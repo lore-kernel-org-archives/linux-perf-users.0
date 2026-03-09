@@ -1,181 +1,182 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359CD2D248B
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 18:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDCB329391
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Mar 2026 19:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773080607; cv=pass; b=n+bhXYeI7TMqzCt7Qj/BTPyqBHTtS+tDO+1ar5tUmaoVvpUM7ibsjNTWP18FOJyns7XPgI7uQgauFY1SgA4UH3Qmd8cMURzb/qOe96eehAxSryNRtj1VlBmXCizGYdkppwnhxEBqVXTTLGlsY3V5QMA4nFzRVXa9CXiuGo8bCGA=
+	t=1773082809; cv=pass; b=AtEmgXpteydFehggqX5O7TMHeapCVn8k2oAcn+fogpVGqHuaf6mc/kuSeoH3ufcRWPe/IyxisQJI1wm5XvxR6tzN9gVfF7v3UwWgnb7Sk7ZOEWmp2wwNWyQU1TowwCeHc6UR0a1lQWaPOKwr0Hh7doSDEFr8OdUFZlz+4YcgdAc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773080607; c=relaxed/simple;
-	bh=49MH/dl7Pu+0YfuTu7r73+4s1hcaPvDpvudwlguIM+I=;
+	s=arc-20240116; t=1773082809; c=relaxed/simple;
+	bh=CA6S3On2vTP5a5E5aET5ntZ0ItXqO0wHfnxbUEuk+RE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MgUAdefp2j+qaOcSiuuaeHzOyzdq12dO317KzHMR8KGME6Ev8FP+qe6AbclbkN3CrgCT//2OglRG0n2lLLuvHWBUyLPRHvFW1ctotdK80QLrWpZnrHVFzDF79xhJ9rz0PLXq7oN0uZTdaanRrJJOFkmCw9Kg0FiEa8QFS7fYhvg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pIETwARL; arc=pass smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=DY34vuhZLmU4BPMYgb8p+6kqAhtUQyyFmmXGDA/jCeSr657kNuAq/r+a5Iv6QLrPAhTkVkK0vK3epHMqagDEd0HUYFtCoBgpinsyXIrc8dFs58bn+s073ypFvx6mn31m/QWEvyPx8OQVxktzK9y6XaKWVxzyAExsiT19wNAXMeA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c75zsmgS; arc=pass smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pIETwARL"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ae49120e97so20105ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 11:23:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773080605; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c75zsmgS"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ae523d54d2so21365ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 12:00:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773082808; cv=none;
         d=google.com; s=arc-20240605;
-        b=bgrL3nseLbbotBsvectqKnW9R89H95YP53rTplXq9h/jHhuxsH1WUzeVx1chAPqNeg
-         vcVtlDdi5oxwQw4P+o8n8nS/0oZW59406147fnscE4gaz9db3NNfAIRXrFDfKj5BuP+N
-         OXX2tmvaIcWZO8PBYFEp11vfgHc7tvrLf5VoGC2dJZX4zYDmWqqqkLH7+Ovv6LxuNEzN
-         MlWWeQ/7tVuyxUDDOTzPvKWQcCqNA9w+0cnZ7D1h637IW/Yo2G/dal9oUnh/+vn7qYss
-         CkSoB2k69mEVIvsM7FftVxYt8fNermQVwrPrR/ySD4XfYqmoxBX5Wxu19Uo7y2Vg9NAk
-         q6UA==
+        b=FoEU8F3plQb4QoNY5mgT1GnGKQYWKhYdqwioPoZuKmpKU8yECOdfnYu431h45mB01Z
+         n2EFtuxuKvXWc3pvGBKqQirQ3o1uPgWCyCPgtGaBoYvCG+qUQ/D7OKo0dJN9iBBQOHPQ
+         swMrI/hFwPeOiX3m5yYk0xD7U5zQRD07GeHIhJ0rtxKyyTQSrXnps+DnT9ARW7BfAzQK
+         DfZ5lXW2e1P1A+rvhqej87wtiKFYnxLuKuh6TW6esckJcn/fs5R4ytH2hY9cgI/NkvcV
+         IDhWpJZh6j5M5k0rxo44aWMRDQy8cz/nZs+GqGFclTTuy6RgCNEgCrVFxRyw+NEUjDKu
+         exUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=n4gsXgEaUq96wmy6ZcJy/P6D42c4wamtor4UbyR6ZyU=;
-        fh=uzvMeuCPxD800fGhhudLk14v0H/OBldpjR5tGNn1EVw=;
-        b=ZMsZoeDrQEHHauGnW+nkLPPpx0XTOG5FYJ1aH6v5LNr5rXtp+bDLcuWj502R6KrZ9H
-         AkfvUnzfshBI26pIrEFzQBYKFO2KIw2tXnxolDfV8xELqkx8rJlbRu8f20JypLUl5rAi
-         cOshcT3YUBb0iKtn/x0kp2qnxVbD3U6+MvXCoSIJAIzhlA0bMp8gCXUcv0BT6y3EcFyS
-         +dsTtbMdXK1dreqNceEPxfQZyLxnBQ/QREo0JMKIdIyAXVOLazOf1JzDLKwTLB7mdWcv
-         Ve7yKYokVXCTgoThDtiZLtshfUvKtShbkQGidrJCUPYFhXZYrXcNqBc0fDrvWx/SCniD
-         H6Yw==;
+        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
+        fh=JWIpOMLvwr34BqCSpZBDW07PZkBzBqRXwXYtmVDr0Kw=;
+        b=RcFqPoDs8CnappmZEm3Dslk4ujYdGvbaOEGA3tP31VnH6xEZBPNjxbLR7K7IITJ+2s
+         gtUCNlFh4qakRv6vrtmK5w+SRXgWE0jtE0bTtsuBiesvlGWywWl2VpA4/5IoQ+bbwkHJ
+         dsZ2tTuin6ukYPL1IvpCK7G4uS5U4B6NjnqX+lGpsuKOjCa1CxguraaJU5lRKqE45KcB
+         xGwDUAmKrPIHE+4CFRRpBVxpKFK719IsKiVnBq8A1as4qtK6MsXqBPHbqIVy1U7f5Qt9
+         smpKc+2XoQ9yBKfIFfvnImB0Y8aZXx8AQrng6Sqo97XJRI1wJqWLgO5u88jGD+5h15iO
+         AV1g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773080605; x=1773685405; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773082808; x=1773687608; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n4gsXgEaUq96wmy6ZcJy/P6D42c4wamtor4UbyR6ZyU=;
-        b=pIETwARLHdo18ScfqYI0v55OhxLUm1CfQrDa0ItK4CbgZr2/hFe7ryQkVy7g5TM/qz
-         NjK6SGulJFlr+jU7FCWP+Z7PZozLUc6yIo1n27z0oupxsTl349Bh0ffVehpq+jkxuApb
-         twV1d8rJYRccHw9kQ5aPoan4c/41cf4WJsDW7gERCr0pjNoh3iV1v8P0ndzvZQxNmKfC
-         TNGJcUO1JZFXMOfzNy/wmnI9R11jIl/b5YHYE4WJVKUwIrbBVlVlL05MK5lhscNhZwWx
-         0DEPB19XSvSkr1E2a2OqPJ65nk/vZXXWExjiw/M+ZKGSoB0tO5Du2A1EAeA0zwPDAAT2
-         mmzQ==
+        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
+        b=c75zsmgSuEs2nto+f0QGaIswwpJ25SkeIvHnOopAR8yjB76t68zrPHdvT9BS/a702+
+         +nn0ExP8F2SOJMfXnhaIMpZPgVUHFtGEZc2Sgg4zrbHJxcRHseXfrmKzD8GpB6rN2og8
+         YwOLrn+wyP8a4j4W0shbW9ktcGuo+4DkinwHfLNeochNjojx/GZGpOvfc62GBGG7xmtx
+         sTZlt4el2UdESD7cXnJ5HDE+a5JJEhfjEBnlhK9fW6n8SGetK9DsNxsrcioY3fe2OpS0
+         lAfpyi6UVyhrQVaS8v+wSz3j6HwyNq1CLzKCYgKaYQOzVoEHn//Ykezm9/pBdoTcQjkb
+         831Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773080605; x=1773685405;
+        d=1e100.net; s=20230601; t=1773082808; x=1773687608;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=n4gsXgEaUq96wmy6ZcJy/P6D42c4wamtor4UbyR6ZyU=;
-        b=mM8XM7SY1qu8ZJWoU+dMSQzviK5zFRbXGXqmPS+zdq2XO19+NAu04EFDsbzzQRypKr
-         iEIhpCke/z6GG8MiYFswtoiazWsnFx6K/rVBcohTpbCQFiVcIG+XWVnqZuthMzdhZM3N
-         QTmS0N+AL/WT+Oqd3Uo/0eLLnt92Pms29muKEpGNOiM1kmkMDZ8+PEcAVCI87Oc283go
-         Fs8+Ehfgwj+/Z/DJ890cd3jLEngaarheQB7wvhaHOFrcQU+VDDH1Ly10WWDHiYARH49z
-         ZeoB4nTVHYaQhlyjyuxY6JQFJ3clVeW6SaUd+lYhEvVTOwgKClX2JGHjxjsXZg1fBsVf
-         60Pw==
-X-Gm-Message-State: AOJu0YxBI09a2rVx/rIfxbcZ3BpPJKl5jevuNJRJ+1Yo0l4FQRB2Y2iP
-	oFQxzlwnXLxzwoWHsI2U3glktMiRLAEa1n9gjRkAXF5Kv6BjAhQc5kp+dn1lggrJ3DJHf+ht00K
-	3VDShtEOwnAcETw5gcK+ZyKb9HDRnyHrUSL2albbFGaLDu+A+3IH/u6ZwaXmBWA==
-X-Gm-Gg: ATEYQzzI43OM+5kNGxGLcy/Ut3EDP6WTtuEOEKD50cUR5eiqRo0kcaBVpiINjNs5QZc
-	PKMU5ERzlcKzkV/hZ9ZXiJ78njfz540iOquH05RFr/8sSuKC4u66kTSe7FIEv4GtawuGbgdw9MU
-	PADWvVNpkXq/JHKzDfnp7dIGisgy0pGGtkQQ3v4R1FRrBFegdOMp+r4bdfhDx6c+KbzT2S6GWYZ
-	spaQ0kJjz3JAsFGqJruYn5tFRIXm5+Rm1vPY4LF8XAjdkBEvyFCe6R0IwDWeCRkuz8al9qV39YH
-	iIXneSTprXo/gNrMtyTb9ZVm6YXeFTQV5P4=
-X-Received: by 2002:a17:903:98d:b0:2a0:867c:60e2 with SMTP id
- d9443c01a7336-2aea32933ffmr288075ad.19.1773080605052; Mon, 09 Mar 2026
- 11:23:25 -0700 (PDT)
+        bh=A69zc9BdB5IhC524YUAWFmjoBTZB9t4o4zitXpX63fc=;
+        b=e0/JfljWAooUqegeRs8FeqHhJNBwzbvi/RxoEwjo9mIlYz/N9JPxLLSKxsPMdhIkZn
+         a2FcaHdNeorQ4lgXqe3HxSfMgrTTKMrJrlN6L/lNjz55iykkv8tAkstUrIURcvBixpfY
+         c7Zyn4SNeev4VI5/ijm5G86aLXh7Y4Q4pum3SdsySh3xTJk43nUhjWB7gyJ9cQ+gB179
+         eUeIXfa7NOU4lsrpzEVRqxouEId9LWtEvdHgImCp66KC8U+4/VsLruMYAPdSSHTgTL2Q
+         uEbZRMDr8GIWN0Sm9be6ZyWXR54cETGhnS6ruYZxZGWucN/VqjlkcsjJuSXMad1+QTdM
+         9r4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWpJ9w0QMQN0MspWgBk0yUA0kGKid2FYcQM8Em+hDqi5YLs705bcf52o92rEsqYxqgHXiJg2MMGgVtN46PnfiVH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDyewVLkI8ssU3Ebaa/L1gbUYpIXw/ugosfnWO2cQZxRny9vsl
+	zGcycoYFyQML2fwqYqTdJv4zbT1hRqAkv4VCXUxAGEmq6CI6V6850kMZPv/RmeR9JBj1smqC/n0
+	v5db9/PGZPaO0DWeoft0KIjAqrDzTih2vWJbj5BmQ
+X-Gm-Gg: ATEYQzzaLkuAdB6XDmIJ4lTFYRGVh4lRWtnAy1fJLHI7khtzmT8frQHNdgaOLTAOMdK
+	pMltecQR60dxZVLpQoCjXWjGEqtisZXOlnLJgkd1huCU20YZArlR2grbHoHqlIWhS2HeWa/ZK3N
+	6Oifu++OvuEdkSBepL5LLbeho1KOSleQczTJkf7QEZPw5JYFAI2Syi6nOi8y0zMoTtF/z9t4IFK
+	WWHO7CJSrb4PiEL2vV1PwyjgkiQ80DdLMd4EnbHFFmI355zA9bSPKvd+pxudSXdyEAriK73vPb0
+	qkP2KJ1DIFJ78nmW51FpaDE3Cm5RzfVKXzo=
+X-Received: by 2002:a17:902:cccb:b0:2a7:4151:2c74 with SMTP id
+ d9443c01a7336-2aea30cfb2dmr468065ad.16.1773082806886; Mon, 09 Mar 2026
+ 12:00:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <61a60089-c0a1-47d8-91c7-c1fe68d19f5e@linux.ibm.com>
-In-Reply-To: <61a60089-c0a1-47d8-91c7-c1fe68d19f5e@linux.ibm.com>
+References: <20260309082548.3084264-1-wangqing7171@gmail.com>
+In-Reply-To: <20260309082548.3084264-1-wangqing7171@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Mar 2026 11:23:13 -0700
-X-Gm-Features: AaiRm53ELie6Ggl3aR72KXdyQ4GJ-4CXceYxevkzcyF5yyjl6emImvgjd6vKA4U
-Message-ID: <CAP-5=fUOizFadGmSnLLPv2m+-a0sR4eg8kqBAMeE5k0wpvQ8ag@mail.gmail.com>
-Subject: Re: Test case '105: perf stat tests' fails for s390.
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>
+Date: Mon, 9 Mar 2026 11:59:55 -0700
+X-Gm-Features: AaiRm519kDNzK9lKlbcsZ89g5eBroJB4EAWXUe13eNdTd-jVAPSHd81mv3FaRz4
+Message-ID: <CAP-5=fW3jcUyOOF5ikEUHbp8r=yMZE=iUPVesUhcba38T8ayZA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix deadlock in perf_mmap()
+To: Qing Wang <wangqing7171@gmail.com>, Haocheng Yu <yuhaocheng035@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 9, 2026 at 6:04=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
-m> wrote:
+On Mon, Mar 9, 2026 at 1:26=E2=80=AFAM Qing Wang <wangqing7171@gmail.com> w=
+rote:
 >
-> Ian,
+> There is a possible deadlock in perf_mmap() if mmap_range() fails then
+> perf_mmap_close() is called while holding event->mmap_mutex. Since
+> perf_mmap_close() also acquire the same mutex, this result in self-deadlo=
+ck.
 >
-> test case '105: perf stat tests' fails for s390 (linux 7.0.0rc2) . It boi=
-ls down to this command
->  # ./perf stat -C 0-31 -a true
->  Error:
->  No supported events found.
+> Fix this by moving the cleanup(perf_mmap_close()) outside the scope of
+> scoped_guard(mutex, &event->mmap_mutex).
 >
-> The first bad commit is this one:
-> commit cee275edcdb1 ("perf metricgroup: Don't early exit if no CPUID tabl=
-e exists")
->
-> Before this commit the output of above command is:
-> Output before that commit:
-> ./perf stat -C 0-31 -a true
->
->  Performance counter stats for 'system wide':
->
->        105      context-switches   #   3579.8 cs/sec  cs_per_second
->      29.33 msec cpu-clock          #      7.8 CPUs  CPUs_utilized
->         34      cpu-migrations     #   1159.2 migrations/sec  migrations_=
-per_second
->         52      page-faults        #   1772.9 faults/sec  page_faults_per=
-_second
->  5,026,832      cpu-cycles         #      0.2 GHz  cycles_frequency
->  3,029,266      instructions       #      0.6 instructions  insn_per_cycl=
-e
->
-> 0.000851608 seconds time elapsed
->
-> Since this is executed on an s390 LPAR, hardware event CPU_CYCLES is avai=
-lable, so it
-> should be used. This is something I will look into.
->
-> Also some other test cases fail after the bad commit:
->  ./perf test 2>&1 | grep  FAILED
->  99: perf stat CSV output linter                                     : FA=
-ILED!
-> 102: perf stat JSON output linter                                    : FA=
-ILED!
-> 104: perf stat STD output linter                                     : FA=
-ILED!
-> 105: perf stat tests                                                 : FA=
-ILED!
-> 133: perftool-testsuite_report                                       : FA=
-ILED!
->
-> Before the bad commit the output is
->  ./perf test 2>&1 | grep FAILED
-> 133: perftool-testsuite_report                                       : FA=
-ILED!
->
-> Any ideas where to look too narrow down the debuggung are very welcome.
+> Fixes: 77de62ad3de3 ("perf/core: Fix refcount bug and potential UAF in pe=
+rf_mmap")
+> Reported-by: syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D196a82fd904572696b3c
+> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
 
-Hi Thomas, sorry for the breakage! I think the issue is a missed
-commit in the v7.0 PR, specifically:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/tools/perf/util/metricgroup.c?h=3Dperf-tools-next&id=3Dc5a244bf17c=
-af2de22f9e100832b75f72b31d3e6
-This has also shown up as breaking stable backports:
-https://lore.kernel.org/lkml/072e2a07-5c6f-47b5-9695-0a3ffe854ac8@kernel.or=
-g/
+Hi Qing, thank you for looking into this. I proposed a similar fix:
+https://lore.kernel.org/lkml/CAP-5=3DfW-wHEv=3DTCULwk_HVOhWHdqRd8AZoESZsU_v=
+nhLjghUBQ@mail.gmail.com/
+but Haocheng noted it reintroduced the race condition the original fix
+was targeting. Haocheng has a larger fix in:
+https://lore.kernel.org/lkml/20260306093616.84299-1-yuhaocheng035@gmail.com=
+/
+that should handle both the original race condition and the deadlock.
+I wonder that fix may be made smaller by passing a parameter like
+"holds_event_mmap_mutex" to perf_mmap_close, something like:
+```
+static void __perf_mmap_close(struct vm_area_struct *vma, struct
+perf_event *event, bool holds_event_mmap_lock)
+{
+   ... // code from original perf_mmap_close
+   if ((!holds_event_mmap_lock &&
+!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
+||
+       (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)=
+))
+     ...
+
+static void perf_mmap_close(struct vm_area_struct *vma)
+{
+       struct perf_event *event =3D vma->vm_file->private_data;
+       __perf_mmap_close(vma, event, /*holds_event_mmap_lock=3D*/false);
+}
+
+static void perf_mmap_close_locked(struct vm_area_struct *vma, struct
+perf_event *event)
+{
+       __perf_mmap_close(vma, event, /*holds_event_mmap_lock=3D*/true);
+}
+```
 
 Thanks,
 Ian
 
-
-
-> Thanks a lot.
+> ---
+>  kernel/events/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 1f5699b339ec..e5ce03ce926d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7485,9 +7485,12 @@ static int perf_mmap(struct file *file, struct vm_=
+area_struct *vma)
+>                  */
+>                 ret =3D map_range(event->rb, vma);
+>                 if (ret)
+> -                       perf_mmap_close(vma);
+> +                       goto out_close;
+>         }
+> +       return 0;
+>
+> +out_close:
+> +       perf_mmap_close(vma);
+>         return ret;
+>  }
 >
 > --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> IBM Deutschland Research & Development GmbH
->
-> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
->
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
->
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
+> 2.34.1
 >
