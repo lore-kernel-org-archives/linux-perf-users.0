@@ -1,222 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012062.outbound.protection.outlook.com [52.101.53.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3639D33C52A;
-	Tue, 10 Mar 2026 06:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773124319; cv=none; b=RfZk+LCau3r33nd6ov7NpmQEbPwOAqdXhB3eexXwwfNQwhzLkLvr2XVRTsBXHzlyCKFwGdC2/8KuJkN+ZnufrEnqv+1Vl5B9bNZmVQJktK2KtIRzOhKFxqiv8hNmm9WQ5VZd48nXjYNHM8wfCmIPIwwAT4RjRqE13Dss2F9r274=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773124319; c=relaxed/simple;
-	bh=KM3R5EQIJsVb+XLDRflVEdavK2iKly9xWnrGcXBV+WM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=NyPJ1+UYGoHhQO0k18BDLagkzXIzUyNo5Ih/N8ivq77cXKozQtbG5Ic3emUlDo6R3NKATNF6oj4XzdDWLP7ZLdhhnYGLWGMqkIPYfeAi75vLQrhV9uPknSF8z+1njWibOyLI5OY/e01crk89UiNMdFSqvz2gX70m05gjTy/XglA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H0KotnfQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C05F42B750;
+	Tue, 10 Mar 2026 10:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773137302; cv=fail; b=JHyapwGOLufxBcTnQC5l3Xq7M4cNwYyJI7M7+/qoIUPgdBiqIaPc9Q4TlfKpfLlhO6FWZmnddwxvANeLs8wJy0VjbVGGjVf/7G+ezmzLXJXQbjnAcWvlcuJZwP8kTGjXb1CX911WleDn9e5uRBoKoPaPjE+ux1gxgPFc9qfkjsE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773137302; c=relaxed/simple;
+	bh=UmwYAzyiB0RQ1Eq7FLxiWY5g9oy/a3ydU6bMcV6Ru+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pr3nCxrMgXTu+ZEhwFOVGVTEBt2pn7TJ64mksUqhE98XKtuRQNQ/FTRF6T/8dR7907xPy7w10INeyNBZbpaPlEvk+kChN8p4lF/+OKd7O/YEGurAxl41Yf0XZ2//9OwBYzAMhnTY2F0z/ZVTXM6TpRRue9DTVhNNLtBYMA2KTao=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oxcykaGn; arc=fail smtp.client-ip=52.101.53.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H0KotnfQ"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629FJsqQ1262800;
-	Tue, 10 Mar 2026 06:30:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SaErOJ
-	OOx+i+eT48z2MnE0DrXZVxkhdRgynwobO8tXY=; b=H0KotnfQa8FWSPxo8oYgbT
-	X4RVQFmvGC4wrMXo2vfkvAC1XQtSeHjIXYNrt2YIyGDrwXwoEuQxot/37l6O9+Li
-	Df/q9WPGntNuI8JaUIIGQyY+suHRNftg9aZE7ttQ95P39ab1gOVYiExEFeuLrPwV
-	SF9HNwYcCX0OJwILaDMletNwX266bI5xMTcTPUvjocQrgXD/K4f+PAg8VBRqWKUu
-	+3I0PxSiAkm19S4gGNZXIBoqFFWxCoCfabv3BcmxXxAfL8kojree7kSUr7HGqeSz
-	8XamwwRTtd8mw6mGgSWk+NXo3nx7ao2+W8NNPzsSemz03QJRP9gjtDnXCnXnmdsQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcun9cx1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Mar 2026 06:30:49 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62A56mw1021168;
-	Tue, 10 Mar 2026 06:30:48 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4crxbsr3ub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Mar 2026 06:30:48 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62A6UkPb27001350
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Mar 2026 06:30:47 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BB73058060;
-	Tue, 10 Mar 2026 06:30:46 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9B4F458051;
-	Tue, 10 Mar 2026 06:30:43 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.98.109.174])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 10 Mar 2026 06:30:43 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oxcykaGn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mifYNh3e3KJPIr7d/OeGEU1YmX9NUwvFNXHJyjdFaxvP2j7hgSZWbhiyYqSp4PIN/8bB8BQgMFw1F/+s/i9dY//fhxo/zT16Jok0fDBfmZhry2X8CE3gqWipR0SAz9vhXeIUa7H5LImdec35TB7DCRG3Cf78gR4hYwIqqfL/QjvTwCkO8Z45j87DI8jLYRqmBFkSGOXTUc+F5GSzVaaK3lHidWKkwmB46w1XMh8hEvLokvhmEe0FKVzq669iiK8qvcoUSjAg9z+QOR9aygGuh716IzkNb7cyNvZpso03HyphkVIhdkVHqVKjT+gBSIduSs+7ybkMniaAjN8v+mhElw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bh48anBO1ploRY5gEhfKAjxGWxbiTY4oirL5owCkuTw=;
+ b=oBK1vmvEQiKsjr78tfhUY2ZyKiJDcqXnYmUUstOtMLfvtE0JPFOPF8h4wzK5G+vQE6X8LxEaqMTkD4nzirsyEZPF2OV4WnM2hfY/21MEPt8dBbgH1rAmQBKzLG/ZshQACgOoDLlknlkwa54LWYj1QQ3VG/RCUX+JVjqnt4jrLEY0iJ9lT1oG79LxdV2IqcxrkpN2QO5r6fLAsH/yXBqTLA5lUMu3VxNoNDb6N0Cd1NEPqtthAqfJPillEEZdxuE9N4sBlmHtzn/mFe9FZnOlwyN+7SXcIykHRsqWlpn+OQhx0D3pUK3pjF5SUG3Y9wk+qi68EFO5vSYmDIImTjTfpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bh48anBO1ploRY5gEhfKAjxGWxbiTY4oirL5owCkuTw=;
+ b=oxcykaGnRFxucja5RjssYHiFCY0eW5bTFoFXm/OGkNi1eHsyfNJDqeqP2STbsgS6XvA2twQ/UB4WB0P/XXaV87ZQ0cP+GivC+rAg3J44ICyKjnBRjotd7AVYzPpAmJs2FKpMDaWwVtz4JrYEq/DGuJ9bnQwtIsp7rU7On5rJi9g=
+Received: from BL1PR13CA0365.namprd13.prod.outlook.com (2603:10b6:208:2c0::10)
+ by LV2PR12MB5823.namprd12.prod.outlook.com (2603:10b6:408:178::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
+ 2026 10:08:15 +0000
+Received: from BN2PEPF00004FBF.namprd04.prod.outlook.com
+ (2603:10b6:208:2c0:cafe::94) by BL1PR13CA0365.outlook.office365.com
+ (2603:10b6:208:2c0::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.18 via Frontend Transport; Tue,
+ 10 Mar 2026 10:08:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN2PEPF00004FBF.mail.protection.outlook.com (10.167.243.185) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Tue, 10 Mar 2026 10:08:15 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Tue, 10 Mar
+ 2026 05:08:14 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Mar
+ 2026 05:08:13 -0500
+Received: from [10.136.32.224] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 10 Mar 2026 05:08:04 -0500
+Message-ID: <bda6c5d3-94cc-4f34-a3b6-b9a50c6b28e8@amd.com>
+Date: Tue, 10 Mar 2026 15:38:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH v2] powerpc, perf: Check that current->mm is alive before
- getting user callchain
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <aa71fOBjQwvCFFNq@linux.ibm.com>
-Date: Tue, 10 Mar 2026 12:00:31 +0530
-Cc: Viktor Malik <vmalik@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@ozlabs.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F8560AA7-E351-49B6-AD7E-1E65C901D806@linux.ibm.com>
-References: <20260309144045.169427-1-vmalik@redhat.com>
- <aa71fOBjQwvCFFNq@linux.ibm.com>
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-        Viktor Malik <vmalik@redhat.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: k_IHO-GGdi6Y5h5NLU1_6rgR5OzdJV6T
-X-Authority-Analysis: v=2.4 cv=Hp172kTS c=1 sm=1 tr=0 ts=69afba9a cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
- a=20KFwNOVAAAA:8 a=FTemPexENOiiN3R5Jr8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEwMDA0OCBTYWx0ZWRfX3RqwDW+CP43K
- DcXOAus0tRXU3vg5MF9Aw4Bc2A1vfY2gJptZN1A4+E+DH3njJ/PWmTS9sHupl7U9fZujTWEUTft
- W1z9CLPZhwApQOCsRUDIm9u/8tP1YrndJEAgABi1U57H9uS6hmh0ievfDpdPY5ai2k07m/Wq/8R
- 23o3T1rEwhLa2+/fHIS8UX/95PccrPBvJvlWejOhzqZinkr4nJmjRf4r3O3In9fqT+DOX9C1iJT
- uBDks+8qtSvo7C/MfOtKaQzzJ4n/omFzATFeoqu4f3aKWFgNla/gtNpHMupKkBj43lEyCpQRQqy
- QfxBrj7trpFQwXmdHqmXj0Tnd4V2K6mwTx1wTu1rnvK7Lg0df6RtyXtPboeYtdGwiQl6JWa72qb
- XhSMnh1XzSNUDtbELpYOLwkVj2WDNyuTASK+gIGJ9GovV23q6NG8BK1LMIaLoJHiLB0LW8t9Z4n
- AsibeIJP8oyZddIf8Ww==
-X-Proofpoint-ORIG-GUID: twKloH2qB9W8EqoRy6abojGwRbwrdKE5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-10_01,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603100048
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/10] perf sched stats: Add support for live mode
+Content-Language: en-GB
+To: Ian Rogers <irogers@google.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <james.clark@arm.com>, <ravi.bangoria@amd.com>,
+	<yu.c.chen@intel.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<sshegde@linux.ibm.com>, <ctshao@google.com>, <quic_zhonhan@quicinc.com>,
+	<thomas.falcon@intel.com>, <blakejones@google.com>, <ashelat@redhat.com>,
+	<leo.yan@arm.com>, <dvyukov@google.com>, <ak@linux.intel.com>,
+	<yujie.liu@intel.com>, <graham.woodward@arm.com>, <ben.gainey@arm.com>,
+	<vineethr@linux.ibm.com>, <tim.c.chen@linux.intel.com>, <linux@treblig.org>,
+	<santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "James
+ Clark" <james.clark@linaro.org>
+References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
+ <20260119175833.340369-8-swapnil.sapkal@amd.com>
+ <CAP-5=fXNtVXEjDD-euueztjO7vj+6LQ2CHgHfxVoHuRF2Nb0Xw@mail.gmail.com>
+From: Swapnil Sapkal <swapnil.sapkal@amd.com>
+In-Reply-To: <CAP-5=fXNtVXEjDD-euueztjO7vj+6LQ2CHgHfxVoHuRF2Nb0Xw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: swapnil.sapkal@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBF:EE_|LV2PR12MB5823:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2508272-c6ec-47d5-cc01-08de7e8cf1d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	8dDSjvBg3yiaogi+w3tBDKJO3Srx5eywmH+5f6Mowoq9z3io3p4sc5KuiqJRs6k3E0rHsd6bA+VFcSzAUB5BWdBwNsjCKxI/S2kvW6HgpAaPfcGr6CgFK0nwrG0P2/iyDkVSNvUHyqjbNiQ355c6Ev0ZPlLfwjgXXFfN59nf4NaRmSRP9/lrHh4TTlmAj0jqd36VSx7lfx/eHFLkrGoYtdt5V8gN57aOqHeNEe04Jx0CTOFOtlTjXTTIWg11DTx+5EFRAR1vnVBEpZ/BhUhigqBtRwNN1xRP3y5dzHSnj9wnYhg4XvwrcNN9FzbPCh20R/U/i5JEZ2/vSVqfw41ZQJWBQU86/FyyWAp+nEHMnScu2isVdNZfGZKoNCeeMxJF5yVLI3chOaNHqEadwJiGkSd/I3IJU1PPcL2K5t+AZxIw+I5hE+JkZhf2bWpCnCFpy1kDZC2afBGB3pVQgNFNMYh/HmMe7j0sqD9uDGb9A5vz/Lv8ZSYW3cJIeXizcOVHTkcCMi7kcXIE3bIs1jHwMlWXmkkCQUj1hn130GiyLRGPa5iteJNmgTrf6eZRM23PBQWsrgHoB6/KU4RFAILt0M41yVo7vOn8zu+SozWM61+pLgCT5NvfrKVPysu9SLOh4MYLLkyKn3WkW26xZBLkJe4WmrJvBFC4xT/yYlCyQ4RrEBYLElwlU6NJ+pYvcThsTMNBBRLdNOqRIu+hiCLuGRQiDGuOW5yyd7TKuNRywIq81E3XMhhhW7JZFFsfH1it7G0s8rvtQCX7NQ3OsAUx8A==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	6937pf8ipW074M47e90KWaNQBu3II8xW0MqLm6mmBdBkQVRGgRSmK/8B0W0vUYV8SvW7uxYfpvYUt0uMOwt9Kn+L47LT2rz5Mqq1pxfhWH0rRMflTMfh6AUnG2vQhXcW8VfJyZWx5jo62vXLf6A+waZzZK/H32wk7eCEZN3xLu5w6xjnGLKawUARHOpIamgrYeH1MN9amSisl0DBbZ9470sG7AYTfBAhfLyiDS7VNiDSAJ+fSIcX8ZgXxogzN6vRDpS/fuTK7TMm6TAMigkVy1JD+UfwegfTKTRHJS6ge7+uyY3w+8khEpGeKMbZ5gsiCER+OpMXou3cBPFRFnPJe2jKJY4i70Opq4eXH07eBnGSCT++oNKV53hUK7y12NA3QAwYv8AXgOYXn/dQeEQnbK/g+qyHfmJHOKkuhhPjqLD+H+rYTr5DccN4cXXy2yqK
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 10:08:15.0704
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2508272-c6ec-47d5-cc01-08de7e8cf1d6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF00004FBF.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5823
 
+Hi Ian,
 
+Sorry for the delay.
 
-> On 9 Mar 2026, at 9:59=E2=80=AFPM, Saket Kumar Bhaskar =
-<skb99@linux.ibm.com> wrote:
->=20
-> On Mon, Mar 09, 2026 at 03:40:45PM +0100, Viktor Malik wrote:
->> It may happen that mm is already released, which leads to kernel =
-panic.
->> This adds the NULL check for current->mm, similarly to 20afc60f892d
->> ("x86, perf: Check that current->mm is alive before getting user
->> callchain").
->>=20
->> I was getting this panic when running a profiling BPF program
->> (profile.py from bcc-tools):
->>=20
->>    [26215.051935] Kernel attempted to read user page (588) - exploit =
-attempt? (uid: 0)
->>    [26215.051950] BUG: Kernel NULL pointer dereference on read at =
-0x00000588
->>    [26215.051952] Faulting instruction address: 0xc00000000020fac0
->>    [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
->>    [...]
->>    [26215.052049] Call Trace:
->>    [26215.052050] [c000000061da6d30] [c00000000020fc10] =
-perf_callchain_user_64+0x2d0/0x490 (unreliable)
->>    [26215.052054] [c000000061da6dc0] [c00000000020f92c] =
-perf_callchain_user+0x1c/0x30
->>    [26215.052057] [c000000061da6de0] [c0000000005ab2a0] =
-get_perf_callchain+0x100/0x360
->>    [26215.052063] [c000000061da6e70] [c000000000573bc8] =
-bpf_get_stackid+0x88/0xf0
->>    [26215.052067] [c000000061da6ea0] [c008000000042258] =
-bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
->>    [...]
->>=20
->> In addition, move storing the top-level stack entry to generic
->> perf_callchain_user to make sure the top-evel entry is always =
-captured,
->> even if current->mm is NULL.
->>=20
->> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
->> Signed-off-by: Viktor Malik <vmalik@redhat.com>
->> ---
+On 04-03-2026 00:17, Ian Rogers wrote:
+> On Mon, Jan 19, 2026 at 10:02 AM Swapnil Sapkal <swapnil.sapkal@amd.com> wrote:
+> [ snip ]
+>> +       /* wait for signal */
+>> +       pause();
+> 
+> I'm seeing the perf sched stats test hang here, requiring me to kill
+> the perf process started by the test. It is unclear what signal is
+> being waited upon, but is there a race condition where the signal
+> could have occurred before the pause? Should the pause at least be
+> conditional on that happening? Given that a race condition would exist
+> even with a test, would it be better to use a condition variable?
+> 
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+I am able to reproduce the issue. There are other places also where the 
+same issue can be reproduced. (e.g. with `perf lock contention -b`)
 
-This patch fixes, reported issue.
+I will propose a fix.
 
-Regards,
-Venkat.
->> Changes in v2:
->> - Move call to perf_callchain_store() for the top-level stack entry =
-to
->>  common perf_callchain_user (Saket)
->>=20
->> arch/powerpc/perf/callchain.c    | 5 +++++
->> arch/powerpc/perf/callchain_32.c | 1 -
->> arch/powerpc/perf/callchain_64.c | 1 -
->> 3 files changed, 5 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/arch/powerpc/perf/callchain.c =
-b/arch/powerpc/perf/callchain.c
->> index 26aa26482c9a..992cc5c98214 100644
->> --- a/arch/powerpc/perf/callchain.c
->> +++ b/arch/powerpc/perf/callchain.c
->> @@ -103,6 +103,11 @@ perf_callchain_kernel(struct =
-perf_callchain_entry_ctx *entry, struct pt_regs *re
->> void
->> perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct =
-pt_regs *regs)
->> {
->> + perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
->> +
->> + if (!current->mm)
->> + return;
->> +
->> if (!is_32bit_task())
->> perf_callchain_user_64(entry, regs);
->> else
->> diff --git a/arch/powerpc/perf/callchain_32.c =
-b/arch/powerpc/perf/callchain_32.c
->> index ddcc2d8aa64a..0de21c5d272c 100644
->> --- a/arch/powerpc/perf/callchain_32.c
->> +++ b/arch/powerpc/perf/callchain_32.c
->> @@ -142,7 +142,6 @@ void perf_callchain_user_32(struct =
-perf_callchain_entry_ctx *entry,
->> next_ip =3D perf_arch_instruction_pointer(regs);
->> lr =3D regs->link;
->> sp =3D regs->gpr[1];
->> - perf_callchain_store(entry, next_ip);
->>=20
->> while (entry->nr < entry->max_stack) {
->> fp =3D (unsigned int __user *) (unsigned long) sp;
->> diff --git a/arch/powerpc/perf/callchain_64.c =
-b/arch/powerpc/perf/callchain_64.c
->> index 115d1c105e8a..30fb61c5f0cb 100644
->> --- a/arch/powerpc/perf/callchain_64.c
->> +++ b/arch/powerpc/perf/callchain_64.c
->> @@ -77,7 +77,6 @@ void perf_callchain_user_64(struct =
-perf_callchain_entry_ctx *entry,
->> next_ip =3D perf_arch_instruction_pointer(regs);
->> lr =3D regs->link;
->> sp =3D regs->gpr[1];
->> - perf_callchain_store(entry, next_ip);
->>=20
->> while (entry->nr < entry->max_stack) {
->> fp =3D (unsigned long __user *) sp;
->> --=20
->> 2.53.0
-> LGTM, feel free to add below tag:
-> Reviewed-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
->>=20
-
+> Thanks,
+> Ian
+--
+Thanks and Regards,
+Swapnil
