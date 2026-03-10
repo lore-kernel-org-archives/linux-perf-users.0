@@ -1,93 +1,93 @@
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED193064A3
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 15:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854423101C0
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 15:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773155689; cv=pass; b=nDHkUj7hBfCctpt44J9Js+5PRNT0RKJRA3eBWsgKJVTQSBUuP8KxFLM7S1Tq6W+nhvT41YkYo/hZdfXxH2j3EKv3LRj8LLqzIvZ9WGNvtt9WmNyb0s96Wri4HnfO2HKLLLUM6h9gm3iTiTNOibLTSxzJcM8dL1dNVd6e/hC3XqQ=
+	t=1773156183; cv=pass; b=ItbG3FQGmbYc69Db4/nishFRnGOhg8RZLkKzEiEVEGXXoGCc4HW9jH5YqrpZZMKqvI9bx0pcjxL3hJ6y3LglFeNy97cUmxmABWESP6Ik/wrzUdQzJ60LsS3+lU+QnqUFHkI+YS9Mm4Wf7W0hv/QQbS+krBCKkWuXlHJm/07jcws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773155689; c=relaxed/simple;
-	bh=KBcOi7xBnxC2wfgl+SVIrI7Expr5ofwcRAKEJFepSlM=;
+	s=arc-20240116; t=1773156183; c=relaxed/simple;
+	bh=a6kxvYOwf8y6EbYqD/I79AOj9D0QkacJAfJfR5Ct+No=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bJnqOtLgJTMO8Ul7TmVN6v82cGmxrmMALC8RfGPkkqpgoCezdbesUPzkf/Z6iNisvqIVYrG+6HhY6Np9+MUXCFd2aODHl2CSLvleWRVrglQVRQ5yuvmdWldJlDu186UYqXeszSw4lpRPhnE2PIrESxemZAHvFDcxwrEMP3CQ9LM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SaJ8cXU2; arc=pass smtp.client-ip=74.125.82.45
+	 To:Cc:Content-Type; b=cZ7llrXJeL/wEQMPksu5DVCXGmGMF8rFMFk33cf5NGQFo6pPKUPvxnduQppJ5dg12VgY0JiMz9zKKTMO7WzCd5kHd1XfLdzpfIKw4rqjs3y9/GtcGSqPzdzT5p2lTBJWztJ98qvhyEpHA2RFaynKRq94IT8nVwEo/NVPkDz6EfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OgBwBXGN; arc=pass smtp.client-ip=74.125.82.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SaJ8cXU2"
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-128ce536fe0so12673c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 08:14:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773155687; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OgBwBXGN"
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1270f10a774so10313c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 08:23:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773156182; cv=none;
         d=google.com; s=arc-20240605;
-        b=CfZL0GI0xB+s+FIU8pXT+ozkUHHQlL12OBrMcU+5eUMom4sUwtJZK6HYiiEjfYBqVX
-         DiiknyMwdpj4qXTe6Ww8bOs4A0qw5T4lUDzUlp5iCQPWcqKXGc1Kn91V0auc7QZqAqmr
-         tfYACqZMhYXcxubi70UudT3waNUi0Xr+wZjV0svmZGxLCfEfOXyd4uL+0ia9nX8Ra1Ik
-         RUjVp7grUrFz2G0YeTzhTTTT2f2OYH4YmG4KF5CycFfl8dPjFlBgx7jsUX9CFsf60zzj
-         2X+sLjG1cdirIxfXX97+E0L32ea+KfXpNpPJzfPXXWZycu7kjab9KUPd46kVLzsveqog
-         W+5A==
+        b=F656sv7ZtEzs84rvCMZH+QRUgIBAoobmWamQS6CX1jT9CMHCi2VBAZ62TMLg32rrRC
+         RgXAQDV8O6YoVCmvYQoo9yY5ICNsEBEQzglqDxDopMcX66imCPVyUwS5cRmA7My5nxzb
+         BwdyOOfbCWTn7rlu8tOoMdt1TvKkjfqMglBkwdUn/jJM20GHSsWro2s1rHdy1G1DfOeZ
+         yeFkllRTF6b1BY39ZkwJ4GX0xwgVbScD8FFpYWWM56SZP1fUw0/SxYQo5cP/1BMFoCcM
+         vTL2qWZEZP36p7IgJOmyMdjlRXWFZFQVuyQdqIOdRSzOLY0rr7kXyX4c+bSh0Tr2JjPL
+         DLtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=QRvANnU2ZU8g5N5SXH34hBwFkah6eGwlIcFTy+QCyKs=;
-        fh=11adqFY0sDxesEz9OeA+mo/o6Hj9B1470qPGMOtkdCY=;
-        b=i9gRRm7QwvuKnoOZBr4AYZ1hPjvJ7F9EIr+yN/HpoOXY+IKzPwicSL2Sj/vw9hTDes
-         eWKTiT3jgh1IW60Qsb97GFgM+LTH4g8UqNomDL9L1vFrML6KP276a82N5r6B2UfYlEMf
-         0c9Yiv/VYp9VUK+sSmVDIq81N0u8DIq8UNHnKtrGRgXgebm0hqmOH0hs+P+0iX4LoXwj
-         +tUjFx0LrLztFebOeWFhGTxOek1Y5qH6GhvcRrLrXkFvImCDwKVeZdplwAq7QdIz4AVF
-         vJ65FJtdEN0Crk4VzQOTWEhUlzEBeF89K7jNmyGHOyHRl7JyHhbPxdG4n2aSDdWdXSDn
-         NLBA==;
+        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
+        fh=BwSYWz1STnAYmmLVctEMeI/Q7NuNJG80u60wk7Uuh7g=;
+        b=c0ta+S4vMV7YYNBl3R0w5USU77DsPYLFakx8n3BFRAVbLyiYcE5jQgV3CnT8ybWfag
+         /4IAK8GH46Ji1ZcS5z/H9nnePkms6suctZZy2SsTKu0cwEfMnHwqB8RnyOK9aLWpRVNG
+         1cZEC1SVkCJOGYX+QgIAbh5L89PpBRcTmacJL4NRzgVze1cN4YQkc1U0onwb8dbHD08e
+         omYDFPOtTM7i8SkaEkiZBG0oEWN9oIBUdI3yQtiz5LAgitLaPXj55T99IuvGhdLcf2Id
+         5Z/+GVOwBGS0IfEMTLy9zQ7ld4GD7vz84mDFj97CeUUAmhXpKP6TbL1dRn9TdeeQFA9Q
+         4F8Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773155687; x=1773760487; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773156182; x=1773760982; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QRvANnU2ZU8g5N5SXH34hBwFkah6eGwlIcFTy+QCyKs=;
-        b=SaJ8cXU2nLsupsbOG2+XCNoRGEG5xJxBzIOT5HH8joKtGY3hWS5ScNwbuNpVFIPmcF
-         y6r/MmbaZ6BXc9ObBc8p4OZVj3KZMDPi6ZMbqfGGnoJZOxtjN3mN3EJwmP8mcnFyCRzJ
-         UFZM+Etzp1X0DW9QnJfBXRIRSOy7OQUR2UPQCC1qn8JPDaUnJ9tCJMk3hpY54liLvIuh
-         vqnDNsrJ9kKUp1ai0U63d/SJEcOb1+aAIGXoDmKLfJDYoDeJ2W+0hHSqmwKaaWYFi+My
-         UPKgJvJRXltGf1l1tYAMm2UqE06WDxllir31VSnAJZoR6FThsUl9wHPcx88ilELiS6bB
-         +xUg==
+        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
+        b=OgBwBXGNM6QPcuBAO6MCTBwz9Ib/s1I406bhsWTKKHki5TE6MOTVbCE5uk9ZcTp5xG
+         UGMUC10yzZcxsVFOTo2q+JxZvGU3JDu8ab7Vtr7A/BsK5jku1BGVVDrTePPM9jrAeEum
+         NwNYdKnUk4SL3jDffG95QgmkiGUUJ99DfJYFHLn0wzX5NOEp8MNZknmVIkLPuQ58Zr6w
+         mpH8x9Th+WSpqbBkEKGp0FtpKwyO6KU3wnkEknI2BN8EvhVujjbmAXzGSjxfdtmCsMhu
+         nP/KwCdAWBk9QPL+PRIA2/zc6a6eARXCTaCh9yDuhfVIOMU622AfvNaTLD2lBFgpYNun
+         CW2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773155687; x=1773760487;
+        d=1e100.net; s=20230601; t=1773156182; x=1773760982;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=QRvANnU2ZU8g5N5SXH34hBwFkah6eGwlIcFTy+QCyKs=;
-        b=l3AXXqP4e11whKN1U66LmURImcfCcWwgxWeW18yiDLy8Z4qMAFEbYcK2RsIV8sYA3d
-         3yjIVomRf4foPQ2SYC8FMZCKNbYLNk8PEzK5dJU1TmcnnF/tgu6x/6pV7ghLLaiXjRhA
-         6YxKXHwDYkbLmHjvb5jcMC+TvcqG/3GHDsK5Pzl7LttMsmw15xcEJsd4kWKLb50ssS+o
-         NqJUuJZFs6uCBTIzSUpc1FjeWU5rpXc5e2QWWY4Eprx5Ps62TShXfGdjxbhNEpl0ueKM
-         StXblsHhrSwS6YhVC3HOlHiqqxmyuPVnLvwxyMBndO2T4uyEcDoTIlwhbXibZS2TnRgU
-         Izuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJuH3hWq9BAjRKjtwyqqPaLeP25CcCQquRuwKmfd7FVXJOrc7BMXdmBEUdqurzG2QR+pn6JkK5hZjXN9b7+Kh1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVKQa+yfiYnkKse57QXpdcKU8uGC6Er+zLtxy52HeVt6iIPUYh
-	q5cuFly/YvFU7HWhqKzAR6DS9fg/cs6ThEB32871hRRx/bOISSPujgzMJv8MKh1KvIPJvJXuLU1
-	v2cstnoPJ7ul3L/6N3uVQRrwKeNJKw+LV8+5aCZfe
-X-Gm-Gg: ATEYQzwqEwk/b9oa4Gl6npBHAFvOgZ+tGVLWTr87XG4Ju3bTxLQAO5ZXMSDv9tmHCU4
-	CXDb8FVSZU1mybcVfXaqRA80qLDuShxGVayCSt1IJ8Su7J9/Ql6XqcoNvkXFlaIrc8tdpYfJku2
-	VLUJT+arzdTNEjvHv2UG99VKYeirQbN04Eac2/GN2fb+DfxmlFVOzi/lq2nhjD2UQMyOBZyeHft
-	9DN7gVjSdE9hKOstBFe4UxeaAzMayYdj44eh1NCoakijJn67bGQ1g8XQiJrJSJ4lMFXhP4QxFNh
-	sM8Vga936K7oWyFIv+jb1averGg6HI0jfuE=
-X-Received: by 2002:a05:701b:240c:b0:124:748c:2ba5 with SMTP id
- a92af1059eb24-128ded303d2mr92041c88.13.1773155685951; Tue, 10 Mar 2026
- 08:14:45 -0700 (PDT)
+        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
+        b=DRp6XGpKi1tro+ed7z4klM+0atRDnaN68oan9kVj0Gq8+E5Nd6giBC074ylSEHreGN
+         /hrym5Apcqr16eap5oAs/ww/mHoMTJl16eDFQWUZJOX9Yhz2mHyDj/iRcJwwnZ4mq/X/
+         NWZp4ZZOqKIhoySG5HwICQafkSGDgbJLZZUxBXHFTMdEBgX62IxcSYwKa+YT4nawsJCC
+         DdDG4drJTXONhs9GfoDvZOxk5cbW9EOI02NHE8Jie+UySNoCOOVPEtTWaXL8Q1v9gxfo
+         zbV9U8MxBrXEQHxMptfug7T/gSvJIWh6OLN/MwkClBnRnfgyYXp4JAQz9AVUSjdQ8pyE
+         9SVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWenlHhiZOGnMDujnqfm0T7+mVy1z1cIfWGjUIDfHA1x2Y8WMaI2252V/BCyLJKXFjpPMccKS/DulYiXeGaxsFd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ3VsgshRuYK52s9EVBvBhK0p7oT5L81f1LYQYagLrQXPh+0V1
+	tindqkGfHBIkHVNQYnTIgHoj9Yhs6i4bnxKqV+jFHEgeYoDA1x+6s4Q8pVBKv3ZNGTpXF36bVse
+	rvlhSTSpf//NnwH+PekSLbBGPV3LP/Jok7l+ch2Bs
+X-Gm-Gg: ATEYQzwtFEXj0djbzNMSI+AdKc0mZ9e1L1xd4J9aneZWSC6tn+4MjX0n6uqfDjqTo+H
+	ucVLzY8jmgJeB0d3oYliRoBfx/7KNNLJpsgjVRm3Q74D9YN16zdzTVqHlrnjO1VV5h3Ab2EOpWT
+	xm0QOEvaSuYPnAXJRjXCIFka4NyPef8Fk9m3Fkdj+6IA2mjolA9i3GjRNkEQaDY6QgldZxtVULt
+	HA7USXVPp6ofrF5CyH8BLAC/WVUF/Xe5+ebSRMCUvvQjHgEBVd/ghqE9ZnqA1kQ6AalCyow4Xon
+	AVMnbJiBDm6dIVieOT5A2TD5T68DcDBQ4DM=
+X-Received: by 2002:a05:701b:4283:20b0:127:3459:3361 with SMTP id
+ a92af1059eb24-128de46eb5amr146652c88.6.1773156181028; Tue, 10 Mar 2026
+ 08:23:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309155728.98026-1-jbrnak@redhat.com> <20260309155728.98026-3-jbrnak@redhat.com>
-In-Reply-To: <20260309155728.98026-3-jbrnak@redhat.com>
+References: <20260309155728.98026-1-jbrnak@redhat.com> <20260309155728.98026-5-jbrnak@redhat.com>
+In-Reply-To: <20260309155728.98026-5-jbrnak@redhat.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 10 Mar 2026 08:14:34 -0700
-X-Gm-Features: AaiRm53BPJ0RBiTHtlpMJ4OULdsd8zTunFcO097ILpxH9H75gzAy_u5XLIPIBpk
-Message-ID: <CAP-5=fWuirFLnL9PzQbyYSVhtSSXGStNUiOBdtOV4Y4W45v27Q@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] perf test: Provide setup for the shell test suite
+Date: Tue, 10 Mar 2026 08:22:48 -0700
+X-Gm-Features: AaiRm50bxjtKAWvxiuYyAzM5u9GIwZxZgk_JuiU4S14Rm63ridp_JAfHigWFYxg
+Message-ID: <CAP-5=fWV2M1KpmPg114W5brc4_eMHNSw2TrJ_tPFs97+V5mL+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 4/7] perf test: Introduce storing logs for shell tests
 To: Jakub Brnak <jbrnak@redhat.com>
 Cc: acme@kernel.org, acme@redhat.com, linux-perf-users@vger.kernel.org, 
 	namhyung@kernel.org, mpetlan@redhat.com
@@ -97,15 +97,10 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Mar 9, 2026 at 8:57=E2=80=AFAM Jakub Brnak <jbrnak@redhat.com> wrot=
 e:
 >
-> Some of the perftool-testsuite test cases require a setup to be done
-> beforehand as may be recording data, setting up cache or restoring sample
-> rate. The setup file also provides the possibility to set the name of
-> the test suite, if the name of the directory is not good enough.
->
-> Check for the existence of the "setup.sh" script for the shell test
-> suites and run it before the any of the test cases. If the setup fails,
-> skip all of the test cases of the test suite as the setup may be
-> required for the result to be valid.
+> Create temporary directories for storing log files for shell tests
+> that could help while debugging. The log files are necessary for
+> perftool testsuite test cases also. If the variable PERFTEST_KEEP_LOGS
+> is set keep the logs, else delete them.
 >
 > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 > Co-developed-by: Veronika Molnarova <vmolnaro@redhat.com>
@@ -113,261 +108,261 @@ e:
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
 > ---
->  tools/perf/tests/builtin-test.c  | 30 +++++++++++++++++++-----
->  tools/perf/tests/tests-scripts.c | 39 +++++++++++++++++++++++++++++---
->  tools/perf/tests/tests-scripts.h | 11 ++++++++-
->  tools/perf/tests/tests.h         |  8 ++++---
->  4 files changed, 75 insertions(+), 13 deletions(-)
+>  tools/perf/tests/builtin-test.c  | 103 +++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests-scripts.c |   4 ++
+>  tools/perf/tests/tests-scripts.h |   3 +
+>  3 files changed, 110 insertions(+)
 >
 > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
 est.c
-> index 06507066213b..c1515fa8a947 100644
+> index c1515fa8a947..70f4a61357ec 100644
 > --- a/tools/perf/tests/builtin-test.c
 > +++ b/tools/perf/tests/builtin-test.c
-> @@ -264,6 +264,22 @@ static test_fnptr test_function(const struct test_su=
-ite *t, int test_case)
->         return t->test_cases[test_case].run_case;
+> @@ -6,6 +6,7 @@
+>   */
+>  #include <ctype.h>
+>  #include <fcntl.h>
+> +#include <ftw.h>
+>  #include <errno.h>
+>  #ifdef HAVE_BACKTRACE_SUPPORT
+>  #include <execinfo.h>
+> @@ -51,6 +52,9 @@ static unsigned int runs_per_test =3D 1;
+>  const char *dso_to_test;
+>  const char *test_objdump_path =3D "objdump";
+>
+> +/* Number of logged test suites. */
+> +size_t num_logged_suites;
+> +
+>  /*
+>   * List of architecture specific tests. Not a weak symbol as the array l=
+ength is
+>   * dependent on the initialization, as such GCC with LTO complains of
+> @@ -288,6 +292,85 @@ static bool test_exclusive(const struct test_suite *=
+t, int test_case)
+>         return t->test_cases[test_case].exclusive;
 >  }
 >
-> +/* If setup fails, skip all test cases */
-> +static void check_shell_setup(const struct test_suite *t, int ret)
+> +static int delete_file(const char *fpath, const struct stat *sb __maybe_=
+unused,
+> +                                                int typeflag, struct FTW=
+ *ftwbuf)
 > +{
-> +       struct shell_test_info *test_info;
+> +       int rv =3D -1;
 > +
-> +       if (!t->priv)
-> +               return;
-> +
-> +       test_info =3D t->priv;
-> +
-> +       if (ret =3D=3D TEST_SETUP_FAIL)
-
-The line above was flagged by AI review:
-
-  Does `ret` here contain a positive exit status from the child
-process? If `setup.sh` fails, `run_test_child()` returns
-`TEST_SETUP_FAIL` (-4) negated, which becomes an exit status of 4.
-Since `TEST_SETUP_FAIL` is -4, `ret =3D=3D TEST_SETUP_FAIL` will evaluate
-to false (4 !=3D -4). This might cause the test suite state to
-incorrectly transition to `PASSED_SETUP` instead of `FAILED_SETUP`,
-skipping the failure path and causing `print_test_result()` to fall
-into the default case instead of skipping the test.
-
-> +               test_info->has_setup =3D FAILED_SETUP;
-> +       else if (test_info->has_setup =3D=3D RUN_SETUP)
-> +               test_info->has_setup =3D PASSED_SETUP;
-> +}
-> +
->  static bool test_exclusive(const struct test_suite *t, int test_case)
->  {
->         if (test_case <=3D 0)
-> @@ -353,10 +369,9 @@ static int run_test_child(struct child_process *proc=
-ess)
->         return -err;
->  }
->
-> -#define TEST_RUNNING -3
-> -
-> -static int print_test_result(struct test_suite *t, int curr_suite, int c=
-urr_test_case,
-> -                            int result, int width, int running)
-> +static int print_test_result(struct test_suite *t, int curr_suite,
-> +                            int curr_test_case, int result, int width,
-> +                            int running)
->  {
->         if (test_suite__num_test_cases(t) > 1) {
->                 int subw =3D width > 2 ? width - 2 : width;
-> @@ -373,7 +388,8 @@ static int print_test_result(struct test_suite *t, in=
-t curr_suite, int curr_test
->         case TEST_OK:
->                 pr_info(" Ok\n");
->                 break;
-> -       case TEST_SKIP: {
-> +       case TEST_SKIP:
-> +       case TEST_SETUP_FAIL:{
->                 const char *reason =3D skip_reason(t, curr_test_case);
->
->                 if (reason)
-> @@ -488,6 +504,7 @@ static void finish_test(struct child_test **child_tes=
-ts, int running_test, int c
->         }
->         /* Clean up child process. */
->         ret =3D finish_command(&child_test->process);
-> +       check_shell_setup(t, ret);
->         if (verbose > 1 || (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL))
->                 fprintf(stderr, "%s", err_output.buf);
->
-> @@ -510,7 +527,8 @@ static int start_test(struct test_suite *test, int cu=
-rr_suite, int curr_test_cas
->                         err =3D test_function(test, curr_test_case)(test,=
- curr_test_case);
->                         pr_debug("---- end ----\n");
->                         print_test_result(test, curr_suite, curr_test_cas=
-e, err, width,
-> -                                         /*running=3D*/0);
-> +                                 /*running=3D*/0);
-> +                       check_shell_setup(test, err);
->                 }
->                 return 0;
->         }
-> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
-ripts.c
-> index 0f167365fb05..3703ad7b3b75 100644
-> --- a/tools/perf/tests/tests-scripts.c
-> +++ b/tools/perf/tests/tests-scripts.c
-> @@ -138,6 +138,12 @@ static bool is_test_script(int dir_fd, const char *n=
-ame)
->         return is_shell_script(dir_fd, name);
->  }
->
-> +/* Filter for scandir */
-> +static int setup_filter(const struct dirent *entry)
-> +{
-> +       return strcmp(entry->d_name, SHELL_SETUP);
-> +}
-> +
->  /* Duplicate a string and fall over and die if we run out of memory */
->  static char *strdup_check(const char *str)
->  {
-> @@ -196,6 +202,7 @@ static void free_suite(struct test_suite *suite)
->
->  static int shell_test__run(struct test_suite *test, int subtest)
->  {
-> +       struct shell_test_info *test_info =3D test->priv;
->         const char *file;
->         int err;
->         char *cmd =3D NULL;
-> @@ -206,6 +213,23 @@ static int shell_test__run(struct test_suite *test, =
-int subtest)
->         else    /* Single test case */
->                 file =3D test->test_cases[0].name;
->
-> +       /* Run setup if needed */
-> +       if (test_info->has_setup =3D=3D RUN_SETUP) {
-> +               char *setup_script;
-> +
-> +               if (asprintf(&setup_script, "%s%s%s", test_info->base_pat=
-h,
-> +                            SHELL_SETUP, verbose ? " -v" : "") < 0)
-> +                       return TEST_SETUP_FAIL;
-> +
-> +               err =3D system(setup_script);
-
-If `perf test` is run in parallel mode (`!sequential`), will
-`start_test()` fork a child process for each test case immediately?
-Since the parent process hasn't executed the setup, all child
-processes will inherit `test_info->has_setup =3D=3D RUN_SETUP` and execute
-`setup.sh` concurrently via `system(setup_script)` here. Could this
-lead to race conditions if the setup script modifies shared state?
-
-> +               free(setup_script);
-> +
-> +                       if (err)
-> +                               return TEST_SETUP_FAIL;
-> +       } else if (test_info->has_setup =3D=3D FAILED_SETUP) {
-> +               return TEST_SKIP; /* Skip test suite if setup failed */
+> +       /* Stop traversal if going too deep */
+> +       if (ftwbuf->level > 5) {
+> +               pr_err("Tree traversal reached level %d, stopping.", ftwb=
+uf->level);
+> +               return rv;
 > +       }
 > +
->         if (asprintf(&cmd, "%s%s", file, verbose ? " -v" : "") < 0)
->                 return TEST_FAIL;
->
-> @@ -247,6 +271,7 @@ static struct test_suite *prepare_test_suite(int dir_=
-fd)
->         }
->
->         test_info->base_path =3D strdup_check(dirpath);           /* Abso=
-lute path to dir */
-> +       test_info->has_setup =3D NO_SETUP;
->
->         test_suite->priv =3D test_info;
->         test_suite->desc =3D NULL;
-> @@ -329,7 +354,7 @@ static void append_scripts_in_subdir(int dir_fd,
->         int n_dirs, i;
->
->         /* List files, sorted by alpha */
-> -       n_dirs =3D scandirat(dir_fd, ".", &entlist, NULL, alphasort);
-> +       n_dirs =3D scandirat(dir_fd, ".", &entlist, setup_filter, alphaso=
-rt);
->         if (n_dirs =3D=3D -1)
->                 return;
->         for (i =3D 0; i < n_dirs && (ent =3D entlist[i]); i++) {
-> @@ -413,8 +438,16 @@ static void append_suites_in_dir(int dir_fd,
->                         continue;
->                 }
->
-> -               /* If no setup, set name to the directory */
-> -               test_suite->desc =3D strdup_check(ent->d_name);
-> +               if (is_test_script(fd, SHELL_SETUP)) {  /* Check for setu=
-p existence */
-> +                       char *desc =3D shell_test__description(fd, SHELL_=
-SETUP);
+> +       /* Remove only expected directories */
+> +       if (typeflag =3D=3D FTW_D || typeflag =3D=3D FTW_DP) {
+> +               const char *dirname =3D fpath + ftwbuf->base;
+> +
+> +               if (strcmp(dirname, "logs") && strcmp(dirname, "examples"=
+) &&
+> +                   strcmp(dirname, "header_tar") && strncmp(dirname, "pe=
+rf_", 5)) {
+> +                       pr_err("Unknown directory %s", dirname);
+> +                       return rv;
+> +               }
+> +       }
+> +
+> +       /* Attempt to remove the file */
+> +       rv =3D remove(fpath);
+> +       if (rv)
+> +               pr_err("Failed to remove file: %s", fpath);
+> +
+> +       return rv;
 
-AI review is flagging that desc may be NULL and lead to a SEGV:
-  Can `shell_test__description()` return NULL if `setup.sh` lacks a
-description format? If it does, `test_suite->desc` will be assigned
-NULL without falling back to the directory name. Later on, could this
-trigger a segmentation fault when `__cmd_test()` passes the
-description pointer to `strlen()`?
+Returning non-zero here will terminate the nftw, would it make more
+sense to always return 0 say as many files are cleaned up as possible?
+
+> +}
+> +
+> +static bool create_logs(struct test_suite *t, int pass)
+> +{
+> +       bool store_logs =3D t->priv && ((struct shell_test_info *)(t->pri=
+v))->store_logs;
+> +
+> +       if (pass =3D=3D 1 && (!test_exclusive(t, 0) || sequential || dont=
+_fork)) {
+> +               /* Sequential and non-exclusive tests run on the first pa=
+ss. */
+> +               return store_logs;
+> +       } else if (pass !=3D 1 && test_exclusive(t, 0) && !sequential && =
+!dont_fork) {
+> +               /* Exclusive tests without sequential run on the second p=
+ass. */
+> +               return store_logs;
+> +       }
+> +       return false;
+> +}
+> +
+> +static char *setup_shell_logs(const char *name)
+> +{
+> +       char template[PATH_MAX];
+> +       char *temp_dir;
+> +
+> +       if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name=
+) < 0) {
+> +               pr_err("Failed to create log dir template");
+> +               return NULL; /* Skip the testsuite */
+> +       }
+> +
+> +       temp_dir =3D mkdtemp(template);
+> +       if (temp_dir) {
+> +               setenv("PERFSUITE_RUN_DIR", temp_dir, 1);
+> +               return strdup(temp_dir);
+> +       }
+> +
+> +       pr_err("Failed to create the temporary directory");
+> +
+> +       return NULL; /* Skip the testsuite */
+> +}
+> +
+> +static void cleanup_shell_logs(char *dirname)
+> +{
+> +       char *keep_logs =3D getenv("PERFTEST_KEEP_LOGS");
+> +
+> +       /* Check if logs should be kept or do cleanup */
+> +       if (dirname) {
+> +               if (!keep_logs || strcmp(keep_logs, "y") !=3D 0)
+> +                       nftw(dirname, delete_file, 8, FTW_DEPTH | FTW_PHY=
+S);
+> +               free(dirname);
+> +       }
+> +
+> +       unsetenv("PERFSUITE_RUN_DIR");
+> +}
+> +
+>  static bool perf_test__matches(const char *desc, int suite_num, int argc=
+, const char *argv[])
+>  {
+>         int i;
+> @@ -627,9 +710,12 @@ static int __cmd_test(struct test_suite **suites, in=
+t argc, const char *argv[],
+>          * runs the exclusive tests sequentially. In other modes all test=
+s are
+>          * run in pass 1.
+>          */
+> +
+>         for (int pass =3D 1; pass <=3D 2; pass++) {
+>                 int child_test_num =3D 0;
+>                 int curr_suite =3D 0;
+> +               char *tmpdir[num_logged_suites * runs_per_test];
+
+Could we avoid a VLA with a calloc here? It is test code so I'd prefer
+correctness over performance.
+
+> +               unsigned int logged_suites =3D 0;
+>
+>                 for (struct test_suite **t =3D suites; *t; t++, curr_suit=
+e++) {
+>                         int curr_test_case;
+> @@ -663,6 +749,18 @@ static int __cmd_test(struct test_suite **suites, in=
+t argc, const char *argv[],
+>                         }
+>
+>                         for (unsigned int run =3D 0; run < runs_per_test;=
+ run++) {
+> +                               /* Setup temporary log directories for sh=
+ell test suites */
+> +                               if (create_logs(*t, pass)) {
+> +                                       tmpdir[logged_suites] =3D setup_s=
+hell_logs((*t)->desc);
+> +                                       /* Couldn't create log dir, skip =
+test suite */
+> +                                       if (tmpdir[logged_suites] =3D=3D =
+NULL) {
+> +                                               ((struct shell_test_info =
+*)((*t)->priv))->has_setup
+> +                                                       =3D FAILED_SETUP;
+> +                                       } else {
+> +                                               logged_suites++;
+> +                                       }
+> +                               }
+> +
+>                                 test_suite__for_each_test_case(*t, curr_t=
+est_case) {
+>                                         if (!suite_matched &&
+>                                             !perf_test__matches(test_desc=
+ription(*t, curr_test_case),
+> @@ -681,6 +779,9 @@ static int __cmd_test(struct test_suite **suites, int=
+ argc, const char *argv[],
+>                         for (size_t x =3D 0; x < num_tests; x++)
+>                                 finish_test(child_tests, x, num_tests, wi=
+dth);
+>                 }
+> +
+> +               for (size_t x =3D 0; x < logged_suites; x++)
+> +                       cleanup_shell_logs(tmpdir[x]);
+
+Perhaps it is worth commenting that leaving/leaking the logs in the
+event of an error is deliberate?
 
 Thanks,
 Ian
 
-> +
-> +                       /* Set the suite name by the setup description */
-> +                       test_suite->desc =3D desc;
-> +                       ((struct shell_test_info *)(test_suite->priv))->h=
-as_setup =3D RUN_SETUP;
-> +               } else {
-> +                       /* If no setup, set name to the directory */
-> +                       test_suite->desc =3D strdup_check(ent->d_name);
-> +               }
+>         }
+>  err_out:
+>         signal(SIGINT, SIG_DFL);
+> @@ -750,6 +851,8 @@ static int perf_test__config(const char *var, const c=
+har *value,
+>         return 0;
+>  }
 >
->                 append_suite(result, result_sz, test_suite);
->                 close(fd);
+> +
+> +
+>  static struct test_suite **build_suites(void)
+>  {
+>         /*
+> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
+ripts.c
+> index 3703ad7b3b75..c45b41b5bf07 100644
+> --- a/tools/perf/tests/tests-scripts.c
+> +++ b/tools/perf/tests/tests-scripts.c
+> @@ -272,6 +272,7 @@ static struct test_suite *prepare_test_suite(int dir_=
+fd)
+>
+>         test_info->base_path =3D strdup_check(dirpath);           /* Abso=
+lute path to dir */
+>         test_info->has_setup =3D NO_SETUP;
+> +       test_info->store_logs =3D false;
+>
+>         test_suite->priv =3D test_info;
+>         test_suite->desc =3D NULL;
+> @@ -438,6 +439,9 @@ static void append_suites_in_dir(int dir_fd,
+>                         continue;
+>                 }
+>
+> +               /* Store logs for testsuite is sub-directories */
+> +               ((struct shell_test_info *)(test_suite->priv))->store_log=
+s =3D true;
+> +               num_logged_suites++;
+>                 if (is_test_script(fd, SHELL_SETUP)) {  /* Check for setu=
+p existence */
+>                         char *desc =3D shell_test__description(fd, SHELL_=
+SETUP);
+>
 > diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-sc=
 ripts.h
-> index 1b849d4e70f4..013031239883 100644
+> index 013031239883..1dd91f1444e3 100644
 > --- a/tools/perf/tests/tests-scripts.h
 > +++ b/tools/perf/tests/tests-scripts.h
-> @@ -4,9 +4,18 @@
->
->  #include "tests.h"
->
-> -/* Additional information attached to shell tests */
-> +#define SHELL_SETUP "setup.sh"
-> +
-> +enum shell_setup {
-> +       NO_SETUP     =3D 0,
-> +       RUN_SETUP    =3D 1,
-> +       FAILED_SETUP =3D 2,
-> +       PASSED_SETUP =3D 3,
-> +};
-> +
+> @@ -16,8 +16,11 @@ enum shell_setup {
 >  struct shell_test_info {
 >         const char *base_path;
-> +       enum shell_setup has_setup;
+>         enum shell_setup has_setup;
+> +       bool store_logs;
 >  };
 >
 >  struct test_suite **create_script_test_suites(void);
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index f5f1238d1f7f..aa91859aeeb7 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -6,9 +6,11 @@
->  #include "util/debug.h"
 >
->  enum {
-> -       TEST_OK   =3D  0,
-> -       TEST_FAIL =3D -1,
-> -       TEST_SKIP =3D -2,
-> +       TEST_OK         =3D  0,
-> +       TEST_FAIL               =3D -1,
-> +       TEST_SKIP       =3D -2,
-> +       TEST_RUNNING    =3D -3,
-> +       TEST_SETUP_FAIL =3D -4,
->  };
->
->  #define TEST_ASSERT_VAL(text, cond)                                     =
-\
+> +extern size_t num_logged_suites;
+> +
+>  #endif /* TESTS_SCRIPTS_H */
 > --
 > 2.52.0
 >
