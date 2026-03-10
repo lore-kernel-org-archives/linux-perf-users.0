@@ -1,85 +1,53 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77920233D9E
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 03:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7AC3A785F;
+	Tue, 10 Mar 2026 04:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773113877; cv=none; b=mqjrtkdrAW/BM2Afn7QOoxLOWgHmEeDDetpvSqfmpl/Q650zwuJUxV98I8xWliJEcxoHdNPy0asrxNgJzTgO0fBdG3diDWdDochXG44OE9wjVi2FGaud5Ozqd943Z3WENDZwjeo2MSS2MBQwouioTLWBWxjXFtvhO5iS9DqPKEk=
+	t=1773115578; cv=none; b=B3yvWU1j5IX75H7neie3d2mZpSdzb4ASaVOS21Xa2I0vMESsy98pKOeaucC87qwmvSwbjmmf3R7tS6pAK+BQ3LyJA6a8L6ECRYf4FRqy+SPC2jFTJUgMpm3bkWZi2KDmTkqVBwP/BCUPRdTSdCXWWJHUAC3AzhyRgTtCu3VUyh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773113877; c=relaxed/simple;
-	bh=fHAdq3AOTRUlyMoegZmRVCGP/gYnsge9SZytjjH/BeY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BnyAziw6iTQDCn9E/7+4ie5vlOm289NmwA4632pDdcmLbpaEhwwOAHBzXKo0sy9sXQ+ykWTP4trsQXRMfDl28QqRa8aU+lTpUSPKBqtg477vWBO9DdZElgHMFcxkyiW0PuHK4jCtG3fPziVCh72Ut+8l6XLqHJUDedFQd2GpEkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9/mwvRP; arc=none smtp.client-ip=209.85.221.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773115578; c=relaxed/simple;
+	bh=9K++Md/MjH3xmXm7C56VANAqYK/MiIVgFmlgdnFSmo4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YQKd2Yx1uwK2YhLZeMJDv507WqGiC4NQ8zcew4rrYd6dFfphvcpxYZi9GaOIHxzioAz/EY9/Gwy/yChSwde+o2WremLKrI1KxA4rjpDG9fWKuxORKIHjmztxaEV9YlMKwBg9gOkKW8g3RuzxXJ4IodivuHrYLTg6TxLqMZFCmuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=McFMh+f4; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9/mwvRP"
-Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-439af00d33cso9391647f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Mar 2026 20:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773113875; x=1773718675; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a3O9gfhS/C+fzzyiVz/DN7Hm9aqoIX4yPfxjmSLP5xg=;
-        b=Z9/mwvRPNLAcjxQ1YcfI6n6aNRPFnX9npLV1S3oyJ6aUfFeNR8GYBiVDx8ORQxEOL0
-         kVztxQsd7l+gfb9exZK3Ob5EOKT6dEguimr8g4NBH5SYq1OJjJUOVwHn43ZBJ9Lul9JU
-         Uit74q5sYzm7JSGfjivGLhsx3M9xMTrR0K3YiSFURx3iWLWTS2S6zhvLC0FMYHuEZ9pE
-         5yb/SNJe1K8gXg9tZYwyCKPA4pcsrb9L5i+frT9yATVH/InovuotoI/RvtO5TanDXyBj
-         nSZ/p+dY+6UNuQI6c5Dp5sxMeh978rqGrC7DU11OkU32DgorQ00YvWor2t4mpkqgW0Ub
-         gv/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773113875; x=1773718675;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=a3O9gfhS/C+fzzyiVz/DN7Hm9aqoIX4yPfxjmSLP5xg=;
-        b=ChieIAFwA3R0O9i3MjhEZ5mFatIEZt4yI7iO+H52U1x4DQyeDUzzyV2WDLs+mcS8N3
-         ItVc0gqdTWJphZ0RndcOCgj3q8lJZKGq4YMjnR/nZxVMJjdFHMbW7ftglay7JseoLEUU
-         nEG1Qa9aJTqf1fYCHg9tZ7/VbyZu3okS6rget6ZGo/xWEhdmenfsQuVnWEkRcTyeKdEk
-         ZMSj3u67jORrOxMlzyAX6yS1SqY9ZeGKAldgUE7cyg5EFqLxFjRbs68JzzKbRN5Y5Yb7
-         /wx7GpKu7WCeAHPN+k3oLH87itaa/tJnokW6klusIzOR6x/SfZG6Nu7kadoloRxETRV/
-         b6Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCXva0Jd58lnvpT4z40G/xFObbXYTa2Be+nI/5ZXR9+La7rmvOsgnNNJsmXf8Jfwz4V/NAafqT3MrSFeyp40SZsy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkpmhU9l/XiwLcuwxPfhzGGPlu39wX/+8uPJiIKeBLBDqCaIDi
-	ZpZZ9usKKm9f/DQoQicHlhiHcGZoIpJTAKVEwhRQx9clTDUGjYotWw+R
-X-Gm-Gg: ATEYQzxGwJ2gCmf1ebf4pysoDp4kzGelDjMB3PZOH1iHgAyGbI1/ah1JDhHNAcrYp8Z
-	esBM3hfTXjebklrPyOJ4eRDsvMtq7zQu2AfuLG7Ew0+jsr9nQgAcRIGKKk+wZXtGONyBHZFvYjL
-	yK+TSMYywnHFi94BtW0Orax6BWxgkXdsYo8ckPlU5HZPlmubMXB3OLvYMpQRwt5w+VMKJKWGIOg
-	efZgfUEAlczTUkHsAgMRtYEdisKeEMWZ4b54HCOLcrwr6c1UIEJfHXQ5eP3Ng5BTlXn86faVpPD
-	c5DlbLIfdA9iESWeOBS0SM5dbQ6/CedBbaRKseTn2vLLaKldLzpoT7aA0E6SRjZV2DBseY0HD4Y
-	ypDlQbGm+YAje6l6JDsGkbAKvAvXrCbTp6v+Ald2LBV5dytxVkNsb5jVmLVYBq2JBCLtADC6UTf
-	NJzzJ+eJGd+n3zBsotWsCTm3LPnXyMcCxe/DH/WBuXmf4U26YsiA==
-X-Received: by 2002:a05:6000:2003:b0:439:cd10:aaf1 with SMTP id ffacd0b85a97d-439da89d477mr24263538f8f.53.1773113874639;
-        Mon, 09 Mar 2026 20:37:54 -0700 (PDT)
-Received: from lima-ubuntu.hz.ali.com ([47.246.98.213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dae57c05sm29700525f8f.39.2026.03.09.20.37.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 20:37:54 -0700 (PDT)
-From: Qing Wang <wangqing7171@gmail.com>
-To: irogers@google.com
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	peterz@infradead.org,
-	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com,
-	wangqing7171@gmail.com,
-	yuhaocheng035@gmail.com
-Subject: Re: [PATCH] perf: Fix deadlock in perf_mmap()
-Date: Tue, 10 Mar 2026 11:37:42 +0800
-Message-Id: <20260310033742.3606390-1-wangqing7171@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAP-5=fW3jcUyOOF5ikEUHbp8r=yMZE=iUPVesUhcba38T8ayZA@mail.gmail.com>
-References: <CAP-5=fW3jcUyOOF5ikEUHbp8r=yMZE=iUPVesUhcba38T8ayZA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="McFMh+f4"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Fbjjlmiz5ZApf0Q+rqPuA7UgQQGuX/gPvGaAJQO5+Mc=;
+	b=McFMh+f4hGy8IXxc6kwDTSfAMeEBahCrcocJhkFJpYcSiBEkqc+GV/Wmq5HmQR3kddUwpduLY
+	mkxdXmtJikPqDYG2albAnj2o1t7M6qqKETnjzXcijlsmSiEFkgZObKNuUF9Q3mBxR8eHS9T0Zch
+	24BDwjaf9gfp54d/gMcPQP0=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4fVKt90MJvzcbS0;
+	Tue, 10 Mar 2026 12:00:49 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 26C6F40538;
+	Tue, 10 Mar 2026 12:06:13 +0800 (CST)
+Received: from localhost.huawei.com (10.90.31.46) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 10 Mar 2026 12:06:12 +0800
+From: Qinxin Xia <xiaqinxin@huawei.com>
+To: <namhyung@kernel.org>, <irogers@google.com>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <wangyushan12@huawei.com>,
+	<hejunhao3@h-partners.com>, <jonathan.cameron@huawei.com>,
+	<xiaqinxin@huawei.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+	<linuxarm@huawei.com>
+Subject: [PATCH v2 1/1] perf: Add --pmu-filter option for filtering PMUs
+Date: Tue, 10 Mar 2026 12:06:07 +0800
+Message-ID: <20260310040607.1780971-2-xiaqinxin@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20260310040607.1780971-1-xiaqinxin@huawei.com>
+References: <20260310040607.1780971-1-xiaqinxin@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -87,49 +55,177 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-On Tue, 10 Mar 2026 at 02:59, Ian Rogers <irogers@google.com> wrote:
-> Hi Qing, thank you for looking into this. I proposed a similar fix:
-> https://lore.kernel.org/lkml/CAP-5=fW-wHEv=TCULwk_HVOhWHdqRd8AZoESZsU_vnhLjghUBQ@mail.gmail.com/
-> but Haocheng noted it reintroduced the race condition the original fix
-> was targeting. Haocheng has a larger fix in:
-> https://lore.kernel.org/lkml/20260306093616.84299-1-yuhaocheng035@gmail.com/
-> that should handle both the original race condition and the deadlock.
+This patch adds a new --pmu-filter option to perf-stat command to allow
+filtering events on specific PMUs. This is useful when there are
+multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
 
-Oh, this fix is too large.
+[root@localhost tmp]# perf stat -M cpa_p0_avg_bw
+ Performance counter stats for 'system wide':
 
-> I wonder that fix may be made smaller by passing a parameter like
-> "holds_event_mmap_mutex" to perf_mmap_close, something like:
-> ```
-> static void __perf_mmap_close(struct vm_area_struct *vma, struct
-> perf_event *event, bool holds_event_mmap_lock)
-> {
->    ... // code from original perf_mmap_close
->    if ((!holds_event_mmap_lock &&
-> !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-> ||
->        (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)))
->      ...
-> 
-> static void perf_mmap_close(struct vm_area_struct *vma)
-> {
->        struct perf_event *event = vma->vm_file->private_data;
->        __perf_mmap_close(vma, event, /*holds_event_mmap_lock=*/false);
-> }
-> 
-> static void perf_mmap_close_locked(struct vm_area_struct *vma, struct
-> perf_event *event)
-> {
->        __perf_mmap_close(vma, event, /*holds_event_mmap_lock=*/true);
-> }
-> ```
-> 
-> Thanks,
-> Ian
+    19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+                 0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
+                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
+                 0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
+    19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
+                 0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
+                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
+                 0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
+    19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
+        75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
+        18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
+                 0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
+    19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+                 0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
+                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
+                 0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
 
-LGTM, your fix is better.
+      19.417734480 seconds time elapsed
 
-But, can you explain why there is still race issue after applying my patch?
+[root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
+ Performance counter stats for 'system wide':
 
-Thanks,
-Qing
+     6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
+        50,548,465      cpa_p0_wr_dat
+         7,552,182      cpa_p0_rd_dat_64b
+                 0      cpa_p0_rd_dat_32b
+
+       6.234139320 seconds time elapsed
+
+Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+---
+ tools/perf/Documentation/perf-stat.txt |  4 ++++
+ tools/perf/builtin-stat.c              | 19 +++++++++++++++++++
+ tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
+ tools/perf/util/parse-events.c         |  2 +-
+ 4 files changed, 37 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 7cccc3a847d1..b72a29c9223c 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
+ Only enable events on applying cpu with this type for hybrid platform
+ (e.g. core or atom)"
+ 
++--pmu-filter::
++Only enable events on applying pmu with specified for multiple
++pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
++
+ EXAMPLES
+ --------
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 73c2ba7e3076..69c83a5beb71 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1214,6 +1214,21 @@ static int parse_cputype(const struct option *opt,
+ 	return 0;
+ }
+ 
++static int parse_pmu_filter(const struct option *opt,
++			   const char *str,
++			   int unset __maybe_unused)
++{
++	struct evlist *evlist = *(struct evlist **)opt->value;
++
++	if (!list_empty(&evlist->core.entries)) {
++		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
++		return -1;
++	}
++
++	parse_events_option_args.pmu_filter = str;
++	return 0;
++}
++
+ static int parse_cache_level(const struct option *opt,
+ 			     const char *str,
+ 			     int unset __maybe_unused)
+@@ -2561,6 +2576,10 @@ int cmd_stat(int argc, const char **argv)
+ 			"Only enable events on applying cpu with this type "
+ 			"for hybrid platform (e.g. core or atom)",
+ 			parse_cputype),
++		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
++			"Only enable events on applying pmu with specified "
++			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
++			parse_pmu_filter),
+ #ifdef HAVE_LIBPFM
+ 		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
+ 			"libpfm4 event selector. use 'perf list' to list available events",
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 46bf4dfeebc8..89b83ca38483 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
+ 				      const char *metric_or_groups)
+ {
+ 	const char *pm_pmu = pm->pmu ?: "cpu";
++	struct perf_pmu *perf_pmu = NULL;
+ 
+-	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
++	if (pm->pmu)
++		perf_pmu = perf_pmus__find(pm->pmu);
++
++	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
++	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
+ 		return false;
+ 
+ 	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
+@@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+ static int parse_ids(bool metric_no_merge, bool fake_pmu,
+ 		     struct expr_parse_ctx *ids, const char *modifier,
+ 		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
+-		     struct evlist **out_evlist)
++		     struct evlist **out_evlist,
++		     const char *filter_pmu)
+ {
+ 	struct parse_events_error parse_error;
+ 	struct evlist *parsed_evlist;
+@@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
+ 	}
+ 	pr_debug("Parsing metric events '%s'\n", events.buf);
+ 	parse_events_error__init(&parse_error);
+-	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
++	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
+ 			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
+ 			     /*fake_tp=*/false);
+ 	if (ret) {
+@@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
+ 					/*modifier=*/NULL,
+ 					/*group_events=*/false,
+ 					tool_events,
+-					&combined_evlist);
++					&combined_evlist,
++					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+ 		}
+ 		if (combined)
+ 			expr__ctx_free(combined);
+@@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
+ 		}
+ 		if (!metric_evlist) {
+ 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+-					m->group_events, tool_events, &m->evlist);
++					m->group_events, tool_events, &m->evlist,
++					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+ 			if (ret)
+ 				goto out;
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index b9efb296bba5..789ff4d15e47 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -429,7 +429,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
+ 	if (parse_state->pmu_filter == NULL)
+ 		return false;
+ 
+-	return strcmp(parse_state->pmu_filter, pmu->name) != 0;
++	return perf_pmu__wildcard_match(pmu, parse_state->pmu_filter) == 0;
+ }
+ 
+ static int parse_events_add_pmu(struct parse_events_state *parse_state,
+-- 
+2.33.0
+
