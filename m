@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3355232B9AC;
-	Tue, 10 Mar 2026 15:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF3A315D53;
+	Tue, 10 Mar 2026 15:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773155268; cv=none; b=ONVa05H7+Q41naFqM6EFONVnGRhSnZhlz8SAuO/CYkbKH6Kkr04+WGacoNKzenFugtlr678iGGAd3/KhOm6W3b7wBC5gG8OLwhBraAzp0hv0K/1xvHfghy6qb1NegBNmvhDcvsNs/tKk6piG0DP+EHfVOwezLHEiNvu0Jb+RQuA=
+	t=1773155349; cv=none; b=c1fpy5K9nFfJwBT7eLo1diSDXQWSbAZinOHSgwq/6GKxHL1DlG0f4QGgectrp9Wzqgbzo9zBPig0T2a+puiQB13HQydHeL0lx757s+abgVkan7d9q99Tl8GnKgFZEbgboUnLArfO7KaRv2nxhf+P7zzGwNkN1EZ02pGUvETxfMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773155268; c=relaxed/simple;
-	bh=1JjbbpVAuDTFJr9BiTjIUOKyxdt9pu9MrW0LTOaSxpI=;
+	s=arc-20240116; t=1773155349; c=relaxed/simple;
+	bh=xpu+/Y7IXw7kv7ph2+TBjL6fozsm071ZHQjOXtti3bI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EeI5iHA4McR/49su9IhvLXgmaapiXHNs+ZO1OHjBnDX/tZfberzfWSUx6L7QZWcfHI8j5Kye7TQ4+/kPK+hSWdB+a8rKLfhwYSqhdujM0/ywKS032U55a6vkisyPuGpQFxWo932Gon6QBXXQzN2LSQ5csJnoMssH3JD4hiCV5R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRqJblz5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kAEBPw9+svO4Ph4vV2bGR6vEnDOfaMFUmcxf459lj1VVXKOM5Dh1qaFGviuaLNlgj94IYRHLklos9HBD3jMmA60/mj2pSzxPWKUOkilr4hbkQYCl6jSiHwjzWcQksnUrInmgDScdKoCi0pR0zXk6ZTa5JjdaZ7PgUyQcs+q3GGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ8dZRa2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRqJblz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4832DC2BCF5;
-	Tue, 10 Mar 2026 15:07:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ8dZRa2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB1BC19425;
+	Tue, 10 Mar 2026 15:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773155267;
-	bh=1JjbbpVAuDTFJr9BiTjIUOKyxdt9pu9MrW0LTOaSxpI=;
+	s=k20201202; t=1773155349;
+	bh=xpu+/Y7IXw7kv7ph2+TBjL6fozsm071ZHQjOXtti3bI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CRqJblz5VHdSHFerr3HqI7/vzGhbxeSGX6fivsvmQCLytOn/xpAa+Yg8rqzvADRB6
-	 SFphmwAK8gcuOnKzbcsKB9NvGb6dkRCxCzlDTvO1APIRI8RtyJD863Amn8p982fs9d
-	 +G4Xhm7u7eMZzi67Q/W2cD0bVp2NwtdFiU1ynwL8JVOba8RiU6M0Hm98k2O4lHyZLp
-	 FqkcxK1U9nV89Qo7QHKjPlRdeSE5r0t4oI9qIo30TT9bDBZIzAAvel3XLJ8GwYZqsO
-	 IDqM5Wwcn6Qa0FZAiOLinECs4Kl/du7HsiLhw2FwJj/BUfF5mK/r3I5/y8c3mpSQe+
-	 hBDsqkO1iHnrQ==
-Date: Tue, 10 Mar 2026 12:07:44 -0300
+	b=CJ8dZRa2bmw2imx3gmkSFTmWLwxOdWF4i5ig1jBvdk99p5qkpUONjydKwrqMFxTFZ
+	 /ElXCdhdU+ogCBNLV+XvGe33ywtB/I2aijgdtuGMyS6JY55oWrkTgVxJctZ/w7N/MP
+	 db6HoLQXB8jL932tL7IB3GDDNkDHDE9oJUxmXgD+dRG1XXq47oQcbUu8LQmZ03w2vR
+	 hUypMpXeOO+g9RyyLi3qlT94O2aCyhMT9qXp9PuDMSEdhGZxrXIgozcv7Kw0P8dDfd
+	 TiJsyjLwSS89MXRc5zxng81/xTIIXWSih5A4SPKvUgskNhAH5C9IMZoz2xetQAxPXF
+	 /IpzryJLZbHaQ==
+Date: Tue, 10 Mar 2026 12:09:05 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: pcc@google.com, namhyung@kernel.org, adrian.hunter@intel.com,
@@ -38,7 +38,7 @@ Cc: pcc@google.com, namhyung@kernel.org, adrian.hunter@intel.com,
 	nick.desaulniers+lkml@gmail.com, peterz@infradead.org
 Subject: Re: [PATCH v1] perf annotate loongarch: Fix off-by-one bug in
  outside check
-Message-ID: <abAzwFW5iZk4XWH7@x1>
+Message-ID: <abA0Eb6vdh4pibpg@x1>
 References: <20260304190613.2507582-1-pcc@google.com>
  <20260306185306.2017505-1-irogers@google.com>
 Precedence: bulk
@@ -54,12 +54,13 @@ In-Reply-To: <20260306185306.2017505-1-irogers@google.com>
 On Fri, Mar 06, 2026 at 10:53:06AM -0800, Ian Rogers wrote:
 > A copy-paste of an issue fixed by Peter Collingbourne in:
 > https://lore.kernel.org/linux-perf-users/20260304190613.2507582-1-pcc@google.com/
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied to perf-tools, for v7.0.
 
 - Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+
 > ---
 >  tools/perf/util/annotate-arch/annotate-loongarch.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
