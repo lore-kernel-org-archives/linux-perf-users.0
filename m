@@ -1,65 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDC63D16EC;
-	Tue, 10 Mar 2026 17:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FC7C3D4110;
+	Tue, 10 Mar 2026 17:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773164521; cv=none; b=SL4erLFXSjXKQu8r45FAT7dQYRze3OHKs+weSbzifXs6tYUbNWvcO334S9siN3gjlpYwhaUypmTXFb3e3nDeTir+DuZKoNuH4VTIoywSnQPXpjNIOKYl/VKbRVsMsxQbTkPubHCRdtCbJYGi3fiUMP06NLQeXRhEDuTq/x49Odc=
+	t=1773165060; cv=none; b=lP3afinlT8LFcz8WMUYPUTllUji92K6SMHfJi2+7bwHJEX3u098OBVtp/SO5GLjvoKi/ESu5EN/gR/T7AyQMxLPWpxJcKrfJBLbZvXR5DHRzqdN+8Xuo6U2Ul6xJFvs7VituIkwi7u5MVHeF8wzJZEkEC5V+SscnqAJpz4onnF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773164521; c=relaxed/simple;
-	bh=flcvGrxGSQcM/HvyJsep1dEanimE9giUMZLN+nEKLMo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cHOuqlra+4MOlRhBZVU03fd4NTH6aeqb8FoTiAMTHHs4p2feJ60xMBIqY6wyyUzCRLAloB4P2xDjK9ItRk+pbdimsQaY1k/+MN3xWT1Mn7A4PTBuKluCiKbme6g759q/9HXFlBWvlcJ/PXWKKlluYOFnh+luglaXoOqgcaltwvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHW+21dV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHW+21dV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03BCC19423;
-	Tue, 10 Mar 2026 17:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773164520;
-	bh=flcvGrxGSQcM/HvyJsep1dEanimE9giUMZLN+nEKLMo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FHW+21dVhKhjrp0LgyqZeYTm+4ULKNWpsg1tBvzNt2BlsEpW/xSKLTOpXjaK/A4pE
-	 /m2YPqMvB3TPQ6bGS11UCkwhIUVCGWflwi+IhDRAanhfDTGOlnHrBsOMoB8aTj9I3/
-	 oXxpjqGrsmVPRsc6WAviJvpTt/vOLF0iRNcw6+RNfR434T3BXQC8J43+sSvwVP27u3
-	 uR0hXYu0TH3ta69tr46t96bmjQWQ++Qd25x6bBTyTKzUo6YuNnM5mjIAAcLX66kSAc
-	 S1s/wfzKPtv+MQJbldeo+Qw1RCrFpwj4Dzy1vhnWxA/59Oqy2ojd7THrJXHldTt2kG
-	 wXyTEx1AO4I0w==
-From: Namhyung Kim <namhyung@kernel.org>
-To: irogers@google.com, james.clark@linaro.org, john.g.garry@oracle.com, 
- will@kernel.org, mike.leach@linaro.org, leo.yan@linux.dev, 
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
- adrian.hunter@intel.com, peterz@infradead.org, mingo@redhat.com, 
- acme@kernel.org, Besar Wicaksono <bwicaksono@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- tmakin@nvidia.com, vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com, 
- ywan@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, mochs@nvidia.com
-In-Reply-To: <20260212233407.1432673-1-bwicaksono@nvidia.com>
-References: <20260212233407.1432673-1-bwicaksono@nvidia.com>
-Subject: Re: [PATCH v2] perf vendor events arm64: Add Tegra410 Olympus PMU
- events
-Message-Id: <177316451973.3633010.4596572843813142614.b4-ty@kernel.org>
-Date: Tue, 10 Mar 2026 10:41:59 -0700
+	s=arc-20240116; t=1773165060; c=relaxed/simple;
+	bh=WcpIf4jmyVmqqaM72AFjCpjIwQJCn0VVYDwmYUBwxoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S3VICnZZCrGKg86pzGY/0E/XQOLpps97xOwGczAg3IyfwbhUv9SrdtBmOZgazYTvmyD8IEmyWP4spYBIP194mxSsSDCjH2aHWuf7G81sYj0XgNGTUvG8bwK8UdUkbx+wEcvbYRP8LDUHZHhBOihiNJYe0C9+KvEufod5MNO3EbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1C1A169C;
+	Tue, 10 Mar 2026 10:50:51 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81E153F694;
+	Tue, 10 Mar 2026 10:50:57 -0700 (PDT)
+Date: Tue, 10 Mar 2026 17:50:55 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 27/30] selftests/bpf: Append extra cflags
+Message-ID: <20260310175055.GE4153946@e132581.arm.com>
+References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
+ <20260308-tools_build_fix_zero_init-v3-27-6477808123b7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260308-tools_build_fix_zero_init-v3-27-6477808123b7@arm.com>
 
-On Thu, 12 Feb 2026 23:34:07 +0000, Besar Wicaksono wrote:
-> Add JSON files for NVIDIA Tegra410 Olympus core PMU events.
-> Also updated the common-and-microarch.json.
+On Sun, Mar 08, 2026 at 04:46:32PM +0000, Leo Yan wrote:
+> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
+> the compiler.
 > 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+
+FWIW, this patch causes bpf selftest build failure and was reported in:
+
+  https://github.com/kernel-patches/bpf/actions/runs/22825654003
+
+The Makefile reuses CFLAGS for clang to build urandom_read, which may
+cause GCC specific flags to feed to clang and causes errors.
+
+The updated patch will introduce a new variable URANDOM_READ_CFLAGS,
+without appending EXTRA_CFLAGS, this can effectively avoid incompatible
+options.
+
+Thanks,
+Leo
+
+> ---
+>  tools/testing/selftests/bpf/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-Applied to perf-tools-next, thanks!
-
-Best regards,
-Namhyung
-
-
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> index 72a9ba41f95ebb825d25799c07ba3f0311243e45..29dfcdbe98c781b53f1e87dcebecf2027bafcd5d 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -49,6 +49,7 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
+>  srctree := $(patsubst %/,%,$(dir $(srctree)))
+>  endif
+>  
+> +CFLAGS += $(EXTRA_CFLAGS)
+>  CFLAGS += -g $(OPT_FLAGS) -rdynamic -std=gnu11				\
+>  	  -Wall -Werror -fno-omit-frame-pointer				\
+>  	  -Wno-unused-but-set-variable					\
+> 
+> -- 
+> 2.34.1
+> 
