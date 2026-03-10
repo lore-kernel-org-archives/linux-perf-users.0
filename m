@@ -1,156 +1,196 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012062.outbound.protection.outlook.com [52.101.53.62])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C05F42B750;
-	Tue, 10 Mar 2026 10:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773137302; cv=fail; b=JHyapwGOLufxBcTnQC5l3Xq7M4cNwYyJI7M7+/qoIUPgdBiqIaPc9Q4TlfKpfLlhO6FWZmnddwxvANeLs8wJy0VjbVGGjVf/7G+ezmzLXJXQbjnAcWvlcuJZwP8kTGjXb1CX911WleDn9e5uRBoKoPaPjE+ux1gxgPFc9qfkjsE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773137302; c=relaxed/simple;
-	bh=UmwYAzyiB0RQ1Eq7FLxiWY5g9oy/a3ydU6bMcV6Ru+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pr3nCxrMgXTu+ZEhwFOVGVTEBt2pn7TJ64mksUqhE98XKtuRQNQ/FTRF6T/8dR7907xPy7w10INeyNBZbpaPlEvk+kChN8p4lF/+OKd7O/YEGurAxl41Yf0XZ2//9OwBYzAMhnTY2F0z/ZVTXM6TpRRue9DTVhNNLtBYMA2KTao=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oxcykaGn; arc=fail smtp.client-ip=52.101.53.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECA243DA2B;
+	Tue, 10 Mar 2026 10:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773137674; cv=none; b=iGfEfv8zu7kW6uMsHHlFrCRTh9/HhT+9QZNcMi7MnT6jvH3kXJJBapFFB+cMsc3d8bN3QswToobxVUm013omHiYhrMUmn0LaLjEN8Q4xyaixhUWKo4wGW/MUZ0i0bRE2U9BWlC8Je5AV3zf9LjbcX/BSGEdriXgwaVb2E2SfQ5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773137674; c=relaxed/simple;
+	bh=kTvCXDglSMMQvrZ5eq2/6jOsZYTsvbROi36DsOdkY+w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=raaMIK1jPswx9HnORLSCU6rW2Q34s6Hhho9jLLN6tirS/ZLcXLNz62cxg74KDQ725NC9eiFKpuPtFsf7YSrsv6GlQvAG6qaCekcQqGr2TBzDd4EMdSlNZUgQpFzyqpgsHnoS+ibxTWX2ua0Id8RRUB0DpH0qxEX7B1bgGKtktMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=DKl+8A9L; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oxcykaGn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mifYNh3e3KJPIr7d/OeGEU1YmX9NUwvFNXHJyjdFaxvP2j7hgSZWbhiyYqSp4PIN/8bB8BQgMFw1F/+s/i9dY//fhxo/zT16Jok0fDBfmZhry2X8CE3gqWipR0SAz9vhXeIUa7H5LImdec35TB7DCRG3Cf78gR4hYwIqqfL/QjvTwCkO8Z45j87DI8jLYRqmBFkSGOXTUc+F5GSzVaaK3lHidWKkwmB46w1XMh8hEvLokvhmEe0FKVzq669iiK8qvcoUSjAg9z+QOR9aygGuh716IzkNb7cyNvZpso03HyphkVIhdkVHqVKjT+gBSIduSs+7ybkMniaAjN8v+mhElw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bh48anBO1ploRY5gEhfKAjxGWxbiTY4oirL5owCkuTw=;
- b=oBK1vmvEQiKsjr78tfhUY2ZyKiJDcqXnYmUUstOtMLfvtE0JPFOPF8h4wzK5G+vQE6X8LxEaqMTkD4nzirsyEZPF2OV4WnM2hfY/21MEPt8dBbgH1rAmQBKzLG/ZshQACgOoDLlknlkwa54LWYj1QQ3VG/RCUX+JVjqnt4jrLEY0iJ9lT1oG79LxdV2IqcxrkpN2QO5r6fLAsH/yXBqTLA5lUMu3VxNoNDb6N0Cd1NEPqtthAqfJPillEEZdxuE9N4sBlmHtzn/mFe9FZnOlwyN+7SXcIykHRsqWlpn+OQhx0D3pUK3pjF5SUG3Y9wk+qi68EFO5vSYmDIImTjTfpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bh48anBO1ploRY5gEhfKAjxGWxbiTY4oirL5owCkuTw=;
- b=oxcykaGnRFxucja5RjssYHiFCY0eW5bTFoFXm/OGkNi1eHsyfNJDqeqP2STbsgS6XvA2twQ/UB4WB0P/XXaV87ZQ0cP+GivC+rAg3J44ICyKjnBRjotd7AVYzPpAmJs2FKpMDaWwVtz4JrYEq/DGuJ9bnQwtIsp7rU7On5rJi9g=
-Received: from BL1PR13CA0365.namprd13.prod.outlook.com (2603:10b6:208:2c0::10)
- by LV2PR12MB5823.namprd12.prod.outlook.com (2603:10b6:408:178::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
- 2026 10:08:15 +0000
-Received: from BN2PEPF00004FBF.namprd04.prod.outlook.com
- (2603:10b6:208:2c0:cafe::94) by BL1PR13CA0365.outlook.office365.com
- (2603:10b6:208:2c0::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.18 via Frontend Transport; Tue,
- 10 Mar 2026 10:08:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN2PEPF00004FBF.mail.protection.outlook.com (10.167.243.185) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9678.18 via Frontend Transport; Tue, 10 Mar 2026 10:08:15 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Tue, 10 Mar
- 2026 05:08:14 -0500
-Received: from satlexmb07.amd.com (10.181.42.216) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Mar
- 2026 05:08:13 -0500
-Received: from [10.136.32.224] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Tue, 10 Mar 2026 05:08:04 -0500
-Message-ID: <bda6c5d3-94cc-4f34-a3b6-b9a50c6b28e8@amd.com>
-Date: Tue, 10 Mar 2026 15:38:03 +0530
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="DKl+8A9L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=2ku8YpBCRFl5lmli1qzDWV/ZYCmF2JRzCMFWRdL9mEo=; b=DKl+8A9LxG8O/Fvs33AEvVMga8
+	0+cJpsQpec2iZXwxjdmvV5zFY/2A+APzzMMcZNWf75R+wi//pU9iy6RijjGAnMtxrM3jLuTnqzuvc
+	2YcJiRtmfKlm/ErmBXsFzi0RdTzKKscelN9bceenTvnLUQB2e8lmLvIS5UvM2e49PAPLj5orD6J7B
+	ZfHE6mkhQ/Hca97a0SWJ5fE1VKg9YhE0JXo7Rmt3ApHAmqVaDqeC/+s2tTZcomJwT65s6GOMGVOvo
+	9UgIdpyzxFqQi2HPV/LwAUuvyo0N8VkgN+fuDa7Y/Xw/OjNDSBjftd6eLuVTV+zVKYe/4t8dxW6Ug
+	m5U3Duvw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vzu6J-002vDH-Ml; Tue, 10 Mar 2026 10:14:08 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 10 Mar 2026 03:13:16 -0700
+Subject: [PATCH v2] perf/x86: Move event pointer setup earlier in
+ x86_pmu_enable()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/10] perf sched stats: Add support for live mode
-Content-Language: en-GB
-To: Ian Rogers <irogers@google.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <james.clark@arm.com>, <ravi.bangoria@amd.com>,
-	<yu.c.chen@intel.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<sshegde@linux.ibm.com>, <ctshao@google.com>, <quic_zhonhan@quicinc.com>,
-	<thomas.falcon@intel.com>, <blakejones@google.com>, <ashelat@redhat.com>,
-	<leo.yan@arm.com>, <dvyukov@google.com>, <ak@linux.intel.com>,
-	<yujie.liu@intel.com>, <graham.woodward@arm.com>, <ben.gainey@arm.com>,
-	<vineethr@linux.ibm.com>, <tim.c.chen@linux.intel.com>, <linux@treblig.org>,
-	<santosh.shukla@amd.com>, <sandipan.das@amd.com>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "James
- Clark" <james.clark@linaro.org>
-References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
- <20260119175833.340369-8-swapnil.sapkal@amd.com>
- <CAP-5=fXNtVXEjDD-euueztjO7vj+6LQ2CHgHfxVoHuRF2Nb0Xw@mail.gmail.com>
-From: Swapnil Sapkal <swapnil.sapkal@amd.com>
-In-Reply-To: <CAP-5=fXNtVXEjDD-euueztjO7vj+6LQ2CHgHfxVoHuRF2Nb0Xw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB03.amd.com: swapnil.sapkal@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBF:EE_|LV2PR12MB5823:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2508272-c6ec-47d5-cc01-08de7e8cf1d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	8dDSjvBg3yiaogi+w3tBDKJO3Srx5eywmH+5f6Mowoq9z3io3p4sc5KuiqJRs6k3E0rHsd6bA+VFcSzAUB5BWdBwNsjCKxI/S2kvW6HgpAaPfcGr6CgFK0nwrG0P2/iyDkVSNvUHyqjbNiQ355c6Ev0ZPlLfwjgXXFfN59nf4NaRmSRP9/lrHh4TTlmAj0jqd36VSx7lfx/eHFLkrGoYtdt5V8gN57aOqHeNEe04Jx0CTOFOtlTjXTTIWg11DTx+5EFRAR1vnVBEpZ/BhUhigqBtRwNN1xRP3y5dzHSnj9wnYhg4XvwrcNN9FzbPCh20R/U/i5JEZ2/vSVqfw41ZQJWBQU86/FyyWAp+nEHMnScu2isVdNZfGZKoNCeeMxJF5yVLI3chOaNHqEadwJiGkSd/I3IJU1PPcL2K5t+AZxIw+I5hE+JkZhf2bWpCnCFpy1kDZC2afBGB3pVQgNFNMYh/HmMe7j0sqD9uDGb9A5vz/Lv8ZSYW3cJIeXizcOVHTkcCMi7kcXIE3bIs1jHwMlWXmkkCQUj1hn130GiyLRGPa5iteJNmgTrf6eZRM23PBQWsrgHoB6/KU4RFAILt0M41yVo7vOn8zu+SozWM61+pLgCT5NvfrKVPysu9SLOh4MYLLkyKn3WkW26xZBLkJe4WmrJvBFC4xT/yYlCyQ4RrEBYLElwlU6NJ+pYvcThsTMNBBRLdNOqRIu+hiCLuGRQiDGuOW5yyd7TKuNRywIq81E3XMhhhW7JZFFsfH1it7G0s8rvtQCX7NQ3OsAUx8A==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	6937pf8ipW074M47e90KWaNQBu3II8xW0MqLm6mmBdBkQVRGgRSmK/8B0W0vUYV8SvW7uxYfpvYUt0uMOwt9Kn+L47LT2rz5Mqq1pxfhWH0rRMflTMfh6AUnG2vQhXcW8VfJyZWx5jo62vXLf6A+waZzZK/H32wk7eCEZN3xLu5w6xjnGLKawUARHOpIamgrYeH1MN9amSisl0DBbZ9470sG7AYTfBAhfLyiDS7VNiDSAJ+fSIcX8ZgXxogzN6vRDpS/fuTK7TMm6TAMigkVy1JD+UfwegfTKTRHJS6ge7+uyY3w+8khEpGeKMbZ5gsiCER+OpMXou3cBPFRFnPJe2jKJY4i70Opq4eXH07eBnGSCT++oNKV53hUK7y12NA3QAwYv8AXgOYXn/dQeEQnbK/g+qyHfmJHOKkuhhPjqLD+H+rYTr5DccN4cXXy2yqK
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 10:08:15.0704
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2508272-c6ec-47d5-cc01-08de7e8cf1d6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBF.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5823
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+X-B4-Tracking: v=1; b=H4sIALvur2kC/12NQQ6DIBBFr0JmLQ0DqVVWvUfjAmXQ6UIMWNPGe
+ PcGu+vyJ++/t0OmxJTBih0SbZw5zmCFrgQMk5tHkuzBCtBK18qoVi6UggzeaO+UwZtroBKwJAr
+ 8PjWP7rfzq3/SsJZvISbOa0yfs7Nh4f6UG0qUtcIQ+qvBpjV3Tz27+RLTCN1xHF/jPWCSqwAAA
+ A==
+X-Change-ID: 20260309-perf-fd32da0317a8
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, Breno Leitao <leitao@debian.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-363b9
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4412; i=leitao@debian.org;
+ h=from:subject:message-id; bh=kTvCXDglSMMQvrZ5eq2/6jOsZYTsvbROi36DsOdkY+w=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpr+7qKzw/BrvD33/WOk0N8nLCfWzEDfTOIrflC
+ Vk12NMTFj6JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaa/u6gAKCRA1o5Of/Hh3
+ baDsD/9J5ucGltT5P4ckOvQjyUztdnkI5TLnC/IbwHqM/6F21UMv6nRU7hyOdciptIgaF8PqKvk
+ KGRk5RCquq01gBqgufJFkf7De6ArQPbDC3xaty0CjXTFbTEiuskpNxXqNdXjXFTx6Z05nyveL3V
+ PYF5hRgNVH8Qj5tKz3cfFpIb/DJWtfuudofFCnG+vLJJlYaHyhSYgpPhKvFMW2YViiiunGlfeq2
+ M8DZaNVyVjOARddNX6IhWZWdHPw0S8fUqF/WagyxMv9RRyz32KY6motyByiJtQ1OZe0pQWUo0aO
+ y14z2kmcg4OjbjaCrEBejfffhCK4oLJTMbAQfh5SSqzXB0dHE/GspI19cZE5ai2txtsB3sYRfub
+ Gcz5QYE8AIjUxDGoZnKonzw39FH81sV/dnY+xaYUp6OEat9rJcoy34RcYcoh9nDUO5JG3KgDQkX
+ 6Zt8QTqsPA4i+X90xIo1Lup5qx/CbWgquVwHNMkvkeVrZz+4IVV1yJSNWaLrkfMSD+sx50uedTZ
+ UmXNUkN8GIRtuY3V6ClUQeMh20fGrcr47JIriaCpX150NlKMalaOOdh8Qc7O0a9g80c/aVp8/sv
+ uNf50jL0/cX3dq/lw/JLrI+BYA7Ajon/iSa5mMDOu5U2W0JLF4jRy45y4FgjE6QKnwV/nNo6+LY
+ GG6GlCpIm7YbrNw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-Hi Ian,
+A production AMD EPYC system crashed with a NULL pointer dereference
+in the PMU NMI handler:
 
-Sorry for the delay.
+  BUG: kernel NULL pointer dereference, address: 0000000000000198
+  RIP: x86_perf_event_update+0xc/0xa0
+  Call Trace:
+   <NMI>
+   amd_pmu_v2_handle_irq+0x1a6/0x390
+   perf_event_nmi_handler+0x24/0x40
 
-On 04-03-2026 00:17, Ian Rogers wrote:
-> On Mon, Jan 19, 2026 at 10:02 AM Swapnil Sapkal <swapnil.sapkal@amd.com> wrote:
-> [ snip ]
->> +       /* wait for signal */
->> +       pause();
-> 
-> I'm seeing the perf sched stats test hang here, requiring me to kill
-> the perf process started by the test. It is unclear what signal is
-> being waited upon, but is there a race condition where the signal
-> could have occurred before the pause? Should the pause at least be
-> conditional on that happening? Given that a race condition would exist
-> even with a test, would it be better to use a condition variable?
-> 
+The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
+corresponding to the `if (unlikely(!hwc->event_base))` check in
+x86_perf_event_update() where hwc = &event->hw and event is NULL.
 
-I am able to reproduce the issue. There are other places also where the 
-same issue can be reproduced. (e.g. with `perf lock contention -b`)
+drgn inspection of the vmcore on CPU 106 showed a mismatch between
+cpuc->active_mask and cpuc->events[]:
 
-I will propose a fix.
+  active_mask: 0x1e (bits 1, 2, 3, 4)
+  events[1]:   0xff1100136cbd4f38  (valid)
+  events[2]:   0x0                 (NULL, but active_mask bit 2 set)
+  events[3]:   0xff1100076fd2cf38  (valid)
+  events[4]:   0xff1100079e990a90  (valid)
 
-> Thanks,
-> Ian
---
-Thanks and Regards,
-Swapnil
+The event that should occupy events[2] was found in event_list[2]
+with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
+(which clears hw.state and sets active_mask) but events[2] was
+never populated.
+
+Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
+showing it was stopped when the PMU rescheduled events, confirming the
+throttle-then-reschedule sequence occurred.
+
+The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
+and potential PEBS record loss") which moved the cpuc->events[idx]
+assignment out of x86_pmu_start() and into step 2 of x86_pmu_enable(),
+after the PERF_HES_ARCH check. This broke any path that calls
+pmu->start() without going through x86_pmu_enable() -- specifically
+the unthrottle path:
+
+  perf_adjust_freq_unthr_events()
+    -> perf_event_unthrottle_group()
+      -> perf_event_unthrottle()
+        -> event->pmu->start(event, 0)
+          -> x86_pmu_start()     // sets active_mask but not events[]
+
+The race sequence is:
+
+  1. A group of perf events overflows, triggering group throttle via
+     perf_event_throttle_group(). All events are stopped: active_mask
+     bits cleared, events[] preserved (x86_pmu_stop no longer clears
+     events[] after commit 7e772a93eb61).
+
+  2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
+     due to other scheduling activity. Stopped events that need to
+     move counters get PERF_HES_ARCH set and events[old_idx] cleared.
+     In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
+     to be skipped -- events[new_idx] is never set.
+
+  3. The timer tick unthrottles the group via pmu->start(). Since
+     commit 7e772a93eb61 removed the events[] assignment from
+     x86_pmu_start(), active_mask[new_idx] is set but events[new_idx]
+     remains NULL.
+
+  4. A PMC overflow NMI fires. The handler iterates active counters,
+     finds active_mask[2] set, reads events[2] which is NULL, and
+     crashes dereferencing it.
+
+Move the cpuc->events[hwc->idx] assignment in x86_pmu_enable() to
+before the PERF_HES_ARCH check, so that events[] is populated even
+for events that are not immediately started. This ensures the
+unthrottle path via pmu->start() always finds a valid event pointer.
+
+Fixes: 7e772a93eb61 ("perf/x86: Fix NULL event access and potential PEBS record loss")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Cc: stable@vger.kernel.org
+---
+Changes in v2:
+- Move event pointer setup earlier in x86_pmu_enable() (peterz)
+- Rewrote the patch title, given the new approach
+- Link to v1: https://patch.msgid.link/20260309-perf-v1-1-601ffb531893@debian.org
+---
+ arch/x86/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 03ce1bc7ef2ea..54b4c315d927f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1372,6 +1372,8 @@ static void x86_pmu_enable(struct pmu *pmu)
+ 			else if (i < n_running)
+ 				continue;
+ 
++			cpuc->events[hwc->idx] = event;
++
+ 			if (hwc->state & PERF_HES_ARCH)
+ 				continue;
+ 
+@@ -1379,7 +1381,6 @@ static void x86_pmu_enable(struct pmu *pmu)
+ 			 * if cpuc->enabled = 0, then no wrmsr as
+ 			 * per x86_pmu_enable_event()
+ 			 */
+-			cpuc->events[hwc->idx] = event;
+ 			x86_pmu_start(event, PERF_EF_RELOAD);
+ 		}
+ 		cpuc->n_added = 0;
+
+---
+base-commit: 0bcac7b11262557c990da1ac564d45777eb6b005
+change-id: 20260309-perf-fd32da0317a8
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
