@@ -1,93 +1,93 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854423101C0
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 15:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8BF309DB1
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 15:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773156183; cv=pass; b=ItbG3FQGmbYc69Db4/nishFRnGOhg8RZLkKzEiEVEGXXoGCc4HW9jH5YqrpZZMKqvI9bx0pcjxL3hJ6y3LglFeNy97cUmxmABWESP6Ik/wrzUdQzJ60LsS3+lU+QnqUFHkI+YS9Mm4Wf7W0hv/QQbS+krBCKkWuXlHJm/07jcws=
+	t=1773156287; cv=pass; b=P/AzIUVbiLdvf7pi+Hb3WV8uS3XddCVdffBux02MKhB1ST1wig115hAs5ArQsZjMDK4g1s0zYCWSEWYx/ohNcHng+6kySmcfoDjdubuJHORnuA4eypT6fwPFiotPs1dUH8Nk4/F7aSTvqDzwStypIQtgYFV8C7KULRiHnLu475o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773156183; c=relaxed/simple;
-	bh=a6kxvYOwf8y6EbYqD/I79AOj9D0QkacJAfJfR5Ct+No=;
+	s=arc-20240116; t=1773156287; c=relaxed/simple;
+	bh=JZrDM///Q/kT9YypmPxIzuH5l/jPTkmghWuvdPPmizo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cZ7llrXJeL/wEQMPksu5DVCXGmGMF8rFMFk33cf5NGQFo6pPKUPvxnduQppJ5dg12VgY0JiMz9zKKTMO7WzCd5kHd1XfLdzpfIKw4rqjs3y9/GtcGSqPzdzT5p2lTBJWztJ98qvhyEpHA2RFaynKRq94IT8nVwEo/NVPkDz6EfQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OgBwBXGN; arc=pass smtp.client-ip=74.125.82.52
+	 To:Cc:Content-Type; b=f5JxJFuZO7nEBm9kUWFSX1EDuJ0ZQQ8uVZSQO4dDDATrc/icLdZPUk+2KnAwoz1v5jKy1MS9aGzD2hfGafvG94ymz6rQPzZtuCbv7Q5VvYN8PEAGv5UmHweF/XbpqjepEhLRrmvCUsE5hEUcJRagvtb0bbAA0/pqV2fd1zt0evw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AS0YZQu4; arc=pass smtp.client-ip=74.125.82.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OgBwBXGN"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1270f10a774so10313c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 08:23:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773156182; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AS0YZQu4"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-126ea4e9697so9741c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 08:24:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773156284; cv=none;
         d=google.com; s=arc-20240605;
-        b=F656sv7ZtEzs84rvCMZH+QRUgIBAoobmWamQS6CX1jT9CMHCi2VBAZ62TMLg32rrRC
-         RgXAQDV8O6YoVCmvYQoo9yY5ICNsEBEQzglqDxDopMcX66imCPVyUwS5cRmA7My5nxzb
-         BwdyOOfbCWTn7rlu8tOoMdt1TvKkjfqMglBkwdUn/jJM20GHSsWro2s1rHdy1G1DfOeZ
-         yeFkllRTF6b1BY39ZkwJ4GX0xwgVbScD8FFpYWWM56SZP1fUw0/SxYQo5cP/1BMFoCcM
-         vTL2qWZEZP36p7IgJOmyMdjlRXWFZFQVuyQdqIOdRSzOLY0rr7kXyX4c+bSh0Tr2JjPL
-         DLtg==
+        b=eXSCqGo+M5RllgI06xjyc3q9nI+4Lwnu+T1XxU0+FG0ytyU0FcGLI9GN5vuX2LPDcG
+         vPrUextXIBZscBACH4w/e0M+le+AxX7g+OOqsad1k8eR0lAtroqqsuZ4M7VdV5xgjgTB
+         E36QsG2VAK1V8+GXVANu1DqrYJjOVT8C8NrcV2r12RWEfAk/tnKWtwncr/YZK60+Ls3H
+         i53ADizgq9ubV9jRVX4EfNGtbcW66ayO9lD3dYY/RFAXkhuyEX/p7JaVAVrQOo/Htxks
+         +U784bEMzdqJOAzroXaIlOKrcbfNCgyuWPPLAtkmE1nzVbPyLhOfVutGU4rGq1QBZhkI
+         qMgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
-        fh=BwSYWz1STnAYmmLVctEMeI/Q7NuNJG80u60wk7Uuh7g=;
-        b=c0ta+S4vMV7YYNBl3R0w5USU77DsPYLFakx8n3BFRAVbLyiYcE5jQgV3CnT8ybWfag
-         /4IAK8GH46Ji1ZcS5z/H9nnePkms6suctZZy2SsTKu0cwEfMnHwqB8RnyOK9aLWpRVNG
-         1cZEC1SVkCJOGYX+QgIAbh5L89PpBRcTmacJL4NRzgVze1cN4YQkc1U0onwb8dbHD08e
-         omYDFPOtTM7i8SkaEkiZBG0oEWN9oIBUdI3yQtiz5LAgitLaPXj55T99IuvGhdLcf2Id
-         5Z/+GVOwBGS0IfEMTLy9zQ7ld4GD7vz84mDFj97CeUUAmhXpKP6TbL1dRn9TdeeQFA9Q
-         4F8Q==;
+        bh=LJ217KTzkBEYdpWoN1Yqy2wHTlV1OI6Ge8V1e7aSXA8=;
+        fh=wLnGRaQG5Br0br9SqtX0cKT64AmH57Gd9Um/cWVxH4o=;
+        b=WhoDe+kxktEepp9LpnK1nHv3j1dMsThuxWbLgqiSeBDc0cF22A4nXBfrr1ANLH/1x3
+         v8mIxpXIX4Cfd6s8CR1/J9hhIhgGdDwUuSvr3lTxCfSgIYthLyBhOTzHCJRrRy8kKrt+
+         HFn+JsJwwWMicrcty9JFcM0SagcCysVatXaadw71LlpxI1Ign5lRbweZuMli3x8G4+/H
+         jjkLevgaDJMUfwkp4DXI5s7i4uyE5YRlG7rfEAlDuLDeZdS+6had7ggbqU2dP6iM7llo
+         dU62R2oun//XODupPbNgLyEE1Csfrt6hwEU55p/OYnrCohALdetXATRE2x14ulAWmBg2
+         rwxg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773156182; x=1773760982; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773156284; x=1773761084; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
-        b=OgBwBXGNM6QPcuBAO6MCTBwz9Ib/s1I406bhsWTKKHki5TE6MOTVbCE5uk9ZcTp5xG
-         UGMUC10yzZcxsVFOTo2q+JxZvGU3JDu8ab7Vtr7A/BsK5jku1BGVVDrTePPM9jrAeEum
-         NwNYdKnUk4SL3jDffG95QgmkiGUUJ99DfJYFHLn0wzX5NOEp8MNZknmVIkLPuQ58Zr6w
-         mpH8x9Th+WSpqbBkEKGp0FtpKwyO6KU3wnkEknI2BN8EvhVujjbmAXzGSjxfdtmCsMhu
-         nP/KwCdAWBk9QPL+PRIA2/zc6a6eARXCTaCh9yDuhfVIOMU622AfvNaTLD2lBFgpYNun
-         CW2g==
+        bh=LJ217KTzkBEYdpWoN1Yqy2wHTlV1OI6Ge8V1e7aSXA8=;
+        b=AS0YZQu4zmJ98x39TEKi2eioraZV+UJyKa6/E6jDWf8o8Ia6P6vUdCYJdy6pCtYOeb
+         kby8Xbp9eSTLrEUs6LsZ77yqzL1HqcwiVl9xWc/+wEDwO211mXgnz8+cakh+cYU8uIRp
+         9eB/jh3uvp3T/db95MOCwahg7P9jQqA8AE9hcUERQptm1Arf18evwg7cVydEv2fgLoqE
+         MKXQfaTqKHVTnPEqN2WFdYW+FilCQp/6PaD2mu1koAGpyr4bp7988uLv6m99bfD+YaVl
+         ZDWOgNpyWd32+Wn3x3708j1uKhFr6p9zWceZGggMrJJz0Vit5kNfiKw1JnhUYHRVNvHG
+         RG3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773156182; x=1773760982;
+        d=1e100.net; s=20230601; t=1773156284; x=1773761084;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=PkpSWMmBGDoTKnfXB84P5fs71N8w3y0/StyiyLOlFuw=;
-        b=DRp6XGpKi1tro+ed7z4klM+0atRDnaN68oan9kVj0Gq8+E5Nd6giBC074ylSEHreGN
-         /hrym5Apcqr16eap5oAs/ww/mHoMTJl16eDFQWUZJOX9Yhz2mHyDj/iRcJwwnZ4mq/X/
-         NWZp4ZZOqKIhoySG5HwICQafkSGDgbJLZZUxBXHFTMdEBgX62IxcSYwKa+YT4nawsJCC
-         DdDG4drJTXONhs9GfoDvZOxk5cbW9EOI02NHE8Jie+UySNoCOOVPEtTWaXL8Q1v9gxfo
-         zbV9U8MxBrXEQHxMptfug7T/gSvJIWh6OLN/MwkClBnRnfgyYXp4JAQz9AVUSjdQ8pyE
-         9SVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWenlHhiZOGnMDujnqfm0T7+mVy1z1cIfWGjUIDfHA1x2Y8WMaI2252V/BCyLJKXFjpPMccKS/DulYiXeGaxsFd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ3VsgshRuYK52s9EVBvBhK0p7oT5L81f1LYQYagLrQXPh+0V1
-	tindqkGfHBIkHVNQYnTIgHoj9Yhs6i4bnxKqV+jFHEgeYoDA1x+6s4Q8pVBKv3ZNGTpXF36bVse
-	rvlhSTSpf//NnwH+PekSLbBGPV3LP/Jok7l+ch2Bs
-X-Gm-Gg: ATEYQzwtFEXj0djbzNMSI+AdKc0mZ9e1L1xd4J9aneZWSC6tn+4MjX0n6uqfDjqTo+H
-	ucVLzY8jmgJeB0d3oYliRoBfx/7KNNLJpsgjVRm3Q74D9YN16zdzTVqHlrnjO1VV5h3Ab2EOpWT
-	xm0QOEvaSuYPnAXJRjXCIFka4NyPef8Fk9m3Fkdj+6IA2mjolA9i3GjRNkEQaDY6QgldZxtVULt
-	HA7USXVPp6ofrF5CyH8BLAC/WVUF/Xe5+ebSRMCUvvQjHgEBVd/ghqE9ZnqA1kQ6AalCyow4Xon
-	AVMnbJiBDm6dIVieOT5A2TD5T68DcDBQ4DM=
-X-Received: by 2002:a05:701b:4283:20b0:127:3459:3361 with SMTP id
- a92af1059eb24-128de46eb5amr146652c88.6.1773156181028; Tue, 10 Mar 2026
- 08:23:01 -0700 (PDT)
+        bh=LJ217KTzkBEYdpWoN1Yqy2wHTlV1OI6Ge8V1e7aSXA8=;
+        b=Il7AF5urCQEy408knzpAGQJHIJYp2V+bh0jDgUfUTtLa6uy4E2zAxM//bQtp075j4X
+         WTymH/Op82ToqXuoaXqFa6eu3aR6M5aGZrUL0feb0e0jDME8egLhJvoo5CtLwvzZirq4
+         2SAElklrYtu20r668JSquoZj95ctR3uYWxZLABKrGlKxje/zbol+dECW0ynA8HB5L0o2
+         +f8lChoEmaoGw4MTzAF0KdvwdZNbvqE1VmFv+s6/WpTw1LYqO7qQV2Oxa8MX1dmL6Ncw
+         fmlJP7z90++I7IcGE6oxPmeSp5ZAjpyr/Sxh4QWQBHjeIt60O2A7fkyZ0SIRufpvm1bz
+         AEYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEXv83LlHk5u75zVQFT4HbXusqmX/XSOLTdOdMmCtROgwSpCjmkncvBhtFdf9YN3BX+Nelz60TOKXXLAe3GN7j@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjcBV8ZGDbcOCMhPb/e8Lvq28Cx+TtbU6SIrSmWB5Ih5vNuMp9
+	AM2Du7z8UtfH184vgVLMgwL3thWqvfjYB0awfv1rNAvQzuui+RkLuUkSsdZeIVM8DPflPBLE5n/
+	901uPERwgt7q0NZDLGR/kRGogmqiGWvw1e71+Dtla
+X-Gm-Gg: ATEYQzwWlQSaZm1Xq3fDqEBuYKBYrbJtsiOwJtUGxGQDypJ8yq7ErGgiKi6lWHZTynr
+	SI061HtJU0L4W6MzbDJ2eb1x6MA4hqelKsxSTBny6nTg3ZaUmRZmQoRXfjMp7ME8akd/0wwRQSi
+	ZT3dccD81DWjSgdkitaskeYJtQEgXeWHIgJO9gY60zIp++FHAYq1XNlmXH8Rpme6OqcdBB3DxjW
+	SOHMA2AeAE3oMbxzNshrohl1rX9iTHMz/tl++F4rycEq4yEi927e33s50HV6dCZVhrzEnRv2tX5
+	LM+s62852ZYq7GPg2qTG+Q3gKLJOYlwCI+E=
+X-Received: by 2002:a05:7022:b056:10b0:127:9745:c69f with SMTP id
+ a92af1059eb24-128ded26ae5mr128995c88.9.1773156283463; Tue, 10 Mar 2026
+ 08:24:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309155728.98026-1-jbrnak@redhat.com> <20260309155728.98026-5-jbrnak@redhat.com>
-In-Reply-To: <20260309155728.98026-5-jbrnak@redhat.com>
+References: <20260309155728.98026-1-jbrnak@redhat.com> <20260309155728.98026-6-jbrnak@redhat.com>
+In-Reply-To: <20260309155728.98026-6-jbrnak@redhat.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 10 Mar 2026 08:22:48 -0700
-X-Gm-Features: AaiRm50bxjtKAWvxiuYyAzM5u9GIwZxZgk_JuiU4S14Rm63ridp_JAfHigWFYxg
-Message-ID: <CAP-5=fWV2M1KpmPg114W5brc4_eMHNSw2TrJ_tPFs97+V5mL+Q@mail.gmail.com>
-Subject: Re: [PATCH v6 4/7] perf test: Introduce storing logs for shell tests
+Date: Tue, 10 Mar 2026 08:24:30 -0700
+X-Gm-Features: AaiRm52uXnelWRxcv3Ted65gu8oq4my3JSJJDaHjN88gakWwqxqalLqwSHGhjnU
+Message-ID: <CAP-5=fVvbq3=sh-0xr7t4BBHDPsuTsr9Nx0-DhBb7G1ZdZRz9Q@mail.gmail.com>
+Subject: Re: [PATCH v6 5/7] perf test: Format log directories for shell tests
 To: Jakub Brnak <jbrnak@redhat.com>
 Cc: acme@kernel.org, acme@redhat.com, linux-perf-users@vger.kernel.org, 
 	namhyung@kernel.org, mpetlan@redhat.com
@@ -97,10 +97,12 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Mar 9, 2026 at 8:57=E2=80=AFAM Jakub Brnak <jbrnak@redhat.com> wrot=
 e:
 >
-> Create temporary directories for storing log files for shell tests
-> that could help while debugging. The log files are necessary for
-> perftool testsuite test cases also. If the variable PERFTEST_KEEP_LOGS
-> is set keep the logs, else delete them.
+> The name of the log directory can be taken from the test suite
+> description, which possibly could contain whitespace characters. This
+> can cause further issues if the name is not quoted correctly.
+>
+> Replace the whitespace characters with an underscore to prevent the
+> possible issues caused by the name splitting.
 >
 > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 > Co-developed-by: Veronika Molnarova <vmolnaro@redhat.com>
@@ -108,261 +110,58 @@ e:
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
 > ---
->  tools/perf/tests/builtin-test.c  | 103 +++++++++++++++++++++++++++++++
->  tools/perf/tests/tests-scripts.c |   4 ++
->  tools/perf/tests/tests-scripts.h |   3 +
->  3 files changed, 110 insertions(+)
+>  tools/perf/tests/builtin-test.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
 > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
 est.c
-> index c1515fa8a947..70f4a61357ec 100644
+> index 70f4a61357ec..cbfae7dcf2b6 100644
 > --- a/tools/perf/tests/builtin-test.c
 > +++ b/tools/perf/tests/builtin-test.c
-> @@ -6,6 +6,7 @@
->   */
->  #include <ctype.h>
->  #include <fcntl.h>
-> +#include <ftw.h>
->  #include <errno.h>
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  #include <execinfo.h>
-> @@ -51,6 +52,9 @@ static unsigned int runs_per_test =3D 1;
->  const char *dso_to_test;
->  const char *test_objdump_path =3D "objdump";
->
-> +/* Number of logged test suites. */
-> +size_t num_logged_suites;
-> +
->  /*
->   * List of architecture specific tests. Not a weak symbol as the array l=
-ength is
->   * dependent on the initialization, as such GCC with LTO complains of
-> @@ -288,6 +292,85 @@ static bool test_exclusive(const struct test_suite *=
-t, int test_case)
+> @@ -292,6 +292,7 @@ static bool test_exclusive(const struct test_suite *t=
+, int test_case)
 >         return t->test_cases[test_case].exclusive;
 >  }
 >
-> +static int delete_file(const char *fpath, const struct stat *sb __maybe_=
+> +
+>  static int delete_file(const char *fpath, const struct stat *sb __maybe_=
 unused,
-> +                                                int typeflag, struct FTW=
+>                                                  int typeflag, struct FTW=
  *ftwbuf)
-> +{
-> +       int rv =3D -1;
-> +
-> +       /* Stop traversal if going too deep */
-> +       if (ftwbuf->level > 5) {
-> +               pr_err("Tree traversal reached level %d, stopping.", ftwb=
-uf->level);
-> +               return rv;
-> +       }
-> +
-> +       /* Remove only expected directories */
-> +       if (typeflag =3D=3D FTW_D || typeflag =3D=3D FTW_DP) {
-> +               const char *dirname =3D fpath + ftwbuf->base;
-> +
-> +               if (strcmp(dirname, "logs") && strcmp(dirname, "examples"=
-) &&
-> +                   strcmp(dirname, "header_tar") && strncmp(dirname, "pe=
-rf_", 5)) {
-> +                       pr_err("Unknown directory %s", dirname);
-> +                       return rv;
-> +               }
-> +       }
-> +
-> +       /* Attempt to remove the file */
-> +       rv =3D remove(fpath);
-> +       if (rv)
-> +               pr_err("Failed to remove file: %s", fpath);
-> +
-> +       return rv;
-
-Returning non-zero here will terminate the nftw, would it make more
-sense to always return 0 say as many files are cleaned up as possible?
-
-> +}
-> +
-> +static bool create_logs(struct test_suite *t, int pass)
-> +{
-> +       bool store_logs =3D t->priv && ((struct shell_test_info *)(t->pri=
-v))->store_logs;
-> +
-> +       if (pass =3D=3D 1 && (!test_exclusive(t, 0) || sequential || dont=
-_fork)) {
-> +               /* Sequential and non-exclusive tests run on the first pa=
-ss. */
-> +               return store_logs;
-> +       } else if (pass !=3D 1 && test_exclusive(t, 0) && !sequential && =
-!dont_fork) {
-> +               /* Exclusive tests without sequential run on the second p=
-ass. */
-> +               return store_logs;
-> +       }
-> +       return false;
-> +}
-> +
-> +static char *setup_shell_logs(const char *name)
-> +{
-> +       char template[PATH_MAX];
-> +       char *temp_dir;
-> +
-> +       if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name=
-) < 0) {
-> +               pr_err("Failed to create log dir template");
-> +               return NULL; /* Skip the testsuite */
-> +       }
-> +
-> +       temp_dir =3D mkdtemp(template);
-> +       if (temp_dir) {
-> +               setenv("PERFSUITE_RUN_DIR", temp_dir, 1);
-> +               return strdup(temp_dir);
-> +       }
-> +
-> +       pr_err("Failed to create the temporary directory");
-> +
-> +       return NULL; /* Skip the testsuite */
-> +}
-> +
-> +static void cleanup_shell_logs(char *dirname)
-> +{
-> +       char *keep_logs =3D getenv("PERFTEST_KEEP_LOGS");
-> +
-> +       /* Check if logs should be kept or do cleanup */
-> +       if (dirname) {
-> +               if (!keep_logs || strcmp(keep_logs, "y") !=3D 0)
-> +                       nftw(dirname, delete_file, 8, FTW_DEPTH | FTW_PHY=
-S);
-> +               free(dirname);
-> +       }
-> +
-> +       unsetenv("PERFSUITE_RUN_DIR");
-> +}
-> +
->  static bool perf_test__matches(const char *desc, int suite_num, int argc=
-, const char *argv[])
 >  {
->         int i;
-> @@ -627,9 +710,12 @@ static int __cmd_test(struct test_suite **suites, in=
-t argc, const char *argv[],
->          * runs the exclusive tests sequentially. In other modes all test=
-s are
->          * run in pass 1.
->          */
-> +
->         for (int pass =3D 1; pass <=3D 2; pass++) {
->                 int child_test_num =3D 0;
->                 int curr_suite =3D 0;
-> +               char *tmpdir[num_logged_suites * runs_per_test];
-
-Could we avoid a VLA with a calloc here? It is test code so I'd prefer
-correctness over performance.
-
-> +               unsigned int logged_suites =3D 0;
+> @@ -340,12 +341,19 @@ static char *setup_shell_logs(const char *name)
+>  {
+>         char template[PATH_MAX];
+>         char *temp_dir;
+> +       size_t i;
 >
->                 for (struct test_suite **t =3D suites; *t; t++, curr_suit=
-e++) {
->                         int curr_test_case;
-> @@ -663,6 +749,18 @@ static int __cmd_test(struct test_suite **suites, in=
-t argc, const char *argv[],
->                         }
+>         if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name=
+) < 0) {
+>                 pr_err("Failed to create log dir template");
+>                 return NULL; /* Skip the testsuite */
+>         }
 >
->                         for (unsigned int run =3D 0; run < runs_per_test;=
- run++) {
-> +                               /* Setup temporary log directories for sh=
-ell test suites */
-> +                               if (create_logs(*t, pass)) {
-> +                                       tmpdir[logged_suites] =3D setup_s=
-hell_logs((*t)->desc);
-> +                                       /* Couldn't create log dir, skip =
-test suite */
-> +                                       if (tmpdir[logged_suites] =3D=3D =
-NULL) {
-> +                                               ((struct shell_test_info =
-*)((*t)->priv))->has_setup
-> +                                                       =3D FAILED_SETUP;
-> +                                       } else {
-> +                                               logged_suites++;
-> +                                       }
-> +                               }
-> +
->                                 test_suite__for_each_test_case(*t, curr_t=
-est_case) {
->                                         if (!suite_matched &&
->                                             !perf_test__matches(test_desc=
-ription(*t, curr_test_case),
-> @@ -681,6 +779,9 @@ static int __cmd_test(struct test_suite **suites, int=
- argc, const char *argv[],
->                         for (size_t x =3D 0; x < num_tests; x++)
->                                 finish_test(child_tests, x, num_tests, wi=
-dth);
->                 }
-> +
-> +               for (size_t x =3D 0; x < logged_suites; x++)
-> +                       cleanup_shell_logs(tmpdir[x]);
+> +       /* Replace non-alphanumeric characters with _ in the name part */
+> +       for (i =3D 15; template[i] !=3D '.' && template[i] !=3D '\0'; i++=
+) {
 
-Perhaps it is worth commenting that leaving/leaking the logs in the
-event of an error is deliberate?
+The AI review mentions:
+  Will this loop terminate prematurely if the test description itself
+contains a dot? If the test name is something like "test v1.0
+execution", the loop would abort at the dot, leaving the subsequent
+spaces unmodified. Should it instead bound the loop by the length of
+the string minus the ".XXXXXX" suffix?
 
 Thanks,
 Ian
 
->         }
->  err_out:
->         signal(SIGINT, SIG_DFL);
-> @@ -750,6 +851,8 @@ static int perf_test__config(const char *var, const c=
-har *value,
->         return 0;
->  }
->
+> +               if (!isalnum((unsigned char)template[i]))
+> +                       template[i] =3D '_';
+> +       }
 > +
-> +
->  static struct test_suite **build_suites(void)
->  {
->         /*
-> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
-ripts.c
-> index 3703ad7b3b75..c45b41b5bf07 100644
-> --- a/tools/perf/tests/tests-scripts.c
-> +++ b/tools/perf/tests/tests-scripts.c
-> @@ -272,6 +272,7 @@ static struct test_suite *prepare_test_suite(int dir_=
-fd)
->
->         test_info->base_path =3D strdup_check(dirpath);           /* Abso=
-lute path to dir */
->         test_info->has_setup =3D NO_SETUP;
-> +       test_info->store_logs =3D false;
->
->         test_suite->priv =3D test_info;
->         test_suite->desc =3D NULL;
-> @@ -438,6 +439,9 @@ static void append_suites_in_dir(int dir_fd,
->                         continue;
->                 }
->
-> +               /* Store logs for testsuite is sub-directories */
-> +               ((struct shell_test_info *)(test_suite->priv))->store_log=
-s =3D true;
-> +               num_logged_suites++;
->                 if (is_test_script(fd, SHELL_SETUP)) {  /* Check for setu=
-p existence */
->                         char *desc =3D shell_test__description(fd, SHELL_=
-SETUP);
->
-> diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-sc=
-ripts.h
-> index 013031239883..1dd91f1444e3 100644
-> --- a/tools/perf/tests/tests-scripts.h
-> +++ b/tools/perf/tests/tests-scripts.h
-> @@ -16,8 +16,11 @@ enum shell_setup {
->  struct shell_test_info {
->         const char *base_path;
->         enum shell_setup has_setup;
-> +       bool store_logs;
->  };
->
->  struct test_suite **create_script_test_suites(void);
->
-> +extern size_t num_logged_suites;
-> +
->  #endif /* TESTS_SCRIPTS_H */
+>         temp_dir =3D mkdtemp(template);
+>         if (temp_dir) {
+>                 setenv("PERFSUITE_RUN_DIR", temp_dir, 1);
 > --
 > 2.52.0
 >
