@@ -1,127 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AD963BF675;
-	Tue, 10 Mar 2026 16:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773158802; cv=none; b=ulVeHXy68WUiBMm9grCCOrEKEByqFzoYrWJ3xyLJ6qB28mCbw4N607qMFOUr2rVkK8CT9WctWLF8Ie614vT/B99h209SeV3gNctqUNLISd5en2A4nLU/HRyiHOGpdA3Ue+QQz1vzHwGrRCEUP76t1+zPSRyHbYJKuBcz3ovuVxk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773158802; c=relaxed/simple;
-	bh=pFTE7f4sOuYyaW3cEsKIhXjgl8+epJV62o4SfIfOkEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4sWZa6C63fhcUkoZsdTv0Zb9CUAYytQbjzA4ZUZklxuDCIppLBeRjwCOjUKLAaxE1L2j4BaM4uZVoijrLcDQKAu5CAXJPyRB1Ztyq8RAy1S11Yhpty1NDApEQfEi4ESuF/uLInCCITIh7tAeAg74MvMD007Vn7Xws9fHSULxPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 499781596;
-	Tue, 10 Mar 2026 09:06:34 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E69A3F73B;
-	Tue, 10 Mar 2026 09:06:40 -0700 (PDT)
-Date: Tue, 10 Mar 2026 16:06:38 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
-	Quentin Monnet <qmo@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 29/30] selftests/nolibc: Append extra cflags
-Message-ID: <20260310160638.GD4153946@e132581.arm.com>
-References: <20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com>
- <20260308-tools_build_fix_zero_init-v3-29-6477808123b7@arm.com>
- <bb278652-8654-4473-b12e-b24b36ec3845@t-8ch.de>
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012015.outbound.protection.outlook.com [40.107.200.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F2736E498;
+	Tue, 10 Mar 2026 16:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773161179; cv=fail; b=JjwX3Glzfxwo8qt5e1YgAS/xTEZ+493UNJVopYjmUidYYTwgBIbdKGhVZ+i82pc02rdAvJzkYPfiYu+7pZjKfNOmaKw8Z86C9wUxJluRwS5ewfu+KzGyO34KSjVhALO14OT9ocgrMOyx6H3cpQSTBDZW4bH3lpZSHvgqjKW8xhc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773161179; c=relaxed/simple;
+	bh=51Ox5YUnS6A3jIREqZqz9VT41vtfOI+kqzN4zdoCcJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HRgFv/OloVbFSvCOZ8MFQu9r0/eCLSESQ255BmFMJGBxHqiM0zG6eZHpDAPDxFjlW5/5zMs/eILBG4debOdFSPtRPT/hG53K2dCJ2oUBiRWJL8DFoLjA+n8S9RXKLEW9UWfiRB1tpmelQKKK1AJ2/Os0dDdpEhtIvXBweNBFNxI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WjK+/ols; arc=fail smtp.client-ip=40.107.200.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WjK+/ols"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VAwh7okporYdbDZvodFABZpn2AU496qTYrDvH8Lr6q8Q+c7V2muX072q3svlCJz7H+zZgyXv0/5OyMjUobs/AhfBFauOuUmE+ADgSV9hCUm9vR640zZMZCiSGJDLNthRRjWL1yak+UBfqAC2G18v9umHYiQSwebcR6BrCxVY+3Qf9Nv2EHMt74HcOuZa2pd6j3RsRGWubPKKTMzAZUuahPKJFh0YEecR5iRS6+6/rillMxJya4g7P0ezkKoyCmMo6O6P4fyEHHFMXwsMrlIvU1/6FBxHTtj/swi/seke4JrpIlb8rCqvVb0MB6XEDa8gSJrmo6XXTazAkIadnUVe7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e8Ww/EZJEa2Xbn9tFtaEJSHlZOb/yL+I33LQi+RibQg=;
+ b=F6G/RvjwRLCrd9rdAq0Vm2rKD0OsSEgPVeFsaJ1VXhseOEiYA5wQrPzLYmhWpbA1L5XC0ephTlnu57ZyD+pprCXc3P69FAMrXhQIMGWM+IObBUu+gwlyYV4FnpPJbWkQJzAk6bTeRt65TSzzTHF9KouXEhNjlzIdKls/aiqtiPtsjoHr1VFdl3ZG014/MK1NaALmjl8S94ENLnu8yvYot35xhqcp1TLziRHVnw6V6JsyyaPtmc/PRbKp5nOtfODZKoR3+yq2QM/2IyR2rfrrYiMrrpsJ255bO20qJeHPCwQDbf1RLHtASg+O/eOVw0j2spIt+0cC1H1QrJtn67+Tbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8Ww/EZJEa2Xbn9tFtaEJSHlZOb/yL+I33LQi+RibQg=;
+ b=WjK+/olsEQ9Dj6S6mPj2qxf5aed1oANG9gCIOfz9lh9bWfBe/IYzHhr7uM1YZdYT9CHlfdO+QM6DuQsQ0rDl0Ts3ZAYpREUI1rBKkYzUCfbIdMAtTEpc+dSfuenIQe/f363xFVhuK9JYEL05e51kuUG1zyuwpQGtqi0sUeD08YE=
+Received: from SJ0PR03CA0218.namprd03.prod.outlook.com (2603:10b6:a03:39f::13)
+ by SA1PR12MB9515.namprd12.prod.outlook.com (2603:10b6:806:45a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
+ 2026 16:46:14 +0000
+Received: from SJ5PEPF000001E8.namprd05.prod.outlook.com
+ (2603:10b6:a03:39f:cafe::a5) by SJ0PR03CA0218.outlook.office365.com
+ (2603:10b6:a03:39f::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.25 via Frontend Transport; Tue,
+ 10 Mar 2026 16:46:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ5PEPF000001E8.mail.protection.outlook.com (10.167.242.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Tue, 10 Mar 2026 16:46:10 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 10 Mar
+ 2026 11:46:10 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 10 Mar
+ 2026 11:46:09 -0500
+Received: from [10.252.223.199] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 10 Mar 2026 11:46:05 -0500
+Message-ID: <9b49bfb2-8f0f-4831-943e-a82d10007680@amd.com>
+Date: Tue, 10 Mar 2026 22:16:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bb278652-8654-4473-b12e-b24b36ec3845@t-8ch.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] perf/amd/ibs: Avoid calling perf_allow_kernel()
+ from the IBS NMI handler
+To: Michael Petlan <mpetlan@redhat.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, James Clark <james.clark@linaro.org>, Sadasivan
+ Shaiju <sadasivan.shaiju2@amd.com>, <x86@kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Manali
+ Shukla" <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20260216042216.1440-1-ravi.bangoria@amd.com>
+ <20260216042216.1440-5-ravi.bangoria@amd.com>
+ <81204aa7-9d81-8d53-b82b-6c4ad8c89c2@redhat.com>
+ <9145b8b7-fb83-49c4-aa17-acdba069359a@amd.com>
+ <21f41878-254f-191e-eaa9-26a9faf68d45@redhat.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <21f41878-254f-191e-eaa9-26a9faf68d45@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E8:EE_|SA1PR12MB9515:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fbc5999-df0d-4336-2b6f-08de7ec488ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|376014|7416014|82310400026|1800799024|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	pWC3GnqpIv2xhqfJJS2TZR60yicRaOCqIH/edqovrH7MQ87bgv4tNZt6mF5giofAp/hsCNzRjNXU9VcQwviQkyFuwyQC/fvQNZHAsg6gNNNWL24PoCONk77PaDr92DuzZAaRcV9H/Wk4CE0cny0htstAya4ASdEMfK1bJv4kePbwBMWihKZ/w69g1jdAZDIFFJ0t8IyBV21zR4513/jzvzW+FWMuusRkIEi/DeXd/5jlCPsMj6Y/5QR6B7fwmhzUUWVcSOjL4YC4XkR0703ukkpcxM7OIiMHyfO3jzhJ2Kxc499tojdk22l9wbOeB7L8rbKGgIpah01ocUJTn3MORJFBYNBgvxJoDgreDpYOZcAsMOmjn/Zq0JJMc5rhZIuDh9jjVvJaY+OK1BktPvgE7fdQ8/eRPb8nUHP2/PGRMSb2gdc9xW7dlJQeFE6wpAOGm96IWW47bNiZC/V5dapCJY6aSp77D69haChLMtdh7nbFTNVKlYvzaDH0fXl5OkzeuKEejKLYMFxWeOuT6eUaRNSIaXRF1xNyRRLVuNsVxGIUqE91DNY8nNriLL2Zsi5+gnRzU9iGgslml5H4a4qFG68U0vIC/dpzMwcYMP0ARc9hnmrUCroc6QsVr6vfX5G0L1kHYlFUiCWwM3bWmJz/8wJlVsaSvhBxAXZ1JZ+ULdXMntHjzlcl36Y+14eWohqiP9AuWhx+BKc964EHtK1P8YAGGi0449XQhwQl/WuF24E3JYnoGpqTfydJzMLVneSoI/TEfLM/AKV4EQ6RLs+lnw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(376014)(7416014)(82310400026)(1800799024)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	IGDZqU49kvsk/xiGKouu9erS5rWIszYi/s2tBfNZVmwAEhWCTTMLEWMxSJzUpZ0QT4cCrfULWCkwbvtUnSal2lv9dhUGyqRsD6hjMMUFn/to1laaSn5/IbM9//YpLEmpDrVI0YvGUvdzGDjjwkpFOEqwY9RvaY08MN9jIo+QvtKCS2T+jDZBCbRUpGhjPrVuGQxkltAi5RbtFi9fDzxh+QYF0lairPQFOBvDj3Klu95XsMYN8bLFfttgaWbivpnnhjXmCSvEar330Pbpibwv4THVI8+MuT+Bmo6AWWlQ2IoI7Ne7ACn9UXzKgfwgMM6d5q9v2bZOnwadNvlucZYik298vbhV1DJPTv9YPXb6NGsok/VPRxSF8QKU77G1aBC+TtLTswnIblh+3k5SUE+iF6TdqrJPH8W8pV8TmSSOr9/M1cNMxCzoTuE9ytNmM0vV
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 16:46:10.3982
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fbc5999-df0d-4336-2b6f-08de7ec488ab
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001E8.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9515
 
-On Mon, Mar 09, 2026 at 11:24:58PM +0100, Thomas Weißschuh wrote:
-> Hi Leo,
+Hi Michael,
+
+>>> By evaluating the privileges at the event-init moment and using cached
+>>> value later, couldn't it lead to the cached value being obsolete at
+>>> some point? E.g. a setuid program later dropping the privileges but
+>>> still being able to read physical addresses?
+>>
+>> Yes, but wouldn't the same concern apply to all other call sites of
+>> perf_allow_kernel() ?
 > 
-> On 2026-03-08 16:46:34+0000, Leo Yan wrote:
-> > Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-> > the compiler.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >  tools/testing/selftests/nolibc/Makefile.nolibc | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/nolibc/Makefile.nolibc b/tools/testing/selftests/nolibc/Makefile.nolibc
-> > index f5704193038f7da935d57e0f894970b6e29b78da..e58b2f5eb2b231bb1c194db7365fff7b4e244e5d 100644
-> > --- a/tools/testing/selftests/nolibc/Makefile.nolibc
-> > +++ b/tools/testing/selftests/nolibc/Makefile.nolibc
-> > @@ -252,6 +252,9 @@ endif
-> >  # Modify CFLAGS based on LLVM=
-> >  include $(srctree)/tools/scripts/Makefile.include
-> >  
-> > +# Append EXTRA_CFLAGS if it is set in tools/scripts/Makefile.include
-> > +CFLAGS  += $(EXTRA_CFLAGS)
-> 
-> Makefile.nolibc here is completely self-contained. It is not expected to
-> inherit any flags from the regular selftests. So I don't think this makes
-> sense. There is a similar, custom "CFLAGS_EXTRA" variable, which could
-> be aligned, but probably not as part of this series.
-> 
-> There is a regular 'Makefile' in this directory which *is* integrated
-> with the regular selftest build system. If you could make sure that
-> it works correctly with what you are doing, that would be great.
+> Well, I don't say this case is worse than the others, just raising a
+> more generic question whether this design is fairly acceptable or would
+> deserve e.g. privilege adjusting at the time when they are dropped or
+> something... Nothing more, just a note... :)
 
-Sure, I will update the regular Makefile.
+I understand. However, performing the privilege check at the beginning
+and then continuing to allow accessing the privileged resource even
+after privileges have been dropped is a common design pattern, isn't it?
+For example, I assume something like this is allowed:
 
-As you suggested, I also will drop patch 18 in new version.
+  fd = open("/root/only/file");
+  setresuid(); /* drop the privilege */
+  read(fd);
 
-Thanks for suggestions!
+Thanks,
+Ravi
