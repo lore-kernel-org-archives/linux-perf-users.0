@@ -1,349 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A37B32C937;
-	Tue, 10 Mar 2026 05:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3639D33C52A;
+	Tue, 10 Mar 2026 06:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773120529; cv=none; b=AaNEBvTlz/6g5Co+7+iD0NW+1EXj/V9jPYitfCEly/6EMHF6/JBfgybKHC//aknAjFMC1K1YkLdoYXD5lQUh9cOn1d+Zqhaa283zD4nhyVxRA71aYMlRPkWLbCkz0p0hQuKicl28/Mua03gpKgpII1WfOs1nMmstIaKIILzN2Yg=
+	t=1773124319; cv=none; b=RfZk+LCau3r33nd6ov7NpmQEbPwOAqdXhB3eexXwwfNQwhzLkLvr2XVRTsBXHzlyCKFwGdC2/8KuJkN+ZnufrEnqv+1Vl5B9bNZmVQJktK2KtIRzOhKFxqiv8hNmm9WQ5VZd48nXjYNHM8wfCmIPIwwAT4RjRqE13Dss2F9r274=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773120529; c=relaxed/simple;
-	bh=zLL0j2J3CKWdyxG7N+oVM1C6hw9PZY0tHgtIRn1rn4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrMr9aRc0OdV/om2UUktMmV8B/dBWwYFVKtHLOuEiBTw1gNSO6QMrnMpkKNMhsreW2ncQif/dvy228SalU2/9LwHXjqMvb1jk5FluX3MixbBoFmB6ROo8XtqgklNHn0GtfutMFpF5VHQ3aBRId0m8zvtfyzr8842idiTzFkS7RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LqVc3WXQ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773124319; c=relaxed/simple;
+	bh=KM3R5EQIJsVb+XLDRflVEdavK2iKly9xWnrGcXBV+WM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NyPJ1+UYGoHhQO0k18BDLagkzXIzUyNo5Ih/N8ivq77cXKozQtbG5Ic3emUlDo6R3NKATNF6oj4XzdDWLP7ZLdhhnYGLWGMqkIPYfeAi75vLQrhV9uPknSF8z+1njWibOyLI5OY/e01crk89UiNMdFSqvz2gX70m05gjTy/XglA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H0KotnfQ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LqVc3WXQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773120527; x=1804656527;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zLL0j2J3CKWdyxG7N+oVM1C6hw9PZY0tHgtIRn1rn4U=;
-  b=LqVc3WXQ+sE1ih6EjRt32IigyR9eQ65FtSzT3In96Guo42eDcMS1L47o
-   JtzuflToNporlT8QwfQcmdsF/jBLogKqDpfaa9pi5o6rdwZotR5aao/Wk
-   prmI3467L8zxH7dbbyphufCTNdnxsrSJpgwpV787xhzAdDgLkjJvPQ2rY
-   UTKVfpPhTjh3wfD7Xlq0sLN4dG/xwfGhpb4wjZ402WvqD+x75pm6Gdl/E
-   qE+eXUpULTSecvFArc7FBNLLOIybgdZRFwVxqmZKJIhTr0xka0qmk8NCD
-   RV+1l6eS6CwEvtzIvaM4PHcFTzXcwPuhbjTvnvRiN2/yD5L1IQBeVTuG2
-   Q==;
-X-CSE-ConnectionGUID: aXITdYQxQYmnFjNpoV/NNA==
-X-CSE-MsgGUID: m9vsYxS4QUCVUX57gWaoRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="74127826"
-X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
-   d="scan'208";a="74127826"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 22:28:46 -0700
-X-CSE-ConnectionGUID: jYXIwd+zTqm3orikkuVZfg==
-X-CSE-MsgGUID: 7SxTGyBTQ5ugZCBsnC8SCw==
-X-ExtLoop1: 1
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 22:28:43 -0700
-Message-ID: <fb9b5ae9-80ce-44ee-9f68-309948f59365@linux.intel.com>
-Date: Tue, 10 Mar 2026 13:28:40 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H0KotnfQ"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629FJsqQ1262800;
+	Tue, 10 Mar 2026 06:30:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SaErOJ
+	OOx+i+eT48z2MnE0DrXZVxkhdRgynwobO8tXY=; b=H0KotnfQa8FWSPxo8oYgbT
+	X4RVQFmvGC4wrMXo2vfkvAC1XQtSeHjIXYNrt2YIyGDrwXwoEuQxot/37l6O9+Li
+	Df/q9WPGntNuI8JaUIIGQyY+suHRNftg9aZE7ttQ95P39ab1gOVYiExEFeuLrPwV
+	SF9HNwYcCX0OJwILaDMletNwX266bI5xMTcTPUvjocQrgXD/K4f+PAg8VBRqWKUu
+	+3I0PxSiAkm19S4gGNZXIBoqFFWxCoCfabv3BcmxXxAfL8kojree7kSUr7HGqeSz
+	8XamwwRTtd8mw6mGgSWk+NXo3nx7ao2+W8NNPzsSemz03QJRP9gjtDnXCnXnmdsQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcun9cx1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Mar 2026 06:30:49 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62A56mw1021168;
+	Tue, 10 Mar 2026 06:30:48 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4crxbsr3ub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Mar 2026 06:30:48 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62A6UkPb27001350
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Mar 2026 06:30:47 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BB73058060;
+	Tue, 10 Mar 2026 06:30:46 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9B4F458051;
+	Tue, 10 Mar 2026 06:30:43 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.98.109.174])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 10 Mar 2026 06:30:43 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 7/7] perf/x86/intel: Add support for rdpmc user disable
- feature
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260112051649.1113435-1-dapeng1.mi@linux.intel.com>
- <20260112051649.1113435-8-dapeng1.mi@linux.intel.com>
- <CAP-5=fXhWssLxjM9s=zai27CU1JbSpz1+GN1=6AM54YAqsqcww@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fXhWssLxjM9s=zai27CU1JbSpz1+GN1=6AM54YAqsqcww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH v2] powerpc, perf: Check that current->mm is alive before
+ getting user callchain
+From: Venkat <venkat88@linux.ibm.com>
+In-Reply-To: <aa71fOBjQwvCFFNq@linux.ibm.com>
+Date: Tue, 10 Mar 2026 12:00:31 +0530
+Cc: Viktor Malik <vmalik@redhat.com>, linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@ozlabs.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F8560AA7-E351-49B6-AD7E-1E65C901D806@linux.ibm.com>
+References: <20260309144045.169427-1-vmalik@redhat.com>
+ <aa71fOBjQwvCFFNq@linux.ibm.com>
+To: Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+        Viktor Malik <vmalik@redhat.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: k_IHO-GGdi6Y5h5NLU1_6rgR5OzdJV6T
+X-Authority-Analysis: v=2.4 cv=Hp172kTS c=1 sm=1 tr=0 ts=69afba9a cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=20KFwNOVAAAA:8 a=FTemPexENOiiN3R5Jr8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEwMDA0OCBTYWx0ZWRfX3RqwDW+CP43K
+ DcXOAus0tRXU3vg5MF9Aw4Bc2A1vfY2gJptZN1A4+E+DH3njJ/PWmTS9sHupl7U9fZujTWEUTft
+ W1z9CLPZhwApQOCsRUDIm9u/8tP1YrndJEAgABi1U57H9uS6hmh0ievfDpdPY5ai2k07m/Wq/8R
+ 23o3T1rEwhLa2+/fHIS8UX/95PccrPBvJvlWejOhzqZinkr4nJmjRf4r3O3In9fqT+DOX9C1iJT
+ uBDks+8qtSvo7C/MfOtKaQzzJ4n/omFzATFeoqu4f3aKWFgNla/gtNpHMupKkBj43lEyCpQRQqy
+ QfxBrj7trpFQwXmdHqmXj0Tnd4V2K6mwTx1wTu1rnvK7Lg0df6RtyXtPboeYtdGwiQl6JWa72qb
+ XhSMnh1XzSNUDtbELpYOLwkVj2WDNyuTASK+gIGJ9GovV23q6NG8BK1LMIaLoJHiLB0LW8t9Z4n
+ AsibeIJP8oyZddIf8Ww==
+X-Proofpoint-ORIG-GUID: twKloH2qB9W8EqoRy6abojGwRbwrdKE5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-10_01,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603100048
 
 
-On 3/10/2026 8:04 AM, Ian Rogers wrote:
-> On Sun, Jan 11, 2026 at 9:20 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Starting with Panther Cove, the rdpmc user disable feature is supported.
->> This feature allows the perf system to disable user space rdpmc reads at
->> the counter level.
->>
->> Currently, when a global counter is active, any user with rdpmc rights
->> can read it, even if perf access permissions forbid it (e.g., disallow
->> reading ring 0 counters). The rdpmc user disable feature mitigates this
->> security concern.
->>
->> Details:
->>
->> - A new RDPMC_USR_DISABLE bit (bit 37) in each EVNTSELx MSR indicates
->>   that the GP counter cannot be read by RDPMC in ring 3.
->> - New RDPMC_USR_DISABLE bits in IA32_FIXED_CTR_CTRL MSR (bits 33, 37,
->>   41, 45, etc.) for fixed counters 0, 1, 2, 3, etc.
->> - When calling rdpmc instruction for counter x, the following pseudo
->>   code demonstrates how the counter value is obtained:
->>         If (!CPL0 && RDPMC_USR_DISABLE[x] == 1) ? 0 : counter_value;
->> - RDPMC_USR_DISABLE is enumerated by CPUID.0x23.0.EBX[2].
->>
->> This patch extends the current global user space rdpmc control logic via
->> the sysfs interface (/sys/devices/cpu/rdpmc) as follows:
->>
->> - rdpmc = 0:
->>   Global user space rdpmc and counter-level user space rdpmc for all
->>   counters are both disabled.
->> - rdpmc = 1:
->>   Global user space rdpmc is enabled during the mmap-enabled time window,
->>   and counter-level user space rdpmc is enabled only for non-system-wide
->>   events. This prevents counter data leaks as count data is cleared
->>   during context switches.
->> - rdpmc = 2:
->>   Global user space rdpmc and counter-level user space rdpmc for all
->>   counters are enabled unconditionally.
->>
->> The new rdpmc settings only affect newly activated perf events; currently
->> active perf events remain unaffected. This simplifies and cleans up the
->> code. The default value of rdpmc remains unchanged at 1.
->>
->> For more details about rdpmc user disable, please refer to chapter 15
->> "RDPMC USER DISABLE" in ISE documentation.
->>
->> ISE: https://www.intel.com/content/www/us/en/content-details/869288/intel-architecture-instruction-set-extensions-programming-reference.html
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+> On 9 Mar 2026, at 9:59=E2=80=AFPM, Saket Kumar Bhaskar =
+<skb99@linux.ibm.com> wrote:
+>=20
+> On Mon, Mar 09, 2026 at 03:40:45PM +0100, Viktor Malik wrote:
+>> It may happen that mm is already released, which leads to kernel =
+panic.
+>> This adds the NULL check for current->mm, similarly to 20afc60f892d
+>> ("x86, perf: Check that current->mm is alive before getting user
+>> callchain").
+>>=20
+>> I was getting this panic when running a profiling BPF program
+>> (profile.py from bcc-tools):
+>>=20
+>>    [26215.051935] Kernel attempted to read user page (588) - exploit =
+attempt? (uid: 0)
+>>    [26215.051950] BUG: Kernel NULL pointer dereference on read at =
+0x00000588
+>>    [26215.051952] Faulting instruction address: 0xc00000000020fac0
+>>    [26215.051957] Oops: Kernel access of bad area, sig: 11 [#1]
+>>    [...]
+>>    [26215.052049] Call Trace:
+>>    [26215.052050] [c000000061da6d30] [c00000000020fc10] =
+perf_callchain_user_64+0x2d0/0x490 (unreliable)
+>>    [26215.052054] [c000000061da6dc0] [c00000000020f92c] =
+perf_callchain_user+0x1c/0x30
+>>    [26215.052057] [c000000061da6de0] [c0000000005ab2a0] =
+get_perf_callchain+0x100/0x360
+>>    [26215.052063] [c000000061da6e70] [c000000000573bc8] =
+bpf_get_stackid+0x88/0xf0
+>>    [26215.052067] [c000000061da6ea0] [c008000000042258] =
+bpf_prog_16d4ab9ab662f669_do_perf_event+0xf8/0x274
+>>    [...]
+>>=20
+>> In addition, move storing the top-level stack entry to generic
+>> perf_callchain_user to make sure the top-evel entry is always =
+captured,
+>> even if current->mm is NULL.
+>>=20
+>> Fixes: 20002ded4d93 ("perf_counter: powerpc: Add callchain support")
+>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
 >> ---
->>  .../sysfs-bus-event_source-devices-rdpmc      | 40 +++++++++++++++++++
->>  arch/x86/events/core.c                        | 21 ++++++++++
->>  arch/x86/events/intel/core.c                  | 26 ++++++++++++
->>  arch/x86/events/perf_event.h                  |  6 +++
->>  arch/x86/include/asm/perf_event.h             |  8 +++-
->>  5 files changed, 99 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc b/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
->> new file mode 100644
->> index 000000000000..d004527ab13e
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-rdpmc
->> @@ -0,0 +1,40 @@
->> +What:           /sys/bus/event_source/devices/cpu.../rdpmc
->> +Date:           November 2011
->> +KernelVersion:  3.10
->> +Contact:        Linux kernel mailing list linux-kernel@vger.kernel.org
->> +Description:    The /sys/bus/event_source/devices/cpu.../rdpmc attribute
->> +                is used to show/manage if rdpmc instruction can be
->> +                executed in user space. This attribute supports 3 numbers.
->> +                - rdpmc = 0
->> +                user space rdpmc is globally disabled for all PMU
->> +                counters.
->> +                - rdpmc = 1
->> +                user space rdpmc is globally enabled only in event mmap
->> +                ioctl called time window. If the mmap region is unmapped,
->> +                user space rdpmc is disabled again.
->> +                - rdpmc = 2
->> +                user space rdpmc is globally enabled for all PMU
->> +                counters.
->> +
->> +                In the Intel platforms supporting counter level's user
->> +                space rdpmc disable feature (CPUID.23H.EBX[2] = 1), the
->> +                meaning of 3 numbers is extended to
->> +                - rdpmc = 0
->> +                global user space rdpmc and counter level's user space
->> +                rdpmc of all counters are both disabled.
->> +                - rdpmc = 1
->> +                No changes on behavior of global user space rdpmc.
->> +                counter level's rdpmc of system-wide events is disabled
->> +                but counter level's rdpmc of non-system-wide events is
->> +                enabled.
->> +                - rdpmc = 2
->> +                global user space rdpmc and counter level's user space
->> +                rdpmc of all counters are both enabled unconditionally.
->> +
->> +                The default value of rdpmc is 1.
->> +
->> +                Please notice global user space rdpmc's behavior would
->> +                change immediately along with the rdpmc value's change,
->> +                but the behavior of counter level's user space rdpmc
->> +                won't take effect immediately until the event is
->> +                reactivated or recreated.
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index c2717cb5034f..6df73e8398cd 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -2616,6 +2616,27 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
->>         return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
->>  }
->>
->> +/*
->> + * Behaviors of rdpmc value:
->> + * - rdpmc = 0
->> + *    global user space rdpmc and counter level's user space rdpmc of all
->> + *    counters are both disabled.
->> + * - rdpmc = 1
->> + *    global user space rdpmc is enabled in mmap enabled time window and
->> + *    counter level's user space rdpmc is enabled for only non system-wide
->> + *    events. Counter level's user space rdpmc of system-wide events is
->> + *    still disabled by default. This won't introduce counter data leak for
->> + *    non system-wide events since their count data would be cleared when
->> + *    context switches.
->> + * - rdpmc = 2
->> + *    global user space rdpmc and counter level's user space rdpmc of all
->> + *    counters are enabled unconditionally.
->> + *
->> + * Suppose the rdpmc value won't be changed frequently, don't dynamically
->> + * reschedule events to make the new rpdmc value take effect on active perf
->> + * events immediately, the new rdpmc value would only impact the new
->> + * activated perf events. This makes code simpler and cleaner.
->> + */
->>  static ssize_t set_attr_rdpmc(struct device *cdev,
->>                               struct device_attribute *attr,
->>                               const char *buf, size_t count)
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index dd488a095f33..77cf849a1381 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -3128,6 +3128,8 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
->>                 bits |= INTEL_FIXED_0_USER;
->>         if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
->>                 bits |= INTEL_FIXED_0_KERNEL;
->> +       if (hwc->config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
->> +               bits |= INTEL_FIXED_0_RDPMC_USER_DISABLE;
->>
->>         /*
->>          * ANY bit is supported in v3 and up
->> @@ -3263,6 +3265,26 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
->>                 __intel_pmu_update_event_ext(hwc->idx, ext);
->>  }
->>
->> +static void intel_pmu_update_rdpmc_user_disable(struct perf_event *event)
->> +{
->> +       /*
->> +        * Counter scope's user-space rdpmc is disabled by default
->> +        * except two cases.
->> +        * a. rdpmc = 2 (user space rdpmc enabled unconditionally)
->> +        * b. rdpmc = 1 and the event is not a system-wide event.
->> +        *    The count of non-system-wide events would be cleared when
->> +        *    context switches, so no count data is leaked.
->> +        */
->> +       if (x86_pmu_has_rdpmc_user_disable(event->pmu)) {
->> +               if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE ||
->> +                   (x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE &&
->> +                    event->ctx->task))
->> +                       event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
->> +               else
->> +                       event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
-> AI code review flagged this, but I think the conditions are discussed
-> in the comments. Posting the AI review out just in case as I'm not
-> sure:
->   If x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE (1) and
-> this is a system-wide event, RDPMC_USER_DISABLE is set to block rdpmc
-> in user space. However, during x86_pmu_event_init(),
-> PERF_EVENT_FLAG_USER_READ_CNT is set because x86_pmu.attr_rdpmc is
-> non-zero. Since it is not cleared when RDPMC_USER_DISABLE is active,
-> arch_perf_update_userpage() will still set cap_user_rdpmc = 1. Does
-> this cause user space to mistakenly attempt rdpmc? If user space uses
-> rdpmc for the system-wide event, the hardware will return 0 due to the
-> RDPMC_USER_DISABLE bit, which might result in user space silently
-> reading garbage values instead of falling back to the read() syscall.
-> Would it make sense to clear cap_user_rdpmc when RDPMC_USER_DISABLE is
-> set?
 
-Yes, I suppose the comment makes sense. We can further update the
-cap_user_rdpmc  base on the RDPMC_USER_DISABLE bit. Thanks.
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
+This patch fixes, reported issue.
 
->
-> Thanks,
-> Ian
->
->> +       }
->> +}
+Regards,
+Venkat.
+>> Changes in v2:
+>> - Move call to perf_callchain_store() for the top-level stack entry =
+to
+>>  common perf_callchain_user (Saket)
+>>=20
+>> arch/powerpc/perf/callchain.c    | 5 +++++
+>> arch/powerpc/perf/callchain_32.c | 1 -
+>> arch/powerpc/perf/callchain_64.c | 1 -
+>> 3 files changed, 5 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/arch/powerpc/perf/callchain.c =
+b/arch/powerpc/perf/callchain.c
+>> index 26aa26482c9a..992cc5c98214 100644
+>> --- a/arch/powerpc/perf/callchain.c
+>> +++ b/arch/powerpc/perf/callchain.c
+>> @@ -103,6 +103,11 @@ perf_callchain_kernel(struct =
+perf_callchain_entry_ctx *entry, struct pt_regs *re
+>> void
+>> perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct =
+pt_regs *regs)
+>> {
+>> + perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
 >> +
->>  DEFINE_STATIC_CALL_NULL(intel_pmu_enable_event_ext, intel_pmu_enable_event_ext);
->>
->>  static void intel_pmu_enable_event(struct perf_event *event)
->> @@ -3271,6 +3293,8 @@ static void intel_pmu_enable_event(struct perf_event *event)
->>         struct hw_perf_event *hwc = &event->hw;
->>         int idx = hwc->idx;
->>
->> +       intel_pmu_update_rdpmc_user_disable(event);
+>> + if (!current->mm)
+>> + return;
 >> +
->>         if (unlikely(event->attr.precise_ip))
->>                 static_call(x86_pmu_pebs_enable)(event);
->>
->> @@ -5863,6 +5887,8 @@ static void update_pmu_cap(struct pmu *pmu)
->>                 hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_UMASK2;
->>         if (ebx_0.split.eq)
->>                 hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_EQ;
->> +       if (ebx_0.split.rdpmc_user_disable)
->> +               hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
->>
->>         if (eax_0.split.cntr_subleaf) {
->>                 cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
->> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->> index 24a81d2916e9..cd337f3ffd01 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -1333,6 +1333,12 @@ static inline u64 x86_pmu_get_event_config(struct perf_event *event)
->>         return event->attr.config & hybrid(event->pmu, config_mask);
->>  }
->>
->> +static inline bool x86_pmu_has_rdpmc_user_disable(struct pmu *pmu)
->> +{
->> +       return !!(hybrid(pmu, config_mask) &
->> +                ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
->> +}
->> +
->>  extern struct event_constraint emptyconstraint;
->>
->>  extern struct event_constraint unconstrained;
->> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
->> index 0d9af4135e0a..ff5acb8b199b 100644
->> --- a/arch/x86/include/asm/perf_event.h
->> +++ b/arch/x86/include/asm/perf_event.h
->> @@ -33,6 +33,7 @@
->>  #define ARCH_PERFMON_EVENTSEL_CMASK                    0xFF000000ULL
->>  #define ARCH_PERFMON_EVENTSEL_BR_CNTR                  (1ULL << 35)
->>  #define ARCH_PERFMON_EVENTSEL_EQ                       (1ULL << 36)
->> +#define ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE       (1ULL << 37)
->>  #define ARCH_PERFMON_EVENTSEL_UMASK2                   (0xFFULL << 40)
->>
->>  #define INTEL_FIXED_BITS_STRIDE                        4
->> @@ -40,6 +41,7 @@
->>  #define INTEL_FIXED_0_USER                             (1ULL << 1)
->>  #define INTEL_FIXED_0_ANYTHREAD                        (1ULL << 2)
->>  #define INTEL_FIXED_0_ENABLE_PMI                       (1ULL << 3)
->> +#define INTEL_FIXED_0_RDPMC_USER_DISABLE               (1ULL << 33)
->>  #define INTEL_FIXED_3_METRICS_CLEAR                    (1ULL << 2)
->>
->>  #define HSW_IN_TX                                      (1ULL << 32)
->> @@ -50,7 +52,7 @@
->>  #define INTEL_FIXED_BITS_MASK                                  \
->>         (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER |            \
->>          INTEL_FIXED_0_ANYTHREAD | INTEL_FIXED_0_ENABLE_PMI |   \
->> -        ICL_FIXED_0_ADAPTIVE)
->> +        ICL_FIXED_0_ADAPTIVE | INTEL_FIXED_0_RDPMC_USER_DISABLE)
->>
->>  #define intel_fixed_bits_by_idx(_idx, _bits)                   \
->>         ((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
->> @@ -226,7 +228,9 @@ union cpuid35_ebx {
->>                 unsigned int    umask2:1;
->>                 /* EQ-bit Supported */
->>                 unsigned int    eq:1;
->> -               unsigned int    reserved:30;
->> +               /* rdpmc user disable Supported */
->> +               unsigned int    rdpmc_user_disable:1;
->> +               unsigned int    reserved:29;
->>         } split;
->>         unsigned int            full;
->>  };
->> --
->> 2.34.1
->>
+>> if (!is_32bit_task())
+>> perf_callchain_user_64(entry, regs);
+>> else
+>> diff --git a/arch/powerpc/perf/callchain_32.c =
+b/arch/powerpc/perf/callchain_32.c
+>> index ddcc2d8aa64a..0de21c5d272c 100644
+>> --- a/arch/powerpc/perf/callchain_32.c
+>> +++ b/arch/powerpc/perf/callchain_32.c
+>> @@ -142,7 +142,6 @@ void perf_callchain_user_32(struct =
+perf_callchain_entry_ctx *entry,
+>> next_ip =3D perf_arch_instruction_pointer(regs);
+>> lr =3D regs->link;
+>> sp =3D regs->gpr[1];
+>> - perf_callchain_store(entry, next_ip);
+>>=20
+>> while (entry->nr < entry->max_stack) {
+>> fp =3D (unsigned int __user *) (unsigned long) sp;
+>> diff --git a/arch/powerpc/perf/callchain_64.c =
+b/arch/powerpc/perf/callchain_64.c
+>> index 115d1c105e8a..30fb61c5f0cb 100644
+>> --- a/arch/powerpc/perf/callchain_64.c
+>> +++ b/arch/powerpc/perf/callchain_64.c
+>> @@ -77,7 +77,6 @@ void perf_callchain_user_64(struct =
+perf_callchain_entry_ctx *entry,
+>> next_ip =3D perf_arch_instruction_pointer(regs);
+>> lr =3D regs->link;
+>> sp =3D regs->gpr[1];
+>> - perf_callchain_store(entry, next_ip);
+>>=20
+>> while (entry->nr < entry->max_stack) {
+>> fp =3D (unsigned long __user *) sp;
+>> --=20
+>> 2.53.0
+> LGTM, feel free to add below tag:
+> Reviewed-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+>>=20
+
