@@ -1,119 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225083D8127;
-	Tue, 10 Mar 2026 17:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317BA2857F0
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2026 17:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773165187; cv=none; b=PntrQXFL1RND8+s5wouVPEtIm9tx8/Ud3a0Iv9gVuEAfQNjk7x0TGtk57IG9q/bU8xFYbUazk6q6mGDAOjC8o577hM1V883VmHuDZ9p7aKJlVoPkXlvWRGYN284a+mHQ56pZHbjWjCAO0CC2wmcdm5pMqpcLMPRJNC8X7jNZT/k=
+	t=1773165597; cv=none; b=Pj5EbNSwjKr4/b3FPOIeiO/Ogj4okYlJUdVrS5JawnHUkOJHeDEYkEZ4Au5sCbCfbLF6Z+1Ud1uEtrFP3JWkvmG2uJdIkpdinBFiJcLG+Hr54aSH7L0FXv7gyG5MLKALmOCmAKDKK5Lh/oGGaoXRrnJPRzw20hVrp7HyEzfdxgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773165187; c=relaxed/simple;
-	bh=WO2FOycvuuimWf2BBulOdnsAjAo+YazNHVVwxkp7CTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZCvBZQfG1HtZq82QDgI6g7a3FjjKn04wJMU334qjLDMqo+dvs6IcSjtICDicC/+TG/vHM6cMed6WbmHhVgq8NCTZtur7tlZ4YC55EpA7mqIF5y2lVqLcmYVm6iotP17sk7/uNhOVUmk1RjZv776c1gzy9eu2KxL1q8YrjM0gUVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBcXb+X8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773165597; c=relaxed/simple;
+	bh=BulqueY2ZgnknkLPrfAhmT9uh9IL/k8A192OgroQeIQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CF5pMWM3h5fM9dyIowYP6szfRSKGoMHQR6pllAiVChsYqjHE3sGnSgU2z4o8KF91BrTUSCovoTleoVUH5imNSOLORZjfsC75qlC6Ts6hPunT0PHhibGyZipZYHkKVmtl+T+pVzxem58peLB8c6vWmg+9RQqKJwBnADanoXHpWeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgqIRDzr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBcXb+X8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72949C19423;
-	Tue, 10 Mar 2026 17:53:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgqIRDzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA48C19423;
+	Tue, 10 Mar 2026 17:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773165186;
-	bh=WO2FOycvuuimWf2BBulOdnsAjAo+YazNHVVwxkp7CTQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eBcXb+X80rgKqCBvLspNlTOV1vd/pku+H6vrMwjnIUc1EPld/SwvI87VOk2v9spAk
-	 mQwzcYlSAluwZ68uAzim6BOLYhwuR8hvCczaCcrGemVxRjRgvMRz7of7bwaxtz6kRd
-	 8qySGXq8grwSK5TKxbSjaXWiTsWNvgZx6eHB/8xZY8WWUeaScw3fMAM7MDLDfNxl7z
-	 tuQvq86WkhT8OZAzrXBsWUK0J89R9XxcjJg1hqWabtJJwZex+dDwXjeMi63lPBbZNv
-	 qOKy8IvjIYCvJ2lP43twwYPykiMiWqj4+PjF4xTACYlgH5VX2O6O8QN3kfkzkExPxm
-	 ckaiF6BuuSr7Q==
-Date: Tue, 10 Mar 2026 12:53:05 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>, wangzhou1@hisilicon.com,
-	wanghuiqiang@huawei.com, liuyonglong@huawei.com,
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] ACPI: Rename get_acpi_id_for_cpu() to
- acpi_get_cpu_acpi_id() on non-x86
-Message-ID: <20260310175305.GA730372@bhelgaas>
+	s=k20201202; t=1773165596;
+	bh=BulqueY2ZgnknkLPrfAhmT9uh9IL/k8A192OgroQeIQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CgqIRDzrxhNOi0KIehID6ibIDjVZuSaeQVgiGZ4yznVNzIcSnTturBO2URGSBxMqF
+	 SjVNUXqiKJ2NMuAegH/nzxoywACJu71Mg19O8AXLtmsJHbzH+Oe0rlDo7JEltEWLrs
+	 xH8u5ToGt+C2+10deaTcs7NQWnZsOXI0UVNUm3GVydB5EszWBbjftUvXW6RlwrjNq9
+	 91qgX+wDcISCSJP1iOY4pAQY+yhrOCwREOPHQ+AaPMkHRARiJ44WqxYXoXR5bfr1Ws
+	 qW/kcac4uO/F60n4F2u2e0ilYPVCLOyIGlfu7kj10iIwQ9Nrdvk8YnW06cB7VGZtKa
+	 XH2KH1h2D+WtQ==
+From: Chuck Lever <cel@kernel.org>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v1] perf synthetic-events: Fix stale build ID in module MMAP2 records
+Date: Tue, 10 Mar 2026 13:59:51 -0400
+Message-ID: <20260310175951.29500-1-cel@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310032049.25387-2-fengchengwen@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 10, 2026 at 11:20:48AM +0800, Chengwen Feng wrote:
-> To unify the CPU ACPI ID retrieval interface across architectures,
-> rename the existing get_acpi_id_for_cpu() function to
-> acpi_get_cpu_acpi_id() on arm64/riscv/loongarch platforms.
-> 
-> This is a pure rename with no functional change, preparing for a
-> consistent ACPI Processor UID retrieval interface across all ACPI-enabled
-> platforms.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Really a question for the ACPI folks, but my preferences would be:
+perf_event__synthesize_modules() allocates a single union
+perf_event and reuses it across every kernel module callback.
+After the first module is processed,
+perf_record_mmap2__read_build_id() sets
+PERF_RECORD_MISC_MMAP_BUILD_ID in header.misc and writes that
+module's build ID into the event. On subsequent iterations the
+callback overwrites start, len, pid, and filename for the next
+module but never clears the stale build ID fields or the
+MMAP_BUILD_ID flag. When perf_record_mmap2__read_build_id()
+runs for the second module it sees the flag, reads the stale
+build ID into a dso_id, and __dso__improve_id() permanently
+poisons the DSO with the wrong build ID. Every module after
+the first therefore receives the first module's build ID in
+its MMAP2 record. On a system with the sunrpc and nfsd modules
+loaded, this causes perf script and perf report to show
+[unknown] for all module symbols.
 
-  - Simpler name for the interface, e.g., "acpi_get_cpu_id()"
+The latent bug has existed since commit d9f2ecbc5e47 ("perf
+dso: Move build_id to dso_id") introduced the
+PERF_RECORD_MISC_MMAP_BUILD_ID check in
+perf_record_mmap2__read_build_id(). Commit 53b00ff358dc ("perf
+record: Make --buildid-mmap the default") then exposed it to
+all users by making the MMAP2-with-build-ID path the default.
+Both commits were merged in the same series.
 
-  - Single prototype in generic header, e.g., include/linux/acpi.h
+Clear the MMAP_BUILD_ID flag and zero the build_id union
+before each call to perf_record_mmap2__read_build_id() so
+that every module starts with a clean slate.
 
-  - Split the x86 part to a separate patch and maybe (a tangent, but
-    looks dubious to me) figure out whether/why xen needs xen_vcpu_id
-    to be ACPI CPU IDs
+Fixes: d9f2ecbc5e47 ("perf dso: Move build_id to dso_id")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ tools/perf/util/synthetic-events.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> ---
->  arch/arm64/include/asm/acpi.h      |  4 ++--
->  arch/loongarch/include/asm/acpi.h  |  2 +-
->  arch/riscv/include/asm/acpi.h      |  2 +-
->  arch/riscv/kernel/acpi_numa.c      |  2 +-
->  drivers/acpi/pptt.c                | 16 ++++++++--------
->  drivers/acpi/riscv/rhct.c          |  2 +-
->  drivers/perf/arm_cspmu/arm_cspmu.c |  2 +-
->  7 files changed, 15 insertions(+), 15 deletions(-)
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index ef79433ebc3a..ddf1cbda1902 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -703,6 +703,11 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+ 
+ 		memcpy(event->mmap2.filename, dso__long_name(dso), dso__long_name_len(dso) + 1);
+ 
++		/* Clear stale build ID from previous module iteration */
++		event->mmap2.header.misc &= ~PERF_RECORD_MISC_MMAP_BUILD_ID;
++		memset(event->mmap2.build_id, 0, sizeof(event->mmap2.build_id));
++		event->mmap2.build_id_size = 0;
++
+ 		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
+ 	} else {
+ 		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
+-- 
+2.53.0
+
