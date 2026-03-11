@@ -1,172 +1,238 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BECC3603DA
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 09:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD813C8729
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 10:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773221932; cv=none; b=BMfIe0Xb1aEaNTDTKEdxxX+9AWYQwjUijoa2mITheoY1qxJp6UQ1l95xmnhUjJVoUs4jJWB6nSHbKL9FlXzlfVkWpwYlm2xTRREUnMypSBOJNmQ0iCqGI4KE8uXC7ByJPuVd1gilgxf7OvAiXOrGNDD3I1bFeMCCg99jhzr7WrI=
+	t=1773224170; cv=none; b=me0oOsUekNUQxp2FUw5E4tWvolK0E64MJ/Kfh3OzyXQubMywT27VVybnmyMcH+cO820fThEwpONyKgnH3yzzOY66IpPHb4YKwXGX0K7Kwq2ki8wZSuHJ0+b+eojKzlgseSWxjwtjuMf0pNUi6KmyPMS22cb9LIeLbARk2MiCN1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773221932; c=relaxed/simple;
-	bh=ceq7ItjI410zJHY9ex/lB3H7siEVATfaO1bldTHFjis=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Mqr5YngqhWdDDjCitKw/LzFT7I9hGUoRhhOlhj/kgLeNfk06/JzFlEwpEI4QAJ2jPVyOktorxzP9WCbeHvtTDK9C9IfrsUSJ4L7mIO5Nd/tbfzoNMmeRWJ/5VhuFkeldNx9sak5QjjFkOvaB60QQZDxc7hmVgyUiZtmC9aJnD1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BnNzevha; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1773224170; c=relaxed/simple;
+	bh=wPOlGJegScfjGXLqN02j6e37cMLeoiGng2UniPA/m/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XbVCO8wbkmlFFU82uB7bU2eBU43HKMk6w0KM4cOpBKFD8/SO1BYE2T211CwBfeS+Cy96xDizAiNjvv3RweKAv35mYBVTDZl6FhRrFa5XiOFATG/nRXv5FPbWrWyN2Bt19Jfh9gd2J4mIKW1pL+S25lWZMzFHwojvrXiUiqr65NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=POgbHspI; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnNzevha"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b940da8ec09so666436066b.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 02:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POgbHspI"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-439afc58ac7so11243046f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 03:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773221929; x=1773826729; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RQubQpcCCRw5LR5oprIFTZzoSHmrBMbhMG4Ewb+bDNM=;
-        b=BnNzevhaOLmgv2VG3RJz5MjAMfYffQeX/O07otWuu5Vg3kJ+l8eK/VwR8aD0JHqx0v
-         0GBpWmAirkhFhsFyBUr2+qtsdtvU/Lz7VkN4rbvt52T98j10+k9rEUbNYNi5Rt2KlRij
-         dFrMaZnAsT0/bqy0ITXDFUhyOssdQGYMQejLlmohDF01F4I6EEyWj2S4T0VUqzvhY9O3
-         IviyDvBhD0KWS7EKN5Siyu5lacrKas35yFDnt9cw7pzdUqdhFCkHT1+1l/yRmadDjUpo
-         74N+8NuOP1haXz8kZkdGH/F6OjcC9IZMSl03SJnjQAHciV/kfZCCsJ4JMMHYQLotg7m6
-         aHGg==
+        d=linaro.org; s=google; t=1773224166; x=1773828966; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=traLbeCphIWDAPRf8wXsen2JdQ2Go7wYWE6BuOL/0nw=;
+        b=POgbHspIGX4XQfy2d2Wdh4cQcjoLeEiTozxq6PIqEagqreaR9ipnXBSw8FM7F5SH6g
+         iXwfLC8QdxUVEpfnIIs5TjBVqRfenHQ10KnL0iCmPoRKhaWa8YG1wpAug50Tisv+iHPg
+         ltET8pumrh1JZ+EM2NZNWM4RYtYL+Ye5Pc+BoPScUPMLu7rdtZQENa0ZgyH/D6EgWdb+
+         cc9syNp0hbrUWPvmpb87HV6WDApJLATjBGbub6PJWKOwgDalTCyxNzzQWJUeqbPWYc68
+         DmkGpd0I+rTb48kEtZlxp9s3cmpG84Bdg9SokdB+flQKRKYcz5iOWCALYhAs2R8FGKF1
+         /Gkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773221929; x=1773826729;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RQubQpcCCRw5LR5oprIFTZzoSHmrBMbhMG4Ewb+bDNM=;
-        b=Wc9/5EMX3bzFOllKfp4MufUW5/0/ZOUb+3EKG9JKfltZyCRz+3Lvmjnm8HOgmcAAjR
-         Ekf+W3E8nqNjU/dfRqIyBfIngBM8De6/J1U4t0eDb17Arm1JMV4lqP4P/ZRIHWL/hrgy
-         QRworArTOaPYF9y7vCh1gK0tMg6Nx0NDu6O2tdvw+z69Bu1h871ViQh3WOGErSQSBnIO
-         iGKL+eBt5ai9O2WnfpQykzDLtFtlxyqEY2QSJXeJ3IMYrpM3q/9GVnxQFJEO3bgpnRmc
-         kWSAaDzFoWn1/IGpVr3hEio3GQ0UZJ9wAJ8TOifOTfvzwzeVp1ON5YQwwkno8jKl4xvs
-         ISJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNCanmnZw6+17+9nXgiH/h9NFx/DcWU2HOFk/pBjwmYCwyXUx1TRhwE0sN9FJlT4QUHfYnRvAg2PjcCjIsUCgw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlZ8KHtmnlxgWVMTJV5HY2ND1ZP8PPiQXW41lsu/HvHlqKjQaM
-	rNn1cr4PnftqpCy3zptWwA5jBEXEK6d7/u/OB85ZbBj2mr5nmrq81/UQKAKsAAdFIBeR/qNFUpw
-	Nb7PMpGtZG3c0LV0jXQ==
-X-Received: from ejja22.prod.google.com ([2002:a17:906:3e96:b0:b8e:ad99:be59])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:906:f592:b0:b87:2abc:4a32 with SMTP id a640c23a62f3a-b972e1d254cmr101140266b.18.1773221928398;
- Wed, 11 Mar 2026 02:38:48 -0700 (PDT)
-Date: Wed, 11 Mar 2026 09:38:45 +0000
-In-Reply-To: <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
+        d=1e100.net; s=20230601; t=1773224166; x=1773828966;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=traLbeCphIWDAPRf8wXsen2JdQ2Go7wYWE6BuOL/0nw=;
+        b=Jr91YWEhxBT8nAxhy965poncg9/TcjLGvjCQQxgFL/7fI3o103naFrEzGrAglCWBq4
+         AVhPU4g3gwypUXrrM8ZBgOyWtn95+aiikxGyHTg6NFjFWPDu91XFWDUzSBCYvdw1TuS/
+         509S21N+rDJHMa4n5UMLyuK2Bm9gtnbcowOcA2BDbB2gy6bNUII3HZkZo6PLmPyyCD6x
+         7yLB8XzLQDMhe2r77nuBTvrrjEn3vZy6IooILnNLAo2e/HC+Xht4sEk7aKl8/+sTNlsQ
+         wklp7n8LTtYYXkCyuByAxQEGwurorBEGB8E0KFVVlBi1n0I0Ybote3J7c3V0ctJ0v72S
+         oVyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXO0K2kfPHGNBmJ26G2FvlJubYnbnDGC3IP3FadLQXGyjyAx2vbXlD0CN82DoAxLf8eVuxvhOXnpxc3PD6tvLBR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+il3q7348qt+M3/yeX2tE+l//4hMjEoiD7W72wnDcTz8tTNTO
+	r5/zHZLlZnKDV0cTfJKP7yV7I2tVB+xf5EOnRirIvL/NjePH44l4/5wHHPpshIIvL3c=
+X-Gm-Gg: ATEYQzzTqXnyyj2BRUsRTGz7vJAmSXoilxycSuwNQtxrZixbH2T3W3bmFvrJHy9AUP4
+	Hg0YhsWN/4UgUha5zdrAYwdJkVAuqB9kkPARWN2Ng+nDSnF+nWfnVuOaWxwEXKQMUBy0v7egze9
+	/+2NPdWqi5O+a1l0xs6d/72BD3SpnR4hTMM9+lWHMH85j9hG2lF2OIPG3lEGMK59MdmW8+DWXqt
+	QF9X0iTVZ9c9mQ6CNFI+rZoqNLrI0wNXgnkHY4DoRhRipnt5+1quIt5GSGxsW75boXH01wGN8Hb
+	v4k3XtleUv3I1C7ZJpO3YS61DyQXdxylRtaKMQXUUctnoLQC7GC2H6aX06YTzczaDkBAH9FO5TB
+	QwP8E9VnvRJV29CjJAr+z3zbgp3SdX7k0K7ZBFc4CxKbMvcmZLJBSXdlVZLEz+X9DeJG6svloJk
+	0o10HqBu36y0YlOEx4wep3OEEMEmcK
+X-Received: by 2002:a05:6000:228a:b0:439:b7c9:2ef1 with SMTP id ffacd0b85a97d-439f81c639bmr3834639f8f.20.1773224165981;
+        Wed, 11 Mar 2026 03:16:05 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f81a0480sm5386398f8f.12.2026.03.11.03.16.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2026 03:16:05 -0700 (PDT)
+Message-ID: <70621066-d327-4206-9be9-28531ad136b0@linaro.org>
+Date: Wed, 11 Mar 2026 10:16:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-17-david@kernel.org>
- <20260309142954.GM1687929@ziepe.ca> <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
-Message-ID: <abE4JYo223OxWCBQ@google.com>
-Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in zap_special_vma_range()
-From: Alice Ryhl <aliceryhl@google.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
-	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
-	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Leon Romanovsky <leon@kernel.org>, 
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
-	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
+ exit
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <Suzuki.Poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Mike Leach <mike.leach@linaro.org>
+References: <20251024170543.11201-1-thaumy.love@gmail.com>
+ <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
+ <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
+ <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+ <20260303142948.GA3698720@noisy.programming.kicks-ass.net>
+ <CAP-5=fX5-fAA8exsxusktUPkvVUfzBqHyAFQMAuc7xg7_ZUJLw@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fX5-fAA8exsxusktUPkvVUfzBqHyAFQMAuc7xg7_ZUJLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 11, 2026 at 10:15:12AM +0100, David Hildenbrand (Arm) wrote:
-> On 3/9/26 15:29, Jason Gunthorpe wrote:
-> > On Fri, Feb 27, 2026 at 09:08:47PM +0100, David Hildenbrand (Arm) wrote:
-> >> There is demand for also zapping page table entries by drivers in
-> >> VM_MIXEDMAP VMAs[1].
-> >>
-> >> Nothing really speaks against supporting VM_MIXEDMAP for driver use. We
-> >> just don't want arbitrary drivers to zap in ordinary (non-special) VMAs.
-> >>
-> >> [1] https://lore.kernel.org/r/aYSKyr7StGpGKNqW@google.com
-> > 
-> > Are we sure about this?
-> 
-> Yes, I don't think relaxing this for drivers to use it on VM_MIXEDMAP is
-> a problem.
-> 
-> > 
-> > This whole function seems like a hack to support drivers that are not
-> > using an address_space.
-> 
-> I assume, then using
-> unmap_mapping_folio()/unmap_mapping_pages()/unmap_mapping_range() instead.
-> 
-> > 
-> > I say that as one of the five driver authors who have made this
-> > mistake.
-> > 
-> > The locking to safely use this function is really hard to do properly,
-> > IDK if binder can shift to use address_space ??
-> I cannot really tell.
-> 
-> Skimming over the code, it looks like it really always handles "single
-> VMA" stuff ("Since a binder_alloc can only be mapped once, we ensure the
-> vma corresponds to this mapping by checking whether the binder_alloc is
-> still mapped"), which makes the locking rather trivial.
-> 
-> It does seem to mostly allocate/free pages in a single VMA, where I
-> think the existing usage of zap_vma_range() makes sense.
-> 
-> So I'm not sure if using address_space would really be an improvement there.
-> 
-> Having that said, maybe binder folks can be motivated to look into that.
-> But I would consider that future work.
 
-It doesn't really make sense to have multiple binder VMAs. What happens
-with Rust Binder is that process A is receiving transactions and has the
-VMA mapped once.
 
-* Process B sends a transaction to process A, and the ioctl (running in
-  process B) will memcpy the message to A directly into the pages of A's
-  VMA.
-* Then, B wakes up A, which causes A to return from the receive ioctl.
-* The return value of the receive ioctl is a pointer, which points
-  somewhere inside A's VMA to the location containing the message from
-  B.
-* Process A will deref the pointer to read the message from B.
-* Once Process A is done handling the transaction, it invokes another
-  ioctl to tell the kernel that it is done with this transaction, that
-  is, it is not safe for the kernel to reuse that subset of the VMA for
-  new incoming transactions.
+On 10/03/2026 6:25 pm, Ian Rogers wrote:
+> On Tue, Mar 3, 2026 at 6:29 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>> I suppose the easiest fix is this, but urgh...
+>>
+>> ---
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 03ced7aad309..c38acf1e2f43 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -3664,6 +3664,9 @@ static int context_equiv(struct perf_event_context *ctx1,
+>>          if (ctx1->pin_count || ctx2->pin_count)
+>>                  return 0;
+>>
+>> +       if (ctx1->nr_stat || ctx2->nr_stat)
+>> +               return 0;
+>> +
+> 
+> So, just for fun, I ran the original patch, James's bug description
+> and this proposed fix through an AI using Chris Mason's kernel review
+> prompts. I'm sharing the output as the do_exit comments seem
+> legitimate given the stack trace in James' report.
+> 
+> Does this introduce a significant performance regression for multithreaded
+> workloads? By forcing a full sched_out and sched_in of the PMU on every
+> thread switch instead of just swapping context pointers, it removes the
+> performance benefits of context_equiv() for inherited stats.
 
-When Binder returns from its ioctl and gives you a pointer, it needs to
-know where the VMA is mapped, because otherwise it can't really give you
-a pointer into the VMA.
+inherit_stat isn't default though. I suppose if you ask for more stuff 
+it costs more, and I assume complete data but slightly slower is better 
+than incomplete but faster.
 
-It's generally not safe for userspace to touch its Binder VMA unless it
-has been told that there is a message there. Pages that do not contain
-any messages may be entirely missing, and trying to read them leads to
-segfault. (Though such pages may also be present if there was previously
-a message in the page. The unused pages are kept around to reuse them
-for future messages, unless there is memory pressure.)
+> 
+> Furthermore, does this patch actually address the concurrent ring buffer
+> corruption reported in the bug?
 
-Alice
+No, the top patch fixes that issue, not the bottom one.
+
+> 
+> The corruption occurs because perf_event_exit_event() (called during do_exit)
+> invokes perf_output_begin() on the parent's ring buffer from the exiting child's
+> CPU. Because ring buffers use local_t operations which are not SMP-safe,
+> concurrent child exits corrupt the rb->nest tracking.
+> 
+> Since context_equiv() is only used during context switch
+> (perf_event_context_sched_out) and not during task exit, modifying it does
+> not prevent the concurrent ring buffer writes during do_exit.
+> 
+> Thanks,
+> Ian
+> 
+>>          /* If ctx1 is the parent of ctx2 */
+>>          if (ctx1 == ctx2->parent_ctx && ctx1->generation == ctx2->parent_gen)
+>>                  return 1;
+>> @@ -3677,76 +3680,13 @@ static int context_equiv(struct perf_event_context *ctx1,
+>>           * hierarchy, see perf_event_init_context().
+>>           */
+>>          if (ctx1->parent_ctx && ctx1->parent_ctx == ctx2->parent_ctx &&
+>> -                       ctx1->parent_gen == ctx2->parent_gen)
+>> +           ctx1->parent_gen == ctx2->parent_gen)
+>>                  return 1;
+>>
+>>          /* Unmatched */
+>>          return 0;
+>>   }
+>>
+>> -static void __perf_event_sync_stat(struct perf_event *event,
+>> -                                    struct perf_event *next_event)
+>> -{
+>> -       u64 value;
+>> -
+>> -       if (!event->attr.inherit_stat)
+>> -               return;
+>> -
+>> -       /*
+>> -        * Update the event value, we cannot use perf_event_read()
+>> -        * because we're in the middle of a context switch and have IRQs
+>> -        * disabled, which upsets smp_call_function_single(), however
+>> -        * we know the event must be on the current CPU, therefore we
+>> -        * don't need to use it.
+>> -        */
+>> -       perf_pmu_read(event);
+>> -
+>> -       perf_event_update_time(event);
+>> -
+>> -       /*
+>> -        * In order to keep per-task stats reliable we need to flip the event
+>> -        * values when we flip the contexts.
+>> -        */
+>> -       value = local64_read(&next_event->count);
+>> -       value = local64_xchg(&event->count, value);
+>> -       local64_set(&next_event->count, value);
+>> -
+>> -       swap(event->total_time_enabled, next_event->total_time_enabled);
+>> -       swap(event->total_time_running, next_event->total_time_running);
+>> -
+>> -       /*
+>> -        * Since we swizzled the values, update the user visible data too.
+>> -        */
+>> -       perf_event_update_userpage(event);
+>> -       perf_event_update_userpage(next_event);
+>> -}
+>> -
+>> -static void perf_event_sync_stat(struct perf_event_context *ctx,
+>> -                                  struct perf_event_context *next_ctx)
+>> -{
+>> -       struct perf_event *event, *next_event;
+>> -
+>> -       if (!ctx->nr_stat)
+>> -               return;
+>> -
+>> -       update_context_time(ctx);
+>> -
+>> -       event = list_first_entry(&ctx->event_list,
+>> -                                  struct perf_event, event_entry);
+>> -
+>> -       next_event = list_first_entry(&next_ctx->event_list,
+>> -                                       struct perf_event, event_entry);
+>> -
+>> -       while (&event->event_entry != &ctx->event_list &&
+>> -              &next_event->event_entry != &next_ctx->event_list) {
+>> -
+>> -               __perf_event_sync_stat(event, next_event);
+>> -
+>> -               event = list_next_entry(event, event_entry);
+>> -               next_event = list_next_entry(next_event, event_entry);
+>> -       }
+>> -}
+>> -
+>>   static void perf_ctx_sched_task_cb(struct perf_event_context *ctx,
+>>                                     struct task_struct *task, bool sched_in)
+>>   {
+>> @@ -3835,8 +3775,6 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
+>>                          RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
+>>
+>>                          do_switch = 0;
+>> -
+>> -                       perf_event_sync_stat(ctx, next_ctx);
+>>                  }
+>>                  raw_spin_unlock(&next_ctx->lock);
+>>                  raw_spin_unlock(&ctx->lock);
+
