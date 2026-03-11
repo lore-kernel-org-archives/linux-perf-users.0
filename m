@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F97B3BE638;
-	Wed, 11 Mar 2026 08:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D8F3BB9EA;
+	Wed, 11 Mar 2026 08:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773218001; cv=none; b=eEIkfghzZwp9vt5z1NuSbqrA5FeTFis9jkcbUHUy84DPirj0ikcykysz0XQc6ABMUvveOCjKkO3k3ppYYh+bfUFdgiq2N2Q15BHOrveAv6IzWCgFxE2EWhmcC03ihkjlrqTAIE1dPgoJFcQcg6b0jvbFIFsdtLw08EVi2wo4bL4=
+	t=1773218007; cv=none; b=LaCpGcPcpZNnxlKRKWz2yukLF/y4NwwVi3TTU3Ad75I1XYDg+HfHF7EjuMoaVnebX475WJOifKDMuqUnKTligZzNR0OG8mc3NAGW7XVE3/roH23ZzkcE1PBV8L8orIfoP/IES8uXMESyUzOqUIgXge4SWrNb1j/C5Eu5NKL14PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773218001; c=relaxed/simple;
-	bh=mYlThUq1iAN/tIV3PsjLtm1fJPfV0aj3FB6Qm/569bA=;
+	s=arc-20240116; t=1773218007; c=relaxed/simple;
+	bh=pX9AkyBK5nD04U0aTxThC7K8j3uVTzojPCrIo1E31LI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eLSo0xhYzswIIoErqUm4LyqGEA7JM4nuUQwbUaM05zVaogYa3d4QYqOsxpEUgaA/Dl389lsjGcnGNO4g47zRsNDRbFq4L+sjI8FxZA8oF38MfnK43+574FN2CLUe8Q1RSu7OBl2070bE79LgMnAHGd7CyiAosa3ee2TpBNU2g94=
+	 In-Reply-To:To:Cc; b=LBLftTC3C3nzupTy1ikTLJh3MUOfNomsk1/wVWuHFKeleoAQz+AvpWP7CqxN7JyRuaK4YPk5wlO8PqQo2ldzPab+z+ByYvo+5scveVxZTpsmy7xIUFCIpvaDU8JJrBEMA/XXKomWAp09IyBv7pxFKpiveqau0gotEpY+5+gENJo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 268A9169C;
-	Wed, 11 Mar 2026 01:33:11 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB9A6169C;
+	Wed, 11 Mar 2026 01:33:18 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E025F3F73B;
-	Wed, 11 Mar 2026 01:33:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DFD53F73B;
+	Wed, 11 Mar 2026 01:33:17 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 11 Mar 2026 08:29:51 +0000
-Subject: [PATCH v4 26/30] tools: usb: Append extra cflags
+Date: Wed, 11 Mar 2026 08:29:52 +0000
+Subject: [PATCH v4 27/30] selftests/bpf: Append extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260311-tools_build_fix_zero_init-v4-26-9e35bdb99cb3@arm.com>
+Message-Id: <20260311-tools_build_fix_zero_init-v4-27-9e35bdb99cb3@arm.com>
 References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 In-Reply-To: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,34 +75,61 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217790; l=672;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217790; l=2248;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=mYlThUq1iAN/tIV3PsjLtm1fJPfV0aj3FB6Qm/569bA=;
- b=ZqKUOAXoaR1p3Dqf+sbX6WDJNgQ9oDQ/ElQvCASx/S4q5NII7q5SldKt7AqQqwo4JCSIMvfez
- 20KpGxL0Xu6A11bwh404cBFYkOnil9sXgcuwKNrmgE4K3urmFsluqfq
+ bh=pX9AkyBK5nD04U0aTxThC7K8j3uVTzojPCrIo1E31LI=;
+ b=nBZJq62MofrfzEhaw8naMT+w2SCGyzSrRPVhkd0Rf+zZ5ijGsYHgizsaQs+HHmYcACLZ0eIdV
+ xX5e/j35eppAO6rHwOBPiV3iGzFynmAYQFST2C/qCIc5VkS6Sl64KlX
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
 Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
 the compiler.
 
+urandom_read is built with clang.  Introduce URANDOM_READ_CFLAGS to copy
+the compiler flags without appending EXTRA_CFLAGS, which may contain
+incompatible options with clang.
+
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/usb/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/Makefile | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/usb/Makefile b/tools/usb/Makefile
-index c6235667dd46223b646bbab5c82c810221750182..42362dcdf2743dace62a5385a7d2707c42bdd3c0 100644
---- a/tools/usb/Makefile
-+++ b/tools/usb/Makefile
-@@ -14,6 +14,7 @@ endif
- MAKEFLAGS += -r
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 72a9ba41f95ebb825d25799c07ba3f0311243e45..27112f08c9a5b6cabc41902207d00897070b41b4 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -71,6 +71,12 @@ ifneq ($(LLVM),)
+ CFLAGS += -Wno-unused-command-line-argument
+ endif
  
- override CFLAGS += -O2 -Wall -Wextra -g -D_GNU_SOURCE -I$(OUTPUT)include -I$(srctree)/tools/include
-+override CFLAGS += $(EXTRA_CFLAGS)
- override LDFLAGS += -lpthread
- 
- ALL_TARGETS := testusb ffs-test
++# urandom_read is built with clang. Copy $(CFLAGS) before EXTRA_CFLAGS are
++# appended so that it does not inherit potentially incompatible options.
++URANDOM_READ_CFLAGS := $(CFLAGS)
++
++CFLAGS += $(EXTRA_CFLAGS)
++
+ # Check whether bpf cpu=v4 is supported or not by clang
+ ifneq ($(shell $(CLANG) --target=bpf -mcpu=help 2>&1 | grep 'v4'),)
+ CLANG_CPUV4 := 1
+@@ -255,7 +261,7 @@ endif
+ $(OUTPUT)/liburandom_read.so: urandom_read_lib1.c urandom_read_lib2.c liburandom_read.map
+ 	$(call msg,LIB,,$@)
+ 	$(Q)$(CLANG) $(CLANG_TARGET_ARCH) \
+-		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) \
++		     $(filter-out -static,$(URANDOM_READ_CFLAGS) $(LDFLAGS)) \
+ 		     $(filter %.c,$^) $(filter-out -static,$(LDLIBS)) \
+ 		     -Wno-unused-command-line-argument \
+ 		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
+@@ -265,7 +271,7 @@ $(OUTPUT)/liburandom_read.so: urandom_read_lib1.c urandom_read_lib2.c liburandom
+ $(OUTPUT)/urandom_read: urandom_read.c urandom_read_aux.c $(OUTPUT)/liburandom_read.so
+ 	$(call msg,BINARY,,$@)
+ 	$(Q)$(CLANG) $(CLANG_TARGET_ARCH) \
+-		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) $(filter %.c,$^) \
++		     $(filter-out -static,$(URANDOM_READ_CFLAGS) $(LDFLAGS)) $(filter %.c,$^) \
+ 		     -Wno-unused-command-line-argument \
+ 		     -lurandom_read $(filter-out -static,$(LDLIBS)) -L$(OUTPUT) \
+ 		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
 
 -- 
 2.34.1
