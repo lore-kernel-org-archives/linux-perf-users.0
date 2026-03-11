@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7C5C3BADA6;
-	Wed, 11 Mar 2026 08:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E873019D6;
+	Wed, 11 Mar 2026 08:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217841; cv=none; b=arbjPaCXVQW9+3926bMHjwTrGZjHLUjd/G3aXw/b7QMm/QSDEEhIPAHAHdhtPdzEsHrFuC/4pARrsoF9a3LhGZiOJ9M4lPfmPCaBkhJFu6Gg56MY8vbL/11FFokqU8v51Pt4Sy8JlVNt0QK5i5jjwMCcsXFuSXXKd41bTXc5mqQ=
+	t=1773217849; cv=none; b=pm967/HsefFVtUP1wcBI/UnH/JTv2+TH3UAmReUi9XyNbqh3nKmME4sTBlb3D4YPzn9ZPOyyxZdQxWOsmri7Sbqbdea61nj1vMqo0uVP46myFPBaB9b6Dtnh5Rgv0mowHgIXoG2QHgYvOktJazgpICvhYNBAJ2HDdGRpHLEY+8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217841; c=relaxed/simple;
-	bh=WM6eh+uCyejH6wIt9/C1ZZ9YLOLPrcxUmJlFRRJ40zM=;
+	s=arc-20240116; t=1773217849; c=relaxed/simple;
+	bh=3JBtHvIDMUinCUvCQDVcAxYVgAKb4KwLtcs/EMqdCS4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u5noK+3pX31glcDCkSJNXT2DuAGv5ZMgZpMMFbBQHltixc0y/WBeUJJ2+IY8qNEbryXXPA7o4PntvsIBoF79l59wA1fjnmbGwqy3ErrbIHi8WWRxo34oAw5dH414e/reYg0OU9SBeGy4IHdwAC54tE3dTIrcb7HiFcXTpSpsn9I=
+	 In-Reply-To:To:Cc; b=t0O3L/hTFLL1kNqbC33bRTGt6/T1uNiVAztNQXQYtoXaWfZ5E4EkLqEpnYVmLcjN977+vjMQApbCQ52ZQwiuaAvNO+iE2YOxwH8+2GqxqolY65az5XInmYBVxA7dwGAao3ecevTvGeoUUJqkdRB/7Srs30snq5v29hYZHeE9GV0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F139D2050;
-	Wed, 11 Mar 2026 01:30:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4A99169C;
+	Wed, 11 Mar 2026 01:30:37 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1DB33F73B;
-	Wed, 11 Mar 2026 01:30:28 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64EB53F73B;
+	Wed, 11 Mar 2026 01:30:36 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 11 Mar 2026 08:29:30 +0000
-Subject: [PATCH v4 05/30] bpftool: Avoid adding EXTRA_CFLAGS to HOST_CFLAGS
+Date: Wed, 11 Mar 2026 08:29:31 +0000
+Subject: [PATCH v4 06/30] libbpf: Remove duplicate $(CLANG_CROSS_FLAGS)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260311-tools_build_fix_zero_init-v4-5-9e35bdb99cb3@arm.com>
+Message-Id: <20260311-tools_build_fix_zero_init-v4-6-9e35bdb99cb3@arm.com>
 References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 In-Reply-To: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,52 +75,41 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=1436;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=930;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=WM6eh+uCyejH6wIt9/C1ZZ9YLOLPrcxUmJlFRRJ40zM=;
- b=AX5ygT7o789kWjNCr+Hi0sW7qCH4wNnmL5QDZ0Yc3lbK4gd64g8HZbJl9gVupvu2p0xA2UtXS
- LOU0a3HayNNCatI4O8VFT2uixNICvIfcAAguFQ5pRzrfiCUEvlm+Gm0
+ bh=3JBtHvIDMUinCUvCQDVcAxYVgAKb4KwLtcs/EMqdCS4=;
+ b=p+22TTJrUX/SZDUA8t2BfYihFjcvgWYmi810CV1GqYqJXosdHCZ3lNHmv22rky2XJhVwbXJtN
+ 6wvPb/+rFBcAHwGJVU8Ke273dMt13nzQY6xOcKkGyCjHVzUPaW1L15s
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Prepare for future changes where EXTRA_CFLAGS may include flags not
-applicable to the host compiler.
+tools/scripts/Makefile.include already appends $(CLANG_CROSS_FLAGS) to
+CFLAGS:
 
-Move the HOST_CFLAGS assignment before appending EXTRA_CFLAGS to
-CFLAGS so that HOST_CFLAGS does not inherit flags from EXTRA_CFLAGS.
+  CFLAGS += $(CLANG_CROSS_FLAGS)
 
-Acked-by: Quentin Monnet <qmo@kernel.org>
+Since Makefile.include is included, the libbpf Makefile appends
+$(CLANG_CROSS_FLAGS) again, resulting in duplicate flags.
+
+Remove the redundant append.
+
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/bpf/bpftool/Makefile | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/lib/bpf/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index 519ea5cb8ab1c0ee31acc67fc5f96b40e21005c2..3e7d8359e1b2a81a29a47544be8539e3b191a0e8 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -81,6 +81,12 @@ CFLAGS += -DPACKAGE='"bpftool"' -D__EXPORTED_HEADERS__ \
- ifneq ($(BPFTOOL_VERSION),)
- CFLAGS += -DBPFTOOL_VERSION='"$(BPFTOOL_VERSION)"'
- endif
-+
-+# This must be done before appending EXTRA_CFLAGS to CFLAGS to avoid
-+# including flags that are not applicable to the host compiler.
-+HOST_CFLAGS := $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
-+		$(subst $(CLANG_CROSS_FLAGS),,$(CFLAGS)))
-+
- ifneq ($(EXTRA_CFLAGS),)
- CFLAGS += $(EXTRA_CFLAGS)
- endif
-@@ -88,8 +94,6 @@ ifneq ($(EXTRA_LDFLAGS),)
- LDFLAGS += $(EXTRA_LDFLAGS)
- endif
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 168140f8e6461bd06db40e23d21a3fb8847ccbf4..b1fbd0211c5edde7be3d98630b16e53e028d9116 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -84,7 +84,6 @@ override CFLAGS += -Werror -Wall
+ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
+ override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+-override CFLAGS += $(CLANG_CROSS_FLAGS)
  
--HOST_CFLAGS := $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
--		$(subst $(CLANG_CROSS_FLAGS),,$(CFLAGS)))
- HOST_LDFLAGS := $(LDFLAGS)
- 
- INSTALL ?= install
+ # flags specific for shared library
+ SHLIB_FLAGS := -DSHARED -fPIC
 
 -- 
 2.34.1
