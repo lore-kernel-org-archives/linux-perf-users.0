@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 147C83B9DBC;
-	Wed, 11 Mar 2026 08:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76A53C342C;
+	Wed, 11 Mar 2026 08:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217924; cv=none; b=Ux0O6AidIsNcrzLobL64O8yC3Zy/9ta09Imd8gwXVfOEpHyS8Mk/jxruAczKUV93ftGqYyrbG20ZaZJTowXp+lTr5ykg4lv7ZbYbikpEkN2gr66Ou/jwQvl1TPgmUVp4gogNJlBdKHMWPBom6iDyTNmfAg1KxUPjolBN9G4XaGI=
+	t=1773217931; cv=none; b=fz3VX+9NHM1NJg6moSjo7ptL9AoWaISLpITNPhgLufRto0amJRDp49w4Dq/1JXDo1akOBZ05edwDxuAxiOcjGqzsuRRCd+DKgUrJUxaQhprN/PIPNcBSTujTeXUi/dwxmLA6Yu41rpyPQpgSGlnjQXdR1yibSY4rj0TqxJa1iac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217924; c=relaxed/simple;
-	bh=J24uTRo5JzVWWMRzOuokKmYRbu145MN2/Re9B/pDvrA=;
+	s=arc-20240116; t=1773217931; c=relaxed/simple;
+	bh=hGyktyHY0K6JN8j/3c0flG6pW5kwtw4MxiSqaD6tx9c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hkON77geie8mHSzFmVT9mxWh1D2Wg+irnPFfr7nO6vBpJikafO949H3sLmjzJlpAQKmuNNPfeIZc4BVRBf1F0UWC3OA1X6UibmmGVNwmqWjp+TMDIV5QnqQHcmoaVzoQq9uEtLPpR/COuzNCKey1zsmnUIwEoBcfNhX0BgRcisQ=
+	 In-Reply-To:To:Cc; b=I0oFwfXF3RgWmBygwUA0L1RCUZVVlWdyKTLRziAJum9hDmwMW5t71AG+lqSsT/vO6T2mJ/R2Ye/hO1ABjmNUX+ObKhQPFhywNRJ3YlsovRQrO079xvKzaVhboCwUogl1KPdrSrgNfiCRYHq16ZloABJ8ZIYwa3vQJirYGXogqt8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 747C4204C;
-	Wed, 11 Mar 2026 01:31:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DFA7169C;
+	Wed, 11 Mar 2026 01:32:02 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DA043F73B;
-	Wed, 11 Mar 2026 01:31:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA4F13F73B;
+	Wed, 11 Mar 2026 01:32:00 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 11 Mar 2026 08:29:41 +0000
-Subject: [PATCH v4 16/30] tools: gpio: Append extra cflags
+Date: Wed, 11 Mar 2026 08:29:42 +0000
+Subject: [PATCH v4 17/30] tools: hv: Append extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260311-tools_build_fix_zero_init-v4-16-9e35bdb99cb3@arm.com>
+Message-Id: <20260311-tools_build_fix_zero_init-v4-17-9e35bdb99cb3@arm.com>
 References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 In-Reply-To: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -73,38 +73,37 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+ Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=766;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=734;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=J24uTRo5JzVWWMRzOuokKmYRbu145MN2/Re9B/pDvrA=;
- b=5HOj0C5P9eVgQw50PEoOK2X6SSBOjTo0e3sK3wt5hU0nwh1f4PackkEMvhpWIQhQKMDjuFGqi
- wVVXFiRB3iiBL/MibdLByqm6+dG99mBDG2SL87vDpsQxKTabvu5KJD1
+ bh=hGyktyHY0K6JN8j/3c0flG6pW5kwtw4MxiSqaD6tx9c=;
+ b=PUW7FKm6Q5/DL0Atupz04pAqGJGRxguCQszfzDEmZJjnAc+9v1yAxwXrxO0ir9S7B/j7swX3v
+ 6EJv+mQryqUCmeht+GCz6X7i7JNSOXP4UtppEj+5AvWKeyLDdAdFiJk
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
 Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
 the compiler.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/gpio/Makefile | 1 +
+ tools/hv/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 342e056c8c665ac075041ff7c7ca7ba94c691187..05a0057ec361626f41ca87e5295691364f03d2cb 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -17,6 +17,7 @@ endif
- MAKEFLAGS += -r
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index 34ffcec264ab0fdf7075d25456ef012cb866796b..a85f2208a8e3c9532b0d2cc750fc2a872ab4bb07 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -18,6 +18,7 @@ MAKEFLAGS += -r
  
  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ override CFLAGS += -Wno-address-of-packed-member
 +override CFLAGS += $(EXTRA_CFLAGS)
  
- ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ ALL_TARGETS := hv_kvp_daemon hv_vss_daemon
+ ifneq ($(ARCH), aarch64)
 
 -- 
 2.34.1
