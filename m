@@ -1,46 +1,47 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8AE30EF8F;
-	Wed, 11 Mar 2026 17:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705C820C029;
+	Wed, 11 Mar 2026 17:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773249550; cv=none; b=mu3f9KXFJxporOMPL2084S0mwVervvSisd+NQcYHbam2gf1M8GPWLvd/6wJBj+X4JuSzmscLOhwtLuvx5tMnR5DU4dy+0xxcaKkvI9zIQdGQQM82kOFpHVyh4L8RT/wlsM/8BqXa0vgQS6VIcVDDwz1mpiKlYcq/pdB0m4qfVu0=
+	t=1773250523; cv=none; b=Tm9xYTP8GVPEG7EjQoxZG5A2bMaOkyUe2+qRE+rUCUO/1qpeXxoI2/e17H80murpYiVsiVd4Lms7BZpQggwqgxfGIrfQ2Jo1doih/X4as1lIs9uH0pXFh6M1F5TIH0gkpsvXtA7owOBvlWaQ4QaQzJ5oYKIm1gHFRZWwXzmu/bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773249550; c=relaxed/simple;
-	bh=pK3BGPL3cQ7krGzPQI4H7J/3WARl0VGGLszyWKCDVlU=;
+	s=arc-20240116; t=1773250523; c=relaxed/simple;
+	bh=nfzQpXc9eb878tgnSQAa64YWxspgp/2aqVk+zMIXxsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3xIWf9/FbTJOjDLPAv2UmBTQPoB3oNryXHMAMYUYF4HGX07Gj4Uoai5cFiIEBs5kSn8D//an8LDmDfwouufiQzVJCAXnBgsN7Cq6WiRbEhPw0evp96YuKgpkqXhCaeVqo/P1qm1//NHmnE3RTFDn8wpQvekKrRelLD/4dpU5Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jzAcIQrD; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCm4qBEh9P0tWTA3BrE3gTRBnTJaCyM3CAejERD4VyKGkoQI9jp3UMuyl8bFUWzaAW5Xc4jVdmMacns59aXCHN7hqgRE6BKgPTPye7ZeP4TEYstBpke3BWEwM+qRDmu0wobDruu2QwDHotfQrCzByH4YTb0NxcOq5pB1MfdX5f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NOB/JLbf; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jzAcIQrD"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NOB/JLbf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=K2n9jrMR1Fhiz/vfUJ3TSNQTfu2pG1vVDmOLvPlPTWw=; b=jzAcIQrDoqfjmnkGtryL3hRhrs
-	L55RoXVs6p3QmnfZ7aAPzACSLzF73D7BkK6QcBGkN3bhoiSUubVTPAnp/cWdgl4tccxuXWu/Pk3UL
-	OJu0yx0x6t5SzhvgYFXmpHGZVjeqFahGeVd+Qr7I0ut1EKnF2bVil+B9gVRQidX0stk7PNakKbut9
-	8P5kQ+XG4XMABgCgXSMvUPd4/BETiUxozj5qkDYqRRpELZmMxWJ7F7bscdVT0TZiscE9d7ZbwOQ2O
-	vgs2gJ6q1eVx2oaAtEdy3/7Y9B0ENFUOKWTqqBU2+ylEP0WZ6ySpKeS2aFO0e+n+dSKzN4LWSI3lz
-	7tDIysqg==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8fRju/0a1YBuwKFU39MW73CZPafQrWliwuiq5VPWm5s=; b=NOB/JLbfeMx/Vm/R4DmzX2hhXt
+	7OoHWyGDl64JMAJYnsa9MG0NaEuzf2JKQ6CUIQheoX6RPFXzAUZW+WG+xFuGajHcp1bb8Y0wep4Fb
+	RJ67scCk/apAi/JtLWMJL8Ix/L3t6eaeSbitzJ4VH6ZcBeoc1SgQQ3D9QUudy5qWxplW2989wubdy
+	6HNKdedR8BW56AG9/53ndcwMy2kMV2SDBeErbweffqQ7kZH3HXJAgj6MyLLIDbQyd1duOfofsmxbB
+	l8RiLTJNBWwMZySuTmIpnJOLcAlJi9ok5Gw+LG9/YQbgCKZ8xKD+DZja9R12VfwYuTk682vRCakR2
+	kSh/l+2g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0NCu-0000000HOyZ-0LfM;
-	Wed, 11 Mar 2026 17:18:52 +0000
+	id 1w0NSg-0000000HQUd-29tc;
+	Wed, 11 Mar 2026 17:35:10 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 795B7300462; Wed, 11 Mar 2026 18:18:50 +0100 (CET)
-Date: Wed, 11 Mar 2026 18:18:50 +0100
+	id CD9B730027B; Wed, 11 Mar 2026 18:35:09 +0100 (CET)
+Date: Wed, 11 Mar 2026 18:35:09 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+	Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
@@ -50,179 +51,62 @@ Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
 	stable@vger.kernel.org
 Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
  x86_pmu_enable()
-Message-ID: <20260311171850.GQ606826@noisy.programming.kicks-ass.net>
+Message-ID: <20260311173509.GR606826@noisy.programming.kicks-ass.net>
 References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
  <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
+ <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
+In-Reply-To: <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
 
-On Wed, Mar 11, 2026 at 10:04:10AM +0800, Mi, Dapeng wrote:
-> 
-> On 3/10/2026 6:13 PM, Breno Leitao wrote:
-> > A production AMD EPYC system crashed with a NULL pointer dereference
-> > in the PMU NMI handler:
-> >
-> >   BUG: kernel NULL pointer dereference, address: 0000000000000198
-> >   RIP: x86_perf_event_update+0xc/0xa0
-> >   Call Trace:
-> >    <NMI>
-> >    amd_pmu_v2_handle_irq+0x1a6/0x390
-> >    perf_event_nmi_handler+0x24/0x40
-> >
-> > The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
-> > corresponding to the `if (unlikely(!hwc->event_base))` check in
-> > x86_perf_event_update() where hwc = &event->hw and event is NULL.
-> >
-> > drgn inspection of the vmcore on CPU 106 showed a mismatch between
-> > cpuc->active_mask and cpuc->events[]:
-> >
-> >   active_mask: 0x1e (bits 1, 2, 3, 4)
-> >   events[1]:   0xff1100136cbd4f38  (valid)
-> >   events[2]:   0x0                 (NULL, but active_mask bit 2 set)
-> >   events[3]:   0xff1100076fd2cf38  (valid)
-> >   events[4]:   0xff1100079e990a90  (valid)
-> >
-> > The event that should occupy events[2] was found in event_list[2]
-> > with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
-> > (which clears hw.state and sets active_mask) but events[2] was
-> > never populated.
-> >
-> > Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
-> > showing it was stopped when the PMU rescheduled events, confirming the
-> > throttle-then-reschedule sequence occurred.
-> >
-> > The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
-> > and potential PEBS record loss") which moved the cpuc->events[idx]
-> > assignment out of x86_pmu_start() and into step 2 of x86_pmu_enable(),
-> > after the PERF_HES_ARCH check. This broke any path that calls
-> > pmu->start() without going through x86_pmu_enable() -- specifically
-> > the unthrottle path:
-> >
-> >   perf_adjust_freq_unthr_events()
-> >     -> perf_event_unthrottle_group()
-> >       -> perf_event_unthrottle()
-> >         -> event->pmu->start(event, 0)
-> >           -> x86_pmu_start()     // sets active_mask but not events[]
-> >
-> > The race sequence is:
-> >
-> >   1. A group of perf events overflows, triggering group throttle via
-> >      perf_event_throttle_group(). All events are stopped: active_mask
-> >      bits cleared, events[] preserved (x86_pmu_stop no longer clears
-> >      events[] after commit 7e772a93eb61).
-> >
-> >   2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
-> >      due to other scheduling activity. Stopped events that need to
-> >      move counters get PERF_HES_ARCH set and events[old_idx] cleared.
-> >      In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
-> >      to be skipped -- events[new_idx] is never set.
-> >
-> >   3. The timer tick unthrottles the group via pmu->start(). Since
-> >      commit 7e772a93eb61 removed the events[] assignment from
-> >      x86_pmu_start(), active_mask[new_idx] is set but events[new_idx]
-> >      remains NULL.
-> >
-> >   4. A PMC overflow NMI fires. The handler iterates active counters,
-> >      finds active_mask[2] set, reads events[2] which is NULL, and
-> >      crashes dereferencing it.
-> >
-> > Move the cpuc->events[hwc->idx] assignment in x86_pmu_enable() to
-> > before the PERF_HES_ARCH check, so that events[] is populated even
-> > for events that are not immediately started. This ensures the
-> > unthrottle path via pmu->start() always finds a valid event pointer.
-> >
-> > Fixes: 7e772a93eb61 ("perf/x86: Fix NULL event access and potential PEBS record loss")
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > Cc: stable@vger.kernel.org
-> > ---
-> > Changes in v2:
-> > - Move event pointer setup earlier in x86_pmu_enable() (peterz)
-> > - Rewrote the patch title, given the new approach
-> > - Link to v1: https://patch.msgid.link/20260309-perf-v1-1-601ffb531893@debian.org
-> > ---
-> >  arch/x86/events/core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 03ce1bc7ef2ea..54b4c315d927f 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1372,6 +1372,8 @@ static void x86_pmu_enable(struct pmu *pmu)
-> >  			else if (i < n_running)
-> >  				continue;
-> >  
-> > +			cpuc->events[hwc->idx] = event;
-> > +
-> >  			if (hwc->state & PERF_HES_ARCH)
-> >  				continue;
-> >  
-> > @@ -1379,7 +1381,6 @@ static void x86_pmu_enable(struct pmu *pmu)
-> >  			 * if cpuc->enabled = 0, then no wrmsr as
-> >  			 * per x86_pmu_enable_event()
-> >  			 */
-> > -			cpuc->events[hwc->idx] = event;
-> >  			x86_pmu_start(event, PERF_EF_RELOAD);
-> >  		}
-> >  		cpuc->n_added = 0;
-> 
-> Just think twice, it seems the change could slightly break the logic of
-> current PEBS counter snapshot logic. 
-> 
-> Currently the function intel_perf_event_update_pmc() needs to filter out
-> these uninitialized counter by checking if the event is NULL as below
-> comments and code show.
-> 
-> ```
-> 
->      * - An event is stopped for some reason, e.g., throttled.
->      *   During this period, another event is added and takes the
->      *   counter of the stopped event. The stopped event is assigned
->      *   to another new and uninitialized counter, since the
->      *   x86_pmu_start(RELOAD) is not invoked for a stopped event.
->      *   The PEBS__DATA_CFG is updated regardless of the event state.
->      *   The uninitialized counter can be recorded in a PEBS record.
->      *   But the cpuc->events[uninitialized_counter] is always NULL,
->      *   because the event is stopped. The uninitialized value is
->      *   safely dropped.
->      */
->     if (!event)
->         return;
-> 
-> ```
-> 
-> Once we have this change, then the original index of a stopped event could
-> be assigned to a new event. In these case, although the new event is still
-> not activated, the cpuc->events[original_index] has been initialized and
-> won't be NULL. So intel_perf_event_update_pmc() could update the cached
-> count value to wrong event.
-> 
-> I suppose we have two ways to fix this issue.
-> 
-> 1. Move "cpuc->events[idx] = event" into x86_pmu_start(), just like what
-> the v1 patch does.
+On Wed, Mar 11, 2026 at 09:37:08AM -0700, Ian Rogers wrote:
 
-That's not what v1 did; v1 did an additional setting.
+> Fwiw, an AI review was saying something similar to me. 
 
-> 2. Check cpuc->active_mask in intel_perf_event_update_pmc() as well, but
-> the side effect is that the cached counter snapshots for the stopped events
-> have to be dropped and it has no chance to update the count value for these
-> stopped events even though the HW index of these stopped events are not
-> occupied by other new events.
+How do you guys get this AI stuff to say anything sensible at all about
+the code? Every time I try, it is telling me the most abject nonsense.
+I've wasted hours of my life trying to guide it to known bugs, in vain.
+
+> I wonder if the
+> issue with NMI storms exists already via another path:
 > 
-> Peter, how's your idea on this? Thanks.
+> By populating cpuc->events[idx] here, even for events that skip
+> x86_pmu_start() due to the PERF_HES_ARCH check, can this lead to PEBS
+> data corruption?
+> 
+> For Intel PEBS, intel_pmu_pebs_late_setup() iterates over cpuc->event_list
+> and enables PEBS_DATA_CFG for this counter index regardless of its stopped
+> state. If the PMU hardware generates PEBS records for this uninitialized
+> counter, or if there are leftover PEBS records from the counter's previous
+> occupant (since x86_pmu_stop() does not drain the PEBS buffer),
+> intel_perf_event_update_pmc() will now find a non-NULL event pointer.
+> Will it incorrectly process these leftover records and attribute them
+> to the stopped event?
 
-So you're saying that intel_perf_event_update_pmc() will be trying to
-read the hardware counter; which hasn't been written with a sensible
-value (and thus mis-behave) even though the event is STOPPED and the
-active_mask bit is unset?
+Yes.
 
-I'm thinking intel_perf_event_update_pmc() needs help either way around
-:-)
+> Additionally, does this change leave the unthrottled event's hardware
+> counter uninitialized?
+
+Also yes.
+
+> When x86_pmu_enable() moves a throttled event to a new counter, it sets
+> PERF_HES_ARCH and skips calling x86_pmu_start(event, PERF_EF_RELOAD).
+> Later, when the timer tick unthrottles the event, it calls
+> perf_event_unthrottle(), which invokes event->pmu->start(event, 0).
+> In x86_pmu_start(), because flags == 0 (lacking PERF_EF_RELOAD),
+> x86_pmu_set_period() is skipped. Will the newly assigned hardware counter
+> be enabled without being programmed with the event's period, potentially
+> causing it to start from a garbage value and leading to incorrect sampling
+> intervals or NMI storms?
+
+Don't think you can get NMI storms this way. If the PMI trips, we'll do
+set_period and that should fix it up.
+
+So just wrong counting.
