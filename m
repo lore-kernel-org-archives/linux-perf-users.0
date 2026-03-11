@@ -1,88 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D90A3C553D;
-	Wed, 11 Mar 2026 09:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2873AA4E6;
+	Wed, 11 Mar 2026 09:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773219735; cv=none; b=oS9BeJNexqDbg8kHl6ndElqmGgi8P5wu+bNPLdrwhAmtGkAlFymY15n/pWV1y+ju8z8mofglGBeqrQimwXkOd1qc+s4w/7X4weF2CVBbLjRREuUVylC/LIkxSm3ajL0cdO9NLpLVLGFUNB5vhGqINhPAiscwIDoNzDmME8b4A70=
+	t=1773220528; cv=none; b=VPg9pPOphHQ0t9iGyPbBTVh5Td5awR8elD/ubbd8i3WKC9H/oJm3YqiyGghkFzzt/uaphcx6JNUGGQtCZQrlYUD/0UUJ4TelX6jvAHVdlzz7quIq5joF2vIQYdIgfKKC1/hj4rY8wIkMh3S9jDYfVF+3MdCnIUFogtbdqsGbEkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773219735; c=relaxed/simple;
-	bh=TgPeQ4e/omI8XDsH8vHgKd+kHDz1IvHHcdNPYPwy95g=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=O4skeglgs8HVWBswtY8fKQnTkILHtmWOfpIJN4D7mKUarxMGmQaL6MdkOZB1ubVcQh3xFDW/sImER7nMTA3hF04ZtDHpHn5ob+C6veBTV+8BPX+SNfE1g6V66W2+DtgBcDIp7oNy8Dor1rAk403G9URjqhIcILiG07oK7u8bMdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4gegN5L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773220528; c=relaxed/simple;
+	bh=/qi/E3sx1wLUyctUK7y+OHXYZPNKh6z9xCAoPwaS9tY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KJv//iT/jC3cibLGHfw3QWkJKpjB1XLJ/+ZW5MmVP/6gL67dWYy8KerPS4FUhHz38iZou3U55ygs3jcLOdZ/cAFliZIk+qP8F0RR/GxJtQLqV7ROZ6tpHYPXwMsizw16DilhHJF/7jduJqjBSRLGrTy7bQ1EuQm8zaVRA/BTT5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgDro3Eo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4gegN5L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D96D3C4CEF7;
-	Wed, 11 Mar 2026 09:02:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgDro3Eo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FCD9C4CEF7;
+	Wed, 11 Mar 2026 09:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773219734;
-	bh=TgPeQ4e/omI8XDsH8vHgKd+kHDz1IvHHcdNPYPwy95g=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=G4gegN5LQ2I68ICOzOISh+4ibgqG8lj5224Zb2OzEs/KbBhB7mpnHNws78YD38V1K
-	 q+PcqzYkOZ4umMp0ZzJ6zo4dDKmyIcIPLX8KqkgZ8550cfre7iRERiO0cAVX4TZ8CV
-	 ZatRcS/QWsW0cws7G4vNYVtt2bRhvxGoX2coi03wwHlNankByUWRGZiPIicqegc5ql
-	 rEthHABws8QE6pXSJbpl1cL2jPmhIKSVh8To/GEvvYnzk7ciwoOEK10TfnB+PFSeKH
-	 T87tKINU/NeD7j69DaTTx5lyntnEu5pXpNWC71o9NlWjVFPyF3Xn8CvrBu5fnHp4a5
-	 M6ph8Y7OvUFgA==
-Content-Type: multipart/mixed; boundary="===============6467356410034622491=="
+	s=k20201202; t=1773220527;
+	bh=/qi/E3sx1wLUyctUK7y+OHXYZPNKh6z9xCAoPwaS9tY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LgDro3Eo6GuEp/c7KpExTwow2lUTl/Pn1bh3kCtPgx5EZkzvkzK56JY3zwHnUDcCc
+	 2as2PvShmmr1XG14DpK2Vlg+JLgJPDOEbIdyLQiZA99gO2VhR6aNobJIyS0CqNvQtn
+	 yBA+KuKdx+4dfgWg9peWZmhGw4/QosQ2PPXaLIeUrGAHySdhxN3QZSvEY8TJQRF4w5
+	 5y2vcF8WS6Vs3oTWyB2qlm1mbS5CYuB5pIK+WazvnWck2cAfQHHfFT1RCTg/MOj6af
+	 KpqT4L8GJkV64xMCr6wNACXlhye3na8PI6Nzf9xRvk9/jbbFZy4EGpTLuB6A51j2SG
+	 LfTqtyCu5LFfA==
+Message-ID: <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
+Date: Wed, 11 Mar 2026 10:15:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <00482d80980f713b27b422ec1ea2d17d0f1daed19243b597c5954e470cc09c92@mail.kernel.org>
-In-Reply-To: <20260311-tools_build_fix_zero_init-v4-6-9e35bdb99cb3@arm.com>
-References: <20260311-tools_build_fix_zero_init-v4-6-9e35bdb99cb3@arm.com>
-Subject: Re: [PATCH v4 06/30] libbpf: Remove duplicate $(CLANG_CROSS_FLAGS)
-From: bot+bpf-ci@kernel.org
-To: leo.yan@arm.com,acme@kernel.org,irogers@google.com,namhyung@kernel.org,james.clark@linaro.org,kees@kernel.org,qmo@kernel.org,nathan@kernel.org,nsc@kernel.org,nick.desaulniers+lkml@gmail.com,morbo@google.com,justinstitt@google.com,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,john.fastabend@gmail.com,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,rafael@kernel.org,daniel.lezcano@kernel.org,rui.zhang@intel.com,lukasz.luba@arm.com,peterz@infradead.org,mingo@redhat.com,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,adrian.hunter@intel.com,mhiramat@kernel.org,wbg@kernel.org,baohua@kernel.org,xiaqinxin@huawei.com,brgl@kernel.org,warthog618@gmail.com,kys@microsoft.com,haiyangz@microsoft.com,wei.liu@kernel.org,decui@microsoft.com,longli@microsoft.com,jic23@kernel.org,dlechner@baylibre.com,nuno.sa@analog.com,andy@kernel.org,akpm@linux-foundation.org,w@1wt.eu,linux@weissschuh.net,jpoimboe@kernel.org,robert.moore@intel.com,lenb@kernel.org,srinivas.pandruvada@linux.intel.com,tj@kernel.org,void@manifault.com,arighi@nvidia.com,changwoo@igalia.com,broonie@kernel.org,rostedt@goodmis.org,gmonaco@redhat.com,shuah@kernel.org,jikos@kernel.org,bentiss@kernel.org
-Cc: linux-kbuild@vger.kernel.org,linux-kernel@vger.kernel.org,llvm@lists.linux.dev,bpf@vger.kernel.org,linux-perf-users@vger.kernel.org,leo.yan@arm.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed, 11 Mar 2026 09:02:13 +0000 (UTC)
-
---===============6467356410034622491==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in
+ zap_special_vma_range()
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-kernel@vger.kernel.org, "linux-mm @ kvack . org"
+ <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+ Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>,
+ Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Leon Romanovsky <leon@kernel.org>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Eric Dumazet <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>,
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-17-david@kernel.org>
+ <20260309142954.GM1687929@ziepe.ca>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260309142954.GM1687929@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index 168140f8e646..b1fbd0211c5e 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -84,7 +84,6 @@ override CFLAGS += -Werror -Wall
->  override CFLAGS += $(INCLUDES)
->  override CFLAGS += -fvisibility=hidden
->  override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-> -override CFLAGS += $(CLANG_CROSS_FLAGS)
+On 3/9/26 15:29, Jason Gunthorpe wrote:
+> On Fri, Feb 27, 2026 at 09:08:47PM +0100, David Hildenbrand (Arm) wrote:
+>> There is demand for also zapping page table entries by drivers in
+>> VM_MIXEDMAP VMAs[1].
+>>
+>> Nothing really speaks against supporting VM_MIXEDMAP for driver use. We
+>> just don't want arbitrary drivers to zap in ordinary (non-special) VMAs.
+>>
+>> [1] https://lore.kernel.org/r/aYSKyr7StGpGKNqW@google.com
+> 
+> Are we sure about this?
 
-At this commit, doesn't this removal lose CLANG_CROSS_FLAGS entirely
-from the libbpf build?
+Yes, I don't think relaxing this for drivers to use it on VM_MIXEDMAP is
+a problem.
 
-The libbpf Makefile includes Makefile.include at the top, which does
-append CLANG_CROSS_FLAGS to CFLAGS. But then the libbpf Makefile
-overwrites CFLAGS with :=
+> 
+> This whole function seems like a hack to support drivers that are not
+> using an address_space.
 
-    CFLAGS := -g -O2
+I assume, then using
+unmap_mapping_folio()/unmap_mapping_pages()/unmap_mapping_range() instead.
 
-which destroys everything Makefile.include appended. The removed line
-above was the only thing that re-added the cross-compile flags after
-that overwrite.
+> 
+> I say that as one of the five driver authors who have made this
+> mistake.
+> 
+> The locking to safely use this function is really hard to do properly,
+> IDK if binder can shift to use address_space ??
+I cannot really tell.
 
-The next commit in the series (233d70853154 "libbpf: Initialize CFLAGS
-before including Makefile.include") fixes this by moving the CFLAGS
-initialization before the include, so Makefile.include's addition
-survives. But at this commit, cross-compilation with Clang appears
-broken.
+Skimming over the code, it looks like it really always handles "single
+VMA" stuff ("Since a binder_alloc can only be mapped once, we ensure the
+vma corresponds to this mapping by checking whether the binder_alloc is
+still mapped"), which makes the locking rather trivial.
 
-Could these two patches be squashed or reordered so that the
-initialization move comes first?
+It does seem to mostly allocate/free pages in a single VMA, where I
+think the existing usage of zap_vma_range() makes sense.
 
+So I'm not sure if using address_space would really be an improvement there.
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+Having that said, maybe binder folks can be motivated to look into that.
+But I would consider that future work.
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22943905432
---===============6467356410034622491==--
+-- 
+Cheers,
+
+David
