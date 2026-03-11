@@ -1,243 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1031DD877;
-	Wed, 11 Mar 2026 00:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AF733987;
+	Wed, 11 Mar 2026 02:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773190301; cv=none; b=gdubz78O4BHW6RVqTNBH0mP/wwWar6ukyIWSZVTqEVbPQP4Pt/vy/l2s/d2/lN2sJjKe66q5Oh4L0afkYCcJUzenudzugBkT/13a68iYEQNnasjVgy+dTsyKiUpReYRnrRP4Gs+MarwAoZlU4vE/J65nNCvWwoOdZvbtYe2fHp4=
+	t=1773194662; cv=none; b=SvTfFaVshmTB+5ogwUt4GswRG/a4T549z/8BVrHNutGg4Zu7cLEtzyfRc2FDD/ijjiDNvPJG6roGBCKzWak9RqpPsecWN2Yy0XWRwXYlghbCfwjfYMuqJXq9wedZ95/EZrAJoOBOoy9haiy3K/yQ6vfrcp6SlvRGypnD8TP9QH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773190301; c=relaxed/simple;
-	bh=cDxvgkx6tl3e7lZvIv3KCaXNgG249qNutfn/S+qhgFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WvQl8F22JUaaUqg7c4tbXbRxwufQxf+XM7KO+8VTf2+1coEzjvlwYt9Dn5yPGu5+sLIQEqIB4GutHPq6ywR+i/M3pNQRM2TDu90l5NJE+haUCdmhKxvbhgs2GAkMf6GLGo0GSrrOOyqr2VAe23vC8TgLikNMX4LtzJKnofzppFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quHwNFcj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773194662; c=relaxed/simple;
+	bh=tuNIUkv+nBaiu23oHhdDDLb7hyiBMWKegBoRvv8EHkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kDxmV+/nZhkhbqfW0PIvrme5EpEMIIWFi/siiqhi2SQEAdWQrhSutuyLdQrVw5xIHkpuWYk10HRxB3eoGml7oO/yqR/7D0dylKI4xnjP38EZmTgyIeE37fLd+UGXG+PQhZptwJk5Pgju3R1FzViPsHXxxsSUJ5atNVAc9JxF/x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZS0oghd; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quHwNFcj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF20C19423;
-	Wed, 11 Mar 2026 00:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773190300;
-	bh=cDxvgkx6tl3e7lZvIv3KCaXNgG249qNutfn/S+qhgFI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=quHwNFcjm9RQ3g3rqorYfmuFz2SZ6W4bnE4NqkAYUDvCrdmNYDEzRS0hVcLXRUEXp
-	 zbCWwRFrRzxwTeTWLfCCji263N50vlYkCQgBSQzrDPOaz7BdQhSxrzL8W9TqZRueWF
-	 XaGRFqTo6P7wScMPP/HYWiCWLxjVg88srGOOYGlipyHii0wxzr0opvrXh1lxf+n3m2
-	 6nroMV5gxSYeBhecXxnqM2MS37zE62oJqFDUhobcepYMBq+RdrYlFqpW668kwO5vAg
-	 yu+CkbRsjCvOHVPk9jUtzEmBz+cBZjwY26SeYTOsM3p0nu5qiXtiTTk3e/gyLRT+8F
-	 ab2iaqmOWwEow==
-From: SeongJae Park <sj@kernel.org>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/6] mm/damon: introduce perf event based access check
-Date: Tue, 10 Mar 2026 17:51:31 -0700
-Message-ID: <20260311005132.90285-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260309010009.11639-1-akinobu.mita@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZS0oghd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773194661; x=1804730661;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tuNIUkv+nBaiu23oHhdDDLb7hyiBMWKegBoRvv8EHkQ=;
+  b=FZS0oghd6Z675ftvnUglVw+QC3zg9E8O3/UgzRG44ygYPhkJF+ikU/bV
+   Yf881aliOS8KQX8FpqAaaMCs1XaIa9djq5imVa0UQ/bgTkucD7uTFGv32
+   3DOcXhnaL9vfjjzVzrq/qEOBQdXYdgBrq9tH86/oVWrRLq2Zf+w2RadaB
+   Qf9VxK3UdQLk4XWozB4EylOdsi8KxiHG0VsMMyFvcnyPXbba9ZCItWc8s
+   giIRFALWhmZPQQKRjRJtlffSgwf1jv/KQ+UYT5aIPN63Yep4UhufKxGVJ
+   DA2rb+5+tOnutKLkEvbiSVBuG7VmR6HB0q95TOdGi2vKlOenFFV4q4c1w
+   Q==;
+X-CSE-ConnectionGUID: v4D2bAaASSuIzUbVeX/ndw==
+X-CSE-MsgGUID: waCyBG4+TZONoRMm3YgWcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="61826979"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="61826979"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 19:04:19 -0700
+X-CSE-ConnectionGUID: gzD6Yt7gRCyl9im/m4hSFA==
+X-CSE-MsgGUID: Q/hdL9z7TQC1GyPdYogNEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="258226895"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 19:04:13 -0700
+Message-ID: <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
+Date: Wed, 11 Mar 2026 10:04:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
+ x86_pmu_enable()
+To: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, stable@vger.kernel.org
+References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon,  9 Mar 2026 10:00:03 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
 
-> DAMON currently only provides PTE accessed-bit based access check, this
-> patch series adds a new perf event based access check.
-> 
-> Since perf event-based access checks do not require modifying the PTE
-> accessed-bit for pages representing each damon region, it reduces the
-> overhead of monitoring at a fixed granularity of the page size.
+On 3/10/2026 6:13 PM, Breno Leitao wrote:
+> A production AMD EPYC system crashed with a NULL pointer dereference
+> in the PMU NMI handler:
+>
+>   BUG: kernel NULL pointer dereference, address: 0000000000000198
+>   RIP: x86_perf_event_update+0xc/0xa0
+>   Call Trace:
+>    <NMI>
+>    amd_pmu_v2_handle_irq+0x1a6/0x390
+>    perf_event_nmi_handler+0x24/0x40
+>
+> The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
+> corresponding to the `if (unlikely(!hwc->event_base))` check in
+> x86_perf_event_update() where hwc = &event->hw and event is NULL.
+>
+> drgn inspection of the vmcore on CPU 106 showed a mismatch between
+> cpuc->active_mask and cpuc->events[]:
+>
+>   active_mask: 0x1e (bits 1, 2, 3, 4)
+>   events[1]:   0xff1100136cbd4f38  (valid)
+>   events[2]:   0x0                 (NULL, but active_mask bit 2 set)
+>   events[3]:   0xff1100076fd2cf38  (valid)
+>   events[4]:   0xff1100079e990a90  (valid)
+>
+> The event that should occupy events[2] was found in event_list[2]
+> with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
+> (which clears hw.state and sets active_mask) but events[2] was
+> never populated.
+>
+> Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
+> showing it was stopped when the PMU rescheduled events, confirming the
+> throttle-then-reschedule sequence occurred.
+>
+> The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
+> and potential PEBS record loss") which moved the cpuc->events[idx]
+> assignment out of x86_pmu_start() and into step 2 of x86_pmu_enable(),
+> after the PERF_HES_ARCH check. This broke any path that calls
+> pmu->start() without going through x86_pmu_enable() -- specifically
+> the unthrottle path:
+>
+>   perf_adjust_freq_unthr_events()
+>     -> perf_event_unthrottle_group()
+>       -> perf_event_unthrottle()
+>         -> event->pmu->start(event, 0)
+>           -> x86_pmu_start()     // sets active_mask but not events[]
+>
+> The race sequence is:
+>
+>   1. A group of perf events overflows, triggering group throttle via
+>      perf_event_throttle_group(). All events are stopped: active_mask
+>      bits cleared, events[] preserved (x86_pmu_stop no longer clears
+>      events[] after commit 7e772a93eb61).
+>
+>   2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
+>      due to other scheduling activity. Stopped events that need to
+>      move counters get PERF_HES_ARCH set and events[old_idx] cleared.
+>      In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
+>      to be skipped -- events[new_idx] is never set.
+>
+>   3. The timer tick unthrottles the group via pmu->start(). Since
+>      commit 7e772a93eb61 removed the events[] assignment from
+>      x86_pmu_start(), active_mask[new_idx] is set but events[new_idx]
+>      remains NULL.
+>
+>   4. A PMC overflow NMI fires. The handler iterates active counters,
+>      finds active_mask[2] set, reads events[2] which is NULL, and
+>      crashes dereferencing it.
+>
+> Move the cpuc->events[hwc->idx] assignment in x86_pmu_enable() to
+> before the PERF_HES_ARCH check, so that events[] is populated even
+> for events that are not immediately started. This ensures the
+> unthrottle path via pmu->start() always finds a valid event pointer.
+>
+> Fixes: 7e772a93eb61 ("perf/x86: Fix NULL event access and potential PEBS record loss")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Cc: stable@vger.kernel.org
+> ---
+> Changes in v2:
+> - Move event pointer setup earlier in x86_pmu_enable() (peterz)
+> - Rewrote the patch title, given the new approach
+> - Link to v1: https://patch.msgid.link/20260309-perf-v1-1-601ffb531893@debian.org
+> ---
+>  arch/x86/events/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 03ce1bc7ef2ea..54b4c315d927f 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1372,6 +1372,8 @@ static void x86_pmu_enable(struct pmu *pmu)
+>  			else if (i < n_running)
+>  				continue;
+>  
+> +			cpuc->events[hwc->idx] = event;
+> +
+>  			if (hwc->state & PERF_HES_ARCH)
+>  				continue;
+>  
+> @@ -1379,7 +1381,6 @@ static void x86_pmu_enable(struct pmu *pmu)
+>  			 * if cpuc->enabled = 0, then no wrmsr as
+>  			 * per x86_pmu_enable_event()
+>  			 */
+> -			cpuc->events[hwc->idx] = event;
+>  			x86_pmu_start(event, PERF_EF_RELOAD);
+>  		}
+>  		cpuc->n_added = 0;
 
-Based on my understanding of this patch sereis that I was enlightened from the
-conversation with you on the RFC v1 and kind comments from perf community, I
-agree to the points of this patch series.  Extending DAMON with h/w features
-like AMD IBS and Intel PEBS is what multiple people shown interests.  I believe
-it can benefit multiple users.
+Just think twice, it seems the change could slightly break the logic of
+current PEBS counter snapshot logic. 
 
-I hope this work to be continued until it is landed on the mainline, and I will
-be happy to help.  Probably not exactly in the current shape, though.  I think
-this is still in an early stage.  And for the reason, I will comment on only
-high level things here, rather than diving deep into each patch.
+Currently the function intel_perf_event_update_pmc() needs to filter out
+these uninitialized counter by checking if the event is NULL as below
+comments and code show.
 
-> Furthermore, this patch series also includes a feature that allows you
-> to set a minimum region size for each target, enabling you to monitor
-> at any fixed size greater than the page size for each target.
+```
 
-I'm not very sure if this is really required to be a part of this series.  Can
-you further share more details about what is the benefit of this feeature, and
-if it should be coupled with this patch series?  It would be great if you can
-share some test results proving the arguments.
+     * - An event is stopped for some reason, e.g., throttled.
+     *   During this period, another event is added and takes the
+     *   counter of the stopped event. The stopped event is assigned
+     *   to another new and uninitialized counter, since the
+     *   x86_pmu_start(RELOAD) is not invoked for a stopped event.
+     *   The PEBS__DATA_CFG is updated regardless of the event state.
+     *   The uninitialized counter can be recorded in a PEBS record.
+     *   But the cpuc->events[uninitialized_counter] is always NULL,
+     *   because the event is stopped. The uninitialized value is
+     *   safely dropped.
+     */
+    if (!event)
+        return;
 
-If this is really beneficial but there is no reason to couple with this series,
-I think merging this separately first or later could also be an option.
+```
 
-> 
-> Using these features also requires modifications to damo, but these are
-> not included in this patch series and are currently under development in
-> the following branch:
-> 
-> * https://github.com/mita/damo/tree/damo-perf-for-v3.1.8
+Once we have this change, then the original index of a stopped event could
+be assigned to a new event. In these case, although the new event is still
+not activated, the cpuc->events[original_index] has been initialized and
+won't be NULL. So intel_perf_event_update_pmc() could update the cached
+count value to wrong event.
 
-Sounds good.  No rush, but also feel free to send patches or PRs for this.  It
-is common to support DAMON features on DAMON user-space tool even before the
-DAMON features are merged into the mainline.
+I suppose we have two ways to fix this issue.
 
-> 
-> Any feedback or advice on the patch set would be greatly appreciated.
-> 
-> * v2
+1. Move "cpuc->events[idx] = event" into x86_pmu_start(), just like what
+the v1 patch does.
 
-Let's keep using "RFC" here.
+2. Check cpuc->active_mask in intel_perf_event_update_pmc() as well, but
+the side effect is that the cached counter snapshots for the stopped events
+have to be dropped and it has no chance to update the count value for these
+stopped events even though the HW index of these stopped events are not
+occupied by other new events.
 
-> - reintroduce damon_operations->cleanup()
-> - introduce struct damon_access_report
-> - use struct damon_access_report instead of introducing struct
->   damon_perf_record
-
-Thank you for doing this.  I hope using not only the struct but the underlying
-infrastructure, though.  Let me comment this more detail below.
-
-> - remove maximum region size setting
-> 
-> * v1
-
-Ditto.  Let's keep using "RFC".
-
-> - https://lore.kernel.org/damon/20260123021014.26915-1-akinobu.mita@gmail.com/T/
-
-Thank you for sharing the link.  This is helpful for me at reviewing.
-
-> 
-> * TODO
-> - Currently, it is possible to unintentionally specify a perf_event
->   that cannot obtain either PERF_SAMPLE_ADDR or PERF_SAMPLE_PHYS_ADDR
-> - Check if it works in a virtual environment using vPMU
-
-The above two TODOs make sense to me.
-
-I'd like to request below things as main TODOs.
-
-First, I hope the benefit of this change is described in more detail.  The
-current description mentions it is more lightweight since it doesn't need to
-update the accessed bit.  But, PMU-based monitoring should also have its own
-additional work.  It would be nice if you can describe what additional works
-for PMU-based monitoring induce, and why it is generally lower than that of
-access bit modification.
-
-Having a more clear motivation, or expected use case would be nice.  You don't
-neeed to share real details of your use case.  You can anonymize sensitive
-things if needed.  But giving a reasonable and realistic use case will be nice
-to understand where this can really be beneficial.
-
-Sharing a test results showing the benefit will also be very nice.  It doesn't
-need to be huge real world test, but some reasonable amount of data that
-collected on a realistic test setup could be very helpful.
-
-Second, I hope this patch series to reuse the DAMON primitives extension
-infrastructure if possible, to reduce possible future duplications.  I'll add
-more details about this below.
-
-> 
-> Akinobu Mita (6):
->   mm/damon: reintroduce damon_operations->cleanup()
-
-Thank you for doing this :)
-
->   mm/damon/core: introduce struct damon_access_report
-
-Again, thank you for doing this.  I understand this is an answer to my previous
-question to the RFC v1 of this series.  I was asking if you considered the
-infrastructure part of my page faults based DAMON extension series, and you
-borrowed the main data structure of the series here.  But, I hope us to reuse
-more of the code, since it is more generic from my point of view.
-
->   mm/damon/core: add common code for perf event based access check
-
-This patch is introducing a few of sysfs files under DAMON sysfs context
-directory, namely 'perf_events/' and its underlying files.  The files is for
-registering perf events for the access monitoring.  I don't dislike the basic
-concept, but concerned if it is too specific for only perf events and therefore
-cannot be easily extended in future.
-
-The faults-based DAMON extension patch series [1] implements files for similar
-but more general concept.  It defines a concept called sampling primitives.  It
-is the low level primitives for access check.  It could be access bit checking,
-page fault event, or something new, like perf events.  It adds
-monitoring_attrs/sample/primitives/ sysfs directory, which can be used for
-selecting what primitives the user wants to use.  I think perf events can be
-defined as another access check primitive, and the sysfs files can be added
-under here.
-
-I was also bit concerned at the fact that the filees are effectively exposing
-perf_event_attr struct.  That is, I was concerning about stability of the
-struct.  I now see it is a part of linux user api, so I assume it is a stable
-api.  Could you please confirm this?  Also, adding more clarification about
-that fact on the patch would be nice.
-
->   mm/damon/vaddr: support perf event based access check
->   mm/damon/paddr: support perf event based access check
-
-My understanding of the above two patches is like below.
-
-1. The perf event samples are added to a circular buffer whenever it is
-   generated.
-2. At the end of each sampling interval, the ops reads each sample in the
-   buffer, find a matching DAMON region for the sample, and updte the
-   'nr_accesses' of the region.
-
-For this, this patch series implements the circular buffer for storing samples,
-and xarrays for finding the matching DAMON region for a given sample.
-
-The page fault based DAMON extension patch series is doing something similar.
-The first patch of the series implements the buffer for storing access samples.
-I think the perf event samples can be stored here.
-
-The seventh patch of the series implements the logic for finding the matching
-DAMON region for each of the samples in the samples buffer, and update the
-'nr_accesses' of the DAMON region.
-
-Because the page fault based extension's infrastructure is quite general for
-any future types of the primitives, I think it would be nice to reuse it.
-
-The infrastructure is quite simple and not optimized for performance.  But
-optimizations can be made later.  I'm more interested in the long term
-maintenance of the interface.  And I think the page fault based extension's
-infrastructure is easier for long term maintenance.  Of course I might be
-biased.  Please let me know what you think.
-
-If it helps and if you don't mind, maybe I can try to implement this series on
-the page fault based infrastructure and share it as another RFC patch series.
-
->   mm/damon: allow user to set min size of region
-
-As I mentioned abovely, I'm not sure if this is really need to be coupled with
-this entire series.
-
-> 
->  .../ABI/testing/sysfs-kernel-mm-damon         |  10 +
->  include/linux/damon.h                         |  63 ++
->  mm/damon/core.c                               |  77 ++-
->  mm/damon/ops-common.h                         |  39 ++
->  mm/damon/paddr.c                              | 105 ++-
->  mm/damon/sysfs-common.c                       |  11 +
->  mm/damon/sysfs-common.h                       |   1 +
->  mm/damon/sysfs.c                              | 399 ++++++++++-
->  mm/damon/tests/sysfs-kunit.h                  |   2 +
->  mm/damon/tests/vaddr-kunit.h                  |   5 +-
->  mm/damon/vaddr.c                              | 654 +++++++++++++++++-
->  11 files changed, 1332 insertions(+), 34 deletions(-)
-> 
-> -- 
-> 2.43.0
-
-[1] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
+Peter, how's your idea on this? Thanks.
 
 
-Thanks,
-SJ
+>
+> ---
+> base-commit: 0bcac7b11262557c990da1ac564d45777eb6b005
+> change-id: 20260309-perf-fd32da0317a8
+>
+> Best regards,
+> --  
+> Breno Leitao <leitao@debian.org>
+>
