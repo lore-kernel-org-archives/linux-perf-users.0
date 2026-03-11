@@ -1,210 +1,161 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B93B9DA1
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 12:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04973DEADE
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 12:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773230491; cv=none; b=UK7XQyNnLmqyi+7A3Hj35Wi8gh9lL8AB+8PBMZetJQzA+M3YiGLlffs6L2f5fwweZsiLxRYYmhVSRqNA9ST1G+0A5wVtUVSu9pqoJAviLKnznJcA58KTiOr3vQkiw8i5KCQYUw9eCA0RAOvr/Uqjy6ChA5VroTWj9Qo03uVLR44=
+	t=1773230663; cv=none; b=cOtn1/VUADVE/CgznXj1ZD3u9DqGGS9sB7nVEMC/9UCo7xHuMnk18kWQvi64BwT+kP0y4s9i4xANDuBlQBLVw2xdUsZ3zQLvadNVQl63vRpmBwDHNLo0Ik5zJlXY/eIb7UHI+83qZTQX3oGgRUmg3YZoVa3qdF+vQJk18xg3QkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773230491; c=relaxed/simple;
-	bh=lfabr63jQizVnrBI1g724BS3W85SNOmSpAe5IvwLLaw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UVvwq8rfuAKNNgFqFMlNuvGebUfuD5LUJ0yfwOwf8AwyRN9aqtzJsFCtro2K+3tQRU/SGy01TiR4RqzR1fdjHNYOFthEhOSpUGiR5wuqatWMkKkVEjBAIZSekDxPtp4Xw9s2Zjdjbi/MRCHZqlxJi2iB4QHwVN3gAU/POAK3+/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uBOTH5US; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1773230663; c=relaxed/simple;
+	bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKUKPrtvDZZKr+vjdx/nN35/GWNlzaEhCDB+JtnF+NI9dgMdpZx12jK8KPSr0VbiA6EjdaK8x8vRCVsg/5lR2EoLOt8CTC01D6uy/FMxgGQSPkSmwSCy28D4oHq72H2N68YwLeEyTVNSp0o6pQQ6/Y6pq1j4aFUx4wmE2oh5284=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oJbNeSzI; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uBOTH5US"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-66132b22182so8157502a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 05:01:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oJbNeSzI"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-89a6ac6f389so5815186d6.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 05:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773230488; x=1773835288; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WSs03vKecjzDF1VoMO+y/2LecDhgaBTeL52G3xYHcfk=;
-        b=uBOTH5US3UAb9axODqSebwAJpaiEH8Kw/HdYHtvIkp0GKqvV1JWCOlDy2bPoQANegr
-         JeQ/3oanQW33n6AB8i9+8P1WZ8GE/9k85mxrN/cG59j5v8iWi2rB4AYU/JN2zK1Xo6TJ
-         rhuqSwWIRQqzJd6vwt5SmVKrTBubGlHtwDPQW+4cMvZ4SzL3YrbgzI+8cQ02B45DN5Bv
-         L/VHesA5PCdIv6kHryCPdcNhz1h9Ej8wNf49BEc5sq1nI6Yf4poggmo32t0WLOACGM++
-         xMn3xQ2h6xP12wkgvA+qChGlgyDKgRuynZ3PvzC0Fs7MLCyyL0h3v6pbRFkqzwb/iFnG
-         MpOQ==
+        d=ziepe.ca; s=google; t=1773230661; x=1773835461; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
+        b=oJbNeSzIwFnPHScHsQshxjdJjgN5YRgniLu4SRX713CC6CAYeQLHkIfpbljvCRRAnH
+         8GCdREp96tRlupjpA0l3esjCjroz6Q5dt0kA190IMCBZe9Y6TypRzoJM5ya12V1OkVub
+         EUQ+KzKHFncYXagt1P6wWI3tx3xXAcJ9nVqE0WJcPYHWyuoYrh+bRaAymwSQo3rHPIU3
+         l4mxZ//9rXYowokM76ZULSkPHRFaWLXI9DeuKwC79yu3oKxE8Iq2+zzTOrCWXVjPZrH9
+         CEu/YAUe//Hit+usny9ISZgFfiOdMPYNDj9YWIjqEKoVggIDs+kCLw9eATV/2xna2ACe
+         /3LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773230488; x=1773835288;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WSs03vKecjzDF1VoMO+y/2LecDhgaBTeL52G3xYHcfk=;
-        b=OfnPO4kqgOGTOb0l7hM3+WjDNaPN4sb8a+nCaAEINdc6WKi/h5ElsVeybPSExC3f3q
-         xBvq9SM/Tv2QcRSKkQKiHnYRkcwEsH3iLuUy8xRLh9MyaHrvAQUFxlkZK1/5nKFWa40Y
-         GYM2eS8KWjb8SNZE/yx45bLlKjp/sukmttNVvnTfVY3FeQv/ROtmO8hKUaU4/rpbdfKG
-         k8bsLt5ZUrglSMLP0IWz42xYstNldL2/Cmbwzfhfu5KdGd5vs4d+fTTqW1mLUDfATS0z
-         s8KPTnTq0M+G940QwPZbaIMgt69DOVZU28ZanaEnYmdVX5mKXIU4aHWr+BiExIaimKy9
-         iiyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXA4HRg66NWA9bL6dZQhTo5zHVYL/00KwwDRr55eS+tRHJw0/fyO1CxAQL2p5JQkslxm1FWIOXOnl+Tj0F9G4gS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD/IrjMv9FDH98Ck/GOyoO+998I2FRlQMAhaEzQuvXYV5XPP8o
-	kAIYk5KvCT/j9mF+/dsIg8fMEPwgW9jqQ87j5EZtqYRhv1hX0t8zXhoPBeMoF75oaeA=
-X-Gm-Gg: ATEYQzxPEnNNH8PQvSKLZEzTyXK6fb5E1Yjw9ArZOX/vrpXnB7cX78zDgKEv+iixugg
-	/cwf91zqf55GNFBNotDqz3mtDUQgHR4xWxsJXCVRYwz8oelnZ1rFW9E48g2OrDdEuIz81z70Abk
-	P/B9BKVfsO4qKAMjbUULDQ59A7Mpq294cQAAOKCNj3Xg7wWmjKgF6Ys5ZLedz+WyizVHVgZJfBy
-	UrXuJahTxFI8Z+Envlm9xdY323IymRevvCcBaXudPa/JNAbYGsbxBB5LYRJtv6BjgN/Niu30hwD
-	0XJRaEnZhcEK2HGsUGJ4ILXfwwVLa4G6O8J3iAYr1VOiVpn0cyxO1haAff/GAhcTI6J52WV72Ir
-	5sAWR0SvotGnjKV84wdPsO4yt52R6G6ohiFCqVNo26O6g/uanaw6PvFelulRxt1FK2tFiuJ+ZUH
-	rjB/1V2eWsVGUM5Nv5Gs6eSRuAhTi+
-X-Received: by 2002:a05:6402:3514:b0:662:bb58:602c with SMTP id 4fb4d7f45d1cf-66319ee3efdmr1270923a12.29.1773230487607;
-        Wed, 11 Mar 2026 05:01:27 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6631503c903sm476518a12.20.2026.03.11.05.01.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2026 05:01:27 -0700 (PDT)
-Message-ID: <68a93eb5-24df-4b73-bd1e-798dc32b7e86@linaro.org>
-Date: Wed, 11 Mar 2026 12:01:26 +0000
+        d=1e100.net; s=20230601; t=1773230661; x=1773835461;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
+        b=LRsC7IaHCqmfw8+22yrZX1h2jJ32LeXP85Z/TotPjAA9hFpgvnoaCwnDwAZzmMalG8
+         IA3eYQrUyh/FHSG9PGE8EP4qqDDOrPlYUk3QvbXytQYKPIwSGTUAd0boVigLXO/g4GXL
+         0/YEU9Jba6Fb7UBVAHWv6MIJ2VxpeRDYcpOeu9rL2hg63+KTzbexNfri9ySYulHEYTuf
+         cjOpoyexUskiBZTMLvuc53g0JJuk99+Vj+EDyLQxx+GI60heR/gBm9fs3T8zzrjJBn06
+         GEa31yjyxJU59Xhn0tF1j4yt2FSizfvWQgzqKmmsjIFH+VJhbBfT3OY0n2hfFRLvAH3x
+         Fosg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSXxle9z6vmzGg3NglO+ZCuNNgRDWknXuvv3Ru0y/1AvIGu39ZoxtKwUkKDpmPJswnAG4iOmeMK0977drF1eFe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZYPBpz2iJsBv0yLnDQgsbVNhEA5xZowJp2MIrs7o0A1lPFtFm
+	f/Giit/oM5aJkLD5C20sXwok6H/yVJtX09z4xHE9y0r/Raz9usO03FuPqKoxYhRl+ms=
+X-Gm-Gg: ATEYQzysWpGoaCdG++a820SvGuMBbHId1DXx5j9oorSipbl/pggyidUO2fvjje1xYZ2
+	svN84Ln9RSQQnz+DCsUoa+g0m9IyCEc8dOtn75xMj4Rswyoix+Tie9DRTR9arAoV5Wd4kkVK/9E
+	VyjD5GCUagUmCwI06Mjapmv/pggtOAw4kCfBmhh0YoiaDaKSzC5V9zsGsjq1D0dwD7xYWZdQIoH
+	hhc+BOiUNbpg+weWQyrNHLMKvTLCvL3HmO1HTWHE6ENS9whobF2+o2ak+2Gs85uikXkOVeV058f
+	NklFICyb2B5q9StjRux1AIhxka1dNF6S3h5xz+rkfWkMGdpm4cU1bZtkATVLaNL59BLaDoG6c4w
+	aI1YR61aRvk4DhVfkuXvJLJtzbBEfPoM/+6TUwikILEaVlpfYixCsK93J9i3mpePixUYte29WyC
+	c2so80KhhMIsI1Y0XT/0U9ARcP+gfhKInyaLbcBn3RiXbTv3HSy6lNLyxP4HPlwlf15pltxb95l
+	bQqeNDtQ7AuXlXwSL0=
+X-Received: by 2002:a05:6214:f2d:b0:899:fd8c:55c6 with SMTP id 6a1803df08f44-89a66a5858dmr29432376d6.23.1773230660563;
+        Wed, 11 Mar 2026 05:04:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a65d17023sm12745086d6.49.2026.03.11.05.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 05:04:19 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1w0IIU-000000069iv-3jx0;
+	Wed, 11 Mar 2026 09:04:18 -0300
+Date: Wed, 11 Mar 2026 09:04:18 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in
+ zap_special_vma_range()
+Message-ID: <20260311120418.GU1687929@ziepe.ca>
+References: <20260227200848.114019-1-david@kernel.org>
+ <20260227200848.114019-17-david@kernel.org>
+ <20260309142954.GM1687929@ziepe.ca>
+ <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
+ <abE4JYo223OxWCBQ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/19] KVM: arm64: Context swap Partitioned PMU guest
- registers
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuah Khan <shuah@kernel.org>,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260209221414.2169465-1-coltonlewis@google.com>
- <20260209221414.2169465-12-coltonlewis@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260209221414.2169465-12-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abE4JYo223OxWCBQ@google.com>
 
+On Wed, Mar 11, 2026 at 09:38:45AM +0000, Alice Ryhl wrote:
+> It doesn't really make sense to have multiple binder VMAs. What happens
+> with Rust Binder is that process A is receiving transactions and has the
+> VMA mapped once.
 
+IIRC the problem is the kernel doesn't guarentee singleton VMAs,
+userspace can always clone them with fork or something. Did binder
+solve this somehow?
 
-On 09/02/2026 10:14 pm, Colton Lewis wrote:
-> Save and restore newly untrapped registers that can be directly
-> accessed by the guest when the PMU is partitioned.
-> 
-> * PMEVCNTRn_EL0
-> * PMCCNTR_EL0
-> * PMSELR_EL0
-> * PMCR_EL0
-> * PMCNTEN_EL0
-> * PMINTEN_EL1
-> 
-> If we know we are not partitioned (that is, using the emulated vPMU),
-> then return immediately. A later patch will make this lazy so the
-> context swaps don't happen unless the guest has accessed the PMU.
-> 
-> PMEVTYPER is handled in a following patch since we must apply the KVM
-> event filter before writing values to hardware.
-> 
-> PMOVS guest counters are cleared to avoid the possibility of
-> generating spurious interrupts when PMINTEN is written. This is fine
-> because the virtual register for PMOVS is always the canonical value.
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->   arch/arm64/kvm/arm.c        |   2 +
->   arch/arm64/kvm/pmu-direct.c | 123 ++++++++++++++++++++++++++++++++++++
->   include/kvm/arm_pmu.h       |   4 ++
->   3 files changed, 129 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 620a465248d1b..adbe79264c032 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -635,6 +635,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   		kvm_vcpu_load_vhe(vcpu);
->   	kvm_arch_vcpu_load_fp(vcpu);
->   	kvm_vcpu_pmu_restore_guest(vcpu);
-> +	kvm_pmu_load(vcpu);
->   	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->   		kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->   
-> @@ -676,6 +677,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->   	kvm_timer_vcpu_put(vcpu);
->   	kvm_vgic_put(vcpu);
->   	kvm_vcpu_pmu_restore_host(vcpu);
-> +	kvm_pmu_put(vcpu);
->   	if (vcpu_has_nv(vcpu))
->   		kvm_vcpu_put_hw_mmu(vcpu);
->   	kvm_arm_vmid_clear_active();
-> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index f2e6b1eea8bd6..b07b521543478 100644
-> --- a/arch/arm64/kvm/pmu-direct.c
-> +++ b/arch/arm64/kvm/pmu-direct.c
-> @@ -9,6 +9,7 @@
->   #include <linux/perf/arm_pmuv3.h>
->   
->   #include <asm/arm_pmuv3.h>
-> +#include <asm/kvm_emulate.h>
->   
->   /**
->    * has_host_pmu_partition_support() - Determine if partitioning is possible
-> @@ -163,3 +164,125 @@ u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
->   
->   	return *host_data_ptr(nr_event_counters);
->   }
-> +
-> +/**
-> + * kvm_pmu_load() - Load untrapped PMU registers
-> + * @vcpu: Pointer to struct kvm_vcpu
-> + *
-> + * Load all untrapped PMU registers from the VCPU into the PCPU. Mask
-> + * to only bits belonging to guest-reserved counters and leave
-> + * host-reserved counters alone in bitmask registers.
-> + */
-> +void kvm_pmu_load(struct kvm_vcpu *vcpu)
-> +{
-> +	struct arm_pmu *pmu;
-> +	unsigned long guest_counters;
-> +	u64 mask;
-> +	u8 i;
-> +	u64 val;
-> +
-> +	/*
-> +	 * If we aren't guest-owned then we know the guest isn't using
-> +	 * the PMU anyway, so no need to bother with the swap.
-> +	 */
-> +	if (!kvm_vcpu_pmu_is_partitioned(vcpu))
-> +		return;
-> +
-> +	preempt_disable();
-> +
-> +	pmu = vcpu->kvm->arch.arm_pmu;
-> +	guest_counters = kvm_pmu_guest_counter_mask(pmu);
-> +
-> +	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
-> +		val = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i);
-> +
-> +		write_sysreg(i, pmselr_el0);
-> +		write_sysreg(val, pmxevcntr_el0);
+Since you can't assume there is only one VMA the locking becomes a
+mess to cover all the cases where userspace can trigger a VMA clone.
 
-This needs to have a special case for ARMV8_PMU_CYCLE_IDX because you 
-can't use pmxevcntr_el0 to read or write PMCCNTR_EL0:
+address space deals with this internally.
 
-D24.5.22:
+Thus, zap_special_vma_range() is extremely hard to use.
 
-   SEL 0b11111      Select the cycle counter, PMCCNTR_EL0:
-
-                    MRS and MSR of PMXEVCNTR_EL0 are CONSTRAINED
-                    UNPREDICTABLE.
-
-There are 3 separate instances of the same thing in the patches. I was 
-getting undefined instruction errors on my Radxa O6 board until they 
-were all fixed.
-
+Jason
