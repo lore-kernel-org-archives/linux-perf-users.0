@@ -1,186 +1,243 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011067.outbound.protection.outlook.com [52.101.52.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37493B27F7;
-	Tue, 10 Mar 2026 22:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773182405; cv=fail; b=ejTiijOFY3lo5jMg3PxREQDsrKL7qkaml4r7jYtGKBbB5sivi0nmQuTVBJAdUWkyoQ57mtCk/kU9708fSVkkIxlJkVTyOVU1juSX+OP/xlo2KumqQIcNNAmjZDAhf/hQyQ2/KZS0yECZQdefXtM9WASl4kBI1n1mgRVzxDNHqLI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773182405; c=relaxed/simple;
-	bh=HnrCLdj6RygG0EoO9wwK9H/c8JLj1gr6ZH/6MSUtKeQ=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MHWxZ0XLcUqz4u9UHqWsPIWhHJG891X9NwQ/VoJLE0D5NrnT8ANjB8DIz0YUTM2lnHeSPgHBTWUhEfQQi29udlBJofJYYIkrKGmnjnJQCJh3LLhmLb3jc5z6VLpHYRuexxVwHkN78sP/fACnYBlb9+6+ywXESt4U2VKR/EyNHxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=citrix.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=OLh0befG; arc=fail smtp.client-ip=52.101.52.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=citrix.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1031DD877;
+	Wed, 11 Mar 2026 00:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773190301; cv=none; b=gdubz78O4BHW6RVqTNBH0mP/wwWar6ukyIWSZVTqEVbPQP4Pt/vy/l2s/d2/lN2sJjKe66q5Oh4L0afkYCcJUzenudzugBkT/13a68iYEQNnasjVgy+dTsyKiUpReYRnrRP4Gs+MarwAoZlU4vE/J65nNCvWwoOdZvbtYe2fHp4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773190301; c=relaxed/simple;
+	bh=cDxvgkx6tl3e7lZvIv3KCaXNgG249qNutfn/S+qhgFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WvQl8F22JUaaUqg7c4tbXbRxwufQxf+XM7KO+8VTf2+1coEzjvlwYt9Dn5yPGu5+sLIQEqIB4GutHPq6ywR+i/M3pNQRM2TDu90l5NJE+haUCdmhKxvbhgs2GAkMf6GLGo0GSrrOOyqr2VAe23vC8TgLikNMX4LtzJKnofzppFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quHwNFcj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="OLh0befG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a6FuBQTZVkw6lglQZbZt/z1EmdG/mFVt4TKI9z33VTEjNqO5EZhTJJ9QD3G7M8u862dh2j3Nr685tmvPF4E4RSS2JIucppG/0d4AIFMrSJ1bXxTu8MQ+nbAY3qnL+sjihiZol/Zu1W9pGAcfDiyB/S6P5DLf/oXGJMrKBCsCKW55jYUk+p99gZEISD1Y7Dhqfr8eOA9igocwL8EE8rvRtTL03YW0H0zx2OQh5PBBU5AQ6CqrI1/Cq/a20F6MLQigB97YfgoqGRrcJG6nH5N2m2vSA1q6zPRRULksDQw1luEURVtT61jamdF6p3JL2d3+aYSojiMlJpbGscp4AHSWaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T5ya/14xemD/FSVbl/3h5BjXqa8QljYPw+uZsXlmhvw=;
- b=CeyqxuDd9d2EwajTtPP7/i2FyWwTlaa3rhz0vp9Y4Z2AuCqgoQSIHxAQgq4uH+lvh26ic0eVjrKEdBUhwYAVfLKITe9VNB2RNrOksWoYHn2QeoYCTBxqjNwea0a65Xt7GzwW1rnF0IVqqeHSfjLeeVO9IKbNBeAYTswo2o2URVkVI7fyLwxDAlGDBwK8Wy6JMa9LWJ+n7cfjolLdLqmszeOBtXfraY67/BDT0MLMxg35NfZo3zvuOtuGuI70IwTkwUGJzfhfe+UmExbpwVIlFdc56hT0UUeQLzO30YhRWls1uIzBOgLevgAIojwhlNuVMhWDuLuIHxoxxwO3qsRn/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=citrix.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5ya/14xemD/FSVbl/3h5BjXqa8QljYPw+uZsXlmhvw=;
- b=OLh0befGjmqooOT15+f6FYL3ssxtC8tCGnpIE/bGkf3niQsZWm68QvF385ug3uFfVMNALkBovNip2OiFvErwOWvTvixRQz80wSdHmxEHDRlcnS+BUMS2g/NrdM/RZEVrU8is3v9cwnarRyg/4fIVwpsLzYj9ub6jXHDa2WeNqMg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-Received: from CH8PR03MB8275.namprd03.prod.outlook.com (2603:10b6:610:2b9::7)
- by SJ0PR03MB5518.namprd03.prod.outlook.com (2603:10b6:a03:289::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
- 2026 22:39:54 +0000
-Received: from CH8PR03MB8275.namprd03.prod.outlook.com
- ([fe80::a70d:dc32:bba8:ce37]) by CH8PR03MB8275.namprd03.prod.outlook.com
- ([fe80::a70d:dc32:bba8:ce37%6]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
- 22:39:58 +0000
-Message-ID: <89f34cfe-7b77-4f66-b3ed-8104c5b50eaf@citrix.com>
-Date: Tue, 10 Mar 2026 22:39:48 +0000
-User-Agent: Mozilla Thunderbird
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>,
- Sunil V L <sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>,
- Yanteng Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>,
- Kai Huang <kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>,
- Thomas Huth <thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>,
- Kevin Loughlin <kevinloughlin@google.com>, Zheyun Shen
- <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>,
- "Ahmed S . Darwish" <darwi@linutronix.de>,
- Sohil Mehta <sohil.mehta@intel.com>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Robin Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>,
- Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
- Ajit Khaparde <ajit.khaparde@broadcom.com>, Wei Huang <wei.huang2@amd.com>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Somnath Kotur <somnath.kotur@broadcom.com>, wangzhou1@hisilicon.com,
- wanghuiqiang@huawei.com, liuyonglong@huawei.com, linux-pci@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
- linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] ACPI: Rename get_acpi_id_for_cpu() to
- acpi_get_cpu_acpi_id() on non-x86
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Chengwen Feng <fengchengwen@huawei.com>
-References: <20260310175305.GA730372@bhelgaas>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-In-Reply-To: <20260310175305.GA730372@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO2P265CA0131.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::23) To CH8PR03MB8275.namprd03.prod.outlook.com
- (2603:10b6:610:2b9::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quHwNFcj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF20C19423;
+	Wed, 11 Mar 2026 00:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773190300;
+	bh=cDxvgkx6tl3e7lZvIv3KCaXNgG249qNutfn/S+qhgFI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=quHwNFcjm9RQ3g3rqorYfmuFz2SZ6W4bnE4NqkAYUDvCrdmNYDEzRS0hVcLXRUEXp
+	 zbCWwRFrRzxwTeTWLfCCji263N50vlYkCQgBSQzrDPOaz7BdQhSxrzL8W9TqZRueWF
+	 XaGRFqTo6P7wScMPP/HYWiCWLxjVg88srGOOYGlipyHii0wxzr0opvrXh1lxf+n3m2
+	 6nroMV5gxSYeBhecXxnqM2MS37zE62oJqFDUhobcepYMBq+RdrYlFqpW668kwO5vAg
+	 yu+CkbRsjCvOHVPk9jUtzEmBz+cBZjwY26SeYTOsM3p0nu5qiXtiTTk3e/gyLRT+8F
+	 ab2iaqmOWwEow==
+From: SeongJae Park <sj@kernel.org>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/6] mm/damon: introduce perf event based access check
+Date: Tue, 10 Mar 2026 17:51:31 -0700
+Message-ID: <20260311005132.90285-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260309010009.11639-1-akinobu.mita@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR03MB8275:EE_|SJ0PR03MB5518:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ec7f3b8-a59e-49fc-4842-08de7ef5f52f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|1800799024|376014|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	0uGaJBptse/dAAqoo9odz6TEboL6x1eofnu0U5I34ebOa2ydcGqAcURoHxeqKeO3q62Mk5AIsz1uGpcRUD51NtKqNO+im0qexd9ilZKJZwf/sVWbvl9FkuGXGlAR406DyLp52UojePLAqEJKSJJpfuOlxgOnt0mVBkxJN6z+adZXzeuwWlSNTcE2sm5+Mcbo8rlNnBVBK6m2P7UzW2lI03Yai/YAtCivMkx7lshvcpmyQU6beOumt/PhWTn9VavQB6dxRkuFDRldT2anaLSy05shimis65lY/86L7Ph65C0dcQnAikX35j9vq3YffbG+ewMZatuwAvx+VS5mkXNpysipAZE0tCOIsJzprkl2htuAgKHB26cB8Iphxp8mgqHxR/pPpGtfkwbzfEm3umXlA6fyULummSFXzgYr0RBrckPf1CMtH3ML09mhbi9mhxjQUH34bLVxRTXGehvJAOmtHAO6RfZpxctAwHNM7zamEqCkqE8aE/PJuIGvCCiPOImsLdYDetUwzZ0rJHdApQ7O06VJcFegGh3y7W+1o+C0nnQmgSL9PsHd47dg7WEAMnQnNAAWK2NFmnJSgh0YtqnNlIPSgpV3/MKdVTRjoYv+CLIJEvylvZsytoZVU1dHgXCtt+w4UbfdU4HvNSO7E6+tC4V2GQzuo7Q8QClKdx2hbNmPlsDsaLWFnXZqMhwKxEvLMBFb6gQv2PJC14pljFl2sByALSYynly2akYCUwJFGmc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR03MB8275.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Yk5PbGRvSzVOcnFMOTR0c3hjbVZuNnZ4emp0MTJXcldGRDRRc2JyN0U2R25n?=
- =?utf-8?B?RXQ0Qng2QlppaWt3N1Nhckt2WS9TRHNkWkJYMVcxQWpzeVNCV2lkanhUajVv?=
- =?utf-8?B?eWpIbEF4Y1FPMzMvVDUvZFRia0I3M2crMTlEbGplR3VLUml1Ti94aVlyY2NU?=
- =?utf-8?B?b1MvdnJ6Uzc5S05uUmZPbi9NMzlQYkRuMkpSbTRCK25kMkwzQ3A4ekFmb1ky?=
- =?utf-8?B?NGJROTNkY05lZnZETVVqOW5tMlYzVk5HWnNQc3VrUkZ2K0xaRkwyVGpmQkl6?=
- =?utf-8?B?V0RjU2NtN2svclpta3FJa1Y1WGVyN01tQVVFelgrbENrcDdad0lLaUExbnNn?=
- =?utf-8?B?cUpCUnpVN3BCQ0kvRGdUYlhXa053aFlFVWVyVk5KejR1cWp6bmxNT0h1WXRE?=
- =?utf-8?B?QjV1L0FNdGhKNlR5QWVZdEZObHliK3czeTFlMUFUbVk5eHZXLzlyZHJYbTly?=
- =?utf-8?B?UFVtbU1PUVZNU2w1RjFUY0UybjRvbVFFSHl2L1BkTlUwKzlhakoySzI5aFR4?=
- =?utf-8?B?SHNySnJTNXZ1TDNLbDU2K3hjdFFpeldidUNFaCtGRFc0RkxvMEV1M2lHbjRx?=
- =?utf-8?B?aWx6d0ZpSVNudDdNUEk5amI3blo3cy9XNzNFZ3BTU0hkK01XTUJ2MUlabk10?=
- =?utf-8?B?N2x5b0VoZUh1WHhLV3o5dW1LZ2Jtb0RvOW94a1J5a1BBODhKNWpZRnZ4S2xH?=
- =?utf-8?B?WjlvdEdteWUxRG5ZZnVnbmUvYmE1bHBEciswOW1VbFREbzFlWksvbUJZRno5?=
- =?utf-8?B?UzFBU0YrVjROdTN0NnkrSXRtUFNuSFhNSE1KOXRTbXc3VUVoNUtWeEViclNa?=
- =?utf-8?B?d0FRemNqMGhERnZVaTAvMzQ3cFozNWtlczE2UVN5Sk4xNklPZkZkYTAzL2Mw?=
- =?utf-8?B?YjVxbXNTVjdBdTZSYVprQys4U1pZeUxlVmZ5dXY4S3N3U1VaL1FBazJHZ1Zl?=
- =?utf-8?B?R0ErTi84MHdlSFh0bENQS1d4d1NMbWdaci9SSkRPcDI1NDM3QlZZc0I2b1g5?=
- =?utf-8?B?UjFxbTRKVnI5S1dIclZXNVpMdVdnVHdQTDlreXlQRTdIcDQ3NGFwL1diY1kv?=
- =?utf-8?B?eHR4eWNOd09aNldnMUdaT09BOWhIQmYzM2VYTFVsQU8rcFRQdGdsYkloZkVR?=
- =?utf-8?B?NU9qRWlCYllPSmkydXFJZTlITHdKcDBFR1VTT3VUcVovcXJ1RnlCYVlNMlJy?=
- =?utf-8?B?V1RwMXNTblltZHZ3bzFnSmhRMEF1Q2JoM0RESjhYNHoxclVXYkFYZUd6R3oz?=
- =?utf-8?B?QkQzK0FoQndBRHIyVzl0dHJBRFByWUxZTXdpdURzSVNReXlXQ1BmZTBWVW9L?=
- =?utf-8?B?WmdwcEpXaU1KektuMFR2ZUlDRVNQelBPbDMvK0xRMTFtRzNHeXA3eEhQSm4r?=
- =?utf-8?B?WFNGaHVWQktaVTBzRmpmUngvMWQ0R1hGOVlnRjJ4Uk9Qb1o3Uzd0Yk9SUjlr?=
- =?utf-8?B?VGw4QzBKelF1c05LYnMydEg3ZE1odjczR21WWllIdFJjc3p4M0ZNMEN6MFNK?=
- =?utf-8?B?N1lrVXRrK3JvVzdVRUcvSlRMWVhFVFpiZDJ3UW1Ob2dkaktvL24zeUFKME8r?=
- =?utf-8?B?aW83N0dMWmhhUlIxMHRoZWY2UzlYdGd5L0ZHajNFaGh4ckpnblBVdFhJR3VB?=
- =?utf-8?B?TGx3djJITzJlblJXM1hBRFAvYjFjZWU4VTFQNThzbXBzSjBpMzErNkdCa25Q?=
- =?utf-8?B?V2Qxc1BPRDdBQkptbGxDaG9YSktVL09DNmV0VEhCTjh5MUMzS2dxV0pFVkpI?=
- =?utf-8?B?TXJTbGc2K3Mxbm5WWFFvV1JJdU55ZHl1bVg5aVlmQWkxUTdqL29Ra3Eya1Ny?=
- =?utf-8?B?eVlZZHN2ZWxabXZsdXFkSExFcUFYK0ZqQ2w2MFZ2eW85VGk5bjJ5bWNYZWhR?=
- =?utf-8?B?Z3FFV200Y1paTm5LV00xRnc2SnVCT0IrMDRkNlYwQkNkSnRlTEZmZXNWNVBK?=
- =?utf-8?B?NFdGdDIvRlEyZWlsWXVyd3lmeG5VQ3NERDlucndkaHd0a1lQMVpaTEJ5Q1Fl?=
- =?utf-8?B?by9QUThVdG83a0dPTWdKb081c1BQczBEdlJoU3dKcmVCZFJCZnZicTB4MlJ0?=
- =?utf-8?B?cUpwU2lTaWJxaDRNVFpUVTR4NHd3TnZXZEFoM0VJaDlPaE9PdDRQR3pRcUkz?=
- =?utf-8?B?T0s1bW1pem5uSkV2SnBaZ2N1TldjU212N2Z3YW0rNGsvSVJhTVFOcHRqYmVJ?=
- =?utf-8?B?VHpZK0tZMEZFbDRYbVdKYThoVDY1aXJYTlgraXk3UkdLMVY5RnhmL2RNUXZm?=
- =?utf-8?B?endqSUs3UWhRbG5mbWQ5NUh4MVh4QzlRT1NSclNJUnRTQXNWNkVQT1hLWlJQ?=
- =?utf-8?B?ajlPN0t2R2lSVUJwbXpLQTgvVDRDMmhRMkVEa0JYanBWREpRcmNmdz09?=
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ec7f3b8-a59e-49fc-4842-08de7ef5f52f
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR03MB8275.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 22:39:58.0577
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w1CHoC9U+cpBf9KaJCKXbaFHOUzVk/9lCW28q1CpouRGxDPSK3i9wKvtNhtfeZBolw2H3VZagHko59xaJlcwT2gvUMZSFHWjbUx6esRQymE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB5518
+Content-Transfer-Encoding: 8bit
 
-On 10/03/2026 5:53 pm, Bjorn Helgaas wrote:
->   - Split the x86 part to a separate patch and maybe (a tangent, but
->     looks dubious to me) figure out whether/why xen needs xen_vcpu_id
->     to be ACPI CPU IDs
+On Mon,  9 Mar 2026 10:00:03 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
 
-This is an unfortunate mess made decades ago with no good solution. 
-It's to do with how Xen and dom0 share responsibility for the system.
+> DAMON currently only provides PTE accessed-bit based access check, this
+> patch series adds a new perf event based access check.
+> 
+> Since perf event-based access checks do not require modifying the PTE
+> accessed-bit for pages representing each damon region, it reduces the
+> overhead of monitoring at a fixed granularity of the page size.
 
-Xen PV dom0 (only, but still widely in use; ring-deprivileging and
-predates hardware virt) is OSPM for the whole system, seeing the real
-ACPI tables but with a number of vCPUs generally less than the whole system.
+Based on my understanding of this patch sereis that I was enlightened from the
+conversation with you on the RFC v1 and kind comments from perf community, I
+agree to the points of this patch series.  Extending DAMON with h/w features
+like AMD IBS and Intel PEBS is what multiple people shown interests.  I believe
+it can benefit multiple users.
 
-This causes Linux to have a split idea of what CPUs are, held together
-by hope and duct tape.
+I hope this work to be continued until it is landed on the mainline, and I will
+be happy to help.  Probably not exactly in the current shape, though.  I think
+this is still in an early stage.  And for the reason, I will comment on only
+high level things here, rather than diving deep into each patch.
 
-Xen PVH dom0 (hardware virt) is OSPM, but has an MADT matching it's vCPU
-layout.  It still sees the system DSDT/etc, so while this is better from
-Linux's point of view, it's still not great.
+> Furthermore, this patch series also includes a feature that allows you
+> to set a minimum region size for each target, enabling you to monitor
+> at any fixed size greater than the page size for each target.
 
-Regular unprivileged VMs get a fully coherent set of CPUID + ACPI tables.
+I'm not very sure if this is really required to be a part of this series.  Can
+you further share more details about what is the benefit of this feeature, and
+if it should be coupled with this patch series?  It would be great if you can
+share some test results proving the arguments.
 
-~Andrew
+If this is really beneficial but there is no reason to couple with this series,
+I think merging this separately first or later could also be an option.
+
+> 
+> Using these features also requires modifications to damo, but these are
+> not included in this patch series and are currently under development in
+> the following branch:
+> 
+> * https://github.com/mita/damo/tree/damo-perf-for-v3.1.8
+
+Sounds good.  No rush, but also feel free to send patches or PRs for this.  It
+is common to support DAMON features on DAMON user-space tool even before the
+DAMON features are merged into the mainline.
+
+> 
+> Any feedback or advice on the patch set would be greatly appreciated.
+> 
+> * v2
+
+Let's keep using "RFC" here.
+
+> - reintroduce damon_operations->cleanup()
+> - introduce struct damon_access_report
+> - use struct damon_access_report instead of introducing struct
+>   damon_perf_record
+
+Thank you for doing this.  I hope using not only the struct but the underlying
+infrastructure, though.  Let me comment this more detail below.
+
+> - remove maximum region size setting
+> 
+> * v1
+
+Ditto.  Let's keep using "RFC".
+
+> - https://lore.kernel.org/damon/20260123021014.26915-1-akinobu.mita@gmail.com/T/
+
+Thank you for sharing the link.  This is helpful for me at reviewing.
+
+> 
+> * TODO
+> - Currently, it is possible to unintentionally specify a perf_event
+>   that cannot obtain either PERF_SAMPLE_ADDR or PERF_SAMPLE_PHYS_ADDR
+> - Check if it works in a virtual environment using vPMU
+
+The above two TODOs make sense to me.
+
+I'd like to request below things as main TODOs.
+
+First, I hope the benefit of this change is described in more detail.  The
+current description mentions it is more lightweight since it doesn't need to
+update the accessed bit.  But, PMU-based monitoring should also have its own
+additional work.  It would be nice if you can describe what additional works
+for PMU-based monitoring induce, and why it is generally lower than that of
+access bit modification.
+
+Having a more clear motivation, or expected use case would be nice.  You don't
+neeed to share real details of your use case.  You can anonymize sensitive
+things if needed.  But giving a reasonable and realistic use case will be nice
+to understand where this can really be beneficial.
+
+Sharing a test results showing the benefit will also be very nice.  It doesn't
+need to be huge real world test, but some reasonable amount of data that
+collected on a realistic test setup could be very helpful.
+
+Second, I hope this patch series to reuse the DAMON primitives extension
+infrastructure if possible, to reduce possible future duplications.  I'll add
+more details about this below.
+
+> 
+> Akinobu Mita (6):
+>   mm/damon: reintroduce damon_operations->cleanup()
+
+Thank you for doing this :)
+
+>   mm/damon/core: introduce struct damon_access_report
+
+Again, thank you for doing this.  I understand this is an answer to my previous
+question to the RFC v1 of this series.  I was asking if you considered the
+infrastructure part of my page faults based DAMON extension series, and you
+borrowed the main data structure of the series here.  But, I hope us to reuse
+more of the code, since it is more generic from my point of view.
+
+>   mm/damon/core: add common code for perf event based access check
+
+This patch is introducing a few of sysfs files under DAMON sysfs context
+directory, namely 'perf_events/' and its underlying files.  The files is for
+registering perf events for the access monitoring.  I don't dislike the basic
+concept, but concerned if it is too specific for only perf events and therefore
+cannot be easily extended in future.
+
+The faults-based DAMON extension patch series [1] implements files for similar
+but more general concept.  It defines a concept called sampling primitives.  It
+is the low level primitives for access check.  It could be access bit checking,
+page fault event, or something new, like perf events.  It adds
+monitoring_attrs/sample/primitives/ sysfs directory, which can be used for
+selecting what primitives the user wants to use.  I think perf events can be
+defined as another access check primitive, and the sysfs files can be added
+under here.
+
+I was also bit concerned at the fact that the filees are effectively exposing
+perf_event_attr struct.  That is, I was concerning about stability of the
+struct.  I now see it is a part of linux user api, so I assume it is a stable
+api.  Could you please confirm this?  Also, adding more clarification about
+that fact on the patch would be nice.
+
+>   mm/damon/vaddr: support perf event based access check
+>   mm/damon/paddr: support perf event based access check
+
+My understanding of the above two patches is like below.
+
+1. The perf event samples are added to a circular buffer whenever it is
+   generated.
+2. At the end of each sampling interval, the ops reads each sample in the
+   buffer, find a matching DAMON region for the sample, and updte the
+   'nr_accesses' of the region.
+
+For this, this patch series implements the circular buffer for storing samples,
+and xarrays for finding the matching DAMON region for a given sample.
+
+The page fault based DAMON extension patch series is doing something similar.
+The first patch of the series implements the buffer for storing access samples.
+I think the perf event samples can be stored here.
+
+The seventh patch of the series implements the logic for finding the matching
+DAMON region for each of the samples in the samples buffer, and update the
+'nr_accesses' of the DAMON region.
+
+Because the page fault based extension's infrastructure is quite general for
+any future types of the primitives, I think it would be nice to reuse it.
+
+The infrastructure is quite simple and not optimized for performance.  But
+optimizations can be made later.  I'm more interested in the long term
+maintenance of the interface.  And I think the page fault based extension's
+infrastructure is easier for long term maintenance.  Of course I might be
+biased.  Please let me know what you think.
+
+If it helps and if you don't mind, maybe I can try to implement this series on
+the page fault based infrastructure and share it as another RFC patch series.
+
+>   mm/damon: allow user to set min size of region
+
+As I mentioned abovely, I'm not sure if this is really need to be coupled with
+this entire series.
+
+> 
+>  .../ABI/testing/sysfs-kernel-mm-damon         |  10 +
+>  include/linux/damon.h                         |  63 ++
+>  mm/damon/core.c                               |  77 ++-
+>  mm/damon/ops-common.h                         |  39 ++
+>  mm/damon/paddr.c                              | 105 ++-
+>  mm/damon/sysfs-common.c                       |  11 +
+>  mm/damon/sysfs-common.h                       |   1 +
+>  mm/damon/sysfs.c                              | 399 ++++++++++-
+>  mm/damon/tests/sysfs-kunit.h                  |   2 +
+>  mm/damon/tests/vaddr-kunit.h                  |   5 +-
+>  mm/damon/vaddr.c                              | 654 +++++++++++++++++-
+>  11 files changed, 1332 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.43.0
+
+[1] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
+
+
+Thanks,
+SJ
