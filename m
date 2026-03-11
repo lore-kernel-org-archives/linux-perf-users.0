@@ -1,221 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F143AEF36;
-	Wed, 11 Mar 2026 08:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7265F35B127;
+	Wed, 11 Mar 2026 08:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217743; cv=none; b=eQTau/AJB1aQWf0rC82+DsDOSbrl3ddEC/zRJJx78FE9CQRmVC4JClr95j8WG04kdXDifi81Vdbad8BlMY/oG/fsh6TWs8c7VK4E8TOK5hmzz73YJH6K5Jhrv8DQIw/XGCsz/yv/4TP/lv5ZXpkufSW/zoaTIHLZIs3QDQWIFEA=
+	t=1773217800; cv=none; b=Kp/9A+WXxnZpeAQAlT4mEB5M85m8dlKYd2q0Dty/bBmIVFc0lXgFLMAnhajR2n/L65GMtJDDOlR1mbdNFyahE0R1UwHpicLHUT3eJkOW1nHeKXVO2kBKrVcdnKiPiLGUcMl/EfE2OUdTVBWDBRhzwtX0HuioN6y7CCEt0lSQoto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217743; c=relaxed/simple;
-	bh=GE6B9Axf2iqOgQ6Zt2ej9Oufrn3oudVjXjL2vTIfmAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TaBi0TpABpWppN3I/jAbHobNkU+IPhRgg4kTWje6nHkDy0dMhMylf7D4RPwXp98qPAPbG5P8LkjpZpnXIsGLMhpHs6J5wQ5GjvpMLxPdqsDrdHQTovZlD12pbVzLeS8/qOV4uoQpufNAoeuRvHHvnYd2dC/xFOnCHsC1h4yxOYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utVavD96; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utVavD96"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4C3C4CEF7;
-	Wed, 11 Mar 2026 08:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773217742;
-	bh=GE6B9Axf2iqOgQ6Zt2ej9Oufrn3oudVjXjL2vTIfmAQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=utVavD961L/MIxHcghlNRfP+qmyZvTz3tZkkai8biCLxovJiwSfi721dAan4WAerP
-	 qQU5S4O+so1CV/l13lXL1pBvxe6Xcb8kk+l/bBNkxM6Og8LAf+De6dljLV/bYd9vPF
-	 RnkVuR2LJMC1aO8Mmf8ZYzGG89DCjYYyg3JerSgXRXHIS9MEy5aP+0VPOJEnsfhJP/
-	 cAHnLbI4JCoH8Po1okfUE05z/3RGXHVkg9UE9OHdr7DaaCoUol+/nBwm0m7BwYmG4l
-	 DzBEoPXPx1/wX7BQYXu4AinRZizyRYhr3BiDVj3GhukhaNvYNRYVgru+HF9UqoHZIa
-	 O0mPmtOaDieiw==
-Message-ID: <5e5e0169-5197-4626-b91b-af4c13520805@kernel.org>
-Date: Wed, 11 Mar 2026 09:28:47 +0100
+	s=arc-20240116; t=1773217800; c=relaxed/simple;
+	bh=ORDb4rz7pkZEG/AYr4fm0X3yvNxV+D8HlxcMfkqWYUQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mz2I/eo81TRDn7kc3eHu+F1O3X4OpRHu5cYTWrOKs4KcqznOljX6dDKeMb5ES2PVL008VZvfbOvrTEdNqpyyVig3avCLu1/B5oB2vI7opLieNQ8m7EuoPZ7VSoxJAwZHRFSUnCHE50y56zfRIrk0r0q8Ep5oVOilwVRa/a8bQls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5F07165C;
+	Wed, 11 Mar 2026 01:29:51 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B5153F73B;
+	Wed, 11 Mar 2026 01:29:50 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 00/30] tools build: Append -fzero-init-padding-bits=all
+ option
+Date: Wed, 11 Mar 2026 08:29:25 +0000
+Message-Id: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 09/16] mm/memory: convert details->even_cows into
- details->skip_cows
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "linux-mm @ kvack . org"
- <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alice Ryhl <aliceryhl@google.com>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
- Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>,
- Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
- H Hartley Sweeten <hsweeten@visionengravers.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>,
- Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Eric Dumazet <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
-References: <20260227200848.114019-1-david@kernel.org>
- <20260227200848.114019-10-david@kernel.org>
- <091ce280-9204-4b85-bf39-5e2a61e3d0ba@lucifer.local>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <091ce280-9204-4b85-bf39-5e2a61e3d0ba@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOYnsWkC/43NSw6CMBCA4auYrq1ppwiNK+9hTNOXMglQ02KjE
+ u5uYcPOuPwnM99MJPmIPpHTbiLRZ0wYhhLVfkdsq4e7p+hKE2BQM4CKjiF0SZkndk7d8KU+Pga
+ FA47U2SPU3DhppCHl/hF9WVjty7V0i2kM8b2+yrBM/1EzUE4N19ZK3mjG/VnH/mBDTxYzi80RT
+ P5yBGW0rppGMslBmGZz5nn+Aqkb8J8IAQAA
+X-Change-ID: 20260224-tools_build_fix_zero_init-dc5261bd8b8b
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+ Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nsc@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, 
+ Qinxin Xia <xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Kent Gibson <warthog618@gmail.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+ Len Brown <lenb@kernel.org>, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
+ Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=5405;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=ORDb4rz7pkZEG/AYr4fm0X3yvNxV+D8HlxcMfkqWYUQ=;
+ b=X80GbJ7tnZIC7IHU6/vKMszPB9MrKUsFSWnAJMY+OLOA7fs4SHLoVzHgMSMIvpQj6gSJZICzM
+ +DBCkDMg0uGAaGXCe0UdWaynWRs/BI0omjcq4WROjAw6ROjHob0d9KM
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
+Thank you for reviewing v3 and I appreciate much Ian's suggestions, most
+of which have been adopted into this series.
 
->>
->>  	zap_page_range_single_batched(
->> diff --git a/mm/memory.c b/mm/memory.c
->> index fdcd2abf29c2..7d7c24c6917c 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -1554,11 +1554,13 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
->>  static inline bool should_zap_cows(struct zap_details *details)
-> 
-> Not sure if you fix up later, but we should probably change this function to
-> should_skip_cows() to keep everything consistent, otherwise this is a bit weird
-> and confusing.
+For anyone new to the series, the reason for appending this compiler
+option is described in v3 (see "Link to v3" below).
 
-should_skip_cows() is a bit misleading on its own IMHO, as we skip the
-"zap" context.
+In this version, the changes are organized into three parts:
 
-Would have to be something like "should_skip_cows_when_zapping()", and I
-am not sure if that's really worth it.
+  Patches 01 – 07: Preparation before adding the new compiler option.
+                   Fix typos, adjust Makefiles to ensure the newly
+                   introduced option does not cause regressions.
+  Patch 08:        Propagate -fzero-init-padding-bits=all to
+                   EXTRA_CFLAGS and HOST_EXTRACFLAGS for the
+                   CC and HOSTCC compilers, respectively.
+  Patches 09 – 30: Apply EXTRA_CFLAGS and HOST_EXTRACFLAGS in
+                   project Makefiles.
 
-So I think we can leave it as is.
+The change has been verified:
 
-Thanks!
+Test 1: Cross compiling perf
+	host: gcc 15.2.0 (x86_64), target: aarch64-linux-gnu-gcc
 
-> 
->>  {
->>  	/* By default, zap all pages */
->> -	if (!details || details->reclaim_pt)
->> +	if (!details)
->>  		return true;
->>
->> +	VM_WARN_ON_ONCE(details->skip_cows && details->reclaim_pt);
->> +
->>  	/* Or, we zap COWed pages only if the caller wants to */
->> -	return details->even_cows;
->> +	return !details->skip_cows;
->>  }
->>
->>  /* Decides whether we should zap this folio with the folio pointer specified */
->> @@ -2149,8 +2151,6 @@ void unmap_vmas(struct mmu_gather *tlb, struct unmap_desc *unmap)
->>  	struct mmu_notifier_range range;
->>  	struct zap_details details = {
->>  		.zap_flags = ZAP_FLAG_DROP_MARKER | ZAP_FLAG_UNMAP,
->> -		/* Careful - we need to zap private pages too! */
->> -		.even_cows = true,
->>  	};
->>
->>  	vma = unmap->first;
->> @@ -4282,7 +4282,7 @@ void unmap_mapping_folio(struct folio *folio)
->>  	first_index = folio->index;
->>  	last_index = folio_next_index(folio) - 1;
->>
->> -	details.even_cows = false;
->> +	details.skip_cows = true;
->>  	details.single_folio = folio;
->>  	details.zap_flags = ZAP_FLAG_DROP_MARKER;
->>
->> @@ -4312,7 +4312,7 @@ void unmap_mapping_pages(struct address_space *mapping, pgoff_t start,
->>  	pgoff_t	first_index = start;
->>  	pgoff_t	last_index = start + nr - 1;
->>
->> -	details.even_cows = even_cows;
->> +	details.skip_cows = !even_cows;
-> 
-> Not sure if you clean up later, but seems sensible to cascade the change into
-> the local boolean here.
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LDFLAGS="-static" \
+	    -C tools/perf VF=1 CORESIGHT=1 NO_JEVENTS=1 DEBUG=1
 
-There are too many unmap_mapping_range() users for me to want to change
-the external interface :)
+Test 2: Cross compiling selftest bpf and sched_ext
+	host: gcc 15.2.0 (x86_64), target: aarch64-linux-gnu-gcc
 
-What I was thinking is that probably there should be two independent
-user-facing functions, instead of having this magical bool passed around
+  export ARCH=arm64
+  export CROSS_COMPILE=aarch64-linux-gnu-
+  make -C tools/testing/selftests/ TARGETS="bpf sched_ext" SKIP_TARGETS=""
 
-Because I am sure, most users don't really know whether to set it to
-true or false ...
+Test 3: Native compiling selftest bpf and sched_ext
+	host: gcc 15.2.0 (x86_64)
 
-But that's something for another cleanup. (I left the whole
-unmap_mapping_pages() interface etc alone in this series)
+  make -C tools/testing/selftests/ TARGETS="bpf sched_ext" SKIP_TARGETS=""
 
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v4:
+- Placed EXTRA_CFLAGS last so it can override the default options (Ian).
+- Cached evaluated values to avoid invoking cc-option when each
+  reference EXTRA_CFLAGS/HOST_EXTRACFLAGS (Ian).
+- Dropped useless patches for feature, verification and nolibc
+  (Gabriele / Ian / Thomas).
+- Fixed typos for thermal (Ian).
+- Removed duplicate $(CLANG_CROSS_FLAGS) in libbpf (Ian).
+- Collected maintainers' reviewed and ACK tags.
+- Link to v3: https://lore.kernel.org/r/20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com
+
+Changes in v3:
+- Extended to support cross compilation (Quentin).
+- Link to v2: https://lore.kernel.org/r/20260224-tools_build_fix_zero_init-v2-1-b1acc817a01e@arm.com
+
+---
+Leo Yan (30):
+      tools: lib: thermal: Fix typo
+      tools/thermal: Fix typo
+      tools: lib: thermal: Initialize CFLAGS before including Makefile.include
+      tools/thermal: Initialize CFLAGS before including Makefile.include
+      bpftool: Avoid adding EXTRA_CFLAGS to HOST_CFLAGS
+      libbpf: Remove duplicate $(CLANG_CROSS_FLAGS)
+      libbpf: Initialize CFLAGS before including Makefile.include
+      tools build: Append -fzero-init-padding-bits=all to extra cflags
+      bpftool: Append extra host flags
+      perf build: Append extra host flags
+      tools/bpf: build: Append extra cflags
+      tools build: Append extra host cflags
+      tools: bootconfig: Append extra cflags
+      tools: counter: Append extra cflags
+      tools: dma: Append extra cflags
+      tools: gpio: Append extra cflags
+      tools: hv: Append extra cflags
+      tools: iio: Append extra cflags
+      tools: mm: Append extra cflags
+      tools: objtool: Append extra host cflags
+      tools: power: acpi: Append extra cflags
+      tools: power: x86/intel-speed-select: Append extra cflags
+      tools: sched_ext: Append extra cflags
+      tools: spi: Append extra cflags
+      tools: tracing: Append extra cflags
+      tools: usb: Append extra cflags
+      selftests/bpf: Append extra cflags
+      selftests/hid: Append extra cflags
+      selftests/nolibc: Append extra cflags
+      selftests/sched_ext: Append extra cflags
+
+ tools/bootconfig/Makefile                   |  1 +
+ tools/bpf/Makefile                          |  1 +
+ tools/bpf/bpftool/Makefile                  |  9 +++++++--
+ tools/build/Makefile                        |  6 ++++--
+ tools/counter/Makefile                      |  1 +
+ tools/dma/Makefile                          |  1 +
+ tools/gpio/Makefile                         |  1 +
+ tools/hv/Makefile                           |  1 +
+ tools/iio/Makefile                          |  1 +
+ tools/lib/bpf/Makefile                      | 17 ++++++++--------
+ tools/lib/thermal/Makefile                  | 20 ++++++++++---------
+ tools/mm/Makefile                           |  1 +
+ tools/objtool/Makefile                      |  2 ++
+ tools/perf/Makefile.config                  |  2 +-
+ tools/power/acpi/Makefile.config            |  1 +
+ tools/power/x86/intel-speed-select/Makefile |  1 +
+ tools/sched_ext/Makefile                    |  1 +
+ tools/scripts/Makefile.include              | 30 +++++++++++++++++++++++++++++
+ tools/spi/Makefile                          |  1 +
+ tools/testing/selftests/bpf/Makefile        | 10 ++++++++--
+ tools/testing/selftests/hid/Makefile        |  1 +
+ tools/testing/selftests/nolibc/Makefile     |  6 ++----
+ tools/testing/selftests/sched_ext/Makefile  |  1 +
+ tools/thermal/lib/Makefile                  | 20 ++++++++++---------
+ tools/tracing/latency/Makefile              |  1 +
+ tools/usb/Makefile                          |  1 +
+ 26 files changed, 101 insertions(+), 37 deletions(-)
+---
+base-commit: 4ae12d8bd9a830799db335ee661d6cbc6597f838
+change-id: 20260224-tools_build_fix_zero_init-dc5261bd8b8b
+
+Best regards,
 -- 
-Cheers,
+Leo Yan <leo.yan@arm.com>
 
-David
