@@ -1,161 +1,125 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04973DEADE
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 12:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691C03AF64C
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 16:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773230663; cv=none; b=cOtn1/VUADVE/CgznXj1ZD3u9DqGGS9sB7nVEMC/9UCo7xHuMnk18kWQvi64BwT+kP0y4s9i4xANDuBlQBLVw2xdUsZ3zQLvadNVQl63vRpmBwDHNLo0Ik5zJlXY/eIb7UHI+83qZTQX3oGgRUmg3YZoVa3qdF+vQJk18xg3QkE=
+	t=1773244902; cv=none; b=hfObg9FYoESb4f6WB8ZS37QxirExKBbJZKQPFY648vnrORwCSja4fHwE0JEJxJy45QL3A6rUqLPmLkegWgtBs6w74He9a1C3CjFJg51piYrDUKi7Sfw3a7o8PrhWVI7YJ2YyBpKQ17164U7l7wMWI6Ab8TJTcHhNK8LTtiHF81M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773230663; c=relaxed/simple;
-	bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKUKPrtvDZZKr+vjdx/nN35/GWNlzaEhCDB+JtnF+NI9dgMdpZx12jK8KPSr0VbiA6EjdaK8x8vRCVsg/5lR2EoLOt8CTC01D6uy/FMxgGQSPkSmwSCy28D4oHq72H2N68YwLeEyTVNSp0o6pQQ6/Y6pq1j4aFUx4wmE2oh5284=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oJbNeSzI; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1773244902; c=relaxed/simple;
+	bh=alZSKgg1lU1wQh0A0HBF21ufoC8erK4cgoNEO+IVhhg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fX6j0vAmb1oJ9q0GzvEBix6+0UJKGUswaqgGT7eJANxh0vC+IlBQMvFqUCeRpVlHCyV9VJMq7+QJJbWshdhPlw0NjlaqJdgkabIMND+lK0+P0bhwOWMkfWXYKxJomb1DzhZa5xRGfUrx1p1j0GUIdAd0t/K+ZSahDJ0dG6dFt5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rgP3KJaq; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oJbNeSzI"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-89a6ac6f389so5815186d6.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 05:04:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rgP3KJaq"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b844098869cso1293345266b.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 09:01:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1773230661; x=1773835461; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
-        b=oJbNeSzIwFnPHScHsQshxjdJjgN5YRgniLu4SRX713CC6CAYeQLHkIfpbljvCRRAnH
-         8GCdREp96tRlupjpA0l3esjCjroz6Q5dt0kA190IMCBZe9Y6TypRzoJM5ya12V1OkVub
-         EUQ+KzKHFncYXagt1P6wWI3tx3xXAcJ9nVqE0WJcPYHWyuoYrh+bRaAymwSQo3rHPIU3
-         l4mxZ//9rXYowokM76ZULSkPHRFaWLXI9DeuKwC79yu3oKxE8Iq2+zzTOrCWXVjPZrH9
-         CEu/YAUe//Hit+usny9ISZgFfiOdMPYNDj9YWIjqEKoVggIDs+kCLw9eATV/2xna2ACe
-         /3LA==
+        d=google.com; s=20230601; t=1773244899; x=1773849699; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FZ9wJHN98p2eqW+aluFwwdS4VIjV0bOaQ4w+79zBhNs=;
+        b=rgP3KJaqF2BlecOpPvT5kKAcfsza44TQB2S2rx00vuamlvPC3PCFQtN7iBBVErQ0kT
+         4WdJtxceJIxgfEoqrKiMSBM220p/tm52QxQ+p/Vm9qhMEQGFaHmneuWDzyXc37rR6IvX
+         j5BlJPNzE5lVxK7VrA572ygi0hpBk5fcEnP2yH7V3Q+z+BLO1dy4fVpi0jRKEMeOTip2
+         HIDkQduGaTUGLYmL2Eky5xA41gFzkVV4qEEUwksw40H4w8eZCk0GeALUIDP+Gr7DNvF1
+         2+wUJnKujEB5WM6EYBJBnq343bDJzOoB3ZqK8V5pehsfNWev2da3jY31l4UTLmX5NLQo
+         YIPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773230661; x=1773835461;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s5EMe7bYHKODG/rm1X+QIPDr4bQTLFjKqTjmSxuIYLA=;
-        b=LRsC7IaHCqmfw8+22yrZX1h2jJ32LeXP85Z/TotPjAA9hFpgvnoaCwnDwAZzmMalG8
-         IA3eYQrUyh/FHSG9PGE8EP4qqDDOrPlYUk3QvbXytQYKPIwSGTUAd0boVigLXO/g4GXL
-         0/YEU9Jba6Fb7UBVAHWv6MIJ2VxpeRDYcpOeu9rL2hg63+KTzbexNfri9ySYulHEYTuf
-         cjOpoyexUskiBZTMLvuc53g0JJuk99+Vj+EDyLQxx+GI60heR/gBm9fs3T8zzrjJBn06
-         GEa31yjyxJU59Xhn0tF1j4yt2FSizfvWQgzqKmmsjIFH+VJhbBfT3OY0n2hfFRLvAH3x
-         Fosg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSXxle9z6vmzGg3NglO+ZCuNNgRDWknXuvv3Ru0y/1AvIGu39ZoxtKwUkKDpmPJswnAG4iOmeMK0977drF1eFe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZYPBpz2iJsBv0yLnDQgsbVNhEA5xZowJp2MIrs7o0A1lPFtFm
-	f/Giit/oM5aJkLD5C20sXwok6H/yVJtX09z4xHE9y0r/Raz9usO03FuPqKoxYhRl+ms=
-X-Gm-Gg: ATEYQzysWpGoaCdG++a820SvGuMBbHId1DXx5j9oorSipbl/pggyidUO2fvjje1xYZ2
-	svN84Ln9RSQQnz+DCsUoa+g0m9IyCEc8dOtn75xMj4Rswyoix+Tie9DRTR9arAoV5Wd4kkVK/9E
-	VyjD5GCUagUmCwI06Mjapmv/pggtOAw4kCfBmhh0YoiaDaKSzC5V9zsGsjq1D0dwD7xYWZdQIoH
-	hhc+BOiUNbpg+weWQyrNHLMKvTLCvL3HmO1HTWHE6ENS9whobF2+o2ak+2Gs85uikXkOVeV058f
-	NklFICyb2B5q9StjRux1AIhxka1dNF6S3h5xz+rkfWkMGdpm4cU1bZtkATVLaNL59BLaDoG6c4w
-	aI1YR61aRvk4DhVfkuXvJLJtzbBEfPoM/+6TUwikILEaVlpfYixCsK93J9i3mpePixUYte29WyC
-	c2so80KhhMIsI1Y0XT/0U9ARcP+gfhKInyaLbcBn3RiXbTv3HSy6lNLyxP4HPlwlf15pltxb95l
-	bQqeNDtQ7AuXlXwSL0=
-X-Received: by 2002:a05:6214:f2d:b0:899:fd8c:55c6 with SMTP id 6a1803df08f44-89a66a5858dmr29432376d6.23.1773230660563;
-        Wed, 11 Mar 2026 05:04:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a65d17023sm12745086d6.49.2026.03.11.05.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 05:04:19 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1w0IIU-000000069iv-3jx0;
-	Wed, 11 Mar 2026 09:04:18 -0300
-Date: Wed, 11 Mar 2026 09:04:18 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"linux-mm @ kvack . org" <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Rientjes <rientjes@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in
- zap_special_vma_range()
-Message-ID: <20260311120418.GU1687929@ziepe.ca>
-References: <20260227200848.114019-1-david@kernel.org>
- <20260227200848.114019-17-david@kernel.org>
- <20260309142954.GM1687929@ziepe.ca>
- <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
- <abE4JYo223OxWCBQ@google.com>
+        d=1e100.net; s=20230601; t=1773244899; x=1773849699;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FZ9wJHN98p2eqW+aluFwwdS4VIjV0bOaQ4w+79zBhNs=;
+        b=eprjwYjpkxbRodBhXzaIWBaR+xN4O3eWOG2BTnuNl0giUrJeWAnCMKBvm5pghOOvb/
+         aSCgcyOC/RtmcfuU600W5tRoV9vAKlGpbekvrBzWY2cga39cca57l8hKfrg8ogQTLIZo
+         tn/UtH4jfGc1sRfkvXBF4SRp2NlZqEr/Xtfs/OEF2d9hIWWKW3dNaRI/QA9YL3xpz5Cq
+         OSosdeGs3DNznfE9kne0r37DBfz4hODZ48XnOLUmS5MVtOZK7nP+LDSPBAfvqKOZpZha
+         jkW8pfJVqUbHZsz5/MB7d+sUlup+3F9vz79Qx4gr6yo6nBTYEbaaFIgUZBQ5TdRnBuiS
+         un9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWAojRbCTr8y70/x6mjX8TNGdllPO0P6Qx6g0JAMpESEBP1ShjihUUewCtSCC5HmpquAKg6gnBD/eob5v5cb4Ya@vger.kernel.org
+X-Gm-Message-State: AOJu0YwItU+7Hy5RAX165O8PNhfe34lIDTwZajrnhNrO616McDcMxVad
+	pMpXABRw+4VzMQYVuwQ9ec9IhkE2JZ4lkqT68k5MQWwI4ouLsvUExCl1V+iq7j7Y4Y0lKHGpMdw
+	vIWPR3Wb0i+qfuD0o+A==
+X-Received: from wrbgw30.prod.google.com ([2002:a05:6000:40de:b0:439:ac29:98cb])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:6d22:b0:b93:3792:4b03 with SMTP id a640c23a62f3a-b972e4f775amr187595066b.32.1773244898034;
+ Wed, 11 Mar 2026 09:01:38 -0700 (PDT)
+Date: Wed, 11 Mar 2026 16:01:36 +0000
+In-Reply-To: <20260311120418.GU1687929@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abE4JYo223OxWCBQ@google.com>
+Mime-Version: 1.0
+References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-17-david@kernel.org>
+ <20260309142954.GM1687929@ziepe.ca> <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
+ <abE4JYo223OxWCBQ@google.com> <20260311120418.GU1687929@ziepe.ca>
+Message-ID: <abGR4GWMXC2tJyr8@google.com>
+Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in zap_special_vma_range()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Leon Romanovsky <leon@kernel.org>, 
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 11, 2026 at 09:38:45AM +0000, Alice Ryhl wrote:
-> It doesn't really make sense to have multiple binder VMAs. What happens
-> with Rust Binder is that process A is receiving transactions and has the
-> VMA mapped once.
+On Wed, Mar 11, 2026 at 09:04:18AM -0300, Jason Gunthorpe wrote:
+> On Wed, Mar 11, 2026 at 09:38:45AM +0000, Alice Ryhl wrote:
+> > It doesn't really make sense to have multiple binder VMAs. What happens
+> > with Rust Binder is that process A is receiving transactions and has the
+> > VMA mapped once.
+> 
+> IIRC the problem is the kernel doesn't guarentee singleton VMAs,
+> userspace can always clone them with fork or something. Did binder
+> solve this somehow?
 
-IIRC the problem is the kernel doesn't guarentee singleton VMAs,
-userspace can always clone them with fork or something. Did binder
-solve this somehow?
+The Binder VMA is DONTCOPY, so it will not be present after fork.
 
-Since you can't assume there is only one VMA the locking becomes a
-mess to cover all the cases where userspace can trigger a VMA clone.
+> Since you can't assume there is only one VMA the locking becomes a
+> mess to cover all the cases where userspace can trigger a VMA clone.
+> 
+> address space deals with this internally.
+> 
+> Thus, zap_special_vma_range() is extremely hard to use.
 
-address space deals with this internally.
+I mean, the hard part about the locking is keeping them in sync. Binder
+just doesn't do that. Only the original VMA gets pages inserted or
+zapped. If you create a second VMA, you just get a useless read-only VMA
+that you can't do anything with.
 
-Thus, zap_special_vma_range() is extremely hard to use.
-
-Jason
+Alice
