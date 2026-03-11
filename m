@@ -1,103 +1,172 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5CA82BEFE7;
-	Wed, 11 Mar 2026 09:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BECC3603DA
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 09:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773221709; cv=none; b=lHGzswplAReTaJcNNGmSseExIWB9V96pgr9IfJPoDzED+UV8el5BGpvHCJcbtGYkUU0+qoo3MYaGc81GWcBBOvQcujxaFOm7WKMbOqQGjsUkHT/kNPmFroLRSDRQDX+NBK6VEuWiRpJZgf1tGKtICQE4KWlLn6Eh1L+6gUGWSjY=
+	t=1773221932; cv=none; b=BMfIe0Xb1aEaNTDTKEdxxX+9AWYQwjUijoa2mITheoY1qxJp6UQ1l95xmnhUjJVoUs4jJWB6nSHbKL9FlXzlfVkWpwYlm2xTRREUnMypSBOJNmQ0iCqGI4KE8uXC7ByJPuVd1gilgxf7OvAiXOrGNDD3I1bFeMCCg99jhzr7WrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773221709; c=relaxed/simple;
-	bh=aa57vnTUh0SxWMfF1DF7EcfbL+UNLmA40TkPWU3lvMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABDKOcW5eJx3N5L1k0W0jaxWe8T1S3z19UXnPCPm5qWQvw8uBDDR56NQPq1t8AZRidVXOxjlF1CZ3QJZhf4wS+G0CWnAkacohs3Ci8jmLI36zK1SqTdJM6ryHzFoMYT34j+RPotvRk12QiInaHTR0mJ/zuLkbPvNlN8pfZiW2Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14BBF169C;
-	Wed, 11 Mar 2026 02:35:01 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECA6B3F73B;
-	Wed, 11 Mar 2026 02:35:06 -0700 (PDT)
-Date: Wed, 11 Mar 2026 09:35:05 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: bot+bpf-ci@kernel.org
-Cc: acme@kernel.org, irogers@google.com, namhyung@kernel.org,
-	james.clark@linaro.org, kees@kernel.org, qmo@kernel.org,
-	nathan@kernel.org, nsc@kernel.org, nick.desaulniers+lkml@gmail.com,
-	morbo@google.com, justinstitt@google.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, rafael@kernel.org,
-	daniel.lezcano@kernel.org, rui.zhang@intel.com, lukasz.luba@arm.com,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	mhiramat@kernel.org, wbg@kernel.org, baohua@kernel.org,
-	xiaqinxin@huawei.com, brgl@kernel.org, warthog618@gmail.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	akpm@linux-foundation.org, w@1wt.eu, linux@weissschuh.net,
-	jpoimboe@kernel.org, robert.moore@intel.com, lenb@kernel.org,
-	srinivas.pandruvada@linux.intel.com, tj@kernel.org,
-	void@manifault.com, arighi@nvidia.com, changwoo@igalia.com,
-	broonie@kernel.org, rostedt@goodmis.org, gmonaco@redhat.com,
-	shuah@kernel.org, jikos@kernel.org, bentiss@kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, martin.lau@kernel.org,
-	clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH v4 06/30] libbpf: Remove duplicate $(CLANG_CROSS_FLAGS)
-Message-ID: <20260311093505.GH4153946@e132581.arm.com>
-References: <20260311-tools_build_fix_zero_init-v4-6-9e35bdb99cb3@arm.com>
- <00482d80980f713b27b422ec1ea2d17d0f1daed19243b597c5954e470cc09c92@mail.kernel.org>
+	s=arc-20240116; t=1773221932; c=relaxed/simple;
+	bh=ceq7ItjI410zJHY9ex/lB3H7siEVATfaO1bldTHFjis=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Mqr5YngqhWdDDjCitKw/LzFT7I9hGUoRhhOlhj/kgLeNfk06/JzFlEwpEI4QAJ2jPVyOktorxzP9WCbeHvtTDK9C9IfrsUSJ4L7mIO5Nd/tbfzoNMmeRWJ/5VhuFkeldNx9sak5QjjFkOvaB60QQZDxc7hmVgyUiZtmC9aJnD1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BnNzevha; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnNzevha"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b940da8ec09so666436066b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 02:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773221929; x=1773826729; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RQubQpcCCRw5LR5oprIFTZzoSHmrBMbhMG4Ewb+bDNM=;
+        b=BnNzevhaOLmgv2VG3RJz5MjAMfYffQeX/O07otWuu5Vg3kJ+l8eK/VwR8aD0JHqx0v
+         0GBpWmAirkhFhsFyBUr2+qtsdtvU/Lz7VkN4rbvt52T98j10+k9rEUbNYNi5Rt2KlRij
+         dFrMaZnAsT0/bqy0ITXDFUhyOssdQGYMQejLlmohDF01F4I6EEyWj2S4T0VUqzvhY9O3
+         IviyDvBhD0KWS7EKN5Siyu5lacrKas35yFDnt9cw7pzdUqdhFCkHT1+1l/yRmadDjUpo
+         74N+8NuOP1haXz8kZkdGH/F6OjcC9IZMSl03SJnjQAHciV/kfZCCsJ4JMMHYQLotg7m6
+         aHGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773221929; x=1773826729;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RQubQpcCCRw5LR5oprIFTZzoSHmrBMbhMG4Ewb+bDNM=;
+        b=Wc9/5EMX3bzFOllKfp4MufUW5/0/ZOUb+3EKG9JKfltZyCRz+3Lvmjnm8HOgmcAAjR
+         Ekf+W3E8nqNjU/dfRqIyBfIngBM8De6/J1U4t0eDb17Arm1JMV4lqP4P/ZRIHWL/hrgy
+         QRworArTOaPYF9y7vCh1gK0tMg6Nx0NDu6O2tdvw+z69Bu1h871ViQh3WOGErSQSBnIO
+         iGKL+eBt5ai9O2WnfpQykzDLtFtlxyqEY2QSJXeJ3IMYrpM3q/9GVnxQFJEO3bgpnRmc
+         kWSAaDzFoWn1/IGpVr3hEio3GQ0UZJ9wAJ8TOifOTfvzwzeVp1ON5YQwwkno8jKl4xvs
+         ISJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNCanmnZw6+17+9nXgiH/h9NFx/DcWU2HOFk/pBjwmYCwyXUx1TRhwE0sN9FJlT4QUHfYnRvAg2PjcCjIsUCgw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlZ8KHtmnlxgWVMTJV5HY2ND1ZP8PPiQXW41lsu/HvHlqKjQaM
+	rNn1cr4PnftqpCy3zptWwA5jBEXEK6d7/u/OB85ZbBj2mr5nmrq81/UQKAKsAAdFIBeR/qNFUpw
+	Nb7PMpGtZG3c0LV0jXQ==
+X-Received: from ejja22.prod.google.com ([2002:a17:906:3e96:b0:b8e:ad99:be59])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:906:f592:b0:b87:2abc:4a32 with SMTP id a640c23a62f3a-b972e1d254cmr101140266b.18.1773221928398;
+ Wed, 11 Mar 2026 02:38:48 -0700 (PDT)
+Date: Wed, 11 Mar 2026 09:38:45 +0000
+In-Reply-To: <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00482d80980f713b27b422ec1ea2d17d0f1daed19243b597c5954e470cc09c92@mail.kernel.org>
+Mime-Version: 1.0
+References: <20260227200848.114019-1-david@kernel.org> <20260227200848.114019-17-david@kernel.org>
+ <20260309142954.GM1687929@ziepe.ca> <61df6369-333c-430a-bd18-c5b1acae68ea@kernel.org>
+Message-ID: <abE4JYo223OxWCBQ@google.com>
+Subject: Re: [PATCH v1 16/16] mm/memory: support VM_MIXEDMAP in zap_special_vma_range()
+From: Alice Ryhl <aliceryhl@google.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
+	"linux-mm @ kvack . org" <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Leon Romanovsky <leon@kernel.org>, 
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Eric Dumazet <edumazet@google.com>, 
+	Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 11, 2026 at 09:02:13AM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> > index 168140f8e646..b1fbd0211c5e 100644
-> > --- a/tools/lib/bpf/Makefile
-> > +++ b/tools/lib/bpf/Makefile
-> > @@ -84,7 +84,6 @@ override CFLAGS += -Werror -Wall
-> >  override CFLAGS += $(INCLUDES)
-> >  override CFLAGS += -fvisibility=hidden
-> >  override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-> > -override CFLAGS += $(CLANG_CROSS_FLAGS)
+On Wed, Mar 11, 2026 at 10:15:12AM +0100, David Hildenbrand (Arm) wrote:
+> On 3/9/26 15:29, Jason Gunthorpe wrote:
+> > On Fri, Feb 27, 2026 at 09:08:47PM +0100, David Hildenbrand (Arm) wrote:
+> >> There is demand for also zapping page table entries by drivers in
+> >> VM_MIXEDMAP VMAs[1].
+> >>
+> >> Nothing really speaks against supporting VM_MIXEDMAP for driver use. We
+> >> just don't want arbitrary drivers to zap in ordinary (non-special) VMAs.
+> >>
+> >> [1] https://lore.kernel.org/r/aYSKyr7StGpGKNqW@google.com
+> > 
+> > Are we sure about this?
 > 
-> At this commit, doesn't this removal lose CLANG_CROSS_FLAGS entirely
-> from the libbpf build?
+> Yes, I don't think relaxing this for drivers to use it on VM_MIXEDMAP is
+> a problem.
 > 
-> The libbpf Makefile includes Makefile.include at the top, which does
-> append CLANG_CROSS_FLAGS to CFLAGS. But then the libbpf Makefile
-> overwrites CFLAGS with :=
+> > 
+> > This whole function seems like a hack to support drivers that are not
+> > using an address_space.
 > 
->     CFLAGS := -g -O2
+> I assume, then using
+> unmap_mapping_folio()/unmap_mapping_pages()/unmap_mapping_range() instead.
 > 
-> which destroys everything Makefile.include appended. The removed line
-> above was the only thing that re-added the cross-compile flags after
-> that overwrite.
+> > 
+> > I say that as one of the five driver authors who have made this
+> > mistake.
+> > 
+> > The locking to safely use this function is really hard to do properly,
+> > IDK if binder can shift to use address_space ??
+> I cannot really tell.
 > 
-> The next commit in the series (233d70853154 "libbpf: Initialize CFLAGS
-> before including Makefile.include") fixes this by moving the CFLAGS
-> initialization before the include, so Makefile.include's addition
-> survives. But at this commit, cross-compilation with Clang appears
-> broken.
+> Skimming over the code, it looks like it really always handles "single
+> VMA" stuff ("Since a binder_alloc can only be mapped once, we ensure the
+> vma corresponds to this mapping by checking whether the binder_alloc is
+> still mapped"), which makes the locking rather trivial.
 > 
-> Could these two patches be squashed or reordered so that the
-> initialization move comes first?
+> It does seem to mostly allocate/free pages in a single VMA, where I
+> think the existing usage of zap_vma_range() makes sense.
+> 
+> So I'm not sure if using address_space would really be an improvement there.
+> 
+> Having that said, maybe binder folks can be motivated to look into that.
+> But I would consider that future work.
 
-To be honest, I feel much more comfortable being corrected by a human
-rather than a bot :)
+It doesn't really make sense to have multiple binder VMAs. What happens
+with Rust Binder is that process A is receiving transactions and has the
+VMA mapped once.
 
-The comment is fair enough, I will squash the two patches.
+* Process B sends a transaction to process A, and the ioctl (running in
+  process B) will memcpy the message to A directly into the pages of A's
+  VMA.
+* Then, B wakes up A, which causes A to return from the receive ioctl.
+* The return value of the receive ioctl is a pointer, which points
+  somewhere inside A's VMA to the location containing the message from
+  B.
+* Process A will deref the pointer to read the message from B.
+* Once Process A is done handling the transaction, it invokes another
+  ioctl to tell the kernel that it is done with this transaction, that
+  is, it is not safe for the kernel to reuse that subset of the VMA for
+  new incoming transactions.
 
-Thanks,
-Leo
+When Binder returns from its ioctl and gives you a pointer, it needs to
+know where the VMA is mapped, because otherwise it can't really give you
+a pointer into the VMA.
+
+It's generally not safe for userspace to touch its Binder VMA unless it
+has been told that there is a message there. Pages that do not contain
+any messages may be entirely missing, and trying to read them leads to
+segfault. (Though such pages may also be present if there was previously
+a message in the page. The unused pages are kept around to reuse them
+for future messages, unless there is memory pressure.)
+
+Alice
