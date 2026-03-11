@@ -1,188 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795FA2E11B0;
-	Wed, 11 Mar 2026 17:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8AE30EF8F;
+	Wed, 11 Mar 2026 17:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773248548; cv=none; b=Ctv3WU8ohCu3xMQHwVyWD49UFYrhMwj+u35BtR0EXJscnwFI0GPmt8+kZ7cEnNYbiCQ4JugtDtGZ5IkNVv6wMaxm/xuytBlRTc6i3tjSny9pwnn04DqmdzT8hyyXoOW1La4r0ZbCoj/s2628rU4aIFXL4cAh2UOZtJTThSePqXA=
+	t=1773249550; cv=none; b=mu3f9KXFJxporOMPL2084S0mwVervvSisd+NQcYHbam2gf1M8GPWLvd/6wJBj+X4JuSzmscLOhwtLuvx5tMnR5DU4dy+0xxcaKkvI9zIQdGQQM82kOFpHVyh4L8RT/wlsM/8BqXa0vgQS6VIcVDDwz1mpiKlYcq/pdB0m4qfVu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773248548; c=relaxed/simple;
-	bh=qbQHUZHFrMSl9GZ0M449xWT2lv88BuJUsOUnExNCyK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P1rjuNmhbq0wrpebwfbcwvWIeUK1QalB6g1pbT7IikWrsjs+LbUp6jLMro62313cWkPCckSaQqrXqfDSUoGlwUd0M2ueEpjcBkxwkpzCNkiq4I4GCOKfPXMq8+5ewg63XpaILUNgByVSrmwasZTnY8NcHnDaesOK5ffeED/SUUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auYcSsap; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773249550; c=relaxed/simple;
+	bh=pK3BGPL3cQ7krGzPQI4H7J/3WARl0VGGLszyWKCDVlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r3xIWf9/FbTJOjDLPAv2UmBTQPoB3oNryXHMAMYUYF4HGX07Gj4Uoai5cFiIEBs5kSn8D//an8LDmDfwouufiQzVJCAXnBgsN7Cq6WiRbEhPw0evp96YuKgpkqXhCaeVqo/P1qm1//NHmnE3RTFDn8wpQvekKrRelLD/4dpU5Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jzAcIQrD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auYcSsap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD869C4CEF7;
-	Wed, 11 Mar 2026 17:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773248548;
-	bh=qbQHUZHFrMSl9GZ0M449xWT2lv88BuJUsOUnExNCyK4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=auYcSsapz8p65gnvMN/VpGSca+m0V47rs2fNjRxHOGbcOF7khTzKCshNZHWFukUEa
-	 bnXC+yfrXbKqbLhu68q0yQfhAyMWSCXNXNIBAKRaLjxFgWqWGJAvlEHVE71SrnEki3
-	 dKD9hbUZKlFZq0UVuNyj0aL4WApKHEHlTf0M8Ea7qH5r5ypeguDSCVP7fDO8XFkDzz
-	 KqLzUOMWPsO+YrDPq38kiCFHjNbZq9K/tQnyESpkcZj3YnLHqDfmRejiAWwWhB2AUQ
-	 D64NsEu8EfPzJunss4O8z5+fy5ezEJbruvUviqIng0ygosw3JnId/51TdCe9FKqRYj
-	 4x+0E9RndXZcA==
-Date: Wed, 11 Mar 2026 12:02:26 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: fengchengwen <fengchengwen@huawei.com>
-Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jzAcIQrD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=K2n9jrMR1Fhiz/vfUJ3TSNQTfu2pG1vVDmOLvPlPTWw=; b=jzAcIQrDoqfjmnkGtryL3hRhrs
+	L55RoXVs6p3QmnfZ7aAPzACSLzF73D7BkK6QcBGkN3bhoiSUubVTPAnp/cWdgl4tccxuXWu/Pk3UL
+	OJu0yx0x6t5SzhvgYFXmpHGZVjeqFahGeVd+Qr7I0ut1EKnF2bVil+B9gVRQidX0stk7PNakKbut9
+	8P5kQ+XG4XMABgCgXSMvUPd4/BETiUxozj5qkDYqRRpELZmMxWJ7F7bscdVT0TZiscE9d7ZbwOQ2O
+	vgs2gJ6q1eVx2oaAtEdy3/7Y9B0ENFUOKWTqqBU2+ylEP0WZ6ySpKeS2aFO0e+n+dSKzN4LWSI3lz
+	7tDIysqg==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w0NCu-0000000HOyZ-0LfM;
+	Wed, 11 Mar 2026 17:18:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 795B7300462; Wed, 11 Mar 2026 18:18:50 +0100 (CET)
+Date: Wed, 11 Mar 2026 18:18:50 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>, wangzhou1@hisilicon.com,
-	wanghuiqiang@huawei.com, liuyonglong@huawei.com,
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, stable@vger.kernel.org,
-	Wathsala Vithanage <wathsala.vithanage@arm.com>
-Subject: Re: [PATCH v5 2/2] PCI/TPH: Fix get cpu steer-tag fail on ARM64
- platform
-Message-ID: <20260311170226.GA930029@bhelgaas>
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
+ x86_pmu_enable()
+Message-ID: <20260311171850.GQ606826@noisy.programming.kicks-ass.net>
+References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+ <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <9ef9b529-839b-4cf0-a294-5b68fe8aa768@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
 
-On Wed, Mar 11, 2026 at 11:00:02AM +0800, fengchengwen wrote:
-> On 3/11/2026 6:09 AM, Bjorn Helgaas wrote:
-> > On Tue, Mar 10, 2026 at 10:58:49AM -0500, Jeremy Linton wrote:
-> >> On 3/9/26 10:20 PM, Chengwen Feng wrote:
-> >>> pcie_tph_get_cpu_st() is broken on ARM64:
-> >>> 1. pcie_tph_get_cpu_st() passes cpu_uid to the PCI ACPI DSM method.
-> >>>     cpu_uid should be the ACPI Processor UID [1].
-> >>> 2. In BNXT, pcie_tph_get_cpu_st() is passed a cpu_uid obtained via
-> >>>     cpumask_first(irq->cpu_mask) - the logical CPU ID of a CPU core,
-> >>>     generated and managed by kernel (e.g., [0,255] for a system  with 256
-> >>>     logical CPU cores).
-> >>> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
-> >>>     MADT table, and this UID may not match the kernel's logical CPU ID.
-> >>>     When this occurs, the mismatch results in the wrong CPU steer-tag.
-> >>> 4. On AMD x86 the logical CPU ID is identical to the ACPI Processor UID
-> >>>     so the mismatch is not seen.
-> > 
-> >>>   int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
-> >>> -			unsigned int cpu_uid, u16 *tag)
-> >>> +			unsigned int cpu, u16 *tag)
-> >>>   {
-> >>>   #ifdef CONFIG_ACPI
-> >>> +	u32 cpu_uid = acpi_get_cpu_acpi_id(cpu);
-> > 
-> > From AI review (gemini/gemini-3.1-pro-preview):
-> > 
-> >   Does this code need to validate that `cpu` is within bounds before
-> >   using it?  Before this change, the `cpu_uid` parameter was passed
-> >   opaquely to the ACPI firmware via `tph_invoke_dsm()`, which would
-> >   gracefully handle invalid values.
-> > 
-> >   Now, `cpu` is treated as a logical CPU index and passed to
-> >   `acpi_get_cpu_acpi_id(cpu)`. On architectures like arm64 and riscv,
-> >   `acpi_get_cpu_acpi_id()` uses `cpu` directly as an array index
-> >   (`&cpu_madt_gicc[cpu]` and `&cpu_madt_rintc[cpu]`). On x86, it uses
-> >   `per_cpu(x86_cpu_to_acpiid, cpu)`.
-> > 
-> >   If a caller passes an out-of-bounds `cpu` index (for example, if an
-> >   IRQ affinity mask is empty and `cpumask_first()` returns
-> >   `nr_cpu_ids`, or if userspace passes an arbitrary ID via
-> >   `mlx5_st_alloc_index()`), this will result in an out-of-bounds
-> >   memory read.
-> > 
-> >   Consider adding a bounds check:
-> > 
-> >     if (cpu >= nr_cpu_ids)
-> >       return -EINVAL;
-> > 
-> > I agree that this is an issue, and I think implementations of
-> > acpi_get_cpu_acpi_id() should validate their inputs.
-> > 
-> > I don't know if there's a value that can never be a valid ACPI CPU UID
-> > and could be used as an error value from acpi_get_cpu_acpi_id().  I do
-> > see a few mentions of a ~0 value meaning "all processors" (ACPI r6.6,
-> > sec 5.2.12.13).  
+On Wed, Mar 11, 2026 at 10:04:10AM +0800, Mi, Dapeng wrote:
 > 
-> I only have the ACPI Specification Version 6.5, so I will use v6.5
-> as an example.
-
-https://uefi.org/sites/default/files/resources/ACPI_Spec_6.6.pdf
-
-> 	int acpi_get_cpu_uid(unsigned int cpu, u32 *uid) {
-> 		if (cpu >= nr_cpu_ids)
-> 			return -EINVAL;
-> 		*uid = xxx;
-> 		return 0;
-> 	}
-
-This looks good to me.
-
-> Another issue: This commit also provides an implementation for the
-> x86 platform.  However, further code analysis revealed a potential
-> problem in the implementation:
+> On 3/10/2026 6:13 PM, Breno Leitao wrote:
+> > A production AMD EPYC system crashed with a NULL pointer dereference
+> > in the PMU NMI handler:
+> >
+> >   BUG: kernel NULL pointer dereference, address: 0000000000000198
+> >   RIP: x86_perf_event_update+0xc/0xa0
+> >   Call Trace:
+> >    <NMI>
+> >    amd_pmu_v2_handle_irq+0x1a6/0x390
+> >    perf_event_nmi_handler+0x24/0x40
+> >
+> > The faulting instruction is `cmpq $0x0, 0x198(%rdi)` with RDI=0,
+> > corresponding to the `if (unlikely(!hwc->event_base))` check in
+> > x86_perf_event_update() where hwc = &event->hw and event is NULL.
+> >
+> > drgn inspection of the vmcore on CPU 106 showed a mismatch between
+> > cpuc->active_mask and cpuc->events[]:
+> >
+> >   active_mask: 0x1e (bits 1, 2, 3, 4)
+> >   events[1]:   0xff1100136cbd4f38  (valid)
+> >   events[2]:   0x0                 (NULL, but active_mask bit 2 set)
+> >   events[3]:   0xff1100076fd2cf38  (valid)
+> >   events[4]:   0xff1100079e990a90  (valid)
+> >
+> > The event that should occupy events[2] was found in event_list[2]
+> > with hw.idx=2 and hw.state=0x0, confirming x86_pmu_start() had run
+> > (which clears hw.state and sets active_mask) but events[2] was
+> > never populated.
+> >
+> > Another event (event_list[0]) had hw.state=0x7 (STOPPED|UPTODATE|ARCH),
+> > showing it was stopped when the PMU rescheduled events, confirming the
+> > throttle-then-reschedule sequence occurred.
+> >
+> > The root cause is commit 7e772a93eb61 ("perf/x86: Fix NULL event access
+> > and potential PEBS record loss") which moved the cpuc->events[idx]
+> > assignment out of x86_pmu_start() and into step 2 of x86_pmu_enable(),
+> > after the PERF_HES_ARCH check. This broke any path that calls
+> > pmu->start() without going through x86_pmu_enable() -- specifically
+> > the unthrottle path:
+> >
+> >   perf_adjust_freq_unthr_events()
+> >     -> perf_event_unthrottle_group()
+> >       -> perf_event_unthrottle()
+> >         -> event->pmu->start(event, 0)
+> >           -> x86_pmu_start()     // sets active_mask but not events[]
+> >
+> > The race sequence is:
+> >
+> >   1. A group of perf events overflows, triggering group throttle via
+> >      perf_event_throttle_group(). All events are stopped: active_mask
+> >      bits cleared, events[] preserved (x86_pmu_stop no longer clears
+> >      events[] after commit 7e772a93eb61).
+> >
+> >   2. While still throttled (PERF_HES_STOPPED), x86_pmu_enable() runs
+> >      due to other scheduling activity. Stopped events that need to
+> >      move counters get PERF_HES_ARCH set and events[old_idx] cleared.
+> >      In step 2 of x86_pmu_enable(), PERF_HES_ARCH causes these events
+> >      to be skipped -- events[new_idx] is never set.
+> >
+> >   3. The timer tick unthrottles the group via pmu->start(). Since
+> >      commit 7e772a93eb61 removed the events[] assignment from
+> >      x86_pmu_start(), active_mask[new_idx] is set but events[new_idx]
+> >      remains NULL.
+> >
+> >   4. A PMC overflow NMI fires. The handler iterates active counters,
+> >      finds active_mask[2] set, reads events[2] which is NULL, and
+> >      crashes dereferencing it.
+> >
+> > Move the cpuc->events[hwc->idx] assignment in x86_pmu_enable() to
+> > before the PERF_HES_ARCH check, so that events[] is populated even
+> > for events that are not immediately started. This ensures the
+> > unthrottle path via pmu->start() always finds a valid event pointer.
+> >
+> > Fixes: 7e772a93eb61 ("perf/x86: Fix NULL event access and potential PEBS record loss")
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Cc: stable@vger.kernel.org
+> > ---
+> > Changes in v2:
+> > - Move event pointer setup earlier in x86_pmu_enable() (peterz)
+> > - Rewrote the patch title, given the new approach
+> > - Link to v1: https://patch.msgid.link/20260309-perf-v1-1-601ffb531893@debian.org
+> > ---
+> >  arch/x86/events/core.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 03ce1bc7ef2ea..54b4c315d927f 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -1372,6 +1372,8 @@ static void x86_pmu_enable(struct pmu *pmu)
+> >  			else if (i < n_running)
+> >  				continue;
+> >  
+> > +			cpuc->events[hwc->idx] = event;
+> > +
+> >  			if (hwc->state & PERF_HES_ARCH)
+> >  				continue;
+> >  
+> > @@ -1379,7 +1381,6 @@ static void x86_pmu_enable(struct pmu *pmu)
+> >  			 * if cpuc->enabled = 0, then no wrmsr as
+> >  			 * per x86_pmu_enable_event()
+> >  			 */
+> > -			cpuc->events[hwc->idx] = event;
+> >  			x86_pmu_start(event, PERF_EF_RELOAD);
+> >  		}
+> >  		cpuc->n_added = 0;
 > 
-> The acpi_get_cpu_acpi_id() retrieves uid from x86_cpu_to_acpiid in
-> SMP, and x86_cpu_to_acpiid is set through the call chain:
-> acpi_parse_lapic() -> topology_register_apic() ->
-> topo_register_apic() -> topo_set_cpuids() -> x86_cpu_to_acpiid. It
-> appears to retrieve the "ACPI Processor UID" from ACPI Section
-> 5.2.12.2, but the problem is that this field is only one byte in
-> length, which may cause issues in huge-core systems.
+> Just think twice, it seems the change could slightly break the logic of
+> current PEBS counter snapshot logic. 
 > 
-> Therefore, I suggest re-implementing the acpi_get_cpu_uid function
-> for the x86 platform. Either I provide a default implementation
-> (shown below), or x86 guys contribute to the implementation:
+> Currently the function intel_perf_event_update_pmc() needs to filter out
+> these uninitialized counter by checking if the event is NULL as below
+> comments and code show.
 > 
-> 	s64 acpi_get_cpu_uid(unsigned int cpu) {
-> 		if (cpu >= nr_cpu_ids)
-> 			return -EINVAL;
-> 		return cpu;
-> 	}
+> ```
+> 
+>      * - An event is stopped for some reason, e.g., throttled.
+>      *   During this period, another event is added and takes the
+>      *   counter of the stopped event. The stopped event is assigned
+>      *   to another new and uninitialized counter, since the
+>      *   x86_pmu_start(RELOAD) is not invoked for a stopped event.
+>      *   The PEBS__DATA_CFG is updated regardless of the event state.
+>      *   The uninitialized counter can be recorded in a PEBS record.
+>      *   But the cpuc->events[uninitialized_counter] is always NULL,
+>      *   because the event is stopped. The uninitialized value is
+>      *   safely dropped.
+>      */
+>     if (!event)
+>         return;
+> 
+> ```
+> 
+> Once we have this change, then the original index of a stopped event could
+> be assigned to a new event. In these case, although the new event is still
+> not activated, the cpuc->events[original_index] has been initialized and
+> won't be NULL. So intel_perf_event_update_pmc() could update the cached
+> count value to wrong event.
+> 
+> I suppose we have two ways to fix this issue.
+> 
+> 1. Move "cpuc->events[idx] = event" into x86_pmu_start(), just like what
+> the v1 patch does.
 
-I don't think this is your problem to solve, so don't worry about it.
-If you implement acpi_get_cpu_uid() to return the same values as
-cpu_acpi_id(), it's up to the x86 folks to deal with any one-byte ID
-issues.
+That's not what v1 did; v1 did an additional setting.
 
-Bjorn
+> 2. Check cpuc->active_mask in intel_perf_event_update_pmc() as well, but
+> the side effect is that the cached counter snapshots for the stopped events
+> have to be dropped and it has no chance to update the count value for these
+> stopped events even though the HW index of these stopped events are not
+> occupied by other new events.
+> 
+> Peter, how's your idea on this? Thanks.
+
+So you're saying that intel_perf_event_update_pmc() will be trying to
+read the hardware counter; which hasn't been written with a sensible
+value (and thus mis-behave) even though the event is STOPPED and the
+active_mask bit is unset?
+
+I'm thinking intel_perf_event_update_pmc() needs help either way around
+:-)
