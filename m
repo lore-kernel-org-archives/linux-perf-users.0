@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E873019D6;
-	Wed, 11 Mar 2026 08:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C7D3358B6;
+	Wed, 11 Mar 2026 08:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217849; cv=none; b=pm967/HsefFVtUP1wcBI/UnH/JTv2+TH3UAmReUi9XyNbqh3nKmME4sTBlb3D4YPzn9ZPOyyxZdQxWOsmri7Sbqbdea61nj1vMqo0uVP46myFPBaB9b6Dtnh5Rgv0mowHgIXoG2QHgYvOktJazgpICvhYNBAJ2HDdGRpHLEY+8U=
+	t=1773217854; cv=none; b=BHbZm3Cc1EowPXdyvBGO5KShqF8pI/ehpbnVr0LVg2hJNWY54Mnhg26Np9T+NLIkTLdqf2uM1gJfPncblehQ6KJtyIGJbbPlDQAu6nMly0lM91xC0NxFXjhdtmVZ4mTJtUHXcya/i242S2HF6Jz1WhU4InshdEJ1HBX9cra5T2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217849; c=relaxed/simple;
-	bh=3JBtHvIDMUinCUvCQDVcAxYVgAKb4KwLtcs/EMqdCS4=;
+	s=arc-20240116; t=1773217854; c=relaxed/simple;
+	bh=lwUdbNhCM4sMoT9afn20u31yKY7rBPrK42zn1LVlLAo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t0O3L/hTFLL1kNqbC33bRTGt6/T1uNiVAztNQXQYtoXaWfZ5E4EkLqEpnYVmLcjN977+vjMQApbCQ52ZQwiuaAvNO+iE2YOxwH8+2GqxqolY65az5XInmYBVxA7dwGAao3ecevTvGeoUUJqkdRB/7Srs30snq5v29hYZHeE9GV0=
+	 In-Reply-To:To:Cc; b=lPubWw+eiLalaFIJqcUyaANhm+/R1EoXL4cbySS4yjb3uoyoq98nmf/xn7jZMycwHWTGcmMH+6AQYEFcNDKFYiO13rpyKzjV52Pl4exDcn9Vc45IdzlK4wLHAgfpAUSde5q04aq0qUz0OjuVebeP7UAKxHIsFANTJOSvkL1IX+U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4A99169C;
-	Wed, 11 Mar 2026 01:30:37 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59993169C;
+	Wed, 11 Mar 2026 01:30:45 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64EB53F73B;
-	Wed, 11 Mar 2026 01:30:36 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1661C3F73B;
+	Wed, 11 Mar 2026 01:30:43 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 11 Mar 2026 08:29:31 +0000
-Subject: [PATCH v4 06/30] libbpf: Remove duplicate $(CLANG_CROSS_FLAGS)
+Date: Wed, 11 Mar 2026 08:29:32 +0000
+Subject: [PATCH v4 07/30] libbpf: Initialize CFLAGS before including
+ Makefile.include
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260311-tools_build_fix_zero_init-v4-6-9e35bdb99cb3@arm.com>
+Message-Id: <20260311-tools_build_fix_zero_init-v4-7-9e35bdb99cb3@arm.com>
 References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 In-Reply-To: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,38 +76,69 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=930;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773217789; l=2016;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=3JBtHvIDMUinCUvCQDVcAxYVgAKb4KwLtcs/EMqdCS4=;
- b=p+22TTJrUX/SZDUA8t2BfYihFjcvgWYmi810CV1GqYqJXosdHCZ3lNHmv22rky2XJhVwbXJtN
- 6wvPb/+rFBcAHwGJVU8Ke273dMt13nzQY6xOcKkGyCjHVzUPaW1L15s
+ bh=lwUdbNhCM4sMoT9afn20u31yKY7rBPrK42zn1LVlLAo=;
+ b=GdKfa01WQ7EkzzQs+te2K50YYy3uDWjVtIqcP10O+ayAEW55IWUt0xlTbNxpXIDO2MzJ87s+m
+ bTBGCOX5yjiAJkYH4vaiiMcN8JenuCarMb1LY19qZ+uUGkCcj54pZjb
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-tools/scripts/Makefile.include already appends $(CLANG_CROSS_FLAGS) to
-CFLAGS:
+tools/scripts/Makefile.include may expand EXTRA_CFLAGS in a future
+change.  This could alter the initialization of CFLAGS, as the default
+options "-g -O2" would never be set once EXTRA_CFLAGS is expanded.
 
-  CFLAGS += $(CLANG_CROSS_FLAGS)
+Prepare for this by moving the CFLAGS initialization before including
+tools/scripts/Makefile.include, so it is not affected by the extended
+EXTRA_CFLAGS.
 
-Since Makefile.include is included, the libbpf Makefile appends
-$(CLANG_CROSS_FLAGS) again, resulting in duplicate flags.
-
-Remove the redundant append.
+Append EXTRA_CFLAGS to CFLAGS only after including Makefile.include and
+place it last so that the extra flags propagate properly and can
+override the default options.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/lib/bpf/Makefile | 1 -
- 1 file changed, 1 deletion(-)
+ tools/lib/bpf/Makefile | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 168140f8e6461bd06db40e23d21a3fb8847ccbf4..b1fbd0211c5edde7be3d98630b16e53e028d9116 100644
+index b1fbd0211c5edde7be3d98630b16e53e028d9116..eca584fb061e16013e76827e4203f6be0477a73e 100644
 --- a/tools/lib/bpf/Makefile
 +++ b/tools/lib/bpf/Makefile
-@@ -84,7 +84,6 @@ override CFLAGS += -Werror -Wall
+@@ -49,6 +49,14 @@ man_dir_SQ = '$(subst ','\'',$(man_dir))'
+ export man_dir man_dir_SQ INSTALL
+ export DESTDIR DESTDIR_SQ
+ 
++# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
++# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
++ifdef EXTRA_CFLAGS
++  CFLAGS :=
++else
++  CFLAGS := -g -O2
++endif
++
+ include $(srctree)/tools/scripts/Makefile.include
+ 
+ # copy a bit from Linux kbuild
+@@ -70,13 +78,6 @@ LIB_TARGET	= libbpf.a libbpf.so.$(LIBBPF_VERSION)
+ LIB_FILE	= libbpf.a libbpf.so*
+ PC_FILE		= libbpf.pc
+ 
+-# Set compile option CFLAGS
+-ifdef EXTRA_CFLAGS
+-  CFLAGS := $(EXTRA_CFLAGS)
+-else
+-  CFLAGS := -g -O2
+-endif
+-
+ # Append required CFLAGS
+ override CFLAGS += -std=gnu89
+ override CFLAGS += $(EXTRA_WARNINGS) -Wno-switch-enum
+@@ -84,6 +85,7 @@ override CFLAGS += -Werror -Wall
  override CFLAGS += $(INCLUDES)
  override CFLAGS += -fvisibility=hidden
  override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
--override CFLAGS += $(CLANG_CROSS_FLAGS)
++override CFLAGS += $(EXTRA_CFLAGS)
  
  # flags specific for shared library
  SHLIB_FLAGS := -DSHARED -fPIC
