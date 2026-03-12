@@ -1,157 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8C6302CD5;
-	Thu, 12 Mar 2026 06:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ADE324B16;
+	Thu, 12 Mar 2026 07:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773298372; cv=none; b=IYX1rIHs+2RscnYCcbuHMbYYj19vVb2Qr7cwOHltv+jXfZ9dVpXBYr7EUXlp32G/BkqctixoGzp9pV88BrsnqLtrIfs21JlENmM6F0ZHA5CSCs9U5gJrSPTfEWaZypcus5sOiUCqkl/tBvpv0I+GPxqNnVLCCblRvrktefwhYuY=
+	t=1773300214; cv=none; b=lcVyrmHddw0NvhFudoiaq09NXLHSYo0tRnwLgKSxd6KgJ+NzmNqbqU2vc2uoztjJWrM3oXgRHdmNKDbwrNdcptV+REaRUlWx3bzn6JW6Xo5+oIoeF+BFlgaquC0wNJyUvkDjTfqalYi874PFYIFWQr8JhWgdywbhIQPC4ifHPzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773298372; c=relaxed/simple;
-	bh=8I/I+1yrDYc20jEasy+FWA3EIROpAGFwzDYInxrihcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S8rBjwmGstGEm84aJp11XRwOF1a35Gt02TNCFBwqP7sTxIEU5iAhXdpT5uLS35Meurspt9jKJWQI0kGw6iaL9a7c5I5NOxi7FgeItSOFPC+xj81vCQsr7QKy5v/Vp/LI8jmzd6U9QgQBzKOuqw0fPl6OktXOZ7q4njxNCUJkfWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=js1oqny9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773300214; c=relaxed/simple;
+	bh=c6WYDxliQ6j+v2i5MKLgDNk5CQ3m0RtYMYEdp20cW8I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g8swOCx9cTx2VrdXgU0r5FuES6rXvRWiaY3V76wO5xlqJeplCkPOyKrC4LkXWmp/vJo/JkD8Mb8+5vWAky5KTYkCxkmg75hGrYWMpZFflC3+EFZQIO11iTxyY5urT6B8e/jNsPVfM0rqLfKShlDUvLxID6e721Dw7sOBpAd/LlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=rBBmv+Lp; arc=none smtp.client-ip=113.46.200.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="js1oqny9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773298370; x=1804834370;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8I/I+1yrDYc20jEasy+FWA3EIROpAGFwzDYInxrihcs=;
-  b=js1oqny9xFYgHspKuDc+XK7cHVAqDRk+SIYpqeTwCMOjBywchrxhxf3Z
-   8cU1reP/PCip3h0zGvvG/WUwticAYlHaYRKbpS0414yofYJtUQC3lO7Hk
-   8xves493c56l4LLnA7v66FbstdSAEQSKkP/Tt8gKEjLW2iNnfc3tD0euL
-   NVoIxZWqW1YS9b7UqBQ0QpGIIErRMQ7BXbtKTJfChHV91i+7UCj76XT3u
-   LShbanNRisjEP2haalZJ0brLQ8urNpKaHDDAMc5VuyJ9u4RvU8elGGbKA
-   hMzhpGw3ZubHtS4pI1I5CHhkFBi3iqsyU7YIdLR6iOyCttC7hvSR/L6/k
-   A==;
-X-CSE-ConnectionGUID: MJSWCaPQS5ecwtXgKBPCIw==
-X-CSE-MsgGUID: +BiYCcdFTjSjIFBYJIBWAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="85856926"
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="85856926"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:52:49 -0700
-X-CSE-ConnectionGUID: w7RPRgpxTjuG4hsNC+hbUQ==
-X-CSE-MsgGUID: EOEueEzFQMOVJcRwIZ0hSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="225688143"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:52:46 -0700
-Message-ID: <a856792a-89ee-4de5-9923-106a23c31206@linux.intel.com>
-Date: Thu, 12 Mar 2026 14:52:43 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="rBBmv+Lp"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=JWR3I9L7KX8a3aClE88ycMtETglowguHrLZMRqWv8Io=;
+	b=rBBmv+LpmD6banh43JS0edaS84dH116/qBok6pLAmwhWmT+MsH/WPIcqF7IxzQwINsFJ6zh0d
+	mJIuJoBHbaPglNXiO3Pr3di3NekDdj/t9i9N3QwQMRBtfQLE/3NhfvwJKUgbM+kmEdJgVXGgKaE
+	7uxc8NBOtepchaLqk9hHm94=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fWf8Y0WTDznTVP;
+	Thu, 12 Mar 2026 15:17:49 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id 462344056C;
+	Thu, 12 Mar 2026 15:23:24 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 12 Mar 2026 15:23:22 +0800
+From: Chengwen Feng <fengchengwen@huawei.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>
+CC: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner
+	<tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V
+ L <sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>, Yanteng
+ Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>, Kai Huang
+	<kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth
+	<thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin
+	<kevinloughlin@google.com>, Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra
+	<peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin
+ Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
+	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
+ Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
+ Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Wei Huang
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
+	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<stable@vger.kernel.org>
+Subject: [PATCH v6 0/3] Fix get cpu steer-tag fail on ARM64 platform
+Date: Thu, 12 Mar 2026 15:23:13 +0800
+Message-ID: <20260312072316.4806-1-fengchengwen@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND Patch 2/2] perf/x86/intel: Add missing branch counters
- constraint apply
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- stable@vger.kernel.org
-References: <20260228053320.140406-1-dapeng1.mi@linux.intel.com>
- <20260228053320.140406-2-dapeng1.mi@linux.intel.com>
- <20260311201625.GW606826@noisy.programming.kicks-ass.net>
- <0a720411-0b24-42eb-9897-856b1175aa82@linux.intel.com>
- <20260312064145.GA606826@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260312064145.GA606826@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
+This patchset fixes the failure of CPU steer tag retrieval on ARM64
+platforms. The series is structured as follows:
 
-On 3/12/2026 2:41 PM, Peter Zijlstra wrote:
-> On Thu, Mar 12, 2026 at 10:31:28AM +0800, Mi, Dapeng wrote:
->> On 3/12/2026 4:16 AM, Peter Zijlstra wrote:
->>> On Sat, Feb 28, 2026 at 01:33:20PM +0800, Dapeng Mi wrote:
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 4768236c054b..4b042d71104f 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -4628,6 +4628,19 @@ static inline void intel_pmu_set_acr_caused_constr(struct perf_event *event,
->>>>  		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
->>>>  }
->>>>  
->>>> +static inline int intel_set_branch_counter_constr(struct perf_event *event,
->>>> +						  int *num)
->>>> +{
->>>> +	if (branch_sample_call_stack(event))
->>>> +		return -EINVAL;
->>>> +	if (branch_sample_counters(event)) {
->>>> +		(*num)++;
->>>> +		event->hw.dyn_constraint &= x86_pmu.lbr_counters;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>>  static int intel_pmu_hw_config(struct perf_event *event)
->>>>  {
->>>>  	int ret = x86_pmu_hw_config(event);
->>>> @@ -4698,21 +4711,18 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>>>  		 * group, which requires the extra space to store the counters.
->>>>  		 */
->>>>  		leader = event->group_leader;
->>>> +		if (intel_set_branch_counter_constr(leader, &num))
->>>>  			return -EINVAL;
->>>>  		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
->>>>  
->>>>  		for_each_sibling_event(sibling, leader) {
->>>> +			if (intel_set_branch_counter_constr(sibling, &num))
->>>> +				return -EINVAL;
->>>> +		}
->>>> +
->>> Do the new bit is this, right?
->> Actually not, the key change is the below one. The last event in the group
->> is not applied the branch counter constraint.
->>
->> Assume we have a event group {cycles,instructions,branches}. When the 3rd
->> event "branches" is created and the function intel_pmu_hw_config() is
->> called for the "branches" event to check the config.  The event leader is
->> "cycles" and the sibling event has only the "instructions" event at that
->> time since the 3rd event "branches" is in creation and still not added into
->> the sibling_list. So for_each_sibling_event() can't really iterate the
->> "branches" event.
->>
->>
->>>> +		if (event != leader) {
->>>> +			if (intel_set_branch_counter_constr(event, &num))
->>>>  				return -EINVAL;
->>>>  		}
->>> The point being that for_each_sibling_event() will not have iterated the
->>> event because its not on the list yet?
->> Yes. 
->>
->>
->>> That wasn't really clear from the changelog and I think that deserves a
->>> comment as well.
->> Sure. I would add comment and enhance the changelog to make it clearer. Thanks.
->>
-> I already fixed everything up. Should be in queue/perf/urgent.
+1. First commit: Mechanical rename of the ACPI Processor UID retrieval
+   interface (no functional changes) to align naming conventions across
+   architectures;
+2. Second commit: Implement acpi_get_cpu_uid() for the x86 platform to
+   complete the unified ACPI Processor UID interface across all
+   ACPI-enabled architectures;
+3. Third commit: Implement the core fix for the CPU steer tag retrieval
+   logic on ARM64 (the root cause of the retrieval failure).
 
-Thanks. 
+The renaming and x86 implementation lay the groundwork for the unified
+ACPI interface required by the ARM64 steer tag fix, ensuring consistent
+CPU UID retrieval across architectures before addressing the functional
+bug.
 
-Peter, As Ian points out, the patch "perf/x86: Update cap_user_rdpmc base
-on rdpmc user disable state" has a bug
-(https://lore.kernel.org/all/CAP-5=fWr2L6miiFZ6Km3HYEdmqp3T0NBL=WY3buKdKztW+HvmA@mail.gmail.com/).
-I would posted a patch to fix the issue. Thanks.
+---
+Changes in v6:
+- Rename existing get_acpi_id_for_cpu() to acpi_get_cpu_uid()
+- Split x86's modify as one commit
 
+Changes in v5:
+- Refine commit-log of commit 2/2
+- Replace cpu_acpi_id() by acpi_get_cpu_acpi_id() on x86
 
+Changes in v4:
+- Split the rename into a separate commit.
 
->
+Changes in v3:
+- Rename existing get_acpi_id_for_cpu() to acpi_get_cpu_acpi_id() other
+  than add one new API.
+
+Changes in v2:
+- Add ECN _DSM reference doc name and its URL.
+- Separate implement acpi_get_cpu_acpi_id() in each arch which supports
+  ACPI.
+- Refine commit-log.
+
+Chengwen Feng (2):
+  ACPI: Rename get_acpi_id_for_cpu() to acpi_get_cpu_acpi_id() on
+    non-x86
+  PCI/TPH: Fix get cpu steer-tag fail on ARM64 platform
+
+Chengwen Feng (3):
+  ACPI: Rename get_acpi_id_for_cpu() to acpi_get_cpu_uid() on non-x86
+  x86: Implement acpi_get_cpu_uid()
+  PCI/TPH: Fix get cpu steer-tag fail on ARM64 platform
+
+ Documentation/PCI/tph.rst          |  4 +--
+ arch/arm64/include/asm/acpi.h      | 16 +---------
+ arch/arm64/kernel/acpi.c           | 16 ++++++++++
+ arch/arm64/kernel/acpi_numa.c      | 15 ++++++++++
+ arch/loongarch/include/asm/acpi.h  |  5 ----
+ arch/loongarch/kernel/acpi.c       |  9 ++++++
+ arch/riscv/include/asm/acpi.h      |  4 ---
+ arch/riscv/kernel/acpi.c           | 16 ++++++++++
+ arch/riscv/kernel/acpi_numa.c      |  8 +++--
+ arch/x86/include/asm/cpu.h         |  1 -
+ arch/x86/include/asm/smp.h         |  1 -
+ arch/x86/kernel/cpu/common.c       | 15 ++++++++++
+ arch/x86/xen/enlighten_hvm.c       |  5 ++--
+ drivers/acpi/pptt.c                | 47 +++++++++++++++++++++---------
+ drivers/acpi/riscv/rhct.c          |  7 ++++-
+ drivers/pci/tph.c                  | 16 ++++++----
+ drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
+ include/linux/acpi.h               | 11 +++++++
+ include/linux/pci-tph.h            |  4 +--
+ 19 files changed, 151 insertions(+), 55 deletions(-)
+
+-- 
+2.17.1
+
