@@ -1,102 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF5C184524;
-	Thu, 12 Mar 2026 01:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EC12820C6;
+	Thu, 12 Mar 2026 01:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773278281; cv=none; b=WoDQmtItdu5tyQPM02w/9QSnj9pNFLUVAkWNRteG3YJu4o2taYwPxvpqzzE1alO8MO0youNtTUIdneElTN3Dxik8RlaU7euy/3sGZMSlluZUnZ2Del267LEfPbXxM01HAXLcmfGYlZCu3lvXuQKMmp6smDaaMf5CC4eocJV79FA=
+	t=1773279993; cv=none; b=FttIf1AGQ7jNEnc24Cp9HKNMs9++U4Kuc0+EHwP5f+5sHExhRWp5jPSFLvNtQNEgSiXRMIOS32DHVT64qnohDx9YX59GK0HDJApf1lDn4cK0qFbKFCnPejHgztedLQvkbG0JRVakLrU9lLrZIiDGudDQFI0UQsCNnoZiX7aEux8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773278281; c=relaxed/simple;
-	bh=ZPkwsrJCcF4EP7sC2ZvRt1O2/NjGzArKjSz4TesUmqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oIw0rvGFhs50F8zsbE5iBIRgUQ+3s81vZo1elF3duLfZxhOeT5X0zP0snGdwwQezrrCGfcqP/LBpaYvPPjO4ZesazUb5SCUQlyspkR/sNQfOU5jIbNTXXQjK6khx7o7UqjXiP2nbTPNlZoOBAtLeISCpq7PEGZ0jmEncQeRamDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRE3yNsV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773279993; c=relaxed/simple;
+	bh=YVMTsCpUknRm8seB/lZR+5bmbilX60hT8sRjcsOU0DY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fUnnWXKcJi/D2vTmmUHMsKylxa9W2LIT+huVWyGWZ2eHA/No16sDRN+Rq7dUf9N7nkKuj08AF58RMJDWw8KWcJpB0hkDA4EwTU481aq1VPG0MmLJNDUhYqZLQug13b9exYx5yazWkRgBmpmburKy0SLH32hdwH9dbiWIMTmAyt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxjyI7vS; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRE3yNsV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18C3C4CEF7;
-	Thu, 12 Mar 2026 01:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773278280;
-	bh=ZPkwsrJCcF4EP7sC2ZvRt1O2/NjGzArKjSz4TesUmqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RRE3yNsVlLRtlOGnW54k8ORPlyXOg2JauuCYY6aYACa7gSVhM3peseqQ7nmAJdDlT
-	 oxrfsEI58WnsqnbwX4Ckeu5UKonH3ApsR4CDcOud3/imMzYRVmhYH3kJTKjYRLPG4a
-	 UogfFXN4Rrf+ibAcZviei4xaY0JzHn2Az3Z+hAeTOQ+iXl7KnYzRdvtkBXk2Orr8VX
-	 QpJNY+2WDv/7Hus0KgnBQYepKbvW4JoEA8j8A3fOXSXvMqrMiAD1Z/SKKgPdcbXLz1
-	 5yOUmU0kY3HI1wgW8zFkvIQwwe7PdkkCyGG38UTqRl6gcw/29RJJvfVV1mJou6eQ41
-	 WhimTRugkjNaQ==
-Date: Wed, 11 Mar 2026 18:17:58 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf disasm: Fix potential use-after-free on fileloc
-Message-ID: <abIURgnW94VGFo8k@google.com>
-References: <20260307002222.2463509-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxjyI7vS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773279992; x=1804815992;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YVMTsCpUknRm8seB/lZR+5bmbilX60hT8sRjcsOU0DY=;
+  b=fxjyI7vSdukD0yMzdrhdX+St39JQ3rJM7AZpRR7XMM0+h4LSIxNVM6UM
+   OKo+Xdk37lGZ2fkESkJraTzWudGFn5zank+UP2TgwTiwU0iW8PY4iPSbE
+   m1oKwkjTymW2gpyYgYnJX6pEVK/s7j0Xd0QKAifp0gyIeUNhdjqXt1IOs
+   SL9TBDVl926nNCIAs5DrJ7HDrO5nbdVXRq7zXRP0Lgvl0SZe5NhcfNqHI
+   Keg6e7hFa6o2o0MmcNEbvhXUV+McBKlldZTAcjY4ZuwinEzHoj+HinuNt
+   2MQibUrdAgeVS18RN4M8LR1hQ2i5egmPD8vB94S6PCyJsCq+W3cnUjl7r
+   w==;
+X-CSE-ConnectionGUID: +PpOrGh+Tjm+wglwQnYSHg==
+X-CSE-MsgGUID: 4Wja1aU4Sl241OOyNSfn0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="76973742"
+X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
+   d="scan'208";a="76973742"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 18:46:31 -0700
+X-CSE-ConnectionGUID: kpLvnhOkQIWjTWz0ibo3tA==
+X-CSE-MsgGUID: wrNx/MB9Rmmc1SsGSpzISA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
+   d="scan'208";a="251158990"
+Received: from unknown (HELO [10.238.3.214]) ([10.238.3.214])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 18:46:25 -0700
+Message-ID: <9b39df21-c35a-42b0-9e1f-ad7aec6a636c@linux.intel.com>
+Date: Thu, 12 Mar 2026 09:46:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260307002222.2463509-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
+ x86_pmu_enable()
+To: Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
+Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, stable@vger.kernel.org
+References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+ <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
+ <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
+ <20260311173509.GR606826@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260311173509.GR606826@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 06, 2026 at 04:22:22PM -0800, Ian Rogers wrote:
-> The fileloc is a copy of a pointer to a string but in places like
-> symbol_disassemble__llvm this string appears to be freed setting up
-> potential use-after-frees:
-> 
-> llvm.c:
-> ```
-> 		dl = disasm_line__new(args);
-> 		if (dl == NULL)
-> 			goto err;
-> 
-> 		annotation_line__add(&dl->al, &notes->src->source);
-> 
-> 		free(args->fileloc);
-> ```
-> disasm.c:
-> ```
-> static void annotation_line__init(struct annotation_line *al,
-> 				  struct annotate_args *args,
-> 				  int nr)
-> {
-> 	al->offset = args->offset;
-> 	al->line = strdup(args->line);
-> 	al->line_nr = args->line_nr;
-> 	al->fileloc = args->fileloc;
-> 	al->data_nr = nr;
-> }
-> 
-> struct disasm_line *disasm_line__new(struct annotate_args *args)
-> {
-> 	struct disasm_line *dl = NULL;
-> 	struct annotation *notes = symbol__annotation(args->ms->sym);
-> 	int nr = notes->src->nr_events;
-> 
-> 	dl = zalloc(disasm_line_size(nr));
-> 	if (!dl)
-> 		return NULL;
-> 
-> 	annotation_line__init(&dl->al, args, nr);
-> ```
-> 
-> Fix this by making the fileloc a copy of the underlying string in its
-> init/exit.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Applied to perf-tools-next, thanks!
+On 3/12/2026 1:35 AM, Peter Zijlstra wrote:
+> On Wed, Mar 11, 2026 at 09:37:08AM -0700, Ian Rogers wrote:
+>
+>> Fwiw, an AI review was saying something similar to me. 
+> How do you guys get this AI stuff to say anything sensible at all about
+> the code? Every time I try, it is telling me the most abject nonsense.
+> I've wasted hours of my life trying to guide it to known bugs, in vain.
 
-Best regards,
-Namhyung
+Base on my experience, the quality of AI generated comments are impacted by
+2 factors, one is the AI model, the other is prompt.
 
+Currently I use Github copilot (Claude model) to do some AI reviews. Claude
+seems to be the best model for reviewing. Although most of AI review
+comments are not 100% accurate, it indeed can point out some potential
+issues or gave some clue about the issues. 
+
+About the Prompt, there is a project
+https://github.com/masoncl/review-prompts which gathers the review prompt
+for Linux kernel. I learnt a lot prompts from it. 
+
+
+>
+>> I wonder if the
+>> issue with NMI storms exists already via another path:
+>>
+>> By populating cpuc->events[idx] here, even for events that skip
+>> x86_pmu_start() due to the PERF_HES_ARCH check, can this lead to PEBS
+>> data corruption?
+>>
+>> For Intel PEBS, intel_pmu_pebs_late_setup() iterates over cpuc->event_list
+>> and enables PEBS_DATA_CFG for this counter index regardless of its stopped
+>> state. If the PMU hardware generates PEBS records for this uninitialized
+>> counter, or if there are leftover PEBS records from the counter's previous
+>> occupant (since x86_pmu_stop() does not drain the PEBS buffer),
+>> intel_perf_event_update_pmc() will now find a non-NULL event pointer.
+>> Will it incorrectly process these leftover records and attribute them
+>> to the stopped event?
+> Yes.
+>
+>> Additionally, does this change leave the unthrottled event's hardware
+>> counter uninitialized?
+> Also yes.
+>
+>> When x86_pmu_enable() moves a throttled event to a new counter, it sets
+>> PERF_HES_ARCH and skips calling x86_pmu_start(event, PERF_EF_RELOAD).
+>> Later, when the timer tick unthrottles the event, it calls
+>> perf_event_unthrottle(), which invokes event->pmu->start(event, 0).
+>> In x86_pmu_start(), because flags == 0 (lacking PERF_EF_RELOAD),
+>> x86_pmu_set_period() is skipped. Will the newly assigned hardware counter
+>> be enabled without being programmed with the event's period, potentially
+>> causing it to start from a garbage value and leading to incorrect sampling
+>> intervals or NMI storms?
+> Don't think you can get NMI storms this way. If the PMI trips, we'll do
+> set_period and that should fix it up.
+>
+> So just wrong counting.
