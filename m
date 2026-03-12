@@ -1,157 +1,95 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF59F2FBDFD
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 05:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617471C3BFC
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 06:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773294508; cv=none; b=mKVn2LL21PfTzfbRCSYqZnt8L8IW7HznYqP/87qLhRaRBpFX6s8tzRYULzeqeV+L5vTdFv3I9z9BjIzSz/mEuB6bePGZcZYS3KP0wQe/WzFqhdHpNYOnKe6p56XCc1XXqb9i0/L76E6AA2+b3MVFaCNlPL5c1dDBO84F4Y7OdAs=
+	t=1773296193; cv=none; b=pCIqGvQgdwOK0NHyLU9KDLuiI+hw7k3+xkIYBamoetDzpvtyhI/0ibexZNYxFAOIs3BVA9z0fbv2Z8SUodYxpnmtMD8xOrQtCje1i7+hqjd86pzk4Y1mf6W/X1L8gvRHXFTt2tggfb5Iu9WIDzVD46xDN+XzdZd3iP/U+2Qg3RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773294508; c=relaxed/simple;
-	bh=RuVytkDFOGxLZv5hZQSKqWBhPyyYvv451s5B3uiFF/A=;
+	s=arc-20240116; t=1773296193; c=relaxed/simple;
+	bh=ESo8adYL6QabyJApQ4LPsfXjKpfgqwShaS5GxF/euyA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TIs1Z+H9M2f5JIxtFkueJ+YbuQk+icwnLFY4DAIVM8df29Ioau09LI36imwy5R6isRQyLsvO9foaploN/zPG6mqSCQZmkkNg18NJ0k3fxi7wwptdDaOpwQxQB9/LxEjiNPly5Ht6vI7x4VQRvyN81O7JhH60KxstPLAyX2OcdJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NNofy8ND; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=niKpviY5jmgHYYmkjxmmHuGcz9sAkB8tRd2KJrE9JfzoPhzaiQMkwGg5iRq6b9hJs5zy8M1FU+uTJ5wbtZfk6wqE/AUOdc41pnrsaKdw1iSFeG63vPkdZ2pw70K00B4LKbMLsLO5hIJPhaxL3LtFGMFwT1wnehwqT4fjx+/V6PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YFm1KMG1; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NNofy8ND"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso774406eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 22:48:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFm1KMG1"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2be0575e290so628376eec.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 23:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773294506; x=1773899306; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773296191; x=1773900991; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kIZKFE8GFE3BbHex+q85LNyPvOPEOZBzXZizsyJDBtk=;
-        b=NNofy8ND/pp7fIj5mDTrIVI24XqJwhDve9fcEIs1NT4JYI6GYt+sfuGb1wzh+uQMj4
-         d3SIr7e9lJg8kNy6byK2SrI9O+lEVRTydpqxy7d0NxsRedeEIP7D6Hak02HkAWCLIufP
-         cQvt6PtLXHfMVPT+CbFM7+nuljqPNh0JE47G14ElYj/rDgBaGFPgXA2UejsWl69gMxCa
-         aHmnp4CCgFHmGvUukSaFVa/Hc2LTAwsqjAAcDc5G2L6CwDyXwEGMTzIWW3+xL8eMjZD+
-         2qVVD/aBr4mayi+3+BootkimllozdJ6xMCGEpGRf+2aA5bXvRhvZu4jNLf1MuyTua5cW
-         c2zg==
+        bh=ER74iEy8gUVJnZ6jeSlc8bWwSBKIum0sBcnkXAXKwV4=;
+        b=YFm1KMG1fbFLgUnkkyZuP13dETHRuWC6Zmf5bzMM6+5N+S/7zcOtkrPHvA1ydWp/pK
+         1ySEPXkxeGpSDyi6lRQq80Fnjr5gRuUrsrLODeMGIVBMsEefIRdZC/PFnTblV7qDCR12
+         CixZXNBSciDu/q6i/yGkwXhjVtuCZn1HEO57EsctkOdmZN1lvvLD7YIAzPvVgwL/sAle
+         LtRCCLPW+DmygL/KFUzWCp55HeBpC704FE/txfX8n3X1rUjT1SztCnbqLveon27l4nc0
+         DiRVqcPBObPQ/qahSt/vh+Dn1/yOH05OC5Huq3v8PpjushVor2TobKAQ0bNToouYkEHB
+         bEhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773294506; x=1773899306;
+        d=1e100.net; s=20230601; t=1773296191; x=1773900991;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kIZKFE8GFE3BbHex+q85LNyPvOPEOZBzXZizsyJDBtk=;
-        b=joPgI7vhT3euZrpxW1cY8nY5cUpspXl2vPmB1AXg4jsgtd+o04gJ6KScVOpPJFw/dg
-         vWkEfHU2ohp5GTmfXT49FK8oXr0Dx1gZQL8FAgtaAbb3wl/znrpW+GFz9q0i30NulRmx
-         AlLgFpc09JSke1EiNAfAg7bs7rBJXSqM9P4BCyj6hn5FCpEVXI4OXhZ2Epo9po5RLK6E
-         YBKZ2P9rXOSbc7RYnxaV7CWiw8ZoNzvNLVcvyGfGHlDX9cfWPFN13rquw+hxkbokWAyB
-         3Tl33A00lxr3U5nEcTHLPCFWg3cJbcG9NgCYNEQm3fhxkCPtoHXBQQ0P/KtVYw44+8/b
-         E8Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1FsMx9dyPnpo1PX0NcuArIpCiZpMa2pEbFy2G4KniYn4Qrgu72yxM0SxigfNtudCdyX3dmlSBej2kLj6p7VIo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdvBrlRndH5tL8VaUkVMSXtPEaacKWFUPGm4SL4gx1KRZfIXoa
-	x/ztTtO9t3gF6RjyPenVO6EesLiCcXRqZfIULNDrLzecs07RJiU9dcrzkXALxbHUma3fwekpb0v
-	S7HXGxqn4rQ==
-X-Received: from dlbvg13.prod.google.com ([2002:a05:7022:7f0d:b0:128:db8e:c776])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4184:b0:119:e56c:18be
- with SMTP id a92af1059eb24-128e787d086mr2490867c88.38.1773294505947; Wed, 11
- Mar 2026 22:48:25 -0700 (PDT)
-Date: Wed, 11 Mar 2026 22:48:10 -0700
-In-Reply-To: <20260312054810.1571020-1-irogers@google.com>
+        bh=ER74iEy8gUVJnZ6jeSlc8bWwSBKIum0sBcnkXAXKwV4=;
+        b=pBoe2pyiVSwnAGHHPad6UO+E8m6p0hrS4e9i4lEWHNbzX4jv5qxDmSbuTpzmZuTJL8
+         1DPGEpyzO1WcEZTSkp9mK3P9suKEh+ztP/NRuxGAoqUanxUJBTwQC4R4oBk8WR2k9Htd
+         kPKlQnQYg7yXY4iCjSUWi4FtSiWJI+CYgbOjb3kqBF3SvnDs1qTSDl/il+cwBJVKkY5g
+         Ve6WNIN2sniKRKm/SkR/WWgaoFDcx/eR/qaWW+uABHumRHusYvaA1THJehRG2X+IJ9yu
+         POsccg3sYnA1HuFLMMH18QcttgWP9yStP5+MdUY/muH8FxAgt7aXJgiJq65LjlxDdU30
+         PRlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm3ryuf82Y1BpHv6MLRM8UcEnruPTMfsA29DA0wpL9vpKs9tQI/pcwzsHtB99CmyuLW+KSJPN2xsKJLxH8JVBP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXGDhnLY0I1wgn39Xnws9ZyLjReQvg/qd5Jt0Kxf72Hkboy6b9
+	LDpzx5cl2eJJdvd3F5VUV0ntJ47/BXmFHgdcPY0u9ByDv6P5AE0KK+ghD7LIfA7bR8bIqABDyTd
+	ILiEqjrKO7Q==
+X-Received: from dycnr22-n1.prod.google.com ([2002:a05:7300:e9d6:10b0:2be:73ec:b506])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:5784:b0:2ba:6fbb:5e7f
+ with SMTP id 5a478bee46e88-2be8a52f0bcmr2052812eec.35.1773296191280; Wed, 11
+ Mar 2026 23:16:31 -0700 (PDT)
+Date: Wed, 11 Mar 2026 23:16:26 -0700
+In-Reply-To: <20260312031928.1494864-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <CAP-5=fUBy-vzdSB3xsuyU+AKd8o99R7DLgoyyJHxb6Shkfb-8w@mail.gmail.com>
- <20260312054810.1571020-1-irogers@google.com>
+References: <20260312031928.1494864-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260312054810.1571020-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf/x86: Reduce is_hybrid calls and aid ellision of
- BUG_ON in hybrid_pmu
+Message-ID: <20260312061628.1593105-1-irogers@google.com>
+Subject: [PATCH v2 0/2] perf evsel fallback changes
 From: Ian Rogers <irogers@google.com>
-To: dapeng1.mi@intel.com, dapeng1.mi@linux.intel.com
-Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
-	ak@linux.intel.com, alexander.shishkin@linux.intel.com, eranian@google.com, 
+To: tmricht@linux.ibm.com
+Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org, 
-	thomas.falcon@intel.com, xudong.hao@intel.com, zide.chen@intel.com
+	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use the capabilities of the PMU rather than the global variable
-perf_is_hybrid to determine if a hybrid pmu has been passed to the
-main accessors. As the pmu capabilities check mirrors that in
-is_x86_pmu, the BUG_ON(!is_x86_pmu...) in hybrid_pmu can be elided as
-it is provably always false (with sufficient function inlining, common
-sub-expression elimination, etc.) in its most common uses.
+Discussion with Thomas Richter in:
+https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.com/
+showed that the evsel__fallback wasn't working for s390. These patches
+avoid the problematic frame pointer callchain on s390 and fix
+evsel__fallback from a range of problems when falling back to a
+software event. I simulated failures when developing the patches but
+they are untested other than that.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-Only build tested.
----
- arch/x86/events/perf_event.h | 52 +++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 24 deletions(-)
+v2: try exclude_callchain_user for s390 rather than fully disabling
+    the callchain. Fix a missed clearing of is_pmu_core if the
+    software event fallback.
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index f1123c95d174..7990d86ef233 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -802,34 +802,38 @@ static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *pmu)
- extern struct static_key_false perf_is_hybrid;
- #define is_hybrid()		static_branch_unlikely(&perf_is_hybrid)
- 
--#define hybrid(_pmu, _field)				\
--(*({							\
--	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;	\
--							\
--	if (is_hybrid() && (_pmu))			\
--		__Fp = &hybrid_pmu(_pmu)->_field;	\
--							\
--	__Fp;						\
-+
-+#define hybrid(_pmu, _field)						\
-+(*({									\
-+	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;			\
-+	struct pmu *__pmu = _pmu;					\
-+									\
-+	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-+		__Fp = &hybrid_pmu(__pmu)->_field;			\
-+									\
-+	__Fp;								\
- }))
- 
--#define hybrid_var(_pmu, _var)				\
--(*({							\
--	typeof(&_var) __Fp = &_var;			\
--							\
--	if (is_hybrid() && (_pmu))			\
--		__Fp = &hybrid_pmu(_pmu)->_var;		\
--							\
--	__Fp;						\
-+#define hybrid_var(_pmu, _var)						\
-+(*({									\
-+	typeof(&_var) __Fp = &_var;					\
-+	struct pmu *__pmu = _pmu;					\
-+									\
-+	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-+		__Fp = &hybrid_pmu(__pmu)->_var;			\
-+									\
-+	__Fp;								\
- }))
- 
--#define hybrid_bit(_pmu, _field)			\
--({							\
--	bool __Fp = x86_pmu._field;			\
--							\
--	if (is_hybrid() && (_pmu))			\
--		__Fp = hybrid_pmu(_pmu)->_field;	\
--							\
--	__Fp;						\
-+#define hybrid_bit(_pmu, _field)					\
-+({									\
-+	bool __Fp = x86_pmu._field;					\
-+	struct pmu *__pmu = _pmu;					\
-+									\
-+	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-+		__Fp = hybrid_pmu(__pmu)->_field;			\
-+									\
-+	__Fp;								\
- })
- 
- /*
+v1: https://lore.kernel.org/lkml/20260312031928.1494864-1-irogers@google.com/
+
+Ian Rogers (2):
+  perf evsel: Improve falling back from cycles
+  perf evsel: Don't configure framepointer callchains on s390
+
+ tools/perf/util/evsel.c | 51 ++++++++++++++++++++++++++++++-----------
+ tools/perf/util/evsel.h |  2 ++
+ 2 files changed, 39 insertions(+), 14 deletions(-)
+
 -- 
 2.53.0.851.ga537e3e6e9-goog
 
