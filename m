@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FB831E82D;
-	Thu, 12 Mar 2026 06:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8C6302CD5;
+	Thu, 12 Mar 2026 06:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773297885; cv=none; b=gI75qlp8jQfAsIw3/jlEDJRJoeneW744OxVQ6uuKOQjzys6Gp4p+11tR6x021SedJ6VBo7Ef7Yc0Lo/1DEPFDvbcHd7FaRbMxNx4T5tvnNI5QreTOu7qIPkJWA3VDBaIf3aFJGcofE61IiG+tBV2o4vzKnQo21G0Ka0flqfj5wY=
+	t=1773298372; cv=none; b=IYX1rIHs+2RscnYCcbuHMbYYj19vVb2Qr7cwOHltv+jXfZ9dVpXBYr7EUXlp32G/BkqctixoGzp9pV88BrsnqLtrIfs21JlENmM6F0ZHA5CSCs9U5gJrSPTfEWaZypcus5sOiUCqkl/tBvpv0I+GPxqNnVLCCblRvrktefwhYuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773297885; c=relaxed/simple;
-	bh=M5YBnvCL1leKHEuolly/wZvds8H1SomAROpQHoO7ae8=;
+	s=arc-20240116; t=1773298372; c=relaxed/simple;
+	bh=8I/I+1yrDYc20jEasy+FWA3EIROpAGFwzDYInxrihcs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qs/A8j+BzHUTArD11guzJ/4GhOwJFce8E4kfZYG6vIbFLa5V+cNiV8KP+USA8DniY+oslxvmwcoVa4eL4sbs8W3MyRF44kx+NWQUAFWWj73EfppL8XJp0ZgqCT1TPkBLh/+l3X3flUVofJ3U0OE0lRcigkmrAhAjvt9LwymJR58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZwhoNUM; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=S8rBjwmGstGEm84aJp11XRwOF1a35Gt02TNCFBwqP7sTxIEU5iAhXdpT5uLS35Meurspt9jKJWQI0kGw6iaL9a7c5I5NOxi7FgeItSOFPC+xj81vCQsr7QKy5v/Vp/LI8jmzd6U9QgQBzKOuqw0fPl6OktXOZ7q4njxNCUJkfWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=js1oqny9; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZwhoNUM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="js1oqny9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773297884; x=1804833884;
+  t=1773298370; x=1804834370;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=M5YBnvCL1leKHEuolly/wZvds8H1SomAROpQHoO7ae8=;
-  b=iZwhoNUMzIySR+WxQjsc7mSt6gwLazII1xX5LPYeMvEWRO1zr3hZc8vS
-   wjRSmMDTlTaqz129fri0JtVsvFaJBjYGEfph++5GP5XW1Cl8yUWbJjI6K
-   YcDJC/Q3QN0UGS4ew7LLJoETXlLNthAZXfPCJdZqjiE1rFzVbbuO9ERwn
-   5TNxawxgFRMQG+t+IUPm/VGXatheODlDyCfTHMvLTnLMmZ6vvWqxkQaSZ
-   bpGhe5tzPUmWfNYonCdFyz6UgpMTHQlyrVBARKumPRZwyF05S4IG6uIVE
-   fI0O490uk7fI7L2K7MOaiJHRxHSNF/1vktrrJPZ7bK7saJU3hn8jiSpwn
+  bh=8I/I+1yrDYc20jEasy+FWA3EIROpAGFwzDYInxrihcs=;
+  b=js1oqny9xFYgHspKuDc+XK7cHVAqDRk+SIYpqeTwCMOjBywchrxhxf3Z
+   8cU1reP/PCip3h0zGvvG/WUwticAYlHaYRKbpS0414yofYJtUQC3lO7Hk
+   8xves493c56l4LLnA7v66FbstdSAEQSKkP/Tt8gKEjLW2iNnfc3tD0euL
+   NVoIxZWqW1YS9b7UqBQ0QpGIIErRMQ7BXbtKTJfChHV91i+7UCj76XT3u
+   LShbanNRisjEP2haalZJ0brLQ8urNpKaHDDAMc5VuyJ9u4RvU8elGGbKA
+   hMzhpGw3ZubHtS4pI1I5CHhkFBi3iqsyU7YIdLR6iOyCttC7hvSR/L6/k
    A==;
-X-CSE-ConnectionGUID: Vnm4qapYQ3OsvtGj8LxWCA==
-X-CSE-MsgGUID: 9yt09NJwRRGI8MaBGIBFNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="85856441"
+X-CSE-ConnectionGUID: MJSWCaPQS5ecwtXgKBPCIw==
+X-CSE-MsgGUID: +BiYCcdFTjSjIFBYJIBWAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="85856926"
 X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="85856441"
+   d="scan'208";a="85856926"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:44:44 -0700
-X-CSE-ConnectionGUID: ZzRpTxvsTamnjUctJnUtyA==
-X-CSE-MsgGUID: MQcUBT7MQ/aIV9YmRH5+Xg==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:52:49 -0700
+X-CSE-ConnectionGUID: w7RPRgpxTjuG4hsNC+hbUQ==
+X-CSE-MsgGUID: EOEueEzFQMOVJcRwIZ0hSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="225685755"
+   d="scan'208";a="225688143"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:44:40 -0700
-Message-ID: <e26d0945-6406-4fe2-bd0d-154aacb1d245@linux.intel.com>
-Date: Thu, 12 Mar 2026 14:44:38 +0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:52:46 -0700
+Message-ID: <a856792a-89ee-4de5-9923-106a23c31206@linux.intel.com>
+Date: Thu, 12 Mar 2026 14:52:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,107 +52,106 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] perf/x86: Reduce is_hybrid calls and aid ellision
- of BUG_ON in hybrid_pmu
-To: Ian Rogers <irogers@google.com>, dapeng1.mi@intel.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
- alexander.shishkin@linux.intel.com, eranian@google.com,
+Subject: Re: [RESEND Patch 2/2] perf/x86/intel: Add missing branch counters
+ constraint apply
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
- thomas.falcon@intel.com, xudong.hao@intel.com, zide.chen@intel.com
-References: <CAP-5=fUBy-vzdSB3xsuyU+AKd8o99R7DLgoyyJHxb6Shkfb-8w@mail.gmail.com>
- <20260312054810.1571020-1-irogers@google.com>
- <20260312054810.1571020-2-irogers@google.com>
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ stable@vger.kernel.org
+References: <20260228053320.140406-1-dapeng1.mi@linux.intel.com>
+ <20260228053320.140406-2-dapeng1.mi@linux.intel.com>
+ <20260311201625.GW606826@noisy.programming.kicks-ass.net>
+ <0a720411-0b24-42eb-9897-856b1175aa82@linux.intel.com>
+ <20260312064145.GA606826@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260312054810.1571020-2-irogers@google.com>
+In-Reply-To: <20260312064145.GA606826@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-LGTM.
-
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
 
-On 3/12/2026 1:48 PM, Ian Rogers wrote:
-> Use the capabilities of the PMU rather than the global variable
-> perf_is_hybrid to determine if a hybrid pmu has been passed to the
-> main accessors. As the pmu capabilities check mirrors that in
-> is_x86_pmu, the BUG_ON(!is_x86_pmu...) in hybrid_pmu can be elided as
-> it is provably always false (with sufficient function inlining, common
-> sub-expression elimination, etc.) in its most common uses.
+On 3/12/2026 2:41 PM, Peter Zijlstra wrote:
+> On Thu, Mar 12, 2026 at 10:31:28AM +0800, Mi, Dapeng wrote:
+>> On 3/12/2026 4:16 AM, Peter Zijlstra wrote:
+>>> On Sat, Feb 28, 2026 at 01:33:20PM +0800, Dapeng Mi wrote:
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index 4768236c054b..4b042d71104f 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -4628,6 +4628,19 @@ static inline void intel_pmu_set_acr_caused_constr(struct perf_event *event,
+>>>>  		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
+>>>>  }
+>>>>  
+>>>> +static inline int intel_set_branch_counter_constr(struct perf_event *event,
+>>>> +						  int *num)
+>>>> +{
+>>>> +	if (branch_sample_call_stack(event))
+>>>> +		return -EINVAL;
+>>>> +	if (branch_sample_counters(event)) {
+>>>> +		(*num)++;
+>>>> +		event->hw.dyn_constraint &= x86_pmu.lbr_counters;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>  static int intel_pmu_hw_config(struct perf_event *event)
+>>>>  {
+>>>>  	int ret = x86_pmu_hw_config(event);
+>>>> @@ -4698,21 +4711,18 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>>>  		 * group, which requires the extra space to store the counters.
+>>>>  		 */
+>>>>  		leader = event->group_leader;
+>>>> +		if (intel_set_branch_counter_constr(leader, &num))
+>>>>  			return -EINVAL;
+>>>>  		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+>>>>  
+>>>>  		for_each_sibling_event(sibling, leader) {
+>>>> +			if (intel_set_branch_counter_constr(sibling, &num))
+>>>> +				return -EINVAL;
+>>>> +		}
+>>>> +
+>>> Do the new bit is this, right?
+>> Actually not, the key change is the below one. The last event in the group
+>> is not applied the branch counter constraint.
+>>
+>> Assume we have a event group {cycles,instructions,branches}. When the 3rd
+>> event "branches" is created and the function intel_pmu_hw_config() is
+>> called for the "branches" event to check the config.  The event leader is
+>> "cycles" and the sibling event has only the "instructions" event at that
+>> time since the 3rd event "branches" is in creation and still not added into
+>> the sibling_list. So for_each_sibling_event() can't really iterate the
+>> "branches" event.
+>>
+>>
+>>>> +		if (event != leader) {
+>>>> +			if (intel_set_branch_counter_constr(event, &num))
+>>>>  				return -EINVAL;
+>>>>  		}
+>>> The point being that for_each_sibling_event() will not have iterated the
+>>> event because its not on the list yet?
+>> Yes. 
+>>
+>>
+>>> That wasn't really clear from the changelog and I think that deserves a
+>>> comment as well.
+>> Sure. I would add comment and enhance the changelog to make it clearer. Thanks.
+>>
+> I already fixed everything up. Should be in queue/perf/urgent.
+
+Thanks. 
+
+Peter, As Ian points out, the patch "perf/x86: Update cap_user_rdpmc base
+on rdpmc user disable state" has a bug
+(https://lore.kernel.org/all/CAP-5=fWr2L6miiFZ6Km3HYEdmqp3T0NBL=WY3buKdKztW+HvmA@mail.gmail.com/).
+I would posted a patch to fix the issue. Thanks.
+
+
+
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Only build tested.
-> ---
->  arch/x86/events/perf_event.h | 52 +++++++++++++++++++-----------------
->  1 file changed, 28 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index f1123c95d174..7990d86ef233 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -802,34 +802,38 @@ static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *pmu)
->  extern struct static_key_false perf_is_hybrid;
->  #define is_hybrid()		static_branch_unlikely(&perf_is_hybrid)
->  
-> -#define hybrid(_pmu, _field)				\
-> -(*({							\
-> -	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;	\
-> -							\
-> -	if (is_hybrid() && (_pmu))			\
-> -		__Fp = &hybrid_pmu(_pmu)->_field;	\
-> -							\
-> -	__Fp;						\
-> +
-> +#define hybrid(_pmu, _field)						\
-> +(*({									\
-> +	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;			\
-> +	struct pmu *__pmu = _pmu;					\
-> +									\
-> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-> +		__Fp = &hybrid_pmu(__pmu)->_field;			\
-> +									\
-> +	__Fp;								\
->  }))
->  
-> -#define hybrid_var(_pmu, _var)				\
-> -(*({							\
-> -	typeof(&_var) __Fp = &_var;			\
-> -							\
-> -	if (is_hybrid() && (_pmu))			\
-> -		__Fp = &hybrid_pmu(_pmu)->_var;		\
-> -							\
-> -	__Fp;						\
-> +#define hybrid_var(_pmu, _var)						\
-> +(*({									\
-> +	typeof(&_var) __Fp = &_var;					\
-> +	struct pmu *__pmu = _pmu;					\
-> +									\
-> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-> +		__Fp = &hybrid_pmu(__pmu)->_var;			\
-> +									\
-> +	__Fp;								\
->  }))
->  
-> -#define hybrid_bit(_pmu, _field)			\
-> -({							\
-> -	bool __Fp = x86_pmu._field;			\
-> -							\
-> -	if (is_hybrid() && (_pmu))			\
-> -		__Fp = hybrid_pmu(_pmu)->_field;	\
-> -							\
-> -	__Fp;						\
-> +#define hybrid_bit(_pmu, _field)					\
-> +({									\
-> +	bool __Fp = x86_pmu._field;					\
-> +	struct pmu *__pmu = _pmu;					\
-> +									\
-> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
-> +		__Fp = hybrid_pmu(__pmu)->_field;			\
-> +									\
-> +	__Fp;								\
->  })
->  
->  /*
