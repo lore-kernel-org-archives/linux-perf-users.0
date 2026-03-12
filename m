@@ -1,250 +1,217 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EF4374E5D
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 15:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EFA38238F
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 15:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773328625; cv=pass; b=MahuNGoeFq9vrb8boevESCktpdXd3UUAkYe/T4IicqsW0gR5Z97OqZEEthvBPcD06eeuUNDs1sJrVsR50WWGkKb3/Cq7L529M4Z3h/h+12l+RI75FbrvBwWc5KS+dO5M9DCLMEGI3JJJBrInyHIxtRiOWlWCpBHg7AoeplDvBK0=
+	t=1773330896; cv=pass; b=BurtIRqLe3lKHgKxdbL03HhyyfChG2bM9NoTLgB50X88ErkYS8kSfKx0pUzyRafbkXnh43iTMynniyS0KIdt9eJ0VbA3JVdJ/Z5R4yvMYKJrcgrpv4XExnE+r77rRpKfVwKSrCyb+jz4HviBBaJIh6tyr1MHmviLakfyQGpi90Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773328625; c=relaxed/simple;
-	bh=QrFKcPwnyEwqzleEsR1Z0gp9z5JyvBhZTzw8OGPfcz0=;
+	s=arc-20240116; t=1773330896; c=relaxed/simple;
+	bh=ZS+/ItMjmQy14ENZqWve/PidZqa0ImY+HlFy6RCiPB0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=piWUe+YAVUbpTd0W7N9c3hnbtj0xm96rR/JSBFvyKb9mnC2KMIzfqUupQzhhdP35zlj3lnJ05N5ZBmyAM2HO/mHAfPeXtsQiDfVkZgVI1O6E1zY9RPAVeFOM6AsbYI7RekOwFsTprbigUQCJEBneR1HzlN3k8IRtGvIrugoT07s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVkvOes2; arc=pass smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=u+5gluUKyEDUleb4f9ojh2txUL82mEfv1Vm3HBGDWc2+KfFwgyHNVg52l+1U9Wl6rTKNLQaO1kg9zQn0XtS4mBw1Y6iz0dCzQYWoEg6gnRm31DyOrIWJW6obY5YvYOVZ/virqMTojWeczqaOrpapcQHXqp7MUNUYYdKgdM68N30=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UY5Yaoes; arc=pass smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVkvOes2"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ae3f822163so102655ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 08:17:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773328622; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UY5Yaoes"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2aea4ebb048so102845ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 08:54:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773330895; cv=none;
         d=google.com; s=arc-20240605;
-        b=GoxvV2HW3h+Nfb1drjIMs6DtBANaJnKln8UIHSoLGCc233bYIKk3t7V6tGLORzPPDI
-         vJ9h3EeLgN2v/ZBg+5n3fy1DNIQhtRc4I2+WAgARkofEJ4KkVCzDgiiCrz0vhTZMM8t8
-         QbZQu/goZ9Z84zUy2jbN8O6CPw34zwA6dTB4y63Hb/P72GK6AMt8e/5jegpbTTiIB+lY
-         683PAC6JuFInjvzWLcrzOJmVk565woJ5ptw5ozYXgfdqSvx/L3n/TX8w2Bv7PKen01mX
-         QGl+CShE/Q44rNrJmJ+7eK/efifBGzkdDJT1Xq9VaYTFAWrCUDsY44c2e8iZDUaR8G0C
-         op7Q==
+        b=BNmFGdcj0MZPrLHEyJzbKF3aMlmCGT7Vw725Nsx0nWNyAlzZrEWL4xohjkrDx34fKz
+         cgMxYDbBwXmpHXNFmaCFF7QYY9tr6Kd9dSbaOh4yZoivEES+2CgA7LJvQEHb/JaVnKrq
+         P+jqW/qXHR4qKoOxxTEjwe+FiGhVOIK6C6xKYHL4gqInHM100WGOHCEkObcmkdvNiK0H
+         zwJA0d6MpgT9QBjtyqsOUVAtDh8qHlvoqBkiTyUBjEUIf0jFjDWe8lGpwBVMx2/Mefl7
+         +C5xaQgtIwi+ORoKuYgBV664Qmceyp6oIpcbwWE5ubmK3ORL2ALRDTtaD8tmu+uC3Enh
+         WfQw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Oh8PRWTWtMdEVxzq0YheWN7NaGFDtw5bIAmE/DTrEdI=;
-        fh=AZ99vVmS8x4GJGch8LSaLaAom1KFz94rvHrYcil7LLU=;
-        b=ACB777U/bm8O0vN0JKBpNZuuxOlMU2qSlF+TQro/ZEGDadZO8pDtvf7FdP/ujU3qTd
-         ePkQDbRygK0fJV3rDdZwHDCmcmywI3JbwQzOi+eueiU6aKJM9F8W/TmaG9Uof9uSu5pr
-         3l+zberDeJZ0cE+euQGoF0VmLfyBknLfNhmQJm61gT9upttGEhjGKu2uDu7Hf/Re8atF
-         VKT1sNhkEssEras7NADF0/OymTgF9IaUfc9QblgZDxygDwaSPlZnJwufvqKIaRoSY2ik
-         8MaP0QHGEmR0GsgCM7EUPJ1ssR1++oyIshvmaIVco9lUVRgsmdFDuuXI4Ic5y6nu7TIN
-         7bHA==;
+        bh=BE3iXs2Z05/7FfoFDbanKcpxzLhlbH+XfqAIeLpZL/0=;
+        fh=EalgVXrr5sxl9YdXDzXZcKNnxEuXcNO2Dl9zmDX0GCI=;
+        b=MfO8HbY2G+ZpY1V15tukMLIw/qbcTiVCbFiC8kRZjhvkF3z2izSlh2w+qp+vGBDWKe
+         7twqKQDyKnRQJ+xOhD8Thd0AuuDxIwj0D6ZOjCga1+K3yAczN5xuEb4raquA+2RsP3Jd
+         hslMr0HI5AwH92hUT3/g6JWEqikQDtVkIM+vztfXc3ngfgtC7J9vU3T0bcDoD/NpxCKv
+         eAcdUIYm60Mx3vFo+o9p5Xyy0wmu+hGvwCKWPr6qL4UAvduZz7ighyCUeqj00PkrFrtK
+         7yovnObteIa5XRIWxYzFyr9SiAaBx2dG+Q3VY9B6bTOnJEicilddKNOcnKXB7oBqptpZ
+         Zatw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773328622; x=1773933422; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773330895; x=1773935695; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Oh8PRWTWtMdEVxzq0YheWN7NaGFDtw5bIAmE/DTrEdI=;
-        b=iVkvOes2QcQ/rlX4Qaad1UoN/KXeHeUQauIKt1W9F3rwbfmjgliNxo7wLDK2znJSUE
-         E9Zq895s7aO03ysrnrXMDfCHqVX9dromfeAWxkCHWRo4hiNPVYOkSpjGfrxEOI0Ab9Oq
-         FvUhzUgA0I/PP6InNrYWTaxXCG+f5Z4BkrxPmQq7Fp8poQcy6sI5yKIsf1fwUEyGcJGZ
-         Yqvo5PefrQL5XYKWeBVHua9PtFWJ1zGOsILgyMEVzzXR1WfLVpnF62FdObDmuvFW5Bx6
-         yahgHM0At1mWlJMFXmZmjE0soGMWvkoSyOKb5hhVZBEqSSK7qtC5PTnUiBELsq1oq2kb
-         nhMw==
+        bh=BE3iXs2Z05/7FfoFDbanKcpxzLhlbH+XfqAIeLpZL/0=;
+        b=UY5YaoesNhP8sgvAkKYeEyR+97Apbz1rEQU5vAf+Oh6ngu8q1ojSJB/CXOhl2nYJRB
+         IIT7hcEqsDkPOBhdWr1fcAPlG7HRBRiRSaS8LjOSajLkSFaVTvTta6YNs+foy6VFm7we
+         cc5lPX+8nXVmqUI7JPNLCm51eQ1PI7ineVYRoc//XCUwPaLytfBDQognu9COQSLXbgKz
+         9m+0aV3myWVFpS7hiYHdoxgkLC3/aoj84VqeLbIxu0mfJACB9WJqZ161i5goZ8kFf4E4
+         6UoZ3pUm5uCOJT0T44k6VF15JuCahmnmxu9vSt0D6A6D7/lEqjlcaiWprIUC0LuDn7en
+         e6Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773328622; x=1773933422;
+        d=1e100.net; s=20230601; t=1773330895; x=1773935695;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Oh8PRWTWtMdEVxzq0YheWN7NaGFDtw5bIAmE/DTrEdI=;
-        b=YLfWq5S9muFuxGG7ryJq6VXdr7HOMslhlNeORuiHmpUUIxZtuZHuvB6UJbGExOWV5V
-         QeLOZls1FFb+n36xa3PjdaL8nlUFEC0tqh9tTwoEmnjx0LhUSm7b5OgSEmZvjgJ//sY1
-         H2XVXjhKraIMoWNHi2G+uF3E95+7al22Ue2jcJ1bpTaT/1iGQFmE0FTFRCAhIytLQtmn
-         RAwageKtZ8RvCRyVCMhWI756bT8X66vwJJw6YngH5a5bc2+wG7PlgJv1jRcLn76GF0k3
-         8xd9QBBcMwnFvj3ZTtP8Veu77/7ipOz/yIjNYgwnQ/sOThJSVgFT290jZ/EQuDmbHBYf
-         wBjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCgo3I/t/lcXoOJS2K+EuilL0CzpByRSXre2QoVNBOhK4B4Cka3MFumjPjpmW0gWHw86xeo2Zx+jT5FgcXmrKc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw84gOS/bDl9NLuu7GgKEve0VT5wISc+BvtVAeTbPilLwFmuFeO
-	bjfMQQ6SqUaE1coE1FbB3u2stEPrGL+jcpD0hxEVgluB3JV7+vyCScvkmT6WpOJRgR6IR0x0dTj
-	lxkAi3JraAGl7nwf4xWJHb0FboKMoyjwPqiQ6fV8g
-X-Gm-Gg: ATEYQzz9ehSKAPuuaRU4y18Yc6PTAla9m44ohG/UFhbH4xGkE5wN3pg1deGhdkvWhZc
-	ZlBTIAF72hmdb8IAt5taihsjQXUVdAscyhjISeQqoGXsv8pvHTbLW63a/OGJvnft5JfLWFnqqoF
-	/D5LeoFElhROp35537cEGJ53FJcb2tJEodpb2uU3iEfIVVm3hhxrDRYcyGFe016qyLeD6ptrZow
-	+WkKqRpntviawI1hwX+f/JdcMGHHtwCJQqiX9qu5q8tMNr1DWrx/nTGiEB9bARYytdKEWr0cnBG
-	WZ/NW6+czsabAH7RIzygu1FodaGfTkqQYqPZ
-X-Received: by 2002:a17:903:3d0b:b0:2ae:4808:bd99 with SMTP id
- d9443c01a7336-2aebad83d36mr3150505ad.2.1773328621594; Thu, 12 Mar 2026
- 08:17:01 -0700 (PDT)
+        bh=BE3iXs2Z05/7FfoFDbanKcpxzLhlbH+XfqAIeLpZL/0=;
+        b=a986PI3wlxeSIIhrY4Zz3oFXF184ongr4pyMJaSTJjzf79IwjEPTP6yyoPb08mgwYf
+         Q6XBLImnWFIFD6fph9CitBGkQ9UEdnfrP/sVh2oDE1D844eH7QmON9ojWSAHaNSltq5M
+         4zywK8JLsqqZlmYo7yrf3vCo4eIT5/grjTYxMLcA+HvixQ8q/VQDsj7UsZXEVGSampXh
+         /B8jd3e0SjppcR7EfsjG9f8Iw06mxc2XgwcG0Mjnh2ZrTjkTL1gqJeFaEnZ0q9hNBPo/
+         UA8KAhUMpeK1RQ5Xo6c+iC4DxIY43LMREpZr9vyD7lleLR0exD8AAqK5GCTIwLe0LQdV
+         E2dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV99PW9ek/bX0EzurcmbFj9CDb+8LYOzlL0UEiSaKSScpsiIQ/+OBl3QP8ZpdMccPstbQBr6DAk9INV6PWx4r1m@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5h1k4F/bKAGvmQcbFpKASKjbv6moZpdnXyrEGv8NoDUWDgwd/
+	J9QsxghpMq1+Nc7Fcc6i9pogUl1xAYYiD4dET6Uttnc4g9OB5YAK2DTtBB4kRHHJRYhZgxs1L0E
+	rXep9EXOGBHERCUU/tWJ5kbpC+4kj9hESTZ593Yi9
+X-Gm-Gg: ATEYQzyoJ4SdEAvpbcSC89mh3jxjttbh8yj1VW8ocYwQQua8bt38oKihcKx+NVoBmb+
+	nB95GESfSioTEqAHo50pvwAsDXyz1Jxv4QPf7FUvP76WlcV6CNMW3Rv/euSEyhSXDdkxW1Os4Mw
+	vLQUABY7irzyNDWOmX6UdkOIP683RrKEQ4rNam4WruRxS+7x6nsUaVl23gSJBkD9j9wUXJgJ+Ef
+	24Rq2a+npNqjZtKaCsgyPm+Gq2VX6P7I6rS1Amujc8+aOg/1aw+kQYQbETyiD5qSpi4ANmXf72z
+	oQxpSuqfCmVAjixgL4QMtmzkwBIc8iyhVo5T
+X-Received: by 2002:a17:902:bf08:b0:2ae:c566:bd99 with SMTP id
+ d9443c01a7336-2aec566cbf7mr758665ad.22.1773330894106; Thu, 12 Mar 2026
+ 08:54:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fUBy-vzdSB3xsuyU+AKd8o99R7DLgoyyJHxb6Shkfb-8w@mail.gmail.com>
- <20260312054810.1571020-1-irogers@google.com> <20260312083159.GD606826@noisy.programming.kicks-ass.net>
- <1627ec0d-50d3-4caa-a75a-a952a29cc664@linux.intel.com>
-In-Reply-To: <1627ec0d-50d3-4caa-a75a-a952a29cc664@linux.intel.com>
+References: <20260312031928.1494864-1-irogers@google.com> <20260312061628.1593105-1-irogers@google.com>
+ <20260312061628.1593105-3-irogers@google.com> <05b884dc-d0bf-4767-8413-40ddb7c0f8fb@linux.ibm.com>
+In-Reply-To: <05b884dc-d0bf-4767-8413-40ddb7c0f8fb@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Mar 2026 08:16:50 -0700
-X-Gm-Features: AaiRm53Ns1nzeQ1WCjmASMJfVy8j20zvTG7Mkio10dpOpOUrrekOMhD26YWYk7M
-Message-ID: <CAP-5=fV6ZDY-wvjfMHFPTpbXsR+3a0-HiBVr-Nxv+dsr7kXzhg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf/x86: Avoid inadvertent casts to x86_hybrid_pmu
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, dapeng1.mi@intel.com, acme@kernel.org, 
-	adrian.hunter@intel.com, ak@linux.intel.com, 
-	alexander.shishkin@linux.intel.com, eranian@google.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, namhyung@kernel.org, thomas.falcon@intel.com, 
-	xudong.hao@intel.com, zide.chen@intel.com
+Date: Thu, 12 Mar 2026 08:54:43 -0700
+X-Gm-Features: AaiRm52XnLLGRVsSOtUv5kOWGcQRyED6TdG_wWyxIGXeGQjR4wuDdkjk1jeva2M
+Message-ID: <CAP-5=fXoAZ2fheQZ-kZe+JKoV=SbH=vS4mpFcVtS7OKsL5PTXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf evsel: Don't configure framepointer
+ callchains on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	namhyung@kernel.org, sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 12, 2026 at 2:44=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
+On Thu, Mar 12, 2026 at 5:45=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
->
-> On 3/12/2026 4:31 PM, Peter Zijlstra wrote:
-> > On Wed, Mar 11, 2026 at 10:48:09PM -0700, Ian Rogers wrote:
-> >> The patch:
-> >> https://lore.kernel.org/lkml/20260311075201.2951073-2-dapeng1.mi@linux=
-.intel.com/
-> >> showed it was pretty easy to accidentally cast non-x86 PMUs to
-> >> x86_hybrid_pmus. Add a BUG_ON for that case. Restructure is_x86_event
-> >> and add an is_x86_pmu to facilitate this.
-> >>
-> >> @@ -779,6 +795,7 @@ struct x86_hybrid_pmu {
-> >>
-> >>  static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *=
-pmu)
-> >>  {
-> >> +    BUG_ON(!is_x86_pmu(pmu));
-> >>      return container_of(pmu, struct x86_hybrid_pmu, pmu);
-> >>  }
-> > Given that hybrid_pmu will have PERF_PMU_CAP_EXTENDED_HW_TYPE, and we
-> > should really only use hyrid_pmu() on one of those, would not the
-> > simpler patch be so?
+> On 3/12/26 07:16, Ian Rogers wrote:
+> > Frame pointer callchains are not supported on s390. Ignore the option
+> > and print a warning.
 > >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > v2: Only disable user callchains as AI is telling me native "kernel"
+> >     callchains are supported on s390.
+> > ---
+> >  tools/perf/util/evsel.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
 > >
-> > diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.=
-h
-> > index fad87d3c8b2c..13ec623617a9 100644
-> > --- a/arch/x86/events/perf_event.h
-> > +++ b/arch/x86/events/perf_event.h
-> > @@ -779,6 +779,7 @@ struct x86_hybrid_pmu {
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index bd14d9bbc91f..fa21b48cba86 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1076,6 +1076,12 @@ static void __evsel__config_callchain(struct evs=
+el *evsel, struct record_opts *o
+> >               attr->exclude_callchain_user =3D 1;
+> >       }
 > >
-> >  static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *p=
-mu)
-> >  {
-> > +     BUG_ON(!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE));
+> > +     if (EM_HOST =3D=3D EM_S390 && (evsel->core.attr.sample_type & PER=
+F_SAMPLE_CALLCHAIN) &&
+> > +         !evsel->core.attr.exclude_callchain_user) {
+> > +             pr_warning("Excluding user callchains that are not suppor=
+ted on s390. Try '--call-graph dwarf'\n");
+> > +             evsel->core.attr.exclude_callchain_user =3D 1;
+> > +     }
+> > +
+> >       if (param->defer && !attr->exclude_callchain_user)
+> >               attr->defer_callchain =3D 1;
+> >  }
 >
-> It looks we can't add either !is_x86_pmu(pmu) or !(pmu->capabilities &
-> PERF_PMU_CAP_EXTENDED_HW_TYPE) here. hybrid_pmu() is called by the hybrid=
-()
-> marco or other variants, and hybrid() macro is called in many places of t=
-he
-> intel_pmu_init(), like the update_pmu_cap() , but the flag
-> PERF_PMU_CAP_EXTENDED_HW_TYPE is still not set for the hybrid
-> pmu->capabilities until intel_pmu_init() ends and the hybrid pmus are
-> registered. Then it would cause the unexpected kernel crash.
+> Ian, thanks very much.
+> Your patch set helps a lot. However there is a small nit (which is mandat=
+ory). Please add these lines
 >
-> [    1.945128] kernel BUG at arch/x86/events/intel/../perf_event.h:798!
-> [    1.946131] Oops: invalid opcode: 0000 [#1] SMP NOPTI
-> [    1.947127] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-> 7.0.0-rc3-perf-urgent-gc8b4b538960c #460 PREEMPT(full)
-> [    1.947127] Hardware name: Intel Corporation Panther Lake Client
-> Platform/PTL-UH LP5 T3 RVP1, BIOS PTLPFWI1.R00.3171.D00.2504220409 04/22/=
-2025
-> [    1.947127] RIP: 0010:intel_pmu_init+0x25c9/0x5fd0
-> [    1.947127] Code: db 44 ff 4c 89 35 c7 da 44 ff 48 89 2d 80 da 44 ff e=
-9
-> 49 df ff ff 83 7a 68 04 0f 84 1b f9 ff ff f6 42 6d 01 0f 85 11 f9 ff ff
-> <0f> 0b 31 d2 48 89 df
-> [    1.947127] RSP: 0000:ffffd5dc800f7db8 EFLAGS: 00010246
-> [    1.947127] RAX: 0000000000000001 RBX: 00000000000abfff RCX:
-> 0000000000000000
-> [    1.947127] RDX: ffff8f40856bc000 RSI: 0000000000000001 RDI:
-> 00000000000000ff
-> [    1.947127] RBP: 0000000000000001 R08: ffffffffffffffff R09:
-> 0000000000000004
-> [    1.947127] R10: ffffffffbd4e2500 R11: 0000000000000006 R12:
-> ffffffffbc26438b
-> [    1.947127] R13: 0000000000000000 R14: 0000000000000000 R15:
-> 0000000000000000
-> [    1.947127] FS:  0000000000000000(0000) GS:ffff8f482214f000(0000)
-> knlGS:0000000000000000
-> [    1.947127] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.947127] CR2: ffff8f47ff7ff000 CR3: 00000004c1434001 CR4:
-> 0000000000f70ef0
-> [    1.947127] PKRU: 55555554
-> [    1.947127] Call Trace:
-> [    1.947127]  <TASK>
-> [    1.947127]  ? __pfx_init_hw_perf_events+0x10/0x10
-> [    1.947127]  init_hw_perf_events+0x2af/0x4b0
-> [    1.947127]  ? __pfx_init_hw_perf_events+0x10/0x10
-> [    1.947127]  do_one_initcall+0x52/0x250
-> [    1.947127]  ? _raw_spin_unlock+0x18/0x40
-> [    1.947127]  ? __register_sysctl_table+0x143/0x1a0
-> [    1.947127]  kernel_init_freeable+0x21d/0x340
-> [    1.947127]  ? __pfx_kernel_init+0x10/0x10
-> [    1.947127]  kernel_init+0x1a/0x1c0
-> [    1.947127]  ret_from_fork+0xcb/0x1c0
-> [    1.947127]  ? __pfx_kernel_init+0x10/0x10
-> [    1.947127]  ret_from_fork_asm+0x1a/0x30
-> [    1.947127]  </TASK>
-> [    1.947127] Modules linked in:
-> [    1.947127] ---[ end trace 0000000000000000 ]---
-> [    1.948128] RIP: 0010:intel_pmu_init+0x25c9/0x5fd0
-> [    1.949128] Code: db 44 ff 4c 89 35 c7 da 44 ff 48 89 2d 80 da 44 ff e=
-9
-> 49 df ff ff 83 7a 68 04 0f 84 1b f9 ff ff f6 42 6d 01 0f 85 11 f9 ff ff
-> <0f> 0b 31 d2 48 89 df
-> [    1.950129] RSP: 0000:ffffd5dc800f7db8 EFLAGS: 00010246
-> [    1.951128] RAX: 0000000000000001 RBX: 00000000000abfff RCX:
-> 0000000000000000
-> [    1.952128] RDX: ffff8f40856bc000 RSI: 0000000000000001 RDI:
-> 00000000000000ff
-> [    1.953128] RBP: 0000000000000001 R08: ffffffffffffffff R09:
-> 0000000000000004
-> [    1.954129] R10: ffffffffbd4e2500 R11: 0000000000000006 R12:
-> ffffffffbc26438b
-> [    1.955128] R13: 0000000000000000 R14: 0000000000000000 R15:
-> 0000000000000000
-> [    1.956128] FS:  0000000000000000(0000) GS:ffff8f482214f000(0000)
-> knlGS:0000000000000000
-> [    1.957128] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.958128] CR2: ffff8f47ff7ff000 CR3: 00000004c1434001 CR4:
-> 0000000000f70ef0
-> [    1.959128] PKRU: 55555554
-> [    1.960128] Kernel panic - not syncing: Attempted to kill init!
-> exitcode=3D0x0000000b
->
-> I'm not sure if we can move the flag PERF_PMU_CAP_EXTENDED_HW_TYPE settin=
-g
-> earlier and eventually find a good place to set the flag. Even it's
-> possible, but could be risky ...
->
-> Ian, if you don't object, I would suggest to drop the bug_on(). I would
-> adopt other changes and add the is_x86_pmu() check in the
-> x86_pmu_has_rdpmc_user_disable() to fix the issue.
+>   evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_CALLCHAIN;
+>   evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_REGS_USER;
+>   evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_STACK_USER;
 
-No objections from me, these patches aim to improve the code's typing
-and were intended more as a suggestion easily expressed in code than
-by email :-)
+So these lines are dropping callchain from the sample_type which means
+the kernel stack won't be sampled. AI was telling me this worked, but
+I'm guess it was wrong. I think rather than this it is just cleaner
+never to set the bits in the perf_event_attr, more like what v1 of the
+patch did:
+https://lore.kernel.org/lkml/20260312031928.1494864-3-irogers@google.com/
 
-I feel that the x86_pmu and x86_hybrid_pmu are something of a mess,
-making features like counter partitioning harder than necessary if the
-code were structured better - ie 1 partition per PMU, which means
-multiple PMUs even without hybrid. It'd be nice if we could implement
-something like the BUG_ON to at least ensure correctness in the
-current code. I'll try to find other broken casts/container_ofs in the
-code by visual inspection.
+> to the new if(EM_HOST =3D=3D ...) above.
+> The s390 CPU Measurement sampling device driver does not check on the att=
+r.core.exclude_callchain_user
+> member, but on the sample_type bit mask. It returns -EOPNOTSUPP when this=
+ bit PERF_SAMPLE_CALLCHAIN
+> is set. This solves the invocation with command line flag -g as in
+>  # ./perf record -v -e cycles  -g  -- perf test -w noploop
+>  ...
+>  perf record: Captured and wrote 0.183 MB perf.data ]
+
+Right because the callchain was removed from all the samples. We can't
+fix old kernels (other than by using fix tags); is there a possibility
+of adding the exclude_callchain_user to the s390 perf driver for the
+sake of kernel callchains? It seems better than providing no
+callchain.
+
+> Also I discovered that the fallback when using --call-graph dwarf command=
+ line flag still fails:
+>  # ./perf record -v -e cycles  --call-graph dwarf -- perf test -w noploop
+>  ...
+>  Warning:
+>  Trying to fall back to excluding guest samples
+>  Error:
+>  Failure to open event 'cycles:H' on PMU 'cpum_cf' which will be removed.
+>  cycles:H: PMU Hardware doesn't support sampling overflow-interrupts. Try=
+ 'perf stat'
+>  Error:
+>  Failure to open any events for recording.
+>
+> The reason is in __evsel__config_callchain() which calls evsel__set_sampl=
+e_bit(evsel, CALLCHAIN)
+> and sets the PERF_SAMPLE_CALLCHAIN bit in evsel->core.attr.sample_type. I=
+t also sets the
+> member attr->exclude_callchain_user =3D 1 and sets bits REGS_USER and _ST=
+ACK_USER.
+> All three bits are not supported by s390.
+
+I'm confused by this and your previous testing that showed the
+`--call-graph dwarf` worked. You need the sampled registers for dwarf
+unwinding to provide initial register values for the unwinder.
+
+> I have modified your 2nd patch and appended it.
+>
+> I find all these bits in sample_type and the attr.exclude_XXX stuff very =
+confusing. If there
+> is a more consistant way of checking these feature, please let me know.
+
+Ok, let me check it out.
+
+> Thanks again for looking into this.
 
 Thanks,
 Ian
 
-> Thanks.
+> --
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> IBM Deutschland Research & Development GmbH
 >
-> >       return container_of(pmu, struct x86_hybrid_pmu, pmu);
-> >  }
-> >
+> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+>
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+>
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
