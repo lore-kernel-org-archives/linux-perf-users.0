@@ -1,120 +1,155 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB48D27470;
-	Thu, 12 Mar 2026 08:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9026F33508E;
+	Thu, 12 Mar 2026 08:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773302899; cv=none; b=WYoPH+XboNrFykN/yKeR1JzD6+mvMxIkv8HUvPzxx6qOhn5fiRX7YqB0S1o4HQ5sTb9SglQY0xHJFIoOXidLcbY1R7Sn+ekS1AIovG1HhF3w9IZKGkgOikbsWtIYgF1Cl0tfcgqdgLX2WE59wbnY3kt/qfFpXyhnnGMOaCl2n34=
+	t=1773303926; cv=none; b=TP4+0fD1rm4/kLNEkQeeDBS1bzlBtXAERFJKTKVO+RSX/FjoTanyi2K44L9Fcv+We2sAzVP7NnvWNQLXuaoBR3h2S2Hs8uEpObDAdbRNZiwOKTJU644fWjlpIqCawMNbBqYt+CgymiadgHX+yCqjIeNmrX0y6JRd/ezeWIblO4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773302899; c=relaxed/simple;
-	bh=8QAgi4tsYCemBagrhQjy0Y/ztU848dHP1HOW/hQnYak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jd3ROnUiJrNzA7LWSplQ67qk4hd7hEqw2CQKPiAbWhajg4DyeJ02PGOGEexNvNGWeYeP8JkXD5LeuJP9tqV2y5/gwsCmBzE306UiE0qXyZMAMkiVUXoAxryhGWFgrXTXpFuyoflcbUjAD+pN4DdBVJPOYONT8sSrJxpQd/HbJZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=teNq9ell; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1773303926; c=relaxed/simple;
+	bh=AsIbTjdcXoAXjraFeAUw2O89rLp6jFYrPwS8CcDC9gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SDGKSwEKIRLtOmmKiB8Cgb5LCwZodKkrVUfoTgvIxj2WUD0gnVSCyrKeHIkSXjCgTP7nhwGiL2qof0JQc138VCaMixra8IAyfwihUcMOFUo5IFinmjS6s/KR/ZwLOojAAw7JFwQYpBchvP65dpYuVKJhtwG+9FI2VoFJDA2R+mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DLoNZXEk; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="teNq9ell"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=m+AGDKIE6hXp/8VOqIEg9/kQz3a6B7IfLZxRpsrZlLc=; b=teNq9ellKTdTiEw8CgadARx2XH
-	LPBtCpFWtUVYzLAmUgMCs4SmnqQc7YNIefAvYFRu5CGx19swkhzNA/48Aivr3cwoA6P1sc8VE+znz
-	K5GtiT5Gonw50+RiI7T69ZiWLfl4Tf8G0TTk+RNvgvwos2uZ+CbTxdrUFTUgHyjr3yl/wibf+xeWt
-	qQTS4YUO5fxyWD0m9NYuLrYrAjmI/LNa4kupmAE4+yJmwX01LIMU5d4TijOf2heQkz5M6uQ6tpBRt
-	FhBJceHidowKp3TUDdo4O2+bAeej0Xx6kiKGdcoz0dhNc5/3xMe30Fa4GlWxfIwzFbT8XyozdIOju
-	TRYUjfHw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0b52-0000000B1Mc-2b9j;
-	Thu, 12 Mar 2026 08:07:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 288A9301150; Thu, 12 Mar 2026 09:07:40 +0100 (CET)
-Date: Thu, 12 Mar 2026 09:07:40 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Carlos Llamas <cmllamas@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Kees Cook <kees@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Jens Remus <jremus@linux.ibm.com>, Juergen Gross <jgross@suse.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	David Kaplan <david.kaplan@amd.com>,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	James Morse <james.morse@arm.com>, Thomas Huth <thuth@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org,
-	Will McVicker <willmcvicker@google.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] static_call: use CFI-compliant return0 stubs
-Message-ID: <20260312080740.GC606826@noisy.programming.kicks-ass.net>
-References: <20260309223156.GA73501@google.com>
- <20260311225822.1565895-1-cmllamas@google.com>
- <20260311231406.GZ606826@noisy.programming.kicks-ass.net>
- <abIFwSF1RqhC96C2@google.com>
- <742d77a8-3c53-4814-9dd6-81e8317cd829@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DLoNZXEk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773303923; x=1804839923;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AsIbTjdcXoAXjraFeAUw2O89rLp6jFYrPwS8CcDC9gs=;
+  b=DLoNZXEkxyhEOL4kJyOSEbdcPHdwm0+5Egny6AVHW6PaO5y1SZ+iEvgM
+   +ivxU7QYBaVHWZJSAFObu25a/jlBkNIQCov6cWc2rAjmUZkKtVhor4hvG
+   ftyefchY6Et4r2BgAIqfPRq53fcCHVL6RRSilzDESUCZJJrRa8j3TtoVx
+   K4Ix8uuT0UYhrQUOJhdQd4WNH3mIgKg+QRpxRopcbWNBTlzs0a6HtlO+s
+   O4gJYesE4QVPYTyGYGVJdTf6OvLJmBjReGK5McfFFok5tuvdWTYYCV+32
+   JQFmuZ6RJ9XMFxv/rrV2mtCgtzpbHkR7xY4hWBTMQdtTjuUWgIIlYvFF5
+   Q==;
+X-CSE-ConnectionGUID: PQOOMd6ZTkajQyMzwtHOZg==
+X-CSE-MsgGUID: gGpQR0PMS16PEPLCaxN7SA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="74087286"
+X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
+   d="scan'208";a="74087286"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 01:25:22 -0700
+X-CSE-ConnectionGUID: qGUEV08VSu6vemQcSdZZEQ==
+X-CSE-MsgGUID: S7IuLFXXRYqfcQN9zzlMAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
+   d="scan'208";a="216893934"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 01:25:17 -0700
+Message-ID: <b7df1415-82c4-45be-829f-6aa3051c525b@linux.intel.com>
+Date: Thu, 12 Mar 2026 16:25:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <742d77a8-3c53-4814-9dd6-81e8317cd829@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf/x86: Avoid inadvertent casts to
+ x86_hybrid_pmu
+To: Ian Rogers <irogers@google.com>, dapeng1.mi@intel.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
+ alexander.shishkin@linux.intel.com, eranian@google.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+ thomas.falcon@intel.com, xudong.hao@intel.com, zide.chen@intel.com
+References: <CAP-5=fUBy-vzdSB3xsuyU+AKd8o99R7DLgoyyJHxb6Shkfb-8w@mail.gmail.com>
+ <20260312054810.1571020-1-irogers@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260312054810.1571020-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 12, 2026 at 08:40:11AM +0100, Ard Biesheuvel wrote:
-> So far, we have managed to avoid the blessings of objtool on arm64,
-> and the complexity associated with the inline patching is not really
-> justified, given that on arm64, there is not really a need to avoid
-> indirect calls (and as Peter says, we might end up with them anyway)
-> 
-> A while ago, I had a stab at implementing the out-of-line variety [0],
-> but nobody cared enough to even respond. It is rather concise, and
-> localised to arm64, so it is something we might consider for
-> CONFIG_CFI builds. It is essentially the same sequence that arm64 uses
-> for trampolines between modules and the kernel if they are out of
-> direct branching range, with some .rodata patching to change the
-> target. (arm64 basically only permits code patching without stopping
-> the machine when it involves patching branch opcodes into NOPS or vice
-> versa).
-> 
-> Doing so for only CONFIG_CFI makes sense because it removes the CFI
-> overhead for all static calls, although it adds back some overhead for
-> the trampoline. But there is currently no need to do this
-> unconditionally.
 
-Right, so your v3 is very simple and straight forward, and should work
-as an end run around the CFI issue, by effectively doing that indirect
-tail call in the trampoline outside of the compiler generated software
-cfi things.
+On 3/12/2026 1:48 PM, Ian Rogers wrote:
+> The patch:
+> https://lore.kernel.org/lkml/20260311075201.2951073-2-dapeng1.mi@linux.intel.com/
+> showed it was pretty easy to accidentally cast non-x86 PMUs to
+> x86_hybrid_pmus. Add a BUG_ON for that case. Restructure is_x86_event
+> and add an is_x86_pmu to facilitate this.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Only build tested.
+> ---
+>  arch/x86/events/core.c       | 16 ----------------
+>  arch/x86/events/perf_event.h | 19 ++++++++++++++++++-
+>  2 files changed, 18 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 03ce1bc7ef2e..6c6567dc6c88 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -774,22 +774,6 @@ void x86_pmu_enable_all(int added)
+>  	}
+>  }
+>  
+> -int is_x86_event(struct perf_event *event)
+> -{
+> -	/*
+> -	 * For a non-hybrid platforms, the type of X86 pmu is
+> -	 * always PERF_TYPE_RAW.
+> -	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
+> -	 * is a unique capability for the X86 PMU.
+> -	 * Use them to detect a X86 event.
+> -	 */
+> -	if (event->pmu->type == PERF_TYPE_RAW ||
+> -	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
+> -		return true;
+> -
+> -	return false;
+> -}
+> -
+>  struct pmu *x86_get_pmu(unsigned int cpu)
+>  {
+>  	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index fad87d3c8b2c..f1123c95d174 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -115,7 +115,23 @@ static inline bool is_topdown_event(struct perf_event *event)
+>  	return is_metric_event(event) || is_slots_event(event);
+>  }
+>  
+> -int is_x86_event(struct perf_event *event);
+> +static inline bool is_x86_pmu(struct pmu *pmu)
+> +{
+> +	/*
+> +	 * For a non-hybrid platforms, the type of X86 pmu is
+> +	 * always PERF_TYPE_RAW.
+> +	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
+> +	 * is a unique capability for the X86 PMU.
+> +	 * Use them to detect a X86 event.
+> +	 */
+> +	return pmu->type == PERF_TYPE_RAW ||
+> +	      (pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE);
+> +}
+> +
+> +static inline bool is_x86_event(struct perf_event *event)
+> +{
+> +	return is_x86_pmu(event->pmu);
+> +}
+>  
+>  static inline bool check_leader_group(struct perf_event *leader, int flags)
+>  {
+> @@ -779,6 +795,7 @@ struct x86_hybrid_pmu {
+>  
+>  static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *pmu)
+>  {
+> +	BUG_ON(!is_x86_pmu(pmu));
 
-And I think I like your thing better because it handles all possible
-cases, not just the ret0 oddity and isn't in fact much larger.
+With the change, I see the kernel crash is triggered on NVL, I still don't
+figure out which exact place triggers it. I would debug it later. Thanks.
+
+
+>  	return container_of(pmu, struct x86_hybrid_pmu, pmu);
+>  }
+>  
