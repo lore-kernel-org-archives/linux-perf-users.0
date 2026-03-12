@@ -1,39 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317602F39C2
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 18:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3811C8634;
+	Thu, 12 Mar 2026 18:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773339971; cv=none; b=iOnJIDqsvlb5DWebvvsY54dzgmtddpQBM7NtacSmyn2H2GpW3DxfRQGxWfw25bEtaGF757q2CIt6iFnIX/0XIW9jpxsve4YbA97rTY8XGgDkNxSaN8YBqKpU0hx1XtZKHS0h9r3Kb+rT20wl96N6n9xgyEgM1CZmOfwzTZB5b3E=
+	t=1773340287; cv=none; b=fooFC96nnUHNhL0XTwpHMUylRueq6StLX0CkSaCEaS98PIBwscbjMoJQbD2kwUa3I9UygCFrTvHUVvTgiMC6aHiRr446ayDb3K335lPto3b2R0YXqz6NzN3kqbmUsZZ409bE+DCE9A+RI9Hd1qiLIhI4Ph7y3hDUdQyhjz6Vll8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773339971; c=relaxed/simple;
-	bh=u1pIwC/EKI9304Fc/zBcFgNRA5YUMRDSIpORIzKnMy8=;
+	s=arc-20240116; t=1773340287; c=relaxed/simple;
+	bh=rp0qyt4sp3t2v5R7dsT9nLl4D8IeqGrfKOSwHQf9yp4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DDqkAe/ZZfYnFBepCNsFnGpezwar6+VX6uum8xEEw1z02ISyooPBF4hG4jAKCYSWDXB/EtLRPyL86Dr/Es4/7BhHFHCWRmApCiTFK/SJES2lQPJy++od/JhmhI9KAUl6SZHI2HE2KOq/6o4a0WLgZYnSCjSAY0stcmabfLGofZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tW+q0OEh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J9ceaLTbNrGPlKK1pFqSCmk1nuL1tLZz/FzMK1RCaIxLAWFPpJuqoN3TAdfAvB2TTAqEj2tDJp/HLKJSkmhDUAv8d6AxCopww/TN6VjpCjd1XhnaFKGQx+fhOMaZRZDOiXtLEXZ9h5FmGKUjfYuBwPxyxg4IEyrYijJv3ksNgCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWm2pqMA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tW+q0OEh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9CBC4CEF7;
-	Thu, 12 Mar 2026 18:26:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWm2pqMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 636D2C4CEF7;
+	Thu, 12 Mar 2026 18:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773339970;
-	bh=u1pIwC/EKI9304Fc/zBcFgNRA5YUMRDSIpORIzKnMy8=;
+	s=k20201202; t=1773340287;
+	bh=rp0qyt4sp3t2v5R7dsT9nLl4D8IeqGrfKOSwHQf9yp4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tW+q0OEhOfwpy4bqhwtI1MTgYCLrTGyaBFvJylXelodwYmli8FetROWtvZN5nBevI
-	 ASOyEMMeT5/Z0qBNjM3jHT3U+1MD7CICfmRK0HGNiajMrVwiSEz+B6pyHRXQuZkNHe
-	 117ncpKkEtbnYFdhZp6xp6cIHwVwqKx1+w6C0IrXTnynw11YC1j3WcEMByrdaVUEBl
-	 +PZ0TFtbzqiHyeYwZZsJI+zkxBCUirqYkV1S8oIiNr48WYXLnI9ImktCdcn3G1Z0u/
-	 qqxympEj5oU2X8TdjbEIpywRqlcnlZWNsWIRdAoa38frO3AkDK/NNELycCDG1e29QQ
-	 2+1ZwNwiOgMOg==
-Date: Thu, 12 Mar 2026 11:26:09 -0700
+	b=HWm2pqMA6QFDPUAPLPuhXTuoMJkcpiVXPREifz653Sb2MAVWJTWb1pbXn1Wox8sPK
+	 sAGR539NtwuI8NDB2uMWwRL/iGS7BOAeMmobKojiMh/1srwYZpRG82sLHr1PrClCT8
+	 suBk92+HLFgrSt4XiZ3trdm9iYUJjfd1GUaAKOD/QmvbJ5BO44cNhklCfSyVKRuCmX
+	 AeezgN++jcT0glq4BBWVB106k26B6FshUghtFq2SCxMZE5pZ0cbyvsGtkAut+YPIL8
+	 EWueQrAIcP0hZwUPAIP4YE26W+nj3G/nlHJ8rrZYqYCzC6HeFRCdzZfjxmOrUCbZN1
+	 LNd4iQccyEHnQ==
+Date: Thu, 12 Mar 2026 11:31:22 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: acme@kernel.org, acme@redhat.com, linux-perf-users@vger.kernel.org,
-	irogers@google.com, mpetlan@redhat.com
-Subject: Re: [PATCH v6 0/7] Introduce structure for shell tests
-Message-ID: <abMFQbTSW5jwpAa2@google.com>
-References: <20260309155728.98026-1-jbrnak@redhat.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 08/30] tools build: Append
+ -fzero-init-padding-bits=all to extra cflags
+Message-ID: <abMGesVohx_UUt44@google.com>
+References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
+ <20260311-tools_build_fix_zero_init-v4-8-9e35bdb99cb3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,54 +94,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260309155728.98026-1-jbrnak@redhat.com>
+In-Reply-To: <20260311-tools_build_fix_zero_init-v4-8-9e35bdb99cb3@arm.com>
 
-Hello,
-
-On Mon, Mar 09, 2026 at 04:57:21PM +0100, Jakub Brnak wrote:
-> Hi,
+On Wed, Mar 11, 2026 at 08:29:33AM +0000, Leo Yan wrote:
+> GCC-15 release claims [1]:
 > 
-> Sending the next revision of patches for perftool-testsuite structure
-> setup which incorporates the changes in Patch 4 suggested by Ian.
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+>   restore old GCC behavior.
+> 
+> As a result, this new behaviour might cause unexpected data when we
+> initialize a union with using the '{ 0 }' initializer.
+> 
+> Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
+> the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
+> in unions and structures.  This commit applies the same option for tools
+> building.
+> 
+> The option is not supported by any version older than GCC 15, nor is it
+> supported by LLVM.  This patch adds the cc-option and host-cc-option
+> functions to dynamically detect compiler option and append it to the
+> EXTRA_CFLAGS and HOST_EXTRACFLAGS respectively.
+> 
+> [1] https://gcc.gnu.org/gcc-15/changes.html
+> 
+> Acked-by: Quentin Monnet <qmo@kernel.org>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Can you please add a documentation for the directory structure, setup,
-log and other details?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+> ---
+>  tools/scripts/Makefile.include | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> Thanks,
-> Jakub
-> 
-> Link to v5: https://lore.kernel.org/linux-perf-users/20251125155648.197527-1-jbrnak@redhat.com/
-> 
-> Changes since v5:
-> Patch 4: fixed log deletion logic to ensure logs are only removed after
-> all tests (including those executed in parallel) have fully completed
-> 
-> Jakub Brnak (7):
->   perf tests: Create a structure for shell tests
->   perf test: Provide setup for the shell test suite
->   perftool-testsuite: Add empty setup for base_probe
->   perf test: Introduce storing logs for shell tests
->   perf test: Format log directories for shell tests
->   perf test: Remove perftool drivers
->   perf test: Fix relative path for 'stderr-whitelist.txt'
-> 
->  tools/perf/tests/builtin-test.c               | 141 ++++++++-
->  tools/perf/tests/shell/base_probe/setup.sh    |  13 +
->  .../tests/shell/base_report/test_basic.sh     |   6 +-
->  .../tests/shell/perftool-testsuite_probe.sh   |  24 --
->  .../tests/shell/perftool-testsuite_report.sh  |  23 --
->  tools/perf/tests/tests-scripts.c              | 289 +++++++++++++++---
->  tools/perf/tests/tests-scripts.h              |  17 ++
->  tools/perf/tests/tests.h                      |   8 +-
->  8 files changed, 413 insertions(+), 108 deletions(-)
->  create mode 100755 tools/perf/tests/shell/base_probe/setup.sh
->  delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
->  delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+> index b5ecf137febcae59f506e107a7f2e2ad72f4bef4..a2397ceae512c1bc54adb15cb1a111ff34e28e43 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -137,6 +137,36 @@ else
+>  EXTRA_WARNINGS += -Wshadow
+>  endif
+>  
+> +# output directory for tests below
+> +TMPOUT = .tmp_$$$$
+> +
+> +# try-run
+> +# Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+> +# Exit code chooses option. "$$TMP" serves as a temporary file and is
+> +# automatically cleaned up.
+> +try-run = $(shell set -e;		\
+> +	TMP=$(TMPOUT)/tmp;		\
+> +	trap "rm -rf $(TMPOUT)" EXIT;	\
+> +	mkdir -p $(TMPOUT);		\
+> +	if ($(1)) >/dev/null 2>&1;	\
+> +	then echo "$(2)";		\
+> +	else echo "$(3)";		\
+> +	fi)
+> +
+> +# cc-option
+> +# Usage: CFLAGS += $(call cc-option,-march=winchip-c6,-march=i586)
+> +cc-option = $(call try-run, \
+> +	$(CC) -Werror $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
+> +
+> +host-cc-option = $(call try-run, \
+> +	$(HOSTCC) -Werror $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
+> +
+> +# Explicitly clear padding bits with the initializer '{ 0 }'
+> +FLAG_ZERO_INIT := $(call cc-option,-fzero-init-padding-bits=all)
+> +override EXTRA_CFLAGS += $(FLAG_ZERO_INIT)
+> +HOST_FLAG_ZERO_INIT := $(call host-cc-option,-fzero-init-padding-bits=all)
+> +override HOST_EXTRACFLAGS += $(HOST_FLAG_ZERO_INIT)
+> +
+>  ifneq ($(findstring $(MAKEFLAGS), w),w)
+>  PRINT_DIR = --no-print-directory
+>  else
 > 
 > -- 
-> 2.52.0
+> 2.34.1
 > 
