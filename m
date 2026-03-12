@@ -1,131 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED7233F383;
-	Thu, 12 Mar 2026 02:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D5D34253B
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Mar 2026 03:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773284050; cv=none; b=t5p1e6jPRaYHkAkFrW95kc6awjA5uYuLYWfGgf7m0+GdrbC3NC1UomH6VrpnO3sfXUxDzMhffDu/xQRYD0LayYQ7tLD6w/pL9BGM/lJxBkIjBXDdQppTPojJjnBYpgICdpr9FQbKlqnPr/utfzR77pgsQo0qmYdvxvCcxoIdEWo=
+	t=1773285574; cv=none; b=aVyuhKreansNf+wlckNfGJqG05e/bLUgffJPfE7nj08dMBJhLD0eN4X1Jmdu3AhVoJi2GmA8VHLbkvdo4IuC3amf/u6z/k2lJ826YWAd+mpBqYyQHksbmqqd3Cq6XjwvK31mA9i9Tt/G1a2PPdd+rbabbwdCT9WprsbF0hL3hjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773284050; c=relaxed/simple;
-	bh=S14+HlXvFyKt+KWODrn2nZSgbAcORPruDb8xmY3GPk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmkXLKLYX9DmJrFi+93KjjRr6F3RUj4WgaoHQFIRTB329KUZUTLV8/KCjltTy0C4eORg5gjLZLKMAThmWlMbqkuwp7soco7WOLp5dtbDrbXO9yer2PLUxu/xCVnrt9rD9mpGToGLvlw8J6SLV8sC5mPwMRGlk8gW4LJcmFEJMKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LzXeWllu; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773285574; c=relaxed/simple;
+	bh=B7pLGrhr1M3AUUWzljLJh9qQCW/pH11OsJvYTeDvP/Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cWNAR8lOhZWLbbAfDX+nY+iWnahoqCrgSrt3i45eh4KPrV8GpHieu4tgPeKriuonE4K6uMTDN6vAMiOxLpra57BoFPL1zmm80kHehSWsmwLWN90LNylZz5jwagl0XGSnAHNKcQe+GirA3aDcFarhp4YYhavwFjG4kSJ+TrVd2OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h2CrqDhe; arc=none smtp.client-ip=74.125.82.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LzXeWllu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773284048; x=1804820048;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=S14+HlXvFyKt+KWODrn2nZSgbAcORPruDb8xmY3GPk0=;
-  b=LzXeWlluyOzdJj2qFTudteiNCy0CKfANlGY+BCO/5x3LL2gP4phkfWj1
-   WPNdnltwBrNOWE4DEwLCdIHImMmmRkT5fPvcZ0/PpU9zZFFXSjqHNtWO0
-   h5k+DeqjnAlWKTE6JhJvu5bie0S+DJ1UGyGYumlwK7MgrZ4G0Lm6Kl9Qp
-   sHL2Ev+NmWD88vjaGNrRxEGTlFdT6M88r3BxCxae8QmHrw5C9nNWukFAw
-   kf9Pl1AnGqEg9Mr/8mX5FZd5Zcqa8heQlTXNrTYpSb/A63RKp9C/EN4Um
-   4c2TLv8Q3BlQwKDD2DO6RSz+UN9aD+O/cRUVqjoe/MF5tDoZqw3YEqomE
-   Q==;
-X-CSE-ConnectionGUID: HaT/kCrTRP+8bxJM7Ad6vw==
-X-CSE-MsgGUID: gyuhXWwQS+utGfr4UZ7/aA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="84685099"
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="84685099"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 19:54:07 -0700
-X-CSE-ConnectionGUID: SAfzNZmwSAqsHSVQzxdJqA==
-X-CSE-MsgGUID: Ehq+LDaSRkGOshJNxgltfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="258575343"
-Received: from unknown (HELO [10.238.3.214]) ([10.238.3.214])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 19:54:02 -0700
-Message-ID: <9e0e04e9-7421-4dfb-a017-c31741a8d500@linux.intel.com>
-Date: Thu, 12 Mar 2026 10:53:59 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2CrqDhe"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-128d0a51897so20645270c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Mar 2026 20:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773285572; x=1773890372; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nJNlw9AbBLbWaDxnsrG+aJBf6+0dB3NQVrAkWPs2QY=;
+        b=h2CrqDhe/j2te1JaFtqy4k35qCSVN+9JG6Mbhm5WK/xXK7IDnVzyTX17iC06CwuWkm
+         FlLI8sj7xg/btUVU2NT0EyCW7/0x/IOIAKjdylQbJVBfMymCaikWcJIDAczQIyEzcYhc
+         HC7N8/z1sHYbLiEqhajfLpaR8+BeRaplsY6mmi+oFdZ4rIcPkRHtugmBucoX+D4pYgtv
+         8IVdO9KcP5LfRrZW3Dat58uJz3xmVhkCVq/m9Uo3jzLBJ4YAT7jElHjyZecKnFcAwUPa
+         ip31R2cwob/AVA4EBwMxYOA8PDhxvSTyFI7JIAF1tEErwUCyj70m79QJ6gIfH7a1XTy1
+         JWCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773285572; x=1773890372;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nJNlw9AbBLbWaDxnsrG+aJBf6+0dB3NQVrAkWPs2QY=;
+        b=V5xYMBXk1qBpeaLAwPuAwsyH+ryMSxDNsiTmrAJu5Xd0b06NaLCDZh3/kW5aWJUpiK
+         SjjdP2OOC/DxRTkGuuj98C3NCcQbQwBUwcycpCC/W6yDvLMYH2ikplVkfwAHaO68B9yv
+         22gU+CckMpfpRjHZ1mIEfLgEVyggVc5NQo+rPgZyR6Z7VXQrEi3ft6pX+SNifUCOl97k
+         zhDwIeFRhPmvGlODRrZD7rk9j0r8jLLtGVCOKksaly/nGODitFUMUk57AZmfS95YmrGK
+         KWQG0ODxV+W9+pH5yqJVseqItm8+R9mf7nqoYgSp9070zZuHxr50yhWYNwFbSQQfHAlu
+         nFjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAmQb/EN/U/EUNEsPJ83k4t8u2JBrFdQeleHXjmWMJJr/s0MZlu8IiAQmgpR7tJTk0X+qNFLpbCEPKJIDf06oD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD6fs2U2l+jOFTRPbVx2BD6h0RNH7y0c9mSjDa8WSFfK3/h3dZ
+	Nm7OBXyvAdmV+zbcyE1oq6I90yVOfctPGIngn7HkHDODOm8IVx+puXPN1LrOOEediaRfgcxPDKd
+	zR4hxU5xJgQ==
+X-Received: from dldz19-n1.prod.google.com ([2002:a05:701b:4193:10b0:128:cff2:6560])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a2:b0:128:cf5c:5362
+ with SMTP id a92af1059eb24-128e77aed60mr2077124c88.12.1773285572154; Wed, 11
+ Mar 2026 20:19:32 -0700 (PDT)
+Date: Wed, 11 Mar 2026 20:19:26 -0700
+In-Reply-To: <131d7e1e-701e-4f5b-961f-c85af74f1d96@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
- x86_pmu_enable()
-To: Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
-Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, stable@vger.kernel.org
-References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
- <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
- <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
- <20260311173509.GR606826@noisy.programming.kicks-ass.net>
- <20260311204035.GX606826@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260311204035.GX606826@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <131d7e1e-701e-4f5b-961f-c85af74f1d96@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
+Message-ID: <20260312031928.1494864-1-irogers@google.com>
+Subject: [PATCH v1 0/2] perf evsel fallback changes
+From: Ian Rogers <irogers@google.com>
+To: tmricht@linux.ibm.com
+Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	hca@linux.ibm.com, irogers@google.com, japo@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
+Discussion with Thomas Richter in:
+https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.com/
+showed that the evsel__fallback wasn't working for s390. These patches
+avoid the problematic frame pointer callchain on s390 and fix
+evsel__fallback from a range of problems when falling back to a
+software event. I simulated failures when developing the patches but
+they are untested other than that.
 
-On 3/12/2026 4:40 AM, Peter Zijlstra wrote:
-> On Wed, Mar 11, 2026 at 06:35:09PM +0100, Peter Zijlstra wrote:
->>> Additionally, does this change leave the unthrottled event's hardware
->>> counter uninitialized?
->> Also yes.
-> Something like so on top of things I suppose.
->
-> ---
-> Subject: x86/perf: Make sure to program the counter value for stopped events on migration
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Mar 11 21:29:14 CET 2026
->
-> Both Mi Dapeng and Ian Rogers noted that not everything that sets HES_STOPPED
-> is required to EF_UPDATE. Specifically the 'step 1' loop of rescheduling
-> explicitly does EF_UPDATE to ensure the counter value is read.
->
-> However, then 'step 2' simply leaves the new counter uninitialized when
-> HES_STOPPED, even though, as noted above, the thing that stopped them might not
-> be aware it needs to EF_RELOAD -- since it didn't EF_UPDATE on stop.
->
-> One such location that is affected is throttling, throttle does pmu->stop(, 0);
-> and unthrottle does pmu->start(, 0); possibly restarting an uninitialized counter.
->
-> Fixes: a4eaf7f14675 ("perf: Rework the PMU methods")
-> Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Reported-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/events/core.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1374,8 +1374,10 @@ static void x86_pmu_enable(struct pmu *p
->  
->  			cpuc->events[hwc->idx] = event;
->  
-> -			if (hwc->state & PERF_HES_ARCH)
-> +			if (hwc->state & PERF_HES_ARCH) {
-> +				static_call(x86_pmu_set_period)(event);
->  				continue;
-> +			}
->  
->  			/*
->  			 * if cpuc->enabled = 0, then no wrmsr as
+Ian Rogers (2):
+  perf evsel: Improve falling back from cycles
+  perf evsel: Don't configure framepointer callchains on s390
 
-LGTM.
+ tools/perf/util/evsel.c | 49 +++++++++++++++++++++++++++++------------
+ tools/perf/util/evsel.h |  2 ++
+ 2 files changed, 37 insertions(+), 14 deletions(-)
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+-- 
+2.53.0.851.ga537e3e6e9-goog
 
-
->
