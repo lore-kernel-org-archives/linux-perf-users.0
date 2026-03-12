@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD9031E82D;
-	Thu, 12 Mar 2026 06:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FB831E82D;
+	Thu, 12 Mar 2026 06:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773297832; cv=none; b=SedUxxgjF+97ZIVIPFLAGCMLc6uOrv2SKVcERUBemtudJfo1tO4EikVkvDGX+gp3hQY1iA2Kt7ca/2Q2wGBiYL/Do1lspUE3+lDGOZ2WmyMd8Env/y7Or4nxvVUpGmul3oCH4xG//HludYriK7BQnqCqS3046U+2iD+BLUrqyL0=
+	t=1773297885; cv=none; b=gI75qlp8jQfAsIw3/jlEDJRJoeneW744OxVQ6uuKOQjzys6Gp4p+11tR6x021SedJ6VBo7Ef7Yc0Lo/1DEPFDvbcHd7FaRbMxNx4T5tvnNI5QreTOu7qIPkJWA3VDBaIf3aFJGcofE61IiG+tBV2o4vzKnQo21G0Ka0flqfj5wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773297832; c=relaxed/simple;
-	bh=V3JZwP7hCqKlJdk5Pth2VHAcfLFPeTR6k/wW/UGj8kI=;
+	s=arc-20240116; t=1773297885; c=relaxed/simple;
+	bh=M5YBnvCL1leKHEuolly/wZvds8H1SomAROpQHoO7ae8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n4bxptrrrAhE6tq3iYXihjGmlzgPjzd8K9dEEUOrv78LrJwPX5jxpQFcEwn53kdfx3kzLQcFvnY5UHm+BvLd0z1WhvMb5pms6sPpl+6k/J53FSDjqpWYBDdcxysVQ5SfJAXj3F/RtGyBulhycIlGbdDtZoRtM5asrVl9zim+16E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mH2AdKSE; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=Qs/A8j+BzHUTArD11guzJ/4GhOwJFce8E4kfZYG6vIbFLa5V+cNiV8KP+USA8DniY+oslxvmwcoVa4eL4sbs8W3MyRF44kx+NWQUAFWWj73EfppL8XJp0ZgqCT1TPkBLh/+l3X3flUVofJ3U0OE0lRcigkmrAhAjvt9LwymJR58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZwhoNUM; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mH2AdKSE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZwhoNUM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773297831; x=1804833831;
+  t=1773297884; x=1804833884;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=V3JZwP7hCqKlJdk5Pth2VHAcfLFPeTR6k/wW/UGj8kI=;
-  b=mH2AdKSE+2PRqwdjO8DwmFD45zpVk9x/ruotlUDD2CGWne0mh96zv3dO
-   AU9tAlLATlgTaG2niNYHNRbMusb2iK2oUfF1Ute/2sMbrwXkFaAQvSTgi
-   q2WavvRHyGAK4t5yxRGcybxrtKcZG+46HxSo2W4fsaQN3QvlaRPJ+wjeP
-   WjipiVymzhGOGw/rj3NqfirQqaczZ8pgO8quaOcbVyggMBaqxVWNe++FE
-   h02LNh4w7397BvYSBDPC/aKD7n4YK+/mB5M28giX2tuvzJoPJtH0ESMuX
-   oZtrqG9NJP5OQe0K6fT5u51XlhAndrsZFzyqjy10To4vxSARpnGgRykCa
-   Q==;
-X-CSE-ConnectionGUID: rsdDL/qRTBew2+TlCrhYBQ==
-X-CSE-MsgGUID: +u3cmqWLROS3J/LI2HNDNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="85856386"
+  bh=M5YBnvCL1leKHEuolly/wZvds8H1SomAROpQHoO7ae8=;
+  b=iZwhoNUMzIySR+WxQjsc7mSt6gwLazII1xX5LPYeMvEWRO1zr3hZc8vS
+   wjRSmMDTlTaqz129fri0JtVsvFaJBjYGEfph++5GP5XW1Cl8yUWbJjI6K
+   YcDJC/Q3QN0UGS4ew7LLJoETXlLNthAZXfPCJdZqjiE1rFzVbbuO9ERwn
+   5TNxawxgFRMQG+t+IUPm/VGXatheODlDyCfTHMvLTnLMmZ6vvWqxkQaSZ
+   bpGhe5tzPUmWfNYonCdFyz6UgpMTHQlyrVBARKumPRZwyF05S4IG6uIVE
+   fI0O490uk7fI7L2K7MOaiJHRxHSNF/1vktrrJPZ7bK7saJU3hn8jiSpwn
+   A==;
+X-CSE-ConnectionGUID: Vnm4qapYQ3OsvtGj8LxWCA==
+X-CSE-MsgGUID: 9yt09NJwRRGI8MaBGIBFNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="85856441"
 X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="85856386"
+   d="scan'208";a="85856441"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:43:50 -0700
-X-CSE-ConnectionGUID: B6//lyLbTHma3NYdhAS9oA==
-X-CSE-MsgGUID: hAXE/atISdm7W8cs2ysJlw==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:44:44 -0700
+X-CSE-ConnectionGUID: ZzRpTxvsTamnjUctJnUtyA==
+X-CSE-MsgGUID: MQcUBT7MQ/aIV9YmRH5+Xg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="225685541"
+   d="scan'208";a="225685755"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:43:47 -0700
-Message-ID: <a61eae6d-7a6d-40bd-83ec-bd4ea7657b9d@linux.intel.com>
-Date: Thu, 12 Mar 2026 14:43:43 +0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 23:44:40 -0700
+Message-ID: <e26d0945-6406-4fe2-bd0d-154aacb1d245@linux.intel.com>
+Date: Thu, 12 Mar 2026 14:44:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf/x86: Avoid inadvertent casts to
- x86_hybrid_pmu
+Subject: Re: [PATCH v1 2/2] perf/x86: Reduce is_hybrid calls and aid ellision
+ of BUG_ON in hybrid_pmu
 To: Ian Rogers <irogers@google.com>, dapeng1.mi@intel.com
 Cc: acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
  alexander.shishkin@linux.intel.com, eranian@google.com,
@@ -62,95 +62,97 @@ Cc: acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
  thomas.falcon@intel.com, xudong.hao@intel.com, zide.chen@intel.com
 References: <CAP-5=fUBy-vzdSB3xsuyU+AKd8o99R7DLgoyyJHxb6Shkfb-8w@mail.gmail.com>
  <20260312054810.1571020-1-irogers@google.com>
+ <20260312054810.1571020-2-irogers@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260312054810.1571020-1-irogers@google.com>
+In-Reply-To: <20260312054810.1571020-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-
-On 3/12/2026 1:48 PM, Ian Rogers wrote:
-> The patch:
-> https://lore.kernel.org/lkml/20260311075201.2951073-2-dapeng1.mi@linux.intel.com/
-> showed it was pretty easy to accidentally cast non-x86 PMUs to
-> x86_hybrid_pmus. Add a BUG_ON for that case. Restructure is_x86_event
-> and add an is_x86_pmu to facilitate this.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Only build tested.
-> ---
->  arch/x86/events/core.c       | 16 ----------------
->  arch/x86/events/perf_event.h | 19 ++++++++++++++++++-
->  2 files changed, 18 insertions(+), 17 deletions(-)
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 03ce1bc7ef2e..6c6567dc6c88 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -774,22 +774,6 @@ void x86_pmu_enable_all(int added)
->  	}
->  }
->  
-> -int is_x86_event(struct perf_event *event)
-> -{
-> -	/*
-> -	 * For a non-hybrid platforms, the type of X86 pmu is
-> -	 * always PERF_TYPE_RAW.
-> -	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
-> -	 * is a unique capability for the X86 PMU.
-> -	 * Use them to detect a X86 event.
-> -	 */
-> -	if (event->pmu->type == PERF_TYPE_RAW ||
-> -	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
-> -		return true;
-> -
-> -	return false;
-> -}
-> -
->  struct pmu *x86_get_pmu(unsigned int cpu)
->  {
->  	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index fad87d3c8b2c..f1123c95d174 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -115,7 +115,23 @@ static inline bool is_topdown_event(struct perf_event *event)
->  	return is_metric_event(event) || is_slots_event(event);
->  }
->  
-> -int is_x86_event(struct perf_event *event);
-> +static inline bool is_x86_pmu(struct pmu *pmu)
-> +{
-> +	/*
-> +	 * For a non-hybrid platforms, the type of X86 pmu is
-> +	 * always PERF_TYPE_RAW.
-> +	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
-> +	 * is a unique capability for the X86 PMU.
-> +	 * Use them to detect a X86 event.
-> +	 */
-> +	return pmu->type == PERF_TYPE_RAW ||
-> +	      (pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE);
-> +}
-> +
-> +static inline bool is_x86_event(struct perf_event *event)
-> +{
-> +	return is_x86_pmu(event->pmu);
-> +}
->  
->  static inline bool check_leader_group(struct perf_event *leader, int flags)
->  {
-> @@ -779,6 +795,7 @@ struct x86_hybrid_pmu {
->  
->  static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *pmu)
->  {
-> +	BUG_ON(!is_x86_pmu(pmu));
->  	return container_of(pmu, struct x86_hybrid_pmu, pmu);
->  }
->  
 
 LGTM.
 
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 
+On 3/12/2026 1:48 PM, Ian Rogers wrote:
+> Use the capabilities of the PMU rather than the global variable
+> perf_is_hybrid to determine if a hybrid pmu has been passed to the
+> main accessors. As the pmu capabilities check mirrors that in
+> is_x86_pmu, the BUG_ON(!is_x86_pmu...) in hybrid_pmu can be elided as
+> it is provably always false (with sufficient function inlining, common
+> sub-expression elimination, etc.) in its most common uses.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Only build tested.
+> ---
+>  arch/x86/events/perf_event.h | 52 +++++++++++++++++++-----------------
+>  1 file changed, 28 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index f1123c95d174..7990d86ef233 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -802,34 +802,38 @@ static __always_inline struct x86_hybrid_pmu *hybrid_pmu(struct pmu *pmu)
+>  extern struct static_key_false perf_is_hybrid;
+>  #define is_hybrid()		static_branch_unlikely(&perf_is_hybrid)
+>  
+> -#define hybrid(_pmu, _field)				\
+> -(*({							\
+> -	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;	\
+> -							\
+> -	if (is_hybrid() && (_pmu))			\
+> -		__Fp = &hybrid_pmu(_pmu)->_field;	\
+> -							\
+> -	__Fp;						\
+> +
+> +#define hybrid(_pmu, _field)						\
+> +(*({									\
+> +	typeof(&x86_pmu._field) __Fp = &x86_pmu._field;			\
+> +	struct pmu *__pmu = _pmu;					\
+> +									\
+> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
+> +		__Fp = &hybrid_pmu(__pmu)->_field;			\
+> +									\
+> +	__Fp;								\
+>  }))
+>  
+> -#define hybrid_var(_pmu, _var)				\
+> -(*({							\
+> -	typeof(&_var) __Fp = &_var;			\
+> -							\
+> -	if (is_hybrid() && (_pmu))			\
+> -		__Fp = &hybrid_pmu(_pmu)->_var;		\
+> -							\
+> -	__Fp;						\
+> +#define hybrid_var(_pmu, _var)						\
+> +(*({									\
+> +	typeof(&_var) __Fp = &_var;					\
+> +	struct pmu *__pmu = _pmu;					\
+> +									\
+> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
+> +		__Fp = &hybrid_pmu(__pmu)->_var;			\
+> +									\
+> +	__Fp;								\
+>  }))
+>  
+> -#define hybrid_bit(_pmu, _field)			\
+> -({							\
+> -	bool __Fp = x86_pmu._field;			\
+> -							\
+> -	if (is_hybrid() && (_pmu))			\
+> -		__Fp = hybrid_pmu(_pmu)->_field;	\
+> -							\
+> -	__Fp;						\
+> +#define hybrid_bit(_pmu, _field)					\
+> +({									\
+> +	bool __Fp = x86_pmu._field;					\
+> +	struct pmu *__pmu = _pmu;					\
+> +									\
+> +	if (__pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)	\
+> +		__Fp = hybrid_pmu(__pmu)->_field;			\
+> +									\
+> +	__Fp;								\
+>  })
+>  
+>  /*
