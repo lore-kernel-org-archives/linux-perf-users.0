@@ -1,271 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C7023D281;
-	Fri, 13 Mar 2026 21:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773435715; cv=none; b=rc+yTaVsjS9ZtY3LjLe3tDPy5kZgEYbcnwzIlyqHTwDyrR4035j683UhdloDOPl+bKjdsyw5t++GfRSZbibhtTPkcoNOZpYRQjKYjqtCyjVJK45tJStveSGAEblI8y5sM7KqeeuszVpbUSw436pvryqSzQunwN/bz3wj3hUTnRo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773435715; c=relaxed/simple;
-	bh=6wByqVucn1HppWOOQjPplLzjC9lUHR9GrWWXOkgckGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4QEyhr9XCyA3Zko6R0xC0fejb24xczveN7rH9B4wkCPtfYLGFXb4du6RsmrPRuTApeaEIO4r6NFVZucmUcAUuE85aDKM0X1zfrSQiMljNNXoQB3Al353I6TYVUrMvBINYc9AwUXjp4W1IqwEQwOAIuBlE2kkrUhdnzfeGhaNa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvsGM6ur; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF733148D8
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 21:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773435839; cv=pass; b=OOFSdzmGKlq3g//UUYrXWYXTvVmatELGKF48ZzLRAknYYI8n5Wo9F1Yj/2LpXeI+zASS0KF9sxqymVaq1ZNp7ldFCM4yjRxUdexVZoo58LsoSNq6R7ehZCTLGj9TGgaYmApUriq94bpYQ8RlzYfyGbffNe4RFaAwQeiXnO3sVYk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773435839; c=relaxed/simple;
+	bh=1R0Lwql6nSOQ9kWNCc0PkQe60FSIwExCWTenK/CGDLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DNsNLHnK7dbb1WnYkcDq1NQCTV+Id5L11vYBEG+39wJp1UkV/3Kf5lBw9aiHjCgnO5LWYN2nX5c9JXiYU/FPyKiJDzzG6Eoa/74dtTO7NHBZJGFO0rmKct7NURcLJmHyxXjoGi9e0WJpPsm4fu8MB+6JJYOsNnc2Np0sfJm1Kws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rt+PPXzG; arc=pass smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvsGM6ur"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92944C19421;
-	Fri, 13 Mar 2026 21:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773435715;
-	bh=6wByqVucn1HppWOOQjPplLzjC9lUHR9GrWWXOkgckGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pvsGM6urlplIpyHI2gd1kSO0pBDHJVbqtH8BG+11C3TuH57UBTWy8drvMGnv1XkBd
-	 42/Equ3SvPBtJfrT9gmbQ//3ayyPH3GmY+MMPwU0VIp3jqG4ZOtppm8sLebXt3bpoO
-	 sOthEJ3p3mgEV9ojWhNgjxIxUtshhOAOBau2hhNsTRdYq+UsEKUhT03n+P0Ai91zt4
-	 as2Ac1f+dTpvyxKKuvxiFPaT48W4BdpjmuGYinhUhIKECOCyXnz2ad/SwvaPUwfzx/
-	 Z9gIUMiDxayDGrunsyLvGkGHdrgu5977xwjSHsDBAwfZ0rme4Dvbjmz/TnfrfjQAKH
-	 s0fXWfi1rB7zg==
-Date: Fri, 13 Mar 2026 14:01:53 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>, acme@kernel.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-	japo@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-	sumanthk@linux.ibm.com
-Subject: Re: [PATCH v2 2/2] perf evsel: Don't configure framepointer
- callchains on s390
-Message-ID: <abR7QU_bDGref9II@google.com>
-References: <20260312031928.1494864-1-irogers@google.com>
- <20260312061628.1593105-1-irogers@google.com>
- <20260312061628.1593105-3-irogers@google.com>
- <05b884dc-d0bf-4767-8413-40ddb7c0f8fb@linux.ibm.com>
- <CAP-5=fXoAZ2fheQZ-kZe+JKoV=SbH=vS4mpFcVtS7OKsL5PTXQ@mail.gmail.com>
- <CAP-5=fWeicz7iFMM8vw32OCQXkBcCeWS4qA7k-iNJ6r7izpBbw@mail.gmail.com>
- <0f693db5-89d4-4346-be6f-d740b4493ad9@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rt+PPXzG"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-66391baf250so2293004a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 14:03:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773435836; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WpbjKAPfQ42CBJGi9XbW9v9lhhhMSjsDcfuJo5EuhDFfby6DYTl1OpdzjaNxyjTu61
+         NNT4KceyS94Vi6kj29mWMA4oTBJ3kSwqsnkaOt1cNps4IeFXYyb7jyGowHogQPK3SUZe
+         yqfcPFz8uL+BytZ+alF2bqxaWcnUREn8hKyQKUHyNxIDEI1SMn4Tq4sa89iBkrBuMpHl
+         qU/PZCjy3MJtb6EoX6PqI+Csj/q352YDfly6ZW83dAaI2ORZAZFFVLM+6RiiIykVJOr5
+         17GOTLvIAUNRjcAG50YvEG4gu7yCXh4Ymm8ozxAmQkSvPOCirZX18sTrao9QFFvHsLyU
+         66KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+/kZwgdWmNGCktNPe763uSTYgyKSmDilnHXCY6tJkRM=;
+        fh=U0oAe41QuMmE3LSB2oSuiADLmpOV8TeyX/FpQEVNCFM=;
+        b=XqWle5r0T3SD6au4tpnQHQDvmnBhAFk+SBekg+VCYRAe8MMu2VbFDMvA1JkyCcvWbB
+         vcjKQq7Ig0baja//BUIrNA6wLCQHgzXoSGecRA+PAyUfzs5CyMDrcdhGESEV1NXVxDXi
+         sYPR4P5iXKlPjFWuqXTLjyYmNoLsk8h01EeoVryPeN3SKkC+JDYuSRqrQayjxrSsvvg5
+         /Zv8ldjWKDK1Uy1PCNcwnn1Xy1ENaYopIYPkhgMsAHUWxbmTtordFf6oHe/uMlt0iDXP
+         7pOuBQnpSKSOiUuy/qRKVBWK7fMQzlTNpwM4ghbSDEMLO9eZ1veZ3yRenqw0xww41HlK
+         HXBQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773435836; x=1774040636; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+/kZwgdWmNGCktNPe763uSTYgyKSmDilnHXCY6tJkRM=;
+        b=Rt+PPXzGHR7RSUYpAnBr6bRN1SHpw6OIqwckkvAuccGhw+jMAkuNHVJFTjiXaIBVde
+         PWpy6GjywIVpCOM4riZ+Uydcf/rnRapbngH7gu7R/T5H49y2hGXfe0ncLJq3r2VFOaG7
+         df4bdsb1YdwNuNtLvTp7OvxCU0gL4dLTFyTiSDGocjyW+c7XUD+iL9jLnSk809oP9GZ5
+         tnZahy3Ke6e0jb3ecqRqhM7mHh0m7TJuQR/1ofBv0m8rPuJVK+62LuWWQXZ7wD/jNQnY
+         P3Z/mXm04cL16vB0uK+X1PPsR9S4XgyT6ZPHDD6XrKl0ix564D+vZe1jc404RZyZalqp
+         rjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773435836; x=1774040636;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+/kZwgdWmNGCktNPe763uSTYgyKSmDilnHXCY6tJkRM=;
+        b=TqR2f/eEUQT+RziIT2xk8gzwbb9E32L8oCLAmvXMNdyoMBHkgaLNWPtRjFRByJOw90
+         kKO1V5XqFY7taGx5wyjrc3IP5U0J0kHFNgLbiLHC799Fnts1JBpuXFVW8I0CykMu7PVf
+         vCJcu0feOxUpKwbZQauRcdy0Zxsyrcudtf8h1LS1PBf/ePwcxjPXF25f5f/UJOYhB58t
+         dsy3iDfqpQmPc3WsrHdYx0v1zVcXrGjh2LBdo96SHBL2GwJ6vLkWzq9/4LTVasZolJjE
+         lC7CC1XxHtw4XA3pv9YsnnCajAh9SzmGVGR5GabBn0ON3FPEXamkpShEChXKmhI81SYj
+         lDnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWb2/q/AeNfcF21Cr2lc8xthc6Ep8j8qFu+96sopjYHvCdB7NTqPXezu6aiUdqWQMDxvUs2RW5prBItshVHIW6C@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvgKBP72emE3yw52TLexYyjYYhBTt4myhuaQRsAZ6rPc/quOAb
+	5pnNB10Nh6zu4W/Dg5jB5DzW0HnS4O1qmqQ06XqAvD3eeVLpQhEMcnIV6ZFmHOf9R5a4d4OKliL
+	Ud6+CIKjnqz7cnlgtTVtYa1X1AzUuUmw=
+X-Gm-Gg: ATEYQzwh0kW2B1kquZSks9+uz9XFRfdbq+gbY6hfE1gqF7HyCTpzKq6vFXt1xKPV3gv
+	kVKUiA9k1OFAEtLIPuj/6x5pvcqNo2ITLibv6vxbP44+3Q70tGv7mD3ZfPwbWc2Geihke9v4K4T
+	1prvCUmdnlT7tgcsMMGkFcr2Rp1iNgYNrmNq019Ff2X/2QEG2wMuDmgsABGW6HKji/iqvwfQFJG
+	et9gfwY/jvfyzIxKWc8+VZTmkF7xGTAIMkkZP2aNHHEbB4lRU+0h9rtpYn7BdGWW0YarG4AenEX
+	7NxojZLMAcfJVJXe8JML3tAQgCowv3P4/PIuRWe98Q==
+X-Received: by 2002:a05:6402:1ecf:b0:662:a4d4:abe0 with SMTP id
+ 4fb4d7f45d1cf-663ba9c2abemr3063467a12.3.1773435835673; Fri, 13 Mar 2026
+ 14:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0f693db5-89d4-4346-be6f-d740b4493ad9@linux.ibm.com>
+References: <20260313180352.3800358-1-puranjay@kernel.org> <20260313180352.3800358-3-puranjay@kernel.org>
+ <CANk7y0jjd6XC7nd2BxtsVhs8vWp_9cC-ckXPGRQK_CW5BSuogQ@mail.gmail.com>
+In-Reply-To: <CANk7y0jjd6XC7nd2BxtsVhs8vWp_9cC-ckXPGRQK_CW5BSuogQ@mail.gmail.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 13 Mar 2026 21:03:44 +0000
+X-Gm-Features: AaiRm509-qHusHx4y7ZJiuiluPbpVvicudHEcA8o5FlqQsneTuZnsmCxW0jMUuM
+Message-ID: <CANk7y0iGmXCLNPJ=W4ZV9tRwWXXK4KmTATfV081kLX51RxJmkQ@mail.gmail.com>
+Subject: Re: [PATCH bpf 2/3] perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Leo Yan <leo.yan@arm.com>, Rob Herring <robh@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 13, 2026 at 10:46:49AM +0100, Thomas Richter wrote:
-> On 3/12/26 17:46, Ian Rogers wrote:
-> > On Thu, Mar 12, 2026 at 8:54 AM Ian Rogers <irogers@google.com> wrote:
-> >>
-> >> On Thu, Mar 12, 2026 at 5:45 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >>>
-> >>> On 3/12/26 07:16, Ian Rogers wrote:
-> >>>> Frame pointer callchains are not supported on s390. Ignore the option
-> >>>> and print a warning.
-> >>>>
-> >>>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>>> ---
-> >>>> v2: Only disable user callchains as AI is telling me native "kernel"
-> >>>>     callchains are supported on s390.
-> >>>> ---
-> >>>>  tools/perf/util/evsel.c | 6 ++++++
-> >>>>  1 file changed, 6 insertions(+)
-> >>>>
-> >>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> >>>> index bd14d9bbc91f..fa21b48cba86 100644
-> >>>> --- a/tools/perf/util/evsel.c
-> >>>> +++ b/tools/perf/util/evsel.c
-> >>>> @@ -1076,6 +1076,12 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
-> >>>>               attr->exclude_callchain_user = 1;
-> >>>>       }
-> >>>>
-> >>>> +     if (EM_HOST == EM_S390 && (evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
-> >>>> +         !evsel->core.attr.exclude_callchain_user) {
-> >>>> +             pr_warning("Excluding user callchains that are not supported on s390. Try '--call-graph dwarf'\n");
-> >>>> +             evsel->core.attr.exclude_callchain_user = 1;
-> >>>> +     }
-> >>>> +
-> >>>>       if (param->defer && !attr->exclude_callchain_user)
-> >>>>               attr->defer_callchain = 1;
-> >>>>  }
-> >>>
-> >>> Ian, thanks very much.
-> >>> Your patch set helps a lot. However there is a small nit (which is mandatory). Please add these lines
-> >>>
-> >>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_CALLCHAIN;
-> >>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_REGS_USER;
-> >>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_STACK_USER;
-> >>
-> >> So these lines are dropping callchain from the sample_type which means
-> >> the kernel stack won't be sampled. AI was telling me this worked, but
-> >> I'm guess it was wrong. I think rather than this it is just cleaner
-> >> never to set the bits in the perf_event_attr, more like what v1 of the
-> >> patch did:
-> >> https://lore.kernel.org/lkml/20260312031928.1494864-3-irogers@google.com/
-> >>
-> 
-> Let me try to answer your and Namhyung questions in one reply.
-> s390 has many PMUs, there is one for counting (cpum_cf) and one for sampling (cpum_sf),
-> which are totally different hardware components.
-> Hardware sampling 
-> 1. writes into a large buffer, data is timestamp and IP (instruction pointer), no registers, no PID.
-> 2. when buffer gets full an interrupt occurs and the interrupt handler scans the
->    hardware samples and converts valid samples to perf format and saves them in perf ring buffer.
-> This means we can not reconstruct register values for an individual sample. Current Pid is saved by
-> other means somewhere and added to perf data during perf ring buffer write.
+On Fri, Mar 13, 2026 at 7:59=E2=80=AFPM Puranjay Mohan <puranjay12@gmail.co=
+m> wrote:
+>
+> On Fri, Mar 13, 2026 at 6:04=E2=80=AFPM Puranjay Mohan <puranjay@kernel.o=
+rg> wrote:
+> >
+> > Implement the perf_snapshot_branch_stack static call for ARM's Branch
+> > Record Buffer Extension (BRBE), enabling the bpf_get_branch_snapshot()
+> > BPF helper on ARM64.
+> >
+> > This is a best-effort snapshot helper intended for tracing and debuggin=
+g
+> > use. It favors non-invasive snapshotting over strong serialization, and
+> > returns 0 whenever a clean snapshot cannot be obtained. Nested
+> > invocations are not serialized; callers may observe a 0-length result
+> > when a clean snapshot cannot be preserved.
+> >
+> > BRBE is paused before the helper does any other work to avoid recording
+> > its own branches. The sysreg writes used to pause are branchless.
+> > local_daif_save() blocks local exception delivery while reading the
+> > buffer. If a PMU overflow raced before that point and re-enabled BRBE,
+> > the helper detects the cleared PAUSED state and returns 0.
+> >
+> > Branch records are read using perf_entry_from_brbe_regset() without
+> > event-specific filtering. The BPF program is responsible for applying
+> > its own filter criteria. The BRBE buffer is invalidated after reading
+> > to maintain contiguity for other consumers.
+> >
+> > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > ---
+> >  drivers/perf/arm_brbe.c  | 70 ++++++++++++++++++++++++++++++++++++++--
+> >  drivers/perf/arm_brbe.h  |  9 ++++++
+> >  drivers/perf/arm_pmuv3.c |  5 ++-
+> >  3 files changed, 81 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> > index ba554e0c846c..db5e000b2575 100644
+> > --- a/drivers/perf/arm_brbe.c
+> > +++ b/drivers/perf/arm_brbe.c
+> > @@ -9,6 +9,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/bitmap.h>
+> >  #include <linux/perf/arm_pmu.h>
+> > +#include <asm/daifflags.h>
+> >  #include "arm_brbe.h"
+> >
+> >  #define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
+> > @@ -618,10 +619,10 @@ static bool perf_entry_from_brbe_regset(int index=
+, struct perf_branch_entry *ent
+> >
+> >         brbe_set_perf_entry_type(entry, brbinf);
+> >
+> > -       if (!branch_sample_no_cycles(event))
+> > +       if (!event || !branch_sample_no_cycles(event))
+> >                 entry->cycles =3D brbinf_get_cycles(brbinf);
+> >
+> > -       if (!branch_sample_no_flags(event)) {
+> > +       if (!event || !branch_sample_no_flags(event)) {
+> >                 /* Mispredict info is available for source only and com=
+plete branch records. */
+> >                 if (!brbe_record_is_target_only(brbinf)) {
+> >                         entry->mispred =3D brbinf_get_mispredict(brbinf=
+);
+> > @@ -803,3 +804,68 @@ void brbe_read_filtered_entries(struct perf_branch=
+_stack *branch_stack,
+> >  done:
+> >         branch_stack->nr =3D nr_filtered;
+> >  }
+> > +
+> > +/*
+> > + * Best-effort BRBE snapshot for BPF tracing. Pause BRBE to avoid
+> > + * self-recording and return 0 if the snapshot state appears disturbed=
+.
+> > + */
+> > +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, =
+unsigned int cnt)
+> > +{
+> > +       unsigned long flags;
+> > +       int nr_hw, nr_banks, nr_copied =3D 0;
+> > +       u64 brbidr, brbfcr, brbcr;
+> > +
+> > +       if (!cnt)
+> > +               return 0;
+> > +
+> > +       /* Pause BRBE first to avoid recording our own branches. */
+> > +       brbfcr =3D read_sysreg_s(SYS_BRBFCR_EL1);
+> > +       brbcr =3D read_sysreg_s(SYS_BRBCR_EL1);
+> > +       write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> > +       isb();
+> > +
+> > +       /* Block local exception delivery while reading the buffer. */
+> > +       flags =3D local_daif_save();
+> > +
+> > +       /*
+> > +        * A PMU overflow before local_daif_save() could have re-enable=
+d
+> > +        * BRBE, clearing the PAUSED bit. Bail out.
+> > +        */
+> > +       if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED))
+> > +               goto out;
+> > +
+>
+> The code below doesn't implement filtering, I am currently trying to
+> figure out the best way to implement that by reusing
+> read_branch_records() somehow.
+>
 
-Thanks for the explanation!
-
-Sounds like ARM SPE.  Off-topic but I just wonder if it's possible to
-adjust the buffer size so that it can fire for each sample.
-
-> 
-> For s390 when we need callchains, we always use event cpu-clock, never hardware event cycles.
-
-I see.
-
-> 
-> 
-> >>> to the new if(EM_HOST == ...) above.
-> >>> The s390 CPU Measurement sampling device driver does not check on the attr.core.exclude_callchain_user
-> >>> member, but on the sample_type bit mask. It returns -EOPNOTSUPP when this bit PERF_SAMPLE_CALLCHAIN
-> >>> is set. This solves the invocation with command line flag -g as in
-> >>>  # ./perf record -v -e cycles  -g  -- perf test -w noploop
-> >>>  ...
-> >>>  perf record: Captured and wrote 0.183 MB perf.data ]
-> >>
-> >> Right because the callchain was removed from all the samples. We can't
-> >> fix old kernels (other than by using fix tags); is there a possibility
-> >> of adding the exclude_callchain_user to the s390 perf driver for the
-> >> sake of kernel callchains? It seems better than providing no
-> >> callchain.
-> >>
-> >>> Also I discovered that the fallback when using --call-graph dwarf command line flag still fails:
-> >>>  # ./perf record -v -e cycles  --call-graph dwarf -- perf test -w noploop
-> >>>  ...
-> >>>  Warning:
-> >>>  Trying to fall back to excluding guest samples
-> >>>  Error:
-> >>>  Failure to open event 'cycles:H' on PMU 'cpum_cf' which will be removed.
-> >>>  cycles:H: PMU Hardware doesn't support sampling overflow-interrupts. Try 'perf stat'
-> >>>  Error:
-> >>>  Failure to open any events for recording.
-> >>>
-> >>> The reason is in __evsel__config_callchain() which calls evsel__set_sample_bit(evsel, CALLCHAIN)
-> >>> and sets the PERF_SAMPLE_CALLCHAIN bit in evsel->core.attr.sample_type. It also sets the
-> >>> member attr->exclude_callchain_user = 1 and sets bits REGS_USER and _STACK_USER.
-> >>> All three bits are not supported by s390.
-> >>
-> >> I'm confused by this and your previous testing that showed the
-> >> `--call-graph dwarf` worked. You need the sampled registers for dwarf
-> >> unwinding to provide initial register values for the unwinder.
-> >>
-> 
-> Right, as explained shortly above, we have to use '-e cpu-clock --call-graph dwarf'
-> to get valid call chain data.
-> 
-> >>> I have modified your 2nd patch and appended it.
-> >>>
-> >>> I find all these bits in sample_type and the attr.exclude_XXX stuff very confusing. If there
-> >>> is a more consistant way of checking these feature, please let me know.
-> > 
-> > I forgot to mention, yeah the exclude thing is maddening. It takes
-> > about 100 lines to convert the command line modifiers to those in the
-> > perf_event_attr, there's a priority to them, and so on:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/parse-events.c#n1759
-> > Fwiw, I was thinking for patch 1 of holding onto the parsed modifiers
-> > so that we could reset the excludes based on them when switching to
-> > the software event.
-> > 
-> >> Ok, let me check it out.
-> > 
-> > So looking at the cpum_cf driver it fails events for having sampling enabled:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/s390/kernel/perf_cpum_cf.c#n859
-> > ```
-> > if (is_sampling_event(event)) /* No sampling support */
-> > ```
-> > and the cpum_sf driver fails for any kind of callchain:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/s390/kernel/perf_cpum_sf.c#n839
-> > ```
-> > static bool is_callchain_event(struct perf_event *event)
-> > {
-> > u64 sample_type = event->attr.sample_type;
-> > 
-> > return sample_type & (PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_REGS_USER |
-> >      PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_STACK_USER);
-> > }
-> > 
-> > static int cpumsf_pmu_event_init(struct perf_event *event)
-> > {
-> > int err;
-> > 
-> > /* No support for taken branch sampling */
-> > /* No support for callchain, stacks and registers */
-> > if (has_branch_stack(event) || is_callchain_event(event))
-> > return -EOPNOTSUPP;
-> > ```
-> > Perhaps there is an oversight in the cpum_cf driver wrt branch stacks
-> > (LBR on x86). The PERF_SAMPLE_CALLCHAIN bit is set for perf call-graph
-> > options currently:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/evsel.c#n1024
-> > 
-> > I think cpum_sf is the PMU we care about for the default cycles event?
-> 
-> Right this PMU does sampling on s390
-> 
-> > Since callchains of any flavor don't work with cpum_sf we can do a few
-> > things:
-> > 1) Disable the callchain and allow hardware sampling to continue,
-> > 2) Switch to a software event like cpu-clock,
-> > 3) Fail for the callchain option with this PMU, which is currently
-> > happening anyway.
-> 
-> @Namhyung:
-> It fails to open event cycles for PMU cpum_sf.
-
-Ok, I assume it'd reject events with PERF_SAMPLE_CALLCHAIN.
-
-> 
-> > 
-> > I dislike option 3 because it requires special s390 logic for many
-> > tests, and we lose testing coverage of hardware events. Option 1 is a
-> > smaller patch, an early return in __evsel__config_callchain if on
-> > s390. Option 2 feels most like what the user would want given they
-> > asked for a callchain. We could change evlist__new_default to take a
-> > "with callchain" boolean and on s390 that could switch the event to a
-> > software one. Only two non-test callers use evlist__new__default
-> > (record and top), so it isn't a huge change.
-> > 
-> > Wdyt Thomas, option 1 or 2?
-> > 
-> > Thanks,
-> > Ian
-> 
-> I actually prefer option 2. when call chains are requested by the user
-> switch to cpu-clock event.
-
-I think the current code will do the job already.  But we missed to
-remove some exclude_* bits before that.  And moving callchain setting
-from FP to DWARF is a separate issue.
-
-> 
-> Thanks a lot for your patience.
-
-The same goes to you. :)
-
-Thanks,
-Namhyung
-
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> IBM Deutschland Research & Development GmbH
-> 
-> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-> 
-> Geschäftsführung: David Faller
-> 
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+So, I thought about this more and feel that we don't need to filter
+for a specific event because the BPF program is not associated with a
+specific event, rather it is associated with the CPU where it is
+running, So bpf_get_branch_snapshot() should return the branch records
+from the PMU of that CPU. Now, if there are two events on that cpu
+with different branch filter types, let's say
+PERF_SAMPLE_BRANCH_IND_CALL in one event and
+PERF_SAMPLE_BRANCH_ANY_RETURN in another event, the perf subsystem
+configures BRBE to record the union and then does per event filtering
+in software (brbe_read_filtered_entries()), but the BPF program should
+still return everything that was recorded on the CPU, which this patch
+is doing.
