@@ -1,37 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BD6330BF70;
-	Fri, 13 Mar 2026 14:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DFDA390993
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773413123; cv=none; b=TuBM+WWSOuozrZWC5VPvT9ESpdkNAVpHbzUT1Jh9ghKKxWXTqycKseoAOajP23pcv103I96kXbDUpvmo5ihL/TV9g0QoR3uKFcTLafyoOgKiRuljwNNmFDn5ghLMxOZ2poCxLwKG/ojuYaSYKbOkUmAWf4CGgnpEJPtANurmk4E=
+	t=1773414810; cv=none; b=RCpxDfJ3piHLDUp53q5tpVhLwebEU1wDXGxQe6MwINvoP1lby8QY3Niei8Bsv3BNbQRMIfZjRUvaHmwAKBicRRrPzAolbG8u9Voi0p2KG0iCJ7dR3m7d7ocplycN792uHf69N5M7LwVuWvBCADuT1DUZtTVJlScn/LftOy3iH5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773413123; c=relaxed/simple;
-	bh=XVpvNySNCJ7P6rS4KC6BqpYui1jlInKjWbqQ56AunFQ=;
+	s=arc-20240116; t=1773414810; c=relaxed/simple;
+	bh=WlovJ7EvHZMZ7do67M/nx5DuFSTm/dh3Yqx9Th+WY5w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0PZ5/UzGKIbYJips1IFyWmNoo4eTFfq0HUZUk6zzl9e8++KQWL7KtTBbU/pI12UvVPKCVCe50i5cy5ICnkj2BqceZ484I7OtKPWaqOO7oCzzpLFTqskMcUT+H2CQhcJkNO1SzMkQDLb0vLJ922i5ye3bWjiObWzrzdwr++7vTc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGtBb5u5+X51NLSAUbogwXJqWgqcRlXJLKDUlKkJRhLqgvfYYrB9papbsSC4dav7QGJJ/WGKJlqPi4Zhd+UIe9dgpvsWSAOH0Vn+Js7Kv76c0bFCxphdaoLCoAqdT6G9yKJucK6InwH3cbRNxlQxvyAlhdyLnW+bJobUztOuB3s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 978991CC4;
-	Fri, 13 Mar 2026 07:45:14 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C1FA165C;
+	Fri, 13 Mar 2026 08:13:22 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F0063F7BD;
-	Fri, 13 Mar 2026 07:45:20 -0700 (PDT)
-Date: Fri, 13 Mar 2026 14:45:18 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4513E3F73B;
+	Fri, 13 Mar 2026 08:13:28 -0700 (PDT)
+Date: Fri, 13 Mar 2026 15:13:26 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Mike Leach <mike.leach@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	coresight@lists.linaro.org, linux-kernel@vger.kernel.org,
-	acme@kernel.org, leo.yan@linaro.org, peterz@infradead.org,
-	mingo@redhat.com, will@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-	namhyung@kernel.org
-Subject: Re: [PATCH 2/2] perf: tools: cs-etm: Enhance raw Coresight trace
- debug display
-Message-ID: <20260313144518.GN4153946@e132581.arm.com>
-References: <20260313132129.2743468-1-mike.leach@arm.com>
- <20260313132129.2743468-3-mike.leach@arm.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Jan Polensky <japo@linux.ibm.com>
+Subject: Re: perf stat issue with 7.0.0rc3
+Message-ID: <20260313151326.GO4153946@e132581.arm.com>
+References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,31 +35,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260313132129.2743468-3-mike.leach@arm.com>
+In-Reply-To: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
 
-On Fri, Mar 13, 2026 at 01:21:29PM +0000, Coresight ML wrote:
-
-[...]
-
-> ETE trace output changes from:
+On Fri, Mar 13, 2026 at 02:13:18PM +0100, Thomas Richter wrote:
+> Ian, 
 > 
-> Idx:0; ID:14; I_ASYNC : Alignment Synchronisation.
-> Idx:12; ID:14; I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0, TSTATE.0 };
->                Decoder Sync point TINFO
-> Idx:15; ID:14; I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
->                Addr=0xFFFF80007CF7F56C;
-> becoming:
+> I just discovered a strange behavior on linux 7.0.0rc3.
 > 
-> Idx:0; ID:14;[0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80];
->               I_ASYNC : Alignment Synchronisation.
-> Idx:12; ID:14; [0x01 0x01 0x00 ]; I_TRACE_INFO : Trace Info.; INFO=0x0
->                { CC.0, TSTATE.0 }; Decoder Sync point TINFO
-> Idx:15; ID:14; [0x9d 0x5b 0x7a 0xf7 0x7c 0x00 0x80 0xff 0xff ];
->                I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
-> 	       Addr=0xFFFF80007CF7F56C;
+> I run these commands on my x86 virtual machine:
 > 
-> Signed-off-by: Mike Leach <mike.leach@arm.com>
+> bash-5.3# uname -m
+> x86_64
+> bash-5.3# perf -v
+> perf version 6.18.13-200.fc43.x86_64
+> bash-5.3# perf stat -- true
+> 
+>  Performance counter stats for 'true':
+> 
+>          1.108.929      task-clock                       #    0,437 CPUs utilized             
+>                  0      context-switches                 #    0,000 /sec                      
+>                  0      cpu-migrations                   #    0,000 /sec                      
+>                 55      page-faults                      #   49,597 K/sec                     
+>    <not supported>      cycles                                                                
+> 
+>        0,002536439 seconds time elapsed
+> 
+>        0,001363000 seconds user
+>        0,001393000 seconds sys
+> 
+> bash-5.3#
+> 
+> This is the epected output, however when I use the perf version 7.0.0rc3:
+> 
+> bash-5.3# ./perf -v
+> perf version 7.0.rc3.g1f318b96cc84
+> bash-5.3# ./perf stat -- true
+> Error:
+> No supported events found.
+> trace.args_alignment
+> bash-5.3# 
+> 
+> Same happens on my s390 systems (LPAR and z/VM).
+> Is this a known already?
 
-LGTM and I tested it:
+I assume you are missing the patch below.  It has been picked to
+perf-tools-next but not landed to mainline.
 
-Tested-by: Leo Yan <leo.yan@arm.com>
+Author: Ian Rogers <irogers@google.com>
+Date:   Fri Feb 6 16:49:56 2026 -0800
+
+    perf metricgroup: Fix metricgroup__has_metric_or_groups
+
+    Use metricgroup__for_each_metric rather than
+    pmu_metrics_table__for_each_metric that combines the default metric
+    table with, a potentially empty, CPUID table.
+
+    Fixes: cee275edcdb1 ("perf metricgroup: Don't early exit if no CPUID table exists")
+    Signed-off-by: Ian Rogers <irogers@google.com>
+    Reviewed-by: Leo Yan <leo.yan@arm.com>
+    Tested-by: Leo Yan <leo.yan@arm.com>
+    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 46bf4dfeebc8..7e39d469111b 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1605,9 +1605,9 @@ bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_gr
+                .metric_or_groups = metric_or_groups,
+        };
+
+-       return pmu_metrics_table__for_each_metric(table,
+-                                                 metricgroup__has_metric_or_groups_callback,
+-                                                 &data)
++       return metricgroup__for_each_metric(table,
++                                           metricgroup__has_metric_or_groups_callback,
++                                           &data)
+                ? true : false;
+ }
