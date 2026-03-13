@@ -1,114 +1,183 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DFDA390993
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC0E35DA79;
+	Fri, 13 Mar 2026 15:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773414810; cv=none; b=RCpxDfJ3piHLDUp53q5tpVhLwebEU1wDXGxQe6MwINvoP1lby8QY3Niei8Bsv3BNbQRMIfZjRUvaHmwAKBicRRrPzAolbG8u9Voi0p2KG0iCJ7dR3m7d7ocplycN792uHf69N5M7LwVuWvBCADuT1DUZtTVJlScn/LftOy3iH5E=
+	t=1773414891; cv=none; b=UNtCNUXFTZnkSA7TIGkShAAKJdD+3eERjUgphRhj/N3GK98i5ldYPW5N0bVPbZLxmU6790ZTygBoVAx6mx7+FOfDUJueDU9rClvY7fjq2USRCfeT+QuoKZAdoYLVWrHWGDzGaqdDs70VuMNq8qKekjWYXmOPUl2B3pfj9l2Dr5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773414810; c=relaxed/simple;
-	bh=WlovJ7EvHZMZ7do67M/nx5DuFSTm/dh3Yqx9Th+WY5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGtBb5u5+X51NLSAUbogwXJqWgqcRlXJLKDUlKkJRhLqgvfYYrB9papbsSC4dav7QGJJ/WGKJlqPi4Zhd+UIe9dgpvsWSAOH0Vn+Js7Kv76c0bFCxphdaoLCoAqdT6G9yKJucK6InwH3cbRNxlQxvyAlhdyLnW+bJobUztOuB3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C1FA165C;
-	Fri, 13 Mar 2026 08:13:22 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4513E3F73B;
-	Fri, 13 Mar 2026 08:13:28 -0700 (PDT)
-Date: Fri, 13 Mar 2026 15:13:26 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Jan Polensky <japo@linux.ibm.com>
-Subject: Re: perf stat issue with 7.0.0rc3
-Message-ID: <20260313151326.GO4153946@e132581.arm.com>
-References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
+	s=arc-20240116; t=1773414891; c=relaxed/simple;
+	bh=k8I8bAXrnAz84SkoUYj+nj9OUQjwxWrTL3YDjclDP18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8+PM+VdAD4XResVxBMj2xh6RVVSJDHQDxcdHceRnNF1Z8+el8huMBwcRFHsmkSm1TnIHnjMlmHOqvRJ5qU/IkVqcDmMtgg9pK2xsF1M+Q1VEM8fXxgmVWBB1ycwLuFFh+u5feeaagyHfeggORrHiaDcDu8YT7QOM7NaEdo/N+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEO7X26B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEO7X26B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B52C19421;
+	Fri, 13 Mar 2026 15:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773414891;
+	bh=k8I8bAXrnAz84SkoUYj+nj9OUQjwxWrTL3YDjclDP18=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CEO7X26BGNGXf7/834VeTsavOqbs9D+3PlcSX6dEq6XVk/hF2CG5VBp5mCRsQ7H/+
+	 iPpzotBPPSqkGAyWIvow3l6lDKtSOrrYCMXOvV8MFi6gqA2dUHBSirPOi5lmIG9V7k
+	 haPrTkLMqqJ18nf1mUwvccQXJg+wARXkgawRnyULKSXBdq6GI+aC3VCvsL7Eoq2oRw
+	 V4U9nTFXstWkzY+bbU6TeXDhQYBQl7Em+PXRBf8ez4MUmFhl0t8CPQJS82DDEvotTC
+	 D7Ftpw9tqJJWVDMcl68KBBGvxchnkBLAmrP5cvYcOTnGGzNBkks8+nFjmhrWDBwDpb
+	 fylP/IPV7aFCQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Changqing Li <changqing.li@windriver.com>,
+	Chen Ni <nichen@iscas.ac.cn>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>,
+	Leo Yan <leo.yan@arm.com>,
+	Markus Mayer <mmayer@broadcom.com>,
+	Peter Collingbourne <pcc@google.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v7.0
+Date: Fri, 13 Mar 2026 12:14:34 -0300
+Message-ID: <20260313151434.1695228-1-acme@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 13, 2026 at 02:13:18PM +0100, Thomas Richter wrote:
-> Ian, 
-> 
-> I just discovered a strange behavior on linux 7.0.0rc3.
-> 
-> I run these commands on my x86 virtual machine:
-> 
-> bash-5.3# uname -m
-> x86_64
-> bash-5.3# perf -v
-> perf version 6.18.13-200.fc43.x86_64
-> bash-5.3# perf stat -- true
-> 
->  Performance counter stats for 'true':
-> 
->          1.108.929      task-clock                       #    0,437 CPUs utilized             
->                  0      context-switches                 #    0,000 /sec                      
->                  0      cpu-migrations                   #    0,000 /sec                      
->                 55      page-faults                      #   49,597 K/sec                     
->    <not supported>      cycles                                                                
-> 
->        0,002536439 seconds time elapsed
-> 
->        0,001363000 seconds user
->        0,001393000 seconds sys
-> 
-> bash-5.3#
-> 
-> This is the epected output, however when I use the perf version 7.0.0rc3:
-> 
-> bash-5.3# ./perf -v
-> perf version 7.0.rc3.g1f318b96cc84
-> bash-5.3# ./perf stat -- true
-> Error:
-> No supported events found.
-> trace.args_alignment
-> bash-5.3# 
-> 
-> Same happens on my s390 systems (LPAR and z/VM).
-> Is this a known already?
+Hi Linus,
 
-I assume you are missing the patch below.  It has been picked to
-perf-tools-next but not landed to mainline.
+	Please consider pulling,
 
-Author: Ian Rogers <irogers@google.com>
-Date:   Fri Feb 6 16:49:56 2026 -0800
+Best regards,
 
-    perf metricgroup: Fix metricgroup__has_metric_or_groups
+- Arnaldo
 
-    Use metricgroup__for_each_metric rather than
-    pmu_metrics_table__for_each_metric that combines the default metric
-    table with, a potentially empty, CPUID table.
 
-    Fixes: cee275edcdb1 ("perf metricgroup: Don't early exit if no CPUID table exists")
-    Signed-off-by: Ian Rogers <irogers@google.com>
-    Reviewed-by: Leo Yan <leo.yan@arm.com>
-    Tested-by: Leo Yan <leo.yan@arm.com>
-    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+The following changes since commit 0031c06807cfa8aa51a759ff8aa09e1aa48149af:
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 46bf4dfeebc8..7e39d469111b 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1605,9 +1605,9 @@ bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_gr
-                .metric_or_groups = metric_or_groups,
-        };
+  Merge tag 'cgroup-for-7.0-rc2-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup (2026-03-03 14:25:18 -0800)
 
--       return pmu_metrics_table__for_each_metric(table,
--                                                 metricgroup__has_metric_or_groups_callback,
--                                                 &data)
-+       return metricgroup__for_each_metric(table,
-+                                           metricgroup__has_metric_or_groups_callback,
-+                                           &data)
-                ? true : false;
- }
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v7.0-1-2026-03-13
+
+for you to fetch changes up to 35b16a7a2c4fc458304447128b86514ce9f70f3c:
+
+  perf synthetic-events: Fix stale build ID in module MMAP2 records (2026-03-11 17:47:42 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v7.0:
+
+- Fix stale build ID in module MMAP2 records in events synthesized for
+  pre-existing processes.
+
+- Fix rust cross compilation.
+
+- hashmap__new() error pointer return handling fixes.
+
+- Fix off-by-one bug in outside of functions check on the disasm code.
+
+- Update header copies of kernel headers, including prctl.h, mount.h, fs.h,
+  irq_vectors.h, perf_event.h, gfp_types.h, kvm.h, cpufeatures.h msr-index.h,
+  also the syscall tables files that introduced the 'rseq_slice_yield' syscall.
+
+- Finish removal of ETM_OPT_* on the ARM coresight support, needed to sync
+  the coresight-pmu.h header with the kernel sources.
+
+- Make in-target rule robust against too long argument error.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (12):
+      tools headers: Sync uapi/linux/prctl.h with the kernel source
+      perf beauty: Sync linux/mount.h copy with the kernel sources
+      perf beauty: Sync UAPI linux/fs.h with kernel sources
+      perf beauty: Update the arch/x86/include/asm/irq_vectors.h copy with the kernel sources
+      perf beauty: Update the linux/perf_event.h copy with the kernel sources
+      tools headers: Update the linux/gfp_types.h copy with the kernel sources
+      tools headers UAPI: Sync linux/kvm.h with the kernel sources
+      tools headers x86 cpufeatures: Sync with the kernel sources
+      tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
+      tools arch x86: Sync msr-index.h to pick MSR_{OMR_[0-3],CORE_PERF_GLOBAL_STATUS_SET}
+      tools headers: Update the syscall tables and unistd.h, to support the new 'rseq_slice_yield' syscall
+      tools headers UAPI: Update tools' copy of linux/coresight-pmu.h
+
+Changqing Li (1):
+      tools build: Make in-target rule robust against too long argument error
+
+Chen Ni (2):
+      perf annotate: Fix hashmap__new() error checking
+      perf ftrace: Fix hashmap__new() error checking
+
+Chuck Lever (1):
+      perf synthetic-events: Fix stale build ID in module MMAP2 records
+
+Dmitrii Dolgov (1):
+      tools build: Fix rust cross compilation
+
+Ian Rogers (1):
+      perf annotate loongarch: Fix off-by-one bug in outside check
+
+James Clark (2):
+      perf cs-etm: Finish removal of ETM_OPT_*
+      perf cs-etm: Sync coresight-pmu.h header with the kernel sources
+
+Markus Mayer (1):
+      perf build: Prevent "argument list too long" error
+
+Peter Collingbourne (1):
+      perf disasm: Fix off-by-one bug in outside check
+
+ tools/arch/x86/include/asm/amd/ibs.h               |   2 +-
+ tools/arch/x86/include/asm/cpufeatures.h           |   4 +-
+ tools/arch/x86/include/asm/msr-index.h             |   6 +
+ tools/arch/x86/include/uapi/asm/kvm.h              |   8 +-
+ tools/build/Build.include                          |   9 +
+ tools/build/Makefile.build                         |   6 +-
+ tools/include/linux/coresight-pmu.h                |  24 -
+ tools/include/linux/gfp_types.h                    |   9 +-
+ tools/include/uapi/asm-generic/unistd.h            |   5 +-
+ tools/include/uapi/linux/kvm.h                     |  24 +-
+ tools/include/uapi/linux/perf_event.h              |   2 +-
+ tools/perf/Makefile.config                         |  18 +
+ tools/perf/Makefile.perf                           |   2 +-
+ tools/perf/arch/arm/entry/syscalls/syscall.tbl     |   1 +
+ tools/perf/arch/arm/util/cs-etm.c                  |  14 -
+ .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |   1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |   1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    | 859 ++++++++++-----------
+ tools/perf/arch/sh/entry/syscalls/syscall.tbl      |   1 +
+ tools/perf/arch/sparc/entry/syscalls/syscall.tbl   |   3 +-
+ tools/perf/arch/x86/entry/syscalls/syscall_32.tbl  |   1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |   1 +
+ tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  |   1 +
+ tools/perf/builtin-ftrace.c                        |   9 +-
+ tools/perf/pmu-events/Build                        |   3 +-
+ .../beauty/arch/x86/include/asm/irq_vectors.h      |   1 +
+ tools/perf/trace/beauty/include/uapi/linux/fs.h    |   1 +
+ tools/perf/trace/beauty/include/uapi/linux/mount.h |  13 +-
+ tools/perf/trace/beauty/include/uapi/linux/prctl.h |  37 +
+ tools/perf/util/annotate-arch/annotate-loongarch.c |   2 +-
+ tools/perf/util/annotate.c                         |   5 +-
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |   2 +-
+ tools/perf/util/cs-etm.c                           |  36 +-
+ tools/perf/util/cs-etm.h                           |  15 +
+ tools/perf/util/disasm.c                           |   2 +-
+ tools/perf/util/synthetic-events.c                 |   5 +
+ tools/scripts/syscall.tbl                          |   1 +
+ 37 files changed, 584 insertions(+), 550 deletions(-)
