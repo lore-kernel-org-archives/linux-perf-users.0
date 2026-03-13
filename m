@@ -1,70 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2403A9DA3;
-	Fri, 13 Mar 2026 13:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780A839DBC4;
+	Fri, 13 Mar 2026 14:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773408836; cv=none; b=HGm19+hjCloCOm14LALJ3GE7bJ5sikWZkqZB7VUrc52k8oXV+/cn//ks2TtRD2/ZQSmVV9+BVqlip8wIr2uZsKqFxpE8AHqmvGB4gVba9YDUpptMeUjJ+40Oct4XtAHlFsCYEcDmrKQjodxAITtSsep9P0pz8A80XIS1DTFCBJI=
+	t=1773412963; cv=none; b=LLboJWzHxFX+WW/dIM1wqX5Wu5S7Wy88tKOPfePgSLyUMhCJSPx8XOg1UNXaOgaB6Lb+VMj2ZbMpZexb7DNZAooW2/orAFtLfv/oqNdMFhrQOEkoyxAwGmlbI7Pk9HpHnQSnYzypOHXPVVStt1DTAARmePg3KGktBKwkRSCgXmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773408836; c=relaxed/simple;
-	bh=AsX3C2hlUvkqktdPj7+pB/3rNjxKkhPkB+9v9ZcQKf4=;
+	s=arc-20240116; t=1773412963; c=relaxed/simple;
+	bh=Gctqmv8j832HSANwQTR0pbldvumowi8c4lgvpTFGZUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y01xcnoSKNUZUsz6Txz+XnzhL2+6TSAm4WRRYNmEvhCyd5rdnPdyzBbwyj7IJQK9xRLDSf9Xz8udzf5uLhysWTRDA3dVNQySyjIXITz+/kQ0bKTJCgBXBqRu+jcBXrdTPxLQf8d8GudZ5m8iR8mSiYrdmNZ7Q1NbXqrCk15uVOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyFxil+n; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyFxil+n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98853C19421;
-	Fri, 13 Mar 2026 13:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773408835;
-	bh=AsX3C2hlUvkqktdPj7+pB/3rNjxKkhPkB+9v9ZcQKf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dyFxil+nKP2AhM6je5QpP0RaFX8/v/cDk7TTmgWg0TVuLcn9ryIJFFOKybiUVi50U
-	 uvdQc8Y6kpDTi0BHcpPulUDB2ubvS6FkKhBDLSu9E0be+AZWlWih7uFLO3+aUElFmu
-	 13ruL9CC83R8seUZq5gEOLGkDUjBcgQgaUXRI3n/91MR+gcPDy31cMuznMDyMbXhVH
-	 bNDvCk/LVVtkfJBhMSijeGJi0YyQ09xstTBjmqtsJbqV6hlwX23eVom1+8lBf/DwiL
-	 2LWG0BN+/BCF79835ZbyBurws49fKNyB2/jDJGmoytzZtrwJeDPyrFb34LppYcAbh5
-	 csTNrevq9Mhxg==
-Date: Fri, 13 Mar 2026 14:33:04 +0100
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, Quentin Monnet <qmo@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, 
-	Qinxin Xia <xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Kent Gibson <warthog618@gmail.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
-	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
-	Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
-	Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 28/30] selftests/hid: Append extra cflags
-Message-ID: <abQR8dXwrbX47SEQ@beelink>
-References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
- <20260311-tools_build_fix_zero_init-v4-28-9e35bdb99cb3@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I3kkhNMbMp86szsYj+R15nNdofGsLYQ6c6aQr/YLU0L/md6zV9LyDjK4zRejEgY8WcXLBITdwyrhZkeT66xjBvts1Lr1ohgss/2N/37W8/Mj+gDYRGpYN02TLqqazwDteblU4GgGRaHy1OqESzsZko3S9Pey69FnrGOrnmLcHzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDB36165C;
+	Fri, 13 Mar 2026 07:42:35 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94FA03F7BD;
+	Fri, 13 Mar 2026 07:42:41 -0700 (PDT)
+Date: Fri, 13 Mar 2026 14:42:39 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Mike Leach <mike.leach@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	coresight@lists.linaro.org, linux-kernel@vger.kernel.org,
+	acme@kernel.org, suzuki.poulose@arm.com, leo.yan@linaro.org,
+	peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@redhat.com, namhyung@kernel.org
+Subject: Re: [PATCH 1/2] perf: tools: cs-etm: Fix print issue for Coresight
+ debug in ETE/TRBE trace
+Message-ID: <20260313144239.GM4153946@e132581.arm.com>
+References: <20260313132129.2743468-1-mike.leach@arm.com>
+ <20260313132129.2743468-2-mike.leach@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,37 +40,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260311-tools_build_fix_zero_init-v4-28-9e35bdb99cb3@arm.com>
+In-Reply-To: <20260313132129.2743468-2-mike.leach@arm.com>
 
-On Mar 11 2026, Leo Yan wrote:
-> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-> the compiler.
+On Fri, Mar 13, 2026 at 01:21:28PM +0000, Mike Leach wrote:
+> Building perf with CORESIGHT=1 and the optional CSTRACE_RAW=1 enables
+> additional debug printing of raw trace data when using command:-
+> perf report --dump.
 > 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> This raw trace prints the CoreSight formatted trace frames, which may be
+> used to investigate suspected issues with trace quality / corruption /
+> decode.
+> 
+> These frames are not present in ETE + TRBE trace.
+> This fix removes the unnecessary call to print these frames.
+> 
+> Due to an addtional fault with the OpenCSD library, this call when ETE/TRBE
+> are being decoded will cause a segfault in perf. This fix also prevents
+> that problem for perf using older (<= 1.8.0 version) OpenCSD libraries.
+
+Thanks for patches!
+
+> Fixes: 68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
+> 
+
+Redundant empty line.
+
+> Reported-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Mike Leach <mike.leach@arm.com>
 > ---
->  tools/testing/selftests/hid/Makefile | 1 +
->  1 file changed, 1 insertion(+)
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-> index 50ec9e0406abaf316fba232c5da1967e27d0fa9b..686c5f79ca592c2ce94e37b39ab5c3ebe8483f79 100644
-> --- a/tools/testing/selftests/hid/Makefile
-> +++ b/tools/testing/selftests/hid/Makefile
-> @@ -26,6 +26,7 @@ HOSTPKG_CONFIG := pkg-config
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index 3050fe212666..f7e89693cf16 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -739,7 +739,8 @@ cs_etm_decoder__new(int decoders, struct cs_etm_decoder_params *d_params,
+>  		goto err_free_decoder;
 >  
->  CFLAGS += -g -O0 -rdynamic -Wall -Werror -I$(OUTPUT)
->  CFLAGS += -I$(OUTPUT)/tools/include
-> +CFLAGS += $(EXTRA_CFLAGS)
+>  	/* init raw frame logging if required */
+> -	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
+> +	if (format == OCSD_TRC_SRC_FRAME_FORMATTED)
+> +		cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
 
-Acked-by: Benjamin Tissoires <bentiss@kernel.org>
+Could we improve a bit to add checking in
+cs_etm_decoder__init_raw_frame_logging(), something like:
 
-Cheers,
-Benjamin
+ cs_etm_decoder__init_raw_frame_logging(struct cs_etm_decoder_params *d_params,
+                                       struct cs_etm_decoder *decoder)
+ {
++       /* No formatted trace frames */
++       if (!d_params->formatted)
++               return;
+
+Sorry I should have mentioned this early.
 
 >  
->  LDLIBS += -lelf -lz -lrt -lpthread
->  
-> 
+>  	for (i = 0; i < decoders; i++) {
+>  		ret = cs_etm_decoder__create_etm_decoder(d_params,
 > -- 
-> 2.34.1
-> 
+> 2.43.0
 > 
