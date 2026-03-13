@@ -1,127 +1,206 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E921D3B2FF0;
-	Fri, 13 Mar 2026 15:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773416136; cv=none; b=DY15rrATjzUT7Tmu2nrxwjDMnqdrn8lWQmcmgkztBKle0pYtiqcPt3E6Rg5Ln+JUKaNn/+w1TpR3kPnxrHpzAFoe4+ezCT01YD0CNsBD5u0o2Dt8+7oKBccr7nrqVdAvMWf2kDYlVO0Q2cQ1t1IEWcfNdGxgJKswNJhBoTQ33dk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773416136; c=relaxed/simple;
-	bh=LiVpjZyWcLgaZBso4RHPZwM346VQfW2lwVDPOvwOGhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqdcxxWasiPueWQJKN9GS4ncRYKDoJ7rQ2K1IfnBYlYdytkUfcl3FVcqK5N8FLlnoAYYwvTOdHOOpYbOoJfLa38o1o/k5W10g0YO3Hwi92sJ5EJ+1ThofI0T74/dKWIrK0loEBbdwIrUyyNbnEqjjDnrE8vOWlJ/eFOivMvprXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=exzRCStB; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570E3A1E6A
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773416522; cv=pass; b=uSZBjbQL0pUv0KyF6QtBr0TJrMmXbCI254Oa1CB+LbGLAJsDgjEicOM9JP3V9Ofsy7VgnUcOQBeFPBsMCN7f9MlFnVBishbjGT9Dddi8/3jhb67owG+HpqWLxfqR74OomSm/DfuzXuRiHZe7smISR7RJx3of2/FO1HP6jivG2lE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773416522; c=relaxed/simple;
+	bh=MqKWbF1K9prpiKRFMJUDv6RSKOW1kYhKyzjN906N8Ac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i7bjYZ1zQFuAaG16u6UKCLO/wmDK7TkZi6dWrxZUI6TGhuzPtpbhoMJRU6oTvqgoM/i6x8tVF4a9jhS42zkf0nqe4UavDc0gCSSs9GDk2clCOIMeoXaeIlnQElnTMTZBehl7xj2sBW2ttj/BcMeqcxq3H3pRE3T9ahbaumzm0KU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iaGYXV2i; arc=pass smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="exzRCStB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dWMRU5JVS/t7/tdyfkDrfyI+p1lveBJHbU8Nl4HN8OU=; b=exzRCStBODRJ0dm7D5emwmIuQA
-	Z5StnHDK/A8VRC+ZT9kadzJgmY06ey8oeYuWuaN7BEUZXbBOM64ScuVVZrq9UcS3xHSuGZDW3BB2u
-	9A4jNjZmr/Ep8fcsKalhjUec18gYWofupd/Aqb1rg6qmEEP4TaZuGSUUBAU53kcF54Lg8RJsT/MSs
-	PIGKz8g2sIZM8RxrPDOO0gTaE1PEJAG/4+tR1n+ETl4F0ISCFGSa5gDNnyKD6EBrLpkKTVQUxfav/
-	9wJWVhoEXep7HOjkpNpaUd62jkE+GaYtgOYYefv3cZ8n5sknkt4S2c2JcFeHLClbcoDVI4iiUu4vY
-	eKOBby4g==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w14Xk-00000003iKj-3mNu;
-	Fri, 13 Mar 2026 15:35:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B790A303377; Fri, 13 Mar 2026 16:35:15 +0100 (CET)
-Date: Fri, 13 Mar 2026 16:35:15 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
- x86_pmu_enable()
-Message-ID: <20260313153515.GC2872@noisy.programming.kicks-ass.net>
-References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
- <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
- <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
- <20260311173509.GR606826@noisy.programming.kicks-ass.net>
- <20260311204035.GX606826@noisy.programming.kicks-ass.net>
- <9e0e04e9-7421-4dfb-a017-c31741a8d500@linux.intel.com>
- <abQPM7zKWBaNJufd@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaGYXV2i"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ae3f822163so107075ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 08:42:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773416520; cv=none;
+        d=google.com; s=arc-20240605;
+        b=i6gTURt1WvqyeQu2aF6Z7pxm6vEZde0mBTecBTilWdlrBaIcV2uFr2r9k8TNU4H7Mp
+         FxNGSCr0Snc/jwK1OzzeAyJqVKSmrlf63hgFH5DZqRenra9aVon7bqc2CPPKMzCmoOQq
+         TG55l9QeY/Cv4338wjF+1Xr5H6M9+ijCVwegTHH5onCUHldLxp6/ynOOZuzuXi6QpiI7
+         h8eoncb669s62jkkfmvcY614WP7E9cwp3LO4QJ62W9ordUOPc4PjrhTM3tQ0cB55wX39
+         Rj3VSjsQXkjuYVwmIhY78XaxUFasgoM3Jxo/rXwSn3ObjIzkkoG1J4DDyBMbdrWXy96+
+         x6NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
+        fh=EEu9jOGS8DkWWjdt5iWdr7DMyWuuoSqsD2ccay8Q1kE=;
+        b=NpRHId5qjIC9NGnC2/gk1Sy0N4Gy/YBAADldmxiztZY92ktD4e7stwhPyuUGPqRzQP
+         mRF3OiJnJnFr0QGE5PjahLaRl/vZmFsEtWM877+j+t/AqKzcwrg8DujbMT8caUVK/+FL
+         4TBDsoqvH/XKllkfkvIJcJ+i4LBkOKV8LqhCsOeQ/0aA8LbcSYOXzYQhAZVTflmNPjM5
+         H7qpipwlRdnsQ4mgXDrCgyOBHYZjhW8mLo+I7JFDtq6oi9VgA5TI3u+3hpeeUFabOGmx
+         CSfW+kFbFPryFHvBl2H38ZGViwGE9zQ/8LKp81SWCfssUvAe0W2J1UiCRIi9u7ZnYDW7
+         THCw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773416520; x=1774021320; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
+        b=iaGYXV2ilZGyglbFo8PG5iK78pZuf1VyFKey0BcoKTisrBeeTvSycmsK0w0jDTlqr0
+         qsIsnzDP0sQ0xKjSKBcllr3MwZIEOIstdzeu19sZOIGVyTe02B/WjrThwRvOrLfBCuTI
+         FrUf89IP9Mq6vBqtFQAOQyEr38wZXZb+vH0vwJtaYZp8XtKKdywz8Cak6cYvIdE/DSuV
+         B/rSWsYtZjfU6kTqEHWOX4H6guXoGJ9k9FJ2q94Q2epCLTtNJ3zNqK2PxIe5MgSn7349
+         M+Q0/EjvZzTABR1am5NyrHSxRFbqMd0i7mj/bUcMPNbk768DlWD55CWXWHC67kZ0cnn3
+         vFrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773416520; x=1774021320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
+        b=jmWzCFJkqz1V8IlGbFZYWOcKwcX7SE6cZa++AQJJOnsb9y3DhYf92K7kyADkx5TJkM
+         7CgrSwE9RD1mpe572PMEpJb6pnp35f/I7jz2RXNFSK0hbXB917AVFJ9F6O7ifh+mg8vC
+         X/0lxhvhKzSa2A54t650tUqeon8bDxIp1xtslMcvAuhpnN/KghwnsyTQ2a0ccw0N9yc8
+         saIU7/tDGJ4EQpAntKRGe6cYQdXz7ZyhowrhYSTV8yMX89y4AZwvO68vpjI2efKeDHjN
+         SCIOeuY1O7+hODPh/D9Ensw2BaGVU7wr14grxvmEcpVtAY8rYUPKtVeIxaKLwr4IgPC+
+         PHpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUc/dTbYn/YmAC/YdBkgugOWer5FCWerPAkY6FYwhPrQHgmFImHoyVzEtIf/4K0lgHP9XnHea6/iFxqu3HQ/gyq@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBLSNxMRYcLrlku2pl2RHYjcvWmQSn+JiYWzBM/DfyOAXQKC/4
+	S+MWtsJw9vWeSX14z/mtVpIXSoZarMEGgPxC5vtuw9bEq+s3oYcGV/qwi3+l1MMYykAVwgn5uzY
+	GGXK3d0EZyHr6ZHaCOeuCOM3eFJBc+E7CZ88AqB2u
+X-Gm-Gg: ATEYQzyXqFCQ9gGa0iJg1pBvRpmIAOJf8tIppfdmOvoLAGxUxVZOomcTZ7yjjQI0PaS
+	TG7+gc9E5bvb1fwoQmx8lGXJJVc5CmC4l+0khGrOFjmMn4vW+RI3LykuJlLspYp3Gv3cRWSMEba
+	Ujt9v1elq34NtegjIGBjQZx8o0WDADAExrYUSIVaOgE2VptjPjgtYuorFyk+X+Sq0+TmFmOCv0F
+	cMgBOwhKB7LLUY9rZBfIxtpgCE89hOnfbbIvw/Zd+NMCLuI7z3bLGQBTbLAv0L/OY0b23Jj5Q+U
+	rIIp9kSag8QmAbYN1itwcMDGp+coYV9RfqsX
+X-Received: by 2002:a17:902:ce0d:b0:2ae:7d03:c911 with SMTP id
+ d9443c01a7336-2aecd56f0b2mr2506745ad.1.1773416519929; Fri, 13 Mar 2026
+ 08:41:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abQPM7zKWBaNJufd@gmail.com>
+References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com> <abQq79_ajs8zFeEI@x1>
+In-Reply-To: <abQq79_ajs8zFeEI@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 13 Mar 2026 08:41:48 -0700
+X-Gm-Features: AaiRm50WOdm4Ean_Pw7iGJt7N5hem3D2oEZRWovZca76GeSqp8bhm-jnnjispcs
+Message-ID: <CAP-5=fWG0Q-xNGn_-_KGCopaNsWG5rUN3pYNLEh3K7+xE0OwVQ@mail.gmail.com>
+Subject: Re: perf stat issue with 7.0.0rc3
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 13, 2026 at 06:23:41AM -0700, Breno Leitao wrote:
-> On Thu, Mar 12, 2026 at 10:53:59AM +0800, Mi, Dapeng wrote:
-> > On 3/12/2026 4:40 AM, Peter Zijlstra wrote:
-> > > Subject: x86/perf: Make sure to program the counter value for stopped events on migration
-> > > From: Peter Zijlstra <peterz@infradead.org>
-> > > Date: Wed Mar 11 21:29:14 CET 2026
-> > >
-> > > Both Mi Dapeng and Ian Rogers noted that not everything that sets HES_STOPPED
-> > > is required to EF_UPDATE. Specifically the 'step 1' loop of rescheduling
-> > > explicitly does EF_UPDATE to ensure the counter value is read.
-> > >
-> > > However, then 'step 2' simply leaves the new counter uninitialized when
-> > > HES_STOPPED, even though, as noted above, the thing that stopped them might not
-> > > be aware it needs to EF_RELOAD -- since it didn't EF_UPDATE on stop.
-> > >
-> > > One such location that is affected is throttling, throttle does pmu->stop(, 0);
-> > > and unthrottle does pmu->start(, 0); possibly restarting an uninitialized counter.
-> > >
-> > > Fixes: a4eaf7f14675 ("perf: Rework the PMU methods")
-> > > Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > > Reported-by: Ian Rogers <irogers@google.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  arch/x86/events/core.c |    4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > --- a/arch/x86/events/core.c
-> > > +++ b/arch/x86/events/core.c
-> > > @@ -1374,8 +1374,10 @@ static void x86_pmu_enable(struct pmu *p
-> > >
-> > >  			cpuc->events[hwc->idx] = event;
-> > >
-> > > -			if (hwc->state & PERF_HES_ARCH)
-> > > +			if (hwc->state & PERF_HES_ARCH) {
-> > > +				static_call(x86_pmu_set_period)(event);
-> > >  				continue;
-> > > +			}
-> > >
-> > >  			/*
-> > >  			 * if cpuc->enabled = 0, then no wrmsr as
+On Fri, Mar 13, 2026 at 8:19=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Fri, Mar 13, 2026 at 02:13:18PM +0100, Thomas Richter wrote:
+> > Ian,
 > >
-> > LGTM.
+> > I just discovered a strange behavior on linux 7.0.0rc3.
 > >
-> > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> Thank you for the patch and the discussion. To confirm my understanding:
-> this patch should be applied on top of my v2 series to fully resolve the
-> issue, correct?
-> 
-> If so, would you prefer that I include both patches together in a single
-> series, or are you fine with them as-is?
+> > I run these commands on my x86 virtual machine:
+> >
+> > bash-5.3# uname -m
+> > x86_64
+> > bash-5.3# perf -v
+> > perf version 6.18.13-200.fc43.x86_64
+> > bash-5.3# perf stat -- true
+> >
+> >  Performance counter stats for 'true':
+> >
+> >          1.108.929      task-clock                       #    0,437 CPU=
+s utilized
+> >                  0      context-switches                 #    0,000 /se=
+c
+> >                  0      cpu-migrations                   #    0,000 /se=
+c
+> >                 55      page-faults                      #   49,597 K/s=
+ec
+> >    <not supported>      cycles
+> >
+> >        0,002536439 seconds time elapsed
+> >
+> >        0,001363000 seconds user
+> >        0,001393000 seconds sys
+> >
+> > bash-5.3#
+> >
+> > This is the epected output, however when I use the perf version 7.0.0rc=
+3:
+> >
+> > bash-5.3# ./perf -v
+> > perf version 7.0.rc3.g1f318b96cc84
+> > bash-5.3# ./perf stat -- true
+> > Error:
+> > No supported events found.
+> > trace.args_alignment
+>
+> And this last line is even stranger, in my case I get something else,
+> also on x86_64:
+>
+> root@number:~#  perf stat -- true
+> Error:
+> No supported events found.
+> addr2line.style
+> root@number:~#
+>
+> On an ARM machine:
+>
+> acme@raspberrypi:~/git/perf-tools $ perf stat -- true
+> Error:
+> No supported events found.
+>
+> acme@raspberrypi:~/git/perf-tools $ uname -a
+> Linux raspberrypi 6.12.62+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.62-1+=
+rpt1 (2025-12-18) aarch64 GNU/Linux
+> acme@raspberrypi:~/git/perf-tools $
+>
+> I'll try to bisect this later, thanks for the report!
 
-Yeah, I've got then in queue/perf/urgent and once the robot is done
-chewing on them, I'll push them out into tip.
+Hi Arnaldo,
 
-Thanks!
+Leo has pointed at the fix:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/tools/perf/util/metricgroup.c?h=3Dperf-tools-next&id=3Dc5a244bf17c=
+af2de22f9e100832b75f72b31d3e6
+This also showed up as missing for the LTS backports:
+https://lore.kernel.org/lkml/ad95d781-7eb2-4c0c-a9e9-aaabae8eb602@kernel.or=
+g/
+so I thought it was flagged as a fix for the next PR. I don't see it in the=
+re:
+https://lore.kernel.org/lkml/20260313151434.1695228-1-acme@kernel.org/
+Could we get it in?
+
+Thanks,
+Ian
+
+
+
+> - Arnaldo
+>
+> > bash-5.3#
+> >
+> > Same happens on my s390 systems (LPAR and z/VM).
+> > Is this a known already?
+> > I guess this is a perf tool issue, same result when you execute this on=
+ a 7.0.0rc3
+> > kernel.
+> >
+> > Any ideas where to start debugging
+> > --
+> > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germ=
+any
+> > --
+> > IBM Deutschland Research & Development GmbH
+> >
+> > Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+> >
+> > Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> >
+> > Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht St=
+uttgart, HRB 243294
+> >
