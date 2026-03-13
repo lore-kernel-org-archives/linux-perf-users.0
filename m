@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5121234751C;
-	Fri, 13 Mar 2026 13:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB0538F65A;
+	Fri, 13 Mar 2026 13:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773408097; cv=none; b=P9SPHs/HuyxFxbNCz++J6pMN+s1HIg4i/OJfXHJrHe5ag5WP5Q2mrXuv1hrcV005BFUf90sDP8Y8m/ocogho2C+7+jS2KKhsX6q3mQGroc6AsXuhzxqVzcn30T1ymAyA55mM+bC5bjkhSscWAMfHc7ysKdlvehciK7GBV/hKU1Y=
+	t=1773408099; cv=none; b=h4fykSfUWnHhJ7ERqdGK500bsNeAPpm4DmhURZ7gA4bFDJ9USAwren6trpnlvngmsiOxD8/gUeCsKyHQkP6IVIDapf4w+G5/89jwryaFIcAak6punUNGTFR/F4MdeJFmXZz/FalaRNk7AcfW3SvnmhnZUYztHAxHZR90MhvcPvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773408097; c=relaxed/simple;
-	bh=bd1TbJp7Yd89q3Q2WVca8kp+kj8hFLLlbenP86LlzL0=;
+	s=arc-20240116; t=1773408099; c=relaxed/simple;
+	bh=sTVnkGCPo0ToxbTpptUzRAu1TrXMsVLxPw2PKOTQ7Ws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TekcT9wXkD0ZpOGHbjlaGj0KWxM9XErTA4B0+AgORGns7yGmfv1jXLJ3XSzo/muu6Tpu1hUiAXkXOjRcJvpuIpfZia1X/S/QwhZApCG3dM5tlEJLiE/x55J0s9m7ns8Ef8buiY7QwC+mXartitRFKbWd5am+tT6BzP2Z8K6f+vo=
+	 MIME-Version; b=d5mD5rq2bNyLC9bZ6o7BYp9lEAb1Bpg1+fsSJ76ZNcip7PcnZcmCvLY6L7i0ybt/N2ReqGVR6SOnAjn+WkACdyCSWXdngugrayoaSQTaLelteiqrY04r0kNmnDxRt6fJ2joPgvF/5MP6dOlqivmFcFrtgBitLgaHll5TuAJvYHU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F4A4176A;
-	Fri, 13 Mar 2026 06:21:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADEF11C2B;
+	Fri, 13 Mar 2026 06:21:31 -0700 (PDT)
 Received: from e142892.manchester.arm.com (e142892.arm.com [10.33.8.89])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DF0A63F73B;
-	Fri, 13 Mar 2026 06:21:33 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1265E3F73B;
+	Fri, 13 Mar 2026 06:21:35 -0700 (PDT)
 From: Mike Leach <mike.leach@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -33,11 +33,10 @@ Cc: suzuki.poulose@arm.com,
 	alexander.shishkin@linux.intel.com,
 	jolsa@redhat.com,
 	namhyung@kernel.org,
-	Mike Leach <mike.leach@arm.com>,
-	Leo Yan <leo.yan@arm.com>
-Subject: [PATCH 1/2] perf: tools: cs-etm: Fix print issue for Coresight debug in ETE/TRBE trace
-Date: Fri, 13 Mar 2026 13:21:28 +0000
-Message-ID: <20260313132129.2743468-2-mike.leach@arm.com>
+	Mike Leach <mike.leach@arm.com>
+Subject: [PATCH 2/2] perf: tools: cs-etm: Enhance raw Coresight trace debug display
+Date: Fri, 13 Mar 2026 13:21:29 +0000
+Message-ID: <20260313132129.2743468-3-mike.leach@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260313132129.2743468-1-mike.leach@arm.com>
 References: <20260313132129.2743468-1-mike.leach@arm.com>
@@ -49,43 +48,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Building perf with CORESIGHT=1 and the optional CSTRACE_RAW=1 enables
-additional debug printing of raw trace data when using command:-
-perf report --dump.
+When compiling perf with CORESIGHT=1, an additional build option may
+be used: CSTRACE_RAW=1, which will cause the CoreSight formatted trace
+frames to be printed out during a perf --dump command. This is useful
+when investigating issues with trace generation, decode or possible
+data corruption.
 
-This raw trace prints the CoreSight formatted trace frames, which may be
-used to investigate suspected issues with trace quality / corruption /
-decode.
+e.g. for ETMv4 trace source into a formatted ETR sink a dump -
 
-These frames are not present in ETE + TRBE trace.
-This fix removes the unnecessary call to print these frames.
+. ... CoreSight ETMV4I Trace data: size 0x28c150 bytes
+Idx:0; ID:14;	I_ASYNC : Alignment Synchronisation.
+Idx:12; ID:14;	I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 };
+                Decoder Sync point TINFO
+Idx:17; ID:14;	I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
+                Addr=0x0000000000000000;
 
-Due to an addtional fault with the OpenCSD library, this call when ETE/TRBE
-are being decoded will cause a segfault in perf. This fix also prevents
-that problem for perf using older (<= 1.8.0 version) OpenCSD libraries.
+becomes with CSTRACE_RAW=1:
 
-Fixes: 68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
+. ... CoreSight ETMV4I Trace data: size 0x28c150 bytes
+Frame Data; Index 0; ID_DATA[0x14]; 00 00 00 00 00 00 00 00
+                                    00 00 00 80 01 01
+Idx:0; ID:14;	I_ASYNC : Alignment Synchronisation.
+Frame Data; Index 16; ID_DATA[0x14]; 00 9d 00 00 00 00 00 00
+                                     00 00 04 85 57 08 f2
+Idx:12; ID:14;	I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 };
+                Decoder Sync point TINFO
+Idx:17; ID:14;	I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
+                Addr=0x0000000000000000;
 
-Reported-by: Leo Yan <leo.yan@arm.com>
+CSTRACE_RAW=1 has no effect on ETE + TRBE trace as there is no trace
+formatting in the TRBE buffer.
+
+This patch enhances the output so that for each packet the individual
+bytes associated with the packet are printed.
+
+Thus for ETMv4 this now becomes:
+
+. ... CoreSight ETMV4I Trace data: size 0x28c150 bytes
+Frame Data; Index 0; ID_DATA[0x14]; 00 00 00 00 00 00 00 00
+                                    00 00 00 80 01 01
+Idx:0; ID:14;[0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80];
+             I_ASYNC : Alignment Synchronisation.
+Frame Data; Index 16; ID_DATA[0x14]; 00 9d 00 00 00 00 00 00
+                                     00 00 04 85 57 08 f2
+Idx:12; ID:14; [0x01 0x01 0x00 ]; I_TRACE_INFO : Trace Info.; INFO=0x0
+                                  { CC.0 }; Decoder Sync point TINFO
+Idx:17; ID:14; [0x9d 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 ];
+               I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
+	       Addr=0x0000000000000000;
+
+ETE trace output changes from:
+
+Idx:0; ID:14; I_ASYNC : Alignment Synchronisation.
+Idx:12; ID:14; I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0, TSTATE.0 };
+               Decoder Sync point TINFO
+Idx:15; ID:14; I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
+               Addr=0xFFFF80007CF7F56C;
+becoming:
+
+Idx:0; ID:14;[0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80];
+              I_ASYNC : Alignment Synchronisation.
+Idx:12; ID:14; [0x01 0x01 0x00 ]; I_TRACE_INFO : Trace Info.; INFO=0x0
+               { CC.0, TSTATE.0 }; Decoder Sync point TINFO
+Idx:15; ID:14; [0x9d 0x5b 0x7a 0xf7 0x7c 0x00 0x80 0xff 0xff ];
+               I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.;
+	       Addr=0xFFFF80007CF7F56C;
+
 Signed-off-by: Mike Leach <mike.leach@arm.com>
 ---
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 3050fe212666..f7e89693cf16 100644
+index f7e89693cf16..229b28538757 100644
 --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
 +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -739,7 +739,8 @@ cs_etm_decoder__new(int decoders, struct cs_etm_decoder_params *d_params,
- 		goto err_free_decoder;
+@@ -22,12 +22,15 @@
+ /* use raw logging */
+ #ifdef CS_DEBUG_RAW
+ #define CS_LOG_RAW_FRAMES
++#define CS_PKT_MON	1
+ #ifdef CS_RAW_PACKED
+ #define CS_RAW_DEBUG_FLAGS (OCSD_DFRMTR_UNPACKED_RAW_OUT | \
+ 			    OCSD_DFRMTR_PACKED_RAW_OUT)
+ #else
+ #define CS_RAW_DEBUG_FLAGS (OCSD_DFRMTR_UNPACKED_RAW_OUT)
+ #endif
++#else
++#define CS_PKT_MON	0
+ #endif
  
- 	/* init raw frame logging if required */
--	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
-+	if (format == OCSD_TRC_SRC_FRAME_FORMATTED)
-+		cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
+ /*
+@@ -686,7 +689,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+ 					   trace_config, &csid))
+ 			return -1;
  
- 	for (i = 0; i < decoders; i++) {
- 		ret = cs_etm_decoder__create_etm_decoder(d_params,
+-		if (ocsd_dt_set_pkt_protocol_printer(decoder->dcd_tree, csid, 0))
++		if (ocsd_dt_set_pkt_protocol_printer(decoder->dcd_tree, csid, CS_PKT_MON))
+ 			return -1;
+ 
+ 		return 0;
 -- 
 2.43.0
 
