@@ -1,60 +1,32 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2902030596D;
-	Fri, 13 Mar 2026 09:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E3530596D;
+	Fri, 13 Mar 2026 09:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773395220; cv=none; b=WXXz7Ax+gkIfL2N81sfPC5nKKWQ4HCoLSlXCyJH/I6ILmpX6HqiHIOpai47hlsplh8fThI0uf97abpck5AHCRGhTYnu/a2WFFRNzV/sh5NPWiic29OmS96O2M0ZUlvcl4AgDgQBNw57DYs+sEuEr8j3VRy3UcDHif68ghpGcSrg=
+	t=1773395382; cv=none; b=sglo+YfikXb/EjMsFbhs8fngyyyzU2Vd3dA+sbvq+zy+yQ72045QJAflFwE+pRg1YPrl8s1aGhnqvS1vY31j//t19/gykKqr8Rw9qa9yDBGhNt9Fj0NIjG0HHHp5M74ubzcjpfXujmJzxwxOAcW905gpbc51abV8wbEyCpARrOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773395220; c=relaxed/simple;
-	bh=GUTlRR0HaFhMGmHANRp4Y8r0KIrL0XaEiA3Oxb8UJp8=;
+	s=arc-20240116; t=1773395382; c=relaxed/simple;
+	bh=NLwfThUHQneH09vFov2tlehpBZ6yfxDMXEbxxEpvAdk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N/kgzQ8k++jxsf+bK0jBwuqpS9ITPO7oy7a3/ompxbiFuhj2bYVW3XM3zQv0wLm2Ij3GuJM4PaiJ/KHnvyh8MkrYfspfobYbJvxuN8tFkIBEFrSiYRlP6PfA7zcnusuqGsqcNemOPGbJSHaFE/hdJZnPkOzKMJ6w8PkUBa5rdcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l/Y8KKa/; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=BGFutPElhpk3xNt4EP9nDvwSI67z4gNqhjT1vBpat/uUqhFFDyafSH5i3puo9ot3zjJmPf0Z3KMkdRtvBzbLBqKioIKjDvmhAnVyjJC7VfRFMmPCc4NUbqbmJaXLm2CFmhhbaBbQr+LVxy4K7Db8lEglVicDtUfLqd9zlH/QWTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j1g+yHxH; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l/Y8KKa/"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62D6aORE2281597;
-	Fri, 13 Mar 2026 09:46:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ATQmym
-	6Oz3CkufKqSrZciv0jPpBMVlX7c4vTaK7yZKI=; b=l/Y8KKa/NLkpqNgh7cbfXO
-	72hADR1I+tM+nREci1pdUOpNQYc2kD73RqFUN/GSX3HbG8IEB4SqX0GFdA8TljrJ
-	LoHJ1pYmv95lh/G11TN6uGhLPliFk/u9q2lS37tHaeSsW/DtnGGlOI3/h/2QP6vR
-	Xu8oUYdrumngauHdK02csGkcZw5ZGUiysUYchi1MuavN8teGx2fKtFZWyI+kxA5J
-	XZcjZIN94ygjbDYKf2m20PuyIHlRTeBrl1Xa4nRo2WDbDHYOANAEtQEhvX83P5+T
-	wm9RLM5EwjagY090UQh265yq4LQ/oYMN2xK22kyxVkPP6A7ZIX0qWdjClGeVmuLQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cuh91q3jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Mar 2026 09:46:56 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62D4mJ0o008821;
-	Fri, 13 Mar 2026 09:46:55 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cuha76457-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Mar 2026 09:46:54 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62D9kovL31785486
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Mar 2026 09:46:50 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BAF162004F;
-	Fri, 13 Mar 2026 09:46:50 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 42E9D20065;
-	Fri, 13 Mar 2026 09:46:50 +0000 (GMT)
-Received: from [9.111.69.213] (unknown [9.111.69.213])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 13 Mar 2026 09:46:50 +0000 (GMT)
-Message-ID: <0f693db5-89d4-4346-be6f-d740b4493ad9@linux.ibm.com>
-Date: Fri, 13 Mar 2026 10:46:49 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j1g+yHxH"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1773395374; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=kEcwQDm8KHZfCK0WKvMnpD8v4R4S8xQgi0tpibbJsVk=;
+	b=j1g+yHxHuLT+nIxJL5ADfv0hAf0IeErI1b7WZtztEWzTtalt7B5ynkwPBvcMGCSLCAOA3Z8yK0bYRvklNXIbaorb73vp+hGyGiSwKeRfHolrEUiW2xMqgnQ8T3v7jIkfpSVefRpbc4J+OQFXYpg+ZMHCfYnMU334AmBDhIVyUKk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0X-rxwnw_1773395372;
+Received: from 30.221.149.97(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0X-rxwnw_1773395372 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Mar 2026 17:49:33 +0800
+Message-ID: <344708d6-2bd8-470b-a1cd-4ca311f62134@linux.alibaba.com>
+Date: Fri, 13 Mar 2026 17:49:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,239 +34,886 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf evsel: Don't configure framepointer
- callchains on s390
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-        sumanthk@linux.ibm.com
-References: <20260312031928.1494864-1-irogers@google.com>
- <20260312061628.1593105-1-irogers@google.com>
- <20260312061628.1593105-3-irogers@google.com>
- <05b884dc-d0bf-4767-8413-40ddb7c0f8fb@linux.ibm.com>
- <CAP-5=fXoAZ2fheQZ-kZe+JKoV=SbH=vS4mpFcVtS7OKsL5PTXQ@mail.gmail.com>
- <CAP-5=fWeicz7iFMM8vw32OCQXkBcCeWS4qA7k-iNJ6r7izpBbw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fWeicz7iFMM8vw32OCQXkBcCeWS4qA7k-iNJ6r7izpBbw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v6 15/16] ras: AEST: support vendor node CMN700
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: lenb@kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+ tony.luck@intel.com, mark.rutland@arm.com, rafael@kernel.org,
+ sudeep.holla@arm.com, linux-edac@vger.kernel.org, tglx@linutronix.de,
+ guohanjun@huawei.com, mchehab@kernel.org, xueshuai@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, oliver.yang@linux.alibaba.com, will@kernel.org,
+ lpieralisi@kernel.org
+References: <20260122094656.73399-1-tianruidong@linux.alibaba.com>
+ <20260122094656.73399-16-tianruidong@linux.alibaba.com>
+ <16782c8d-ab55-4ac0-bd4d-56d440e43d33@arm.com>
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+In-Reply-To: <16782c8d-ab55-4ac0-bd4d-56d440e43d33@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: xzNQt9Urr-OnAuZNM_RXysaPnlZcwmpr
-X-Authority-Analysis: v=2.4 cv=E6/AZKdl c=1 sm=1 tr=0 ts=69b3dd10 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=3msShAU7VGpf1x8BKTMA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDA2OSBTYWx0ZWRfX9t2h+e7KLmVK
- 21MlzTNozzz1yG+6ozfXGYx5zLpetnc1rhFhM46pSa7EgE/j0GM8mhG/wVZm0XmU6zJgK3SDJx1
- XXOKjEoCY+M3Ohhc3Ja71gz/8D6Ybv2r3fZFonBG3DrlwukP7SmGzBD6chB5sTL2YS4QlOIK1yb
- hFvGKApEK3UQeL0CwKtVVVlw782EEHtc5B8e8h9U6pUXgKS2buqA/hzJirRF0g++QP01B7AcutA
- RgtN5H7lHS0ZwmTg8y/s1ev6KNrGsJg98eH0VuFuRkwVzsRybjiqhMilYcNrmAyuH6komztuUi5
- Xh7zTdgPuBgw8VVFleg0OV7hTy89JD7h1gcdARdvnbXoHnrenrk2cwuLsA0YYWU2WYNsccwWMQU
- X08PFGUDDNICR+l7zyJQTtbuw9Z9c+Mx4D0iOWGkxz4KPpE3gSfGuYil2ZaReV4eTcbqLl+IW95
- 2/us+xu9qviip7cBUxw==
-X-Proofpoint-ORIG-GUID: h-nB9L3Fi9z-APnvyHBeSTPfh9EuG-7H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-13_01,2026-03-12_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 phishscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603130069
 
-On 3/12/26 17:46, Ian Rogers wrote:
-> On Thu, Mar 12, 2026 at 8:54 AM Ian Rogers <irogers@google.com> wrote:
+Hi, Murphy:
+
+Thank you very much for the reply. I really appreciate it.
+
+在 2026/3/10 03:21, Robin Murphy 写道:
+> On 22/01/2026 9:46 am, Ruidong Tian wrote:
+>> The CMN (Coherent Mesh Network) architecture incorporates five distinct
+>> device types. Each device type is associated with an error group register
+>> set. The struct aest_cmn_700 models a single CMN instance, while struct
+>> aest_cmn_700_child represents an individual CMN device.
 >>
->> On Thu, Mar 12, 2026 at 5:45 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>>
->>> On 3/12/26 07:16, Ian Rogers wrote:
->>>> Frame pointer callchains are not supported on s390. Ignore the option
->>>> and print a warning.
->>>>
->>>> Signed-off-by: Ian Rogers <irogers@google.com>
->>>> ---
->>>> v2: Only disable user callchains as AI is telling me native "kernel"
->>>>     callchains are supported on s390.
->>>> ---
->>>>  tools/perf/util/evsel.c | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>> index bd14d9bbc91f..fa21b48cba86 100644
->>>> --- a/tools/perf/util/evsel.c
->>>> +++ b/tools/perf/util/evsel.c
->>>> @@ -1076,6 +1076,12 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
->>>>               attr->exclude_callchain_user = 1;
->>>>       }
->>>>
->>>> +     if (EM_HOST == EM_S390 && (evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
->>>> +         !evsel->core.attr.exclude_callchain_user) {
->>>> +             pr_warning("Excluding user callchains that are not supported on s390. Try '--call-graph dwarf'\n");
->>>> +             evsel->core.attr.exclude_callchain_user = 1;
->>>> +     }
->>>> +
->>>>       if (param->defer && !attr->exclude_callchain_user)
->>>>               attr->defer_callchain = 1;
->>>>  }
->>>
->>> Ian, thanks very much.
->>> Your patch set helps a lot. However there is a small nit (which is mandatory). Please add these lines
->>>
->>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_CALLCHAIN;
->>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_REGS_USER;
->>>   evsel->core.attr.sample_type &= ~PERF_SAMPLE_STACK_USER;
+>> CMN's error records utilize a memory-mapped single error record view [1].
+>> Critically, one error record corresponds to one AEST node, implying that
+>> a single CMN instance can generate hundreds of AEST nodes. To manage this
+>> scale, this driver introduces a virtual AEST node, which represents an
+>> entire CMN device, such as an HNI or HNF. This allows an HNF AEST node,
+>> for instance, to leverage its errgsr register to pinpoint which specific
+>> error record has reported an error.
 >>
->> So these lines are dropping callchain from the sample_type which means
->> the kernel stack won't be sampled. AI was telling me this worked, but
->> I'm guess it was wrong. I think rather than this it is just cleaner
->> never to set the bits in the perf_event_attr, more like what v1 of the
->> patch did:
->> https://lore.kernel.org/lkml/20260312031928.1494864-3-irogers@google.com/
+>> During the AEST probe phase, the CMN AEST driver identifies the CMN node
+>> type using the cmn_node_info register. It then reorganizes all AEST nodes
+>> belonging to the same CMN node type into a cohesive CMN AEST node
+>> structure. To locate the relevant CMN register addresses, the CMN's
+>> presence in the DSDT is required, along with the CMN node offset
+>> specified in the AEST vendor specification data [1].
+> 
+> That sounds wrong - IIRC, each AEST interface entry should point to the 
+> node's RAS register block directly (i.e. the ERRFR address), then the 
+> vendor-specific data indicates the relative offset such that a consumer 
+> could work backwards from there to other CMN registers if it really 
+> needs to. There should not be any dependency on DSDT for discovery.
+
+Thanks for pointing this out. You are absolutely right. In CMN, the 
+ERRFR offset within the register block is fixed (0x3100), while the 
+register block offset itself is provided in the vendor-specific data. 
+That means we can derive PERIPHBASE directly from AEST as:
+
+PERIPHBASE = (errfr_addr - errfr_offset) - register_block_offset
+
+I was planning to obtain PERIPHBASE from the DSDT because of the note in 
+section 2.6.33: “the PERIPHBASE is encoded in the _CRS object of the CMN 
+ACPI DSDT device.” But your approach is clearly better: we can derive 
+PERIPHBASE from AEST alone and avoid any dependency on DSDT. I'll fix 
+this in the next version. Thanks for the correction.
+
+> 
+> For reference, the missing link to that spec is:
+> 
+> https://developer.arm.com/documentation/den0093/latest/
+> 
+> and what it actually says is not at all what this patch has implemented.
+
+There are indeed several issues here. I'll fix them all in the next 
+version. Thanks for pointing them out.
+
+> 
+>> [1]: https://developer.arm.com/documentation/102308/latest/
 >>
-
-Let me try to answer your and Namhyung questions in one reply.
-s390 has many PMUs, there is one for counting (cpum_cf) and one for sampling (cpum_sf),
-which are totally different hardware components.
-Hardware sampling 
-1. writes into a large buffer, data is timestamp and IP (instruction pointer), no registers, no PID.
-2. when buffer gets full an interrupt occurs and the interrupt handler scans the
-   hardware samples and converts valid samples to perf format and saves them in perf ring buffer.
-This means we can not reconstruct register values for an individual sample. Current Pid is saved by
-other means somewhere and added to perf data during perf ring buffer write.
-
-For s390 when we need callchains, we always use event cpu-clock, never hardware event cycles.
-
-
->>> to the new if(EM_HOST == ...) above.
->>> The s390 CPU Measurement sampling device driver does not check on the attr.core.exclude_callchain_user
->>> member, but on the sample_type bit mask. It returns -EOPNOTSUPP when this bit PERF_SAMPLE_CALLCHAIN
->>> is set. This solves the invocation with command line flag -g as in
->>>  # ./perf record -v -e cycles  -g  -- perf test -w noploop
->>>  ...
->>>  perf record: Captured and wrote 0.183 MB perf.data ]
+>> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+>> ---
+>>   arch/arm64/include/asm/arm-cmn.h |  47 +++++
+>>   drivers/perf/arm-cmn.c           |  37 +---
+>>   drivers/ras/aest/Makefile        |   1 +
+>>   drivers/ras/aest/aest-cmn.c      | 330 +++++++++++++++++++++++++++++++
+>>   drivers/ras/aest/aest-core.c     |  42 ++--
+>>   drivers/ras/aest/aest.h          |  39 ++++
+>>   6 files changed, 444 insertions(+), 52 deletions(-)
+>>   create mode 100644 arch/arm64/include/asm/arm-cmn.h
+>>   create mode 100644 drivers/ras/aest/aest-cmn.c
 >>
->> Right because the callchain was removed from all the samples. We can't
->> fix old kernels (other than by using fix tags); is there a possibility
->> of adding the exclude_callchain_user to the s390 perf driver for the
->> sake of kernel callchains? It seems better than providing no
->> callchain.
->>
->>> Also I discovered that the fallback when using --call-graph dwarf command line flag still fails:
->>>  # ./perf record -v -e cycles  --call-graph dwarf -- perf test -w noploop
->>>  ...
->>>  Warning:
->>>  Trying to fall back to excluding guest samples
->>>  Error:
->>>  Failure to open event 'cycles:H' on PMU 'cpum_cf' which will be removed.
->>>  cycles:H: PMU Hardware doesn't support sampling overflow-interrupts. Try 'perf stat'
->>>  Error:
->>>  Failure to open any events for recording.
->>>
->>> The reason is in __evsel__config_callchain() which calls evsel__set_sample_bit(evsel, CALLCHAIN)
->>> and sets the PERF_SAMPLE_CALLCHAIN bit in evsel->core.attr.sample_type. It also sets the
->>> member attr->exclude_callchain_user = 1 and sets bits REGS_USER and _STACK_USER.
->>> All three bits are not supported by s390.
->>
->> I'm confused by this and your previous testing that showed the
->> `--call-graph dwarf` worked. You need the sampled registers for dwarf
->> unwinding to provide initial register values for the unwinder.
->>
+>> diff --git a/arch/arm64/include/asm/arm-cmn.h b/arch/arm64/include/ 
+>> asm/arm-cmn.h
+>> new file mode 100644
+>> index 000000000000..1b9f50679794
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/arm-cmn.h
+>> @@ -0,0 +1,47 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2015 ARM Ltd.
+>> + */
+>> +#ifndef __ASM_ARM_CMN_H
+>> +#define __ASM_ARM_CMN_H
+>> +
+>> +#include <asm/sysreg.h>
+> 
+> That is not relevant to CMN...
 
-Right, as explained shortly above, we have to use '-e cpu-clock --call-graph dwarf'
-to get valid call chain data.
-
->>> I have modified your 2nd patch and appended it.
->>>
->>> I find all these bits in sample_type and the attr.exclude_XXX stuff very confusing. If there
->>> is a more consistant way of checking these feature, please let me know.
-> 
-> I forgot to mention, yeah the exclude thing is maddening. It takes
-> about 100 lines to convert the command line modifiers to those in the
-> perf_event_attr, there's a priority to them, and so on:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/parse-events.c#n1759
-> Fwiw, I was thinking for patch 1 of holding onto the parsed modifiers
-> so that we could reset the excludes based on them when switching to
-> the software event.
-> 
->> Ok, let me check it out.
-> 
-> So looking at the cpum_cf driver it fails events for having sampling enabled:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/s390/kernel/perf_cpum_cf.c#n859
-> ```
-> if (is_sampling_event(event)) /* No sampling support */
-> ```
-> and the cpum_sf driver fails for any kind of callchain:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/s390/kernel/perf_cpum_sf.c#n839
-> ```
-> static bool is_callchain_event(struct perf_event *event)
-> {
-> u64 sample_type = event->attr.sample_type;
-> 
-> return sample_type & (PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_REGS_USER |
->      PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_STACK_USER);
-> }
-> 
-> static int cpumsf_pmu_event_init(struct perf_event *event)
-> {
-> int err;
-> 
-> /* No support for taken branch sampling */
-> /* No support for callchain, stacks and registers */
-> if (has_branch_stack(event) || is_callchain_event(event))
-> return -EOPNOTSUPP;
-> ```
-> Perhaps there is an oversight in the cpum_cf driver wrt branch stacks
-> (LBR on x86). The PERF_SAMPLE_CALLCHAIN bit is set for perf call-graph
-> options currently:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/evsel.c#n1024
-> 
-> I think cpum_sf is the PMU we care about for the default cycles event?
-
-Right this PMU does sampling on s390
-
-> Since callchains of any flavor don't work with cpum_sf we can do a few
-> things:
-> 1) Disable the callchain and allow hardware sampling to continue,
-> 2) Switch to a software event like cpu-clock,
-> 3) Fail for the callchain option with this PMU, which is currently
-> happening anyway.
-
-@Namhyung:
-It fails to open event cycles for PMU cpum_sf.
+You're right, asm/sysreg.h is not needed here. I'll drop it in the next 
+revision.
 
 > 
-> I dislike option 3 because it requires special s390 logic for many
-> tests, and we lose testing coverage of hardware events. Option 1 is a
-> smaller patch, an early return in __evsel__config_callchain if on
-> s390. Option 2 feels most like what the user would want given they
-> asked for a callchain. We could change evlist__new_default to take a
-> "with callchain" boolean and on s390 that could switch the event to a
-> software one. Only two non-test callers use evlist__new__default
-> (record and top), so it isn't a huge change.
+>> +/* Common register stuff */
+>> +#define CMN_NODE_INFO            0x0000
+>> +#define CMN_NI_NODE_TYPE        GENMASK_ULL(15, 0)
+>> +#define CMN_NI_NODE_ID            GENMASK_ULL(31, 16)
+>> +#define CMN_NI_LOGICAL_ID        GENMASK_ULL(47, 32)
+>> +
+>> +enum cmn_node_type {
+>> +    CMN_TYPE_INVALID,
+>> +    CMN_TYPE_DVM,
+>> +    CMN_TYPE_CFG,
+>> +    CMN_TYPE_DTC,
+>> +    CMN_TYPE_HNI,
+>> +    CMN_TYPE_HNF,
+>> +    CMN_TYPE_XP,
+>> +    CMN_TYPE_SBSX,
+>> +    CMN_TYPE_MPAM_S,
+>> +    CMN_TYPE_MPAM_NS,
+>> +    CMN_TYPE_RNI,
+>> +    CMN_TYPE_RND = 0xd,
+>> +    CMN_TYPE_RNSAM = 0xf,
+>> +    CMN_TYPE_MTSX,
+>> +    CMN_TYPE_HNP,
+>> +    CMN_TYPE_CXRA = 0x100,
+>> +    CMN_TYPE_CXHA,
+>> +    CMN_TYPE_CXLA,
+>> +    CMN_TYPE_CCRA,
+>> +    CMN_TYPE_CCHA,
+>> +    CMN_TYPE_CCLA,
+>> +    CMN_TYPE_CCLA_RNI,
+>> +    CMN_TYPE_HNS = 0x200,
+>> +    CMN_TYPE_HNS_MPAM_S,
+>> +    CMN_TYPE_HNS_MPAM_NS,
+>> +    CMN_TYPE_APB = 0x1000,
+>> +    /* Not a real node type */
+>> +    CMN_TYPE_WP = 0x7770
+>> +};
 > 
-> Wdyt Thomas, option 1 or 2?
+> ...and the majority of this is irrelevant to the RAS feature, not to 
+> mention that at least some of it being purely internal implementation 
+> detail of the PMU driver which has no business being exposed outside the 
+> PMU driver at all.
+
+The RAS driver only needs a few of these definitions (HN-I, HN-F, 
+CXHA/CCG, SBSX and XP), not all of them. I was trying to avoid 
+duplicating them between the RAS and PMU drivers by using a shared header.
+
+If you would rather keep only the required subset local to the RAS 
+driver, I can do that instead. I do not have a strong preference, so I 
+am happy to follow your suggestion.
+
+> 
+>> +
+>> +#endif /* __ASM_ARM_CMN_H */
+>> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+>> index 23245352a3fc..989482096dfb 100644
+>> --- a/drivers/perf/arm-cmn.c
+>> +++ b/drivers/perf/arm-cmn.c
+>> @@ -2,6 +2,7 @@
+>>   // Copyright (C) 2016-2020 Arm Limited
+>>   // ARM CMN/CI interconnect PMU driver
+>> +#include <asm/arm-cmn.h>
+> 
+> And to top it all off, this would break COMPILE_TEST for other 
+> architectures.
+> 
+> Honestly, for the couple of node type values that matter for RAS, just 
+> give the RAS driver its own appropriate definitions.
+
+Understood. I'll drop the shared header approach and define only the 
+small subset of node type values needed by the RAS driver locally.
+
+> 
+>>   #include <linux/acpi.h>
+>>   #include <linux/bitfield.h>
+>>   #include <linux/bitops.h>
+>> @@ -19,11 +20,6 @@
+>>   #include <linux/sort.h>
+>>   /* Common register stuff */
+>> -#define CMN_NODE_INFO            0x0000
+>> -#define CMN_NI_NODE_TYPE        GENMASK_ULL(15, 0)
+>> -#define CMN_NI_NODE_ID            GENMASK_ULL(31, 16)
+>> -#define CMN_NI_LOGICAL_ID        GENMASK_ULL(47, 32)
+>> -
+>>   #define CMN_CHILD_INFO            0x0080
+>>   #define CMN_CI_CHILD_COUNT        GENMASK_ULL(15, 0)
+>>   #define CMN_CI_CHILD_PTR_OFFSET        GENMASK_ULL(31, 16)
+>> @@ -241,37 +237,6 @@ enum cmn_revision {
+>>       REV_CI700_R2P0,
+>>   };
+>> -enum cmn_node_type {
+>> -    CMN_TYPE_INVALID,
+>> -    CMN_TYPE_DVM,
+>> -    CMN_TYPE_CFG,
+>> -    CMN_TYPE_DTC,
+>> -    CMN_TYPE_HNI,
+>> -    CMN_TYPE_HNF,
+>> -    CMN_TYPE_XP,
+>> -    CMN_TYPE_SBSX,
+>> -    CMN_TYPE_MPAM_S,
+>> -    CMN_TYPE_MPAM_NS,
+>> -    CMN_TYPE_RNI,
+>> -    CMN_TYPE_RND = 0xd,
+>> -    CMN_TYPE_RNSAM = 0xf,
+>> -    CMN_TYPE_MTSX,
+>> -    CMN_TYPE_HNP,
+>> -    CMN_TYPE_CXRA = 0x100,
+>> -    CMN_TYPE_CXHA,
+>> -    CMN_TYPE_CXLA,
+>> -    CMN_TYPE_CCRA,
+>> -    CMN_TYPE_CCHA,
+>> -    CMN_TYPE_CCLA,
+>> -    CMN_TYPE_CCLA_RNI,
+>> -    CMN_TYPE_HNS = 0x200,
+>> -    CMN_TYPE_HNS_MPAM_S,
+>> -    CMN_TYPE_HNS_MPAM_NS,
+>> -    CMN_TYPE_APB = 0x1000,
+>> -    /* Not a real node type */
+>> -    CMN_TYPE_WP = 0x7770
+>> -};
+>> -
+>>   enum cmn_filter_select {
+>>       SEL_NONE = -1,
+>>       SEL_OCCUP1ID,
+>> diff --git a/drivers/ras/aest/Makefile b/drivers/ras/aest/Makefile
+>> index 5ee10fc8b2e9..e5a45fde6d36 100644
+>> --- a/drivers/ras/aest/Makefile
+>> +++ b/drivers/ras/aest/Makefile
+>> @@ -5,3 +5,4 @@ obj-$(CONFIG_AEST)     += aest.o
+>>   aest-y        := aest-core.o
+>>   aest-y        += aest-sysfs.o
+>>   aest-y        += aest-inject.o
+>> +aest-y        += aest-cmn.o
+>> diff --git a/drivers/ras/aest/aest-cmn.c b/drivers/ras/aest/aest-cmn.c
+>> new file mode 100644
+>> index 000000000000..ad82ed163a8c
+>> --- /dev/null
+>> +++ b/drivers/ras/aest/aest-cmn.c
+>> @@ -0,0 +1,330 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * ARM Error Source Table CMN700 Support
+>> + *
+>> + * Copyright (c) 2025, Alibaba Inc
+>> + */
+>> +
+>> +#include <asm/arm-cmn.h>
+>> +
+>> +#include "aest.h"
+>> +
+>> +/*
+>> + * CMN include 5 device types, each device type has an error group 
+>> register set
+>> + * which contains a set of error records. The struct aest_cmn_700 
+>> represents
+>> + * one CMN Instance, and the struct aest_cmn_700_child represent one 
+>> CMN device.
+>> + * The error record of CMN use memory-mapped single error record 
+>> view, so one
+>> + * record is correspond to one AEST node, it means there will be 
+>> hundreds of
+>> + * AEST node of CMN. As described in chapters 2.6.3.4 of Arm ACPI 
+>> Spec[1], we
+>> + * use vendor define data to recognize the device type of an AEST 
+>> node. So AEST
+>> + * driver can enumerate all CMN AEST node to initialize struct 
+>> aest_cmn_700 and
+>> + * aest_cmn_700_child with HID, UID and other CMN info described in 
+>> AEST or CMN
+>> + * register.
+>> + *
+>> + * Each CMN Instance has their own error interrupt and the struct 
+>> aest_cmn_700
+>> + * is passed to interrupt context. OS check error group register set 
+>> to locate
+>> + * record which report error. All procedure is similar with chapters 
+>> 3.8 in
+>> + * Arm CMN Spec[2].
+>> + *
+>> + * The CMN RAS architecture is showed as follow:
+>> + *
+>> + *                     +----+
+>> + *                  -->|XP  |     ......
+>> + *                  |  +----+
+>> + *                  |
+>> + *                  |  +----+     ......
+>> + *                  |  |HNI |     +----------------+
+>> + *                  |  +----+   ->|record/AEST node|
+>> + *                  |           | +----------------+
+>> + *  +------------+  |  +----+   |    .
+>> + *  |CMN Instance|--|  |HNF |---|    .
+>> + *  +------------+  |  +----+   |    .
+>> + *                  |           | +----------------+
+>> + *                  |  +----+   ->|record/AEST node|
+>> + *                  |  |SBSX|     +----------------+
+>> + *                  |  +----+     ......
+>> + *                  |
+>> + *                  |  +----+
+>> + *                  -->|CCG |     ......
+>> + *                     +----+
+>> + *
+>> + * [1]: https://developer.arm.com/documentation/den0093/latest
+>> + * [2]: https://developer.arm.com/documentation/102308/latest
+>> + */
+>> +
+>> +#define CMN_RAS_DEV_NUM 6
+>> +#define CMN700_ERRGSR_NUM 8
+>> +#define CMN_MAX_UID 8
+> 
+> What's that based on?
+
+According to section 4.2.5 of the CMN-700 specification, 
+6(CMN_RAS_DEV_NUM) device types have ERRGSR registers. Each ERRGSR 
+effectively consists of 8(CMN700_ERRGSR_NUM) 64-bit registers, numbered 
+0 through 7. CMN_MAX_UID therefore does not seem appropriate here; 
+CMN_RAS_DEV_NUM should be sufficient.
+
+> 
+>> +#define CMN_ERRDEVARCH 0x3FB8
+>> +#define CMN_ERRDEVARCH_REV GENMASK(19, 16)
+>> +#define CMN_ERRGSR_OFFSET 0x3000
+>> +
+>> +struct cmn_vendor_data {
+>> +    int node_type;
+>> +    int node_id;
+>> +    int logic_id;
+>> +};
+>> +
+>> +struct cmn_config {
+>> +    int errgsr_num;
+>> +    int dev_num;
+>> +    int ras_ver;
+>> +    const int *node_id_map;
+>> +    const char *const *node_name;
+>> +    int (*errgsr_mapping)(int errgsr_bit);
+>> +    u64 (*errgsr_offset)(u64 hnd_ofset, int node_idx);
+>> +};
+>> +
+>> +static const char *const cmn700_node_name[] = {
+>> +    [CMN_TYPE_HNI] = "HNI",     [CMN_TYPE_HNF] = "HNF",
+>> +    [CMN_TYPE_XP] = "XP",     [CMN_TYPE_SBSX] = "SBSX",
+>> +    [CMN_TYPE_CXRA] = "RND", [CMN_TYPE_MTSX] = "MTSX",
+>> +};
+>> +
+>> +static const int cmn700_node_id_map[] = {
+>> +    [CMN_TYPE_HNI] = 1,  [CMN_TYPE_HNF] = 2,  [CMN_TYPE_XP] = 0,
+>> +    [CMN_TYPE_SBSX] = 3, [CMN_TYPE_CXRA] = 4, [CMN_TYPE_MTSX] = 5,
+>> +};
+>> +
+>> +static u64 cmn_dev_array[CMN_MAX_UID];
+>> +static struct cmn_config *cmn_config;
+>> +
+>> +static u64 cmn700_errgsr_offset(u64 hnd_offset, int node_idx)
+>> +{
+>> +    return hnd_offset + CMN_ERRGSR_OFFSET +
+>> +           (node_idx * 2) * CMN700_ERRGSR_NUM * 8;
+>> +}
+> 
+> I would say it's not worth bothering with the ERRGSRs at all - more than 
+> just being confusingly different from the RAS architecture concept of 
+> the same name, they're also at least 50% totally broken and useless (see 
+> erratum #2732981). Thus if we have to treat HN-I, HN-S and SBSX RAS 
+> nodes as just a bunch of independent single records which happen to 
+> share an IRQ, we may as well just do that for everything.
+
+Thanks for the pointer. I checked the erratum, which states that "the 
+registers are not updated correctly for the HN-S, HN-I and SBSX device 
+groups". Your approach would certainly simplify things, but I am a bit 
+concerned about the efficiency of treating all nodes as independent 
+single-record entries on a shared IRQ.
+
+For a 64-core SoC, the CMN could expose a fairly large number of AEST 
+nodes (for example, 64 HN-F + 64 XP + 8 CCG). In that case, the IRQ 
+handler would need to iterate over all of them and check ERR_STATUS.V on 
+every interrupt. If corrected errors become noisy(like cmcistorm on 
+x86), this may end up being quite expensive.
+
+One possible approach I was considering is to use the AEST "Error 
+group-based status reporting supported" field to mark HN-S, HN-I and 
+SBSX as not supporting ERRGSR, and fall back to polling for those nodes 
+only, while still using ERRGSR for the remaining node types. This is 
+only a small change and is fully compliant with the AEST specification.
+
+> 
+>> +static struct cmn_config cmn700_config = {
+>> +    .errgsr_num = CMN700_ERRGSR_NUM,
+>> +    .dev_num = CMN_RAS_DEV_NUM,
+>> +    .ras_ver = 1,
+>> +    .node_name = cmn700_node_name,
+>> +    .node_id_map = cmn700_node_id_map,
+>> +    .errgsr_mapping = cmn700_errgsr_mapping,
+>> +    .errgsr_offset = cmn700_errgsr_offset,
+>> +};
+>> +
+>> +static acpi_status aest_cmn_700_resource_ioremap(struct acpi_resource 
+>> *res,
+>> +                         void *data)
+>> +{
+>> +    struct acpi_resource_address64 addr64;
+>> +    u32 *uid = data;
+>> +    acpi_status status;
+>> +
+>> +    status = acpi_resource_to_address64(res, &addr64);
+>> +    if (ACPI_FAILURE(status) || (addr64.resource_type != 
+>> ACPI_MEMORY_RANGE))
+>> +        return AE_OK;
+>> +
+>> +    cmn_dev_array[*uid] = (u64)ioremap(addr64.address.minimum,
+>> +                       addr64.address.address_length);
+>> +
+>> +    pr_debug("CMN device resource [%llx-%llx] ioremap to %llx\n",
+>> +         addr64.address.minimum, addr64.address.maximum,
+>> +         cmn_dev_array[*uid]);
+>> +
+>> +    return AE_CTRL_TERMINATE;
+>> +}
+>> +
+>> +static acpi_status aest_cmn_get_dev_by_uid(acpi_handle handle, u32 
+>> level,
+>> +                       void *data, void **return_value)
+>> +{
+>> +    u32 *match_uid = data;
+>> +    acpi_status status;
+>> +    unsigned long long uid;
+>> +
+>> +    status = acpi_evaluate_integer(handle, METHOD_NAME__UID, NULL, 
+>> &uid);
+> 
+> Who says CMN _UIDs cant be arbitrary Strings? The binding doesn't (it 
+> merely happens to use Integers in its examples).
+
+I'll remove the DSDT-related code in the next revision.
+
+> 
+>> +    if (ACPI_FAILURE(status)) {
+>> +        pr_err("Do not find devive\n");
+>> +        return_ACPI_STATUS(status);
+>> +    }
+>> +
+>> +    if (uid != *match_uid)
+>> +        return AE_OK;
+>> +
+>> +    pr_debug("CMN device instance %llx, walk through resource\n", uid);
+>> +
+>> +    status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+>> +                     aest_cmn_700_resource_ioremap, data);
+>> +
+>> +    if (ACPI_FAILURE(status)) {
+>> +        pr_err("Device do not have resource\n");
+>> +        return_ACPI_STATUS(status);
+>> +    }
+>> +
+>> +    return AE_CTRL_TERMINATE;
+>> +}
+> 
+> Again, poking through some other device's resources is nonsense, but I 
+> don't see that we really need anything outside the invididual node 
+> registers anyway, since as well as ERRGSR...
+
+Yes, exactly. Even the ERRGSR can be derived from the information 
+already provided by AEST, so there is no need to depend on DSDT.
+
+> 
+>> +
+>> +static inline int aest_cmn_node_ver(void *base)
+>> +{
+>> +    return FIELD_GET(CMN_ERRDEVARCH_REV,
+>> +             readl_relaxed(base + CMN_ERRDEVARCH));
+> 
+> ...ERRDEVARCH is also of dubious value here, given that the register 
+> layout alone is quite blatantly not that of the RAS system architecture 
+> v1.0 (as the register value boldly claims), nor indeed any other 
+> version. Even at best, this isn't saying any more than the hard-coded 
+> ".ras_ver = 1" above already does.
+
+".ras_ver = 1" should already be sufficient. I'll consider dropping 
+aest_cmn_node_ver() in the next revision.
+> 
+>> +}
+>> +
+>> +static int aest_cmn_init_node(struct aest_device *adev,
+>> +                  struct aest_node *cmn_node,
+>> +                  struct acpi_aest_node *anode, u64 type,
+>> +                  u64 errgsr_addr)
+>> +{
+>> +    cmn_node->info = anode;
+>> +    cmn_node->name = devm_kasprintf(adev->dev, GFP_KERNEL, "%s",
+>> +                    cmn_config->node_name[type]);
+>> +    if (!cmn_node->name)
+>> +        return -ENOMEM;
+>> +    cmn_node->errgsr = (void *)errgsr_addr;
+>> +    cmn_node->type = anode->type;
+>> +    cmn_node->adev = adev;
+>> +    cmn_node->version = cmn_config->ras_ver;
+>> +    cmn_node->errgsr_num = cmn_config->errgsr_num;
+>> +    cmn_node->errgsr_mapping = cmn_config->errgsr_mapping;
+>> +    cmn_node->record_count = cmn_node->errgsr_num * BITS_PER_LONG / 2;
+>> +    cmn_node->record_implemented = devm_bitmap_zalloc(
+>> +        adev->dev, cmn_node->record_count, GFP_KERNEL);
+>> +    if (!cmn_node->record_implemented)
+>> +        return -ENOMEM;
+>> +    bitmap_set(cmn_node->record_implemented, 0, cmn_node->record_count);
+>> +
+>> +    cmn_node->status_reporting = devm_bitmap_zalloc(
+>> +        adev->dev, cmn_node->record_count, GFP_KERNEL);
+>> +    if (!cmn_node->status_reporting)
+>> +        return -ENOMEM;
+>> +    bitmap_set(cmn_node->status_reporting, 0, cmn_node->record_count);
+>> +
+>> +    cmn_node->records = devm_kcalloc(adev->dev, cmn_node->record_count,
+>> +                     sizeof(struct aest_record),
+>> +                     GFP_KERNEL);
+>> +    if (!cmn_node->records)
+>> +        return -ENOMEM;
+>> +
+>> +    aest_node_dbg(cmn_node, "Node init with errgsr %llx\n", 
+>> errgsr_addr);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int aest_cmn_reorgnize_node(struct aest_device *adev,
+>> +                   struct acpi_aest_node *anode, u64 base)
+>> +{
+>> +    struct aest_node *cmn_node;
+>> +    u64 hnd_offset, cmn_node_offset, reg, logic_id, type, node_id;
+>> +    u64 errgsr_addr, hnd_base;
+>> +    struct aest_record *record;
+>> +    int ret, node_index;
+>> +    struct cmn_vendor_data *vendor_data;
+>> +
+>> +    if (anode->interface_hdr->type !=
+>> +        ACPI_AEST_NODE_SINGLE_RECORD_MEMORY_MAPPED) {
+>> +        aest_dev_err(adev, "CMN just use single memory mapping\n");
+>> +        return -ENODEV;
+>> +    }
+>> +
+>> +    hnd_offset = *((u64 *)anode->vendor->vendor_specific_data);
+>> +    cmn_node_offset = *((u64 *)&anode->vendor->vendor_specific_data[8]);
+>> +
+>> +    reg = readq_relaxed((void *)base + cmn_node_offset + CMN_NODE_INFO);
+>> +
+>> +    logic_id = FIELD_GET(CMN_NI_LOGICAL_ID, reg);
+>> +    type = FIELD_GET(CMN_NI_NODE_TYPE, reg);
+>> +    node_id = FIELD_GET(CMN_NI_NODE_ID, reg);
+>> +
+>> +    hnd_base = base + hnd_offset;
+>> +    node_index = cmn_config->node_id_map[type];
+>> +    errgsr_addr = base + cmn_config->errgsr_offset(hnd_offset, 
+>> node_index);
+>> +
+>> +    // node not register, create it
+>> +    cmn_node = &adev->nodes[node_index];
+>> +    if (!cmn_node->errgsr) {
+>> +        ret = aest_cmn_init_node(adev, cmn_node, anode, type,
+>> +                     errgsr_addr);
+>> +        if (ret)
+>> +            return -ENOMEM;
+>> +    }
+>> +
+>> +    aest_dev_dbg(adev, "node type %llx, id %llx, offset %llx\n", type,
+>> +             logic_id, cmn_node_offset);
+>> +
+>> +    if (!test_bit(0, anode->record_implemented))
+>> +        clear_bit(logic_id, cmn_node->record_implemented);
+>> +
+>> +    if (!test_bit(0, anode->status_reporting))
+>> +        clear_bit(logic_id, cmn_node->status_reporting);
+>> +
+>> +    record = &cmn_node->records[logic_id];
+>> +    record->name =
+>> +        devm_kasprintf(adev->dev, GFP_KERNEL, "record%lld", logic_id);
+>> +    if (!record->name)
+>> +        return -ENOMEM;
+>> +    record->regs_base = devm_ioremap(
+>> +        adev->dev, (resource_size_t)anode->interface_hdr->address,
+>> +        sizeof(struct ras_ext_regs));
+>> +    if (!record->regs_base)
+>> +        return -ENOMEM;
+>> +    record->addressing_mode = test_bit(0, anode->addressing_mode);
+>> +    record->node = cmn_node;
+>> +    record->index = logic_id;
+>> +    record->access = &aest_access[anode->interface_hdr->type];
+>> +
+>> +    vendor_data = devm_kzalloc(adev->dev, sizeof(struct 
+>> cmn_vendor_data),
+>> +                   GFP_KERNEL);
+>> +    vendor_data->node_type = type;
+>> +    vendor_data->node_id = node_id;
+>> +    vendor_data->logic_id = logic_id;
+>> +
+>> +    record->vendor_data = vendor_data;
+>> +    record->vendor_data_size = sizeof(struct cmn_vendor_data);
+>> +
+>> +    aest_record_dbg(record, "base %llx\n", anode->interface_hdr- 
+>> >address);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +// reorgnize cmn node
+>> +static int aest_cmn_probe(struct aest_device *adev, struct aest_hnode 
+>> *ahnode)
+>> +{
+>> +    acpi_status status;
+>> +    u64 base;
+>> +    int ret = 0;
+>> +    struct acpi_aest_node *anode;
+>> +    char name[9];
+>> +
+>> +    anode = list_first_entry(&ahnode->list, struct acpi_aest_node, 
+>> list);
+>> +    if (!anode)
+>> +        return -ENODEV;
+>> +
+>> +    if (!cmn_dev_array[anode->vendor->acpi_uid]) {
+>> +        snprintf(name, 9, "%s", anode->vendor->acpi_hid);
+>> +        status = acpi_get_devices(name, aest_cmn_get_dev_by_uid,
+>> +                      &anode->vendor->acpi_uid, NULL);
+>> +        if (ACPI_FAILURE(status)) {
+>> +            aest_dev_err(adev, "Can not find base\n");
+>> +            return_ACPI_STATUS(status);
+>> +        }
+>> +    }
+>> +    base = cmn_dev_array[anode->vendor->acpi_uid];
+>> +    if (!base) {
+>> +        aest_dev_err(adev, "Device base invalid\n");
+>> +        return -ENODEV;
+>> +    }
+>> +
+>> +    adev->type = anode->type;
+>> +    adev->node_cnt = cmn_config->dev_num;
+>> +    adev->nodes = devm_kcalloc(adev->dev, adev->node_cnt,
+>> +                   sizeof(struct aest_node), GFP_KERNEL);
+>> +    if (!adev->nodes)
+>> +        return -ENOMEM;
+>> +    aest_set_name(adev, ahnode);
+>> +
+>> +    list_for_each_entry(anode, &ahnode->list, list) {
+>> +        ret = aest_cmn_reorgnize_node(adev, anode, base);
+>> +        if (ret)
+>> +            return ret;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +int aest_cmn700_probe(struct aest_device *adev, struct aest_hnode 
+>> *ahnode)
+>> +{
+>> +    cmn_config = &cmn700_config;
+>> +
+>> +    return aest_cmn_probe(adev, ahnode);
+>> +}
+>> diff --git a/drivers/ras/aest/aest-core.c b/drivers/ras/aest/aest-core.c
+>> index 047c9a8cffe4..bbf8b1142be7 100644
+>> --- a/drivers/ras/aest/aest-core.c
+>> +++ b/drivers/ras/aest/aest-core.c
+>> @@ -152,6 +152,8 @@ static void init_aest_event(struct aest_event *event,
+>>       memcpy(&event->regs, regs, sizeof(*regs));
+>>       event->index = record->index;
+>>       event->addressing_mode = record->addressing_mode;
+>> +    event->vendor_data_size = record->vendor_data_size;
+>> +    event->vendor_data = record->vendor_data;
+>>   }
+>>   static int aest_node_gen_pool_add(struct aest_device *adev,
+>> @@ -341,10 +343,9 @@ void aest_proc_record(struct aest_record *record, 
+>> void *data, bool fake)
+>>       record_write(record, ERXSTATUS, regs.err_status);
+>>   }
+>> -static void aest_node_foreach_record(void (*func)(struct aest_record 
+>> *, void *,
+>> -                          bool),
+>> -                     struct aest_node *node, void *data,
+>> -                     unsigned long *bitmap)
+>> +void aest_node_foreach_record(void (*func)(struct aest_record *, void 
+>> *, bool),
+>> +                  struct aest_node *node, void *data,
+>> +                  unsigned long *bitmap)
+> 
+> This change doesn't seem to be needed, or at least doesn't belong to 
+> this patch.
+
+You're right, this does not seem necessary here. I'll remove it from 
+this patch in the next revision.
+> 
+>>   {
+>>       int i;
+>> @@ -359,7 +360,7 @@ static void aest_node_foreach_record(void (*func) 
+>> (struct aest_record *, void *,
+>>   static int aest_proc(struct aest_node *node)
+>>   {
+>> -    int count = 0, i, j, size = node->record_count;
+>> +    int count = 0, i, j, size = node->record_count, record_idx;
+>>       u64 err_group = 0;
+>>       aest_node_dbg(node, "Poll bitmap %*pb\n", size,
+>> @@ -374,19 +375,21 @@ static int aest_proc(struct aest_node *node)
+>>                 node->status_reporting);
+>>       for (i = 0; i < BITS_TO_U64(size); i++) {
+>>           err_group = readq_relaxed((void *)node->errgsr + i * 8);
+>> -        aest_node_dbg(node, "errgsr[%d]: 0x%llx\n", i, err_group);
+>> -
+>>           for_each_set_bit(j, (unsigned long *)&err_group,
+>>                    BITS_PER_LONG) {
+>> +            record_idx =
+>> +                node->errgsr_mapping(i * BITS_PER_LONG + j);
+>> +            aest_node_dbg(node, "errgsr[%d]: bit %d occur error\n",
+>> +                      i, record_idx);
+>>               /*
+>>                * Error group base is only valid in Memory Map node,
+>>                * so driver do not need to write select register and
+>>                * sync.
+>>                */
+>> -            if (test_bit(i * BITS_PER_LONG + j,
+>> -                     node->status_reporting))
+>> +            if (test_bit(record_idx, node->status_reporting))
+>>                   continue;
+>> -            aest_proc_record(&node->records[j], &count, false);
+>> +            aest_proc_record(&node->records[record_idx], &count,
+>> +                     false);
+>>           }
+>>       }
+>> @@ -398,8 +401,11 @@ static irqreturn_t aest_irq_func(int irq, void 
+>> *input)
+>>       struct aest_device *adev = input;
+>>       int i;
+>> -    for (i = 0; i < adev->node_cnt; i++)
+>> +    for (i = 0; i < adev->node_cnt; i++) {
+>> +        if (!adev->nodes[i].record_count)
+>> +            continue;
+>>           aest_proc(&adev->nodes[i]);
+>> +    }
+>>       return IRQ_HANDLED;
+>>   }
+>> @@ -776,6 +782,7 @@ static int aest_init_node(struct aest_device 
+>> *adev, struct aest_node *node,
+>>       node->info = anode;
+>>       node->type = anode->type;
+>>       node->version = get_aest_node_ver(node);
+>> +    node->errgsr_mapping = default_errgsr_mapping;
+>>       node->name = alloc_aest_node_name(node);
+>>       if (!node->name)
+>>           return -ENOMEM;
+>> @@ -828,6 +835,7 @@ static int aest_init_node(struct aest_device 
+>> *adev, struct aest_node *node,
+>>       if (!node->records)
+>>           return -ENOMEM;
+>> +    node->errgsr_num = DIV_ROUND_UP(node->record_count, BITS_PER_LONG);
+>>       for (i = 0; i < node->record_count; i++) {
+>>           ret = aest_init_record(&node->records[i], i, node);
+>>           if (ret)
+>> @@ -923,11 +931,12 @@ static int aest_setup_irq(struct platform_device 
+>> *pdev,
+>>   }
+>>   static struct aest_vendor_match vendor_match[] = {
+>> -    {  },
+>> +    { "ARMHC700", &aest_cmn700_probe },
+> 
+> The RAS identifier for CMN-700 is ARMCH701, and that is what should be 
+> in the AEST entry. ARMHC700 is only for the PMU. A RAS driver should 
+> probe off AEST entries, it should not depend on both the PMU happening 
+> to be advertised to the OS *and* the AEST being wrong.
+
+Sorry, this is a mistake. I'll fix it in the next revision.
+
 > 
 > Thanks,
-> Ian
+> Robin.
+>
 
-I actually prefer option 2. when call chains are requested by the user
-switch to cpu-clock event.
+Thanks,
+Ruidong.
 
-Thanks a lot for your patience.
+>> +    {},
+>>   };
+>> -static int
+>> -aest_vendor_probe(struct aest_device *adev, struct aest_hnode *ahnode)
+>> +static int aest_vendor_probe(struct aest_device *adev,
+>> +                 struct aest_hnode *ahnode)
+>>   {
+>>       int i;
+>>       struct acpi_aest_node *anode;
+>> @@ -936,13 +945,14 @@ aest_vendor_probe(struct aest_device *adev, 
+>> struct aest_hnode *ahnode)
+>>       if (!anode)
+>>           return -ENODEV;
+>> -    aest_dev_dbg(adev, "Try to probe vendor node %s\n", anode- 
+>> >vendor->acpi_hid);
+>> +    aest_dev_dbg(adev, "Try to probe vendor node %s\n",
+>> +             anode->vendor->acpi_hid);
+>>       for (i = 0; i < ARRAY_SIZE(vendor_match); i++) {
+>>           if (!strncmp(vendor_match[i].hid, anode->vendor->acpi_hid, 8))
+>>               return vendor_match[i].probe(adev, ahnode);
+>>       }
+>> -    return -ENODEV;
+>> +    return 0;
+>>   }
+>>   static int aest_device_probe(struct platform_device *pdev)
+>> diff --git a/drivers/ras/aest/aest.h b/drivers/ras/aest/aest.h
+>> index 304c03839d31..9d67d79eb4a2 100644
+>> --- a/drivers/ras/aest/aest.h
+>> +++ b/drivers/ras/aest/aest.h
+>> @@ -94,8 +94,16 @@ struct aest_event {
+>>       /* Vendor node    : hardware ID. */
+>>       char *hid;
+>>       u32 index;
+>> +    u64 ce_threshold;
+>>       int addressing_mode;
+>>       struct ras_ext_regs regs;
+>> +
+>> +    /*
+>> +     * This field is used to store vendor specific data for decoding 
+>> error
+>> +     * record by EDAC driver.
+>> +     */
+>> +    void *vendor_data;
+>> +    size_t vendor_data_size;
+>>   };
+>>   struct aest_access {
+>> @@ -147,6 +155,9 @@ struct aest_record {
+>>       enum ras_ce_threshold threshold_type;
+>>       struct record_count count;
+>>       struct dentry *debugfs;
+>> +
+>> +    void *vendor_data;
+>> +    size_t vendor_data_size;
+>>   };
+>>   struct aest_group {
+>> @@ -208,6 +219,19 @@ struct aest_node {
+>>        */
+>>       unsigned long *status_reporting;
+>>       int version;
+>> +    /*
+>> +     * Usually bit[n] in errgsr indicates [n]th error record within this
+>> +     * error node report error. But some compoent may have different 
+>> rules.
+>> +     * For example, CMN700 TRM 4.3.5.12 say:
+>> +     *    ``` Error occurs when the index is even and Fault
+>> +     *        occurs when the index is odd. ```
+>> +     *    Bit[n]: record[n] report ERROR.
+>> +     *    Bit[n + 1]: record[n] report FAULT.
+>> +     * errgsr_mapping function is used to map errgsr bit to record index
+>> +     * for various components.
+>> +     */
+>> +    int (*errgsr_mapping)(int errgsr_bit);
+>> +    int errgsr_num;
+>>       const struct aest_group *group;
+>>       struct aest_device *adev;
+>> @@ -366,6 +390,21 @@ static inline bool aest_dev_is_oncore(struct 
+>> aest_device *adev)
+>>       return adev->type == ACPI_AEST_PROCESSOR_ERROR_NODE;
+>>   }
+>> +static inline int default_errgsr_mapping(int errgsr_bit)
+>> +{
+>> +    return errgsr_bit;
+>> +}
+>> +
+>> +static inline int cmn700_errgsr_mapping(int errgsr_bit)
+>> +{
+>> +    return errgsr_bit / 2;
+>> +}
+>> +
+>>   void aest_dev_init_debugfs(struct aest_device *adev);
+>>   void aest_inject_init_debugfs(struct aest_record *record);
+>>   void aest_proc_record(struct aest_record *record, void *data, bool 
+>> fake);
+>> +void aest_node_foreach_record(void (*func)(struct aest_record *, void 
+>> *, bool),
+>> +                  struct aest_node *node, void *data,
+>> +                  unsigned long *bitmap);
+>> +
+>> +int aest_cmn700_probe(struct aest_device *adev, struct aest_hnode 
+>> *ahnode);
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
