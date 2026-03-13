@@ -1,127 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401AD397E90
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E921D3B2FF0;
+	Fri, 13 Mar 2026 15:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773415154; cv=none; b=JfVUflSubG2GnEe+X62SHh+nTSR0+94O+wh+TG31fSqJ75Hik3wvzxu09iiic/6K6BW6slGTJGwG8thbdBuQKKOvJyYj3I41gbEIZZs5MxREgaBaZWFILix7dQ/XiUdhDk3oQdTzp2W+KClsKvf0kkvIERRbdGcA6wamHR3NOs0=
+	t=1773416136; cv=none; b=DY15rrATjzUT7Tmu2nrxwjDMnqdrn8lWQmcmgkztBKle0pYtiqcPt3E6Rg5Ln+JUKaNn/+w1TpR3kPnxrHpzAFoe4+ezCT01YD0CNsBD5u0o2Dt8+7oKBccr7nrqVdAvMWf2kDYlVO0Q2cQ1t1IEWcfNdGxgJKswNJhBoTQ33dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773415154; c=relaxed/simple;
-	bh=Eh3gjA2sctTF1oNwcOYglGKzXLhEx21cV9/Jjd2sn2w=;
+	s=arc-20240116; t=1773416136; c=relaxed/simple;
+	bh=LiVpjZyWcLgaZBso4RHPZwM346VQfW2lwVDPOvwOGhg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iivm0Z2i8cnFzhDYBW1HK1VGftpSDMfzrRITNVerQtTGmoqeDb87HxL0xIGiY/xGAlma06+xxXagb6BrjIl9GkjQ9S1SScA7ufg19SAR2705FOY5X4Hjj7KAOVwjZiy4kxDvLaiDi7PH0bl5V/bEfbmQo1u7v3jsVI+1WTrvB18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEGMi9ls; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqdcxxWasiPueWQJKN9GS4ncRYKDoJ7rQ2K1IfnBYlYdytkUfcl3FVcqK5N8FLlnoAYYwvTOdHOOpYbOoJfLa38o1o/k5W10g0YO3Hwi92sJ5EJ+1ThofI0T74/dKWIrK0loEBbdwIrUyyNbnEqjjDnrE8vOWlJ/eFOivMvprXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=exzRCStB; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEGMi9ls"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72CE8C19425;
-	Fri, 13 Mar 2026 15:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773415153;
-	bh=Eh3gjA2sctTF1oNwcOYglGKzXLhEx21cV9/Jjd2sn2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rEGMi9lsYiLQv/vLwjFRgGGjmDMK8E3IXpWOVG+C3Kwze3mTNl8Ic7Bfm04HS0kV5
-	 5QR/MXEe+xEhJBSN48ps492Vm0oc0Hw4evEeiAbghN1DhxcGlwg9fgv+6sdGq8kQAC
-	 oNNULQhBQbfbTozChqq1UWyhldF3THh1fi4oTEvJvwHCNslaVxK9zAi80HIT6dcbCm
-	 ESZIGQNt6IbyhWvemNaToHT5TKjDlVoTDBjojOAQZWzlpPFtz4KAkkPg5gX6nlFPbD
-	 Ud6rHBZicYaa0jbkoROvsf8/9XjK+0c/qrke+Icot0/SiNxE30Ig7v5piXVeqRTRuI
-	 5eRRvZ98UqcHg==
-Date: Fri, 13 Mar 2026 12:19:11 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Jan Polensky <japo@linux.ibm.com>
-Subject: Re: perf stat issue with 7.0.0rc3
-Message-ID: <abQq79_ajs8zFeEI@x1>
-References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="exzRCStB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dWMRU5JVS/t7/tdyfkDrfyI+p1lveBJHbU8Nl4HN8OU=; b=exzRCStBODRJ0dm7D5emwmIuQA
+	Z5StnHDK/A8VRC+ZT9kadzJgmY06ey8oeYuWuaN7BEUZXbBOM64ScuVVZrq9UcS3xHSuGZDW3BB2u
+	9A4jNjZmr/Ep8fcsKalhjUec18gYWofupd/Aqb1rg6qmEEP4TaZuGSUUBAU53kcF54Lg8RJsT/MSs
+	PIGKz8g2sIZM8RxrPDOO0gTaE1PEJAG/4+tR1n+ETl4F0ISCFGSa5gDNnyKD6EBrLpkKTVQUxfav/
+	9wJWVhoEXep7HOjkpNpaUd62jkE+GaYtgOYYefv3cZ8n5sknkt4S2c2JcFeHLClbcoDVI4iiUu4vY
+	eKOBby4g==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w14Xk-00000003iKj-3mNu;
+	Fri, 13 Mar 2026 15:35:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B790A303377; Fri, 13 Mar 2026 16:35:15 +0100 (CET)
+Date: Fri, 13 Mar 2026 16:35:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] perf/x86: Move event pointer setup earlier in
+ x86_pmu_enable()
+Message-ID: <20260313153515.GC2872@noisy.programming.kicks-ass.net>
+References: <20260310-perf-v2-1-4a3156fce43c@debian.org>
+ <a0a1d8ab-85cd-411c-b8e2-9e7e2f7136fd@linux.intel.com>
+ <CAP-5=fWAzaKNO0wmAA89ovJLFgxCWQ3khnyWFotnaSAGiugv+A@mail.gmail.com>
+ <20260311173509.GR606826@noisy.programming.kicks-ass.net>
+ <20260311204035.GX606826@noisy.programming.kicks-ass.net>
+ <9e0e04e9-7421-4dfb-a017-c31741a8d500@linux.intel.com>
+ <abQPM7zKWBaNJufd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
+In-Reply-To: <abQPM7zKWBaNJufd@gmail.com>
 
-On Fri, Mar 13, 2026 at 02:13:18PM +0100, Thomas Richter wrote:
-> Ian, 
+On Fri, Mar 13, 2026 at 06:23:41AM -0700, Breno Leitao wrote:
+> On Thu, Mar 12, 2026 at 10:53:59AM +0800, Mi, Dapeng wrote:
+> > On 3/12/2026 4:40 AM, Peter Zijlstra wrote:
+> > > Subject: x86/perf: Make sure to program the counter value for stopped events on migration
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > > Date: Wed Mar 11 21:29:14 CET 2026
+> > >
+> > > Both Mi Dapeng and Ian Rogers noted that not everything that sets HES_STOPPED
+> > > is required to EF_UPDATE. Specifically the 'step 1' loop of rescheduling
+> > > explicitly does EF_UPDATE to ensure the counter value is read.
+> > >
+> > > However, then 'step 2' simply leaves the new counter uninitialized when
+> > > HES_STOPPED, even though, as noted above, the thing that stopped them might not
+> > > be aware it needs to EF_RELOAD -- since it didn't EF_UPDATE on stop.
+> > >
+> > > One such location that is affected is throttling, throttle does pmu->stop(, 0);
+> > > and unthrottle does pmu->start(, 0); possibly restarting an uninitialized counter.
+> > >
+> > > Fixes: a4eaf7f14675 ("perf: Rework the PMU methods")
+> > > Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > > Reported-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  arch/x86/events/core.c |    4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > --- a/arch/x86/events/core.c
+> > > +++ b/arch/x86/events/core.c
+> > > @@ -1374,8 +1374,10 @@ static void x86_pmu_enable(struct pmu *p
+> > >
+> > >  			cpuc->events[hwc->idx] = event;
+> > >
+> > > -			if (hwc->state & PERF_HES_ARCH)
+> > > +			if (hwc->state & PERF_HES_ARCH) {
+> > > +				static_call(x86_pmu_set_period)(event);
+> > >  				continue;
+> > > +			}
+> > >
+> > >  			/*
+> > >  			 * if cpuc->enabled = 0, then no wrmsr as
+> >
+> > LGTM.
+> >
+> > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > 
-> I just discovered a strange behavior on linux 7.0.0rc3.
+> Thank you for the patch and the discussion. To confirm my understanding:
+> this patch should be applied on top of my v2 series to fully resolve the
+> issue, correct?
 > 
-> I run these commands on my x86 virtual machine:
-> 
-> bash-5.3# uname -m
-> x86_64
-> bash-5.3# perf -v
-> perf version 6.18.13-200.fc43.x86_64
-> bash-5.3# perf stat -- true
-> 
->  Performance counter stats for 'true':
-> 
->          1.108.929      task-clock                       #    0,437 CPUs utilized             
->                  0      context-switches                 #    0,000 /sec                      
->                  0      cpu-migrations                   #    0,000 /sec                      
->                 55      page-faults                      #   49,597 K/sec                     
->    <not supported>      cycles                                                                
-> 
->        0,002536439 seconds time elapsed
-> 
->        0,001363000 seconds user
->        0,001393000 seconds sys
-> 
-> bash-5.3#
-> 
-> This is the epected output, however when I use the perf version 7.0.0rc3:
-> 
-> bash-5.3# ./perf -v
-> perf version 7.0.rc3.g1f318b96cc84
-> bash-5.3# ./perf stat -- true
-> Error:
-> No supported events found.
-> trace.args_alignment
+> If so, would you prefer that I include both patches together in a single
+> series, or are you fine with them as-is?
 
-And this last line is even stranger, in my case I get something else,
-also on x86_64:
+Yeah, I've got then in queue/perf/urgent and once the robot is done
+chewing on them, I'll push them out into tip.
 
-root@number:~#  perf stat -- true
-Error:
-No supported events found.
-addr2line.style
-root@number:~#
-
-On an ARM machine:
-
-acme@raspberrypi:~/git/perf-tools $ perf stat -- true
-Error:
-No supported events found.
-
-acme@raspberrypi:~/git/perf-tools $ uname -a
-Linux raspberrypi 6.12.62+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.62-1+rpt1 (2025-12-18) aarch64 GNU/Linux
-acme@raspberrypi:~/git/perf-tools $
-
-I'll try to bisect this later, thanks for the report!
-
-- Arnaldo
-
-> bash-5.3# 
-> 
-> Same happens on my s390 systems (LPAR and z/VM).
-> Is this a known already?
-> I guess this is a perf tool issue, same result when you execute this on a 7.0.0rc3
-> kernel.
-> 
-> Any ideas where to start debugging
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> IBM Deutschland Research & Development GmbH
-> 
-> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-> 
-> Geschäftsführung: David Faller
-> 
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
+Thanks!
