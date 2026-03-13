@@ -1,206 +1,2035 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570E3A1E6A
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BC8DDCD
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 15:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773416522; cv=pass; b=uSZBjbQL0pUv0KyF6QtBr0TJrMmXbCI254Oa1CB+LbGLAJsDgjEicOM9JP3V9Ofsy7VgnUcOQBeFPBsMCN7f9MlFnVBishbjGT9Dddi8/3jhb67owG+HpqWLxfqR74OomSm/DfuzXuRiHZe7smISR7RJx3of2/FO1HP6jivG2lE=
+	t=1773416872; cv=pass; b=UB4LRZOICDlFUWqCbyLArpZ0x4932kz8Gyuw6PkIUjcD2XVtYmoxymhMLjjz4s9lRkhW1p3u1235ZkXfWq6NcRKJ4fNf7f8ogyo4NENzV3zUnWavTqdQtMMFHCe8QpUxYZT2EIEXiOOk7og3AVtgrh/ZEyOKDUhUlJXtWw96qBo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773416522; c=relaxed/simple;
-	bh=MqKWbF1K9prpiKRFMJUDv6RSKOW1kYhKyzjN906N8Ac=;
+	s=arc-20240116; t=1773416872; c=relaxed/simple;
+	bh=Ig1TlWkXD8kHN6MTU6Z1XH6/DBfhGo6y97gACFAXTwQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i7bjYZ1zQFuAaG16u6UKCLO/wmDK7TkZi6dWrxZUI6TGhuzPtpbhoMJRU6oTvqgoM/i6x8tVF4a9jhS42zkf0nqe4UavDc0gCSSs9GDk2clCOIMeoXaeIlnQElnTMTZBehl7xj2sBW2ttj/BcMeqcxq3H3pRE3T9ahbaumzm0KU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iaGYXV2i; arc=pass smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=slb9tQu5B/8SqJ6WKE9OwEyDd7ZGcJ6wT0yXMos2uo74l382VH4wyexLgKIZaadL/g19iCkDk60gmkGHlG65O+M9tI5RZlsXpHIblsBAJrGQRZ2HAHk6ZrPjKCAlemSRRiKF5vP+KflItpIujD7jzuD5agloOyHwk4TvR4dMxec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DodukKVF; arc=pass smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaGYXV2i"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ae3f822163so107075ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 08:42:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773416520; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DodukKVF"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ae49120e97so95015ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 08:47:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773416865; cv=none;
         d=google.com; s=arc-20240605;
-        b=i6gTURt1WvqyeQu2aF6Z7pxm6vEZde0mBTecBTilWdlrBaIcV2uFr2r9k8TNU4H7Mp
-         FxNGSCr0Snc/jwK1OzzeAyJqVKSmrlf63hgFH5DZqRenra9aVon7bqc2CPPKMzCmoOQq
-         TG55l9QeY/Cv4338wjF+1Xr5H6M9+ijCVwegTHH5onCUHldLxp6/ynOOZuzuXi6QpiI7
-         h8eoncb669s62jkkfmvcY614WP7E9cwp3LO4QJ62W9ordUOPc4PjrhTM3tQ0cB55wX39
-         Rj3VSjsQXkjuYVwmIhY78XaxUFasgoM3Jxo/rXwSn3ObjIzkkoG1J4DDyBMbdrWXy96+
-         x6NA==
+        b=jkvXq134B4htuSfeYf9XgS2n7RyQSVQ/7ToYv9iMxXIhUWgYcAU7wTio3jGf12lfNH
+         B2oduVBpk5517XJUAOpnSVqVlYtwkzQz2g3vLkWhOKJhXOQ2/X9Adk8hFHmk+jUfc8wt
+         NTsb3XrDTQLjpG7gS9OoBdx0wbwV1a6JmN7k7H9D/uuFqzWRGsu9UgRvZs+FrLr0Ti42
+         KSzuXq+HzfspsIB20e3JVjbX0xqOiNZwNxXIxCLBJi2O9+6O3f0HPrNRUfL8S27H7h3x
+         gsBrwv1tb4SIERzGseHka1fP13OixSDiVdhoBkDGML5eqUZEnaifnve5IvT+2kaNbeto
+         jDQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
-        fh=EEu9jOGS8DkWWjdt5iWdr7DMyWuuoSqsD2ccay8Q1kE=;
-        b=NpRHId5qjIC9NGnC2/gk1Sy0N4Gy/YBAADldmxiztZY92ktD4e7stwhPyuUGPqRzQP
-         mRF3OiJnJnFr0QGE5PjahLaRl/vZmFsEtWM877+j+t/AqKzcwrg8DujbMT8caUVK/+FL
-         4TBDsoqvH/XKllkfkvIJcJ+i4LBkOKV8LqhCsOeQ/0aA8LbcSYOXzYQhAZVTflmNPjM5
-         H7qpipwlRdnsQ4mgXDrCgyOBHYZjhW8mLo+I7JFDtq6oi9VgA5TI3u+3hpeeUFabOGmx
-         CSfW+kFbFPryFHvBl2H38ZGViwGE9zQ/8LKp81SWCfssUvAe0W2J1UiCRIi9u7ZnYDW7
-         THCw==;
+        bh=YLyHQ7GFkCh1mz74nY1dF5CVnGSFGt3QbJZLOtgXnOs=;
+        fh=9rHiP2VWQ2n6cjRf9iytaxsNNf1kiIDu3huutmCgTBw=;
+        b=cOuOc0qi2no1o8puZPMsgrfULIcDwN4yu1EyhJGxlMWojYP/fe5G+mnAA78bI0q2Qj
+         os2nOm5eBJ/ZTHZdjOb+/N1NwSczrejbdyaF3x6h7oTSXyeYMfB0I8ffzPoQqtpLrnGp
+         /xTHZt4JM09p9DoutTW4nTVdRewSg6dTWpNzKrz0XcPn2s8xssv+ClFekiMEAJ9121Ey
+         DCx4h2IxvmsbbOu/HRqduhv070htoHvy6MxYooTNSKCO8FszOiLUipKFGLVdpml/DQPf
+         a73AJW1KXI4fqZhUd/ITu18Le0OpH0UrN9MDPddXCFFISPJiq9Csh4Bq2tyPS0i0L7BT
+         H+KQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773416520; x=1774021320; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773416865; x=1774021665; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
-        b=iaGYXV2ilZGyglbFo8PG5iK78pZuf1VyFKey0BcoKTisrBeeTvSycmsK0w0jDTlqr0
-         qsIsnzDP0sQ0xKjSKBcllr3MwZIEOIstdzeu19sZOIGVyTe02B/WjrThwRvOrLfBCuTI
-         FrUf89IP9Mq6vBqtFQAOQyEr38wZXZb+vH0vwJtaYZp8XtKKdywz8Cak6cYvIdE/DSuV
-         B/rSWsYtZjfU6kTqEHWOX4H6guXoGJ9k9FJ2q94Q2epCLTtNJ3zNqK2PxIe5MgSn7349
-         M+Q0/EjvZzTABR1am5NyrHSxRFbqMd0i7mj/bUcMPNbk768DlWD55CWXWHC67kZ0cnn3
-         vFrg==
+        bh=YLyHQ7GFkCh1mz74nY1dF5CVnGSFGt3QbJZLOtgXnOs=;
+        b=DodukKVFg7XL04z1aG5az15bnAJYOPXXteZqjJ3IOmgaTZApX34eeuyMPJH0+yeCf/
+         sZ6veshx4zC3d77BKFoD/k34jcFi6H1rlVqWwyrYYfuC4ygLAciDN2SqYnJRxfLZloK4
+         KC2OO8Z0M4sCnUdZ/p79DgSzSz5oMhHxhNGq0ZAFpEsMzNV1y8hNa5Ueab88g8YcNcOK
+         DyfvLrBaPvh4XI373BPQKTdQc9Sp5CBFeHJ/jbSczxeiwv8qiWuoVz1Wbnaa2t6s9gUo
+         3vjrPOCj2Xu70TrypVPR/e1s89ApG1i1syqc6D8flRaqweokOFLIXSr48Ss+qT5q08tc
+         YttA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773416520; x=1774021320;
+        d=1e100.net; s=20251104; t=1773416865; x=1774021665;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Q07G+OAbpZKijxP5AiBDLkTD9FE4MgVyIhOUrj6YrXU=;
-        b=jmWzCFJkqz1V8IlGbFZYWOcKwcX7SE6cZa++AQJJOnsb9y3DhYf92K7kyADkx5TJkM
-         7CgrSwE9RD1mpe572PMEpJb6pnp35f/I7jz2RXNFSK0hbXB917AVFJ9F6O7ifh+mg8vC
-         X/0lxhvhKzSa2A54t650tUqeon8bDxIp1xtslMcvAuhpnN/KghwnsyTQ2a0ccw0N9yc8
-         saIU7/tDGJ4EQpAntKRGe6cYQdXz7ZyhowrhYSTV8yMX89y4AZwvO68vpjI2efKeDHjN
-         SCIOeuY1O7+hODPh/D9Ensw2BaGVU7wr14grxvmEcpVtAY8rYUPKtVeIxaKLwr4IgPC+
-         PHpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUc/dTbYn/YmAC/YdBkgugOWer5FCWerPAkY6FYwhPrQHgmFImHoyVzEtIf/4K0lgHP9XnHea6/iFxqu3HQ/gyq@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBLSNxMRYcLrlku2pl2RHYjcvWmQSn+JiYWzBM/DfyOAXQKC/4
-	S+MWtsJw9vWeSX14z/mtVpIXSoZarMEGgPxC5vtuw9bEq+s3oYcGV/qwi3+l1MMYykAVwgn5uzY
-	GGXK3d0EZyHr6ZHaCOeuCOM3eFJBc+E7CZ88AqB2u
-X-Gm-Gg: ATEYQzyXqFCQ9gGa0iJg1pBvRpmIAOJf8tIppfdmOvoLAGxUxVZOomcTZ7yjjQI0PaS
-	TG7+gc9E5bvb1fwoQmx8lGXJJVc5CmC4l+0khGrOFjmMn4vW+RI3LykuJlLspYp3Gv3cRWSMEba
-	Ujt9v1elq34NtegjIGBjQZx8o0WDADAExrYUSIVaOgE2VptjPjgtYuorFyk+X+Sq0+TmFmOCv0F
-	cMgBOwhKB7LLUY9rZBfIxtpgCE89hOnfbbIvw/Zd+NMCLuI7z3bLGQBTbLAv0L/OY0b23Jj5Q+U
-	rIIp9kSag8QmAbYN1itwcMDGp+coYV9RfqsX
-X-Received: by 2002:a17:902:ce0d:b0:2ae:7d03:c911 with SMTP id
- d9443c01a7336-2aecd56f0b2mr2506745ad.1.1773416519929; Fri, 13 Mar 2026
- 08:41:59 -0700 (PDT)
+        bh=YLyHQ7GFkCh1mz74nY1dF5CVnGSFGt3QbJZLOtgXnOs=;
+        b=Am8N6FymRpERx+oS1Z6qpHgnLXZJx+6lR1u2HBgne0eyvzrwrpIBd9eF/+4HjaMYzv
+         d3vwyFZ65H5Sre3iLmDGD1FrbvqpofvN8b5ba80wAAD8GZJjvKK3RoIPGNZddS5qVT0D
+         fc0qujjzdGYAc2dfKRJ1pJFAm+IsvlSFsm8h5m08UAC4di/VWPdGidK5tNiU0tShUlsZ
+         YYPCbJGWfDY+kjc2dkQtQKAwu/p3l7WrkoJgpRqkPANZRBk8WdCRbnk2Dsgrk9eGEUld
+         8NVeCEvX1NXmxHYG3x+5mLT2XLGNGRkvWwt/ydzVzjbl9oRQhpZhRAiVQS0xMvwPAG/r
+         BWcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCn+inYFi+x98J+TgPXJZMckUGZFF7Ud/fmIrfPuWGCCoWGeiXRCv96y1qeB1UkUyHg73RwhudaccG37XekTcU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIBqRD5q0AXfD5wMh3EzPrAr15WqdKqd/TARzLZ20/Jm5j4Kms
+	jRwNFgDl+132qSAbMmxqAv9w+q8+7NKcq0dTWcDVO0jEugdVputuhVagwg5PXATLyr6lOOM8UEv
+	N5nDNh5xtJgZjvYcbX5Bl1criTbWgMqmItI+RrPVV
+X-Gm-Gg: ATEYQzynEs7d1miRGnbDwFSFFR5Rc7MEt1lwsYXjBEGvzu5VJZs4JduuWLXeg8vgVtG
+	r2Ru0TCRwFegZn3iY47GkW12EluSFpbcMqaYnC6VH7wUFIs1cULc4uAAxf4If+UlTiaNic8OhcF
+	a6be5e+jRuevHk2BZLNGlE2pvIDznfV+jNPvWeDhfn7CcJWOvDOZF88PQnO9KJxv9oeOw0kkSY2
+	oPsXLmP3OH8165OSAgH/8dLnHGIRu+ibkdf0oldmVqBIJEriUriqVQBS8FLLAuYzU3DrwoLvH45
+	Va4/Ulkn9wTOYLpvMYnHcbitKTAl0U8sHJ59
+X-Received: by 2002:a17:902:cf08:b0:2ae:44db:570c with SMTP id
+ d9443c01a7336-2aecb5b4459mr2904115ad.12.1773416863812; Fri, 13 Mar 2026
+ 08:47:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com> <abQq79_ajs8zFeEI@x1>
-In-Reply-To: <abQq79_ajs8zFeEI@x1>
+References: <20260313072431.584-1-cp0613@linux.alibaba.com> <20260313083627.881-1-cp0613@linux.alibaba.com>
+In-Reply-To: <20260313083627.881-1-cp0613@linux.alibaba.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 13 Mar 2026 08:41:48 -0700
-X-Gm-Features: AaiRm50WOdm4Ean_Pw7iGJt7N5hem3D2oEZRWovZca76GeSqp8bhm-jnnjispcs
-Message-ID: <CAP-5=fWG0Q-xNGn_-_KGCopaNsWG5rUN3pYNLEh3K7+xE0OwVQ@mail.gmail.com>
-Subject: Re: perf stat issue with 7.0.0rc3
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>
+Date: Fri, 13 Mar 2026 08:47:31 -0700
+X-Gm-Features: AaiRm512lXwEU0RBH3Kr7rFpbhj-cfhCJIZwjwv9aG0eVZa8uNVHGLsL2kAcXw4
+Message-ID: <CAP-5=fUAf5bhbHiy_45xP4LhUM-qOa6YykQaMF4yp4Ta7qmbog@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Avoid argument list too long in orphan pruning
+To: cp0613@linux.alibaba.com
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, guoren@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 13, 2026 at 8:19=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Mar 13, 2026 at 1:37=E2=80=AFAM <cp0613@linux.alibaba.com> wrote:
 >
-> On Fri, Mar 13, 2026 at 02:13:18PM +0100, Thomas Richter wrote:
-> > Ian,
-> >
-> > I just discovered a strange behavior on linux 7.0.0rc3.
-> >
-> > I run these commands on my x86 virtual machine:
-> >
-> > bash-5.3# uname -m
-> > x86_64
-> > bash-5.3# perf -v
-> > perf version 6.18.13-200.fc43.x86_64
-> > bash-5.3# perf stat -- true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >          1.108.929      task-clock                       #    0,437 CPU=
-s utilized
-> >                  0      context-switches                 #    0,000 /se=
-c
-> >                  0      cpu-migrations                   #    0,000 /se=
-c
-> >                 55      page-faults                      #   49,597 K/s=
-ec
-> >    <not supported>      cycles
-> >
-> >        0,002536439 seconds time elapsed
-> >
-> >        0,001363000 seconds user
-> >        0,001393000 seconds sys
-> >
-> > bash-5.3#
-> >
-> > This is the epected output, however when I use the perf version 7.0.0rc=
-3:
-> >
-> > bash-5.3# ./perf -v
-> > perf version 7.0.rc3.g1f318b96cc84
-> > bash-5.3# ./perf stat -- true
-> > Error:
-> > No supported events found.
-> > trace.args_alignment
+> The original problem was encountered when compiling the Linux tool perf i=
+n
+> buildroot. I think it might also occur in buildroot or yocto environments=
+.
 >
-> And this last line is even stranger, in my case I get something else,
-> also on x86_64:
->
-> root@number:~#  perf stat -- true
-> Error:
-> No supported events found.
-> addr2line.style
-> root@number:~#
->
-> On an ARM machine:
->
-> acme@raspberrypi:~/git/perf-tools $ perf stat -- true
-> Error:
-> No supported events found.
->
-> acme@raspberrypi:~/git/perf-tools $ uname -a
-> Linux raspberrypi 6.12.62+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.62-1+=
-rpt1 (2025-12-18) aarch64 GNU/Linux
-> acme@raspberrypi:~/git/perf-tools $
->
-> I'll try to bisect this later, thanks for the report!
+> I also constructed a method to reproduce the issue in an x86 native
+> environment by extracting a long file list. The problem can be reproduced
+> using:
+>   make -C tools/perf O=3D./patches-perf NO_LIBTRACEEVENT=3D1 NO_LIBPYTHON=
+=3D1
 
-Hi Arnaldo,
+Hi cp0613,
 
-Leo has pointed at the fix:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/tools/perf/util/metricgroup.c?h=3Dperf-tools-next&id=3Dc5a244bf17c=
-af2de22f9e100832b75f72b31d3e6
-This also showed up as missing for the LTS backports:
-https://lore.kernel.org/lkml/ad95d781-7eb2-4c0c-a9e9-aaabae8eb602@kernel.or=
-g/
-so I thought it was flagged as a fix for the next PR. I don't see it in the=
-re:
-https://lore.kernel.org/lkml/20260313151434.1695228-1-acme@kernel.org/
-Could we get it in?
+I'm not sure what the patch diff is, but I think you're encountering
+the issue discussed here:
+https://lore.kernel.org/lkml/20260303211503.165337-1-mmayer@broadcom.com/
+The fix has been merged, so I'm not sure why it remains a problem.
 
 Thanks,
 Ian
 
-
-
-> - Arnaldo
+> The patch diff is as follows:
 >
-> > bash-5.3#
-> >
-> > Same happens on my s390 systems (LPAR and z/VM).
-> > Is this a known already?
-> > I guess this is a perf tool issue, same result when you execute this on=
- a 7.0.0rc3
-> > kernel.
-> >
-> > Any ideas where to start debugging
-> > --
-> > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germ=
-any
-> > --
-> > IBM Deutschland Research & Development GmbH
-> >
-> > Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-> >
-> > Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> >
-> > Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht St=
-uttgart, HRB 243294
-> >
+> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> index 63c65788d442..4a530ea15b81 100644
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+> @@ -118,7 +118,8 @@ CUR_OUT_JSON        :=3D $(shell [ -d $(OUT_DIR) ] &&=
+ find $(OUT_DIR) -type f)
+>
+>  # Things in the OUTPUT directory but shouldn't be there as computed by
+>  # OUT_JSON and GEN_JSON.
+> -ORPHAN_FILES   :=3D $(filter-out $(OUT_JSON) $(GEN_JSON),$(CUR_OUT_JSON)=
+)
+> +#ORPHAN_FILES  :=3D $(filter-out $(OUT_JSON) $(GEN_JSON),$(CUR_OUT_JSON)=
+)
+> +ORPHAN_FILES :=3D /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm=
+64/ampere/ampereone/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/arm64/ampere/ampereone/bus.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/arm64/ampere/ampereone/cache.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/arm64/ampere/ampereone/core-imp-def.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereone/exception=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/amper=
+eone/instruction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/ar=
+m64/ampere/ampereone/intrinsic.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/ampere/ampereone/memory.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereone/pipeline.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereone/spe.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/ampere=
+onex/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/a=
+mpere/ampereonex/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/ampere/ampereonex/cache.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/ampere/ampereonex/core-imp-def.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/exception.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/instr=
+uction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere=
+/ampereonex/intrinsic.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/arm64/ampere/ampereonex/memory.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/ampere/ampereonex/metrics.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/mmu.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/pipeline.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/=
+spe.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ampere/em=
+ag/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/amp=
+ere/emag/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/=
+ampere/emag/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/a=
+rm64/ampere/emag/clock.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/ampere/emag/exception.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/ampere/emag/instruction.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metric.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a3=
+4/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/=
+cortex-a34/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm6=
+4/arm/cortex-a34/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/arm/cortex-a34/exception.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/arm64/arm/cortex-a34/instruction.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a34/memory.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a35/branch.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a35/bus.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a35/=
+cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cor=
+tex-a35/exception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/a=
+rm64/arm/cortex-a35/instruction.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/arm/cortex-a35/memory.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/arm64/arm/cortex-a510/branch.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/bus.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/cache.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a510/excep=
+tion.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cort=
+ex-a510/instruction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/arm64/arm/cortex-a510/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/arm64/arm/cortex-a510/pipeline.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/arm64/arm/cortex-a510/trace.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a53=
+/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/c=
+ortex-a53/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm=
+64/arm/cortex-a53/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/arm64/arm/cortex-a55/branch.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/arm64/arm/cortex-a55/bus.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/arm64/arm/cortex-a55/cache.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a55/exception.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a55/instruction=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a=
+55/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm=
+/cortex-a55/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/cortex-a57-a72/branch.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/arm/cortex-a57-a72/bus.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/cache.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/exception.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a=
+72/instruction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm6=
+4/arm/cortex-a57-a72/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/arm64/arm/cortex-a65-e1/branch.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/arm64/arm/cortex-a65-e1/bus.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/cache.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/dpu.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/e=
+xception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/=
+cortex-a65-e1/ifu.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/a=
+rm64/arm/cortex-a65-e1/instruction.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/arm64/arm/cortex-a65-e1/memory.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/pipeline.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a710/branch.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a710/b=
+us.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex=
+-a710/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/a=
+rm/cortex-a710/exception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/arm64/arm/cortex-a710/instruction.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/arm64/arm/cortex-a710/memory.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a710/pipeline.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a710/trace.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/br=
+anch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cort=
+ex-a73/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ar=
+m/cortex-a73/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/arm/cortex-a73/etm.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/arm64/arm/cortex-a73/exception.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/arm64/arm/cortex-a73/instruction.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipelin=
+e.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-=
+a75/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ar=
+m/cortex-a75/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/ar=
+m64/arm/cortex-a75/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/arm64/arm/cortex-a75/etm.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/arm/cortex-a75/exception.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/arm64/arm/cortex-a75/instruction.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a75/memory.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a75/mmu.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a75/p=
+ipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/c=
+ortex-a76/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/ar=
+m64/arm/cortex-a76/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/arm/cortex-a76/cache.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/arm/cortex-a76/exception.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/arm64/arm/cortex-a76/instruction.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a76/memory.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a76/pipelin=
+e.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-=
+a77/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ar=
+m/cortex-a77/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/ar=
+m64/arm/cortex-a77/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/arm64/arm/cortex-a77/exception.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/arm64/arm/cortex-a77/instruction.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a78/br=
+anch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cort=
+ex-a78/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/ar=
+m/cortex-a78/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/arm/cortex-a78/exception.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/arm/cortex-a78/instruction.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/arm64/arm/cortex-a78/memory.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-a78/pipeline.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x1/branch.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x1/b=
+us.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex=
+-x1/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm=
+/cortex-x1/exception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/cortex-x1/instruction.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/arm/cortex-x1/memory.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/arm64/arm/cortex-x1/pipeline.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/ex=
+ception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/c=
+ortex-x2/instruction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/cortex-x2/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/arm64/arm/cortex-x2/pipeline.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/arm64/arm/cortex-x2/trace.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/bus.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/exception.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/genera=
+l.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neovers=
+e-n1/l1d_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm6=
+4/arm/neoverse-n1/l1i_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/arm64/arm/neoverse-n1/l2_cache.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/arm64/arm/neoverse-n1/l3_cache.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/ll_cache.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/memory.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n=
+1/metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm=
+/neoverse-n1/retired.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/neoverse-n1/spe.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/arm64/arm/neoverse-n1/spec_operation.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/stall.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n1/tlb.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-=
+v2/exception.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/=
+arm/neoverse-n2-v2/fp_operation.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/arm/neoverse-n2-v2/general.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l1d_cache.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/l1i_cac=
+he.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neover=
+se-n2-v2/l2_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/a=
+rm64/arm/neoverse-n2-v2/l3_cache.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/arm64/arm/neoverse-n2-v2/ll_cache.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-=
+n2-v2/retired.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64=
+/arm/neoverse-n2-v2/spe.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/arm64/arm/neoverse-n2-v2/spec_operation.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/stall.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/sve.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/tl=
+b.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neovers=
+e-n2-v2/trace.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64=
+/arm/neoverse-n3/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/neoverse-n3/exception.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/arm/neoverse-n3/fp_operation.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/general.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1d_cache.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n=
+3/l1i_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/a=
+rm/neoverse-n3/l2_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/arm64/arm/neoverse-n3/l3_cache.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/arm64/arm/neoverse-n3/ll_cache.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/memory.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/ret=
+ired.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neov=
+erse-n3/spe.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/a=
+rm/neoverse-n3/spec_operation.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/arm64/arm/neoverse-n3/stall.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/arm64/arm/neoverse-n3/sve.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/tlb.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/trace.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/bus.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/exc=
+eption.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/ne=
+overse-v1/fp_operation.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/arm/neoverse-v1/general.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/arm/neoverse-v1/l1d_cache.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l1i_cache.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/l2_cache.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/=
+l3_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/=
+neoverse-v1/ll_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/arm64/arm/neoverse-v1/memory.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/arm/neoverse-v1/metrics.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/arm64/arm/neoverse-v1/retired.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/spe.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/spec_operati=
+on.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neover=
+se-v1/stall.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/a=
+rm/neoverse-v1/sve.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/arm/neoverse-v1/tlb.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/arm64/arm/neoverse-v3/brbe.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/arm64/arm/neoverse-v3/bus.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/arm64/arm/neoverse-v3/exception.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/fp_operation.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/ge=
+neral.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neo=
+verse-v3/l1d_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/arm/neoverse-v3/l1i_cache.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/arm/neoverse-v3/l2_cache.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/arm64/arm/neoverse-v3/ll_cache.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/memory.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metric=
+s.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/arm/neovers=
+e-v3/retired.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/=
+arm/neoverse-v3/spe.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/arm64/arm/neoverse-v3/spec_operation.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/arm64/arm/neoverse-v3/stall.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/sve.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/tlb.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/cavium/thunderx2/core-imp-d=
+ef.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/common-and=
+-microarch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fr=
+eescale/imx8mm/sys/ddrc.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/arm64/freescale/imx8mm/sys/metrics.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/freescale/imx8mp/sy=
+s/ddrc.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/freesc=
+ale/imx8mp/sys/metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/freescale/imx8mq/sys/ddrc.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/arm64/freescale/imx8mq/sys/metrics.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/ddrc.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/arm64/freescale/imx91/sys/metr=
+ics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/freescale=
+/imx93/sys/ddrc.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm=
+64/freescale/imx93/sys/metrics.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/freescale/imx94/sys/ddrc.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/arm64/freescale/imx94/sys/metrics.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/arm64/freescale/imx95/sys/ddrc.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/freescale/imx95/sy=
+s/metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fuj=
+itsu/a64fx/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/a=
+rm64/fujitsu/a64fx/bus.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/arm64/fujitsu/a64fx/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/arm64/fujitsu/a64fx/cycle.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/arm64/fujitsu/a64fx/exception.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/instruction.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/memory.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/other=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/a64f=
+x/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fu=
+jitsu/a64fx/sve.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm=
+64/fujitsu/monaka/core-imp-def.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/arm64/fujitsu/monaka/cycle_accounting.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/energy.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/exception.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/fp=
+_operation.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fu=
+jitsu/monaka/gcycle.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/arm64/fujitsu/monaka/general.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/arm64/fujitsu/monaka/hwpf.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/arm64/fujitsu/monaka/l1d_cache.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l1i_cache.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l2_cache.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l=
+3_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujit=
+su/monaka/ll_cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/fujitsu/monaka/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/arm64/fujitsu/monaka/pipeline.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/arm64/fujitsu/monaka/retired.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/spec_operation.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/stall.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/monaka=
+/sve.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fujitsu/=
+monaka/tlb.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/fu=
+jitsu/monaka/trace.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+arm64/hisilicon/hip08/core-imp-def.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/arm64/hisilicon/hip08/metrics.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64/hisilicon/hip=
+08/uncore-l3c.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/arm64=
+/hisilicon/hip09/sys/uncore-cpa.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/mapfile.csv /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/arm64/recommended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/arm64/sbsa.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/ar=
+m64/thead/yitian710/sys/ali_drw.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/arm64/thead/yitian710/sys/metrics.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/nds32/mapfile.csv /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/nds32/n13/atcpmu.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/powerpc/compat/generic-events.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/powerpc/mapfile.csv /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/powerpc/power10/cache.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/powerpc/power10/datasource.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/powerpc/power10/floating_point.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power10/frontend.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power10/loc=
+ks.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power10/=
+marked.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/powe=
+r10/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/=
+power10/metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/pow=
+erpc/power10/nest_metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/powerpc/power10/others.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/powerpc/power10/pipeline.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/powerpc/power10/pmc.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/powerpc/power10/translation.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/powerpc/power8/cache.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/powerpc/power8/floating-point.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/powerpc/power8/frontend.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power8/marked.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power8/memory.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power8/metrics.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power8/other=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power8/pip=
+eline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power=
+8/pmc.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/powerpc/power=
+8/translation.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/power=
+pc/power9/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/pow=
+erpc/power9/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/powerpc/power9/frontend.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/powerpc/power9/marked.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/powerpc/power9/memory.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/powerpc/power9/metrics.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/powerpc/power9/nest_metrics.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/powerpc/power9/other.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/powerpc/power9/pmc.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/powerpc/power9/translation.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z10/basic.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z10/extended.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z13/basic.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z13/crypto.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z13/extended.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z13/transaction.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z14/basic.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z14/crypto.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z14/extended.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z14/transact=
+ion.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z15/bas=
+ic.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z15/cryp=
+to6.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z15/ext=
+ended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z15/t=
+ransaction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_=
+z16/basic.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_z=
+16/crypto6.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/cf_=
+z16/extended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s390/c=
+f_z16/pai_crypto.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s3=
+90/cf_z16/pai_ext.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/s=
+390/cf_z16/transaction.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/s390/cf_z17/basic.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/s390/cf_z17/crypto6.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/s390/cf_z17/extended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/s390/cf_z17/pai_crypto.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/s390/cf_z17/pai_ext.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/s390/cf_z17/transaction.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/s390/cf_z196/basic.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/s390/cf_z196/crypto.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/s390/cf_z196/extended.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/s390/cf_zec12/basic.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/s390/cf_zec12/crypto.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/s390/cf_zec12/extended.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/s390/cf_zec12/transaction.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/s390/mapfile.csv /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/alderlake/cache.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/alderlake/floating-point.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlake/frontend.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlake/memory.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlake/metricgrou=
+ps.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlake/ot=
+her.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlake/p=
+ipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderla=
+ke/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/alderlake/uncore-memory.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/alderlake/uncore-other.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/alderlake/virtual-memory.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/alderlaken/cache.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlaken/fronten=
+d.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlaken/me=
+mory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/alderlaken=
+/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/a=
+lderlaken/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/alderlaken/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/alderlaken/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/x86/alderlaken/uncore-memory.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/x86/alderlaken/uncore-other.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/branch.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/cache.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/core.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/data-fabric.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/floating-poin=
+t.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/memor=
+y.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/other=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen1/recomm=
+ended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen2/b=
+ranch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen2/c=
+ache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen2/co=
+re.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen2/data=
+-fabric.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen2=
+/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/amdzen2/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/amdzen2/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+amdzen2/recommended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/amdzen3/branch.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/amdzen3/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/amdzen3/core.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/amdzen3/data-fabric.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/amdzen3/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/amdzen3/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/amdzen3/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/x86/amdzen3/recommended.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/amdzen4/branch.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/amdzen4/cache.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/amdzen4/core.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/amdzen4/data-fabric.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/amdzen4/floating-point.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/amdzen4/memory-controller.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/amdzen4/memory.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/amdzen4/other.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/amdzen5/branch-prediction.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen5/data-fabri=
+c.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen5/decod=
+e.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen5/execu=
+tion.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen5/fl=
+oating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/am=
+dzen5/inst-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/amdzen5/l2-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/amdzen5/l3-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/amdzen5/load-store.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/amdzen5/memory-controller.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/amdzen5/pipeline.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/amdzen5/recommended.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/amdzen6/branch-prediction.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/amdzen6/decode.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/amdzen6/execution.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/amdzen6/floating-point.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen6/inst-cache.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen6/l2-cache.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen6/l3-cache.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen6/load-stor=
+e.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/amdzen6/memor=
+y-controller.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/am=
+dzen6/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+amdzen6/recommended.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/arrowlake/arl-metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/arrowlake/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/arrowlake/floating-point.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/arrowlake/frontend.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/arrowlake/memory.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/arrowlake/metricgroups.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/arrowlake/other.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/arrowlake/uncore-cache.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/arrowlake/uncore-intercon=
+nect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/arrowlake/=
+uncore-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/a=
+rrowlake/uncore-other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/arrowlake/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/bonnell/cache.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/bonnell/counter.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/bonnell/floating-point.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/bonnell/frontend.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/bonnell/memory.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/bonnell/other.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/bonnell/pipeline.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/bonnell/virtual-memory.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/broadwell/cache.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/broadwell/counter.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/x86/broadwell/floating-point.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwell/frontend=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwell/memo=
+ry.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwell/me=
+tricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broa=
+dwell/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/bro=
+adwell/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/broadwell/uncore-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/broadwell/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/broadwell/virtual-memory.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/broadwellde/cache.json /mnt/ss=
+d/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_=
+trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellde/counter.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellde/floating-p=
+oint.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwelld=
+e/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broa=
+dwellde/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+broadwellde/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/broadwellde/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/broadwellde/pipeline.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/broadwellde/uncore-cache.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/broadwellde/uncore-interconnect.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/broadwellde/uncore-io.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellde/uncore-mem=
+ory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellde=
+/uncore-power.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/b=
+roadwellde/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/broadwellx/bdx-metrics.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/broadwellx/cache.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/broadwellx/counter.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/broadwellx/floating-point.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/broadwellx/frontend.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/broadwellx/memory.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellx/other.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadwellx/unco=
+re-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/broadw=
+ellx/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/broadwellx/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/broadwellx/uncore-memory.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/broadwellx/uncore-power.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/broadwellx/virtual-memory.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/cascadelakex/cache.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/cascadelakex/co=
+unter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/cascadela=
+kex/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/cascadelakex/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/cascadelakex/memory.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/cascadelakex/metricgroups.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/cascadelakex/other.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interc=
+onnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/cascadel=
+akex/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+cascadelakex/uncore-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/cascadelakex/uncore-power.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/cascadelakex/virtual-memory.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/clearwaterforest/fron=
+tend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/clearwater=
+forest/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/c=
+learwaterforest/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/clearwaterforest/virtual-memory.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/elkhartlake/cache.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/elkhartlake/counter.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/elkhartlake/ehl-metrics.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/elkhartlake/floating-point.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/elkhartlake/fronten=
+d.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/elkhartlake/m=
+emory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/elkhartla=
+ke/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/elkhar=
+tlake/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+elkhartlake/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/emeraldrapids/cache.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/emeraldrapids/counter.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/emeraldrapids/floating-point.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/emeraldrapids/frontend.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/emeraldrapids/memo=
+ry.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/emeraldrapid=
+s/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+emeraldrapids/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/emeraldrapids/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/emeraldrapids/uncore-cache.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/emeraldrapids/uncore-cxl.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-interconnect.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-=
+io.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/emeraldrapid=
+s/uncore-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/emeraldrapids/uncore-power.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/emeraldrapids/virtual-memory.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/goldmont/cache.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/goldmont/counter.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/goldmont/floating-point.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/goldmont/frontend.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/goldmont/memory.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/goldmont/other.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/goldmontplus/cache.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/goldmontplus/coun=
+ter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/goldmontplu=
+s/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/goldmontplus/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/goldmontplus/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/x86/goldmontplus/other.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/goldmontplus/pipeline.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/grandridge/cache.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/grandridge/counter.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/grandridge/floating-point.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/grandridge/frontend.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/grandridge/grr-=
+metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/grandri=
+dge/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/gran=
+dridge/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/grandridge/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/grandridge/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/grandridge/uncore-cache.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/grandridge/uncore-interconnect.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/grandridge/uncore-memory.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/grandridge/uncore-powe=
+r.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/grandridge/vi=
+rtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/gr=
+aniterapids/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x=
+86/graniterapids/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/graniterapids/floating-point.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/graniterapids/frontend.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/graniterapids/memory.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/graniterapids/metricgroups=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/graniterapids/=
+other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/granitera=
+pids/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/g=
+raniterapids/uncore-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/graniterapids/uncore-cxl.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/graniterapids/uncore-interconnect.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/graniterapids/uncore-io.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/graniterapids/uncore-memor=
+y.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/graniterapids=
+/uncore-power.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/g=
+raniterapids/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/haswell/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/haswell/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/haswell/floating-point.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/haswell/frontend.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/haswell/hsw-metrics.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/haswell/memory.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/haswell/metricgroups.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/x86/haswell/other.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/x86/haswell/pipeline.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswell/virtual-memor=
+y.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswellx/cach=
+e.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswellx/coun=
+ter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswellx/fl=
+oating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ha=
+swellx/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/haswellx/hsx-metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/haswellx/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/haswellx/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/haswellx/other.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/haswellx/pipeline.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/haswellx/uncore-cache.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/haswellx/uncore-interconnect.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/haswellx/uncore-io.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/haswellx/uncore-memory.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswellx/uncore-power.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/haswellx/virtual-=
+memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelake/=
+cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelake/c=
+ounter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelake/=
+floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+icelake/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/icelake/icl-metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/icelake/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/icelake/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/icelake/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/icelake/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/x86/icelake/uncore-interconnect.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/icelake/uncore-other.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/icelakex/cache.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/icelakex/counter.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/icelakex/floating-point.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelakex/frontend.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelakex/memor=
+y.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelakex/metr=
+icgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelak=
+ex/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/icelak=
+ex/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ice=
+lakex/uncore-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/icelakex/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/icelakex/uncore-io.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/x86/icelakex/uncore-memory.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/icelakex/uncore-power.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/icelakex/virtual-memory.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/ivybridge/cache.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/x86/ivybridge/counter.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/ivybridge/floating-point.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivybridge/front=
+end.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivybridge/i=
+vb-metrics.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivyb=
+ridge/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_def=
+config/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/iv=
+ybridge/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/ivybridge/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/ivybridge/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/ivybridge/uncore-cache.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/ivybridge/uncore-interconnect.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/x86/ivybridge/virtual-memory.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/ivytown/cache.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/ivytown/counter.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/ivytown/floating-point.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/frontend.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/memory.j=
+son /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/l=
+inux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/metricgr=
+oups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/ot=
+her.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/pip=
+eline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivytown/u=
+ncore-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/ivy=
+town/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/ivytown/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/ivytown/uncore-memory.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/x86/ivytown/uncore-power.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/ivytown/virtual-memory.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/x86/jaketown/cache.json /mnt/ssd/workarea/che=
+np/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_=
+v3/tools/perf/pmu-events/arch/x86/jaketown/counter.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/jaketown/floating-point.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/jaketown/frontend.json /mnt/ss=
+d/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_=
+trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/memory.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/metricgroup=
+s.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/othe=
+r.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/pipe=
+line.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jaketown/u=
+ncore-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/jak=
+etown/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/jaketown/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/jaketown/uncore-memory.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/jaketown/uncore-power.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/jaketown/virtual-memory.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/knightslanding/cache.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/knightslanding/counter.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/knightslanding/floatin=
+g-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/knights=
+landing/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/knightslanding/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/knightslanding/pipeline.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/knightslanding/uncore-cache.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json /mnt/ssd/worka=
+rea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_s=
+upport_v3/tools/perf/pmu-events/arch/x86/knightslanding/uncore-memory.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/knightslanding/virtu=
+al-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defcon=
+fig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/lunar=
+lake/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/luna=
+rlake/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/lunarlake/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/lunarlake/lnl-metrics.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/lunarlake/memory.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/lunarlake/metricgroups.json /mnt/ssd/workarea/chenp/linu=
+x/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tool=
+s/perf/pmu-events/arch/x86/lunarlake/other.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/lunarlake/pipeline.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/x86/lunarlake/uncore-interconnect.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/x86/lunarlake/uncore-memory.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/lunarlake/virtual-m=
+emory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/=
+build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/mapfile.c=
+sv /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/meteorlake/cache.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/meteorlake/floa=
+ting-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/mete=
+orlake/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/meteorlake/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/meteorlake/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/meteorlake/mtl-metrics.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/meteorlake/other.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/meteorlake/pipeline.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/meteorlake/uncore-memo=
+ry.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/meteorlake/u=
+ncore-other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/met=
+eorlake/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/nehalemep/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/nehalemep/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/nehalemep/floating-point.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/x86/nehalemep/frontend.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/nehalemep/memory.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/nehalemep/other.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/nehalemep/pipeline.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/x86/nehalemep/virtual-memory.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/cache.json /mnt/ssd/wo=
+rkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trac=
+e_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/counter.json /mnt/ssd=
+/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_t=
+race_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/frontend=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/memo=
+ry.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/ot=
+her.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/nehalemex/p=
+ipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/nehalem=
+ex/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x=
+86/pantherlake/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/pantherlake/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/pantherlake/floating-point.json /mnt/ssd/workarea/chenp/linux/bu=
+ildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/pe=
+rf/pmu-events/arch/x86/pantherlake/frontend.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/pantherlake/memory.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/x86/pantherlake/other.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/pantherlake/pipeline.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/pantherlake/uncore-memory.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/pantherlake/virtual-me=
+mory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/rocketlake=
+/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/rocketla=
+ke/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/rock=
+etlake/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rv=
+trace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/ar=
+ch/x86/rocketlake/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qe=
+mu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-even=
+ts/arch/x86/rocketlake/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX=
+/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-e=
+vents/arch/x86/rocketlake/metricgroups.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/rocketlake/other.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/rocketlake/pipeline.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/rocketlake/uncore-interconnect.json =
+/mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux=
+-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/rocketlake/uncore-ot=
+her.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/rocketlake/=
+virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_d=
+efconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/=
+sandybridge/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrac=
+e_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x=
+86/sandybridge/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/sandybridge/floating-point.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/x86/sandybridge/frontend.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/sandybridge/memory.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/sandybridge/metricgroups.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/sandybridge/other.json /mnt/ssd/wor=
+karea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace=
+_support_v3/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json /mnt/s=
+sd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv=
+_trace_support_v3/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sandybridge/uncor=
+e-cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfi=
+g/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sandybr=
+idge/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/sandybridge/virtual-memory.json /mnt/ssd/workarea/chenp/linux/bui=
+ldrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/per=
+f/pmu-events/arch/x86/sapphirerapids/cache.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/sapphirerapids/counter.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json /mnt=
+/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ris=
+cv_trace_support_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.=
+json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/=
+linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/=
+memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig=
+/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sapphire=
+rapids/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/sapphirerapids/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/sapphirerapids/pipeline.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/x86/sapphirerapids/spr-metrics.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cxl.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/unco=
+re-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/sapphirerapids/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildrootX/qem=
+u_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-event=
+s/arch/x86/sapphirerapids/uncore-memory.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/sapphirerapids/uncore-power.json /mnt/ssd/workarea=
+/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_supp=
+ort_v3/tools/perf/pmu-events/arch/x86/sapphirerapids/virtual-memory.json /m=
+nt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-r=
+iscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sierraforest/cache.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sierraforest/count=
+er.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bui=
+ld/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sierraforest=
+/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/sierraforest/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/sierraforest/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/q=
+emu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-eve=
+nts/arch/x86/sierraforest/metricgroups.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/sierraforest/other.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/sierraforest/pipeline.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/sierraforest/srf-metrics.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sierraforest/uncore=
+-cxl.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sierrafore=
+st/uncore-interconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/sierraforest/uncore-io.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/sierraforest/uncore-memory.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/sierraforest/uncore-power.json /mnt/ssd/workare=
+a/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_sup=
+port_v3/tools/perf/pmu-events/arch/x86/sierraforest/virtual-memory.json /mn=
+t/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-ri=
+scv_trace_support_v3/tools/perf/pmu-events/arch/x86/silvermont/cache.json /=
+mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-=
+riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/silvermont/counter.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/silvermont/floati=
+ng-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/silver=
+mont/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/s=
+ilvermont/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/silvermont/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtra=
+ce_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/=
+x86/silvermont/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/silvermont/virtual-memory.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/x86/skylake/cache.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/skylake/counter.json /mnt/ssd/workarea/chenp/linux/build=
+rootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/=
+pmu-events/arch/x86/skylake/floating-point.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/skylake/frontend.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/skylake/memory.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/skylake/metricgroups.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/skylake/other.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/skylake/pipeline.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json /mnt/ss=
+d/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_=
+trace_support_v3/tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skylake/virtua=
+l-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skylak=
+ex/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skylak=
+ex/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defco=
+nfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skyl=
+akex/floating-point.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/skylakex/frontend.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/skylakex/memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_=
+rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/=
+arch/x86/skylakex/metricgroups.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/skylakex/other.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/skylakex/pipeline.json /mnt/ssd/workarea/chenp/linux/buildr=
+ootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/p=
+mu-events/arch/x86/skylakex/skx-metrics.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/skylakex/uncore-cache.json /mnt/ssd/workarea/chenp=
+/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3=
+/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/skylakex/uncore-memory.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skylakex/uncore-p=
+ower.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/b=
+uild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/skylakex/v=
+irtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_de=
+fconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/s=
+nowridgex/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_=
+defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86=
+/snowridgex/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtr=
+ace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch=
+/x86/snowridgex/floating-point.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/snowridgex/frontend.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/snowridgex/memory.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/snowridgex/other.json /mnt/ssd/workarea/chenp/linux=
+/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools=
+/perf/pmu-events/arch/x86/snowridgex/pipeline.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/snowridgex/uncore-i=
+o.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/buil=
+d/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/snowridgex/un=
+core-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/sno=
+wridgex/uncore-power.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/snowridgex/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildroo=
+tX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu=
+-events/arch/x86/tigerlake/cache.json /mnt/ssd/workarea/chenp/linux/buildro=
+otX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pm=
+u-events/arch/x86/tigerlake/counter.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/tigerlake/floating-point.json /mnt/ssd/workarea/chenp/=
+linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/=
+tools/perf/pmu-events/arch/x86/tigerlake/frontend.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/tigerlake/memory.json /mnt/ssd/workarea/=
+chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppo=
+rt_v3/tools/perf/pmu-events/arch/x86/tigerlake/metricgroups.json /mnt/ssd/w=
+orkarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tra=
+ce_support_v3/tools/perf/pmu-events/arch/x86/tigerlake/other.json /mnt/ssd/=
+workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_tr=
+ace_support_v3/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.jso=
+n /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/lin=
+ux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/tigerlake/uncore-i=
+nterconnect.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defc=
+onfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/tig=
+erlake/uncore-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvt=
+race_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arc=
+h/x86/tigerlake/uncore-other.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/x86/tigerlake/virtual-memory.json /mnt/ssd/workarea/chenp/linux/b=
+uildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/p=
+erf/pmu-events/arch/x86/westmereep-dp/cache.json /mnt/ssd/workarea/chenp/li=
+nux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/to=
+ols/perf/pmu-events/arch/x86/westmereep-dp/counter.json /mnt/ssd/workarea/c=
+henp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_suppor=
+t_v3/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-dp/frontend.js=
+on /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/li=
+nux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-dp/mem=
+ory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/bu=
+ild/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-=
+dp/other.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westme=
+reep-dp/pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace=
+_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x8=
+6/westmereep-dp/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildroot=
+X/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-=
+events/arch/x86/westmereep-sp/cache.json /mnt/ssd/workarea/chenp/linux/buil=
+drootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf=
+/pmu-events/arch/x86/westmereep-sp/counter.json /mnt/ssd/workarea/chenp/lin=
+ux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/too=
+ls/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json /mnt/ssd/work=
+area/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_=
+support_v3/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json /mnt/=
+ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-risc=
+v_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json=
+ /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linu=
+x-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-sp/other=
+.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build=
+/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westmereep-sp/=
+pipeline.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_rvtrace_defconf=
+ig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/arch/x86/westme=
+reep-sp/virtual-memory.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu_r=
+vtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events/a=
+rch/x86/westmereex/cache.json /mnt/ssd/workarea/chenp/linux/buildrootX/qemu=
+_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-events=
+/arch/x86/westmereex/counter.json /mnt/ssd/workarea/chenp/linux/buildrootX/=
+qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/perf/pmu-ev=
+ents/arch/x86/westmereex/floating-point.json /mnt/ssd/workarea/chenp/linux/=
+buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/tools/=
+perf/pmu-events/arch/x86/westmereex/frontend.json /mnt/ssd/workarea/chenp/l=
+inux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v3/t=
+ools/perf/pmu-events/arch/x86/westmereex/memory.json /mnt/ssd/workarea/chen=
+p/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support_v=
+3/tools/perf/pmu-events/arch/x86/westmereex/other.json /mnt/ssd/workarea/ch=
+enp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_support=
+_v3/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json /mnt/ssd/workar=
+ea/chenp/linux/buildrootX/qemu_rvtrace_defconfig/build/linux-riscv_trace_su=
+pport_v3/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+>
+>  # Message for $(call echo-cmd,mkd). There is already a mkdir message
+>  # but it assumes $@ is a file to mkdir the directory for.
+> @@ -211,10 +212,10 @@ ifneq ($(strip $(ORPHAN_FILES)),)
+>
+>  # Message for $(call echo-cmd,rm). Generally cleaning files isn't part
+>  # of a build step.
+> -quiet_cmd_rm  =3D RM      $^
+> +quiet_cmd_rm  =3D RM      $(ORPHAN_FILES)
+>
+> -prune_orphans: $(ORPHAN_FILES)
+> -       $(Q)$(call echo-cmd,rm)rm -f $^
+> +prune_orphans:
+> +       $(Q)$(call echo-cmd,rm)
+>
+>  JEVENTS_DEPS +=3D prune_orphans
+>  endif
