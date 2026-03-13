@@ -1,331 +1,313 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B0D3E3174
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 20:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773433706; cv=none; b=BaXLhwlwpb8M9v/jYDcvwQ7pB5e9mEAlSzhL5W34cbwrL59gB4nn1lpAJmZsYCIC7EB04IbNOj/4YfMklJ2w9bBuVIxq4N8wuBVGdGZjJtqK/FuL5Qyq2x6QCe5A+WoMo/vnoGN4OvJNBNY8dSlBrgRHVBHc7r+ushwRGIn51Ok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773433706; c=relaxed/simple;
-	bh=Y1tiRV1EG29+sMZhK56SFMelGvlIQkNmYR96+JSu95Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ADbQyqdN6op+E12WPn/yFSpdgECmP997/+Pnbs3Zv56W5WhVkt7l6DswoMewVemy3qZo3zRdy9px2HW3LM3YEx+REmYxZnFPmCBUjFw5MBTcEk7d3SssnvsUKf1l1QdDNna07D3SigRVbkvBHGUS08mj6aMuPe4QtR4l0J5ctyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nnFcwOGB; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D9937DEB3
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 20:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773435034; cv=pass; b=m3rxrrvceUVRKY9M1cDJqCy+jyzlrGtn3sT9eh1geVdzBuJVqN5jlVZzCqzcU/8BBixuZK07sclUmmy6MuRCWv2JZ6NvHaj+hvb5vD5SEfWJNg+3coz4NKsSxV4+xdLXJ/LZpUHoF2mFFZrdultOgTTmvLjgWfQkbOh2Hj+cgVg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773435034; c=relaxed/simple;
+	bh=CRTB0rvLPUWbgmQPVFGsG9fKu133Dx4BOGCkPJ1QcLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rMR2S3XAHYMX2YnyPKsPTp939GvFoUNDgDYZTvABGfgOKG9uKODa+jjfbnHUXQMnQOzMs6HCi5XdWcBs2oQ4wYYNi+meRkyuH7EStaPPsxicxHwJ3vpNUUJIXyHfwaBPRwY7o1rCbV6jbD1kfQUzg33M65Q8j2Jxwma5IEzOt7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sqdxx6Wc; arc=pass smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nnFcwOGB"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2b81ff82e3cso2311752eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 13:28:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sqdxx6Wc"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2aeab6ff148so7285ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2026 13:50:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773435033; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RhvONVoWFNMhlkrQlScnIp6lAU7EUGoX5Ni2VS3E6RuNH/0IyETxXpx1jwKtoqJ9t1
+         EBMC8nIfi0+xB0TG1rxcTNLi17+6QW/ThsSDiHQwA50DniX6ow7RGb9Rssc4UHeHE0Y3
+         LzqlekCN2iC9n/JO8t9T5gErbaZ4l/bn6jFqYkpjZHhlMpkM6BLE4XvWZWg2jfGSjqFE
+         OsFMDXu7HZH4BxEfOZVayYrZGKFsS0YgXQNnFcl2MOcnxhqONthe3XT1LDV3808BSNg+
+         9tHzBKYJifbXLojzi2aC/hn1wapQePDN6Zcp8UqXRCkZ8BtN3AD14cLdW4gRkPFxpau+
+         3GjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uiD4tYD5kTcoUckTF0mt3ib4Qawq7lU5JzHwtKX4SDI=;
+        fh=i9PmzT7ESEW5r6oHi4TbyehDYk34/JUPXdjNkBdVq08=;
+        b=YPlxvgO5k3FiJCXaPRO3iG5sg/FkD2AqN9h3nIfiUj1vF/0skgF0R724eJvPQKPhSB
+         Fbn7OwJelbsIYSoNlm/ayVwgQSoLdk4KHtuQ1BEgteH7IQYtUBhAF0QVwlp+ritBulp8
+         QJpwqPvxknCSZFHpbPZpLTjpuCYVfzEV9NknKEqy7p/TOuQkM50fI9cZ3KcerPya70YY
+         7b6v7pXJOF3ANY98nu3M3zah/Kvct3e2lwELw3AJ0zY89ngxtT6Akx/AMV/dH+Mp/XjJ
+         lOiUOqq7UMeN80x6s5gSBvQd9QamdY1htnVHEZWbH+YejU4NQNFq83kYcu5E0Fw1i9/h
+         WIvA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773433703; x=1774038503; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGYQ5+mcr9zuL+O4EQl29EcCB3SFK28wde9c/Pez8+k=;
-        b=nnFcwOGBi8OHkKFYt4Qs3ZHXfPPOAw55+wOwiOHpLzmMvFMPA1oWuAOEmNFgaWXIQA
-         R2ViJdo7r22tly+qWWAm0VPH1ggmduWSMz96Nhr5DDwepjs5PPvbNU7qKnm7clDGLxYa
-         lg7bwarUoaViKR4bfJ1XOw/jMHDbH/Ie4gEGc64hK2YkYfyZacawp65HHtzlCrGgxu0G
-         tYCccfjx0Irdsu5jr0PK1GJwUuV/r0ONe+OIhAH/6sQV2raydccMovGIXVNTubiT2F/+
-         65btER6p7moJgvYZG8yyiQSsctUEMrbNqafOwL/P9RlLC8L0YSF/o139o+Sov+0ayO++
-         Kxpw==
+        d=google.com; s=20251104; t=1773435033; x=1774039833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uiD4tYD5kTcoUckTF0mt3ib4Qawq7lU5JzHwtKX4SDI=;
+        b=Sqdxx6WcWmRw4mAloAkvBLmLLX6A69lenTWcZ8W25wrFWpl1TMCdnR4yAycOg9QChV
+         IAClo82m5a67y06tUME11dbEkLQjlA/B1ZlzURkHiQ1CbPrd9RN561svuZNxrXyURuX8
+         WIbNDmsoyZxsLfCsng346rsDQCVMVyosjazJQyEP3ZFLMArRq/aYA43YbRlRVccDJRJI
+         WBmYK3HqJFA4KdzgHDuegrjm86Te6pFHRRIxemqZCAZQDN2TbOaJRfrIY1W15FscJg1p
+         fX8rG3cDjhf5WVtyycrPng1kopTE5bcI3g/B3o9CQ4u0AzHATbyQ8+BVZrnf19365F1N
+         e2Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773433703; x=1774038503;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGYQ5+mcr9zuL+O4EQl29EcCB3SFK28wde9c/Pez8+k=;
-        b=anjhteVn56xayaU7LUIou0o6VbeYO6Uuy9r2wMe2ggPP7ae0yYyZ8mYUmurvXnziyk
-         w+RK1DDQHsobHowoK15OoPegdLjlwStksFp9+avrnR1Gj5w+wcdHUZV8HsIw3//5YMML
-         7JmqG9xWAyWTuVf3K8/YvdhuQkI+oV0UnyO+N+4N6te5xoavcib3pw0jjqYSLd0oCsak
-         gxf/yjTAMZfEWqbltRfeOpMKEbMAFNvc5MOCGuvmqgmPAZ6NS1rnxt5zUmCfoOkqnFG2
-         /1OIpMxeH8rDMVj0MQEn3SDbC6fJQ7Lqi4cNp//JawNCu19WL62Ygf20salWteXE3qRi
-         q/0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUnC2zycPpKAtUDYFx/iUBO/j5DAITI4meSOCcVLKq3Db9RCi34rKiBXyKH0Jlp1NqcCKYUUPAt5WyyOW9UCKO/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTxNlDvgDo7V7tDS3IahWEVRC2xPOKdcYniRkf6oMMwRar4Pel
-	Pvx7I4ROI2klco+euHQuKaXb/Tkmmu8SkrJwhbVEpWTRwc+tklnDXqH6+g60BZcgxI8oh6fbZDh
-	YoGXxPuYZmQ==
-X-Received: from dlae28.prod.google.com ([2002:a05:701b:231c:b0:128:ee69:eb75])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:618d:b0:128:d2b2:143b
- with SMTP id a92af1059eb24-128f3b4b03cmr1996806c88.9.1773433702538; Fri, 13
- Mar 2026 13:28:22 -0700 (PDT)
-Date: Fri, 13 Mar 2026 13:28:11 -0700
-In-Reply-To: <20260313202811.2599195-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1773435033; x=1774039833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uiD4tYD5kTcoUckTF0mt3ib4Qawq7lU5JzHwtKX4SDI=;
+        b=XCZX+lwj266zkl0GXMplFdsPtpza3eJ9fQ0eitSj1WOMi41McI5vW5JpZYo4j/0ZxN
+         9Cn4qOFIWXMELaR33Bce0Mu1EV3N30AUVfaymg3GddyfjKGxNgycjoZmjf9UgSIt1vn2
+         yFTCWt0eefjt2EFpyyKRE2lSTkmJcNRJ7nLTYV7KVcGsumAjOoqsfnpzjSRT68Ghdvki
+         zXBFBtRN+wHIFgtgQTQI0+TIbdJSn7xHOxf5514mpK/OoYW4P+2tZ8LjYsLd5TBztoZ0
+         eV+7L3RJvj44dzyZPqe3lQcjmE5IPH7+rUJM+/52jkg0sSIC86R8SCAmyCDRy7N99lbW
+         CU4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVjXgWnGZdAU6rE64I7AQ3HznR13U6gBkVjb4Oj/+DuWcivlvj5i/qzim2cRDNzOiNbFPuUbCFemk+6BGy6nP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYt0g/s1okfJUBucQsUYAydhPQIVRIyTcj3z2l+jUnE6zdzTp8
+	2QgJlCak3eYpLAFpEOx5bbQfEd5pp+Zs8GhmVl+NcKZxN42uiyga1RUcF3/UR5SF1ot0q4ZwNxv
+	zZ2GXqg6Xokp5d5cNhy9BqZ4U4qMnz2fUx8AABoV6
+X-Gm-Gg: ATEYQzw0Xg+u49gzqtCxSXrMRuv22yorvlsze0JmRe9WhL4i2T0SIVEmInJ409zt6AY
+	K7546ly6E2cGtY4gB2wqWA9XtLjbf9fPPYxcleaWdARVwPrsXytUEFdcrPQABkwt1oCYRXri0H4
+	gMlfrsKEGiSE+Q+0rwh/drB08tiqrEOtPZTIzLWrU53ycD17LNJosfh4SoRrlVVpmyNiz551Bwt
+	w/rzBHqFWrBFUIdgrxuBNlUBwK2rwoqfjNCGeBjoAi23zOQlm4s0BvSBvpXVd3o5MjUJCj3LufS
+	WMzwj1ztVY7pd/Q6Id4He18/Jt9VnpaMy+O6
+X-Received: by 2002:a17:903:44cb:b0:2ae:c358:bb9f with SMTP id
+ d9443c01a7336-2b0420883bamr619905ad.10.1773435032491; Fri, 13 Mar 2026
+ 13:50:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260312061628.1593105-1-irogers@google.com> <20260313202811.2599195-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260313202811.2599195-4-irogers@google.com>
-Subject: [PATCH v3 3/3] perf evlist: Improve default event for s390
+MIME-Version: 1.0
+References: <20260313132302.3347751-1-tmricht@linux.ibm.com>
+In-Reply-To: <20260313132302.3347751-1-tmricht@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-To: tmricht@linux.ibm.com
-Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
-	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
+Date: Fri, 13 Mar 2026 13:50:19 -0700
+X-Gm-Features: AaiRm52m-wjV1pXoGxPYImJlolftypsHZ9mGQCdsloyTkZ7E8iNB4Fb0ptX2Vis
+Message-ID: <CAP-5=fU1Spg+rxTkjqECZZbRjkLASPu14Q=ZyONFWHe4rwy9+g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf record: Add support for arch_sdt_arg_parse_op()
+ on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	dapeng1.mi@linux.intel.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Frame pointer callchains are not supported on s390 and dwarf
-callchains are only supported on software events.
+On Fri, Mar 13, 2026 at 6:33=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_=
+parse_op() function")
+> removes arch_sdt_arg_parse_op() functions. s390 support is missing.
+> The following warning is printed:
+>
+>   Unknown ELF machine 22, standard arguments parse will be skipped.
+>
+> ELF machine 22 is the EM_S390 host. This happens with command
+>   # ./perf record -v -- stress-ng -t 1s --matrix 0
+> on a z/VM system when the event is not specified.
+>
+> Add s390 specific __perf_sdt_arg_parse_op_s390() function to support
+> -architecture calls to arch_sdt_arg_parse_op() for s390.
+> The warning disappears.
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Tested-by: Jan Polensky <japo@linux.ibm.com>
+> ---
+>  .../perf/util/perf-regs-arch/perf_regs_s390.c | 89 +++++++++++++++++++
+>  tools/perf/util/perf_regs.c                   |  3 +
+>  tools/perf/util/perf_regs.h                   |  1 +
+>  3 files changed, 93 insertions(+)
+>
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_s390.c b/tools/perf=
+/util/perf-regs-arch/perf_regs_s390.c
+> index c61df24edf0f..c830aeae606e 100644
+> --- a/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+> @@ -1,7 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+> +#include <errno.h>
+> +#include <regex.h>
+>  #include "../perf_regs.h"
+>  #include "../../arch/s390/include/perf_regs.h"
+> +#include "debug.h"
+> +
+> +#include <linux/zalloc.h>
+> +#include <linux/kernel.h>
+>
+>  uint64_t __perf_reg_mask_s390(bool intr __maybe_unused)
+>  {
+> @@ -95,3 +101,86 @@ uint64_t __perf_reg_sp_s390(void)
+>  {
+>         return PERF_REG_S390_R15;
+>  }
+> +
+> +/* %rXX */
+> +#define SDT_OP_REGEX1  "^%r([0-9]|1[0-5])$"
+> +/* -###(%rXX) */
+> +#define SDT_OP_REGEX2  "^(-?[0-9]+)\\(%r([0-9]|1[0-5])\\)$"
+> +static regex_t sdt_op_regex1, sdt_op_regex2;
+> +
+> +static int sdt_init_op_regex(void)
+> +{
+> +       static int initialized;
+> +       int ret =3D 0;
+> +
+> +       if (initialized)
+> +               return 0;
+> +
+> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
+> +       if (ret)
+> +               goto error;
+> +       initialized =3D 1;
+> +
+> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
+> +       if (ret)
+> +               goto free_regex1;
+> +       initialized =3D 2;
+> +
+> +       return 0;
+> +
+> +free_regex1:
+> +       regfree(&sdt_op_regex1);
+> +error:
+> +       pr_debug4("Regex compilation error, initialized %d\n", initialize=
+d);
+> +       initialized =3D 0;
+> +       return ret;
+> +}
+> +
+> +/*
+> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG)=
+.
+> + * Possible variants of OP are:
+> + *     Format          Example
+> + *     -------------------------
+> + *     NUM(%rREG)      48(%r1)
+> + *     -NUM(%rREG)     -48(%r1)
+> + *     %rREG           %r1
+> + */
+> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op)
+> +{
+> +       int ret, new_len;
+> +       regmatch_t rm[6];
+> +       unsigned long i;
+> +
+> +       *new_op =3D NULL;
+> +       ret =3D sdt_init_op_regex();
+> +       if (ret < 0)
+> +               return ret;
 
-Switch the default event from cycles to cpu-clock or task-clock on
-s390 if callchains are enabled.
+Some AI feedback:
 
-If frame pointer callchains are requested on s390, warn and switch to
-dwarf callchains.
+POSIX regcomp() returns 0 on success and a positive error code on failure
+(like REG_ESPACE). Since sdt_init_op_regex() returns this positive code,
+will ret < 0 evaluate to false on compilation failure?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-record.c      |  3 ++-
- tools/perf/builtin-top.c         |  2 +-
- tools/perf/tests/event_update.c  |  4 +++-
- tools/perf/tests/expand-cgroup.c |  4 +++-
- tools/perf/tests/perf-record.c   |  7 ++++--
- tools/perf/tests/topology.c      |  4 +++-
- tools/perf/util/evlist.c         | 37 +++++++++++++++++++-------------
- tools/perf/util/evlist.h         |  2 +-
- tools/perf/util/evsel.c          | 11 ++++++++--
- 9 files changed, 49 insertions(+), 25 deletions(-)
+If so, this would allow execution to proceed to regexec() using uninitializ=
+ed
+or freed regex structs, which could crash the tool.
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 60d764068302..07ecc8a5fec7 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -4310,7 +4310,8 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.tail_synthesize = true;
- 
- 	if (rec->evlist->core.nr_entries == 0) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(&rec->opts.target,
-+								callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 710604c4f6f6..58bab595b024 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1695,7 +1695,7 @@ int cmd_top(int argc, const char **argv)
- 		goto out_delete_evlist;
- 
- 	if (!top.evlist->core.nr_entries) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(target, callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out_delete_evlist;
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index cb9e6de2e033..facc65e29f20 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -8,6 +8,7 @@
- #include "header.h"
- #include "machine.h"
- #include "util/synthetic-events.h"
-+#include "target.h"
- #include "tool.h"
- #include "tests.h"
- #include "debug.h"
-@@ -81,7 +82,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
- {
- 	struct evsel *evsel;
- 	struct event_name tmp;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index c7b32a220ca1..dd547f2f77cc 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -8,6 +8,7 @@
- #include "parse-events.h"
- #include "pmu-events/pmu-events.h"
- #include "pfm.h"
-+#include "target.h"
- #include <subcmd/parse-options.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -99,7 +100,8 @@ out:	for (i = 0; i < nr_events; i++)
- static int expand_default_events(void)
- {
- 	int ret;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index efbd9cd60c63..c6e31ab8a6b8 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -84,8 +84,11 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
- 	CPU_ZERO_S(cpu_mask_size, cpu_mask);
- 
- 	perf_sample__init(&sample, /*all=*/false);
--	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
--		evlist = evlist__new_default();
-+	if (evlist == NULL) { /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
-+		struct target target = {};
-+
-+		evlist = evlist__new_default(&target, /*sample_callchains=*/false);
-+	}
- 
- 	if (evlist == NULL) {
- 		pr_debug("Not enough memory to create evlist\n");
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index ec01150d208d..a34a7ab19a80 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -9,6 +9,7 @@
- #include "evlist.h"
- #include "debug.h"
- #include "pmus.h"
-+#include "target.h"
- #include <linux/err.h>
- 
- #define TEMPL "/tmp/perf-test-XXXXXX"
-@@ -37,11 +38,12 @@ static int session_write_header(char *path)
- 		.path = path,
- 		.mode = PERF_DATA_MODE_WRITE,
- 	};
-+	struct target target = {};
- 
- 	session = perf_session__new(&data, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
- 
--	session->evlist = evlist__new_default();
-+	session->evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 	TEST_ASSERT_VAL("can't get evlist", session->evlist);
- 	session->evlist->session = session;
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 591bdf0b3e2a..e6c518cc4a69 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -13,6 +13,7 @@
- #include "util/mmap.h"
- #include "thread_map.h"
- #include "target.h"
-+#include "dwarf-regs.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "record.h"
-@@ -98,38 +99,44 @@ struct evlist *evlist__new(void)
- 	return evlist;
- }
- 
--struct evlist *evlist__new_default(void)
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains)
- {
- 	struct evlist *evlist = evlist__new();
- 	bool can_profile_kernel;
- 	struct perf_pmu *pmu = NULL;
-+	struct evsel *evsel;
-+	char buf[256];
-+	int err;
- 
- 	if (!evlist)
- 		return NULL;
- 
- 	can_profile_kernel = perf_event_paranoid_check(1);
- 
--	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
--		char buf[256];
--		int err;
--
--		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+	if (EM_HOST == EM_S390 && sample_callchains) {
-+		snprintf(buf, sizeof(buf), "software/%s/%s",
-+			 target__has_cpu(target) ? "cpu-clock" : "task-clock",
- 			 can_profile_kernel ? "P" : "Pu");
- 		err = parse_event(evlist, buf);
--		if (err) {
--			evlist__delete(evlist);
--			return NULL;
-+		if (err)
-+			goto out_err;
-+	} else {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+				can_profile_kernel ? "P" : "Pu");
-+			err = parse_event(evlist, buf);
-+			if (err)
-+				goto out_err;
- 		}
- 	}
- 
--	if (evlist->core.nr_entries > 1) {
--		struct evsel *evsel;
--
--		evlist__for_each_entry(evlist, evsel)
--			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
--	}
-+	evlist__for_each_entry(evlist, evsel)
-+		evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
- 
- 	return evlist;
-+out_err:
-+	evlist__delete(evlist);
-+	return NULL;
- }
- 
- struct evlist *evlist__new_dummy(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index d17c3b57a409..e507f5f20ef6 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -104,7 +104,7 @@ struct evsel_str_handler {
- };
- 
- struct evlist *evlist__new(void);
--struct evlist *evlist__new_default(void);
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
- struct evlist *evlist__new_dummy(void);
- void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 		  struct perf_thread_map *threads);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index bd14d9bbc91f..caa95dc06ac5 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1020,6 +1020,13 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- {
- 	bool function = evsel__is_function_event(evsel);
- 	struct perf_event_attr *attr = &evsel->core.attr;
-+	enum perf_call_graph_mode record_mode = param->record_mode;
-+
-+	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
-+		pr_warning("Framepointer unwinding switched to dwarf due to a lack of kernel support.\n"
-+			   "Use '--call-graph dwarf' to silence this warning.\n");
-+		record_mode = CALLCHAIN_DWARF;
-+	}
- 
- 	evsel__set_sample_bit(evsel, CALLCHAIN);
- 
-@@ -1029,7 +1036,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 		attr->exclude_callchain_user = 1;
- 	if (opts->user_callchains)
- 		attr->exclude_callchain_kernel = 1;
--	if (param->record_mode == CALLCHAIN_LBR) {
-+	if (record_mode == CALLCHAIN_LBR) {
- 		if (!opts->branch_stack) {
- 			if (attr->exclude_user) {
- 				pr_warning("LBR callstack option is only available "
-@@ -1048,7 +1055,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 				    "Falling back to framepointers.\n");
- 	}
- 
--	if (param->record_mode == CALLCHAIN_DWARF) {
-+	if (record_mode == CALLCHAIN_DWARF) {
- 		if (!function) {
- 			uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
- 
--- 
-2.53.0.851.ga537e3e6e9-goog
+> +
+> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
+> +               /* Extract %rX */
+> +               new_len =3D 2;    /* % NULL */
+> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%%%.*s",
+> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
+].rm_so);
 
+Does this formatting correctly preserve the 'r' prefix for s390 registers?
+The regex SDT_OP_REGEX1 is defined as ^%r([0-9]|1[0-5])$, meaning rm[1]
+captures the numeric digits, not the 'r'. So an input like %r15 will be
+formatted as %15.
+
+However, the s390 kernel's regs_query_register_offset() strictly requires
+the register name to start with 'r', otherwise it returns -EINVAL. Will
+the kernel's parse_probe_arg() reject the uprobe definition without the
+'r' prefix?
+
+> +       } else if (!regexec(&sdt_op_regex2, old_op, ARRAY_SIZE(rm), rm, 0=
+)) {
+> +               /* Extract #(%rX) */
+> +               new_len =3D 4;    /* (%)NULL */
+> +               for (i =3D 1; i < ARRAY_SIZE(rm) && rm[i].rm_so !=3D -1; =
+++i)
+> +                       new_len +=3D (int)(rm[i].rm_eo - rm[i].rm_so);
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%.*s(%%%.*s)",
+> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
+].rm_so,
+> +                         (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2=
+].rm_so);
+
+Similar to the above, rm[2] isolates the digits without the 'r' prefix,
+creating an argument like 48(%15).
+
+Additionally, does this string translation handle positive memory
+displacements correctly?
+
+The kernel's parse_probe_arg() in kernel/trace/trace_probe.c parses memory
+dereferences by matching the case '+': or case '-': prefix switch cases.
+If an argument starts with a digit rather than a + or -, it falls through
+to the default case and is rejected with -EINVAL.
+
+Should positive memory offsets be translated to explicitly include the +
+prefix (e.g., +48(%r15)) so they are accepted by the uprobe parser?
+
+Thanks,
+Ian
+
+
+> +       } else {
+> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
+op);
+> +               return SDT_ARG_SKIP;
+> +       }
+> +
+> +       return SDT_ARG_VALID;
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 5b8f34beb24e..f52b0e1f7fc7 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -23,6 +23,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old=
+_op, char **new_op)
+>         case EM_X86_64:
+>                 ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
+>                 break;
+> +       case EM_S390:
+> +               ret =3D __perf_sdt_arg_parse_op_s390(old_op, new_op);
+> +               break;
+>         default:
+>                 pr_debug("Unknown ELF machine %d, standard arguments pars=
+e will be skipped.\n",
+>                          e_machine);
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index 7c04700bf837..573f0d1dfe04 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -62,6 +62,7 @@ uint64_t __perf_reg_mask_s390(bool intr);
+>  const char *__perf_reg_name_s390(int id);
+>  uint64_t __perf_reg_ip_s390(void);
+>  uint64_t __perf_reg_sp_s390(void);
+> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op);
+>
+>  int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
+>  uint64_t __perf_reg_mask_x86(bool intr);
+> --
+> 2.53.0
+>
+>
