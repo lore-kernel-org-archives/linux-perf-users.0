@@ -1,325 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D4C5B1EB;
-	Sat, 14 Mar 2026 01:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952673B2AA
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Mar 2026 08:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773451878; cv=none; b=EssTzTjfco/p3FMrbdg00h6Y2trSJmv1eg337k8Ert9XRNCCrpmjAmGfVTimTS/a9bf7CqhDtfi9T40DyYEPZPXRacgVvmgMIVvwefbHizkcpu71MDdMq0YahXm2frQox5rE7ozCf0owMTvvGr45KABHFoOOOz1WhrkhQEziovc=
+	t=1773477216; cv=none; b=FdRTTdoIZwzgx4UvruPm0J+1Pz18S7M3SPnIYdA185y30LCpAP7GTcRlo8BPKyztgi/AJHoGMudx0Su9hQ/rzcUZahKjQlfn9RFjbwWvPS81xaY6tBhxs6fgXeW3PwBAmTfvq5CAQMlGvMKcvXeVvc7WIOQFwPluxAURGOJ5930=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773451878; c=relaxed/simple;
-	bh=KcINNhRmCzgBqiFRq849ArmBY3HgveYIGaJwxHKXNKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iQaQerKFtJ4ltlciUu2u87ykHNMW8Q9L67MdT9pLqcAWroyx2zyt5UQ2N9AzlZPCx+OSPozmJjJPgG77f/X5ZIC3OIqyhih+24tOucYvduLPvTSlybAo1K95+S6ccWGEKtArVbg+SEIfiUL61p41jEgAZcbL7jQkQ0TvR+TeQ+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrW+/VpV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773477216; c=relaxed/simple;
+	bh=5W+2nxUWPZr+UrwHB9fwT4W3XXYtK5R3uBygwbVNN54=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LO/RCdexcUoMlw1rnCYw8Bh2dIOYQgXYkDueW7YmVDwxRhllgyHMABZvGg9JocpSxwYMbD4B8zPF8MMRnXZWxGD+6GF7Kcn5PtD47Nxv9KcYeWmMcb56mNU0V3SmZhvlTxnnt658w+2nXqtM3IHFwJBUc6pB8s2Porkc+I/zHv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N6geLIhp; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrW+/VpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB56C19421;
-	Sat, 14 Mar 2026 01:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773451878;
-	bh=KcINNhRmCzgBqiFRq849ArmBY3HgveYIGaJwxHKXNKk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZrW+/VpVDYa4Y4kADKjIk06IN3657d8SutcoPhVwmNIYQFXxrLeVVTIm8SvFEk13x
-	 +dOJunD/D+WQH6cwAMk9EhHx+zQyjxewHl4tyz7Ve2yMgwNBUXpkVSqOYgx884rfGa
-	 L5TTlAItxUuPCzUPr57hPl/NbncTJRtLO9bDQ8p9xfbYBAVxOcs8xopzB7pOsYlSQx
-	 aiXBkqQwXcXMaCNLe72FE5Xx91HwPuJt2wUj1+tAA7tfw4xFwYWbJQhq0iYLBYdSuY
-	 RoJC0tb6+pwMMYqne7lemfaZr8C1PI1DSbCZLVsJK/t2AJeHyTx4CwZLMMLlDsGhUN
-	 8N1a/CT7hgnyA==
-From: SeongJae Park <sj@kernel.org>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/6] mm/damon: introduce perf event based access check
-Date: Fri, 13 Mar 2026 18:31:13 -0700
-Message-ID: <20260314013115.81177-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <CAC5umygtmi_rHUbayYn=EMFg=0ztZH1ot73KzsaHTy+yk-a=Qw@mail.gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N6geLIhp"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62E7iseA754979;
+	Sat, 14 Mar 2026 08:33:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=nF1PE8AgQGnQnDvAsWFJ4sv6siulTysshFQpxdqbf
+	cc=; b=N6geLIhpnp6yKLKaAzNfqac2z59/Q4Xn5Dkf3KeMkfkWptrzRjzdeabt9
+	OFNFf9WSiuEN/g+gx5qfVPXhoGWGRmFEZD+TPv+OGr9njEBBzDxnAbLfoXd3e/9W
+	KgjMrx8C4ybD3vXUuX5W9wOCslbBq+cphViI2lQdTYNb8pMG9ILGKHMleLBB33sm
+	hHlKb6cPgv0QEGuAYc2znAJraG7LelOwtWgh/iDxGjlTEn0Ppp3TkEdqc8VnVhix
+	GC8RPDAuv9sDoJConpmKVaBdA9K/SHpu7hoGCTjWv/ZTrQmD7zOCCHzcacHOQHjh
+	XWyE3WUkpbiN9QLCFP7FKxLwxqa5A==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvyd38nvg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Mar 2026 08:33:27 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62E8GKfA008897;
+	Sat, 14 Mar 2026 08:33:26 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cuha79uku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 14 Mar 2026 08:33:26 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62E8XMaN51577144
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 14 Mar 2026 08:33:22 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A50082004B;
+	Sat, 14 Mar 2026 08:33:22 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 518BF20043;
+	Sat, 14 Mar 2026 08:33:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.216.245])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 14 Mar 2026 08:33:20 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: [PATCH] tools/perf: Fix the check for parameterized field in event term
+Date: Sat, 14 Mar 2026 14:03:04 +0530
+Message-Id: <20260314083304.75321-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=PbPyRyhd c=1 sm=1 tr=0 ts=69b51d58 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=KlCRr-_lrQmZq1rU:21 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=g2m9RzfYH6J901Z4KtUA:9
+X-Proofpoint-ORIG-GUID: BzFO8xnVbHHI98wRi9VjKCzdZ269q4sr
+X-Proofpoint-GUID: 82vhkJDgEV5cJOgMEWR7-xTeQ2QQow5O
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE0MDA2MiBTYWx0ZWRfXyfsrEGIOOmiT
+ KwOMXBuvY6QI5xkhRS/IN6FFXrztezFK6UxHmUKnAh8C/1i3b0KzA5bTMm/2SQVQQ3gd75B2ypf
+ y1MJf/SEdviPTu6UD86CHo/yYt0THtooNVEJ556HCoaGLCdSWxtaQ0lH9jsIaxyTclbiC+8B4Lm
+ vz9nlKYwMHH59Rjm3sky8iw01nUa4e/fFDZE3EAnCj0arzDbe5T93NuCyJLkISTrupU5KjTkX8y
+ 50/bfd7uCrhVhEoXNM3HJfHuqbp+eRR5AsSYtWvDBWO/33Di9R0Ei9eAniJey+idKNYev7rmhpU
+ 86xVLNtGEt9VjLJ9AKHv/VM2ggIsYAYEkv983xnMlph7aoylS0SfKgeCpsHAlCaNPVTVPhZZerP
+ SMz1UYaJZyIb5PZpLBzzAKnm4H3qUiQrxDLTmw870Ie9JBFaUWqNFTEXIUTjfD1JAHF6lrALGTo
+ zYqvCY8o16fimzFz2SA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-14_02,2026-03-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ malwarescore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603140062
 
-On Fri, 13 Mar 2026 16:35:55 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
+The format_alias() function in util/pmu.c has a check to
+detect whether the event has parameterized field ( =? ).
+The string alias->terms contains the event and if the event
+has user configurable parameter, there will be presence of
+sub string "=?" in the alias->terms.
 
-> 2026年3月11日(水) 9:51 SeongJae Park <sj@kernel.org>:
-> >
-> > On Mon,  9 Mar 2026 10:00:03 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
-> >
-> > > DAMON currently only provides PTE accessed-bit based access check, this
-> > > patch series adds a new perf event based access check.
-> > >
-> > > Since perf event-based access checks do not require modifying the PTE
-> > > accessed-bit for pages representing each damon region, it reduces the
-> > > overhead of monitoring at a fixed granularity of the page size.
-> >
-> > Based on my understanding of this patch sereis that I was enlightened from the
-> > conversation with you on the RFC v1 and kind comments from perf community, I
-> > agree to the points of this patch series.  Extending DAMON with h/w features
-> > like AMD IBS and Intel PEBS is what multiple people shown interests.  I believe
-> > it can benefit multiple users.
-> >
-> > I hope this work to be continued until it is landed on the mainline, and I will
-> > be happy to help.  Probably not exactly in the current shape, though.  I think
-> > this is still in an early stage.  And for the reason, I will comment on only
-> > high level things here, rather than diving deep into each patch.
-> 
-> Thank you for your helpful comments.
-> I will continue to work on this project.
+Snippet of code:
 
-Glad to hear that :)
+  /* Paramemterized events have the parameters shown. */
+        if (strstr(alias->terms, "=?")) {
+                /* No parameters. */
+                snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
 
-> 
-> > > Furthermore, this patch series also includes a feature that allows you
-> > > to set a minimum region size for each target, enabling you to monitor
-> > > at any fixed size greater than the page size for each target.
-> >
-> > I'm not very sure if this is really required to be a part of this series.  Can
-> > you further share more details about what is the benefit of this feeature, and
-> > if it should be coupled with this patch series?  It would be great if you can
-> > share some test results proving the arguments.
-> >
-> > If this is really beneficial but there is no reason to couple with this series,
-> > I think merging this separately first or later could also be an option.
-> 
-> Indeed, this patch can be submitted separately.
-> 
-> The purpose of access monitoring with a fixed granularity greater than
-> the page size is to reduce overhead when the total size of the memory
-> region being tracked is large.
+if "strstr" contains the substring, it returns a pointer
+and hence enters the above check which is not the expected
+check. And hence "perf list" doesn't have the parameterized
+fields in the result.
 
-This sounds bit strange to me, because DAMON's upper-bound monitoring overhead
-is proportional to the user-set maximum number of regions, not the total
-monitoring memory size.
+Fix this check to use:
 
-> 
-> Also, we want to be able to track hugepage sizes for some targets, so a minimum
-> region size setting is provided for each target.
-> For example, when memcached is started with the --enable-largepages option,
-> it will attempt to use THP.
+if (!strstr(alias->terms, "=?")) {
 
-This is again sounds not very completely easy to understand to me, since
-adaptive regions adjustment will converge to work in THP granularity in the
-case.
+With this change, perf list shows the events correctly with
+the strings showing parameters.
 
-Maybe you want to monitor virtual addresses in fixed granularity, but use
-different granularity per target?  You could do the fixed granularity
-monitoring by setting the min_nr_regions and max_nr_regions same to the total
-size of monitoring memory divided by the desired granularity size.  But maybe
-this is challenging for your use case, because you use 'vaddr', which
-dynamically changes the total monitoring memory size depending on the process's
-memory mapping status?
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You can also do different granularity monitoring for different virtual address
-space by using different DAMON contexts per the target process.  But I guess
-you're saying it is not a good user experience?
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 23337d2fa281..0b8d58543f17 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
+ 						   skip_duplicate_pmus);
+ 
+ 	/* Paramemterized events have the parameters shown. */
+-	if (strstr(alias->terms, "=?")) {
++	if (!strstr(alias->terms, "=?")) {
+ 		/* No parameters. */
+ 		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
+ 		return buf;
+-- 
+2.47.3
 
-If so, that makes more sense to me.  But, I think user-space helpers could help
-you overhauling the challenges.  I'm curious if you tried that, and found it is
-really uncomfortable or too suboptimal.  If so, sharing the experience and/or
-test results in more detail will be very helpful.  Maybe we can do this discuss
-in more detail on the separated patch, though.
-
-> 
-> > >
-> > > Using these features also requires modifications to damo, but these are
-> > > not included in this patch series and are currently under development in
-> > > the following branch:
-> > >
-> > > * https://github.com/mita/damo/tree/damo-perf-for-v3.1.8
-> >
-> > Sounds good.  No rush, but also feel free to send patches or PRs for this.  It
-> > is common to support DAMON features on DAMON user-space tool even before the
-> > DAMON features are merged into the mainline.
-> >
-> > >
-> > > Any feedback or advice on the patch set would be greatly appreciated.
-> > >
-> > > * v2
-> >
-> > Let's keep using "RFC" here.
-> 
-> OK.
-> 
-> > > - reintroduce damon_operations->cleanup()
-> > > - introduce struct damon_access_report
-> > > - use struct damon_access_report instead of introducing struct
-> > >   damon_perf_record
-> >
-> > Thank you for doing this.  I hope using not only the struct but the underlying
-> > infrastructure, though.  Let me comment this more detail below.
-> >
-> > > - remove maximum region size setting
-> > >
-> > > * v1
-> >
-> > Ditto.  Let's keep using "RFC".
-> >
-> > > - https://lore.kernel.org/damon/20260123021014.26915-1-akinobu.mita@gmail.com/T/
-> >
-> > Thank you for sharing the link.  This is helpful for me at reviewing.
-> >
-> > >
-> > > * TODO
-> > > - Currently, it is possible to unintentionally specify a perf_event
-> > >   that cannot obtain either PERF_SAMPLE_ADDR or PERF_SAMPLE_PHYS_ADDR
-> > > - Check if it works in a virtual environment using vPMU
-> >
-> > The above two TODOs make sense to me.
-> >
-> > I'd like to request below things as main TODOs.
-> >
-> > First, I hope the benefit of this change is described in more detail.  The
-> > current description mentions it is more lightweight since it doesn't need to
-> > update the accessed bit.  But, PMU-based monitoring should also have its own
-> > additional work.  It would be nice if you can describe what additional works
-> > for PMU-based monitoring induce, and why it is generally lower than that of
-> > access bit modification.
-> >
-> > Having a more clear motivation, or expected use case would be nice.  You don't
-> > neeed to share real details of your use case.  You can anonymize sensitive
-> > things if needed.  But giving a reasonable and realistic use case will be nice
-> > to understand where this can really be beneficial.
-> >
-> > Sharing a test results showing the benefit will also be very nice.  It doesn't
-> > need to be huge real world test, but some reasonable amount of data that
-> > collected on a realistic test setup could be very helpful.
-> 
-> All of the TODOs you suggested are useful.  I will try to share the test
-> results and comparisons with access bit based cases.
-
-Great, looking forward to!
-
-> 
-> > Second, I hope this patch series to reuse the DAMON primitives extension
-> > infrastructure if possible, to reduce possible future duplications.  I'll add
-> > more details about this below.
-> >
-> > >
-> > > Akinobu Mita (6):
-> > >   mm/damon: reintroduce damon_operations->cleanup()
-> >
-> > Thank you for doing this :)
-> >
-> > >   mm/damon/core: introduce struct damon_access_report
-> >
-> > Again, thank you for doing this.  I understand this is an answer to my previous
-> > question to the RFC v1 of this series.  I was asking if you considered the
-> > infrastructure part of my page faults based DAMON extension series, and you
-> > borrowed the main data structure of the series here.  But, I hope us to reuse
-> > more of the code, since it is more generic from my point of view.
-> 
-> The plan was to start by reusing structures and gradually make use of
-> infrastructure.  Now, I have a better understanding of your DAMON
-> extension series
-> and have no major concerns about migrating to it.
-
-Great.  Nonetheless, I expect you might find devils in the details while coding
-it.  Please bear in mind and don't hesitate at asking my help.  I tend to be
-wrong a lot and learn from mistakes. :)
-
-> 
-> > >   mm/damon/core: add common code for perf event based access check
-> >
-> > This patch is introducing a few of sysfs files under DAMON sysfs context
-> > directory, namely 'perf_events/' and its underlying files.  The files is for
-> > registering perf events for the access monitoring.  I don't dislike the basic
-> > concept, but concerned if it is too specific for only perf events and therefore
-> > cannot be easily extended in future.
-> >
-> > The faults-based DAMON extension patch series [1] implements files for similar
-> > but more general concept.  It defines a concept called sampling primitives.  It
-> > is the low level primitives for access check.  It could be access bit checking,
-> > page fault event, or something new, like perf events.  It adds
-> > monitoring_attrs/sample/primitives/ sysfs directory, which can be used for
-> > selecting what primitives the user wants to use.  I think perf events can be
-> > defined as another access check primitive, and the sysfs files can be added
-> > under here.
-> 
-> I agree.
-> 
-> > I was also bit concerned at the fact that the filees are effectively exposing
-> > perf_event_attr struct.  That is, I was concerning about stability of the
-> > struct.  I now see it is a part of linux user api, so I assume it is a stable
-> > api.  Could you please confirm this?  Also, adding more clarification about
-> > that fact on the patch would be nice.
-> 
-> Since `perf_event_attr` itself is an argument to the `perf_event_open()` system
-> call, I think future compatibility will be maintained, but I also have some
-> concerns about whether the interface provided by this patch is optimal.
-> 
-> Also, as mentioned in the TODO section, there are currently almost no
-> restrictions on the PMUs that can be specified, so it is possible to register
-> PMUs that are completely useless for perf event-based access checks.
-
-I agree to this concern.
-
-> I have one idea under consideration, and I plan to address it when I send out
-> the next patch series.
-
-Sounds good, looking forward to the next version.
-
-> 
-> > >   mm/damon/vaddr: support perf event based access check
-> > >   mm/damon/paddr: support perf event based access check
-> >
-> > My understanding of the above two patches is like below.
-> >
-> > 1. The perf event samples are added to a circular buffer whenever it is
-> >    generated.
-> > 2. At the end of each sampling interval, the ops reads each sample in the
-> >    buffer, find a matching DAMON region for the sample, and updte the
-> >    'nr_accesses' of the region.
-> >
-> > For this, this patch series implements the circular buffer for storing samples,
-> > and xarrays for finding the matching DAMON region for a given sample.
-> >
-> > The page fault based DAMON extension patch series is doing something similar.
-> > The first patch of the series implements the buffer for storing access samples.
-> > I think the perf event samples can be stored here.
-> >
-> > The seventh patch of the series implements the logic for finding the matching
-> > DAMON region for each of the samples in the samples buffer, and update the
-> > 'nr_accesses' of the DAMON region.
-> >
-> > Because the page fault based extension's infrastructure is quite general for
-> > any future types of the primitives, I think it would be nice to reuse it.
-> >
-> > The infrastructure is quite simple and not optimized for performance.  But
-> > optimizations can be made later.  I'm more interested in the long term
-> > maintenance of the interface.  And I think the page fault based extension's
-> > infrastructure is easier for long term maintenance.  Of course I might be
-> > biased.  Please let me know what you think.
-> >
-> > If it helps and if you don't mind, maybe I can try to implement this series on
-> > the page fault based infrastructure and share it as another RFC patch series.
-> 
-> I'm starting to get a vision of how to incorporate this as sampling primitives,
-> but if you try implementing it and share your results, it would be extremely
-> helpful.
-
-Ok, I will try to make it in a dirty but fast way and share asap, probably
-within 2-3 weeks.
-
-> 
-> > >   mm/damon: allow user to set min size of region
-> >
-> > As I mentioned abovely, I'm not sure if this is really need to be coupled with
-> > this entire series.
-> 
-> I'm happy with this patch, as it's much simpler than the last one for RFC v1.
-> Next time, I'll send them separately.
-
-Nice, looking forward to it!
-
-
-Thanks,
-SJ
-
-[...]
