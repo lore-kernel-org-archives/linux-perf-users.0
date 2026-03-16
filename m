@@ -1,87 +1,60 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485D52BE62E
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 11:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017E5395DB5;
+	Mon, 16 Mar 2026 12:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773661916; cv=none; b=Zvful/pwVs4Sw7AeSclOrXjdvOYb0UDXsS0jfY4xxLYzNncfHmt/n43M43hat2n8ZX7inlOO23iPR7tFuLcCXAqtl9qazHJ6wm5wCxWYL5WW1tO8WWMdF4UmGpqbBjo9Dyrlun1ARCg91a9aBVqPpZX1KReBiwWr/w3DS6z3A+I=
+	t=1773663199; cv=none; b=Z2tTsy71zjgCyj9qMFSshE+zIC8GYU/G43C2AGIzueAqQr4x2GFtQwozvv2hL8/6iTlqH6gQG7bBBbzhw6fOcYCE/baieEfLNEkmiqut2xmWOO7xmhY6+C/U+abXqLBMBliHO70foelpKWyqCUGO43+fOFuHNsb0X9sw0qR39WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773661916; c=relaxed/simple;
-	bh=YLpCc002qTAuD1kMTo9L2KKQ3cL9ptha/TF1A8yfeIM=;
+	s=arc-20240116; t=1773663199; c=relaxed/simple;
+	bh=88S8/0i83dlqrJjT2MbvpG5Jo17wiItc++sT9jlDABA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QQ3hggg9A12xZjtgeTyWJR9z3gO5B3i6KIPtda0aZTZuZSe5dCeY+d6ICa6KXStFEocv8J+9Ts9TnYYQuOITC+y3BlsYmaTJMXuMlBAezgQHlnzb91Bw5VBiKhAOSMNFM/ZW2SWfxbcM2Si5fLJpKUPL/9ZgzTeQfaC2Nx5cYAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R7gZHh9X; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Fz1ndhlW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=gtwaJbCzSJrDXIk9TUvMOogvBKCjxqRKr+KddYjt6IPaUvMQDlLp48UM7Uz0sZi5VJAGE9ttq9/5ji+ccJ4zT4JfHGMNHDjCu1+u8g/F2TdVNfXDcQeG5DlEvHLrgPXDyoesYEm1RoPsg9EtbzITlSnxZX2zIR3zZ3ARv9cVJDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HfWj4N7b; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R7gZHh9X";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Fz1ndhlW"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62GBn1V21067822
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 11:51:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JVZQrImfTrVRlq9EnXFdF8VyCUmvC/OmzTav/z10XOY=; b=R7gZHh9XPlUicz4h
-	ApdGvsVcPW0AlNGGFSPnNMHzdRsfpQ9dZkk8Q20sXtLvj2zpPxt94+PE6ukW3SWI
-	IUDl6ZVbt2JjlXZURxrJLC79qRoPNWHVhIxm52CpLWKffjY/oW5UQhdj2EW+90gH
-	zpK1zTzp1q/qH1JH6UHZWJhFYlBwn6bS4cs9PhHWk3mK28PTq0dI9PxFdgIcZXSI
-	QI+TnToLJdb3zKgYYBV1CwXAMuR4CKCCfF9ne1ryeYkg2MjOjEzDIowzWK3azep8
-	OtpOD7W4dslo6YhaoDF+jNlZmZbzzYaWgBiCYuUHPMTRASEL/aC19DYNk+klafHL
-	IH5BjQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cw027dp25-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 11:51:53 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cd849cd562so3013565485a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 04:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773661913; x=1774266713; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JVZQrImfTrVRlq9EnXFdF8VyCUmvC/OmzTav/z10XOY=;
-        b=Fz1ndhlWkJoGaj3/p8V3UwaH1DhwuccaCJK0/7kKpnGyxq8SleFIOzODnPyqOX55ek
-         hRxnG5+5WJlp7Hq82VXGU0HoFC71IKVm9d7OO1OATH4mO3kFVLyt4pfQdsXyz9OGAOaK
-         e1HPtdaZ3QIqbW47+We2nIxx780QktkRFD/d4mrJQl710JmPgXB0/6x7G33ebfpGw07H
-         PU2phW9hD/Ox31Psd7sDtzbLrf7ScHLI34+X5Ek1qSB2hkWH34hl1/oS0bbsJkrnbRkh
-         UREAqLZkYQa+rAUrDt6TkzjqWNt9dQH0iWLggMYCvasCF3zRBlIpdpPfmIE2xGGvgWGV
-         GX6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773661913; x=1774266713;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JVZQrImfTrVRlq9EnXFdF8VyCUmvC/OmzTav/z10XOY=;
-        b=QjxmmhuFANvTXYAMw4MBCJNQVO+Z3J6d+n+gHDDdy1l0iisvHT55Hj0FCSvBynThw+
-         BXeOiI2cHaJgd3Z2ISiZmBZwGF6d/jVyu5OUDijtLhzsziR6KTzTFYIdSaiBcVljLTfa
-         3vc8kAOist4mXFrsyO39psnJ4oNSYbtdrQ+dxc4GLoHi1by3w4UhNYHv5HtoGz5C5J9w
-         paDWfRPB1k0Va3vP6lcaQM0SQZ4JMcb2GQyU6j8iIwV7ODqDfDlu0lb41c1ElMBEeuPl
-         MqD8htDG4lDYpGVVR+bagvw5+C1CZzJhaBgiZbgwoJ3Tl8TKOHZRK62S0H9hH8pMFw9H
-         UcFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVysA0zngE5UdvDRFMXP8kvXRXzfncQZff/8Z+6Jrfg/dl+DlrTkFTyvqY8ovOXVjH+wS7nvOB5KxlWY9MKQaXb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYu2OHDDKjZOoqcYcTYYbZXYteKiVDG0DUemOXiw1NQdKK2Bkg
-	yC1q29/SIoa0nmmxIW4h169+DUfntC+MHtSQGd23VMmhRxWqX1tBZbVu92vmPLFGvMDGuwolZqj
-	2b351T63fOg6S7+vgFfYRKSp3osOAEc1vycI7lbmrZOy0fPxe29ajadp6AV4RJAbODMe1Fp4t
-X-Gm-Gg: ATEYQzzNR+Zqvp3JPgcIou6RK8BIaMfb0gSFQ68qJ3HpoBRUMkqUNg3f/lc4K6VZ5j0
-	/X77yfXbKZcmTLvO8rBG2XmdoNu5xSMnbrX8mCSnhhauf64OTW1Oa4cc1tYYufoZryyzq0OacL6
-	eiP721G9H9tE6jVj6prK3ug0xRGImjM9jl4PVMSmC1qox8szpdo5PJg6DU/FBxiOYy/qP+Nu2Gp
-	kwJaaDq0MHybT2tGALZoOzlnLPxlk0HYzHmhiUcaexCv5DPEqYoRctJMYOkxXWIe6PQUktldbR5
-	MN7tByACGev/ZptBC40c5K9gdq3YaVaqedppFGXYwRwqrdQZQwmB/dC0hY0KtOaZW6AS2RpMGYl
-	US6QmJY7GWZH/ZxqA07ZwmmiNGblKMU7KLlE0I3WlHmN9heKYVX6QPxKs1tqaNQha2lZgB3y6AS
-	M4EXzHUBMq
-X-Received: by 2002:a05:620a:4691:b0:8cd:8f04:50ec with SMTP id af79cd13be357-8cdb5a5479cmr1654671085a.2.1773661912740;
-        Mon, 16 Mar 2026 04:51:52 -0700 (PDT)
-X-Received: by 2002:a05:620a:4691:b0:8cd:8f04:50ec with SMTP id af79cd13be357-8cdb5a5479cmr1654665485a.2.1773661911989;
-        Mon, 16 Mar 2026 04:51:51 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:5dfc:3995:22ce:d286? ([2a05:6e02:1041:c10:5dfc:3995:22ce:d286])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe20b899sm40444943f8f.23.2026.03.16.04.51.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 04:51:51 -0700 (PDT)
-Message-ID: <c214b66c-6ef0-494f-8f13-9d6000068e7f@oss.qualcomm.com>
-Date: Mon, 16 Mar 2026 12:51:49 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HfWj4N7b"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62FNk0r51363601;
+	Mon, 16 Mar 2026 12:13:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=bRjZ+H
+	bmCwmN2NCDq8j5UX5mwx+VaqKP+RvUKkDYcJw=; b=HfWj4N7bJqjIWvvxDcbWd6
+	LBMgZIaSuNMbouOHdHCY4ssaLgHe0aFPzwfkiTsUpqMrd6PY26v/KpV+T0xHMW+g
+	vyLtlET+vxXu2rbxIZ0ZRnwYaTIp5HYRvXY+cC5eQ9FoSAlLIbBQUzOSV8DbF/vE
+	gCf3vlfnu82qLWRCaZgZSR8J+4hEYqIGBMTR0ivJxUBRR/ykIsyrFklgIv8JNv4A
+	nRObdHCviz8lmglXNQEtiQdkpigtcxVYazl+m7apOCbnq3M/en4RvgmpxOjYZuV7
+	B58dfWBdeoMqRsfBWarGNpK07DojI0UaLGKGMcmAI4VnaLV79cjmD8eGuP8aE5eA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvy64fsa7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Mar 2026 12:13:13 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62GBoXIx028510;
+	Mon, 16 Mar 2026 12:13:13 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwmq14gpx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Mar 2026 12:13:12 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62GCD9TH47907298
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Mar 2026 12:13:09 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3FE9D20043;
+	Mon, 16 Mar 2026 12:13:09 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A800B20040;
+	Mon, 16 Mar 2026 12:13:08 +0000 (GMT)
+Received: from [9.111.90.13] (unknown [9.111.90.13])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 16 Mar 2026 12:13:08 +0000 (GMT)
+Message-ID: <6e9e5208-3e92-48f4-81fb-d37e5c0080ae@linux.ibm.com>
+Date: Mon, 16 Mar 2026 13:13:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -89,110 +62,319 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/30] tools: lib: thermal: Initialize CFLAGS before
- including Makefile.include
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
-        Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nsc@kernel.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau
- <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        William Breathitt Gray <wbg@kernel.org>,
-        Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        David Lechner <dlechner@baylibre.com>,
-        =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Andrew Morton
- <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-        Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
-        Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
- <20260311-tools_build_fix_zero_init-v4-3-9e35bdb99cb3@arm.com>
+Subject: Re: [PATCH v3 3/3] perf evlist: Improve default event for s390
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
+        namhyung@kernel.org, sumanthk@linux.ibm.com
+References: <20260312061628.1593105-1-irogers@google.com>
+ <20260313202811.2599195-1-irogers@google.com>
+ <20260313202811.2599195-4-irogers@google.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <20260311-tools_build_fix_zero_init-v4-3-9e35bdb99cb3@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: IXQnZeN-r5mZtmUSIJybGcjAvHQNtWNP
-X-Proofpoint-ORIG-GUID: IXQnZeN-r5mZtmUSIJybGcjAvHQNtWNP
-X-Authority-Analysis: v=2.4 cv=AqXjHe9P c=1 sm=1 tr=0 ts=69b7eed9 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22 a=7CQSdrXTAAAA:8
- a=VwQbUJbxAAAA:8 a=xTKRYfdV9gSblPpQG3AA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE2MDA5MCBTYWx0ZWRfX7X7JmiHyUiMs
- 482SW8MG13uqkQ0humjZVfbdez/IA4i8j5ZVOdX2osQfsjL9ytlPVWrESYxMQoGtMWATDCjD6uA
- vfU1soAgwqIBtorVhrzV8fyfxk1p7VaBKBqE7vMS4YGv9HTAekf8EYpq4X109+C9jV9mhPC5yeG
- 3zAF+kEsoRHaDPMOeRJ+6i9xhsqL1Wg8kPyqnucWNrgcOQe1Bdxr36iPxEw7OLEpAw55/G4GloZ
- bsV/fgO+Dkj8jDuDOUsHWlux3U8A0l7nBt0YccbpM32+wzw0sJahKaf0G6UC94kmGtFVwVBIMaE
- Z+BKviMjfTmE3ax0kR2oXQ9gy4dalxj6bgu6ihBwIA1auyf93xfBKtDoECMPWIGffMwSE6Qa8X5
- lxAsrVvHr4SaZcQ34Viz0FMQ/KWWmy5iu26G+CqvPawqOCdxDAKQW8xAcwMju3JT8Iz3riz0XPb
- bUyg0nykQvTE4sNDmSA==
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20260313202811.2599195-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: sv7XyqkG_mLFRVWOfkmNpWTZz3fTtbwE
+X-Proofpoint-GUID: 7_6DgbesUrf5GZXRzq2IZsx26oFfmjMg
+X-Authority-Analysis: v=2.4 cv=KYnfcAYD c=1 sm=1 tr=0 ts=69b7f3da cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=1XWaLZrsAAAA:8
+ a=VnNF1IyMAAAA:8 a=y1uQG0x6g7_J814r8qQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE2MDA5MyBTYWx0ZWRfXzYKlesd7r5g3
+ 2/p09gRSfU0RTRhrc4boN6am/90n6BAwcTWHufc4ZRdCPOHr4LW2mH/J+ESrqAxqYaapNxz+vYO
+ mb5r2Ak8U59luvTP3qeeP5CwfQKeomiH2bfA5psQmAII4y7EJ2P6UajhotLdARD5U6wcS+nNDVX
+ imzkceYoyiifwgMEnVU2PWT/yVvnxtWXIpQKhIvi3dnBlmkm5eAEZAAYxO6FPyvr91Ou/ejFbqm
+ VPam3MdtZi3NWQVkNalyoDWzQA1i2NGROJU8WAiePap10SUsENdxcIHr4h1RYeWwuRyuRjlbOBs
+ 8QmVZbyv6cR8O+8M7d6ob+WLm0OT3Zq3tzPuZWA/azf+aWigTPhKmfQMUfKSl9E0WviNLYzeuzA
+ 559XdH+NZ9hc6UC2jHqnbngjJAz5zBhL2DMi2ZxCcIRDi1xbqqu/sC62/VOXPrWV2xAD0e5oa47
+ rzb22D+dvkVeQiIvVYg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-16_04,2026-03-16_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015 phishscore=0
- spamscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ spamscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603160090
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603160093
 
-On 3/11/26 09:29, Leo Yan wrote:
-> tools/scripts/Makefile.include may expand EXTRA_CFLAGS in a future
-> change.  This could alter the initialization of CFLAGS in the thermal
-> Makefile, as the default options "-g -Wall" would never be set once
-> EXTRA_CFLAGS is expanded.
+On 3/13/26 21:28, Ian Rogers wrote:
+> Frame pointer callchains are not supported on s390 and dwarf
+> callchains are only supported on software events.
 > 
-> Prepare for this by moving the CFLAGS initialization before including
-> tools/scripts/Makefile.include, so it is not affected by the extended
-> EXTRA_CFLAGS.
+> Switch the default event from cycles to cpu-clock or task-clock on
+> s390 if callchains are enabled.
 > 
-> Append EXTRA_CFLAGS to CFLAGS only after including Makefile.include and
-> place it last so that the extra flags propagate properly and can
-> override the default options.
+> If frame pointer callchains are requested on s390, warn and switch to
+> dwarf callchains.
 > 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
+>  tools/perf/builtin-record.c      |  3 ++-
+>  tools/perf/builtin-top.c         |  2 +-
+>  tools/perf/tests/event_update.c  |  4 +++-
+>  tools/perf/tests/expand-cgroup.c |  4 +++-
+>  tools/perf/tests/perf-record.c   |  7 ++++--
+>  tools/perf/tests/topology.c      |  4 +++-
+>  tools/perf/util/evlist.c         | 37 +++++++++++++++++++-------------
+>  tools/perf/util/evlist.h         |  2 +-
+>  tools/perf/util/evsel.c          | 11 ++++++++--
+>  9 files changed, 49 insertions(+), 25 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 60d764068302..07ecc8a5fec7 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -4310,7 +4310,8 @@ int cmd_record(int argc, const char **argv)
+>  		record.opts.tail_synthesize = true;
+>  
+>  	if (rec->evlist->core.nr_entries == 0) {
+> -		struct evlist *def_evlist = evlist__new_default();
+> +		struct evlist *def_evlist = evlist__new_default(&rec->opts.target,
+> +								callchain_param.enabled);
+>  
+>  		if (!def_evlist)
+>  			goto out;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 710604c4f6f6..58bab595b024 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1695,7 +1695,7 @@ int cmd_top(int argc, const char **argv)
+>  		goto out_delete_evlist;
+>  
+>  	if (!top.evlist->core.nr_entries) {
+> -		struct evlist *def_evlist = evlist__new_default();
+> +		struct evlist *def_evlist = evlist__new_default(target, callchain_param.enabled);
+>  
+>  		if (!def_evlist)
+>  			goto out_delete_evlist;
+> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+> index cb9e6de2e033..facc65e29f20 100644
+> --- a/tools/perf/tests/event_update.c
+> +++ b/tools/perf/tests/event_update.c
+> @@ -8,6 +8,7 @@
+>  #include "header.h"
+>  #include "machine.h"
+>  #include "util/synthetic-events.h"
+> +#include "target.h"
+>  #include "tool.h"
+>  #include "tests.h"
+>  #include "debug.h"
+> @@ -81,7 +82,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+>  {
+>  	struct evsel *evsel;
+>  	struct event_name tmp;
+> -	struct evlist *evlist = evlist__new_default();
+> +	struct target target = {};
+> +	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
+>  
+>  	TEST_ASSERT_VAL("failed to get evlist", evlist);
+>  
+> diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+> index c7b32a220ca1..dd547f2f77cc 100644
+> --- a/tools/perf/tests/expand-cgroup.c
+> +++ b/tools/perf/tests/expand-cgroup.c
+> @@ -8,6 +8,7 @@
+>  #include "parse-events.h"
+>  #include "pmu-events/pmu-events.h"
+>  #include "pfm.h"
+> +#include "target.h"
+>  #include <subcmd/parse-options.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> @@ -99,7 +100,8 @@ out:	for (i = 0; i < nr_events; i++)
+>  static int expand_default_events(void)
+>  {
+>  	int ret;
+> -	struct evlist *evlist = evlist__new_default();
+> +	struct target target = {};
+> +	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
+>  
+>  	TEST_ASSERT_VAL("failed to get evlist", evlist);
+>  
+> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+> index efbd9cd60c63..c6e31ab8a6b8 100644
+> --- a/tools/perf/tests/perf-record.c
+> +++ b/tools/perf/tests/perf-record.c
+> @@ -84,8 +84,11 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	CPU_ZERO_S(cpu_mask_size, cpu_mask);
+>  
+>  	perf_sample__init(&sample, /*all=*/false);
+> -	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
+> -		evlist = evlist__new_default();
+> +	if (evlist == NULL) { /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
+> +		struct target target = {};
+> +
+> +		evlist = evlist__new_default(&target, /*sample_callchains=*/false);
+> +	}
+>  
+>  	if (evlist == NULL) {
+>  		pr_debug("Not enough memory to create evlist\n");
+> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+> index ec01150d208d..a34a7ab19a80 100644
+> --- a/tools/perf/tests/topology.c
+> +++ b/tools/perf/tests/topology.c
+> @@ -9,6 +9,7 @@
+>  #include "evlist.h"
+>  #include "debug.h"
+>  #include "pmus.h"
+> +#include "target.h"
+>  #include <linux/err.h>
+>  
+>  #define TEMPL "/tmp/perf-test-XXXXXX"
+> @@ -37,11 +38,12 @@ static int session_write_header(char *path)
+>  		.path = path,
+>  		.mode = PERF_DATA_MODE_WRITE,
+>  	};
+> +	struct target target = {};
+>  
+>  	session = perf_session__new(&data, NULL);
+>  	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
+>  
+> -	session->evlist = evlist__new_default();
+> +	session->evlist = evlist__new_default(&target, /*sample_callchains=*/false);
+>  	TEST_ASSERT_VAL("can't get evlist", session->evlist);
+>  	session->evlist->session = session;
+>  
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 591bdf0b3e2a..e6c518cc4a69 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -13,6 +13,7 @@
+>  #include "util/mmap.h"
+>  #include "thread_map.h"
+>  #include "target.h"
+> +#include "dwarf-regs.h"
+>  #include "evlist.h"
+>  #include "evsel.h"
+>  #include "record.h"
+> @@ -98,38 +99,44 @@ struct evlist *evlist__new(void)
+>  	return evlist;
+>  }
+>  
+> -struct evlist *evlist__new_default(void)
+> +struct evlist *evlist__new_default(const struct target *target, bool sample_callchains)
+>  {
+>  	struct evlist *evlist = evlist__new();
+>  	bool can_profile_kernel;
+>  	struct perf_pmu *pmu = NULL;
+> +	struct evsel *evsel;
+> +	char buf[256];
+> +	int err;
+>  
+>  	if (!evlist)
+>  		return NULL;
+>  
+>  	can_profile_kernel = perf_event_paranoid_check(1);
+>  
+> -	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+> -		char buf[256];
+> -		int err;
+> -
+> -		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
+> +	if (EM_HOST == EM_S390 && sample_callchains) {
+> +		snprintf(buf, sizeof(buf), "software/%s/%s",
+> +			 target__has_cpu(target) ? "cpu-clock" : "task-clock",
+>  			 can_profile_kernel ? "P" : "Pu");
+>  		err = parse_event(evlist, buf);
+> -		if (err) {
+> -			evlist__delete(evlist);
+> -			return NULL;
+> +		if (err)
+> +			goto out_err;
+> +	} else {
+> +		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+> +			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
+> +				can_profile_kernel ? "P" : "Pu");
+> +			err = parse_event(evlist, buf);
+> +			if (err)
+> +				goto out_err;
+>  		}
+>  	}
+>  
+> -	if (evlist->core.nr_entries > 1) {
+> -		struct evsel *evsel;
+> -
+> -		evlist__for_each_entry(evlist, evsel)
+> -			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
+> -	}
+> +	evlist__for_each_entry(evlist, evsel)
+> +		evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
+>  
+>  	return evlist;
+> +out_err:
+> +	evlist__delete(evlist);
+> +	return NULL;
+>  }
+>  
+>  struct evlist *evlist__new_dummy(void)
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index d17c3b57a409..e507f5f20ef6 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -104,7 +104,7 @@ struct evsel_str_handler {
+>  };
+>  
+>  struct evlist *evlist__new(void);
+> -struct evlist *evlist__new_default(void);
+> +struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
+>  struct evlist *evlist__new_dummy(void);
+>  void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+>  		  struct perf_thread_map *threads);
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index bd14d9bbc91f..caa95dc06ac5 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1020,6 +1020,13 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+>  {
+>  	bool function = evsel__is_function_event(evsel);
+>  	struct perf_event_attr *attr = &evsel->core.attr;
+> +	enum perf_call_graph_mode record_mode = param->record_mode;
+> +
+> +	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
+> +		pr_warning("Framepointer unwinding switched to dwarf due to a lack of kernel support.\n"
+> +			   "Use '--call-graph dwarf' to silence this warning.\n");
+> +		record_mode = CALLCHAIN_DWARF;
+> +	}
+>  
+>  	evsel__set_sample_bit(evsel, CALLCHAIN);
+>  
+> @@ -1029,7 +1036,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+>  		attr->exclude_callchain_user = 1;
+>  	if (opts->user_callchains)
+>  		attr->exclude_callchain_kernel = 1;
+> -	if (param->record_mode == CALLCHAIN_LBR) {
+> +	if (record_mode == CALLCHAIN_LBR) {
+>  		if (!opts->branch_stack) {
+>  			if (attr->exclude_user) {
+>  				pr_warning("LBR callstack option is only available "
+> @@ -1048,7 +1055,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+>  				    "Falling back to framepointers.\n");
+>  	}
+>  
+> -	if (param->record_mode == CALLCHAIN_DWARF) {
+> +	if (record_mode == CALLCHAIN_DWARF) {
+>  		if (!function) {
+>  			uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
+>  
 
-Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
+Ian, Thanks very much.
 
-Thanks !
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
+The fall back to cpu-clock works nicely when --call-graph or -g is specified on s390.
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
