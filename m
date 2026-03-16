@@ -1,136 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549313396E9;
-	Mon, 16 Mar 2026 05:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBD6346E54;
+	Mon, 16 Mar 2026 06:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773637971; cv=none; b=Y7caw1o12Gc+ZKMh6ym88qZ/JwR2SsLZmGkuJmTq0LoXC48KHJha3mS+84uSH5tz6NIu4UL587YWOLVYZPza6Y0weNBc49HqmyOXw1wrqtp1DbYoObgfqhBUkuFHSAhWK7nuuUxpul2UPRauI7opEW+jL7q1omJdmNPNIvjd8hM=
+	t=1773644038; cv=none; b=ud/x3kebVVxk4+RnBSFCTgDEWYNyJQuhLYfAwnL7dTpE8RWl8YU//Ae6YWbuRL5rS0docOtknK2SkkKrH7NW+6+lU1KYZUaMjOM9PL7VZwETsFu/6K8K+Ra3uZr7waJOK/Hlwp1Esu+f/2IBznJiXca/cXQz+mC1mJQeh33/sVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773637971; c=relaxed/simple;
-	bh=IKMdcMgH+u2bjuAiJri0Q8fmMQlZhYYXZh93E5g++hY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NOzC+YcHfezYDr1DMMH2LJdGUTIY3x9UZM/v5URZzZ89R5vGiypDZBA1TVgHxq4duaqmbf7CwBGs6XMM9AJuAgVWJC+9CZgNdfRBZFQxeSX8tA7NM+fdmBLVml5lZ5qSW+QiGuPJAMsR/Tz+8yO2CpVS8hGY8ItxSOmTmZeWXhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NOTQYk4O; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1773644038; c=relaxed/simple;
+	bh=1o24Y8PLR50PRp8YtGb4O5udNKNzuWgwdP8DQegvPLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P8TtFg8E3NSSIv+eNgRIAkzAplS0kYDD13iEIHwFb6hWvSt2k6dBS7BKOHfLiexITEc1MfVYRvLBX6LQ+/K36E3IHoAP+AMhp28/wP6GnzVyZHCYbrQ1iBtN1oRBenEs7yzeI0kH/RvxNDnhkpeoacc+0FpaFky1T83Upd34tig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOS5nHfi; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NOTQYk4O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOS5nHfi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773637970; x=1805173970;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IKMdcMgH+u2bjuAiJri0Q8fmMQlZhYYXZh93E5g++hY=;
-  b=NOTQYk4OV1YN+Ts/6y7GM89BV1Fk4GhgRu+1MdCRbQPT2EllJCYHUgcF
-   leFWBNY0OX7PbcaIRcqKsMdwkwJKAbGqQeSRh7lPCcUPoLLFWPslULbOf
-   HPKYbIK8z4Qm0G8qmzAEyYGa8X2pAth0YDhqUyEFU51vtnRPEZEW0icTP
-   5UjcyfmXspx8d1SY8UarlTG25W+UGlNfDGEyUeEEHSHrWgfEZ5FDvIXGw
-   su7TZVnNB0sX9qh9AQTR1A6aq5HFIzar+ueY7oDu4W/qHaaikdjtViI6/
-   HsmKyiqEjf6LDJO1lOCh01jJJL0Y8F0b/AoQvQVaXyXX4o6UD1Ir/Plgz
-   A==;
-X-CSE-ConnectionGUID: jJ1o9wpOSre+UVvlp0dM5w==
-X-CSE-MsgGUID: Pgt/wH4lTOWYP0FqfHsh0Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="86003463"
+  t=1773644035; x=1805180035;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1o24Y8PLR50PRp8YtGb4O5udNKNzuWgwdP8DQegvPLs=;
+  b=ZOS5nHfigO3Y6vFnvantIQY6OLAcw+lsmm/zrPBHTwN3zeoVRbP+vw0l
+   31NG2ekjhnSZAnzD1TKmrrGTXLvXHfzHS+n1wuvizif8hcJNY0bMc3HCO
+   BOZipmpFdTa78/Uy9P86VUsoPfeKfaSsdLjlkMibYLzqoLE6a/mYnsuXI
+   kbsgM2ufF4cIDna8GvL7LvUKIUZx9QYn/jIeMuUtUgdxu9Y5pHMAe10lG
+   2oOgHWObjHUM7cHuj3sj0CVKJm0PthSeISX5DgnAqJKsqkBxoknerqhfA
+   e4wjPIuowFRQxfCbKJRGN/pTAHYIKRidmuGPkZ3mc+7UvwIyNxGYWZDbp
+   Q==;
+X-CSE-ConnectionGUID: 96NMXbwPSeyJ+JEs8lEsvQ==
+X-CSE-MsgGUID: WHT7BHWFT4yoB4xHjI0img==
+X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="92222528"
 X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
-   d="scan'208";a="86003463"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2026 22:12:50 -0700
-X-CSE-ConnectionGUID: v7jb1GZHSKywycg/194Kyg==
-X-CSE-MsgGUID: 0ctDSsNUTTOvsw+4s85pjg==
+   d="scan'208";a="92222528"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2026 23:53:54 -0700
+X-CSE-ConnectionGUID: rW0nyuZ7Qd66/ay6xZdF8Q==
+X-CSE-MsgGUID: gmikGwNJTaON6IpVZJIc1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
-   d="scan'208";a="226262462"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa004.jf.intel.com with ESMTP; 15 Mar 2026 22:12:47 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 2/2] perf/x86: Update cap_user_rdpmc base on rdpmc user disable state
-Date: Mon, 16 Mar 2026 13:08:38 +0800
-Message-Id: <20260316050838.3624051-2-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260316050838.3624051-1-dapeng1.mi@linux.intel.com>
-References: <20260316050838.3624051-1-dapeng1.mi@linux.intel.com>
+   d="scan'208";a="217680567"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2026 23:53:51 -0700
+Message-ID: <c18ccaf6-3b4d-486a-9d88-76dd715902a2@linux.intel.com>
+Date: Mon, 16 Mar 2026 14:53:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 3/4] perf/x86/intel/uncore: Fix die ID init and look up
+ bugs
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Steve Wahl <steve.wahl@hpe.com>, Chun-Tse Shao <ctshao@google.com>,
+ Markus Elfring <Markus.Elfring@web.de>
+References: <20260313174050.171704-1-zide.chen@intel.com>
+ <20260313174050.171704-4-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260313174050.171704-4-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-After introducing the RDPMC user disable feature, user-space RDPMC may
-return 0 instead of the actual event count. This creates an inconsistency
-with cap_user_rdpmc, where cap_user_rdpmc is set, but user-space RDPMC
-only returns 0.
 
-To accurately represent the user-space RDPMC capability, update
-cap_user_rdpmc based on the RDPMC user disable state. If RDPMC user
-disable is enabled, cap_user_rdpmc is set to false, allowing user-space
-programs to fall back to the read() syscall to obtain the real event
-count.
+On 3/14/2026 1:40 AM, Zide Chen wrote:
+> In snbep_pci2phy_map_init(), in the nr_node_ids > 8 path,
+> uncore_device_to_die() may return -1 when all CPUs associated
+> with the UBOX device are offline.
+>
+> Remove the WARN_ON_ONCE(die_id == -1) check for two reasons:
+>
+> - The current code breaks out of the loop. This is incorrect because
+>   pci_get_device() does not guarantee iteration in domain or bus order,
+>   so additional UBOX devices may be skipped during the scan.
+>
+> - Returning -EINVAL is incorrect, since marking offline buses with
+>   die_id == -1 is expected and should not be treated as an error.
+>
+> Separately, when NUMA is disabled on a NUMA-capable platform,
+> pcibus_to_node() returns NUMA_NO_NODE, causing uncore_device_to_die()
+> to return -1 for all PCI devices.  As a result,
+> spr_update_device_location(), used on Intel SPR and EMR, ignores the
+> corresponding PMON units and does not add them to the RB tree.
+>
+> Fix this by using uncore_pcibus_to_dieid(), which retrieves topology
+> from the UBOX GIDNIDMAP register and works regardless of whether NUMA
+> is enabled in Linux.  This requires snbep_pci2phy_map_init() to be
+> added in spr_uncore_pci_init().
+>
+> Keep uncore_device_to_die() only for the nr_node_ids > 8 case, where
+> NUMA is expected to be enabled.
+>
+> Fixes: 9a7832ce3d92 ("perf/x86/intel/uncore: With > 8 nodes, get pci bus die id from NUMA info")
+> Fixes: 65248a9a9ee1 ("perf/x86/uncore: Add a quirk for UPI on SPR")
+> Tested-by: Steve Wahl <steve.wahl@hpe.com>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> V2:
+> - Fix the commit message to note that spr_update_device_location() is
+>   used by EMR, not GNR.
+> - Rewrite the commit message for clarity.
+> - Add a Tested-by tag.
+>
+> V4: no changes.
+> ---
+>  arch/x86/events/intel/uncore.c       |  1 +
+>  arch/x86/events/intel/uncore_snbep.c | 13 ++++++-------
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 786bd51a0d89..e9cc1ba921c5 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
+>  	return bus ? pci_domain_nr(bus) : -EINVAL;
+>  }
+>  
+> +/* Note: This API can only be used when NUMA information is available. */
+>  int uncore_device_to_die(struct pci_dev *dev)
+>  {
+>  	int node = pcibus_to_node(dev->bus);
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index 9b51883fd6fd..421378f681d7 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -1459,13 +1459,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
+>  			}
+>  
+>  			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
 
-Since arch_perf_update_userpage() could be called for software events,
-enhance x86_pmu_has_rdpmc_user_disable() to only check the x86 PMUs.
+The "die_id" variable is not needed any more after removing below check,
+please remove it.
 
-Fixes: 59af95e028d4 ("perf/x86/intel: Add support for rdpmc user disable feature")
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- 
-v2: Add is_x86_pmu() check before checking if rdpmc user disable feature
-is supported.
+Others look good to me. Thanks.
 
-v1: https://lore.kernel.org/all/20260311075201.2951073-2-dapeng1.mi@linux.intel.com/
 
- arch/x86/events/core.c       | 3 +++
- arch/x86/events/perf_event.h | 5 +++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 66b1a873c395..34eda8813716 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2794,6 +2794,9 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	userpg->cap_user_time_zero = 0;
- 	userpg->cap_user_rdpmc =
- 		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
-+	if (x86_pmu_has_rdpmc_user_disable(event->pmu) &&
-+	    event->hw.config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
-+		userpg->cap_user_rdpmc = 0;
- 	userpg->pmc_width = x86_pmu.cntval_bits;
- 
- 	if (!using_native_sched_clock() || !sched_clock_stable())
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 025f67726ecc..307361b106d2 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1351,8 +1351,9 @@ static inline u64 x86_pmu_get_event_config(struct perf_event *event)
- 
- static inline bool x86_pmu_has_rdpmc_user_disable(struct pmu *pmu)
- {
--	return !!(hybrid(pmu, config_mask) &
--		 ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
-+	return is_x86_pmu(pmu) &&
-+	       (hybrid(pmu, config_mask) &
-+		ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
- }
- 
- extern struct event_constraint emptyconstraint;
--- 
-2.34.1
-
+> -
+>  			raw_spin_unlock(&pci2phy_map_lock);
+> -
+> -			if (WARN_ON_ONCE(die_id == -1)) {
+> -				err = -EINVAL;
+> -				break;
+> -			}
+>  		}
+>  	}
+>  
+> @@ -6420,7 +6414,7 @@ static void spr_update_device_location(int type_id)
+>  
+>  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
+>  
+> -		die = uncore_device_to_die(dev);
+> +		die = uncore_pcibus_to_dieid(dev->bus);
+>  		if (die < 0)
+>  			continue;
+>  
+> @@ -6444,6 +6438,11 @@ static void spr_update_device_location(int type_id)
+>  
+>  int spr_uncore_pci_init(void)
+>  {
+> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+>  	/*
+>  	 * The discovery table of UPI on some SPR variant is broken,
+>  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
