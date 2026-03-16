@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590C3D810C;
-	Mon, 16 Mar 2026 18:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4FC3DFC80;
+	Mon, 16 Mar 2026 18:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773685025; cv=none; b=AsyVUOjwfg2zoIfgRbXhCVoaqwG6T2+8qR5ziDNNQb112wzGTMHUhv9sF0XBfrwnygmkW/esfY8S/oZB1l5xjX0RAHuA3korEGugx+dZslTeJ3MRjJyKPPyYGRbKDbUxElpS6eA9kNWGUR9gCNrD4UeXkSxHK7lxAyNRQSh7IVc=
+	t=1773686441; cv=none; b=tc915Q4LvMpCSxRZOcYnWT+L1oZISx4W1cna6pLcYwlCd9QmM+iPjS8P3LOrNzjdDPcPH5WMJMsLbRg5PqoDJA7ZFU1zyX5D7Xjd09BiSvLDljAT29WNEYTGElVGwVlM99f1ydDkudi28OODp5OQhmPCh483iW9grc2lQRN1wF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773685025; c=relaxed/simple;
-	bh=iG+Add5ys416NNZxdTEyzXi8HW32YFjkpDzoqqQSWl4=;
+	s=arc-20240116; t=1773686441; c=relaxed/simple;
+	bh=BDLkgbnoo2CWArc5Am7Ovr1qSVX1mkAs+VUyk+DYM1A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ES5elYKupwAmqw+mbZNuuH0mKTHYwgewfyFQEhAgF4UCac/i3w8V3rdWUmfZtLWZsPauHWwohAYiu98/cfFw9GXsuqC8kOP8+EiLgB4P/6e+Q7a8YdYzeF4ZigE+TEyAfwHuema+IXhA1Mh/czB3av2Ab3y62qwYETzF11oIsgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nmb8J9Qk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bqPcZHBKE2JksvwifgK3vW6m06SlAU+qRYo6tyJszG0hUtyzoEn2wPAumM7P4ypyPY1Ke1wbtxGMDSGF0DEDzunsWJey8jycAi6MXjvIiNgY+t+xGuIdhH3OG4BACO82k7T+ADIWUSt7viLZ5XHy8rhzXu1RhX66ANtWjb6gdeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAUjuL93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nmb8J9Qk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D7F5C19421;
-	Mon, 16 Mar 2026 18:17:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAUjuL93"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37C7C19421;
+	Mon, 16 Mar 2026 18:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773685024;
-	bh=iG+Add5ys416NNZxdTEyzXi8HW32YFjkpDzoqqQSWl4=;
+	s=k20201202; t=1773686440;
+	bh=BDLkgbnoo2CWArc5Am7Ovr1qSVX1mkAs+VUyk+DYM1A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nmb8J9Qk7nbF9+qO5nvYBTJc1GNk3tk/ij3ig45Pvxj6cpykotp0NePJyIqU8fIdi
-	 2Zh993PmNFyjA0XH6XT3T9uWbfs/cv+5NWSsEoeboHOREykjLq2rJnQbY+IPkP4w/h
-	 uXVEAJ2QKrLep40EFn2BtBVrDXZ1Grp+UB3O1H5cZJqEnIH0LOT6o5U1jDHQuH1e7t
-	 LDb0t2HLPvR9Y8RjGZqmShLxHQ2bEsVLOs/ikWF4gALrLImyZJd351cRC2BemsicrJ
-	 ubdzqIjiMGRxbkXApWvJtOs5qpd71qXeCBIojYf94DR/VUUc/gisYZ2jJD6Oc+sheH
-	 q2HXqgGM79uIw==
-Date: Mon, 16 Mar 2026 11:17:02 -0700
+	b=bAUjuL93dpxhmmlf5mAlbdQ49SBBM6UIOZR2h0goX7yS91Tr/5sXklJrLA/pKEQcl
+	 jVJimEaOkEDeEtW53/WYtud3oLCCPGOro0OsO55eGx4NiTmrPlN+/Fv9vhLj7Qn3TX
+	 d6s6g9j2nzJJ/ISaUOyedJDoTgZrCnbWYPZL9OjAw49tZ+T5UyRSP0G3dSTSzi0xcq
+	 p+LB/pehxCm/a2zsr3+V/iDV/ab2+EzQ303L5lXNrCM95i8EDiMTgjYwozC+G1/mhB
+	 JFdKwJX0I2qpU3sWYwZrWW5NsxPoVq3HGwhcXnwnH4+uS47Lex4HZAstOzXJo1H/lp
+	 Qqs4vRCbPTyIg==
+Date: Mon, 16 Mar 2026 11:40:38 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Zecheng Li <zli94@ncsu.edu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, xliuprof@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] perf tools: Improvements to data type profiler
-Message-ID: <abhJHjMHbHILpbmN@google.com>
-References: <20260309175546.916039-1-zli94@ncsu.edu>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>,
+	James Clark <james.clark@linaro.org>,
+	Blake Jones <blakejones@google.com>,
+	Yuzhuo Jing <yuzhuo@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools build: Link crypto lib for libopenssl feature
+Message-ID: <abhOpjDG6hr-Sfe2@google.com>
+References: <20260307140553.2021539-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,108 +47,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260309175546.916039-1-zli94@ncsu.edu>
+In-Reply-To: <20260307140553.2021539-1-leo.yan@arm.com>
 
-Hi Zecheng,
+Hi Leo,
 
-Thanks for working on this continuously!
+On Sat, Mar 07, 2026 at 02:05:53PM +0000, Leo Yan wrote:
+> The perf static build reports that the BPF skeleton is disabled due to
+> the missing libopenssl feature.
+> 
+> Linking the crypto library fixes the static build failure.
 
-On Mon, Mar 09, 2026 at 01:55:13PM -0400, Zecheng Li wrote:
-> This patch series improves the coverage and correctness of data type
-> annotations in the perf tools.
-> 
-> Here's a breakdown of the patches:
-> 
-> Patches 1-4 improve variable type matching:
-> - Add die_get_pointer_type() to properly handle typedef'd pointer types
-> - Preserve typedefs in match_var_offset for consistent type handling
-> - Skip redundant check_variable for die_find_variable_by_reg and
->   die_find_variable_by_addr since match_var_offset already performs
->   sufficient checking
-> - Improve type comparison when variables are found in different scopes
-> 
-> Patch 5 handles array types in die_get_member_type, allowing proper
-> resolution of struct members that are arrays.
-> 
-> Patches 6-7 improve global variable handling:
-> - Allow collecting global variables without symbol names (DWARF provides
->   the address directly via DW_OP_addr)
-> - Handle global variable access when a register holds a const value
->   with negative offset
-> 
-> Patches 8-9 improve caller-saved register handling:
-> - Add invalidate_reg_state() helper for consistent register invalidation
-> - Always invalidate caller-saved registers for call instructions per ABI
->   requirements, even when the call target is unknown
-> 
-> Patches 10-11 use DWARF location ranges to improve type tracking:
-> - Track DWARF location lifetime to preserve register state across calls
->   when the debug info indicates the value is still valid
-> - Collect all variable location entries instead of just the first one
-> 
-> Tested with the Linux kernel vmlinux with sampled functions and five
-> programs from binutils (as, ld, nm, objdump, readelf) with all
-> functions. Coverage rate includes all memory access instructions,
-> excluding stack memory accesses.
-> 
-> `lost` means coverage loss (only including annotated -> none);
-> `chg` means type name change. Net coverage gain is new_rate - prev_rate.
-> 
->          -------- vmlinux --------   ------- binutils -------
->   Patch  rate     lost     chg       rate     lost     chg
->   ----------------------------------------------------------------
->   base   88.87%   -        -         72.55%   -        -
->   1      88.87%   0%       0%        74.22%   0%       .03%
->   2      88.88%   0%       .05%      74.32%   0%       0%
->   3      88.90%   0%       .69%      74.38%   0%       .31%
->   4      88.90%   0%       .83%      74.38%   0%       .17%
->   5      89.11%   .01%     .08%      74.41%   0%       .01%
->   6      89.12%   0%       .05%      75.33%   0%       1.62%
->   7      89.18%   0%       0%        75.33%   0%       0%
->   8      89.18%   0%       0%        75.30%   .02%     0%
->   9      89.09%   .09%     0%        75.24%   .05%     0%
->   10     89.05%   .08%     .09%      75.53%   .03%     .03%
->   11     89.97%   0%       .10%      76.63%   .26%     .07%
+I'm not sure if it's enough.  My build still doesn't have BPF skeleton
+support even with this change.  It seems to want zlib and zstd as well.
 
-It's interesting that the patch 11 lost some coverage as it merely added
-more variables (well the same variables with different ranges).
-Have you checked the lost cases and what happened there?
+Here's my tools/build/feature/test-libopenssl.make.output.
+
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-dso_dlfcn.o): in function `dlfcn_globallookup':
+(.text+0x18): warning: Using 'dlopen' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-bio_addr.o): in function `BIO_lookup_ex':
+(.text+0xe77): warning: Using 'getaddrinfo' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-bio_sock.o): in function `BIO_gethostbyname':
+(.text+0x85): warning: Using 'gethostbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_stateful_expand_block':
+(.text+0x83): undefined reference to `inflate'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_stateful_compress_block':
+(.text+0x157): undefined reference to `deflate'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_stateful_finish':
+(.text+0x1bd): undefined reference to `inflateEnd'
+/usr/bin/ld: (.text+0x1c6): undefined reference to `deflateEnd'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_stateful_init':
+(.text+0x293): undefined reference to `inflateInit_'
+/usr/bin/ld: (.text+0x308): undefined reference to `deflateInit_'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `bio_zlib_ctrl':
+(.text+0x506): undefined reference to `zError'
+/usr/bin/ld: (.text+0x5f8): undefined reference to `deflate'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `bio_zlib_write':
+(.text+0x8c9): undefined reference to `deflate'
+/usr/bin/ld: (.text+0x946): undefined reference to `zError'
+/usr/bin/ld: (.text+0x9e7): undefined reference to `deflateInit_'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `bio_zlib_read':
+(.text+0xad9): undefined reference to `inflate'
+/usr/bin/ld: (.text+0xb56): undefined reference to `zError'
+/usr/bin/ld: (.text+0xbcb): undefined reference to `inflateInit_'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_oneshot_expand_block':
+(.text+0xc64): undefined reference to `uncompress'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `zlib_oneshot_compress_block':
+(.text+0xce4): undefined reference to `compress'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zlib.o): in function `bio_zlib_free':
+(.text+0xd39): undefined reference to `inflateEnd'
+/usr/bin/ld: (.text+0xd64): undefined reference to `deflateEnd'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_stateful_expand_block':
+(.text+0x9e): undefined reference to `ZSTD_decompressStream'
+/usr/bin/ld: (.text+0xa9): undefined reference to `ZSTD_isError'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_stateful_compress_block':
+(.text+0x178): undefined reference to `ZSTD_compressStream2'
+/usr/bin/ld: (.text+0x180): undefined reference to `ZSTD_isError'
+/usr/bin/ld: (.text+0x1bf): undefined reference to `ZSTD_endStream'
+/usr/bin/ld: (.text+0x1c7): undefined reference to `ZSTD_isError'
+/usr/bin/ld: (.text+0x1ef): undefined reference to `ZSTD_flushStream'
+/usr/bin/ld: (.text+0x1f7): undefined reference to `ZSTD_isError'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_stateful_finish':
+(.text+0x22b): undefined reference to `ZSTD_freeCStream'
+/usr/bin/ld: (.text+0x234): undefined reference to `ZSTD_freeDStream'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_stateful_init':
+(.text+0x2fd): undefined reference to `ZSTD_createCStream_advanced'
+/usr/bin/ld: (.text+0x316): undefined reference to `ZSTD_initCStream'
+/usr/bin/ld: (.text+0x337): undefined reference to `ZSTD_createDStream_advanced'
+/usr/bin/ld: (.text+0x34c): undefined reference to `ZSTD_initDStream'
+/usr/bin/ld: (.text+0x374): undefined reference to `ZSTD_freeCStream'
+/usr/bin/ld: (.text+0x37d): undefined reference to `ZSTD_freeDStream'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `bio_zstd_new':
+(.text+0x42c): undefined reference to `ZSTD_createDStream_advanced'
+/usr/bin/ld: (.text+0x444): undefined reference to `ZSTD_initDStream'
+/usr/bin/ld: (.text+0x449): undefined reference to `ZSTD_DStreamInSize'
+/usr/bin/ld: (.text+0x46e): undefined reference to `ZSTD_createCStream_advanced'
+/usr/bin/ld: (.text+0x488): undefined reference to `ZSTD_initCStream'
+/usr/bin/ld: (.text+0x48d): undefined reference to `ZSTD_CStreamInSize'
+/usr/bin/ld: (.text+0x4f4): undefined reference to `ZSTD_freeDStream'
+/usr/bin/ld: (.text+0x4fd): undefined reference to `ZSTD_freeCStream'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `bio_zstd_ctrl':
+(.text+0x6dc): undefined reference to `ZSTD_getErrorName'
+/usr/bin/ld: (.text+0x78d): undefined reference to `ZSTD_flushStream'
+/usr/bin/ld: (.text+0x798): undefined reference to `ZSTD_isError'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `bio_zstd_write':
+(.text+0x9a2): undefined reference to `ZSTD_compressStream2'
+/usr/bin/ld: (.text+0x9ad): undefined reference to `ZSTD_isError'
+/usr/bin/ld: (.text+0xa24): undefined reference to `ZSTD_getErrorName'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `bio_zstd_read':
+(.text+0xbcd): undefined reference to `ZSTD_decompressStream'
+/usr/bin/ld: (.text+0xbd8): undefined reference to `ZSTD_isError'
+/usr/bin/ld: (.text+0xc14): undefined reference to `ZSTD_getErrorName'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_oneshot_expand_block':
+(.text+0xd87): undefined reference to `ZSTD_decompress'
+/usr/bin/ld: (.text+0xd94): undefined reference to `ZSTD_isError'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `zstd_oneshot_compress_block':
+(.text+0xe0a): undefined reference to `ZSTD_compress'
+/usr/bin/ld: (.text+0xe17): undefined reference to `ZSTD_isError'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-c_zstd.o): in function `bio_zstd_free':
+(.text+0xe77): undefined reference to `ZSTD_freeDStream'
+/usr/bin/ld: (.text+0xe95): undefined reference to `ZSTD_freeCStream'
+collect2: error: ld returned 1 exit status
 
 Thanks,
 Namhyung
 
-> 
->   Total: vmlinux  88.87% -> 89.97% (+1.10%)
->          binutils 72.55% -> 76.63% (+4.08%)
-> 
-> Changes in v2:
-> - Reorder patches 1-3 to avoid temporary regression: pointer_type and
->   typedef patches now come before skip check_variable (Namhyung)
-> - Skip check_variable for both die_find_variable_by_reg and
->   die_find_variable_by_addr paths (Namhyung)
-> - Add dso__kernel() guard for const register global variable access
->   to restrict it to kernel DSOs (Namhyung)
-> 
-> Zecheng Li (11):
->   perf dwarf-aux: Add die_get_pointer_type to get pointer types
->   perf dwarf-aux: Preserve typedefs in match_var_offset
->   perf dwarf-aux: Skip check_variable for variable lookup
->   perf annotate-data: Improve type comparison from different scopes
->   perf dwarf-aux: Handle array types in die_get_member_type
->   perf annotate-data: Collect global variables without name
->   perf annotate-data: Handle global variable access with const register
->   perf annotate-data: Add invalidate_reg_state() helper for x86
->   perf annotate-data: Invalidate caller-saved regs for all calls
->   perf annotate-data: Use DWARF location ranges to preserve reg state
->   perf dwarf-aux: Collect all variable locations for insn tracking
-> 
->  tools/perf/util/annotate-arch/annotate-x86.c |  69 ++++++---
->  tools/perf/util/annotate-data.c              | 119 ++++++++-------
->  tools/perf/util/annotate-data.h              |   3 +
->  tools/perf/util/dwarf-aux.c                  | 145 +++++++++++++------
->  tools/perf/util/dwarf-aux.h                  |   9 +-
->  5 files changed, 230 insertions(+), 115 deletions(-)
-> 
-> -- 
-> 2.53.0
-> 
