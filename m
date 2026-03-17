@@ -1,188 +1,171 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2E82D7DE7
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA593264F3;
+	Tue, 17 Mar 2026 11:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773737781; cv=none; b=NmPjV3UXT7CMpdocR1g82KRO1Io4duoD1YDr6aKaKLQ870mUFGFzSJbrP9rJYAANYv1hAPvSEiJ+p8KauO9xnSuEoPxU77JDt+BSbQqCnBBPuwfEzAiQkOO7pXtJAi7n0QwW7Hk2Anr0CcH5/C9lxKvgh4hVayYDf3h1g9Gtin0=
+	t=1773745254; cv=none; b=WLQxecTCBiXhJCPu8j2TBP+RqWd6WXxKOQmtpuWVlf4SQl2gtZ55g8QxYDmcuehBSy9gbpGC3ueqSzJ4RfPJbW09wY2wbnUuM0NBlDv4GwNVF+FufgQ/jSplvietoy0IYQ9FGGuq/CZUwx6tqIVYITqTmlsfphT05ne55ciKLqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773737781; c=relaxed/simple;
-	bh=IALiEY89hJkDTqyU/yPhFcUhRSDY/BOr6UGRATjs1Tw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=NdDz8wq15Rr+ZgpBX3Kdzbnr7DMB5zLpxg6WFVg3u3qsBNqLsPO3B27Do021DECfXX4pTprZYuEhPm11Xp+tVKXQEWvf8qZwdd41hl8epbijz1Z1Kv4i3ZGeSLCOer1Ps9lsjrT7yPv8hiq5r5rxkyq6q9Fv27CQy+D6FX3SNq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wls9NSFB; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wls9NSFB"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62H7G0rK693890;
-	Tue, 17 Mar 2026 08:56:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6Fz2vc
-	VVnbioilRDd7DhZdEf++mvzXZJLFXf2r/waNI=; b=Wls9NSFBrnp5JFSdDq+4zg
-	Ql0qhXKQzHlqZ0vxUDsZ/hVizfwgofPtbNl9d9GPvBO/peOTFUzNJSYCSZ0MGMST
-	cYv5nbm7qCN8SjoQbv5SurcRlWTXdbd8anxkZy0VH9b6Wd75kcLIfLlvDK9FVDhX
-	WANJFlbrDNPAovRCxgL2cVCfkYSMKP7GVaWouwjyh3gyoRDX7ykTnzrr6JIDZEW4
-	zf6TKVygWBrKml+5LL3ad6VCELdPzZV9U9w7Nj3nGvGxej93Spv8PZlMfqn1B0kp
-	+Qp5dBJJPeMuIfmjfDfrjZyPoNodE89/6XgJM/D8tZ1zGPbYFcnvVnK94M0ojIZg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvyaubarb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 08:56:09 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62H7BYXm015601;
-	Tue, 17 Mar 2026 08:56:08 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cwk0n8b7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 08:56:08 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62H8u5j39175580
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Mar 2026 08:56:06 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D166D58059;
-	Tue, 17 Mar 2026 08:56:05 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A30A658058;
-	Tue, 17 Mar 2026 08:56:01 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.249.251])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 17 Mar 2026 08:56:01 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1773745254; c=relaxed/simple;
+	bh=BR9kW5ZjiDDsV4GsKjKcwmYxCRLsI3jocIzjmmAqAm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OU2xUoGlvqIADhogkkDeA91eV4aawYTmUJ7FR30dQFjzwZnHW/8ieOikrlHEO8J5tb+GhAm5NJW+DSsdVbjDhY4xSark9cBTi+Wj0d/tYm3XyCziQ0UjIMIoIfeveQYj86MeRbQ2mUwcp7CzOpi9PM8txtHkxF3XmdVN1vC7zj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ABDF16F2;
+	Tue, 17 Mar 2026 04:00:45 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 180843F7BD;
+	Tue, 17 Mar 2026 04:00:51 -0700 (PDT)
+Date: Tue, 17 Mar 2026 11:00:49 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 29/30] selftests/nolibc: Append extra cflags
+Message-ID: <20260317110049.GJ8048@e132581.arm.com>
+References: <20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com>
+ <20260311-tools_build_fix_zero_init-v4-29-9e35bdb99cb3@arm.com>
+ <aacd52ed-4ef6-49f1-90a4-0affeea908e6@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH] tools/perf: Fix the check for parameterized field in
- event term
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <20260314083304.75321-1-atrajeev@linux.ibm.com>
-Date: Tue, 17 Mar 2026 14:25:48 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7D255F44-3588-460F-ACFB-6ABAEBA152DC@linux.ibm.com>
-References: <20260314083304.75321-1-atrajeev@linux.ibm.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDA3NiBTYWx0ZWRfX84cphwAzMc1W
- 9n6KCclKOukRKA7FwNWjVsBKXojL/xio6/eviVPsczbHPlTnaxmDly2MJAruCAOlacK0jYySu/V
- 2t4o+7ymYEES7MMzxaXup8/+Nurfib8w80LUsSbF/updIrV/A27ofmyLXVnloyV7Q0yd19CLsS3
- SLJ21TQkdf1qpJBCeUxG5jdKo0axH8nfGqVM0Kftv8tf4samNRrvA6WcguC2X2UiqSYhJU1SgqF
- OU8KQu8jfb0E2/tziy01t2iGOuBNZ24twB0p3QDNE2IqZE9Xsba/NssL1z1NbiHX7vX1RzjAXaR
- np5C5WdXQDXT9BNAgB6Am0iMcQqfmAxpax64LsOk+JhsaHc9AfDi5Fe954cM7S7HUs1xgbC1lPI
- T4N1h1bl7oeAUKfFDS/6f2xFCrCBtBOuKnoGH4LWvFFr3euv+uCZVAX8H1tuLuqoyF7LVm9C+p/
- t7j+QYVnaAMU4hwiN4w==
-X-Authority-Analysis: v=2.4 cv=GIQF0+NK c=1 sm=1 tr=0 ts=69b91729 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22
- a=VnNF1IyMAAAA:8 a=ASrTm7EkTYZRIX76TdgA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: S5lniLY7V9VraQks7iNPMWQemupHBGq5
-X-Proofpoint-GUID: AchMjJ9DckEPfrOiPF-w2WZDd1Cw3_qy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_01,2026-03-16_06,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603170076
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aacd52ed-4ef6-49f1-90a4-0affeea908e6@t-8ch.de>
 
+On Mon, Mar 16, 2026 at 11:27:41PM +0100, Thomas Weißschuh wrote:
+> On 2026-03-11 08:29:54+0000, Leo Yan wrote:
+> > Include tools/scripts/Makefile.include, which may provide additional
+> > flags in EXTRA_CFLAGS, and append to CFLAGS.
+> > 
+> > Since Makefile.include already defines cc-option, remove the redundant
+> > definition and include.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >  tools/testing/selftests/nolibc/Makefile | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
+> > index 0370489d938b540721a4fb814ebb68c463760e73..d1a9c1d5988bdc6a8778ef418aaa4c5ac1d26a10 100644
+> > --- a/tools/testing/selftests/nolibc/Makefile
+> > +++ b/tools/testing/selftests/nolibc/Makefile
+> > @@ -3,15 +3,13 @@
+> >  TEST_GEN_PROGS := nolibc-test libc-test
+> >  
+> >  include ../lib.mk
+> > -include $(top_srcdir)/scripts/Makefile.compiler
+> > -
+> > -cc-option = $(call __cc-option, $(CC),,$(1),$(2))
+> > +include $(top_srcdir)/tools/scripts/Makefile.include
+> >  
+> >  include Makefile.include
+> >  
+> >  $(OUTPUT)/nolibc-test: CFLAGS = -nostdlib -nostdinc -static \
+> >  	 -isystem $(top_srcdir)/tools/include/nolibc -isystem $(top_srcdir)/usr/include \
+> > -	 $(CFLAGS_NOLIBC_TEST)
+> > +	 $(CFLAGS_NOLIBC_TEST) $(EXTRA_CFLAGS)
+> >  $(OUTPUT)/nolibc-test: LDLIBS = $(if $(LLVM),,-lgcc)
+> >  $(OUTPUT)/nolibc-test: nolibc-test.c nolibc-test-linkage.c | headers
+> 
+> The rule for "libc-test", which uses the standard $(LINK.c) to invoke
+> the compiler, does not respect $(EXTRA_CFLAGS) automatically.
+> Is this intentional?
 
+Thanks for the review. Is the change below OK with you? I can update it
+before sending a new series.
 
-> On 14 Mar 2026, at 2:03=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->=20
-> The format_alias() function in util/pmu.c has a check to
-> detect whether the event has parameterized field ( =3D? ).
-> The string alias->terms contains the event and if the event
-> has user configurable parameter, there will be presence of
-> sub string "=3D?" in the alias->terms.
->=20
-> Snippet of code:
->=20
->  /* Paramemterized events have the parameters shown. */
->        if (strstr(alias->terms, "=3D?")) {
->                /* No parameters. */
->                snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
-pmu->name, alias->name);
->=20
-> if "strstr" contains the substring, it returns a pointer
-> and hence enters the above check which is not the expected
-> check. And hence "perf list" doesn't have the parameterized
-> fields in the result.
->=20
-> Fix this check to use:
->=20
-> if (!strstr(alias->terms, "=3D?")) {
->=20
-> With this change, perf list shows the events correctly with
-> the strings showing parameters.
->=20
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> ---
-> tools/perf/util/pmu.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 23337d2fa281..0b8d58543f17 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, =
-const struct perf_pmu *pmu,
->   skip_duplicate_pmus);
->=20
-> /* Paramemterized events have the parameters shown. */
-> - if (strstr(alias->terms, "=3D?")) {
-> + if (!strstr(alias->terms, "=3D?")) {
-> /* No parameters. */
-> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
-alias->name);
-> return buf;
-> --=20
-> 2.47.3
->=20
+diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
+index 0370489d938b..7b65e6f9840b 100644
+--- a/tools/testing/selftests/nolibc/Makefile
++++ b/tools/testing/selftests/nolibc/Makefile
+@@ -3,18 +3,17 @@
+ TEST_GEN_PROGS := nolibc-test libc-test
 
-Tested this patch, and its working as expected.
+ include ../lib.mk
+-include $(top_srcdir)/scripts/Makefile.compiler
+-
+-cc-option = $(call __cc-option, $(CC),,$(1),$(2))
++include $(top_srcdir)/tools/scripts/Makefile.include
 
-Before Patch:
+ include Makefile.include
 
-./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
-  hv_24x7/CPM_EXT_INT_OS/                            [Kernel PMU event]
+ $(OUTPUT)/nolibc-test: CFLAGS = -nostdlib -nostdinc -static \
+         -isystem $(top_srcdir)/tools/include/nolibc -isystem $(top_srcdir)/usr/include \
+-        $(CFLAGS_NOLIBC_TEST)
++        $(CFLAGS_NOLIBC_TEST) $(EXTRA_CFLAGS)
+ $(OUTPUT)/nolibc-test: LDLIBS = $(if $(LLVM),,-lgcc)
+ $(OUTPUT)/nolibc-test: nolibc-test.c nolibc-test-linkage.c | headers
 
-After Patch:
++$(OUTPUT)/libc-test: CFLAGS += $(EXTRA_CFLAGS)
+ $(OUTPUT)/libc-test: nolibc-test.c nolibc-test-linkage.c
+        $(call msg,CC,,$@)
+        $(Q)$(LINK.c) $^ -o $@
 
-./perf list hv_24x7 | grep -i CPM_EXT_INT_OS=20
- hv_24x7/CPM_EXT_INT_OS,domain=3D?,core=3D?/ [Kernel PMU event]
+> It also affects all other users of lib.mk which
+> don't have any custom cflags handling.
 
+Many projects include lib.mk, but most do not include
+tools/scripts/Makefile.include.  Without it, the appended EXTRA_CFLAGS
+cannot be inherited.  This is why I did not touch those projects.
 
-./perf stat -e hv_24x7/PM_PAU_CYC,chip=3D0/
+Appending EXTRA_CFLAGS in lib.mk may not be a good idea ? as such a
+global change could break some builds.
 
-
- Performance counter stats for 'system wide':
-
-        2018866563      hv_24x7/PM_PAU_CYC,chip=3D0/                     =
-                      =20
-
-     229.938231314 seconds time elapsed
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-Regards,
-Venkat.
-
-
+Thanks,
+Leo
