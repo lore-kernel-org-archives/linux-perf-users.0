@@ -1,96 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E3B20ED
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 19:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48D7334688;
+	Tue, 17 Mar 2026 19:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773774500; cv=none; b=mJlg2uimi0iDFunNfAHkjplZEVH8WGV8FSx1qc88etaabAzPN8eSIOuWBaAco0dW/pgTt63GUA/vrXyzI+BwPjH4VLBrmFvj2XuNWmAqPY7UA1mwpEHIE+dZu86nPcbUyoujEau4wDxfB9etKB+3HgEoqBn4qYNNwqT40j3AXlw=
+	t=1773775484; cv=none; b=cGy9kT0z1fQAXyHo5/dYIlWEzy1x0ew7uQo/8FlVMN+SXnuvVZlwy0dOcvMbZQNP+Ntbe4sdIglLrQ8WNg5QDOdTvdTMeHs7CrUh/g8SGDMVXWdQ+e/ZRxGs0Fw+ZyhxcYt3uKj0FyKJcFnp95116LgXL8IZer/L5xkBbf39/9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773774500; c=relaxed/simple;
-	bh=MQuZ8zNAhnuVz5iAfvFkte71HHNzFPcNkkRHPFWG8SQ=;
+	s=arc-20240116; t=1773775484; c=relaxed/simple;
+	bh=OrWX52PPbNUvRTPuD1SlUTOd1+2mrpIom7I+UmRKyqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jczBvQOCXOgNkiPpcrqtBxUcqWt6kBDII+AKPBu5zsT+3SSlvjDWYbqGECg0y5M7OiYWLAE6owZc+xvaYrpbqOTyM7ChzxoaySYnRfAahvnW5EslHNgADoqts3PpHZ2aX06/krlaGiyZL2x57ngykePto/kIrIVcD5kGPlicvNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 118031477;
-	Tue, 17 Mar 2026 12:08:12 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDC793F778;
-	Tue, 17 Mar 2026 12:08:17 -0700 (PDT)
-Date: Tue, 17 Mar 2026 19:08:15 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yo5+H3t5S64gN5WXiOt7R9gK2hMherg5gkfn4s3a0u+lFKpi0UOi5WzDiGkDFqIMnHftU02Ikti1pUaN57rFkT9RCTxoce/TxSWRWNROw80forU63QQQaH2HhM08VS35r456qAhWrAl3iTYDazmkHYbH/79w3l8xs+mweqtC6C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOS6ORhd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOS6ORhd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F253DC4CEF7;
+	Tue, 17 Mar 2026 19:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773775484;
+	bh=OrWX52PPbNUvRTPuD1SlUTOd1+2mrpIom7I+UmRKyqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MOS6ORhdl95Eu+xYUFBUBu5rVlLaevMqvMTem/PD1LWzkbGQlr/WiTWx/fxwkNH/h
+	 ywMoSW6Oh3CrT1GPldlDdqRSC2OrfVrj462Z5+Q8X37LQHZ1z0+wtI4SkFBBa4S00x
+	 raJhi/C4oXo9gY0vT2qd4KYyYAQp1Ng0+mEQMAV111PaCAOVBkn9ZWMrfHKZ4C9fPq
+	 gh3smjMUbmwaziQ9AeSd17ZYr8LZJ7MzfFysvDHraDuI+1SBdI7amjE9h2+Kt2Od85
+	 jKtZr4NHgRS2hwPERyJ1TsfuGRJinMTKPZyqUbJoC2BBrxNyWiqB6abkcK5v06p0yP
+	 Dmcg/gTMsUBXQ==
+Date: Tue, 17 Mar 2026 16:24:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] tools build: Link static libs for libopenssl feature
-Message-ID: <20260317190815.GL8048@e132581.arm.com>
-References: <20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com>
- <CAP-5=fXopOUKZ=Hf1s5CZrb0CmH+W9XQa38JW9Bv+GXdYrcHnQ@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tools headers: Skip arm64 cputype.h check
+Message-ID: <abmqeZEogMN9a3TI@x1>
+References: <20260316-tools_remove_sync_cputype-h-v2-1-07c9cdb7b2f7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXopOUKZ=Hf1s5CZrb0CmH+W9XQa38JW9Bv+GXdYrcHnQ@mail.gmail.com>
+In-Reply-To: <20260316-tools_remove_sync_cputype-h-v2-1-07c9cdb7b2f7@arm.com>
 
-On Tue, Mar 17, 2026 at 08:52:23AM -0700, Ian Rogers wrote:
-> On Tue, Mar 17, 2026 at 1:50 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > The perf static build reports that the BPF skeleton is disabled due to
-> > the missing libopenssl feature.
-> >
-> > Explicitly linking the libraries fixes the static build failure.
-> >
-> > Fixes: 7678523109d1 ("tools/build: Add a feature test for libopenssl")
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >  tools/build/feature/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> > index 1fbcb3ce74d2173072748a417fc63bd9a5b13888..18a9abf6bfc43e86ecf58b96e0374a0e3c613bb0 100644
-> > --- a/tools/build/feature/Makefile
-> > +++ b/tools/build/feature/Makefile
-> > @@ -384,7 +384,7 @@ $(OUTPUT)test-libpfm4.bin:
-> >         $(BUILD) -lpfm
-> >
-> >  $(OUTPUT)test-libopenssl.bin:
-> > -       $(BUILD) -lssl
-> > +       $(BUILD) -lssl -lcrypto -lz -lzstd
+On Mon, Mar 16, 2026 at 11:11:57AM +0000, Leo Yan wrote:
+> Some definitions in the arm64 kernel's cputype.h are kernel specific and
+> cause perf build failures when the header is synced into tools.
 > 
-> I wonder it would be better to do something like test-gtk2.bin so that
-> if openssl wasn't compiled with libz and libzstd things don't fail:
-> ```
-> $(OUTPUT)test-gtk2.bin:
->        $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0
-> 2>/dev/null) -Wno-deprecated-declarations
-> ```
-> so:
-> ```
-> $(OUTPUT)test-openssl.bin:
->        $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
-> ```
-> Since "-lssl" is a dependency of BUILD_ALL, that will probably also
-> need updating.
+> Stop checking arm64's cputype.h.  In the future, the header in tools
+> will be updated manually when teaching tools about new CPUs.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Thanks for suggestion, I have sent out v3.
+Thanks, applied yesterday to perf-tools, for v7.0.
 
-Just record for another issue:
-
-I was not able to build test-all.bin successfully with static linking
-until explicitly added -lexpat.  Seems some Python extension libraries
-depends on libexpat, but python3-config doesn't include this dependency.
-
-This would be a wider issue - as this is not limited to feature build,
-we also need to fix perf's build as well?   I might look into details
-when have free time.
-
-Thanks,
-Leo
+- Arnaldo
+> ---
+> Changes in v2:
+> - Explicitly states that update cputype.h for new CPUs (Mark).
+> - Link to v1: https://lore.kernel.org/r/20260316-tools_remove_sync_cputype-h-v1-1-9f0dc5931f09@arm.com
