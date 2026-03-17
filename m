@@ -1,301 +1,151 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234483E4C85
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 15:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676D325A357
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 15:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773761557; cv=pass; b=TlIwbthsN7+uKjUpLB2TqB4fMfHfT6gsLKD7QToeDJFxtyZGBFK7c6359q5gNx/Rvq6lx913ci3ffOsw+znxudVrzJ2V3uMgai5+lOFU5SQO8cuDE52NX28orfgtSa/ovNGm2y7eq779gU0rpyHkDNE/vogiHC26iaJ0enLHmlQ=
+	t=1773762756; cv=pass; b=uKZQsd/JRUM85wEnhw6UbDYjkQZpJJdGvUUindW5gTgvfCfrH5+0uGT1Rtj4Nhk3IuH59YL9SqqIAWqxvcA9qlpdnioILRq1N4gwTHadzR3c9/Tt+YhfJ+oMUBlMCQzlRKcOLPwmAOxwCk5km2hzKp0ohDwTnPIAaqiZApNydFA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773761557; c=relaxed/simple;
-	bh=ApEZkM0jYqujC4X9S2HoQoK9lEJKjGaSsk15Iej8Ogw=;
+	s=arc-20240116; t=1773762756; c=relaxed/simple;
+	bh=jE6FqVyFcqvuMSIvjeoAKYl8wLaKhQ8ouJqR8s7EErc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uzr2agufDKUq0ZwLxIqpJI9oxaBQwOugUF+ZlfoW8/rEL1LOQ/HVVg0GM4JK4Kh6alLpa8jY2sddWoE0V8CO0uiRBBj00RQH9+8Ia1m2Jjls15m2kTImu4O2LR1/+sPoGowoOJjWhr//iMXAzFDUUbAJ+KZ7tnLkOkAJ543au/U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J1kmbtSl; arc=pass smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=oWdQm/rx08vJDvtQ4PAFI8qVaNtvuBHsAUKoI8dkxmNxTIrFWHeZtLzvNYC+Zuwd2n3+bFtBjZxLhaV13dnG/cbJuZIZHtPbS2DtyoxbBujncaLPOvIyhq9jzJwj+wnZR9wzVL9MUKlLu+4PgHkufrhhfFyTR/2uJgk/m8+Orlc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g+gJDQ93; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1kmbtSl"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b052562254so100825ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:32:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773761555; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+gJDQ93"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2aeab6ff148so92805ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:52:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773762755; cv=none;
         d=google.com; s=arc-20240605;
-        b=P3c6XABHgY3vPkvnoXaxeGs+ZBuHLJUf8h9lnT1eo3qRGuZ3eocK8JfKI1jw70XZzC
-         nDEKdAZlQkUPjUyaaMEMUsL+YPxc3WmsB+afb7tys4VxXwfU4rNy+TnaR9U3dUmhIGNC
-         0b+t0JhYh5tU5rRmgbwqSJ7BNkpp47/H7Tr420mvbR8p55fbb9WU4DvRafGlQ7giPUAO
-         kjKZq3Fbr5bUP/haxKzafK8D4kcR8HnCDT+morcW+kh5liAedQattbpStX7opjQ0Lwkm
-         mU3O10bCPaabpXEDo5otpdmpPkHwwYmdZN2+YOelr/cTW2ZHD2lm4AOKYDDhdUxedImR
-         75EQ==
+        b=k2tMDGnQ76K+08GGCeWknMtuyDWElKUuT2AlVAnoCZAkoEgP7CnvnTqGkOAOPuVcTs
+         sfg1iAt+3MzZRHXS7mtBsArmu7MIebYTkA6VoOtGZ95dXcic9a9rPzb1vfbLciOf6+kO
+         FEeitC8+7D3FnGaQ2o6MPN2bCJoW5xu/IjM0KMS09yBLdeGjoSgHzyY75sEQ2t4drWG6
+         XcMM0i+v2VWazrnjXOdMSV1Q6xJXBsGL2kCnDOTYSSqO9qIkNlyBdaV+bAqY3jrmnMZi
+         mGFa8sKUPKqZe+4zj2IwpiyJfvwS8qO7Tt7AK3HuMDzZxJAuEdBmXyxuk8VCY4idTh4l
+         xgdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
-        fh=hxqzQXo4ZcrYXTVx0rXq8QYuP8tzifoG3EoZzkSrL70=;
-        b=iCcLkRXkX696hRREOW/jhJFGdBcDuVny7wMgIRRMDLEHGi6q9eCAtMdrwGc81FsKY+
-         iB8sJEMl5oSGFhqYwXIZgN/MUtGAr7rJTz55DxPTYjjcr/tOAWneJ9NOgIYvQjNHo6ug
-         XlqXKuOmXOaSXNWN1xmudMwCD42aVMUSxHjrUma+GKQN7A+rrPi/o1Jbwwomzbwlu8C0
-         w3ghmzLQK30gKlV374+L8609AEHsuuU1+nX2YvsZJrOGZ9TyPSZ66jhcVjjeh4k6Mx9L
-         ZQuCukca1i48nC7bB/ySTxWy2flCBTaiUG1Mer+S+A7jEDBo+/FyKsGskT9Pb0LDVGiC
-         V0Bg==;
+        bh=78NN58kMKAj0P9I0QnI1xQxgwS8ArXygA2+hFYnQ/u8=;
+        fh=AV0Mll7kZWlrx8aC87xw8MUVFR35o+yT9iQIC+UGtLU=;
+        b=OV1X+UMAmYbZQ/WT2JeYPzTRqSmMga9Gd7Kzux2/qro9eYXYZvv7O8v2NXlPIqau79
+         C2/hnpeA+v3bTBK0qpbUSt9J0nf6o39KLstSKi9Ub5tCIyOOJnM5cetFQE4S22smttHA
+         8OGgh1ZnRbE/30lX9AYp3Yp46BrgJtTp0snmuNwhg0zRB/m8Gp9rVdzgQJlrelaxY3LD
+         poiTFmmMOP3y/479sJ4orB9LfaJ/yPsCk+LBPE9kkrIfw3YcD6G7SQsED7O7tFUWs8/p
+         9FhPB6gv6GuSSLDXx+9mYnZ6WJBEblDMxhMAvIOdCLO9JXb1tP33969VuTlHHuTL3LDZ
+         heyA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773761555; x=1774366355; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773762755; x=1774367555; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
-        b=J1kmbtSlA9gr4SX9xWNgAorkqiPgNF01ANyakTlWoXO+b+t9U5itXPwzBr+2dqu6Zv
-         EUmFsoLCcgx0OtiNUAA1+MioFPpBSESqY8P3qtY6GDpkxviHhJbf3l1YurFDo3t5U9h7
-         eO6pdYUtlB0pTTbLygak0LF1k86mDYoQt9DeEMh+iPMiDXvyApJbAxxMwo4VvtmghQWA
-         ShQxfgNLLev+XycVqNPR7RrMQtgh/0TU5PH1lI4/MJFGQQuk8cWnxHSlM+FDVUkmhEx9
-         aFpZtpFp5ywxuZDuuC4oTThFkbTvYUsDQQsGrImIbwo3mKWELSPx86uv6YoyQYPCkzIa
-         OkPQ==
+        bh=78NN58kMKAj0P9I0QnI1xQxgwS8ArXygA2+hFYnQ/u8=;
+        b=g+gJDQ93gGMAFllmTG8D9hTxkC7mvPiSr8TUUZkn4Fq3vtls4k5qP3/FvMCVQfVe6s
+         S12BVqIpku3VNyGfJmE4Rav1e7tTx+sdvQiwvysxXuXVNHGmC6AVLbNIzoe/YdiI958i
+         MAI5wA5SF8LU9nv9T8dLCdLARUI8vPsiKtMrH6d0oQnixVqw7JBo4MkxDXVxDrxL+LO+
+         TLLXB6QeoE2xjwSZEVnYG/0ASziXVAwa/XMjLyHZvh6+Aji5AVxsa76itbKKMB39hWa/
+         +dw0tOBI0gXNgEnKGXGcvZvUgF/HlPPlMPHOFbNMnWpKFVCiwThNEiVdc+sldcO9rsm+
+         B8xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773761555; x=1774366355;
+        d=1e100.net; s=20251104; t=1773762755; x=1774367555;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
-        b=UjfC0x00yE1sj3XJfUIYIpQ92rJ9K5YgQh+7gBHzzGlursXHvHvjc5442jMMNOgBfy
-         BQ6faBOYC3sJfMXrThD5137WMPApMXxLOe2mSK4SSOgt/HtvE7Zl2gH5bn7ecMX8p+/Q
-         HMpKDHGmqCToT48JZgMk+ZQ187Q4gHlNf/gH81C5iEXYo06mrMsSnzBLwz81CP01jsjI
-         +MJTFUm7UGc1WlDJJDteMfO3NPaBrNm9DfUgUjZ8gWSuO7ndKCAj81CvUoId2RXLJM9N
-         3cfqrDZkKGI//SzuGHEyZjOlWaV97ilQaH53UTOOfgvRJM/114E3WGDNL6L6hdGIAwig
-         bVMg==
-X-Forwarded-Encrypted: i=1; AJvYcCURPlnmcT6bnkTZrCak0Biap7+qmg7zXWRBq6rFtYlX3OhoO5j250DRjtRHZvLjdXq8yMTMEU+e/+5O0TZHUlgg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNjp1JIEmLLt7z/UKsR9KsY6d6ZMvic+HuO2noX6I+Y8kR9ylX
-	gIlz1B9hJYr3k7Sq/dbbDQw5Dyot+ePfUrwOdTtHO0w6OlXB/foVqfjQ9XYEBRvFPsPLRhChiPu
-	X+4eJNTzjTAlC8bBxLF4g8MaOWLlBERHHSyczDhog
-X-Gm-Gg: ATEYQzxUlBozPrp3Kd+4qJWu6yw+QenAJaXx008v9q7RPDJH5G2ms1wsRXtM8s5I195
-	LYiCp2PHIiPJhuXqmmHxwifCwCmfWsqdhzeGO5zGuBy3MQZUoAXvWx2hihnrTRhYM67AAV1Ysh4
-	enuNvhDzpbLO+n1An1GHuAtf9ixp5AXAYIrZ6tJmP/BvkSom3oaZ8DyN4OUqNF8hMGOvWKGBQPh
-	YtnQjH/S1fFuYA9/NaNq0bOJHXF+1FGiUjuzWaYu0o6uGUXntSc6h4T/th8MaZ7tR618XLEsq0Y
-	w8BRf/Da
-X-Received: by 2002:a17:903:2284:b0:2ae:c566:bd99 with SMTP id
- d9443c01a7336-2b064050a74mr3541605ad.22.1773761554698; Tue, 17 Mar 2026
- 08:32:34 -0700 (PDT)
+        bh=78NN58kMKAj0P9I0QnI1xQxgwS8ArXygA2+hFYnQ/u8=;
+        b=tMrdzsW6/sw1DhgK7V1koHGurOG/Vey1aIWh7QbuKQw4cOkt/DppG9imDotxag5EN5
+         sqBYpkqOtjL/XFPiqdLNnIeVCbnPv8qJIfphbwexmkpUkdHRxP3eVLIJk4r7yExb/1ME
+         DAnwp/DtG7gPd8p61xJ0GCHpBeNHzh6UXjE36MhAMs7rkY/4Uigz5ZiLlz0yxULrhLB4
+         9iDvs+zZ2Rtf4fkv1SIMoRgPe+TcpGSwG+eBwK7/Q1hKKBa3Wm1fhYteu+Orxlt2azb8
+         cY0xplxQEDyvxjrMaWs4PNT2VkXmJjcMdeQ6L6U+h7heSLHCv3iT5I+INCmrR04CPR80
+         9Ogg==
+X-Forwarded-Encrypted: i=1; AJvYcCURNwSHbgJut/rYE9G9KakG5DywMJtSWbbj2VR7oy69pYMss3LSfXUazzxsXcfEc9d1Eqey2qNiuK0EDMLQ8aV1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEIGYnrZnQ69HLjdcISJde4sreoO/DqndyueUSEiDuhrLtzOS9
+	zi5lEJH85knJipREygrRxeH8H2UfWkHq7HVkW7Tkhf1djDniNxO/tPQmfRbkekC1XpmWGsA++eN
+	MokeXTkyp5FAqRJ1IYQMOumAXgWmgKc1nBzG47bVx
+X-Gm-Gg: ATEYQzwVLv61vojZUxKULxfVO2SpLptVLK/UxSnYT6krOQAgTuG1YAN8w95eXKWnEMj
+	+gEebvboZMd0rF8APzTJNi7uquEd9F0+IIRLqo9rtDsEhepdBsWagyJ8DPpNjGNHTmN48aurKRU
+	Dtwasg/MiNzEhVJQ16q8IB0uw1u1eiuQWd/BMlz2A6mphan4tdCQ+Qdrv9C4UV4MnVOYgZzYVZ6
+	iid/urj23LbXfAu3u2cIX/+PQw07KaecrYgmyzhIQzIFRrFKmYvandhL38cM/mZ3Svju24ettkr
+	F1BPv4X/iAziTlqeR/0=
+X-Received: by 2002:a17:903:b8e:b0:2ae:5d57:c94f with SMTP id
+ d9443c01a7336-2b06402f708mr3378095ad.16.1773762754144; Tue, 17 Mar 2026
+ 08:52:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260317110641.39975-1-tmricht@linux.ibm.com>
-In-Reply-To: <20260317110641.39975-1-tmricht@linux.ibm.com>
+References: <20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com>
+In-Reply-To: <20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Mar 2026 08:32:23 -0700
-X-Gm-Features: AaiRm51sDcxb0oBkf_9EcnaMRntY3oFxYJD4ORK821DJdA0cyvTGiNKYUS_CPhs
-Message-ID: <CAP-5=fWL=ium-_+aXe1TfTADuThv1T43hh2RWb+MV2pyZSf8tg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf record: Add support for arch_sdt_arg_parse_op()
- on s390
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	dapeng1.mi@linux.intel.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+Date: Tue, 17 Mar 2026 08:52:23 -0700
+X-Gm-Features: AaiRm53UVAFZ96XCYdDHpKloysLEvHYi68DkAEV2Y2uy66DKKfycwPKF0D-Gth8
+Message-ID: <CAP-5=fXopOUKZ=Hf1s5CZrb0CmH+W9XQa38JW9Bv+GXdYrcHnQ@mail.gmail.com>
+Subject: Re: [PATCH v2] tools build: Link static libs for libopenssl feature
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 17, 2026 at 4:06=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Tue, Mar 17, 2026 at 1:50=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_=
-parse_op() function")
-> removes arch_sdt_arg_parse_op() functions and s390 support is lost.
-> The following warning is printed:
-
-Apologies again for this breakage.
-
->   Unknown ELF machine 22, standard arguments parse will be skipped.
+> The perf static build reports that the BPF skeleton is disabled due to
+> the missing libopenssl feature.
 >
-> ELF machine 22 is the EM_S390 host. This happens with command
->   # ./perf record -v -- stress-ng -t 1s --matrix 0
-> on a z/VM system when the event is not specified.
+> Explicitly linking the libraries fixes the static build failure.
 >
-> Add s390 specific __perf_sdt_arg_parse_op_s390() function to support
-> -architecture calls to arch_sdt_arg_parse_op() for s390.
-> The warning disappears.
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Tested-by: Jan Polensky <japo@linux.ibm.com>
+> Fixes: 7678523109d1 ("tools/build: Add a feature test for libopenssl")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->  .../perf/util/perf-regs-arch/perf_regs_s390.c | 89 +++++++++++++++++++
->  tools/perf/util/perf_regs.c                   |  3 +
->  tools/perf/util/perf_regs.h                   |  1 +
->  3 files changed, 93 insertions(+)
+>  tools/build/feature/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_s390.c b/tools/perf=
-/util/perf-regs-arch/perf_regs_s390.c
-> index c61df24edf0f..2aa70eb23311 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_s390.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
-> @@ -1,7 +1,13 @@
->  // SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 1fbcb3ce74d2173072748a417fc63bd9a5b13888..18a9abf6bfc43e86ecf58b96e=
+0374a0e3c613bb0 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -384,7 +384,7 @@ $(OUTPUT)test-libpfm4.bin:
+>         $(BUILD) -lpfm
 >
-> +#include <errno.h>
-> +#include <regex.h>
->  #include "../perf_regs.h"
->  #include "../../arch/s390/include/perf_regs.h"
-> +#include "debug.h"
-> +
-> +#include <linux/zalloc.h>
-> +#include <linux/kernel.h>
->
->  uint64_t __perf_reg_mask_s390(bool intr __maybe_unused)
->  {
-> @@ -95,3 +101,86 @@ uint64_t __perf_reg_sp_s390(void)
->  {
->         return PERF_REG_S390_R15;
->  }
-> +
-> +/* %rXX */
-> +#define SDT_OP_REGEX1  "^%(r([0-9]|1[0-5]))$"
-> +/* -###(%rXX) */
-> +#define SDT_OP_REGEX2  "^([+-]?[0-9]+)\\(%(r[0-9]|r1[0-5])\\)$"
-> +static regex_t sdt_op_regex1, sdt_op_regex2;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +       static int initialized;
-> +       int ret =3D 0;
-> +
-> +       if (initialized)
-> +               return 0;
-> +
-> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> +       if (ret)
-> +               goto error;
-> +       initialized =3D 1;
-> +
-> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> +       if (ret)
-> +               goto free_regex1;
+>  $(OUTPUT)test-libopenssl.bin:
+> -       $(BUILD) -lssl
+> +       $(BUILD) -lssl -lcrypto -lz -lzstd
 
-Sashiko's review:
-https://sashiko.dev/#/patchset/20260317110641.39975-1-tmricht%40linux.ibm.c=
-om
-notes that here 'initialized' will still be 1, should it be made 0 again?
-
-It triggers an ENOMEM, so I doubt this will be very useful, but it may
-make the code read better.
-
-> +       initialized =3D 2;
-> +
-> +       return 0;
-> +
-> +free_regex1:
-> +       regfree(&sdt_op_regex1);
-> +error:
-> +       pr_debug4("Regex compilation error, initialized %d\n", initialize=
-d);
-> +       return ret;
-> +}
-> +
-> +/*
-> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG)=
-.
-> + * Possible variants of OP are:
-> + *     Format          Example
-> + *     -------------------------
-> + *     NUM(%rREG)      48(%r1)
-> + *     -NUM(%rREG)     -48(%r1)
-> + *     %rREG           %r1
-> + */
-> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op)
-> +{
-> +       int ret, new_len;
-> +       regmatch_t rm[6];
-> +       unsigned long i;
-> +
-> +       *new_op =3D NULL;
-> +       ret =3D sdt_init_op_regex();
-> +       if (ret)
-> +               return -EINVAL;
-> +
-> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> +               /* Extract %rX */
-> +               new_len =3D 2;    /* % NULL */
-> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%.*s",
-> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
-].rm_so);
-
-Sashiko notes this is probably more of an issue:
-
-The allocation size accounts for a % character, but the scnprintf format
-string "%.*s" seems to omit it.
-
-Will this output r1 instead of %r1?
-
-> +       } else if (!regexec(&sdt_op_regex2, old_op, ARRAY_SIZE(rm), rm, 0=
-)) {
-> +               /* Extract #(%rX) */
-> +               new_len =3D 4;    /* (%)NULL */
-> +               for (i =3D 1; i < ARRAY_SIZE(rm) && rm[i].rm_so !=3D -1; =
-++i)
-> +                       new_len +=3D (int)(rm[i].rm_eo - rm[i].rm_so);
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%.*s(%.*s)",
-> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
-].rm_so,
-> +                         (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2=
-].rm_so);
-
-
-Similarly, does this scnprintf format string "%.*s(%.*s)" need a %% charact=
-er
-to produce the correct uprobe format? As written, it appears it will output
-48(r1) instead of 48(%r1).
+I wonder it would be better to do something like test-gtk2.bin so that
+if openssl wasn't compiled with libz and libzstd things don't fail:
+```
+$(OUTPUT)test-gtk2.bin:
+       $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0
+2>/dev/null) -Wno-deprecated-declarations
+```
+so:
+```
+$(OUTPUT)test-openssl.bin:
+       $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
+```
+Since "-lssl" is a dependency of BUILD_ALL, that will probably also
+need updating.
 
 Thanks,
 Ian
 
-> +       } else {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       return SDT_ARG_VALID;
-> +}
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 5b8f34beb24e..f52b0e1f7fc7 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -23,6 +23,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old=
-_op, char **new_op)
->         case EM_X86_64:
->                 ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
->                 break;
-> +       case EM_S390:
-> +               ret =3D __perf_sdt_arg_parse_op_s390(old_op, new_op);
-> +               break;
->         default:
->                 pr_debug("Unknown ELF machine %d, standard arguments pars=
-e will be skipped.\n",
->                          e_machine);
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 7c04700bf837..573f0d1dfe04 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -62,6 +62,7 @@ uint64_t __perf_reg_mask_s390(bool intr);
->  const char *__perf_reg_name_s390(int id);
->  uint64_t __perf_reg_ip_s390(void);
->  uint64_t __perf_reg_sp_s390(void);
-> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op);
 >
->  int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_x86(bool intr);
+>  $(OUTPUT)test-bpftool-skeletons.bin:
+>         $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
+>
+> ---
+> base-commit: bb551508e78c886e6d3bcca6c744d3bc3fd8ad59
+> change-id: 20260317-tools_fix_build_libopenssl-8290bfebda3c
+>
+> Best regards,
 > --
-> 2.53.0
+> Leo Yan <leo.yan@arm.com>
 >
