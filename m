@@ -1,347 +1,129 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F50B3803DA
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 05:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994E41E5702
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 06:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773726833; cv=none; b=nmoPF9H4aJmQO4vwScBvYUPMtNYqAhQpSPpwlbOdsqbicJY0t9MmktMRKUqVpNSL3QtAdR7aGj+qRSwRN5DKnjKwtrloV5ENwlkppBPK2wcdJ42CMAH/KpsvVThAtBMPNXOiKyY56lHIZgZV0gDF5AwZShmR7KRYtvC4yJYIbBQ=
+	t=1773728962; cv=none; b=tx1bOOYmYc5aliksze6NdTD4jCK4Mw3rqk6GWDggCR2CWvi99RxD4mkp3hBjjyWfk9sdenOtkqNBuiPZm9O7l3hmns5WGwPi0K8YQ53SoPT6RLHxJV1QYUZDbqUuSOqsxaqfouvHd2+3qxGz1TUCsTLDUjt4a6KI1IKPRyOMosI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773726833; c=relaxed/simple;
-	bh=Axfy6NjjxmduxcvXsqF3sLzos55b1PwttR68soQDBPY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GJ/tcIRB4stVFtnf7dTOCkX6QlWp+pDrZIrkQ7uYEkkaLKuyW1QAdZEs98kQ3kVXufJDyRRFAQN5qV9XRg5YbIe/wppDbHzv9eSbl9whTwnFKEg+pTTcARKEC4ist39Q1Poa7eThb168lsENuL78LYr2XwRtTwRWOpf997j38s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iS9Y4Ddj; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1773728962; c=relaxed/simple;
+	bh=eCiKRyoDAzKNcTc0XsJk4iW3vQZugoEMQp0SQuxx7CA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BB8yrZTAfYPhZsPfoeOUtDO8JeYoN3cmNLYZGKB5m2yZu5QdZVpPvrPkc/WJk2Uk5U/lp0HRWeLdlvpsf0uenRz85JR1qLWq92ACnYO1481CAAsIzVsPwMbb6j084GaGjAouVIY4/P3cGY2qTr+TSTdUgiREI4s+Jh1/vq8bLuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjHacC/8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iS9Y4Ddj"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bea80a5849so78668957eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 22:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773726831; x=1774331631; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1y9l7GOlMwY9cVT1XEv6vvs7n+TqRuMl4hN3XZ5vC3w=;
-        b=iS9Y4Ddja3dTnD5SNFBcWYNOLjUYUn0OPtVJ6K8M3HK0AO4IzlKEKzxM4pDbSQvd5f
-         sCmOJVNOc7Av2AYsBh3HiKJK/053rmnHVYIjy3u5xDPaS4XsOhA4Dx52OylX9AKVNNch
-         hUC5jqa1WFEF7jocdfnKEJXfuxzdR7pxWi9AMcNR6UF7aEHwJxZBev4lo5BX8ZU6fMpb
-         E1HVF1uxbKRI7r87OIe5d8HBsgJeLu8KM3Ceb5efg/yzf6cnvP0r0rqhtJPD4oBqF3vC
-         eGnXFcZpR7r0P1qzUckg74rWo9QuryT93pyt71vOE2IVtdHxjNBgzpVR5QZ09s8Jd44X
-         y+0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773726831; x=1774331631;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1y9l7GOlMwY9cVT1XEv6vvs7n+TqRuMl4hN3XZ5vC3w=;
-        b=CJKlQr2eNH4luzT7Cb5ej1NWzxd9Cp+KxwPN5fduaB9vnH0ETbM246glMHohQ1g5Rd
-         xZUA+TcDa8uTiu+d2VFhSpZS0nMHDX//iX97gW7Gf89o8K+i66mnXeHdw/U5nncX7ZZF
-         Hp0fG4sx83KgMkzACtbQUK13O/VGXPnsUkBRQNijiS6qiwmXPg4v5Qadi/e4L6AmopE2
-         G3fFUhu6IrNeGHq4nzkremUxIFy1Ro7CeCIwgAPFTzciNfYzL3bBV4itEpq7tvtPcbLM
-         0+e9SQH7jVB2jIL6Km9cdVJpPffcebkCMdCjAkCMn0FcUp+/oP+BVT1cUvIXAs63o/4R
-         xI0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUGdcTf1mVrV7crNsMIvO78CnDrXEdIrxTLdoZ3q4u3e6HOQYrGpXXgjGoydp5nZ08hUppnXhAoOQWZ8LDI5cwQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlY3iemm0oYOPOVgieuqj1zxIFZLSKysSZF3umaIJtbzr7BEq9
-	L0NwRXJ5WGECzSb7GI7Rfpb1CcditzDm1p544E1nRE5L3KG7Fk9YwcYqHJCuNTPRfw6kb7X3E6y
-	yhfI/od9asg==
-X-Received: from dyek37.prod.google.com ([2002:a05:7300:6425:b0:2c0:c2b7:5f36])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2f8a:b0:2c0:dd6e:7c87
- with SMTP id 5a478bee46e88-2c0dd6ea02emr56147eec.32.1773726830473; Mon, 16
- Mar 2026 22:53:50 -0700 (PDT)
-Date: Mon, 16 Mar 2026 22:53:34 -0700
-In-Reply-To: <20260317055334.760347-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjHacC/8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4EDC2BCB3
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 06:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773728962;
+	bh=eCiKRyoDAzKNcTc0XsJk4iW3vQZugoEMQp0SQuxx7CA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VjHacC/8FdACMbK6ZQ3iSWuPyV3khiCNBlCPf3ZLxirZ7gQYmgHytqYXG3Ss3utf2
+	 ib1639oiQIddZPKO2RsdlurBgzHCUTBD6nfwPntBJ0jCwPOiVmrF5QekBOCS/H5Qq1
+	 xgjOCXElPosQY4Hlf7LebOJXJsxbPdh8VW/n1Vk5Rm3TxeA5ETssbdfPtDL+3XaBO9
+	 /JuL6bfB/vHVk3051d91dpGc8ApeJbBhBPWEruW5YTgl6LWvZhTvO/ZKKaEvS8GBVM
+	 327YTigTfgIT0sCJbIgWiv5EYe8k4ZFfiJIIc/Qdr3scZxGE5xWJtf9W8sTzTLPSXm
+	 n8212MZTDwKLA==
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4852f8ac7e9so63965335e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 23:29:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWhB8RaAV1zf30TficqUncCD9EzlSmbKR8R6TzOBFHZigeHwCvjhaHbqN3H1Ac8aY3H8HoUQRUFrs+ljESy7duB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyM5YIm9HxQML4FJeZa8mItO5Uf6NZYOJUbQN9CVrj+nB6WRA2
+	N7C2ca9QqSeMcI6Gq6mESs8zmTJdrY9wjJ95vfFqTNuv/WgLKS2p25bBuNS3L7TtdrMelCkAheN
+	2sxnoXDovGS2lrzI+ySgwvUm8KzPm1HY=
+X-Received: by 2002:a05:600c:c4ac:b0:485:40a4:364 with SMTP id
+ 5b1f17b1804b1-4855670c2a5mr259125285e9.26.1773728960630; Mon, 16 Mar 2026
+ 23:29:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260317030601.567422-1-irogers@google.com> <20260317055334.760347-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260317055334.760347-6-irogers@google.com>
-Subject: [PATCH v5 5/5] perf evlist: Improve default event for s390
-From: Ian Rogers <irogers@google.com>
-To: tmricht@linux.ibm.com
-Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
-	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
+MIME-Version: 1.0
+References: <20260317034847.4136-1-cp0613@linux.alibaba.com>
+In-Reply-To: <20260317034847.4136-1-cp0613@linux.alibaba.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 17 Mar 2026 14:29:08 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRYfvFCeHx4yxdh8tfn1GLTC+UN7vtrTokmkmb2Z6=vKg@mail.gmail.com>
+X-Gm-Features: AaiRm515znQBvPe7b1QWk6C1XHuW373cVtMlbUs1J4rEm3b0iHNiaSsIo_5SmLg
+Message-ID: <CAJF2gTRYfvFCeHx4yxdh8tfn1GLTC+UN7vtrTokmkmb2Z6=vKg@mail.gmail.com>
+Subject: Re: [PATCH] perf symbol: Add RISCV case in get_plt_sizes
+To: cp0613@linux.alibaba.com
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, irogers@google.com, pjw@kernel.org, alex@ghiti.fr, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Frame pointer callchains are not supported on s390 and dwarf
-callchains are only supported on software events.
+On Tue, Mar 17, 2026 at 11:49=E2=80=AFAM <cp0613@linux.alibaba.com> wrote:
+>
+> From: Chen Pei <cp0613@linux.alibaba.com>
+>
+> According to RISC-V psABI specification, the PLT (Program Linkage Table)
+> has the following layout:
+> - The first PLT entry occupies two 16-byte entries (32 bytes total)
+> - Subsequent PLT entries take up 16 bytes each
+>
+> This aligns with the binutils-gdb implementation which defines the same
+> PLT sizes for RISC-V architecture.
+>
+> Update get_plt_sizes() to set plt_header_size=3D32 and plt_entry_size=3D1=
+6
+> for EM_RISCV, matching the architecture's standard ABI.
+>
+> Since AARCH64, LOONGARCH, and RISCV have the same PLT size definition,
+> they are merged together.
+>
+> Link: https://github.com/riscv-non-isa/riscv-elf-psabi-doc
+> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dblob;f=3Dbfd/e=
+lfnn-riscv.c
 
-Switch the default event from cycles to cpu-clock or task-clock on
-s390 if callchains are enabled.
+I don't think putting Link here is a good idea. Just copy the part of
+the psabi spec v1.0 here:
 
-If frame pointer callchains are requested on s390 show a
-warning. Modify the '-g' option of `perf top` and `perf record` to
-default to dwarf callchains on s390.
+8.4.6. Program Linkage Table
+...
+The first entry in the PLT occupies two 16 byte entries:
+...
+Subsequent function entry stubs in the PLT take up 16 bytes and load a
+function pointer from the GOT.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-record.c      |  8 ++++++--
- tools/perf/builtin-top.c         |  5 +++--
- tools/perf/tests/event_update.c  |  4 +++-
- tools/perf/tests/expand-cgroup.c |  4 +++-
- tools/perf/tests/perf-record.c   |  7 +++++--
- tools/perf/tests/topology.c      |  4 +++-
- tools/perf/util/evlist.c         | 32 +++++++++++++++++++++-----------
- tools/perf/util/evlist.h         |  2 +-
- tools/perf/util/evsel.c          |  5 +++++
- 9 files changed, 50 insertions(+), 21 deletions(-)
+For others:
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index af1fe6b7c65c..ef97c7a54088 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -55,6 +55,7 @@
- #include "asm/bug.h"
- #include "perf.h"
- #include "cputopo.h"
-+#include "dwarf-regs.h"
- 
- #include <errno.h>
- #include <inttypes.h>
-@@ -2986,7 +2987,9 @@ static int record_callchain_opt(const struct option *opt,
- 				const char *arg __maybe_unused,
- 				int unset)
- {
--	return record_opts__parse_callchain(opt->value, &callchain_param, "fp", unset);
-+	return record_opts__parse_callchain(opt->value, &callchain_param,
-+					    EM_HOST != EM_S390 ? "fp" : "dwarf",
-+					    unset);
- }
- 
- 
-@@ -4265,7 +4268,8 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.tail_synthesize = true;
- 
- 	if (rec->evlist->core.nr_entries == 0) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(&rec->opts.target,
-+								callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 2a949d956d0b..84211a78977e 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -56,6 +56,7 @@
- #include "util/debug.h"
- #include "util/ordered-events.h"
- #include "util/pfm.h"
-+#include "dwarf-regs.h"
- 
- #include <assert.h>
- #include <elf.h>
-@@ -1409,7 +1410,7 @@ parse_callchain_opt(const struct option *opt, const char *arg, int unset)
- static int
- callchain_opt(const struct option *opt, const char *arg __maybe_unused, int unset)
- {
--	return parse_callchain_opt(opt, "fp", unset);
-+	return parse_callchain_opt(opt, EM_HOST != EM_S390 ? "fp" : "dwarf", unset);
- }
- 
- 
-@@ -1695,7 +1696,7 @@ int cmd_top(int argc, const char **argv)
- 		goto out_delete_evlist;
- 
- 	if (!top.evlist->core.nr_entries) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(target, callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out_delete_evlist;
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index cb9e6de2e033..facc65e29f20 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -8,6 +8,7 @@
- #include "header.h"
- #include "machine.h"
- #include "util/synthetic-events.h"
-+#include "target.h"
- #include "tool.h"
- #include "tests.h"
- #include "debug.h"
-@@ -81,7 +82,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
- {
- 	struct evsel *evsel;
- 	struct event_name tmp;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index c7b32a220ca1..dd547f2f77cc 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -8,6 +8,7 @@
- #include "parse-events.h"
- #include "pmu-events/pmu-events.h"
- #include "pfm.h"
-+#include "target.h"
- #include <subcmd/parse-options.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -99,7 +100,8 @@ out:	for (i = 0; i < nr_events; i++)
- static int expand_default_events(void)
- {
- 	int ret;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index efbd9cd60c63..c6e31ab8a6b8 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -84,8 +84,11 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
- 	CPU_ZERO_S(cpu_mask_size, cpu_mask);
- 
- 	perf_sample__init(&sample, /*all=*/false);
--	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
--		evlist = evlist__new_default();
-+	if (evlist == NULL) { /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
-+		struct target target = {};
-+
-+		evlist = evlist__new_default(&target, /*sample_callchains=*/false);
-+	}
- 
- 	if (evlist == NULL) {
- 		pr_debug("Not enough memory to create evlist\n");
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index ec01150d208d..a34a7ab19a80 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -9,6 +9,7 @@
- #include "evlist.h"
- #include "debug.h"
- #include "pmus.h"
-+#include "target.h"
- #include <linux/err.h>
- 
- #define TEMPL "/tmp/perf-test-XXXXXX"
-@@ -37,11 +38,12 @@ static int session_write_header(char *path)
- 		.path = path,
- 		.mode = PERF_DATA_MODE_WRITE,
- 	};
-+	struct target target = {};
- 
- 	session = perf_session__new(&data, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
- 
--	session->evlist = evlist__new_default();
-+	session->evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 	TEST_ASSERT_VAL("can't get evlist", session->evlist);
- 	session->evlist->session = session;
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 591bdf0b3e2a..c702741a9173 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -13,6 +13,7 @@
- #include "util/mmap.h"
- #include "thread_map.h"
- #include "target.h"
-+#include "dwarf-regs.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "record.h"
-@@ -98,38 +99,47 @@ struct evlist *evlist__new(void)
- 	return evlist;
- }
- 
--struct evlist *evlist__new_default(void)
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains)
- {
- 	struct evlist *evlist = evlist__new();
- 	bool can_profile_kernel;
- 	struct perf_pmu *pmu = NULL;
-+	struct evsel *evsel;
-+	char buf[256];
-+	int err;
- 
- 	if (!evlist)
- 		return NULL;
- 
- 	can_profile_kernel = perf_event_paranoid_check(1);
- 
--	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
--		char buf[256];
--		int err;
--
--		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+	if (EM_HOST == EM_S390 && sample_callchains) {
-+		snprintf(buf, sizeof(buf), "software/%s/%s",
-+			 target__has_cpu(target) ? "cpu-clock" : "task-clock",
- 			 can_profile_kernel ? "P" : "Pu");
- 		err = parse_event(evlist, buf);
--		if (err) {
--			evlist__delete(evlist);
--			return NULL;
-+		if (err)
-+			goto out_err;
-+	} else {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+				can_profile_kernel ? "P" : "Pu");
-+			err = parse_event(evlist, buf);
-+			if (err)
-+				goto out_err;
- 		}
- 	}
- 
-+	/* If there is only 1 event a sample identifier isn't necessary. */
- 	if (evlist->core.nr_entries > 1) {
--		struct evsel *evsel;
--
- 		evlist__for_each_entry(evlist, evsel)
- 			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
- 	}
- 
- 	return evlist;
-+out_err:
-+	evlist__delete(evlist);
-+	return NULL;
- }
- 
- struct evlist *evlist__new_dummy(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index d17c3b57a409..e507f5f20ef6 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -104,7 +104,7 @@ struct evsel_str_handler {
- };
- 
- struct evlist *evlist__new(void);
--struct evlist *evlist__new_default(void);
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
- struct evlist *evlist__new_dummy(void);
- void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 		  struct perf_thread_map *threads);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 54c8922a8e47..5a294595a677 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1021,6 +1021,11 @@ static void __evsel__config_callchain(struct evsel *evsel, const struct record_o
- 	bool function = evsel__is_function_event(evsel);
- 	struct perf_event_attr *attr = &evsel->core.attr;
- 
-+	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
-+		pr_warning_once(
-+			"Framepointer unwinding lacks kernel support. Use '--call-graph dwarf'\n");
-+	}
-+
- 	evsel__set_sample_bit(evsel, CALLCHAIN);
- 
- 	attr->sample_max_stack = param->max_stack;
--- 
-2.53.0.851.ga537e3e6e9-goog
 
+>
+>
+>
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+> ---
+>  tools/perf/util/symbol-elf.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 76912c62b6a0..806936d95523 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -372,10 +372,8 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr=
+ *ehdr, GElf_Shdr *shdr_plt,
+>                 *plt_entry_size =3D 12;
+>                 return true;
+>         case EM_AARCH64:
+> -               *plt_header_size =3D 32;
+> -               *plt_entry_size =3D 16;
+> -               return true;
+>         case EM_LOONGARCH:
+> +       case EM_RISCV:
+>                 *plt_header_size =3D 32;
+>                 *plt_entry_size =3D 16;
+>                 return true;
+> --
+> 2.50.1
+>
+
+
+--=20
+Best Regards
+ Guo Ren
