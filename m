@@ -1,81 +1,188 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9775834DB4B
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2E82D7DE7
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773737419; cv=none; b=iEt3Xq0K1VoVc/xPEH18grNivzHJB9JRIcCWd2R8myz0MbJltYO2MRH5ruQ4hPgfjoKzyrqxhoht35Iy6HNC+zrdcdx7LXAmTCTkTMW7kSptU8HzRgQvFcD2BnwaiY85OymZDcp75b1vIqTOKu4w/0lwuwk1x55JCxJMIeug7tU=
+	t=1773737781; cv=none; b=NmPjV3UXT7CMpdocR1g82KRO1Io4duoD1YDr6aKaKLQ870mUFGFzSJbrP9rJYAANYv1hAPvSEiJ+p8KauO9xnSuEoPxU77JDt+BSbQqCnBBPuwfEzAiQkOO7pXtJAi7n0QwW7Hk2Anr0CcH5/C9lxKvgh4hVayYDf3h1g9Gtin0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773737419; c=relaxed/simple;
-	bh=V2z8AagOQhIflZQZZOrfTu4jGiMGwd94SCW8I89B9jk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BoJ3GMESrfN1nnCVPzcGM35IFIrShiKisxMVXC82TjmnCxQkedesq02JmjQsSxn7ROM10cvA0ROsVaK8oAu3P/oSPBahZsytFi9wx+EiRxzpJAoay93iy+uEAEb6KakELUWLDvQVb8MRyCnwpDSFVsHpbYJjCxCAww08gN4xpPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1BB71756;
-	Tue, 17 Mar 2026 01:50:11 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 139FF3F7BD;
-	Tue, 17 Mar 2026 01:50:16 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 17 Mar 2026 08:50:02 +0000
-Subject: [PATCH v2] tools build: Link static libs for libopenssl feature
+	s=arc-20240116; t=1773737781; c=relaxed/simple;
+	bh=IALiEY89hJkDTqyU/yPhFcUhRSDY/BOr6UGRATjs1Tw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NdDz8wq15Rr+ZgpBX3Kdzbnr7DMB5zLpxg6WFVg3u3qsBNqLsPO3B27Do021DECfXX4pTprZYuEhPm11Xp+tVKXQEWvf8qZwdd41hl8epbijz1Z1Kv4i3ZGeSLCOer1Ps9lsjrT7yPv8hiq5r5rxkyq6q9Fv27CQy+D6FX3SNq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wls9NSFB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wls9NSFB"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62H7G0rK693890;
+	Tue, 17 Mar 2026 08:56:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6Fz2vc
+	VVnbioilRDd7DhZdEf++mvzXZJLFXf2r/waNI=; b=Wls9NSFBrnp5JFSdDq+4zg
+	Ql0qhXKQzHlqZ0vxUDsZ/hVizfwgofPtbNl9d9GPvBO/peOTFUzNJSYCSZ0MGMST
+	cYv5nbm7qCN8SjoQbv5SurcRlWTXdbd8anxkZy0VH9b6Wd75kcLIfLlvDK9FVDhX
+	WANJFlbrDNPAovRCxgL2cVCfkYSMKP7GVaWouwjyh3gyoRDX7ykTnzrr6JIDZEW4
+	zf6TKVygWBrKml+5LL3ad6VCELdPzZV9U9w7Nj3nGvGxej93Spv8PZlMfqn1B0kp
+	+Qp5dBJJPeMuIfmjfDfrjZyPoNodE89/6XgJM/D8tZ1zGPbYFcnvVnK94M0ojIZg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvyaubarb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Mar 2026 08:56:09 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62H7BYXm015601;
+	Tue, 17 Mar 2026 08:56:08 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cwk0n8b7n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Mar 2026 08:56:08 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62H8u5j39175580
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Mar 2026 08:56:06 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D166D58059;
+	Tue, 17 Mar 2026 08:56:05 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A30A658058;
+	Tue, 17 Mar 2026 08:56:01 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.249.251])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 17 Mar 2026 08:56:01 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com>
-X-B4-Tracking: v=1; b=H4sIALkVuWkC/x3MWwqAIBBA0a3EfCeYQq+tREjmVAOi4VQE0d6TP
- g9c7gOMiZChLx5IeBFTDBmqLGDeprCiIJcNSqpa6qoRR4yezUK3sSd5ZzzZuGNg9qJVnbQLWjf
- pGfJgT5i7fz6M7/sB15getWwAAAA=
-X-Change-ID: 20260317-tools_fix_build_libopenssl-8290bfebda3c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
- James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773737416; l=1058;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=V2z8AagOQhIflZQZZOrfTu4jGiMGwd94SCW8I89B9jk=;
- b=DxJsDXTsWef6wkY8J5MlgWy6dpWsOrsVbDgU66NPnUJfTEGkes6c0d6DMGkVW0eqSRlKymbnp
- oNhhjYoI4G2DnPWA1DqaUkAe0B0UsLYtVYHNfTXrChbUGWD4m/dSvED
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH] tools/perf: Fix the check for parameterized field in
+ event term
+From: Venkat <venkat88@linux.ibm.com>
+In-Reply-To: <20260314083304.75321-1-atrajeev@linux.ibm.com>
+Date: Tue, 17 Mar 2026 14:25:48 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7D255F44-3588-460F-ACFB-6ABAEBA152DC@linux.ibm.com>
+References: <20260314083304.75321-1-atrajeev@linux.ibm.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDA3NiBTYWx0ZWRfX84cphwAzMc1W
+ 9n6KCclKOukRKA7FwNWjVsBKXojL/xio6/eviVPsczbHPlTnaxmDly2MJAruCAOlacK0jYySu/V
+ 2t4o+7ymYEES7MMzxaXup8/+Nurfib8w80LUsSbF/updIrV/A27ofmyLXVnloyV7Q0yd19CLsS3
+ SLJ21TQkdf1qpJBCeUxG5jdKo0axH8nfGqVM0Kftv8tf4samNRrvA6WcguC2X2UiqSYhJU1SgqF
+ OU8KQu8jfb0E2/tziy01t2iGOuBNZ24twB0p3QDNE2IqZE9Xsba/NssL1z1NbiHX7vX1RzjAXaR
+ np5C5WdXQDXT9BNAgB6Am0iMcQqfmAxpax64LsOk+JhsaHc9AfDi5Fe954cM7S7HUs1xgbC1lPI
+ T4N1h1bl7oeAUKfFDS/6f2xFCrCBtBOuKnoGH4LWvFFr3euv+uCZVAX8H1tuLuqoyF7LVm9C+p/
+ t7j+QYVnaAMU4hwiN4w==
+X-Authority-Analysis: v=2.4 cv=GIQF0+NK c=1 sm=1 tr=0 ts=69b91729 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22
+ a=VnNF1IyMAAAA:8 a=ASrTm7EkTYZRIX76TdgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: S5lniLY7V9VraQks7iNPMWQemupHBGq5
+X-Proofpoint-GUID: AchMjJ9DckEPfrOiPF-w2WZDd1Cw3_qy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-17_01,2026-03-16_06,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603170076
 
-The perf static build reports that the BPF skeleton is disabled due to
-the missing libopenssl feature.
 
-Explicitly linking the libraries fixes the static build failure.
 
-Fixes: 7678523109d1 ("tools/build: Add a feature test for libopenssl")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/build/feature/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On 14 Mar 2026, at 2:03=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>=20
+> The format_alias() function in util/pmu.c has a check to
+> detect whether the event has parameterized field ( =3D? ).
+> The string alias->terms contains the event and if the event
+> has user configurable parameter, there will be presence of
+> sub string "=3D?" in the alias->terms.
+>=20
+> Snippet of code:
+>=20
+>  /* Paramemterized events have the parameters shown. */
+>        if (strstr(alias->terms, "=3D?")) {
+>                /* No parameters. */
+>                snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>=20
+> if "strstr" contains the substring, it returns a pointer
+> and hence enters the above check which is not the expected
+> check. And hence "perf list" doesn't have the parameterized
+> fields in the result.
+>=20
+> Fix this check to use:
+>=20
+> if (!strstr(alias->terms, "=3D?")) {
+>=20
+> With this change, perf list shows the events correctly with
+> the strings showing parameters.
+>=20
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
+> tools/perf/util/pmu.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 23337d2fa281..0b8d58543f17 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, =
+const struct perf_pmu *pmu,
+>   skip_duplicate_pmus);
+>=20
+> /* Paramemterized events have the parameters shown. */
+> - if (strstr(alias->terms, "=3D?")) {
+> + if (!strstr(alias->terms, "=3D?")) {
+> /* No parameters. */
+> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
+alias->name);
+> return buf;
+> --=20
+> 2.47.3
+>=20
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 1fbcb3ce74d2173072748a417fc63bd9a5b13888..18a9abf6bfc43e86ecf58b96e0374a0e3c613bb0 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -384,7 +384,7 @@ $(OUTPUT)test-libpfm4.bin:
- 	$(BUILD) -lpfm
- 
- $(OUTPUT)test-libopenssl.bin:
--	$(BUILD) -lssl
-+	$(BUILD) -lssl -lcrypto -lz -lzstd
- 
- $(OUTPUT)test-bpftool-skeletons.bin:
- 	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
+Tested this patch, and its working as expected.
 
----
-base-commit: bb551508e78c886e6d3bcca6c744d3bc3fd8ad59
-change-id: 20260317-tools_fix_build_libopenssl-8290bfebda3c
+Before Patch:
 
-Best regards,
--- 
-Leo Yan <leo.yan@arm.com>
+./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
+  hv_24x7/CPM_EXT_INT_OS/                            [Kernel PMU event]
+
+After Patch:
+
+./perf list hv_24x7 | grep -i CPM_EXT_INT_OS=20
+ hv_24x7/CPM_EXT_INT_OS,domain=3D?,core=3D?/ [Kernel PMU event]
+
+
+./perf stat -e hv_24x7/PM_PAU_CYC,chip=3D0/
+
+
+ Performance counter stats for 'system wide':
+
+        2018866563      hv_24x7/PM_PAU_CYC,chip=3D0/                     =
+                      =20
+
+     229.938231314 seconds time elapsed
+
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+Regards,
+Venkat.
+
 
