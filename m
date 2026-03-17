@@ -1,234 +1,301 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013003.outbound.protection.outlook.com [52.101.72.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E43EB7FA;
-	Tue, 17 Mar 2026 15:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.3
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773760241; cv=fail; b=MiJv2fjkybKqGjrzxe8b/+koFwYIN4N8eZyIMw7fOVW4XpZyB7ew87cSTC3iVzMQParMaXknBcYzqbV/HXXmJ/lqYnjEEkkQm7sS2oJ4RyyI4Z7Luvemfd6D1Nb88Yvjad/W9VRuWhYBSN6ySFu1801dIY62WU29Ms6+dRbfdls=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773760241; c=relaxed/simple;
-	bh=vz9oDIAvzvJ7OjF4ranK7Xou3XmDOYtKYKg8rNW6xHs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Wv++mkvneNruTuuKM7tUQ8AZBkJiLCNgXppja3YYITOpHNivfz6B4GQS1FPVqzgSULAlDH8W24yJfV2UCwMLE42v8pn5t6rFEqdvn+PJxjIivUDqc9RlcacXgvaG43R1eXp+aZD+AsJEZn+o8zBw/bGdbr9NvGPhfSkOp71n+D4=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EBZWksKH; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EBZWksKH; arc=fail smtp.client-ip=52.101.72.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234483E4C85
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 15:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773761557; cv=pass; b=TlIwbthsN7+uKjUpLB2TqB4fMfHfT6gsLKD7QToeDJFxtyZGBFK7c6359q5gNx/Rvq6lx913ci3ffOsw+znxudVrzJ2V3uMgai5+lOFU5SQO8cuDE52NX28orfgtSa/ovNGm2y7eq779gU0rpyHkDNE/vogiHC26iaJ0enLHmlQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773761557; c=relaxed/simple;
+	bh=ApEZkM0jYqujC4X9S2HoQoK9lEJKjGaSsk15Iej8Ogw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uzr2agufDKUq0ZwLxIqpJI9oxaBQwOugUF+ZlfoW8/rEL1LOQ/HVVg0GM4JK4Kh6alLpa8jY2sddWoE0V8CO0uiRBBj00RQH9+8Ia1m2Jjls15m2kTImu4O2LR1/+sPoGowoOJjWhr//iMXAzFDUUbAJ+KZ7tnLkOkAJ543au/U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J1kmbtSl; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EBZWksKH";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EBZWksKH"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=R9hKzfByaLa04Bxi2pXUds3GU8U16dPPVtUSkIOcwCHb5KsGvIKwboAnXujkvLUqFLxdfuTCF8c5Un0JMCOxr6nF03TvHj4LF3bzCFNglUdjXgyAEaBZYk68hCrKAQHfdVr0aglZld/xW4XygpEZjRf2ctU43TbqU4VFV+SOzf+JyfLs92fHe8RDVjzdFY8beaDb38E/eTVIDtd4FpUsYL7TqJr6ZqQBbrE1eVApvKqMk4EJCLgR//M4e7cbe9FHRnn2KQJ0v6JUlh+9WbVOMbtJByjvuqnGY5YKw8Zvwpa2J+Cku6ojBJK4WnX3QCl+1fQu9xztGR/qSLiCYIDNVw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VjmfrBxVqs6kjFDKdyJAUJif12TRMajUdxhPbGhrOE0=;
- b=MEaJ8pQJgfBaDzs6DI7LiRIB5bnzBohKoWSCtRvhmHqGV8ENFo15yxCOTd8b9/Zk9C2QO6hS3OxuczWfqkkACPxl1ix2vvlyn65j1azEJYSVeHu8P+6XEy6yHR3iHXBv7fyANYxvwHy91Q/VwUOX/vsbkKjPHaUfk7frZH2pb4oBlnTKKEXMmXFANGwm7lMBRlIJ1mOX6GXQC73RvFERmKLGoM8OvRfJwu+aJ/Yx6/wEz3PMY9V08HhvY1p+UzivGHSQG4meHvvNGpIx7mSSbc99UGNt2o/94rJDDjJeRTp7wRZet0s3YpMnHYgJ2bcaN1D/GKokXb9+4R+QqkPVgg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VjmfrBxVqs6kjFDKdyJAUJif12TRMajUdxhPbGhrOE0=;
- b=EBZWksKHfN4xnb/qGUEBM3N18erwlWLMtp/p1yGGXpjLijoUYDM78ByipgHJh5ta7T6GJEdKTvOqlurmu09lku66xD/L5lCdWCUb974ZRWbfeBIjdrBCCQlnOOwH+uXtlMFMJnWr/po+g9tdK+RgIG1wUBL2dRB0gfr6WDkR4Dc=
-Received: from DU6P191CA0072.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53e::25)
- by PAWPR08MB10307.eurprd08.prod.outlook.com (2603:10a6:102:366::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.24; Tue, 17 Mar
- 2026 15:10:31 +0000
-Received: from DU2PEPF00028D0D.eurprd03.prod.outlook.com
- (2603:10a6:10:53e:cafe::9f) by DU6P191CA0072.outlook.office365.com
- (2603:10a6:10:53e::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.27 via Frontend Transport; Tue,
- 17 Mar 2026 15:10:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D0D.mail.protection.outlook.com (10.167.242.21) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.18
- via Frontend Transport; Tue, 17 Mar 2026 15:10:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X8VPsZoCml5p7A9oWvxqkXtf6zLtoYs2NjWJlpS281Qke2aTEsXvPAKxZm5ueXPA3RnaLe60T1cWDrMCie8D/VRpoPpwLRhb0qVeKaIJ+uq4dIovwKzlT6xNlP7bpOwcoBTtzPnoNikF7AZqw8C9dyRlrv8KsaOaMDDDwAM3jU72Kwi3RBhucVrnCslz4qmbhQWpg5zewMX8amuP2zmCdhfaWYiY41Le1/OyV3e2gbInE8eeoJtMajNEbApeKprxq9GoSjjA8EZeLplsw7uQK/5ovHS49MOzavnBKV+N/GPaypzJtCnM/IxDxwWepIbwAigioZdL3udxc/dc8ugRbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VjmfrBxVqs6kjFDKdyJAUJif12TRMajUdxhPbGhrOE0=;
- b=QeZsuq24Ab/pa35xB8vajQWtfZnazSkm/5FnTvjn0psDt3jK20r7r6Dt/7bL6kWLBDK1NRwzyC6C7gl2WH9ve5IM3bl4+LEox+hGeLf2lpFv3irFDU5MUzH73Fx7IwUUmFrZzsH8jLewLfUg8yyrTwb7VZHW17nPdmrvOdakmQ5Ylax+95RQ+ri36sTEtiAKIXJt0v58sCB+wWPBBE3k1TBxAsGYBDWS9za+x1WGo9J3bb/UcL4s8COIXLRKlTgxgGZO7tHdsAAngdEbInT+fyu7M3B5xcBxMm7ovoLSQ5Qbx7eSZmZ+hnjIH7nNfv5Us9sr+6+bJJeIpA2aD5uRdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VjmfrBxVqs6kjFDKdyJAUJif12TRMajUdxhPbGhrOE0=;
- b=EBZWksKHfN4xnb/qGUEBM3N18erwlWLMtp/p1yGGXpjLijoUYDM78ByipgHJh5ta7T6GJEdKTvOqlurmu09lku66xD/L5lCdWCUb974ZRWbfeBIjdrBCCQlnOOwH+uXtlMFMJnWr/po+g9tdK+RgIG1wUBL2dRB0gfr6WDkR4Dc=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from PAVPR08MB9674.eurprd08.prod.outlook.com (2603:10a6:102:31d::14)
- by PAVPR08MB8821.eurprd08.prod.outlook.com (2603:10a6:102:2fc::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.27; Tue, 17 Mar
- 2026 15:09:27 +0000
-Received: from PAVPR08MB9674.eurprd08.prod.outlook.com
- ([fe80::6f25:3681:7c97:ea2e]) by PAVPR08MB9674.eurprd08.prod.outlook.com
- ([fe80::6f25:3681:7c97:ea2e%5]) with mapi id 15.20.9700.022; Tue, 17 Mar 2026
- 15:09:26 +0000
-Message-ID: <17f18a05-c53a-4faa-8b3a-2540fbfe1e3d@arm.com>
-Date: Tue, 17 Mar 2026 15:09:24 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf: tools: cs-etm: Fix print issue for Coresight
- debug in ETE/TRBE trace
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- coresight@lists.linaro.org, linux-kernel@vger.kernel.org, acme@kernel.org,
- suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com,
- will@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@redhat.com, namhyung@kernel.org, nd@arm.com
-References: <20260313132129.2743468-1-mike.leach@arm.com>
- <20260313132129.2743468-2-mike.leach@arm.com>
- <20260313144239.GM4153946@e132581.arm.com>
-Content-Language: en-US
-From: Mike Leach <mike.leach@arm.com>
-In-Reply-To: <20260313144239.GM4153946@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0288.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:195::23) To PAVPR08MB9674.eurprd08.prod.outlook.com
- (2603:10a6:102:31d::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1kmbtSl"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b052562254so100825ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:32:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773761555; cv=none;
+        d=google.com; s=arc-20240605;
+        b=P3c6XABHgY3vPkvnoXaxeGs+ZBuHLJUf8h9lnT1eo3qRGuZ3eocK8JfKI1jw70XZzC
+         nDEKdAZlQkUPjUyaaMEMUsL+YPxc3WmsB+afb7tys4VxXwfU4rNy+TnaR9U3dUmhIGNC
+         0b+t0JhYh5tU5rRmgbwqSJ7BNkpp47/H7Tr420mvbR8p55fbb9WU4DvRafGlQ7giPUAO
+         kjKZq3Fbr5bUP/haxKzafK8D4kcR8HnCDT+morcW+kh5liAedQattbpStX7opjQ0Lwkm
+         mU3O10bCPaabpXEDo5otpdmpPkHwwYmdZN2+YOelr/cTW2ZHD2lm4AOKYDDhdUxedImR
+         75EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
+        fh=hxqzQXo4ZcrYXTVx0rXq8QYuP8tzifoG3EoZzkSrL70=;
+        b=iCcLkRXkX696hRREOW/jhJFGdBcDuVny7wMgIRRMDLEHGi6q9eCAtMdrwGc81FsKY+
+         iB8sJEMl5oSGFhqYwXIZgN/MUtGAr7rJTz55DxPTYjjcr/tOAWneJ9NOgIYvQjNHo6ug
+         XlqXKuOmXOaSXNWN1xmudMwCD42aVMUSxHjrUma+GKQN7A+rrPi/o1Jbwwomzbwlu8C0
+         w3ghmzLQK30gKlV374+L8609AEHsuuU1+nX2YvsZJrOGZ9TyPSZ66jhcVjjeh4k6Mx9L
+         ZQuCukca1i48nC7bB/ySTxWy2flCBTaiUG1Mer+S+A7jEDBo+/FyKsGskT9Pb0LDVGiC
+         V0Bg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773761555; x=1774366355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
+        b=J1kmbtSlA9gr4SX9xWNgAorkqiPgNF01ANyakTlWoXO+b+t9U5itXPwzBr+2dqu6Zv
+         EUmFsoLCcgx0OtiNUAA1+MioFPpBSESqY8P3qtY6GDpkxviHhJbf3l1YurFDo3t5U9h7
+         eO6pdYUtlB0pTTbLygak0LF1k86mDYoQt9DeEMh+iPMiDXvyApJbAxxMwo4VvtmghQWA
+         ShQxfgNLLev+XycVqNPR7RrMQtgh/0TU5PH1lI4/MJFGQQuk8cWnxHSlM+FDVUkmhEx9
+         aFpZtpFp5ywxuZDuuC4oTThFkbTvYUsDQQsGrImIbwo3mKWELSPx86uv6YoyQYPCkzIa
+         OkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773761555; x=1774366355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BhkaLEEGAixAQMrvos9+dLptA5RYw1Pl3uUnTFzQa/M=;
+        b=UjfC0x00yE1sj3XJfUIYIpQ92rJ9K5YgQh+7gBHzzGlursXHvHvjc5442jMMNOgBfy
+         BQ6faBOYC3sJfMXrThD5137WMPApMXxLOe2mSK4SSOgt/HtvE7Zl2gH5bn7ecMX8p+/Q
+         HMpKDHGmqCToT48JZgMk+ZQ187Q4gHlNf/gH81C5iEXYo06mrMsSnzBLwz81CP01jsjI
+         +MJTFUm7UGc1WlDJJDteMfO3NPaBrNm9DfUgUjZ8gWSuO7ndKCAj81CvUoId2RXLJM9N
+         3cfqrDZkKGI//SzuGHEyZjOlWaV97ilQaH53UTOOfgvRJM/114E3WGDNL6L6hdGIAwig
+         bVMg==
+X-Forwarded-Encrypted: i=1; AJvYcCURPlnmcT6bnkTZrCak0Biap7+qmg7zXWRBq6rFtYlX3OhoO5j250DRjtRHZvLjdXq8yMTMEU+e/+5O0TZHUlgg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNjp1JIEmLLt7z/UKsR9KsY6d6ZMvic+HuO2noX6I+Y8kR9ylX
+	gIlz1B9hJYr3k7Sq/dbbDQw5Dyot+ePfUrwOdTtHO0w6OlXB/foVqfjQ9XYEBRvFPsPLRhChiPu
+	X+4eJNTzjTAlC8bBxLF4g8MaOWLlBERHHSyczDhog
+X-Gm-Gg: ATEYQzxUlBozPrp3Kd+4qJWu6yw+QenAJaXx008v9q7RPDJH5G2ms1wsRXtM8s5I195
+	LYiCp2PHIiPJhuXqmmHxwifCwCmfWsqdhzeGO5zGuBy3MQZUoAXvWx2hihnrTRhYM67AAV1Ysh4
+	enuNvhDzpbLO+n1An1GHuAtf9ixp5AXAYIrZ6tJmP/BvkSom3oaZ8DyN4OUqNF8hMGOvWKGBQPh
+	YtnQjH/S1fFuYA9/NaNq0bOJHXF+1FGiUjuzWaYu0o6uGUXntSc6h4T/th8MaZ7tR618XLEsq0Y
+	w8BRf/Da
+X-Received: by 2002:a17:903:2284:b0:2ae:c566:bd99 with SMTP id
+ d9443c01a7336-2b064050a74mr3541605ad.22.1773761554698; Tue, 17 Mar 2026
+ 08:32:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	PAVPR08MB9674:EE_|PAVPR08MB8821:EE_|DU2PEPF00028D0D:EE_|PAWPR08MB10307:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd013cf1-803a-4b80-4c35-08de843754cd
-X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info-Original:
- Iztl+L2AUMp4HYajuZNxN8Hfh9cI8+eGwx+4OxGlDPbGGqDRKArfBNOD8Gfi7FbxbMo7i8gSUwfqU7+g5yEwRGa+0iTCKa2oLjQ4RXitbsLb2m9ObaHo3Ypl/7jQoAuctNSgwMtxriuFGXdA8j9uN8iDl2QX5x/Kydn0TIK7SBJlRsDxg7F3Q4SqRRh6VO1mGuWPM8bH2s7Vdbc2QOfQi0BG12RZEK7ozPFn4+LQaaEW8il9m3n0nAm3XALkisHy8xeqDaPJFZ8K9uBF62zO/BflrZYEi85cmK/2H1diRYjhF+Hk7yTRv83DhqMUle1J4/hf6NL8vDBYc/WHv9clNfZOB/scMO81vLqfpBv/WtyxlAp8DNUGsXj2vzaYap7+m/HSInFcRceTNaddnWvRLtnG+DxmPBC18abA85YQP4SoM1oRtp3PezlE/ONHmQyI2hkpJDF1p3Mzxcn/O+SjwligSqVUAsumCz0RAkCF0CTerCpgCN3XKHxtbksL+BEU0pAoOpr23ktzQertPi1PUecIwutej2YNlly+uO41DlGXiSvWQhgPQYBBvYt3rTGmGdvF01ioUjkPbSswthdpY0vd7dAcrSy8eAFMpef/VLi5FXTym0bbkGs0JJcJx9VOG6JkKYM0a/XPt51I1yqQPxpPl6O9e2z2FAup/G9Ap2U2L+LTeynHEME0cEiO1sQDpxEQ2zwlvHy+8Mzk8kxciVCiQWPUKvFzUGTTTW3SbRU=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAVPR08MB9674.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- voqipJJ/h7mN+0xtX4/CR4CRt67H5ieijcnvOhxjBoaE9iJM/a3NoHuAtaLAO7240b2lsvNIBI/C3/orR8XM2w80CKUX65IZ35p43C9EupoXceyY8nXxzPg1gtj68pBBUxa05pQhYlhYpyAuvoBzg5WKI2eyC0agLy5EGgM5Fzef3naX+VK8AaFY+Bcj+aXrMRRaYjpNysz0NOBe9NGWBTSBEoSLGBcVduE2ueerpud1fhQi5T+64w/DSt5x7EzzxLDVZg1l6B4dxzYb2ThBaPCBLt5WxtLzVg42kcIYaxn7XDKIsLevco4DqSux+/oITtr4RZcRubIfYc0B3LrJRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB8821
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D0D.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	f8f6ef23-2aa4-470e-6270-08de84372dd9
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|14060799003|35042699022|82310400026|36860700016|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	YUpMcUz27/YamaxYn/yGOUD77AE69hpniVbFJSVQ9/G47uJY92tf9WzMr7XkIX2YyM+AUweiMVm9dlC/5h1ujhf98zYIfuTAYUL/qFKjNLG3389RaKY1VICORKiYrHwqR/KpW+iubTn+xpoHLx3EbpPGegNQhXrQCdIsi4nY6EGnMvYvwNh/stkZd51bImxYCvwg4vOgDeii2GB59WeNKxpRwOcGsiqAfWPeiD2eGWrxMJ0OOeVLryG+YiwtRciAffYtaQ8nygPfnxf+MW+fsjNRrZl5/aWeGrWxR04f+4zHgfbUhk4R5NkcuObLCvHQDINGifILhtH39QVIIdAIaM4IcaE9wcqAM3z9JiiiE3WaNs1NtScoIb2na+zxkOpP5rPMBW0w380hoI1WMycEgYpAFg7ZQgFyptNxZG1eY5SZmxq4n3m6tH5xUg9oZUxt2SHfovmU2F/E1rtOCAnRP6Yo3AvKhTWLksFIYiyVYPGhtzWNDi87nCNpKyBOoTrSGWPLbsVy21pscOioGoTBUo0dB1MQajH4itsHWYNtUpY/djBh6AiaKAY9SKls3yujpHLlXjnYOfWvq7rVrIw2yE99g/wyl3Xc0Cllfy2heCDDG7TuJtcjB4noq6XXcYgiMHR3d009vQcpPQlPxf4QWjatTwr0H2XpWCtvj4zT9yuF/smGTYhmn+XPHZj9OcS9YEgEJSP8Ihquf/4Xm1WibqmxpCyGLMN/fwc15FnCEDsJ6A7FrYM83tOXQJZPTM8e3MZjXEyCncm1sDora7z4Xw==
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(14060799003)(35042699022)(82310400026)(36860700016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	7avI3bVlTcMfuG9SeX3p8aPPQ43oCWX+9Ha1xei7QTMdWew/mHcg8nE3k0ysAZqJtHcdYcuRjgS6qeE2efqMrzUexRYgCcUwKELkisk5ePQLx3BHQdkF8coYvF+igUMM00RDDpK4MsEhG4jXG3Qb2pZ0IdlA86GaYUoMFG2ZcxHg2shxmxW0dbvmDaogNhgdmos4BsKbWimq5Nf0VbfAeiurn0q48x6fUqSA6ktL7E4nksTbVs8VQrk3E97V116J4oEwekhSqKS3hfbUpenVeylfhv4UvrAYC2ES7w9MAbpIx2k1XW0WcGsaZPf9TRmP0RnthLr2L6nFsNoON63hd/ObLg1lMCyO450hMtW0Em2oV6nOA7cvY4Djg2c95fVzNGqo2hyoJfRVu/G3PCS5c1WOZFXW1LOKSSAw+yevQae9ilOsZ2whIt6wtz0LlXK3
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2026 15:10:31.2992
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd013cf1-803a-4b80-4c35-08de843754cd
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D0D.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB10307
+References: <20260317110641.39975-1-tmricht@linux.ibm.com>
+In-Reply-To: <20260317110641.39975-1-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 17 Mar 2026 08:32:23 -0700
+X-Gm-Features: AaiRm51sDcxb0oBkf_9EcnaMRntY3oFxYJD4ORK821DJdA0cyvTGiNKYUS_CPhs
+Message-ID: <CAP-5=fWL=ium-_+aXe1TfTADuThv1T43hh2RWb+MV2pyZSf8tg@mail.gmail.com>
+Subject: Re: [PATCH v3] perf record: Add support for arch_sdt_arg_parse_op()
+ on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	dapeng1.mi@linux.intel.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 17, 2026 at 4:06=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_=
+parse_op() function")
+> removes arch_sdt_arg_parse_op() functions and s390 support is lost.
+> The following warning is printed:
+
+Apologies again for this breakage.
+
+>   Unknown ELF machine 22, standard arguments parse will be skipped.
+>
+> ELF machine 22 is the EM_S390 host. This happens with command
+>   # ./perf record -v -- stress-ng -t 1s --matrix 0
+> on a z/VM system when the event is not specified.
+>
+> Add s390 specific __perf_sdt_arg_parse_op_s390() function to support
+> -architecture calls to arch_sdt_arg_parse_op() for s390.
+> The warning disappears.
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Tested-by: Jan Polensky <japo@linux.ibm.com>
+> ---
+>  .../perf/util/perf-regs-arch/perf_regs_s390.c | 89 +++++++++++++++++++
+>  tools/perf/util/perf_regs.c                   |  3 +
+>  tools/perf/util/perf_regs.h                   |  1 +
+>  3 files changed, 93 insertions(+)
+>
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_s390.c b/tools/perf=
+/util/perf-regs-arch/perf_regs_s390.c
+> index c61df24edf0f..2aa70eb23311 100644
+> --- a/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+> @@ -1,7 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+> +#include <errno.h>
+> +#include <regex.h>
+>  #include "../perf_regs.h"
+>  #include "../../arch/s390/include/perf_regs.h"
+> +#include "debug.h"
+> +
+> +#include <linux/zalloc.h>
+> +#include <linux/kernel.h>
+>
+>  uint64_t __perf_reg_mask_s390(bool intr __maybe_unused)
+>  {
+> @@ -95,3 +101,86 @@ uint64_t __perf_reg_sp_s390(void)
+>  {
+>         return PERF_REG_S390_R15;
+>  }
+> +
+> +/* %rXX */
+> +#define SDT_OP_REGEX1  "^%(r([0-9]|1[0-5]))$"
+> +/* -###(%rXX) */
+> +#define SDT_OP_REGEX2  "^([+-]?[0-9]+)\\(%(r[0-9]|r1[0-5])\\)$"
+> +static regex_t sdt_op_regex1, sdt_op_regex2;
+> +
+> +static int sdt_init_op_regex(void)
+> +{
+> +       static int initialized;
+> +       int ret =3D 0;
+> +
+> +       if (initialized)
+> +               return 0;
+> +
+> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
+> +       if (ret)
+> +               goto error;
+> +       initialized =3D 1;
+> +
+> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
+> +       if (ret)
+> +               goto free_regex1;
+
+Sashiko's review:
+https://sashiko.dev/#/patchset/20260317110641.39975-1-tmricht%40linux.ibm.c=
+om
+notes that here 'initialized' will still be 1, should it be made 0 again?
+
+It triggers an ENOMEM, so I doubt this will be very useful, but it may
+make the code read better.
+
+> +       initialized =3D 2;
+> +
+> +       return 0;
+> +
+> +free_regex1:
+> +       regfree(&sdt_op_regex1);
+> +error:
+> +       pr_debug4("Regex compilation error, initialized %d\n", initialize=
+d);
+> +       return ret;
+> +}
+> +
+> +/*
+> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG)=
+.
+> + * Possible variants of OP are:
+> + *     Format          Example
+> + *     -------------------------
+> + *     NUM(%rREG)      48(%r1)
+> + *     -NUM(%rREG)     -48(%r1)
+> + *     %rREG           %r1
+> + */
+> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op)
+> +{
+> +       int ret, new_len;
+> +       regmatch_t rm[6];
+> +       unsigned long i;
+> +
+> +       *new_op =3D NULL;
+> +       ret =3D sdt_init_op_regex();
+> +       if (ret)
+> +               return -EINVAL;
+> +
+> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
+> +               /* Extract %rX */
+> +               new_len =3D 2;    /* % NULL */
+> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%.*s",
+> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
+].rm_so);
+
+Sashiko notes this is probably more of an issue:
+
+The allocation size accounts for a % character, but the scnprintf format
+string "%.*s" seems to omit it.
+
+Will this output r1 instead of %r1?
+
+> +       } else if (!regexec(&sdt_op_regex2, old_op, ARRAY_SIZE(rm), rm, 0=
+)) {
+> +               /* Extract #(%rX) */
+> +               new_len =3D 4;    /* (%)NULL */
+> +               for (i =3D 1; i < ARRAY_SIZE(rm) && rm[i].rm_so !=3D -1; =
+++i)
+> +                       new_len +=3D (int)(rm[i].rm_eo - rm[i].rm_so);
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%.*s(%.*s)",
+> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1=
+].rm_so,
+> +                         (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2=
+].rm_so);
 
 
-Hi Leo,
+Similarly, does this scnprintf format string "%.*s(%.*s)" need a %% charact=
+er
+to produce the correct uprobe format? As written, it appears it will output
+48(r1) instead of 48(%r1).
 
-On 3/13/26 14:42, Leo Yan wrote:
-> On Fri, Mar 13, 2026 at 01:21:28PM +0000, Mike Leach wrote:
->> Building perf with CORESIGHT=1 and the optional CSTRACE_RAW=1 enables
->> additional debug printing of raw trace data when using command:-
->> perf report --dump.
->>
->> This raw trace prints the CoreSight formatted trace frames, which may be
->> used to investigate suspected issues with trace quality / corruption /
->> decode.
->>
->> These frames are not present in ETE + TRBE trace.
->> This fix removes the unnecessary call to print these frames.
->>
->> Due to an addtional fault with the OpenCSD library, this call when ETE/TRBE
->> are being decoded will cause a segfault in perf. This fix also prevents
->> that problem for perf using older (<= 1.8.0 version) OpenCSD libraries.
-> 
-> Thanks for patches!
-> 
->> Fixes: 68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
->>
-> 
-> Redundant empty line.
+Thanks,
+Ian
 
-OK
-
-> 
->> Reported-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: Mike Leach <mike.leach@arm.com>
->> ---
->>   tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> index 3050fe212666..f7e89693cf16 100644
->> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> @@ -739,7 +739,8 @@ cs_etm_decoder__new(int decoders, struct cs_etm_decoder_params *d_params,
->>   		goto err_free_decoder;
->>   
->>   	/* init raw frame logging if required */
->> -	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
->> +	if (format == OCSD_TRC_SRC_FRAME_FORMATTED)
->> +		cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
-> 
-> Could we improve a bit to add checking in
-> cs_etm_decoder__init_raw_frame_logging(), something like:
-> 
->   cs_etm_decoder__init_raw_frame_logging(struct cs_etm_decoder_params *d_params,
->                                         struct cs_etm_decoder *decoder)
->   {
-> +       /* No formatted trace frames */
-> +       if (!d_params->formatted)
-> +               return;
-> 
-> Sorry I should have mentioned this early.
-> 
-
-Looking at cs_etm_decoder__init_raw_frame_logging(), this function is 
-called once, after cs_etm_decoder__init_def_logger_printing(), and 
-unnecessarily repeats a bunch of init calls that are done in that 
-function. The one call needed to set up the extra logging could be 
-folded into cs_etm_decoder__init_def_logger_printing() with the cond 
-compile and d_params checks, removing init_raw_frame_logging() completely
-
-I'll spin up a v2 with this simplification.
-
-Regards
-
-Mike
-
->>   
->>   	for (i = 0; i < decoders; i++) {
->>   		ret = cs_etm_decoder__create_etm_decoder(d_params,
->> -- 
->> 2.43.0
->>
-
+> +       } else {
+> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
+op);
+> +               return SDT_ARG_SKIP;
+> +       }
+> +
+> +       return SDT_ARG_VALID;
+> +}
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 5b8f34beb24e..f52b0e1f7fc7 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -23,6 +23,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old=
+_op, char **new_op)
+>         case EM_X86_64:
+>                 ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
+>                 break;
+> +       case EM_S390:
+> +               ret =3D __perf_sdt_arg_parse_op_s390(old_op, new_op);
+> +               break;
+>         default:
+>                 pr_debug("Unknown ELF machine %d, standard arguments pars=
+e will be skipped.\n",
+>                          e_machine);
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index 7c04700bf837..573f0d1dfe04 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -62,6 +62,7 @@ uint64_t __perf_reg_mask_s390(bool intr);
+>  const char *__perf_reg_name_s390(int id);
+>  uint64_t __perf_reg_ip_s390(void);
+>  uint64_t __perf_reg_sp_s390(void);
+> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op);
+>
+>  int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
+>  uint64_t __perf_reg_mask_x86(bool intr);
+> --
+> 2.53.0
+>
