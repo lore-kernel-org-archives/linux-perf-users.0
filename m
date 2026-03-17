@@ -1,54 +1,54 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4857F3803D6
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 05:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1A537FF60
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 05:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773726824; cv=none; b=mJEeLIWOi+0LaODmOZYnYY5rqGfVsAXtl4i8W2AB5EUX7IITQvwyA6m6LLs8D8weOneFjHpsJiX4gsSxJDKMqIhWZp403Grr1wNTKMlM87s9cTVFpljObL5TSrk/r4S0MCHXJSopBGVGFmszxP6iTkrmByPpIs/kGXrlWmifJ7E=
+	t=1773726829; cv=none; b=Uor3s1XmGeSV7TGWr8GJiywr5jxRn3LwZF8XtJ29DuFGHJNfN3OfZN90zdLN4hab9h67BSIxbOwLsMzjWbZozvkkO9Ukf4VuTnsK0/6mr4dIrOelWLPsMG7bvs7dAGjc2vEQTGscGPN0BCYU6YUuFB+IYmel//D72KMo5haR9RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773726824; c=relaxed/simple;
-	bh=4mSJoDt19c1s52Ar2qiFo/PGbNpyNgJireRDLID11TM=;
+	s=arc-20240116; t=1773726829; c=relaxed/simple;
+	bh=YnHls8NIVjy5Ei7a4hKc1qV28zK+UaZo7VK2CAN8c3w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lozcGHC4FT+xrtJVOChIylXtYi/fw0BaWVIb+HzGzPDi6in2ggIpld2pdIseI4359Ih0D1X7OxrCm4QGex8rTByLsxGPlWrC+ifuXkNmsIm8ForVc370qTlRs7vKTZ9xYtSuunDkV1TZoz1g5PK7yEa8XENVoT9Tlt3HAsc4JCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e2jppqV2; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=sEa+wbkA5gMfrSmeaot70ErRufRiDzcr6U820ls4KQwBW6Js/Il3nojxH62XXWrT9sKdrXmr0ltXCFB6TO/GuSvTk3f07VPq021/cd5nk1ISao0EGCPlZ/9EyrhLPd/wbAujKDgZsgFDB8IS84gJYSoSI4tgW/ubO6qpttzR2e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CZaH7B0f; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2jppqV2"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-829ad972df6so2917755b3a.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 22:53:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CZaH7B0f"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bea61591fdso92774782eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 22:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773726823; x=1774331623; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773726826; x=1774331626; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjPd8hYb03Ftsdibhr+aMw0AWnG2dzFR9qnmX2QMSHk=;
-        b=e2jppqV2bBUIRMl1d+AbvCcolwtdLSX0AOG2FdGsjQE8e3rgmk1H/inwS8Ziq5DBxx
-         9ab6UF53qr73utPneH0bCbPXZfGpBlNuf41imZ0/xJW6AuOKYC+4DgAWIayFlZ8yAMx/
-         AiojvGIaPzfzRqlgmfnJF9QVsi0n470bu2uuLZUCe+Y372vjYLF4B2sNC7QSsDu+sUMm
-         H4f4T+58a76p7ENqT+lgl0dw1swTsOX5x9WozmCbcdEreoWjNGHhK4QWGOpdLucvf6++
-         dnoVdNLd1SFnlChPeirJdaIvU0FGF384MEdUP2vh1JK3L9NntgFtk7nliJkA87nQu7hX
-         l+qw==
+        bh=4sR/GkKKCK4vlTKAx1HdQnSDfMDIglmN+8LdctHHquI=;
+        b=CZaH7B0f+C3xa/FsGjzd/HvczyHWkhOwyx965AwK3zmQoiBc/JrHWYAd3CCIUY559M
+         3vlDLuP0SLRA9sLA67mNoOndErkPDHBQCcvHcBuIQsapKb+yudMkJscfxgNsEu/W4rCZ
+         pJ8QYrTeQTgEdXv6aWgP/aI1euy+TwESvLxg9Y68sfg/qXzz/YBiw5xfU/rTpH/gPQUy
+         iPs+4WxLbpOlG+R9H6PgjYDbcONPmTfZBkCbPgE4i3CKM+kX/0cr9sBduLVV9fvKfANC
+         K70a1U/WMO80EylvO10jHUgoaFF4nAxHuG5Iog46I0xTe5hn/2Iy1eMh9C2DBaSGxXjM
+         9hIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773726823; x=1774331623;
+        d=1e100.net; s=20251104; t=1773726826; x=1774331626;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjPd8hYb03Ftsdibhr+aMw0AWnG2dzFR9qnmX2QMSHk=;
-        b=JUOQXHosil/KUKOv7ENbngZREzMN/i0ZQ4wI7YKmHDiPSlLYzV0fAsDx6WKDKvayJy
-         do4KL+IV0eUwycBNG25CgR6CESya3o3qARtJUxcWkW8W1iMBmDCs0kSDoAx/V+qzYuoV
-         Jw4+cu2yRW4rfP6wtX8AHEXnE0Nnn0LXquRFlWoENjX1LmLI9YF2kv56LxpxbggiECbV
-         TQb5stWFdci2zelBJpzoX/mNHW8Bpf6W0f3Ah9wsnf+vZMkFePVF1EHdyby0JvfCHcYT
-         bWB9fsGHbOSPcLl2rR4AmS55imXrTPCRBnsOXtEiPwfQ+osfObltL68gP1t1TIRVW+A3
-         dTOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdtFAVVghJQ/wl2njEIAgElJJSLhfEGEe0x6pcpRGJ4PR4BOZQWRexfjvIIQMF32PvWaftFt3ZmzT/lD0q3Bb9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy6+Oeq+kIXNnsGW0gmi8lclqTIR7DM9OA20DptHT4DLkQKLpL
-	oIEXUnB/juS2EBF+zObXnXPkWaz3SFpyY11lytAZpnAlE73DgZ0mfEFMzj5FzruW0fDgW+9TO1Z
-	REpLiV6beOA==
-X-Received: from pfld9.prod.google.com ([2002:a05:6a00:1989:b0:824:a502:8fea])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:22c4:b0:827:2f87:ac03
- with SMTP id d2e1a72fcca58-82a198fb8f3mr15205658b3a.43.1773726822422; Mon, 16
- Mar 2026 22:53:42 -0700 (PDT)
-Date: Mon, 16 Mar 2026 22:53:31 -0700
+        bh=4sR/GkKKCK4vlTKAx1HdQnSDfMDIglmN+8LdctHHquI=;
+        b=pKMRXWNJMcKyaGEehNlrv3OER+kJ2UUr6ry4EoBY3UbLnnfymvUvvJdRK4UDJ0GNeR
+         5L7fpG+b2UyoozUD6zHrCIQAHBQ2T5OwAOsEccjWMsLkEkTtvqwvLDj7tRrx0LB/IvwN
+         l9qGz9yiPgm2mDY1cB1GaQYeenuGhISE+jhSZACuS6col67h4M43XxAD9qQ61Zuepaq9
+         RYDs9Nu2vhInDO/juiBCwnHVESiDGhotDce+9Dp0JtHHxHStMGGj5WIZv+vFP3/8zeu9
+         7d/dQkMxfGKmtw9INXQqB1qJL4JpoRhn2bhVwNRlEAeUIo4aK0mke8VCSL3vDoiR2VTZ
+         MRyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFpBQwq7jc/3MEnO0CoflLL3QYtUzp6YJpGI/1d838BY5DzZ6sGCcQVOmDcO2nIyW1WhD2YndjzvXfFPU8exP/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWX9AL+0X3FkSdnnpZa6bCam6yI68f2nlLtUVDYPypGrltVbjV
+	Mtp+amLg/Z0rqV2jiOtQ79jbXuYEPq6M2kPSZEyVx60T4ZFcgDVfpb1W8TzYUTj2W0wHHALi/RT
+	2ewDoIq62LA==
+X-Received: from dybvz8.prod.google.com ([2002:a05:7301:7a08:b0:2be:2465:40e5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:4308:b0:2c0:d690:7b8
+ with SMTP id 5a478bee46e88-2c0d6901e3cmr1075723eec.23.1773726825768; Mon, 16
+ Mar 2026 22:53:45 -0700 (PDT)
+Date: Mon, 16 Mar 2026 22:53:32 -0700
 In-Reply-To: <20260317055334.760347-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260317030601.567422-1-irogers@google.com> <20260317055334.760347-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260317055334.760347-3-irogers@google.com>
-Subject: [PATCH v5 2/5] perf target: Constify simple check functions
+Message-ID: <20260317055334.760347-4-irogers@google.com>
+Subject: [PATCH v5 3/5] perf evsel: Constify option arguments to config functions
 From: Ian Rogers <irogers@google.com>
 To: tmricht@linux.ibm.com
 Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
@@ -68,59 +68,105 @@ Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com,
 	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Allow the target to be const in callers.
+The options are used to configure the evsel but are not themselves
+configured. Make the arguments const to better capture this.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/target.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/util/evsel.c | 20 ++++++++++----------
+ tools/perf/util/evsel.h |  8 ++++----
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index 84ebb9c940c6..bc2bff9c6842 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -49,22 +49,22 @@ uid_t parse_uid(const char *str);
- 
- int target__strerror(struct target *target, int errnum, char *buf, size_t buflen);
- 
--static inline bool target__has_task(struct target *target)
-+static inline bool target__has_task(const struct target *target)
- {
- 	return target->tid || target->pid;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index bd14d9bbc91f..54c8922a8e47 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1015,8 +1015,8 @@ uint16_t evsel__e_machine(struct evsel *evsel, uint32_t *e_flags)
+ 	return perf_session__e_machine(session, e_flags);
  }
  
--static inline bool target__has_cpu(struct target *target)
-+static inline bool target__has_cpu(const struct target *target)
+-static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+-				      struct callchain_param *param)
++static void __evsel__config_callchain(struct evsel *evsel, const struct record_opts *opts,
++				      const struct callchain_param *param)
  {
- 	return target->system_wide || target->cpu_list;
+ 	bool function = evsel__is_function_event(evsel);
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+@@ -1080,14 +1080,14 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 		attr->defer_callchain = 1;
  }
  
--static inline bool target__none(struct target *target)
-+static inline bool target__none(const struct target *target)
+-void evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+-			     struct callchain_param *param)
++void evsel__config_callchain(struct evsel *evsel, const struct record_opts *opts,
++			     const struct callchain_param *param)
  {
- 	return !target__has_task(target) && !target__has_cpu(target);
+ 	if (param->enabled)
+ 		return __evsel__config_callchain(evsel, opts, param);
  }
  
--static inline bool target__enable_on_exec(struct target *target)
-+static inline bool target__enable_on_exec(const struct target *target)
+-static void evsel__reset_callgraph(struct evsel *evsel, struct callchain_param *param)
++static void evsel__reset_callgraph(struct evsel *evsel, const struct callchain_param *param)
  {
- 	/*
- 	 * Normally enable_on_exec should be set if:
-@@ -75,12 +75,12 @@ static inline bool target__enable_on_exec(struct target *target)
- 	return target__none(target) && !target->initial_delay;
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 
+@@ -1106,7 +1106,7 @@ static void evsel__reset_callgraph(struct evsel *evsel, struct callchain_param *
+ 
+ static void evsel__apply_ratio_to_prev(struct evsel *evsel,
+ 				       struct perf_event_attr *attr,
+-				       struct record_opts *opts,
++				       const struct record_opts *opts,
+ 				       const char *buf)
+ {
+ 	struct perf_event_attr *prev_attr = NULL;
+@@ -1170,7 +1170,7 @@ static void evsel__apply_ratio_to_prev(struct evsel *evsel,
  }
  
--static inline bool target__has_per_thread(struct target *target)
-+static inline bool target__has_per_thread(const struct target *target)
+ static void evsel__apply_config_terms(struct evsel *evsel,
+-				      struct record_opts *opts, bool track)
++				      const struct record_opts *opts, bool track)
  {
- 	return target->system_wide && target->per_thread;
+ 	struct evsel_config_term *term;
+ 	struct list_head *config_terms = &evsel->config_terms;
+@@ -1445,7 +1445,7 @@ void __weak arch_evsel__apply_ratio_to_prev(struct evsel *evsel __maybe_unused,
+ {
  }
  
--static inline bool target__uses_dummy_map(struct target *target)
-+static inline bool target__uses_dummy_map(const struct target *target)
+-static void evsel__set_default_freq_period(struct record_opts *opts,
++static void evsel__set_default_freq_period(const struct record_opts *opts,
+ 					   struct perf_event_attr *attr)
  {
- 	bool use_dummy = false;
+ 	if (opts->freq) {
+@@ -1490,8 +1490,8 @@ bool evsel__is_offcpu_event(struct evsel *evsel)
+  *     enable/disable events specifically, as there's no
+  *     initial traced exec call.
+  */
+-void evsel__config(struct evsel *evsel, struct record_opts *opts,
+-		   struct callchain_param *callchain)
++void evsel__config(struct evsel *evsel, const struct record_opts *opts,
++		   const struct callchain_param *callchain)
+ {
+ 	struct evsel *leader = evsel__leader(evsel);
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 97f57fab28ce..339b5c08a33d 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -287,10 +287,10 @@ void evsel__set_priv_destructor(void (*destructor)(void *priv));
  
+ struct callchain_param;
+ 
+-void evsel__config(struct evsel *evsel, struct record_opts *opts,
+-		   struct callchain_param *callchain);
+-void evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+-			     struct callchain_param *callchain);
++void evsel__config(struct evsel *evsel, const struct record_opts *opts,
++		   const struct callchain_param *callchain);
++void evsel__config_callchain(struct evsel *evsel, const struct record_opts *opts,
++			     const  struct callchain_param *callchain);
+ 
+ int __evsel__sample_size(u64 sample_type);
+ void evsel__calc_id_pos(struct evsel *evsel);
 -- 
 2.53.0.851.ga537e3e6e9-goog
 
