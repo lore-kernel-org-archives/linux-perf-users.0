@@ -1,129 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994E41E5702
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 06:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA0D22A80D;
+	Tue, 17 Mar 2026 07:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773728962; cv=none; b=tx1bOOYmYc5aliksze6NdTD4jCK4Mw3rqk6GWDggCR2CWvi99RxD4mkp3hBjjyWfk9sdenOtkqNBuiPZm9O7l3hmns5WGwPi0K8YQ53SoPT6RLHxJV1QYUZDbqUuSOqsxaqfouvHd2+3qxGz1TUCsTLDUjt4a6KI1IKPRyOMosI=
+	t=1773730838; cv=none; b=hYzSKaavQ5bbKi6FNHfkjQGaznVL6PiTfJ9NiK9ZJOFcCAv54LM+D/MdvA7+rhQcYPCKFA6KPbsqf2A8gBz4ua3heSKzdMneiygAYn8kirCoaLEz4RyVJqCAIwswB2ExmUzzpWUwUIuIoYXPOXUvrO6TXDHg2XctrHkkiCaFhrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773728962; c=relaxed/simple;
-	bh=eCiKRyoDAzKNcTc0XsJk4iW3vQZugoEMQp0SQuxx7CA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BB8yrZTAfYPhZsPfoeOUtDO8JeYoN3cmNLYZGKB5m2yZu5QdZVpPvrPkc/WJk2Uk5U/lp0HRWeLdlvpsf0uenRz85JR1qLWq92ACnYO1481CAAsIzVsPwMbb6j084GaGjAouVIY4/P3cGY2qTr+TSTdUgiREI4s+Jh1/vq8bLuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjHacC/8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773730838; c=relaxed/simple;
+	bh=UgYDSh/T7OTYVT5d05Oq68sK6MVez60xW0HwRSnFA1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LIIizegUFJs9csoV6KvHBf9ygfXuSlMYsO8MyUSw/fxQdAHU4Pvu0NqThhCR8vcuTRgWNx7hspm1a0DJ+kkxiBzp9ExkEQfYMbwVyfxXfxXXG+LkIp05KXP4Z/D65vksRhi0Lto+hkcq/awwVKVUvZ/i4Z7k6nKV1VRGv1Z75s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUU4qY6n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjHacC/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4EDC2BCB3
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 06:29:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUU4qY6n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348A6C4CEF7;
+	Tue, 17 Mar 2026 07:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773728962;
-	bh=eCiKRyoDAzKNcTc0XsJk4iW3vQZugoEMQp0SQuxx7CA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VjHacC/8FdACMbK6ZQ3iSWuPyV3khiCNBlCPf3ZLxirZ7gQYmgHytqYXG3Ss3utf2
-	 ib1639oiQIddZPKO2RsdlurBgzHCUTBD6nfwPntBJ0jCwPOiVmrF5QekBOCS/H5Qq1
-	 xgjOCXElPosQY4Hlf7LebOJXJsxbPdh8VW/n1Vk5Rm3TxeA5ETssbdfPtDL+3XaBO9
-	 /JuL6bfB/vHVk3051d91dpGc8ApeJbBhBPWEruW5YTgl6LWvZhTvO/ZKKaEvS8GBVM
-	 327YTigTfgIT0sCJbIgWiv5EYe8k4ZFfiJIIc/Qdr3scZxGE5xWJtf9W8sTzTLPSXm
-	 n8212MZTDwKLA==
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4852f8ac7e9so63965335e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Mar 2026 23:29:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhB8RaAV1zf30TficqUncCD9EzlSmbKR8R6TzOBFHZigeHwCvjhaHbqN3H1Ac8aY3H8HoUQRUFrs+ljESy7duB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyM5YIm9HxQML4FJeZa8mItO5Uf6NZYOJUbQN9CVrj+nB6WRA2
-	N7C2ca9QqSeMcI6Gq6mESs8zmTJdrY9wjJ95vfFqTNuv/WgLKS2p25bBuNS3L7TtdrMelCkAheN
-	2sxnoXDovGS2lrzI+ySgwvUm8KzPm1HY=
-X-Received: by 2002:a05:600c:c4ac:b0:485:40a4:364 with SMTP id
- 5b1f17b1804b1-4855670c2a5mr259125285e9.26.1773728960630; Mon, 16 Mar 2026
- 23:29:20 -0700 (PDT)
+	s=k20201202; t=1773730838;
+	bh=UgYDSh/T7OTYVT5d05Oq68sK6MVez60xW0HwRSnFA1I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GUU4qY6nC/0lmXYLmDQ4uT03viTeKaD91PwTnL2peKmxDTnDKfsZFi8X6xjyXUGst
+	 fy3vR4SI8pT8dY6ZWTejb75qr9HNji6WWynsIe6a0vU4WicpMELONgQODhA3eE15Jq
+	 HFobLTTRmid+3b10yg/qxlKCE9c/xG4JJVpBMoLZbXMtdIgXRiTDEl0PAoZ8NrH6wY
+	 cKy2Ht8zPegey4E9RfSM1z2nMwjVoQhpeSnPWhb/gk65gK0/qbJa8nNYcH5j71zID3
+	 1Zfo+DBXeSBkbTChmwrBj7IWQiiOJVxAz6S/gfAZCHOq6uZ/5Iyc1m4/n+ClDR2UQF
+	 El+YW2sgjHxtw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf test: Fix perf stat --bpf-counters on hybrid machines
+Date: Tue, 17 Mar 2026 00:00:32 -0700
+Message-ID: <20260317070032.41934-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260317034847.4136-1-cp0613@linux.alibaba.com>
-In-Reply-To: <20260317034847.4136-1-cp0613@linux.alibaba.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 17 Mar 2026 14:29:08 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRYfvFCeHx4yxdh8tfn1GLTC+UN7vtrTokmkmb2Z6=vKg@mail.gmail.com>
-X-Gm-Features: AaiRm515znQBvPe7b1QWk6C1XHuW373cVtMlbUs1J4rEm3b0iHNiaSsIo_5SmLg
-Message-ID: <CAJF2gTRYfvFCeHx4yxdh8tfn1GLTC+UN7vtrTokmkmb2Z6=vKg@mail.gmail.com>
-Subject: Re: [PATCH] perf symbol: Add RISCV case in get_plt_sizes
-To: cp0613@linux.alibaba.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, irogers@google.com, pjw@kernel.org, alex@ghiti.fr, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 17, 2026 at 11:49=E2=80=AFAM <cp0613@linux.alibaba.com> wrote:
->
-> From: Chen Pei <cp0613@linux.alibaba.com>
->
-> According to RISC-V psABI specification, the PLT (Program Linkage Table)
-> has the following layout:
-> - The first PLT entry occupies two 16-byte entries (32 bytes total)
-> - Subsequent PLT entries take up 16 bytes each
->
-> This aligns with the binutils-gdb implementation which defines the same
-> PLT sizes for RISC-V architecture.
->
-> Update get_plt_sizes() to set plt_header_size=3D32 and plt_entry_size=3D1=
-6
-> for EM_RISCV, matching the architecture's standard ABI.
->
-> Since AARCH64, LOONGARCH, and RISCV have the same PLT size definition,
-> they are merged together.
->
-> Link: https://github.com/riscv-non-isa/riscv-elf-psabi-doc
-> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dblob;f=3Dbfd/e=
-lfnn-riscv.c
+The test constantly fails on my Intel hybrid machine.  The issue was it
+has two events in the output even if I only gave it one event.
 
-I don't think putting Link here is a good idea. Just copy the part of
-the psabi spec v1.0 here:
+  $ perf stat -e instructions -- perf test -w sqrtloop
 
-8.4.6. Program Linkage Table
-...
-The first entry in the PLT occupies two 16 byte entries:
-...
-Subsequent function entry stubs in the PLT take up 16 bytes and load a
-function pointer from the GOT.
+   Performance counter stats for 'perf test -w sqrtloop':
 
-For others:
-Reviewed-by: Guo Ren <guoren@kernel.org>
+         910,856,421      cpu_atom/instructions/                                                  (28.05%)
+      14,852,865,997      cpu_core/instructions/                                                  (96.79%)
 
+         1.014313341 seconds time elapsed
 
->
->
->
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> ---
->  tools/perf/util/symbol-elf.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 76912c62b6a0..806936d95523 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -372,10 +372,8 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr=
- *ehdr, GElf_Shdr *shdr_plt,
->                 *plt_entry_size =3D 12;
->                 return true;
->         case EM_AARCH64:
-> -               *plt_header_size =3D 32;
-> -               *plt_entry_size =3D 16;
-> -               return true;
->         case EM_LOONGARCH:
-> +       case EM_RISCV:
->                 *plt_header_size =3D 32;
->                 *plt_entry_size =3D 16;
->                 return true;
-> --
-> 2.50.1
->
+         1.004114000 seconds user
+         0.008174000 seconds sys
 
+Let's modify the awk script to add the values for each line and print
+the total.  That way it should work on any platforms.
 
---=20
-Best Regards
- Guo Ren
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/shell/stat_bpf_counters.sh | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+index f43e28a136d3c9bc..e04808ed871e3f08 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+@@ -41,8 +41,10 @@ check_counts()
+ test_bpf_counters()
+ {
+ 	printf "Testing --bpf-counters "
+-	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | awk '/instructions/ {print $1}')
+-	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
++	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
++				awk -v i=0 '/instructions/ {i += $1} END {print i}')
++	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
++			       awk -v i=0 '/instructions/ {i += $1} END {print i}')
+ 	check_counts $base_instructions $bpf_instructions
+ 	compare_number $base_instructions $bpf_instructions
+ 	echo "[Success]"
+@@ -52,8 +54,8 @@ test_bpf_modifier()
+ {
+ 	printf "Testing bpf event modifier "
+ 	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
+-	base_instructions=$(echo "$stat_output"| awk '/base_instructions/ {print $1}')
+-	bpf_instructions=$(echo "$stat_output"| awk '/bpf_instructions/ {print $1}')
++	base_instructions=$(echo "$stat_output"| awk -v i=0 '/base_instructions/ {i += $1} END {print i}')
++	bpf_instructions=$(echo "$stat_output"| awk -v i=0 '/bpf_instructions/ {i += $1} END {print i}')
+ 	check_counts $base_instructions $bpf_instructions
+ 	compare_number $base_instructions $bpf_instructions
+ 	echo "[Success]"
+-- 
+2.53.0
+
