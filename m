@@ -1,196 +1,157 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13262DA756
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 15:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6984B2E888C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 16:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773763083; cv=pass; b=nVYa/uJDWfVB+reS9vopfN4sR6cn5aaiXGXN8/GEnyftzo4wONtgu6X/mPw0eaeiKbWyYrhlwv2RAx+Bu69AOpcBEF5FhaveoaGjpaOnVM16FwTvd6rY+acbDbbRJjOTEcM8zF3nAzJHXOUK2RbA0Cl1AcPyorlLkJ8MlaZ6XZA=
+	t=1773763337; cv=pass; b=SxnjV21ygJ5JbU7ppszqXFbUZiIygpfO9DM2EINNoMG0vqM5oiizE9TV9pItDLjTg0zlku9d4o0HMzY97A2mnxS2PHQEpCTw/wKbhECds9uMd1TvxPFb+hut2XxoFBR4zfOdoobWiafsYHVwkToMWab0ULy4LTUy3xDNHmA+8to=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773763083; c=relaxed/simple;
-	bh=FpVJKWoAP8Q+O3yUtt7eVFUQooIj80V1twyl9biRNBk=;
+	s=arc-20240116; t=1773763337; c=relaxed/simple;
+	bh=CqqW22RO3ZRqLUDSRy8f7yh1EqvrK6CgpS2J8cVHpqU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d5KOJ8il1Rd0gyOPV2jWgRP2zuPpFDHGvScxz5tal+IGMA1H51udXV4NtGfaBctJ0tkP58IMHLwfLX8D+Cpq7kga5UBlRku+Ydpop83/B7zPF7T3nFEA+HQ6C9+asYvDyb8mGSY9gG1hcyTs4rKuu+VmmHJd5HsF/Az80ON/ZMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dlInDSSS; arc=pass smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=sYWU9otrakgvcGwTKIuUjIayeozp5doB2ndiLf6FbsziJKZ7wjm2t8kUOK6ihG4RpJuvRA5Dta3jQ2MPfwJ13sL+85u0+r31pyaWjVlsDUpe8aEwuFDUbItb3LgXRazOdqJRzl5tVwhutI2dH0TCnk5Dk3VKf8xraHBVcC+yCOw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MsnKQETc; arc=pass smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dlInDSSS"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b04c9e3eb7so94635ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 08:58:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773763080; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MsnKQETc"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-661ce258878so13116a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 09:02:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773763335; cv=none;
         d=google.com; s=arc-20240605;
-        b=PHD+CCYS4leXB3qiwaM0WhSaQhpLg0r0+nizf8bvbKinBNT6G8f3rEVKEOrm9+Wc3l
-         i4cmrBJtW4rGf5V0aVxDgt8fyT/7epjrQscEkwm99ICMsSH8rbJwxv6r/FFEUsMWhYbl
-         t4MXUHqPq10wiezM8ia7esApild8hi6RXFDO3ahW4kCwIBfH33sLZjU2Pi8qKn2PVUWH
-         Q+QB737qXOHUbcVRdzSj6cix8j+pGYJw7iJXkffKYLxk4QD7KZEtPDtRt5b5DaEUA1YA
-         3gadz+fCVtj4ERz+PmnnLFu4jYKdmr5ny+xbi2Hy/BaGGhDOpyoKZAM2z9g2oMR8A1+m
-         MiKA==
+        b=bWJ/u9dWU3OSI3Cs3Ay64wP6YrMfjWGwE4A5yUXroNUZk9oJkl0ZWRBxyKXbV+f/Py
+         awclJkjNdogsTDVE5IIQ2cCluXypjl1aHNmoVk8Lvkhpeb6K1j7FqNkbNL8UTr7xH0O4
+         ZmY+Jx5J3ObRWrNmQX9AN0rW3XMS5RAWb5dERdM8TRB4xfoLI9q7zxBbM6S9e3N0wg6R
+         dH1CiJXQYgpQ/I8F8L3GxWc5M8bcNVM2qwB8ahezAgKVFfS0ykmB4vOJJsZF4Zty6Ufa
+         sz6xhBXo5iOdueRBY1p31M0uPI0FoheLnM7rKbZdeZHceGpC9tIkIACIcxc6MAvNeMOk
+         dp/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=nJlQgXhNC6o+XDgLnffDGT6DTW23Wmbf2a7EXFBYx9Y=;
-        fh=Gx9hZ2kK/6Oc3oWzcf8R83Sz8fN+9r/LOV7yBeFj7Z4=;
-        b=gY4YMgKXP4ucwwXaz5PAIeezJv9YZfxteg/b2MaU//ExtXYzsCAEW5MAl2Vi1gcVtg
-         zbhkC3Hd+FSG1hD+pBCWfTLlVqUjJf8YlJ6CHDC8Xg2Q2nZdopq16tLHKjxfErbbYS/q
-         IQp6uppQa4UAv0Cdpy3CYttDQtVt7MyNaCOzQ7AF3h1ARV/3Ost0UtLkJWuxyKp8CDHW
-         8u9AzOGQ8zHo57fUqoTfNxIWz6RYtchoaTknBcGD618NKkgR/IsL6C1ppy1bMFObgpsU
-         J9702usIcXBYezNM5TL/ICJlvjAwL1beBv/d8w20bGb8r1qoZc8ZBiwexsOiQn585Sqx
-         UDoA==;
+        bh=SY4/5vAWWcaV9x0jV4cO7baDxpJaaDgGr6iFNkqEvuQ=;
+        fh=+YXLT1JC9Nj6GspRhUgjWEBk/AL//mUcfQSxaZqSbKw=;
+        b=WgbA92NFluBtELxegg7U2OoYUdkiQrpZyc74uDxGAFVHAV4zWMD5bM3HOQS6LtMk/O
+         Crh6G+Q0VJxnE5iEOOSRRVAp6a3Spm/SBSl+MQokYqkLBGcz9qWdcXRh3bHwTYXuT5P/
+         kpTXNZZyon2k2YnZJaJiTmG4gbdoaFFXqnOZBqsuojWC4waFj9L3KNh9a0KnFBzNRxWu
+         K8iyD+tkWu4t6OE0S5xmIAJOOwC0C45QsguQikvXH0aKOeIbHdP/acUmZAYIoDUr/IhT
+         lufG78U8s0nu/u+UNNH4az6zahq2eI4caHrwOc+lrAMGAWrC2qfQpGB81NMo9jsfOAY1
+         B+2g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773763080; x=1774367880; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773763335; x=1774368135; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nJlQgXhNC6o+XDgLnffDGT6DTW23Wmbf2a7EXFBYx9Y=;
-        b=dlInDSSSgt6t/wEOUeHUFLvZ4RYzw0FFwp9IHmf2ufD+vkCjUmxcb+U9LWULOqiGfQ
-         PwiObmgQ1v1AkXixcZM68IPYlDpoUIL+JRI3ZC28EhfpFz10M5JxB7IYZm6Q1rMumE8G
-         uwEiLCZABnc9h43UeGDkw5T0YeNM4r4dBjGmtavC+4ovjhQg+pBo2IGK7ZhGJTzBPecQ
-         +54vs7qlLiLg+8Mbvn5v2sv34Uoz1xYdla50b8m1NVUp8qDXT2W5hS7zF6CEM6MTkbFr
-         cImBsgWLhGu4oeC4HTMiv3r1Q9O3KPJx6MBCHWXxywRIGEdPGiDa0G4BsQHxcGjcWyoC
-         378w==
+        bh=SY4/5vAWWcaV9x0jV4cO7baDxpJaaDgGr6iFNkqEvuQ=;
+        b=MsnKQETcw3qKro5hwCDhoywmoAkFKeqa6Ir0NxILtQoh3sEe6M1IDctTtxvrzn9RbA
+         VnIBeNtfj7rMVSafhLU60CmGjcMJrp0bSpMoo6JDDtZMnd6i86Gj5cKU7eeuJ6hwNGLV
+         6CiI442hnbmbJVYt0g3KzJY37QenvPYGUcv87moJTBZx+mA8WENJTmQcSq34Ze9xoUIR
+         PwbKR3l1umlCmsU6B5n16/2n0l0GGEAxH4/Cvb5P8tPuq9lzp3z/Z1JoPWWTraAfiZ78
+         819B9K3dxiHh7ce6yKbcxo7sp26n6xAU9Wt2fSTaK2JEjRXr54Zp+HEUa7M+TcmQis5+
+         k1aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773763080; x=1774367880;
+        d=1e100.net; s=20251104; t=1773763335; x=1774368135;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nJlQgXhNC6o+XDgLnffDGT6DTW23Wmbf2a7EXFBYx9Y=;
-        b=UHbG3Onm+QY5Zbjpj+6z17b055W0+08tonutq+2X59zWek3/xj30HPR4a8MZ2Yjas1
-         oy1bDQr2hATsIQZNlswBk4bbU0n6dZLVtCNvmDyeqwJgmdVr1SRRGq7xdldz0HsURRvx
-         SE/lAZXSdEFP5zzh78ALFvL4Oct1EkmhotouDDlCmLQnRGyX7mywR7cNActdwXp8b1p5
-         V6YJefsldyIVZvzzGQGaPKN3gN3O0k/87kf4+fXr1mL60Fl6ixCEQBESTtnVJtrEEwcH
-         ftV7Ff1Ka7u4Fx9lDY3RlOBHrVnHdERw31PmQKhWxs8IljjzO1rCmm+rXDjKJ6Ym9JDZ
-         9GEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEfDSKpBGouQzHhFjFOR6LLyHkzxMRZObL12ddkCLzYuvKFbDM6HCfUQ98v9wrKnCOWAXLIovwhwCuWucdqKPt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI56PgHCQokGfRIhiY8wrk0oGXk8DTD/2hVmhtWzhcpdEMpxtZ
-	13jjdaBSp118VfQUV5TqBYdmh2Rm27jkaSisMD4NG8yNl2iZdaHX9cclYZc51UQRICZddPMKS64
-	5iiZ0zydC+Lksi6TQJS2aArbjFfhjIllqiPWuIHzn
-X-Gm-Gg: ATEYQzxWIlp4UyOuUwwOeRzNwmLkmX6mRjKyYzoiDvmxd5mbM4S7J1rOX3ygeh7fH4r
-	QfImvBDxjJjgc39xdZA+p8s07BQcyl2l9dSm22DDfa+x620qRKckFMttDfJ7kg9zZEwOA5y2IyS
-	huaHlLl8hLYE32GJcMzMtwQ2rs7oT7u6yoQdOXH3TmeWbQnSN3jqp/hnJHNUxNFnN6dWXPpcNiM
-	tpUAVhkIKFFCH2cyzDeMc72bH0wjkv539IXm1GNDZOHGA7oAuYOIR2FttlrQAxj10x7Kc1bOC3p
-	h1Qo8qqp
-X-Received: by 2002:a17:903:32cd:b0:2ae:c358:bb9f with SMTP id
- d9443c01a7336-2b063f0b355mr3286165ad.10.1773763079537; Tue, 17 Mar 2026
- 08:57:59 -0700 (PDT)
+        bh=SY4/5vAWWcaV9x0jV4cO7baDxpJaaDgGr6iFNkqEvuQ=;
+        b=ABJR2KTHwZuPBB0qhTvMs1+zqcse5HCiWH1zzMdRmT93KduPBA6PzbJZpMBeaTlo14
+         BU1K+MG1T+e9ofTxJOT/x69jxcTXMNZvpESd9f1Q0nJHCXA62UPNuFcSQwh3RONCKXfV
+         f7WnJjHlDTDzwp8X1gNVJvhBgaOgvMRp3Qh4aipBAB1UZMXPmwmGVZZd6dpbdUx+SD6p
+         r7wUvy6r8/mkaeS+8wpnTJm3HQvyi2PsZ2AZ3oYQOFestNJDO4FJiNpaSoFvlMWXh631
+         AntJBNRn1d4ZXQZNgV6PJ8K6aO8wuK9AtL5xI1dUV3j/37GSVa3MfkBnKbaKL3OxHbIu
+         Xz6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf1SkMjMbZQMQ8QvKeFYyYemK1jvA5+ITNktO9Lq48Hjr3AkcjV/orD5yexJCclDC8kXIMYmlXJFQw0hxJys16@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqCLKPqz63bcmIHEsIIll3+jBds4g1UwdGzNJSTZotEWpITHIT
+	AoLKBeBhgDrEgb5AJzjQiBj2E58DkFxV3RKCY+c2QuElLnZxhnmzJwNbZijKYf8dJhcIwfWJ6xD
+	NCR7ourXqc73UcIwbzu7Y3tQwkLiXTMLCe1fb1ID2
+X-Gm-Gg: ATEYQzxdatQBlGgV/PPaHNm6oms+FZbL5agZNxzIqzt8F7L3TeVbht2L3LtG47/uV1H
+	tWoOEKlOOS6cC4KM+4b14nkmFhJOpkvWo7jX/w38sqkH1O8uaylqpa8BQHufoUnwgrH1V6eCb/J
+	66PWI8a5K0RJ70p9vDU4S4NO2VaLsC1HMN+yTC4rRz3lJNRbShTVCnrzH1euLUaPWzVoImE44om
+	zld2QZkEqjno+zf3xOkqxd7k9KOkhMBuEyQc8RcG0do2CUuiB4fp7WC00lIRz82HXmqUDrx1bC7
+	8nXpCv33zWC3xg8o9A==
+X-Received: by 2002:aa7:d691:0:b0:660:b029:3d4c with SMTP id
+ 4fb4d7f45d1cf-66713bea8f6mr51265a12.2.1773763334159; Tue, 17 Mar 2026
+ 09:02:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260317070032.41934-1-namhyung@kernel.org>
-In-Reply-To: <20260317070032.41934-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Mar 2026 08:57:47 -0700
-X-Gm-Features: AaiRm52mlxH7ugoAvbqhwxncus-wr_xj_dtmYlhwklkgyvOEXWtLveK99qSH_hQ
-Message-ID: <CAP-5=fWsjTbwjzcv6Lj4Byzy-h19qQx4-hWVGofRj6dnwH3a5A@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix perf stat --bpf-counters on hybrid machines
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <Z_VUswFkWiTYI0eD@do-x1carbon> <Z_aovIbwdKIIBMuq@google.com>
+In-Reply-To: <Z_aovIbwdKIIBMuq@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Tue, 17 Mar 2026 09:02:02 -0700
+X-Gm-Features: AaiRm52Qe_TIMFzvhlPR8tJPzof84bHGndhqcQdcQocpyA2EGQ2Rrcs0dQ9C98I
+Message-ID: <CALMp9eRvB5Jqbs6aKMsPzKDJE7Pb0iUTsO9Ot1CB698px1GHcA@mail.gmail.com>
+Subject: Re: kvm guests crash when running "perf kvm top"
+To: Sean Christopherson <seanjc@google.com>
+Cc: Seth Forshee <sforshee@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, 
+	Mingwei Zhang <mizhang@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 17, 2026 at 12:00=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> The test constantly fails on my Intel hybrid machine.  The issue was it
-> has two events in the output even if I only gave it one event.
->
->   $ perf stat -e instructions -- perf test -w sqrtloop
->
->    Performance counter stats for 'perf test -w sqrtloop':
->
->          910,856,421      cpu_atom/instructions/                         =
-                         (28.05%)
->       14,852,865,997      cpu_core/instructions/                         =
-                         (96.79%)
->
->          1.014313341 seconds time elapsed
->
->          1.004114000 seconds user
->          0.008174000 seconds sys
->
-> Let's modify the awk script to add the values for each line and print
-> the total.  That way it should work on any platforms.
+On Wed, Apr 9, 2025 at 10:05=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
 
-Thanks Namhyung! Sashiko noted a regression in the "not
-counted/supported" logic caused by this change:
-https://sashiko.dev/#/patchset/20260317070032.41934-1-namhyung%40kernel.org
-
-Does this modification to the awk script prevent the detection of unsupport=
-ed
-or uncounted events?
-
-When perf stat outputs strings like "<not counted>" or "<not supported>",
-the first field is "<not". In awk arithmetic, adding a non-numeric string
-evaluates to 0. The script will output 0 instead of the string.
-
-The check_counts() function explicitly checks for these uncounted events:
-
-  check_counts()
-  {
-    if [ "$1" =3D "<not" ]; then
-    printf "[Skipped]\n"
-
-Since awk now returns 0, it seems the test will bypass the skip logic,
-proceed to compare the numbers (0 and 0), and falsely report success. Can t=
-he
-awk script be adjusted to preserve non-numeric strings?
-
-Thanks,
-Ian
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/stat_bpf_counters.sh | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+> Long story short, masking PEBS_ENABLE with the guest's value (in addition=
+ to
+> what perf allows) fixes the issue on my end.  Assuming testing goes well,=
+ I'll
+> post this as a proper patch.
 >
-> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tes=
-ts/shell/stat_bpf_counters.sh
-> index f43e28a136d3c9bc..e04808ed871e3f08 100755
-> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
-> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-> @@ -41,8 +41,10 @@ check_counts()
->  test_bpf_counters()
->  {
->         printf "Testing --bpf-counters "
-> -       base_instructions=3D$(perf stat --no-big-num -e instructions -- $=
-workload 2>&1 | awk '/instructions/ {print $1}')
-> -       bpf_instructions=3D$(perf stat --no-big-num --bpf-counters -e ins=
-tructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
-> +       base_instructions=3D$(perf stat --no-big-num -e instructions -- $=
-workload 2>&1 | \
-> +                               awk -v i=3D0 '/instructions/ {i +=3D $1} =
-END {print i}')
-> +       bpf_instructions=3D$(perf stat --no-big-num --bpf-counters -e ins=
-tructions -- $workload  2>&1 | \
-> +                              awk -v i=3D0 '/instructions/ {i +=3D $1} E=
-ND {print i}')
->         check_counts $base_instructions $bpf_instructions
->         compare_number $base_instructions $bpf_instructions
->         echo "[Success]"
-> @@ -52,8 +54,8 @@ test_bpf_modifier()
->  {
->         printf "Testing bpf event modifier "
->         stat_output=3D$(perf stat --no-big-num -e instructions/name=3Dbas=
-e_instructions/,instructions/name=3Dbpf_instructions/b -- $workload 2>&1)
-> -       base_instructions=3D$(echo "$stat_output"| awk '/base_instruction=
-s/ {print $1}')
-> -       bpf_instructions=3D$(echo "$stat_output"| awk '/bpf_instructions/=
- {print $1}')
-> +       base_instructions=3D$(echo "$stat_output"| awk -v i=3D0 '/base_in=
-structions/ {i +=3D $1} END {print i}')
-> +       bpf_instructions=3D$(echo "$stat_output"| awk -v i=3D0 '/bpf_inst=
-ructions/ {i +=3D $1} END {print i}')
->         check_counts $base_instructions $bpf_instructions
->         compare_number $base_instructions $bpf_instructions
->         echo "[Success]"
 > --
-> 2.53.0
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index cdb19e3ba3aa..1d01fb43a337 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4336,7 +4336,7 @@ static struct perf_guest_switch_msr *intel_guest_ge=
+t_msrs(int *nr, void *data)
+>         arr[pebs_enable] =3D (struct perf_guest_switch_msr){
+>                 .msr =3D MSR_IA32_PEBS_ENABLE,
+>                 .host =3D cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_ma=
+sk,
+> -               .guest =3D pebs_mask & ~cpuc->intel_ctrl_host_mask,
+> +               .guest =3D pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_=
+pmu->pebs_enable,
+>         };
 >
+>         if (arr[pebs_enable].host) {
+
+Because kvm_pmu->pebs_enable is optimistic, I think we also need to
+swap these two modifications to guest PGC in the code below:
+
+arr[global_ctrl].guest &=3D ~kvm_pmu->host_cross_mapped_mask;
+/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+arr[global_ctrl].guest |=3D arr[pebs_enable].guest;
+
+
+By the way, IA32_PEBS_ENABLE can be modified in NMI context by
+handle_pmi_common(), so the host value returned from this function may
+already be stale. We have seen cases where handle_pmi_common() clears
+a bit in IA32_PEBS_ENABLE between here and the next VM-entry. VM-exit
+restores the stale value with the bit set, and that bit persists
+indefinitely. If the next perf event assigned to that PMC is not a
+PEBS event, it magically becomes one. When an NMI arrives for PEBS
+buffer overflow, perf refuses to claim it, because it doesn't think
+any PEBS events are active. So, we get an "Uhhuh. NMI received for
+unknown reason" message on the console. A flood of these is enough to
+trigger the NMI watchdog and cause a panic.
+
+I think we need a fixup after VM-exit to clear any IA32_PEBS_ENABLE
+bits that were cleared by handle_pmi_common() between
+intel_guest_get_msrs() and VM-entry, but I'm not sure what the best
+API might be. Calling intel_guest_get_msrs() again seems too
+heavyweight. Maybe KVM could ask perf nicely to just rewrite the MSR
+with cpuc->pebs_enabled? Note that any erroneous IA32_PEBS_ENABLE bits
+are dormant post VM-exit, since any PMCs throttled by
+handle_pmi_common() will have their enable bits cleared in the
+corresponding event selector.
