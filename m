@@ -1,107 +1,96 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C40373F7863
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 18:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E3B20ED
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Mar 2026 19:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773773893; cv=none; b=kwDcmd4VgUladhWQthCN6jE+ik/4vXZwKCHHgWd8XLbfoAPZPqa7ANkmqCYEt6bo2lieZYwOXIIhT7RbVU/1bvI+jLX/CZ7FrXJGSB964Rj67WAQ5HQ2vI7E9SgCvM/IIqDqhT/C+lU41uu9o1O5rgbNMMzmJI71iG5zOP8SoXs=
+	t=1773774500; cv=none; b=mJlg2uimi0iDFunNfAHkjplZEVH8WGV8FSx1qc88etaabAzPN8eSIOuWBaAco0dW/pgTt63GUA/vrXyzI+BwPjH4VLBrmFvj2XuNWmAqPY7UA1mwpEHIE+dZu86nPcbUyoujEau4wDxfB9etKB+3HgEoqBn4qYNNwqT40j3AXlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773773893; c=relaxed/simple;
-	bh=dvEQ84EZOFi0ZVeX5TM+PD21NNXmeL3RHXpP3i/6r/I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YvXdEHxNFU7QVnFLEmpA+Uo0UhgKjMqhldikxn/wmK69LXIRDh/boPTJZ/p452p85msaVgHfNB7F32CjAaQwcOuBLaUeVHmu+dpCYPfr+eduOusflbUl9hCWB3oMAiZQJnQcjyNChkH140BagPJsUniupNvQYUDx94oUlthTPps=
+	s=arc-20240116; t=1773774500; c=relaxed/simple;
+	bh=MQuZ8zNAhnuVz5iAfvFkte71HHNzFPcNkkRHPFWG8SQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jczBvQOCXOgNkiPpcrqtBxUcqWt6kBDII+AKPBu5zsT+3SSlvjDWYbqGECg0y5M7OiYWLAE6owZc+xvaYrpbqOTyM7ChzxoaySYnRfAahvnW5EslHNgADoqts3PpHZ2aX06/krlaGiyZL2x57ngykePto/kIrIVcD5kGPlicvNo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00B601477;
-	Tue, 17 Mar 2026 11:58:05 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61E023F7BD;
-	Tue, 17 Mar 2026 11:58:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 118031477;
+	Tue, 17 Mar 2026 12:08:12 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDC793F778;
+	Tue, 17 Mar 2026 12:08:17 -0700 (PDT)
+Date: Tue, 17 Mar 2026 19:08:15 +0000
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 17 Mar 2026 18:58:00 +0000
-Subject: [PATCH v3] tools build: Correct link flags for libopenssl
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] tools build: Link static libs for libopenssl feature
+Message-ID: <20260317190815.GL8048@e132581.arm.com>
+References: <20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com>
+ <CAP-5=fXopOUKZ=Hf1s5CZrb0CmH+W9XQa38JW9Bv+GXdYrcHnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260317-tools_fix_build_libopenssl-v3-1-7878c8342c51@arm.com>
-X-B4-Tracking: v=1; b=H4sIADekuWkC/42NQQqDMBBFryKzbkpMxGpX3qOImDjWgWgkY6VFc
- vemnqDL9/i8fwBjIGS4ZwcE3InJLwn0JQM79csTBQ2JQUlVSp3fxOa9426kd2de5IbOkfErLsx
- OVKqWZkQz9NpCCqwB0+6MP9rEE/Hmw+f82tXP/pXdlchFrUtl82KUhamaPsxX62doY4xfX6G+x
- sIAAAA=
-X-Change-ID: 20260317-tools_fix_build_libopenssl-8290bfebda3c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
- James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773773890; l=2271;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=dvEQ84EZOFi0ZVeX5TM+PD21NNXmeL3RHXpP3i/6r/I=;
- b=JeeSSttGASsyKYkTCU+1h+QSMOMdHsUITKFt/I3p30F8yDLzSmhD/b47bco4c27dHbL6UPrb3
- rf6WjjHzWEbDgl5C4T/cft6uc2zgu1cGQvwsXPjqxbs4/y7TLx4V+0+
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXopOUKZ=Hf1s5CZrb0CmH+W9XQa38JW9Bv+GXdYrcHnQ@mail.gmail.com>
 
-The perf static build reports that the BPF skeleton is disabled due to
-the missing libopenssl feature.
+On Tue, Mar 17, 2026 at 08:52:23AM -0700, Ian Rogers wrote:
+> On Tue, Mar 17, 2026 at 1:50 AM Leo Yan <leo.yan@arm.com> wrote:
+> >
+> > The perf static build reports that the BPF skeleton is disabled due to
+> > the missing libopenssl feature.
+> >
+> > Explicitly linking the libraries fixes the static build failure.
+> >
+> > Fixes: 7678523109d1 ("tools/build: Add a feature test for libopenssl")
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >  tools/build/feature/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> > index 1fbcb3ce74d2173072748a417fc63bd9a5b13888..18a9abf6bfc43e86ecf58b96e0374a0e3c613bb0 100644
+> > --- a/tools/build/feature/Makefile
+> > +++ b/tools/build/feature/Makefile
+> > @@ -384,7 +384,7 @@ $(OUTPUT)test-libpfm4.bin:
+> >         $(BUILD) -lpfm
+> >
+> >  $(OUTPUT)test-libopenssl.bin:
+> > -       $(BUILD) -lssl
+> > +       $(BUILD) -lssl -lcrypto -lz -lzstd
+> 
+> I wonder it would be better to do something like test-gtk2.bin so that
+> if openssl wasn't compiled with libz and libzstd things don't fail:
+> ```
+> $(OUTPUT)test-gtk2.bin:
+>        $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0
+> 2>/dev/null) -Wno-deprecated-declarations
+> ```
+> so:
+> ```
+> $(OUTPUT)test-openssl.bin:
+>        $(BUILD) $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
+> ```
+> Since "-lssl" is a dependency of BUILD_ALL, that will probably also
+> need updating.
 
-Use PKG_CONFIG to determine the link flags for libopenssl.  Add
-"--static" to the PKG_CONFIG command for static linking.
+Thanks for suggestion, I have sent out v3.
 
-Fixes: 7678523109d1 ("tools/build: Add a feature test for libopenssl")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
-Changes in v3:
-- Used PKG_CONFIG to explore ssl link flags (Ian).
-- Link to v2: https://lore.kernel.org/r/20260317-tools_fix_build_libopenssl-v2-1-9362c14f04b8@arm.com
----
- tools/build/feature/Makefile | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Just record for another issue:
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 1fbcb3ce74d2173072748a417fc63bd9a5b13888..f163a245837a63f13f5e6526be097fe9a0e8245d 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -103,12 +103,18 @@ else
-   endif
- endif
- 
-+ifeq ($(findstring -static,${LDFLAGS}),-static)
-+  PKG_CONFIG += --static
-+endif
-+
- all: $(FILES)
- 
- __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
-   BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
-   BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
--  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd -lssl
-+  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang \
-+	      $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd \
-+	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
- 
- __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
-   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
-@@ -384,7 +390,7 @@ $(OUTPUT)test-libpfm4.bin:
- 	$(BUILD) -lpfm
- 
- $(OUTPUT)test-libopenssl.bin:
--	$(BUILD) -lssl
-+	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
- 
- $(OUTPUT)test-bpftool-skeletons.bin:
- 	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
+I was not able to build test-all.bin successfully with static linking
+until explicitly added -lexpat.  Seems some Python extension libraries
+depends on libexpat, but python3-config doesn't include this dependency.
 
----
-base-commit: bb551508e78c886e6d3bcca6c744d3bc3fd8ad59
-change-id: 20260317-tools_fix_build_libopenssl-8290bfebda3c
+This would be a wider issue - as this is not limited to feature build,
+we also need to fix perf's build as well?   I might look into details
+when have free time.
 
-Best regards,
--- 
-Leo Yan <leo.yan@arm.com>
-
+Thanks,
+Leo
