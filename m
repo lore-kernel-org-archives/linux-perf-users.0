@@ -1,60 +1,60 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A403E33F370;
-	Tue, 17 Mar 2026 07:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C947939023D;
+	Tue, 17 Mar 2026 08:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773733954; cv=none; b=TGwArUWt0zWvIwf5YWg7vl9G6G8v3QIlBXeQGvWr9yjjaDhxE0K52Bxn1VMXEoC8ILvkruv6rcaui8mF741x62y5O2fW8hhHP+1y85T8af7ceJuueuYRjfHBXMUUisfqQuJ19dv09L2CmziPSJaH+ZzQIkZgY9n4QDMZ4S1WsSE=
+	t=1773736858; cv=none; b=ZgqhLwrL+nytSkAIsQLqO9A9766lmGRGHIQ8TGXwi+gdh1f6mOKcGMLQVFEBypjUZHhU/ezTpYXv9MwfvArRCQf0oLOOwvueByVbYV83uXrkl9UdcPNUA64G0eJ0OD3f3sZZTd0UyDAWbwBBZaa9XMf819KF+hrd2yV4vTLHm0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773733954; c=relaxed/simple;
-	bh=uBaESwmycrWrTRKSSAuGLAPUHANTLMiQC/xnz7TKlu4=;
+	s=arc-20240116; t=1773736858; c=relaxed/simple;
+	bh=eZUt8UK7XvIw4tpVa3cAPzKO499+HWIQ5eIZlvsbzSc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nl+9KNqiXYc41OF5PU2NpS3UxFl3OCDaU51IlDgM94yztEFTQkKDkaM9A2WoGuDww3356JgVwUnaMj4URgCUhvz30C6ibntawGVhnrxukCjWMVLn26FR+G6eSqVK60vJY22g43WZrxtdx4Gmw5KZvZVlT2c1sBmtomWjV4hEcE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e/60dEBH; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=QWoMKNwx0EZ1QnNfRWdKcUBpWy2CiO+MPE92GC8gyEV+ocA0194CR/yGUWBRcG7tVsobc8TKTaAMyleVA8qk9EjJSh9xNJSl/hT2AqQp8CFCvdZyVEN//4uBo6vXglY48szToZ9/Pyx7tS7xQUP3GVdR7yRJQnkkUiTjvl+PzdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AxMAihbB; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e/60dEBH"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AxMAihbB"
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62H6dOkb231841;
-	Tue, 17 Mar 2026 07:52:18 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62GMvqP23853770;
+	Tue, 17 Mar 2026 08:40:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=cw89Ki
-	Wod8luehAQAkMUSahhQA1jbRX1OqQUsB1vCmE=; b=e/60dEBHj6S0bCnC36K7kc
-	+/HaELWZDFsrrja5ShepsPkrcLNLLkaMQzPeBQGc7JcDVNio5KUqL6Z8koLNVZDk
-	0khyJjH/dLsokKqhKmiHw4coibA0Y0nSGYURZChxCMTGNk+27KPwFJNxgVL85wn/
-	p5t/ng62S+m9WvxCwvT9LkW4VaVgmm1fbvwDJxhhAnF8ycVyYgMp+w9C3LFLJ3C4
-	1TGC0xQbKWwxSjWhdCXMF8zJJ9DfIEMig+wXFAUJ6luAqbVToXgajmLhBjUYoJ/H
-	cqTiRP/YgaR3cwq1quZ+Qov9oqTmPBr7ZPpLRjLkqLWJZpABQtumcjT7FsnM7ezA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Vf1hre
+	HTTxpElBwuAWIccvlxILrrO4lSzKqnIcdiG0k=; b=AxMAihbB2rCVyfXT1y1HGX
+	M6pvpv7JP7LxyGVOwFr/YpbeoTQFJhcuabudrZ9ZRYgV+YyhQyUaL9QRm4DWTedl
+	U0vM7M/5DwVcNow32pXltED5/82oYZu+bqbHmlTddXYmQLsaDA1Q3OKIcY1BQakj
+	CdZX/FAPt3FfYKtZ50ijFDddgKLmE1qnwvwCwS354LkG8WnaAYpyEbo/qYNFEVCH
+	xH7DF+5cJIRnEnPFoFoatG1p+RtMSdYJY7bamdacq0smHj5AvOk5LPLNqpIKZMKQ
+	wibjoP47zsqqdfjMQWF76nXw2ImwcQoRJKl8BPCBmzbjlsTiyUbn/FrL+sibyJlg
 	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvybs3kw4-1
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvybs3rws-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 07:52:17 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62H6d2vq013996;
-	Tue, 17 Mar 2026 07:52:16 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cwjcy07r8-1
+	Tue, 17 Mar 2026 08:40:53 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62H8CeuG028455;
+	Tue, 17 Mar 2026 08:40:52 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwmq182rw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 07:52:16 +0000
+	Tue, 17 Mar 2026 08:40:52 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62H7qCEN36110714
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62H8emVV49414478
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Mar 2026 07:52:12 GMT
+	Tue, 17 Mar 2026 08:40:48 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2589B20063;
-	Tue, 17 Mar 2026 07:52:12 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id BE2BF2004D;
+	Tue, 17 Mar 2026 08:40:48 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CC9A72004B;
-	Tue, 17 Mar 2026 07:52:11 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 746CF2004B;
+	Tue, 17 Mar 2026 08:40:48 +0000 (GMT)
 Received: from [9.52.199.37] (unknown [9.52.199.37])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 17 Mar 2026 07:52:11 +0000 (GMT)
-Message-ID: <e8087f8c-09e8-4204-a9c9-fc635d0453b5@linux.ibm.com>
-Date: Tue, 17 Mar 2026 08:52:11 +0100
+	Tue, 17 Mar 2026 08:40:48 +0000 (GMT)
+Message-ID: <2fc33a4b-5e6a-4e60-bc8d-8494888e8106@linux.ibm.com>
+Date: Tue, 17 Mar 2026 09:40:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,38 +62,39 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] perf evlist: Improve default event for s390
+Subject: Re: [PATCH v2] perf record: Add support for arch_sdt_arg_parse_op()
+ on s390
 To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-        namhyung@kernel.org, sumanthk@linux.ibm.com
-References: <20260317030601.567422-1-irogers@google.com>
- <20260317055334.760347-1-irogers@google.com>
- <20260317055334.760347-6-irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        dapeng1.mi@linux.intel.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+References: <20260313132302.3347751-1-tmricht@linux.ibm.com>
+ <CAP-5=fU1Spg+rxTkjqECZZbRjkLASPu14Q=ZyONFWHe4rwy9+g@mail.gmail.com>
 Content-Language: en-US
 From: Thomas Richter <tmricht@linux.ibm.com>
 Organization: IBM
-In-Reply-To: <20260317055334.760347-6-irogers@google.com>
+In-Reply-To: <CAP-5=fU1Spg+rxTkjqECZZbRjkLASPu14Q=ZyONFWHe4rwy9+g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=MMttWcZl c=1 sm=1 tr=0 ts=69b90831 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=MMttWcZl c=1 sm=1 tr=0 ts=69b91395 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=1XWaLZrsAAAA:8
- a=VnNF1IyMAAAA:8 a=bqfBD2JWZyNg3Hh1bRcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: rHFHrB4jP-50V9eIE9_rNreOQexot1fi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDA2NiBTYWx0ZWRfX+BNh8jOSv0sc
- 0XfbnFJscvRRhD5/KNk/apk1ntTKYuEVCrlwXo+GWXZFnppibPCdQD1PmPL0ILVyOiaDK+Atri+
- +ezsErSEtQanpHHKPtCvx3xVprQWIEczb3LQyVdZMhVSJVw+vLik4WO5e0yrKcgi5XKJksMJEJ/
- fYWb4Sm5PWRLEvhA2Fa3QsZBbnftbu/9agCTSkNSKC4LPqTL7PasnMS13ZFQgXr6932wnxec7qx
- BWQF5LB06Z4z+P7q1hh3ErLtWEEj71tQS1zgvdjaH9w+jsLFraXgS4DsTc6+X1U+J2uowVTsym3
- hB5SNf8e5RnIAsbciJNy2do7TeBYggx0XaWzXCduNSh1+9mm1Gexk7A7jrnmfRP/tMI2xX0j0jz
- PNd57Rjx7dHZel/H7vTnYtUzJ5ejFTN9E32TWweaU8WQ7/MrZC46vFOHx855ylgPOZxLP8CZYbI
- eKrrD7ha3z0dUsi76EQ==
-X-Proofpoint-GUID: 7xlHs3jLz7sGMDSDn0R2rs4XOi7T5Wfg
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=QyXUC8HyAAAA:8 a=A_7-HmRUnHCsZpZN3REA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=O8hF6Hzn-FEA:10
+X-Proofpoint-ORIG-GUID: mKv1pSUJclrzC1Sv3RJxCYW-YEPVHrRx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDA3MSBTYWx0ZWRfX2AgC6J2iT4uO
+ clxX4Etziw67+XbzdmXMxtaIigQmtgP4ZT26b8yDmnVFxlufaf611JvrGVnZ8URPxihEeLGikSD
+ jOMdrtHg/GcF8XV2s3ehFe2EYNAxOl94cbMxKh0FRQgVoCNvxd54AX9WlnscWewL1f98XR7FVrl
+ lMK2cO0/A6N9DGF23xoJ4Qmjp8PF7wJCUwqhHM27dfbujbGlGm/+Y6h25oiMTu8Cn4lOVKIzPDY
+ xeclyjRiz9hfIWeRru8W0phztqY9BYCNt0euYhqPk8qatRONDtmxzP0EsqwbAeQTNI8PDjtfSI+
+ 6T/gngoIwHjViOxGe0fN0S0Y8nyFNiNiREmkoQVxPXM7CDdn2eFMP1TCu8X4CiUMxkzPl/meIp0
+ SeoBosGcYjZmXBve/g7zaz8FdLfl8BWou/UPLo3o3H8vtcIlsaPN7CyOKv1uwJQiTM+2S2r6fNc
+ F8Xie2Jh+bmZOywLzMQ==
+X-Proofpoint-GUID: 547GzLUDXAmodTrqY-m8GM2y7n_cSOBS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-17_01,2026-03-16_06,2025-10-01_01
@@ -102,339 +103,196 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
  bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603170066
+ definitions=main-2603170071
 
-On 3/17/26 06:53, Ian Rogers wrote:
-> Frame pointer callchains are not supported on s390 and dwarf
-> callchains are only supported on software events.
+On 3/13/26 21:50, Ian Rogers wrote:
+> On Fri, Mar 13, 2026 at 6:33 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_parse_op() function")
+>> removes arch_sdt_arg_parse_op() functions. s390 support is missing.
+>> The following warning is printed:
+>>
+>>   Unknown ELF machine 22, standard arguments parse will be skipped.
+>>
+>> ELF machine 22 is the EM_S390 host. This happens with command
+>>   # ./perf record -v -- stress-ng -t 1s --matrix 0
+>> on a z/VM system when the event is not specified.
+>>
+>> Add s390 specific __perf_sdt_arg_parse_op_s390() function to support
+>> -architecture calls to arch_sdt_arg_parse_op() for s390.
+>> The warning disappears.
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Tested-by: Jan Polensky <japo@linux.ibm.com>
+>> ---
+>>  .../perf/util/perf-regs-arch/perf_regs_s390.c | 89 +++++++++++++++++++
+>>  tools/perf/util/perf_regs.c                   |  3 +
+>>  tools/perf/util/perf_regs.h                   |  1 +
+>>  3 files changed, 93 insertions(+)
+>>
+>> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_s390.c b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+>> index c61df24edf0f..c830aeae606e 100644
+>> --- a/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+>> +++ b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
+>> @@ -1,7 +1,13 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>
+>> +#include <errno.h>
+>> +#include <regex.h>
+>>  #include "../perf_regs.h"
+>>  #include "../../arch/s390/include/perf_regs.h"
+>> +#include "debug.h"
+>> +
+>> +#include <linux/zalloc.h>
+>> +#include <linux/kernel.h>
+>>
+>>  uint64_t __perf_reg_mask_s390(bool intr __maybe_unused)
+>>  {
+>> @@ -95,3 +101,86 @@ uint64_t __perf_reg_sp_s390(void)
+>>  {
+>>         return PERF_REG_S390_R15;
+>>  }
+>> +
+>> +/* %rXX */
+>> +#define SDT_OP_REGEX1  "^%r([0-9]|1[0-5])$"
+>> +/* -###(%rXX) */
+>> +#define SDT_OP_REGEX2  "^(-?[0-9]+)\\(%r([0-9]|1[0-5])\\)$"
+>> +static regex_t sdt_op_regex1, sdt_op_regex2;
+>> +
+>> +static int sdt_init_op_regex(void)
+>> +{
+>> +       static int initialized;
+>> +       int ret = 0;
+>> +
+>> +       if (initialized)
+>> +               return 0;
+>> +
+>> +       ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
+>> +       if (ret)
+>> +               goto error;
+>> +       initialized = 1;
+>> +
+>> +       ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
+>> +       if (ret)
+>> +               goto free_regex1;
+>> +       initialized = 2;
+>> +
+>> +       return 0;
+>> +
+>> +free_regex1:
+>> +       regfree(&sdt_op_regex1);
+>> +error:
+>> +       pr_debug4("Regex compilation error, initialized %d\n", initialized);
+>> +       initialized = 0;
+>> +       return ret;
+>> +}
+>> +
+>> +/*
+>> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG).
+>> + * Possible variants of OP are:
+>> + *     Format          Example
+>> + *     -------------------------
+>> + *     NUM(%rREG)      48(%r1)
+>> + *     -NUM(%rREG)     -48(%r1)
+>> + *     %rREG           %r1
+>> + */
+>> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op)
+>> +{
+>> +       int ret, new_len;
+>> +       regmatch_t rm[6];
+>> +       unsigned long i;
+>> +
+>> +       *new_op = NULL;
+>> +       ret = sdt_init_op_regex();
+>> +       if (ret < 0)
+>> +               return ret;
 > 
-> Switch the default event from cycles to cpu-clock or task-clock on
-> s390 if callchains are enabled.
+> Some AI feedback:
 > 
-> If frame pointer callchains are requested on s390 show a
-> warning. Modify the '-g' option of `perf top` and `perf record` to
-> default to dwarf callchains on s390.
+> POSIX regcomp() returns 0 on success and a positive error code on failure
+> (like REG_ESPACE). Since sdt_init_op_regex() returns this positive code,
+> will ret < 0 evaluate to false on compilation failure?
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c      |  8 ++++++--
->  tools/perf/builtin-top.c         |  5 +++--
->  tools/perf/tests/event_update.c  |  4 +++-
->  tools/perf/tests/expand-cgroup.c |  4 +++-
->  tools/perf/tests/perf-record.c   |  7 +++++--
->  tools/perf/tests/topology.c      |  4 +++-
->  tools/perf/util/evlist.c         | 32 +++++++++++++++++++++-----------
->  tools/perf/util/evlist.h         |  2 +-
->  tools/perf/util/evsel.c          |  5 +++++
->  9 files changed, 50 insertions(+), 21 deletions(-)
+> If so, this would allow execution to proceed to regexec() using uninitialized
+> or freed regex structs, which could crash the tool.
+
+Thanks for the finding, you are correct.
+I simply copy and pasted most part of the code. So we should also fix
+util/perf-regs-arch/perf_regs_powerpc.c, line 86
+util/perf-regs-arch/perf_regs_aarch64.c, line 65
+
+Then then return code of functions  __perf_sdt_arg_parse_op_s390() should
+be negative on error. Otherwise
+
+  synthesize_sdt_probe_arg()
+  +--> perf_sdt_arg_parse_op()
+       +--> __perf_sdt_arg_parse_op_s390()
+
+and synthesize_sdt_probe_arg() does not handle positive value as error:
+       ret = perf_sdt_arg_parse_op(EM_HOST, op, &new_op);                    
+                                                                              
+        if (ret < 0)                                                          
+                goto error;
+
+>> +
+>> +       if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
+>> +               /* Extract %rX */
+>> +               new_len = 2;    /* % NULL */
+>> +               new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
+>> +               *new_op = zalloc(new_len);
+>> +               if (!*new_op)
+>> +                       return -ENOMEM;
+>> +
+>> +               scnprintf(*new_op, new_len, "%%%.*s",
+>> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index af1fe6b7c65c..ef97c7a54088 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -55,6 +55,7 @@
->  #include "asm/bug.h"
->  #include "perf.h"
->  #include "cputopo.h"
-> +#include "dwarf-regs.h"
->  
->  #include <errno.h>
->  #include <inttypes.h>
-> @@ -2986,7 +2987,9 @@ static int record_callchain_opt(const struct option *opt,
->  				const char *arg __maybe_unused,
->  				int unset)
->  {
-> -	return record_opts__parse_callchain(opt->value, &callchain_param, "fp", unset);
-> +	return record_opts__parse_callchain(opt->value, &callchain_param,
-> +					    EM_HOST != EM_S390 ? "fp" : "dwarf",
-> +					    unset);
->  }
->  
->  
-> @@ -4265,7 +4268,8 @@ int cmd_record(int argc, const char **argv)
->  		record.opts.tail_synthesize = true;
->  
->  	if (rec->evlist->core.nr_entries == 0) {
-> -		struct evlist *def_evlist = evlist__new_default();
-> +		struct evlist *def_evlist = evlist__new_default(&rec->opts.target,
-> +								callchain_param.enabled);
->  
->  		if (!def_evlist)
->  			goto out;
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 2a949d956d0b..84211a78977e 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -56,6 +56,7 @@
->  #include "util/debug.h"
->  #include "util/ordered-events.h"
->  #include "util/pfm.h"
-> +#include "dwarf-regs.h"
->  
->  #include <assert.h>
->  #include <elf.h>
-> @@ -1409,7 +1410,7 @@ parse_callchain_opt(const struct option *opt, const char *arg, int unset)
->  static int
->  callchain_opt(const struct option *opt, const char *arg __maybe_unused, int unset)
->  {
-> -	return parse_callchain_opt(opt, "fp", unset);
-> +	return parse_callchain_opt(opt, EM_HOST != EM_S390 ? "fp" : "dwarf", unset);
->  }
->  
->  
-> @@ -1695,7 +1696,7 @@ int cmd_top(int argc, const char **argv)
->  		goto out_delete_evlist;
->  
->  	if (!top.evlist->core.nr_entries) {
-> -		struct evlist *def_evlist = evlist__new_default();
-> +		struct evlist *def_evlist = evlist__new_default(target, callchain_param.enabled);
->  
->  		if (!def_evlist)
->  			goto out_delete_evlist;
-> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-> index cb9e6de2e033..facc65e29f20 100644
-> --- a/tools/perf/tests/event_update.c
-> +++ b/tools/perf/tests/event_update.c
-> @@ -8,6 +8,7 @@
->  #include "header.h"
->  #include "machine.h"
->  #include "util/synthetic-events.h"
-> +#include "target.h"
->  #include "tool.h"
->  #include "tests.h"
->  #include "debug.h"
-> @@ -81,7 +82,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
->  {
->  	struct evsel *evsel;
->  	struct event_name tmp;
-> -	struct evlist *evlist = evlist__new_default();
-> +	struct target target = {};
-> +	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
->  
->  	TEST_ASSERT_VAL("failed to get evlist", evlist);
->  
-> diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-> index c7b32a220ca1..dd547f2f77cc 100644
-> --- a/tools/perf/tests/expand-cgroup.c
-> +++ b/tools/perf/tests/expand-cgroup.c
-> @@ -8,6 +8,7 @@
->  #include "parse-events.h"
->  #include "pmu-events/pmu-events.h"
->  #include "pfm.h"
-> +#include "target.h"
->  #include <subcmd/parse-options.h>
->  #include <stdio.h>
->  #include <stdlib.h>
-> @@ -99,7 +100,8 @@ out:	for (i = 0; i < nr_events; i++)
->  static int expand_default_events(void)
->  {
->  	int ret;
-> -	struct evlist *evlist = evlist__new_default();
-> +	struct target target = {};
-> +	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
->  
->  	TEST_ASSERT_VAL("failed to get evlist", evlist);
->  
-> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-> index efbd9cd60c63..c6e31ab8a6b8 100644
-> --- a/tools/perf/tests/perf-record.c
-> +++ b/tools/perf/tests/perf-record.c
-> @@ -84,8 +84,11 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  	CPU_ZERO_S(cpu_mask_size, cpu_mask);
->  
->  	perf_sample__init(&sample, /*all=*/false);
-> -	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
-> -		evlist = evlist__new_default();
-> +	if (evlist == NULL) { /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
-> +		struct target target = {};
-> +
-> +		evlist = evlist__new_default(&target, /*sample_callchains=*/false);
-> +	}
->  
->  	if (evlist == NULL) {
->  		pr_debug("Not enough memory to create evlist\n");
-> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-> index ec01150d208d..a34a7ab19a80 100644
-> --- a/tools/perf/tests/topology.c
-> +++ b/tools/perf/tests/topology.c
-> @@ -9,6 +9,7 @@
->  #include "evlist.h"
->  #include "debug.h"
->  #include "pmus.h"
-> +#include "target.h"
->  #include <linux/err.h>
->  
->  #define TEMPL "/tmp/perf-test-XXXXXX"
-> @@ -37,11 +38,12 @@ static int session_write_header(char *path)
->  		.path = path,
->  		.mode = PERF_DATA_MODE_WRITE,
->  	};
-> +	struct target target = {};
->  
->  	session = perf_session__new(&data, NULL);
->  	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
->  
-> -	session->evlist = evlist__new_default();
-> +	session->evlist = evlist__new_default(&target, /*sample_callchains=*/false);
->  	TEST_ASSERT_VAL("can't get evlist", session->evlist);
->  	session->evlist->session = session;
->  
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 591bdf0b3e2a..c702741a9173 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -13,6 +13,7 @@
->  #include "util/mmap.h"
->  #include "thread_map.h"
->  #include "target.h"
-> +#include "dwarf-regs.h"
->  #include "evlist.h"
->  #include "evsel.h"
->  #include "record.h"
-> @@ -98,38 +99,47 @@ struct evlist *evlist__new(void)
->  	return evlist;
->  }
->  
-> -struct evlist *evlist__new_default(void)
-> +struct evlist *evlist__new_default(const struct target *target, bool sample_callchains)
->  {
->  	struct evlist *evlist = evlist__new();
->  	bool can_profile_kernel;
->  	struct perf_pmu *pmu = NULL;
-> +	struct evsel *evsel;
-> +	char buf[256];
-> +	int err;
->  
->  	if (!evlist)
->  		return NULL;
->  
->  	can_profile_kernel = perf_event_paranoid_check(1);
->  
-> -	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-> -		char buf[256];
-> -		int err;
-> -
-> -		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-> +	if (EM_HOST == EM_S390 && sample_callchains) {
-> +		snprintf(buf, sizeof(buf), "software/%s/%s",
-> +			 target__has_cpu(target) ? "cpu-clock" : "task-clock",
->  			 can_profile_kernel ? "P" : "Pu");
->  		err = parse_event(evlist, buf);
-> -		if (err) {
-> -			evlist__delete(evlist);
-> -			return NULL;
-> +		if (err)
-> +			goto out_err;
-> +	} else {
-> +		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-> +			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-> +				can_profile_kernel ? "P" : "Pu");
-> +			err = parse_event(evlist, buf);
-> +			if (err)
-> +				goto out_err;
->  		}
->  	}
->  
-> +	/* If there is only 1 event a sample identifier isn't necessary. */
->  	if (evlist->core.nr_entries > 1) {
-> -		struct evsel *evsel;
-> -
->  		evlist__for_each_entry(evlist, evsel)
->  			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
->  	}
->  
->  	return evlist;
-> +out_err:
-> +	evlist__delete(evlist);
-> +	return NULL;
->  }
->  
->  struct evlist *evlist__new_dummy(void)
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index d17c3b57a409..e507f5f20ef6 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -104,7 +104,7 @@ struct evsel_str_handler {
->  };
->  
->  struct evlist *evlist__new(void);
-> -struct evlist *evlist__new_default(void);
-> +struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
->  struct evlist *evlist__new_dummy(void);
->  void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
->  		  struct perf_thread_map *threads);
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 54c8922a8e47..5a294595a677 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1021,6 +1021,11 @@ static void __evsel__config_callchain(struct evsel *evsel, const struct record_o
->  	bool function = evsel__is_function_event(evsel);
->  	struct perf_event_attr *attr = &evsel->core.attr;
->  
-> +	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
-> +		pr_warning_once(
-> +			"Framepointer unwinding lacks kernel support. Use '--call-graph dwarf'\n");
-> +	}
-> +
->  	evsel__set_sample_bit(evsel, CALLCHAIN);
->  
->  	attr->sample_max_stack = param->max_stack;
+> Does this formatting correctly preserve the 'r' prefix for s390 registers?
+> The regex SDT_OP_REGEX1 is defined as ^%r([0-9]|1[0-5])$, meaning rm[1]
+> captures the numeric digits, not the 'r'. So an input like %r15 will be
+> formatted as %15.
+> 
+> However, the s390 kernel's regs_query_register_offset() strictly requires
+> the register name to start with 'r', otherwise it returns -EINVAL. Will
+> the kernel's parse_probe_arg() reject the uprobe definition without the
+> 'r' prefix?
 
-Great, here is the output on my LPAR. Thanks very much fpr addressing and fixing this!!!
+Ok will fix this
 
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 2s 
-❯ ./perf record  --call-graph dwarf  -- perf test -w noploop
-[ perf record: Woken up 133 times to write data ]
-[ perf record: Captured and wrote 32.928 MB perf.data (4039 samples) ]
+> 
+>> +       } else if (!regexec(&sdt_op_regex2, old_op, ARRAY_SIZE(rm), rm, 0)) {
+>> +               /* Extract #(%rX) */
+>> +               new_len = 4;    /* (%)NULL */
+>> +               for (i = 1; i < ARRAY_SIZE(rm) && rm[i].rm_so != -1; ++i)
+>> +                       new_len += (int)(rm[i].rm_eo - rm[i].rm_so);
+>> +               *new_op = zalloc(new_len);
+>> +               if (!*new_op)
+>> +                       return -ENOMEM;
+>> +
+>> +               scnprintf(*new_op, new_len, "%.*s(%%%.*s)",
+>> +                         (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so,
+>> +                         (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so);
+> 
+> Similar to the above, rm[2] isolates the digits without the 'r' prefix,
+> creating an argument like 48(%15).
+> 
+> Additionally, does this string translation handle positive memory
+> displacements correctly?
+> 
+> The kernel's parse_probe_arg() in kernel/trace/trace_probe.c parses memory
+> dereferences by matching the case '+': or case '-': prefix switch cases.
+> If an argument starts with a digit rather than a + or -, it falls through
+> to the default case and is rejected with -EINVAL.
+> 
+> Should positive memory offsets be translated to explicitly include the +
+> prefix (e.g., +48(%r15)) so they are accepted by the uprobe parser?
+> 
 
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 2s 
-❯ ./perf evlist
-software/task-clock/P
+Ok will fix this and send v2
 
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc 
-❯ ./perf record  -g -- perf test -w noploop
-[ perf record: Woken up 133 times to write data ]
-[ perf record: Captured and wrote 32.952 MB perf.data (4042 samples) ]
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 2s 
-❯ ./perf evlist
-software/task-clock/P
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc 
-❯ ./perf record  -- perf test -w noploop
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.179 MB perf.data (3974 samples) ]
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 2s 
-❯ ./perf evlist
-cpum_cf/cycles/P
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc 
-❯ ./perf record  
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.250 MB perf.data (24 samples) ]
+Thanks a lot
 
 
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 3s 
-❯ ./perf evlist
-cpum_cf/cycles/P
-dummy:u
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc 
-❯ ./perf record  -g
-^C[ perf record: Woken up 8 times to write data ]
-[ perf record: Captured and wrote 5.186 MB perf.data (34255 samples) ]
-
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 3s 
-❯ ./perf evlist
-software/cpu-clock/P
-dummy:u
-
-
-root in 🌐 b83lp69 in mirror-linux-next/tools/perf on  master [⇡] via C v15.2.1-gcc took 3s 
- 
-Tested-by:  Thomas Richter <tmricht@linux.ibm.com>
 -- 
 Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
 --
