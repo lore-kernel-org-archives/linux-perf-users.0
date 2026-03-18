@@ -1,384 +1,82 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E28E3ACA74
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 17:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A672721CA03
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 18:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773856713; cv=none; b=PLa8WP+7cXZw8BvlrOIhplI92WXcIVdJkp/vMoK12mIeW7f9/tkF8/+9lD+77LLgwcL4xN/qj6vhghi8wXRlUSXVWXeY0c+2qT0yGKaj3V8erIf19aD+TSwEPsjDiqbuiO4c3KgOj4HbkqtLIe/m7gz6DKpH1KHCwaUaSRWnWfc=
+	t=1773858889; cv=none; b=Y9rAZEz+Cd5GC4AoNjqT4+FGBmNPKll2CYIEvfykipdIRQ+U7okRauFhOTUbd6XiUwcbqF8j1R195uZeAxi7SmJize0O5AGObqMYFqzwN2UfuGnKF5rcfZMX7i0nXcDuX3JOnHvBRpOxc4DhMaMupyOIK1DzrylCY5SgT54Ot4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773856713; c=relaxed/simple;
-	bh=GPpwA85YpY3ve/jpJyD7fWcf24krXiV0PAh/fAaUiQc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iTJ6A6tTzLYA5ZZq4CfKP/+vUHuwRhZ/e4h+739ZYRQ58P6Bya62Kb/avBMqiTY83PKdQOnSZms7QZtljjDpaHyg9FK1BBQ0qkpycK3/soKctMSfEG/81LRsxCtPxYh27F5k6ZtHFLKInM8mQU1J/s//1/3c9ClkEI1XFqiDKJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E3ChCD28; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1773858889; c=relaxed/simple;
+	bh=xGK6GsdwL25ism2FGlBFdHI5dICdcBy3SGVUEwOEoSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XY86vp7BoEZ47AcsnSJ4BHCEq98a5GcYFEBdeTKkLrc2Lzc1eongKZ2xCQ54kP7ZcchW9ByI6ON368GDKGSLtlVJvRTvpwL30fynZbX9AlFNfvJFpRnv4Jba1p+wd7IeMweszYaHJoWyl4NsQAYBoZo8IhJTVXQKvLQJ+gwgjCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOjUh3pM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E3ChCD28"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-128d0b690feso2430568c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 10:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773856711; x=1774461511; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bT3J+EWYQrSSWTHjOQc06GLH9CU25PGV/fk5O36CMLI=;
-        b=E3ChCD28/FwunJh3w3NqmFUKkRj/4nyaulbCKeknyZq8ttBodbCqdDggvQcf4TThQc
-         zX6eVuyanYRAz8URSi8urq0m/ofHlmiO49PTNcHSp5Gx3ddePr+DgG/t6QOQAw43R2yM
-         tGDf6yhnbaahI/xpj9ujog0/RK/2T1a+lG36F4tde7NTvNrSPsZnVygwUmmF4V6ycuVN
-         CCffc00KaIZghXiXWk8wNoVgwzZaW1ce2pNMx74b3ycTWZ0fHBqeaJb2uPPq0zQAKqr9
-         a51YVgu1uLCHJ3w1Yr8+TXq5DcO0z/OtZLSml45QGqWqyMAtgJK3R7Wh+fT8V10qQsDz
-         FvyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773856711; x=1774461511;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bT3J+EWYQrSSWTHjOQc06GLH9CU25PGV/fk5O36CMLI=;
-        b=BkHx2rVbbZjW0eSF940Tt6j+9ycdM+ur1Bl/wvKHEGParODSWc7sHGqhivjQ3TEJgL
-         MAyYZPbPm16WVbbnd+fmcYvZUtzFemMI60QfWZuieYuqwlBNnUeY7fGB2gAPVWQnTOOB
-         Mr9Q8lT1ebxWXVboWCFi1Q9YVlby2I45VKFLraIeAimmowL5aJLVR+2uP75knfPuh9we
-         BYsPvUpL2Y9dF37BxSUsow5QPvLsL28QOjkt/0PsnXKv8coOVcaYEKpJ+QzPRdzvJoGf
-         ghs9TihGjOrKTWYkL8UENshewgaDGR7m7qQV0eKHPWrHz2voEExGV9/soWUcFqYtv3A2
-         qoGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaMCrny6T7IQZXeMubWJPHiq/t8qH3YBHrNNwTyTJgQ+joFF/MPACyzq5mtqasCZef1Pa2+g6JfKvZ+vtJcUe+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyop8vmTV4qrXlL7aILNIueTI4rzIfVOB+llTtoEUwdEBNbGcoD
-	HX3Cr0AYWopnhCXT7kUghqLj/waKRmH+QWA6WePh/PqKVHedeG8ORarKgnB+KyZITcJ27nQnPBA
-	5IH5EBqzNOg==
-X-Received: from dybuh11.prod.google.com ([2002:a05:7301:750b:b0:2be:82ee:95dc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2513:b0:122:2f4:b24b
- with SMTP id a92af1059eb24-1299d187bf1mr2286090c88.25.1773856711119; Wed, 18
- Mar 2026 10:58:31 -0700 (PDT)
-Date: Wed, 18 Mar 2026 10:58:08 -0700
-In-Reply-To: <20260318175808.582009-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOjUh3pM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9510C19421;
+	Wed, 18 Mar 2026 18:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773858889;
+	bh=xGK6GsdwL25ism2FGlBFdHI5dICdcBy3SGVUEwOEoSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TOjUh3pMNW7qDQXCKG+Vi4baSl8GMRqD3dznXQD+DkPnokA1HcpD3Orge4gtoYc3z
+	 9jnlcTHv7Y2WUCL7m48BXnKHQDzM5IhOF2xfXzWHIqEh0KDAEEhWgxhaM7gAUBWk9g
+	 yMesPdbuu2j6CCBob0BI6d/IxQFKoCTkEOkFvAZfDe3UZkFKFCBghYAsThK2CHqyfs
+	 aZJ4ia2ZFJrOwV/7s0upMzprZNcGn5nWItsjwfd6Lo/qDcPyzWPepsekfrtBdo6lWt
+	 j7f0PqwceJq6QbKpfh+kgZROAK9PeoqZTqt/KD2ZeR5g+7wPZvOXnpl1UeXKXCtY5J
+	 tBkwBOdpEkMlg==
+Date: Wed, 18 Mar 2026 11:34:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Chen Ni <nichen@iscas.ac.cn>, linux-perf-users@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org
+Subject: Re: [PATCH] perf intel-tpebs: Remove duplicate include of stat.h
+Message-ID: <abrwRmaS7CDhzAyl@google.com>
+References: <20260318034932.398913-1-nichen@iscas.ac.cn>
+ <CAP-5=fUitzKwJONTngiW17XkS7kVr2cDS4cDL_HccJKcnR2EgQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAP-5=fWCf1TFMW8epW8moOcUbMuzRjrG1r38SWFevH35mqR0+w@mail.gmail.com>
- <20260318175808.582009-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260318175808.582009-6-irogers@google.com>
-Subject: [PATCH v7 5/5] perf evlist: Improve default event for s390
-From: Ian Rogers <irogers@google.com>
-To: tmricht@linux.ibm.com
-Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
-	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUitzKwJONTngiW17XkS7kVr2cDS4cDL_HccJKcnR2EgQ@mail.gmail.com>
 
-Frame pointer callchains are not supported on s390 and dwarf
-callchains are only supported on software events.
+On Wed, Mar 18, 2026 at 10:33:54AM -0700, Ian Rogers wrote:
+> On Tue, Mar 17, 2026 at 8:54 PM Chen Ni <nichen@iscas.ac.cn> wrote:
+> >
+> > Remove duplicate inclusion of stat.h in intel-tpebs.c to clean up
+> > redundant code.
+> >
+> > Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> We should really have a style for #includes and try to get it into the
+> kernel coding style. It doesn't matter so much in the kernel but
+> inconsistencies abound in tools, and the lack of alphabetical sorting
+> allows duplicates to occur. Here is a proposal that makes sense:
+> 
+> For any given C source file (e.g., server.c), group your #include
+> directives into distinct blocks separated by a blank line, ordered as
+> follows:
+>  * The Corresponding Header ("server.h")
+>  * C Standard Library Headers (<stdio.h>, <stdlib.h>)
+>  * OS/System-Specific Headers (<unistd.h>, <pthread.h>)
+>  * Third-Party Library Headers (<sqlite3.h>, <jansson.h>)
+>  * Your Project's Other Headers ("utils/logger.h", "database.h")
+> Within each block, alphabetize the headers.
 
-Switch the default event from the hardware 'cycles' event to the
-software 'cpu-clock' or 'task-clock' on s390 if callchains are
-enabled. Move the target initialization earlier in builtin-top so it
-is ready for use by evlist__new_default.
+Yep, sounds good.  I'm not sure if we want to convert all existing
+sources for this.  I think it's good for new changes touching header
+inclusion.
 
-If frame pointer callchains are requested on s390 show a
-warning. Modify the '-g' option of `perf top` and `perf record` to
-default to dwarf callchains on s390.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/builtin-record.c      |  8 ++++++--
- tools/perf/builtin-top.c         | 23 ++++++++++++-----------
- tools/perf/tests/event_update.c  |  4 +++-
- tools/perf/tests/expand-cgroup.c |  4 +++-
- tools/perf/tests/perf-record.c   |  7 +++++--
- tools/perf/tests/topology.c      |  4 +++-
- tools/perf/util/evlist.c         | 32 +++++++++++++++++++++-----------
- tools/perf/util/evlist.h         |  2 +-
- tools/perf/util/evsel.c          |  5 +++++
- 9 files changed, 59 insertions(+), 30 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 26223f9505c2..a03acfe66c27 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -55,6 +55,7 @@
- #include "asm/bug.h"
- #include "perf.h"
- #include "cputopo.h"
-+#include "dwarf-regs.h"
- 
- #include <errno.h>
- #include <inttypes.h>
-@@ -2990,7 +2991,9 @@ static int record_callchain_opt(const struct option *opt,
- 	if (callchain_param.record_mode != CALLCHAIN_NONE)
- 		return 0;
- 
--	return record_opts__parse_callchain(opt->value, &callchain_param, "fp", unset);
-+	return record_opts__parse_callchain(opt->value, &callchain_param,
-+					    EM_HOST != EM_S390 ? "fp" : "dwarf",
-+					    unset);
- }
- 
- 
-@@ -4269,7 +4272,8 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.tail_synthesize = true;
- 
- 	if (rec->evlist->core.nr_entries == 0) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(&rec->opts.target,
-+								callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 5d2587228975..3cc339ec04e3 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -56,6 +56,7 @@
- #include "util/debug.h"
- #include "util/ordered-events.h"
- #include "util/pfm.h"
-+#include "dwarf-regs.h"
- 
- #include <assert.h>
- #include <elf.h>
-@@ -1415,7 +1416,7 @@ callchain_opt(const struct option *opt, const char *arg __maybe_unused, int unse
- 	if (callchain->record_mode != CALLCHAIN_NONE)
- 		return 0;
- 
--	return parse_callchain_opt(opt, "fp", unset);
-+	return parse_callchain_opt(opt, EM_HOST != EM_S390 ? "fp" : "dwarf", unset);
- }
- 
- 
-@@ -1700,8 +1701,17 @@ int cmd_top(int argc, const char **argv)
- 	if (annotate_check_args() < 0)
- 		goto out_delete_evlist;
- 
-+	status = target__validate(target);
-+	if (status) {
-+		target__strerror(target, status, errbuf, BUFSIZ);
-+		ui__warning("%s\n", errbuf);
-+	}
-+
-+	if (target__none(target))
-+		target->system_wide = true;
-+
- 	if (!top.evlist->core.nr_entries) {
--		struct evlist *def_evlist = evlist__new_default();
-+		struct evlist *def_evlist = evlist__new_default(target, callchain_param.enabled);
- 
- 		if (!def_evlist)
- 			goto out_delete_evlist;
-@@ -1794,12 +1804,6 @@ int cmd_top(int argc, const char **argv)
- 		goto out_delete_evlist;
- 	}
- 
--	status = target__validate(target);
--	if (status) {
--		target__strerror(target, status, errbuf, BUFSIZ);
--		ui__warning("%s\n", errbuf);
--	}
--
- 	if (top.uid_str) {
- 		uid_t uid = parse_uid(top.uid_str);
- 
-@@ -1813,9 +1817,6 @@ int cmd_top(int argc, const char **argv)
- 			goto out_delete_evlist;
- 	}
- 
--	if (target__none(target))
--		target->system_wide = true;
--
- 	if (evlist__create_maps(top.evlist, target) < 0) {
- 		ui__error("Couldn't create thread/CPU maps: %s\n",
- 			  errno == ENOENT ? "No such process" : str_error_r(errno, errbuf, sizeof(errbuf)));
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index cb9e6de2e033..facc65e29f20 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -8,6 +8,7 @@
- #include "header.h"
- #include "machine.h"
- #include "util/synthetic-events.h"
-+#include "target.h"
- #include "tool.h"
- #include "tests.h"
- #include "debug.h"
-@@ -81,7 +82,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
- {
- 	struct evsel *evsel;
- 	struct event_name tmp;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index c7b32a220ca1..dd547f2f77cc 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -8,6 +8,7 @@
- #include "parse-events.h"
- #include "pmu-events/pmu-events.h"
- #include "pfm.h"
-+#include "target.h"
- #include <subcmd/parse-options.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -99,7 +100,8 @@ out:	for (i = 0; i < nr_events; i++)
- static int expand_default_events(void)
- {
- 	int ret;
--	struct evlist *evlist = evlist__new_default();
-+	struct target target = {};
-+	struct evlist *evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index efbd9cd60c63..c6e31ab8a6b8 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -84,8 +84,11 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
- 	CPU_ZERO_S(cpu_mask_size, cpu_mask);
- 
- 	perf_sample__init(&sample, /*all=*/false);
--	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
--		evlist = evlist__new_default();
-+	if (evlist == NULL) { /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
-+		struct target target = {};
-+
-+		evlist = evlist__new_default(&target, /*sample_callchains=*/false);
-+	}
- 
- 	if (evlist == NULL) {
- 		pr_debug("Not enough memory to create evlist\n");
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index ec01150d208d..a34a7ab19a80 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -9,6 +9,7 @@
- #include "evlist.h"
- #include "debug.h"
- #include "pmus.h"
-+#include "target.h"
- #include <linux/err.h>
- 
- #define TEMPL "/tmp/perf-test-XXXXXX"
-@@ -37,11 +38,12 @@ static int session_write_header(char *path)
- 		.path = path,
- 		.mode = PERF_DATA_MODE_WRITE,
- 	};
-+	struct target target = {};
- 
- 	session = perf_session__new(&data, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
- 
--	session->evlist = evlist__new_default();
-+	session->evlist = evlist__new_default(&target, /*sample_callchains=*/false);
- 	TEST_ASSERT_VAL("can't get evlist", session->evlist);
- 	session->evlist->session = session;
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 591bdf0b3e2a..c702741a9173 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -13,6 +13,7 @@
- #include "util/mmap.h"
- #include "thread_map.h"
- #include "target.h"
-+#include "dwarf-regs.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "record.h"
-@@ -98,38 +99,47 @@ struct evlist *evlist__new(void)
- 	return evlist;
- }
- 
--struct evlist *evlist__new_default(void)
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains)
- {
- 	struct evlist *evlist = evlist__new();
- 	bool can_profile_kernel;
- 	struct perf_pmu *pmu = NULL;
-+	struct evsel *evsel;
-+	char buf[256];
-+	int err;
- 
- 	if (!evlist)
- 		return NULL;
- 
- 	can_profile_kernel = perf_event_paranoid_check(1);
- 
--	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
--		char buf[256];
--		int err;
--
--		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+	if (EM_HOST == EM_S390 && sample_callchains) {
-+		snprintf(buf, sizeof(buf), "software/%s/%s",
-+			 target__has_cpu(target) ? "cpu-clock" : "task-clock",
- 			 can_profile_kernel ? "P" : "Pu");
- 		err = parse_event(evlist, buf);
--		if (err) {
--			evlist__delete(evlist);
--			return NULL;
-+		if (err)
-+			goto out_err;
-+	} else {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+				can_profile_kernel ? "P" : "Pu");
-+			err = parse_event(evlist, buf);
-+			if (err)
-+				goto out_err;
- 		}
- 	}
- 
-+	/* If there is only 1 event a sample identifier isn't necessary. */
- 	if (evlist->core.nr_entries > 1) {
--		struct evsel *evsel;
--
- 		evlist__for_each_entry(evlist, evsel)
- 			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
- 	}
- 
- 	return evlist;
-+out_err:
-+	evlist__delete(evlist);
-+	return NULL;
- }
- 
- struct evlist *evlist__new_dummy(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index d17c3b57a409..e507f5f20ef6 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -104,7 +104,7 @@ struct evsel_str_handler {
- };
- 
- struct evlist *evlist__new(void);
--struct evlist *evlist__new_default(void);
-+struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
- struct evlist *evlist__new_dummy(void);
- void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 		  struct perf_thread_map *threads);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 54c8922a8e47..5a294595a677 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1021,6 +1021,11 @@ static void __evsel__config_callchain(struct evsel *evsel, const struct record_o
- 	bool function = evsel__is_function_event(evsel);
- 	struct perf_event_attr *attr = &evsel->core.attr;
- 
-+	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
-+		pr_warning_once(
-+			"Framepointer unwinding lacks kernel support. Use '--call-graph dwarf'\n");
-+	}
-+
- 	evsel__set_sample_bit(evsel, CALLCHAIN);
- 
- 	attr->sample_max_stack = param->max_stack;
--- 
-2.53.0.851.ga537e3e6e9-goog
+Thanks,
+Namhyung
 
