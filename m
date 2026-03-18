@@ -1,50 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7831B4F09;
-	Wed, 18 Mar 2026 01:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8777219F135;
+	Wed, 18 Mar 2026 02:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773798758; cv=none; b=Qtt873142T1vK6+XsNCOgOiW4Gy1vkoJ8W94Riy9+/gIRM0hwCKhGr85YCwoQ+XGFT8mwJZKRsiI+/aBqpWQY+4Y7Y/VcE0PFWzEMTd9/fi5pQByzxvo3r0KtkzKAyHzGAigYXOm79kTi2xHI5LAhWA22XnmDnfnW1zpRsO9Ev8=
+	t=1773799379; cv=none; b=I7bs/SHlEZuwDf+BbLawFoHI456ESqG9F4zFyWnBN/KQi5wnmjv1OR31yvpMwgYuq9NyEJVdSdwfJzEJZkTTYwFB1Tm7ESwgSrRymGyCvByICjm+Ej3ieMn+qrFTA61/uqPuCizwJhPq7B/kRE57+3+i0j7GqGJ4HY3GUy3jbkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773798758; c=relaxed/simple;
-	bh=qNmcaRf1or87FJtpGhBUNODnaoOwhhxyGrn3R71WJGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m0HlDbG+Hyu2FL6jJTFSkEI3FEAu6X/SgsiO4F7Pml8U1LnTNBr/HzCV8h9yOyRytTvygyujZzxUATcLltjobaQsp+xBQ0mpKBFLwE3QhYYd2+ckciWherDBwakaR/246EB+wG1APQ9oO1gS/0EHvkNQrDtaYxdyORRMaVxqrZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YOY7SKZb; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773799379; c=relaxed/simple;
+	bh=1aY8itGwueXfUym7kqMXhD3Bd0X8oZZRMQubLbTix9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Rj8nxGNN5wW5KTu5N7ThvbEcqaecR6V4ttxkGYAjLlxgrvX7nyyQ0muH6L4tuLcFuoxszuN/K0qIVroyVmh2x79R86D3QG2NHuIyEWzq6luIj1WClniau/7ZeuTKbGKmZpReov6wjxoNlYvDxA0xtlVhTDzM706BYjixHXEczAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=aCEWYkJ5; arc=none smtp.client-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YOY7SKZb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773798756; x=1805334756;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qNmcaRf1or87FJtpGhBUNODnaoOwhhxyGrn3R71WJGk=;
-  b=YOY7SKZbITS/HGFj0H10X8b47thkrXuFdn8fthsqnRhGh3yBmJr5hegS
-   zspBLdozknKPLidhek1/L8x/rofPlA7W5XI3pMKY7AsOibi9Ak8aZGZ8/
-   0LT5FI9irOcNaE91qjK4ttqBA8fH2UeAak6yZNxA3076sGXd556jmc0SE
-   yPTnRj2JnwtQIri3b+7Iyt3TXG2R3CVAdFO3T/K3na+8sOjZY39LUCUo0
-   RZBOFiwcQJ7cjA0FJaGwTzCHXGr2zHH6nR0xwK8CxbOj/nUHmUXBFYJPn
-   BPDPHUj7GHXjlruG3x26u45afcGPhvNAgerxtZ949NiRJ7+7WrvNRUQbL
-   w==;
-X-CSE-ConnectionGUID: HbEwPmyzTtmA4wtrd33NUg==
-X-CSE-MsgGUID: NRtLGty0TICOSHok09KBKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="100307293"
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="100307293"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 18:52:35 -0700
-X-CSE-ConnectionGUID: j3uJvxpCQh2mPviTNuknxQ==
-X-CSE-MsgGUID: DecEX2TzRhGwxJ9QKqYipQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="245479958"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 18:52:33 -0700
-Message-ID: <53039fb5-4785-48ac-8e9a-7b561a3242c6@linux.intel.com>
-Date: Wed, 18 Mar 2026 09:52:30 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="aCEWYkJ5"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=tZ0YkW6QzHvviEShl9PgGlFvkR04UgvTgl/eoJfCubk=;
+	b=aCEWYkJ57RU+jYD6xeuAmQT6QWYhWukuC1lqL25B1ZrxDqI0Vs3NTfKvJ5AlwQLdM8pehEYQe
+	55n1qFUEZVHwC/PnTOrkKqsbc9EydqwCPUchnbkZH2IVuBilQdsFrdI/yQDCCC98dkWUvhAxjOH
+	sHTmJrb+EsIdeC3eKd+Ehz4=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fbBmC73pYz1T4Gh;
+	Wed, 18 Mar 2026 09:57:31 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id C20BD40538;
+	Wed, 18 Mar 2026 10:02:52 +0800 (CST)
+Received: from [10.67.121.161] (10.67.121.161) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 18 Mar 2026 10:02:51 +0800
+Message-ID: <c9eb7f53-db46-4229-b9ef-8faa1138aca7@huawei.com>
+Date: Wed, 18 Mar 2026 10:02:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,181 +42,166 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf record: Add support for arch_sdt_arg_parse_op()
- on s390
-To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
- hca@linux.ibm.com, japo@linux.ibm.com
-References: <20260317110641.39975-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH v7 1/3] ACPI: Refactor get_acpi_id_for_cpu() to
+ acpi_get_cpu_uid() on non-x86
+To: Jeremy Linton <jeremy.linton@arm.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+	<will@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
+CC: <punit.agrawal@oss.qualcomm.com>, <guohanjun@huawei.com>,
+	<suzuki.poulose@arm.com>, <ryan.roberts@arm.com>, <chenl311@chinatelecom.cn>,
+	<masahiroy@kernel.org>, <wangyuquan1236@phytium.com.cn>,
+	<anshuman.khandual@arm.com>, <heinrich.schuchardt@canonical.com>,
+	<Eric.VanTassell@amd.com>, <jonathan.cameron@huawei.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
+	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<stable@vger.kernel.org>
+References: <20260313022144.40942-1-fengchengwen@huawei.com>
+ <20260313022144.40942-2-fengchengwen@huawei.com>
+ <e4b0aefa-7108-47b4-ad5d-d62d385b8f33@arm.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260317110641.39975-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: fengchengwen <fengchengwen@huawei.com>
+In-Reply-To: <e4b0aefa-7108-47b4-ad5d-d62d385b8f33@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
+Hi,
 
-On 3/17/2026 7:06 PM, Thomas Richter wrote:
-> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_parse_op() function")
-> removes arch_sdt_arg_parse_op() functions and s390 support is lost.
-> The following warning is printed:
+On 3/18/2026 5:38 AM, Jeremy Linton wrote:
+> Hi,
+> 
+> Lets try this again, since the last one looks like it got caught in the moderation system and wasn't quite right anyway.
+> 
+> On 3/12/26 9:21 PM, Chengwen Feng wrote:
+>> Unify CPU ACPI ID retrieval interface across architectures by
+>> refactoring get_acpi_id_for_cpu() to acpi_get_cpu_uid() on
+>> arm64/riscv/loongarch:
+>> - Add input parameter validation
+>> - Adjust interface to int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+>>    (old: u32 get_acpi_id_for_cpu(unsigned int cpu), no input check)
+>>
+>> This refactoring (not a pure rename) enhances interface robustness while
+>> preparing for consistent ACPI Processor UID retrieval across all
+>> ACPI-enabled platforms. Valid inputs retain original behavior.
+>>
+>> Note: Move the ARM64-specific get_cpu_for_acpi_id() implementation to
+>>        arch/arm64/kernel/acpi_numa.c to fix compilation errors from
+>>        circular header dependencies introduced by the rename.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> ---
+>>   arch/arm64/include/asm/acpi.h      | 16 +---------
+>>   arch/arm64/kernel/acpi.c           | 16 ++++++++++
+>>   arch/arm64/kernel/acpi_numa.c      | 14 +++++++++
+>>   arch/loongarch/include/asm/acpi.h  |  5 ---
+>>   arch/loongarch/kernel/acpi.c       |  9 ++++++
+>>   arch/riscv/include/asm/acpi.h      |  4 ---
+>>   arch/riscv/kernel/acpi.c           | 16 ++++++++++
+>>   arch/riscv/kernel/acpi_numa.c      |  9 ++++--
+>>   drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
+>>   drivers/acpi/riscv/rhct.c          |  7 ++++-
+>>   drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
+>>   include/linux/acpi.h               | 13 ++++++++
+>>   12 files changed, 122 insertions(+), 43 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+>> index c07a58b96329..106a08556cbf 100644
+>> --- a/arch/arm64/include/asm/acpi.h
+>> +++ b/arch/arm64/include/asm/acpi.h
+>> @@ -114,22 +114,8 @@ static inline bool acpi_has_cpu_in_madt(void)
+>>   }
+>>     struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu);
+>> -static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+>> -{
+>> -    return    acpi_cpu_get_madt_gicc(cpu)->uid;
+>> -}
+>> -
+>> -static inline int get_cpu_for_acpi_id(u32 uid)
+>> -{
+>> -    int cpu;
+>> -
+>> -    for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+>> -        if (acpi_cpu_get_madt_gicc(cpu) &&
+>> -            uid == get_acpi_id_for_cpu(cpu))
+>> -            return cpu;
+>>   -    return -EINVAL;
+>> -}
+>> +int get_cpu_for_acpi_id(u32 uid);
+>>     static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+>>   void __init acpi_init_cpus(void);
+>> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+>> index af90128cfed5..f3866606fc46 100644
+>> --- a/arch/arm64/kernel/acpi.c
+>> +++ b/arch/arm64/kernel/acpi.c
+>> @@ -458,3 +458,19 @@ int acpi_unmap_cpu(int cpu)
+>>   }
+>>   EXPORT_SYMBOL(acpi_unmap_cpu);
+>>   #endif /* CONFIG_ACPI_HOTPLUG_CPU */
+>> +
+>> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+>> +{
+>> +    struct acpi_madt_generic_interrupt *gicc;
+>> +
+>> +    if (cpu >= nr_cpu_ids)
+>> +        return -EINVAL;
+> If this actually happens, its probably useful to know it with a pr_warn/pr_warn_once.> +
 
-Not sure if I miss something, but it looks there was also no s390 specific
-support for arch_sdt_arg_parse_op() before the commit e5e66adfe45a6 ("perf
-regs: Remove __weak attributive arch_sdt_arg_parse_op() function") and we
-would see same warning even without the commit e5e66adfe45a6, right?
+The function maybe called from userspace which on later roadmap, so I prefer not add
+warning or error here.
+BTW: the function will return -EINVAL, so caller could know the case.
 
+>> +    gicc = acpi_cpu_get_madt_gicc(cpu);
+>> +    if (!gicc)
+> I think this check is redundant because we can't have logical cpu's that aren't in the cpu_possible() list, which on arm64 doesn't AFAIK have holes. In the past this might have made sense if we weren't maintaining a copy of the gicc structure from the MADT for each core.> +        return -ENODEV;
 
->
->   Unknown ELF machine 22, standard arguments parse will be skipped.
->
-> ELF machine 22 is the EM_S390 host. This happens with command
->   # ./perf record -v -- stress-ng -t 1s --matrix 0
-> on a z/VM system when the event is not specified.
->
-> Add s390 specific __perf_sdt_arg_parse_op_s390() function to support
-> -architecture calls to arch_sdt_arg_parse_op() for s390.
-> The warning disappears.
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Tested-by: Jan Polensky <japo@linux.ibm.com>
-> ---
->  .../perf/util/perf-regs-arch/perf_regs_s390.c | 89 +++++++++++++++++++
->  tools/perf/util/perf_regs.c                   |  3 +
->  tools/perf/util/perf_regs.h                   |  1 +
->  3 files changed, 93 insertions(+)
->
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_s390.c b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
-> index c61df24edf0f..2aa70eb23311 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_s390.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_s390.c
-> @@ -1,7 +1,13 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> +#include <errno.h>
-> +#include <regex.h>
->  #include "../perf_regs.h"
->  #include "../../arch/s390/include/perf_regs.h"
-> +#include "debug.h"
-> +
-> +#include <linux/zalloc.h>
-> +#include <linux/kernel.h>
->  
->  uint64_t __perf_reg_mask_s390(bool intr __maybe_unused)
->  {
-> @@ -95,3 +101,86 @@ uint64_t __perf_reg_sp_s390(void)
->  {
->  	return PERF_REG_S390_R15;
->  }
-> +
-> +/* %rXX */
-> +#define SDT_OP_REGEX1  "^%(r([0-9]|1[0-5]))$"
-> +/* -###(%rXX) */
-> +#define SDT_OP_REGEX2  "^([+-]?[0-9]+)\\(%(r[0-9]|r1[0-5])\\)$"
-> +static regex_t sdt_op_regex1, sdt_op_regex2;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +	static int initialized;
-> +	int ret = 0;
-> +
-> +	if (initialized)
-> +		return 0;
-> +
-> +	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> +	if (ret)
-> +		goto error;
-> +	initialized = 1;
-> +
-> +	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> +	if (ret)
-> +		goto free_regex1;
-> +	initialized = 2;
-> +
-> +	return 0;
-> +
-> +free_regex1:
-> +	regfree(&sdt_op_regex1);
-> +error:
-> +	pr_debug4("Regex compilation error, initialized %d\n", initialized);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Parse OP and convert it into uprobe format, which is, +/-NUM(%gprREG).
-> + * Possible variants of OP are:
-> + *	Format		Example
-> + *	-------------------------
-> + *	NUM(%rREG)	48(%r1)
-> + *	-NUM(%rREG)	-48(%r1)
-> + *	%rREG		%r1
-> + */
-> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op)
-> +{
-> +	int ret, new_len;
-> +	regmatch_t rm[6];
-> +	unsigned long i;
-> +
-> +	*new_op = NULL;
-> +	ret = sdt_init_op_regex();
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	if (!regexec(&sdt_op_regex1, old_op, 3, rm, 0)) {
-> +		/* Extract %rX */
-> +		new_len = 2;    /* % NULL */
-> +		new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
-> +		*new_op = zalloc(new_len);
-> +		if (!*new_op)
-> +			return -ENOMEM;
-> +
-> +		scnprintf(*new_op, new_len, "%.*s",
-> +			  (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
-> +	} else if (!regexec(&sdt_op_regex2, old_op, ARRAY_SIZE(rm), rm, 0)) {
-> +		/* Extract #(%rX) */
-> +		new_len = 4;    /* (%)NULL */
-> +		for (i = 1; i < ARRAY_SIZE(rm) && rm[i].rm_so != -1; ++i)
-> +			new_len += (int)(rm[i].rm_eo - rm[i].rm_so);
-> +		*new_op = zalloc(new_len);
-> +		if (!*new_op)
-> +			return -ENOMEM;
-> +
-> +		scnprintf(*new_op, new_len, "%.*s(%.*s)",
-> +			  (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so,
-> +			  (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so);
-> +	} else {
-> +		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-> +		return SDT_ARG_SKIP;
-> +	}
-> +
-> +	return SDT_ARG_VALID;
-> +}
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 5b8f34beb24e..f52b0e1f7fc7 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -23,6 +23,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op)
->  	case EM_X86_64:
->  		ret = __perf_sdt_arg_parse_op_x86(old_op, new_op);
->  		break;
-> +	case EM_S390:
-> +		ret = __perf_sdt_arg_parse_op_s390(old_op, new_op);
-> +		break;
->  	default:
->  		pr_debug("Unknown ELF machine %d, standard arguments parse will be skipped.\n",
->  			 e_machine);
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 7c04700bf837..573f0d1dfe04 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -62,6 +62,7 @@ uint64_t __perf_reg_mask_s390(bool intr);
->  const char *__perf_reg_name_s390(int id);
->  uint64_t __perf_reg_ip_s390(void);
->  uint64_t __perf_reg_sp_s390(void);
-> +int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op);
->  
->  int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_x86(bool intr);
+This commit will backport to stable branch at least 6.6. So I think it's OK to keep it.
+
+>> +
+>> +    *uid = gicc->uid;
+>> +    return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
+>> diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
+>> index 2465f291c7e1..41d1e46a4338 100644
+>> --- a/arch/arm64/kernel/acpi_numa.c
+>> +++ b/arch/arm64/kernel/acpi_numa.c
+>> @@ -34,6 +34,20 @@ int __init acpi_numa_get_nid(unsigned int cpu)
+>>       return acpi_early_node_map[cpu];
+>>   }
+>>   +int get_cpu_for_acpi_id(u32 uid)
+>> +{
+>> +    u32 cpu_uid;
+>> +    int ret;
+>> +
+>> +    for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
+>> +        ret = acpi_get_cpu_uid(cpu, &cpu_uid);
+> This might have been a simplification, but since we are basically doing a for_each_possible_cpu(cpu) and every possible cpu will have a GICC entry before it becomes 'possible' there will be a UID, so all the error checking AFAIK, is impossible here.> +        if (ret == 0 && uid == cpu_uid)
+
+I prefer to keep the current impl, as it may catch future error.
+
+>> +            return cpu;
+>> +    }
+>> +
+>> +    return -EINVAL;
+>> +}
+>> +
+> I also moved this below acpi_get_cpu_uid() in acpi.c and I don't see the a forward error issue you mentioned. It seems to me that they should be kept close to each other since they are basically inverses of each other.
+
+As long as you ensure that it is not placed in asm/acpi.h, that's fine.
+So it's OK to move this function to acpi.c
+
+But I just checked the callers of this function again and found that there are
+all in acpi_numa.c, so I will now add the static keyword to this function and
+make it an internal function.
+
+Thanks
+
+> 
+
