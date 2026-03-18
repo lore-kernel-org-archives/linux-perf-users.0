@@ -1,117 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B823603E9;
-	Wed, 18 Mar 2026 07:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B80376471;
+	Wed, 18 Mar 2026 08:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773818107; cv=none; b=ULnvDmnrq2X6KzyXR1gsOshZMBnK/9BZKh5QrLJzUzyuIOr8bTogo5B4+iCOLE9tSnj6wLvzcO6zeNCnMLnC1vfqn8psSn/T2HQIEWjIkApMnXHZ6pF66BumzCDeBS1JEME62HAxsbuk5mQ3GRN34BWzlQcQIs4pQgK0RL8jjFE=
+	t=1773821008; cv=none; b=Ru9YA0finTL7vFLt+NuvUZu7P2NOXyAEp8ePV9Cownq6z4+1GpWHQUCL3tlo/REmyyNPjjhQBPEsirZNf9ITmKd3hzgrcDyz1HmESg3WqxwFq0ehYz/RzMd4wpdyoKO0l7r3BUdRkkUw+lxiewCY8kCM1+R+K2hpEYX08MKqr8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773818107; c=relaxed/simple;
-	bh=Vp1eIjcQdu7nh+wlHqRJaseJqZre+Q2B4i3duBiBEaU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XYqlCBSCpdKMCyFRVjLpdbdEVd7YeEW5H3CEuxXlAzG7sSlRrwdPM2s6+1xmwFfITrmJoXiRx57eb9c2o7rkC5CiYvmkLNvatcBp+dyAW2fclItne40RnuskE9dgIgAykF07Nqvn7ewZzFj0ZGunTT53YhXpSsIvTih+qaAvCt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTHTb+Ax; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773821008; c=relaxed/simple;
+	bh=DYXWvYfUSpZR5al96Sc7tYooTiT5m/o/92SYPPh2AnE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZnX9QSrj8Xi+FAQfDDaw/wLix0A5y2nWVKMqSSK1GVOHjrn7WEe+eGtA9t93eEfFcpebJldzFDiTXATl51jL9MrXRm3f4JFjKi/N33Hi9cvBA/DiY9gWI9/l81LZz6ndI7/5aYSOnacieShGAq1HjQijzxqRWPIOgIvxyFkXMjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hgs+T34F; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTHTb+Ax"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E674C2BC9E;
-	Wed, 18 Mar 2026 07:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773818107;
-	bh=Vp1eIjcQdu7nh+wlHqRJaseJqZre+Q2B4i3duBiBEaU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GTHTb+AxdnfJezG0Dcwg23PRAq4v3630BZQTAc8ilDZRe/YnqJdJGNJLVgO+0iAkE
-	 TNi3RD72YHYZP0HyXt2pwXuTWAZ9/cIudq+4uO21/u882qLUWWsHNwfMwKbNxhbJLy
-	 W4hpdh+vCW9VhoddvOyA/O36wGmx+xOBdIMXCmq78tyjFv9f7XdSK7P/Ega+KNcsja
-	 ZgmfEYJJsbB83qbsqMVNbI0yYBH+K16DBKzVqXJnEcmE6TpVSfs3MUG/+pI/KRhjqi
-	 TDdpAlSgClgd8Us0fOZrXtl+B41Uq90G0Ur1HOTN+tD8wTfb5mtIPcP4TS44Bm7Bor
-	 wZYi/M3oGLzLg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] perf test: Fix perf stat --bpf-counters on hybrid machines
-Date: Wed, 18 Mar 2026 00:15:01 -0700
-Message-ID: <20260318071501.17339-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hgs+T34F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773821007; x=1805357007;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DYXWvYfUSpZR5al96Sc7tYooTiT5m/o/92SYPPh2AnE=;
+  b=Hgs+T34FScwlR5Lg8DFNefu9pUq3UAEm02AQJN1RTqUF/MYLmagTqfsf
+   qOvht2GodTQCD1lyxqLZ1zwPS9mj1wGZmdtJy/m/+9rZTWPe/AkGNTh9/
+   zVRhhKD9gFPMfyl3swGlIJ2MVBvD2bFB0/Z5Q/7fAMp/8gMIVEkbDzaNd
+   sfMMEQvCXUNZN6QwVyIG3mlI+5A6EMWY2+YRsgTHrUfysk/0iPV1ALkZW
+   XeVDWUpSpaXW9pjBVhvVRQNgorGdVNl6h1tbLNN6kvqYI5xk7RGzb2klX
+   zm1iqlL+wAWkoVRj5pN2W8UfE6H+MHU+5iT7zHqy3TjDeXo0TQyOTs1Le
+   g==;
+X-CSE-ConnectionGUID: 2zH8OoI5SGycT1vgvbskTA==
+X-CSE-MsgGUID: D692jSN3Q+SHjOFr/MCd6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="78478503"
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="78478503"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 01:03:26 -0700
+X-CSE-ConnectionGUID: 6hGynHTmRC+qG+1/6uHngg==
+X-CSE-MsgGUID: dbQF7qDPTSi1+VKz16axcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="221777167"
+Received: from unknown (HELO [10.238.3.211]) ([10.238.3.211])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 01:03:23 -0700
+Message-ID: <dc7e1a7d-dc40-4644-a836-84c3a968811d@linux.intel.com>
+Date: Wed, 18 Mar 2026 16:03:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf record: Add support for arch_sdt_arg_parse_op()
+ on s390
+To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, japo@linux.ibm.com
+References: <20260317110641.39975-1-tmricht@linux.ibm.com>
+ <53039fb5-4785-48ac-8e9a-7b561a3242c6@linux.intel.com>
+ <6dac1f79-ff68-4583-a108-e9d291422438@linux.ibm.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <6dac1f79-ff68-4583-a108-e9d291422438@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The test constantly fails on my Intel hybrid machine.  The issue was it
-has two events in the output even if I only gave it one event.
 
-  $ perf stat -e instructions -- perf test -w sqrtloop
+On 3/18/2026 2:27 PM, Thomas Richter wrote:
+> On 3/18/26 02:52, Mi, Dapeng wrote:
+>> On 3/17/2026 7:06 PM, Thomas Richter wrote:
+>>> commit e5e66adfe45a6 ("perf regs: Remove __weak attributive arch_sdt_arg_parse_op() function")
+>>> removes arch_sdt_arg_parse_op() functions and s390 support is lost.
+>>> The following warning is printed:
+>> Not sure if I miss something, but it looks there was also no s390 specific
+>> support for arch_sdt_arg_parse_op() before the commit e5e66adfe45a6 ("perf
+>> regs: Remove __weak attributive arch_sdt_arg_parse_op() function") and we
+>> would see same warning even without the commit e5e66adfe45a6, right?
+>>
+>>
+> Absolutely Correct, but in my opinion it does not matter if it was your patch or if
+> you just remove the __weak attribute. Your patch revealed the missing s390 support, which triggered
+> this patch.
+> If you do not like the wording, what do  you suggest?
 
-   Performance counter stats for 'perf test -w sqrtloop':
+I see. The original words lead me think the commit e5e66adfe45a6 ("perf
+regs: Remove __weak attributive arch_sdt_arg_parse_op() function") drops
+the s390 specific support unexpectedly. :)
 
-         910,856,421      cpu_atom/instructions/                                                  (28.05%)
-      14,852,865,997      cpu_core/instructions/                                                  (96.79%)
+So precisely speaking, we may say "the commit e5e66adfe45a6 ("perf regs:
+Remove __weak attributive arch_sdt_arg_parse_op() function") introducing
+perf_sdt_arg_parse_op() to support architecture-specific argument parsing,
+but s390 specific argument parsing is still not supported. So this patch
+adds the missing support for s390 ..."
 
-         1.014313341 seconds time elapsed
+Thanks.
 
-         1.004114000 seconds user
-         0.008174000 seconds sys
 
-Let's modify the awk script to add the values for each line and print
-the total.  The variable 'i' has a number of input lines that have valid
-output and variable 'c' has the sum of actual counter values.  That way
-it should work on any platforms.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2) handle '<not counted>' and '<not supported>'.
-
- tools/perf/tests/shell/stat_bpf_counters.sh | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index f43e28a136d3c9bc..8b42585f45025d5c 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -41,8 +41,14 @@ check_counts()
- test_bpf_counters()
- {
- 	printf "Testing --bpf-counters "
--	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | awk '/instructions/ {print $1}')
--	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
-+	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
-+				awk -v i=0 -v c=0 '/instructions/ { \
-+					if ($1 != "<not") { i++; c += $1 } \
-+				} END { if (i > 0) print c; else print "<not" }')
-+	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
-+				awk -v i=0 -v c=0 '/instructions/ { \
-+					if ($1 != "<not") { i++; c += $1 } \
-+				} END { if (i > 0) print c; else print "<not" }')
- 	check_counts $base_instructions $bpf_instructions
- 	compare_number $base_instructions $bpf_instructions
- 	echo "[Success]"
-@@ -52,8 +58,14 @@ test_bpf_modifier()
- {
- 	printf "Testing bpf event modifier "
- 	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
--	base_instructions=$(echo "$stat_output"| awk '/base_instructions/ {print $1}')
--	bpf_instructions=$(echo "$stat_output"| awk '/bpf_instructions/ {print $1}')
-+	base_instructions=$(echo "$stat_output"| \
-+				awk -v i=0 -v c=0 '/base_instructions/ { \
-+					if ($1 != "<not") { i++; c += $1 } \
-+				} END { if (i > 0) print c; else print "<not" }')
-+	bpf_instructions=$(echo "$stat_output"| \
-+				awk -v i=0 -v c=0 '/bpf_instructions/ { \
-+					if ($1 != "<not") { i++; c += $1 } \
-+				} END { if (i > 0) print c; else print "<not" }')
- 	check_counts $base_instructions $bpf_instructions
- 	compare_number $base_instructions $bpf_instructions
- 	echo "[Success]"
--- 
-2.53.0
-
+>
+> Thanks Thomas
