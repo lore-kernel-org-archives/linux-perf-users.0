@@ -1,29 +1,30 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DEB13E3D9E;
-	Wed, 18 Mar 2026 15:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 847933EBF06;
+	Wed, 18 Mar 2026 15:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773846553; cv=none; b=LnnH31T50MuBNzYLmBin8M/p6jZt/xS2+teBY3WpQhdQPWZFpSAKdsidfd0pZImInR5MJQy56lpHddXizSlPm/mPLqcJ0kgdTGWpCk1NDKHbydAg5ktFwVQuxGsW4O60Qlv1adYCXfqyf/EWyK9JOwu9qS+Hk3eRd853BTg8vIU=
+	t=1773846802; cv=none; b=gmz/pN52zjRYnFlGJzKioxo2K2MMVrSBgRSm3A/M8F5Hv7y/IDWRTyGLej3Qk2GuOnPnV8IOaCx+kluZ7T30UJtDjvbALtqhBgdQF8d3fp1hjZqKcO0TKBWzZbMYki2PRngmE+q+ykG9HUm0A2CWERMcrhCetrYHzHwiR24tv1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773846553; c=relaxed/simple;
-	bh=7AuzPR/hbu1GLj3uVnx/emzpJSB1Ww7j9Hgi3DwM1HY=;
+	s=arc-20240116; t=1773846802; c=relaxed/simple;
+	bh=mcByvHAC12ZJE2Ee6LT24Yp29yRr5rwa469/SF7LLN8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EcZT+OV+pvfcbTFn8PcyF0VUdIqVl92bNJBS+mrmjzDH9SRXD0YHb8gUtX/4mQcEmA9eK4h7Duer4+UyovPBk+mw7oLbOe30hcMX6sRF8HUNctFoqSnK3nDXG8bREBFioJiGfWt/cpOlr81vNDILrp6RNhvw1oWOF6jITKNmDSg=
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyAMLy1HkB1x3qKJW4fFnhS0U9Q663gQahuGerS0NRh2Sz3Pxf2xim1HHn8gj6JMzYfGc8v34A3ycSKwySS6JUF46Eg6cBbjDUzwEHspSMcPyg8VXapDs0erGypw11pwYKhnGHe3AlgSbIGz/1+7SV1X+nZsH0Dx8Fpuur7nANY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C577E1C2B;
-	Wed, 18 Mar 2026 08:09:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88D451E2F;
+	Wed, 18 Mar 2026 08:13:12 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E85D3F73B;
-	Wed, 18 Mar 2026 08:09:10 -0700 (PDT)
-Date: Wed, 18 Mar 2026 15:09:08 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F1533F73B;
+	Wed, 18 Mar 2026 08:13:18 -0700 (PDT)
+Date: Wed, 18 Mar 2026 15:13:16 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Quentin Monnet <qmo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
 	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
+	Quentin Monnet <qmo@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nsc@kernel.org>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
@@ -41,7 +42,6 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Lezcano <daniel.lezcano@kernel.org>,
 	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -75,9 +75,9 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Subject: Re: [PATCH v5 00/26] tools build: Append
  -fzero-init-padding-bits=all option
-Message-ID: <20260318150908.GM8048@e132581.arm.com>
+Message-ID: <20260318151316.GN8048@e132581.arm.com>
 References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
- <8590eea2-8278-4cff-a6f2-f5fa404508bb@kernel.org>
+ <20260318115325.GB3738786@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -86,31 +86,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8590eea2-8278-4cff-a6f2-f5fa404508bb@kernel.org>
+In-Reply-To: <20260318115325.GB3738786@noisy.programming.kicks-ass.net>
 
-On Wed, Mar 18, 2026 at 02:56:24PM +0000, Quentin Monnet wrote:
-> 2026-03-18 09:16 UTC+0000 ~ Leo Yan <leo.yan@arm.com>
+On Wed, Mar 18, 2026 at 12:53:25PM +0100, Peter Zijlstra wrote:
+> On Wed, Mar 18, 2026 at 09:16:44AM +0000, Leo Yan wrote:
 > > Thank you for reviewing and commenting on v4.
 > > 
 > > For anyone new to the series, the reason for appending this compiler
 > > option is described in v3 (see "Link to v3" below).
-> > 
-> > In this version, the BPF related patches have been split out and will be
-> > sent separately (note that I have kept the bpftool patches in this
-> > series, as I have gathered Quentin's Acked-by tags).
 > 
-> 
-> Hi Leo, if it's all the same to you, could bpftool patches go through
-> the bpf-next tree as well, please? (You can keep my tags, of course.)
+> So why can't you just copy-paste that yourself, and save me from having
+> to go find a browser and copy/paste the stupid link, just to find
+> something that should have been here to begin with?!
 
-Sure!
+Sorry about that!
 
-I need to look into BPF CI failures, seems the extra cflags causes
-regressions in eBPF selftest [1][2].  After make things clear, I will
-send patch series separately (a common one and a BPF one).
-
-Thanks,
-Leo
-
-[1] https://github.com/kernel-patches/bpf/actions/runs/23238743267/job/67551317220
-[2] https://github.com/kernel-patches/bpf/actions/runs/23238743267/job/67551683133
+I didn't expect a link to cause trouble.  I'll include the information
+instead later.
