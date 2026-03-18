@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C82242D76;
-	Wed, 18 Mar 2026 17:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DF12EB860;
+	Wed, 18 Mar 2026 17:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773854248; cv=none; b=iSFm7EMpYn7794y5Uwk6zB29O6sCjSCNrDarUFqznp/Ei554zBAiT9V4klyfPEH2dZdzrVofGCxOAhIcBQRS3qnku86Jj59YSUNoSeZJ6VgqvU7JeaXyFgt0OzL5s9yVmMsUJbZ/vLBkovikmlDIkgyBJB9T8iAWWKPlTCirjZE=
+	t=1773854255; cv=none; b=MLjKn2h43RTVsJeoemk/iPg88+YnJRLdTeTK+ZhF9LkB9srbNEq+KMiMEue4DV949AvAOoB0MRMoRyxSLFOC3SL5SXIVUZPjVbsv0yn+nbY2g7PYnUybDow8Khffa7mxddqIUjMKI+AI3Kgrd52/Iz0S6iIDw7KZw45UpjCPgGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773854248; c=relaxed/simple;
-	bh=UAeqv1crTMesgqI0eCm4lZuBxl3uq8Ao0hE7O5sw9WE=;
+	s=arc-20240116; t=1773854255; c=relaxed/simple;
+	bh=dm3G7/u4dkXgG56i0lULzKkyOM7j8bbEFH4ISzHFyUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDo4rhoqcO13vt5qErD6m/QUXxIam5eUIDIuDr3W8g8pVmVviQTR5bOMUzL1ruJWOr3K2oGk3xvftJb6fI5zf1qKbig6cswMu3QQO7GPGjPUmrzejSePyR/D7xE77WtOwJxDS8lHeWwA3K2x3kXDR1HcxETKiWUcv4JC5A4nvoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHbOPoqo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lYUEdvTPM0lSp9LSa8DK8qiI7DZHBf0/zx3Gsll0qogs4blm61oyGau/JWVBr1MI7+NnmWuOAAZESipP3bjDXF/xAHwcuxxXBiC01Q1Lb1e8wwLV73HtZDaNhRp3zc16B8WM8DM0hBPit14rSm6Deu2a05MQxOyJRWt0Z+YnOq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LBWFAH42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHbOPoqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3469EC2BCAF;
-	Wed, 18 Mar 2026 17:17:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LBWFAH42"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D75C2BCAF;
+	Wed, 18 Mar 2026 17:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773854248;
-	bh=UAeqv1crTMesgqI0eCm4lZuBxl3uq8Ao0hE7O5sw9WE=;
+	s=k20201202; t=1773854254;
+	bh=dm3G7/u4dkXgG56i0lULzKkyOM7j8bbEFH4ISzHFyUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vHbOPoqohS+J2yBQ2tc3UMWkMCmiLoL19m7AH8VT9z7odibeTRewAB538KJOXk5kC
-	 YqN8SX9RGd4buaIuI6O1N4Sgf/1/D7B6RHdtcCferpumSpGWaQTPoX9G4dhyNiHTTS
-	 8fsjNY27/ZzMuvtbD9O/0NFb83IjCk6hvUvyGKaoaUgmwYAAMve8gzo9dSeWKqHnLK
-	 6JkZKi8+ch4NDRwDlbpPBMuIj8urVbvboxFq75XlE1Gc2VpZVSBrXX2tBwLgvUzMon
-	 qHGqy909oQK3KUuoMFqD67XZrgGGxTPgpxIqz07vhNtLTnZtIrM7iggv8r9E4vhsIV
-	 9I458M1FGTLCg==
+	b=LBWFAH42lPCuKmuEdfuRq1aSN36d87ndQsXolknWabBU/+uBts6zddmVGhOw5SXMA
+	 vu9KRw/vuWN3g0LJKpDT+n7iTF9ugFmXCL+0X3pMtmy2ahZ2t2hKOlX0VEPmmDIek/
+	 u9Y7GjMnvKAA2MmDuuu+WkatpDmJt5aiy1QTKFKFNCYDH0iK8UDPeLpFpfnJvmbBEh
+	 Ruv9mzrxF9aXguTTVEggkIjd3EB9ahiJy+8vkanfJVsKd8LoTD6Mt1CklESSuDK1Yu
+	 Nd8m9TdD/3aOi0Zrd7PCgxPXFgy7alvH5oGGSgV1qd8k1IMeEBU8zZTAtUVFQLWaVK
+	 QZWwGOWepMXRQ==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: bpf@vger.kernel.org
 Cc: Puranjay Mohan <puranjay@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v2 1/4] perf/arm_pmuv3: Fix NULL pointer dereference in armv8pmu_sched_task()
-Date: Wed, 18 Mar 2026 10:16:55 -0700
-Message-ID: <20260318171706.2840512-2-puranjay@kernel.org>
+Subject: [PATCH v2 2/4] perf: Fix uninitialized bitfields in perf_clear_branch_entry_bitfields()
+Date: Wed, 18 Mar 2026 10:16:56 -0700
+Message-ID: <20260318171706.2840512-3-puranjay@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260318171706.2840512-1-puranjay@kernel.org>
 References: <20260318171706.2840512-1-puranjay@kernel.org>
@@ -59,63 +59,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is easily triggered with:
+perf_clear_branch_entry_bitfields() zeroes individual bitfields of struct
+perf_branch_entry but misses the new_type (4 bits) and priv (3 bits)
+fields. This means any code path that relies on this function to produce
+a clean entry may expose stale or uninitialised data in these fields to
+userspace.
 
-  perf record -b -e cycles -a -- ls
+The function was introduced by commit bfe4daf850f4 ("perf/core: Add
+perf_clear_branch_entry_bitfields() helper") specifically to "centralize
+the initialization to avoid missing a field in case more are added."
+Unfortunately, the commits that later added new_type and priv to struct
+perf_branch_entry only updated the UAPI header and did not update this
+clearing function.
 
-which crashes on the first context switch with:
+Zero new_type and priv alongside the other bitfields.
 
-  Unable to handle kernel NULL pointer dereference at virtual address 00[.]
-  PC is at armv8pmu_sched_task+0x14/0x50
-  LR is at perf_pmu_sched_task+0xac/0x108
-  Call trace:
-    armv8pmu_sched_task+0x14/0x50 (P)
-    perf_pmu_sched_task+0xac/0x108
-    __perf_event_task_sched_out+0x6c/0xe0
-    prepare_task_switch+0x120/0x268
-    __schedule+0x1e8/0x828
-    ...
-
-perf_pmu_sched_task() invokes the PMU sched callback with cpc->task_epc,
-which is NULL when no per-task events exist for this PMU. With CPU-wide
-branch-stack events, armv8pmu_sched_task() is still registered and
-dereferences pmu_ctx->pmu unconditionally, causing the crash.
-
-The bug was introduced by commit fa9d27773873 ("perf: arm_pmu: Kill last
-use of per-CPU cpu_armpmu pointer") which changed the function from
-using the per-CPU cpu_armpmu pointer (always valid) to dereferencing
-pmu_ctx->pmu without adding a NULL check.
-
-Add a NULL check for pmu_ctx to avoid the crash.
-
-Fixes: fa9d27773873 ("perf: arm_pmu: Kill last use of per-CPU cpu_armpmu pointer")
+Fixes: b190bc4ac9e6 ("perf: Extend branch type classification")
+Fixes: 5402d25aa571 ("perf: Capture branch privilege information")
 Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ include/linux/perf_event.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 8014ff766cff..2d097fad9c10 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -1074,8 +1074,15 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
- static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx,
- 				struct task_struct *task, bool sched_in)
- {
--	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
--	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-+	struct arm_pmu *armpmu;
-+	struct pmu_hw_events *hw_events;
-+
-+	/* cpc->task_epc is NULL when no per-task events exist for this PMU */
-+	if (!pmu_ctx)
-+		return;
-+
-+	armpmu = to_arm_pmu(pmu_ctx->pmu);
-+	hw_events = this_cpu_ptr(armpmu->hw_events);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 48d851fbd8ea..d7f39b7e9cda 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1481,6 +1481,8 @@ static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *b
+ 	br->cycles	= 0;
+ 	br->type	= 0;
+ 	br->spec	= PERF_BR_SPEC_NA;
++	br->new_type	= 0;
++	br->priv	= 0;
+ 	br->reserved	= 0;
+ }
  
- 	if (!hw_events->branch_users)
- 		return;
 -- 
 2.52.0
 
