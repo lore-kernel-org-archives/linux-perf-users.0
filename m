@@ -1,271 +1,117 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19D23612F7
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 06:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B823603E9;
+	Wed, 18 Mar 2026 07:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773815743; cv=none; b=GOVOfBPBLQP3rEHoQVkTGKtty2QpQ+RLtst4Gv46aGr64SD48W4Sgwt/sTVX5jRUFphGYlwtcXulT6irpppj+Tw3CQOBBmCafGvLEmVR5HksB+lN6nl2ov/eOFbv/XI1ELCJ8WzgeF+0nOTjuLkOjB2/pvb80JkpxLnwProEoN4=
+	t=1773818107; cv=none; b=ULnvDmnrq2X6KzyXR1gsOshZMBnK/9BZKh5QrLJzUzyuIOr8bTogo5B4+iCOLE9tSnj6wLvzcO6zeNCnMLnC1vfqn8psSn/T2HQIEWjIkApMnXHZ6pF66BumzCDeBS1JEME62HAxsbuk5mQ3GRN34BWzlQcQIs4pQgK0RL8jjFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773815743; c=relaxed/simple;
-	bh=dP8X/Hxr2X9gjLBbDFnOO+/g4ktqaHFFHrx3d1o/a+M=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Y9EkpLYkMs+RLuxsfDaJHIhBwH08nHkwLXh4D7b8GjxvN67wKPGhAo0A4+KpnJRXtrc0+hdxMMPM3ftDgWHyaSHHcWNhuMOMbhfu3zZXJVex2IykG8Muh9EwwZyEK2xw9D6zP0Tvpb4acvmX3IVrHBlfE4//AEjWjsdKHPpjiqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TFVN1ta0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1773818107; c=relaxed/simple;
+	bh=Vp1eIjcQdu7nh+wlHqRJaseJqZre+Q2B4i3duBiBEaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XYqlCBSCpdKMCyFRVjLpdbdEVd7YeEW5H3CEuxXlAzG7sSlRrwdPM2s6+1xmwFfITrmJoXiRx57eb9c2o7rkC5CiYvmkLNvatcBp+dyAW2fclItne40RnuskE9dgIgAykF07Nqvn7ewZzFj0ZGunTT53YhXpSsIvTih+qaAvCt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTHTb+Ax; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TFVN1ta0"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62HMM7J81188759;
-	Wed, 18 Mar 2026 06:35:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=RVtABx
-	UGyqYXtwHfN+JJOZD0Yp2Zot16jzhg+2+0tI8=; b=TFVN1ta0mXNUrUGxAwH9GA
-	G2N5dTFo6ilyNM5wozXgLbmO2t2qoFSU049bPac/nAthjHWmOtKeal0eS/poZ/OS
-	Mi3BOSRK4lCEe/6NZUE4mZ+7Lhl8NpjmMWtEjh/eTJ0PFlmslYxbIUCzHHwhft2z
-	TyTU5EMcw21Pl0u9/fUkYGCZaE6cHC9LN5fSQUgFo4gaqrJrzhsUtR7IaTEfTyLy
-	sroq6XOVmZqrS0PT9rsps6eENkmsHMBPlSrSa7VHaoYPomJJioYbLR5KMeaJkcCB
-	HWeE7rIb3iZOBN+lkTaIoEEb6z5mJR5gwHbqEQ5guyK4VqzkB28K5+Ak/mZzozKQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cx7vfjt91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Mar 2026 06:35:35 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62I6B2d5032333;
-	Wed, 18 Mar 2026 06:35:34 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwm7jvjsw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Mar 2026 06:35:34 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62I6ZVEl52822272
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Mar 2026 06:35:31 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F2D9F2004B;
-	Wed, 18 Mar 2026 06:35:30 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1B9420040;
-	Wed, 18 Mar 2026 06:35:28 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.39.25.25])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 18 Mar 2026 06:35:28 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTHTb+Ax"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E674C2BC9E;
+	Wed, 18 Mar 2026 07:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773818107;
+	bh=Vp1eIjcQdu7nh+wlHqRJaseJqZre+Q2B4i3duBiBEaU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GTHTb+AxdnfJezG0Dcwg23PRAq4v3630BZQTAc8ilDZRe/YnqJdJGNJLVgO+0iAkE
+	 TNi3RD72YHYZP0HyXt2pwXuTWAZ9/cIudq+4uO21/u882qLUWWsHNwfMwKbNxhbJLy
+	 W4hpdh+vCW9VhoddvOyA/O36wGmx+xOBdIMXCmq78tyjFv9f7XdSK7P/Ega+KNcsja
+	 ZgmfEYJJsbB83qbsqMVNbI0yYBH+K16DBKzVqXJnEcmE6TpVSfs3MUG/+pI/KRhjqi
+	 TDdpAlSgClgd8Us0fOZrXtl+B41Uq90G0Ur1HOTN+tD8wTfb5mtIPcP4TS44Bm7Bor
+	 wZYi/M3oGLzLg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] perf test: Fix perf stat --bpf-counters on hybrid machines
+Date: Wed, 18 Mar 2026 00:15:01 -0700
+Message-ID: <20260318071501.17339-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH] tools/perf: Fix the check for parameterized field in
- event term
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <CAP-5=fVcWpBTALH1zr7dL3qH9j24c3t3L0zvExaWbnC-2tXjcg@mail.gmail.com>
-Date: Wed, 18 Mar 2026 12:05:17 +0530
-Cc: Venkat <venkat88@linux.ibm.com>, acme@kernel.org, jolsa@kernel.org,
-        adrian.hunter@intel.com, maddy@linux.ibm.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AD8DAAE1-50E9-45CD-AD81-D9DFF139B362@linux.ibm.com>
-References: <20260314083304.75321-1-atrajeev@linux.ibm.com>
- <7D255F44-3588-460F-ACFB-6ABAEBA152DC@linux.ibm.com>
- <CAP-5=fVcWpBTALH1zr7dL3qH9j24c3t3L0zvExaWbnC-2tXjcg@mail.gmail.com>
-To: Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: Z-aEaTcRefxNRO5C2aDsWSrW_hl8NhUs
-X-Authority-Analysis: v=2.4 cv=KajfcAYD c=1 sm=1 tr=0 ts=69ba47b8 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22
- a=c92rfblmAAAA:8 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=9KTUCuxsr_UIN7oIV3gA:9
- a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE4MDA1MSBTYWx0ZWRfXwRJBvn7bb9ud
- z4cZWj+KhajCXZ46Z2rsnq2O/oPdfDXoJpBl35C1rgDv5QJOth7aTjG9d0N6WU8Peli8zEdenAJ
- OQOM0bU+onUz4xnf3G5dSg3/krfPFyyeTZf5jF6qnqRYuMoCnozphBS2ve+tNS1ShzPkHbGGGAh
- O0ePuKbqab0BY1jYfIMjrWBtKnxnzkXx88iO31j7ZRY2+Ywpiz1ktixmFdIaxsopTqD5iL1az0C
- E+GF4NS/lelSNF6Mn9DIm8kYoTHdPR9ht68A0C1JbCYi9w7/Xbxq+Ly+3COKmakxsetlXBR1R4q
- szGun39Xrz2yIOH1a9X7QZ2QnNpIYiy+1anyXxFjUjQo5+t8MdaFDdOFT8koiZYN6tEOxfHpGJR
- lTaeIYJJ9minW2izDHBsXdAIs2EAadR+vewpI2brbL7PV6SsNSy5DhD1a5s3PGLs1KJFX8jZobl
- Zp1zOaGIyxb1VDeuqJw==
-X-Proofpoint-GUID: LMBiwWsHooIW3JtUqnTcNnoICyMEFBkh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_05,2026-03-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603180051
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+The test constantly fails on my Intel hybrid machine.  The issue was it
+has two events in the output even if I only gave it one event.
 
+  $ perf stat -e instructions -- perf test -w sqrtloop
 
-> On 17 Mar 2026, at 9:39=E2=80=AFPM, Ian Rogers <irogers@google.com> =
-wrote:
->=20
-> On Tue, Mar 17, 2026 at 1:56=E2=80=AFAM Venkat =
-<venkat88@linux.ibm.com> wrote:
->>=20
->>> On 14 Mar 2026, at 2:03=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->>>=20
->>> The format_alias() function in util/pmu.c has a check to
->>> detect whether the event has parameterized field ( =3D? ).
->>> The string alias->terms contains the event and if the event
->>> has user configurable parameter, there will be presence of
->>> sub string "=3D?" in the alias->terms.
->>>=20
->>> Snippet of code:
->>>=20
->>> /* Paramemterized events have the parameters shown. */
->>>       if (strstr(alias->terms, "=3D?")) {
->>>               /* No parameters. */
->>>               snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
-pmu->name, alias->name);
->>>=20
->>> if "strstr" contains the substring, it returns a pointer
->>> and hence enters the above check which is not the expected
->>> check. And hence "perf list" doesn't have the parameterized
->>> fields in the result.
->>>=20
->>> Fix this check to use:
->>>=20
->>> if (!strstr(alias->terms, "=3D?")) {
->>>=20
->>> With this change, perf list shows the events correctly with
->>> the strings showing parameters.
->>>=20
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
->=20
-> Thanks Athira, Sashiko is noting in its review:
-> =
-https://sashiko.dev/#/patchset/20260314083304.75321-1-atrajeev%40linux.ibm=
-.com
+   Performance counter stats for 'perf test -w sqrtloop':
 
-Thanks Ian for pointing this. Its interesting to see this review.
-I will check through the review.
+         910,856,421      cpu_atom/instructions/                                                  (28.05%)
+      14,852,865,997      cpu_core/instructions/                                                  (96.79%)
 
-Thanks
-Athira
->=20
-> By inverting this check, parameterized events now proceed to
-> parse_events_terms() and the rest of format_alias().
->=20
-> If a parameterized event uses a built-in perf keyword for its =
-parameter name
-> (e.g., config=3D?), the lexer parses it as a predefined term token, =
-which sets
-> term->config to NULL.
->=20
-> Does this cause a NULL pointer dereference in the term iteration loop?
->=20
-> list_for_each_entry(term, &terms.terms, list) {
->  if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR)
->    used +=3D snprintf(buf + used, sub_non_neg(len, used),
->      ",%s=3D%s", term->config,
->      term->val.str);
-> }
->=20
-> Passing a NULL pointer to the %s format specifier for term->config =
-might
-> cause a segmentation fault or formatting corruption.
->=20
-> Can this also lead to a stack buffer overflow due to how snprintf() =
-return
-> values are accumulated?
->=20
-> snprintf() returns the number of characters that would have been =
-written.
-> If the event names and terms are long enough, the "used" variable can =
-exceed
-> "len" (which is typically 1024 bytes).
->=20
-> When evaluating "buf + used" in the same loop:
->=20
->  used +=3D snprintf(buf + used, sub_non_neg(len, used), ...);
->=20
-> If "used" exceeds 1024, this creates an out-of-bounds pointer. Modern
-> compilers can use this undefined behavior to infer that "used" <=3D =
-1024
-> must be true, which optimizes out the safety check inside =
-sub_non_neg():
->=20
-> static int sub_non_neg(int a, int b)
-> {
->  if (b > a)
->    return 0;
->  return a - b;
-> }
->=20
-> The compiler can reduce this to simply "a - b" (or "len - used").
-> If "used" is actually greater than 1024, "len - used" evaluates to a
-> negative integer. This negative value is implicitly cast to size_t for
-> snprintf(), resulting in a massive size limit.
->=20
-> Would this cause snprintf() to write past the end of the stack buffer
-> without bounds checking? Using scnprintf() might prevent "used" from
-> exceeding "len".
->=20
-> Thanks,
-> Ian
->=20
->>> ---
->>> tools/perf/util/pmu.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>=20
->>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>> index 23337d2fa281..0b8d58543f17 100644
->>> --- a/tools/perf/util/pmu.c
->>> +++ b/tools/perf/util/pmu.c
->>> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, =
-const struct perf_pmu *pmu,
->>>  skip_duplicate_pmus);
->>>=20
->>> /* Paramemterized events have the parameters shown. */
->>> - if (strstr(alias->terms, "=3D?")) {
->>> + if (!strstr(alias->terms, "=3D?")) {
->>> /* No parameters. */
->>> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
-alias->name);
->>> return buf;
->>> --
->>> 2.47.3
->>>=20
->>=20
->> Tested this patch, and its working as expected.
->>=20
->> Before Patch:
->>=20
->> ./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
->>  hv_24x7/CPM_EXT_INT_OS/                            [Kernel PMU =
-event]
->>=20
->> After Patch:
->>=20
->> ./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
->> hv_24x7/CPM_EXT_INT_OS,domain=3D?,core=3D?/ [Kernel PMU event]
->>=20
->>=20
->> ./perf stat -e hv_24x7/PM_PAU_CYC,chip=3D0/
->>=20
->>=20
->> Performance counter stats for 'system wide':
->>=20
->>        2018866563      hv_24x7/PM_PAU_CYC,chip=3D0/
->>=20
->>     229.938231314 seconds time elapsed
->>=20
->> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->>=20
->> Regards,
->> Venkat.
+         1.014313341 seconds time elapsed
 
+         1.004114000 seconds user
+         0.008174000 seconds sys
+
+Let's modify the awk script to add the values for each line and print
+the total.  The variable 'i' has a number of input lines that have valid
+output and variable 'c' has the sum of actual counter values.  That way
+it should work on any platforms.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2) handle '<not counted>' and '<not supported>'.
+
+ tools/perf/tests/shell/stat_bpf_counters.sh | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+index f43e28a136d3c9bc..8b42585f45025d5c 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+@@ -41,8 +41,14 @@ check_counts()
+ test_bpf_counters()
+ {
+ 	printf "Testing --bpf-counters "
+-	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | awk '/instructions/ {print $1}')
+-	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
++	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
++				awk -v i=0 -v c=0 '/instructions/ { \
++					if ($1 != "<not") { i++; c += $1 } \
++				} END { if (i > 0) print c; else print "<not" }')
++	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
++				awk -v i=0 -v c=0 '/instructions/ { \
++					if ($1 != "<not") { i++; c += $1 } \
++				} END { if (i > 0) print c; else print "<not" }')
+ 	check_counts $base_instructions $bpf_instructions
+ 	compare_number $base_instructions $bpf_instructions
+ 	echo "[Success]"
+@@ -52,8 +58,14 @@ test_bpf_modifier()
+ {
+ 	printf "Testing bpf event modifier "
+ 	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
+-	base_instructions=$(echo "$stat_output"| awk '/base_instructions/ {print $1}')
+-	bpf_instructions=$(echo "$stat_output"| awk '/bpf_instructions/ {print $1}')
++	base_instructions=$(echo "$stat_output"| \
++				awk -v i=0 -v c=0 '/base_instructions/ { \
++					if ($1 != "<not") { i++; c += $1 } \
++				} END { if (i > 0) print c; else print "<not" }')
++	bpf_instructions=$(echo "$stat_output"| \
++				awk -v i=0 -v c=0 '/bpf_instructions/ { \
++					if ($1 != "<not") { i++; c += $1 } \
++				} END { if (i > 0) print c; else print "<not" }')
+ 	check_counts $base_instructions $bpf_instructions
+ 	compare_number $base_instructions $bpf_instructions
+ 	echo "[Success]"
+-- 
+2.53.0
 
