@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6612137C908;
-	Wed, 18 Mar 2026 09:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB1FE37754E;
+	Wed, 18 Mar 2026 09:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773825470; cv=none; b=tMwA83K3HHTXqBaXLtM76EpMsdef4pdujhmP9CnNE4TlVtwxrpW4QE89VFIo7/m3eWI059W02LxrMIJaJ/RyxidFuo5S4IQ10AJxU9f2gjizJup7sYOslS5YoMFwpTd7FOYxO8vp7d1w32/u4yZ4j9KL+zTxyOXa9qXrUm+Nj50=
+	t=1773825479; cv=none; b=Hl2BYCszRyRy1zhMB006Y1xuG0WdPup8q4x2URgQ936xzITur1/eGQNF8HRS5v/P6RNw0HezcKF0LsN+Z407JWEfsYMpehiwVXu0wB8stX8Lb0+sruw3On2X+dG4nFKMbBr0M3nCY/r8n8MVTfLZYvMVec6BDV0usowx4dfTybE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773825470; c=relaxed/simple;
-	bh=BFehMj28QR2IYXlxOIJtUAyqZ+kYk51QCcp6lZ5W+HY=;
+	s=arc-20240116; t=1773825479; c=relaxed/simple;
+	bh=WM6eh+uCyejH6wIt9/C1ZZ9YLOLPrcxUmJlFRRJ40zM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z95bmryPteQA7RUepi0YpfjM7ns6Xmge7az1KSFDfoyZGnZ88InnH5RulyFZaB32V2e9vF7dzjRK4RWm+sLbpA98QMmhuTgVfXCc0plYaMvJ+DshFXJ83F72yqmaBGpwTi2UXWre97Z5OxIQ/w61rK8u7V8vEWbUQQKy+GBc984=
+	 In-Reply-To:To:Cc; b=fdJd/x0GiQulUnzdXmWzEirBTpER5yreXYzghPd92JL7p+qGdaKQVQggEdZlN1Jd9jcWAdoUXb0M3zhgk6Glm4ho/UkDqd3tCALHOPO8pnsxwL5zto80XGvJ6MkfqLNm9IepDeXFx14kus6uQwTCU+lh7Sb1Jj2Aj45gZE4u8DM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E27501F91;
-	Wed, 18 Mar 2026 02:17:41 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 255AE202C;
+	Wed, 18 Mar 2026 02:17:51 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1131C3F73B;
-	Wed, 18 Mar 2026 02:17:38 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46AD03F73B;
+	Wed, 18 Mar 2026 02:17:48 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 18 Mar 2026 09:16:48 +0000
-Subject: [PATCH v5 04/26] tools/thermal: Initialize CFLAGS before including
- Makefile.include
+Date: Wed, 18 Mar 2026 09:16:49 +0000
+Subject: [PATCH v5 05/26] bpftool: Avoid adding EXTRA_CFLAGS to HOST_CFLAGS
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260318-tools_build_fix_zero_init-v5-4-bbeffd8da199@arm.com>
+Message-Id: <20260318-tools_build_fix_zero_init-v5-5-bbeffd8da199@arm.com>
 References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 In-Reply-To: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -76,74 +75,52 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=1994;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=1436;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=BFehMj28QR2IYXlxOIJtUAyqZ+kYk51QCcp6lZ5W+HY=;
- b=JLWXSP7iMG5YIw+3JDlGnZF54Txs+/ERqkdweKC7P+NWPLxHe7vm0cHo9mdMyugjMYOOWxM13
- +5w7ubrXUHYC1pHU4fsvgmwjfauhT02fheUq0GvReC1tjta/W0AFHAG
+ bh=WM6eh+uCyejH6wIt9/C1ZZ9YLOLPrcxUmJlFRRJ40zM=;
+ b=rNe9TULQgpGGv9z9iyLRlO+2acG1uuhf9ew7VHZim72gzEbX1rvSPPcDBYo/qHE50gRIsrwhr
+ M+1RsEOJnvAAM9KpfbaZICOj/P/oxIiduUBxTvCHRIDgdLM6oVsSMqC
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-tools/scripts/Makefile.include may expand EXTRA_CFLAGS in a future
-change.  This could alter the initialization of CFLAGS in the thermal
-Makefile, as the default options "-g -Wall" would never be set once
-EXTRA_CFLAGS is expanded.
+Prepare for future changes where EXTRA_CFLAGS may include flags not
+applicable to the host compiler.
 
-Prepare for this by moving the CFLAGS initialization before including
-tools/scripts/Makefile.include, so it is not affected by the extended
-EXTRA_CFLAGS.
+Move the HOST_CFLAGS assignment before appending EXTRA_CFLAGS to
+CFLAGS so that HOST_CFLAGS does not inherit flags from EXTRA_CFLAGS.
 
-Append EXTRA_CFLAGS to CFLAGS only after including Makefile.include and
-place it last so that the extra flags propagate properly and can
-override the default options.
-
-Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
+Acked-by: Quentin Monnet <qmo@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/thermal/lib/Makefile | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ tools/bpf/bpftool/Makefile | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index 8c9a37f999b826855dad11c0d9574b41d5b24244..333b711bc7f0f9610e165ff7dc72c42980c59c99 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -23,6 +23,14 @@ INSTALL = install
- DESTDIR ?=
- DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
- 
-+# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
-+# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
-+ifdef EXTRA_CFLAGS
-+  CFLAGS :=
-+else
-+  CFLAGS := -g -Wall
-+endif
+diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+index 519ea5cb8ab1c0ee31acc67fc5f96b40e21005c2..3e7d8359e1b2a81a29a47544be8539e3b191a0e8 100644
+--- a/tools/bpf/bpftool/Makefile
++++ b/tools/bpf/bpftool/Makefile
+@@ -81,6 +81,12 @@ CFLAGS += -DPACKAGE='"bpftool"' -D__EXPORTED_HEADERS__ \
+ ifneq ($(BPFTOOL_VERSION),)
+ CFLAGS += -DBPFTOOL_VERSION='"$(BPFTOOL_VERSION)"'
+ endif
 +
- include $(srctree)/tools/scripts/Makefile.include
- include $(srctree)/tools/scripts/Makefile.arch
++# This must be done before appending EXTRA_CFLAGS to CFLAGS to avoid
++# including flags that are not applicable to the host compiler.
++HOST_CFLAGS := $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
++		$(subst $(CLANG_CROSS_FLAGS),,$(CFLAGS)))
++
+ ifneq ($(EXTRA_CFLAGS),)
+ CFLAGS += $(EXTRA_CFLAGS)
+ endif
+@@ -88,8 +94,6 @@ ifneq ($(EXTRA_LDFLAGS),)
+ LDFLAGS += $(EXTRA_LDFLAGS)
+ endif
  
-@@ -39,13 +47,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
+-HOST_CFLAGS := $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
+-		$(subst $(CLANG_CROSS_FLAGS),,$(CFLAGS)))
+ HOST_LDFLAGS := $(LDFLAGS)
  
--# Set compile option CFLAGS
--ifdef EXTRA_CFLAGS
--  CFLAGS := $(EXTRA_CFLAGS)
--else
--  CFLAGS := -g -Wall
--endif
--
- INCLUDES = \
- -I/usr/include/libnl3 \
- -I$(srctree)/tools/lib/thermal/include \
-@@ -62,6 +63,7 @@ override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
- override CFLAGS += -Wl,-L.
- override CFLAGS += -Wl,-lthermal
-+override CFLAGS += $(EXTRA_CFLAGS)
- 
- all:
- 
+ INSTALL ?= install
 
 -- 
 2.34.1
