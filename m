@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F8723A63F9;
-	Wed, 18 Mar 2026 09:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741583A9013;
+	Wed, 18 Mar 2026 09:21:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773825655; cv=none; b=Jjwu2+eWrA25/kVHhjDZ0muVXeFaNfpNQkGOMdXnppkEl2btxrBFtg3KjSZQN9fDTtHGxo8D/0MZ1pHJFfQek6MQIJ2LccVmE/jvEFkUCt5Smecs/MKgMiiNuhc9hzyakke2QJqAcLWl9kRIGd1IFPufeuqm2z8AcfJlYLjJI08=
+	t=1773825664; cv=none; b=F5O7Rv4V0zarDvjZCk4+GDUBnyMl2DmSzsQrhehllgTjG7IQIqEqBuaimsJO3yq64paQFyVN38QjdQxuedxs7m5yRzgFxCYuGbEQPkysLXcPZvZmIRNHa/NMvT4hjothEXv2RfxoVRrM2gY9/F4QmDHS5vQIyKvhUg71ennfmxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773825655; c=relaxed/simple;
-	bh=I+txdPEFIu4th5lgf2+eCGWjywMXv8xD0Iam5VIr81Q=;
+	s=arc-20240116; t=1773825664; c=relaxed/simple;
+	bh=x2h+4FB5LaYokMgKHEvZZeyJKpOwoKiSiosB1fOmqrU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lvweP4Z2VCr8uocLqkbxsMd7vHggzRSZl0X7hRA9qQxCDx6OU3wTVpGliFKBsNPMWCJbj1s82pnmxaR9zoCdWfQRh4Yn2B+p9z6mYNFA0r5YKGWS4ueVX4hQJuiOjr4lPgZYjN762fu2wfrwzoFJ9ba/r9zqlqF514r0irMALUY=
+	 In-Reply-To:To:Cc; b=XEzGxtL3XZn77DwuUILoZlnHxuL+Ge7EhqEoZNrYEPOHu7KZ2TIGa2eO5GiTsDbQKwyWjbo4Uag7a6EonOIKDVk7OY9dh1OeYHSOrHPrE/cscSSkJXsycuOJVH6GuhAsdV/ORwq+hZDuuO+76ZCZvpWZvqI8kb2Ntysi8zxw1Us=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADC3F2247;
-	Wed, 18 Mar 2026 02:20:46 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E74DB2008;
+	Wed, 18 Mar 2026 02:20:55 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3BE93F73B;
-	Wed, 18 Mar 2026 02:20:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EFCD3F73B;
+	Wed, 18 Mar 2026 02:20:52 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 18 Mar 2026 09:17:08 +0000
-Subject: [PATCH v5 24/26] selftests/hid: Append extra cflags
+Date: Wed, 18 Mar 2026 09:17:09 +0000
+Subject: [PATCH v5 25/26] selftests/nolibc: Append extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260318-tools_build_fix_zero_init-v5-24-bbeffd8da199@arm.com>
+Message-Id: <20260318-tools_build_fix_zero_init-v5-25-bbeffd8da199@arm.com>
 References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 In-Reply-To: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,35 +75,51 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=774;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=1451;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=I+txdPEFIu4th5lgf2+eCGWjywMXv8xD0Iam5VIr81Q=;
- b=HZamFLZzzbrllUPxiJ5FCACbc8M8TdozdiMPnBpTIvvKrXVt/wIG+8rquDZo4nmrAnIhZhgSV
- Fbj8fkO05hgAFHLGDqTHRs6eEe/oHVPyNT/uGAKLfTRMXJgMJcDd4bT
+ bh=x2h+4FB5LaYokMgKHEvZZeyJKpOwoKiSiosB1fOmqrU=;
+ b=86diJBsidIsbxd+QyonKL+CQAz+Q1KZkYa+Qrua4pDJEbEQn+TlPK2abrAoVcTfIgF96GWV5d
+ WBzDj0G+3rtD5RmgBkp0PHl6Vyg1jjiWuHQ0RTmF2UWTbXtUW0FHOYy
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-the compiler.
+Include tools/scripts/Makefile.include, which may provide additional
+flags in EXTRA_CFLAGS, and append to CFLAGS.
 
-Acked-by: Benjamin Tissoires <bentiss@kernel.org>
+Since Makefile.include already defines cc-option, remove the redundant
+definition and include.
+
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/testing/selftests/hid/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/nolibc/Makefile | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-index 50ec9e0406abaf316fba232c5da1967e27d0fa9b..686c5f79ca592c2ce94e37b39ab5c3ebe8483f79 100644
---- a/tools/testing/selftests/hid/Makefile
-+++ b/tools/testing/selftests/hid/Makefile
-@@ -26,6 +26,7 @@ HOSTPKG_CONFIG := pkg-config
+diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
+index 0370489d938b540721a4fb814ebb68c463760e73..7b65e6f9840b035c1d8580574fc3145318b278b4 100644
+--- a/tools/testing/selftests/nolibc/Makefile
++++ b/tools/testing/selftests/nolibc/Makefile
+@@ -3,18 +3,17 @@
+ TEST_GEN_PROGS := nolibc-test libc-test
  
- CFLAGS += -g -O0 -rdynamic -Wall -Werror -I$(OUTPUT)
- CFLAGS += -I$(OUTPUT)/tools/include
-+CFLAGS += $(EXTRA_CFLAGS)
+ include ../lib.mk
+-include $(top_srcdir)/scripts/Makefile.compiler
+-
+-cc-option = $(call __cc-option, $(CC),,$(1),$(2))
++include $(top_srcdir)/tools/scripts/Makefile.include
  
- LDLIBS += -lelf -lz -lrt -lpthread
+ include Makefile.include
  
+ $(OUTPUT)/nolibc-test: CFLAGS = -nostdlib -nostdinc -static \
+ 	 -isystem $(top_srcdir)/tools/include/nolibc -isystem $(top_srcdir)/usr/include \
+-	 $(CFLAGS_NOLIBC_TEST)
++	 $(CFLAGS_NOLIBC_TEST) $(EXTRA_CFLAGS)
+ $(OUTPUT)/nolibc-test: LDLIBS = $(if $(LLVM),,-lgcc)
+ $(OUTPUT)/nolibc-test: nolibc-test.c nolibc-test-linkage.c | headers
+ 
++$(OUTPUT)/libc-test: CFLAGS += $(EXTRA_CFLAGS)
+ $(OUTPUT)/libc-test: nolibc-test.c nolibc-test-linkage.c
+ 	$(call msg,CC,,$@)
+ 	$(Q)$(LINK.c) $^ -o $@
 
 -- 
 2.34.1
