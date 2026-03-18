@@ -1,82 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A672721CA03
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 18:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D43B25A642;
+	Wed, 18 Mar 2026 18:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773858889; cv=none; b=Y9rAZEz+Cd5GC4AoNjqT4+FGBmNPKll2CYIEvfykipdIRQ+U7okRauFhOTUbd6XiUwcbqF8j1R195uZeAxi7SmJize0O5AGObqMYFqzwN2UfuGnKF5rcfZMX7i0nXcDuX3JOnHvBRpOxc4DhMaMupyOIK1DzrylCY5SgT54Ot4E=
+	t=1773858962; cv=none; b=r2JuZ2qpfHP39Agk6PPM6xPifPiZDeix1BNU/OXuRNxWTL8ADLfszMJMbEzPp6mLC5ypk1q2eYb+DicKVvRxDjAI/XKa7MKEMXc6yWLL1V0aV3YG5IXVfbZCIsc00BwV9xfOCCUUS+pscpZoXVoqfPSsDIa4lAp5C87zts8N6Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773858889; c=relaxed/simple;
-	bh=xGK6GsdwL25ism2FGlBFdHI5dICdcBy3SGVUEwOEoSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XY86vp7BoEZ47AcsnSJ4BHCEq98a5GcYFEBdeTKkLrc2Lzc1eongKZ2xCQ54kP7ZcchW9ByI6ON368GDKGSLtlVJvRTvpwL30fynZbX9AlFNfvJFpRnv4Jba1p+wd7IeMweszYaHJoWyl4NsQAYBoZo8IhJTVXQKvLQJ+gwgjCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOjUh3pM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773858962; c=relaxed/simple;
+	bh=mccp+sFUj4Y5DYO32/dfBE70yAE0cK9YdPDuifH5nHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P5mZUNhj871en+cL1qFIo5EbHSS6gQd8ctx85GdU9LwxHGazyl0/b0Y/67BLroTOQgsgUgDeo2khLtx1+I7Thn/L2bOsdspSenCsrkmQ+Dcw4yb3+9UFT9KYTVCk01IuM6h+yvI3GSEC03KhnhYDih8ENl4ls+htUgLGZBBC2ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqlOBC7H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOjUh3pM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9510C19421;
-	Wed, 18 Mar 2026 18:34:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqlOBC7H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B925C19421;
+	Wed, 18 Mar 2026 18:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773858889;
-	bh=xGK6GsdwL25ism2FGlBFdHI5dICdcBy3SGVUEwOEoSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TOjUh3pMNW7qDQXCKG+Vi4baSl8GMRqD3dznXQD+DkPnokA1HcpD3Orge4gtoYc3z
-	 9jnlcTHv7Y2WUCL7m48BXnKHQDzM5IhOF2xfXzWHIqEh0KDAEEhWgxhaM7gAUBWk9g
-	 yMesPdbuu2j6CCBob0BI6d/IxQFKoCTkEOkFvAZfDe3UZkFKFCBghYAsThK2CHqyfs
-	 aZJ4ia2ZFJrOwV/7s0upMzprZNcGn5nWItsjwfd6Lo/qDcPyzWPepsekfrtBdo6lWt
-	 j7f0PqwceJq6QbKpfh+kgZROAK9PeoqZTqt/KD2ZeR5g+7wPZvOXnpl1UeXKXCtY5J
-	 tBkwBOdpEkMlg==
-Date: Wed, 18 Mar 2026 11:34:46 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Chen Ni <nichen@iscas.ac.cn>, linux-perf-users@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org
-Subject: Re: [PATCH] perf intel-tpebs: Remove duplicate include of stat.h
-Message-ID: <abrwRmaS7CDhzAyl@google.com>
-References: <20260318034932.398913-1-nichen@iscas.ac.cn>
- <CAP-5=fUitzKwJONTngiW17XkS7kVr2cDS4cDL_HccJKcnR2EgQ@mail.gmail.com>
+	s=k20201202; t=1773858962;
+	bh=mccp+sFUj4Y5DYO32/dfBE70yAE0cK9YdPDuifH5nHc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mqlOBC7HqtrvvHdZqcxIMhM/LIlKs5kCH60vH2JVfvMu1pDF458Cx2kPjdZtD0Gal
+	 2ClgPHifnyniZSsLmkQdg1BFmycWCzgYBiQ0lgp1C52wPopWp5bbJ73/E9pVOfB1e6
+	 9fT7V2PMwPJEyKrkypa3gjxXWMuUP7zdN66S/7IR4LWj7ITun5WzxfUR+lrhZbvJzg
+	 vQKvQGkWcwbW0fRtA+eTS1yFpEx5AywZxAIEy1h3KrCgJG6XCiIGuW3F/MardbFX+v
+	 dXezppIm2Qq16vM6ke3RYf8FeXd7x3CUp/VPJmQy2e23+VPkzKUSFViCFlU04XuRBo
+	 R7/13p/maz6Iw==
+Date: Wed, 18 Mar 2026 15:35:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 fyi] tools headers: Syncronize linux/build_bug.h with the
+ kernel sources
+Message-ID: <abrwjt_R2X8r7Bbm@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUitzKwJONTngiW17XkS7kVr2cDS4cDL_HccJKcnR2EgQ@mail.gmail.com>
 
-On Wed, Mar 18, 2026 at 10:33:54AM -0700, Ian Rogers wrote:
-> On Tue, Mar 17, 2026 at 8:54 PM Chen Ni <nichen@iscas.ac.cn> wrote:
-> >
-> > Remove duplicate inclusion of stat.h in intel-tpebs.c to clean up
-> > redundant code.
-> >
-> > Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> We should really have a style for #includes and try to get it into the
-> kernel coding style. It doesn't matter so much in the kernel but
-> inconsistencies abound in tools, and the lack of alphabetical sorting
-> allows duplicates to occur. Here is a proposal that makes sense:
-> 
-> For any given C source file (e.g., server.c), group your #include
-> directives into distinct blocks separated by a blank line, ordered as
-> follows:
->  * The Corresponding Header ("server.h")
->  * C Standard Library Headers (<stdio.h>, <stdlib.h>)
->  * OS/System-Specific Headers (<unistd.h>, <pthread.h>)
->  * Third-Party Library Headers (<sqlite3.h>, <jansson.h>)
->  * Your Project's Other Headers ("utils/logger.h", "database.h")
-> Within each block, alphabetize the headers.
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-Yep, sounds good.  I'm not sure if we want to convert all existing
-sources for this.  I think it's good for new changes touching header
-inclusion.
+Full explanation:
 
-Thanks,
-Namhyung
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
+
+See further details at:
+
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+
+To pick up the changes in:
+
+  6ffd853b0b10e1e2 ("build_bug.h: correct function parameters names in kernel-doc")
+
+That just add some comments, addressing this perf tools build warning:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/include/linux/build_bug.h include/linux/build_bug.h
+
+Please take a look at tools/include/uapi/README for further info on this
+synchronization process.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ include/linux/build_bug.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
+index d3dc5dc5f916ff4e..2cfbb4c65c784ad8 100644
+--- a/include/linux/build_bug.h
++++ b/include/linux/build_bug.h
+@@ -32,8 +32,7 @@
+ /**
+  * BUILD_BUG_ON_MSG - break compile if a condition is true & emit supplied
+  *		      error message.
+- * @cond: the condition which the compiler should know is false.
+- * @msg: build-time error message
++ * @condition: the condition which the compiler should know is false.
+  *
+  * See BUILD_BUG_ON for description.
+  */
+@@ -61,7 +60,6 @@
+ 
+ /**
+  * static_assert - check integer constant expression at build time
+- * @expr: expression to be checked
+  *
+  * static_assert() is a wrapper for the C11 _Static_assert, with a
+  * little macro magic to make the message optional (defaulting to the
+-- 
+2.53.0
 
