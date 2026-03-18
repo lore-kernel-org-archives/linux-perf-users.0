@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B5E3A6EE5;
-	Wed, 18 Mar 2026 09:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 848243A63F2;
+	Wed, 18 Mar 2026 09:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773825506; cv=none; b=F76eVu8MYZSJuzfFRzPO0ZEPYgZOFUw4ATcOjORXqMlXsiS6J1iDMep6XfRrwM+CPw0BKpxpnbdBjQZmXhs3LHm7LgpJneqjrJ3z2H5LWDK/BQIQs6xKYJ1FcOTH8ZoqteYGxlmzAMTcc+H8YTuSLGK7J6uIuakY8tmBYP6GmHs=
+	t=1773825515; cv=none; b=OeTSUFMbpL4R2Yx7P/kgYfFigjt4BD7nySe1va9lpDIUvtYnrRt/FjaaBNvxcXyER9cIC9Ua12yBHDzAqmdyyk1KP2v62Ou43kBsq+XNn0HmP3JaUZxWFpxz10BU/sF6tdHbKSGOaMvc/LQSqzMxm/fLGwkrRvYX+NTVqAWMTMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773825506; c=relaxed/simple;
-	bh=W1Q9TUYmS2oOVNsuC5F4lc4Ge7O9HF7hQY/yiHfp7+Q=;
+	s=arc-20240116; t=1773825515; c=relaxed/simple;
+	bh=G2cI6gno4ym5dTpFGJCwLPZT6MUzcUe+/hvBAAojmWk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ulR1Rmbgt4JjmnAD2FjRfFuTMweNHmKw3SPXEq7/Je96tEzyDdnBiVBUIXouNHP82fh2Wb3/QJ6FpnYCd2wL5aHZNi5pzCU76lyhG67MRH1rXm8T40e/fLyHA4ASF+Iv1qTknVgn0Qjvv00S5rDvjtHbwvXL8Bte/Ya5Aye2OTQ=
+	 In-Reply-To:To:Cc; b=bjBZNVCLMV1nlKedTNh5EzP89YJRmU3NCH2raLmnI/r4vFlvmlHYrWyk9L2AhlAkGs8sd6fHB5IvGS0LUm26jsjWNCV86yrchng//0msj2vjhAG2vZoBDCEM4+ufmTFL91QLDiTeb9Ue2JRRh0WdKOYdImBScxdHdmt6B+y89rg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF676201B;
-	Wed, 18 Mar 2026 02:18:18 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02F121F37;
+	Wed, 18 Mar 2026 02:18:28 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E37C63F73B;
-	Wed, 18 Mar 2026 02:18:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 230663F73B;
+	Wed, 18 Mar 2026 02:18:25 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 18 Mar 2026 09:16:52 +0000
-Subject: [PATCH v5 08/26] perf build: Append extra host flags
+Date: Wed, 18 Mar 2026 09:16:53 +0000
+Subject: [PATCH v5 09/26] tools build: Append extra host cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260318-tools_build_fix_zero_init-v5-8-bbeffd8da199@arm.com>
+Message-Id: <20260318-tools_build_fix_zero_init-v5-9-bbeffd8da199@arm.com>
 References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 In-Reply-To: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,36 +75,45 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=1086;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=1108;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=W1Q9TUYmS2oOVNsuC5F4lc4Ge7O9HF7hQY/yiHfp7+Q=;
- b=3w6FVMiM8npZY4Oyq4o2klTJ3jiP9BhaYrdjOBd52/wQciQx/VsV+k3GBoIWL5Bw3oMi1tt0k
- ZY6CjyWZp/mDLv7iVKRmB5m0MvwITgV+63r72rtR4V9W2kc3XceFEL0
+ bh=G2cI6gno4ym5dTpFGJCwLPZT6MUzcUe+/hvBAAojmWk=;
+ b=seG0PjkzdDNVsGala65O+1S70R48XtzDJwDLtNyhQAVylJ2TCLKK6WHBZrivpWJYqa0fpGC84
+ da2K3i00MvTDOo4GoQbfeyyjggGtDMEDmp0b53lEAxAgxD5zX2M9pIl
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Append HOST_EXTRACFLAGS to HOST_CFLAGS so that additional flags can be
+Append HOST_EXTRACFLAGS to HOSTCFLAGS so that additional flags can be
 applied to the host compiler.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/build/Makefile | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 15fbba9f4ca8926e4512f0b021d9c9b2ec83847e..c9034aeaf6ce27752fd44432847b52074c4e0f1e 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -17,7 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
- detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+diff --git a/tools/build/Makefile b/tools/build/Makefile
+index 3a5a3808ab2a1dedd40f35ea322913e8a0788130..44e50a7c182484e18ff80f4205c49a77e8c8abd9 100644
+--- a/tools/build/Makefile
++++ b/tools/build/Makefile
+@@ -40,14 +40,16 @@ endif
+ FIXDEP		:= $(OUTPUT)fixdep
+ FIXDEP_IN	:= $(OUTPUT)fixdep-in.o
  
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
--HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-+HOSTCFLAGS := $(HOST_EXTRACFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
++HOSTCFLAGS	:= $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
++
+ # To track fixdep's dependencies properly, fixdep needs to run on itself.
+ # Build it twice the first time.
+ $(FIXDEP_IN): FORCE
+ 	$(Q)if [ ! -f $(FIXDEP) ]; then						\
+-		$(MAKE) $(build)=fixdep HOSTCFLAGS="$(KBUILD_HOSTCFLAGS)";	\
++		$(MAKE) $(build)=fixdep HOSTCFLAGS="$(HOSTCFLAGS)";		\
+ 		rm -f $(FIXDEP).o;						\
+ 	fi
+-	$(Q)$(MAKE) $(build)=fixdep HOSTCFLAGS="$(KBUILD_HOSTCFLAGS)"
++	$(Q)$(MAKE) $(build)=fixdep HOSTCFLAGS="$(HOSTCFLAGS)"
  
- # This is required because the kernel is built with this and some of the code
- # borrowed from kernel headers depends on it, e.g. put_unaligned_*().
+ 
+ $(FIXDEP): $(FIXDEP_IN)
 
 -- 
 2.34.1
