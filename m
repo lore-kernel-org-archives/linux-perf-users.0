@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EE0839C625;
-	Wed, 18 Mar 2026 09:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DC828A3FA;
+	Wed, 18 Mar 2026 09:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773825442; cv=none; b=B8cGBv7TxHXBA5zSQwA62LGiKyPzt6fPJe4jY1bzljXljv1Tlm4gpMXdOE7e1xYgULBaJ9lbKFt1udvvZYu2SDtRdKbYCpRkubNabO7YjesT2ogF0Ill2iwCLV8jU0VbD9pBU9oxlGvipWrkxl+BG+8c84W0OaGOH45O4tBSoQ4=
+	t=1773825452; cv=none; b=mHvBHXw387hxLudcQdFaPlz8xjIbJPUWY1YL/uuvDxCvhQ26rox/Lu44xqBs00sO9PbJ+mvykAHSxdSCjptUn97KK+w4Xs9YlqC0vl4EsE3Wb5eTVr2BoWHjf3K5I0trewRNA7R9GkDa1D7YlFk7d+ALDv7j58ZUzo7kfoc7rMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773825442; c=relaxed/simple;
-	bh=ZGKuPIwbdXR8s5su0qDzEXK8S9PgMd8yIP/evG69qcc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B1lxV9nfVB+xqBkgL8+GaEbu3NrTsxsir347RW3BOcFz63yUJem5YGBIPcYu7zQFeNjthx3xyoJnmXYIjypl3wNPwIo9jqPQkgN/DnmGramURw4n6NVm5cz2bQuwhFrWGXZRVVaSfYKbF33/zQ2cPO5vWP0yb8NF69ZtR90zv9M=
+	s=arc-20240116; t=1773825452; c=relaxed/simple;
+	bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TOHT3oxPPP4Pmp4BnXDUChPrNCfL5oKeEGm0b4R6vtHAE0iGyJy3XveIWsXuDOY55PUiYMDRHRt1Yjc92D9tVoCJism8mDigpxZTY1dxxtD9Pgxc/j39DFzihd15FUVN60aaOzAmPDdjZkHJfFGLk3CAP7PNfOZMBhNxgqZmWK0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C94121F37;
-	Wed, 18 Mar 2026 02:17:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68D841FC7;
+	Wed, 18 Mar 2026 02:17:23 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A38223F73B;
-	Wed, 18 Mar 2026 02:17:01 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71FA23F73B;
+	Wed, 18 Mar 2026 02:17:20 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v5 00/26] tools build: Append -fzero-init-padding-bits=all
- option
-Date: Wed, 18 Mar 2026 09:16:44 +0000
-Message-Id: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
+Date: Wed, 18 Mar 2026 09:16:46 +0000
+Subject: [PATCH v5 02/26] tools/thermal: Fix typo
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,12 +28,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHxtumkC/43NSw6CMBCA4auQrq3pg0dx5T2MIUxbZRKkpkWiE
- u5uYYNuiMt/MvPNSIL1aAM5JCPxdsCArouR7RKim7q7WoomNhFM5EyIlPbOtaGCB7amuuCzelv
- vKuywp0ZnIudgFCgg8f7ubVxY7NM5doOhd/61vBrEPP1HHQTlFHitteJFzbg91v621+5GZnOQq
- yOZ2nIkZTRPi0IxxYWE4tdJvxzOt5w0OqWVGRgoSw1ydaZp+gCG67AuUAEAAA==
-X-Change-ID: 20260224-tools_build_fix_zero_init-dc5261bd8b8b
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260318-tools_build_fix_zero_init-v5-2-bbeffd8da199@arm.com>
+References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
+In-Reply-To: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
  James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
@@ -76,136 +73,41 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+ Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=5318;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=809;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=ZGKuPIwbdXR8s5su0qDzEXK8S9PgMd8yIP/evG69qcc=;
- b=rCs4AS2t7Rahlxd/h549WaR1+JjUhUAud2CA403JALg1IPppakXeQRXDKgwXYZ97EQrnBIzSJ
- CW7dqJDTNy6D0V52zCNmr050xXckAHKFB34mabWboySY9CApaGuGVY+
+ bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
+ b=nmiSSzSo4WkbHQW3Rxf1oRaCHLgAWvjhDgpw/3QH9iuSLQA05Prn+renCn913RgzkCX6AGm9i
+ dcY2y3fgu30DKFDL0AtPa0JiJLtzauvFpoi2jJbN4I4s/uupdCyHV3s
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Thank you for reviewing and commenting on v4.
+s/CFGLAS/CFLAGS
 
-For anyone new to the series, the reason for appending this compiler
-option is described in v3 (see "Link to v3" below).
-
-In this version, the BPF related patches have been split out and will be
-sent separately (note that I have kept the bpftool patches in this
-series, as I have gathered Quentin's Acked-by tags).
-
-The changes are organized into three parts:
-
-  Patches 01 – 05: Preparation before adding the new compiler option.
-                   Fix typos, adjust Makefiles to ensure the newly
-                   introduced option does not cause regressions.
-  Patch 06:        Propagate -fzero-init-padding-bits=all to
-                   EXTRA_CFLAGS and HOST_EXTRACFLAGS for the
-                   CC and HOSTCC compilers, respectively.
-  Patches 07 – 26: Apply EXTRA_CFLAGS and HOST_EXTRACFLAGS in
-                   project Makefiles.
-
-The change has been verified:
-
-Test 1: Cross compiling perf
-	host: gcc 15.2.0 (x86_64), target: aarch64-linux-gnu-gcc
-
-  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LDFLAGS="-static" \
-	    -C tools/perf VF=1 CORESIGHT=1 NO_JEVENTS=1 DEBUG=1
-
-Test 2: Cross compiling selftest bpf and sched_ext
-	host: gcc 15.2.0 (x86_64), target: aarch64-linux-gnu-gcc
-
-  export ARCH=arm64
-  export CROSS_COMPILE=aarch64-linux-gnu-
-  make -C tools/testing/selftests/ TARGETS="bpf sched_ext" SKIP_TARGETS=""
-
-Test 3: Native compiling selftest bpf and sched_ext
-	host: gcc 15.2.0 (x86_64)
-
-  make -C tools/testing/selftests/ TARGETS="bpf sched_ext" SKIP_TARGETS=""
-
+Fixes: 3b7c5e8adf9c ("tools/thermal: Add util library")
+Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
-Changes in v5:
-- Gathered Acked tags (thanks Daniel, Namhyung, Benjamin!)
-- Appended HOST_EXTRACFLAGS after KBUILD_HOSTCFLAGS (Ian)
-- Appended CFLAGS for libc-test (Thomas)
-- Left out BPF patches and will send out separately (Alexei)
-- Rebase on v7.0.0-rc4
-- Link to v4: https://lore.kernel.org/r/20260311-tools_build_fix_zero_init-v4-0-9e35bdb99cb3@arm.com
+ tools/thermal/lib/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v4:
-- Placed EXTRA_CFLAGS last so it can override the default options (Ian).
-- Cached evaluated values to avoid invoking cc-option when each
-  reference EXTRA_CFLAGS/HOST_EXTRACFLAGS (Ian).
-- Dropped useless patches for feature, verification and nolibc
-  (Gabriele / Ian / Thomas).
-- Fixed typos for thermal (Ian).
-- Removed duplicate $(CLANG_CROSS_FLAGS) in libbpf (Ian).
-- Collected maintainers' reviewed and ACK tags.
-- Link to v3: https://lore.kernel.org/r/20260308-tools_build_fix_zero_init-v3-0-6477808123b7@arm.com
+diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
+index 056d212f25cf51cd8c02260fbe2ef28dda5e4acb..8c9a37f999b826855dad11c0d9574b41d5b24244 100644
+--- a/tools/thermal/lib/Makefile
++++ b/tools/thermal/lib/Makefile
+@@ -60,8 +60,8 @@ override CFLAGS += $(EXTRA_WARNINGS)
+ override CFLAGS += -Werror -Wall
+ override CFLAGS += -fPIC
+ override CFLAGS += $(INCLUDES)
+-override CFGLAS += -Wl,-L.
+-override CFGLAS += -Wl,-lthermal
++override CFLAGS += -Wl,-L.
++override CFLAGS += -Wl,-lthermal
+ 
+ all:
+ 
 
----
-Leo Yan (26):
-      tools: lib: thermal: Fix typo
-      tools/thermal: Fix typo
-      tools: lib: thermal: Initialize CFLAGS before including Makefile.include
-      tools/thermal: Initialize CFLAGS before including Makefile.include
-      bpftool: Avoid adding EXTRA_CFLAGS to HOST_CFLAGS
-      tools build: Append -fzero-init-padding-bits=all to extra cflags
-      bpftool: Append extra host flags
-      perf build: Append extra host flags
-      tools build: Append extra host cflags
-      tools: bootconfig: Append extra cflags
-      tools: counter: Append extra cflags
-      tools: dma: Append extra cflags
-      tools: gpio: Append extra cflags
-      tools: hv: Append extra cflags
-      tools: iio: Append extra cflags
-      tools: mm: Append extra cflags
-      tools: objtool: Append extra host cflags
-      tools: power: acpi: Append extra cflags
-      tools: power: x86/intel-speed-select: Append extra cflags
-      tools: sched_ext: Append extra cflags
-      tools: spi: Append extra cflags
-      tools: tracing: Append extra cflags
-      tools: usb: Append extra cflags
-      selftests/hid: Append extra cflags
-      selftests/nolibc: Append extra cflags
-      selftests/sched_ext: Append extra cflags
-
- tools/bootconfig/Makefile                   |  1 +
- tools/bpf/bpftool/Makefile                  |  9 +++++++--
- tools/build/Makefile                        |  6 ++++--
- tools/counter/Makefile                      |  1 +
- tools/dma/Makefile                          |  1 +
- tools/gpio/Makefile                         |  1 +
- tools/hv/Makefile                           |  1 +
- tools/iio/Makefile                          |  1 +
- tools/lib/thermal/Makefile                  | 20 ++++++++++---------
- tools/mm/Makefile                           |  1 +
- tools/objtool/Makefile                      |  2 ++
- tools/perf/Makefile.config                  |  2 +-
- tools/power/acpi/Makefile.config            |  1 +
- tools/power/x86/intel-speed-select/Makefile |  1 +
- tools/sched_ext/Makefile                    |  1 +
- tools/scripts/Makefile.include              | 30 +++++++++++++++++++++++++++++
- tools/spi/Makefile                          |  1 +
- tools/testing/selftests/hid/Makefile        |  1 +
- tools/testing/selftests/nolibc/Makefile     |  7 +++----
- tools/testing/selftests/sched_ext/Makefile  |  1 +
- tools/thermal/lib/Makefile                  | 20 ++++++++++---------
- tools/tracing/latency/Makefile              |  1 +
- tools/usb/Makefile                          |  1 +
- 23 files changed, 84 insertions(+), 27 deletions(-)
----
-base-commit: a989fde763f4f24209e4702f50a45be572340e68
-change-id: 20260224-tools_build_fix_zero_init-dc5261bd8b8b
-
-Best regards,
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
