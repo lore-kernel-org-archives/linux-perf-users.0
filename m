@@ -1,185 +1,113 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74E737AA7D;
-	Wed, 18 Mar 2026 08:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B78FD3A0B2B;
+	Wed, 18 Mar 2026 09:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773822055; cv=none; b=Q3k7zdc3fCv5FxxKm/ij3osly3l8IV3BOrj187D6d1Le0lQeQjHV+VQ3hkvcdkYqJFD+/6PBbY/H50dyMjnORyzBjGKZ7VP3XzH8ucxVYnkKOsHXy4rVInd0xAHnNpllX2aZvo7RfqMMLSjbErGiWQHW7avU6TKgMVG6ARoCgUQ=
+	t=1773825442; cv=none; b=AureYfRKgEYqyt6U5pBMExJDyBz53XQNOty09JwZ0qUStBlaD+ggv6VpnxelVplVkYcZ++OfNqv6IPE/NSJLl0maGrCH82z5vCnjcQb5Vzil0TrT9okX4MUclnI740Tl+MDvZ6UqquoxvRjBjawXZg5CbinWhpuLPiJMa2esjww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773822055; c=relaxed/simple;
-	bh=4iDXfO4piBeUTI+J6XtSG33I+Bok33vhWjPBczwJ/oI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hgiG7YBSTaQ6+OegxqxSVqtdhW9xGo1ICXOo/tm3aHw27tsDuTMfV7JBaktoWCNCnmQejZ280VnReRrnbrNZHEuWRmsAML+YReueZ1fKhWpi+trh+tyyqzkrUpmpNHN7gNPP287vBVno5/N5X8/BDATiLWekH4n5hLqVOkv07sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VrwoUdnz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VrwoUdnz"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62HIcguW622825;
-	Wed, 18 Mar 2026 08:20:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=JZxBCj
-	ositLH+55spngCp/YOKn6U3KMCEd8mZo2qlx0=; b=VrwoUdnz5GVvceiqnaxfu/
-	zdgxJhwQMXFty7BaWfpMiR3mn+uTZ1n+Kt95FM16lBWi62Uk2McdPrcEPw9hEPfv
-	T20mDPAXlclSXdgaM24/bSUKiEZS0X5BxPtEgjNXf2xSmFj+Erh4LG/wysZJtwhu
-	Wfm7oNceMgCx/NzIeJzffTyZi7cx7JKtRvMg9QOojcK7afiRBotAojyQ+8aWHBdw
-	4AIrwxgZPeWaItFAJhDwuNQQ0K5Pls4CNFp/b9GHHa2Azdkwu3PvSv+K3NCciXi9
-	kkbuk+IMdEqP3HBEKlDx2s/8tNz14E2l066+EVTskAsErM0RukLXYCcnnVlJtacw
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvx3d0abq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Mar 2026 08:20:49 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62I4Su74004581;
-	Wed, 18 Mar 2026 08:20:49 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwj0sd7np-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Mar 2026 08:20:49 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62I8Kj6d46268886
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Mar 2026 08:20:45 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1A9512004E;
-	Wed, 18 Mar 2026 08:20:45 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D71AE2004B;
-	Wed, 18 Mar 2026 08:20:44 +0000 (GMT)
-Received: from [9.52.199.37] (unknown [9.52.199.37])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 18 Mar 2026 08:20:44 +0000 (GMT)
-Message-ID: <d2396ba9-1859-49d2-b8de-94e87241a6f2@linux.ibm.com>
-Date: Wed, 18 Mar 2026 09:20:44 +0100
+	s=arc-20240116; t=1773825442; c=relaxed/simple;
+	bh=QlxqPfGlmp00Gm1LThv7H+jhWuYECXWFEH8vLVpP9r0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oIjHxZl+Jk/mLEw0npdMFm0jo71yh60a26vAjEA/5TGc7JXQCe6S7uCNOflDQlbXfZelgfANAjDRrhq2/JM4nz8/g40dpRaKRsAARjafgsdDdJGVaOpM24b9UOvPOFymmseSRMuwgepp22LhhwTcMealmrsr7TilFNtjaH8qVYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C3D51FC4;
+	Wed, 18 Mar 2026 02:17:14 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A0F73F73B;
+	Wed, 18 Mar 2026 02:17:11 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Date: Wed, 18 Mar 2026 09:16:45 +0000
+Subject: [PATCH v5 01/26] tools: lib: thermal: Fix typo
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/5] perf evsel fallback changes, better s390 defaults
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-        namhyung@kernel.org, sumanthk@linux.ibm.com
-References: <CAP-5=fUO8azimnOV2Ogb93nZ3eXnaLdGo6b+3wPVf0tMz29JqQ@mail.gmail.com>
- <20260317175642.161647-1-irogers@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20260317175642.161647-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=arO/yCZV c=1 sm=1 tr=0 ts=69ba6062 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=c92rfblmAAAA:8 a=1XWaLZrsAAAA:8 a=ObKG83E-m0-uxJZurrIA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE4MDA2OSBTYWx0ZWRfXwN8kO/h0CWXa
- zBn7sRUmgzMhdSAVk2x4izMiNugUiSnYdVB5vQ29ojm0WI999lO29ARK0d/bkUp0EtQ57WE84T9
- GwtDOoCihNJRC1r+q3lTVC+9o7/+pqmMc8dhzlNomrZageViZoI8q+TROfApKdpRlO+lk5MohpZ
- J2ux4pfMM0UgBKWJwjMh402g8d3az/EsYh0ZDncPr/817fLXeKfm85yfG/lBuH+Nc+we2BEinSV
- WmqE+pzGZit3nJPVTVpd8xFpTBK8xWIO8sw7K9YKKSB6EfFCqJysdeGeEiwHuDT6z/NdFVH6BDo
- TEwnqhv9pGPWEWCnz/CWUL4ilyrIWMtNtT59xY+ExvfYfL1Rd3ife4M22aioT6u4KMcm0UUTl5s
- 9lMVf/froe4fudgKe4vUSM7VAgpDm95gsHYjbmdP7ZDE+L31zobU+zsFYguUjKaztyGenHVSFtE
- TAMYfczYLGxJ1Ic/o6w==
-X-Proofpoint-GUID: uBenSS1Ap3oKWbOg24k-aYS5xVrhgNRF
-X-Proofpoint-ORIG-GUID: MAcF-LjZdIk7Pr4n58gBb4lzUPUk50mW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_05,2026-03-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603180069
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260318-tools_build_fix_zero_init-v5-1-bbeffd8da199@arm.com>
+References: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
+In-Reply-To: <20260318-tools_build_fix_zero_init-v5-0-bbeffd8da199@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+ Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nsc@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, 
+ Qinxin Xia <xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Kent Gibson <warthog618@gmail.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+ Len Brown <lenb@kernel.org>, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
+ Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773825421; l=820;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=QlxqPfGlmp00Gm1LThv7H+jhWuYECXWFEH8vLVpP9r0=;
+ b=0AdAqFKwPR4J9d4usPhXtYkbZhLdkf0bmqqTbDuqW82iPUberiibO2CDerKnwPLbjsw3mPTtk
+ I6OMgUXNnsRB8vWtE0D8kRwou6n5uD8cgez62aQ+ABEl7iQoKQkpy5y
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On 3/17/26 18:56, Ian Rogers wrote:
-> Discussion with Thomas Richter in:
-> https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.com/
-> showed that the evsel__fallback wasn't working for s390. These patches
-> avoid the problematic frame pointer callchain on s390 and fix
-> evsel__fallback from a range of problems when falling back to a
-> software event. I simulated failures when developing the patches but
-> they are untested other than that.
-> 
-> v6: Sashiko noted that target wasn't fully set up when creating the
->     default evlist in `perf top`, so move it earlier. Fix const char*
->     casting issues in __parse_callchain_report_opt. Make '-g' not
->     override the .perfconfig setting again.
-> https://sashiko.dev/#/patchset/20260317055334.760347-1-irogers%40google.com
-> 
-> v5: Fix the value for the top option to match that of record. Tidy the
->     callchain parsing option callbacks. Based on AI review feedback:
-> https://sashiko.dev/#/patchset/20260317030601.567422-1-irogers%40google.com
-> https://lore.kernel.org/lkml/20260317055334.760347-1-irogers@google.com/
-> 
-> v4: Changing the callchain parameter at configuration time means other
->     options aren't set the same as they would for `--call-graph
->     dwarf`, for example the stack size. Switch to setting the
->     callchain option on s390 to parameter parse time. For '-g' use
->     '--call-graph dwarf' for s390. Other --call-graph options are
->     parsed as normal, but a warning is generated when setting
->     `--call-graph fp` for s390. Also fix that sample IDs aren't wanted
->     when there is only 1 event in the evlist.
-> https://lore.kernel.org/lkml/20260317030601.567422-1-irogers@google.com/
-> 
-> v3: Incorporate feedback about event and callchain behavior for s390:
-> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
-> https://lore.kernel.org/lkml/20260313202811.2599195-1-irogers@google.com/
-> 
-> v2: try exclude_callchain_user for s390 rather than fully disabling
->     the callchain. Fix a missed clearing of is_pmu_core if the
->     software event fallback.
-> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
-> 
-> v1: https://lore.kernel.org/lkml/20260312031928.1494864-1-irogers@google.com/
-> 
-> Ian Rogers (5):
->   perf evsel: Improve falling back from cycles
->   perf target: Constify simple check functions
->   perf evsel: Constify option arguments to config functions
->   perf callchain: Refactor callchain option parsing
->   perf evlist: Improve default event for s390
-> 
->  tools/perf/builtin-record.c      | 66 +++++++----------------------
->  tools/perf/builtin-top.c         | 67 ++++++++++++++++-------------
->  tools/perf/builtin-trace.c       |  9 +++-
->  tools/perf/tests/event_update.c  |  4 +-
->  tools/perf/tests/expand-cgroup.c |  4 +-
->  tools/perf/tests/perf-record.c   |  7 ++-
->  tools/perf/tests/topology.c      |  4 +-
->  tools/perf/util/callchain.c      | 73 ++++++++++++++++++++++++++------
->  tools/perf/util/callchain.h      | 12 ++----
->  tools/perf/util/evlist.c         | 32 +++++++++-----
->  tools/perf/util/evlist.h         |  2 +-
->  tools/perf/util/evsel.c          | 70 +++++++++++++++++++-----------
->  tools/perf/util/evsel.h          | 10 +++--
->  tools/perf/util/target.h         | 12 +++---
->  14 files changed, 217 insertions(+), 155 deletions(-)
-> 
+s/CFGLAS/CFLAGS
 
-Ian, thanks a lot. I tested it using the same sequences as for v5.
+Fixes: 47c4b0de080a ("tools/lib/thermal: Add a thermal library")
+Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/lib/thermal/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
+index 41aa7a324ff4d76351b89d7d7cf382df3fc14052..09d8f4ba6a0ab7ab9c99ac7f64d52d0268bee340 100644
+--- a/tools/lib/thermal/Makefile
++++ b/tools/lib/thermal/Makefile
+@@ -66,8 +66,8 @@ override CFLAGS += -fPIC
+ override CFLAGS += $(NL3_CFLAGS)
+ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
+-override CFGLAS += -Wl,-L.
+-override CFGLAS += -Wl,-lthermal
++override CFLAGS += -Wl,-L.
++override CFLAGS += -Wl,-lthermal
+ 
+ all:
+ 
 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+2.34.1
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
