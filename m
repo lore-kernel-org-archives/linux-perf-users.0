@@ -1,66 +1,50 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6693E3815E2
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 22:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EC73E8C47;
+	Thu, 19 Mar 2026 22:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773958870; cv=none; b=cqhxiJPXVwettTMF6jVlt4gMQqzAYZe6nCtXzVoSLq56WtPojZbYcN2F011H0UlhHyix88EAyXWXUPBLvYgw2JCK/Es+9FKYVa3RGGgwfrLlGgn7vg5QUTo1zQMOU0puBNetPkrVJcEdZC0phSEnd4zD2tHq91e9waCiWhRT8tk=
+	t=1773959076; cv=none; b=TFNGEYf6/IcGh7JFrqbcx1un8SNWapbuQ+5v7uzS0mBcaRHPgDOvoSFheRCCorhNIYxEAlarbQ+mSwIe7WPK5N5E6xvRaeDmF/+cDeBPc/A9odBgB7QDZIKdpwtzf8fvb2h8m2jA8RgAqpWz4Tp644SG5Yb0CsFMElsrvSZubaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773958870; c=relaxed/simple;
-	bh=ZBH6NS3ja5+c+YNg5rCrzPVnOSo36P3Iy+l5/5xqIYI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=q0ZEx/tfVXVuNi4IHzPRUaDwe35TDOmjl7PMOjP4xULPRXyumfqkZZ7PRz0F8kAN0KE5U1uQAqiTgONhOnoCdc3vf7B3BNTKA6c5DuyThsUexLBfLA8TGKV5tsUpLu+U4GNSr3L2eWDJOJoRce49et6pLTCaDEFK0C6czkPeugM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lah0f46P; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773959076; c=relaxed/simple;
+	bh=/uvr+DA8hrayQiRWtVDJDaZmXrkvFHzAwHNKb6SUAOI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XUI58OYR+w4AFvDWdKHTuY52Um+uSPxCX2e6AlQEzlPR7NKU5XYhMNQowVsQ3BZ9NwrJKoHEbasMTByCq8oDlnzK3diOlrjBOL+n1pRdWFi+SHYb1Xp+kF8y/0IMCElCsvs5Az0PH7J4KFyFAdFmmleORWSTY0bR+E0uwy+g9ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNZRZZ5O; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lah0f46P"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4852f8ac7e9so12329795e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 15:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773958867; x=1774563667; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qlrYoKxU1+2i+RAnVyvubSDpYIvMgPyLxmBALMH7/EY=;
-        b=lah0f46PxYUE96FDaKt9sRDQO3c+eQTeoy16qTYD+rRoZovaqq9Ava1AMowd50nPFt
-         F2eZ3NBs/VEVi92jrIq6DRzXl9PG5hJtSxOc/rb5ldJltw+RxpuzVy7S2ZUR3kE267uw
-         iZVAs6wF0co9kOXCjtnrlwqsH23qo0lbTsA2bdCmd0UwpPOMGIEFeD5KsY0tKE3rMD3W
-         llQnP2GrMJZldU4TSq6TpPyG42/pwlW5m/SRAI2QCTauYO0QnQT8ltDir6n40J/CpB8o
-         Kpdl1LHFotZv09uRgMXe3FidU8P3v/z8ffBhkc/zHVk9tIO8FVo8XyCNdCq9oVY8Nt3A
-         CcXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773958867; x=1774563667;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qlrYoKxU1+2i+RAnVyvubSDpYIvMgPyLxmBALMH7/EY=;
-        b=CAWcMxGvOQBmN1VavO/zJpass4Mw9Xh6k1hqvdbqgHlzGYlf4dXTdoGE9xmzddlliN
-         5BF2+H8OZIBQnFgGKkVfPxnHYY1YhCaTgsGTTAnMcwTkN1cPT+Snef58zQmS5z4ezPI3
-         4qIYC/ptWD9pQdp8a8+aEGsEQXgGqNgMbWFwdJ5XMVonp9jqpW0jf9SBBajgPdRhIRhO
-         QdVljQ5hJ67Pw2DrXovPrlAzmbK4lxOEOV9M3d8MdVQbd14/QlZv258pamink1vVneRY
-         xn8zqZ0wo9PRRnjyQ7yP7VVTQuow95uH6ZX5PfHJt13DH5yKusxqGIXUDxPXrJsV0vvn
-         6EvA==
-X-Forwarded-Encrypted: i=1; AJvYcCViEiqMqlo0OOkcQdlOkMjkrAk3qIVVG5K24mHE60Ow3ztD67PCCb5+mgUmALEJWlblVIRBXv2wZlzpP0oQQIgP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC/Ho6xWCcPYGTZVUksTYLA+ClvsodJz9lEiI7sjroFeHT8ChM
-	hh9PGKx8jrtJU9RRkTYRIbePIZwgFxcXDGwQ9Z3wrF506Fy67kQFwxlF
-X-Gm-Gg: ATEYQzyQEQdC7sapprHDspjFxvb4kwoB7rxoPGZnv5UtlzcSYTPSdv5UxnDRcOmie9L
-	j4ONqUusXPBL5311dA4rGl1BfpZEUdtlPhncFCpwMlfjobC8XB7L23uSZ08ei1vrOdE+wju+9V0
-	f3xirwfIKBMoeb5bOd7NHdnBmz7PLF2smNcADdgxo8zYdsRO6hqAv1xy/Pihf8ebvPmb9bV9SIr
-	n8lzAHTs3W53k0jWASxLi6yEKYBtUn/DqNOdn+vzGAUlzELqY3QkGrYThybMRd52sbHttMW7Mpp
-	XxIIGwS6zYs1Ws5m+qaAInIk6cgZkVwXCccSWb47G5xRjJ9l5QUP78zXkEbs1oW5Q2OgWSONwx8
-	OvEXI7fVzeRM59K7pHfK5lEQN/e73C3Q5Wp7m1GK9BWVQuKxCv6SJdumzqhg4rmsVaeEZewPtIU
-	tiRC2Q7cXeNc7WRZSqWL06/r96BqQ3bY1M27fAfoFn2T5XRrZaS5yBfNyoh+NDJNUrXNc6OzNL9
-	yHZrpUFPw==
-X-Received: by 2002:a05:600d:8401:b0:485:35a4:939f with SMTP id 5b1f17b1804b1-486fee297bcmr8481075e9.28.1773958866366;
-        Thu, 19 Mar 2026 15:21:06 -0700 (PDT)
-Received: from ?IPV6:2a01:e11:5402:d840:f1ee:c5d:74e4:6e19? ([2a01:e11:5402:d840:f1ee:c5d:74e4:6e19])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe889652sm7216775e9.2.2026.03.19.15.21.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2026 15:21:06 -0700 (PDT)
-Message-ID: <a8a8ad35-7e92-41ec-b6a5-b471a91811b2@gmail.com>
-Date: Thu, 19 Mar 2026 23:20:59 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNZRZZ5O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773959071; x=1805495071;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/uvr+DA8hrayQiRWtVDJDaZmXrkvFHzAwHNKb6SUAOI=;
+  b=SNZRZZ5OAo/ZzYjOMceLE1AdWfN2eh+eb6JboQ8vuW/8XmQ3j3mHRp2j
+   fmtbAjneTWoT13rjC3Lwp1uFZzqdB5Ax1UgK01TUgtoQeXvpyiOB2pfNk
+   QPzwMCuLzhJywW3ljkLzuIoXXvZpVyah+pZpR7Ucc5F0wxU6DrkyIHAM9
+   Lx4eB8G4FJuTtXWCIeHKMCgm0qdGd6WOc4R4snDJxt2mrSvifv0d0uBkN
+   drNGXiWECQQgRwIPAvXYJelpuxXd1w8zyWwcQlvEbEbI90wyScAmmD+Im
+   iG/VmDOmBuDkpyRPwF4pa+VUXrYStJiWN3/tY+JS1lP0JVFT1eDyrQqj3
+   g==;
+X-CSE-ConnectionGUID: dr+4M8kxQlCjca+DLfRrWA==
+X-CSE-MsgGUID: uZIC9djSQGurUanTHxd/SA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="75114797"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="75114797"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 15:24:30 -0700
+X-CSE-ConnectionGUID: VYF50OkCR0qagrLocJHoUg==
+X-CSE-MsgGUID: pBqwSwpSTISmF/nPivB6Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="260995807"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.109.61]) ([10.125.109.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 15:24:31 -0700
+Message-ID: <2b097880-b2fc-498f-9dab-db875a4dec83@intel.com>
+Date: Thu, 19 Mar 2026 15:24:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,10 +52,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Aldo Conte <aldocontelk@gmail.com>
 Subject: Re: [PATCH] perf/x86/intel/p4: Fix unused variable warning in
  p4_pmu_init()
-To: Dave Hansen <dave.hansen@intel.com>, peterz@infradead.org,
+To: Aldo Conte <aldocontelk@gmail.com>, peterz@infradead.org,
  mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@kernel.org,
  bp@alien8.de, dave.hansen@linux.intel.com
 Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -81,59 +64,65 @@ Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
  skhan@linuxfoundation.org
 References: <20260319152210.210854-1-aldocontelk@gmail.com>
  <cab98c76-9772-46f8-8830-68c7af453aaa@intel.com>
+ <a8a8ad35-7e92-41ec-b6a5-b471a91811b2@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-In-Reply-To: <cab98c76-9772-46f8-8830-68c7af453aaa@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a8a8ad35-7e92-41ec-b6a5-b471a91811b2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 3/19/26 4:30 PM, Dave Hansen wrote:
-> On 3/19/26 08:22, Aldo Conte wrote:
->> This patch prints the full content of Model-Specific Register
->> via `pr_cont` and so both the low and high part. It is also
->> very useful to have the contents of MSR_IA32_MISC_ENABLE
->> in dmesg for debugging purposes.
-> 
-> I'd probably just switch it over to rdmsrq():
-> 
-> 	unsigned int misc;
-> 
-> 	rdmsr(MSR_IA32_MISC_ENABLE, misc);
-> 
-> 	if (!(misc & MSR_IA32_MISC_ENABLE_EMON)) {
-> 		...
-> 
-> I'm kinda surprised the compiler is complaining, though. I suspect we've
-> got a ton of these around where one of the registers isn't used.
-Okay, your comment actually caught my attention. I looked into it 
-further and noticed that `rdmsr` is defined as a macro in both
-`arch/x86/include/asm/msr.h` and `/arch/x86/include/asm/paravirt.h`. In 
-the first header, however, the expansion shows that high and low are 
-evaluated as follows:
-(void)((low) = (u32)__val);                \
-(void)((high) = (u32)(__val >> 32));            \
-so with a sort of warning suppressor, whereas in the second header, the 
-(void) is not used.
+On 3/19/26 15:20, Aldo Conte wrote:
+> I admit I'm a novice in this field, so what do you suggest is the best
+> fix at this point?
+> Should I use the “warning suppressor" with something like
+>     (void) val1 = (u32)_l;                \
+>     (void) val2 = _l >> 32;            \
+> or implement the solution you suggested?
 
-Now, the file `arch/x86/events/intel/p4.c` includes `msr.h` and thus the 
-expansion of `rdmsr`, which in theory contains `void`.
+Ideally, someone should go consolidate the two copies.
 
-However, scrolling through the msr.h file, you can see that if the 
-CONFIG_PARAVIRT_XXL configuration parameter is defined, then the second 
-header (paravirt.h) is included, which then causes rdmsr to expand to
-
-#define rdmsr(msr, val1, val2)            \
-do {                        \
-	u64 _l = paravirt_read_msr(msr);    \
-     val1 = (u32)_l;				\
-     val2 = _l >> 32;            \
-} while (0)
-
-Since there is no (void) in front of val1 and val2, this will trigger a 
-warning.
-
-I admit I'm a novice in this field, so what do you suggest is the best 
-fix at this point?
-Should I use the “warning suppressor" with something like
-     (void) val1 = (u32)_l;                \
-     (void) val2 = _l >> 32;            \
-or implement the solution you suggested?
+But, for now, for the p4.c issue, I'm still happy with transitioning
+over to rdmsrq().
