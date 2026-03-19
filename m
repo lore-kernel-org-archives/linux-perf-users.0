@@ -1,492 +1,221 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6591A9B46
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 01:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773882070; cv=none; b=DuJUsdY7woM8OmitvMtAQNmUPITDYzpA3Ag+l7Ak4/aR1F7MWS67iyFq2jwVz5lfaGgRVnHs9OV3KGkbrWc7UkISeK9PrESmHs2tCuiMbFPQraeO4zGPwmUeqSDbZ+Tz2zrY7OeMzvT/UalkkH6o/2EpA8n4vzakhhecyn7qb84=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773882070; c=relaxed/simple;
-	bh=nBpQQmln3h68mueEStlNAP9MLGkLWGd920aNDOCUdV0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XJOlaHRKYrfrMQWFpfd/Z4QtSOSWK4TnfOuEVYmRy4biSOt0I1DMqYu+P5PBx+OppLK4suAxKIQjOuoEw9OBZXXlVZVgnhVH0pJWohjHe0iDBlHOPudRWUFIeyeSMVog5xvHGlzZytMECfvOGzvbDRvuEz0zfyj6l2c58Bd0IEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dZ2EFhZK; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24887481DD;
+	Thu, 19 Mar 2026 02:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773885796; cv=fail; b=rYiD4ou44r8rIr4bEX1dCLyqMDri8N8YczH6bdencSQL7bddHY5JCK5lcdERZkQmUY0EkefVfjpAng+E8SHh0Z/Qld0uXqq4SwTCP7HYuqouKk3bDfmyOP/wBz/ZHIAEJl5kpt+ZSpwtxfQAH+wNzwd9OjdZG1fiTNDy6LHFA18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773885796; c=relaxed/simple;
+	bh=ewloqGIoNEWSjDyABR4f3uPAxxarj1bfaRCO191U+UE=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=LTb7uLFZRDSJE4X90oZMLYp3r1PWhOuOvi5dWUpHUFiXtLYYwAENZqO2zKf8kTn2ixjwEevEIZ6sbdX1GkcIGrVMMZ8BKObNdFmhAgOwlY+CKdUdUlVOxQFCZIKBckQipDCyOl/7wlW1jSyrMMDX5fvBHk88F+w+8qCTVTlGwuw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=fGRVYv77; arc=fail smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZ2EFhZK"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-128edc72e5bso2072344c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 18:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773882066; x=1774486866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QHyu10m31rt4yID0dgVUsXszWZbquQZGf7tMDuZJnvw=;
-        b=dZ2EFhZKKaZVIa2N70ChEH6dG0Uu6MjWHdDSw4hz8rIeYw8zSgney0eLHb0edkVUGb
-         Di0KZeir1WpHiB5/fqcvjp+M4GOCBAMxks8CWuc+ACj5AEvrxUHElf8bDqGuyvoig5wb
-         oSevdBBTOvBPwGDiT7d0lrSN2I+on/D+4K1fYBPkYK9WFGLhqyaIsTIhro7x6nvWz2S8
-         zvrrKDwj3LJUNG5iEBvqINMb/W9HmaLTD1p1tb85PJEcsUPylBrh8rQnYkCP7w/5mEKa
-         iIN/ULfnMCJXnwPbhDMfDyxasx+2ktWFZ5DhfVIXY6jLbXdOgyXQabL5DahGIiA5lP/N
-         c7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773882066; x=1774486866;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QHyu10m31rt4yID0dgVUsXszWZbquQZGf7tMDuZJnvw=;
-        b=lBhzt7dtPEalWwbhdsbUa281bLsxg9NmL4yyHT1n4CAfNTvkWg9j5o95lzusXRJdCN
-         QHKN31HYgsQoag8XkzSb0juX6sE/0n6146emDZr7JP68usBviL7CRIM743Oywtyz5Ecf
-         iLbZdyvP+XKeGxyLRWMjFUepmLOKY3Gm2jIByxdkevfQYMxrpYxOxaiB3CBDCWnwQnsu
-         XZ5HeYbFeQJzAPDoBaNmwAzfwQIh+PwiX0WLpXNnRgN6l45ffregrlgtWkrMokP6XtDD
-         +AzCDdgzwJxrFbl5oRff4KIGTloSfRa3Ndu4jMPLY0XbQcZq39hvsT6eD+lShuhV20Ph
-         QVKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8FArWQAoLb5D4RRkBBt+Ai0TssDIdic8fzbEi0kgc1WgwhU39IeD6vwzlH6VO6+/vc9VxipTEjsqKdtTd6bb+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKtV0uQA1XLejle5W4StPwqyAVdwwoRy4aP+NWA+YhEjMlu1XS
-	sJn7MZnlYBcxfcc05ysmnF5sxVUMpq5NtAcGBvAFPv5haodjrgfPBI9D5Z/v8/+wz4imENtQqFe
-	vF3lnA0aFXQ==
-X-Received: from dlbrn2.prod.google.com ([2002:a05:7022:1502:b0:128:ed1b:481d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:438a:b0:128:d174:6382
- with SMTP id a92af1059eb24-129a70f91d9mr3186903c88.9.1773882066163; Wed, 18
- Mar 2026 18:01:06 -0700 (PDT)
-Date: Wed, 18 Mar 2026 18:01:03 -0700
-In-Reply-To: <CAP-5=fWmDYmyt5JGfVH77zjA6828Ocu7JP-B02=iifp+J_=9Tw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="fGRVYv77"
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62J1mgQJ1627247;
+	Wed, 18 Mar 2026 18:56:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=UOLG4ix4A
+	o7OPzPFdojvCdzABGl6zm/hK9DxxHy6GlQ=; b=fGRVYv77q0hJ9E76H3pK8JZTX
+	ljUKY92WGXQ3PcdTVx/d+A/HtDmFesTsD5vEaGwnpOGhh4/wF8wVQKBZYyyWP+Ud
+	q13NYEvVxzYkt3uDQQ69PU97eIMMicBUAXa8XeAU44D5MCO5i1LD4YPoOUZynWXV
+	e3FlsRem9Wl9UoSA+M0aVOpXnjwUxLDAfM5qNPdjwvmYYTQrNIPpJUmRo82li+wr
+	I6+WkvAtA+g0dvB8+mBDFLZj4Y4IH6mH/tfBiHs895BIoKMA4HIKa+fvHYqIuH/3
+	/Z08QFY2pOQDv8I5fNw1x53gDsxq0mJhDfzYCzSdWULisgVkGdxHNE9aA5HCQ==
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012020.outbound.protection.outlook.com [40.107.200.20])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4cw2y15mwp-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 18 Mar 2026 18:56:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ohb2zZHMQ4rb9e5dP1b9cZkoD4cpYyM458kgTCKqzcsUM9O/SWe1z/ERV4OIay9vNkNMGbf382+4uzEU5L1M6Kro6KeBVg+rFchTt9i7R8bD4+w0fhQiEBG0Srxzj926Mq6475q+njHQMJ/t0f6uRExxskKaA0/2ic3ohKIAhn8nZGtf/ZbQ0BSSM1xDkqBhRVCMI9clD7YBQkux1ReGp4Tj38ETjUUA37hoiNcmPsrTQjU5UHjNd3Kbl8o4sBPM5WmmlMZX48gAmYoqp+sNApXD0/Tu8tRX3WxmlDScsPpEBzueqKqSBrVnfGsszDhO3GOHkhLOVpDC+4ZAQLSLng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UOLG4ix4Ao7OPzPFdojvCdzABGl6zm/hK9DxxHy6GlQ=;
+ b=bOkfwpzSF9YdfZzVzdrSItMACF0Ia/VD+nMrl/O0ZvTFZFIMFdYEz+KgmR2a6hGi1d1oTOS/lQxHPSy8FqLvS0UJOOs98Us41+pfRMVpRlVYl0wTIRziKn2+j+kvlyn6tYQh50xzJEP5CWK9aGZfd5KkSPtBwYYPCM7CmOtRo7kO6pr6OENv5Vwl0mWekw7ocB4DSTEQEdMso/44zd10EFhEDCZIp4YR3MyHgML/Huf93bhPcMDV3ZLtVkAJl5uG9UdDNmq5dlCpHhRtt0+rM3ZS0zE53hJRWYk3C+X6CzOJ3PaMKK0Cu2UG3tEOtGnYmVoENnW+/7RvHufLbYBBQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from IA1PR11MB8200.namprd11.prod.outlook.com (2603:10b6:208:454::6)
+ by DM6PR11MB4658.namprd11.prod.outlook.com (2603:10b6:5:28f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Thu, 19 Mar
+ 2026 01:56:47 +0000
+Received: from IA1PR11MB8200.namprd11.prod.outlook.com
+ ([fe80::e0e6:a2f:a53b:4414]) by IA1PR11MB8200.namprd11.prod.outlook.com
+ ([fe80::e0e6:a2f:a53b:4414%4]) with mapi id 15.20.9723.018; Thu, 19 Mar 2026
+ 01:56:46 +0000
+Message-ID: <813bc5fd-0c35-46af-aea2-90798154daaa@windriver.com>
+Date: Thu, 19 Mar 2026 09:56:30 +0800
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Haixiao Yan <haixiao.yan.cn@windriver.com>
+Subject: [REGRESSION] perf build failed after 5cf6e76e4f4f ("libperf: Don't
+ remove -g when EXTRA_CFLAGS are used") on riscv64 with gcc 13
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+        linux-perf-users@vger.kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, alex@ghiti.fr, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SEWP216CA0043.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2bd::13) To DS0PR11MB8181.namprd11.prod.outlook.com
+ (2603:10b6:8:159::8)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAP-5=fWmDYmyt5JGfVH77zjA6828Ocu7JP-B02=iifp+J_=9Tw@mail.gmail.com>
-X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260319010103.834106-1-irogers@google.com>
-Subject: [PATCH v1] perf metrics: Make common stalled metrics conditional on
- having the event
-From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org
-Cc: irogers@google.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB8200:EE_|DM6PR11MB4658:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3d44c6f-f447-43ce-1350-08de855ac67b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	Po9TkFaGdffh2YKCKGUWBDFk83nQ4xYUhDHPgziW7mTBtWLGZo1pkdQjhQ9TABVfarcmHaRIdMUk6tQrci66vC2RhRwlUKb2Nu/BdZwrcayymdLS8pqyI/ujg2H2URoDzGuItTOldocz6uB5j73gAeYv1gRwWM5hQjhh8qJbKY89Z4mhTW3sRt0AFhi4IHOSOQzbSALm4ENP/z4+bar22xfAYp0kTKkzg9xVwGc07AIQHZpGepiwCOU8Lj8eqOzGVwvDEnE2ugZpqPvl+jso7DR9N8wVvkzTvtI18D8tL0Ey/Y1IU5ObLXlzWKckig0Rw54+05X5Qxcs2VMOz33vuSaoonFfXKaAf8ABzOasbdTzmyRRGFVG3bFgepucLLEwJsGMLLsRPWpq4stL+qK404bN9+UYkfvlEep6s7QZRYMVJQpce8TSR/TtNtK2WuLXZ0Dcb4o4URn0Z2rH7Qwbl1WiqH/6iVK47MKmJQsVq1sGu1c3yGBmJNGRuetV9OMM7CEow4DaxqoxDmX+yvGOt3P23p9aoQiDSfuqfmf6Pa5d+bpDBemUhb2Ey+/DEsZofVMYqSOUQ7caKDOBQiXGrfWu7sJdr6PlW3eJU4y82xv/YZMc88FM+aImRnc0n+QsZykY/PYQYQY+BjnNFICJdvlsgB6IbnCS04EjPky5fW9SDfY7DNsM+aqGxjLcIB3XBBq+IHHUCUUAaRDzEa3lFhvE6UWbP/1mkFujXmrc0sI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB8200.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TElWZm5iS21BeXU5dVA0UnZIdFlCVjE4dkM1aWpQQVpCZ1JNa3NCTW9rcmtM?=
+ =?utf-8?B?cytjaVZVUXF2QzJqd1ZFZFpzOWtUbTcrN1YxUzNOMGd1Zjh1aDFjalNLd09F?=
+ =?utf-8?B?YjlDVjJwcjNyUWxaNE9tQVA4ZHUzNkZ6SFRRWTFOZlQ0bXhRaU90eGIzVVJo?=
+ =?utf-8?B?SVltUnlUNW9nQlN1bmZrVTRTa2F6V1Nvd1I4RytWSmpjL2lYQ2o3WTRsNXM1?=
+ =?utf-8?B?bi9kRVJNSTJ4ak9WOVk0cVFvSmRhNkVNTXpManIzNGJBVFgxanRPdmNzNGxL?=
+ =?utf-8?B?SzFzVXEzYjFRdFg1anlSTGVuNGtySW56SmlFQ0pkTGpKQUtuc0FIemw0dFF4?=
+ =?utf-8?B?dFUxWU1mWkdGNXJsYllxWWtpNlArWjl5RlBpRUNHclBJdWtZMXAxeGJ1bW05?=
+ =?utf-8?B?bXh5T0pDZkhQalpsc2IvNEptV1dWc1dHdFo3ZDhGZlhRK0xLeHdrSXIxcGk5?=
+ =?utf-8?B?QlMwVFBHY21IRnlDeWZ5c0JLcDdnOFVEQzhPY3VnNGMydUY0Y21oNTNyYXJv?=
+ =?utf-8?B?SlIreDZiYUEzWkJKbFYrNHBPQTNaUGhtN0NHUmJXd1Q2aysydEdQTUJub1ho?=
+ =?utf-8?B?R1RQNFQvdFV0OGcvVzBpV1V3T2FXL3loejBFUHVqdHlnYnZFdFc0Y0F3MExw?=
+ =?utf-8?B?bFQ1eFU1NUd2QUVPRE9uSDRvdkxzSzRVNldiRHNkQXpmREV4UTU5T1Y4TitW?=
+ =?utf-8?B?TkJ3cnpzVkRxV0lUZlFhMDdPaTk1R00xbDBJa1BhUGU5WDBPZjdUblB3UVUw?=
+ =?utf-8?B?WTFRSXg5L3ZCYVVXMkE2MVJmTU8zQkwvN2hTcFpXTFJTYlZlcER5MkRSMjNE?=
+ =?utf-8?B?dThZdmpFUmZ5M3RDOFdGSEpTdVRHb2xtUXFCNWYzQk92dEFQWllnYklLWGJu?=
+ =?utf-8?B?Qmd3c0V5WnpwUGFja0Q1c25GRFA1UHc2cFhia25ERUtlZWQ3MTRJblQzbnVj?=
+ =?utf-8?B?anNLSm50SW9Wc3I1YVdpNGZEQTQrMFVRVTBNdEkxK01haWVaOWpSdVcrS1E4?=
+ =?utf-8?B?Um9kZlNDdHJYa1dndTYvaUM2b2hEZkk1U3RadjZoZHRHNjhTYjQ1Z1RpU0Va?=
+ =?utf-8?B?V0QxdnkzeU05TjJ3dFZoRVhuckdJM1VjbDMvYktmR2FLWUt5aGxXSUhac0dw?=
+ =?utf-8?B?VFFHRUZMOU83bGl0UWt6WFBmV0JlYXhiOGJLdzZ1Sy93cXB2Yi9HenRqaXhV?=
+ =?utf-8?B?YmsrYlJxUWNYZENIYTdYSXlzSzNaaHNpMFo0dCtPcmMzdFZjK2lkYTBsTE9u?=
+ =?utf-8?B?bHZMd0FrdGEvb2R4UG5YRGpFYldNc3dGcm1XMHFKSXRtRjd2dm14OGpzV29l?=
+ =?utf-8?B?WGNwZklSMGo5N3V1a2lEZjVtVjl5ZVBBVWNuVTBNckdZckU3Q0ZJL3FTRzky?=
+ =?utf-8?B?blliU1dmZmhPLzdURGU4d09LaUFlVXU0U0VhSEZLWmN5VWVDRklkSkRveWhy?=
+ =?utf-8?B?NlQrUUlvaXF6ck5kMWlTdlpsa1pFYVVUTVozTTIwMFl6R3RZTXh2T05EckVH?=
+ =?utf-8?B?WEl2cHNaa04vdDVQTTUyZjlMS2xmeXVtLzg3OHdOZmZ0VTBYL1piK3JuS09I?=
+ =?utf-8?B?d2Y0SkdaZ3BIcWh2RlFtdXdxNk1PQ1E5aWF5TXJBZExQZkczQTFqQ2tvTnZ0?=
+ =?utf-8?B?cDBuV2xBOGhjL2l2emxUMmtZREFQRkJpemNJSGhJcWtPR3pnb3BEU3RqcXJ6?=
+ =?utf-8?B?OWpMcjM0TnJwUnhsbUlvVjZhZDVrbWVFaXJub1pNQUJXMSsrTklTeWhVYUFp?=
+ =?utf-8?B?S0xYdjZGQUw4Y1JtakptOGF1aXoyR1FZY2FGUTZZNWJKRzg4ZEVLdFhCU0cx?=
+ =?utf-8?B?djh0WHg2c2NuYWZPYlJoYnZBMHVjbUFOdXpGR3hWeXY0UDVWQ2dITTRtOTBC?=
+ =?utf-8?B?TTN4M3pnQ1pHaytwTFJrL0VoSCtSdGkrVmYrMkdydDNaY1lnaEl5bm5pUDhj?=
+ =?utf-8?B?TXR0bXR6SHhrN1JCdjdXUDRTOEhwb2cxU0RXeWVLaEllQWV3Zktud0J4a1Vi?=
+ =?utf-8?B?cy9oM3ZNVGo0OUNIbVgxcGp2R1pMaUNSdllDWU9ZdUNMM3NXQlFnNFpzWW1v?=
+ =?utf-8?B?blNiUUFCRkFlbXV4U2VNSHR2d2RRTnRNeWVBYzFtMXllYUQvZVlvZ3NqdHVJ?=
+ =?utf-8?B?d1ZQN1N2RzdaenpoMlZiWDB4NFJZT0ZINlIvc1hydjdraGRieTNoWkJ2d0Rv?=
+ =?utf-8?B?NDU2WWVIWGNJTkJraFJKRFM1Vm9JelREaHhDbjVqZGdSTERXdEdLa3VyZ0dV?=
+ =?utf-8?B?UEF6SzY2d2Zld1JnQjlXRlhOOWpac09PS0VjSE9zU0xrbDE5Ym9pV0hoam56?=
+ =?utf-8?B?WUNNUVJnZnh0VFZhaGphL0ZyZE9Ic1F6cmgrcHEzK3lJVysxWU9VM3NLTUV1?=
+ =?utf-8?Q?5b+qzwLuq5H6R4Lc=3D?=
+X-Exchange-RoutingPolicyChecked:
+	bxitE7LvBnzs6sDYuVW+/dXdgmOyoZRcHu67My0ZqfGQg+pjFCHMj7qQWLRjzYmz5q4U6rkjEyVvVkbHTTrtbVeZknjhanld+sWrOLZfTmZXj0CQBkc8z3hLH9eSuwkiCMaBCj9OyKCpNtVxQSsfPbIB3pZrsDpEauifuAfL50k2lIhTLD2Uy7Nfo8UAdq9u4nbYBpe//0IDeVr1Q/a2C+TKRPKimz38EW7PE6xZ6m5pm/E617laJ56yjdEiiBcHRVEsiEOHNou+mFssh5v8mKGIQI8oZnBnuxraHTq5o+ihBjBGnChC9Al/qL+BxjN5s0zDHoqDl5bo8YZ37bAE3w==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3d44c6f-f447-43ce-1350-08de855ac67b
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8181.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2026 01:56:46.7202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dSYsKW4zymmrFKTL7iVgSozVlWGvMz3fqCQwLWhkfzaHjHgEALO4bVdZdFAG6zS2+ZBn2p9SSe7Gjl/13uNLGr06ovYOsHPTlEWqPO5md7s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4658
+X-Authority-Analysis: v=2.4 cv=CekFJbrl c=1 sm=1 tr=0 ts=69bb57e1 cx=c_pps
+ a=Og0UtPbLppQH9mpfBaDriA==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22 a=HK-ge7EqtdluswH-FwHe:22
+ a=VwQbUJbxAAAA:8 a=iGHA9ds3AAAA:8 a=mDV3o1hIAAAA:8 a=vpkhIxmY652di75XKZ0A:9
+ a=QEXdDO2ut3YA:10 a=nM-MV4yxpKKO9kiQg6Ot:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDAxMyBTYWx0ZWRfXx1Jn13jciimF
+ i3M8En6sQtRH5C8inRomfauL9z6hbHGAkRe8S58DNb05ydYcjfeYq2hoLfaVlKvBkGqDj6fHcUt
+ 6CUXcS7prI0va44r17so6FshONiXW7+Bqg9ojx/vexFd/Iep0Do99Euji8ANjD2Drhz15EV3oG2
+ VepM314U1cQdwO4g5KUiTk/mG9dUkxgA+exhkv7nWzIuF7ecbQRViNZkGULLjGvR6a/SrosYUjr
+ KQAPnEqsGdlZxffOsXKB6d6OzUToy1lbDWK9A4wY5x8XRacQMAfKhIaFqkZdFVoDbMLdwQ7ydV0
+ h5zr4FClo3nfTIbok/IcyFlQp1OaHC855lh8/MpFwU8gxtGf8t3rzPMt9btKsQLzh7JhCBWphqo
+ GX+9CepFGAPuf5GOH2H4cUKMcMlx57L/pro7+GXi9Z8hh4XJYqt2L96wTTEcVCxZV8kYZA3edDO
+ SKbSJu/caalSFZLiCnw==
+X-Proofpoint-GUID: OU2ka1KdJKdEViMV2kuh7s2d3ctNyc5y
+X-Proofpoint-ORIG-GUID: OU2ka1KdJKdEViMV2kuh7s2d3ctNyc5y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-18_02,2026-03-17_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
+ definitions=main-2603190013
 
-The metric code uses the event parsing code but it generally assumes
-all events are supported. Arnaldo reported AMD supporting
-stalled-cycles-frontend but not stalled-cycles-backend [1]. An issue
-with this is that before parsing happens the metric code tries to
-share events within groups to reduce the number of events and
-multiplexing. If the group has some supported and not supported
-events, the whole group will become broken. To avoid this situation
-add has_event tests to the metrics for stalled-cycles-frontend and
-stalled-cycles-backend. has_events is evaluated when parsing the
-metric and its result constant propagated (with if-elses) to reduce
-the number of events. This means when the metric code considers
-sharing the events, only supported events will be shared.
+Hi,
 
-Note for backporting. This change updates
-tools/perf/pmu-events/empty-pmu-events.c a convenience file for builds
-on systems without python present. While the metrics.json code should
-backport easily there can be conflicts on empty-pmu-events.c. In this
-case the build will have left a file test-empty-pmu-events.c that can
-be copied over empty-pmu-events.c to resolve issues and make an
-appropriate empty-pmu-events.c for the json in the source tree at the
-time of the build.
+Commit[5cf6e76e4f4f](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/tools/lib/perf/Makefile?h=linux-6.6.y&id=5cf6e76e4f4fee54c0056758b639cf4919cffba9)
+changed the libperf Makefile to preserve external CFLAGS instead of overriding them. As a result, the -O6 optimization flags from perf's
+build system are now inherited by libperf during compilation. This triggers a false positive -Walloc-size-larger-than= warning in GCC 13 on
+riscv64, causing the build to fail with -Werror.
 
-[1] https://lore.kernel.org/lkml/abm1nR-2xjOUBroD@x1/
+| cpumap.c: In function 'perf_cpu_map__merge':
+| cpumap.c:422:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum objec
+t size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+|   422 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+|       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| In file included from cpumap.c:3:
+| /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/recipe-sysroo
+t/usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
+|   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
+|       |              ^~~~~~
+| rm -f /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/perf-1.
+0/libapi/libapi.a && riscv64-poky-linux-gcc-ar rcs /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/w
+ork/qemuriscv64-poky-linux/perf/1.0/perf-1.0/libapi/libapi.a /buildarea5/hyan-cn/project_yocto/poky/build-ris
+cv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/perf-1.0/libapi/libapi-in.o
+| cc1: all warnings being treated as errors
 
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Closes: https://lore.kernel.org/lkml/abm1nR-2xjOUBroD@x1/
-Fixes: c7adeb0974f1 ("perf jevents: Add set of common metrics based on defa=
-ult ones")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/common/common/metrics.json           |   6 +-
- tools/perf/pmu-events/empty-pmu-events.c      | 108 +++++++++---------
- 2 files changed, 57 insertions(+), 57 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json b/tools/=
-perf/pmu-events/arch/common/common/metrics.json
-index 0d010b3ebc6d..cefc8bfe7830 100644
---- a/tools/perf/pmu-events/arch/common/common/metrics.json
-+++ b/tools/perf/pmu-events/arch/common/common/metrics.json
-@@ -46,14 +46,14 @@
-     },
-     {
-         "BriefDescription": "Max front or backend stalls per instruction",
--        "MetricExpr": "max(stalled\\-cycles\\-frontend, stalled\\-cycles\\=
--backend) / instructions",
-+        "MetricExpr": "(max(stalled\\-cycles\\-frontend, stalled\\-cycles\=
-\-backend) / instructions) if (has_event(stalled\\-cycles\\-frontend) & has=
-_event(stalled\\-cycles\\-backend)) else ((stalled\\-cycles\\-frontend / in=
-structions) if has_event(stalled\\-cycles\\-frontend) else ((stalled\\-cycl=
-es\\-backend / instructions) if has_event(stalled\\-cycles\\-backend) else =
-0))",
-         "MetricGroup": "Default",
-         "MetricName": "stalled_cycles_per_instruction",
-         "DefaultShowEvents": "1"
-     },
-     {
-         "BriefDescription": "Frontend stalls per cycle",
--        "MetricExpr": "stalled\\-cycles\\-frontend / cpu\\-cycles",
-+        "MetricExpr": "(stalled\\-cycles\\-frontend / cpu\\-cycles) if has=
-_event(stalled\\-cycles\\-frontend) else 0",
-         "MetricGroup": "Default",
-         "MetricName": "frontend_cycles_idle",
-         "MetricThreshold": "frontend_cycles_idle > 0.1",
-@@ -61,7 +61,7 @@
-     },
-     {
-         "BriefDescription": "Backend stalls per cycle",
--        "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
-+        "MetricExpr": "(stalled\\-cycles\\-backend / cpu\\-cycles) if has_=
-event(stalled\\-cycles\\-backend) else 0",
-         "MetricGroup": "Default",
-         "MetricName": "backend_cycles_idle",
-         "MetricThreshold": "backend_cycles_idle > 0.2",
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-even=
-ts/empty-pmu-events.c
-index 76c395cf513c..a92dd0424f79 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -1310,33 +1310,33 @@ static const char *const big_c_string =3D
- /* offset=3D128375 */ "migrations_per_second\000Default\000software@cpu\\-=
-migrations\\,name\\=3Dcpu\\-migrations@ * 1e9 / (software@cpu\\-clock\\,nam=
-e\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtas=
-k\\-clock@)\000\000Process migrations to a new CPU per CPU second\000\0001m=
-igrations/sec\000\000\000\000011"
- /* offset=3D128635 */ "page_faults_per_second\000Default\000software@page\=
-\-faults\\,name\\=3Dpage\\-faults@ * 1e9 / (software@cpu\\-clock\\,name\\=
-=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\=
--clock@)\000\000Page faults per CPU second\000\0001faults/sec\000\000\000\0=
-00011"
- /* offset=3D128866 */ "insn_per_cycle\000Default\000instructions / cpu\\-c=
-ycles\000insn_per_cycle < 1\000Instructions Per Cycle\000\0001instructions\=
-000\000\000\000001"
--/* offset=3D128979 */ "stalled_cycles_per_instruction\000Default\000max(st=
-alled\\-cycles\\-frontend, stalled\\-cycles\\-backend) / instructions\000\0=
-00Max front or backend stalls per instruction\000\000\000\000\000\000001"
--/* offset=3D129143 */ "frontend_cycles_idle\000Default\000stalled\\-cycles=
-\\-frontend / cpu\\-cycles\000frontend_cycles_idle > 0.1\000Frontend stalls=
- per cycle\000\000\000\000\000\000001"
--/* offset=3D129273 */ "backend_cycles_idle\000Default\000stalled\\-cycles\=
-\-backend / cpu\\-cycles\000backend_cycles_idle > 0.2\000Backend stalls per=
- cycle\000\000\000\000\000\000001"
--/* offset=3D129399 */ "cycles_frequency\000Default\000cpu\\-cycles / (soft=
-ware@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\=
-\-clock\\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\=
-000\000\000\000011"
--/* offset=3D129575 */ "branch_frequency\000Default\000branches / (software=
-@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-cl=
-ock\\,name\\=3Dtask\\-clock@)\000\000Branches per CPU second\000\0001000M/s=
-ec\000\000\000\000011"
--/* offset=3D129755 */ "branch_miss_rate\000Default\000branch\\-misses / br=
-anches\000branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\0=
-00\000001"
--/* offset=3D129859 */ "l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-m=
-isses / L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\0=
-00100%\000\000\000\000001"
--/* offset=3D129975 */ "llc_miss_rate\000Default2\000LLC\\-load\\-misses / =
-LLC\\-loads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\00=
-0\000001"
--/* offset=3D130076 */ "l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-m=
-isses / L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\00=
-0100%\000\000\000\000001"
--/* offset=3D130191 */ "dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses =
-/ dTLB\\-loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\0=
-00\000\000001"
--/* offset=3D130297 */ "itlb_miss_rate\000Default3\000iTLB\\-load\\-misses =
-/ iTLB\\-loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\0=
-00\000\000001"
--/* offset=3D130403 */ "l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-=
-prefetch\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.0=
-5\000L1 prefetch miss rate\000\000100%\000\000\000\000001"
--/* offset=3D130551 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D130574 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalte=
-d.thread\000\000\000\000\000\000\000\000000"
--/* offset=3D130638 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.co=
-re / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_a=
-ctive / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000"
--/* offset=3D130805 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_=
-retired.any\000\000\000\000\000\000\000\000000"
--/* offset=3D130870 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / in=
-st_retired.any\000\000\000\000\000\000\000\000000"
--/* offset=3D130938 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + ic=
-ache_miss_cycles\000\000\000\000\000\000\000\000000"
--/* offset=3D131010 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_h=
-it + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000"
--/* offset=3D131105 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_d=
-ata_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_=
-miss\000\000\000\000\000\000\000\000000"
--/* offset=3D131240 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2=
-_All_Miss\000\000\000\000\000\000\000\000000"
--/* offset=3D131305 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, D=
-Cache_L2_All)\000\000\000\000\000\000\000\000000"
--/* offset=3D131374 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss,=
- DCache_L2_All)\000\000\000\000\000\000\000\000000"
--/* offset=3D131445 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D131468 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D131491 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\000000=
-"
--/* offset=3D131512 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9=
- / duration_time\000\000\000\000\000\000\000\000000"
-+/* offset=3D128979 */ "stalled_cycles_per_instruction\000Default\000(max(s=
-talled\\-cycles\\-frontend, stalled\\-cycles\\-backend) / instructions if h=
-as_event(stalled\\-cycles\\-frontend) & has_event(stalled\\-cycles\\-backen=
-d) else (stalled\\-cycles\\-frontend / instructions if has_event(stalled\\-=
-cycles\\-frontend) else (stalled\\-cycles\\-backend / instructions if has_e=
-vent(stalled\\-cycles\\-backend) else 0)))\000\000Max front or backend stal=
-ls per instruction\000\000\000\000\000\000001"
-+/* offset=3D129404 */ "frontend_cycles_idle\000Default\000(stalled\\-cycle=
-s\\-frontend / cpu\\-cycles if has_event(stalled\\-cycles\\-frontend) else =
-0)\000frontend_cycles_idle > 0.1\000Frontend stalls per cycle\000\000\000\0=
-00\000\000001"
-+/* offset=3D129583 */ "backend_cycles_idle\000Default\000(stalled\\-cycles=
-\\-backend / cpu\\-cycles if has_event(stalled\\-cycles\\-backend) else 0)\=
-000backend_cycles_idle > 0.2\000Backend stalls per cycle\000\000\000\000\00=
-0\000001"
-+/* offset=3D129757 */ "cycles_frequency\000Default\000cpu\\-cycles / (soft=
-ware@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\=
-\-clock\\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\=
-000\000\000\000011"
-+/* offset=3D129933 */ "branch_frequency\000Default\000branches / (software=
-@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-cl=
-ock\\,name\\=3Dtask\\-clock@)\000\000Branches per CPU second\000\0001000M/s=
-ec\000\000\000\000011"
-+/* offset=3D130113 */ "branch_miss_rate\000Default\000branch\\-misses / br=
-anches\000branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\0=
-00\000001"
-+/* offset=3D130217 */ "l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-m=
-isses / L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\0=
-00100%\000\000\000\000001"
-+/* offset=3D130333 */ "llc_miss_rate\000Default2\000LLC\\-load\\-misses / =
-LLC\\-loads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\00=
-0\000001"
-+/* offset=3D130434 */ "l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-m=
-isses / L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\00=
-0100%\000\000\000\000001"
-+/* offset=3D130549 */ "dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses =
-/ dTLB\\-loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\0=
-00\000\000001"
-+/* offset=3D130655 */ "itlb_miss_rate\000Default3\000iTLB\\-load\\-misses =
-/ iTLB\\-loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\0=
-00\000\000001"
-+/* offset=3D130761 */ "l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-=
-prefetch\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.0=
-5\000L1 prefetch miss rate\000\000100%\000\000\000\000001"
-+/* offset=3D130909 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D130932 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalte=
-d.thread\000\000\000\000\000\000\000\000000"
-+/* offset=3D130996 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.co=
-re / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_a=
-ctive / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000"
-+/* offset=3D131163 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_=
-retired.any\000\000\000\000\000\000\000\000000"
-+/* offset=3D131228 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / in=
-st_retired.any\000\000\000\000\000\000\000\000000"
-+/* offset=3D131296 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + ic=
-ache_miss_cycles\000\000\000\000\000\000\000\000000"
-+/* offset=3D131368 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_h=
-it + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000"
-+/* offset=3D131463 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_d=
-ata_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_=
-miss\000\000\000\000\000\000\000\000000"
-+/* offset=3D131598 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2=
-_All_Miss\000\000\000\000\000\000\000\000000"
-+/* offset=3D131663 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, D=
-Cache_L2_All)\000\000\000\000\000\000\000\000000"
-+/* offset=3D131732 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss,=
- DCache_L2_All)\000\000\000\000\000\000\000\000000"
-+/* offset=3D131803 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D131826 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D131849 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\000000=
-"
-+/* offset=3D131870 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9=
- / duration_time\000\000\000\000\000\000\000\000000"
- ;
-=20
- static const struct compact_pmu_event pmu_events__common_default_core[] =
-=3D {
-@@ -2626,22 +2626,22 @@ static const struct pmu_table_entry pmu_events__com=
-mon[] =3D {
-=20
- static const struct compact_pmu_event pmu_metrics__common_default_core[] =
-=3D {
- { 127956 }, /* CPUs_utilized\000Default\000(software@cpu\\-clock\\,name\\=
-=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\=
--clock@) / (duration_time * 1e9)\000\000Average CPU utilization\000\0001CPU=
-s\000\000\000\000011 */
--{ 129273 }, /* backend_cycles_idle\000Default\000stalled\\-cycles\\-backen=
-d / cpu\\-cycles\000backend_cycles_idle > 0.2\000Backend stalls per cycle\0=
-00\000\000\000\000\000001 */
--{ 129575 }, /* branch_frequency\000Default\000branches / (software@cpu\\-c=
-lock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,na=
-me\\=3Dtask\\-clock@)\000\000Branches per CPU second\000\0001000M/sec\000\0=
-00\000\000011 */
--{ 129755 }, /* branch_miss_rate\000Default\000branch\\-misses / branches\0=
-00branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\000\00000=
-1 */
-+{ 129583 }, /* backend_cycles_idle\000Default\000(stalled\\-cycles\\-backe=
-nd / cpu\\-cycles if has_event(stalled\\-cycles\\-backend) else 0)\000backe=
-nd_cycles_idle > 0.2\000Backend stalls per cycle\000\000\000\000\000\000001=
- */
-+{ 129933 }, /* branch_frequency\000Default\000branches / (software@cpu\\-c=
-lock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,na=
-me\\=3Dtask\\-clock@)\000\000Branches per CPU second\000\0001000M/sec\000\0=
-00\000\000011 */
-+{ 130113 }, /* branch_miss_rate\000Default\000branch\\-misses / branches\0=
-00branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\000\00000=
-1 */
- { 128142 }, /* cs_per_second\000Default\000software@context\\-switches\\,n=
-ame\\=3Dcontext\\-switches@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-=
-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\=
-000\000Context switches per CPU second\000\0001cs/sec\000\000\000\000011 */
--{ 129399 }, /* cycles_frequency\000Default\000cpu\\-cycles / (software@cpu=
-\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\=
-\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\000\000\=
-000\000011 */
--{ 130191 }, /* dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses / dTLB\\=
--loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\000\000\0=
-00001 */
--{ 129143 }, /* frontend_cycles_idle\000Default\000stalled\\-cycles\\-front=
-end / cpu\\-cycles\000frontend_cycles_idle > 0.1\000Frontend stalls per cyc=
-le\000\000\000\000\000\000001 */
-+{ 129757 }, /* cycles_frequency\000Default\000cpu\\-cycles / (software@cpu=
-\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\=
-\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\000\000\=
-000\000011 */
-+{ 130549 }, /* dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses / dTLB\\=
--loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\000\000\0=
-00001 */
-+{ 129404 }, /* frontend_cycles_idle\000Default\000(stalled\\-cycles\\-fron=
-tend / cpu\\-cycles if has_event(stalled\\-cycles\\-frontend) else 0)\000fr=
-ontend_cycles_idle > 0.1\000Frontend stalls per cycle\000\000\000\000\000\0=
-00001 */
- { 128866 }, /* insn_per_cycle\000Default\000instructions / cpu\\-cycles\00=
-0insn_per_cycle < 1\000Instructions Per Cycle\000\0001instructions\000\000\=
-000\000001 */
--{ 130297 }, /* itlb_miss_rate\000Default3\000iTLB\\-load\\-misses / iTLB\\=
--loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\000\000\0=
-00001 */
--{ 130403 }, /* l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-prefetch=
-\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.05\000L1 =
-prefetch miss rate\000\000100%\000\000\000\000001 */
--{ 129859 }, /* l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-misses / =
-L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\000100%\0=
-00\000\000\000001 */
--{ 130076 }, /* l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-misses / =
-L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\000100%\00=
-0\000\000\000001 */
--{ 129975 }, /* llc_miss_rate\000Default2\000LLC\\-load\\-misses / LLC\\-lo=
-ads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\000\000001=
- */
-+{ 130655 }, /* itlb_miss_rate\000Default3\000iTLB\\-load\\-misses / iTLB\\=
--loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\000\000\0=
-00001 */
-+{ 130761 }, /* l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-prefetch=
-\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.05\000L1 =
-prefetch miss rate\000\000100%\000\000\000\000001 */
-+{ 130217 }, /* l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-misses / =
-L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\000100%\0=
-00\000\000\000001 */
-+{ 130434 }, /* l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-misses / =
-L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\000100%\00=
-0\000\000\000001 */
-+{ 130333 }, /* llc_miss_rate\000Default2\000LLC\\-load\\-misses / LLC\\-lo=
-ads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\000\000001=
- */
- { 128375 }, /* migrations_per_second\000Default\000software@cpu\\-migratio=
-ns\\,name\\=3Dcpu\\-migrations@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcp=
-u\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-cloc=
-k@)\000\000Process migrations to a new CPU per CPU second\000\0001migration=
-s/sec\000\000\000\000011 */
- { 128635 }, /* page_faults_per_second\000Default\000software@page\\-faults=
-\\,name\\=3Dpage\\-faults@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-c=
-lock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\0=
-00\000Page faults per CPU second\000\0001faults/sec\000\000\000\000011 */
--{ 128979 }, /* stalled_cycles_per_instruction\000Default\000max(stalled\\-=
-cycles\\-frontend, stalled\\-cycles\\-backend) / instructions\000\000Max fr=
-ont or backend stalls per instruction\000\000\000\000\000\000001 */
-+{ 128979 }, /* stalled_cycles_per_instruction\000Default\000(max(stalled\\=
--cycles\\-frontend, stalled\\-cycles\\-backend) / instructions if has_event=
-(stalled\\-cycles\\-frontend) & has_event(stalled\\-cycles\\-backend) else =
-(stalled\\-cycles\\-frontend / instructions if has_event(stalled\\-cycles\\=
--frontend) else (stalled\\-cycles\\-backend / instructions if has_event(sta=
-lled\\-cycles\\-backend) else 0)))\000\000Max front or backend stalls per i=
-nstruction\000\000\000\000\000\000001 */
-=20
- };
-=20
-@@ -2714,21 +2714,21 @@ static const struct pmu_table_entry pmu_events__tes=
-t_soc_cpu[] =3D {
- };
-=20
- static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_co=
-re[] =3D {
--{ 130551 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000 */
--{ 131240 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Mis=
-s\000\000\000\000\000\000\000\000000 */
--{ 131010 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_=
-rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000 */
--{ 131105 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd -=
- l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000=
-\000\000\000\000\000\000\000000 */
--{ 131305 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2=
-_All)\000\000\000\000\000\000\000\000000 */
--{ 131374 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_=
-L2_All)\000\000\000\000\000\000\000\000000 */
--{ 130638 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 =
-* (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / =
-cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000 */
--{ 130574 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread=
-\000\000\000\000\000\000\000\000000 */
--{ 131512 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / durat=
-ion_time\000\000\000\000\000\000\000\000000 */
--{ 131445 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\000000 */
--{ 131468 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\000000 */
--{ 131491 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\000000 */
--{ 130938 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_mis=
-s_cycles\000\000\000\000\000\000\000\000000 */
--{ 130805 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.=
-any\000\000\000\000\000\000\000\000000 */
--{ 130870 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-ed.any\000\000\000\000\000\000\000\000000 */
-+{ 130909 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000 */
-+{ 131598 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Mis=
-s\000\000\000\000\000\000\000\000000 */
-+{ 131368 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_=
-rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000 */
-+{ 131463 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd -=
- l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000=
-\000\000\000\000\000\000\000000 */
-+{ 131663 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2=
-_All)\000\000\000\000\000\000\000\000000 */
-+{ 131732 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_=
-L2_All)\000\000\000\000\000\000\000\000000 */
-+{ 130996 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 =
-* (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / =
-cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000 */
-+{ 130932 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread=
-\000\000\000\000\000\000\000\000000 */
-+{ 131870 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / durat=
-ion_time\000\000\000\000\000\000\000\000000 */
-+{ 131803 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\000000 */
-+{ 131826 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\000000 */
-+{ 131849 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\000000 */
-+{ 131296 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_mis=
-s_cycles\000\000\000\000\000\000\000\000000 */
-+{ 131163 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.=
-any\000\000\000\000\000\000\000\000000 */
-+{ 131228 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-ed.any\000\000\000\000\000\000\000\000000 */
-=20
- };
-=20
---=20
-2.53.0.851.ga537e3e6e9-goog
+Steps to reproduce:
+
+git clone -b scarthgap https://git.yoctoproject.org/poky
+cd poky
+sed -i 's/af240d7d57ebf66e87bc2dff34855e630a97ead1/5cf6e76e4f4fee54c0056758b639cf4919cffba9/' meta/recipes-kernel/linux/linux-yocto_6.6.bb
+
+source oe-init-build-env build-riscv64
+
+cat >> conf/local.conf << 'EOF'
+MACHINE = "qemuriscv64"
+'KERNEL_VERSION_SANITY_SKIP = "1"'
+EOF
+
+bitbake perf
+
+I have confirmed that:
+Known to fail: gcc 13.3.0, 13.4.0
+Known to work: gcc 11.5.0, 12.5.0, 14.3.0, 15.2.0
+
+Not sure whether this is a gcc bug.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=124549 filed to gcc.
+
+Thanks,
+Haixiao
+
 
