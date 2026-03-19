@@ -1,166 +1,204 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D9923D7CF
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 04:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521A328CF77
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 05:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773893191; cv=pass; b=dsp8xdKh8qQNfh4KX/cO/SOesSax/0QAOeAYFpt95Q9epOQoJJNctLtKK0fVasQzUswHCPx0zfS/Hg8hs0Fzk5XriUv49IGtXdvuC8DLWlwiRt2lPc/Sm9UY/OhFEWWb3MIydLvFYzmn9NXvGvbF0LHk0KWypDvoZ5R51v952ng=
+	t=1773898780; cv=pass; b=F+xNBG04j3+n66lWIeLghE/ZctAl8iZqrOfUa7v7QO6otVvb7HAh7U65YiKUlti2YdIOd2izxgL5VjCm0JAjtxOuTmApaJiREILibQ6ksHyvBpNagxV7U2r9erkI+2Ph82bGUdvH4cbWIKzyKAJvIV78ggdVyW6jmbbzhbnV3Dc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773893191; c=relaxed/simple;
-	bh=nY61M98sNbFncUjcLGc9YQMg14gQYVXeRn4B4Hdca0Y=;
+	s=arc-20240116; t=1773898780; c=relaxed/simple;
+	bh=d4dtVkzoDU7q1gZU6EzIMD9MaBklkUv/FswCZinMFrA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhOwbe8TtdAsizGHy8WSjpaqVRv59RUDoIxPyerIKhja+PbS7kLYjpSbdtEhCmIk8qEXmSFD0urzH2PCHxlsXlIPu3Inqvi/FOrNNO/rQFtlsyYeEJnJO8VtX6Ti048rfAdLOr39190snSkIpb5xsWDAQ/W2OtKrz4aitLP1uS8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F8vxFe9X; arc=pass smtp.client-ip=209.85.208.52
+	 To:Cc:Content-Type; b=VT2hip6XPRoVHDijE5XAA/n0VevFD39POEWVvDJDU1f2C5rp1grzf5HyQ8+WIb8dqh3obpJZTFgnZhsKRU0TF3kjwroZ/4VZsd4YPVA5gHICgJ67sTnz/YxR3Nz4TaTJOVERtPrBZiDTH9n+oC13a9gZe7aeQta3HdE6AFDrHDs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hp3c5Y5S; arc=pass smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F8vxFe9X"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-661ce258878so6013a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 21:06:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773893189; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hp3c5Y5S"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2aeab6ff148so37725ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Mar 2026 22:39:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773898779; cv=none;
         d=google.com; s=arc-20240605;
-        b=T5VUcWmRBBVRBXCLdToR7LVW3EZ3KtUUddQtDNG6k3ue6HaIBzOLbMve/BBJdt3gio
-         kqEE7HqZmko2vkk74iWnFXMqKT4COQ7P8yRjxV/H0C/LTMFiI3TJowJP8HJ/hAkFBYLD
-         MnaEw1zhMgiIPfm1EIvWQ8riekmwXf4qiYWqcZjxoyoeq0BLQU0jG4KErnPV6OkQo66C
-         jkvUeRgOGHS64bu1SHuQGPftP6olPnHy4VO/hJiPFQqdDEx6tkI0o1nNGlOBCoFrQ7EE
-         hNyhwR+8mmCND49ekCf+hgonhmnJmVjc0V9d1zkHGKoGRcRnQMmk+A6BK9iTbFgNxcb/
-         szcg==
+        b=IXlg7qItW8UyX5hsAVxACFjztpd8m9QjlloPGzB1b64N3ypq/csdBVQK7VqfxIQfXb
+         vQ1CJVgihxbYYfK4MQa12RXvAqUuPC4jF2IsIiA2MX424v1ebMMQMx+elJHu8q8T8BLm
+         3dSjT8qcCiCrZ4usT0B6TSdG5Mkaxk3X9ur7y6xP1p/teN2rCEjUT/BdVZxbODo2bIjg
+         VCJkSoa/dFQo0EhS23/gfXIyyO3k0u15p108XvCAu25TUvC3M7uLQLI3eEOqiAYX+MGe
+         yCfs+hd17QgGx+XU5DgAdAbbiTJoDGyu1cKLtcuE1TxUvR3j2katSL4P1vdmDYzhVt8R
+         vcpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZFupn+7z2aHtdyw3MiPnyeYQXXbBr5+TRfey41p/lPg=;
-        fh=IUrCjpZht11oxP/gHNjJ4Srh8M/azeXgZeMBEqExRZE=;
-        b=j1eZPecn8Vh9xO4H/Zt27j5U+a7HoK4Z1rLq50ZaaIMNwjUSgb5nXjehI/7cSIGlnh
-         w57f8QEMfXb/YenJt/NrmrJ3LULwApZiFKNTfxv+p6upwVv9JIecy+v4pfHO2WVLCPzx
-         oBz13CBctPER3A1YsX+7DYGd31vzvaPQA/zFcD8imQNpMETa9bMCanPI5dBFt4k4Kw7I
-         ld6HBvP85HkNxILuW2CzjNpNfoL6R+WBE3zFhcYiOZ5UXhkbH1WBKJ4tzG0y7Zof5U6i
-         weOhKgqAwBoSw29+Oe4CMHpRmVVHOcGikLfT8nzJXZRNAN4TzYGOPA3IqJf+KdUyD1w5
-         6RWA==;
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        fh=/7kq+P/lUpjMFh6aPvsp6Sc2TjL2gFDMMRXohf4t0BQ=;
+        b=SA0u8qc9W8hIfVc2Yy3U+3+ezOigKwsLUAnhOX1cx9ypzjskC9iU651bYARaVOUC+l
+         mAN502PhABDP8OnSuG/PjxY1Ls+drFV8ikJgyfdmt7vdyCZ67Qr5pSCrfYA/n6vRdQF2
+         273ldFKRLa1nGog7zO82lywfwTGgRnnmMOOU+FDBH9KocPiRV2LSb3SqQnkzfkzYcgOt
+         4txddTF92l+GexZcWLnV3UbgJlSdSt9EcKVPyvrDCJKZzgktS+pKXfDnR3LfXMDQ9j2O
+         +huDIjASSD8EzrGPPpYJP1ywwDckzNCLJactPIzbs0rT98aA4Q+cZB8LS+Cix5myN9G/
+         IyJA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773893189; x=1774497989; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773898779; x=1774503579; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZFupn+7z2aHtdyw3MiPnyeYQXXbBr5+TRfey41p/lPg=;
-        b=F8vxFe9XxJQaZB2m1xp/FlAQH7hDyOQS5nw5CvKeGC6Md6GZSLx0aeBy2KVNLOg7Ys
-         4xM6u7Y9Hyoh4BQn+2VJFm0R4Jy3GIMIexNAyC3IWRHye8n5ZxycbNdw9YL3O4YqyhSL
-         tIyfRBmQovoXnfX3QkYcXqd0SxuQbgITO/w0BUwOnqZRXVagTD2ga/u8/1ssKob5klnG
-         07c59Djzfp6U6AnljUjFH8ZZULDBpFQIb8IVdhqYFGEhJpzzyQAjQWKszIwJ6e6HkMAZ
-         J0CDOBbxd4877hq2JB5nC/CdSSYsrpyFtT3Ug75qlygnghMpTdrUDKuvYQPi2DQbFB4r
-         55pA==
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        b=hp3c5Y5ScpvVbvrekNsYm9l0tBbxcOvIaa3TE+Ih4TIydN77Qvznwxj6mmJTDnZ4xM
+         0feeNjSl596CpAlhJoZsRGdC4Cp8Fg3VPIDospK1K5OMMXt2qeFQFsu8tqF4J/7G41RT
+         +W1a+eucAjt4gljmYxFpEOHo4yhRq/UhhnF28YMqrcBwHb/Io048HWSiAGP1LWIpfT2O
+         lJZL9fIQ/leCIJRRAFqM2iwUqpeBfqbVvnR/VdOfWHLZzGSl2rHDVctZSNuUsZuoZRN/
+         QqDIkhOrF2QJA7BTx1eFu3EG/DvKAp9OpOdDs1oGmk/jDqP/+HzhkEJiCQ3dPmrnV1+9
+         dP9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773893189; x=1774497989;
+        d=1e100.net; s=20251104; t=1773898779; x=1774503579;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZFupn+7z2aHtdyw3MiPnyeYQXXbBr5+TRfey41p/lPg=;
-        b=XrkmHye23knqmtlsCJuLak7za7XDf4VpQ+3Km/M8jGAOmN8Waz1+gfkahIZ9dpOR89
-         MR4JsL8PjWd+8hyl6j6zS6RJT6V3uwVwQP8bzJGnLucoGvv3pZoDH8U7bGbEJK4HSmON
-         3SjU90o+HBPGQzZ5GjqJtAUWjncm6qLnZMDyLWZAeODf9KVbiDrmjRFmnBPYzat+92Xm
-         sXShBm6WiUcYbw1PRCVYSbXX/Q2h2aqEQqQUlUtMAlD+sffWdCYO0SFMkNrEGqrS1sr5
-         bpSEeSsWMkcuIG9Pc0e0iNp30mT0GTa9/cnwL5dTpJ84wRkefpZHVkfP7l8JgHBBwy6e
-         KhJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXE0xAG7kTdSPjAVPEPb4Wi8Ktyw8U+MFrXWo9zfQrd+Ti+zu8Mbriz1IFFcOVq8EeUmQkh7yU2bihhBd/BVWqa@vger.kernel.org
-X-Gm-Message-State: AOJu0YytV/YDYnmHh0nWA2/Zlvi0kWuQQvsOyIRTKJWGg9eiPsoyfav2
-	//3+UAne/QXY6KPsQKuHpJSg97jFNiYZxQczF6w1cKRK7Q57IPexnkXuwFu27YMKND/ofPLAcsP
-	czQbHeUplpfXfdvbClcZxVWaBEpYHmJ9Kezo3DMcu
-X-Gm-Gg: ATEYQzy9mwCOaxxwt4NlMwP017uFB9W9OnTDhG/j6nhkq7d6IK3uZfzTIBloaS5HDnY
-	RsAo2yVTGXmaiLnTv1c+qOr+wiUSUPo8aa/OWsLJ9v0rUWj7cMxZfpnZBGFRxHW0pu/0r6Po4bu
-	u9cpo8KlvalmURYUqmrkMSo8QsMmE32G4uWZ46PU2PR+Yrl+CfvF8QA1NP95+b8PU3ajLgwPYIh
-	gUHv0ZoPSL2/UpteQGZOtDO74Cz3bETcuMj4cVfLbabkoLio8Q7uJceBE0gkCprzk7SQQ2QQuce
-	dNdE4Q/3sa2DihAZ6Q==
-X-Received: by 2002:a05:6402:a518:20b0:660:f90b:a19b with SMTP id
- 4fb4d7f45d1cf-66852d86339mr17295a12.8.1773893188325; Wed, 18 Mar 2026
- 21:06:28 -0700 (PDT)
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        b=FO1Um0UAbWZQG6HBm3rO8oOaas/6kXuv1laFWH07kkSsiEW3YHtg3KvqKxT+SdcxC5
+         3L1WHynCQCu099t2jVW4rLoyqjQvzd8H3SUIzs1JQ7jZkpXzdgujXIUC1TaJnvRls/OF
+         eikBL/+L6Xs2FdPdwhKYo0KmLLdMSgK01DsBmfEk/8yb0sCaqKnY4Ql+LlQtQLYMVzVa
+         2h9ji7fBgfgr7n7Og1vpc4mm8RP4JDNIGJ6Azyo7b02cB0Vv3q45U9584DGFOthbxWjj
+         T5WVppDU80MKWrXCOFNs62QykCtn/QrnK8UhxxZcwDmJyMZrJQVL3gAm3fMtud0tlLbu
+         6XeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeAEw7gMtYV5+tQUlgXUGWYiwsNJQgKzV/u238y7cqB/muI1TYDzSPyctf3XzHqXc8m1maIjlMIBaIiuUYoAH3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo2xt0UgoDSXnHFHigL++BbGAc02pWrd8ELJlon904fBnLgqq1
+	oVEAgxDxM82mbqdxwKjDV6DPtlWh5SvZHOLODvewwe6tg9JiHhh9lMEGH70mqIdWt3nCwVOG+19
+	9aSorbHkc28VyJ5jzVnKE9EPLqAN/LTlk8rdk2AOk
+X-Gm-Gg: ATEYQzxIJH1ix8IuuzWDOHXXdYBdrNTvlyuupDtXbbJJguZo9bTx0gq/mf7Nxv3H/OZ
+	Gjn4WfAmMwIUQSmE81cCBEPeVUdVS2vgVDF1kzFO0BCt/tHPEMOfOf0VqWbMxLSfUyW+klTas/r
+	Yk1KkovJ6gA70nQzf+vWHp9gAblkKYMHGpVF0G9H+CKV5ysNSGpoVIqP6ezLzrcWomh5lVtaRc3
+	hgwTJQLt3sE9DQQEzdUOuf+0jL4m0x+L84mSx5ZVa7KiBgePIXWaf1Mu6rppptF47ySwx+QAwQJ
+	OeiAmzSq4h/UnW1yeTU=
+X-Received: by 2002:a17:903:46cd:b0:2ad:6f9b:7817 with SMTP id
+ d9443c01a7336-2b077e8cf17mr2042765ad.22.1773898777982; Wed, 18 Mar 2026
+ 22:39:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z_VUswFkWiTYI0eD@do-x1carbon> <Z_aovIbwdKIIBMuq@google.com> <CALMp9eRvB5Jqbs6aKMsPzKDJE7Pb0iUTsO9Ot1CB698px1GHcA@mail.gmail.com>
-In-Reply-To: <CALMp9eRvB5Jqbs6aKMsPzKDJE7Pb0iUTsO9Ot1CB698px1GHcA@mail.gmail.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Wed, 18 Mar 2026 21:06:15 -0700
-X-Gm-Features: AaiRm52WJRfvPAUqdIkMTaSmp90F_ogLSUXEWsodofL5Jcw8j1NrdQ8m-_7HYBY
-Message-ID: <CALMp9eTxwD2c1CwyzLr0eKkCM2YJYo7XTViMCwo=envoWoEssg@mail.gmail.com>
-Subject: Re: kvm guests crash when running "perf kvm top"
-To: Sean Christopherson <seanjc@google.com>
-Cc: Seth Forshee <sforshee@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, 
-	Mingwei Zhang <mizhang@google.com>
+References: <20260318175808.582009-1-irogers@google.com> <20260318234600.730340-1-irogers@google.com>
+In-Reply-To: <20260318234600.730340-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Mar 2026 22:39:26 -0700
+X-Gm-Features: AaiRm51WVkEbo2yRWjczdr_OVf_mYCmnDxfH_HvwH40cuXXVAtHg9_DcyaGADP4
+Message-ID: <CAP-5=fVWNP-fpD6bCWBKNDnwcMkYwZcvkBgqGjTJJ0fFQko89g@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] perf evsel fallback changes, better s390 defaults
+To: acme@kernel.org, namhyung@kernel.org, tmricht@linux.ibm.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
+	japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 17, 2026 at 9:02=E2=80=AFAM Jim Mattson <jmattson@google.com> w=
-rote:
+On Wed, Mar 18, 2026 at 4:46=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Wed, Apr 9, 2025 at 10:05=E2=80=AFAM Sean Christopherson <seanjc@googl=
-e.com> wrote:
->
-> > Long story short, masking PEBS_ENABLE with the guest's value (in additi=
-on to
-> > what perf allows) fixes the issue on my end.  Assuming testing goes wel=
-l, I'll
-> > post this as a proper patch.
-> >
-> > --
-> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.=
-c
-> > index cdb19e3ba3aa..1d01fb43a337 100644
-> > --- a/arch/x86/events/intel/core.c
-> > +++ b/arch/x86/events/intel/core.c
-> > @@ -4336,7 +4336,7 @@ static struct perf_guest_switch_msr *intel_guest_=
-get_msrs(int *nr, void *data)
-> >         arr[pebs_enable] =3D (struct perf_guest_switch_msr){
-> >                 .msr =3D MSR_IA32_PEBS_ENABLE,
-> >                 .host =3D cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_=
-mask,
-> > -               .guest =3D pebs_mask & ~cpuc->intel_ctrl_host_mask,
-> > +               .guest =3D pebs_mask & ~cpuc->intel_ctrl_host_mask & kv=
-m_pmu->pebs_enable,
-> >         };
-> >
-> >         if (arr[pebs_enable].host) {
->
-> Because kvm_pmu->pebs_enable is optimistic, I think we also need to
-> swap these two modifications to guest PGC in the code below:
->
-> arr[global_ctrl].guest &=3D ~kvm_pmu->host_cross_mapped_mask;
-> /* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
-> arr[global_ctrl].guest |=3D arr[pebs_enable].guest;
+> Discussion with Thomas Richter in:
+> https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.c=
+om/
+> showed that the evsel__fallback wasn't working for s390. These patches
+> avoid the problematic frame pointer callchain on s390 and fix
+> evsel__fallback from a range of problems when falling back to a
+> software event. I simulated failures when developing the patches but
+> they are untested other than that.
 
-Doh! The line above those two lines is:
+I think at this point I call it a day. Sashiko still has feedback that
+could justify a v9:
+https://sashiko.dev/#/patchset/20260318234600.730340-1-irogers%40google.com
+Specifically:
+1) software PMUs may fail if sysfs isn't mounted. This isn't a real
+problem as "software" is a "well known" PMU that we create even if
+sysfs isn't mounted.
+2) the handling of callchain in .perfconfig files isn't right, but the
+patches aren't making it any worse. I worry there could be several
+more patches if I start fixing things wrong with .perfconfig.
+3) the possibility to add another NULL check for safety exists, but
+the code would already crash at the same point.
+Apparently, the tendency of prompts to generate further refinements
+instead of providing all the problems at once is a known limitation of
+LLMs and the current prompting methods.
 
-arr[pebs_enable].guest &=3D ~kvm_pmu->host_cross_mapped_mask;
+Thanks,
+Ian
 
-So, the ordering of the global_ctrl modifications is irrelevant.
-
-> By the way, IA32_PEBS_ENABLE can be modified in NMI context by
-> handle_pmi_common(), so the host value returned from this function may
-> already be stale. We have seen cases where handle_pmi_common() clears
-> a bit in IA32_PEBS_ENABLE between here and the next VM-entry. VM-exit
-> restores the stale value with the bit set, and that bit persists
-> indefinitely. If the next perf event assigned to that PMC is not a
-> PEBS event, it magically becomes one. When an NMI arrives for PEBS
-> buffer overflow, perf refuses to claim it, because it doesn't think
-> any PEBS events are active. So, we get an "Uhhuh. NMI received for
-> unknown reason" message on the console. A flood of these is enough to
-> trigger the NMI watchdog and cause a panic.
+> v8: Address sashiko review that target wasn't fully initialized for
+>     `perf record` with '-u'. Ensure the callchain is enabled with '-g'
+>     and a .perfconfig setting. This don't impact testing so keeping
+>     Thomas' tested-by tags.
+> https://sashiko.dev/#/patchset/20260318175808.582009-1-irogers%40google.c=
+om
 >
-> I think we need a fixup after VM-exit to clear any IA32_PEBS_ENABLE
-> bits that were cleared by handle_pmi_common() between
-> intel_guest_get_msrs() and VM-entry, but I'm not sure what the best
-> API might be. Calling intel_guest_get_msrs() again seems too
-> heavyweight. Maybe KVM could ask perf nicely to just rewrite the MSR
-> with cpuc->pebs_enabled? Note that any erroneous IA32_PEBS_ENABLE bits
-> are dormant post VM-exit, since any PMCs throttled by
-> handle_pmi_common() will have their enable bits cleared in the
-> corresponding event selector.
+> v7: In perf top, move the target uid handling back to after the evlist
+>     is setup. A regression caught by Sashiko in:
+> https://sashiko.dev/#/patchset/20260317175642.161647-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260318175808.582009-1-irogers@google.com/
+>
+> v6: Sashiko noted that target wasn't fully set up when creating the
+>     default evlist in `perf top`, so move it earlier. Fix const char*
+>     casting issues in __parse_callchain_report_opt. Make '-g' not
+>     override the .perfconfig setting again.
+> https://sashiko.dev/#/patchset/20260317055334.760347-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260317175642.161647-1-irogers@google.com/
+>
+> v5: Fix the value for the top option to match that of record. Tidy the
+>     callchain parsing option callbacks. Based on AI review feedback:
+> https://sashiko.dev/#/patchset/20260317030601.567422-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260317055334.760347-1-irogers@google.com/
+>
+> v4: Changing the callchain parameter at configuration time means other
+>     options aren't set the same as they would for `--call-graph
+>     dwarf`, for example the stack size. Switch to setting the
+>     callchain option on s390 to parameter parse time. For '-g' use
+>     '--call-graph dwarf' for s390. Other --call-graph options are
+>     parsed as normal, but a warning is generated when setting
+>     `--call-graph fp` for s390. Also fix that sample IDs aren't wanted
+>     when there is only 1 event in the evlist.
+> https://lore.kernel.org/lkml/20260317030601.567422-1-irogers@google.com/
+>
+> v3: Incorporate feedback about event and callchain behavior for s390:
+> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
+> https://lore.kernel.org/lkml/20260313202811.2599195-1-irogers@google.com/
+>
+> v2: try exclude_callchain_user for s390 rather than fully disabling
+>     the callchain. Fix a missed clearing of is_pmu_core if the
+>     software event fallback.
+> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
+>
+> v1: https://lore.kernel.org/lkml/20260312031928.1494864-1-irogers@google.=
+com/
+>
+> Ian Rogers (5):
+>   perf evsel: Improve falling back from cycles
+>   perf target: Constify simple check functions
+>   perf evsel: Constify option arguments to config functions
+>   perf callchain: Refactor callchain option parsing
+>   perf evlist: Improve default event for s390
+>
+>  tools/perf/builtin-record.c      | 81 ++++++++++----------------------
+>  tools/perf/builtin-top.c         | 46 +++++++++++-------
+>  tools/perf/builtin-trace.c       |  9 +++-
+>  tools/perf/tests/event_update.c  |  4 +-
+>  tools/perf/tests/expand-cgroup.c |  4 +-
+>  tools/perf/tests/perf-record.c   |  7 ++-
+>  tools/perf/tests/topology.c      |  4 +-
+>  tools/perf/util/callchain.c      | 73 +++++++++++++++++++++++-----
+>  tools/perf/util/callchain.h      | 12 ++---
+>  tools/perf/util/evlist.c         | 32 ++++++++-----
+>  tools/perf/util/evlist.h         |  2 +-
+>  tools/perf/util/evsel.c          | 70 +++++++++++++++++----------
+>  tools/perf/util/evsel.h          | 10 ++--
+>  tools/perf/util/target.h         | 12 ++---
+>  14 files changed, 219 insertions(+), 147 deletions(-)
+>
+> --
+> 2.53.0.851.ga537e3e6e9-goog
+>
