@@ -1,128 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EC73E8C47;
-	Thu, 19 Mar 2026 22:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1413FB06C
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773959076; cv=none; b=TFNGEYf6/IcGh7JFrqbcx1un8SNWapbuQ+5v7uzS0mBcaRHPgDOvoSFheRCCorhNIYxEAlarbQ+mSwIe7WPK5N5E6xvRaeDmF/+cDeBPc/A9odBgB7QDZIKdpwtzf8fvb2h8m2jA8RgAqpWz4Tp644SG5Yb0CsFMElsrvSZubaA=
+	t=1773962642; cv=none; b=r7F0dEm2GDodBKKl8xStZlv+m22LhwjZcJ+YDw/ZrWBmgockWMz5nd3zzed5p+pYpZqNbd8MQ/7SXYQSDacUa60IF1dHUzb7kFq5oQNo6flp81H1mpjPTuk0cT6epDg2Ud42vDbZ32N8OXY1feFfHjyPvYGAlqYBcVjf4UwTthQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773959076; c=relaxed/simple;
-	bh=/uvr+DA8hrayQiRWtVDJDaZmXrkvFHzAwHNKb6SUAOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XUI58OYR+w4AFvDWdKHTuY52Um+uSPxCX2e6AlQEzlPR7NKU5XYhMNQowVsQ3BZ9NwrJKoHEbasMTByCq8oDlnzK3diOlrjBOL+n1pRdWFi+SHYb1Xp+kF8y/0IMCElCsvs5Az0PH7J4KFyFAdFmmleORWSTY0bR+E0uwy+g9ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNZRZZ5O; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773962642; c=relaxed/simple;
+	bh=fyBLBJtFWLrCoT30aL2/hhfXjNw0FtIgx5j18nj7m44=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=r808j49+larTvqlHQHjXURHBkhDQOb+ewmq/896dQSBFwxd2OVzhGc2Y1XuAiwYfHy1EH/RYkg+RF+cEFyGgd+TA8GunB5ljqU+/vvNgRs5386QTnWMW6D42AX9RDcpGaZPsuLXZlJzkuK0XogVZjvRJBgFfT9csCQTUmZ0H8F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h95mwr7L; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNZRZZ5O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773959071; x=1805495071;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/uvr+DA8hrayQiRWtVDJDaZmXrkvFHzAwHNKb6SUAOI=;
-  b=SNZRZZ5OAo/ZzYjOMceLE1AdWfN2eh+eb6JboQ8vuW/8XmQ3j3mHRp2j
-   fmtbAjneTWoT13rjC3Lwp1uFZzqdB5Ax1UgK01TUgtoQeXvpyiOB2pfNk
-   QPzwMCuLzhJywW3ljkLzuIoXXvZpVyah+pZpR7Ucc5F0wxU6DrkyIHAM9
-   Lx4eB8G4FJuTtXWCIeHKMCgm0qdGd6WOc4R4snDJxt2mrSvifv0d0uBkN
-   drNGXiWECQQgRwIPAvXYJelpuxXd1w8zyWwcQlvEbEbI90wyScAmmD+Im
-   iG/VmDOmBuDkpyRPwF4pa+VUXrYStJiWN3/tY+JS1lP0JVFT1eDyrQqj3
-   g==;
-X-CSE-ConnectionGUID: dr+4M8kxQlCjca+DLfRrWA==
-X-CSE-MsgGUID: uZIC9djSQGurUanTHxd/SA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="75114797"
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="75114797"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 15:24:30 -0700
-X-CSE-ConnectionGUID: VYF50OkCR0qagrLocJHoUg==
-X-CSE-MsgGUID: pBqwSwpSTISmF/nPivB6Uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="260995807"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.109.61]) ([10.125.109.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 15:24:31 -0700
-Message-ID: <2b097880-b2fc-498f-9dab-db875a4dec83@intel.com>
-Date: Thu, 19 Mar 2026 15:24:29 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h95mwr7L"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1276e71652fso70201c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773962639; x=1774567439; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMxs+MiOwNOIbq145/xttpf/Gy8y4MNEvWrxQX3EgtY=;
+        b=h95mwr7La2YR3Y8BKkRlchMCHSSROyaqV+xycAlULvnrJxK4KHZc7LjbVCgIQrg/7x
+         ALIdNYsH4exH5kQ1HKpZAh495AF1Op5nsaoCMzCGkGZaMLDjudjSDVP0plrvGzUL2edH
+         Uis1dTv6QEXjD/As7yjqOPNgweZAQrxax1u4EgZ09OtHZBc87OfYOgClYny33rzAmEUV
+         dkH7PhhFA/fo/Gwl/SxwMpEG/xGrpVhyU/UA2M43DyOB2FjwXQiCzgetx7GylhHGdhiQ
+         x+kh8by/0CAQZTvb/ExMRj63q2Ft3u9nh0u8I9vKEw32itj+iXMJYX5WP1KyEEWgYWzT
+         ziOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773962639; x=1774567439;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMxs+MiOwNOIbq145/xttpf/Gy8y4MNEvWrxQX3EgtY=;
+        b=RXGQDfKOTnFB13B+Dmpv3bfOKnr66LF7XJ/L+03WrgQnY1x4YfykznFiNCrjBG9EEU
+         VlTfy27MTBAurWM/rgrZSOUUaKQVJjeOaobcwIQTSi17cv/YnBDibdT7WFiP82ztWmxi
+         qkllrMnOc15sjSBOPMVVryThCLXDfiTJx6suFbUpbePCOJgsXz4q6gJACc/RuRDDbflI
+         UbjoYwWlos7juNmVChWnDTn74NxR6HHWptYQG7i/IE76cjsN/xcyWl1ruHKloceNK7GE
+         l7tGaS74+d+sf7r6Cw7nKQctyXwnGATMrdWhSb+qMoz4bzDv72p1tk033JgGYFyba3fJ
+         OqlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW47mFExnxTrzhSfrCWHhTjHwzlAvAHtN4M+NdMT7feM/MGcyIMfmh5CVwfW0Js7YL4NMbYu92m6HH9Bhf3Wlwb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXrY00vK0KbOw5q3pHHWZNDZtiuhBwsgOPzNO70FgLTofBjYZb
+	JkIoX0/npF841nE0eXVlPUg5uAB8uDMZBR4e967vbonSIjApsPtOrEyt9w1kCnpheEzTKlkCYl8
+	uyih/VfL0+Q==
+X-Received: from dlee11.prod.google.com ([2002:a05:7022:628b:b0:128:cf86:d1c9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1b09:b0:12a:6ab7:3f71
+ with SMTP id a92af1059eb24-12a7264eb70mr498857c88.7.1773962639024; Thu, 19
+ Mar 2026 16:23:59 -0700 (PDT)
+Date: Thu, 19 Mar 2026 16:23:09 -0700
+In-Reply-To: <20260209174032.4142096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/p4: Fix unused variable warning in
- p4_pmu_init()
-To: Aldo Conte <aldocontelk@gmail.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- james.clark@linaro.org, hpa@zytor.com, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org
-References: <20260319152210.210854-1-aldocontelk@gmail.com>
- <cab98c76-9772-46f8-8830-68c7af453aaa@intel.com>
- <a8a8ad35-7e92-41ec-b6a5-b471a91811b2@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <a8a8ad35-7e92-41ec-b6a5-b471a91811b2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260209174032.4142096-1-irogers@google.com>
+X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
+Message-ID: <20260319232334.287517-1-irogers@google.com>
+Subject: [PATCH v2 00/25] perf tool: Add evsel to perf_sample
+From: Ian Rogers <irogers@google.com>
+To: acme@kernel.org, namhyung@kernel.org
+Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	ak@linux.intel.com, alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
+	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
+	derek.foreman@collabora.com, dvyukov@google.com, howardchu95@gmail.com, 
+	hrishikesh123s@gmail.com, james.clark@linaro.org, jolsa@kernel.org, 
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com, tanze@kylinos.cn, thomas.falcon@intel.com, 
+	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/19/26 15:20, Aldo Conte wrote:
-> I admit I'm a novice in this field, so what do you suggest is the best
-> fix at this point?
-> Should I use the “warning suppressor" with something like
->     (void) val1 = (u32)_l;                \
->     (void) val2 = _l >> 32;            \
-> or implement the solution you suggested?
+Nearly all perf code ends up passing an evsel with the perf_sample,
+which is problematic if you want to rewrite the evsel such as with
+off-CPU processing - all uses of the evsel need fixing up. Previously
+I'd mailed this patch as an RFC with everything combined:
+https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
+and there was a request to break it up.
 
-Ideally, someone should go consolidate the two copies.
+I've started the series by adding documentation to struct
+perf_sample. Next I fixed missing perf_sample__init/exit largely from
+the recent perf inject callchain rewriting work. The 3rd patch adds
+the evsel to struct perf_sample and ensures it is correctly
+initialized. The next 22 patches avoid passing the evsel along with
+sample for different parts of the perf tool, along with some minor
+tweaks like constification and not determining the evsel if it is
+present in the sample.
 
-But, for now, for the p4.c issue, I'm still happy with transitioning
-over to rdmsrq().
+v1: Add review feedback on the first 2 patches from Namhyung, fix a
+    missed evsel assignment running event2evsel in builtin-inject.
+https://lore.kernel.org/lkml/20260209174032.4142096-1-irogers@google.com/
+
+Ian Rogers (25):
+  perf sample: Document struct perf_sample
+  perf sample: Make sure perf_sample__init/exit are used
+  perf sample: Add evsel to struct perf_sample
+  perf tool: Remove evsel from tool APIs that pass the sample
+  perf kvm: Don't pass evsel with sample
+  perf evsel: Refactor evsel__intval to perf_sample__intval
+  perf trace: Don't pass evsel with sample
+  perf callchain: Don't pass evsel and sample
+  perf lock: Only pass sample to handlers
+  perf lock: Constify trace_lock_handler variables
+  perf hist: Remove evsel parameter from inc samples functions
+  perf db-export: Remove evsel from struct export_sample
+  perf hist: Remove evsel from struct hist_entry_iter
+  perf report: Directly use sample->evsel to avoid computing from
+    sample->id
+  perf annotate: Don't pass evsel to add_sample
+  perf inject: Don't pass evsel with sample
+  perf kmem: Don't pass evsel with sample
+  perf kwork: Don't pass evsel with sample
+  perf sched: Don't pass evsel with sample
+  perf timechart: Don't pass evsel with sample
+  perf trace: Don't pass evsel with sample
+  perf evlist: Try to avoid computing evsel from sample
+  perf script: Don't pass evsel with sample
+  perf s390-sample-raw: Don't pass evsel with sample
+  perf evsel: Don't pass evsel with sample
+
+ tools/perf/builtin-annotate.c                 |  28 ++-
+ tools/perf/builtin-c2c.c                      |   6 +-
+ tools/perf/builtin-diff.c                     |   5 +-
+ tools/perf/builtin-inject.c                   |  79 ++++----
+ tools/perf/builtin-kmem.c                     |  58 +++---
+ tools/perf/builtin-kvm.c                      |  22 +--
+ tools/perf/builtin-kwork.c                    | 104 ++++------
+ tools/perf/builtin-lock.c                     | 117 +++++------
+ tools/perf/builtin-mem.c                      |   1 -
+ tools/perf/builtin-record.c                   |   3 +-
+ tools/perf/builtin-report.c                   |  38 ++--
+ tools/perf/builtin-sched.c                    | 183 ++++++++----------
+ tools/perf/builtin-script.c                   |  26 ++-
+ tools/perf/builtin-timechart.c                |  76 +++-----
+ tools/perf/builtin-top.c                      |  19 +-
+ tools/perf/builtin-trace.c                    | 103 +++++-----
+ tools/perf/tests/hists_cumulate.c             |   3 +-
+ tools/perf/tests/hists_filter.c               |   2 +-
+ tools/perf/tests/hists_output.c               |   3 +-
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
+ tools/perf/tests/switch-tracking.c            |   9 +-
+ tools/perf/util/annotate.c                    |  19 +-
+ tools/perf/util/annotate.h                    |   6 +-
+ tools/perf/util/build-id.c                    |   3 +-
+ tools/perf/util/build-id.h                    |   7 +-
+ tools/perf/util/callchain.c                   |   8 +-
+ tools/perf/util/callchain.h                   |   5 +-
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/data-convert-json.c           |   5 +-
+ tools/perf/util/db-export.c                   |  13 +-
+ tools/perf/util/db-export.h                   |   3 +-
+ tools/perf/util/evlist.c                      |   5 +-
+ tools/perf/util/evsel.c                       |  60 +++---
+ tools/perf/util/evsel.h                       |  12 +-
+ tools/perf/util/hist.c                        |  26 +--
+ tools/perf/util/hist.h                        |   3 +-
+ tools/perf/util/intel-pt.c                    |  12 +-
+ tools/perf/util/intel-tpebs.c                 |   3 +-
+ tools/perf/util/jitdump.c                     |   2 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
+ .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
+ tools/perf/util/kvm-stat.c                    |  19 +-
+ tools/perf/util/kvm-stat.h                    |  18 +-
+ tools/perf/util/kwork.h                       |   9 +-
+ tools/perf/util/machine.c                     |  14 +-
+ tools/perf/util/machine.h                     |   3 -
+ tools/perf/util/s390-sample-raw.c             |  15 +-
+ tools/perf/util/sample.c                      |  10 +-
+ tools/perf/util/sample.h                      | 113 ++++++++++-
+ .../util/scripting-engines/trace-event-perl.c |  23 +--
+ .../scripting-engines/trace-event-python.c    |  47 ++---
+ tools/perf/util/session.c                     |  74 ++++---
+ tools/perf/util/synthetic-events.c            |   9 +-
+ tools/perf/util/synthetic-events.h            |   2 -
+ tools/perf/util/tool.c                        |   4 +-
+ tools/perf/util/tool.h                        |   4 +-
+ tools/perf/util/trace-event-scripting.c       |   5 +-
+ tools/perf/util/trace-event.h                 |   3 -
+ 63 files changed, 792 insertions(+), 825 deletions(-)
+
+-- 
+2.53.0.959.g497ff81fa9-goog
+
