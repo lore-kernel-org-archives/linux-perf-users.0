@@ -1,251 +1,312 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A38C194C98;
-	Thu, 19 Mar 2026 18:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E423D331B;
+	Thu, 19 Mar 2026 21:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773945141; cv=none; b=pJXdx/zB0Cs0adxkzfnSozTslUX0TrDbxEoGszbwGE31yozbFIiWeR1x6BbdaNYEGz+jl7g+vZxvhHamhGoVCh3ZLXrx5/VSUzU3MwYqcdMlRVrg2n6X7gC90VHMlrDvpVCnzFsf+nOl5qJEHAVMaxhepIFGTg2XfprdvJb9i/Q=
+	t=1773955793; cv=none; b=JED4MpxsMRWYJ3WnU+Li0CR+vkrTwWYuzIjFgTSZBDgv4gTrvk8JMjySqiS9Ept5e2nQYCAyL1dxAjsMYl8NAxuCzHD8rEzEkaObaxSLVDDP7otjqN8x22+IqVRq3nRqe+jXaYboHALAh1OW444oG80aXX/0Fe7rFzf6XP6vmtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773945141; c=relaxed/simple;
-	bh=q/AIFKBlYrlqgaIU+R+X2Kbm55lVUhw1nLQSCLmd6ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=EDWApP9FvLKDUyrbYkP0fXgMKLFP0p6bzhJnM1KtjsOx2K2vNn6/AqZh38yE5Hkl5ELMgyTy+3RdqSOEBUg/l96I44AMj5PW8tf7q4pAwsRv7r9Lp3hVOpu1Yy4YEeqO5rKx5cCvzxwB8uhNXAr9J0RJe/ztEmfhYVF8GuOS8Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLfxJBQH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773955793; c=relaxed/simple;
+	bh=27GXIBI1vToPPkBGFI7yFUONCgw3el/DkvcRL/cWpmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ahwGmBmeJThCQ2EjvwZUQAR5FBr836hS06zF/08CsYvFWYDJZwxhc8FvHAdI/WB2lgpMmXQ+kCA+YqTgBCMKfG4TgIens7EZMNDCdNBlUhxWDAJNAoBJZo6KiH3OvyNDRtbO792KgRofB/Lgoz0ZiBaxxseOyzOiDJAncnYasA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSdH4Psr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLfxJBQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2336C19424;
-	Thu, 19 Mar 2026 18:32:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSdH4Psr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED525C19424;
+	Thu, 19 Mar 2026 21:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773945141;
-	bh=q/AIFKBlYrlqgaIU+R+X2Kbm55lVUhw1nLQSCLmd6ew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SLfxJBQH3ZBwLVeaWFuXtr69z+ue66UBDBXapfmCGZU/5sePR0jM8ttItsExbkxXd
-	 fat6HASgQmW8lTt+q9Fv/u0XJTf3d3wZAiJLqrgzYHG5GWO4lK+JttBOqJXt5pwhQF
-	 w+6FlJPTdi3oKlG3m7NbTFgXf1aiA6jp7uCbZskZpkhz+sWDidVqJYVEsczF3/Cr0q
-	 5HIA6+fCuzX4SwGeOuI+h7S9iLuLC57oeWrh6xVKPtDKceG2qv5E5rx2twVSmjZBNQ
-	 hX57e6N1IjMEwU/bgDkP0m8XkKB2jG/ioYVncpqZsFKATtztVHzIe50BPghhEOmL2B
-	 /aAbuSjpDjtvg==
-Date: Thu, 19 Mar 2026 13:32:19 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
+	s=k20201202; t=1773955793;
+	bh=27GXIBI1vToPPkBGFI7yFUONCgw3el/DkvcRL/cWpmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uSdH4Psr/R91Fxzb3JlB1MZrueoo3lN41flbvxe6XyL+B4k0d+0x/DG8QEc3Zlhp6
+	 Amk8ewo65L2iYPFFm45xW2J8ZoDqzAoXurZpMUfI7CaNgWSLn7Gpkof/qV/FmRM0ci
+	 I9Uowk83jt/YLoXbUVDxlu9SePdNH/StRQ6nt2cHVVmkYlOboNrvKAMTv4Vt30rVuy
+	 kGHF44Uag6A18eNZnpLd5V4oTo507V9tIet7QpqD0KQZJSVXTi6+ylhq+ckasOjX6N
+	 cfMpXyeM9D6mK5moOFjmmyBRV2EEZZbkicNcJLq3jbw+Cm5Nyf8HW+h2MUmD17LOJe
+	 0IBI93YUo8ySw==
+Date: Thu, 19 Mar 2026 14:29:51 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>,
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com,
-	suzuki.poulose@arm.com, ryan.roberts@arm.com,
-	chenl311@chinatelecom.cn, masahiroy@kernel.org,
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com,
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com,
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com,
-	liuyonglong@huawei.com, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v9 7/7] PCI/TPH: Fix get cpu steer-tag fail on ARM64
- platform
-Message-ID: <20260319183219.GA519221@bhelgaas>
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ricky Ringler <ricky.ringler@proton.me>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+	Tianyou Li <tianyou.li@intel.com>,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v2] tools: perf: add comm_ignore_digit column
+Message-ID: <abxqz93jZSWcfdt8@google.com>
+References: <20260316175631.3169955-1-stephen.s.brennan@oracle.com>
+ <CAP-5=fWFrDaG7dCT2AcEAu28aAPKz6qMtpzmrG+4-vn1NLQ--Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260319065735.45954-8-fengchengwen@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWFrDaG7dCT2AcEAu28aAPKz6qMtpzmrG+4-vn1NLQ--Q@mail.gmail.com>
 
-Let's make the subject a little more specific, e.g.,
+Hello,
 
-  PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+On Tue, Mar 17, 2026 at 09:14:50AM -0700, Ian Rogers wrote:
+> On Mon, Mar 16, 2026 at 10:56 AM Stephen Brennan
+> <stephen.s.brennan@oracle.com> wrote:
+> >
+> > The "comm" column allows grouping events by the process command. It is
+> > intended to group like programs, despite having different PIDs. But some
+> > workloads may adjust their own command, so that a unique identifier
+> > (e.g. a PID or some other numeric value) is part of the command name.
+> > This destroys the utility of "comm", forcing perf to place each unique
+> > process name into its own bucket, which can contribute to a
+> > combinatorial explosion of memory use in perf report.
+> >
+> > Create a less strict version of this column, which ignores digits when
+> > comparing command names. This allows "similar looking" processes to
+> > again be placed in the same bucket.
 
-On Thu, Mar 19, 2026 at 02:57:35PM +0800, Chengwen Feng wrote:
-> pcie_tph_get_cpu_st() is broken on ARM64:
-> 1. pcie_tph_get_cpu_st() passes cpu_uid to the PCI ACPI DSM method.
->    cpu_uid should be the ACPI Processor UID [1].
-> 2. In BNXT, pcie_tph_get_cpu_st() is passed a cpu_uid obtained via
->    cpumask_first(irq->cpu_mask) - the logical CPU ID of a CPU core,
->    generated and managed by kernel (e.g., [0,255] for a system  with 256
->    logical CPU cores).
-> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
->    MADT table, and this UID may not match the kernel's logical CPU ID.
->    When this occurs, the mismatch results in the wrong CPU steer-tag.
-> 4. On AMD x86 the logical CPU ID is identical to the ACPI Processor UID
->    so the mismatch is not seen.
+Can you please include an example of this change so that others can
+notice what's going on?
+
+Actually I'm not happy with the name "comm_ignore_digit".  While it's
+intuitive, it would be nice if we have a shorter name.  But maybe we
+can just go with it unless someone has a better idea.
+
+> >
+> > Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> > ---
+> >
+> > Changes from v1:
+> > - Rebased on linux-tools-next. Resolved conflict with commit cbd41c6d4c26c
+> >   ("perf report: Update sort key state from -F option").
+> >
+> > v1: https://lore.kernel.org/linux-perf-users/20260305181847.3249498-1-stephen.s.brennan@oracle.com/
+> >
+> >  tools/perf/util/hist.c |  1 +
+> >  tools/perf/util/hist.h |  1 +
+> >  tools/perf/util/sort.c | 92 +++++++++++++++++++++++++++++++++++++++++-
+> >  tools/perf/util/sort.h |  1 +
+> >  4 files changed, 94 insertions(+), 1 deletion(-)
+
+Also please update the man page in the Documentation.
+
+> >
+> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > index 7ffaa3d9851b4..a6e566dda3a15 100644
+> > --- a/tools/perf/util/hist.c
+> > +++ b/tools/perf/util/hist.c
+> > @@ -110,6 +110,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+> >         len = thread__comm_len(h->thread);
+> >         if (hists__new_col_len(hists, HISTC_COMM, len))
+> >                 hists__set_col_len(hists, HISTC_THREAD, len + 8);
+> > +       hists__new_col_len(hists, HISTC_COMM_IGNORE_DIGIT, len);
 > 
-> Resolution:
-> 1. Use acpi_get_cpu_uid() in pcie_tph_get_cpu_st() to translate from
->    logical CPU ID to ACPI Processor UID needed for the DSM call.
-> 2. Rename pcie_tpu_get_cpu_st() parameter from cpu_uid to cpu to
->    reflect that it is a logical CPU_ID.
-
-And simplify this, e.g.,
-
-  pcie_tph_get_cpu_st() uses the Query Cache Locality Features _DSM
-  [1] to retrieve the TPH Steering Tag for memory associated with the
-  CPU identified by its "cpu_uid" parameter, a Linux logical CPU ID.
-
-  The _DSM requires a ACPI Processor UID, which pcie_tph_get_cpu_st()
-  previously assumed was the same as the Linux logical CPU ID.  This
-  is true on x86 but not on arm64, so pcie_tph_get_cpu_st() failed on
-  arm64.
-
-  Convert the Linux logical CPU ID to the ACPI Processor UID with
-  acpi_get_cpu_uid() before passing it to the _DSM.
-
-If there's a specific error message from BNXT or similar that is a
-symptom of this problem, it'd be nice to include that.  Or if the
-problem was just poor performance because the _DSM returned the wrong
-Steering Tag, you could say something like:
-
-  ... so pcie_tph_get_cpu_st() returned the wrong Steering Tag,
-  resulting in poor network performance.
-
-> [1] According to ECN_TPH-ST_Revision_20200924
->     (https://members.pcisig.com/wg/PCI-SIG/document/15470), the input
->     is defined as: "If the target is a processor, then this field
->     represents the ACPI Processor UID of the processor as specified in
->     the MADT. If the target is a processor container, then this field
->     represents the ACPI Processor UID of the processor container as
->     specified in the PPTT."
+> Thanks for working on this! Sashiko is noting some nits in its review:
+> https://sashiko.dev/#/patchset/20260316175631.3169955-1-stephen.s.brennan%40oracle.com
 > 
-> Fixes: d2e8a34876ce ("PCI/TPH: Add Steering Tag support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-The patch looks good to me.  Thanks for all your work on this!
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  Documentation/PCI/tph.rst |  4 ++--
->  drivers/pci/tph.c         | 16 +++++++++++-----
->  include/linux/pci-tph.h   |  4 ++--
->  3 files changed, 15 insertions(+), 9 deletions(-)
+> Because hist_entry__comm_ignore_digit_snprintf() replaces consecutive digits
+> with the 3-character string <N>, the formatted string is often longer than
+> the original string (e.g., a command named worker_1 expands from 8 to 10
+> characters: worker_<N>).
 > 
-> diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
-> index e8993be64fd6..b6cf22b9bd90 100644
-> --- a/Documentation/PCI/tph.rst
-> +++ b/Documentation/PCI/tph.rst
-> @@ -79,10 +79,10 @@ To retrieve a Steering Tag for a target memory associated with a specific
->  CPU, use the following function::
->  
->    int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type type,
-> -                          unsigned int cpu_uid, u16 *tag);
-> +                          unsigned int cpu, u16 *tag);
->  
->  The `type` argument is used to specify the memory type, either volatile
-> -or persistent, of the target memory. The `cpu_uid` argument specifies the
-> +or persistent, of the target memory. The `cpu` argument specifies the
->  CPU where the memory is associated to.
->  
->  After the ST value is retrieved, the device driver can use the following
-> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-> index ca4f97be7538..b67c9ad14bda 100644
-> --- a/drivers/pci/tph.c
-> +++ b/drivers/pci/tph.c
-> @@ -236,21 +236,27 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
->   * with a specific CPU
->   * @pdev: PCI device
->   * @mem_type: target memory type (volatile or persistent RAM)
-> - * @cpu_uid: associated CPU id
-> + * @cpu: associated CPU id
->   * @tag: Steering Tag to be returned
->   *
->   * Return the Steering Tag for a target memory that is associated with a
-> - * specific CPU as indicated by cpu_uid.
-> + * specific CPU as indicated by cpu.
->   *
->   * Return: 0 if success, otherwise negative value (-errno)
->   */
->  int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
-> -			unsigned int cpu_uid, u16 *tag)
-> +			unsigned int cpu, u16 *tag)
->  {
->  #ifdef CONFIG_ACPI
->  	struct pci_dev *rp;
->  	acpi_handle rp_acpi_handle;
->  	union st_info info;
-> +	u32 cpu_uid;
-> +	int ret;
-> +
-> +	ret = acpi_get_cpu_uid(cpu, &cpu_uid);
-> +	if (ret != 0)
-> +		return ret;
->  
->  	rp = pcie_find_root_port(pdev);
->  	if (!rp || !rp->bus || !rp->bus->bridge)
-> @@ -265,9 +271,9 @@ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
->  
->  	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
->  
-> -	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
-> +	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu=%d, tag=%#04x\n",
->  		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
-> -		cpu_uid, *tag);
-> +		cpu, *tag);
->  
->  	return 0;
->  #else
-> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-> index ba28140ce670..be68cd17f2f8 100644
-> --- a/include/linux/pci-tph.h
-> +++ b/include/linux/pci-tph.h
-> @@ -25,7 +25,7 @@ int pcie_tph_set_st_entry(struct pci_dev *pdev,
->  			  unsigned int index, u16 tag);
->  int pcie_tph_get_cpu_st(struct pci_dev *dev,
->  			enum tph_mem_type mem_type,
-> -			unsigned int cpu_uid, u16 *tag);
-> +			unsigned int cpu, u16 *tag);
->  void pcie_disable_tph(struct pci_dev *pdev);
->  int pcie_enable_tph(struct pci_dev *pdev, int mode);
->  u16 pcie_tph_get_st_table_size(struct pci_dev *pdev);
-> @@ -36,7 +36,7 @@ static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
->  { return -EINVAL; }
->  static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
->  				      enum tph_mem_type mem_type,
-> -				      unsigned int cpu_uid, u16 *tag)
-> +				      unsigned int cpu, u16 *tag)
->  { return -EINVAL; }
->  static inline void pcie_disable_tph(struct pci_dev *pdev) { }
->  static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
-> -- 
-> 2.17.1
+> Since the snprintf logic strictly bounds the output to the calculated width,
+> will the expanded output be prematurely truncated in reports?
+
+Right.  You can add perf_hpp_list.comm_ignore_digit field and update it
+the column length properly only if it's set.
+
+Thanks,
+Namhyung
+
 > 
+> >
+> >         if (h->ms.map) {
+> >                 len = dso__name_len(map__dso(h->ms.map));
+> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > index 1d5ea632ca4e1..ae7e98bd9e46d 100644
+> > --- a/tools/perf/util/hist.h
+> > +++ b/tools/perf/util/hist.h
+> > @@ -44,6 +44,7 @@ enum hist_column {
+> >         HISTC_THREAD,
+> >         HISTC_TGID,
+> >         HISTC_COMM,
+> > +       HISTC_COMM_IGNORE_DIGIT,
+> >         HISTC_CGROUP_ID,
+> >         HISTC_CGROUP,
+> >         HISTC_PARENT,
+> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > index 42d5cd7ef4e23..45662302ed5ba 100644
+> > --- a/tools/perf/util/sort.c
+> > +++ b/tools/perf/util/sort.c
+> > @@ -1,4 +1,5 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> > +#include <ctype.h>
+> >  #include <errno.h>
+> >  #include <inttypes.h>
+> >  #include <regex.h>
+> > @@ -265,6 +266,93 @@ struct sort_entry sort_comm = {
+> >         .se_width_idx   = HISTC_COMM,
+> >  };
+> >
+> > +/* --sort comm_ignore_digit */
+> > +
+> > +static int64_t strcmp_nodigit(const char *left, const char *right)
+> > +{
+> > +       for (;;) {
+> > +               while (*left && isdigit(*left))
+> > +                       left++;
+> > +               while (*right && isdigit(*right))
+> > +                       right++;
+> > +               if (*left == *right && !*left) {
+> > +                       return 0;
+> > +               } else if (*left == *right) {
+> > +                       left++;
+> > +                       right++;
+> > +               } else {
+> > +                       return (int64_t)*left - (int64_t)*right;
+> > +               }
+> > +       }
+> > +}
+> 
+> Sashiko also notes what's below, but I sent out a patch to make all
+> chars unsigned (like the kernel):
+> https://lore.kernel.org/lkml/20260306191908.2065682-1-irogers@google.com/
+> but it has no reviews.
+> 
+> Process command strings can contain arbitrary non-ASCII bytes (e.g., UTF-8
+> characters). On architectures where char is signed, these bytes evaluate as
+> negative integers.
+> 
+> Passing a negative value (other than EOF) to ctype.h's isdigit() causes
+> undefined behavior. In glibc, it results in an out-of-bounds read on the
+> __ctype_b_loc array, which can lead to a segmentation fault.
+> 
+> Additionally, if char is signed, returning (int64_t)*left - (int64_t)*right
+> means non-ASCII characters will mathematically sort before ASCII characters.
+> 
+> Does this code need to cast the characters to unsigned char before passing
+> them to isdigit() and subtracting them?
+> 
+> Thanks,
+> Ian
+> 
+> 
+> > +
+> > +static int64_t
+> > +sort__comm_ignore_digit_cmp(struct hist_entry *left, struct hist_entry *right)
+> > +{
+> > +       return strcmp_nodigit(comm__str(right->comm), comm__str(left->comm));
+> > +}
+> > +
+> > +static int64_t
+> > +sort__comm_ignore_digit_collapse(struct hist_entry *left, struct hist_entry *right)
+> > +{
+> > +       return strcmp_nodigit(comm__str(right->comm), comm__str(left->comm));
+> > +}
+> > +
+> > +static int64_t
+> > +sort__comm_ignore_digit_sort(struct hist_entry *left, struct hist_entry *right)
+> > +{
+> > +       return strcmp_nodigit(comm__str(right->comm), comm__str(left->comm));
+> > +}
+> > +
+> > +static int hist_entry__comm_ignore_digit_snprintf(struct hist_entry *he, char *bf,
+> > +                                               size_t size, unsigned int width)
+> > +{
+> > +       int ret = 0;
+> > +       unsigned int print_len, printed = 0, start = 0, end = 0;
+> > +       bool in_digit;
+> > +       const char *comm = comm__str(he->comm), *print;
+> > +
+> > +       while (printed < width && printed < size && comm[start]) {
+> > +               in_digit = !!isdigit(comm[start]);
+> > +               end = start + 1;
+> > +               while (comm[end] && !!isdigit(comm[end]) == in_digit)
+> > +                       end++;
+> > +               if (in_digit) {
+> > +                       print_len = 3; /* <N> */
+> > +                       print = "<N>";
+> > +               } else {
+> > +                       print_len = end - start;
+> > +                       print = &comm[start];
+> > +               }
+> > +               print_len = min(print_len, width - printed);
+> > +               ret = repsep_snprintf(bf + printed, size - printed, "%-.*s",
+> > +                                       print_len, print);
+> > +               if (ret < 0)
+> > +                       return ret;
+> > +               start = end;
+> > +               printed += ret;
+> > +       }
+> > +       /* Pad to width if necessary */
+> > +       if (printed < width && printed < size) {
+> > +               ret = repsep_snprintf(bf + printed, size - printed, "%-*.*s",
+> > +                                      width - printed, width - printed, "");
+> > +               if (ret < 0)
+> > +                       return ret;
+> > +               printed += ret;
+> > +       }
+> > +       return printed;
+> > +}
+> > +
+> > +struct sort_entry sort_comm_ignore_digit = {
+> > +       .se_header      = "CommandIgnoreDigit",
+> > +       .se_cmp         = sort__comm_ignore_digit_cmp,
+> > +       .se_collapse    = sort__comm_ignore_digit_collapse,
+> > +       .se_sort        = sort__comm_ignore_digit_sort,
+> > +       .se_snprintf    = hist_entry__comm_ignore_digit_snprintf,
+> > +       .se_filter      = hist_entry__thread_filter,
+> > +       .se_width_idx   = HISTC_COMM_IGNORE_DIGIT,
+> > +};
+> > +
+> >  /* --sort dso */
+> >
+> >  static int64_t _sort__dso_cmp(struct map *map_l, struct map *map_r)
+> > @@ -2583,6 +2671,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+> >         DIM(SORT_PID, "pid", sort_thread),
+> >         DIM(SORT_TGID, "tgid", sort_tgid),
+> >         DIM(SORT_COMM, "comm", sort_comm),
+> > +       DIM(SORT_COMM_IGNORE_DIGIT, "comm_ignore_digit", sort_comm_ignore_digit),
+> >         DIM(SORT_DSO, "dso", sort_dso),
+> >         DIM(SORT_SYM, "symbol", sort_sym),
+> >         DIM(SORT_PARENT, "parent", sort_parent),
+> > @@ -3577,7 +3666,7 @@ static int __sort_dimension__update(struct sort_dimension *sd,
+> >                 list->socket = 1;
+> >         } else if (sd->entry == &sort_thread) {
+> >                 list->thread = 1;
+> > -       } else if (sd->entry == &sort_comm) {
+> > +       } else if (sd->entry == &sort_comm || sd->entry == &sort_comm_ignore_digit) {
+> >                 list->comm = 1;
+> >         } else if (sd->entry == &sort_type_offset) {
+> >                 symbol_conf.annotate_data_member = true;
+> > @@ -4040,6 +4129,7 @@ static bool get_elide(int idx, FILE *output)
+> >         case HISTC_DSO:
+> >                 return __get_elide(symbol_conf.dso_list, "dso", output);
+> >         case HISTC_COMM:
+> > +       case HISTC_COMM_IGNORE_DIGIT:
+> >                 return __get_elide(symbol_conf.comm_list, "comm", output);
+> >         default:
+> >                 break;
+> > diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> > index d7787958e06b9..6819934b4d48a 100644
+> > --- a/tools/perf/util/sort.h
+> > +++ b/tools/perf/util/sort.h
+> > @@ -43,6 +43,7 @@ enum sort_type {
+> >         /* common sort keys */
+> >         SORT_PID,
+> >         SORT_COMM,
+> > +       SORT_COMM_IGNORE_DIGIT,
+> >         SORT_DSO,
+> >         SORT_SYM,
+> >         SORT_PARENT,
+> > --
+> > 2.47.3
+> >
