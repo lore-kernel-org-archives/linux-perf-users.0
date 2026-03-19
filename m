@@ -1,117 +1,247 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1489389E1F;
-	Thu, 19 Mar 2026 08:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC193BE15D;
+	Thu, 19 Mar 2026 10:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773910098; cv=none; b=rolqEJW39Vx2Oi+vi8IcKFrtoyzqMKD6ZKRiobPMWxwbA+1PRJx3ufuThjrLBPfrdimpQTjGk4c0i+vcQv9yZ7bwUPP+S5qN6F7doBnwmnxHbK7bsZSH7FaPRcuIRyPO6fdra7XK2wm/Nv4/dThhxInLXlLrSZlQAOF9mn5r8WA=
+	t=1773915823; cv=none; b=i9/PxGAY9ssZ+VL63jXnS3XZYAaoeMKclbFYS1HwwpQiFy08fw3XmNIRPnn81TTwdUlITxLKHaXRO/6eppNH3vyEUjucj4YLhK5qzY9iyLKNCqTgZnNXjIajXQCIbP7KwPc6yHSXmcxlYYrLeodWzyA7SwLYaEIInSnYWUFaXiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773910098; c=relaxed/simple;
-	bh=955ZIVhYtNpJ59DyTrQSQhtcl+EmqAghs45/hrOI47s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gIxx6/dMFSCGGLabL2e/xdxjLvldW9wCyfejT9+Cf5mD0aLBFYDnFgzCEAa+c/rL76n/lBAsoNH3yHT6ubEt+WvtMIPwwbe9MobydoH22EIc8f09+yBboSCNeZ3z4kXO9Z/NtxZP3kspTy1H0Hkkk2GSegDJYtBBt3w2MAn/JJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KzibydEm; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1773915823; c=relaxed/simple;
+	bh=Yh7lW9dpGdQudp7VsYTchDBsa/EIimbPWcjlbK66Fqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UaJpALgrjE6Nih4tCPISQM9fJ+iTQVjxGTspbVcnh1eigTNNwZRTDP/cq8S3LqUpv4p9qS7+W0CQmie1V4okCfjaJPNFIProvLLSqkHP1ZVksTK9NlGQxt1td1oIsY3QuooXUp6aFZgvNyIoijzWMiCpwyIuo1WmrsSBDbk2i4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=eo/RtRM8; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KzibydEm"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62IKB3MU940706;
-	Thu, 19 Mar 2026 08:48:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=JU5l0Jj02SsqHfskF5jjmP2Wg7c+Zxu3xhbWXIqdD
-	TE=; b=KzibydEmGvqG50UwU3PX9g6eqviRc1oeoLOi6l1LNq+HvY2PFa9Tq1uQw
-	rD9u8EOgx3fCLwTHwcfrew6zAtSlOLwffM3PWfbM6XXzwu0v4P8VlqfrP0+WeiOX
-	Arlrl2ZMRp6h4j6eFDlYKHLt/GDbJ+lcA9LLFrdi17xi0aZkAwOl4sJ/GKg2SJfm
-	gy9fo9sN2f8udIbuCbUvTI7m25QVOncMAAjfemIACGuNRcBogC+3LMApfGbzN3LH
-	m2KXdxpzU13F0kyTyebbH3oKzWX21Xu+zj9OUgqiuYT6EuXd00kmiJ1tzfzF0ScP
-	t8hdfGSi9mXpuWnUZqq8j9Xl2tzWA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvybse1xr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Mar 2026 08:48:09 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62J5cTAo032333;
-	Thu, 19 Mar 2026 08:48:09 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwm7k1hqq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Mar 2026 08:48:08 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62J8m0Ts46399990
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Mar 2026 08:48:00 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3FA572004B;
-	Thu, 19 Mar 2026 08:48:00 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 07A992005A;
-	Thu, 19 Mar 2026 08:48:00 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 19 Mar 2026 08:47:59 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com
-Subject: [PATCH v5 0/1] perf record: Add support for arch_sdt_arg_parse_op() on s390
-Date: Thu, 19 Mar 2026 09:47:53 +0100
-Message-ID: <20260319084754.3838828-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="eo/RtRM8"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=TaNJoLKgo6ZalflRL4yYXl67XeCLQ0wZuEpo2RuxMEY=;
+	b=eo/RtRM82KF7IVPNSdmoKfcZY8Gjrrobs04J+UvvFfrBeTlgi3RNdw5ZP+ZNPvD19xrsGyW+N
+	PbdcUSHd/Awjoocexgxv+zvEQ9x6xtdg3+lvLd3uVYxjZEoH09obppYGy4kBvDdkBmKzKnqfCw8
+	+feQjSbpryuGo2Y0r+DiYFo=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fc1qp2cTCzmV6M;
+	Thu, 19 Mar 2026 18:18:30 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 81DE74055B;
+	Thu, 19 Mar 2026 18:23:31 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 19 Mar 2026 18:23:30 +0800
+Message-ID: <7f333498-4bed-4784-999f-7ee96dc63fd8@huawei.com>
+Date: Thu, 19 Mar 2026 18:23:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=MMttWcZl c=1 sm=1 tr=0 ts=69bbb84a cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=ZNFJW8Vw3D9jWG06bIQA:9
-X-Proofpoint-ORIG-GUID: 3ePFdRpvdVLUoF2dWq9QzJTx9ssMngLo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDA2OCBTYWx0ZWRfX5BpdOIgkL78a
- zBwq1f1EMvXzZx6Ga+TYoPLIISg3xqW/NBe89HjSnbokSJEf3mQQRFnqmAVkBEmpHqEV6qxE9k5
- aLtki5m5zaZGz+ZBtG5bmvFhG9bXCl9gBfM45jT2feB0AqMU4rhb+LsBWAV07pTC9FIJYh6+BuM
- e+W8GAirj86/DoJ/SwsXKMs1f6AGcT8AgTLG0GF4DKXdWqpFlZ5t/K8ZpQxXqVBd6dJ3sSDZZUr
- P5hLnCm6miITsuN86pYzgnbHBZIGllmELLoBOd9noex7DH61O3mMcVPezn+f8Ml4gVMDLVLMmIE
- WV7ceLZZGHpT8U5Q/URifN7FYac6HWpQxGNoRcY5kGja88RZg8o7WTfclgoAagaJMHF1C2KXuxk
- eyb9B1f8Iy9BtkmLNre6EGTFc5dOzdEcN2CI3ZVgvCjvKxZpKf1qv6ioVV50lXzVy6r+atvkWKh
- fgvNQAapMuh7izvjFlw==
-X-Proofpoint-GUID: gDLl_13xqtNl2wHd4wG7HfLLm1SkQaTm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-19_01,2026-03-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603190068
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] perf: Add --pmu-filter option for filtering PMUs
+To: Namhyung Kim <namhyung@kernel.org>, <irogers@google.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<wangyushan12@huawei.com>, <hejunhao3@h-partners.com>,
+	<jonathan.cameron@huawei.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<adrian.hunter@intel.com>, <james.clark@linaro.org>, <linuxarm@huawei.com>
+References: <20260310040607.1780971-1-xiaqinxin@huawei.com>
+ <20260310040607.1780971-2-xiaqinxin@huawei.com> <abMA1UTdr7k16_IK@google.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <abMA1UTdr7k16_IK@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-V5: Add comments from Ian and Sashiko:
-    Moved version history to cover letter
-    Added missing comment line +NUM(%rREG).
-V4: Add comments from Ian and Sashiko:
-    Reset variable initialized to zero on error
-    Rework regular expression and reduce to one case.
-V3: Add comments from Ian
-    Print register expression without leading 'r' (wrong).
-V2: Add comments from Sumanth Koirkkar
 
-Thomas Richter (1):
-  perf record: Add support for arch_sdt_arg_parse_op() on s390
+On 2026/3/13 02:07:17, Namhyung Kim <namhyung@kernel.org> wrote:
+> On Tue, Mar 10, 2026 at 12:06:07PM +0800, Qinxin Xia wrote:
+>> This patch adds a new --pmu-filter option to perf-stat command to allow
+>> filtering events on specific PMUs. This is useful when there are
+>> multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
+>>
+>> [root@localhost tmp]# perf stat -M cpa_p0_avg_bw
+>>   Performance counter stats for 'system wide':
+>>
+>>      19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
+>>          75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
+>>          18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
+>>      19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
+>>                   0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
+>>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
+>>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
+>>
+>>        19.417734480 seconds time elapsed
+>>
+>> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
+>>   Performance counter stats for 'system wide':
+>>
+>>       6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
+>>          50,548,465      cpa_p0_wr_dat
+>>           7,552,182      cpa_p0_rd_dat_64b
+>>                   0      cpa_p0_rd_dat_32b
+>>
+>>         6.234139320 seconds time elapsed
+> 
+> Ian, can you please take a look at this?
+> 
+> Thanks,
+> Namhyung
+> 
+>>
+>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>> ---
+>>   tools/perf/Documentation/perf-stat.txt |  4 ++++
+>>   tools/perf/builtin-stat.c              | 19 +++++++++++++++++++
+>>   tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
+>>   tools/perf/util/parse-events.c         |  2 +-
+>>   4 files changed, 37 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 7cccc3a847d1..b72a29c9223c 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
+>>   Only enable events on applying cpu with this type for hybrid platform
+>>   (e.g. core or atom)"
+>>   
+>> +--pmu-filter::
+>> +Only enable events on applying pmu with specified for multiple
+>> +pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
+>> +
+>>   EXAMPLES
+>>   --------
+>>   
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 73c2ba7e3076..69c83a5beb71 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -1214,6 +1214,21 @@ static int parse_cputype(const struct option *opt,
+>>   	return 0;
+>>   }
+>>   
+>> +static int parse_pmu_filter(const struct option *opt,
+>> +			   const char *str,
+>> +			   int unset __maybe_unused)
+>> +{
+>> +	struct evlist *evlist = *(struct evlist **)opt->value;
+>> +
+>> +	if (!list_empty(&evlist->core.entries)) {
+>> +		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
+>> +		return -1;
+>> +	}
+>> +
+>> +	parse_events_option_args.pmu_filter = str;
+>> +	return 0;
+>> +}
+>> +
+>>   static int parse_cache_level(const struct option *opt,
+>>   			     const char *str,
+>>   			     int unset __maybe_unused)
+>> @@ -2561,6 +2576,10 @@ int cmd_stat(int argc, const char **argv)
+>>   			"Only enable events on applying cpu with this type "
+>>   			"for hybrid platform (e.g. core or atom)",
+>>   			parse_cputype),
+>> +		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
+>> +			"Only enable events on applying pmu with specified "
+>> +			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
+>> +			parse_pmu_filter),
+>>   #ifdef HAVE_LIBPFM
+>>   		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
+>>   			"libpfm4 event selector. use 'perf list' to list available events",
+>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+>> index 46bf4dfeebc8..89b83ca38483 100644
+>> --- a/tools/perf/util/metricgroup.c
+>> +++ b/tools/perf/util/metricgroup.c
+>> @@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
+>>   				      const char *metric_or_groups)
+>>   {
+>>   	const char *pm_pmu = pm->pmu ?: "cpu";
+>> +	struct perf_pmu *perf_pmu = NULL;
+>>   
+>> -	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
+>> +	if (pm->pmu)
+>> +		perf_pmu = perf_pmus__find(pm->pmu);
+>> +
+>> +	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
+>> +	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
+>>   		return false;
+>>   
+>>   	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
+>> @@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+>>   static int parse_ids(bool metric_no_merge, bool fake_pmu,
+>>   		     struct expr_parse_ctx *ids, const char *modifier,
+>>   		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
+>> -		     struct evlist **out_evlist)
+>> +		     struct evlist **out_evlist,
+>> +		     const char *filter_pmu)
+>>   {
+>>   	struct parse_events_error parse_error;
+>>   	struct evlist *parsed_evlist;
+>> @@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
+>>   	}
+>>   	pr_debug("Parsing metric events '%s'\n", events.buf);
+>>   	parse_events_error__init(&parse_error);
+>> -	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
+>> +	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
+>>   			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
+>>   			     /*fake_tp=*/false);
+>>   	if (ret) {
+>> @@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
+>>   					/*modifier=*/NULL,
+>>   					/*group_events=*/false,
+>>   					tool_events,
+>> -					&combined_evlist);
+>> +					&combined_evlist,
+>> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+>>   		}
+>>   		if (combined)
+>>   			expr__ctx_free(combined);
+>> @@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
+>>   		}
+>>   		if (!metric_evlist) {
+>>   			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+>> -					m->group_events, tool_events, &m->evlist);
+>> +					m->group_events, tool_events, &m->evlist,
+>> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
+>>   			if (ret)
+>>   				goto out;
+>>   
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>> index b9efb296bba5..789ff4d15e47 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -429,7 +429,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
+>>   	if (parse_state->pmu_filter == NULL)
+>>   		return false;
+>>   
+>> -	return strcmp(parse_state->pmu_filter, pmu->name) != 0;
+>> +	return perf_pmu__wildcard_match(pmu, parse_state->pmu_filter) == 0;
+>>   }
+>>   
+>>   static int parse_events_add_pmu(struct parse_events_state *parse_state,
+>> -- 
+>> 2.33.0
+>>
+> 
 
- .../perf/util/perf-regs-arch/perf_regs_s390.c | 78 +++++++++++++++++++
- tools/perf/util/perf_regs.c                   |  3 +
- tools/perf/util/perf_regs.h                   |  1 +
- 3 files changed, 82 insertions(+)
-
+Gentle ping.
 -- 
-2.53.0
+Thanks,
+Qinxin
 
