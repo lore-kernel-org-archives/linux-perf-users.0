@@ -1,65 +1,65 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1413FB06C
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990EB3F8E09
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773962642; cv=none; b=r7F0dEm2GDodBKKl8xStZlv+m22LhwjZcJ+YDw/ZrWBmgockWMz5nd3zzed5p+pYpZqNbd8MQ/7SXYQSDacUa60IF1dHUzb7kFq5oQNo6flp81H1mpjPTuk0cT6epDg2Ud42vDbZ32N8OXY1feFfHjyPvYGAlqYBcVjf4UwTthQ=
+	t=1773962644; cv=none; b=PXUFOupvWTHfALUQFvbPZPwmvpjjXnFwlwwvz/YOqVkTZUu8Fw4j7a3dijHHBKv2i6lDLkmVB38pJrZMltELwAue1+vwNp/CJMBjzh03pez1dd1lOvtoFDMWT8G38EYWP2WdsemRGlJnHDVD/NGAcgcdD1ix6VQzohWYDGH6r9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773962642; c=relaxed/simple;
-	bh=fyBLBJtFWLrCoT30aL2/hhfXjNw0FtIgx5j18nj7m44=;
+	s=arc-20240116; t=1773962644; c=relaxed/simple;
+	bh=p+8j09y1FyGo9ACvwOtcz+yNEqZiJ3Fz0Rzzqj3M3sg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r808j49+larTvqlHQHjXURHBkhDQOb+ewmq/896dQSBFwxd2OVzhGc2Y1XuAiwYfHy1EH/RYkg+RF+cEFyGgd+TA8GunB5ljqU+/vvNgRs5386QTnWMW6D42AX9RDcpGaZPsuLXZlJzkuK0XogVZjvRJBgFfT9csCQTUmZ0H8F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h95mwr7L; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=jYqRUnbC2QT6M7BlBTb3ISxxypdO0D9S7ke7GQ2fPCE3MWox9oKrfJCN4XSIjXtGftY3ZbGskNLbSKl2IKHS3bSUYofEaw63IzBYFckC6K+xBqwGBByL64LrPhwCzv7Pm9XQTtCwF7ExDrfXPv6vR9j2pp6tgs1kDTwDIgFo8Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWF4xwI1; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h95mwr7L"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1276e71652fso70201c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWF4xwI1"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12737f276a2so1389615c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773962639; x=1774567439; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773962642; x=1774567442; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OMxs+MiOwNOIbq145/xttpf/Gy8y4MNEvWrxQX3EgtY=;
-        b=h95mwr7La2YR3Y8BKkRlchMCHSSROyaqV+xycAlULvnrJxK4KHZc7LjbVCgIQrg/7x
-         ALIdNYsH4exH5kQ1HKpZAh495AF1Op5nsaoCMzCGkGZaMLDjudjSDVP0plrvGzUL2edH
-         Uis1dTv6QEXjD/As7yjqOPNgweZAQrxax1u4EgZ09OtHZBc87OfYOgClYny33rzAmEUV
-         dkH7PhhFA/fo/Gwl/SxwMpEG/xGrpVhyU/UA2M43DyOB2FjwXQiCzgetx7GylhHGdhiQ
-         x+kh8by/0CAQZTvb/ExMRj63q2Ft3u9nh0u8I9vKEw32itj+iXMJYX5WP1KyEEWgYWzT
-         ziOA==
+        bh=fGwLOw5TQbWpR3/XxIqkjD3gfTI56RqD3egsR4RKFmo=;
+        b=dWF4xwI1rY7lOoHSHonmV0VHbNZ0OEJ6E0bB/t5ZKieY6FpmUUNIp+JqEV+H0KzLmV
+         /9gVsxxf/o3WnCtduK8DlknF3kkR3wElITgyOtYqmMJWWcC8Nxl61Fp2W+DZXHEdYSAL
+         aqVESeDZjUkP/gbCk8lhvh2zkNePmfSoLdduK4/LJnodIvCF+fkSZRVupm9aDlZj6fvY
+         u/2jNgfBBGBr+7pX0vVHI3Hmlb6UUQAbNOjztlx6/GWMjkPpfxvu/Gd8+0edX4uO6dry
+         guIV17EEdU5AasMfsBlU+G4EL/GIm1nlhEQzXjEMETM+/VBfoVJjaCHAJl5UmPreuTN1
+         5iYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773962639; x=1774567439;
+        d=1e100.net; s=20251104; t=1773962642; x=1774567442;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OMxs+MiOwNOIbq145/xttpf/Gy8y4MNEvWrxQX3EgtY=;
-        b=RXGQDfKOTnFB13B+Dmpv3bfOKnr66LF7XJ/L+03WrgQnY1x4YfykznFiNCrjBG9EEU
-         VlTfy27MTBAurWM/rgrZSOUUaKQVJjeOaobcwIQTSi17cv/YnBDibdT7WFiP82ztWmxi
-         qkllrMnOc15sjSBOPMVVryThCLXDfiTJx6suFbUpbePCOJgsXz4q6gJACc/RuRDDbflI
-         UbjoYwWlos7juNmVChWnDTn74NxR6HHWptYQG7i/IE76cjsN/xcyWl1ruHKloceNK7GE
-         l7tGaS74+d+sf7r6Cw7nKQctyXwnGATMrdWhSb+qMoz4bzDv72p1tk033JgGYFyba3fJ
-         OqlA==
-X-Forwarded-Encrypted: i=1; AJvYcCW47mFExnxTrzhSfrCWHhTjHwzlAvAHtN4M+NdMT7feM/MGcyIMfmh5CVwfW0Js7YL4NMbYu92m6HH9Bhf3Wlwb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXrY00vK0KbOw5q3pHHWZNDZtiuhBwsgOPzNO70FgLTofBjYZb
-	JkIoX0/npF841nE0eXVlPUg5uAB8uDMZBR4e967vbonSIjApsPtOrEyt9w1kCnpheEzTKlkCYl8
-	uyih/VfL0+Q==
-X-Received: from dlee11.prod.google.com ([2002:a05:7022:628b:b0:128:cf86:d1c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1b09:b0:12a:6ab7:3f71
- with SMTP id a92af1059eb24-12a7264eb70mr498857c88.7.1773962639024; Thu, 19
- Mar 2026 16:23:59 -0700 (PDT)
-Date: Thu, 19 Mar 2026 16:23:09 -0700
-In-Reply-To: <20260209174032.4142096-1-irogers@google.com>
+        bh=fGwLOw5TQbWpR3/XxIqkjD3gfTI56RqD3egsR4RKFmo=;
+        b=hGzjTIyoeZmYzactZHX4FkOBeZFNP8BAQCjps9+GYNnPtmOG2CUh5y1Avi8i8RCGHM
+         l/NUCkmJdRGDxAsJSwcu7EFFUliXioo/fLwBHdMWk4KjzOz4Bouh4Bg09BhOgaDsefFx
+         Kj6tWDD7/mso5qdXkgkSH2bbUCHYYuJCZEmdum0HrRpocyjhvfWLjjkPQ4lluGZ2mdco
+         XggmuEeCR/XHENo+jciahA4QIcttoB01bdhues5BgGJxw5dwbRQmzsvh4+zqPfw6fseM
+         e+AK6jNhdULDOXlzNuZCqhn/D1ZUwmohCAIpXBe4PLfVRPfm23zpn2mVPysFd+8Egg58
+         uZeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXu33DYGZD1tYVtbb2tDsfSgA7FVaMBJdkkCjPM6Bypf2IqmKXa8etgV9sH9WraMEukZpRZWxymzKjWF/bwGZyj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj0FfkZk+i8yllhT0+TMQdlYW4Wp5lsLRYjd+anS0oF6x6tQ75
+	ycCG6ZT6zHqpKw37CzHUfghFeyqCwJw5vrtDk/rGvPZ3st+R/ErFGIOtO7Wm8APL+IJ3LEWPfhR
+	Id/7oRg/UPQ==
+X-Received: from dlbqq5.prod.google.com ([2002:a05:7022:ed05:b0:128:eccd:75b3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:220c:b0:12a:67b7:53f8
+ with SMTP id a92af1059eb24-12a7263d550mr536013c88.8.1773962641535; Thu, 19
+ Mar 2026 16:24:01 -0700 (PDT)
+Date: Thu, 19 Mar 2026 16:23:10 -0700
+In-Reply-To: <20260319232334.287517-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260209174032.4142096-1-irogers@google.com>
+References: <20260209174032.4142096-1-irogers@google.com> <20260319232334.287517-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260319232334.287517-1-irogers@google.com>
-Subject: [PATCH v2 00/25] perf tool: Add evsel to perf_sample
+Message-ID: <20260319232334.287517-2-irogers@google.com>
+Subject: [PATCH v2 01/25] perf sample: Document struct perf_sample
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,119 +76,172 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Nearly all perf code ends up passing an evsel with the perf_sample,
-which is problematic if you want to rewrite the evsel such as with
-off-CPU processing - all uses of the evsel need fixing up. Previously
-I'd mailed this patch as an RFC with everything combined:
-https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
-and there was a request to break it up.
+Add kernel-doc for struct perf_sample capturing the somewhat unusual
+population of fields and lifetime relationships.
 
-I've started the series by adding documentation to struct
-perf_sample. Next I fixed missing perf_sample__init/exit largely from
-the recent perf inject callchain rewriting work. The 3rd patch adds
-the evsel to struct perf_sample and ensures it is correctly
-initialized. The next 22 patches avoid passing the evsel along with
-sample for different parts of the perf tool, along with some minor
-tweaks like constification and not determining the evsel if it is
-present in the sample.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/sample.h | 110 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 106 insertions(+), 4 deletions(-)
 
-v1: Add review feedback on the first 2 patches from Namhyung, fix a
-    missed evsel assignment running event2evsel in builtin-inject.
-https://lore.kernel.org/lkml/20260209174032.4142096-1-irogers@google.com/
-
-Ian Rogers (25):
-  perf sample: Document struct perf_sample
-  perf sample: Make sure perf_sample__init/exit are used
-  perf sample: Add evsel to struct perf_sample
-  perf tool: Remove evsel from tool APIs that pass the sample
-  perf kvm: Don't pass evsel with sample
-  perf evsel: Refactor evsel__intval to perf_sample__intval
-  perf trace: Don't pass evsel with sample
-  perf callchain: Don't pass evsel and sample
-  perf lock: Only pass sample to handlers
-  perf lock: Constify trace_lock_handler variables
-  perf hist: Remove evsel parameter from inc samples functions
-  perf db-export: Remove evsel from struct export_sample
-  perf hist: Remove evsel from struct hist_entry_iter
-  perf report: Directly use sample->evsel to avoid computing from
-    sample->id
-  perf annotate: Don't pass evsel to add_sample
-  perf inject: Don't pass evsel with sample
-  perf kmem: Don't pass evsel with sample
-  perf kwork: Don't pass evsel with sample
-  perf sched: Don't pass evsel with sample
-  perf timechart: Don't pass evsel with sample
-  perf trace: Don't pass evsel with sample
-  perf evlist: Try to avoid computing evsel from sample
-  perf script: Don't pass evsel with sample
-  perf s390-sample-raw: Don't pass evsel with sample
-  perf evsel: Don't pass evsel with sample
-
- tools/perf/builtin-annotate.c                 |  28 ++-
- tools/perf/builtin-c2c.c                      |   6 +-
- tools/perf/builtin-diff.c                     |   5 +-
- tools/perf/builtin-inject.c                   |  79 ++++----
- tools/perf/builtin-kmem.c                     |  58 +++---
- tools/perf/builtin-kvm.c                      |  22 +--
- tools/perf/builtin-kwork.c                    | 104 ++++------
- tools/perf/builtin-lock.c                     | 117 +++++------
- tools/perf/builtin-mem.c                      |   1 -
- tools/perf/builtin-record.c                   |   3 +-
- tools/perf/builtin-report.c                   |  38 ++--
- tools/perf/builtin-sched.c                    | 183 ++++++++----------
- tools/perf/builtin-script.c                   |  26 ++-
- tools/perf/builtin-timechart.c                |  76 +++-----
- tools/perf/builtin-top.c                      |  19 +-
- tools/perf/builtin-trace.c                    | 103 +++++-----
- tools/perf/tests/hists_cumulate.c             |   3 +-
- tools/perf/tests/hists_filter.c               |   2 +-
- tools/perf/tests/hists_output.c               |   3 +-
- tools/perf/tests/mmap-basic.c                 |   4 +-
- tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
- tools/perf/tests/switch-tracking.c            |   9 +-
- tools/perf/util/annotate.c                    |  19 +-
- tools/perf/util/annotate.h                    |   6 +-
- tools/perf/util/build-id.c                    |   3 +-
- tools/perf/util/build-id.h                    |   7 +-
- tools/perf/util/callchain.c                   |   8 +-
- tools/perf/util/callchain.h                   |   5 +-
- tools/perf/util/data-convert-bt.c             |   2 +-
- tools/perf/util/data-convert-json.c           |   5 +-
- tools/perf/util/db-export.c                   |  13 +-
- tools/perf/util/db-export.h                   |   3 +-
- tools/perf/util/evlist.c                      |   5 +-
- tools/perf/util/evsel.c                       |  60 +++---
- tools/perf/util/evsel.h                       |  12 +-
- tools/perf/util/hist.c                        |  26 +--
- tools/perf/util/hist.h                        |   3 +-
- tools/perf/util/intel-pt.c                    |  12 +-
- tools/perf/util/intel-tpebs.c                 |   3 +-
- tools/perf/util/jitdump.c                     |   2 +-
- .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
- .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
- .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
- .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 +++----
- tools/perf/util/kvm-stat.c                    |  19 +-
- tools/perf/util/kvm-stat.h                    |  18 +-
- tools/perf/util/kwork.h                       |   9 +-
- tools/perf/util/machine.c                     |  14 +-
- tools/perf/util/machine.h                     |   3 -
- tools/perf/util/s390-sample-raw.c             |  15 +-
- tools/perf/util/sample.c                      |  10 +-
- tools/perf/util/sample.h                      | 113 ++++++++++-
- .../util/scripting-engines/trace-event-perl.c |  23 +--
- .../scripting-engines/trace-event-python.c    |  47 ++---
- tools/perf/util/session.c                     |  74 ++++---
- tools/perf/util/synthetic-events.c            |   9 +-
- tools/perf/util/synthetic-events.h            |   2 -
- tools/perf/util/tool.c                        |   4 +-
- tools/perf/util/tool.h                        |   4 +-
- tools/perf/util/trace-event-scripting.c       |   5 +-
- tools/perf/util/trace-event.h                 |   3 -
- 63 files changed, 792 insertions(+), 825 deletions(-)
-
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 3cce8dd202aa..88ff154b630c 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -81,47 +81,149 @@ struct simd_flags {
+ #define SIMD_OP_FLAGS_PRED_PARTIAL	0x01	/* partial predicate */
+ #define SIMD_OP_FLAGS_PRED_EMPTY	0x02	/* empty predicate */
+ 
++/**
++ * struct perf_sample
++ *
++ * A sample is generally filled in by evlist__parse_sample/evsel__parse_sample
++ * which fills in the variables from a "union perf_event *event" which is data
++ * from a perf ring buffer or perf.data file. The "event" sample is variable in
++ * length as determined by the perf_event_attr (in the evsel) and details within
++ * the sample event itself. A struct perf_sample avoids needing to care about
++ * the variable length nature of the original event.
++ *
++ * To avoid being excessively large parts of the struct perf_sample are pointers
++ * into the original sample event. In general the lifetime of a struct
++ * perf_sample needs to be less than the "union perf_event *event" it was
++ * derived from.
++ *
++ * The struct regs_dump user_regs and intr_regs are lazily allocated again for
++ * size reasons, due to them holding a cache of looked up registers. The
++ * function pair of perf_sample__init and perf_sample__exit correctly initialize
++ * and clean up these values.
++ */
+ struct perf_sample {
++	/** @ip: The sample event PERF_SAMPLE_IP value. */
+ 	u64 ip;
+-	u32 pid, tid;
++	/** @pid: The sample event PERF_SAMPLE_TID pid value. */
++	u32 pid;
++	/** @tid: The sample event PERF_SAMPLE_TID tid value. */
++	u32 tid;
++	/** @time: The sample event PERF_SAMPLE_TIME value. */
+ 	u64 time;
++	/** @addr: The sample event PERF_SAMPLE_ADDR value. */
+ 	u64 addr;
++	/** @id: The sample event PERF_SAMPLE_ID value. */
+ 	u64 id;
++	/** @stream_id: The sample event PERF_SAMPLE_STREAM_ID value. */
+ 	u64 stream_id;
++	/** @period: The sample event PERF_SAMPLE_PERIOD value. */
+ 	u64 period;
++	/** @weight: Data determined by PERF_SAMPLE_WEIGHT or PERF_SAMPLE_WEIGHT_STRUCT. */
+ 	u64 weight;
++	/** @transaction: The sample event PERF_SAMPLE_TRANSACTION value. */
+ 	u64 transaction;
++	/** @insn_cnt: Filled in and used by intel-pt. */
+ 	u64 insn_cnt;
++	/** @cyc_cnt: Filled in and used by intel-pt. */
+ 	u64 cyc_cnt;
++	/** @cpu: The sample event PERF_SAMPLE_CPU value. */
+ 	u32 cpu;
++	/**
++	 * @raw_size: The size in bytes of raw data from PERF_SAMPLE_RAW. For
++	 *            alignment reasons this should always be a multiple of
++	 *            sizeof(u64) + sizeof(u32).
++	 */
+ 	u32 raw_size;
++	/** @data_src: The sample event PERF_SAMPLE_DATA_SRC value. */
+ 	u64 data_src;
++	/** @phys_addr: The sample event PERF_SAMPLE_PHYS_ADDR value. */
+ 	u64 phys_addr;
++	/** @data_page_size: The sample event PERF_SAMPLE_DATA_PAGE_SIZE value. */
+ 	u64 data_page_size;
++	/** @code_page_size: The sample event PERF_SAMPLE_CODE_PAGE_SIZE value. */
+ 	u64 code_page_size;
++	/** @cgroup: The sample event PERF_SAMPLE_CGROUP value. */
+ 	u64 cgroup;
++	/** @flags: Extra flag data from auxiliary events like intel-pt. */
+ 	u32 flags;
++	/** @machine_pid: The guest machine pid derived from the sample id. */
+ 	u32 machine_pid;
++	/** @vcpu: The guest machine vcpu derived from the sample id. */
+ 	u32 vcpu;
++	/**
++	 * @insn_len: Instruction length from auxiliary events like
++	 *            intel-pt. The instruction itself is held in insn.
++	 */
+ 	u16 insn_len;
++	/**
++	 * @cpumode: The cpumode from struct perf_event_header misc variable
++	 *           masked with CPUMODE_MASK. Gives user, kernel and hypervisor
++	 *           information.
++	 */
+ 	u8  cpumode;
++	/** @misc: The entire struct perf_event_header misc variable. */
+ 	u16 misc;
++	/**
++	 * @ins_lat: Instruction latency information from weight2 in
++	 *           PERF_SAMPLE_WEIGHT_STRUCT or auxiliary events like
++	 *           intel-pt.
++	 */
+ 	u16 ins_lat;
+-	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
++	/**
++	 * @weight3: From PERF_SAMPLE_WEIGHT_STRUCT. On x86 holds retire_lat, on
++	 *           powerpc holds p_stage_cyc.
++	 */
+ 	u16 weight3;
+-	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
+-	bool deferred_callchain;	/* Has deferred user callchains */
++	/**
++	 * @no_hw_idx: For PERF_SAMPLE_BRANCH_STACK, true when
++	 *             PERF_SAMPLE_BRANCH_HW_INDEX isn't set.
++	 */
++	bool no_hw_idx;
++	/**
++	 * @deferred_callchain: When processing PERF_SAMPLE_CALLCHAIN a deferred
++	 *                      user callchain marker was encountered. When set
++	 *                      the callchain entry is allocated.
++	 */
++	bool deferred_callchain;
++	/**
++	 * @deferred_cookie: Identifier of the deferred callchain in the later
++	 *                   PERF_RECORD_CALLCHAIN_DEFERRED event.
++	 */
+ 	u64 deferred_cookie;
++	/** @insn: A copy of the sampled instruction filled in by perf_sample__fetch_insn. */
+ 	char insn[MAX_INSN];
++	/** @raw_data: Pointer into the original event for PERF_SAMPLE_RAW data. */
+ 	void *raw_data;
++	/**
++	 * @callchain: Pointer into the original event for PERF_SAMPLE_CALLCHAIN
++	 *             data. If deferred_callchain is not set, it just points to
++	 *             data in the mmap buffer and it should not be freed.
++	 */
+ 	struct ip_callchain *callchain;
++	/** @branch_stack: Pointer into the original event for PERF_SAMPLE_BRANCH_STACK data. */
+ 	struct branch_stack *branch_stack;
++	/**
++	 * @branch_stack_cntr: Pointer into the original event for
++	 *                     PERF_SAMPLE_BRANCH_COUNTERS data.
++	 */
+ 	u64 *branch_stack_cntr;
++	/** @user_regs: Values and pointers into the sample for PERF_SAMPLE_REGS_USER. */
+ 	struct regs_dump  *user_regs;
++	/** @intr_regs: Values and pointers into the sample for PERF_SAMPLE_REGS_INTR. */
+ 	struct regs_dump  *intr_regs;
++	/** @user_stack: Size and pointer into the sample for PERF_SAMPLE_STACK_USER. */
+ 	struct stack_dump user_stack;
++	/**
++	 * @read: The sample event PERF_SAMPLE_READ counter values. The valid
++	 *        values depend on the attr.read_format PERF_FORMAT_ values.
++	 */
+ 	struct sample_read read;
++	/**
++	 * @aux_sample: Similar to raw data but with a 64-bit size and
++	 *              alignment, PERF_SAMPLE_AUX data.
++	 */
+ 	struct aux_sample aux_sample;
++	/** @simd_flags: SIMD flag information from ARM SPE auxiliary events. */
+ 	struct simd_flags simd_flags;
+ };
+ 
 -- 
 2.53.0.959.g497ff81fa9-goog
 
