@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990EB3F8E09
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7F64014B1
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773962644; cv=none; b=PXUFOupvWTHfALUQFvbPZPwmvpjjXnFwlwwvz/YOqVkTZUu8Fw4j7a3dijHHBKv2i6lDLkmVB38pJrZMltELwAue1+vwNp/CJMBjzh03pez1dd1lOvtoFDMWT8G38EYWP2WdsemRGlJnHDVD/NGAcgcdD1ix6VQzohWYDGH6r9I=
+	t=1773962646; cv=none; b=LKGR58u8j27WHZSXMQinlCKtwf/qnwVKf4CZdfR1yzK97hzzthc1gEZ12VSmEGTyX8ANtGkkU8P+uQ47anaM/7+2dRMT2BxR9PLc0VOitSyE9efmXQ2+JySnBkfeelCP4WGvCBwMVkr6sIz3TAQLYupcAdEp0bFID81+aFVmukg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773962644; c=relaxed/simple;
-	bh=p+8j09y1FyGo9ACvwOtcz+yNEqZiJ3Fz0Rzzqj3M3sg=;
+	s=arc-20240116; t=1773962646; c=relaxed/simple;
+	bh=da9kZFbgZ2WPtd5VACLt5Kz4GVNFk2cHHuwtri+vAe4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jYqRUnbC2QT6M7BlBTb3ISxxypdO0D9S7ke7GQ2fPCE3MWox9oKrfJCN4XSIjXtGftY3ZbGskNLbSKl2IKHS3bSUYofEaw63IzBYFckC6K+xBqwGBByL64LrPhwCzv7Pm9XQTtCwF7ExDrfXPv6vR9j2pp6tgs1kDTwDIgFo8Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWF4xwI1; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=PggmUJ7drGrWDOBYgbLtGMN6VDhNEzYMBIPXqxMrMPSIlNVIu7jTt4H140VaOVwl/07u29+KT+Wou9CsLty9pC85I1VznwdbRANKVfu7Sk6Akv7URpgL5kqAqOXvanxnELIwechKIwrffp0n7LknxTbb3KFq2Gb71i2T2i3SzEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l5DD8QZR; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWF4xwI1"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12737f276a2so1389615c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l5DD8QZR"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35ba237d2a1so1197053a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773962642; x=1774567442; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773962644; x=1774567444; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGwLOw5TQbWpR3/XxIqkjD3gfTI56RqD3egsR4RKFmo=;
-        b=dWF4xwI1rY7lOoHSHonmV0VHbNZ0OEJ6E0bB/t5ZKieY6FpmUUNIp+JqEV+H0KzLmV
-         /9gVsxxf/o3WnCtduK8DlknF3kkR3wElITgyOtYqmMJWWcC8Nxl61Fp2W+DZXHEdYSAL
-         aqVESeDZjUkP/gbCk8lhvh2zkNePmfSoLdduK4/LJnodIvCF+fkSZRVupm9aDlZj6fvY
-         u/2jNgfBBGBr+7pX0vVHI3Hmlb6UUQAbNOjztlx6/GWMjkPpfxvu/Gd8+0edX4uO6dry
-         guIV17EEdU5AasMfsBlU+G4EL/GIm1nlhEQzXjEMETM+/VBfoVJjaCHAJl5UmPreuTN1
-         5iYA==
+        bh=rxFBTP7Uc7XGPsqUW2Y55ItggKIIf/Ou02Qa4BUhgvs=;
+        b=l5DD8QZRQFKVbndhNMQSpf6/SAy0CyMV/893i3hTSxIeknmgbpf4CeQLfJPTKrdj4/
+         nL8lIjaQL5I9MVc6eDoivMJiOAfll7+aixK2LtPMM7a8rzfO5RC8RoGJBcn0pRduuP7N
+         hwgPNP18U0yGoAhglxQ8fjfSksGutwZe7uDOEHRI4a8xdkYxkcH6QTpmkJ5htEotTInV
+         GiC7xXkJkt1nq03v8o6i6hvrdFTm/yCDoGu6RB3WvGnQf1yyOXHe5FzPeiwOdoy4vZoy
+         j3Ax9YDb4hU4c6upp4QPqbcQpNotm4AHdL4QwW/zSD+7ri5fHcIUalJlJTZFRKU6dsuk
+         RsBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773962642; x=1774567442;
+        d=1e100.net; s=20251104; t=1773962644; x=1774567444;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGwLOw5TQbWpR3/XxIqkjD3gfTI56RqD3egsR4RKFmo=;
-        b=hGzjTIyoeZmYzactZHX4FkOBeZFNP8BAQCjps9+GYNnPtmOG2CUh5y1Avi8i8RCGHM
-         l/NUCkmJdRGDxAsJSwcu7EFFUliXioo/fLwBHdMWk4KjzOz4Bouh4Bg09BhOgaDsefFx
-         Kj6tWDD7/mso5qdXkgkSH2bbUCHYYuJCZEmdum0HrRpocyjhvfWLjjkPQ4lluGZ2mdco
-         XggmuEeCR/XHENo+jciahA4QIcttoB01bdhues5BgGJxw5dwbRQmzsvh4+zqPfw6fseM
-         e+AK6jNhdULDOXlzNuZCqhn/D1ZUwmohCAIpXBe4PLfVRPfm23zpn2mVPysFd+8Egg58
-         uZeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXu33DYGZD1tYVtbb2tDsfSgA7FVaMBJdkkCjPM6Bypf2IqmKXa8etgV9sH9WraMEukZpRZWxymzKjWF/bwGZyj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj0FfkZk+i8yllhT0+TMQdlYW4Wp5lsLRYjd+anS0oF6x6tQ75
-	ycCG6ZT6zHqpKw37CzHUfghFeyqCwJw5vrtDk/rGvPZ3st+R/ErFGIOtO7Wm8APL+IJ3LEWPfhR
-	Id/7oRg/UPQ==
-X-Received: from dlbqq5.prod.google.com ([2002:a05:7022:ed05:b0:128:eccd:75b3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:220c:b0:12a:67b7:53f8
- with SMTP id a92af1059eb24-12a7263d550mr536013c88.8.1773962641535; Thu, 19
- Mar 2026 16:24:01 -0700 (PDT)
-Date: Thu, 19 Mar 2026 16:23:10 -0700
+        bh=rxFBTP7Uc7XGPsqUW2Y55ItggKIIf/Ou02Qa4BUhgvs=;
+        b=jr5FCbX8qmmGIqpArXegiXnnj+T7BDdn/tq1TlJ9yhyAGNqbK6joF0GXy1/epulLZS
+         DdA42OozgrwFfeag9KRJJEqWJE6OXayTAxrB5HNGSjBr04u8MFp9yxVwNQZjybqqkdnH
+         1PtF6qUwnnLOOkb4MVbEe32nxVqAEjoL3QStQSas+KA3v3c1XUZzyA/VOCSq7W9+SVlV
+         0/Yyr1kC1jV5fgmuxIefhZeGeJ/wMEMfN7Rvrr0e/BhD4DoRTovKgKZdkYYvbSjrYW8z
+         8A/FDbxVa1mWu+f+i27MgAC6ICfdEhoUmQBBOiFhzLmYqBlvXeTHYCV0a52R5dchzDgd
+         Ta1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWfsLe0iY6be1veSmgeD27YcTHz7Js0MxdKtp+JhIlVy1wQVWCWK4IxSSGuHjuE9CQ7GdPs7DEJ6+MwmBfZGASD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSpRMDVKSByhykptv9HciAfvQ7pa/q81pLuAIEwFBU7xfXfaJk
+	nW51PL9QRVsRLAqJFPXigjxYHJRKWZODaTL4YXuBnyvMojE7bVGK3n0oNKi/1w15jp4UJFhbwN+
+	rEsMvoca5+g==
+X-Received: from pjuf2.prod.google.com ([2002:a17:90a:ce02:b0:35b:9e0a:de3f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1a8a:b0:35b:9ab6:1d59
+ with SMTP id 98e67ed59e1d1-35bd27f16abmr650514a91.13.1773962644102; Thu, 19
+ Mar 2026 16:24:04 -0700 (PDT)
+Date: Thu, 19 Mar 2026 16:23:11 -0700
 In-Reply-To: <20260319232334.287517-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260209174032.4142096-1-irogers@google.com> <20260319232334.287517-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260319232334.287517-2-irogers@google.com>
-Subject: [PATCH v2 01/25] perf sample: Document struct perf_sample
+Message-ID: <20260319232334.287517-3-irogers@google.com>
+Subject: [PATCH v2 02/25] perf sample: Make sure perf_sample__init/exit are used
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,172 +76,251 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Add kernel-doc for struct perf_sample capturing the somewhat unusual
-population of fields and lifetime relationships.
+The deferred stack trace code wasn't using perf_sample__init/exit. Add
+the deferred stack trace clean up to perf_sample__exit which requires
+proper NULL initialization in perf_sample__init. Make the
+perf_sample__exit robust to being called more than once by using
+zfree. Make the error paths in evsel__parse_sample exit the sample.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/sample.h | 110 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 106 insertions(+), 4 deletions(-)
+ tools/perf/builtin-inject.c |  5 ++++-
+ tools/perf/util/evlist.c    |  5 ++++-
+ tools/perf/util/evsel.c     | 28 +++++++++++++++++-----------
+ tools/perf/util/sample.c    | 10 ++++++++--
+ tools/perf/util/session.c   | 13 +++++++++----
+ 5 files changed, 42 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 3cce8dd202aa..88ff154b630c 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -81,47 +81,149 @@ struct simd_flags {
- #define SIMD_OP_FLAGS_PRED_PARTIAL	0x01	/* partial predicate */
- #define SIMD_OP_FLAGS_PRED_EMPTY	0x02	/* empty predicate */
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 5b29f4296861..039323908ebf 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -1087,6 +1087,7 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
+ 	struct perf_sample sample_sw;
+ 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+ 	u32 pid = evsel__intval(evsel, sample, "pid");
++	int ret;
  
-+/**
-+ * struct perf_sample
-+ *
-+ * A sample is generally filled in by evlist__parse_sample/evsel__parse_sample
-+ * which fills in the variables from a "union perf_event *event" which is data
-+ * from a perf ring buffer or perf.data file. The "event" sample is variable in
-+ * length as determined by the perf_event_attr (in the evsel) and details within
-+ * the sample event itself. A struct perf_sample avoids needing to care about
-+ * the variable length nature of the original event.
-+ *
-+ * To avoid being excessively large parts of the struct perf_sample are pointers
-+ * into the original sample event. In general the lifetime of a struct
-+ * perf_sample needs to be less than the "union perf_event *event" it was
-+ * derived from.
-+ *
-+ * The struct regs_dump user_regs and intr_regs are lazily allocated again for
-+ * size reasons, due to them holding a cache of looked up registers. The
-+ * function pair of perf_sample__init and perf_sample__exit correctly initialize
-+ * and clean up these values.
-+ */
- struct perf_sample {
-+	/** @ip: The sample event PERF_SAMPLE_IP value. */
- 	u64 ip;
--	u32 pid, tid;
-+	/** @pid: The sample event PERF_SAMPLE_TID pid value. */
-+	u32 pid;
-+	/** @tid: The sample event PERF_SAMPLE_TID tid value. */
-+	u32 tid;
-+	/** @time: The sample event PERF_SAMPLE_TIME value. */
- 	u64 time;
-+	/** @addr: The sample event PERF_SAMPLE_ADDR value. */
- 	u64 addr;
-+	/** @id: The sample event PERF_SAMPLE_ID value. */
- 	u64 id;
-+	/** @stream_id: The sample event PERF_SAMPLE_STREAM_ID value. */
- 	u64 stream_id;
-+	/** @period: The sample event PERF_SAMPLE_PERIOD value. */
- 	u64 period;
-+	/** @weight: Data determined by PERF_SAMPLE_WEIGHT or PERF_SAMPLE_WEIGHT_STRUCT. */
- 	u64 weight;
-+	/** @transaction: The sample event PERF_SAMPLE_TRANSACTION value. */
- 	u64 transaction;
-+	/** @insn_cnt: Filled in and used by intel-pt. */
- 	u64 insn_cnt;
-+	/** @cyc_cnt: Filled in and used by intel-pt. */
- 	u64 cyc_cnt;
-+	/** @cpu: The sample event PERF_SAMPLE_CPU value. */
- 	u32 cpu;
-+	/**
-+	 * @raw_size: The size in bytes of raw data from PERF_SAMPLE_RAW. For
-+	 *            alignment reasons this should always be a multiple of
-+	 *            sizeof(u64) + sizeof(u32).
-+	 */
- 	u32 raw_size;
-+	/** @data_src: The sample event PERF_SAMPLE_DATA_SRC value. */
- 	u64 data_src;
-+	/** @phys_addr: The sample event PERF_SAMPLE_PHYS_ADDR value. */
- 	u64 phys_addr;
-+	/** @data_page_size: The sample event PERF_SAMPLE_DATA_PAGE_SIZE value. */
- 	u64 data_page_size;
-+	/** @code_page_size: The sample event PERF_SAMPLE_CODE_PAGE_SIZE value. */
- 	u64 code_page_size;
-+	/** @cgroup: The sample event PERF_SAMPLE_CGROUP value. */
- 	u64 cgroup;
-+	/** @flags: Extra flag data from auxiliary events like intel-pt. */
- 	u32 flags;
-+	/** @machine_pid: The guest machine pid derived from the sample id. */
- 	u32 machine_pid;
-+	/** @vcpu: The guest machine vcpu derived from the sample id. */
- 	u32 vcpu;
-+	/**
-+	 * @insn_len: Instruction length from auxiliary events like
-+	 *            intel-pt. The instruction itself is held in insn.
-+	 */
- 	u16 insn_len;
-+	/**
-+	 * @cpumode: The cpumode from struct perf_event_header misc variable
-+	 *           masked with CPUMODE_MASK. Gives user, kernel and hypervisor
-+	 *           information.
-+	 */
- 	u8  cpumode;
-+	/** @misc: The entire struct perf_event_header misc variable. */
- 	u16 misc;
-+	/**
-+	 * @ins_lat: Instruction latency information from weight2 in
-+	 *           PERF_SAMPLE_WEIGHT_STRUCT or auxiliary events like
-+	 *           intel-pt.
-+	 */
- 	u16 ins_lat;
--	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
-+	/**
-+	 * @weight3: From PERF_SAMPLE_WEIGHT_STRUCT. On x86 holds retire_lat, on
-+	 *           powerpc holds p_stage_cyc.
-+	 */
- 	u16 weight3;
--	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
--	bool deferred_callchain;	/* Has deferred user callchains */
-+	/**
-+	 * @no_hw_idx: For PERF_SAMPLE_BRANCH_STACK, true when
-+	 *             PERF_SAMPLE_BRANCH_HW_INDEX isn't set.
-+	 */
-+	bool no_hw_idx;
-+	/**
-+	 * @deferred_callchain: When processing PERF_SAMPLE_CALLCHAIN a deferred
-+	 *                      user callchain marker was encountered. When set
-+	 *                      the callchain entry is allocated.
-+	 */
-+	bool deferred_callchain;
-+	/**
-+	 * @deferred_cookie: Identifier of the deferred callchain in the later
-+	 *                   PERF_RECORD_CALLCHAIN_DEFERRED event.
-+	 */
- 	u64 deferred_cookie;
-+	/** @insn: A copy of the sampled instruction filled in by perf_sample__fetch_insn. */
- 	char insn[MAX_INSN];
-+	/** @raw_data: Pointer into the original event for PERF_SAMPLE_RAW data. */
- 	void *raw_data;
-+	/**
-+	 * @callchain: Pointer into the original event for PERF_SAMPLE_CALLCHAIN
-+	 *             data. If deferred_callchain is not set, it just points to
-+	 *             data in the mmap buffer and it should not be freed.
-+	 */
- 	struct ip_callchain *callchain;
-+	/** @branch_stack: Pointer into the original event for PERF_SAMPLE_BRANCH_STACK data. */
- 	struct branch_stack *branch_stack;
-+	/**
-+	 * @branch_stack_cntr: Pointer into the original event for
-+	 *                     PERF_SAMPLE_BRANCH_COUNTERS data.
-+	 */
- 	u64 *branch_stack_cntr;
-+	/** @user_regs: Values and pointers into the sample for PERF_SAMPLE_REGS_USER. */
- 	struct regs_dump  *user_regs;
-+	/** @intr_regs: Values and pointers into the sample for PERF_SAMPLE_REGS_INTR. */
- 	struct regs_dump  *intr_regs;
-+	/** @user_stack: Size and pointer into the sample for PERF_SAMPLE_STACK_USER. */
- 	struct stack_dump user_stack;
-+	/**
-+	 * @read: The sample event PERF_SAMPLE_READ counter values. The valid
-+	 *        values depend on the attr.read_format PERF_FORMAT_ values.
-+	 */
- 	struct sample_read read;
-+	/**
-+	 * @aux_sample: Similar to raw data but with a 64-bit size and
-+	 *              alignment, PERF_SAMPLE_AUX data.
-+	 */
- 	struct aux_sample aux_sample;
-+	/** @simd_flags: SIMD flag information from ARM SPE auxiliary events. */
- 	struct simd_flags simd_flags;
- };
+ 	list_for_each_entry(ent, &inject->samples, node) {
+ 		if (pid == ent->tid)
+@@ -1103,7 +1104,9 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
+ 	perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
+ 				      evsel->core.attr.read_format, &sample_sw);
+ 	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
+-	return perf_event__repipe(tool, event_sw, &sample_sw, machine);
++	ret = perf_event__repipe(tool, event_sw, &sample_sw, machine);
++	perf_sample__exit(&sample_sw);
++	return ret;
+ }
+ #endif
  
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 591bdf0b3e2a..bdb196425071 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1622,8 +1622,11 @@ int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct
+ 	struct evsel *evsel = evlist__event2evsel(evlist, event);
+ 	int ret;
+ 
+-	if (!evsel)
++	if (!evsel) {
++		/* Ensure the sample is okay for perf_sample__exit. */
++		perf_sample__init(sample, /*all=*/false);
+ 		return -EFAULT;
++	}
+ 	ret = evsel__parse_sample(evsel, event, sample);
+ 	if (ret)
+ 		return ret;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f59228c1a39e..34ae388750db 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3067,7 +3067,7 @@ static inline bool overflow(const void *endp, u16 max_size, const void *offset,
+ #define OVERFLOW_CHECK(offset, size, max_size)				\
+ 	do {								\
+ 		if (overflow(endp, (max_size), (offset), (size)))	\
+-			return -EFAULT;					\
++			goto out_efault;				\
+ 	} while (0)
+ 
+ #define OVERFLOW_CHECK_u64(offset) \
+@@ -3199,6 +3199,8 @@ static int __set_offcpu_sample(struct perf_sample *data)
+ 	data->cgroup = *array;
+ 
+ 	return 0;
++out_efault:
++	return -EFAULT;
+ }
+ 
+ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+@@ -3217,7 +3219,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	 */
+ 	union u64_swap u;
+ 
+-	memset(data, 0, sizeof(*data));
++	perf_sample__init(data, /*all=*/true);
+ 	data->cpu = data->pid = data->tid = -1;
+ 	data->stream_id = data->id = data->time = -1ULL;
+ 	data->period = evsel->core.attr.sample_period;
+@@ -3231,25 +3233,26 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 
+ 		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
+ 		if (data->callchain->nr > max_callchain_nr)
+-			return -EFAULT;
++			goto out_efault;
+ 
+ 		data->deferred_cookie = event->callchain_deferred.cookie;
+ 
+ 		if (evsel->core.attr.sample_id_all)
+ 			perf_evsel__parse_id_sample(evsel, event, data);
++
+ 		return 0;
+ 	}
+ 
+ 	if (event->header.type != PERF_RECORD_SAMPLE) {
+-		if (!evsel->core.attr.sample_id_all)
+-			return 0;
+-		return perf_evsel__parse_id_sample(evsel, event, data);
++		if (evsel->core.attr.sample_id_all)
++			perf_evsel__parse_id_sample(evsel, event, data);
++		return 0;
+ 	}
+ 
+ 	array = event->sample.array;
+ 
+ 	if (perf_event__check_size(event, evsel->sample_size))
+-		return -EFAULT;
++		goto out_efault;
+ 
+ 	if (type & PERF_SAMPLE_IDENTIFIER) {
+ 		data->id = *array;
+@@ -3342,7 +3345,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 					sizeof(struct sample_read_value);
+ 
+ 			if (data->read.group.nr > max_group_nr)
+-				return -EFAULT;
++				goto out_efault;
+ 
+ 			sz = data->read.group.nr * sample_read_value_size(read_format);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+@@ -3370,7 +3373,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 		data->callchain = (struct ip_callchain *)array++;
+ 		callchain_nr = data->callchain->nr;
+ 		if (callchain_nr > max_callchain_nr)
+-			return -EFAULT;
++			goto out_efault;
+ 		sz = callchain_nr * sizeof(u64);
+ 		/*
+ 		 * Save the cookie for the deferred user callchain.  The last 2
+@@ -3428,7 +3431,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 		data->branch_stack = (struct branch_stack *)array++;
+ 
+ 		if (data->branch_stack->nr > max_branch_nr)
+-			return -EFAULT;
++			goto out_efault;
+ 
+ 		sz = data->branch_stack->nr * sizeof(struct branch_entry);
+ 		if (evsel__has_branch_hw_idx(evsel)) {
+@@ -3505,7 +3508,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 			data->user_stack.size = *array++;
+ 			if (WARN_ONCE(data->user_stack.size > sz,
+ 				      "user stack dump failure\n"))
+-				return -EFAULT;
++				goto out_efault;
+ 		}
+ 	}
+ 
+@@ -3586,6 +3589,9 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 		return __set_offcpu_sample(data);
+ 
+ 	return 0;
++out_efault:
++	perf_sample__exit(data);
++	return -EFAULT;
+ }
+ 
+ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
+diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
+index 8f82aaf1aab6..b04cbad7edd3 100644
+--- a/tools/perf/util/sample.c
++++ b/tools/perf/util/sample.c
+@@ -21,13 +21,19 @@ void perf_sample__init(struct perf_sample *sample, bool all)
+ 	} else {
+ 		sample->user_regs = NULL;
+ 		sample->intr_regs = NULL;
++		sample->deferred_callchain = false;
++		sample->callchain = NULL;
+ 	}
+ }
+ 
+ void perf_sample__exit(struct perf_sample *sample)
+ {
+-	free(sample->user_regs);
+-	free(sample->intr_regs);
++	zfree(&sample->user_regs);
++	zfree(&sample->intr_regs);
++	if (sample->deferred_callchain) {
++		zfree(&sample->callchain);
++		sample->deferred_callchain = false;
++	}
+ }
+ 
+ struct regs_dump *perf_sample__user_regs(struct perf_sample *sample)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 4b465abfa36c..c48e840da7d4 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1367,14 +1367,18 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
+ 		struct perf_sample orig_sample;
+ 
++		perf_sample__init(&orig_sample, /*all=*/false);
+ 		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
+ 		if (ret < 0) {
+ 			pr_err("failed to parse original sample\n");
++			perf_sample__exit(&orig_sample);
+ 			break;
+ 		}
+ 
+-		if (sample->tid != orig_sample.tid)
++		if (sample->tid != orig_sample.tid) {
++			perf_sample__exit(&orig_sample);
+ 			continue;
++		}
+ 
+ 		if (event->callchain_deferred.cookie == orig_sample.deferred_cookie)
+ 			sample__merge_deferred_callchain(&orig_sample, sample);
+@@ -1385,9 +1389,7 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 		ret = evlist__deliver_sample(evlist, tool, de->event,
+ 					     &orig_sample, evsel, machine);
+ 
+-		if (orig_sample.deferred_callchain)
+-			free(orig_sample.callchain);
+-
++		perf_sample__exit(&orig_sample);
+ 		list_del(&de->list);
+ 		free(de->event);
+ 		free(de);
+@@ -1414,9 +1416,11 @@ static int session__flush_deferred_samples(struct perf_session *session,
+ 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
+ 		struct perf_sample sample;
+ 
++		perf_sample__init(&sample, /*all=*/false);
+ 		ret = evlist__parse_sample(evlist, de->event, &sample);
+ 		if (ret < 0) {
+ 			pr_err("failed to parse original sample\n");
++			perf_sample__exit(&sample);
+ 			break;
+ 		}
+ 
+@@ -1424,6 +1428,7 @@ static int session__flush_deferred_samples(struct perf_session *session,
+ 		ret = evlist__deliver_sample(evlist, tool, de->event,
+ 					     &sample, evsel, machine);
+ 
++		perf_sample__exit(&sample);
+ 		list_del(&de->list);
+ 		free(de->event);
+ 		free(de);
 -- 
 2.53.0.959.g497ff81fa9-goog
 
