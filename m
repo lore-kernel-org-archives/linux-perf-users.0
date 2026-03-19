@@ -1,139 +1,97 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668AE41C302
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8539E37B3F5
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 23:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773962700; cv=none; b=nxQYVKuig+7901hXfPf7q3hh+R1tEup0eA2Zm6NoUb7keWxXFDNHvjCVHmCeSMLJZ1b+Os/9iVHc76z19YErSyV1x0CaagzSeuWXLA7pgDcs2Rs0LPBzgCL/rGeYyhL7p1yqzbojL2nM0KB0jy9kBKhuw+9d4LMk969vJoYTOU8=
+	t=1773963240; cv=none; b=Ar8wlbllSjvlLKhJi2XLVWcWFDwjg1cPMW6Aldt9CByFPfjx5WtYvVmEbkCshXKd4sm7dGn6gnXqcMoVivmL+ckR3qLE5ad9JaKcR7cSzNg60afrdigAWTtAIb0Kt61akfuV3fNtnwXemrymGzpd1bCovLsOWTlo7Ig44JYI7h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773962700; c=relaxed/simple;
-	bh=uS+Uo7Uea+sK0cag3i4TRSz4T9zVxU/R2GcBbXVObe0=;
+	s=arc-20240116; t=1773963240; c=relaxed/simple;
+	bh=jaKQNWDztSTVc9carY07JbD+L36D0ujHAkrR1d3xcKE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hfxX15xl9ReJJksXXwAgmFbcUb3du/LO87yb4I6PylOd0vX0JxtSaCAeNYmx7orE2ph02H4USQNuRkaUlAFyMbdq9LVtQcL17MfFzD1pm7c3wtl6QAKSRFQeh4Tt3FDFZKfDtjeV78vZ48p52iJxpU73kvOrUrqfqxPx/Wjz+NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m78fkXhO; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=ML69Uxt6hpRATf2BNkWg+Y3lAVy27Xd+AJ0yGvYq6s0K6eNEuZR1/+cvkrWW/wk1YqNIV9V/7JORI4cKQ42i6ax8bSFsNKlw49l5ELCs9+DnTaohfKMPD4Iak5sBAR4cNwXYtJGXyaWv0EkCNj4hozrp2nfJA6YBA4gPLeWckDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bN2frJ+q; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m78fkXhO"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1273dfdaf5dso854498c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:24:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bN2frJ+q"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3595485abbbso2074063a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 16:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773962699; x=1774567499; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773963239; x=1774568039; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1gUztKY4N8cazk2OKll8MhFt0eTLdZ6QKcUsAqNQqSQ=;
-        b=m78fkXhO6nooKGCkbH/KQgw5QgQU8SSs5wDXrNaUXFPsIMUKCxU2lKEaAwRysnwdNs
-         sG/r+6U7otUyHujUrZ9ehTArk2RFpNuk3Et/nnn//D+7G8HRh3OfLqtIsgP7nXxcFKz4
-         UiWbil0A4TPDA/SW80rDWcA01F6MRNDHHSjak2UDCtPmeC6GD10l0uFgAg9jWGLTMz0I
-         HJ9KTyXppdzRdO/oftHH+oDt6PQYgz3ilaPMifXVpkWLLC93/pwPitSdu7XD8Z6ULtv3
-         3+y0WO3t5TManrzEwLI+XSz+r4H1We2DS7VsQk/+n7FaRQDBXWtrFnV+zbrdhZ7KQbqo
-         9iTw==
+        bh=ZBprN/SDxVbpqiWt0IwbTwUWMFsC5LXCcAsRDziglik=;
+        b=bN2frJ+qNxrBCarZjkkLMfMeevrsH4ZV07wQz0fwGrfWKjhAJkHJ82GSr5WfRA3mIs
+         zLD1hFleN4/lbnsUds7IWGRrWYfguYxZAwayixzOFnksiMUZlk2gFrqiI5M1DtNbcmro
+         U+zoaHFVh8DYSh/VXUX51TYtiM99CmfobzQwSdCe1FHcersjTC7tjmelTJku5TuvpqTF
+         LorKkPd8aT5GIiaE0Dx1oYz2I2jmydaKT62/UgH33JMMxvR1flpTiG+0Wt3Nc5jB9Gx3
+         Tzkw+G6cg3jybEb87MNw4gByHzob3yu6vnGIdEEQOYMzQQ6rC5T8ZD/r0b30ijG6yC3Y
+         065A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773962699; x=1774567499;
+        d=1e100.net; s=20251104; t=1773963239; x=1774568039;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1gUztKY4N8cazk2OKll8MhFt0eTLdZ6QKcUsAqNQqSQ=;
-        b=qL+4qHzDILcfoP79edlSdRFy5sevU2HJ3BgPuOTH4TbwlT+ebWvCX3BBfHUoG/fP8A
-         zvMx29KrD1E7yERbg3zdaqLoLyBzTj++6C3udVoJ3143QXQ3NTpjdu6ZwwWdT3EhaKnb
-         aEwiV2QSB7Fl9VM1E2AUIflDm8JRsVVtyOnQ9B5G838dVgASgrk8Mr5JcDjekxLDKpG+
-         lv8uk3BL8rJmwS8ccR6rGWrlAEsgDLaIkr7+LLrwd+8D+ucQE15bUpYj0q+40uCW61b1
-         28x3ZIhDw9w9KF4dF8n71GZYAuvDqkGoaew8bBV/n7cyWMNumvLngSLm5D+TVr+U3UPL
-         MXqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWMFyn+GqZKWWtaptwIW1lpEYVF2m8lV3Za3BcQy8uU9pXxd1oaPPH6tD4tRki/MTa+TgLeM6JH7X7AH/yDEyC@vger.kernel.org
-X-Gm-Message-State: AOJu0YymZ2xkLSQq8HoEzGQwdWBA8pEDeHSm3KJRoULRzeTbVh7CGOeh
-	/yflViSPFEC1tN/8Z1/1PeGXUR+gjurXgrWHANCPQPdym2l/kXnpZe40sTBucYCMDtRVmPTtCBK
-	y0zzMEjrkyg==
-X-Received: from dlbrl10.prod.google.com ([2002:a05:7022:f50a:b0:12a:6fc0:69e8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:125:b0:119:e569:f875
- with SMTP id a92af1059eb24-12a72342011mr609259c88.18.1773962698382; Thu, 19
- Mar 2026 16:24:58 -0700 (PDT)
-Date: Thu, 19 Mar 2026 16:23:34 -0700
-In-Reply-To: <20260319232334.287517-1-irogers@google.com>
+        bh=ZBprN/SDxVbpqiWt0IwbTwUWMFsC5LXCcAsRDziglik=;
+        b=JNOcUpw0yZh64HSWrrOcgmz8YGry8XnkTGegrTM8IZbWJJyoq63X6PEWr9c9HrojFw
+         rWfKkt/9Vtfz/3yVatneVsS55BdMI/ngneeiV5fswrTy/BtRpyw6KrT43i+pG5HYzv71
+         QNFD3sMvdWQ/WnF351AkQ7IygXn+SGrjyfuXY3NLOBp+7KizWQen6ultiv+/+54qYohW
+         27b7o1QinMm+04zh7qSfrb1P99kgqXOIcejpwsfKIlcdvZ3UfduSdZeiUrSjmyRqPa5F
+         bbXVesHmoUh+vcN8GEBviygFTSAqh+Mwz/Tq6K9TE5/xCf53kR1akmAFuD4MDZMz9p60
+         QdCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGkBozcqx8nCf9FNsinXCXFj1rJ0Q4tCI9bT7row0f/KwpnCOaYVuJBRm2AaEyBhVhKAa7TflmonSW19pLbHkd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxamEYAjO1ManTXl+ZqdkiH7T7CxDA/TJgjAO+6TkJ5FjhwjNEV
+	qmXzYPkHqrHR0e9OFSD++E5DU7ZHGzoTrFUgbfX+um9KxhB/+AVoGc+KtctMUwPNrHBZcZslCrY
+	vB51ZPqD4KQ==
+X-Received: from pjey9.prod.google.com ([2002:a17:90a:16c9:b0:35b:91c7:d49d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f88:b0:35b:a44f:b8a
+ with SMTP id 98e67ed59e1d1-35bd2ba3293mr652535a91.6.1773963238705; Thu, 19
+ Mar 2026 16:33:58 -0700 (PDT)
+Date: Thu, 19 Mar 2026 16:33:48 -0700
+In-Reply-To: <20260319221215.207951-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260209174032.4142096-1-irogers@google.com> <20260319232334.287517-1-irogers@google.com>
+References: <20260319221215.207951-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260319232334.287517-26-irogers@google.com>
-Subject: [PATCH v2 25/25] perf evsel: Don't pass evsel with sample
+Message-ID: <20260319233349.306012-1-irogers@google.com>
+Subject: [PATCH v2 1/2] perf lock: Fix option value type in parse_max_stack
 From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org, namhyung@kernel.org
-Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
-	ak@linux.intel.com, alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
-	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
-	derek.foreman@collabora.com, dvyukov@google.com, howardchu95@gmail.com, 
-	hrishikesh123s@gmail.com, james.clark@linaro.org, jolsa@kernel.org, 
-	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com, 
+To: irogers@google.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn, palmer@dabbelt.com, 
-	peterz@infradead.org, pjw@kernel.org, ravi.bangoria@amd.com, 
-	swapnil.sapkal@amd.com, tanze@kylinos.cn, thomas.falcon@intel.com, 
-	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
+	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Arrange for the sample to contain the evsel and so it is unnecessary
-to pass the evsel as well. This is done for uniformity, although
-parsing of the sample is arguably a special case.
+The value is a void* and the address of an int, max_stack_depth, is
+set up in the perf lock options. The parse_max_stack function treats
+the int* as a long*, make this more correct by declaring the value to
+be an int*.
 
+Fixes: 0a277b622670 ("perf lock contention: Check --max-stack option")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/builtin-lock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 041766d39ec3..21602d121260 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2997,10 +2997,10 @@ int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
- 	return ret;
- }
- 
--static int perf_evsel__parse_id_sample(const struct evsel *evsel,
--				       const union perf_event *event,
-+static int perf_evsel__parse_id_sample(const union perf_event *event,
- 				       struct perf_sample *sample)
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index e8962c985d34..5585aeb97684 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2250,7 +2250,7 @@ static int parse_map_entry(const struct option *opt, const char *str,
+ static int parse_max_stack(const struct option *opt, const char *str,
+ 			   int unset __maybe_unused)
  {
-+	const struct evsel *evsel = sample->evsel;
- 	u64 type = evsel->core.attr.sample_type;
- 	const __u64 *array = event->sample.array;
- 	bool swapped = evsel->needs_swap;
-@@ -3239,14 +3239,14 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		data->deferred_cookie = event->callchain_deferred.cookie;
+-	unsigned long *len = (unsigned long *)opt->value;
++	int *len = opt->value;
+ 	long val;
+ 	char *endptr;
  
- 		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
-+			perf_evsel__parse_id_sample(event, data);
- 
- 		return 0;
- 	}
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
-+			perf_evsel__parse_id_sample(event, data);
- 		return 0;
- 	}
- 
-@@ -3606,12 +3606,13 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		struct perf_sample data = {
-+			.evsel = evsel,
- 			.time = -1ULL,
- 		};
- 
- 		if (!evsel->core.attr.sample_id_all)
- 			return -1;
--		if (perf_evsel__parse_id_sample(evsel, event, &data))
-+		if (perf_evsel__parse_id_sample(event, &data))
- 			return -1;
- 
- 		*timestamp = data.time;
 -- 
 2.53.0.959.g497ff81fa9-goog
 
