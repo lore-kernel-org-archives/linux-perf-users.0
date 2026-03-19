@@ -1,247 +1,103 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC193BE15D;
-	Thu, 19 Mar 2026 10:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF473BFE3F;
+	Thu, 19 Mar 2026 10:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773915823; cv=none; b=i9/PxGAY9ssZ+VL63jXnS3XZYAaoeMKclbFYS1HwwpQiFy08fw3XmNIRPnn81TTwdUlITxLKHaXRO/6eppNH3vyEUjucj4YLhK5qzY9iyLKNCqTgZnNXjIajXQCIbP7KwPc6yHSXmcxlYYrLeodWzyA7SwLYaEIInSnYWUFaXiE=
+	t=1773917927; cv=none; b=O25qrPVd+SD/jsF0514T0mv216K5uWfeOKR3cyxJkt8GWVJhW2Mim0Z9Z0l6U9n27tpOlgwk2Eoi62bJX1Igt1HvrmdtfqUVf34/QktTNNJsMS/65PxMKXiBCYL8NlweCzesJBHTRDG6zsALCOLUrkH2iCIoTGMOVTblblazL5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773915823; c=relaxed/simple;
-	bh=Yh7lW9dpGdQudp7VsYTchDBsa/EIimbPWcjlbK66Fqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UaJpALgrjE6Nih4tCPISQM9fJ+iTQVjxGTspbVcnh1eigTNNwZRTDP/cq8S3LqUpv4p9qS7+W0CQmie1V4okCfjaJPNFIProvLLSqkHP1ZVksTK9NlGQxt1td1oIsY3QuooXUp6aFZgvNyIoijzWMiCpwyIuo1WmrsSBDbk2i4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=eo/RtRM8; arc=none smtp.client-ip=113.46.200.223
+	s=arc-20240116; t=1773917927; c=relaxed/simple;
+	bh=AgCBXHZnTJeW1jAh7B9Ei661agzhi2bu6A1p7nceQYM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W+KonpLASqLy2VMjbNX4CgQFkFekGQhTCMMH499N84RPIPdzdq9uIJw2durS4qitlMsXEfJf++tlWRzrbFYX8K4PAzDe2CgOfM8JFyes5ytjPP4cJfPGwfQ2mNGLmLufXhTLXjNr6ePNEUsDxAuM23mp61RZ+SsmxGMOq8GEk+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="eo/RtRM8"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=TaNJoLKgo6ZalflRL4yYXl67XeCLQ0wZuEpo2RuxMEY=;
-	b=eo/RtRM82KF7IVPNSdmoKfcZY8Gjrrobs04J+UvvFfrBeTlgi3RNdw5ZP+ZNPvD19xrsGyW+N
-	PbdcUSHd/Awjoocexgxv+zvEQ9x6xtdg3+lvLd3uVYxjZEoH09obppYGy4kBvDdkBmKzKnqfCw8
-	+feQjSbpryuGo2Y0r+DiYFo=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fc1qp2cTCzmV6M;
-	Thu, 19 Mar 2026 18:18:30 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 81DE74055B;
-	Thu, 19 Mar 2026 18:23:31 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 19 Mar 2026 18:23:30 +0800
-Message-ID: <7f333498-4bed-4784-999f-7ee96dc63fd8@huawei.com>
-Date: Thu, 19 Mar 2026 18:23:29 +0800
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc2hx2gqtzJ46cg;
+	Thu, 19 Mar 2026 18:57:37 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 94D4A40569;
+	Thu, 19 Mar 2026 18:58:36 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
+ 2026 10:58:34 +0000
+Date: Thu, 19 Mar 2026 10:58:32 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Chengwen Feng <fengchengwen@huawei.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>, "WANG
+ Xuerui" <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, "Palmer Dabbelt"
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Alexandre Ghiti"
+	<alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
+	<hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V L
+	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook
+	<kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Sean Christopherson
+	<seanjc@google.com>, Kai Huang <kai.huang@intel.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, Thorsten Blum
+	<thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, Zheyun
+ Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, "Ahmed S .
+ Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, Ilkka
+ Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>,
+	James Clark <james.clark@linaro.org>, Besar Wicaksono
+	<bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, "Wei Huang"
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
+	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<stable@vger.kernel.org>
+Subject: Re: [PATCH v9 0/7] ACPI: Unify CPU UID interface and fix ARM64 TPH
+ steer-tag issue
+Message-ID: <20260319105832.00002218@huawei.com>
+In-Reply-To: <20260319065735.45954-1-fengchengwen@huawei.com>
+References: <20260319065735.45954-1-fengchengwen@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] perf: Add --pmu-filter option for filtering PMUs
-To: Namhyung Kim <namhyung@kernel.org>, <irogers@google.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<wangyushan12@huawei.com>, <hejunhao3@h-partners.com>,
-	<jonathan.cameron@huawei.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<adrian.hunter@intel.com>, <james.clark@linaro.org>, <linuxarm@huawei.com>
-References: <20260310040607.1780971-1-xiaqinxin@huawei.com>
- <20260310040607.1780971-2-xiaqinxin@huawei.com> <abMA1UTdr7k16_IK@google.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <abMA1UTdr7k16_IK@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
+On Thu, 19 Mar 2026 14:57:28 +0800
+Chengwen Feng <fengchengwen@huawei.com> wrote:
 
-On 2026/3/13 02:07:17, Namhyung Kim <namhyung@kernel.org> wrote:
-> On Tue, Mar 10, 2026 at 12:06:07PM +0800, Qinxin Xia wrote:
->> This patch adds a new --pmu-filter option to perf-stat command to allow
->> filtering events on specific PMUs. This is useful when there are
->> multiple PMUs with same type (e.g. hisi_sicl2_cpa0 and hisi_sicl0_cpa0).
->>
->> [root@localhost tmp]# perf stat -M cpa_p0_avg_bw
->>   Performance counter stats for 'system wide':
->>
->>      19,417,779,115      hisi_sicl0_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl0_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl0_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,751,103      hisi_sicl10_cpa0/cpa_cycles/     #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl10_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl10_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,730,679      hisi_sicl2_cpa0/cpa_cycles/      #     0.31 cpa_p0_avg_bw
->>          75,635,749      hisi_sicl2_cpa0/cpa_p0_wr_dat/
->>          18,520,640      hisi_sicl2_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl2_cpa0/cpa_p0_rd_dat_32b/
->>      19,417,674,227      hisi_sicl8_cpa0/cpa_cycles/      #     0.00 cpa_p0_avg_bw
->>                   0      hisi_sicl8_cpa0/cpa_p0_wr_dat/
->>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_64b/
->>                   0      hisi_sicl8_cpa0/cpa_p0_rd_dat_32b/
->>
->>        19.417734480 seconds time elapsed
->>
->> [root@localhost tmp]# perf stat --pmu-filter hisi_sicl2_cpa0 -M cpa_p0_avg_bw
->>   Performance counter stats for 'system wide':
->>
->>       6,234,093,559      cpa_cycles                       #     0.60 cpa_p0_avg_bw
->>          50,548,465      cpa_p0_wr_dat
->>           7,552,182      cpa_p0_rd_dat_64b
->>                   0      cpa_p0_rd_dat_32b
->>
->>         6.234139320 seconds time elapsed
+> This patchset unifies ACPI Processor UID retrieval across
+> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
+> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
 > 
-> Ian, can you please take a look at this?
+> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
+>      respective users)
+> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+> 6: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
+> 7: Fix ARM64 platform CPU steer-tag retrieval failure
 > 
-> Thanks,
-> Namhyung
-> 
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> ---
->>   tools/perf/Documentation/perf-stat.txt |  4 ++++
->>   tools/perf/builtin-stat.c              | 19 +++++++++++++++++++
->>   tools/perf/util/metricgroup.c          | 18 +++++++++++++-----
->>   tools/perf/util/parse-events.c         |  2 +-
->>   4 files changed, 37 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
->> index 7cccc3a847d1..b72a29c9223c 100644
->> --- a/tools/perf/Documentation/perf-stat.txt
->> +++ b/tools/perf/Documentation/perf-stat.txt
->> @@ -578,6 +578,10 @@ $ perf config stat.no-csv-summary=true
->>   Only enable events on applying cpu with this type for hybrid platform
->>   (e.g. core or atom)"
->>   
->> +--pmu-filter::
->> +Only enable events on applying pmu with specified for multiple
->> +pmus with same type (e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)
->> +
->>   EXAMPLES
->>   --------
->>   
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 73c2ba7e3076..69c83a5beb71 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -1214,6 +1214,21 @@ static int parse_cputype(const struct option *opt,
->>   	return 0;
->>   }
->>   
->> +static int parse_pmu_filter(const struct option *opt,
->> +			   const char *str,
->> +			   int unset __maybe_unused)
->> +{
->> +	struct evlist *evlist = *(struct evlist **)opt->value;
->> +
->> +	if (!list_empty(&evlist->core.entries)) {
->> +		fprintf(stderr, "Must define pmu-filter before events/metrics\n");
->> +		return -1;
->> +	}
->> +
->> +	parse_events_option_args.pmu_filter = str;
->> +	return 0;
->> +}
->> +
->>   static int parse_cache_level(const struct option *opt,
->>   			     const char *str,
->>   			     int unset __maybe_unused)
->> @@ -2561,6 +2576,10 @@ int cmd_stat(int argc, const char **argv)
->>   			"Only enable events on applying cpu with this type "
->>   			"for hybrid platform (e.g. core or atom)",
->>   			parse_cputype),
->> +		OPT_CALLBACK(0, "pmu-filter", &evsel_list, "pmu",
->> +			"Only enable events on applying pmu with specified "
->> +			"for multiple pmus with same type(e.g. hisi_sicl2_cpa0 or hisi_sicl0_cpa0)",
->> +			parse_pmu_filter),
->>   #ifdef HAVE_LIBPFM
->>   		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
->>   			"libpfm4 event selector. use 'perf list' to list available events",
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index 46bf4dfeebc8..89b83ca38483 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -387,8 +387,13 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
->>   				      const char *metric_or_groups)
->>   {
->>   	const char *pm_pmu = pm->pmu ?: "cpu";
->> +	struct perf_pmu *perf_pmu = NULL;
->>   
->> -	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
->> +	if (pm->pmu)
->> +		perf_pmu = perf_pmus__find(pm->pmu);
->> +
->> +	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu) &&
->> +	   (perf_pmu && !perf_pmu__name_wildcard_match(perf_pmu, pmu)))
->>   		return false;
->>   
->>   	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
->> @@ -1259,7 +1264,8 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
->>   static int parse_ids(bool metric_no_merge, bool fake_pmu,
->>   		     struct expr_parse_ctx *ids, const char *modifier,
->>   		     bool group_events, const bool tool_events[TOOL_PMU__EVENT_MAX],
->> -		     struct evlist **out_evlist)
->> +		     struct evlist **out_evlist,
->> +		     const char *filter_pmu)
->>   {
->>   	struct parse_events_error parse_error;
->>   	struct evlist *parsed_evlist;
->> @@ -1313,7 +1319,7 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
->>   	}
->>   	pr_debug("Parsing metric events '%s'\n", events.buf);
->>   	parse_events_error__init(&parse_error);
->> -	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
->> +	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
->>   			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
->>   			     /*fake_tp=*/false);
->>   	if (ret) {
->> @@ -1416,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
->>   					/*modifier=*/NULL,
->>   					/*group_events=*/false,
->>   					tool_events,
->> -					&combined_evlist);
->> +					&combined_evlist,
->> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->>   		}
->>   		if (combined)
->>   			expr__ctx_free(combined);
->> @@ -1471,7 +1478,8 @@ static int parse_groups(struct evlist *perf_evlist,
->>   		}
->>   		if (!metric_evlist) {
->>   			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
->> -					m->group_events, tool_events, &m->evlist);
->> +					m->group_events, tool_events, &m->evlist,
->> +					(pmu && strcmp(pmu, "all") == 0) ? NULL : pmu);
->>   			if (ret)
->>   				goto out;
->>   
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> index b9efb296bba5..789ff4d15e47 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -429,7 +429,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
->>   	if (parse_state->pmu_filter == NULL)
->>   		return false;
->>   
->> -	return strcmp(parse_state->pmu_filter, pmu->name) != 0;
->> +	return perf_pmu__wildcard_match(pmu, parse_state->pmu_filter) == 0;
->>   }
->>   
->>   static int parse_events_add_pmu(struct parse_events_state *parse_state,
->> -- 
->> 2.33.0
->>
-> 
+> The interface refactor ensures consistent CPU UID retrieval across
+> architectures (no functional changes for valid inputs) and provides the
+> unified interface required for the ARM64 TPH fix.
 
-Gentle ping.
--- 
-Thanks,
-Qinxin
+Given the structure of the series has slowly evolved since I gave
+tags, I took another look.  All looks good to me.
+Nice work.
 
+Jonathan
