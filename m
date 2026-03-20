@@ -1,258 +1,351 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6146F9C0;
-	Fri, 20 Mar 2026 03:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7409B19ABD8
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 04:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773977457; cv=fail; b=dVXIVxQNTaCzSfsJIb21AGkTqC7K1n5mzLuKTGdzk/o4XOJgRmuqTJoCEI23lj1lQioToJ2FYNuHXuUEFik8rJw9RX6bPpGLSRon7ZQJv7NmGal5Kq05oXhyPLPxjWmZYJ8ih7vT31lh5bhPv0B3izHQUpNRbyuJBOMjPoBCfrw=
+	t=1773981707; cv=pass; b=XAOvd/Y8eF3rmD143urawl/DOcO6RIEHsb14XppWHvUYGArTrRVL6XfqFm1g2njoKotPzmvLw+YJgqaJT4VYjuVaYGDJKgX9Zjw5WAHFsPisw8QUv1z/KGMt2cSd75WGUeTA7r8JnEaQxBUHz7Ss8072Bb1LlFg7o4uHnIX5CaY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773977457; c=relaxed/simple;
-	bh=wodPdY9QqnAY990hj2Js/3REpROFjpiAST3d09uqX/o=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bvUkN4UFZis/3mRzqILKZ4lSfKjav07LaX4q8cd0pUNBRvDuCE5lNPOI+gr0i0CpjwKD05rhRq/NmiisWXkpvWyASGShC7bFA5Ka6B7mYdsrkXLQ4shKY2AVv5YcpyOJGgSSwJAZpfGtGG1fCnO769TyVUNYvgl2a6Abst/mhwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=kDAI/wZq; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	s=arc-20240116; t=1773981707; c=relaxed/simple;
+	bh=Qu9ynk1ckoA7jcRWTQsEwk+bo7+Skjo94p0isOgfn5I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OzV17VY6v8K90keji7GrsoXjRtHsp4x74NHjtpXMmQVBG7A7JBqpH157DWUImBkG9jtjCX6Ja4SQSN3JJxKlkogjeBRHuLRu8q6txdtjnub+DyNZmJf9L+QKhiXNFM9Xt+wwiEDXv4+cbjotjBNWzbUNbvFMhRpbyXtHrQEn3cw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UE0qa1Fm; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="kDAI/wZq"
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62K2rPcf1758979;
-	Fri, 20 Mar 2026 03:29:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=yJ5Dv6Immu34SJYMb7uz3qmp4qV9fUP2uIODBCeAWLs=; b=
-	kDAI/wZq9G1rbQA8Tc/dj7yv0qAuy8nOB2CuQYv7mbsvhjtmrNkD+IEVWGD4ylfz
-	4NGIXj1DJVgvSwDDOyiPTCX/1gL99zaR3iBE/zIdhV7kg0IRxF8gxApfdtq4X9sL
-	1usbgV4VSp2S/+cHLqgRUqKo+EpueaxiKLFDPLq5+BERKACreK6g4QdWradBSSFs
-	XShKrLkjp3qloGxZtwzREdLRtUdGrdSEJEeU0N0SuFid4mNgf7Zbu5SBlVP4gFQA
-	Df3/yIovgR2MRjE0ROHa7fSIlQdsI9ebIw3gioIsbAvBcW0YDLQU0V7i6xo9ERPT
-	Zm4hRnrR0GtiB3+u9vRr3g==
-Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010021.outbound.protection.outlook.com [52.101.61.21])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4cxm66dc5e-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 20 Mar 2026 03:29:05 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FY1DdGwCK+LwbgdrSJc6drii9rpBEQQyyfDhp6QLNWY4OX8fqlXY7zc9FKGiZHj5G4+xont54OOohKYN3JRuVmoqxPCvYA+BBHPBSBsAcCuWpAAOywKJw0k8i3ATDlGkejW5Nm0NtTXtm+/GuXwyizxw4ZohqQHS2s509xgEoB7cn+2Q8Llxi5xQk9UCCz1wpCNoqu8TGVsfZ2O8mnQqPwJ/9kp98bphLXMvpUHpZeF1O1AZ909qLNkLGPRIWnXY/IxCxFhUan9SSGfZEm2rjBRfNAne1LlEfXaHK7waT3ATY8Jw3VLwMtn2QAdElxc6EBMw+v9dKvvcTNGUNnIT/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yJ5Dv6Immu34SJYMb7uz3qmp4qV9fUP2uIODBCeAWLs=;
- b=G0C9BFuUsBWdUntwhpG9284rwcA0xk7icc4PRlw+YuV1aolfrfzW/kqsItBbX1AujhffD0PomqSNngctP8d7zpPe1o9Rp2Gt0AiGznSvDOAGj99GZCgmn91jGoPlRfRDLchySp5QYeJ5PXZ3pJZUQJa+63/1ubKm0wAzLQ+z41YDKt5jzSPGfFm0t/+3/2K4MDnoDNEnTzX1LAbBA483ifMmSoFboyIZCejY5MwuTkhBcOkLjWQQv6n2bZGKxwy9IUL7zR5hHWHhj8YxX1RhnzaCGaf8Z+r1c0pC+uvxt3CHKBJi/zTNuGVI0c5yfs7fd6Y/AYtRj8XCzS+FX5/OOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from CH0PR11MB8189.namprd11.prod.outlook.com (2603:10b6:610:18d::13)
- by LV1PR11MB8820.namprd11.prod.outlook.com (2603:10b6:408:2b2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Fri, 20 Mar
- 2026 03:29:02 +0000
-Received: from CH0PR11MB8189.namprd11.prod.outlook.com
- ([fe80::7b99:70e4:edb2:30c2]) by CH0PR11MB8189.namprd11.prod.outlook.com
- ([fe80::7b99:70e4:edb2:30c2%6]) with mapi id 15.20.9745.007; Fri, 20 Mar 2026
- 03:29:02 +0000
-Message-ID: <06ffdbe0-1743-470e-b83a-d2c9a4702461@windriver.com>
-Date: Fri, 20 Mar 2026 11:28:51 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] perf build failed after 5cf6e76e4f4f ("libperf:
- Don't remove -g when EXTRA_CFLAGS are used") on riscv64 with gcc 13
-To: Ian Rogers <irogers@google.com>, Chingbin Li <liqb365@163.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        adrian.hunter@intel.com, james.clark@linaro.org,
-        linux-perf-users@vger.kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, alex@ghiti.fr, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <813bc5fd-0c35-46af-aea2-90798154daaa@windriver.com>
- <CAP-5=fW_O_sm9JzfCf=qDXyaffoLLRH3mob1zckESUHsG2rp-g@mail.gmail.com>
-Content-Language: en-US
-From: "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>
-In-Reply-To: <CAP-5=fW_O_sm9JzfCf=qDXyaffoLLRH3mob1zckESUHsG2rp-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SEWP216CA0115.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:2b9::7) To CH0PR11MB8189.namprd11.prod.outlook.com
- (2603:10b6:610:18d::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UE0qa1Fm"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b052ec7176so34475ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2026 21:41:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773981706; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Q/K9Sf6REQjsMprm84JXfM0QeqdvswSWsiletPHV/F94fKiIs4DcAlMj/tjU9GdzTC
+         s5YlZydugYIMTVBoBl6bftZJdJ+1imxJz/SnshKbWCqVv5vBUgBP23OZmXUaiB8rNDJD
+         W+W9cCn2bbnuCxehnnp3J99zsbJg/GVWM1CogNkFxF7Q4UTNZEK+bC6jjgsBVl1iR5nq
+         cr0IS4HymIVnIRSKugzoYVleadBcdgWNpAobMA1MYP4t8Qz5G1h8l63UXpQhrYZmFsxz
+         NFv7utgHtMnXSi4hCCEf40X5pdj9tSojcAVtaxCheJ2gdh5ffv+Fz0p1gsjLVMdJLKow
+         60RQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uohoBMP5HkASaFKxCxMD8Vj43rtHEGp54XIfdjkUR+Y=;
+        fh=MgL0bYARlvWLcLbl36l+gi3QSsmJRzmAGiCMnzqQ1G4=;
+        b=VoG0HdiUV76YXtbR54yzUDPm4PamJyg6i9DUoCRU+bfkmtEJfNr6UOQM5eQkLeIFmn
+         W5Cmc5r/O/tsZ8ElAHxxfI8rO70oCfwTzqVlE4sfe54t5MFexilGFDp06eY9q/2FYsjK
+         LlkiQ26nMvDMKW255aHeCQZfChZAk8oLVTfdI1gyc5y5Bsc3eFFi5m2YnHMBn4QTFzcp
+         NKmO/l6J1NrdCoQ0XUrUx+K1Jr2L6ErdfGcv1MgN5um4agWt3RF5+Fbn4u0s4/BJ6z07
+         XOdq9pmWgrrPzjWgDu0i0or3HLshexReR1icTleVnUZoBGD/j/Uw1CKq86Q56GE6n4O7
+         WoXA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773981706; x=1774586506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uohoBMP5HkASaFKxCxMD8Vj43rtHEGp54XIfdjkUR+Y=;
+        b=UE0qa1FmBnA+RJmemMZJ6BzFno1zHPkbe0/iZPAPasgt6vtyDmLxeKwdw2ZWS+u68w
+         Un48fEx6iMmxQEnDWk9Bj91W7kdKSK3ivTH8smEz/4uz51hiyKjboN/r6qBptyDbOcvR
+         NiINqsNZhrlsB/acP8Kml9vejMVv79tEAsU6b2DQlUGB2U8/Zey7VoUZKhKZJvMXrN9d
+         uagDwtaJ4ZV+yR8eKdgtKSHLuu/TLH6eaD5iRIqjvz+WngyEGwIB5vXHLIWJ0TwN9k/z
+         oPEcwSvRYzqwToyxc4sfKQsAw+XlrVc4MsU8INPy0TKPDnEeKCrJWSRd1WdhDVO+mkiA
+         FEow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773981706; x=1774586506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uohoBMP5HkASaFKxCxMD8Vj43rtHEGp54XIfdjkUR+Y=;
+        b=p1K+6v+KICu2Qp/u9GJNQuGlDZhCe/RMfa5s+ZmwkfPEFOZ46Fen513gydFJ3Kr+sr
+         4f5MssdV+QnGPjjQ2xSgrM5PEk+wYNs1gGZIs76CCSE5pu7MmiGPiLDROWmQJVZDk0Dw
+         U5AxqCH9hlduWreHmG8gFFLI2NGtNY/xQ9nbXtTWpJPgH+PB/wPNOIJOvvZn0RN8gRl3
+         3duiCwB3j0m5M4Jd/nUAbV1Ex3gSHtE9MusjgoxOVrDYfj+5aRTFM3B6+pN868szIlgS
+         am5JL2K3JaYpwz/nEoBo0jFE01+sZ19ruHkufRfVr2E5XJRy7ckGY4p35TW5Cpnm2ssz
+         W5Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/FuX/h1qyom2GxVMsZuJUB6I92uYyjo4AS3n3vj4/uJp0WmHWi4e+T2vlJBFz8qLRuLEyXNaPCOp1FDKMcY6v@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3EJG8V1aihdqQno0Ms+sNKrlRW/T/qyyIIojRgECgoxLUROsL
+	z7TlhjqaqYiR1hpxnfC38wDT54V9B9Dd9lZjeMOLR95+GNEta97z6LwnV93b8XpaTTBAlmqsWef
+	7xu6VzxPnl7SmWv1R8w3NkuRt7tOjAjUA0hklTLVj
+X-Gm-Gg: ATEYQzzTGk2BMyRGt0TpQgnhRDLLOgiLIe5TyNIrUIMGzOGrxEFA20uwdkdg5Uz2QGh
+	BaTZUePgarpNtjAiffqRa4teLu91N1Vh0XB1iNjEBPJSvHs04N+4fnGcfsB0itPJ/BI8jpz7r37
+	3+LIrzpJOuHaP71saID9H/a8CwqUzbVS1F5TQBct7X8WjiZM30J/6LOm42L9yk+L9ITgOzeY8LC
+	TDHnuqYHeyqp9tM1CuGz4eDc3BynboJ46/Pxcp7NKjhVC7w5zfgpB5UM6DIknGpm/MSQcJHGphT
+	jlvMJ/9Q
+X-Received: by 2002:a17:903:2449:b0:2b0:5b4c:a439 with SMTP id
+ d9443c01a7336-2b08282922emr1675445ad.2.1773981704943; Thu, 19 Mar 2026
+ 21:41:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR11MB8189:EE_|LV1PR11MB8820:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb7ff46b-9ff1-4a15-24db-08de8630d4c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	NZf1mjaLJh9GpHEWiZ9B+0rStSNQi8pe2ZcZ+FDMYBYG3tcOJ/gl/G0N3UIr0YIW2xVcuhPN8kNPQuKMKfbF3sdjhCDYkhS76+uJrkCUETGI0mZfkKLPh+c1iV3648NzNONi3KM/kZ0I2WauEZKUlI7WfgrnkRGX6kbR8+9bIlp+miNIeJk10+Y3ORwH9srqh/4Gw56srhMLuuTsQ/wE9l0kFqUeXpMDgYu3oH+rHGFC3SDuPXHx3AJ9fZhEOaMk1XNycugWtRwx2n+jLLT3x6+Rua6lmAGbTmSYHuiCq5qZJu9mpQjlu3blLYndj3z+DEBnYlPnsv6haM0itTdKXJfcAygAE+zG9puaPPIemT5ldTGZQpB8D3fjOJule5lyL386WnGNMFdxUMsyz3QZDevv8Fe2C6hYHoeuI7LiGMsLk9M8/5CrJge81Ou0V2+pAyvnhur4jo4F3Qv4h5rVzwMZVxtTaTxvSOZSK38s/LpLpf55l5x8ncnaOPwDZ/aofbMn6aHYBMegzXmZzptQZDxYs8Ng4yBFBj3HTwRYEjS9ILPaTNINTA3/VtVlFMrgHJCtPyYGElUB4ZUXbr8LIqbe1M5lxsCMQr4iej3aaj2qnxahE7DdqYCOMj/5hks8SzH5t4BBUE2lqhkXxt/4m/DaTOXFnLRt/fBRNrYL7+3+yqLnKMtNxs3KBK2i8qk0
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR11MB8189.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?azdVdXBCd1IwVjgwUExtTlljK2ljWmdFMjQ3cmF6S1Y2Vm5jaEh0cm5lbjlt?=
- =?utf-8?B?QlU5V00xVmVrOStPQ0ZONUJVNnBYWWMxZHRZVkZ6UnRBVDI0WkxCMnJsaGlJ?=
- =?utf-8?B?ZU9PQ3BmcWdhYmo1bWhSeEVPVFgzYzl6anJIaEp4SWdaeGJjbzhqZWs1WjlQ?=
- =?utf-8?B?VnA2V2F3M2d0Tkp2QTh3bk01bmIzdVlpSUdNSVBPSEtZM0hDSzFROTFIYVZG?=
- =?utf-8?B?V0dSUHp5ZFJPVk14YlcrVGg1Nk9kMHFjZ3p3ZVlsVEZtTkIxcVdhNUxmajM0?=
- =?utf-8?B?ZUtGWHU1bzJxcUxmVmQzMlFTMk8vTHJwNkFNdTRlVkNVVjNqRWFvNzR5TUhV?=
- =?utf-8?B?WFJYMVRUbkI1V3NYN2pGa0dkS0dmL3d0RG5zdXNGNmh2V3hTeGNWZmhiaURE?=
- =?utf-8?B?dERTeVVuNUhLTUQ4OE0yMFIvd3p6M2dHd2RaRGtKRWh2NHRHaTFGYlZyQmgy?=
- =?utf-8?B?ZFBGNm8rRktiTDZXMkJZZXJsRllURC85b2J1TGV6djlLQzZOZHNlMnIvWGhO?=
- =?utf-8?B?UXkrQXU0b3ltTGREd0pncnViTjJUTy80d0ZWN1FmNlRvY3c0bDZid1NicDEr?=
- =?utf-8?B?dnRaVDVWV1J5U01uQzFMM0pmbkluMVZZc2t4VTlhWHh5MThGSWJnQzJseFIv?=
- =?utf-8?B?WFVsbWFpY1lGaVVOSEJFL2E0SGs2NWZSbUQ5Y1VReGJEaXpsSHhCN0ZEdllt?=
- =?utf-8?B?RzA5WTU5bzlhbk9UUmZPVjBVS0RwZHhyUC9STWJvUkVhejFyTEtncHdPcGZh?=
- =?utf-8?B?Q0xiV1pWc0lhanc0di9jaWhwQkg4ZG8wK0lkTkxzOWZFY1VMa29yMW5IZ0Jq?=
- =?utf-8?B?Tjlpa25xTVVSZUFGTjcxeFVrTEVMdUN5aUdQeVV1bGUvWTVVczhFU3FGVDlu?=
- =?utf-8?B?TEdSQjZSOFQ2OTRPdS9NNExTb1B6TnRMZHI0TWVEQ2NLNW04bzB6eEp3SFIx?=
- =?utf-8?B?OUp0a0xXOEJyOFF5dFdnVmtWcDRrSUFVcERXL1I2MmhaTVZqUmxQL0hFcCs5?=
- =?utf-8?B?dVFnckhQRG4xZHBqNmdrU29vZVlCZWV1SkszT090V2tPS1VWMUMzVWd0U1ds?=
- =?utf-8?B?eGN4THJhREplV3pEc0JlOEU0OGxncjA3MmZBTzh6M01EVHJYYlMzckNDR1hv?=
- =?utf-8?B?SkxCVTBGemNsV3NoTGxKOXdueGZRUEg1ekhCSzJReWt5ZkhrUkltSGZ4USsr?=
- =?utf-8?B?RUJnUTQ3VGxiUHJweGxBaU91WnNiTVllcVVGTnFPZjRnR1d5ZlJNMGVGRUhW?=
- =?utf-8?B?UEtiLzlzQWlEaDZaSlhzT1BIY1JIOVlVdXR3VGgveTBQNEU3aFl6ZFZZWTJR?=
- =?utf-8?B?WTNIWCs3QW9HbUxLUUVpdkxhUlZZMjloNW40QVIzcFBwWmdnNjcwclZNbnVa?=
- =?utf-8?B?TTZNVWZzV2JEdHM2NHdIekRrUWg3d0xtNGNHZkpjL2F5K3FibnlFT0lGbG1v?=
- =?utf-8?B?N3hiMjhJNndPWXRrWVdOaGtNb2VnVk1UZERIZGRyanVmemNQR2h6NlFOUjcw?=
- =?utf-8?B?c2JLOHZHT3hobFhXUkdKMVI2em5KWGV1TW4yR3AxT2JqZ2R0OTVoS0J0OHQy?=
- =?utf-8?B?VGhuQlE1S1BteUkvMnpkV3pHalJxVzJIL29OeTIzUHZ0TFljdEVSWlFia2RW?=
- =?utf-8?B?SEpCcXJseVJUSWtBRnkzNHFDRnBtYnRpb0Izc0lCaU9uMzdObS93MGJCajJW?=
- =?utf-8?B?d1d1MVcwdUI0ZGhLUytIaVV4Z0FIMTlpN1RDTGNvR24rS1dLeko2V2w1VVR2?=
- =?utf-8?B?L3ovVDRodjg4dVRBSS9jOUVwQTdMWGk5MXRWbE5acWtpNGlxU1FWUFdEK2l2?=
- =?utf-8?B?TWY4T0RmZExtWEZlVUVvbVNua0FVUTBwV0Y4dWpWUnBXZUt5QmJsQ09nc1RB?=
- =?utf-8?B?Zzg1clZJTGJ6SFV5VzhLbHhLcmlGbGVlRkd2d1IxR2xOTHptUE95dThKMHl0?=
- =?utf-8?B?cllOV0tvdGJ6enNqejd3RnErMWgzYUpvWjZRQUZTUnRYaklIWE1WdTAvL3VK?=
- =?utf-8?B?b01zL1piaWRMVllGVitoL0pnWWFBTmxSRzBhdHJITG1nZ1FreWJoMkI3Wi9H?=
- =?utf-8?B?WXdOc1dVSGw2MEErSCtPdzNjK2d0WnFDSnZhZnU0NnUzUG95Y29kenhwMS9E?=
- =?utf-8?B?RUZDTzRNR05GS3J4UHM1aWlGQXoza0YxL0F2enR2eGxydXpOVEhHVUZnc05m?=
- =?utf-8?B?ZmN5dDVFT1NWajkwZVpVN3Fad0xCYVQ4RXlGcG5XanVpblVMTEk5VDV2dm9E?=
- =?utf-8?B?Y1RETGJJNG04S1ZoL2tFMlpscXdMU0VFa2c1L1FPRS9TMHNiVDl3UTdQZDI1?=
- =?utf-8?B?RENtSGhtREM1Wkw4dDFXTUE4QjF3OU5RTUpzVUREcXhGMXJCUGdUV1htSDkr?=
- =?utf-8?Q?jw8N9kfdJcwdMRT8=3D?=
-X-Exchange-RoutingPolicyChecked:
-	g6b1Xx6hvAA8lRsE3UTvyeYPGCDwXLG7DmisMwIuTk4/hgCW8pR2DEPdNE9HyzVuOeoIBnNKz6yJGPKlYovXlxghsRj8IIQYCnqLecyzSVCM/R8Khi+sAfZnBhuSNv9cMIyNN7dbpobplo82sgGPxsLsQBeDQHIMiuy2YOJSWmPbU/9rGIaUBVe4bbURnumx1Yje9almxrIt69J7yPrLMzVHCoA3xJaJabzHphGMG8XOdJ/Zo8TCl5lZv/d74i99zX4WwIfZJ36Amvorsc8aO6LWesaIS6AjzytgOgSDCZLI2UKCVlFpOFYO1Wz8Uo9BqqE++zh/CqFBUUyha9UfaQ==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb7ff46b-9ff1-4a15-24db-08de8630d4c7
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR11MB8189.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 03:29:02.3104
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FIDL45LpYyU/zY83IeamWDqDuZKuL0yFxkGIf8dUqfG1Gm1+n4JLZ9bHpo9gntUsucYEPKUD7+FdZK7WXkc3MKrVjf7yau3vQMUsGhx44qk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV1PR11MB8820
-X-Proofpoint-ORIG-GUID: G6gqpH1Mg9e7_p_n10PsukcYTv2zYSEL
-X-Proofpoint-GUID: G6gqpH1Mg9e7_p_n10PsukcYTv2zYSEL
-X-Authority-Analysis: v=2.4 cv=fLk0HJae c=1 sm=1 tr=0 ts=69bcbf01 cx=c_pps
- a=RSwuJLpHzOwHBpypAu37kQ==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22
- a=VwQbUJbxAAAA:8 a=Byx-y9mGAAAA:8 a=1XWaLZrsAAAA:8 a=iGHA9ds3AAAA:8
- a=mDV3o1hIAAAA:8 a=t7CeM3EgAAAA:8 a=IJxojsRzdbPxS6_aMgQA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=nM-MV4yxpKKO9kiQg6Ot:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIwMDAyMiBTYWx0ZWRfX/k8kia08zAsS
- snzL+51mTiYFfLMAx5rqOI0KUIRot5fNFjVk2XDICLorgZGgn6A33pVkdXFpSQP+5M+XDMUE8Tr
- v4NUsYLhnO3lUFT3HZvQwjuOgXOuJn2vFYfDoM2m+ZrYQEukQFfBZ0bGirxFuHl0e5mChlL33/C
- +UA/pT29gCK/g/ZwH1DqqNW05b9CN17PTL2W/7vcxXl9aRnczQ0dugoRBxukkXlaGYU2sc+OM4m
- WH4tist5ItWBLCRFxZUSyWufu5Pp7CcsILPqpKhDlQd5nop6TyKq/puZmWLvUYnuj7/NA5b6gIP
- cmMj47JmnpOH/QIz14HEVqbUgGc2bliX07g+Jn5zxewG/xQCL1xwytUbnY6yG9M6Tf9VeKJtooQ
- FU8Y5XtpYhkuiZpQPsOx5Cyv1OeS3HRu82rB3rWv+GP0rrf3GbbrU9TmOjKRlh23iKlOG+zzbO3
- rvy2u+Tan9FkE9gmViQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-19_04,2026-03-19_05,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 impostorscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=0 malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603200022
+References: <20260209174032.4142096-1-irogers@google.com> <20260209174032.4142096-2-irogers@google.com>
+ <aaZQZI2ElVhblz-t@google.com>
+In-Reply-To: <aaZQZI2ElVhblz-t@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 19 Mar 2026 21:41:33 -0700
+X-Gm-Features: AaiRm504X-nnjrdc9ma65X_4Vp1hA4PSpI5tAndSHpxweoEhstu8kzjBJitnrrg
+Message-ID: <CAP-5=fW+-1oP16Uyk1zSkU6c4=eg0aNpqNbE_v_0dxqJiq-PCg@mail.gmail.com>
+Subject: Re: [PATCH v1 01/25] perf sample: Document struct perf_sample
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Leo Yan <leo.yan@arm.com>, Tianyou Li <tianyou.li@intel.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Derek Foreman <derek.foreman@collabora.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, tanze <tanze@kylinos.cn>, 
+	Hrishikesh Suresh <hrishikesh123s@gmail.com>, Quan Zhou <zhouquan@iscas.ac.cn>, 
+	Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, Chen Ni <nichen@iscas.ac.cn>, 
+	Blake Jones <blakejones@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 3/19/2026 4:21 PM, Ian Rogers wrote:
-> CAUTION: This email comes from a non Wind River email account!
-> Do not click links or open attachments unless you recognize the sender and know the content is safe.
+On Mon, Mar 2, 2026 at 7:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> On Wed, Mar 18, 2026 at 6:57 PM Haixiao Yan
-> <haixiao.yan.cn@windriver.com> wrote:
->> Hi,
->>
->> Commit[5cf6e76e4f4f](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/tools/lib/perf/Makefile?h=linux-6.6.y&id=5cf6e76e4f4fee54c0056758b639cf4919cffba9)
->> changed the libperf Makefile to preserve external CFLAGS instead of overriding them. As a result, the -O6 optimization flags from perf's
->> build system are now inherited by libperf during compilation. This triggers a false positive -Walloc-size-larger-than= warning in GCC 13 on
->> riscv64, causing the build to fail with -Werror.
->>
->> | cpumap.c: In function 'perf_cpu_map__merge':
->> | cpumap.c:422:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum objec
->> t size 9223372036854775807 [-Werror=alloc-size-larger-than=]
->> |   422 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
->> |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> | In file included from cpumap.c:3:
->> | /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/recipe-sysroo
->> t/usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
->> |   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
->> |       |              ^~~~~~
->> | rm -f /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/perf-1.
->> 0/libapi/libapi.a && riscv64-poky-linux-gcc-ar rcs /buildarea5/hyan-cn/project_yocto/poky/build-riscv64/tmp/w
->> ork/qemuriscv64-poky-linux/perf/1.0/perf-1.0/libapi/libapi.a /buildarea5/hyan-cn/project_yocto/poky/build-ris
->> cv64/tmp/work/qemuriscv64-poky-linux/perf/1.0/perf-1.0/libapi/libapi-in.o
->> | cc1: all warnings being treated as errors
-> Hi Haixiao,
+> On Mon, Feb 09, 2026 at 09:40:08AM -0800, Ian Rogers wrote:
+> > Add kernel-doc for struct perf_sample capturing the somewhat unusual
+> > population of fields and lifetime relationships.
 >
-> this was raised before by Chingbin in:
-> https://lore.kernel.org/lkml/20260212025127.841090-1-liqb365@163.com/
-> I was concerned about the introduction of volatile to avoid this
-> warning. I've mailed out what is hopefully a fix without volatile in
-> it:
-> https://lore.kernel.org/lkml/20260319081843.1650640-1-irogers@google.com/
-> If you could take a look.
+> Thanks for doing this.
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/sample.h | 90 ++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 87 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+> > index 3cce8dd202aa..3fd2a5e01308 100644
+> > --- a/tools/perf/util/sample.h
+> > +++ b/tools/perf/util/sample.h
+> > @@ -81,47 +81,131 @@ struct simd_flags {
+> >  #define SIMD_OP_FLAGS_PRED_PARTIAL   0x01    /* partial predicate */
+> >  #define SIMD_OP_FLAGS_PRED_EMPTY     0x02    /* empty predicate */
+> >
+> > +/**
+> > + * struct perf_sample
+> > + *
+> > + * A sample is generally filled in by evlist__parse_sample/evsel__pars=
+e_sample
+> > + * which fills in the variables from a "union perf_event *event" which=
+ is data
+> > + * from a perf ring buffer or perf.data file. The "event" sample is va=
+riable in
+> > + * length as determined by the perf_event_attr (in the evsel) and deta=
+ils within
+> > + * the sample event itself. A struct perf_sample avoids needing to car=
+e about
+> > + * the variable length nature of the original event.
+> > + *
+> > + * To avoid being excessively large parts of the struct perf_sample ar=
+e pointers
+> > + * into the original sample event. In general the lifetime of a struct
+> > + * perf_sample needs to be less than the "union perf_event *event" it =
+was
+> > + * derived from.
+> > + *
+> > + * The struct regs_dump user_regs and intr_regs are lazily allocated a=
+gain for
+> > + * size reasons, due to them holding a cache of looked up registers. T=
+he
+> > + * function pair of perf_sample__init and perf_sample__exit correctly =
+initialize
+> > + * and clean up these values.
+> > + */
+> >  struct perf_sample {
+> > +     /** @ip: The sample event PERF_SAMPLE_IP value. */
+> >       u64 ip;
+> > -     u32 pid, tid;
+> > +     /** @pid: The sample event PERF_SAMPLE_TID pid value. */
+> > +     u32 pid;
+> > +     /** @tid: The sample event PERF_SAMPLE_TID tid value. */
+> > +     u32 tid;
+> > +     /** @time: The sample event PERF_SAMPLE_TIME value. */
+> >       u64 time;
+> > +     /** @addr: The sample event PERF_SAMPLE_ADDR value. */
+> >       u64 addr;
+> > +     /** @id: The sample event PERF_SAMPLE_ID value. */
+> >       u64 id;
+> > +     /** @stream_id: The sample event PERF_SAMPLE_STREAM_ID value. */
+> >       u64 stream_id;
+> > +     /** @period: The sample event PERF_SAMPLE_PERIOD value. */
+> >       u64 period;
+> > +     /** @weight: Data determined by PERF_SAMPLE_WEIGHT or PERF_SAMPLE=
+_WEIGHT_STRUCT. */
+> >       u64 weight;
+> > +     /** @transaction: The sample event PERF_SAMPLE_TRANSACTION value.=
+ */
+> >       u64 transaction;
+> > +     /** @insn_cnt: Filled in and used by intel-pt. */
+> >       u64 insn_cnt;
+> > +     /** @cyc_cnt: Filled in and used by intel-pt. */
+> >       u64 cyc_cnt;
+> > +     /** @cpu: The sample event PERF_SAMPLE_CPU value. */
+> >       u32 cpu;
+> > +     /**
+> > +      * @raw_size: The size in bytes of raw data from PERF_SAMPLE_RAW.=
+ For
+> > +      *            alignment reasons this should always be a multiple =
+of
+> > +      *            sizeof(u64) + sizeof(u32).
+> > +      */
+> >       u32 raw_size;
+> > +     /** @data_src: The sample event PERF_SAMPLE_DATA_SRC value. */
+> >       u64 data_src;
+> > +     /** @phys_addr: The sample event PERF_SAMPLE_PHYS_ADDR value. */
+> >       u64 phys_addr;
+> > +     /** @data_page_size: The sample event PERF_SAMPLE_DATA_PAGE_SIZE =
+value. */
+> >       u64 data_page_size;
+> > +     /** @code_page_size: The sample event PERF_SAMPLE_CODE_PAGE_SIZE =
+value. */
+> >       u64 code_page_size;
+> > +     /** @cgroup: The sample event PERF_SAMPLE_CGROUP value. */
+> >       u64 cgroup;
+> > +     /** @flags: Extra flag data from auxiliary events like intel-pt. =
+*/
+> >       u32 flags;
+> > +     /** @machine_pid: The guest machine pid derived from the sample i=
+d. */
+> >       u32 machine_pid;
+> > +     /** @vcpu: The guest machine vcpu derived from the sample id. */
+> >       u32 vcpu;
+> > +     /** @insn_len: Instruction length from auxiliary events like inte=
+l-pt. */
+> >       u16 insn_len;
+>
+> Does it control the insn array later?
+>
+>
+> > +     /**
+> > +      * @cpumode: The cpumode from struct perf_event_header misc varia=
+ble
+> > +      *           masked with CPUMODE_MASK. Gives user, kernel and hyp=
+ervisor
+> > +      *           information.
+> > +      */
+> >       u8  cpumode;
+> > +     /** @misc: The entire struct perf_event_header misc variable. */
+> >       u16 misc;
+> > +     /** @ins_lat: Instruction latency information from auxiliary even=
+ts like intel-pt. */
+> >       u16 ins_lat;
+>
+> I think this is weight2 coming from PERF_SAMPLE_WEIGHT_STRUCT.
+>
+>
+> >       /** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_c=
+yc. */
+> >       u16 weight3;
+>
+> You may also want to mention it's from WEIGHT_STRUCT.
+>
+>
+> > -     bool no_hw_idx;         /* No hw_idx collected in branch_stack */
+> > -     bool deferred_callchain;        /* Has deferred user callchains *=
+/
+> > +     /**
+> > +      * @no_hw_idx: For PERF_SAMPLE_BRANCH_STACK, true when
+> > +      *             PERF_SAMPLE_BRANCH_HW_INDEX isn't set.
+> > +      */
+> > +     bool no_hw_idx;
+> > +     /**
+> > +      * @deferred_callchain: When processing PERF_SAMPLE_CALLCHAIN a d=
+eferred
+> > +      *                      user callchain marker was encountered.
+> > +      */
+> > +     bool deferred_callchain;
+>
+> If this is set, then callchain entry is allocated for deferred
+> callchains.
 
-Hi Ian,
+So when deferred_callchain is set this isn't true. The callchain
+points into the event:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/evsel.c?h=3Dperf-tools-next#n3384
 
-I have verified this patch on the master branch using gcc 13.4.0 for 
-both riscv64 and ppc64 targets, and
-can confirm the issue is resolved.
+>
+>
+> > +     /**
+> > +      * @deferred_cookie: Identifier of the deferred callchain in the =
+later
+> > +      *                   PERF_RECORD_CALLCHAIN_DEFERRED event.
+> > +      */
+> >       u64 deferred_cookie;
+> > +     /** @insn: A copy of the sampled instruction filled in by perf_sa=
+mple__fetch_insn. */
+> >       char insn[MAX_INSN];
+> > +     /** @raw_data: Byte aligned pointer into the original event for P=
+ERF_SAMPLE_RAW data. */
+>
+> I think it's 32-bit aligned (or shifted) as it comes right after the
+> raw_size (32-bit).  As other fields in the event are 64-bit aligned this
+> caused some troubles like in perf trace when you access the pointer
+> directly and assume it's naturally aligned.
+>
+>
+> >       void *raw_data;
+> > +     /** @callchain: Pointer into the original event for PERF_SAMPLE_C=
+ALLCHAIN data. */
+> >       struct ip_callchain *callchain;
+>
+> If deferred_callchain is not set, it just points to data in the mmap
+> buffer and it should not be freed.
 
-It would be greatly appreciated if this could be backported to the 
-linux-6.6.y stable branch.
+But if deferred_callchain is set this may also be true. Sashiko is
+picking up on the inconsistencies. I'll weasel word it by referring to
+the sample__merge_deferred_callchain function.
 
 Thanks,
+Ian
 
-Haixiao
-
+> > +     /** @branch_stack: Pointer into the original event for PERF_SAMPL=
+E_BRANCH_STACK data. */
+> >       struct branch_stack *branch_stack;
+> > +     /**
+> > +      * @branch_stack_cntr: Pointer into the original event for
+> > +      *                     PERF_SAMPLE_BRANCH_COUNTERS data.
+> > +      */
+> >       u64 *branch_stack_cntr;
+> > +     /** @user_regs: Values and pointers into the sample for PERF_SAMP=
+LE_REGS_USER. */
+> >       struct regs_dump  *user_regs;
+> > +     /** @intr_regs: Values and pointers into the sample for PERF_SAMP=
+LE_REGS_INTR. */
+> >       struct regs_dump  *intr_regs;
+> > +     /** @user_stack: Size and pointer into the sample for PERF_SAMPLE=
+_STACK_USER. */
+> >       struct stack_dump user_stack;
+> > +     /** @read: The sample event PERF_SAMPLE_READ counter values. */
+>
+> The actual format depends on read_format in the event attribute.
 >
 > Thanks,
-> Ian
+> Namhyung
 >
->> Steps to reproduce:
->>
->> git clone -b scarthgap https://git.yoctoproject.org/poky
->> cd poky
->> sed -i 's/af240d7d57ebf66e87bc2dff34855e630a97ead1/5cf6e76e4f4fee54c0056758b639cf4919cffba9/' meta/recipes-kernel/linux/linux-yocto_6.6.bb
->>
->> source oe-init-build-env build-riscv64
->>
->> cat >> conf/local.conf << 'EOF'
->> MACHINE = "qemuriscv64"
->> 'KERNEL_VERSION_SANITY_SKIP = "1"'
->> EOF
->>
->> bitbake perf
->>
->> I have confirmed that:
->> Known to fail: gcc 13.3.0, 13.4.0
->> Known to work: gcc 11.5.0, 12.5.0, 14.3.0, 15.2.0
->>
->> Not sure whether this is a gcc bug.
->> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=124549 filed to gcc.
->>
->> Thanks,
->> Haixiao
->>
->>
+>
+> >       struct sample_read read;
+> > +     /**
+> > +      * @aux_sample: Similar to raw data but with a 64-bit size and
+> > +      *              alignment, PERF_SAMPLE_AUX data.
+> > +      */
+> >       struct aux_sample aux_sample;
+> > +     /** @simd_flags: SIMD flag information from ARM SPE auxiliary eve=
+nts. */
+> >       struct simd_flags simd_flags;
+> >  };
+> >
+> > --
+> > 2.53.0.239.g8d8fc8a987-goog
+> >
