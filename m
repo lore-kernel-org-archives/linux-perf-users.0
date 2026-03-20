@@ -1,177 +1,99 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27983BC661
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 15:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3483CD8A2
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 17:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774020579; cv=none; b=WIkp2PaCrFmHLmgFrWoUmkbGCzuFGLSu9AcNi8oh6x7q+78RYVjzntnWMoBgRf0jTe12KUtxuW4GS1EeE9Sz5n0LDK6Hkn8TL+T18+t7smUVqeRZAqFBYHNtxYU2Mj0/lx+7fYz2Mo/RSSQaE/HlauLwUulEMb+pbqvv5OwZS3E=
+	t=1774027926; cv=none; b=Gt/EdAkYvkjP8UN3E15ITGGOv7y9oTJ3udGoN7+ZS/CFj3sPPzweb9wIBI2J7AUKyjxfsr9ZD1Xl4ERLU32ig+kDDVuul6hYsYvjaAVIGG12JaWhpidvGMSySbN1rEeIZQD81PkaeZ0mrJmDWW4Mu8Gf0W2leQTYGnIomVz1Cj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774020579; c=relaxed/simple;
-	bh=Xt0oyCoANRknBAg74JLO5k+ywmj7macSsoY1aANe7W0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=A1OmXTRv4XZX4f6uf6jQ+6xfiZpK+e0S3429eNyRJ7tKHIoBgAPvRtbTOI/QDqqNzrOGlWh3Po7UMCuSVLj22JdxZALXaa8676Ut3Mqa5qAiu5p1cUVFxnxiaQvJXZgpRbqGLgiu4qYmNq21AYAhqwWpWPJtr3YDnnZjUZeb2+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S9hYe5UP; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
+	s=arc-20240116; t=1774027926; c=relaxed/simple;
+	bh=E6aRQ367u5hgWjKYG0nqKkdIuMauzwGRTL3rsHqFQ2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JyDtyQ5s7UG3qHk5SiRA+qSEsNBCWWp8kNv90edSSAUUnL+zr1DY+zuJ3KhDS1rXMafa2GGY0FpMeyDGAk+1vzL200GOizmqXzgal4ipgbSlLHW4NdCapi4kXeFFdsM7K/lmL/O/wQFXNWn9HtLFAZ7G8HSZxLASsHdn6gfjy5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C5W+kFkg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S9hYe5UP"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2b059ab124dso7718395ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 08:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774020578; x=1774625378; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jmlujj2bVl3FzbdDIVmQ4UUMo+lfTybxXtCuGCGh2ZY=;
-        b=S9hYe5UPUpr2tsFSslQa2NpB9G0BI8FQ2JvEWlM2fyGvfdmv1B1RKf52lbWPTVEJH8
-         j5gfklzQjMXguRNUHP9z3cRxTIoxcjgnY0VSIq5ZBITSIcbVDebb2EXtfwkyuJ5VSjjc
-         mEOFtM7WaNKJR1jbZuwvA8ne2NL+Lnpa/upbdxSJGBxi2Z72ZPRBdWRIPI1ylVbe32M/
-         gg85cNn8pGj8Pb4gR+0spBVaJ7aYzhitMWRGzIT1LGVy+o9qyxalUKg84jYusqJRPGfR
-         fSnjX3IchwuuD62QHxoWSBNJ17vxafuDE02846/QxXaOQ9Uut4wdwR/Pe6iEjFPebGZO
-         WPzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774020578; x=1774625378;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jmlujj2bVl3FzbdDIVmQ4UUMo+lfTybxXtCuGCGh2ZY=;
-        b=swqXIP4KSyzcTVFP+SXWdqjoycJPlzUccJ0o+Ezjh4+4TvT/kAsLnmsLK1M5y08P9U
-         1lIXqQg17URYcDfGdKpREYiULcAoSNKwFgC90tR1wJdSvCYCDVSg5SgS6y5ZiYmR9no/
-         0QIv9V7tFVdyNfBm9XedSolFS+bR1zo+mqYQgvwTT+pNKe3Lw2Nlei3/vNQIii6WXcP9
-         gbV+rVFj6rQYJXFwyA/LNIYfGZoFuRUR/9zII1pG5kJO72kyQqjleQ0pFx2JCAtxxGCl
-         yFe5DyjNTXEO5uXuIqeVTK+DPGpAq73z+NNRxnhRnoXhyxyOc7BR0hs3E+87hu5NPr91
-         mhsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFHcNh3dKuYPxAsKQ9KQeorEPvCQDAzak9tLOWmm64m7bUZSMrPu7cxNvjYOF+kciG9l1KCJw0WvisEsQWwN/n@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqOr4kB0ZJAQBYhCG9Ux7Pu6H1V2NLL57YNBYlcbRDJ6i5cdFS
-	UPucAvm8J119cvGBACZqRY8QRuXu3rSoq9qIPfPcWu0rJ8XBxiPGslwBObIFcF4wCz6CQyx+oST
-	Ph8karojARD1uNA==
-X-Received: from plgc17.prod.google.com ([2002:a17:902:d491:b0:2b0:51f0:272d])
- (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:191:b0:2b0:60b2:4f8 with SMTP id d9443c01a7336-2b0827219a0mr33739825ad.15.1774020577769;
- Fri, 20 Mar 2026 08:29:37 -0700 (PDT)
-Date: Fri, 20 Mar 2026 08:27:52 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C5W+kFkg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774027924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OpmkD8/1OErEP+Wqm/7F8P6jM8zuQtHg7khB2iRLIYo=;
+	b=C5W+kFkgluTf4EWH8XBSRNMfQPcouhXyUCF3LfaZdTDybr0antXcvNxRJqr32FU33jYjmE
+	jFx/jSpfwBqZA2CsRqdqPtA/nzFCeDKyf35WNU0bfcD7CsHOY/CRvUDRuVp9+3AFJ+QsOr
+	jRwkQYbgPNPYYQzDUXXmZwVdbtgCyGc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-rhYYQ86JNMONuO5uU-EJVw-1; Fri,
+ 20 Mar 2026 13:32:00 -0400
+X-MC-Unique: rhYYQ86JNMONuO5uU-EJVw-1
+X-Mimecast-MFC-AGG-ID: rhYYQ86JNMONuO5uU-EJVw_1774027919
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50A7C18005B2;
+	Fri, 20 Mar 2026 17:31:59 +0000 (UTC)
+Received: from 192.168.0.121 (unknown [10.22.80.104])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 378C81800361;
+	Fri, 20 Mar 2026 17:31:53 +0000 (UTC)
+Date: Fri, 20 Mar 2026 14:31:52 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
+Message-ID: <ab2D0a32yuwYTO1K@192.168.0.121>
+References: <20260320150651.51057-1-tglozar@redhat.com>
+ <20260320150651.51057-4-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260320152928.1916447-1-jmattson@google.com>
-Subject: [PATCH] perf/x86/intel: Don't update PEBS_ENABLE MSR in NMI context
-From: Jim Mattson <jmattson@google.com>
-To: Peter Zijlstra <peterz@infraded.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, 
-	Mingwei Zhang <mizhang@google.com>
-Cc: Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320150651.51057-4-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Writing MSR_IA32_PEBS_ENABLE in handle_pmi_common() when a PEBS event is
-throttled is problematic for KVM, which may have an older value for the MSR
-(previously obtained via perf_guest_get_msrs()) stored in the VM-exit
-MSR-load list.
+On Fri, Mar 20, 2026 at 04:06:51PM +0100, Tomas Glozar wrote:
+> Instead of using getopt_long() directly to parse the command line
+> arguments given to an RTLA tool, use libsubcmd's parse_options().
+> 
+> Utilizing libsubcmd for parsing command line arguments has several
+> benefits:
+> 
+> - A help message is automatically generated by libsubcmd from the
+>   specification, removing the need of writing it by hand.
+> - Options are sorted into groups based on which part of tracing (CPU,
+>   thread, auto-analysis, tuning, histogram) they relate to.
+> - Common parsing patterns for numerical and boolean values now share
+>   code, with the target variable being stored in the option array.
+> 
+> To avoid duplication of the option parsing logic, RTLA-specific
+> macros defining struct option values are created:
+> 
+> - RTLA_OPT_* for options common to all tools
+> - OSNOISE_OPT_* and TIMERLAT_OPT_* for options specific to
 
-It isn't necessary to update the MSR in the PMI handler, because the
-throttled counter's PerfEvtSel ENABLE bit has been cleared, so its
-PEBS_ENABLE bit is irrelevant. However, the MSR must be updated before the
-stale bit becomes relevant again (i.e. when the PMC starts counting a new
-perf event).
+[snip]
 
-When the PEBS_ENABLE MSR is rendered stale in the PMI handler, just record
-that fact in a new cpu_hw_events boolean, pebs_stale.  Extend
-intel_pmu_pebs_enable_all() to write MSR_IA32_PEBS_ENABLE when pebs_stale
-is set and to clear pebs_stale.  This ensures stale bits are cleared
-during the normal PMU enable path, before PERF_GLOBAL_CTRL is restored and
-any new event can start counting.
+> -int getopt_auto(int argc, char **argv, const struct option *long_opts);
+>  int common_parse_options(int argc, char **argv, struct common_params *common);
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
----
- arch/x86/events/intel/core.c | 28 ++++++++++++++++++++++------
- arch/x86/events/intel/ds.c   |  4 +++-
- arch/x86/events/perf_event.h |  1 +
- 3 files changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index cf3a4fe06ff2..3b0173d25232 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3548,14 +3548,26 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 		static_call(x86_pmu_drain_pebs)(regs, &data);
- 
- 		/*
--		 * PMI throttle may be triggered, which stops the PEBS event.
--		 * Although cpuc->pebs_enabled is updated accordingly, the
--		 * MSR_IA32_PEBS_ENABLE is not updated. Because the
--		 * cpuc->enabled has been forced to 0 in PMI.
--		 * Update the MSR if pebs_enabled is changed.
-+		 * PMI throttling may be triggered, which stops the PEBS
-+		 * event.  Although cpuc->pebs_enabled was updated
-+		 * accordingly, MSR_IA32_PEBS_ENABLE has not been updated.
-+		 *
-+		 * The MSR must not be updated in NMI context, because KVM
-+		 * may be in a critical region on its way to VM-entry, with
-+		 * the now-stale MSR value stored in the VM-exit MSR-load
-+		 * list.  On VM-exit, the CPU will restore the stale value.
-+		 *
-+		 * Deferring the MSR update is harmless because the
-+		 * throttled event's PerfEvtSel ENABLE bit has been
-+		 * cleared, so the stale PEBS_ENABLE bit is irrelevant for
-+		 * now.
-+		 *
-+		 * Track when MSR_IA32_PEBS_ENABLE is stale, so that
-+		 * pebs_enable_all() will write cpuc->pebs_enabled to the
-+		 * MSR, even when cpuc->pebs_enabled is 0.
- 		 */
- 		if (pebs_enabled != cpuc->pebs_enabled)
--			wrmsrq(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
-+			cpuc->pebs_stale = true;
- 
- 		/*
- 		 * Above PEBS handler (PEBS counters snapshotting) has updated fixed
-@@ -4978,6 +4990,10 @@ static int intel_pmu_hw_config(struct perf_event *event)
-  * These values have nothing to do with the emulated values the guest sees
-  * when it uses {RD,WR}MSR, which should be handled by the KVM context,
-  * specifically in the intel_pmu_{get,set}_msr().
-+ *
-+ * Note that MSRs returned from this function must not be modified in NMI
-+ * context. Doing so could result in a stale host value being restored at
-+ * the next VM-exit.
-  */
- static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- {
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 5027afc97b65..852baf6a05e9 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1982,8 +1982,10 @@ void intel_pmu_pebs_enable_all(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (cpuc->pebs_enabled)
-+	if (cpuc->pebs_enabled || cpuc->pebs_stale)
- 		wrmsrq(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
-+
-+	cpuc->pebs_stale = false;
- }
- 
- void intel_pmu_pebs_disable_all(void)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fad87d3c8b2c..22102296e31b 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -298,6 +298,7 @@ struct cpu_hw_events {
- 	/* DS based PEBS or arch-PEBS buffer address */
- 	void			*pebs_vaddr;
- 	u64			pebs_enabled;
-+	bool			pebs_stale;
- 	int			n_pebs;
- 	int			n_large_pebs;
- 	int			n_pebs_via_pt;
--- 
-2.53.0.959.g497ff81fa9-goog
+The function common_parse_options() body was removed, but the declaration remains.
+
+>  int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
+
+[snip]
 
