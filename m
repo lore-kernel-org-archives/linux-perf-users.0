@@ -1,99 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3483CD8A2
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 17:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56813DF018;
+	Fri, 20 Mar 2026 18:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774027926; cv=none; b=Gt/EdAkYvkjP8UN3E15ITGGOv7y9oTJ3udGoN7+ZS/CFj3sPPzweb9wIBI2J7AUKyjxfsr9ZD1Xl4ERLU32ig+kDDVuul6hYsYvjaAVIGG12JaWhpidvGMSySbN1rEeIZQD81PkaeZ0mrJmDWW4Mu8Gf0W2leQTYGnIomVz1Cj0=
+	t=1774030371; cv=none; b=d7JRc/hg5nqZVe7BZustHDQvbQdu9hphxdQbSjYZid/T07Yr4LGFUYyqfnJRvJTjFQRiGp8iW1VKuIQXeITnTQdbXjgagNUNciQBEgxLQQLa002rEsU78VDyPa6LWLf64cSKwZh4pS+O6g/DfMV638Tf6bcMH9HU+TKoXRRBDBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774027926; c=relaxed/simple;
-	bh=E6aRQ367u5hgWjKYG0nqKkdIuMauzwGRTL3rsHqFQ2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JyDtyQ5s7UG3qHk5SiRA+qSEsNBCWWp8kNv90edSSAUUnL+zr1DY+zuJ3KhDS1rXMafa2GGY0FpMeyDGAk+1vzL200GOizmqXzgal4ipgbSlLHW4NdCapi4kXeFFdsM7K/lmL/O/wQFXNWn9HtLFAZ7G8HSZxLASsHdn6gfjy5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C5W+kFkg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1774030371; c=relaxed/simple;
+	bh=n1QvfQWiSTblXnZbnr64EergjifBJapiMlDBUHZi4Lc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IyGxib0SWvyz/H6kuv/viVORhvf6YPFWqtuH/b5z30TPRZcbel4dbS3Um1W6eM5zobQU2xqlgZOzwkY4TUO9rbQIBKacrVoNmX858DX7kBt0Je3hU5p406kxkqDGqVUr91VSKctDSmkZfLR4iRaCGvfkAZjxIPEB1GUs6XLlYwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQsoyEuk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C5W+kFkg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774027924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OpmkD8/1OErEP+Wqm/7F8P6jM8zuQtHg7khB2iRLIYo=;
-	b=C5W+kFkgluTf4EWH8XBSRNMfQPcouhXyUCF3LfaZdTDybr0antXcvNxRJqr32FU33jYjmE
-	jFx/jSpfwBqZA2CsRqdqPtA/nzFCeDKyf35WNU0bfcD7CsHOY/CRvUDRuVp9+3AFJ+QsOr
-	jRwkQYbgPNPYYQzDUXXmZwVdbtgCyGc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-rhYYQ86JNMONuO5uU-EJVw-1; Fri,
- 20 Mar 2026 13:32:00 -0400
-X-MC-Unique: rhYYQ86JNMONuO5uU-EJVw-1
-X-Mimecast-MFC-AGG-ID: rhYYQ86JNMONuO5uU-EJVw_1774027919
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50A7C18005B2;
-	Fri, 20 Mar 2026 17:31:59 +0000 (UTC)
-Received: from 192.168.0.121 (unknown [10.22.80.104])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 378C81800361;
-	Fri, 20 Mar 2026 17:31:53 +0000 (UTC)
-Date: Fri, 20 Mar 2026 14:31:52 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
-Message-ID: <ab2D0a32yuwYTO1K@192.168.0.121>
-References: <20260320150651.51057-1-tglozar@redhat.com>
- <20260320150651.51057-4-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQsoyEuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE288C4CEF7;
+	Fri, 20 Mar 2026 18:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774030370;
+	bh=n1QvfQWiSTblXnZbnr64EergjifBJapiMlDBUHZi4Lc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=vQsoyEukDPovTA5HKZB4zM/MF81VBYhPNksMx1Y/RVbWUJI5ursuqHM3MNb1znVRx
+	 HMFrbq2gyjaTXxGg3YEagU9tPoich2wOy86uS5qJm3/673WWzAiVXocLBOgYYDEZue
+	 ziNe20ptij0kOxtAE9Lh5ll5A7sUMKOOePyde/V7QhRlGPwle/k4nCKT0uDwuTrq0S
+	 LFNPLGutBqbGvIJ67nr7FYOsubeSUEl0BvzsL+IhaJYwWZKEAkHnF4lYTFsC0deOls
+	 2ueeHBZlYxwjK+BSrmIhT8sLXJjpfPhxg7ljS85Y57K7n7Xq66BVRLF0PwtT8I0e1z
+	 Xwd/+ILvE4Clg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Zecheng Li <zli94@ncsu.edu>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, xliuprof@google.com, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260309175546.916039-1-zli94@ncsu.edu>
+References: <20260309175546.916039-1-zli94@ncsu.edu>
+Subject: Re: [PATCH v2 00/11] perf tools: Improvements to data type
+ profiler
+Message-Id: <177403036976.155109.14080981113837815530.b4-ty@b4>
+Date: Fri, 20 Mar 2026 11:12:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320150651.51057-4-tglozar@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-02735
 
-On Fri, Mar 20, 2026 at 04:06:51PM +0100, Tomas Glozar wrote:
-> Instead of using getopt_long() directly to parse the command line
-> arguments given to an RTLA tool, use libsubcmd's parse_options().
+On Mon, 09 Mar 2026 13:55:13 -0400, Zecheng Li wrote:
+
+> This patch series improves the coverage and correctness of data type
+> annotations in the perf tools.
 > 
-> Utilizing libsubcmd for parsing command line arguments has several
-> benefits:
+> Here's a breakdown of the patches:
 > 
-> - A help message is automatically generated by libsubcmd from the
->   specification, removing the need of writing it by hand.
-> - Options are sorted into groups based on which part of tracing (CPU,
->   thread, auto-analysis, tuning, histogram) they relate to.
-> - Common parsing patterns for numerical and boolean values now share
->   code, with the target variable being stored in the option array.
+> Patches 1-4 improve variable type matching:
+> - Add die_get_pointer_type() to properly handle typedef'd pointer types
+> - Preserve typedefs in match_var_offset for consistent type handling
+> - Skip redundant check_variable for die_find_variable_by_reg and
+>   die_find_variable_by_addr since match_var_offset already performs
+>   sufficient checking
+> - Improve type comparison when variables are found in different scopes
 > 
-> To avoid duplication of the option parsing logic, RTLA-specific
-> macros defining struct option values are created:
-> 
-> - RTLA_OPT_* for options common to all tools
-> - OSNOISE_OPT_* and TIMERLAT_OPT_* for options specific to
+> [...]
 
-[snip]
+Applied to perf-tools-next, thanks!
 
-> -int getopt_auto(int argc, char **argv, const struct option *long_opts);
->  int common_parse_options(int argc, char **argv, struct common_params *common);
-
-
-The function common_parse_options() body was removed, but the declaration remains.
-
->  int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
-
-[snip]
+Best regards,
+Namhyung
 
