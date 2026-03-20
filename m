@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470033FAE08
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CAA3FB064
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774034907; cv=none; b=TnKgUAT1D4yLwUPsFDXscdnVPqhbyuLFDlXrhzXooaHJzxHTrz9d5JbqJixl93VlrCZtMUSr6RmD+5MMBecHgOL3kJliQydSL8m94kYgh0mBGKlTN2P/mvEVTGJ+3il3GME+R4oYs0z5uMjlBI1ySWTjSe8uakLJMJEpQDOeEfg=
+	t=1774034911; cv=none; b=QznCJJkOdtO3nMWiHEW6Gc3aXLyOcv+vaarGyoE04jr5qn86AxTJyviLMGoinPglOTuHW0KDwRZBw5P//MGoJADwkaVTRF1Efm33uJmLMi+ViI7wRT6ReW4OS9BC1j9o89bp42pQ0Ofuw1gCMb+iCm0+ylrHf0JIRjJSel+fbWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774034907; c=relaxed/simple;
-	bh=RCv6opy0rOqvlNj5z92+NzI29eWRQq7w3cUzbQCiF+k=;
+	s=arc-20240116; t=1774034911; c=relaxed/simple;
+	bh=tSip01469jrvhlPU1rMawpxwCK1neIL6tVl016usvGs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZpH/+Rw5UnLYJS13iEMyIdgUpUYOoSdFuDa+p95WTB+KpRfh+dpZo/k0qQFxp93uNI8oED8UB8vADa7ukuUS6adU44S4CKq1+3ReriPnJkki9RlhWXyDghE3vKyZq4fC72xmchE6iP1kUFGc7YpcBPyevkzmKxMPJRBVIknLYbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jhYHsT1h; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=NUYska0xgexT5BB9ao8uuNkJmc9C6KXpRpd3IkR9174aMjGLcdwvgYYgdDLqAVAxyGpvmLdYcQL/UiiY9adWMEfjES5kh1UFB3I7L4XObc1BfoauCaRl2Ok3FKLp58/84mnW+aM9wgqMUMhkQE//wNL6bGC/niXHqhV/tqTWzbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPfws/Oh; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jhYHsT1h"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2c0c85c38acso1252640eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPfws/Oh"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12776bebeb3so34373204c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774034902; x=1774639702; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774034907; x=1774639707; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d33AbYDTlaS5mB4Y5js7O+MGtwScYB2I0WrPSaITagA=;
-        b=jhYHsT1hG/BlMtiP6MLncEGobCsBVcQdUe9geguptaE27QO3XL7gAWINHd/MYZucr9
-         nnP7MDyBTUCOvNYApfO3sHEFZvIfnaKaGjByHMldcnYUaiYel3fouL+ZaSDpMjGqNtdu
-         rT3jpLg4Nc9ng+sdzVtL1GEnbK272/XrRjjN7XAY8TUWQ+GIrZghDN85J21+RpQSlYGr
-         0I89jgMsMbTeeuWzMrLGlEABuIIUKFCSgVVhlzPx8bD92sTC8WV+y99992dXVBkq7KNT
-         RwOxzErFeWm746ExspoggayO/5bUZ4ZOGck5UHYe8cJZLe1npwzfjTV3R1Slv9oziHmh
-         FUgQ==
+        bh=0A77l9BiErq54VrV3SpgYee5+o3mpUP2uJ5Hd4lHjyw=;
+        b=gPfws/OhKEmjquesvA6ImVaRkugOOxjXgTTscNSSQ+xewB18gYQuD7hbcCUHfN2fvL
+         z+jioE5kmeEBHNx4Ean/hbCQ9RqF3mdCN9UIU1h9ZcarPdvwJbdAs3QqQT7mPCDiY1Sm
+         +BlWHJEKOtbxjOJv8I6BlAZLBCRb+AwnmZjI6Q5ygIcq8MXeMRHwcjwoSUw8l34z5Ap4
+         B+n5dgm8SB/VEI6LHlsQ4Uk4FSVtAv/ky1iCqwrqkvvRuBvrexeESj3FJAAZ1NoW4NhO
+         zHyZHsTFB+CVCidfTbkSbWxdqysufFdZdeUon+XJYq5dSIqVFRF0S7epbRujhcZ2QkLR
+         yXDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774034902; x=1774639702;
+        d=1e100.net; s=20251104; t=1774034907; x=1774639707;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d33AbYDTlaS5mB4Y5js7O+MGtwScYB2I0WrPSaITagA=;
-        b=sUZ1jooH60BCjG5zTXexlvGh7oMCxfxgFYTSxVGhrHkWHVeo3PCAeSL9If5BVFc31S
-         ldmTNeaMa1j7sTXZT4WDRi2Vz3dYprsWNQhW+/hVHkfez/8sHMD1a50ul21UDPZLwt8t
-         eBngfq0AL1rgu/jJZe7X8jmr/F9xsX0jveBcJbEtvwcM4kjeZ15hHMDSOJN/SQKIvKg/
-         YmFPs9Yvr67xvyWKg6cy67CadCRprS4iNzJnA/DwnLgPeKhLQxTfWC/vCbrdmYmqJMoM
-         U/+sKlQzJjeIkrdtEyoEZRxlizk0/yIL02kh63pkpD6rE3FLps8wpSUtrj1Z9fen+QY1
-         tblQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2jdxOgNP+l9iLlF3GvbCz3dG48V0dVkFtC8FSI3jjxpmgLxEyZwdauertM+iXhwA5L5vRlYlYFeJiw/oAED66@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+ts/5loz6rS3/Vf6EHyX4sD/V4XWiiIg5Xy3v06/LjDNgzSB2
-	NL4StJB3EwHKeUqZo9ohU/wqCsnnIG1Kr/qhuod1B4ZXxmFN31/r3oNTadrr5NvR9BOC0/nrReh
-	KeyEk3WUgbQ==
-X-Received: from dybrc11.prod.google.com ([2002:a05:7300:d80b:b0:2c0:f437:1898])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4198:b0:2c1:27c:75d0
- with SMTP id 5a478bee46e88-2c109622b74mr2063461eec.9.1774034902036; Fri, 20
- Mar 2026 12:28:22 -0700 (PDT)
-Date: Fri, 20 Mar 2026 12:26:12 -0700
+        bh=0A77l9BiErq54VrV3SpgYee5+o3mpUP2uJ5Hd4lHjyw=;
+        b=khYQQBgw/nZiwQ/bk7vjy+l1VQfymHXFWzyayQYkWBogAL/iLJTQ00l779W6X71bM1
+         FZ3mu7uldJeOjP7NKV1PWnylbuE7/xel1NdNltg4/ndw2lDhZPtcGEOyo7tRonqD0kRH
+         rkBWlHesT9UDbU04i3rkQUmN3poAJ3loGJYA/8Xt5UAp11tgqPEdZ9t6hmCiq6tBVvs4
+         nFR+WfTaoVFNuEQ4TfFMyz2IkNFuG7dUVF6R/fmT967DqjyQvN/cZjSFhqQsq690ldRk
+         6OlRw1doir7C+KDYMIhah5756lGnXw8tSyd87qbbq/GMrm0AyCeQKIgUcCJaegmRKKR+
+         lbOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFODCS7HJShwdL0/w8SVHX+3q8fLKSqky4mf53VyQ3P20RkCw3HkLxPWF+S1OVxEhkKp7WG8U5gnzNHz6RSAWW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbBr4urQBflbPpDiRRV35WiF3YPTWNLxOQY0Zj8M04F35T3nX2
+	Vi7CBXbfDtiqvkL79vxIvYSvDPkxbVz93chqysIibFEvWUpV6BCZ+v9cwZXgEQR4Ogt+KlBtAh9
+	XSd/lK+gUzA==
+X-Received: from dycao1.prod.google.com ([2002:a05:7301:7d01:b0:2c1:113a:5c84])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4442:b0:2c1:564:7116
+ with SMTP id 5a478bee46e88-2c109752b2dmr2217246eec.20.1774034906404; Fri, 20
+ Mar 2026 12:28:26 -0700 (PDT)
+Date: Fri, 20 Mar 2026 12:26:14 -0700
 In-Reply-To: <20260320192627.368357-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260320080835.724836-1-irogers@google.com> <20260320192627.368357-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260320192627.368357-11-irogers@google.com>
-Subject: [PATCH v4 10/25] perf lock: Constify trace_lock_handler variables
+Message-ID: <20260320192627.368357-13-irogers@google.com>
+Subject: [PATCH v4 12/25] perf db-export: Remove evsel from struct export_sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,42 +77,106 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Structs don't change and so constify.
+As the sample contains the evsel avoid the duplication. Remove the
+evsel from db_export__sample as it can also read from the sample.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/db-export.c                            | 5 ++---
+ tools/perf/util/db-export.h                            | 3 +--
+ tools/perf/util/scripting-engines/trace-event-python.c | 8 ++++----
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 78fb39d06e7c..735e6bb234ae 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1179,7 +1179,7 @@ static int report_lock_contention_end_event(struct perf_sample *sample)
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index a1f578c3a8d5..fdfd825c7ef4 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -345,14 +345,13 @@ static int db_export__threads(struct db_export *dbe, struct thread *thread,
+ }
  
- /* lock oriented handlers */
- /* TODO: handlers for CPU oriented, thread oriented */
--static struct trace_lock_handler report_lock_ops  = {
-+static const struct trace_lock_handler report_lock_ops  = {
- 	.acquire_event		= report_lock_acquire_event,
- 	.acquired_event		= report_lock_acquired_event,
- 	.contended_event	= report_lock_contended_event,
-@@ -1188,13 +1188,13 @@ static struct trace_lock_handler report_lock_ops  = {
- 	.contention_end_event	= report_lock_contention_end_event,
- };
- 
--static struct trace_lock_handler contention_lock_ops  = {
-+static const struct trace_lock_handler contention_lock_ops  = {
- 	.contention_begin_event	= report_lock_contention_begin_event,
- 	.contention_end_event	= report_lock_contention_end_event,
- };
- 
- 
--static struct trace_lock_handler *trace_handler;
-+static const struct trace_lock_handler *trace_handler;
- 
- static int evsel__process_lock_acquire(struct perf_sample *sample)
+ int db_export__sample(struct db_export *dbe, union perf_event *event,
+-		      struct perf_sample *sample, struct evsel *evsel,
++		      struct perf_sample *sample,
+ 		      struct addr_location *al, struct addr_location *addr_al)
  {
+ 	struct thread *thread = al->thread;
+ 	struct export_sample es = {
+ 		.event = event,
+ 		.sample = sample,
+-		.evsel = evsel,
+ 		.al = al,
+ 	};
+ 	struct thread *main_thread;
+@@ -365,7 +364,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 	if (!machine)
+ 		return -1;
+ 
+-	err = db_export__evsel(dbe, evsel);
++	err = db_export__evsel(dbe, sample->evsel);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/tools/perf/util/db-export.h b/tools/perf/util/db-export.h
+index 23983cb35706..1abbfd398e3a 100644
+--- a/tools/perf/util/db-export.h
++++ b/tools/perf/util/db-export.h
+@@ -25,7 +25,6 @@ struct call_return;
+ struct export_sample {
+ 	union perf_event	*event;
+ 	struct perf_sample	*sample;
+-	struct evsel		*evsel;
+ 	struct addr_location	*al;
+ 	u64			db_id;
+ 	u64			comm_db_id;
+@@ -96,7 +95,7 @@ int db_export__symbol(struct db_export *dbe, struct symbol *sym,
+ int db_export__branch_type(struct db_export *dbe, u32 branch_type,
+ 			   const char *name);
+ int db_export__sample(struct db_export *dbe, union perf_event *event,
+-		      struct perf_sample *sample, struct evsel *evsel,
++		      struct perf_sample *sample,
+ 		      struct addr_location *al, struct addr_location *addr_al);
+ 
+ int db_export__branch_types(struct db_export *dbe);
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 08197cef44c8..8de08cebe240 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1312,7 +1312,7 @@ static void python_export_sample_table(struct db_export *dbe,
+ 	t = tuple_new(28);
+ 
+ 	tuple_set_d64(t, 0, es->db_id);
+-	tuple_set_d64(t, 1, es->evsel->db_id);
++	tuple_set_d64(t, 1, es->sample->evsel->db_id);
+ 	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
+ 	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
+ 	tuple_set_d64(t, 4, es->comm_db_id);
+@@ -1353,7 +1353,7 @@ static void python_export_synth(struct db_export *dbe, struct export_sample *es)
+ 	t = tuple_new(3);
+ 
+ 	tuple_set_d64(t, 0, es->db_id);
+-	tuple_set_d64(t, 1, es->evsel->core.attr.config);
++	tuple_set_d64(t, 1, es->sample->evsel->core.attr.config);
+ 	tuple_set_bytes(t, 2, es->sample->raw_data, es->sample->raw_size);
+ 
+ 	call_object(tables->synth_handler, t, "synth_data");
+@@ -1368,7 +1368,7 @@ static int python_export_sample(struct db_export *dbe,
+ 
+ 	python_export_sample_table(dbe, es);
+ 
+-	if (es->evsel->core.attr.type == PERF_TYPE_SYNTH && tables->synth_handler)
++	if (es->sample->evsel->core.attr.type == PERF_TYPE_SYNTH && tables->synth_handler)
+ 		python_export_synth(dbe, es);
+ 
+ 	return 0;
+@@ -1517,7 +1517,7 @@ static void python_process_event(union perf_event *event,
+ 	/* Reserve for future process_hw/sw/raw APIs */
+ 	default:
+ 		if (tables->db_export_mode)
+-			db_export__sample(&tables->dbe, event, sample, evsel, al, addr_al);
++			db_export__sample(&tables->dbe, event, sample, al, addr_al);
+ 		else
+ 			python_process_general_event(sample, evsel, al, addr_al);
+ 	}
 -- 
 2.53.0.959.g497ff81fa9-goog
 
