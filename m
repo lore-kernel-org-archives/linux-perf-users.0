@@ -1,54 +1,54 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE93FE37D
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2F03FE660
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774034945; cv=none; b=D7+SBiE9mnijybPNst2zBjgY8Zv0BKSNQEH95WznF5LDAVQzAH+evYFYp8EK5POxJMG36bA/yxNnG+qEyuSF2dKgKv/BtetB5Md7hvqx8mVmlY3hJM74Ey4BLxm9kHGbFSGBujha97eTppsqzhIF88PnVJv+nlTWHYJkH2ZSFe0=
+	t=1774034946; cv=none; b=ckiRwMvZ2owKDHSWxyYLlYf5sXQ2c3zDp4/K1ivFK86yxA2cgaxfcAUFsqsuLMMEYy8SfYcORi09mN6ZCCXl2zje8WgfNlViIR/xIygF/ORy7Hkh9/YGFo11Xiw4JYBue3I+961PhqHDzH+7XvdB98isvqZzqhOqJG/wuVRBFNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774034945; c=relaxed/simple;
-	bh=df+Q8Hao+Wb+sgglUduBppGoaTxC3i0NJTMypKier14=;
+	s=arc-20240116; t=1774034946; c=relaxed/simple;
+	bh=pXK7y7ZuOVRML1aOeG+R07tIO0+gbHDOA/JGYMY35PE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o7VEu88+5NrhzRFm21Xv4gPpwRhKAri+rAw275OG7p/N5ZrUDZLXGmOZ6bdRUUM32mUgh9Be+uwrhfYcZRyt/uB0Fj5Kc0oXyOejdFaeiT31p9oTKEZqYzWGu0djIvrK0HN3GM1urCEx95G5F1G6jtVwba02OIhn3UrRh1dyqkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KSNm9iPu; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=LKP99lmPAJSM5HDnQxr4jE8HQ7gRBEakimt8tSqYAqhWX+cRvVMz564f42YRRPtSyc7af8BqZXaC9UuBp0Qc08PIaFcDN0FQV6u/So5h2sY2TLaE9FeDK+HcbIlV4KhUQhJRduhm96D+u1Lsof5ZG51dFCyirnGCqfbt194buGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OoxnFE2+; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSNm9iPu"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-829a72475a1so8861188b3a.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OoxnFE2+"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12a77b008deso8692677c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774034939; x=1774639739; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774034941; x=1774639741; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bZ687OvgY9YJYNMy3dst5piorsFyjH5zZpmt4EK12LY=;
-        b=KSNm9iPu3vYeqaNUL8GAlM2v09y8s7m/9b9VzaVhRcrcHr+AwkQp0kIyVZbbqwqiSg
-         QZdul4LOEf0QqL5JdoDjvktqUWxbj3GKxaa/wraEZdMjxt9bsRsn2ogQidKPzqbyUFX0
-         FYj9Hx6k6KXlyeaGUp3jYoKDL0lwXymDruvL8Za3FRs8f7/E1nD5dewlW0wz/iZFw3gf
-         3ZLsJdjbwW0iUK8Wb9slD1HoIbZOsTOkrq3gcydA50yem+96B4enD1fYb66UYx2XjSA5
-         3DslMUEH/7NCTnESwx1UH8Gj6/vmCOQI1eFVnviiJJ8UYtN9Rnh5DEpFJ1xS06Wknbbt
-         7BEw==
+        bh=91h6BWsxtGziSV6ylkwBKTTT39CDjMj0ZvKle7CWKFI=;
+        b=OoxnFE2+zXyDqIbX0aX/PRoDxcV1cSAJMVbwcSfWyoqc+d+U7tJiCtJI7o34r6guIy
+         /Hk1S6k/CTBPdsybc97ayPLHboYchBlSG0S+eBydMCmY8UyNIXxW39idi4QOKlp+3qp9
+         LnI3gc94A48QQ6ERKkQ0vVzX3IfIE6If+N6w+qzSHTzKAd6VOF7j0THV9yD/NIdFk6Ta
+         f70z8ITvxGzCXFfgLCmK01/H4Sbys1a3U+OI2RNiLtIRjLt0X60s7wjc0gF91rPHOaop
+         j6z1y2EEbckKZptExrba6IQ+kkwJvgy+yHmnU0oWVjuWHYGwRsrL0ycg4CH8lxtSB1/1
+         LseA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774034939; x=1774639739;
+        d=1e100.net; s=20251104; t=1774034941; x=1774639741;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bZ687OvgY9YJYNMy3dst5piorsFyjH5zZpmt4EK12LY=;
-        b=ZyaR7t0XIDNZYHTB8CvWgUWDMgBY7zipHy/qTT8Ogu2CqKOHdzs1zfocXScM5Zj1Y4
-         dTW89fM7lYPzR+J1vmwzetzEjf1fr3ASR4QCPG00INalu/KAJGHtRg7brkWmHhotVpQc
-         KyrKoOmMsWmNhFic6qt5VBOzT/iTOiBU28AbpJj7yzQ0lBSBcfHaZJzNcGIH0gNBcTcV
-         39r+3vJjReKIZZSUwmuWBktmzxa9z5buAB2GCdtNyUPZ63m6Ip43YZKTsqKhQwvJaN4g
-         Z6VFyly46TG+Y+6rGGgq5IzKYMzImpzxIVR2E0oq++PQpx/eWClxidG8wNmsTtKkH8aG
-         7IeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV32baTFWhAAphkOb5YGjgrwcgGNEZ3p6QlEJKbWAeo2CawpAp/e3Yx+lg3YY/C64IR2Mt9CKBsz7kLheB3d41j@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoCEKjkJiFQqLlo+nsmee6Mu5x9eErAflPBJYuxVE+X0uauS2s
-	gPyWWW7Zc4qK7WHVJG7jHtcCkYizCCg0APRIWJS/O0m6dK1h+qaAdfc5vfIsBjhxEvl/I2XmLTq
-	J1fqyQuylzA==
-X-Received: from pfo25.prod.google.com ([2002:a05:6a00:2f9:b0:7e8:b7f1:f957])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b908:b0:824:a01f:6335
- with SMTP id d2e1a72fcca58-82a8c22b812mr3211102b3a.22.1774034934008; Fri, 20
- Mar 2026 12:28:54 -0700 (PDT)
-Date: Fri, 20 Mar 2026 12:26:21 -0700
+        bh=91h6BWsxtGziSV6ylkwBKTTT39CDjMj0ZvKle7CWKFI=;
+        b=WJK7Gg/BN8lWR6VAQLCG96mrddiXDfjjyz2vxTvTkzdr9KziMSjYk9g+tIUQT32uGd
+         4dWq0Tyh9zg8fM3oLGOzUHmkq+I5vKI5Wz5F6YdnEMwwLr1vWOYajeRSctcTiwyekWCk
+         rGWfz2YjComiNQA7bXAcIDPpNlN2RoXcaU1mkTNxSzQshJp3MZ6xF13NML/1DtR07RmA
+         KcsQGmjrmv6Rgqo26draP9tAohECSmI9Bcn18kau9BS9CaEJtTEJbaRcwt7fgxqbv68W
+         UDMYdny0D0BTBywSIKPr3gLX524Vr3UJl0IYNpA3SviGE1tFvHq2wBWyv4P+zDj/hVUc
+         6qeg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/2s7+6E3SQjEVKnsuSyYToFYyG8n5oD37uUFnQTOOY54QH42N4I9nJ+WSAVbyzJj58S5+dX0OppPw67+NnXEd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpLcrtT5IgNdJsSUwtiYhDnBYM3vJzfaGV5+fy2o337s9jWR+S
+	bBo6htCvIEq+NQksHDh/A+enGHSrE7hcvOwW4dHO6NyoG8raCQqQMjxFIs14beT7e0Z12emOMih
+	LHU45GpfB8A==
+X-Received: from dlbto10.prod.google.com ([2002:a05:7022:3b0a:b0:12a:6ccc:6d06])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:226:b0:11b:b179:6e17
+ with SMTP id a92af1059eb24-12a726d0480mr2091074c88.34.1774034940456; Fri, 20
+ Mar 2026 12:29:00 -0700 (PDT)
+Date: Fri, 20 Mar 2026 12:26:22 -0700
 In-Reply-To: <20260320192627.368357-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260320080835.724836-1-irogers@google.com> <20260320192627.368357-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260320192627.368357-20-irogers@google.com>
-Subject: [PATCH v4 19/25] perf sched: Don't pass evsel with sample
+Message-ID: <20260320192627.368357-21-irogers@google.com>
+Subject: [PATCH v4 20/25] perf timechart: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -78,415 +78,269 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 The sample contains the evsel and so it is unnecessary to pass the
-evsel as well.
+evsel as well. Add missing backtrace argument to tracepoint_handler
+functions and mark them unused. Fix missing free from cat_backtrace,
+which requires copies of the backtrace being made in functions that
+save it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-sched.c | 92 ++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 58 deletions(-)
+ tools/perf/builtin-timechart.c | 75 ++++++++++++++++------------------
+ 1 file changed, 35 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b6271a5ec8de..fdfa2fec0fe6 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -129,21 +129,20 @@ typedef int (*sort_fn_t)(struct work_atoms *, struct work_atoms *);
- struct perf_sched;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 782ede4258a2..69ee08a8295f 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -299,7 +299,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
+ 	sample->type = type;
+ 	sample->next = c->samples;
+ 	sample->cpu = cpu;
+-	sample->backtrace = backtrace;
++	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
+ 	c->samples = sample;
  
- struct trace_sched_handler {
--	int (*switch_event)(struct perf_sched *sched, struct evsel *evsel,
--			    struct perf_sample *sample, struct machine *machine);
-+	int (*switch_event)(struct perf_sched *sched, struct perf_sample *sample,
-+			    struct machine *machine);
+ 	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
+@@ -433,7 +433,7 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
  
--	int (*runtime_event)(struct perf_sched *sched, struct evsel *evsel,
--			     struct perf_sample *sample, struct machine *machine);
-+	int (*runtime_event)(struct perf_sched *sched, struct perf_sample *sample,
-+			     struct machine *machine);
+ 	we->time = timestamp;
+ 	we->waker = waker;
+-	we->backtrace = backtrace;
++	we->backtrace = backtrace ? strdup(backtrace) : NULL;
  
--	int (*wakeup_event)(struct perf_sched *sched, struct evsel *evsel,
--			    struct perf_sample *sample, struct machine *machine);
-+	int (*wakeup_event)(struct perf_sched *sched, struct perf_sample *sample,
-+			    struct machine *machine);
+ 	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
+ 		we->waker = -1;
+@@ -489,9 +489,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
+ 	}
+ }
  
- 	/* PERF_RECORD_FORK event, not sched_process_fork tracepoint */
- 	int (*fork_event)(struct perf_sched *sched, union perf_event *event,
- 			  struct machine *machine);
+-static const char *cat_backtrace(union perf_event *event,
+-				 struct perf_sample *sample,
+-				 struct machine *machine)
++static char *cat_backtrace(union perf_event *event,
++			   struct perf_sample *sample,
++			   struct machine *machine)
+ {
+ 	struct addr_location al;
+ 	unsigned int i;
+@@ -567,7 +567,6 @@ static const char *cat_backtrace(union perf_event *event,
+ }
  
- 	int (*migrate_task_event)(struct perf_sched *sched,
+ typedef int (*tracepoint_handler)(struct timechart *tchart,
 -				  struct evsel *evsel,
  				  struct perf_sample *sample,
- 				  struct machine *machine);
- };
-@@ -826,7 +825,7 @@ static void test_calibrations(struct perf_sched *sched)
+ 				  const char *backtrace);
  
- static int
- replay_wakeup_event(struct perf_sched *sched,
--		    struct evsel *evsel, struct perf_sample *sample,
-+		    struct perf_sample *sample,
- 		    struct machine *machine __maybe_unused)
+@@ -578,6 +577,7 @@ static int process_sample_event(const struct perf_tool *tool,
  {
- 	const char *comm = perf_sample__strval(sample, "comm");
-@@ -834,7 +833,7 @@ replay_wakeup_event(struct perf_sched *sched,
- 	struct task_desc *waker, *wakee;
+ 	struct timechart *tchart = container_of(tool, struct timechart, tool);
+ 	struct evsel *evsel = sample->evsel;
++	int ret = 0;
  
- 	if (verbose > 0) {
--		printf("sched_wakeup event %p\n", evsel);
-+		printf("sched_wakeup event %p\n", sample->evsel);
- 
- 		printf(" ... pid %d woke up %s/%d\n", sample->tid, comm, pid);
- 	}
-@@ -847,7 +846,6 @@ replay_wakeup_event(struct perf_sched *sched,
- }
- 
- static int replay_switch_event(struct perf_sched *sched,
--			       struct evsel *evsel,
- 			       struct perf_sample *sample,
- 			       struct machine *machine __maybe_unused)
- {
-@@ -861,7 +859,7 @@ static int replay_switch_event(struct perf_sched *sched,
- 	s64 delta;
- 
- 	if (verbose > 0)
--		printf("sched_switch event %p\n", evsel);
-+		printf("sched_switch event %p\n", sample->evsel);
- 
- 	if (cpu >= MAX_CPUS || cpu < 0)
- 		return 0;
-@@ -1134,7 +1132,6 @@ static void free_work_atoms(struct work_atoms *atoms)
- }
- 
- static int latency_switch_event(struct perf_sched *sched,
--				struct evsel *evsel __maybe_unused,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
-@@ -1204,7 +1201,6 @@ static int latency_switch_event(struct perf_sched *sched,
- }
- 
- static int latency_runtime_event(struct perf_sched *sched,
--				 struct evsel *evsel __maybe_unused,
- 				 struct perf_sample *sample,
- 				 struct machine *machine)
- {
-@@ -1239,7 +1235,6 @@ static int latency_runtime_event(struct perf_sched *sched,
- }
- 
- static int latency_wakeup_event(struct perf_sched *sched,
--				struct evsel *evsel __maybe_unused,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
-@@ -1300,7 +1295,6 @@ static int latency_wakeup_event(struct perf_sched *sched,
- }
- 
- static int latency_migrate_task_event(struct perf_sched *sched,
--				      struct evsel *evsel __maybe_unused,
- 				      struct perf_sample *sample,
- 				      struct machine *machine)
- {
-@@ -1519,20 +1513,18 @@ static void perf_sched__sort_lat(struct perf_sched *sched)
- }
- 
- static int process_sched_wakeup_event(const struct perf_tool *tool,
--				      struct evsel *evsel,
- 				      struct perf_sample *sample,
- 				      struct machine *machine)
- {
- 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
- 
- 	if (sched->tp_handler->wakeup_event)
--		return sched->tp_handler->wakeup_event(sched, evsel, sample, machine);
-+		return sched->tp_handler->wakeup_event(sched, sample, machine);
- 
- 	return 0;
- }
- 
- static int process_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unused,
--				      struct evsel *evsel __maybe_unused,
- 				      struct perf_sample *sample __maybe_unused,
- 				      struct machine *machine __maybe_unused)
- {
-@@ -1626,8 +1618,8 @@ static void print_sched_map(struct perf_sched *sched, struct perf_cpu this_cpu,
- 	}
- }
- 
--static int map_switch_event(struct perf_sched *sched, struct evsel *evsel __maybe_unused,
--			    struct perf_sample *sample, struct machine *machine)
-+static int map_switch_event(struct perf_sched *sched,  struct perf_sample *sample,
-+			    struct machine *machine)
- {
- 	const u32 next_pid = perf_sample__intval(sample, "next_pid");
- 	const u32 prev_pid = perf_sample__intval(sample, "prev_pid");
-@@ -1791,7 +1783,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel __mayb
- }
- 
- static int process_sched_switch_event(const struct perf_tool *tool,
--				      struct evsel *evsel,
- 				      struct perf_sample *sample,
- 				      struct machine *machine)
- {
-@@ -1815,21 +1806,20 @@ static int process_sched_switch_event(const struct perf_tool *tool,
- 	}
- 
- 	if (sched->tp_handler->switch_event)
--		err = sched->tp_handler->switch_event(sched, evsel, sample, machine);
-+		err = sched->tp_handler->switch_event(sched, sample, machine);
- 
- 	sched->curr_pid[this_cpu] = next_pid;
- 	return err;
- }
- 
- static int process_sched_runtime_event(const struct perf_tool *tool,
--				       struct evsel *evsel,
- 				       struct perf_sample *sample,
- 				       struct machine *machine)
- {
- 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
- 
- 	if (sched->tp_handler->runtime_event)
--		return sched->tp_handler->runtime_event(sched, evsel, sample, machine);
-+		return sched->tp_handler->runtime_event(sched, sample, machine);
- 
- 	return 0;
- }
-@@ -1852,20 +1842,18 @@ static int perf_sched__process_fork_event(const struct perf_tool *tool,
- }
- 
- static int process_sched_migrate_task_event(const struct perf_tool *tool,
--					    struct evsel *evsel,
- 					    struct perf_sample *sample,
- 					    struct machine *machine)
- {
- 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
- 
- 	if (sched->tp_handler->migrate_task_event)
--		return sched->tp_handler->migrate_task_event(sched, evsel, sample, machine);
-+		return sched->tp_handler->migrate_task_event(sched, sample, machine);
- 
- 	return 0;
- }
- 
- typedef int (*tracepoint_handler)(const struct perf_tool *tool,
--				  struct evsel *evsel,
- 				  struct perf_sample *sample,
- 				  struct machine *machine);
- 
-@@ -1879,7 +1867,7 @@ static int perf_sched__process_tracepoint_sample(const struct perf_tool *tool __
+ 	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
+ 		if (!tchart->first_time || tchart->first_time > sample->time)
+@@ -588,16 +588,17 @@ static int process_sample_event(const struct perf_tool *tool,
  
  	if (evsel->handler != NULL) {
  		tracepoint_handler f = evsel->handler;
--		err = f(tool, evsel, sample, machine);
-+		err = f(tool, sample, machine);
+-		return f(tchart, evsel, sample,
+-			 cat_backtrace(event, sample, machine));
++		char *backtrace = cat_backtrace(event, sample, machine);
++
++		ret = f(tchart, sample, backtrace);
++		free(backtrace);
  	}
  
- 	return err;
-@@ -2318,11 +2306,10 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 	r->total_pre_mig_time += r->dt_pre_mig;
+-	return 0;
++	return ret;
  }
  
--static bool is_idle_sample(struct perf_sample *sample,
--			   struct evsel *evsel)
-+static bool is_idle_sample(struct perf_sample *sample)
+ static int
+ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+-			struct evsel *evsel __maybe_unused,
+ 			struct perf_sample *sample,
+ 			const char *backtrace __maybe_unused)
  {
- 	/* pid 0 == swapper == idle task */
--	if (evsel__name_is(evsel, "sched:sched_switch"))
-+	if (evsel__name_is(sample->evsel, "sched:sched_switch"))
- 		return perf_sample__intval(sample, "prev_pid") == 0;
+@@ -617,7 +618,6 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
  
- 	return sample->pid == 0;
-@@ -2504,12 +2491,11 @@ static void save_idle_callchain(struct perf_sched *sched,
- 
- static struct thread *timehist_get_thread(struct perf_sched *sched,
- 					  struct perf_sample *sample,
--					  struct machine *machine,
--					  struct evsel *evsel)
-+					  struct machine *machine)
- {
- 	struct thread *thread;
- 
--	if (is_idle_sample(sample, evsel)) {
-+	if (is_idle_sample(sample)) {
- 		thread = get_idle_thread(sample->cpu);
- 		if (thread == NULL)
- 			pr_err("Failed to get idle thread for cpu %d.\n", sample->cpu);
-@@ -2552,7 +2538,6 @@ static struct thread *timehist_get_thread(struct perf_sched *sched,
- 
- static bool timehist_skip_sample(struct perf_sched *sched,
- 				 struct thread *thread,
--				 struct evsel *evsel,
- 				 struct perf_sample *sample)
- {
- 	bool rc = false;
-@@ -2574,7 +2559,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- 		tr = thread__get_runtime(thread);
- 		if (tr && tr->prio != -1)
- 			prio = tr->prio;
--		else if (evsel__name_is(evsel, "sched:sched_switch"))
-+		else if (evsel__name_is(sample->evsel, "sched:sched_switch"))
- 			prio = perf_sample__intval(sample, "prev_prio");
- 
- 		if (prio != -1 && !test_bit(prio, sched->prio_bitmap)) {
-@@ -2584,7 +2569,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- 	}
- 
- 	if (sched->idle_hist) {
--		if (!evsel__name_is(evsel, "sched:sched_switch"))
-+		if (!evsel__name_is(sample->evsel, "sched:sched_switch"))
- 			rc = true;
- 		else if (perf_sample__intval(sample, "prev_pid") != 0 &&
- 			 perf_sample__intval(sample, "next_pid") != 0)
-@@ -2595,7 +2580,6 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- }
- 
- static void timehist_print_wakeup_event(struct perf_sched *sched,
--					struct evsel *evsel,
- 					struct perf_sample *sample,
- 					struct machine *machine,
- 					struct thread *awakened)
-@@ -2608,8 +2592,8 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
- 		return;
- 
- 	/* show wakeup unless both awakee and awaker are filtered */
--	if (timehist_skip_sample(sched, thread, evsel, sample) &&
--	    timehist_skip_sample(sched, awakened, evsel, sample)) {
-+	if (timehist_skip_sample(sched, thread, sample) &&
-+	    timehist_skip_sample(sched, awakened, sample)) {
- 		thread__put(thread);
- 		return;
- 	}
-@@ -2633,7 +2617,6 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
- 
- static int timehist_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unused,
- 					union perf_event *event __maybe_unused,
--					struct evsel *evsel __maybe_unused,
- 					struct perf_sample *sample __maybe_unused,
- 					struct machine *machine __maybe_unused)
- {
-@@ -2642,7 +2625,6 @@ static int timehist_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unu
- 
- static int timehist_sched_wakeup_event(const struct perf_tool *tool,
- 				       union perf_event *event __maybe_unused,
--				       struct evsel *evsel,
- 				       struct perf_sample *sample,
- 				       struct machine *machine)
- {
-@@ -2668,14 +2650,13 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
- 	/* show wakeups if requested */
- 	if (sched->show_wakeups &&
- 	    !perf_time__skip_sample(&sched->ptime, sample->time))
--		timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
-+		timehist_print_wakeup_event(sched, sample, machine, thread);
- 
- 	thread__put(thread);
- 	return 0;
- }
- 
- static void timehist_print_migration_event(struct perf_sched *sched,
--					struct evsel *evsel,
- 					struct perf_sample *sample,
- 					struct machine *machine,
- 					struct thread *migrated)
-@@ -2696,8 +2677,8 @@ static void timehist_print_migration_event(struct perf_sched *sched,
- 	if (thread == NULL)
- 		return;
- 
--	if (timehist_skip_sample(sched, thread, evsel, sample) &&
--	    timehist_skip_sample(sched, migrated, evsel, sample)) {
-+	if (timehist_skip_sample(sched, thread, sample) &&
-+	    timehist_skip_sample(sched, migrated, sample)) {
- 		thread__put(thread);
- 		return;
- 	}
-@@ -2731,7 +2712,6 @@ static void timehist_print_migration_event(struct perf_sched *sched,
- 
- static int timehist_migrate_task_event(const struct perf_tool *tool,
- 				       union perf_event *event __maybe_unused,
--				       struct evsel *evsel,
- 				       struct perf_sample *sample,
- 				       struct machine *machine)
- {
-@@ -2756,8 +2736,7 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
- 
- 	/* show migrations if requested */
- 	if (sched->show_migrations) {
--		timehist_print_migration_event(sched, evsel, sample,
--							machine, thread);
-+		timehist_print_migration_event(sched, sample, machine, thread);
- 	}
- 	thread__put(thread);
- 
-@@ -2789,7 +2768,6 @@ static void timehist_update_task_prio(struct perf_sample *sample,
- 
- static int timehist_sched_change_event(const struct perf_tool *tool,
- 				       union perf_event *event,
--				       struct evsel *evsel,
- 				       struct perf_sample *sample,
- 				       struct machine *machine)
- {
-@@ -2813,13 +2791,13 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 	if (sched->show_prio || sched->prio_str)
- 		timehist_update_task_prio(sample, machine);
- 
--	thread = timehist_get_thread(sched, sample, machine, evsel);
-+	thread = timehist_get_thread(sched, sample, machine);
- 	if (thread == NULL) {
- 		rc = -1;
- 		goto out;
- 	}
- 
--	if (timehist_skip_sample(sched, thread, evsel, sample))
-+	if (timehist_skip_sample(sched, thread, sample))
- 		goto out;
- 
- 	tr = thread__get_runtime(thread);
-@@ -2828,7 +2806,7 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 		goto out;
- 	}
- 
--	tprev = evsel__get_time(evsel, sample->cpu);
-+	tprev = evsel__get_time(sample->evsel, sample->cpu);
- 
- 	/*
- 	 * If start time given:
-@@ -2918,7 +2896,7 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 		tr->migrated = 0;
- 	}
- 
--	evsel__save_time(evsel, sample->time, sample->cpu);
-+	evsel__save_time(sample->evsel, sample->time, sample->cpu);
- 
- 	thread__put(thread);
- 	addr_location__exit(&al);
-@@ -2927,11 +2905,10 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 
- static int timehist_sched_switch_event(const struct perf_tool *tool,
- 			     union perf_event *event,
--			     struct evsel *evsel,
+ static int
+ process_sample_cpu_frequency(struct timechart *tchart,
+-			     struct evsel *evsel __maybe_unused,
  			     struct perf_sample *sample,
- 			     struct machine *machine __maybe_unused)
+ 			     const char *backtrace __maybe_unused)
  {
--	return timehist_sched_change_event(tool, event, evsel, sample, machine);
-+	return timehist_sched_change_event(tool, event, sample, machine);
- }
+@@ -634,7 +634,6 @@ process_sample_cpu_frequency(struct timechart *tchart,
  
- static int process_lost(const struct perf_tool *tool __maybe_unused,
-@@ -3179,7 +3156,6 @@ static void timehist_print_summary(struct perf_sched *sched,
+ static int
+ process_sample_sched_wakeup(struct timechart *tchart,
+-			    struct evsel *evsel __maybe_unused,
+ 			    struct perf_sample *sample,
+ 			    const char *backtrace)
+ {
+@@ -648,7 +647,6 @@ process_sample_sched_wakeup(struct timechart *tchart,
  
- typedef int (*sched_handler)(const struct perf_tool *tool,
- 			  union perf_event *event,
--			  struct evsel *evsel,
- 			  struct perf_sample *sample,
- 			  struct machine *machine);
+ static int
+ process_sample_sched_switch(struct timechart *tchart,
+-			    struct evsel *evsel __maybe_unused,
+ 			    struct perf_sample *sample,
+ 			    const char *backtrace)
+ {
+@@ -664,7 +662,6 @@ process_sample_sched_switch(struct timechart *tchart,
+ #ifdef SUPPORT_OLD_POWER_EVENTS
+ static int
+ process_sample_power_start(struct timechart *tchart __maybe_unused,
+-			   struct evsel *evsel __maybe_unused,
+ 			   struct perf_sample *sample,
+ 			   const char *backtrace __maybe_unused)
+ {
+@@ -681,7 +678,6 @@ process_sample_power_start(struct timechart *tchart __maybe_unused,
  
-@@ -3201,7 +3177,7 @@ static int perf_timehist__process_sample(const struct perf_tool *tool,
- 	if (evsel->handler != NULL) {
- 		sched_handler f = evsel->handler;
+ static int
+ process_sample_power_end(struct timechart *tchart,
+-			 struct evsel *evsel __maybe_unused,
+ 			 struct perf_sample *sample,
+ 			 const char *backtrace __maybe_unused)
+ {
+@@ -691,7 +687,6 @@ process_sample_power_end(struct timechart *tchart,
  
--		err = f(tool, event, evsel, sample, machine);
-+		err = f(tool, event, sample, machine);
- 	}
+ static int
+ process_sample_power_frequency(struct timechart *tchart,
+-			       struct evsel *evsel __maybe_unused,
+ 			       struct perf_sample *sample,
+ 			       const char *backtrace __maybe_unused)
+ {
+@@ -865,8 +860,8 @@ static int pid_end_io_sample(struct timechart *tchart, int pid, int type,
  
- 	return err;
+ static int
+ process_enter_read(struct timechart *tchart,
+-		   struct evsel *evsel __maybe_unused,
+-		   struct perf_sample *sample)
++		   struct perf_sample *sample,
++		   const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_READ,
+@@ -875,8 +870,8 @@ process_enter_read(struct timechart *tchart,
+ 
+ static int
+ process_exit_read(struct timechart *tchart,
+-		  struct evsel *evsel __maybe_unused,
+-		  struct perf_sample *sample)
++		  struct perf_sample *sample,
++		  const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_READ,
+@@ -885,8 +880,8 @@ process_exit_read(struct timechart *tchart,
+ 
+ static int
+ process_enter_write(struct timechart *tchart,
+-		    struct evsel *evsel __maybe_unused,
+-		    struct perf_sample *sample)
++		    struct perf_sample *sample,
++		    const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_WRITE,
+@@ -895,8 +890,8 @@ process_enter_write(struct timechart *tchart,
+ 
+ static int
+ process_exit_write(struct timechart *tchart,
+-		   struct evsel *evsel __maybe_unused,
+-		   struct perf_sample *sample)
++		   struct perf_sample *sample,
++		   const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_WRITE,
+@@ -905,8 +900,8 @@ process_exit_write(struct timechart *tchart,
+ 
+ static int
+ process_enter_sync(struct timechart *tchart,
+-		   struct evsel *evsel __maybe_unused,
+-		   struct perf_sample *sample)
++		   struct perf_sample *sample,
++		   const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_SYNC,
+@@ -915,8 +910,8 @@ process_enter_sync(struct timechart *tchart,
+ 
+ static int
+ process_exit_sync(struct timechart *tchart,
+-		  struct evsel *evsel __maybe_unused,
+-		  struct perf_sample *sample)
++		  struct perf_sample *sample,
++		  const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_SYNC,
+@@ -925,8 +920,8 @@ process_exit_sync(struct timechart *tchart,
+ 
+ static int
+ process_enter_tx(struct timechart *tchart,
+-		 struct evsel *evsel __maybe_unused,
+-		 struct perf_sample *sample)
++		 struct perf_sample *sample,
++		 const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_TX,
+@@ -935,8 +930,8 @@ process_enter_tx(struct timechart *tchart,
+ 
+ static int
+ process_exit_tx(struct timechart *tchart,
+-		struct evsel *evsel __maybe_unused,
+-		struct perf_sample *sample)
++		struct perf_sample *sample,
++		const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_TX,
+@@ -945,8 +940,8 @@ process_exit_tx(struct timechart *tchart,
+ 
+ static int
+ process_enter_rx(struct timechart *tchart,
+-		 struct evsel *evsel __maybe_unused,
+-		 struct perf_sample *sample)
++		 struct perf_sample *sample,
++		 const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_RX,
+@@ -955,8 +950,8 @@ process_enter_rx(struct timechart *tchart,
+ 
+ static int
+ process_exit_rx(struct timechart *tchart,
+-		struct evsel *evsel __maybe_unused,
+-		struct perf_sample *sample)
++		struct perf_sample *sample,
++		const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_RX,
+@@ -965,8 +960,8 @@ process_exit_rx(struct timechart *tchart,
+ 
+ static int
+ process_enter_poll(struct timechart *tchart,
+-		   struct evsel *evsel __maybe_unused,
+-		   struct perf_sample *sample)
++		   struct perf_sample *sample,
++		   const char *backtrace __maybe_unused)
+ {
+ 	long fd = perf_sample__intval(sample, "fd");
+ 	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_POLL,
+@@ -975,8 +970,8 @@ process_enter_poll(struct timechart *tchart,
+ 
+ static int
+ process_exit_poll(struct timechart *tchart,
+-		  struct evsel *evsel __maybe_unused,
+-		  struct perf_sample *sample)
++		  struct perf_sample *sample,
++		  const char *backtrace __maybe_unused)
+ {
+ 	long ret = perf_sample__intval(sample, "ret");
+ 	return pid_end_io_sample(tchart, sample->tid, IOTYPE_POLL,
 -- 
 2.53.0.959.g497ff81fa9-goog
 
