@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA58301704
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 15:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999B3C73C0
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 15:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774019239; cv=none; b=UCkTuWQyI5Y2K8aOs8lifNz9M7q+4mP/OZbSw9J5hCglg2JvMwc812dBpJzwcIx6AsrmGKMMYz6p8BGyu5LcWzQ4uGRqkN5RqnxNdp69qMqz2Mz1A8iolQ0+af1iaJqQH7FpooZpaPiaERdHTm7eTB8r8wAlJiil7yL5TwgFTKo=
+	t=1774019246; cv=none; b=X2NBcy1i+nRbbeSVjSPzK7DwXzP/e8JgzczAJt5NkpG7SJMNdeYzoFShoCcpr63A+37uJTdcE0bGCftcPpaoVr6WPfNyWLG2SDldNeGLb9oLARPjZx6y9mBsVVHSGf36UF+ceYvqyo1Tqbecn0PqKVpqVFe2cbN7tOx0V/+a6aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774019239; c=relaxed/simple;
-	bh=h/I8Re7m7WOPYbknGlRF+QVH2AtXrxWw5aW0Nb+s838=;
+	s=arc-20240116; t=1774019246; c=relaxed/simple;
+	bh=B75QOB5lNdM9RVYdRBa/dd1dxup+YqlwKsvtHFXeDS4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LAZIU49hoOqw6Paoiy3Fld1Xm4H4KEzOqI7saTuYvbB8ZBuZSTI0MVSSliyehkG65rRixaqHnxGe4oZbyMCGstQggynIZeQP4F0RFdIJpIWy4fSy7bbSTGTDOvdTFySsPf8rC6nAkjhGuuzdEqWujS1lE8f0xAzYcb2cSFyr/6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C24ra9jp; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=FdwnaUWn5j0i+yEZZegIxKpTiW25hpvTKZHPlRVb5HKghb7hnKiqX2jsEfPolcN8WKTdGGhsug3qfyPjEdBzqwfcOcIAtqOD3ZmcSKyr/otzD3LNxQUTEWIpDnZP4uOFXZ2IjX7LqVme9vInkx653t7Khv0Mtd3m87dNRcbxb1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZKtoHpxG; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C24ra9jp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZKtoHpxG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774019237;
+	s=mimecast20190719; t=1774019241;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a1vYlO08d38SSC6asSeb1UkO8Gzpz4WOW8Bkx6t6EKE=;
-	b=C24ra9jp4DYoRjyF8Msyq24nq+ML7HpC7XvLbuR2iibDltbvb44lP6w1NyZYPr29rUnK6N
-	I0WdnCncjHvAFTw2PuvU4R4xRx0YKkNKOOC0ZUWM6KBNtE2OFSYNtZwSFaPG7D8VTEjiv4
-	RriNLyMts5GZtmqXcVhEQTWp+plfjt8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=dwgRA+HJKFYiDk0rCzUXLj5cRuuY+rfFGq2I6+hrpj4=;
+	b=ZKtoHpxGJfvOZT+0PJa1wkzo2XX3tFX41ZvH05u6ZzZPrdB7frAVaNdFflY63Dz4t6V5O/
+	3BzhMs4cxZ9osbbnR3aRGrxXkpM5Mm0wbRAEdQoYEKnZ+sdUnsgqSi2mQNCUSlHh0wVIS+
+	2atLpfvbuxNHvVmWukAEwyFBeXzR0y4=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-178--xW8WFpyO7OtsYOEU3Av-w-1; Fri,
- 20 Mar 2026 11:07:13 -0400
-X-MC-Unique: -xW8WFpyO7OtsYOEU3Av-w-1
-X-Mimecast-MFC-AGG-ID: -xW8WFpyO7OtsYOEU3Av-w_1774019232
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-nZ31bTAfMvGgu3yL0t8B1A-1; Fri,
+ 20 Mar 2026 11:07:17 -0400
+X-MC-Unique: nZ31bTAfMvGgu3yL0t8B1A-1
+X-Mimecast-MFC-AGG-ID: nZ31bTAfMvGgu3yL0t8B1A_1774019236
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90D651955E79;
-	Fri, 20 Mar 2026 15:07:11 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D91D5195608A;
+	Fri, 20 Mar 2026 15:07:15 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.224.223])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2BD6130001A1;
-	Fri, 20 Mar 2026 15:07:07 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F169B30001A1;
+	Fri, 20 Mar 2026 15:07:11 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>
@@ -57,9 +57,9 @@ Cc: John Kacur <jkacur@redhat.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
 	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: [PATCH 2/3] tools subcmd: support optarg as separate argument
-Date: Fri, 20 Mar 2026 16:06:50 +0100
-Message-ID: <20260320150651.51057-3-tglozar@redhat.com>
+Subject: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
+Date: Fri, 20 Mar 2026 16:06:51 +0100
+Message-ID: <20260320150651.51057-4-tglozar@redhat.com>
 In-Reply-To: <20260320150651.51057-1-tglozar@redhat.com>
 References: <20260320150651.51057-1-tglozar@redhat.com>
 Precedence: bulk
@@ -71,164 +71,2795 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-In addition to "-ovalue" and "--opt=value" syntax, allow also "-o value"
-and "--opt value" for options with optional argument when the newly
-added PARSE_OPT_OPTARG_ALLOW_NEXT flag is set.
+Instead of using getopt_long() directly to parse the command line
+arguments given to an RTLA tool, use libsubcmd's parse_options().
 
-This behavior is turned off by default since it does not make sense for
-tools using non-option command line arguments. Consider the ambiguity
-of "cmd -d x", where "-d x" can mean either "-d with argument of x" or
-"-d without argument, followed by non-option argument x". This is not an
-issue in the case that the tool takes no non-option arguments.
+Utilizing libsubcmd for parsing command line arguments has several
+benefits:
 
-To implement this, a new local variable, force_defval, is created in
-get_value(), along with a comment explaining the logic.
+- A help message is automatically generated by libsubcmd from the
+  specification, removing the need of writing it by hand.
+- Options are sorted into groups based on which part of tracing (CPU,
+  thread, auto-analysis, tuning, histogram) they relate to.
+- Common parsing patterns for numerical and boolean values now share
+  code, with the target variable being stored in the option array.
 
+To avoid duplication of the option parsing logic, RTLA-specific
+macros defining struct option values are created:
+
+- RTLA_OPT_* for options common to all tools
+- OSNOISE_OPT_* and TIMERLAT_OPT_* for options specific to
+  osnoise/timerlat tools
+, HIST_OPT_* macros for options specific to histogram-based tools.
+
+Individual *_parse_args() functions then construct an array out of
+these macros that is then passed to libsubcmd's parse_options().
+
+All code specific to command line options parsing is moved out of the
+individual tool files into a new file, cli.c, which also contains the
+contents of the rtla.c file.
+
+The return value of tool-level help option changes to 129, as this is
+the value set by libsubcmd; this is reflected in affected test cases.
+The implementation of help for command-level and tracer-level help
+remains the same.
+
+Assisted-by: Composer:composer-1.5
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/lib/subcmd/parse-options.c | 53 +++++++++++++++++++++++++++-----
- tools/lib/subcmd/parse-options.h |  1 +
- 2 files changed, 46 insertions(+), 8 deletions(-)
+ tools/tracing/rtla/src/Build           |    2 +-
+ tools/tracing/rtla/src/cli.c           | 1207 ++++++++++++++++++++++++
+ tools/tracing/rtla/src/cli.h           |    7 +
+ tools/tracing/rtla/src/common.c        |  109 ---
+ tools/tracing/rtla/src/common.h        |   26 +-
+ tools/tracing/rtla/src/osnoise_hist.c  |  221 +----
+ tools/tracing/rtla/src/osnoise_top.c   |  200 +---
+ tools/tracing/rtla/src/rtla.c          |   89 --
+ tools/tracing/rtla/src/timerlat.h      |    4 +-
+ tools/tracing/rtla/src/timerlat_hist.c |  317 +------
+ tools/tracing/rtla/src/timerlat_top.c  |  285 +-----
+ tools/tracing/rtla/src/utils.c         |   28 +-
+ tools/tracing/rtla/src/utils.h         |    3 +-
+ tools/tracing/rtla/tests/hwnoise.t     |    2 +-
+ 14 files changed, 1236 insertions(+), 1264 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/cli.c
+ create mode 100644 tools/tracing/rtla/src/cli.h
+ delete mode 100644 tools/tracing/rtla/src/rtla.c
 
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index 555d617c1f50..664b2053bb77 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -72,6 +72,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 	const char *s, *arg = NULL;
- 	const int unset = flags & OPT_UNSET;
- 	int err;
-+	bool force_defval = false;
- 
- 	if (unset && p->opt)
- 		return opterror(opt, "takes no value", flags);
-@@ -123,6 +124,42 @@ static int get_value(struct parse_opt_ctx_t *p,
- 		}
- 	}
- 
-+	if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (!(p->flags & PARSE_OPT_OPTARG_ALLOW_NEXT)) {
-+			/*
-+			 * If the option has an optional argument, and the argument is not
-+			 * provided in the option itself, do not attempt to get it from
-+			 * the next argument, unless PARSE_OPT_OPTARG_ALLOW_NEXT is set.
-+			 *
-+			 * This prevents a non-option argument from being interpreted as an
-+			 * optional argument of a preceding option, for example:
-+			 *
-+			 * $ cmd --opt val
-+			 * -> is "val" argument of "--opt" or a separate non-option
-+			 * argument?
-+			 *
-+			 * With PARSE_OPT_OPTARG_ALLOW_NEXT, "val" is interpreted as
-+			 * the argument of "--opt", i.e. the same as "--opt=val".
-+			 * Without PARSE_OPT_OPTARG_ALLOW_NEXT, --opt is interpreted
-+			 * as having the default value, and "val" as a separate non-option
-+			 * argument.
-+			 *
-+			 * PARSE_OPT_OPTARG_ALLOW_NEXT is useful for commands that take no
-+			 * non-option arguments and want to allow more flexibility in
-+			 * optional argument passing.
-+			 */
-+			force_defval = true;
-+		}
+diff --git a/tools/tracing/rtla/src/Build b/tools/tracing/rtla/src/Build
+index 329e24a40cf7..a1f3ab927207 100644
+--- a/tools/tracing/rtla/src/Build
++++ b/tools/tracing/rtla/src/Build
+@@ -11,4 +11,4 @@ rtla-y += timerlat_hist.o
+ rtla-y += timerlat_u.o
+ rtla-y += timerlat_aa.o
+ rtla-y += timerlat_bpf.o
+-rtla-y += rtla.o
++rtla-y += cli.o
+diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
+new file mode 100644
+index 000000000000..d029a698e8a7
+--- /dev/null
++++ b/tools/tracing/rtla/src/cli.c
+@@ -0,0 +1,1207 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
++ */
 +
-+		if (p->argc <= 1 || p->argv[1][0] == '-') {
-+			/*
-+			 * If next argument is an option or does not exist,
-+			 * use the default value.
-+			 */
-+			force_defval = true;
-+		}
++#define _GNU_SOURCE
++#include <stdlib.h>
++#include <string.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/types.h>
++
++#include <linux/kernel.h>
++#include <subcmd/parse-options.h>
++
++#include "cli.h"
++#include "osnoise.h"
++#include "timerlat.h"
++
++struct osnoise_cb_data {
++	struct osnoise_params *params;
++	char *trace_output;
++};
++
++struct timerlat_cb_data {
++	struct timerlat_params *params;
++	char *trace_output;
++};
++
++static const char * const osnoise_top_usage[] = {
++	"rtla osnoise [top] [<options>]",
++	NULL,
++};
++
++static const char * const osnoise_hist_usage[] = {
++	"rtla osnoise hist [<options>]",
++	NULL,
++};
++
++static const char * const timerlat_top_usage[] = {
++	"rtla timerlat [top] [<options>]",
++	NULL,
++};
++
++static const char * const timerlat_hist_usage[] = {
++	"rtla timerlat hist [<options>]",
++	NULL,
++};
++
++static const char * const hwnoise_usage[] = {
++	"rtla hwnoise [<options>]",
++	NULL,
++};
++
++static const int common_parse_options_flags = PARSE_OPT_OPTARG_ALLOW_NEXT;
++
++/*
++ * Macros for command line options common to all tools
++ *
++ * Note: Some of the options are common to both timerlat and osnoise, but
++ * have a slightly different meaning. Such options take additional arguments
++ * that have to be provided by the *_parse_args() function of the corresponding
++ * tool.
++ *
++ * All macros defined here assume the presence of a params variable of
++ * the corresponding tool type (i.e struct timerlat_params or struct osnoise_params)
++ * and a cb_data variable of the matching type.
++ */
++
++#define RTLA_OPT_STOP(short, long, name) OPT_CALLBACK(short, long, \
++	&params->common.stop_us, \
++	"us", \
++	"stop trace if " name " is higher than the argument in us", \
++	opt_llong_callback)
++
++#define RTLA_OPT_STOP_TOTAL(short, long, name) OPT_CALLBACK(short, long, \
++	&params->common.stop_total_us, \
++	"us", \
++	"stop trace if " name " is higher than the argument in us", \
++	opt_llong_callback)
++
++#define RTLA_OPT_TRACE_OUTPUT(tracer, cb) OPT_CALLBACK_OPTARG('t', "trace", \
++	(const char **)&cb_data.trace_output, \
++	tracer "_trace.txt", \
++	"[file]", \
++	"save the stopped trace to [file|" tracer "_trace.txt]", \
++	cb)
++
++#define RTLA_OPT_CPUS OPT_CALLBACK('c', "cpus", &params->common, \
++	"cpu-list", \
++	"run the tracer only on the given cpus", \
++	opt_cpus_cb)
++
++#define RTLA_OPT_CGROUP OPT_CALLBACK_OPTARG('C', "cgroup", &params->common, \
++	"[cgroup_name]", NULL, \
++	"set cgroup, no argument means rtla's cgroup will be inherited", \
++	opt_cgroup_cb)
++
++#define RTLA_OPT_USER_THREADS OPT_CALLBACK('u', "user-threads", params, NULL, \
++	"use rtla user-space threads instead of kernel-space timerlat threads", \
++	opt_user_threads_cb)
++
++#define RTLA_OPT_KERNEL_THREADS OPT_BOOLEAN('k', "kernel-threads", \
++	&params->common.kernel_workload, \
++	"use timerlat kernel-space threads instead of rtla user-space threads")
++
++#define RTLA_OPT_USER_LOAD OPT_BOOLEAN('U', "user-load", &params->common.user_data, \
++	"enable timerlat for user-defined user-space workload")
++
++#define RTLA_OPT_DURATION OPT_CALLBACK('d', "duration", &params->common, \
++	"time[s|m|h|d]", \
++	"set the duration of the session", \
++	opt_duration_cb)
++
++#define RTLA_OPT_EVENT OPT_CALLBACK('e', "event", &params->common.events, \
++	"sys:event", \
++	"enable the <sys:event> in the trace instance, multiple -e are allowed", \
++	opt_event_cb)
++
++#define RTLA_OPT_HOUSEKEEPING OPT_CALLBACK('H', "house-keeping", &params->common, \
++	"cpu-list", \
++	"run rtla control threads only on the given cpus", \
++	opt_housekeeping_cb)
++
++#define RTLA_OPT_PRIORITY OPT_CALLBACK('P', "priority", &params->common, \
++	"o:prio|r:prio|f:prio|d:runtime:period", \
++	"set scheduling parameters", \
++	opt_priority_cb)
++
++#define RTLA_OPT_TRIGGER OPT_CALLBACK(0, "trigger", &params->common, \
++	"trigger", \
++	"enable a trace event trigger to the previous -e event", \
++	opt_trigger_cb)
++
++#define RTLA_OPT_FILTER OPT_CALLBACK(0, "filter", &params->common, \
++	"filter", \
++	"enable a trace event filter to the previous -e event", \
++	opt_filter_cb)
++
++#define RTLA_OPT_QUIET OPT_BOOLEAN('q', "quiet", &params->common.quiet, \
++	"print only a summary at the end")
++
++#define RTLA_OPT_TRACE_BUFFER_SIZE OPT_CALLBACK(0, "trace-buffer-size", \
++	&params->common.buffer_size, "kB", \
++	"set the per-cpu trace buffer size in kB", \
++	opt_int_callback)
++
++#define RTLA_OPT_WARM_UP OPT_CALLBACK(0, "warm-up", &params->common.warmup, "s", \
++	"let the workload run for s seconds before collecting data", \
++	opt_int_callback)
++
++#define RTLA_OPT_AUTO(cb) OPT_CALLBACK('a', "auto", &cb_data, "us", \
++	"set automatic trace mode, stopping the session if argument in us sample is hit", \
++	cb)
++
++#define RTLA_OPT_ON_THRESHOLD(threshold, cb) OPT_CALLBACK(0, "on-threshold", \
++	&params->common.threshold_actions, \
++	"action", \
++	"define action to be executed at " threshold " threshold, multiple are allowed", \
++	cb)
++
++#define RTLA_OPT_ON_END(cb) OPT_CALLBACK(0, "on-end", &params->common.end_actions, \
++	"action", \
++	"define action to be executed at measurement end, multiple are allowed", \
++	cb)
++
++#define RTLA_OPT_DEBUG OPT_BOOLEAN('D', "debug", &config_debug, \
++	"print debug info")
++
++#define RTLA_OPT_HELP OPT_BOOLEAN('h', "help", (bool *)NULL, \
++	"show help")
++
++/*
++ * Common callback functions for command line options
++ */
++
++static int opt_llong_callback(const struct option *opt, const char *arg, int unset)
++{
++	long long *value = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*value = get_llong_from_str((char *)arg);
++	return 0;
++}
++
++static int opt_int_callback(const struct option *opt, const char *arg, int unset)
++{
++	int *value = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	if (strtoi(arg, value))
++		return -1;
++
++	return 0;
++}
++
++static int opt_cpus_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = parse_cpu_set((char *)arg, &params->monitored_cpus);
++	if (retval)
++		fatal("Invalid -c cpu list");
++	params->cpus = (char *)arg;
++
++	return 0;
++}
++
++static int opt_cgroup_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++
++	params->cgroup = 1;
++	params->cgroup_name = (char *)arg;
++	if (params->cgroup_name && params->cgroup_name[0] == '=')
++		/* Allow -C=<cgroup_name> next to -C[ ]<cgroup_name> */
++		++params->cgroup_name;
++
++	return 0;
++}
++
++static int opt_duration_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	params->duration = parse_seconds_duration((char *)arg);
++	if (!params->duration)
++		fatal("Invalid -d duration");
++
++	return 0;
++}
++
++static int opt_event_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct trace_events **events = opt->value;
++	struct trace_events *tevent;
++
++	if (unset || !arg)
++		return -1;
++
++	tevent = trace_event_alloc((char *)arg);
++	if (!tevent)
++		fatal("Error alloc trace event");
++
++	if (*events)
++		tevent->next = *events;
++	*events = tevent;
++
++	return 0;
++}
++
++static int opt_housekeeping_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	params->hk_cpus = 1;
++	retval = parse_cpu_set((char *)arg, &params->hk_cpu_set);
++	if (retval)
++		fatal("Error parsing house keeping CPUs");
++
++	return 0;
++}
++
++static int opt_priority_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = parse_prio((char *)arg, &params->sched_param);
++	if (retval == -1)
++		fatal("Invalid -P priority");
++	params->set_sched = 1;
++
++	return 0;
++}
++
++static int opt_trigger_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	if (!params->events)
++		fatal("--trigger requires a previous -e");
++
++	trace_event_add_trigger(params->events, (char *)arg);
++
++	return 0;
++}
++
++static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct common_params *params = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	if (!params->events)
++		fatal("--filter requires a previous -e");
++
++	trace_event_add_filter(params->events, (char *)arg);
++
++	return 0;
++}
++
++/*
++ * Macros for command line options specific to osnoise
++ */
++#define OSNOISE_OPT_PERIOD OPT_CALLBACK('p', "period", &params->period, "us", \
++	"osnoise period in us", \
++	opt_osnoise_period_cb)
++
++#define OSNOISE_OPT_RUNTIME OPT_CALLBACK('r', "runtime", &params->runtime, "us", \
++	"osnoise runtime in us", \
++	opt_osnoise_runtime_cb)
++
++#define OSNOISE_OPT_THRESHOLD OPT_CALLBACK('T', "threshold", &params->threshold, "us", \
++	"the minimum delta to be considered a noise", \
++	opt_osnoise_threshold_cb)
++
++/*
++ * Callback functions for command line options for osnoise tools
++ */
++
++static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct osnoise_cb_data *cb_data = opt->value;
++	struct osnoise_params *params = cb_data->params;
++	long long auto_thresh;
++
++	if (unset || !arg)
++		return -1;
++
++	auto_thresh = get_llong_from_str((char *)arg);
++	params->common.stop_us = auto_thresh;
++	params->threshold = 1;
++
++	if (!cb_data->trace_output)
++		cb_data->trace_output = "osnoise_trace.txt";
++
++	return 0;
++}
++
++static int opt_osnoise_period_cb(const struct option *opt, const char *arg, int unset)
++{
++	unsigned long long *period = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*period = get_llong_from_str((char *)arg);
++	if (*period > 10000000)
++		fatal("Period longer than 10 s");
++
++	return 0;
++}
++
++static int opt_osnoise_runtime_cb(const struct option *opt, const char *arg, int unset)
++{
++	unsigned long long *runtime = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*runtime = get_llong_from_str((char *)arg);
++	if (*runtime < 100)
++		fatal("Runtime shorter than 100 us");
++
++	return 0;
++}
++
++static int opt_osnoise_trace_output_cb(const struct option *opt, const char *arg, int unset)
++{
++	const char **trace_output = opt->value;
++
++	if (unset)
++		return -1;
++
++	if (!arg) {
++		*trace_output = "osnoise_trace.txt";
++	} else {
++		*trace_output = (char *)arg;
++		if (*trace_output && (*trace_output)[0] == '=')
++			/* Allow -t=<trace_output> next to -t[ ]<trace_output> */
++			++*trace_output;
 +	}
 +
- 	if (opt->flags & PARSE_OPT_NOBUILD) {
- 		char reason[128];
- 		bool noarg = false;
-@@ -148,7 +185,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			noarg = true;
- 		if (opt->flags & PARSE_OPT_NOARG)
- 			noarg = true;
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		if (force_defval)
- 			noarg = true;
++	return 0;
++}
++
++static int opt_osnoise_threshold_cb(const struct option *opt, const char *arg, int unset)
++{
++	long long *threshold = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*threshold = get_llong_from_str((char *)arg);
++
++	return 0;
++}
++
++static int opt_osnoise_on_threshold_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct actions *actions = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
++	if (retval)
++		fatal("Invalid action %s", arg);
++
++	return 0;
++}
++
++static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct actions *actions = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
++	if (retval)
++		fatal("Invalid action %s", arg);
++
++	return 0;
++}
++
++/*
++ * Macros for command line options specific to timerlat
++ */
++#define TIMERLAT_OPT_PERIOD OPT_CALLBACK('p', "period", &params->timerlat_period_us, "us", \
++	"timerlat period in us", \
++	opt_timerlat_period_cb)
++
++#define TIMERLAT_OPT_STACK OPT_CALLBACK('s', "stack", &params->print_stack, "us", \
++	"save the stack trace at the IRQ if a thread latency is higher than the argument in us", \
++	opt_llong_callback)
++
++#define TIMERLAT_OPT_NANO OPT_CALLBACK('n', "nano", params, NULL, \
++	"display data in nanoseconds", \
++	opt_nano_cb)
++
++#define TIMERLAT_OPT_DMA_LATENCY OPT_CALLBACK(0, "dma-latency", &params->dma_latency, "us", \
++	"set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency", \
++	opt_dma_latency_cb)
++
++#define TIMERLAT_OPT_DEEPEST_IDLE_STATE OPT_CALLBACK(0, "deepest-idle-state", \
++	&params->deepest_idle_state, "n", \
++	"only go down to idle state n on cpus used by timerlat to reduce exit from idle latency", \
++	opt_int_callback)
++
++#define TIMERLAT_OPT_AA_ONLY OPT_CALLBACK(0, "aa-only", params, "us", \
++	"stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)", \
++	opt_aa_only_cb)
++
++#define TIMERLAT_OPT_NO_AA OPT_BOOLEAN(0, "no-aa", &params->no_aa, \
++	"disable auto-analysis, reducing rtla timerlat cpu usage")
++
++#define TIMERLAT_OPT_DUMPS_TASKS OPT_BOOLEAN(0, "dump-tasks", &params->dump_tasks, \
++	"prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)")
++
++#define TIMERLAT_OPT_BPF_ACTION OPT_STRING(0, "bpf-action", &params->bpf_action_program, \
++	"program", \
++	"load and execute BPF program when latency threshold is exceeded")
++
++#define TIMERLAT_OPT_STACK_FORMAT OPT_CALLBACK(0, "stack-format", &params->stack_format, "format", \
++	"set the stack format (truncate, skip, full)", \
++	opt_stack_format_cb)
++
++/*
++ * Callback functions for command line options for timerlat tools
++ */
++
++static int opt_timerlat_period_cb(const struct option *opt, const char *arg, int unset)
++{
++	long long *period = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*period = get_llong_from_str((char *)arg);
++	if (*period > 1000000)
++		fatal("Period longer than 1 s");
++
++	return 0;
++}
++
++static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct timerlat_cb_data *cb_data = opt->value;
++	struct timerlat_params *params = cb_data->params;
++	long long auto_thresh;
++
++	if (unset || !arg)
++		return -1;
++
++	auto_thresh = get_llong_from_str((char *)arg);
++	params->common.stop_total_us = auto_thresh;
++	params->common.stop_us = auto_thresh;
++	params->print_stack = auto_thresh;
++
++	if (!cb_data->trace_output)
++		cb_data->trace_output = "timerlat_trace.txt";
++
++	return 0;
++}
++
++static int opt_dma_latency_cb(const struct option *opt, const char *arg, int unset)
++{
++	int *dma_latency = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = strtoi((char *)arg, dma_latency);
++	if (retval)
++		fatal("Invalid -dma-latency %s", arg);
++	if (*dma_latency < 0 || *dma_latency > 10000)
++		fatal("--dma-latency needs to be >= 0 and < 10000");
++
++	return 0;
++}
++
++static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct timerlat_params *params = opt->value;
++	long long auto_thresh;
++
++	if (unset || !arg)
++		return -1;
++
++	auto_thresh = get_llong_from_str((char *)arg);
++	params->common.stop_total_us = auto_thresh;
++	params->common.stop_us = auto_thresh;
++	params->print_stack = auto_thresh;
++	params->common.aa_only = 1;
++
++	return 0;
++}
++
++static int opt_timerlat_trace_output_cb(const struct option *opt, const char *arg, int unset)
++{
++	const char **trace_output = opt->value;
++
++	if (unset)
++		return -1;
++
++	if (!arg) {
++		*trace_output = "timerlat_trace.txt";
++	} else {
++		*trace_output = (char *)arg;
++		if (*trace_output && (*trace_output)[0] == '=')
++			/* Allow -t=<trace_output> next to -t[ ]<trace_output> */
++			++*trace_output;
++	}
++
++	return 0;
++}
++
++static int opt_timerlat_on_threshold_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct actions *actions = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
++	if (retval)
++		fatal("Invalid action %s", arg);
++
++	return 0;
++}
++
++static int opt_timerlat_on_end_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct actions *actions = opt->value;
++	int retval;
++
++	if (unset || !arg)
++		return -1;
++
++	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
++	if (retval)
++		fatal("Invalid action %s", arg);
++
++	return 0;
++}
++
++static int opt_user_threads_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct timerlat_params *params = opt->value;
++
++	if (unset)
++		return 0;
++
++	params->common.user_workload = true;
++	params->common.user_data = true;
++
++	return 0;
++}
++
++static int opt_nano_cb(const struct option *opt, const char *arg, int unset)
++{
++	struct timerlat_params *params = opt->value;
++
++	if (unset)
++		return 0;
++
++	params->common.output_divisor = 1;
++
++	return 0;
++}
++
++static int opt_stack_format_cb(const struct option *opt, const char *arg, int unset)
++{
++	int *format = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*format = parse_stack_format((char *)arg);
++
++	if (*format == -1)
++		fatal("Invalid --stack-format option");
++
++	return 0;
++}
++
++/*
++ * Macros for command line options specific to histogram-based tools
++ */
++#define HIST_OPT_BUCKET_SIZE OPT_CALLBACK('b', "bucket-size", \
++	&params->common.hist.bucket_size, "N", \
++	"set the histogram bucket size (default 1)", \
++	opt_bucket_size_cb)
++
++#define HIST_OPT_ENTRIES OPT_CALLBACK('E', "entries", &params->common.hist.entries, "N", \
++	"set the number of entries of the histogram (default 256)", \
++	opt_entries_cb)
++
++#define HIST_OPT_NO_IRQ OPT_BOOLEAN(0, "no-irq", &params->common.hist.no_irq, \
++	"ignore IRQ latencies")
++
++#define HIST_OPT_NO_THREAD OPT_BOOLEAN(0, "no-thread", &params->common.hist.no_thread, \
++	"ignore thread latencies")
++
++#define HIST_OPT_NO_HEADER OPT_BOOLEAN(0, "no-header", &params->common.hist.no_header, \
++	"do not print header")
++
++#define HIST_OPT_NO_SUMMARY OPT_BOOLEAN(0, "no-summary", &params->common.hist.no_summary, \
++	"do not print summary")
++
++#define HIST_OPT_NO_INDEX OPT_BOOLEAN(0, "no-index", &params->common.hist.no_index, \
++	"do not print index")
++
++#define HIST_OPT_WITH_ZEROS OPT_BOOLEAN(0, "with-zeros", &params->common.hist.with_zeros, \
++	"print zero only entries")
++
++/* Histogram-specific callbacks */
++
++static int opt_bucket_size_cb(const struct option *opt, const char *arg, int unset)
++{
++	int *bucket_size = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*bucket_size = get_llong_from_str((char *)arg);
++	if (*bucket_size == 0 || *bucket_size >= 1000000)
++		fatal("Bucket size needs to be > 0 and <= 1000000");
++
++	return 0;
++}
++
++static int opt_entries_cb(const struct option *opt, const char *arg, int unset)
++{
++	int *entries = opt->value;
++
++	if (unset || !arg)
++		return -1;
++
++	*entries = get_llong_from_str((char *)arg);
++	if (*entries < 10 || *entries > 9999999)
++		fatal("Entries must be > 10 and < 9999999");
++
++	return 0;
++}
++
++/*
++ * osnoise_top_parse_args - allocs, parse and fill the cmd line parameters
++ */
++struct common_params *osnoise_top_parse_args(int argc, char **argv)
++{
++	struct osnoise_params *params;
++	struct osnoise_cb_data cb_data;
++	const char * const *usage;
++
++	params = calloc_fatal(1, sizeof(*params));
++
++	cb_data.params = params;
++	cb_data.trace_output = NULL;
++
++	if (strcmp(argv[0], "hwnoise") == 0) {
++		params->mode = MODE_HWNOISE;
++		/*
++		 * Reduce CPU usage for 75% to avoid killing the system.
++		 */
++		params->runtime = 750000;
++		params->period = 1000000;
++		usage = hwnoise_usage;
++	} else {
++		usage = osnoise_top_usage;
++	}
++
++	const struct option osnoise_top_options[] = {
++	OPT_GROUP("Tracing Options:"),
++		OSNOISE_OPT_PERIOD,
++		OSNOISE_OPT_RUNTIME,
++		RTLA_OPT_STOP('s', "stop", "single sample"),
++		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
++		OSNOISE_OPT_THRESHOLD,
++		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
++
++	OPT_GROUP("Event Configuration:"),
++		RTLA_OPT_EVENT,
++		RTLA_OPT_FILTER,
++		RTLA_OPT_TRIGGER,
++
++	OPT_GROUP("CPU Configuration:"),
++		RTLA_OPT_CPUS,
++		RTLA_OPT_HOUSEKEEPING,
++
++	OPT_GROUP("Thread Configuration:"),
++		RTLA_OPT_PRIORITY,
++		RTLA_OPT_CGROUP,
++
++	OPT_GROUP("Output:"),
++		RTLA_OPT_QUIET,
++
++	OPT_GROUP("System Tuning:"),
++		RTLA_OPT_TRACE_BUFFER_SIZE,
++		RTLA_OPT_WARM_UP,
++
++	OPT_GROUP("Auto Analysis and Actions:"),
++		RTLA_OPT_AUTO(opt_osnoise_auto_cb),
++		RTLA_OPT_ON_THRESHOLD("stop-total", opt_osnoise_on_threshold_cb),
++		RTLA_OPT_ON_END(opt_osnoise_on_end_cb),
++
++	OPT_GROUP("General:"),
++		RTLA_OPT_DURATION,
++		RTLA_OPT_DEBUG,
++		RTLA_OPT_HELP,
++
++	OPT_END(),
++	};
++
++	actions_init(&params->common.threshold_actions);
++	actions_init(&params->common.end_actions);
++
++	argc = parse_options(argc, (const char **)argv,
++			     osnoise_top_options,
++			     usage,
++			     common_parse_options_flags);
++	if (argc < 0)
++		return NULL;
++
++	if (cb_data.trace_output)
++		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
++
++	if (geteuid())
++		fatal("osnoise needs root permission");
++
++	return &params->common;
++}
++
++/*
++ * osnoise_hist_parse_args - allocs, parse and fill the cmd line parameters
++ */
++struct common_params *osnoise_hist_parse_args(int argc, char *argv[])
++{
++	struct osnoise_params *params;
++	struct osnoise_cb_data cb_data;
++
++	params = calloc_fatal(1, sizeof(*params));
++
++	cb_data.params = params;
++	cb_data.trace_output = NULL;
++
++	const struct option osnoise_hist_options[] = {
++	OPT_GROUP("Tracing Options:"),
++		OSNOISE_OPT_PERIOD,
++		OSNOISE_OPT_RUNTIME,
++		RTLA_OPT_STOP('s', "stop", "single sample"),
++		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
++		OSNOISE_OPT_THRESHOLD,
++		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
++
++	OPT_GROUP("Event Configuration:"),
++		RTLA_OPT_EVENT,
++		RTLA_OPT_FILTER,
++		RTLA_OPT_TRIGGER,
++
++	OPT_GROUP("CPU Configuration:"),
++		RTLA_OPT_CPUS,
++		RTLA_OPT_HOUSEKEEPING,
++
++	OPT_GROUP("Thread Configuration:"),
++		RTLA_OPT_PRIORITY,
++		RTLA_OPT_CGROUP,
++
++	OPT_GROUP("Histogram Options:"),
++		HIST_OPT_BUCKET_SIZE,
++		HIST_OPT_ENTRIES,
++		HIST_OPT_NO_HEADER,
++		HIST_OPT_NO_SUMMARY,
++		HIST_OPT_NO_INDEX,
++		HIST_OPT_WITH_ZEROS,
++
++	OPT_GROUP("System Tuning:"),
++		RTLA_OPT_TRACE_BUFFER_SIZE,
++		RTLA_OPT_WARM_UP,
++
++	OPT_GROUP("Auto Analysis and Actions:"),
++		RTLA_OPT_AUTO(opt_osnoise_auto_cb),
++		RTLA_OPT_ON_THRESHOLD("stop-total", opt_osnoise_on_threshold_cb),
++		RTLA_OPT_ON_END(opt_osnoise_on_end_cb),
++
++	OPT_GROUP("General:"),
++		RTLA_OPT_DURATION,
++		RTLA_OPT_DEBUG,
++		RTLA_OPT_HELP,
++
++	OPT_END(),
++	};
++
++	actions_init(&params->common.threshold_actions);
++	actions_init(&params->common.end_actions);
++
++	/* display data in microseconds */
++	params->common.output_divisor = 1000;
++	params->common.hist.bucket_size = 1;
++	params->common.hist.entries = 256;
++
++	argc = parse_options(argc, (const char **)argv,
++			     osnoise_hist_options, osnoise_hist_usage,
++			     common_parse_options_flags);
++	if (argc < 0)
++		return NULL;
++
++	if (cb_data.trace_output)
++		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
++
++	if (geteuid())
++		fatal("rtla needs root permission");
++
++	if (params->common.hist.no_index && !params->common.hist.with_zeros)
++		fatal("no-index set and with-zeros not set - it does not make sense");
++
++	return &params->common;
++}
++
++struct common_params *timerlat_top_parse_args(int argc, char **argv)
++{
++	struct timerlat_params *params;
++	struct timerlat_cb_data cb_data;
++
++	params = calloc_fatal(1, sizeof(*params));
++
++	cb_data.params = params;
++	cb_data.trace_output = NULL;
++
++	const struct option timerlat_top_options[] = {
++	OPT_GROUP("Tracing Options:"),
++		TIMERLAT_OPT_PERIOD,
++		RTLA_OPT_STOP('i', "irq", "irq latency"),
++		RTLA_OPT_STOP_TOTAL('T', "thread", "thread latency"),
++		TIMERLAT_OPT_STACK,
++		RTLA_OPT_TRACE_OUTPUT("timerlat", opt_timerlat_trace_output_cb),
++
++	OPT_GROUP("Event Configuration:"),
++		RTLA_OPT_EVENT,
++		RTLA_OPT_FILTER,
++		RTLA_OPT_TRIGGER,
++
++	OPT_GROUP("CPU Configuration:"),
++		RTLA_OPT_CPUS,
++		RTLA_OPT_HOUSEKEEPING,
++
++	OPT_GROUP("Thread Configuration:"),
++		RTLA_OPT_PRIORITY,
++		RTLA_OPT_CGROUP,
++		RTLA_OPT_USER_THREADS,
++		RTLA_OPT_KERNEL_THREADS,
++		RTLA_OPT_USER_LOAD,
++
++	OPT_GROUP("Output:"),
++		TIMERLAT_OPT_NANO,
++		RTLA_OPT_QUIET,
++
++	OPT_GROUP("System Tuning:"),
++		TIMERLAT_OPT_DMA_LATENCY,
++		TIMERLAT_OPT_DEEPEST_IDLE_STATE,
++		RTLA_OPT_TRACE_BUFFER_SIZE,
++		RTLA_OPT_WARM_UP,
++
++	OPT_GROUP("Auto Analysis and Actions:"),
++		RTLA_OPT_AUTO(opt_timerlat_auto_cb),
++		TIMERLAT_OPT_AA_ONLY,
++		TIMERLAT_OPT_NO_AA,
++		TIMERLAT_OPT_DUMPS_TASKS,
++		RTLA_OPT_ON_THRESHOLD("latency", opt_timerlat_on_threshold_cb),
++		RTLA_OPT_ON_END(opt_timerlat_on_end_cb),
++		TIMERLAT_OPT_BPF_ACTION,
++		TIMERLAT_OPT_STACK_FORMAT,
++
++	OPT_GROUP("General:"),
++		RTLA_OPT_DURATION,
++		RTLA_OPT_DEBUG,
++		RTLA_OPT_HELP,
++
++	OPT_END(),
++	};
++
++	actions_init(&params->common.threshold_actions);
++	actions_init(&params->common.end_actions);
++
++	/* disabled by default */
++	params->dma_latency = -1;
++	params->deepest_idle_state = -2;
++
++	/* display data in microseconds */
++	params->common.output_divisor = 1000;
++
++	/* default to BPF mode */
++	params->mode = TRACING_MODE_BPF;
++
++	/* default to truncate stack format */
++	params->stack_format = STACK_FORMAT_TRUNCATE;
++
++	argc = parse_options(argc, (const char **)argv,
++			     timerlat_top_options, timerlat_top_usage,
++			     common_parse_options_flags);
++	if (argc < 0)
++		return NULL;
++
++	if (cb_data.trace_output)
++		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
++
++	if (geteuid())
++		fatal("rtla needs root permission");
++
++	/*
++	 * Auto analysis only happens if stop tracing, thus:
++	 */
++	if (!params->common.stop_us && !params->common.stop_total_us)
++		params->no_aa = 1;
++
++	if (params->no_aa && params->common.aa_only)
++		fatal("--no-aa and --aa-only are mutually exclusive!");
++
++	if (params->common.kernel_workload && params->common.user_workload)
++		fatal("--kernel-threads and --user-threads are mutually exclusive!");
++
++	/*
++	 * If auto-analysis or trace output is enabled, switch from BPF mode to
++	 * mixed mode
++	 */
++	if (params->mode == TRACING_MODE_BPF &&
++		(params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++		params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
++		!params->no_aa))
++		params->mode = TRACING_MODE_MIXED;
++
++	return &params->common;
++}
++
++struct common_params *timerlat_hist_parse_args(int argc, char **argv)
++{
++	struct timerlat_params *params;
++	struct timerlat_cb_data cb_data;
++
++	params = calloc_fatal(1, sizeof(*params));
++
++	cb_data.params = params;
++	cb_data.trace_output = NULL;
++
++	const struct option timerlat_hist_options[] = {
++	OPT_GROUP("Tracing Options:"),
++		TIMERLAT_OPT_PERIOD,
++		RTLA_OPT_STOP('i', "irq", "irq latency"),
++		RTLA_OPT_STOP_TOTAL('T', "thread", "thread latency"),
++		TIMERLAT_OPT_STACK,
++		RTLA_OPT_TRACE_OUTPUT("timerlat", opt_timerlat_trace_output_cb),
++
++	OPT_GROUP("Event Configuration:"),
++		RTLA_OPT_EVENT,
++		RTLA_OPT_FILTER,
++		RTLA_OPT_TRIGGER,
++
++	OPT_GROUP("CPU Configuration:"),
++		RTLA_OPT_CPUS,
++		RTLA_OPT_HOUSEKEEPING,
++
++	OPT_GROUP("Thread Configuration:"),
++		RTLA_OPT_PRIORITY,
++		RTLA_OPT_CGROUP,
++		RTLA_OPT_USER_THREADS,
++		RTLA_OPT_KERNEL_THREADS,
++		RTLA_OPT_USER_LOAD,
++
++	OPT_GROUP("Histogram Options:"),
++		HIST_OPT_BUCKET_SIZE,
++		HIST_OPT_ENTRIES,
++		HIST_OPT_NO_IRQ,
++		HIST_OPT_NO_THREAD,
++		HIST_OPT_NO_HEADER,
++		HIST_OPT_NO_SUMMARY,
++		HIST_OPT_NO_INDEX,
++		HIST_OPT_WITH_ZEROS,
++
++	OPT_GROUP("Output:"),
++		TIMERLAT_OPT_NANO,
++
++	OPT_GROUP("System Tuning:"),
++		TIMERLAT_OPT_DMA_LATENCY,
++		TIMERLAT_OPT_DEEPEST_IDLE_STATE,
++		RTLA_OPT_TRACE_BUFFER_SIZE,
++		RTLA_OPT_WARM_UP,
++
++	OPT_GROUP("Auto Analysis and Actions:"),
++		RTLA_OPT_AUTO(opt_timerlat_auto_cb),
++		TIMERLAT_OPT_NO_AA,
++		TIMERLAT_OPT_DUMPS_TASKS,
++		RTLA_OPT_ON_THRESHOLD("latency", opt_timerlat_on_threshold_cb),
++		RTLA_OPT_ON_END(opt_timerlat_on_end_cb),
++		TIMERLAT_OPT_BPF_ACTION,
++		TIMERLAT_OPT_STACK_FORMAT,
++
++	OPT_GROUP("General:"),
++		RTLA_OPT_DURATION,
++		RTLA_OPT_DEBUG,
++		RTLA_OPT_HELP,
++
++		OPT_END(),
++	};
++
++	actions_init(&params->common.threshold_actions);
++	actions_init(&params->common.end_actions);
++
++	/* disabled by default */
++	params->dma_latency = -1;
++
++	/* disabled by default */
++	params->deepest_idle_state = -2;
++
++	/* display data in microseconds */
++	params->common.output_divisor = 1000;
++	params->common.hist.bucket_size = 1;
++	params->common.hist.entries = 256;
++
++	/* default to BPF mode */
++	params->mode = TRACING_MODE_BPF;
++
++	/* default to truncate stack format */
++	params->stack_format = STACK_FORMAT_TRUNCATE;
++
++	argc = parse_options(argc, (const char **)argv,
++			     timerlat_hist_options, timerlat_hist_usage,
++			     common_parse_options_flags);
++	if (argc < 0)
++		return NULL;
++
++	if (cb_data.trace_output)
++		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
++
++	if (geteuid())
++		fatal("rtla needs root permission");
++
++	if (params->common.hist.no_irq && params->common.hist.no_thread)
++		fatal("no-irq and no-thread set, there is nothing to do here");
++
++	if (params->common.hist.no_index && !params->common.hist.with_zeros)
++		fatal("no-index set with with-zeros is not set - it does not make sense");
++
++	/*
++	 * Auto analysis only happens if stop tracing, thus:
++	 */
++	if (!params->common.stop_us && !params->common.stop_total_us)
++		params->no_aa = 1;
++
++	if (params->common.kernel_workload && params->common.user_workload)
++		fatal("--kernel-threads and --user-threads are mutually exclusive!");
++
++	/*
++	 * If auto-analysis or trace output is enabled, switch from BPF mode to
++	 * mixed mode
++	 */
++	if (params->mode == TRACING_MODE_BPF &&
++		(params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++		params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
++		!params->no_aa))
++		params->mode = TRACING_MODE_MIXED;
++
++	return &params->common;
++}
++
++/*
++ * rtla_usage - print rtla usage
++ */
++static void rtla_usage(int err)
++{
++	int i;
++
++	static const char *msg[] = {
++		"",
++		"rtla version " VERSION,
++		"",
++		"  usage: rtla COMMAND ...",
++		"",
++		"  commands:",
++		"     osnoise  - gives information about the operating system noise (osnoise)",
++		"     hwnoise  - gives information about hardware-related noise",
++		"     timerlat - measures the timer irq and thread latency",
++		"",
++		NULL,
++	};
++
++	for (i = 0; msg[i]; i++)
++		fprintf(stderr, "%s\n", msg[i]);
++	exit(err);
++}
++
++/*
++ * run_tool_command - try to run a rtla tool command
++ *
++ * It returns 0 if it fails. The tool's main will generally not
++ * return as they should call exit().
++ */
++int run_tool_command(int argc, char **argv, int start_position)
++{
++	if (strcmp(argv[start_position], "osnoise") == 0) {
++		osnoise_main(argc-start_position, &argv[start_position]);
++		goto ran;
++	} else if (strcmp(argv[start_position], "hwnoise") == 0) {
++		hwnoise_main(argc-start_position, &argv[start_position]);
++		goto ran;
++	} else if (strcmp(argv[start_position], "timerlat") == 0) {
++		timerlat_main(argc-start_position, &argv[start_position]);
++		goto ran;
++	}
++
++	return 0;
++ran:
++	return 1;
++}
++
++int main(int argc, char *argv[])
++{
++	int retval;
++
++	/* is it an alias? */
++	retval = run_tool_command(argc, argv, 0);
++	if (retval)
++		exit(0);
++
++	if (argc < 2)
++		goto usage;
++
++	if (strcmp(argv[1], "-h") == 0)
++		rtla_usage(0);
++	else if (strcmp(argv[1], "--help") == 0)
++		rtla_usage(0);
++
++	retval = run_tool_command(argc, argv, 1);
++	if (retval)
++		exit(0);
++
++usage:
++	rtla_usage(1);
++	exit(1);
++}
+diff --git a/tools/tracing/rtla/src/cli.h b/tools/tracing/rtla/src/cli.h
+new file mode 100644
+index 000000000000..c49ccb3e92f5
+--- /dev/null
++++ b/tools/tracing/rtla/src/cli.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#pragma once
++
++struct common_params *osnoise_top_parse_args(int argc, char **argv);
++struct common_params *osnoise_hist_parse_args(int argc, char **argv);
++struct common_params *timerlat_top_parse_args(int argc, char **argv);
++struct common_params *timerlat_hist_parse_args(int argc, char **argv);
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 35e3d3aa922e..7403dcc8f6c1 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -5,7 +5,6 @@
+ #include <signal.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <getopt.h>
+ #include <sys/sysinfo.h>
  
- 		switch (opt->type) {
-@@ -212,7 +249,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 		err = 0;
- 		if (unset)
- 			*(const char **)opt->value = NULL;
--		else if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		else if (force_defval)
- 			*(const char **)opt->value = (const char *)opt->defval;
- 		else
- 			err = get_arg(p, opt, flags, (const char **)opt->value);
-@@ -244,7 +281,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			return (*opt->callback)(opt, NULL, 1) ? (-1) : 0;
- 		if (opt->flags & PARSE_OPT_NOARG)
- 			return (*opt->callback)(opt, NULL, 0) ? (-1) : 0;
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		if (force_defval)
- 			return (*opt->callback)(opt, NULL, 0) ? (-1) : 0;
- 		if (get_arg(p, opt, flags, &arg))
- 			return -1;
-@@ -255,7 +292,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(int *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(int *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -271,7 +308,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(unsigned int *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(unsigned int *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -289,7 +326,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(long *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(long *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -305,7 +342,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(unsigned long *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(unsigned long *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -321,7 +358,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(u64 *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(u64 *)opt->value = opt->defval;
- 			return 0;
- 		}
-diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
-index 8e9147358a28..c573a0ca5ca6 100644
---- a/tools/lib/subcmd/parse-options.h
-+++ b/tools/lib/subcmd/parse-options.h
-@@ -33,6 +33,7 @@ enum parse_opt_flags {
- 	PARSE_OPT_KEEP_ARGV0 = 4,
- 	PARSE_OPT_KEEP_UNKNOWN = 8,
- 	PARSE_OPT_NO_INTERNAL_HELP = 16,
-+	PARSE_OPT_OPTARG_ALLOW_NEXT = 32,
+ #include "common.h"
+@@ -53,114 +52,6 @@ static void unset_signals(struct common_params *params)
+ 	}
+ }
+ 
+-/*
+- * getopt_auto - auto-generates optstring from long_options
+- */
+-int getopt_auto(int argc, char **argv, const struct option *long_opts)
+-{
+-	char opts[256];
+-	int n = 0;
+-
+-	for (int i = 0; long_opts[i].name; i++) {
+-		if (long_opts[i].val < 32 || long_opts[i].val > 127)
+-			continue;
+-
+-		if (n + 4 >= sizeof(opts))
+-			fatal("optstring buffer overflow");
+-
+-		opts[n++] = long_opts[i].val;
+-
+-		if (long_opts[i].has_arg == required_argument)
+-			opts[n++] = ':';
+-		else if (long_opts[i].has_arg == optional_argument) {
+-			opts[n++] = ':';
+-			opts[n++] = ':';
+-		}
+-	}
+-
+-	opts[n] = '\0';
+-
+-	return getopt_long(argc, argv, opts, long_opts, NULL);
+-}
+-
+-/*
+- * common_parse_options - parse common command line options
+- *
+- * @argc: argument count
+- * @argv: argument vector
+- * @common: common parameters structure
+- *
+- * Parse command line options that are common to all rtla tools.
+- *
+- * Returns: non zero if a common option was parsed, or 0
+- * if the option should be handled by tool-specific parsing.
+- */
+-int common_parse_options(int argc, char **argv, struct common_params *common)
+-{
+-	struct trace_events *tevent;
+-	int saved_state = optind;
+-	int c;
+-
+-	static struct option long_options[] = {
+-		{"cpus",                required_argument,      0, 'c'},
+-		{"cgroup",              optional_argument,      0, 'C'},
+-		{"debug",               no_argument,            0, 'D'},
+-		{"duration",            required_argument,      0, 'd'},
+-		{"event",               required_argument,      0, 'e'},
+-		{"house-keeping",       required_argument,      0, 'H'},
+-		{"priority",            required_argument,      0, 'P'},
+-		{0, 0, 0, 0}
+-	};
+-
+-	opterr = 0;
+-	c = getopt_auto(argc, argv, long_options);
+-	opterr = 1;
+-
+-	switch (c) {
+-	case 'c':
+-		if (parse_cpu_set(optarg, &common->monitored_cpus))
+-			fatal("Invalid -c cpu list");
+-		common->cpus = optarg;
+-		break;
+-	case 'C':
+-		common->cgroup = 1;
+-		common->cgroup_name = parse_optional_arg(argc, argv);
+-		break;
+-	case 'D':
+-		config_debug = 1;
+-		break;
+-	case 'd':
+-		common->duration = parse_seconds_duration(optarg);
+-		if (!common->duration)
+-			fatal("Invalid -d duration");
+-		break;
+-	case 'e':
+-		tevent = trace_event_alloc(optarg);
+-		if (!tevent)
+-			fatal("Error alloc trace event");
+-
+-		if (common->events)
+-			tevent->next = common->events;
+-		common->events = tevent;
+-		break;
+-	case 'H':
+-		common->hk_cpus = 1;
+-		if (parse_cpu_set(optarg, &common->hk_cpu_set))
+-			fatal("Error parsing house keeping CPUs");
+-		break;
+-	case 'P':
+-		if (parse_prio(optarg, &common->sched_param) == -1)
+-			fatal("Invalid -P priority");
+-		common->set_sched = 1;
+-		break;
+-	default:
+-		optind = saved_state;
+-		return 0;
+-	}
+-
+-	return c;
+-}
+-
+ /*
+  * common_apply_config - apply common configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
+index 51665db4ffce..27439b10ffd5 100644
+--- a/tools/tracing/rtla/src/common.h
++++ b/tools/tracing/rtla/src/common.h
+@@ -1,7 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #pragma once
+ 
+-#include <getopt.h>
+ #include "actions.h"
+ #include "timerlat_u.h"
+ #include "trace.h"
+@@ -58,12 +57,12 @@ extern struct trace_instance *trace_inst;
+ extern volatile int stop_tracing;
+ 
+ struct hist_params {
+-	char			no_irq;
+-	char			no_thread;
+-	char			no_header;
+-	char			no_summary;
+-	char			no_index;
+-	char			with_zeros;
++	bool			no_irq;
++	bool			no_thread;
++	bool			no_header;
++	bool			no_summary;
++	bool			no_index;
++	bool			with_zeros;
+ 	int			bucket_size;
+ 	int			entries;
  };
+@@ -96,12 +95,12 @@ struct common_params {
+ 	/* Other parameters */
+ 	struct hist_params	hist;
+ 	int			output_divisor;
+-	int			pretty_output;
+-	int			quiet;
+-	int			user_workload;
+-	int			kernel_workload;
+-	int			user_data;
+-	int			aa_only;
++	bool			pretty_output;
++	bool			quiet;
++	bool			user_workload;
++	bool			kernel_workload;
++	bool			user_data;
++	bool			aa_only;
  
- enum parse_opt_option_flags {
+ 	struct actions		threshold_actions;
+ 	struct actions		end_actions;
+@@ -177,7 +176,6 @@ int osnoise_set_stop_us(struct osnoise_context *context, long long stop_us);
+ int osnoise_set_stop_total_us(struct osnoise_context *context,
+ 			      long long stop_total_us);
+ 
+-int getopt_auto(int argc, char **argv, const struct option *long_opts);
+ int common_parse_options(int argc, char **argv, struct common_params *common);
+ int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
+ int top_main_loop(struct osnoise_tool *tool);
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index 8ad816b80265..dfa91d0681f8 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -4,7 +4,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#include <getopt.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <signal.h>
+@@ -13,6 +12,7 @@
+ #include <time.h>
+ 
+ #include "osnoise.h"
++#include "cli.h"
+ 
+ struct osnoise_hist_cpu {
+ 	int			*samples;
+@@ -400,225 +400,6 @@ osnoise_print_stats(struct osnoise_tool *tool)
+ 	osnoise_report_missed_events(tool);
+ }
+ 
+-/*
+- * osnoise_hist_usage - prints osnoise hist usage message
+- */
+-static void osnoise_hist_usage(void)
+-{
+-	static const char * const msg_start[] = {
+-		"[-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+-		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+-		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] \\",
+-		"	  [--no-index] [--with-zeros] [-C [cgroup_name]] [--warm-up]",
+-		NULL,
+-	};
+-
+-	static const char * const msg_opts[] = {
+-		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+-		"	  -p/--period us: osnoise period in us",
+-		"	  -r/--runtime us: osnoise runtime in us",
+-		"	  -s/--stop us: stop trace if a single sample is higher than the argument in us",
+-		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
+-		"	  -T/--threshold us: the minimum delta to be considered a noise",
+-		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+-		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+-		"	  -d/--duration time[s|m|h|d]: duration of the session",
+-		"	  -D/--debug: print debug info",
+-		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
+-		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+-		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+-		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+-		"	  -b/--bucket-size N: set the histogram bucket size (default 1)",
+-		"	  -E/--entries N: set the number of entries of the histogram (default 256)",
+-		"	     --no-header: do not print header",
+-		"	     --no-summary: do not print summary",
+-		"	     --no-index: do not print index",
+-		"	     --with-zeros: print zero only entries",
+-		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period: set scheduling parameters",
+-		"		o:prio - use SCHED_OTHER with prio",
+-		"		r:prio - use SCHED_RR with prio",
+-		"		f:prio - use SCHED_FIFO with prio",
+-		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
+-		"						       in nanoseconds",
+-		"	     --warm-up: let the workload run for s seconds before collecting data",
+-		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+-		"	     --on-threshold <action>: define action to be executed at stop-total threshold, multiple are allowed",
+-		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
+-		NULL,
+-	};
+-
+-	common_usage("osnoise", "hist", "a per-cpu histogram of the OS noise",
+-		     msg_start, msg_opts);
+-}
+-
+-/*
+- * osnoise_hist_parse_args - allocs, parse and fill the cmd line parameters
+- */
+-static struct common_params
+-*osnoise_hist_parse_args(int argc, char *argv[])
+-{
+-	struct osnoise_params *params;
+-	int retval;
+-	int c;
+-	char *trace_output = NULL;
+-
+-	params = calloc_fatal(1, sizeof(*params));
+-
+-	actions_init(&params->common.threshold_actions);
+-	actions_init(&params->common.end_actions);
+-
+-	/* display data in microseconds */
+-	params->common.output_divisor = 1000;
+-	params->common.hist.bucket_size = 1;
+-	params->common.hist.entries = 256;
+-
+-	while (1) {
+-		static struct option long_options[] = {
+-			{"auto",		required_argument,	0, 'a'},
+-			{"bucket-size",		required_argument,	0, 'b'},
+-			{"entries",		required_argument,	0, 'E'},
+-			{"help",		no_argument,		0, 'h'},
+-			{"period",		required_argument,	0, 'p'},
+-			{"runtime",		required_argument,	0, 'r'},
+-			{"stop",		required_argument,	0, 's'},
+-			{"stop-total",		required_argument,	0, 'S'},
+-			{"trace",		optional_argument,	0, 't'},
+-			{"threshold",		required_argument,	0, 'T'},
+-			{"no-header",		no_argument,		0, '0'},
+-			{"no-summary",		no_argument,		0, '1'},
+-			{"no-index",		no_argument,		0, '2'},
+-			{"with-zeros",		no_argument,		0, '3'},
+-			{"trigger",		required_argument,	0, '4'},
+-			{"filter",		required_argument,	0, '5'},
+-			{"warm-up",		required_argument,	0, '6'},
+-			{"trace-buffer-size",	required_argument,	0, '7'},
+-			{"on-threshold",	required_argument,	0, '8'},
+-			{"on-end",		required_argument,	0, '9'},
+-			{0, 0, 0, 0}
+-		};
+-
+-		if (common_parse_options(argc, argv, &params->common))
+-			continue;
+-
+-		c = getopt_auto(argc, argv, long_options);
+-
+-		/* detect the end of the options. */
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'a':
+-			/* set sample stop to auto_thresh */
+-			params->common.stop_us = get_llong_from_str(optarg);
+-
+-			/* set sample threshold to 1 */
+-			params->threshold = 1;
+-
+-			/* set trace */
+-			if (!trace_output)
+-				trace_output = "osnoise_trace.txt";
+-
+-			break;
+-		case 'b':
+-			params->common.hist.bucket_size = get_llong_from_str(optarg);
+-			if (params->common.hist.bucket_size == 0 ||
+-			    params->common.hist.bucket_size >= 1000000)
+-				fatal("Bucket size needs to be > 0 and <= 1000000");
+-			break;
+-		case 'E':
+-			params->common.hist.entries = get_llong_from_str(optarg);
+-			if (params->common.hist.entries < 10 ||
+-			    params->common.hist.entries > 9999999)
+-				fatal("Entries must be > 10 and < 9999999");
+-			break;
+-		case 'h':
+-		case '?':
+-			osnoise_hist_usage();
+-			break;
+-		case 'p':
+-			params->period = get_llong_from_str(optarg);
+-			if (params->period > 10000000)
+-				fatal("Period longer than 10 s");
+-			break;
+-		case 'r':
+-			params->runtime = get_llong_from_str(optarg);
+-			if (params->runtime < 100)
+-				fatal("Runtime shorter than 100 us");
+-			break;
+-		case 's':
+-			params->common.stop_us = get_llong_from_str(optarg);
+-			break;
+-		case 'S':
+-			params->common.stop_total_us = get_llong_from_str(optarg);
+-			break;
+-		case 'T':
+-			params->threshold = get_llong_from_str(optarg);
+-			break;
+-		case 't':
+-			trace_output = parse_optional_arg(argc, argv);
+-			if (!trace_output)
+-				trace_output = "osnoise_trace.txt";
+-			break;
+-		case '0': /* no header */
+-			params->common.hist.no_header = 1;
+-			break;
+-		case '1': /* no summary */
+-			params->common.hist.no_summary = 1;
+-			break;
+-		case '2': /* no index */
+-			params->common.hist.no_index = 1;
+-			break;
+-		case '3': /* with zeros */
+-			params->common.hist.with_zeros = 1;
+-			break;
+-		case '4': /* trigger */
+-			if (params->common.events)
+-				trace_event_add_trigger(params->common.events, optarg);
+-			else
+-				fatal("--trigger requires a previous -e");
+-			break;
+-		case '5': /* filter */
+-			if (params->common.events)
+-				trace_event_add_filter(params->common.events, optarg);
+-			else
+-				fatal("--filter requires a previous -e");
+-			break;
+-		case '6':
+-			params->common.warmup = get_llong_from_str(optarg);
+-			break;
+-		case '7':
+-			params->common.buffer_size = get_llong_from_str(optarg);
+-			break;
+-		case '8':
+-			retval = actions_parse(&params->common.threshold_actions, optarg,
+-					       "osnoise_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '9':
+-			retval = actions_parse(&params->common.end_actions, optarg,
+-					       "osnoise_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		default:
+-			fatal("Invalid option");
+-		}
+-	}
+-
+-	if (trace_output)
+-		actions_add_trace_output(&params->common.threshold_actions, trace_output);
+-
+-	if (geteuid())
+-		fatal("rtla needs root permission");
+-
+-	if (params->common.hist.no_index && !params->common.hist.with_zeros)
+-		fatal("no-index set and with-zeros not set - it does not make sense");
+-
+-	return &params->common;
+-}
+-
+ /*
+  * osnoise_hist_apply_config - apply the hist configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 244bdce022ad..512a6299cb01 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -4,7 +4,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#include <getopt.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <signal.h>
+@@ -13,6 +12,7 @@
+ #include <time.h>
+ 
+ #include "osnoise.h"
++#include "cli.h"
+ 
+ struct osnoise_top_cpu {
+ 	unsigned long long	sum_runtime;
+@@ -245,204 +245,6 @@ osnoise_print_stats(struct osnoise_tool *top)
+ 	osnoise_report_missed_events(top);
+ }
+ 
+-/*
+- * osnoise_top_usage - prints osnoise top usage message
+- */
+-static void osnoise_top_usage(struct osnoise_params *params)
+-{
+-	const char *tool, *mode, *desc;
+-
+-	static const char * const msg_start[] = {
+-		"[-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+-		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+-		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C [cgroup_name]] [--warm-up s]",
+-		NULL,
+-	};
+-
+-	static const char * const msg_opts[] = {
+-		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+-		"	  -p/--period us: osnoise period in us",
+-		"	  -r/--runtime us: osnoise runtime in us",
+-		"	  -s/--stop us: stop trace if a single sample is higher than the argument in us",
+-		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
+-		"	  -T/--threshold us: the minimum delta to be considered a noise",
+-		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+-		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+-		"	  -d/--duration time[s|m|h|d]: duration of the session",
+-		"	  -D/--debug: print debug info",
+-		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
+-		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+-		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+-		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+-		"	  -q/--quiet print only a summary at the end",
+-		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
+-		"		o:prio - use SCHED_OTHER with prio",
+-		"		r:prio - use SCHED_RR with prio",
+-		"		f:prio - use SCHED_FIFO with prio",
+-		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
+-		"						       in nanoseconds",
+-		"	     --warm-up s: let the workload run for s seconds before collecting data",
+-		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+-		"	     --on-threshold <action>: define action to be executed at stop-total threshold, multiple are allowed",
+-		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
+-		NULL,
+-	};
+-
+-	if (params->mode == MODE_OSNOISE) {
+-		tool = "osnoise";
+-		mode = "top";
+-		desc = "a per-cpu summary of the OS noise";
+-	} else {
+-		tool = "hwnoise";
+-		mode = "";
+-		desc = "a summary of hardware-related noise";
+-	}
+-
+-	common_usage(tool, mode, desc, msg_start, msg_opts);
+-}
+-
+-/*
+- * osnoise_top_parse_args - allocs, parse and fill the cmd line parameters
+- */
+-struct common_params *osnoise_top_parse_args(int argc, char **argv)
+-{
+-	struct osnoise_params *params;
+-	int retval;
+-	int c;
+-	char *trace_output = NULL;
+-
+-	params = calloc_fatal(1, sizeof(*params));
+-
+-	actions_init(&params->common.threshold_actions);
+-	actions_init(&params->common.end_actions);
+-
+-	if (strcmp(argv[0], "hwnoise") == 0) {
+-		params->mode = MODE_HWNOISE;
+-		/*
+-		 * Reduce CPU usage for 75% to avoid killing the system.
+-		 */
+-		params->runtime = 750000;
+-		params->period = 1000000;
+-	}
+-
+-	while (1) {
+-		static struct option long_options[] = {
+-			{"auto",		required_argument,	0, 'a'},
+-			{"help",		no_argument,		0, 'h'},
+-			{"period",		required_argument,	0, 'p'},
+-			{"quiet",		no_argument,		0, 'q'},
+-			{"runtime",		required_argument,	0, 'r'},
+-			{"stop",		required_argument,	0, 's'},
+-			{"stop-total",		required_argument,	0, 'S'},
+-			{"threshold",		required_argument,	0, 'T'},
+-			{"trace",		optional_argument,	0, 't'},
+-			{"trigger",		required_argument,	0, '0'},
+-			{"filter",		required_argument,	0, '1'},
+-			{"warm-up",		required_argument,	0, '2'},
+-			{"trace-buffer-size",	required_argument,	0, '3'},
+-			{"on-threshold",	required_argument,	0, '4'},
+-			{"on-end",		required_argument,	0, '5'},
+-			{0, 0, 0, 0}
+-		};
+-
+-		if (common_parse_options(argc, argv, &params->common))
+-			continue;
+-
+-		c = getopt_auto(argc, argv, long_options);
+-
+-		/* Detect the end of the options. */
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'a':
+-			/* set sample stop to auto_thresh */
+-			params->common.stop_us = get_llong_from_str(optarg);
+-
+-			/* set sample threshold to 1 */
+-			params->threshold = 1;
+-
+-			/* set trace */
+-			if (!trace_output)
+-				trace_output = "osnoise_trace.txt";
+-
+-			break;
+-		case 'h':
+-		case '?':
+-			osnoise_top_usage(params);
+-			break;
+-		case 'p':
+-			params->period = get_llong_from_str(optarg);
+-			if (params->period > 10000000)
+-				fatal("Period longer than 10 s");
+-			break;
+-		case 'q':
+-			params->common.quiet = 1;
+-			break;
+-		case 'r':
+-			params->runtime = get_llong_from_str(optarg);
+-			if (params->runtime < 100)
+-				fatal("Runtime shorter than 100 us");
+-			break;
+-		case 's':
+-			params->common.stop_us = get_llong_from_str(optarg);
+-			break;
+-		case 'S':
+-			params->common.stop_total_us = get_llong_from_str(optarg);
+-			break;
+-		case 't':
+-			trace_output = parse_optional_arg(argc, argv);
+-			if (!trace_output)
+-				trace_output = "osnoise_trace.txt";
+-			break;
+-		case 'T':
+-			params->threshold = get_llong_from_str(optarg);
+-			break;
+-		case '0': /* trigger */
+-			if (params->common.events)
+-				trace_event_add_trigger(params->common.events, optarg);
+-			else
+-				fatal("--trigger requires a previous -e");
+-			break;
+-		case '1': /* filter */
+-			if (params->common.events)
+-				trace_event_add_filter(params->common.events, optarg);
+-			else
+-				fatal("--filter requires a previous -e");
+-			break;
+-		case '2':
+-			params->common.warmup = get_llong_from_str(optarg);
+-			break;
+-		case '3':
+-			params->common.buffer_size = get_llong_from_str(optarg);
+-			break;
+-		case '4':
+-			retval = actions_parse(&params->common.threshold_actions, optarg,
+-					       "osnoise_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '5':
+-			retval = actions_parse(&params->common.end_actions, optarg,
+-					       "osnoise_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		default:
+-			fatal("Invalid option");
+-		}
+-	}
+-
+-	if (trace_output)
+-		actions_add_trace_output(&params->common.threshold_actions, trace_output);
+-
+-	if (geteuid())
+-		fatal("osnoise needs root permission");
+-
+-	return &params->common;
+-}
+-
+ /*
+  * osnoise_top_apply_config - apply the top configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/rtla.c b/tools/tracing/rtla/src/rtla.c
+deleted file mode 100644
+index 845932f902ef..000000000000
+--- a/tools/tracing/rtla/src/rtla.c
++++ /dev/null
+@@ -1,89 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+- */
+-
+-#include <getopt.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <stdio.h>
+-
+-#include "osnoise.h"
+-#include "timerlat.h"
+-
+-/*
+- * rtla_usage - print rtla usage
+- */
+-static void rtla_usage(int err)
+-{
+-	int i;
+-
+-	static const char *msg[] = {
+-		"",
+-		"rtla version " VERSION,
+-		"",
+-		"  usage: rtla COMMAND ...",
+-		"",
+-		"  commands:",
+-		"     osnoise  - gives information about the operating system noise (osnoise)",
+-		"     hwnoise  - gives information about hardware-related noise",
+-		"     timerlat - measures the timer irq and thread latency",
+-		"",
+-		NULL,
+-	};
+-
+-	for (i = 0; msg[i]; i++)
+-		fprintf(stderr, "%s\n", msg[i]);
+-	exit(err);
+-}
+-
+-/*
+- * run_tool_command - try to run a rtla tool command
+- *
+- * It returns 0 if it fails. The tool's main will generally not
+- * return as they should call exit().
+- */
+-int run_tool_command(int argc, char **argv, int start_position)
+-{
+-	if (strcmp(argv[start_position], "osnoise") == 0) {
+-		osnoise_main(argc-start_position, &argv[start_position]);
+-		goto ran;
+-	} else if (strcmp(argv[start_position], "hwnoise") == 0) {
+-		hwnoise_main(argc-start_position, &argv[start_position]);
+-		goto ran;
+-	} else if (strcmp(argv[start_position], "timerlat") == 0) {
+-		timerlat_main(argc-start_position, &argv[start_position]);
+-		goto ran;
+-	}
+-
+-	return 0;
+-ran:
+-	return 1;
+-}
+-
+-int main(int argc, char *argv[])
+-{
+-	int retval;
+-
+-	/* is it an alias? */
+-	retval = run_tool_command(argc, argv, 0);
+-	if (retval)
+-		exit(0);
+-
+-	if (argc < 2)
+-		goto usage;
+-
+-	if (strcmp(argv[1], "-h") == 0) {
+-		rtla_usage(0);
+-	} else if (strcmp(argv[1], "--help") == 0) {
+-		rtla_usage(0);
+-	}
+-
+-	retval = run_tool_command(argc, argv, 1);
+-	if (retval)
+-		exit(0);
+-
+-usage:
+-	rtla_usage(1);
+-	exit(1);
+-}
+diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
+index 364203a29abd..37a808f1611e 100644
+--- a/tools/tracing/rtla/src/timerlat.h
++++ b/tools/tracing/rtla/src/timerlat.h
+@@ -23,8 +23,8 @@ struct timerlat_params {
+ 	long long		timerlat_period_us;
+ 	long long		print_stack;
+ 	int			dma_latency;
+-	int			no_aa;
+-	int			dump_tasks;
++	bool			no_aa;
++	bool			dump_tasks;
+ 	int			deepest_idle_state;
+ 	enum timerlat_tracing_mode mode;
+ 	const char		*bpf_action_program;
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 79142af4f566..df7b1398a966 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -4,7 +4,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#include <getopt.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <signal.h>
+@@ -17,6 +16,7 @@
+ #include "timerlat.h"
+ #include "timerlat_aa.h"
+ #include "timerlat_bpf.h"
++#include "cli.h"
+ #include "common.h"
+ 
+ struct timerlat_hist_cpu {
+@@ -685,321 +685,6 @@ timerlat_print_stats(struct osnoise_tool *tool)
+ 	osnoise_report_missed_events(tool);
+ }
+ 
+-/*
+- * timerlat_hist_usage - prints timerlat top usage message
+- */
+-static void timerlat_hist_usage(void)
+-{
+-	static const char * const msg_start[] = {
+-		"[-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
+-		"         [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+-		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
+-		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-task] [-u|-k]",
+-		"	  [--warm-up s] [--deepest-idle-state n]",
+-		NULL,
+-	};
+-
+-	static const char * const msg_opts[] = {
+-		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
+-		"	  -p/--period us: timerlat period in us",
+-		"	  -i/--irq us: stop trace if the irq latency is higher than the argument in us",
+-		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
+-		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+-		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+-		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+-		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
+-		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
+-		"	  -D/--debug: print debug info",
+-		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
+-		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+-		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+-		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+-		"	  -n/--nano: display data in nanoseconds",
+-		"	     --no-aa: disable auto-analysis, reducing rtla timerlat cpu usage",
+-		"	  -b/--bucket-size N: set the histogram bucket size (default 1)",
+-		"	  -E/--entries N: set the number of entries of the histogram (default 256)",
+-		"	     --no-irq: ignore IRQ latencies",
+-		"	     --no-thread: ignore thread latencies",
+-		"	     --no-header: do not print header",
+-		"	     --no-summary: do not print summary",
+-		"	     --no-index: do not print index",
+-		"	     --with-zeros: print zero only entries",
+-		"	     --dma-latency us: set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency",
+-		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
+-		"		o:prio - use SCHED_OTHER with prio",
+-		"		r:prio - use SCHED_RR with prio",
+-		"		f:prio - use SCHED_FIFO with prio",
+-		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
+-		"						       in nanoseconds",
+-		"	  -u/--user-threads: use rtla user-space threads instead of kernel-space timerlat threads",
+-		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
+-		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
+-		"	     --warm-up s: let the workload run for s seconds before collecting data",
+-		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+-		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
+-		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
+-		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
+-		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
+-		"	     --stack-format <format>: set the stack format (truncate, skip, full)",
+-		NULL,
+-	};
+-
+-	common_usage("timerlat", "hist", "a per-cpu histogram of the timer latency",
+-		     msg_start, msg_opts);
+-}
+-
+-/*
+- * timerlat_hist_parse_args - allocs, parse and fill the cmd line parameters
+- */
+-static struct common_params
+-*timerlat_hist_parse_args(int argc, char *argv[])
+-{
+-	struct timerlat_params *params;
+-	int auto_thresh;
+-	int retval;
+-	int c;
+-	char *trace_output = NULL;
+-
+-	params = calloc_fatal(1, sizeof(*params));
+-
+-	actions_init(&params->common.threshold_actions);
+-	actions_init(&params->common.end_actions);
+-
+-	/* disabled by default */
+-	params->dma_latency = -1;
+-
+-	/* disabled by default */
+-	params->deepest_idle_state = -2;
+-
+-	/* display data in microseconds */
+-	params->common.output_divisor = 1000;
+-	params->common.hist.bucket_size = 1;
+-	params->common.hist.entries = 256;
+-
+-	/* default to BPF mode */
+-	params->mode = TRACING_MODE_BPF;
+-
+-	/* default to truncate stack format */
+-	params->stack_format = STACK_FORMAT_TRUNCATE;
+-
+-	while (1) {
+-		static struct option long_options[] = {
+-			{"auto",		required_argument,	0, 'a'},
+-			{"bucket-size",		required_argument,	0, 'b'},
+-			{"entries",		required_argument,	0, 'E'},
+-			{"help",		no_argument,		0, 'h'},
+-			{"irq",			required_argument,	0, 'i'},
+-			{"nano",		no_argument,		0, 'n'},
+-			{"period",		required_argument,	0, 'p'},
+-			{"stack",		required_argument,	0, 's'},
+-			{"thread",		required_argument,	0, 'T'},
+-			{"trace",		optional_argument,	0, 't'},
+-			{"user-threads",	no_argument,		0, 'u'},
+-			{"kernel-threads",	no_argument,		0, 'k'},
+-			{"user-load",		no_argument,		0, 'U'},
+-			{"no-irq",		no_argument,		0, '0'},
+-			{"no-thread",		no_argument,		0, '1'},
+-			{"no-header",		no_argument,		0, '2'},
+-			{"no-summary",		no_argument,		0, '3'},
+-			{"no-index",		no_argument,		0, '4'},
+-			{"with-zeros",		no_argument,		0, '5'},
+-			{"trigger",		required_argument,	0, '6'},
+-			{"filter",		required_argument,	0, '7'},
+-			{"dma-latency",		required_argument,	0, '8'},
+-			{"no-aa",		no_argument,		0, '9'},
+-			{"dump-task",		no_argument,		0, '\1'},
+-			{"warm-up",		required_argument,	0, '\2'},
+-			{"trace-buffer-size",	required_argument,	0, '\3'},
+-			{"deepest-idle-state",	required_argument,	0, '\4'},
+-			{"on-threshold",	required_argument,	0, '\5'},
+-			{"on-end",		required_argument,	0, '\6'},
+-			{"bpf-action",		required_argument,	0, '\7'},
+-			{"stack-format",	required_argument,	0, '\10'},
+-			{0, 0, 0, 0}
+-		};
+-
+-		if (common_parse_options(argc, argv, &params->common))
+-			continue;
+-
+-		c = getopt_auto(argc, argv, long_options);
+-
+-		/* detect the end of the options. */
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'a':
+-			auto_thresh = get_llong_from_str(optarg);
+-
+-			/* set thread stop to auto_thresh */
+-			params->common.stop_total_us = auto_thresh;
+-			params->common.stop_us = auto_thresh;
+-
+-			/* get stack trace */
+-			params->print_stack = auto_thresh;
+-
+-			/* set trace */
+-			if (!trace_output)
+-				trace_output = "timerlat_trace.txt";
+-
+-			break;
+-		case 'b':
+-			params->common.hist.bucket_size = get_llong_from_str(optarg);
+-			if (params->common.hist.bucket_size == 0 ||
+-			    params->common.hist.bucket_size >= 1000000)
+-				fatal("Bucket size needs to be > 0 and <= 1000000");
+-			break;
+-		case 'E':
+-			params->common.hist.entries = get_llong_from_str(optarg);
+-			if (params->common.hist.entries < 10 ||
+-			    params->common.hist.entries > 9999999)
+-				fatal("Entries must be > 10 and < 9999999");
+-			break;
+-		case 'h':
+-		case '?':
+-			timerlat_hist_usage();
+-			break;
+-		case 'i':
+-			params->common.stop_us = get_llong_from_str(optarg);
+-			break;
+-		case 'k':
+-			params->common.kernel_workload = 1;
+-			break;
+-		case 'n':
+-			params->common.output_divisor = 1;
+-			break;
+-		case 'p':
+-			params->timerlat_period_us = get_llong_from_str(optarg);
+-			if (params->timerlat_period_us > 1000000)
+-				fatal("Period longer than 1 s");
+-			break;
+-		case 's':
+-			params->print_stack = get_llong_from_str(optarg);
+-			break;
+-		case 'T':
+-			params->common.stop_total_us = get_llong_from_str(optarg);
+-			break;
+-		case 't':
+-			trace_output = parse_optional_arg(argc, argv);
+-			if (!trace_output)
+-				trace_output = "timerlat_trace.txt";
+-			break;
+-		case 'u':
+-			params->common.user_workload = 1;
+-			/* fallback: -u implies in -U */
+-		case 'U':
+-			params->common.user_data = 1;
+-			break;
+-		case '0': /* no irq */
+-			params->common.hist.no_irq = 1;
+-			break;
+-		case '1': /* no thread */
+-			params->common.hist.no_thread = 1;
+-			break;
+-		case '2': /* no header */
+-			params->common.hist.no_header = 1;
+-			break;
+-		case '3': /* no summary */
+-			params->common.hist.no_summary = 1;
+-			break;
+-		case '4': /* no index */
+-			params->common.hist.no_index = 1;
+-			break;
+-		case '5': /* with zeros */
+-			params->common.hist.with_zeros = 1;
+-			break;
+-		case '6': /* trigger */
+-			if (params->common.events)
+-				trace_event_add_trigger(params->common.events, optarg);
+-			else
+-				fatal("--trigger requires a previous -e");
+-			break;
+-		case '7': /* filter */
+-			if (params->common.events)
+-				trace_event_add_filter(params->common.events, optarg);
+-			else
+-				fatal("--filter requires a previous -e");
+-			break;
+-		case '8':
+-			params->dma_latency = get_llong_from_str(optarg);
+-			if (params->dma_latency < 0 || params->dma_latency > 10000)
+-				fatal("--dma-latency needs to be >= 0 and < 10000");
+-			break;
+-		case '9':
+-			params->no_aa = 1;
+-			break;
+-		case '\1':
+-			params->dump_tasks = 1;
+-			break;
+-		case '\2':
+-			params->common.warmup = get_llong_from_str(optarg);
+-			break;
+-		case '\3':
+-			params->common.buffer_size = get_llong_from_str(optarg);
+-			break;
+-		case '\4':
+-			params->deepest_idle_state = get_llong_from_str(optarg);
+-			break;
+-		case '\5':
+-			retval = actions_parse(&params->common.threshold_actions, optarg,
+-					       "timerlat_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '\6':
+-			retval = actions_parse(&params->common.end_actions, optarg,
+-					       "timerlat_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '\7':
+-			params->bpf_action_program = optarg;
+-			break;
+-		case '\10':
+-			params->stack_format = parse_stack_format(optarg);
+-			if (params->stack_format == -1)
+-				fatal("Invalid --stack-format option");
+-			break;
+-		default:
+-			fatal("Invalid option");
+-		}
+-	}
+-
+-	if (trace_output)
+-		actions_add_trace_output(&params->common.threshold_actions, trace_output);
+-
+-	if (geteuid())
+-		fatal("rtla needs root permission");
+-
+-	if (params->common.hist.no_irq && params->common.hist.no_thread)
+-		fatal("no-irq and no-thread set, there is nothing to do here");
+-
+-	if (params->common.hist.no_index && !params->common.hist.with_zeros)
+-		fatal("no-index set with with-zeros is not set - it does not make sense");
+-
+-	/*
+-	 * Auto analysis only happens if stop tracing, thus:
+-	 */
+-	if (!params->common.stop_us && !params->common.stop_total_us)
+-		params->no_aa = 1;
+-
+-	if (params->common.kernel_workload && params->common.user_workload)
+-		fatal("--kernel-threads and --user-threads are mutually exclusive!");
+-
+-	/*
+-	 * If auto-analysis or trace output is enabled, switch from BPF mode to
+-	 * mixed mode
+-	 */
+-	if (params->mode == TRACING_MODE_BPF &&
+-	    (params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
+-	     params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
+-	     !params->no_aa))
+-		params->mode = TRACING_MODE_MIXED;
+-
+-	return &params->common;
+-}
+-
+ /*
+  * timerlat_hist_apply_config - apply the hist configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 64cbdcc878b0..18e1071a2e24 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -4,7 +4,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#include <getopt.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <signal.h>
+@@ -17,6 +16,7 @@
+ #include "timerlat.h"
+ #include "timerlat_aa.h"
+ #include "timerlat_bpf.h"
++#include "cli.h"
+ #include "common.h"
+ 
+ struct timerlat_top_cpu {
+@@ -459,289 +459,6 @@ timerlat_print_stats(struct osnoise_tool *top)
+ 	osnoise_report_missed_events(top);
+ }
+ 
+-/*
+- * timerlat_top_usage - prints timerlat top usage message
+- */
+-static void timerlat_top_usage(void)
+-{
+-	static const char *const msg_start[] = {
+-		"[-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
+-		"	  [[-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+-		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
+-		NULL,
+-	};
+-
+-	static const char *const msg_opts[] = {
+-		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
+-		"	     --aa-only us: stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)",
+-		"	  -p/--period us: timerlat period in us",
+-		"	  -i/--irq us: stop trace if the irq latency is higher than the argument in us",
+-		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
+-		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+-		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+-		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+-		"	  -d/--duration time[s|m|h|d]: duration of the session",
+-		"	  -D/--debug: print debug info",
+-		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
+-		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
+-		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+-		"	     --filter <command>: enable a trace event filter to the previous -e event",
+-		"	     --trigger <command>: enable a trace event trigger to the previous -e event",
+-		"	  -n/--nano: display data in nanoseconds",
+-		"	     --no-aa: disable auto-analysis, reducing rtla timerlat cpu usage",
+-		"	  -q/--quiet print only a summary at the end",
+-		"	     --dma-latency us: set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency",
+-		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
+-		"		o:prio - use SCHED_OTHER with prio",
+-		"		r:prio - use SCHED_RR with prio",
+-		"		f:prio - use SCHED_FIFO with prio",
+-		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
+-		"						       in nanoseconds",
+-		"	  -u/--user-threads: use rtla user-space threads instead of kernel-space timerlat threads",
+-		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
+-		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
+-		"	     --warm-up s: let the workload run for s seconds before collecting data",
+-		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+-		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
+-		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
+-		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
+-		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
+-		"	     --stack-format <format>: set the stack format (truncate, skip, full)",
+-		NULL,
+-	};
+-
+-	common_usage("timerlat", "top", "a per-cpu summary of the timer latency",
+-		     msg_start, msg_opts);
+-}
+-
+-/*
+- * timerlat_top_parse_args - allocs, parse and fill the cmd line parameters
+- */
+-static struct common_params
+-*timerlat_top_parse_args(int argc, char **argv)
+-{
+-	struct timerlat_params *params;
+-	long long auto_thresh;
+-	int retval;
+-	int c;
+-	char *trace_output = NULL;
+-
+-	params = calloc_fatal(1, sizeof(*params));
+-
+-	actions_init(&params->common.threshold_actions);
+-	actions_init(&params->common.end_actions);
+-
+-	/* disabled by default */
+-	params->dma_latency = -1;
+-
+-	/* disabled by default */
+-	params->deepest_idle_state = -2;
+-
+-	/* display data in microseconds */
+-	params->common.output_divisor = 1000;
+-
+-	/* default to BPF mode */
+-	params->mode = TRACING_MODE_BPF;
+-
+-	/* default to truncate stack format */
+-	params->stack_format = STACK_FORMAT_TRUNCATE;
+-
+-	while (1) {
+-		static struct option long_options[] = {
+-			{"auto",		required_argument,	0, 'a'},
+-			{"help",		no_argument,		0, 'h'},
+-			{"irq",			required_argument,	0, 'i'},
+-			{"nano",		no_argument,		0, 'n'},
+-			{"period",		required_argument,	0, 'p'},
+-			{"quiet",		no_argument,		0, 'q'},
+-			{"stack",		required_argument,	0, 's'},
+-			{"thread",		required_argument,	0, 'T'},
+-			{"trace",		optional_argument,	0, 't'},
+-			{"user-threads",	no_argument,		0, 'u'},
+-			{"kernel-threads",	no_argument,		0, 'k'},
+-			{"user-load",		no_argument,		0, 'U'},
+-			{"trigger",		required_argument,	0, '0'},
+-			{"filter",		required_argument,	0, '1'},
+-			{"dma-latency",		required_argument,	0, '2'},
+-			{"no-aa",		no_argument,		0, '3'},
+-			{"dump-tasks",		no_argument,		0, '4'},
+-			{"aa-only",		required_argument,	0, '5'},
+-			{"warm-up",		required_argument,	0, '6'},
+-			{"trace-buffer-size",	required_argument,	0, '7'},
+-			{"deepest-idle-state",	required_argument,	0, '8'},
+-			{"on-threshold",	required_argument,	0, '9'},
+-			{"on-end",		required_argument,	0, '\1'},
+-			{"bpf-action",		required_argument,	0, '\2'},
+-			{"stack-format",	required_argument,	0, '\3'},
+-			{0, 0, 0, 0}
+-		};
+-
+-		if (common_parse_options(argc, argv, &params->common))
+-			continue;
+-
+-		c = getopt_auto(argc, argv, long_options);
+-
+-		/* detect the end of the options. */
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'a':
+-			auto_thresh = get_llong_from_str(optarg);
+-
+-			/* set thread stop to auto_thresh */
+-			params->common.stop_total_us = auto_thresh;
+-			params->common.stop_us = auto_thresh;
+-
+-			/* get stack trace */
+-			params->print_stack = auto_thresh;
+-
+-			/* set trace */
+-			if (!trace_output)
+-				trace_output = "timerlat_trace.txt";
+-
+-			break;
+-		case '5':
+-			/* it is here because it is similar to -a */
+-			auto_thresh = get_llong_from_str(optarg);
+-
+-			/* set thread stop to auto_thresh */
+-			params->common.stop_total_us = auto_thresh;
+-			params->common.stop_us = auto_thresh;
+-
+-			/* get stack trace */
+-			params->print_stack = auto_thresh;
+-
+-			/* set aa_only to avoid parsing the trace */
+-			params->common.aa_only = 1;
+-			break;
+-		case 'h':
+-		case '?':
+-			timerlat_top_usage();
+-			break;
+-		case 'i':
+-			params->common.stop_us = get_llong_from_str(optarg);
+-			break;
+-		case 'k':
+-			params->common.kernel_workload = true;
+-			break;
+-		case 'n':
+-			params->common.output_divisor = 1;
+-			break;
+-		case 'p':
+-			params->timerlat_period_us = get_llong_from_str(optarg);
+-			if (params->timerlat_period_us > 1000000)
+-				fatal("Period longer than 1 s");
+-			break;
+-		case 'q':
+-			params->common.quiet = 1;
+-			break;
+-		case 's':
+-			params->print_stack = get_llong_from_str(optarg);
+-			break;
+-		case 'T':
+-			params->common.stop_total_us = get_llong_from_str(optarg);
+-			break;
+-		case 't':
+-			trace_output = parse_optional_arg(argc, argv);
+-			if (!trace_output)
+-				trace_output = "timerlat_trace.txt";
+-			break;
+-		case 'u':
+-			params->common.user_workload = true;
+-			/* fallback: -u implies -U */
+-		case 'U':
+-			params->common.user_data = true;
+-			break;
+-		case '0': /* trigger */
+-			if (params->common.events)
+-				trace_event_add_trigger(params->common.events, optarg);
+-			else
+-				fatal("--trigger requires a previous -e");
+-			break;
+-		case '1': /* filter */
+-			if (params->common.events)
+-				trace_event_add_filter(params->common.events, optarg);
+-			else
+-				fatal("--filter requires a previous -e");
+-			break;
+-		case '2': /* dma-latency */
+-			params->dma_latency = get_llong_from_str(optarg);
+-			if (params->dma_latency < 0 || params->dma_latency > 10000)
+-				fatal("--dma-latency needs to be >= 0 and < 10000");
+-			break;
+-		case '3': /* no-aa */
+-			params->no_aa = 1;
+-			break;
+-		case '4':
+-			params->dump_tasks = 1;
+-			break;
+-		case '6':
+-			params->common.warmup = get_llong_from_str(optarg);
+-			break;
+-		case '7':
+-			params->common.buffer_size = get_llong_from_str(optarg);
+-			break;
+-		case '8':
+-			params->deepest_idle_state = get_llong_from_str(optarg);
+-			break;
+-		case '9':
+-			retval = actions_parse(&params->common.threshold_actions, optarg,
+-					       "timerlat_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '\1':
+-			retval = actions_parse(&params->common.end_actions, optarg,
+-					       "timerlat_trace.txt");
+-			if (retval)
+-				fatal("Invalid action %s", optarg);
+-			break;
+-		case '\2':
+-			params->bpf_action_program = optarg;
+-			break;
+-		case '\3':
+-			params->stack_format = parse_stack_format(optarg);
+-			if (params->stack_format == -1)
+-				fatal("Invalid --stack-format option");
+-			break;
+-		default:
+-			fatal("Invalid option");
+-		}
+-	}
+-
+-	if (trace_output)
+-		actions_add_trace_output(&params->common.threshold_actions, trace_output);
+-
+-	if (geteuid())
+-		fatal("rtla needs root permission");
+-
+-	/*
+-	 * Auto analysis only happens if stop tracing, thus:
+-	 */
+-	if (!params->common.stop_us && !params->common.stop_total_us)
+-		params->no_aa = 1;
+-
+-	if (params->no_aa && params->common.aa_only)
+-		fatal("--no-aa and --aa-only are mutually exclusive!");
+-
+-	if (params->common.kernel_workload && params->common.user_workload)
+-		fatal("--kernel-threads and --user-threads are mutually exclusive!");
+-
+-	/*
+-	 * If auto-analysis or trace output is enabled, switch from BPF mode to
+-	 * mixed mode
+-	 */
+-	if (params->mode == TRACING_MODE_BPF &&
+-	    (params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
+-	     params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
+-	     !params->no_aa))
+-		params->mode = TRACING_MODE_MIXED;
+-
+-	return &params->common;
+-}
+-
+ /*
+  * timerlat_top_apply_config - apply the top configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 9cec5b3e02c8..cb187e7d48d1 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -22,7 +22,7 @@
+ #include "common.h"
+ 
+ #define MAX_MSG_LENGTH	1024
+-int config_debug;
++bool config_debug;
+ 
+ /*
+  * err_msg - print an error message to the stderr
+@@ -1011,32 +1011,6 @@ int auto_house_keeping(cpu_set_t *monitored_cpus)
+ 	return 1;
+ }
+ 
+-/**
+- * parse_optional_arg - Parse optional argument value
+- *
+- * Parse optional argument value, which can be in the form of:
+- * -sarg, -s/--long=arg, -s/--long arg
+- *
+- * Returns arg value if found, NULL otherwise.
+- */
+-char *parse_optional_arg(int argc, char **argv)
+-{
+-	if (optarg) {
+-		if (optarg[0] == '=') {
+-			/* skip the = */
+-			return &optarg[1];
+-		} else {
+-			return optarg;
+-		}
+-	/* parse argument of form -s [arg] and --long [arg]*/
+-	} else if (optind < argc && argv[optind][0] != '-') {
+-		/* consume optind */
+-		return argv[optind++];
+-	} else {
+-		return NULL;
+-	}
+-}
+-
+ /*
+  * strtoi - convert string to integer with error checking
+  *
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 96fd72042717..2ba3333669bb 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -39,7 +39,7 @@ static inline bool str_has_prefix(const char *str, const char *prefix)
+ 	return strncmp(str, prefix, strlen(prefix)) == 0;
+ }
+ 
+-extern int config_debug;
++extern bool config_debug;
+ void debug_msg(const char *fmt, ...);
+ void err_msg(const char *fmt, ...);
+ void fatal(const char *fmt, ...);
+@@ -47,7 +47,6 @@ void fatal(const char *fmt, ...);
+ long parse_seconds_duration(char *val);
+ void get_duration(time_t start_time, char *output, int output_size);
+ 
+-char *parse_optional_arg(int argc, char **argv);
+ long long get_llong_from_str(char *start);
+ 
+ static inline void
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+index 23ce250a6852..cfe687ff5ee1 100644
+--- a/tools/tracing/rtla/tests/hwnoise.t
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -6,7 +6,7 @@ test_begin
+ set_timeout 2m
+ 
+ check "verify help page" \
+-	"hwnoise --help" 0 "summary of hardware-related noise"
++	"hwnoise --help" 129 "Usage: rtla hwnoise"
+ check "detect noise higher than one microsecond" \
+ 	"hwnoise -c 0 -T 1 -d 5s -q" 0
+ check "set the automatic trace mode" \
 -- 
 2.53.0
 
