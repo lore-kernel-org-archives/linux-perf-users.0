@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB03C3FB04F
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E383FAE0B
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774034930; cv=none; b=L+hv1Rhkts0unDNKiaEg8WWl/V61KxLlIa+PpeBm2xU4aIrOnvzuyVSrbkT4nS0STlG4SXVzbp+zCqGoWxsw9uwmzNoFrCyz6tURgvI21Ep5HyUtQnldSfVnynVmLh5p/UVXSu19yFthAoYxC49Qhq5dwymHl5//PDBLPB1H8/I=
+	t=1774034934; cv=none; b=MQ+2vhayQHmjgmNhg/XebRzN8yeMwiBikzgb1SdrwpNMUq0/BXXcvKWSE1H7jTF1Cf4m+DulhVOQef8HGd95pcXbSODK+JRpETXwKnSYurg4ZVul71aO0P02qPg7VA28t1FhVS47m/ORXErv5EkYq7gk2vtwSeqO8jpuwJPznJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774034930; c=relaxed/simple;
-	bh=Px3kvXNISBtpkk8Yg/YzO2B/LDlP1VbH2wUqa3xN3DY=;
+	s=arc-20240116; t=1774034934; c=relaxed/simple;
+	bh=CEzrpzKB5IgM/hwuaLjglqhHBaNyniUjqkDKSMp0k6w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vmjq9qAEnWT/jHpLBOH2KLrEao1xM/X5PrmNUx0IGRK4eFloMHjmti3KauDPhITz76kM+MihCFKHIcURywd3uv1Kia6ycNCkci881ZP+mDlmutET4GLWNyNj2HKwj+MjYbwS9ZQu9E1hjAlXo+/1KVXiZiNRmH9v3DbOZXLCr9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebL6CZeR; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=YGv5OBabsqby4amBpNz+0itPk3FuAERh0Z0/LEGHEHsf7TZ9TUehy0MYMlV+eftDeGp/FSfMxgCvrX171PaglbStgPR8iF+nwkYmNn0qzNsMasezStN12MBxeIFiP2Ue2blE4LAEB2a+60jvzn5tQOYlDd+QI6uAdz8vtN9Ubsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JXY37XV2; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebL6CZeR"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1276e71652fso951678c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JXY37XV2"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35b901d542bso15119842a91.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774034925; x=1774639725; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774034929; x=1774639729; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SJxIIiDIQ59GOTFf+kVAJjN1YJAohx4635ngGk36Q3M=;
-        b=ebL6CZeRXnnlLZByegFDWO55c4kfFkQCgAhB6dO0KV55yStWZZznPhyS9uVT4v/jU4
-         O5i1ZXoBjx8rVwVnbfovUTUwrtLCHRTFpnrt139BNOPu1AWtt7WqyRtu9gA7Dwz8CgpP
-         t4AXoXtfB6hc+Vfrnjg5Aq3be49jf99chsRAE4KtrlhTXmoyYeejdvbIRdySazTyzThK
-         0DvHWNtMiy09Dx0XFNHnqzTku01S3NTuLd2jhIL+QAzB0IpAHDyvUB26ZoYx/pKo5/1q
-         pK+rxNA5swAKImxQY2FHwEFVJ+ikwI675jySgcG1fHaaXfl23iBTdzZ9QHV+ZlkusbPR
-         po2w==
+        bh=yZrluTFZUT4tONIgqjkyumkc9DPApsGSP8KPJ2mvbkc=;
+        b=JXY37XV2kVL+ZaA//EtFvFgZ7XAoaVRK5o4F8o6KFQz49J9zpS63FUh0rSGL7CMUBG
+         sOfQkerbaz65gE64+7ds0JqyGRAJOlxENeb/rueadQAAgsR3NUV1a0g2nM4zr24NWZG6
+         ho0IwVVlkWtDzu5Hzn9xi1eEhVKX4C/yeVTYTRogHekTkRm5BRvX0VdCzb/tJDEek3P7
+         1glUO+icdoxsGu/dpcEfQ1JAko6jXnRGNsWDZ1eJCHdrLugBK1VqhgPnDHJTvWjgGtXA
+         idvbCwecZKZQLEwvqniUILvk+inWSoGX1s+FFJayMQJzJueY4M8UUFXHf0vJ6nFFbXr/
+         afuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774034925; x=1774639725;
+        d=1e100.net; s=20251104; t=1774034929; x=1774639729;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SJxIIiDIQ59GOTFf+kVAJjN1YJAohx4635ngGk36Q3M=;
-        b=Co9852OiscErgtnA9VBQg4bJih1Q+l1wJC4FrfnrjW0zkleDk7VOwz07dzcfSzCTK3
-         KnNAGOwG36iDFy71Y2yN0QZEny7e9IIFxSIv+PIKYkjLEsDYSxICIwSBGYXWlK/j7wKY
-         rL2lb3aYiu217Fe3VM2lPGn9mnVCTUy0fk2kY+sPluM8dhw0uem48LtkgdJTBPWmjGBa
-         t2ny4ZxrueeML80pmKvRyURUNDJd7UeB9wzCZ4z8qsmUZcsMX2edCzaPFc35jePor9yk
-         ok4DcpdyaNpOyXZVmLavOPUuROwe5Z87piYxTYifbICet6KSM7zi92ytmofKP+jiokBX
-         CC+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUueMulpkh3mCC8Kg/+gTwmSPPzGD6vp7V2acmjtmmXEn3OfEVMts1BNwzpzu42ZhKogoBzsumMY3ZYgt6XtPgU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx9DvRTqIuP+za18LiyS9EH4mPSDa+SW/bdckpELmYteaCZQAi
-	TdJGAdw7OoU5glaOIAiT/GmlvvN49oVlKeIcgIjv/a4uQfCxZvaVy4lICJLQzab/SJrhvZEeikG
-	dtyoGrH8ImQ==
-X-Received: from dyb19.prod.google.com ([2002:a05:693c:6313:b0:2be:7cd3:c97c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:b82:b0:12a:6ab7:3f7c
- with SMTP id a92af1059eb24-12a7264eb86mr1946806c88.5.1774034925159; Fri, 20
- Mar 2026 12:28:45 -0700 (PDT)
-Date: Fri, 20 Mar 2026 12:26:17 -0700
+        bh=yZrluTFZUT4tONIgqjkyumkc9DPApsGSP8KPJ2mvbkc=;
+        b=n3VdV/Cdu2WkPMXLAYorYPHpm56AU/RGHOW3THbaasxWaKr2djMpeUQw/ERQXYzIlP
+         yvuDcyYhfQrnPcseqrDRWlQCynGfYKVkC8GSmphLM2BXTvTXeh95qbscAx+xG7oWBZGK
+         IOzXtxvzsrSJuGxahhPLzu54wCCwr/1ycyM0byquQ16H6K9Yfw08hwpsLdpmagx36TFI
+         pgT7ih2IBDZOzJHELrea9NOQfGNpoho9SJ8rnEIj4al1BqEYrnMgOrw1VF0pZWfkWJf6
+         ZxUD2Am0LUtempzICOA7IZulDQVSpV9of/qbfKel2oXQz1i2DmSqJSmTDWySNykvmKPr
+         hGow==
+X-Forwarded-Encrypted: i=1; AJvYcCWxubXs/5rUY7poEkWM6hZUuSjDEfAHvY9tdYb/19jg6M21xz6Jrqq7e8tjZjkNESF857OZ/syzLXyNZF/EKQJT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2gs4MBEwUuKw02Lv4oia8RbZ1rsKeFjfDTWotaQhuAO0X45Iv
+	J3rsm6ck1JBepCmbITYBzCVCyDr4wCdtn1DPp1Mo2sC20dGQaXgRFkTiDWQjNSg+yTO36tM3yFY
+	oin6MRsfT4g==
+X-Received: from pjvg12.prod.google.com ([2002:a17:90a:db0c:b0:35b:963b:d15c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:510a:b0:359:3426:c60a
+ with SMTP id 98e67ed59e1d1-35bd2bd6af9mr3625369a91.4.1774034929280; Fri, 20
+ Mar 2026 12:28:49 -0700 (PDT)
+Date: Fri, 20 Mar 2026 12:26:19 -0700
 In-Reply-To: <20260320192627.368357-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260320080835.724836-1-irogers@google.com> <20260320192627.368357-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260320192627.368357-16-irogers@google.com>
-Subject: [PATCH v4 15/25] perf annotate: Don't pass evsel to add_sample
+Message-ID: <20260320192627.368357-18-irogers@google.com>
+Subject: [PATCH v4 17/25] perf kmem: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,43 +77,145 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-The sample contains the evsel so read it rather than pass it. Update
-call site.
+The sample contains the evsel and so it is unnecessary to pass the
+evsel as well. Fix memory leaks on error paths spotted during code
+review.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-annotate.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/builtin-kmem.c | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 041f5dc92ea8..894e57aa50cd 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -233,11 +233,11 @@ static bool has_annotation(struct perf_annotate *ann)
- 	return ui__has_annotation() || ann->use_stdio2;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index b04f5d578e7a..8eb4eff4e469 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -171,7 +171,7 @@ static int insert_caller_stat(unsigned long call_site,
+ 	return 0;
  }
  
--static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
--			     struct addr_location *al, struct perf_annotate *ann,
--			     struct machine *machine)
-+static int add_sample(struct perf_sample *sample,
-+		      struct addr_location *al, struct perf_annotate *ann,
-+		      struct machine *machine)
+-static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *sample)
++static int evsel__process_alloc_event(struct perf_sample *sample)
  {
--	struct hists *hists = evsel__hists(evsel);
-+	struct hists *hists = evsel__hists(sample->evsel);
- 	struct hist_entry *he;
- 	int ret;
+ 	unsigned long ptr = perf_sample__intval(sample, "ptr"),
+ 		      call_site = perf_sample__intval(sample, "call_site");
+@@ -198,7 +198,7 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
+ 	 * If the tracepoint contains the field "node" the tool stats the
+ 	 * cross allocation.
+ 	 */
+-	if (evsel__field(evsel, "node")) {
++	if (evsel__field(sample->evsel, "node")) {
+ 		int node1, node2;
  
-@@ -299,7 +299,7 @@ static int process_sample_event(const struct perf_tool *tool,
- 		goto out_put;
+ 		node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu});
+@@ -243,7 +243,7 @@ static struct alloc_stat *search_alloc_stat(unsigned long ptr,
+ 	return NULL;
+ }
  
- 	if (!al.filtered &&
--	    evsel__add_sample(sample->evsel, sample, &al, ann, machine)) {
-+	    add_sample(sample, &al, ann, machine)) {
- 		pr_warning("problem incrementing symbol count, "
- 			   "skipping event\n");
- 		ret = -1;
+-static int evsel__process_free_event(struct evsel *evsel __maybe_unused, struct perf_sample *sample)
++static int evsel__process_free_event(struct perf_sample *sample)
+ {
+ 	unsigned long ptr = perf_sample__intval(sample, "ptr");
+ 	struct alloc_stat *s_alloc, *s_caller;
+@@ -751,8 +751,7 @@ static char *compact_gfp_string(unsigned long gfp_flags)
+ 	return NULL;
+ }
+ 
+-static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+-			   unsigned int gfp_flags)
++static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
+ {
+ 	struct tep_record record = {
+ 		.cpu = sample->cpu,
+@@ -773,7 +772,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 	}
+ 
+ 	trace_seq_init(&seq);
+-	tp_format = evsel__tp_format(evsel);
++	tp_format = evsel__tp_format(sample->evsel);
+ 	if (tp_format)
+ 		tep_print_event(tp_format->tep, &seq, &record, "%s", TEP_PRINT_INFO);
+ 
+@@ -784,7 +783,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 
+ 			new = realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
+ 			if (new == NULL)
+-				return -ENOMEM;
++				goto err_out;
+ 
+ 			gfps = new;
+ 			new += nr_gfps++;
+@@ -793,7 +792,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 			new->human_readable = strdup(str + 10);
+ 			new->compact_str = compact_gfp_flags(str + 10);
+ 			if (!new->human_readable || !new->compact_str)
+-				return -ENOMEM;
++				goto err_out;
+ 
+ 			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
+ 		}
+@@ -803,9 +802,12 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 
+ 	trace_seq_destroy(&seq);
+ 	return 0;
++err_out:
++	trace_seq_destroy(&seq);
++	return -ENOMEM;
+ }
+ 
+-static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_sample *sample)
++static int evsel__process_page_alloc_event(struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = perf_sample__intval(sample, "order");
+@@ -845,7 +847,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ 		return 0;
+ 	}
+ 
+-	if (parse_gfp_flags(evsel, sample, gfp_flags) < 0)
++	if (parse_gfp_flags(sample, gfp_flags) < 0)
+ 		return -1;
+ 
+ 	callsite = find_callsite(sample);
+@@ -886,8 +888,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ 	return 0;
+ }
+ 
+-static int evsel__process_page_free_event(struct evsel *evsel __maybe_unused,
+-					  struct perf_sample *sample)
++static int evsel__process_page_free_event(struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = perf_sample__intval(sample, "order");
+@@ -969,8 +970,7 @@ static bool perf_kmem__skip_sample(struct perf_sample *sample)
+ 	return false;
+ }
+ 
+-typedef int (*tracepoint_handler)(struct evsel *evsel,
+-				  struct perf_sample *sample);
++typedef int (*tracepoint_handler)(struct perf_sample *sample);
+ 
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+@@ -988,14 +988,16 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 		return -1;
+ 	}
+ 
+-	if (perf_kmem__skip_sample(sample))
++	if (perf_kmem__skip_sample(sample)) {
++		thread__put(thread);
+ 		return 0;
++	}
+ 
+ 	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
+ 
+ 	if (evsel->handler != NULL) {
+ 		tracepoint_handler f = evsel->handler;
+-		err = f(evsel, sample);
++		err = f(sample);
+ 	}
+ 
+ 	thread__put(thread);
 -- 
 2.53.0.959.g497ff81fa9-goog
 
