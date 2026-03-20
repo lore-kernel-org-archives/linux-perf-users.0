@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135E83FCB35
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB03C3FB04F
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 19:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774034927; cv=none; b=oO43MHF2ZoJgE4IjFmm2k7bMBUrrkHT2qoD4gpsCR7bv4VyLH/57cj+fXmOFi/rMGsUU1VqvQDpCATAtGTCTlUQ5MahcKF6DdBmpy36bxq83LWvcd0QhbolzduSMUX8tHi29ve3H2NXMbSqe94c6Ho1mBi/xLHq8eMHKBZuKCfc=
+	t=1774034930; cv=none; b=L+hv1Rhkts0unDNKiaEg8WWl/V61KxLlIa+PpeBm2xU4aIrOnvzuyVSrbkT4nS0STlG4SXVzbp+zCqGoWxsw9uwmzNoFrCyz6tURgvI21Ep5HyUtQnldSfVnynVmLh5p/UVXSu19yFthAoYxC49Qhq5dwymHl5//PDBLPB1H8/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774034927; c=relaxed/simple;
-	bh=VBRBWOOsTuUZUQAm9Xp4jFDUX44iF/hvvynPgGnEBf8=;
+	s=arc-20240116; t=1774034930; c=relaxed/simple;
+	bh=Px3kvXNISBtpkk8Yg/YzO2B/LDlP1VbH2wUqa3xN3DY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ut0NDIbpa+HD458R2+Wcpv8hr7PKP7AYWrUpOjuy39t/Sbfe+3/gUZHCXd7fS5J4PU16oZLyYUgDgXYyAOp+YsIYCdWnDV3WF2Pv9VN3vyfqp83Up/ENOzTtpJQ4dwlEgI+6R8YRlOr2shXpToFS5tWoKBYQDGHP15Z3Gj5QTm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e/xzLtZk; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=Vmjq9qAEnWT/jHpLBOH2KLrEao1xM/X5PrmNUx0IGRK4eFloMHjmti3KauDPhITz76kM+MihCFKHIcURywd3uv1Kia6ycNCkci881ZP+mDlmutET4GLWNyNj2HKwj+MjYbwS9ZQu9E1hjAlXo+/1KVXiZiNRmH9v3DbOZXLCr9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebL6CZeR; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/xzLtZk"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso1557586eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebL6CZeR"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1276e71652fso951678c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 12:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774034923; x=1774639723; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774034925; x=1774639725; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ex7esaiGl8GWNlFO/kP2nPhlftSsne7shuQzPr/LD2Y=;
-        b=e/xzLtZku0eGrBwKtTJDqSchrS/s6rMYuSqn+iQV6533wbcFjBsF6DPwfkEKpNHI6f
-         HTgMsNLZSHRIinvgsOTt/8judQPaVjoxqfRJKrC7PKy8PGhdkuGsrqXPtIlQcf/20OtW
-         B9vT25mSkOPhZqgBe4HS9JkVd9x7JwAjae2a/zuG9K3GLU5V+f2nJzezTUchfdR0m2vp
-         sPuUFDHdWxMo2KG+cS/c1NpMu1npq8GLLhcPhLxNIY+mc+uKHJm2J7Rx1yrahmSzh21V
-         NzinzxVX3TeBiliT2S347tG9pxzVoRmiU+xtfg7vLaBh/dMhAFA5RHoIUIW62qolHsTO
-         jRNw==
+        bh=SJxIIiDIQ59GOTFf+kVAJjN1YJAohx4635ngGk36Q3M=;
+        b=ebL6CZeRXnnlLZByegFDWO55c4kfFkQCgAhB6dO0KV55yStWZZznPhyS9uVT4v/jU4
+         O5i1ZXoBjx8rVwVnbfovUTUwrtLCHRTFpnrt139BNOPu1AWtt7WqyRtu9gA7Dwz8CgpP
+         t4AXoXtfB6hc+Vfrnjg5Aq3be49jf99chsRAE4KtrlhTXmoyYeejdvbIRdySazTyzThK
+         0DvHWNtMiy09Dx0XFNHnqzTku01S3NTuLd2jhIL+QAzB0IpAHDyvUB26ZoYx/pKo5/1q
+         pK+rxNA5swAKImxQY2FHwEFVJ+ikwI675jySgcG1fHaaXfl23iBTdzZ9QHV+ZlkusbPR
+         po2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774034923; x=1774639723;
+        d=1e100.net; s=20251104; t=1774034925; x=1774639725;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ex7esaiGl8GWNlFO/kP2nPhlftSsne7shuQzPr/LD2Y=;
-        b=BIfXPm0IBvp42N9o16zw1PcVaAKM6hXVqfO0Lxt1+wD/cvANTlIFAIsAUrvRffEIJ6
-         hfuw6lRc1m1EBzreqiWAvadnDW3KZSxwDDy5a0pTMgdf3HFOSISJ0k09icDrD9/MZ+or
-         /jzBXxvuMoRtE1Gofgc/Ltd090MVyLfo8BkxpePKr9colrVYArvmhbeo7RSYfOwBsqYv
-         ctzP0/ygLpWJWKTs2Ke299jRZVfDA88ygGnSZHS1l6aTTl+Vseex0uD7hWgpiWDI/P16
-         zXuQPbPiXsy6WZ2o3tYGHy8GLODN/BDyENFfPC46XmC7AvAYc9A0RD2ZxRoB+zgRocYQ
-         CH+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUiuvz63twAqTSxWZBpI6mEFpp81fW9vvriwZ24GeMvTlpx5oZalQTh6oH50Kj+hICJzJgwLv9S0oplSr0CMyep@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAVauJT0brvZvHi1fNTXSVPP/iEuib4xyPqwidcmfJjmBgVU2t
-	RdXey5pZ70hrGrEChhqoUIroJOjS1SmofXr3gwgXb5bF16cm9brMbS8HG5FBpejUGjNjdz1MWPR
-	gV3y1mHm/oA==
-X-Received: from dycpg9.prod.google.com ([2002:a05:7300:dd09:b0:2c0:f659:16d0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e2cb:b0:2c0:dd99:f11
- with SMTP id 5a478bee46e88-2c1097589e5mr2098853eec.22.1774034922570; Fri, 20
- Mar 2026 12:28:42 -0700 (PDT)
-Date: Fri, 20 Mar 2026 12:26:16 -0700
+        bh=SJxIIiDIQ59GOTFf+kVAJjN1YJAohx4635ngGk36Q3M=;
+        b=Co9852OiscErgtnA9VBQg4bJih1Q+l1wJC4FrfnrjW0zkleDk7VOwz07dzcfSzCTK3
+         KnNAGOwG36iDFy71Y2yN0QZEny7e9IIFxSIv+PIKYkjLEsDYSxICIwSBGYXWlK/j7wKY
+         rL2lb3aYiu217Fe3VM2lPGn9mnVCTUy0fk2kY+sPluM8dhw0uem48LtkgdJTBPWmjGBa
+         t2ny4ZxrueeML80pmKvRyURUNDJd7UeB9wzCZ4z8qsmUZcsMX2edCzaPFc35jePor9yk
+         ok4DcpdyaNpOyXZVmLavOPUuROwe5Z87piYxTYifbICet6KSM7zi92ytmofKP+jiokBX
+         CC+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUueMulpkh3mCC8Kg/+gTwmSPPzGD6vp7V2acmjtmmXEn3OfEVMts1BNwzpzu42ZhKogoBzsumMY3ZYgt6XtPgU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx9DvRTqIuP+za18LiyS9EH4mPSDa+SW/bdckpELmYteaCZQAi
+	TdJGAdw7OoU5glaOIAiT/GmlvvN49oVlKeIcgIjv/a4uQfCxZvaVy4lICJLQzab/SJrhvZEeikG
+	dtyoGrH8ImQ==
+X-Received: from dyb19.prod.google.com ([2002:a05:693c:6313:b0:2be:7cd3:c97c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:b82:b0:12a:6ab7:3f7c
+ with SMTP id a92af1059eb24-12a7264eb86mr1946806c88.5.1774034925159; Fri, 20
+ Mar 2026 12:28:45 -0700 (PDT)
+Date: Fri, 20 Mar 2026 12:26:17 -0700
 In-Reply-To: <20260320192627.368357-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260320080835.724836-1-irogers@google.com> <20260320192627.368357-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260320192627.368357-15-irogers@google.com>
-Subject: [PATCH v4 14/25] perf report: Directly use sample->evsel to avoid
- computing from sample->id
+Message-ID: <20260320192627.368357-16-irogers@google.com>
+Subject: [PATCH v4 15/25] perf annotate: Don't pass evsel to add_sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -78,32 +77,43 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-In count_lost_samples_events try to avoid searching for the evsel for
-the sample, just use the variable within the sample.
+The sample contains the evsel so read it rather than pass it. Update
+call site.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-annotate.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1051d7b75361..d53aa7a94192 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -793,9 +793,11 @@ static int count_lost_samples_event(const struct perf_tool *tool,
- 				    struct machine *machine __maybe_unused)
- {
- 	struct report *rep = container_of(tool, struct report, tool);
--	struct evsel *evsel;
-+	struct evsel *evsel = sample->evsel;
-+
-+	if (!evsel)
-+		evsel = evlist__id2evsel(rep->session->evlist, sample->id);
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 041f5dc92ea8..894e57aa50cd 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -233,11 +233,11 @@ static bool has_annotation(struct perf_annotate *ann)
+ 	return ui__has_annotation() || ann->use_stdio2;
+ }
  
--	evsel = evlist__id2evsel(rep->session->evlist, sample->id);
- 	if (evsel) {
- 		struct hists *hists = evsel__hists(evsel);
- 		u32 count = event->lost_samples.lost;
+-static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
+-			     struct addr_location *al, struct perf_annotate *ann,
+-			     struct machine *machine)
++static int add_sample(struct perf_sample *sample,
++		      struct addr_location *al, struct perf_annotate *ann,
++		      struct machine *machine)
+ {
+-	struct hists *hists = evsel__hists(evsel);
++	struct hists *hists = evsel__hists(sample->evsel);
+ 	struct hist_entry *he;
+ 	int ret;
+ 
+@@ -299,7 +299,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		goto out_put;
+ 
+ 	if (!al.filtered &&
+-	    evsel__add_sample(sample->evsel, sample, &al, ann, machine)) {
++	    add_sample(sample, &al, ann, machine)) {
+ 		pr_warning("problem incrementing symbol count, "
+ 			   "skipping event\n");
+ 		ret = -1;
 -- 
 2.53.0.959.g497ff81fa9-goog
 
