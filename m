@@ -1,163 +1,162 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D631F36EAB0
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 06:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE01DF258
+	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 06:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774073699; cv=none; b=E4xfZh5KFsFvPldDcfYBoJ0kWLJa7kVqhFUvE1LD1xEeUlUVg8wG8VMAewVjGdSEHUcF7EP7ENRQ12o4fMyrTNjOeHtgpWO+91twsHZEDYd/i8ASRl4S5X4n90fsgf2BhiyP7O7uMy+4BDvVqrTN1I3U/zwbOFblhzWLGN/Y7gg=
+	t=1774073790; cv=none; b=Ls35+Wk8zOyjfzH7zUdtA9mrL1WRKv3xJIL7qQU3XKFwd4Z3MseH8EjxxKbCYbo9BrzUEQvQkmY3t7OK5TNhqkvBKVEQ+AP/fgxKWRjXDsbPplm9fCOKV4kENFjpe0OejU+M0Ya44QxV/yrsoqoevHLSuTfSm60qPTaCz0EJbx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774073699; c=relaxed/simple;
-	bh=RaVBhRwD/TXOFi3vjdfMkXMF7yO5ilaxhU/GUdD89vo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=g1oIGi/6u4O0cVRCzdu5bqIzAdDfyAPy6eblFA+XZ3B52DpiT8OCdPXUYyh0ZsJuJ5hQJN9cx+qx7qzKariiNN34AGnCHOdkdmQQVG//kN4HpOMTWeESWanJasrvFofAG2mUQqoQ2dm9KYfM6iAIQEofUhC9KLltX4Xo8l7iywc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tL6iefNm; arc=none smtp.client-ip=74.125.82.74
+	s=arc-20240116; t=1774073790; c=relaxed/simple;
+	bh=hzUHg/Rr7zHctFOvkGtG2cxFzAArMhXqHtmI8pxKW6g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=QSwTWhEbElfuz4QWdcvvEr9cMLoFBjUKyFZAzmTjw3eVyV+YKVkoXnzrnwfk8oNEIJK1scyNInO0a0BUbXYVGdiu1TpYOnBQU6Z83DxDZ+RGj/AyRYYqtM6werEIO73Ub7g55b0wHpC2URG+CkAZj12z2Sy3auYLXZMB0oIVlHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wj3TPJc6; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tL6iefNm"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12776bebeb3so48993386c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 23:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wj3TPJc6"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdc1b30ac8so68101314eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 23:16:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774073696; x=1774678496; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3aUi2AhNT7jHBIGjkzfrKcmaX2J03AlRffrZ+lkaYXk=;
-        b=tL6iefNmIhmMHT9SmT063GLqqmr5h1q1RG9K9/1pXXW851lsc4BVrh5UehNwXndoWp
-         vGyn+6wnjX9r1nFMvKnH1Nv2RXoOQkpqby2n5q7Wd0mV2kIGbXdCyLCcr83N8jarjgfG
-         Fh9w/RWPEpwEDewlsb6XsnK08epr99zSMBhrhWpg4o0FmeFMZjVVjwQq6ltbEzEaGY5W
-         rDSKnuA+D1lsX3lOMzPo7+2fWkpsS8ayTUKvtHW2aiOpIUZOkkZ5voCeeokXxJ66RsP+
-         NodhroMnCRl24aqOE8/pKs7hHCNTx5dPeCfnMduKkMyRVkvsU168TzZAPzLqjG+396Ub
-         KrSg==
+        d=google.com; s=20251104; t=1774073788; x=1774678588; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HYPRju/rpMO2YL/AEK0Hs0ueiqArdFKTD0SNUgo6yS4=;
+        b=wj3TPJc6vTcqRMF09nqa1g0zoX5+GLxIyf65OF7rC9IfE1aDbwFc7iJp5Kwc89UjAb
+         E+4Pr0+9+mrNyYSa9SQInMQo9oid46CE27601lHTmHmi2Et5fNLcdQ5xCo9S/3TOx72p
+         0g8wQzgbZWARpxOliSgTXnaZ0uHz478cpOcNk6XquXxYuEYOco6U9IfKC1MNnOD6VDPF
+         IAFWgpyfJSlLHt25YE8E8nicAUhq3M8QIkk4nqisY6SY1rYjOgng5wsQCDqni64xVh04
+         qb8S19jf0n001fAtB+7AJEfPvuuZzgj8jvbYRTA0wJjkyEZtLhvbMy2VcSBjoXkFq4IJ
+         rl9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774073696; x=1774678496;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3aUi2AhNT7jHBIGjkzfrKcmaX2J03AlRffrZ+lkaYXk=;
-        b=Lnf4c6Rh/RJaFqtc/7t4Ecbou6HrtIHjK76L8ycCmZyFQhMbhuH0sG3GLM96yLLTvD
-         3vXxfAQ9TMrhQoS2Loby4MoKicB45fU8zrhTCJrDtKL+PQYHKI8Tu9Xcfqr2onvkLqjo
-         v3aNDD2UCPRK5GEEOT8g4R01o6S8fAIZjyjDl0fGI/PUaELsD9mLHNzN4za4p/+vtmTR
-         mR2YOmTdnGnHFbjHiL+6TWZ3eLPubrgNB/QLUnoDUufUk2nZaih+pECk480boxtrHz9G
-         dS2L1sP24/YxuprqbuEjt3TzYa3cjS7fFZluTcunDP8GaGvxWc3rliZMoIvYW4erj7V/
-         BMAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW75B/OVkaluY+CSlFpJn5lkjQJdZKSbNtmv9LXYqYHzCWI3A8JgfTQWXqh4rOgx26ApN8IwqMY9LhqMjV/e4GB@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb2OjYvBtfoSP61hlHKUZlA3DayWdjMD95t4V2Hje73DNx9rTx
-	nIS+qUPWg6gdMq/HHAlLOvHMzS6ap2FmUWeWxZ8wIHEWvij5iGX7iyCJoG50b2JihEIqLnkukSa
-	p56M/We/WGw==
-X-Received: from dlai17.prod.google.com ([2002:a05:701b:2711:b0:128:e1c4:18c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4a1:b0:12a:6a64:8212
- with SMTP id a92af1059eb24-12a72648524mr2790183c88.4.1774073695747; Fri, 20
- Mar 2026 23:14:55 -0700 (PDT)
-Date: Fri, 20 Mar 2026 23:14:48 -0700
-In-Reply-To: <20260321061448.810525-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1774073788; x=1774678588;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HYPRju/rpMO2YL/AEK0Hs0ueiqArdFKTD0SNUgo6yS4=;
+        b=HyWpNEn95YPR9nT+2AwKYNe3hrkz8QncgcWf1+6iOA+Y/mmsVRN6ahkRkWQtSeK8+W
+         XztC+8OSj71EZfiqwmnpcWcU0fpsNttzwkzy3BKLiB1+3/yB1JEsjnHpuUTMB8q8S4wN
+         tuZySjmBNAFK9CmRdr5ixfXcggn2PM7Uw6Q02sBU2PEdG37jw35A8PFLpnRisL/FO3W1
+         XckXzuZ7e64KdnY5tQTJyQMT5T/R6UDbdVgkdGIQHwGafQspwkg8n9VgSeJoaF+h7Rb8
+         6xjDOxzAgHUO0JkkFkd/lo9Gfp0MIitxTvXz6T3wQtxQ7SgovF/WMj60g54l6HHjqUZ+
+         //KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMVcwPm9Q22FIjzVVSvZ/v2PEo4A78aCwGzxz8Rxzz8lQDnvOCZAoPJuQ6vca/FDXRe7q58MTzpFTX6jTuzIJ0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNDdvSz9Y7zPrzVW4nUm+hTAsVTEBZXvRU12gRTF8boC9azGN/
+	59hLiEVhZppeQ9yNTWz/UAYmoIKSF8iCGtk12MA22U9H5usxcr/0CX3IsVb0tQjJ0+hMJmktiRM
+	oeB6vNfto9g==
+X-Received: from dybna27.prod.google.com ([2002:a05:7300:cc1b:b0:2c1:f6:65e5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:3f16:b0:2b8:66f3:2502
+ with SMTP id 5a478bee46e88-2c109585265mr2881662eec.1.1774073787701; Fri, 20
+ Mar 2026 23:16:27 -0700 (PDT)
+Date: Fri, 20 Mar 2026 23:16:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260321061448.810525-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260321061448.810525-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf tests sched stats: Write output to temp file
+Message-ID: <20260321061624.811157-1-irogers@google.com>
+Subject: [PATCH v1] perf tests task-analyzer: Write all test files to tmpdir
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Writing to the perf.data file can fail in various contexts such as
-continual test. Other tests write to a mktemp-ed file, make the "perf
-sched stats tests" follow this convention.
+Writing to the test output files in the current working directory can
+fail in various contexts such as continual test. Other tests write to
+a mktemp-ed file, make the "perf script task-analyszer tests" follow
+this convention too. Currently this isn't possible for the perf.data
+file due to a lack of perf script support.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/perf_sched_stats.sh | 37 ++++++++++++++++------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ tools/perf/tests/shell/test_task_analyzer.sh | 37 +++++++++++---------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/tests/shell/perf_sched_stats.sh b/tools/perf/tests/shell/perf_sched_stats.sh
-index 2b1410b050d0..bef7714ef37a 100755
---- a/tools/perf/tests/shell/perf_sched_stats.sh
-+++ b/tools/perf/tests/shell/perf_sched_stats.sh
-@@ -4,10 +4,29 @@
+diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+index e194fcf61df3..cc74b03477fe 100755
+--- a/tools/perf/tests/shell/test_task_analyzer.sh
++++ b/tools/perf/tests/shell/test_task_analyzer.sh
+@@ -3,6 +3,10 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- set -e
+ tmpdir=$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
++# perf script report only supports input from the perf.data file.
++perfdata="perf.data"
++csv="$tmpdir/csv"
++csvsummary="$tmpdir/csvsummary"
+ err=0
  
-+perfdata=$(mktemp /tmp/__perf_test_sched_stats.perf.data.XXXXX)
-+perfdata2=$(mktemp /tmp/__perf_test_sched_stats.perf.data.XXXXX)
-+
-+cleanup() {
+ # set PERF_EXEC_PATH to find scripts in the source directory
+@@ -15,11 +19,10 @@ fi
+ export ASAN_OPTIONS=detect_leaks=0
+ 
+ cleanup() {
+-  rm -f perf.data
+-  rm -f perf.data.old
+-  rm -f csv
+-  rm -f csvsummary
 +  rm -f "${perfdata}"
 +  rm -f "${perfdata}".old
-+  rm -f "${perfdata2}"
-+  rm -f "${perfdata2}".old
+   rm -rf "$tmpdir"
 +
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  echo "Unexpected signal in ${FUNCNAME[1]}"
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
- err=0
- test_perf_sched_stats_record() {
-   echo "Basic perf sched stats record test"
--  if ! perf sched stats record true 2>&1 | \
-+  if ! perf sched stats record -o "${perfdata}" true 2>&1 | \
-     grep -E -q "[ perf sched stats: Wrote samples to perf.data ]"
-   then
-     echo "Basic perf sched stats record test [Failed]"
-@@ -19,15 +38,13 @@ test_perf_sched_stats_record() {
- 
- test_perf_sched_stats_report() {
-   echo "Basic perf sched stats report test"
--  perf sched stats record true > /dev/null
--  if ! perf sched stats report 2>&1 | grep -E -q "Description"
-+  perf sched stats record -o "${perfdata}" true > /dev/null
-+  if ! perf sched stats report -i "${perfdata}" 2>&1 | grep -E -q "Description"
-   then
-     echo "Basic perf sched stats report test [Failed]"
-     err=1
--    rm perf.data
-     return
-   fi
--  rm perf.data
-   echo "Basic perf sched stats report test [Success]"
+   trap - exit term int
  }
  
-@@ -44,16 +61,14 @@ test_perf_sched_stats_live() {
+@@ -61,7 +64,7 @@ skip_no_probe_record_support() {
  
- test_perf_sched_stats_diff() {
-   echo "Basic perf sched stats diff test"
--  perf sched stats record true > /dev/null
--  perf sched stats record true > /dev/null
--  if ! perf sched stats diff > /dev/null
-+  perf sched stats record -o "${perfdata}" true > /dev/null
-+  perf sched stats record -o "${perfdata2}" true > /dev/null
-+  if ! perf sched stats diff "${perfdata}" "${perfdata2}" > /dev/null
-   then
-     echo "Basic perf sched stats diff test [Failed]"
-     err=1
--    rm perf.data.old perf.data
-     return
-   fi
--  rm perf.data.old perf.data
-   echo "Basic perf sched stats diff test [Success]"
+ prepare_perf_data() {
+ 	# 1s should be sufficient to catch at least some switches
+-	perf record -e sched:sched_switch -a -- sleep 1 > /dev/null 2>&1
++	perf record -e sched:sched_switch -a -o "${perfdata}" -- sleep 1 > /dev/null 2>&1
+ 	# check if perf data file got created in above step.
+ 	if [ ! -e "perf.data" ]; then
+ 		printf "FAIL: perf record failed to create \"perf.data\" \n"
+@@ -130,28 +133,28 @@ test_extended_times_summary_ns() {
  }
  
-@@ -61,4 +76,6 @@ test_perf_sched_stats_record
- test_perf_sched_stats_report
- test_perf_sched_stats_live
- test_perf_sched_stats_diff
-+
-+cleanup
- exit $err
+ test_csv() {
+-	perf script report task-analyzer --csv csv > /dev/null
+-	check_exec_0 "perf script report task-analyzer --csv csv"
+-	find_str_or_fail "Comm;" csv "${FUNCNAME[0]}"
++	perf script report task-analyzer --csv "${csv}" > /dev/null
++	check_exec_0 "perf script report task-analyzer --csv ${csv}"
++	find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
+ }
+ 
+ test_csv_extended_times() {
+-	perf script report task-analyzer --csv csv --extended-times > /dev/null
+-	check_exec_0 "perf script report task-analyzer --csv csv --extended-times"
+-	find_str_or_fail "Out-Out;" csv "${FUNCNAME[0]}"
++	perf script report task-analyzer --csv "${csv}" --extended-times > /dev/null
++	check_exec_0 "perf script report task-analyzer --csv ${csv} --extended-times"
++	find_str_or_fail "Out-Out;" "${csv}" "${FUNCNAME[0]}"
+ }
+ 
+ test_csvsummary() {
+-	perf script report task-analyzer --csv-summary csvsummary > /dev/null
+-	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary"
+-	find_str_or_fail "Comm;" csvsummary "${FUNCNAME[0]}"
++	perf script report task-analyzer --csv-summary "${csvsummary}" > /dev/null
++	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary}"
++	find_str_or_fail "Comm;" "${csvsummary}" "${FUNCNAME[0]}"
+ }
+ 
+ test_csvsummary_extended() {
+-	perf script report task-analyzer --csv-summary csvsummary --summary-extended \
++	perf script report task-analyzer --csv-summary "${csvsummary}" --summary-extended \
+ 	>/dev/null
+-	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary --summary-extended"
+-	find_str_or_fail "Out-Out;" csvsummary "${FUNCNAME[0]}"
++	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary} --summary-extended"
++	find_str_or_fail "Out-Out;" "${csvsummary}" "${FUNCNAME[0]}"
+ }
+ 
+ skip_no_probe_record_support
 -- 
 2.53.0.959.g497ff81fa9-goog
 
