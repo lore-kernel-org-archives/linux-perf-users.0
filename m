@@ -1,162 +1,265 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE01DF258
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 06:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6BE23ED6A;
+	Sat, 21 Mar 2026 08:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774073790; cv=none; b=Ls35+Wk8zOyjfzH7zUdtA9mrL1WRKv3xJIL7qQU3XKFwd4Z3MseH8EjxxKbCYbo9BrzUEQvQkmY3t7OK5TNhqkvBKVEQ+AP/fgxKWRjXDsbPplm9fCOKV4kENFjpe0OejU+M0Ya44QxV/yrsoqoevHLSuTfSm60qPTaCz0EJbx4=
+	t=1774081250; cv=none; b=QcvBH6F8qtcn97dCRPQdKvJkbxqBUALDS68PyE+fy7GmEso6yZzdPg6qlnWyEj+pY59RR7VlnYkzFELTzvGTQeoYZjqDUD2AfnkLo+rJMaTsbfxFKhcSVKWLbUEYMtjRYnSJfrRHX5p7B6i5sw/13VeYM0QvKfo6Hjz7rT3Ruqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774073790; c=relaxed/simple;
-	bh=hzUHg/Rr7zHctFOvkGtG2cxFzAArMhXqHtmI8pxKW6g=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=QSwTWhEbElfuz4QWdcvvEr9cMLoFBjUKyFZAzmTjw3eVyV+YKVkoXnzrnwfk8oNEIJK1scyNInO0a0BUbXYVGdiu1TpYOnBQU6Z83DxDZ+RGj/AyRYYqtM6werEIO73Ub7g55b0wHpC2URG+CkAZj12z2Sy3auYLXZMB0oIVlHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wj3TPJc6; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wj3TPJc6"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdc1b30ac8so68101314eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2026 23:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774073788; x=1774678588; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HYPRju/rpMO2YL/AEK0Hs0ueiqArdFKTD0SNUgo6yS4=;
-        b=wj3TPJc6vTcqRMF09nqa1g0zoX5+GLxIyf65OF7rC9IfE1aDbwFc7iJp5Kwc89UjAb
-         E+4Pr0+9+mrNyYSa9SQInMQo9oid46CE27601lHTmHmi2Et5fNLcdQ5xCo9S/3TOx72p
-         0g8wQzgbZWARpxOliSgTXnaZ0uHz478cpOcNk6XquXxYuEYOco6U9IfKC1MNnOD6VDPF
-         IAFWgpyfJSlLHt25YE8E8nicAUhq3M8QIkk4nqisY6SY1rYjOgng5wsQCDqni64xVh04
-         qb8S19jf0n001fAtB+7AJEfPvuuZzgj8jvbYRTA0wJjkyEZtLhvbMy2VcSBjoXkFq4IJ
-         rl9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774073788; x=1774678588;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HYPRju/rpMO2YL/AEK0Hs0ueiqArdFKTD0SNUgo6yS4=;
-        b=HyWpNEn95YPR9nT+2AwKYNe3hrkz8QncgcWf1+6iOA+Y/mmsVRN6ahkRkWQtSeK8+W
-         XztC+8OSj71EZfiqwmnpcWcU0fpsNttzwkzy3BKLiB1+3/yB1JEsjnHpuUTMB8q8S4wN
-         tuZySjmBNAFK9CmRdr5ixfXcggn2PM7Uw6Q02sBU2PEdG37jw35A8PFLpnRisL/FO3W1
-         XckXzuZ7e64KdnY5tQTJyQMT5T/R6UDbdVgkdGIQHwGafQspwkg8n9VgSeJoaF+h7Rb8
-         6xjDOxzAgHUO0JkkFkd/lo9Gfp0MIitxTvXz6T3wQtxQ7SgovF/WMj60g54l6HHjqUZ+
-         //KA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMVcwPm9Q22FIjzVVSvZ/v2PEo4A78aCwGzxz8Rxzz8lQDnvOCZAoPJuQ6vca/FDXRe7q58MTzpFTX6jTuzIJ0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNDdvSz9Y7zPrzVW4nUm+hTAsVTEBZXvRU12gRTF8boC9azGN/
-	59hLiEVhZppeQ9yNTWz/UAYmoIKSF8iCGtk12MA22U9H5usxcr/0CX3IsVb0tQjJ0+hMJmktiRM
-	oeB6vNfto9g==
-X-Received: from dybna27.prod.google.com ([2002:a05:7300:cc1b:b0:2c1:f6:65e5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:3f16:b0:2b8:66f3:2502
- with SMTP id 5a478bee46e88-2c109585265mr2881662eec.1.1774073787701; Fri, 20
- Mar 2026 23:16:27 -0700 (PDT)
-Date: Fri, 20 Mar 2026 23:16:24 -0700
+	s=arc-20240116; t=1774081250; c=relaxed/simple;
+	bh=hkO0iFx5HSVyWjwR8ychq+iuGvvlDP8NH1LmsLqbb4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDzdIAxCwvqZb1/PMWL3PpgSQONHuUBDvJPHcRmxnU9DEsU0U4rrlOvNPGTmN8QFALbpmuopJxxcM3CLSMtzchUhevaDnOEhsVKiA9RDwX47Rh7sMeUYouv6iWydn1s9L0DBKYlg4FixxcHrlP6VYKxdkj3OxBxvlP6vHMqu+OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from gentoo.org (165.145.0.85.dynamic.cust.swisscom.net [85.0.145.165])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: amadio)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id AA137342017;
+	Sat, 21 Mar 2026 08:20:41 +0000 (UTC)
+Date: Sat, 21 Mar 2026 09:20:38 +0100
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, 9erthalion6@gmail.com,
+	acme@kernel.org, adrian.hunter@intel.com, alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com, andrew.jones@oss.qualcomm.com,
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
+	blakejones@google.com, ctshao@google.com,
+	dapeng1.mi@linux.intel.com, howardchu95@gmail.com,
+	james.clark@linaro.org, john.g.garry@oracle.com, jolsa@kernel.org,
+	leo.yan@linux.dev, libunwind-devel@nongnu.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	mingo@redhat.com, palmer@dabbelt.com, peterz@infradead.org,
+	pjw@kernel.org, shimin.guo@skydio.com, tglozar@redhat.com,
+	tmricht@linux.ibm.com, will@kernel.org, yuzhuo@google.com
+Subject: Re: [PATCH v2 0/8] perf libunwind multiple remote support
+Message-ID: <ab5U1oyGcgfIpA7p@gentoo.org>
+References: <CAP-5=fWVU3ktkGAnZQrjQJf+Z5AtQo73BVUhj-nr3H95GdcEJQ@mail.gmail.com>
+ <20260305221927.3237145-1-irogers@google.com>
+ <abxs-2rozL1tBEO1@google.com>
+ <CAP-5=fVEKifx7VZJAsoPFguMPipW66k-06vgb9iE2oO6GxSxdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260321061624.811157-1-irogers@google.com>
-Subject: [PATCH v1] perf tests task-analyzer: Write all test files to tmpdir
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVEKifx7VZJAsoPFguMPipW66k-06vgb9iE2oO6GxSxdw@mail.gmail.com>
 
-Writing to the test output files in the current working directory can
-fail in various contexts such as continual test. Other tests write to
-a mktemp-ed file, make the "perf script task-analyszer tests" follow
-this convention too. Currently this isn't possible for the perf.data
-file due to a lack of perf script support.
+On Fri, Mar 20, 2026 at 08:06:42PM -0700, Ian Rogers wrote:
+> On Thu, Mar 19, 2026 at 2:39 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Thu, Mar 05, 2026 at 02:19:19PM -0800, Ian Rogers wrote:
+> > > Fix the libunwind build for when libdw and libunwind are feature
+> > > detected, currently failing with a duplicate symbol.
+> > >
+> > > Refactor the libunwind support so that whenever a remote target is
+> > > available, perf functions using the ELF machine can use that remote
+> > > target regardless of what the host/local machine is. Migrate existing
+> > > libunwind supported architectures like powerpc, arm64 and loongarch so
+> > > that they can work in a cross-architecture way. Add support for
+> > > RISC-V. Make the code more regular in function names, etc. and avoid
+> > > including a C-file. This increases the lines of code. It is similar in
+> > > style to the unwind-libdw implementation. It is hoped that the more
+> > > uniform nature of the code with help with refactoring the perf
+> > > registers for SIMD/APX support.
+> > >
+> > > Aside from local host testing these patches are under tested, in part
+> > > as I'm failing to see how to build libunwind with support for multiple
+> > > remote targets. Please could I get help in testing.
+> >
+> > It seems libunwind project is not actively maintained.  Assuming libdw
+> > unwinding is performant enough, we may want to get rid of libunwind
+> > support.
+> 
+> Guilherme, is it true that libunwind is built into perf with Gentoo?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/test_task_analyzer.sh | 37 +++++++++++---------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+Hi Ian, libunwind support is an optional feature, which is not enabled
+by default. Users can turn it on via a USE flag:
 
-diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-index e194fcf61df3..cc74b03477fe 100755
---- a/tools/perf/tests/shell/test_task_analyzer.sh
-+++ b/tools/perf/tests/shell/test_task_analyzer.sh
-@@ -3,6 +3,10 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- tmpdir=$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
-+# perf script report only supports input from the perf.data file.
-+perfdata="perf.data"
-+csv="$tmpdir/csv"
-+csvsummary="$tmpdir/csvsummary"
- err=0
- 
- # set PERF_EXEC_PATH to find scripts in the source directory
-@@ -15,11 +19,10 @@ fi
- export ASAN_OPTIONS=detect_leaks=0
- 
- cleanup() {
--  rm -f perf.data
--  rm -f perf.data.old
--  rm -f csv
--  rm -f csvsummary
-+  rm -f "${perfdata}"
-+  rm -f "${perfdata}".old
-   rm -rf "$tmpdir"
-+
-   trap - exit term int
- }
- 
-@@ -61,7 +64,7 @@ skip_no_probe_record_support() {
- 
- prepare_perf_data() {
- 	# 1s should be sufficient to catch at least some switches
--	perf record -e sched:sched_switch -a -- sleep 1 > /dev/null 2>&1
-+	perf record -e sched:sched_switch -a -o "${perfdata}" -- sleep 1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
- 	if [ ! -e "perf.data" ]; then
- 		printf "FAIL: perf record failed to create \"perf.data\" \n"
-@@ -130,28 +133,28 @@ test_extended_times_summary_ns() {
- }
- 
- test_csv() {
--	perf script report task-analyzer --csv csv > /dev/null
--	check_exec_0 "perf script report task-analyzer --csv csv"
--	find_str_or_fail "Comm;" csv "${FUNCNAME[0]}"
-+	perf script report task-analyzer --csv "${csv}" > /dev/null
-+	check_exec_0 "perf script report task-analyzer --csv ${csv}"
-+	find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
- }
- 
- test_csv_extended_times() {
--	perf script report task-analyzer --csv csv --extended-times > /dev/null
--	check_exec_0 "perf script report task-analyzer --csv csv --extended-times"
--	find_str_or_fail "Out-Out;" csv "${FUNCNAME[0]}"
-+	perf script report task-analyzer --csv "${csv}" --extended-times > /dev/null
-+	check_exec_0 "perf script report task-analyzer --csv ${csv} --extended-times"
-+	find_str_or_fail "Out-Out;" "${csv}" "${FUNCNAME[0]}"
- }
- 
- test_csvsummary() {
--	perf script report task-analyzer --csv-summary csvsummary > /dev/null
--	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary"
--	find_str_or_fail "Comm;" csvsummary "${FUNCNAME[0]}"
-+	perf script report task-analyzer --csv-summary "${csvsummary}" > /dev/null
-+	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary}"
-+	find_str_or_fail "Comm;" "${csvsummary}" "${FUNCNAME[0]}"
- }
- 
- test_csvsummary_extended() {
--	perf script report task-analyzer --csv-summary csvsummary --summary-extended \
-+	perf script report task-analyzer --csv-summary "${csvsummary}" --summary-extended \
- 	>/dev/null
--	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary --summary-extended"
--	find_str_or_fail "Out-Out;" csvsummary "${FUNCNAME[0]}"
-+	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary} --summary-extended"
-+	find_str_or_fail "Out-Out;" "${csvsummary}" "${FUNCNAME[0]}"
- }
- 
- skip_no_probe_record_support
--- 
-2.53.0.959.g497ff81fa9-goog
+https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/perf/perf-6.19.ebuild#n88
 
+The full list of USE flags is here:
+https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/perf/perf-6.19.ebuild#n38
+the ones marked with a + in front are enabled by default.
+
+Personally, I enable everything when installing:
+~ $ perf version --build-options
+perf version 6.19
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
+          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT ( tip: Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el] )
+        libbpf-strings: [ on  ]  # HAVE_LIBBPF_STRINGS_SUPPORT
+           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libLLVM: [ on  ]  # HAVE_LIBLLVM_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+            libopencsd: [ OFF ]  # HAVE_CSTRACE_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpfm4: [ on  ]  # HAVE_LIBPFM
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+
+> The performance fix for unwinding with libdw is in commit
+> 6b2658b3f36a ("perf unwind-libdw: Don't discard loaded ELF/DWARF after
+> every unwind") that is currently only in v7.0-rc[1-4].
+> 
+> In commit 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather
+> than opt-out"), perf made libunwind opt-in rather than opt-out. This
+> change is in v6.13.
+> 
+> LLVM has a libunwind project but LLVM scares me because its library
+> dependencies are so large.
+
+If you have advice on what you'd prefer us (i.e. packagers) to do, I'm
+happy to follow. For example, I've removed BUILD_NONDISTRO=1 from our
+ebuilds some time around 6.17. If the performance fix above applies onto
+6.19 (or is included in 6.19.x for some x), then we can pick that up as
+well.
+
+> Perhaps we should merge these changes and then delete the libunwind
+> support in 2 or 3 releases time. I believe this is closer to how
+> libbpf deprecated the pre-1.0 behaviors. Personally I don't mind if we
+> just delete everything now, but typically we're not that aggressive.
+
+From Gentoo's point of view, it's relatively easy to adapt the ebuild to
+upstream changes. As a user, I care about having reliable stack traces,
+what library is used for that is not as important.
+
+Best regards,
+-Guilherme
+
+> Thanks,
+> Ian
+> 
+> > Thanks,
+> > Namhyung
+> >
+> > >
+> > > v2: Move two fixes patches to position 1 and 2 in the series. Fix
+> > >     struct naming inconsistency, Andrew Jones
+> > >     <andrew.jones@oss.qualcomm.com>. Fix other inconsistencies and
+> > >     potential non-x86 build issues.
+> > >
+> > > v1: https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
+> > >
+> > > Ian Rogers (8):
+> > >   perf unwind: Refactor get_entries to allow dynamic libdw/libunwind
+> > >     selection
+> > >   perf build loongarch: Remove reference to missing file
+> > >   tools build: Deduplicate test-libunwind for different architectures
+> > >   perf build: Be more programmatic when setting up libunwind variables
+> > >   perf unwind-libunwind: Make libunwind register reading cross platform
+> > >   perf unwind-libunwind: Move flush/finish access out of local
+> > >   perf unwind-libunwind: Remove libunwind-local
+> > >   perf unwind-libunwind: Add RISC-V libunwind support
+> > >
+> > >  tools/build/feature/Makefile                  |  38 +-
+> > >  tools/build/feature/test-libunwind-aarch64.c  |  27 -
+> > >  tools/build/feature/test-libunwind-arm.c      |  28 -
+> > >  .../test-libunwind-debug-frame-aarch64.c      |  17 -
+> > >  .../feature/test-libunwind-debug-frame-arm.c  |  17 -
+> > >  .../feature/test-libunwind-debug-frame.c      |   1 -
+> > >  tools/build/feature/test-libunwind-x86.c      |  28 -
+> > >  tools/build/feature/test-libunwind-x86_64.c   |  28 -
+> > >  tools/build/feature/test-libunwind.c          |   1 -
+> > >  tools/perf/Makefile.config                    | 215 ++---
+> > >  tools/perf/arch/arm/util/Build                |   2 -
+> > >  tools/perf/arch/arm/util/unwind-libunwind.c   |  50 --
+> > >  tools/perf/arch/arm64/util/Build              |   1 -
+> > >  tools/perf/arch/arm64/util/unwind-libunwind.c |  17 -
+> > >  tools/perf/arch/loongarch/util/Build          |   3 -
+> > >  .../arch/loongarch/util/unwind-libunwind.c    |  82 --
+> > >  tools/perf/arch/mips/Build                    |   1 -
+> > >  tools/perf/arch/mips/util/Build               |   1 -
+> > >  tools/perf/arch/mips/util/unwind-libunwind.c  |  22 -
+> > >  tools/perf/arch/powerpc/util/Build            |   1 -
+> > >  .../perf/arch/powerpc/util/unwind-libunwind.c |  92 --
+> > >  tools/perf/arch/x86/util/Build                |   3 -
+> > >  tools/perf/arch/x86/util/unwind-libunwind.c   | 115 ---
+> > >  tools/perf/builtin-inject.c                   |   4 +
+> > >  tools/perf/builtin-report.c                   |   4 +
+> > >  tools/perf/builtin-script.c                   |   4 +
+> > >  tools/perf/util/Build                         |   5 +-
+> > >  tools/perf/util/libunwind-arch/Build          |  11 +
+> > >  .../perf/util/libunwind-arch/libunwind-arch.c | 319 +++++++
+> > >  .../perf/util/libunwind-arch/libunwind-arch.h | 296 +++++++
+> > >  .../perf/util/libunwind-arch/libunwind-arm.c  | 290 ++++++
+> > >  .../util/libunwind-arch/libunwind-arm64.c     | 289 ++++++
+> > >  .../perf/util/libunwind-arch/libunwind-i386.c | 312 +++++++
+> > >  .../util/libunwind-arch/libunwind-loongarch.c | 297 +++++++
+> > >  .../perf/util/libunwind-arch/libunwind-mips.c | 299 +++++++
+> > >  .../util/libunwind-arch/libunwind-ppc32.c     | 301 +++++++
+> > >  .../util/libunwind-arch/libunwind-ppc64.c     | 303 +++++++
+> > >  .../util/libunwind-arch/libunwind-riscv.c     | 297 +++++++
+> > >  .../perf/util/libunwind-arch/libunwind-s390.c | 299 +++++++
+> > >  .../util/libunwind-arch/libunwind-x86_64.c    | 320 +++++++
+> > >  tools/perf/util/libunwind/arm64.c             |  40 -
+> > >  tools/perf/util/libunwind/x86_32.c            |  41 -
+> > >  tools/perf/util/maps.c                        |  29 +-
+> > >  tools/perf/util/maps.h                        |   4 +-
+> > >  tools/perf/util/symbol_conf.h                 |  15 +
+> > >  tools/perf/util/thread.c                      |  29 +-
+> > >  tools/perf/util/unwind-libdw.c                |   2 +-
+> > >  tools/perf/util/unwind-libunwind-local.c      | 832 ------------------
+> > >  tools/perf/util/unwind-libunwind.c            | 679 ++++++++++++--
+> > >  tools/perf/util/unwind.c                      | 102 +++
+> > >  tools/perf/util/unwind.h                      |  56 +-
+> > >  51 files changed, 4536 insertions(+), 1733 deletions(-)
+> > >  delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
+> > >  delete mode 100644 tools/build/feature/test-libunwind-arm.c
+> > >  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarch64.c
+> > >  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.c
+> > >  delete mode 100644 tools/build/feature/test-libunwind-x86.c
+> > >  delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
+> > >  delete mode 100644 tools/perf/arch/arm/util/unwind-libunwind.c
+> > >  delete mode 100644 tools/perf/arch/arm64/util/unwind-libunwind.c
+> > >  delete mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
+> > >  delete mode 100644 tools/perf/arch/mips/Build
+> > >  delete mode 100644 tools/perf/arch/mips/util/Build
+> > >  delete mode 100644 tools/perf/arch/mips/util/unwind-libunwind.c
+> > >  delete mode 100644 tools/perf/arch/powerpc/util/unwind-libunwind.c
+> > >  delete mode 100644 tools/perf/arch/x86/util/unwind-libunwind.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/Build
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.h
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm64.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-i386.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-loongarch.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-mips.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc32.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc64.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-riscv.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-s390.c
+> > >  create mode 100644 tools/perf/util/libunwind-arch/libunwind-x86_64.c
+> > >  delete mode 100644 tools/perf/util/libunwind/arm64.c
+> > >  delete mode 100644 tools/perf/util/libunwind/x86_32.c
+> > >  delete mode 100644 tools/perf/util/unwind-libunwind-local.c
+> > >  create mode 100644 tools/perf/util/unwind.c
+> > >
+> > > --
+> > > 2.53.0.473.g4a7958ca14-goog
+> > >
