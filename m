@@ -1,158 +1,193 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89E020E702
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 15:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774107631; cv=none; b=Riym/mGWVwRWU1TXqoFX7gWVIqudN8oj1XvgJUf+NGzr1VAXkVa07vhKSpEqQvq67w+h53OxEKJ/BFV5Yj8e2LPlrCkyfRW6pOzpTXq7TeGy6rjQ1vNyER2r3719W6Uqhdks3CVW1LgVryNxwm8s4nFfxYuwL9FzaXZyZZQGkuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774107631; c=relaxed/simple;
-	bh=xeifeO8z3MuDy4wz8FY0AraYOOq9oBCxeUZOl9PPdGo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YrYmpz6ZbYNnuxEwagObeGUKC4HAXr6Noa3tIE/avwU0WvlZO3b6rQVyNNxPRISQtpfB+LWXSCG/E9FS+Q2bhJOxGNPfxrxOdon4xotWtmQk+0wxqU1ofz/n2FadrIayA1UGvzB4Iqv0NginG4uN6bBo3B8ypj0TqC3E59rszdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FOZ7wN5j; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CD519E992
+	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 16:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774109328; cv=pass; b=qkHu8f94IaS8/tZ8CHHiO6pwx1ph23426ZSAOuX049UtwdsJUf6Ai+VPDNA8jua82RzXtp8yulspGiDMxqpc8J59mb/ZBtFPKLFJaP9cnNI94cLJfSKxnaDvv3/th+cql+isJND4lgUXl1+xlqDEnhuyGhPPNWpJN/2TjFaVP1g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774109328; c=relaxed/simple;
+	bh=iG7fQBUq6AV5Pl+IRaBFIukp4ILZYZNf0kT6rUelntE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NZiHWuPO3TrZ++qgmecZpwPY7+AJqPckde5fLX76MGCW7Nxgce0K+08ApMWOa7GMeYl0UML+9wBL/OPz3icn8Ny3AczThTBi+zVuKozLxQXBfFimEVWibl7MF2yoFz5vIoc/TfdqDjEtc4po9bs6vKhHayFkrxF8UO7EaFzEyRc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tif755z2; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=kjebZwnz; arc=pass smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FOZ7wN5j"
-Message-ID: <20d77c80-6538-4dec-804c-156402c26534@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774107617;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tif755z2";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="kjebZwnz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774109326;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R1xbV5lFfC6JBplJ0yW6J+xSG/V2oZ+k7p4c0Lgblks=;
-	b=FOZ7wN5jzEjmcPeHEMEzRELlraaK56uAqnRB4wDB+FTkkMN0PvWbe832ZM0t9+yudAWslS
-	6qfvEjP9ys/Nn5dqYa/bgWtIRiB8cSmyD7uTD0uVykscneE5z8rSUruBpAoznQRrv2Erry
-	SV9qvXNXF743EF154iYCQ/0chrxGKOI=
-Date: Sat, 21 Mar 2026 08:40:05 -0700
+	bh=m5Gn2W2nUjRCGyIbKZ4RgXOOpfdeMeWuqEVTqDlQkd4=;
+	b=Tif755z2H8/psNjhsIcEwvTVnu7Xa/TJ5ZZkS7K335ERZIZcckUQ6J5svB5zepIzCIwnSN
+	cWsqKv+iqpgFpp1L3+1V0f561bhnVJWHYRJTxilGrl68bgyMGwtm4TFdOZOFmPlXcQ899t
+	8Ep7mM+RcXhrInCepq9sly3QNQCATdE=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-m1rX7oKJO7Ko8DSRTEQ8Uw-1; Sat, 21 Mar 2026 12:08:45 -0400
+X-MC-Unique: m1rX7oKJO7Ko8DSRTEQ8Uw-1
+X-Mimecast-MFC-AGG-ID: m1rX7oKJO7Ko8DSRTEQ8Uw_1774109324
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-6679523f510so3018175a12.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 09:08:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774109324; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MK4Foh+B3t+gmew+3pxj1gbFTKVbfvLsthvSGE50p4lICQ01dDVYJvy9DzA5QD5dZF
+         RXUu7j8gywzk72qUYSHPJCrZ5ThNf+gK7EMjR0FeBNWlhMHzyMZClHwdHjKKXuCMC3f/
+         U8xqmLelteSC/RRBEJoB4JjxSrOgOf6rACKUh9q9kRXOb34NmWI8Gq8X85Z2sz4iQ/aT
+         /1JYSuIOSGoFFsN51IS7ivWsQoKSa+doVpJxfazcv+bSAGIzWnEWkhvYQZt05S+7H3RP
+         +gUQfHBkQ2CorrbBISJfLGph0R/HWwKH6BsPH6IE0MUY0ag+BaxbmEkvdNvG63vSquSA
+         zO4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=m5Gn2W2nUjRCGyIbKZ4RgXOOpfdeMeWuqEVTqDlQkd4=;
+        fh=bu2ojpYFBA21z8S7ARse3hmbg6nD1JGgNghkZ5fCaHI=;
+        b=TTAVIpY6DC6hUCmRpFauCMaj2Z+1aI4WTbMygg1t70BYfC3e3dHvx0PtlpgM79W/Vf
+         BNnnexnAhweChanM/hsSDAs55V1RHODKsqS1geLkFov+svNG84p8NxhH6VzbFIPJ2vH5
+         SENp5dHL4h/124iFyWZGyPLLQplx/bavEGx8ZdmZ2go3DjgQhdISvhL+EDQk5dtP+rLc
+         UeqE53Y0UmKeUwxaeRkRKUXbqItKtmS6O5w1NRV9plUSpOidjjtadHIi0cJMqC2sMsc5
+         eC9rgGXvvUezMW2nBjq9WZEifHI7YJkEf0Hi/IfoZs0qOdcJtSf/3/FGFZPjsYJ9MEkr
+         JjJA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1774109324; x=1774714124; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5Gn2W2nUjRCGyIbKZ4RgXOOpfdeMeWuqEVTqDlQkd4=;
+        b=kjebZwnzGVCnlwch0IGhzJ32lQW6IPJT2nYHb+sfmrXSJfgJnIMjpFpW+Q24SbrJzD
+         1W26bU3/KhyRpwd8AL1Lf6lFI+ln9odwKRC1JPS63aAd/N4uzrsc3n/4IjUvY2h3EDF4
+         yIaQLeRB5wNUXVQLCx0yMmR6DXs8qrcqEual9vIFM44BDKCBwo/m1Vcj/PsJb3RVSkSh
+         nODV+/RJzwWCt7kzvJ7a8HyfQ//VMZVhroGJ2QyisZFxLJien+pb1+LPVt3dqqrhyNRP
+         3R5sUD/7MyrajlksQRNRhcy3Xf2kf14LwDq5IwM9Ovj4rcly4uR0d79RMW4ZWq7g1S5o
+         CaNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774109324; x=1774714124;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m5Gn2W2nUjRCGyIbKZ4RgXOOpfdeMeWuqEVTqDlQkd4=;
+        b=Akkh6loNrr/5iGZfJLHisgOL90LG23NQfgRGFUaGhc50j0XDq/yyjmqb8E+LG9cvNK
+         BK4zvghsU7yr4T9CNU2xv75V+adg6wwHhfOJkqK3oU1akcCjyV3i4MJwsbTvliQcGLmd
+         H+8tu/iQQXc2UEwDNxNqwrVgBvi0D7ezpp4T3yiDk6NRKOkosW/JIPtPSUqyYDyWxGVL
+         LwpCQOc/OEbFfeu1emHsQDGPwkrAHrs9/vtkroQcyK2IjPVmo58s+U4OXeb41d4XPKGe
+         kvOONXqVJNAj+V1hiQAMgVEBwfVdsnTM2AUPLC1XLOcdTa02aU6OOrxxN9ecQ8TXDNhS
+         t4kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUelZFBT+ObqNCQbpgyLXSo+AIvU1ocXvggpzGKidOYJuUD24olsD7v81AW5SZi4Q4J5q7+DPfP50RaXuT907d5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDPkq4z7FyATlL4vW6MKhc68j0NbPG9xgqEjHyMOHDNgC/XZkO
+	2er8/8tsssUW9/TH9mrB9yFushp8ZqtvZ180MaK0W438JDed6WqR8Y4PV9+wAcbWKpxaxJrWC0g
+	Kd2ANBTRlWZsp11CK7NPshLsiYN2HuWdWRIm2V6LT4Vovn4n5fMaUZ+3kDzGpnkdOK0w4V/fjJ/
+	T372TjKyqMYw6/sHwj2wdNqg4RxWr2jsoiBpaxquKIeMSWOA==
+X-Gm-Gg: ATEYQzzsrBRYVxmnlboGXnTWzxiIcFdu2TIBfWTq2PlhflnFCkP1xIfGZz73kspM9Js
+	NWWhzE4SwmqkWlckSlHIBEnEd5g2FLDFKFc2aVsa/7l9SdGMWy700MUC6OyWfboBofFqLIin5y6
+	yoV22PAXUwXdJRv9hns+TDWfT2G7rKQ12zUmjAeLE2JFkhbNc6seGZsGYZGLQ/x3LPB2pX8F8cC
+	fd2GytqIKJ3vPhcVugCPwOzor/DdZiducOT++k=
+X-Received: by 2002:a05:6402:5050:b0:664:bc6:69a9 with SMTP id 4fb4d7f45d1cf-668c97208femr4586778a12.17.1774109323818;
+        Sat, 21 Mar 2026 09:08:43 -0700 (PDT)
+X-Received: by 2002:a05:6402:5050:b0:664:bc6:69a9 with SMTP id
+ 4fb4d7f45d1cf-668c97208femr4586766a12.17.1774109323433; Sat, 21 Mar 2026
+ 09:08:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 1/2] libbpf: Fix strict aliasing violations in hashmap
-Content-Language: en-GB
-To: Ian Rogers <irogers@google.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20260321024446.692008-1-irogers@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20260321024446.692008-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260320150651.51057-1-tglozar@redhat.com> <20260320150651.51057-4-tglozar@redhat.com>
+In-Reply-To: <20260320150651.51057-4-tglozar@redhat.com>
+From: Costa Shulyupin <costa.shul@redhat.com>
+Date: Sat, 21 Mar 2026 18:08:06 +0200
+X-Gm-Features: AaiRm531oz0EqyoXJ7hHAU-cWOd72s4QUjMps8WXa2sE_1NLdGfDFvTSqoaWsac
+Message-ID: <CADDUTFx7eSqQoA0Sv2hJCcpunosWcg3=VkhWQNoFv1iOC=Fc-w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 20 Mar 2026 at 17:07, Tomas Glozar <tglozar@redhat.com> wrote:
+>> +#define TIMERLAT_OPT_NANO OPT_CALLBACK('n', "nano", params, NULL, \
+> +       "display data in nanoseconds", \
+> +       opt_nano_cb)
 
+-n/--nano requires value incorrectly
 
-On 3/20/26 7:44 PM, Ian Rogers wrote:
-> The hashmap implementation contained strict aliasing violations.
-> Specifically, the hashmap_cast_ptr(p) macro was casting pointers (such
-> as void **) to long *, and these were subsequently dereferenced in
-> functions like hashmap_insert(), hashmap_find(), and hashmap_delete().
->
-> C's strict aliasing rules (C11 6.5/7) prohibit accessing an object
-> through an lvalue of an incompatible type. Dereferencing a long * to
-> write to a void * object is a violation, even if they share the same
-> size, as they are not compatible types. This can lead to undefined
-> behavior, especially with aggressive compiler optimizations.
+ File: src/cli.c:463
+ Cause: TIMERLAT_OPT_NANO used OPT_CALLBACK which expects an argument,
+but -n is a flag.
+ Fix: Changed to OPT_CALLBACK_NOOPT:
 
-Potentially this could be a concern. Did you actually find an issue
-with it?
+> +               HIST_OPT_NO_IRQ,
+--no-irq clashes with auto-negation of --irq
 
-The linux kernel build has
-    KBUILD_CFLAGS += -fno-strict-aliasing
+ File: src/cli.c:1042
+ Cause: libsubcmd auto-generates --no-X negations for every option.
+--no-irq (histogram boolean) collides with the auto-negation of --irq
+(stop threshold). The first match wins, so --irq was matched first and
+its negation intercepted the call.
+ Fix: Moved HIST_OPT_NO_IRQ before RTLA_OPT_STOP('i', "irq", ...) in
+the options array so the explicit --no-irq boolean is found first.
 
-The libbpf does not have this flag. Maybe we should add '-fno-strict-aliasing'
-for libbpf as well? This way, we can avoid any future potential
-'strict aliasing' issues.
+> +               HIST_OPT_NO_THREAD,
+--no-thread - same issue
 
-Note that bpf program (tools/testing/selftests/bpf/Makefile)
-also has '-fno-strict-alaising' flag.
+ Cause: Same collision between --no-thread boolean and auto-negation
+of --thread.
+ Fix: Same reordering approach.
 
->
-> Fix this by:
-> 1. Updating hashmap_insert(), hashmap_find(), and hashmap_delete() to
->     take void * for their output parameters (old_key, old_value, and
->     value).
-> 2. Modifying the implementation to use memcpy() and memset() for
->     accessing these output parameters. Accessing an object as an array of
->     characters (as done by memcpy) is a permitted exception to the
->     strict aliasing rules.
-> 3. Updating the hashmap_cast_ptr(p) macro to return void *, ensuring
->     compatibility with the new function signatures while preserving the
->     static assertion that ensures the pointed-to type matches the size of
->     a long.
->
-> Input parameters (key and value) remain as long, as they involve value
-> conversion rather than incompatible pointer dereferencing, which is safe
-> under strict aliasing rules.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/lib/bpf/hashmap.c | 21 +++++++++++----------
->   tools/lib/bpf/hashmap.h |  8 ++++----
->   2 files changed, 15 insertions(+), 14 deletions(-)
->
-> diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-> index 140ee4055676..ef50d262a126 100644
-> --- a/tools/lib/bpf/hashmap.c
-> +++ b/tools/lib/bpf/hashmap.c
-> @@ -8,6 +8,7 @@
->   #include <stdint.h>
->   #include <stdlib.h>
->   #include <stdio.h>
-> +#include <string.h>
->   #include <errno.h>
->   #include <linux/err.h>
->   #include "hashmap.h"
-> @@ -153,24 +154,24 @@ static bool hashmap_find_entry(const struct hashmap *map,
->   
->   int hashmap_insert(struct hashmap *map, long key, long value,
->   		   enum hashmap_insert_strategy strategy,
-> -		   long *old_key, long *old_value)
-> +		   void *old_key, void *old_value)
->   {
->   	struct hashmap_entry *entry;
->   	size_t h;
->   	int err;
->   
->   	if (old_key)
-> -		*old_key = 0;
-> +		memset(old_key, 0, sizeof(long));
->   	if (old_value)
-> -		*old_value = 0;
-> +		memset(old_value, 0, sizeof(long));
->   
->   	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
->   	if (strategy != HASHMAP_APPEND &&
->   	    hashmap_find_entry(map, key, h, NULL, &entry)) {
->   		if (old_key)
-> -			*old_key = entry->key;
-> +			memcpy(old_key, &entry->key, sizeof(long));
->   		if (old_value)
-> -			*old_value = entry->value;
-> +			memcpy(old_value, &entry->value, sizeof(long));
->   
->   		if (strategy == HASHMAP_SET || strategy == HASHMAP_UPDATE) {
->   			entry->key = key;
-> @@ -203,7 +204,7 @@ int hashmap_insert(struct hashmap *map, long key, long value,
->   	return 0;
->   }
+Costa and Claude
 
-[...]
+diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
+index d029a698e8a7..c6b9ed920539 100644
+--- a/tools/tracing/rtla/src/cli.c
++++ b/tools/tracing/rtla/src/cli.c
+@@ -460,7 +460,7 @@ static int opt_osnoise_on_end_cb(const struct
+option *opt, const char *arg, int
+  "save the stack trace at the IRQ if a thread latency is higher than
+the argument in us", \
+  opt_llong_callback)
+
+-#define TIMERLAT_OPT_NANO OPT_CALLBACK('n', "nano", params, NULL, \
++#define TIMERLAT_OPT_NANO OPT_CALLBACK_NOOPT('n', "nano", params, NULL, \
+  "display data in nanoseconds", \
+  opt_nano_cb)
+
+@@ -1011,6 +1011,12 @@ struct common_params
+*timerlat_hist_parse_args(int argc, char **argv)
+  cb_data.trace_output = NULL;
+
+  const struct option timerlat_hist_options[] = {
++ OPT_GROUP("Histogram Options:"),
++ HIST_OPT_NO_IRQ,
++ HIST_OPT_NO_THREAD,
++ HIST_OPT_BUCKET_SIZE,
++ HIST_OPT_ENTRIES,
++
+  OPT_GROUP("Tracing Options:"),
+  TIMERLAT_OPT_PERIOD,
+  RTLA_OPT_STOP('i', "irq", "irq latency"),
+@@ -1034,11 +1040,7 @@ struct common_params
+*timerlat_hist_parse_args(int argc, char **argv)
+  RTLA_OPT_KERNEL_THREADS,
+  RTLA_OPT_USER_LOAD,
+
+- OPT_GROUP("Histogram Options:"),
+- HIST_OPT_BUCKET_SIZE,
+- HIST_OPT_ENTRIES,
+- HIST_OPT_NO_IRQ,
+- HIST_OPT_NO_THREAD,
++ OPT_GROUP(""),
+  HIST_OPT_NO_HEADER,
+  HIST_OPT_NO_SUMMARY,
+ HIST_OPT_NO_INDEX,
 
