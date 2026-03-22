@@ -1,393 +1,135 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EA42459D4
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 23:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757D63009F6
+	for <linux-perf-users@vger.kernel.org>; Sun, 22 Mar 2026 00:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774136550; cv=none; b=qstuBN97kizjfAvXWCMFZ3JOT1LBocVJmjWGlmbzq5o1fC76QPgIMLFI53MV2R0N6sZPx8LUmjMyBVFGZ0T17MwVIp5tz1l/hfvwqlDVnPZv9vt3t2ghZ3ePAKcPCW1pL1aaurI97e/C5PaYNSave5BGoGOiMD6kcT55pZo3Auk=
+	t=1774141115; cv=none; b=HW1TR3aPEdIggs7HhVcEyFen5QaLsvanlsZ0Y7K6P/wgBK3WS+38j7IAafRyTQ2A1yDEadm6U8N7rREqXZAr15LSOVkTC5aXhHH6MSoaZXUw/mhj12pa0aTJIpCOcK1poLDzfDd/64JJWXL5Sav+qUAp4lSV5t9Byaq7nMh9CMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774136550; c=relaxed/simple;
-	bh=nN5sSn0LYIxPN0XI3Sgb4WnlGszT6wCW80ieYvC2J0c=;
+	s=arc-20240116; t=1774141115; c=relaxed/simple;
+	bh=w94Z4ht1ngE2NEfC3k9zIcS3AmVkMhwClW/z8reEnSE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TkQU8hWhn3ZjpJNlYO1nZiRKMbevERiVox3pEGRzRlqnfclHu8/BaQmt9KzZ2MMdD5BRaEawG2FfeEwaG4eEdHdsYaU5HPetrGV2CqxuZWKpi6aOyKMBtKTM+USva7uf/q8ekkoZ/Qn9rYwo46Et4DNAwlIE6SVLf07UYBZKSLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F3mCgUqh; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=LgvdfrFh/2ydQTWO6swoKktF1hSN3Udp0FOAinHmNk9iDcAIEYaydVqUxDVgNGl7YsuSf3BaicIE7DODlIx3iOVZZPbSMm7hCyE11uhrVahtmww4GuSCr2sKopZpu25RFcL6bprAjHBU9NP8T8R6xdYj5ChnMwkUH+mBzfWpRyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T18WgsEE; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F3mCgUqh"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12776bebeb3so459082c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 16:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T18WgsEE"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12776bebeb3so2583769c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 Mar 2026 17:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774136548; x=1774741348; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774141113; x=1774745913; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Lt+rwRrqT065vfUOo6yVpO/YAP7pOX34Tn4qVl2j8c=;
-        b=F3mCgUqhLhKYrs09N529NoLgd+3/XneVjJEvvs2eUW6offO1SXc9sUwXnanDwyEq79
-         DHTSJp+AQYQw51v8hGTBpRiphulCU7ZcAMGiWy3hx9qNn+iOHDRHt8Q4rIr0NnZIpfSg
-         l+fCREiYZrUzl6oPsE9hjYsnV6nUdZMqTYSKRTdjNd4QQYiYyanxC9RxCxbv2oDg9pSc
-         1vRwqxWTRAIariZTzUQGCdxFgyieIb5e4yb9u/yVQOP+xUQVEVHDtS5x1NjbIbgVHbM7
-         2+w7Aowh2Htekb3CI6SKUDq2Z2/oz1kpVhWL/MpqFqeFjsH4fsvQqEWOliZSzSLMM3rK
-         aAAg==
+        bh=JYyPAR1RPCplqnKawfHVIkwnGNEWNEIIYR+bHhpQ178=;
+        b=T18WgsEEIXlBHVzMQoxTinFEKz5zIksJ1YZL9E0mfJ1EHxzGh5gmRbBP/b5datuqXB
+         J5UTJttrZo47h3MUOB1ROwz9OLEITgLORJSmaWsDg6BFEC/alfcHzZlI51zVxB/gzzdB
+         rjbBQn5J0l2uNn9phtx74mVxQykN5HQ33i+S2hXL6yLDTiyaY66Z6ceXLyC/NbRikOuI
+         fm97w16AAghZk3kowCDAR8XPpwkF0hxXC+naKwzbtZcaU2fM09eG0yQvdzu8HG06Twqg
+         rGvJ5NVQPVGKT4/HNj32IfBey36Ew1dz24Hfb06cPUf/Y4EFni12nACO/v5Hxm6JRfGr
+         p4dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774136548; x=1774741348;
+        d=1e100.net; s=20251104; t=1774141113; x=1774745913;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Lt+rwRrqT065vfUOo6yVpO/YAP7pOX34Tn4qVl2j8c=;
-        b=PYYpAkkbf11iHqdNsej2Of1uo8AjGUIGDzelrDoEnkx+nei2OshxWP3+dPpFxfLxSw
-         0v9VbBTFpx2l5sX3dxcjaeSA00DnPb2hY8ga0Xv7dUhLWecedJQwVcGGUD1ja5h/Inm/
-         LzwKIq0RCpSbgsNo+eCIOtjYKj09HmbbXzHgL/16o8YcVDBLsHCghzQAsh4ZflJhiPzD
-         cEunFVH1d6iiGZXURoDDmhTo1x3AKASH/wAx4LWQQOHqX+DuObMee5ePPw4dKeRwSetd
-         oXNLy6lf7QMYW+MU25EmG2ds+bWX9xMahidyHIJYam8llreUG2mjYNE/wfb9qgzISOeU
-         A0tA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLfDQLCq3a9G/IqzShcRvya4UeOFX68ufzli09j0QaeOH33tYUv1SkR/J6f7M+X2Zypayaf+Ig/Sk4Eej37Enw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwswCjOLsC0YJDAd5fhxqJSILTREoHIlQv/AAQixEJaS9wXiRn1
-	60pKRY5KHUlD3WD9GZaqCrSjov7Zcbzl+jVSAELCUFvCfbfgohQwahDfKvKaRfq3DrCZBbEzOSu
-	CAe2KHqSh5w==
-X-Received: from dlbrh17.prod.google.com ([2002:a05:7022:f311:b0:128:d4d5:93c3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:b14:b0:128:e2a9:d97b
- with SMTP id a92af1059eb24-12a726dd9b5mr3614344c88.42.1774136547707; Sat, 21
- Mar 2026 16:42:27 -0700 (PDT)
-Date: Sat, 21 Mar 2026 16:42:20 -0700
-In-Reply-To: <20260321234220.848859-1-irogers@google.com>
+        bh=JYyPAR1RPCplqnKawfHVIkwnGNEWNEIIYR+bHhpQ178=;
+        b=saoVGMqWM1x/wdtjNOO4/AeKIU9QmsdPm4flVcbcJHwe1lhQ9BZrn00YnE+7X+IADZ
+         9PNjH97ALgvgaZaG6rkxp+DGqfHeahU7Ka5gcLUjKxdv1ym1jlm4Of9qVTM+d/J7b896
+         tEhsEqwGUiYM2S1Hr61/vuMAUNQh/oiqrlradQ4ssFUtVly7dtZ1uTTd7Rj0IXUQAMGC
+         WSYEAKKXmLBWlH1DvqqWUfHv4pCqoCYNt44nKZZw3AW1NBlqeFB7Lnp9f4nfCudQ7lty
+         TnJ+eCWcGW3QdPjV9wqdVZUwMyh8JmQfPjYdlDmDXcvMKaQuiP7CeZ4OoTn6BIqnjFA+
+         hTYg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9MJYrJCJ6tWVs/1K4DMy/HDCyx8j6gB+gKSkUDeUek1qkMMDgEGyZ67c+hxo2El0ZbFfdFrtRO+0OpX/sVX6v@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6MjRtE1/fwvZe3zxQtKNhvx/oeAbAYQEo6Dzba+dUJFkcatz4
+	/1PatcXeMgVXwINcJ3mqJOuSjbasrjmVunvydqJYREZlB+gCA7FAJcLe858zKxZMA1E7ekiaQ8A
+	HfIpgsmeCVQ==
+X-Received: from dlbts23-n1.prod.google.com ([2002:a05:7022:b057:10b0:12a:796d:c7e4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2507:b0:128:bac0:2edf
+ with SMTP id a92af1059eb24-12a726cfa29mr4106254c88.34.1774141113098; Sat, 21
+ Mar 2026 17:58:33 -0700 (PDT)
+Date: Sat, 21 Mar 2026 17:58:19 -0700
+In-Reply-To: <CAP-5=fUsaORbZuCtUxFgzMT-Cn2jVDLYfcYGSkXC7TdtyfnatQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <abxs-2rozL1tBEO1@google.com> <20260321234220.848859-1-irogers@google.com>
+References: <CAP-5=fUsaORbZuCtUxFgzMT-Cn2jVDLYfcYGSkXC7TdtyfnatQ@mail.gmail.com>
 X-Mailer: git-send-email 2.53.0.959.g497ff81fa9-goog
-Message-ID: <20260321234220.848859-3-irogers@google.com>
-Subject: [PATCH v1 2/2] tools build: Remove libunwind feature tests
+Message-ID: <20260322005823.981079-1-irogers@google.com>
+Subject: [PATCH v2 0/4] perf hashmap: Separate perf's hashmap code from libbpf
 From: Ian Rogers <irogers@google.com>
-To: namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
-	alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
-	andrew.jones@oss.qualcomm.com, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
-	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
-	howardchu95@gmail.com, irogers@google.com, james.clark@linaro.org, 
-	john.g.garry@oracle.com, jolsa@kernel.org, leo.yan@linux.dev, 
-	libunwind-devel@nongnu.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, mingo@redhat.com, palmer@dabbelt.com, 
-	peterz@infradead.org, pjw@kernel.org, shimin.guo@skydio.com, 
-	tglozar@redhat.com, tmricht@linux.ibm.com, will@kernel.org, amadio@gentoo.org, 
-	yuzhuo@google.com
+To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org
+Cc: alexander.shishkin@linux.intel.com, alexei.starovoitov@gmail.com, 
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
+	eddyz87@gmail.com, haoluo@google.com, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, martin.lau@linux.dev, memxor@gmail.com, 
+	sdf@fomichev.me, song@kernel.org, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Libunwind support has been removed from perf, so the feature tests
-used to detect its presence are no longer needed. Remove the
-test-libunwind-*.c files and their references in the feature Makefile.
+The hashmap code as-is violates the C specification meaning
+ -fno-strict-aliasing is required or fixes sent in:
+https://lore.kernel.org/lkml/20260321024446.692008-1-irogers@google.com/
+    
+We're looking to not build perf with -fno-strict-aliasing:
+https://lore.kernel.org/lkml/20260320224248.536449-1-irogers@google.com/
+    
+There is also the continual problem with hashmap using errptrs rather
+than errno introducing subtle bugs as shown in commits,
+  d05073adda0f perf trace: Avoid an ERR_PTR in syscall_stats
+  96f202eab813 perf trace: Fix IS_ERR() vs NULL check bug
+  9f3c16a430e8 perf expr: Fix return value of ids__new()
+but there are additional fixes on the mailing list.
+https://lore.kernel.org/lkml/20250805063209.3678359-1-linmq006@gmail.com/
+    
+Allow the perf version of hashmap diverge from libbpf's so that we can
+fix its issues. This means that perf has a dependency on libbpf that
+has strict aliasing violations, no -fno-strict-alias or the fixes, but
+you can bring a horse to water, you can't make it drink.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/build/feature/Makefile                  | 31 -------------------
- tools/build/feature/test-libunwind-aarch64.c  | 27 ----------------
- tools/build/feature/test-libunwind-arm.c      | 28 -----------------
- .../test-libunwind-debug-frame-aarch64.c      | 17 ----------
- .../feature/test-libunwind-debug-frame-arm.c  | 17 ----------
- .../feature/test-libunwind-debug-frame.c      | 17 ----------
- tools/build/feature/test-libunwind-x86.c      | 28 -----------------
- tools/build/feature/test-libunwind-x86_64.c   | 28 -----------------
- tools/build/feature/test-libunwind.c          | 28 -----------------
- 9 files changed, 221 deletions(-)
- delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
- delete mode 100644 tools/build/feature/test-libunwind-arm.c
- delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarch64.c
- delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.c
- delete mode 100644 tools/build/feature/test-libunwind-debug-frame.c
- delete mode 100644 tools/build/feature/test-libunwind-x86.c
- delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
- delete mode 100644 tools/build/feature/test-libunwind.c
+v1: https://lore.kernel.org/lkml/20260321024446.692008-1-irogers@google.com/
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 1fbcb3ce74d2..37b972526987 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -36,14 +36,6 @@ FILES=                                          \
-          test-libtraceevent.bin                 \
-          test-libcpupower.bin                   \
-          test-libtracefs.bin                    \
--         test-libunwind.bin                     \
--         test-libunwind-debug-frame.bin         \
--         test-libunwind-x86.bin                 \
--         test-libunwind-x86_64.bin              \
--         test-libunwind-arm.bin                 \
--         test-libunwind-aarch64.bin             \
--         test-libunwind-debug-frame-arm.bin     \
--         test-libunwind-debug-frame-aarch64.bin \
-          test-pthread-attr-setaffinity-np.bin   \
-          test-pthread-barrier.bin		\
-          test-stackprotector-all.bin            \
-@@ -203,29 +195,6 @@ $(OUTPUT)test-libnuma.bin:
- $(OUTPUT)test-numa_num_possible_cpus.bin:
- 	$(BUILD) -lnuma
- 
--$(OUTPUT)test-libunwind.bin:
--	$(BUILD) -lelf -llzma
--
--$(OUTPUT)test-libunwind-debug-frame.bin:
--	$(BUILD) -lelf -llzma
--$(OUTPUT)test-libunwind-x86.bin:
--	$(BUILD) -lelf -llzma -lunwind-x86
--
--$(OUTPUT)test-libunwind-x86_64.bin:
--	$(BUILD) -lelf -llzma -lunwind-x86_64
--
--$(OUTPUT)test-libunwind-arm.bin:
--	$(BUILD) -lelf -llzma -lunwind-arm
--
--$(OUTPUT)test-libunwind-aarch64.bin:
--	$(BUILD) -lelf -llzma -lunwind-aarch64
--
--$(OUTPUT)test-libunwind-debug-frame-arm.bin:
--	$(BUILD) -lelf -llzma -lunwind-arm
--
--$(OUTPUT)test-libunwind-debug-frame-aarch64.bin:
--	$(BUILD) -lelf -llzma -lunwind-aarch64
--
- $(OUTPUT)test-libslang.bin:
- 	$(BUILD) -lslang
- 
-diff --git a/tools/build/feature/test-libunwind-aarch64.c b/tools/build/feature/test-libunwind-aarch64.c
-deleted file mode 100644
-index 323803f49212..000000000000
---- a/tools/build/feature/test-libunwind-aarch64.c
-+++ /dev/null
-@@ -1,27 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-aarch64.h>
--#include <stdlib.h>
--
--extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
--					       unw_word_t ip,
--					       unw_dyn_info_t *di,
--					       unw_proc_info_t *pi,
--					       int need_unwind_info, void *arg);
--
--#define dwarf_search_unwind_table UNW_OBJ(dwarf_search_unwind_table)
--
--static unw_accessors_t accessors;
--
--int main(void)
--{
--	unw_addr_space_t addr_space;
--
--	addr_space = unw_create_addr_space(&accessors, 0);
--	if (addr_space)
--		return 0;
--
--	unw_init_remote(NULL, addr_space, NULL);
--	dwarf_search_unwind_table(addr_space, 0, NULL, NULL, 0, NULL);
--
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-arm.c b/tools/build/feature/test-libunwind-arm.c
-deleted file mode 100644
-index cb378b7d6866..000000000000
---- a/tools/build/feature/test-libunwind-arm.c
-+++ /dev/null
-@@ -1,28 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-arm.h>
--#include <stdlib.h>
--
--extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
--					       unw_word_t ip,
--					       unw_dyn_info_t *di,
--					       unw_proc_info_t *pi,
--					       int need_unwind_info, void *arg);
--
--
--#define dwarf_search_unwind_table UNW_OBJ(dwarf_search_unwind_table)
--
--static unw_accessors_t accessors;
--
--int main(void)
--{
--	unw_addr_space_t addr_space;
--
--	addr_space = unw_create_addr_space(&accessors, 0);
--	if (addr_space)
--		return 0;
--
--	unw_init_remote(NULL, addr_space, NULL);
--	dwarf_search_unwind_table(addr_space, 0, NULL, NULL, 0, NULL);
--
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-debug-frame-aarch64.c b/tools/build/feature/test-libunwind-debug-frame-aarch64.c
-deleted file mode 100644
-index 36d6646c185e..000000000000
---- a/tools/build/feature/test-libunwind-debug-frame-aarch64.c
-+++ /dev/null
-@@ -1,17 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-aarch64.h>
--#include <stdlib.h>
--
--extern int
--UNW_OBJ(dwarf_find_debug_frame) (int found, unw_dyn_info_t *di_debug,
--				 unw_word_t ip, unw_word_t segbase,
--				 const char *obj_name, unw_word_t start,
--				 unw_word_t end);
--
--#define dwarf_find_debug_frame UNW_OBJ(dwarf_find_debug_frame)
--
--int main(void)
--{
--	dwarf_find_debug_frame(0, NULL, 0, 0, NULL, 0, 0);
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-debug-frame-arm.c b/tools/build/feature/test-libunwind-debug-frame-arm.c
-deleted file mode 100644
-index 8696e48e1268..000000000000
---- a/tools/build/feature/test-libunwind-debug-frame-arm.c
-+++ /dev/null
-@@ -1,17 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-arm.h>
--#include <stdlib.h>
--
--extern int
--UNW_OBJ(dwarf_find_debug_frame) (int found, unw_dyn_info_t *di_debug,
--				 unw_word_t ip, unw_word_t segbase,
--				 const char *obj_name, unw_word_t start,
--				 unw_word_t end);
--
--#define dwarf_find_debug_frame UNW_OBJ(dwarf_find_debug_frame)
--
--int main(void)
--{
--	dwarf_find_debug_frame(0, NULL, 0, 0, NULL, 0, 0);
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-debug-frame.c b/tools/build/feature/test-libunwind-debug-frame.c
-deleted file mode 100644
-index efb55cdd8d01..000000000000
---- a/tools/build/feature/test-libunwind-debug-frame.c
-+++ /dev/null
-@@ -1,17 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind.h>
--#include <stdlib.h>
--
--extern int
--UNW_OBJ(dwarf_find_debug_frame) (int found, unw_dyn_info_t *di_debug,
--				 unw_word_t ip, unw_word_t segbase,
--				 const char *obj_name, unw_word_t start,
--				 unw_word_t end);
--
--#define dwarf_find_debug_frame UNW_OBJ(dwarf_find_debug_frame)
--
--int main(void)
--{
--	dwarf_find_debug_frame(0, NULL, 0, 0, NULL, 0, 0);
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-x86.c b/tools/build/feature/test-libunwind-x86.c
-deleted file mode 100644
-index e5e0f6c89637..000000000000
---- a/tools/build/feature/test-libunwind-x86.c
-+++ /dev/null
-@@ -1,28 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-x86.h>
--#include <stdlib.h>
--
--extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
--					       unw_word_t ip,
--					       unw_dyn_info_t *di,
--					       unw_proc_info_t *pi,
--					       int need_unwind_info, void *arg);
--
--
--#define dwarf_search_unwind_table UNW_OBJ(dwarf_search_unwind_table)
--
--static unw_accessors_t accessors;
--
--int main(void)
--{
--	unw_addr_space_t addr_space;
--
--	addr_space = unw_create_addr_space(&accessors, 0);
--	if (addr_space)
--		return 0;
--
--	unw_init_remote(NULL, addr_space, NULL);
--	dwarf_search_unwind_table(addr_space, 0, NULL, NULL, 0, NULL);
--
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind-x86_64.c b/tools/build/feature/test-libunwind-x86_64.c
-deleted file mode 100644
-index 62ae4db597dc..000000000000
---- a/tools/build/feature/test-libunwind-x86_64.c
-+++ /dev/null
-@@ -1,28 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind-x86_64.h>
--#include <stdlib.h>
--
--extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
--					       unw_word_t ip,
--					       unw_dyn_info_t *di,
--					       unw_proc_info_t *pi,
--					       int need_unwind_info, void *arg);
--
--
--#define dwarf_search_unwind_table UNW_OBJ(dwarf_search_unwind_table)
--
--static unw_accessors_t accessors;
--
--int main(void)
--{
--	unw_addr_space_t addr_space;
--
--	addr_space = unw_create_addr_space(&accessors, 0);
--	if (addr_space)
--		return 0;
--
--	unw_init_remote(NULL, addr_space, NULL);
--	dwarf_search_unwind_table(addr_space, 0, NULL, NULL, 0, NULL);
--
--	return 0;
--}
-diff --git a/tools/build/feature/test-libunwind.c b/tools/build/feature/test-libunwind.c
-deleted file mode 100644
-index 53fd26614ff0..000000000000
---- a/tools/build/feature/test-libunwind.c
-+++ /dev/null
-@@ -1,28 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <libunwind.h>
--#include <stdlib.h>
--
--extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
--                                      unw_word_t ip,
--                                      unw_dyn_info_t *di,
--                                      unw_proc_info_t *pi,
--                                      int need_unwind_info, void *arg);
--
--
--#define dwarf_search_unwind_table UNW_OBJ(dwarf_search_unwind_table)
--
--static unw_accessors_t accessors;
--
--int main(void)
--{
--	unw_addr_space_t addr_space;
--
--	addr_space = unw_create_addr_space(&accessors, 0);
--	if (addr_space)
--		return 0;
--
--	unw_init_remote(NULL, addr_space, NULL);
--	dwarf_search_unwind_table(addr_space, 0, NULL, NULL, 0, NULL);
--
--	return 0;
--}
+Ian Rogers (4):
+  perf build: Don't check difference of perf and libbpf hashmap
+  perf hashmap: Rename hashmap to perf_hashmap to avoid libbpf conflict
+  perf hashmap: Fix strict aliasing violations in hashmap
+  perf hashmap: Remove errptr usage from hashmap
+
+ tools/perf/builtin-ftrace.c           |  20 ++--
+ tools/perf/builtin-trace.c            |  32 +++---
+ tools/perf/check-headers.sh           |   4 -
+ tools/perf/tests/expr.c               |  68 ++++++-------
+ tools/perf/tests/pmu-events.c         |   8 +-
+ tools/perf/ui/browsers/annotate.c     |  16 +--
+ tools/perf/util/Build                 |   9 --
+ tools/perf/util/annotate.c            |  18 ++--
+ tools/perf/util/annotate.h            |   6 +-
+ tools/perf/util/bpf-trace-summary.c   |  30 +++---
+ tools/perf/util/bpf_lock_contention.c |  14 +--
+ tools/perf/util/evsel.c               |   8 +-
+ tools/perf/util/evsel.h               |   4 +-
+ tools/perf/util/expr.c                |  68 ++++++-------
+ tools/perf/util/expr.h                |  12 +--
+ tools/perf/util/expr.y                |   2 +-
+ tools/perf/util/fncache.c             |  16 +--
+ tools/perf/util/ftrace.h              |   2 +-
+ tools/perf/util/hashmap.c             | 126 +++++++++++------------
+ tools/perf/util/hashmap.h             | 138 +++++++++++++-------------
+ tools/perf/util/hwmon_pmu.c           |  44 ++++----
+ tools/perf/util/metricgroup.c         |  30 +++---
+ tools/perf/util/pmu.c                 |  30 +++---
+ tools/perf/util/pmu.h                 |   4 +-
+ tools/perf/util/s390-sample-raw.c     |  14 +--
+ tools/perf/util/stat.c                |  10 +-
+ tools/perf/util/threads.c             |  24 ++---
+ tools/perf/util/threads.h             |   2 +-
+ 28 files changed, 379 insertions(+), 380 deletions(-)
+
 -- 
 2.53.0.959.g497ff81fa9-goog
 
