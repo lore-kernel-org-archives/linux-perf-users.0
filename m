@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12D33B27FF;
-	Mon, 23 Mar 2026 15:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6362C3B2FE3;
+	Mon, 23 Mar 2026 15:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774278852; cv=none; b=gayxp2ZHl2gI4s+NGN1zvZ/q3OMIGe3PuA3xqYTNgYU6Ej1CjRg/fvT0CpEImUNF5/ob0w8yB0uVh8WGdVOlBVDjqKqVfXBKyAj83NZZ3X/ahBOmdLwxSxfHmRC59kR8Y9Arphy9i/e+6urQhJ9iCEemYPvx/kWSt6AR5WQKz1I=
+	t=1774278859; cv=none; b=kyH0Q8Vp7WLsCJqfcAacowk34FLv/9XMhxJK3vP7XgZhod313/qRjxSklyMxaap290De4PRpYTlb5IWjDN6ALMcOOFfPGoFW1Ggh6qsAdXvcG81NzEgCCXYJtAtWEtYRyiLhJGtiOEOTKD+MDuuaKM/ikrQlxmAh7XyHyXHJjpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774278852; c=relaxed/simple;
-	bh=HHiufcx01zjsi7OxV3Txr2WMedIY5n8R+m3Nlsc8pBA=;
+	s=arc-20240116; t=1774278859; c=relaxed/simple;
+	bh=BFehMj28QR2IYXlxOIJtUAyqZ+kYk51QCcp6lZ5W+HY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U6HDkrdkJBAMS/C/34OdyPoOcCfv7gW6Swgvly0U7jipUjiWGKba+dX/BK6hAt574BRPKu+s2TCjKH9R3DFKpDg/hGI8lPCi/RAMVCEQiRHiw26qF/C7ELS0dStUImVSDGavlgv+RZo0H2aNKFpOAkDmhLCTX1vag+p0P0cJL2o=
+	 In-Reply-To:To:Cc; b=QV7Bvq+4R6uU2B46+g8veMAr4dNf3WPjBuAZEZ3+ELa9lJV5MZXzjT/zJv7Md4bbKDaeF+s8v+7zm9+geF/6tM7GRErXCECHzLSCuJEncqz7cVwaXWyNLxKmB9vJD7onEzN0d3Gr5/8iWnoFrQc3ul7U/Lsc+wrcSW10zDesL5Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 658031756;
-	Mon, 23 Mar 2026 08:14:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAE8B16A3;
+	Mon, 23 Mar 2026 08:14:11 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2847E3F694;
-	Mon, 23 Mar 2026 08:14:03 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DD9A3F694;
+	Mon, 23 Mar 2026 08:14:10 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 23 Mar 2026 15:13:24 +0000
-Subject: [PATCH v6 03/24] tools: lib: thermal: Initialize CFLAGS before
- including Makefile.include
+Date: Mon, 23 Mar 2026 15:13:25 +0000
+Subject: [PATCH v6 04/24] tools/thermal: Initialize CFLAGS before including
+ Makefile.include
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260323-tools_build_fix_zero_init-v6-3-235858c51af9@arm.com>
+Message-Id: <20260323-tools_build_fix_zero_init-v6-4-235858c51af9@arm.com>
 References: <20260323-tools_build_fix_zero_init-v6-0-235858c51af9@arm.com>
 In-Reply-To: <20260323-tools_build_fix_zero_init-v6-0-235858c51af9@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -75,11 +75,11 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774278819; l=2051;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774278819; l=1994;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=HHiufcx01zjsi7OxV3Txr2WMedIY5n8R+m3Nlsc8pBA=;
- b=i5YuBBtCcjN1uSCuCzVdTeJuZwYbEKy1ip0iqLL9JBH9QSprjyQ+sZSq88rp3ychtYGBMb/wg
- t/tEyFSSGe5Bt7cKeVJwlJDUFEA0ltnt1H3dnNdQzXdgzd7nKnEAeto
+ bh=BFehMj28QR2IYXlxOIJtUAyqZ+kYk51QCcp6lZ5W+HY=;
+ b=XEE2aMp5aLmjQ3GsTDbXJ8ihF3x6Ydn5ONySXwAJA8UURgi2TXFvBPTMZHqRXxmCFbTO+8+44
+ WI5ZeM1VOxDAlDMWOVUmj6agnbkKnTCxarMVjo8V/OLA/LqJhGrZDN7
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
@@ -99,13 +99,13 @@ override the default options.
 Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/lib/thermal/Makefile | 16 +++++++++-------
+ tools/thermal/lib/Makefile | 16 +++++++++-------
  1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 09d8f4ba6a0ab7ab9c99ac7f64d52d0268bee340..b55fa42cefa47628b7f2fac32fc08fcd82580a0e 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
+diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
+index 8c9a37f999b826855dad11c0d9574b41d5b24244..333b711bc7f0f9610e165ff7dc72c42980c59c99 100644
+--- a/tools/thermal/lib/Makefile
++++ b/tools/thermal/lib/Makefile
 @@ -23,6 +23,14 @@ INSTALL = install
  DESTDIR ?=
  DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
@@ -132,11 +132,11 @@ index 09d8f4ba6a0ab7ab9c99ac7f64d52d0268bee340..b55fa42cefa47628b7f2fac32fc08fcd
 -  CFLAGS := -g -Wall
 -endif
 -
- NL3_CFLAGS = $(shell pkg-config --cflags libnl-3.0 2>/dev/null)
- ifeq ($(NL3_CFLAGS),)
- NL3_CFLAGS = -I/usr/include/libnl3
-@@ -68,6 +69,7 @@ override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
+ INCLUDES = \
+ -I/usr/include/libnl3 \
+ -I$(srctree)/tools/lib/thermal/include \
+@@ -62,6 +63,7 @@ override CFLAGS += -fPIC
+ override CFLAGS += $(INCLUDES)
  override CFLAGS += -Wl,-L.
  override CFLAGS += -Wl,-lthermal
 +override CFLAGS += $(EXTRA_CFLAGS)
