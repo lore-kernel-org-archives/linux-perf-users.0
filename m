@@ -1,225 +1,145 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D245539D6D2
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 12:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774268685; cv=none; b=DAJhbmUEjs+vHHeQVzL4s+h/OB+7R3n3G3aLzxjbMvcFezWONghk8Po+T22Ep+dXIpcG96Ut3tkS2Dv49w2609U+RQIwn2AozIRC9Uu2avGF0iLf5LNUk6QmS+pQ0/Q3Eo3os0STCtxxKRC8IBhnrhhfQNO5YGhc3bmKZDYuxxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774268685; c=relaxed/simple;
-	bh=unGWbZOaUuZhXh6LcCWGBbS1w0bVZpwHy1st27Id1QI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y8xiu8Z8bjRolRKhPuPR3QoHzjTWiJgwzVJhPoI32qQikAjKotsbZVeMYjMtS2Z5EyFUJlr0gWIHg0lDVEvjPvSMV4oCzFT3QKDfS9TuFu+i6NeiidPopPDUbUpJyT/pNq6UyGb4Q9pknrs9tkyhv5Pexypunx1vfCptJGmsuBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fTcu/ZB8; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4FE3B0AC7
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 14:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774275371; cv=pass; b=t43jPHaV81PdwN9UWuNl41R4n+Jd7d1vXH1Wdd8rntJKbkQ0E/xGN5drR31O8oKhuViReZyZMh5oW+gZ0wFIkC0unSR3ekS4UdaZ5TtODgrzw2tqfATV86tsCvpxvvGWMc/P8J3ItPjoDEzaxaojlXcqfjX/8cj6m7YCpSg7fqc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774275371; c=relaxed/simple;
+	bh=1nIqdRIK+bdOJEY5Yuv7/zhGEajgtRCx1Do8WfIUy7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K9mnRcSWTf9fZNe38YtEEcLzF21N9JIEClSHbqQRkMQTAc1Z4cTkjWXsCSY9X2fxpFLNTz5iwiYo18vYNAYvrp9tgFG/XbfOWVeSDKo5MeX3b0bgCk4ZQaaW9HG797iOdAc1btX0bsUWRnOJ3eNz71tKfZug6C5N5xan/ftDAVg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hQGwWlgB; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=g7T8VkK/; arc=pass smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fTcu/ZB8"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62MLGB3v415280;
-	Mon, 23 Mar 2026 12:24:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=z6SgLbYUDqPGxGeE/U9+Advc7KQ1OyZKc+TkwM3oe
-	FM=; b=fTcu/ZB8F5nkSY/B5yV2MWxqpXBAy4bg4NAuoFC319eAMCsuSA24sbtvT
-	cT0xZAFgtIoqxCRmijq7jtaodYz+qjiK/HyfnPjxMmhhblZyRgH1V7rxWCg6FXQt
-	WAIeqrU5M8R66YYGY8eqUBasqsDEWQ1VF4BC5ljDw6ag8RSf3oxK5hsGvQAJCT5J
-	Kc1CjiRP1xH0pfLFpWXVGolqN73YpjBs3WUuYVFnBaDJU5YoqqKshDPPSvf2WjPN
-	73HPCDlzo6mQRr9210ztn6E6uebJ3BeedDkAjRiqLDYczb1PowU+AMB6QVqb6W7q
-	lh2IIHOC77vxGWqsCMvbV6yhAZ2Qg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kumeg4y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Mar 2026 12:24:34 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62NBBLJp031592;
-	Mon, 23 Mar 2026 12:24:33 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d25nsnegg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Mar 2026 12:24:33 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62NCOT1r12583308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Mar 2026 12:24:29 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 576842004F;
-	Mon, 23 Mar 2026 12:24:29 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96E4B2004B;
-	Mon, 23 Mar 2026 12:24:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.222.130])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Mar 2026 12:24:26 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Subject: [PATCH V2] tools/perf/tests: Update test_adding_kernel.sh to handle proper debuginfo check
-Date: Mon, 23 Mar 2026 17:54:24 +0530
-Message-Id: <20260323122424.88068-1-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQGwWlgB";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="g7T8VkK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774275369;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imgXWCiXPKFseEHXN+izA67gyX9JBIBpeFg/nk4xdSA=;
+	b=hQGwWlgB/pBaZBibC2M4WJA5AyGwm8m7eODETmCOjDl926/HzRDL0Dkt3SZ2Y1I6V8VmNr
+	ailu2UhZ/fjgpmpU0BwV+rNOB7lVGej7Az1SKAH2cVNKKkwncvZxYYzYW6OzfaDE/0Teek
+	YNCBP7i2AMK+QLqCFoiJ5g18nf5mAzU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-573-6v9TK0E8PmqnY70vNF4YSA-1; Mon, 23 Mar 2026 10:16:08 -0400
+X-MC-Unique: 6v9TK0E8PmqnY70vNF4YSA-1
+X-Mimecast-MFC-AGG-ID: 6v9TK0E8PmqnY70vNF4YSA_1774275367
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b940da8ec09so27422466b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 07:16:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774275366; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DQGFr0O7urUZHfGjuCs3Mw/tNxWuwmgXQEyl1rUp3qxEvWQvgzHAv2H6wNKjSb1cAT
+         +muX8NyPfwm+pnDCWHXyGSydYIF5aXjQP5uo/0Q9MwBOLsiftBZYEEkuz+DjNnOzjOOH
+         XvMDIlPalFngO8Rx9oflcD33fkoLzibZPEQXo5MHhWVIaij1ajuYOpTWLAzYpt7sNzhq
+         eC381pKTEiVMGbmpmhayzCXtFKextFEOlaDHYZsZXvBm/f3q1/6TgnJBapwAOKSacqH3
+         Q2IyfOHIw4nQ95rOnIVK0MdZDUDT88TnCv2oPBFbV7u0p++586pZTgXfQoHH+tWHHFWM
+         XCfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=imgXWCiXPKFseEHXN+izA67gyX9JBIBpeFg/nk4xdSA=;
+        fh=AysCU0GoPfLOtBi/gIM9JvcJ2byKjpA6Q85uQm1vGio=;
+        b=Cl0H/8xSUZrGKrAxHZ+8r1GwdWbgEDlbPw1BrAc54l/Kk+W/sb4L7CXRHtFRex16aJ
+         /LIQ0xgYF7cyRZpR1QC8QipibqB1hfTnas70g5Moz3awEz2zjKzs9DDnA7iOR28wrYGT
+         p7JxgWGvc91xuI/Mw6+JhCNoouG7BXfbFe/NPvQpxAbGDogEs3GWL4cgv8s88yQK7Vwc
+         1yUlTPlvPTvwYaJNpLPD2J2Q80QrkztgSA+0LkpfG3PUOLzxz5DYU6/bfuTOnF1cNiHb
+         i9x2I/H5DW5DPJJBfNaaRhtEKOyC6Z9DcAPMj/FDr7lYk8toHMdpaOB0FhOeY8KXdyLu
+         OM1A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1774275366; x=1774880166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=imgXWCiXPKFseEHXN+izA67gyX9JBIBpeFg/nk4xdSA=;
+        b=g7T8VkK/RJ4ORRgvlght4itJJgup/BLu+Jsxy5DAA1QmM9Ra6fwSseiddsraZtDMhX
+         9gGLOWaMNH7rshK2k1/OCJcAXvi5zz79rNktTwEdRpdMWoubz1qJB8SI8CIqg4iHQTZT
+         SoF4wVNVqEwuio8L/OLBu3/oTv1AZv10vd6d4+Uix67IG7NGVPW58/vuQYqqIGqAAapD
+         4xJq5ceaJBSjOVbGI4Jkv6/Lt5v4iEhu07sirl7D9JD69RrJDbqpFGTZlStosenJzbLL
+         vUjdQ983DuE53EQTbizKwyaOEERgiAzWWXt+ZOGFs1LEOi9Phe1Wzv1+jeL91/TTtVz5
+         FwGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774275366; x=1774880166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=imgXWCiXPKFseEHXN+izA67gyX9JBIBpeFg/nk4xdSA=;
+        b=lnEymBG0LuYJpo3eFh3x25wSkmywLvoPlTXrzocdfih0mKftqNPDZOkcAXSZRzxE4I
+         LypS7TTS2ET6LHBMtB1bsOk3Aqt6oXcr6MvkRCLJlU8m7dbVxKG/jSnVp5r97TDzhWdO
+         uT+czhz53wllupnQ/04resLXLTZDkbGRqFfraNjQhJ4CGRI1LCWnRveh4DpCWFH/HwdY
+         JwzW/wFByRa7UFlkSU5ywkAm1KCarYZNrctJw1nCvKCVRPWafxYjjB2eSLgPRDGaDsRs
+         +z/vkVDJ62BwuSwePgvq1vi85QKeXZcXAg1jOTRPQe7gSBCGbEDOtWTDmRiKgyJnU+0a
+         43Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+SRl7PHgIEHbd0TsUbVj7+x09Dithl0Xmp57iDHSVXre2hWb7IaRAScoazjHHygchgHj+bR5KaUqK1Np7sRSj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkZsp3yAghkmFEqCJgsz1vOFsRVH0WrlbLHEioxl7GhGE5USNL
+	WkdYvXZ5b8KvxNjkEtMTgVJmhsOog8A9kWFj5BTcR+M2MZr04veM8r5/nbX4aL05tYixV2ttwYx
+	XUkVjaofL/KRc0iLGOAygdi9OQDTAinqfqtDcfpSJMsJDYH+0BgnRSDwodOdurxMP/QoSMF57dl
+	HweWL8unp/6TKxBVkdxbBf6Y8JdaUgzsrQHdLWtIp1XcpJ53D7cclwxg==
+X-Gm-Gg: ATEYQzzQ88iQ0MfWDy5YzVZ8yp8odud115vI0mwmBbLCH2D8A/wrp2Mc2VndySxqjet
+	+06V+oJU0YCd/Nu+BJ4XbKBHOvCQossWNe5z7F+0I29IZswUocep7Dv5ZPCVBqt72MDyzqAv81c
+	GzvPsEpyZHwjBiWWFK4GRYCxXa80EtY5vcy2Eow3smdscI5opi6WD5Z1xa5J5LoefAm5Az9R/ri
+	EDbBQ==
+X-Received: by 2002:a17:906:e94a:b0:b98:1b:5157 with SMTP id a640c23a62f3a-b982f28b1aemr705654066b.23.1774275366361;
+        Mon, 23 Mar 2026 07:16:06 -0700 (PDT)
+X-Received: by 2002:a17:906:e94a:b0:b98:1b:5157 with SMTP id
+ a640c23a62f3a-b982f28b1aemr705652166b.23.1774275365877; Mon, 23 Mar 2026
+ 07:16:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 0IuV7QVQEzjkYDzoBN0cHa-UXOuMnVNc
-X-Proofpoint-ORIG-GUID: 5YWDhPIAUIOY5zunGHzgCnz7SjuMU7Cd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA5NSBTYWx0ZWRfX9MQg/yrfA+eV
- Vbiump5d9YNTxjugaska9+bkF226WMu9ndpg5T48YML1rv+Vyj/n6MwxzaT1dXkotgM3ZCKyBcH
- xRp+ezW5NxgYRCbKkWtG/9fvU/P4NQ/VSjDGYBJ8m7KJbTvaHtwoL8xUBM9LCMuDzkLENmkPUKf
- hM/gkeh0cD6fWcudVI4khZEovm+N+mO6Z/pLGUpLNKxEwlGMXwD3xFNpBC/YlBJDnn8Y3poEslJ
- 0Su00CQFbkSmba0NHVn0TrWtbcD8jIsH1o6yPRDdt+F1U5FeB4wGmL+QomzFqrS2NjpEqh5z/aF
- ar0KLSXK66KhvqS+08FbvLKvClqG9ojg3p+jEwxCEdcYjfvl4NOP2u/b6R4ZgYwxN0VBEgIBAbf
- J0bu+fkngB8zJ0dd0gAqB91dcP4sPPzqNAN6igKds1PZaF4fztNTLLaQp23csuUBRr+IzwJ35A+
- prhy0cyhb1BkFA5EC3Q==
-X-Authority-Analysis: v=2.4 cv=KbXfcAYD c=1 sm=1 tr=0 ts=69c13102 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
- a=djXmuU_IFq0narE4Ot4A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-23_03,2026-03-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230095
+References: <20260320150651.51057-1-tglozar@redhat.com> <20260320150651.51057-4-tglozar@redhat.com>
+ <ab2D0a32yuwYTO1K@192.168.0.121>
+In-Reply-To: <ab2D0a32yuwYTO1K@192.168.0.121>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 23 Mar 2026 15:15:54 +0100
+X-Gm-Features: AaiRm51OaCr12M7bKmgPO5zKGS_Ot5Z_5dmTG4KQ7CY2nbc36ZRPKUfpZq_CCcY
+Message-ID: <CAP4=nvSqarP3JtCqkvMeH3wmM08pTWADBSJR0RVN8b7FXYXZeg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Perf test perftool-testsuite_probe fails as below:
+p=C3=A1 20. 3. 2026 v 18:32 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+> [snip]
+>
+> > -int getopt_auto(int argc, char **argv, const struct option *long_opts)=
+;
+> >  int common_parse_options(int argc, char **argv, struct common_params *=
+common);
+>
+>
+> The function common_parse_options() body was removed, but the declaration=
+ remains.
+>
+> >  int common_apply_config(struct osnoise_tool *tool, struct common_param=
+s *params);
+>
+> [snip]
+>
 
- Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
- -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
- -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
- Regexp not found: "probe:vfs_mknod"
- Regexp not found: "probe:vfs_create"
- Regexp not found: "probe:vfs_rmdir"
- Regexp not found: "probe:vfs_link"
- Regexp not found: "probe:vfs_write"
- -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
- Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
- Regexp not found: "in this function|at this address"
- -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
- ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
+Thanks for noticing that, I will fix that in v2 that will be needed either =
+way.
 
-Further analysing, the failed testcase is for "test_adding_kernel".
-If the kernel debuginfo is missing, perf probe fails as below:
-
-perf probe -nf --max-probes=512 -a 'vfs_* $params'
-Failed to find the path for the kernel: No such file or directory
-  Error: Failed to add events.
-
-skip_if_no_debuginfo has check to handle whether debuginfo is present
-and the testcase checks for debuginfo since this :
-commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
-testcases fail when kernel debuginfo is not present")
-
-Recently a change got added in "tests/shell/lib/probe_vfs_getname.sh"
-via this another fix:
-commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
-line detected")
-Since this commit, first add_probe_vfs_getname is used to prevent false
-failures. And based on return code of add_probe_vfs_getname, skip_if_no_debuginfo
-is used to skip testcase if debuginfo is present. And this modified other
-testcases to call add_probe_vfs_getname first and invoke
-skip_if_no_debuginfo based on return value.
-
-The tests in test_adding_kernel.sh which depends on presence of
-debuginfo are:
-1. probe add for inode_permission
-2. probe max-probes option using 'vfs_* $params'
-3. non-existing variable probing
-
-For these tests, probe check for specific line is not required.
-So call skip_if_no_debuginfo with argument to say if line check is
-needed. This is to convey to skip_if_no_debuginfo() function
-that test only needs to check for debuginfo, and not specifically
-line number. Update skip_if_no_debuginfo to use simple "perf probe"
-check if test only needs to check for debuginfo. And for other
-tests which rely on line number, use add_probe_vfs_getname()
-
-With the change, verified that only three which required debuginfo only
-is skipped and others ran successfully. Also tested with debuginfo
-to make sure tests are not skipped.
-
-Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changelog:
-- First version used "perf probe -v -L getname_flags" for debuginfo
-  check. This will not catch fail string "Debuginfo-analysis is not
-supported" which is used in cases when perf is built without dwarf.
- So use "perf probe -vn add inode_permission" to capture cases when
- tools built with NO_LIBDWARF=1. This will capture debuginfo missing as
-well as tool built without dwarf case.
-
- .../tests/shell/base_probe/test_adding_kernel.sh  | 15 ++++++++++++++-
- tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-index 555a825d55f2..f3db125c8669 100755
---- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-+++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-@@ -23,10 +23,23 @@ TEST_RESULT=0
- . "$DIR_PATH/../lib/probe_vfs_getname.sh"
- 
- TEST_PROBE=${TEST_PROBE:-"inode_permission"}
-+PROBE_NO_LINE_CHECK=1
- 
- # set NO_DEBUGINFO to skip testcase if debuginfo is not present
- # skip_if_no_debuginfo returns 2 if debuginfo is not present
--skip_if_no_debuginfo
-+#
-+# The perf probe checks which depends on presence of debuginfo and
-+# used in this testcase are:
-+# 1. probe add for inode_permission
-+# 2. probe max-probes option using 'vfs_* $params'
-+# 3. non-existing variable probing
-+#
-+# For these tests, probe check for specific line is not
-+# required ( add_probe_vfs_getname does that ). So call
-+# skip_if_no_debuginfo with argument as 1. This is to convey
-+# that test only needs to check for debuginfo, and not specifically
-+# line number
-+skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
- if [ $? -eq 2 ]; then
- 	NO_DEBUGINFO=1
- fi
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 88cd0e26d5f6..8ae2ea2bc8a2 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -39,7 +39,18 @@ add_probe_vfs_getname() {
- }
- 
- skip_if_no_debuginfo() {
--	add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
-+	no_line_check=$1
-+	debug_str="^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)"
-+
-+	# search for debug_str using simple perf probe if the
-+	# test only needs to check for debuginfo, and not specifically
-+	# line number.
-+	if [ $no_line_check -eq 1 ]; then
-+		perf probe -vn add inode_permission 2>&1 | grep -E -q "$debug_str" && return 2
-+	else
-+		add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return 2
-+	fi
-+
- 	return 1
- }
- 
--- 
-2.47.3
+Tomas
 
