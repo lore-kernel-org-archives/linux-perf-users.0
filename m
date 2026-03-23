@@ -1,187 +1,447 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FC91FC101
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 14:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774275991; cv=pass; b=USXNJeqjP2PlmnANXPaaTnneFkW1dWZYlsvuM78UYWZV+vst3FpBiRu33ck2XyUSy3q2VhMgG3FKaiom0xdgCxWlM8eOhMPxCA6z4XeSkx7b9TqsJR7wj4hGytOpDFapVNrqs/q9aLW18MJHabnHnB433LxWMKHVmIMIuKZisOA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774275991; c=relaxed/simple;
-	bh=nlQk3Fo7l4wjv+7Ly6liOeonvctxsE9EFpAX/SSjx+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i+ui4ucG0mxyL/cSFkT0cES1cIvpE6zU3hfI/0+P/RwXiU+Xxo4GIYkXAViKgrGJGZg3n47ErRxcGljxFX60AGGijcxNdFpQaGpb7HItV+1yte38XIxjdtfEQXENYW9dX4Z0WnQ2XOIzIdw9tMFuFEJQ2arNVqaTEziJTFDv52k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ipvEiHc9; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=YtNwODxr; arc=pass smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912C93ACF03;
+	Mon, 23 Mar 2026 14:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774276586; cv=none; b=dJMOcyafEGnUDryLiudLllOhY9BMM5hlZBk5r19cYFs5UlUyCkWAO8xW0j7tAIw+7pFKweOQ9xMN3EUxUMr3Z5H1b+LDpT4k/UQraFDiOoTnCnXuVvoTcJSL5qNHaZxI94+Ug1EDOClkU8xqLnofdls/Kwf06w/CN0FrmrdXTss=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774276586; c=relaxed/simple;
+	bh=8bo40OUmEzaCMVbJOsVqLOEajqU4sMBo9QYog8uS4H0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrBo43GPScxR3UxDf732rROAdIHm3CSnKwVJVMCleE/AP8rrUMPj+ulj2K4P2jeTFe1+tycHl58zJBupMzZ33cZradQWZQvnCYN1M9CBgN1Hq7ckmvBZobSaFHqn2qFUppws9rbsi+T1QoiWInQ7PJAh+eIIhhMnxnMg36GSQnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Huhtr5VG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ipvEiHc9";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="YtNwODxr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774275988;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hPrayZ5bCR8SUVZWUxn9+RJQ5ap97Cb8RO+ppSHaOTs=;
-	b=ipvEiHc9uUJaCcIGLlyaqgAIjPICl5NCS1fXy0ROrBWYWiFjt0a6VsAYC+F760Bsu2vjvc
-	g/GVrDMLZpRJ3eyPASfHScJtJNwLXFycMK0IcUTBYRLTSPE2X0lxtn2jAMsXuQYNy+Eq4B
-	DxheqmuK5TfAaKZW2JjZduUxAQ6NB6M=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-2MXfnvl_N2aGSeIkUfNCUQ-1; Mon, 23 Mar 2026 10:26:27 -0400
-X-MC-Unique: 2MXfnvl_N2aGSeIkUfNCUQ-1
-X-Mimecast-MFC-AGG-ID: 2MXfnvl_N2aGSeIkUfNCUQ_1774275986
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b9399d68111so349537866b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 07:26:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774275986; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CVbVBaUBOavWhA5CMkgivugUbCsAAJ9njjMX09Fb199NOzGUQwaFR0v95U9ag3EsVO
-         8TZHGEussiu4y6g8fsckqvdfIU3UMjkcGjebCgq8Bd8NbgmGH9IV5lpG4LeBnCpR0eIB
-         WJQCcxyL3NBRfQtQSNkNYdg1xSn/dBo06RtFRVLl5NlZLR2M2fQJ8GPvXglREJt1cwDx
-         StFy95mD6AQFb2/lg9BPkMm+vQ/YOBq9QPLpXkG5B50LX6gATWJFX1PC4+Co5neD5JD7
-         j/Nw7DxhVLQGD2P9JMPfahCVvkuEu/iKmZI4DEl1FMHWSyzlrfPVjbux6dVsE+51vXWJ
-         U9Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=hPrayZ5bCR8SUVZWUxn9+RJQ5ap97Cb8RO+ppSHaOTs=;
-        fh=T1jubNAbGf3Mnb6ZgXsSpRKEHVY8FbL9Bd8pwouMZtE=;
-        b=HGwfDUPqaO4efsaym19hm1AENO35BeNKfVZmxPDsJpnsX0YG1RewPMYyuR7PR1ofP8
-         DN/4mWZN2Yv4rt1e6ERscrThACXn1fj/09nCk2aoMTCth4k0oE+b5hXpOEMO9amytOJa
-         TUqOpI7pnPwLo/BCKsi2LPfwhe7Qf+s5Xe9UPRmuHBNwKreKa7RQ7j/KiFMeMC9cw6tJ
-         FrG8PtcFOzy8januzltXaJsucCZc85d8xlHNn3qm7iPJ9NVTARq6gSYO0xm9KKjc6Ybw
-         3K5ADpCDLHTtMDagBenOi1YIJKL6Jri0TyUIjzaBZcvHq7Xoe1G9nLQdPZyL5sXYfmeG
-         eF7A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1774275986; x=1774880786; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hPrayZ5bCR8SUVZWUxn9+RJQ5ap97Cb8RO+ppSHaOTs=;
-        b=YtNwODxrSwinF8HULG36Y1XrQyPniDk/w3zZ4dqlDhPhsutydcVNc4vb8wUAWOB0mJ
-         NfdtUzZVhlfPuGDsF+Lekmr4yKqGmZMlmZ+d6mM73+OM0IVMuGmQKiSF4kxxoQkDjfLS
-         kbl2z61Q7Jft1/nnympc/lW9Xq4ta/lO/o5NT4vQ/x63nRNylDkmOz+c6cZ3vkahhwnb
-         BAtmVLpmDffU/R92wK8MrrTdLGpqa5b+JJXyPCl9ZRwsL0gYjrHXdKVU2SHJ84+Y03Q2
-         aTeKDhYSYpVv1LwWUGPtdi7Qu/mmV9xvtlTv9cw6JbsRJSsMxZPD5rvDqVaCCz99ZMvD
-         ZWqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774275986; x=1774880786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hPrayZ5bCR8SUVZWUxn9+RJQ5ap97Cb8RO+ppSHaOTs=;
-        b=OxvuvrVl15nxgBGhfHccCH0/wpFK2zizAyE6t0rAbR0Ga4LXTS5OL5RkbtYlByPOkq
-         4pwybbiv23YEMkOT++P+hotZoxDkWqSz346t9i9FKem/TAsu/1038tuMPlw6YeVWaVhi
-         4fT/TpHf9g7qYw35PyNtmGP2uNtmhIgT7VUyAMwv2gR/qQ2h7ttcM1kAtudAXR6ZWJID
-         KemH3xcqgQcYh1/XOsIB0/+J0rkLgq9E0qm8v6lzsmoDBjSUUhR0te+uSG4XdJ5SXiXs
-         CKvORRwEJGU/ahK3fs17RcjgQKLTBvpsyudV0Zc4pl5S3y0VFJRxgiHbhbaudnq0c49t
-         hBZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNtbajqvJsQgm+HDbBjdwQHKtuMFPqIlFKFPMWNKU/tMImBAbNZ9/f/05JJ98ni70l1BDUXVJt2y3McX/5ntck@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2pQV+bh01FxCITpOdZ7YqJFqGXelauNF4ZrzNv9okAHHx7wdF
-	xmpSdsCBxRH8YhaU8HyWNOuKyIOwUnYU3wZ0jSHdTAyvjFi8T2YcocFkaiXoGdPQvFeQh6T3O7q
-	MhD+/jCn8/GK+AwzlWeNGV7MRnDgV1eQSkFJVvp8GfrXsViJ+Rry4yGp+FWOjcy8x8yj4CtcasJ
-	zQ6gR8Jv8jeiNmHsBkUjzRHsdb9mTLdKfCZ/66UYRps1ztIw==
-X-Gm-Gg: ATEYQzx0z0bCQJjD28K9UxYuhZ5hDA1foZdPlm38A9meg4mbkPtZevLZ90Xyq0NkkjQ
-	OmXMU9VIr/Z0F4UCsiktnaH85kel6lVAh7a0iGpPfpDuhnWscbWCeNEAPkC7idVjdH1WNbg4sjM
-	HGMV0VoMElsKAvxcajT3UgxfYCyVEsoE1jCn1On552AO88TaSR5jrU5rYbC1N1fjZhBVL1bGJPl
-	8RSGw==
-X-Received: by 2002:a17:907:cf8a:b0:b98:32c1:246e with SMTP id a640c23a62f3a-b9832c15bb8mr887145166b.8.1774275986262;
-        Mon, 23 Mar 2026 07:26:26 -0700 (PDT)
-X-Received: by 2002:a17:907:cf8a:b0:b98:32c1:246e with SMTP id
- a640c23a62f3a-b9832c15bb8mr887141766b.8.1774275985672; Mon, 23 Mar 2026
- 07:26:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Huhtr5VG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A62C4CEF7;
+	Mon, 23 Mar 2026 14:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774276586;
+	bh=8bo40OUmEzaCMVbJOsVqLOEajqU4sMBo9QYog8uS4H0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Huhtr5VGNClE/y3garEEPC4rzHhObWTNdhXq4fD8lQBifVH5mSzk2cBQgi2oObynl
+	 n4cbSHIpeYUGvakIosViGhXgzV45m68v9d5c4bJY8nMjC+cRK0yXD821/fqGgmaKot
+	 I+F8jYiS5uynivOylEekKlE5rSJE4M3TZ/N+gL3Km071yylj8uueVNUSWcbxvYvse7
+	 Z/Fn5OfRGlR6bLcurcm7iVtbO5KcEZJI9q58RZYKf8UbnKxl1o8mZxLzqcQpurLmGb
+	 MkAt/Ag2vRNFCSqZwZQO8WmcnR6iO0H2Gfyf6Y2jeIQlQRrNu8D7+hIm7beOoxtMQc
+	 r3H1+iJ/KxDUA==
+Date: Mon, 23 Mar 2026 11:36:22 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Breno Leitao <leitao@debian.org>, Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>
+Subject: Re: [PATCH] perf stat: Fix crash on arm64
+Message-ID: <acFP5timJfI5qWEJ@x1>
+References: <20260205-perf_stat-v1-1-e433b0c918af@debian.org>
+ <CAP-5=fW2iUbaZRX789SaJNGXk1VhGg0igLukb6SAosKiA-f1tA@mail.gmail.com>
+ <20260205173918.GB3529712@e132581.arm.com>
+ <20260205175250.GC3529712@e132581.arm.com>
+ <CAP-5=fUY8dYzwKu-g3-HER4ji9ZeGmPQo9DeORW0w9ocW1qnMw@mail.gmail.com>
+ <abFBoVrlGl9cIg1h@gmail.com>
+ <20260311115011.GJ4153946@e132581.arm.com>
+ <acFMfBS-85NWuDu-@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260320150651.51057-1-tglozar@redhat.com> <20260320150651.51057-4-tglozar@redhat.com>
- <CADDUTFx7eSqQoA0Sv2hJCcpunosWcg3=VkhWQNoFv1iOC=Fc-w@mail.gmail.com>
-In-Reply-To: <CADDUTFx7eSqQoA0Sv2hJCcpunosWcg3=VkhWQNoFv1iOC=Fc-w@mail.gmail.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 23 Mar 2026 15:26:14 +0100
-X-Gm-Features: AQROBzAJEfs0pMyWRv-uz3ieDQzIldlm_q3-K_uSMJ3o7b1hAvMc5Kkkyx7-4Zs
-Message-ID: <CAP4=nvTKpEm9BAsR6+SE_qES_zDzYrY2atpNwCGjpwq-g+8oHQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	Wander Lairson Costa <wander@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acFMfBS-85NWuDu-@x1>
 
-so 21. 3. 2026 v 17:08 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> On Fri, 20 Mar 2026 at 17:07, Tomas Glozar <tglozar@redhat.com> wrote:
-> >> +#define TIMERLAT_OPT_NANO OPT_CALLBACK('n', "nano", params, NULL, \
-> > +       "display data in nanoseconds", \
-> > +       opt_nano_cb)
->
-> -n/--nano requires value incorrectly
->
+On Mon, Mar 23, 2026 at 11:21:48AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Mar 11, 2026 at 11:50:11AM +0000, Leo Yan wrote:
+> > On Wed, Mar 11, 2026 at 03:21:00AM -0700, Breno Leitao wrote:
+> > > On Thu, Feb 05, 2026 at 10:22:27AM -0800, Ian Rogers wrote:
+> > > > I think it is a different issue, they have metrics while you don't.
+> > > > Your report does highlight we're missing a NO_JEVENTS=1 build-test,
+> > > > but the build is working for me. I'll send out two patches for these
+> > > > issues.
+> 
+> > > I wanted to follow up on this. Are there any next steps I should take?
+>  
+> > I can reproduce the issue on my Orion6 with setting a _dummy_ CPUID:
+>  
+> >  $ export PERF_CPUID=0x00000000410fd490
+> >  $ perf stat -C 5 -vvv
+> >  ...
+> >  Aborted
+> >  perf: util/evsel.c:2156: get_group_fd: Assertion `!(!leader->core.fd)' failed
+> 
+> > Because we are working on different hardwares, I am a bit suspect I
+> > reproduced the issue with difference sequence as yours.  Anyway, I do
+> > see that an event can be opened prior to its leader event, see the log
+> > below.
+>  
+> > Thus, your patch seems make sense to me as we need to ensure the leader
+> > event to be opened first.  Ian, how about you think?
+>  
+> > I have a side question (maybe this is for James :): why other arch (or
+> > platforms) don't have reproduce the issue?  I am wandering if any error
+> > or special stuffs in Arm CPU's json files.
+> 
+> I managed to reproduce using Leo's method:
 
-Yes, this is a mistake.
+But then I applied Breno's patch and got the same SEGV as below.
 
->  File: src/cli.c:463
->  Cause: TIMERLAT_OPT_NANO used OPT_CALLBACK which expects an argument,
-> but -n is a flag.
->  Fix: Changed to OPT_CALLBACK_NOOPT:
->
-> > +               HIST_OPT_NO_IRQ,
-> --no-irq clashes with auto-negation of --irq
->
->  File: src/cli.c:1042
->  Cause: libsubcmd auto-generates --no-X negations for every option.
-> --no-irq (histogram boolean) collides with the auto-negation of --irq
-> (stop threshold). The first match wins, so --irq was matched first and
-> its negation intercepted the call.
->  Fix: Moved HIST_OPT_NO_IRQ before RTLA_OPT_STOP('i', "irq", ...) in
-> the options array so the explicit --no-irq boolean is found first.
->
-
-Thank you for reporting that, I had no idea libsubcmd does this, I
-haven't seen it documented anywhere, and I never used it in either
-perf or bpftool.
-
-It is a very strange thing to do for non-boolean options in my
-opinion. If I understand the intention correctly, the option is
-intended to unset another option specified before it, i.e. this:
-
-$ ./rtla timerlat hist --event=3Dtimer --no-event
-
-is supposed to behave the same as:
-
-$ ./rtla timerlat hist
-
-But it doesn't work:
-
-$ ./rtla timerlat hist --event=3Dtimer --no-event
-
-Usage: rtla timerlat hist [<options>]
-
-perf fails even harder on this:
-
-$ ./perf version
-perf version 7.0.rc2.g61637af4f771
-$ ./perf record --event=3Dcycles --no-event
-Segmentation fault (core dumped)
-
-I'm thinking about modifying libsubcmd so this can be at least
-disabled (not sure if the behavior is even intended in the non-boolean
-case). Reshuffling the RTLA option array could work, too, but is
-unintuitive from the developer's point of view, and will also force
-histogram options to be before threshold options in the help message,
-which is not what I wanted.
-
-Tomas
-
+- Arnaldo
+ 
+> (gdb) run stat -C 1
+> Starting program: /root/bin/perf stat -C 1
+> [Thread debugging using libthread_db enabled]
+> Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+> Failure to read '#slots'Failure to read '#slots'Failure to read '#slots'Failure to read '#slots'
+> Program received signal SIGSEGV, Segmentation fault.
+> metricgroup__copy_metric_events (evlist=0x555555c85790, cgrp=0x0, new_metric_events=0x555555c86250, old_metric_events=0x555555c86d60) at util/metricgroup.c:1662
+> 1662			evsel = evlist__find_evsel(evlist, old_me->evsel->core.idx);
+> (gdb) bt
+> #0  metricgroup__copy_metric_events (evlist=0x555555c85790, cgrp=0x0, new_metric_events=0x555555c86250, old_metric_events=0x555555c86d60) at util/metricgroup.c:1662
+> #1  0x00005555555db404 in add_default_events () at builtin-stat.c:2102
+> #2  0x00005555555de000 in cmd_stat (argc=0, argv=0x7ffffffffc30) at builtin-stat.c:2830
+> #3  0x00005555556778e0 in run_builtin (p=0x555555bd5558 <commands+360>, argc=3, argv=0x7ffffffffc30) at perf.c:348
+> #4  0x0000555555677b5c in handle_internal_command (argc=3, argv=0x7ffffffffc30) at perf.c:398
+> #5  0x0000555555677d20 in run_argv (argcp=0x7ffffffffa4c, argv=0x7ffffffffa40) at perf.c:442
+> #6  0x0000555555678064 in main (argc=3, argv=0x7ffffffffc30) at perf.c:549
+> (gdb)
+> 
+> acme@raspberrypi:~/git/perf-tools $ git log --no-merges --oneline -15 tools/
+> 493ad070cbcb (HEAD -> perf-tools, tag: perf-tools-fixes-for-v7.0-2-2026-03-23, x1/perf-tools, number/perf-tools) tools headers: Synchronize linux/build_bug.h with the kernel sources
+> 0a8b2a0857ed tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
+> 3c71ae8ec9ad tools headers UAPI: Sync linux/kvm.h with the kernel sources
+> 4ddd7588fae6 tools arch x86: Sync the msr-index.h copy with the kernel sources
+> 563d39928db6 perf kvm stat: Fix relative paths for including headers
+> 72a8b9c060d3 perf parse-events: Fix big-endian 'overwrite' by writing correct union member
+> 8dd1d9a33532 perf metricgroup: Fix metricgroup__has_metric_or_groups()
+> 5d4c6c132ea9 selftests/hid: fix compilation when bpf_wq and hid_device are not exported
+> 81f86728a980 tools headers: Skip arm64 cputype.h check
+> e2715ea5fb35 bootconfig: Add bootconfig tests about braces
+> d2ea4ff1ce50 KVM: selftests: Verify SEV+ guests can read and write EFER, CR0, CR4, and CR8
+> 146c9ab38b48 powerpc/selftests/copyloops: extend selftest to exercise __copy_tofrom_user_power7_vmx
+> 68e76fc12df0 selftests: rtnetlink: add neighbour update test
+> 35b16a7a2c4f (tag: perf-tools-fixes-for-v7.0-1-2026-03-13, five/perf-tools) perf synthetic-events: Fix stale build ID in module MMAP2 records
+> 3e745694b032 selftests: kvm: add a test that VMX validates controls on RSM
+> acme@raspberrypi:~/git/perf-tools $
+> 
+> Below goes the full -vvv log FWIW.
+> 
+> - Arnaldo
+> 
+> root@raspberrypi:~# export PERF_CPUID=0x00000000410fd490
+> root@raspberrypi:~# perf stat -C 1 -vvv
+> Using CPUID 0x00000000410fd490
+> metric expr 100 * (STALL_SLOT_BACKEND / (CPU_CYCLES * #slots) - BR_MIS_PRED * 3 / CPU_CYCLES) for backend_bound
+> parsing metric: 100 * (STALL_SLOT_BACKEND / (CPU_CYCLES * #slots) - BR_MIS_PRED * 3 / CPU_CYCLES)
+> Failure to read '#slots'literal: #slots = nan
+> syntax error
+> metric expr 100 * ((1 - OP_RETIRED / OP_SPEC) * (1 - (STALL_SLOT if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * #slots)) + BR_MIS_PRED * 4 / CPU_CYCLES) for bad_speculation
+> parsing metric: 100 * ((1 - OP_RETIRED / OP_SPEC) * (1 - (STALL_SLOT if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * #slots)) + BR_MIS_PRED * 4 / CPU_CYCLES)
+> Failure to read '#slots'literal: #slots = nan
+> syntax error
+> metric expr 100 * ((STALL_SLOT_FRONTEND if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT_FRONTEND - CPU_CYCLES) / (CPU_CYCLES * #slots) - BR_MIS_PRED / CPU_CYCLES) for frontend_bound
+> parsing metric: 100 * ((STALL_SLOT_FRONTEND if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT_FRONTEND - CPU_CYCLES) / (CPU_CYCLES * #slots) - BR_MIS_PRED / CPU_CYCLES)
+> Failure to read '#slots'literal: #slots = nan
+> syntax error
+> metric expr 100 * (OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * #slots))) for retiring
+> parsing metric: 100 * (OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT if strcmp_cpuid_str(0x410fd493) | strcmp_cpuid_str(0x410fd490) ^ 1 else STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * #slots)))
+> Failure to read '#slots'literal: #slots = nan
+> syntax error
+> metric expr (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) / (duration_time * 1e9) for CPUs_utilized
+> parsing metric: (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) / (duration_time * 1e9)
+> literal: #target_cpu = 1.000000
+> metric expr stalled\-cycles\-backend / cpu\-cycles for backend_cycles_idle
+> parsing metric: backend_cycles_idle
+> metric expr stalled\-cycles\-backend / cpu\-cycles for backend_cycles_idle
+> parsing metric: stalled\-cycles\-backend / cpu\-cycles
+> metric expr branches / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for branch_frequency
+> parsing metric: branches / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@)
+> literal: #target_cpu = 1.000000
+> metric expr branch\-misses / branches for branch_miss_rate
+> parsing metric: branch_miss_rate
+> metric expr branch\-misses / branches for branch_miss_rate
+> parsing metric: branch\-misses / branches
+> metric expr software@context\-switches\,name\=context\-switches@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for cs_per_second
+> parsing metric: software@context\-switches\,name\=context\-switches@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@)
+> literal: #target_cpu = 1.000000
+> metric expr cpu\-cycles / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for cycles_frequency
+> parsing metric: cpu\-cycles / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@)
+> literal: #target_cpu = 1.000000
+> metric expr stalled\-cycles\-frontend / cpu\-cycles for frontend_cycles_idle
+> parsing metric: frontend_cycles_idle
+> metric expr stalled\-cycles\-frontend / cpu\-cycles for frontend_cycles_idle
+> parsing metric: stalled\-cycles\-frontend / cpu\-cycles
+> metric expr instructions / cpu\-cycles for insn_per_cycle
+> parsing metric: insn_per_cycle
+> metric expr instructions / cpu\-cycles for insn_per_cycle
+> parsing metric: instructions / cpu\-cycles
+> metric expr software@cpu\-migrations\,name\=cpu\-migrations@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for migrations_per_second
+> parsing metric: software@cpu\-migrations\,name\=cpu\-migrations@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@)
+> literal: #target_cpu = 1.000000
+> metric expr software@page\-faults\,name\=page\-faults@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@) for page_faults_per_second
+> parsing metric: software@page\-faults\,name\=page\-faults@ * 1e9 / (software@cpu\-clock\,name\=cpu\-clock@ if #target_cpu else software@task\-clock\,name\=task\-clock@)
+> literal: #target_cpu = 1.000000
+> metric expr max(stalled\-cycles\-frontend, stalled\-cycles\-backend) / instructions for stalled_cycles_per_instruction
+> parsing metric: max(stalled\-cycles\-frontend, stalled\-cycles\-backend) / instructions
+> found event software@context-switches,name=context-switches@
+> found event duration_time
+> found event software@page-faults,name=page-faults@
+> found event cpu-cycles
+> found event branches
+> found event software@cpu-migrations,name=cpu-migrations@
+> found event software@cpu-clock,name=cpu-clock@
+> Parsing metric events 'software/context-switches,name=context-switches,metric-id=software!3context!1switches!0name!2context!1switches!3/,software/page-faults,name=page-faults,metric-id=software!3page!1faults!0name!2page!1faults!3/,cpu-cycles/metric-id=cpu!1cycles/,branches/metric-id=branches/,software/cpu-migrations,name=cpu-migrations,metric-id=software!3cpu!1migrations!0name!2cpu!1migrations!3/,software/cpu-clock,name=cpu-clock,metric-id=software!3cpu!1clock!0name!2cpu!1clock!3/,duration_time'
+> Attempt to add: software/context-switches,name=context-switches,metric-id=software!3context!1switches!0name!2context!1switches!3/
+> ..after resolving event: software/config=0x3,name=context-switches,metric-id=software!3context!1switches!0name!2context!1switches!3/
+> Attempt to add: software/page-faults,name=page-faults,metric-id=software!3page!1faults!0name!2page!1faults!3/
+> ..after resolving event: software/config=0x2,name=page-faults,metric-id=software!3page!1faults!0name!2page!1faults!3/
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> Attempt to add: armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> ..after resolving event: armv8_cortex_a76/metric-id=cpu!1cycles,legacy-hardware-config=0/
+> cpu-cycles -> armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'branches'
+> Attempt to add: armv8_cortex_a76/metric-id=branches,branches/
+> ..after resolving event: armv8_cortex_a76/metric-id=branches,legacy-hardware-config=0x4/
+> branches -> armv8_cortex_a76/metric-id=branches,branches/
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> Attempt to add: software/cpu-migrations,name=cpu-migrations,metric-id=software!3cpu!1migrations!0name!2cpu!1migrations!3/
+> ..after resolving event: software/config=0x4,name=cpu-migrations,metric-id=software!3cpu!1migrations!0name!2cpu!1migrations!3/
+> Attempt to add: software/cpu-clock,name=cpu-clock,metric-id=software!3cpu!1clock!0name!2cpu!1clock!3/
+> ..after resolving event: software/config=0,name=cpu-clock,metric-id=software!3cpu!1clock!0name!2cpu!1clock!3/
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> found event duration_time
+> Parsing metric events 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id duration_time to duration_time
+> Events in 'frontend_bound' fully contained within 'retiring'
+> Events in 'bad_speculation' fully contained within 'retiring'
+> Events in 'backend_bound' fully contained within 'retiring'
+> found event duration_time
+> found event stalled-cycles-backend
+> found event instructions
+> found event stalled-cycles-frontend
+> Parsing metric events '{stalled-cycles-backend/metric-id=stalled!1cycles!1backend/,instructions/metric-id=instructions/,stalled-cycles-frontend/metric-id=stalled!1cycles!1frontend/}:W,duration_time'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> Attempt to add: armv8_cortex_a76/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+> ..after resolving event: armv8_cortex_a76/metric-id=stalled!1cycles!1backend,legacy-hardware-config=0x8/
+> stalled-cycles-backend -> armv8_cortex_a76/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'instructions'
+> Attempt to add: armv8_cortex_a76/metric-id=instructions,instructions/
+> ..after resolving event: armv8_cortex_a76/metric-id=instructions,legacy-hardware-config=0x1/
+> instructions -> armv8_cortex_a76/metric-id=instructions,instructions/
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> Attempt to add: armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+> ..after resolving event: armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,legacy-hardware-config=0x7/
+> stalled-cycles-frontend -> armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id stalled-cycles-backend to stalled-cycles-backend
+> Matched metric-id instructions to instructions
+> Matched metric-id stalled-cycles-frontend to stalled-cycles-frontend
+> Matched metric-id duration_time to duration_time
+> Matched metric-id software@page-faults,name=page-faults@ to page-faults
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> Matched metric-id software@cpu-migrations,name=cpu-migrations@ to cpu-migrations
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> found event duration_time
+> found event cpu-cycles
+> found event instructions
+> Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,instructions/metric-id=instructions/}:W,duration_time'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> Attempt to add: armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> ..after resolving event: armv8_cortex_a76/metric-id=cpu!1cycles,legacy-hardware-config=0/
+> cpu-cycles -> armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'instructions'
+> Attempt to add: armv8_cortex_a76/metric-id=instructions,instructions/
+> ..after resolving event: armv8_cortex_a76/metric-id=instructions,legacy-hardware-config=0x1/
+> instructions -> armv8_cortex_a76/metric-id=instructions,instructions/
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon file 'instructions'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id cpu-cycles to cpu-cycles
+> Matched metric-id instructions to instructions
+> Matched metric-id duration_time to duration_time
+> found event duration_time
+> found event cpu-cycles
+> found event stalled-cycles-frontend
+> Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,stalled-cycles-frontend/metric-id=stalled!1cycles!1frontend/}:W,duration_time'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> Attempt to add: armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> ..after resolving event: armv8_cortex_a76/metric-id=cpu!1cycles,legacy-hardware-config=0/
+> cpu-cycles -> armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> Attempt to add: armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+> ..after resolving event: armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,legacy-hardware-config=0x7/
+> stalled-cycles-frontend -> armv8_cortex_a76/metric-id=stalled!1cycles!1frontend,stalled-cycles-frontend/
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-frontend'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id cpu-cycles to cpu-cycles
+> Matched metric-id stalled-cycles-frontend to stalled-cycles-frontend
+> Matched metric-id duration_time to duration_time
+> Matched metric-id cpu-cycles to cpu-cycles
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> Matched metric-id software@context-switches,name=context-switches@ to context-switches
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> found event duration_time
+> found event branch-misses
+> found event branches
+> Parsing metric events '{branch-misses/metric-id=branch!1misses/,branches/metric-id=branches/}:W,duration_time'
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> Attempt to add: armv8_cortex_a76/metric-id=branch!1misses,branch-misses/
+> ..after resolving event: armv8_cortex_a76/metric-id=branch!1misses,legacy-hardware-config=0x5/
+> branch-misses -> armv8_cortex_a76/metric-id=branch!1misses,branch-misses/
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> hwmon_pmu: not a hwmon file 'branch-misses'
+> hwmon_pmu: not a hwmon file 'branches'
+> Attempt to add: armv8_cortex_a76/metric-id=branches,branches/
+> ..after resolving event: armv8_cortex_a76/metric-id=branches,legacy-hardware-config=0x4/
+> branches -> armv8_cortex_a76/metric-id=branches,branches/
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon file 'branches'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id branch-misses to branch-misses
+> Matched metric-id branches to branches
+> Matched metric-id duration_time to duration_time
+> Matched metric-id branches to branches
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> found event duration_time
+> found event cpu-cycles
+> found event stalled-cycles-backend
+> Parsing metric events '{cpu-cycles/metric-id=cpu!1cycles/,stalled-cycles-backend/metric-id=stalled!1cycles!1backend/}:W,duration_time'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> Attempt to add: armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> ..after resolving event: armv8_cortex_a76/metric-id=cpu!1cycles,legacy-hardware-config=0/
+> cpu-cycles -> armv8_cortex_a76/metric-id=cpu!1cycles,cpu-cycles/
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'cpu-cycles'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> Attempt to add: armv8_cortex_a76/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+> ..after resolving event: armv8_cortex_a76/metric-id=stalled!1cycles!1backend,legacy-hardware-config=0x8/
+> stalled-cycles-backend -> armv8_cortex_a76/metric-id=stalled!1cycles!1backend,stalled-cycles-backend/
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon file 'stalled-cycles-backend'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> hwmon_pmu: not a hwmon type 'duration' in file name 'duration_time'
+> Attempt to add: tool/duration_time/
+> ..after resolving event: tool/config=0x1/
+> duration_time -> tool/duration_time/
+> Matched metric-id cpu-cycles to cpu-cycles
+> Matched metric-id stalled-cycles-backend to stalled-cycles-backend
+> Matched metric-id duration_time to duration_time
+> Matched metric-id software@cpu-clock,name=cpu-clock@ to cpu-clock
+> Matched metric-id duration_time to duration_time
+> Segmentation fault
+> root@raspberrypi:~#
+> 
