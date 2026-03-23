@@ -1,218 +1,192 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C582631B837
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 20:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042FF3815D8
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 21:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774297585; cv=pass; b=hRB3xR+eKENN3M6Hze+aubgkFTplDFONFTRzqBluci8PzRo3G9khpn7oIYmF3WuzvlWfNrSTRa/4r7TJFJY/x6PVX3KgSG2j1RM+X2ZUoTSEFGfk+/OOkl3pu22bWfF4d6BYvwuj0dka9rtgFi1cJIYCPyCJLZZDbzYzdRY2hHU=
+	t=1774302755; cv=pass; b=bT8eTIcj7UAUdw7RSWXsGIloOLkaC4b3/YKR9J//hZL5yROqvRZyp2j8pWtLIZAg8HpU/Rv4m3M92hrxhIi8mSlpwJWbkD/spnkUJex2lSpeQzs1bjCUYX6F1GXochBZvF+tK6ZnJCzq5Ragf1BTxTtVUD+rqnQ/p/YMyns38WI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774297585; c=relaxed/simple;
-	bh=5JOf2/fHsfp/ZaOuAnluvpXGwz7ca/WtqTlpq7AW8wg=;
+	s=arc-20240116; t=1774302755; c=relaxed/simple;
+	bh=sBpt4JBKJwVjXuMXplkOgOFupV3EsudH585P0A/BF6o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jd6c55yIoOsgeLtdwvGyZIo23d8cBRJcnP9+R6aIJNgd8yfrqb/3X0kWuEiYlck8vAd3h4fc4LmYNuPs60NqgQcRRU565Ee3qg/NmiNMMkXWmZM8YUvL9weh51OH1PeQXGzvbcfFu+baea5JmWezm3U9oZtTv/g5W5tRLjjWAlc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uauokwxb; arc=pass smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=dL0QqNHxpnmf2JLoh3NhFHZYnpjyp72/GBWgwN/b3/dpgO63xp/wPltP5ccOfKDcLDclPtKIAKJwcfpIbpMXGP5b677yx7kHyFpiyb4Q4b8S8RP6wzjs+YmyKiBED4RF1eX5Z25HM3zNtPN/vcoW5GQvjkLjbH0XRhMB2rQquzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wWZ9n5NB; arc=pass smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uauokwxb"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2aeab6ff148so5975ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 13:26:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774297583; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wWZ9n5NB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2aeab6ff148so14045ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 14:52:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774302752; cv=none;
         d=google.com; s=arc-20240605;
-        b=OVMCJenpeUs00N3xkcElcGt9GpibLshKR0CbdojOwYT+/2xfgCGVjsSB2VU8cWM+QC
-         UtZG3qlLu1ndNXN4kCMQE3HZ/4vU3wrUFHIQ9fxDvGPYe9e0d3OIJp0l5131l7fJYiNv
-         aKzOZ45tX3a9zZxD116PHbfEZ1EjCD4cCFM0MjVqdgM6GbAaEHPk8y7UfkfSWVofCsLT
-         C/4YOOtDnBaNXyfAoGBtebFFG9B8Zv5vA42XF6eoS0btqkS4EXjzfx+RExuW2MRgnhLQ
-         Ki3dn85OgC8RMR9r1gDikJM/sn7cRZeI0eP7Zrc73iQUpG/9r95el9OtlO8c2TrQT1je
-         WnZQ==
+        b=PtW2D/QvJFhdTv+hKWtqhJ7H5fGRoCrr79ZpcyC1JayFBL4HU7rCCm/B3TgkML4wcm
+         qwBVThJqHawKoklHaFHAU38uaLPSW5bu6WPSuiNX223gSM8DFOhbxzOyDGmj06EOzHzF
+         O2qXalG922FQtC6V/EBNKvauLLKsx210ySmmeHjjxevMd2lmqeBWaL8KYxTcJojkyfXx
+         SG2PyJwueL2XXd4SATGfDHyz9ZEkRF2qp9Mj8eYhR09fuW3apn2u4GrSSifq7QxBrt7U
+         c5cog7azFOp++CWCbehuVFvWY9afM748bmjXBEHx5ciIUjdmZvAU4Fi/hK7RPviU7Q0C
+         EfoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Ss0OTKF4z14a/TGi7TTiDuFnXX64U8Y20beIGWGhwfI=;
-        fh=QJ6EqR0AlkLGr28xS8DVJLekchvI5GKqWGbbft2eyhA=;
-        b=Yc7w/l93+BG8302qRmtSfuzoEoika2wfTr82yBDKDS3HbPBvjRz8wVlikDNJcjEDLJ
-         6tesyR1dda9WYRrT6My4nmySX/285GyE8kyak2P7Nc10Y1i35Vt9lgjLLKXQVCPXaDJB
-         lsFtoNflgfEPbWOF839hJC8WTgV48/m7mDdVwsXl/o0wEZOgyxwVfc6oz3i3NDynwUBG
-         8gEcb2d3q6odjYAVieN7y1qjOLpTXIhcWu1/c/8v6vZX9tk6Zt4/CApYC95Rb2vdGg4F
-         5Ei+HcyuaQ8c+4FUWtGA8WCGr8Zh7/4c+71kvYT7XBTsFrffYq1WWZN7mkYstVRtYVEq
-         WyUQ==;
+        bh=YmKAfG81GUfLojTL2WV0FfXjre1ys9QeKFFeiwGpR3k=;
+        fh=JGuRdiAbZONIo1CdZGK7UJEEziqZkkCwkn0OAiHw4qU=;
+        b=evx4HAHyYjrJ0vFXEn0ODN4fZhhwku9nQT1Wm2JR5GoBa64wlBxdRHcwzvp7jgV9RU
+         +MNiq0TTQiZAAZYZbizcloMTCtC/o9i/yxMlDXEtHnNVLg4awv6NSud523BNsfM7EWlJ
+         wWE8YFlA174V2qGq3a8DAWWWPMiYaMZs79n4sbzPCIwwBpuumu/Ln1si0hz7OcgfDJaJ
+         ZCjYNKB5WVRoqf1rKSdAiQaK47wreQhM5IeMEiJEBUYQSp7Fw62lH7f4MCZyhkRBXUmY
+         342ZEvIINT2YftPrzA1gYs72RVualpyYHnjIeoavUyGg/tyEbLPHZ9DmxykidnB0dKFp
+         TZTQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774297583; x=1774902383; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774302752; x=1774907552; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ss0OTKF4z14a/TGi7TTiDuFnXX64U8Y20beIGWGhwfI=;
-        b=UauokwxbrI8eG4vB8edaf1TCVxMZvPXHT/T8zhX40SyoaTaFYQgiakW/kXvxjld9YH
-         IpPfKmV39UjprWSGDEPveWQbsyShfWuR9M2+4OVnAPfj9sc2dPc+pcRl77PkGO02Tnkt
-         jj6lINnr2zWQjx3hUmvMH2xwc130EhKwWFB2GAJBZCReTOqdraFdbjtnkPFw2JwPPYZ+
-         b4ZKK9b4kI8hSxiz7iKzL1Hc3muZl4IQaz115v7IBxG56eGQA9sxLIFDuluRf7BRFgdr
-         XRXNgvSavVwrcmhZwsLbolW1jtBtFyFtXUYU49kCveowdR44oSfDJziDmdFvnr5wW5Qm
-         752g==
+        bh=YmKAfG81GUfLojTL2WV0FfXjre1ys9QeKFFeiwGpR3k=;
+        b=wWZ9n5NBS/9RCgwHRU84wAit0QohoiXmzck4EmORp5UPYtEkCanBTWrcF6oya97kAm
+         CoODxVpD/jMmRZvpuu5PotLHvpunW+JpwcxFZQ3UwksEKZViQSYy4YSiddM+m/DDZSF4
+         R3wKVWoegqLyuWu9wjtgEJn35p7vo6DSVw5YNtNoqNDs553jlI19Da8Nr/RaY2FtVwfS
+         p0l+FbPuMJV6Xb6YAGxCMGADFd4M/0XNGju5Y02DFh7k6kq1YYATXMKZnEz97w7dfFwH
+         k46r1vi454I6pOWTxwMG1SQxr9XKIOTHbDmeT+eQtLfvESGLh6ncjTlx1XM1601Ni+0K
+         DJbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774297583; x=1774902383;
+        d=1e100.net; s=20251104; t=1774302752; x=1774907552;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ss0OTKF4z14a/TGi7TTiDuFnXX64U8Y20beIGWGhwfI=;
-        b=W/0am4V5lDuFhcA8sWs5gTjZHTl3+f3xQ2QCc1ULTeyTNY2XbpLjQB4wvcMx66lEAr
-         TRDYlI802dQzJNZwUXHDfbljpZAV2znuvLCxiZyMcO8/VbzLyDBSgJHctojbZY0oy5ov
-         +KFI9y/Keaar4gr5tMh/pdspaJV4D5rklFoY52Do/xYvILTAMOfIDTaGnXuqS3UC3m1p
-         wAngdPkezA4k8YykvxYvUDMfhyOyEQXuBqUgxyVb4g+JxKI6iQIlpzDa77JwcA/yJOIC
-         Aezbt/Dz/ReYgDPAU+aTn8PrB8QOiuY3RDX0/tmpfllZjXDkGyZlW7uwS7Z/pZ9SCLh4
-         lYcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWS+XmjFJdTKdiU+9xCghPnzim9j2uo4dH7I7DOA/Z4guM4DWwAoAcCa7/WIqr+267/56AO1C3D18ZMB3cDB/4/@vger.kernel.org
-X-Gm-Message-State: AOJu0YykiGBnthioepSqCD6de6OD3nZTDUIbvrJYmmxdD5Pk3VZtSo1e
-	LJV+qGuH2+KbPCggNH7kNeEf1tKXktqoJ1YglvjCjIPE7N0QpgpM8N8lv85+XkTypFNCJr/en7K
-	+MZoBDEcPXzTv39JtjEoDSR0sLfAtGJdrIxjpJvJV
-X-Gm-Gg: ATEYQzwS/hcMXmUwrxiESt3GOKBEx0gvhHwapYW88suQyxhsvIukFugv1TiarvwsRaw
-	waPFwvhco4F3bmnPtWcKEpCWOSFtZPdfAqHnoGygXMhiIiuEM1tV9oNbecHn2wKSxza4ZKjGsMR
-	TskumiKPKp7tGXPor46PePLNrcaimHCagRwtwa4tbd/GgiN4XnksSaNtRx/2YEHPZCtR/st4JyW
-	fK/hLgEdXuNYlBkhMU81HVS2Nv/1EvUvI2dFVr7JCzJ8m9+LkwKlDD9wnLCGyqb8kP+2TzFQyij
-	Bgoc5YaZS0iDd27cks1c5euWZ/3XcLAU0HqOhDqjgHrAtiVa
-X-Received: by 2002:a17:902:fc4d:b0:2b0:5e19:1862 with SMTP id
- d9443c01a7336-2b0a67072a6mr137995ad.5.1774297582314; Mon, 23 Mar 2026
- 13:26:22 -0700 (PDT)
+        bh=YmKAfG81GUfLojTL2WV0FfXjre1ys9QeKFFeiwGpR3k=;
+        b=LOv6euYCIP2yccsNyGp6NRGopxq9vWBcLrIm98mlvvaH+3uWmF3eI0LWf3K+wRVRUM
+         lRaO0ek87/7DdwyU3SwpNJkV721c/f3iIUDdzFWmYfiPZnuB+Egk/3juZcsJEi4EZ1JT
+         uJUCm4jVp4yfV7ZgLYEJdn/BNqfrZZLoHsxz5kpZEMUzmpQ/pdPiSWXk3uzwDVZETCVb
+         e6FNtUbM2pWXoFxhb5395onhXgB0mAd+07PKYJhNstpt8YZkNrnA1BX8uwSxN0vuV4qb
+         gQi0PTCehtM1D0Z6O2OwmDPBQokRY50Xy7emJv3LmZWLAg4WLzVH7VY4htuT7ls3Tn8f
+         VI4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV2CtSJL/FmsFzBu4H/XUVKERQbiEoT/G52RXQ0YUSULgUARkpCxl9RSrSTZPMOct+57e3m4trLGvwtwuy8S6ig@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiNDAK8IsPDgZXviSH5/TiyfRh6bzauUJyTpo0z2y5d6jTFMDM
+	ZTcFUy5imeF/r+XFenZji/DzmXvLUTLmeQYTzxo5Z5K/bgFsf/m/2p8kEYYX/+a1X9H+XZn4ue/
+	DitOdbZPVqHCulZiG6Xm3noNRU0G6ew5+DXfV9Nil
+X-Gm-Gg: ATEYQzzC/mWNFU/EBIarUiRDFokas3qrTl7qP6LIIgXS2mNgMi1BxakbHX8o5Fjcw3p
+	XAAphCqZZdv/kfK7PdbRDdKKh8keCnkVId1059tXYeCheadGESeOhGdZYSuPzs/UzbIy2XiGorN
+	BGOtQFiVTybAc3TcqsyoR8qFX4oN5s/CoSzjAO66VhKfI2xeirjSBhm2zmu3WVY0/OYiwC7tb1j
+	OVR9cdzmOSHXGGzXJLNQkyN0nSqbhMiz2DES6oxTQADA1LkLypK0XBF/BtVetVPVCrdAWZ4nCVf
+	o24jsw7KSQmM2276xp1XE9iGgb3mfnC6Xaqevw==
+X-Received: by 2002:a17:903:166e:b0:2b0:5cc5:9405 with SMTP id
+ d9443c01a7336-2b0a664d289mr425965ad.1.1774302751322; Mon, 23 Mar 2026
+ 14:52:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fW5Cx-a0hm_PKNLDSmo=L0xu=LizKiAPyJF1YtH-coFdg@mail.gmail.com>
- <20260323202409.194123-1-irogers@google.com>
-In-Reply-To: <20260323202409.194123-1-irogers@google.com>
+References: <20260323-tools_build_fix_zero_init-v6-0-235858c51af9@arm.com> <20260323-tools_build_fix_zero_init-v6-15-235858c51af9@arm.com>
+In-Reply-To: <20260323-tools_build_fix_zero_init-v6-15-235858c51af9@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Mar 2026 13:26:11 -0700
-X-Gm-Features: AaiRm51sj4DGCa2d5arquhJLiaxWCEmjC3JseMCjCw4ej9K416ful2aViALEJTc
-Message-ID: <CAP-5=fXwDgZ-+JT2c8y3sJLURGAz1njduLZRxTJ548xbW+H9Jg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf test: Fix perf stat --bpf-counters on hybrid machines
-To: irogers@google.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@kernel.org, namhyung@kernel.org, 
-	peterz@infradead.org
+Date: Mon, 23 Mar 2026 14:52:19 -0700
+X-Gm-Features: AaiRm50yylCAkONRByCnsK3y21H-MAkFVEhgsvCDA9ssNccOFZGUuoIYZZ9MJLg
+Message-ID: <CAP-5=fW9h2qJK5owk9WNohDTvkUX=Of__nunBsRpjrq6VXT8eQ@mail.gmail.com>
+Subject: Re: [PATCH v6 15/24] tools: objtool: Append extra host cflags
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, 
+	Changwoo Min <changwoo@igalia.com>, Mark Brown <broonie@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 23, 2026 at 1:24=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Mon, Mar 23, 2026 at 8:15=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> Events on hardware PMUs may open on >1 hardware PMU on hybrid
-> machines. Unfortunately multiplexing introduces a scaling issue as
-> reported in:
-> https://lore.kernel.org/lkml/20250716223924.825772-1-irogers@google.com/
+> Append HOST_EXTRACFLAGS to HOSTCFLAGS so that additional flags can be
+> applied to the host compiler.
 >
-> Switch to using task-clock which as a software event runs on all CPUs
-> and has a single PMU.
+> Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/objtool/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> index b71d1886022e9b3d9fde52bf73bd502aa20d173e..a41fb2a46217bb14fcd8d0941=
+c99d102945c3f2d 100644
+> --- a/tools/objtool/Makefile
+> +++ b/tools/objtool/Makefile
+> @@ -60,6 +60,8 @@ INCLUDES :=3D -I$(srctree)/tools/include \
+>             -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include \
+>             -I$(LIBSUBCMD_OUTPUT)/include
+>
+> +HOSTCFLAGS      +=3D $(HOST_EXTRACFLAGS)
 
-With hindsight, maybe the better thing to do is Namhyung's patch plus
-the "--no-scale" option to `perf stat` to sidestep the scaling issue.
-It'd be great to make this test not "(exclusive)", it shouldn't be
-necessary. You can test for flakiness with the '-r' option to `perf
-test` which takes a repeat count.
+Sashiko noted here (sharing just for common information, not because I
+feel this is necessarily making thigs worse) that:
+https://sashiko.dev/#/patchset/20260323-tools_build_fix_zero_init-v6-0-2358=
+58c51af9%40arm.com
+
+Will this late addition of HOST_EXTRACFLAGS cause a regression by missing t=
+he
+feature detection checks that run earlier in the Makefile?
+
+The HAVE_XXHASH feature check uses HOSTCFLAGS inside a shell command:
+
+ifeq ($(ARCH_HAS_KLP),y)
+  HAVE_XXHASH =3D $(shell printf "$(pound)include
+<xxhash.h>\nXXH3_state_t *state;int main() {}" | \
+    $(HOSTCC) $(HOSTCFLAGS) -xc - -o /dev/null -lxxhash 2> /dev/null
+&& echo y || echo n)
+  ifeq ($(HAVE_XXHASH),y)
+
+Because this check is evaluated immediately by the ifeq ($(HAVE_XXHASH),y)
+conditional, the shell command executes during the Makefile parsing phase.
+
+Since HOST_EXTRACFLAGS is appended here after the feature checks, the earli=
+er
+tests will run without these extra flags. If a user provides necessary incl=
+ude
+paths via HOST_EXTRACFLAGS to locate xxhash.h, the feature test will fail a=
+nd
+silently disable Kernel Live Patching (BUILD_KLP) support.
+
+Could HOSTCFLAGS be updated earlier in the Makefile, before the feature che=
+cks
+are evaluated?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/tests/shell/stat_bpf_counters.sh | 35 +++++++++++----------
->  1 file changed, 18 insertions(+), 17 deletions(-)
+> +
+>  OBJTOOL_CFLAGS  :=3D -std=3Dgnu11 -fomit-frame-pointer -O2 -g $(WARNINGS=
+)  \
+>                    $(INCLUDES) $(LIBELF_FLAGS) $(LIBXXHASH_CFLAGS) $(HOST=
+CFLAGS)
 >
-> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tes=
-ts/shell/stat_bpf_counters.sh
-> index f43e28a136d3..58f7dc9692ac 100755
-> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
-> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-> @@ -5,6 +5,7 @@
->  set -e
 >
->  workload=3D"perf test -w sqrtloop"
-> +event=3Dtask-clock
->
->  # check whether $2 is within +/- 20% of $1
->  compare_number()
-> @@ -25,15 +26,15 @@ compare_number()
->
->  check_counts()
->  {
-> -       base_instructions=3D$1
-> -       bpf_instructions=3D$2
-> +       base_count=3D$(echo "$1"|sed -e 's/[^0-9]*\([0-9]*\).*/\1/')
-> +       bpf_count=3D$(echo "$2"|sed -e 's/[^0-9]*\([0-9]*\).*/\1/')
->
-> -       if [ "$base_instructions" =3D "<not" ]; then
-> -               echo "Skipping: instructions event not counted"
-> +       if [ "$base_count" =3D "<not" ]; then
-> +               echo "Skipping: $event event not counted"
->                 exit 2
->         fi
-> -       if [ "$bpf_instructions" =3D "<not" ]; then
-> -               echo "Failed: instructions not counted with --bpf-counter=
-s"
-> +       if [ "$bpf_count" =3D "<not" ]; then
-> +               echo "Failed: $event not counted with --bpf-counters"
->                 exit 1
->         fi
->  }
-> @@ -41,29 +42,29 @@ check_counts()
->  test_bpf_counters()
->  {
->         printf "Testing --bpf-counters "
-> -       base_instructions=3D$(perf stat --no-big-num -e instructions -- $=
-workload 2>&1 | awk '/instructions/ {print $1}')
-> -       bpf_instructions=3D$(perf stat --no-big-num --bpf-counters -e ins=
-tructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
-> -       check_counts $base_instructions $bpf_instructions
-> -       compare_number $base_instructions $bpf_instructions
-> +       base_count=3D$(perf stat --no-big-num -e "$event" -- $workload 2>=
-&1 | awk "/$event/ {print \$1}")
-> +       bpf_count=3D$(perf stat --no-big-num --bpf-counters -e "$event" -=
-- $workload  2>&1 | awk "/$event/ {print \$1}")
-> +       check_counts "$base_count" "$bpf_count"
-> +       compare_number "$base_count" "$bpf_count"
->         echo "[Success]"
->  }
->
->  test_bpf_modifier()
->  {
->         printf "Testing bpf event modifier "
-> -       stat_output=3D$(perf stat --no-big-num -e instructions/name=3Dbas=
-e_instructions/,instructions/name=3Dbpf_instructions/b -- $workload 2>&1)
-> -       base_instructions=3D$(echo "$stat_output"| awk '/base_instruction=
-s/ {print $1}')
-> -       bpf_instructions=3D$(echo "$stat_output"| awk '/bpf_instructions/=
- {print $1}')
-> -       check_counts $base_instructions $bpf_instructions
-> -       compare_number $base_instructions $bpf_instructions
-> +       stat_output=3D$(perf stat --no-big-num -e "$event/name=3Dbase_$ev=
-ent/,$event/name=3Dbpf_$event/b" -- $workload 2>&1)
-> +       base_count=3D$(echo "$stat_output"| awk "/base_$event/ {print \$1=
-}")
-> +       bpf_count=3D$(echo "$stat_output"| awk "/bpf_$event/ {print \$1}"=
-)
-> +       check_counts "$base_count" "$bpf_count"
-> +       compare_number "$base_count" "$bpf_count"
->         echo "[Success]"
->  }
->
->  # skip if --bpf-counters is not supported
-> -if ! perf stat -e instructions --bpf-counters true > /dev/null 2>&1; the=
-n
-> +if ! perf stat -e $event --bpf-counters true > /dev/null 2>&1; then
->         if [ "$1" =3D "-v" ]; then
->                 echo "Skipping: --bpf-counters not supported"
-> -               perf --no-pager stat -e instructions --bpf-counters true =
-|| true
-> +               perf --no-pager stat -e $event --bpf-counters true || tru=
-e
->         fi
->         exit 2
->  fi
 > --
-> 2.53.0.1018.g2bb0e51243-goog
+> 2.34.1
 >
