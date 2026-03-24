@@ -1,179 +1,97 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FE7318EDF
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Mar 2026 11:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20FF2D5950;
+	Tue, 24 Mar 2026 14:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774350472; cv=none; b=FoFZhRE10AkKvrsTKDqTZDmptwRpX2nIXs4UQGqU3TxXS8GKVE2RnkEFggMbO/eIW5U1K9dmtei24DiSv1DyCIP0V57xXhQFccFXmSUR8/33IaTXRqVOBdUUhiMAO8p/IISVhGam/kGPCq12gnI/u0p67DTsMbSZy4s0lXEdRVQ=
+	t=1774361473; cv=none; b=bfNHPv+MweqJEaa48o/tbON6Jbc5caYyPlAycfMAs7yKrwASVuSj0SjCGxiCh5g9FjBFw2ZeQYknTbz+OQyitddu3dwQyLB9EjWLsSHVTPNPtaSEFfUQXpMHJ0feEE+0CxTu7lai7RDhLy7StN38xFG6P09vUS+Y1qYUoYIY3Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774350472; c=relaxed/simple;
-	bh=QG+8lD3sXRzohUKO6LV6DWO+gSoLA789GHs4h40/4G8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZDijMmdFlc3Jl8wb5AvLr2KgMX+mTOPo++S+m4U8hxWmpNBgtM5xlpLb1u4y3u+OdFBsicPmMt1TzYm0jv/mCUSb3nDpMFbw9rtdF5XpBa6XSh9Ola6d/+kt2PW0cBvW7Bu4gJGAH3L5lOVkDINIsQNfJUmsaFTzLguW7j1pJqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R5o2FlBF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1774361473; c=relaxed/simple;
+	bh=Y3sNoYWIj73JRndD3CMspGqfg9ytNZF735DoB3CazPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5LZgZHvSUGtBJHb7A+K7gzhtnuSrnEb7mZXW2xwhb+AJhGCo2UJ6yKIXhGzt75KnauePdoQqFGpW0XwZdhgpsUhWBV6Ey5tQqJBDaJS4nHWFmaJJURiUoPLxVZ3vfN1Yk95zw6OPTxlxPUBJOwp/m/RgRzPmtN3MT9cbrYMknQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BZAE9aRX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R5o2FlBF"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62NJtDbn3111761;
-	Tue, 24 Mar 2026 11:07:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=IdJXTy
-	EO82Ru1iNtXkchM6iEKX+rtchRpyWzxFwuTEM=; b=R5o2FlBFVT1Ygis2HFv4PM
-	5mDU+4fjx6pMKbkPdQCqPoyMEiWsQvQ8dJJC8JyzhRIPrcITqZWe9Ehdv43Oa8Cb
-	/dOk3xBfWti2eseUBdx90G9v3/wRRyes/hu/lzIw9E1O0WJbBe7ZCv7VsnxBbjUE
-	6+8PItOIKW1Ra0Gq72W4+1GTfj/B01hxbFac5TN1Lv8r2PWF4Zdi60FgxT+6zeKV
-	0gsYOMGLFXiS9OIpgixOmQWfFbXEk07SHxIs9TLignwxfBf8IYn8K9a3afw/SR8q
-	0MZp9Zhf2NQiU9i5rYJ8m2RqGNing4LvkZ9eYX1+q2UIbeovaI4fKvEgfwY8Qupg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kumjhq7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Mar 2026 11:07:32 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62O8xCmP004375;
-	Tue, 24 Mar 2026 11:07:31 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d28c2181n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Mar 2026 11:07:31 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62OB7U1G52035878
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Mar 2026 11:07:30 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A3792004B;
-	Tue, 24 Mar 2026 11:07:30 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D1B8320040;
-	Tue, 24 Mar 2026 11:07:29 +0000 (GMT)
-Received: from [9.52.199.37] (unknown [9.52.199.37])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Mar 2026 11:07:29 +0000 (GMT)
-Message-ID: <cd24821d-2357-4203-85d1-8db37ac11640@linux.ibm.com>
-Date: Tue, 24 Mar 2026 12:07:29 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BZAE9aRX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=H7n+QrXXSaIaAxwOyaWDEXy9usylHrhcJhyke33iXW8=; b=BZAE9aRXGVm1nxFrNzQDh1IVq6
+	WzLau0Bjd7ODJFGTz7YiqNoAZEpR5NyIh4jA77knPM8XHNVRKz58anWQooReIAVCHrPm8MIJkT0Sz
+	imRS3bZdkvkYLhP3deufoAq94932jdYpyJcRsnW8rwgonu0MKl1kQi5LkltYWB3HWcgItfKO2EVEU
+	QTNHuZUNpXW5nCwXEXBAJUXlRJ8YH+RvMKUibXs4Hpy8lslEcWrz4XSyD9GVIrSWgdlqbcCbI8g3g
+	FyDcLCkXGdriLr6oybeyVWjMUXBkYRBHa1AkugVgBO+WEVEi5NTBt1mFjhUjJ4mvUlrnEs5sPLiGx
+	tgxE4JmA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w52TE-00000004FJc-3BHr;
+	Tue, 24 Mar 2026 14:11:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 35B123002D8; Tue, 24 Mar 2026 15:10:59 +0100 (CET)
+Date: Tue, 24 Mar 2026 15:10:59 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aldo Conte <aldocontelk@gmail.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@kernel.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	hpa@zytor.com, x86@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH v2] perf/x86/intel/p4: Fix unused variable warning in
+ p4_pmu_init()
+Message-ID: <20260324141059.GG3738010@noisy.programming.kicks-ass.net>
+References: <20260319152210.210854-1-aldocontelk@gmail.com>
+ <20260320112302.281549-1-aldocontelk@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf symbols: Fix module symbol resolution for non-zero
- .text sh_addr
-To: Chuck Lever <cel@kernel.org>, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <20260323155804.7216-1-cel@kernel.org>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20260323155804.7216-1-cel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GS9HO3aOGLMio27LCc3HEH0zb72qDG97
-X-Proofpoint-ORIG-GUID: GS9HO3aOGLMio27LCc3HEH0zb72qDG97
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDA4NiBTYWx0ZWRfX/FsZwVJZVcLL
- vtUJkpqEFPstlG9ZSeyNHafHtesd+HgPz1rd0kLogIH7fNLdxz80eccmAYXXvKgAN1nO6cBIDKh
- fVIY6XecuwVNUqftR+boiAWrmZSQDA08rx8TxeCLdj+TBitW/6H/Z8lICz2UashM3jAQLNBwE1g
- hNpLlIZlGtWaw+XxJ7e0KRWC0bNmkpbDEAPc/W+O8XLn6jPS+wvaJFpGGtuBeXSQapcme9W5Zhs
- MBWuKz828msOFyb9umCg3l95O1je1fi1kWRJrE4Ig95QZUhxO0bYrru36/daOuB7hopvfAbJbw6
- fCI4fqjdyoy699ZZF8aMjckJSnimtS+in2vJI82T9SywP98PdPl4dtnmX9SOZE8CH2mK382GaEl
- uPco8kRFykwBEdvo9x8vahHG4GQtF4Mg04Jxj+XQ1qS4SMivTVHKru6zCyVXgUOLDr50nYLWqwK
- n1J96wRsX2w6XEI0+pw==
-X-Authority-Analysis: v=2.4 cv=KbXfcAYD c=1 sm=1 tr=0 ts=69c27074 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=yPCof4ZbAAAA:8
- a=VnNF1IyMAAAA:8 a=KByoUL483hSIROooWq4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-24_02,2026-03-23_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1011
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603240086
+In-Reply-To: <20260320112302.281549-1-aldocontelk@gmail.com>
 
-On 3/23/26 16:58, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, Mar 20, 2026 at 12:23:02PM +0100, Aldo Conte wrote:
+> Build the kernel with make W=1 generates the following warning:
 > 
-> When perf resolves symbols from kernel module ELF files (ET_REL),
-> it converts symbol addresses to file offsets so that sample IPs
-> can be matched to the correct symbol. The conversion adjusts each
-> symbol's st_value:
+>   arch/x86/events/intel/p4.c: In function ‘p4_pmu_init’:
+>   arch/x86/events/intel/p4.c:1370:27: error: variable ‘high’ set but not used [-Werror=unused-but-set-variable]
+>    1370 |         unsigned int low, high;
+>         |                           ^~~~
 > 
->   sym->st_value -= shdr->sh_addr - shdr->sh_offset;
+> This happens because, although both variables are declared and
+> initialized by rdmsr, only `low` is used in the subsequent if statement.
 > 
-> For vmlinux (ET_EXEC), st_value is a virtual address and sh_addr
-> is the section's virtual base, so subtracting sh_addr and adding
-> sh_offset correctly yields a file offset.
+> This patch uses the rdmsrq() macro instead of the rdmsr() macro.
+> The rdmsrq() macro avoids the use of high and low variables
+> because it reads the msr value in a single u64 variable.
+> Also, replace (1 << 7) with the proper macro.
 > 
-> For kernel modules (ET_REL), st_value is a section-relative
-> offset. The module loader ignores sh_addr entirely and places
-> symbols at module_base + st_value. Converting to file offset
-> requires only adding sh_offset; subtracting sh_addr introduces an
-> error equal to sh_addr bytes.
+> Running `make W=1` again resolves the error.
+> I was unable to test the patch because
+> i do not have the hardware.
 > 
-> When .text has sh_addr == 0 -- the historical norm for simple
-> modules -- both formulas produce the same result and the bug is
-> latent. As modules gain more metadata sections before .text (.note,
-> .static_call.text, etc.), the linker assigns .text a non-zero
-> sh_addr, exposing the defect. For example, nfsd.ko on this kernel
-> has sh_addr=0xa80, kvm-intel.ko has sh_addr=0x1e90.
-> 
-> The effect is that all .text symbols in affected modules
-> shift by sh_addr bytes relative to sample IPs, causing perf
-> report to attribute samples to incorrect, nearby symbols. This
-> was observed as 13% of LLC-load-miss samples misattributed
-> to nfsd_file_get_dio_attrs when the actual hot function was
-> nfsd_cache_lookup, approximately 0xa80 bytes away in the symbol
-> table.
-> 
-> Use the existing dso__rel() flag (already set for ET_REL modules)
-> to select the correct adjustment: add sh_offset for ET_REL,
-> subtract (sh_addr - sh_offset) for ET_EXEC/ET_DYN.
-> 
-> Fixes: 0131c4ec794a ("perf tools: Make it possible to read object code from kernel modules")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Aldo Conte <aldocontelk@gmail.com>
 > ---
->  tools/perf/util/symbol-elf.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> v2: 
+>  - Use of rdmsrq() instead of rdmsr() to read the full 64-bit MSR
+>    in one single read avoiding the use of high and low.
+>  - Replace (1 << 7) with the MSR_IA32_MISC_ENABLE_EMON
+>  - Remove pr_cont() with MSR printout added in the previous patch
 > 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 76912c62b6a0..968e269d9be1 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1356,8 +1356,12 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
->  	char dso_name[PATH_MAX];
->  
->  	/* Adjust symbol to map to file offset */
-> -	if (adjust_kernel_syms)
-> -		sym->st_value -= shdr->sh_addr - shdr->sh_offset;
-> +	if (adjust_kernel_syms) {
-> +		if (dso__rel(dso))
-> +			sym->st_value += shdr->sh_offset;
-> +		else
-> +			sym->st_value -= shdr->sh_addr - shdr->sh_offset;
-> +	}
->  
->  	if (strcmp(section_name, (dso__short_name(curr_dso) + dso__short_name_len(dso))) == 0)
->  		return 0;
+> v1: https://lore.kernel.org/all/20260319152210.210854-1-aldocontelk@gmail.com/
+>  arch/x86/events/intel/p4.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
-For s390
+In general I figure people using W=1 can keep the pieces, but the split
+msr interface is a relic, so yeah, lets clean this up.
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks!
