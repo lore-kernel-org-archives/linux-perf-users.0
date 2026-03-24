@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF85533A6E9;
-	Tue, 24 Mar 2026 00:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B773368A9;
+	Tue, 24 Mar 2026 00:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774313176; cv=none; b=Wnf9QaQBWkNQsgYE1MEg2SmVOFZkeF6zZZ3Su4coWtlJTS4UWbViuQ/7Mxol7aC3R9CYqpya9c5AfbUHndcxFJegQIgnmty5AJU3vQgVkYRGFNI5zzBPIw/jR0AKFktAES+TP2CvFBMkG77Q9C0VB42pQXCl3ka3BIsUHHx8Opc=
+	t=1774313180; cv=none; b=jhmuqhXqYapkYCM0uXAeyX3Z+lJ9Ku8v1L/Z7iKA4B0qjS7XVkiQCHJ5tdSCyEecPHdhQ+Qa4cMejTa9nKMJJ3ppMLrDOpZSANiXNXrglsUKAyURAN8X0gr7kpgZh+7VmyjRKhvsK9FabEj5dZKazCwKHf/3r///Iw40XJtFOoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774313176; c=relaxed/simple;
-	bh=zodwL5+xJi/IO70cB6B5L6mqs+2tijSFx7bH9iRFOXs=;
+	s=arc-20240116; t=1774313180; c=relaxed/simple;
+	bh=YPwdksZY9flUYU+BXIQ78U8LxMq1uu73KMPaOrlJlDE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aovmFKJZZ82/8ff1jK3PQg0mME+KyYrS4l/yId9r/eQAF/FuPf2Er6DFkqfaO6EaydIE9Fo6Dp3i/uWJ4iMx6UIPunxZ4MJondKjCLDxhHr7T1BskIDb8PTaaoM92tP4bzORIZpcE9YVFonSi79zXJtZm9N2EUpunB9AJhJKlFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/+TLhlB; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=dxMpyiduAgSfwCQkO77e6Jbha97U/6U4lBU78nIUJU8XfPUbpt8W74+XlJqsDpeL0I88YapgHqvE+11hZKi5TqjJHmWp27U4nfLKc3wb78z+4AC5PU3fEhkGAdhvyTBFQTB6ArGxDsaBeRINENus2jSj0109v9G9vyCVBOt/aqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jsZIjjPq; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/+TLhlB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jsZIjjPq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774313175; x=1805849175;
+  t=1774313180; x=1805849180;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zodwL5+xJi/IO70cB6B5L6mqs+2tijSFx7bH9iRFOXs=;
-  b=S/+TLhlBJxTSRtmblXGUGanpT1btzeASWlXx4P6QKOSQR+6G6Ggr5khM
-   9sZIBFwdroZq2v3wXC5pfWDgjSA9+Kn6oudo/lP9duuC326P5Si7zKvK0
-   q3MK0LdVkH4o2BJJ6tkFi8IrCGbhfRizLlQ1iMSIR/WfnSCNHiaNpgb/o
-   T88ZlnjZB7bW/C+LhpWB6pds1mYnDGL8t33f0CNZpGbIpN5EwZU48eBdk
-   pExddFwslSwHuRM5o08eKBjKfu8A7Imzdq4RhhCzNrWA6O+kGn2wsE7UR
-   NqB1I0t99dNCZzVWupNn9Me7RzZlACRAMYSkbWcJqS/F+syKsVG9jWy7B
-   A==;
-X-CSE-ConnectionGUID: NdKBAkNESWeGClejHzKGPg==
-X-CSE-MsgGUID: 1kZthIy2SU+xJoQ+lwiJuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="86397034"
+  bh=YPwdksZY9flUYU+BXIQ78U8LxMq1uu73KMPaOrlJlDE=;
+  b=jsZIjjPqfT6R9n6675RcPiafeCS7FdQCYIfddTfz7ApFjqpX7+qFqPNI
+   6xKhUOky6IxFiPB7XI4Fg+WDpDQdi7rsfeawGvsYHucou05uJ5Q2gWjeM
+   5PoN6aMFVNUXaV/rL9FNbN1y9tnZBKv0fkavnWZgB40eowtKEH0qLmFDr
+   NwTN8picqGIcTbiAQbTQTU6uHC3M4BbR5NB58f+9/BnaiDjeno6XAGJXk
+   +QRoBwupPaf5nkYHx4dMCygvUn0r+kEdSLBoRnQG4om76AXguLBqh7ITF
+   s4J33lDjJv8n9uFf/519WC5KSJ6SanP/qTEzbWdZWNJbN7dzxoXkebR3j
+   Q==;
+X-CSE-ConnectionGUID: 89ZWDUocS2KJi7KFyqSnUQ==
+X-CSE-MsgGUID: FfwFUtnfSsKxHpxEL2Zrtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="86397054"
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="86397034"
+   d="scan'208";a="86397054"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:46:14 -0700
-X-CSE-ConnectionGUID: xf8DvQtxR1WNQ5ZVm/1GcQ==
-X-CSE-MsgGUID: zsGQ1Up0TLCC44xv6PaFYg==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:46:19 -0700
+X-CSE-ConnectionGUID: vorp4ajcQySGM1M1Frrl4A==
+X-CSE-MsgGUID: muSkuVMvSVC2hSm+hgElfw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="221322659"
+   d="scan'208";a="221322684"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Mar 2026 17:46:10 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 23 Mar 2026 17:46:15 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,10 +65,11 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v7 05/24] perf: Eliminate duplicate arch-specific functions definations
-Date: Tue, 24 Mar 2026 08:40:59 +0800
-Message-Id: <20260324004118.3772171-6-dapeng1.mi@linux.intel.com>
+Subject: [Patch v7 06/24] perf/x86: Use x86_perf_regs in the x86 nmi handler
+Date: Tue, 24 Mar 2026 08:41:00 +0800
+Message-Id: <20260324004118.3772171-7-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
 References: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
@@ -80,227 +81,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define default common __weak functions for perf_reg_value(),
-perf_reg_validate(), perf_reg_abi() and perf_get_regs_user(). This helps
-to eliminate the duplicated arch-specific definations.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-No function changes intended.
+More and more regs will be supported in the overflow, e.g., more vector
+registers, SSP, etc. The generic pt_regs struct cannot store all of
+them. Use a X86 specific x86_perf_regs instead.
 
+The struct pt_regs *regs is still passed to x86_pmu_handle_irq(). There
+is no functional change for the existing code.
+
+AMD IBS's NMI handler doesn't utilize the static call
+x86_pmu_handle_irq(). The x86_perf_regs struct doesn't apply to the AMD
+IBS. It can be added separately later when AMD IBS supports more regs.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/arm/kernel/perf_regs.c       |  6 ------
- arch/arm64/kernel/perf_regs.c     |  6 ------
- arch/csky/kernel/perf_regs.c      |  6 ------
- arch/loongarch/kernel/perf_regs.c |  6 ------
- arch/mips/kernel/perf_regs.c      |  6 ------
- arch/parisc/kernel/perf_regs.c    |  6 ------
- arch/riscv/kernel/perf_regs.c     |  6 ------
- arch/x86/kernel/perf_regs.c       |  6 ------
- include/linux/perf_regs.h         | 32 ++++++-------------------------
- kernel/events/core.c              | 22 +++++++++++++++++++++
- 10 files changed, 28 insertions(+), 74 deletions(-)
 
-diff --git a/arch/arm/kernel/perf_regs.c b/arch/arm/kernel/perf_regs.c
-index 0529f90395c9..d575a4c3ca56 100644
---- a/arch/arm/kernel/perf_regs.c
-+++ b/arch/arm/kernel/perf_regs.c
-@@ -31,9 +31,3 @@ u64 perf_reg_abi(struct task_struct *task)
- 	return PERF_SAMPLE_REGS_ABI_32;
- }
+V7: use per-cpu x86_intr_regs to replace temporary variable in v6.
+
+ arch/x86/events/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 67883cf1d675..ad6cbc19592d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1782,9 +1782,11 @@ void perf_put_guest_lvtpc(void)
+ EXPORT_SYMBOL_FOR_KVM(perf_put_guest_lvtpc);
+ #endif /* CONFIG_PERF_GUEST_MEDIATED_PMU */
  
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index b4eece3eb17d..70e2f13f587f 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -98,9 +98,3 @@ u64 perf_reg_abi(struct task_struct *task)
- 		return PERF_SAMPLE_REGS_ABI_64;
- }
++static DEFINE_PER_CPU(struct x86_perf_regs, x86_intr_regs);
+ static int
+ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+ {
++	struct x86_perf_regs *x86_regs = this_cpu_ptr(&x86_intr_regs);
+ 	u64 start_clock;
+ 	u64 finish_clock;
+ 	int ret;
+@@ -1808,7 +1810,8 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+ 		return NMI_DONE;
  
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/csky/kernel/perf_regs.c b/arch/csky/kernel/perf_regs.c
-index 09b7f88a2d6a..94601f37b596 100644
---- a/arch/csky/kernel/perf_regs.c
-+++ b/arch/csky/kernel/perf_regs.c
-@@ -31,9 +31,3 @@ u64 perf_reg_abi(struct task_struct *task)
- 	return PERF_SAMPLE_REGS_ABI_32;
- }
+ 	start_clock = sched_clock();
+-	ret = static_call(x86_pmu_handle_irq)(regs);
++	x86_regs->regs = *regs;
++	ret = static_call(x86_pmu_handle_irq)(&x86_regs->regs);
+ 	finish_clock = sched_clock();
  
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/loongarch/kernel/perf_regs.c b/arch/loongarch/kernel/perf_regs.c
-index 263ac4ab5af6..8dd604f01745 100644
---- a/arch/loongarch/kernel/perf_regs.c
-+++ b/arch/loongarch/kernel/perf_regs.c
-@@ -45,9 +45,3 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 	return regs->regs[idx];
- }
- 
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/mips/kernel/perf_regs.c b/arch/mips/kernel/perf_regs.c
-index e686780d1647..7736d3c5ebd2 100644
---- a/arch/mips/kernel/perf_regs.c
-+++ b/arch/mips/kernel/perf_regs.c
-@@ -60,9 +60,3 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 	return (s64)v; /* Sign extend if 32-bit. */
- }
- 
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/parisc/kernel/perf_regs.c b/arch/parisc/kernel/perf_regs.c
-index 10a1a5f06a18..b9fe1f2fcb9b 100644
---- a/arch/parisc/kernel/perf_regs.c
-+++ b/arch/parisc/kernel/perf_regs.c
-@@ -53,9 +53,3 @@ u64 perf_reg_abi(struct task_struct *task)
- 	return PERF_SAMPLE_REGS_ABI_64;
- }
- 
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/riscv/kernel/perf_regs.c b/arch/riscv/kernel/perf_regs.c
-index fd304a248de6..3bba8deababb 100644
---- a/arch/riscv/kernel/perf_regs.c
-+++ b/arch/riscv/kernel/perf_regs.c
-@@ -35,9 +35,3 @@ u64 perf_reg_abi(struct task_struct *task)
- #endif
- }
- 
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index 624703af80a1..81204cb7f723 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -100,12 +100,6 @@ u64 perf_reg_abi(struct task_struct *task)
- 	return PERF_SAMPLE_REGS_ABI_32;
- }
- 
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
- #else /* CONFIG_X86_64 */
- #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
- 		       (1ULL << PERF_REG_X86_ES) | \
-diff --git a/include/linux/perf_regs.h b/include/linux/perf_regs.h
-index f632c5725f16..144bcc3ff19f 100644
---- a/include/linux/perf_regs.h
-+++ b/include/linux/perf_regs.h
-@@ -9,6 +9,12 @@ struct perf_regs {
- 	struct pt_regs	*regs;
- };
- 
-+u64 perf_reg_value(struct pt_regs *regs, int idx);
-+int perf_reg_validate(u64 mask);
-+u64 perf_reg_abi(struct task_struct *task);
-+void perf_get_regs_user(struct perf_regs *regs_user,
-+			struct pt_regs *regs);
-+
- #ifdef CONFIG_HAVE_PERF_REGS
- #include <asm/perf_regs.h>
- 
-@@ -16,35 +22,9 @@ struct perf_regs {
- #define PERF_REG_EXTENDED_MASK	0
- #endif
- 
--u64 perf_reg_value(struct pt_regs *regs, int idx);
--int perf_reg_validate(u64 mask);
--u64 perf_reg_abi(struct task_struct *task);
--void perf_get_regs_user(struct perf_regs *regs_user,
--			struct pt_regs *regs);
- #else
- 
- #define PERF_REG_EXTENDED_MASK	0
- 
--static inline u64 perf_reg_value(struct pt_regs *regs, int idx)
--{
--	return 0;
--}
--
--static inline int perf_reg_validate(u64 mask)
--{
--	return mask ? -ENOSYS : 0;
--}
--
--static inline u64 perf_reg_abi(struct task_struct *task)
--{
--	return PERF_SAMPLE_REGS_ABI_NONE;
--}
--
--static inline void perf_get_regs_user(struct perf_regs *regs_user,
--				      struct pt_regs *regs)
--{
--	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
--}
- #endif /* CONFIG_HAVE_PERF_REGS */
- #endif /* _LINUX_PERF_REGS_H */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5eeae8636996..eb1dea2b1b0e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7731,6 +7731,28 @@ unsigned long perf_instruction_pointer(struct perf_event *event,
- 	return perf_arch_instruction_pointer(regs);
- }
- 
-+u64 __weak perf_reg_value(struct pt_regs *regs, int idx)
-+{
-+	return 0;
-+}
-+
-+int __weak perf_reg_validate(u64 mask)
-+{
-+	return mask ? -ENOSYS : 0;
-+}
-+
-+u64 __weak perf_reg_abi(struct task_struct *task)
-+{
-+	return PERF_SAMPLE_REGS_ABI_NONE;
-+}
-+
-+void __weak perf_get_regs_user(struct perf_regs *regs_user,
-+			       struct pt_regs *regs)
-+{
-+	regs_user->regs = task_pt_regs(current);
-+	regs_user->abi = perf_reg_abi(current);
-+}
-+
- static void
- perf_output_sample_regs(struct perf_output_handle *handle,
- 			struct pt_regs *regs, u64 mask)
+ 	perf_sample_event_took(finish_clock - start_clock);
 -- 
 2.34.1
 
