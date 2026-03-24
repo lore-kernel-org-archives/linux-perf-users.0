@@ -1,121 +1,179 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C60241665;
-	Tue, 24 Mar 2026 11:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FE7318EDF
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Mar 2026 11:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774350058; cv=none; b=lw6Yx4YSIdBFUbPLckR8Jj85QC3wsEvzmGtJVtsW1B7FLMbSo03fzqCffwHwps6vB/aBc+7GMET0oTDrDun5IiLqv8M4rNBo44ws8wVwvxXBWs1hFh13kpEkEkviP9HV7L74xnxU1N5TeHllBqwM2kNl7V2SY3ESAX4TYG3LhZ4=
+	t=1774350472; cv=none; b=FoFZhRE10AkKvrsTKDqTZDmptwRpX2nIXs4UQGqU3TxXS8GKVE2RnkEFggMbO/eIW5U1K9dmtei24DiSv1DyCIP0V57xXhQFccFXmSUR8/33IaTXRqVOBdUUhiMAO8p/IISVhGam/kGPCq12gnI/u0p67DTsMbSZy4s0lXEdRVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774350058; c=relaxed/simple;
-	bh=Oe3Vg3S8mxT/p5JmSF1aIUNvorHkMrnMplNiCvjDkH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i32AZnnJxLe/vw15k74jTkc5QfqXF/QkuCdNEDchwW9bBqnst3PfnwGkaDBnLF7BuSDRT90jKrC44U4DaalNRp2ojPHiDh1Jk5n8ZD6XtjQdFqV4WZ+DgzYBSZwvsgFLz816JeK9YP9zTr5qPC4euoisyEMDScfTWVYdEPre75c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=as9Vd4Km; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1774350472; c=relaxed/simple;
+	bh=QG+8lD3sXRzohUKO6LV6DWO+gSoLA789GHs4h40/4G8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZDijMmdFlc3Jl8wb5AvLr2KgMX+mTOPo++S+m4U8hxWmpNBgtM5xlpLb1u4y3u+OdFBsicPmMt1TzYm0jv/mCUSb3nDpMFbw9rtdF5XpBa6XSh9Ola6d/+kt2PW0cBvW7Bu4gJGAH3L5lOVkDINIsQNfJUmsaFTzLguW7j1pJqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R5o2FlBF; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="as9Vd4Km"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=qbZ8j6xqh7ypw+ZPOVxuDTv3AEc31FwYpRu4/UHR7dM=; b=as9Vd4KmuiiFNY6u4zt9Wcqy2Z
-	eDX/mlwY4qvo4guQ0tx8/OyXDQI0Tpo6/BARh0odFFMxMPZV7GUUqf2KaptTDF4UXWVSToAq+nJjz
-	4hLQ7C+APM+jrpAF17JQcfGN6M7fUzv2EGwdpshGtSPTggxLZnonbtXjjUVCkcqixFrkJSQvZViWV
-	1H8nVgIXDSP/kta2mIbzfdua2QThcs2yEX4FWRLCeN4T9sl6sEdfM2vYc42wW/GN2GLcrPMhb/S0d
-	PFK0jReHCdKLhcbLI9gbEq3g6iNa5kJLviUAPLjiWBfL4BXcqCumMC7frHxmY5pL0OwIbgKZ7R1pe
-	tg/Y46lA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1w4zUy-008FwT-09; Tue, 24 Mar 2026 11:00:34 +0000
-Date: Tue, 24 Mar 2026 04:00:28 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Leo Yan <leo.yan@arm.com>, acme@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Denis Yaroshevskiy <dyaroshev@meta.com>
-Subject: Re: [PATCH] perf stat: Fix crash on arm64
-Message-ID: <acJufmWMuzD9Jzcr@gmail.com>
-References: <20260205-perf_stat-v1-1-e433b0c918af@debian.org>
- <CAP-5=fW2iUbaZRX789SaJNGXk1VhGg0igLukb6SAosKiA-f1tA@mail.gmail.com>
- <20260205173918.GB3529712@e132581.arm.com>
- <20260205175250.GC3529712@e132581.arm.com>
- <CAP-5=fUY8dYzwKu-g3-HER4ji9ZeGmPQo9DeORW0w9ocW1qnMw@mail.gmail.com>
- <abFBoVrlGl9cIg1h@gmail.com>
- <20260311115011.GJ4153946@e132581.arm.com>
- <CAP-5=fWRgDo7UnJAD4C--d=mVPRhOEWZVyU7nVM1YEp3jncAgg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R5o2FlBF"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62NJtDbn3111761;
+	Tue, 24 Mar 2026 11:07:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=IdJXTy
+	EO82Ru1iNtXkchM6iEKX+rtchRpyWzxFwuTEM=; b=R5o2FlBFVT1Ygis2HFv4PM
+	5mDU+4fjx6pMKbkPdQCqPoyMEiWsQvQ8dJJC8JyzhRIPrcITqZWe9Ehdv43Oa8Cb
+	/dOk3xBfWti2eseUBdx90G9v3/wRRyes/hu/lzIw9E1O0WJbBe7ZCv7VsnxBbjUE
+	6+8PItOIKW1Ra0Gq72W4+1GTfj/B01hxbFac5TN1Lv8r2PWF4Zdi60FgxT+6zeKV
+	0gsYOMGLFXiS9OIpgixOmQWfFbXEk07SHxIs9TLignwxfBf8IYn8K9a3afw/SR8q
+	0MZp9Zhf2NQiU9i5rYJ8m2RqGNing4LvkZ9eYX1+q2UIbeovaI4fKvEgfwY8Qupg
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kumjhq7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Mar 2026 11:07:32 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62O8xCmP004375;
+	Tue, 24 Mar 2026 11:07:31 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d28c2181n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Mar 2026 11:07:31 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62OB7U1G52035878
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Mar 2026 11:07:30 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A3792004B;
+	Tue, 24 Mar 2026 11:07:30 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D1B8320040;
+	Tue, 24 Mar 2026 11:07:29 +0000 (GMT)
+Received: from [9.52.199.37] (unknown [9.52.199.37])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 24 Mar 2026 11:07:29 +0000 (GMT)
+Message-ID: <cd24821d-2357-4203-85d1-8db37ac11640@linux.ibm.com>
+Date: Tue, 24 Mar 2026 12:07:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf symbols: Fix module symbol resolution for non-zero
+ .text sh_addr
+To: Chuck Lever <cel@kernel.org>, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20260323155804.7216-1-cel@kernel.org>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20260323155804.7216-1-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWRgDo7UnJAD4C--d=mVPRhOEWZVyU7nVM1YEp3jncAgg@mail.gmail.com>
-X-Debian-User: leitao
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: GS9HO3aOGLMio27LCc3HEH0zb72qDG97
+X-Proofpoint-ORIG-GUID: GS9HO3aOGLMio27LCc3HEH0zb72qDG97
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDA4NiBTYWx0ZWRfX/FsZwVJZVcLL
+ vtUJkpqEFPstlG9ZSeyNHafHtesd+HgPz1rd0kLogIH7fNLdxz80eccmAYXXvKgAN1nO6cBIDKh
+ fVIY6XecuwVNUqftR+boiAWrmZSQDA08rx8TxeCLdj+TBitW/6H/Z8lICz2UashM3jAQLNBwE1g
+ hNpLlIZlGtWaw+XxJ7e0KRWC0bNmkpbDEAPc/W+O8XLn6jPS+wvaJFpGGtuBeXSQapcme9W5Zhs
+ MBWuKz828msOFyb9umCg3l95O1je1fi1kWRJrE4Ig95QZUhxO0bYrru36/daOuB7hopvfAbJbw6
+ fCI4fqjdyoy699ZZF8aMjckJSnimtS+in2vJI82T9SywP98PdPl4dtnmX9SOZE8CH2mK382GaEl
+ uPco8kRFykwBEdvo9x8vahHG4GQtF4Mg04Jxj+XQ1qS4SMivTVHKru6zCyVXgUOLDr50nYLWqwK
+ n1J96wRsX2w6XEI0+pw==
+X-Authority-Analysis: v=2.4 cv=KbXfcAYD c=1 sm=1 tr=0 ts=69c27074 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=yPCof4ZbAAAA:8
+ a=VnNF1IyMAAAA:8 a=KByoUL483hSIROooWq4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-24_02,2026-03-23_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1011
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603240086
 
-On Mon, Mar 23, 2026 at 10:06:37AM -0700, Ian Rogers wrote:
-> On Wed, Mar 11, 2026 at 4:50 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > Hi Breno,
-> >
-> > On Wed, Mar 11, 2026 at 03:21:00AM -0700, Breno Leitao wrote:
-> > > On Thu, Feb 05, 2026 at 10:22:27AM -0800, Ian Rogers wrote:
-> > > > I think it is a different issue, they have metrics while you don't.
-> > > > Your report does highlight we're missing a NO_JEVENTS=1 build-test,
-> > > > but the build is working for me. I'll send out two patches for these
-> > > > issues.
-> > >
-> > > Hi Ian, Leo, Acme
-> > >
-> > > I wanted to follow up on this. Are there any next steps I should take?
-> >
-> > Sorry for not tracking this issue.
-> >
-> > I can reproduce the issue on my Orion6 with setting a _dummy_ CPUID:
-> >
-> >  $ export PERF_CPUID=0x00000000410fd490
-> >  $ perf stat -C 5 -vvv
-> >  ...
-> >  Aborted
-> >  perf: util/evsel.c:2156: get_group_fd: Assertion `!(!leader->core.fd)' failed
-> >
-> > Because we are working on different hardwares, I am a bit suspect I
-> > reproduced the issue with difference sequence as yours.  Anyway, I do
-> > see that an event can be opened prior to its leader event, see the log
-> > below.
-> >
-> > Thus, your patch seems make sense to me as we need to ensure the leader
-> > event to be opened first.  Ian, how about you think?
+On 3/23/26 16:58, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Because so many things depend on the event ordering, the patch makes
-> me very nervous, particularly how it will change architectural
-> requirement handling. Ordering the Intel slots and metric events is a
-> challenge. There is also how handling uncore events, which are
-> deliberately parsed out-of-order, will change. I've got a feeling the
-> test coverage for this isn't adequate, and finding the bugs requires
-> running on particular machines. It will also require examining the
-> default perf stat output to ensure this isn't broken; hopefully the
-> code is somewhat robust.
+> When perf resolves symbols from kernel module ELF files (ET_REL),
+> it converts symbol addresses to file offsets so that sample IPs
+> can be matched to the correct symbol. The conversion adjusts each
+> symbol's st_value:
+> 
+>   sym->st_value -= shdr->sh_addr - shdr->sh_offset;
+> 
+> For vmlinux (ET_EXEC), st_value is a virtual address and sh_addr
+> is the section's virtual base, so subtracting sh_addr and adding
+> sh_offset correctly yields a file offset.
+> 
+> For kernel modules (ET_REL), st_value is a section-relative
+> offset. The module loader ignores sh_addr entirely and places
+> symbols at module_base + st_value. Converting to file offset
+> requires only adding sh_offset; subtracting sh_addr introduces an
+> error equal to sh_addr bytes.
+> 
+> When .text has sh_addr == 0 -- the historical norm for simple
+> modules -- both formulas produce the same result and the bug is
+> latent. As modules gain more metadata sections before .text (.note,
+> .static_call.text, etc.), the linker assigns .text a non-zero
+> sh_addr, exposing the defect. For example, nfsd.ko on this kernel
+> has sh_addr=0xa80, kvm-intel.ko has sh_addr=0x1e90.
+> 
+> The effect is that all .text symbols in affected modules
+> shift by sh_addr bytes relative to sample IPs, causing perf
+> report to attribute samples to incorrect, nearby symbols. This
+> was observed as 13% of LLC-load-miss samples misattributed
+> to nfsd_file_get_dio_attrs when the actual hot function was
+> nfsd_cache_lookup, approximately 0xa80 bytes away in the symbol
+> table.
+> 
+> Use the existing dso__rel() flag (already set for ET_REL modules)
+> to select the correct adjustment: add sh_offset for ET_REL,
+> subtract (sh_addr - sh_offset) for ET_EXEC/ET_DYN.
+> 
+> Fixes: 0131c4ec794a ("perf tools: Make it possible to read object code from kernel modules")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  tools/perf/util/symbol-elf.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 76912c62b6a0..968e269d9be1 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1356,8 +1356,12 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+>  	char dso_name[PATH_MAX];
+>  
+>  	/* Adjust symbol to map to file offset */
+> -	if (adjust_kernel_syms)
+> -		sym->st_value -= shdr->sh_addr - shdr->sh_offset;
+> +	if (adjust_kernel_syms) {
+> +		if (dso__rel(dso))
+> +			sym->st_value += shdr->sh_offset;
+> +		else
+> +			sym->st_value -= shdr->sh_addr - shdr->sh_offset;
+> +	}
+>  
+>  	if (strcmp(section_name, (dso__short_name(curr_dso) + dso__short_name_len(dso))) == 0)
+>  		return 0;
 
-Sure thing. please let me know if there is any action on my side, and
-I am happy to help.
+For s390
 
-> Ideally, the impact of the change on all these issues would be in the
-> commit message, but it's more realistic to cover each issue with
-> testing. I'll try to ask an AI buddy to help with this. Could you
-> rebase and send a v2? I'm curious to see what sashiko will throw up.
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-Ack. I will resping it, so, we can check what sashiko thinks about it.
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
-Thanks,
---breno
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
