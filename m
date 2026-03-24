@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A5B33A033;
-	Tue, 24 Mar 2026 00:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C821530B51D;
+	Tue, 24 Mar 2026 00:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774313157; cv=none; b=Jsu0BmMZm+Ni2mGvwe4+QANTt4E0rl0K6OeogTl4uElxnCKGb9fsIw0r7u430JgmWehdESKXZmD+N4DgRWj5qD6rsKgiq5plsWgkxrkgDNtFICJ0RILe7c1eMy5MDmFQ6g6RWz8s8VcGwYYEF20h20ywi+afygJlqE1vXcYkq8Q=
+	t=1774313162; cv=none; b=t/zRuz/pkDhKoAXq4WQnm6f1OMdhfJNRgP59VbjcfzbhxZ2+ezPGMPVb9RiRmefT+OMudxb4YSkElbG+rcOpWUMrb9orjVRbGgoVd8T/D8G+kxV0c/wpuMbx4DJyKdJy349sZiuB1J4jWD28TWsE3w9GkG0DyPOGXQkmFil7kP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774313157; c=relaxed/simple;
-	bh=ucyDrz+YIvqZS8qQMRZNMN6O3iLyvvXdEPYmMh/DcuE=;
+	s=arc-20240116; t=1774313162; c=relaxed/simple;
+	bh=nZdptApk2egtKxE0jTlQ4OhGVZIz8u+Eemv+BFkILIo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F1RYrPTWdgEs01EjdtdGTwBsr8fqjdmdAajwwQD2reKsZqUB4BkXi+mMddISCo8OSzVwydRj0xLrCHeR2p0ZbjeEhWAu6RBHdbmk+9vjf9aT54T4Wbi7BxbUaY9yD0d9Osu/mwFYg8ddOcC9+ErmmRk5O0/Wh1gHqMjsWoWv7TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CsNnSPfX; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=Wcvof6jnQoKkDKdpvX7TndARZ9qdquA7X8hvTvWi7S+eidDzEJ0Ipj67PHpnJC+dPvr3vouTIYV6n9+D5SvsRiQmycbaobuZ2Ggx5iYn+WDNm7ngdgIqOCymC9YU5SeW17T/pAzcVVMiLOVccv0zZsUpgQ1Wj+391rryk/BuyLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQp28z9m; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CsNnSPfX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQp28z9m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774313156; x=1805849156;
+  t=1774313161; x=1805849161;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ucyDrz+YIvqZS8qQMRZNMN6O3iLyvvXdEPYmMh/DcuE=;
-  b=CsNnSPfXCSUItxho7MXjdp9jBniyS84Ch1S9o3NkYvA833QkOxEzSKB4
-   xao7DsUyVduv3uk8iAR/8hRQeLsNq0Xc/1JOq8V8olA7PYyPMEwMbxw6q
-   PWt6TpwoiAb6hz1Gf/QgJcCa5J8Ynn2onsiCA74lmG/2ajP9tmYOAq00t
-   0EF/1XCZ4ro6q1ZhM+MhGmbQi5ys0XMd3nn49lYfX3yRe8usQDHLCrtX7
-   VwnckFg+Jv1ipGYY1fvEbAB+/vCgDoY4NwH21y/M+FDicTOs+ZGFpY87R
-   5NfOnAi1ZT+uMx+TOyppRCSFK3J36eiJaoQTcCYbD/XQvdZUE14LmmS3j
+  bh=nZdptApk2egtKxE0jTlQ4OhGVZIz8u+Eemv+BFkILIo=;
+  b=WQp28z9mHWYjEAJdB/uA6zU/UNDI3N9EM+s7v0Yj1z4IY5ePoObQAaN+
+   OmAz5qNheOLX6gH1NjY+ljnS5QtX1cAd6E7aUO65PELYD50UhEK2bBKQW
+   Z9V98CqUrmzHqFUFDDI4UEEbwsX6CM6NwKgc/K9qAOdJA/CzV4NlOrxzx
+   cWv6VvK4gKrIIaPrXe4hQpBFRHFSS1sI4KhwBDuFmu7lnaej5N0VNaSuQ
+   k09K45cX1nZ3IhOary3ljEt/oPViClORxX/EKISesJQLw+SKnWN23qwKk
+   07usilet8jrtgKilNRrih+x8Don9DRwFucPPmceBicMFvpNFBQxLzQtOP
    A==;
-X-CSE-ConnectionGUID: 8P8lAEMgQJ6+NQ/GHCIlbg==
-X-CSE-MsgGUID: h1FsJzo6Q+GEomTTsGcFDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="86396932"
+X-CSE-ConnectionGUID: Y+TyXdzST3GT8HcRUtATGw==
+X-CSE-MsgGUID: kNs6lyG4R5+zPIxtL/T/1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="86396953"
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="86396932"
+   d="scan'208";a="86396953"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:45:56 -0700
-X-CSE-ConnectionGUID: NU8Cgf+dSLGYuYeb1NXdHQ==
-X-CSE-MsgGUID: dFxChUNjRWuqC8LEfI37sw==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:46:00 -0700
+X-CSE-ConnectionGUID: EEgbxxN/SxacT6MBoQsc+A==
+X-CSE-MsgGUID: IZA98ioZTEKLPaqdBs1/YA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="221322564"
+   d="scan'208";a="221322582"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Mar 2026 17:45:51 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 23 Mar 2026 17:45:56 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,10 +65,11 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v7 01/24] perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
-Date: Tue, 24 Mar 2026 08:40:55 +0800
-Message-Id: <20260324004118.3772171-2-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Yi Lai <yi1.lai@intel.com>
+Subject: [Patch v7 02/24] perf/x86/intel: Avoid PEBS event on fixed counters without extended PEBS
+Date: Tue, 24 Mar 2026 08:40:56 +0800
+Message-Id: <20260324004118.3772171-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
 References: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
@@ -80,60 +81,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current approach initializes hybrid PMU structures immediately before
-registering them. This is risky as it can lead to key fields, such as
-'capabilities', being inadvertently overwritten.
+Before the introduction of extended PEBS, PEBS supported only
+general-purpose (GP) counters. In a virtual machine (VM) environment,
+the PEBS_BASELINE bit in PERF_CAPABILITIES may not be set, but the PEBS
+format could be indicated as 4 or higher. In such cases, PEBS events
+might be scheduled to fixed counters, and writing the corresponding bits
+into the PEBS_ENABLE MSR could cause a #GP fault.
 
-Although no issues have arisen so far, this method is not ideal. It makes
-the PMU structure fields susceptible to being overwritten, especially with
-future changes that might initialize fields like 'capabilities' within
-init_hybrid_pmu() called by x86_pmu_starting_cpu().
+To fix this issue, enhance intel_pebs_constraints() to avoid scheduling
+PEBS events on fixed counters if extended PEBS is not supported.
 
-To mitigate this potential problem, move the default hybrid structure
-initialization before calling x86_pmu_starting_cpu().
-
+Reported-by: Yi Lai <yi1.lai@intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
 
-V7: new patch.
+V2: Restrict PEBS events work on only GP counters if no PEBS-baseline
+suggested instead of limiting cpuc->pebs_enabled to PEBS capable
+counters in v1.
 
- arch/x86/events/core.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/ds.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 03ce1bc7ef2e..67883cf1d675 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2189,8 +2189,20 @@ static int __init init_hw_perf_events(void)
- 
- 	pmu.attr_update = x86_pmu.attr_update;
- 
--	if (!is_hybrid())
-+	if (!is_hybrid()) {
- 		x86_pmu_show_pmu_cap(NULL);
-+	} else {
-+		int i;
-+
-+		/*
-+		 * Init default ops.
-+		 * Must be called before registering x86_pmu_starting_cpu(),
-+		 * otherwise some key PMU fields, e.g., capabilities
-+		 * initialized in x86_pmu_starting_cpu(), would be overwritten.
-+		 */
-+		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++)
-+			x86_pmu.hybrid_pmu[i].pmu = pmu;
-+	}
- 
- 	if (!x86_pmu.read)
- 		x86_pmu.read = _x86_pmu_read;
-@@ -2237,7 +2249,6 @@ static int __init init_hw_perf_events(void)
- 		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
- 			hybrid_pmu = &x86_pmu.hybrid_pmu[i];
- 
--			hybrid_pmu->pmu = pmu;
- 			hybrid_pmu->pmu.type = -1;
- 			hybrid_pmu->pmu.attr_update = x86_pmu.attr_update;
- 			hybrid_pmu->pmu.capabilities |= PERF_PMU_CAP_EXTENDED_HW_TYPE;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 5027afc97b65..49af127bff68 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1557,6 +1557,14 @@ struct event_constraint *intel_pebs_constraints(struct perf_event *event)
+ 	if (pebs_constraints) {
+ 		for_each_event_constraint(c, pebs_constraints) {
+ 			if (constraint_match(c, event->hw.config)) {
++				/*
++				 * If fixed counters are suggested in the constraints,
++				 * but extended PEBS is not supported, empty constraint
++				 * should be returned.
++				 */
++				if ((c->idxmsk64 & ~PEBS_COUNTER_MASK) &&
++				    !(x86_pmu.flags & PMU_FL_PEBS_ALL))
++					break;
+ 				event->hw.flags |= c->flags;
+ 				return c;
+ 			}
 -- 
 2.34.1
 
