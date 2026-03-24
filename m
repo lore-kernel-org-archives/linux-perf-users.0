@@ -1,450 +1,621 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474931E5B64
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Mar 2026 04:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774325976; cv=pass; b=kA05ANEhd8EsflRVb7nFi+1PmVFcdhcXSoC1utkRNvL+K/wb8Szd/ra5KC+eHXjoU3w07jhM5AfKi4J5FvHDNvFxPM5mE9k0J1EmglLStc8WinRcFmEo2MMCakvcj5J0tRrkKBsLiK/aTaXExPFRyFA9vQngyQ/t2ilvY6yRumA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774325976; c=relaxed/simple;
-	bh=/O+MTcrM96xJgvVfk/hLD6xdrcgyM16IbCZDXn9fEvk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o1sB4hesSpnjKowrOZc6QsS0hlxODwGqRtTMvZ2F4ml3zD1uu+xj2Oi8T/yxqsx3YTj6OkjiqfMW7/FmLQz22Xj5JUdcFuZMU42O3RQb1KNt8SKbDnKfke+p2c2jW33e2FL6XV/JTgyZLjw2D9Om3DEDfR6j7Bhre/HoHEh9S9A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kfHJYRPN; arc=pass smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EBD3A2569
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Mar 2026 05:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774331848; cv=none; b=GADNW+BS+9f3SJqdNckR6Obz6rUIoc8/BCnDJWxT/BCDUQAoQmu1JMXL4VYN9q6xLK1aj1pBdTfXo8oRIYVFkX6pAo3Q/pRyvXmbKtnsOy8YJc6nbAFayfDVTo9jNJQf+6DvriSLBUiratMOjS6ygp7/XHFuIJg0GJeJHnJ087o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774331848; c=relaxed/simple;
+	bh=WTrSyUNmIuP3fqejIPaFvnuEASOpAWW44FPyOhKil0M=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ojQpO+Fk/bUdzA7ZGKjUntilAUliOPWsM2EXg9l/5PJYjHJazrnZgqxoBwJkJfLtzaIaJV2UTDgYvozFiXklTmOz1GPJQinQsOHnbmB30w+IZ3/sstBi9PneeHabX62/zq+EjUZUkrAfTgt3Y/RLl/gG6Bq7++m4P0Ypg2v1JlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KpHZJ0Vs; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kfHJYRPN"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-126ea4e9697so3967c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Mar 2026 21:19:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774325974; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LDLAkdxN0oClBWI03TubKd1/o7nfAyMIzEW0XQ5MIDGdz50VHNyf+RRDHqrXXHyadu
-         Uy9kUZis493LYBIcVXkCwdZ1aQ/tKPgfmjhVdkNMIIVXP7yAG/WB7epbZWkpyhWF2hlV
-         mpXSDVVe83nxGo9DWUwKPPpuSs3tYko5iry5AqYF08/76EjcaEABInb5efDPSl1tv7dv
-         nvMcNYUvtp6/32/10Xu6Ms7bDcq7Edh29ya2kYkywi/VzpvyLlzs6FxCoRAbE/jBMp/o
-         5LHWzWJa40AmQAIRO7XDVHLFFDsVifpHe64i49bBoDszbS3WAyh+x7HrFAYkkLruoQhc
-         XBcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NHP/cgwApiu7vjtrG8hPnSAFW3clok7WHUaTU0v68KU=;
-        fh=KUGZshki2KaD25BttmIe/faNzgAvmKLocWTFQJCPVu0=;
-        b=AXTxMecy9jqiiXtl4e8vHy8J6YC4KMecVLBYa0QdWtux5/z+QnHuiumtBBUGqidR+G
-         MfADL0isEwsjiQ2Bjxa1FjBajSxoBPD0rZyPMTHECkpaEZn1lp6moYQZzqkYAL0A3Il3
-         bTdXdQN7QWu2yfSW1zd+CJ7YhL6ah/es1xuZPuPbBN/eWtGAnaxn9VHr0JcKgnjwbs17
-         JHxSJIOYYF1RZq6TzMCm7fe6gy/Q+URpa6YMLHp7wKTfX0303FhLt4XnwJ5UJuX4wiEs
-         /8orxeuCo2KGWkgT+vKK+OMvKFLF68cwv48wyIO9H7rlH426rSg8q54PqS9WBNzNk+3P
-         xjbA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774325974; x=1774930774; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NHP/cgwApiu7vjtrG8hPnSAFW3clok7WHUaTU0v68KU=;
-        b=kfHJYRPNWeQfAnjpng/M9VEf15wuhGp7muKsDM11KMqRK6pIgtK0Nh5UXe8zY7Nhcb
-         pzE0fhSIxLqC842P8bvnAuFr5OO+4IPxNtmE0U1dmkX7IDqZfbh45lMOUq9TBsZYnEmL
-         5y+B2wlSpLeKOa4MjWhAUKXYIMihZ32EBa4zlhDRhhWik29+ms/a3ApBjrmUCRxy3U5B
-         DLWTBh5Fn7iR0PYCKsrVsMU72tpBXuJn6ilvcx9zamEOQgvbB/XP+YXlfHT3r07+YUOs
-         sb/e6fLBfuWqYyU7ekAnw5EJyTb5tg6Ns1IOdj/yli15460RTVVDRjDDO8KFy1WS2keJ
-         mTGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774325974; x=1774930774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NHP/cgwApiu7vjtrG8hPnSAFW3clok7WHUaTU0v68KU=;
-        b=FiZ1T1OqW3Xkd4GsKUxZaN94u5bchxTaBXDAjA+lciMw36UjeWsTqa1Ggqv8KZumNR
-         t5u6UADvUhIjxjwRlI0CbiVRoD0AyfU48KRwnD4Y8VOy5EvLXg39OllDLn8s+nmbkpaE
-         yZQSxK7AGf1fCJLt0QGXSYU98N7YoyY2Msgeg6mwl7dhNdDiTk3G0WUe7PDK53kwZ4bv
-         vryRWj8+JpM3/JIJFKWS9f5J+hrOYI1J6eX132oOyouG/kFxXPqlC2MxsopKFy4T03tr
-         1PapSeS5ZkJc1Mzo7XOGeEg2cRuMtWYZIy7CobIPqHPwcqUHRbleXxSZQ9+DEOr9kDUp
-         MM8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVSkO1OofxZ/MZzZbnRGYL2721J3Yfdi103qmQqC1XRUYJ3l1Hl1rYhehAzGx16h/XyMKj8IlhtbJSiPuifQO6Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5ykkEfz3AEMCUMyDBtlaSUjZ4m4APTcLMtJ+rw9BLyOFMu9Q4
-	SV3Qbl6M0n/NaANVwQDEQbJRjTp4enJ20+oMwZIaJJ47VMTVAIFUycBtpuUt1UgACDyab8uvaEL
-	Rh2o63fS4bTlFaFxRHOqv1qT9zrm7ZA6U1d1v+31J
-X-Gm-Gg: ATEYQzzlPgxikqqSRLw1+wM0rGiVh0vpN7v6Jspsyf7J8K+7BMkRVykjz+fdzut2xZl
-	yBsfGbkLM3Rg4/kD3EBrAb2l6OSokeSFrObY9lO9FvLecOd0m+hGv/5O3D4dHHbTQAT2cTKXuGt
-	O/asTS+eGdqIyOLdXmUUv9X9qCT6eAtm73EjhtiCs2WTIoOEKRem3uyT52Utg2O9bQwwOoyTOmG
-	CeSG4kNPb9ZotRkiCnzryDBPRTkJU901lkLUud2rTxUijNsPhC6RFvn/VMJNPPyqOVjDLqcKTtK
-	HjKbV482
-X-Received: by 2002:a05:7022:628e:b0:11a:44d1:533b with SMTP id
- a92af1059eb24-12a8e67af82mr80459c88.8.1774325973529; Mon, 23 Mar 2026
- 21:19:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KpHZJ0Vs"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62NI8Yht1073850;
+	Tue, 24 Mar 2026 05:57:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2oor+M
+	YF8TomBMgmD+lB129UgQOGofcdbJEhp1qK72c=; b=KpHZJ0Vst3lT0gTOsrwbEq
+	ablXwJ9FV9RXJ/eNHXusk1EHsYgpp0oKXJKwbBcbWt5YMafckPqyMoxXY9AZI7bz
+	jC4mTLT/KtfhdPLLRu95tovaljR8ReGNYI+RjDwkuzPAg6y/GjmdHDW4uh86PBrL
+	ADlrhhznDvuYTRL9188a5Cq/mjmvDTIeQj4jRso427vauQvNWyRnZBqVG12F/gGS
+	TG24BPY5QFpigP/wcfa1UUnj2qN929XLrgEaz/nKNhOsh0NcLrbGm9KKliv09gVq
+	w7b9G9hBqi/DP4n7Q+evKtvTmXpp1sHarHnp5zOFXrn1+7+akDngF48EEaXop7bg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ky01fsh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Mar 2026 05:57:14 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62O40RbH026797;
+	Tue, 24 Mar 2026 05:57:13 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d275kr9te-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Mar 2026 05:57:13 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62O5v9JV46137696
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Mar 2026 05:57:09 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7439620043;
+	Tue, 24 Mar 2026 05:57:09 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DEEF120040;
+	Tue, 24 Mar 2026 05:57:06 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.123.4.235])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 24 Mar 2026 05:57:06 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <66d0366b-8690-4bde-aba4-1d51f278dfa1@linux.ibm.com>
- <abQq79_ajs8zFeEI@x1> <CAP-5=fWG0Q-xNGn_-_KGCopaNsWG5rUN3pYNLEh3K7+xE0OwVQ@mail.gmail.com>
- <abmt6FhLfWrzWGwU@x1> <abmyA5q9nXjagJIL@x1> <abm1nR-2xjOUBroD@x1>
- <CAP-5=fU76bLLgorJJ0CVXwTanaZTbjtV=EWA2evy8UjGE8Sw4Q@mail.gmail.com>
- <abnz0pxixB7L7-7R@x1> <CAP-5=fWmDYmyt5JGfVH77zjA6828Ocu7JP-B02=iifp+J_=9Tw@mail.gmail.com>
-In-Reply-To: <CAP-5=fWmDYmyt5JGfVH77zjA6828Ocu7JP-B02=iifp+J_=9Tw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Mar 2026 21:19:21 -0700
-X-Gm-Features: AQROBzBxLgTkWG_CnDsU5CZLM9-YOd1MVnraeRsWbCXSluZOpgtYNVo1Qco2s1g
-Message-ID: <CAP-5=fVBNfJ8cABp+mWLJ+FjRWpxXLyrzr_H_pQTWd2ZZvgB_w@mail.gmail.com>
-Subject: Re: perf stat issue with 7.0.0rc3
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	Jan Polensky <japo@linux.ibm.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH] tools/perf: Fix the check for parameterized field in
+ event term
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <CAP-5=fXcZVxKcfV5giqDWxBPm53cNYLGhrTL8Q=uibrqJPmzgw@mail.gmail.com>
+Date: Tue, 24 Mar 2026 11:26:54 +0530
+Cc: Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Venkat <venkat88@linux.ibm.com>,
+        jolsa@kernel.org, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <4E333DED-B88A-4071-9828-C46F50EB0090@linux.ibm.com>
+References: <20260314083304.75321-1-atrajeev@linux.ibm.com>
+ <7D255F44-3588-460F-ACFB-6ABAEBA152DC@linux.ibm.com>
+ <CAP-5=fVcWpBTALH1zr7dL3qH9j24c3t3L0zvExaWbnC-2tXjcg@mail.gmail.com>
+ <AD8DAAE1-50E9-45CD-AD81-D9DFF139B362@linux.ibm.com>
+ <8C75E314-2038-4A76-BA4F-F36AE3F30B0B@linux.ibm.com>
+ <CAP-5=fXcZVxKcfV5giqDWxBPm53cNYLGhrTL8Q=uibrqJPmzgw@mail.gmail.com>
+To: Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDA0NiBTYWx0ZWRfX5hRJqtc2Q/7f
+ GCI9OfYgB4pUFYeXbLqTP2eVKwFdEk0Bf/DozhyEcR9nqGGWF69cClOCtH/oes5o8PhlPWqohFC
+ b4xkzJd2+UTVp75wjzzQRZubq9/DvbXIKteqb2klLabpnw9CUhNKDNwYWTxl1f09WFVnJ9A5alT
+ iaESwUS72iteo3SXiL/rZ0yc85sXRqBbZ/0BoK9RBnRCe5ZkVv6GP5/uWXpyrzz2B462rA5/YXT
+ 75QkiNNOGA4h/N7I4EYYEnVcOJiZpqVHyK0f0UrJLE/Uhxr5ktEciYYwVSzFP5TYDevDxdwK/MU
+ uepdBjFB3dd5vIe2KGKcgvtLxtiznRRVwQqCA34WpRZY6Por07KONeYm2flz7aFFYSDckgSR0ny
+ 4gHlNApZPNT5cxcqoWRfdI5Ytv3FpVZ/2iK4O4/n3p67y3i1lTMpm+BrjeaymrcCTrHabPa+bWG
+ qGnCsobCbj7QxcTY8yA==
+X-Authority-Analysis: v=2.4 cv=JK42csKb c=1 sm=1 tr=0 ts=69c227ba cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22
+ a=c92rfblmAAAA:8 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=nCd-JXeiIYM9aWHwyxEA:9
+ a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
+X-Proofpoint-ORIG-GUID: k5wI-MpocaYuIziLe-HpwAr26jhw8kZj
+X-Proofpoint-GUID: 77GLMpzA58N8BDtWJ-qY5FZPmGE1kHaL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-24_01,2026-03-23_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 adultscore=0
+ spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603240046
 
-On Tue, Mar 17, 2026 at 7:25=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Tue, Mar 17, 2026 at 5:37=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Mar 17, 2026 at 01:50:21PM -0700, Ian Rogers wrote:
-> > > On Tue, Mar 17, 2026 at 1:12=E2=80=AFPM Arnaldo Carvalho de Melo <acm=
-e@kernel.org> wrote:
-> > > > On Tue, Mar 17, 2026 at 04:56:51PM -0300, Arnaldo Carvalho de Melo =
+
+
+> On 24 Mar 2026, at 12:17=E2=80=AFAM, Ian Rogers <irogers@google.com> =
 wrote:
-> > > > > It is not trying PERF_COUNT_HW_STALLED_CYCLES_FRONTEND, is asking=
- for
-> > > > > PERF_COUNT_HW_STALLED_CYCLES_BACKEND instead...
-> >
-> > > > If I instead ask just for stalled-cycles-frontend and
-> > > > stalled-cycles-backend:
-> >
-> > > > root@number:~# strace -e perf_event_open perf stat -e stalled-cycle=
-s-frontend,stalled-cycles-backend sleep 1
-> >
-> > > I think you intend for this to be system wide '-a'.
-> >
-> > > > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, =
-config=3D0xa9, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, rea=
-d_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING, d=
-isabled=3D1, inherit=3D1, enable_on_exec=3D1, precise_ip=3D0 /* arbitrary s=
-kid */, ...}, 250619, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D 3
-> > > > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_V=
-ER9, config=3DPERF_COUNT_HW_STALLED_CYCLES_BACKEND, sample_period=3D0, samp=
-le_type=3DPERF_SAMPLE_IDENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENAB=
-LED|PERF_FORMAT_TOTAL_TIME_RUNNING, disabled=3D1, inherit=3D1, enable_on_ex=
-ec=3D1, precise_ip=3D0 /* arbitrary skid */, ...}, 250619, -1, -1, PERF_FLA=
-G_FD_CLOEXEC) =3D -1 ENOENT (No such file or directory)
-> > > > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_pid=3D250=
-619, si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
-> > > >
-> > > >  Performance counter stats for 'sleep 1':
-> > > >
-> > > >            409,276      stalled-cycles-frontend
-> > > >    <not supported>      stalled-cycles-backend
-> > > >
-> > > >        1.000428804 seconds time elapsed
-> > > >
-> > > >        0.000439000 seconds user
-> > > >        0.000000000 seconds sys
-> > > >
-> > > >
-> > > > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DSI_USER, si_pid=3D250618=
-, si_uid=3D0} ---
-> > > > +++ exited with 0 +++
-> > > > root@number:~#
-> > > >
-> > > > It used type=3DPERF_TYPE_RAW, config=3D0xa9 for  stalled-cycles-fro=
-ntend but
-> > > > type=3DPERF_TYPE_HARDWARE, config=3DPERF_COUNT_HW_STALLED_CYCLES_BA=
-CKEND.
-> > > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools]$ git grep stalled-cycles-fronten=
-d tools
-> > > > tools/bpf/bpftool/link.c:       [PERF_COUNT_HW_STALLED_CYCLES_FRONT=
-END] =3D "stalled-cycles-frontend",
-> > > > tools/perf/builtin-stat.c:     3,856,436,920 stalled-cycles-fronten=
-d   #   74.09% frontend cycles idle
-> > > > tools/perf/pmu-events/arch/common/common/legacy-hardware.json:    "=
-EventName": "stalled-cycles-frontend",
-> > > > tools/perf/pmu-events/empty-pmu-events.c:/* offset=3D122795 */ "sta=
-lled-cycles-frontend\000legacy hardware\000Stalled cycles during issue [Thi=
-s event is an alias of idle-cycles-frontend]\000legacy-hardware-config=3D7\=
-000\00000\000\000\000\000\000"
-> > > > tools/perf/pmu-events/empty-pmu-events.c:/* offset=3D122945 */ "idl=
-e-cycles-frontend\000legacy hardware\000Stalled cycles during issue [This e=
-vent is an alias of stalled-cycles-frontend]\000legacy-hardware-config=3D7\=
-000\00000\000\000\000\000\000"
-> > > > tools/perf/pmu-events/empty-pmu-events.c:{ 122795 }, /* stalled-cyc=
-les-frontend\000legacy hardware\000Stalled cycles during issue [This event =
-is an alias of idle-cycles-frontend]\000legacy-hardware-config=3D7\000\0000=
-0\000\000\000\000\000 */
-> > > > tools/perf/tests/shell/stat+std_output.sh:event_name=3D(cpu-clock t=
-ask-clock context-switches cpu-migrations page-faults stalled-cycles-fronte=
-nd stalled-cycles-backend cycles instructions branches branch-misses)
-> > > > tools/perf/util/evsel.c:        "stalled-cycles-frontend",
-> > > > =E2=AC=A2 [acme@toolbx perf-tools]$
-> > > >
-> > > > This machine is:
-> > > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools]$ grep -m1 "model name" /proc/cpu=
-info
-> > > > model name      : AMD Ryzen 9 9950X3D 16-Core Processor
-> > >
-> > > Lots of missing legacy events on AMD. The problem is worse with -dd a=
-nd -ddd.
-> > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools]
-> > > >
-> > > > And doesn't have PERF_COUNT_HW_STALLED_CYCLES_BACKEND, but has
-> > > > PERF_COUNT_HW_STALLED_CYCLES_FRONTEND, that gets configured using
-> > > > PERF_TYPE_RAW and 0xa9 because:
-> > > >
-> > > > root@number:~# cat /sys/devices/cpu/events/stalled-cycles-frontend
-> > > > event=3D0xa9
-> > > > root@number:~#
-> > > >
-> > > > But I couldn't so far explain why in the default case it is asking =
-for
-> > > > PERF_COUNT_HW_STALLED_CYCLES_BACKEND, when it should be asking for
-> > > > PERF_COUNT_HW_STALLED_CYCLES_FRONTEND or PERF_TYPE_RAW+config=3D0xa=
-9...
-> >
-> > So you mean that it goes on to try this:
-> >
-> >   {
-> >         "BriefDescription": "Max front or backend stalls per instructio=
-n",
-> >         "MetricExpr": "max(stalled\\-cycles\\-frontend, stalled\\-cycle=
-s\\-backend) / instructions",
-> >         "MetricGroup": "Default",
-> >         "MetricName": "stalled_cycles_per_instruction",
-> >         "DefaultShowEvents": "1"
-> >     },
-> >
-> > Yeah, it tries both:
-> >
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0xa9, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, inherit=3D1, precise_ip=3D0 /* arbitrary skid *=
-/, ...}, 865157, -1, 14, PERF_FLAG_FD_CLOEXEC) =3D 15
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0x76, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, disabled=3D1, inherit=3D1, enable_on_exec=3D1, =
-precise_ip=3D0 /* arbitrary skid */, ...}, 865157, -1, -1, PERF_FLAG_FD_CLO=
-EXEC) =3D 16
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_VER9,=
- config=3DPERF_COUNT_HW_STALLED_CYCLES_BACKEND, sample_period=3D0, sample_t=
-ype=3DPERF_SAMPLE_IDENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|=
-PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP, inherit=3D=
-1, precise_ip=3D0 /* arbitrary skid */, ...}, 865157, -1, 16, PERF_FLAG_FD_=
-CLOEXEC) =3D -1 ENOENT (No such file or directory)
->
-> perf trace? The formatting on perf_event_open is better :-)
->
-> > The RAW one is the equivalent to PERF_COUNT_HW_STALLED_CYCLES_FRONTEND,
-> > I see now that I looked again at the 'strace perf stat sleep 1'
-> >
-> > But in the output it also says:
-> >
-> >      <not counted>      stalled-cycles-frontend          #      nan fro=
-ntend_cycles_idle        (0.00%)
-> >
-> > And if I try just this one:
-> >
-> > root@number:~# strace -e perf_event_open perf stat -e stalled-cycles-fr=
-ontend sleep 1
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0xa9, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING, disab=
-led=3D1, inherit=3D1, enable_on_exec=3D1, precise_ip=3D0 /* arbitrary skid =
-*/, ...}, 865273, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D 3
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_pid=3D865273,=
- si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
-> >
-> >  Performance counter stats for 'sleep 1':
-> >
-> >            422,404      stalled-cycles-frontend
-> >
-> >        1.000432524 seconds time elapsed
-> >
-> >        0.000438000 seconds user
-> >        0.000000000 seconds sys
-> >
-> >
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DSI_USER, si_pid=3D865272, si=
-_uid=3D0} ---
-> > +++ exited with 0 +++
-> > root@number:~#
-> >
-> > It works, so that line with stalled-cycles-frontend could have produced
-> > the value, not '<not counted>', as this call succeeded:
-> >
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0xa9, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, inherit=3D1, precise_ip=3D0 /* arbitrary skid *=
-/, ...}, 865157, -1, 14, PERF_FLAG_FD_CLOEXEC) =3D 15
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0x76, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, disabled=3D1, inherit=3D1, enable_on_exec=3D1, =
-precise_ip=3D0 /* arbitrary skid */, ...}, 865157, -1, -1, PERF_FLAG_FD_CLO=
-EXEC) =3D 16
-> >
-> > Maybe the explanation is that it tries the metric, that uses both
-> > frontend and backend, it fails at backend and then it discards the
-> > frontend?
->
-> The metric logic tries to be smart, creating groups of events and then
-> sharing events between groups to avoid programming more events. I
-> suspect the frontend and backend are in a group, maybe the backend is
-> the leader. The backend fails to open, resulting in no group_fd and a
-> broken group for both the metrics.
->
-> > > So the default events/metrics are now in json:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-n=
-ext.git/tree/tools/perf/pmu-events/arch/common/common/metrics.json?h=3Dperf=
--tools-next
-> > > Relating to the stalls there are:
-> > > ```
-> > >     {
-> > >         "BriefDescription": "Max front or backend stalls per instruct=
-ion",
-> > >         "MetricExpr": "max(stalled\\-cycles\\-frontend,
-> > > stalled\\-cycles\\-backend) / instructions",
-> > >         "MetricGroup": "Default",
-> > >         "MetricName": "stalled_cycles_per_instruction",
-> > >         "DefaultShowEvents": "1"
-> > >     },
-> >
-> > root@number:~# strace -e perf_event_open perf stat -M stalled_cycles_pe=
-r_instruction sleep 1
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_VER9,=
- config=3DPERF_COUNT_HW_STALLED_CYCLES_BACKEND, sample_period=3D0, sample_t=
-ype=3DPERF_SAMPLE_IDENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|=
-PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP, disabled=
-=3D1, inherit=3D1, enable_on_exec=3D1, precise_ip=3D0 /* arbitrary skid */,=
- ...}, 865362, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D -1 ENOENT (No such file or=
- directory)
-> > Error:
-> > No supported events found.
-> > The stalled-cycles-backend event is not supported.
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_KILLED, si_pid=3D865362,=
- si_uid=3D0, si_status=3DSIGTERM, si_utime=3D0, si_stime=3D0} ---
-> > +++ exited with 1 +++
-> > root@number:~#
-> >
-> > >     {
-> > >         "BriefDescription": "Frontend stalls per cycle",
-> > >         "MetricExpr": "stalled\\-cycles\\-frontend / cpu\\-cycles",
-> > >         "MetricGroup": "Default",
-> > >         "MetricName": "frontend_cycles_idle",
-> > >         "MetricThreshold": "frontend_cycles_idle > 0.1",
-> > >         "DefaultShowEvents": "1"
-> > >     },
-> >
-> > root@number:~# strace -e perf_event_open perf stat -M frontend_cycles_i=
-dle sleep 1
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0x76, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, disabled=3D1, inherit=3D1, enable_on_exec=3D1, =
-precise_ip=3D0 /* arbitrary skid */, ...}, 865414, -1, -1, PERF_FLAG_FD_CLO=
-EXEC) =3D 3
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0xa9, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, inherit=3D1, precise_ip=3D0 /* arbitrary skid *=
-/, ...}, 865414, -1, 3, PERF_FLAG_FD_CLOEXEC) =3D 4
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_pid=3D865414,=
- si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
-> >
-> >  Performance counter stats for 'sleep 1':
-> >
-> >            881,022      cpu-cycles                       #     0.48 fro=
-ntend_cycles_idle
-> >            422,386      stalled-cycles-frontend
-> >
-> >        1.000468505 seconds time elapsed
-> >
-> >        0.000504000 seconds user
-> >        0.000000000 seconds sys
-> >
-> >
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DSI_USER, si_pid=3D865413, si=
-_uid=3D0} ---
-> > +++ exited with 0 +++
-> > root@number:~#
-> > >     {
-> > >         "BriefDescription": "Backend stalls per cycle",
-> > >         "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
-> > >         "MetricGroup": "Default",
-> > >         "MetricName": "backend_cycles_idle",
-> > >         "MetricThreshold": "backend_cycles_idle > 0.2",
-> > >         "DefaultShowEvents": "1"
-> > >     },
-> >
-> > root@number:~# strace -e perf_event_open perf stat -M backend_cycles_id=
-le sleep 1
-> > perf_event_open({type=3DPERF_TYPE_RAW, size=3DPERF_ATTR_SIZE_VER9, conf=
-ig=3D0x76, sample_period=3D0, sample_type=3DPERF_SAMPLE_IDENTIFIER, read_fo=
-rmat=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_F=
-ORMAT_ID|PERF_FORMAT_GROUP, disabled=3D1, inherit=3D1, enable_on_exec=3D1, =
-precise_ip=3D0 /* arbitrary skid */, ...}, 865442, -1, -1, PERF_FLAG_FD_CLO=
-EXEC) =3D 3
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_VER9,=
- config=3DPERF_COUNT_HW_STALLED_CYCLES_BACKEND, sample_period=3D0, sample_t=
-ype=3DPERF_SAMPLE_IDENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|=
-PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP, inherit=3D=
-1, precise_ip=3D0 /* arbitrary skid */, ...}, 865442, -1, 3, PERF_FLAG_FD_C=
-LOEXEC) =3D -1 ENOENT (No such file or directory)
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_pid=3D865442,=
- si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
-> >
-> >  Performance counter stats for 'sleep 1':
-> >
-> >      <not counted>      cpu-cycles                       #      nan bac=
-kend_cycles_idle
-> >    <not supported>      stalled-cycles-backend
-> >
-> >        1.000739264 seconds time elapsed
-> >
-> >        0.000675000 seconds user
-> >        0.000000000 seconds sys
-> >
-> >
-> > --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DSI_USER, si_pid=3D865441, si=
-_uid=3D0} ---
-> > +++ exited with 0 +++
-> > root@number:~#
-> >
-> > > ```
-> > > The stalled_cycles_per_instruction and backed_cycles_idle should fail
-> > > as the stalled-cycles-backend event is missing. frontend_cycles_idle
-> > > should work, I wonder if the 0 counts relate to trouble scheduling
-> > > groups of events. I'll need more verbose output to understand. Perhap=
-s
-> > > for stalled_cycles_per_instruction, we should modify the metric to
-> > > tolerate missing events:
-> > >
-> > > max(stalled\\-cycles\\-frontend if
-> > > have_event(stalled\\-cycles\\-frontend) else 0,
-> > > stalled\\-cycles\\-backend if have_event(stalled\\-cycles\\-backend)
-> > > else 0) / instructions
-> >
-> > That have_event() part also have to be implemented, right?
->
-> I mistyped, has_event not have_event :-)
+>=20
+> On Mon, Mar 23, 2026 at 5:19=E2=80=AFAM Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On 18 Mar 2026, at 12:05=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>>> On 17 Mar 2026, at 9:39=E2=80=AFPM, Ian Rogers <irogers@google.com> =
+wrote:
+>>>>=20
+>>>> On Tue, Mar 17, 2026 at 1:56=E2=80=AFAM Venkat =
+<venkat88@linux.ibm.com> wrote:
+>>>>>=20
+>>>>>> On 14 Mar 2026, at 2:03=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>>>>>>=20
+>>>>>> The format_alias() function in util/pmu.c has a check to
+>>>>>> detect whether the event has parameterized field ( =3D? ).
+>>>>>> The string alias->terms contains the event and if the event
+>>>>>> has user configurable parameter, there will be presence of
+>>>>>> sub string "=3D?" in the alias->terms.
+>>>>>>=20
+>>>>>> Snippet of code:
+>>>>>>=20
+>>>>>> /* Paramemterized events have the parameters shown. */
+>>>>>>     if (strstr(alias->terms, "=3D?")) {
+>>>>>>             /* No parameters. */
+>>>>>>             snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>>>>>>=20
+>>>>>> if "strstr" contains the substring, it returns a pointer
+>>>>>> and hence enters the above check which is not the expected
+>>>>>> check. And hence "perf list" doesn't have the parameterized
+>>>>>> fields in the result.
+>>>>>>=20
+>>>>>> Fix this check to use:
+>>>>>>=20
+>>>>>> if (!strstr(alias->terms, "=3D?")) {
+>>>>>>=20
+>>>>>> With this change, perf list shows the events correctly with
+>>>>>> the strings showing parameters.
+>>>>>>=20
+>>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>>>>=20
+>>>> Thanks Athira, Sashiko is noting in its review:
+>>>> =
+https://sashiko.dev/#/patchset/20260314083304.75321-1-atrajeev%40linux.ibm=
+.com
+>>>=20
+>>> Thanks Ian for pointing this. Its interesting to see this review.
+>>> I will check through the review.
+>>>=20
+>>> Thanks
+>>> Athira
+>>>>=20
+>>>> By inverting this check, parameterized events now proceed to
+>>>> parse_events_terms() and the rest of format_alias().
+>>>>=20
+>>>> If a parameterized event uses a built-in perf keyword for its =
+parameter name
+>>>> (e.g., config=3D?), the lexer parses it as a predefined term token, =
+which sets
+>>>> term->config to NULL.
+>>=20
+>> Hi All,
+>>=20
+>> sashiko brought up a scenario :
+>>=20
+>> =E2=80=9CIf a parameterized event uses a built-in perf keyword for =
+its parameter name
+>> (e.g., config=3D?), the lexer parses it as a predefined term token, =
+which sets
+>> term->config to NULL."
+>>=20
+>> Existing usage for parameterized events in perf:
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>> In perf,  =E2=80=9C?=E2=80=9D is often used in event aliases to =
+indicate that a parameter needs to be provided
+>> by the user (e.g., param1=3D?). This information is exposed via =
+=E2=80=9Cformat=E2=80=9D in sysfs too.  The current way,
+>> how this is consumed in different PMU drivers is: example:
+>>=20
+>>  # cat /sys/devices/pmu/format/param1
+>>    config:12-15
+>>=20
+>>   # cat /sys/devices/pmu/format/param2
+>>    config1:0-17
+>>=20
+>> Here param1 uses bits 12:15 in config and param2 used bits 0:17 in =
+config1
+>>=20
+>> And event will use these parameterized fields:
+>>    #cat /sys/devices/pmu/events/event1       =
+domain=3D1,param1=3D?,param2=3D?
+>>=20
+>> =E2=80=9CPerf list=E2=80=9D expects "param1=3D?,param2=3D?=E2=80=9D =
+In the event listing
+>>   # perf list|grep event1
+>>   pmu/event1,param1=3D?,param2=3D?/                       [Kernel PMU =
+event]
+>>=20
+>> The patch here address fix in =E2=80=9Cstrstr=E2=80=9D check in =
+format_alias for =E2=80=9Cperf list=E2=80=9D to display these user =
+expected =E2=80=9C?=E2=80=9D fields
+>> in event alias.  Traditionally, perf treats config, config1, and =
+config2 etc as hardcoded numeric
+>> keywords or builtin keyword.
+>>=20
+>> The scneario sashiko brought up is interesting. Where a parameterized =
+event
+>> uses a built-in perf keyword  for its parameter name.
+>>=20
+>> sashiko review : Scenario where parameterized event uses a built-in =
+perf keyword
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> Example, having =E2=80=9Cconfig2=E2=80=9D in sysfs format-driven =
+logic. Below is an example case.
+>>=20
+>>    #cat /sys/devices/pmu/events/event1
+>>     config2=3D?,domain=3D1,param1=3D?,param2=3D?
+>>=20
+>>      # cat /sys/devices/hv_24x7/format/config2
+>>         config2:0-16
+>>=20
+>> Here =E2=80=9Cperf list=E2=80=9D will show as (null) or might crash =
+too as sashiko review pointed out.
+>>=20
+>>    # perf list|grep event1
+>>    pmu/event1,(null)=3D?,param1=3D?,param2=3D?/                    =
+[Kernel PMU event]
+>>=20
+>> This is because term->config is null for built-in keywords. perf =
+lexer sets this to NULL
+>> for predefined keywords ( like 'config', 'period'), storing the type =
+in the enum instead.
+>>=20
+>> To fix displaying the =E2=80=9C=3D?=E2=80=9D in =E2=80=9Cperf list=E2=80=
+=9D for keywords like config2,  format_alias() function needs to handle
+>> null term->config , ie by using parse_events__term_type_str() to map =
+NULL config
+>> pointers back to their string keywords
+>>=20
+>> But this only will fix the =E2=80=9Cperf list=E2=80=9D part of it.  =
+=E2=80=9CPerf stat=E2=80=9D or record will still fail since
+>> currently these keywords are not considered as placeholders for =
+=E2=80=9C?=E2=80=9D values.
+>>=20
+>> If a PMU wants to use any builtin-keywords in parameters and want to =
+ensure
+>> it is set by user, this could be useful.  Again considering this as a =
+use case, we need other changes
+>> to allow these built-in keywords to function as placeholders (e.g., =
+config2=3D?) within a PMU alias.
+>>=20
+>> I am adding changes which I have identified needed for this support.
+>> If it is better to post this separately as patch set and discuss, =
+definitely will do that.
+>> I wanted to run the idea of this new scenario with everyone. =
+Apologies for the long text.
+>>=20
+>> Thanks and looking for comments.
+>>=20
+>>=20
+>> =46rom 21179a76be97ef81c69a9492f0f432dec5b5361c Mon Sep 17 00:00:00 =
+2001
+>> From: Athira Rajeev <atrajeev@linux.ibm.com>
+>> Date: Mon, 23 Mar 2026 08:38:30 -0400
+>> Subject: [PATCH] tools/perf: Enable parameterized values for keywords =
+like
+>> config1
+>>=20
+>> PMU defines events that require user-supplied parameters (like chip
+>> or core) are packed into specific bit-fields of the different config
+>> registers. Traditionally, perf treats config, config1, and config2
+>> as hardcoded numeric keywords, causing it to bypass the sysfs
+>> format-driven bit-masking logic.
+>>=20
+>> This patch allows these built-in keywords to function as placeholders
+>> (e.g., config2=3D?) within a PMU alias.
+>>=20
+>> Changes includes:
+>> - Updated config_term_pmu in parse-events.c to recognize string
+>>  placeholders for event terms. otherwise it will expect those to
+>>  be of type PARSE_EVENTS__TERM_TYPE_NUM
+>> - Updated pmu_config_term in pmu.c to make sure if keywords are used
+>>  as placeholders , they pass through sysfs based format logic
+>> (pmu_find_format) and pmu_resolve_param_term() logic
+>> - Modified format_alias() to ensure "perf list" display the =
+parameterized
+>>  events correctly
+>> - Replace snprintf with scnprintf in buffer offset calculations to
+>>   ensure the 'used' count will not exceed the "len"
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>> ---
+>> tools/perf/util/parse-events.c |  5 +++++
+>> tools/perf/util/pmu.c          | 37 =
++++++++++++++++++++++++++---------
+>> 2 files changed, 33 insertions(+), 9 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/parse-events.c =
+b/tools/perf/util/parse-events.c
+>> index b9efb296bba5..282b0a0a5340 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1051,6 +1051,11 @@ static int config_term_pmu(struct =
+perf_event_attr *attr,
+>>                 */
+>>                return 0;
+>>        }
+>> +
+>> +       if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR && =
+term->val.str)
+>> +               if (strstr(term->val.str, "?"))
+>> +                       return 0;
+>=20
+> nit: Since the nested if spans more than two lines, could you add
+> curly braces {} to the outer if statement. Could you also add a
+> comment explaining why the runtime parameter causes an early return
+> and why you used `strstr` instead of `strcmp`?
 
-I posted:
-https://lore.kernel.org/lkml/20260319010103.834106-1-irogers@google.com/
-that implements the has_event approach.
 
-Thanks,
-Ian
+Hi Ian
 
+Thanks for checking and responding with review comments.
+Sure I will handle this.
+>=20
+>> +
+>>        return config_term_common(attr, term, parse_state);
+>> }
+>>=20
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 23337d2fa281..2c4503e1a11b 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -1442,10 +1442,19 @@ static int pmu_resolve_param_term(struct =
+parse_events_term *term,
+>>                                  __u64 *value)
+>> {
+>>        struct parse_events_term *t;
+>> +       const char *name =3D term->config;
+>> +
+>> +       if (!term->config)
+>=20
+> I think you meant "if (!name)" here.
+Yes, will correct this=20
+>=20
+>> +               name =3D =
+parse_events__term_type_str(term->type_term);
+>>=20
+>>        list_for_each_entry(t, &head_terms->terms, list) {
+>> +               const char *t_name =3D t->config;
+>> +
+>> +               if (!t_name)
+>> +                       t_name =3D =
+parse_events__term_type_str(t->type_term);
+>> +
+>>                if (t->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM &&
+>> -                   t->config && !strcmp(t->config, term->config)) {
+>> +                   t_name && name && !strcmp(t_name, name)) {
+>>                        t->used =3D true;
+>>                        *value =3D t->val.num;
+>>                        return 0;
+>> @@ -1453,7 +1462,7 @@ static int pmu_resolve_param_term(struct =
+parse_events_term *term,
+>>        }
+>>=20
+>>        if (verbose > 0)
+>> -               printf("Required parameter '%s' not specified\n", =
+term->config);
+>> +               printf("Required parameter '%s' not specified\n", =
+name);
+>>=20
+>>        return -1;
+>> }
+>> @@ -1494,6 +1503,7 @@ static int pmu_config_term(const struct =
+perf_pmu *pmu,
+>>        struct perf_pmu_format *format;
+>>        __u64 *vp;
+>>        __u64 val, max_val;
+>> +       const char *name;
+>>=20
+>>        /*
+>>         * If this is a parameter we've already used for =
+parameterized-eval,
+>> @@ -1507,7 +1517,8 @@ static int pmu_config_term(const struct =
+perf_pmu *pmu,
+>>         * traditionally have had to handle not having a PMU. An alias =
+may
+>>         * have hard coded config values, optionally apply them below.
+>>         */
+>> -       if (parse_events__is_hardcoded_term(term)) {
+>> +       if (parse_events__is_hardcoded_term(term) &&
+>> +                      term->type_val !=3D =
+PARSE_EVENTS__TERM_TYPE_STR) {
+>=20
+> What is being guarded against in this case? Could you update or add a =
+comment.
+
+Sure
+>=20
+>>                /* Config terms set all bits in the config. */
+>>                DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+>>=20
+>> @@ -1576,7 +1587,11 @@ static int pmu_config_term(const struct =
+perf_pmu *pmu,
+>>                return 0;
+>>        }
+>>=20
+>> -       format =3D pmu_find_format(&pmu->format, term->config);
+>> +       name =3D term->config;
+>> +       if (!name)
+>> +               name =3D =
+parse_events__term_type_str(term->type_term);
+>> +
+>> +       format =3D pmu_find_format(&pmu->format, name);
+>>        if (!format) {
+>>                char *pmu_term =3D pmu_formats_string(&pmu->format);
+>>                char *unknown_term;
+>> @@ -2117,7 +2132,7 @@ static char *format_alias(char *buf, int len, =
+const struct perf_pmu *pmu,
+>>                                                   =
+skip_duplicate_pmus);
+>>=20
+>>        /* Paramemterized events have the parameters shown. */
+>> -       if (strstr(alias->terms, "=3D?")) {
+>> +       if (!strstr(alias->terms, "=3D?")) {
+>=20
+> I wonder if it would be safer if we did a `str_ends_with(alias->terms,
+> "=3D?")`. This likely applies to the other strstr usage.
+Ok ,=20
+
+I will post a V2 patchset with all changes, splitting the fix patch =
+which address the =E2=80=9Cstr=E2=80=9D check above
+and changes to allow using the builtin-keywords as place holders within =
+PMU event alias
+
+Thanks
+Athira
+>=20
 > Thanks,
 > Ian
->
-> > - Arnaldo
+>=20
+>>                /* No parameters. */
+>>                snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>>                return buf;
+>> @@ -2129,15 +2144,19 @@ static char *format_alias(char *buf, int len, =
+const struct perf_pmu *pmu,
+>>                pr_err("Failure to parse '%s' terms '%s': %d\n",
+>>                        alias->name, alias->terms, ret);
+>>                parse_events_terms__exit(&terms);
+>> -               snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>> +               scnprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>>                return buf;
+>>        }
+>> -       used =3D snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, =
+pmu->name, alias->name);
+>> +       used =3D scnprintf(buf, len, "%.*s/%s", (int)pmu_name_len, =
+pmu->name, alias->name);
+>>=20
+>>        list_for_each_entry(term, &terms.terms, list) {
+>> +               const char *name =3D term->config;
+>> +
+>> +               if (!name)
+>> +                       name =3D =
+parse_events__term_type_str(term->type_term);
+>>                if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR)
+>> -                       used +=3D snprintf(buf + used, =
+sub_non_neg(len, used),
+>> -                                       ",%s=3D%s", term->config,
+>> +                       used +=3D scnprintf(buf + used, =
+sub_non_neg(len, used),
+>> +                                       ",%s=3D%s", name,
+>>                                        term->val.str);
+>>        }
+>>        parse_events_terms__exit(&terms);
+>> --  2.47.3
+>>=20
+>>=20
+>>=20
+>> Thanks
+>> Athira
+>>=20
+>>>>=20
+>>>> Does this cause a NULL pointer dereference in the term iteration =
+loop?
+>>>>=20
+>>>> list_for_each_entry(term, &terms.terms, list) {
+>>>> if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR)
+>>>>  used +=3D snprintf(buf + used, sub_non_neg(len, used),
+>>>>    ",%s=3D%s", term->config,
+>>>>    term->val.str);
+>>>> }
+>>>>=20
+>>>> Passing a NULL pointer to the %s format specifier for term->config =
+might
+>>>> cause a segmentation fault or formatting corruption.
+>>>>=20
+>>>> Can this also lead to a stack buffer overflow due to how snprintf() =
+return
+>>>> values are accumulated?
+>>>>=20
+>>>> snprintf() returns the number of characters that would have been =
+written.
+>>>> If the event names and terms are long enough, the "used" variable =
+can exceed
+>>>> "len" (which is typically 1024 bytes).
+>>>>=20
+>>>> When evaluating "buf + used" in the same loop:
+>>>>=20
+>>>> used +=3D snprintf(buf + used, sub_non_neg(len, used), ...);
+>>>>=20
+>>>> If "used" exceeds 1024, this creates an out-of-bounds pointer. =
+Modern
+>>>> compilers can use this undefined behavior to infer that "used" <=3D =
+1024
+>>>> must be true, which optimizes out the safety check inside =
+sub_non_neg():
+>>>>=20
+>>>> static int sub_non_neg(int a, int b)
+>>>> {
+>>>> if (b > a)
+>>>>  return 0;
+>>>> return a - b;
+>>>> }
+>>>>=20
+>>>> The compiler can reduce this to simply "a - b" (or "len - used").
+>>>> If "used" is actually greater than 1024, "len - used" evaluates to =
+a
+>>>> negative integer. This negative value is implicitly cast to size_t =
+for
+>>>> snprintf(), resulting in a massive size limit.
+>>>>=20
+>>>> Would this cause snprintf() to write past the end of the stack =
+buffer
+>>>> without bounds checking? Using scnprintf() might prevent "used" =
+from
+>>>> exceeding "len".
+>>>>=20
+>>>> Thanks,
+>>>> Ian
+>>>>=20
+>>>>>> ---
+>>>>>> tools/perf/util/pmu.c | 2 +-
+>>>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>=20
+>>>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>>>>> index 23337d2fa281..0b8d58543f17 100644
+>>>>>> --- a/tools/perf/util/pmu.c
+>>>>>> +++ b/tools/perf/util/pmu.c
+>>>>>> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int =
+len, const struct perf_pmu *pmu,
+>>>>>> skip_duplicate_pmus);
+>>>>>>=20
+>>>>>> /* Paramemterized events have the parameters shown. */
+>>>>>> - if (strstr(alias->terms, "=3D?")) {
+>>>>>> + if (!strstr(alias->terms, "=3D?")) {
+>>>>>> /* No parameters. */
+>>>>>> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
+alias->name);
+>>>>>> return buf;
+>>>>>> --
+>>>>>> 2.47.3
+>>>>>>=20
+>>>>>=20
+>>>>> Tested this patch, and its working as expected.
+>>>>>=20
+>>>>> Before Patch:
+>>>>>=20
+>>>>> ./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
+>>>>> hv_24x7/CPM_EXT_INT_OS/                            [Kernel PMU =
+event]
+>>>>>=20
+>>>>> After Patch:
+>>>>>=20
+>>>>> ./perf list hv_24x7 | grep -i CPM_EXT_INT_OS
+>>>>> hv_24x7/CPM_EXT_INT_OS,domain=3D?,core=3D?/ [Kernel PMU event]
+>>>>>=20
+>>>>>=20
+>>>>> ./perf stat -e hv_24x7/PM_PAU_CYC,chip=3D0/
+>>>>>=20
+>>>>>=20
+>>>>> Performance counter stats for 'system wide':
+>>>>>=20
+>>>>>      2018866563      hv_24x7/PM_PAU_CYC,chip=3D0/
+>>>>>=20
+>>>>>   229.938231314 seconds time elapsed
+>>>>>=20
+>>>>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>>>=20
+>>>>> Regards,
+>>>>> Venkat.
+
+
