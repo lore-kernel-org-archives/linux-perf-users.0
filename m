@@ -1,279 +1,174 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21836344DB9
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 10:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0893939DF;
+	Wed, 25 Mar 2026 10:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774434069; cv=none; b=GdbMvY778mn5Xd2fouL10BaDhuSoH4mp8e/CC/RK5wrgGSpUlBTAWftFteJ7AIzqp1JaBld0mxJ7WHjAFRQkLHY/jugE5PCM0D9m51X/aD0ftkjE7w0gkfJ40DQBOklS9gGwd8rTji6CjAydCnWrQZHFj6//VrH13RHyugVtODQ=
+	t=1774434301; cv=none; b=FMH7AdMYtB+iDl3stkYG83vb25IGzAjQFClosvEJyl3cmACGCvSYw3pZfx5ql17e8MBtdFzIDAHJ7vNeNaDEWlXZbJUCXskXFy2jaPrSiA+qHyCG7ghel30VbzrlHM+fZXmidzOEgeoTaDpJdsz+LlAsiDRLxs5DvlnmvdQ3nn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774434069; c=relaxed/simple;
-	bh=WPt4DvNqupxTlvcwAH81mPkiloh4dRgjM9M59Bf3dnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ImA7OKSU9C41kQJv2qbC+We9ODXgjcwoFW6tNYvS/TxkH1WWD2o/n0+M3zGNy7pl4dUYDj9aPQxiSkVWePl0+6gLEHXB2autAQwZbQ4zFt7dIUIS9yHV4+h17etuYV+ph8Z/JF6L/opzvO6/BcknnlpoZeCWEgDeLAGmalct7yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXIXfl3t; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774434301; c=relaxed/simple;
+	bh=c+qH9vBJ7Cy1tr9tNvd+WKnja75AJUV1J2eiRMmVjUc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qHhG4KLZ4YNvHGYjJmDK2YDMc3+zxBvek9ceZUcGMklg8Cvbq8mq8/CEMkIJXhggBc9eF6OGcVXcuXgxb7Lhy3RR9F7e43P5l8qpn9P3AapPXF5ooOYfqDHqJkbZxMivnZ1C8n7ll4yhkZ6k74I3V/6+WlAPXf8XbREzhgObfio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=cBOMBT4v; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXIXfl3t"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2aae146b604so43155865ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 03:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774434067; x=1775038867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rEJQGBx4Xb6J3zWmRxtcoZ3WTekrmNgq3UQWPxGWMU=;
-        b=WXIXfl3txdDeTo1Soro8TnCECrI1trHBNmFtL0zol+leEe37U82Njfg3K3kTP1Roum
-         pWkIMorgpyIzrXEZULwTCPFpEnb6Cjefj4BYig37H9L+HDb5UqINHu/UUP3ym9Jb+DbI
-         eNGfCqRI6O+kEN2xi1SbDbNEc2OxHNW08vDUfX8Ss88BsVFc2mx8cQpX1zU22AN48OdJ
-         Za9XnnllkzgpaBBsl88bK03ll95jP5/GWH9urcMmEzRtXde1XItOajqG4WcTyd4kNZSe
-         fivzssDquCEoQLdN/oSHA2HhZuwnCw165AGKJF0LDKQsb3oZdunahxdJGxQ2kzd/6uQV
-         M1nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774434067; x=1775038867;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8rEJQGBx4Xb6J3zWmRxtcoZ3WTekrmNgq3UQWPxGWMU=;
-        b=WT4eiGYqh5ErxLbzqupBoa1qIbWMZpgll0Udio4bzBK8FtPYS1A6T2CY2qIAPMgGCD
-         e/NrdavPODAbSFiug6BBsWoTJTvAP/yO5/kChko5q7liCKrvXyIev7Crax2ZvUtz5POS
-         pY3QHb+19kvnn3TJzYRDRZFrII2zsgx2rCBFK/xLgu/K8M7eu+GQVDnToLrHsV4LqBL3
-         4f2qErt6c5BsWmvMGz0ftnECduNGyVyhns+SnL19dvm75K3Rc9qZBe8uUgtG5a8OKchN
-         csskV5N7sIfHCS4gnRlCTrvNNvXien9UslCz2XYMzr+4VocQ1897H8KYW7sCkjz/9rtw
-         KlwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpUq1zk8Z39i4SHyNEs12d+lIdC7n1DCH9psbn2MMrnlfNJnlAAnSF4wp4CUVoTldQvQNS10Q3hQ5y/MO/nfxw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEfLxZTz+U/Stdxwnpr5/yW6LHNsiSgCyoEBbtygFGugrP3VRp
-	s3iensO95wHe2uk+HtnYF6YExCk/kkE9yoh8486x7ItoJmSWzHEq4ReP
-X-Gm-Gg: ATEYQzwocqok4oB7Ug6RKIzbZKAWr8/yIWMwI7Hg6soBaeig4wu/9LhILChpoi/OWKX
-	TGm4pVjj6P3AmdTu4e313Dd7lhXlzOKw32zNgxgJuDLE0guXp9uTOiJlCtjYEE16EYKnZn/QXxv
-	dAwzMdTCGiRbS2ce5ZXEjhYcGjBTo5Cvt7bPHw7tIksfDY7g8hsiBDW75mA1CvgqgHRCQqnmdwn
-	m4Mvd4TWn3PG/TR+0Xz2PSVn2kJ83AEKotjCuyXUY9ncHaCQAjSs9ZNmBgxMgRmZm7svDQaj314
-	445/b2UTAkPb6870sn7dnzWSUVocFlqC1ICjw25hEc3VKngrz0Wh/isBQUQmTV99yFFJvjmCdTm
-	t+w7tQ/DnJLGGuRgX5ov0sACN/RR5cs6rA9Vg5u+ofag4y9VDEZYRXjQWTSIvE/Sh3YqorcvTBZ
-	rn78DZl+934GNzchKdyWDUST+new==
-X-Received: by 2002:a17:903:234d:b0:2ae:6133:d170 with SMTP id d9443c01a7336-2b0b0a58ad9mr31139925ad.20.1774434067110;
-        Wed, 25 Mar 2026 03:21:07 -0700 (PDT)
-Received: from localhost ([2408:8642:893:d2da:e037:e3f2:a0bf:cef])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2b08366b5besm177533395ad.55.2026.03.25.03.21.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 03:21:05 -0700 (PDT)
-From: yuhaocheng035@gmail.com
-To: irogers@google.com,
-	wangqing7171@gmail.com,
-	peterz@infradead.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
-Subject: [PATCH v3] perf/core: Fix refcount bug and potential UAF in perf_mmap
-Date: Wed, 25 Mar 2026 18:20:53 +0800
-Message-ID: <20260325102053.1401-1-yuhaocheng035@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
-References: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="cBOMBT4v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=CmHtMiAdLNN40FHGoEYbgu4STZYHNCDu0t499ydvFM0=; b=cBOMBT4vfd6O7SzyuDsY6kK+1U
+	p6Fsfpbc7KV2XJXIE5ViBi1pfkNPnDP5OdOgmAeQlO6XNTo/kZroHibLM051m/7kCsyNMGRyeId2G
+	Sv/ctKtD3lsrYve0GUCl8tzqbyAn027m5lkoPpZoTsqflmgVAk+XNpHh0T9tK1bY10ump2POtroCH
+	HRl9GMHmwicJQ/TDGqcUwV/I44W0vLlVGsF/wE65j0e/c/z/4YOQRA2OiTy9qx8+hIShEEVgTm3Co
+	AOo1//ZsCAald/Ew3yR6/keGqfw4KXVtq9t+aLaagLspbFXS7ox5tHrOnJjsxZQf13C6L8Rq87r18
+	Mr9Ip6/Q==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w5LPs-0090ZB-E4; Wed, 25 Mar 2026 10:24:48 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 25 Mar 2026 03:24:30 -0700
+Subject: [PATCH v2] perf stat: Fix crash on arm64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
+X-B4-Tracking: v=1; b=H4sIAN63w2kC/23Nyw6CMBCF4VdpZk1NL+KFle9hiJmWAcYFkLYSD
+ em7m+LW5Un+fGeDSIEpQiM2CLRy5HmCRphKgB9xGkhyB40Ao8xJGVXLhUL/iAmTRIUG7ZmM9jV
+ UApZAPb93697+dny5J/lUgFKMHNMcPvvZqkv3z1211JKO1jrlr/qC/a0jxzgd5jBAm3P+AmmPQ
+ G+1AAAA
+X-Change-ID: 20260205-perf_stat-a0a2a37e21c5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>, 
+ Dmitry Ilvokhin <d@ilvokhin.com>, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-453a6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3920; i=leitao@debian.org;
+ h=from:subject:message-id; bh=c+qH9vBJ7Cy1tr9tNvd+WKnja75AJUV1J2eiRMmVjUc=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpw7fq5arMfCrdAU6ifZp9sPmnoExAKkuR5rhnh
+ M7UowNzspmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCacO36gAKCRA1o5Of/Hh3
+ bQpvD/9wCyo8lbqFOePa+d/AIHj6723FtpOx54P2Wbrr8pOF/Jpwxc8CJ3X9Tn5wKJylon4c4HN
+ lQZFawWlGRtV493EydXoxbT/hQbyf99zwHBVKLAkiY2b7qYMutOXZsVU9cYDKF/VmhxkumzJG3N
+ ROq3C5dO5QimHlBZq9D+B2C6OB6D3+1IBkjxRzXIap9KAMaUU4HO2qJDtBYizF8AB+3pZ+6aenu
+ aCqMiYr2RJf8j4agxEYdUKNgp/3X4t7lrSPq+hnny7F3P+ioFEsJ80JRJgzgIow6+L15uuuBsuq
+ D1nwJA4tiJWIhlKQmYbNki6muFbEXoUQS4WPLsW96PMMCqWPZXGYv/nxjz87pc3NzGNIAAK4QmK
+ puM353bm8OU3taFfmQwtisMHSy/Is73g5dlUppNvkBDeYSAog8GiYWjWErp/LXXIsJhAVA7VxWh
+ ImZ3Y22KC+5vyrs2wmoTf+mf+uWAR07E7vQ5KGGIk3nXrnAdEpjOQyHf4NMZ6r4aPgGWH0rphaE
+ zh2OqsgrOzQ2TBdpXHAgERYNsAsJfFbd5luXSLx+GlMBmDnozMiNrpURaeORFGLp3VxtRmC/mPE
+ CIh6D71l6gPYVti14Mr3bzYqLOboNXuMcjBAfvTH966/54UQNUNmIkxTTMS4cN9q8hROOCqJ+o/
+ Xks6Id/AOJwtcsw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-From: Haocheng Yu <yuhaocheng035@gmail.com>
+Perf stat is crashing on arm64 hosts with the following issue:
 
-Syzkaller reported a refcount_t: addition on 0; use-after-free warning
-in perf_mmap.
+	# make -C tools/perf DEBUG=1
+	# perf stat sleep 1
+	perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core.fd)' failed.
+	[1]    1220794 IOT instruction (core dumped)  ./perf stat
 
-The issue is caused by a race condition between a failing mmap() setup
-and a concurrent mmap() on a dependent event (e.g., using output
-redirection).
+The sorting function introduced by commit a745c0831c15c ("perf stat:
+Sort default events/metrics") compares events based on their individual
+properties. This can cause events from different groups to be
+interleaved, resulting in group members appearing before their leaders
+in the sorted evlist.
 
-In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
-event->rb with the mmap_mutex held. The mutex is then released to
-perform map_range().
+When the iterator opens events in list order, a group member may be
+processed before its leader has been opened.
 
-If map_range() fails, perf_mmap_close() is called to clean up.
-However, since the mutex was dropped, another thread attaching to
-this event (via inherited events or output redirection) can acquire
-the mutex, observe the valid event->rb pointer, and attempt to
-increment its reference count. If the cleanup path has already
-dropped the reference count to zero, this results in a
-use-after-free or refcount saturation warning.
+For example, CPU_CYCLES (idx=32) with leader STALL_SLOT_BACKEND (idx=37)
+could be sorted before its leader, causing the crash when CPU_CYCLES
+tries to get its group fd from the not-yet-opened leader.
 
-Fix this by extending the scope of mmap_mutex to cover the
-map_range() call. This ensures that the ring buffer initialization
-and mapping (or cleanup on failure) happens atomically effectively,
-preventing other threads from accessing a half-initialized or
-dying ring buffer.
+Fix this by comparing events based on their leader's attributes instead
+of their own attributes when the events are in different groups. This
+ensures all members of a group share the same sort key as their leader,
+keeping groups together and guaranteeing leaders are opened before their
+members.
 
-v2:
-Because expanding the guarded region would cause the event->mmap_mutex
-to be acquired repeatedly in the perf_mmap_close function, potentially
-leading to a self deadlock, the original logic of perf_mmap_close was
-retained, and the mutex-holding logic was modified to obtain the
-perf_mmap_close_locked function.
-
-v3:
-The fix is made smaller by passing the parameter "holds_event_mmap_mutex"
-to perf_mmap_close.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+Reported-by: Denis Yaroshevskiy <dyaroshev@meta.com>
+Fixes: a745c0831c15c ("perf stat: Sort default events/metrics")
+Tested-by: Dmitry Ilvokhin <d@ilvokhin.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- kernel/events/core.c | 78 +++++++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 30 deletions(-)
+Cc; linux-arm-kernel@lists.infradead.org
+---
+Changes in v2:
+- No changes from V1, just resending the exact same patch.
+- Link to v1: https://patch.msgid.link/20260205-perf_stat-v1-1-e433b0c918af@debian.org
+---
+ tools/perf/builtin-stat.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2c35acc2722b..a3228c587de1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6730,9 +6730,10 @@ static void perf_pmu_output_stop(struct perf_event *event);
-  * the buffer here, where we still have a VM context. This means we need
-  * to detach all events redirecting to us.
-  */
--static void perf_mmap_close(struct vm_area_struct *vma)
-+static void __perf_mmap_close(struct vm_area_struct *vma, struct perf_event *event,
-+			      bool holds_event_mmap_lock)
- {
--	struct perf_event *event = vma->vm_file->private_data;
-+	struct perf_event *iter_event;
- 	mapped_f unmapped = get_mapped(event, event_unmapped);
- 	struct perf_buffer *rb = ring_buffer_get(event);
- 	struct user_struct *mmap_user = rb->mmap_user;
-@@ -6772,11 +6773,14 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	if (refcount_dec_and_test(&rb->mmap_count))
- 		detach_rest = true;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 73c2ba7e30760..a97b9d0de3f58 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1917,25 +1917,33 @@ static int default_evlist_evsel_cmp(void *priv __maybe_unused,
+ 	const struct evsel *lhs = container_of(lhs_core, struct evsel, core);
+ 	const struct perf_evsel *rhs_core = container_of(r, struct perf_evsel, node);
+ 	const struct evsel *rhs = container_of(rhs_core, struct evsel, core);
++	const struct evsel *lhs_leader = evsel__leader(lhs);
++	const struct evsel *rhs_leader = evsel__leader(rhs);
  
--	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-+	if ((!holds_event_mmap_lock &&
-+	     !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex)) ||
-+	    (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)))
- 		goto out_put;
+-	if (evsel__leader(lhs) == evsel__leader(rhs)) {
++	if (lhs_leader == rhs_leader) {
+ 		/* Within the same group, respect the original order. */
+ 		return lhs_core->idx - rhs_core->idx;
+ 	}
  
- 	ring_buffer_attach(event, NULL);
--	mutex_unlock(&event->mmap_mutex);
-+	if (!holds_event_mmap_lock)
-+		mutex_unlock(&event->mmap_mutex);
++	/*
++	 * Compare using leader's attributes so that all members of a group
++	 * stay together. This ensures leaders are opened before their members.
++	 */
++
+ 	/* Sort default metrics evsels first, and default show events before those. */
+-	if (lhs->default_metricgroup != rhs->default_metricgroup)
+-		return lhs->default_metricgroup ? -1 : 1;
++	if (lhs_leader->default_metricgroup != rhs_leader->default_metricgroup)
++		return lhs_leader->default_metricgroup ? -1 : 1;
  
- 	/* If there's still other mmap()s of this buffer, we're done. */
- 	if (!detach_rest)
-@@ -6789,8 +6793,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	 */
- again:
- 	rcu_read_lock();
--	list_for_each_entry_rcu(event, &rb->event_list, rb_entry) {
--		if (!atomic_long_inc_not_zero(&event->refcount)) {
-+	list_for_each_entry_rcu(iter_event, &rb->event_list, rb_entry) {
-+		if (!atomic_long_inc_not_zero(&iter_event->refcount)) {
- 			/*
- 			 * This event is en-route to free_event() which will
- 			 * detach it and remove it from the list.
-@@ -6799,7 +6803,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		}
- 		rcu_read_unlock();
+-	if (lhs->default_show_events != rhs->default_show_events)
+-		return lhs->default_show_events ? -1 : 1;
++	if (lhs_leader->default_show_events != rhs_leader->default_show_events)
++		return lhs_leader->default_show_events ? -1 : 1;
  
--		mutex_lock(&event->mmap_mutex);
-+		if (!holds_event_mmap_lock)
-+			mutex_lock(&iter_event->mmap_mutex);
- 		/*
- 		 * Check we didn't race with perf_event_set_output() which can
- 		 * swizzle the rb from under us while we were waiting to
-@@ -6810,11 +6815,12 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		 * still restart the iteration to make sure we're not now
- 		 * iterating the wrong list.
- 		 */
--		if (event->rb == rb)
--			ring_buffer_attach(event, NULL);
-+		if (iter_event->rb == rb)
-+			ring_buffer_attach(iter_event, NULL);
+ 	/* Sort by PMU type (prefers legacy types first). */
+-	if (lhs->pmu != rhs->pmu)
+-		return lhs->pmu->type - rhs->pmu->type;
++	if (lhs_leader->pmu != rhs_leader->pmu)
++		return lhs_leader->pmu->type - rhs_leader->pmu->type;
  
--		mutex_unlock(&event->mmap_mutex);
--		put_event(event);
-+		if (!holds_event_mmap_lock)
-+			mutex_unlock(&iter_event->mmap_mutex);
-+		put_event(iter_event);
- 
- 		/*
- 		 * Restart the iteration; either we're on the wrong list or
-@@ -6842,6 +6848,18 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	ring_buffer_put(rb); /* could be last */
+-	/* Sort by name. */
+-	return strcmp(evsel__name((struct evsel *)lhs), evsel__name((struct evsel *)rhs));
++	/* Sort by leader's name. */
++	return strcmp(evsel__name((struct evsel *)lhs_leader),
++		      evsel__name((struct evsel *)rhs_leader));
  }
  
-+static void perf_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct perf_event *event = vma->vm_file->private_data;
-+
-+	__perf_mmap_close(vma, event, false);
-+}
-+
-+static void perf_mmap_close_locked(struct vm_area_struct *vma, struct perf_event *event)
-+{
-+	__perf_mmap_close(vma, event, true);
-+}
-+
- static vm_fault_t perf_mmap_pfn_mkwrite(struct vm_fault *vmf)
- {
- 	/* The first page is the user control page, others are read-only. */
-@@ -7167,28 +7185,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 			ret = perf_mmap_aux(vma, event, nr_pages);
- 		if (ret)
- 			return ret;
--	}
- 
--	/*
--	 * Since pinned accounting is per vm we cannot allow fork() to copy our
--	 * vma.
--	 */
--	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
--	vma->vm_ops = &perf_mmap_vmops;
-+		/*
-+		 * Since pinned accounting is per vm we cannot allow fork() to copy our
-+		 * vma.
-+		 */
-+		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
-+		vma->vm_ops = &perf_mmap_vmops;
- 
--	mapped = get_mapped(event, event_mapped);
--	if (mapped)
--		mapped(event, vma->vm_mm);
-+		mapped = get_mapped(event, event_mapped);
-+		if (mapped)
-+			mapped(event, vma->vm_mm);
- 
--	/*
--	 * Try to map it into the page table. On fail, invoke
--	 * perf_mmap_close() to undo the above, as the callsite expects
--	 * full cleanup in this case and therefore does not invoke
--	 * vmops::close().
--	 */
--	ret = map_range(event->rb, vma);
--	if (ret)
--		perf_mmap_close(vma);
-+		/*
-+		 * Try to map it into the page table. On fail, invoke
-+		 * perf_mmap_close() to undo the above, as the callsite expects
-+		 * full cleanup in this case and therefore does not invoke
-+		 * vmops::close().
-+		 */
-+		ret = map_range(event->rb, vma);
-+		if (ret)
-+			perf_mmap_close_locked(vma, event);
-+	}
- 
- 	return ret;
- }
+ /*
 
-base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
--- 
-2.51.0
+---
+base-commit: 85964cdcad0fac9a0eb7b87a0f9d88cc074b854c
+change-id: 20260205-perf_stat-a0a2a37e21c5
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
