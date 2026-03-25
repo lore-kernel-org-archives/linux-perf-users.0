@@ -1,222 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EFE2E401;
-	Wed, 25 Mar 2026 05:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D435FF6B;
+	Wed, 25 Mar 2026 06:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774415935; cv=none; b=IE/6T3y9l5nmzB0eZIw8XpquM0ObK0qw55NTqm5INid8sQF8IWiEhEVgDIeaxp2jQbIHy6CSuCJDeSNv85rm/T76XFoqPkHIHxSY52QGD47Jf7giLtdIqF8M2LVCnhy8VOTT9u8nBzkaEqcNHlSJKTlE3MP29Cl9Tq4dCZ+FBoY=
+	t=1774421892; cv=none; b=B3odU/1JPOsLw463UeMHdfSlrqTRqGIhDXAucSXYiIrnBMow/zzV8FcH4KvJLmIAIg/KkTXE3A5vIa7whOs7S7BHSJ5uPBAGXtww26mvgheShqrvffSw3p7w871YdQrwSDVhPmTEpvLvDf3ATt17Sg6rFSlEG8WdAOV5huN8uD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774415935; c=relaxed/simple;
-	bh=N+ZQ2SaWvXCp0sxJhTvr1moXay3eRsAD4m78bHtik08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZCRKRZT2VEDOWgh2SVWDACzC2NIIqrbXJoS7pPT5F+9KfOBH+UylAIE7oKwJUnK4VignAF9zv4LcYwnO706JI+OP3HPVk/phFnJmpUk+GsKscNLAjLQpZYJVIffWc550XGQ3LObZyoSBo/XPEsnci6HrW2CvsEcklBqAN/xLypg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cIUvHV46; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774421892; c=relaxed/simple;
+	bh=6eYGJ2LbQlnZQ24DKIA4YQNf2DSG4IkIa2fRS+NpsDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lF5tEtiYrLVNvShahyPIzJoKMQ6tTZ3bxglZgXfMO4444eUyIHI0IKTTTue6rtfeDnFcc4RbEUgjB6BAtHPhftzOMLaOro/RHS56QZGM+zoPNfvdnnRmW401NQVbKAzGvkovt060vSYJOwIekN3WUu/VPAwqxhd8+VuQDavEjC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k26dan2c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cIUvHV46"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774415934; x=1805951934;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N+ZQ2SaWvXCp0sxJhTvr1moXay3eRsAD4m78bHtik08=;
-  b=cIUvHV46KVkITKsvDraTF5peAG80Hg+e3YD65EEGazhwVGbXF1EutzOe
-   oQw7MEUi2cFsJsPtM1UPfOvuCGj++UtkoCp1i9UeiEWgZBDYAaHe4sE22
-   rOqVCeY5UBX/a1HrKk/eX+lSb18Bf4q6FYkFWvBk14sLHBW2Gg+7o9JPO
-   JUcV4BLgLXoi2x07Yl8072kV/8w8WNnMoXv+HVzzNI9DgyH9niFpGW03b
-   4i9Bm+hHswxkkuQXVMSTUwS7sGzx330xMDT7bWo13vSAnFyiIUAnOWKbl
-   Z2dIZjLgz/dA4QvaH7y181sx67JTf72n6YOwLA03YXbgp6tFCVH69hg60
-   w==;
-X-CSE-ConnectionGUID: kkcHs3efS/uWef6rb3UjTg==
-X-CSE-MsgGUID: Sk2EQ12bRBe0zONS2xX5xA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="74473454"
-X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="74473454"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 22:18:53 -0700
-X-CSE-ConnectionGUID: uFkGH1EKTXyPQTHhXemuHQ==
-X-CSE-MsgGUID: ijJyg3/pRZm3R9DRKjyrlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="229039893"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 22:18:48 -0700
-Message-ID: <7efb05b6-ce14-4a55-b45a-fe79872d8fd9@linux.intel.com>
-Date: Wed, 25 Mar 2026 13:18:44 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k26dan2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CFCC4CEF7;
+	Wed, 25 Mar 2026 06:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774421891;
+	bh=6eYGJ2LbQlnZQ24DKIA4YQNf2DSG4IkIa2fRS+NpsDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k26dan2cYkWaB4MHDF43RmUqrtE7rTEzjKpgr+6+V43BGxPZL7GvVBCVo5h+5Splq
+	 xHe5TdAPTUZXgO8v5b6DegjWlzhR5qgjnAUKhjTvnhJaMSYQhUZlC+yqcrKfe9TNif
+	 dp7/nfLUMQaN0CbdfD6hwlZ0yY33RUUvfzJj7FzWrs0lpgHUpwFg3A4Ww9D3TMno6x
+	 gGIS2Lz+IKeo9TqW6lgQPPdlpoGyAIFFDpCWrerXSXeSSFmGRpwzeByEyv0EMqAZKs
+	 W5LK7bTB/WvtM+PavhYf4BpZ8/5+66Jwu2kMfdRlf6h7onHDLZ2Zu/BjBvmfwP6C/5
+	 IEAPfx8tCohrw==
+Date: Tue, 24 Mar 2026 23:58:09 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: tmricht@linux.ibm.com, acme@kernel.org, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-s390@vger.kernel.org, sumanthk@linux.ibm.com
+Subject: Re: [PATCH v1] perf symbol: Lazily compute idle and use the perf_env
+Message-ID: <acOHgYoM6oYWWTmC@google.com>
+References: <20260219113850.354271-1-tmricht@linux.ibm.com>
+ <20260302234343.564937-1-irogers@google.com>
+ <CAP-5=fW0Bu2313nAuhur+wP5Y2JtBNY+wpPoiKLqNzcSe-R3gA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 07/24] perf/x86: Introduce x86-specific
- x86_pmu_setup_regs_data()
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
- <20260324004118.3772171-8-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260324004118.3772171-8-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW0Bu2313nAuhur+wP5Y2JtBNY+wpPoiKLqNzcSe-R3gA@mail.gmail.com>
+
+Hi Ian,
+
+Sorry for the delay.
+
+On Tue, Mar 24, 2026 at 10:14:01AM -0700, Ian Rogers wrote:
+> On Mon, Mar 2, 2026 at 3:43 PM Ian Rogers <irogers@google.com> wrote:
+[SNIP]
+> > -       if (idle_symbols_list)
+> > -               return strlist__has_entry(idle_symbols_list, name);
+> > +       /*
+> > +        * ppc64 uses function descriptors and appends a '.' to the
+> > +        * start of every instruction address. Remove it.
+> > +        */
+> > +       if (name[0] == '.')
+
+Then e_machine == EM_PPC64 can be checked here.
+
+> > +               name++;
+> > +
+> > +
+
+Two blank lines.
+
+> > +       if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
+> > +                   sizeof(idle_symbols[0]), sym_name_cmp)) {
+> > +               sym->idle = SYMBOL_IDLE__IDLE;
+> > +               return true;
+> > +       }
+> > +
+> > +       if (e_machine == EM_386 || e_machine == EM_X86_64) {
+> > +               if (strstarts(name, "mwait_idle") ||
+> > +                   strstarts(name, "intel_idle")) {
+> > +                       sym->idle = SYMBOL_IDLE__IDLE;
+> > +                       return true;
+> > +               }
+> > +       }
+> > +
+> > +       if (e_machine == EM_PPC64 &&!strcmp(name, "ppc64_runlatch_off")) {
+> > +               sym->idle = SYMBOL_IDLE__IDLE;
+> > +               return true;
+> > +       }
+> >
+> > -       idle_symbols_list = strlist__new(NULL, NULL);
+> > +       if (e_machine == EM_S390) {
+> > +               int major = 0, minor = 0;
+> > +               const char *release = env && env->os_release
+> > +                       ? env->os_release : perf_version_string;
+> >
+> > -       for (i = 0; idle_symbols[i]; i++)
+> > -               strlist__add(idle_symbols_list, idle_symbols[i]);
+> > +               sscanf(release, "%d.%d", &major, &minor);
+> >
+> > -       return strlist__has_entry(idle_symbols_list, name);
+> > +               /* Before v6.10, s390 used psw_idle. */
+> > +               if ((major < 6 || (major == 6 && minor < 10)) && strstarts(name, "psw_idle")) {
+> > +                       sym->idle = SYMBOL_IDLE__IDLE;
+> > +                       return true;
+> > +               }
+> > +       }
+> > +
+> > +       sym->idle = SYMBOL_IDLE__NOT_IDLE;
+> > +       return false;
+> >  }
+> >
+> >  static int map__process_kallsym_symbol(void *arg, const char *name,
+> > @@ -785,7 +815,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+> >          * We will pass the symbols to the filter later, in
+> >          * map__split_kallsyms, when we have split the maps per module
+> >          */
+> > -       __symbols__insert(root, sym, !strchr(name, '['));
+> > +       __symbols__insert(root, sym);
+> >
+> >         return 0;
+> >  }
+> > diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> > index 3fb5d146d9b1..508dd9f336e9 100644
+> > --- a/tools/perf/util/symbol.h
+> > +++ b/tools/perf/util/symbol.h
+> > @@ -24,6 +24,7 @@ struct dso;
+> >  struct map;
+> >  struct maps;
+> >  struct option;
+> > +struct perf_env;
+> >  struct build_id;
+> >
+> >  /*
+> > @@ -41,6 +42,12 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+> >                              GElf_Shdr *shp, const char *name, size_t *idx);
+> >  #endif
+> >
+> > +enum symbol_idle_kind {
+> > +       SYMBOL_IDLE__UNKNOWN = 0,
+> > +       SYMBOL_IDLE__NOT_IDLE = 1,
+> > +       SYMBOL_IDLE__IDLE = 2,
+> > +};
+> > +
+> >  /**
+> >   * A symtab entry. When allocated this may be preceded by an annotation (see
+> >   * symbol__annotation) and/or a browser_index (see symbol__browser_index).
+> > @@ -56,8 +63,8 @@ struct symbol {
+> >         u8              type:4;
+> >         /** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
+> >         u8              binding:4;
+> > -       /** Set true for kernel symbols of idle routines. */
+> > -       u8              idle:1;
+> > +       /** Cache for symbol__is_idle. */
+> > +       enum symbol_idle_kind idle:2;
+
+I'm curious if bitfields with different types (u8 and enum) can be
+placed consecutively bitwise.  There can be a lot of symbols so it
+could be a concern.
+
+Thanks,
+Namhyung
 
 
-On 3/24/2026 8:41 AM, Dapeng Mi wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The current perf/x86 implementation uses the generic functions
-> perf_sample_regs_user() and perf_sample_regs_intr() to set up registers
-> data for sampling records. While this approach works for general
-> registers, it falls short when adding sampling support for SIMD and APX
-> eGPRs registers on x86 platforms.
->
-> To address this, we introduce the x86-specific function
-> x86_pmu_setup_regs_data() for setting up register data on x86 platforms.
->
-> At present, x86_pmu_setup_regs_data() mirrors the logic of the generic
-> functions perf_sample_regs_user() and perf_sample_regs_intr().
-> Subsequent patches will introduce x86-specific enhancements.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/events/core.c       | 33 +++++++++++++++++++++++++++++++++
->  arch/x86/events/intel/ds.c   |  9 ++++++---
->  arch/x86/events/perf_event.h |  4 ++++
->  3 files changed, 43 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index ad6cbc19592d..0a6c51e86e9b 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1699,6 +1699,39 @@ static void x86_pmu_del(struct perf_event *event, int flags)
->  	static_call_cond(x86_pmu_del)(event);
->  }
->  
-> +void x86_pmu_setup_regs_data(struct perf_event *event,
-> +			     struct perf_sample_data *data,
-> +			     struct pt_regs *regs)
-> +{
-> +	struct perf_event_attr *attr = &event->attr;
-> +	u64 sample_type = attr->sample_type;
-> +
-> +	if (sample_type & PERF_SAMPLE_REGS_USER) {
-> +		if (user_mode(regs)) {
-> +			data->regs_user.abi = perf_reg_abi(current);
-> +			data->regs_user.regs = regs;
-> +		} else if (!(current->flags & PF_KTHREAD)) {
-
-Sashiko (AI agent) reviews this patchset. I would pick the reasonable
-comment and paste here.
-
-"
-
-Is it safe to rely on !(current->flags & PF_KTHREAD) here?
-
-
-Core perf code replaced this with the is_user_task() helper in commit
-76ed27608f7d to prevent crashes. If a task is exiting (where task->mm
-is cleared but PF_KTHREAD is not set) or if it is an io_uring thread
-(which uses PF_USER_WORKER), could this pass the check and cause a NULL
-pointer dereference or leak uninitialized kernel registers to user-space?
-
-"
-
-The comment looks reasonable and would fix it in next version.
-
-
-> +			perf_get_regs_user(&data->regs_user, regs);
-> +		} else {
-> +			data->regs_user.abi = PERF_SAMPLE_REGS_ABI_NONE;
-> +			data->regs_user.regs = NULL;
-> +		}
-> +		data->dyn_size += sizeof(u64);
-> +		if (data->regs_user.regs)
-> +			data->dyn_size += hweight64(attr->sample_regs_user) * sizeof(u64);
-> +		data->sample_flags |= PERF_SAMPLE_REGS_USER;
-> +	}
-> +
-> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
-> +		data->regs_intr.regs = regs;
-> +		data->regs_intr.abi = perf_reg_abi(current);
-> +		data->dyn_size += sizeof(u64);
-> +		if (data->regs_intr.regs)
-> +			data->dyn_size += hweight64(attr->sample_regs_intr) * sizeof(u64);
-> +		data->sample_flags |= PERF_SAMPLE_REGS_INTR;
-> +	}
-> +}
-> +
->  int x86_pmu_handle_irq(struct pt_regs *regs)
->  {
->  	struct perf_sample_data data;
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index 52eb6eac5df3..b045297c02d0 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -2450,6 +2450,7 @@ static inline void __setup_pebs_basic_group(struct perf_event *event,
->  }
->  
->  static inline void __setup_pebs_gpr_group(struct perf_event *event,
-> +					  struct perf_sample_data *data,
->  					  struct pt_regs *regs,
->  					  struct pebs_gprs *gprs,
->  					  u64 sample_type)
-> @@ -2459,8 +2460,10 @@ static inline void __setup_pebs_gpr_group(struct perf_event *event,
->  		regs->flags &= ~PERF_EFLAGS_EXACT;
->  	}
->  
-> -	if (sample_type & (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER))
-> +	if (sample_type & (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)) {
->  		adaptive_pebs_save_regs(regs, gprs);
-> +		x86_pmu_setup_regs_data(event, data, regs);
-> +	}
->  }
->  
->  static inline void __setup_pebs_meminfo_group(struct perf_event *event,
-> @@ -2553,7 +2556,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
->  		gprs = next_record;
->  		next_record = gprs + 1;
->  
-> -		__setup_pebs_gpr_group(event, regs, gprs, sample_type);
-> +		__setup_pebs_gpr_group(event, data, regs, gprs, sample_type);
->  	}
->  
->  	if (format_group & PEBS_DATACFG_MEMINFO) {
-> @@ -2677,7 +2680,7 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
->  		gprs = next_record;
->  		next_record = gprs + 1;
->  
-> -		__setup_pebs_gpr_group(event, regs,
-> +		__setup_pebs_gpr_group(event, data, regs,
->  				       (struct pebs_gprs *)gprs,
->  				       sample_type);
->  	}
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index fad87d3c8b2c..39c41947c70d 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -1306,6 +1306,10 @@ void x86_pmu_enable_event(struct perf_event *event);
->  
->  int x86_pmu_handle_irq(struct pt_regs *regs);
->  
-> +void x86_pmu_setup_regs_data(struct perf_event *event,
-> +			     struct perf_sample_data *data,
-> +			     struct pt_regs *regs);
-> +
->  void x86_pmu_show_pmu_cap(struct pmu *pmu);
->  
->  static inline int x86_pmu_num_counters(struct pmu *pmu)
+> >         /** Resolvable but tools ignore it (e.g. idle routines). */
+> >         u8              ignore:1;
+> >         /** Symbol for an inlined function. */
+> > @@ -184,8 +191,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
+> >
+> >  char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
+> >
+> > -void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
+> > -                      bool kernel);
+> > +void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
+> >  void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
+> >  void symbols__fixup_duplicate(struct rb_root_cached *symbols);
+> >  void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
+> > @@ -269,5 +275,6 @@ enum {
+> >  };
+> >
+> >  int symbol__validate_sym_arguments(void);
+> > +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, const struct perf_env *env);
+> >
+> >  #endif /* __PERF_SYMBOL */
+> > --
+> > 2.53.0.473.g4a7958ca14-goog
+> >
