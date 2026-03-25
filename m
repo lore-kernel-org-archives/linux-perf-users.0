@@ -1,376 +1,279 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F31739B94A;
-	Wed, 25 Mar 2026 09:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21836344DB9
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 10:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774431721; cv=none; b=Een61yVLDyLcWbw6FWRgiBqp0BcsYbfoQ3gCdj+hUxZDF2q+sitmo8vFPZ3LIWgPH7+SUVftn7VQE5HyV0FquoomIuAbjtDgjEDKAb79caDrZKqWbKGjbvG5j6zRH89I2olQbGlbizbtm1xk+9w9EIIWkpZE7PPvukSLajRJ89o=
+	t=1774434069; cv=none; b=GdbMvY778mn5Xd2fouL10BaDhuSoH4mp8e/CC/RK5wrgGSpUlBTAWftFteJ7AIzqp1JaBld0mxJ7WHjAFRQkLHY/jugE5PCM0D9m51X/aD0ftkjE7w0gkfJ40DQBOklS9gGwd8rTji6CjAydCnWrQZHFj6//VrH13RHyugVtODQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774431721; c=relaxed/simple;
-	bh=yQoGpfG3ugLGDpTHY7ILfQRiIXYCFMxAHN1weX3UwpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dVgzwykMPbzLMUcQ7bHKVMQyntqlZ8kVxa8HiQc4Zu0EYjU0CWpcqz5vD6CEgxEWd/KAnbMjXMlW+krxyp3POzZGziVFNdzZMPCcB58geDoClAAAX33+mEbKgyGMWKMEapddNxwRbwtk1+RlcvzDIR1n7FP2PrscqOxkYEjXuEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OYFGvFn1; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774434069; c=relaxed/simple;
+	bh=WPt4DvNqupxTlvcwAH81mPkiloh4dRgjM9M59Bf3dnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ImA7OKSU9C41kQJv2qbC+We9ODXgjcwoFW6tNYvS/TxkH1WWD2o/n0+M3zGNy7pl4dUYDj9aPQxiSkVWePl0+6gLEHXB2autAQwZbQ4zFt7dIUIS9yHV4+h17etuYV+ph8Z/JF6L/opzvO6/BcknnlpoZeCWEgDeLAGmalct7yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXIXfl3t; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OYFGvFn1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774431717; x=1805967717;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yQoGpfG3ugLGDpTHY7ILfQRiIXYCFMxAHN1weX3UwpY=;
-  b=OYFGvFn15HRBwu6WBkYZW7FY/mXOFWVOSVU2MQfye40VXrlZIm3oRaPv
-   Kyemx0UlkH5XPYztAMLmWlWDzU/I4rXym0VnKlCG9NC+wDuswLj6e5r4R
-   JnAb+DJ+pi2gRb7+N9X9IPBOkgPHx6Lhzdt/hsv+Z1VdlF8pD6M38Uvsx
-   yKso48+2ECj806Z1Cv5g7Wc8JWJulbx19ird2hvQgemXNhANCZHTrHi1Z
-   BuXjORYFVMYzlmlwUTl6Cnr2/BX+dbYqj0kU7puL153kXCJnvFkt6iNAW
-   +hHxg0K4LHadFN3pSD+JocrvA6DF8FNIqRyEYYWtGpeBphdBRQlyhNnUe
-   w==;
-X-CSE-ConnectionGUID: SCNVMmpmRNm2acP4Tzf5rw==
-X-CSE-MsgGUID: 8DCfq6T9T5GqFbErdZ1FQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="93041374"
-X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="93041374"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 02:41:56 -0700
-X-CSE-ConnectionGUID: X93mAqNoTwyX9ZmJ+w/8ZQ==
-X-CSE-MsgGUID: v+0etEhfR/OgD/ulECkIKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="228692372"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 02:41:50 -0700
-Message-ID: <6744304d-2402-490b-ae9c-f61da81b91a7@linux.intel.com>
-Date: Wed, 25 Mar 2026 17:41:47 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXIXfl3t"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2aae146b604so43155865ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 03:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774434067; x=1775038867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8rEJQGBx4Xb6J3zWmRxtcoZ3WTekrmNgq3UQWPxGWMU=;
+        b=WXIXfl3txdDeTo1Soro8TnCECrI1trHBNmFtL0zol+leEe37U82Njfg3K3kTP1Roum
+         pWkIMorgpyIzrXEZULwTCPFpEnb6Cjefj4BYig37H9L+HDb5UqINHu/UUP3ym9Jb+DbI
+         eNGfCqRI6O+kEN2xi1SbDbNEc2OxHNW08vDUfX8Ss88BsVFc2mx8cQpX1zU22AN48OdJ
+         Za9XnnllkzgpaBBsl88bK03ll95jP5/GWH9urcMmEzRtXde1XItOajqG4WcTyd4kNZSe
+         fivzssDquCEoQLdN/oSHA2HhZuwnCw165AGKJF0LDKQsb3oZdunahxdJGxQ2kzd/6uQV
+         M1nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774434067; x=1775038867;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8rEJQGBx4Xb6J3zWmRxtcoZ3WTekrmNgq3UQWPxGWMU=;
+        b=WT4eiGYqh5ErxLbzqupBoa1qIbWMZpgll0Udio4bzBK8FtPYS1A6T2CY2qIAPMgGCD
+         e/NrdavPODAbSFiug6BBsWoTJTvAP/yO5/kChko5q7liCKrvXyIev7Crax2ZvUtz5POS
+         pY3QHb+19kvnn3TJzYRDRZFrII2zsgx2rCBFK/xLgu/K8M7eu+GQVDnToLrHsV4LqBL3
+         4f2qErt6c5BsWmvMGz0ftnECduNGyVyhns+SnL19dvm75K3Rc9qZBe8uUgtG5a8OKchN
+         csskV5N7sIfHCS4gnRlCTrvNNvXien9UslCz2XYMzr+4VocQ1897H8KYW7sCkjz/9rtw
+         KlwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpUq1zk8Z39i4SHyNEs12d+lIdC7n1DCH9psbn2MMrnlfNJnlAAnSF4wp4CUVoTldQvQNS10Q3hQ5y/MO/nfxw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEfLxZTz+U/Stdxwnpr5/yW6LHNsiSgCyoEBbtygFGugrP3VRp
+	s3iensO95wHe2uk+HtnYF6YExCk/kkE9yoh8486x7ItoJmSWzHEq4ReP
+X-Gm-Gg: ATEYQzwocqok4oB7Ug6RKIzbZKAWr8/yIWMwI7Hg6soBaeig4wu/9LhILChpoi/OWKX
+	TGm4pVjj6P3AmdTu4e313Dd7lhXlzOKw32zNgxgJuDLE0guXp9uTOiJlCtjYEE16EYKnZn/QXxv
+	dAwzMdTCGiRbS2ce5ZXEjhYcGjBTo5Cvt7bPHw7tIksfDY7g8hsiBDW75mA1CvgqgHRCQqnmdwn
+	m4Mvd4TWn3PG/TR+0Xz2PSVn2kJ83AEKotjCuyXUY9ncHaCQAjSs9ZNmBgxMgRmZm7svDQaj314
+	445/b2UTAkPb6870sn7dnzWSUVocFlqC1ICjw25hEc3VKngrz0Wh/isBQUQmTV99yFFJvjmCdTm
+	t+w7tQ/DnJLGGuRgX5ov0sACN/RR5cs6rA9Vg5u+ofag4y9VDEZYRXjQWTSIvE/Sh3YqorcvTBZ
+	rn78DZl+934GNzchKdyWDUST+new==
+X-Received: by 2002:a17:903:234d:b0:2ae:6133:d170 with SMTP id d9443c01a7336-2b0b0a58ad9mr31139925ad.20.1774434067110;
+        Wed, 25 Mar 2026 03:21:07 -0700 (PDT)
+Received: from localhost ([2408:8642:893:d2da:e037:e3f2:a0bf:cef])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2b08366b5besm177533395ad.55.2026.03.25.03.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2026 03:21:05 -0700 (PDT)
+From: yuhaocheng035@gmail.com
+To: irogers@google.com,
+	wangqing7171@gmail.com,
+	peterz@infradead.org
+Cc: acme@kernel.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
+Subject: [PATCH v3] perf/core: Fix refcount bug and potential UAF in perf_mmap
+Date: Wed, 25 Mar 2026 18:20:53 +0800
+Message-ID: <20260325102053.1401-1-yuhaocheng035@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
+References: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 00/24] Support SIMD/eGPRs/SSP registers sampling for
- perf
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260324004118.3772171-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-All comments from Sashiko
-(https://sashiko.dev/#/patchset/20260324004118.3772171-1-dapeng1.mi%40linux.intel.com)
-have been reviewed.
+From: Haocheng Yu <yuhaocheng035@gmail.com>
 
-About 70% comments make sense and are posted the individual patches. About
-10% comments are correct but have nothing to do with this patch series,
-like "intel_pmu_init_hybrid() fails to allocate x86_pmu.hybrid_pmu, but
-current code doesn't check if x86_pmu.hybrid_pmu is null before accessing
-it".  The left ~20% comments are not correct and would be ignored.
+Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+in perf_mmap.
 
-All the correct comments would be addressed in the next version. Thanks.
+The issue is caused by a race condition between a failing mmap() setup
+and a concurrent mmap() on a dependent event (e.g., using output
+redirection).
 
-On 3/24/2026 8:40 AM, Dapeng Mi wrote:
-> Changes since V6:
-> - Fix potential overwritten issue in hybrid PMU structure (patch 01/24)
-> - Restrict PEBS events work on GP counters if no PEBS baseline suggested
->   (patch 02/24)
-> - Use per-cpu x86_intr_regs for perf_event_nmi_handler() instead of
->   temporary variable (patch 06/24)
-> - Add helper update_fpu_state_and_flag() to ensure TIF_NEED_FPU_LOAD is
->   set after save_fpregs_to_fpstate() call (patch 09/24)
-> - Optimize and simplify x86_pmu_sample_xregs(), etc. (patch 11/24)
-> - Add macro word_for_each_set_bit() to simplify u64 set-bit iteration
->   (patch 13/24)
-> - Add sanity check for PEBS fragment size (patch 24/24)
->
-> Changes since V5:
-> - Introduce 3 commits to fix newly found PEBS issues (Patch 01~03/19)
-> - Address Peter comments, including,
->   * Fully support user-regs sampling of the SIMD/eGPRs/SSP registers
->   * Adjust newly added fields in perf_event_attr to avoid holes
->   * Fix the endian issue introduced by for_each_set_bit() in
->     event/core.c
->   * Remove some unnecessary macros from UAPI header perf_regs.h
->   * Enhance b2b NMI detection for all PEBS handlers to ensure identical
->     behaviors of all PEBS handlers
-> - Split perf-tools patches which would be posted in a separate patchset
->   later
->
-> Changes since V4:
-> - Rewrite some functions comments and commit messages (Dave)
-> - Add arch-PEBS based SIMD/eGPRs/SSP sampling support (Patch 15/19)
-> - Fix "suspecious NMI" warnning observed on PTL/NVL P-core and DMR by
->   activating back-to-back NMI detection mechanism (Patch 16/19)
-> - Fix some minor issues on perf-tool patches (Patch 18/19)
->
-> Changes since V3:
-> - Drop the SIMD registers if an NMI hits kernel mode for REGS_USER.
-> - Only dump the available regs, rather than zero and dump the
->   unavailable regs. It's possible that the dumped registers are a subset
->   of the requested registers.
-> - Some minor updates to address Dapeng's comments in V3.
->
-> Changes since V2:
-> - Use the FPU format for the x86_pmu.ext_regs_mask as well
-> - Add a check before invoking xsaves_nmi()
-> - Add perf_simd_reg_check() to retrieve the number of available
->   registers. If the kernel fails to get the requested registers, e.g.,
->   XSAVES fails, nothing dumps to the userspace (the V2 dumps all 0s).
-> - Add POC perf tool patches
->
-> Changes since V1:
-> - Apply the new interfaces to configure and dump the SIMD registers
-> - Utilize the existing FPU functions, e.g., xstate_calculate_size,
->   get_xsave_addr().
->
-> Starting from Intel Ice Lake, XMM registers can be collected in a PEBS
-> record. Future Architecture PEBS will include additional registers such
-> as YMM, ZMM, OPMASK, SSP and APX eGPRs, contingent on hardware support.
->
-> This patch set introduces a software solution to mitigate the hardware
-> requirement by utilizing the XSAVES command to retrieve the requested
-> registers in the overflow handler. This feature is no longer limited to
-> PEBS events or specific platforms. While the hardware solution remains
-> preferable due to its lower overhead and higher accuracy, this software
-> approach provides a viable alternative.
->
-> The solution is theoretically compatible with all x86 platforms but is
-> currently enabled on newer platforms, including Sapphire Rapids and
-> later P-core server platforms, Sierra Forest and later E-core server
-> platforms and recent Client platforms, like Arrow Lake, Panther Lake and
-> Nova Lake.
->
-> Newly supported registers include YMM, ZMM, OPMASK, SSP, and APX eGPRs.
-> Due to space constraints in sample_regs_user/intr, new fields have been 
-> introduced in the perf_event_attr structure to accommodate these
-> registers.
->
-> After a long discussion in V1,
-> https://lore.kernel.org/lkml/3f1c9a9e-cb63-47ff-a5e9-06555fa6cc9a@linux.intel.com/
-> The below new fields are introduced.
->
-> @@ -547,6 +549,25 @@ struct perf_event_attr {
->
->         __u64   config3; /* extension of config2 */
->         __u64   config4; /* extension of config3 */
-> +
-> +       /*
-> +        * Defines set of SIMD registers to dump on samples.
-> +        * The sample_simd_regs_enabled !=0 implies the
-> +        * set of SIMD registers is used to config all SIMD registers.
-> +        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
-> +        * config some SIMD registers on X86.
-> +        */
-> +       union {
-> +               __u16 sample_simd_regs_enabled;
-> +               __u16 sample_simd_pred_reg_qwords;
-> +       };
-> +       __u16   sample_simd_vec_reg_qwords;
-> +       __u32   __reserved_4;
-> +
-> +       __u32   sample_simd_pred_reg_intr;
-> +       __u32   sample_simd_pred_reg_user;
-> +       __u64   sample_simd_vec_reg_intr;
-> +       __u64   sample_simd_vec_reg_user;
->  };
->
->  /*
-> @@ -1020,7 +1041,15 @@ enum perf_event_type {
->          *      } && PERF_SAMPLE_BRANCH_STACK
->          *
->          *      { u64                   abi; # enum perf_sample_regs_abi
-> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
-> +        *        u64                   regs[weight(mask)];
-> +        *        struct {
-> +        *              u16 nr_vectors;         # 0 ... weight(sample_simd_vec_reg_user)
-> +        *              u16 vector_qwords;      # 0 ... sample_simd_vec_reg_qwords
-> +        *              u16 nr_pred;            # 0 ... weight(sample_simd_pred_reg_user)
-> +        *              u16 pred_qwords;        # 0 ... sample_simd_pred_reg_qwords
-> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
-> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +        *      } && PERF_SAMPLE_REGS_USER
->          *
->          *      { u64                   size;
->          *        char                  data[size];
-> @@ -1047,7 +1076,15 @@ enum perf_event_type {
->          *      { u64                   data_src; } && PERF_SAMPLE_DATA_SRC
->          *      { u64                   transaction; } && PERF_SAMPLE_TRANSACTION
->          *      { u64                   abi; # enum perf_sample_regs_abi
-> -        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
-> +        *        u64                   regs[weight(mask)];
-> +        *        struct {
-> +        *              u16 nr_vectors;         # 0 ... weight(sample_simd_vec_reg_intr)
-> +        *              u16 vector_qwords;      # 0 ... sample_simd_vec_reg_qwords
-> +        *              u16 nr_pred;            # 0 ... weight(sample_simd_pred_reg_intr)
-> +        *              u16 pred_qwords;        # 0 ... sample_simd_pred_reg_qwords
-> +        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
-> +        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +        *      } && PERF_SAMPLE_REGS_INTR
->          *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_ADDR
->          *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
->          *      { u64                   data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
->
->
-> To maintain simplicity, a single field, sample_{simd|pred}_vec_reg_qwords,
-> is introduced to indicate register width. For example:
-> - sample_simd_vec_reg_qwords = 2 for XMM registers (128 bits) on x86
-> - sample_simd_vec_reg_qwords = 4 for YMM registers (256 bits) on x86
->
-> Four additional fields, sample_{simd|pred}_vec_reg_{intr|user}, represent
-> the bitmap of sampling registers. For instance, the bitmap for x86
-> XMM registers is 0xffff (16 XMM registers). Although users can
-> theoretically sample a subset of registers, the current perf-tool
-> implementation supports sampling all registers of each type to avoid
-> complexity.
->
-> A new ABI, PERF_SAMPLE_REGS_ABI_SIMD, is introduced to signal user space 
-> tools about the presence of SIMD registers in sampling records. When this
-> flag is detected, tools should recognize that extra SIMD register data
-> follows the general register data. The layout of the extra SIMD register
-> data is displayed as follow.
->
->    u16 nr_vectors;
->    u16 vector_qwords;
->    u16 nr_pred;
->    u16 pred_qwords;
->    u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->
-> With this patch set, sampling for the aforementioned registers is
-> supported on the Intel Nova Lake platform.
->
-> Examples:
->  $perf record -I?
->  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
->
->  $perf record --user-regs=?
->  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
->  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28
->  R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
->
->  $perf record -e branches:p -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask -c 100000 ./test
->  $perf report -D
->
->  ... ...
->  14027761992115 0xcf30 [0x8a8]: PERF_RECORD_SAMPLE(IP, 0x1): 29964/29964:
->  0xffffffff9f085e24 period: 100000 addr: 0
->  ... intr regs: mask 0x18001010003 ABI 64-bit
->  .... AX    0xdffffc0000000000
->  .... BX    0xffff8882297685e8
->  .... R8    0x0000000000000000
->  .... R16   0x0000000000000000
->  .... R31   0x0000000000000000
->  .... SSP   0x0000000000000000
->  ... SIMD ABI nr_vectors 32 vector_qwords 8 nr_pred 8 pred_qwords 1
->  .... ZMM  [0] 0xffffffffffffffff
->  .... ZMM  [0] 0x0000000000000001
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [0] 0x0000000000000000
->  .... ZMM  [1] 0x003a6b6165506d56
->  ... ...
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... ZMM  [31] 0x0000000000000000
->  .... OPMASK[0] 0x00000000fffffe00
->  .... OPMASK[1] 0x0000000000ffffff
->  .... OPMASK[2] 0x000000000000007f
->  .... OPMASK[3] 0x0000000000000000
->  .... OPMASK[4] 0x0000000000010080
->  .... OPMASK[5] 0x0000000000000000
->  .... OPMASK[6] 0x0000400004000000
->  .... OPMASK[7] 0x0000000000000000
->  ... ...
->
->
-> History:
->   v6: https://lore.kernel.org/all/20260209072047.2180332-1-dapeng1.mi@linux.intel.com/
->   v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
->   v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
->   v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
->   v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
->   v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
->
-> Dapeng Mi (12):
->   perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
->   perf/x86/intel: Avoid PEBS event on fixed counters without extended
->     PEBS
->   perf/x86/intel: Enable large PEBS sampling for XMMs
->   perf/x86/intel: Convert x86_perf_regs to per-cpu variables
->   perf: Eliminate duplicate arch-specific functions definations
->   x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after saving FPU state
->   perf/x86: Enable XMM Register Sampling for Non-PEBS Events
->   perf/x86: Enable XMM register sampling for REGS_USER case
->   perf: Enhance perf_reg_validate() with simd_enabled argument
->   perf/x86/intel: Enable arch-PEBS based SIMD/eGPRs/SSP sampling
->   perf/x86: Activate back-to-back NMI detection for arch-PEBS induced
->     NMIs
->   perf/x86/intel: Add sanity check for PEBS fragment size
->
-> Kan Liang (12):
->   perf/x86: Use x86_perf_regs in the x86 nmi handler
->   perf/x86: Introduce x86-specific x86_pmu_setup_regs_data()
->   x86/fpu/xstate: Add xsaves_nmi() helper
->   perf: Move and rename has_extended_regs() for ARCH-specific use
->   perf: Add sampling support for SIMD registers
->   perf/x86: Enable XMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable YMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable ZMM sampling using sample_simd_vec_reg_* fields
->   perf/x86: Enable OPMASK sampling using sample_simd_pred_reg_* fields
->   perf/x86: Enable eGPRs sampling using sample_regs_* fields
->   perf/x86: Enable SSP sampling using sample_regs_* fields
->   perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
->
->  arch/arm/kernel/perf_regs.c           |   8 +-
->  arch/arm64/kernel/perf_regs.c         |   8 +-
->  arch/csky/kernel/perf_regs.c          |   8 +-
->  arch/loongarch/kernel/perf_regs.c     |   8 +-
->  arch/mips/kernel/perf_regs.c          |   8 +-
->  arch/parisc/kernel/perf_regs.c        |   8 +-
->  arch/powerpc/perf/perf_regs.c         |   2 +-
->  arch/riscv/kernel/perf_regs.c         |   8 +-
->  arch/s390/kernel/perf_regs.c          |   2 +-
->  arch/x86/events/core.c                | 392 +++++++++++++++++++++++++-
->  arch/x86/events/intel/core.c          | 127 ++++++++-
->  arch/x86/events/intel/ds.c            | 195 ++++++++++---
->  arch/x86/events/perf_event.h          |  85 +++++-
->  arch/x86/include/asm/fpu/sched.h      |   5 +-
->  arch/x86/include/asm/fpu/xstate.h     |   3 +
->  arch/x86/include/asm/msr-index.h      |   7 +
->  arch/x86/include/asm/perf_event.h     |  38 ++-
->  arch/x86/include/uapi/asm/perf_regs.h |  51 ++++
->  arch/x86/kernel/fpu/core.c            |  27 +-
->  arch/x86/kernel/fpu/xstate.c          |  25 +-
->  arch/x86/kernel/perf_regs.c           | 134 +++++++--
->  include/linux/perf_event.h            |  16 ++
->  include/linux/perf_regs.h             |  36 +--
->  include/uapi/linux/perf_event.h       |  50 +++-
->  kernel/events/core.c                  | 138 +++++++--
->  tools/perf/util/header.c              |   3 +-
->  26 files changed, 1193 insertions(+), 199 deletions(-)
->
+In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
+event->rb with the mmap_mutex held. The mutex is then released to
+perform map_range().
+
+If map_range() fails, perf_mmap_close() is called to clean up.
+However, since the mutex was dropped, another thread attaching to
+this event (via inherited events or output redirection) can acquire
+the mutex, observe the valid event->rb pointer, and attempt to
+increment its reference count. If the cleanup path has already
+dropped the reference count to zero, this results in a
+use-after-free or refcount saturation warning.
+
+Fix this by extending the scope of mmap_mutex to cover the
+map_range() call. This ensures that the ring buffer initialization
+and mapping (or cleanup on failure) happens atomically effectively,
+preventing other threads from accessing a half-initialized or
+dying ring buffer.
+
+v2:
+Because expanding the guarded region would cause the event->mmap_mutex
+to be acquired repeatedly in the perf_mmap_close function, potentially
+leading to a self deadlock, the original logic of perf_mmap_close was
+retained, and the mutex-holding logic was modified to obtain the
+perf_mmap_close_locked function.
+
+v3:
+The fix is made smaller by passing the parameter "holds_event_mmap_mutex"
+to perf_mmap_close.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@intel.com/
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
+---
+ kernel/events/core.c | 78 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 30 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2c35acc2722b..a3228c587de1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6730,9 +6730,10 @@ static void perf_pmu_output_stop(struct perf_event *event);
+  * the buffer here, where we still have a VM context. This means we need
+  * to detach all events redirecting to us.
+  */
+-static void perf_mmap_close(struct vm_area_struct *vma)
++static void __perf_mmap_close(struct vm_area_struct *vma, struct perf_event *event,
++			      bool holds_event_mmap_lock)
+ {
+-	struct perf_event *event = vma->vm_file->private_data;
++	struct perf_event *iter_event;
+ 	mapped_f unmapped = get_mapped(event, event_unmapped);
+ 	struct perf_buffer *rb = ring_buffer_get(event);
+ 	struct user_struct *mmap_user = rb->mmap_user;
+@@ -6772,11 +6773,14 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	if (refcount_dec_and_test(&rb->mmap_count))
+ 		detach_rest = true;
+ 
+-	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
++	if ((!holds_event_mmap_lock &&
++	     !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex)) ||
++	    (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)))
+ 		goto out_put;
+ 
+ 	ring_buffer_attach(event, NULL);
+-	mutex_unlock(&event->mmap_mutex);
++	if (!holds_event_mmap_lock)
++		mutex_unlock(&event->mmap_mutex);
+ 
+ 	/* If there's still other mmap()s of this buffer, we're done. */
+ 	if (!detach_rest)
+@@ -6789,8 +6793,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	 */
+ again:
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(event, &rb->event_list, rb_entry) {
+-		if (!atomic_long_inc_not_zero(&event->refcount)) {
++	list_for_each_entry_rcu(iter_event, &rb->event_list, rb_entry) {
++		if (!atomic_long_inc_not_zero(&iter_event->refcount)) {
+ 			/*
+ 			 * This event is en-route to free_event() which will
+ 			 * detach it and remove it from the list.
+@@ -6799,7 +6803,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 		}
+ 		rcu_read_unlock();
+ 
+-		mutex_lock(&event->mmap_mutex);
++		if (!holds_event_mmap_lock)
++			mutex_lock(&iter_event->mmap_mutex);
+ 		/*
+ 		 * Check we didn't race with perf_event_set_output() which can
+ 		 * swizzle the rb from under us while we were waiting to
+@@ -6810,11 +6815,12 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 		 * still restart the iteration to make sure we're not now
+ 		 * iterating the wrong list.
+ 		 */
+-		if (event->rb == rb)
+-			ring_buffer_attach(event, NULL);
++		if (iter_event->rb == rb)
++			ring_buffer_attach(iter_event, NULL);
+ 
+-		mutex_unlock(&event->mmap_mutex);
+-		put_event(event);
++		if (!holds_event_mmap_lock)
++			mutex_unlock(&iter_event->mmap_mutex);
++		put_event(iter_event);
+ 
+ 		/*
+ 		 * Restart the iteration; either we're on the wrong list or
+@@ -6842,6 +6848,18 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	ring_buffer_put(rb); /* could be last */
+ }
+ 
++static void perf_mmap_close(struct vm_area_struct *vma)
++{
++	struct perf_event *event = vma->vm_file->private_data;
++
++	__perf_mmap_close(vma, event, false);
++}
++
++static void perf_mmap_close_locked(struct vm_area_struct *vma, struct perf_event *event)
++{
++	__perf_mmap_close(vma, event, true);
++}
++
+ static vm_fault_t perf_mmap_pfn_mkwrite(struct vm_fault *vmf)
+ {
+ 	/* The first page is the user control page, others are read-only. */
+@@ -7167,28 +7185,28 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			ret = perf_mmap_aux(vma, event, nr_pages);
+ 		if (ret)
+ 			return ret;
+-	}
+ 
+-	/*
+-	 * Since pinned accounting is per vm we cannot allow fork() to copy our
+-	 * vma.
+-	 */
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &perf_mmap_vmops;
++		/*
++		 * Since pinned accounting is per vm we cannot allow fork() to copy our
++		 * vma.
++		 */
++		vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
++		vma->vm_ops = &perf_mmap_vmops;
+ 
+-	mapped = get_mapped(event, event_mapped);
+-	if (mapped)
+-		mapped(event, vma->vm_mm);
++		mapped = get_mapped(event, event_mapped);
++		if (mapped)
++			mapped(event, vma->vm_mm);
+ 
+-	/*
+-	 * Try to map it into the page table. On fail, invoke
+-	 * perf_mmap_close() to undo the above, as the callsite expects
+-	 * full cleanup in this case and therefore does not invoke
+-	 * vmops::close().
+-	 */
+-	ret = map_range(event->rb, vma);
+-	if (ret)
+-		perf_mmap_close(vma);
++		/*
++		 * Try to map it into the page table. On fail, invoke
++		 * perf_mmap_close() to undo the above, as the callsite expects
++		 * full cleanup in this case and therefore does not invoke
++		 * vmops::close().
++		 */
++		ret = map_range(event->rb, vma);
++		if (ret)
++			perf_mmap_close_locked(vma, event);
++	}
+ 
+ 	return ret;
+ }
+
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
+-- 
+2.51.0
+
