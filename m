@@ -1,100 +1,337 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EFC28F949;
-	Wed, 25 Mar 2026 15:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774452770; cv=none; b=irCBh42kr14oDxYaZ/GH66qbuAGmh/KBiw7l074llZD2OnvALYnej2eI9UHsVHW6GnHrXDm/bKbCns3zBpOuzhGHc7h7C2WyfyIy1bbkP4jG6Ev2+1VLe3XlGHt3H+DGvTEokpQ3++WpM+lB7OXFwvcIuYwqajktulzVZMSIjnE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774452770; c=relaxed/simple;
-	bh=lKvyEM68xFevYhuzAf0jU+8fwUQON+hy53TSSIdLLtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsoV5FDIiWx4giMRS1EemBMVme04HEGFQU/IxPfAy0y+8bssvMykrM0a6BE7dsQk86qGxeXNZBZNylTSdsQK2N/Fyp3woolBxkfh2HlJP9zbxT3VcgYJh6mSHZI2a64WJ4KjrDomPBLdr+H0pWIcNZ0dZrCGxR7O3V9ZIOt4Q74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RjL6y9FP; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD803E7170
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 15:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774454300; cv=pass; b=S+MwoPMmjy3TWlB9XyuMRQ3NUPqD80jw9IXTGGp4+ukgGE8xzFAVkDRlZaAaJwxyX1R4WLIOkxc4u6DXIps1s8U+Zd0kaGIGFK9E0ML/2TjPGxsn5edxiHXaG4pJVyxALBEh4buDmaEWWdBGnGBaZe0NMyd8GGT3BLeX5nh7B04=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774454300; c=relaxed/simple;
+	bh=31v6dVcQjc/pLZxpJdzPz04ZotyuRNXgR5C/JrvThjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=evA4qn1gJc6HbCYOvsdHgpDqGKiQ9BNfEqZJmRlmlNa+o6ewMbLFnCvsNmo1h5U8hDI9eC+tg3ClwFtOfXAL3quNJxX8u5KLyelqWFNzedQd14mhW2uNLd24B0cC6rBa0eNyT2FH8MpqmGm4IWY7TlKwu76H9Xh2XHDZZ52x2KY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l0XaCJwk; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjL6y9FP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cvBNTH6UO4NrJA7ZeXzlrXmhyqeU6c9RcfZsXgC+OFY=; b=RjL6y9FP8+YGBj367jAK6Kk4vX
-	L+enG2fNiW5cdI0vP2jEhMMJSMZolIheB01vVIxC5vo3DOCG1mK3bnW2U3Nb4c4vlfjhfVte26mG5
-	uchXyVb/8dVOwxNZucMRbfHTEwCws5KF2GLNKW3sjRemN7SR7N0gPTkTqJSbGiDXuvFyFzb4rVlYh
-	BsTRIb1ka/XWvVQJT5QTcyAkOd07wOmVY4LdYhe8UDj5WT9Ktm5vpOhEdXUKExU3un+2wWjpyGRMd
-	Jr7YTSGpq5Zu8S/pWacuWjl4xGnAxThvW/+mXNji3V8lKDfnIpdm9yVD8Okv5qPKPfOB8Fhrr7usr
-	MPx1g4Bg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5QDo-00000006UyY-42Lj;
-	Wed, 25 Mar 2026 15:32:41 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 67F7A3004F8; Wed, 25 Mar 2026 16:32:40 +0100 (CET)
-Date: Wed, 25 Mar 2026 16:32:40 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: yuhaocheng035@gmail.com
-Cc: irogers@google.com, wangqing7171@gmail.com, acme@kernel.org,
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
-Subject: Re: [PATCH v3] perf/core: Fix refcount bug and potential UAF in
- perf_mmap
-Message-ID: <20260325153240.GK3739106@noisy.programming.kicks-ass.net>
-References: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
- <20260325102053.1401-1-yuhaocheng035@gmail.com>
- <20260325151735.GI3738010@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l0XaCJwk"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2aeab6ff148so88895ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 08:58:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774454298; cv=none;
+        d=google.com; s=arc-20240605;
+        b=I/tucoJX/phubELUZ16m44Fgq5/0wCMEXV4Ge/9Tl+899CwCO9GTXS4qaMjBApxyTt
+         SCe3IxZaDeFhL8HaUQNMmt6cRrOo5BaZb75atMwk2iS38oujxI1CPsUuC5R7fuEIMAiM
+         f5GX0ykXFoBpK6n3TD/rogMdrkECPcJVwsTQ494Rf4wPAU3ia0ttPvk7POJguNzYJ0md
+         Q2VTxj7FlOm9wvO3xuWDIv4zWeIIuKp5ICYDeA0Mh0nVo5O515jMWnno0mBEZUtBGJp/
+         H591lLdutKemg8WF3Ka9Zrx0/P71KkbPfS9gJn6vBhJnXa1P/ehO/6tPnu3B+44VOgp2
+         QnHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4NlapPe71gz9z0qpcpgNNnFPRNCo/H/SsEHbnVcdX28=;
+        fh=WVgkRO9M+77jwHfNGIg9Oh6VfWAHOW23jEQcqfE0J6c=;
+        b=D2CHonFPXkBzbcgkhqUX9pkDz1VHttdR0FRBZVovpGrI+utTHYjFBaYnaVNdDPGn5a
+         +WjdeqOOhF7k2XvxisM0fDzxDPVAucW+a7mMrxkh9sColSynPRqFWvl+3og5UvJbsVh+
+         BCzHGzzjj7YWm0yCnb6CAJ7TT8J0KWlxhixj9Umk/qcwZFcUPIIS7Jnj+aRn18tENXib
+         XrFMFTRjdgGIvdRTg/BQt3GKLMPcHZ0E+nuaRkQ8C3NQ0PU89kR+akniviI77Dpjldrf
+         +uwDtSE7P6C3YmlQ4ZP45xnraZ+rbqxjvA19I9asqifzQ9fSnmwvCxR2g6FrlPXjAfQ+
+         hV4Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1774454298; x=1775059098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4NlapPe71gz9z0qpcpgNNnFPRNCo/H/SsEHbnVcdX28=;
+        b=l0XaCJwkahqIvMvINx5+eyaDH3bJz0MVhmNyKVG5j4eT4EyMnrxxVlGv3Y8JFiA/N5
+         uxX1wWK8AMC0vS6XitFt1TQ4QsXR/iIazskl1xpkk6vnQ4kRkHPyFm4uSk+vfS36JqxD
+         oI/cfrbOAG5cd2LJu+OQVzyznD85FG/Hn1YOlH1loVAjHsFqCeQm/Knf8HjS3gfNZyCT
+         lCFFTradBb6P9uPIjZ2oFhGOkNqoxwSOOgXSOiTVgVKaW2x4tRL1QCi0M9ReYnykgHkK
+         ezFB2QbzRBVMcR9xRGyfL83ntcyDJtzREuVVWiYLQ3NYdBqwkEX3c9cu1BvXYYmRZWNK
+         DIOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774454298; x=1775059098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4NlapPe71gz9z0qpcpgNNnFPRNCo/H/SsEHbnVcdX28=;
+        b=modYQkobtEpF+dAFnnphdBgs17UCvhA6Ww7YwZqz24ubKK4OIKcuTf3LOZ/ltgz+Pn
+         Gtx7NDOMwyD+3OUs5eQ0rSyDIq4N+3TnzATKeCyu2vhsRxv+7iS6fZJkBRXB23s7/Oip
+         yqtYcxpDymNOzSp8ciZKXzZXMeGT8ZW2gLhjG8p5HrmjuAefCBa7YLMc0aXFRWXRACWV
+         OExQ0AVPTb+sL3v0DshPBvRk8C5DPwEw3BbGzA6RL7JRQh3Zv4H39C3H6VPfeTfiPzJS
+         7rfNNZX2J/ZXiqxakNT+VFP4LnLftu5THEECsbcD/vRT406+Ohb04MQb+uLdIOvQ06M3
+         NHPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSM7eGbur41ZXo1b1nUPb+9jVmdJQQu48mswcE2rHyeCc+BOJ3p2mqGsR4aT3PREmPAn4reul82SF/LN26Amie@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy040X/RjY0/3HvPFrZVgUDPz8jP2M+nWTlDTBVqjchIPDC92GT
+	fAYYeT5uGgHD2c9lyCh0LF/z4FLJzhbAHl0wdikNkcfSJ7G0NoSTxx4nXj2mhm47koav8Ta8RxH
+	5hErDKHU6EHYx+jrqUayeAww+SI5PFWuk8OQ3RJBH
+X-Gm-Gg: ATEYQzwqlgia7Ljydq+byGNvTNO8cy6VtXiu4nZIWxy1AAoLEMZ1/zGjl8VqbhWrk/L
+	+GMzDkf/9LZ0FU8K3pNT6jcRRlwt7BUVWq2gTGzbOQUfHngar6jhfOw4Az3zAm6fE7Z/CNpeOy0
+	snoFzvk689stn6qnRfx33bSbtxxQeAwkaY/8iU9Q+9cLEEiCkoqPrl5YBPg64UclsxkzVN2FFP4
+	jVs3sUDu/kQeJUG9l8LrmWLiDG3yS/v8dT6TcoR9vFwyK5UyZhWkrPMykKGLg4GGNW3t66tiZYP
+	/3y2QSDPOvuPXWI9E0WNwFXNdnTBNl0jWOO5XQ==
+X-Received: by 2002:a17:903:1a08:b0:2b0:5c88:51e1 with SMTP id
+ d9443c01a7336-2b0b15e34b9mr712735ad.14.1774454297593; Wed, 25 Mar 2026
+ 08:58:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260325151735.GI3738010@noisy.programming.kicks-ass.net>
+References: <20260219113850.354271-1-tmricht@linux.ibm.com>
+ <20260302234343.564937-1-irogers@google.com> <CAP-5=fW0Bu2313nAuhur+wP5Y2JtBNY+wpPoiKLqNzcSe-R3gA@mail.gmail.com>
+ <acOHgYoM6oYWWTmC@google.com>
+In-Reply-To: <acOHgYoM6oYWWTmC@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 25 Mar 2026 08:58:06 -0700
+X-Gm-Features: AaiRm525eJRZyq4wKqduzPONL8OvxU9mCR-LMkOhMDNYqJEk_WtRzP7shjYJI78
+Message-ID: <CAP-5=fUDdyVneU9LY0gcc-KdNkOi8vR0mo9yqndpwo7QTwqwyw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Lazily compute idle and use the perf_env
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: tmricht@linux.ibm.com, acme@kernel.org, agordeev@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-s390@vger.kernel.org, sumanthk@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 25, 2026 at 04:17:35PM +0100, Peter Zijlstra wrote:
-> 
-> Argh,. why is this hidden in this old thread :/
-> 
-> On Wed, Mar 25, 2026 at 06:20:53PM +0800, yuhaocheng035@gmail.com wrote:
-> 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 2c35acc2722b..a3228c587de1 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -6730,9 +6730,10 @@ static void perf_pmu_output_stop(struct perf_event *event);
-> >   * the buffer here, where we still have a VM context. This means we need
-> >   * to detach all events redirecting to us.
-> >   */
-> > -static void perf_mmap_close(struct vm_area_struct *vma)
-> > +static void __perf_mmap_close(struct vm_area_struct *vma, struct perf_event *event,
-> > +			      bool holds_event_mmap_lock)
-> >  {
-> > -	struct perf_event *event = vma->vm_file->private_data;
-> > +	struct perf_event *iter_event;
-> >  	mapped_f unmapped = get_mapped(event, event_unmapped);
-> >  	struct perf_buffer *rb = ring_buffer_get(event);
-> >  	struct user_struct *mmap_user = rb->mmap_user;
-> > @@ -6772,11 +6773,14 @@ static void perf_mmap_close(struct vm_area_struct *vma)
-> >  	if (refcount_dec_and_test(&rb->mmap_count))
-> >  		detach_rest = true;
-> >  
-> > -	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-> > +	if ((!holds_event_mmap_lock &&
-> > +	     !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex)) ||
-> > +	    (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)))
-> >  		goto out_put;
-> 
-> *groan*, this is horrible.
-> 
-> Let me have a poke to see if there isn't a saner variant around.
+On Tue, Mar 24, 2026 at 11:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hi Ian,
+>
+> Sorry for the delay.
+>
+> On Tue, Mar 24, 2026 at 10:14:01AM -0700, Ian Rogers wrote:
+> > On Mon, Mar 2, 2026 at 3:43=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> [SNIP]
+> > > -       if (idle_symbols_list)
+> > > -               return strlist__has_entry(idle_symbols_list, name);
+> > > +       /*
+> > > +        * ppc64 uses function descriptors and appends a '.' to the
+> > > +        * start of every instruction address. Remove it.
+> > > +        */
+> > > +       if (name[0] =3D=3D '.')
+>
+> Then e_machine =3D=3D EM_PPC64 can be checked here.
 
-Also, I just realized this patch doesn't even apply, it is against a
-tree without 77de62ad3de3 ("perf/core: Fix refcount bug and potential
-UAF in perf_mmap").
+Agreed, but potentially this is load bearing for more than just PPC so
+I'd rather leave it as it is.
 
+> > > +               name++;
+> > > +
+> > > +
+>
+> Two blank lines.
+
+Will fix in v2.
+
+> > > +       if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
+> > > +                   sizeof(idle_symbols[0]), sym_name_cmp)) {
+> > > +               sym->idle =3D SYMBOL_IDLE__IDLE;
+> > > +               return true;
+> > > +       }
+> > > +
+> > > +       if (e_machine =3D=3D EM_386 || e_machine =3D=3D EM_X86_64) {
+> > > +               if (strstarts(name, "mwait_idle") ||
+> > > +                   strstarts(name, "intel_idle")) {
+> > > +                       sym->idle =3D SYMBOL_IDLE__IDLE;
+> > > +                       return true;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       if (e_machine =3D=3D EM_PPC64 &&!strcmp(name, "ppc64_runlatch=
+_off")) {
+> > > +               sym->idle =3D SYMBOL_IDLE__IDLE;
+> > > +               return true;
+> > > +       }
+> > >
+> > > -       idle_symbols_list =3D strlist__new(NULL, NULL);
+> > > +       if (e_machine =3D=3D EM_S390) {
+> > > +               int major =3D 0, minor =3D 0;
+> > > +               const char *release =3D env && env->os_release
+> > > +                       ? env->os_release : perf_version_string;
+> > >
+> > > -       for (i =3D 0; idle_symbols[i]; i++)
+> > > -               strlist__add(idle_symbols_list, idle_symbols[i]);
+> > > +               sscanf(release, "%d.%d", &major, &minor);
+> > >
+> > > -       return strlist__has_entry(idle_symbols_list, name);
+> > > +               /* Before v6.10, s390 used psw_idle. */
+> > > +               if ((major < 6 || (major =3D=3D 6 && minor < 10)) && =
+strstarts(name, "psw_idle")) {
+> > > +                       sym->idle =3D SYMBOL_IDLE__IDLE;
+> > > +                       return true;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       sym->idle =3D SYMBOL_IDLE__NOT_IDLE;
+> > > +       return false;
+> > >  }
+> > >
+> > >  static int map__process_kallsym_symbol(void *arg, const char *name,
+> > > @@ -785,7 +815,7 @@ static int map__process_kallsym_symbol(void *arg,=
+ const char *name,
+> > >          * We will pass the symbols to the filter later, in
+> > >          * map__split_kallsyms, when we have split the maps per modul=
+e
+> > >          */
+> > > -       __symbols__insert(root, sym, !strchr(name, '['));
+> > > +       __symbols__insert(root, sym);
+> > >
+> > >         return 0;
+> > >  }
+> > > diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> > > index 3fb5d146d9b1..508dd9f336e9 100644
+> > > --- a/tools/perf/util/symbol.h
+> > > +++ b/tools/perf/util/symbol.h
+> > > @@ -24,6 +24,7 @@ struct dso;
+> > >  struct map;
+> > >  struct maps;
+> > >  struct option;
+> > > +struct perf_env;
+> > >  struct build_id;
+> > >
+> > >  /*
+> > > @@ -41,6 +42,12 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *=
+ep,
+> > >                              GElf_Shdr *shp, const char *name, size_t=
+ *idx);
+> > >  #endif
+> > >
+> > > +enum symbol_idle_kind {
+> > > +       SYMBOL_IDLE__UNKNOWN =3D 0,
+> > > +       SYMBOL_IDLE__NOT_IDLE =3D 1,
+> > > +       SYMBOL_IDLE__IDLE =3D 2,
+> > > +};
+> > > +
+> > >  /**
+> > >   * A symtab entry. When allocated this may be preceded by an annotat=
+ion (see
+> > >   * symbol__annotation) and/or a browser_index (see symbol__browser_i=
+ndex).
+> > > @@ -56,8 +63,8 @@ struct symbol {
+> > >         u8              type:4;
+> > >         /** ELF binding type as defined for st_info. E.g. STB_WEAK or=
+ STB_GLOBAL. */
+> > >         u8              binding:4;
+> > > -       /** Set true for kernel symbols of idle routines. */
+> > > -       u8              idle:1;
+> > > +       /** Cache for symbol__is_idle. */
+> > > +       enum symbol_idle_kind idle:2;
+>
+> I'm curious if bitfields with different types (u8 and enum) can be
+> placed consecutively bitwise.  There can be a lot of symbols so it
+> could be a concern.
+
+pahole says no size difference:
+
+Before:
+```
+struct symbol {
+       struct rb_node             rb_node
+__attribute__((__aligned__(8))); /*     0    24 */
+       u64                        start;                /*    24     8 */
+       u64                        end;                  /*    32     8 */
+       u16                        namelen;              /*    40     2 */
+       u8                         type:4;               /*    42: 0  1 */
+       u8                         binding:4;            /*    42: 4  1 */
+       u8                         idle:1;               /*    43: 0  1 */
+       u8                         ignore:1;             /*    43: 1  1 */
+       u8                         inlined:1;            /*    43: 2  1 */
+       u8                         annotate2:1;          /*    43: 3  1 */
+       u8                         ifunc_alias:1;        /*    43: 4  1 */
+
+       /* XXX 3 bits hole, try to pack */
+
+       u8                         arch_sym;             /*    44     1 */
+       char                       name[];               /*    45     0 */
+
+       /* size: 48, cachelines: 1, members: 13 */
+       /* sum members: 43 */
+       /* sum bitfield members: 13 bits, bit holes: 1, sum bit holes: 3 bit=
+s */
+       /* padding: 3 */
+       /* forced alignments: 1 */
+       /* last cacheline: 48 bytes */
+} __attribute__((__aligned__(8)));
+```
+
+After:
+```
+struct symbol {
+       struct rb_node             rb_node
+__attribute__((__aligned__(8))); /*     0    24 */
+       u64                        start;                /*    24     8 */
+       u64                        end;                  /*    32     8 */
+       u16                        namelen;              /*    40     2 */
+       u8                         type:4;               /*    42: 0  1 */
+       u8                         binding:4;            /*    42: 4  1 */
+
+       /* Bitfield combined with previous fields */
+
+       enum symbol_idle_kind      idle:2;               /*    40:24  4 */
+
+       /* Bitfield combined with next fields */
+
+       u8                         ignore:1;             /*    43: 2  1 */
+       u8                         inlined:1;            /*    43: 3  1 */
+       u8                         annotate2:1;          /*    43: 4  1 */
+       u8                         ifunc_alias:1;        /*    43: 5  1 */
+
+       /* XXX 2 bits hole, try to pack */
+
+       u8                         arch_sym;             /*    44     1 */
+       char                       name[];               /*    45     0 */
+
+       /* size: 48, cachelines: 1, members: 13 */
+       /* sum members: 43 */
+       /* sum bitfield members: 14 bits, bit holes: 1, sum bit holes: 2 bit=
+s */
+       /* padding: 3 */
+       /* forced alignments: 1 */
+       /* last cacheline: 48 bytes */
+} __attribute__((__aligned__(8)));
+```
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+>
+> > >         /** Resolvable but tools ignore it (e.g. idle routines). */
+> > >         u8              ignore:1;
+> > >         /** Symbol for an inlined function. */
+> > > @@ -184,8 +191,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, =
+struct symsrc *ss);
+> > >
+> > >  char *dso__demangle_sym(struct dso *dso, int kmodule, const char *el=
+f_name);
+> > >
+> > > -void __symbols__insert(struct rb_root_cached *symbols, struct symbol=
+ *sym,
+> > > -                      bool kernel);
+> > > +void __symbols__insert(struct rb_root_cached *symbols, struct symbol=
+ *sym);
+> > >  void symbols__insert(struct rb_root_cached *symbols, struct symbol *=
+sym);
+> > >  void symbols__fixup_duplicate(struct rb_root_cached *symbols);
+> > >  void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kall=
+syms);
+> > > @@ -269,5 +275,6 @@ enum {
+> > >  };
+> > >
+> > >  int symbol__validate_sym_arguments(void);
+> > > +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, cons=
+t struct perf_env *env);
+> > >
+> > >  #endif /* __PERF_SYMBOL */
+> > > --
+> > > 2.53.0.473.g4a7958ca14-goog
+> > >
