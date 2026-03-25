@@ -1,187 +1,325 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8AD3C7E11
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 17:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774459023; cv=none; b=LYt3hZbOwD2MC9cHJSRBAtqCbx02G2evYArwAQtdpw43F+tA8P0oM+Bw2yNI7++SkCv2QHM8FpbV9rfOtd57qHTlbsCbysUeqEl/Dk2yFjsUg4fTSaiRNRE8bVpc4d4+lLWW/1Js2AzQfsu82Vgo9MTwfJe89LKFFcNh9pBTqhM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774459023; c=relaxed/simple;
-	bh=FPAwh3tMDtLkSZCER6ZjMyy8O4etYqnOFFztkhjmdrw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ChUTTQtX33Q6sDthGLA0ueE7eE3coEC7TAnbiUWzMZvLNw2ESyvLt+jbyj+5A6iEHNjs98+HBvr5vdKQ6pIjxQ4VhDbYAWdS+9qc+Zg5t3ipHDEWlULBT2GeN/Xl9ElfbU3YmD0D0iXvWWKC+JD9a/PGQJEQf/BimDwzAnl9P4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J/vMoAOd; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605EE3264DF
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 18:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774463170; cv=pass; b=slUoduU2W3fRPNkWsHBlElY2BS0pGIeX7bmlCcbEKnklEIBdGqFZJe0iNMxomXUBSylzX6rOvDkqAb+nOkZwx7BqLNpTyCunSRphCFd7ffxNhehpv8HibMu6gd/ffjynntboQGLXMaSpLwIC0CkrSiNYd3p9fe2fHvbsIXHr6TI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774463170; c=relaxed/simple;
+	bh=fA3VTS6HbS9raAOyqVgq5AmlEV1NhdzoHIq4riBKQ2U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C2lM4chT/L8j4L8O4OkF96weVHUs36J7CWAikY6KErocbR93JTCzl8aWZvsaXqdIagtb7cPuVO4sjbiq/kOzqAjF4vJLSeQKIR/4njCRt5Z1WJd9XS0vzS6SukMVsmPl4BBk//RBXeFAIaF9Y91UGCvRBC+whLsZGXDPuU63LJg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=movej8jj; arc=pass smtp.client-ip=74.125.82.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J/vMoAOd"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c1030ca85eso688238eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 10:17:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="movej8jj"
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-128ce536fe0so1390c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 11:26:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774463166; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Jq93kGp7EZZ5LVxg0RgqBzuwaIMa/7QuHNqYyPgyCmxcR/JkkCefDjsHUHlKeJBx15
+         QddPu/AQZPG3pfMHz0NlSgY5LwrYVBiNw+1wP+wANXvubt63nvPWTBZTkn/o/o3ERUui
+         9fyhQlWLT+6Bx9d0kDGqhHhQ8ChbOvIYt1L30uUL5scoaHmYMQhjF38clowSm2VCgREQ
+         niHIZCKQIrFxk+xz9KkrV7Kka3ySBIKyAeFIHEz0p27EUyL40GVEz+CtBdbfdru9GvFi
+         aUC2CoVCjfT4bbL/CU9UQYZbYHL/eloipx5f28fj7sS9/WP4ziOHEj+Aai67RfWp+dny
+         B9Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+Zfnaxe1etiJdBCoB4L7gtblWpxqqKGPqrtf4yXdaVY=;
+        fh=kzUuYCqSvhG4akwnELRev2YG7l6K27metUvYXTnbT2M=;
+        b=YJ/JgXzVYZB0te1EczocePA86rngkmX25uxem6gHlM0PppYJIJ53A4SyggWWaeSi9R
+         QQ1y4EPW3dk+dhkn9GPZOK/iwUClfHqzLxczNPc2SDbY/fGPFuTuqtJjl9cI9pZud7gp
+         gK9VfsyGu0sqJTp794kGjoEWY2GELERAlWiXWlV0t3qccSRs9Qjj4AKa8WUIXhocWRsu
+         Ufxyjkd5lzu73W9EpyXrb+1ohNkmoJgVAiNDnd9qhhWGAL4wXRZj5u0zmtVjTgczcpL4
+         BVd6trLS8ECccAQ9FogUEaKh4x6dE8kLU/gSyH7zM7imTNnmi+ZDidYaAoJRt9eYpdWm
+         uYGQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774459021; x=1775063821; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SrBkzZtmjALVxSdK+cHMSnOSQqnK80sDVfD1bwO90gc=;
-        b=J/vMoAOd+i3ZuJFmsLof15x6EHOU6HrNeqi1wpf6D90GB8IlbBhxozmIICCRqDhi/h
-         YQujI9w4grOWhMbOv0AesVKI1N/tErEdqN0UQiuLFvMLs4OZ82Fs9G/f0LrDA6LdK5Ia
-         4Tsa4GIo2y2470A+bkvDbzCO69lSuisV15Cir1SuGsOZGsBgDvKyWY7GE68udXxBNK9W
-         u9KTwowLt6dTlb36H03dTEYCKdoaiZOX/gw4qgWvXhzm+fhOmf+htnSCB/G5d8oTb6DX
-         KISb125DKDq+97bCd5VGrdPTZ1iEy8jziJ9xgxiUCPDj04M3CHlUN867zQ+myjh85JYu
-         K2hg==
+        d=google.com; s=20251104; t=1774463166; x=1775067966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+Zfnaxe1etiJdBCoB4L7gtblWpxqqKGPqrtf4yXdaVY=;
+        b=movej8jjKgGVrvgsCwNtYxJB/5FOsM0yAb0jJT5Mcun1FG+YlB/QFif6FgUGyTNxGn
+         AenAm2euBxDa/5DC/9NLVYMYvkwzF4Cj1LQz1fsBLjf7OK9SVZhptEycIa5z8E8SnXRN
+         7UlbD0rGocTD49bXiOZP2rGUK/njYfXaCvbLQnMGqkXEGqhkZv8qlizQPQs5wZyLdn0t
+         Pz7DS9/xfDDtljOoj8hnmf6CIbyl2bWfKfXGXSdm+KceKwb5BtxCcsxi4za47C8j5MVn
+         y0vMgZtXxo29OxDbDScBYLbaWqRfeC5Twd22Qtr86G3+HAVj73gzurKr2aexsgR2ZWcW
+         5SOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774459021; x=1775063821;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SrBkzZtmjALVxSdK+cHMSnOSQqnK80sDVfD1bwO90gc=;
-        b=NoQLKrO/aupazJvVIHX8MF7jjRf8vPZt/7f6Yhrzvp8EH2vcPCcA1rnxY1UUMW5Cec
-         p0j+HVcE12OW9NSdLL4W8WBvcIE9bzsUQtL5Ne9dbjQ2cF9JsEjJ8XpTZZSI67t0Bm6+
-         Pf3YA+Qg33FWpqxaW85QKwf5nBuH4nYQryb92/rr0F1bcfrf9EUcTG+Iu+JwBL7D7Ptq
-         BK+JsOZMxP9qvKmoGucAVA3ifChJjAHBxpW94KQO1lpHRZMIorte5MV2vEyFxdIt+Opw
-         DGSekKnofr9CgS3pFdsZ+2Kzevov6w1ow3nrO+48nZBkXG0uwX/VibA/c1sU5DjiK9z3
-         I1Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcZ1lBORDZD1+H/DwGdvMOXWqzlI+I3UKEC4O06FJ9uC0I5YhNwx3RHvAqJABJ1hmklL06jUzNl8kGayl55nls@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKjSWfWyYirFMHAOTky06md+sXAp+bUlWletd2uJq1MZroiK3G
-	9FRSSyrCPf0FdQl3fywnBp5kGSbcBmlw6kDXfwzwCEId+n1bCAs64Z+q7Qho8i0UxaQUlJBVfqi
-	xdAtiimbe3Q==
-X-Received: from dlam9-n2.prod.google.com ([2002:a05:701b:2089:20b0:12a:7b92:3d63])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:102:b0:121:a01a:8e2f
- with SMTP id a92af1059eb24-12a96f05572mr2314974c88.42.1774459021129; Wed, 25
- Mar 2026 10:17:01 -0700 (PDT)
-Date: Wed, 25 Mar 2026 10:16:53 -0700
-In-Reply-To: <acOI-3Rtjys7JPyl@google.com>
+        d=1e100.net; s=20251104; t=1774463166; x=1775067966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+Zfnaxe1etiJdBCoB4L7gtblWpxqqKGPqrtf4yXdaVY=;
+        b=AztkcomuPCmgOP0HqkhXDybc708QGT2qLcWES4IrQ0rEwdjHx52MkaeYbC6aLM2y9C
+         ddoZ26bDUCKDvJ354gRPsQKLelzqTf9gvIuWV9QMdUja7tlfwX2KhcJ1aWvyTElzl9zz
+         2eYDI5+gQN9MveN+bOlYYsFXpBhpZIbDD+rXGnEBlO7Y4vQJm1w5W4KnM6zpqYoZOT6J
+         e4i7Dc6VuWgI48B4VJaGBUHuVXDlQyGvsHjUopqp9mQ+kJdYZwM+6hylJZvjCynVTLUZ
+         1vKdpCskSvw7FkLOmBqXRHM7Mb9JwmJi27MmqE3JCQylrLIv/lYvBtmB7ayWeHtlDZwu
+         SkYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIQ7LYEGNqBRogoGwipa7RwefgOxuwQAX9AFKRNhBwbtT4VUJzoOHaMuWAyDQ0iFWzyeQtnZUsb6X7Jp2GTDfx@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTaxT39kdhUnNpFWD00KNT12LodqfMkjfsXuLWSHLfTLIJ4MZr
+	fVITWlsHegwRm4PGojJ+5P/F/iDWWOQt5VReZAwTvs5TtuYLMnRWMSC1BMu3f91DhqXvb9hVDz9
+	yrjk6a73anQGnHvcKUc7D9R9PTkIraGeRdu+xvyB1TIJh+qsnuLTVemx9
+X-Gm-Gg: ATEYQzxxbuajqVNSwYSZJKdCycB8MTVJHOtN+KRwAcvYvlGoi1dSumnQNjCQieTA83w
+	Role1f4VTLl4Mu/4y25aOt2lpjDMKYLWZW1QBa/OjRKypqX13W63kn3qVV3Ow60zOaP4fP5jr87
+	fQQ1LGV6okugk6nhI36UCYq4mKq6b0Ho62QVrHdJWnbcHmQoX+S743lem1U8xi7W63oGMl7tr3g
+	KLMMqjWmWupBgnnhK5OzK/FSJsy6A5Lut86F2wBrwV0jpBEuL4PpmqCnc8R3BsaZu5LJJntGM9N
+	1NGI1Eeu9lGVEZbSHRzfdA5NQfUPXh2XgPHkyA==
+X-Received: by 2002:a05:7022:6606:b0:11a:2c18:9e70 with SMTP id
+ a92af1059eb24-12aa946bd16mr395c88.11.1774463165843; Wed, 25 Mar 2026 11:26:05
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <acOI-3Rtjys7JPyl@google.com>
-X-Mailer: git-send-email 2.53.0.1018.g2bb0e51243-goog
-Message-ID: <20260325171653.1091337-1-irogers@google.com>
-Subject: [PATCH v2] perf test: Fix perf stat --bpf-counters on hybrid machines
+MIME-Version: 1.0
+References: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
+In-Reply-To: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
 From: Ian Rogers <irogers@google.com>
-To: namhyung@kernel.org
-Cc: acme@kernel.org, adrian.hunter@intel.com, irogers@google.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
+Date: Wed, 25 Mar 2026 11:25:54 -0700
+X-Gm-Features: AQROBzAP_hOjRTa73dmwyNb96P8wcP6Kx5vmO06admrQPBvia23ys0HwW1WGXPk
+Message-ID: <CAP-5=fWE5d1frE+3CoRshWVPLe_Mmp_LHNcqoVSCdhxGgJXAVw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Fix crash on arm64
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>, Dmitry Ilvokhin <d@ilvokhin.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Events on hardware PMUs may open on >1 hardware PMU on hybrid
-machines. Unfortunately multiplexing introduces a scaling issue as
-reported in:
-https://lore.kernel.org/lkml/20250716223924.825772-1-irogers@google.com/
+On Wed, Mar 25, 2026 at 3:25=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> Perf stat is crashing on arm64 hosts with the following issue:
+>
+>         # make -C tools/perf DEBUG=3D1
+>         # perf stat sleep 1
+>         perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core=
+.fd)' failed.
+>         [1]    1220794 IOT instruction (core dumped)  ./perf stat
+>
+> The sorting function introduced by commit a745c0831c15c ("perf stat:
+> Sort default events/metrics") compares events based on their individual
+> properties. This can cause events from different groups to be
+> interleaved, resulting in group members appearing before their leaders
+> in the sorted evlist.
+>
+> When the iterator opens events in list order, a group member may be
+> processed before its leader has been opened.
+>
+> For example, CPU_CYCLES (idx=3D32) with leader STALL_SLOT_BACKEND (idx=3D=
+37)
+> could be sorted before its leader, causing the crash when CPU_CYCLES
+> tries to get its group fd from the not-yet-opened leader.
+>
+> Fix this by comparing events based on their leader's attributes instead
+> of their own attributes when the events are in different groups. This
+> ensures all members of a group share the same sort key as their leader,
+> keeping groups together and guaranteeing leaders are opened before their
+> members.
+>
+> Reported-by: Denis Yaroshevskiy <dyaroshev@meta.com>
+> Fixes: a745c0831c15c ("perf stat: Sort default events/metrics")
+> Tested-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Switch to using task-clock which as a software event runs on all CPUs
-and has a single PMU.
+Ah, this is the separate sorting for perf stat output and not the
+parse-events sorting. This sorting happens after we've regrouped for
+PMUs, etc. and so the invariants I expect shouldn't be broken by the
+change. Fwiw, the Intel hybrid sorting isn't impacted:
 
-For when hybrid event scaling is fixed, incorporate support for
-combining hybrid counts as posted by Namhyung Kim in:
-https://lore.kernel.org/lkml/20260319064513.9269-1-namhyung@kernel.org/
+Before:
+```
+$ perf stat -a sleep 1
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
----
-v1: https://lore.kernel.org/lkml/20260323202409.194123-1-irogers@google.com/
----
- tools/perf/tests/shell/stat_bpf_counters.sh | 55 ++++++++++++++-------
- 1 file changed, 38 insertions(+), 17 deletions(-)
+ Performance counter stats for 'system wide':
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index f43e28a136d3..f8c24ccc7830 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -5,6 +5,24 @@
- set -e
- 
- workload="perf test -w sqrtloop"
-+event=task-clock
-+
-+extract_count()
-+{
-+	local target_event="$1"
-+
-+	awk -v target="$target_event" -v i=0 -v c=0 '
-+	$0 ~ target {
-+		i++;
-+		c += $1
-+	}
-+	END {
-+		if (i > 0)
-+			printf "%.0f\n", c;
-+		else
-+			print "<not counted>"
-+	}'
-+}
- 
- # check whether $2 is within +/- 20% of $1
- compare_number()
-@@ -25,15 +43,15 @@ compare_number()
- 
- check_counts()
- {
--	base_instructions=$1
--	bpf_instructions=$2
-+	base_count=$1
-+	bpf_count=$2
- 
--	if [ "$base_instructions" = "<not" ]; then
--		echo "Skipping: instructions event not counted"
-+	if [ "$base_count" = "<not counted>" ]; then
-+		echo "Skipping: $event event not counted"
- 		exit 2
- 	fi
--	if [ "$bpf_instructions" = "<not" ]; then
--		echo "Failed: instructions not counted with --bpf-counters"
-+	if [ "$bpf_count" = "<not counted>" ]; then
-+		echo "Failed: $event not counted with --bpf-counters"
- 		exit 1
- 	fi
- }
-@@ -41,29 +59,32 @@ check_counts()
- test_bpf_counters()
- {
- 	printf "Testing --bpf-counters "
--	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | awk '/instructions/ {print $1}')
--	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | awk '/instructions/ {print $1}')
--	check_counts $base_instructions $bpf_instructions
--	compare_number $base_instructions $bpf_instructions
-+	base_count=$(perf stat --no-big-num -e "$event" -- $workload 2>&1 \
-+          | extract_count "$event")
-+	bpf_count=$(perf stat --no-big-num --bpf-counters -e "$event" -- $workload  2>&1 \
-+          | extract_count "$event")
-+	check_counts "$base_count" "$bpf_count"
-+	compare_number "$base_count" "$bpf_count"
- 	echo "[Success]"
- }
- 
- test_bpf_modifier()
- {
- 	printf "Testing bpf event modifier "
--	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
--	base_instructions=$(echo "$stat_output"| awk '/base_instructions/ {print $1}')
--	bpf_instructions=$(echo "$stat_output"| awk '/bpf_instructions/ {print $1}')
--	check_counts $base_instructions $bpf_instructions
--	compare_number $base_instructions $bpf_instructions
-+	stat_output=$(perf stat --no-big-num \
-+          -e "$event/name=base_$event/,$event/name=bpf_$event/b" -- $workload 2>&1)
-+	base_count=$(echo "$stat_output" | extract_count "base_$event")
-+	bpf_count=$(echo "$stat_output"|  extract_count "bpf_$event")
-+	check_counts "$base_count" "$bpf_count"
-+	compare_number "$base_count" "$bpf_count"
- 	echo "[Success]"
- }
- 
- # skip if --bpf-counters is not supported
--if ! perf stat -e instructions --bpf-counters true > /dev/null 2>&1; then
-+if ! perf stat -e "$event" --bpf-counters true > /dev/null 2>&1; then
- 	if [ "$1" = "-v" ]; then
- 		echo "Skipping: --bpf-counters not supported"
--		perf --no-pager stat -e instructions --bpf-counters true || true
-+		perf --no-pager stat -e "$event" --bpf-counters true || true
- 	fi
- 	exit 2
- fi
--- 
-2.53.0.1018.g2bb0e51243-goog
+            22,355      context-switches                 #    792.6
+cs/sec  cs_per_second
+         28,205.79 msec cpu-clock                        #     27.6
+CPUs  CPUs_utilized
+               477      cpu-migrations                   #     16.9
+migrations/sec  migrations_per_second
+               294      page-faults                      #     10.4
+faults/sec  page_faults_per_second
+         1,796,969      cpu_core/branch-misses/          #      2.0 %
+branch_miss_rate
+        90,819,614      cpu_core/branches/               #      3.2
+M/sec  branch_frequency
+       465,688,306      cpu_core/cpu-cycles/             #      0.0
+GHz  cycles_frequency
+       435,799,882      cpu_core/instructions/           #      0.9
+instructions  insn_per_cycle
+         2,239,373      cpu_atom/branch-misses/          #      4.6 %
+branch_miss_rate         (49.78%)
+        48,356,802      cpu_atom/branches/               #      1.7
+M/sec  branch_frequency     (50.17%)
+       477,205,378      cpu_atom/cpu-cycles/             #      0.0
+GHz  cycles_frequency       (50.37%)
+       236,677,090      cpu_atom/instructions/           #      0.5
+instructions  insn_per_cycle  (50.35%)
+             TopdownL1 (cpu_core)                        #      7.1 %
+tma_bad_speculation
+                                                         #     40.2 %
+tma_frontend_bound
+                                                         #     35.7 %
+tma_backend_bound
+                                                         #     17.1 %
+tma_retiring
+             TopdownL1 (cpu_atom)                        #     32.7 %
+tma_backend_bound        (59.74%)
+                                                         #     37.8 %
+tma_frontend_bound       (59.54%)
+                                                         #     17.2 %
+tma_bad_speculation
+                                                         #     12.3 %
+tma_retiring             (59.62%)
 
+       1.006767726 seconds time elapsed
+```
+
+After:
+```
+$ perf stat -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+            21,329      context-switches                 #    758.5
+cs/sec  cs_per_second
+         28,120.76 msec cpu-clock                        #     27.7
+CPUs  CPUs_utilized
+               482      cpu-migrations                   #     17.1
+migrations/sec  migrations_per_second
+               217      page-faults                      #      7.7
+faults/sec  page_faults_per_second
+         1,606,877      cpu_core/branch-misses/          #      1.8 %
+branch_miss_rate
+        90,472,412      cpu_core/branches/               #      3.2
+M/sec  branch_frequency
+       459,566,033      cpu_core/cpu-cycles/             #      0.0
+GHz  cycles_frequency
+       482,577,042      cpu_core/instructions/           #      1.1
+instructions  insn_per_cycle
+         2,430,046      cpu_atom/branch-misses/          #      7.0 %
+branch_miss_rate         (49.85%)
+        35,031,345      cpu_atom/branches/               #      1.2
+M/sec  branch_frequency     (50.20%)
+       494,493,558      cpu_atom/cpu-cycles/             #      0.0
+GHz  cycles_frequency       (50.22%)
+       190,397,854      cpu_atom/instructions/           #      0.4
+instructions  insn_per_cycle  (50.24%)
+             TopdownL1 (cpu_core)                        #      6.6 %
+tma_bad_speculation
+                                                         #     35.9 %
+tma_frontend_bound
+                                                         #     38.2 %
+tma_backend_bound
+                                                         #     19.3 %
+tma_retiring
+             TopdownL1 (cpu_atom)                        #     30.2 %
+tma_backend_bound        (59.74%)
+                                                         #     38.8 %
+tma_frontend_bound       (59.71%)
+                                                         #     21.7 %
+tma_bad_speculation
+                                                         #      9.3 %
+tma_retiring             (59.68%)
+
+       1.005096844 seconds time elapsed
+```
+
+Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+
+> ---
+> Cc; linux-arm-kernel@lists.infradead.org
+> ---
+> Changes in v2:
+> - No changes from V1, just resending the exact same patch.
+> - Link to v1: https://patch.msgid.link/20260205-perf_stat-v1-1-e433b0c918=
+af@debian.org
+> ---
+>  tools/perf/builtin-stat.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 73c2ba7e30760..a97b9d0de3f58 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1917,25 +1917,33 @@ static int default_evlist_evsel_cmp(void *priv __=
+maybe_unused,
+>         const struct evsel *lhs =3D container_of(lhs_core, struct evsel, =
+core);
+>         const struct perf_evsel *rhs_core =3D container_of(r, struct perf=
+_evsel, node);
+>         const struct evsel *rhs =3D container_of(rhs_core, struct evsel, =
+core);
+> +       const struct evsel *lhs_leader =3D evsel__leader(lhs);
+> +       const struct evsel *rhs_leader =3D evsel__leader(rhs);
+>
+> -       if (evsel__leader(lhs) =3D=3D evsel__leader(rhs)) {
+> +       if (lhs_leader =3D=3D rhs_leader) {
+>                 /* Within the same group, respect the original order. */
+>                 return lhs_core->idx - rhs_core->idx;
+>         }
+>
+> +       /*
+> +        * Compare using leader's attributes so that all members of a gro=
+up
+> +        * stay together. This ensures leaders are opened before their me=
+mbers.
+> +        */
+> +
+>         /* Sort default metrics evsels first, and default show events bef=
+ore those. */
+> -       if (lhs->default_metricgroup !=3D rhs->default_metricgroup)
+> -               return lhs->default_metricgroup ? -1 : 1;
+> +       if (lhs_leader->default_metricgroup !=3D rhs_leader->default_metr=
+icgroup)
+> +               return lhs_leader->default_metricgroup ? -1 : 1;
+>
+> -       if (lhs->default_show_events !=3D rhs->default_show_events)
+> -               return lhs->default_show_events ? -1 : 1;
+> +       if (lhs_leader->default_show_events !=3D rhs_leader->default_show=
+_events)
+> +               return lhs_leader->default_show_events ? -1 : 1;
+>
+>         /* Sort by PMU type (prefers legacy types first). */
+> -       if (lhs->pmu !=3D rhs->pmu)
+> -               return lhs->pmu->type - rhs->pmu->type;
+> +       if (lhs_leader->pmu !=3D rhs_leader->pmu)
+> +               return lhs_leader->pmu->type - rhs_leader->pmu->type;
+>
+> -       /* Sort by name. */
+> -       return strcmp(evsel__name((struct evsel *)lhs), evsel__name((stru=
+ct evsel *)rhs));
+> +       /* Sort by leader's name. */
+> +       return strcmp(evsel__name((struct evsel *)lhs_leader),
+> +                     evsel__name((struct evsel *)rhs_leader));
+>  }
+>
+>  /*
+>
+> ---
+> base-commit: 85964cdcad0fac9a0eb7b87a0f9d88cc074b854c
+> change-id: 20260205-perf_stat-a0a2a37e21c5
+>
+> Best regards,
+> --
+> Breno Leitao <leitao@debian.org>
+>
