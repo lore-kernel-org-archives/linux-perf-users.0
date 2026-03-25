@@ -1,115 +1,148 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F349E34107F
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 15:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49EB3F0764
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 15:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774451137; cv=pass; b=V5/gwRTBmLTglI7LjkcOEClr7y92Z4Dl2JQaOI+6noPhe8rp3VE8ZTz5vEAh8FJytkSZYPMDoJBqwfXuW2C94tLnxKdfqf3/ykHaRgU4qNoFIZvrSJUIFL3gA1IRHVjwkj5DpOuY6yom7rIRI3UqnU6R4OLZwGl6mulItcFfqqM=
+	t=1774451294; cv=pass; b=Q1YOOZvJzefFpk0dGubrNfmErQD9nKYdEv6g72fxtcoEs0iLi4K2GSwgwJeeyItzIFx4Aua+p8CCB0ZBrDXGrRsUkLXvnPl19HCf8oHxkjHqMxNR4DjBJlITRSVErSsqFQxOU4SMeJFl1pv4NzpKGEHJrolHuppbMoJp973IJoc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774451137; c=relaxed/simple;
-	bh=RiZ/P1j05T5iezJ42hkZoxCtyJ4MdUs+RpruqciR7qQ=;
+	s=arc-20240116; t=1774451294; c=relaxed/simple;
+	bh=QXNtPM9v/gYK2WPvl0X1uZr1Jx5+vXu4GgXl8B7CVxg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C8mD5BSgB0lYYbvRz9dn5vIKwO3JsMdzzrtPDSQhntdRmLt1y0tDxIPF3g66p2XV4uJuZgpmBWYlBmFIMNoFMi6wqAyCAzKOkAqjBgJPPXp3x0SEeldFqaY60y/kdkC69Ev10Bc9ydJN7uU+r0GW2xJsRz/j6Rg8HEHG+e7Rz7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EXcWTBf2; arc=pass smtp.client-ip=209.85.214.172
+	 To:Cc:Content-Type; b=JeoQwRzrGjQQYY3B8LP+2H2w5OOr6pfyV/d0X8xYPI2r1I0+bJPaK6TmorysF1t7S/nP0yAhudNe9A/rUCefzhLEfGDXK82TnUoZbmvyXG4anC5j3on/fnd5W+M/Y6g5xYhzDUB0rllUJDP/zH1H18LcAjI34ai2qGAu6ye86+M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sW6dzNVX; arc=pass smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXcWTBf2"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2b0b260d309so75575ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 08:05:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774451135; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sW6dzNVX"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2aeab6ff148so82725ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 08:08:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774451292; cv=none;
         d=google.com; s=arc-20240605;
-        b=UPlFpMbvf5OJ4Q/A8/eePOln3gFXL329u7fnQD+vZR8PDIHxNTWcr3LNawaPcqamdb
-         XfuHHHNOabNlrd59fhB3FWDW4jsnSJu/6ZnjyQQr8n9bcR13eCa59YqF5f0fDrhd4+Sb
-         DKniAWZNCbM3ysw3UIgKdnJojs5l22+8tHJz6hqCWpXVE+YprNvC5iAF7OnItsaFggjd
-         k2XHikP3c1VABuss/Rmwc3BzujB4vyg2vGe7etkluJ4RE1L67+Yi2HTPsoHh5dvIWOWG
-         JZasHAtNNoxAQdhGuTCzyKDfF5upGYpY5Pvf3xFC3wRPzCMZzLB4wnEU7BCor9tbKBdV
-         Dwpw==
+        b=GJGwtSXbca+Z8+D5cPBRAIEIcRnclgJsM6cRNeBXpeK1+npVyq+8EYaH4Iqlzu6oHx
+         DY2t/fKPTgQXibSYr/cYYNlu4WJqBteg7bO6A4eP/vo5Vdoj8xYtu9Fp2Rks3LqCrKcc
+         +LEoLL504GKdq25ju0r8JJpDO9u2/dyPJkA1IlzAsRHbTMIrgGEjRDgAIvJdeGo5jgJP
+         f16413lAANeyejQ8UeryXXVWijyBWp5RBUVb9qhJflKAFZeYY9gjK6d26aaMq8F5kLo5
+         AnLBzbUww0+7TM4Z2c08UY3Gf40wI7uihJOXQEAZBbnfCqyqQRD8Ke7N6yRAgR4ru2sB
+         bNWQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=76OabY+luJ+BcIbMsFlMiNmsKsf1afMlxhtAh6iR5WA=;
-        fh=vBBzzLgD/v72Cv0n3ad1e/a/MXkTwF06bfr7ZFjCbMg=;
-        b=koc7BAvHiDpoAUfJUa+a1Y4oKrS27os1mkEbG8cuEaubNPFTKC/qduCPfjHWE/65li
-         YVrGr+Ouc9WSIufCEi6aAS0YLaV/hi3PHtGQ2KBsm40cANp4vctLqmed1EA5pjzPsHCS
-         s4oBcD6gevR1SHhxRTcf0sw61Od0jTlApuH5/gm1Nrr3ZX6JKxLCcHjNSX25eCRZjVSx
-         Csi/doL7LlaeYwYxscDApoXPOdJ100YSFNjlKHbTI0PMZticN6hpa/2LuGPkkB/kwv/t
-         Su7f8CylgGBRnaUAuxRaVr7zOQ7v9ZTqOR1ZEFUcGIzNXBSfW60BxiMZpTr7IVmAaFD8
-         HClQ==;
+        bh=PZ3n2lSjBUHI8XA3sxpWr0dwW+BQ++RM8y9bJI00dNU=;
+        fh=BaZQ/ol4/E3OHjKRgz2NWjzLwcEo+skEZpaBalifh4g=;
+        b=T5CEie8uBvauQmLItbUB2gPK79tLiQaWQvOzO830f5SqI5mmIhL9E0xR0aHyNPlyNI
+         5RxLagk6Hbm7EaZSTu1SMp0+drXMCY9A+1/s8TuUb4hHbXLpuyh/AVSYe3HZ3aKsy0o5
+         MSTBonU3mazxZ64IbxrhQE7nycFB/dpCi33h0YTnL8kPQaj8dW2KtGRHuTT8D6TT47JS
+         6y0aR9yIBw9N6aG7VXc+Y+8M8vLAQwStIjT/2GXBP9yIIO+KOYGjL7PPSg7SWF91+YU5
+         R2itB9WWlCOQ7W8sXkcPEYe7Ni3S+6WkhmXOvFR48Ozz20hesgoi5K8h3/7C0nT7mMSN
+         Pkfw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774451135; x=1775055935; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774451292; x=1775056092; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=76OabY+luJ+BcIbMsFlMiNmsKsf1afMlxhtAh6iR5WA=;
-        b=EXcWTBf2jClhw2sCM2swx8Pt0Ki7HKY1q5N0yS9CXW8gb2anlRC4HJ0YoYkFbnVb7C
-         XPeGb89R01Hm3IGzOkeZZXo7AbxT5jXRD9tKbvVVC0XlV9cMBuo0GzIoDNko6XmZqnCg
-         Y2van4Vdj/mqG8jMzruW65LtDfxwYRYzvb/g2p/maAYYLHMRyp7cWDW2gpxPFp+AOAvm
-         f/ZsV9Yaz0CdZAgP9fOx7+B+pgOhBhTzfPcG8hAeAwhp6XHHh74aN9MspGZxcSdpAgJu
-         C4TiZUtgiysDnDdiw7ZfApTv9NrKrY2RE+hho46lcTlgflTR14t1oC1lQ84NMcN2nZG/
-         Ho9A==
+        bh=PZ3n2lSjBUHI8XA3sxpWr0dwW+BQ++RM8y9bJI00dNU=;
+        b=sW6dzNVXkOIpAfCk9r5SWVDsbQ20CImgOO9ZqlKG9P1cuhRhvXCtlY2Z+AlZsT4CD9
+         UbBn3Dkgd0u+TlmI/wgMieWGGKqaWWeRg4bM6k6LO+vrZKjvtQUWC4h09uyan/Yt2+xL
+         ZETxF5BDWCq19Zxcv+Bfl/VjSU2zFjbWo6k1BmP3xltlwJ6u7QLTVvKizxBKiRmTiCZf
+         dfz+vlIPEYODV4vNgocX3zmWbrsRh79L2rgzbUNDluX8C7eAsMTlGyVdoLr6QVdU5AhS
+         MXKmvSvhmYZp5Cpxbwk91nr2h9R4aXh/lZ1umzNS19Oeeroat8FhLaU7ixa0ne0DCzBN
+         1uZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774451135; x=1775055935;
+        d=1e100.net; s=20251104; t=1774451292; x=1775056092;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=76OabY+luJ+BcIbMsFlMiNmsKsf1afMlxhtAh6iR5WA=;
-        b=oFw1VRH6tF0VYDuDdIDR44LOhTpCkNdl2Byg+4tk45X/j3Q7h8eKPAYBH/MYY1lLLM
-         wdA+Y/6/3DQDko4Rcx668FB3Fmy5Q9Wr5tJvcKgYqpyFwaev9b2Vci99s7pYEsn07TvJ
-         G5748UdnqB1hEzaRW4Rqv09JA6aDPdXMYDjrx36MC6SpUWzZytiw3+UrUmJyGChIPQVW
-         99h/AJG7iyMUSd5qn3Gyfw7QqymtQ75vvAg0WGOKOH0WBpmZVowiDU9DKcYa9lOMe8sk
-         FkRntQ7g8CQWxboxdio7CP+oLDo7xJMBEsJ4vCmnvWe0vEosPOJGcc/gmyRhQgTlkzj5
-         cdrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTuLyhPD801LbZ0MsQW5e04XzVOzYIt9bF6a7YL4I/ftqjOHJD8tcfhIoCDAsYX0r+HGwDVA2XWeC6A3/6l9HY@vger.kernel.org
-X-Gm-Message-State: AOJu0YymCn7S3e2/dJ2dV2u92NtYg0GC8jYA8vJw0SpyoaPhoU43jldu
-	++ByL3TmdVTnER/xN9bLId0FtkrlXku8i/i78GjGAznLA5HJIW8kgFYp+Lfpw1cyXcKW7ZEHVNw
-	BajHzzk6T2VRaX1rDt+yM2s6/+z975JlLUvPCuule
-X-Gm-Gg: ATEYQzy/3v/MOGTSEy0rOCQElajExqBP4a+WplbBNZ2jyC+8LZR3G46Q7jpJetlKVKN
-	O3f0L2ssBh9M8bmhsKozdy003Jdvyczvm/y6xD81zSZXyjGsSslIDSDLsgt7s4uGu+Nbd/pb3N/
-	qaw+3ShnkaMU9Z5UkVPhaMu387wFj67kYb7RzRLF2HAKuFh0e1KSDeglZRyIGWm5OCcTeZxHHfj
-	hrDTBtnneTuQmF+R2yEh01kdkYNt05QDs2RihntBmZni09GJjy9kSV27jWRA5Kn2yBFzUTw8F/+
-	IPrVjZyAsD1EblbtFOP8o6AYnyxiNWM2o1WgHQ==
-X-Received: by 2002:a17:902:ecc4:b0:2ae:575f:3755 with SMTP id
- d9443c01a7336-2b0b1622bf8mr3148215ad.20.1774451134653; Wed, 25 Mar 2026
- 08:05:34 -0700 (PDT)
+        bh=PZ3n2lSjBUHI8XA3sxpWr0dwW+BQ++RM8y9bJI00dNU=;
+        b=EwieYmjusPI10YQLEESsJ3gCRtMNSG2ae/jkd3eqpW8rjghEJaARxL5TxubTz8x6um
+         jHP99ym2VE1h3jnxKAFXQxoVWlhd3qCwcKPTo7k7hGL4atqj5dK9mc9ltqmxm7NpPghg
+         Z8o+XR/WIGiRJzOnkZ6ZvreuM1jrIaE/HlsM8uLLEkcvR+otac9lCt2jxV9eumlY0SdF
+         h7K6vUHHrEu9Mr70iz09SFV3s4TlnepGJtltp6wn7lfXzs4uuRNYRAd/F+rCvdyrzw0A
+         h4st071CvwwJ41vnVekbC4qKSapccAA8m5t0nQyocOAmh3xZJUDN2KqbzdMlZCN9HXt/
+         VemA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA+9rimXSP8U+Kojajl5PnKf6IgHD7TW0HQaZ6ewI5OhOT1c2Pgt5fOUFrbB0OiT15G8I7yQJprwHXDXZQbExa@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3P6XQINAyL9Y+rKOHo1b8ZUQzeehkoii/e+NGHpHY4UlqeSgB
+	7wxy7liYIbO4nZTUVZd86KXzrfOFOuZfoOs83E2e5uInXcl23kQQAJ0OnZ02FUKfut8WB541G96
+	fWSWYJcXUjPbBITIZ1JjXDMtx7DDXIGlX7yQjZg0P
+X-Gm-Gg: ATEYQzxj+0VtJcST4kR0novhsGIzOss8inZUBDjBSjhsWGmWZdrSM3MZbHKsWDUIW87
+	PwOKHTnATP1okYQetEwaP1RXiDq81gojiwWbtuBRVuQMzzX5yE/KYugls1ertdGMRaV3YBM1wM5
+	q0VqapKCNT0Q7jsS6KhW9nVdvjaQk6wpZAaGaXov1deT8QlOrwRTXuv9AY6xPd4mK5+vom7MUTj
+	dP1IP3p2rJqice8TH6vdqdQIPU/0ziXOdOHHhpPKIwohfx8+xn8J8ttgu9/HUtIEJJZaOFDbxJ+
+	LZyA+5j5mmVoi/BcaE5gen8BtlyxEQOo6wDQLA==
+X-Received: by 2002:a17:902:ccc7:b0:2a7:d266:d84a with SMTP id
+ d9443c01a7336-2b0b2a6c418mr174195ad.17.1774451291428; Wed, 25 Mar 2026
+ 08:08:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325120627.1841175-1-tmricht@linux.ibm.com> <20260325120627.1841175-4-tmricht@linux.ibm.com>
-In-Reply-To: <20260325120627.1841175-4-tmricht@linux.ibm.com>
+References: <CAAoXzSrdEjHtLYqHJDT8bm_gDAY=C1VdeU=0NbjJ0hhpOo5V9w@mail.gmail.com>
+ <20260325102053.1401-1-yuhaocheng035@gmail.com>
+In-Reply-To: <20260325102053.1401-1-yuhaocheng035@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 25 Mar 2026 08:05:22 -0700
-X-Gm-Features: AaiRm51aCCTjGP10v807adh0JZjzR1DHeVdYkImq6BkMDIeW29lO9Fx36OI7nR8
-Message-ID: <CAP-5=fV+Xn_7Q1DZmO43MBrOAHZv6YUu8wwF8jyy7Stwo=BNRQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf addr2line: Remove global variable addr2line_timeout_ms
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
-	hca@linux.ibm.com, japo@linux.ibm.com
+Date: Wed, 25 Mar 2026 08:08:00 -0700
+X-Gm-Features: AaiRm50kII7vVc0rUwG_4qLpRbTa_GeDHYthvBi81fYP_igpvEvsxOLR_Cog7pI
+Message-ID: <CAP-5=fUwzdnVris8pLB2nA8Y9dtjfdANDztnN=rP268cZuX5MA@mail.gmail.com>
+Subject: Re: [PATCH v3] perf/core: Fix refcount bug and potential UAF in perf_mmap
+To: yuhaocheng035@gmail.com
+Cc: wangqing7171@gmail.com, peterz@infradead.org, acme@kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 25, 2026 at 5:06=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Wed, Mar 25, 2026 at 3:21=E2=80=AFAM <yuhaocheng035@gmail.com> wrote:
 >
-> Remove global variable addr2line_timeout_ms and add is as member
-> to symbol_conf structure. No functional change.
+> From: Haocheng Yu <yuhaocheng035@gmail.com>
 >
-> Fixes: 257046a36750a ("perf srcline: Fallback between addr2line implement=
-ations")
-> Cc: Ian Rogers <irogers@google.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-
-I'm a bit curious about the no functional change and the Fixes tag :-)
-I think the trend for addr2line is to use libdw. The forking of both
-objdump and addr2line is quite brittle and slow.
+> Syzkaller reported a refcount_t: addition on 0; use-after-free warning
+> in perf_mmap.
+>
+> The issue is caused by a race condition between a failing mmap() setup
+> and a concurrent mmap() on a dependent event (e.g., using output
+> redirection).
+>
+> In perf_mmap(), the ring_buffer (rb) is allocated and assigned to
+> event->rb with the mmap_mutex held. The mutex is then released to
+> perform map_range().
+>
+> If map_range() fails, perf_mmap_close() is called to clean up.
+> However, since the mutex was dropped, another thread attaching to
+> this event (via inherited events or output redirection) can acquire
+> the mutex, observe the valid event->rb pointer, and attempt to
+> increment its reference count. If the cleanup path has already
+> dropped the reference count to zero, this results in a
+> use-after-free or refcount saturation warning.
+>
+> Fix this by extending the scope of mmap_mutex to cover the
+> map_range() call. This ensures that the ring buffer initialization
+> and mapping (or cleanup on failure) happens atomically effectively,
+> preventing other threads from accessing a half-initialized or
+> dying ring buffer.
+>
+> v2:
+> Because expanding the guarded region would cause the event->mmap_mutex
+> to be acquired repeatedly in the perf_mmap_close function, potentially
+> leading to a self deadlock, the original logic of perf_mmap_close was
+> retained, and the mutex-holding logic was modified to obtain the
+> perf_mmap_close_locked function.
+>
+> v3:
+> The fix is made smaller by passing the parameter "holds_event_mmap_mutex"
+> to perf_mmap_close.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202602020208.m7KIjdzW-lkp@i=
+ntel.com/
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Haocheng Yu <yuhaocheng035@gmail.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
@@ -117,98 +150,171 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/addr2line.c   | 8 ++++----
->  tools/perf/util/addr2line.h   | 2 --
->  tools/perf/util/config.c      | 3 +--
->  tools/perf/util/symbol_conf.h | 1 +
->  4 files changed, 6 insertions(+), 8 deletions(-)
+>  kernel/events/core.c | 78 +++++++++++++++++++++++++++-----------------
+>  1 file changed, 48 insertions(+), 30 deletions(-)
 >
-> diff --git a/tools/perf/util/addr2line.c b/tools/perf/util/addr2line.c
-> index e9f084db0802..1b7f66ece570 100644
-> --- a/tools/perf/util/addr2line.c
-> +++ b/tools/perf/util/addr2line.c
-> @@ -18,9 +18,6 @@
->
->  #define MAX_INLINE_NEST 1024
->
-> -/* If addr2line doesn't return data for 5 seconds then timeout. */
-> -int addr2line_timeout_ms =3D 5 * 1000;
-> -
->  static int filename_split(char *filename, unsigned int *line_nr)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 2c35acc2722b..a3228c587de1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6730,9 +6730,10 @@ static void perf_pmu_output_stop(struct perf_event=
+ *event);
+>   * the buffer here, where we still have a VM context. This means we need
+>   * to detach all events redirecting to us.
+>   */
+> -static void perf_mmap_close(struct vm_area_struct *vma)
+> +static void __perf_mmap_close(struct vm_area_struct *vma, struct perf_ev=
+ent *event,
+> +                             bool holds_event_mmap_lock)
 >  {
->         char *sep;
-> @@ -87,6 +84,9 @@ static struct child_process *addr2line_subprocess_init(=
-const char *addr2line_pat
->                 return NULL;
->         }
+> -       struct perf_event *event =3D vma->vm_file->private_data;
+> +       struct perf_event *iter_event;
+>         mapped_f unmapped =3D get_mapped(event, event_unmapped);
+>         struct perf_buffer *rb =3D ring_buffer_get(event);
+>         struct user_struct *mmap_user =3D rb->mmap_user;
+> @@ -6772,11 +6773,14 @@ static void perf_mmap_close(struct vm_area_struct=
+ *vma)
+>         if (refcount_dec_and_test(&rb->mmap_count))
+>                 detach_rest =3D true;
 >
-> +       if (!symbol_conf.addr2line_timeout_ms)
-> +               symbol_conf.addr2line_timeout_ms =3D 5 * 1000;
-> +
->         return a2l;
+> -       if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap=
+_mutex))
+> +       if ((!holds_event_mmap_lock &&
+> +            !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mma=
+p_mutex)) ||
+> +           (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap=
+_count)))
+>                 goto out_put;
+>
+>         ring_buffer_attach(event, NULL);
+> -       mutex_unlock(&event->mmap_mutex);
+> +       if (!holds_event_mmap_lock)
+> +               mutex_unlock(&event->mmap_mutex);
+>
+>         /* If there's still other mmap()s of this buffer, we're done. */
+>         if (!detach_rest)
+> @@ -6789,8 +6793,8 @@ static void perf_mmap_close(struct vm_area_struct *=
+vma)
+>          */
+>  again:
+>         rcu_read_lock();
+> -       list_for_each_entry_rcu(event, &rb->event_list, rb_entry) {
+> -               if (!atomic_long_inc_not_zero(&event->refcount)) {
+> +       list_for_each_entry_rcu(iter_event, &rb->event_list, rb_entry) {
+> +               if (!atomic_long_inc_not_zero(&iter_event->refcount)) {
+>                         /*
+>                          * This event is en-route to free_event() which w=
+ill
+>                          * detach it and remove it from the list.
+> @@ -6799,7 +6803,8 @@ static void perf_mmap_close(struct vm_area_struct *=
+vma)
+>                 }
+>                 rcu_read_unlock();
+>
+> -               mutex_lock(&event->mmap_mutex);
+> +               if (!holds_event_mmap_lock)
+> +                       mutex_lock(&iter_event->mmap_mutex);
+>                 /*
+>                  * Check we didn't race with perf_event_set_output() whic=
+h can
+>                  * swizzle the rb from under us while we were waiting to
+> @@ -6810,11 +6815,12 @@ static void perf_mmap_close(struct vm_area_struct=
+ *vma)
+>                  * still restart the iteration to make sure we're not now
+>                  * iterating the wrong list.
+>                  */
+> -               if (event->rb =3D=3D rb)
+> -                       ring_buffer_attach(event, NULL);
+> +               if (iter_event->rb =3D=3D rb)
+> +                       ring_buffer_attach(iter_event, NULL);
+>
+> -               mutex_unlock(&event->mmap_mutex);
+> -               put_event(event);
+> +               if (!holds_event_mmap_lock)
+> +                       mutex_unlock(&iter_event->mmap_mutex);
+> +               put_event(iter_event);
+>
+>                 /*
+>                  * Restart the iteration; either we're on the wrong list =
+or
+> @@ -6842,6 +6848,18 @@ static void perf_mmap_close(struct vm_area_struct =
+*vma)
+>         ring_buffer_put(rb); /* could be last */
 >  }
 >
-> @@ -335,7 +335,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
->                 goto out;
->         }
->         io__init(&io, a2l->out, buf, sizeof(buf));
-> -       io.timeout_ms =3D addr2line_timeout_ms;
-> +       io.timeout_ms =3D symbol_conf.addr2line_timeout_ms;
->         switch (read_addr2line_record(&io, cmd_a2l_style, dso_name, addr,=
- /*first=3D*/true,
->                                       &record_function, &record_filename,=
- &record_line_nr)) {
->         case -1:
-> diff --git a/tools/perf/util/addr2line.h b/tools/perf/util/addr2line.h
-> index d35a47ba8dab..75989a92f16b 100644
-> --- a/tools/perf/util/addr2line.h
-> +++ b/tools/perf/util/addr2line.h
-> @@ -8,8 +8,6 @@ struct dso;
->  struct inline_node;
->  struct symbol;
+> +static void perf_mmap_close(struct vm_area_struct *vma)
+> +{
+> +       struct perf_event *event =3D vma->vm_file->private_data;
+> +
+> +       __perf_mmap_close(vma, event, false);
+> +}
+> +
+> +static void perf_mmap_close_locked(struct vm_area_struct *vma, struct pe=
+rf_event *event)
+> +{
+> +       __perf_mmap_close(vma, event, true);
+> +}
+> +
+>  static vm_fault_t perf_mmap_pfn_mkwrite(struct vm_fault *vmf)
+>  {
+>         /* The first page is the user control page, others are read-only.=
+ */
+> @@ -7167,28 +7185,28 @@ static int perf_mmap(struct file *file, struct vm=
+_area_struct *vma)
+>                         ret =3D perf_mmap_aux(vma, event, nr_pages);
+>                 if (ret)
+>                         return ret;
+> -       }
 >
-> -extern int addr2line_timeout_ms;
-> -
->  int cmd__addr2line(const char *dso_name, u64 addr,
->                    char **file, unsigned int *line_nr,
->                    struct dso *dso,
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index 31541e03aab7..573b3a3f5999 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-> @@ -19,7 +19,6 @@
->  #include "util/hist.h"  /* perf_hist_config */
->  #include "util/stat.h"  /* perf_stat__set_big_num */
->  #include "util/evsel.h"  /* evsel__hw_names, evsel__use_bpf_counters */
-> -#include "util/addr2line.h"  /* addr2line_timeout_ms */
->  #include "srcline.h"
->  #include "build-id.h"
->  #include "debug.h"
-> @@ -459,7 +458,7 @@ static int perf_default_core_config(const char *var, =
-const char *value)
->                 proc_map_timeout =3D strtoul(value, NULL, 10);
+> -       /*
+> -        * Since pinned accounting is per vm we cannot allow fork() to co=
+py our
+> -        * vma.
+> -        */
+> -       vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP);
+> -       vma->vm_ops =3D &perf_mmap_vmops;
+> +               /*
+> +                * Since pinned accounting is per vm we cannot allow fork=
+() to copy our
+> +                * vma.
+> +                */
+> +               vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDU=
+MP);
+> +               vma->vm_ops =3D &perf_mmap_vmops;
 >
->         if (!strcmp(var, "core.addr2line-timeout"))
-> -               addr2line_timeout_ms =3D strtoul(value, NULL, 10);
-> +               symbol_conf.addr2line_timeout_ms =3D strtoul(value, NULL,=
- 10);
+> -       mapped =3D get_mapped(event, event_mapped);
+> -       if (mapped)
+> -               mapped(event, vma->vm_mm);
+> +               mapped =3D get_mapped(event, event_mapped);
+> +               if (mapped)
+> +                       mapped(event, vma->vm_mm);
 >
->         if (!strcmp(var, "core.addr2line-disable-warn"))
->                 symbol_conf.addr2line_disable_warn =3D strtoul(value, NUL=
-L, 10);
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.=
-h
-> index ff229942fbb1..c86f4c0ca46b 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -80,6 +80,7 @@ struct symbol_conf {
->                         *bt_stop_list_str;
->         const char              *addr2line_path;
->         enum a2l_style  addr2line_style[MAX_A2L_STYLE];
-> +       int             addr2line_timeout_ms;
->         unsigned long   time_quantum;
->         struct strlist  *dso_list,
->                         *comm_list,
+> -       /*
+> -        * Try to map it into the page table. On fail, invoke
+> -        * perf_mmap_close() to undo the above, as the callsite expects
+> -        * full cleanup in this case and therefore does not invoke
+> -        * vmops::close().
+> -        */
+> -       ret =3D map_range(event->rb, vma);
+> -       if (ret)
+> -               perf_mmap_close(vma);
+> +               /*
+> +                * Try to map it into the page table. On fail, invoke
+> +                * perf_mmap_close() to undo the above, as the callsite e=
+xpects
+> +                * full cleanup in this case and therefore does not invok=
+e
+> +                * vmops::close().
+> +                */
+> +               ret =3D map_range(event->rb, vma);
+> +               if (ret)
+> +                       perf_mmap_close_locked(vma, event);
+> +       }
+>
+>         return ret;
+>  }
+>
+> base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
 > --
-> 2.53.0
+> 2.51.0
 >
