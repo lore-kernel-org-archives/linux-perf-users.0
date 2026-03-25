@@ -1,41 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2437C371CFF;
-	Wed, 25 Mar 2026 20:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85919329C7C;
+	Wed, 25 Mar 2026 20:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774470262; cv=none; b=ZHw7rTTiXBaYKZYy49co1oMktMaS/4VidfXV6Ke7XJ45xqyZxrYU9u5NagBovAg3X1cCLjYuzUbSnJFMX29qnLEGhQAk/BWgsz2DmFd+zmsi0TzBTpaRX2aK7aLm9tJP+fdISLDy4E33nybgITajKlJkbgcUYnC8yzkE5VZRrQI=
+	t=1774472361; cv=none; b=LeynlgUdtuTej8HJx8XJG1o+TixOXuj52jlPgvMAYSBrtYqCOHSoQEI2bF0oYv2nGrYs7v3quMIOrKQnhmcIgS9q7UrCqr0wnp0DgV0EMqJLjtN6oBBDtf1hqV9uXWCmeQEqrPGU+Fiiu4S+GyjvhIPRjsfdVZuNnt9LmVUMdgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774470262; c=relaxed/simple;
-	bh=5fd3ECdDIqqSgH53R+bITI0S5qmf4w7tCTbW5/P4uOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Vm1yWfeNE4fGrmhyRmQ6P6EV2OaMnfdwTk5+8W3mVRdz29qv18QLzYrRWHiBT5HgkcSQP5gREVoaNkeTmrp2SCrUGNFh3EBe4cvXXFpw+RKU4pXpzGLVlWZNg7hM7pLoVJ6QNUZNaUh+xKMR+HXJZxs7/PhucebjKHgIk8w7TAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf6i5EZ3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774472361; c=relaxed/simple;
+	bh=qdsdhA5npi4oRBexj5sCJDIYNcI6ym0119Z97aIEc6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+HzyACwe2xhLuOaaBWMioYKs5RRn9dUi6yYQrcor9LZZQmSV59qIIaU8uXk8FvSyq7ccEhlfg4xPa6G15YDutMtf7O7jDzqsjs3A/4KJixxtbubCzzL1wYrnLI6jE3c3Zik1GiGisbS8eUJmPPgs1QgreJjDgthak2Md2uN8sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=o21ygcPl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jf6i5EZ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EF6EC2BC9E;
-	Wed, 25 Mar 2026 20:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774470261;
-	bh=5fd3ECdDIqqSgH53R+bITI0S5qmf4w7tCTbW5/P4uOQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jf6i5EZ3QjKRJyi7LRKDLkJMR3deu6OftSQmgwDHN8ZNXaEd4j7Q8SSZ1ihxPvXUD
-	 FLJuwM2/QFnHXnUC7yw6bQNgc6NO9QV2zW38yrNazXtPlquD7B4KIR8x1JkiepFiVN
-	 wKFhTfRx6J8zMM6A9K33QlpVEZ/jNi3tO1cNkhhGMva6uq43NYVJs3P1c/S4hWgJAc
-	 TyHv/Hq7d2113gm0f48jDcKF3A07r3N/WFdO1k7XLevjXTbJ35LUm2IeO49TpBr9UZ
-	 ZQOSFi07rQR0rH9aNzZjaCga4+Igi0/Mo4L25fBvGh8z5+9cpQ0ZT5mlhzIV65PmUA
-	 H2YVUNgfjmcsQ==
-Date: Wed, 25 Mar 2026 17:24:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1 next] tools: Move tools/include/uapi/drm to
- tools/perf/trace/beauty/include/uapi
-Message-ID: <acREcm8rZbNcav23@x1>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="o21ygcPl"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60B821D6F;
+	Wed, 25 Mar 2026 13:59:11 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E17393F915;
+	Wed, 25 Mar 2026 13:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1774472357; bh=qdsdhA5npi4oRBexj5sCJDIYNcI6ym0119Z97aIEc6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o21ygcPlU7AURZMZKvatyP74R9xOQ63yqd8YIZYSSGt9t+8BRhYp0ZYwdZmYJn9r/
+	 ibRksOelJ4X/EhaEAhlQ1cJxUM0GXICWO0iunePPp/aaNucxIaaI6vysaKTdkHugde
+	 hdw2DocIW9wloqfcN2FwPEYgGfwoDQQBsIIk31JI=
+Date: Wed, 25 Mar 2026 20:59:14 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: Re: [PATCH v2] perf stat: Fix crash on arm64
+Message-ID: <20260325205914.GA356832@e132581.arm.com>
+References: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,81 +51,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
 
-As it is used only to parse ioctl numbers, not to build perf and so far
-no other tools/ living tools uses it, so to clean up tools/include/ to be
-used just for building tools, to have access to things available in the
-kernel and not yet in the system headers, move it to the directory where
-just the tools/perf/trace/beauty/ scripts can use to generate tables
-used by perf.
+On Wed, Mar 25, 2026 at 03:24:30AM -0700, Breno Leitao wrote:
+> Perf stat is crashing on arm64 hosts with the following issue:
+> 
+> 	# make -C tools/perf DEBUG=1
+> 	# perf stat sleep 1
+> 	perf: util/evsel.c:2034: get_group_fd: Assertion `!(!leader->core.fd)' failed.
+> 	[1]    1220794 IOT instruction (core dumped)  ./perf stat
+> 
+> The sorting function introduced by commit a745c0831c15c ("perf stat:
+> Sort default events/metrics") compares events based on their individual
+> properties. This can cause events from different groups to be
+> interleaved, resulting in group members appearing before their leaders
+> in the sorted evlist.
+> 
+> When the iterator opens events in list order, a group member may be
+> processed before its leader has been opened.
+> 
+> For example, CPU_CYCLES (idx=32) with leader STALL_SLOT_BACKEND (idx=37)
+> could be sorted before its leader, causing the crash when CPU_CYCLES
+> tries to get its group fd from the not-yet-opened leader.
+> 
+> Fix this by comparing events based on their leader's attributes instead
+> of their own attributes when the events are in different groups. This
+> ensures all members of a group share the same sort key as their leader,
+> keeping groups together and guaranteeing leaders are opened before their
+> members.
+> 
+> Reported-by: Denis Yaroshevskiy <dyaroshev@meta.com>
+> Fixes: a745c0831c15c ("perf stat: Sort default events/metrics")
+> Tested-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Makefile.perf                                  | 2 +-
- tools/perf/check-headers.sh                               | 4 ++--
- tools/perf/trace/beauty/drm_ioctl.sh                      | 2 +-
- tools/{ => perf/trace/beauty}/include/uapi/drm/drm.h      | 0
- tools/{ => perf/trace/beauty}/include/uapi/drm/i915_drm.h | 0
- 5 files changed, 4 insertions(+), 4 deletions(-)
- rename tools/{ => perf/trace/beauty}/include/uapi/drm/drm.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/drm/i915_drm.h (100%)
+As Arnaldo mentioned in v1, I also found Segmentation fault when
+testing this patch:
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 11b63bafdb2329a5..1a4674243cfa01e8 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -547,7 +547,7 @@ $(clone_flags_array): $(beauty_uapi_linux_dir)/sched.h $(clone_flags_tbl)
- 	$(Q)$(SHELL) '$(clone_flags_tbl)' $(beauty_uapi_linux_dir) > $@
- 
- drm_ioctl_array := $(beauty_ioctl_outdir)/drm_ioctl_array.c
--drm_hdr_dir := $(srctree)/tools/include/uapi/drm
-+drm_hdr_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/drm
- drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
- 
- $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index da3aca87457fdc56..f220da953c6b1873 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -6,8 +6,6 @@ NC='\033[0m' # No Color
- 
- declare -a FILES=(
-   "include/uapi/linux/const.h"
--  "include/uapi/drm/drm.h"
--  "include/uapi/drm/i915_drm.h"
-   "include/uapi/linux/bits.h"
-   "include/uapi/linux/fadvise.h"
-   "include/uapi/linux/fscrypt.h"
-@@ -90,6 +88,8 @@ declare -a SYNC_CHECK_FILES=(
- declare -a BEAUTY_FILES=(
-   "arch/x86/include/asm/irq_vectors.h"
-   "arch/x86/include/uapi/asm/prctl.h"
-+  "include/uapi/drm/drm.h"
-+  "include/uapi/drm/i915_drm.h"
-   "include/linux/socket.h"
-   "include/uapi/linux/fcntl.h"
-   "include/uapi/linux/fs.h"
-diff --git a/tools/perf/trace/beauty/drm_ioctl.sh b/tools/perf/trace/beauty/drm_ioctl.sh
-index 9aa94fd523a9c2dd..f2f1a257bac8b41e 100755
---- a/tools/perf/trace/beauty/drm_ioctl.sh
-+++ b/tools/perf/trace/beauty/drm_ioctl.sh
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: LGPL-2.1
- 
--[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/drm/
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/perf/trace/beauty/include/uapi/drm/
- 
- printf "#ifndef DRM_COMMAND_BASE\n"
- grep "#define DRM_COMMAND_BASE" $header_dir/drm.h
-diff --git a/tools/include/uapi/drm/drm.h b/tools/perf/trace/beauty/include/uapi/drm/drm.h
-similarity index 100%
-rename from tools/include/uapi/drm/drm.h
-rename to tools/perf/trace/beauty/include/uapi/drm/drm.h
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/perf/trace/beauty/include/uapi/drm/i915_drm.h
-similarity index 100%
-rename from tools/include/uapi/drm/i915_drm.h
-rename to tools/perf/trace/beauty/include/uapi/drm/i915_drm.h
--- 
-2.53.0
+ Program received signal SIGSEGV, Segmentation fault.
+ metricgroup__copy_metric_events (evlist=0xaaaaab037750, cgrp=0x0, new_metric_events=0xaaaaab038210, old_metric_events=0xaaaaab038d20) at util/metricgroup.c:1662
+ 1662                    evsel = evlist__find_evsel(evlist, old_me->evsel->core.idx);
+ (gdb) bt
+ #0  metricgroup__copy_metric_events (evlist=0xaaaaab037750, cgrp=0x0, new_metric_events=0xaaaaab038210, old_metric_events=0xaaaaab038d20) at util/metricgroup.c:1662
+ #1  0x0000aaaaaab05870 in add_default_events () at builtin-stat.c:2110
+ #2  0x0000aaaaaab08300 in cmd_stat (argc=0, argv=0xfffffffffaa0) at builtin-stat.c:2838
+ #3  0x0000aaaaaab40998 in run_builtin (p=0xaaaaaaf9d428 <commands+360>, argc=4, argv=0xfffffffffaa0) at perf.c:348
+ #4  0x0000aaaaaab40c14 in handle_internal_command (argc=4, argv=0xfffffffffaa0) at perf.c:398
+ #5  0x0000aaaaaab40ddc in run_argv (argcp=0xfffffffff8bc, argv=0xfffffffff8b0) at perf.c:442
+ #6  0x0000aaaaaab41110 in main (argc=4, argv=0xfffffffffaa0) at perf.c:549
 
+Last week I tested v1 and confirmed the issue was gone with the change,
+I will dig a bit in tomorrow and share back if any finding.
+
+Apologies for my lazy, as I should double check once Arnaldo
+pointed out in v1.
+
+Thanks,
+Leo
