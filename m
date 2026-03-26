@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B8021C160;
-	Thu, 26 Mar 2026 22:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115E732E12E;
+	Thu, 26 Mar 2026 22:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774564652; cv=none; b=qRo5bupYloVHxspnsyXtyDsTfkJydq/xyUAuPbI4ff88Xd77RhN9tS3PXa4lszVetIQuyA+YK43S7TbZcW9bUSfDU9vkEHUaQE+LC64dp5brL+QGUjZaTEs7sy/AiaUK75Yua7dvF4v/icpEECuZHLu8z2FoGfMochu8WgDxtFw=
+	t=1774565010; cv=none; b=nEmHUziCLNZs7NGkGcMOOQQ4++QnPBYdIIG6GyKHY85BqX/VpEs99pEDDWPmUu62z7r5v9K/vWNrKvxaKlSS6FqiLx2sUK9onoHTF2HwrHhCTADMcNQ1DYeFyl6UcGaupcnIH/zj371sJjADsd8YOyvuoTCk4TPawQKi1XITK+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774564652; c=relaxed/simple;
-	bh=xBPsYXKrihhZTtuticuwUsxl47Z18kQT0bgBIgJNn8A=;
+	s=arc-20240116; t=1774565010; c=relaxed/simple;
+	bh=U4bc+g9K/SDkafvPL1137CUd6thaGktSBphqe64Zir0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8xMh2MthDE4V/aLQc9QplGXuUvg0ZUUBWlPpJslJOcgrTl0T7iSWLK8qKNBLfQpi71uy8U/L8ew68wqWzs/kqAmWDVFATnm319w7fJ310GlChngmLYzbtgQjHpiROHZZEpkfsq9Qwubu1vQvXK+hF2jFpmwNkbw8MDCXCrSWPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrGS9ChW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QWuFFekaMtDPBw3YB13J9NZ+xYmIG2RiHJvo2GaoHtxOxqL2qHTj4hecs5avNHl39cds/RsiVvQf3zUzcLSkqlVKLBOV5w+gEAMVNSL0HvfQjl03l41RPfM4bKdBVzy6+s7qOo13/js9VIfpzI+XRrP4uSeXkWbuiUBGfw9QD9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ST0v4VOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrGS9ChW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AEA1C116C6;
-	Thu, 26 Mar 2026 22:37:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ST0v4VOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBE8C116C6;
+	Thu, 26 Mar 2026 22:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774564651;
-	bh=xBPsYXKrihhZTtuticuwUsxl47Z18kQT0bgBIgJNn8A=;
+	s=k20201202; t=1774565009;
+	bh=U4bc+g9K/SDkafvPL1137CUd6thaGktSBphqe64Zir0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LrGS9ChWaxGzsohyRK1x1Ovaxdl82n6V5opnbQ5DEtByBeowV1tnJhspqhI1xybWg
-	 Qd3u9xgEKUh2PbaMRZCP0s1tDf66/JbYOenK93kis6lYcYGVtzcSCskNV/KSlnZ4ck
-	 5KmOrsfU2I5t+Zuua0hmssBMEgcqXBiKrSBDmbb5E7eWFcZRgpXr55l/PCw8B9OE0F
-	 7j4lrUui6FyjXjzU6SHR9G/B3VFQKgtB4Qu2tuuNwlGq5IhXpfKgY5BMId7/9Pphi7
-	 C/+jbQ3iimfGPTZmUtQGrnBCY46EyGNgMzYVO1BzRWR0msxlFybfd7vKgwkFleWeIR
-	 zMETRXRqRyKuQ==
-Date: Thu, 26 Mar 2026 15:37:29 -0700
+	b=ST0v4VOf9DN6R0/RhaUJbpjDv5+dxGZz1QZ7x/iX2tdjkLmqzW8ChEZXdm5HzKsYJ
+	 SfqRe2vztffafJizRonM3KJTIl3n2CO/lbHdjAxx/ltowvRcDg4BPQENN1DZ3G5Uxx
+	 navlI6T8scUJnflLMrcAkUAJi1teBEJksC8N1BDBVsMkJuogzDdDk+zIpinx7SiAmO
+	 mzIk/LkpRTAAlyjwXA6bIn4FA8uO8vy2HQ2mJl21ToLN5QV08RHl1YXB2F1QWaCvfJ
+	 nPhYQyLm4Mgz4hFcqHsk+Eq5RscW3m6pZAqZyHZ9g6YGD3odaweHOAwBo49wp2Asii
+	 nwulzL9g0qshw==
+Date: Thu, 26 Mar 2026 15:43:27 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf tests task-analyzer: Write all test files to
- tmpdir
-Message-ID: <acW1KYl5x8W8SUO0@google.com>
-References: <20260321061624.811157-1-irogers@google.com>
+To: Ricky Ringler <ricky.ringler@proton.me>
+Cc: irogers@google.com, mingo@redhat.com, acme@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4] perf utilities: cln_size header
+Message-ID: <acW2j7hki-u50YYz@google.com>
+References: <20260214040659.168769-2-ricky.ringler@proton.me>
+ <aaeKBOolC3AyHAFa@google.com>
+ <20260305235655.40779-1-ricky.ringler@proton.me>
+ <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me>
+ <20260308172037.123654-1-ricky.ringler@proton.me>
+ <CAP-5=fVk22oOxLSN-2_MioJ3RKUpQwD2TWK9sA=WcegUc_dj1w@mail.gmail.com>
+ <20260321204145.26359-1-ricky.ringler@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,115 +48,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260321061624.811157-1-irogers@google.com>
+In-Reply-To: <20260321204145.26359-1-ricky.ringler@proton.me>
 
-On Fri, Mar 20, 2026 at 11:16:24PM -0700, Ian Rogers wrote:
-> Writing to the test output files in the current working directory can
-> fail in various contexts such as continual test. Other tests write to
-> a mktemp-ed file, make the "perf script task-analyszer tests" follow
-> this convention too. Currently this isn't possible for the perf.data
-> file due to a lack of perf script support.
+Hello,
 
-I don't know what you mean by the last sentence.
+On Sat, Mar 21, 2026 at 08:41:55PM +0000, Ricky Ringler wrote:
+> Store cacheline size during perf record in header, so
+> that cacheline size can be used for other features, like
+> sort.
+> 
+> V4: Ian feedback
+> V3: Rebase off perf-tools-next round two
+> V2: Rebase off perf-tools-next
+> 
+> Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
+
+Please squash the patches into a single change and send it again.
 
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Testing:
+> - Built perf
+> - Ran record + report with feat enabled
+> - Ran record + report with feat disabled
+> 
+> Tested-by: Ricky Ringler <ricky.ringler@proton.me>
+
+Tested-by tag from the author may not be meaningful.  We always expect
+authors to test their patches. :)
+
+> Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
 > ---
->  tools/perf/tests/shell/test_task_analyzer.sh | 37 +++++++++++---------
->  1 file changed, 20 insertions(+), 17 deletions(-)
+>  tools/perf/builtin-inject.c |  2 +-
+>  tools/perf/util/header.c    | 11 ++++++++---
+>  tools/perf/util/sort.c      |  8 ++++++--
+>  3 files changed, 15 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-> index e194fcf61df3..cc74b03477fe 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -3,6 +3,10 @@
->  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 2675d32f88cf..11ac7c8c4be3 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2134,7 +2134,7 @@ static bool keep_feat(struct perf_inject *inject, int feat)
+>  	case HEADER_HYBRID_TOPOLOGY:
+>  	case HEADER_PMU_CAPS:
+>  	case HEADER_CPU_DOMAIN_INFO:
+> -	case HEADER_CLNq_SIZE:
+> +	case HEADER_CLN_SIZE:
+>  		return true;
+>  	/* Information that can be updated */
+>  	case HEADER_BUILD_ID:
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 4f65faafe75d..2d39da470267 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1310,8 +1310,13 @@ static int write_cln_size(struct feat_fd *ff,
+>  {
+>  	int cln_size = cacheline_size();
 >  
->  tmpdir=$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
-> +# perf script report only supports input from the perf.data file.
-> +perfdata="perf.data"
-
-I thought you want to use a different file name.  What's the point of
-adding a variable here?
-
-
-> +csv="$tmpdir/csv"
-> +csvsummary="$tmpdir/csvsummary"
->  err=0
->  
->  # set PERF_EXEC_PATH to find scripts in the source directory
-> @@ -15,11 +19,10 @@ fi
->  export ASAN_OPTIONS=detect_leaks=0
->  
->  cleanup() {
-> -  rm -f perf.data
-> -  rm -f perf.data.old
-> -  rm -f csv
-> -  rm -f csvsummary
-> +  rm -f "${perfdata}"
-> +  rm -f "${perfdata}".old
->    rm -rf "$tmpdir"
+> -	if (!cln_size)
+> -		cln_size = 0;
 > +
->    trap - exit term int
->  }
->  
-> @@ -61,7 +64,7 @@ skip_no_probe_record_support() {
->  
->  prepare_perf_data() {
->  	# 1s should be sufficient to catch at least some switches
-> -	perf record -e sched:sched_switch -a -- sleep 1 > /dev/null 2>&1
-> +	perf record -e sched:sched_switch -a -o "${perfdata}" -- sleep 1 > /dev/null 2>&1
+> +	if (!cln_size) {
+> +		int default_cacheline_size = 64;
 
-I'm not sure why it's needed.
+Let's get rid of the local variable.
 
 Thanks,
 Namhyung
 
-
->  	# check if perf data file got created in above step.
->  	if [ ! -e "perf.data" ]; then
->  		printf "FAIL: perf record failed to create \"perf.data\" \n"
-> @@ -130,28 +133,28 @@ test_extended_times_summary_ns() {
+> +
+> +		cln_size = default_cacheline_size;
+> +	}
+> +
+>  	ff->ph->env.cln_size = cln_size;
+>  
+>  	return do_write(ff, &cln_size, sizeof(cln_size));
+> @@ -2274,7 +2279,7 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
+>  	}
 >  }
 >  
->  test_csv() {
-> -	perf script report task-analyzer --csv csv > /dev/null
-> -	check_exec_0 "perf script report task-analyzer --csv csv"
-> -	find_str_or_fail "Comm;" csv "${FUNCNAME[0]}"
-> +	perf script report task-analyzer --csv "${csv}" > /dev/null
-> +	check_exec_0 "perf script report task-analyzer --csv ${csv}"
-> +	find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
+> -static void print_cln_size(struct feat_fd *ff, FILE *fp __maybe_unused)
+> +static void print_cln_size(struct feat_fd *ff, FILE *fp)
+>  {
+>  	fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
 >  }
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 13287ade784e..5f617cf03d5d 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -2483,8 +2483,12 @@ hist_entry__cln_size(struct hist_entry *he)
+>  	if (he && he->hists) {
+>  		struct evsel *evsel = hists_to_evsel(he->hists);
 >  
->  test_csv_extended_times() {
-> -	perf script report task-analyzer --csv csv --extended-times > /dev/null
-> -	check_exec_0 "perf script report task-analyzer --csv csv --extended-times"
-> -	find_str_or_fail "Out-Out;" csv "${FUNCNAME[0]}"
-> +	perf script report task-analyzer --csv "${csv}" --extended-times > /dev/null
-> +	check_exec_0 "perf script report task-analyzer --csv ${csv} --extended-times"
-> +	find_str_or_fail "Out-Out;" "${csv}" "${FUNCNAME[0]}"
->  }
+> -		if (evsel && evsel->evlist->session && evsel->evlist->session)
+> -			ret = evsel->evlist->session->header.env.cln_size;
+> +
+> +		if (evsel) {
+> +			struct perf_session *session = evsel__session(evsel);
+> +
+> +			ret = session->header.env.cln_size;
+> +		}
+>  	}
 >  
->  test_csvsummary() {
-> -	perf script report task-analyzer --csv-summary csvsummary > /dev/null
-> -	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary"
-> -	find_str_or_fail "Comm;" csvsummary "${FUNCNAME[0]}"
-> +	perf script report task-analyzer --csv-summary "${csvsummary}" > /dev/null
-> +	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary}"
-> +	find_str_or_fail "Comm;" "${csvsummary}" "${FUNCNAME[0]}"
->  }
->  
->  test_csvsummary_extended() {
-> -	perf script report task-analyzer --csv-summary csvsummary --summary-extended \
-> +	perf script report task-analyzer --csv-summary "${csvsummary}" --summary-extended \
->  	>/dev/null
-> -	check_exec_0 "perf script report task-analyzer --csv-summary csvsummary --summary-extended"
-> -	find_str_or_fail "Out-Out;" csvsummary "${FUNCNAME[0]}"
-> +	check_exec_0 "perf script report task-analyzer --csv-summary ${csvsummary} --summary-extended"
-> +	find_str_or_fail "Out-Out;" "${csvsummary}" "${FUNCNAME[0]}"
->  }
->  
->  skip_no_probe_record_support
+>  	if (!ret || ret < 1) {
 > -- 
-> 2.53.0.959.g497ff81fa9-goog
+> 2.53.0
+> 
 > 
