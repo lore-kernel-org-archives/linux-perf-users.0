@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600BB2E3AEA;
-	Thu, 26 Mar 2026 22:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB04379EFE
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 23:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774565482; cv=none; b=eQf8k59gf73uO+XvyzYRDKCin1sdnct7LzlrXxuXSzFcob7OlJJjxzWN7id0uW7IDMGLlKRFOouyzgjRNWyXnGuisz8A4AKuazQ79f2vNnqUVgHbxsrsrhL4l4uipNgqv/HLVzJHNZHmVPOMIMDYpz5q/pOTxSG3J8iBmLuNtdY=
+	t=1774566842; cv=none; b=p5O/sa2frtELiBnbVDyCwglHx1UQmAWj6vfmhw34NpKvk/Q1Bt1TvMctq3vptZFeWdWeCujIn3jk/ueaYXgX8pAyrAhip2+/Dx++nivDMJWWIU60AJp/1u72sxTVcvjKPkksXdbfrJ1O4kb2udn5RigumUaf94mQAMi4uaYfDgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774565482; c=relaxed/simple;
-	bh=BwSkK1FHDJhBb9L9q07poJvujcAazF3P+8G7lS5m8FQ=;
+	s=arc-20240116; t=1774566842; c=relaxed/simple;
+	bh=u4RJ9O9+gfXzZdgVUzGMPLSaeyo9wy6XkYU3+iZapro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pM7zCt/aHq8xwUfeR4D3z4SoGSqK5zTKeODlhMyG78NSlpf6Z/YhHA5dsFr6JcQJQYx1gYTKFRScWz+6IhmZBofq1KmWMTYWtpGFZiqXOxSVPKw1eiYAm+Vir5gk7OizooRCK38HviCRWW67vN+nnLihJQyt0yy0IUTEYvskF+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlvjDkbi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyrBbzCQZMVe0bmRLOHhshjRbDV/c8xGb5LzCOvTxDYky3NX/4eIVBsl2D6I8rzkjyGb/E0A714UmYz8XR0GPg47A/1eh1yCNOBbxKSvQaY6D26R1wMPEoPMABKMcgB6HDzMRMWUqrSNuX0rnRiE6DGh12ck8hxEGeC8BObJS4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNBLxSpT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlvjDkbi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C36DDC116C6;
-	Thu, 26 Mar 2026 22:51:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNBLxSpT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 114F7C116C6;
+	Thu, 26 Mar 2026 23:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774565482;
-	bh=BwSkK1FHDJhBb9L9q07poJvujcAazF3P+8G7lS5m8FQ=;
+	s=k20201202; t=1774566841;
+	bh=u4RJ9O9+gfXzZdgVUzGMPLSaeyo9wy6XkYU3+iZapro=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tlvjDkbiz41h+QYZBsxuhb0YHGNmEY6otaPvKnoKakmWMQqlrYOSbZReuq6XlEHso
-	 xyp67AjYIlAZvu3KV40GFta00jszUBhc4AGQA2Vs9pUn2KA9Mjkl3cmnU2rYZdqLJ6
-	 IFFQ0CYxuEmgRxY2dFGWOeFto0qf3MvM1WCSo5LPvU+1G7jmFjGrNVtLn5elwDvHP8
-	 gcudumydS5QdzscqjKIqpPsfhYCCKiToA2j/dAfMLC4RT/gnN8O4ARQzYbxJOUqKJ2
-	 HbfJ9H76p/ealtpFxGBywfdeMy8zGK/4cEDa+5rHLuDuniNjmj7VWwJluZaGnsXiMp
-	 x7z9WkFqXlZeQ==
-Date: Thu, 26 Mar 2026 15:51:19 -0700
+	b=NNBLxSpT8m0Y225KbDt7EmVCPTEJwk2vNx3zJHGXsbiR+NmUXZTrtwzcuxSNoB1Pw
+	 M89Pj6iIuSYR69cZ0n3Lk1lPbj+UH/ZHc91/BhZRVcyBbjV1E4de/ciEWpQNpOGyMF
+	 jTUsmOtr+10btwiudAeOjdRWNGx5sr8KzH/1Jp+tw9EhgUrMx0urtd+c1hJpPLMurx
+	 UqsNISL/4aMr5tx02hePlxltfXaASI0ShUBw1Dj58I4KYTkV6dHraA7RNTmFBhcSO7
+	 t1/aXIzRHcYC8gn13U3DbiO+X7JAIWkEi6qcM3RydJ90aOJXTERcs2hICJFIotMb9h
+	 hdeintXqns3Tg==
+Date: Thu, 26 Mar 2026 16:13:59 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com,
-	alex@ghiti.fr, alexander.shishkin@linux.intel.com,
-	andrew.jones@oss.qualcomm.com, aou@eecs.berkeley.edu,
-	atrajeev@linux.ibm.com, blakejones@google.com, ctshao@google.com,
-	dapeng1.mi@linux.intel.com, howardchu95@gmail.com,
-	james.clark@linaro.org, john.g.garry@oracle.com, jolsa@kernel.org,
-	leo.yan@linux.dev, libunwind-devel@nongnu.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-	mingo@redhat.com, palmer@dabbelt.com, peterz@infradead.org,
-	pjw@kernel.org, shimin.guo@skydio.com, tglozar@redhat.com,
-	tmricht@linux.ibm.com, will@kernel.org, amadio@gentoo.org,
-	yuzhuo@google.com
-Subject: Re: [PATCH v1 0/2] perf build: Remove libunwind support
-Message-ID: <acW4Z2KJbyPZM1SG@google.com>
-References: <abxs-2rozL1tBEO1@google.com>
- <20260321234220.848859-1-irogers@google.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+	maddy@linux.ibm.com, irogers@google.com,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+	Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: Re: [PATCH V2] tools/perf/tests: Update test_adding_kernel.sh to
+ handle proper debuginfo check
+Message-ID: <acW9tz0KZWgaJjTV@google.com>
+References: <20260323122424.88068-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,109 +47,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260321234220.848859-1-irogers@google.com>
+In-Reply-To: <20260323122424.88068-1-atrajeev@linux.ibm.com>
 
-On Sat, Mar 21, 2026 at 04:42:18PM -0700, Ian Rogers wrote:
-> libunwind support exists for "--call-graph dwarf", however, libunwind
-> support has been opt-in rather than opt-out since Linux v6.13 as libdw
-> is preferred - commit 13e17c9ff49119aa ("perf build: Make libunwind
-> opt-in rather than opt-out"). A problem with the libdw support was
-> that it was slow, an issue fixed in Linux v7.0 in commit 6b2658b3f36a
-> ("perf unwind-libdw: Don't discard loaded ELF/DWARF after every
-> unwind"). As such libunwind support is now unnecessary.
+On Mon, Mar 23, 2026 at 05:54:24PM +0530, Athira Rajeev wrote:
+> Perf test perftool-testsuite_probe fails as below:
 > 
-> The patch series:
-> https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
-> looked to make the libunwind support in perf similar to the libdw
-> support, allow cross-architecture unwinding, etc. This was motivated
-> by the perf regs conventions being altered by the addition of x86 APX
-> support:
-> https://lore.kernel.org/lkml/20260209072047.2180332-1-dapeng1.mi@linux.intel.com/
-> It is necessary to translate the library's notion of registers to the
-> perf register convention so that the stack unwinding state can be
-> initialized. On this series it was stated that removing libunwind
-> support from perf should be an option, rather than updating support:
-> https://lore.kernel.org/lkml/abxs-2rozL1tBEO1@google.com/
-> This was also what motivated making libunwind opt-in rather than
-> opt-out.
+>  Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>  -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+>  -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+>  Regexp not found: "probe:vfs_mknod"
+>  Regexp not found: "probe:vfs_create"
+>  Regexp not found: "probe:vfs_rmdir"
+>  Regexp not found: "probe:vfs_link"
+>  Regexp not found: "probe:vfs_write"
+>  -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+>  Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>  Regexp not found: "in this function|at this address"
+>  -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
+>  ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
 > 
-> Given that 7 minor releases have happened with libunwind "deprecated"
-> by making it opt-in, let's remove the libunwind support. There doesn't
-> appear to be any disagreement to this on the mailing list.
+> Further analysing, the failed testcase is for "test_adding_kernel".
+> If the kernel debuginfo is missing, perf probe fails as below:
+> 
+> perf probe -nf --max-probes=512 -a 'vfs_* $params'
+> Failed to find the path for the kernel: No such file or directory
+>   Error: Failed to add events.
+> 
+> skip_if_no_debuginfo has check to handle whether debuginfo is present
+> and the testcase checks for debuginfo since this :
+> commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
+> testcases fail when kernel debuginfo is not present")
+> 
+> Recently a change got added in "tests/shell/lib/probe_vfs_getname.sh"
+> via this another fix:
+> commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
+> line detected")
+> Since this commit, first add_probe_vfs_getname is used to prevent false
+> failures. And based on return code of add_probe_vfs_getname, skip_if_no_debuginfo
+> is used to skip testcase if debuginfo is present. And this modified other
+> testcases to call add_probe_vfs_getname first and invoke
+> skip_if_no_debuginfo based on return value.
+> 
+> The tests in test_adding_kernel.sh which depends on presence of
+> debuginfo are:
+> 1. probe add for inode_permission
+> 2. probe max-probes option using 'vfs_* $params'
+> 3. non-existing variable probing
+> 
+> For these tests, probe check for specific line is not required.
+> So call skip_if_no_debuginfo with argument to say if line check is
+> needed. This is to convey to skip_if_no_debuginfo() function
+> that test only needs to check for debuginfo, and not specifically
+> line number. Update skip_if_no_debuginfo to use simple "perf probe"
+> check if test only needs to check for debuginfo. And for other
+> tests which rely on line number, use add_probe_vfs_getname()
+> 
+> With the change, verified that only three which required debuginfo only
+> is skipped and others ran successfully. Also tested with debuginfo
+> to make sure tests are not skipped.
+> 
+> Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
+> Changelog:
+> - First version used "perf probe -v -L getname_flags" for debuginfo
+>   check. This will not catch fail string "Debuginfo-analysis is not
+> supported" which is used in cases when perf is built without dwarf.
+>  So use "perf probe -vn add inode_permission" to capture cases when
+>  tools built with NO_LIBDWARF=1. This will capture debuginfo missing as
+> well as tool built without dwarf case.
+> 
+>  .../tests/shell/base_probe/test_adding_kernel.sh  | 15 ++++++++++++++-
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
+>  2 files changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> index 555a825d55f2..f3db125c8669 100755
+> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> @@ -23,10 +23,23 @@ TEST_RESULT=0
+>  . "$DIR_PATH/../lib/probe_vfs_getname.sh"
+>  
+>  TEST_PROBE=${TEST_PROBE:-"inode_permission"}
+> +PROBE_NO_LINE_CHECK=1
 
-I'm not sure if we want to remove it now.  I think we need more time to
-verify libdw unwinding is stable and fast enough.  Also maybe we can
-add build- or run-time warning when people try to use libunwind.
+I'm not sure I follow but shouldn't it depend on the return value of
+`perf check feature -q dwarf`?
 
 Thanks,
 Namhyung
 
-> 
-> Ian Rogers (2):
->   perf build: Remove libunwind support
->   tools build: Remove libunwind feature tests
-> 
->  tools/build/feature/Makefile                  |  31 -
->  tools/build/feature/test-libunwind-aarch64.c  |  27 -
->  tools/build/feature/test-libunwind-arm.c      |  28 -
->  .../test-libunwind-debug-frame-aarch64.c      |  17 -
->  .../feature/test-libunwind-debug-frame-arm.c  |  17 -
->  .../feature/test-libunwind-debug-frame.c      |  17 -
->  tools/build/feature/test-libunwind-x86.c      |  28 -
->  tools/build/feature/test-libunwind-x86_64.c   |  28 -
->  tools/build/feature/test-libunwind.c          |  28 -
->  tools/perf/Documentation/perf-check.txt       |   1 -
->  tools/perf/Documentation/perf-config.txt      |   4 +-
->  tools/perf/Documentation/perf-record.txt      |   2 +-
->  tools/perf/Makefile.config                    | 163 +---
->  tools/perf/Makefile.perf                      |   3 -
->  tools/perf/arch/arm/util/Build                |   1 -
->  tools/perf/arch/arm/util/unwind-libunwind.c   |  50 --
->  tools/perf/arch/arm64/util/Build              |   1 -
->  tools/perf/arch/arm64/util/unwind-libunwind.c |  17 -
->  tools/perf/arch/loongarch/util/Build          |   1 -
->  .../arch/loongarch/util/unwind-libunwind.c    |  82 --
->  tools/perf/arch/mips/util/Build               |   1 -
->  tools/perf/arch/mips/util/unwind-libunwind.c  |  22 -
->  tools/perf/arch/powerpc/util/Build            |   1 -
->  .../perf/arch/powerpc/util/unwind-libunwind.c |  92 --
->  tools/perf/arch/x86/util/Build                |   1 -
->  tools/perf/arch/x86/util/unwind-libunwind.c   | 115 ---
->  tools/perf/builtin-check.c                    |   1 -
->  tools/perf/builtin-report.c                   |   4 +-
->  tools/perf/tests/make                         |   2 -
->  tools/perf/util/Build                         |   5 -
->  tools/perf/util/callchain.c                   |   2 +-
->  tools/perf/util/dso.h                         |   6 -
->  tools/perf/util/libunwind/arm64.c             |  40 -
->  tools/perf/util/libunwind/x86_32.c            |  41 -
->  tools/perf/util/maps.c                        |  47 +-
->  tools/perf/util/maps.h                        |   6 -
->  tools/perf/util/thread.c                      |  40 +-
->  tools/perf/util/thread.h                      |   1 -
->  tools/perf/util/unwind-libunwind-local.c      | 832 ------------------
->  tools/perf/util/unwind-libunwind.c            |  92 --
->  tools/perf/util/unwind.h                      |  41 +-
->  41 files changed, 19 insertions(+), 1919 deletions(-)
->  delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
->  delete mode 100644 tools/build/feature/test-libunwind-arm.c
->  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarch64.c
->  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.c
->  delete mode 100644 tools/build/feature/test-libunwind-debug-frame.c
->  delete mode 100644 tools/build/feature/test-libunwind-x86.c
->  delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
->  delete mode 100644 tools/build/feature/test-libunwind.c
->  delete mode 100644 tools/perf/arch/arm/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/arch/arm64/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/arch/mips/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/arch/powerpc/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/arch/x86/util/unwind-libunwind.c
->  delete mode 100644 tools/perf/util/libunwind/arm64.c
->  delete mode 100644 tools/perf/util/libunwind/x86_32.c
->  delete mode 100644 tools/perf/util/unwind-libunwind-local.c
->  delete mode 100644 tools/perf/util/unwind-libunwind.c
-> 
+>  
+>  # set NO_DEBUGINFO to skip testcase if debuginfo is not present
+>  # skip_if_no_debuginfo returns 2 if debuginfo is not present
+> -skip_if_no_debuginfo
+> +#
+> +# The perf probe checks which depends on presence of debuginfo and
+> +# used in this testcase are:
+> +# 1. probe add for inode_permission
+> +# 2. probe max-probes option using 'vfs_* $params'
+> +# 3. non-existing variable probing
+> +#
+> +# For these tests, probe check for specific line is not
+> +# required ( add_probe_vfs_getname does that ). So call
+> +# skip_if_no_debuginfo with argument as 1. This is to convey
+> +# that test only needs to check for debuginfo, and not specifically
+> +# line number
+> +skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
+>  if [ $? -eq 2 ]; then
+>  	NO_DEBUGINFO=1
+>  fi
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 88cd0e26d5f6..8ae2ea2bc8a2 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -39,7 +39,18 @@ add_probe_vfs_getname() {
+>  }
+>  
+>  skip_if_no_debuginfo() {
+> -	add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
+> +	no_line_check=$1
+> +	debug_str="^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)"
+> +
+> +	# search for debug_str using simple perf probe if the
+> +	# test only needs to check for debuginfo, and not specifically
+> +	# line number.
+> +	if [ $no_line_check -eq 1 ]; then
+> +		perf probe -vn add inode_permission 2>&1 | grep -E -q "$debug_str" && return 2
+> +	else
+> +		add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return 2
+> +	fi
+> +
+>  	return 1
+>  }
+>  
 > -- 
-> 2.53.0.959.g497ff81fa9-goog
+> 2.47.3
 > 
