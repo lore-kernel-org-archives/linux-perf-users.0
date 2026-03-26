@@ -1,188 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E5D3FFAA8;
-	Thu, 26 Mar 2026 16:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4E735DA44
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 17:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774543171; cv=none; b=VfHIUScDZSWO4LEDoGJjU3SvAfm5F9+WbBYU1NTWrY4aJHVY+rLY8h++ttlOl0kLEs5EU9T2VScXFAGdgS8gTT0SwX5JyagL6AP+ebKU4jutEQj/yFYCL7Nc5tW8ZaFUy1fXeD38cHXyF3DL2EfYxeOURgTGRB8K01pGyvCd8yc=
+	t=1774547127; cv=none; b=KfA1NIHu4uRZNkSzGOSLXEx1aDYdGl5Zj3KNYejy0FxgniVpE/Lyqk8wKftRyFXIqMEStYIbWpzpPdvo6Z05I7z+6VttQP8MQB0blJBJIAvCpK2nr+GdU5WHxUwstUXovIMKTKWHirLFj+0XnwGr0ZeoabVmsJ1uFUdwH72cOZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774543171; c=relaxed/simple;
-	bh=4N4MkMJOO4e1DvpIc4taU17tnv9S+seEJ9mmcITOIj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AaomJphURRJVHA8/9En5s1HAeKGEMXk+7H//TJ93GoxHwovDjkXyy338BKphpgo5BxJ3rzHO/tUFj0ZMuIB19iC73M+xCSpgO0/Ga4TEIOBwq6KVR+w3VEclCWnaevbkyzQ8VYY2/kQ17lhq0BpQeg+4Cqn8/jODSIQu7QA9K6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=j3NWEASd; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1774547127; c=relaxed/simple;
+	bh=wmcfMJpAf9cAklazC7SsR15lg35pextNpvdKomyvVMo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Sp3lP2/aGH0EDCkG6vmFHeWEhivigkXMOAdOXFBNx+MddlnOwnft+ULfDHHBd/BcJjErW0W6S+oShAnTEfb7pdZQ+oQGWx/b1EHJzwJxYGFK1YO0A0sjFmUd/HxubUrGEnM/EPTtxuu/OrOnvX0bfLk5fp0aLvyNasf80k+RBhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AN1EWmDz; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="j3NWEASd"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDE942BC0;
-	Thu, 26 Mar 2026 09:39:22 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4816C3F905;
-	Thu, 26 Mar 2026 09:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1774543168; bh=4N4MkMJOO4e1DvpIc4taU17tnv9S+seEJ9mmcITOIj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j3NWEASdLKUKKwpfFvCNRQ6zhHNY6FJbMbJpZGaf2Zq2j8zyoXQap5zRO4zNRJzTk
-	 jG+ya/sctdMrLPh7al0jJ1gCv8bmkoz/f5EOp1ayXvvNQVreJ3pAdC+mtWNtW4YKtU
-	 K8HBYEhdmdQ2nkkhLYqz7QkBlHdfQmYX8114MQ9c=
-Date: Thu, 26 Mar 2026 16:39:26 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: Re: [PATCH v2] perf stat: Fix crash on arm64
-Message-ID: <20260326163926.GB356832@e132581.arm.com>
-References: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
- <20260325205914.GA356832@e132581.arm.com>
- <CAP-5=fWkbhffgL6BJjpiwRV6rD3yd=KkOz7-ODH2FnORBf70bQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AN1EWmDz"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2c18175fc54so499937eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 10:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1774547125; x=1775151925; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DBFjyDPSdsg855fL+fMEtLIcnhl2jbnVzYsOsLzd26o=;
+        b=AN1EWmDzd+uoA6scZFnGs4S4DKChNM3R1dRLH03T0r0P/IWabadiL7ybNl9kfEs7qn
+         5CMKBCMjD/jE+hRYkGr48A9KzPhA0i/RVmtOsZhi3yhqlnPiUM5HP+du7uPTW/vHpb27
+         ySMrAvifr8Dhp1i03bCS5gGveiPIBh1GJ2abp+1XomT08paFKDVHLiBa40+FP0kqwd2Y
+         RhzH1R3xaVJPAI8TurMc2US7pYa9EfqatTJRq75MDctL0WlMN50b5/zPM2eWbkQnPKPv
+         /0b3Vu1lz6Ur2EQKmkXlW1HPO1cym3JmYiE1ACHupELvrGCi6WzR8Bl0JtdonqCnTQh4
+         0wcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774547125; x=1775151925;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DBFjyDPSdsg855fL+fMEtLIcnhl2jbnVzYsOsLzd26o=;
+        b=HMOP1GGFCGMAB02uUwFWrvLANhYoJHXGZnAMJcN9wwOud2YV+3xMl/9wNKZz0mW9c+
+         zwPQRqqMdVuZJjaw/Hz8Ny0R0wbtl1Taudk6PgGfEni17A9tMZCtJnfqlda8gQbx/NGS
+         zFsDiNNKTVjLtbonB67akMcW9YVIGmijA0ITxu7wgD8DW+Sco+koaccC7vs7G3gQ4vVP
+         g+mhT/A2+o2zN5iNzJqsMr82fJGfbU3KHxOaVu+husQpoxy7nRt22HeQ8Lx/qmenq1uq
+         mMm23rvozer7Aa0t9GEDIhboS1+c2wMJEWHhRZ7p1gcsj5Qhl5PvRgKSirW6lQEJqtzG
+         mtLw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9D3hCBaOh/cKdB4iTL9oott4lyDwfWXUBv9CUs9JfPBkVFZNsa99av9NJPzqHBPVvciORPPi0JuGNc9ST0TsH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0Xh2rxxqmm6K+T+1V0lOq/4RhDMvYenymDtmxRrxkesQJfW9v
+	WIKBii9hdJDzTTI4Pfx1PF52r1Iz3eap8OBr5atwWbobg/5qXRyqOE+A4Brt+GemizNQICA/3lg
+	b1zkaYUbaZw==
+X-Received: from dybuz23.prod.google.com ([2002:a05:7301:5097:b0:2c0:bbbf:3af4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:ac90:b0:2c1:2706:b3f3
+ with SMTP id 5a478bee46e88-2c15d49e613mr4480475eec.35.1774547125078; Thu, 26
+ Mar 2026 10:45:25 -0700 (PDT)
+Date: Thu, 26 Mar 2026 10:45:19 -0700
+In-Reply-To: <CAP-5=fVJVc8uvPssSnUyTdO9PSbKy9qb0PrrE7VLUurwTa6MpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWkbhffgL6BJjpiwRV6rD3yd=KkOz7-ODH2FnORBf70bQ@mail.gmail.com>
+Mime-Version: 1.0
+References: <CAP-5=fVJVc8uvPssSnUyTdO9PSbKy9qb0PrrE7VLUurwTa6MpQ@mail.gmail.com>
+X-Mailer: git-send-email 2.53.0.1018.g2bb0e51243-goog
+Message-ID: <20260326174521.1829203-1-irogers@google.com>
+Subject: [PATCH v3 0/2] perf symbol/env: ELF machine clean up and lazy idle computation
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com
+Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	hca@linux.ibm.com, jameshongleiwang@126.com, japo@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com, 
+	tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 25, 2026 at 03:27:05PM -0700, Ian Rogers wrote:
+Add a helper to perf_env to compute the e_machine if it is
+EM_NONE. Derive the value from the arch string if available. Similarly
+derive the arch string from the ELF machine if available, for
+consistency. This means perf's arch (machine type) is no longer
+determined by uname but set to match that of the perf ELF executable.
 
-[...]
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+`perf top`. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation is machine and
+kernel version dependent.
 
-> > As Arnaldo mentioned in v1, I also found Segmentation fault when
-> > testing this patch:
-> >
-> >  Program received signal SIGSEGV, Segmentation fault.
-> >  metricgroup__copy_metric_events (evlist=0xaaaaab037750, cgrp=0x0, new_metric_events=0xaaaaab038210, old_metric_events=0xaaaaab038d20) at util/metricgroup.c:1662
-> >  1662                    evsel = evlist__find_evsel(evlist, old_me->evsel->core.idx);
-> >  (gdb) bt
-> >  #0  metricgroup__copy_metric_events (evlist=0xaaaaab037750, cgrp=0x0, new_metric_events=0xaaaaab038210, old_metric_events=0xaaaaab038d20) at util/metricgroup.c:1662
-> >  #1  0x0000aaaaaab05870 in add_default_events () at builtin-stat.c:2110
-> >  #2  0x0000aaaaaab08300 in cmd_stat (argc=0, argv=0xfffffffffaa0) at builtin-stat.c:2838
-> >  #3  0x0000aaaaaab40998 in run_builtin (p=0xaaaaaaf9d428 <commands+360>, argc=4, argv=0xfffffffffaa0) at perf.c:348
-> >  #4  0x0000aaaaaab40c14 in handle_internal_command (argc=4, argv=0xfffffffffaa0) at perf.c:398
-> >  #5  0x0000aaaaaab40ddc in run_argv (argcp=0xfffffffff8bc, argv=0xfffffffff8b0) at perf.c:442
-> >  #6  0x0000aaaaaab41110 in main (argc=4, argv=0xfffffffffaa0) at perf.c:549
-> >
-> > Last week I tested v1 and confirmed the issue was gone with the change,
-> > I will dig a bit in tomorrow and share back if any finding.
-> >
-> > Apologies for my lazy, as I should double check once Arnaldo
-> > pointed out in v1.
-> 
-> 
-> From the stack trace I don't see anything that should allow this.
-> Either the list of metrics is broken, or the struct metric_event's
-> evsel is NULL. But that should never happen as we wouldn't have a
-> metric at that point. The sorting shouldn't affect that. If you can
-> reproduce the issue, verbose logs may help.
+v3: Properly set up the e_machine coming from the perf_env as reported
+    by Honglei Wang.
 
-I believe I encountered a different issue, which is irrelevant to this
-patch.  So Breno's patch is fine for me.
+v2: Some minor white space clean up:
+    https://lore.kernel.org/lkml/20260325161836.1029457-1-irogers@google.com/
 
-On one of my board, I can see the log:
+v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
 
-  Events in 'frontend_bound' fully contained within 'retiring'
-  Events in 'bad_speculation' fully contained within 'retiring'
-  Events in 'backend_bound' fully contained within 'retiring'
+Ian Rogers (2):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf symbol: Lazily compute idle and use the perf_env
 
-Then, in parse_groups(), it selects fully contained list:
+ tools/perf/builtin-top.c     |   6 +-
+ tools/perf/util/env.c        | 179 +++++++++++++++++++++++++++--------
+ tools/perf/util/env.h        |   1 +
+ tools/perf/util/session.c    |  14 +--
+ tools/perf/util/symbol-elf.c |   2 +-
+ tools/perf/util/symbol.c     | 105 ++++++++++++--------
+ tools/perf/util/symbol.h     |  15 ++-
+ 7 files changed, 235 insertions(+), 87 deletions(-)
 
-  list_for_each_entry(n, &metric_list, nd) {
-      ...
-      if (expr__subset_of_ids(n->pctx, m->pctx)) {
-          metric_evlist = n->evlist;
-          break;
-      }
-  }
-
-  // As metric_evlist has been set, so below does not run
-  if (!metric_evlist) {
-        ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
-                        m->group_events, tool_events, &m->evlist);
-        if (ret)
-                goto out;
-
-        metric_evlist = m->evlist;
-  }
-
-The problem is it skips to call parse_ids() and m->pctx is not
-initialized.  This leads to pick_display_evsel() returns NULL and
-pass NULL pointer to metricgroup__lookup().   In the end, the NULL
-pointer is consumed in metricgroup__copy_metric_events().
-
-How about below change ?  I tested it which can dismiss the issue.
-
-Subject: [PATCH] perf metricgroup: Fix segment fault in
- metricgroup__copy_metric_events()
-
-In parse_groups(), when find a event is fully contained by a previous
-event, it skips to call parse_ids(), as a result, m->pctx->ids is not
-initialized.  Then, setup_metric_events() returns an empty metric
-events, pick_display_evsel() consumes the returned metric_events and
-feeds to metricgroup__lookup() with passing "evsel = NULL".
-
-metricgroup__copy_metric_events() access old_me->evsel->core.idx, due
-to the evsel is set to NULL in metricgroup__lookup(), it causes
-segment fault.
-
-This commit corrects the fully contained case to allow it to parse IDs,
-thus this can effectively avoid setup NULL pointer in
-metricgroup__lookup().
-
-Fixes: 5ecd5a0c7d1c ("perf metrics: Modify setup and deduplication")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/metricgroup.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7e39d469111b..528a6462876b 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1431,7 +1431,7 @@ static int parse_groups(struct evlist *perf_evlist,
- 	list_for_each_entry(m, &metric_list, nd) {
- 		struct metric_event *me;
- 		struct evsel **metric_events;
--		struct evlist *metric_evlist = NULL;
-+		struct evlist *metric_evlist = NULL, *contained = NULL;
- 		struct metric *n;
- 		struct metric_expr *expr;
- 
-@@ -1463,19 +1463,18 @@ static int parse_groups(struct evlist *perf_evlist,
- 				if (expr__subset_of_ids(n->pctx, m->pctx)) {
- 					pr_debug("Events in '%s' fully contained within '%s'\n",
- 						 m->metric_name, n->metric_name);
--					metric_evlist = n->evlist;
-+					contained = n->evlist;
- 					break;
- 				}
--
- 			}
- 		}
- 		if (!metric_evlist) {
-+			metric_evlist = contained ? contained : m->evlist;
-+
- 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
--					m->group_events, tool_events, &m->evlist);
-+					m->group_events, tool_events, &metric_evlist);
- 			if (ret)
- 				goto out;
--
--			metric_evlist = m->evlist;
- 		}
- 		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
- 					  metric_evlist, &metric_events);
 -- 
-2.34.1
+2.53.0.1018.g2bb0e51243-goog
+
