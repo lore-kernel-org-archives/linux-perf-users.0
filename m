@@ -1,226 +1,234 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6580A40DFBC
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 23:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C605C34AB1D
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 23:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774566908; cv=pass; b=UzudPLC3mfS3N3iAhid59zcZTZo9MTl8uauNv/OEvXHy0b1Vih9yjpQM28+/HW4UqcFS9XAIjafzlTB6VVceAcZoMH3DR401TdGvEK69YaOjflRx2v5ZEcvPqLnE0lbnO8OfHnBSJJuVWXwPdPN36Ck4GbQ5Eq6aXBSaZOsMJgw=
+	t=1774567053; cv=pass; b=iFjl472cs7g+zwiY4a/KrcbvtzBnteotR6NQXw2HoKShGnovaCyQ+ItX/KbwfRZisN88Pnh57+WplG1es9cOIx9SB8XpacTZ58cHSn+61PMQ1EwK0RcFgichvncz7mAjHXOVpo/ZyHdzEl+fOjW/X4INs4h5GdyCZedzRpHjpI8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774566908; c=relaxed/simple;
-	bh=Tfz0geM240yeWd8y4HiLMBMYNidmUDstLMgynTczcOU=;
+	s=arc-20240116; t=1774567053; c=relaxed/simple;
+	bh=PL5pOMRzbV/0Pt0Gb8PF2GBDbraxA+xbtu9NTzYfELY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=otvNNe/l0Zpcaoyoi8M9wgv0Zub7iRX6b5B2X1PJkjLmLjZfMlXcVatZ1Q/nWCGIsa5LtVZu4LWKCVLOAr0lybEkEGVoxzz+14fPjVaBbQBW/XWlvEdUVYGUs1XwnUdX+AGt7rbeC2FobmjSMIJz7ERW5Q1bhGZ0YsR2BD5W9qg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j65NJ05w; arc=pass smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=cd8idVepMJpuZ++NYNm32peC6wtGOPSp3MWoMwoGfjBEGedg76FCwQxmdMt5TSB1Vi7oLdXEZepbayj7G9VPuVuTFtfw8o6UOx4/Bz0cEWvi3f7R7cWuKBvoJqm0mEXmtbj3ws+ak+XhU6yU6EuHbw2r2+M576CNL67LKX6pLAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nPpiA+7m; arc=pass smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j65NJ05w"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2b052562254so39955ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 16:15:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774566906; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPpiA+7m"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2b0c12be0ecso39595ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 16:17:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774567051; cv=none;
         d=google.com; s=arc-20240605;
-        b=lJ342GtmnVhja1DvEqElOG9soL5Y2/qbYsDTJi54qZZbL+1jt99b2BjeKKlbwVuGfS
-         d8TVkdE8mP2M1lKA3X+Qvot+/pr2X/7n44tOGKXGnEgrA5liSSU6KMdNnz/5e1qTJlk2
-         vL0ZtBbHRqnkYLnwtbt3b12dw67OGxowZZozRGdX7ohJD3hxSekD0hX7nMHY5JQWPbSu
-         IBiWi7ucReyt1iTFPIRUbZX1ZJCvwnGDiCCh+PAf0EgxNp65wCXMB8sNPdDYAs1RXr6+
-         Op/2VGW/RQX4a+0Pc0pRmXtt5Gwfy5i2cCAaeqUeRuexH+s31emqcfAEtPoSaEMzJPeJ
-         gtwg==
+        b=IHAztkFq+QG5yrOLZY9w2gyaAGCQjZ0CI8X0YQTNlVFfsgt9q9LxewrliPHoBzmrYA
+         w/fmfNc0J4iME+mAU34hWt+hzmbOvBVDei1LSnER5V4zhwQykmchXH+S2U+iXwyElBf5
+         ilJgJiAYnfzcnOrLkokHDFVx7RAlQ703Woz+UmIJBHbNUCr4xEZzIFsSfnROqnJpoQ10
+         glwPiZ1znhPL3wXlKwT6gUyHC0dwK/3ToaFej/aGab21zIG50H/JKjthdpExqaeQgQlX
+         zuy22edAZ6f/rhqvm3Qsw7l5QQmmA9bRzy3qQSkEDuCWVNWu+qne7/Ec1oQL4OePIG20
+         oHEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=T2YD6pwogaEbBAngQ7jzL1Df9t10z5n8+TMyot+6ut0=;
-        fh=ypI6NVGvX8d8ND5B8SQ+6UXfMp1p2ARujM+9Q2pzAAY=;
-        b=G+g3qz2UzAupJKWEfof/U6QBdeYxVtmRWZ6/4d52qrASI+/BferXJ1sYAFBppXNELx
-         Cp/E0mGOxJy/cvjbmf28pDMpiLm79WaYcLi1TrVMrtbLz3j8I4mTHc7R8sAXhCcXybve
-         JF1NTSgfDSD7oijSkpIJ4UlDsLNQl0a3za+l9G5uay6ZD2lFIEerxnTefIamlcvIB9dr
-         tb8JEh5LLUuv85ZkuCtm+6cyDKq5SqJcArd8gO0AUmGslPgttUxtiexMmCHoBLqDLqwi
-         jW+mPjZQQ/h43vm3+WCUToBDXAW6KyzAVNP3zb23CuD9N6XADUwsm9/ItE+lcqARjIZH
-         bUtg==;
+        bh=mV5QqxNzRGWrKqI1MsAp3Y+lpwQOnKfxH9lIamOXgM4=;
+        fh=xp6/fO/Dyi4nrKIXqcHnbv3P7jYK7ZQrRErLMwXelLs=;
+        b=kSofmFcq+yxuXDRBV3IEjdqcTewjh3SsgJ55NmartR72jyQprU8I5bEK3nqu+6AkTf
+         sCJ0uF3BWaF/oCaKbFTwJRzdUDrbJYhYRlIW3BUclKMi3URuSpS3EHOstq4gvIo5WJRK
+         sPaCCE37uVpU76eKfawLk/hOxzD6AwuZMQa0aIM07cURlulhwMPI4gv0Mvbx6LpJkekL
+         otfYA4wqm/6mbgqXD7B6IgQlC12nbTo5NwXIARbVuBI1EOElkxybWo56Ua9KPYxifGm0
+         pKB/PvS1uRVHB2cOcjrSvWb7wKm0fHUMNqz+7DKso0EQ1YKeHbsPFmNmM0yhHnk86Anr
+         hWag==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774566906; x=1775171706; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774567051; x=1775171851; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T2YD6pwogaEbBAngQ7jzL1Df9t10z5n8+TMyot+6ut0=;
-        b=j65NJ05wM43tpsz6TwihQfx4shC4AWb6+r+cJdUCDOgc3p04cSOjLFB+VBJG0WxM4U
-         tUsv4tmirMBc1KtsCzKDZLluBn2RSAD1vSNwFOjJF48hagKB0gdBCuAC4AhtyAIgHp1l
-         9jKJDOkmblKY6i/PHIqeiobahb5JMYLrKuK6Tio6sa0ACD0LMoQPzoYo3KjH1W5mNmiI
-         bQ455DLO4fRQNcoORuDaPvqjCWjdsfLJe08sVUHc6RiaM58kdFHz4meMczYe7iJswqLu
-         hzCNKAjtexaVC69Jb5Hy6RineKqOLIJIo87v4IL6pyb9iOHxDW4JuLv3DSgw1ePjXn5R
-         o8YQ==
+        bh=mV5QqxNzRGWrKqI1MsAp3Y+lpwQOnKfxH9lIamOXgM4=;
+        b=nPpiA+7mfEzZubArp0lcaX/yg5KeuObH/ZPgL/kww2kNaxI9VB7prmOh34a7FT0tS4
+         2Zd4sFCsdp9TmJNrt1x3nmPCqW5QkT3gmae3ZnMa4lKe5oaMIWGi2kznrH6DUTDs+TDr
+         ablhevc5XbhrYeQh4vr2DFPNJfLE5BIFONgednmxdxAoaBq2/x8yx4TWI8DeE+NZ00vj
+         tpfyJj3MU0FtOZ+w8+iwytJnSZ7xwSmSK7JaDWEgKVHe/iDso73n3jsUrcA+1e88j1SX
+         mGPtd3noLiDb73kUt59T3bw2F1gAsvEYyU/PmPNOJBIEz9ja5EEXbcxNIh6GKH79SGxD
+         m3YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774566906; x=1775171706;
+        d=1e100.net; s=20251104; t=1774567051; x=1775171851;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=T2YD6pwogaEbBAngQ7jzL1Df9t10z5n8+TMyot+6ut0=;
-        b=DgIpQJiuKFLZmDPQpIZZ2Y8/XkqN0N4wbCkztLTXRxvLE4Ojxm12ZEZ+k9TS/XrdxW
-         irTFMKvsEJI9Pf265je786QAR/dsMoVZJvORPtqMr6tRII/IB9q3ROOXtRmpt7LpS5Ru
-         2v79/crMO0AWErGofA2pdLOkKxCamHVBfUh7GmZjpBgdMbRswicn9UdVa9YqoImbohdR
-         ezWPGM18dvXpZkRr1NLyWEwuLjfsrPA+MFuSadddojhE6T1mELgWN4bsWlNpcsBgMIY9
-         Qan9Bv1heEfsC9yDlBj2IMDn1Y7NuTjEAkrq1Ahqh6LgcJKLIODTp1KG7n21uB3KsSJF
-         s2hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXY5CbSkT1sjA8/6JUYcvPOwp2XSHIyZO6NbR17v8GtDxe5JnRPN8CrDOdKKitTrV/1rsH0oxgHViZ/cHUo5g6L@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqGjUX4xfYk6b1H81/66jrs1cHUj7lxVIcKbsLleb/1PT0jOQj
-	qdyqSTlbgXWZpLQWUqKIhi6kbKqKWQabOJ9g9nkb4iMizdemgN4g99yYQnBaZoaaCUUtw/1LwzK
-	mVHmp2qXy0LXu5QOj24gyUEgWF9lDFBE1s4851VQl
-X-Gm-Gg: ATEYQzxUGn8sL575iBANxTm8YL5qibd/6i/mLwmb99nTAVRXC0gHKTbPqvJHe+7pG1a
-	I0xsKY7o4Sv8i+YwIl507zu+N8EqYIuZeVF4HHKoOeKTHqbkT+rq3PCKu8JvqQgY+SbwbCwIryD
-	zPOrB3fWxLFQGs8lRCG9C37/lOnGwShr0XY2RCtka70IGpxU944pk/FLvSOnLhHRL+bp80KK+x2
-	UqezCf++tRusVfzo5rS74/Zo7MnpvNHJ4T83dGbKX22SYOB5SvZOhJ7trNIoNXk+m+mwU8CwIqT
-	ADdBqGY=
-X-Received: by 2002:a17:902:ef46:b0:2b0:5193:1212 with SMTP id
- d9443c01a7336-2b0cc23f103mr1451505ad.4.1774566905014; Thu, 26 Mar 2026
- 16:15:05 -0700 (PDT)
+        bh=mV5QqxNzRGWrKqI1MsAp3Y+lpwQOnKfxH9lIamOXgM4=;
+        b=n4qL+IOXSxU0ZKDVd9jVXD167YZfIxRA/ha1uXFE0uj2EJ0+scrIU/BExGOhDLsRBy
+         rs/WNqPZodyKSkmZmRiqSs0TfOO/9T1iZjz3x6IgWPRQjnqw2QH0NrVs5l3UP8pGuIEM
+         Yu7XNnehsFHgj3MxMvTzgTQrmqOXeh16O6FTYy91XMd46mVFC/BTCOYGnzCNaUPicrxF
+         QPPUJChPKqGZ6GptrW8jXr8NwhejiV0V/Y3HGuyG1EPYiG1iu4aXEGGtZQfN+FrmHWXm
+         5W7nX7AeEM2FgyW6Wqrlbdlx/ZYO4OlWmhswlt9LfwXi6v1tDIYpUrkGOEIpcBdep3xW
+         DXmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWT5POqx1OxV9UA0GNinQJM/kfB1eKyAScIu7dGzK8+waeoEP87WX7hkWHJjO2qMfcqs4B6xo07zKZmoPNm0x5s@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIjGuXQmDiiaBjMkNmSmZrVtt6SrDGApK+bm8iG1iSj5s4AXql
+	QL67aRyXx+pSe4hMQ2+b73xAn9wXYfvXtvGingig3gkLBtB9ERsKZEvIcm4G7AN6YeJYVLA2I3S
+	Oc7P6c9iLv9ImdriZUW9Z7dzta4v1aPqHiGII0urz
+X-Gm-Gg: ATEYQzzXnTOsIilEE8SpLrAcpRO78k5McDcaYA6RYqQ3KqEmqQSa67IiRJkbdTiJ67K
+	zQ7LnfN8lyYHloa7wyIdC2a81PJ3IC+vzb0JjSrcBpWHBTGbtrWJoyIGfrmTfi9fKYzIdRBb6uM
+	oxrrnzdHGMMneLTXSd3COR/c9wyC9+sqgorVc4NYY8UR7j5Gkxl4OWg9iHSGjGuED2QoOeiCyeQ
+	N7dy9LYGzYKXxbUu5tgXPzyVDGsS9L0hBZe0NpKCfT7KwNCjqBTmbDUzFS4nzqV8MIAzKhlayjU
+	Fe2C/IM=
+X-Received: by 2002:a17:903:2352:b0:2ae:c7c8:f46 with SMTP id
+ d9443c01a7336-2b0cc39fd5dmr1316765ad.18.1774567050592; Thu, 26 Mar 2026
+ 16:17:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <abxs-2rozL1tBEO1@google.com> <20260321234220.848859-1-irogers@google.com>
- <acW4Z2KJbyPZM1SG@google.com>
-In-Reply-To: <acW4Z2KJbyPZM1SG@google.com>
+References: <20260321061624.811157-1-irogers@google.com> <acW1KYl5x8W8SUO0@google.com>
+In-Reply-To: <acW1KYl5x8W8SUO0@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Mar 2026 16:14:52 -0700
-X-Gm-Features: AQROBzAygKd6oTfrEHZEo1yOPUniUJvjrCTN9i1V25cS3M3lNv5jNRoxNUpz8Kw
-Message-ID: <CAP-5=fV54H9o4FjALZU3wzEjBjNgGBb6zhaRmrjhseT_noggZA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] perf build: Remove libunwind support
+Date: Thu, 26 Mar 2026 16:17:18 -0700
+X-Gm-Features: AQROBzA7S5V0WlKvDZcolktKTC5mIvY85dkhrxNDneQguIbT4-ZM0cPlLYeZU_4
+Message-ID: <CAP-5=fUJb+a4s45p4aL8_qf-nC3EdTxL9oey1xh6ax=1rjUr=A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf tests task-analyzer: Write all test files to tmpdir
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
-	alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
-	andrew.jones@oss.qualcomm.com, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
-	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
-	howardchu95@gmail.com, james.clark@linaro.org, john.g.garry@oracle.com, 
-	jolsa@kernel.org, leo.yan@linux.dev, libunwind-devel@nongnu.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	mingo@redhat.com, palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org, 
-	shimin.guo@skydio.com, tglozar@redhat.com, tmricht@linux.ibm.com, 
-	will@kernel.org, amadio@gentoo.org, yuzhuo@google.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 26, 2026 at 3:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Thu, Mar 26, 2026 at 3:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Sat, Mar 21, 2026 at 04:42:18PM -0700, Ian Rogers wrote:
-> > libunwind support exists for "--call-graph dwarf", however, libunwind
-> > support has been opt-in rather than opt-out since Linux v6.13 as libdw
-> > is preferred - commit 13e17c9ff49119aa ("perf build: Make libunwind
-> > opt-in rather than opt-out"). A problem with the libdw support was
-> > that it was slow, an issue fixed in Linux v7.0 in commit 6b2658b3f36a
-> > ("perf unwind-libdw: Don't discard loaded ELF/DWARF after every
-> > unwind"). As such libunwind support is now unnecessary.
-> >
-> > The patch series:
-> > https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.co=
-m/
-> > looked to make the libunwind support in perf similar to the libdw
-> > support, allow cross-architecture unwinding, etc. This was motivated
-> > by the perf regs conventions being altered by the addition of x86 APX
-> > support:
-> > https://lore.kernel.org/lkml/20260209072047.2180332-1-dapeng1.mi@linux.=
-intel.com/
-> > It is necessary to translate the library's notion of registers to the
-> > perf register convention so that the stack unwinding state can be
-> > initialized. On this series it was stated that removing libunwind
-> > support from perf should be an option, rather than updating support:
-> > https://lore.kernel.org/lkml/abxs-2rozL1tBEO1@google.com/
-> > This was also what motivated making libunwind opt-in rather than
-> > opt-out.
-> >
-> > Given that 7 minor releases have happened with libunwind "deprecated"
-> > by making it opt-in, let's remove the libunwind support. There doesn't
-> > appear to be any disagreement to this on the mailing list.
+> On Fri, Mar 20, 2026 at 11:16:24PM -0700, Ian Rogers wrote:
+> > Writing to the test output files in the current working directory can
+> > fail in various contexts such as continual test. Other tests write to
+> > a mktemp-ed file, make the "perf script task-analyszer tests" follow
+> > this convention too. Currently this isn't possible for the perf.data
+> > file due to a lack of perf script support.
 >
-> I'm not sure if we want to remove it now.  I think we need more time to
-> verify libdw unwinding is stable and fast enough.  Also maybe we can
-> add build- or run-time warning when people try to use libunwind.
+> I don't know what you mean by the last sentence.
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/shell/test_task_analyzer.sh | 37 +++++++++++---------
+> >  1 file changed, 20 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/=
+tests/shell/test_task_analyzer.sh
+> > index e194fcf61df3..cc74b03477fe 100755
+> > --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> > +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+> > @@ -3,6 +3,10 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >
+> >  tmpdir=3D$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
+> > +# perf script report only supports input from the perf.data file.
+> > +perfdata=3D"perf.data"
+>
+> I thought you want to use a different file name.  What's the point of
+> adding a variable here?
 
-I've had issues with old versions of libdw, but presumably the
-distributions won't update perf without libdw. Given we're waiting
-should we land the cleanup in:
-https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
-We have test coverage.
+Let me cleanup the commit message in v2. The variable's purpose is to
+allow us to update it when perf script supports the -i flag with
+script files.
 
 Thanks,
 Ian
 
+>
+> > +csv=3D"$tmpdir/csv"
+> > +csvsummary=3D"$tmpdir/csvsummary"
+> >  err=3D0
+> >
+> >  # set PERF_EXEC_PATH to find scripts in the source directory
+> > @@ -15,11 +19,10 @@ fi
+> >  export ASAN_OPTIONS=3Ddetect_leaks=3D0
+> >
+> >  cleanup() {
+> > -  rm -f perf.data
+> > -  rm -f perf.data.old
+> > -  rm -f csv
+> > -  rm -f csvsummary
+> > +  rm -f "${perfdata}"
+> > +  rm -f "${perfdata}".old
+> >    rm -rf "$tmpdir"
+> > +
+> >    trap - exit term int
+> >  }
+> >
+> > @@ -61,7 +64,7 @@ skip_no_probe_record_support() {
+> >
+> >  prepare_perf_data() {
+> >       # 1s should be sufficient to catch at least some switches
+> > -     perf record -e sched:sched_switch -a -- sleep 1 > /dev/null 2>&1
+> > +     perf record -e sched:sched_switch -a -o "${perfdata}" -- sleep 1 =
+> /dev/null 2>&1
+>
+> I'm not sure why it's needed.
+>
 > Thanks,
 > Namhyung
 >
+>
+> >       # check if perf data file got created in above step.
+> >       if [ ! -e "perf.data" ]; then
+> >               printf "FAIL: perf record failed to create \"perf.data\" =
+\n"
+> > @@ -130,28 +133,28 @@ test_extended_times_summary_ns() {
+> >  }
 > >
-> > Ian Rogers (2):
-> >   perf build: Remove libunwind support
-> >   tools build: Remove libunwind feature tests
+> >  test_csv() {
+> > -     perf script report task-analyzer --csv csv > /dev/null
+> > -     check_exec_0 "perf script report task-analyzer --csv csv"
+> > -     find_str_or_fail "Comm;" csv "${FUNCNAME[0]}"
+> > +     perf script report task-analyzer --csv "${csv}" > /dev/null
+> > +     check_exec_0 "perf script report task-analyzer --csv ${csv}"
+> > +     find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
+> >  }
 > >
-> >  tools/build/feature/Makefile                  |  31 -
-> >  tools/build/feature/test-libunwind-aarch64.c  |  27 -
-> >  tools/build/feature/test-libunwind-arm.c      |  28 -
-> >  .../test-libunwind-debug-frame-aarch64.c      |  17 -
-> >  .../feature/test-libunwind-debug-frame-arm.c  |  17 -
-> >  .../feature/test-libunwind-debug-frame.c      |  17 -
-> >  tools/build/feature/test-libunwind-x86.c      |  28 -
-> >  tools/build/feature/test-libunwind-x86_64.c   |  28 -
-> >  tools/build/feature/test-libunwind.c          |  28 -
-> >  tools/perf/Documentation/perf-check.txt       |   1 -
-> >  tools/perf/Documentation/perf-config.txt      |   4 +-
-> >  tools/perf/Documentation/perf-record.txt      |   2 +-
-> >  tools/perf/Makefile.config                    | 163 +---
-> >  tools/perf/Makefile.perf                      |   3 -
-> >  tools/perf/arch/arm/util/Build                |   1 -
-> >  tools/perf/arch/arm/util/unwind-libunwind.c   |  50 --
-> >  tools/perf/arch/arm64/util/Build              |   1 -
-> >  tools/perf/arch/arm64/util/unwind-libunwind.c |  17 -
-> >  tools/perf/arch/loongarch/util/Build          |   1 -
-> >  .../arch/loongarch/util/unwind-libunwind.c    |  82 --
-> >  tools/perf/arch/mips/util/Build               |   1 -
-> >  tools/perf/arch/mips/util/unwind-libunwind.c  |  22 -
-> >  tools/perf/arch/powerpc/util/Build            |   1 -
-> >  .../perf/arch/powerpc/util/unwind-libunwind.c |  92 --
-> >  tools/perf/arch/x86/util/Build                |   1 -
-> >  tools/perf/arch/x86/util/unwind-libunwind.c   | 115 ---
-> >  tools/perf/builtin-check.c                    |   1 -
-> >  tools/perf/builtin-report.c                   |   4 +-
-> >  tools/perf/tests/make                         |   2 -
-> >  tools/perf/util/Build                         |   5 -
-> >  tools/perf/util/callchain.c                   |   2 +-
-> >  tools/perf/util/dso.h                         |   6 -
-> >  tools/perf/util/libunwind/arm64.c             |  40 -
-> >  tools/perf/util/libunwind/x86_32.c            |  41 -
-> >  tools/perf/util/maps.c                        |  47 +-
-> >  tools/perf/util/maps.h                        |   6 -
-> >  tools/perf/util/thread.c                      |  40 +-
-> >  tools/perf/util/thread.h                      |   1 -
-> >  tools/perf/util/unwind-libunwind-local.c      | 832 ------------------
-> >  tools/perf/util/unwind-libunwind.c            |  92 --
-> >  tools/perf/util/unwind.h                      |  41 +-
-> >  41 files changed, 19 insertions(+), 1919 deletions(-)
-> >  delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
-> >  delete mode 100644 tools/build/feature/test-libunwind-arm.c
-> >  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarc=
-h64.c
-> >  delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.=
-c
-> >  delete mode 100644 tools/build/feature/test-libunwind-debug-frame.c
-> >  delete mode 100644 tools/build/feature/test-libunwind-x86.c
-> >  delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
-> >  delete mode 100644 tools/build/feature/test-libunwind.c
-> >  delete mode 100644 tools/perf/arch/arm/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/arch/arm64/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/arch/mips/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/arch/powerpc/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/arch/x86/util/unwind-libunwind.c
-> >  delete mode 100644 tools/perf/util/libunwind/arm64.c
-> >  delete mode 100644 tools/perf/util/libunwind/x86_32.c
-> >  delete mode 100644 tools/perf/util/unwind-libunwind-local.c
-> >  delete mode 100644 tools/perf/util/unwind-libunwind.c
+> >  test_csv_extended_times() {
+> > -     perf script report task-analyzer --csv csv --extended-times > /de=
+v/null
+> > -     check_exec_0 "perf script report task-analyzer --csv csv --extend=
+ed-times"
+> > -     find_str_or_fail "Out-Out;" csv "${FUNCNAME[0]}"
+> > +     perf script report task-analyzer --csv "${csv}" --extended-times =
+> /dev/null
+> > +     check_exec_0 "perf script report task-analyzer --csv ${csv} --ext=
+ended-times"
+> > +     find_str_or_fail "Out-Out;" "${csv}" "${FUNCNAME[0]}"
+> >  }
 > >
+> >  test_csvsummary() {
+> > -     perf script report task-analyzer --csv-summary csvsummary > /dev/=
+null
+> > -     check_exec_0 "perf script report task-analyzer --csv-summary csvs=
+ummary"
+> > -     find_str_or_fail "Comm;" csvsummary "${FUNCNAME[0]}"
+> > +     perf script report task-analyzer --csv-summary "${csvsummary}" > =
+/dev/null
+> > +     check_exec_0 "perf script report task-analyzer --csv-summary ${cs=
+vsummary}"
+> > +     find_str_or_fail "Comm;" "${csvsummary}" "${FUNCNAME[0]}"
+> >  }
+> >
+> >  test_csvsummary_extended() {
+> > -     perf script report task-analyzer --csv-summary csvsummary --summa=
+ry-extended \
+> > +     perf script report task-analyzer --csv-summary "${csvsummary}" --=
+summary-extended \
+> >       >/dev/null
+> > -     check_exec_0 "perf script report task-analyzer --csv-summary csvs=
+ummary --summary-extended"
+> > -     find_str_or_fail "Out-Out;" csvsummary "${FUNCNAME[0]}"
+> > +     check_exec_0 "perf script report task-analyzer --csv-summary ${cs=
+vsummary} --summary-extended"
+> > +     find_str_or_fail "Out-Out;" "${csvsummary}" "${FUNCNAME[0]}"
+> >  }
+> >
+> >  skip_no_probe_record_support
 > > --
 > > 2.53.0.959.g497ff81fa9-goog
 > >
