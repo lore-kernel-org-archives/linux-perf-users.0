@@ -1,152 +1,128 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD37342CB4
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 03:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB57028DB54;
+	Thu, 26 Mar 2026 03:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774495099; cv=none; b=nxlCOA0V1Ofvs8pxXkP33F9rgnmXoHxpvJFaxOXeb8bzINxBSK1useLXxeyEW/KMcgH9458mwKMAsafTakoSj/OZu2Hm8ssu82Vt+iwasX+iRGGNeHglHG1NZQZwTbDvUaPm5nRhdp+W9GY2X9juzFWk9sY9O0AvtHM2KFVL1nw=
+	t=1774496826; cv=none; b=RdtN2uBstGm10WhVZxURn1tVYLPZtw/H7tdg5OhQBG+TEaQZPCZm0eYMWSmSTY+2/cvl2Vy3NtxFg1HHaVmi4qkrPoXmBTKgo+aVuiw1zwEFSPO14aFgSo7fMYQazardYUpOm/FJFNP6NOhpL0euCjmwdZ66gLYfNdSQURZ7C+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774495099; c=relaxed/simple;
-	bh=szGr69gF+vdEu9NuDlS62rGphnL6lDBt9qkzVt6uERU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OibS68ypwatjjQoCIQN/kG/OSYGz0MrIeJTui1YCQl03NvhpzmIeewB6BFFaRPLUx0gYjcmvl7Hi+GJGj0xCaqt2glUkfcka1sOIQUEjGK688b0n1G/XLPvBasqvQleNA0wjd8AciqWPWS8k2KIh6TLj243XMvQ+RvTeaF9kvBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/xI7GsJ; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774496826; c=relaxed/simple;
+	bh=a01caIgdw8K5lW6bErAiMiEDFBlhJ/I4LcweqJ5vzuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q9oCkoV9x/NNPhA085Ty1moGEsjc2jqRkBlXk9Iw0UJsW7udYjExOVHDoYaLgBmTOtoEnWr3LsCr/ML5tyjblDN6VdWwf7HUcHUCV5tHn2Wl8uivHpwvpxmzc3GPLWxQ1P8gjPu9mmLRTMd4cb0MRvuGqN6PBA+fvf64IE5Pl7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=JdynUzbb; arc=none smtp.client-ip=117.135.210.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/xI7GsJ"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-8296dabef74so503974b3a.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Mar 2026 20:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774495096; x=1775099896; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJyZdzHJlp0YpomaVsmEd2du9wsvCvcnjce5LqH7hsc=;
-        b=X/xI7GsJ7neL2ltjkz9G04EJCB3q65SyO2auh7WChXHBdr9h/05XSWI9G2VfbLy9hO
-         wV2LrS73/CTAmowgGuwe8rzgkZSXpk9ORUQh8xvIkXZt5cV6LjpTel3/j01OGeYM+qd5
-         fL3+ZbKXtoxL7FXaa5Y21vfu0xlF/a6GLQI09ShMaBW7TCfoMTCIoHWf2wQyHOPyuXik
-         ALwPtu0UM7cszmB7JihGMUKs7P9zSFaZkzgACAFJe+K6BuuHXCZ4Hsw0czLFWkumoK0M
-         Z4JhL5oYxH/pPCPvEH/5vGl+Vg5lAmgKg0yDxK2pDsL+rCpo8GtOgb9tRHiJ49c3WIny
-         CCjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774495096; x=1775099896;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XJyZdzHJlp0YpomaVsmEd2du9wsvCvcnjce5LqH7hsc=;
-        b=L81mfTK8mYiWxahE8O3WXqzOmvfyUWfJCvsrGxau8JPuT11IVjyVYTPTfqFz18ZwXE
-         8PTHN4EzbuT/AM6/8iK6cK38tskXxwnCDwQfgpWMI8OXakEM/TvbMZ/u3E9W3dUu/dI8
-         HJ8rH3KWnIkjTSrUqDWnWB3el2lqqPSx6/AC0Xtm/Uq/Vgp6i4NvsZpnPt+GpA7LsbZt
-         sS6kISYHMPSj3fDg3ZZMa8F3hD2OWsoQvfE4J901yzDJ7ildBUl8ko1KO/H0KjWsiZ2N
-         EdghQMbQLxLonZiXb8BL4ukKKj3eZhkf0OwLXF+bq+7O9Ks6LeKFZZRR7WkcSc4dhtfY
-         Zvmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE7Yk/Jy+gpZ2apjQLmMJqGa+GKNB2G7LjA3uFYW2HTWwDLAUeL6YsGB3cg039j90Vbhn7vAbNGt5rMRwIuzoc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS1V3q50QSkpIeSBfIFyKqanmqK5neNSqyRBbsNiavKIUIFFtM
-	uann/4/wWT8L0kIy1mWxu2jfBtGDUXgqOzAyqIx4XCoTnVXOe48QqEmb
-X-Gm-Gg: ATEYQzwfhFSd8TGmNkYXIK9WpFKV1dKJtslvGTEhqpAdZX4rF6hh2+KhaJwRZxjAzMY
-	W8Ac0VWab5e7J1LytyLyk2KDzFHMtBCyla4Tbg5XTsvZFPuKQdQx6j0GL41+PKW32W3/QPGaEgj
-	hZeA1s++D5dz3+3n1CN1v2CPkhKX1nC1MncTOKELZjQ6aai3OTbDW1dk4Jt9oqUiV3oV7ov1alg
-	7oZipKsC6kUPHJuirqlQparCtjxsO6nWtiEh6uoQZQDfVfmC+2ZZfRIx/JgwbWmVA3Uv70tCNlI
-	ypTGhQJyqNfczo136ilLBJdNmkL3eqqvCoEBPAHo0bw5meKVTprHasqt0fE18aevpjqxEzVjNXY
-	wdM1nCxtHWV7SqqXqYOxq2ZOILkTJSQyOferp7+OO5WkaHegHVrlwYPURC7dcmI7Dg944bfByzS
-	tmQL59O/IEKYjtcJ0p4jZnqa+z8lV7aMVps+OARIDIknCgOb74Cw==
-X-Received: by 2002:a05:6a00:a210:b0:827:444a:58e0 with SMTP id d2e1a72fcca58-82c6e0e6089mr5629907b3a.32.1774495096498;
-        Wed, 25 Mar 2026 20:18:16 -0700 (PDT)
-Received: from lima-ubuntu.hz.ali.com ([47.246.98.210])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82c7d3f8a51sm1089780b3a.60.2026.03.25.20.18.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 20:18:15 -0700 (PDT)
-From: Qing Wang <wangqing7171@gmail.com>
-To: peterz@infradead.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	syzbot+196a82fd904572696b3c@syzkaller.appspotmail.com,
-	wangqing7171@gmail.com,
-	yuhaocheng035@gmail.com
-Subject: Re: [PATCH v3] perf/core: Fix refcount bug and potential UAF in perf_mmap
-Date: Thu, 26 Mar 2026 11:18:06 +0800
-Message-Id: <20260326031806.876931-1-wangqing7171@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260325151735.GI3738010@noisy.programming.kicks-ass.net>
-References: <20260325151735.GI3738010@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="JdynUzbb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=IVp2hqmU+KCQ4JYeOOX1aInjRTzm6Ect0l0BiwWltcA=;
+	b=JdynUzbbL/wehu7oJYRtmF37Hno0R0k4ZkMwt1iT4Sg9xyQZVHeyW/Ti41bWCB
+	ATc6STmKZwSoUHwxv9oV2LHz5o/Ph/D6SYkPYflMUHvGQeDynb8HGHfSo4CgaEoq
+	j89QAZ+Hsv9BM/g1abB4rEu+aFsRXTwlOhahJU0Lzjkb4=
+Received: from [172.24.149.146] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3_0Vdq8RpfcUhAg--.39776S2;
+	Thu, 26 Mar 2026 11:43:27 +0800 (CST)
+Message-ID: <7815cf12-5579-44df-adc6-2b061f365adb@126.com>
+Date: Thu, 26 Mar 2026 11:43:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf symbols: Add 'intel_idle_irq' to the list of idle
+ symbols
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+ mingo@redhat.com, peterz@infradead.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, james.clark@linaro.org, ojeda@kernel.org,
+ gary@garyguo.net, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260323085255.98173-1-jameshongleiwang@126.com>
+ <CAP-5=fVdxJxSAYyAoS_UVxQqOtS1GrhHphEag=Ksb2Oc+NuCGQ@mail.gmail.com>
+ <acOJPVxR7MRLE4NW@google.com>
+ <CAP-5=fX8QmteodkvmaE4baJdw=wwWWN7+_DA3v8C95BJuN2y=w@mail.gmail.com>
+Content-Language: en-US
+From: Honglei Wang <jameshongleiwang@126.com>
+In-Reply-To: <CAP-5=fX8QmteodkvmaE4baJdw=wwWWN7+_DA3v8C95BJuN2y=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3_0Vdq8RpfcUhAg--.39776S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AFW7WFWfuFy5WF4UCrWxZwb_yoW8uF43pF
+	yUuFWjgF45Xr1fGw13tr4fXF4Ygas7XayrWFn5tw1UZFnI9Fn2grWxJF4Y93y8WrykGF1r
+	AFyj9F9I93W0y3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UtpnQUUUUU=
+X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/xtbBrh+NO2nEq19W2wAA3T
 
-On Wed, 25 Mar 2026 at 23:17, Peter Zijlstra <peterz@infradead.org> wrote:
-> Argh,. why is this hidden in this old thread :/
+
+
+On 3/26/26 12:07 AM, Ian Rogers wrote:
+> On Wed, Mar 25, 2026 at 12:05 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> On Mon, Mar 23, 2026 at 11:35:05AM -0700, Ian Rogers wrote:
+>>> On Mon, Mar 23, 2026 at 1:53 AM Honglei Wang <jameshongleiwang@126.com> wrote:
+>>>>
+>>>> Commit 32d4fd5751ea ("cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE")
+>>>> introduced intel_idle_irq as entry of those with
+>>>> CPUIDLE_FLAG_IRQ_ENABLE, say, skx and icx so far. Let's add a new
+>>>> one to the list of idle symbols to avoid noise.
+>>>>
+>>>> Signed-off-by: Honglei Wang <jameshongleiwang@126.com>
+>>>> ---
+>>>>  tools/perf/util/symbol.c | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>>>> index 8662001e1e25..7cff66e7ce06 100644
+>>>> --- a/tools/perf/util/symbol.c
+>>>> +++ b/tools/perf/util/symbol.c
+>>>> @@ -730,6 +730,7 @@ static bool symbol__is_idle(const char *name)
+>>>>                 "cpu_startup_entry",
+>>>>                 "idle_cpu",
+>>>>                 "intel_idle",
+>>>> +               "intel_idle_irq",
+>>>
+>>> It would be nice to make this an Intel specific idle symbol. I sent
+>>> out a patch set to do this:
+>>> https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
+>>> but there are no reviews. Perhaps we can follow up that patch by
+>>> adding this symbol. Arnaldo, Namhyung, wdyt? I believe Arnaldo was
+>>> supportive in:
+>>> https://lore.kernel.org/lkml/aahC-zp56irr5e2k@x1/
+>>
+>> Yeah, I'm ok in general.  I've left a comment there.
 > 
-> On Wed, Mar 25, 2026 at 06:20:53PM +0800, yuhaocheng035@gmail.com wrote:
+> As that patch adds:
+> ```
+> if (e_machine == EM_386 || e_machine == EM_X86_64) {
+>     if (strstarts(name, "mwait_idle") ||
+>          strstarts(name, "intel_idle")) {
+>         sym->idle = SYMBOL_IDLE__IDLE;
+>     return true;
+>     }
+> }
+> ```
 > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 2c35acc2722b..a3228c587de1 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -6730,9 +6730,10 @@ static void perf_pmu_output_stop(struct perf_event *event);
-> >   * the buffer here, where we still have a VM context. This means we need
-> >   * to detach all events redirecting to us.
-> >   */
-> > -static void perf_mmap_close(struct vm_area_struct *vma)
-> > +static void __perf_mmap_close(struct vm_area_struct *vma, struct perf_event *event,
-> > +			      bool holds_event_mmap_lock)
-> >  {
-> > -	struct perf_event *event = vma->vm_file->private_data;
-> > +	struct perf_event *iter_event;
-> >  	mapped_f unmapped = get_mapped(event, event_unmapped);
-> >  	struct perf_buffer *rb = ring_buffer_get(event);
-> >  	struct user_struct *mmap_user = rb->mmap_user;
-> > @@ -6772,11 +6773,14 @@ static void perf_mmap_close(struct vm_area_struct *vma)
-> >  	if (refcount_dec_and_test(&rb->mmap_count))
-> >  		detach_rest = true;
-> >  
-> > -	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-> > +	if ((!holds_event_mmap_lock &&
-> > +	     !refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex)) ||
-> > +	    (holds_event_mmap_lock && !refcount_dec_and_test(&event->mmap_count)))
-> >  		goto out_put;
+> The strstarts covers intel_idle_irq and that change will incorporate
+> this modification.
 > 
-> *groan*, this is horrible.
+> Thanks,
+> Ian
 > 
-> Let me have a poke to see if there isn't a saner variant around.
 
-I think it's ok to move perf_mmap_close() outside the mutex lock, like this:
+Sorry, I was a bit busy these two days.. I'm OK to make this general.
+But at a fast test on my machine with your v2 patch, the intel_idle_irq
+was still there at top of the output. I'll do more debug to see why it
+happened.
 
-https://lore.kernel.org/all/20260325153240.GK3739106@noisy.programming.kicks-ass.net/T/#m0f82e8ecdfdfce4acd5121bcb799e864cf05ebf9
+Thanks,
+Honglei
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1f5699b339ec..e5ce03ce926d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7485,9 +7485,12 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 		 */
- 		ret = map_range(event->rb, vma);
- 		if (ret)
--			perf_mmap_close(vma);
-+			goto out_close;
- 	}
-+	return 0;
- 
-+out_close:
-+	perf_mmap_close(vma);
- 	return ret;
- }
+>> Thanks,
+>> Namhyung
 
-How do you think?
-
---
-Qing
