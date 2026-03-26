@@ -1,229 +1,177 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAF2347C7
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 21:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774560771; cv=pass; b=GbHrNV6tKM+jRd0dAJiUOPkspwHQCt7kKOKs1tGTnqkuUNZevkOm6yW5xq428Fz90h8myMYEC/9FoylbVtAPA3S29CXswG1/uxvBgHZb/NkuZM5tS9KVXPADM76Quh5sfvUxlSaLX5caviuHIpGyD8jUrhWhUJX/2UNmFld4G+o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774560771; c=relaxed/simple;
-	bh=BRdnOj1skffZBZ9eqkqnTSC7MKsYAeiyYvZQPCm5hDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nIPHOPYzb0G44DwwcOwlbHK8qz+1MQMU+QEjyQNUQSf7iTPTJI5+ntdrs/jijrOcc2zhpAqWCV/LQQPy1bYE0HsqIpwxylTHEMxnEMyP5DIFutGM+J79rtWoElhY6WDanFKMJ/YS/JpUAfGQctlFqzh9/PjJkAUgvPojRaYopo0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oOMo5oZx; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC9329E6C;
+	Thu, 26 Mar 2026 22:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774562551; cv=none; b=tMjDM1h3T1mT5lOJEk6UXBsdh6bz642BwLymkl3H0+RHDBO8erVd6E8wjcJ/3hYfh3vprxSATXzGQl0q+2Jtz/cr+N5kFjVB2UPggfBjNReOMoJINr1mrCvqSKQ72PDOrPgdVOthCfWpyE4JA/8ZBgIlnucmyRDpavxLx53vVbQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774562551; c=relaxed/simple;
+	bh=gRNPoUuUlFMlvvoA/CvHNeMEwTUtTfTmqdQjTNdqDmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RizyAZjgLUIGii02q5H1qnRssg0HTSTBkg364kDvod3TmyBtVgyUnzFDEOV8eXGBXk6vsZkpi6S92OtDEdh0hPZBIP71fX5SI8WReA6M/NX3CRDVRaiYcEmLLjXXp2RUfflH2m/43LrkkLZtTCVLD9wLlH42H0C3+R5AfdQmjBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCu6v8UI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oOMo5oZx"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2b052562254so33035ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 14:32:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774560769; cv=none;
-        d=google.com; s=arc-20240605;
-        b=L05yU/DcJWNbRRt9UlsMCPnVdG0z4kG0co7LbYMR8by0pyvJkOufJ1/WHiYJp+8coG
-         Jdv9vFKn+itYR6aSZKMsX4nZlyosuYIbOppwF1nsAHuN+V56QMnnfoQdXklPcjd7hqko
-         T0yEuAoWiP3AnMA79LsacsNCmhAfNIhmKz0KAvXDmkOp6rEDLky4gNhAeXC4a5WJPUsf
-         3xsd7xvOrGI4jn2W6RJL6MwVYx50BGA9aNTBOSvNs4tRAlOJScFOdp6xwK50b69Ds1eO
-         taAsKWw2FO7po8qkGhqciTPkGUrrTO13wL1//KetgJWBGmc40Ycw8NaVZy7IbgT/2tJn
-         ud9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=XQVWwOiHgzOpvok3jXEkPaAAGTJXqeaKefQ9e9m8M60=;
-        fh=/IWSL+5m7/eTmTWNgxmt14NnmFgCBctHwXWajqGuoi4=;
-        b=MyXDUVM7LxdWnHpRTNEafflQJMA0LfB3JalG9lxTTPkt/9Hqxt0RB3fBOqmIdWa9Au
-         Crh63hbZd5GBekkrmZgRwz9fqNqjXOthDHvZ7GNalVzN0ROH5X94Cg4TaABU/GZentSG
-         CrrlYx7otZ8YM5AIcTGOXH95/N/6lOdcg59UmF4xKpA/z46bLCphN2RBu47ExyAlxjVS
-         vMlNEUShkPDWubBH1d+0HThAcgL+D0HflbEZDeTS7lWxTeq3dA3iKvyEiekBXc0tecFf
-         RqgREKLl1+JTqq4wuVrdrV0m89R9SB6dpStIrmELloI7JcaJcC0cUFXFUMM49gtuGVRk
-         ngKg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774560769; x=1775165569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XQVWwOiHgzOpvok3jXEkPaAAGTJXqeaKefQ9e9m8M60=;
-        b=oOMo5oZxImwE/5aXIrgKqcdGNRFA2+5Ow7kfLtsN/s9XnDiDS5152c/UiYQJvPnpPh
-         e17cdOMPRTb7koLWq6AdK/nwn/7kWr1zwwvoDGdSSOcxS9J68QPeWPvrEoNa2ot0AnXv
-         MCqwG6nUZM3/QLZTVUkL6Ut2odrztpAYhOmtqKDmM6udRm645+xGe0bkrQxr/lq3l9qY
-         a5Tnrr9rx2+QpvdsfYD4CZzM0+Pyhfs8kOqDETKSt6/4FGPUTRIXSKBRNO7jwuDWo3WX
-         xgodWLZrU5kLpwG0p5EuOpey+/P8JhHYPP4aw1PtOtiQ2PAyewNB3aDw3+KzrGkBY/jM
-         0QXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774560769; x=1775165569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XQVWwOiHgzOpvok3jXEkPaAAGTJXqeaKefQ9e9m8M60=;
-        b=BB6p6njG3vHCcJw+h9oaLe4DzcFSteeOfoDZ2oShyictPwK2R2rMc/hdQMP0zhxria
-         U+vPhkpZ1QF+rVeWsgvgS+S7rFnVSpKrJsNgi1VLkk3WOrsBlc7XZJoY7LucdwvdEpPg
-         lH+uWfhpiWpz/u92DaY3faAqPS5u5X+f72Q72R6LT6tclnhZ22+ifyvyzgG6vFBUDYxW
-         DmA7vcX6teaU1RDl26CNMo6fnuuGRCVlv4jhJCS//EKV4je5dKfDovbziwCA//1U6w3w
-         SbxKGXxKMgcUfTtU/EGZ2yt20kIwZNRB3EEpSIVuV64YvHViIqNWSDAC4Tu1fZ1QAMct
-         IZoA==
-X-Gm-Message-State: AOJu0Yyw1aFUYiicFZ2zQiRkHM5LwxdXB7LOGUDUoOjgNr+FMfrF8VOA
-	4JoYo3x0g2nOjBCRb4+gYVZwNN6c5SZyRjI2WyitC7mbRPPJlruF1btF817yQx/AFz652K/6Idh
-	8AnqRy9bRJCu4jST4mPPz0ywIV/TGlD0nPoOK0cd1
-X-Gm-Gg: ATEYQzzxo+jW+YLlwjRoYNKvXHIy+2Jubw+Ld103IeZnXBtoSFdurKbcuAcB2vCXB8i
-	k4lIJkGXcljaFH6XGWjPHd2zRY0TlGZU8ogGoB7GXN9CsongWNhmsCa34pdAYw+sXzzj5c5dKY2
-	EUKG6SJa+W3TOVeb+Ho2VHJJnCss6UfQ6fgCh6MVTHqp9PGtRr1FlAH5a1fnDSR0MXJDHAFW83Z
-	chgXr/e9NQiVyWPhClufD8ajcCbN5YVFKFkrZ81u2RiHacmn2I1a69MJySFw06cZkJ+lfNw/D6s
-	EjRP4ExyXyyF6w1zvIFujSOTiMF1oW5Hv7eH
-X-Received: by 2002:a17:902:ef46:b0:2b0:5193:1212 with SMTP id
- d9443c01a7336-2b0cc23f103mr1088335ad.4.1774560768573; Thu, 26 Mar 2026
- 14:32:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCu6v8UI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41994C116C6;
+	Thu, 26 Mar 2026 22:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774562551;
+	bh=gRNPoUuUlFMlvvoA/CvHNeMEwTUtTfTmqdQjTNdqDmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nCu6v8UItvowi6ElrWpUinjpm4Vo8MXTt0j9qziqHf3voTYp72CBhvnqwlMpICMpj
+	 gsRyJRclcEAaKxij0RUByESwEo+kpSHvCC+K52if2WOaYPldUEXXLxPRcKt6WG8/dD
+	 DYZMDnggi2W/HqV0n60gtd1mJ+UZj7/EDdipcXh6sT2mYJq+GHNfadn7f+ZO27M0lU
+	 a8E8tKyoQKqC1yjMOwncCcidxhN8n9Ggiz9g6s5JwzrSkJkZZWrtU0+4Kf1q+nsnqm
+	 3vXbX0nzByJHPo07Sag1mUYjPZU7pWy1TQ8772CxsCoMEZvpVxvqgx3XLasZtP2R9X
+	 ux/yDVLBAZMjQ==
+Date: Thu, 26 Mar 2026 15:02:29 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, james.clark@linaro.org,
+	jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	peterz@infradead.org
+Subject: Re: [PATCH v2 2/2] perf stat: Fix opt->value type for
+ parse_cache_level
+Message-ID: <acWs9Vrj4AA4YypB@google.com>
+References: <20260319221215.207951-1-irogers@google.com>
+ <20260319233349.306012-1-irogers@google.com>
+ <20260319233349.306012-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260326180125.168536-1-thomas.falcon@intel.com>
-In-Reply-To: <20260326180125.168536-1-thomas.falcon@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Mar 2026 14:32:37 -0700
-X-Gm-Features: AQROBzDLYlS8FqKHU-z7YpBW3OsGOSQmLNytDuAKUeqHkGTFtOKqZOIKCYaz6BM
-Message-ID: <CAP-5=fUFGevUhRROdybtDCXZgWgxYzfLrq_0f8r5_Yv_VfxP+A@mail.gmail.com>
-Subject: Re: [PATCH v2] tools/perf: Fix ratio_to_prev event parsing test
-To: Thomas Falcon <thomas.falcon@intel.com>
-Cc: linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260319233349.306012-2-irogers@google.com>
 
-On Thu, Mar 26, 2026 at 11:01=E2=80=AFAM Thomas Falcon <thomas.falcon@intel=
-.com> wrote:
->
-> test__ratio_to_prev() assumed the first event in a group is the leader,
-> which is not the case when the event is expanded into two event groups
-> on hybrid PMU's with auto counter reload support. This patch updates the
-> test to iterate over the event group generated for each core PMU. Also
-> update "wrong leader" test to check that the subordinate event has the
-> correct leader instead of checking that it is not the group leader.
->
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> Fixes: 56be0fe5f62c ("perf record: Add auto counter reload parse and regr=
-ession tests")
+On Thu, Mar 19, 2026 at 04:33:49PM -0700, Ian Rogers wrote:
+> Commit f5803651b4a4 ("perf stat: Choose the most disaggregate command
+> line option") changed aggregation option handling for `perf stat` but
+> not `perf stat report` leading to parse_cache_level being passed a
+> struct in the `perf stat` case but erroneously an aggr_mode enum value
+> for `perf stat report`. Change the `perf stat report` aggregation
+> handling to use the same opt_aggr_mode as `perf stat`. Also, just pass
+> the boolean for consistency with other boolean argument handling.
+> 
+> Fixes: f5803651b4a4 ("perf stat: Choose the most disaggregate command line option")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> v2: made changes suggested by Dapeng Mi
-> https://lore.kernel.org/all/997b6291-7429-4eaa-8467-1fd88e100616@linux.in=
-tel.com/
+> v2: Add in fixes suggested by Sashiko.
 > ---
->  tools/perf/tests/parse-events.c | 47 +++++++++++++++++++--------------
->  1 file changed, 27 insertions(+), 20 deletions(-)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index 1d3cc224fbc2..4487508c5658 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -1796,31 +1796,38 @@ static bool test__acr_valid(void)
->
->  static int test__ratio_to_prev(struct evlist *evlist)
+>  tools/perf/builtin-stat.c | 43 +++++++++++++++++++++------------------
+>  1 file changed, 23 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 73c2ba7e3076..02c1c02d4b27 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -164,7 +164,7 @@ struct opt_aggr_mode {
+>  };
+>  
+>  /* Turn command line option into most generic aggregation mode setting. */
+> -static enum aggr_mode opt_aggr_mode_to_aggr_mode(struct opt_aggr_mode *opt_mode)
+> +static enum aggr_mode opt_aggr_mode_to_aggr_mode(const struct opt_aggr_mode *opt_mode)
 >  {
-> -       struct evsel *evsel;
-> +       struct evsel *evsel, *leader;
->
->         TEST_ASSERT_VAL("wrong number of entries", 2 * perf_pmus__num_cor=
-e_pmus() =3D=3D evlist->core.nr_entries);
->
-> -        evlist__for_each_entry(evlist, evsel) {
-> -               if (!perf_pmu__has_format(evsel->pmu, "acr_mask"))
-> +       for (int i =3D 0; i < num_core_entries(evlist); i++) {
-> +               leader =3D (i =3D=3D 0 ? evlist__first(evlist) : evsel__n=
-ext(evsel));
-> +               if (!perf_pmu__has_format(leader->pmu, "acr_mask"))
+>  	enum aggr_mode mode = AGGR_GLOBAL;
+>  
+> @@ -1219,8 +1219,8 @@ static int parse_cache_level(const struct option *opt,
+>  			     int unset __maybe_unused)
+>  {
+>  	int level;
+> -	struct opt_aggr_mode *opt_aggr_mode = (struct opt_aggr_mode *)opt->value;
+> -	u32 *aggr_level = (u32 *)opt->data;
+> +	bool *per_cache = opt->value;
+> +	u32 *aggr_level = opt->data;
+>  
+>  	/*
+>  	 * If no string is specified, aggregate based on the topology of
+> @@ -1258,7 +1258,7 @@ static int parse_cache_level(const struct option *opt,
+>  		return -EINVAL;
+>  	}
+>  out:
+> -	opt_aggr_mode->cache = true;
+> +	*per_cache = true;
+>  	*aggr_level = level;
+>  	return 0;
+>  }
+> @@ -2305,24 +2305,23 @@ static struct perf_stat perf_stat = {
+>  static int __cmd_report(int argc, const char **argv)
+>  {
+>  	struct perf_session *session;
+> +	struct opt_aggr_mode opt_mode = {};
+>  	const struct option options[] = {
+>  	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+> -	OPT_SET_UINT(0, "per-socket", &perf_stat.aggr_mode,
+> -		     "aggregate counts per processor socket", AGGR_SOCKET),
+> -	OPT_SET_UINT(0, "per-die", &perf_stat.aggr_mode,
+> -		     "aggregate counts per processor die", AGGR_DIE),
+> -	OPT_SET_UINT(0, "per-cluster", &perf_stat.aggr_mode,
+> -		     "aggregate counts perf processor cluster", AGGR_CLUSTER),
+> -	OPT_CALLBACK_OPTARG(0, "per-cache", &perf_stat.aggr_mode, &perf_stat.aggr_level,
+> -			    "cache level",
+> -			    "aggregate count at this cache level (Default: LLC)",
+> +		OPT_BOOLEAN(0, "per-thread", &opt_mode.thread, "aggregate counts per thread"),
 
-If the p-core non-ACR supporting events are first, won't this mean the
-loop immediately terminates? I wonder the loop should be:
-```
-evlist__for_each_entry(evlist, evsel) {
-               if (evsel !=3D evsel__leader(evsel) ||
-!perf_pmu__has_format(evsel->pmu, "acr_mask"))
-                    continue; /* Not a group leader or the event is
-for a non-ACR supporting PMU. */
-```
-then the regular tests on the config2, etc. Then evsel__next to get
-the instructions event, etc.
+A wrong indentation.  I'll fix this time.
+
+
+> +	OPT_BOOLEAN(0, "per-socket", &opt_mode.socket,
+> +		    "aggregate counts per processor socket"),
+> +	OPT_BOOLEAN(0, "per-die", &opt_mode.die, "aggregate counts per processor die"),
+> +	OPT_BOOLEAN(0, "per-cluster", &opt_mode.cluster,
+> +		    "aggregate counts per processor cluster"),
+> +	OPT_CALLBACK_OPTARG(0, "per-cache", &opt_mode.cache, &perf_stat.aggr_level,
+> +			    "cache level", "aggregate count at this cache level (Default: LLC)",
+>  			    parse_cache_level),
+> -	OPT_SET_UINT(0, "per-core", &perf_stat.aggr_mode,
+> -		     "aggregate counts per physical processor core", AGGR_CORE),
+> -	OPT_SET_UINT(0, "per-node", &perf_stat.aggr_mode,
+> -		     "aggregate counts per numa node", AGGR_NODE),
+> -	OPT_SET_UINT('A', "no-aggr", &perf_stat.aggr_mode,
+> -		     "disable CPU count aggregation", AGGR_NONE),
+> +	OPT_BOOLEAN(0, "per-core", &opt_mode.core,
+> +		    "aggregate counts per physical processor core"),
+> +	OPT_BOOLEAN(0, "per-node", &opt_mode.node, "aggregate counts per numa node"),
+> +	OPT_BOOLEAN('A', "no-aggr", &opt_mode.no_aggr,
+> +		    "disable aggregation across CPUs or PMUs"),
+>  	OPT_END()
+>  	};
+>  	struct stat st;
+> @@ -2330,6 +2329,10 @@ static int __cmd_report(int argc, const char **argv)
+>  
+>  	argc = parse_options(argc, argv, options, stat_report_usage, 0);
+>  
+> +	perf_stat.aggr_mode = opt_aggr_mode_to_aggr_mode(&opt_mode);
+> +	if (perf_stat.aggr_mode == AGGR_GLOBAL)
+> +		perf_stat.aggr_mode = AGGR_UNSET; /* No option found so leave unset. */
+
+I think it's more intuitive if the function returns AGGR_UNSET if none
+of the field was set.  Then we need to change record and stat parts to
+set GLOBAL when it's UNSET.  But this could be a separate change.
 
 Thanks,
-Ian
+Namhyung
 
 
->                         return TEST_OK;
->
-> -               if (evsel =3D=3D evlist__first(evlist)) {
-> -                       TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->=
-core.attr.config2);
-> -                       TEST_ASSERT_VAL("wrong leader", evsel__is_group_l=
-eader(evsel));
-> -                       TEST_ASSERT_VAL("wrong core.nr_members", evsel->c=
-ore.nr_members =3D=3D 2);
-> -                       TEST_ASSERT_VAL("wrong group_idx", evsel__group_i=
-dx(evsel) =3D=3D 0);
-> -                       TEST_ASSERT_EVSEL("unexpected event",
-> -                                       evsel__match(evsel, HARDWARE, HW_=
-CPU_CYCLES),
-> -                                       evsel);
-> -               } else {
-> -                       TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->=
-core.attr.config2);
-> -                       TEST_ASSERT_VAL("wrong leader", !evsel__is_group_=
-leader(evsel));
-> -                       TEST_ASSERT_VAL("wrong core.nr_members", evsel->c=
-ore.nr_members =3D=3D 0);
-> -                       TEST_ASSERT_VAL("wrong group_idx", evsel__group_i=
-dx(evsel) =3D=3D 1);
-> -                       TEST_ASSERT_EVSEL("unexpected event",
-> -                                       evsel__match(evsel, HARDWARE, HW_=
-INSTRUCTIONS),
-> -                                       evsel);
-> -               }
-> +               /* cycles */
-> +               TEST_ASSERT_VAL("wrong config2", 0 =3D=3D leader->core.at=
-tr.config2);
-> +               TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(le=
-ader));
-> +               TEST_ASSERT_VAL("wrong core.nr_members", leader->core.nr_=
-members =3D=3D 2);
-> +               TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(leade=
-r) =3D=3D 0);
-> +               TEST_ASSERT_EVSEL("unexpected event",
-> +                                 evsel__match(leader, HARDWARE, HW_CPU_C=
-YCLES),
-> +                                 leader);
-> +               /*
-> +                * The period value gets configured within evlist__config=
-,
-> +                * while this test executes only parse events method.
-> +                */
-> +               TEST_ASSERT_VAL("wrong period", 0 =3D=3D leader->core.att=
-r.sample_period);
 > +
-> +                /* instructions/period=3D200000,ratio-to-prev=3D2.0/ */
-> +               evsel =3D evsel__next(leader);
-> +               TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->core.att=
-r.config2);
-> +               TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, =
-leader));
-> +               TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_m=
-embers =3D=3D 0);
-> +               TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel=
-) =3D=3D 1);
-> +               TEST_ASSERT_EVSEL("unexpected event",
-> +                                 evsel__match(evsel, HARDWARE, HW_INSTRU=
-CTIONS),
-> +                                 evsel);
->                 /*
->                  * The period value gets configured within evlist__config=
-,
->                  * while this test executes only parse events method.
-> --
-> 2.43.0
->
+>  	if (!input_name || !strlen(input_name)) {
+>  		if (!fstat(STDIN_FILENO, &st) && S_ISFIFO(st.st_mode))
+>  			input_name = "-";
+> @@ -2506,7 +2509,7 @@ int cmd_stat(int argc, const char **argv)
+>  		OPT_BOOLEAN(0, "per-die", &opt_mode.die, "aggregate counts per processor die"),
+>  		OPT_BOOLEAN(0, "per-cluster", &opt_mode.cluster,
+>  			"aggregate counts per processor cluster"),
+> -		OPT_CALLBACK_OPTARG(0, "per-cache", &opt_mode, &stat_config.aggr_level,
+> +		OPT_CALLBACK_OPTARG(0, "per-cache", &opt_mode.cache, &stat_config.aggr_level,
+>  				"cache level", "aggregate count at this cache level (Default: LLC)",
+>  				parse_cache_level),
+>  		OPT_BOOLEAN(0, "per-core", &opt_mode.core,
+> -- 
+> 2.53.0.959.g497ff81fa9-goog
+> 
