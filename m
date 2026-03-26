@@ -1,373 +1,290 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5BA2DF12F;
-	Thu, 26 Mar 2026 07:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774509644; cv=none; b=gO0WPvydaon+I6xRD7oqemnzDorJV2hSjQ6qjI9uHi1hQCJNwXtFj3xXdFuEXfoI3Z4ko+FOdkZaQEii5pg8nsmx6+RbM5yBxFDELXHPMaf9BTmK/A3wlPhci83aWuHuR1Gx9EblrlUn0Oyt7D4IWPJIIaote8zy8cjoF+4edYs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774509644; c=relaxed/simple;
-	bh=pSlQKT/b1HCPvWFIQb+8xqExFbpC07qWgZu3ngrk98I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DCtHey1g6WPw0W3XDN3qtEe33wgSRXeel/qGtNrZFUX6HxEBKhzGiBgl44bqvMSGE6f7Qdc6LBT7dXksZ/XLqkbUUgDmqQDWTzIbzdNxX+4W+JsrRFc6SzKGJqvu+lrQSF+oNJUp54eLV12jxOh3G+tz0FFUAWWiXbp0aIbZWHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=G1wa8LS5; arc=none smtp.client-ip=117.135.210.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D010242D62
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 08:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774515449; cv=pass; b=pjA2sjqkG8dzcMaLaoygipESYODNpH9VQlgDqCtmQYPh+h/279LtH0OcXLkzI99I3jNo0DwDl/r9od5wCZCn7BCWqVGf2P9UHZoCSgFay/KEDNk2Tuv+pBUmld8zSyQ4RpZFF/qbvrkfnfUaKiEufpo66UjCz8NXoNDXecWVl8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774515449; c=relaxed/simple;
+	bh=ptT2d5P9SeLna8e97nY4yBzJRQ9RCTJWUVNhB1VfGvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B31FpZYpKOJ0f99cECMw3En/LGIltdhhSR1OSO3SOjK8wypxivDzkkIbM9gVrRd5G5nY5KLA6U5ykrS4gSETls6XqA88ksPgfNfuNMesCEzNgDHCDnHtUZXkvdR63WrtU2AJjqVUfWy9vpsmmhP5jOpavuzY/jeew8t9A/39VUs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQ1Qh7EZ; arc=pass smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="G1wa8LS5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=lscYA8WasBHC0985AOl1Uc+DlR92krmpHLmMCBJENuU=;
-	b=G1wa8LS5QQmSraxZLhAf150xJlw06iTDowYTgKjhJdA4fEPuGW45iZHMuYEWlZ
-	+vD1f5cwA2VlUIRV8torep0CtT4o/mRHqF0xvE3Q40UVfm0V+p4QDTN6UQrVQlel
-	mFnC0ROJQqIkBD16zdvUgT7YG6e4I/gLHUDUSYo80gUe0=
-Received: from [172.24.149.146] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3Zxwh3sRp3DTSAg--.48128S2;
-	Thu, 26 Mar 2026 15:20:02 +0800 (CST)
-Message-ID: <c9b522c0-09ce-47c4-a377-1a46ae84e609@126.com>
-Date: Thu, 26 Mar 2026 15:20:01 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQ1Qh7EZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-66971ccfcabso923781a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 01:57:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774515446; cv=none;
+        d=google.com; s=arc-20240605;
+        b=LNbpZbEkvWP/iBf7+DSaDfGFET+wD69uc/8HAZDv1x+wuSioEXr/WAj80vQ+dGDIQw
+         u5sOYDW2s01RUss0g0UDHEgY8Ga2qHToT7thmndp7ZlsASxWXkhXPRJsP7LO4yoanNY0
+         pfIZ51f5wSFrk9jWVE4xmttmQDSPH8c6irk4mIpP89yfwwr7nDb2jqAD/TiJMIQ5iWLr
+         94QFXCxby6Io/DS+JTTNxg9OO0sYc4p+86/z8nQv2cfQ9rO/AEXOPaHfv/r7jhEP3wrx
+         e7BqpENqAn2zhGwryZj6fd2VrLOrlDdxcoJs+WF6uF7gkFc0na0KxNVoM5pFQ9UoK/1q
+         cSQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=WSjnQNvspGmmDZsOu+XUcYNWj5wosTqN8XrzdpzoIi0=;
+        fh=jHYYBibazhn8n8GN+B93o/PETcA6Zw8+YNobuOjFhbY=;
+        b=FghWl8SRmLw70K2WDuU1/mnwl4Ag9tbS/q2PuamxZgg7jFV94IF0yDVsEVjMRm6tME
+         nxtHKRfT8bH0SaqZO+YyV0rwyGsXviYHixB3VlfDG6gYttO8l+pA/SWHt/hX5TbJp+zC
+         wb4RMw7/9odNbJs/5U2V04Ju7GFEKg3vlePisX3y7Cu2uSXcUM+dFFfgLHQH5pU3kG11
+         kuSQ3//sgmPIBSEoLCVnP4s79svx78qJ2ZhdV35k4tTXi1/FJ9BU5Lv+4OKS8DbeGYK2
+         riyGiRX0Ai9WMjqacSCdRTiNue+3ZUU5KLEFEQYpv5CzWv04zKP1M52EsKbloV6QeP6d
+         xfPw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774515446; x=1775120246; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WSjnQNvspGmmDZsOu+XUcYNWj5wosTqN8XrzdpzoIi0=;
+        b=QQ1Qh7EZ/2vnZIPDRRNLIcBDg48OnpnZsStMd4CG1Wx0Sf/BgtixhblD6D84BKmal+
+         HUNZ517dAQ6IMEyjv84gyq6n8QLwZxNCiNx9NLBgac6Fbb2Z79cpVq4ISUHjzsim7XO5
+         5cPtTxPEzCeMCj8H7KLs/zRnMtNbmVUssL5730Bf1rQfj/IoSwRqQiWF0VS6BJwpAsMa
+         gGPoaGCumOTixuNHUFoAnhStC6b6eitvylc3sLXsdAvA2RGvQBUBuM6UXuSsipY2WTyJ
+         qoECLRB09z7LMUvQMKz26dXYXC0DG4alsLSZK3uZtGL1IR1O36WXX1hQ4gcSUenaEAbj
+         dxEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774515446; x=1775120246;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WSjnQNvspGmmDZsOu+XUcYNWj5wosTqN8XrzdpzoIi0=;
+        b=IvbkVOIVD6zokvmCk48cjtUn2DoidTMghpICwwGJzRd4l4mTbq5xZq+YhKQfXLPuSb
+         4IUKLvjzp5fdlL2nqmbf5Hvf7JNT6icXps2CGi5TNoVgpuEJ5XZNcQJSjBi6sgwOLKlN
+         GUpYh3MNnQ+YjW7EKDisnCbHrckH6fDPj74fdOEC3RfqCSnKx2xFzEQGCAs1+1mr5AVM
+         cF/tJcjJ7BR0KPnet3b5FX4hBQppnZ8SlcQxK+5eBbH4SrMBuJuivp9Y9yRVDHHOzWYx
+         8VpIolKcklhNUWwltOQVVEbO5Bh0hV54nwC5deVzJ8Dm6Kd03kZgSGLDOIjXPueWrizQ
+         CpzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVc4GUwNQhJXgaOuvO3VZVA6W8uw2e8ye5YhdmMhZYlmmj0D4u4zFDjt174pP+7RLKFl9KFqPRIRtCz3OIc00z4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzCGaB1UEA9y7lw+P/iG8ARFrZfXBlwcePE9EWlNM1Rg6Dw04Z
+	PXodnvnzdKaCYlecujhr5Vbm+W1Xpqjk56ldcFYJkZUkcPSpuFf7FWn7m4RL5zyDI1lLp9hDECW
+	qnq2W+mPP0Do1gVjYR7NjzYlY8LkY9nk=
+X-Gm-Gg: ATEYQzztyNhAQ1lPeupKweE9ANvrCI33Q3iAArrmdQ88U7uHb38155wZrWdSmDhHb/W
+	dqPAhg9YyzChlJL9DMz+5GpL2oQCvQnqItvsWUZ/La20xpGd5hSEeXMdP7nrj7W/kvtbcmun+Qv
+	Yr9ElY4fhK9/bXRfxJ1kal5p0DF2DL/+qmTCbJw3TA4m/kWYWcxCEdG5HpV3MOw8QrkamgYLkid
+	PZ+cYfWeWOS9VjclQbDwRWzizqyyy69ytouGYOpkMEIWG5rrXQE8kYZeARsen8JV+JacwKMO6Q9
+	ebIAowJe/ab0ZZ03j5WqWHo=
+X-Received: by 2002:a05:6402:27d4:b0:665:5e1b:de04 with SMTP id
+ 4fb4d7f45d1cf-66a82622630mr4696822a12.8.1774515445904; Thu, 26 Mar 2026
+ 01:57:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf symbol: Lazily compute idle and use the perf_env
-To: Ian Rogers <irogers@google.com>, acme@kernel.org, namhyung@kernel.org,
- tmricht@linux.ibm.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
- japo@linux.ibm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
- sumanthk@linux.ibm.com
-References: <20260302234343.564937-1-irogers@google.com>
- <20260325161836.1029457-1-irogers@google.com>
-Content-Language: en-US
-From: Honglei Wang <jameshongleiwang@126.com>
-In-Reply-To: <20260325161836.1029457-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3Zxwh3sRp3DTSAg--.48128S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWfJr4rtr4DAFyrtF1rKrWfXwb_yoWDZw13pF
-	WDCr47Zr48Jr45W34fJF4UuFy5uwnavw4rCr4UJ3yrAFsIkr1UKFZ7GF1Y9w4rXrn3G3Wr
-	ArsFkFyfWa18JrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UtKsbUUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/xtbBrwNL+GnE3iPPewAA37
+References: <20260318171706.2840512-1-puranjay@kernel.org>
+In-Reply-To: <20260318171706.2840512-1-puranjay@kernel.org>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Thu, 26 Mar 2026 08:57:14 +0000
+X-Gm-Features: AQROBzB7QhJ548_kCWv2yOw_2QglR5rh_u7vEtjQXGJvuYjl-MbQL5_xSVj3SE8
+Message-ID: <CANk7y0jnY-V7Hv912gwc45jSx2UqLw5PBcdOdoFfS175bNuDmg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] arm64: Add BRBE support for bpf_get_branch_snapshot()
+To: bpf@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Leo Yan <leo.yan@arm.com>, 
+	Rob Herring <robh@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
+Hi Catalin, Mark, and Will,
 
-On 3/26/26 12:18 AM, Ian Rogers wrote:
-> Move the idle boolean to a helper symbol__is_idle function. In the
-> function lazily compute whether a symbol is an idle function taking
-> into consideration the kernel version and architecture of the
-> machine. As symbols__insert no longer needs to know if a symbol is for
-> the kernel, remove the argument.
-> 
-> This change is inspired by mailing list discussion, particularly from
-> Thomas Richter <tmricht@linux.ibm.com> and Heiko Carstens
-> <hca@linux.ibm.com>:
-> https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ibm.com/
-> 
-> The change switches x86 matches to use strstarts which means
-> intel_idle_irq is matched as part of strstarts(name, "intel_idle"), a
-> change suggested by Honglei Wang <jameshongleiwang@126.com> in:
-> https://lore.kernel.org/lkml/20260323085255.98173-1-jameshongleiwang@126.com/
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
-> ---
->  tools/perf/builtin-top.c     |   6 +-
->  tools/perf/util/symbol-elf.c |   2 +-
->  tools/perf/util/symbol.c     | 105 ++++++++++++++++++++++-------------
->  tools/perf/util/symbol.h     |  15 +++--
->  4 files changed, 84 insertions(+), 44 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 37950efb28ac..bdc1c761cd61 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -751,6 +751,7 @@ static void perf_event__process_sample(const struct perf_tool *tool,
->  {
->  	struct perf_top *top = container_of(tool, struct perf_top, tool);
->  	struct addr_location al;
-> +	struct dso *dso = NULL;
->  
->  	if (!machine && perf_guest) {
->  		static struct intlist *seen;
-> @@ -830,7 +831,10 @@ static void perf_event__process_sample(const struct perf_tool *tool,
->  		}
->  	}
->  
-> -	if (al.sym == NULL || !al.sym->idle) {
-> +	if (al.map)
-> +		dso = map__dso(al.map);
-> +
-> +	if (al.sym == NULL || !symbol__is_idle(al.sym, dso, machine->env)) {
->  		struct hists *hists = evsel__hists(evsel);
->  		struct hist_entry_iter iter = {
->  			.evsel		= evsel,
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 3cd4e5a03cc5..9fabf5146d89 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1723,7 +1723,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->  
->  		arch__sym_update(f, &sym);
->  
-> -		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
-> +		__symbols__insert(dso__symbols(curr_dso), f);
->  		nr++;
->  	}
->  	dso__put(curr_dso);
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index ce9195717f44..1a357af93a0a 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -25,6 +25,8 @@
->  #include "demangle-ocaml.h"
->  #include "demangle-rust-v0.h"
->  #include "dso.h"
-> +#include "dwarf-regs.h"
-> +#include "env.h"
->  #include "util.h" // lsdir()
->  #include "event.h"
->  #include "machine.h"
-> @@ -50,7 +52,6 @@
->  
->  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
->  static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
-> -static bool symbol__is_idle(const char *name);
->  
->  int vmlinux_path__nr_entries;
->  char **vmlinux_path;
-> @@ -357,8 +358,7 @@ void symbols__delete(struct rb_root_cached *symbols)
->  	}
->  }
->  
-> -void __symbols__insert(struct rb_root_cached *symbols,
-> -		       struct symbol *sym, bool kernel)
-> +void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
->  {
->  	struct rb_node **p = &symbols->rb_root.rb_node;
->  	struct rb_node *parent = NULL;
-> @@ -366,17 +366,6 @@ void __symbols__insert(struct rb_root_cached *symbols,
->  	struct symbol *s;
->  	bool leftmost = true;
->  
-> -	if (kernel) {
-> -		const char *name = sym->name;
-> -		/*
-> -		 * ppc64 uses function descriptors and appends a '.' to the
-> -		 * start of every instruction address. Remove it.
-> -		 */
-> -		if (name[0] == '.')
-> -			name++;
-> -		sym->idle = symbol__is_idle(name);
-> -	}
-> -
->  	while (*p != NULL) {
->  		parent = *p;
->  		s = rb_entry(parent, struct symbol, rb_node);
-> @@ -393,7 +382,7 @@ void __symbols__insert(struct rb_root_cached *symbols,
->  
->  void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
->  {
-> -	__symbols__insert(symbols, sym, false);
-> +	__symbols__insert(symbols, sym);
->  }
->  
->  static struct symbol *symbols__find(struct rb_root_cached *symbols, u64 ip)
-> @@ -554,7 +543,7 @@ void dso__reset_find_symbol_cache(struct dso *dso)
->  
->  void dso__insert_symbol(struct dso *dso, struct symbol *sym)
->  {
-> -	__symbols__insert(dso__symbols(dso), sym, dso__kernel(dso));
-> +	__symbols__insert(dso__symbols(dso), sym);
->  
->  	/* update the symbol cache if necessary */
->  	if (dso__last_find_result_addr(dso) >= sym->start &&
-> @@ -716,47 +705,87 @@ int modules__parse(const char *filename, void *arg,
->  	return err;
->  }
->  
-> +static int sym_name_cmp(const void *a, const void *b)
-> +{
-> +	const char *name = a;
-> +	const char *const *sym = b;
-> +
-> +	return strcmp(name, *sym);
-> +}
-> +
->  /*
->   * These are symbols in the kernel image, so make sure that
->   * sym is from a kernel DSO.
->   */
-> -static bool symbol__is_idle(const char *name)
-> +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, const struct perf_env *env)
->  {
-> -	const char * const idle_symbols[] = {
-> +	static const char * const idle_symbols[] = {
->  		"acpi_idle_do_entry",
->  		"acpi_processor_ffh_cstate_enter",
->  		"arch_cpu_idle",
->  		"cpu_idle",
->  		"cpu_startup_entry",
-> -		"idle_cpu",
-> -		"intel_idle",
-> -		"intel_idle_ibrs",
->  		"default_idle",
-> -		"native_safe_halt",
->  		"enter_idle",
->  		"exit_idle",
-> -		"mwait_idle",
-> -		"mwait_idle_with_hints",
-> -		"mwait_idle_with_hints.constprop.0",
-> +		"idle_cpu",
-> +		"native_safe_halt",
->  		"poll_idle",
-> -		"ppc64_runlatch_off",
->  		"pseries_dedicated_idle_sleep",
-> -		"psw_idle",
-> -		"psw_idle_exit",
-> -		NULL
->  	};
-> -	int i;
-> -	static struct strlist *idle_symbols_list;
-> +	const char *name = sym->name;
-> +	uint16_t e_machine = env ? env->e_machine : EM_HOST;
->  
-> -	if (idle_symbols_list)
-> -		return strlist__has_entry(idle_symbols_list, name);
-> +	if (sym->idle)
-> +		return sym->idle == SYMBOL_IDLE__IDLE;
->  
-> -	idle_symbols_list = strlist__new(NULL, NULL);
-> +	if (!dso || dso__kernel(dso) == DSO_SPACE__USER) {
-> +		sym->idle = SYMBOL_IDLE__NOT_IDLE;
-> +		return false;
-> +	}
->  
-> -	for (i = 0; idle_symbols[i]; i++)
-> -		strlist__add(idle_symbols_list, idle_symbols[i]);
-> +	/*
-> +	 * ppc64 uses function descriptors and appends a '.' to the
-> +	 * start of every instruction address. Remove it.
-> +	 */
-> +	if (name[0] == '.')
-> +		name++;
->  
-> -	return strlist__has_entry(idle_symbols_list, name);
-> +	if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
-> +		    sizeof(idle_symbols[0]), sym_name_cmp)) {
-> +		sym->idle = SYMBOL_IDLE__IDLE;
-> +		return true;
-> +	}
-> +
-> +	if (e_machine == EM_386 || e_machine == EM_X86_64) {
-
-As said in anther thread, intel_idle_irq was still there on my test
-machine. I did a bit debug and found e_machine == 0 so it couldn't run
-into this branch. After dig more, it should be
-deliver_event()->perf_session__find_machine() return a struct machine
-whose env->e_machine is 0. I'm still busy today to do more, wish this
-clue can help.
+Would you mind taking a look at this patchset when you have a chance?
 
 Thanks,
-Honglei
+Puranjay
 
-> +		if (strstarts(name, "mwait_idle") ||
-> +		    strstarts(name, "intel_idle")) {
-> +			sym->idle = SYMBOL_IDLE__IDLE;
-> +			return true;
-> +		}
-> +	}
-> +
-> +	if (e_machine == EM_PPC64 && !strcmp(name, "ppc64_runlatch_off")) {
-> +		sym->idle = SYMBOL_IDLE__IDLE;
-> +		return true;
-> +	}
-> +
-> +	if (e_machine == EM_S390) {
-> +		int major = 0, minor = 0;
-> +		const char *release = env && env->os_release
-> +			? env->os_release : perf_version_string;
-> +
-> +		sscanf(release, "%d.%d", &major, &minor);
-> +
-> +		/* Before v6.10, s390 used psw_idle. */
-> +		if ((major < 6 || (major == 6 && minor < 10)) && strstarts(name, "psw_idle")) {
-> +			sym->idle = SYMBOL_IDLE__IDLE;
-> +			return true;
-> +		}
-> +	}
-> +
-> +	sym->idle = SYMBOL_IDLE__NOT_IDLE;
-> +	return false;
->  }
->  
->  static int map__process_kallsym_symbol(void *arg, const char *name,
-> @@ -785,7 +814,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
->  	 * We will pass the symbols to the filter later, in
->  	 * map__split_kallsyms, when we have split the maps per module
->  	 */
-> -	__symbols__insert(root, sym, !strchr(name, '['));
-> +	__symbols__insert(root, sym);
->  
->  	return 0;
->  }
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index c67814d6d6d6..f26f67bd7982 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -25,6 +25,7 @@ struct dso;
->  struct map;
->  struct maps;
->  struct option;
-> +struct perf_env;
->  struct build_id;
->  
->  /*
-> @@ -42,6 +43,12 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
->  			     GElf_Shdr *shp, const char *name, size_t *idx);
->  #endif
->  
-> +enum symbol_idle_kind {
-> +	SYMBOL_IDLE__UNKNOWN = 0,
-> +	SYMBOL_IDLE__NOT_IDLE = 1,
-> +	SYMBOL_IDLE__IDLE = 2,
-> +};
-> +
->  /**
->   * A symtab entry. When allocated this may be preceded by an annotation (see
->   * symbol__annotation) and/or a browser_index (see symbol__browser_index).
-> @@ -57,8 +64,8 @@ struct symbol {
->  	u8		type:4;
->  	/** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
->  	u8		binding:4;
-> -	/** Set true for kernel symbols of idle routines. */
-> -	u8		idle:1;
-> +	/** Cache for symbol__is_idle. */
-> +	enum symbol_idle_kind idle:2;
->  	/** Resolvable but tools ignore it (e.g. idle routines). */
->  	u8		ignore:1;
->  	/** Symbol for an inlined function. */
-> @@ -202,8 +209,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
->  
->  char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
->  
-> -void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
-> -		       bool kernel);
-> +void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
->  void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
->  void symbols__fixup_duplicate(struct rb_root_cached *symbols);
->  void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
-> @@ -286,5 +292,6 @@ enum {
->  };
->  
->  int symbol__validate_sym_arguments(void);
-> +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, const struct perf_env *env);
->  
->  #endif /* __PERF_SYMBOL */
-
+On Wed, Mar 18, 2026 at 5:17=E2=80=AFPM Puranjay Mohan <puranjay@kernel.org=
+> wrote:
+>
+> v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.=
+org/
+> Changes in v2:
+> - Rebased on arm64/for-next/core
+> - Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
+>   on non-BRBE CPUs in heterogeneous big.LITTLE systems.
+> - Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
+>   zeroing new_type and priv bitfields, added as a separate patch with
+>   Fixes tags (new patch 2).
+> - Use architecture-specific selftest threshold (#if defined(__aarch64__))
+>   instead of raising the global threshold, to preserve x86 regression
+>   detection.
+>
+> RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel=
+.org/
+> Changes from RFC:
+>  - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
+>    found by Leo Yan during testing (patch 1)
+>  - Pause BRBE before local_daif_save() to avoid branch pollution from
+>    trace_hardirqs_off()
+>  - Use local_daif_save() to prevent pNMI race from counter overflow
+>    (Mark Rutland)
+>  - Reuse perf_entry_from_brbe_regset() instead of duplicating register
+>    read logic, by making it accept NULL event (Mark Rutland)
+>  - Invalidate BRBE after reading to maintain record contiguity for
+>    other consumers (Mark Rutland)
+>  - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
+>  - Tested on ARM FVP with BRBE enabled
+>
+> This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
+> by implementing the perf_snapshot_branch_stack static call for ARM's
+> Branch Record Buffer Extension (BRBE).
+>
+> bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
+> branch records on-demand from any BPF tracing context. This was
+> previously only available on x86 (Intel LBR) since v5.16. With BRBE
+> available on ARMv9, this series closes the gap for ARM64.
+>
+> Usage model
+> -----------
+>
+> The helper works in conjunction with perf events. The userspace
+> component of the BPF application opens a perf event with
+> PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
+> to continuously record branches into BRBE (on ARM64) or LBR (on x86).
+> A BPF program attached to a tracepoint, kprobe, or fentry hook can
+> then call bpf_get_branch_snapshot() to snapshot the branch buffer at
+> any point. Without an active perf event, BRBE is not recording and
+> the buffer is empty.
+>
+> On-demand branch snapshots from BPF are useful for diagnosing which
+> specific code path was taken inside a function. Stack traces only show
+> function boundaries, but branch records reveal the exact sequence of
+> jumps, calls, and returns within a function -- making it possible to
+> identify which specific error check triggered a failure, or which
+> callback implementation was invoked through a function pointer.
+>
+> For example, retsnoop [2] is a BPF-based tool for non-intrusive
+> mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
+> perf events with PERF_SAMPLE_BRANCH_STACK and then uses
+> bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
+> branch records whenever a traced function returns an error.
+>
+> Consider debugging a bpf() syscall that returns -EINVAL when creating
+> a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
+> with BRBE to trace the bpf() syscall and array_map_alloc_check():
+>
+>   $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=3Dany \
+>              -F -k vmlinux --debug full-lbr
+>   $ simfail bpf-bad-map-max-entries-array  # in another terminal
+>
+> Output of retsnoop:
+>
+>   --- fentry BPF program (entries #63-#17) ---
+>
+>   [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (h=
+ashtab.c)
+>   [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (h=
+ashtab.c:750)
+>   [#57-#55] ... dump_bpf_prog internal branches ...
+>   [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (h=
+elpers.c:225)
+>   [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (h=
+elpers.c:225)
+>   [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
+>   [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
+>   [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (h=
+ashtab.c:717)
+>   [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (h=
+ashtab.c:750)
+>   [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
+>   [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (h=
+elpers.c:178)
+>   [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cnt=
+pct
+>   [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (t=
+imekeeping.c:493)
+>   [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (h=
+elpers.c:178)
+>   [#29-#25] ... dump_bpf_prog internal branches ...
+>   [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (t=
+rampoline.c:1190)
+>   [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (t=
+rampoline.c:1195)
+>
+>   --- array_map_alloc_check (entries #16-#12) ---
+>
+>   [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (a=
+rraymap.c:55)
+>   [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (a=
+rraymap.c:56)
+>         . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
+>   [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (a=
+rraymap.c:59)
+>         . bpf_map_attr_numa_node
+>   [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (a=
+rraymap.c:64)
+>   [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (a=
+rraymap.c:82)
+>
+>   --- fexit trampoline overhead (entries #11-#00) ---
+>
+>   [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (t=
+rampoline.c:1145)
+>   [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (t=
+rampoline.c:1146)
+>   [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (t=
+rampoline.c:1157)
+>   [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
+>   [#00] dump_bpf_prog+0xd340        -> arm_brbe_snapshot_branch_stack+0x0=
+ (arm_brbe.c:814)
+>
+>                    el0t_64_sync+0x168
+>                    el0t_64_sync_handler+0x98
+>                    el0_svc+0x28
+>                    do_el0_svc+0x4c
+>                    invoke_syscall.constprop.0+0x54
+>     373us [-EINVAL] __arm64_sys_bpf+0x8
+>                     __sys_bpf+0x87c
+>                     map_create+0x120
+>      95us [-EINVAL] array_map_alloc_check+0x8
+>
+> The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
+> 64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
+> trampoline that ran before the function, and entries #11-#00 (12)
+> are consumed by the fexit trampoline that runs after. Entry #00
+> shows the very last branch recorded before BRBE is paused: the call
+> into arm_brbe_snapshot_branch_stack().
+>
+> The 5 useful entries (#16-#12) show the exact path taken inside
+> array_map_alloc_check(). Record #14 shows a jump from line 56
+> (bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
+> shows an immediate jump from line 59 (attr->max_entries =3D=3D 0) to
+> line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
+> max_entries=3D=3D0 as the cause -- a diagnosis impossible with stack
+> traces alone.
+>
+> [1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
+> [2] https://github.com/anakryiko/retsnoop
+>
+> Puranjay Mohan (4):
+>   perf/arm_pmuv3: Fix NULL pointer dereference in armv8pmu_sched_task()
+>   perf: Fix uninitialized bitfields in
+>     perf_clear_branch_entry_bitfields()
+>   perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+>   selftests/bpf: Adjust wasted entries threshold for ARM64 BRBE
+>
+>  drivers/perf/arm_brbe.c                       | 79 ++++++++++++++++++-
+>  drivers/perf/arm_brbe.h                       |  9 +++
+>  drivers/perf/arm_pmuv3.c                      | 16 +++-
+>  include/linux/perf_event.h                    |  2 +
+>  .../bpf/prog_tests/get_branch_snapshot.c      | 13 ++-
+>  5 files changed, 110 insertions(+), 9 deletions(-)
+>
+>
+> base-commit: d118f32246fdabfb4f6a3fd2e511dc5e622bc553
+> --
+> 2.52.0
+>
