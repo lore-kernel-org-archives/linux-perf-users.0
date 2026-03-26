@@ -1,86 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAF03CEB98;
-	Thu, 26 Mar 2026 10:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5860435A387;
+	Thu, 26 Mar 2026 10:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774521197; cv=none; b=fNvnZripIXm218+Rr+8eFWFPc7LJqO0vBUojAXJDNhHMGO/QsaDxJhZSI/pnJGL/WrKbigGkWJNxydOB5G1NM8EPhvmrDVhKpdbLCdndjiJLf0kDfkp16ZXawm+LhIc+j/fjSuXNjmpwa1EJapfe2pczb+OJT5QFqt+SkNEXUII=
+	t=1774521621; cv=none; b=ehtMxz0zf6xA3GhNuwO3EDZgF/eoIIz9RK6NvbGL7MyG0ciabxlRQ5kE0BJvB3f37+oXovLsOxfh9ec4EYNu1TlyiqP/y9FuJWsdCooDZ53rp4/IDuuQuW+KOx0XWA4dICV8Xfbg6G2b7nhvUpvg+xrQU/wOmbaH0NNfJrRuMr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774521197; c=relaxed/simple;
-	bh=NyCZxhrmAGFbyrL6h2c2w6JZvW0gffjIb4o1sEXE/4g=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=fQ+7nCZpMlP6djvBTWbScmtbP6/z6MbSBWDyQHergtCfL9WkzDMKAhhJ0JnsD0DkozQ2iNeCrx5w+pLVFHLdsnaWBVNuSyFDBdxhX/egA7u2Pyy3d0jacxSGadiYDsK63ajpd0zKRQRkk7v58t4jyYO4nd+QuJGl8w4R65UJ9qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C94S+xEB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774521621; c=relaxed/simple;
+	bh=jCgA5Qoq0F1Yxd79EMxK5dXZ+XK/jWruv7LJw+fK3S0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qUbp0tajQAX8tZtyBXTAWIGi4uh8auDOYvmqjdDewjfZK8Yxwgk6t/G2XCgUPPbLUgjJYp0hMU+R1d4a4LWtXmG0zMf9topkdBxgEHmSHO1Tc+QAxmhoDg5daIT+VMDwghjJX4xZ7+y71vg47ZjT5L88nfuxr5S/Eg4+a/+P2Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=K3WnHrRd; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C94S+xEB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2844EC116C6;
-	Thu, 26 Mar 2026 10:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774521197;
-	bh=NyCZxhrmAGFbyrL6h2c2w6JZvW0gffjIb4o1sEXE/4g=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=C94S+xEBpyEIESagZYsh6vWRmPxqlxpYq8f+4SuY2THKpf/FdX9VBeOUuEJPAGuZ6
-	 MLZcIml1C3R7WhiYcNN+yxjDjmz9nAa5NOJPXrj0yqlwtf/A6x2iiR4ObLgs3u0V8m
-	 vnj3MS00gVVjTevcNP8QFZd15DSzbPUJctmh7fFGchJyI23Cer2OtY7vzM2kp2GXIL
-	 TNazfChQquXqpy+AoWcU0awhaRUYN1pGGxGLLTvDu422fZi1zC9E6A9u/57jyrd/vD
-	 U9lTVqHtQJwSxklSTcMvF5bwwZO14Esba62N4mrK9vjEJQYLyg53uuzzfu4hFjNXaN
-	 BG45J7/0eW1eQ==
-Date: Thu, 26 Mar 2026 05:33:15 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="K3WnHrRd"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF361175A;
+	Thu, 26 Mar 2026 03:40:12 -0700 (PDT)
+Received: from [10.57.76.165] (unknown [10.57.76.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC6E3FB90;
+	Thu, 26 Mar 2026 03:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1774521618; bh=jCgA5Qoq0F1Yxd79EMxK5dXZ+XK/jWruv7LJw+fK3S0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K3WnHrRdamLykfPTlVFokk/Uvzgsnhp0B4vw5wO2j37T78seG4zPV/MPjo/0tN2JX
+	 TuJsRxhTv+sulyeAiSQq/dHHvQLPu0UE895yM16X98AHocoqdK9OoMwVsTw2PXhTmt
+	 7B+kEnefTxcsOOoQEgl5pJYyNitQs7yHSW7eY4HM=
+Message-ID: <45fbd3d2-4c46-49ce-9d19-38b247ad7388@arm.com>
+Date: Thu, 26 Mar 2026 10:40:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: mark.rutland@arm.com, will@kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- devicetree@vger.kernel.org, krzk+dt@kernel.org, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/arm-cmn: Fix resource_size_t printk specifier in
+ arm_cmn_init_dtc()
+To: Nathan Chancellor <nathan@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org
-To: Geetha sowjanya <gakula@marvell.com>
-In-Reply-To: <20260326090645.22590-2-gakula@marvell.com>
-References: <20260326090645.22590-1-gakula@marvell.com>
- <20260326090645.22590-2-gakula@marvell.com>
-Message-Id: <177452119218.1921575.14174289122061565308.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: perf: marvell: Document CN20K DDR PMU
+References: <20260325-perf-arm-cmn-fix-resource_size_t-format-v1-1-e84d52ee3e81@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260325-perf-arm-cmn-fix-resource_size_t-format-v1-1-e84d52ee3e81@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Thu, 26 Mar 2026 14:36:44 +0530, Geetha sowjanya wrote:
-> Add a devicetree binding for the Marvell CN20K DDR performance
-> monitor block, including the marvell,cn20k-ddr-pmu compatible
-> string and the required MMIO reg region.
+On 2026-03-26 2:19 am, Nathan Chancellor wrote:
+> When building for 32-bit ARM, there is a warning when using the %llx
+> specifier to print a resource_size_t variable:
 > 
-> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+>    drivers/perf/arm-cmn.c: In function 'arm_cmn_init_dtc':
+>    drivers/perf/arm-cmn.c:2149:73: error: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Werror=format=]
+>     2149 |                                      "Failed to request DTC region 0x%llx\n", base);
+>          |                                                                      ~~~^     ~~~~
+>          |                                                                         |     |
+>          |                                                                         |     resource_size_t {aka unsigned int}
+>          |                                                                         long long unsigned int
+>          |                                                                      %x
+> 
+> Use the %pa specifier to handle the possible sizes of phys_addr_t
+> properly. This requires passing the variable by reference.
+
+Cheers Nathan! I had seen the kbuild robot reports last night, and was 
+going to get to this today, but I'm more than happy to be beaten to it!
+
+Reviewed-by: Robin murphy <robin.murphy@arm.com>
+
+> Fixes: 5394396ff548 ("perf/arm-cmn: Stop claiming entire iomem region")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 > ---
->  .../bindings/perf/marvell-cn20k-ddr.yaml      | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml
+>   drivers/perf/arm-cmn.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.example.dts:22.21-25.15: Warning (unit_address_vs_reg): /example-0/bus/ddrcpmu: node has a reg or ranges property, but no unit name
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260326090645.22590-2-gakula@marvell.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index 1ac91cda6780..5c727c2abaf0 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -2146,7 +2146,7 @@ static int arm_cmn_init_dtc(struct arm_cmn *cmn, struct arm_cmn_node *dn, int id
+>   	size = cmn->part == PART_CMN600 ? SZ_16K : SZ_64K;
+>   	if (!devm_request_mem_region(cmn->dev, base, size, dev_name(cmn->dev)))
+>   		return dev_err_probe(cmn->dev, -EBUSY,
+> -				     "Failed to request DTC region 0x%llx\n", base);
+> +				     "Failed to request DTC region 0x%pa\n", &base);
+>   
+>   	writel_relaxed(CMN_DT_DTC_CTL_DT_EN, dtc->base + CMN_DT_DTC_CTL);
+>   	writel_relaxed(CMN_DT_PMCR_PMU_EN | CMN_DT_PMCR_OVFL_INTR_EN, CMN_DT_PMCR(dtc));
+> 
+> ---
+> base-commit: 2f89b7f78c50ca973ca035ceb30426f78d9e0996
+> change-id: 20260325-perf-arm-cmn-fix-resource_size_t-format-b01795e36e60
+> 
+> Best regards,
+> --
+> Nathan Chancellor <nathan@kernel.org>
+> 
 
