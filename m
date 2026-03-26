@@ -1,84 +1,86 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5025B3603F8
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 09:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAF03CEB98;
+	Thu, 26 Mar 2026 10:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774516220; cv=none; b=om4U2hKJojCEkDRw3Zd+h2gd8/tP54x9sMWNcMN7hZn6Luo2r7LPtfg5FEGYu/k2sfuIDWecJ9tkdLdSb9KC+qmknu9CGkURm041DKuppKlW17H5WRZNRXxn8EzvRTAxPAICK2bc0AFwxYYP4VTUnB/WQ84vOf/2D6gnALVl+zI=
+	t=1774521197; cv=none; b=fNvnZripIXm218+Rr+8eFWFPc7LJqO0vBUojAXJDNhHMGO/QsaDxJhZSI/pnJGL/WrKbigGkWJNxydOB5G1NM8EPhvmrDVhKpdbLCdndjiJLf0kDfkp16ZXawm+LhIc+j/fjSuXNjmpwa1EJapfe2pczb+OJT5QFqt+SkNEXUII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774516220; c=relaxed/simple;
-	bh=6mq5dy0/xWriwcPnRpQ0tyrZlWdKbtV+wQYgNa4+bwc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RSL93pBXbmm065/XDo4LJkkyKLiR9w5Lywy1Rffyx89rFbk5umET7JH8yZNJW59Qeu0nfQCsFsH1YhXDhkZc0VCANDGXfdbCYSHVG+qC659GJQ0Ez6Cjj5vV3CypX9HUjshrUr5ikCbsVeh6b0jH/l/gTzIwLuhjCXsCjTktdLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowACXQW3m98Rp5tI6Cw--.4094S2;
-	Thu, 26 Mar 2026 17:09:58 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: will@kernel.org
-Cc: robin.murphy@arm.com,
-	mark.rutland@arm.com,
-	ilkka@os.amperecomputing.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] perf/arm-cmn: Fix incorrect error check for devm_ioremap()
-Date: Thu, 26 Mar 2026 17:08:56 +0800
-Message-Id: <20260326090856.644136-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1774521197; c=relaxed/simple;
+	bh=NyCZxhrmAGFbyrL6h2c2w6JZvW0gffjIb4o1sEXE/4g=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fQ+7nCZpMlP6djvBTWbScmtbP6/z6MbSBWDyQHergtCfL9WkzDMKAhhJ0JnsD0DkozQ2iNeCrx5w+pLVFHLdsnaWBVNuSyFDBdxhX/egA7u2Pyy3d0jacxSGadiYDsK63ajpd0zKRQRkk7v58t4jyYO4nd+QuJGl8w4R65UJ9qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C94S+xEB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C94S+xEB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2844EC116C6;
+	Thu, 26 Mar 2026 10:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774521197;
+	bh=NyCZxhrmAGFbyrL6h2c2w6JZvW0gffjIb4o1sEXE/4g=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=C94S+xEBpyEIESagZYsh6vWRmPxqlxpYq8f+4SuY2THKpf/FdX9VBeOUuEJPAGuZ6
+	 MLZcIml1C3R7WhiYcNN+yxjDjmz9nAa5NOJPXrj0yqlwtf/A6x2iiR4ObLgs3u0V8m
+	 vnj3MS00gVVjTevcNP8QFZd15DSzbPUJctmh7fFGchJyI23Cer2OtY7vzM2kp2GXIL
+	 TNazfChQquXqpy+AoWcU0awhaRUYN1pGGxGLLTvDu422fZi1zC9E6A9u/57jyrd/vD
+	 U9lTVqHtQJwSxklSTcMvF5bwwZO14Esba62N4mrK9vjEJQYLyg53uuzzfu4hFjNXaN
+	 BG45J7/0eW1eQ==
+Date: Thu, 26 Mar 2026 05:33:15 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACXQW3m98Rp5tI6Cw--.4094S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF4ruFWrXF17Xry5ZFyDtrb_yoWDXrX_Cr
-	4fuFnxCFykCF1qvr13Gw1rZ34Syr1v9FWxXFs8KasxZw4UJw17WrW7Z3s3Zr4xuw4rJr1q
-	gryUAFySvr4xGjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43
-	ZEXa7VUj9a93UUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: mark.rutland@arm.com, will@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ devicetree@vger.kernel.org, krzk+dt@kernel.org, 
+ linux-kernel@vger.kernel.org
+To: Geetha sowjanya <gakula@marvell.com>
+In-Reply-To: <20260326090645.22590-2-gakula@marvell.com>
+References: <20260326090645.22590-1-gakula@marvell.com>
+ <20260326090645.22590-2-gakula@marvell.com>
+Message-Id: <177452119218.1921575.14174289122061565308.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: perf: marvell: Document CN20K DDR PMU
 
-Check devm_ioremap() return value for NULL instead of ERR_PTR and return
--ENOMEM on failure. devm_ioremap() never returns ERR_PTR, using IS_ERR()
-skips the error path and may cause a NULL pointer dereference.
 
-Fixes: 5394396ff548 ("perf/arm-cmn: Stop claiming entire iomem region")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/perf/arm-cmn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, 26 Mar 2026 14:36:44 +0530, Geetha sowjanya wrote:
+> Add a devicetree binding for the Marvell CN20K DDR performance
+> monitor block, including the marvell,cn20k-ddr-pmu compatible
+> string and the required MMIO reg region.
+> 
+> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+> ---
+>  .../bindings/perf/marvell-cn20k-ddr.yaml      | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml
+> 
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 1ac91cda6780..9fe00d0f4deb 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -2573,8 +2573,8 @@ static int arm_cmn_probe(struct platform_device *pdev)
- 
- 	/* Map the whole region now, claim the DTCs once we've found them */
- 	cmn->base = devm_ioremap(cmn->dev, cfg->start, resource_size(cfg));
--	if (IS_ERR(cmn->base))
--		return PTR_ERR(cmn->base);
-+	if (!cmn->base)
-+		return -ENOMEM;
- 
- 	rootnode = arm_cmn_get_root(cmn, cfg);
- 	if (rootnode < 0)
--- 
-2.25.1
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.example.dts:22.21-25.15: Warning (unit_address_vs_reg): /example-0/bus/ddrcpmu: node has a reg or ranges property, but no unit name
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.kernel.org/project/devicetree/patch/20260326090645.22590-2-gakula@marvell.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
