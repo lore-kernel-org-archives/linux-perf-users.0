@@ -1,133 +1,211 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E85433D6E3;
-	Fri, 27 Mar 2026 18:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD3F3876BF;
+	Fri, 27 Mar 2026 20:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774634758; cv=none; b=l6qjz7g6CKWurffCATaf5uCAZOUvqfTtttbsI51hLPyWMcYiQQKhVDohzqx53Swiyk6Fh0MCxqKs6QSh+Q6ElgDHBcqXSU8xCfPatFPz93+N6MhzQGZV9YYQ6qzoWBfqFTMcgxUapGLHld7cHDC1TUUfSInG3X4Ju1hMSb4k7LU=
+	t=1774642068; cv=none; b=V1df+XlM0fOyIQEefUHPRq+2PK1s1+7bSybEIe44a5tR3WO//reMfSTX5T7dVD+iso5H4KHLfOxAbcmMupVnC6QN12PajxaKdkBJo5BqG/E3eLX9PYPnRYLibi2z+kn2t7MPDG445XpRjrdC+b5T7beYrr9glHkuMd8jbfFzAuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774634758; c=relaxed/simple;
-	bh=f9lpmujYRmAYBc6nKFLnMG+gp/XoKx0LeQnP2wObzg0=;
+	s=arc-20240116; t=1774642068; c=relaxed/simple;
+	bh=xHRwHRWX7sDO8EBJS6B5aXfJHu0i4XN8dvpcSTbfIRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eTSlhlTBwW/oF69Fk8F0BWjOnWP8Ik72o57wKA2W3o0+DNJOQcjHL2c69zAUHL/QsKPLp3MkjyKqg6JTeUKlg7HWqj7tWAVX5zD5VhF1P/C8G0YC4rDvooXPrxD2UPbI7U+ZMxkBp4GVpYQpNJJFEd5px/Q6lTi9rWqO85eLnps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fES7LvIz; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JIIR5Oo94tQnGsGQpLgI1NxYlHN06L0yCj4WMQvikEc5ycPT8jDoTv9hvN1XVquYxH20mqtt3L444dVoTqZFfXyw5918z/obAhd4LbbDMFy2PhamUYakJdc2BizutmZKD4Grb5ur276+szPlazJNbPfpwDg2mFiIi2fcKCktOV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHjUd3ZF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fES7LvIz"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F26EF35AA;
-	Fri, 27 Mar 2026 10:57:09 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 898813F99C;
-	Fri, 27 Mar 2026 10:57:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1774634235; bh=f9lpmujYRmAYBc6nKFLnMG+gp/XoKx0LeQnP2wObzg0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHjUd3ZF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF0DC19423;
+	Fri, 27 Mar 2026 20:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774642067;
+	bh=xHRwHRWX7sDO8EBJS6B5aXfJHu0i4XN8dvpcSTbfIRc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fES7LvIzyc/qPpQ+RFhpdoJRKZRdudA19bb5n2HOvVcjr6nF4ysLsDz2s08w/w/9h
-	 Or1Vt0ZLVjzxT0s7wcl5Os2W2ngdcFSqbeoC5M2upJREU34BuDHldDu8qAfYKh8J3S
-	 Go92DJ1SWR2Kw+RGfkbiR7skWFZqHnRG7Bz9ShFE=
-Date: Fri, 27 Mar 2026 17:57:13 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, Denis Yaroshevskiy <dyaroshev@meta.com>,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: Re: [PATCH v2] perf stat: Fix crash on arm64
-Message-ID: <20260327175713.GD356832@e132581.arm.com>
-References: <20260325-perf_stat-v2-1-d986ef5b9327@debian.org>
- <20260325205914.GA356832@e132581.arm.com>
- <CAP-5=fWkbhffgL6BJjpiwRV6rD3yd=KkOz7-ODH2FnORBf70bQ@mail.gmail.com>
- <20260326163926.GB356832@e132581.arm.com>
- <CAP-5=fUy8Y1cQUC=HzrSpAKcYyxDOjq=JZk1kdgKH9udWA+R=g@mail.gmail.com>
+	b=dHjUd3ZF79LzrbAsi+TKEK/Ox3bmzPuIrfMVXalW4YK/WE4eklng4Df+wSLXUgWxX
+	 lKaRwK1I0DNDfmr/scNd5pCVoZDofC3GXlVmUgZ8/OqIBX5MzrcGLP7BzUeqgecyy/
+	 fYrvqyq4LOy3tCyTMc2aXe5GP79hIW8ZJguFwPB4isv94O+qxI8j1TPWne/0DvX8iw
+	 J2gbjMSc8XXnUnLOffcSDKNThi9RN2DzhBovrz5EChYLDv8pHc16S+dq8eDka59cc+
+	 DrvbMPLlVDZ8ohXwe+J/hmsHr7V9SMRi38wiuqWCwQddWgeu/TJpnsT/lDGoguLhd0
+	 aGa3mpY8dB5iw==
+Date: Fri, 27 Mar 2026 17:07:43 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, 9erthalion6@gmail.com,
+	adrian.hunter@intel.com, alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com, andrew.jones@oss.qualcomm.com,
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
+	blakejones@google.com, ctshao@google.com,
+	dapeng1.mi@linux.intel.com, howardchu95@gmail.com,
+	james.clark@linaro.org, john.g.garry@oracle.com, jolsa@kernel.org,
+	leo.yan@linux.dev, libunwind-devel@nongnu.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	mingo@redhat.com, palmer@dabbelt.com, peterz@infradead.org,
+	pjw@kernel.org, shimin.guo@skydio.com, tglozar@redhat.com,
+	tmricht@linux.ibm.com, will@kernel.org, amadio@gentoo.org,
+	yuzhuo@google.com
+Subject: Re: [PATCH v1 0/2] perf build: Remove libunwind support
+Message-ID: <acbjjwc-WCk1CwtF@x1>
+References: <abxs-2rozL1tBEO1@google.com>
+ <20260321234220.848859-1-irogers@google.com>
+ <acW4Z2KJbyPZM1SG@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUy8Y1cQUC=HzrSpAKcYyxDOjq=JZk1kdgKH9udWA+R=g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <acW4Z2KJbyPZM1SG@google.com>
 
-On Thu, Mar 26, 2026 at 02:21:00PM -0700, Ian Rogers wrote:
+On Thu, Mar 26, 2026 at 03:51:19PM -0700, Namhyung Kim wrote:
+> On Sat, Mar 21, 2026 at 04:42:18PM -0700, Ian Rogers wrote:
+> > libunwind support exists for "--call-graph dwarf", however, libunwind
+> > support has been opt-in rather than opt-out since Linux v6.13 as libdw
+> > is preferred - commit 13e17c9ff49119aa ("perf build: Make libunwind
+> > opt-in rather than opt-out"). A problem with the libdw support was
+> > that it was slow, an issue fixed in Linux v7.0 in commit 6b2658b3f36a
+> > ("perf unwind-libdw: Don't discard loaded ELF/DWARF after every
+> > unwind"). As such libunwind support is now unnecessary.
+> > 
+> > The patch series:
+> > https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
+> > looked to make the libunwind support in perf similar to the libdw
+> > support, allow cross-architecture unwinding, etc. This was motivated
+> > by the perf regs conventions being altered by the addition of x86 APX
+> > support:
+> > https://lore.kernel.org/lkml/20260209072047.2180332-1-dapeng1.mi@linux.intel.com/
+> > It is necessary to translate the library's notion of registers to the
+> > perf register convention so that the stack unwinding state can be
+> > initialized. On this series it was stated that removing libunwind
+> > support from perf should be an option, rather than updating support:
+> > https://lore.kernel.org/lkml/abxs-2rozL1tBEO1@google.com/
+> > This was also what motivated making libunwind opt-in rather than
+> > opt-out.
 
-[...]
+> > Given that 7 minor releases have happened with libunwind "deprecated"
+> > by making it opt-in, let's remove the libunwind support. There doesn't
+> > appear to be any disagreement to this on the mailing list.
+ 
+> I'm not sure if we want to remove it now.  I think we need more time to
+> verify libdw unwinding is stable and fast enough.  Also maybe we can
+> add build- or run-time warning when people try to use libunwind.
 
-> > On one of my board, I can see the log:
-> >
-> >   Events in 'frontend_bound' fully contained within 'retiring'
-> >   Events in 'bad_speculation' fully contained within 'retiring'
-> >   Events in 'backend_bound' fully contained within 'retiring'
-> 
-> I looked at nvidia/t410/metrics.json but I'm not clear on where the
-> issue is coming from.
+We have:
 
-Digging a bit, all these metrics have syntax errors because #slots is
-zero when returned from tool_pmu__cpu_slots_per_cycle().
-See the log: https://termbin.com/e9ue
+acme@x1:~/git/perf-tools$ perf -vv | grep LIBU
+             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
+acme@x1:~/git/perf-tools$
 
-After that, executes parse_groups() treats all these problematic metrics
-as being contained by "retiring".
+acme@x1:~/git/perf-tools$ perf check feature libunwind && echo perf built with libunwind
+             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
+acme@x1:~/git/perf-tools$
 
-I have sent a patch to make __add_metrics() respect the returned syntax
-error, so the program can exit early.
+Building with both, as Ian mentioned ends up with:
 
+  LD      /tmp/build/perf-tools/util/perf-util-in.o
+ld: /tmp/build/perf-tools/util/unwind-libunwind.o: in function `unwind__get_entries':
+unwind-libunwind.c:(.text+0x2a0): multiple definition of `unwind__get_entries'; /tmp/build/perf-tools/util/unwind-libdw.o:unwind-libdw.c:(.text+0x940): first defined here
+make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:164: /tmp/build/perf-tools/util/perf-util-in.o] Error 123
+make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:158: util] Error 2
+make[2]: *** [Makefile.perf:797: /tmp/build/perf-tools/perf-util-in.o] Error 2
+make[1]: *** [Makefile.perf:289: sub-make] Error 2
+make: *** [Makefile:119: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+⬢ [acme@toolbx perf-tools]$
 
-> > In parse_groups(), when find a event is fully contained by a previous
-> > event, it skips to call parse_ids(), as a result, m->pctx->ids is not
-> > initialized.  Then, setup_metric_events() returns an empty metric
-> > events, pick_display_evsel() consumes the returned metric_events and
-> > feeds to metricgroup__lookup() with passing "evsel = NULL".
-> 
-> Fully contained groups exist on x86, why isn't this problem breaking
-> whenever this happens? Stepping through "contained" examples, I see
-> that the ids aren't initialized. I think something else must be
-> happening.
+So what Namhyung is suggesting is to disable libdw when libunwind is
+asked for?
 
-If you change tool_pmu__cpu_slots_per_cycle() to always return zero,
-this might can reproduce the issue.
+I.e.
 
-[...]
+alias m='rm -rf ~/libexec/perf-core/ ; make LIBUNWIND=1 NO_LIBDW=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test "import python" && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
 
-> > @@ -1463,19 +1463,18 @@ static int parse_groups(struct evlist *perf_evlist,
-> >                                 if (expr__subset_of_ids(n->pctx, m->pctx)) {
-> >                                         pr_debug("Events in '%s' fully contained within '%s'\n",
-> >                                                  m->metric_name, n->metric_name);
-> > -                                       metric_evlist = n->evlist;
-> > +                                       contained = n->evlist;
-> >                                         break;
-> >                                 }
-> > -
-> >                         }
-> >                 }
-> >                 if (!metric_evlist) {
-> > +                       metric_evlist = contained ? contained : m->evlist;
-> > +
-> >                         ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
-> > -                                       m->group_events, tool_events, &m->evlist);
-> > +                                       m->group_events, tool_events, &metric_evlist);
-> 
-> Won't this match the behavior of metric_no_merge/--metric-no-merge,
-> since for every metric the events for that metric are being appended
-> to the evlist?
+Which builds and ends up linking with both:
 
-TBH, I still cannot understand well parse_groups().
+⬢ [acme@toolbx perf-tools]$ ldd ~/bin/perf | egrep unwind\|dw
+	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007fbf430b6000)
+	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007fbf4309b000)
+	libdw.so.1 => /lib64/libdw.so.1 (0x00007fbf38570000)
+⬢ [acme@toolbx perf-tools]$
 
-The change above passes &metric_evlist to parse_ids(), as this will only
-change the value of metric_evlist itself but not update m->evlist or
-n->evlist, this is not right for metric_no_merge case ?
+I.e. that NO_LIBDW isn't really disabling linking with it, just some
+features based on it, likely.
 
-Here I am not sure how to use parse_ids() to parse "m->pctx" but avoid
-to overwrite "n->evlist" for the fully contained case.
+Hum, we also have NO_LIBDW_DWARF_UNWIND, which probably is what we want
+here... nope:
 
-Thanks,
-Leo
+⬢ [acme@toolbx perf-tools]$ alias m='rm -rf ~/libexec/perf-core/ ; make LIBUNWIND=1 NO_LIBDW_DWARF_UNWIND=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test "import python" && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
+⬢ [acme@toolbx perf-tools]$ m
+rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-314.pyc': Permission denied
+make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+  BUILD:   Doing 'make -j12' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                               libpython: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+...                              libopenssl: [ on  ]
+...                                    rust: [ on  ]
+
+  INSTALL libsubcmd_headers
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL libsymbol_headers
+  INSTALL libbpf_headers
+  LD      /tmp/build/perf-tools/util/perf-util-in.o
+ld: /tmp/build/perf-tools/util/unwind-libunwind.o: in function `unwind__get_entries':
+unwind-libunwind.c:(.text+0x2a0): multiple definition of `unwind__get_entries'; /tmp/build/perf-tools/util/unwind-libdw.o:unwind-libdw.c:(.text+0x940): first defined here
+make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:164: /tmp/build/perf-tools/util/perf-util-in.o] Error 123
+make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:158: util] Error 2
+make[2]: *** [Makefile.perf:797: /tmp/build/perf-tools/perf-util-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile.perf:289: sub-make] Error 2
+make: *** [Makefile:119: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+⬢ [acme@toolbx perf-tools]$
+
+I expected NO_LIBDW_DWARF_UNWIND=1 would resolve this case, and maybe it
+should?
+
+Or maybe it did it in the past as by now it is just a comment:
+
+⬢ [acme@toolbx perf-tools]$ git grep NO_LIBDW_DWARF_UNWIND
+tools/perf/Makefile.perf:# Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
+⬢ [acme@toolbx perf-tools]$
+
+Its from:
+
+# Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
+# for dwarf backtrace post unwind.
+
+As we need libdw for 'perf probe', etc, so being able to disable it just
+for DWARF backtrace is what we need here to make them mutually
+exclusive, i.e. the default is for building with libdw for backtraces,
+but if the user asks for LIBUNWIND=1, then a warning that libdw won't be
+used for DWARF backtraces and select NO_LIBDW_DWARF_UNWIND?
+
+We could then have a regression test that builds perf with one, does
+some backtraces, then with the other, then compare? This would be
+followup work, if somebody has the cycles, but making them mutually
+exclusive should be doable with not that much work?
+
+This is an area that is tricky and since we _already_ have two
+implementations, the good thing for regression testing would be the
+compare their results until libunwind becomes completely rotten and
+unusable?
+
+- Arnaldo
