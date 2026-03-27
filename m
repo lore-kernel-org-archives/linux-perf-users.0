@@ -1,230 +1,208 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CCD2FD1B6
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Mar 2026 04:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774587089; cv=pass; b=c7I3gfGw7K0rkJp0u3CMha/0lu0LjedDlyb+jICFiRQT+FAUNQbd+WLITzIU31lbM4raUGbwThzUo+Q1crxLQQxniwa44v+Xm/Suzl3V9xZ8/g3p+UxGlTQNrCFlalEMvoYPA04tCQ42FykPbzPklpCJdS1KPSetNhIJIsZxKlE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774587089; c=relaxed/simple;
-	bh=54mvcUBb49XV0Cjm3g/nnjYBLh7pIbUqLB8uwLCtM1I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yq1Zip54M4RIk5es1OfKR++Dxi5vCrFY7o+krwyf+33/QsW4W+r0kGy+1saFj1QC6wLhgetpukdfHzlip31xmLFe2XRmWSyMk+YLJBB3YJiD3oYHErSnDJGWiVsRSo48+snSdEQBQiHCaIwAHWsztS/h5GvBJHYxQNg/NcoYuSQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aANlqKQa; arc=pass smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90AD74BE1;
+	Fri, 27 Mar 2026 05:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774589610; cv=none; b=gM9NyNlQiyyUVDkB8EBTsldDjnuJbxnO1QMDqOqV38kuT5u9iLuxh4vUXeR0vzokwnCPyfJfjoXTWu/YTJpE3h+x3YO/DFhh7IHWhl8btg5oOvT9hfgKlZM6S92PBbPPasomR5iiwiagLEJPM1LW/TVvm+ONm9EX+zJ0BQlAHBE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774589610; c=relaxed/simple;
+	bh=9BbP1yzdoQCpZfKgmlwryzXQX1iDypKgSQT2ATe3lrc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jTzcfJSs1lzEuGrFM3XYw7MipS7xXkGOWM4TWCg2kz5hftNx7vyZTZtkblKzAn5rLfpqnv4zpoqV0/5REtN0qu6GckLV+BhABtuZXQrtloYF/sGEAFo8/bzZ/y5m42fGy9Atldl8W3h2j4bYMHBkl4373McyZ9utWOLZn14a088=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ACarafmK; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aANlqKQa"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b0c12be0ecso59425ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Mar 2026 21:51:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774587087; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DlUVuuwKKRh7X4SF8GJxRkR6VNNL6ssZwb6f5MPXPBOjqJgdJHGG4iquvO17IjjeKU
-         30FiE95d1z/wZR67BPDx+ymGj9nITv+ElRswfpxlMVuS/1qeGnr7cHEzC+dBUbb6/J9F
-         7tp6IYr6HKEyusbcttlGfpX3es2oeDNj71cpVuhSB+rSYHvfVMNFmjsdDfiwA0wX8M1U
-         jgzgvHrx6eal2relQIFKbe+RQD6Ikg4kJqZV0hgjqczECfvS3b3DqbnTpgNqKI3IstLe
-         c1S1nGY9bUqw0zcOe/zQ0hx+ZtydzhUVfnfMsp94RLupyGCvqrxbZaXORAaNCjeKuggN
-         83kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Qq6Q7MtlgFflrtMc8Gc16/NXq1SYHiWM3pdiFTYkC/8=;
-        fh=/IWSL+5m7/eTmTWNgxmt14NnmFgCBctHwXWajqGuoi4=;
-        b=FwMC5RwWFnDAEiW7XvtrL6XLWMplRQFS6uKwx1+l8fsDameFutm1dFoAuuoNulhV/N
-         2Q7FG0Rg5Hkc6v7EfHCP5++Gv95mmgoEp4UGFXCMEHFKkQqQTzHV+hxUXNTALF+mxirM
-         rogGB2JU/1qsrYWGIPHNAZOUZqAvBDxpm0GX7McAezLKA281Nv8YnSpbjPU9EwUJ4D7w
-         uvUQQICL5Yzce2YKBV1oN8yXVF92Lvh8riaPXNdCm5rt26bWY/yQ0TGCFVYo5w9jaTeZ
-         7sCdPsaQolKBKPSr7n4X4iAbGJeN/TIH2PCj2bs/1x9yv+uOr56sBC5wxwr50iUQZFHJ
-         LSig==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774587087; x=1775191887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qq6Q7MtlgFflrtMc8Gc16/NXq1SYHiWM3pdiFTYkC/8=;
-        b=aANlqKQalYtD48UYfVSZ6yzsP5fCMlRlJ+ZSqpRyt0xcaibVE8CYBFevaSkf+1FVhz
-         C3KF0ou/isDldxrifThqu3e18nqhgUxfX3GJ8zfIRQdCEZGyW/yhIJBBoZ/H/0Lb4nC0
-         4Ywicz1vAo9un8lgsDTqp426K5ptGK/WYPU0aJ1v5ytkyejIAXysegD01lpoaNAOyOum
-         8HSueenBdM7ILPy5/6SBfNij1zRw+s6H2OFqxcSuNhhYfxiazt/ag6AoZYcocHbhORI2
-         rF/fI/erdL984tOFFedxRiZTACfxEsVZOjADeB/0BBLoNGfWylHC7wSojBeHjAXT//vO
-         wo9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774587087; x=1775191887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Qq6Q7MtlgFflrtMc8Gc16/NXq1SYHiWM3pdiFTYkC/8=;
-        b=FzQpbMQjWFWQHm+Cft2lqi0rC2aY6cBmIGgVBIeOG5UIb9gNptUb3i+0TRC/gtIKAN
-         umNzJgU4Mz/v1AwhGjXDeKJu4gQVpcEb/DU20eAIz6Vhs2YXC1NOQALTr82QdqJwo5vF
-         9YxdMRQIaPky0SYhKi0Zuk0Ki+kY5y2N6nR5dD+HwK4e8SE4OSSW39D+/mS4ogMMoB+Z
-         UprG7vavtTfO50mybpPk6u55KvDTVptYfxC/gXS97niS94dLAZlUeaO2TO56PDEwgBmd
-         0Dfwaae4RnHMpvkgCUIl1l9vxhWBZd/dHW/FLPA5J44DNXP0B25GCgD5fep9UrFlob5E
-         pcQQ==
-X-Gm-Message-State: AOJu0YzMeg+hE9rSK4WkPNi2yAP+VLeIpYXfoWavyR1cXS/WVVfivpnr
-	qKZUg9PhyoMcWs0qjKsfHUve5VjfPjngBLeL8eKUUqGauiM8S3qLhL4jxzR+v0kd7wo9pGV4j4W
-	fYTzzAULdgJuAhTB3LoiGAyHwzGeF1AuPlwGicCyL
-X-Gm-Gg: ATEYQzw7JY/azio0SLv+HYtAS+aofqSLwg5uA9Z0jTUJvPZigrgvIVjct0eCGLHTcyn
-	INte+mMdgsVEJQH1SBXAqwX8OdTIthmK9c/0LRbou5Sc/pwIS6gR8bswUeW21LNN7ovsACs8W/C
-	+BV+VL6ADB/BKv8bhofgRo02tyxk8AaadPWmJforUGIEAn4/BH00YOwiNyODwKkmoL6OoRdnfxE
-	A7bU83YD9pj7bqWM7Vo2xF8p6w19786iT9LapbYbtfrHJ07TOIaiNahXfqkrwg8HKK0A3rgFn7I
-	gkVMdfyk
-X-Received: by 2002:a17:903:4b4c:b0:2b0:5ba3:2416 with SMTP id
- d9443c01a7336-2b0cd36e585mr1287265ad.7.1774587086695; Thu, 26 Mar 2026
- 21:51:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ACarafmK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774589609; x=1806125609;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9BbP1yzdoQCpZfKgmlwryzXQX1iDypKgSQT2ATe3lrc=;
+  b=ACarafmK5GzMlyOjJd9XAnJMPtXYxcYOJz5yfE2bzCpGFyckmmSq0PQH
+   6tXZKiqsCVUK4bWgnKGfkaoKTKNvbeME/jk0EC896e00rhZh/TlB2dLtE
+   hg+4KGMzkvGOqRNCKXbVdQsNrCs1ivOdVPGThLNs7If6Z0Y8POyOktH6t
+   /WE1t0YSyrwlrNUal+/xJW3itlU4nWFCFGrsGMvL2DLmEqbnC8aaJaXST
+   ZBNwo66QlXp7u+M5A47hwk9c1cjkppz2t6mAxLlvZVmI1fuCP1apSzM98
+   tD5PpQmMWOG7NOWuoT/CtgrTNLDr8/v8fjsNRFmpDV5/GiIstXkzgTDJo
+   A==;
+X-CSE-ConnectionGUID: eVZ0Kjg5Q8OfFprutlCJIw==
+X-CSE-MsgGUID: HxM5sZNLSUOutqW6NN5mcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="93240870"
+X-IronPort-AV: E=Sophos;i="6.23,143,1770624000"; 
+   d="scan'208";a="93240870"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 22:33:28 -0700
+X-CSE-ConnectionGUID: uSpiwYX4QwOP+Aj8ZIb7nA==
+X-CSE-MsgGUID: nX8+a2voTfyQPQ6cJl68oQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,143,1770624000"; 
+   d="scan'208";a="224267106"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa006.jf.intel.com with ESMTP; 26 Mar 2026 22:33:24 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2] perf/x86/msr: Make SMI and PPERF on by default
+Date: Fri, 27 Mar 2026 13:28:44 +0800
+Message-Id: <20260327052844.818218-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fUFGevUhRROdybtDCXZgWgxYzfLrq_0f8r5_Yv_VfxP+A@mail.gmail.com>
- <20260327015927.223999-1-thomas.falcon@intel.com>
-In-Reply-To: <20260327015927.223999-1-thomas.falcon@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 26 Mar 2026 21:51:15 -0700
-X-Gm-Features: AQROBzDIH1t9Uky97r23IFE8ZD6pQvorV1X6-uqG54wgtfz7R9utBN_JcKkEdUk
-Message-ID: <CAP-5=fXCUB3Hqwi1M7gpEZLrGw_H2DgH5Us=ez6PE2Nmb_3efA@mail.gmail.com>
-Subject: Re: [PATCH v3] tools/perf: Fix ratio_to_prev event parsing test
-To: Thomas Falcon <thomas.falcon@intel.com>
-Cc: linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 26, 2026 at 7:01=E2=80=AFPM Thomas Falcon <thomas.falcon@intel.=
-com> wrote:
->
-> test__ratio_to_prev() assumed the first event in a group is the leader,
-> which is not the case when the event is expanded into two event groups
-> on hybrid PMU's with auto counter reload support. Instead, iterate over t=
-he
-> event group generated for each core PMU. Also update "wrong leader" test =
-to
-> check that the subordinate event has the correct leader instead of checki=
-ng
-> that it is not the group leader. Finally, do not exit immediately if a PM=
-U
-> without auto counter reload support is found.
->
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> Fixes: 56be0fe5f62c ("perf record: Add auto counter reload parse and regr=
-ession tests")
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The MSRs, SMI_COUNT and PPERF, are model-specific MSRs. A very long
+CPU ID list is maintained to indicate the supported platforms. With more
+and more platforms being introduced, new CPU IDs have to be kept adding.
+Also, the old kernel has to be updated to apply the new CPU ID.
 
-Thanks!
-Ian
+The MSRs have been introduced for a long time. There is no plan to
+change them in the near future. Furthermore, the current code utilizes
+rdmsr_safe() to check the availability of MSRs before using it.
 
-> ---
-> v3: Fixed early loop termination if PMU without auto counter reload suppo=
-rt is
->     encountered first, suggested by Ian Rogers
-> https://lore.kernel.org/all/CAP-5=3DfUFGevUhRROdybtDCXZgWgxYzfLrq_0f8r5_Y=
-v_VfxP+A@mail.gmail.com/
->
-> v2: made changes suggested by Dapeng Mi
-> https://lore.kernel.org/all/997b6291-7429-4eaa-8467-1fd88e100616@linux.in=
-tel.com/
-> ---
->
->  tools/perf/tests/parse-events.c | 49 +++++++++++++++++++--------------
->  1 file changed, 28 insertions(+), 21 deletions(-)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index 1d3cc224f..05c3e899b 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -1796,31 +1796,38 @@ static bool test__acr_valid(void)
->
->  static int test__ratio_to_prev(struct evlist *evlist)
->  {
-> -       struct evsel *evsel;
-> +       struct evsel *evsel, *leader;
->
->         TEST_ASSERT_VAL("wrong number of entries", 2 * perf_pmus__num_cor=
-e_pmus() =3D=3D evlist->core.nr_entries);
->
-> -        evlist__for_each_entry(evlist, evsel) {
-> -               if (!perf_pmu__has_format(evsel->pmu, "acr_mask"))
-> -                       return TEST_OK;
-> -
-> -               if (evsel =3D=3D evlist__first(evlist)) {
-> -                       TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->=
-core.attr.config2);
-> -                       TEST_ASSERT_VAL("wrong leader", evsel__is_group_l=
-eader(evsel));
-> -                       TEST_ASSERT_VAL("wrong core.nr_members", evsel->c=
-ore.nr_members =3D=3D 2);
-> -                       TEST_ASSERT_VAL("wrong group_idx", evsel__group_i=
-dx(evsel) =3D=3D 0);
-> -                       TEST_ASSERT_EVSEL("unexpected event",
-> -                                       evsel__match(evsel, HARDWARE, HW_=
-CPU_CYCLES),
-> -                                       evsel);
-> -               } else {
-> -                       TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->=
-core.attr.config2);
-> -                       TEST_ASSERT_VAL("wrong leader", !evsel__is_group_=
-leader(evsel));
-> -                       TEST_ASSERT_VAL("wrong core.nr_members", evsel->c=
-ore.nr_members =3D=3D 0);
-> -                       TEST_ASSERT_VAL("wrong group_idx", evsel__group_i=
-dx(evsel) =3D=3D 1);
-> -                       TEST_ASSERT_EVSEL("unexpected event",
-> -                                       evsel__match(evsel, HARDWARE, HW_=
-INSTRUCTIONS),
-> -                                       evsel);
-> +       evlist__for_each_entry(evlist, evsel) {
-> +               if (evsel !=3D evsel__leader(evsel) ||
-> +                   !perf_pmu__has_format(evsel->pmu, "acr_mask")) {
-> +                       continue;
->                 }
-> +               leader =3D evsel;
-> +               /* cycles */
-> +               TEST_ASSERT_VAL("wrong config2", 0 =3D=3D leader->core.at=
-tr.config2);
-> +               TEST_ASSERT_VAL("wrong core.nr_members", leader->core.nr_=
-members =3D=3D 2);
-> +               TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(leade=
-r) =3D=3D 0);
-> +               TEST_ASSERT_EVSEL("unexpected event",
-> +                                 evsel__match(leader, HARDWARE, HW_CPU_C=
-YCLES),
-> +                                 leader);
-> +               /*
-> +                * The period value gets configured within evlist__config=
-,
-> +                * while this test executes only parse events method.
-> +                */
-> +               TEST_ASSERT_VAL("wrong period", 0 =3D=3D leader->core.att=
-r.sample_period);
-> +
-> +                /* instructions/period=3D200000,ratio-to-prev=3D2.0/ */
-> +               evsel =3D evsel__next(evsel);
-> +               TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->core.att=
-r.config2);
-> +               TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, =
-leader));
-> +               TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_m=
-embers =3D=3D 0);
-> +               TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel=
-) =3D=3D 1);
-> +               TEST_ASSERT_EVSEL("unexpected event",
-> +                                 evsel__match(evsel, HARDWARE, HW_INSTRU=
-CTIONS),
-> +                                 evsel);
->                 /*
->                  * The period value gets configured within evlist__config=
-,
->                  * while this test executes only parse events method.
-> --
-> 2.51.0
->
+Make them on by default. It should be good enough to only rely on the
+rdmsr_safe() to check their availability for both existing and future
+platforms.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+
+V2: Removed stale #include <asm/cpu_device_id.h>.
+
+V1: https://lore.kernel.org/lkml/20240910192626.768146-1-kan.liang@linux.intel.com/
+
+ arch/x86/events/msr.c | 82 ++-----------------------------------------
+ 1 file changed, 3 insertions(+), 79 deletions(-)
+
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 8052596b8503..76d6418c5055 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -2,7 +2,6 @@
+ #include <linux/perf_event.h>
+ #include <linux/sysfs.h>
+ #include <linux/nospec.h>
+-#include <asm/cpu_device_id.h>
+ #include <asm/msr.h>
+ 
+ #include "probe.h"
+@@ -41,86 +40,11 @@ static bool test_therm_status(int idx, void *data)
+ 
+ static bool test_intel(int idx, void *data)
+ {
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL ||
+-	    boot_cpu_data.x86 != 6)
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+ 		return false;
+ 
+-	switch (boot_cpu_data.x86_vfm) {
+-	case INTEL_NEHALEM:
+-	case INTEL_NEHALEM_G:
+-	case INTEL_NEHALEM_EP:
+-	case INTEL_NEHALEM_EX:
+-
+-	case INTEL_WESTMERE:
+-	case INTEL_WESTMERE_EP:
+-	case INTEL_WESTMERE_EX:
+-
+-	case INTEL_SANDYBRIDGE:
+-	case INTEL_SANDYBRIDGE_X:
+-
+-	case INTEL_IVYBRIDGE:
+-	case INTEL_IVYBRIDGE_X:
+-
+-	case INTEL_HASWELL:
+-	case INTEL_HASWELL_X:
+-	case INTEL_HASWELL_L:
+-	case INTEL_HASWELL_G:
+-
+-	case INTEL_BROADWELL:
+-	case INTEL_BROADWELL_D:
+-	case INTEL_BROADWELL_G:
+-	case INTEL_BROADWELL_X:
+-	case INTEL_SAPPHIRERAPIDS_X:
+-	case INTEL_EMERALDRAPIDS_X:
+-	case INTEL_GRANITERAPIDS_X:
+-	case INTEL_GRANITERAPIDS_D:
+-
+-	case INTEL_ATOM_SILVERMONT:
+-	case INTEL_ATOM_SILVERMONT_D:
+-	case INTEL_ATOM_AIRMONT:
+-	case INTEL_ATOM_AIRMONT_NP:
+-
+-	case INTEL_ATOM_GOLDMONT:
+-	case INTEL_ATOM_GOLDMONT_D:
+-	case INTEL_ATOM_GOLDMONT_PLUS:
+-	case INTEL_ATOM_TREMONT_D:
+-	case INTEL_ATOM_TREMONT:
+-	case INTEL_ATOM_TREMONT_L:
+-
+-	case INTEL_XEON_PHI_KNL:
+-	case INTEL_XEON_PHI_KNM:
+-		if (idx == PERF_MSR_SMI)
+-			return true;
+-		break;
+-
+-	case INTEL_SKYLAKE_L:
+-	case INTEL_SKYLAKE:
+-	case INTEL_SKYLAKE_X:
+-	case INTEL_KABYLAKE_L:
+-	case INTEL_KABYLAKE:
+-	case INTEL_COMETLAKE_L:
+-	case INTEL_COMETLAKE:
+-	case INTEL_ICELAKE_L:
+-	case INTEL_ICELAKE:
+-	case INTEL_ICELAKE_X:
+-	case INTEL_ICELAKE_D:
+-	case INTEL_TIGERLAKE_L:
+-	case INTEL_TIGERLAKE:
+-	case INTEL_ROCKETLAKE:
+-	case INTEL_ALDERLAKE:
+-	case INTEL_ALDERLAKE_L:
+-	case INTEL_ATOM_GRACEMONT:
+-	case INTEL_RAPTORLAKE:
+-	case INTEL_RAPTORLAKE_P:
+-	case INTEL_RAPTORLAKE_S:
+-	case INTEL_METEORLAKE:
+-	case INTEL_METEORLAKE_L:
+-		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+-			return true;
+-		break;
+-	}
+-
+-	return false;
++	/* Rely on perf_msr_probe() to check the availability */
++	return true;
+ }
+ 
+ PMU_EVENT_ATTR_STRING(tsc,				attr_tsc,		"event=0x00"	);
+
+base-commit: 6ee26b7a224b27aa7e8e1ee8a845a31664d2e97c
+-- 
+2.34.1
+
