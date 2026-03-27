@@ -1,235 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7640625A2DD;
-	Fri, 27 Mar 2026 21:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529C533D4F2;
+	Fri, 27 Mar 2026 23:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774645710; cv=none; b=fNdWBh7RbSMOgorSjvSzyd57CPPgdb0kYtX8Eu2v2v12Bbi74gWt2w7Y6FtnCmmYuOU7Qu1nJEyvSeDOOzwrYYdJxMTfYDDA4W1HvvDS12SThAnDAuoFSc2iTpOwkEhGdEqkgbAVoTOgLtctjr748SUZEZmbzyNfmj38AEXsMaw=
+	t=1774654611; cv=none; b=r133qWVrkUW8nUqJGYIImC3KsXkQWvoR4rRJcU66LG1ijt00rccFdMF08Iq79wxj+OkClXQtC338PkUD5MZrzTcYjs9ryefMDx4oh0SvZ/zRzdTz9gCmsksB7Y/4jnLf16nNPQDLoRpRW5hjmjW1mL3cryD8NcjYMODe+e3O6Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774645710; c=relaxed/simple;
-	bh=41bvbqtQ5rHa85PxOAK8Zh1fd0/U1TvED/9pl87ZXhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ScDT3cdnIJseoc1hQJWh/oNFOITGWtBvu+4klM8W26G92P8Um3n4X20hSsdk2/Oq7pC+kpTreL8nM7V91dJWe0rTUsQY+p6eE/CgKtZUTFIhVarNxESvm2IlkGQR4pEbUVCMrsuTiAIkHzrZUb0wqryQd/afTABXULtye4tqRdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/LEVa4B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774654611; c=relaxed/simple;
+	bh=yqKU/hxCou745aNQopxzn2NC0bKGSHQNdIG74+bKyoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aPtBRjIQNINwyOopYIxLC2f5CzorVe3OnvC7MKXdT/h7A+GyT/P10onE2bSv7uhETu+RE6jXUQK9UzsfctwHfQqvV7bO4a/n7x6Ml3SJdIlbKd0nPQWTjWYW6S/OwfyJ7odCgAkqSJEkLLvzGNMcP5ReA+47IakU1u3AeWNB4O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRg8bJQr; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/LEVa4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0FBC19423;
-	Fri, 27 Mar 2026 21:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774645710;
-	bh=41bvbqtQ5rHa85PxOAK8Zh1fd0/U1TvED/9pl87ZXhI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n/LEVa4B4xIMYsACSUCFQQ76Dc09qbTsdPH8bk0rdggph1FzAdccw1UUtX1vwW/qU
-	 daEzajDR4V7mDusKMKCKhCXGkdhM0nbCCwxtCguXtXE3ZbK8uZO83+T0v9rJomMmQQ
-	 DwK/W6ijoyi8AJG3HbmgJJwv+GaO7MDcWbbZdiEXs7gCQ0K34YXBvyJFfqd4XwupB4
-	 z2iPeteWP3LG6D0Op/W9VbnvJNoPndJWC92ziMVf9vbaD9EtcxbGZbHKHT6av3TG3d
-	 cQWjvhEcd9gecqtVz+35dd671f/Ndt6ZXTILHmfr6dTrlaFlN6dT2ydlanDP/MxIu9
-	 qSMYodpa0DzNg==
-Date: Fri, 27 Mar 2026 18:08:27 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, 9erthalion6@gmail.com,
-	adrian.hunter@intel.com, alex@ghiti.fr,
-	alexander.shishkin@linux.intel.com, andrew.jones@oss.qualcomm.com,
-	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
-	blakejones@google.com, ctshao@google.com,
-	dapeng1.mi@linux.intel.com, howardchu95@gmail.com,
-	james.clark@linaro.org, john.g.garry@oracle.com, jolsa@kernel.org,
-	leo.yan@linux.dev, libunwind-devel@nongnu.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-	mingo@redhat.com, palmer@dabbelt.com, peterz@infradead.org,
-	pjw@kernel.org, shimin.guo@skydio.com, tglozar@redhat.com,
-	tmricht@linux.ibm.com, will@kernel.org, amadio@gentoo.org,
-	yuzhuo@google.com
-Subject: Re: [PATCH v1 0/2] perf build: Remove libunwind support
-Message-ID: <acbxyzN4XKczgpLg@x1>
-References: <abxs-2rozL1tBEO1@google.com>
- <20260321234220.848859-1-irogers@google.com>
- <acW4Z2KJbyPZM1SG@google.com>
- <acbjjwc-WCk1CwtF@x1>
- <CAP-5=fXmBpqP86FT85sA_BZYRnzwbZ5joYLogCqON6fjXCkRHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRg8bJQr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774654610; x=1806190610;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=yqKU/hxCou745aNQopxzn2NC0bKGSHQNdIG74+bKyoA=;
+  b=fRg8bJQr9JTsmai5UXZo9YEQcZU37io+nEqYAq9pCbp4xU3s0gMhaa8C
+   W2zFF/MLBsur7jDkBn+qKUgPR3Sh+mS+wBxKQMV+JV5m49+Tcy+otrYPj
+   rlBrMTddVm/KeUFiqRXAGYeDx969lvRwe5FDDupHvFrylx+AziKr7XOV0
+   vhUJnGi47CLIsyWlwN8tgyVa8Mpk4rmJNFvT5vTvOqTVs9y6YtQBkCWpl
+   Ti4KBqHXUZhlhczYkTxjq00dmkStz4md7C7WLZZ3z2XRz9VjwJ668Cb22
+   fa9rwOQ/+rkj7QtOFadyJSS7oB3+IeizuRg0zIWrDUNlLKic51/xhVhhY
+   g==;
+X-CSE-ConnectionGUID: ntcqGklmTGivdSb1+FOQwA==
+X-CSE-MsgGUID: 8s4Ym6SqQOm/rSsSI1BL7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="93315721"
+X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
+   d="scan'208";a="93315721"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 16:36:49 -0700
+X-CSE-ConnectionGUID: d4AIO7jZRWS3jEkWK1Hy6A==
+X-CSE-MsgGUID: nA4IVH2jS+6ufEAKnb/jIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
+   d="scan'208";a="248490417"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.241.240.169]) ([10.241.240.169])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 16:36:48 -0700
+Message-ID: <4952de45-eb76-46cc-9a42-f93ec5666175@intel.com>
+Date: Fri, 27 Mar 2026 16:36:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXmBpqP86FT85sA_BZYRnzwbZ5joYLogCqON6fjXCkRHQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf tests: Add test for uncore event sorting
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>,
+ Dmitrii Dolgov <9erthalion6@gmail.com>, German Gomez <german.gomez@arm.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260325183045.1229502-1-irogers@google.com>
+ <20260325183045.1229502-2-irogers@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260325183045.1229502-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 27, 2026 at 01:37:20PM -0700, Ian Rogers wrote:
-> On Fri, Mar 27, 2026 at 1:07 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Thu, Mar 26, 2026 at 03:51:19PM -0700, Namhyung Kim wrote:
-> > > On Sat, Mar 21, 2026 at 04:42:18PM -0700, Ian Rogers wrote:
-> > > > libunwind support exists for "--call-graph dwarf", however, libunwind
-> > > > support has been opt-in rather than opt-out since Linux v6.13 as libdw
-> > > > is preferred - commit 13e17c9ff49119aa ("perf build: Make libunwind
-> > > > opt-in rather than opt-out"). A problem with the libdw support was
-> > > > that it was slow, an issue fixed in Linux v7.0 in commit 6b2658b3f36a
-> > > > ("perf unwind-libdw: Don't discard loaded ELF/DWARF after every
-> > > > unwind"). As such libunwind support is now unnecessary.
-> > > >
-> > > > The patch series:
-> > > > https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
-> > > > looked to make the libunwind support in perf similar to the libdw
-> > > > support, allow cross-architecture unwinding, etc. This was motivated
-> > > > by the perf regs conventions being altered by the addition of x86 APX
-> > > > support:
-> > > > https://lore.kernel.org/lkml/20260209072047.2180332-1-dapeng1.mi@linux.intel.com/
-> > > > It is necessary to translate the library's notion of registers to the
-> > > > perf register convention so that the stack unwinding state can be
-> > > > initialized. On this series it was stated that removing libunwind
-> > > > support from perf should be an option, rather than updating support:
-> > > > https://lore.kernel.org/lkml/abxs-2rozL1tBEO1@google.com/
-> > > > This was also what motivated making libunwind opt-in rather than
-> > > > opt-out.
-> >
-> > > > Given that 7 minor releases have happened with libunwind "deprecated"
-> > > > by making it opt-in, let's remove the libunwind support. There doesn't
-> > > > appear to be any disagreement to this on the mailing list.
-> >
-> > > I'm not sure if we want to remove it now.  I think we need more time to
-> > > verify libdw unwinding is stable and fast enough.  Also maybe we can
-> > > add build- or run-time warning when people try to use libunwind.
-> >
-> > We have:
-> >
-> > acme@x1:~/git/perf-tools$ perf -vv | grep LIBU
-> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
-> > acme@x1:~/git/perf-tools$
-> >
-> > acme@x1:~/git/perf-tools$ perf check feature libunwind && echo perf built with libunwind
-> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
-> > acme@x1:~/git/perf-tools$
-> >
-> > Building with both, as Ian mentioned ends up with:
-> >
-> >   LD      /tmp/build/perf-tools/util/perf-util-in.o
-> > ld: /tmp/build/perf-tools/util/unwind-libunwind.o: in function `unwind__get_entries':
-> > unwind-libunwind.c:(.text+0x2a0): multiple definition of `unwind__get_entries'; /tmp/build/perf-tools/util/unwind-libdw.o:unwind-libdw.c:(.text+0x940): first defined here
-> > make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:164: /tmp/build/perf-tools/util/perf-util-in.o] Error 123
-> > make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:158: util] Error 2
-> > make[2]: *** [Makefile.perf:797: /tmp/build/perf-tools/perf-util-in.o] Error 2
-> > make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> > make: *** [Makefile:119: install-bin] Error 2
-> > make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
-> > ⬢ [acme@toolbx perf-tools]$
-> >
-> > So what Namhyung is suggesting is to disable libdw when libunwind is
-> > asked for?
-> >
-> > I.e.
-> >
-> > alias m='rm -rf ~/libexec/perf-core/ ; make LIBUNWIND=1 NO_LIBDW=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test "import python" && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
-> >
-> > Which builds and ends up linking with both:
-> >
-> > ⬢ [acme@toolbx perf-tools]$ ldd ~/bin/perf | egrep unwind\|dw
-> >         libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007fbf430b6000)
-> >         libunwind.so.8 => /lib64/libunwind.so.8 (0x00007fbf4309b000)
-> >         libdw.so.1 => /lib64/libdw.so.1 (0x00007fbf38570000)
-> > ⬢ [acme@toolbx perf-tools]$
-> >
-> > I.e. that NO_LIBDW isn't really disabling linking with it, just some
-> > features based on it, likely.
-> >
-> > Hum, we also have NO_LIBDW_DWARF_UNWIND, which probably is what we want
-> > here... nope:
-> >
-> > ⬢ [acme@toolbx perf-tools]$ alias m='rm -rf ~/libexec/perf-core/ ; make LIBUNWIND=1 NO_LIBDW_DWARF_UNWIND=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test "import python" && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
-> > ⬢ [acme@toolbx perf-tools]$ m
-> > rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-314.pyc': Permission denied
-> > make: Entering directory '/home/acme/git/perf-tools/tools/perf'
-> >   BUILD:   Doing 'make -j12' parallel build
-> > Warning: Kernel ABI header differences:
-> >   diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
-> >
-> > Auto-detecting system features:
-> > ...                                   libdw: [ on  ]
-> > ...                                   glibc: [ on  ]
-> > ...                                  libelf: [ on  ]
-> > ...                                 libnuma: [ on  ]
-> > ...                  numa_num_possible_cpus: [ on  ]
-> > ...                               libpython: [ on  ]
-> > ...                             libcapstone: [ on  ]
-> > ...                               llvm-perf: [ on  ]
-> > ...                                    zlib: [ on  ]
-> > ...                                    lzma: [ on  ]
-> > ...                                     bpf: [ on  ]
-> > ...                                  libaio: [ on  ]
-> > ...                                 libzstd: [ on  ]
-> > ...                              libopenssl: [ on  ]
-> > ...                                    rust: [ on  ]
-> >
-> >   INSTALL libsubcmd_headers
-> >   INSTALL libperf_headers
-> >   INSTALL libapi_headers
-> >   INSTALL libsymbol_headers
-> >   INSTALL libbpf_headers
-> >   LD      /tmp/build/perf-tools/util/perf-util-in.o
-> > ld: /tmp/build/perf-tools/util/unwind-libunwind.o: in function `unwind__get_entries':
-> > unwind-libunwind.c:(.text+0x2a0): multiple definition of `unwind__get_entries'; /tmp/build/perf-tools/util/unwind-libdw.o:unwind-libdw.c:(.text+0x940): first defined here
-> > make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:164: /tmp/build/perf-tools/util/perf-util-in.o] Error 123
-> > make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:158: util] Error 2
-> > make[2]: *** [Makefile.perf:797: /tmp/build/perf-tools/perf-util-in.o] Error 2
-> > make[2]: *** Waiting for unfinished jobs....
-> > make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> > make: *** [Makefile:119: install-bin] Error 2
-> > make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
-> > ⬢ [acme@toolbx perf-tools]$
-> >
-> > I expected NO_LIBDW_DWARF_UNWIND=1 would resolve this case, and maybe it
-> > should?
-> >
-> > Or maybe it did it in the past as by now it is just a comment:
-> >
-> > ⬢ [acme@toolbx perf-tools]$ git grep NO_LIBDW_DWARF_UNWIND
-> > tools/perf/Makefile.perf:# Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
-> > ⬢ [acme@toolbx perf-tools]$
-> >
-> > Its from:
-> >
-> > # Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
-> > # for dwarf backtrace post unwind.
-> >
-> > As we need libdw for 'perf probe', etc, so being able to disable it just
-> > for DWARF backtrace is what we need here to make them mutually
-> > exclusive, i.e. the default is for building with libdw for backtraces,
-> > but if the user asks for LIBUNWIND=1, then a warning that libdw won't be
-> > used for DWARF backtraces and select NO_LIBDW_DWARF_UNWIND?
-> >
-> > We could then have a regression test that builds perf with one, does
-> > some backtraces, then with the other, then compare? This would be
-> > followup work, if somebody has the cycles, but making them mutually
-> > exclusive should be doable with not that much work?
-> >
-> > This is an area that is tricky and since we _already_ have two
-> > implementations, the good thing for regression testing would be the
-> > compare their results until libunwind becomes completely rotten and
-> > unusable?
+
+
+On 3/25/2026 11:30 AM, Ian Rogers wrote:
+> Add a test for uncore event sorting matching multiple PMUs. Uncore
+> PMUs may have a common prefix, like the PMUs uncore_imc_free_running_0
+> and uncore_imc_free_running_1 have a prefix of
+> uncore_imc_free_running. Parsing an event group like
+> "{data_read,data_write}" for those PMUs should result with two groups
+> "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_0/data_write/},
+> {uncore_imc_free_running_1/data_read/,uncore_imc_free_running_1/data_write/}"
+> which means the evsels need resorting as when initially parsed the
+> evsels are ordered with mixed PMUs:
+> "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/,
+> uncore_imc_free_running_0/data_write/,uncore_imc_free_running_1/data_write/}".
 > 
-> My series:
-> https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
-> makes libdw and libunwind supported together:
-> https://lore.kernel.org/lkml/20260305221927.3237145-2-irogers@google.com/
-> """
-> This commit refactors the DWARF unwind post-processing to be
-> configurable at runtime via the .perfconfig file option
-> 'unwind.style', or using the argument '--unwind-style' in the commands
-> 'perf report', 'perf script' and 'perf inject', in a similar manner to
-> the addr2line or the disassembler style.
-> """
-> That series cleans up several other issues, which is why I think it is
-> worth landing while we wait for libdw to become stable.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
 
-Cool, I'll try and review/test it this weekend.
+Tested-by: Zide Chen <zide.chen@intel.com>
 
-Thanks for pointint it out!
+>  tools/perf/tests/Build                  |   1 +
+>  tools/perf/tests/builtin-test.c         |   1 +
+>  tools/perf/tests/tests.h                |   1 +
+>  tools/perf/tests/uncore-event-sorting.c | 125 ++++++++++++++++++++++++
+>  4 files changed, 128 insertions(+)
+>  create mode 100644 tools/perf/tests/uncore-event-sorting.c
+> 
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index c2a67ce45941..66944a4f4968 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -3,6 +3,7 @@
+>  perf-test-y += builtin-test.o
+>  perf-test-y += tests-scripts.o
+>  perf-test-y += parse-events.o
+> +perf-test-y += uncore-event-sorting.o
+>  perf-test-y += dso-data.o
+>  perf-test-y += vmlinux-kallsyms.o
+>  perf-test-y += openat-syscall.o
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 06507066213b..f2c135891477 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -71,6 +71,7 @@ static struct test_suite *generic_tests[] = {
+>  	&suite__basic_mmap,
+>  	&suite__mem,
+>  	&suite__parse_events,
+> +	&suite__uncore_event_sorting,
+>  	&suite__expr,
+>  	&suite__PERF_RECORD,
+>  	&suite__pmu,
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index f5f1238d1f7f..ee00518bf36f 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
+>  DECLARE_SUITE(event_groups);
+>  DECLARE_SUITE(symbols);
+>  DECLARE_SUITE(util);
+> +DECLARE_SUITE(uncore_event_sorting);
+>  DECLARE_SUITE(subcmd_help);
+>  DECLARE_SUITE(kallsyms_split);
+>  
+> diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/uncore-event-sorting.c
+> new file mode 100644
+> index 000000000000..91e1a580709b
+> --- /dev/null
+> +++ b/tools/perf/tests/uncore-event-sorting.c
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +#include "tests.h"
+> +#include "debug.h"
+> +#include "parse-events.h"
+> +#include "pmu.h"
+> +#include "pmus.h"
+> +#include "evlist.h"
+> +#include <string.h>
+> +
+> +struct match_state {
+> +	char *event1;
+> +	char *event2;
+> +};
+> +
+> +static int event_cb(void *state, struct pmu_event_info *info)
+> +{
+> +	struct match_state *m = state;
+> +
+> +	if (!m->event1) {
+> +		m->event1 = strdup(info->name);
+> +	} else if (!m->event2) {
+> +		if (strcmp(m->event1, info->name)) {
+> +			m->event2 = strdup(info->name);
+> +			return 1;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int test__uncore_event_sorting(struct test_suite *test __maybe_unused,
+> +				      int subtest __maybe_unused)
+> +{
+> +	struct evlist *evlist;
+> +	struct parse_events_error err;
+> +	struct evsel *evsel;
+> +	struct perf_pmu *pmu = NULL;
+> +	char *pmu_prefix = NULL;
+> +	struct match_state m = { NULL, NULL };
+> +	char buf[1024];
+> +	int ret;
+> +
+> +	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> +		size_t len;
+> +		struct perf_pmu *sibling;
+> +
+> +		if (pmu->is_core)
+> +			continue;
+> +
+> +		len = pmu_name_len_no_suffix(pmu->name);
+> +		if (len == strlen(pmu->name))
+> +			continue;
+> +
+> +		sibling = pmu;
+> +		while ((sibling = perf_pmus__scan(sibling)) != NULL) {
+> +			if (sibling->is_core)
+> +				continue;
+> +			if (pmu_name_len_no_suffix(sibling->name) == len &&
+> +			    !strncmp(pmu->name, sibling->name, len))
+> +				break;
+> +		}
+> +
+> +		if (!sibling)
+> +			continue;
+> +
+> +		m.event1 = m.event2 = NULL;
+> +		perf_pmu__for_each_event(pmu, false, &m, event_cb);
+> +
+> +		if (m.event1 && m.event2) {
+> +			pmu_prefix = strndup(pmu->name, len);
+> +			break;
+> +		}
+> +		free(m.event1);
+> +	}
+> +
+> +	if (!pmu_prefix) {
+> +		pr_debug("No suitable uncore PMU found\n");
+> +		return TEST_SKIP;
+> +	}
+> +
+> +	evlist = evlist__new();
+> +	if (!evlist)
+> +		return TEST_FAIL;
+> +
+> +	snprintf(buf, sizeof(buf), "{%s/%s/,%s/%s/}",
+> +		 pmu_prefix, m.event1, pmu_prefix, m.event2);
+> +	pr_debug("Parsing: %s\n", buf);
+> +
+> +	parse_events_error__init(&err);
+> +	ret = parse_events(evlist, buf, &err);
+> +	if (ret) {
+> +		pr_debug("parse_events failed\n");
+> +		goto out_err;
+> +	}
+> +
+> +	TEST_ASSERT_VAL("Number of events is > 0", evlist->core.nr_entries > 0);
+> +	TEST_ASSERT_EQUAL("Number of events is a multiple of 2", evlist->core.nr_entries % 2, 0);
+> +
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (evsel__is_group_leader(evsel)) {
+> +			struct evsel *next = evsel__next(evsel);
+> +
+> +			TEST_ASSERT_EQUAL("Group size is 2", evsel->core.nr_members, 2);
+> +			TEST_ASSERT_VAL("PMU match", evsel->pmu == next->pmu);
+> +			TEST_ASSERT_VAL("First event name", strstr(evsel->name, m.event1) != NULL);
+> +			TEST_ASSERT_VAL("Second event name", strstr(next->name, m.event2) != NULL);
+> +		}
+> +	}
+> +
+> +	evlist__delete(evlist);
+> +	parse_events_error__exit(&err);
+> +	free(pmu_prefix);
+> +	free(m.event1);
+> +	free(m.event2);
+> +	return TEST_OK;
+> +
+> +out_err:
+> +	evlist__delete(evlist);
+> +	parse_events_error__exit(&err);
+> +	free(pmu_prefix);
+> +	free(m.event1);
+> +	free(m.event2);
+> +	return TEST_FAIL;
+> +}
+> +
+> +DEFINE_SUITE("Uncore event sorting", uncore_event_sorting);
 
-- Arnaldo
