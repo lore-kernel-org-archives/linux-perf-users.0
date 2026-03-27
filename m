@@ -1,210 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A7D373C0C;
-	Fri, 27 Mar 2026 17:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD0028726D;
+	Fri, 27 Mar 2026 17:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774631143; cv=none; b=GkDvC3Gu5xTWU8iTr9nLhEvrlX5N2rVv3eHiSmF3/43jwRiYImYE2QrDW4A/wOkIFbJ0SQnrp63KaB0QJfkkd6TRlKatREdIlF6c/POqtyAoEPmWiBVWzmWVLuxagX+BPJTgJkSKkN9gT2p6oK4H58gFJDY7nxrdWCIroPgtezU=
+	t=1774632337; cv=none; b=ZQ05RDAIZAl4PchpFSUwwqAEsG3i7zLO427HGKrg9im3N+Tjn62FW9i7EhXR/y82mDPz1UCcAIRSGq+0jm3v0A5iVd4Ly18elOJZpoBGMDrIjUphhjujy7BivhfBBQMvWiOO0JZp0yKvqCXWcFSPon/N+cyRqbRbdir1zvJyA/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774631143; c=relaxed/simple;
-	bh=re2qH/iKq7gw7n3d/e2H1mnXYP5UtGjZZ0t8FJYpQnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lCTaSpzptrJHshk8gm6+5Rixvjk/sSQCuFIbG5AYNmuBhVkgmKyJBTuhTxYeRp5+zga1nRiRz0rOuTNCrJ7Bjc/kef00oHUf6OWzLFSF/CdLaY30DAlr6NC7BJ2Eo1DooSmyimpf3N+tksxFTnEYlkIoCZdNtFB5CtaBk36X5cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FeulRE0a; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1774632337; c=relaxed/simple;
+	bh=BtmBe1lZNU1bmJI1iYVGd2tNmnmFPMHpX8Sj3GHYJnU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XulhV4xonyvetnFzZD/49Ib5M9heh2CUYj/BRWwvni7Trgi/iCBSnHwLKddS2Qw52JmgYNdU8qYwMC6OcBSZu4GJHTlelbZuombvA2gWj/RckKVtjI2rskIx5gRljIm8gQ2FSMbTN7S/rjsIFHOYzJgYhJdDg/wRjrznc/RKk6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fGIsnlVe; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FeulRE0a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774631141; x=1806167141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=re2qH/iKq7gw7n3d/e2H1mnXYP5UtGjZZ0t8FJYpQnM=;
-  b=FeulRE0aJvvkwe8qV25u1UzK4I36iufKanKMuEZJVAkGftvKtSdqHAzz
-   BGijaUBRfNPIZfIZ+lkbElDtqbDu5dVdSirfLUu/OXPehbAdSB51x5wDr
-   6DO+hKaneeQXzl4jXDcV9o8+JRN4aMa6KqkkHLGpKU/hFzoBt6HgP0+AH
-   P+IhnqCpW3tlUK/l3uR8OlccsKSQan+jb1ddmkUu2fJuzyfu5rS7u1oWf
-   F2xJ8yefmTKOkhLu1RT3QP9wEXV5PR+aCFxOo8uHv/+UhbW5Q35IniZXz
-   gv9NDNGTrRLbf1r/WhXNrtjk3pIWi21LVZhDHsIWif1yR7z1o1tIghJiu
-   w==;
-X-CSE-ConnectionGUID: B3v6idPYR72HM0gkLobX2w==
-X-CSE-MsgGUID: J8SO8SG+S6i+ywc1mROvdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="75612715"
-X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
-   d="scan'208";a="75612715"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:05:39 -0700
-X-CSE-ConnectionGUID: cmmKfPhbQtqZ8FLvE+o7Cw==
-X-CSE-MsgGUID: d3ja/bTFRUaJ9Wl/WYvdfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
-   d="scan'208";a="220973199"
-Received: from unknown (HELO [10.241.240.169]) ([10.241.240.169])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:05:39 -0700
-Message-ID: <b65adc63-edf2-4927-8913-a431290d673d@intel.com>
-Date: Fri, 27 Mar 2026 10:05:38 -0700
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fGIsnlVe"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5BEF35AA;
+	Fri, 27 Mar 2026 10:25:29 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C9283F99C;
+	Fri, 27 Mar 2026 10:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1774632335; bh=BtmBe1lZNU1bmJI1iYVGd2tNmnmFPMHpX8Sj3GHYJnU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=fGIsnlVeEkRwKVXxZK9lGRCF1508s8drUaTLxqNAEBivjVDf525bOsdf0GAu/4rbC
+	 B4TiDGKr3mXJk/0TCv2xSizqPtOe8slf1m7dVajQB+/uGsLDBKJJO7TJoqMHPatdPq
+	 SPyg3Af131xLL+VzNjd1SOtgjpFqDNVVPM0ZYdxA=
+From: Leo Yan <leo.yan@arm.com>
+Date: Fri, 27 Mar 2026 17:25:27 +0000
+Subject: [PATCH] perf metricgroup: Correctly return syntax error
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2] perf/x86/msr: Make SMI and PPERF on by default
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20260327052844.818218-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260327052844.818218-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260327-perf_fix_metrics_group-v1-1-49e4b8ee9a08@arm.com>
+X-B4-Tracking: v=1; b=H4sIAIa9xmkC/x2MWwqAIBAArxL7nWCaRl0lQnqstR+VrBVBdPekz
+ 4GZeSAiE0ZosgcYL4q0bwmKPINx6bcZBU2JQUllpVaVCMjeebrdigfTGN3M+xlEOaAxg9LW1xZ
+ SHBiT9I/b7n0/HO+G3GgAAAA=
+X-Change-ID: 20260327-perf_fix_metrics_group-4be55b236f96
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774632334; l=1840;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=BtmBe1lZNU1bmJI1iYVGd2tNmnmFPMHpX8Sj3GHYJnU=;
+ b=TSHI8bydyKho0Ecn/MjJgb4aSfddoGg0K/At3XmRqd76bd5UDYAjG4tR9PFlI7DASq3SEgA2i
+ y9QAomrb94yBmoPUrtCJS2LcgvfDKjOt3W39VmkTjfGPVC2E8TjdKLE
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
+On arm64 platforms, some CPU variants return zero for the number of slots
+when invoking tool_pmu__cpu_slots_per_cycle().  This leads to metric
+expression parsing failures, e.g.:
 
+  metric expr 100 * (STALL_SLOT_BACKEND / (CPU_CYCLES * #slots) - BR_MIS_PRED * 3 / CPU_CYCLES) for backend_bound
+  parsing metric: 100 * (STALL_SLOT_BACKEND / (CPU_CYCLES * #slots) - BR_MIS_PRED * 3 / CPU_CYCLES)
+  Failure to read '#slots' literal: #slots = nan
+  syntax error
 
-On 3/26/2026 10:28 PM, Dapeng Mi wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The MSRs, SMI_COUNT and PPERF, are model-specific MSRs. A very long
-> CPU ID list is maintained to indicate the supported platforms. With more
-> and more platforms being introduced, new CPU IDs have to be kept adding.
-> Also, the old kernel has to be updated to apply the new CPU ID.
-> 
-> The MSRs have been introduced for a long time. There is no plan to
-> change them in the near future. Furthermore, the current code utilizes
-> rdmsr_safe() to check the availability of MSRs before using it.
-> 
-> Make them on by default. It should be good enough to only rely on the
-> rdmsr_safe() to check their availability for both existing and future
-> platforms.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
+expr__find_ids() returns a positive value for syntax errors, but this is
+not respected.  Fix this by checking for any non-zero return value from
+expr__find_ids().
 
-Reviewed-by: Zide Chen <zide.chen@intel.com>
+Do not add a Fixes tag, as this is a rare case that can only be reproduced
+by deliberately setting the PERF_CPUS env variable.
 
-> 
-> V2: Removed stale #include <asm/cpu_device_id.h>.
-> 
-> V1: https://lore.kernel.org/lkml/20240910192626.768146-1-kan.liang@linux.intel.com/
-> 
->  arch/x86/events/msr.c | 82 ++-----------------------------------------
->  1 file changed, 3 insertions(+), 79 deletions(-)
-> 
-> diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-> index 8052596b8503..76d6418c5055 100644
-> --- a/arch/x86/events/msr.c
-> +++ b/arch/x86/events/msr.c
-> @@ -2,7 +2,6 @@
->  #include <linux/perf_event.h>
->  #include <linux/sysfs.h>
->  #include <linux/nospec.h>
-> -#include <asm/cpu_device_id.h>
->  #include <asm/msr.h>
->  
->  #include "probe.h"
-> @@ -41,86 +40,11 @@ static bool test_therm_status(int idx, void *data)
->  
->  static bool test_intel(int idx, void *data)
->  {
-> -	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL ||
-> -	    boot_cpu_data.x86 != 6)
-> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
->  		return false;
->  
-> -	switch (boot_cpu_data.x86_vfm) {
-> -	case INTEL_NEHALEM:
-> -	case INTEL_NEHALEM_G:
-> -	case INTEL_NEHALEM_EP:
-> -	case INTEL_NEHALEM_EX:
-> -
-> -	case INTEL_WESTMERE:
-> -	case INTEL_WESTMERE_EP:
-> -	case INTEL_WESTMERE_EX:
-> -
-> -	case INTEL_SANDYBRIDGE:
-> -	case INTEL_SANDYBRIDGE_X:
-> -
-> -	case INTEL_IVYBRIDGE:
-> -	case INTEL_IVYBRIDGE_X:
-> -
-> -	case INTEL_HASWELL:
-> -	case INTEL_HASWELL_X:
-> -	case INTEL_HASWELL_L:
-> -	case INTEL_HASWELL_G:
-> -
-> -	case INTEL_BROADWELL:
-> -	case INTEL_BROADWELL_D:
-> -	case INTEL_BROADWELL_G:
-> -	case INTEL_BROADWELL_X:
-> -	case INTEL_SAPPHIRERAPIDS_X:
-> -	case INTEL_EMERALDRAPIDS_X:
-> -	case INTEL_GRANITERAPIDS_X:
-> -	case INTEL_GRANITERAPIDS_D:
-> -
-> -	case INTEL_ATOM_SILVERMONT:
-> -	case INTEL_ATOM_SILVERMONT_D:
-> -	case INTEL_ATOM_AIRMONT:
-> -	case INTEL_ATOM_AIRMONT_NP:
-> -
-> -	case INTEL_ATOM_GOLDMONT:
-> -	case INTEL_ATOM_GOLDMONT_D:
-> -	case INTEL_ATOM_GOLDMONT_PLUS:
-> -	case INTEL_ATOM_TREMONT_D:
-> -	case INTEL_ATOM_TREMONT:
-> -	case INTEL_ATOM_TREMONT_L:
-> -
-> -	case INTEL_XEON_PHI_KNL:
-> -	case INTEL_XEON_PHI_KNM:
-> -		if (idx == PERF_MSR_SMI)
-> -			return true;
-> -		break;
-> -
-> -	case INTEL_SKYLAKE_L:
-> -	case INTEL_SKYLAKE:
-> -	case INTEL_SKYLAKE_X:
-> -	case INTEL_KABYLAKE_L:
-> -	case INTEL_KABYLAKE:
-> -	case INTEL_COMETLAKE_L:
-> -	case INTEL_COMETLAKE:
-> -	case INTEL_ICELAKE_L:
-> -	case INTEL_ICELAKE:
-> -	case INTEL_ICELAKE_X:
-> -	case INTEL_ICELAKE_D:
-> -	case INTEL_TIGERLAKE_L:
-> -	case INTEL_TIGERLAKE:
-> -	case INTEL_ROCKETLAKE:
-> -	case INTEL_ALDERLAKE:
-> -	case INTEL_ALDERLAKE_L:
-> -	case INTEL_ATOM_GRACEMONT:
-> -	case INTEL_RAPTORLAKE:
-> -	case INTEL_RAPTORLAKE_P:
-> -	case INTEL_RAPTORLAKE_S:
-> -	case INTEL_METEORLAKE:
-> -	case INTEL_METEORLAKE_L:
-> -		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
-> -			return true;
-> -		break;
-> -	}
-> -
-> -	return false;
-> +	/* Rely on perf_msr_probe() to check the availability */
-> +	return true;
->  }
->  
->  PMU_EVENT_ATTR_STRING(tsc,				attr_tsc,		"event=0x00"	);
-> 
-> base-commit: 6ee26b7a224b27aa7e8e1ee8a845a31664d2e97c
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/util/metricgroup.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 7e39d469111b2995f5a2636529d6985eac595f76..1119bb1c99dbd9d32601b8aeebed7d5638872366 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -909,10 +909,12 @@ static int __add_metric(struct list_head *metric_list,
+ 		expr = metric_no_threshold ? pm->metric_name : pm->metric_threshold;
+ 		visited_node.name = "__threshold__";
+ 	}
+-	if (expr__find_ids(expr, NULL, root_metric->pctx) < 0) {
++
++	/* The expression parser returns a positive value on syntax error */
++	if (expr__find_ids(expr, NULL, root_metric->pctx))
+ 		/* Broken metric. */
+ 		ret = -EINVAL;
+-	}
++
+ 	if (!ret) {
+ 		/* Resolve referenced metrics. */
+ 		struct perf_pmu *pmu;
+
+---
+base-commit: 54fcc7f6ec3944ae7c1b0246a999744e33839cdb
+change-id: 20260327-perf_fix_metrics_group-4be55b236f96
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
