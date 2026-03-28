@@ -1,266 +1,276 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mail-43100.protonmail.ch (mail-43100.protonmail.ch [185.70.43.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529C533D4F2;
-	Fri, 27 Mar 2026 23:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E144032720D;
+	Sat, 28 Mar 2026 20:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774654611; cv=none; b=r133qWVrkUW8nUqJGYIImC3KsXkQWvoR4rRJcU66LG1ijt00rccFdMF08Iq79wxj+OkClXQtC338PkUD5MZrzTcYjs9ryefMDx4oh0SvZ/zRzdTz9gCmsksB7Y/4jnLf16nNPQDLoRpRW5hjmjW1mL3cryD8NcjYMODe+e3O6Nw=
+	t=1774728308; cv=none; b=a2MfWZKhi3b/O5WEq4B05vDWtbANLg4iE72DQza1NefslvZPpvQxCiDqoTasySOiv6GYlrUfCZRBGxTadvO+6lKYAg0ca3W3ShVdkBExLU54wk2Zz/DDzeHYVFzqZ1WGuj+RkJ6xvovBbsbBU8rz9eWvaXj/iI7lvdDPn/7ES8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774654611; c=relaxed/simple;
-	bh=yqKU/hxCou745aNQopxzn2NC0bKGSHQNdIG74+bKyoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aPtBRjIQNINwyOopYIxLC2f5CzorVe3OnvC7MKXdT/h7A+GyT/P10onE2bSv7uhETu+RE6jXUQK9UzsfctwHfQqvV7bO4a/n7x6Ml3SJdIlbKd0nPQWTjWYW6S/OwfyJ7odCgAkqSJEkLLvzGNMcP5ReA+47IakU1u3AeWNB4O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRg8bJQr; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1774728308; c=relaxed/simple;
+	bh=cHgXijMZVlGPBfwbcnUY/SIfD8bN3S1pTNfSWGhPv5I=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qNNqeTDlsrLUioicoT1O7h6mRCJ6J3l9BRMP+XDvNPEPauPUxlALN5io6NO+tK9qpWewP+bkUIDjJlB5kjF316Izdm1aaqBPPEYXlQWikDAxG6w02mjsEYr42kUaKPCak2syhrdpqhEWOscn8TtfEk0HRxvxRkVQYNqXYXZzlPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=W5q6dqwf; arc=none smtp.client-ip=185.70.43.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRg8bJQr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774654610; x=1806190610;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=yqKU/hxCou745aNQopxzn2NC0bKGSHQNdIG74+bKyoA=;
-  b=fRg8bJQr9JTsmai5UXZo9YEQcZU37io+nEqYAq9pCbp4xU3s0gMhaa8C
-   W2zFF/MLBsur7jDkBn+qKUgPR3Sh+mS+wBxKQMV+JV5m49+Tcy+otrYPj
-   rlBrMTddVm/KeUFiqRXAGYeDx969lvRwe5FDDupHvFrylx+AziKr7XOV0
-   vhUJnGi47CLIsyWlwN8tgyVa8Mpk4rmJNFvT5vTvOqTVs9y6YtQBkCWpl
-   Ti4KBqHXUZhlhczYkTxjq00dmkStz4md7C7WLZZ3z2XRz9VjwJ668Cb22
-   fa9rwOQ/+rkj7QtOFadyJSS7oB3+IeizuRg0zIWrDUNlLKic51/xhVhhY
-   g==;
-X-CSE-ConnectionGUID: ntcqGklmTGivdSb1+FOQwA==
-X-CSE-MsgGUID: 8s4Ym6SqQOm/rSsSI1BL7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="93315721"
-X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
-   d="scan'208";a="93315721"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 16:36:49 -0700
-X-CSE-ConnectionGUID: d4AIO7jZRWS3jEkWK1Hy6A==
-X-CSE-MsgGUID: nA4IVH2jS+6ufEAKnb/jIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
-   d="scan'208";a="248490417"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.241.240.169]) ([10.241.240.169])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 16:36:48 -0700
-Message-ID: <4952de45-eb76-46cc-9a42-f93ec5666175@intel.com>
-Date: Fri, 27 Mar 2026 16:36:47 -0700
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="W5q6dqwf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1774728297; x=1774987497;
+	bh=o0uEth+v09+G4LVAnrdbt6+QAzoQB2c/e72JLtyM8Oc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=W5q6dqwfzB2NQcjZBR4Fr5jjmc6bvR/FdqhNf7qhxlAzXlCPbeGxyv12qBRnqW/0F
+	 EQXWyZJqdCFfs9CbKIqbMxwV06xi+p2FYVlTgdSutYNYRqm8DHbd25ZlXa2i4xV5xa
+	 oWdjg/4mVwDApoHFcSex8c0n8UyME1JtHo6q1RSL1c+KEmbILgxXc6tHqf7zqZ54Oz
+	 +AAcp8IK8ICxSimx0544f++xgSCIeaHsGPvsn5b5Dx17xIFw0fqEm4y/Hcz4ma0Fny
+	 oFEQeQPBmB7PQIx61v2J/ruJXVodqqhE8+dVBSB9U7feVqZMCTjI58/xAqlnKuzgbO
+	 nVuv3W80Z8jNg==
+Date: Sat, 28 Mar 2026 20:04:52 +0000
+To: namhyung@kernel.org
+From: Ricky Ringler <ricky.ringler@proton.me>
+Cc: irogers@google.com, mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ricky Ringler <ricky.ringler@proton.me>
+Subject: [PATCH v5] perf utilities: cln_size header
+Message-ID: <20260328200442.134489-1-ricky.ringler@proton.me>
+In-Reply-To: <acW2j7hki-u50YYz@google.com>
+References: <20260214040659.168769-2-ricky.ringler@proton.me> <aaeKBOolC3AyHAFa@google.com> <20260305235655.40779-1-ricky.ringler@proton.me> <THyJLu3kRy_7q7V6-XpKu2hIZsSzkadNwnZ6YIOUSSTS2if2u3OWv6ROm_MtvBWVQVOJ03FVWw0POxzhU0LpeSBhoKSxTwKVV-JhZFJNCvg=@proton.me> <20260308172037.123654-1-ricky.ringler@proton.me> <CAP-5=fVk22oOxLSN-2_MioJ3RKUpQwD2TWK9sA=WcegUc_dj1w@mail.gmail.com> <20260321204145.26359-1-ricky.ringler@proton.me> <acW2j7hki-u50YYz@google.com>
+Feedback-ID: 171348601:user:proton
+X-Pm-Message-ID: 69b7ab33184e0c917f34e2eec806b0d0195265e0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf tests: Add test for uncore event sorting
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>,
- Dmitrii Dolgov <9erthalion6@gmail.com>, German Gomez <german.gomez@arm.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260325183045.1229502-1-irogers@google.com>
- <20260325183045.1229502-2-irogers@google.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260325183045.1229502-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Store cacheline size during perf record in header, so
+that cacheline size can be used for other features, like
+sort.
 
+V5: Namhyung feedback
+V4: Ian feedback
+V3: Rebase off perf-tools-next round two
+V2: Rebase off perf-tools-next
 
-On 3/25/2026 11:30 AM, Ian Rogers wrote:
-> Add a test for uncore event sorting matching multiple PMUs. Uncore
-> PMUs may have a common prefix, like the PMUs uncore_imc_free_running_0
-> and uncore_imc_free_running_1 have a prefix of
-> uncore_imc_free_running. Parsing an event group like
-> "{data_read,data_write}" for those PMUs should result with two groups
-> "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_0/data_write/},
-> {uncore_imc_free_running_1/data_read/,uncore_imc_free_running_1/data_write/}"
-> which means the evsels need resorting as when initially parsed the
-> evsels are ordered with mixed PMUs:
-> "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/,
-> uncore_imc_free_running_0/data_write/,uncore_imc_free_running_1/data_write/}".
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
+Follow-up patch from message ID "aYZiQk6Uftzlb_JV@x1"
 
-Tested-by: Zide Chen <zide.chen@intel.com>
+Testing:
+- Built perf
+- Ran record + report with feat enabled
+- Ran record + report with feat disabled
 
->  tools/perf/tests/Build                  |   1 +
->  tools/perf/tests/builtin-test.c         |   1 +
->  tools/perf/tests/tests.h                |   1 +
->  tools/perf/tests/uncore-event-sorting.c | 125 ++++++++++++++++++++++++
->  4 files changed, 128 insertions(+)
->  create mode 100644 tools/perf/tests/uncore-event-sorting.c
-> 
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index c2a67ce45941..66944a4f4968 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -3,6 +3,7 @@
->  perf-test-y += builtin-test.o
->  perf-test-y += tests-scripts.o
->  perf-test-y += parse-events.o
-> +perf-test-y += uncore-event-sorting.o
->  perf-test-y += dso-data.o
->  perf-test-y += vmlinux-kallsyms.o
->  perf-test-y += openat-syscall.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 06507066213b..f2c135891477 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -71,6 +71,7 @@ static struct test_suite *generic_tests[] = {
->  	&suite__basic_mmap,
->  	&suite__mem,
->  	&suite__parse_events,
-> +	&suite__uncore_event_sorting,
->  	&suite__expr,
->  	&suite__PERF_RECORD,
->  	&suite__pmu,
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index f5f1238d1f7f..ee00518bf36f 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
->  DECLARE_SUITE(event_groups);
->  DECLARE_SUITE(symbols);
->  DECLARE_SUITE(util);
-> +DECLARE_SUITE(uncore_event_sorting);
->  DECLARE_SUITE(subcmd_help);
->  DECLARE_SUITE(kallsyms_split);
->  
-> diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/uncore-event-sorting.c
-> new file mode 100644
-> index 000000000000..91e1a580709b
-> --- /dev/null
-> +++ b/tools/perf/tests/uncore-event-sorting.c
-> @@ -0,0 +1,125 @@
-> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> +#include "tests.h"
-> +#include "debug.h"
-> +#include "parse-events.h"
-> +#include "pmu.h"
-> +#include "pmus.h"
-> +#include "evlist.h"
-> +#include <string.h>
-> +
-> +struct match_state {
-> +	char *event1;
-> +	char *event2;
-> +};
-> +
-> +static int event_cb(void *state, struct pmu_event_info *info)
-> +{
-> +	struct match_state *m = state;
-> +
-> +	if (!m->event1) {
-> +		m->event1 = strdup(info->name);
-> +	} else if (!m->event2) {
-> +		if (strcmp(m->event1, info->name)) {
-> +			m->event2 = strdup(info->name);
-> +			return 1;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int test__uncore_event_sorting(struct test_suite *test __maybe_unused,
-> +				      int subtest __maybe_unused)
-> +{
-> +	struct evlist *evlist;
-> +	struct parse_events_error err;
-> +	struct evsel *evsel;
-> +	struct perf_pmu *pmu = NULL;
-> +	char *pmu_prefix = NULL;
-> +	struct match_state m = { NULL, NULL };
-> +	char buf[1024];
-> +	int ret;
-> +
-> +	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-> +		size_t len;
-> +		struct perf_pmu *sibling;
-> +
-> +		if (pmu->is_core)
-> +			continue;
-> +
-> +		len = pmu_name_len_no_suffix(pmu->name);
-> +		if (len == strlen(pmu->name))
-> +			continue;
-> +
-> +		sibling = pmu;
-> +		while ((sibling = perf_pmus__scan(sibling)) != NULL) {
-> +			if (sibling->is_core)
-> +				continue;
-> +			if (pmu_name_len_no_suffix(sibling->name) == len &&
-> +			    !strncmp(pmu->name, sibling->name, len))
-> +				break;
-> +		}
-> +
-> +		if (!sibling)
-> +			continue;
-> +
-> +		m.event1 = m.event2 = NULL;
-> +		perf_pmu__for_each_event(pmu, false, &m, event_cb);
-> +
-> +		if (m.event1 && m.event2) {
-> +			pmu_prefix = strndup(pmu->name, len);
-> +			break;
-> +		}
-> +		free(m.event1);
-> +	}
-> +
-> +	if (!pmu_prefix) {
-> +		pr_debug("No suitable uncore PMU found\n");
-> +		return TEST_SKIP;
-> +	}
-> +
-> +	evlist = evlist__new();
-> +	if (!evlist)
-> +		return TEST_FAIL;
-> +
-> +	snprintf(buf, sizeof(buf), "{%s/%s/,%s/%s/}",
-> +		 pmu_prefix, m.event1, pmu_prefix, m.event2);
-> +	pr_debug("Parsing: %s\n", buf);
-> +
-> +	parse_events_error__init(&err);
-> +	ret = parse_events(evlist, buf, &err);
-> +	if (ret) {
-> +		pr_debug("parse_events failed\n");
-> +		goto out_err;
-> +	}
-> +
-> +	TEST_ASSERT_VAL("Number of events is > 0", evlist->core.nr_entries > 0);
-> +	TEST_ASSERT_EQUAL("Number of events is a multiple of 2", evlist->core.nr_entries % 2, 0);
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (evsel__is_group_leader(evsel)) {
-> +			struct evsel *next = evsel__next(evsel);
-> +
-> +			TEST_ASSERT_EQUAL("Group size is 2", evsel->core.nr_members, 2);
-> +			TEST_ASSERT_VAL("PMU match", evsel->pmu == next->pmu);
-> +			TEST_ASSERT_VAL("First event name", strstr(evsel->name, m.event1) != NULL);
-> +			TEST_ASSERT_VAL("Second event name", strstr(next->name, m.event2) != NULL);
-> +		}
-> +	}
-> +
-> +	evlist__delete(evlist);
-> +	parse_events_error__exit(&err);
-> +	free(pmu_prefix);
-> +	free(m.event1);
-> +	free(m.event2);
-> +	return TEST_OK;
-> +
-> +out_err:
-> +	evlist__delete(evlist);
-> +	parse_events_error__exit(&err);
-> +	free(pmu_prefix);
-> +	free(m.event1);
-> +	free(m.event2);
-> +	return TEST_FAIL;
-> +}
-> +
-> +DEFINE_SUITE("Uncore event sorting", uncore_event_sorting);
+Signed-off-by: Ricky Ringler <ricky.ringler@proton.me>
+---
+ tools/perf/builtin-inject.c |  1 +
+ tools/perf/util/env.h       |  1 +
+ tools/perf/util/header.c    | 33 +++++++++++++++++++++++++++++
+ tools/perf/util/header.h    |  1 +
+ tools/perf/util/sort.c      | 41 +++++++++++++++++++++++++++----------
+ 5 files changed, 66 insertions(+), 11 deletions(-)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 5b29f4296861..11ac7c8c4be3 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2134,6 +2134,7 @@ static bool keep_feat(struct perf_inject *inject, int=
+ feat)
+ =09case HEADER_HYBRID_TOPOLOGY:
+ =09case HEADER_PMU_CAPS:
+ =09case HEADER_CPU_DOMAIN_INFO:
++=09case HEADER_CLN_SIZE:
+ =09=09return true;
+ =09/* Information that can be updated */
+ =09case HEADER_BUILD_ID:
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index a4501cbca375..c7052ac1f856 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -112,6 +112,7 @@ struct perf_env {
+ =09struct cpu_cache_level=09*caches;
+ =09struct cpu_domain_map=09**cpu_domain;
+ =09int=09=09=09 caches_cnt;
++=09unsigned int=09=09cln_size;
+ =09u32=09=09=09comp_ratio;
+ =09u32=09=09=09comp_ver;
+ =09u32=09=09=09comp_type;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 9142a8ba4019..4d852bd4ca9a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -54,6 +54,7 @@
+ #include "bpf-event.h"
+ #include "bpf-utils.h"
+ #include "clockid.h"
++#include "cacheline.h"
+=20
+ #include <linux/ctype.h>
+ #include <internal/lib.h>
+@@ -1304,6 +1305,22 @@ static int write_cache(struct feat_fd *ff,
+ =09return ret;
+ }
+=20
++#define DEFAULT_CACHELINE_SIZE =3D 64
++
++static int write_cln_size(struct feat_fd *ff,
++=09=09       struct evlist *evlist __maybe_unused)
++{
++=09int cln_size =3D cacheline_size();
++
++
++=09if(!cln_size)
++=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
++
++=09ff->ph->env.cln_size =3D cln_size;
++
++=09return do_write(ff, &cln_size, sizeof(cln_size));
++}
++
+ static int write_stat(struct feat_fd *ff __maybe_unused,
+ =09=09      struct evlist *evlist __maybe_unused)
+ {
+@@ -2261,6 +2278,11 @@ static void print_cache(struct feat_fd *ff, FILE *fp=
+ __maybe_unused)
+ =09}
+ }
+=20
++static void print_cln_size(struct feat_fd *ff, FILE *fp)
++{
++=09fprintf(fp, "# cacheline size: %u\n", ff->ph->env.cln_size);
++}
++
+ static void print_compressed(struct feat_fd *ff, FILE *fp)
+ {
+ =09fprintf(fp, "# compressed : %s, level =3D %d, ratio =3D %d\n",
+@@ -3154,6 +3176,16 @@ static int process_cache(struct feat_fd *ff, void *d=
+ata __maybe_unused)
+ =09return -1;
+ }
+=20
++static int process_cln_size(struct feat_fd *ff, void *data __maybe_unused)
++{
++=09struct perf_env *env =3D &ff->ph->env;
++
++=09if (do_read_u32(ff, &env->cln_size))
++=09=09return -1;
++
++=09return 0;
++}
++
+ static int process_sample_time(struct feat_fd *ff, void *data __maybe_unus=
+ed)
+ {
+ =09struct perf_session *session;
+@@ -3763,6 +3795,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_=
+LAST_FEATURE] =3D {
+ =09FEAT_OPR(PMU_CAPS,=09pmu_caps,=09false),
+ =09FEAT_OPR(CPU_DOMAIN_INFO,=09cpu_domain_info,=09true),
+ =09FEAT_OPR(E_MACHINE,=09e_machine,=09false),
++=09FEAT_OPR(CLN_SIZE,=09cln_size,=09false),
+ };
+=20
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index cc40ac796f52..be315040727f 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -55,6 +55,7 @@ enum {
+ =09HEADER_PMU_CAPS,
+ =09HEADER_CPU_DOMAIN_INFO,
+ =09HEADER_E_MACHINE,
++=09HEADER_CLN_SIZE,
+ =09HEADER_LAST_FEATURE,
+ =09HEADER_FEAT_BITS=09=3D 256,
+ };
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 42d5cd7ef4e2..5f617cf03d5d 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -30,6 +30,7 @@
+ #include "time-utils.h"
+ #include "cgroup.h"
+ #include "machine.h"
++#include "session.h"
+ #include "trace-event.h"
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+@@ -2474,7 +2475,30 @@ struct sort_entry sort_type_offset =3D {
+=20
+ /* --sort typecln */
+=20
+-#define DEFAULT_CACHELINE_SIZE 64
++static int
++hist_entry__cln_size(struct hist_entry *he)
++{
++=09int ret =3D 0;
++
++=09if (he && he->hists) {
++=09=09struct evsel *evsel =3D hists_to_evsel(he->hists);
++
++
++=09=09if (evsel) {
++=09=09=09struct perf_session *session =3D evsel__session(evsel);
++
++=09=09=09ret =3D session->header.env.cln_size;
++=09=09}
++=09}
++
++=09if (!ret || ret < 1) {
++=09=09int default_cacheline_size =3D 64; // avoid div/0 later
++
++=09=09ret =3D default_cacheline_size;
++=09}
++
++=09return ret;
++}
+=20
+ static int64_t
+ sort__typecln_sort(struct hist_entry *left, struct hist_entry *right)
+@@ -2482,11 +2506,9 @@ sort__typecln_sort(struct hist_entry *left, struct h=
+ist_entry *right)
+ =09struct annotated_data_type *left_type =3D left->mem_type;
+ =09struct annotated_data_type *right_type =3D right->mem_type;
+ =09int64_t left_cln, right_cln;
++=09int64_t cln_size_left =3D hist_entry__cln_size(left);
++=09int64_t cln_size_right =3D hist_entry__cln_size(right);
+ =09int64_t ret;
+-=09int cln_size =3D cacheline_size();
+-
+-=09if (cln_size =3D=3D 0)
+-=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
+=20
+ =09if (!left_type) {
+ =09=09sort__type_init(left);
+@@ -2502,8 +2524,8 @@ sort__typecln_sort(struct hist_entry *left, struct hi=
+st_entry *right)
+ =09if (ret)
+ =09=09return ret;
+=20
+-=09left_cln =3D left->mem_type_off / cln_size;
+-=09right_cln =3D right->mem_type_off / cln_size;
++=09left_cln =3D left->mem_type_off / cln_size_left;
++=09right_cln =3D right->mem_type_off / cln_size_right;
+ =09return left_cln - right_cln;
+ }
+=20
+@@ -2511,10 +2533,7 @@ static int hist_entry__typecln_snprintf(struct hist_=
+entry *he, char *bf,
+ =09=09=09=09     size_t size, unsigned int width __maybe_unused)
+ {
+ =09struct annotated_data_type *he_type =3D he->mem_type;
+-=09int cln_size =3D cacheline_size();
+-
+-=09if (cln_size =3D=3D 0)
+-=09=09cln_size =3D DEFAULT_CACHELINE_SIZE;
++=09int cln_size =3D hist_entry__cln_size(he);
+=20
+ =09return repsep_snprintf(bf, size, "%s: cache-line %d", he_type->self.typ=
+e_name,
+ =09=09=09       he->mem_type_off / cln_size);
+--=20
+2.53.0
+
 
