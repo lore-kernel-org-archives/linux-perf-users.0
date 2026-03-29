@@ -1,54 +1,58 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE637F756;
-	Sun, 29 Mar 2026 15:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8FE2367D9;
+	Sun, 29 Mar 2026 15:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774797910; cv=none; b=oRPRZ2ckxBGuSG4r/exqGUHshd9ROWNumHhqmja6dNvOlKruxk9EUWL2skYsSTHBAcXcF5zWlrMzEkNK7zswy4aK/eimbrIOYBW5lAbdi6Y3LqCqFAKMmqQ4WZtmD0hFJ4RRWxALCAL2g3j/FcHM8QS0kcuSdHYzaF2be96v/bU=
+	t=1774797910; cv=none; b=eK9SjRjpKKmNcHFEJvCtDHmxbJO29wg8dVOUp/cg0HzxSRTK/b+4NHyAm6O7M0OnmHe88QS5/tsin5DDbCYw7ej62NSejM2tcst9lnlblY8SxBBTBmBwvholzRHn5tY69tTxEfbIMDwo3+Htdspk4qA4AJPGxAWRa180jTvDjGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774797910; c=relaxed/simple;
-	bh=DoXQRe7hcWtxPGGVoRo1ja3dj3tJlCTl4VyNv9MFYKM=;
+	bh=nmm4VslxqXI3wqv5WDfEliYsy8tjbJh0jnVAafj/7Vs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gSsBGB39a8mPlQPrH7Yp0WEdeV+SAM3PQ+lZr9ZNF1/WFerVQ8vZH6Y6Qa3POttO1wGQQrSb+cWxuKALkIKa1JzavBA4mUZdc77KXgvmgOltimTB5FqEez6L0LylQNWpJgNGn5pm9VsxZVd2i3U+/PNRh8uv7uOckszi0McFwrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=HDkYtfLV; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=u/5CnadO8C8EMb43n/CxZNQhbNKQlEnel7BvPHG5mr/K0BiQib3UBK9Bq2IyeB/wzCb9MvVjsDDjieAzA9L5NC/p+w4pgFQwoppOE0uvb51mrRAM5rsFNwgTukRC5YyLz8bnTR0uANH7yPZy0x0CZlVOaXhxThR5Sm93FLKV4HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=PHoczkpm; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="HDkYtfLV"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62TFL6b41371814;
-	Sun, 29 Mar 2026 08:24:48 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PHoczkpm"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62TAfSEV1378075;
+	Sun, 29 Mar 2026 08:24:47 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=L9xd7vMLFeG3N3Dmk/LIu/Jxg
-	/dW3RJ5aKkQFlvfWY4=; b=HDkYtfLVfpoxhauUNHTNmd5h6Yegi/88K9HWU22Pf
-	BI58htQzvpm8fIYs/WVqAgMu0XqT8eojWTms/t7yjcK0nNjAxENExrrtbpBcC9RA
-	VRZqpjlpKYX2mwQXNZegEGYZl85Cl7RIv7LqSIrNpY+surUPdd9VpDTH6Bd++rOb
-	ipYIwod2mcKz5y2eqa08WMkxBROCAsil7H/zf6+VpSkytWQXLHvLZUcMNSfoEl8N
-	qXlMhjgsyMj/D++c+K2wdeh3FwuULQJQ1sK/vmyvH1jYBMOdFWr5PRarXHMiY3RR
-	gpdyRL6sG7YviqmBDN8LWvU8ZSwhisdFBJDS2YeqbanFQ==
+	:references:subject:to; s=pfpt0220; bh=0frzZsRp4geA//YkLJsFKvscu
+	/wuys79Cml4PWw9at8=; b=PHoczkpm12eC8XjnksxBndGDOyolM5wy/I+5JQ7Wg
+	/TTfVHHIZAkk0xy4m+yH4CnKyMx9/OeZk3E9gIoVXpQDfYxpwSdtOJevL6Qeqt1D
+	1WRLXXty+OICYnUoS0OIKXE7epAVrmf/MuK15tWBgGlEBhL+63tE9Xlo+1HZzT5V
+	PViXRoeIU/QgIAWQqqL7ZpWXqp1/W4BJHdoKilozCaOi6sPYctThA+sS2DqK2H0g
+	p2byQSZF1l4MsEiXZq2o9+UH7H6z0XzH8JRd95qQOfwmL85cx5FuYv0lVn8+Zn4I
+	QKDgSXj4qcbCusKXXwQ7l8tczu1bXXF4x3StCPk0NXaiw==
 Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 4d73870841-1
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4d6egghqbb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 29 Mar 2026 08:24:48 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+	Sun, 29 Mar 2026 08:24:47 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Sun, 29 Mar 2026 08:24:47 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
- Transport; Sun, 29 Mar 2026 08:24:47 -0700
+ 15.2.1544.25; Sun, 29 Mar 2026 08:24:46 -0700
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 29 Mar 2026 08:24:45 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
+ Transport; Sun, 29 Mar 2026 08:24:45 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id AA4F43F70A3;
-	Sun, 29 Mar 2026 08:24:45 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 0839F3F70A3;
+	Sun, 29 Mar 2026 08:24:42 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
 CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>
-Subject: [PATCH v2 2/2] perf: marvell: Add CN20K DDR PMU support
-Date: Sun, 29 Mar 2026 20:54:39 +0530
-Message-ID: <20260329152439.10573-3-gakula@marvell.com>
+Subject: [PATCH v2 1/2] dt-bindings: perf: marvell: Document CN20K DDR PMU
+Date: Sun, 29 Mar 2026 20:54:38 +0530
+Message-ID: <20260329152439.10573-2-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20260329152439.10573-1-gakula@marvell.com>
 References: <20260329152439.10573-1-gakula@marvell.com>
@@ -59,394 +63,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI5MDExOSBTYWx0ZWRfXw9gI1RjTu6WO
- vp7biRa2px+rjSRAgu2sLgTGHEBq3hBAaB5A9Mnf9t2YaIK9K1uG47G8TBuceWrjZamOalM7P2N
- B/19qmohEwVpYKZPWrGQ82llyDo/2h5uyDCNj7OdrXW47nB1gEkloX87w4E2cfM3GwvlE1MO2Xb
- 5uFetzT7Xj8NqRG6yn8dClARBg/F/wE4bfsVONQZXg7ocCrkwms91/YftzNgyi0qrUfKhwh7+VO
- Sv08gwu6iYRfBBqVgyW1PEJioorcFLnwioCw0gtebIGPjuLcm+xh6Z5tb4P+mQyWiu1jF6Ifl4m
- 8ZCQTVNDCeuyTSuIgPr+gwOU7b2RFLAtjhnmFzG5YiQRHiUw3bth/Gh5nkn7/ENCztwGXwf7esA
- 5Il725AwrUbBvEZ2D/E1tenHTq5Yxv4lIrCLNv0uZkm01hSLWLvFSOnz7uxWWNAhgi6JFgCIRcQ
- dliJnhXiZ85YLhfuW+A==
-X-Proofpoint-GUID: 55MiH9Me88W7AY5A23X6q6daP0JLvuIc
-X-Authority-Analysis: v=2.4 cv=DMCCIiNb c=1 sm=1 tr=0 ts=69c94440 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=bfxmkePB c=1 sm=1 tr=0 ts=69c9443f cx=c_pps
  a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
- a=TtqV-g6YmW1Jfm2GSLaY:22 a=M5GUcnROAAAA:8 a=WnYttJQ71G5mWjJxUIAA:9
- a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-ORIG-GUID: 55MiH9Me88W7AY5A23X6q6daP0JLvuIc
+ a=QXcCYyLzdtTjyudCfB6f:22 a=gEfo2CItAAAA:8 a=M5GUcnROAAAA:8
+ a=cxBr6QS3EhuSzrwsu80A:9 a=sptkURWiP4Gy88Gu7hUp:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: tb7vR8qxdi2mztV-MXqgls793zxXo8UH
+X-Proofpoint-GUID: tb7vR8qxdi2mztV-MXqgls793zxXo8UH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI5MDExOSBTYWx0ZWRfX5P44iiAmwQaz
+ ivRyhs/Bliq93ik0LWMM6tdYf7p4FraZ3jFHBFDz9C8Y8HN7Wf2dG4QD1dt29Ek95v35Eh/I3xu
+ j9CMu2ewE/WbcA+5DDCDe7ExQwtdUqSinV/4WcQiKSv+q8Zjx38pgi5nm3rY7meeW+9B22PvmK0
+ 02KCsOv+q5soOJf4qtoo4Ogu0W7ZG3oerz9WPIkwMI2st+cc/F/0GSYiLvFZBF+nZcXEiWtaivB
+ 4qHpa9UW+vUR6rs6OqLgYkDqqmurmiSnW9hSBqtjOsyjYQv+jh5HFXOT+fUrM82rb37HZ2t6H2b
+ lLTPzq7WwokaGDTINl0duiXVYevcf/RLWTsoo7QPbHzT7jyx08yJ28oxT9rPiC8795vRAEmwR1X
+ aT/Gsaw0fgXJrpNJB/dwpGr8WDYYj8U3p/TWHhBixNI/PX0Dse2spo80iHtWYxZUy+2vGONb1Ru
+ PxmjNcmqmMzKyM4gF7w==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-29_04,2026-03-28_01,2025-10-01_01
 
-The CN20K DRAM Subsystem exposes eight programmable
-performance counters and two fixed counters for DDR
-read and write traffic.  Software selects events for
-the programmable counters from traffic at the DDR PHY
-interface, the CHI interconnect, or inside the DDR controller.
-
-Add CN20K register offsets, event maps, and sysfs attributes;
-match the device via OF (marvell,cn20k-ddr-pmu) and ACPI (MRVL000B).
-Represent the SoC variant in platform data with bit flags so
-CN20K can reuse the Odyssey PMU code path where appropriate.
+Add a devicetree binding for the Marvell CN20K DDR performance
+monitor block, including the marvell,cn20k-ddr-pmu compatible
+string and the required MMIO reg region.
 
 Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 ---
- drivers/perf/marvell_cn10k_ddr_pmu.c | 187 ++++++++++++++++++++++++---
- 1 file changed, 171 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index 72ac17efd846..7e2e1823b009 100644
---- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-+++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -13,31 +13,43 @@
- #include <linux/hrtimer.h>
- #include <linux/acpi.h>
- #include <linux/platform_device.h>
-+#include <linux/bits.h>
+Changes in v1:
+- Added a description field to the binding.
+- Simplified the compatible property using 'const' instead of 'items/enum'.
+- Updated the example node name to include a unit-address matching the reg base.
+
+ .../bindings/perf/marvell-cn20k-ddr.yaml      | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml
+
+diff --git a/Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml b/Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml
+new file mode 100644
+index 000000000000..470eac0a53c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/marvell-cn20k-ddr.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/marvell-cn20k-ddr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/* SoC variant flags for struct ddr_pmu_platform_data (mutually exclusive in pdata) */
-+#define IS_CN10K	BIT(0)
-+#define IS_ODY		BIT(1)
-+#define IS_CN20K	BIT(2)
- 
- /* Performance Counters Operating Mode Control Registers */
- #define CN10K_DDRC_PERF_CNT_OP_MODE_CTRL	0x8020
- #define ODY_DDRC_PERF_CNT_OP_MODE_CTRL		0x20020
-+#define CN20K_DDRC_PERF_CNT_OP_MODE_CTRL	0x20000
- #define OP_MODE_CTRL_VAL_MANUAL	0x1
- 
- /* Performance Counters Start Operation Control Registers */
- #define CN10K_DDRC_PERF_CNT_START_OP_CTRL	0x8028
- #define ODY_DDRC_PERF_CNT_START_OP_CTRL		0x200A0
-+#define CN20K_DDRC_PERF_CNT_START_OP_CTRL	0x20080
- #define START_OP_CTRL_VAL_START		0x1ULL
- #define START_OP_CTRL_VAL_ACTIVE	0x2
- 
- /* Performance Counters End Operation Control Registers */
- #define CN10K_DDRC_PERF_CNT_END_OP_CTRL	0x8030
- #define ODY_DDRC_PERF_CNT_END_OP_CTRL	0x200E0
-+#define CN20K_DDRC_PERF_CNT_END_OP_CTRL	0x200C0
- #define END_OP_CTRL_VAL_END		0x1ULL
- 
- /* Performance Counters End Status Registers */
- #define CN10K_DDRC_PERF_CNT_END_STATUS		0x8038
- #define ODY_DDRC_PERF_CNT_END_STATUS		0x20120
-+#define CN20K_DDRC_PERF_CNT_END_STATUS		0x20100
- #define END_STATUS_VAL_END_TIMER_MODE_END	0x1
- 
- /* Performance Counters Configuration Registers */
- #define CN10K_DDRC_PERF_CFG_BASE		0x8040
- #define ODY_DDRC_PERF_CFG_BASE			0x20160
-+#define CN20K_DDRC_PERF_CFG_BASE		0x20140
-+#define CN20K_DDRC_PERF_CFG1_BASE		0x20180
- 
- /* 8 Generic event counter + 2 fixed event counters */
- #define DDRC_PERF_NUM_GEN_COUNTERS	8
-@@ -61,6 +73,23 @@
-  * DO NOT change these event-id numbers, they are used to
-  * program event bitmap in h/w.
-  */
++title: Marvell CN20K DDR performance monitor
 +
-+/* CN20K specific events */
-+#define EVENT_PERF_OP_IS_RD16			61
-+#define EVENT_PERF_OP_IS_RD32			60
-+#define EVENT_PERF_OP_IS_WR16			59
-+#define EVENT_PERF_OP_IS_WR32			58
-+#define EVENT_OP_IS_ENTER_DSM			44
-+#define EVENT_OP_IS_RFM				43
++description:
++  Performance Monitoring Unit (PMU) for the DDR controller
++  in Marvell CN20K SoCs.
 +
-+#define EVENT_CN20K_OP_IS_TCR_MRR			50
-+#define EVENT_CN20K_OP_IS_DQSOSC_MRR			49
-+#define EVENT_CN20K_OP_IS_DQSOSC_MPC			48
-+#define EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_WR	47
-+#define EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_RD	46
-+#define EVENT_CN20K_OP_IS_ZQLATCH			21
-+#define EVENT_CN20K_OP_IS_ZQSTART			22
++maintainers:
++  - Geetha sowjanya <gakula@marvell.com>
 +
- #define EVENT_DFI_CMD_IS_RETRY			61
- #define EVENT_RD_UC_ECC_ERROR			60
- #define EVENT_RD_CRC_ERROR			59
-@@ -87,6 +116,9 @@
- #define EVENT_OP_IS_SPEC_REF			41
- #define EVENT_OP_IS_CRIT_REF			40
- #define EVENT_OP_IS_REFRESH			39
-+#define EVENT_OP_IS_CAS_WCK_SUS			38
-+#define EVENT_OP_IS_CAS_WS_OFF			37
-+#define EVENT_OP_IS_CAS_WS			36
- #define EVENT_OP_IS_ENTER_MPSM			35
- #define EVENT_OP_IS_ENTER_POWERDOWN		31
- #define EVENT_OP_IS_ENTER_SELFREF		27
-@@ -183,8 +215,8 @@ struct ddr_pmu_platform_data {
- 	u64 cnt_freerun_clr;
- 	u64 cnt_value_wr_op;
- 	u64 cnt_value_rd_op;
--	bool is_cn10k;
--	bool is_ody;
-+	u64 cfg1_base;
-+	unsigned int silicon_flags; /* IS_CN10K, IS_ODY, or IS_CN20K */
- };
- 
- static ssize_t cn10k_ddr_pmu_event_show(struct device *dev,
-@@ -336,6 +368,80 @@ static struct attribute *odyssey_ddr_perf_events_attrs[] = {
- 	NULL
- };
- 
-+static struct attribute *cn20k_ddr_perf_events_attrs[] = {
-+	/* Programmable */
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hif_rd_or_wr_access, EVENT_HIF_RD_OR_WR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hif_wr_access, EVENT_HIF_WR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hif_rd_access, EVENT_HIF_RD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hif_rmw_access, EVENT_HIF_RMW),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hif_pri_rdaccess, EVENT_HIF_HI_PRI_RD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_rd_bypass_access, EVENT_READ_BYPASS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_act_bypass_access, EVENT_ACT_BYPASS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_dfi_wr_data_access,
-+				 EVENT_DFI_WR_DATA_CYCLES),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_dfi_rd_data_access,
-+				 EVENT_DFI_RD_DATA_CYCLES),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_hpri_sched_rd_crit_access,
-+				 EVENT_HPR_XACT_WHEN_CRITICAL),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_lpri_sched_rd_crit_access,
-+				 EVENT_LPR_XACT_WHEN_CRITICAL),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_wr_trxn_crit_access,
-+				 EVENT_WR_XACT_WHEN_CRITICAL),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_active_access, EVENT_OP_IS_ACTIVATE),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_rd_or_wr_access,
-+				 EVENT_OP_IS_RD_OR_WR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_rd_active_access,
-+				 EVENT_OP_IS_RD_ACTIVATE),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_read, EVENT_OP_IS_RD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_write, EVENT_OP_IS_WR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_mwr, EVENT_OP_IS_MWR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_precharge, EVENT_OP_IS_PRECHARGE),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_precharge_for_rdwr,
-+				 EVENT_PRECHARGE_FOR_RDWR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_precharge_for_other,
-+				 EVENT_PRECHARGE_FOR_OTHER),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_rdwr_transitions, EVENT_RDWR_TRANSITIONS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_write_combine, EVENT_WRITE_COMBINE),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_war_hazard, EVENT_WAR_HAZARD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_raw_hazard, EVENT_RAW_HAZARD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_waw_hazard, EVENT_WAW_HAZARD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_enter_selfref, EVENT_OP_IS_ENTER_SELFREF),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_enter_powerdown,
-+				 EVENT_OP_IS_ENTER_POWERDOWN),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_ws, EVENT_OP_IS_CAS_WS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_ws_off, EVENT_OP_IS_CAS_WS_OFF),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_wck_sus, EVENT_OP_IS_CAS_WCK_SUS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_refresh, EVENT_OP_IS_REFRESH),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_crit_ref, EVENT_OP_IS_CRIT_REF),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_spec_ref, EVENT_OP_IS_SPEC_REF),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_load_mode, EVENT_OP_IS_LOAD_MODE),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_rfm, EVENT_OP_IS_RFM),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_enter_dsm, EVENT_OP_IS_ENTER_DSM),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_dfi_cycles, EVENT_DFI_CYCLES),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_win_limit_reached_rd,
-+				 EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_RD),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_win_limit_reached_wr,
-+				 EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_WR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_dqsosc_mpc, EVENT_CN20K_OP_IS_DQSOSC_MPC),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_dqsosc_mrr, EVENT_CN20K_OP_IS_DQSOSC_MRR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_tcr_mrr, EVENT_CN20K_OP_IS_TCR_MRR),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_zqstart, EVENT_CN20K_OP_IS_ZQSTART),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_zqlatch, EVENT_CN20K_OP_IS_ZQLATCH),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_read16, EVENT_PERF_OP_IS_RD16),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_read32, EVENT_PERF_OP_IS_RD32),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_write16, EVENT_PERF_OP_IS_WR16),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_write32, EVENT_PERF_OP_IS_WR32),
-+	/* Free run event counters */
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_ddr_reads, EVENT_DDR_READS),
-+	CN10K_DDR_PMU_EVENT_ATTR(ddr_ddr_writes, EVENT_DDR_WRITES),
-+	NULL
-+};
++properties:
++  compatible:
++    const: marvell,cn20k-ddr-pmu
 +
-+static struct attribute_group cn20k_ddr_perf_events_attr_group = {
-+	.name = "events",
-+	.attrs = cn20k_ddr_perf_events_attrs,
-+};
++  reg:
++    maxItems: 1
 +
- static struct attribute_group odyssey_ddr_perf_events_attr_group = {
- 	.name = "events",
- 	.attrs = odyssey_ddr_perf_events_attrs,
-@@ -393,6 +499,13 @@ static const struct attribute_group *odyssey_attr_groups[] = {
- 	NULL
- };
- 
-+static const struct attribute_group *cn20k_attr_groups[] = {
-+	&cn20k_ddr_perf_events_attr_group,
-+	&cn10k_ddr_perf_format_attr_group,
-+	&cn10k_ddr_perf_cpumask_attr_group,
-+	NULL
-+};
++required:
++  - compatible
++  - reg
 +
- /* Default poll timeout is 100 sec, which is very sufficient for
-  * 48 bit counter incremented max at 5.6 GT/s, which may take many
-  * hours to overflow.
-@@ -412,7 +525,7 @@ static int ddr_perf_get_event_bitmap(int eventid, u64 *event_bitmap,
- 
- 	switch (eventid) {
- 	case EVENT_DFI_PARITY_POISON ...EVENT_DFI_CMD_IS_RETRY:
--		if (!ddr_pmu->p_data->is_ody) {
-+		if (!(ddr_pmu->p_data->silicon_flags & IS_ODY)) {
- 			err = -EINVAL;
- 			break;
- 		}
-@@ -524,9 +637,9 @@ static void cn10k_ddr_perf_counter_enable(struct cn10k_ddr_pmu *pmu,
- 					  int counter, bool enable)
- {
- 	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
-+	unsigned int silicon_flags = pmu->p_data->silicon_flags;
- 	u64 ctrl_reg = pmu->p_data->cnt_op_mode_ctrl;
- 	const struct ddr_pmu_ops *ops = pmu->ops;
--	bool is_ody = pmu->p_data->is_ody;
- 	u32 reg;
- 	u64 val;
- 
-@@ -546,7 +659,7 @@ static void cn10k_ddr_perf_counter_enable(struct cn10k_ddr_pmu *pmu,
- 
- 		writeq_relaxed(val, pmu->base + reg);
- 
--		if (is_ody) {
-+		if (silicon_flags & IS_ODY) {
- 			if (enable) {
- 				/*
- 				 * Setup the PMU counter to work in
-@@ -621,6 +734,7 @@ static int cn10k_ddr_perf_event_add(struct perf_event *event, int flags)
- {
- 	struct cn10k_ddr_pmu *pmu = to_cn10k_ddr_pmu(event->pmu);
- 	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
-+	unsigned int silicon_flags = pmu->p_data->silicon_flags;
- 	const struct ddr_pmu_ops *ops = pmu->ops;
- 	struct hw_perf_event *hwc = &event->hw;
- 	u8 config = event->attr.config;
-@@ -642,10 +756,17 @@ static int cn10k_ddr_perf_event_add(struct perf_event *event, int flags)
- 	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
- 		/* Generic counters, configure event id */
- 		reg_offset = DDRC_PERF_CFG(p_data->cfg_base, counter);
--		ret = ddr_perf_get_event_bitmap(config, &val, pmu);
--		if (ret)
--			return ret;
- 
-+		if (silicon_flags & IS_CN20K) {
-+			val =  (1ULL << (config - 1));
-+			if (config == EVENT_CN20K_OP_IS_ZQSTART ||
-+			    config == EVENT_CN20K_OP_IS_ZQLATCH)
-+				reg_offset = DDRC_PERF_CFG(p_data->cfg1_base, counter);
-+		} else {
-+			ret = ddr_perf_get_event_bitmap(config, &val, pmu);
-+			if (ret)
-+				return ret;
-+		}
- 		writeq_relaxed(val, pmu->base + reg_offset);
- 	} else {
- 		/* fixed event counter, clear counter value */
-@@ -952,7 +1073,25 @@ static const struct ddr_pmu_platform_data cn10k_ddr_pmu_pdata = {
- 	.cnt_freerun_clr = 0,
- 	.cnt_value_wr_op = CN10K_DDRC_PERF_CNT_VALUE_WR_OP,
- 	.cnt_value_rd_op = CN10K_DDRC_PERF_CNT_VALUE_RD_OP,
--	.is_cn10k = TRUE,
-+	.silicon_flags = IS_CN10K,
-+};
++additionalProperties: false
 +
-+static const struct ddr_pmu_platform_data cn20k_ddr_pmu_pdata = {
-+	.counter_overflow_val = 0,
-+	.counter_max_val = GENMASK_ULL(63, 0),
-+	.cnt_base = ODY_DDRC_PERF_CNT_VALUE_BASE,
-+	.cfg_base = CN20K_DDRC_PERF_CFG_BASE,
-+	.cfg1_base = CN20K_DDRC_PERF_CFG1_BASE,
-+	.cnt_op_mode_ctrl = CN20K_DDRC_PERF_CNT_OP_MODE_CTRL,
-+	.cnt_start_op_ctrl = CN20K_DDRC_PERF_CNT_START_OP_CTRL,
-+	.cnt_end_op_ctrl = CN20K_DDRC_PERF_CNT_END_OP_CTRL,
-+	.cnt_end_status = CN20K_DDRC_PERF_CNT_END_STATUS,
-+	.cnt_freerun_en = 0,
-+	.cnt_freerun_ctrl = ODY_DDRC_PERF_CNT_FREERUN_CTRL,
-+	.cnt_freerun_clr = ODY_DDRC_PERF_CNT_FREERUN_CLR,
-+	.cnt_value_wr_op = ODY_DDRC_PERF_CNT_VALUE_WR_OP,
-+	.cnt_value_rd_op = ODY_DDRC_PERF_CNT_VALUE_RD_OP,
-+	.silicon_flags = IS_CN20K,
- };
- #endif
- 
-@@ -979,7 +1118,7 @@ static const struct ddr_pmu_platform_data odyssey_ddr_pmu_pdata = {
- 	.cnt_freerun_clr = ODY_DDRC_PERF_CNT_FREERUN_CLR,
- 	.cnt_value_wr_op = ODY_DDRC_PERF_CNT_VALUE_WR_OP,
- 	.cnt_value_rd_op = ODY_DDRC_PERF_CNT_VALUE_RD_OP,
--	.is_ody = TRUE,
-+	.silicon_flags = IS_ODY,
- };
- #endif
- 
-@@ -989,8 +1128,7 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- 	struct cn10k_ddr_pmu *ddr_pmu;
- 	struct resource *res;
- 	void __iomem *base;
--	bool is_cn10k;
--	bool is_ody;
-+	unsigned int silicon_flags;
- 	char *name;
- 	int ret;
- 
-@@ -1014,10 +1152,9 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- 	ddr_pmu->base = base;
- 
- 	ddr_pmu->p_data = dev_data;
--	is_cn10k = ddr_pmu->p_data->is_cn10k;
--	is_ody = ddr_pmu->p_data->is_ody;
-+	silicon_flags = ddr_pmu->p_data->silicon_flags;
- 
--	if (is_cn10k) {
-+	if (silicon_flags & IS_CN10K) {
- 		ddr_pmu->ops = &ddr_pmu_ops;
- 		/* Setup the PMU counter to work in manual mode */
- 		writeq_relaxed(OP_MODE_CTRL_VAL_MANUAL, ddr_pmu->base +
-@@ -1039,7 +1176,7 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- 		};
- 	}
- 
--	if (is_ody) {
-+	if (silicon_flags & IS_ODY) {
- 		ddr_pmu->ops = &ddr_pmu_ody_ops;
- 
- 		ddr_pmu->pmu = (struct pmu) {
-@@ -1056,6 +1193,22 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- 		};
- 	}
- 
-+	if (silicon_flags & IS_CN20K) {
-+		ddr_pmu->ops = &ddr_pmu_ody_ops;
++examples:
++  - |
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
 +
-+		ddr_pmu->pmu = (struct pmu) {
-+			.module       = THIS_MODULE,
-+			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
-+			.task_ctx_nr = perf_invalid_context,
-+			.attr_groups = cn20k_attr_groups,
-+			.event_init  = cn10k_ddr_perf_event_init,
-+			.add         = cn10k_ddr_perf_event_add,
-+			.del         = cn10k_ddr_perf_event_del,
-+			.start       = cn10k_ddr_perf_event_start,
-+			.stop        = cn10k_ddr_perf_event_stop,
-+			.read        = cn10k_ddr_perf_event_update,
-+		};
-+	}
- 	/* Choose this cpu to collect perf data */
- 	ddr_pmu->cpu = raw_smp_processor_id();
- 
-@@ -1098,6 +1251,7 @@ static void cn10k_ddr_perf_remove(struct platform_device *pdev)
- #ifdef CONFIG_OF
- static const struct of_device_id cn10k_ddr_pmu_of_match[] = {
- 	{ .compatible = "marvell,cn10k-ddr-pmu", .data = &cn10k_ddr_pmu_pdata },
-+	{ .compatible = "marvell,cn20k-ddr-pmu", .data = &cn20k_ddr_pmu_pdata },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, cn10k_ddr_pmu_of_match);
-@@ -1107,6 +1261,7 @@ MODULE_DEVICE_TABLE(of, cn10k_ddr_pmu_of_match);
- static const struct acpi_device_id cn10k_ddr_pmu_acpi_match[] = {
- 	{"MRVL000A", (kernel_ulong_t)&cn10k_ddr_pmu_pdata },
- 	{"MRVL000C", (kernel_ulong_t)&odyssey_ddr_pmu_pdata},
-+	{"MRVL000B", (kernel_ulong_t)&cn20k_ddr_pmu_pdata},
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, cn10k_ddr_pmu_acpi_match);
++	ddr-pmu@c200000000 {
++            compatible = "marvell,cn20k-ddr-pmu";
++            reg = <0xc200 0x00000000 0x0 0x100000>;
++        };
++    };
 -- 
 2.25.1
 
