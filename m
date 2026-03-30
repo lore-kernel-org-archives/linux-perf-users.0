@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E403A16A5;
-	Mon, 30 Mar 2026 21:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA493A3E67;
+	Mon, 30 Mar 2026 21:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774906389; cv=none; b=YCUbicUcoIBgUUdrzs9i5Kze37TYDJBa3exlq/6JeB6j39pHnqFDmv7w0pqB0wbqkFZgyXRjl/Gvk3K71qf34QLPrUgUfJw/MBrh2MDvD/+s2Iid455mQOimnLezYGV/ztE9rW0O+1/eRcbo4EnYmXRYG5e/9jVobbuK09Ce6oE=
+	t=1774906389; cv=none; b=r6kXye+9xvHSW9hCpMpdyWDqoztpgHGSgv061ZGmyFz9mLAJHOAkzHY88S6axoJSNJN16pfC6uJBECKcdMNQQ29rY5wRyDy64jbkey2djsXcZr3OEEbIggPg4Yxe5SmaprfviAp4DxP77mWWlpnJ3fGPCyQ6H7xvG0+Z8kG1Q3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774906389; c=relaxed/simple;
-	bh=dj91uacxVecpa5voFWCqOyWoMImRkteyWSGRMf7pepo=;
+	bh=s9AYQcY7BMrLW8mIR2aeHyxZbtPFcbCalGfICe0htbM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hmJqX2+bvTbSamZs/fBJRLRBOHT2JoJIxMSa8oA9iBMEVF5GX8Q0NjXZV4YyAyNGwz5V6jeph4JtlbNSYI4Qiw6N5Dej0IAz+7mF0qWYNjZmaCwuB9zN5NC8ciswu9Xj9ItsS7nGU24NwT9pAFk9mMJywuzA3eZHdK3x/EK3/z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K+kPGZS6; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=lPej04Y1C+0GJmGZE/UD3zgbtYrihozQe+CZKwTO7jsCllJ3DGzEsn7TKQDs7rt+y8CcMV3jZMH+WlMXECG5sSHyL0Ykl++7ZxQXJy7rZvv6eLdZHcjp5E1oPdHUxFYsF7NKVmFtahfP5YC8ERG/94hfe8suBaAldgiYR37SKjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nUPScYrG; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+kPGZS6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nUPScYrG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774906387; x=1806442387;
+  t=1774906388; x=1806442388;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dj91uacxVecpa5voFWCqOyWoMImRkteyWSGRMf7pepo=;
-  b=K+kPGZS6HpqIu4XV4f/UcaVwz66iO1zHSyOqYodSUmVvy5FDUEloInHQ
-   wPwHCbSzutgeNqRzcWZWk4g1Q/KM3mDqOP/3HkmWmntXD9Z2RgXSNxvGd
-   Zl+OnDn8lFUX4wUN5MyENwBCBsw4J7auKkCHU6kgU8Mc8DBBAtA5rxsQ4
-   U+0MO2yhT4ozmL/UsDIC9/b6gJDX7LSsa78VgWD13PujtzWq+C9RgndFI
-   egT6uObiD0KrfKbhnKoq9DZ1yeskvqH1gNTll/zEiLuaC/Wv54ViiXcOq
-   ahUT7lENKv9nUklZjWbooClXj4EpzjQiOGnpRNniaWNkgV4zxy57SwOZr
-   Q==;
-X-CSE-ConnectionGUID: 7QiLgV9oR+WrTEoqL2Sajw==
-X-CSE-MsgGUID: hi60cEODTWmgct3PK2IlUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="101366825"
+  bh=s9AYQcY7BMrLW8mIR2aeHyxZbtPFcbCalGfICe0htbM=;
+  b=nUPScYrGMzfzAvtU2PV8toovuyBwLwR5agipq8iNyq1HfsEDqoYpEHrG
+   E9vQqWFuFADnXYMxdI9Lee+cO5G+rRnz3cgICEhpj1vVwj4B4sjhNRD4u
+   7XS9DYk83cajaNuQfeeZPK9qbcOHp784JGMTcKpeFpd5xjtYw76yaas3R
+   OGgySV6MaVdSD9Rr0MrH472E4YG2XaOjKqpXRsOVPftXCVnLMxhcOT87B
+   cW9OBF5Gy4jn5Nzg5WlaUR5xBbsqnEtgCZdbc96DmHuXuH6XPaE+QrBJs
+   AQFhuVs0fwLPgqgJCKwfTG7ptIM2TM6mhpi5DSm3MFvBTrwV3ZramdPTb
+   g==;
+X-CSE-ConnectionGUID: UlgZd6dVRYG0b1pikv5VmQ==
+X-CSE-MsgGUID: EWn2gZA/TXuXNedKOD1anA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="101366832"
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="101366825"
+   d="scan'208";a="101366832"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:07 -0700
-X-CSE-ConnectionGUID: 2EL/tTtlSteUtPfvcsXlbg==
-X-CSE-MsgGUID: BPBTC3oQTLeC+af8ddxfXw==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:08 -0700
+X-CSE-ConnectionGUID: yb/AzzijQACslFfCe8/t/g==
+X-CSE-MsgGUID: ti4QAWreTZSRuoRvxty9pA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="227779540"
+   d="scan'208";a="227779543"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:06 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:07 -0700
 From: Zide Chen <zide.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steve Wahl <steve.wahl@hpe.com>,
 	Chun-Tse Shao <ctshao@google.com>,
 	Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH V6 3/5] perf/x86/intel/uncore: Do not treat -1 die_id as error during UBOX scan
-Date: Mon, 30 Mar 2026 14:24:42 -0700
-Message-ID: <20260330212444.117325-4-zide.chen@intel.com>
+Subject: [PATCH V6 4/5] perf/x86/intel/uncore: Fix PMON enumeration with NUMA disabled
+Date: Mon, 30 Mar 2026 14:24:43 -0700
+Message-ID: <20260330212444.117325-5-zide.chen@intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260330212444.117325-1-zide.chen@intel.com>
 References: <20260330212444.117325-1-zide.chen@intel.com>
@@ -74,69 +74,101 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In snbep_pci2phy_map_init(), in the nr_node_ids > 8 path,
-uncore_device_to_die() may return -1 when all CPUs associated
-with the UBOX device are offline.
+When NUMA is disabled on a NUMA-capable platform, UPI and M3UPI PMON
+units are not enumerated.
 
-Remove the WARN_ON_ONCE(die_id == -1) check for two reasons:
+In this case, pcibus_to_node() always returns NUMA_NO_NODE, causing
+uncore_device_to_die() to return -1 for all PCI devices. As a result,
+the corresponding PMON units are not added to the RB tree.
 
-- The current code breaks out of the loop. This is incorrect because
-  pci_get_device() does not guarantee iteration in domain or bus order,
-  so additional UBOX devices may be skipped during the scan.
+These PMON units are per-die resources, and their utility when NUMA is
+disabled is limited.  The driver does not prohibit their use, and the
+enumeration should still work correctly.
 
-- Returning -EINVAL is incorrect, since marking offline buses with
-  die_id == -1 is expected and should not be treated as an error.
+Fix this by using uncore_pcibus_to_dieid(), which works regardless of
+whether NUMA is enabled.  This requires calling
+snbep_pci2phy_map_init() in spr_uncore_pci_init().
 
-Fixes: 9a7832ce3d92 ("perf/x86/intel/uncore: With > 8 nodes, get pci bus die id from NUMA info")
+Since pci_init() is called before mmio_init(), remove the redundant
+snbep_pci2phy_map_init() call from spr_uncore_mmio_init().  If
+snbep_pci2phy_map_init() fails, uncore driver should be bailed out,
+so the fallback path in spr_uncore_mmio_init() can be removed.
+
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
-V2:
-- Fix the commit message to note that spr_update_device_location() is
-  used by EMR, not GNR.
-- Rewrite the commit message for clarity.
-- Add a Tested-by tag.
-
-V5:
-- Removed unused die_id (Dapeng).
-
 V6:
-- Move the spr_update_device_location() change to a separate patch.
-- Update the comit message and title to reflect the reduced scope of
-  this patch.
-- Remove Tested-by since the code has changed.
+- Split from patch v5 3/4.
+- Remove the redundant call in spr_uncore_mmio_init().
+- Update commit messages.
 ---
- arch/x86/events/intel/uncore_snbep.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/x86/events/intel/uncore.c       |  1 +
+ arch/x86/events/intel/uncore_snbep.c | 26 +++++++++++---------------
+ 2 files changed, 12 insertions(+), 15 deletions(-)
 
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 786bd51a0d89..e9cc1ba921c5 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
+ 	return bus ? pci_domain_nr(bus) : -EINVAL;
+ }
+ 
++/* Note: This API can only be used when NUMA information is available. */
+ int uncore_device_to_die(struct pci_dev *dev)
+ {
+ 	int node = pcibus_to_node(dev->bus);
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 9b51883fd6fd..8ee06d4659bb 100644
+index 8ee06d4659bb..73da1e88e286 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -1413,7 +1413,7 @@ static int topology_gidnid_map(int nodeid, u32 gidnid)
- static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool reverse)
+@@ -6415,7 +6415,7 @@ static void spr_update_device_location(int type_id)
+ 
+ 	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
+ 
+-		die = uncore_device_to_die(dev);
++		die = uncore_pcibus_to_dieid(dev->bus);
+ 		if (die < 0)
+ 			continue;
+ 
+@@ -6439,6 +6439,10 @@ static void spr_update_device_location(int type_id)
+ 
+ int spr_uncore_pci_init(void)
  {
- 	struct pci_dev *ubox_dev = NULL;
--	int i, bus, nodeid, segment, die_id;
-+	int i, bus, nodeid, segment;
- 	struct pci2phy_map *map;
- 	int err = 0;
- 	u32 config = 0;
-@@ -1458,14 +1458,9 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
- 				break;
- 			}
++	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * The discovery table of UPI on some SPR variant is broken,
+ 	 * which impacts the detection of both UPI and M3UPI uncore PMON.
+@@ -6460,21 +6464,13 @@ int spr_uncore_pci_init(void)
  
--			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
-+			map->pbus_to_dieid[bus] = uncore_device_to_die(ubox_dev);
+ void spr_uncore_mmio_init(void)
+ {
+-	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
++	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
++						 UNCORE_SPR_MMIO_EXTRA_UNCORES,
++						 spr_mmio_uncores,
++						 UNCORE_SPR_NUM_UNCORE_TYPES,
++						 spr_uncores);
  
- 			raw_spin_unlock(&pci2phy_map_lock);
+-	if (ret) {
+-		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
+-							 UNCORE_SPR_NUM_UNCORE_TYPES,
+-							 spr_uncores);
+-	} else {
+-		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
+-							 UNCORE_SPR_MMIO_EXTRA_UNCORES,
+-							 spr_mmio_uncores,
+-							 UNCORE_SPR_NUM_UNCORE_TYPES,
+-							 spr_uncores);
 -
--			if (WARN_ON_ONCE(die_id == -1)) {
--				err = -EINVAL;
--				break;
--			}
- 		}
- 	}
+-		spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
+-	}
++	spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
+ }
  
+ /* end of SPR uncore support */
 -- 
 2.53.0
 
