@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA493A3E67;
-	Mon, 30 Mar 2026 21:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729DC3A453B;
+	Mon, 30 Mar 2026 21:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774906389; cv=none; b=r6kXye+9xvHSW9hCpMpdyWDqoztpgHGSgv061ZGmyFz9mLAJHOAkzHY88S6axoJSNJN16pfC6uJBECKcdMNQQ29rY5wRyDy64jbkey2djsXcZr3OEEbIggPg4Yxe5SmaprfviAp4DxP77mWWlpnJ3fGPCyQ6H7xvG0+Z8kG1Q3g=
+	t=1774906390; cv=none; b=nyHULrKzgjhWlyjpoTsbYJpNf7r1tg1kdp8N1EeQXWeeoSK2o6NdeYOhaFyqld4RmnKJcrI8qPE90webY6i4A3w6OfI2UOlkqQmq/xHh8ZufBuFyuEearVEbgaWYtl9oRGtHpmxT2jqSqnDICNzZyerFHOdpZCGBSh8WlcfUTmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774906389; c=relaxed/simple;
-	bh=s9AYQcY7BMrLW8mIR2aeHyxZbtPFcbCalGfICe0htbM=;
+	s=arc-20240116; t=1774906390; c=relaxed/simple;
+	bh=9QRzPBMILxYM58UeEFL5MSp8C3xvH+5XF+oAuc3WGlI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lPej04Y1C+0GJmGZE/UD3zgbtYrihozQe+CZKwTO7jsCllJ3DGzEsn7TKQDs7rt+y8CcMV3jZMH+WlMXECG5sSHyL0Ykl++7ZxQXJy7rZvv6eLdZHcjp5E1oPdHUxFYsF7NKVmFtahfP5YC8ERG/94hfe8suBaAldgiYR37SKjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nUPScYrG; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=aXcrO3qkJDlzsEkGkQiBq++hELLtSQwZm1AE3nSO5Lo29/15SzLBbDjfjgtrVcmuxPEkKtNPJZfNxgWt0BKMZq6bMmkOXsZwwKa01bf2XViRr75QdpYwCFMAUYQNehwZ8SQhn+nr/usR5ClI+hYncCmUtHyQn+hg/bnHtMj1KZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/3TJhtp; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nUPScYrG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/3TJhtp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774906388; x=1806442388;
+  t=1774906389; x=1806442389;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=s9AYQcY7BMrLW8mIR2aeHyxZbtPFcbCalGfICe0htbM=;
-  b=nUPScYrGMzfzAvtU2PV8toovuyBwLwR5agipq8iNyq1HfsEDqoYpEHrG
-   E9vQqWFuFADnXYMxdI9Lee+cO5G+rRnz3cgICEhpj1vVwj4B4sjhNRD4u
-   7XS9DYk83cajaNuQfeeZPK9qbcOHp784JGMTcKpeFpd5xjtYw76yaas3R
-   OGgySV6MaVdSD9Rr0MrH472E4YG2XaOjKqpXRsOVPftXCVnLMxhcOT87B
-   cW9OBF5Gy4jn5Nzg5WlaUR5xBbsqnEtgCZdbc96DmHuXuH6XPaE+QrBJs
-   AQFhuVs0fwLPgqgJCKwfTG7ptIM2TM6mhpi5DSm3MFvBTrwV3ZramdPTb
-   g==;
-X-CSE-ConnectionGUID: UlgZd6dVRYG0b1pikv5VmQ==
-X-CSE-MsgGUID: EWn2gZA/TXuXNedKOD1anA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="101366832"
+  bh=9QRzPBMILxYM58UeEFL5MSp8C3xvH+5XF+oAuc3WGlI=;
+  b=f/3TJhtp/9hnsmVYJ35NrSUaZVSsRV0/tzR+bYibPz3hd2+Vd5pEzMe6
+   0pBvRoFdc9PjSmCK3bSIM2XNmL6bUO1t257kNOgEJX3aCy1SwJS72fWJl
+   UHt2+dlNbuEhxXdkEWAdvsvGWOhUZ4dTalaFqfLFqxbWtrpdGJU2mcQzK
+   gRvLdR2XT00OkG8fvr2VCCJxtenbNWxSKS4HSp6R4lK3JC/WOI1GlGs8U
+   jmrzfzNsZCRsVpg/eoyZOatpxqbSA1sP1C48oYiiET6mKRHvTSNhH8G1Y
+   99fbcCkkYh0o3DbGVJGfgCtCN9KYs2ev5WkmYw3klT45CwQzMFmRF4i9m
+   w==;
+X-CSE-ConnectionGUID: KdCwLSp5TH+PIPZMo1UfyA==
+X-CSE-MsgGUID: kTpWAHwNQqa041THd6Hy5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="101366839"
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="101366832"
+   d="scan'208";a="101366839"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:08 -0700
-X-CSE-ConnectionGUID: yb/AzzijQACslFfCe8/t/g==
-X-CSE-MsgGUID: ti4QAWreTZSRuoRvxty9pA==
+X-CSE-ConnectionGUID: 8cDXPaNQTr2jcM20tVAanQ==
+X-CSE-MsgGUID: mV5G5DJMRemX2XitI5aXaQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="227779543"
+   d="scan'208";a="227779546"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:07 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:08 -0700
 From: Zide Chen <zide.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steve Wahl <steve.wahl@hpe.com>,
 	Chun-Tse Shao <ctshao@google.com>,
 	Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH V6 4/5] perf/x86/intel/uncore: Fix PMON enumeration with NUMA disabled
-Date: Mon, 30 Mar 2026 14:24:43 -0700
-Message-ID: <20260330212444.117325-5-zide.chen@intel.com>
+Subject: [PATCH V6 5/5] perf/x86/intel/uncore: Remove extra double quote mark
+Date: Mon, 30 Mar 2026 14:24:44 -0700
+Message-ID: <20260330212444.117325-6-zide.chen@intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260330212444.117325-1-zide.chen@intel.com>
 References: <20260330212444.117325-1-zide.chen@intel.com>
@@ -74,101 +74,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When NUMA is disabled on a NUMA-capable platform, UPI and M3UPI PMON
-units are not enumerated.
+The third argument in INTEL_UNCORE_FR_EVENT_DESC() is subject to
+__stringify(), and the extra double quote marks can result in the
+expansion "3.814697266e-6" in the sysfs knobs, instead of
+3.814697266e-6.
 
-In this case, pcibus_to_node() always returns NUMA_NO_NODE, causing
-uncore_device_to_die() to return -1 for all PCI devices. As a result,
-the corresponding PMON units are not added to the RB tree.
+This is incorrect, though it may still work for perf, e.g.
+perf stat -e uncore_iio_free_running_0/bw_in_port0/
 
-These PMON units are per-die resources, and their utility when NUMA is
-disabled is limited.  The driver does not prohibit their use, and the
-enumeration should still work correctly.
-
-Fix this by using uncore_pcibus_to_dieid(), which works regardless of
-whether NUMA is enabled.  This requires calling
-snbep_pci2phy_map_init() in spr_uncore_pci_init().
-
-Since pci_init() is called before mmio_init(), remove the redundant
-snbep_pci2phy_map_init() call from spr_uncore_mmio_init().  If
-snbep_pci2phy_map_init() fails, uncore driver should be bailed out,
-so the fallback path in spr_uncore_mmio_init() can be removed.
-
+Fixes: d8987048f665 ("perf/x86/intel/uncore: Support IIO free-running counters on DMR")
+Reported-by: Chun-Tse Shao <ctshao@google.com>
+Closes: https://lore.kernel.org/all/20251231224233.113839-1-zide.chen@intel.com/
+Reviewed-by: Chun-Tse Shao <ctshao@google.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
-V6:
-- Split from patch v5 3/4.
-- Remove the redundant call in spr_uncore_mmio_init().
-- Update commit messages.
+V2: Added Reviewed-by tags.
 ---
- arch/x86/events/intel/uncore.c       |  1 +
- arch/x86/events/intel/uncore_snbep.c | 26 +++++++++++---------------
- 2 files changed, 12 insertions(+), 15 deletions(-)
+ arch/x86/events/intel/uncore_snbep.c | 48 ++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 786bd51a0d89..e9cc1ba921c5 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
- 	return bus ? pci_domain_nr(bus) : -EINVAL;
- }
- 
-+/* Note: This API can only be used when NUMA information is available. */
- int uncore_device_to_die(struct pci_dev *dev)
- {
- 	int node = pcibus_to_node(dev->bus);
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 8ee06d4659bb..73da1e88e286 100644
+index 73da1e88e286..fdbdabb5026e 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6415,7 +6415,7 @@ static void spr_update_device_location(int type_id)
+@@ -6952,34 +6952,34 @@ static struct freerunning_counters dmr_iio_freerunning[] = {
  
- 	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
+ static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
+ 	/*  ITC Free Running Data BW counter for inbound traffic */
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, 3.814697266e-6),
  
--		die = uncore_device_to_die(dev);
-+		die = uncore_pcibus_to_dieid(dev->bus);
- 		if (die < 0)
- 			continue;
+ 	/*  ITC Free Running BW IN counters */
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, 3.814697266e-6),
  
-@@ -6439,6 +6439,10 @@ static void spr_update_device_location(int type_id)
+ 	/*  ITC Free Running BW OUT counters */
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
+-	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, 3.814697266e-6),
++	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, 3.814697266e-6),
  
- int spr_uncore_pci_init(void)
- {
-+	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * The discovery table of UPI on some SPR variant is broken,
- 	 * which impacts the detection of both UPI and M3UPI uncore PMON.
-@@ -6460,21 +6464,13 @@ int spr_uncore_pci_init(void)
- 
- void spr_uncore_mmio_init(void)
- {
--	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-+	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
-+						 UNCORE_SPR_MMIO_EXTRA_UNCORES,
-+						 spr_mmio_uncores,
-+						 UNCORE_SPR_NUM_UNCORE_TYPES,
-+						 spr_uncores);
- 
--	if (ret) {
--		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
--							 UNCORE_SPR_NUM_UNCORE_TYPES,
--							 spr_uncores);
--	} else {
--		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
--							 UNCORE_SPR_MMIO_EXTRA_UNCORES,
--							 spr_mmio_uncores,
--							 UNCORE_SPR_NUM_UNCORE_TYPES,
--							 spr_uncores);
--
--		spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
--	}
-+	spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
- }
- 
- /* end of SPR uncore support */
+ 	/* Free Running Clock Counter */
+ 	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
 -- 
 2.53.0
 
