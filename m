@@ -1,162 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729DC3A453B;
-	Mon, 30 Mar 2026 21:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774906390; cv=none; b=nyHULrKzgjhWlyjpoTsbYJpNf7r1tg1kdp8N1EeQXWeeoSK2o6NdeYOhaFyqld4RmnKJcrI8qPE90webY6i4A3w6OfI2UOlkqQmq/xHh8ZufBuFyuEearVEbgaWYtl9oRGtHpmxT2jqSqnDICNzZyerFHOdpZCGBSh8WlcfUTmY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774906390; c=relaxed/simple;
-	bh=9QRzPBMILxYM58UeEFL5MSp8C3xvH+5XF+oAuc3WGlI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aXcrO3qkJDlzsEkGkQiBq++hELLtSQwZm1AE3nSO5Lo29/15SzLBbDjfjgtrVcmuxPEkKtNPJZfNxgWt0BKMZq6bMmkOXsZwwKa01bf2XViRr75QdpYwCFMAUYQNehwZ8SQhn+nr/usR5ClI+hYncCmUtHyQn+hg/bnHtMj1KZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/3TJhtp; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4823A5E83
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 21:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.133.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774907457; cv=pass; b=hTKh/oBnGKF8sE7Yp8QE/gqT6wvu2gXhpw/uKSX+SE79fIvr2yyXE08XlzqEypPIUF4Yjig2VmV5GUeJ6ypCJjI4/xlJQ+wrF9kWVAK4lDD45q/Sx2cqKdNWQRPc53O1Gpok/I9zTPnem4pqcFaFWIUCZLqphS3GBnBIQ9AMCzA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774907457; c=relaxed/simple;
+	bh=16trTYqdUvfLnP2d1X3/FLgzLapCukA4O0Gg1kYU1SA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ODU1zpOcOaNfiACPSGwwiMJmlBhZA8ng9tKFsYhQ+k8wV5tLMU0qXIl2AqmmRWbZYElYWz0RPVWVXS4DjS/FXDiPdBaivlZYqt8TEGSsVV33O44K3nwLJdJ3fbOoVwi8pfuU/4gZFdi4klxfLLzt8E1uD9jSxm1uHfSmHKyvDxc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqCo0SjI; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=bGG9eyMU; arc=pass smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/3TJhtp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774906389; x=1806442389;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9QRzPBMILxYM58UeEFL5MSp8C3xvH+5XF+oAuc3WGlI=;
-  b=f/3TJhtp/9hnsmVYJ35NrSUaZVSsRV0/tzR+bYibPz3hd2+Vd5pEzMe6
-   0pBvRoFdc9PjSmCK3bSIM2XNmL6bUO1t257kNOgEJX3aCy1SwJS72fWJl
-   UHt2+dlNbuEhxXdkEWAdvsvGWOhUZ4dTalaFqfLFqxbWtrpdGJU2mcQzK
-   gRvLdR2XT00OkG8fvr2VCCJxtenbNWxSKS4HSp6R4lK3JC/WOI1GlGs8U
-   jmrzfzNsZCRsVpg/eoyZOatpxqbSA1sP1C48oYiiET6mKRHvTSNhH8G1Y
-   99fbcCkkYh0o3DbGVJGfgCtCN9KYs2ev5WkmYw3klT45CwQzMFmRF4i9m
-   w==;
-X-CSE-ConnectionGUID: KdCwLSp5TH+PIPZMo1UfyA==
-X-CSE-MsgGUID: kTpWAHwNQqa041THd6Hy5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="101366839"
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="101366839"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:08 -0700
-X-CSE-ConnectionGUID: 8cDXPaNQTr2jcM20tVAanQ==
-X-CSE-MsgGUID: mV5G5DJMRemX2XitI5aXaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="227779546"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 14:33:08 -0700
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Steve Wahl <steve.wahl@hpe.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH V6 5/5] perf/x86/intel/uncore: Remove extra double quote mark
-Date: Mon, 30 Mar 2026 14:24:44 -0700
-Message-ID: <20260330212444.117325-6-zide.chen@intel.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260330212444.117325-1-zide.chen@intel.com>
-References: <20260330212444.117325-1-zide.chen@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqCo0SjI";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="bGG9eyMU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774907454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J2K6gZ+oFXq4qrYYN555dK1MgDnH2FbrbOyZZqYR5S4=;
+	b=FqCo0SjIVxa4HC9NOdi3lkIam+vK/oSUhIsZhIgwB8hAZ8LylVLloMIeR12eQj4s3+0o58
+	p/6Iwv/lLIg6ygH13xZFXPuqvbQlMuFykbOF8s8p+H2FyB0Gt9pj6yQLguxUfLWOFHS+I6
+	RQqRQASsc8a9eRoQMSFdpKLavU0+Hbs=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-424-2Zn9fqK7Nte-PB1ABC1k-g-1; Mon, 30 Mar 2026 17:50:53 -0400
+X-MC-Unique: 2Zn9fqK7Nte-PB1ABC1k-g-1
+X-Mimecast-MFC-AGG-ID: 2Zn9fqK7Nte-PB1ABC1k-g_1774907452
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-38a326b8fa0so32226691fa.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 14:50:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774907452; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cjMQKvh4GEhEJuc/mMME711i3xGewVT2A7qMZ8CYtCL0jRUmmOeMN+y1npThuXJAdy
+         NoqEojAosgaSZtNfWgnSoTvDzP8jTPLl3AyzXzXUda60b9AjBBlcXjnCmsqMgSTnTPwm
+         n/54BhYbSmrKSNaJAktaJp99kzhZEvqSBld7FoDnP0SxRfLCdE9dEYbdSmF91qbr91UM
+         KE/qIY8R0w7FOwbL58F/sW7Lc06OJOIfF8QJn7mGxl98POLVGyG8kbiOGbTmhsJVepy7
+         +2dCN/lh1p1eW+dGNCVJKj6lsAS9kW4kUYqPOCNZwBUbRD53XENujT7GpTznqLIMJEaP
+         jYqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=J2K6gZ+oFXq4qrYYN555dK1MgDnH2FbrbOyZZqYR5S4=;
+        fh=cqoLd1FUlo3XxYEN9jX7pqohI1iuYlQcvGrHNG/FvG8=;
+        b=X6jHXesxC47WRh8jBlTM+S5mEgw8EufTteEfHdQf/l8qtec95Gj6/FwU4GyYjUxCfx
+         zjD3NWPckgweZj4sWjclI2VrG/MZVUbJSv8WOV6CVYuZMTHfAEB5E8DK2XEHd6dMMVdI
+         VSLVtpjMg/F8xhiyZIzI3CspMff5J26AEywXv3R0+/AjXJHoHXCNvpfNbblh8EQZqeAO
+         Wf/D7GzfopLxKIRBn77vH1IbPXqlxR4cBdduO1x2SpiawtwNdPw/XVucLDPtEvyw7JPX
+         VXVBsty0mFfratgJEeQTrBSR/97xPQ9B+ogmySKOINEoROu0uJnhxcC+1sxKG+nTDNxz
+         23DQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1774907452; x=1775512252; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J2K6gZ+oFXq4qrYYN555dK1MgDnH2FbrbOyZZqYR5S4=;
+        b=bGG9eyMUKhafxhM+OKk/3kR1fiJNrIvLmt7pxlbDP2YrciP9OI1AciAXzaIg2lLnto
+         SWvv+uksjKTYe8NwbPS21eKsgpsX/RP23h/78O+reKkUgq+flbPz/XC3Cl2RoYNAj9fo
+         SIVLlt5UQQIB6LWWVkhhd01NUgAwVS6+156n+iTVMWplnnVa7TUDTIzuSAFic9laTTmb
+         Ybypt/i4fyDyvfMofET7Jo91Nwc7hl/H9pWCGoGWu8Omb+hnseqnDYHzn/F50cUwYn9r
+         e4YsTiKlNrc/EcBXIYdu+R2kad74P7ub6ug7LPRsQy25juAM8U/hqK9QGG5IWtoAA9Ly
+         fuCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774907452; x=1775512252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=J2K6gZ+oFXq4qrYYN555dK1MgDnH2FbrbOyZZqYR5S4=;
+        b=hbiE7dR4ilhRB6YpgAJmLpnCdPHG8Ll2TnqlRjmaGj33Lr5p0nO5QlCeUbYSEsi6yh
+         9aM4XzqQ0FjnoexKcwflripw0niNLvHmuoDQiNKd5tEnkFrkzWj9VPziGqEYTiJfmtFK
+         xTMzGxG0VhhZRHcpOFn9VR9LGKJyROATuv/LmxJcjZXSaHWF2J7/91t0s3RPNuoGeSIr
+         sCr+auaWS9k6m48xAsVTjxlt/FzKzNO1PkVl2JfiY7Ujzpplpw/0oszYUlSYiB/wWJPj
+         8oTZznO3r1Fn9WZbPnpmWVwB1koNTvhOncn9JaW/LkNEsnmlpe/yLhVvX1l1tbnukeaU
+         tZsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPmQ/7g8sHIyA3gXa3ayNMw89iL9JZbAgApCz0K2WVy4GWlUNEppohct5D3lClGUFo1gZZYmBwDQQ2eYCYzbkJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg9FSjwIGDmXiB+Aatx692LL6rRCIzkojemNUIHPEx6liaKUxy
+	+d71o0twQvBFWldb9kQDcCm80MU5km+Rq49N5FUMD+Ak+zrWFfn0pTjlzL7Rz4hL+F6nJUnsf00
+	YTNmyeAkuSH5IPyrdABWPjyr/oLx0TvG0XjG5iXR0HFCIs825j6ihwAYvJKf4IkHwMmM7GGoI28
+	vacfMnQznWO2KGKoMFb/tCqZT774tEdKI7JNGXJCUkKcMbNg==
+X-Gm-Gg: ATEYQzz6PREjHzL6ePCfGNLENLFZo+cNaNDqokQ63Lz198t7jOK413MEF/8iKxUAc7Q
+	z8350Y+JPVdRKeWIHXeUL6ly1x3ZzQXhNF0TFAwlYWvYZpIyagZFoQHa4BdjMOjO9Dky7JDo14o
+	aqgVXUwxPDzELyCBTLFhmtruPoxLdq5Vr1aDSP7SdpKfQYNtJh7Qk7XLh+e+gZiKDhOsjBEtp/B
+	PhzVt7sDst14FwveNHyUaygzbM+UIBRPVSDAtcZ
+X-Received: by 2002:a05:651c:1144:b0:38a:31e8:c0c1 with SMTP id 38308e7fff4ca-38cb1ad9bcemr3483251fa.12.1774907451723;
+        Mon, 30 Mar 2026 14:50:51 -0700 (PDT)
+X-Received: by 2002:a05:651c:1144:b0:38a:31e8:c0c1 with SMTP id
+ 38308e7fff4ca-38cb1ad9bcemr3483111fa.12.1774907451168; Mon, 30 Mar 2026
+ 14:50:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260330194021.212912-2-ashelat@redhat.com> <CAP-5=fUvN=7ynEXju4jo6mWuajRRY0uC68SpUR8mTvXPqrgQTw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUvN=7ynEXju4jo6mWuajRRY0uC68SpUR8mTvXPqrgQTw@mail.gmail.com>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Mon, 30 Mar 2026 17:50:40 -0400
+X-Gm-Features: AQROBzCGqVSCTRDz6xA9cTMglaVz1brRpnlhGWwDwbaosqcgwCcwg9sTfvpcQaA
+Message-ID: <CA+G8Dh+rSWHuO4ihq3Qbf9=qBcjhZ_AWLZxBPh_cxJ=GDfvCRQ@mail.gmail.com>
+Subject: Re: [PATCH] perf dso: prevent null dsos from being added and add
+ comparator checks
+To: Ian Rogers <irogers@google.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The third argument in INTEL_UNCORE_FR_EVENT_DESC() is subject to
-__stringify(), and the extra double quote marks can result in the
-expansion "3.814697266e-6" in the sysfs knobs, instead of
-3.814697266e-6.
+On Mon, Mar 30, 2026 at 5:06=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Do you have a reproduction for this? The entries in the dsos array
+> should never be null, so the check is redundant. If this is
+> out-of-memory related the check in __dsos__add should suffice.
 
-This is incorrect, though it may still work for perf, e.g.
-perf stat -e uncore_iio_free_running_0/bw_in_port0/
+We don't have reproduction, but we got a coredump with the system
+crashing in dsos__cmp_long_name_id_short_name. This is the stack trace
+of the culprit thread:
+Stack trace of thread 12717:
 
-Fixes: d8987048f665 ("perf/x86/intel/uncore: Support IIO free-running counters on DMR")
-Reported-by: Chun-Tse Shao <ctshao@google.com>
-Closes: https://lore.kernel.org/all/20251231224233.113839-1-zide.chen@intel.com/
-Reviewed-by: Chun-Tse Shao <ctshao@google.com>
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
-V2: Added Reviewed-by tags.
----
- arch/x86/events/intel/uncore_snbep.c | 48 ++++++++++++++--------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+            #0  0x0000aaaad2905cb0 n/a (perf + 0x1e5cb0)
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 73da1e88e286..fdbdabb5026e 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6952,34 +6952,34 @@ static struct freerunning_counters dmr_iio_freerunning[] = {
- 
- static struct uncore_event_desc dmr_uncore_iio_freerunning_events[] = {
- 	/*  ITC Free Running Data BW counter for inbound traffic */
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, "3.814697266e-6"),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port0, 0x10, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port1, 0x11, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port2, 0x12, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port3, 0x13, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port4, 0x14, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port5, 0x15, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port6, 0x16, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(inb_data_port7, 0x17, 3.814697266e-6),
- 
- 	/*  ITC Free Running BW IN counters */
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, "3.814697266e-6"),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port0, 0x20, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port1, 0x21, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port2, 0x22, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port3, 0x23, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port4, 0x24, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port5, 0x25, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port6, 0x26, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_in_port7, 0x27, 3.814697266e-6),
- 
- 	/*  ITC Free Running BW OUT counters */
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, "3.814697266e-6"),
--	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, "3.814697266e-6"),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port0, 0x30, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port1, 0x31, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port2, 0x32, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port3, 0x33, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port4, 0x34, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port5, 0x35, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port6, 0x36, 3.814697266e-6),
-+	INTEL_UNCORE_FR_EVENT_DESC(bw_out_port7, 0x37, 3.814697266e-6),
- 
- 	/* Free Running Clock Counter */
- 	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff,umask=0x40"),
--- 
-2.53.0
+            #1  0x0000ffffa7090b38 msort_with_tmp.part.0 (libc.so.6 +
+0x3eb38)
+
+            #2  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #3  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #4  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #5  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #6  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #7  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+0x3e9f0)
+
+            #8  0x0000ffffa7090dc8 qsort_r (libc.so.6 + 0x3edc8)
+
+            #9  0x0000aaaad2905e28 n/a (perf + 0x1e5e28)
+
+            #10 0x0000aaaad2905eac n/a (perf + 0x1e5eac)
+
+            #11 0x0000aaaad2906764 dsos__find (perf + 0x1e6764)
+
+            #12 0x0000aaaad2928438 map__new (perf + 0x208438)
+
+            #13 0x0000aaaad292765c machine__process_mmap2_event (perf
++ 0x20765c)
+
+            #14 0x0000aaaad2973b94 perf_tool__process_synth_event
+(perf + 0x253b94)
+
+            #15 0x0000aaaad2974874 perf_event__synthesize_mmap_events
+(perf + 0x254874)
+
+            #16 0x0000aaaad2975200 n/a (perf + 0x255200)
+
+            #17 0x0000aaaad2975428 n/a (perf + 0x255428)
+
+            #18 0x0000aaaad2975504 n/a (perf + 0x255504)
+
+            #19 0x0000ffffa70d2e00 start_thread (libc.so.6 + 0x80e00)
+
+            #20 0x0000ffffa713d49c thread_start (libc.so.6 + 0xeb49c)
+
+It looks out-of-memory related and I agree the comparator checks
+aren't strictly necessary, but I think keeping them would be a good
+redundancy against some future issue that would cause a similar crash.
+
+Anubhav
 
