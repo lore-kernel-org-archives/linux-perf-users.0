@@ -1,67 +1,66 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D67F2E5B2A
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 14:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643F92F3C3E
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 14:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774881342; cv=none; b=lCtfpdkThY84XRsguhKRtA9EOW2i920z6vu3zFPI+o2AxZSpnmPUegDAMW8m/lg6T3WVReYrtTIpaXLmSNJCHDYCzCuRCdd4okmjRo6mr24GDeg0s1ZjgAVMVmL27Q0+qrz+hP//zqdBGbbJ+uzNBgJ5V5BhqgJJOJ2UIptyjV8=
+	t=1774881866; cv=none; b=a+3B6/e8pSkRpscBTfUzMllrIgQ3s5nBAsMRFZ8JZK96mc1ILsIV46BlMilGtkLLC1SbUbAEY51i49uA+3mmRD4CUQeRMzmMEmiUuV2QZ4z4RiiMguSHM6Dw6kMDSgWpPxy9bKpc1BLveXE4MbMd8gb5quYkAoaSq772LaVVmdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774881342; c=relaxed/simple;
-	bh=UkVa6cmf3QGn7h3L7OioSsm6tUbCai0QK/j4KgC0qNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBFEWRO1eJ4XwQKgUjekw14v5iFBZOSPZGRfIGdprHJWnV3jWomWVqr9nAeanqJra3xVaO81oLaWG80YugoxhTyTd6690fplO0d0XdOdMa0z8+WGAlLwQtlIy2HIINhI92nPtsEitvi6Nb9nAEi46GVYnSg46NQzPA5r74ZOYDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTA9qv/G; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1774881866; c=relaxed/simple;
+	bh=gCrCn0jqzgDlmPX6zwbnJcPde8lUj6hgZ9Pnt1vwXso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=mOST207mrpCHFtzXUpljCPi++v7BgRT9A9UQIKdjfi9VlElksfhs4yfcAYcwfDkHXbOJl0lgdJQWeA/pfA9e4SLFB1h/q6SML5xPX7U2+3c9aktjKFkRHthVj4IBLBx4B5Nkw4ESwRVgz2EIzVNtxn3M1JneI414+S/lh0FkTqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UXcHrPKx; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTA9qv/G"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-48540d21f7dso54967315e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 07:35:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXcHrPKx"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso37562285e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Mar 2026 07:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1774881339; x=1775486139; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OABjowBdKssAqbCjvzHnHU7J4j90A7eNOnV4X5RcKF4=;
-        b=eTA9qv/G+r8NX0QjJ+L+MlMygPRWWvzjnXw6vM7FWuTC6H4qP1OyRM28sh85UNxVBh
-         TkUO6jtZFr6EWmi3q2W/y0gyJK6n/LbVvoFiumTb5kfTBbnZlE85iqUOTkKxSgdemogQ
-         v/pkdNRiBm4CcVAqbPYTX/A4ryd74QXC2D5ziqNmyYJqWtPCMAcHWVimDNMexcvHSZST
-         uNoRp/IcjAbCZ8KLYPry4rgztBM6rY4/5b+1u83xl8vcKLTbsInMHYcybBluzKrzb/h4
-         mQprIqRCVRcwYh06l2KRm3WS6AB6k6oQ14FUlpS6ffdU5UEQywmvhdEkkIIjLHi8zIps
-         PBlA==
+        d=linaro.org; s=google; t=1774881863; x=1775486663; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8S8GbrJC0PV0rV1d1lJEMcJXpU04+a2ZuFS/J3C8pXs=;
+        b=UXcHrPKxmjbvIEgX+C8JfZ40BxaKlhYuTeFv6XbbMGYiZUXQT5sVyyUM4wkJDcuRct
+         Y65PEfJOCnCteZOW8SMlIOmvFWQXACNlmdJaouUXvGKkIItnpAncgZqx6Tba0t+kmhgJ
+         0i2kg1Ktnea9MKTEhGaOHSl8FC0AMpbfXlKOYysDbNLpwh3R6iCBesN2pQgvz8VnQfd3
+         SDs0iaTz+ME7qvmmtpn3lAXtlRYFzOBkEoj8ev7bD6syX66RoeTmI9SV2enDwLccP+k0
+         AurDktUs+XxPwTLASQ+2iBZFxiBU2aqyy58dhXfROkqHQaygSGjF8dWulo+e8pY5E0VC
+         bw8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774881339; x=1775486139;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20251104; t=1774881863; x=1775486663;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OABjowBdKssAqbCjvzHnHU7J4j90A7eNOnV4X5RcKF4=;
-        b=BhK2CdqCDcB540KpVKYCaU5noDoPQnS9dyTv7KaBd7YSk2bt7m8/HbQeAsqcsANTXl
-         U/zC2emw9+WjBwpTXqjChuZP+SOpGNyo4T1rTTKoWSkh/WZqtpU+ps0emfFN9GDsDSZy
-         gVlWFv8vVAsb+RCauKNmTALHfV/KmscQa7M5ihCOhsfUQTV56lRGWPCDoW7cci/IN9Kd
-         RvtSpyWiShiIxKWKghy02+cFNFHNCGKuuYX4mZfhfoY5u2MEqI2h0DArvsQ6/iZdmkHS
-         9MHfoBGBGbb+Za//PvjIc4TqeAS7RW5nLLpJR3g3mjpYmYdlyLwN3lDBqbalpLOkIUNf
-         6D6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUqiKdW+xlqbxCAecavXDPY+orokXDPZaKeCr1NxAqqKGxKozqbxkGyxVEsORCGoKoPo4BkHttaw9fP/nCb5NI9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbF4kudq8z/KMmJRVK/lx8IZzgYTH8Xg4NMwali1U2rS77VaoS
-	qDuQOUkAIhmnVSGIirdnVd1+p92ysi8gu43uQ7tnajman9F+st7u1AFpeK43ISROoQmZ/deaWPz
-	JkSaO1NI=
-X-Gm-Gg: ATEYQzyWJn79hl/RBclPD6EEuISReZOYWxl5jo8wRNuJQ5ZzjYUrIcMYRYF9RRMmn7t
-	hbnUvdKAPTOrxO0W4eHUstwvNvWTuGWHzRsEn6v2tYCLG0O1DIVq9s0TE4+8Qf9M4Yzn3dNUWUy
-	PZwVrsT+5+OMipFhCD9dlVQM2iIihxNmzSWCGj1x6xn3XNxDj+FHma0xJJ635U5SYVpQzdDvqsm
-	llMTbIXqk7X3vp4LCbOI2IcPOFdt2NO8HEY0sfOlcM5hWQI/puDvMqxjMzZ3AHyEtHqabpXKtuM
-	don/MNokyLbCTIz3xpiSq7gzxmtJ3UMPb+WcINEVrHbXXqizuUpis0cFURy9SR+sGiIAFyS5PBH
-	mj+w6HNeoIy2c3wK4G5NdKjLyK7w+lgwlfSL5Gqv+0wl0i9e9FrE0L0Aomndi6pfv89ZLKUKenB
-	6rOFNUrckep2OJbkCil2mtjac2dazb
-X-Received: by 2002:a05:600c:8b63:b0:482:f564:d613 with SMTP id 5b1f17b1804b1-48727eafa46mr190145605e9.15.1774881339360;
-        Mon, 30 Mar 2026 07:35:39 -0700 (PDT)
+        bh=8S8GbrJC0PV0rV1d1lJEMcJXpU04+a2ZuFS/J3C8pXs=;
+        b=QU9OeyTGfhz+HqpOAJkKP7bHi19j+mw4a+IrKe+7lkutOiNUFH4fLGUwmAP1NkNyNd
+         VDa9YeQgoWd5ueJogSclmgrsdmzMrirodq0K2LqdhRITPKs2K2iy+8zrX34NeFggP/0D
+         oLnMZTPZoHkMNhhfTC4pmw+5uFHvHSBP4OuStnGJlha11Bv2qLO4y301fL8tgvmOc3Hu
+         8bMmJg4zOaRAXs4rzpYRo6SnUd/ew54Fb08UKavdVXNQdK+oa/BbCqBF2clYNDWPZLFG
+         gwZBIw93eTRC3x6qeF9HGLhLOAO5+RbQbHAqitTnAi13sqT7dfsxlNK2xwAGly8BYVZN
+         ZAjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUymuCTXH+Mnc4aek78zlUaQCrHkAmE3sO6Ou79iZrmGPy2NDVREPy5b+hMUmmmcU0/TRCnygiXG15+kCvM+iBr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBBJiXcLeHO3sEN03HC/KTBp08atQxD8Rsc861srVLhGXhI55A
+	OoNrC+AA6G0RV5I5aoj3r1WPO4ohT3HMw0864eFSSVI4x+hvAs9APExGdqrUZEEmDqA=
+X-Gm-Gg: ATEYQzyxAG90/zyERHtn7XmbHYkNuwvYcgsPJ8RyU2sScHSyifncrIHXHi24rzMh7PN
+	1E5+QXDQl2if+X/cEJoz12QDfC8ZSGxTkR2QbdgcbJsPHY26fSw8LO7qK/SGuCcTHXduzhUxBFL
+	Ix6NNUdQ3UGlUpHRnFHof3j2EYKjZIJS6N2PV/Topj9DiHxtQLmkbHUYelNEoxmAcvAuJaWS0In
+	EAM2wXesIqwVX1gli15vIVwpE5c7Y0up6QBeSRagw32U8RKkg0pfuLEO0A7/d6Fr5Ky84VIxVVt
+	sIiv3WBcNxpw7h2M6QFbVwGP8NvKiu0EvmFJcvnS9c78Dllsimg12ZYAwkr2MJpxxA+xuvX5s4l
+	fMNP+RCmhZwDqROOUlwW7GHhUJUUoh7ceq4EfTjzZIFN5NMGn44UU2ucpB4RFVG/pWY1DadOP8t
+	5E1Yzf5ZLgEU0n0sNft/JxJqmxZb0l6Bm/UAlEo+A=
+X-Received: by 2002:a05:600c:529b:b0:485:3ec6:e634 with SMTP id 5b1f17b1804b1-48727d84100mr199442355e9.15.1774881862629;
+        Mon, 30 Mar 2026 07:44:22 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4873cd7d039sm70710925e9.15.2026.03.30.07.35.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48739fac087sm139524085e9.1.2026.03.30.07.44.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2026 07:35:38 -0700 (PDT)
-Message-ID: <3e218109-261d-4046-8cac-86aa1362ddda@linaro.org>
-Date: Mon, 30 Mar 2026 15:35:36 +0100
+        Mon, 30 Mar 2026 07:44:22 -0700 (PDT)
+Message-ID: <dcf5a92b-ef14-43d5-9f21-568252fd630b@linaro.org>
+Date: Mon, 30 Mar 2026 15:44:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,82 +68,106 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/10] perf sched stats: Add support for live mode
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>, Ian Rogers <irogers@google.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, james.clark@arm.com, ravi.bangoria@amd.com,
- yu.c.chen@intel.com, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, rostedt@goodmis.org,
- vincent.guittot@linaro.org, adrian.hunter@intel.com,
- kan.liang@linux.intel.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com,
- juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
- tj@kernel.org, sshegde@linux.ibm.com, ctshao@google.com,
- quic_zhonhan@quicinc.com, thomas.falcon@intel.com, blakejones@google.com,
- ashelat@redhat.com, leo.yan@arm.com, dvyukov@google.com, ak@linux.intel.com,
- yujie.liu@intel.com, graham.woodward@arm.com, ben.gainey@arm.com,
- vineethr@linux.ibm.com, tim.c.chen@linux.intel.com, linux@treblig.org,
- santosh.shukla@amd.com, sandipan.das@amd.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20260119175833.340369-1-swapnil.sapkal@amd.com>
- <20260119175833.340369-8-swapnil.sapkal@amd.com>
- <CAP-5=fXNtVXEjDD-euueztjO7vj+6LQ2CHgHfxVoHuRF2Nb0Xw@mail.gmail.com>
- <bda6c5d3-94cc-4f34-a3b6-b9a50c6b28e8@amd.com>
+Subject: Re: [PATCH v1] perf metricgroup: Avoid scanning unnecessary PMUs for
+ identifier match
+To: Ian Rogers <irogers@google.com>
+References: <20260326224454.2101190-1-irogers@google.com>
 Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, Thomas Falcon <thomas.falcon@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <bda6c5d3-94cc-4f34-a3b6-b9a50c6b28e8@amd.com>
+In-Reply-To: <20260326224454.2101190-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 10/03/2026 10:08 am, Swapnil Sapkal wrote:
-> Hi Ian,
+On 26/03/2026 10:44 pm, Ian Rogers wrote:
+> Only uncore PMUs can have an identifier, so add an optimized
+> perf_pmus__scan routine for that case to avoid all PMU types being
+> created.
 > 
-> Sorry for the delay.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> ---
+>   tools/perf/util/metricgroup.c |  8 ++------
+>   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
+>   tools/perf/util/pmus.h        |  1 +
+>   3 files changed, 20 insertions(+), 7 deletions(-)
 > 
-> On 04-03-2026 00:17, Ian Rogers wrote:
->> On Mon, Jan 19, 2026 at 10:02 AM Swapnil Sapkal 
->> <swapnil.sapkal@amd.com> wrote:
->> [ snip ]
->>> +       /* wait for signal */
->>> +       pause();
->>
->> I'm seeing the perf sched stats test hang here, requiring me to kill
->> the perf process started by the test. It is unclear what signal is
->> being waited upon, but is there a race condition where the signal
->> could have occurred before the pause? Should the pause at least be
->> conditional on that happening? Given that a race condition would exist
->> even with a test, would it be better to use a condition variable?
->>
-> 
-> I am able to reproduce the issue. There are other places also where the 
-> same issue can be reproduced. (e.g. with `perf lock contention -b`)
-> 
-> I will propose a fix.
-> 
->> Thanks,
->> Ian
-> -- 
-> Thanks and Regards,
-> Swapnil
-
-Hi Swapnil,
-
-I'm also seeing the same issue, did you come up with a fix yet? I think 
-checking the finish condition in a loop would work as long as it's 
-sleep() instead of pause(). Or if you want to use pause() you have to 
-mask the signals before launching and then do a sigsuspend() to unmask 
-and pause atomically.
-
-I was able to reproduce it every time by using the runs per test option:
-
-   $ perf test -vvv -r 10 "perf sched stats tests"
-
-Running multiple in parallel also showed another issue because the test 
-writes to and deletes perf.data in the current working directory. 
-Usually the tests do mktmp somewhere so they have a unique output dir to 
-not conflict with other tests.
-
-Thanks
-James
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 7e39d469111b..769b38400832 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -410,13 +410,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+>   	if (!pm->metric_expr || !pm->compat)
+>   		return 0;
+>   
+> -	while ((pmu = perf_pmus__scan(pmu))) {
+> -
+> -		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
+> -			continue;
+> -
+> +	while ((pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat)))
+>   		return d->fn(pm, table, d->data);
+> -	}
+> +
+>   	return 0;
+>   }
+>   
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 98be2eb8f1f0..9859d7056fb7 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
+>   	if (!pmu) {
+>   		/*
+>   		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
+> -		 * aren't wother optimizing for.
+> +		 * aren't worth optimizing for.
+>   		 */
+>   		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+>   			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
+> @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+>   	return NULL;
+>   }
+>   
+> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
+> +{
+> +	if (!pmu) {
+> +		/* Only uncore PMUs can have identifiers. */
+> +		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> +
+> +		pmu_read_sysfs(to_read_pmus);
+> +		pmu = list_prepare_entry(pmu, &other_pmus, list);
+> +	}
+> +	list_for_each_entry_continue(pmu, &other_pmus, list) {
+> +		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
+> +			return pmu;
+> +	}
+> +	return NULL;
+> +}
+> +
+>   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+>   {
+>   	struct perf_pmu *pmu = NULL;
+> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> index 7cb36863711a..0d55edb3f2fc 100644
+> --- a/tools/perf/util/pmus.h
+> +++ b/tools/perf/util/pmus.h
+> @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+>   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+>   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
+>   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
+> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
+>   
+>   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+>   
 
