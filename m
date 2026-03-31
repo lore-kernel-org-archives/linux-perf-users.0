@@ -1,155 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739F43E0C7C
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774959880; cv=none; b=Uc6MFX9F8ZSwbbhOtwRgbsWoQRLJzy4WS/pOWLom0taGg836+y23xaKDYtyvPuqd4lNK+FdjdXepNICDZ7SP+HEg06I1RdcBjdrhYQI6d+vURpPnS1lvo2cpK38M7eKRrOptCtShG5p8qBupJ0HLPw70bJ2fW+dQ69Doo5bzHlg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774959880; c=relaxed/simple;
-	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1056E3FB04D
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 14:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774965978; cv=pass; b=BfMS9vi+xjgfcRD5tcaPv8RH47D+ZDa+fh4LpVxwtrT2MmMyQIQ4mc7kuu5xKWyOeK+vVa2hoXfyFnbcqk5zJyUhBpY4qoi5JBSs4kSIOBlrD+jDNrHwII0ZJiNZvGrfV21yjuD3Vgdjw1LEGvRI/l3jlkZuUYH4DGYFl1E3a9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774965978; c=relaxed/simple;
+	bh=35knIS05r+0/zDDy6wAojCvHGYRDPNcejxc81KGSLIo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r7nFIa/BlFwGuy/BkleI2ZF6lIeEeFktIHX0sqB6RSTzSJlzvIE5JcnPvIPY/rY4Q73lICKZrhRivy+x2v0snXj8tx//Ltx1Y00xH1LNu8IdGZNZoso4XeQMb/YjFMzUFfExjyVYP0iYGhIiPqxskA7hCXtD6NtnC8uMcfVfJkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJZmO7Tv; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=SJnpcEQUn/TIkUnbDlUWwggBbsHVX1odQ3FaJmxCf0JcdbPL0JZ2dSnxGOjmKg/SQjJEkoXrcCNhlDmLMncfYqqZGatE9G09LO3Ukja934dsCTxAXxSz6lOsnMeQvE3mXwKWXZXUcBKuPwpts9zCf97CJFYPiLvWyQAi4cQ3muk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KaJSlQD2; arc=pass smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJZmO7Tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589BEC2BCB4
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774959880;
-	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RJZmO7TvhY88kQe3eU7xRIwnSJdkZvyh60WN8MrF2rST5eqYT7Si7twWZg/DT2ZoX
-	 YzqUgPxfYDwdo0IEdVVzbGnpMkc2xEIEQWtZG/kOBKnlwvP5OBf9k5ABA9qJOS+Ukj
-	 eOekVrlTQVDRLMnCElfoE+fONsncPPw1jhKXxukkxEyJi7dEXS+heu/pZUzPng526Q
-	 fQrEJ4DiG53+M4yOJk7Zh135J6HBPJuwoHDZrzQcHd3EDgZteWUMcAVKR5sOaepyV5
-	 f2xbf4yCO62QwUTSWKNB376JIzJj0sbMnh6R7hTd0WRb04t6xyHnCnYuuXajw89d5X
-	 Ti2a3xJRDsK2w==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-4152698e745so2024693fac.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 05:24:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXa2Z2rHXBqjYPy55QA/UzuFhIsKGxaXpQhmQNW/m3sNgYZSlYGrNdbM78jQDmTYN1TOBL9XLsB9Y0mpGL8eXS8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyadEW4dVg+DMe3TXQV2XUkPUlS93w9+UqYj/CIXg+L2ekB7/7
-	n+pAhMBvnwGtV0jiZcbTVdJdNmfAnCMaapTWwSHY1/jiMXFjaK1TlCXE1qO7xv5rQwGDPN6XWZL
-	2Z0+HcLGVpTm0ad1/xlKXRyxn04ymOB8=
-X-Received: by 2002:a05:6870:3212:b0:41c:5212:2c7e with SMTP id
- 586e51a60fabf-41cec149624mr8736242fac.20.1774959878527; Tue, 31 Mar 2026
- 05:24:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KaJSlQD2"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2591757fbso110615ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 07:06:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774965971; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DI+BHnKDhmmSTc7iI7tGXjn55zGpQw7SavnXEmIhBbUOMASfXM6aC8JBdlTl/YEggG
+         O2CCZr79ScJi4jXBnXWTuhLlZiNbylNvFXHbRKNrNGfh01rBwQIJZXDtVw1WVL20vKfz
+         LF9y+pvW10/VMbV47Ez6Q/zTdFWaHiidtvvNnH2On+7ZUf01rMNk9FStEf5DNjoDBYrW
+         Z/R1ylPsaiovwnYM7AqsSuSTRpxiqILb8qnAsXvQRfCdfdy+RLnnTRGsUDIjhlOW6hVp
+         RobrBeylx4UpjwpyrXKXhub3fdDKAY2+fuG3USuRNcwou1KHw2ZClE+B7aIPfnW0eKvT
+         OsQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
+        fh=JaR3MQZU0PHfPXkFHJJcd2DIuI9ZYfn14VsXXo7Zlh4=;
+        b=kUrmo1wB/lhOMyFW8KfkcoC8ZUvIU9lQCZONO2tJYnE+6PHz5LJ4mJdOJSa3AtIuMD
+         BSD4Qay+FOfPxxNtrzZhtq1OT+GHUSHLhI+fJ6CFdkYgGAJ9fdjxCJeQq+oixc8FbNwh
+         NC4e2IpYaNO2bPKUPuL2AxixobD3r1Qo3e0E4XVaImsFjqlU9Rgo/hJ7jFpUUtis8NuT
+         CTFRCPgTGXX8FiQCVo9U1w2zZoZGunYHOZ3Ci1Gzhh8YUPSRvlTdc1iGDYiyirHCoHrS
+         BzrgdDgQ09X6LuPbX0J7EStalFDnoS1AdE8b0k3nEERvZ8M9Fj/0y6d4SKptziwvluHv
+         cIKw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1774965971; x=1775570771; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
+        b=KaJSlQD2eUbDRS8eX+iGmUTzt+B38W3lUBtfVmm/8xStypI5zIGvslPegPf3D6Q3wC
+         Uc/AQdL0SCAa30hTVvn8rFaCzWfsbkw0GktXv3jQT/ZOd/p94iLUkiJdabeue3JbWjLU
+         eAooUlfBIVYOO6LbTBmHdbE+wAH2Y+1RX5T3OfIelBTNbeOn2ri1HCRicSdviQTi8Vtp
+         z6lPJJWq8iaPy1pryfTKox6fbO+HlzgLwH5x5VgG7gfcsGziRv9281vADWu1Zm0COYfF
+         T48oTYvRcW3ZzESfMY3kKZlMEBQjIHs64S6W5V/M293mTbD45b6z64XEMyjVeG+FNiaF
+         jxag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774965971; x=1775570771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
+        b=Fpi2jLnPGOW3xTaEwYWZp0CDkEBWPxVkrZo4vNvcS/ExOfF5RcNiamZtaIv0k48fTF
+         i2KAuugwc677lNrS/dZuABlERRdF6lIYXgDkVbdiXtJCxilb9yDoc4BbSoQi9Zb951ss
+         qyEpDYcNFxCaArEKNeZOhf3rBHPOzZ9BCM6u5YNYudazBPhu019ZxrneJwyamfa0OfQC
+         zbv33LIRoBHNP5Hmm/AcbibIyoy+dUm4jDq6xjszUobO3OCKSdF6hk/FlKQjdWHxiT3y
+         PXN8xR7Ll/hCWh5ixfQxgYjFR/1kAvgDibaH8Yv2xlgpcyKdx57lSgZ11tMAnDEqL1SF
+         46rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEygSCtkfGHy5dlYKhsY0COfFakCJ62niLWs2ITe1IhD8UsEGVImApCSTEqCOoHnzFcbEtNSmGzmBWi/Z22idB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTAULxnyMYuB5vzeKfs7OZxgSEH/ZV+8tKNlzDfvuch4ceFFYL
+	ty0gVBEheO7//r2g/BJRdPB7PPWD+tol1oZB3kX22mn8NXFhIMz0cqmjRH3kr4IkT3yqoIq6w/5
+	iqhieI+FYukF63n+u4W6SZ9CzNaJ2ayvYdEaauz+e
+X-Gm-Gg: ATEYQzyqWnhZYzxaMA48KUiWK+8COm5bWzp5WOfzodpLeselUqtOvBvFFLRmSdKabqV
+	F5WKUfUo1Y+OdR8XvBdQfp1QzEfxayNqpcMPhYCPRRmTuqvcqOgONBS3nzRmCzGzyYQqiHxCz9y
+	5QmkkTIP4n6cwx/l00kzRNl9Vr6BI2s4MkY/D+Fbe9yH1QuyszQJEB2UgNtqo8sVS7NT4GUE7fM
+	fczMRPSfFfexzdJC72JJNypFR1eW/qGQB1aHQvJ9ss0A4y4n4iGZDd8p/P1JTVS68X1EzqwPQIP
+	49VaaKOA
+X-Received: by 2002:a17:902:d58e:b0:2b0:5193:1212 with SMTP id
+ d9443c01a7336-2b25f6cd077mr3358735ad.4.1774965970525; Tue, 31 Mar 2026
+ 07:06:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260320031737.35048-1-fengchengwen@huawei.com>
-In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 31 Mar 2026 14:24:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
-X-Gm-Features: AQROBzDL-JtY7QC0BpuyBPGCuLquO5-Gf9GrQy5Yvy_4yGsymDKEHbc8tb9l0x0
-Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
-Subject: Re: [PATCH v10 0/8] ACPI: Unify CPU UID interface and fix ARM64 TPH
- steer-tag issue
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, 
-	Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, 
-	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
-	James Clark <james.clark@linaro.org>, Besar Wicaksono <bwicaksono@nvidia.com>, 
-	Ma Ke <make24@iscas.ac.cn>, Wei Huang <wei.huang2@amd.com>, 
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com, suzuki.poulose@arm.com, 
-	ryan.roberts@arm.com, chenl311@chinatelecom.cn, masahiroy@kernel.org, 
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com, 
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com, 
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com, liuyonglong@huawei.com, 
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20260326224454.2101190-1-irogers@google.com> <dcf5a92b-ef14-43d5-9f21-568252fd630b@linaro.org>
+ <actqG7NHUWR8x7x_@google.com>
+In-Reply-To: <actqG7NHUWR8x7x_@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 31 Mar 2026 07:05:58 -0700
+X-Gm-Features: AQROBzB2QONtm85edap_zw31sApG9_yjOEbmg8Ss9M0M8kKJKa4B6ZX65SvPrfQ
+Message-ID: <CAP-5=fVOtY8NYQnhwgyexyjDN+W4Vf2Yo+_Tm6chZSfYFx-OMQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf metricgroup: Avoid scanning unnecessary PMUs for
+ identifier match
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 4:17=E2=80=AFAM Chengwen Feng <fengchengwen@huawei.=
-com> wrote:
+On Mon, Mar 30, 2026 at 11:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> This patchset unifies ACPI Processor UID retrieval across
-> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
-> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
+> On Mon, Mar 30, 2026 at 03:44:21PM +0100, James Clark wrote:
+> >
+> >
+> > On 26/03/2026 10:44 pm, Ian Rogers wrote:
+> > > Only uncore PMUs can have an identifier, so add an optimized
+> > > perf_pmus__scan routine for that case to avoid all PMU types being
+> > > created.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > Reviewed-by: James Clark <james.clark@linaro.org>
+> >
+> > > ---
+> > >   tools/perf/util/metricgroup.c |  8 ++------
+> > >   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
+> > >   tools/perf/util/pmus.h        |  1 +
+> > >   3 files changed, 20 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgr=
+oup.c
+> > > index 7e39d469111b..769b38400832 100644
+> > > --- a/tools/perf/util/metricgroup.c
+> > > +++ b/tools/perf/util/metricgroup.c
+> > > @@ -410,13 +410,9 @@ static int metricgroup__sys_event_iter(const str=
+uct pmu_metric *pm,
+> > >     if (!pm->metric_expr || !pm->compat)
+> > >             return 0;
+> > > -   while ((pmu =3D perf_pmus__scan(pmu))) {
+> > > -
+> > > -           if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, =
+pmu->id))
+> > > -                   continue;
+> > > -
+> > > +   while ((pmu =3D perf_pmus__scan_for_uncore_id(pmu, pm->compat)))
+> > >             return d->fn(pm, table, d->data);
 >
-> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
->      respective users)
-> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
-> 6: Clean up perf/arm_cspmu
-> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
-> 8: Pass ACPI Processor UID to Cache Locality _DSM
->
-> The interface refactor ensures consistent CPU UID retrieval across
-> architectures (no functional changes for valid inputs) and provides the
-> unified interface required for the ARM64 TPH fix.
->
-> ---
-> Changes in v10:
-> - Refine commit header&log according to Punit's and Bjorn's review
-> - Split perf/arm_cspmu as a separate commit which address Punit's
->   review
->
-> Changes in v9:
-> - Address Bjorn's review: split commits to each platform so that make
->   them easy to review
->
-> Changes in v8:
-> - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
->   Jeremy's review
->
-> Chengwen Feng (8):
->   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID
->     retrieval
->   x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   ACPI: Centralize acpi_get_cpu_uid() declaration in
->     include/linux/acpi.h
->   perf: arm_cspmu: Switch to acpi_get_cpu_uid() from
->     get_acpi_id_for_cpu()
->   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
->   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
->
->  Documentation/PCI/tph.rst          |  4 +--
->  arch/arm64/include/asm/acpi.h      | 17 +---------
->  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
->  arch/loongarch/include/asm/acpi.h  |  5 ---
->  arch/loongarch/kernel/acpi.c       |  9 ++++++
->  arch/riscv/include/asm/acpi.h      |  4 ---
->  arch/riscv/kernel/acpi.c           | 16 ++++++++++
->  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
->  arch/x86/include/asm/cpu.h         |  1 -
->  arch/x86/include/asm/smp.h         |  1 -
->  arch/x86/kernel/acpi/boot.c        | 20 ++++++++++++
->  arch/x86/xen/enlighten_hvm.c       |  5 +--
->  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
->  drivers/acpi/riscv/rhct.c          |  7 ++++-
->  drivers/pci/tph.c                  | 16 +++++++---
->  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
->  include/linux/acpi.h               | 11 +++++++
->  include/linux/pci-tph.h            |  4 +--
->  18 files changed, 158 insertions(+), 57 deletions(-)
->
-> --
+> Sashiko review: it's natural to convert it to 'if'.
 
-It doesn't look like anyone has a particular heartburn related to this
-series, so I could apply it in principle, but I'd appreciate some ACKs
-from arch maintainers.
+Yeah, I saw and disagreed. The pattern with the  "while ((pmu =3D
+perf_pmus__scan...(pmu)))" functions is for them to be a while loop.
+With an "if" it would read:
+```
+pmu =3D perf_pmus__scan...(pmu);
+if (pmu)
+   return ...
+```
+and we lose the consistency of having while loops in the code.
 
-Why don't you resend it with all of the tags collected so far (and
-please add x86@kernel.org to the CC list)?
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+>
+> > > -   }
+> > > +
+> > >     return 0;
+> > >   }
+> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > index 98be2eb8f1f0..9859d7056fb7 100644
+> > > --- a/tools/perf/util/pmus.c
+> > > +++ b/tools/perf/util/pmus.c
+> > > @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcar=
+d(struct perf_pmu *pmu, const c
+> > >     if (!pmu) {
+> > >             /*
+> > >              * Core PMUs, other sysfs PMUs and tool PMU can have any =
+name or
+> > > -            * aren't wother optimizing for.
+> > > +            * aren't worth optimizing for.
+> > >              */
+> > >             unsigned int to_read_pmus =3D  PERF_TOOL_PMU_TYPE_PE_CORE=
+_MASK |
+> > >                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
+> > > @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_dup=
+licates(struct perf_pmu *pmu)
+> > >     return NULL;
+> > >   }
+> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu,=
+ const char *compat)
+> > > +{
+> > > +   if (!pmu) {
+> > > +           /* Only uncore PMUs can have identifiers. */
+> > > +           unsigned int to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_OTHER=
+_MASK;
+> > > +
+> > > +           pmu_read_sysfs(to_read_pmus);
+> > > +           pmu =3D list_prepare_entry(pmu, &other_pmus, list);
+> > > +   }
+> > > +   list_for_each_entry_continue(pmu, &other_pmus, list) {
+> > > +           if (pmu->id && pmu_uncore_identifier_match(compat, pmu->i=
+d))
+> > > +                   return pmu;
+> > > +   }
+> > > +   return NULL;
+> > > +}
+> > > +
+> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *st=
+r)
+> > >   {
+> > >     struct perf_pmu *pmu =3D NULL;
+> > > diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> > > index 7cb36863711a..0d55edb3f2fc 100644
+> > > --- a/tools/perf/util/pmus.h
+> > > +++ b/tools/perf/util/pmus.h
+> > > @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
+mu);
+> > >   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+> > >   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, co=
+nst char *event);
+> > >   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu =
+*pmu, const char *wildcard);
+> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu,=
+ const char *compat);
+> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *st=
+r);
+> >
