@@ -1,184 +1,189 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE4040626B
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 15:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774970765; cv=none; b=lPT/j678qlIYePhQO+3moxZEUSBG/0FCIrt6kFhv/ST8W6Y9cMhBnlpZhA5fxAUR935wOPkrR+2vmcGvASPLb+a7Cb6JJF2Q7U2sQ7Z/OGBoUrWAbO2/UZ0tpCCXGQciUJR11V6KNXe/NdaoiG5kS1DUjO0Ix8mwqUN2ETrVyJQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774970765; c=relaxed/simple;
-	bh=5lEWMzXasikcO31AENKqbC2O8hgoosi4MrR3O6h5qjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZNOoGFU4pmv5vt5HtVft1rdcFAJ8xyIw9QBQW1mmvZASzn5l+lji95VOlASexNNSIbCM7yvIuFrL/xRcGNdVJmh/EPZaD/f8nVeMqyVn0PjyFl/oGsuJuZdAS+S7EUe2BGOig0ozkgEesiUPJCU+leypUTS86ZLPlxiXKAR1NVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=X0+BvwWG; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF50C30E0DC
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 16:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774974126; cv=pass; b=B/26qlKcGgvQYhJ42bdN/xUVL8ZGcOGtbAneeU01JerOs0W8XOAoy13kk3piFiLdxLfju+3QxLi1jgdXQeZNN24iU3LqPgHS59eIUc9F2ymDUgoTDDhmI/zdxW5WOz2NUOIJWRLo8uMk4czGdkWHKQGNgg0WXT/WqyjcjuVklMM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774974126; c=relaxed/simple;
+	bh=laAesc2DWHHY+XHvDhZvR+Cqdh0i+9IybQYWeli+aBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bwnu0g22MT5vgMnNbb6OiecvloNWJS+nAo+8lrDotm0dH8fJovokxm2gxv/oqMLDKnVqu8c1ULtT/9An/vBcpP3uiDsoVN2WsSNIRtQZDlC0lgxuAaI4TJ28mR2bMzPK5A+j+rpLGcda8f3OWnubbKvI9wLBnD4A6+jdE9xVoss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gNrwq/QA; arc=pass smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="X0+BvwWG"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-127380532eeso676987c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 08:26:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gNrwq/QA"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b0c12be0ecso124135ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 09:22:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774974125; cv=none;
+        d=google.com; s=arc-20240605;
+        b=lGWoRP9bJZOGriMD63rA1vc8nj1rc/6nM6Fzi3hv4Xvi/H1jpnEz0H56Jy4gIJkane
+         4Vm+qxCFMlTM0eDGFMnGtuQEuLoYI9UqM/QHdH7A6pxIHogLJbrFi/kg4pTXsVt2OR7P
+         zzSZXIWiNotqnQt5pnvA3MM+sNek6q0oz9pDaVIcdVeBjbcmINDJxvrUjlmWnI9+YY1Q
+         GlTWAjgWi2dJW0eHIpKfW1YsXvKvgJWG1An4JADDakeGnaZJM6M9QQQVS6iUmwXpUUod
+         pHeEHBnaolbKSEcsmp71dEQQEZpRYGplVBd5BCkvMnY+qtI31UEV2VVPn6gv1gqFe/+D
+         8JWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=yZi4x52Tz19qxTf/zTm0U0WBodN60K0SdHTxgYhWyF4=;
+        fh=t7EpQlYf5av/Kd4QV+ImR9s9N0yOStvhEoTOR4PEPL4=;
+        b=hrcNBYBM+pfyEXGkxKQZRyHMaDXtJ4Y3MGFV9DjhOb/LbBOAkwD4zDqkkwfBToBz+U
+         2NsIf8NqtPpu0CNYGqANEInLfGBMpEf0up7W7+SA57Q0gi6b7xS+pWQ31YtR0KA7h4NG
+         BPx5M2lrLVu+RuU+nNaanJcH2iXdX70hQ8GOmK4+PHF6U61R2lXX9VyI49sOQX11Rg19
+         eQAQAV3sBDhnZ5D81qZf7weKjTnWOan8gewQNv8FLAfMwDMMdFWEO7sHH+92C/ux3cc+
+         dbhKcL2ktcH7W7RE0xhga+Zs5Z9HLo8+hofpnYHH31TME9QPOGvGpnNHCR0xq5twDfgj
+         jOPA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1774970763; x=1775575563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20251104; t=1774974125; x=1775578925; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dz1Axq4Y+lq0ZDtoswb/uDlh80ImpylCPpWTk7UXK8M=;
-        b=X0+BvwWG0p80dR9JBRWfrAQVCetEKmdHNm8xXXi9A9cW61uJkpeXkowoXtxrbPm9DY
-         T5Fw+6ZYpGLucYw6Zq/cZp8sPS+bDtvA+p0wDdO0Ua9txyNgRgBOFOqef+gocnQyS0fR
-         245Gm/48pycTeG3UE5FZ/3rSsQh254jCGgZwwvO8Le5HZYQbdqLXnmcG41jVaQ58tqHD
-         jWM2MuaAvH6uWy5/SxGLxnPObVmNjbpzWHMnbeW2iAdeRdSNHGrDHVVVCQRaTGpEpqMv
-         +0wud2F20FqbkysQ3DuNXlUTRHEORZnhba+ZIud84nSEpIWCHJSXCVDfI+IGfyn9sRUL
-         FAIA==
+        bh=yZi4x52Tz19qxTf/zTm0U0WBodN60K0SdHTxgYhWyF4=;
+        b=gNrwq/QAPfRbGx1ajwrXyWaEfeDGQ65XIlQn2umoBMc0PZnCfbPKzJl3Yi2nbH91sB
+         xUhwxb1qSbjwIJLkL2aUvArCN9iEse1chd7Jjtkp+pyQ7WlkvHzqZvwKeZ7ibrLVWEyu
+         tc98uMJZh02HCH5kGFxk+1i4tmWkyZs9+H3J5lWfoRJh3gA2SSxaLkYdCI7UzFr+CuFB
+         oQIZlHyBFkSkG91pp13HbjIcJDxMxe7mEyVh3UyEeYMhi6X4xVbIVd2qM3AuqPHim0bE
+         R8BTnR1NG7vy0SkuF+5kH0beLa2BeaVfH65D5hY1T0lUBPfO4PbZlYSldE2BzwYJAN/L
+         jUCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774970763; x=1775575563;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1774974125; x=1775578925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Dz1Axq4Y+lq0ZDtoswb/uDlh80ImpylCPpWTk7UXK8M=;
-        b=ri6KSbq9shBZsTJITMt9Dxi2kNxXP34brkUOaVsN7oTAzvt9314lsaqte0JrPFErIa
-         Q+aoHFL6GFzSaoAyrz1RGgJ0yRKg29VGIr8ZYyMM9nZ3zq57KZB3i8FgKIyx7w+0xdym
-         0yzRu2drQESqiAZ1SM5OZa5xjBQk8aAU/XXkdp1sYc3WhnWeVESviakZBUFAr1ljOYB0
-         UdD2pNqfPVeNqnaf4uB8gVrYEn3KrJox3wIPwwtYxBBHjSZtS7d4loatzT0WczJHh7Er
-         gUii/dKRoanIORqz+y+iI9PHK/TFwORnq3lv6Vd1ZyG0691bIVkmypb2YzduUkYIpCNN
-         YrGQ==
-X-Gm-Message-State: AOJu0YxQ0K8ngusi3bReT7P9pAfErLTwpV2f348ZZlxEG78C4UW0knsL
-	4iMlRSA/VR7zkYmqbxck1xd9sx3GlGomS+d8pEzdeWFBj1T1JFqq6S7qtoXjXJDhRnhRxD0G95b
-	TT7XY+/+wlA==
-X-Gm-Gg: ATEYQzx6S20fXNlEQ9Wzzgw+WiIsaN8X06KiUE0FVrrHBRJVVJmsZyUlTttWAHnn3BV
-	PKkn9XvdQr/GvOie2ENasbScyFWUB7DDi9ckdvLu6gn7huwpELWOIlnpzQtdaFhuWVJGWpxxq5X
-	wtUTny8lfJN1BKXWMTLe1fmXzhVDOdBhz9/CzmpRUsrPOzxb1MAhp2kAgW2BADMpIrmKC0N5gZ8
-	pOL7TWULI2SqaY5g2VvQx93GlpVBtDCY3xzTNtzHpIqvpj65E7gTfv73aiR3/mSSuVGT5wsxdfF
-	kiFr0xkdVC88k5xjoHIEsBKtB/WQfaLDr4mE3HCEUy/jBibACxYNrNoLGPXhuPjzcF873msV7/L
-	MCSZGmAtBKpZndgonBiASJyLgirZvrYO0FOWMGG57VU10WBfF3ooqytihbtUR/1QkwPpdvghJgu
-	kXQyZZbO25Y5YjFaYrxDrND0D8A1NDnC/9uw==
-X-Received: by 2002:a05:7022:388a:b0:11b:1c7e:27d0 with SMTP id a92af1059eb24-12ab2752bbamr10827485c88.0.1774970762557;
-        Tue, 31 Mar 2026 08:26:02 -0700 (PDT)
-Received: from mozart.vkv.me ([2001:5a8:468b:d015:5f44:e3d:a8c5:d59])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab983f9f3sm15618113c88.10.2026.03.31.08.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 08:26:02 -0700 (PDT)
-From: Calvin Owens <calvin@wbinvd.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 2/2] perf: Don't throttle based on NMI watchdog events
-Date: Tue, 31 Mar 2026 08:25:50 -0700
-Message-ID: <685061daed5b505ef604835b602e0202531f2315.1774969692.git.calvin@wbinvd.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1774969692.git.calvin@wbinvd.org>
-References: <cover.1774969692.git.calvin@wbinvd.org>
+        bh=yZi4x52Tz19qxTf/zTm0U0WBodN60K0SdHTxgYhWyF4=;
+        b=jZIBiP9Py8DXCMC064lta7YUhLMhDiFUJ/34mOhahF8PBKDekq4bjGteKIgUI0ha/H
+         QYyDUrWHqfcskieoAgIS9mrTK8rWEAD/cGmx1dyHyZoN7SYQltmg0vF2Ius3be9613C1
+         2YtB/h/3wA0p5J/Z1VJp6pHv/5ecKVhMxLSb6Do0m8EaC++o9uIlGGZgHP/5NivzpCn/
+         xZZS2SHI4ZNwj9k4WvLX7Em8+F+iqKpiotU3KRJr9uqBb374XUtCUymqJ+v9jbufoVgF
+         8WL7v1H+HtOjHJGFj5ncCxld3FyqWd80YWtgNq+LZjdKb3pcG5EELpxEB9rUQzKvESHp
+         DFcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTf/twRQYfN3/pZmw9e9Dpr7Qys253wzdGQJZ+KYLKpLSaPHcA2kKkoRKo2vLdTLYaXxjOuU/TnFve1pyl+VsW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL2GuffcyBIJ5m7BEpDntHhc/z0eL+y1RR59Eew+YqFqTo5O/7
+	G1V83pf/RtfocuEKuLwOdsVp+hx5vB7bNft3Itat4fPRj+W8pN6uW/ZypWk0iN6QRNHESlaXE/l
+	rQPnu8z21kb4VTvAXKsnwEzDm5otSfmR/k8l2EN30
+X-Gm-Gg: ATEYQzyz2hgGOiTOIZVFsCoyXnA999tqWyxN2evmZawP4Aufl5sVhQFbc21bm1wqFTy
+	Rs67CLO6u2xmuJJyvLH85CqVtaURcH80ym127vOjudw/4eMxAnLzYR4YQMx71t0K+SOFKg3UYg7
+	4tLGnQ0SQM5JSxtEGvaRN6ujCBfBS1PIuvXK2EVBTrckN3kO9Ej2LgJRHDr5Ipt4zcCQ34NP9rG
+	J4jmQF095q21FzrJ3zFzzZsfBmR6GYGH5xWL7FFAT+bWfc55waq4qZXKBdfLuddZ75abOhk7JKP
+	Zlt6pAJk6KDC8oYlzIJsV++RBvRNNWAZ20qE/w==
+X-Received: by 2002:a17:903:1b6f:b0:2b0:5683:1cf with SMTP id
+ d9443c01a7336-2b268eb903cmr171025ad.13.1774974124549; Tue, 31 Mar 2026
+ 09:22:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260330194021.212912-2-ashelat@redhat.com> <CAP-5=fUvN=7ynEXju4jo6mWuajRRY0uC68SpUR8mTvXPqrgQTw@mail.gmail.com>
+ <CA+G8Dh+rSWHuO4ihq3Qbf9=qBcjhZ_AWLZxBPh_cxJ=GDfvCRQ@mail.gmail.com>
+In-Reply-To: <CA+G8Dh+rSWHuO4ihq3Qbf9=qBcjhZ_AWLZxBPh_cxJ=GDfvCRQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 31 Mar 2026 09:21:52 -0700
+X-Gm-Features: AQROBzBlXbvSW7TXbvv7P3ATxKI_apRsmh5V-VZY4isqQ9Z-20JPn-Z2PFNuPVg
+Message-ID: <CAP-5=fW=rMqV_ci5u9wvXUJq_1aiKxTSwi3MMYPM4XHGwUDSvg@mail.gmail.com>
+Subject: Re: [PATCH] perf dso: prevent null dsos from being added and add
+ comparator checks
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The throttling logic in perf_sample_event_took() assumes the NMI is
-running at the maximum allowed sample rate. While this makes sense most
-of the time, it wildly overestimates the runtime of the NMI for the perf
-hardware watchdog:
+On Mon, Mar 30, 2026 at 2:50=E2=80=AFPM Anubhav Shelat <ashelat@redhat.com>=
+ wrote:
+>
+> On Mon, Mar 30, 2026 at 5:06=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Do you have a reproduction for this? The entries in the dsos array
+> > should never be null, so the check is redundant. If this is
+> > out-of-memory related the check in __dsos__add should suffice.
+>
+> We don't have reproduction, but we got a coredump with the system
+> crashing in dsos__cmp_long_name_id_short_name. This is the stack trace
+> of the culprit thread:
+> Stack trace of thread 12717:
+>
+>             #0  0x0000aaaad2905cb0 n/a (perf + 0x1e5cb0)
+>
+>             #1  0x0000ffffa7090b38 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3eb38)
+>
+>             #2  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #3  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #4  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #5  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #6  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #7  0x0000ffffa70909f0 msort_with_tmp.part.0 (libc.so.6 +
+> 0x3e9f0)
+>
+>             #8  0x0000ffffa7090dc8 qsort_r (libc.so.6 + 0x3edc8)
+>
+>             #9  0x0000aaaad2905e28 n/a (perf + 0x1e5e28)
+>
+>             #10 0x0000aaaad2905eac n/a (perf + 0x1e5eac)
+>
+>             #11 0x0000aaaad2906764 dsos__find (perf + 0x1e6764)
+>
+>             #12 0x0000aaaad2928438 map__new (perf + 0x208438)
+>
+>             #13 0x0000aaaad292765c machine__process_mmap2_event (perf
+> + 0x20765c)
+>
+>             #14 0x0000aaaad2973b94 perf_tool__process_synth_event
+> (perf + 0x253b94)
+>
+>             #15 0x0000aaaad2974874 perf_event__synthesize_mmap_events
+> (perf + 0x254874)
+>
+>             #16 0x0000aaaad2975200 n/a (perf + 0x255200)
+>
+>             #17 0x0000aaaad2975428 n/a (perf + 0x255428)
+>
+>             #18 0x0000aaaad2975504 n/a (perf + 0x255504)
+>
+>             #19 0x0000ffffa70d2e00 start_thread (libc.so.6 + 0x80e00)
+>
+>             #20 0x0000ffffa713d49c thread_start (libc.so.6 + 0xeb49c)
+>
+> It looks out-of-memory related and I agree the comparator checks
+> aren't strictly necessary, but I think keeping them would be a good
+> redundancy against some future issue that would cause a similar crash.
 
-    # bpftrace -e 'kprobe:perf_sample_event_took { \
-	    printf("%s: cpu=%02d time_taken=%dns\n", \
-	    strftime("%H:%M:%S.%f", nsecs), cpu(), arg0); }'
-    03:12:13.087003: cpu=00 time_taken=3190ns
-    03:12:13.486789: cpu=01 time_taken=2918ns
-    03:12:18.075288: cpu=03 time_taken=3308ns
-    03:12:19.797207: cpu=02 time_taken=2581ns
-    03:12:23.110317: cpu=00 time_taken=2823ns
-    03:12:23.510308: cpu=01 time_taken=2943ns
-    03:12:29.229348: cpu=03 time_taken=3669ns
-    03:12:31.656306: cpu=02 time_taken=3262ns
+Thanks Anubhav! I think adding null checks on elements in the array
+could cause null checks everywhere. How about we keep:
+```
+ int __dsos__add(struct dsos *dsos, struct dso *dso)
+ {
++       if (!dso)
++               return -EINVAL;
+```
+and drop the others? This clarifies the invariant on the array clear,
+avoids bugs and eliminates the need for additional checks throughout
+the code.
 
-The NMI for the watchdog runs for 2-4us every ten seconds, but the
-math done in perf_sample_event_took() concludes it is running for
-200-400ms every second!
+Thanks,
+Ian
 
-When it is the only PMU event running, it can take minutes to hours of
-samples from the watchdog for the moving average to accumulate to
-something near the real mean, which causes the same little "litany" of
-sample rate throttles to happen every time Linux boots with the perf
-hardware watchdog enabled:
-
-    perf: interrupt took too long (2526 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
-    perf: interrupt took too long (3177 > 3157), lowering kernel.perf_event_max_sample_rate to 62000
-    perf: interrupt took too long (3979 > 3971), lowering kernel.perf_event_max_sample_rate to 50000
-    perf: interrupt took too long (4983 > 4973), lowering kernel.perf_event_max_sample_rate to 40000
-
-This serves no purpose: it doesn't actually affect the runtime of the
-watchdog NMI at all. It confuses users, because it suggests their
-machine is spinning its wheels in interrupts when it isn't.
-
-Because the watchdog NMI is so infrequent, we can avoid throttling it by
-making the throttling a two-step process: load and update a timestamp
-whenever we think we need to throttle, and only actually proceed to
-throttle if the last time that happened was less than one second ago.
-
-This is inelegant, but it avoids touching the hot path and preserves
-current throttling behavior for real PMU use, at the cost of delaying
-the throttling by a single NMI.
-
-Signed-off-by: Calvin Owens <calvin@wbinvd.org>
----
- kernel/events/core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 89b40e439717..0f7a7e912f55 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -623,6 +623,7 @@ core_initcall(init_events_core_sysctls);
-  */
- #define NR_ACCUMULATED_SAMPLES 128
- static DEFINE_PER_CPU(u64, running_sample_length);
-+static DEFINE_PER_CPU(u64, last_throttle_clock);
- 
- static u64 __report_avg;
- static u64 __report_allowed;
-@@ -643,6 +644,8 @@ void perf_sample_event_took(u64 sample_len_ns)
- 	u64 max_len = READ_ONCE(perf_sample_allowed_ns);
- 	u64 running_len;
- 	u64 avg_len;
-+	u64 delta;
-+	u64 now;
- 	u32 max;
- 
- 	if (max_len == 0)
-@@ -663,6 +666,17 @@ void perf_sample_event_took(u64 sample_len_ns)
- 	if (avg_len <= max_len)
- 		return;
- 
-+	/*
-+	 * Very infrequent events like the perf counter hard watchdog
-+	 * can trigger spurious throttling: skip throttling if the prior
-+	 * NMI got here more than one second before this NMI began.
-+	 */
-+	now = local_clock();
-+	delta = now - __this_cpu_read(last_throttle_clock);
-+	__this_cpu_write(last_throttle_clock, now);
-+	if (delta - sample_len_ns > NSEC_PER_SEC)
-+		return;
-+
- 	__report_avg = avg_len;
- 	__report_allowed = max_len;
- 
--- 
-2.47.3
-
+> Anubhav
+>
