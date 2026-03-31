@@ -1,51 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF972222A9;
-	Tue, 31 Mar 2026 03:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F54370D65;
+	Tue, 31 Mar 2026 06:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774926522; cv=none; b=OImnhZ2A/BPG2B11VFfoY5oaaHEfisdU1TVcJmY6325Y+hke1AmtmpgnP2OZBuaBTQfu9VBJt8Nfnv/nVQXe2P2+GuEUT3HkcZRmasq9ItKWw/eoXegBUF2430TlWGIe6oHC3fLikKco08GvEET+6DFEGM9O/3Ha9jQ/XqaZDSU=
+	t=1774938653; cv=none; b=u2bO/jEiHr/0VeqMbPwSrhAp5pw3BYQ2g5JJ5qxAhGuxhdwWAG8xtuGWQlVoB7uG63yd0CrLJJp/N+tcLQ2vGqd/TIXKYXj7zImaNI5ldnOF1h/8Ve/uI1Bkn0ZEwPioCYc5h5zES4Yu+qruTBStIXrwOYwosVea9n1hdNuMcyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774926522; c=relaxed/simple;
-	bh=gAB1I798vQbwoQFeZbpkMQ3UGt72dmKOgU+Lc1R66Nc=;
+	s=arc-20240116; t=1774938653; c=relaxed/simple;
+	bh=BMJo0V9g3cbNMoitA27GyS5FMiNdbtTu3n072W0v+G4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LbF65jzssoNuXa9dbLQ0fkHQsHSXnbpn3Jparag074liOSukNk27/jqRzM8/EHDB2ucvguzbgCFmnQ4QVvgz6DRMkMOtIT84y1o6dE2R+CKx7MC69F+E2B+mg/iQTSTcbg4bjMoI7IaqpWnqCDPRnIbsypsxVNdSspPQZFc+fMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZNJ/rg9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aAAEoR16323QzuB9tNRVCIGTd+s/Of89Kp31rt8SE3YiaTUf+cIS+Y0Vgfrd7jowM5kxLGAgvBdxgiFBybD5ZuyxD7v8/fU7m6UFMOgdEOerY7g+NX2pDBzSjKC8bmFF1RA3KeRbsxcXB1VyPRZQwglfLqCb21r+q3Lt7rTtMVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFMf8A7J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZNJ/rg9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B08FC4CEF7;
-	Tue, 31 Mar 2026 03:08:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFMf8A7J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038BEC19424;
+	Tue, 31 Mar 2026 06:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774926521;
-	bh=gAB1I798vQbwoQFeZbpkMQ3UGt72dmKOgU+Lc1R66Nc=;
+	s=k20201202; t=1774938653;
+	bh=BMJo0V9g3cbNMoitA27GyS5FMiNdbtTu3n072W0v+G4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oZNJ/rg9pZrpHunbP7KXqnm55rndYnIzTAyYUfOQetvAQZ1Hun/jhWIWD7YmMhhkg
-	 tPfgqMaIhEiRprRzyXIc4G9JKeHHmw/05l/vnuQttR5YJboiS5EEO0XmGJGAjdUtso
-	 8l1kzbFZZVmBtpDzM2PNf+Jm1dh1n6KG8Wm+CV38Vfg36sRJCdmA+FXJp7vdn3YngU
-	 OLwoHNaqJGAepuDaMujJC6EX6LPvFS1xbkIBVlj+MBvRAuaI+H+1glwfWxYrjvuGOw
-	 j96S2Cs3wYtr6l/wzAwY7TJF/bBAgK1Aq2dpnJJy9QCHihPTo0ytL/uVbkalpNIRnb
-	 9RzPsgP0+rdnA==
-Date: Mon, 30 Mar 2026 20:08:39 -0700
+	b=NFMf8A7Jcvaa+mXDEc+3eSS8Sn48PUnfY1gBWwb8bF91kkR6BpfF5l9+amPOEs5TS
+	 4A48v53DhtvTf44HcyINb9izZ4Qlm7z88tDfWsWomntx2t9hN/A/cOnfUZQNZN8nak
+	 01t1la8f1BNk5xog9HI67VTpLxxWDIth7Pm7kWraRrLSZXHOB5u9/a7Nppe9m25uzN
+	 LvvHQDNU0F3/N0M+8y7Z8Ckb1Q4bzN6I97iifN5Mzi1I0p/qMTFhvDMq599FmfSfiF
+	 kQtIG9aoTsSvqgY0eJBc6H2gRNo2dqPut6A4R7DpqcZ+DgxnvT4+JBjLurItAxm5kg
+	 hupD4Q+biMkmQ==
+Date: Mon, 30 Mar 2026 23:30:51 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Chen, Zide" <zide.chen@intel.com>
+To: James Clark <james.clark@linaro.org>
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf arch x86 tests: Add test for topdown event
- sorting
-Message-ID: <acs6txqcncbwCFZA@google.com>
-References: <20260325183045.1229502-1-irogers@google.com>
- <20260325183045.1229502-3-irogers@google.com>
- <51dd73f1-d5b1-4fec-b94d-5a57bfb409c1@intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf metricgroup: Avoid scanning unnecessary PMUs for
+ identifier match
+Message-ID: <actqG7NHUWR8x7x_@google.com>
+References: <20260326224454.2101190-1-irogers@google.com>
+ <dcf5a92b-ef14-43d5-9f21-568252fd630b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,190 +50,94 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <51dd73f1-d5b1-4fec-b94d-5a57bfb409c1@intel.com>
+In-Reply-To: <dcf5a92b-ef14-43d5-9f21-568252fd630b@linaro.org>
 
-On Mon, Mar 30, 2026 at 02:53:45PM -0700, Chen, Zide wrote:
+On Mon, Mar 30, 2026 at 03:44:21PM +0100, James Clark wrote:
 > 
 > 
-> On 3/25/2026 11:30 AM, Ian Rogers wrote:
-> > Add a test to capture the comment in
-> > tools/perf/arch/x86/util/evlist.c. Test that slots and
-> > topdown-retiring get appropriately sorted with respect to instructions
-> > when they're all specified together. When the PMU requires topdown
-> > event grouping (indicated by the pressence of the slots event) metric
-> > events should be after slots, which should be the group leader.
-> > 
-> > Add a related test that when the slots event isn't given it is
-> > injected into the appropriate group.
+> On 26/03/2026 10:44 pm, Ian Rogers wrote:
+> > Only uncore PMUs can have an identifier, so add an optimized
+> > perf_pmus__scan routine for that case to avoid all PMU types being
+> > created.
 > > 
 > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/x86/tests/topdown.c | 137 +++++++++++++++++++++++++++-
-> >  1 file changed, 136 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
-> > index 3ee4e5e71be3..aca7faa16fc7 100644
-> > --- a/tools/perf/arch/x86/tests/topdown.c
-> > +++ b/tools/perf/arch/x86/tests/topdown.c
-> > @@ -75,4 +75,139 @@ static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest
-> >  	return ret;
-> >  }
-> >  
-> > -DEFINE_SUITE("x86 topdown", x86_topdown);
-> > +static int test_sort(const char *str, int expected_slots_group_size,
-> > +		     int expected_instructions_group_size)
-> > +{
-> > +	struct evlist *evlist;
-> > +	struct parse_events_error err;
-> > +	struct evsel *evsel;
-> > +	int ret;
-> > +
-> > +	evlist = evlist__new();
-> > +	if (!evlist)
-> > +		return TEST_FAIL;
-> > +
-> > +	parse_events_error__init(&err);
-> > +	ret = parse_events(evlist, str, &err);
-> > +	if (ret) {
-> > +		pr_debug("parse_events failed for %s\n", str);
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	evlist__for_each_entry(evlist, evsel) {
-> > +		if (evsel__is_group_leader(evsel)) {
-
-Same thing.  Please reduce the indentation.
-
-
-> > +			if (strstr(evsel->name, "slots")) {
-> > +				/*
-> > +				 * Slots as a leader means the PMU is for a perf
-> > +				 * metric group as the slots event isn't present
-> > +				 * when not.
-> > +				 */
-> > +				TEST_ASSERT_EQUAL("slots group size", evsel->core.nr_members,
-> > +						  expected_slots_group_size);
-> > +				if (expected_slots_group_size == 3) {
-> > +					struct evsel *next = evsel__next(evsel);
-> > +					struct evsel *next2 = evsel__next(next);
-> > +
-> > +					TEST_ASSERT_VAL("slots second event is instructions",
-> > +							strstr(next->name, "instructions")
-> > +							!= NULL);
-> > +					TEST_ASSERT_VAL("slots third event is topdown-retiring",
-> > +							strstr(next2->name, "topdown-retiring")
-> > +							!= NULL);
-> > +				} else if (expected_slots_group_size == 2) {
-> > +					struct evsel *next = evsel__next(evsel);
-> > +
-> > +					TEST_ASSERT_VAL("slots second event is topdown-retiring",
-> > +							strstr(next->name, "topdown-retiring")
-> > +							!= NULL);
-> > +				}
-> > +			} else if (strstr(evsel->name, "instructions")) {
-> > +				TEST_ASSERT_EQUAL("instructions group size", evsel->core.nr_members,
-> > +						  expected_instructions_group_size);
-> > +				if (expected_instructions_group_size == 2) {
-> > +					/*
-> > +					 * The instructions event leads a group
-> > +					 * with a topdown-retiring event,
-> > +					 * neither of which need reordering for
-> > +					 * perf metric event support.
-> > +					 */
-> > +					struct evsel *next = evsel__next(evsel);
-> > +
-> > +					TEST_ASSERT_VAL("instructions second event is topdown-retiring",
-> > +							strstr(next->name, "topdown-retiring")
-> > +							!= NULL);
-> > +				}
-> > +			} else if (strstr(evsel->name, "topdown-retiring")) {
-> > +				/*
-> > +				 * A perf metric event where the PMU doesn't
-> > +				 * require slots as a leader.
-> > +				 */
-> > +				TEST_ASSERT_EQUAL("topdown-retiring group size",
-> > +						  evsel->core.nr_members, 1);
-> > +			} else if (strstr(evsel->name, "cycles")) {
-> > +				TEST_ASSERT_EQUAL("cycles group size", evsel->core.nr_members, 1);
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	evlist__delete(evlist);
-> > +	parse_events_error__exit(&err);
-> > +	return TEST_OK;
-> > +
-> > +out_err:
-> > +	evlist__delete(evlist);
-> > +	parse_events_error__exit(&err);
-> > +	return TEST_FAIL;
-
-Also, please share the code and use a different return value.
-
-> > +}
-> > +
-> > +static int test__x86_topdown_sorting(struct test_suite *test __maybe_unused,
-> > +				     int subtest __maybe_unused)
-> > +{
-> > +	if (!topdown_sys_has_perf_metrics())
-> > +		return TEST_OK;
 > 
-> I'm wondering if it makes more sense to return TEST_SKIP? As well as for
-> other calls to topdown_sys_has_perf_metrics().
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> 
+> > ---
+> >   tools/perf/util/metricgroup.c |  8 ++------
+> >   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
+> >   tools/perf/util/pmus.h        |  1 +
+> >   3 files changed, 20 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 7e39d469111b..769b38400832 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -410,13 +410,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+> >   	if (!pm->metric_expr || !pm->compat)
+> >   		return 0;
+> > -	while ((pmu = perf_pmus__scan(pmu))) {
+> > -
+> > -		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
+> > -			continue;
+> > -
+> > +	while ((pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat)))
+> >   		return d->fn(pm, table, d->data);
 
-Makes sense.
+Sashiko review: it's natural to convert it to 'if'.
 
 Thanks,
 Namhyung
 
-> 
-> Other than that, Tested-by: Zide Chen <zide.chen@intel.com>
-> 
-> 
-> 
-> > +	TEST_ASSERT_EQUAL("all events in a group",
-> > +			  test_sort("{instructions,topdown-retiring,slots}", 3, 2), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("all events not in a group",
-> > +			  test_sort("instructions,topdown-retiring,slots", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("slots event in a group but topdown metrics events outside the group",
-> > +			  test_sort("{instructions,slots},topdown-retiring", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("slots event and topdown metrics events in two groups",
-> > +			  test_sort("{instructions,slots},{topdown-retiring}", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("slots event and metrics event are not in a group and not adjacent",
-> > +			  test_sort("{instructions,slots},cycles,topdown-retiring", 2, 1), TEST_OK);
+
+> > -	}
 > > +
-> > +	return TEST_OK;
-> > +}
-> > +
-> > +static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unused,
-> > +					     int subtest __maybe_unused)
+> >   	return 0;
+> >   }
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index 98be2eb8f1f0..9859d7056fb7 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
+> >   	if (!pmu) {
+> >   		/*
+> >   		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
+> > -		 * aren't wother optimizing for.
+> > +		 * aren't worth optimizing for.
+> >   		 */
+> >   		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+> >   			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
+> > @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+> >   	return NULL;
+> >   }
+> > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
 > > +{
-> > +	if (!topdown_sys_has_perf_metrics())
-> > +		return TEST_OK;
+> > +	if (!pmu) {
+> > +		/* Only uncore PMUs can have identifiers. */
+> > +		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
 > > +
-> > +	TEST_ASSERT_EQUAL("all events in a group",
-> > +			  test_sort("{instructions,topdown-retiring}", 3, 2), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("all events not in a group",
-> > +			  test_sort("instructions,topdown-retiring", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("event in a group but topdown metrics events outside the group",
-> > +			  test_sort("{instructions},topdown-retiring", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("event and topdown metrics events in two groups",
-> > +			  test_sort("{instructions},{topdown-retiring}", 2, 1), TEST_OK);
-> > +	TEST_ASSERT_EQUAL("event and metrics event are not in a group and not adjacent",
-> > +			  test_sort("{instructions},cycles,topdown-retiring", 2, 1), TEST_OK);
-> > +
-> > +	return TEST_OK;
+> > +		pmu_read_sysfs(to_read_pmus);
+> > +		pmu = list_prepare_entry(pmu, &other_pmus, list);
+> > +	}
+> > +	list_for_each_entry_continue(pmu, &other_pmus, list) {
+> > +		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
+> > +			return pmu;
+> > +	}
+> > +	return NULL;
 > > +}
 > > +
-> > +static struct test_case x86_topdown_tests[] = {
-> > +	TEST_CASE("topdown events", x86_topdown),
-> > +	TEST_CASE("topdown sorting", x86_topdown_sorting),
-> > +	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
-> > +	{ .name = NULL, }
-> > +};
-> > +
-> > +struct test_suite suite__x86_topdown = {
-> > +	.desc = "x86 topdown",
-> > +	.test_cases = x86_topdown_tests,
-> > +};
+> >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+> >   {
+> >   	struct perf_pmu *pmu = NULL;
+> > diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> > index 7cb36863711a..0d55edb3f2fc 100644
+> > --- a/tools/perf/util/pmus.h
+> > +++ b/tools/perf/util/pmus.h
+> > @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+> >   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+> >   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
+> >   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
+> > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
+> >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
 > 
