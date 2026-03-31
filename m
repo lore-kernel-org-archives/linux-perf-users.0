@@ -1,135 +1,131 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3071243635C;
-	Tue, 31 Mar 2026 17:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E195B30F7FA
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 17:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774978305; cv=none; b=sY1vweNPCLT15i8FzG/TNOazxAqoI+s3IODawlGqYcbjE9hPjK/z6eAyIoAh8FSayiZ+9cDTrKN90aKC06YG9wbn9unVwORbp/rfuNoMx3ymD7h39P9+cj93NOTqO8Eu98lzRGvkPcL1VmAo6FFudfzLStqq7Y+gjFq+ia7UBiw=
+	t=1774978996; cv=none; b=cceLWuITyP8Ef+JL5RFrq1Czkyrej/eqe9o5gFmB4aCusuRXpPRHIjYblH2Y4EMfJm0Jg8Ov/L0EM1fXwpTVjzs9h1UocaEAmObbHJhy/DTMunJu/luhmEl/4OJoO8ewiERFBLlMC31trjqMahtS+gsLutbuMOv8QsMsFV1TJ0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774978305; c=relaxed/simple;
-	bh=3i1Gq4JAIizBknxjSLlecxNj8YdouZQOldf/Gi8SPcc=;
+	s=arc-20240116; t=1774978996; c=relaxed/simple;
+	bh=BA4fJi/uGZRbO+swLKTc/k6zNKY4yPRp0Vie0GkIi0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uI2WBVD1KNj/vbWPOt8JZdWy1rES0FBPi4tnEWCPjHrzq+upMhOBFbT8Hn5pL0uUW9iz98AFvjVbiqTVIPCTdyUQt3VLIVJZFvYpCk32uiZnjAywTHiQjzgStwt7DukC5Xk5ARGF/9TEUdbbGB9K8gwv23WpnwYMa/uA95+wD+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WDzivK/a; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8snMFtcsSY/zEr+XdQ3+MZfu3n3lF4F+3JOMt9lNd3G3noSY7AAZr5+DbUW/+hyLBxIAJbSaqPN3y6b3OUz6XPJjubaOZzZqTaTWsh5lDH/8WOnXqidEexioINiq2i2laaj9gV0KYsSWyRyJgdFK1vYz8FA3XU3KD90xCeIdhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=ckJcFOdT; arc=none smtp.client-ip=74.125.82.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="WDzivK/a"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C85B1D31;
-	Tue, 31 Mar 2026 10:31:36 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDE373F915;
-	Tue, 31 Mar 2026 10:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1774978302; bh=3i1Gq4JAIizBknxjSLlecxNj8YdouZQOldf/Gi8SPcc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WDzivK/ay0BT4/Mfila47ssOCUKcoC8mcE1OJ3YzJDm9s79Zs686E4kzJf4HRuKB6
-	 lpHJ/DyPCzQqdZR0SBq1PcmDDq9UF0avGeThJW47JsQ4fAL+D9oqkCMCvB+7zuGSCf
-	 u5jO9aDk1QLnYCQi+3kmjhvfmGJUmFBpQyUk3kzE=
-Date: Tue, 31 Mar 2026 18:31:33 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="ckJcFOdT"
+Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-1271257ae53so6038624c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 10:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wbinvd.org; s=wbinvd; t=1774978992; x=1775583792; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6j9GhmvN1+aw1MZJsniSTJSaG6YjGwrtw4O+Ld1Fnto=;
+        b=ckJcFOdThSn4KYTWDUgpjV2+4/bCuTnzBnlRkBEgqvQ9wXYAnkbf8MX9AG+EM76woM
+         lTplETBQahLuTqMIm6rO3Im3vKdBvS47qsFV2sIeM/5ZtpeS8abRS8yRMWKZ78TXWH1c
+         rZqwkydNEBHIc6lbrdFntAkFi8OweWsjIh7CwlpD0V8mbRsmjDV0o2XtI/9iPDtJAowt
+         L6/3O2S0xDT3y9Mi+rXd9nykE7YbYYm0/TDaMSpcYBDrjPrJpSbLtDEy0alwr8lEdRYM
+         4JArIo5tBYOhQVsMLgYhTfsaQxITeucS9YXEXlCJbovplaV+MXa7I5PUuXwMIiRZEJH6
+         PmXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774978992; x=1775583792;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6j9GhmvN1+aw1MZJsniSTJSaG6YjGwrtw4O+Ld1Fnto=;
+        b=DliWz/GI2FbcR3vX3i2y6e41HJopHVyIQtXQp+I5yllkQ+TqDLskr8S5rss1an9npP
+         TFXiuyEt6UU+Arwr4ctSX7003CEfUSgFhZOjfxMY78ekKBhHcknpfQ+/HI4IBbEuuJIR
+         ZME6IXHDVESPAqR3ABVus7FljAMDaGYgKMiDDmnbAmhwG67myYE2fGpJ5b3GRQIlbhgg
+         LAPvFFmOc1WmXvGWRPIOEI6m8GnY0M3mJZchmHZBaFAVXCxFZ04OwhB8Pu3kO2hlOl83
+         4PHZE3TADNY91mXbWVeZVYLK9Ui5TFDUmVR7G+zcvktFAcdTHTjTI2Hh6RCoshINgmhv
+         SOLQ==
+X-Gm-Message-State: AOJu0YxcKEUUXrqNayKkyHUdg7rskPlHeo6QzVOsfMcxUmzGKHVO04Br
+	awZo8s4lUOFxxKxby/3UXBqLLRTl+7RyY1qGKe1Dd9MSy8Sa6iA+hWwDZLki6g2jXs0=
+X-Gm-Gg: ATEYQzzBVKhx7xfTrqHRttEuY+8Q0KWVKdLhnJ/veg0pA34nA/iXI4mEQzOj4NgRdzQ
+	LJLpsqbkOizcq1yDnXkHVpTIclKJE02WU1PfEHzk3rK7RP528nlk5ZLu9MmCAdwj4Q+c4d9qPmv
+	tkON5iIVeiknyIsxDZhfhoLbA98xG9dMzKmOmdOiTRQbgjp3i2sf5hrZOW+vzxQ5tgqSutxiFEn
+	+eIckw19j7pd1pkFJGhAQIj9znjHL0Z+Vb1GIcy+jWFzQ9pvnc/kNP1r29FvPjWDUWU5y7LYFrX
+	HW5/rBUUiETH+T1LclRVFr7gSM+fWjzSGzpqkTusCoql4dUAEBrvrniOXam9PMLls5Jh2LX27RJ
+	nqDIP+QHgB7hCxLFr4ZveDch0FHr1XfS+1gO2ffkw79jYqdkMzt8p1H47b3/qdkeRTyRlrzzZAZ
+	+ODj20/+/DhfL2kvSqwPX64dCcWQ==
+X-Received: by 2002:a05:7022:6987:b0:128:ca83:5aa1 with SMTP id a92af1059eb24-12be649ca84mr230940c88.16.1774978992473;
+        Tue, 31 Mar 2026 10:43:12 -0700 (PDT)
+Received: from mozart.vkv.me ([2001:5a8:468b:d015:36de:b209:4884:3260])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab983f904sm15641070c88.9.2026.03.31.10.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 10:43:11 -0700 (PDT)
+Date: Tue, 31 Mar 2026 10:43:09 -0700
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, x86@kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>,
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com,
-	suzuki.poulose@arm.com, ryan.roberts@arm.com,
-	chenl311@chinatelecom.cn, masahiroy@kernel.org,
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com,
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com,
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com,
-	liuyonglong@huawei.com, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v10 0/8] ACPI: Unify CPU UID interface and fix ARM64 TPH
- steer-tag issue
-Message-ID: <acwE9V-r63-W2wby@arm.com>
-References: <20260320031737.35048-1-fengchengwen@huawei.com>
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 2/2] perf: Don't throttle based on NMI watchdog events
+Message-ID: <acwHrbpnLxM_G9Vg@mozart.vkv.me>
+References: <cover.1774969692.git.calvin@wbinvd.org>
+ <685061daed5b505ef604835b602e0202531f2315.1774969692.git.calvin@wbinvd.org>
+ <acwC2R63DVoZVf-l@mozart.vkv.me>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
+In-Reply-To: <acwC2R63DVoZVf-l@mozart.vkv.me>
 
-On Fri, Mar 20, 2026 at 11:17:29AM +0800, Chengwen Feng wrote:
-> This patchset unifies ACPI Processor UID retrieval across
-> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
-> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
-> 
-> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
->      respective users)
-> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
-> 6: Clean up perf/arm_cspmu
-> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
-> 8: Pass ACPI Processor UID to Cache Locality _DSM
-> 
-> The interface refactor ensures consistent CPU UID retrieval across
-> architectures (no functional changes for valid inputs) and provides the
-> unified interface required for the ARM64 TPH fix.
-> 
-> ---
-> Changes in v10:
-> - Refine commit header&log according to Punit's and Bjorn's review
-> - Split perf/arm_cspmu as a separate commit which address Punit's
->   review
-> 
-> Changes in v9:
-> - Address Bjorn's review: split commits to each platform so that make
->   them easy to review
-> 
-> Changes in v8:
-> - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
->   Jeremy's review
-> 
-> Chengwen Feng (8):
->   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID
->     retrieval
->   x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   ACPI: Centralize acpi_get_cpu_uid() declaration in
->     include/linux/acpi.h
->   perf: arm_cspmu: Switch to acpi_get_cpu_uid() from
->     get_acpi_id_for_cpu()
->   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
->   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
-> 
->  Documentation/PCI/tph.rst          |  4 +--
->  arch/arm64/include/asm/acpi.h      | 17 +---------
->  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
+On Tuesday 03/31 at 10:22 -0700, Calvin Owens wrote:
+> On Tuesday 03/31 at 08:25 -0700, Calvin Owens wrote:
+> > @@ -663,6 +666,17 @@ void perf_sample_event_took(u64 sample_len_ns)
+> >  	if (avg_len <= max_len)
+> >  		return;
+> >  
+> > +	/*
+> > +	 * Very infrequent events like the perf counter hard watchdog
+> > +	 * can trigger spurious throttling: skip throttling if the prior
+> > +	 * NMI got here more than one second before this NMI began.
+> > +	 */
+> > +	now = local_clock();
+> > +	delta = now - __this_cpu_read(last_throttle_clock);
+> > +	__this_cpu_write(last_throttle_clock, now);
+> > +	if (delta - sample_len_ns > NSEC_PER_SEC)
+> > +		return;
 
-For the arm64 bits:
+Apologies for replying twice in a row...
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Sashiko made a second useful observation:
+
+>> There appears to be no upper bound on sample_len_ns itself. If an
+>> event takes 5 seconds to run but is configured to fire only once every
+>> 7 seconds, the idle time will be 2 seconds.
+>>
+>> Because 2 seconds is > NSEC_PER_SEC, the throttling logic is skipped
+>> entirely. This defeats the sysctl_perf_cpu_time_max_percent safeguard
+>> and allows an event to monopolize the CPU in NMI/IRQ context for
+>> seconds at a time without ever being throttled.
+
+I'm skeptical that would ever actually happen, but I think I can address
+that by adding:
+
+	&& sample_len_ns < NSEC_PER_SEC
+
+...to the skip throttle condition?
+
+In fairness to the LLM skeptics, the feedback Sashiko gave on patch 1/2
+is absolute nonsense.
+
+Thanks,
+Calvin
