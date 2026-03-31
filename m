@@ -1,204 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCCD319617;
-	Tue, 31 Mar 2026 01:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453C878F59;
+	Tue, 31 Mar 2026 03:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774920423; cv=none; b=hPehyyxj4in4bQ4oSKds5qpJwG4D5wTs5N29IXApJB+tTwCky8+ksHMEefmDY8ff9ofyTBMspR8YRc6fhPx1zqi430bOtwgkL5HRaLquqsAB2OUdcplNvbAxJjMUNL34eh3Q3+sNn1SFke4MidbxanSxvzjPjSV1/L8jwZcsHe0=
+	t=1774926373; cv=none; b=hPH6KBzmXmxQYUlh+4sE78tIeItRMSuClOp8tQET4KTBUOmwlpMvL78mhRAwjZViUAg2Wmix8ex7a1KaoNcLOvdSslzg14T/eagd9q8OKcq/gxaQmsDBZdQ7KQYnYPIKsIuR10cbKvLd1qLl5NcDFhHZfq26NzdW+69njLeoBBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774920423; c=relaxed/simple;
-	bh=tdikCDSwXSWQXNlH4pP3oTBO/piRHW9T/nktj8KdS5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NkllmJpsyA+JdUBd2+9tbLTkvIBOPkV1jWWePRVaVxmLbmuEkY3EpiNwcrYoxCkx3YsgDnO31x1EsAqcwEmfRv+VMNtP5nFJBHeS0bctdp0EJIx0Ac2GyzjEO903++VXivpLtH8kXJ6BENIezvXKSePo58W96v9VT/9dS2+j9dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SK1HUsH+; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774926373; c=relaxed/simple;
+	bh=5Smner0zgl4+3+SGrmvNNFv7/cjf/Kerm21y3zNNIcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBBOjQFRrVz5Bz9zWDHrKI8OOXT2h24v7VZOoY0O/3rdWaDS4iitXDJsfDLtHouaYyDaIigPUYH+5NBEPYehPZiMcabsYrt4fBglxDQ1mDK3zs5yKPt2oDH2aJoCwfdg8+ZxAhI4jKbeYQL8sPXWKgJIdLR0vISqqldM9ssjb0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZPj8My+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SK1HUsH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774920421; x=1806456421;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tdikCDSwXSWQXNlH4pP3oTBO/piRHW9T/nktj8KdS5U=;
-  b=SK1HUsH+XiQEj6ICO8AerAVHdaQcZmjEHeeEqMI7QIreh8xoybdNJrsh
-   rfcrIF9E26u+Pg2ZspLGJY473AvnzEf8D9Wuz8TtT5JCfPUH9FhM52TQN
-   CFIR8CQODaCaatuDAp/nLoVdSjvOFg43wL7dkbuhwGXQhBQal7vSnHTl7
-   ckzEMjjRZjftaLJEPQg355hzSYnErLgs0/HhkphwY0ikChPrHxLAmrQMn
-   7BAivGNmTEiQc9FYEK05CqYYVYO8EjL3eW3ChA5NzxDBryTVHt/TZeB4o
-   U2L81RmphyA9wIG5WXKC5JB/MIlzYEFjAcISwcoMsYrSSH7714aOrp1Qy
-   A==;
-X-CSE-ConnectionGUID: 5ZK5evtYSBuqMqfQQkA6nA==
-X-CSE-MsgGUID: Mmy5y8bPT8ifya+SrqqzzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="75819630"
-X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="75819630"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 18:27:01 -0700
-X-CSE-ConnectionGUID: 2CkRbMrcSpmZ0FQV8F9Pmw==
-X-CSE-MsgGUID: 4pjiz/gqRDWtJq14TVY+Wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="227834632"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 18:26:57 -0700
-Message-ID: <e899636d-371a-44dc-b8e7-578f499847fa@linux.intel.com>
-Date: Tue, 31 Mar 2026 09:26:54 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZPj8My+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661C9C4CEF7;
+	Tue, 31 Mar 2026 03:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774926372;
+	bh=5Smner0zgl4+3+SGrmvNNFv7/cjf/Kerm21y3zNNIcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hZPj8My+0/nQLOEvDoKpfFWco1S2NcLzx/w9mwbVGtCc0hXncot7UGtKLOt8mn4O4
+	 WYZh+0Zh7XAnFRsc4a8tpzddjvuv+M/bB6DEq6yNlVt7DxJ44C3ZjJTVxNH49VT44i
+	 jzx4K4z9HBbvhhORswuo0mdNIewLVh0bbOHscL4enktDucWdO6p9SKZnct0N3PgFI0
+	 xER3AmS//arWSvB48djQC3R6ZS/R5JkRX2xyngOD0rPELQIP3YBxtEriKcmm/wtngz
+	 wbO74J0pEE4ZPQ8RqacSaaJyfCZhFSeZWj0NyuiwSOWxbFaStRThFxy8QQGAUxVVMS
+	 4TpgqWTtiIeQg==
+Date: Mon, 30 Mar 2026 20:06:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Chen, Zide" <zide.chen@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>,
+	German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf tests: Add test for uncore event sorting
+Message-ID: <acs6Isec7qNVi1wh@google.com>
+References: <20260325183045.1229502-1-irogers@google.com>
+ <20260325183045.1229502-2-irogers@google.com>
+ <4952de45-eb76-46cc-9a42-f93ec5666175@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 4/5] perf/x86/intel/uncore: Fix PMON enumeration with
- NUMA disabled
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>, Chun-Tse Shao <ctshao@google.com>,
- Markus Elfring <Markus.Elfring@web.de>
-References: <20260330212444.117325-1-zide.chen@intel.com>
- <20260330212444.117325-5-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260330212444.117325-5-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4952de45-eb76-46cc-9a42-f93ec5666175@intel.com>
+
+Hi Ian,
+
+Just a few nitpicks.
+
+On Fri, Mar 27, 2026 at 04:36:47PM -0700, Chen, Zide wrote:
+> 
+> 
+> On 3/25/2026 11:30 AM, Ian Rogers wrote:
+> > Add a test for uncore event sorting matching multiple PMUs. Uncore
+> > PMUs may have a common prefix, like the PMUs uncore_imc_free_running_0
+> > and uncore_imc_free_running_1 have a prefix of
+> > uncore_imc_free_running. Parsing an event group like
+> > "{data_read,data_write}" for those PMUs should result with two groups
+> > "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_0/data_write/},
+> > {uncore_imc_free_running_1/data_read/,uncore_imc_free_running_1/data_write/}"
+> > which means the evsels need resorting as when initially parsed the
+> > evsels are ordered with mixed PMUs:
+> > "{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/,
+> > uncore_imc_free_running_0/data_write/,uncore_imc_free_running_1/data_write/}".
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> 
+> Tested-by: Zide Chen <zide.chen@intel.com>
+> 
+> >  tools/perf/tests/Build                  |   1 +
+> >  tools/perf/tests/builtin-test.c         |   1 +
+> >  tools/perf/tests/tests.h                |   1 +
+> >  tools/perf/tests/uncore-event-sorting.c | 125 ++++++++++++++++++++++++
+> >  4 files changed, 128 insertions(+)
+> >  create mode 100644 tools/perf/tests/uncore-event-sorting.c
+> > 
+> > diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> > index c2a67ce45941..66944a4f4968 100644
+> > --- a/tools/perf/tests/Build
+> > +++ b/tools/perf/tests/Build
+> > @@ -3,6 +3,7 @@
+> >  perf-test-y += builtin-test.o
+> >  perf-test-y += tests-scripts.o
+> >  perf-test-y += parse-events.o
+> > +perf-test-y += uncore-event-sorting.o
+> >  perf-test-y += dso-data.o
+> >  perf-test-y += vmlinux-kallsyms.o
+> >  perf-test-y += openat-syscall.o
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index 06507066213b..f2c135891477 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -71,6 +71,7 @@ static struct test_suite *generic_tests[] = {
+> >  	&suite__basic_mmap,
+> >  	&suite__mem,
+> >  	&suite__parse_events,
+> > +	&suite__uncore_event_sorting,
+> >  	&suite__expr,
+> >  	&suite__PERF_RECORD,
+> >  	&suite__pmu,
+> > diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> > index f5f1238d1f7f..ee00518bf36f 100644
+> > --- a/tools/perf/tests/tests.h
+> > +++ b/tools/perf/tests/tests.h
+> > @@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
+> >  DECLARE_SUITE(event_groups);
+> >  DECLARE_SUITE(symbols);
+> >  DECLARE_SUITE(util);
+> > +DECLARE_SUITE(uncore_event_sorting);
+> >  DECLARE_SUITE(subcmd_help);
+> >  DECLARE_SUITE(kallsyms_split);
+> >  
+> > diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/uncore-event-sorting.c
+> > new file mode 100644
+> > index 000000000000..91e1a580709b
+> > --- /dev/null
+> > +++ b/tools/perf/tests/uncore-event-sorting.c
+> > @@ -0,0 +1,125 @@
+> > +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> > +#include "tests.h"
+> > +#include "debug.h"
+> > +#include "parse-events.h"
+> > +#include "pmu.h"
+> > +#include "pmus.h"
+> > +#include "evlist.h"
+> > +#include <string.h>
+> > +
+> > +struct match_state {
+> > +	char *event1;
+> > +	char *event2;
+> > +};
+> > +
+> > +static int event_cb(void *state, struct pmu_event_info *info)
+> > +{
+> > +	struct match_state *m = state;
+> > +
+> > +	if (!m->event1) {
+> > +		m->event1 = strdup(info->name);
+> > +	} else if (!m->event2) {
+> > +		if (strcmp(m->event1, info->name)) {
+> > +			m->event2 = strdup(info->name);
+> > +			return 1;
+> > +		}
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static int test__uncore_event_sorting(struct test_suite *test __maybe_unused,
+> > +				      int subtest __maybe_unused)
+> > +{
+> > +	struct evlist *evlist;
+> > +	struct parse_events_error err;
+> > +	struct evsel *evsel;
+> > +	struct perf_pmu *pmu = NULL;
+> > +	char *pmu_prefix = NULL;
+> > +	struct match_state m = { NULL, NULL };
+> > +	char buf[1024];
+> > +	int ret;
+> > +
+> > +	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> > +		size_t len;
+> > +		struct perf_pmu *sibling;
+> > +
+> > +		if (pmu->is_core)
+> > +			continue;
+> > +
+> > +		len = pmu_name_len_no_suffix(pmu->name);
+> > +		if (len == strlen(pmu->name))
+> > +			continue;
+> > +
+> > +		sibling = pmu;
+> > +		while ((sibling = perf_pmus__scan(sibling)) != NULL) {
+> > +			if (sibling->is_core)
+> > +				continue;
+> > +			if (pmu_name_len_no_suffix(sibling->name) == len &&
+> > +			    !strncmp(pmu->name, sibling->name, len))
+> > +				break;
+> > +		}
+> > +
+> > +		if (!sibling)
+> > +			continue;
+> > +
+> > +		m.event1 = m.event2 = NULL;
+> > +		perf_pmu__for_each_event(pmu, false, &m, event_cb);
+> > +
+> > +		if (m.event1 && m.event2) {
+> > +			pmu_prefix = strndup(pmu->name, len);
+> > +			break;
+> > +		}
+> > +		free(m.event1);
+> > +	}
+> > +
+> > +	if (!pmu_prefix) {
+> > +		pr_debug("No suitable uncore PMU found\n");
+> > +		return TEST_SKIP;
+> > +	}
+> > +
+> > +	evlist = evlist__new();
+> > +	if (!evlist)
+> > +		return TEST_FAIL;
+> > +
+> > +	snprintf(buf, sizeof(buf), "{%s/%s/,%s/%s/}",
+> > +		 pmu_prefix, m.event1, pmu_prefix, m.event2);
+> > +	pr_debug("Parsing: %s\n", buf);
+> > +
+> > +	parse_events_error__init(&err);
+> > +	ret = parse_events(evlist, buf, &err);
+> > +	if (ret) {
+> > +		pr_debug("parse_events failed\n");
+> > +		goto out_err;
+> > +	}
+> > +
+> > +	TEST_ASSERT_VAL("Number of events is > 0", evlist->core.nr_entries > 0);
+> > +	TEST_ASSERT_EQUAL("Number of events is a multiple of 2", evlist->core.nr_entries % 2, 0);
+
+It'd be nice if we can hide libperf details in general.  But I've
+realized there's no API in libperf to return the number of entries
+in evlist. :(
+
+> > +
+> > +	evlist__for_each_entry(evlist, evsel) {
+> > +		if (evsel__is_group_leader(evsel)) {
+
+You can skip the loop if it's not a leader and reduce a level of
+indentation.
 
 
-On 3/31/2026 5:24 AM, Zide Chen wrote:
-> When NUMA is disabled on a NUMA-capable platform, UPI and M3UPI PMON
-> units are not enumerated.
->
-> In this case, pcibus_to_node() always returns NUMA_NO_NODE, causing
-> uncore_device_to_die() to return -1 for all PCI devices. As a result,
-> the corresponding PMON units are not added to the RB tree.
->
-> These PMON units are per-die resources, and their utility when NUMA is
-> disabled is limited.  The driver does not prohibit their use, and the
-> enumeration should still work correctly.
->
-> Fix this by using uncore_pcibus_to_dieid(), which works regardless of
-> whether NUMA is enabled.  This requires calling
-> snbep_pci2phy_map_init() in spr_uncore_pci_init().
->
-> Since pci_init() is called before mmio_init(), remove the redundant
-> snbep_pci2phy_map_init() call from spr_uncore_mmio_init().  If
-> snbep_pci2phy_map_init() fails, uncore driver should be bailed out,
-> so the fallback path in spr_uncore_mmio_init() can be removed.
->
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
-> V6:
-> - Split from patch v5 3/4.
-> - Remove the redundant call in spr_uncore_mmio_init().
-> - Update commit messages.
-> ---
->  arch/x86/events/intel/uncore.c       |  1 +
->  arch/x86/events/intel/uncore_snbep.c | 26 +++++++++++---------------
->  2 files changed, 12 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 786bd51a0d89..e9cc1ba921c5 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
->  	return bus ? pci_domain_nr(bus) : -EINVAL;
->  }
->  
-> +/* Note: This API can only be used when NUMA information is available. */
->  int uncore_device_to_die(struct pci_dev *dev)
->  {
->  	int node = pcibus_to_node(dev->bus);
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 8ee06d4659bb..73da1e88e286 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -6415,7 +6415,7 @@ static void spr_update_device_location(int type_id)
->  
->  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->  
-> -		die = uncore_device_to_die(dev);
-> +		die = uncore_pcibus_to_dieid(dev->bus);
->  		if (die < 0)
->  			continue;
->  
-> @@ -6439,6 +6439,10 @@ static void spr_update_device_location(int type_id)
->  
->  int spr_uncore_pci_init(void)
->  {
-> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * The discovery table of UPI on some SPR variant is broken,
->  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
-> @@ -6460,21 +6464,13 @@ int spr_uncore_pci_init(void)
->  
->  void spr_uncore_mmio_init(void)
->  {
-> -	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-> +	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
-> +						 UNCORE_SPR_MMIO_EXTRA_UNCORES,
-> +						 spr_mmio_uncores,
-> +						 UNCORE_SPR_NUM_UNCORE_TYPES,
-> +						 spr_uncores);
->  
-> -	if (ret) {
-> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
-> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
-> -							 spr_uncores);
-> -	} else {
-> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
-> -							 UNCORE_SPR_MMIO_EXTRA_UNCORES,
-> -							 spr_mmio_uncores,
-> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
-> -							 spr_uncores);
-> -
-> -		spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
-> -	}
-> +	spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
+> > +			struct evsel *next = evsel__next(evsel);
+> > +
+> > +			TEST_ASSERT_EQUAL("Group size is 2", evsel->core.nr_members, 2);
+> > +			TEST_ASSERT_VAL("PMU match", evsel->pmu == next->pmu);
+> > +			TEST_ASSERT_VAL("First event name", strstr(evsel->name, m.event1) != NULL);
+> > +			TEST_ASSERT_VAL("Second event name", strstr(next->name, m.event2) != NULL);
+> > +		}
+> > +	}
+> > +
+> > +	evlist__delete(evlist);
+> > +	parse_events_error__exit(&err);
+> > +	free(pmu_prefix);
+> > +	free(m.event1);
+> > +	free(m.event2);
+> > +	return TEST_OK;
+> > +
+> > +out_err:
+> > +	evlist__delete(evlist);
+> > +	parse_events_error__exit(&err);
+> > +	free(pmu_prefix);
+> > +	free(m.event1);
+> > +	free(m.event2);
+> > +	return TEST_FAIL;
 
-I'm not sure if we can directly remove the snbep_pci2phy_map_init() call
-here. In theory, the snbep_pci2phy_map_init() call in spr_uncore_pci_init()
-could fail and then spr_uncore_mmio_init() doesn't know it and directly
-initializes MMIO PMU, then it could lead to the MMIO initialization fails.
+Looks like the same logic.  Can we set a return value properly?
 
-Currently the PCI, CPU and MMIO initialization are totally independent,
-only when the 3 types initialization all fail, then uncore PMU can abort.
-
-``` 
-
-   if (uncore_init->pci_init) {
-        pret = uncore_init->pci_init();
-        if (!pret)
-            pret = uncore_pci_init();
-    }
-
-    if (uncore_init->cpu_init) {
-        uncore_init->cpu_init();
-        cret = uncore_cpu_init();
-    }
-
-    if (uncore_init->mmio_init) {
-        uncore_init->mmio_init();
-        mret = uncore_mmio_init();
-    }
-
-    if (cret && pret && mret) {
-        ret = -ENODEV;
-        goto free_discovery;
-    }
-```
+Thanks,
+Namhyung
 
 
->  }
->  
->  /* end of SPR uncore support */
+> > +}
+> > +
+> > +DEFINE_SUITE("Uncore event sorting", uncore_event_sorting);
+> 
