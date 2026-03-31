@@ -1,223 +1,133 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1056E3FB04D
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 14:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774965978; cv=pass; b=BfMS9vi+xjgfcRD5tcaPv8RH47D+ZDa+fh4LpVxwtrT2MmMyQIQ4mc7kuu5xKWyOeK+vVa2hoXfyFnbcqk5zJyUhBpY4qoi5JBSs4kSIOBlrD+jDNrHwII0ZJiNZvGrfV21yjuD3Vgdjw1LEGvRI/l3jlkZuUYH4DGYFl1E3a9E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774965978; c=relaxed/simple;
-	bh=35knIS05r+0/zDDy6wAojCvHGYRDPNcejxc81KGSLIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SJnpcEQUn/TIkUnbDlUWwggBbsHVX1odQ3FaJmxCf0JcdbPL0JZ2dSnxGOjmKg/SQjJEkoXrcCNhlDmLMncfYqqZGatE9G09LO3Ukja934dsCTxAXxSz6lOsnMeQvE3mXwKWXZXUcBKuPwpts9zCf97CJFYPiLvWyQAi4cQ3muk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KaJSlQD2; arc=pass smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9E1402BBE
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 15:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774970761; cv=none; b=jza6S7YP3g71pNanIIFFfFLTnVxr59Z9Qn5iHzXB7Zxyw7QUXm/tTTcczYCw1e+6e/1LC1BB3CYoY3TXEvmQ+Hz1e+0hdEkTbIp/mNy60Et/TSNqK1Zp0ZE7kDQgxnxv2C+fVhx898C7fY1kpVihThEuoERdSLTraGM5sJ4aXRk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774970761; c=relaxed/simple;
+	bh=931WL5lxRqSVTB3j5gbXnoGACtUkYVdgB+a8sDGnyUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NgF+QI0DwwT3uWfH2iEkpKkhA0yC6bVNSVGpjoLOEbBy2JsuyAZOJX3VxkGQsN6LfZXzGL1//tLCICYxLgC3k3Kylwd0UbvrjA5Omr75443lntQelF9gaEYTnglNtc0g6URZoq9WI5PxggzVEWW7ppVIy8wGeZje17RcVHGVRXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=LqItqOnT; arc=none smtp.client-ip=74.125.82.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KaJSlQD2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2591757fbso110615ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 07:06:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774965971; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DI+BHnKDhmmSTc7iI7tGXjn55zGpQw7SavnXEmIhBbUOMASfXM6aC8JBdlTl/YEggG
-         O2CCZr79ScJi4jXBnXWTuhLlZiNbylNvFXHbRKNrNGfh01rBwQIJZXDtVw1WVL20vKfz
-         LF9y+pvW10/VMbV47Ez6Q/zTdFWaHiidtvvNnH2On+7ZUf01rMNk9FStEf5DNjoDBYrW
-         Z/R1ylPsaiovwnYM7AqsSuSTRpxiqILb8qnAsXvQRfCdfdy+RLnnTRGsUDIjhlOW6hVp
-         RobrBeylx4UpjwpyrXKXhub3fdDKAY2+fuG3USuRNcwou1KHw2ZClE+B7aIPfnW0eKvT
-         OsQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
-        fh=JaR3MQZU0PHfPXkFHJJcd2DIuI9ZYfn14VsXXo7Zlh4=;
-        b=kUrmo1wB/lhOMyFW8KfkcoC8ZUvIU9lQCZONO2tJYnE+6PHz5LJ4mJdOJSa3AtIuMD
-         BSD4Qay+FOfPxxNtrzZhtq1OT+GHUSHLhI+fJ6CFdkYgGAJ9fdjxCJeQq+oixc8FbNwh
-         NC4e2IpYaNO2bPKUPuL2AxixobD3r1Qo3e0E4XVaImsFjqlU9Rgo/hJ7jFpUUtis8NuT
-         CTFRCPgTGXX8FiQCVo9U1w2zZoZGunYHOZ3Ci1Gzhh8YUPSRvlTdc1iGDYiyirHCoHrS
-         BzrgdDgQ09X6LuPbX0J7EStalFDnoS1AdE8b0k3nEERvZ8M9Fj/0y6d4SKptziwvluHv
-         cIKw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="LqItqOnT"
+Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-12a74039dc6so4637223c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 Mar 2026 08:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774965971; x=1775570771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
-        b=KaJSlQD2eUbDRS8eX+iGmUTzt+B38W3lUBtfVmm/8xStypI5zIGvslPegPf3D6Q3wC
-         Uc/AQdL0SCAa30hTVvn8rFaCzWfsbkw0GktXv3jQT/ZOd/p94iLUkiJdabeue3JbWjLU
-         eAooUlfBIVYOO6LbTBmHdbE+wAH2Y+1RX5T3OfIelBTNbeOn2ri1HCRicSdviQTi8Vtp
-         z6lPJJWq8iaPy1pryfTKox6fbO+HlzgLwH5x5VgG7gfcsGziRv9281vADWu1Zm0COYfF
-         T48oTYvRcW3ZzESfMY3kKZlMEBQjIHs64S6W5V/M293mTbD45b6z64XEMyjVeG+FNiaF
-         jxag==
+        d=wbinvd.org; s=wbinvd; t=1774970759; x=1775575559; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XyB5u8iR+k4gpxBMoQKfY1JLhLhiFgCfs6MUItcTw6Y=;
+        b=LqItqOnTMS1fvQcx55bnaij9NH9XhgIrp9tT2cwXicstGi1D+KXqrzBt/hWP7ptg82
+         pJRhYIh6W0PUOc44VVy+wBdL774nZS8FykWo3jp//DMD0Gu4Ebnv8uw9rsS0cJeGDZMw
+         kaVrmFDabaqpGn0v3xtgn3CfxuJFhgWjgjRGaKOPu4Ctk7FoFS40gTOuvg/8KKtXT4hW
+         jVAFO9uHQOqdiQEo7K2f2fshdG8GwskNRGr6wrG999wSi6EcehxHMBysmSAJfeT/0lQ1
+         C9hjWIi3nTvwkXpH/6QsK/aBzm9hF1Z9tzqpLT3eqsYr/TXxn6k9mWs3Dd75mzn0w31M
+         6uRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774965971; x=1775570771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PDGsXaUl+myNwvEP+SvZyruG0MyrHpxc9v3bJYoOIbY=;
-        b=Fpi2jLnPGOW3xTaEwYWZp0CDkEBWPxVkrZo4vNvcS/ExOfF5RcNiamZtaIv0k48fTF
-         i2KAuugwc677lNrS/dZuABlERRdF6lIYXgDkVbdiXtJCxilb9yDoc4BbSoQi9Zb951ss
-         qyEpDYcNFxCaArEKNeZOhf3rBHPOzZ9BCM6u5YNYudazBPhu019ZxrneJwyamfa0OfQC
-         zbv33LIRoBHNP5Hmm/AcbibIyoy+dUm4jDq6xjszUobO3OCKSdF6hk/FlKQjdWHxiT3y
-         PXN8xR7Ll/hCWh5ixfQxgYjFR/1kAvgDibaH8Yv2xlgpcyKdx57lSgZ11tMAnDEqL1SF
-         46rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEygSCtkfGHy5dlYKhsY0COfFakCJ62niLWs2ITe1IhD8UsEGVImApCSTEqCOoHnzFcbEtNSmGzmBWi/Z22idB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTAULxnyMYuB5vzeKfs7OZxgSEH/ZV+8tKNlzDfvuch4ceFFYL
-	ty0gVBEheO7//r2g/BJRdPB7PPWD+tol1oZB3kX22mn8NXFhIMz0cqmjRH3kr4IkT3yqoIq6w/5
-	iqhieI+FYukF63n+u4W6SZ9CzNaJ2ayvYdEaauz+e
-X-Gm-Gg: ATEYQzyqWnhZYzxaMA48KUiWK+8COm5bWzp5WOfzodpLeselUqtOvBvFFLRmSdKabqV
-	F5WKUfUo1Y+OdR8XvBdQfp1QzEfxayNqpcMPhYCPRRmTuqvcqOgONBS3nzRmCzGzyYQqiHxCz9y
-	5QmkkTIP4n6cwx/l00kzRNl9Vr6BI2s4MkY/D+Fbe9yH1QuyszQJEB2UgNtqo8sVS7NT4GUE7fM
-	fczMRPSfFfexzdJC72JJNypFR1eW/qGQB1aHQvJ9ss0A4y4n4iGZDd8p/P1JTVS68X1EzqwPQIP
-	49VaaKOA
-X-Received: by 2002:a17:902:d58e:b0:2b0:5193:1212 with SMTP id
- d9443c01a7336-2b25f6cd077mr3358735ad.4.1774965970525; Tue, 31 Mar 2026
- 07:06:10 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774970759; x=1775575559;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XyB5u8iR+k4gpxBMoQKfY1JLhLhiFgCfs6MUItcTw6Y=;
+        b=dnCvN+QlS0jQlTeSNwwna2xvPbDAxoStRRZRlylrJpqNeDFu3kcq88pgA/fWxHtOH/
+         GC6YdiuTnqCDx08rzezPmD86+USSHEwBevGKDRKNQrC4dtnbbiK/dCkbw13FmbOOmP+j
+         DTN+4ylCZ/NcjnAwOoOe1JIzo1CCZJWEofOgW9VF3LPDoGUObwJTeFdaTpLRuxlDuIwq
+         AR7VdL3G8bQziU0IjRaAAaURu5sOnY2/So4AbU722hXBO1jxOCkzSIzd1vSPHnzz7p5o
+         mdHPZpP31g2fqFy4zzsv1L6OrfmZkLXIaXRrh+3ILgEnwTMrFhrsk5sA0D8kwjtw5G1y
+         TjVA==
+X-Gm-Message-State: AOJu0YyafPTXcvtklZOh0K0w662hN4z1xvLD/3FhQN2yTX0TxQFNVMC2
+	YBqFggkhkPZy+aPCYUmgtiGa41Y6qzxUhgEnMKTb40XtmgBxhJEvqMq4ezemHiGUWUk=
+X-Gm-Gg: ATEYQzz+Pmrw/rFDu3EdIRLiIlWYVtuNDmVFdVOXVDhkLUJkbbqZmTlssAjVR8mcx6d
+	MTG45cSdm9mcWZNxm299qkEXCsKdwVJngeEUo4F5Y8raBBrEK+6lNMMETWeHk8SmNZB24w6e7Zw
+	kZaCR1DWwRKpzPKM4524eqFWtqBkpW/zRaJYpXRj7oK+tkGcJ4YoVc8WxVViQGByKAXHdbtRZin
+	YtvV8wBr06/8j/a+IsF9zIzpjwpd1tlqga8JrrHzAcd0TOy08P5rIPSJ/Bcc/pdzuDzJhymyb6V
+	GttbBKJzVtKarmh7EOjHbVhwtCzD/hbrubTXs3cRO5s0TXytQzmrk52WaWRtiX4Tf5Magv2qXUd
+	gIMJ2voMWiNxeYqss10Tktw6DHH7TAyaX/5cK1qwx3/2QIcpdNyOk+PRqG+FnpOoc8Zc0jlWE41
+	AatLozudgqDH7AKK3Q0evG4lhawJPhaQqFLw==
+X-Received: by 2002:a05:7022:61b:b0:119:e56b:98bf with SMTP id a92af1059eb24-12ab29021femr9101926c88.38.1774970759146;
+        Tue, 31 Mar 2026 08:25:59 -0700 (PDT)
+Received: from mozart.vkv.me ([2001:5a8:468b:d015:5f44:e3d:a8c5:d59])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab983f9f3sm15618113c88.10.2026.03.31.08.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 08:25:58 -0700 (PDT)
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 0/2] Two semi-related perf throttling fixes
+Date: Tue, 31 Mar 2026 08:25:48 -0700
+Message-ID: <cover.1774969692.git.calvin@wbinvd.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260326224454.2101190-1-irogers@google.com> <dcf5a92b-ef14-43d5-9f21-568252fd630b@linaro.org>
- <actqG7NHUWR8x7x_@google.com>
-In-Reply-To: <actqG7NHUWR8x7x_@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 31 Mar 2026 07:05:58 -0700
-X-Gm-Features: AQROBzB2QONtm85edap_zw31sApG9_yjOEbmg8Ss9M0M8kKJKa4B6ZX65SvPrfQ
-Message-ID: <CAP-5=fVOtY8NYQnhwgyexyjDN+W4Vf2Yo+_Tm6chZSfYFx-OMQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf metricgroup: Avoid scanning unnecessary PMUs for
- identifier match
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 30, 2026 at 11:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Mon, Mar 30, 2026 at 03:44:21PM +0100, James Clark wrote:
-> >
-> >
-> > On 26/03/2026 10:44 pm, Ian Rogers wrote:
-> > > Only uncore PMUs can have an identifier, so add an optimized
-> > > perf_pmus__scan routine for that case to avoid all PMU types being
-> > > created.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > Reviewed-by: James Clark <james.clark@linaro.org>
-> >
-> > > ---
-> > >   tools/perf/util/metricgroup.c |  8 ++------
-> > >   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
-> > >   tools/perf/util/pmus.h        |  1 +
-> > >   3 files changed, 20 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgr=
-oup.c
-> > > index 7e39d469111b..769b38400832 100644
-> > > --- a/tools/perf/util/metricgroup.c
-> > > +++ b/tools/perf/util/metricgroup.c
-> > > @@ -410,13 +410,9 @@ static int metricgroup__sys_event_iter(const str=
-uct pmu_metric *pm,
-> > >     if (!pm->metric_expr || !pm->compat)
-> > >             return 0;
-> > > -   while ((pmu =3D perf_pmus__scan(pmu))) {
-> > > -
-> > > -           if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, =
-pmu->id))
-> > > -                   continue;
-> > > -
-> > > +   while ((pmu =3D perf_pmus__scan_for_uncore_id(pmu, pm->compat)))
-> > >             return d->fn(pm, table, d->data);
->
-> Sashiko review: it's natural to convert it to 'if'.
+Hi all,
 
-Yeah, I saw and disagreed. The pattern with the  "while ((pmu =3D
-perf_pmus__scan...(pmu)))" functions is for them to be a while loop.
-With an "if" it would read:
-```
-pmu =3D perf_pmus__scan...(pmu);
-if (pmu)
-   return ...
-```
-and we lose the consistency of having while loops in the code.
+In the course of investigating [1], I set out to understand why this
+sequence of messages is printed every boot, even when nobody is using
+perf at all:
+
+    perf: interrupt took too long (2516 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+    perf: interrupt took too long (3156 > 3145), lowering kernel.perf_event_max_sample_rate to 63000
+    perf: interrupt took too long (4014 > 3945), lowering kernel.perf_event_max_sample_rate to 49000
+    perf: interrupt took too long (5035 > 5017), lowering kernel.perf_event_max_sample_rate to 39000
+    perf: interrupt took too long (6302 > 6293), lowering kernel.perf_event_max_sample_rate to 31000
+    perf: interrupt took too long (7879 > 7877), lowering kernel.perf_event_max_sample_rate to 25000
+    perf: interrupt took too long (9852 > 9848), lowering kernel.perf_event_max_sample_rate to 20000
+
+It turns out this happens because of how the dynamic sample rate
+throttling interacts with the perf hardware watchdog. Patch [2/2] is my
+attempt to prevent the dynamic throttling logic from acting solely based
+on the latency of the watchdog NMI.
+
+Intel CPUs were happy with that. But AMD CPUs still printed the messages!
+
+That happens because AMD CPUs have a second PMU facility with its own
+NMI handler, and both NMI handlers average in their latency, even when
+they don't actually handle the NMI.
+
+Patch [1/2] fixes that, which is a correctness issue entirely
+independent of patch [2/2]. But it also happens to be required for patch
+[2/2] to achieve its goal on AMD CPUs, so I sent them together.
 
 Thanks,
-Ian
+Calvin
 
-> Thanks,
-> Namhyung
->
->
-> > > -   }
-> > > +
-> > >     return 0;
-> > >   }
-> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > > index 98be2eb8f1f0..9859d7056fb7 100644
-> > > --- a/tools/perf/util/pmus.c
-> > > +++ b/tools/perf/util/pmus.c
-> > > @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcar=
-d(struct perf_pmu *pmu, const c
-> > >     if (!pmu) {
-> > >             /*
-> > >              * Core PMUs, other sysfs PMUs and tool PMU can have any =
-name or
-> > > -            * aren't wother optimizing for.
-> > > +            * aren't worth optimizing for.
-> > >              */
-> > >             unsigned int to_read_pmus =3D  PERF_TOOL_PMU_TYPE_PE_CORE=
-_MASK |
-> > >                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-> > > @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_dup=
-licates(struct perf_pmu *pmu)
-> > >     return NULL;
-> > >   }
-> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu,=
- const char *compat)
-> > > +{
-> > > +   if (!pmu) {
-> > > +           /* Only uncore PMUs can have identifiers. */
-> > > +           unsigned int to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_OTHER=
-_MASK;
-> > > +
-> > > +           pmu_read_sysfs(to_read_pmus);
-> > > +           pmu =3D list_prepare_entry(pmu, &other_pmus, list);
-> > > +   }
-> > > +   list_for_each_entry_continue(pmu, &other_pmus, list) {
-> > > +           if (pmu->id && pmu_uncore_identifier_match(compat, pmu->i=
-d))
-> > > +                   return pmu;
-> > > +   }
-> > > +   return NULL;
-> > > +}
-> > > +
-> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *st=
-r)
-> > >   {
-> > >     struct perf_pmu *pmu =3D NULL;
-> > > diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> > > index 7cb36863711a..0d55edb3f2fc 100644
-> > > --- a/tools/perf/util/pmus.h
-> > > +++ b/tools/perf/util/pmus.h
-> > > @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
-mu);
-> > >   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
-> > >   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, co=
-nst char *event);
-> > >   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu =
-*pmu, const char *wildcard);
-> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu,=
- const char *compat);
-> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *st=
-r);
-> >
+[1] https://lore.kernel.org/all/acMe-QZUel-bBYUh@mozart.vkv.me/
+
+Calvin Owens (2):
+  perf/x86: Avoid double accounting of PMU NMI latencies
+  perf: Don't throttle based on NMI watchdog events
+
+ arch/x86/events/amd/ibs.c |  6 +++---
+ arch/x86/events/core.c    |  3 ++-
+ kernel/events/core.c      | 14 ++++++++++++++
+ 3 files changed, 19 insertions(+), 4 deletions(-)
+
+-- 
+2.47.3
+
