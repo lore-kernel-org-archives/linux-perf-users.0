@@ -1,137 +1,96 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045453F7898
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 10:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFF942669D
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 13:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775040943; cv=none; b=bq2RXGo8hKksoQCYZJbyzmXWhGJZP7MpM2HtLpuVqpqYfbQG2KNiOMkpRPZ4FmE8Hw9qic9coEFCUxlnL4APfNQ4FsCOT2L1fzUUt7cZ4Nd5VWMaEXaIpUV+VaZ8upb/KWDLjEchn36VyYTP/bXcwN+jNHVHZakXt2Ai+HyU3No=
+	t=1775049963; cv=none; b=iLG2MkSFYyEHg6chm+mo7rXmuppRZgq0WTyQSoLtd00sOKIadjGEFMohHmC0h3lsfDapwjiSYpX1XDjxS06ss7zGA0VQQyZaeJC3zfqp8LlJGoyAL8xbcuSpswF/CsdmrnqhVeineHBptgAzavtlopKM5eroAugGZx8ij+Nc7T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775040943; c=relaxed/simple;
-	bh=4zs9v//J3FtMcHGsNl+stI0CMj0a74VFNWBWUpscOBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cISZiowhLM4V227h/ECy+vUIJIh15003+r1NOoFOIVKf50eWEKPX9Cp5gZumsP6UXAGwYEl7gjJGQO+vCGhzYAUNoM9zhrLWZG+IKAEFtZoFZs4k3de0Wnee3tIwBC8oDN5h2q6xSqMe77SfuoMrHqdSW1uHsS9mlfD3FBGXUwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=njqsAVBw; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1775049963; c=relaxed/simple;
+	bh=S54Ur7xGaPcCaMFNaVUxQSyGAlIf3cbAGmZWuElRWP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cWV1Kyg8jtPUbJfgtgg9h3L1VZYr3wKLG2EU9t6xTdoSmmR7iH5P3QVbkOOSkqImD/N9dhuKbTePB16MNGz9UdSz+Lwo35LtPRaRotvUMOL8q0n1H42TvMOi2AlKhplZpaJtjDjWMesWfyLiwyaJFCMm7n5mR4/MvS69lD2dkso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=boDA3TPA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="njqsAVBw"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-482f454be5bso8379035e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 03:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775040934; x=1775645734; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5xTlYT2mRCzPWbMvzG6Gw7RgwMimcucQpAzoCrNsxy0=;
-        b=njqsAVBwyRs4PcRbFj7gc3+omI0QfVWJmP6Jsr3QsJTAd3BLkBWQe9wCVPFbTomrfZ
-         G5keeQTSXcCZAccS+rBOCnv1JWVG2+ccPmbPwd+zwiS84Y7cifsOwiQkK1h8qgyaqTzP
-         5NTUGKDxBcg2lWDnecXSii5M1bjiyfvvlUStFCSxKO4GK5Slzg2NdT2L7JYWdXa73PON
-         51hCw+uyY/5jVOzmIOCmrpEWBBJktfxDPi9HHJ+PfDZ5MWf2F4Fmlp5IoQ5cxVYAyfax
-         2+TCRhHCZKTMIgkH/V1w0QWk8wGK29GjyxRsVDI7fKoYXCod5TO7YRUWs7/DfNBOm7ZA
-         CpwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775040934; x=1775645734;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5xTlYT2mRCzPWbMvzG6Gw7RgwMimcucQpAzoCrNsxy0=;
-        b=UcqXeRpFKEpISSdzC4CmUj2nQvnwBAdvhxANs/wC9BNUx8HJCdaUU28OKghc460b9y
-         IsN0DIL7SG3X3hzdmSncSzQQlmtLJ5W9xH9055vegDQK28uoSVapWyG5yomZRbPg24fN
-         xbsxnz3jF6lXPstrYAaoFNi3OE9cSGoUKpvyeLfqc5s8bviuDBSBRgf8L+pdpgUzq4Ip
-         eeFZy32M56p3yonUEKFZ5RKGuTqLBNI1DJN4qFRYmdIUDNvWJXm+7JDFPHaVUYA6sOks
-         TQg85eFKGwTznqI1778VpH3ormlGVeejitb7hIs0qD49WxsHjhndd2KDjlfRJmg87Uen
-         8gzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdtrJmbaDvP2XzSuyxQgQDLrXUTMSqhgD5ug6DkEU/pcKCIWztP5UGxup5RiltE6iYXne4u5BwIp0oktOVqyJI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ/phYPqqp8Wb7Nhp8AtfbXNUM9g90Ui30yETEoC6iIaEejQjF
-	R6KJFYEDeQvMVmjqTr++JecvKqjF63Zi11Y6VboxmxL8wyopNe+bgCJ82LmLn0ihLn4=
-X-Gm-Gg: ATEYQzz+vuB63dTQ5InlGa9h+r/eY/+3EBvM8VEBqoQ2LcArJ377Tr0IQTfYqyzu95f
-	ymS2Mn9NvFFwnWoW43ZcVOio/GAZMLF/7ys7ibr/kZdE6wUMU8yfF/icU/8+p08uemfYkVpDuyu
-	UOHl68C+S8u7kLQpYu9M1KZEyJ08RgaErI7I4kcE0gAJoVgjOTOwNBgz2ZAIChGyGoZ7B6PPU18
-	ZzC3WJFC+m6lwVxeBENmt6XretT/8COBxZ4KyjVTHmxUoWOuVJ+addJs6GEppHr0kkcokFLiQ3P
-	W5EevY93Ys+GJgSW0Cj2TR1Qt1/hlR639QVLOn6AFqHTSKAU3GaTYlEeMe+23WRmU1dKMX48CZK
-	L+uepBDuE/GFp6Fo8X7fbHCclMi2E2Vq9YI5pX6NZus6d7OvSIukg1PA0FBDLNCCko7PVq333Ij
-	2oMV2D2TiIGobuWamJ69GqBmv5495dC0Kt1bwcFcw=
-X-Received: by 2002:a05:600c:3e1a:b0:486:fbc4:8fe2 with SMTP id 5b1f17b1804b1-488835d166amr47030845e9.15.1775040933566;
-        Wed, 01 Apr 2026 03:55:33 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e7e9786sm102087935e9.3.2026.04.01.03.55.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2026 03:55:32 -0700 (PDT)
-Message-ID: <bf734b00-fb08-45b3-9201-92c11ad1fb6c@linaro.org>
-Date: Wed, 1 Apr 2026 11:55:30 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="boDA3TPA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775049961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2aBuHTlA6uRx8M4jeiB+YqjeH/F8q4zxjlSiVW2evoc=;
+	b=boDA3TPAJxIThX/FqgOeQ2bd905U7XHRvH/ihrKAywIp/3Pn+FYPrwYFZ9xq4QDSF01I9U
+	tspWrcZ4jZta+mCkD7FA7TG1FjYJF8j5MkgFrD7foozicln4nOZSpZ2ALl2xMGC1qF2MJ8
+	iJetRGHZZxVu5Qo9gVQ6perafP8W4nE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-tmi8_O7nN42JJCY3tddnwA-1; Wed,
+ 01 Apr 2026 09:25:58 -0400
+X-MC-Unique: tmi8_O7nN42JJCY3tddnwA-1
+X-Mimecast-MFC-AGG-ID: tmi8_O7nN42JJCY3tddnwA_1775049954
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C1E719560B7;
+	Wed,  1 Apr 2026 13:25:53 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.88.218])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0CD81955F2E;
+	Wed,  1 Apr 2026 13:25:48 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org,
+	Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH] perf dso: prevent null dsos from being added
+Date: Wed,  1 Apr 2026 09:24:43 -0400
+Message-ID: <20260401132442.505507-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] perf: Fix SIGCHLD vs pause() race with short-lived
- workloads
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, adrian.hunter@intel.com, gautham.shenoy@amd.com,
- ravi.bangoria@amd.com, KPrateek.Nayak@amd.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, irogers@google.com
-References: <20260401064114.141066-1-swapnil.sapkal@amd.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260401064114.141066-1-swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+When sorting the dso array we sometimes get a crash due to null
+comparisons in comparator functions. So prevent __dsos__add from
+adding null to the dso array to avoid out-of-memory related errors.
 
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/util/dsos.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 01/04/2026 7:41 am, Swapnil Sapkal wrote:
-> Some perf subcommands (sched stats, lock contention) use the pattern
-> of forking a workload child, calling evlist__start_workload() to uncork
-> it, and then calling pause() to wait for a signal (typically SIGCHLD
-> when the child exits, or SIGINT/SIGTERM from the user).
-> 
-> This pattern has a race condition: if the workload is very short-lived,
-> the child can exit and deliver SIGCHLD in the window between
-> evlist__start_workload() and pause(). Since pause() only returns when a
-> signal is received *while the process is suspended*, and SIGCHLD has
-> already been delivered and handled by the empty sighandler(), pause()
-> blocks indefinitely.
-> 
-> The fix uses the standard POSIX pattern for this class of bug:
-> 
-> 1. Block SIGCHLD (via sigprocmask) before starting the workload.
->     If the child exits, the signal remains pending rather than being
->     delivered and lost.
-> 
-> 2. Replace pause() with sigsuspend(&oldmask), which atomically
->     unblocks SIGCHLD and suspends the process. There is no window
->     where the signal can slip through unnoticed.
-> 
-> 3. Restore the original signal mask after sigsuspend() returns.
-> 
-> SIGINT and SIGTERM are not blocked at any point, so Ctrl+C and
-> graceful termination continue to work exactly as before.
-> 
-> Three call sites are affected across two files:
->    - perf_sched__schedstat_record() in builtin-sched.c
->    - perf_sched__schedstat_live()   in builtin-sched.c
->    - __cmd_contention()             in builtin-lock.c
-> 
-> The two pause() sites in builtin-kwork.c are NOT affected because they
-> do not register SIGCHLD or fork workload children; they only wait for
-> user-initiated SIGINT/SIGTERM.
-> 
-> Swapnil Sapkal (3):
->    perf sched stats: Fix SIGCHLD race in schedstat_record()
->    perf sched stats: Fix SIGCHLD race in schedstat_live()
->    perf lock contention: Fix SIGCHLD race in __cmd_contention()
-> 
->   tools/perf/builtin-lock.c  | 20 ++++++++++++++++++--
->   tools/perf/builtin-sched.c | 30 ++++++++++++++++++++++++++----
->   2 files changed, 44 insertions(+), 6 deletions(-)
-> 
-
-Reviewed-by: James Clark <james.clark@linaro.org>
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 0a7645c7fae7..5cf8c878bab2 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -196,6 +196,9 @@ static struct dso *__dsos__find_by_longname_id(struct dsos *dsos,
+ 
+ int __dsos__add(struct dsos *dsos, struct dso *dso)
+ {
++	if (!dso)
++		return -EINVAL;
++
+ 	if (dsos->cnt == dsos->allocated) {
+ 		unsigned int to_allocate = 2;
+ 		struct dso **temp;
+-- 
+2.52.0
 
