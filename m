@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86EB26E711;
-	Wed,  1 Apr 2026 03:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2F927B4F7;
+	Wed,  1 Apr 2026 03:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775014423; cv=none; b=bgJgqBnqHXml/9uZZaRd4e6IxaByDRPdRAdHa4C4CBYvjEoVn+GxOEx19VQElKM9FTKFFaAIaQpX5vuxOnPrfSg6yRZXdTyKxxUTPh5cEMA8I/Ds3Wds7ZGXYsQ+BCq1iaVyzEA5EuVPP54XB0EdJNLPNwQxdxX4vwFaFsO+WJg=
+	t=1775014908; cv=none; b=eaEFfRGGpYwhm8UcOHdFf0OLjVnMIgtzMhdr5pr/tXnPHupT+7On83AJP3mZQZvKgxaVK7l/UqMW8YioqsxxWuIFkVY+UDXMCwLpNw5+NSIFcyrFWns0ciBN8nM5lazeclyZDCxW5zoM0Cv4I069W/3iaJYbRKCUoASUNOgRXZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775014423; c=relaxed/simple;
-	bh=MsIHcnNE/2NC6JK0y+0LkdkqoWno6lOAjHYKldqSoT4=;
+	s=arc-20240116; t=1775014908; c=relaxed/simple;
+	bh=xT1A1ghi2oF7C8alEdXW77pytLgkDnbIwD2JXTbo0aU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LpllCnKXvMmCkv9TOPwEHD/hq6MPklGc0cfhwN531Q75gFn/y8MusY8DJnsMZtooTjU4haar6grbCbOVdxfcqeNTEqipVBQ9AQPipeljCIOVGRwWKX3JjH2Q9jiaXlw/qkvNTBfCq8TTlL/HKi3tR7VQz/G28pjj5qW9WX9MHtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mf3Iu63a; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pwJlkuoR6rcB9fUimdo/1T9zjPVeT9rERxu7H0zJwLFzOVJKkQ2V1G5KF4+qk1RimNLk4oKhUalnak8up46WE0Lb0fXhjKvLk3uVb8VPDjCsMeOHB1DlxQhbtSXX6f9fKU2o723UAAOfzaPREnWgFS42bH8PLRh78mLcu48OF5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+xBAsj/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mf3Iu63a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E149DC4CEF7;
-	Wed,  1 Apr 2026 03:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+xBAsj/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD0FAC4CEF7;
+	Wed,  1 Apr 2026 03:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775014423;
-	bh=MsIHcnNE/2NC6JK0y+0LkdkqoWno6lOAjHYKldqSoT4=;
+	s=k20201202; t=1775014908;
+	bh=xT1A1ghi2oF7C8alEdXW77pytLgkDnbIwD2JXTbo0aU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mf3Iu63av+RO84JHr5UkjY2VMi7oPXd+r3U5TCLPLwnrB76QRfKsiiOOkYPBHY5mb
-	 NXrB86/a1iZHNr/b1qf/2TUJVRh0RgIRrl0yFbemAbZz+GjUVmxrOsue0vtT3Ctzcu
-	 59t5UAmce+eINYERbOuZc/PuDj44Kr8uxYlBmvl8FoQE9b8LC1Qgw2vLxCDEynJbU8
-	 CdKrPk8gk3yGby6x/fYEwpGJkpadH25SWxUxyjYnMC7NnrYkFnBZrxnw8rHtCbutGm
-	 9V945MnAy/yDRd1H5RWghVgYRcA1P2sOXmuUGo1SKysyP0rU7SHUSfQJqvIuf+Bbd/
-	 Ef5ykE5bAgB9A==
-Date: Tue, 31 Mar 2026 20:33:40 -0700
+	b=U+xBAsj/SmESfH0r6zxi1mn4/LBwLZtnesEGD/3h8Vw4kb241eopRt6cyFnp3Bc16
+	 iCa3zL09Q+4YoxMk0mx3j9l6JHkKdza2WjUImM9PzseRD1F5SdDUlTuvsYpaB2AXsu
+	 6DSk0sGXWwphdQrlCegmikSjFSP9yxU4H3d+cdJkQzS67K+F9hl5dfsA8g4DLsXzQa
+	 NF6KHyerwq0mABV6E1EFMgHNES7Yff3FOkuGm7RCpHuRnx2mwl567AUV9fr+WWagyu
+	 6hvrF8hZakh1gsNKqpbbZDd9qQQqtqGECMxAvZZLJM7BTH29Xs50jLGBgJhEHq2KcB
+	 kFmfU9XtnrGXQ==
+Date: Tue, 31 Mar 2026 20:41:46 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, collin.funk1@gmail.com,
-	german.gomez@arm.com, james.clark@linaro.org, jolsa@kernel.org,
+Cc: acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	hca@linux.ibm.com, jameshongleiwang@126.com, japo@linux.ibm.com,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org, zide.chen@intel.com
-Subject: Re: [PATCH v3 2/2] perf arch x86 tests: Add test for topdown event
- sorting
-Message-ID: <acySFKORtDwArHXl@google.com>
-References: <20260331165207.4016392-1-irogers@google.com>
- <20260331185419.4085479-1-irogers@google.com>
- <20260331185419.4085479-3-irogers@google.com>
+	linux-s390@vger.kernel.org, sumanthk@linux.ibm.com,
+	tmricht@linux.ibm.com
+Subject: Re: [PATCH v2] perf tests task-analyzer: Write test files to tmpdir
+Message-ID: <acyT-ua9xspntyY0@google.com>
+References: <20260326174521.1829203-1-irogers@google.com>
+ <20260327060033.2294469-1-irogers@google.com>
+ <act2RNT6-3Kx_h5p@google.com>
+ <CAP-5=fX12Kmd26bq4xRjx50WzmuuMszEzuVY=g6y7-hkPd8Wzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,174 +48,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260331185419.4085479-3-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX12Kmd26bq4xRjx50WzmuuMszEzuVY=g6y7-hkPd8Wzg@mail.gmail.com>
 
-On Tue, Mar 31, 2026 at 11:54:19AM -0700, Ian Rogers wrote:
-> Add a test to capture the comment in
-> tools/perf/arch/x86/util/evlist.c. Test that slots and
-> topdown-retiring get appropriately sorted with respect to instructions
-> when they're all specified together. When the PMU requires topdown
-> event grouping (indicated by the pressence of the slots event) metric
-> events should be after slots, which should be the group leader.
+On Tue, Mar 31, 2026 at 10:58:55AM -0700, Ian Rogers wrote:
+> On Tue, Mar 31, 2026 at 12:22 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > I'm curious why this patch is in the idle symbol thread.
 > 
-> Add a related test that when the slots event isn't given it is
-> injected into the appropriate group.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Tested-by: Zide Chen <zide.chen@intel.com>
-> ---
->  tools/perf/arch/x86/tests/topdown.c | 134 +++++++++++++++++++++++++++-
->  1 file changed, 133 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
-> index 3ee4e5e71be3..ee8d673a0e7b 100644
-> --- a/tools/perf/arch/x86/tests/topdown.c
-> +++ b/tools/perf/arch/x86/tests/topdown.c
-> @@ -75,4 +75,136 @@ static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest
->  	return ret;
->  }
->  
-> -DEFINE_SUITE("x86 topdown", x86_topdown);
-> +static int test_sort(const char *str, int expected_slots_group_size,
-> +		     int expected_instructions_group_size)
-> +{
-> +	struct evlist *evlist;
-> +	struct parse_events_error err;
-> +	struct evsel *evsel;
-> +	int ret = TEST_FAIL;
-> +	bool slots_seen = false;
-> +
-> +	evlist = evlist__new();
-> +	if (!evlist)
-> +		return TEST_FAIL;
-> +
-> +	parse_events_error__init(&err);
-> +	ret = parse_events(evlist, str, &err);
-> +	if (ret) {
-> +		pr_debug("parse_events failed for %s\n", str);
+> I'll separate it, I was gathering fixes. Same branch has the BPF
+> counters test fix in it:
+> https://lore.kernel.org/lkml/20260325171653.1091337-1-irogers@google.com/
 
-It should set ret to TEST_FAIL.  I'll add that this time.
+Ok, I'll test and process it.
 
 Thanks,
 Namhyung
-
-
-> +		goto out_err;
-> +	}
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (!evsel__is_group_leader(evsel))
-> +			continue;
-> +
-> +		if (strstr(evsel__name(evsel), "slots")) {
-> +			/*
-> +			 * Slots as a leader means the PMU is for a perf metric
-> +			 * group as the slots event isn't present when not.
-> +			 */
-> +			slots_seen = true;
-> +			TEST_ASSERT_EQUAL("slots group size", evsel->core.nr_members,
-> +					expected_slots_group_size);
-> +			if (expected_slots_group_size == 3) {
-> +				struct evsel *next = evsel__next(evsel);
-> +				struct evsel *next2 = evsel__next(next);
-> +
-> +				TEST_ASSERT_VAL("slots second event is instructions",
-> +						strstr(evsel__name(next), "instructions")
-> +						!= NULL);
-> +				TEST_ASSERT_VAL("slots third event is topdown-retiring",
-> +						strstr(evsel__name(next2), "topdown-retiring")
-> +						!= NULL);
-> +			} else if (expected_slots_group_size == 2) {
-> +				struct evsel *next = evsel__next(evsel);
-> +
-> +				TEST_ASSERT_VAL("slots second event is topdown-retiring",
-> +						strstr(evsel__name(next), "topdown-retiring")
-> +						!= NULL);
-> +			}
-> +		} else if (strstr(evsel__name(evsel), "instructions")) {
-> +			TEST_ASSERT_EQUAL("instructions group size", evsel->core.nr_members,
-> +					  expected_instructions_group_size);
-> +			if (expected_instructions_group_size == 2) {
-> +				/*
-> +				 * The instructions event leads a group with a
-> +				 * topdown-retiring event, neither of which need
-> +				 * reordering for perf metric event support.
-> +				 */
-> +				struct evsel *next = evsel__next(evsel);
-> +
-> +				TEST_ASSERT_VAL("instructions second event is topdown-retiring",
-> +						strstr(evsel__name(next), "topdown-retiring")
-> +						!= NULL);
-> +			}
-> +		} else if (strstr(evsel__name(evsel), "topdown-retiring")) {
-> +			/*
-> +			 * A perf metric event where the PMU doesn't require
-> +			 * slots as a leader.
-> +			 */
-> +			TEST_ASSERT_EQUAL("topdown-retiring group size", evsel->core.nr_members, 1);
-> +		} else if (strstr(evsel__name(evsel), "cycles")) {
-> +			TEST_ASSERT_EQUAL("cycles group size", evsel->core.nr_members, 1);
-> +		}
-> +	}
-> +	TEST_ASSERT_VAL("slots seen", slots_seen);
-> +	ret = TEST_OK;
-> +out_err:
-> +	evlist__delete(evlist);
-> +	parse_events_error__exit(&err);
-> +	return ret;
-> +}
-> +
-> +static int test__x86_topdown_sorting(struct test_suite *test __maybe_unused,
-> +				     int subtest __maybe_unused)
-> +{
-> +	if (!topdown_sys_has_perf_metrics())
-> +		return TEST_OK;
-> +
-> +	TEST_ASSERT_EQUAL("all events in a group",
-> +			  test_sort("{instructions,topdown-retiring,slots}", 3, 2), TEST_OK);
-> +	TEST_ASSERT_EQUAL("all events not in a group",
-> +			  test_sort("instructions,topdown-retiring,slots", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("slots event in a group but topdown metrics events outside the group",
-> +			  test_sort("{instructions,slots},topdown-retiring", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("slots event and topdown metrics events in two groups",
-> +			  test_sort("{instructions,slots},{topdown-retiring}", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("slots event and metrics event are not in a group and not adjacent",
-> +			  test_sort("{instructions,slots},cycles,topdown-retiring", 2, 1), TEST_OK);
-> +
-> +	return TEST_OK;
-> +}
-> +
-> +static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unused,
-> +					     int subtest __maybe_unused)
-> +{
-> +	if (!topdown_sys_has_perf_metrics())
-> +		return TEST_OK;
-> +
-> +	TEST_ASSERT_EQUAL("all events in a group",
-> +			  test_sort("{instructions,topdown-retiring}", 3, 2), TEST_OK);
-> +	TEST_ASSERT_EQUAL("all events not in a group",
-> +			  test_sort("instructions,topdown-retiring", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("event in a group but topdown metrics events outside the group",
-> +			  test_sort("{instructions},topdown-retiring", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("event and topdown metrics events in two groups",
-> +			  test_sort("{instructions},{topdown-retiring}", 2, 1), TEST_OK);
-> +	TEST_ASSERT_EQUAL("event and metrics event are not in a group and not adjacent",
-> +			  test_sort("{instructions},cycles,topdown-retiring", 2, 1), TEST_OK);
-> +
-> +	return TEST_OK;
-> +}
-> +
-> +static struct test_case x86_topdown_tests[] = {
-> +	TEST_CASE("topdown events", x86_topdown),
-> +	TEST_CASE("topdown sorting", x86_topdown_sorting),
-> +	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
-> +	{ .name = NULL, }
-> +};
-> +
-> +struct test_suite suite__x86_topdown = {
-> +	.desc = "x86 topdown",
-> +	.test_cases = x86_topdown_tests,
-> +};
-> -- 
-> 2.53.0.1118.gaef5881109-goog
-> 
