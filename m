@@ -1,182 +1,204 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3D147CC71
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 16:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC561E98FF
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 16:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775060827; cv=pass; b=oU9iBuEkDLUhg9hggZhHfMANv3a1nAxMGm922IonHhHTZC+9WAFrqDrKudLEMNoPppDTxBGuDeu6xfFvFLNem01UnxKVM1g7wfxpn7gWC/yiVrd9CjY0FQxbSLnc39dKItBzq8Ht92EBYTWeEtvbTgAv8GyJMKcbmfkWhvH9WEQ=
+	t=1775061141; cv=pass; b=AIkdJAH5/yMzA9wO87VUtpl34XPSDt3ZXpCvemQHUIJDp64QVOLRjlOjCmleWBQeShCqAhxJqR2erSTkhCYaEtdPK1Wtz3tuxYw11iZcnmGT4PkLQ2Ii3RuWaQVnVc+X4kJxQFqd6v5bD2Jx633BZB24MR/xYf9FmxQB0kCj8b4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775060827; c=relaxed/simple;
-	bh=PVEwyQhpZ43VPdWZA/9xRWrTsKqlw2cVGq5u7vcumf8=;
+	s=arc-20240116; t=1775061141; c=relaxed/simple;
+	bh=Q2rkDE3RcKsGQIDvG7G9l4W/xFa87PiCjn92xyx0acI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtbcbLno8xX01/9wMRjhSGbrv/uIbzg6mLJe9LkPbhV0c2v/6N/XD7U5XHBKgvfec6Sj72OrTf6od45ok4nDvKrq0MaoQr4vPssrJY1sptAtTf1SX3vwQXVi+c8UKDHSBfxkuB9j5Yx2WpG9yDoCevhlsAV/nkmrLFLOhSMFRTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KAto2ig/; arc=pass smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=GP3FkLhHffRWt3RiGMIJPN//yLZe89OyJynxzGX+lCqhpt3RfgHOzgtuVos2L1W8hB40U0xEg5cR1VcDkcogFA+zauXKr/eaCGfHCWDEHezNz48D8XLsRecRwKlhTdc3urI7ZrM4LZnlOfU2V/TortXxu6zDlE7o7jwXtUM3Uw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=opS0yUIr; arc=pass smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KAto2ig/"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2591757fbso254135ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 09:27:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775060824; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="opS0yUIr"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2b243198058so204185ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 09:32:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775061137; cv=none;
         d=google.com; s=arc-20240605;
-        b=SM3V4HbWui6W5wGNcq97PsNBU5NZJwk4lMWt5eGWCU/SbvbSFerNVxiGnRRxTNmNs1
-         YBZuq1rKn5Jw68ZBkEifUO8mQd9Jb/PDLInMIEpTTKJ1WlGluxLBVGTp5aqZ69yJ81Zp
-         v5bdSFGOK7KQq8ZTJPv+gDtNjaW03G24QIQOuGP7UZdjQtVDDJZz3R8EWufiBzdJmnpy
-         5IegWNvM1i2X6+vRBrRtszMnozokyQJIxX/PAwdYbxN7NskuZgeB7swvSE+H15Hl42RP
-         HetvchCL3Mf/xP6tJPOTXDGUxccJx0DmM8SjbawyYw60Rcu2ZsmbTCgDuxzc4taN6k7y
-         bPPA==
+        b=lMSfjYFXOmem9crg35lSgojaVvOcvobfzG88IBgdsBNiEZbyOYRp54qeR6OZm0E2zG
+         7u6Ntu5Zn8E+C2fhmnJCQEoKX14934SbWezZ/M2p1MDBECZvJpKbhAYcFW2cOBzDKoSA
+         6Et8t/vqbrblfj1Z5Hb0/d0lfEyGMkkh5KCD4ga4h38e1K2x7fdEcAaJz6tPLs2wg1+O
+         P0rBPucVFgqm7GLXZwI1M+MGcybHCK4jloa7kyLsYCI/rGDavj4BO9PGzafuNaCLP91V
+         1Krm/qd1mexbwrP2fveaLyxjyCuQ5ND0scp5Tr117faPw0Q4Pco1V7F+JOSrz7Qr5VKn
+         ZeQQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
-        fh=ByH0JbSLqQ+Q3txLZPwY4uE5q+Hw6Nb3SYcHyqErdj4=;
-        b=MCuiy38aMfEmoH8E9zyi0ragnjITfdD8W+LsVy2kXvPsQ7Xd42TwpCFFZeKlKy6nTS
-         pwaRz6UPSUQ+ViTuI4Cd8fqaSSvXqm4AWIVWAf5BMZOo1zMvjldA3NRMFeeU7T92Rgk3
-         vF/Nd6eHv0RLf6YA0aQkrI9GFEW2TcZZnEwjJnAsAdLfelj2mwHbMc6AuTBal2S9CQ08
-         2hYlyNjTkmaOSuaq1DRNgYsAdzXE0xm69UcfD9GJkDFjmj+kliI4qO5pL+TBMNkOLDq8
-         N+rL6jB5ND2QEEE1DhqqmAQic9iK5NElPICH81HvOAjaCaxAuUmznWp2hravTp78f+k4
-         iqgQ==;
+        bh=CXBXVKK2TXmfSRBdjIo4v/2ObPRfZ8Hmuct+Up9E5CM=;
+        fh=B31VvvP6y1tPQbIWTrg1DwJlcCSCBYW7Zg8NkpexL0M=;
+        b=ghSk639Dh308+wkKW32SWFR5c/8Eak08UplcKZBfYofrOuLsqxTqK4ydFE6etz6IEE
+         Me1QPYYxl2q3CLQ4uFbu6DZ0w6GtrdRDhqD7NS0EYrIh/iJ6rHj0PuYskeRm7RlCtAuR
+         Dd4RaYx/e4qqunqGG7AtQbx8aBRGujvBzMYPAmMi2N5Fs74uP5kbHJI0qEP+80WULwmz
+         xAKUe+y9UK5iLMeTkUZQ5VagJHkTQmqwPESe2w6XNKEgT3XvkN+2lJT1eEcYsmYMP13x
+         0uKsGVAjf8YtWKl3W6WGwXCpo7HFa9UC4o59yRoDooMo2VhAGDh1VN13HfrgQRnFyU0R
+         zjMw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775060824; x=1775665624; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775061137; x=1775665937; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
-        b=KAto2ig/BqucVBC+cEDgrrZoSi3AQpxOR30fF6qSoyLUUfGOF8C2qVTM58HcvBkifS
-         T/vhRgTgtx23FrzyDkXQbpMDUvxw5nB1tN3muKKLOgQcKZAxdUiVLi5qI0GqL+7t4hCu
-         D258N0VcopI1j/mBG/YdNLaMQtSCSgfI3Jaw+otsDReASYipbFcvq242nqmJUmC3hRR+
-         /ls5M+9KM4CdNCc+89bTZ7U7lwB5Hj1oMqDHxaMz988EVHg76iMHtFn2ghzSFJCsVKRH
-         sRip+PfnMwd4bFmRe6Co/KywY97jrOZvMPa62xcPWxJexA5elBvoYu8sLHOT87JZQwSc
-         tOvA==
+        bh=CXBXVKK2TXmfSRBdjIo4v/2ObPRfZ8Hmuct+Up9E5CM=;
+        b=opS0yUIrWJzEE7BZLDXCsdZNIiYd0OrVQNsIWRSVDMTgxbfzb2L6CUUZ6N4odXuz7t
+         TeUJdQri1GiwpKFrvBiomk0mrNfZpxnn/HNFo00v1LTCZvmNWPLWcc86ZZAPwmP3uvO4
+         mPD79h01iks4bkYXJi/GfO9BguUnza3k/F+biGt2aD3UmbxhANSs5vtBWXxe6cQ84W8q
+         DyH+reHmSsbGAD/PuL5m6AUDiT1oki71KUS4xPmTZ7V/nskkHcO7Mq749MLbdvpATp+m
+         Jlf+EWn+2TxGB4qT8Qufi4/YXeEpWMLDEsiEEvSESJkozTgJBbslTzG9Fog6hyZt1JfU
+         /S+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775060824; x=1775665624;
+        d=1e100.net; s=20251104; t=1775061137; x=1775665937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
-        b=a1w0yQSSDdoPjsPaiKuTEubEdlmRGcHbtuCifSyxm9en/LZlhNGzZsuLSQ8PcYAWPS
-         i9Q+Rna2HUIQMl+5J8T0zFoLYQSVy7O82yOZN8q1IO+pucZHzBoM47WQbt63pCLcN1oQ
-         IDo28YmjTpooJPZeAslOGPBhVigcTTxhgzEisueyFUxatHjlFMbVdpLw4r54ZS/PUgbo
-         ZHs4eJFxdC36j1csuOjtwxHr+8sepDGDAP25darAwnekGQC9RGA2j1iT4x/qKvWsMIcB
-         Ys1e9nxu2UYWu3qEsiIb6UwcrfONNXvwjVapF3N14FJ8DX6Ma38wMC1EikNJEX3LLYLk
-         1oug==
-X-Forwarded-Encrypted: i=1; AJvYcCWPgspOR8zsA5ekCI+uWJ/tUAHM/dQTMVIX0XLE+qp36cFVTKIoae49505CvpAZCOsFlhHpNm2ziyKvCO29F+pS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAmjIsTMndrAx46xtNeLqLMYOp1bPPcSNYUNRYqSx9fNdT1d8I
-	4m5c2UmQA++uJlN3SInuEAYUMaaRsick4rkvuw6UXGq/Y9PHr3TcNP0mvsId2lxryGoE1fSGr+a
-	uPHWxjZQKlTd6VXa2e8IRMACEfzlG1qswc1RSnjTk
-X-Gm-Gg: ATEYQzwM3vHKtlriaipgyl23Gl2GL1sObGRTSlSknef41/LU9dDvnFnKmZN2WhBinZL
-	Iri9u93R0qI6qfJsBseFU3aH6lrDen9dJHnVzQdzqX0ZlvN36BO+SYQTRJqeqWYVa1OOR3GjwSY
-	Ks2GaHZqIOrY9sbZ6v98mnXGjcWpZexkUbGpm19aWgpMuIpWFIYCcg0K8ktuKz+4S85lKWehWO1
-	qyeLDBAMJeXP1kK33pOrLspvX08QJhldTL49FORcpvDwwnoXocMsJcNrKMgw7QeBpK746vwbyDr
-	io+P8TfcQ9lgdV+QDhVwc+rvwCsnEqsDRc68H3T6VEZ+CKE=
-X-Received: by 2002:a17:902:f787:b0:2a7:4151:2c74 with SMTP id
- d9443c01a7336-2b2753a6fcemr94535ad.16.1775060822991; Wed, 01 Apr 2026
- 09:27:02 -0700 (PDT)
+        bh=CXBXVKK2TXmfSRBdjIo4v/2ObPRfZ8Hmuct+Up9E5CM=;
+        b=C6jDlWa19kAgHb4SLVbksaIQmEvQ+IaYI01Lftt6enyGV015xRpIsFKxAjw1hmrkKn
+         bEvxs3D0o+1T3PeW2q8qL5uVotLH+rMTinhmej6oM2JX7+jbLsEBjYQDwBp1XZcV362u
+         Rx/RXUsUhxP4OqK2F7Agw7WgYc33z2Xecamk0Jx06rdcQRii9iSu4h404C0M89SJziL6
+         ym4y0xcdPmM7jiv1qR+DQPxdXMo8bRVaJ+Ad8FCOUi/HDDR6LKWZ82LqyeAhao3kVq4L
+         NfaxdMz2pcHlsYs5PP40ZYtZdD9S6eEyYmyGpGDEcBBtZ6+uI9F6yjThV9/JjIjWCGsT
+         isyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDeLK6guGl16A4uCJmPOzjCrd3QATxbHiPlrOXiQc6XdG1OfNQdFBSYCgwMLhiMmoICDxIyFVwB1YoAq/9ShiD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIsogxC8s1cXqM2Gp4FhItXNCUvRzo3QX9WOIuklhXg5bhL/Hs
+	Y9vqknZS5i/yrBNu6QxDL0LJexIlKRK6eUIaOe3yidsoOKPZ6+PcCDatveOb3CnqvZ2aL45BabF
+	jpVGP7FHad9chOKBW87UIO2cwYHmqpR6UsvmK3Grg
+X-Gm-Gg: ATEYQzzSvzm/Bvb8/1zNBNkrvIqwXshl3rbq6FPVEDzVD5n5RTBTIZAMJJlgcpJD1Y8
+	GWJumYFmmosKhLy6pQ7OZ2Kcgwb6Sm6K93uqU1p1o9cNHoo1j3ZF7WX7onn543R+T7p2XqGD79k
+	Iqg4eDgTMhJyiYB/dplOfAExyqDWdb8jVXt7VufdWpOgOWta1JDOKHKB+kR1ZQt62T8dAtPWUoZ
+	JfuJ2Uq7A2+9CK1NSgVzBs82Z1q/BQPTStMXHTMz8kNpQ3Kb+A5v5rANOkSZGoGiXIYUxv4Z0df
+	v9d3zZohJC4GwHUi2maRLcuQhqWa1tBP1hmX5x2GSYRxFfE=
+X-Received: by 2002:a17:902:e54a:b0:2ae:c7c8:f46 with SMTP id
+ d9443c01a7336-2b2753979dbmr146085ad.18.1775061136342; Wed, 01 Apr 2026
+ 09:32:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401064114.141066-1-swapnil.sapkal@amd.com> <20260401064114.141066-2-swapnil.sapkal@amd.com>
-In-Reply-To: <20260401064114.141066-2-swapnil.sapkal@amd.com>
+References: <20250603181634.1362626-1-ctshao@google.com> <9413e707-35d2-4c9a-9058-d14112ebb2cc@linux.intel.com>
+ <CAP-5=fX0-W5BKha32qZu5zhJN=7Jvocz+ZwxLzXxYw_g2Zsz4Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fX0-W5BKha32qZu5zhJN=7Jvocz+ZwxLzXxYw_g2Zsz4Q@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Apr 2026 09:26:51 -0700
-X-Gm-Features: AQROBzADRZrhKPOV8aXGljfCZNSgApJalzZ11vuhPeeaxRPCmQJKw71LCF2RJys
-Message-ID: <CAP-5=fWY7X6Zo2xFXHbPtU2Dob=eHguzbkzowHjqyBzsse2+-Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf sched stats: Fix SIGCHLD race in schedstat_record()
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, james.clark@linaro.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	gautham.shenoy@amd.com, ravi.bangoria@amd.com, KPrateek.Nayak@amd.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 1 Apr 2026 09:32:05 -0700
+X-Gm-Features: AQROBzAItQEatsBOCWfr2iBB4xUcsp0KHETqKe22dc1uIJJM3O4JS1HV6O7FoEg
+Message-ID: <CAP-5=fVPgHyAtLCVemMfedvH=J__9j28DXdNHJZGD12GNgF7AA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
+To: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	weilin.wang@intel.com, linux-perf-users@vger.kernel.org, 
+	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 31, 2026 at 11:42=E2=80=AFPM Swapnil Sapkal <swapnil.sapkal@amd=
-.com> wrote:
+On Wed, Nov 12, 2025 at 8:59=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> When a very short-lived workload is used with 'perf sched stats record',
-> the child process can exit and deliver SIGCHLD between
-> evlist__start_workload() and pause(). Since pause() only returns when a
-> signal is received while suspended, and the SIGCHLD has already been
-> delivered and handled by then, pause() blocks indefinitely.
+> On Mon, Sep 29, 2025 at 8:12=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.inte=
+l.com> wrote:
+> >
+> >
+> > On 6/4/2025 2:15 AM, Chun-Tse Shao wrote:
+> > > It gives useful info on knowing which PMUs are reserved by this proce=
+ss.
+> > > Also add config which would be useful.
+> > > Testing cycles:
+> > >
+> > >   $ ./perf stat -e cycles &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    3081
+> > >   perf_event_attr.type:   0
+> > >   perf_event_attr.config: 0
+> > >
+> > > Testing L1-dcache-load-misses:
+> > >
+> > >   $ ./perf stat -e L1-dcache-load-misses &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    1072
+> > >   perf_event_attr.type:   3
+> > >   perf_event_attr.config: 65536
+> > >
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > ---
+> > > v4:
+> > >   Removed the first patch in v3 since it is merged.
+> > >   Retested to make sure the patch still work.
+> > >
+> > > v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
+> > >
+> > >  kernel/events/core.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 95e703891b24..bad563692d63 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -56,6 +56,7 @@
+> > >  #include <linux/buildid.h>
+> > >  #include <linux/task_work.h>
+> > >  #include <linux/percpu-rwsem.h>
+> > > +#include <linux/seq_file.h>
+> > >
+> > >  #include "internal.h"
+> > >
+> > > @@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *fi=
+lp, int on)
+> > >       return 0;
+> > >  }
+> > >
+> > > +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
+> > > +{
+> > > +     struct perf_event *event =3D f->private_data;
+> > > +
+> > > +     seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
+> > > +     seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long=
+ long)event->attr.config);
+> >
+> > Could we print the config field with hexadecimal format? It makes the e=
+vent
+> > is more easily recognized. Thanks.
 >
-> Fix this by blocking SIGCHLD before starting the workload and replacing
-> pause() with sigsuspend(). sigsuspend() atomically unblocks SIGCHLD and
-> suspends the process, ensuring no signal is lost regardless of how
-> quickly the child exits.
->
-> Assisted-by: Claude:claude-opus-4.6
-> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
+> I think this is a reasonable suggestion. I think it would also be
+> useful to dump the config1, config2 and config3 values. I also think
+> the state of the event would be useful for debugging.
 
-Thanks Swapnil! In the Sashiko reviews there were some nits about
-clean up on error paths but also 1 about signals potentially being
-masked in the perf workload:
-https://sashiko.dev/#/patchset/20260401064114.141066-1-swapnil.sapkal%40amd=
-.com
-Could you take a look?
+Any updates on this? It seems to have been forgotten about.
 
+Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-sched.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
+> Thanks,
+> Ian
 >
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 3f509cfdd58c..eb3702d98fd1 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3807,6 +3807,7 @@ const char *output_name;
->  static int perf_sched__schedstat_record(struct perf_sched *sched,
->                                         int argc, const char **argv)
->  {
-> +       sigset_t sigchld_mask, oldmask;
->         struct perf_session *session;
->         struct target target =3D {};
->         struct evlist *evlist;
-> @@ -3822,6 +3823,15 @@ static int perf_sched__schedstat_record(struct per=
-f_sched *sched,
->         signal(SIGCHLD, sighandler);
->         signal(SIGTERM, sighandler);
->
-> +       /*
-> +        * Block SIGCHLD early so that a short-lived workload cannot deli=
-ver
-> +        * the signal before we are ready to wait for it. sigsuspend() be=
-low
-> +        * will atomically unblock it.
-> +        */
-> +       sigemptyset(&sigchld_mask);
-> +       sigaddset(&sigchld_mask, SIGCHLD);
-> +       sigprocmask(SIG_BLOCK, &sigchld_mask, &oldmask);
-> +
->         evlist =3D evlist__new();
->         if (!evlist)
->                 return -ENOMEM;
-> @@ -3902,8 +3912,15 @@ static int perf_sched__schedstat_record(struct per=
-f_sched *sched,
->         if (argc)
->                 evlist__start_workload(evlist);
->
-> -       /* wait for signal */
-> -       pause();
-> +       /*
-> +        * Use sigsuspend() instead of pause() to avoid a race where a
-> +        * short-lived workload exits and delivers SIGCHLD before pause()
-> +        * is entered, causing it to block indefinitely. sigsuspend()
-> +        * atomically unblocks SIGCHLD (blocked above) and suspends,
-> +        * ensuring no signal is lost.
-> +        */
-> +       sigsuspend(&oldmask);
-> +       sigprocmask(SIG_SETMASK, &oldmask, NULL);
->
->         if (reset) {
->                 err =3D disable_sched_schedstat();
-> --
-> 2.43.0
->
+> > > +}
+> > > +
+> > >  static const struct file_operations perf_fops =3D {
+> > >       .release                =3D perf_release,
+> > >       .read                   =3D perf_read,
+> > > @@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops =
+=3D {
+> > >       .compat_ioctl           =3D perf_compat_ioctl,
+> > >       .mmap                   =3D perf_mmap,
+> > >       .fasync                 =3D perf_fasync,
+> > > +     .show_fdinfo            =3D perf_show_fdinfo,
+> > >  };
+> > >
+> > >  /*
+> > > --
+> > > 2.49.0.1204.g71687c7c1d-goog
+> > >
+> > >
