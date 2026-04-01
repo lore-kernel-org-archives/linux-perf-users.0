@@ -1,334 +1,1254 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C0A477983
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 16:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775061522; cv=pass; b=EZ27T3b2jt6ZdJMOuC+++25D7FIebRNmI5CDSyTsp4Sz/uBanHM8bryWYFLn2/W55fBNLahOFCRG/pXhwsHM8ugbbzS878OEhDZyI8ZaNmwY4mntZ9AF6qNtemXCReC3yaroIGWVZu8aNo8ttq3r7eyTeWcPa42j5AgJmM6UDP0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775061522; c=relaxed/simple;
-	bh=R7YWh0oll30gDFPfNPmwQO4JYJ4cfRwWBRWkKeKZE7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqUmAioyVKPb8qJvi5ImDOUs60MsWhB98uvwHNI4zE3LnPG0RR+C+JafjsZK0/xspSz3uEYXjSCkTub5oXMSv5uXxPSPpYeMmTyZVDqQM6G0JZwDQ/LLNER258XkzTeI3QfZu/nrI49cnfsXdmA7xL5S7u8oAEP92K0WMYF3gHo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iYy9kDwY; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E971F1932;
+	Wed,  1 Apr 2026 20:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775073827; cv=none; b=AsMWNi6Y7YxlEWi6zD7if7nSLXAZiLWuLVS2zP6wZlZMGcg5M8MStm4uUx41eh4AmJYK1/LeFuENpxkMrIE17x6KwSZxwz0uyzxeTil+siYj7slqX5XtCU3GXXoNRdfx32qw2tbVBCUii4DBuXHQBOE0Hm8zs12Gy77AY1kcAQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775073827; c=relaxed/simple;
+	bh=tptFObifvwTrpNGUneGg8I5TCTfacBQlCZ2TvC8wZ64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhkE2eQBwijPxjzoTTGRVaFRjo9mLpwb1JvRDcqqSddNXpshT9/YyUEgUXWWm7jfq4Ew2FqC6LJkt38vRMhjunUaxMRF4Uwuf05xRQYQ5QX/fO/HQ8N+9eoxRCEVtMEqkxyyLfYn8p0fDG9nvrZS8XAzFJ34OY+Live6joAOcVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiL67NLN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iYy9kDwY"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-509069a7a7fso3191cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 09:38:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775061517; cv=none;
-        d=google.com; s=arc-20240605;
-        b=W8UzYezjU7DAaxBrMKM5fF3smMHxJMDywpdRa7qULJu7OW7DG6kM4qC0TY84HnrFnU
-         SH1fcMWhdbJ4OSa6BHeG+kIDm2TtXX0jfD7aQI5+obmWk1wT5IrxRKJ5S/UDo0i2tZZh
-         1e1oPE1v2PLs4rrJi13U99PqjnK8qkUnq50EP/ePgge6eZgpZpIgFnZwUkwkUvIWeay0
-         NrhQcpPxmjmqgXyYrGg6SF2TvNqXMmVqVRXhNuctGf5hyAC/mczKXbTO/dtCZkwbU42I
-         XCwbPY6rPaVgwbU+S2cDtEWdWWEPbiMcNkaEbOf5r3306sYXvCg1pdrm3W5OVnL3uB5S
-         XsrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Ay596QS6OHnxfOrTTjBz6KQQ1PnBNWvUbgzVsrgd5mE=;
-        fh=3Y70IX5zXw1aG0RtEIbKNwmFgf7GiczuhBilUueg7tM=;
-        b=hvwejhoO3ETzP80NLCF1VduLRt38FTh7cFV9VyuXorzhd09f2dIGCk50pBZ6SHN64v
-         9aoBODkMbou4VfsbVdGWFIZbM5xbgPmRtFZNTLz8DOFnH/sJq0HQRstsCrah4yeS97ck
-         DdO6fIWX4+Cr0fKut6PlRf5iTQ85B70IIhF4ja8m6BYfpNnNbtBWMbFaRslwvH7dpbgr
-         FrAKJ04ER5i3h0gT4a+of2NjCj+RJk+5OuI2e49JREvL3TacUL1bXl8PvS8ctTrKT28T
-         A60igfDF309YVBkkLCnG5KGUqe7IVcfTUUp8iw67vxPnWy/gN8SHT2NRI84ncPB8v3BF
-         6lEA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775061517; x=1775666317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ay596QS6OHnxfOrTTjBz6KQQ1PnBNWvUbgzVsrgd5mE=;
-        b=iYy9kDwYXCwim/hMvalQSTpHT7NGy/1vUKhajwrHN4FN6AquJHnivZEsMiqk9Nvq7W
-         G/kAYw2iMaE1io3OupY5l7d5ZDrc5TQN0Q1QdcJwckPmpbllo61McDNAzVzKnYtomGup
-         rFHBBf0wumqgdS/ku9l4UhtxhNgNDSbLcqZvji/ZwNInhOA1vVgi6DUVVJn5ItPlGneo
-         id12WLv//9UjGKmcUKwDwFXPuG4uRpUbY1wKcbyZ/ZDlWB/HvaqZxAVg2ADUuHCKyhwO
-         eR4hUpbz92pXWC8QFP2GPXCACbDC+XcC3X7p9s6R/fK56r7Me2++oEi+WKmEr6dWyRlh
-         wiNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775061517; x=1775666317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ay596QS6OHnxfOrTTjBz6KQQ1PnBNWvUbgzVsrgd5mE=;
-        b=dtbIJtt/VhMeqJx8O6VAQalaJmtOLLqMPEO/d9fuIdcYK8ejINtS4TqeU0wrmJ3V9T
-         Ha+ytCu8hW/D/cHCiFBUlaDVmccQlPU6DCvw2KZDghTYsA/dd1oVvUw+pOGKsHnJ5EnK
-         k1u1pAbjxh1BHcnUuCqs8URIo0RamZT+YLFp62GwCqyoRjgMzKlGtVSQgH7eN5gFHqir
-         RZesHLrd/htpRaMIbHIr4RNGoFLfW3gSemlkED+gSbdefayv7tY+unCTXZauE/3DhqoN
-         I/QW1QzV4v1ziTyulOG405Q0quwCchxuz4LQbX5ZzY0hjMftzUUllfRp/y4CyAWHMWPZ
-         smKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrKGkESA1+lZDXCnD4efIYQTndcyAfMIb6Cf/DBpsz6ZbKTh+WtNInLVN/Gadg/Qqs6Yy0P1dxtgwOh5ssuvnL@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtu8XGXH3ouVTIzrjihjCy5lKvlcwrM1kOV9E1e4Vp3wP9+qna
-	o4MriWdkfEYhPXMQOPz1oLkDraGWTsivBOTJzIOs/rMaDJbgRAPdkEarFYKkaIF8ixEZ9MkI1MM
-	9B3HdygI02j0h0ajuh2Zwj8d6isfaakReS/w/qbXh
-X-Gm-Gg: ATEYQzzDPnn/YjaELOMQfeT2kLDSmIJMEyq64yJaqlKbhlAPFLdZuAY7CUFOOn4H00t
-	hwBGFepHHTZ8Nljq6m8RWxhPJ1N0r9kmW+cocmIHBSOhJSLWan49RkQ4RFXIxtMDfQJyZIg1hJO
-	pac9jKzvHw5fS3q3KCVgWerS8H5e3um/DqCABF6UiEwUYYLC2pYpGS+LDmaNnab04MTfOp0Ug1f
-	MhbbmXJmBOb1WcadSCU2/6qwlmdBkrVx4LKwUPkrzkauHVzdbpWwmbMDO87HEt98lAlvASbn8l4
-	CsnILZk/MC5mpH+KGUDfx60uvkOQcPI5nUtvlTud+4tnxXM=
-X-Received: by 2002:a17:903:f8e:b0:2b0:aee4:afe7 with SMTP id
- d9443c01a7336-2b275818201mr4435ad.10.1775061516467; Wed, 01 Apr 2026 09:38:36
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiL67NLN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2070DC4CEF7;
+	Wed,  1 Apr 2026 20:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775073826;
+	bh=tptFObifvwTrpNGUneGg8I5TCTfacBQlCZ2TvC8wZ64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jiL67NLNkm0j0v7KvH5Uv1+UiEj6Nd2JDadwW8ZVWFSv+PoIiLLiyMa9pMQNSe7oa
+	 207tjK0rNfVjnMx79ooZEzSFt4VeKpAqAJS3yxvIBiR3nLSWJMEeSnTeOv+CE6ClxE
+	 QPdsSiFtyrVv3BvgoqSwPodwijMN2KLi/fnH5UIzBMK4+NlZSFaJG/KAreKwrQhhn1
+	 ZvwTvffyDEHvbZRqkesRkPE9UXhXtxp85US53HxTITnsC6UVX7fv4JnAdYBTIyrz4m
+	 a21XFrGK4Zvjf5kMIQxmSx1zVNMuQjj44h6QCnOmKJVXIv3aVUTEke1ljHOtbYaN/q
+	 ma70QMzOvmwbg==
+Date: Wed, 1 Apr 2026 17:03:43 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Guo Ren <guoren@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf: Make more global variables static
+Message-ID: <ac16HyVvtutHnjuX@x1>
+References: <20251204214235.589865-1-irogers@google.com>
+ <aWGtNvi9kbBCTNVE@google.com>
+ <aWa75MJy7FMyzR9P@x1>
+ <CAP-5=fUcceQuKSu_FhOPxpsXwi2ou+iR3VHafcy1kCHa0CeVhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260212223942.3832857-1-ctshao@google.com> <bb9a1471-6996-47e9-a81e-8de58ab32fb2@intel.com>
-In-Reply-To: <bb9a1471-6996-47e9-a81e-8de58ab32fb2@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUcceQuKSu_FhOPxpsXwi2ou+iR3VHafcy1kCHa0CeVhA@mail.gmail.com>
+
+On Tue, Mar 31, 2026 at 10:15:16PM -0700, Ian Rogers wrote:
+> On Tue, Jan 13, 2026 at 1:40 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Fri, Jan 09, 2026 at 05:36:54PM -0800, Namhyung Kim wrote:
+> > > On Thu, Dec 04, 2025 at 01:42:35PM -0800, Ian Rogers wrote:
+> > > > `make check` will run sparse on the perf code base. A frequent warning
+> > > > is "warning: symbol '...' was not declared. Should it be static?" Go
+> > > > through and make global definitions without declarations static. In
+> > > > some cases it is deliberate due to dlsym accessing the symbol, this
+> > > > change doesn't clean up the missing declarations for perf test
+> > > > suites. Sometimes things can opportunistically be made const. Making
+> > > > somethings static exposed unused functions warnings, so restructuring
+> > > > of ifdefs was necessary for that. These changes reduce the size of the
+> > > > perf binary by 3,264 bytes.
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks, applied to perf-tools-next,
+> 
+> Hi Arnaldo, it looks like this patch got lost. I'm not seeing it in
+> perf-tools-next. I suspect it needs a hefty rebase now. Any idea what
+> happened?
+
+I think there was some issue and I removed it to make progress, then
+fell thru the cracks.
+
+I refreshed it, see below, will send together with a few other patches
+after testing it in the build containers.
+
+There were just a few adjustments and a lot of fuzz the perf regs part
+you refactored, etc.
+
+Thanks for the reminder and sorry about it,
+
+- Arnaldo
+
+From 28366a044268da5191328d62edd28fc33d5f6a1f Mon Sep 17 00:00:00 2001
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Apr 2026 09:38:24 -0700
-X-Gm-Features: AQROBzBb8Vd21-uYCvQaZUCJvMTY5YuKmmk6D7vCzMgJisqdbJM5iUqPm2fye0o
-Message-ID: <CAP-5=fXFzmKx+buppcNBQWhEP2UyCobPwYRC-L-unpmDL=2_Wg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on Emeraldrapids
-To: "Chen, Zide" <zide.chen@intel.com>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, ravi.bangoria@amd.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 1 Apr 2026 09:53:16 -0300
+Subject: [PATCH 1/3] perf tools: Make more global variables static
 
-On Thu, Feb 12, 2026 at 4:08=E2=80=AFPM Chen, Zide <zide.chen@intel.com> wr=
-ote:
->
-> On 2/12/2026 2:39 PM, Chun-Tse Shao wrote:
-> > Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
-> > Adjust cpumasks as the logic for GNR in [1].
-> >
-> > Tested on Emeraldrapids with SNC2 enabled:
-> >   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a --=
- sleep 1
-> >
-> >    Performance counter stats for 'system wide':
-> >
-> >   N0       30        72125876670      UNC_CHA_CLOCKTICKS
-> >   N0        4         8815163648      UNC_M_CLOCKTICKS
-> >   N1       30        72124958844      UNC_CHA_CLOCKTICKS
-> >   N1        4         8815014974      UNC_M_CLOCKTICKS
-> >   N2       30        72121049022      UNC_CHA_CLOCKTICKS
-> >   N2        4         8814592626      UNC_M_CLOCKTICKS
-> >   N3       30        72117133854      UNC_CHA_CLOCKTICKS
-> >   N3        4         8814012840      UNC_M_CLOCKTICKS
-> >
-> >          1.001574118 seconds time elapsed
-> >
-> > [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
->
-> LGTM.
->
-> Reviewed-by: Zide Chen <zide.chen@intel.com>
+`make check` will run sparse on the perf code base. A frequent warning
+is "warning: symbol '...' was not declared. Should it be static?" Go
+through and make global definitions without declarations static.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+In some cases it is deliberate due to dlsym accessing the symbol, this
+change doesn't clean up the missing declarations for perf test suites.
 
-Thanks,
-Ian
+Sometimes things can opportunistically be made const.
 
-> > ---
-> > v3:
-> >   Fix a typo.
-> >
-> > v2: lore.kernel.org/20260205232220.1980168-1-ctshao@google.com
-> >   Split EMR and GNR in the SNC2 IMC cpu map.
-> >
-> > v1: lore.kernel.org/20260108184430.1210223-1-ctshao@google.com
-> >
-> >  tools/perf/arch/x86/util/pmu.c | 95 ++++++++++++++++++++++------------
-> >  1 file changed, 63 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/=
-pmu.c
-> > index a3f96221758d..2215984349f5 100644
-> > --- a/tools/perf/arch/x86/util/pmu.c
-> > +++ b/tools/perf/arch/x86/util/pmu.c
-> > @@ -22,20 +22,29 @@
-> >  #include "util/env.h"
-> >  #include "util/header.h"
-> >
-> > -static bool x86__is_intel_graniterapids(void)
-> > +static bool x86__is_snc_supported(void)
-> >  {
-> > -     static bool checked_if_graniterapids;
-> > -     static bool is_graniterapids;
-> > +     static bool checked_if_snc_supported;
-> > +     static bool is_supported;
-> >
-> > -     if (!checked_if_graniterapids) {
-> > -             const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
-";
-> > +     if (!checked_if_snc_supported) {
-> > +
-> > +             /* Emeraldrapids and Graniterapids support SNC configurat=
-ion. */
-> > +             static const char *const supported_cpuids[] =3D {
-> > +                     "GenuineIntel-6-CF", /* Emeraldrapids */
-> > +                     "GenuineIntel-6-A[DE]", /* Graniterapids */
-> > +             };
-> >               char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
-> >
-> > -             is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
-ids_cpuid, cpuid) =3D=3D 0;
-> > +             for (size_t i =3D 0; i < ARRAY_SIZE(supported_cpuids); i+=
-+) {
-> > +                     is_supported =3D cpuid && strcmp_cpuid_str(suppor=
-ted_cpuids[i], cpuid) =3D=3D 0;
-> > +                     if (is_supported)
-> > +                             break;
-> > +             }
-> >               free(cpuid);
-> > -             checked_if_graniterapids =3D true;
-> > +             checked_if_snc_supported =3D true;
-> >       }
-> > -     return is_graniterapids;
-> > +     return is_supported;
-> >  }
-> >
-> >  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
-> > @@ -64,6 +73,7 @@ static int snc_nodes_per_l3_cache(void)
-> >                       read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
-/index3/shared_cpu_list");
-> >
-> >               snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
-__nr(node_cpus);
-> > +
-> >               perf_cpu_map__put(cache_cpus);
-> >               perf_cpu_map__put(node_cpus);
-> >               checked_snc =3D true;
-> > @@ -137,23 +147,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
-> >       // Compute the IMC SNC using lookup tables.
-> >       unsigned int imc_num;
-> >       int snc_nodes =3D snc_nodes_per_l3_cache();
-> > -     const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
-> > -     const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
-> > -     const u8 *snc_map;
-> > -     size_t snc_map_len;
-> > -
-> > -     switch (snc_nodes) {
-> > -     case 2:
-> > -             snc_map =3D snc2_map;
-> > -             snc_map_len =3D ARRAY_SIZE(snc2_map);
-> > -             break;
-> > -     case 3:
-> > -             snc_map =3D snc3_map;
-> > -             snc_map_len =3D ARRAY_SIZE(snc3_map);
-> > -             break;
-> > -     default:
-> > -             /* Error or no lookup support for SNC with >3 nodes. */
-> > -             return 0;
-> > +     char *cpuid;
-> > +     static const u8 emr_snc2_map[] =3D { 0, 0, 1, 1 };
-> > +     static const u8 gnr_snc2_map[] =3D { 1, 1, 0, 0 };
-> > +     static const u8 snc3_map[] =3D { 1, 1, 0, 0, 2, 2 };
-> > +     static const u8 *snc_map;
-> > +     static size_t snc_map_len;
-> > +
-> > +     /* snc_map is not inited yet. We only look up once to avoid expen=
-sive operations. */
-> > +     if (!snc_map) {
-> > +             switch (snc_nodes) {
-> > +             case 2:
-> > +                     cpuid =3D get_cpuid_str((struct perf_cpu){ 0 });
-> > +                     if (cpuid) {
-> > +                             if (strcmp_cpuid_str("GenuineIntel-6-CF",=
- cpuid) =3D=3D 0) {
-> > +                                     snc_map =3D emr_snc2_map;
-> > +                                     snc_map_len =3D ARRAY_SIZE(emr_sn=
-c2_map);
-> > +                             } else if (strcmp_cpuid_str("GenuineIntel=
--6-A[DE]", cpuid) =3D=3D 0) {
-> > +                                     snc_map =3D gnr_snc2_map;
-> > +                                     snc_map_len =3D ARRAY_SIZE(gnr_sn=
-c2_map);
-> > +                             }
-> > +                             free(cpuid);
-> > +                     }
-> > +                     break;
-> > +             case 3:
-> > +                     snc_map =3D snc3_map;
-> > +                     snc_map_len =3D ARRAY_SIZE(snc3_map);
-> > +                     break;
-> > +             default:
-> > +                     /* Error or no lookup support for SNC with >3 nod=
-es. */
-> > +                     return 0;
-> > +             }
-> > +
-> > +             if (!snc_map) {
-> > +                     pr_warning("Unexpected: can not find snc map conf=
-ig");
-> > +                     return 0;
-> > +             }
-> >       }
-> >
-> >       /* Compute SNC for PMU. */
-> > @@ -161,11 +190,12 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
-> >               pr_warning("Unexpected: unable to compute IMC number '%s'=
-\n", pmu->name);
-> >               return 0;
-> >       }
-> > -     if (imc_num >=3D snc_map_len) {
-> > +     if (imc_num >=3D snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
-> >               pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
-um, snc_nodes);
-> >               return 0;
-> >       }
-> > -     return snc_map[imc_num];
-> > +
-> > +     return snc_map[imc_num % snc_map_len];
-> >  }
-> >
-> >  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
-> > @@ -205,7 +235,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pm=
-u_snc)
-> >       return cpu_adjust[pmu_snc];
-> >  }
-> >
-> > -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu =
-*pmu, bool cha)
-> > +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu=
-, bool cha)
-> >  {
-> >       // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
- the
-> >       // topology. For example, a two socket graniterapids machine may =
-be set
-> > @@ -304,11 +334,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
-> >                               pmu->mem_events =3D perf_mem_events_intel=
-_aux;
-> >                       else
-> >                               pmu->mem_events =3D perf_mem_events_intel=
-;
-> > -             } else if (x86__is_intel_graniterapids()) {
-> > +             } else if (x86__is_snc_supported()) {
-> >                       if (starts_with(pmu->name, "uncore_cha_"))
-> > -                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/true);
-> > -                     else if (starts_with(pmu->name, "uncore_imc_"))
-> > -                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/false);
-> > +                             uncore_cha_imc_adjust_cpumask_for_snc(pmu=
-, /*cha=3D*/true);
-> > +                     else if (starts_with(pmu->name, "uncore_imc_") &&
-> > +                              !starts_with(pmu->name, "uncore_imc_free=
-_running"))
-> > +                             uncore_cha_imc_adjust_cpumask_for_snc(pmu=
-, /*cha=3D*/false);
-> >               }
-> >       }
-> >  }
-> > --
-> > 2.53.0.273.g2a3d683680-goog
-> >
-> >
->
+Making somethings static exposed unused functions warnings, so
+restructuring of ifdefs was necessary for that.
+
+These changes reduce the size of the perf binary by 568 bytes.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Ankur Arora <ankur.a.arora@oracle.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Leo Yan <leo.yan@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Paul Walmsley <pjw@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Yujie Liu <yujie.liu@intel.com>
+[ Refreshed the patch, the original one fell thru the cracks, updated the size reduction ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/common.c                      |  22 ++--
+ tools/perf/arch/sh/include/dwarf-regs-table.h |   2 +-
+ tools/perf/bench/breakpoint.c                 |   4 +-
+ tools/perf/bench/mem-functions.c              |   2 +-
+ tools/perf/bench/numa.c                       |   2 +-
+ tools/perf/bench/uprobe.c                     |   2 +-
+ tools/perf/builtin-c2c.c                      |   7 +-
+ tools/perf/builtin-config.c                   |   2 +-
+ tools/perf/builtin-data.c                     |   8 +-
+ tools/perf/builtin-diff.c                     |   4 +-
+ tools/perf/builtin-kmem.c                     |   2 +-
+ tools/perf/builtin-kwork.c                    |  12 +-
+ tools/perf/builtin-script.c                   |   2 +-
+ tools/perf/builtin-top.c                      |   5 +-
+ tools/perf/tests/bp_signal.c                  |   2 +-
+ tools/perf/tests/dso-data.c                   |   2 +-
+ tools/perf/tests/wp.c                         |   6 +-
+ tools/perf/util/block-range.c                 |   2 +-
+ tools/perf/util/bpf_counter.c                 |   4 +-
+ tools/perf/util/bpf_off_cpu.c                 |   2 +-
+ tools/perf/util/debug.c                       |   2 +-
+ tools/perf/util/debuginfo.c                   |  19 ++--
+ tools/perf/util/sort.c                        | 104 +++++++++---------
+ tools/perf/util/trace-event-scripting.c       |  98 +++++++++--------
+ tools/perf/util/util.c                        |   2 -
+ 25 files changed, 159 insertions(+), 160 deletions(-)
+
+diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+index 4908d54dd33b2733..21836f70f231e42d 100644
+--- a/tools/perf/arch/common.c
++++ b/tools/perf/arch/common.c
+@@ -9,14 +9,14 @@
+ #include "../util/debug.h"
+ #include <linux/zalloc.h>
+ 
+-const char *const arc_triplets[] = {
++static const char *const arc_triplets[] = {
+ 	"arc-linux-",
+ 	"arc-snps-linux-uclibc-",
+ 	"arc-snps-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const arm_triplets[] = {
++static const char *const arm_triplets[] = {
+ 	"arm-eabi-",
+ 	"arm-linux-androideabi-",
+ 	"arm-unknown-linux-",
+@@ -28,13 +28,13 @@ const char *const arm_triplets[] = {
+ 	NULL
+ };
+ 
+-const char *const arm64_triplets[] = {
++static const char *const arm64_triplets[] = {
+ 	"aarch64-linux-android-",
+ 	"aarch64-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const powerpc_triplets[] = {
++static const char *const powerpc_triplets[] = {
+ 	"powerpc-unknown-linux-gnu-",
+ 	"powerpc-linux-gnu-",
+ 	"powerpc64-unknown-linux-gnu-",
+@@ -43,40 +43,40 @@ const char *const powerpc_triplets[] = {
+ 	NULL
+ };
+ 
+-const char *const riscv32_triplets[] = {
++static const char *const riscv32_triplets[] = {
+ 	"riscv32-unknown-linux-gnu-",
+ 	"riscv32-linux-android-",
+ 	"riscv32-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const riscv64_triplets[] = {
++static const char *const riscv64_triplets[] = {
+ 	"riscv64-unknown-linux-gnu-",
+ 	"riscv64-linux-android-",
+ 	"riscv64-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const s390_triplets[] = {
++static const char *const s390_triplets[] = {
+ 	"s390-ibm-linux-",
+ 	"s390x-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const sh_triplets[] = {
++static const char *const sh_triplets[] = {
+ 	"sh-unknown-linux-gnu-",
+ 	"sh-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const sparc_triplets[] = {
++static const char *const sparc_triplets[] = {
+ 	"sparc-unknown-linux-gnu-",
+ 	"sparc64-unknown-linux-gnu-",
+ 	"sparc64-linux-gnu-",
+ 	NULL
+ };
+ 
+-const char *const x86_triplets[] = {
++static const char *const x86_triplets[] = {
+ 	"x86_64-pc-linux-gnu-",
+ 	"x86_64-unknown-linux-gnu-",
+ 	"i686-pc-linux-gnu-",
+@@ -90,7 +90,7 @@ const char *const x86_triplets[] = {
+ 	NULL
+ };
+ 
+-const char *const mips_triplets[] = {
++static const char *const mips_triplets[] = {
+ 	"mips-unknown-linux-gnu-",
+ 	"mipsel-linux-android-",
+ 	"mips-linux-gnu-",
+diff --git a/tools/perf/arch/sh/include/dwarf-regs-table.h b/tools/perf/arch/sh/include/dwarf-regs-table.h
+index 900e6961997091c7..b5974a090fb44a79 100644
+--- a/tools/perf/arch/sh/include/dwarf-regs-table.h
++++ b/tools/perf/arch/sh/include/dwarf-regs-table.h
+@@ -2,7 +2,7 @@
+ #ifdef DEFINE_DWARF_REGSTR_TABLE
+ /* This is included in perf/util/dwarf-regs.c */
+ 
+-const char * const sh_regstr_tbl[] = {
++static const char * const sh_regstr_tbl[] = {
+ 	"r0",
+ 	"r1",
+ 	"r2",
+diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
+index dfd18f5db97dbc7e..1b7cd4481bd224aa 100644
+--- a/tools/perf/bench/breakpoint.c
++++ b/tools/perf/bench/breakpoint.c
+@@ -16,7 +16,7 @@
+ #include "bench.h"
+ #include "futex.h"
+ 
+-struct {
++static struct {
+ 	unsigned int nbreakpoints;
+ 	unsigned int nparallel;
+ 	unsigned int nthreads;
+@@ -173,7 +173,7 @@ int bench_breakpoint_thread(int argc, const char **argv)
+ 	return 0;
+ }
+ 
+-struct {
++static struct {
+ 	unsigned int npassive;
+ 	unsigned int nactive;
+ } enable_params = {
+diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
+index f5ab41bb85bf67a0..5ede528539535b6a 100644
+--- a/tools/perf/bench/mem-functions.c
++++ b/tools/perf/bench/mem-functions.c
+@@ -399,7 +399,7 @@ static void mem_free(struct bench_mem_info *info __maybe_unused,
+ 	*dst = *src = NULL;
+ }
+ 
+-struct function memcpy_functions[] = {
++static struct function memcpy_functions[] = {
+ 	{ .name		= "default",
+ 	  .desc		= "Default memcpy() provided by glibc",
+ 	  .fn.init	= mem_alloc,
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 19be2aaf4dc0c07e..6588a9b0b15aec6d 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -166,7 +166,7 @@ static struct global_info	*g = NULL;
+ static int parse_cpus_opt(const struct option *opt, const char *arg, int unset);
+ static int parse_nodes_opt(const struct option *opt, const char *arg, int unset);
+ 
+-struct params p0;
++static struct params p0;
+ 
+ static const struct option options[] = {
+ 	OPT_INTEGER('p', "nr_proc"	, &p0.nr_proc,		"number of processes"),
+diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
+index c4dac868f1eea401..89697ff788ef3035 100644
+--- a/tools/perf/bench/uprobe.c
++++ b/tools/perf/bench/uprobe.c
+@@ -58,7 +58,7 @@ static const char * const bench_uprobe_usage[] = {
+ 		goto cleanup; \
+ 	}
+ 
+-struct bench_uprobe_bpf *skel;
++static struct bench_uprobe_bpf *skel;
+ 
+ static int bench_uprobe__setup_bpf_skel(enum bench_uprobe bench)
+ {
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e60eea62c2fc76d6..3ce5f0adec2f31c2 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2892,9 +2892,10 @@ static int ui_quirks(void)
+ 
+ #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
+ 
+-const char callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
+-				CALLCHAIN_REPORT_HELP
+-				"\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
++static const char callchain_help[] =
++	"Display call graph (stack chain/backtrace):\n\n"
++	CALLCHAIN_REPORT_HELP
++	"\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
+ 
+ static int
+ parse_callchain_opt(const struct option *opt, const char *arg, int unset)
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index 45b5312fbe8370e8..237600643bbd6f33 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -23,7 +23,7 @@ static const char * const config_usage[] = {
+ 	NULL
+ };
+ 
+-enum actions {
++static enum actions {
+ 	ACTION_LIST = 1
+ } actions;
+ 
+diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+index 85f59886b5cf0045..4c08ccb8c06b7598 100644
+--- a/tools/perf/builtin-data.c
++++ b/tools/perf/builtin-data.c
+@@ -28,15 +28,15 @@ static const char *data_usage[] = {
+ 	NULL
+ };
+ 
+-const char *to_json;
+-const char *to_ctf;
+-struct perf_data_convert_opts opts = {
++static const char *to_json;
++static const char *to_ctf;
++static struct perf_data_convert_opts opts = {
+ 	.force = false,
+ 	.all = false,
+ 	.time_str = NULL,
+ };
+ 
+-const struct option data_options[] = {
++static const struct option data_options[] = {
+ 		OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+ 		OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 		OPT_STRING(0, "to-json", &to_json, NULL, "Convert to JSON format"),
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 69069926dd0ba07b..e45f0ac1381ab2df 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -113,7 +113,7 @@ enum {
+ 	COMPUTE_STREAM,	/* After COMPUTE_MAX to avoid use current compute arrays */
+ };
+ 
+-const char *compute_names[COMPUTE_MAX] = {
++static const char *compute_names[COMPUTE_MAX] = {
+ 	[COMPUTE_DELTA] = "delta",
+ 	[COMPUTE_DELTA_ABS] = "delta-abs",
+ 	[COMPUTE_RATIO] = "ratio",
+@@ -382,7 +382,7 @@ static void block_hist_free(void *he)
+ 	free(bh);
+ }
+ 
+-struct hist_entry_ops block_hist_ops = {
++static struct hist_entry_ops block_hist_ops = {
+ 	.new    = block_hist_zalloc,
+ 	.free   = block_hist_free,
+ };
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 7929a5fa5f462b32..9c64a0d7482378cc 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -82,7 +82,7 @@ static unsigned long nr_allocs, nr_cross_allocs;
+ 
+ /* filters for controlling start and stop of time of analysis */
+ static struct perf_time_interval ptime;
+-const char *time_str;
++static const char *time_str;
+ 
+ static int insert_alloc_stat(unsigned long call_site, unsigned long ptr,
+ 			     int bytes_req, int bytes_alloc, int cpu)
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 6f94a8f45f605f34..1140e00e874f4eed 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -985,7 +985,7 @@ static int process_irq_handler_exit_event(const struct perf_tool *tool,
+ 	return 0;
+ }
+ 
+-const struct evsel_str_handler irq_tp_handlers[] = {
++static const struct evsel_str_handler irq_tp_handlers[] = {
+ 	{ "irq:irq_handler_entry", process_irq_handler_entry_event, },
+ 	{ "irq:irq_handler_exit",  process_irq_handler_exit_event,  },
+ };
+@@ -1080,7 +1080,7 @@ static int process_softirq_exit_event(const struct perf_tool *tool,
+ 	return 0;
+ }
+ 
+-const struct evsel_str_handler softirq_tp_handlers[] = {
++static const struct evsel_str_handler softirq_tp_handlers[] = {
+ 	{ "irq:softirq_raise", process_softirq_raise_event, },
+ 	{ "irq:softirq_entry", process_softirq_entry_event, },
+ 	{ "irq:softirq_exit",  process_softirq_exit_event,  },
+@@ -1211,7 +1211,7 @@ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
+ 	return 0;
+ }
+ 
+-const struct evsel_str_handler workqueue_tp_handlers[] = {
++static const struct evsel_str_handler workqueue_tp_handlers[] = {
+ 	{ "workqueue:workqueue_activate_work", process_workqueue_activate_work_event, },
+ 	{ "workqueue:workqueue_execute_start", process_workqueue_execute_start_event, },
+ 	{ "workqueue:workqueue_execute_end",   process_workqueue_execute_end_event,   },
+@@ -1281,7 +1281,7 @@ static int process_sched_switch_event(const struct perf_tool *tool,
+ 	return 0;
+ }
+ 
+-const struct evsel_str_handler sched_tp_handlers[] = {
++static const struct evsel_str_handler sched_tp_handlers[] = {
+ 	{ "sched:sched_switch",  process_sched_switch_event, },
+ };
+ 
+@@ -1561,13 +1561,13 @@ static void print_bad_events(struct perf_kwork *kwork)
+ 	}
+ }
+ 
+-const char *graph_load = "||||||||||||||||||||||||||||||||||||||||||||||||";
+-const char *graph_idle = "                                                ";
+ static void top_print_per_cpu_load(struct perf_kwork *kwork)
+ {
+ 	int i, load_width;
+ 	u64 total, load, load_ratio;
+ 	struct kwork_top_stat *stat = &kwork->top_stat;
++	const char *graph_load = "||||||||||||||||||||||||||||||||||||||||||||||||";
++	const char *graph_idle = "                                                ";
+ 
+ 	for (i = 0; i < MAX_NR_CPUS; i++) {
+ 		total = stat->cpus_runtime[i].total;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index b005b23f9d8cd273..15a58da599581a7b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -166,7 +166,7 @@ struct perf_script {
+ 	int			range_num;
+ };
+ 
+-struct output_option {
++static struct output_option {
+ 	const char *str;
+ 	enum perf_output_field field;
+ } all_output_options[] = {
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 37950efb28aca8cc..35ff2495e1ee5897 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1449,11 +1449,10 @@ parse_percent_limit(const struct option *opt, const char *arg,
+ 	return 0;
+ }
+ 
+-const char top_callchain_help[] = CALLCHAIN_RECORD_HELP CALLCHAIN_REPORT_HELP
+-	"\n\t\t\t\tDefault: fp,graph,0.5,caller,function";
+-
+ int cmd_top(int argc, const char **argv)
+ {
++	const char top_callchain_help[] = CALLCHAIN_RECORD_HELP CALLCHAIN_REPORT_HELP
++		"\n\t\t\t\tDefault: fp,graph,0.5,caller,function";
+ 	char errbuf[BUFSIZ];
+ 	struct perf_top top = {
+ 		.count_filter	     = 5,
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 3faeb5b6fe0bb24a..f580ba7486b1d8ab 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -36,7 +36,7 @@ static int fd3;
+ static int overflows;
+ static int overflows_2;
+ 
+-volatile long the_var;
++static volatile long the_var;
+ 
+ 
+ /*
+diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+index a1fff4203b75f665..46bc3f59726004fa 100644
+--- a/tools/perf/tests/dso-data.c
++++ b/tools/perf/tests/dso-data.c
+@@ -58,7 +58,7 @@ struct test_data_offset {
+ 	int size;
+ };
+ 
+-struct test_data_offset offsets[] = {
++static struct test_data_offset offsets[] = {
+ 	/* Fill first cache page. */
+ 	{
+ 		.offset = 10,
+diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+index 6c178985e37f5eba..69b31f00eed04c5b 100644
+--- a/tools/perf/tests/wp.c
++++ b/tools/perf/tests/wp.c
+@@ -22,11 +22,11 @@ do {                                            \
+ 
+ #ifdef __i386__
+ /* Only breakpoint length less-than 8 has hardware support on i386. */
+-volatile u32 data1;
++static volatile u32 data1;
+ #else
+-volatile u64 data1;
++static volatile u64 data1;
+ #endif
+-volatile u8 data2[3];
++static volatile u8 data2[3];
+ 
+ #ifndef __s390x__
+ static int wp_read(int fd, long long *count, int size)
+diff --git a/tools/perf/util/block-range.c b/tools/perf/util/block-range.c
+index 15c42196c24c8230..7c559fcfd7e0a6db 100644
+--- a/tools/perf/util/block-range.c
++++ b/tools/perf/util/block-range.c
+@@ -4,7 +4,7 @@
+ #include <assert.h>
+ #include <stdlib.h>
+ 
+-struct {
++static struct {
+ 	struct rb_root root;
+ 	u64 blocks;
+ } block_ranges;
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index 2ffd7aefb6eb3bf8..34b6b0da18b738c7 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -353,7 +353,7 @@ static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu_map_idx
+ 	return 0;
+ }
+ 
+-struct bpf_counter_ops bpf_program_profiler_ops = {
++static struct bpf_counter_ops bpf_program_profiler_ops = {
+ 	.load       = bpf_program_profiler__load,
+ 	.enable	    = bpf_program_profiler__enable,
+ 	.disable    = bpf_program_profiler__disable,
+@@ -833,7 +833,7 @@ static int bperf__destroy(struct evsel *evsel)
+  * the leader prog.
+  */
+ 
+-struct bpf_counter_ops bperf_ops = {
++static struct bpf_counter_ops bperf_ops = {
+ 	.load       = bperf__load,
+ 	.enable     = bperf__enable,
+ 	.disable    = bperf__disable,
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 0891d9c736609cfa..a3b699a5322f1e51 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -39,7 +39,7 @@ union off_cpu_data {
+ 	u64 array[1024 / sizeof(u64)];
+ };
+ 
+-u64 off_cpu_raw[MAX_STACKS + 5];
++static u64 off_cpu_raw[MAX_STACKS + 5];
+ 
+ static int off_cpu_config(struct evlist *evlist)
+ {
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 1dfa4d0eec4d7d5a..6b5ffe81f14121b7 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -48,7 +48,7 @@ int debug_ordered_events;
+ static int redirect_to_stderr;
+ int debug_data_convert;
+ static FILE *_debug_file;
+-bool debug_display_time;
++static bool debug_display_time;
+ int debug_type_profile;
+ 
+ FILE *debug_file(void)
+diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+index 4a559b3e8cdce60a..8b819dea36ac1ef0 100644
+--- a/tools/perf/util/debuginfo.c
++++ b/tools/perf/util/debuginfo.c
+@@ -88,18 +88,17 @@ static struct debuginfo *__debuginfo__new(const char *path)
+ 	return dbg;
+ }
+ 
+-enum dso_binary_type distro_dwarf_types[] = {
+-	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+-	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+-	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+-	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+-	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+-	DSO_BINARY_TYPE__NOT_FOUND,
+-};
+-
+ struct debuginfo *debuginfo__new(const char *path)
+ {
+-	enum dso_binary_type *type;
++	const enum dso_binary_type distro_dwarf_types[] = {
++		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
++		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__NOT_FOUND,
++	};
++	const enum dso_binary_type *type;
+ 	char buf[PATH_MAX], nil = '\0';
+ 	struct dso *dso;
+ 	struct debuginfo *dinfo = NULL;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index fda8fcfa46e07d38..fe482eec7d9ada28 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -43,11 +43,11 @@ regex_t		parent_regex;
+ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
+ const char	*parent_pattern = default_parent_pattern;
+ const char	*default_sort_order = "comm,dso,symbol";
+-const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
++static const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
+ const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
+-const char	default_top_sort_order[] = "dso,symbol";
+-const char	default_diff_sort_order[] = "dso,symbol";
+-const char	default_tracepoint_sort_order[] = "trace";
++static const char	default_top_sort_order[] = "dso,symbol";
++static const char	default_diff_sort_order[] = "dso,symbol";
++static const char	default_tracepoint_sort_order[] = "trace";
+ const char	*sort_order;
+ const char	*field_order;
+ regex_t		ignore_callees_regex;
+@@ -172,7 +172,7 @@ static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
+ }
+ 
+-struct sort_entry sort_tgid = {
++static struct sort_entry sort_tgid = {
+ 	.se_header	= "   Tgid:Command",
+ 	.se_cmp		= sort__tgid_cmp,
+ 	.se_snprintf	= hist_entry__tgid_snprintf,
+@@ -218,7 +218,7 @@ static int hist_entry__simd_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "[.] %s", name);
+ }
+ 
+-struct sort_entry sort_simd = {
++static struct sort_entry sort_simd = {
+ 	.se_header	= "Simd   ",
+ 	.se_cmp		= sort__simd_cmp,
+ 	.se_snprintf	= hist_entry__simd_snprintf,
+@@ -604,7 +604,7 @@ hist_entry__symoff_snprintf(struct hist_entry *he, char *bf, size_t size, unsign
+ 	return repsep_snprintf(bf, size, "[%c] %s+0x%llx", he->level, sym->name, he->ip - sym->start);
+ }
+ 
+-struct sort_entry sort_sym_offset = {
++static struct sort_entry sort_sym_offset = {
+ 	.se_header	= "Symbol Offset",
+ 	.se_cmp		= sort__symoff_cmp,
+ 	.se_sort	= sort__symoff_sort,
+@@ -715,7 +715,7 @@ static int hist_entry__srcline_from_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, he->branch_info->srcline_from);
+ }
+ 
+-struct sort_entry sort_srcline_from = {
++static struct sort_entry sort_srcline_from = {
+ 	.se_header	= "From Source:Line",
+ 	.se_cmp		= sort__srcline_from_cmp,
+ 	.se_collapse	= sort__srcline_from_collapse,
+@@ -763,7 +763,7 @@ static int hist_entry__srcline_to_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, he->branch_info->srcline_to);
+ }
+ 
+-struct sort_entry sort_srcline_to = {
++static struct sort_entry sort_srcline_to = {
+ 	.se_header	= "To Source:Line",
+ 	.se_cmp		= sort__srcline_to_cmp,
+ 	.se_collapse	= sort__srcline_to_collapse,
+@@ -799,7 +799,7 @@ static int hist_entry__sym_ipc_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*s", width, tmp);
+ }
+ 
+-struct sort_entry sort_sym_ipc = {
++static struct sort_entry sort_sym_ipc = {
+ 	.se_header	= "IPC   [IPC Coverage]",
+ 	.se_cmp		= sort__sym_cmp,
+ 	.se_snprintf	= hist_entry__sym_ipc_snprintf,
+@@ -817,7 +817,7 @@ static int hist_entry__sym_ipc_null_snprintf(struct hist_entry *he
+ 	return repsep_snprintf(bf, size, "%-*s", width, tmp);
+ }
+ 
+-struct sort_entry sort_sym_ipc_null = {
++static struct sort_entry sort_sym_ipc_null = {
+ 	.se_header	= "IPC   [IPC Coverage]",
+ 	.se_cmp		= sort__sym_cmp,
+ 	.se_snprintf	= hist_entry__sym_ipc_null_snprintf,
+@@ -850,7 +850,7 @@ static int hist_entry__callchain_branch_predicted_snprintf(
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
+ }
+ 
+-struct sort_entry sort_callchain_branch_predicted = {
++static struct sort_entry sort_callchain_branch_predicted = {
+ 	.se_header	= "Predicted",
+ 	.se_cmp		= sort__callchain_branch_predicted_cmp,
+ 	.se_snprintf	= hist_entry__callchain_branch_predicted_snprintf,
+@@ -880,7 +880,7 @@ static int hist_entry__callchain_branch_abort_snprintf(struct hist_entry *he,
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
+ }
+ 
+-struct sort_entry sort_callchain_branch_abort = {
++static struct sort_entry sort_callchain_branch_abort = {
+ 	.se_header	= "Abort",
+ 	.se_cmp		= sort__callchain_branch_abort_cmp,
+ 	.se_snprintf	= hist_entry__callchain_branch_abort_snprintf,
+@@ -913,7 +913,7 @@ static int hist_entry__callchain_branch_cycles_snprintf(struct hist_entry *he,
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
+ }
+ 
+-struct sort_entry sort_callchain_branch_cycles = {
++static struct sort_entry sort_callchain_branch_cycles = {
+ 	.se_header	= "Cycles",
+ 	.se_cmp		= sort__callchain_branch_cycles_cmp,
+ 	.se_snprintf	= hist_entry__callchain_branch_cycles_snprintf,
+@@ -980,7 +980,7 @@ static int hist_entry__srcfile_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-.*s", width, he->srcfile);
+ }
+ 
+-struct sort_entry sort_srcfile = {
++static struct sort_entry sort_srcfile = {
+ 	.se_header	= "Source File",
+ 	.se_cmp		= sort__srcfile_cmp,
+ 	.se_collapse	= sort__srcfile_collapse,
+@@ -1032,7 +1032,7 @@ static int hist_entry__cpu_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%*.*d", width, width, he->cpu);
+ }
+ 
+-struct sort_entry sort_cpu = {
++static struct sort_entry sort_cpu = {
+ 	.se_header      = "CPU",
+ 	.se_cmp	        = sort__cpu_cmp,
+ 	.se_snprintf    = hist_entry__cpu_snprintf,
+@@ -1063,7 +1063,7 @@ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%*d", width, he->parallelism);
+ }
+ 
+-struct sort_entry sort_parallelism = {
++static struct sort_entry sort_parallelism = {
+ 	.se_header      = "Parallelism",
+ 	.se_cmp	        = sort__parallelism_cmp,
+ 	.se_filter	= hist_entry__parallelism_filter,
+@@ -1104,7 +1104,7 @@ static int hist_entry__cgroup_id_snprintf(struct hist_entry *he,
+ 			       he->cgroup_id.ino);
+ }
+ 
+-struct sort_entry sort_cgroup_id = {
++static struct sort_entry sort_cgroup_id = {
+ 	.se_header      = "cgroup id (dev/inode)",
+ 	.se_cmp	        = sort__cgroup_id_cmp,
+ 	.se_snprintf    = hist_entry__cgroup_id_snprintf,
+@@ -1137,7 +1137,7 @@ static int hist_entry__cgroup_snprintf(struct hist_entry *he,
+ 	return repsep_snprintf(bf, size, "%s", cgrp_name);
+ }
+ 
+-struct sort_entry sort_cgroup = {
++static struct sort_entry sort_cgroup = {
+ 	.se_header      = "Cgroup",
+ 	.se_cmp	        = sort__cgroup_cmp,
+ 	.se_snprintf    = hist_entry__cgroup_snprintf,
+@@ -1168,7 +1168,7 @@ static int hist_entry__socket_filter(struct hist_entry *he, int type, const void
+ 	return sk >= 0 && he->socket != sk;
+ }
+ 
+-struct sort_entry sort_socket = {
++static struct sort_entry sort_socket = {
+ 	.se_header      = "Socket",
+ 	.se_cmp	        = sort__socket_cmp,
+ 	.se_snprintf    = hist_entry__socket_snprintf,
+@@ -1199,7 +1199,7 @@ static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
+ }
+ 
+-struct sort_entry sort_time = {
++static struct sort_entry sort_time = {
+ 	.se_header      = "Time",
+ 	.se_cmp	        = sort__time_cmp,
+ 	.se_snprintf    = hist_entry__time_snprintf,
+@@ -1268,7 +1268,7 @@ static int hist_entry__trace_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-.*s", width, he->trace_output);
+ }
+ 
+-struct sort_entry sort_trace = {
++static struct sort_entry sort_trace = {
+ 	.se_header      = "Trace output",
+ 	.se_cmp	        = sort__trace_cmp,
+ 	.se_snprintf    = hist_entry__trace_snprintf,
+@@ -1563,7 +1563,7 @@ sort__addr_to_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	return _sort__addr_cmp(to_l->addr, to_r->addr);
+ }
+ 
+-struct sort_entry sort_addr_from = {
++static struct sort_entry sort_addr_from = {
+ 	.se_header	= "Source Address",
+ 	.se_cmp		= sort__addr_from_cmp,
+ 	.se_snprintf	= hist_entry__addr_from_snprintf,
+@@ -1571,7 +1571,7 @@ struct sort_entry sort_addr_from = {
+ 	.se_width_idx	= HISTC_ADDR_FROM,
+ };
+ 
+-struct sort_entry sort_addr_to = {
++static struct sort_entry sort_addr_to = {
+ 	.se_header	= "Target Address",
+ 	.se_cmp		= sort__addr_to_cmp,
+ 	.se_snprintf	= hist_entry__addr_to_snprintf,
+@@ -1628,7 +1628,7 @@ static int hist_entry__cycles_snprintf(struct hist_entry *he, char *bf,
+ 			       he->branch_info->flags.cycles);
+ }
+ 
+-struct sort_entry sort_cycles = {
++static struct sort_entry sort_cycles = {
+ 	.se_header	= "Basic Block Cycles",
+ 	.se_cmp		= sort__cycles_cmp,
+ 	.se_snprintf	= hist_entry__cycles_snprintf,
+@@ -1918,7 +1918,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+ 	return _hist_entry__sym_snprintf(ms, addr, level, bf, size, width);
+ }
+ 
+-struct sort_entry sort_mispredict = {
++static struct sort_entry sort_mispredict = {
+ 	.se_header	= "Branch Mispredicted",
+ 	.se_cmp		= sort__mispredict_cmp,
+ 	.se_snprintf	= hist_entry__mispredict_snprintf,
+@@ -1937,7 +1937,7 @@ static int hist_entry__local_weight_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*llu", width, he->weight);
+ }
+ 
+-struct sort_entry sort_local_weight = {
++static struct sort_entry sort_local_weight = {
+ 	.se_header	= "Local Weight",
+ 	.se_cmp		= sort__weight_cmp,
+ 	.se_snprintf	= hist_entry__local_weight_snprintf,
+@@ -1951,7 +1951,7 @@ static int hist_entry__global_weight_snprintf(struct hist_entry *he, char *bf,
+ 			       he->weight * he->stat.nr_events);
+ }
+ 
+-struct sort_entry sort_global_weight = {
++static struct sort_entry sort_global_weight = {
+ 	.se_header	= "Weight",
+ 	.se_cmp		= sort__weight_cmp,
+ 	.se_snprintf	= hist_entry__global_weight_snprintf,
+@@ -1970,7 +1970,7 @@ static int hist_entry__local_ins_lat_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*u", width, he->ins_lat);
+ }
+ 
+-struct sort_entry sort_local_ins_lat = {
++static struct sort_entry sort_local_ins_lat = {
+ 	.se_header	= "Local INSTR Latency",
+ 	.se_cmp		= sort__ins_lat_cmp,
+ 	.se_snprintf	= hist_entry__local_ins_lat_snprintf,
+@@ -1984,7 +1984,7 @@ static int hist_entry__global_ins_lat_snprintf(struct hist_entry *he, char *bf,
+ 			       he->ins_lat * he->stat.nr_events);
+ }
+ 
+-struct sort_entry sort_global_ins_lat = {
++static struct sort_entry sort_global_ins_lat = {
+ 	.se_header	= "INSTR Latency",
+ 	.se_cmp		= sort__ins_lat_cmp,
+ 	.se_snprintf	= hist_entry__global_ins_lat_snprintf,
+@@ -2010,70 +2010,70 @@ static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*u", width, he->weight3);
+ }
+ 
+-struct sort_entry sort_local_p_stage_cyc = {
++static struct sort_entry sort_local_p_stage_cyc = {
+ 	.se_header      = "Local Pipeline Stage Cycle",
+ 	.se_cmp         = sort__p_stage_cyc_cmp,
+ 	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
+ 	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
+ };
+ 
+-struct sort_entry sort_global_p_stage_cyc = {
++static struct sort_entry sort_global_p_stage_cyc = {
+ 	.se_header      = "Pipeline Stage Cycle",
+ 	.se_cmp         = sort__p_stage_cyc_cmp,
+ 	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
+ 	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
+ };
+ 
+-struct sort_entry sort_mem_daddr_sym = {
++static struct sort_entry sort_mem_daddr_sym = {
+ 	.se_header	= "Data Symbol",
+ 	.se_cmp		= sort__daddr_cmp,
+ 	.se_snprintf	= hist_entry__daddr_snprintf,
+ 	.se_width_idx	= HISTC_MEM_DADDR_SYMBOL,
+ };
+ 
+-struct sort_entry sort_mem_iaddr_sym = {
++static struct sort_entry sort_mem_iaddr_sym = {
+ 	.se_header	= "Code Symbol",
+ 	.se_cmp		= sort__iaddr_cmp,
+ 	.se_snprintf	= hist_entry__iaddr_snprintf,
+ 	.se_width_idx	= HISTC_MEM_IADDR_SYMBOL,
+ };
+ 
+-struct sort_entry sort_mem_daddr_dso = {
++static struct sort_entry sort_mem_daddr_dso = {
+ 	.se_header	= "Data Object",
+ 	.se_cmp		= sort__dso_daddr_cmp,
+ 	.se_snprintf	= hist_entry__dso_daddr_snprintf,
+ 	.se_width_idx	= HISTC_MEM_DADDR_DSO,
+ };
+ 
+-struct sort_entry sort_mem_locked = {
++static struct sort_entry sort_mem_locked = {
+ 	.se_header	= "Locked",
+ 	.se_cmp		= sort__locked_cmp,
+ 	.se_snprintf	= hist_entry__locked_snprintf,
+ 	.se_width_idx	= HISTC_MEM_LOCKED,
+ };
+ 
+-struct sort_entry sort_mem_tlb = {
++static struct sort_entry sort_mem_tlb = {
+ 	.se_header	= "TLB access",
+ 	.se_cmp		= sort__tlb_cmp,
+ 	.se_snprintf	= hist_entry__tlb_snprintf,
+ 	.se_width_idx	= HISTC_MEM_TLB,
+ };
+ 
+-struct sort_entry sort_mem_lvl = {
++static struct sort_entry sort_mem_lvl = {
+ 	.se_header	= "Memory access",
+ 	.se_cmp		= sort__lvl_cmp,
+ 	.se_snprintf	= hist_entry__lvl_snprintf,
+ 	.se_width_idx	= HISTC_MEM_LVL,
+ };
+ 
+-struct sort_entry sort_mem_snoop = {
++static struct sort_entry sort_mem_snoop = {
+ 	.se_header	= "Snoop",
+ 	.se_cmp		= sort__snoop_cmp,
+ 	.se_snprintf	= hist_entry__snoop_snprintf,
+ 	.se_width_idx	= HISTC_MEM_SNOOP,
+ };
+ 
+-struct sort_entry sort_mem_dcacheline = {
++static struct sort_entry sort_mem_dcacheline = {
+ 	.se_header	= "Data Cacheline",
+ 	.se_cmp		= sort__dcacheline_cmp,
+ 	.se_snprintf	= hist_entry__dcacheline_snprintf,
+@@ -2108,7 +2108,7 @@ static int hist_entry__blocked_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%.*s", width, out);
+ }
+ 
+-struct sort_entry sort_mem_blocked = {
++static struct sort_entry sort_mem_blocked = {
+ 	.se_header	= "Blocked",
+ 	.se_cmp		= sort__blocked_cmp,
+ 	.se_snprintf	= hist_entry__blocked_snprintf,
+@@ -2149,7 +2149,7 @@ static int hist_entry__phys_daddr_snprintf(struct hist_entry *he, char *bf,
+ 	return width;
+ }
+ 
+-struct sort_entry sort_mem_phys_daddr = {
++static struct sort_entry sort_mem_phys_daddr = {
+ 	.se_header	= "Data Physical Address",
+ 	.se_cmp		= sort__phys_daddr_cmp,
+ 	.se_snprintf	= hist_entry__phys_daddr_snprintf,
+@@ -2178,7 +2178,7 @@ static int hist_entry__data_page_size_snprintf(struct hist_entry *he, char *bf,
+ 			get_page_size_name(mem_info__daddr(he->mem_info)->data_page_size, str));
+ }
+ 
+-struct sort_entry sort_mem_data_page_size = {
++static struct sort_entry sort_mem_data_page_size = {
+ 	.se_header	= "Data Page Size",
+ 	.se_cmp		= sort__data_page_size_cmp,
+ 	.se_snprintf	= hist_entry__data_page_size_snprintf,
+@@ -2203,7 +2203,7 @@ static int hist_entry__code_page_size_snprintf(struct hist_entry *he, char *bf,
+ 			       get_page_size_name(he->code_page_size, str));
+ }
+ 
+-struct sort_entry sort_code_page_size = {
++static struct sort_entry sort_code_page_size = {
+ 	.se_header	= "Code Page Size",
+ 	.se_cmp		= sort__code_page_size_cmp,
+ 	.se_snprintf	= hist_entry__code_page_size_snprintf,
+@@ -2235,7 +2235,7 @@ static int hist_entry__abort_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*s", width, out);
+ }
+ 
+-struct sort_entry sort_abort = {
++static struct sort_entry sort_abort = {
+ 	.se_header	= "Transaction abort",
+ 	.se_cmp		= sort__abort_cmp,
+ 	.se_snprintf	= hist_entry__abort_snprintf,
+@@ -2267,7 +2267,7 @@ static int hist_entry__in_tx_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*s", width, out);
+ }
+ 
+-struct sort_entry sort_in_tx = {
++static struct sort_entry sort_in_tx = {
+ 	.se_header	= "Branch in transaction",
+ 	.se_cmp		= sort__in_tx_cmp,
+ 	.se_snprintf	= hist_entry__in_tx_snprintf,
+@@ -2339,7 +2339,7 @@ static int hist_entry__transaction_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-*s", width, buf);
+ }
+ 
+-struct sort_entry sort_transaction = {
++static struct sort_entry sort_transaction = {
+ 	.se_header	= "Transaction                ",
+ 	.se_cmp		= sort__transaction_cmp,
+ 	.se_snprintf	= hist_entry__transaction_snprintf,
+@@ -2378,7 +2378,7 @@ static int hist_entry__sym_size_snprintf(struct hist_entry *he, char *bf,
+ 	return _hist_entry__sym_size_snprintf(he->ms.sym, bf, size, width);
+ }
+ 
+-struct sort_entry sort_sym_size = {
++static struct sort_entry sort_sym_size = {
+ 	.se_header	= "Symbol size",
+ 	.se_cmp		= sort__sym_size_cmp,
+ 	.se_snprintf	= hist_entry__sym_size_snprintf,
+@@ -2417,7 +2417,7 @@ static int hist_entry__dso_size_snprintf(struct hist_entry *he, char *bf,
+ 	return _hist_entry__dso_size_snprintf(he->ms.map, bf, size, width);
+ }
+ 
+-struct sort_entry sort_dso_size = {
++static struct sort_entry sort_dso_size = {
+ 	.se_header	= "DSO size",
+ 	.se_cmp		= sort__dso_size_cmp,
+ 	.se_snprintf	= hist_entry__dso_size_snprintf,
+@@ -2454,7 +2454,7 @@ static int hist_entry__addr_snprintf(struct hist_entry *he, char *bf,
+ 	return repsep_snprintf(bf, size, "%-#*llx", width, ip);
+ }
+ 
+-struct sort_entry sort_addr = {
++static struct sort_entry sort_addr = {
+ 	.se_header	= "Address",
+ 	.se_cmp		= sort__addr_cmp,
+ 	.se_snprintf	= hist_entry__addr_snprintf,
+@@ -2572,7 +2572,7 @@ static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
+ 			       he->mem_type_off, buf);
+ }
+ 
+-struct sort_entry sort_type_offset = {
++static struct sort_entry sort_type_offset = {
+ 	.se_header	= "Data Type Offset",
+ 	.se_cmp		= sort__type_cmp,
+ 	.se_collapse	= sort__typeoff_sort,
+@@ -2630,7 +2630,7 @@ static int hist_entry__typecln_snprintf(struct hist_entry *he, char *bf,
+ 			       he->mem_type_off / cln_size);
+ }
+ 
+-struct sort_entry sort_type_cacheline = {
++static struct sort_entry sort_type_cacheline = {
+ 	.se_header	= "Data Type Cacheline",
+ 	.se_cmp		= sort__type_cmp,
+ 	.se_collapse	= sort__typecln_sort,
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index fa850e44cb46cfd7..0745a2fe3af8c201 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -122,6 +122,7 @@ void scripting_context__update(struct scripting_context *c,
+ 	c->addr_al = addr_al;
+ }
+ 
++#if !defined(HAVE_LIBPERL_SUPPORT) || !defined(HAVE_LIBPYTHON_SUPPORT)
+ static int flush_script_unsupported(void)
+ {
+ 	return 0;
+@@ -139,7 +140,22 @@ static void process_event_unsupported(union perf_event *event __maybe_unused,
+ 				      struct addr_location *addr_al __maybe_unused)
+ {
+ }
++#endif
++
++static void register_python_scripting(struct scripting_ops *scripting_ops)
++{
++	if (scripting_context == NULL)
++		scripting_context = malloc(sizeof(*scripting_context));
+ 
++	if (scripting_context == NULL ||
++	   script_spec_register("Python", scripting_ops) ||
++	   script_spec_register("py", scripting_ops)) {
++		pr_err("Error registering Python script extension: disabling it\n");
++		zfree(&scripting_context);
++	}
++}
++
++#ifndef HAVE_LIBPYTHON_SUPPORT
+ static void print_python_unsupported_msg(void)
+ {
+ 	fprintf(stderr, "Python scripting not supported."
+@@ -169,32 +185,18 @@ static int python_generate_script_unsupported(struct tep_handle *pevent
+ 	return -1;
+ }
+ 
+-struct scripting_ops python_scripting_unsupported_ops = {
+-	.name = "Python",
+-	.dirname = "python",
+-	.start_script = python_start_script_unsupported,
+-	.flush_script = flush_script_unsupported,
+-	.stop_script = stop_script_unsupported,
+-	.process_event = process_event_unsupported,
+-	.generate_script = python_generate_script_unsupported,
+-};
+-
+-static void register_python_scripting(struct scripting_ops *scripting_ops)
+-{
+-	if (scripting_context == NULL)
+-		scripting_context = malloc(sizeof(*scripting_context));
+-
+-       if (scripting_context == NULL ||
+-	   script_spec_register("Python", scripting_ops) ||
+-	   script_spec_register("py", scripting_ops)) {
+-		pr_err("Error registering Python script extension: disabling it\n");
+-		zfree(&scripting_context);
+-	}
+-}
+-
+-#ifndef HAVE_LIBPYTHON_SUPPORT
+ void setup_python_scripting(void)
+ {
++	static struct scripting_ops python_scripting_unsupported_ops = {
++		.name = "Python",
++		.dirname = "python",
++		.start_script = python_start_script_unsupported,
++		.flush_script = flush_script_unsupported,
++		.stop_script = stop_script_unsupported,
++		.process_event = process_event_unsupported,
++		.generate_script = python_generate_script_unsupported,
++	};
++
+ 	register_python_scripting(&python_scripting_unsupported_ops);
+ }
+ #else
+@@ -207,6 +209,20 @@ void setup_python_scripting(void)
+ #endif
+ 
+ #ifdef HAVE_LIBTRACEEVENT
++static void register_perl_scripting(struct scripting_ops *scripting_ops)
++{
++	if (scripting_context == NULL)
++		scripting_context = malloc(sizeof(*scripting_context));
++
++	if (scripting_context == NULL ||
++	   script_spec_register("Perl", scripting_ops) ||
++	   script_spec_register("pl", scripting_ops)) {
++		pr_err("Error registering Perl script extension: disabling it\n");
++		zfree(&scripting_context);
++	}
++}
++
++#ifndef HAVE_LIBPERL_SUPPORT
+ static void print_perl_unsupported_msg(void)
+ {
+ 	fprintf(stderr, "Perl scripting not supported."
+@@ -235,32 +251,18 @@ static int perl_generate_script_unsupported(struct tep_handle *pevent
+ 	return -1;
+ }
+ 
+-struct scripting_ops perl_scripting_unsupported_ops = {
+-	.name = "Perl",
+-	.dirname = "perl",
+-	.start_script = perl_start_script_unsupported,
+-	.flush_script = flush_script_unsupported,
+-	.stop_script = stop_script_unsupported,
+-	.process_event = process_event_unsupported,
+-	.generate_script = perl_generate_script_unsupported,
+-};
+-
+-static void register_perl_scripting(struct scripting_ops *scripting_ops)
+-{
+-	if (scripting_context == NULL)
+-		scripting_context = malloc(sizeof(*scripting_context));
+-
+-       if (scripting_context == NULL ||
+-	   script_spec_register("Perl", scripting_ops) ||
+-	   script_spec_register("pl", scripting_ops)) {
+-		pr_err("Error registering Perl script extension: disabling it\n");
+-		zfree(&scripting_context);
+-	}
+-}
+-
+-#ifndef HAVE_LIBPERL_SUPPORT
+ void setup_perl_scripting(void)
+ {
++	static struct scripting_ops perl_scripting_unsupported_ops = {
++		.name = "Perl",
++		.dirname = "perl",
++		.start_script = perl_start_script_unsupported,
++		.flush_script = flush_script_unsupported,
++		.stop_script = stop_script_unsupported,
++		.process_event = process_event_unsupported,
++		.generate_script = perl_generate_script_unsupported,
++	};
++
+ 	register_perl_scripting(&perl_scripting_unsupported_ops);
+ }
+ #else
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 8b893de35f777db0..c5fee8e394805544 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -77,8 +77,6 @@ bool sysctl__nmi_watchdog_enabled(void)
+ 	return nmi_watchdog;
+ }
+ 
+-bool test_attr__enabled;
+-
+ bool exclude_GH_default;
+ 
+ bool perf_host  = true;
+-- 
+2.53.0
+
