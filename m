@@ -1,266 +1,301 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD9F30C62D;
-	Wed,  1 Apr 2026 20:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775075144; cv=none; b=kQxEBW26Nw/BlsBjUU0S6bPaG/ITSaFVF7XwFPgmW+Xe3Sii+UpqGQ+UZ/Yy0VRUIbElJZ7EDn01bParSrNCS0/OIjhkO3kzLwINcPYvprq5R+IyMeEq6xmLTPYaunrIoWMIkJQlxgUZgw/aEQCf+xNr4w42RJLMUeFjHcSyZqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775075144; c=relaxed/simple;
-	bh=FS4xLikDs2CZ1D57plh+WBOO1XKBqmdCc4ePxwJTdDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ki6xhkNFc+Rbu/UVSMuuKFAzCC/IYP46dEQUFY7dNA/KCsZZFeLG1yQmoJqhkFyxDSZnHp+mtF+yv/1xbNcCamrztpyqUX5S30S3QYISrm6/ODxkkX/stMwzspFJ12LW+CzsUygPQE2r7PB8m9mQnz9aeHilhVtgHRmP7lo1068=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLidPBIh; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E887335B138
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 20:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775076062; cv=pass; b=vCUAjW10WfVCn5vERj046JgI8dY1Lh8gMoCMwijdAfytU0is3euExC+meWtsFyi05z9ZEjwcfaWb4AbLtzEMpZiRf0SR3YfbYtR8lkUp+Yap7r1W90xPAzCkC7Lo2K8M87Jrg439d0PWJMjBiIgi2W2+4qEtxmOA21gEPyNUfQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775076062; c=relaxed/simple;
+	bh=1GCNYeJaTGrTTC6MOMS3VIk+Hr3glBrGSPbjTinHeYo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MSNnKulLO7j4MasGdnoSapc3ATFzO28Zr+q8K5XoqqplGBpve9Dz2s75lvV5K+L4njiTuQkBED1F2iN3b0xy3n6SaHS0KWQKd1hh61kMXKA8iamaNuepcK7LVK6opgacQwjA8Y7FckSpFQO4aUFx1gaQs/tIhRihs8pgRBJiqLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WP0mqj+E; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLidPBIh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775075141; x=1806611141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FS4xLikDs2CZ1D57plh+WBOO1XKBqmdCc4ePxwJTdDM=;
-  b=KLidPBIhtTs8eJ11PqRaTJw6ctZntLkzf8pLm5KfyQiMnbCclw2lrDTy
-   /uDZiYWVFOYgxbrxlSG6YzfY/p1UioHzaWclAe75CcVxCAconnZRrJi12
-   BsdFBAdcZAz5FL3fqjhhm01aEHVlbJ5UXIo6k5HD6uiJBzU/k/hifF7Qo
-   5O69OJnwznwxXpWuvSBVZ9MclaA3oa6+m7j8ryHWJXt+C4aIZqw0I5TPe
-   VBU9sATBT1bQg9BDoHodhm2EiWRyWzYDK5GwFBbsQzilgZJwGlHCtwJwg
-   GWuopt4HYv8DyxUzLJ1bdBNSEgCb87U07yzfw4cxRZAx81+Veq6uMlIht
-   A==;
-X-CSE-ConnectionGUID: 42vV/94OSKKj+dmfuCKS0g==
-X-CSE-MsgGUID: siohYbgPQt6OZ0GvmlnPeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="75301530"
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="75301530"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 13:25:41 -0700
-X-CSE-ConnectionGUID: 8Kd4HXjcSKKRtPO9lFROAw==
-X-CSE-MsgGUID: XEceVQPCS9qCqshvsfgYVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="228390846"
-Received: from unknown (HELO [10.241.241.7]) ([10.241.241.7])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 13:25:40 -0700
-Message-ID: <d0e4d464-0f9e-4e76-952f-daac7d585f5b@intel.com>
-Date: Wed, 1 Apr 2026 13:25:39 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WP0mqj+E"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2591757fbso33515ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 13:41:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775076060; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ct+mwkmcEEyG1v/ETheZHyYoykGrUAs6VkoKRa4qRt8GRDUprnomhfks4O2U8LYSSv
+         BXSzIK3h83VpfzonaF6fz07rObekRpUtJDSehU+gmUrKmdyy1kBfYwkCmpTJuETFP8pQ
+         sfkjcxDNnsl8F0Rpl1OkZbr44s80Om0B+oEloFHnGyYVNDIgXweu0xVuWRC7sAWKCUYo
+         Xu2W1TbCqy8VMJ435arNWRj0DYZoxjooqF+tlyP5/04TfVvyS0345dFc/gPaflhf5h+o
+         r5KCAUZ69qez+Ad03FmeddG2jzQ6qaSEWslkEDbLampAmIkQDP/dbA3ioqjGjZIZj8GP
+         aNQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=951WrjawRqq3nzkew3xFf8UWz29OPoL5LGFETUE8lmQ=;
+        fh=hnDnY2oo86r1wvsaJlGX+MxYm/0e23n+NB8WYTS+MVg=;
+        b=L/NvEfGfriszRlgzQ/u/NAgDjA/jJWoX3BlzYIThwGMyc/esMxJ1IrksRGk1ZdzVfW
+         fI5TI7GQ3zpEYenUbwX1tvKZnWphBE0+ydaQWjRpiSwAJfiMdGoE37fUtqFJREh05+NO
+         5EoCu2YnwuN1rU3p/QPvMVeq81l+V2TVj2gW3vibgspSK3ifLqWG7gs6tCbT4ZAsFG5I
+         JviHFwVBw4rAhbIZXI9nKNMo8+fQXE7ftfSelxQMKR2Hx9VKDiz2EOKR9wKuSA6kDywe
+         UcgZ7Fg8SJmWY75uL2nRycyDf/LOTPDK2nIsFbKJPbU/3oUJx8K5BQyq/1F/Kkm3Wg9Q
+         oyYg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775076060; x=1775680860; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=951WrjawRqq3nzkew3xFf8UWz29OPoL5LGFETUE8lmQ=;
+        b=WP0mqj+ETn3nHyzlbeq1BshaSTBQQggCcdgHyWsrz+iH+CXfbvqGhmDxD4IoGiDKJ+
+         MjgH1Jo73jyLWuJSBSOeBR56Pe7/99p1lyP8lrsjFFZE7CK4kJpISDq/KVKDS9pE/fHe
+         /9ATV1SASmPzH1ZvIBYuyCIpdF/8IkjCxfqMZ2XVqkGfoqwu1UiBh7vQWPFMpl2B0/bA
+         nPBgvmgZ0arGYBJFBb0Ji2Rl/BFWNb7EWUzC0QAF2X98F+1mRPbu/WPA2RAKkwJIZp2p
+         IXW5qzFRy1RmtmPj1KY6dhIYkvzrdBFq1rjgOVe6Mzupirp+XSuGV6f/xWpryCcf08yB
+         qFnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775076060; x=1775680860;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=951WrjawRqq3nzkew3xFf8UWz29OPoL5LGFETUE8lmQ=;
+        b=nh53oePeKSU3RV0MhuQYSDZi+zPFXCVuMLgnHnbkLX/muIxCeWLimFGHcqEu39xSeV
+         pNIp1wHht2G/OFiQtCtBjJac7QrreTb08v8ZEIF8ALs9Adjajt86r5WBaxqVE73QZl3O
+         JoRlnRQe45cq7e9AcojvXBoIf2WlRMWYc7aU7wYRbjKwSuOfLN1XZPRsMOsBEiFEkPc5
+         kKFGw55ZBoopIpS2lqZe19JxaCytWfA+qP3BqxqDqbwCmeGczfOsau0DAqNHRPOewZJL
+         dqzeRn9sOC9m1cdqF0BV58GaDD0JrIPBvLRp6KFjV0KEwB+8QXxIgUaZ99ppohop/Rhb
+         7bvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJkD+G9XYMBcCJKfPTkAorZIrajCb9XhMX49WvosZZS1YsMp28/vdVaQmAD1cJGGDYg6OHi6zXua8bekqHRhiC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx36sCreM5ZcdMuQk5n0jPoluMuaHHiXMgoB0cbueFELQmCbDPf
+	74CrTBVncdC0n2b5MsKCPMDAC988WZPP+p5sg8L85MdytyE0tGb7qvegX7bAo/WihffmVFSES7P
+	DVEAw+vJkBhSflA1DrNX/aCqX1Yy+FZX+iey4bYGA
+X-Gm-Gg: ATEYQzwGeNV2DgglDX+TF4psm+0yASGY7db2zJxxBbaNqO4eZ3LB+VX/xUqj3Iwbvyk
+	W2ZPOTfzp+A4VrOLvFQp1HdG9xkDm5LFbA2y/K388lKHw0p0uaKTofHhu0rFY8svIt9BwplZ1x9
+	rFRxxuT2yZe4t26JWqsPENsDKARTtt+pW4TyByQGJa+ITzkOMXGXWURcM4xeVZmFxpp4SUOfB3Z
+	WftNoUKttslu4GfLVXhFJNgD1llkrLCx31aPPaiDZMcS5bCkaqr4KI2JYApik1CEusMIORJEFgc
+	jpqXCL449+QKwScKFDoFFuKOYyzzRkAQx6JNTkeDTtz1RxE=
+X-Received: by 2002:a17:903:1a2d:b0:2ae:7fa2:6bda with SMTP id
+ d9443c01a7336-2b2769b0742mr500905ad.1.1775076059588; Wed, 01 Apr 2026
+ 13:40:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 4/5] perf/x86/intel/uncore: Fix PMON enumeration with
- NUMA disabled
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>, Chun-Tse Shao <ctshao@google.com>,
- Markus Elfring <Markus.Elfring@web.de>
-References: <20260330212444.117325-1-zide.chen@intel.com>
- <20260330212444.117325-5-zide.chen@intel.com>
- <e899636d-371a-44dc-b8e7-578f499847fa@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <e899636d-371a-44dc-b8e7-578f499847fa@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260315105751.86835-1-atrajeev@linux.ibm.com> <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
+In-Reply-To: <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 1 Apr 2026 13:40:47 -0700
+X-Gm-Features: AQROBzCsIQ5u20S1ffg6GKC2eZ2mM6neoKCEoseeulqZUJEM_EM8Ddw4PtA3mMI
+Message-ID: <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
+ all PMU test
+To: Venkat <venkat88@linux.ibm.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
+	maddy@linux.ibm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com, 
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 23, 2026 at 3:40=E2=80=AFAM Venkat <venkat88@linux.ibm.com> wro=
+te:
+>
+>
+>
+> > On 15 Mar 2026, at 4:27=E2=80=AFPM, Athira Rajeev <atrajeev@linux.ibm.c=
+om> wrote:
+> >
+> > Currently in "perf all PMU test", for "perf stat -e <event> true",
+> > below checks are done:
+> > - if return code is zero, look for "not supported" to decide pass
+> >  scenario
+> > - check for "not supported" to ignore the event
+> > - looks for "No permission to enable" to skip the event.
+> > - If output has "Bad event name", fail the test.
+> > - Use "Access to performance monitoring and observability operations is
+> >  limited." to ignore fail due to access limitations
+> >
+> > If we failed to see event and it is supported, retries with longer
+> > workload "perf bench internals synthesize".
+> > - Here if output has <event>, the test is a pass.
+> >
+> > Snippet of code check:
+> >  ```
+> >  output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> >  if echo "$output" | grep -q "$p"
+> >  ```
+> > - if output doesn't have event printed in logs, considers it fail.
+> >
+> > But this results in false pass for events in some cases.
+> > Example, if perf stat fails as below:
+> >
+> > # ./perf stat -e pmu/event/  true
+> > event syntax error: 'pmu/event/'
+> >                     \___ Bad event or PMU
+> >
+> > Unable to find PMU or event on a PMU of 'pmu'
+> > Run 'perf list' for a list of valid events
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >    -e, --event <event>   event selector. use 'perf list' to list availa=
+ble events
+> > # echo $?
+> > 129
+> >
+> > Since this has non-zero return code and doesn't have the
+> > fail strings being checked in the test, it will enter check using
+> > longer workload. and since the output fail log has event, it
+> > declares test as "supported".
+> >
+> > Since all the fail strings can't be added in the check, update
+> > the testcase to check return code before proceeding to longer
+> > workload run.
+> >
+> > Another missing scenario is when system wide monitoring is supported
+> > example:
+> > # ./perf stat -e pmu/event/ true
+> > Error:
+> > No supported events found.
+> >  Unsupported event (pmu/event/H) in per-thread mode, enable system wide=
+ with '-a'.
+> >
+> > Update testcase to check with "perf stat -a -e $p" as well
+> >
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> > ---
+>
+> Tested this patch.
+>
+>
+> With this patch:
+>
+> Testing hv_24x7/CPM_ADJUNCT_INST/ -- perf stat failed with non-zero retur=
+n code
+> Testing hv_24x7/CPM_ADJUNCT_PCYC/ -- perf stat failed with non-zero retur=
+n code
+>
+>
+>
+> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
+Testing on an Intel Alderlake the test is now failing:
+```
+...
+Testing offcore_requests_outstanding.l3_miss_demand_data_rd -- supported
+Testing ocr.full_streaming_wr.any_response -- perf stat failed with
+non-zero return code
+Testing ocr.partial_streaming_wr.any_response -- perf stat failed with
+non-zero return code
+Testing ocr.streaming_wr.any_response -- supported
+...
+```
 
-On 3/30/2026 6:26 PM, Mi, Dapeng wrote:
-> 
-> On 3/31/2026 5:24 AM, Zide Chen wrote:
->> When NUMA is disabled on a NUMA-capable platform, UPI and M3UPI PMON
->> units are not enumerated.
->>
->> In this case, pcibus_to_node() always returns NUMA_NO_NODE, causing
->> uncore_device_to_die() to return -1 for all PCI devices. As a result,
->> the corresponding PMON units are not added to the RB tree.
->>
->> These PMON units are per-die resources, and their utility when NUMA is
->> disabled is limited.  The driver does not prohibit their use, and the
->> enumeration should still work correctly.
->>
->> Fix this by using uncore_pcibus_to_dieid(), which works regardless of
->> whether NUMA is enabled.  This requires calling
->> snbep_pci2phy_map_init() in spr_uncore_pci_init().
->>
->> Since pci_init() is called before mmio_init(), remove the redundant
->> snbep_pci2phy_map_init() call from spr_uncore_mmio_init().  If
->> snbep_pci2phy_map_init() fails, uncore driver should be bailed out,
->> so the fallback path in spr_uncore_mmio_init() can be removed.
->>
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->> V6:
->> - Split from patch v5 3/4.
->> - Remove the redundant call in spr_uncore_mmio_init().
->> - Update commit messages.
->> ---
->>  arch/x86/events/intel/uncore.c       |  1 +
->>  arch/x86/events/intel/uncore_snbep.c | 26 +++++++++++---------------
->>  2 files changed, 12 insertions(+), 15 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index 786bd51a0d89..e9cc1ba921c5 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
->> @@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
->>  	return bus ? pci_domain_nr(bus) : -EINVAL;
->>  }
->>  
->> +/* Note: This API can only be used when NUMA information is available. */
->>  int uncore_device_to_die(struct pci_dev *dev)
->>  {
->>  	int node = pcibus_to_node(dev->bus);
->> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->> index 8ee06d4659bb..73da1e88e286 100644
->> --- a/arch/x86/events/intel/uncore_snbep.c
->> +++ b/arch/x86/events/intel/uncore_snbep.c
->> @@ -6415,7 +6415,7 @@ static void spr_update_device_location(int type_id)
->>  
->>  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->>  
->> -		die = uncore_device_to_die(dev);
->> +		die = uncore_pcibus_to_dieid(dev->bus);
->>  		if (die < 0)
->>  			continue;
->>  
->> @@ -6439,6 +6439,10 @@ static void spr_update_device_location(int type_id)
->>  
->>  int spr_uncore_pci_init(void)
->>  {
->> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
->> +	if (ret)
->> +		return ret;
->> +
->>  	/*
->>  	 * The discovery table of UPI on some SPR variant is broken,
->>  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
->> @@ -6460,21 +6464,13 @@ int spr_uncore_pci_init(void)
->>  
->>  void spr_uncore_mmio_init(void)
->>  {
->> -	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
->> +	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
->> +						 UNCORE_SPR_MMIO_EXTRA_UNCORES,
->> +						 spr_mmio_uncores,
->> +						 UNCORE_SPR_NUM_UNCORE_TYPES,
->> +						 spr_uncores);
->>  
->> -	if (ret) {
->> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
->> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
->> -							 spr_uncores);
->> -	} else {
->> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
->> -							 UNCORE_SPR_MMIO_EXTRA_UNCORES,
->> -							 spr_mmio_uncores,
->> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
->> -							 spr_uncores);
->> -
->> -		spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
->> -	}
->> +	spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
-> 
-> I'm not sure if we can directly remove the snbep_pci2phy_map_init() call
-> here. In theory, the snbep_pci2phy_map_init() call in spr_uncore_pci_init()
-> could fail and then spr_uncore_mmio_init() doesn't know it and directly
-> initializes MMIO PMU, then it could lead to the MMIO initialization fails.
+Running `perf stat` manually reveals an issue with the event:
+```
+$ sudo perf stat -vv -e ocr.full_streaming_wr.any_response -a sleep
+1
+Using CPUID GenuineIntel-6-B7-1
+Attempt to add: cpu_atom/ocr.full_streaming_wr.any_response/
+..after resolving event:
+cpu_atom/event=3D0xb7,period=3D0x186a3,umask=3D0x1,offcore_rsp=3D0x80000001=
+0000/
+ocr.full_streaming_wr.any_response ->
+cpu_atom/ocr.full_streaming_wr.any_response/
+Control descriptor is not initialized
+------------------------------------------------------------
+perf_event_attr:
+ type                             10 (cpu_atom)
+ size                             144
+------------------------------------------------------------
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ config                           0xa00000000
+(cpu_atom/PERF_COUNT_HW_CPU_CYCLES/)
+ disabled                         1
+------------------------------------------------------------
+sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
+------------------------------------------------------------
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ config                           0x400000000
+(cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+ disabled                         1
+------------------------------------------------------------
+sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
+ config                           0x1b7
+(ocr.demand_data_rd.l3_hit.snoop_hit_no_fwd)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ { bp_addr, config1 }             0x800000010000
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 16  group_fd -1  flags 0x8
+sys_perf_event_open failed, error -22
+switching off deferred callchain support
+Warning:
+ocr.full_streaming_wr.any_response event is not supported by the kernel.
+The sys_perf_event_open() syscall failed for event
+(ocr.full_streaming_wr.any_response): Invalid argument
+"dmesg | grep -i perf" may provide additional information.
 
+Error:
+No supported events found.
+The sys_perf_event_open() syscall failed for event
+(ocr.full_streaming_wr.any_response): Invalid argument
+"dmesg | grep -i perf" may provide additional information.
+```
 
-Yes, this is true. But I would argue that the fix in this patch is
-correct, and the issue you pointed out is not new: the uncore driver
-registers a PMU device without guaranteeing it's functioning.
+This looks like a latent Intel cpu_atom PMU bug. Thomas, wdyt?
 
-This is because the Intel uncore driver employs a lazy init approach.
-And when init_box() fails, it doesn't unregister the inaccessible PMU
-devices. For example, intel_generic_uncore_mmio_init_box() could fail
-for a number of reasons, making all associated PMU devices non-functional.
+Thanks,
+Ian
 
-Originally the uncore driver tried to enumerate PCI/MSR/MMIO uncore
-independently, but evolving hardware complexity makes this more
-challenging.  This patch is just one example, IMC Freerunning is
-MMIO-accessed but relies on PCI devices to read the die-specific MMIO
-base address. Explicitly gating sysfs node creation with PCI init code
-in mmio_init() is neither clean nor reliable.
-
-To fix it, it seems reasonable to have init_box() return int and
-unregister the PMU device if deemed inaccessible — similar to what
-perf_event_ibs_init() does.
-
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -129,7 +129,7 @@ struct intel_uncore_type {
- #define events_group attr_groups[2]
-
- struct intel_uncore_ops {
--       void (*init_box)(struct intel_uncore_box *);
-+       int (*init_box)(struct intel_uncore_box *);
-
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1155,7 +1155,8 @@ static int uncore_pci_pmu_register(struct pci_dev
-*pdev,
-        box->dieid = die;
-        box->pci_dev = pdev;
-        box->pmu = pmu;
--       uncore_box_init(box);
-+       ret = uncore_box_init(box);
-+	if (ret)
-+               return ret;
-
-@@ -1598,8 +1599,10 @@ static int uncore_box_ref(struct
-intel_uncore_type **types,
-                pmu = type->pmus;
-                for (i = 0; i < type->num_boxes; i++, pmu++) {
-                        box = pmu->boxes[id];
--                       if (box && box->cpu >= 0 &&
-atomic_inc_return(&box->refcnt) == 1)
--                               uncore_box_init(box);
-+                       if (box && box->cpu >= 0 &&
-atomic_inc_return(&box->refcnt) == 1)
-+                               if (uncore_box_init(box))
-+                                       uncore_pmu_unregister(pmu);
-
-
-> Currently the PCI, CPU and MMIO initialization are totally independent,
-> only when the 3 types initialization all fail, then uncore PMU can abort.
-> 
-> ``` 
-> 
->    if (uncore_init->pci_init) {
->         pret = uncore_init->pci_init();
->         if (!pret)
->             pret = uncore_pci_init();
->     }
-> 
->     if (uncore_init->cpu_init) {
->         uncore_init->cpu_init();
->         cret = uncore_cpu_init();
->     }
-> 
->     if (uncore_init->mmio_init) {
->         uncore_init->mmio_init();
->         mret = uncore_mmio_init();
->     }
-> 
->     if (cret && pret && mret) {
->         ret = -ENODEV;
->         goto free_discovery;
->     }
-> ```
-> 
-> 
->>  }
->>  
->>  /* end of SPR uncore support */
-
+> Regards,
+> Venkat.
+>
+>
+>
+> > tools/perf/tests/shell/stat_all_pmu.sh | 20 ++++++++++++++++++++
+> > 1 file changed, 20 insertions(+)
+> >
+> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/=
+shell/stat_all_pmu.sh
+> > index 9c466c0efa85..6c4d59cbfa5f 100755
+> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> > @@ -53,6 +53,26 @@ do
+> >     continue
+> >   fi
+> >
+> > +  # check with system wide if it is supported.
+> > +  output=3D$(perf stat -a -e "$p" true 2>&1)
+> > +  stat_result=3D$?
+> > +  if echo "$output" | grep -q "not supported"
+> > +  then
+> > +    # Event not supported, so ignore.
+> > +    echo "not supported"
+> > +    continue
+> > +  fi
+> > +
+> > +  # checked through possible access limitations and permissions.
+> > +  # At this step, non-zero return code from "perf stat" needs to
+> > +  # reported as fail for the user to investigate
+> > +  if [ $stat_result -ne 0 ]
+> > +  then
+> > +    echo "perf stat failed with non-zero return code"
+> > +    err=3D1
+> > +    continue
+> > +  fi
+> > +
+> >   # We failed to see the event and it is supported. Possibly the worklo=
+ad was
+> >   # too small so retry with something longer.
+> >   output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> > --
+> > 2.47.3
+> >
+>
