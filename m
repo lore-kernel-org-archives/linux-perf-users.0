@@ -1,68 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6BA35DA5B;
-	Wed,  1 Apr 2026 08:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF2B39E185;
+	Wed,  1 Apr 2026 08:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775030483; cv=none; b=RcUYqyYqPB8qutVFNFX9xArB/B0l8DQyxp5aSy9U+jO7zEC2EtPMQQNaISU4Tbtr0dBUeCVuNrrXbKVTrOR0bDLsFyLhpWMCNphMsslgJwDnfiR/wLcm5vp7YAb1neYiiKm4dYVsGeNC9azsgQvNZxttBv6eyK67CY4CSsUd74k=
+	t=1775031417; cv=none; b=C1wadJXAtY0uDiZsF40n2dOZTz/imeIFTqnphw+/nDcX1dtGUFmgGgUCGSvqlF9oJ4zgNHCqTp/JSFjUuWE+AOYSo2poNAIUBcqUxbd13dLV5VedLsjpc1Tes0pJsmWauVuWum9UpV65hvmG0NhspEfj3K2PAF8MU0gvxi348B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775030483; c=relaxed/simple;
-	bh=4KPcHQaH2A+EIsW/2xhQ1DgUyBDKAUpbyJcONff9D4w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gf5i6JwCnfblSZ3QceGcP1tSU0Ks1uoKfGOvE/VRrCOZS1quLF/8s1xprbWJqhxoVGX5TGq8POJMdbJ4EHzRjXIJyzITT5jVcO/0xIfhe1wXZcS3Hh43xRYk/amvya2oWTJegFEkGzS0VI092vhJCM4vLrEa2se+IQ3Q9HY5ISk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/BI9vzq; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775031417; c=relaxed/simple;
+	bh=fEGzW0HQ9aaEqblExMt3fAmEGfMNM+rKetFSxjUPWu8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UD7TorTqeNGS9rKHc1R9qCO9TN3WJVMV6tdgy+Rs3eghRJDocFnOcse3JTPXtAnh1TKCS0mA4zFtiGfcXw8bOytLA9ID8Pnn2it8Kq1CLAcuUUNivZDFQX/vQoKbyg1wedddyKESulxFz+t8rZ3nPKQPNAs9x0vyCTE3f5aNo6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0iNno9Ks; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/BI9vzq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775030482; x=1806566482;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=4KPcHQaH2A+EIsW/2xhQ1DgUyBDKAUpbyJcONff9D4w=;
-  b=E/BI9vzqDgg8vqfcsG4PsOIZjZP3ivgAkAR+ecvPCkuAar6vKOGFOa8k
-   rg6PBtnQieWGheoRzps4XPOSDCStjfQLpGtqnZMzLaHHZAeCESB4HuuLx
-   nwGeAfxx/AJgZFZJDtmeKZ5Z7EMyGRD8Wd00IjAMWfO0ZOScXpNAKRcN2
-   ckF4HVT0LF7bmTjY26wRznFISimsHALoaCfumNWCJTkd55ys2sF3k++ae
-   RKNgyl1HuOZb6lcjPW68VAWprlgMm1zgKMFTubzzbcT/jb/Uu8Ai+mWcr
-   LonPT/fC1PdpUX8Rb5dFPL7YLFc8RMuVthlcpq25wsBYwp1DBr1p0VweJ
-   Q==;
-X-CSE-ConnectionGUID: jCRtpvLKQemjmmW6phx7Yg==
-X-CSE-MsgGUID: HbByzR/aT1ODto1Sx5QS1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="86363841"
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="86363841"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 01:01:21 -0700
-X-CSE-ConnectionGUID: XfbOVKFJT6iKwii3eVtcsQ==
-X-CSE-MsgGUID: 9OKPY4FESdub/5FB3tfE4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="264536738"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
-  by orviesa001.jf.intel.com with ESMTP; 01 Apr 2026 01:01:21 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-	id D5F61302965; Wed, 01 Apr 2026 01:01:20 -0700 (PDT)
-From: Andi Kleen <ak@linux.intel.com>
-To: Calvin Owens <calvin@wbinvd.org>
-Cc: linux-kernel@vger.kernel.org,  linux-perf-users@vger.kernel.org,
-  x86@kernel.org,  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar
- <mingo@redhat.com>,  Arnaldo Carvalho de Melo <acme@kernel.org>,  Namhyung
- Kim <namhyung@kernel.org>,  Mark Rutland <mark.rutland@arm.com>,
-  Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>,  Ian Rogers <irogers@google.com>,  Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>,  Thomas
- Gleixner <tglx@kernel.org>,  Borislav Petkov <bp@alien8.de>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 0/2] Two semi-related perf throttling fixes
-In-Reply-To: <cover.1774969692.git.calvin@wbinvd.org> (Calvin Owens's message
-	of "Tue, 31 Mar 2026 08:25:48 -0700")
-References: <cover.1774969692.git.calvin@wbinvd.org>
-Date: Wed, 01 Apr 2026 01:01:20 -0700
-Message-ID: <87y0j7w1m7.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0iNno9Ks"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=BAu9Jx0jggsoB9DdjhBMDzv6GW2fgZQZhQIfabnTV1w=;
+	b=0iNno9KssbzJIwOx46kM6OnZNBBxZqavG7rHHC5bdLxsRgIt4sx/XNjUZTTVDZXEoVFcegx0c
+	Yif2aSgMI7B+vjuMbgqzpMuvUrJW1SQ8yRstGcNtfNLWFUMM/xjzPhZAjZffDLNoeTFLUbEByDb
+	+8fyvzP5gn6CQVDmf4awY48=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4flyPC3klwz12LG4;
+	Wed,  1 Apr 2026 16:11:27 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id CEA0F40537;
+	Wed,  1 Apr 2026 16:16:50 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 1 Apr 2026 16:16:48 +0800
+From: Chengwen Feng <fengchengwen@huawei.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>
+CC: Jonathan Corbet <corbet@lwn.net>, WANG Xuerui <kernel@xen0n.name>, Thomas
+ Gleixner <tglx@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
+ Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V
+ L <sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>, Yanteng
+ Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>, Kai Huang
+	<kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth
+	<thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin
+	<kevinloughlin@google.com>, Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra
+	<peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin
+ Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
+	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
+ Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
+ Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Wei Huang
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <fengchengwen@huawei.com>,
+	<linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+	<xen-devel@lists.xenproject.org>, <linux-acpi@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <stable@vger.kernel.org>,
+	<x86@kernel.org>
+Subject: [PATCH RESEND v10 2/8] LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+Date: Wed, 1 Apr 2026 16:16:34 +0800
+Message-ID: <20260401081640.26875-3-fengchengwen@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260401081640.26875-1-fengchengwen@huawei.com>
+References: <20260401081640.26875-1-fengchengwen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,19 +79,51 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
-Calvin Owens <calvin@wbinvd.org> writes:
+As a step towards unifying the interface for retrieving ACPI CPU UID
+across architectures, introduce a new function acpi_get_cpu_uid() for
+loongarch. While at it, add input validation to make the code more
+robust.
 
-> Hi all,
->
-> In the course of investigating [1], I set out to understand why this
-> sequence of messages is printed every boot, even when nobody is using
-> perf at all:
+Cc: stable@vger.kernel.org
+Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+---
+ arch/loongarch/include/asm/acpi.h | 1 +
+ arch/loongarch/kernel/acpi.c      | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-I don't think i've ever seen that just from the NMI watchdog. I wonder
-what is different on your machines. And of course the PMU based NMI
-watchdog is on the way out.
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index 7376840fa9f7..8bb101b4557e 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -44,6 +44,7 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+ {
+ 	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+ }
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
+ 
+ #endif /* !CONFIG_ACPI */
+ 
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 1367ca759468..058f0dbe8e8f 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -385,3 +385,12 @@ int acpi_unmap_cpu(int cpu)
+ EXPORT_SYMBOL(acpi_unmap_cpu);
+ 
+ #endif /* CONFIG_ACPI_HOTPLUG_CPU */
++
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
++{
++	if (cpu >= nr_cpu_ids)
++		return -EINVAL;
++	*uid = acpi_core_pic[cpu_logical_map(cpu)].processor_id;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
+-- 
+2.17.1
 
-But the fixes make sense to me.
-
-Reviewed-by: Andi Kleen <ak@kernel.org>
