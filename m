@@ -1,154 +1,214 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E707738838B
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 21:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775077711; cv=pass; b=J8hmHLfU53AJoz0OwErtER0/sBlRlP7apwZGfOOr+D5crkBAxSkbM9hu3siOiA8SHjRLuXVz+ukjrrsZwxl+PCZLkEx+2brNfc8EHCOXkrb3VM1KBVE8PWbbqPQmikScgJq7sCj+HN6Q4F7oE3Le102lIt0F1fis9vJITxO9B5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775077711; c=relaxed/simple;
-	bh=vcIHZrAyfg0m4198caOIabYp3B6FvYDftZygG0uh+Go=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mCM9/RrUD9Ruo+XtZPEDk8GW7BfgMPwHbFuGLvqzB5KsXw/SI7NRVJD5L5zY/JfIbRUEwZR5ry5Hn4d8CIpOnVrfshoEUddQxhZLK+SBUU/aRYgmbl9GpxXQgecigo+9q43nC7Y7pBh0KnvGP6CmtnP0/3TTW+6j1oYQXbXUZrw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CyQMSY1K; arc=pass smtp.client-ip=74.125.82.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6753337BB5;
+	Wed,  1 Apr 2026 21:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775077880; cv=none; b=TES3ZcXUBfhrpkT5iwNV/Xw4a4cYKzLHFGX2An6zyNcLSKNh9l2SS27h0bAUODCJkbAAx+trlnr21xtFjnxQpxOZsHRxOoeuGmApPrbKf2CfkJCkrMJzqCY/bDMRIiyNxDr86O9ERpUexwR9geJ1w5trKvbnaU4YkQm6nxpv6H8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775077880; c=relaxed/simple;
+	bh=UyIjbxZElQCOPdZlwMmhz77CmkooPytlNReJidGcgDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FnYOomHC118N38p189hJPMJrKqwqO2Q8C/1RzCcWY8Wxh29nUnHsoYaRgn2FvFTh39M3Bda6M3zPrWzAU+teQvlDkICD+mJf8pacZfdK/vqozhoi0nvgj+9GnAxBwstmXqdGvJuQdtIGueRGs9qEphJUuxieY4weD9wBKQ2I+YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/cObhqT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CyQMSY1K"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-126ea4e9697so1025c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 14:08:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775077709; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LTWDnnle8FZWOl1eLdTItKIvF0sp9+L4SqvBZuAJ+/jnLfWG3a3wQnl4R5/ChIt7hL
-         OzkS2xQcEC1KUsLgL8axCGXnQ/yI9UYmBeDae0k+OsFt2INXQ3zLB+E/H06bSvjEhzLR
-         2/BLVq5CDVFm1aMbQn0guxAvYa1Ozl4ZdE5iKV+3ZeKPCJL7h0y8rfL0VRJEr9+/ZRGg
-         vS8CVC891x64qCLjo+/GqMkxuX1NTb6s8A+Uu0Yc8FWhJKtDZTbXSpGmW6XfGw/ahSdJ
-         SC8fuoBxe2Rpq/A/f78xoBpFcJxk6B4H9aMQcfUzEAB5/2Q3zkGYc/lHIrZYR1XTPLfz
-         D+LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=9ucDhJ6lwYktf9dCOlOtXzwrIvyGzqYFOODgsg1UA2k=;
-        fh=9g3W/m7C4w45OhtemZMa4WXH2mQNdJPS4VhKaMa0iIc=;
-        b=SoynBEYub1o5Poji/RxulfyjXEtzvWblx2d7p/ZjcTud6GriLyg31s5NA+9X+6DoJz
-         2SvPy2dndGgStuT1J5YCL0AiRVT0z1RuY7F0TxOwUtys8l5juxsHSHpSqOd4fqC3Gcvy
-         lGtlOwGaWo6o3Tmt2dJJCrlC1xFKQrJhKjJMQXo+CKvpWcGa86PvlP/Gj68Vicp+Gq4n
-         yCmf1PoUFDBwOaFJ10hCnLeDe/rX4/VzCDX5Ds0VuVux/AtcdqPHZIasFMKuSPa//9Si
-         H64yZ7B3kyCQFcatht5xhwIeWFugkQVy/zoCHFK3k44gLxxqxNIODT+1DLpbpUbAk1hl
-         oBxw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775077709; x=1775682509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ucDhJ6lwYktf9dCOlOtXzwrIvyGzqYFOODgsg1UA2k=;
-        b=CyQMSY1Km22Dh5VdGNYq7Sv+bYhB/gVXQusyp3KhGb7rVOlnb7iMSPdxezbaELczpv
-         FbG4BFTITrrtVqh2hSwxeJRQbmwMPLOrj7wL1uE8EH6tY9niqwPJCCspJuswJ32uErv0
-         hn2hUIGPZfgEdVI+2K43j685ru/xWtoCV1UXnqYwc16pv17gFvq8/WPT2i0Qwl1rpxbz
-         Qzv1l0gLX9s3mOkpOP3oP8Dnm+eSyyZbIvhYqEmzEW3HcK7fCV67DOOqTJRWmb8xbJAy
-         R5Ns4LMP/pX6CZs97G3k6/FDplVh56UqTiuPHbs62ZKtVjxAK+NGhuMv7i0Oo83OMUxM
-         OWiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775077709; x=1775682509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9ucDhJ6lwYktf9dCOlOtXzwrIvyGzqYFOODgsg1UA2k=;
-        b=Xw1DelrM8EyVOFY9EW6EzzZjOKaSVUT9JlEWfxGqaiHUkJFOVCSSbyTeZE0Qx3yfYw
-         hyC4dybiBMySn2E9BxDt+hfZRSuoTbDrD3EECKIuyE3MOG2TbnFi++OYBt5l93o9pu+a
-         444GpdB8mAaXzWry1CFSC+xfjg9sa5EBZlej9MVorhPDEBY/iqpx4bnWGPwuuQEPKoIL
-         uN6Ddad5MhmrGMuI4QBz7n1p8G6CbmuFo6t1+fW61xdT/tKlovu6nYVA+mMJvDY1cJNN
-         aiS53MtxNR+ltByCZqhdcj7GGzRYkP5Mr/om7FRQB4Gcss3IcK2SzsZkduqsqPfdLI7g
-         SEyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfhMB5Wj10ckz6I+lug2q5meaA7eB1d/nHr8fLFDw+cK4BNAtBZGWI+taLsOrKyxqor0dExRL29npfAOhu4MDY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYHG0xq3GeOGiV99+gElfSvfe1vnTozt+gHCkfxojWJxArA9xD
-	vCvHZD3R061XUysJJwDg15Au8hftrklgtOiTxIUOUfjSY7REcyExZEOZgMy1nBIFnKn+bbqlMtf
-	T4LcUjxxtEFsxi12Ujqyuj7QdXwcA9SM4n9ocakzQ
-X-Gm-Gg: ATEYQzzVvnR1TkAvjm5gM3ppCyJFiycr17uqWSMmfAPRB6QNptct104Lgc38F8ad74G
-	+WHVTuyUMlq6XM49pkPjltPKGD491cv1AFregLHJoYcn+boyfptPLq7Xbn4CUQhuHKES/HgCOQj
-	cHX5yQFdzaRT4wrQqcWADuE0+oT4OKmHboU41m6Z2LvNvuND0mCTmpyMbU/vwadPfp0QtDFgm3a
-	xWOTIO4UPjjEdmDMC+4lOinv99+LVDnDsw1AgSKN8KOd98J/XwcNLzh1LDlpz3aPihp20Xmxs39
-	tk8YO7YuRbdWRQJjhunGDKQXkRgyBcfXVcAU
-X-Received: by 2002:a05:7022:6b87:b0:128:ec96:67 with SMTP id
- a92af1059eb24-12bef3e48bfmr30584c88.9.1775077708411; Wed, 01 Apr 2026
- 14:08:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/cObhqT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE115C4CEF7;
+	Wed,  1 Apr 2026 21:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775077880;
+	bh=UyIjbxZElQCOPdZlwMmhz77CmkooPytlNReJidGcgDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S/cObhqTK+3SCnPPq1pvZ20KqkYioSAtW06oGJYioLCHk7GcqnbziA2LsgST0mqCj
+	 i5MbG0NClPy30hAtPXE6jm+Ht+ZqDEizvZ1lWSPrO/TK9ZNCUH/NxSbYruLrnfdLVs
+	 XLXaf2oFFSapyvDhHqkC+3Xylq51YMPmlLHSAz/SDo2RRslnXL8SA9nRl3eGbH30hE
+	 PeI5/bLFCGpcGWOW8v5NBzg46iG+fCfZHqr+u14m2W7/sihzz2vSSrG/27xnb2SZGO
+	 BRmIuBpwvgAz72S48zlchIF0WxO8qk8fT64b+jJWkdrFnrsiEowB3RjBsmPuygMAPk
+	 A7DC3e8cjbFoA==
+Date: Wed, 1 Apr 2026 18:11:16 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Steinar H. Gunderson" <sesse@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Improve C++ support in arguments
+Message-ID: <ac2J9BRFsmzdJo2J@x1>
+References: <20251205123608.3125691-1-sesse@google.com>
+ <CAP-5=fW7y93ZfSF0Mrt3nB1Jqu4HaKypEUhH88CTyy9-v4JPdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401210203.2150651-1-acme@kernel.org> <20260401210203.2150651-7-acme@kernel.org>
-In-Reply-To: <20260401210203.2150651-7-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Apr 2026 14:08:16 -0700
-X-Gm-Features: AQROBzBmkcUSzJsiJ_QpoVIttJCsLSxo0kCjp6OIaENPfOdAtpcNldX5-kKrdpI
-Message-ID: <CAP-5=fXEVn8BBcQBfXSWwWYPfWV50Xk6FAgm1gCBxu=qqxoJpw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf symbol: Add missing libgen.h include to get
- basename() prototype
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW7y93ZfSF0Mrt3nB1Jqu4HaKypEUhH88CTyy9-v4JPdA@mail.gmail.com>
 
-On Wed, Apr 1, 2026 at 2:02=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> This works in some places because there are tricks to prefer a GNU
-> version instead of the XPG version, but started breaking in some musl
-> libc systems due to some unrelated change that made libgen.h stop being
-> included by chance.
->
-> Since symbol.h is using basename(), make it include libgen.h.
->
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/make    | 2 +-
->  tools/perf/util/symbol.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 6587dc326d1b272e..e12ff6397077806e 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -148,7 +148,7 @@ run +=3D make_extra_tests
->  run +=3D make_no_jevents
->  run +=3D make_jevents_all
->  run +=3D make_no_bpf_skel
-> -run +=3D make_gen_vmlinux_h
-> +#run +=3D make_gen_vmlinux_h
+On Wed, Apr 01, 2026 at 02:03:42PM -0700, Ian Rogers wrote:
+> On Fri, Dec 5, 2025 at 4:36 AM Steinar H. Gunderson <sesse@google.com> wrote:
+> >
+> > For purposes of specifying arguments in tracepoints, C++ classes
+> > work exactly like structs, and C++ references work almost exactly
+> > like pointers (they are dereferenced with . instead of ->).
+> > However, they use different tags in DWARF, which means you cannot
+> > use them in arguments.
+> >
+> > Implement support for both, based on the existing struct and pointer
+> > support. This allows us to to something like this in Chromium:
+> >
+> >   perf probe --exec content_shell --add 'PerformanceMark=\
+> > _ZN5blink15PerformanceMark6CreateEPNS_11ScriptStateERKNS_12\
+> > AtomicStringEPNS_22PerformanceMarkOptionsERNS_14ExceptionStateE \
+> > mark_name.string_.impl_.ptr_'
+> >
+> > even though mark_name is an class AtomicString&.
+> >
+> > We don't support advanced C++ features, such as operator overloading.
+> > Unfortunately, we also don't support C++-style strings where there
+> > is a separate length field instead of null-termination. We also cannot
+> > go past ptr_ in the example above (e.g. add ->length_), due to
+> > unrelated DWARF issues.
+> >
+> > Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> 
+> This change makes sense to me, Namhyung?
 
-This looks like something removed during testing that you meant to put back=
-.
+Agreed, and there are some other C++ specific (Go as well), like
+DW_TAG_rvalue_reference_type, that we may want to support, also it would
+be great to have some extra workload in 'perf test -w' to have a shell
+testing this feature, no?
 
-Thanks,
-Ian
-
->  run +=3D make_libperl
->  run +=3D make_no_libpython
->  run +=3D make_no_scripts
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index c67814d6d6d6f64a..b37ecc2e90f77efe 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -10,6 +10,7 @@
->  #include <linux/rbtree.h>
->  #include <stdio.h>
->  #include <errno.h>
-> +#include <libgen.h>
->  #include "addr_location.h"
->  #include "path.h"
->  #include "symbol_conf.h"
-> --
-> 2.53.0
->
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/perf/util/annotate-data.c |  3 ++-
+> >  tools/perf/util/dwarf-aux.c     | 13 ++++++++++---
+> >  tools/perf/util/probe-finder.c  | 24 +++++++++++++++++-------
+> >  3 files changed, 29 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> > index 07cf9c334be0..d97b5fc61e6f 100644
+> > --- a/tools/perf/util/annotate-data.c
+> > +++ b/tools/perf/util/annotate-data.c
+> > @@ -459,7 +459,8 @@ static bool is_pointer_type(Dwarf_Die *type_die)
+> >  {
+> >         int tag = dwarf_tag(type_die);
+> >
+> > -       return tag == DW_TAG_pointer_type || tag == DW_TAG_array_type;
+> > +       return tag == DW_TAG_pointer_type || tag == DW_TAG_reference_type ||
+> > +              tag == DW_TAG_array_type;
+> >  }
+> >
+> >  static bool is_compound_type(Dwarf_Die *type_die)
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index 9267af204c7d..25bbc840d1a8 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -1112,6 +1112,8 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+> >         tag = dwarf_tag(type_die);
+> >         if (tag == DW_TAG_pointer_type)
+> >                 tmp = "*";
+> > +       else if (tag == DW_TAG_reference_type)
+> > +               tmp = "&";
+> >         else if (tag == DW_TAG_array_type)
+> >                 tmp = "[]";
+> >         else if (tag == DW_TAG_subroutine_type) {
+> > @@ -1124,6 +1126,8 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+> >                         tmp = "union ";
+> >                 else if (tag == DW_TAG_structure_type)
+> >                         tmp = "struct ";
+> > +               else if (tag == DW_TAG_class_type)
+> > +                       tmp = "class ";
+> >                 else if (tag == DW_TAG_enumeration_type)
+> >                         tmp = "enum ";
+> >                 else if (name == NULL)
+> > @@ -2065,7 +2069,8 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+> >
+> >         tag = dwarf_tag(type_die);
+> >         /* If it's not a compound type, return the type directly */
+> > -       if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+> > +       if (tag != DW_TAG_structure_type && tag != DW_TAG_class_type &&
+> > +           tag != DW_TAG_union_type) {
+> >                 Dwarf_Word size;
+> >
+> >                 if (dwarf_aggregate_size(type_die, &size) < 0)
+> > @@ -2080,7 +2085,8 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+> >
+> >         mb_type = *type_die;
+> >         /* TODO: Handle union types better? */
+> > -       while (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
+> > +       while (tag == DW_TAG_structure_type || tag == DW_TAG_class_type ||
+> > +              tag == DW_TAG_union_type) {
+> >                 member = die_find_child(&mb_type, __die_find_member_offset_cb,
+> >                                         (void *)(long)offset, die_mem);
+> >                 if (member == NULL)
+> > @@ -2091,7 +2097,8 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+> >
+> >                 tag = dwarf_tag(&mb_type);
+> >
+> > -               if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
+> > +               if (tag == DW_TAG_structure_type || tag == DW_TAG_class_type ||
+> > +                   tag == DW_TAG_union_type) {
+> >                         Dwarf_Word loc;
+> >
+> >                         /* Update offset for the start of the member struct */
+> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> > index 5ffd97ee4898..ca4734c75bba 100644
+> > --- a/tools/perf/util/probe-finder.c
+> > +++ b/tools/perf/util/probe-finder.c
+> > @@ -360,12 +360,20 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+> >                 ref->offset += dwarf_bytesize(&type) * field->index;
+> >                 ref->user_access = user_access;
+> >                 goto next;
+> > -       } else if (tag == DW_TAG_pointer_type) {
+> > +       } else if (tag == DW_TAG_pointer_type || tag == DW_TAG_reference_type) {
+> >                 /* Check the pointer and dereference */
+> > -               if (!field->ref) {
+> > -                       pr_err("Semantic error: %s must be referred by '->'\n",
+> > -                              field->name);
+> > -                       return -EINVAL;
+> > +               if (tag == DW_TAG_pointer_type) {
+> > +                       if (!field->ref) {
+> > +                               pr_err("Semantic error: %s must be referred by '->'\n",
+> > +                                      field->name);
+> > +                               return -EINVAL;
+> > +                       }
+> > +               } else {
+> > +                       if (field->ref) {
+> > +                               pr_err("Semantic error: %s must be referred by '.'\n",
+> > +                                      field->name);
+> > +                               return -EINVAL;
+> > +                       }
+> >                 }
+> >                 /* Get the type pointed by this pointer */
+> >                 if (die_get_real_type(&type, &type) == NULL) {
+> > @@ -374,7 +382,8 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+> >                 }
+> >                 /* Verify it is a data structure  */
+> >                 tag = dwarf_tag(&type);
+> > -               if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+> > +               if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type &&
+> > +                   tag != DW_TAG_class_type) {
+> >                         pr_warning("%s is not a data structure nor a union.\n",
+> >                                    varname);
+> >                         return -EINVAL;
+> > @@ -389,7 +398,8 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+> >                         *ref_ptr = ref;
+> >         } else {
+> >                 /* Verify it is a data structure  */
+> > -               if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+> > +               if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type &&
+> > +                   tag != DW_TAG_class_type) {
+> >                         pr_warning("%s is not a data structure nor a union.\n",
+> >                                    varname);
+> >                         return -EINVAL;
+> > --
+> > 2.51.0
+> >
