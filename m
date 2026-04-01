@@ -1,135 +1,182 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C805343CEE4
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 16:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3D147CC71
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Apr 2026 16:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775060518; cv=pass; b=ptN0aoNm7JUxX3dJyglmvAic0zCkxJmkqu7/t/tI8h5ZdC9IdDmfMufmqSJCi1718/NzZ4qVmtCofdAeVFUoO5lD9f7DFpqEFL94U9cIORtWatdYs5gw+bh8CK8k9OktuD2+NjDutKo/Hj8eWHXKDl1mNJbInHPztC0GzIpHwrE=
+	t=1775060827; cv=pass; b=oU9iBuEkDLUhg9hggZhHfMANv3a1nAxMGm922IonHhHTZC+9WAFrqDrKudLEMNoPppDTxBGuDeu6xfFvFLNem01UnxKVM1g7wfxpn7gWC/yiVrd9CjY0FQxbSLnc39dKItBzq8Ht92EBYTWeEtvbTgAv8GyJMKcbmfkWhvH9WEQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775060518; c=relaxed/simple;
-	bh=/pbAWRtjyu/gysOFIbb8hsILqLVN9QAa/FvTW3+pzRE=;
+	s=arc-20240116; t=1775060827; c=relaxed/simple;
+	bh=PVEwyQhpZ43VPdWZA/9xRWrTsKqlw2cVGq5u7vcumf8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y2XSfic0zGKMIT2xZn7S3NdiTNupg95czRMVZqUNnRi6T+SmZOjIBm9qprukDJvSxualPO/KvDDTSweI2MQG5v7hUEXkXoYVIUB5TWlCDrHZIneDuXQ4juhUu8BG25dXalnfkyYC9+9RWhh8YaO1yrYZOASJh8k8KgpMDd//KEE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z7ISDIYR; arc=pass smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=GtbcbLno8xX01/9wMRjhSGbrv/uIbzg6mLJe9LkPbhV0c2v/6N/XD7U5XHBKgvfec6Sj72OrTf6od45ok4nDvKrq0MaoQr4vPssrJY1sptAtTf1SX3vwQXVi+c8UKDHSBfxkuB9j5Yx2WpG9yDoCevhlsAV/nkmrLFLOhSMFRTY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KAto2ig/; arc=pass smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z7ISDIYR"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2b0b260d309so190875ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 09:21:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775060516; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KAto2ig/"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2591757fbso254135ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2026 09:27:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775060824; cv=none;
         d=google.com; s=arc-20240605;
-        b=EXiLJQjYY5VZNwTiq4dzN2KT+4Lwk39O+HioQTmZEZLqBwM0LIvaqFxngoCKTBz4mT
-         bfx9kB/KL/oVbkfhLRxPijzb6kTSghut4YLjgGr9HJTbpRC7KCVvdaxe+6VWRGOtwWSz
-         6FbvBvoYAQL6VQgN0ak1AFTBkyYyI0KIToEdfhSALI4Jtyn7K15l9WaXo2E99jeJfydK
-         Q5O8BVKVHZmAMOqeRujpBuGdEueMlWhmqPCuc1dulEzaMVg/NAtoDZHRj9mJ0hY11eIp
-         ODaQ4juS4MhCX+WMCsyjc5xR+liaJWVlUupzaKgGmZFvXIVN3GJOcgR0EypGt3VKDwi3
-         tmZA==
+        b=SM3V4HbWui6W5wGNcq97PsNBU5NZJwk4lMWt5eGWCU/SbvbSFerNVxiGnRRxTNmNs1
+         YBZuq1rKn5Jw68ZBkEifUO8mQd9Jb/PDLInMIEpTTKJ1WlGluxLBVGTp5aqZ69yJ81Zp
+         v5bdSFGOK7KQq8ZTJPv+gDtNjaW03G24QIQOuGP7UZdjQtVDDJZz3R8EWufiBzdJmnpy
+         5IegWNvM1i2X6+vRBrRtszMnozokyQJIxX/PAwdYbxN7NskuZgeB7swvSE+H15Hl42RP
+         HetvchCL3Mf/xP6tJPOTXDGUxccJx0DmM8SjbawyYw60Rcu2ZsmbTCgDuxzc4taN6k7y
+         bPPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=BbYdq7S6/VuZCDSSQ4IJ+YGRE6TdTe/mlo1fYzThqrI=;
-        fh=7XV0TRtuhfo54nis1EPYKzU1X7FBdKL4T52cVSSrMvU=;
-        b=Lwjp7E39HQyHm5glpn4T4YzM2f5fMfVNj3+O69t5FtO3o0QvWN+aLPkTdsUtLpGw89
-         7yipSNKRzPKcA9IwJA5HkxDXaDtSHuPN3glB3Kt3Iz6NtTtztqymM0APwM4ylIQqLee0
-         trkOdH9vbHwRkc2ppNikFac6Vj4hVqsPQLp48q1Ytc6vdbMgTm/9vn56X4/l2UpZAWIV
-         r4oCh5PSEvQ6uBX/d8/DUJKiJn7Odgm/yBPvhIASl5ul3vt+zOQpypn03zhmfaR253Ae
-         Xb86NSZJ7fXHmgN0M0RJ/mvv6HYRBBZ6PErZtTf4XmPy+6k9PIFFvcmuqBfjpI38aLkm
-         LAWA==;
+        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
+        fh=ByH0JbSLqQ+Q3txLZPwY4uE5q+Hw6Nb3SYcHyqErdj4=;
+        b=MCuiy38aMfEmoH8E9zyi0ragnjITfdD8W+LsVy2kXvPsQ7Xd42TwpCFFZeKlKy6nTS
+         pwaRz6UPSUQ+ViTuI4Cd8fqaSSvXqm4AWIVWAf5BMZOo1zMvjldA3NRMFeeU7T92Rgk3
+         vF/Nd6eHv0RLf6YA0aQkrI9GFEW2TcZZnEwjJnAsAdLfelj2mwHbMc6AuTBal2S9CQ08
+         2hYlyNjTkmaOSuaq1DRNgYsAdzXE0xm69UcfD9GJkDFjmj+kliI4qO5pL+TBMNkOLDq8
+         N+rL6jB5ND2QEEE1DhqqmAQic9iK5NElPICH81HvOAjaCaxAuUmznWp2hravTp78f+k4
+         iqgQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775060516; x=1775665316; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775060824; x=1775665624; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BbYdq7S6/VuZCDSSQ4IJ+YGRE6TdTe/mlo1fYzThqrI=;
-        b=Z7ISDIYR6rwFSnpWImw5FaSq9qBqwzHK2HCuI9ZG49u9yC6d/YaUlJKMF2BQTU0hcN
-         D9stH8lC+CRQkfxbhf9fjexDZEdksMx4AwfbS69AEXKxZY5Fsj6L9DcLYDxivF1wrp8S
-         YhUQE15hd8duBN+YSZUKRHWpdvVRjwhvrULphLJe0ibzOcO3ipHe/9GI0Ro7PrqOkc2j
-         huqNGiHkhSH6iInICMaQ8rr+cCKw/qF/qeGBmxehBYMkPVhPvS756KZtYdBsrvidBtF5
-         h1gv6UNDi5PKUIACGQe9STq0bEko4N9tRbrao3q+DFEVBA2+YeupPbdip8r0e+kSLgz/
-         qsSA==
+        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
+        b=KAto2ig/BqucVBC+cEDgrrZoSi3AQpxOR30fF6qSoyLUUfGOF8C2qVTM58HcvBkifS
+         T/vhRgTgtx23FrzyDkXQbpMDUvxw5nB1tN3muKKLOgQcKZAxdUiVLi5qI0GqL+7t4hCu
+         D258N0VcopI1j/mBG/YdNLaMQtSCSgfI3Jaw+otsDReASYipbFcvq242nqmJUmC3hRR+
+         /ls5M+9KM4CdNCc+89bTZ7U7lwB5Hj1oMqDHxaMz988EVHg76iMHtFn2ghzSFJCsVKRH
+         sRip+PfnMwd4bFmRe6Co/KywY97jrOZvMPa62xcPWxJexA5elBvoYu8sLHOT87JZQwSc
+         tOvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775060516; x=1775665316;
+        d=1e100.net; s=20251104; t=1775060824; x=1775665624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=BbYdq7S6/VuZCDSSQ4IJ+YGRE6TdTe/mlo1fYzThqrI=;
-        b=aoj9dyOvqSuzRg1ssixbuPd6Yd1AAqmD5/AjcgSIKVKTmvx78n5U3CUYZ5wQEcyXim
-         Jxo1Kk5IfdCDv/L5HcInAsWi/LbGG2f1KL9Hq9BKng9yWca/ec+vtr1cC3nMlcsirQPW
-         e9PUOSY+GHxzYTzJhxMb4HHCIsK+Xfc3Gs+hUco/Dk+JoPefoui9noCuu8fELmQYABJI
-         hxkdtzTHsTWwoX6dJL5xGzYlWGOSYDm7KfvaasuplIU4oFiZFFJPX5gjE6Zyeh0UqOjM
-         4o8pHMmcyL0D1caq6sXm6sgBctoz8LWfZVZQJBxa3cMh21elpl/tbj14ko5LRldMThdZ
-         S+jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ1fedtArHRgflbUmV60Cw4R1oxW//vMx8VSaaZucVb6CcRYxndXcFZi7TcV6/r4r0hkBumtZuFmI8VjI+Igzk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8zNXr0cznQGO1mU0rBZ95kAYp3soTAYXb1nhWoO9/VlcIIEyl
-	5KAxRLRzmu6f9DGKHQJ2c30bg8ZqAhX41cTSwwZaQztM61nBuIitVVXOg7QA4Rr0KJDnXS8IYJk
-	aLGHxmpD3cLpsgO3rr0sxy7TPf1iWpR0J8fm7ESt/EHRKdLt+Rxe+XYkh
-X-Gm-Gg: ATEYQzxaL1XmTflLttqgCX+8ON3Ydy0Rvq5bI2NwcljgsOn5Rg4aSlyK5cncfBUILMt
-	Ag4ewLc+2aq+WJ5ka2T6tWb8H2mNfT8O3voXsfOiKj4ehLmz4Lh82iAWgiRbVXxookh2RqSwDq1
-	ztGiBzRN4h6IEacrxckGQXB1kWBs/A+x3FhmxbqnuC5N7cB4632nbMkFK5Wg7xH82PuZDqz+COQ
-	IB2bUTU1tyY8awTxvSb4tvGx0xc+I6p9jLoPUYE8iIuiEa1RExqa2id/TuXFkBCZ7enXvr93PLD
-	BDXLrzTqVVjBacYlJe2hkRz/MwYaUp8qzCuQ
-X-Received: by 2002:a17:902:cec1:b0:271:9873:80d9 with SMTP id
- d9443c01a7336-2b274ce92b2mr267615ad.7.1775060515366; Wed, 01 Apr 2026
- 09:21:55 -0700 (PDT)
+        bh=oIvY14sTT3ST+enS4Ze2qWtxGseKcs4uU7SXIZ5EU/k=;
+        b=a1w0yQSSDdoPjsPaiKuTEubEdlmRGcHbtuCifSyxm9en/LZlhNGzZsuLSQ8PcYAWPS
+         i9Q+Rna2HUIQMl+5J8T0zFoLYQSVy7O82yOZN8q1IO+pucZHzBoM47WQbt63pCLcN1oQ
+         IDo28YmjTpooJPZeAslOGPBhVigcTTxhgzEisueyFUxatHjlFMbVdpLw4r54ZS/PUgbo
+         ZHs4eJFxdC36j1csuOjtwxHr+8sepDGDAP25darAwnekGQC9RGA2j1iT4x/qKvWsMIcB
+         Ys1e9nxu2UYWu3qEsiIb6UwcrfONNXvwjVapF3N14FJ8DX6Ma38wMC1EikNJEX3LLYLk
+         1oug==
+X-Forwarded-Encrypted: i=1; AJvYcCWPgspOR8zsA5ekCI+uWJ/tUAHM/dQTMVIX0XLE+qp36cFVTKIoae49505CvpAZCOsFlhHpNm2ziyKvCO29F+pS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAmjIsTMndrAx46xtNeLqLMYOp1bPPcSNYUNRYqSx9fNdT1d8I
+	4m5c2UmQA++uJlN3SInuEAYUMaaRsick4rkvuw6UXGq/Y9PHr3TcNP0mvsId2lxryGoE1fSGr+a
+	uPHWxjZQKlTd6VXa2e8IRMACEfzlG1qswc1RSnjTk
+X-Gm-Gg: ATEYQzwM3vHKtlriaipgyl23Gl2GL1sObGRTSlSknef41/LU9dDvnFnKmZN2WhBinZL
+	Iri9u93R0qI6qfJsBseFU3aH6lrDen9dJHnVzQdzqX0ZlvN36BO+SYQTRJqeqWYVa1OOR3GjwSY
+	Ks2GaHZqIOrY9sbZ6v98mnXGjcWpZexkUbGpm19aWgpMuIpWFIYCcg0K8ktuKz+4S85lKWehWO1
+	qyeLDBAMJeXP1kK33pOrLspvX08QJhldTL49FORcpvDwwnoXocMsJcNrKMgw7QeBpK746vwbyDr
+	io+P8TfcQ9lgdV+QDhVwc+rvwCsnEqsDRc68H3T6VEZ+CKE=
+X-Received: by 2002:a17:902:f787:b0:2a7:4151:2c74 with SMTP id
+ d9443c01a7336-2b2753a6fcemr94535ad.16.1775060822991; Wed, 01 Apr 2026
+ 09:27:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401132442.505507-2-ashelat@redhat.com>
-In-Reply-To: <20260401132442.505507-2-ashelat@redhat.com>
+References: <20260401064114.141066-1-swapnil.sapkal@amd.com> <20260401064114.141066-2-swapnil.sapkal@amd.com>
+In-Reply-To: <20260401064114.141066-2-swapnil.sapkal@amd.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Apr 2026 09:21:43 -0700
-X-Gm-Features: AQROBzAyllx-MNcie5lcCXb9rdSWuDQbDdIsKmO_oCEDEcuDw-9VDQJYAxwTUv8
-Message-ID: <CAP-5=fXWrq=UzP01TwAWRScZSX0+ws1yMvqo9r-=QGk-3ZZ=Fw@mail.gmail.com>
-Subject: Re: [PATCH] perf dso: prevent null dsos from being added
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Date: Wed, 1 Apr 2026 09:26:51 -0700
+X-Gm-Features: AQROBzADRZrhKPOV8aXGljfCZNSgApJalzZ11vuhPeeaxRPCmQJKw71LCF2RJys
+Message-ID: <CAP-5=fWY7X6Zo2xFXHbPtU2Dob=eHguzbkzowHjqyBzsse2+-Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf sched stats: Fix SIGCHLD race in schedstat_record()
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, james.clark@linaro.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	gautham.shenoy@amd.com, ravi.bangoria@amd.com, KPrateek.Nayak@amd.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 1, 2026 at 6:26=E2=80=AFAM Anubhav Shelat <ashelat@redhat.com> =
-wrote:
+On Tue, Mar 31, 2026 at 11:42=E2=80=AFPM Swapnil Sapkal <swapnil.sapkal@amd=
+.com> wrote:
 >
-> When sorting the dso array we sometimes get a crash due to null
-> comparisons in comparator functions. So prevent __dsos__add from
-> adding null to the dso array to avoid out-of-memory related errors.
+> When a very short-lived workload is used with 'perf sched stats record',
+> the child process can exit and deliver SIGCHLD between
+> evlist__start_workload() and pause(). Since pause() only returns when a
+> signal is received while suspended, and the SIGCHLD has already been
+> delivered and handled by then, pause() blocks indefinitely.
 >
-> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> Fix this by blocking SIGCHLD before starting the workload and replacing
+> pause() with sigsuspend(). sigsuspend() atomically unblocks SIGCHLD and
+> suspends the process, ensuring no signal is lost regardless of how
+> quickly the child exits.
+>
+> Assisted-by: Claude:claude-opus-4.6
+> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Thanks Swapnil! In the Sashiko reviews there were some nits about
+clean up on error paths but also 1 about signals potentially being
+masked in the perf workload:
+https://sashiko.dev/#/patchset/20260401064114.141066-1-swapnil.sapkal%40amd=
+.com
+Could you take a look?
 
-Thanks!
 Ian
 
 > ---
->  tools/perf/util/dsos.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  tools/perf/builtin-sched.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-> index 0a7645c7fae7..5cf8c878bab2 100644
-> --- a/tools/perf/util/dsos.c
-> +++ b/tools/perf/util/dsos.c
-> @@ -196,6 +196,9 @@ static struct dso *__dsos__find_by_longname_id(struct=
- dsos *dsos,
->
->  int __dsos__add(struct dsos *dsos, struct dso *dso)
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 3f509cfdd58c..eb3702d98fd1 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3807,6 +3807,7 @@ const char *output_name;
+>  static int perf_sched__schedstat_record(struct perf_sched *sched,
+>                                         int argc, const char **argv)
 >  {
-> +       if (!dso)
-> +               return -EINVAL;
+> +       sigset_t sigchld_mask, oldmask;
+>         struct perf_session *session;
+>         struct target target =3D {};
+>         struct evlist *evlist;
+> @@ -3822,6 +3823,15 @@ static int perf_sched__schedstat_record(struct per=
+f_sched *sched,
+>         signal(SIGCHLD, sighandler);
+>         signal(SIGTERM, sighandler);
+>
+> +       /*
+> +        * Block SIGCHLD early so that a short-lived workload cannot deli=
+ver
+> +        * the signal before we are ready to wait for it. sigsuspend() be=
+low
+> +        * will atomically unblock it.
+> +        */
+> +       sigemptyset(&sigchld_mask);
+> +       sigaddset(&sigchld_mask, SIGCHLD);
+> +       sigprocmask(SIG_BLOCK, &sigchld_mask, &oldmask);
 > +
->         if (dsos->cnt =3D=3D dsos->allocated) {
->                 unsigned int to_allocate =3D 2;
->                 struct dso **temp;
+>         evlist =3D evlist__new();
+>         if (!evlist)
+>                 return -ENOMEM;
+> @@ -3902,8 +3912,15 @@ static int perf_sched__schedstat_record(struct per=
+f_sched *sched,
+>         if (argc)
+>                 evlist__start_workload(evlist);
+>
+> -       /* wait for signal */
+> -       pause();
+> +       /*
+> +        * Use sigsuspend() instead of pause() to avoid a race where a
+> +        * short-lived workload exits and delivers SIGCHLD before pause()
+> +        * is entered, causing it to block indefinitely. sigsuspend()
+> +        * atomically unblocks SIGCHLD (blocked above) and suspends,
+> +        * ensuring no signal is lost.
+> +        */
+> +       sigsuspend(&oldmask);
+> +       sigprocmask(SIG_SETMASK, &oldmask, NULL);
+>
+>         if (reset) {
+>                 err =3D disable_sched_schedstat();
 > --
-> 2.52.0
+> 2.43.0
 >
