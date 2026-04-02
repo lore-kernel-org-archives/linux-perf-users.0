@@ -1,174 +1,236 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243DD30C35F
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775144044; cv=pass; b=k8qgljmYjg6yw4dlOFp5ntSAMmXcMxnveG+IToQM1J8a3Lbf1DR7O8w6Q2sl33sHkOKZFuPHSfKI7lBx2Jhx+k9zIPty11e/j4GlRz/IKjj0QN3wE9osvWE4zdMbBw4Tbdnz7/Ai0T3p7sLttdKJyFUG4njwPhL/VGdouGYdHPg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775144044; c=relaxed/simple;
-	bh=QsVI/gsv8ufD9g/OK2Gg+dFq6hitUns33WyqXk2RqcE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JIXgsNret+Z1ad0cF+WM4/YjnWsO9+pu8XRjwalLAA73DIm1W8sgOeFMnpNluVzgzuu6FW4OJLd6AwlFeJrSaIiBRhlSv4TeBkIaco2NHcXf4KVfjDpt6FNoDwhOJhzqAkkxlbxs2iTR55YJejcsKGeAXpCdw3tzquyIlyJUQVk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TdgtC71u; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB9430F816
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775144790; cv=none; b=ZQUy9DJVlcyRZWpD2V5IhauFV6v6pEZqz4M5MkG7iqsma0c+tfuGot32C3IKiKyEHQvZ/KKJ+vICw7fNxkXOzJK2oERJSXrkzHais0rrEBdjdE7RfCSXgtRyASlRH/nkC8o5W3SszpyayI6bHGYmmsXlvf885oPN0mMwhyJsfrI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775144790; c=relaxed/simple;
+	bh=GSyWse/iVZS0AkBDe2MT9U+atVMNYrdthdUTw96SoYE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=WiM5DZ2h3SUU+O46qSXIFx5wcUXGdwvolHwXx+p9V2Q9s3yEGU0zt3P5YZ3GULbqe+W2/BQXoQc6KjFEx2R04gIMzz1Y/0Uwqh/PT02VH3kw2uOKkLUKG178GkajNkeVc4sXVXXyeEk7r/2qDnF+4mNNtaP0HR0/djudQ2bAj0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NXQej2T7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TdgtC71u"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2b243198058so69715ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 08:34:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775144042; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gRCWydlBOMAVOqjZ+o3lhjDCgcjOEHP5SKjrbOhB7OIfM0NeCktLtIc5+Z/nWEdBj8
-         B3ympv8XgJmCh1EaOxFSd/AwDNc3g1cUFQCC473hC+e7vi3P+5/b8mPkpfZSS2uXfs0Q
-         aWrnUTrA59tzKqcqaiHf/hM1dAG8MU3v124yaw2EUr5J+COZSkB4+sQlHM8xQTTkOz+L
-         6Z+lU69sDtRDjz1CvzaXp8+chHJC5O0xE+w9D2W/LxEyJ2kOr6QLh8SeJoH5iZVSE4Pu
-         JoGPfewdCBoDhP7XetKJT3I4X/pNm50t7Jbzq1GVjO96zJ82imfXqazGfWog2bVS/sbE
-         i8mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/ExeRyThJfOiH/5CZ20hx8q6xpO7P/GWMpyW50SEXpo=;
-        fh=CLSgseJU8bi586JBn0umNTg/4seL7ela6qL2SxS231E=;
-        b=GukEyLc9ZbPX9rgkVgKyf7YBIsE/oTLKXvNESutxiSzrvBBvIO0Yk2wI2EZ9JbcNXh
-         oT+u5itx+CAgVi0sCnqs1PdMbLjRcuKkbv4JefulhW/Ci18YxdoTJutUj6ErPSMBkfGj
-         j7MwMVhXikQLbpLcfK0s1Bk2u04M6cgkrh2WXH1xr7F3ytruR2FwtaKgoF5EbiFs6fND
-         QCKMycE629gJethhGzaFxaDTV9UcOaX8XKwYa3AIOjRBxOHYataNK51ZOa3/aqowFzJU
-         V56Ya0j+fvIxz+O6OdRyl+aSuVDRoj+WrAVrFCvQDpL/MoiuyNm0bv4FeCSQsyvwobsb
-         5frg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775144042; x=1775748842; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ExeRyThJfOiH/5CZ20hx8q6xpO7P/GWMpyW50SEXpo=;
-        b=TdgtC71u4ztalk9ROhzPGcvD9J1O/9ezJRSVusCeNF35hO7BLvFkq1dtmWMyAsfLsc
-         mFxYj9rGJKLLtZNuGPZZLHVC5O98vMkAr8Ia8VRK9PtzLevzXWtiLeJKA5BuGHXF+JyK
-         d93WBxVK/i4E5MhStDozQJf6MIFo4y80jfj1Xgp/0pdqUQ+2iHw5NhO3e5eVpcgLESo+
-         RIlpjceZ7UvAldEjiv/CvRnp13NS4Ad4gHCf454uvEH8ma4E3lsNIeNH8EciiPBvfObc
-         B/7QMdRm2iDWJx0XTGhii6FoUq4H6ii1m0yXo6spy7Z5tyXqQeiyyx9gfy1XfA/0rR00
-         pAvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775144042; x=1775748842;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/ExeRyThJfOiH/5CZ20hx8q6xpO7P/GWMpyW50SEXpo=;
-        b=hV36ONLBUG5Sk/KDSH+8afSygMy7D16rKref7Auwuym0smVGkvfAiXeDCo3S905yuj
-         EezggrWHrUke+0MbyQlYe1znsFf2vxSP5AtLfWH4rNFXPF9i+azHpagMApm9z7M8QqbP
-         BbOi+VyM69A2SnWnYdCLltGnmO9ouDzMhNSr/0l08h+LBerodkM70RmLMOQdKFWH65KH
-         tyehBi/T42CoEqgHhSgVRmNGiSS/Uf5XzBoL0CkRsngA/xGYW4LDvGgwEzI9vh5+2ns4
-         7dubtojbAYWPeLvPo6hYmf++woBrXAUbJmdkBUSREDryNmsKdyMxvwo361h5blAMT/j5
-         nKfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWd6Cy6b3qkGMoFyBVZgI1rO22e4OjLF7rX1QsGlm3bLgiypFEMWLwuug5tSFwmBOqUChmPQNbCjd/+oVvZEW85@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe3XDOZC2vEPbhfrwH0/qaIVG1gTAZhOHC4mfNS0/6o51pHa7b
-	uN7/0pnAZHWqRu5mMPw8Km78MVKVN/azKKD8+BG2FX4V3ylJuexrkNmAK/thHxKtmf/THxudcZ9
-	Qgknsz2aZHs4OqIQFVET+EtUx+M02HoKKwwgGjr3k
-X-Gm-Gg: AeBDiev1DdmqactcfzaVRj8P1yJv23k3UvMlJEWytod5u9Dlbmf7ZiVVynaxuXxhzyk
-	CQp32arAxCt+Q1az9QRc3gF+tR2z+IplKSzt7BCn2JHEHUy/ev90EEIAnyrcKpadfyjRnMCFFLC
-	zF2wNfkWudhZGPLLMWCyQMiMzAIGqk6FS+axMxHOvrxDk3yBrhHZ+hlbohgkIk5U5C7XAg3FBJl
-	id980hoC2iCyibD86hu1YG4k66PSnELVdPZBTlS+TI7nYXMIyLRrUsuEkMm85wscPl3qBxLhu8w
-	uQ12WMxDbCdizomWq620HNGZtEd+MDZqMkHJ
-X-Received: by 2002:a17:902:d2cd:b0:2b2:5931:5950 with SMTP id
- d9443c01a7336-2b2785591e5mr2238815ad.16.1775144041938; Thu, 02 Apr 2026
- 08:34:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NXQej2T7"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632EVRq2330917;
+	Thu, 2 Apr 2026 15:46:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=csUms1
+	1w8sD4yrK8bQgpBN2NcH1O2zwmQoS2J7SG/tI=; b=NXQej2T7cFXN0bx3k4Cet5
+	iHcuFWOupXTcg0Tb+5x/txMcI3MqKavNTWxI1Ndr29GcQe62cIQlIGeeQIBAVw1y
+	Lc3Rh4SNh7Bc9i6SIQfl1CyKpDhGuYZS2/C8Dt6aRrnKEmCH/KEr2H/q2OlUJ7OV
+	5uuVpgItDI0icbur9r0BEJVrMa1afjxXrLH5adxruJoAnVw9hxCWhpyjQ1j80s+G
+	+o+kqApQqzoUxXuLFGw4xI96YWRRrsYgQnMGpSP8Sh1vcRQy+BWQSSLhJZRsy7mM
+	0efrMSnji3lI/p0XFzdEv5Wq773FX2zRjpTMj01VlJ4ZOiIxvX8VrOxz89fTdvwg
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d64dgvq3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Apr 2026 15:46:18 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 632D0oNp008689;
+	Thu, 2 Apr 2026 15:46:17 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6v11tcw2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Apr 2026 15:46:17 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632FkDN649742308
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Apr 2026 15:46:13 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0EA1B2004F;
+	Thu,  2 Apr 2026 15:46:13 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DBEA2004D;
+	Thu,  2 Apr 2026 15:46:08 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.17.92])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  2 Apr 2026 15:46:08 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260401215310.348463-1-suunj1331@gmail.com> <CAP-5=fXbicqGBLjJqYjUvqdmVo2SsLWYgtaQbp=QCPt3uRgsMA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXbicqGBLjJqYjUvqdmVo2SsLWYgtaQbp=QCPt3uRgsMA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Apr 2026 08:33:50 -0700
-X-Gm-Features: AQROBzBV2RooA0UyzRzMQaBCwcQLVedgsBph0yfPVg9BHLyjBqeLrBsiI2xiAVg
-Message-ID: <CAP-5=fXovuB6ghVei27MOJmn4S538fWcWv-=ZS_qsE4duneppg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf header: Validate build_id filename length to
- prevent buffer overflow
-To: SeungJu Cheon <suunj1331@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, brcampbell@google.com, 
-	shuah@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
+ all PMU test
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <CAP-5=fX6993MzAEgB7JeVEU5GcVk3PxhkEjMX3G4EZgxPBaBqg@mail.gmail.com>
+Date: Thu, 2 Apr 2026 21:15:54 +0530
+Cc: Venkat <venkat88@linux.ibm.com>, Thomas Falcon <thomas.falcon@intel.com>,
+        acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <A33EEA7D-DB03-4FA9-A0A8-D10115FEF423@linux.ibm.com>
+References: <20260315105751.86835-1-atrajeev@linux.ibm.com>
+ <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
+ <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
+ <ac2uvTXI1iknXwyV@google.com>
+ <CAP-5=fX6993MzAEgB7JeVEU5GcVk3PxhkEjMX3G4EZgxPBaBqg@mail.gmail.com>
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDEzOCBTYWx0ZWRfX0/oM6SGp1s8u
+ IFKpwXJJu5HYy55U4H2OydF6kJSc6ZrbcOHRvHIi/g0EW+sM2hxtrfPQalBldLdLSI+TiLFBcte
+ WWdTw1DkDlJ8+45/ITrtN2++RaziZvUtrptEnxBxmVJK2wiMMYUF4erfEvY++VJUtGkzLHtjiDM
+ AFbdJHtwxPTkzkdpc8DQM9uVr1JUjVooHJ4utHnT8iBRXZ0EcuE5zbId0l1IMMfA/PSYkOXo3KS
+ aMjs6YVmGvpgzy9U4Ec8iIRLwpC2FpLSQfdQVLRoB4X6UAscqltpP/fKCzCK4m1+Rnr6mpF9uWA
+ B16wbaoRGrl35HvnYfLt+10N3RcgXHCpnrRDSIxVQIoZmeqUfU5iDCy9ognizAxDW2FFZBbOUso
+ QspfdLKQR69MfBixNKyqkSDkYRnhEbF4uQGlGGHpNWlWm9usEEx57YLN/VcupwS8079V9aCa408
+ +NQk894THyCuavdznAg==
+X-Authority-Analysis: v=2.4 cv=QKZlhwLL c=1 sm=1 tr=0 ts=69ce8f4a cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=1XWaLZrsAAAA:8
+ a=VwQbUJbxAAAA:8 a=5P6_zFFMFuBFcQzlmxgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: ELZTcBwiiz92CdProDJUwfuPWyYx91Gr
+X-Proofpoint-ORIG-GUID: NBYhbLeaYpwzozA_h9oOJXCh9G9ez-Aj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-02_02,2026-04-02_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020138
 
-On Wed, Apr 1, 2026 at 3:12=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Wed, Apr 1, 2026 at 2:53=E2=80=AFPM SeungJu Cheon <suunj1331@gmail.com=
-> wrote:
-> >
-> > The build_id parsing functions calculate a filename length from the
-> > event header size and read directly into a stack buffer of PATH_MAX
-> > bytes without bounds checking. A malformed perf.data file with a
-> > crafted header.size can cause the length to be negative or exceed
-> > PATH_MAX, resulting in a stack buffer overflow.
-> >
-> > Add bounds checking for the filename length in both
-> > perf_header__read_build_ids() and the ABI quirk variant. Print a
-> > warning message when invalid length is detected.
-> >
-> > Signed-off-by: SeungJu Cheon <suunj1331@gmail.com>
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Sashiko spotted some additional nits:
-https://sashiko.dev/#/patchset/20260401215310.348463-1-suunj1331%40gmail.co=
-m
-printf flags, potential for no '\0' termination and reads of
-uninitialized memory.
 
-Thanks,
-Ian
-
+> On 2 Apr 2026, at 5:27=E2=80=AFAM, Ian Rogers <irogers@google.com> =
+wrote:
+>=20
+> On Wed, Apr 1, 2026 at 4:48=E2=80=AFPM Namhyung Kim =
+<namhyung@kernel.org> wrote:
+>>=20
+>> On Wed, Apr 01, 2026 at 01:40:47PM -0700, Ian Rogers wrote:
+>>> This looks like a latent Intel cpu_atom PMU bug. Thomas, wdyt?
+>>=20
+>> Are you ok with the change itself then?
+>>=20
+>> I'm not sure what's the expectation when the test runs with a regular
+>> user.  I assume the intention of this change is running as root..
+>=20
+> So the test is failing as root on Intel, and the log output is
+> extensive. I'd prefer not to have the log output, so we may need to
+> work past some known broken items. Otherwise, the change looks okay,
+> but there are inconsistencies: `grep -q "<not supported>"` is used in
+> the existing code, while `grep -q "not supported"` is used here.
+>=20
 > Thanks,
 > Ian
->
-> > ---
-> > v2:
-> >  - Add warning message when invalid filename length detected
-> > ---
-> >  tools/perf/util/header.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 9142a8ba4019..132d360d716a 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -2545,6 +2545,11 @@ static int perf_header__read_build_ids_abi_quirk=
-(struct perf_header *header,
-> >                         perf_event_header__bswap(&old_bev.header);
-> >
-> >                 len =3D old_bev.header.size - sizeof(old_bev);
-> > +               if (len < 0 || len >=3D PATH_MAX) {
-> > +                       pr_warning("invalid build_id filename length %d=
-\n", len);
-> > +                       return -1;
-> > +               }
-> > +
-> >                 if (readn(input, filename, len) !=3D len)
-> >                         return -1;
-> >
-> > @@ -2587,6 +2592,11 @@ static int perf_header__read_build_ids(struct pe=
-rf_header *header,
-> >                         perf_event_header__bswap(&bev.header);
-> >
-> >                 len =3D bev.header.size - sizeof(bev);
-> > +               if (len < 0 || len >=3D PATH_MAX) {
-> > +                       pr_warning("invalid build_id filename length %d=
-\n", len);
-> > +                       goto out;
-> > +               }
-> > +
-> >                 if (readn(input, filename, len) !=3D len)
-> >                         goto out;
-> >                 /*
-> > --
-> > 2.52.0
-> >
+>=20
+>> Thanks,
+>> Namhyung
+>>=20
+
+Hi Namhyung, Ian
+
+Thanks for trying the change and responding.
+
+Sorry, I missed the comment from Sashiko. Next time I will check =
+explicitly for Sashiko comments too.
+
+The intention of this patch has two things:
+
+1) It was resulting in =E2=80=9Cfalse pass=E2=80=9D earlier if the test =
+fallback to last check where we run with longer workload. Because error
+  message contains the event name =E2=80=9C$p=E2=80=9D and hence matches =
+the =E2=80=9Cgrep=E2=80=9D check.=20
+
+Example:
+
+   # ./perf stat -e hv_24x7/CPM_ADJUNCT_PCYC/ ./perf bench internals =
+synthesize
+    event syntax error: 'hv_24x7/CPM_ADJUNCT_PCYC/'
+                     \___ Bad event or PMU
+
+    Unable to find PMU or event on a PMU of =E2=80=98hv_24x7'
+    Run 'perf list' for a list of valid events
+
+    Usage: perf stat [<options>] [<command>]
+
+        -e, --event <event>   event selector. use 'perf list' to list =
+available events
+  # echo $?
+     129
+
+
+Here the test checks for :
+  <<>>
+   output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+   if echo "$output" | grep -q "$p=E2=80=9D
+  <<>>
+
+Since the error message contains the event name, it matches grep check =
+and declares test as pass.
+
+ To catch this, patch adds a check for =E2=80=9Creturn code=E2=80=9D=20
+
++  # checked through possible access limitations and permissions.
++  # At this step, non-zero return code from "perf stat" needs to
++  # reported as fail for the user to investigate
++  if [ $stat_result -ne 0 ]
++  then
++    echo "perf stat failed with non-zero return code"
++    err=3D1
++    continue
++  fi
+
+2) If events are supported in system wide monitoring.=20
+
+Namhyung is right here that for regular user it will result in fail . I =
+will take care of having check around that.
+The reason for using =E2=80=9Cnot supported=E2=80=9D text here is:
+
+Example: There is an event in powerpc "vpa_dtl/dtl_all/=E2=80=9C which =
+when run on per thread monitoring:
+
+ # ./perf stat  -e vpa_dtl/dtl_all/ true
+    Error: =20
+    No supported events found.
+    Unsupported event (vpa_dtl/dtl_all/H) in per-thread mode, enable =
+system wide with '-a=E2=80=99.
+
+Next running with system wide monitoring:
+
+  # ./perf stat -a -e vpa_dtl/dtl_all/ true
+     Error:
+     No supported events found.
+     The sys_perf_event_open() syscall failed for event =
+(vpa_dtl/dtl_all/H): Operation not supported
+     "dmesg | grep -i perf" may provide additional information.
+
+This is because this event is supported for only =E2=80=9Csampling=E2=80=9D=
+ system wide and not counting.=20
+So patch attempts to use =E2=80=9C-a=E2=80=9D, if still it fails, we =
+look for =E2=80=9Cnot supported=E2=80=9D in logs
+
+Namhyung, Ian,
+
+If the addition of =E2=80=9C-a=E2=80=9D can cause regression ( like =
+intel one if its not suppose to be run system wide ),=20
+how about adding a case like this:
+- Look for "enable system wide with '-a=E2=80=99 =E2=80=9C in the error =
+logs
+	- If logs matches this message and if user is root, attempt with =
+-a next.
+       - With =E2=80=9C-a=E2=80=9D, If the logs has "Operation not =
+supported=E2=80=9D , test can continue to next event.
+
+Thanks
+Athira
+
+
