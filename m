@@ -1,93 +1,93 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266B333ADA8
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E8538AC91
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775143633; cv=pass; b=gSK1Elq3mnoNtrCTVWBUq112QxAsCEYrKtWnErDKiqR06Bz3vN7DSuY13M5gGoLo3wKEaw0PkKFR48JV3ALxZUYX6M91oV+JaFs+apB1YwDF9ia7cTtxUvKGfcv1ptimQ1xrmP5YsnLVkHsMUh4m77IPDQ+ZzxdduWJyBHi6QpM=
+	t=1775143828; cv=pass; b=WTNY8aFhRD2z58CVK9UGEb4acIMcgRgLpAiTbyleUuEgX59Txsi41MRDRKAtPxl9NB7R9cqQaV+9Io2nuDRFwOquK07AnF1H0+6ov70lSMxN0Sb7KFTOSa1yaVqHJqy3sABm8SLDgViwq4Q+YObFLuEi2m4OeFdMhbmQcSUlAJY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775143633; c=relaxed/simple;
-	bh=kGf9sbyWrxAyCWnz0C8mXUti/kFwGhKtsrHzpE+m/Fg=;
+	s=arc-20240116; t=1775143828; c=relaxed/simple;
+	bh=JZFjXO/jfZfhRYVqajlzU08tgbq12iwxWILX1Zz+5cY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fmvs9suR9mPeQe4NPuY0pscZDayQxzKpOtXLoy0oQyfZoWsNucdp+VHkRfRFs+fQqj79vv8YLZIS76iHk78mcs0dIVVqkajWXg5RZ1PHxiCF8M2O3RZJwv49yssadNyZvYMHoqN2kOIw1ENhMRYyLWJZt5iLaoqbqhYeY/bYDQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tbSY9F5P; arc=pass smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=sHW3C9kn+XdtMtwVSGH9ugs83i1SAHw57Tq9Q6Jj6/aXgaXyiUi6H2GwZBVqgE4DonLw+/NN/41pDIPjf+Plc5jqZTZT065Y33O2+m6rARfE6fReUVqNiFrrOzK353ocNqj8rKPSr6IlX6jzTetH4+N8H2Ypb/eNDPGVvlBaT4c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NSpBe2n4; arc=pass smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbSY9F5P"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b0c12be0ecso104335ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 08:27:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775143631; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSpBe2n4"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2b2591757fbso119815ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 08:30:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775143827; cv=none;
         d=google.com; s=arc-20240605;
-        b=GtDqbXLJ/w8k1JlNveMs9tUOeVakifiuF4UvTPUx8fQlN+Qe/OIgjUtQvpdGCQav7n
-         tJQ3N616VU6T3aVlAyS+sE+n5N1NP/4zsgqqVXdI7HCW0vDusXOdDSCGAyIkrbAK3iTV
-         fd4qoM1dHP/wuIXkVzA6Nb9iF5jLjYjZe7b2CZOpdWN+NiwL3aTLEBYrmldH6/CLqBoo
-         6FljNOxptf6FhtaCyEqTJ8fj7io5IeHRME+3x2/7/thuUN7XrsYnOEvhijEPTAHRgdoH
-         /dJXcJGB85AwHyZFfnDm7g/OsPUXlrLzq6aZB+mX9s0U6j9DQFFd0W+iRlPUQ0MNIIuq
-         H4KA==
+        b=Xu/SMYPHw335a16vEPdUGI1zyl7atqO2ZqpXp0RoiDI1vtqnmAWnk4dU+ce+b0fRBh
+         JV7Z5KcACx9v6Es3f4ldVpsVFg4K77H0qs+avwiuY4WH0Qojkiyaj8AkHXDoOA0F4F8+
+         rsKBE6hbvFwC3JywfYtplvsMddw6K82l6v8d0bymSb6gOTHNuLImdXJbhUxf6z2S2elD
+         eb5VjgUWfuCq6ft3pEtJ86kGY6iMJHlAU9vG8AjYKp+KTYNXaaXBlwFRFNDi69sZ39DZ
+         B/Q+0seWvD6OVnB6amgqtrHAIfMamWJw29YrVI1VfY5KvFigDhE7/Xhx/chrGfK5zQtw
+         btgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=obs00e+wrJFs2sWumo70dIrKKwlJrD6vLf8ObLD+lkA=;
-        fh=2Fzq7r2uihaLIdOydyXZXr5yX51Q2HjxV7O7VnP98EQ=;
-        b=eRfKljbaONsZZ+8NDypi5meHd2OxvEskqAkeL8BQ5zq4Q9RZCJ1XjzX9hCz3x/4GeC
-         kMw4IhK9TDtdyyfH+2j843BwwAv1/TfAo20DnPRCcaXJI9ygD/dSBaNNOqxRXmXAgGEk
-         cPtuKnrwMgwUoIt4Kb4CZcQk/YXeIUpo2iG8IluB2cG44da3fjbALMu8q+dqyw30B3+e
-         xsqP+Pyych71KVQQW3vPQzoFUR2FemsgrRtn908yYZIjeFBvPrAIF9NXu6YjwhNtZPx9
-         0tBUtzmqs4p2rFp6bf87h/ETGv9UgcJWRkjHc1V/lexS1Ba//ED0BrsFd+doE2d7jsaF
-         BGHw==;
+        bh=I5haVRGC9b7QkQ0SSs9IjxxUXgTNuHV1w/UHzqTO5Ok=;
+        fh=BAS4YuL72xbnq46spPKkqDUOcBtdtW9FeDyWGSS3GYk=;
+        b=B4IvVd6AUudLVnR6zXJvlfOpXwGQKyUU8Ilvtw3zwB/V5Ytcoh1fiPqgE4yfz3qGnH
+         8XY7DOyHP6CrnSJUY/GaJcA1/UVxV2L+No7+fv92irphHQh+UWgiA7Qps+8/asyai/dG
+         jAvEg20aV8pZxCFzR2GtYtintH4xGzilM4mc2gvXgLchNCLcuEMeVClwB9Snd68r7O/E
+         M7mqTj9J/2FDPEp0M7NjP9irIMR8AolVOeFHX/6/bl2ykh5DAcri4yNO2wDZJoOiKsqt
+         vM6GO4oJr0kalEsqtQ5ckU1lHNul8ei8EyisekHZcIvRDkorJVMaU5pbAK8N1RFIFWVf
+         LYSQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775143631; x=1775748431; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775143827; x=1775748627; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=obs00e+wrJFs2sWumo70dIrKKwlJrD6vLf8ObLD+lkA=;
-        b=tbSY9F5PCQRAWRp3dFByDzGKpvpJixEEUSBH4hbhjTXiCgWI6Qkq84qZmi5GqlNYVy
-         mMXgWsLVRNd8cXoLNy3F5Kvd8wjjmHvk9rMzv/G8A1kJEQJC7GdKXd1WmkwdqFRVIkO0
-         De3xAXRlVL78hiOPC0VO+v81pgco+Jryd0lo9r2lNHNui08pkjJRlDt+7SU6DRUdWkRj
-         DlexhNC1ZOP72ceLlIVrqjAZzFJmSHH+CGEe2McSrfKaLIKlQmU/r13I6jpP8iSSrbgM
-         wVAlDGBh+KF+42uXGuzvRTJ9NP7+/kIxNvgG41CZN8r0KSm6F9QEkyMRM6JnnQwFHOSc
-         DdEA==
+        bh=I5haVRGC9b7QkQ0SSs9IjxxUXgTNuHV1w/UHzqTO5Ok=;
+        b=NSpBe2n4aQqfgVAgJ8HhmhsBc/U0nrNRxy8yvXELQ8/80cDG4LPKK7EsRl+aJqZF7C
+         uGINzJFkc6rHavgVB1cy6oplqTjFQefGAZTNEX8nNa0LAzHUlOYJLUSVxFPDjQ6miAH7
+         gSi0XXmhegqiiwE3F8WmeCV4qUSgL53o4+nkZInQKMoh5ZJ4iAHlK3Bq0Ikg9OB/x9IQ
+         90kQZuQNCo0LEY9S2loZElKLaJGWG74kzkiZZLLNFdZyLAxb3wgHx0hNPWUiWb6mIOQW
+         DEOnQnhqC5/sJNRKtVlwG2GvpXiB09HZxVj250P4Bxc9wEIHDnh1Nobu6rdyh9ImUhuM
+         Ej8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775143631; x=1775748431;
+        d=1e100.net; s=20251104; t=1775143827; x=1775748627;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=obs00e+wrJFs2sWumo70dIrKKwlJrD6vLf8ObLD+lkA=;
-        b=gCjGPGXwvjg8tzwRVia0mIvz9PCvXxo4VAZZAh1/z1cUqbXgwT16KimxpFZb1kLopV
-         Rk9MQuRqBFiThdFjKYEPH+NgOc25xblho+WdlkfLsaGE3TvkSPw5Ldd5/M7yKt/MuKZY
-         fFUTTzuD9aGvL1q4fiIzGcETr/NRD7mkvSNC+l+seZRNi470LkPJO+d59m5DZ/6mD2Bl
-         R3QITiI270jo5zbJj6X/ait4GIVniWXrbCrokY1JYZW7zbJ4DaWprPUJMHgwRnECWbvG
-         Tot5UCX8JErDiI6fjEOoTOEzVnumIqWx+Cn383Otq1NulaIyCP+JUO+32FFVCxpFJ8Qd
-         j8gg==
-X-Forwarded-Encrypted: i=1; AJvYcCXv4bc4FoaZQ2ySfJMTUYKb7uod+b4P3c+m/rcj+GZ8S6I5Up8Wyjps2MI1zVoxnqHraANX+UgJllYHCd3l9SAx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFjNwKQNJMWneonxRnAQ2ElM9zIw1LJPhh5RdvAXloe1ZJfHkP
-	v3VNd29EXzBshmMSFsrtHA+iub7nBqd6OshF9jyu7RFBU+bcknKikYIZF9dpYW2vKymkPuwzGEZ
-	khtP3XM7Oi/8SdcPO4nR1T6ALsKXnmF6AKe+5WVIi
-X-Gm-Gg: AeBDiet0RsCtrflOiI3Do2GMuYNrUMvu5rSBgyELJz4l/2sgC08JUVuUbhBInZ/HsIl
-	aRmlwgP94GdqJuT7mqcwOHrgMKl6Gv0dN3iAydUyqerdWfmGU9MT1QPneNjm293bMQEzOVVUtXp
-	aryl+Rf9W4ufJgjcTnHI2qW267thOfbcMM2m1wFud9Ldv4MtRxSSc7uDxUS8uC8nUu7Kl1qd9Z1
-	dxefITB5UM0uJjVkQje9JNavRKjj7p471CsbwXh89ViUxoTGkVY4gEK0tWNykIPU+9RfBOI00L/
-	lRmGAS4uoK+wKHUqW/6v2TisAD71pLvJEHiS
-X-Received: by 2002:a17:902:e74e:b0:2ae:575b:2345 with SMTP id
- d9443c01a7336-2b2784835cemr2064795ad.9.1775143630848; Thu, 02 Apr 2026
- 08:27:10 -0700 (PDT)
+        bh=I5haVRGC9b7QkQ0SSs9IjxxUXgTNuHV1w/UHzqTO5Ok=;
+        b=KT+rTuDsVbWOMigmQUzISFbkPVxumYt0qHAJwSWx2HnHSIlmRvJsPT02jgmcwLB1YF
+         c96z0dKtKLAsgSNryl5L10YJ0Zn6LcPS9YyeTh43+9jquSCOAHDBKGdRxWcHn/LHXMrm
+         5GzisINTzoN+mgkDBiY9VcDlnIbaBwKKyGnsDn3J6BIzmKrJjfjNlfO9vl/hkWk6HVqA
+         hsnFEDG4bUkLmXQqwLrI1rrNAfbj7nkXycbj6jC1TzuhnKPYoARFIACgkVtGMo2o+mlW
+         PtxqwNLOxvYLYqjOryINxq7ZXP70BS7Hhx08vdQ0/6O2I5slfHb+YOr/7hKEeqTteT0u
+         Wf5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqqQ4D8v6yuGRQSvCYO0A129O9hLn7Y1pQ4FGTyxk1pMEC7TGYsohxnS9ExvYO40dIm1gNegQTNU8/ZWi+fHoY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc0kU5Kf3E60uVlbtuQ1Wl6SIhHpaRzdGRbg+YsvyB1xTBeSLP
+	zcu46R/j6aWNeZnzBryd9x9FZhWK2V2TOBQ9j0pZn7UjV1imh/ghMyYkGIrF3tk5oOHdD0lBUm2
+	i5YWNEGRPEdABdR12j6/nA/zk9UqRCfvLufuzD2r4
+X-Gm-Gg: AeBDiesmAdKhZrzoatvA74e7hISQBoGkBE7Pqo50HoqxWoPdrS0Wk9Kb2PMpLHfOHPZ
+	jhg5QuNMSFLyM6Dmdb2OuUYHCOk0uWDCnIuWI55UZ47gPw9trIKaiUrwBQbxnIwOY8l6Q9/M0QH
+	rQSNHHOy9QH9AAwxaTSdcZ+EO6knHubCYqSN8+fPOehe5A+U8ojokHwUs9H4s7rRO6oPsjjucxM
+	BNlwyFK6wy3PE70wZdh3yJWzcq25uYv4kBCiMBPF/unPpZHx6uBFFJLnC2fSLxzxTLFrnCyxW/X
+	XCOTD+c408SWR2mrHp9XpTyw6UYhgJWj1iXx
+X-Received: by 2002:a17:903:b8d:b0:271:9873:80d9 with SMTP id
+ d9443c01a7336-2b278455672mr2105515ad.7.1775143826015; Thu, 02 Apr 2026
+ 08:30:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401-james-spe-impdef-decode-v1-0-ad0d372c220c@linaro.org> <20260401-james-spe-impdef-decode-v1-3-ad0d372c220c@linaro.org>
-In-Reply-To: <20260401-james-spe-impdef-decode-v1-3-ad0d372c220c@linaro.org>
+References: <20260401-james-spe-impdef-decode-v1-0-ad0d372c220c@linaro.org> <20260401-james-spe-impdef-decode-v1-2-ad0d372c220c@linaro.org>
+In-Reply-To: <20260401-james-spe-impdef-decode-v1-2-ad0d372c220c@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Apr 2026 08:26:59 -0700
-X-Gm-Features: AQROBzAMz7khfd74Y0zsjFeuyutU7U6Voo59fVJW6yu6K4lYUjWspkQFbEqalcU
-Message-ID: <CAP-5=fVcYOJ_3TWd6won5FVaH2MH6QwLhCoCRnNzzeE-9PgO1Q@mail.gmail.com>
-Subject: Re: [PATCH 3/4] perf arm_spe: Decode Arm N1 IMPDEF events
+Date: Thu, 2 Apr 2026 08:30:14 -0700
+X-Gm-Features: AQROBzAP6yKuK4YHefgxpwrxzp8Y2RKU7903BiEjJc1CooYruerIUT1QOmGlPIg
+Message-ID: <CAP-5=fXxogy1-ZijUy1oWEjOM6JOzxE6erXEi0_uEzTc7M8vVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] perf arm_spe: Turn event name mappings into an array
 To: James Clark <james.clark@linaro.org>
 Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
 	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
@@ -104,254 +104,171 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Apr 1, 2026 at 7:26=E2=80=AFAM James Clark <james.clark@linaro.org>=
  wrote:
 >
-> From the TRM [1], N1 has one IMPDEF event which isn't covered by the
-> common list. Add a framework so that more cores can be added in the
-> future and that the N1 IMPDEF event can be decoded. Also increase the
-> size of the buffer because we're adding more strings and if it gets
-> truncated it falls back to a hex dump only.
+> This is so we can have a single function that prints events and can be
+> used with multiple mappings from different CPUs. Remove any bit that was
+> printed so that later we can print out the remaining unknown impdef
+> bits.
 >
-> [1]: https://developer.arm.com/documentation/100616/0401/Statistical-Prof=
-iling-Extension/implementation-defined-features-of-SPE
-> Suggested-by: Al Grant <al.grant@arm.com>
+> No functional changes intended.
+>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  tools/perf/util/arm-spe-decoder/Build              |  2 +
->  .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 45 ++++++++++++++++=
-++++--
->  .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |  5 ++-
->  tools/perf/util/arm-spe.c                          | 13 ++++---
->  4 files changed, 54 insertions(+), 11 deletions(-)
+>  .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 88 +++++++++++-----=
+------
+>  1 file changed, 43 insertions(+), 45 deletions(-)
 >
-> diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-=
-spe-decoder/Build
-> index ab500e0efe24..97a298d1e279 100644
-> --- a/tools/perf/util/arm-spe-decoder/Build
-> +++ b/tools/perf/util/arm-spe-decoder/Build
-> @@ -1 +1,3 @@
->  perf-util-y +=3D arm-spe-pkt-decoder.o arm-spe-decoder.o
-> +
-> +CFLAGS_arm-spe-pkt-decoder.o +=3D -I$(srctree)/tools/arch/arm64/include/=
- -I$(OUTPUT)arch/arm64/include/generated/
 > diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tool=
 s/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-> index c880b0dec3a1..42a7501d4dfe 100644
+> index 5769ba2f4140..c880b0dec3a1 100644
 > --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
 > +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-> @@ -15,6 +15,8 @@
+> @@ -276,6 +276,48 @@ static int arm_spe_pkt_out_string(int *err, char **b=
+uf_p, size_t *blen,
+>         return ret;
+>  }
 >
->  #include "arm-spe-pkt-decoder.h"
->
-> +#include "../../arm64/include/asm/cputype.h"
-
-Sashiko spotted:
-https://sashiko.dev/#/patchset/20260401-james-spe-impdef-decode-v1-0-ad0d37=
-2c220c%40linaro.org
-"""
-This isn't a bug, but does this include directive rely on accidental
-path normalization?
-
-The relative path ../../arm64/include/asm/cputype.h does not exist relative
-to arm-spe-pkt-decoder.c. It only compiles because the Build file adds
--I$(srctree)/tools/arch/arm64/include/ to CFLAGS.
-
-Would it be cleaner to use #include <asm/cputype.h> to explicitly rely on
-the include path?
-[ ... ]
-"""
-I wouldn't use <asm/cputype.h> due to cross-compilation and the like,
-instead just add the extra "../" into the include path.
-
+> +struct ev_string {
+> +       u8 event;
+> +       const char *desc;
+> +};
 > +
->  static const char * const arm_spe_packet_name[] =3D {
->         [ARM_SPE_PAD]           =3D "PAD",
->         [ARM_SPE_END]           =3D "END",
-> @@ -307,6 +309,11 @@ static const struct ev_string common_ev_strings[] =
-=3D {
->         { .event =3D 0, .desc =3D NULL },
->  };
->
-> +static const struct ev_string n1_event_strings[] =3D {
-> +       { .event =3D 12, .desc =3D "LATE-PREFETCH" },
+> +static const struct ev_string common_ev_strings[] =3D {
+> +       { .event =3D EV_EXCEPTION_GEN, .desc =3D "EXCEPTION-GEN" },
+> +       { .event =3D EV_RETIRED, .desc =3D "RETIRED" },
+> +       { .event =3D EV_L1D_ACCESS, .desc =3D "L1D-ACCESS" },
+> +       { .event =3D EV_L1D_REFILL, .desc =3D "L1D-REFILL" },
+> +       { .event =3D EV_TLB_ACCESS, .desc =3D "TLB-ACCESS" },
+> +       { .event =3D EV_TLB_WALK, .desc =3D "TLB-REFILL" },
+> +       { .event =3D EV_NOT_TAKEN, .desc =3D "NOT-TAKEN" },
+> +       { .event =3D EV_MISPRED, .desc =3D "MISPRED" },
+> +       { .event =3D EV_LLC_ACCESS, .desc =3D "LLC-ACCESS" },
+> +       { .event =3D EV_LLC_MISS, .desc =3D "LLC-REFILL" },
+> +       { .event =3D EV_REMOTE_ACCESS, .desc =3D "REMOTE-ACCESS" },
+> +       { .event =3D EV_ALIGNMENT, .desc =3D "ALIGNMENT" },
+> +       { .event =3D EV_TRANSACTIONAL, .desc =3D "TXN" },
+> +       { .event =3D EV_PARTIAL_PREDICATE, .desc =3D "SVE-PARTIAL-PRED" }=
+,
+> +       { .event =3D EV_EMPTY_PREDICATE, .desc =3D "SVE-EMPTY-PRED" },
+> +       { .event =3D EV_L2D_ACCESS, .desc =3D "L2D-ACCESS" },
+> +       { .event =3D EV_L2D_MISS, .desc =3D "L2D-MISS" },
+> +       { .event =3D EV_CACHE_DATA_MODIFIED, .desc =3D "HITM" },
+> +       { .event =3D EV_RECENTLY_FETCHED, .desc =3D "LFB" },
+> +       { .event =3D EV_DATA_SNOOPED, .desc =3D "SNOOPED" },
+> +       { .event =3D EV_STREAMING_SVE_MODE, .desc =3D "STREAMING-SVE" },
+> +       { .event =3D EV_SMCU, .desc =3D "SMCU" },
 > +       { .event =3D 0, .desc =3D NULL },
 > +};
 > +
->  static u64 print_event_list(int *err, char **buf, size_t *buf_len,
->                             const struct ev_string *ev_strings, u64 paylo=
+> +static u64 print_event_list(int *err, char **buf, size_t *buf_len,
+> +                           const struct ev_string *ev_strings, u64 paylo=
 ad)
->  {
-> @@ -318,14 +325,44 @@ static u64 print_event_list(int *err, char **buf, s=
-ize_t *buf_len,
->         return payload;
->  }
->
-> +struct event_print_handle {
-> +       const struct midr_range *midr_ranges;
-> +       const struct ev_string *ev_strings;
-> +};
-> +
-> +#define EV_PRINT(range, strings)                       \
-> +       {                                       \
-> +               .midr_ranges =3D range,           \
-> +               .ev_strings =3D strings,  \
-> +       }
-> +
-> +static const struct midr_range n1_event_encoding_cpus[] =3D {
-> +       MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-> +       {},
-> +};
-> +
-> +static const struct event_print_handle event_print_handles[] =3D {
-> +       EV_PRINT(n1_event_encoding_cpus, n1_event_strings),
-> +};
-> +
->  static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
-> -                                 char *buf, size_t buf_len)
-> +                                 char *buf, size_t buf_len, u64 midr)
->  {
->         u64 payload =3D packet->payload;
->         int err =3D 0;
->
->         arm_spe_pkt_out_string(&err, &buf, &buf_len, "EV");
-> -       print_event_list(&err, &buf, &buf_len, common_ev_strings, payload=
-);
-> +       payload =3D print_event_list(&err, &buf, &buf_len, common_ev_stri=
-ngs,
-> +                                  payload);
-> +
-> +       /* Try to decode IMPDEF bits for known CPUs */
-> +       for (unsigned int i =3D 0; i < ARRAY_SIZE(event_print_handles); i=
-++) {
-> +               if (is_midr_in_range_list(midr,
-> +                                         event_print_handles[i].midr_ran=
-ges))
-> +                       payload =3D print_event_list(&err, &buf, &buf_len=
-,
-> +                                                  event_print_handles[i]=
-.ev_strings,
-> +                                                  payload);
-> +       }
->
->         return err;
->  }
-> @@ -506,7 +543,7 @@ static int arm_spe_pkt_desc_counter(const struct arm_=
-spe_pkt *packet,
->  }
->
->  int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
-> -                    size_t buf_len)
-> +                    size_t buf_len, u64 midr)
->  {
->         int idx =3D packet->index;
->         unsigned long long payload =3D packet->payload;
-> @@ -522,7 +559,7 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet=
-, char *buf,
->                 arm_spe_pkt_out_string(&err, &buf, &blen, "%s", name);
->                 break;
->         case ARM_SPE_EVENTS:
-> -               err =3D arm_spe_pkt_desc_event(packet, buf, buf_len);
-> +               err =3D arm_spe_pkt_desc_event(packet, buf, buf_len, midr=
-);
->                 break;
->         case ARM_SPE_OP_TYPE:
->                 err =3D arm_spe_pkt_desc_op_type(packet, buf, buf_len);
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tool=
-s/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-> index adf4cde320aa..17b067fe3c87 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-> @@ -11,7 +11,7 @@
->  #include <stddef.h>
->  #include <stdint.h>
->
-> -#define ARM_SPE_PKT_DESC_MAX           256
-> +#define ARM_SPE_PKT_DESC_MAX           512
->
->  #define ARM_SPE_NEED_MORE_BYTES                -1
->  #define ARM_SPE_BAD_PACKET             -2
-> @@ -186,5 +186,6 @@ const char *arm_spe_pkt_name(enum arm_spe_pkt_type);
->  int arm_spe_get_packet(const unsigned char *buf, size_t len,
->                        struct arm_spe_pkt *packet);
->
-> -int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf, size_t=
- len);
-> +int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf, size_t=
- len,
-> +                    u64 midr);
->  #endif
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 7447b000f9cd..46f0309c092b 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -135,7 +135,7 @@ struct data_source_handle {
->         }
->
->  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
-> -                        unsigned char *buf, size_t len)
-> +                        unsigned char *buf, size_t len, u64 midr)
->  {
->         struct arm_spe_pkt packet;
->         size_t pos =3D 0;
-> @@ -161,7 +161,7 @@ static void arm_spe_dump(struct arm_spe *spe __maybe_=
-unused,
->                         color_fprintf(stdout, color, "   ");
->                 if (ret > 0) {
->                         ret =3D arm_spe_pkt_desc(&packet, desc,
-> -                                              ARM_SPE_PKT_DESC_MAX);
-> +                                              ARM_SPE_PKT_DESC_MAX, midr=
-);
->                         if (!ret)
->                                 color_fprintf(stdout, color, " %s\n", des=
-c);
->                 } else {
-> @@ -174,10 +174,10 @@ static void arm_spe_dump(struct arm_spe *spe __mayb=
-e_unused,
->  }
->
->  static void arm_spe_dump_event(struct arm_spe *spe, unsigned char *buf,
-> -                              size_t len)
-> +                              size_t len, u64 midr)
->  {
->         printf(".\n");
-> -       arm_spe_dump(spe, buf, len);
-> +       arm_spe_dump(spe, buf, len, midr);
->  }
->
->  static int arm_spe_get_trace(struct arm_spe_buffer *b, void *data)
-> @@ -1469,8 +1469,11 @@ static int arm_spe_process_auxtrace_event(struct p=
-erf_session *session,
->                 /* Dump here now we have copied a piped trace out of the =
-pipe */
->                 if (dump_trace) {
->                         if (auxtrace_buffer__get_data(buffer, fd)) {
-> +                               u64 midr =3D 0;
-> +
-> +                               arm_spe__get_midr(spe, buffer->cpu.cpu, &=
-midr);
+> +{
+> +       for (const struct ev_string *ev =3D ev_strings; ev->desc !=3D NUL=
+L; ev++) {
+> +               if (payload & BIT(ev->event))
+> +                       arm_spe_pkt_out_string(err, buf, buf_len, " %s", =
+ev->desc);
+> +               payload &=3D ~BIT(ev->event);
 
-Sashiko claims to have spotted an issue here:
+Sashiko has a bunch of worries in these patches about 32-bit builds:
+https://sashiko.dev/#/patchset/20260401-james-spe-impdef-decode-v1-0-ad0d37=
+2c220c%40linaro.org
+The one here is:
 """
-Is it possible for arm_spe__get_midr() to cause a segmentation fault here?
+Since payload is a u64, does using ~BIT(ev->event) unintentionally clear
+the upper 32 bits on 32-bit architectures?
 
-If the trace is from an older recording (metadata version 1) and the
-environment lacks a CPUID string (such as during cross-architecture
-analysis), perf_env__cpuid() returns NULL.
+On 32-bit systems, BIT() evaluates to a 32-bit unsigned long. The bitwise
+NOT operation creates a 32-bit mask, which is then zero-extended to 64 bits
+during the compound assignment to the payload.
 
-It appears arm_spe__get_midr() then passes this NULL pointer to
-strtol(cpuid, NULL, 16), which leads to undefined behavior.
+This would discard bits 32-63, contradicting the intent mentioned in the
+commit message to preserve the remaining unknown impdef bits for later
+printing.
+
+Would using BIT_ULL() be safer here to ensure a 64-bit inverted mask?
 """
-
-But this feels like, if this happens you're already having a bad time
-and these changes aren't necessarily making things worse.
 
 Thanks,
 Ian
 
->                                 arm_spe_dump_event(spe, buffer->data,
-> -                                               buffer->size);
-> +                                               buffer->size, midr);
->                                 auxtrace_buffer__put_data(buffer);
->                         }
->                 }
+> +       }
+> +       return payload;
+> +}
+> +
+>  static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
+>                                   char *buf, size_t buf_len)
+>  {
+> @@ -283,51 +325,7 @@ static int arm_spe_pkt_desc_event(const struct arm_s=
+pe_pkt *packet,
+>         int err =3D 0;
+>
+>         arm_spe_pkt_out_string(&err, &buf, &buf_len, "EV");
+> -
+> -       if (payload & BIT(EV_EXCEPTION_GEN))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " EXCEPTION-=
+GEN");
+> -       if (payload & BIT(EV_RETIRED))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " RETIRED");
+> -       if (payload & BIT(EV_L1D_ACCESS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " L1D-ACCESS=
+");
+> -       if (payload & BIT(EV_L1D_REFILL))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " L1D-REFILL=
+");
+> -       if (payload & BIT(EV_TLB_ACCESS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " TLB-ACCESS=
+");
+> -       if (payload & BIT(EV_TLB_WALK))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " TLB-REFILL=
+");
+> -       if (payload & BIT(EV_NOT_TAKEN))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " NOT-TAKEN"=
+);
+> -       if (payload & BIT(EV_MISPRED))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " MISPRED");
+> -       if (payload & BIT(EV_LLC_ACCESS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " LLC-ACCESS=
+");
+> -       if (payload & BIT(EV_LLC_MISS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " LLC-REFILL=
+");
+> -       if (payload & BIT(EV_REMOTE_ACCESS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " REMOTE-ACC=
+ESS");
+> -       if (payload & BIT(EV_ALIGNMENT))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " ALIGNMENT"=
+);
+> -       if (payload & BIT(EV_TRANSACTIONAL))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " TXN");
+> -       if (payload & BIT(EV_PARTIAL_PREDICATE))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " SVE-PARTIA=
+L-PRED");
+> -       if (payload & BIT(EV_EMPTY_PREDICATE))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " SVE-EMPTY-=
+PRED");
+> -       if (payload & BIT(EV_L2D_ACCESS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " L2D-ACCESS=
+");
+> -       if (payload & BIT(EV_L2D_MISS))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " L2D-MISS")=
+;
+> -       if (payload & BIT(EV_CACHE_DATA_MODIFIED))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " HITM");
+> -       if (payload & BIT(EV_RECENTLY_FETCHED))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " LFB");
+> -       if (payload & BIT(EV_DATA_SNOOPED))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " SNOOPED");
+> -       if (payload & BIT(EV_STREAMING_SVE_MODE))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " STREAMING-=
+SVE");
+> -       if (payload & BIT(EV_SMCU))
+> -               arm_spe_pkt_out_string(&err, &buf, &buf_len, " SMCU");
+> +       print_event_list(&err, &buf, &buf_len, common_ev_strings, payload=
+);
+>
+>         return err;
+>  }
 >
 > --
 > 2.34.1
