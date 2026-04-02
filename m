@@ -1,236 +1,166 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB9430F816
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A52E266C
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775144790; cv=none; b=ZQUy9DJVlcyRZWpD2V5IhauFV6v6pEZqz4M5MkG7iqsma0c+tfuGot32C3IKiKyEHQvZ/KKJ+vICw7fNxkXOzJK2oERJSXrkzHais0rrEBdjdE7RfCSXgtRyASlRH/nkC8o5W3SszpyayI6bHGYmmsXlvf885oPN0mMwhyJsfrI=
+	t=1775144910; cv=none; b=fztBjhLyL+JMDQxyn43VHmduHGhC3lEsEeaSxYtxwqVRoVP8yH4tH+Vfsp3zGZ+ZqNdKX2t6+ZL5+50wUt3sgEDl+gMhG953LSshbxM5Y7sW261qpa/vAwVEVIoUYh6Y9YMut5OEWFWmeVN4hckpvkR/w6MXeWc3V4VRn8mlgKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775144790; c=relaxed/simple;
-	bh=GSyWse/iVZS0AkBDe2MT9U+atVMNYrdthdUTw96SoYE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=WiM5DZ2h3SUU+O46qSXIFx5wcUXGdwvolHwXx+p9V2Q9s3yEGU0zt3P5YZ3GULbqe+W2/BQXoQc6KjFEx2R04gIMzz1Y/0Uwqh/PT02VH3kw2uOKkLUKG178GkajNkeVc4sXVXXyeEk7r/2qDnF+4mNNtaP0HR0/djudQ2bAj0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NXQej2T7; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1775144910; c=relaxed/simple;
+	bh=mR4dJqr/kRsaH7W3VkaiLJgPwY3uRTk2WenRHZJDliw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=eEjOFXJwCE9hkMEID8oP9FIPKTaTPW07g6p8yAcs4QxY3XZEj9oz6dubUU6OI+6T9a59Bn/lWjVnm3DobAdKCoWd1UMNzcLEIwGr0p6wlcTYjP57db4UySg7w0janBx15dd1ADyHiNJ5Y21LHE0Tx7IZ24DSftnYzYrWHrtXPYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OO2NlgNO; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NXQej2T7"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632EVRq2330917;
-	Thu, 2 Apr 2026 15:46:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=csUms1
-	1w8sD4yrK8bQgpBN2NcH1O2zwmQoS2J7SG/tI=; b=NXQej2T7cFXN0bx3k4Cet5
-	iHcuFWOupXTcg0Tb+5x/txMcI3MqKavNTWxI1Ndr29GcQe62cIQlIGeeQIBAVw1y
-	Lc3Rh4SNh7Bc9i6SIQfl1CyKpDhGuYZS2/C8Dt6aRrnKEmCH/KEr2H/q2OlUJ7OV
-	5uuVpgItDI0icbur9r0BEJVrMa1afjxXrLH5adxruJoAnVw9hxCWhpyjQ1j80s+G
-	+o+kqApQqzoUxXuLFGw4xI96YWRRrsYgQnMGpSP8Sh1vcRQy+BWQSSLhJZRsy7mM
-	0efrMSnji3lI/p0XFzdEv5Wq773FX2zRjpTMj01VlJ4ZOiIxvX8VrOxz89fTdvwg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d64dgvq3s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 15:46:18 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 632D0oNp008689;
-	Thu, 2 Apr 2026 15:46:17 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6v11tcw2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 15:46:17 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632FkDN649742308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Apr 2026 15:46:13 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0EA1B2004F;
-	Thu,  2 Apr 2026 15:46:13 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5DBEA2004D;
-	Thu,  2 Apr 2026 15:46:08 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.39.17.92])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  2 Apr 2026 15:46:08 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO2NlgNO"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-951c5ac6253so337997241.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 08:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775144908; x=1775749708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1d/eRtpKUBbGeXwWEqsynzXEyvi7SdWU5Nw4sF1GCq0=;
+        b=OO2NlgNOU/7CCVHSfsQeCEPH+aLTiYs6s5JmLbme0PGVMdjQI3xmUwep8tKtDjhCzX
+         nx+dEQvUE1hR+M+TgjoxVF3INs+T6vc1nXNGKryJBti/RRF5+3Cu1etnPbj+OhgIJsRQ
+         dvPO2Si9SHxmBqZ06HPVUXhAvPpx4pTftgcOeWKPpFjRn+G+vs8pZJ7sAhAqULMcfAKU
+         Vs11cZQItNrvIBFYBSpa50bk1//UTiD0fSn0JieHuEiZo0ZI0S196BQVImaJaLjkZDIE
+         5Og63zbHSxta8A3+S1gSvoEuMaoO0WLUm+R0usEaCpnIfkldMoqWQaYLG5fS4aJUC/vk
+         OUPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775144909; x=1775749709;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1d/eRtpKUBbGeXwWEqsynzXEyvi7SdWU5Nw4sF1GCq0=;
+        b=H+tqbuT7/Fo8SCYyJQ+UqTHDRcf9Y/y2OS/Sh+GNmJwL+673Z5zz0MoM7fs/F7CEsl
+         Q/6q9o+O8NfuGqDHxbcKrmZxMIXZxEev93EZqYI2j5lxdGAFB9aykVJwIMCdYaWUjcHR
+         nXcdglwgeSpf+wTFvmTjDqOfTrDprEP8NpeGg8wUS/yDe/9UEIrnWA7LJMT0j9+7zgp4
+         rb1uF2hOWKkC9ZoOQthk8uX4h38s98tbPcHWEXdxfZW1s+Chvxb/7JsOhu1GQhWd8jGC
+         3bV7aKtxxPTlk6mt8FBTa/c047QjJ/RRBT29kMzXYZhETt3OUxKgGxNCkq2moby/v/2T
+         JJMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHIn9hm6PTYBXfncjGTzBOGvoKo4PJF5whoY1XTjZKxf3p2S4D6rlAdY1oGJs2+864A21AM4d6+owDAURPDfcN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiYy7PU+DjX6evipPqjMa1Xx/uTdMR+JXwKqc+lrQV+iybEo4U
+	GNl4j+/+DuG+AOpdaRwvYBT+8wG0ZZpwofxvPIaAnXsqIlb4QsL3bNfv
+X-Gm-Gg: ATEYQzyX9xQNYdOCHc8WGUPmWERU6iN0NhYVyJo3gvrw/is/OYlZSPjkenYx9B0XloL
+	nob+Sc+1HHjN48oTD95ouRPGxcTa0Fl4iBK4hfXEpNwx3ZTyBLq4KIZZq4c0Gg1SRw0ehqcFEvM
+	Ab13g7Z9H5tJtkirksSZmPEK28W4i5pf48pXTTRTtDcXoK6wHufuMZXFPmLzFb5x7fk5rqbPE59
+	x2HDnomEguuRZ771ycvapm6Xt+wPzRvDQtFJs67wCIpEGRiQTC3czFhLmwmj1tWXNp7yGRtJDf/
+	PbSphMdE6euDCG+WjjZqWUGClMk1GCLl8Gwj7GITSQapeUMAt9avUAfMgwIPnx5JhGML7mB8gmX
+	MCNxou6CUeNheskqI+yGfj5aQe3UZvVBkN9tMRcc2F1NLEWAnk+7YdMwPdzCCTS+rYArmdkdwWh
+	lx8vYhXDaVQnymqmvGb1j1ILoFGHMMZ8BjBgL8c/l8uKOzgQiYEA==
+X-Received: by 2002:a05:6102:3e26:b0:605:a89:d007 with SMTP id ada2fe7eead31-6058409b279mr1395979137.29.1775144908605;
+        Thu, 02 Apr 2026 08:48:28 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([2804:388:90c1:8f1:18a2:90d6:46f8:9787])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-953fb84f2c5sm3652725241.5.2026.04.02.08.48.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2026 08:48:28 -0700 (PDT)
+Date: Thu, 02 Apr 2026 12:48:23 -0300
+From: Arnaldo Melo <arnaldo.melo@gmail.com>
+To: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_4/4=5D_perf_symbol=3A_Add_missing_l?=
+ =?US-ASCII?Q?ibgen=2Eh_include_to_get_basename=28=29_prototype?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <CAP-5=fVv=5H-6DOaAr4BSDE=pKrxWDa9oduYbVTozYc-ZeeuRg@mail.gmail.com>
+References: <20260402001740.2220481-1-acme@kernel.org> <20260402001740.2220481-5-acme@kernel.org> <CAP-5=fVv=5H-6DOaAr4BSDE=pKrxWDa9oduYbVTozYc-ZeeuRg@mail.gmail.com>
+Message-ID: <1A659979-30FE-4E90-B4B3-5278A2242C51@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
- all PMU test
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <CAP-5=fX6993MzAEgB7JeVEU5GcVk3PxhkEjMX3G4EZgxPBaBqg@mail.gmail.com>
-Date: Thu, 2 Apr 2026 21:15:54 +0530
-Cc: Venkat <venkat88@linux.ibm.com>, Thomas Falcon <thomas.falcon@intel.com>,
-        acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <A33EEA7D-DB03-4FA9-A0A8-D10115FEF423@linux.ibm.com>
-References: <20260315105751.86835-1-atrajeev@linux.ibm.com>
- <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
- <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
- <ac2uvTXI1iknXwyV@google.com>
- <CAP-5=fX6993MzAEgB7JeVEU5GcVk3PxhkEjMX3G4EZgxPBaBqg@mail.gmail.com>
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDEzOCBTYWx0ZWRfX0/oM6SGp1s8u
- IFKpwXJJu5HYy55U4H2OydF6kJSc6ZrbcOHRvHIi/g0EW+sM2hxtrfPQalBldLdLSI+TiLFBcte
- WWdTw1DkDlJ8+45/ITrtN2++RaziZvUtrptEnxBxmVJK2wiMMYUF4erfEvY++VJUtGkzLHtjiDM
- AFbdJHtwxPTkzkdpc8DQM9uVr1JUjVooHJ4utHnT8iBRXZ0EcuE5zbId0l1IMMfA/PSYkOXo3KS
- aMjs6YVmGvpgzy9U4Ec8iIRLwpC2FpLSQfdQVLRoB4X6UAscqltpP/fKCzCK4m1+Rnr6mpF9uWA
- B16wbaoRGrl35HvnYfLt+10N3RcgXHCpnrRDSIxVQIoZmeqUfU5iDCy9ognizAxDW2FFZBbOUso
- QspfdLKQR69MfBixNKyqkSDkYRnhEbF4uQGlGGHpNWlWm9usEEx57YLN/VcupwS8079V9aCa408
- +NQk894THyCuavdznAg==
-X-Authority-Analysis: v=2.4 cv=QKZlhwLL c=1 sm=1 tr=0 ts=69ce8f4a cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=1XWaLZrsAAAA:8
- a=VwQbUJbxAAAA:8 a=5P6_zFFMFuBFcQzlmxgA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: ELZTcBwiiz92CdProDJUwfuPWyYx91Gr
-X-Proofpoint-ORIG-GUID: NBYhbLeaYpwzozA_h9oOJXCh9G9ez-Aj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-02_02,2026-04-02_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 phishscore=0 adultscore=0 impostorscore=0 clxscore=1011
- spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020138
 
 
 
-> On 2 Apr 2026, at 5:27=E2=80=AFAM, Ian Rogers <irogers@google.com> =
+On April 2, 2026 12:19:24 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom> =
 wrote:
->=20
-> On Wed, Apr 1, 2026 at 4:48=E2=80=AFPM Namhyung Kim =
-<namhyung@kernel.org> wrote:
->>=20
->> On Wed, Apr 01, 2026 at 01:40:47PM -0700, Ian Rogers wrote:
->>> This looks like a latent Intel cpu_atom PMU bug. Thomas, wdyt?
->>=20
->> Are you ok with the change itself then?
->>=20
->> I'm not sure what's the expectation when the test runs with a regular
->> user.  I assume the intention of this change is running as root..
->=20
-> So the test is failing as root on Intel, and the log output is
-> extensive. I'd prefer not to have the log output, so we may need to
-> work past some known broken items. Otherwise, the change looks okay,
-> but there are inconsistencies: `grep -q "<not supported>"` is used in
-> the existing code, while `grep -q "not supported"` is used here.
->=20
-> Thanks,
-> Ian
->=20
->> Thanks,
->> Namhyung
->>=20
+>On Wed, Apr 1, 2026 at 5:20=E2=80=AFPM Arnaldo Carvalho de Melo <acme@ker=
+nel=2Eorg> wrote:
+>>
+>> From: Arnaldo Carvalho de Melo <acme@redhat=2Ecom>
+>>
+>> This works in some places because there are tricks to prefer a GNU
+>> version instead of the XPG version, but started breaking in some musl
+>> libc systems due to some unrelated change that made libgen=2Eh stop bei=
+ng
+>> included by chance=2E
+>>
+>> Since symbol=2Eh is using basename(), make it include libgen=2Eh=2E
+>
+>Huh, this is being flagged by Sashiko:
+>"""
+>Could this include cause segmentation faults by exposing the POSIX versio=
+n
+>of basename() to the rest of the tools?
+>
+>According to the POSIX specification, if the input is an empty string
+>or slashes, basename() can return a pointer to a statically allocated,
+>read-only string literal (such as "=2E" or "/")=2E
+>
+>In tools/perf/util/probe-event=2Ec:convert_exec_to_group(), the code take=
+s
+>the return value of basename() and modifies it in-place:
+>    ptr =3D basename(exec);
+>    =2E=2E=2E
+>    for (ptr2 =3D ptr; *ptr2 !=3D '\0'; ptr2++) {
+>            if (!isalnum(*ptr2) && *ptr2 !=3D '_')
+>                    *ptr2 =3D '_';
+>    }
+>If a user provides an empty target or "/", the POSIX basename() would
+>return a read-only string=2E When the loop attempts to write a null or
+>underscore into it, wouldn't it trigger an immediate segmentation fault?
+>
+>Is there a way we can safely duplicate the returned string before modifyi=
+ng it,
+>or ensure the inputs never resolve to these static strings?
+>"""
+>
+>The story of the two basename versions and the issues appears in the
+>man pages=2E The whole thing makes me think we should avoid basename :-)
 
-Hi Namhyung, Ian
+:-)
 
-Thanks for trying the change and responding.
+I think we should just follow it's advice and use strdup in it's return, i=
+n a helper, and have it's users free it afterwards=2E=20
 
-Sorry, I missed the comment from Sashiko. Next time I will check =
-explicitly for Sashiko comments too.
+- Arnaldo
 
-The intention of this patch has two things:
+>
+>Thanks,
+>Ian
+>
+>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat=2Ecom>
+>> ---
+>>  tools/perf/util/symbol=2Eh | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/perf/util/symbol=2Eh b/tools/perf/util/symbol=2Eh
+>> index c67814d6d6d6f64a=2E=2Eb37ecc2e90f77efe 100644
+>> --- a/tools/perf/util/symbol=2Eh
+>> +++ b/tools/perf/util/symbol=2Eh
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/rbtree=2Eh>
+>>  #include <stdio=2Eh>
+>>  #include <errno=2Eh>
+>> +#include <libgen=2Eh>
+>>  #include "addr_location=2Eh"
+>>  #include "path=2Eh"
+>>  #include "symbol_conf=2Eh"
+>> --
+>> 2=2E53=2E0
+>>
 
-1) It was resulting in =E2=80=9Cfalse pass=E2=80=9D earlier if the test =
-fallback to last check where we run with longer workload. Because error
-  message contains the event name =E2=80=9C$p=E2=80=9D and hence matches =
-the =E2=80=9Cgrep=E2=80=9D check.=20
-
-Example:
-
-   # ./perf stat -e hv_24x7/CPM_ADJUNCT_PCYC/ ./perf bench internals =
-synthesize
-    event syntax error: 'hv_24x7/CPM_ADJUNCT_PCYC/'
-                     \___ Bad event or PMU
-
-    Unable to find PMU or event on a PMU of =E2=80=98hv_24x7'
-    Run 'perf list' for a list of valid events
-
-    Usage: perf stat [<options>] [<command>]
-
-        -e, --event <event>   event selector. use 'perf list' to list =
-available events
-  # echo $?
-     129
-
-
-Here the test checks for :
-  <<>>
-   output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
-   if echo "$output" | grep -q "$p=E2=80=9D
-  <<>>
-
-Since the error message contains the event name, it matches grep check =
-and declares test as pass.
-
- To catch this, patch adds a check for =E2=80=9Creturn code=E2=80=9D=20
-
-+  # checked through possible access limitations and permissions.
-+  # At this step, non-zero return code from "perf stat" needs to
-+  # reported as fail for the user to investigate
-+  if [ $stat_result -ne 0 ]
-+  then
-+    echo "perf stat failed with non-zero return code"
-+    err=3D1
-+    continue
-+  fi
-
-2) If events are supported in system wide monitoring.=20
-
-Namhyung is right here that for regular user it will result in fail . I =
-will take care of having check around that.
-The reason for using =E2=80=9Cnot supported=E2=80=9D text here is:
-
-Example: There is an event in powerpc "vpa_dtl/dtl_all/=E2=80=9C which =
-when run on per thread monitoring:
-
- # ./perf stat  -e vpa_dtl/dtl_all/ true
-    Error: =20
-    No supported events found.
-    Unsupported event (vpa_dtl/dtl_all/H) in per-thread mode, enable =
-system wide with '-a=E2=80=99.
-
-Next running with system wide monitoring:
-
-  # ./perf stat -a -e vpa_dtl/dtl_all/ true
-     Error:
-     No supported events found.
-     The sys_perf_event_open() syscall failed for event =
-(vpa_dtl/dtl_all/H): Operation not supported
-     "dmesg | grep -i perf" may provide additional information.
-
-This is because this event is supported for only =E2=80=9Csampling=E2=80=9D=
- system wide and not counting.=20
-So patch attempts to use =E2=80=9C-a=E2=80=9D, if still it fails, we =
-look for =E2=80=9Cnot supported=E2=80=9D in logs
-
-Namhyung, Ian,
-
-If the addition of =E2=80=9C-a=E2=80=9D can cause regression ( like =
-intel one if its not suppose to be run system wide ),=20
-how about adding a case like this:
-- Look for "enable system wide with '-a=E2=80=99 =E2=80=9C in the error =
-logs
-	- If logs matches this message and if user is root, attempt with =
--a next.
-       - With =E2=80=9C-a=E2=80=9D, If the logs has "Operation not =
-supported=E2=80=9D , test can continue to next event.
-
-Thanks
-Athira
-
-
+- Arnaldo 
