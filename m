@@ -1,98 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F106113790B
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 14:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775141488; cv=none; b=UE7SfAFwdgwvcJEDUIf0ICgFSgCx/uEp84GvOMn2XAefnZXkVi7GmUZkcqXPsSD2FZrgiebNNeFC1sZWRIyKdWhqyXJhmLTWTuOldHwVIJjCTXyb3Y2asnXCjIEQnTXjmP3Tb4TxwxQRW4wv0V7Eg4x2XHBN30QPPWZvHZNGO/E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775141488; c=relaxed/simple;
-	bh=dPiRupAAsB+47PnMZyZc8UQYiFCGbIdywri2EGdgH3w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YkI8wa/00B+oOpB/UI1x9TMxGbPflGn31OGb/fEMivrqoWvly9ogyxdKOzSQcZp7LSaHVyaq6t/loNUx/SAb/PVSjxcVo+UxStDUg+Ebirq6/4tYpe2OvVu4fT9s7pDMIa/dmDwC3MpiSU96fsx/kNMKIn4G4KtWz4+1UDurBdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1Yery15; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86A83E92A9
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 15:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775142566; cv=pass; b=nmk+u7WrhjVJOkAR9UU0v5DNu32/mSwWUVxxSxQZ0Q3DLOdXq0ddGctJl6QxK/bLHRe9HzKPp2wbFxUtdHmEopurse7bLB1G45GzMPm/+Tj3kvN79NqN5Y4NxQzvm2LIuo7sT2eNMcXl4iMNsTAswyuWmRKku1UD/w9UhoAu0i4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775142566; c=relaxed/simple;
+	bh=X8CjnSI/tjqm1ede5+yk1zYHqTWURWfdEsBQJKOqCQI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dnyppO0RWtiLDlrsz2m6XGwZX8cKwSpFRCdvK1SrSiNmE7sTMo4vWesrFdsmEytPpL3aIyUemuEGVYu0TRH7bsCZsKhImmtIiAL6tgaHHod1Pqqk32toV6GZN26mrABUs+swnMta/tSnJvoBoWeJJeJ07UbBFdpcqHRxj+xXu0U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DyT1sXql; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1Yery15"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775141485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VJxTXZZgHS3KNGdR9ycOE5Q1JZarToSEJbSB60v1zoU=;
-	b=b1Yery15ciMK68ee6eTZi2vnkKe7gbxSEhhxGoAm1AeaSkxpFCsj2aLBehqXvquHomwb2g
-	8UTGVxTgNCE+FCMKjlZdjIZOLeMZyrQ6sq763kfmaEPePf5idofSZgwsYShxWdnFJBpMdM
-	Eh16j3+f1eOJ8iuixtWYJqWWUKNtm5Q=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-169-j8-iL6CQNDq2a9n2ulxtdQ-1; Thu,
- 02 Apr 2026 10:51:22 -0400
-X-MC-Unique: j8-iL6CQNDq2a9n2ulxtdQ-1
-X-Mimecast-MFC-AGG-ID: j8-iL6CQNDq2a9n2ulxtdQ_1775141481
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BAE301956046;
-	Thu,  2 Apr 2026 14:51:21 +0000 (UTC)
-Received: from Carbon.redhat.com (unknown [10.44.24.7])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0009919373D8;
-	Thu,  2 Apr 2026 14:51:19 +0000 (UTC)
-From: Michael Petlan <mpetlan@redhat.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	acme@redhat.com,
-	namhyung@kernel.org
-Subject: [PATCH v2] perf trace: Fix potential u64 underflow in duration calculation
-Date: Thu,  2 Apr 2026 16:51:18 +0200
-Message-ID: <20260402145118.1379546-1-mpetlan@redhat.com>
-In-Reply-To: <20260331101020.1270363-1-mpetlan@redhat.com>
-References: <20260331101020.1270363-1-mpetlan@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DyT1sXql"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b243198058so67665ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 08:09:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775142564; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JXuD0GLSBPnCZChAV6a4OFAeHtJ+a8msppK9wT5lcaj8CPtaMMf7rZ8eXNbiT1oaSI
+         AL7lKBTJu+wv3hTbioklFeii2qFBUki9InLxsA6fJeHtcJSyIUgxgnpb69JV4k2XgbKq
+         1nF/buJ5JK+mtDGzshXi3yIC5Q/xzQspidMmiwYCtDRbzMZCJFEuKvTNPoqm88VJOKD1
+         05M8+zUd6yxy349k1Rjl8ECz3hZt9zTMDRhmBUKllhnJDism02Q3pNQof4vWRAW6s1Wb
+         zd4j+4fQ+F4vCZoZsZvvzowvGwX8Lf201jKbgA3CoZJSPvLBTIqGaVXjACL+9NVb9K5U
+         X77Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5NvVC9uAXVaQSavj7B6qNg9YvvTlpKV01rWwJOFU0qQ=;
+        fh=2ggxsn/vSxUTYbAKELz7XTlq/8ot9I2eDr3ykERc3ec=;
+        b=hHYEmkH5qeAQfdiah62p1cmGcvwALlwCLD86/35Llx/+c/PFskFSAzznbU9i4s2Y6g
+         jIzMH8q9kZecN55Co7gKusVni8EUCraIA1tlOuxbbe0inlU0oJq8KKpxbfDSayPww5M0
+         Bka7Ob1KZCzCnSLUpaFvS0tnR5jhqMjt4npqml3Ia7HmYJxEIkYFlaUq+mvKj+aw8jAz
+         Ly5awa9SBOlQMOcT3ovooCc4XCi4xSEiQH5hSXm+Jen+bApdSirhNHZvAPkTkbVNnGYX
+         vhldvzTfeIWfA++NVjnSpeQ5O8aGWO33xA/QDQb583cusmbkCZcJADKPW1MVVH2ab0It
+         f9GQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775142564; x=1775747364; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5NvVC9uAXVaQSavj7B6qNg9YvvTlpKV01rWwJOFU0qQ=;
+        b=DyT1sXqlyvzA8UVsnZeclpaX8EiYbWl6ZkTPrGzlc8YDy3JStworlBWBAvPqIIg4j+
+         yrhV5coyiLt+NdNN5XgPPMNjkdfGcOOrBAD0K9alFkIlTUzgG/YJ7O5ox7npc1MIJcaz
+         qnxHK1WXS2O85UiwsSPLltyNf4ZVb8oLeAbYfoq2b7T6PwT+RwabARgRzHgkXg9vmdkW
+         vIUIw13t0mL6KcqByJQgkMucqr+thneJYsZmgPV2vo4I0YtJo0JUi0/n9ckcl/zQbYsF
+         /172teCX++BgA7PMrLe/T6GOdvmY8V5jcuadQ536rgJvQ9vb+qm57/8ExTKVqIKROOUz
+         4jWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775142564; x=1775747364;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5NvVC9uAXVaQSavj7B6qNg9YvvTlpKV01rWwJOFU0qQ=;
+        b=T9bF+bRsQT4x7W/R/QUv9+gTLoEFQnW9mBsNgPHKGQZEsIxbZpubdBn2pGXl7XBt/E
+         hxQnz7n7fHUEDtTUGuB5aNRiSYw2ZrAWbNletFoT4k3O5TqlRd/Y8pZmLimREKBLZvdB
+         bc7ayF0s7wJU0m2eb9KkvG+nps4jTeHqcLN7a1/NtDNKeC8+mGeHGvbWef7VzBW6N6Mq
+         2QWCMnVgSaOsN9GjcdT6mj3PTR+FGi3WCuhuP3Q9lmac4+zqsHZxzK16X2Jysw3BPpIR
+         8SElvPXQ2iLql5kowYC6d9JVZe3mAYQHTHRKFzs2Zifb3+RG4AMuMPq69li+UQpETzKT
+         7m/A==
+X-Gm-Message-State: AOJu0YyIc9RuYoYscCB3LwHcmnoFH070A4HYgXMYslrhmP0R3GYUExLa
+	HBepEpI7P4S9Nkx/QLnphh4yD97YmXZkgBo1n+kqq+hpZtbrdfcNssT5mLPCE+OkdkZG0YN6b4R
+	lBqs3mNYEmtGDvAnCmtJYINI3Wp/CQrfytu9HMFtl
+X-Gm-Gg: AeBDievHLqN3Mf9Y/OZ8AHv51xjKfYQiWdsn33m5dF69Xfo1zeqMMOJb7a5uoL4MF+/
+	NV0YLvyDgXsm/LMgavf1tCEnZhXppvjDJ+M6xzOjT4/SVW/MH8yCLfu7SM5poWY9ezz8kfMrTIi
+	JSoKM/6Ph+6eBwa97ioo1YkGH62Kcj6lEGKrfmljsheEvbqCQRByPl5OBUVYt4oi1lcFaZSs4E7
+	uXaYunsbK4xkK1LByCVQtkOYnFdj8twN8EOWnQKYtSqcK3w3sM2Z3tey6Of4Fg+r8EPHMhaDshD
+	XHVR5iMlEhF8V5usxrqJyXUBLPhlAJej39jU
+X-Received: by 2002:a17:903:a84:b0:2b0:5c88:51e1 with SMTP id
+ d9443c01a7336-2b278554bb3mr1361445ad.14.1775142563726; Thu, 02 Apr 2026
+ 08:09:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20260331101020.1270363-1-mpetlan@redhat.com> <20260402145118.1379546-1-mpetlan@redhat.com>
+In-Reply-To: <20260402145118.1379546-1-mpetlan@redhat.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 2 Apr 2026 08:09:12 -0700
+X-Gm-Features: AQROBzBV1eZRdLMbexXfO9PNYPFaC98JE9Pv3WlF_GcoahOZhFmeSICVm8TGrJM
+Message-ID: <CAP-5=fUo6GVurv8qQnMfpgN-hYa1ukNLhF_5n2VfEv=X6APBTQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf trace: Fix potential u64 underflow in duration calculation
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Although it happens very rarely, in case of out-of-order events (i.e.
-due to CPU migration when a syscall is executed), the calculation of
-event duration might underflow and thus a bogus value is printed:
+On Thu, Apr 2, 2026 at 7:51=E2=80=AFAM Michael Petlan <mpetlan@redhat.com> =
+wrote:
+>
+> Although it happens very rarely, in case of out-of-order events (i.e.
+> due to CPU migration when a syscall is executed), the calculation of
+> event duration might underflow and thus a bogus value is printed:
+>
+>     2.804 ( 0.001 ms): :49553/49553 rt_sigaction(sig: QUIT, act: 0x7fff40=
+3ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) =3D 0
+>     2.807 ( 0.001 ms): :49553/49553 rt_sigaction(sig: CHLD, act: 0x7fff40=
+3ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) =3D 0
+>     2.815 (18446744073709.438 ms): :49553/49553 execve(filename: 0xbb173a=
+30, argv: 0x55aabb171930, envp: 0x55aabb171120) =3D 0
+>     2.815 ( 0.534 ms): pwd/49553  ... [continued]: execve())             =
+                              =3D 0
+>
+> Check for possible underflow first and in case of a bogus value, do
+> not print it.
+>
+> v2: Use greater-or-equal to handle "zero" duration calls correctly.
 
-    2.804 ( 0.001 ms): :49553/49553 rt_sigaction(sig: QUIT, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
-    2.807 ( 0.001 ms): :49553/49553 rt_sigaction(sig: CHLD, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
-    2.815 (18446744073709.438 ms): :49553/49553 execve(filename: 0xbb173a30, argv: 0x55aabb171930, envp: 0x55aabb171120) = 0
-    2.815 ( 0.534 ms): pwd/49553  ... [continued]: execve())                                           = 0
+Nit: This normally comes after the signed-off-by past a "---" to
+indicate it should not be included in the commit log.
 
-Check for possible underflow first and in case of a bogus value, do
-not print it.
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 
-v2: Use greater-or-equal to handle "zero" duration calls correctly.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f487fbaa0ad6..9c59969de2af 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2956,7 +2956,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
- 		++trace->stats.vfs_getname;
- 	}
- 
--	if (ttrace->entry_time) {
-+	if (ttrace->entry_time && sample->time >= ttrace->entry_time) {
- 		duration = sample->time - ttrace->entry_time;
- 		if (trace__filter_duration(trace, duration))
- 			goto out;
--- 
-2.47.3
-
+> ---
+>  tools/perf/builtin-trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index f487fbaa0ad6..9c59969de2af 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2956,7 +2956,7 @@ static int trace__sys_exit(struct trace *trace, str=
+uct evsel *evsel,
+>                 ++trace->stats.vfs_getname;
+>         }
+>
+> -       if (ttrace->entry_time) {
+> +       if (ttrace->entry_time && sample->time >=3D ttrace->entry_time) {
+>                 duration =3D sample->time - ttrace->entry_time;
+>                 if (trace__filter_duration(trace, duration))
+>                         goto out;
+> --
+> 2.47.3
+>
