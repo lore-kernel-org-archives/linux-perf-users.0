@@ -1,139 +1,262 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A54431F99E
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 20:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775161986; cv=pass; b=QK/8pJXhFgBR4MiRShMcqfsWe7nraNqwUJYkE7v3SVd8CTshO3EAZJik4SejiLI9SddHF8mS5MTAihNOD0thB0OO/ZJmwvn+WZ7FG0x8+3cH/1H96niVZOjwi6aajuLwRJ+CSIs6pI9JDnd33gPcIFJKn7rG1wCnGWEzfWWZbFw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775161986; c=relaxed/simple;
-	bh=76nVsFIzca0JfDL3k0s/0UXG1tolgd2fXXDQOTCVqJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GaiL5dBV/sJjXWpnfJbsDge5Mg0dRUVN0C6JKpyAIlDKNf6DuqbLDvzJm81xfJGwJ/PQrDeRw6PR4pYznnNSvfzlRPXfqIJZfHgwFbxdh4z0Mu82f2TONaj6OoOvzwX4nouXoClQhHUw64AX42V51HryoJj0sIWsK9c9Fayx2TQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smK787Ij; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64462345722
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 20:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775163186; cv=none; b=Q5eqbUJzXlSU3xl1RpMZtqphRx+yygxKCloI6IhJbt+fL+GLZX8Fa2oXnB42T+KzLBhLXz8FFfT2XUA7QV4oeqI2fYzZiVEzCNd1S4Wy1PElgWCqIK5qbT7P22coGQBg9848iQiRC4mPmjZ950U4s07NP0WlB28liL+SJVWKDc8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775163186; c=relaxed/simple;
+	bh=a7wOyMvWrq4Ig+LN/eM9EA9fjmQHlLUoFGik5G+ml+E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=TA+7jJ/32ewgf+HFN2Ut5bpB4q0Q6PvxMZr85h6GNlJp64XcsKJGKUO//pyoGExEe89D39O+goBnQ65f5hZb5E2LD7tASdpHxU9YXc2OKTWGnWOiAmFMZs97dntXiAdnAOl3XMa+o7UjCKG9UDc831YQ90/u2Rf5xqO+iMaoCmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q1lbU7fs; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smK787Ij"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2b2591757fbso28095ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 13:33:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775161984; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BApGqRzeH/G7ykZznW6TFwO94cBiLiE8LIsYjZ3N/XP2cM41b9+aPE/QLd5DpRauPH
-         kqf07JwI/FEU/UL5DD4wRPHuCmeMuaIJAt+H+Eo0wCkidhWGnQ3yCDyy1ERujPbUTh4G
-         qwh2VMeG7RlVeNU6D95XS1Hg7PBhUbErEgkJWAM+k1sFMleATj09qrQqLfhSHsGREMaD
-         icnsqEUXvbZ6SvNqRmf0i9qtrhsb2U3c0jzRm4+qGof+FNclezjmsMEdG+20NLKbVztz
-         vW56RQGKFyCxO01ceV8pQV4qRpATBWBT5rRuNiONEoRGOEsLlHBLFDQT+rPAcfIpWnTM
-         yetw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
-        fh=Khqb/Km+dM8p6GiqgWpu92FAYZaDaXPVPFaiSI/zaQA=;
-        b=BHcEYUUSw5FVq33TYofd6t/KqHHZpE7QVHJYc0Ac9Zx/mpx3/SgotMh65Hj8IXEqWH
-         WZEeEK+uy1vez6yBqNiDdJEhy/LogZEX+NBZhdVP9bLfyMp8vHarOkS1Gz6XEwKEDWmp
-         tftB/O5H4BIcccLs6N3rQpAcbdUOCeGamkha+poapvLUkmuXh7JSqSExStp293uNR1ZK
-         gnkMZcTKEPjMQoUtQ4OaKpQHWfkxJIvx/jiJaaIelbaxk8o3geO8Hbc7mB+yfM3bMbug
-         7y1h/eBjMc0yIdcfbdDuZtRKY5OU0rQuL1kBN80x1NNdbjpTPuzI+6n0pTtL9eAdJdYn
-         iwsw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q1lbU7fs"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-127133794b6so1909763c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 13:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775161984; x=1775766784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
-        b=smK787Ij3E1gdYxjmCOlrUC33SG/oZ296YWXhpl5A6ee0pXiMiKiX1d9xE/YT3IFfQ
-         xAQgUz6meK6ugSP+tePCJrhtZizETkCa9xm0oEXHruEe+4SdrS3ouEGSVj+wwK5Tgq62
-         3d2suGVzqb9D4OD8aRaCpIAK9brRD2cOcL2D7is1U4XakFaxaR87PVdgjICdknUX0taI
-         6OcEHWARbVhdrhOpqt0EBOaoE/lud4EMIiKo3nec2lAjyiXUTlnptCx9MdtrheMPmdGC
-         EckwgkxjF50ktePwxeJ5xsYB/g44VqKfg1epCaipO63KEjacCEvsAygoAvBQ8Quv1cPB
-         sDXA==
+        d=google.com; s=20251104; t=1775163183; x=1775767983; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=apN9Yb0xT2EOL/8vOyj1Pmw7mf6No7ghyB3CEvy3Wdk=;
+        b=q1lbU7fs7FM6VUT19rInobXhl4lG0NbW+sA8aP56/ALTjhoO75jwO0MAzruzKA5ITp
+         /e8y2Nb9vcApOP7+wMEhKPRssT9ZaLGVrmY/2R/2Qfa5epA9F3nZ+C5MfU2TFYt/726U
+         RYCw8ttI5Afja3xsWy43KtuJ3dSuNapZaIKmNZZrAez8sXFY5J2cjmosvD9YMuCwpwvq
+         QCUrgktcsLOXbmuqRJtpZm/EkPBAZP9hyG/fgejDDiTzaS4mIUYvNNWHG2Sy0LU9kR2g
+         wMo6IY7NzSX5YSOKuWfOz/ABkVa9grQwQ4s3UquAClm5K/MYpaSYYPZ9U1fyZk+5zxVm
+         tgag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775161984; x=1775766784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
-        b=JwZnGoWtgA6DQOAMnCjaKDiTSQXW60FB/1tifd3s3Gsgu34I3gcs/0ceuRX6W9PHHr
-         otQ2f3c81yMyaLplWmIjZRO0OX7nOoScnWUx+WK6fZfHl4ckWiKl5ptNc5WYZqXAuMlh
-         tHXdTg8fBnQmqoyGXz97r9Ge1CAUtMHKlJYQOPtOGl+BUwUZykCmfDKjX5DzZEYsFLK4
-         MLVIt5ktVVBMwsWgqRncWJDJuTPyZZqQ4VDLPY3uUI7+RvT32ov4KtXITMYNUCHP/hQa
-         NGr+BgoUCwBqDdjKtfTol+DeeYv1wl6W0BybsoBBC/+Ni0l9SpSlrEdV+y/ya3OIQ66d
-         ugPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUL7qZ+s1qL/Q6AxeBXo737FrcEHgYXtaQ4eoR5bj6tToXl/uh6zLzFmTj/7M7703leiqQUuL6moxl7mjGyatNy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq37HL3nZjk1Lbr7fmikpEN392a+7AN+wpJvBrzeWFxaIuIigM
-	hAloYaK2x27k/lntLvY/M5+826bDA9hVvyV9OHzKqZmGMWMXlzCxSvk7aEuUO45XVQ3VQQdgbw/
-	TndU8Uv2eIcEgz48d6DEvSdKOGzBXBGOSVUJXJIHr
-X-Gm-Gg: AeBDiev2J9OVJWJZCe07jdOrtWwgZb0bD4cQ3/7LAfdG0nU/nHoja+8kH0EyC5mA5uI
-	mHvvAGc42I876Lxx4gKlMOYVQJE1SzpwyOUAiCSha7fIC6bHHZAVmgTTYA7yND+o1HsbDN7MMew
-	h16M2qqDAgp+rjMBvRYCGADXuK5Msjsla3j1Ce5e9xs8GWqKS8kCrdAwP8BdQDhZQrgEALE0aLt
-	Dnk950Cjdo+v9HBEydBbeDswpYH/i+NrUBgeAkIgfxEUxFWEV5xftscU9beN4/tUSxKiceGrsqg
-	af+9qa5CS51hA6BbirS3/arj7cdsazCPAeTtkZoQrVmj2XUx
-X-Received: by 2002:a17:902:c943:b0:2ae:6432:8f77 with SMTP id
- d9443c01a7336-2b28303347emr290655ad.17.1775161983758; Thu, 02 Apr 2026
- 13:33:03 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775163183; x=1775767983;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=apN9Yb0xT2EOL/8vOyj1Pmw7mf6No7ghyB3CEvy3Wdk=;
+        b=D2ISyLdSIL1a9Bw8AM+ig+idLWL0bWUGbolBFK3AQfyZJHHIoXW69qS1TB7d752Ajb
+         tvRRuaKagP8DRt6CNN523tQCZrqHyQ0JsembgDnJhybjfaGOrouVW1rIMuDZv2Ylp07S
+         rB7fNDagyDYgOStloiKwKV3Pn5tVSaZmkYpYjXoCr602lyV+UgZmc1tAbO/MJR4JNR+7
+         b7X75jM3T/PaHzoFYVxdpnft6PMXu5qLnMlUgYgqDRK8Ccu9JhKG01uEftx//iWD7G2j
+         L7osmLK4vKL/6r0UeqK10E3srQ4U5sVrRJjdconiKZRYqg8WpXoC+Gevj2tM9x9jEFYA
+         HQvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqvik4nSbgb9AVpm8sBIaEZzQ0CBFp7AMkgIcJ9wmOUQ9y57k/H5HZoy1OOxpjiVPskx2BpWFWDQ609hzxyGcr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yziahvq9MAC+jwj9t+brKRpt6lBFVFyJo6EwjyslDw+18dtDLAk
+	2wYhMLoRgyr6Ky/YjjCZ9Ysoh4cF7wxQzsr3hgzmXcqcRzesROIO9k2v3rEboSwOD42qkmH1Oeq
+	6GctlKw==
+X-Received: from dlbrn6.prod.google.com ([2002:a05:7022:1506:b0:128:ebd8:625d])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:fe04:b0:122:2f4:b251
+ with SMTP id a92af1059eb24-12bfb760ef4mr275984c88.21.1775163183125; Thu, 02
+ Apr 2026 13:53:03 -0700 (PDT)
+Date: Thu,  2 Apr 2026 13:52:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260402-perf_fix_metrics_group-v2-0-1f9427a5d763@arm.com>
-In-Reply-To: <20260402-perf_fix_metrics_group-v2-0-1f9427a5d763@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Apr 2026 13:32:51 -0700
-X-Gm-Features: AQROBzCSDmqfqgcAldePIsUAxoFC4rqiaPysPHn4GKffEJzUwtZVpvYTRkrKvW0
-Message-ID: <CAP-5=fU0hFSBFzuuHwyHRDdBTkUdsEsaTSjPJ3ZRnnyMRrTxdw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] perf metricgroup: Fix segmentation fault and
- refine logs
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260402205300.1953706-1-ctshao@google.com>
+Subject: [PATCH v4] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on Emeraldrapids
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, Zide Chen <zide.chen@intel.com>, 
+	Ian Rogers <irogers@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	james.clark@linaro.org, ravi.bangoria@amd.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 2, 2026 at 9:04=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> The first patch is to fix segmentation fault if there have syntax errors
-> in metric groups.
->
-> The last two patches are to refine logs to give users clear hints for
-> failures.
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
+Adjust cpumasks as the logic for GNR in [1].
 
-For the series:
+Tested on Emeraldrapids with SNC2 enabled:
+  $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
+
+   Performance counter stats for 'system wide':
+
+  N0       30        72125876670      UNC_CHA_CLOCKTICKS
+  N0        4         8815163648      UNC_M_CLOCKTICKS
+  N1       30        72124958844      UNC_CHA_CLOCKTICKS
+  N1        4         8815014974      UNC_M_CLOCKTICKS
+  N2       30        72121049022      UNC_CHA_CLOCKTICKS
+  N2        4         8814592626      UNC_M_CLOCKTICKS
+  N3       30        72117133854      UNC_CHA_CLOCKTICKS
+  N3        4         8814012840      UNC_M_CLOCKTICKS
+
+         1.001574118 seconds time elapsed
+
+[1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
+
+Reviewed-by: Zide Chen <zide.chen@intel.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v4:
+  Rebase.
 
-Thanks,
-Ian
+v3: lore.kernel.org/20260212223942.3832857-1-ctshao@google.com
+  Fix a typo.
 
-> ---
-> Changes in v2:
-> - Added fix tags (James).
-> - Added before and after logs (James).
-> - Link to v1: https://lore.kernel.org/r/20260327-perf_fix_metrics_group-v=
-1-1-49e4b8ee9a08@arm.com
->
-> ---
-> Leo Yan (3):
->       perf expr: Return -EINVAL for syntax error in expr__find_ids()
->       perf expr: Add '\n' in literal parse errors
->       perf metricgroup: Refine error logs
->
->  tools/perf/util/expr.c        |  7 ++++---
->  tools/perf/util/metricgroup.c | 11 ++++++-----
->  2 files changed, 10 insertions(+), 8 deletions(-)
-> ---
-> base-commit: d9db9c8db56c3e378aa5c91637664f77ca5a6f72
-> change-id: 20260327-perf_fix_metrics_group-4be55b236f96
->
-> Best regards,
-> --
-> Leo Yan <leo.yan@arm.com>
->
+v2: lore.kernel.org/20260205232220.1980168-1-ctshao@google.com
+  Split EMR and GNR in the SNC2 IMC cpu map.
+
+v1: lore.kernel.org/20260108184430.1210223-1-ctshao@google.com
+
+ tools/perf/arch/x86/util/pmu.c | 95 ++++++++++++++++++++++------------
+ 1 file changed, 63 insertions(+), 32 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index 0661e0f0b02d..ec3c5a368d67 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -23,20 +23,29 @@
+ #include "util/env.h"
+ #include "util/header.h"
+
+-static bool x86__is_intel_graniterapids(void)
++static bool x86__is_snc_supported(void)
+ {
+-	static bool checked_if_graniterapids;
+-	static bool is_graniterapids;
++	static bool checked_if_snc_supported;
++	static bool is_supported;
+
+-	if (!checked_if_graniterapids) {
+-		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
++	if (!checked_if_snc_supported) {
++
++		/* Emeraldrapids and Graniterapids support SNC configuration. */
++		static const char *const supported_cpuids[] = {
++			"GenuineIntel-6-CF", /* Emeraldrapids */
++			"GenuineIntel-6-A[DE]", /* Graniterapids */
++		};
+ 		char *cpuid = get_cpuid_str((struct perf_cpu){0});
+
+-		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
++		for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
++			is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
++			if (is_supported)
++				break;
++		}
+ 		free(cpuid);
+-		checked_if_graniterapids = true;
++		checked_if_snc_supported = true;
+ 	}
+-	return is_graniterapids;
++	return is_supported;
+ }
+
+ static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+@@ -65,6 +74,7 @@ static int snc_nodes_per_l3_cache(void)
+ 			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+
+ 		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
++
+ 		perf_cpu_map__put(cache_cpus);
+ 		perf_cpu_map__put(node_cpus);
+ 		checked_snc = true;
+@@ -133,23 +143,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+ 	// Compute the IMC SNC using lookup tables.
+ 	unsigned int imc_num;
+ 	int snc_nodes = snc_nodes_per_l3_cache();
+-	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+-	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+-	const u8 *snc_map;
+-	size_t snc_map_len;
+-
+-	switch (snc_nodes) {
+-	case 2:
+-		snc_map = snc2_map;
+-		snc_map_len = ARRAY_SIZE(snc2_map);
+-		break;
+-	case 3:
+-		snc_map = snc3_map;
+-		snc_map_len = ARRAY_SIZE(snc3_map);
+-		break;
+-	default:
+-		/* Error or no lookup support for SNC with >3 nodes. */
+-		return 0;
++	char *cpuid;
++	static const u8 emr_snc2_map[] = { 0, 0, 1, 1 };
++	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
++	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
++	static const u8 *snc_map;
++	static size_t snc_map_len;
++
++	/* snc_map is not inited yet. We only look up once to avoid expensive operations. */
++	if (!snc_map) {
++		switch (snc_nodes) {
++		case 2:
++			cpuid = get_cpuid_str((struct perf_cpu){ 0 });
++			if (cpuid) {
++				if (strcmp_cpuid_str("GenuineIntel-6-CF", cpuid) == 0) {
++					snc_map = emr_snc2_map;
++					snc_map_len = ARRAY_SIZE(emr_snc2_map);
++				} else if (strcmp_cpuid_str("GenuineIntel-6-A[DE]", cpuid) == 0) {
++					snc_map = gnr_snc2_map;
++					snc_map_len = ARRAY_SIZE(gnr_snc2_map);
++				}
++				free(cpuid);
++			}
++			break;
++		case 3:
++			snc_map = snc3_map;
++			snc_map_len = ARRAY_SIZE(snc3_map);
++			break;
++		default:
++			/* Error or no lookup support for SNC with >3 nodes. */
++			return 0;
++		}
++
++		if (!snc_map) {
++			pr_warning("Unexpected: can not find snc map config");
++			return 0;
++		}
+ 	}
+
+ 	/* Compute SNC for PMU. */
+@@ -157,11 +186,12 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+ 		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+ 		return 0;
+ 	}
+-	if (imc_num >= snc_map_len) {
++	if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
+ 		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+ 		return 0;
+ 	}
+-	return snc_map[imc_num];
++
++	return snc_map[imc_num % snc_map_len];
+ }
+
+ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+@@ -201,7 +231,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+ 	return cpu_adjust[pmu_snc];
+ }
+
+-static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
++static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+ {
+ 	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+ 	// topology. For example, a two socket graniterapids machine may be set
+@@ -301,11 +331,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 				pmu->mem_events = perf_mem_events_intel_aux;
+ 			else
+ 				pmu->mem_events = perf_mem_events_intel;
+-		} else if (x86__is_intel_graniterapids()) {
++		} else if (x86__is_snc_supported()) {
+ 			if (strstarts(pmu->name, "uncore_cha_"))
+-				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+-			else if (strstarts(pmu->name, "uncore_imc_"))
+-				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
++				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
++			else if (strstarts(pmu->name, "uncore_imc_") &&
++				 !strstarts(pmu->name, "uncore_imc_free_running"))
++				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+ 		}
+ 	}
+ }
+--
+2.53.0.1213.gd9a14994de-goog
+
