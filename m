@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34861A6813;
-	Thu,  2 Apr 2026 00:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F91417BA6;
+	Thu,  2 Apr 2026 00:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775089209; cv=none; b=hfToSkgANvwckJr2sQnenVekDZnprK2eOT2zxp6r6/L9pij++EnLzQs4AkwNNfYyQS00Y10qzqff5ZPYG2OcyYQmGA+Y+3ojXVZYDAxj9yivcjwZf+Rvj+3Nm7yyPQDwMEDNLaz0KUbMWafdYbdJfyMcAyfndcw4wf/gF8OWRnQ=
+	t=1775089214; cv=none; b=lvbDal0n+Oph8tdtJaaPB+QREb+UxvFxiG+/8bEYeBx/3SUZ1PVCzYQ3rnxeXYBC/rLp+GgtiCjXI2zC8HUjZUldsfMHWNEGRk5xK3/m91ekY8+CmllKEcXQnigNujWNHatlH1d3PphXYG6IS/YL/+GES0R2Ua8/KWx3CJDI8Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775089209; c=relaxed/simple;
-	bh=zTngreCvGae6sglda8jgbeLTOmRS0WfY+R9XKkRx0jk=;
+	s=arc-20240116; t=1775089214; c=relaxed/simple;
+	bh=T09XRGHw0wt4kIggFrmFysE/zDedHmSZ60pG0WfLjVY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hiuir5uc5kaPT3+jUFJELsbOEV/I2yl2MtIXfXEjcAUyi/KjDnITCxg1aAxpbOFh8N5no0nDJRgfF7LHAAbVmx/RZ8DraMzPzuui9PeQsKqQxcnNdG88Xc6mKZyFSUAOjYb4DwMuf+VCTiU0xjo15XyrUmlNiSmQN5td7enS614=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIdizwS5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LsQJCSvjBM0aYsbEZ28SkP+PLrA+ceiUGa2bJ0v9qi3WT99tIZuVe60a739wv1G24yUGC3rRr4KbvYOxCfIJXz/TlqUVOD752tjnu6xF65SjMAnn0Za0Wtd0d+PnsVJLkdA/I+evc8WZ2ixcYWCUMk0f6iaA9ZMLESZcqqYi0ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D63qtWHP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIdizwS5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D72C2BCB2;
-	Thu,  2 Apr 2026 00:19:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D63qtWHP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04F67C4CEF7;
+	Thu,  2 Apr 2026 00:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775089208;
-	bh=zTngreCvGae6sglda8jgbeLTOmRS0WfY+R9XKkRx0jk=;
+	s=k20201202; t=1775089214;
+	bh=T09XRGHw0wt4kIggFrmFysE/zDedHmSZ60pG0WfLjVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fIdizwS5wubslP3xhs27/GAk5sLA/Y8bn6tq2MmrjEa6VgnY6dZ77wHGJYMakvm/f
-	 WKDOCLaz9iPsSJTgzz/wYGNGWSNxvbxtdN3J0nOrIB0/CX6aj3a/PNRvJJoExm1zEc
-	 pEbrTvTWTwu5Sx1mL0o5819iQNx9VjPYVL6X906nn+yuZM4d9hMySzgEKarUvHJhCr
-	 AHcqeu5U5NT+Ag71V2/0O5LWO2pLJTyyFWJGLFYWf69DwEDLzAhHuZgh21sr/DHTy/
-	 MtaJ7ZBB3rmvHYGDvDGnJQyyKRc84kFWsJIKglqg6E4JJbNSDIQ8yM5oRSEPDdVji0
-	 8ctPk/0ahLa3Q==
+	b=D63qtWHPa2PBLMbO0Dl1IIwNe7AgQqVUO3TwKGfjhrVPXK6QZJdfKru80KD1X/OEX
+	 WbvKUDHHAbmv0jkJvBx6nD1smCql9InJIBSyJ0E+n5hKzjOb7ut8GXxi+jPVP69NL8
+	 LRKlR5nvyiVC5hdh8ykGjlFswdlysWTIbqF0MSngbq7b1TYkjzZagSLTaZckqf7y14
+	 C72NMLAO5AnrSq7hO0Qm02Qr7aqpfiLF5BR+e9wZy0xyXuUTB0VsEeosZjs0GGvxNk
+	 WShTbC6+NCmziGB1BpkE/Qcn3w/OOcsuegsAQuCKX25X/QWb19TlNmndpLjAO2XoEs
+	 sep5CYEUjjSLA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,24 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Yujie Liu <yujie.liu@intel.com>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/4] perf tools: Make more global variables static
-Date: Wed,  1 Apr 2026 21:17:37 -0300
-Message-ID: <20260402001740.2220481-2-acme@kernel.org>
+Subject: [PATCH 2/4] perf bench: Constify tables
+Date: Wed,  1 Apr 2026 21:17:38 -0300
+Message-ID: <20260402001740.2220481-3-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260402001740.2220481-1-acme@kernel.org>
 References: <20260402001740.2220481-1-acme@kernel.org>
@@ -67,1017 +53,176 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-`make check` will run sparse on the perf code base. A frequent warning
-is "warning: symbol '...' was not declared. Should it be static?" Go
-through and make global definitions without declarations static.
+Those tables and variables don't change, better capture this by
+explicitely using 'const'.
 
-In some cases it is deliberate due to dlsym accessing the symbol, this
-change doesn't clean up the missing declarations for perf test suites.
-
-Sometimes things can opportunistically be made const.
-
-Making somethings static exposed unused functions warnings, so
-restructuring of ifdefs was necessary for that.
-
-These changes reduce the size of the perf binary by 568 bytes.
-
-Committer notes:
-
-Refreshed the patch, the original one fell thru the cracks, updated the
-size reduction.
-
-Remove the trace-event-scripting.c changes, break the build, noticed
-with container builds and with sashiko:
-
-  https://sashiko.dev/#/patchset/20260401215306.2152898-1-acme%40kernel.org
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Ankur Arora <ankur.a.arora@oracle.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Yujie Liu <yujie.liu@intel.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/common.c                      |  22 ++--
- tools/perf/arch/sh/include/dwarf-regs-table.h |   2 +-
- tools/perf/bench/breakpoint.c                 |   4 +-
- tools/perf/bench/mem-functions.c              |   2 +-
- tools/perf/bench/numa.c                       |   2 +-
- tools/perf/bench/uprobe.c                     |   2 +-
- tools/perf/builtin-c2c.c                      |   7 +-
- tools/perf/builtin-config.c                   |   2 +-
- tools/perf/builtin-data.c                     |   8 +-
- tools/perf/builtin-diff.c                     |   4 +-
- tools/perf/builtin-kmem.c                     |   2 +-
- tools/perf/builtin-kwork.c                    |  12 +-
- tools/perf/builtin-script.c                   |   2 +-
- tools/perf/builtin-top.c                      |   5 +-
- tools/perf/tests/bp_signal.c                  |   2 +-
- tools/perf/tests/dso-data.c                   |   2 +-
- tools/perf/tests/wp.c                         |   6 +-
- tools/perf/util/block-range.c                 |   2 +-
- tools/perf/util/bpf_counter.c                 |   4 +-
- tools/perf/util/bpf_off_cpu.c                 |   2 +-
- tools/perf/util/debug.c                       |   2 +-
- tools/perf/util/debuginfo.c                   |  19 ++--
- tools/perf/util/sort.c                        | 104 +++++++++---------
- tools/perf/util/util.c                        |   2 -
- 24 files changed, 109 insertions(+), 112 deletions(-)
+ tools/perf/builtin-bench.c | 42 +++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 4908d54dd33b2733..21836f70f231e42d 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -9,14 +9,14 @@
- #include "../util/debug.h"
- #include <linux/zalloc.h>
- 
--const char *const arc_triplets[] = {
-+static const char *const arc_triplets[] = {
- 	"arc-linux-",
- 	"arc-snps-linux-uclibc-",
- 	"arc-snps-linux-gnu-",
- 	NULL
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 02dea1b8822864e8..02d47913cc6a3fae 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -37,14 +37,14 @@ struct bench {
  };
  
--const char *const arm_triplets[] = {
-+static const char *const arm_triplets[] = {
- 	"arm-eabi-",
- 	"arm-linux-androideabi-",
- 	"arm-unknown-linux-",
-@@ -28,13 +28,13 @@ const char *const arm_triplets[] = {
- 	NULL
+ #ifdef HAVE_LIBNUMA_SUPPORT
+-static struct bench numa_benchmarks[] = {
++static const struct bench numa_benchmarks[] = {
+ 	{ "mem",	"Benchmark for NUMA workloads",			bench_numa		},
+ 	{ "all",	"Run all NUMA benchmarks",			NULL			},
+ 	{ NULL,		NULL,						NULL			}
  };
- 
--const char *const arm64_triplets[] = {
-+static const char *const arm64_triplets[] = {
- 	"aarch64-linux-android-",
- 	"aarch64-linux-gnu-",
- 	NULL
- };
- 
--const char *const powerpc_triplets[] = {
-+static const char *const powerpc_triplets[] = {
- 	"powerpc-unknown-linux-gnu-",
- 	"powerpc-linux-gnu-",
- 	"powerpc64-unknown-linux-gnu-",
-@@ -43,40 +43,40 @@ const char *const powerpc_triplets[] = {
- 	NULL
- };
- 
--const char *const riscv32_triplets[] = {
-+static const char *const riscv32_triplets[] = {
- 	"riscv32-unknown-linux-gnu-",
- 	"riscv32-linux-android-",
- 	"riscv32-linux-gnu-",
- 	NULL
- };
- 
--const char *const riscv64_triplets[] = {
-+static const char *const riscv64_triplets[] = {
- 	"riscv64-unknown-linux-gnu-",
- 	"riscv64-linux-android-",
- 	"riscv64-linux-gnu-",
- 	NULL
- };
- 
--const char *const s390_triplets[] = {
-+static const char *const s390_triplets[] = {
- 	"s390-ibm-linux-",
- 	"s390x-linux-gnu-",
- 	NULL
- };
- 
--const char *const sh_triplets[] = {
-+static const char *const sh_triplets[] = {
- 	"sh-unknown-linux-gnu-",
- 	"sh-linux-gnu-",
- 	NULL
- };
- 
--const char *const sparc_triplets[] = {
-+static const char *const sparc_triplets[] = {
- 	"sparc-unknown-linux-gnu-",
- 	"sparc64-unknown-linux-gnu-",
- 	"sparc64-linux-gnu-",
- 	NULL
- };
- 
--const char *const x86_triplets[] = {
-+static const char *const x86_triplets[] = {
- 	"x86_64-pc-linux-gnu-",
- 	"x86_64-unknown-linux-gnu-",
- 	"i686-pc-linux-gnu-",
-@@ -90,7 +90,7 @@ const char *const x86_triplets[] = {
- 	NULL
- };
- 
--const char *const mips_triplets[] = {
-+static const char *const mips_triplets[] = {
- 	"mips-unknown-linux-gnu-",
- 	"mipsel-linux-android-",
- 	"mips-linux-gnu-",
-diff --git a/tools/perf/arch/sh/include/dwarf-regs-table.h b/tools/perf/arch/sh/include/dwarf-regs-table.h
-index 900e6961997091c7..b5974a090fb44a79 100644
---- a/tools/perf/arch/sh/include/dwarf-regs-table.h
-+++ b/tools/perf/arch/sh/include/dwarf-regs-table.h
-@@ -2,7 +2,7 @@
- #ifdef DEFINE_DWARF_REGSTR_TABLE
- /* This is included in perf/util/dwarf-regs.c */
- 
--const char * const sh_regstr_tbl[] = {
-+static const char * const sh_regstr_tbl[] = {
- 	"r0",
- 	"r1",
- 	"r2",
-diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
-index dfd18f5db97dbc7e..1b7cd4481bd224aa 100644
---- a/tools/perf/bench/breakpoint.c
-+++ b/tools/perf/bench/breakpoint.c
-@@ -16,7 +16,7 @@
- #include "bench.h"
- #include "futex.h"
- 
--struct {
-+static struct {
- 	unsigned int nbreakpoints;
- 	unsigned int nparallel;
- 	unsigned int nthreads;
-@@ -173,7 +173,7 @@ int bench_breakpoint_thread(int argc, const char **argv)
- 	return 0;
- }
- 
--struct {
-+static struct {
- 	unsigned int npassive;
- 	unsigned int nactive;
- } enable_params = {
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index f5ab41bb85bf67a0..5ede528539535b6a 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -399,7 +399,7 @@ static void mem_free(struct bench_mem_info *info __maybe_unused,
- 	*dst = *src = NULL;
- }
- 
--struct function memcpy_functions[] = {
-+static struct function memcpy_functions[] = {
- 	{ .name		= "default",
- 	  .desc		= "Default memcpy() provided by glibc",
- 	  .fn.init	= mem_alloc,
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 19be2aaf4dc0c07e..6588a9b0b15aec6d 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -166,7 +166,7 @@ static struct global_info	*g = NULL;
- static int parse_cpus_opt(const struct option *opt, const char *arg, int unset);
- static int parse_nodes_opt(const struct option *opt, const char *arg, int unset);
- 
--struct params p0;
-+static struct params p0;
- 
- static const struct option options[] = {
- 	OPT_INTEGER('p', "nr_proc"	, &p0.nr_proc,		"number of processes"),
-diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
-index c4dac868f1eea401..89697ff788ef3035 100644
---- a/tools/perf/bench/uprobe.c
-+++ b/tools/perf/bench/uprobe.c
-@@ -58,7 +58,7 @@ static const char * const bench_uprobe_usage[] = {
- 		goto cleanup; \
- 	}
- 
--struct bench_uprobe_bpf *skel;
-+static struct bench_uprobe_bpf *skel;
- 
- static int bench_uprobe__setup_bpf_skel(enum bench_uprobe bench)
- {
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e60eea62c2fc76d6..3ce5f0adec2f31c2 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2892,9 +2892,10 @@ static int ui_quirks(void)
- 
- #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
- 
--const char callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
--				CALLCHAIN_REPORT_HELP
--				"\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
-+static const char callchain_help[] =
-+	"Display call graph (stack chain/backtrace):\n\n"
-+	CALLCHAIN_REPORT_HELP
-+	"\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
- 
- static int
- parse_callchain_opt(const struct option *opt, const char *arg, int unset)
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index 45b5312fbe8370e8..237600643bbd6f33 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -23,7 +23,7 @@ static const char * const config_usage[] = {
- 	NULL
- };
- 
--enum actions {
-+static enum actions {
- 	ACTION_LIST = 1
- } actions;
- 
-diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-index 85f59886b5cf0045..4c08ccb8c06b7598 100644
---- a/tools/perf/builtin-data.c
-+++ b/tools/perf/builtin-data.c
-@@ -28,15 +28,15 @@ static const char *data_usage[] = {
- 	NULL
- };
- 
--const char *to_json;
--const char *to_ctf;
--struct perf_data_convert_opts opts = {
-+static const char *to_json;
-+static const char *to_ctf;
-+static struct perf_data_convert_opts opts = {
- 	.force = false,
- 	.all = false,
- 	.time_str = NULL,
- };
- 
--const struct option data_options[] = {
-+static const struct option data_options[] = {
- 		OPT_INCR('v', "verbose", &verbose, "be more verbose"),
- 		OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 		OPT_STRING(0, "to-json", &to_json, NULL, "Convert to JSON format"),
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 69069926dd0ba07b..e45f0ac1381ab2df 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -113,7 +113,7 @@ enum {
- 	COMPUTE_STREAM,	/* After COMPUTE_MAX to avoid use current compute arrays */
- };
- 
--const char *compute_names[COMPUTE_MAX] = {
-+static const char *compute_names[COMPUTE_MAX] = {
- 	[COMPUTE_DELTA] = "delta",
- 	[COMPUTE_DELTA_ABS] = "delta-abs",
- 	[COMPUTE_RATIO] = "ratio",
-@@ -382,7 +382,7 @@ static void block_hist_free(void *he)
- 	free(bh);
- }
- 
--struct hist_entry_ops block_hist_ops = {
-+static struct hist_entry_ops block_hist_ops = {
- 	.new    = block_hist_zalloc,
- 	.free   = block_hist_free,
- };
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 7929a5fa5f462b32..9c64a0d7482378cc 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -82,7 +82,7 @@ static unsigned long nr_allocs, nr_cross_allocs;
- 
- /* filters for controlling start and stop of time of analysis */
- static struct perf_time_interval ptime;
--const char *time_str;
-+static const char *time_str;
- 
- static int insert_alloc_stat(unsigned long call_site, unsigned long ptr,
- 			     int bytes_req, int bytes_alloc, int cpu)
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 6f94a8f45f605f34..1140e00e874f4eed 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -985,7 +985,7 @@ static int process_irq_handler_exit_event(const struct perf_tool *tool,
- 	return 0;
- }
- 
--const struct evsel_str_handler irq_tp_handlers[] = {
-+static const struct evsel_str_handler irq_tp_handlers[] = {
- 	{ "irq:irq_handler_entry", process_irq_handler_entry_event, },
- 	{ "irq:irq_handler_exit",  process_irq_handler_exit_event,  },
- };
-@@ -1080,7 +1080,7 @@ static int process_softirq_exit_event(const struct perf_tool *tool,
- 	return 0;
- }
- 
--const struct evsel_str_handler softirq_tp_handlers[] = {
-+static const struct evsel_str_handler softirq_tp_handlers[] = {
- 	{ "irq:softirq_raise", process_softirq_raise_event, },
- 	{ "irq:softirq_entry", process_softirq_entry_event, },
- 	{ "irq:softirq_exit",  process_softirq_exit_event,  },
-@@ -1211,7 +1211,7 @@ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
- 	return 0;
- }
- 
--const struct evsel_str_handler workqueue_tp_handlers[] = {
-+static const struct evsel_str_handler workqueue_tp_handlers[] = {
- 	{ "workqueue:workqueue_activate_work", process_workqueue_activate_work_event, },
- 	{ "workqueue:workqueue_execute_start", process_workqueue_execute_start_event, },
- 	{ "workqueue:workqueue_execute_end",   process_workqueue_execute_end_event,   },
-@@ -1281,7 +1281,7 @@ static int process_sched_switch_event(const struct perf_tool *tool,
- 	return 0;
- }
- 
--const struct evsel_str_handler sched_tp_handlers[] = {
-+static const struct evsel_str_handler sched_tp_handlers[] = {
- 	{ "sched:sched_switch",  process_sched_switch_event, },
- };
- 
-@@ -1561,13 +1561,13 @@ static void print_bad_events(struct perf_kwork *kwork)
- 	}
- }
- 
--const char *graph_load = "||||||||||||||||||||||||||||||||||||||||||||||||";
--const char *graph_idle = "                                                ";
- static void top_print_per_cpu_load(struct perf_kwork *kwork)
- {
- 	int i, load_width;
- 	u64 total, load, load_ratio;
- 	struct kwork_top_stat *stat = &kwork->top_stat;
-+	const char *graph_load = "||||||||||||||||||||||||||||||||||||||||||||||||";
-+	const char *graph_idle = "                                                ";
- 
- 	for (i = 0; i < MAX_NR_CPUS; i++) {
- 		total = stat->cpus_runtime[i].total;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b005b23f9d8cd273..15a58da599581a7b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -166,7 +166,7 @@ struct perf_script {
- 	int			range_num;
- };
- 
--struct output_option {
-+static struct output_option {
- 	const char *str;
- 	enum perf_output_field field;
- } all_output_options[] = {
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 37950efb28aca8cc..35ff2495e1ee5897 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1449,11 +1449,10 @@ parse_percent_limit(const struct option *opt, const char *arg,
- 	return 0;
- }
- 
--const char top_callchain_help[] = CALLCHAIN_RECORD_HELP CALLCHAIN_REPORT_HELP
--	"\n\t\t\t\tDefault: fp,graph,0.5,caller,function";
--
- int cmd_top(int argc, const char **argv)
- {
-+	const char top_callchain_help[] = CALLCHAIN_RECORD_HELP CALLCHAIN_REPORT_HELP
-+		"\n\t\t\t\tDefault: fp,graph,0.5,caller,function";
- 	char errbuf[BUFSIZ];
- 	struct perf_top top = {
- 		.count_filter	     = 5,
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 3faeb5b6fe0bb24a..f580ba7486b1d8ab 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -36,7 +36,7 @@ static int fd3;
- static int overflows;
- static int overflows_2;
- 
--volatile long the_var;
-+static volatile long the_var;
- 
- 
- /*
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index a1fff4203b75f665..46bc3f59726004fa 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -58,7 +58,7 @@ struct test_data_offset {
- 	int size;
- };
- 
--struct test_data_offset offsets[] = {
-+static struct test_data_offset offsets[] = {
- 	/* Fill first cache page. */
- 	{
- 		.offset = 10,
-diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-index 6c178985e37f5eba..69b31f00eed04c5b 100644
---- a/tools/perf/tests/wp.c
-+++ b/tools/perf/tests/wp.c
-@@ -22,11 +22,11 @@ do {                                            \
- 
- #ifdef __i386__
- /* Only breakpoint length less-than 8 has hardware support on i386. */
--volatile u32 data1;
-+static volatile u32 data1;
- #else
--volatile u64 data1;
-+static volatile u64 data1;
  #endif
--volatile u8 data2[3];
-+static volatile u8 data2[3];
  
- #ifndef __s390x__
- static int wp_read(int fd, long long *count, int size)
-diff --git a/tools/perf/util/block-range.c b/tools/perf/util/block-range.c
-index 15c42196c24c8230..7c559fcfd7e0a6db 100644
---- a/tools/perf/util/block-range.c
-+++ b/tools/perf/util/block-range.c
-@@ -4,7 +4,7 @@
- #include <assert.h>
- #include <stdlib.h>
- 
--struct {
-+static struct {
- 	struct rb_root root;
- 	u64 blocks;
- } block_ranges;
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index 2ffd7aefb6eb3bf8..34b6b0da18b738c7 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -353,7 +353,7 @@ static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu_map_idx
- 	return 0;
- }
- 
--struct bpf_counter_ops bpf_program_profiler_ops = {
-+static struct bpf_counter_ops bpf_program_profiler_ops = {
- 	.load       = bpf_program_profiler__load,
- 	.enable	    = bpf_program_profiler__enable,
- 	.disable    = bpf_program_profiler__disable,
-@@ -833,7 +833,7 @@ static int bperf__destroy(struct evsel *evsel)
-  * the leader prog.
-  */
- 
--struct bpf_counter_ops bperf_ops = {
-+static struct bpf_counter_ops bperf_ops = {
- 	.load       = bperf__load,
- 	.enable     = bperf__enable,
- 	.disable    = bperf__disable,
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 0891d9c736609cfa..a3b699a5322f1e51 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -39,7 +39,7 @@ union off_cpu_data {
- 	u64 array[1024 / sizeof(u64)];
+-static struct bench sched_benchmarks[] = {
++static const struct bench sched_benchmarks[] = {
+ 	{ "messaging",	"Benchmark for scheduling and IPC",		bench_sched_messaging	},
+ 	{ "pipe",	"Benchmark for pipe() between two processes",	bench_sched_pipe	},
+ 	{ "seccomp-notify",	"Benchmark for seccomp user notify",	bench_sched_seccomp_notify},
+@@ -52,7 +52,7 @@ static struct bench sched_benchmarks[] = {
+ 	{ NULL,		NULL,						NULL			}
  };
  
--u64 off_cpu_raw[MAX_STACKS + 5];
-+static u64 off_cpu_raw[MAX_STACKS + 5];
+-static struct bench syscall_benchmarks[] = {
++static const struct bench syscall_benchmarks[] = {
+ 	{ "basic",	"Benchmark for basic getppid(2) calls",		bench_syscall_basic	},
+ 	{ "getpgid",	"Benchmark for getpgid(2) calls",		bench_syscall_getpgid	},
+ 	{ "fork",	"Benchmark for fork(2) calls",			bench_syscall_fork	},
+@@ -61,7 +61,7 @@ static struct bench syscall_benchmarks[] = {
+ 	{ NULL,		NULL,						NULL			},
+ };
  
- static int off_cpu_config(struct evlist *evlist)
+-static struct bench mem_benchmarks[] = {
++static const struct bench mem_benchmarks[] = {
+ 	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
+ 	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
+ 	{ "find_bit",	"Benchmark for find_bit() functions",		bench_mem_find_bit	},
+@@ -70,7 +70,7 @@ static struct bench mem_benchmarks[] = {
+ 	{ NULL,		NULL,						NULL			}
+ };
+ 
+-static struct bench futex_benchmarks[] = {
++static const struct bench futex_benchmarks[] = {
+ 	{ "hash",	"Benchmark for futex hash table",               bench_futex_hash	},
+ 	{ "wake",	"Benchmark for futex wake calls",               bench_futex_wake	},
+ 	{ "wake-parallel", "Benchmark for parallel futex wake calls",   bench_futex_wake_parallel },
+@@ -82,7 +82,7 @@ static struct bench futex_benchmarks[] = {
+ };
+ 
+ #ifdef HAVE_EVENTFD_SUPPORT
+-static struct bench epoll_benchmarks[] = {
++static const struct bench epoll_benchmarks[] = {
+ 	{ "wait",	"Benchmark epoll concurrent epoll_waits",       bench_epoll_wait	},
+ 	{ "ctl",	"Benchmark epoll concurrent epoll_ctls",        bench_epoll_ctl		},
+ 	{ "all",	"Run all futex benchmarks",			NULL			},
+@@ -90,7 +90,7 @@ static struct bench epoll_benchmarks[] = {
+ };
+ #endif // HAVE_EVENTFD_SUPPORT
+ 
+-static struct bench internals_benchmarks[] = {
++static const struct bench internals_benchmarks[] = {
+ 	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
+ 	{ "kallsyms-parse", "Benchmark kallsyms parsing",	bench_kallsyms_parse	},
+ 	{ "inject-build-id", "Benchmark build-id injection",	bench_inject_build_id	},
+@@ -99,14 +99,14 @@ static struct bench internals_benchmarks[] = {
+ 	{ NULL,		NULL,					NULL			}
+ };
+ 
+-static struct bench breakpoint_benchmarks[] = {
++static const struct bench breakpoint_benchmarks[] = {
+ 	{ "thread", "Benchmark thread start/finish with breakpoints", bench_breakpoint_thread},
+ 	{ "enable", "Benchmark breakpoint enable/disable", bench_breakpoint_enable},
+ 	{ "all", "Run all breakpoint benchmarks", NULL},
+ 	{ NULL,	NULL, NULL },
+ };
+ 
+-static struct bench uprobe_benchmarks[] = {
++static const struct bench uprobe_benchmarks[] = {
+ 	{ "baseline",	"Baseline libc usleep(1000) call",				bench_uprobe_baseline,	},
+ 	{ "empty",	"Attach empty BPF prog to uprobe on usleep, system wide",	bench_uprobe_empty,	},
+ 	{ "trace_printk", "Attach trace_printk BPF prog to uprobe on usleep syswide",	bench_uprobe_trace_printk,	},
+@@ -116,12 +116,12 @@ static struct bench uprobe_benchmarks[] = {
+ };
+ 
+ struct collection {
+-	const char	*name;
+-	const char	*summary;
+-	struct bench	*benchmarks;
++	const char		*name;
++	const char		*summary;
++	const struct bench	*benchmarks;
+ };
+ 
+-static struct collection collections[] = {
++static const struct collection collections[] = {
+ 	{ "sched",	"Scheduler and IPC benchmarks",			sched_benchmarks	},
+ 	{ "syscall",	"System call benchmarks",			syscall_benchmarks	},
+ 	{ "mem",	"Memory access benchmarks",			mem_benchmarks		},
+@@ -147,9 +147,9 @@ static struct collection collections[] = {
+ #define for_each_bench(coll, bench) \
+ 	for (bench = coll->benchmarks; bench && bench->name; bench++)
+ 
+-static void dump_benchmarks(struct collection *coll)
++static void dump_benchmarks(const struct collection *coll)
  {
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index 1dfa4d0eec4d7d5a..6b5ffe81f14121b7 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -48,7 +48,7 @@ int debug_ordered_events;
- static int redirect_to_stderr;
- int debug_data_convert;
- static FILE *_debug_file;
--bool debug_display_time;
-+static bool debug_display_time;
- int debug_type_profile;
+-	struct bench *bench;
++	const struct bench *bench;
  
- FILE *debug_file(void)
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 4a559b3e8cdce60a..8b819dea36ac1ef0 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -88,18 +88,17 @@ static struct debuginfo *__debuginfo__new(const char *path)
- 	return dbg;
- }
+ 	printf("\n        # List of available benchmarks for collection '%s':\n\n", coll->name);
  
--enum dso_binary_type distro_dwarf_types[] = {
--	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
--	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
--	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
--	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
--	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
--	DSO_BINARY_TYPE__NOT_FOUND,
--};
--
- struct debuginfo *debuginfo__new(const char *path)
+@@ -178,7 +178,7 @@ static const char * const bench_usage[] = {
+ 
+ static void print_usage(void)
  {
--	enum dso_binary_type *type;
-+	const enum dso_binary_type distro_dwarf_types[] = {
-+		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
-+		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-+		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-+		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
-+		DSO_BINARY_TYPE__NOT_FOUND,
-+	};
-+	const enum dso_binary_type *type;
- 	char buf[PATH_MAX], nil = '\0';
- 	struct dso *dso;
- 	struct debuginfo *dinfo = NULL;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index fda8fcfa46e07d38..fe482eec7d9ada28 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -43,11 +43,11 @@ regex_t		parent_regex;
- const char	default_parent_pattern[] = "^sys_|^do_page_fault";
- const char	*parent_pattern = default_parent_pattern;
- const char	*default_sort_order = "comm,dso,symbol";
--const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
-+static const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
- const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
--const char	default_top_sort_order[] = "dso,symbol";
--const char	default_diff_sort_order[] = "dso,symbol";
--const char	default_tracepoint_sort_order[] = "trace";
-+static const char	default_top_sort_order[] = "dso,symbol";
-+static const char	default_diff_sort_order[] = "dso,symbol";
-+static const char	default_tracepoint_sort_order[] = "trace";
- const char	*sort_order;
- const char	*field_order;
- regex_t		ignore_callees_regex;
-@@ -172,7 +172,7 @@ static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
+-	struct collection *coll;
++	const struct collection *coll;
+ 	int i;
+ 
+ 	printf("Usage: \n");
+@@ -234,9 +234,9 @@ static int run_bench(const char *coll_name, const char *bench_name, bench_fn_t f
+ 	return ret;
  }
  
--struct sort_entry sort_tgid = {
-+static struct sort_entry sort_tgid = {
- 	.se_header	= "   Tgid:Command",
- 	.se_cmp		= sort__tgid_cmp,
- 	.se_snprintf	= hist_entry__tgid_snprintf,
-@@ -218,7 +218,7 @@ static int hist_entry__simd_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "[.] %s", name);
- }
+-static void run_collection(struct collection *coll)
++static void run_collection(const struct collection *coll)
+ {
+-	struct bench *bench;
++	const struct bench *bench;
+ 	const char *argv[2];
  
--struct sort_entry sort_simd = {
-+static struct sort_entry sort_simd = {
- 	.se_header	= "Simd   ",
- 	.se_cmp		= sort__simd_cmp,
- 	.se_snprintf	= hist_entry__simd_snprintf,
-@@ -604,7 +604,7 @@ hist_entry__symoff_snprintf(struct hist_entry *he, char *bf, size_t size, unsign
- 	return repsep_snprintf(bf, size, "[%c] %s+0x%llx", he->level, sym->name, he->ip - sym->start);
- }
+ 	argv[1] = NULL;
+@@ -260,7 +260,7 @@ static void run_collection(struct collection *coll)
  
--struct sort_entry sort_sym_offset = {
-+static struct sort_entry sort_sym_offset = {
- 	.se_header	= "Symbol Offset",
- 	.se_cmp		= sort__symoff_cmp,
- 	.se_sort	= sort__symoff_sort,
-@@ -715,7 +715,7 @@ static int hist_entry__srcline_from_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, he->branch_info->srcline_from);
- }
+ static void run_all_collections(void)
+ {
+-	struct collection *coll;
++	const struct collection *coll;
  
--struct sort_entry sort_srcline_from = {
-+static struct sort_entry sort_srcline_from = {
- 	.se_header	= "From Source:Line",
- 	.se_cmp		= sort__srcline_from_cmp,
- 	.se_collapse	= sort__srcline_from_collapse,
-@@ -763,7 +763,7 @@ static int hist_entry__srcline_to_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, he->branch_info->srcline_to);
- }
+ 	for_each_collection(coll)
+ 		run_collection(coll);
+@@ -268,7 +268,7 @@ static void run_all_collections(void)
  
--struct sort_entry sort_srcline_to = {
-+static struct sort_entry sort_srcline_to = {
- 	.se_header	= "To Source:Line",
- 	.se_cmp		= sort__srcline_to_cmp,
- 	.se_collapse	= sort__srcline_to_collapse,
-@@ -799,7 +799,7 @@ static int hist_entry__sym_ipc_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*s", width, tmp);
- }
+ int cmd_bench(int argc, const char **argv)
+ {
+-	struct collection *coll;
++	const struct collection *coll;
+ 	int ret = 0;
  
--struct sort_entry sort_sym_ipc = {
-+static struct sort_entry sort_sym_ipc = {
- 	.se_header	= "IPC   [IPC Coverage]",
- 	.se_cmp		= sort__sym_cmp,
- 	.se_snprintf	= hist_entry__sym_ipc_snprintf,
-@@ -817,7 +817,7 @@ static int hist_entry__sym_ipc_null_snprintf(struct hist_entry *he
- 	return repsep_snprintf(bf, size, "%-*s", width, tmp);
- }
+ 	/* Unbuffered output */
+@@ -306,7 +306,7 @@ int cmd_bench(int argc, const char **argv)
+ 	}
  
--struct sort_entry sort_sym_ipc_null = {
-+static struct sort_entry sort_sym_ipc_null = {
- 	.se_header	= "IPC   [IPC Coverage]",
- 	.se_cmp		= sort__sym_cmp,
- 	.se_snprintf	= hist_entry__sym_ipc_null_snprintf,
-@@ -850,7 +850,7 @@ static int hist_entry__callchain_branch_predicted_snprintf(
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
- }
+ 	for_each_collection(coll) {
+-		struct bench *bench;
++		const struct bench *bench;
  
--struct sort_entry sort_callchain_branch_predicted = {
-+static struct sort_entry sort_callchain_branch_predicted = {
- 	.se_header	= "Predicted",
- 	.se_cmp		= sort__callchain_branch_predicted_cmp,
- 	.se_snprintf	= hist_entry__callchain_branch_predicted_snprintf,
-@@ -880,7 +880,7 @@ static int hist_entry__callchain_branch_abort_snprintf(struct hist_entry *he,
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
- }
- 
--struct sort_entry sort_callchain_branch_abort = {
-+static struct sort_entry sort_callchain_branch_abort = {
- 	.se_header	= "Abort",
- 	.se_cmp		= sort__callchain_branch_abort_cmp,
- 	.se_snprintf	= hist_entry__callchain_branch_abort_snprintf,
-@@ -913,7 +913,7 @@ static int hist_entry__callchain_branch_cycles_snprintf(struct hist_entry *he,
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, str);
- }
- 
--struct sort_entry sort_callchain_branch_cycles = {
-+static struct sort_entry sort_callchain_branch_cycles = {
- 	.se_header	= "Cycles",
- 	.se_cmp		= sort__callchain_branch_cycles_cmp,
- 	.se_snprintf	= hist_entry__callchain_branch_cycles_snprintf,
-@@ -980,7 +980,7 @@ static int hist_entry__srcfile_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-.*s", width, he->srcfile);
- }
- 
--struct sort_entry sort_srcfile = {
-+static struct sort_entry sort_srcfile = {
- 	.se_header	= "Source File",
- 	.se_cmp		= sort__srcfile_cmp,
- 	.se_collapse	= sort__srcfile_collapse,
-@@ -1032,7 +1032,7 @@ static int hist_entry__cpu_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%*.*d", width, width, he->cpu);
- }
- 
--struct sort_entry sort_cpu = {
-+static struct sort_entry sort_cpu = {
- 	.se_header      = "CPU",
- 	.se_cmp	        = sort__cpu_cmp,
- 	.se_snprintf    = hist_entry__cpu_snprintf,
-@@ -1063,7 +1063,7 @@ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%*d", width, he->parallelism);
- }
- 
--struct sort_entry sort_parallelism = {
-+static struct sort_entry sort_parallelism = {
- 	.se_header      = "Parallelism",
- 	.se_cmp	        = sort__parallelism_cmp,
- 	.se_filter	= hist_entry__parallelism_filter,
-@@ -1104,7 +1104,7 @@ static int hist_entry__cgroup_id_snprintf(struct hist_entry *he,
- 			       he->cgroup_id.ino);
- }
- 
--struct sort_entry sort_cgroup_id = {
-+static struct sort_entry sort_cgroup_id = {
- 	.se_header      = "cgroup id (dev/inode)",
- 	.se_cmp	        = sort__cgroup_id_cmp,
- 	.se_snprintf    = hist_entry__cgroup_id_snprintf,
-@@ -1137,7 +1137,7 @@ static int hist_entry__cgroup_snprintf(struct hist_entry *he,
- 	return repsep_snprintf(bf, size, "%s", cgrp_name);
- }
- 
--struct sort_entry sort_cgroup = {
-+static struct sort_entry sort_cgroup = {
- 	.se_header      = "Cgroup",
- 	.se_cmp	        = sort__cgroup_cmp,
- 	.se_snprintf    = hist_entry__cgroup_snprintf,
-@@ -1168,7 +1168,7 @@ static int hist_entry__socket_filter(struct hist_entry *he, int type, const void
- 	return sk >= 0 && he->socket != sk;
- }
- 
--struct sort_entry sort_socket = {
-+static struct sort_entry sort_socket = {
- 	.se_header      = "Socket",
- 	.se_cmp	        = sort__socket_cmp,
- 	.se_snprintf    = hist_entry__socket_snprintf,
-@@ -1199,7 +1199,7 @@ static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
- }
- 
--struct sort_entry sort_time = {
-+static struct sort_entry sort_time = {
- 	.se_header      = "Time",
- 	.se_cmp	        = sort__time_cmp,
- 	.se_snprintf    = hist_entry__time_snprintf,
-@@ -1268,7 +1268,7 @@ static int hist_entry__trace_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-.*s", width, he->trace_output);
- }
- 
--struct sort_entry sort_trace = {
-+static struct sort_entry sort_trace = {
- 	.se_header      = "Trace output",
- 	.se_cmp	        = sort__trace_cmp,
- 	.se_snprintf    = hist_entry__trace_snprintf,
-@@ -1563,7 +1563,7 @@ sort__addr_to_cmp(struct hist_entry *left, struct hist_entry *right)
- 	return _sort__addr_cmp(to_l->addr, to_r->addr);
- }
- 
--struct sort_entry sort_addr_from = {
-+static struct sort_entry sort_addr_from = {
- 	.se_header	= "Source Address",
- 	.se_cmp		= sort__addr_from_cmp,
- 	.se_snprintf	= hist_entry__addr_from_snprintf,
-@@ -1571,7 +1571,7 @@ struct sort_entry sort_addr_from = {
- 	.se_width_idx	= HISTC_ADDR_FROM,
- };
- 
--struct sort_entry sort_addr_to = {
-+static struct sort_entry sort_addr_to = {
- 	.se_header	= "Target Address",
- 	.se_cmp		= sort__addr_to_cmp,
- 	.se_snprintf	= hist_entry__addr_to_snprintf,
-@@ -1628,7 +1628,7 @@ static int hist_entry__cycles_snprintf(struct hist_entry *he, char *bf,
- 			       he->branch_info->flags.cycles);
- }
- 
--struct sort_entry sort_cycles = {
-+static struct sort_entry sort_cycles = {
- 	.se_header	= "Basic Block Cycles",
- 	.se_cmp		= sort__cycles_cmp,
- 	.se_snprintf	= hist_entry__cycles_snprintf,
-@@ -1918,7 +1918,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
- 	return _hist_entry__sym_snprintf(ms, addr, level, bf, size, width);
- }
- 
--struct sort_entry sort_mispredict = {
-+static struct sort_entry sort_mispredict = {
- 	.se_header	= "Branch Mispredicted",
- 	.se_cmp		= sort__mispredict_cmp,
- 	.se_snprintf	= hist_entry__mispredict_snprintf,
-@@ -1937,7 +1937,7 @@ static int hist_entry__local_weight_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*llu", width, he->weight);
- }
- 
--struct sort_entry sort_local_weight = {
-+static struct sort_entry sort_local_weight = {
- 	.se_header	= "Local Weight",
- 	.se_cmp		= sort__weight_cmp,
- 	.se_snprintf	= hist_entry__local_weight_snprintf,
-@@ -1951,7 +1951,7 @@ static int hist_entry__global_weight_snprintf(struct hist_entry *he, char *bf,
- 			       he->weight * he->stat.nr_events);
- }
- 
--struct sort_entry sort_global_weight = {
-+static struct sort_entry sort_global_weight = {
- 	.se_header	= "Weight",
- 	.se_cmp		= sort__weight_cmp,
- 	.se_snprintf	= hist_entry__global_weight_snprintf,
-@@ -1970,7 +1970,7 @@ static int hist_entry__local_ins_lat_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*u", width, he->ins_lat);
- }
- 
--struct sort_entry sort_local_ins_lat = {
-+static struct sort_entry sort_local_ins_lat = {
- 	.se_header	= "Local INSTR Latency",
- 	.se_cmp		= sort__ins_lat_cmp,
- 	.se_snprintf	= hist_entry__local_ins_lat_snprintf,
-@@ -1984,7 +1984,7 @@ static int hist_entry__global_ins_lat_snprintf(struct hist_entry *he, char *bf,
- 			       he->ins_lat * he->stat.nr_events);
- }
- 
--struct sort_entry sort_global_ins_lat = {
-+static struct sort_entry sort_global_ins_lat = {
- 	.se_header	= "INSTR Latency",
- 	.se_cmp		= sort__ins_lat_cmp,
- 	.se_snprintf	= hist_entry__global_ins_lat_snprintf,
-@@ -2010,70 +2010,70 @@ static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*u", width, he->weight3);
- }
- 
--struct sort_entry sort_local_p_stage_cyc = {
-+static struct sort_entry sort_local_p_stage_cyc = {
- 	.se_header      = "Local Pipeline Stage Cycle",
- 	.se_cmp         = sort__p_stage_cyc_cmp,
- 	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
- 	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
- };
- 
--struct sort_entry sort_global_p_stage_cyc = {
-+static struct sort_entry sort_global_p_stage_cyc = {
- 	.se_header      = "Pipeline Stage Cycle",
- 	.se_cmp         = sort__p_stage_cyc_cmp,
- 	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
- 	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
- };
- 
--struct sort_entry sort_mem_daddr_sym = {
-+static struct sort_entry sort_mem_daddr_sym = {
- 	.se_header	= "Data Symbol",
- 	.se_cmp		= sort__daddr_cmp,
- 	.se_snprintf	= hist_entry__daddr_snprintf,
- 	.se_width_idx	= HISTC_MEM_DADDR_SYMBOL,
- };
- 
--struct sort_entry sort_mem_iaddr_sym = {
-+static struct sort_entry sort_mem_iaddr_sym = {
- 	.se_header	= "Code Symbol",
- 	.se_cmp		= sort__iaddr_cmp,
- 	.se_snprintf	= hist_entry__iaddr_snprintf,
- 	.se_width_idx	= HISTC_MEM_IADDR_SYMBOL,
- };
- 
--struct sort_entry sort_mem_daddr_dso = {
-+static struct sort_entry sort_mem_daddr_dso = {
- 	.se_header	= "Data Object",
- 	.se_cmp		= sort__dso_daddr_cmp,
- 	.se_snprintf	= hist_entry__dso_daddr_snprintf,
- 	.se_width_idx	= HISTC_MEM_DADDR_DSO,
- };
- 
--struct sort_entry sort_mem_locked = {
-+static struct sort_entry sort_mem_locked = {
- 	.se_header	= "Locked",
- 	.se_cmp		= sort__locked_cmp,
- 	.se_snprintf	= hist_entry__locked_snprintf,
- 	.se_width_idx	= HISTC_MEM_LOCKED,
- };
- 
--struct sort_entry sort_mem_tlb = {
-+static struct sort_entry sort_mem_tlb = {
- 	.se_header	= "TLB access",
- 	.se_cmp		= sort__tlb_cmp,
- 	.se_snprintf	= hist_entry__tlb_snprintf,
- 	.se_width_idx	= HISTC_MEM_TLB,
- };
- 
--struct sort_entry sort_mem_lvl = {
-+static struct sort_entry sort_mem_lvl = {
- 	.se_header	= "Memory access",
- 	.se_cmp		= sort__lvl_cmp,
- 	.se_snprintf	= hist_entry__lvl_snprintf,
- 	.se_width_idx	= HISTC_MEM_LVL,
- };
- 
--struct sort_entry sort_mem_snoop = {
-+static struct sort_entry sort_mem_snoop = {
- 	.se_header	= "Snoop",
- 	.se_cmp		= sort__snoop_cmp,
- 	.se_snprintf	= hist_entry__snoop_snprintf,
- 	.se_width_idx	= HISTC_MEM_SNOOP,
- };
- 
--struct sort_entry sort_mem_dcacheline = {
-+static struct sort_entry sort_mem_dcacheline = {
- 	.se_header	= "Data Cacheline",
- 	.se_cmp		= sort__dcacheline_cmp,
- 	.se_snprintf	= hist_entry__dcacheline_snprintf,
-@@ -2108,7 +2108,7 @@ static int hist_entry__blocked_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%.*s", width, out);
- }
- 
--struct sort_entry sort_mem_blocked = {
-+static struct sort_entry sort_mem_blocked = {
- 	.se_header	= "Blocked",
- 	.se_cmp		= sort__blocked_cmp,
- 	.se_snprintf	= hist_entry__blocked_snprintf,
-@@ -2149,7 +2149,7 @@ static int hist_entry__phys_daddr_snprintf(struct hist_entry *he, char *bf,
- 	return width;
- }
- 
--struct sort_entry sort_mem_phys_daddr = {
-+static struct sort_entry sort_mem_phys_daddr = {
- 	.se_header	= "Data Physical Address",
- 	.se_cmp		= sort__phys_daddr_cmp,
- 	.se_snprintf	= hist_entry__phys_daddr_snprintf,
-@@ -2178,7 +2178,7 @@ static int hist_entry__data_page_size_snprintf(struct hist_entry *he, char *bf,
- 			get_page_size_name(mem_info__daddr(he->mem_info)->data_page_size, str));
- }
- 
--struct sort_entry sort_mem_data_page_size = {
-+static struct sort_entry sort_mem_data_page_size = {
- 	.se_header	= "Data Page Size",
- 	.se_cmp		= sort__data_page_size_cmp,
- 	.se_snprintf	= hist_entry__data_page_size_snprintf,
-@@ -2203,7 +2203,7 @@ static int hist_entry__code_page_size_snprintf(struct hist_entry *he, char *bf,
- 			       get_page_size_name(he->code_page_size, str));
- }
- 
--struct sort_entry sort_code_page_size = {
-+static struct sort_entry sort_code_page_size = {
- 	.se_header	= "Code Page Size",
- 	.se_cmp		= sort__code_page_size_cmp,
- 	.se_snprintf	= hist_entry__code_page_size_snprintf,
-@@ -2235,7 +2235,7 @@ static int hist_entry__abort_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*s", width, out);
- }
- 
--struct sort_entry sort_abort = {
-+static struct sort_entry sort_abort = {
- 	.se_header	= "Transaction abort",
- 	.se_cmp		= sort__abort_cmp,
- 	.se_snprintf	= hist_entry__abort_snprintf,
-@@ -2267,7 +2267,7 @@ static int hist_entry__in_tx_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*s", width, out);
- }
- 
--struct sort_entry sort_in_tx = {
-+static struct sort_entry sort_in_tx = {
- 	.se_header	= "Branch in transaction",
- 	.se_cmp		= sort__in_tx_cmp,
- 	.se_snprintf	= hist_entry__in_tx_snprintf,
-@@ -2339,7 +2339,7 @@ static int hist_entry__transaction_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-*s", width, buf);
- }
- 
--struct sort_entry sort_transaction = {
-+static struct sort_entry sort_transaction = {
- 	.se_header	= "Transaction                ",
- 	.se_cmp		= sort__transaction_cmp,
- 	.se_snprintf	= hist_entry__transaction_snprintf,
-@@ -2378,7 +2378,7 @@ static int hist_entry__sym_size_snprintf(struct hist_entry *he, char *bf,
- 	return _hist_entry__sym_size_snprintf(he->ms.sym, bf, size, width);
- }
- 
--struct sort_entry sort_sym_size = {
-+static struct sort_entry sort_sym_size = {
- 	.se_header	= "Symbol size",
- 	.se_cmp		= sort__sym_size_cmp,
- 	.se_snprintf	= hist_entry__sym_size_snprintf,
-@@ -2417,7 +2417,7 @@ static int hist_entry__dso_size_snprintf(struct hist_entry *he, char *bf,
- 	return _hist_entry__dso_size_snprintf(he->ms.map, bf, size, width);
- }
- 
--struct sort_entry sort_dso_size = {
-+static struct sort_entry sort_dso_size = {
- 	.se_header	= "DSO size",
- 	.se_cmp		= sort__dso_size_cmp,
- 	.se_snprintf	= hist_entry__dso_size_snprintf,
-@@ -2454,7 +2454,7 @@ static int hist_entry__addr_snprintf(struct hist_entry *he, char *bf,
- 	return repsep_snprintf(bf, size, "%-#*llx", width, ip);
- }
- 
--struct sort_entry sort_addr = {
-+static struct sort_entry sort_addr = {
- 	.se_header	= "Address",
- 	.se_cmp		= sort__addr_cmp,
- 	.se_snprintf	= hist_entry__addr_snprintf,
-@@ -2572,7 +2572,7 @@ static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
- 			       he->mem_type_off, buf);
- }
- 
--struct sort_entry sort_type_offset = {
-+static struct sort_entry sort_type_offset = {
- 	.se_header	= "Data Type Offset",
- 	.se_cmp		= sort__type_cmp,
- 	.se_collapse	= sort__typeoff_sort,
-@@ -2630,7 +2630,7 @@ static int hist_entry__typecln_snprintf(struct hist_entry *he, char *bf,
- 			       he->mem_type_off / cln_size);
- }
- 
--struct sort_entry sort_type_cacheline = {
-+static struct sort_entry sort_type_cacheline = {
- 	.se_header	= "Data Type Cacheline",
- 	.se_cmp		= sort__type_cmp,
- 	.se_collapse	= sort__typecln_sort,
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 8b893de35f777db0..c5fee8e394805544 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -77,8 +77,6 @@ bool sysctl__nmi_watchdog_enabled(void)
- 	return nmi_watchdog;
- }
- 
--bool test_attr__enabled;
--
- bool exclude_GH_default;
- 
- bool perf_host  = true;
+ 		if (strcmp(coll->name, argv[0]))
+ 			continue;
 -- 
 2.53.0
 
