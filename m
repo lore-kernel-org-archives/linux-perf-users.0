@@ -1,154 +1,107 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DFC38AC85
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 21:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC8931B803;
+	Thu,  2 Apr 2026 21:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775167058; cv=none; b=H4XT4NvJro3H74+AqRraidrA3+CSP4C0ioybMhVwrgGbSDpExxeRM7fN2DTgTLuTY4b9F35UG1xP12uEo7LRnn7LKtYkI2TpZ3zuHFSwjmwU5aQHgmq//N7+PZKZOjYG7dHVfb2CR+sUX2I/Vg1t33HxrpiLle/YcHM2A/R64xY=
+	t=1775167107; cv=none; b=k0KTnsXAl0U1zEWJXPFqqxg/0Ps3JXPapOn3I1EGDoeKTvF9US/PyIfdG+xpLI7tvChHd36X2Tl7BxvkXQId6eqjJ0CvRUFjBPnNvmh0R8aT2gMib5ftcekYMyYcmiA1YqUefTFMScCkjx1iMYXus6GRMr0nosElGxpPdOE0UK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775167058; c=relaxed/simple;
-	bh=siRI0ffl20AQmueI8A3TOxwowDSSjh9DIdAqWO1oi/E=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=tnuKH8ZkBNFqUH5g3wkI4Ff0IC63sivH90vmdKcQ9n8S9Pm65g5QfZ2QKgIqSTxXxqXkd5rjuYfF8P1sW3Fu1ymitmPgUwd/p0N8nv8otMbdJe8J8sK3IQiP9GeOy7/cERHNx8Nyja20l5QCgr+IJJsyvNzWiHYHXrL4b72suVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s6InZzXP; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1775167107; c=relaxed/simple;
+	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DVJp2RZb27ELpuSXbKU4Hp/Y6oxtY4GVZi+hvh0cGpfFqwLi3iiECU8FkXW3LsP2E4BFa3lHd7gKiNOQi5H6gIaKO0hKHraIz2ZSgvjaY8pL8Nj3ueFJ33XzKXy8KKHzyLjplHoEp/PCfYJu8MKrJG/teYDsTZ/J1SYs3fWx0zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBJzCsq7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s6InZzXP"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12bfa367189so1494710c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 14:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775167052; x=1775771852; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tQ3+wXp52+vINavkRYclxQ9XykPvN9/1RMTQP4wILHI=;
-        b=s6InZzXPCztg7/FO1NJS7XcLGD20y6GgeG5IOYuLcdko7JTtgSyqAFyXVXw1wMgWZX
-         RmxfZOIBvpAoE8fkeDZV6VSJRzRlEPcF7ERaoCsgvGuirZGpkxzleZ2eGz/khXSgmi+I
-         KfTE7ewwzEppvNQyiIo8D93nPjvl7EKLENmNJFTn1X9FnX0jkTJY5SYrDFgclTHfZqon
-         AJA/O+IrJA6gPiHQshIHCuPqeVynKnIDvEt5Dpg0HZO5IoxdTvYEcAqOywnCdM8bEq1c
-         MiXmn5hvONdCQ5fhSpA+UUzNxgci53nhyfwSjDbvPHuDCQ7gsMN/nJbREieUqLmkkg0/
-         za9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775167052; x=1775771852;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tQ3+wXp52+vINavkRYclxQ9XykPvN9/1RMTQP4wILHI=;
-        b=IZicmKkvpsWZ99O0TOZWVxt2fKI37HibqCAKOmKVIhAkSzytrO4rFWnTtu4PwSzTnM
-         mj81GMdbV6f+BUn3EVM/wmallYt58hOd7xoE29+7tO2dymND+E8cNsvzMg4uCY1jSAhY
-         B0FJMcdjL1iRqz32cDr0NN4PvgAJI7XDbdNfzL9lfr1ykwlOGZNsyl5xCREa3cpzXob3
-         xstAMulZtjtE2aCHIDW6pB8x4NpX4apurRb6p37PiwhWmnPr/xLDqVNJbxKTr14pjIxP
-         Iw3dHTgrMJTNkQHrNVwceQcezItoU0HzhNt43DyYfzjtd3q1IWQqNowdmmhJFJQIbBRG
-         9Cyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi8nJdiBXY2RLdbzMRRRqdwTfvbl5sfEXeYNOZe5k4GKm3TkrUOXKMQHBH7M8H8aExWlvLOxugTGZT76JTONX9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWDez6LetYrQnvZR3laecwDME8xZ3rv3q6nPXezgkX72qS1Ryp
-	36YkZoNPeAmWILV+OJGLDmgiQ340dI7cWMul1Oq67H/tHggwo0tvhqFBU0V58R/bhbC7yVKLJx5
-	tFTurIStEnA==
-X-Received: from dlec15-n1.prod.google.com ([2002:a05:701b:428f:10b0:12a:c4d6:354a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:212:b0:11b:ec5f:1c37
- with SMTP id a92af1059eb24-12bfb74468cmr361309c88.18.1775167051893; Thu, 02
- Apr 2026 14:57:31 -0700 (PDT)
-Date: Thu,  2 Apr 2026 14:57:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBJzCsq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D96C116C6;
+	Thu,  2 Apr 2026 21:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775167106;
+	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=KBJzCsq7TNcgHpU+TWPAd3W8YuuJXdgpviR9Ow38UzYp/E+eDMYCQdUq5+04/Mnru
+	 vF8yruBgH9Kqoxj3RdUA00tDQnEgnr1qE7AXbmqG7qka9IVu/f1eZKTg86JWT+ETrn
+	 TjxI1jdECoYVYFvAydaPvhTr0DLyOkSNS0rHhfEWArmmkmeciwTpFwX+5aQHpstoUl
+	 foXfbAlUvknuR2UINHvJ3kK1f5ozCCWUSVy6PFFL3eEN4gpoDz+keSHvFP6Ep2zvPe
+	 Ej2doeiB7lotVTyVy6ov80wS5IsFWdnGSH4WR6z1XJ7lBV9TObDwXGWdYhpggyK3MT
+	 1b1VbHt8uneOw==
+Date: Thu, 2 Apr 2026 15:58:18 -0600 (MDT)
+From: Paul Walmsley <pjw@kernel.org>
+To: Yury Norov <ynorov@nvidia.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    "Michael S. Tsirkin" <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>, 
+    Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    Alexander Viro <viro@zeniv.linux.org.uk>, 
+    Alexandra Winter <wintera@linux.ibm.com>, 
+    Andreas Dilger <adilger.kernel@dilger.ca>, 
+    Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>, 
+    Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, 
+    Carlos Maiolino <cem@kernel.org>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Chao Yu <chao@kernel.org>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Christian Brauner <brauner@kernel.org>, 
+    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    David Airlie <airlied@gmail.com>, 
+    Dominique Martinet <asmadeus@codewreck.org>, 
+    Dongsheng Yang <dongsheng.yang@linux.dev>, 
+    Eric Dumazet <edumazet@google.com>, 
+    Eric Van Hensbergen <ericvh@kernel.org>, 
+    Heiko Carstens <hca@linux.ibm.com>, 
+    Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
+    Jaegeuk Kim <jaegeuk@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+    Jani Nikula <jani.nikula@linux.intel.com>, 
+    Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>, 
+    Jens Axboe <axboe@kernel.dk>, 
+    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+    Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>, 
+    Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
+    Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>, 
+    Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+    Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+    Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Sean Christopherson <seanjc@google.com>, Simona Vetter <simona@ffwll.ch>, 
+    Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
+    Trond Myklebust <trondmy@kernel.org>, 
+    Tvrtko Ursulin <tursulin@ursulin.net>, Vasily Gorbik <gor@linux.ibm.com>, 
+    Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
+    Zheng Gu <cengku@gmail.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+    linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+    linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+    linux-s390@vger.kernel.org, linux-block@vger.kernel.org, 
+    intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+    dm-devel@lists.linux.dev, netdev@vger.kernel.org, 
+    linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org, 
+    linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+    linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+    linux-crypto@vger.kernel.org, linux-mm@kvack.org, 
+    linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev, 
+    virtualization@lists.linux.dev, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 8/8] arch: use rest_of_page() macro where appropriate
+In-Reply-To: <20260304012717.201797-9-ynorov@nvidia.com>
+Message-ID: <ee15482d-22a8-9686-ba64-d216b25d8e68@kernel.org>
+References: <20260304012717.201797-1-ynorov@nvidia.com> <20260304012717.201797-9-ynorov@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260402215727.980993-1-irogers@google.com>
-Subject: [PATCH v1] perf cgroup: Update metric leader in evlist__expand_cgroup
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-When the evlist is expanded the metric leader wasn't being updated. As
-the original evsel is deleted this creates a use-after-free in
-stat-shadow's prepare_metric. This was detected running the "perf stat
---bpf-counters --for-each-cgroup test" with sanitizers.
+On Tue, 3 Mar 2026, Yury Norov wrote:
 
-The change itself puts the copied evsel into the priv field (known
-unused because of evsel__clone use) and then in a second pass over the
-list updates the copied values using the priv pointer.
+> Switch arch code to using the macro. No functional changes intended.
+> 
+> Signed-off-by: Yury Norov <ynorov@nvidia.com>
 
-Fixes: d1c5a0e86a4e ("perf stat: Add --for-each-cgroup option")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/cgroup.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 040eb75f0804..1e0fef283826 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -417,7 +417,6 @@ static bool has_pattern_string(const char *str)
- int evlist__expand_cgroup(struct evlist *evlist, const char *str, bool open_cgroup)
- {
- 	struct evlist *orig_list, *tmp_list;
--	struct evsel *pos, *evsel, *leader;
- 	struct rblist orig_metric_events;
- 	struct cgroup *cgrp = NULL;
- 	struct cgroup_name *cn;
-@@ -452,6 +451,7 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str, bool open_cgro
- 		goto out_err;
- 
- 	list_for_each_entry(cn, &cgroup_list, list) {
-+		struct evsel *pos;
- 		char *name;
- 
- 		if (!cn->used)
-@@ -467,21 +467,41 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str, bool open_cgro
- 		if (cgrp == NULL)
- 			continue;
- 
--		leader = NULL;
-+		/* copy the list and set to the new cgroup. */
- 		evlist__for_each_entry(orig_list, pos) {
--			evsel = evsel__clone(/*dest=*/NULL, pos);
-+			struct evsel *evsel = evsel__clone(/*dest=*/NULL, pos);
-+
- 			if (evsel == NULL)
- 				goto out_err;
- 
-+			/* stash the copy during the copying. */
-+			pos->priv = &evsel->core;
- 			cgroup__put(evsel->cgrp);
- 			evsel->cgrp = cgroup__get(cgrp);
- 
--			if (evsel__is_group_leader(pos))
--				leader = evsel;
--			evsel__set_leader(evsel, leader);
--
- 			evlist__add(tmp_list, evsel);
- 		}
-+		/* update leader information using stashed pointer to copy. */
-+		evlist__for_each_entry(orig_list, pos) {
-+			struct evsel *evsel = pos->priv;
-+
-+			if (evsel__leader(pos))
-+				evsel->core.leader = evsel__leader(pos)->priv;
-+
-+			if (pos->metric_leader) {
-+				evsel->metric_leader =
-+					container_of(pos->metric_leader->priv, struct evsel, core);
-+			}
-+			if (pos->first_wildcard_match) {
-+				evsel->first_wildcard_match =
-+					container_of(pos->first_wildcard_match->priv,
-+						     struct evsel, core);
-+			}
-+		}
-+		/* the stashed copy is no longer used. */
-+		evlist__for_each_entry(orig_list, pos)
-+			pos->priv = NULL;
-+
- 		/* cgroup__new() has a refcount, release it here */
- 		cgroup__put(cgrp);
- 		nr_cgroups++;
--- 
-2.53.0.1213.gd9a14994de-goog
 
+- Paul
