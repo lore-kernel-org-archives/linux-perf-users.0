@@ -1,107 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC8931B803;
-	Thu,  2 Apr 2026 21:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCBE38AC8C
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 22:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775167107; cv=none; b=k0KTnsXAl0U1zEWJXPFqqxg/0Ps3JXPapOn3I1EGDoeKTvF9US/PyIfdG+xpLI7tvChHd36X2Tl7BxvkXQId6eqjJ0CvRUFjBPnNvmh0R8aT2gMib5ftcekYMyYcmiA1YqUefTFMScCkjx1iMYXus6GRMr0nosElGxpPdOE0UK0=
+	t=1775167452; cv=none; b=M1ZwvTJ2rVy4mtsw/JJ2oo/hZBlLHgxCNW/i2Ciddl7NzmNunYIP1owDPZdWt9LQkjMFtafbTCyicuEsecOpfIV/NaEEynngG83Tecx4m5ITE2PbjnF3a8gVo8Hi+cJCxupasufUjgM+Qg4c2jSVUUCH7TUhZPSy7YdOFcqGp1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775167107; c=relaxed/simple;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DVJp2RZb27ELpuSXbKU4Hp/Y6oxtY4GVZi+hvh0cGpfFqwLi3iiECU8FkXW3LsP2E4BFa3lHd7gKiNOQi5H6gIaKO0hKHraIz2ZSgvjaY8pL8Nj3ueFJ33XzKXy8KKHzyLjplHoEp/PCfYJu8MKrJG/teYDsTZ/J1SYs3fWx0zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBJzCsq7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775167452; c=relaxed/simple;
+	bh=iRouk0ngQoiEa0Vgp5uGB7SrOcFatK26XuwU83n6CAA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=UEI6kGyxyJI5bEizrm5sh7QR2E4yMPneIw23HkWuK87K0VPejJWRotKuDoEfnB54fJ0mbxOdWfQxrkMMbGLeaKbfnaA+k0KE4m6YK7ANrfFMbMlnJSWUAKJAkQNwmW7/icZ+PsI5pCjq4bHcfaaRJ4WS1IbCSOZUocGh8dWrK4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=skHHg+l+; arc=none smtp.client-ip=74.125.82.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBJzCsq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D96C116C6;
-	Thu,  2 Apr 2026 21:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775167106;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=KBJzCsq7TNcgHpU+TWPAd3W8YuuJXdgpviR9Ow38UzYp/E+eDMYCQdUq5+04/Mnru
-	 vF8yruBgH9Kqoxj3RdUA00tDQnEgnr1qE7AXbmqG7qka9IVu/f1eZKTg86JWT+ETrn
-	 TjxI1jdECoYVYFvAydaPvhTr0DLyOkSNS0rHhfEWArmmkmeciwTpFwX+5aQHpstoUl
-	 foXfbAlUvknuR2UINHvJ3kK1f5ozCCWUSVy6PFFL3eEN4gpoDz+keSHvFP6Ep2zvPe
-	 Ej2doeiB7lotVTyVy6ov80wS5IsFWdnGSH4WR6z1XJ7lBV9TObDwXGWdYhpggyK3MT
-	 1b1VbHt8uneOw==
-Date: Thu, 2 Apr 2026 15:58:18 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    "Michael S. Tsirkin" <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, 
-    Alexandra Winter <wintera@linux.ibm.com>, 
-    Andreas Dilger <adilger.kernel@dilger.ca>, 
-    Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>, 
-    Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, 
-    Carlos Maiolino <cem@kernel.org>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Chao Yu <chao@kernel.org>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Christian Brauner <brauner@kernel.org>, 
-    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    David Airlie <airlied@gmail.com>, 
-    Dominique Martinet <asmadeus@codewreck.org>, 
-    Dongsheng Yang <dongsheng.yang@linux.dev>, 
-    Eric Dumazet <edumazet@google.com>, 
-    Eric Van Hensbergen <ericvh@kernel.org>, 
-    Heiko Carstens <hca@linux.ibm.com>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
-    Jaegeuk Kim <jaegeuk@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-    Jani Nikula <jani.nikula@linux.intel.com>, 
-    Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>, 
-    Jens Axboe <axboe@kernel.dk>, 
-    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-    Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>, 
-    Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-    Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Sean Christopherson <seanjc@google.com>, Simona Vetter <simona@ffwll.ch>, 
-    Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-    Trond Myklebust <trondmy@kernel.org>, 
-    Tvrtko Ursulin <tursulin@ursulin.net>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
-    Zheng Gu <cengku@gmail.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-    linux-s390@vger.kernel.org, linux-block@vger.kernel.org, 
-    intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    dm-devel@lists.linux.dev, netdev@vger.kernel.org, 
-    linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org, 
-    linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-    linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-    linux-crypto@vger.kernel.org, linux-mm@kvack.org, 
-    linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev, 
-    virtualization@lists.linux.dev, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 8/8] arch: use rest_of_page() macro where appropriate
-In-Reply-To: <20260304012717.201797-9-ynorov@nvidia.com>
-Message-ID: <ee15482d-22a8-9686-ba64-d216b25d8e68@kernel.org>
-References: <20260304012717.201797-1-ynorov@nvidia.com> <20260304012717.201797-9-ynorov@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skHHg+l+"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12711ec96fbso8395873c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 15:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775167450; x=1775772250; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0YEbItHkRkpnU/lfd+rF7ORpm8vYnWtiloc9sGIoL/E=;
+        b=skHHg+l+GS/NvcCbqPbREoS/PWh4HDWmbeFLOPLYaph0qCvEgmMgcF/TmrxgJhjDQa
+         eQtK7jCxH5YTE4zET+isfmuVD7v81vsvhslRfKWG86R+r+Sa2yBiAZt9ORNKtltzJ0dJ
+         GOy3W1WXZXKPEXT0Qw8f2wKYhAFBHZt26CHWLyU58qpuZaSiohf1GdpmeOJew3f/Rb82
+         BpxAXEks7Nff3av1BVHBHJ4jnCEFhLh71ykTfrygwWdXC2Feaa134clTBDJiIk0f6hPO
+         FIr1VCT4XWtItu2L4shDo+AZ72F7tCetKdeKZWshenX7o8E4RsWAuzOM1w8EmvtpGeKA
+         +T5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775167450; x=1775772250;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0YEbItHkRkpnU/lfd+rF7ORpm8vYnWtiloc9sGIoL/E=;
+        b=QxJ0vuunCy6qwVGObD8tLgUHKl4c9G3rjSD3H+uDRZRLNGy8DDQSXtag022hOf6W63
+         ky2xq44SpynMlIzFCVep3pDR5YEZ0u28eBepbJWHWYO9odTXHDLT7YVmX7kZFb4UVt9l
+         Tlb/aYQv60spPcnS/Mn907+Z6B6IljU/QNVIkj88sOAltiy8+W+SA2Lhf/ZiCu+P9Dmw
+         pY2vqJ0i9mRKvOyCgztIJ4rT7JYPs61FBx+2xpxzleXoL2d8dO6eFN8RHgVdmjs5D3ub
+         5+O/3AQPMZ7ut8M14IxkjtwyzyoX8nn47glcMYywmuYrX9HHtNH/hUj5xuACoaDiP9iB
+         eLLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSvKsIHEkHoiDhtcFOJF3eJFcuAlzVxpSbw+aAm6nERQgtg4IIgW7n7SUkAOg/urrQVywv2RlpQg4Dbl9u3OAv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQwvrguR3wmXAPRz6JydLZSA0IdgNfK11TAc2sJIhIGwqKnlZE
+	TLqi+Xf87uKeVMbxPTY78GNlYO+L0NhMr1uVfIKYkN4V3qIHCiG8Orr4I3yUIUDguJLb6CFprCl
+	MD7ks99Ubnw==
+X-Received: from dycae21.prod.google.com ([2002:a05:7300:da15:b0:2cb:b540:9519])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec17:b0:128:d455:8501
+ with SMTP id a92af1059eb24-12bfb77a42emr349411c88.37.1775167449802; Thu, 02
+ Apr 2026 15:04:09 -0700 (PDT)
+Date: Thu,  2 Apr 2026 15:04:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260402220406.983248-1-irogers@google.com>
+Subject: [PATCH v1] perf test: Stat std output match 2 metrics for stalled-cycles-backend
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 3 Mar 2026, Yury Norov wrote:
+Seen on ARM, the stalled-cycles-backend event can be given as the
+event for both backend_cycles_idle and stalled_cycles_per_instruction
+metrics. Make the metric match sufficiently generic to allow this.
 
-> Switch arch code to using the macro. No functional changes intended.
-> 
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/stat+std_output.sh | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
+index 9c4b92ecf448..5a6bda436dd4 100755
+--- a/tools/perf/tests/shell/stat+std_output.sh
++++ b/tools/perf/tests/shell/stat+std_output.sh
+@@ -11,9 +11,12 @@ set -e
+ 
+ stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
+ 
++# For event_name[i] expect to see event_metric[i]. 'stalled-cycles-backend' may
++# match both 'backend_cycles_idle' and 'stalled_cycles_per_instruction', hence
++# matching "_cycles_".
+ event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
+-event_metric=("CPUs_utilized" "CPUs_utilized" "cs/sec" "migrations/sec" "faults/sec" "frontend_cycles_idle" "backend_cycles_idle" "GHz" "insn_per_cycle" "/sec" "branch_miss_rate")
+-skip_metric=("tma_" "TopdownL1")
++event_metric=("CPUs_utilized" "CPUs_utilized" "cs/sec" "migrations/sec" "faults/sec" "frontend_cycles_idle" "_cycles_" "GHz" "insn_per_cycle" "/sec" "branch_miss_rate")
++skip_metric=("tma_" "TopdownL1" "percent of slots")
+ 
+ cleanup() {
+   rm -f "${stat_output}"
+-- 
+2.53.0.1213.gd9a14994de-goog
 
-
-- Paul
