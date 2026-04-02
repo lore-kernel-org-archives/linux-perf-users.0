@@ -1,133 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766A3DA5CE;
-	Thu,  2 Apr 2026 17:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775152767; cv=none; b=bXZMvdNfgUEn3BkUix8DpOvUTPeb+YisjiJdH7dfljStb2ElWA68WZ2aBX4KUrjvCTd+UUspogJhwuzzHm4EIFnUwJJTPzWsRivQoH81ZNccTDk/qtNbGI6lNnC/zZnUj4SO5rpdyi8Wd79GEqVgeIOMT0gh6lDtSJgXn3RkdQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775152767; c=relaxed/simple;
-	bh=vPgWeEtXaTLBNLyKSrj7f5vCm/g8wZd2nttvJgASbVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8VEHT2GRL0FtwwuTvKZ1pkQtwl/zBFxCQC2wgqw66AxC7v1fxuSf+mrT95X1YekfVJEwDuYprcLS8GjhvmkXc8MP8093D+x5LmKXp7Rk7IUBT9Tn21AfsCAj4avkeTVwTUBfkknlQO8U/RHwHtTeVwvMxVmm3KzpbtWO02QDVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aELXh7+6; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A54431F99E
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Apr 2026 20:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775161986; cv=pass; b=QK/8pJXhFgBR4MiRShMcqfsWe7nraNqwUJYkE7v3SVd8CTshO3EAZJik4SejiLI9SddHF8mS5MTAihNOD0thB0OO/ZJmwvn+WZ7FG0x8+3cH/1H96niVZOjwi6aajuLwRJ+CSIs6pI9JDnd33gPcIFJKn7rG1wCnGWEzfWWZbFw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775161986; c=relaxed/simple;
+	bh=76nVsFIzca0JfDL3k0s/0UXG1tolgd2fXXDQOTCVqJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GaiL5dBV/sJjXWpnfJbsDge5Mg0dRUVN0C6JKpyAIlDKNf6DuqbLDvzJm81xfJGwJ/PQrDeRw6PR4pYznnNSvfzlRPXfqIJZfHgwFbxdh4z0Mu82f2TONaj6OoOvzwX4nouXoClQhHUw64AX42V51HryoJj0sIWsK9c9Fayx2TQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smK787Ij; arc=pass smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aELXh7+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CDFC116C6;
-	Thu,  2 Apr 2026 17:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775152766;
-	bh=vPgWeEtXaTLBNLyKSrj7f5vCm/g8wZd2nttvJgASbVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aELXh7+6l4vkHmbybFtH/RAlkl5+QAr0g7soTnkz0MVaHIjdfmOSAEpbyrqF7UwnJ
-	 /KJH1HI0USssgKIQchmSm0DjcgEMIxk+BIAR2ihKyzpFN3Vp+BtMxc1F01c8yIwSa/
-	 2zME/yMLeHrFCl3drckcfkXdv783uX3JuwfxGkHmjSMHwy6NGVgJmv6dBM1lab3eBq
-	 +ftkxXUVa/1t+HnpZyexIaJFx63fp3HLNnc2awe6JBIR/07FJMXGijnI+eS8lRAvIT
-	 eGIiBiltNjcGfP0NoFe0KCvLrITs2iskIaY/3kRsgk0kxdrOL9NNf3qCKnz7q0waej
-	 yiz3/bUNf5VWw==
-Date: Thu, 2 Apr 2026 10:59:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: SeungJu Cheon <suunj1331@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	brcampbell@google.com, shuah@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf header: Validate build_id filename length to
- prevent buffer overflow
-Message-ID: <ac6ufPHfHR_L0ze-@google.com>
-References: <20260401215310.348463-1-suunj1331@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smK787Ij"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2b2591757fbso28095ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Apr 2026 13:33:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775161984; cv=none;
+        d=google.com; s=arc-20240605;
+        b=BApGqRzeH/G7ykZznW6TFwO94cBiLiE8LIsYjZ3N/XP2cM41b9+aPE/QLd5DpRauPH
+         kqf07JwI/FEU/UL5DD4wRPHuCmeMuaIJAt+H+Eo0wCkidhWGnQ3yCDyy1ERujPbUTh4G
+         qwh2VMeG7RlVeNU6D95XS1Hg7PBhUbErEgkJWAM+k1sFMleATj09qrQqLfhSHsGREMaD
+         icnsqEUXvbZ6SvNqRmf0i9qtrhsb2U3c0jzRm4+qGof+FNclezjmsMEdG+20NLKbVztz
+         vW56RQGKFyCxO01ceV8pQV4qRpATBWBT5rRuNiONEoRGOEsLlHBLFDQT+rPAcfIpWnTM
+         yetw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
+        fh=Khqb/Km+dM8p6GiqgWpu92FAYZaDaXPVPFaiSI/zaQA=;
+        b=BHcEYUUSw5FVq33TYofd6t/KqHHZpE7QVHJYc0Ac9Zx/mpx3/SgotMh65Hj8IXEqWH
+         WZEeEK+uy1vez6yBqNiDdJEhy/LogZEX+NBZhdVP9bLfyMp8vHarOkS1Gz6XEwKEDWmp
+         tftB/O5H4BIcccLs6N3rQpAcbdUOCeGamkha+poapvLUkmuXh7JSqSExStp293uNR1ZK
+         gnkMZcTKEPjMQoUtQ4OaKpQHWfkxJIvx/jiJaaIelbaxk8o3geO8Hbc7mB+yfM3bMbug
+         7y1h/eBjMc0yIdcfbdDuZtRKY5OU0rQuL1kBN80x1NNdbjpTPuzI+6n0pTtL9eAdJdYn
+         iwsw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775161984; x=1775766784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
+        b=smK787Ij3E1gdYxjmCOlrUC33SG/oZ296YWXhpl5A6ee0pXiMiKiX1d9xE/YT3IFfQ
+         xAQgUz6meK6ugSP+tePCJrhtZizETkCa9xm0oEXHruEe+4SdrS3ouEGSVj+wwK5Tgq62
+         3d2suGVzqb9D4OD8aRaCpIAK9brRD2cOcL2D7is1U4XakFaxaR87PVdgjICdknUX0taI
+         6OcEHWARbVhdrhOpqt0EBOaoE/lud4EMIiKo3nec2lAjyiXUTlnptCx9MdtrheMPmdGC
+         EckwgkxjF50ktePwxeJ5xsYB/g44VqKfg1epCaipO63KEjacCEvsAygoAvBQ8Quv1cPB
+         sDXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775161984; x=1775766784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=R0Fk+SK4rOpR2k9kCubpeHNVZ7mkrxIlD+k9iFqGulY=;
+        b=JwZnGoWtgA6DQOAMnCjaKDiTSQXW60FB/1tifd3s3Gsgu34I3gcs/0ceuRX6W9PHHr
+         otQ2f3c81yMyaLplWmIjZRO0OX7nOoScnWUx+WK6fZfHl4ckWiKl5ptNc5WYZqXAuMlh
+         tHXdTg8fBnQmqoyGXz97r9Ge1CAUtMHKlJYQOPtOGl+BUwUZykCmfDKjX5DzZEYsFLK4
+         MLVIt5ktVVBMwsWgqRncWJDJuTPyZZqQ4VDLPY3uUI7+RvT32ov4KtXITMYNUCHP/hQa
+         NGr+BgoUCwBqDdjKtfTol+DeeYv1wl6W0BybsoBBC/+Ni0l9SpSlrEdV+y/ya3OIQ66d
+         ugPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUL7qZ+s1qL/Q6AxeBXo737FrcEHgYXtaQ4eoR5bj6tToXl/uh6zLzFmTj/7M7703leiqQUuL6moxl7mjGyatNy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq37HL3nZjk1Lbr7fmikpEN392a+7AN+wpJvBrzeWFxaIuIigM
+	hAloYaK2x27k/lntLvY/M5+826bDA9hVvyV9OHzKqZmGMWMXlzCxSvk7aEuUO45XVQ3VQQdgbw/
+	TndU8Uv2eIcEgz48d6DEvSdKOGzBXBGOSVUJXJIHr
+X-Gm-Gg: AeBDiev2J9OVJWJZCe07jdOrtWwgZb0bD4cQ3/7LAfdG0nU/nHoja+8kH0EyC5mA5uI
+	mHvvAGc42I876Lxx4gKlMOYVQJE1SzpwyOUAiCSha7fIC6bHHZAVmgTTYA7yND+o1HsbDN7MMew
+	h16M2qqDAgp+rjMBvRYCGADXuK5Msjsla3j1Ce5e9xs8GWqKS8kCrdAwP8BdQDhZQrgEALE0aLt
+	Dnk950Cjdo+v9HBEydBbeDswpYH/i+NrUBgeAkIgfxEUxFWEV5xftscU9beN4/tUSxKiceGrsqg
+	af+9qa5CS51hA6BbirS3/arj7cdsazCPAeTtkZoQrVmj2XUx
+X-Received: by 2002:a17:902:c943:b0:2ae:6432:8f77 with SMTP id
+ d9443c01a7336-2b28303347emr290655ad.17.1775161983758; Thu, 02 Apr 2026
+ 13:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260401215310.348463-1-suunj1331@gmail.com>
+References: <20260402-perf_fix_metrics_group-v2-0-1f9427a5d763@arm.com>
+In-Reply-To: <20260402-perf_fix_metrics_group-v2-0-1f9427a5d763@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 2 Apr 2026 13:32:51 -0700
+X-Gm-Features: AQROBzCSDmqfqgcAldePIsUAxoFC4rqiaPysPHn4GKffEJzUwtZVpvYTRkrKvW0
+Message-ID: <CAP-5=fU0hFSBFzuuHwyHRDdBTkUdsEsaTSjPJ3ZRnnyMRrTxdw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] perf metricgroup: Fix segmentation fault and
+ refine logs
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Apr 2, 2026 at 9:04=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> The first patch is to fix segmentation fault if there have syntax errors
+> in metric groups.
+>
+> The last two patches are to refine logs to give users clear hints for
+> failures.
+>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-On Thu, Apr 02, 2026 at 06:53:10AM +0900, SeungJu Cheon wrote:
-> The build_id parsing functions calculate a filename length from the
-> event header size and read directly into a stack buffer of PATH_MAX
-> bytes without bounds checking. A malformed perf.data file with a
-> crafted header.size can cause the length to be negative or exceed
-> PATH_MAX, resulting in a stack buffer overflow.
-> 
-> Add bounds checking for the filename length in both
-> perf_header__read_build_ids() and the ABI quirk variant. Print a
-> warning message when invalid length is detected.
-> 
-> Signed-off-by: SeungJu Cheon <suunj1331@gmail.com>
-> ---
-> v2:
->  - Add warning message when invalid filename length detected
-> ---
->  tools/perf/util/header.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 9142a8ba4019..132d360d716a 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2545,6 +2545,11 @@ static int perf_header__read_build_ids_abi_quirk(struct perf_header *header,
->  			perf_event_header__bswap(&old_bev.header);
->  
->  		len = old_bev.header.size - sizeof(old_bev);
-> +		if (len < 0 || len >= PATH_MAX) {
-> +			pr_warning("invalid build_id filename length %d\n", len);
-> +			return -1;
-
-I got this errors:
-
-  In file included from util/header.c:38:                                         
-  util/header.c: In function 'perf_header__read_build_ids_abi_quirk':             
-  util/header.c:2549:36: error: format '%d' expects argument of type 'int', but argument 4 has type 'ssize_t' {aka 'long int'} [-Werror=format
-  =]
-   2549 |                         pr_warning("invalid build_id filename length %d\n", len);
-        |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/debug.h:20:21: note: in definition of macro 'pr_fmt'                       
-     20 | #define pr_fmt(fmt) fmt                                                 
-        |                     ^~~                                                 
-  util/header.c:2549:25: note: in expansion of macro 'pr_warning'                 
-   2549 |                         pr_warning("invalid build_id filename length %d\n", len);
-        |                         ^~~~~~~~~~                                      
-  util/header.c:2549:71: note: format string is defined here                      
-   2549 |                         pr_warning("invalid build_id filename length %d\n", len);
-        |                                                                      ~^ 
-        |                                                                       | 
-        |                                                                       int
-        |                                                                      %ld
-
-Please make sure it builds before sending patches.  Hopefully we can run
-perf test before and after your changes to see if there's anything
-broken.
-
-I'll fix it up this time.
+For the series:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
+Ian
 
-> +		}
-> +
->  		if (readn(input, filename, len) != len)
->  			return -1;
->  
-> @@ -2587,6 +2592,11 @@ static int perf_header__read_build_ids(struct perf_header *header,
->  			perf_event_header__bswap(&bev.header);
->  
->  		len = bev.header.size - sizeof(bev);
-> +		if (len < 0 || len >= PATH_MAX) {
-> +			pr_warning("invalid build_id filename length %d\n", len);
-> +			goto out;
-> +		}
-> +
->  		if (readn(input, filename, len) != len)
->  			goto out;
->  		/*
-> -- 
-> 2.52.0
-> 
+> ---
+> Changes in v2:
+> - Added fix tags (James).
+> - Added before and after logs (James).
+> - Link to v1: https://lore.kernel.org/r/20260327-perf_fix_metrics_group-v=
+1-1-49e4b8ee9a08@arm.com
+>
+> ---
+> Leo Yan (3):
+>       perf expr: Return -EINVAL for syntax error in expr__find_ids()
+>       perf expr: Add '\n' in literal parse errors
+>       perf metricgroup: Refine error logs
+>
+>  tools/perf/util/expr.c        |  7 ++++---
+>  tools/perf/util/metricgroup.c | 11 ++++++-----
+>  2 files changed, 10 insertions(+), 8 deletions(-)
+> ---
+> base-commit: d9db9c8db56c3e378aa5c91637664f77ca5a6f72
+> change-id: 20260327-perf_fix_metrics_group-4be55b236f96
+>
+> Best regards,
+> --
+> Leo Yan <leo.yan@arm.com>
+>
