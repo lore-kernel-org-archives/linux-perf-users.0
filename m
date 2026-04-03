@@ -1,28 +1,28 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D7B396D38;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31ED73947A3;
 	Fri,  3 Apr 2026 09:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775209737; cv=none; b=lYuQghkwFe8mHp3tBkg0j8AM7bwZPTNHNbOG9MvLgArpwHlsPK1j7YrVG0zkEJOWNjvcOLQcThOB7s2LyAFh07jIUz8nb8hPSYWPYonJcX/1yy4NitX+IfyNjh0ViacCDZoeMgEd8nOcvVp89xVKnrKRBNCegyYCu1lZxjmjDkQ=
+	t=1775209737; cv=none; b=P5qurhQaRT2tyGySaZxXpE5G4KcAEaAuUZ7ODv3R98KWSUGhIBhBmKsS6ph4g0xxibmK7g2X+EuUTSgicyDwLHhU7bmqY/sOzfmlyDyn9ZlKykmBNkvW451Zd14Nw1rSqbZPILXeKFF0ZJlON3FpTA2I1g2UFh5JAN1438Z722w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775209737; c=relaxed/simple;
-	bh=bgKiTTSyQ4y4kJ+WUZohf6ydQwOsT/tfbaDDo5qvqlk=;
+	bh=qydWQLkPkS95NbWSLGfg3tq8oFn8ZwP/dQ9wzc11y/A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dBpHkSkJvL6G9BFzBzBGLrDa3DA+1jHJ24Zf7GlQzZp0rTtGIxVTpIei0j9Xgbe0QndzcKOCv0zj7N0CKsqquS1LB/rZU321LHZPxRxvaPThy/fqGcIbN6PZ3DISBS4jTkn/g1csf9v0c2IIeXkuGdg1hTqlpSwEVLq3D0Erhhs=
+	 MIME-Version; b=SISlXHf38L0fuiH0eI1ZpsPfJS9M6b7ALi2czjTXkjDmH0bz2DpA4lP8EYjpw1Osg0Dyer7uFR8DuxDFMkMkJzxtWkxmp7UWW5Y6xovk6KU8FeiSdZLGOI4FWIzVeWvbvZHv8sgcleYdE5r+BiTB85bRxRfZHiSIbRvy2p/ZbEw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fnDRd3D9vzKHMXS;
-	Fri,  3 Apr 2026 17:47:57 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fnDRc3sKlzKHMVF;
+	Fri,  3 Apr 2026 17:47:56 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 0FE4C4056F;
-	Fri,  3 Apr 2026 17:48:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 26E1940593;
+	Fri,  3 Apr 2026 17:48:49 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with SMTP id _Ch0CgAnB1TwjM9p8K_UDA--.49742S13;
-	Fri, 03 Apr 2026 17:48:49 +0800 (CST)
+	by APP3 (Coremail) with SMTP id _Ch0CgAnB1TwjM9p8K_UDA--.49742S3;
+	Fri, 03 Apr 2026 17:48:48 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -42,9 +42,9 @@ Cc: Bill Wendling <morbo@google.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v2 11/16] perf annotate-arm64: Support stack variable tracking
-Date: Fri,  3 Apr 2026 09:47:55 +0000
-Message-Id: <20260403094800.1418825-12-wutengda@huaweicloud.com>
+Subject: [PATCH v2 01/16] perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
+Date: Fri,  3 Apr 2026 09:47:45 +0000
+Message-Id: <20260403094800.1418825-2-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260403094800.1418825-1-wutengda@huaweicloud.com>
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
@@ -55,169 +55,128 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAnB1TwjM9p8K_UDA--.49742S13
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFyfArW5tw1DJrW3ur1xXwb_yoWrCrWxpa
-	1DCFy3Kr47Kr47KFs3JFs3Xr93Wws7Kw17C3s0qwn2yFySkr1rKas5tFW2vFW5Jr97Z34U
-	Gw1DKrs5Xw42gaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRGMKuUUUUU
+X-CM-TRANSID:_Ch0CgAnB1TwjM9p8K_UDA--.49742S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWryxGr4xuw48Zr1UXFW3Awb_yoW5uw43pr
+	WDKayrJw4UAr1fXwsIkr47ury5CrWvqFW5Kr43ArsYkr43AFyfC34xGr429a47Xryqvw45
+	Ars09FWUWF48JrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQEb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
+	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
+	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
+	0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	CI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0pE9mRrUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Extend update_insn_state() for arm64 to track data types stored on the
-stack. This allows 'perf annotate' to maintain type information for
-local variables that are spilled to or loaded from stack slots.
+The operands of 'adrp' instructions parsed by libllvm are currently
+represented as raw immediates rather than the "address <symbol+offset>"
+format used by objdump. This inconsistency causes arm64_mov__parse()
+to fail when parsing these instructions during post-processing.
 
-The implementation handles:
-1. Stack Loads (LDR): Identify when a register is loaded from a stack
-   slot and update the register's type state based on the tracked
-   stack content or compound member types.
-2. Stack Stores (STR): Update or create new stack state entries when
-   a tracked register type is stored to the stack.
+Example of the mismatch:
+  Current: adrp x18, 8014
+  Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
 
-This enables the instruction tracker to follow data types as they move
-between registers and memory, specifically for function local variables
-and compiler-spilled values on arm64.
+Fix this by manually extracting the target address from the raw adrp
+instruction via symbol_lookup_callback(). The address is then converted
+to a specific symbol during symbol__disassemble_llvm() and formatted
+to match objdump's output, ensuring compatibility with existing
+parsers.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../perf/util/annotate-arch/annotate-arm64.c  | 83 ++++++++++++++++++-
- 1 file changed, 80 insertions(+), 3 deletions(-)
+ tools/perf/util/llvm.c | 50 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index 28647a778802..f9100230c2f6 100644
---- a/tools/perf/util/annotate-arch/annotate-arm64.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -11,6 +11,8 @@
- #include "../disasm.h"
- #include "../annotate-data.h"
- #include "../debug.h"
-+#include "../map.h"
-+#include "../symbol.h"
+diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+index a0deb742a733..533d47e8084d 100644
+--- a/tools/perf/util/llvm.c
++++ b/tools/perf/util/llvm.c
+@@ -94,6 +94,7 @@ static void init_llvm(void)
+ struct symbol_lookup_storage {
+ 	u64 branch_addr;
+ 	u64 pcrel_load_addr;
++	u64 pcrel_adrp_addr;
+ };
  
- struct arch_arm64 {
- 	struct arch arch;
-@@ -297,6 +299,8 @@ static void update_insn_state_arm64(struct type_state *state,
- 	Dwarf_Die type_die;
- 	u32 insn_offset = dl->al.offset;
- 	int sreg, dreg;
-+	int fbreg = dloc->fbreg;
-+	int fboff = 0;
- 
- 	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
- 		return;
-@@ -304,17 +308,59 @@ static void update_insn_state_arm64(struct type_state *state,
- 	sreg = src->reg1;
- 	dreg = dst->reg1;
- 
-+	if (dloc->fb_cfa) {
-+		u64 ip = dloc->ms->sym->start + dl->al.offset;
-+		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+ static const char *
+@@ -108,6 +109,18 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
+ 		storage->branch_addr = value;
+ 	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
+ 		storage->pcrel_load_addr = value;
++	else if (*ref_type == LLVMDisassembler_ReferenceType_In_ARM64_ADRP) {
++		uint64_t adrp_imm;
 +
-+		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-+			fbreg = -1;
++		/* immhi (bits 23:5) and immlo (bits 30:29) */
++		adrp_imm = ((value & 0x00ffffe0) >> 3) | ((value >> 29) & 0x3);
++		/* Sign-extend the 21-bit immediate to 64-bit */
++		if (adrp_imm & (1ULL << 20))
++			adrp_imm |= ~((1ULL << 21) - 1);
++
++		/* Calculate the target page address */
++		storage->pcrel_adrp_addr = (address & ~0xFFFLL) + (adrp_imm << 12);
 +	}
-+
- 	/* Memory to register transfers */
- 	if (!strncmp(dl->ins.name, "ld", 2)) {
- 		struct type_state_reg dst_tsr;
+ 	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
+ 	return NULL;
+ }
+@@ -204,6 +217,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
  
--		if (!has_reg_type(state, sreg) ||
--		    !has_reg_type(state, dreg) ||
--		    !state->regs[dreg].ok)
-+		if (!has_reg_type(state, sreg))
- 			return;
+ 		storage.branch_addr = 0;
+ 		storage.pcrel_load_addr = 0;
++		storage.pcrel_adrp_addr = 0;
  
- 		tsr = &state->regs[sreg];
- 		tsr->copied_from = -1;
-+
-+		/* Check stack variables with offset */
-+		if (sreg == fbreg || sreg == state->stack_reg) {
-+			struct type_state_stack *stack;
-+			int offset = src->offset - fboff;
-+
-+			stack = find_stack_state(state, offset);
-+			if (stack == NULL) {
-+				tsr->ok = false;
-+				return;
-+			} else if (!stack->compound) {
-+				tsr->type = stack->type;
-+				tsr->kind = stack->kind;
-+				tsr->offset = stack->ptr_offset;
-+				tsr->ok = true;
-+			} else if (die_get_member_type(&stack->type,
-+						       offset - stack->offset,
-+						       &type_die)) {
-+				tsr->type = type_die;
-+				tsr->kind = TSR_KIND_TYPE;
-+				tsr->offset = 0;
-+				tsr->ok = true;
-+			} else {
-+				tsr->ok = false;
-+				return;
-+			}
-+
-+			pr_debug_dtp("ldr [%x] -%#x(stack) -> reg%d",
-+				     insn_offset, -offset, sreg);
-+			pr_debug_type_name(&tsr->type, tsr->kind);
-+			return;
-+		}
-+
-+		if (!has_reg_type(state, dreg) || !state->regs[dreg].ok)
-+			return;
-+
- 		dst_tsr = state->regs[dreg];
- 
- 		/* Dereference the pointer if it has one */
-@@ -338,6 +384,37 @@ static void update_insn_state_arm64(struct type_state *state,
- 
- 	/* Register to memory transfers */
- 	if (!strncmp(dl->ins.name, "st", 2)) {
-+		/* Check stack variables with offset */
-+		if (dreg == fbreg || dreg == state->stack_reg) {
-+			struct type_state_stack *stack;
-+			int offset = dst->offset - fboff;
-+
-+			if (!has_reg_type(state, sreg) ||
-+			    !state->regs[sreg].ok)
-+				return;
-+
-+			tsr = &state->regs[sreg];
-+
-+			stack = find_stack_state(state, offset);
-+			if (stack) {
-+				if (!stack->compound)
-+					set_stack_state(stack, offset, tsr->kind,
-+							&tsr->type, tsr->offset);
-+			} else {
-+				findnew_stack_state(state, offset, tsr->kind,
-+						    &tsr->type, tsr->offset);
-+			}
-+
-+			pr_debug_dtp("str [%x] reg%d -> -%#x(stack)",
-+				     insn_offset, sreg, -offset);
-+			if (tsr->offset != 0) {
-+				pr_debug_dtp(" reg%d offset %#x ->",
-+					     sreg, tsr->offset);
-+			}
-+			pr_debug_type_name(&tsr->type, tsr->kind);
-+			return;
-+		}
-+
  		/*
- 		 * Store instructions do not change the register type,
- 		 * but the base register must be updated for pre/post-index
+ 		 * LLVM's API has the code be disassembled as non-const, cast
+@@ -227,6 +241,42 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
+ 				free(name);
+ 			}
+ 		}
++		if (storage.pcrel_adrp_addr != 0) {
++			/*
++			 * ADRP (Address Page) instructions encode a 21-bit signed
++			 * immediate offset relative to the current PC's page.
++			 *
++			 * To maintain consistency with standard objdump output,
++			 * we truncate the raw encoded immediate at the comma
++			 * and replace it with the resolved absolute page address.
++			 *
++			 * Example conversion:
++			 * From: adrp x18, 8014
++			 * To:   adrp x18, ffff800081f5f000 <this_cpu_vector>
++			 */
++			char *name;
++			char *s = strchr(disasm_buf, ',');
++
++			if (s == NULL)
++				goto err;
++
++			s++;
++			*s = '\0';
++			disasm_len = strlen(disasm_buf);
++			disasm_len += scnprintf(disasm_buf + disasm_len,
++						sizeof(disasm_buf) - disasm_len,
++						" %"PRIx64,
++						storage.pcrel_adrp_addr);
++			name = llvm_name_for_data(dso, filename,
++						  storage.pcrel_adrp_addr);
++			if (name) {
++				disasm_len += scnprintf(disasm_buf + disasm_len,
++							sizeof(disasm_buf) -
++							disasm_len,
++							" <%s>", name);
++				free(name);
++			}
++		}
+ 		if (storage.pcrel_load_addr != 0) {
+ 			char *name = llvm_name_for_data(dso, filename,
+ 							storage.pcrel_load_addr);
 -- 
 2.34.1
 
