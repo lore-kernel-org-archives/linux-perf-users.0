@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6933F1A9FAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2F53CBE65;
 	Fri,  3 Apr 2026 17:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775237393; cv=none; b=EF3diUc/UZXoREihlvSxUNvPYIOj5Alh5eEiNmufqYvAf0QDR9KLsljuxlY9DKiY+cd1LWBtqZ7bpGGyQkno6dtqFrjO5iIJY67JdS9vSw31i/JI4wnuagR3pNtXbiAwvsSgCjO8qYGJ0Mn+us+sDV8XyxLNQdSScdSnsBf1Qa8=
+	t=1775237394; cv=none; b=NiOGYQyXKRdwqri3AgZjEl+/LeB27YWF2eaC8IeQh5aqLtyG55Ok2rSn7YD9ALetw/PJfI2+fYQwfQ7xCWNKPPxkBZnqNfRTH/k6s7NeubGAZhiIE7IezAu6JyBHg7LW28SvxaXSFDpbeOVvSEazGBTBugcJ25WGgdE7mv30ba8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775237393; c=relaxed/simple;
-	bh=bptTC34Orrt8y4UNTuh3XaUCQrFtvCfv0mpea/iiyKE=;
+	s=arc-20240116; t=1775237394; c=relaxed/simple;
+	bh=xAnQSlM5aNzQ53On1UiWFjjJ0H7oYLmKMXghursHwR4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EWjBb/ae4pgAYY4WlsLzf1hTDaXR6iPHMYXmu/56jPgYvilJ9rMihcN+ZEE3Z/uD0WzRg/2e7V+Um/u4qyDuESlNtN4jDaOnjux3ltoqDMyVUbOF2Nxpmd2TscQno7X/p5Y1pR1Z9V72T7178b46MLl2CvxQIlCY5ekmerkiDhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ebhFCwOl; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=T6D4dm9S/lu3ywNVhjnU4rBp/nIwTuUjoEn3m5HdxvjOywSWy3OjcnNtq2ff75G3NbZZerPtDsEQfc2XTN1KdUSstk3IxXe4NFSFCnPMbkh9c2I/TXLSDdiqNH/RiZuwmvMPJaBg2ElgYrlGQemqXa72TvNpr9SAkL3OuVWQi0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HyluBsR3; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ebhFCwOl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HyluBsR3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1775237393; x=1806773393;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bptTC34Orrt8y4UNTuh3XaUCQrFtvCfv0mpea/iiyKE=;
-  b=ebhFCwOlDhc/B4hh4GgeF/zYjdzYyE3yEPrw7wM1bCY1ly3VKKwRo5xI
-   hRegBq6e23Fasl6VqtQu1wcTXjQ5XuiK8Qwetstt4BubAgueIYi8bFKpW
-   D7GN+EK2KcTR4umIQHKdVbuwM1A1c6dHY4bHak2yk1mcDmLr3RibFzuCl
-   2Cgn0d5AxZuZrE3pWqWvM8h0kC2BrFftQqOw8LTfgSVMzn6y8aDjvGCbi
-   99dUKHTR2BKqTmybdEVAAmWmZqRcolNBrAYL0UdaT59QPBibs7VD42ci5
-   ILtIZ4EZObAhxM/mash8MKEA63gcXzAB19vu/NhrJCMQimvuArj3LjDKu
-   w==;
-X-CSE-ConnectionGUID: f/HwNhu8TUypHQqqgWqxPQ==
-X-CSE-MsgGUID: 3zUI9CsQQVShzxjxGH7d0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11748"; a="93693304"
+  bh=xAnQSlM5aNzQ53On1UiWFjjJ0H7oYLmKMXghursHwR4=;
+  b=HyluBsR3K4YdNsiWLrWKyjGO0PHDduXHCa7dDM1/dl6j1mSIbOp8xqyR
+   GnBMYaY8dLh2GcNyREP2mAr7s0VJYmyYpMCSpyEbZSqj9xCA8ONfpsiOB
+   O/zzw+9oXV7RKtsV4Ewe0uP54xRn+sHLUoHStFhA9P5HXWkUtACbvJPNo
+   fEgSp8xUvs5ec/rC6e4kWMdItXHPMN7Txkq6K/6GBpEkP43KC5SHnwhNK
+   3hKxM5j5q+bUrbZro7AIWvyQsZcQBriRkm8PoBKKPDtFrsVgKnj4iwn9+
+   NjbAUxtiKBmwHODxLfWmKdiCME/X0QV3lNp/qLQxXVYTKUpqa1/9ZjaGi
+   A==;
+X-CSE-ConnectionGUID: 7+mv5JecQ+iZxL8kIQ/RCA==
+X-CSE-MsgGUID: cFR12VgcQRmgyIoEW8zEzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11748"; a="93693311"
 X-IronPort-AV: E=Sophos;i="6.23,158,1770624000"; 
-   d="scan'208";a="93693304"
+   d="scan'208";a="93693311"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
   by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2026 10:29:52 -0700
-X-CSE-ConnectionGUID: L3DgGVh3SNGGwZb4Zze1Zg==
-X-CSE-MsgGUID: JSfv6PN/QByI4NG4T0zB5g==
+X-CSE-ConnectionGUID: 3W8YJOvXSPqO3Tg0Z6FPDQ==
+X-CSE-MsgGUID: wkWOBysYReys/mZCeXuL0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,158,1770624000"; 
-   d="scan'208";a="250525256"
+   d="scan'208";a="250525259"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2026 10:29:50 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2026 10:29:51 -0700
 From: Zide Chen <zide.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,11 +59,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Steve Wahl <steve.wahl@hpe.com>,
 	Chun-Tse Shao <ctshao@google.com>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH V7 1/4] perf/x86/intel/uncore: Fix iounmap() leak on global_init failure
-Date: Fri,  3 Apr 2026 10:21:43 -0700
-Message-ID: <20260403172146.158172-2-zide.chen@intel.com>
+	Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH V7 2/4] perf/x86/intel/uncore: Skip discovery table for offline dies
+Date: Fri,  3 Apr 2026 10:21:44 -0700
+Message-ID: <20260403172146.158172-3-zide.chen@intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260403172146.158172-1-zide.chen@intel.com>
 References: <20260403172146.158172-1-zide.chen@intel.com>
@@ -75,87 +74,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Kernel test robot reported:
+This warning can be triggered if NUMA is disabled and the system
+boots with fewer CPUs than the number of CPUs in die 0.
 
-Unverified Error/Warning (likely false positive, kindly check if
-interested):
-    arch/x86/events/intel/uncore_discovery.c:293:2-8:
-    ERROR: missing iounmap; ioremap on line 288 and execution via
-    conditional on line 292
+WARNING: CPU: 9 PID: 7257 at uncore.c:1146 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
 
-If domain->global_init() fails in __parse_discovery_table(), the
-ioremap'ed MMIO region is not released before returning, resulting
-in an MMIO mapping leak.
+Currently, the discovery table continues to be parsed even if all CPUs
+in the associated die are offline.  This can lead to an array overflow
+at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
+trigger the warning above or cause other issues.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: b575fc0e3357 ("perf/x86/intel/uncore: Add domain global init callback")
+However, the Intel uncore driver assumes all die IDs are consecutive
+and does not support gaps in the die ID space.
+
+Reported-by: Steve Wahl <steve.wahl@hpe.com>
+Tested-by: Steve Wahl <steve.wahl@hpe.com>
+Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
 V2:
-- As suggested by Markus, add an `out` label and use goto-based error
-  handling to reduce duplicated iounmap() code.
-  - Add the original warning from the kernel test robot to the commit message.
-  - Trivial rewording of the commit message.
+- Add the Tested-by tag
+- Rebase onto perf/core (base commit: a491c02c2770)
 
 V3:
+- Remove the overly cautious WARN_ON()
+
+V4:
 - Add Reviewed-by tag.
+
+v6:
+- Change WARNING line from 1157 to 1146 to reflect the new rebased code.
+- Add changelog to clarify that it doesn't support die ID gaps.
 ---
- arch/x86/events/intel/uncore_discovery.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/uncore_discovery.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 12e259a988dd..427939be2fb4 100644
+index 427939be2fb4..583cbd06b9b8 100644
 --- a/arch/x86/events/intel/uncore_discovery.c
 +++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -264,6 +264,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
- 	struct uncore_unit_discovery unit;
- 	void __iomem *io_addr;
- 	unsigned long size;
-+	int ret = 0;
- 	int i;
+@@ -371,7 +371,7 @@ static bool uncore_discovery_pci(struct uncore_discovery_domain *domain)
+ 				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
  
- 	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
-@@ -273,21 +274,23 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
+ 			die = get_device_die_id(dev);
+-			if (die < 0)
++			if ((die < 0) || (die >= uncore_max_dies()))
+ 				continue;
  
- 	/* Read Global Discovery State */
- 	memcpy_fromio(&global, io_addr, sizeof(struct uncore_global_discovery));
-+	iounmap(io_addr);
-+
- 	if (uncore_discovery_invalid_unit(global)) {
- 		pr_info("Invalid Global Discovery State: 0x%llx 0x%llx 0x%llx\n",
- 			global.table1, global.ctl, global.table3);
--		iounmap(io_addr);
- 		return -EINVAL;
- 	}
--	iounmap(io_addr);
- 
- 	size = (1 + global.max_units) * global.stride * 8;
- 	io_addr = ioremap(addr, size);
- 	if (!io_addr)
- 		return -ENOMEM;
- 
--	if (domain->global_init && domain->global_init(global.ctl))
--		return -ENODEV;
-+	if (domain->global_init && domain->global_init(global.ctl)) {
-+		ret = -ENODEV;
-+		goto out;
-+	}
- 
- 	/* Parsing Unit Discovery State */
- 	for (i = 0; i < global.max_units; i++) {
-@@ -307,8 +310,10 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
- 	}
- 
- 	*parsed = true;
-+
-+out:
- 	iounmap(io_addr);
--	return 0;
-+	return ret;
- }
- 
- static int parse_discovery_table(struct uncore_discovery_domain *domain,
+ 			parse_discovery_table(domain, dev, die, bar_offset, &parsed);
 -- 
 2.53.0
 
