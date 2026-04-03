@@ -1,157 +1,355 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3883C9EFC
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 15:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9394523ABA8
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 15:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775230181; cv=pass; b=T/28yUUu9ztbAoT4iYHwciWCUQezeyzImPO/AVN6epgd3ZsNn5FIIvcW0IYuEVwSz3jp+8flMvLtOdCbHy77neNFDGeBkHVDstYDEpB12+zfkknkSVxf9rPdsjsA2gQaJxfwl8VOAFxF3tGR490IBq1z2dlsZoJzEFYp05k8khA=
+	t=1775230767; cv=pass; b=j+uomuF9jXgguhXGHG8YNJZUu8BlkaGWJrlY7mkSmgV41WtVVucoGYDYS5nY1c+ug48Qv0pAS48nAT1rd9VCb8sKUA46N0Wi9jeOP1Jzo9j9QdDhdK4U+tadZmAeF3mmTQjf9wc3r34k/wkV1+cQ6tzL2Vev7JontGraVBoYuyc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775230181; c=relaxed/simple;
-	bh=siNZISg3GNBeJf8yWH9J+JBY1zcpCFCaTKBk6ifXNRY=;
+	s=arc-20240116; t=1775230767; c=relaxed/simple;
+	bh=FHsyMbg0FZTKl50XAM+xRDMKF852TM+wvnNu7d18Ji4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jLLBEPAAksY4fm5SCILkTtt6hsgvHPr4n4LT6iDOLY2413H2U6wdvTGsYeFNF14wgUzECpFkRoxPDlp+OBWPB9Zg5vdBfn4dMQxGaNe6y1dSFFgmQx1Vh7XmNClfbdFbHstl1mYmrnAeoAPWUlbM0Ps6Bf/QZ82Gbsa4UM5UQr0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CKPmav3M; arc=pass smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=liTaMOT8QLoRAUg7ImkMQZwb99ibGXS3fHHknQqfmdkMbhvd7PTBZ9SvZsRnNPzsEcvBmPPofxTexLoiI/iSZ9rc5qiu4xBSeb3gOo614dZNZTi2hYZjJgASFtA7kbfvqNJxaWR2njZ9CEy7mEN7W2UGmJVC+yhQXsU0g3wzv3w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Snxfsxdk; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKPmav3M"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b2591757fbso95535ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 08:29:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775230179; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Snxfsxdk"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2b2591757fbso96285ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 08:39:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775230765; cv=none;
         d=google.com; s=arc-20240605;
-        b=lAruAlp0sCSkGvBY6p2i8WVHBx0DNHRdBmi628aNW2CBY/s2Z9vkr6uAnhBZjrtBdg
-         cM6MzHSskx8DQ4GsLN8BdlG/sTWzvKYLyHNJB/J6vc1UWVrfN0uuhStXO/KfEWXaaIZe
-         HO7AFlvLgaTtvYwX5S0Hpf8FlNbfn7006co0b3PNv5gY5frbazTbk5IuP6K8pqq5KLw+
-         3rLoOKg9+W5K7KvjS2Gx1xrDwtJFr377L8PPkXCuskDOLkH/1Ms2oOltQsBYMFL7uuYH
-         5qs7JjDucVklf6F11hJuIG4UzYSh+XRP621K5LbQGIRwf6PIydwPQm2/Y6zNFi5bEoEe
-         Fphw==
+        b=VS8CxqOmS3i+17VF62kK7pF4bhFydZA8Zdzxr5n+Vhr8KtUfczhsW4U5y8Hpyjnijs
+         ziGE48U3KfNOlw0BxcVa8ITzFgLHU8WsEREvx3T7wgYMCR+BIxBAZLsfnduVvTFIPwY+
+         EqCCenABb9wMXCxPBKkmTKDTz7DwF6U0Ip0u9s2poH+WK/uiXVOZM0E7MQXz6QJHy4Mk
+         syU+q5hxnaHBfENWi+CDrZV86gY29tglR5Egcy8A5ZF4gfnZntvYXX1GxNNOLk4Bb1xM
+         1UsZP1mv5kfoGxEJzvfbjf3QaXfDxKVwnC9ZH9t9IUx58Di1US9JeRKYmWpVDGK1QtYS
+         yhNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Q13A7NNNhi4HN9nlr+c56u0s/kqqPYR1H9gR5ubc/Uk=;
-        fh=o1NxlCps5L6NKvOau9ynRt76VmqsIiaLfMEpezy+UyI=;
-        b=c66eLSdg3RZChVkHlYzRY4ndOxYWbtf0wCIE6cbd7F+mBLlV6mVDoEk5iY7y9sYuXD
-         JoeWyexQ/0KKf7ZOFcudDctSl0t3EzmX1xiRh7qE4kRzy2+GJWrYMjb/wSRfp1av1ndu
-         m3i6qb0OT40x9huQSHgkXzTlVKzoKwiZ7+3+ZjWsmlkqtmTkwo/jEQ2lFObqLlE7M67G
-         vuQlflxQJIsnKmv0rj6O4Qv+zFPcixl4e9ctxvssPd1x8SSuN38evfJ/xbqxZBVKpo6B
-         1UHRBu/0KYY4dNGiYKCaVAB55bIEFzfe20aryKMJXM/ro5nIUR9kRvU4vYU2fpZnCdxj
-         +KEQ==;
+        bh=FhI+efbDFLiEonazJjgaQH+AZ3snthfw8f9lU+HywFw=;
+        fh=JpVXpgEgaJjITdTezZKupiZJ/y8T76eyOguUZrbXnxM=;
+        b=BrYvIapvmyPitMeNfO6Gj3c4t77nEssu5IXV6vsSA1kb+tY2oiEfFGrL5rKaVryEJQ
+         lQuG/kaK6gHKsbsuGAZNbT058+eVnK1VzfVrPuib2piLW4RfGnHBUetSYO7mlRCSib9B
+         REuPq96cwTyIE6eDqn1Pwx136pJx9gtNUCVbVRw5Io1J1l/TEEFVg7VVWXZkC5XkxsyQ
+         ZltQDLH2uNReEtqqN1UFT6hb6GsoV3Q/aUmWXEBBaqYtzWYrS9YJhMkv7/l/bMl+NmMR
+         ENzbMVnja3oCsPFHFVfGzoMAJH2qKqabvQWx/rtvWXWCQfV37oU0gYZXXLTQIyfsZwgD
+         u5YQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775230179; x=1775834979; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775230765; x=1775835565; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Q13A7NNNhi4HN9nlr+c56u0s/kqqPYR1H9gR5ubc/Uk=;
-        b=CKPmav3MNw3TPgw3lPjAwkOx0pKFjVO2mRuJSTjMeNabXIGtQSs4lJZIXX1FI5AiUl
-         Nl00W5qcZh9xqBMuHCYaxxZ+2n75yzlNdStRHBRIViCUqpPg0ciB8mE1DtN0Q1JE0oJx
-         qYzLkLGMPiIw3pazpLnpnjvrfQbQJxN4jWrQuhNHWwdIV2naROrVgnAHBXEtT3IbV121
-         nRundXbbiJVlbXfa6OSgOqDsHOwLRmIRXryyPfpyOWvTOw6JGEnYYNDmWzIS4qEa2x80
-         DkRhKfuoVxk4eyedG894Ul4T5OI1SRgYjiqFCKnSj9halMPpWAZ83hhDNHcSFIpX+SZK
-         gNaA==
+        bh=FhI+efbDFLiEonazJjgaQH+AZ3snthfw8f9lU+HywFw=;
+        b=SnxfsxdkJ2LhwQuy+NviXk93kDrwSd4rAthFjQ55hYzz53njKJQnIv3BKEBe6hLJsI
+         pS3vdGFoHnYsu7tTf9RuZWN2k1ivYgmiy7gpc9aV3C8dk3fn5chAvW25FxXZI6Cgn4g9
+         CYacHV5MVxU8ZWQ98sfdCbiLrpiT6ljx+72U6s6JAC6sh1JmtLtPldsRfYCFzDkoc/9B
+         QstCeIcHX/qojdKzFv8aaHIc4xCEIEAKtngMjvdsIIjhmjbx1vH/Q4P7ZBKw2wxTSYsC
+         tqE4rBsrPtMdY+rCIA7m3peRqBXPios8WD72K08bVFqfX43BQ1AwzVqnW9UpLqcmPozP
+         FZlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775230179; x=1775834979;
+        d=1e100.net; s=20251104; t=1775230765; x=1775835565;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Q13A7NNNhi4HN9nlr+c56u0s/kqqPYR1H9gR5ubc/Uk=;
-        b=WMdboVzRbsuUAFyNEplPU3pY0/8gF3waXz+ax4ObYDFqJc0xB+uTZd088f0QZmnsiq
-         Znfz8mELS4wyEfgn5Sm0trXkaiNXny9Fb/XZsJ/RKR1+/79sp58uBvErGTQ9FsmcJNtF
-         X+oikZgRhrBFCVFXh1VlWJj9xFIrnlW6+qEdESl9cbqQaQA5MBthL59YAYmTZvV7F1yi
-         VlqD2Rb/uxWryKqx/NXQY8D+WBFM9VskM50s67TKp6FGwsqQx6x4fbbcfo18NFIVfvgW
-         N7wcObFsUiHcEFWD46jWZcXvlcJnh6LfnlXL8jDx2l1N1RRgL2UdwONGEc3eaqWsaPKR
-         iGVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlDzzKeYjRlWtIl/rQ4pyXVSC9r22YZNM1A0lGUvzM2jP8QqBEJCuaBJxkrGHKY6eJHWmxIMRQJuinfcR5hRcw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlP/J6D8EsI7GsT9EEFV2sD2Seed0SJNKFm4hHVCtRn6o6y43k
-	dIiqJ78ltfEzTKjPyCZG/UXiOhh3Q6CWBO1pHX9YWfPy2hSVtqGBEzRhZhlw0W5xFtetA4Df51S
-	+iEISUoojPEzbiVmdlI9s/FOMz+RZtoi3VJsHG6Mb
-X-Gm-Gg: AeBDievgy0Es8Q7XZvukArFU6Rx5GQg2EhCuOsnWLKvFUgII3/lppdUXg6NF08+S8KJ
-	6DdKCvK5PYi/wnyqgj0I3WkwnqjXRRpdTXCVyvrc4dmv+Qn9OVwwCopku1dgBETPhHHbW4zVP9Z
-	Hw5Dv4uTpJlfPguMgAU7KL62vumqtjI2+2YLNihBZFldrLqsufBQTN86znzorUbYzfHxiv9vfB1
-	zeaNdj/Qg3TwTnIh3Uk5b/PjFV0DhJZ4QK3ZpLveMg0+4+Rgq0rDWQS3eTfrMzHX1MLWndBopeC
-	N7TPNgqQ
-X-Received: by 2002:a17:903:17c8:b0:2b0:aee4:afe7 with SMTP id
- d9443c01a7336-2b282f4b9a3mr2296925ad.10.1775230178573; Fri, 03 Apr 2026
- 08:29:38 -0700 (PDT)
+        bh=FhI+efbDFLiEonazJjgaQH+AZ3snthfw8f9lU+HywFw=;
+        b=L0wCDXaeA5224Y4iQDRcn/1hyxc3aMsLoPWHMpoRxim/YMlxQc2kJcnVfu9NEPygpF
+         LHyRzVpzJTKLSu/fu87EY4qPJFiqXbPXP+gbrfdimGsOS/fvTNlcbfAkpFO8qsR3FC+m
+         8IIpknm6XqpS++PBA75o6CUrwQMY9wd2cN/SZMrwsp/JCZxyOjdWQqphODeC/bK1qAJZ
+         Qe1bYXfBWT0MuzIuOwBF1R1+9R2Q9bm1DXIQ9/ep4WfRnLIdI8d5hBux4AxyHYUGPs1m
+         T5ycIKr4tnglCKjYFQK5bef0++X1OXbi69IpmEYHXN2KPigN1je/CTygoC9XSRY2U4lB
+         FoOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/VnS3sE3yQpqxMEjeCaMYklEO/+Kk5fTusj7yzNZR0bb3iARQrgw8PttqLjYJJAI/00R3c4DR5FXfJE7wrbL9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyroCVmVdSiUl5TZlu4vwxt2trRyyk2I0D3LWoZqyO+WPcMbIS4
+	JqOqRIR7b4uDyMs6ZxOvPjMvEnoQYpvFm0XsmTCji9s0YBgcmr1jaWbYLzboTao/YIScszWe1Ar
+	weGYbLHKktlWUaare4gU6ihAsb+C3/pgTZY6YIJuv
+X-Gm-Gg: AeBDievRiYk9z5N/OkDfIrApopUtwD+m11Sutp4iXjAlnHJmjgl4m4dQ3JlXny5QzCL
+	b5bqDmLWETO6tSqHY6gtoFv3V6cktZtSEHldJQRxrvWjzEY3FrLBOjDg/d/WIO/7w0E7TW5LsWz
+	h8AIDPObI0/96T6l71EqwBYOGOmH7uL94aZxpp7TZ3GAzZHTP4xk+5CSphwkQchgLO03b0olT+U
+	Z9NmGdYOZ4JqWUSEvpOIwwn8I6q/2jax64pUWnUsLKZ81VcLrQgZ+1aU6D5iHc1ZTErPrb3VY3M
+	ol9PMwiY
+X-Received: by 2002:a17:903:22d1:b0:2ae:7fa2:6bda with SMTP id
+ d9443c01a7336-2b283f049edmr1927905ad.1.1775230764064; Fri, 03 Apr 2026
+ 08:39:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260321061448.810525-1-irogers@google.com> <acW_IHQVZnxIETdd@google.com>
- <CAP-5=fWh66OwPC0K4ZyedAWqwyXez0ya9Dz6hzbgY0AhoqMfdg@mail.gmail.com> <ac8pEDUKjuMxXUS6@google.com>
-In-Reply-To: <ac8pEDUKjuMxXUS6@google.com>
+References: <20260315105751.86835-1-atrajeev@linux.ibm.com>
+ <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com> <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
+ <ec33d914a3eb3f8cc1a0ad16bf877ff7284072c9.camel@intel.com> <cf702c86-7dea-44af-8dd2-0c27e19da1b5@linux.intel.com>
+In-Reply-To: <cf702c86-7dea-44af-8dd2-0c27e19da1b5@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 3 Apr 2026 08:29:25 -0700
-X-Gm-Features: AQROBzCaXvfhEtVBIBohPAapfAo-yUd_76AjU-BmVwJsogZ_IfmcHOU7XgJNOsQ
-Message-ID: <CAP-5=fXeBje03BM8D9q-0KsXg2KmyRa81CuphtSQfHp0isFc_w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf sched: Avoid segv if tp_handler not set
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 3 Apr 2026 08:39:10 -0700
+X-Gm-Features: AQROBzA-FV3lZ8eXXN_-IIy5A-zCuhgDBacFdsKJ5rl_ORv9FOTKguhRMX3ukUY
+Message-ID: <CAP-5=fWR6v7kKSMVD+ANwMTmOdc4zKLEVY+9tNR5n+kq0F=Mkg@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
+ all PMU test
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, "Falcon, Thomas" <thomas.falcon@intel.com>, 
+	"Kleen, Andi" <andi.kleen@intel.com>
+Cc: "atrajeev@linux.ibm.com" <atrajeev@linux.ibm.com>, 
+	"venkat88@linux.ibm.com" <venkat88@linux.ibm.com>, "Shivani.Nittor@ibm.com" <Shivani.Nittor@ibm.com>, 
+	"tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, 
+	"hbathini@linux.vnet.ibm.com" <hbathini@linux.vnet.ibm.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
+	"Tanushree.Shah@ibm.com" <Tanushree.Shah@ibm.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"maddy@linux.ibm.com" <maddy@linux.ibm.com>, "Chen, Zide" <zide.chen@intel.com>, 
+	"vmolnaro@redhat.com" <vmolnaro@redhat.com>, "Tejas.Manhas1@ibm.com" <Tejas.Manhas1@ibm.com>, 
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "Mi, Dapeng1" <dapeng1.mi@intel.com>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 2, 2026 at 7:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Tue, Mar 31, 2026 at 10:59:52PM -0700, Ian Rogers wrote:
-> > On Thu, Mar 26, 2026 at 4:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > On Fri, Mar 20, 2026 at 11:14:47PM -0700, Ian Rogers wrote:
-> > > > Doing a `perf sched record` then `perf sched stats report` crashes =
-as
-> > > > the tp_handler isn't set. Add extra checks that tp_handler is set
-> > > > before accessing through it.
-> > >
-> > > Oh.. unintended use case. :)  Probably better to add a dummy handler
-> > > for `perf sched stats report`.
-> >
-> > Perhaps. I'd prefer to land the simpler change as-is.
->
-> Well.. I guess the dummy handler approach would be simpler and perform
-> better. :)
->
-> Thanks,
-> Namhyung
+On Fri, Apr 3, 2026 at 12:36=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
+com> wrote:
 >
 >
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index d083e2bb770303a4..9fb5447f9014d026 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -4955,6 +4955,7 @@ int cmd_sched(int argc, const char **argv)
->                 .switch_event       =3D replay_switch_event,
->                 .fork_event         =3D replay_fork_event,
->         };
-> +       struct trace_sched_handler stats_ops  =3D {};
+> On 4/3/2026 1:32 AM, Falcon, Thomas wrote:
+> > On Wed, 2026-04-01 at 13:40 -0700, Ian Rogers wrote:
+> >> On Mon, Mar 23, 2026 at 3:40=E2=80=AFAM Venkat <venkat88@linux.ibm.com=
+>
+> >> wrote:
+> >>>
+> >>>
+> >>>> On 15 Mar 2026, at 4:27=E2=80=AFPM, Athira Rajeev
+> >>>> <atrajeev@linux.ibm.com> wrote:
+> >>>>
+> >>>> Currently in "perf all PMU test", for "perf stat -e <event>
+> >>>> true",
+> >>>> below checks are done:
+> >>>> - if return code is zero, look for "not supported" to decide pass
+> >>>>  scenario
+> >>>> - check for "not supported" to ignore the event
+> >>>> - looks for "No permission to enable" to skip the event.
+> >>>> - If output has "Bad event name", fail the test.
+> >>>> - Use "Access to performance monitoring and observability
+> >>>> operations is
+> >>>>  limited." to ignore fail due to access limitations
+> >>>>
+> >>>> If we failed to see event and it is supported, retries with
+> >>>> longer
+> >>>> workload "perf bench internals synthesize".
+> >>>> - Here if output has <event>, the test is a pass.
+> >>>>
+> >>>> Snippet of code check:
+> >>>>  ```
+> >>>>  output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> >>>>  if echo "$output" | grep -q "$p"
+> >>>>  ```
+> >>>> - if output doesn't have event printed in logs, considers it
+> >>>> fail.
+> >>>>
+> >>>> But this results in false pass for events in some cases.
+> >>>> Example, if perf stat fails as below:
+> >>>>
+> >>>> # ./perf stat -e pmu/event/  true
+> >>>> event syntax error: 'pmu/event/'
+> >>>>                     \___ Bad event or PMU
+> >>>>
+> >>>> Unable to find PMU or event on a PMU of 'pmu'
+> >>>> Run 'perf list' for a list of valid events
+> >>>>
+> >>>>  Usage: perf stat [<options>] [<command>]
+> >>>>
+> >>>>    -e, --event <event>   event selector. use 'perf list' to list
+> >>>> available events
+> >>>> # echo $?
+> >>>> 129
+> >>>>
+> >>>> Since this has non-zero return code and doesn't have the
+> >>>> fail strings being checked in the test, it will enter check using
+> >>>> longer workload. and since the output fail log has event, it
+> >>>> declares test as "supported".
+> >>>>
+> >>>> Since all the fail strings can't be added in the check, update
+> >>>> the testcase to check return code before proceeding to longer
+> >>>> workload run.
+> >>>>
+> >>>> Another missing scenario is when system wide monitoring is
+> >>>> supported
+> >>>> example:
+> >>>> # ./perf stat -e pmu/event/ true
+> >>>> Error:
+> >>>> No supported events found.
+> >>>>  Unsupported event (pmu/event/H) in per-thread mode, enable
+> >>>> system wide with '-a'.
+> >>>>
+> >>>> Update testcase to check with "perf stat -a -e $p" as well
+> >>>>
+> >>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> >>>> ---
+> >>> Tested this patch.
+> >>>
+> >>>
+> >>> With this patch:
+> >>>
+> >>> Testing hv_24x7/CPM_ADJUNCT_INST/ -- perf stat failed with non-zero
+> >>> return code
+> >>> Testing hv_24x7/CPM_ADJUNCT_PCYC/ -- perf stat failed with non-zero
+> >>> return code
+> >>>
+> >>>
+> >>>
+> >>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> >> Testing on an Intel Alderlake the test is now failing:
+> >> ```
+> >> ...
+> >> Testing offcore_requests_outstanding.l3_miss_demand_data_rd --
+> >> supported
+> >> Testing ocr.full_streaming_wr.any_response -- perf stat failed with
+> >> non-zero return code
+> >> Testing ocr.partial_streaming_wr.any_response -- perf stat failed
+> >> with
+> >> non-zero return code
+> >> Testing ocr.streaming_wr.any_response -- supported
+> >> ...
+> >> ```
+> >>
+> >> Running `perf stat` manually reveals an issue with the event:
+> >> ```
+> >> $ sudo perf stat -vv -e ocr.full_streaming_wr.any_response -a sleep
+> >> 1
+> >> Using CPUID GenuineIntel-6-B7-1
+> >> Attempt to add: cpu_atom/ocr.full_streaming_wr.any_response/
+> >> ..after resolving event:
+> >> cpu_atom/event=3D0xb7,period=3D0x186a3,umask=3D0x1,offcore_rsp=3D0x800=
+0000100
+> >> 00/
+> >> ocr.full_streaming_wr.any_response ->
+> >> cpu_atom/ocr.full_streaming_wr.any_response/
+> >> Control descriptor is not initialized
+> >> ------------------------------------------------------------
+> >> perf_event_attr:
+> >>  type                             10 (cpu_atom)
+> >>  size                             144
+> >> ------------------------------------------------------------
+> >> perf_event_attr:
+> >>  type                             0 (PERF_TYPE_HARDWARE)
+> >>  config                           0xa00000000
+> >> (cpu_atom/PERF_COUNT_HW_CPU_CYCLES/)
+> >>  disabled                         1
+> >> ------------------------------------------------------------
+> >> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
+> >> ------------------------------------------------------------
+> >> perf_event_attr:
+> >>  type                             0 (PERF_TYPE_HARDWARE)
+> >>  config                           0x400000000
+> >> (cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+> >>  disabled                         1
+> >> ------------------------------------------------------------
+> >> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
+> >>  config                           0x1b7
+> >> (ocr.demand_data_rd.l3_hit.snoop_hit_no_fwd)
+> >>  sample_type                      IDENTIFIER
+> >>  read_format
+> >> TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+> >>  disabled                         1
+> >>  inherit                          1
+> >>  { bp_addr, config1 }             0x800000010000
+> >> ------------------------------------------------------------
+> >> sys_perf_event_open: pid -1  cpu 16  group_fd -1  flags 0x8
+> >> sys_perf_event_open failed, error -22
+> >> switching off deferred callchain support
+> >> Warning:
+> >> ocr.full_streaming_wr.any_response event is not supported by the
+> >> kernel.
+> >> The sys_perf_event_open() syscall failed for event
+> >> (ocr.full_streaming_wr.any_response): Invalid argument
+> >> "dmesg | grep -i perf" may provide additional information.
+> >>
+> >> Error:
+> >> No supported events found.
+> >> The sys_perf_event_open() syscall failed for event
+> >> (ocr.full_streaming_wr.any_response): Invalid argument
+> >> "dmesg | grep -i perf" may provide additional information.
+> >> ```
+> >>
+> >> This looks like a latent Intel cpu_atom PMU bug. Thomas, wdyt?
+>
+> Hmm, it looks the error is caused by the invalid bitmask of OFFCORE_RSP_x
+> MSRs. Currently the valid bitmask of OFFCORE_RSP_x MSR is set to
+> 0x3fffffffff in intel_grt_extra_regs[], while the msr value is set
+> 0x800000010000 for the ocr.full_streaming_wr.any_response event. The bit =
+47
+> is recognized an invalid bit and then abort the event creation.
+>
+> Base on the description "Table 21-56. MSR_OFFCORE_RSPx Request Type
+> Definition" in SDM, bit 47 should be a valid bit now. Suppose bit 47 shou=
+ld
+> not be a valid bit when adding the ADL PMU support, but it's updated and
+> becomes valid later.
+>
+> Along with the constant updates of perf event lists
+> (https://github.com/intel/perfmon), we have noticed there are mismatches
+> more or less between the driver hardcoded events and perfmon event list.
+> Currently we are summarizing the mismatches. Once these mismatches are
+> finalized. we would submit a patchset to fix these mismatches.
 
-Oh, because there's an existing null test on the function pointer we
-don't need dummy functions, which is what I thought you were asking
-for. I'm still not convinced this is very intention revealing, but if
-it works for you then you can have my reviewed-by tag.
+That's great, if it takes too long perhaps we could just remove the
+events for now.
 
 Thanks,
 Ian
 
->         int ret;
+> Thanks.
 >
->         perf_tool__init(&sched.tool, /*ordered_events=3D*/true);
-> @@ -5037,6 +5038,7 @@ int cmd_sched(int argc, const char **argv)
->         } else if (!strcmp(argv[0], "stats")) {
->                 const char *const stats_subcommands[] =3D {"record", "rep=
-ort", NULL};
->
-> +               sched.tp_handler =3D &stats_ops;
->                 argc =3D parse_options_subcommand(argc, argv, stats_optio=
-ns,
->                                                 stats_subcommands,
->                                                 stats_usage,
->
+> > +Dapeng, Zide, Andi
+> >
+> > Thanks,
+> > Tom
+> >
+> >> Thanks,
+> >> Ian
+> >>
+> >>> Regards,
+> >>> Venkat.
+> >>>
+> >>>
+> >>>
+> >>>> tools/perf/tests/shell/stat_all_pmu.sh | 20 ++++++++++++++++++++
+> >>>> 1 file changed, 20 insertions(+)
+> >>>>
+> >>>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh
+> >>>> b/tools/perf/tests/shell/stat_all_pmu.sh
+> >>>> index 9c466c0efa85..6c4d59cbfa5f 100755
+> >>>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> >>>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> >>>> @@ -53,6 +53,26 @@ do
+> >>>>     continue
+> >>>>   fi
+> >>>>
+> >>>> +  # check with system wide if it is supported.
+> >>>> +  output=3D$(perf stat -a -e "$p" true 2>&1)
+> >>>> +  stat_result=3D$?
+> >>>> +  if echo "$output" | grep -q "not supported"
+> >>>> +  then
+> >>>> +    # Event not supported, so ignore.
+> >>>> +    echo "not supported"
+> >>>> +    continue
+> >>>> +  fi
+> >>>> +
+> >>>> +  # checked through possible access limitations and permissions.
+> >>>> +  # At this step, non-zero return code from "perf stat" needs to
+> >>>> +  # reported as fail for the user to investigate
+> >>>> +  if [ $stat_result -ne 0 ]
+> >>>> +  then
+> >>>> +    echo "perf stat failed with non-zero return code"
+> >>>> +    err=3D1
+> >>>> +    continue
+> >>>> +  fi
+> >>>> +
+> >>>>   # We failed to see the event and it is supported. Possibly the
+> >>>> workload was
+> >>>>   # too small so retry with something longer.
+> >>>>   output=3D$(perf stat -e "$p" perf bench internals synthesize
+> >>>> 2>&1)
+> >>>> --
+> >>>> 2.47.3
+> >>>>
