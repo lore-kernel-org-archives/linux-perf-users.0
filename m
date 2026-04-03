@@ -1,278 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379121C01;
-	Fri,  3 Apr 2026 00:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812AB23F26A;
+	Fri,  3 Apr 2026 01:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775177897; cv=none; b=K9Trs7AOJjpC+hwmk6qWZjocvSfMU1Pk7oLTPrE0Yr/Sz7uf0xI5WtZt1/7dfyeXNDQDNJyoyqypwCSm4+w+YeGSty5XripBmphg6Z3DXrwtlz4c8QccaYfJ/uNHwPCLHT+XBZSr+UiVbQ+SqSrPUGWPaoPEPLD36xlY8dYrYGI=
+	t=1775178346; cv=none; b=jeW4YVuzQUJQXzSEOKoCJW1TFhc2kJmzz5Iqmy3DEMOaddcxwOpe5D1+Gj/A+di5M41L+QLce0MadeoWKchJOfhlT68+MiYRQ9Q0nXHowXIltIG1gnIxrnd+3FG5y+yLVnROVVFlRMI/g6NubuijNBk1tAStbXm8/p42NsqvTPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775177897; c=relaxed/simple;
-	bh=bBoYr7PfHmJC41JraCFuGAaYweKtOCA1ziSQTZVkzF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bu3NHJCljwNp+apxsKsHN2BGHqFyPPK3GQLjTSKLeCO+jq1N5xupfRQUTVTZiwBOlDmiGFr/v2u0lch0ghZuvQ4jRS89MNxBwPvTg+xwPdjuj0dytlfRt2acDLySg8ryQgAxmmZrhr8TFW0P3Mfqcz4CXMARoc97r1x+aiZT8YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nucoSoyd; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775178346; c=relaxed/simple;
+	bh=8QVu6wQMQzN5RpnneuN3rcFlycUh1rdpNK8roV3jOOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NJxtVO7k3sIJSs5sctjg4sM2LVJXwl/1jZ/Bi3o4Kz+Mrh7SB9SMPszPQhCcagobd3ia8PXJs90miUI4+HzoAt8z5ZOIv5l/o2ky2R/92/Qz6WA2/YhF+9wsAXfWOH0b1rxjqrW4YyyvVC5SmjaUFi/HFWLPSNEJUF8LX0k4oZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTardiKi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nucoSoyd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775177895; x=1806713895;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bBoYr7PfHmJC41JraCFuGAaYweKtOCA1ziSQTZVkzF4=;
-  b=nucoSoydlIrXSEq1R9BkhTdnV/HKNIHiEXnuKrOqSE42ROwHdcy3GEGN
-   hyXM8Mt9dpZrS8w2wHDjEMIun5fVxBXSC3JJ7EPwWar1orQaFsbgjP+LU
-   LY04XAN0/N6jWkZ2X6vEKBylMKEB3hBsS+vaxeaj2yUcWYDbaKhufqLii
-   RCGoHaoTiZxDfmKB8b8gE3XNncKkikLL3ak3+6c6yOzxnz8XQO197q+bv
-   KSTdsg4OEPsZEyL0C44yMrhBpSwlIHSibuaL27BlA5GjZYuBnUxtdDo+k
-   t2IYfDazQc3RT/zFyMsL3BuX5065vhqK8mPHcSe4fG/uWtVAYCaTGmw/o
-   w==;
-X-CSE-ConnectionGUID: sX1XOHO5QeyPdfaaDRPIiw==
-X-CSE-MsgGUID: Q65fzJBgT4u7wXZyv8b+fQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="86865808"
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="86865808"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 17:58:14 -0700
-X-CSE-ConnectionGUID: TxclQPmnQsegmts7YdHxVQ==
-X-CSE-MsgGUID: dKOI5RzcSziHjDx4CeBEDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="226126260"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 17:58:11 -0700
-Message-ID: <ca050d2c-53e6-40fe-b72a-4dd11fe739ed@linux.intel.com>
-Date: Fri, 3 Apr 2026 08:58:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTardiKi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944D6C116C6;
+	Fri,  3 Apr 2026 01:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775178346;
+	bh=8QVu6wQMQzN5RpnneuN3rcFlycUh1rdpNK8roV3jOOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aTardiKiWT6Lb/uDIbBEYLEdEPpRuHGGkHZtPoF2cVGL5edorNT73Ne0cyfMmswZh
+	 dMCozh3XjucfZFgFLLeAL0dMMiWtAmqYpYXPYc18MLZ+EZVR9EIYE7O0FWONEonhGl
+	 CukDlxHJkPBXdCyPUFwgJq/nqjeIoy7lgjtZbHvelFBxXs9h5eRXjFUW1KtiC4ujEY
+	 ftYWlfvphq5of/7BIB9IdCLe2u6gYt/Krmliwybx6Q+IAgHEeg5npJG7w2FTAem/cp
+	 ekUb/Vg39WbSyRLCE57bgQB28+Yfu48zzbavOgDHEyJnMbb3ZIb3/a4xLC9SwBWoUk
+	 OlS+ec6mHtubA==
+Date: Thu, 2 Apr 2026 18:05:43 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+	Ian Rogers <irogers@google.com>, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, james.clark@linaro.org,
+	ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on Emeraldrapids
+Message-ID: <ac8SZ1FoFOhJarLJ@google.com>
+References: <20260402205300.1953706-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 4/5] perf/x86/intel/uncore: Fix PMON enumeration with
- NUMA disabled
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>, Chun-Tse Shao <ctshao@google.com>,
- Markus Elfring <Markus.Elfring@web.de>
-References: <20260330212444.117325-1-zide.chen@intel.com>
- <20260330212444.117325-5-zide.chen@intel.com>
- <e899636d-371a-44dc-b8e7-578f499847fa@linux.intel.com>
- <d0e4d464-0f9e-4e76-952f-daac7d585f5b@intel.com>
- <aa13af82-b5ca-4dbe-8788-abd8a0cdc98b@linux.intel.com>
- <71af8e5f-8d13-4bec-8856-b30ebaf308c7@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <71af8e5f-8d13-4bec-8856-b30ebaf308c7@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260402205300.1953706-1-ctshao@google.com>
 
+On Thu, Apr 02, 2026 at 01:52:36PM -0700, Chun-Tse Shao wrote:
+> Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
+> Adjust cpumasks as the logic for GNR in [1].
+> 
+> Tested on Emeraldrapids with SNC2 enabled:
+>   $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
+> 
+>    Performance counter stats for 'system wide':
+> 
+>   N0       30        72125876670      UNC_CHA_CLOCKTICKS
+>   N0        4         8815163648      UNC_M_CLOCKTICKS
+>   N1       30        72124958844      UNC_CHA_CLOCKTICKS
+>   N1        4         8815014974      UNC_M_CLOCKTICKS
+>   N2       30        72121049022      UNC_CHA_CLOCKTICKS
+>   N2        4         8814592626      UNC_M_CLOCKTICKS
+>   N3       30        72117133854      UNC_CHA_CLOCKTICKS
+>   N3        4         8814012840      UNC_M_CLOCKTICKS
+> 
+>          1.001574118 seconds time elapsed
+> 
+> [1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
+> 
+> Reviewed-by: Zide Chen <zide.chen@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+> v4:
+>   Rebase.
+> 
+> v3: lore.kernel.org/20260212223942.3832857-1-ctshao@google.com
+>   Fix a typo.
+> 
+> v2: lore.kernel.org/20260205232220.1980168-1-ctshao@google.com
+>   Split EMR and GNR in the SNC2 IMC cpu map.
+> 
+> v1: lore.kernel.org/20260108184430.1210223-1-ctshao@google.com
+> 
+>  tools/perf/arch/x86/util/pmu.c | 95 ++++++++++++++++++++++------------
+>  1 file changed, 63 insertions(+), 32 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+> index 0661e0f0b02d..ec3c5a368d67 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -23,20 +23,29 @@
+>  #include "util/env.h"
+>  #include "util/header.h"
+> 
+> -static bool x86__is_intel_graniterapids(void)
+> +static bool x86__is_snc_supported(void)
+>  {
+> -	static bool checked_if_graniterapids;
+> -	static bool is_graniterapids;
+> +	static bool checked_if_snc_supported;
+> +	static bool is_supported;
+> 
+> -	if (!checked_if_graniterapids) {
+> -		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
+> +	if (!checked_if_snc_supported) {
+> +
+> +		/* Emeraldrapids and Graniterapids support SNC configuration. */
+> +		static const char *const supported_cpuids[] = {
+> +			"GenuineIntel-6-CF", /* Emeraldrapids */
+> +			"GenuineIntel-6-A[DE]", /* Graniterapids */
+> +		};
+>  		char *cpuid = get_cpuid_str((struct perf_cpu){0});
+> 
+> -		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
+> +		for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
+> +			is_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
+> +			if (is_supported)
+> +				break;
+> +		}
+>  		free(cpuid);
+> -		checked_if_graniterapids = true;
+> +		checked_if_snc_supported = true;
+>  	}
+> -	return is_graniterapids;
+> +	return is_supported;
+>  }
+> 
+>  static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> @@ -65,6 +74,7 @@ static int snc_nodes_per_l3_cache(void)
+>  			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+> 
+>  		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
+> +
 
-On 4/3/2026 5:31 AM, Chen, Zide wrote:
->
-> On 4/1/2026 7:48 PM, Mi, Dapeng wrote:
->> On 4/2/2026 4:25 AM, Chen, Zide wrote:
->>> On 3/30/2026 6:26 PM, Mi, Dapeng wrote:
->>>> On 3/31/2026 5:24 AM, Zide Chen wrote:
->>>>> When NUMA is disabled on a NUMA-capable platform, UPI and M3UPI PMON
->>>>> units are not enumerated.
->>>>>
->>>>> In this case, pcibus_to_node() always returns NUMA_NO_NODE, causing
->>>>> uncore_device_to_die() to return -1 for all PCI devices. As a result,
->>>>> the corresponding PMON units are not added to the RB tree.
->>>>>
->>>>> These PMON units are per-die resources, and their utility when NUMA is
->>>>> disabled is limited.  The driver does not prohibit their use, and the
->>>>> enumeration should still work correctly.
->>>>>
->>>>> Fix this by using uncore_pcibus_to_dieid(), which works regardless of
->>>>> whether NUMA is enabled.  This requires calling
->>>>> snbep_pci2phy_map_init() in spr_uncore_pci_init().
->>>>>
->>>>> Since pci_init() is called before mmio_init(), remove the redundant
->>>>> snbep_pci2phy_map_init() call from spr_uncore_mmio_init().  If
->>>>> snbep_pci2phy_map_init() fails, uncore driver should be bailed out,
->>>>> so the fallback path in spr_uncore_mmio_init() can be removed.
->>>>>
->>>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>>>> ---
->>>>> V6:
->>>>> - Split from patch v5 3/4.
->>>>> - Remove the redundant call in spr_uncore_mmio_init().
->>>>> - Update commit messages.
->>>>> ---
->>>>>  arch/x86/events/intel/uncore.c       |  1 +
->>>>>  arch/x86/events/intel/uncore_snbep.c | 26 +++++++++++---------------
->>>>>  2 files changed, 12 insertions(+), 15 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->>>>> index 786bd51a0d89..e9cc1ba921c5 100644
->>>>> --- a/arch/x86/events/intel/uncore.c
->>>>> +++ b/arch/x86/events/intel/uncore.c
->>>>> @@ -67,6 +67,7 @@ int uncore_die_to_segment(int die)
->>>>>  	return bus ? pci_domain_nr(bus) : -EINVAL;
->>>>>  }
->>>>>  
->>>>> +/* Note: This API can only be used when NUMA information is available. */
->>>>>  int uncore_device_to_die(struct pci_dev *dev)
->>>>>  {
->>>>>  	int node = pcibus_to_node(dev->bus);
->>>>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->>>>> index 8ee06d4659bb..73da1e88e286 100644
->>>>> --- a/arch/x86/events/intel/uncore_snbep.c
->>>>> +++ b/arch/x86/events/intel/uncore_snbep.c
->>>>> @@ -6415,7 +6415,7 @@ static void spr_update_device_location(int type_id)
->>>>>  
->>>>>  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->>>>>  
->>>>> -		die = uncore_device_to_die(dev);
->>>>> +		die = uncore_pcibus_to_dieid(dev->bus);
->>>>>  		if (die < 0)
->>>>>  			continue;
->>>>>  
->>>>> @@ -6439,6 +6439,10 @@ static void spr_update_device_location(int type_id)
->>>>>  
->>>>>  int spr_uncore_pci_init(void)
->>>>>  {
->>>>> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
->>>>> +	if (ret)
->>>>> +		return ret;
->>>>> +
->>>>>  	/*
->>>>>  	 * The discovery table of UPI on some SPR variant is broken,
->>>>>  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
->>>>> @@ -6460,21 +6464,13 @@ int spr_uncore_pci_init(void)
->>>>>  
->>>>>  void spr_uncore_mmio_init(void)
->>>>>  {
->>>>> -	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
->>>>> +	uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
->>>>> +						 UNCORE_SPR_MMIO_EXTRA_UNCORES,
->>>>> +						 spr_mmio_uncores,
->>>>> +						 UNCORE_SPR_NUM_UNCORE_TYPES,
->>>>> +						 spr_uncores);
->>>>>  
->>>>> -	if (ret) {
->>>>> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO, 0, NULL,
->>>>> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
->>>>> -							 spr_uncores);
->>>>> -	} else {
->>>>> -		uncore_mmio_uncores = uncore_get_uncores(UNCORE_ACCESS_MMIO,
->>>>> -							 UNCORE_SPR_MMIO_EXTRA_UNCORES,
->>>>> -							 spr_mmio_uncores,
->>>>> -							 UNCORE_SPR_NUM_UNCORE_TYPES,
->>>>> -							 spr_uncores);
->>>>> -
->>>>> -		spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
->>>>> -	}
->>>>> +	spr_uncore_imc_free_running.num_boxes = uncore_type_max_boxes(uncore_mmio_uncores, UNCORE_SPR_IMC) / 2;
->>>> I'm not sure if we can directly remove the snbep_pci2phy_map_init() call
->>>> here. In theory, the snbep_pci2phy_map_init() call in spr_uncore_pci_init()
->>>> could fail and then spr_uncore_mmio_init() doesn't know it and directly
->>>> initializes MMIO PMU, then it could lead to the MMIO initialization fails.
->>> Yes, this is true. But I would argue that the fix in this patch is
->>> correct, and the issue you pointed out is not new: the uncore driver
->>> registers a PMU device without guaranteeing it's functioning.
->>>
->>> This is because the Intel uncore driver employs a lazy init approach.
->>> And when init_box() fails, it doesn't unregister the inaccessible PMU
->>> devices. For example, intel_generic_uncore_mmio_init_box() could fail
->>> for a number of reasons, making all associated PMU devices non-functional.
->>>
->>> Originally the uncore driver tried to enumerate PCI/MSR/MMIO uncore
->>> independently, but evolving hardware complexity makes this more
->>> challenging.  This patch is just one example, IMC Freerunning is
->>> MMIO-accessed but relies on PCI devices to read the die-specific MMIO
->>> base address. Explicitly gating sysfs node creation with PCI init code
->>> in mmio_init() is neither clean nor reliable.
->>>
->>> To fix it, it seems reasonable to have init_box() return int and
->>> unregister the PMU device if deemed inaccessible — similar to what
->>> perf_event_ibs_init() does.
->>>
->>> --- a/arch/x86/events/intel/uncore.h
->>> +++ b/arch/x86/events/intel/uncore.h
->>> @@ -129,7 +129,7 @@ struct intel_uncore_type {
->>>  #define events_group attr_groups[2]
->>>
->>>  struct intel_uncore_ops {
->>> -       void (*init_box)(struct intel_uncore_box *);
->>> +       int (*init_box)(struct intel_uncore_box *);
->>>
->>> --- a/arch/x86/events/intel/uncore.c
->>> +++ b/arch/x86/events/intel/uncore.c
->>> @@ -1155,7 +1155,8 @@ static int uncore_pci_pmu_register(struct pci_dev
->>> *pdev,
->>>         box->dieid = die;
->>>         box->pci_dev = pdev;
->>>         box->pmu = pmu;
->>> -       uncore_box_init(box);
->>> +       ret = uncore_box_init(box);
->>> +	if (ret)
->>> +               return ret;
->>>
->>> @@ -1598,8 +1599,10 @@ static int uncore_box_ref(struct
->>> intel_uncore_type **types,
->>>                 pmu = type->pmus;
->>>                 for (i = 0; i < type->num_boxes; i++, pmu++) {
->>>                         box = pmu->boxes[id];
->>> -                       if (box && box->cpu >= 0 &&
->>> atomic_inc_return(&box->refcnt) == 1)
->>> -                               uncore_box_init(box);
->>> +                       if (box && box->cpu >= 0 &&
->>> atomic_inc_return(&box->refcnt) == 1)
->>> +                               if (uncore_box_init(box))
->>> +                                       uncore_pmu_unregister(pmu);
->> Yes, I like this idea. The return value of init_box() should always be
->> checked. I'm not quite sure if there are other resources need to be cleaned
->> besides unregistering the corresponding uncore pmu, please double check.
->> Thanks.
-> I'm thinking of removing this patch from this series and putting it
-> together with the init_box() changes, where it will be a complete fix
-> and I need more time to double check all the init_box() callbacks.
+An unnecessary change.
 
-Yeah, It's a fundamental change and let's do more tests. Thanks.
+>  		perf_cpu_map__put(cache_cpus);
+>  		perf_cpu_map__put(node_cpus);
+>  		checked_snc = true;
+> @@ -133,23 +143,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>  	// Compute the IMC SNC using lookup tables.
+>  	unsigned int imc_num;
+>  	int snc_nodes = snc_nodes_per_l3_cache();
+> -	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+> -	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> -	const u8 *snc_map;
+> -	size_t snc_map_len;
+> -
+> -	switch (snc_nodes) {
+> -	case 2:
+> -		snc_map = snc2_map;
+> -		snc_map_len = ARRAY_SIZE(snc2_map);
+> -		break;
+> -	case 3:
+> -		snc_map = snc3_map;
+> -		snc_map_len = ARRAY_SIZE(snc3_map);
+> -		break;
+> -	default:
+> -		/* Error or no lookup support for SNC with >3 nodes. */
+> -		return 0;
+> +	char *cpuid;
+> +	static const u8 emr_snc2_map[] = { 0, 0, 1, 1 };
+> +	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
+> +	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
+> +	static const u8 *snc_map;
+> +	static size_t snc_map_len;
+> +
+> +	/* snc_map is not inited yet. We only look up once to avoid expensive operations. */
+> +	if (!snc_map) {
+> +		switch (snc_nodes) {
+> +		case 2:
+> +			cpuid = get_cpuid_str((struct perf_cpu){ 0 });
+> +			if (cpuid) {
+> +				if (strcmp_cpuid_str("GenuineIntel-6-CF", cpuid) == 0) {
+> +					snc_map = emr_snc2_map;
+> +					snc_map_len = ARRAY_SIZE(emr_snc2_map);
+> +				} else if (strcmp_cpuid_str("GenuineIntel-6-A[DE]", cpuid) == 0) {
+> +					snc_map = gnr_snc2_map;
+> +					snc_map_len = ARRAY_SIZE(gnr_snc2_map);
+> +				}
+> +				free(cpuid);
+> +			}
+> +			break;
+> +		case 3:
+> +			snc_map = snc3_map;
+> +			snc_map_len = ARRAY_SIZE(snc3_map);
+> +			break;
+> +		default:
+> +			/* Error or no lookup support for SNC with >3 nodes. */
+> +			return 0;
+> +		}
+> +
+> +		if (!snc_map) {
+> +			pr_warning("Unexpected: can not find snc map config");
+> +			return 0;
+> +		}
+>  	}
+> 
+>  	/* Compute SNC for PMU. */
+> @@ -157,11 +186,12 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
+>  		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+>  		return 0;
+>  	}
+> -	if (imc_num >= snc_map_len) {
+> +	if (imc_num >= snc_map_len * perf_cpu_map__nr(pmu->cpus)) {
+>  		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+>  		return 0;
+>  	}
+> -	return snc_map[imc_num];
+> +
+> +	return snc_map[imc_num % snc_map_len];
 
+Can you please move this part to a separate commit?  I think it's an
+independent change from the EMR support.
 
->
->>>
->>>> Currently the PCI, CPU and MMIO initialization are totally independent,
->>>> only when the 3 types initialization all fail, then uncore PMU can abort.
->>>>
->>>> ``` 
->>>>
->>>>    if (uncore_init->pci_init) {
->>>>         pret = uncore_init->pci_init();
->>>>         if (!pret)
->>>>             pret = uncore_pci_init();
->>>>     }
->>>>
->>>>     if (uncore_init->cpu_init) {
->>>>         uncore_init->cpu_init();
->>>>         cret = uncore_cpu_init();
->>>>     }
->>>>
->>>>     if (uncore_init->mmio_init) {
->>>>         uncore_init->mmio_init();
->>>>         mret = uncore_mmio_init();
->>>>     }
->>>>
->>>>     if (cret && pret && mret) {
->>>>         ret = -ENODEV;
->>>>         goto free_discovery;
->>>>     }
->>>> ```
->>>>
->>>>
->>>>>  }
->>>>>  
->>>>>  /* end of SPR uncore support */
+Thanks,
+Namhyung
+
+>  }
+> 
+>  static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> @@ -201,7 +231,7 @@ static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+>  	return cpu_adjust[pmu_snc];
+>  }
+> 
+> -static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+> +static void uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+>  {
+>  	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+>  	// topology. For example, a two socket graniterapids machine may be set
+> @@ -301,11 +331,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  				pmu->mem_events = perf_mem_events_intel_aux;
+>  			else
+>  				pmu->mem_events = perf_mem_events_intel;
+> -		} else if (x86__is_intel_graniterapids()) {
+> +		} else if (x86__is_snc_supported()) {
+>  			if (strstarts(pmu->name, "uncore_cha_"))
+> -				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+> -			else if (strstarts(pmu->name, "uncore_imc_"))
+> -				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+> +				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+> +			else if (strstarts(pmu->name, "uncore_imc_") &&
+> +				 !strstarts(pmu->name, "uncore_imc_free_running"))
+> +				uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+>  		}
+>  	}
+>  }
+> --
+> 2.53.0.1213.gd9a14994de-goog
+> 
