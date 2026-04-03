@@ -1,50 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E995B2EAD15
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 01:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A874274B2A
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 01:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775179669; cv=none; b=EliOdqCwsTWtEbl7af1CqyF/PrPaWbHOKyhWm0nL1smsNvUha4JPT2n+jxXJRAbIt22N3weDbkboJ2vSQQE/GlCmbFappLr0HzFL4jpNcrw3r9zMpJjFDFPo9g9DR1Pf5oxtld57dYTZEUJ0r1cdQ0VMN6O1O/kb7qz08/hSjQo=
+	t=1775180438; cv=none; b=PK+9kEHnJUbUt67wQ7qb7QDYMaQvDaqeNfqIIeyFCgTE8sEFL/s5SWghpFJGuoxDoE/4dbST7VkNVJUwaNx6grt/6zag/NRrZmVJDJUNFkruwtTiMZwXtABbFwcU7ianwQR/vjS08BYALP1ZdgaPVgEVy6Cu/se0i8zjmoS9QNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775179669; c=relaxed/simple;
-	bh=H3J9EZr3tvvevdBAgqVrRb4AziVG1y905B7abbKP/HM=;
+	s=arc-20240116; t=1775180438; c=relaxed/simple;
+	bh=H2Yf3Z1qsgrZjdr1WJOu3Uuczn/2maq7eE/Tf1Sfz2k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooV+jJO/L0t0DqUIwkTYffBy3DGutHnnzKAilic5QYK/sPNTfgIu80PhYBthiMLeSBGL8NMw1tLXUrrt2r1i62JiyrmhvLRQrsd2R2l41pnC3vK3h8ryPIoleND4zZ6451WhrbSMobKVk72xpZT3eE13cpTywrj8a2VvznwbfFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+3qCKwA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V3kUfrYkWVdl89gnkNuse64fq50zcIRX+k6G43dwfmaQUb/yRKkWPKtiz95zljfF56i6JdBU0zcPyNLPL37S/X6HdyZdg5jiof0if5iBSiY5aXsvUI9Uw14jBRI4dBIDC08cu0h6GCrSqJh1dg+VESHwGdVX5AkzrO+T0TresRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKuC0diF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+3qCKwA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A20AC2BCAF;
-	Fri,  3 Apr 2026 01:27:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKuC0diF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0179C116C6;
+	Fri,  3 Apr 2026 01:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775179668;
-	bh=H3J9EZr3tvvevdBAgqVrRb4AziVG1y905B7abbKP/HM=;
+	s=k20201202; t=1775180438;
+	bh=H2Yf3Z1qsgrZjdr1WJOu3Uuczn/2maq7eE/Tf1Sfz2k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+3qCKwA0hQ54jmAI7omw55knguLR6cX010JRKDRMcNtrlGQ3CT3uJXcXf7qh3n9w
-	 6QXdS6RqEH91dJYN3vrmMylJ+RK8308zzRoIZxv7durYNzXPLLOZMya6QGXqC9Soff
-	 1QrsJn1MXWNN6vCVkGujarq1nWm66AClyPIo+zoZY16ncGWtVjf9nUtaII4AQW2Yfa
-	 FXzucd1itI57Xg1vCA/hsnqVhcFQFCFnJw+ev8FvbjOjaW+drY/KQ+FGwW+wWPUUjA
-	 FMej6obO34XfbJ0somonTlM/mmBOPUEpdJ7kQ3SUeI+XRzSjYwQECY2lSL98zo6aid
-	 xRz/qt0JQcKcw==
-Date: Thu, 2 Apr 2026 18:27:46 -0700
+	b=LKuC0diFcwk8Sq9dasYEfLqzNvAzJUuRivJMv6Yhh8NZEj3Z8BVf0OCui8KRIYUsL
+	 RAdV10jEXBSfo0kBKbC/aig6rMc07dOb7KIN5pNbl8KVXujA0Cg5hAK0YvDzYe0RYG
+	 GSGRN/oaARx0x4itlvTSZOhJkoYsp1Mb4G0U8vYjGHAPmEunNUjNaKC8ZzBWuoJcIX
+	 y/+99Ix1xKMy5xZellPcYJO58rmst+Ypwmr+gl0SwT/Q6dsSDABFRdCgg8Zf9A/exy
+	 dP4YD32wndwysRJ/pV+8x6OOgmxEM/WEKrIUKhz0XUg7bECvBRO7aUDA1HlTK84QWL
+	 5nujKrDH0xgfQ==
+Date: Thu, 2 Apr 2026 18:40:36 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>, Venkat <venkat88@linux.ibm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>, acme@kernel.org,
-	jolsa@kernel.org, adrian.hunter@intel.com, vmolnaro@redhat.com,
-	mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-	Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
- all PMU test
-Message-ID: <ac8Xkty-lqrIbFsP@google.com>
-References: <20260315105751.86835-1-atrajeev@linux.ibm.com>
- <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
- <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
- <ac2uvTXI1iknXwyV@google.com>
- <CAP-5=fX6993MzAEgB7JeVEU5GcVk3PxhkEjMX3G4EZgxPBaBqg@mail.gmail.com>
- <A33EEA7D-DB03-4FA9-A0A8-D10115FEF423@linux.ibm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
+	acme@redhat.com
+Subject: Re: [PATCH v2] perf trace: Fix potential u64 underflow in duration
+ calculation
+Message-ID: <ac8alE0Nm-DL20a2@google.com>
+References: <20260331101020.1270363-1-mpetlan@redhat.com>
+ <20260402145118.1379546-1-mpetlan@redhat.com>
+ <CAP-5=fUo6GVurv8qQnMfpgN-hYa1ukNLhF_5n2VfEv=X6APBTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,18 +46,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A33EEA7D-DB03-4FA9-A0A8-D10115FEF423@linux.ibm.com>
+In-Reply-To: <CAP-5=fUo6GVurv8qQnMfpgN-hYa1ukNLhF_5n2VfEv=X6APBTQ@mail.gmail.com>
 
-On Thu, Apr 02, 2026 at 09:15:54PM +0530, Athira Rajeev wrote:
-> If the addition of “-a” can cause regression ( like intel one if its not suppose to be run system wide ), 
-> how about adding a case like this:
-> - Look for "enable system wide with '-a’ “ in the error logs
-> 	- If logs matches this message and if user is root, attempt with -a next.
->        - With “-a”, If the logs has "Operation not supported” , test can continue to next event.
+On Thu, Apr 02, 2026 at 08:09:12AM -0700, Ian Rogers wrote:
+> On Thu, Apr 2, 2026 at 7:51 AM Michael Petlan <mpetlan@redhat.com> wrote:
+> >
+> > Although it happens very rarely, in case of out-of-order events (i.e.
+> > due to CPU migration when a syscall is executed), the calculation of
+> > event duration might underflow and thus a bogus value is printed:
+> >
+> >     2.804 ( 0.001 ms): :49553/49553 rt_sigaction(sig: QUIT, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
+> >     2.807 ( 0.001 ms): :49553/49553 rt_sigaction(sig: CHLD, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
+> >     2.815 (18446744073709.438 ms): :49553/49553 execve(filename: 0xbb173a30, argv: 0x55aabb171930, envp: 0x55aabb171120) = 0
+> >     2.815 ( 0.534 ms): pwd/49553  ... [continued]: execve())                                           = 0
+> >
+> > Check for possible underflow first and in case of a bogus value, do
+> > not print it.
 
-Sounds good, you can check perf_event_paranoid as well as root.  Then
-you don't need to check the result of "-a" for -EOPNOTSUP.
+I guess this means to leave the duration empty and print the rest.  For
+clear communication, I think it's better to put examples before and
+after for user-visible changes.
+
+> >
+> > v2: Use greater-or-equal to handle "zero" duration calls correctly.
+> 
+> Nit: This normally comes after the signed-off-by past a "---" to
+> indicate it should not be included in the commit log.
+
++1.  I can handle that this time but please do later.
+
+> 
+> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Namhyung
 
+> 
+> > ---
+> >  tools/perf/builtin-trace.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index f487fbaa0ad6..9c59969de2af 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2956,7 +2956,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+> >                 ++trace->stats.vfs_getname;
+> >         }
+> >
+> > -       if (ttrace->entry_time) {
+> > +       if (ttrace->entry_time && sample->time >= ttrace->entry_time) {
+> >                 duration = sample->time - ttrace->entry_time;
+> >                 if (trace__filter_duration(trace, duration))
+> >                         goto out;
+> > --
+> > 2.47.3
+> >
