@@ -1,54 +1,54 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884733D9022
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 20:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786233D8904
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Apr 2026 20:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775248857; cv=none; b=JWNrKRxaJd57628d/T18hbyA/nCUm/cD0vcr/IJx/L6bxHcrNCk6Cj7y6x5SNoLryQQHJ/IyS8LOqidlz5/5uw+DDcbOq65hwdrqM7xSGb+RdTJYIUKrJjWi9H2TdN9utTBwdVwxbfiDf63Ma9YfZZWLQt8RLyvgUJBu+Yl8AW4=
+	t=1775248858; cv=none; b=VxYUEH5ZkmeSGEroL6Y1Z1atC0ZWl660ofLM6WHyU+jo5xmHcHIMQBsY/N9Ceu8ZWCgFgwJ4UlLcZaaMZvRDmCFSpu6euYIEOeeHKSCSrYYDz8mxHC6p+w+DhWLlm7mI3N+BR13udrRxbv7C6GXFBA87aDOa12cVRE0w21ftqLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775248857; c=relaxed/simple;
-	bh=dTakRFq+3hjeVloe4iHCXNw7Dee9NH42FeVhCpT0lVE=;
+	s=arc-20240116; t=1775248858; c=relaxed/simple;
+	bh=jNIL33k87gtaSUPMibDJ6yPQJtDK0dHAdF1GtgBune4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=isQuUgClotsYjYH5Voo5gyxuuAVcALZt/epHaTkLycm7jjW39KIR/+RROj+PXjItHy8hFFhTDH6qvXMp7AJn5e3WAX097oDWWOyG4n5t1wPOyXarh5kTT0juKRzimvoulpLlMILBXnDOf4sos1NeKQXM+jRCHalRQYXGSev/aAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLxHO7XX; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=qMqvjWXwUVG6AoEAPytTzeyXpo2cWgdPPDS65BimcUyCkQ4n5nC6h9qK8Rj2vthEi97itX9bq3JN0MWsxiak+rn3RdAHNbRVdXzmbXHS45iv1QWHDEk90I+nuUUwsP/SQQfzomI93plXgDaw9ZorCsW/mDrIohEUNFrna+lPw98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KxMVnMT/; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLxHO7XX"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12721cd1a2aso11297459c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 13:40:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KxMVnMT/"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12721cd1a2aso11297998c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 13:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775248850; x=1775853650; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775248855; x=1775853655; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P2FLhx5V0ymgc8/HiT98CwKQoIrTyFPHn++TN0eREEo=;
-        b=eLxHO7XXbQi7baT1EJ3Jt7MUtzfj7wlnN9uQBibyK/QeOQrYJ2ZE+uBWG+MuoBGwMl
-         td+UY89mCkklNMtVRWuSaRX+5vHES2oI/t0Qp7pa9hhsjC81aWtuSDmiqNT7HR77HHYg
-         Qp1Ed7GpYl0xI9PeasDTpCf9t/CF529CQLHxBbJDQVNXxDi6IwZwylGlYMATnR/g59Vt
-         hZaan94LslWDupBd7SJf8TXA0yQ5qeqLZUshUFA9BXx9pePhzbWyHRQpRzdyslq458zz
-         RXsI1eBqBgi7edJSp+gKASvz3WaP7MTZGp8xFF+0Dj+NmrTxrgchfl7jxjrQp2gKAYUN
-         aH8w==
+        bh=ynwM+AEApMdqoZuvNbVdN+EnF0BWt1XhQbbnU8yhnto=;
+        b=KxMVnMT/uCP+fa5uFu9nAoXgroYKJD72CmKyj2RY4ce+XjX4JWRhzAb+F8MlKNbP3F
+         fUpSmCxDjet7sVve04ORXwJ3PRO3yncRRewALLRPXs+jcdlvhdq2NhQ/jNr/oCLUXeTL
+         BbPaQx5mbvVN5gTL9tWDAQSK3aKhaTn1fRtCTmamnNTBNqm/bCw3mtKjp6lFBpWnx/bx
+         szKDjwF6HqmmKS1zVy/QqICiZZAQKgsvxRBnyDRVLGCKEH91c8qaGzO2ku/jX2p+Mzfb
+         Dw73/pdQcMI+EAL2JzoFvvtPemf0lyFHIP2E749T7QPZWlwiZqmEijzGr9I8U2edkjxO
+         qiyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775248850; x=1775853650;
+        d=1e100.net; s=20251104; t=1775248855; x=1775853655;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P2FLhx5V0ymgc8/HiT98CwKQoIrTyFPHn++TN0eREEo=;
-        b=nQnu9QdXm2pM7Sc7z7tqrYM2pNtmvGJ4RmWwiiEpyJ/AJ3CyEoeBL+PhS+mf0cUG0Y
-         G38/5N9CadiVh6pdTXfan0Ws3JNZEQ8ga1xs9I89XKMLZxxuzEgck0urb7dpItTpyM0p
-         R92zZxWHnSwBnlzRUtXWerTxxIuXZyiVXuvFf5rGxAnZGDDzdYgveqfRBWfzp04vCWCo
-         1IxJK++SEChvS5PY75wqpNBLLa4PSZUD1XRW/N4LlvU3NQOpPRrx6aVOrNegAnMO77nP
-         OIEKW/No9ctgo9Az6Fqyoq6fVcJhkWdUGiw3zeBiFm2MrDa2JCc1nfs4b3n7dpQljJwC
-         pMYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsL6zdleWbHQarLltklV5RDcgnH31s2IEf5M6eQTv3w3CxApYmudOLut54BZTMZXdrg3zU8CrCrNmgIuS8o3Jb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy769sDVc6NsLA+CCXAjcMcJCicDCyrqzdlDUPeebGPw45VQL2h
-	QgpNq1CJhMRNyrt0bUA/OBPJdkmY04I3wKskStcsQKBNcH6vIVEZsl3OKhF78T4EfwPq57OerAQ
-	2YBVfEnq4jg==
-X-Received: from dldnz7.prod.google.com ([2002:a05:701a:ca07:b0:12a:6c72:daa3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea31:b0:128:ce44:be8f
- with SMTP id a92af1059eb24-12bfb6e980bmr2195283c88.2.1775248849648; Fri, 03
- Apr 2026 13:40:49 -0700 (PDT)
-Date: Fri,  3 Apr 2026 13:40:03 -0700
+        bh=ynwM+AEApMdqoZuvNbVdN+EnF0BWt1XhQbbnU8yhnto=;
+        b=P1yR3Gj1DGnsLFfndkS4ozNrA5qUYEN2bOXE539fa7T/x0b4o6FVCrndFTUdxhgbFH
+         K8AMkTqo2MQs6sSVpsDU4DP3C5qwgPBQ1Lj2XKNfk18McldJ3kuKIiVZZJG5YWXUiXjU
+         FNp+Pl1RR5cK9ZaG1fkrEkeybWYBRBVqbRxSzWF+FqBTUETxi52TGfV365/qhaHYzRPg
+         WPX5XpXwdElzhqPHC5N5tFbUIvaxa9wIEO3aglI85gIY/S/yh5+bPMDfp6RAAkTXwNb6
+         q8pkz2ON6P+qcjTksXTBCayRuxY+8FjxxpLBiosPZhoaqfjuR+q1fYXR5FiyypVrFb6W
+         d4lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxVvzn7qWs+vcLjMvX4QiFY2pL6lOl7+T9h1GaUeC7BN3cyqrwHyL6kMd23LYpvV6DXMBUripBWsgr4qRa1f64@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy7/tGtUSwx3Vz7Ns7yH6HXn5yk5039fAdTAZwbmL1XlvP2jTx
+	KdfdUJ5aU7ikdAix0AGLg/HQjTJeq7Y0CbbPFRSYeoOnTwy6uP+1nVzgKCvJX5QGskRmzX4CUJF
+	OE07bNqpGvg==
+X-Received: from dlbrh17.prod.google.com ([2002:a05:7022:f311:b0:12a:70c3:eda4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec17:b0:124:11af:7b75
+ with SMTP id a92af1059eb24-12bfb76f2a2mr2106655c88.34.1775248854355; Fri, 03
+ Apr 2026 13:40:54 -0700 (PDT)
+Date: Fri,  3 Apr 2026 13:40:05 -0700
 In-Reply-To: <20260403204017.2919994-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ Mime-Version: 1.0
 References: <CAP-5=fXDd2_uqRHGOrbbjsAjbunsW67P-kONsmhm6UZWQUc-2w@mail.gmail.com>
  <20260403204017.2919994-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260403204017.2919994-12-irogers@google.com>
-Subject: [PATCH v5 11/25] perf hist: Remove evsel parameter from inc samples functions
+Message-ID: <20260403204017.2919994-14-irogers@google.com>
+Subject: [PATCH v5 13/25] perf hist: Remove evsel from struct hist_entry_iter
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -77,243 +77,324 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-hist_entry__inc_addr_samples and addr_map_symbol__inc_samples
-unnecessarily take an evsel argument. Read the evsel from the sample
-instead.
+struct hist_entry_iter has the sample within it so the evsel is
+unnecessary. Remove the evsel and update uses. Also remove the evsel
+from hist__account_cycles and derive it from the sample too.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-annotate.c |  7 +++----
- tools/perf/builtin-c2c.c      |  2 +-
- tools/perf/builtin-report.c   | 18 ++++++++----------
- tools/perf/builtin-top.c      |  6 +++---
- tools/perf/util/annotate.c    | 19 +++++++++----------
- tools/perf/util/annotate.h    |  6 ++----
- 6 files changed, 26 insertions(+), 32 deletions(-)
+ tools/perf/builtin-annotate.c     | 10 ++++------
+ tools/perf/builtin-diff.c         |  3 +--
+ tools/perf/builtin-report.c       |  6 ++----
+ tools/perf/builtin-top.c          |  9 +++------
+ tools/perf/tests/hists_cumulate.c |  1 -
+ tools/perf/tests/hists_filter.c   |  1 -
+ tools/perf/tests/hists_output.c   |  1 -
+ tools/perf/util/hist.c            | 24 ++++++++++++------------
+ tools/perf/util/hist.h            |  3 +--
+ 9 files changed, 23 insertions(+), 35 deletions(-)
 
 diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index c97a0fe159f8..c2d0599fe5f5 100644
+index c2d0599fe5f5..041f5dc92ea8 100644
 --- a/tools/perf/builtin-annotate.c
 +++ b/tools/perf/builtin-annotate.c
-@@ -177,16 +177,15 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct hist_entry *he = iter->he;
- 	struct branch_info *bi;
- 	struct perf_sample *sample = iter->sample;
--	struct evsel *evsel = iter->evsel;
- 	int err;
- 
- 	bi = he->branch_info;
--	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->from, sample);
- 
- 	if (err)
- 		goto out;
- 
--	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->to, sample);
- 
- out:
+@@ -191,14 +191,12 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
  	return err;
-@@ -276,7 +275,7 @@ static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
- 	if (he == NULL)
- 		return -ENOMEM;
- 
--	ret = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+	ret = hist_entry__inc_addr_samples(he, sample, al->addr);
- 	hists__inc_nr_samples(hists, true);
- 	return ret;
  }
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index f9ac871264af..5684c14c2bf6 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -371,7 +371,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
  
- 	if (perf_c2c__has_annotation(NULL)) {
- 		perf_c2c__evsel_hists_inc_stats(evsel, he, sample);
--		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample, evsel);
-+		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample);
- 	}
+-static int process_branch_callback(struct evsel *evsel,
+-				   struct perf_sample *sample,
++static int process_branch_callback(struct perf_sample *sample,
+ 				   struct addr_location *al,
+ 				   struct perf_annotate *ann,
+ 				   struct machine *machine)
+ {
+ 	struct hist_entry_iter iter = {
+-		.evsel		= evsel,
+ 		.sample		= sample,
+ 		.add_entry_cb	= hist_iter__branch_callback,
+ 		.hide_unresolved	= symbol_conf.hide_unresolved,
+@@ -221,8 +219,8 @@ static int process_branch_callback(struct evsel *evsel,
+ 	if (a.map != NULL)
+ 		dso__set_hit(map__dso(a.map));
  
- 	ret = hist_entry__append_callchain(he, sample);
+-	hist__account_cycles(sample->branch_stack, al, sample, false,
+-			     NULL, evsel);
++	hist__account_cycles(sample->branch_stack, al, sample, /*nonany_branch_mode=*/false,
++			     /*total_cycles=*/NULL);
+ 
+ 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
+ out:
+@@ -269,7 +267,7 @@ static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
+ 	process_branch_stack(sample->branch_stack, al, sample);
+ 
+ 	if (ann->has_br_stack && has_annotation(ann))
+-		return process_branch_callback(evsel, sample, al, ann, machine);
++		return process_branch_callback(sample, al, ann, machine);
+ 
+ 	he = hists__add_entry(hists, al, NULL, NULL, NULL, NULL, sample, true);
+ 	if (he == NULL)
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 096adc65451c..67cf5bbaab29 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -397,7 +397,6 @@ static int diff__process_sample_event(const struct perf_tool *tool,
+ 	struct evsel *evsel = sample->evsel;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry_iter iter = {
+-		.evsel	= evsel,
+ 		.sample	= sample,
+ 		.ops	= &hist_iter_normal,
+ 	};
+@@ -431,7 +430,7 @@ static int diff__process_sample_event(const struct perf_tool *tool,
+ 		}
+ 
+ 		hist__account_cycles(sample->branch_stack, &al, sample,
+-				     false, NULL, evsel);
++				     /*nonany_branch_mode=*/false, /*total_cycles=*/NULL);
+ 		break;
+ 
+ 	case COMPUTE_STREAM:
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 507002cbdd5b..39968ae5cfb0 100644
+index 39968ae5cfb0..1051d7b75361 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -170,7 +170,6 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
- 	int err = 0;
- 	struct report *rep = arg;
- 	struct hist_entry *he = iter->he;
--	struct evsel *evsel = iter->evsel;
- 	struct perf_sample *sample = iter->sample;
- 	struct mem_info *mi;
- 	struct branch_info *bi;
-@@ -180,25 +179,25 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
- 
- 	if (sort__mode == SORT_MODE__BRANCH) {
- 		bi = he->branch_info;
--		err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+		err = addr_map_symbol__inc_samples(&bi->from, sample);
- 		if (err)
- 			goto out;
- 
--		err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+		err = addr_map_symbol__inc_samples(&bi->to, sample);
- 
- 	} else if (rep->mem_mode) {
- 		mi = he->mem_info;
--		err = addr_map_symbol__inc_samples(mem_info__daddr(mi), sample, evsel);
-+		err = addr_map_symbol__inc_samples(mem_info__daddr(mi), sample);
- 		if (err)
- 			goto out;
- 
--		err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+		err = hist_entry__inc_addr_samples(he, sample, al->addr);
- 
- 	} else if (symbol_conf.cumulate_callchain) {
- 		if (single)
--			err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+			err = hist_entry__inc_addr_samples(he, sample, al->addr);
- 	} else {
--		err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+		err = hist_entry__inc_addr_samples(he, sample, al->addr);
+@@ -270,10 +270,8 @@ static int process_sample_event(const struct perf_tool *tool,
+ 				struct machine *machine)
+ {
+ 	struct report *rep = container_of(tool, struct report, tool);
+-	struct evsel *evsel = sample->evsel;
+ 	struct addr_location al;
+ 	struct hist_entry_iter iter = {
+-		.evsel 			= evsel,
+ 		.sample 		= sample,
+ 		.hide_unresolved 	= symbol_conf.hide_unresolved,
+ 		.add_entry_cb 		= hist_iter__report_callback,
+@@ -285,7 +283,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		return 0;
  	}
  
- out:
-@@ -214,7 +213,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct report *rep = arg;
- 	struct branch_info *bi = he->branch_info;
- 	struct perf_sample *sample = iter->sample;
--	struct evsel *evsel = iter->evsel;
- 	int err;
- 
- 	branch_type_count(&rep->brtype_stat, &bi->flags,
-@@ -223,11 +221,11 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
+-	if (evswitch__discard(&rep->evswitch, evsel))
++	if (evswitch__discard(&rep->evswitch, sample->evsel))
  		return 0;
  
--	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->from, sample);
- 	if (err)
- 		goto out;
+ 	addr_location__init(&al);
+@@ -329,7 +327,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 	if (ui__has_annotation() || rep->symbol_ipc || rep->total_cycles_mode) {
+ 		hist__account_cycles(sample->branch_stack, &al, sample,
+ 				     rep->nonany_branch_mode,
+-				     &rep->total_cycles, evsel);
++				     &rep->total_cycles);
+ 	}
  
--	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->to, sample);
- 
- out:
- 	return err;
+ 	rep->total_samples++;
 diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 37950efb28ac..b879592ae745 100644
+index b879592ae745..a66666e89f67 100644
 --- a/tools/perf/builtin-top.c
 +++ b/tools/perf/builtin-top.c
-@@ -199,7 +199,7 @@ static void ui__warn_map_erange(struct map *map, struct symbol *sym, u64 ip)
- static void perf_top__record_precise_ip(struct perf_top *top,
- 					struct hist_entry *he,
- 					struct perf_sample *sample,
--					struct evsel *evsel, u64 ip)
-+					u64 ip)
- 	EXCLUSIVE_LOCKS_REQUIRED(he->hists->lock)
+@@ -732,20 +732,18 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
+ 	EXCLUSIVE_LOCKS_REQUIRED(iter->he->hists->lock)
  {
- 	struct annotation *notes;
-@@ -216,7 +216,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 	if (!annotation__trylock(notes))
- 		return;
- 
--	err = hist_entry__inc_addr_samples(he, sample, evsel, ip);
-+	err = hist_entry__inc_addr_samples(he, sample, ip);
- 
- 	annotation__unlock(notes);
- 
-@@ -735,7 +735,7 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
- 	struct evsel *evsel = iter->evsel;
+ 	struct perf_top *top = arg;
+-	struct evsel *evsel = iter->evsel;
  
  	if (perf_hpp_list.sym && single)
--		perf_top__record_precise_ip(top, iter->he, iter->sample, evsel, al->addr);
-+		perf_top__record_precise_ip(top, iter->he, iter->sample, al->addr);
+ 		perf_top__record_precise_ip(top, iter->he, iter->sample, al->addr);
  
  	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
  			     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 63f0ee9d4c03..d97cb087a63e 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -214,9 +214,10 @@ static int __symbol__account_cycles(struct cyc_hist *ch,
- }
- 
- static int __symbol__inc_addr_samples(struct map_symbol *ms,
--				      struct annotated_source *src, struct evsel *evsel, u64 addr,
-+				      struct annotated_source *src, u64 addr,
- 				      struct perf_sample *sample)
- {
-+	struct evsel *evsel = sample->evsel;
- 	struct symbol *sym = ms->sym;
- 	long hash_key;
- 	u64 offset;
-@@ -319,7 +320,7 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists)
- }
- 
- static int symbol__inc_addr_samples(struct map_symbol *ms,
--				    struct evsel *evsel, u64 addr,
-+				    u64 addr,
- 				    struct perf_sample *sample)
- {
- 	struct symbol *sym = ms->sym;
-@@ -327,8 +328,8 @@ static int symbol__inc_addr_samples(struct map_symbol *ms,
- 
- 	if (sym == NULL)
- 		return 0;
--	src = symbol__hists(sym, evsel->evlist->core.nr_entries);
--	return src ? __symbol__inc_addr_samples(ms, src, evsel, addr, sample) : 0;
-+	src = symbol__hists(sym, sample->evsel->evlist->core.nr_entries);
-+	return src ? __symbol__inc_addr_samples(ms, src, addr, sample) : 0;
- }
- 
- static int symbol__account_br_cntr(struct annotated_branch *branch,
-@@ -582,16 +583,14 @@ static int annotation__compute_ipc(struct annotation *notes, size_t size,
+-			     NULL, evsel);
++			     /*total_cycles=*/NULL);
  	return 0;
  }
  
--int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
--				 struct evsel *evsel)
-+int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample)
+ static void perf_event__process_sample(const struct perf_tool *tool,
+ 				       const union perf_event *event,
+-				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       struct machine *machine)
  {
--	return symbol__inc_addr_samples(&ams->ms, evsel, ams->al_addr, sample);
-+	return symbol__inc_addr_samples(&ams->ms, ams->al_addr, sample);
- }
+@@ -831,9 +829,8 @@ static void perf_event__process_sample(const struct perf_tool *tool,
+ 	}
  
--int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample,
--				 struct evsel *evsel, u64 ip)
-+int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample, u64 ip)
+ 	if (al.sym == NULL || !al.sym->idle) {
+-		struct hists *hists = evsel__hists(evsel);
++		struct hists *hists = evsel__hists(sample->evsel);
+ 		struct hist_entry_iter iter = {
+-			.evsel		= evsel,
+ 			.sample 	= sample,
+ 			.add_entry_cb 	= hist_iter__top_callback,
+ 		};
+@@ -1211,7 +1208,7 @@ static int deliver_event(struct ordered_events *qe,
+ 	}
+ 
+ 	if (event->header.type == PERF_RECORD_SAMPLE) {
+-		perf_event__process_sample(&top->tool, event, evsel,
++		perf_event__process_sample(&top->tool, event,
+ 					   &sample, machine);
+ 	} else if (event->header.type == PERF_RECORD_LOST) {
+ 		perf_top__process_lost(top, event, evsel);
+diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
+index 606aa926a8fc..267cbc24691a 100644
+--- a/tools/perf/tests/hists_cumulate.c
++++ b/tools/perf/tests/hists_cumulate.c
+@@ -87,7 +87,6 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 	addr_location__init(&al);
+ 	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 		struct hist_entry_iter iter = {
+-			.evsel = evsel,
+ 			.sample	= &sample,
+ 			.hide_unresolved = false,
+ 		};
+diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
+index cc6b26e373d1..002e3a4c1ca5 100644
+--- a/tools/perf/tests/hists_filter.c
++++ b/tools/perf/tests/hists_filter.c
+@@ -63,7 +63,6 @@ static int add_hist_entries(struct evlist *evlist,
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 			struct hist_entry_iter iter = {
+-				.evsel = evsel,
+ 				.sample = &sample,
+ 				.ops = &hist_iter_normal,
+ 				.hide_unresolved = false,
+diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
+index 7818950d786e..fa683fd7b1e5 100644
+--- a/tools/perf/tests/hists_output.c
++++ b/tools/perf/tests/hists_output.c
+@@ -57,7 +57,6 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 	addr_location__init(&al);
+ 	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 		struct hist_entry_iter iter = {
+-			.evsel = evsel,
+ 			.sample = &sample,
+ 			.ops = &hist_iter_normal,
+ 			.hide_unresolved = false,
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index f51fd439d2dd..4e9a6e3b2a99 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -935,8 +935,8 @@ iter_add_single_mem_entry(struct hist_entry_iter *iter, struct addr_location *al
  {
--	return symbol__inc_addr_samples(&he->ms, evsel, ip, sample);
-+	return symbol__inc_addr_samples(&he->ms, ip, sample);
- }
+ 	u64 cost;
+ 	struct mem_info *mi = iter->mi;
+-	struct hists *hists = evsel__hists(iter->evsel);
+ 	struct perf_sample *sample = iter->sample;
++	struct hists *hists = evsel__hists(sample->evsel);
+ 	struct hist_entry *he;
  
+ 	if (mi == NULL)
+@@ -968,7 +968,7 @@ static int
+ iter_finish_mem_entry(struct hist_entry_iter *iter,
+ 		      struct addr_location *al __maybe_unused)
+ {
+-	struct evsel *evsel = iter->evsel;
++	struct evsel *evsel = iter->sample->evsel;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry *he = iter->he;
+ 	int err = -EINVAL;
+@@ -1036,9 +1036,9 @@ static int
+ iter_add_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
+ {
+ 	struct branch_info *bi;
+-	struct evsel *evsel = iter->evsel;
+-	struct hists *hists = evsel__hists(evsel);
+ 	struct perf_sample *sample = iter->sample;
++	struct evsel *evsel = sample->evsel;
++	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry *he = NULL;
+ 	int i = iter->curr;
+ 	int err = 0;
+@@ -1078,7 +1078,7 @@ static int
+ iter_finish_branch_entry(struct hist_entry_iter *iter,
+ 			 struct addr_location *al __maybe_unused)
+ {
+-	struct evsel *evsel = iter->evsel;
++	struct evsel *evsel = iter->sample->evsel;
+ 	struct hists *hists = evsel__hists(evsel);
  
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 696e36dbf013..1aa6df7d1618 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -422,8 +422,7 @@ static inline struct annotation *symbol__annotation(struct symbol *sym)
- 	return (void *)sym - symbol_conf.priv_size;
- }
+ 	for (int i = 0; i < iter->total; i++)
+@@ -1103,8 +1103,8 @@ iter_prepare_normal_entry(struct hist_entry_iter *iter __maybe_unused,
+ static int
+ iter_add_single_normal_entry(struct hist_entry_iter *iter, struct addr_location *al)
+ {
+-	struct evsel *evsel = iter->evsel;
+ 	struct perf_sample *sample = iter->sample;
++	struct evsel *evsel = sample->evsel;
+ 	struct hist_entry *he;
  
--int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
--				 struct evsel *evsel);
-+int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample);
+ 	he = hists__add_entry(evsel__hists(evsel), al, iter->parent, NULL, NULL,
+@@ -1121,8 +1121,8 @@ iter_finish_normal_entry(struct hist_entry_iter *iter,
+ 			 struct addr_location *al __maybe_unused)
+ {
+ 	struct hist_entry *he = iter->he;
+-	struct evsel *evsel = iter->evsel;
+ 	struct perf_sample *sample = iter->sample;
++	struct evsel *evsel = sample->evsel;
  
- struct annotated_branch *annotation__get_branch(struct annotation *notes);
+ 	if (he == NULL)
+ 		return 0;
+@@ -1165,9 +1165,9 @@ static int
+ iter_add_single_cumulative_entry(struct hist_entry_iter *iter,
+ 				 struct addr_location *al)
+ {
+-	struct evsel *evsel = iter->evsel;
+-	struct hists *hists = evsel__hists(evsel);
+ 	struct perf_sample *sample = iter->sample;
++	struct evsel *evsel = sample->evsel;
++	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry **he_cache = iter->he_cache;
+ 	struct hist_entry *he;
+ 	int err = 0;
+@@ -1224,8 +1224,8 @@ static int
+ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 			       struct addr_location *al)
+ {
+-	struct evsel *evsel = iter->evsel;
+ 	struct perf_sample *sample = iter->sample;
++	struct evsel *evsel = sample->evsel;
+ 	struct hist_entry **he_cache = iter->he_cache;
+ 	struct hist_entry *he;
+ 	struct hist_entry he_tmp = {
+@@ -2826,7 +2826,7 @@ int hists__unlink(struct hists *hists)
  
-@@ -433,8 +432,7 @@ int addr_map_symbol__account_cycles(struct addr_map_symbol *ams,
- 				    struct evsel *evsel,
- 				    u64 br_cntr);
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 			  struct perf_sample *sample, bool nonany_branch_mode,
+-			  u64 *total_cycles, struct evsel *evsel)
++			  u64 *total_cycles)
+ {
+ 	struct branch_info *bi;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
+@@ -2850,7 +2850,7 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 			for (int i = bs->nr - 1; i >= 0; i--) {
+ 				addr_map_symbol__account_cycles(&bi[i].from,
+ 					nonany_branch_mode ? NULL : prev,
+-					bi[i].flags.cycles, evsel,
++					bi[i].flags.cycles, sample->evsel,
+ 					bi[i].branch_stack_cntr);
+ 				prev = &bi[i].to;
  
--int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample,
--				 struct evsel *evsel, u64 addr);
-+int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample, u64 addr);
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index d97a4efb9250..8fb89d81ef06 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -156,7 +156,6 @@ struct hist_entry_iter {
+ 	int total;
+ 	int curr;
  
- struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
- void symbol__annotate_zero_histograms(struct symbol *sym);
+-	struct evsel *evsel;
+ 	struct perf_sample *sample;
+ 	struct hist_entry *he;
+ 	struct symbol *parent;
+@@ -799,7 +798,7 @@ unsigned int hists__overhead_width(struct hists *hists);
+ 
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 			  struct perf_sample *sample, bool nonany_branch_mode,
+-			  u64 *total_cycles, struct evsel *evsel);
++			  u64 *total_cycles);
+ 
+ struct option;
+ int parse_filter_percentage(const struct option *opt, const char *arg, int unset);
 -- 
 2.53.0.1213.gd9a14994de-goog
 
