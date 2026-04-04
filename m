@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA68914F112;
-	Sat,  4 Apr 2026 00:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38D1DFD96
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 00:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775261701; cv=none; b=P2Xp8Im0Qu3sdfh42ijwEvrj6T92X0Fdv6+FLRXB6h2WR32eqWhYlVfaLqupx0LydMv9SjovIq1iGgErPritg/8u5K58Y9eErl//a5YKjTtkD+qJBQydKUMng/rBNPAnBYYFRVYCsE57FJh5ZErKcv+hbtLVnk5AbpWZEmClfOg=
+	t=1775261702; cv=none; b=OQISml4OcocM9Q+B6DDfG8i9uAytNMFMV3X7H/fwgjeBPkNE8CnyvR5GpTBqhKB91+aPCpGGQGwdgkCFGcE+dxO9Nayt4uef7uUhW0LvX6/x8q4XGCm8QIjSNdZQbOMLygPrAZ3RqVqzfkYz0k5oBIe7YTccO4zWgvTGLLq+QYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775261701; c=relaxed/simple;
-	bh=a1cA2VuH9gx7o5zyfrOR9t8QM2OgfKxSfh7Z8o/lYKI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JwME8XaMM8l8aJ9tepzmw1cYNqpG7L38FkI25KKEu/99mnyltUaWXTqzXKlUcVXS+TCZDQ85p+zdy3oOVPvVyNCTImbN+GivAc4yhXjLXXkrMhvyfzVIacFeG7gI6enzT4BVGt1H2DNLbQ+MxCYRUIkuXT62oZWTOM2iooRmSwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7RJwPq5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775261702; c=relaxed/simple;
+	bh=W2pW0QrsxXm4iSgx2dx0lJpJRttWNhdvHB5F275Fp5c=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FfXpZ5FOzoXKz98r4TYlu0wU6Dvh+I9WgLKzTlWf9GP3CWpT/8iT53KP6GSfpOo80MpSEMBsiiBzd0XNTz6mLdMqRrg55l8PfHLqPA+gEZdlsHq88eHuS85VYCuPvQaFzefDOHcXrrE7+h4ibWftUc4MO5UGC+wb+x8eOV+oq/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSvr3D8X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7RJwPq5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F76C19423;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSvr3D8X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D310BC2BCB2;
 	Sat,  4 Apr 2026 00:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775261701;
-	bh=a1cA2VuH9gx7o5zyfrOR9t8QM2OgfKxSfh7Z8o/lYKI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=R7RJwPq5P7YZbwq2z+dASC1/BE9GNbHd54E6NhuIo2Oy9NGwiQjAN3FfQPV5uoReq
-	 x+Fjr1SKsjk+EwJcgjIELBuqTsPl3PzOqERQoISjBoXD+ya1xbiChwBiDMN8MBvqQH
-	 MX50y/oFMx+eiMPkq3l2I+HGzZ3Act8gJptF0vq8w76s8CZs9zJpOlYE1k1C4sNBL/
-	 UVAx5Y1qAr6jhZwaeytwb/LhW1hQ0XRzpLbuuGv1cnbdGWql1/u4AfZPPGl4/ZZK57
-	 A++JDPys0/Z+Ar3lauhGm/t7w6PWMJheLbN3Uc/eq94KO9kKMUEmesFjpHIKcKuk45
-	 7UlskaI4ubvKQ==
+	s=k20201202; t=1775261702;
+	bh=W2pW0QrsxXm4iSgx2dx0lJpJRttWNhdvHB5F275Fp5c=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=uSvr3D8XQ8yB/auVBa+sj4YFHp3h4BMA5NallQWsdYPy8P6toTTk49rlUJIBexwCQ
+	 WJKpSKJULei0uhzA9ESk8yC6ggc49Xj0boAhGmYeeBQAVgtmwG5gWuAuHIADkW9i8I
+	 iMM0LKkASXcug5nqgPl3i6ciZvW7/jzoPZNZhQNdOtlLYU5PT8AmFrQZK95gMO8/Bg
+	 hpMjwLrnNxMikUr3nH2GgB2EAOHhuaFjTV9kIGp6sZoK3y7H+tEXXzIC2wji4Pvf4O
+	 6iu4ImWLPFnCkvN1/0sJby4zopjPkc8q3zSjr68UdxyH0vyW8CggQMWqwREOoTxKpJ
+	 mRwMqUxpyj1yw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- SeungJu Cheon <suunj1331@gmail.com>
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
- me@brighamcampbell.com, shuah@kernel.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-In-Reply-To: <20260402160410.425978-1-suunj1331@gmail.com>
-References: <20260402160410.425978-1-suunj1331@gmail.com>
-Subject: Re: [PATCH v3] perf header: Validate build_id filename length to
- prevent buffer overflow
-Message-Id: <177526170118.2123878.2776545631982676157.b4-ty@kernel.org>
+To: linux-perf-users@vger.kernel.org, irogers@google.com, acme@redhat.com, 
+ Michael Petlan <mpetlan@redhat.com>
+In-Reply-To: <20260402145118.1379546-1-mpetlan@redhat.com>
+References: <20260331101020.1270363-1-mpetlan@redhat.com>
+ <20260402145118.1379546-1-mpetlan@redhat.com>
+Subject: Re: [PATCH v2] perf trace: Fix potential u64 underflow in duration
+ calculation
+Message-Id: <177526170182.2123878.7712855657688931086.b4-ty@kernel.org>
 Date: Fri, 03 Apr 2026 17:15:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -49,16 +46,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 03 Apr 2026 01:04:10 +0900, SeungJu Cheon wrote:
-> The build_id parsing functions calculate a filename length from the
-> event header size and read directly into a stack buffer of PATH_MAX
-> bytes without bounds checking. A malformed perf.data file with a
-> crafted header.size can cause the length to be negative or exceed
-> PATH_MAX, resulting in a stack buffer overflow.
+On Thu, 02 Apr 2026 16:51:18 +0200, Michael Petlan wrote:
+> Although it happens very rarely, in case of out-of-order events (i.e.
+> due to CPU migration when a syscall is executed), the calculation of
+> event duration might underflow and thus a bogus value is printed:
 > 
-> Add bounds checking for the filename length in both
-> perf_header__read_build_ids() and the ABI quirk variant. Print a
-> warning message when invalid length is detected.
+>     2.804 ( 0.001 ms): :49553/49553 rt_sigaction(sig: QUIT, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
+>     2.807 ( 0.001 ms): :49553/49553 rt_sigaction(sig: CHLD, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
+>     2.815 (18446744073709.438 ms): :49553/49553 execve(filename: 0xbb173a30, argv: 0x55aabb171930, envp: 0x55aabb171120) = 0
+>     2.815 ( 0.534 ms): pwd/49553  ... [continued]: execve())                                           = 0
 > 
 > [...]
 Applied to perf-tools-next, thanks!
