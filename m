@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BCA33689B
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B0033372D
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775274238; cv=none; b=rz9nL1B27/5dwNBdOmvtsFNc89QCr/Tk2cYMySPLLAzYOnblcb92EeI90d+dhRfTLkhohwSFDlLZHkHMfMhr+Gy/Ax8RC/XLHE/8MsW43bAuweHke2CviOAactQG6FDGN9eh6ElpP3HVrxEkeJ20rOsbFolUvGwKMZHHMwW1MfY=
+	t=1775274241; cv=none; b=lctPY3AQD9RuHgVoGUwbiDdUoiKlUWJtuKXOgvSV1c8lu1JBP0sG/E+ccBVk15SAwduzvX49A1XgzYqvB3BcNhvf5pgppR+WiCYbMp3egv0ane52o3vISAGVhde3CSJs2iwHg/8OvLPGRHUsV68tDJXgLARLaQTj6ogFcm5wtjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775274238; c=relaxed/simple;
-	bh=TmERjTsfCchcvnBxTVFCTL/3bw750/9drXxVZNCyUuA=;
+	s=arc-20240116; t=1775274241; c=relaxed/simple;
+	bh=SYrJANGR3+3OE2V0oHZ0BNrkaTsib9ddsYIXs4rLT8E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C/K+f2JgKngv18uIUSN4ik53g5d08c335YSUuL5X7OYpXwLg3sTTDV/KWfj9oG5RnrHohgkr/3ICKisp5qw8850TLeJCuclcAdAmEGbela3q7XKu1WRzUGeBjNMumEw8vWLf1e0UOJ2XeWfJZSGaCeVK4GTvzoSbIJdK3W6Dotk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V7T13/V4; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=UvM/i1CebOhsSlZjRdv6MrT+sr1I0bAwCMj/5B/U5yF6l6eqIXeQUO8grd3rLX2oTC+uEgsjhYjN8yDlW3ewZ40Eaggwx2elKtxCV4zKA5hrnyl06x3UHWbULc34A/I9C4DUyZxRltByw+RREL+Pk6HoVqxRtxKTwJEbA2ZFQoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=avr+WZPC; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V7T13/V4"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdf75bc88fso3061790eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="avr+WZPC"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-127133794b6so3726260c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775274234; x=1775879034; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775274239; x=1775879039; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7eSS/UcOnmpfy2TnTgmbIFWY3hFTWBkqu+oSCILmctM=;
-        b=V7T13/V4lHcMddXY7Xn5izd6ogBjze/VeA78ezI+d4hs3wVlH74dqM4ZNgSogEAKVR
-         OwLsUD1s/DbsoQCvlgD0uLT0pEBM8WLGgH2VG4JzWPddRRrz1p0qyicFBfmNrnt6cQLC
-         B6hOoyyXl7b4PMdgvGr4X4Nm7UY6LeTWfcA7owHdk5/Cig1TzOMfjqAvamQjjUweiGOO
-         ayRUnXwEFsjBmHTRq1qyv2fmVqx/ORPFVTdeospHtBgoz7+BibWkE4tpcBTMeuFeh1Bd
-         kqmJ98h+xDnnZmJy970yhyX0fl7gODWbYQH0VvvIWt3HI8pCTu0fQkxpW53nuBLMP0bf
-         5/DQ==
+        bh=n1+MYX0+5YGMm7TjdJ/WWiuEu/OsAkIHeLC0vTnO8zk=;
+        b=avr+WZPC+7eX/+lzHKqCtsBbv05b1eAppgLHHc34E6oio7Ayo+Qmk7IRlveyXYimpS
+         22/UnqS7zKvK/LmW8UUGOX/fLzyFX3qvJgjrYdwgBsvk8VXZjvPbIKXhHZqMnjOOqLtg
+         9Vd3tUxaw4qno/RDofqvsJHmqNRWjh0Y0cnIvXBIjxc1xdeHHHwFV+tnUkHj1dZccbT/
+         9nOxIi49yuiGIaGNghB8IouZs0tO7cV+DzUwA0DjqxN+h1h/eZ0xq0ULQZTSbqj0W9sg
+         DT2lU+4VViw4L0xsoaI+6kC2SJcxg4YwISRpi4/SBOV7+ecoU/hzx3tBJTk615gAfdK/
+         3F2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775274234; x=1775879034;
+        d=1e100.net; s=20251104; t=1775274239; x=1775879039;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7eSS/UcOnmpfy2TnTgmbIFWY3hFTWBkqu+oSCILmctM=;
-        b=UsEval5aJ5VQPsbDjh3bjye2lToCQ1vQXc+Z12ReVGt9G7CmcSik5t/ZLkTVW4YqJh
-         v7tGhJRyOGG47OQMrzBcCjhZP39vZ8197g1CAZofOqvzpb7OwPTQ0IJt9sfHwLdxw5UD
-         wXVKll2gPNgVEShox7t1kZ31kJuU2wnZtHKLgz24pSTJJSUB/iMwJo8que1jKQjRK6sJ
-         YBCOr7Nys991C/E4AJoN+noyNONbDsiB5BfhPh4e7WtqfyMChEA9/EH2YWQOvX/cHscu
-         0xtAZWLRO9nQXpCCzi2IIdFeZuSlBGMwqFDCZ0ZYfvGn0NKMBmBCdWvW/cDGl0iUeeZu
-         mKDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnTBqo0MlG631R3kKa+BmA7ms9cAVbjwv08sI7/yGZZ+n7Dm9zNzEM6XpaE8ypmqp0RVzI7cejEMAWZjodB8H+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwASZqDhtuOEv8RFEn3F9Pi95pdv1ivbH+fvQur5qqKSjX7FUCV
-	OTJUJibIoSibO26Bx+tQmBxC4vo1WlcU0xs/yKeFvMYkJoJsiM+A6S4JlDGWWXNp/q+jl7hbgs5
-	w2VzmPZZdBw==
-X-Received: from dled10-n2.prod.google.com ([2002:a05:701b:42ca:20b0:12a:adb8:138b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:41f:b0:12a:6a64:81d9
- with SMTP id a92af1059eb24-12bfb6fba60mr2381361c88.13.1775274233625; Fri, 03
- Apr 2026 20:43:53 -0700 (PDT)
-Date: Fri,  3 Apr 2026 20:43:08 -0700
+        bh=n1+MYX0+5YGMm7TjdJ/WWiuEu/OsAkIHeLC0vTnO8zk=;
+        b=soXo3fM2azlJi8TAFt6O7VPXu3UeplC4MeIGcP9QGeL222riFaeNmSIYuTZoahKpCa
+         hI0MxEpcIeQ2As+eUgnZywUIzZI/B6EM+gODKC61gyHhd1ct3MIIoo+CHXd9Bp8o+IQp
+         5m77l/wnvFC2VfIZHAzKrduhaGoFx6qpop6A32KGRIcqpgYMPGh22kX04K5TkQZdB7Cx
+         JiDQDc0oW2zyIbgDLH796vbQAYBqvfKyAc8tktc11DY/vBXWnyAMsFYJ08f5j+dhwQSB
+         JL+PalXyE+Z2SX3cO1LiK7FEmMJxypBjWXr1kOgtpIrRH/BF2+wWrcB3QGnUrxZMq8F1
+         ymUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWH61cwWpZzjgNIQsX2qdVTIZXGERQNHIE/c+Qnuqn0R6c+CGtcU6ICUFpBL+S/EcuN1HEhP5iFtA9GB4Imo/qy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmnWQHiYHa7v5gxkNsPqlXhOq7nbTPrEL2YeYT1h+y14GPq01+
+	T12LZAikWOAgg1n62q/R9yTel0RREfIQe3RJDP2ZV+/DcbhYBFny0mAi44gxFB5Lx2JDWMAzzb0
+	RoabCp+8RBw==
+X-Received: from dlbts25-n1.prod.google.com ([2002:a05:7022:b059:10b0:12a:6ccc:6d06])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:43a8:b0:11b:9b98:aa4b
+ with SMTP id a92af1059eb24-12bfb6ec461mr2614294c88.6.1775274238390; Fri, 03
+ Apr 2026 20:43:58 -0700 (PDT)
+Date: Fri,  3 Apr 2026 20:43:10 -0700
 In-Reply-To: <20260404034325.3172592-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260403204017.2919994-1-irogers@google.com> <20260404034325.3172592-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260404034325.3172592-9-irogers@google.com>
-Subject: [PATCH v6 08/25] perf callchain: Don't pass evsel and sample
+Message-ID: <20260404034325.3172592-11-irogers@google.com>
+Subject: [PATCH v6 10/25] perf lock: Constify trace_lock_handler variables
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,574 +76,42 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Change callchain resolve code to not pass an evsel with the sample,
-instead just read the evsel from the sample.
+Structs don't change and so constify.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-c2c.c                      |  2 +-
- tools/perf/builtin-inject.c                   |  4 ++--
- tools/perf/builtin-kmem.c                     |  6 ++---
- tools/perf/builtin-kwork.c                    |  5 ++--
- tools/perf/builtin-lock.c                     | 24 +++++++++----------
- tools/perf/builtin-sched.c                    |  5 ++--
- tools/perf/builtin-script.c                   |  6 ++---
- tools/perf/builtin-trace.c                    |  2 +-
- tools/perf/util/build-id.c                    |  2 +-
- tools/perf/util/callchain.c                   |  8 +++----
- tools/perf/util/callchain.h                   |  6 ++---
- tools/perf/util/db-export.c                   |  8 +++----
- tools/perf/util/hist.c                        |  2 +-
- tools/perf/util/machine.c                     | 14 +++++------
- tools/perf/util/machine.h                     |  3 ---
- .../util/scripting-engines/trace-event-perl.c |  4 ++--
- .../scripting-engines/trace-event-python.c    |  4 ++--
- 17 files changed, 48 insertions(+), 57 deletions(-)
+ tools/perf/builtin-lock.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index dedd53cb5a86..9e4c647b9399 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -339,7 +339,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 
- 	cursor = get_tls_callchain_cursor();
- 	ret = sample__resolve_callchain(sample, cursor, NULL,
--					evsel, &al, sysctl_perf_event_max_stack);
-+					&al, sysctl_perf_event_max_stack);
- 	if (ret)
- 		goto out;
- 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 237ee708d689..ebcbe7a7202c 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -418,7 +418,7 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
- 		goto out;
- 
- 	/* this will parse DWARF using stack and register data */
--	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+	ret = thread__resolve_callchain(thread, cursor, sample,
- 					/*parent=*/NULL, /*root_al=*/NULL,
- 					PERF_MAX_STACK_DEPTH);
- 	thread__put(thread);
-@@ -1018,7 +1018,7 @@ static int perf_event__inject_buildid(const struct perf_tool *tool, union perf_e
- 			     /*sample_in_dso=*/true);
- 	}
- 
--	sample__for_each_callchain_node(thread, sample->evsel, sample, PERF_MAX_STACK_DEPTH,
-+	sample__for_each_callchain_node(thread, sample, PERF_MAX_STACK_DEPTH,
- 					/*symbols=*/false, mark_dso_hit_callback, &args);
- 	thread__put(thread);
- repipe:
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 4f3ff29d2a9f..b04f5d578e7a 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -394,7 +394,7 @@ static int build_alloc_func_list(void)
-  * Find first non-memory allocation function from callchain.
-  * The allocation functions are in the 'alloc_func_list'.
-  */
--static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
-+static u64 find_callsite(struct perf_sample *sample)
- {
- 	struct addr_location al;
- 	struct machine *machine = &kmem_session->machines.host;
-@@ -414,7 +414,7 @@ static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
- 	if (cursor == NULL)
- 		goto out;
- 
--	sample__resolve_callchain(sample, cursor, NULL, evsel, &al, 16);
-+	sample__resolve_callchain(sample, cursor, /*parent=*/NULL, &al, 16);
- 
- 	callchain_cursor_commit(cursor);
- 	while (true) {
-@@ -848,7 +848,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
- 	if (parse_gfp_flags(evsel, sample, gfp_flags) < 0)
- 		return -1;
- 
--	callsite = find_callsite(evsel, sample);
-+	callsite = find_callsite(sample);
- 
- 	/*
- 	 * This is to find the current page (with correct gfp flags and
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index dceb9b79aa6a..69ead3faea22 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -688,7 +688,6 @@ static int latency_entry_event(struct perf_kwork *kwork,
- 
- static void timehist_save_callchain(struct perf_kwork *kwork,
- 				    struct perf_sample *sample,
--				    struct evsel *evsel,
- 				    struct machine *machine)
- {
- 	struct symbol *sym;
-@@ -708,7 +707,7 @@ static void timehist_save_callchain(struct perf_kwork *kwork,
- 
- 	cursor = get_tls_callchain_cursor();
- 
--	if (thread__resolve_callchain(thread, cursor, evsel, sample,
-+	if (thread__resolve_callchain(thread, cursor, sample,
- 				      NULL, NULL, kwork->max_stack + 2) != 0) {
- 		pr_debug("Failed to resolve callchain, skipping\n");
- 		goto out_put;
-@@ -838,7 +837,7 @@ static int timehist_entry_event(struct perf_kwork *kwork,
- 		return ret;
- 
- 	if (work != NULL)
--		timehist_save_callchain(kwork, sample, evsel, machine);
-+		timehist_save_callchain(kwork, sample, machine);
- 
- 	return 0;
- }
 diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index cbf3a39c7837..e2b585e528ac 100644
+index 8ccb64415d3b..7b23d22d8f48 100644
 --- a/tools/perf/builtin-lock.c
 +++ b/tools/perf/builtin-lock.c
-@@ -551,13 +551,13 @@ static int get_key_by_aggr_mode_simple(u64 *key, u64 addr, u32 tid)
- 	return 0;
- }
+@@ -1182,7 +1182,7 @@ static int report_lock_contention_end_event(struct perf_sample *sample)
  
--static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample);
-+static u64 callchain_id(struct perf_sample *sample);
+ /* lock oriented handlers */
+ /* TODO: handlers for CPU oriented, thread oriented */
+-static struct trace_lock_handler report_lock_ops  = {
++static const struct trace_lock_handler report_lock_ops  = {
+ 	.acquire_event		= report_lock_acquire_event,
+ 	.acquired_event		= report_lock_acquired_event,
+ 	.contended_event	= report_lock_contended_event,
+@@ -1191,13 +1191,13 @@ static struct trace_lock_handler report_lock_ops  = {
+ 	.contention_end_event	= report_lock_contention_end_event,
+ };
  
--static int get_key_by_aggr_mode(u64 *key, u64 addr, struct evsel *evsel,
-+static int get_key_by_aggr_mode(u64 *key, u64 addr,
- 				 struct perf_sample *sample)
+-static struct trace_lock_handler contention_lock_ops  = {
++static const struct trace_lock_handler contention_lock_ops  = {
+ 	.contention_begin_event	= report_lock_contention_begin_event,
+ 	.contention_end_event	= report_lock_contention_end_event,
+ };
+ 
+ 
+-static struct trace_lock_handler *trace_handler;
++static const struct trace_lock_handler *trace_handler;
+ 
+ static int evsel__process_lock_acquire(struct perf_sample *sample)
  {
- 	if (aggr_mode == LOCK_AGGR_CALLER) {
--		*key = callchain_id(evsel, sample);
-+		*key = callchain_id(sample);
- 		return 0;
- 	}
- 	return get_key_by_aggr_mode_simple(key, addr, sample->tid);
-@@ -841,7 +841,7 @@ static int get_symbol_name_offset(struct map *map, struct symbol *sym, u64 ip,
- 	else
- 		return strlcpy(buf, sym->name, size);
- }
--static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sample,
-+static int lock_contention_caller(struct perf_sample *sample,
- 				  char *buf, int size)
- {
- 	struct thread *thread;
-@@ -862,7 +862,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
- 	cursor = get_tls_callchain_cursor();
- 
- 	/* use caller function name from the callchain */
--	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+	ret = thread__resolve_callchain(thread, cursor, sample,
- 					NULL, NULL, max_stack_depth);
- 	if (ret != 0) {
- 		thread__put(thread);
-@@ -896,7 +896,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
- 	return -1;
- }
- 
--static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
-+static u64 callchain_id(struct perf_sample *sample)
- {
- 	struct callchain_cursor *cursor;
- 	struct machine *machine = &session->machines.host;
-@@ -911,7 +911,7 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
- 
- 	cursor = get_tls_callchain_cursor();
- 	/* use caller function name from the callchain */
--	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+	ret = thread__resolve_callchain(thread, cursor, sample,
- 					NULL, NULL, max_stack_depth);
- 	thread__put(thread);
- 
-@@ -963,7 +963,7 @@ static u64 *get_callstack(struct perf_sample *sample, int max_stack)
- 	return callstack;
- }
- 
--static int report_lock_contention_begin_event(struct evsel *evsel,
-+static int report_lock_contention_begin_event(struct evsel *evsel __maybe_unused,
- 					      struct perf_sample *sample)
- {
- 	struct lock_stat *ls;
-@@ -978,7 +978,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 	struct map *kmap;
- 	struct symbol *sym;
- 
--	ret = get_key_by_aggr_mode(&key, addr, evsel, sample);
-+	ret = get_key_by_aggr_mode(&key, addr, sample);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1025,7 +1025,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 			break;
- 		case LOCK_AGGR_CALLER:
- 			name = buf;
--			if (lock_contention_caller(evsel, sample, buf, sizeof(buf)) < 0)
-+			if (lock_contention_caller(sample, buf, sizeof(buf)) < 0)
- 				name = "Unknown";
- 			break;
- 		case LOCK_AGGR_CGROUP:
-@@ -1127,7 +1127,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 	return 0;
- }
- 
--static int report_lock_contention_end_event(struct evsel *evsel,
-+static int report_lock_contention_end_event(struct evsel *evsel __maybe_unused,
- 					    struct perf_sample *sample)
- {
- 	struct lock_stat *ls;
-@@ -1138,7 +1138,7 @@ static int report_lock_contention_end_event(struct evsel *evsel,
- 	u64 key;
- 	int ret;
- 
--	ret = get_key_by_aggr_mode(&key, addr, evsel, sample);
-+	ret = get_key_by_aggr_mode(&key, addr, sample);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 3e7e8ad0bc13..b6271a5ec8de 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2330,7 +2330,6 @@ static bool is_idle_sample(struct perf_sample *sample,
- 
- static void save_task_callchain(struct perf_sched *sched,
- 				struct perf_sample *sample,
--				struct evsel *evsel,
- 				struct machine *machine)
- {
- 	struct callchain_cursor *cursor;
-@@ -2350,7 +2349,7 @@ static void save_task_callchain(struct perf_sched *sched,
- 
- 	cursor = get_tls_callchain_cursor();
- 
--	if (thread__resolve_callchain(thread, cursor, evsel, sample,
-+	if (thread__resolve_callchain(thread, cursor, sample,
- 				      NULL, NULL, sched->max_stack + 2) != 0) {
- 		if (verbose > 0)
- 			pr_err("Failed to resolve callchain. Skipping\n");
-@@ -2524,7 +2523,7 @@ static struct thread *timehist_get_thread(struct perf_sched *sched,
- 				 sample->tid);
- 		}
- 
--		save_task_callchain(sched, sample, evsel, machine);
-+		save_task_callchain(sched, sample, machine);
- 		if (sched->idle_hist) {
- 			struct thread *idle;
- 			struct idle_thread_runtime *itr;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 04cc5d64c174..5eb295944673 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1683,7 +1683,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
- 
- 		if (symbol_conf.use_callchain && sample->callchain) {
- 			cursor = get_tls_callchain_cursor();
--			if (thread__resolve_callchain(al->thread, cursor, evsel,
-+			if (thread__resolve_callchain(al->thread, cursor,
- 						      sample, NULL, NULL,
- 						      scripting_max_stack))
- 				cursor = NULL;
-@@ -2506,7 +2506,7 @@ static void process_event(struct perf_script *script,
- 
- 		if (symbol_conf.use_callchain && sample->callchain) {
- 			cursor = get_tls_callchain_cursor();
--			if (thread__resolve_callchain(al->thread, cursor, evsel,
-+			if (thread__resolve_callchain(al->thread, cursor,
- 						      sample, NULL, NULL,
- 						      scripting_max_stack))
- 				cursor = NULL;
-@@ -2791,7 +2791,7 @@ static int process_deferred_sample_event(const struct perf_tool *tool,
- 
- 		if (symbol_conf.use_callchain && sample->callchain) {
- 			cursor = get_tls_callchain_cursor();
--			if (thread__resolve_callchain(al.thread, cursor, evsel,
-+			if (thread__resolve_callchain(al.thread, cursor,
- 						      sample, NULL, NULL,
- 						      scripting_max_stack)) {
- 				pr_info("cannot resolve deferred callchains\n");
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5c8cced4ca9b..b694e1219807 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2909,7 +2909,7 @@ static int trace__resolve_callchain(struct trace *trace,
- 	if (machine__resolve(trace->host, &al, sample) < 0)
- 		goto out;
- 
--	err = thread__resolve_callchain(al.thread, cursor, evsel, sample, NULL, NULL, max_stack);
-+	err = thread__resolve_callchain(al.thread, cursor, sample, NULL, NULL, max_stack);
- out:
- 	addr_location__exit(&al);
- 	return err;
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 55b72235f891..af4d874f1381 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -73,7 +73,7 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
- 
- 	addr_location__exit(&al);
- 
--	sample__for_each_callchain_node(thread, sample->evsel, sample, PERF_MAX_STACK_DEPTH,
-+	sample__for_each_callchain_node(thread, sample, PERF_MAX_STACK_DEPTH,
- 					/*symbols=*/false, mark_dso_hit_callback, /*data=*/NULL);
- 
- 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index f031cbbeeba8..5c2282051e39 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1170,7 +1170,7 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
- 
- int sample__resolve_callchain(struct perf_sample *sample,
- 			      struct callchain_cursor *cursor, struct symbol **parent,
--			      struct evsel *evsel, struct addr_location *al,
-+			      struct addr_location *al,
- 			      int max_stack)
- {
- 	if (sample->callchain == NULL && !symbol_conf.show_branchflag_count)
-@@ -1178,7 +1178,7 @@ int sample__resolve_callchain(struct perf_sample *sample,
- 
- 	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain ||
- 	    perf_hpp_list.parent || symbol_conf.show_branchflag_count) {
--		return thread__resolve_callchain(al->thread, cursor, evsel, sample,
-+		return thread__resolve_callchain(al->thread, cursor, sample,
- 						 parent, al, max_stack);
- 	}
- 	return 0;
-@@ -1853,7 +1853,7 @@ s64 callchain_avg_cycles(struct callchain_node *cnode)
- 	return cycles;
- }
- 
--int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
-+int sample__for_each_callchain_node(struct thread *thread,
- 				    struct perf_sample *sample, int max_stack,
- 				    bool symbols, callchain_iter_fn cb, void *data)
- {
-@@ -1864,7 +1864,7 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
- 		return -ENOMEM;
- 
- 	/* Fill in the callchain. */
--	ret = __thread__resolve_callchain(thread, cursor, evsel, sample,
-+	ret = __thread__resolve_callchain(thread, cursor, sample,
- 					  /*parent=*/NULL, /*root_al=*/NULL,
- 					  max_stack, symbols);
- 	if (ret)
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 06d463ccc7a0..27d8e486dc22 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -8,11 +8,9 @@
- #include "branch.h"
- 
- struct addr_location;
--struct evsel;
- struct hist_entry;
- struct hists;
- struct ip_callchain;
--struct map;
- struct perf_sample;
- struct record_opts;
- struct thread;
-@@ -245,7 +243,7 @@ int record_opts__parse_callchain(struct record_opts *record,
- 
- int sample__resolve_callchain(struct perf_sample *sample,
- 			      struct callchain_cursor *cursor, struct symbol **parent,
--			      struct evsel *evsel, struct addr_location *al,
-+			      struct addr_location *al,
- 			      int max_stack);
- int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *sample);
- int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
-@@ -308,7 +306,7 @@ s64 callchain_avg_cycles(struct callchain_node *cnode);
- 
- typedef int (*callchain_iter_fn)(struct callchain_cursor_node *node, void *data);
- 
--int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
-+int sample__for_each_callchain_node(struct thread *thread,
- 				    struct perf_sample *sample, int max_stack,
- 				    bool symbols, callchain_iter_fn cb, void *data);
- 
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index ae9a9065aab7..a1f578c3a8d5 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -209,8 +209,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
- static struct call_path *call_path_from_sample(struct db_export *dbe,
- 					       struct machine *machine,
- 					       struct thread *thread,
--					       struct perf_sample *sample,
--					       struct evsel *evsel)
-+					       struct perf_sample *sample)
- {
- 	u64 kernel_start = machine__kernel_start(machine);
- 	struct call_path *current = &dbe->cpr->call_path;
-@@ -228,7 +227,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 	 */
- 	callchain_param.order = ORDER_CALLER;
- 	cursor = get_tls_callchain_cursor();
--	err = thread__resolve_callchain(thread, cursor, evsel,
-+	err = thread__resolve_callchain(thread, cursor,
- 					sample, NULL, NULL, PERF_MAX_STACK_DEPTH);
- 	if (err) {
- 		callchain_param.order = saved_order;
-@@ -391,8 +390,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 
- 	if (dbe->cpr) {
- 		struct call_path *cp = call_path_from_sample(dbe, machine,
--							     thread, sample,
--							     evsel);
-+							     thread, sample);
- 		if (cp) {
- 			db_export__call_path(dbe, cp);
- 			es.call_path_id = cp->db_id;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index fc737a0a8e4d..f51fd439d2dd 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1342,7 +1342,7 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
- 		alm = map__get(al->map);
- 
- 	err = sample__resolve_callchain(iter->sample, get_tls_callchain_cursor(), &iter->parent,
--					iter->evsel, al, max_stack_depth);
-+					al, max_stack_depth);
- 	if (err) {
- 		map__put(alm);
- 		return err;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index e76f8c86e62a..c2e0a99efe97 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2778,13 +2778,13 @@ static u64 get_leaf_frame_caller(struct perf_sample *sample,
- 
- static int thread__resolve_callchain_sample(struct thread *thread,
- 					    struct callchain_cursor *cursor,
--					    struct evsel *evsel,
- 					    struct perf_sample *sample,
- 					    struct symbol **parent,
- 					    struct addr_location *root_al,
- 					    int max_stack,
- 					    bool symbols)
- {
-+	struct evsel *evsel = sample->evsel;
- 	struct branch_stack *branch = sample->branch_stack;
- 	struct branch_entry *entries = perf_sample__branch_entries(sample);
- 	struct ip_callchain *chain = sample->callchain;
-@@ -2986,10 +2986,11 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 
- static int thread__resolve_callchain_unwind(struct thread *thread,
- 					    struct callchain_cursor *cursor,
--					    struct evsel *evsel,
- 					    struct perf_sample *sample,
- 					    int max_stack, bool symbols)
- {
-+	struct evsel *evsel = sample->evsel;
-+
- 	/* Can we do dwarf post unwind? */
- 	if (!((evsel->core.attr.sample_type & PERF_SAMPLE_REGS_USER) &&
- 	      (evsel->core.attr.sample_type & PERF_SAMPLE_STACK_USER)))
-@@ -3009,7 +3010,6 @@ static int thread__resolve_callchain_unwind(struct thread *thread,
- 
- int __thread__resolve_callchain(struct thread *thread,
- 				struct callchain_cursor *cursor,
--				struct evsel *evsel,
- 				struct perf_sample *sample,
- 				struct symbol **parent,
- 				struct addr_location *root_al,
-@@ -3025,22 +3025,22 @@ int __thread__resolve_callchain(struct thread *thread,
- 
- 	if (callchain_param.order == ORDER_CALLEE) {
- 		ret = thread__resolve_callchain_sample(thread, cursor,
--						       evsel, sample,
-+						       sample,
- 						       parent, root_al,
- 						       max_stack, symbols);
- 		if (ret)
- 			return ret;
- 		ret = thread__resolve_callchain_unwind(thread, cursor,
--						       evsel, sample,
-+						       sample,
- 						       max_stack, symbols);
- 	} else {
- 		ret = thread__resolve_callchain_unwind(thread, cursor,
--						       evsel, sample,
-+						       sample,
- 						       max_stack, symbols);
- 		if (ret)
- 			return ret;
- 		ret = thread__resolve_callchain_sample(thread, cursor,
--						       evsel, sample,
-+						       sample,
- 						       parent, root_al,
- 						       max_stack, symbols);
- 	}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 22a42c5825fa..048b24e9bd38 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -187,7 +187,6 @@ struct callchain_cursor;
- 
- int __thread__resolve_callchain(struct thread *thread,
- 				struct callchain_cursor *cursor,
--				struct evsel *evsel,
- 				struct perf_sample *sample,
- 				struct symbol **parent,
- 				struct addr_location *root_al,
-@@ -196,7 +195,6 @@ int __thread__resolve_callchain(struct thread *thread,
- 
- static inline int thread__resolve_callchain(struct thread *thread,
- 					    struct callchain_cursor *cursor,
--					    struct evsel *evsel,
- 					    struct perf_sample *sample,
- 					    struct symbol **parent,
- 					    struct addr_location *root_al,
-@@ -204,7 +202,6 @@ static inline int thread__resolve_callchain(struct thread *thread,
- {
- 	return __thread__resolve_callchain(thread,
- 					   cursor,
--					   evsel,
- 					   sample,
- 					   parent,
- 					   root_al,
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index e261a57b87d4..af0d514b2397 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -257,7 +257,7 @@ static void define_event_symbols(struct tep_event *event,
- }
- 
- static SV *perl_process_callchain(struct perf_sample *sample,
--				  struct evsel *evsel,
-+				  struct evsel *evsel __maybe_unused,
- 				  struct addr_location *al)
- {
- 	struct callchain_cursor *cursor;
-@@ -272,7 +272,7 @@ static SV *perl_process_callchain(struct perf_sample *sample,
- 
- 	cursor = get_tls_callchain_cursor();
- 
--	if (thread__resolve_callchain(al->thread, cursor, evsel,
-+	if (thread__resolve_callchain(al->thread, cursor,
- 				      sample, NULL, NULL, scripting_max_stack) != 0) {
- 		pr_err("Failed to resolve callchain. Skipping\n");
- 		goto exit;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5a30caaec73e..1537122167d5 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -390,7 +390,7 @@ static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
- }
- 
- static PyObject *python_process_callchain(struct perf_sample *sample,
--					 struct evsel *evsel,
-+					 struct evsel *evsel __maybe_unused,
- 					 struct addr_location *al)
- {
- 	PyObject *pylist;
-@@ -404,7 +404,7 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
- 		goto exit;
- 
- 	cursor = get_tls_callchain_cursor();
--	if (thread__resolve_callchain(al->thread, cursor, evsel,
-+	if (thread__resolve_callchain(al->thread, cursor,
- 				      sample, NULL, NULL,
- 				      scripting_max_stack) != 0) {
- 		pr_err("Failed to resolve callchain. Skipping\n");
 -- 
 2.53.0.1213.gd9a14994de-goog
 
