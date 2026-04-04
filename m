@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38D1DFD96
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 00:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB85920C477;
+	Sat,  4 Apr 2026 00:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775261702; cv=none; b=OQISml4OcocM9Q+B6DDfG8i9uAytNMFMV3X7H/fwgjeBPkNE8CnyvR5GpTBqhKB91+aPCpGGQGwdgkCFGcE+dxO9Nayt4uef7uUhW0LvX6/x8q4XGCm8QIjSNdZQbOMLygPrAZ3RqVqzfkYz0k5oBIe7YTccO4zWgvTGLLq+QYU=
+	t=1775261702; cv=none; b=kr6nQSnJnLpKuzgK0nXu9/syNp92GVtKbQyDSkvL4mOyNeAD8WCBX0JsS4tBJAbt+kI3ejKBy5NRJrstgG5Ash3yu0LPhFoxRsrFGJbptZ5PiFw1NIbRzBiUxmaqspDzkH6w/211R3yubKn7nx1p9M+Pa4gZ/d7QckR99QrEC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775261702; c=relaxed/simple;
-	bh=W2pW0QrsxXm4iSgx2dx0lJpJRttWNhdvHB5F275Fp5c=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FfXpZ5FOzoXKz98r4TYlu0wU6Dvh+I9WgLKzTlWf9GP3CWpT/8iT53KP6GSfpOo80MpSEMBsiiBzd0XNTz6mLdMqRrg55l8PfHLqPA+gEZdlsHq88eHuS85VYCuPvQaFzefDOHcXrrE7+h4ibWftUc4MO5UGC+wb+x8eOV+oq/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSvr3D8X; arc=none smtp.client-ip=10.30.226.201
+	bh=sZCVJi875CGK8FBlxy09pyuoHJ9P3iz5Kh5dpjYT5iQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=J0KSAbhR2JaNL7eGS8mFItCpx8F1DFRYqWbCG3/kfsVmN2pIRR8jnVutzksXEjw5ik96I3w9WD4EC15Pdp4v3rwkuZwtk8/+Oyi9a8H9UG+750gD8c2zMjk//xtLHm13zs3coOcblPOS4abpKu8f/hTqsEk9I+9mNY1JUQy7R7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fatC4gPH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSvr3D8X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D310BC2BCB2;
-	Sat,  4 Apr 2026 00:15:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fatC4gPH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C909C19424;
+	Sat,  4 Apr 2026 00:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1775261702;
-	bh=W2pW0QrsxXm4iSgx2dx0lJpJRttWNhdvHB5F275Fp5c=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=uSvr3D8XQ8yB/auVBa+sj4YFHp3h4BMA5NallQWsdYPy8P6toTTk49rlUJIBexwCQ
-	 WJKpSKJULei0uhzA9ESk8yC6ggc49Xj0boAhGmYeeBQAVgtmwG5gWuAuHIADkW9i8I
-	 iMM0LKkASXcug5nqgPl3i6ciZvW7/jzoPZNZhQNdOtlLYU5PT8AmFrQZK95gMO8/Bg
-	 hpMjwLrnNxMikUr3nH2GgB2EAOHhuaFjTV9kIGp6sZoK3y7H+tEXXzIC2wji4Pvf4O
-	 6iu4ImWLPFnCkvN1/0sJby4zopjPkc8q3zSjr68UdxyH0vyW8CggQMWqwREOoTxKpJ
-	 mRwMqUxpyj1yw==
+	bh=sZCVJi875CGK8FBlxy09pyuoHJ9P3iz5Kh5dpjYT5iQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=fatC4gPH7Pow8daCHcPqDs+kllZOCSTuEilfSHjwBt0Fq7id7zfdnPYZM0yNvHk5S
+	 65xpHLwItGwX8YzaB2gJPGsO3vR1vHH0jMumiRhFOcF8wZ/x68OPud70w7GgJvtFX9
+	 QUI0k4nyzs3sH9S4tuLd5Yygea43yv9xDlUBrh5cXP6eHYIRz/gw1kXlaQpdzSMJb9
+	 mK4BDsow6/Ya9hxuVyznjBqixIR7OJ/REOdd8FP5F2rpp3rnz1On/odEw1Za8Rgt0v
+	 E/XijNIJtu5hPMxCAhlwOCZXzik+ys9iFZuWaYLmpu+1UyxyEsKd7KzN14iMpx85jP
+	 qxh6eyifsztzQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, irogers@google.com, acme@redhat.com, 
- Michael Petlan <mpetlan@redhat.com>
-In-Reply-To: <20260402145118.1379546-1-mpetlan@redhat.com>
-References: <20260331101020.1270363-1-mpetlan@redhat.com>
- <20260402145118.1379546-1-mpetlan@redhat.com>
-Subject: Re: [PATCH v2] perf trace: Fix potential u64 underflow in duration
- calculation
-Message-Id: <177526170182.2123878.7712855657688931086.b4-ty@kernel.org>
-Date: Fri, 03 Apr 2026 17:15:01 -0700
+To: acme@kernel.org, Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+ ashelat@redhat.com, ctshao@google.com, derek.foreman@collabora.com, 
+ howardchu95@gmail.com, hrishikesh123s@gmail.com, james.clark@linaro.org, 
+ jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+ swapnil.sapkal@amd.com, thomas.falcon@intel.com
+In-Reply-To: <20260401161324.332356-1-irogers@google.com>
+References: <20260401055206.43187-1-irogers@google.com>
+ <20260401161324.332356-1-irogers@google.com>
+Subject: Re: [PATCH v4 0/8] perf data/pipe handling improvements
+Message-Id: <177526170213.2123878.10130258955620280586.b4-ty@kernel.org>
+Date: Fri, 03 Apr 2026 17:15:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,15 +50,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 02 Apr 2026 16:51:18 +0200, Michael Petlan wrote:
-> Although it happens very rarely, in case of out-of-order events (i.e.
-> due to CPU migration when a syscall is executed), the calculation of
-> event duration might underflow and thus a bogus value is printed:
-> 
->     2.804 ( 0.001 ms): :49553/49553 rt_sigaction(sig: QUIT, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
->     2.807 ( 0.001 ms): :49553/49553 rt_sigaction(sig: CHLD, act: 0x7fff403ed6e0, oact: 0x7fff403ed780, sigsetsize: 8) = 0
->     2.815 (18446744073709.438 ms): :49553/49553 execve(filename: 0xbb173a30, argv: 0x55aabb171930, envp: 0x55aabb171120) = 0
->     2.815 ( 0.534 ms): pwd/49553  ... [continued]: execve())                                           = 0
+On Wed, 01 Apr 2026 09:13:16 -0700, Ian Rogers wrote:
+> I'm looking at improving the perf data converter with files generated
+> in pipe mode. In pipe mode I found the feature handling for the last
+> feature marker was problematic. If a new feature was added then the
+> old marker looks like the new feature. These changes do some minor
+> logging and build fixes, but they also change the last feature
+> handling in pipe mode so that the marker is treated as a marker and
+> not a feature that is broken.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
