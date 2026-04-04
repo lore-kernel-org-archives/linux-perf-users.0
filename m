@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A41330B3B
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8092333429
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775274222; cv=none; b=szyE5wfMg0D6MhONdGfuuAzGlLM6z9RO21pfNa905b0E9m/hEynVALM+OHEHSszHzNzvq86hhbvYXOl642aoocXDUaYGc2ArNY6okd9vS8hj+lsbhNX/bwtsX+XPWGEf68V/rZ//QH6IX7Vh90B5CYdglYR8L+F34A9w5hl9OgU=
+	t=1775274224; cv=none; b=TNbDKGtIFHiWqM0+sUDCtnrnd/BXL2ZWatCmD1PMPhDOtyLme7pw3r/Re6m2wIi2aImdLJxyWP2noTqjEdJX2RlXGSHUKwvqGGExEB4pWk5RJ3Rzk0+qApBkD9H+/MZ0RizbPHtlPkrfg0W6t9+lE5BpY5FNO2Kz0mdh7/NPmqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775274222; c=relaxed/simple;
-	bh=XxJjf4fEXEx+i4A4Cly0amFYTUzF0E8GUbx7yzl2BQ0=;
+	s=arc-20240116; t=1775274224; c=relaxed/simple;
+	bh=Qut0eip6SIm3QPTH9kFywQnXB7+XdpapJ4Wln7A+0yg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bUPBxl/btJ9T4JI4OTU8WpNlaVof0RgHn3G4CmFf0SAhMbKlzmJq2vFuObY5AXVhSGbljgTmAZHIKbrPA2RavdzAfE2XOfOXn66ZclR0OfR3KtkazgEuaTCUpJSNb9n37yqdF1kynHMob7JWVsv3h8f4hGzJ5L1MDh7nCw6sUGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XEorRrZK; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=gGbkrRVX5YZJ7Vk2Ti3a8hW3n56CpjuFADdaJuFzLCymu7KQ4XQq2b1PfxoyIy+cwypd6f+TbWhKXPsVkVLRI3gd9xrHtIO7Dt673gzj8BeaJdzYNc9vSGO3888CTntyrSjK/27KZ19zmcFsZxOe+K2L8lhqy4hWERUrcWGxNYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQ5niWtq; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XEorRrZK"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bda35eab74so2764912eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQ5niWtq"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so3082107eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775274219; x=1775879019; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775274222; x=1775879022; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8d/eNKZCOxSFQtfh8z2A6Tanb/X7MRyyQglbaRxPQQ=;
-        b=XEorRrZKCG+Orh+/rezDfxmpLGCsdTshWcwv1jDJ8NW1hUFAwPX/kWQUxV9oGFQ9zF
-         90AGS7E8TLvE2tbsTPh2+q88Qc43t2t7/yyg87acUcPLzO3VQXXYe6GarWmrQFw6W+XK
-         6vATC47jLZgmMIuXSEaizo8woTG4XDg1EbwTMHoi2JA5dTcarS9R94kQ/q3DmKxdRIwj
-         +Fz3D63/gHRPcaKMh4owDTD5dMdIwXh1GOJaThVTjAGmGg2//zMKjA7MqE3YZfoqFB27
-         svwMFaJRaXwGqazbtiXCsp8FJ19oPK9/fLt/rD+RJnAY4oiPs3U4FuaUhZ2Cj1IVZeZi
-         AjUA==
+        bh=lRP4mslqNRcFh9/FqPp5a2E7CZAvgx589ItuQzR4cGA=;
+        b=JQ5niWtqz0cDux8EZPUd93frSlCGCGjn/EdjUR4lfVLvOYlTjNHn27k/DIPwe2hmH0
+         Dcz9BgNHWzwx+MRUhrhFO625Qw9f+P1TLTsk68VE93x+/SZqYs2+QCHH8DFyUzBJ6bF/
+         y6Kg3dxkVw+NRfoHFp8H/GJUS7vQ3bO6eSXQ5KdITOZxgdHt1E8l7qdouJ9aG14ZG5F6
+         bfB9qT2qLIvxn2WC2LS14w9pu+E90rDckJBIc76TXWNSMPkM3vXXRfiO4rCudPDGibdl
+         U+cDf4D200uxCLt8Lo3aKjUC4C+lO40cRL5kZr006pSRCuMoiIYrC+O/MWgpBbwVeDSV
+         0N3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775274219; x=1775879019;
+        d=1e100.net; s=20251104; t=1775274222; x=1775879022;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8d/eNKZCOxSFQtfh8z2A6Tanb/X7MRyyQglbaRxPQQ=;
-        b=bE6Y3jO67u9QACibtAJA7Pomjr/4xN1RsdIFXqegRvDLhTjv0RAPPauCLGh30x0qSR
-         YXQIsXtZF7xYmRxCy6WhhofwzXsf8ijnGhe7xCd4yI/uDA7c6Spl7eKM7PUBYwNxM/nD
-         kfWcaceNrZgOnnOzGKmvlckv7mqxQVv8RpXF7P1KQcUTArGSw3Svpwu86eW0UjdIxBxG
-         Emjf+9n5spmRE4Nri86Jt2cUzmvY4TwlEBe7FBo4egQ7KK31Tlzl+N/vrxaSMXiYIMM5
-         HNxp9z6acfe7YzX2mK2tUoyyPmLTKxtsbBaPzmCP2vD7RXwEcW3s4NEUi2kEyctS7TY/
-         feLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI+iR+lNdphQW5502HqdmdBL7B/hXTC+LPGCuaGakrUZh0JyoEgZaeRSrQ1OOXdAuMjeZVX7ywlBFkFoDcY4L8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/qEvAw9Dom6hqS3Oxw87089zC8fxCA6Pt+0+8GgI+oaqmg4eC
-	n2SAZXTwlsk7eZ6P90guG6yc1XC7v7AAKKj0YOByp9w12A4oxvOAGUV618aJ90s14wfRnNspukk
-	YvBWwzJT97w==
-X-Received: from dlbsw11.prod.google.com ([2002:a05:7022:3a8b:b0:128:d5fb:9499])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4591:b0:12a:6abf:ab1c
- with SMTP id a92af1059eb24-12bfaf4e6b7mr2106270c88.11.1775274219211; Fri, 03
- Apr 2026 20:43:39 -0700 (PDT)
-Date: Fri,  3 Apr 2026 20:43:02 -0700
+        bh=lRP4mslqNRcFh9/FqPp5a2E7CZAvgx589ItuQzR4cGA=;
+        b=G0tKEJzmatncX7DAzmJLEm4/338qYWTjfX0PwRPUrFUHRz8GG6vAN/pzyEsKxy/XxU
+         cgJ/t1IjJ9enNoR/hjiJ2jOZlMQy6MEd+x4FRET6aZ/Gb35ayvNFWsnGOueWhDy7EBTf
+         ZF+XyG8MiRKz2u6o+yC0rf4TB7mcXgg87/dXVKQE6GiRcb0K7F62j4MFOIsYLLhJJHC5
+         FnvU1C4NXlbaHq29VAMZBcA9pkVTse5UKSt1o2ujUYdlh9yHLMh0i8yG17aLrFZfEsZr
+         59n2PiIGvm81djyzSZbCDoosoaVM8HlKDQNBAY8y/19VFiElXGRKVBcMaDWanj9Mb36e
+         3wyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVZzVStbvilBHDKrI+16AvcYLpWf7qJk4aNAU+HR/aQDS199LpWWsg/6rRVIEItrtRzT1etesCyNnoKvEqmhz@vger.kernel.org
+X-Gm-Message-State: AOJu0YySLPvLrLKmrXD84e+7K0fi+rMgiaHZw25Ca0cwMFdlHT99j86m
+	4RjHGyI23AhYMk23O9xM+/z8P7OhkKaMC8TrOxvay5LMmSIF4iVkT+l7g7pRHf3no9inaxJ+Yu0
+	EpCAz6KT1Yg==
+X-Received: from dlea10-n1.prod.google.com ([2002:a05:701b:420a:10b0:12a:6c32:ffd2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61f:b0:128:d5f1:d595
+ with SMTP id a92af1059eb24-12bfb6f3d84mr2262518c88.10.1775274221641; Fri, 03
+ Apr 2026 20:43:41 -0700 (PDT)
+Date: Fri,  3 Apr 2026 20:43:03 -0700
 In-Reply-To: <20260404034325.3172592-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260403204017.2919994-1-irogers@google.com> <20260404034325.3172592-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260404034325.3172592-3-irogers@google.com>
-Subject: [PATCH v6 02/25] perf sample: Make sure perf_sample__init/exit are used
+Message-ID: <20260404034325.3172592-4-irogers@google.com>
+Subject: [PATCH v6 03/25] perf sample: Add evsel to struct perf_sample
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,524 +76,260 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-The deferred stack trace code wasn't using perf_sample__init/exit. Add
-the deferred stack trace clean up to perf_sample__exit which requires
-proper NULL initialization in perf_sample__init. Make the
-perf_sample__exit robust to being called more than once by using
-zfree. Make the error paths in evsel__parse_sample exit the
-sample. Add a merged_callchain boolean to capture that callchain is
-allocated, deferred_callchain doen't suffice for this. Pack the struct
-variables to avoid padding bytes for this.
-
-Similiarly powerpc_vpadtl_sample wasn't using perf_sample__init/exit,
-use it for consistency and potential issues with uninitialized
-variables.
-
-Similarly guest_session__inject_events in builtin-inject wasn't using
-perf_sample_init/exit. The lifetime management for fetched events is
-somewhat complex there, but when an event is fetched the sample should
-be initialized and needs exiting on error. The sample may be left in
-place so that future injects have access to it.
+Add the evsel from evsel__parse_sample into the struct
+perf_sample. Sometimes we want to alter the evsel associated with a
+sample, such as with off-cpu bpf-output events. In general the evsel
+and perf_sample are passed as a pair, but this makes an altered evsel
+something of a chore to keep checking for and setting up. Later
+patches will remove passing an evsel with the perf_sample and switch
+to just using the perf_sample's value.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c        | 55 +++++++++++++++++++++---------
- tools/perf/tests/perf-record.c     |  1 +
- tools/perf/tests/switch-tracking.c |  2 ++
- tools/perf/util/callchain.c        | 10 ++++--
- tools/perf/util/evlist.c           |  5 ++-
- tools/perf/util/evsel.c            | 34 +++++++++++-------
- tools/perf/util/powerpc-vpadtl.c   | 10 +++---
- tools/perf/util/sample.c           | 10 ++++--
- tools/perf/util/sample.h           | 17 +++++----
- tools/perf/util/session.c          | 13 ++++---
- 10 files changed, 108 insertions(+), 49 deletions(-)
+ tools/perf/builtin-inject.c       |  6 +++---
+ tools/perf/builtin-script.c       |  4 ++++
+ tools/perf/tests/hists_cumulate.c |  2 +-
+ tools/perf/tests/hists_filter.c   |  1 +
+ tools/perf/tests/hists_output.c   |  2 +-
+ tools/perf/util/evsel.c           |  1 +
+ tools/perf/util/sample.c          |  1 +
+ tools/perf/util/sample.h          |  3 +++
+ tools/perf/util/session.c         | 35 +++++++++++++++++++------------
+ 9 files changed, 37 insertions(+), 18 deletions(-)
 
 diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 5b29f4296861..d63191ae4c5b 100644
+index d63191ae4c5b..05b769a2a825 100644
 --- a/tools/perf/builtin-inject.c
 +++ b/tools/perf/builtin-inject.c
-@@ -1087,6 +1087,7 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
- 	struct perf_sample sample_sw;
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	u32 pid = evsel__intval(evsel, sample, "pid");
-+	int ret;
+@@ -133,7 +133,7 @@ struct perf_inject {
+ 	struct perf_file_section secs[HEADER_FEAT_BITS];
+ 	struct guest_session	guest_session;
+ 	struct strlist		*known_build_ids;
+-	const struct evsel	*mmap_evsel;
++	struct evsel		*mmap_evsel;
+ 	struct ip_callchain	*raw_callchain;
+ };
  
- 	list_for_each_entry(ent, &inject->samples, node) {
- 		if (pid == ent->tid)
-@@ -1103,7 +1104,9 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
- 	perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
- 				      evsel->core.attr.read_format, &sample_sw);
- 	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
--	return perf_event__repipe(tool, event_sw, &sample_sw, machine);
-+	ret = perf_event__repipe(tool, event_sw, &sample_sw, machine);
-+	perf_sample__exit(&sample_sw);
-+	return ret;
- }
- #endif
+@@ -519,7 +519,7 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
+  * processing mmap events. If not stashed, search the evlist for the first mmap
+  * gathering event.
+  */
+-static const struct evsel *inject__mmap_evsel(struct perf_inject *inject)
++static struct evsel *inject__mmap_evsel(struct perf_inject *inject)
+ {
+ 	struct evsel *pos;
  
-@@ -1648,6 +1651,7 @@ static int guest_session__fetch(struct guest_session *gs)
- 	size_t hdr_sz = sizeof(*hdr);
- 	ssize_t ret;
+@@ -1023,7 +1023,6 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
  
-+	perf_sample__init(&gs->ev.sample, /*all=*/false);
- 	buf = gs->ev.event_buf;
- 	if (!buf) {
- 		buf = malloc(PERF_SAMPLE_MAX_SIZE);
-@@ -1745,18 +1749,24 @@ static int guest_session__inject_events(struct guest_session *gs, u64 timestamp)
- 		if (!gs->fetched) {
- 			ret = guest_session__fetch(gs);
- 			if (ret)
--				return ret;
-+				break;
- 			gs->fetched = true;
- 		}
- 
- 		ev = gs->ev.event;
- 		sample = &gs->ev.sample;
- 
--		if (!ev->header.size)
--			return 0; /* EOF */
+ 	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
+ 					/*symbols=*/false, mark_dso_hit_callback, &args);
 -
--		if (sample->time > timestamp)
--			return 0;
-+		if (!ev->header.size) {
-+			/* EOF */
-+			perf_sample__exit(&gs->ev.sample);
-+			gs->fetched = false;
-+			ret = 0;
-+			break;
-+		}
-+		if (sample->time > timestamp) {
-+			ret = 0;
-+			break;
-+		}
+ 	thread__put(thread);
+ repipe:
+ 	perf_event__repipe(tool, event, sample, machine);
+@@ -1432,6 +1431,7 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
+ {
+ 	struct machine *machine = perf_session__findnew_machine(inject->session, machine_pid);
+ 	struct perf_sample synth_sample = {
++		.evsel	   = inject__mmap_evsel(inject),
+ 		.pid	   = -1,
+ 		.tid	   = -1,
+ 		.time	   = -1,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 622130d3aed4..42d4cc162039 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2910,8 +2910,12 @@ static int print_event_with_time(const struct perf_tool *tool,
+ 		thread = machine__findnew_thread(machine, pid, tid);
  
- 		/* Change cpumode to guest */
- 		cpumode = ev->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
-@@ -1779,12 +1789,14 @@ static int guest_session__inject_events(struct guest_session *gs, u64 timestamp)
- 
- 		if (id_hdr_size & 7) {
- 			pr_err("Bad id_hdr_size %u\n", id_hdr_size);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
- 
- 		if (ev->header.size & 7) {
- 			pr_err("Bad event size %u\n", ev->header.size);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
- 
- 		/* Remove guest id sample */
-@@ -1792,14 +1804,16 @@ static int guest_session__inject_events(struct guest_session *gs, u64 timestamp)
- 
- 		if (ev->header.size & 7) {
- 			pr_err("Bad raw event size %u\n", ev->header.size);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
- 
- 		guest_id = guest_session__lookup_id(gs, id);
- 		if (!guest_id) {
- 			pr_err("Guest event with unknown id %llu\n",
- 			       (unsigned long long)id);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
- 
- 		/* Change to host ID to avoid conflicting ID values */
-@@ -1819,19 +1833,28 @@ static int guest_session__inject_events(struct guest_session *gs, u64 timestamp)
- 		/* New id sample with new ID and CPU */
- 		ret = evlist__append_id_sample(inject->session->evlist, ev, sample);
- 		if (ret)
--			return ret;
-+			break;
- 
- 		if (ev->header.size & 7) {
- 			pr_err("Bad new event size %u\n", ev->header.size);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
- 
--		gs->fetched = false;
--
- 		ret = output_bytes(inject, ev, ev->header.size);
- 		if (ret)
--			return ret;
-+			break;
+ 	if (evsel) {
++		struct evsel *saved_evsel = sample->evsel;
 +
-+		/* Reset for next guest session event fetch. */
-+		perf_sample__exit(sample);
-+		gs->fetched = false;
- 	}
-+	if (ret && gs->fetched) {
-+		/* Clear saved sample state on error. */
-+		perf_sample__exit(&gs->ev.sample);
-+		gs->fetched = false;
-+	}
-+	return ret;
- }
- 
- static int guest_session__flush_events(struct guest_session *gs)
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index c6e31ab8a6b8..ad44cc68820b 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -300,6 +300,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
- 				}
- 
- 				perf_mmap__consume(&md->core);
-+				perf_sample__exit(&sample);
- 			}
- 			perf_mmap__read_done(&md->core);
- 		}
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 15791fcb76b2..72a8289e846d 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -239,11 +239,13 @@ static int add_event(struct evlist *evlist, struct list_head *events,
- 
- 	if (!sample.time) {
- 		pr_debug("event with no time\n");
-+		perf_sample__exit(&sample);
- 		return -1;
++		sample->evsel = evsel;
+ 		perf_sample__fprintf_start(script, sample, thread, evsel,
+ 					   event->header.type, stdout);
++		sample->evsel = saved_evsel;
  	}
  
- 	node->event_time = sample.time;
+ 	perf_event__fprintf(event, machine, stdout);
+diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
+index 3eb9ef8d7ec6..606aa926a8fc 100644
+--- a/tools/perf/tests/hists_cumulate.c
++++ b/tools/perf/tests/hists_cumulate.c
+@@ -81,7 +81,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ {
+ 	struct addr_location al;
+ 	struct evsel *evsel = hists_to_evsel(hists);
+-	struct perf_sample sample = { .period = 1000, };
++	struct perf_sample sample = { .evsel = evsel, .period = 1000, };
+ 	size_t i;
  
-+	perf_sample__exit(&sample);
- 	return 0;
- }
+ 	addr_location__init(&al);
+diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
+index 1cebd20cc91c..cc6b26e373d1 100644
+--- a/tools/perf/tests/hists_filter.c
++++ b/tools/perf/tests/hists_filter.c
+@@ -70,6 +70,7 @@ static int add_hist_entries(struct evlist *evlist,
+ 			};
+ 			struct hists *hists = evsel__hists(evsel);
  
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index f879b84f8ff9..f031cbbeeba8 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1901,16 +1901,19 @@ int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
- 	u64 nr_deferred = sample_callchain->callchain->nr;
- 	struct ip_callchain *callchain;
++			sample.evsel = evsel;
+ 			/* make sure it has no filter at first */
+ 			hists->thread_filter = NULL;
+ 			hists->dso_filter = NULL;
+diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
+index ee5ec8bda60e..7818950d786e 100644
+--- a/tools/perf/tests/hists_output.c
++++ b/tools/perf/tests/hists_output.c
+@@ -51,7 +51,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ {
+ 	struct addr_location al;
+ 	struct evsel *evsel = hists_to_evsel(hists);
+-	struct perf_sample sample = { .period = 100, };
++	struct perf_sample sample = { .evsel = evsel, .period = 100, };
+ 	size_t i;
  
-+	if (sample_orig->merged_callchain) {
-+		/* Already merged. */
-+		return -EINVAL;
-+	}
-+
- 	if (sample_orig->callchain->nr < 2) {
- 		sample_orig->deferred_callchain = false;
- 		return -EINVAL;
- 	}
- 
- 	callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
--	if (callchain == NULL) {
--		sample_orig->deferred_callchain = false;
-+	if (callchain == NULL)
- 		return -ENOMEM;
--	}
- 
- 	callchain->nr = nr_orig + nr_deferred;
- 	/* copy original including PERF_CONTEXT_USER_DEFERRED (but the cookie) */
-@@ -1919,6 +1922,7 @@ int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
- 	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
- 	       nr_deferred * sizeof(u64));
- 
-+	sample_orig->merged_callchain = true;
- 	sample_orig->callchain = callchain;
- 	return 0;
- }
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c702741a9173..f46e1d40bad7 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1632,8 +1632,11 @@ int evlist__parse_sample(struct evlist *evlist, union perf_event *event, struct
- 	struct evsel *evsel = evlist__event2evsel(evlist, event);
- 	int ret;
- 
--	if (!evsel)
-+	if (!evsel) {
-+		/* Ensure the sample is okay for perf_sample__exit. */
-+		perf_sample__init(sample, /*all=*/false);
- 		return -EFAULT;
-+	}
- 	ret = evsel__parse_sample(evsel, event, sample);
- 	if (ret)
- 		return ret;
+ 	addr_location__init(&al);
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 1281af056cec..df2392713edb 100644
+index df2392713edb..2ee87fd84d3e 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -3073,7 +3073,7 @@ static inline bool overflow(const void *endp, u16 max_size, const void *offset,
- #define OVERFLOW_CHECK(offset, size, max_size)				\
- 	do {								\
- 		if (overflow(endp, (max_size), (offset), (size)))	\
--			return -EFAULT;					\
-+			goto out_efault;				\
- 	} while (0)
- 
- #define OVERFLOW_CHECK_u64(offset) \
-@@ -3205,6 +3205,8 @@ static int __set_offcpu_sample(struct perf_sample *data)
- 	data->cgroup = *array;
- 
- 	return 0;
-+out_efault:
-+	return -EFAULT;
- }
- 
- int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-@@ -3223,7 +3225,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	 */
+@@ -3226,6 +3226,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
  	union u64_swap u;
  
--	memset(data, 0, sizeof(*data));
-+	perf_sample__init(data, /*all=*/true);
+ 	perf_sample__init(data, /*all=*/true);
++	data->evsel = evsel;
  	data->cpu = data->pid = data->tid = -1;
  	data->stream_id = data->id = data->time = -1ULL;
  	data->period = evsel->core.attr.sample_period;
-@@ -3237,25 +3239,26 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
+index 2a30de4573f6..cf73329326d7 100644
+--- a/tools/perf/util/sample.c
++++ b/tools/perf/util/sample.c
+@@ -19,6 +19,7 @@ void perf_sample__init(struct perf_sample *sample, bool all)
+ 	if (all) {
+ 		memset(sample, 0, sizeof(*sample));
+ 	} else {
++		sample->evsel = NULL;
+ 		sample->user_regs = NULL;
+ 		sample->intr_regs = NULL;
+ 		sample->merged_callchain = false;
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 5809c42631e5..3bd6d8b60586 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -5,6 +5,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
  
- 		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
- 		if (data->callchain->nr > max_callchain_nr)
--			return -EFAULT;
-+			goto out_efault;
++struct evsel;
+ struct machine;
+ struct thread;
  
- 		data->deferred_cookie = event->callchain_deferred.cookie;
- 
- 		if (evsel->core.attr.sample_id_all)
- 			perf_evsel__parse_id_sample(evsel, event, data);
-+
- 		return 0;
- 	}
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
--		if (!evsel->core.attr.sample_id_all)
--			return 0;
--		return perf_evsel__parse_id_sample(evsel, event, data);
-+		if (evsel->core.attr.sample_id_all)
-+			perf_evsel__parse_id_sample(evsel, event, data);
-+		return 0;
- 	}
- 
- 	array = event->sample.array;
- 
- 	if (perf_event__check_size(event, evsel->sample_size))
--		return -EFAULT;
-+		goto out_efault;
- 
- 	if (type & PERF_SAMPLE_IDENTIFIER) {
- 		data->id = *array;
-@@ -3348,7 +3351,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 					sizeof(struct sample_read_value);
- 
- 			if (data->read.group.nr > max_group_nr)
--				return -EFAULT;
-+				goto out_efault;
- 
- 			sz = data->read.group.nr * sample_read_value_size(read_format);
- 			OVERFLOW_CHECK(array, sz, max_size);
-@@ -3376,7 +3379,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		data->callchain = (struct ip_callchain *)array++;
- 		callchain_nr = data->callchain->nr;
- 		if (callchain_nr > max_callchain_nr)
--			return -EFAULT;
-+			goto out_efault;
- 		sz = callchain_nr * sizeof(u64);
- 		/*
- 		 * Save the cookie for the deferred user callchain.  The last 2
-@@ -3434,7 +3437,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		data->branch_stack = (struct branch_stack *)array++;
- 
- 		if (data->branch_stack->nr > max_branch_nr)
--			return -EFAULT;
-+			goto out_efault;
- 
- 		sz = data->branch_stack->nr * sizeof(struct branch_entry);
- 		if (evsel__has_branch_hw_idx(evsel)) {
-@@ -3511,7 +3514,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			data->user_stack.size = *array++;
- 			if (WARN_ONCE(data->user_stack.size > sz,
- 				      "user stack dump failure\n"))
--				return -EFAULT;
-+				goto out_efault;
- 		}
- 	}
- 
-@@ -3588,10 +3591,15 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		array = (void *)array + sz;
- 	}
- 
--	if (evsel__is_offcpu_event(evsel))
--		return __set_offcpu_sample(data);
-+	if (evsel__is_offcpu_event(evsel)) {
-+		if (__set_offcpu_sample(data))
-+			goto out_efault;
-+	}
- 
- 	return 0;
-+out_efault:
-+	perf_sample__exit(data);
-+	return -EFAULT;
- }
- 
- int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
-diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
-index d1c3396f182f..993ab16614c7 100644
---- a/tools/perf/util/powerpc-vpadtl.c
-+++ b/tools/perf/util/powerpc-vpadtl.c
-@@ -182,7 +182,9 @@ static int powerpc_vpadtl_sample(struct powerpc_vpadtl_entry *record,
+@@ -102,6 +103,8 @@ struct simd_flags {
+  * and clean up these values.
+  */
+ struct perf_sample {
++	/** @evsel: Backward reference to the evsel used when constructing the sample. */
++	struct evsel *evsel;
+ 	/** @ip: The sample event PERF_SAMPLE_IP value. */
+ 	u64 ip;
+ 	/** @pid: The sample event PERF_SAMPLE_TID pid value. */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 53fb2e628b71..7588cca110d2 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1264,8 +1264,9 @@ static int deliver_sample_value(struct evlist *evlist,
+ 				bool per_thread)
  {
- 	struct perf_sample sample;
- 	union perf_event event;
+ 	struct perf_sample_id *sid = evlist__id2sid(evlist, v->id);
+-	struct evsel *evsel;
++	struct evsel *saved_evsel = sample->evsel;
+ 	u64 *storage = NULL;
 +	int ret;
  
-+	perf_sample__init(&sample, /*all=*/true);
- 	sample.ip = be64_to_cpu(record->srr0);
- 	sample.period = 1;
- 	sample.cpu = cpu;
-@@ -198,12 +200,12 @@ static int powerpc_vpadtl_sample(struct powerpc_vpadtl_entry *record,
- 	event.sample.header.misc = sample.cpumode;
- 	event.sample.header.size = sizeof(struct perf_event_header);
+ 	if (sid) {
+ 		storage = perf_sample_id__get_period_storage(sid, sample->tid, per_thread);
+@@ -1289,8 +1290,10 @@ static int deliver_sample_value(struct evlist *evlist,
+ 	if (!sample->period)
+ 		return 0;
  
--	if (perf_session__deliver_synth_event(vpa->session, &event, &sample)) {
-+	ret = perf_session__deliver_synth_event(vpa->session, &event, &sample);
-+	if (ret)
- 		pr_debug("Failed to create sample for dtl entry\n");
--		return -1;
--	}
- 
--	return 0;
-+	perf_sample__exit(&sample);
+-	evsel = container_of(sid->evsel, struct evsel, core);
+-	return tool->sample(tool, event, sample, evsel, machine);
++	sample->evsel = container_of(sid->evsel, struct evsel, core);
++	ret = tool->sample(tool, event, sample, sample->evsel, machine);
++	sample->evsel = saved_evsel;
 +	return ret;
  }
  
- static int powerpc_vpadtl_get_buffer(struct powerpc_vpadtl_queue *vpaq)
-diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
-index 8f82aaf1aab6..2a30de4573f6 100644
---- a/tools/perf/util/sample.c
-+++ b/tools/perf/util/sample.c
-@@ -21,13 +21,19 @@ void perf_sample__init(struct perf_sample *sample, bool all)
- 	} else {
- 		sample->user_regs = NULL;
- 		sample->intr_regs = NULL;
-+		sample->merged_callchain = false;
-+		sample->callchain = NULL;
- 	}
- }
- 
- void perf_sample__exit(struct perf_sample *sample)
+ static int deliver_sample_group(struct evlist *evlist,
+@@ -1362,13 +1365,16 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 					      struct machine *machine)
  {
--	free(sample->user_regs);
--	free(sample->intr_regs);
-+	zfree(&sample->user_regs);
-+	zfree(&sample->intr_regs);
-+	if (sample->merged_callchain) {
-+		zfree(&sample->callchain);
-+		sample->merged_callchain = false;
-+	}
- }
+ 	struct deferred_event *de, *tmp;
+-	struct evsel *evsel;
+ 	int ret = 0;
  
- struct regs_dump *perf_sample__user_regs(struct perf_sample *sample)
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 8d4ace0e6594..5809c42631e5 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -155,12 +155,6 @@ struct perf_sample {
- 	 *            intel-pt. The instruction itself is held in insn.
- 	 */
- 	u16 insn_len;
--	/**
--	 * @cpumode: The cpumode from struct perf_event_header misc variable
--	 *           masked with CPUMODE_MASK. Gives user, kernel and hypervisor
--	 *           information.
--	 */
--	u8  cpumode;
- 	/** @misc: The entire struct perf_event_header misc variable. */
- 	u16 misc;
- 	/**
-@@ -174,6 +168,12 @@ struct perf_sample {
- 	 *           powerpc holds p_stage_cyc.
- 	 */
- 	u16 weight3;
-+	/**
-+	 * @cpumode: The cpumode from struct perf_event_header misc variable
-+	 *           masked with CPUMODE_MASK. Gives user, kernel and hypervisor
-+	 *           information.
-+	 */
-+	u8  cpumode;
- 	/**
- 	 * @no_hw_idx: For PERF_SAMPLE_BRANCH_STACK, true when
- 	 *             PERF_SAMPLE_BRANCH_HW_INDEX isn't set.
-@@ -184,6 +184,11 @@ struct perf_sample {
- 	 *                      user callchain marker was encountered.
- 	 */
- 	bool deferred_callchain;
-+	/**
-+	 * @merged_callchain: A synthesized merged callchain that is allocated
-+	 *                    and needs freeing.
-+	 */
-+	bool merged_callchain;
- 	/**
- 	 * @deferred_cookie: Identifier of the deferred callchain in the later
- 	 *                   PERF_RECORD_CALLCHAIN_DEFERRED event.
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 3a911c70cd0e..53fb2e628b71 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1374,14 +1374,18 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 	if (!tool->merge_deferred_callchains) {
+-		evsel = evlist__id2evsel(evlist, sample->id);
+-		return tool->callchain_deferred(tool, event, sample,
+-						evsel, machine);
++		struct evsel *saved_evsel = sample->evsel;
++
++		sample->evsel = evlist__id2evsel(evlist, sample->id);
++		ret = tool->callchain_deferred(tool, event, sample,
++					       sample->evsel, machine);
++		sample->evsel = saved_evsel;
++		return ret;
+ 	}
+ 
  	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
- 		struct perf_sample orig_sample;
+@@ -1392,9 +1398,9 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 		else
+ 			orig_sample.deferred_callchain = false;
  
-+		perf_sample__init(&orig_sample, /*all=*/false);
- 		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
- 		if (ret < 0) {
- 			pr_err("failed to parse original sample\n");
-+			perf_sample__exit(&orig_sample);
+-		evsel = evlist__id2evsel(evlist, orig_sample.id);
++		orig_sample.evsel = evlist__id2evsel(evlist, orig_sample.id);
+ 		ret = evlist__deliver_sample(evlist, tool, de->event,
+-					     &orig_sample, evsel, machine);
++					     &orig_sample, orig_sample.evsel, machine);
+ 
+ 		perf_sample__exit(&orig_sample);
+ 		list_del(&de->list);
+@@ -1417,7 +1423,6 @@ static int session__flush_deferred_samples(struct perf_session *session,
+ 	struct evlist *evlist = session->evlist;
+ 	struct machine *machine = &session->machines.host;
+ 	struct deferred_event *de, *tmp;
+-	struct evsel *evsel;
+ 	int ret = 0;
+ 
+ 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
+@@ -1431,9 +1436,9 @@ static int session__flush_deferred_samples(struct perf_session *session,
  			break;
  		}
  
--		if (sample->tid != orig_sample.tid)
-+		if (sample->tid != orig_sample.tid) {
-+			perf_sample__exit(&orig_sample);
- 			continue;
-+		}
- 
- 		if (event->callchain_deferred.cookie == orig_sample.deferred_cookie)
- 			sample__merge_deferred_callchain(&orig_sample, sample);
-@@ -1392,9 +1396,7 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+-		evsel = evlist__id2evsel(evlist, sample.id);
++		sample.evsel = evlist__id2evsel(evlist, sample.id);
  		ret = evlist__deliver_sample(evlist, tool, de->event,
- 					     &orig_sample, evsel, machine);
+-					     &sample, evsel, machine);
++					     &sample, sample.evsel, machine);
  
--		if (orig_sample.deferred_callchain)
--			free(orig_sample.callchain);
--
-+		perf_sample__exit(&orig_sample);
+ 		perf_sample__exit(&sample);
  		list_del(&de->list);
- 		free(de->event);
- 		free(de);
-@@ -1421,9 +1423,11 @@ static int session__flush_deferred_samples(struct perf_session *session,
- 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
- 		struct perf_sample sample;
+@@ -1458,8 +1463,12 @@ static int machines__deliver_event(struct machines *machines,
  
-+		perf_sample__init(&sample, /*all=*/false);
- 		ret = evlist__parse_sample(evlist, de->event, &sample);
- 		if (ret < 0) {
- 			pr_err("failed to parse original sample\n");
-+			perf_sample__exit(&sample);
- 			break;
- 		}
+ 	dump_event(evlist, event, file_offset, sample, file_path);
  
-@@ -1431,6 +1435,7 @@ static int session__flush_deferred_samples(struct perf_session *session,
- 		ret = evlist__deliver_sample(evlist, tool, de->event,
- 					     &sample, evsel, machine);
+-	evsel = evlist__id2evsel(evlist, sample->id);
++	if (!sample->evsel)
++		sample->evsel = evlist__id2evsel(evlist, sample->id);
++	else
++		assert(sample->evsel == evlist__id2evsel(evlist, sample->id));
  
-+		perf_sample__exit(&sample);
- 		list_del(&de->list);
- 		free(de->event);
- 		free(de);
++	evsel = sample->evsel;
+ 	machine = machines__find_for_cpumode(machines, event, sample);
+ 
+ 	switch (event->header.type) {
 -- 
 2.53.0.1213.gd9a14994de-goog
 
