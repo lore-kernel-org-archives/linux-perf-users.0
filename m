@@ -1,54 +1,54 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E73321A3
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98698330B11
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775274229; cv=none; b=AzyvowOiMTUGRfb9zseHgiqwCo3sEfa1kGREy6VkezcXbu+6Kro7x+4nbLeqXljwqhkLticZ2F9Wb57aJ8e0+yaVo+Ior1+toLzADU6rPM6qKrlgf2W2W8no6AB7rDP5Dssr5pzyJRrR0/C7guoXeRBEB7MXrN7ZJnho+0jS4Cc=
+	t=1775274233; cv=none; b=P62EiTWvEH9JrhQenll6j0zHr3yz0uEzdW7t8+qXK3b018k4OUwlrvTDcp/pvYmq2x4cj8+b1qkqCONNTIf4kMiqveMRDfymk6Qco7THGrEnoqX9nF0r3IfFV2Uq7PUdRqGlmgn7uqHlp5xRGFh/b6EnyzjaXUOlDSjWXEYc9k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775274229; c=relaxed/simple;
-	bh=o+Xes5abuH+yASF/5nAM10kbXFW/dLHGpz6yw+ZAltA=;
+	s=arc-20240116; t=1775274233; c=relaxed/simple;
+	bh=OJ4fj/ceTXl3wyPyO/bDDEJLY5TO9m90ese6zSP2IfE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dXv5boMOhFHwYfHvAh3oCVY8Pf6R0wPugSflt9rMgdkNzI8NTUQ53vhqiZ6eWXbph2sDuk8DKGogO5ei7yeem2uMzfKXp9dU2EyN43tpWnLHYu6VntDUJn4uJACXjKQHgspWfO6EtdSov1cLqO3cJ8WguxofS0wYkey7XqTbU8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m7U6lxVk; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=Eonp/rM30B6XA0um1oxlycNgu0xtJ3p0VxThMMcnY1JUbitwwwM9Omh5IxYYXoGNlWgY+CjqRBMIE5ux98p2R6OftNQuD8BbZshu5tPeJSCXEqvlMsHyf9Un6ldejy//o1JP4ZB8KbW1l2z50hvL5dP0zKXefRgUQRqgVvZNZF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9Rg1P4S; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7U6lxVk"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12bf9974587so7266145c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9Rg1P4S"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12bfa367189so9108676c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775274227; x=1775879027; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775274231; x=1775879031; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oannBQ3qlAZji2iUnnBApQPMVduJ0gSlFJ8k8/hJ3qM=;
-        b=m7U6lxVk6+sFnczmWTWBwH/SpHWvh2QsIAkYf11xB5TGGjKT5h0COmXghqPhLuOOkF
-         4U3Fd51uHxaFUYHybd4Ro1zKp5/VPhOeFGtcaudIk/RoHNvo3ikcZ5X2y8HPHiedEo/A
-         CqSLLijaxSm/No+eL0idfW01NJgy+GqdP5dg4WV9KVz3aeYmZz8FdqYoozYXAYE67x7B
-         7+MpE/WHnuCLv6LUldYdrpciE5WvaeSTliZnKivgF8NWlnCw8N/G03WS84gZ/1dtfvAy
-         LLR03YtYZktGBzvXiSM8XQLCWUrL83M8x95niVz+sUU23iw3ECZa38qDoMJkweC1tRRk
-         g3hg==
+        bh=wSKO8kCpsbKECXOYQ7vo4YscjpszRTQ4LUGkn8KPV+o=;
+        b=M9Rg1P4SN5VfT8MQXoqfkpHfFJNGTYsdmQHe/Bx8MQH+2v8gIENy0e4tDOB36bg5Wu
+         9wIH7Biosh1vyh8t5W0jxH+IM5f1t0vEAiArdj2mnaRcbE6M+/BVowXrGDIdL5g0i4Qp
+         qxsA6JWg6MNIURD65Dxj+/7wPLIwJfIruJkZM4Kso3PlcbNB/w+X68Svfc2oP3P9hIiQ
+         5HO1+OqqpJIS+bvkhtKY3uNuZmulfIQNi4GZsWrCdSrBJ7iOnEx2OLrBHvdtN9nYGQhg
+         5CLprXphj+ua3f3S/WRrMa0taGHZh7OO8W7qPzmw5H/xIIbzrE0jEMX2oW9Pea39Orjr
+         pGMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775274227; x=1775879027;
+        d=1e100.net; s=20251104; t=1775274231; x=1775879031;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oannBQ3qlAZji2iUnnBApQPMVduJ0gSlFJ8k8/hJ3qM=;
-        b=mH2hxecjj+Xt9XQ+mCe47y/nbztL27lctXiUjQfbPHPWbZj+C20RBQI3EaWtZ4qte3
-         r7f1cHOGRjFo/u5Lg9T5bjgoCCk1rcBj3IP5TEgxC2ZhR/q5uQyqoKQFcJ3/HgtL+N6k
-         lLgQYsJsOTnzO7nGz3gPDl7eJv4Nt8vh0I0uGIsqdy3eAVid87mHvBVDtbSddfQr2XXw
-         xDriWmFJQOJwWkQOCWSygYBoLlDY5EApK34QW2Mwre+DY3GeSHrma/iHQdUcNv5he6aU
-         ran0sX6+YEX45IqVLxXvGqgyGeIpIAt/jRKos9Q30K7YhkSQubI4p1HCwVYR7fra1k34
-         I1Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWm2v0gHeVSsm7FGCoo6F2VuvLgVS1A8TftOSH/Gow5jd/NpFResOiDNwVxDCqXJGwwgnQttPRtcd403JSY0MX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzGhV49KjgPmSQ6OsOghb2sQCMiP4eoZO9dYB4PWotHzcZVXBz
-	N1nG4QF1aSPo7HsU6NEIMl536GItpmJ6f8C1JQbshwzKfjIr9ThoFFBARJss1UJZnp+Dmqp1fBv
-	hMkHOSqrw9w==
-X-Received: from dlbuy23.prod.google.com ([2002:a05:7022:1e17:b0:12c:5db:d6d1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1603:b0:128:cedb:33c6
- with SMTP id a92af1059eb24-12bfb709d6fmr3089132c88.16.1775274226368; Fri, 03
- Apr 2026 20:43:46 -0700 (PDT)
-Date: Fri,  3 Apr 2026 20:43:05 -0700
+        bh=wSKO8kCpsbKECXOYQ7vo4YscjpszRTQ4LUGkn8KPV+o=;
+        b=Im72g4aWkKR4naKfEgqsw3s24B/ZlJX9BFnnPokfwASG9u4ppzvX/6WdzXNvYVzGq2
+         p/6i2LRaUpuveuhYplD8qBMn0Ilq/Mnjs1rD8hq8wSSzgxyQUshvVNIlBxRM8SI9Fphq
+         tHmyrmRqokykpRJt16JIxYsIAaW64R+Xa4b1s3cZT/MyNj957nLfX+h8IDAhxs/B2SLk
+         EeAcgF1uixmoPsGviOYvgoEeBGQsTY9i1qLifq/l/9fjZETCoHgHwASKoWEVyClwcisU
+         rbU6L8epxzsr1k+GW7d30Exospq5KjE6Y9aJ2sOsrDFZ9IV4IfqJ9OawY/a+fqDrL0Uf
+         635Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU7TbhGGrEdzAYZahGDv8ckYBjfv97/27GgZwQGKZbzIpI4TTxmVFzZLpdC5Bw/e9uF2l7AuF+TxtGboGcp/+D0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3zpb0iVI2uf+HJsiNP/SgvmYuaSd2WqTTMUSFIbnRTvt6D0DA
+	fgxFaxfKNSH2J+z8nDdIThpIYk1sxqmivZrjiwCx0+KTRulpa8kA1300+F0+exRYL5xYOy1DlWU
+	VHeGo6Z0bug==
+X-Received: from dlec15-n1.prod.google.com ([2002:a05:701b:428f:10b0:12a:81ef:45d2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:41a3:b0:128:d714:3ca1
+ with SMTP id a92af1059eb24-12bfb6ecd04mr2615905c88.5.1775274230538; Fri, 03
+ Apr 2026 20:43:50 -0700 (PDT)
+Date: Fri,  3 Apr 2026 20:43:07 -0700
 In-Reply-To: <20260404034325.3172592-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260403204017.2919994-1-irogers@google.com> <20260404034325.3172592-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260404034325.3172592-6-irogers@google.com>
-Subject: [PATCH v6 05/25] perf kvm: Don't pass evsel with sample
+Message-ID: <20260404034325.3172592-8-irogers@google.com>
+Subject: [PATCH v6 07/25] perf trace: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,556 +76,216 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-As the sample now contains the evsel, read the evsel from the sample
-rather than passing them as a pair.
+The sample now contains the evsel and so don't unnecessarily pass the
+evsel.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kvm.c                      | 19 +++--
- .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  | 17 +++--
- .../util/kvm-stat-arch/kvm-stat-loongarch.c   | 17 ++---
- .../util/kvm-stat-arch/kvm-stat-powerpc.c     | 17 ++---
- .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  | 18 +++--
- tools/perf/util/kvm-stat-arch/kvm-stat-s390.c | 20 +++---
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  | 70 ++++++++-----------
- tools/perf/util/kvm-stat.c                    | 19 +++--
- tools/perf/util/kvm-stat.h                    | 18 ++---
- 9 files changed, 89 insertions(+), 126 deletions(-)
+ tools/perf/builtin-trace.c | 55 +++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 5e8e6fde097a..d9b9792894a8 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -806,7 +806,6 @@ static bool update_kvm_event(struct perf_kvm_stat *kvm,
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index b7c1e3803307..5c8cced4ca9b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -535,12 +535,12 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
+ 	return NULL;
  }
  
- static bool is_child_event(struct perf_kvm_stat *kvm,
--			   struct evsel *evsel,
- 			   struct perf_sample *sample,
- 			   struct event_key *key)
- {
-@@ -818,8 +817,8 @@ static bool is_child_event(struct perf_kvm_stat *kvm,
- 		return false;
+-#define perf_evsel__sc_tp_uint(evsel, name, sample) \
+-	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
++#define perf_evsel__sc_tp_uint(name, sample) \
++	({ struct syscall_tp *fields = __evsel__syscall_tp(sample->evsel); \
+ 	   fields->name.integer(&fields->name, sample); })
  
- 	for (; child_ops->name; child_ops++) {
--		if (evsel__name_is(evsel, child_ops->name)) {
--			child_ops->get_key(evsel, sample, key);
-+		if (evsel__name_is(sample->evsel, child_ops->name)) {
-+			child_ops->get_key(sample, key);
- 			return true;
- 		}
+-#define perf_evsel__sc_tp_ptr(evsel, name, sample) \
+-	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
++#define perf_evsel__sc_tp_ptr(name, sample) \
++	({ struct syscall_tp *fields = __evsel__syscall_tp(sample->evsel); \
+ 	   fields->name.pointer(&fields->name, sample); })
+ 
+ size_t strarray__scnprintf_suffix(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_suffix, int val)
+@@ -2723,8 +2723,8 @@ static int trace__printf_interrupted_entry(struct trace *trace)
+ 	return printed;
+ }
+ 
+-static int trace__fprintf_sample(struct trace *trace, struct evsel *evsel,
+-				 struct perf_sample *sample, struct thread *thread)
++static int trace__fprintf_sample(struct trace *trace, struct perf_sample *sample,
++				 struct thread *thread)
+ {
+ 	int printed = 0;
+ 
+@@ -2732,7 +2732,7 @@ static int trace__fprintf_sample(struct trace *trace, struct evsel *evsel,
+ 		double ts = (double)sample->time / NSEC_PER_MSEC;
+ 
+ 		printed += fprintf(trace->output, "%22s %10.3f %s %d/%d [%d]\n",
+-				   evsel__name(evsel), ts,
++				   evsel__name(sample->evsel), ts,
+ 				   thread__comm_str(thread),
+ 				   sample->pid, sample->tid, sample->cpu);
  	}
-@@ -917,11 +916,10 @@ static bool handle_end_event(struct perf_kvm_stat *kvm,
+@@ -2787,7 +2787,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	void *args;
+ 	int printed = 0;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1;
+ 	int augmented_args_size = 0, e_machine;
+ 	void *augmented_args = NULL;
+ 	struct syscall *sc;
+@@ -2802,9 +2802,9 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
  
- static
- struct vcpu_event_record *per_vcpu_record(struct thread *thread,
--					  struct evsel *evsel,
- 					  struct perf_sample *sample)
+-	trace__fprintf_sample(trace, evsel, sample, thread);
++	trace__fprintf_sample(trace, sample, thread);
+ 
+-	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
++	args = perf_evsel__sc_tp_ptr(args, sample);
+ 
+ 	if (ttrace->entry_str == NULL) {
+ 		ttrace->entry_str = malloc(trace__entry_str_size);
+@@ -2859,12 +2859,11 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	return err;
+ }
+ 
+-static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+-				    struct perf_sample *sample)
++static int trace__fprintf_sys_enter(struct trace *trace, struct perf_sample *sample)
  {
- 	/* Only kvm_entry records vcpu id. */
--	if (!thread__priv(thread) && kvm_entry_event(evsel)) {
-+	if (!thread__priv(thread) && kvm_entry_event(sample->evsel)) {
- 		struct vcpu_event_record *vcpu_record;
- 		struct machine *machine = maps__machine(thread__maps(thread));
- 		uint16_t e_machine = thread__e_machine(thread, machine, /*e_flags=*/NULL);
-@@ -932,7 +930,7 @@ struct vcpu_event_record *per_vcpu_record(struct thread *thread,
- 			return NULL;
- 		}
+ 	struct thread_trace *ttrace;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1;
+ 	struct syscall *sc;
+ 	char msg[1024];
+ 	void *args, *augmented_args = NULL;
+@@ -2874,7 +2873,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
  
--		vcpu_record->vcpu_id = evsel__intval(evsel, sample, vcpu_id_str(e_machine));
-+		vcpu_record->vcpu_id = evsel__intval(sample->evsel, sample, vcpu_id_str(e_machine));
- 		thread__set_priv(thread, vcpu_record);
- 	}
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
+ 	e_machine = thread__e_machine(thread, trace->host, /*e_flags=*/NULL);
+-	sc = trace__syscall_info(trace, evsel, e_machine, id);
++	sc = trace__syscall_info(trace, sample->evsel, e_machine, id);
+ 	if (sc == NULL)
+ 		goto out_put;
+ 	ttrace = thread__trace(thread, trace);
+@@ -2885,7 +2884,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
  
-@@ -943,12 +941,11 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
- 			     struct thread *thread,
- 			     struct perf_sample *sample)
- {
--	struct evsel *evsel = sample->evsel;
- 	struct vcpu_event_record *vcpu_record;
- 	struct event_key key = { .key = INVALID_KEY,
- 				 .exit_reasons = kvm->exit_reasons };
+-	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
++	args = perf_evsel__sc_tp_ptr(args, sample);
+ 	augmented_args = syscall__augmented_args(sc, sample, &augmented_args_size, trace->raw_augmented_syscalls_args_size);
+ 	printed += syscall__scnprintf_args(sc, msg, sizeof(msg), args, augmented_args, augmented_args_size, trace, thread);
+ 	fprintf(trace->output, "%.*s", (int)printed, msg);
+@@ -2895,10 +2894,11 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 	return err;
+ }
  
--	vcpu_record = per_vcpu_record(thread, evsel, sample);
-+	vcpu_record = per_vcpu_record(thread, sample);
- 	if (!vcpu_record)
- 		return true;
- 
-@@ -957,13 +954,13 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
- 	    (kvm->trace_vcpu != vcpu_record->vcpu_id))
- 		return true;
- 
--	if (kvm->events_ops->is_begin_event(evsel, sample, &key))
-+	if (kvm->events_ops->is_begin_event(sample, &key))
- 		return handle_begin_event(kvm, vcpu_record, &key, sample);
- 
--	if (is_child_event(kvm, evsel, sample, &key))
-+	if (is_child_event(kvm, sample, &key))
- 		return handle_child_event(kvm, vcpu_record, &key, sample);
- 
--	if (kvm->events_ops->is_end_event(evsel, sample, &key))
-+	if (kvm->events_ops->is_end_event(sample, &key))
- 		return handle_end_event(kvm, vcpu_record, &key, sample);
- 
- 	return true;
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c b/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-index c640dcd8af7c..1e76906f719c 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c
-@@ -17,10 +17,11 @@ static const char * const __kvm_events_tp[] = {
- 	NULL,
- };
- 
--static void event_get_key(struct evsel *evsel,
--			  struct perf_sample *sample,
-+static void event_get_key(struct perf_sample *sample,
- 			  struct event_key *key)
+-static int trace__resolve_callchain(struct trace *trace, struct evsel *evsel,
++static int trace__resolve_callchain(struct trace *trace,
+ 				    struct perf_sample *sample,
+ 				    struct callchain_cursor *cursor)
  {
 +	struct evsel *evsel = sample->evsel;
-+
- 	key->info = 0;
- 	key->key = evsel__intval(evsel, sample, kvm_exit_reason(EM_AARCH64));
- 	key->exit_reasons = arm64_exit_reasons;
-@@ -36,19 +37,17 @@ static void event_get_key(struct evsel *evsel,
+ 	struct addr_location al;
+ 	int max_stack = evsel->core.attr.sample_max_stack ?
+ 			evsel->core.attr.sample_max_stack :
+@@ -2933,7 +2933,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	u64 duration = 0;
+ 	bool duration_calculated = false;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1, callchain_ret = 0, printed = 0;
+ 	int alignment = trace->args_alignment, e_machine;
+ 	struct syscall *sc;
+ 	struct thread_trace *ttrace;
+@@ -2947,9 +2947,9 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
+ 
+-	trace__fprintf_sample(trace, evsel, sample, thread);
++	trace__fprintf_sample(trace, sample, thread);
+ 
+-	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
++	ret = perf_evsel__sc_tp_uint(ret, sample);
+ 
+ 	if (trace->summary)
+ 		thread__update_stats(thread, ttrace, id, sample, ret, trace);
+@@ -2971,7 +2971,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out;
+@@ -3186,9 +3186,10 @@ static void bpf_output__fprintf(struct trace *trace,
+ 	++trace->nr_events_printed;
+ }
+ 
+-static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
++static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
+ 				       struct thread *thread, void *augmented_args, int augmented_args_size)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	char bf[2048];
+ 	size_t size = sizeof(bf);
+ 	const struct tep_event *tp_format = evsel__tp_format(evsel);
+@@ -3271,7 +3272,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out;
+@@ -3289,7 +3290,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 		trace__fprintf_comm_tid(trace, thread, trace->output);
+ 
+ 	if (evsel == trace->syscalls.events.bpf_output) {
+-		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
++		int id = perf_evsel__sc_tp_uint(id, sample);
+ 		int e_machine = thread
+ 			? thread__e_machine(thread, trace->host, /*e_flags=*/NULL)
+ 			: EM_HOST;
+@@ -3297,7 +3298,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 
+ 		if (sc) {
+ 			fprintf(trace->output, "%s(", sc->name);
+-			trace__fprintf_sys_enter(trace, evsel, sample);
++			trace__fprintf_sys_enter(trace, sample);
+ 			fputc(')', trace->output);
+ 			goto newline;
+ 		}
+@@ -3317,13 +3318,13 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 		const struct tep_event *tp_format = evsel__tp_format(evsel);
+ 
+ 		if (tp_format && (strncmp(tp_format->name, "sys_enter_", 10) ||
+-				  trace__fprintf_sys_enter(trace, evsel, sample))) {
++				  trace__fprintf_sys_enter(trace, sample))) {
+ 			if (trace->libtraceevent_print) {
+ 				event_format__fprintf(tp_format, sample->cpu,
+ 						      sample->raw_data, sample->raw_size,
+ 						      trace->output);
+ 			} else {
+-				trace__fprintf_tp_fields(trace, evsel, sample, thread, NULL, 0);
++				trace__fprintf_tp_fields(trace, sample, thread, NULL, 0);
+ 			}
+ 		}
  	}
- }
+@@ -3382,7 +3383,7 @@ static int trace__pgfault(struct trace *trace,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
  
--static bool event_begin(struct evsel *evsel,
--			struct perf_sample *sample __maybe_unused,
-+static bool event_begin(struct perf_sample *sample,
- 			struct event_key *key __maybe_unused)
- {
--	return evsel__name_is(evsel, kvm_entry_trace(EM_AARCH64));
-+	return evsel__name_is(sample->evsel, kvm_entry_trace(EM_AARCH64));
- }
- 
--static bool event_end(struct evsel *evsel,
--		      struct perf_sample *sample,
-+static bool event_end(struct perf_sample *sample,
- 		      struct event_key *key)
- {
--	if (evsel__name_is(evsel, kvm_exit_trace(EM_AARCH64))) {
--		event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, kvm_exit_trace(EM_AARCH64))) {
-+		event_get_key(sample, key);
- 		return true;
- 	}
- 	return false;
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c b/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-index b802e516b138..9d6265290f6d 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-loongarch.c
-@@ -53,14 +53,12 @@ static const char * const __kvm_events_tp[] = {
- 	NULL,
- };
- 
--static bool event_begin(struct evsel *evsel,
--			struct perf_sample *sample, struct event_key *key)
-+static bool event_begin(struct perf_sample *sample, struct event_key *key)
- {
--	return exit_event_begin(evsel, sample, key);
-+	return exit_event_begin(sample, key);
- }
- 
--static bool event_end(struct evsel *evsel,
--		      struct perf_sample *sample __maybe_unused,
-+static bool event_end(struct perf_sample *sample,
- 		      struct event_key *key __maybe_unused)
- {
- 	/*
-@@ -71,17 +69,16 @@ static bool event_end(struct evsel *evsel,
- 	 *   kvm:kvm_enter   means returning to vmm and then to guest
- 	 *   kvm:kvm_reenter means returning to guest immediately
- 	 */
--	return evsel__name_is(evsel, kvm_entry_trace(EM_LOONGARCH)) ||
--	       evsel__name_is(evsel, kvm_reenter_trace);
-+	return evsel__name_is(sample->evsel, kvm_entry_trace(EM_LOONGARCH)) ||
-+	       evsel__name_is(sample->evsel, kvm_reenter_trace);
- }
- 
--static void event_gspr_get_key(struct evsel *evsel,
--			       struct perf_sample *sample, struct event_key *key)
-+static void event_gspr_get_key(struct perf_sample *sample, struct event_key *key)
- {
- 	unsigned int insn;
- 
- 	key->key = LOONGARCH_EXCEPTION_OTHERS;
--	insn = evsel__intval(evsel, sample, "inst_word");
-+	insn = evsel__intval(sample->evsel, sample, "inst_word");
- 
- 	switch (insn >> 24) {
- 	case 0:
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-index 42182d70beb6..5158d7e88ee6 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-@@ -28,12 +28,11 @@ static const char * const ppc_book3s_hv_kvm_tp[] = {
- /* 1 extra placeholder for NULL */
- static const char *__kvm_events_tp[NR_TPS + 1];
- 
--static void hcall_event_get_key(struct evsel *evsel,
--				struct perf_sample *sample,
-+static void hcall_event_get_key(struct perf_sample *sample,
- 				struct event_key *key)
- {
- 	key->info = 0;
--	key->key = evsel__intval(evsel, sample, "req");
-+	key->key = evsel__intval(sample->evsel, sample, "req");
- }
- 
- static const char *get_hcall_exit_reason(u64 exit_code)
-@@ -51,18 +50,16 @@ static const char *get_hcall_exit_reason(u64 exit_code)
- 	return "UNKNOWN";
- }
- 
--static bool hcall_event_end(struct evsel *evsel,
--			    struct perf_sample *sample __maybe_unused,
-+static bool hcall_event_end(struct perf_sample *sample,
- 			    struct event_key *key __maybe_unused)
- {
--	return evsel__name_is(evsel, __kvm_events_tp[3]);
-+	return evsel__name_is(sample->evsel, __kvm_events_tp[3]);
- }
- 
--static bool hcall_event_begin(struct evsel *evsel,
--			      struct perf_sample *sample, struct event_key *key)
-+static bool hcall_event_begin(struct perf_sample *sample, struct event_key *key)
- {
--	if (evsel__name_is(evsel, __kvm_events_tp[2])) {
--		hcall_event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, __kvm_events_tp[2])) {
-+		hcall_event_get_key(sample, key);
- 		return true;
- 	}
- 
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-index 8d4d5d6ce720..e8db8b4f8e2e 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-@@ -20,30 +20,28 @@ static const char * const __kvm_events_tp[] = {
- 	NULL,
- };
- 
--static void event_get_key(struct evsel *evsel,
--			  struct perf_sample *sample,
-+static void event_get_key(struct perf_sample *sample,
- 			  struct event_key *key)
- {
- 	int xlen = 64; // TODO: 32-bit support.
- 
- 	key->info = 0;
--	key->key = evsel__intval(evsel, sample, kvm_exit_reason(EM_RISCV)) & ~CAUSE_IRQ_FLAG(xlen);
-+	key->key = evsel__intval(sample->evsel, sample,
-+				 kvm_exit_reason(EM_RISCV)) & ~CAUSE_IRQ_FLAG(xlen);
- 	key->exit_reasons = riscv_exit_reasons;
- }
- 
--static bool event_begin(struct evsel *evsel,
--			struct perf_sample *sample __maybe_unused,
-+static bool event_begin(struct perf_sample *sample,
- 			struct event_key *key __maybe_unused)
- {
--	return evsel__name_is(evsel, kvm_entry_trace(EM_RISCV));
-+	return evsel__name_is(sample->evsel, kvm_entry_trace(EM_RISCV));
- }
- 
--static bool event_end(struct evsel *evsel,
--		      struct perf_sample *sample,
-+static bool event_end(struct perf_sample *sample,
- 		      struct event_key *key)
- {
--	if (evsel__name_is(evsel, kvm_exit_trace(EM_RISCV))) {
--		event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, kvm_exit_trace(EM_RISCV))) {
-+		event_get_key(sample, key);
- 		return true;
- 	}
- 	return false;
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-s390.c b/tools/perf/util/kvm-stat-arch/kvm-stat-s390.c
-index 7e29169f5bb0..158372ba0205 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-s390.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-s390.c
-@@ -18,38 +18,34 @@ define_exit_reasons_table(sie_sigp_order_codes, sigp_order_codes);
- define_exit_reasons_table(sie_diagnose_codes, diagnose_codes);
- define_exit_reasons_table(sie_icpt_prog_codes, icpt_prog_codes);
- 
--static void event_icpt_insn_get_key(struct evsel *evsel,
--				    struct perf_sample *sample,
-+static void event_icpt_insn_get_key(struct perf_sample *sample,
- 				    struct event_key *key)
- {
- 	u64 insn;
- 
--	insn = evsel__intval(evsel, sample, "instruction");
-+	insn = evsel__intval(sample->evsel, sample, "instruction");
- 	key->key = icpt_insn_decoder(insn);
- 	key->exit_reasons = sie_icpt_insn_codes;
- }
- 
--static void event_sigp_get_key(struct evsel *evsel,
--			       struct perf_sample *sample,
-+static void event_sigp_get_key(struct perf_sample *sample,
- 			       struct event_key *key)
- {
--	key->key = evsel__intval(evsel, sample, "order_code");
-+	key->key = evsel__intval(sample->evsel, sample, "order_code");
- 	key->exit_reasons = sie_sigp_order_codes;
- }
- 
--static void event_diag_get_key(struct evsel *evsel,
--			       struct perf_sample *sample,
-+static void event_diag_get_key(struct perf_sample *sample,
- 			       struct event_key *key)
- {
--	key->key = evsel__intval(evsel, sample, "code");
-+	key->key = evsel__intval(sample->evsel, sample, "code");
- 	key->exit_reasons = sie_diagnose_codes;
- }
- 
--static void event_icpt_prog_get_key(struct evsel *evsel,
--				    struct perf_sample *sample,
-+static void event_icpt_prog_get_key(struct perf_sample *sample,
- 				    struct event_key *key)
- {
--	key->key = evsel__intval(evsel, sample, "code");
-+	key->key = evsel__intval(sample->evsel, sample, "code");
- 	key->exit_reasons = sie_icpt_prog_codes;
- }
- 
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-index 0f626db3a439..0ce543d82850 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-@@ -24,45 +24,43 @@ static const struct kvm_events_ops exit_events = {
-  * the time of MMIO write: kvm_mmio(KVM_TRACE_MMIO_WRITE...) -> kvm_entry
-  * the time of MMIO read: kvm_exit -> kvm_mmio(KVM_TRACE_MMIO_READ...).
-  */
--static void mmio_event_get_key(struct evsel *evsel, struct perf_sample *sample,
-+static void mmio_event_get_key(struct perf_sample *sample,
- 			       struct event_key *key)
- {
--	key->key  = evsel__intval(evsel, sample, "gpa");
--	key->info = evsel__intval(evsel, sample, "type");
-+	key->key  = evsel__intval(sample->evsel, sample, "gpa");
-+	key->info = evsel__intval(sample->evsel, sample, "type");
- }
- 
- #define KVM_TRACE_MMIO_READ_UNSATISFIED 0
- #define KVM_TRACE_MMIO_READ 1
- #define KVM_TRACE_MMIO_WRITE 2
- 
--static bool mmio_event_begin(struct evsel *evsel,
--			     struct perf_sample *sample, struct event_key *key)
-+static bool mmio_event_begin(struct perf_sample *sample, struct event_key *key)
- {
- 	/* MMIO read begin event in kernel. */
--	if (kvm_exit_event(evsel))
-+	if (kvm_exit_event(sample->evsel))
- 		return true;
- 
- 	/* MMIO write begin event in kernel. */
--	if (evsel__name_is(evsel, "kvm:kvm_mmio") &&
--	    evsel__intval(evsel, sample, "type") == KVM_TRACE_MMIO_WRITE) {
--		mmio_event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, "kvm:kvm_mmio") &&
-+	    evsel__intval(sample->evsel, sample, "type") == KVM_TRACE_MMIO_WRITE) {
-+		mmio_event_get_key(sample, key);
- 		return true;
- 	}
- 
- 	return false;
- }
- 
--static bool mmio_event_end(struct evsel *evsel, struct perf_sample *sample,
--			   struct event_key *key)
-+static bool mmio_event_end(struct perf_sample *sample, struct event_key *key)
- {
- 	/* MMIO write end event in kernel. */
--	if (kvm_entry_event(evsel))
-+	if (kvm_entry_event(sample->evsel))
- 		return true;
- 
- 	/* MMIO read end event in kernel.*/
--	if (evsel__name_is(evsel, "kvm:kvm_mmio") &&
--	    evsel__intval(evsel, sample, "type") == KVM_TRACE_MMIO_READ) {
--		mmio_event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, "kvm:kvm_mmio") &&
-+	    evsel__intval(sample->evsel, sample, "type") == KVM_TRACE_MMIO_READ) {
-+		mmio_event_get_key(sample, key);
- 		return true;
- 	}
- 
-@@ -86,31 +84,27 @@ static const struct kvm_events_ops mmio_events = {
- };
- 
-  /* The time of emulation pio access is from kvm_pio to kvm_entry. */
--static void ioport_event_get_key(struct evsel *evsel,
--				 struct perf_sample *sample,
-+static void ioport_event_get_key(struct perf_sample *sample,
- 				 struct event_key *key)
- {
--	key->key  = evsel__intval(evsel, sample, "port");
--	key->info = evsel__intval(evsel, sample, "rw");
-+	key->key  = evsel__intval(sample->evsel, sample, "port");
-+	key->info = evsel__intval(sample->evsel, sample, "rw");
- }
- 
--static bool ioport_event_begin(struct evsel *evsel,
--			       struct perf_sample *sample,
-+static bool ioport_event_begin(struct perf_sample *sample,
- 			       struct event_key *key)
- {
--	if (evsel__name_is(evsel, "kvm:kvm_pio")) {
--		ioport_event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, "kvm:kvm_pio")) {
-+		ioport_event_get_key(sample, key);
- 		return true;
- 	}
- 
- 	return false;
- }
- 
--static bool ioport_event_end(struct evsel *evsel,
--			     struct perf_sample *sample __maybe_unused,
--			     struct event_key *key __maybe_unused)
-+static bool ioport_event_end(struct perf_sample *sample, struct event_key *key __maybe_unused)
- {
--	return kvm_entry_event(evsel);
-+	return kvm_entry_event(sample->evsel);
- }
- 
- static void ioport_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
-@@ -130,31 +124,25 @@ static const struct kvm_events_ops ioport_events = {
- };
- 
-  /* The time of emulation msr is from kvm_msr to kvm_entry. */
--static void msr_event_get_key(struct evsel *evsel,
--				 struct perf_sample *sample,
--				 struct event_key *key)
-+static void msr_event_get_key(struct perf_sample *sample, struct event_key *key)
- {
--	key->key  = evsel__intval(evsel, sample, "ecx");
--	key->info = evsel__intval(evsel, sample, "write");
-+	key->key  = evsel__intval(sample->evsel, sample, "ecx");
-+	key->info = evsel__intval(sample->evsel, sample, "write");
- }
- 
--static bool msr_event_begin(struct evsel *evsel,
--			       struct perf_sample *sample,
--			       struct event_key *key)
-+static bool msr_event_begin(struct perf_sample *sample, struct event_key *key)
- {
--	if (evsel__name_is(evsel, "kvm:kvm_msr")) {
--		msr_event_get_key(evsel, sample, key);
-+	if (evsel__name_is(sample->evsel, "kvm:kvm_msr")) {
-+		msr_event_get_key(sample, key);
- 		return true;
- 	}
- 
- 	return false;
- }
- 
--static bool msr_event_end(struct evsel *evsel,
--			     struct perf_sample *sample __maybe_unused,
--			     struct event_key *key __maybe_unused)
-+static bool msr_event_end(struct perf_sample *sample, struct event_key *key __maybe_unused)
- {
--	return kvm_entry_event(evsel);
-+	return kvm_entry_event(sample->evsel);
- }
- 
- static void msr_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
-diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-index 27f16810498c..f17a6132958d 100644
---- a/tools/perf/util/kvm-stat.c
-+++ b/tools/perf/util/kvm-stat.c
-@@ -11,22 +11,20 @@ bool kvm_exit_event(struct evsel *evsel)
- 	return evsel__name_is(evsel, kvm_exit_trace(e_machine));
- }
- 
--void exit_event_get_key(struct evsel *evsel,
--			struct perf_sample *sample,
-+void exit_event_get_key(struct perf_sample *sample,
- 			struct event_key *key)
- {
--	uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
-+	uint16_t e_machine = evsel__e_machine(sample->evsel, /*e_flags=*/NULL);
- 
- 	key->info = 0;
--	key->key  = evsel__intval(evsel, sample, kvm_exit_reason(e_machine));
-+	key->key  = evsel__intval(sample->evsel, sample, kvm_exit_reason(e_machine));
- }
- 
- 
--bool exit_event_begin(struct evsel *evsel,
--		      struct perf_sample *sample, struct event_key *key)
-+bool exit_event_begin(struct perf_sample *sample, struct event_key *key)
- {
--	if (kvm_exit_event(evsel)) {
--		exit_event_get_key(evsel, sample, key);
-+	if (kvm_exit_event(sample->evsel)) {
-+		exit_event_get_key(sample, key);
- 		return true;
- 	}
- 
-@@ -40,11 +38,10 @@ bool kvm_entry_event(struct evsel *evsel)
- 	return evsel__name_is(evsel, kvm_entry_trace(e_machine));
- }
- 
--bool exit_event_end(struct evsel *evsel,
--		    struct perf_sample *sample __maybe_unused,
-+bool exit_event_end(struct perf_sample *sample,
- 		    struct event_key *key __maybe_unused)
- {
--	return kvm_entry_event(evsel);
-+	return kvm_entry_event(sample->evsel);
- }
- 
- static const char *get_exit_reason(struct perf_kvm_stat *kvm,
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index 4a998aaece5d..cdbd921a555f 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -53,18 +53,15 @@ struct kvm_event {
- };
- 
- struct child_event_ops {
--	void (*get_key)(struct evsel *evsel,
--			struct perf_sample *sample,
-+	void (*get_key)(struct perf_sample *sample,
- 			struct event_key *key);
- 	const char *name;
- };
- 
- struct kvm_events_ops {
--	bool (*is_begin_event)(struct evsel *evsel,
--			       struct perf_sample *sample,
-+	bool (*is_begin_event)(struct perf_sample *sample,
- 			       struct event_key *key);
--	bool (*is_end_event)(struct evsel *evsel,
--			     struct perf_sample *sample, struct event_key *key);
-+	bool (*is_end_event)(struct perf_sample *sample, struct event_key *key);
- 	const struct child_event_ops *child_ops;
- 	void (*decode_key)(struct perf_kvm_stat *kvm, struct event_key *key,
- 			   char *decode);
-@@ -116,14 +113,11 @@ struct kvm_reg_events_ops {
- 
- #ifdef HAVE_LIBTRACEEVENT
- 
--void exit_event_get_key(struct evsel *evsel,
--			struct perf_sample *sample,
-+void exit_event_get_key(struct perf_sample *sample,
- 			struct event_key *key);
--bool exit_event_begin(struct evsel *evsel,
--		      struct perf_sample *sample,
-+bool exit_event_begin(struct perf_sample *sample,
- 		      struct event_key *key);
--bool exit_event_end(struct evsel *evsel,
--		    struct perf_sample *sample,
-+bool exit_event_end(struct perf_sample *sample,
- 		    struct event_key *key);
- void exit_event_decode_key(struct perf_kvm_stat *kvm,
- 			   struct event_key *key,
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out_put;
 -- 
 2.53.0.1213.gd9a14994de-goog
 
