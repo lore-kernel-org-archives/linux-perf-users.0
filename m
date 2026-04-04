@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8092333429
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4943358BE
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Apr 2026 03:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775274224; cv=none; b=TNbDKGtIFHiWqM0+sUDCtnrnd/BXL2ZWatCmD1PMPhDOtyLme7pw3r/Re6m2wIi2aImdLJxyWP2noTqjEdJX2RlXGSHUKwvqGGExEB4pWk5RJ3Rzk0+qApBkD9H+/MZ0RizbPHtlPkrfg0W6t9+lE5BpY5FNO2Kz0mdh7/NPmqE=
+	t=1775274228; cv=none; b=hfwuuam+DgDKA9RM5inev8g5Pi99uQquUQNGj6mg+tSoae3D4P4Pc6Hb0GiKTU2ZG8wPvbjBvlXnNsyaqugjk8UB8rWmaXkv5V3XSK5YBxu9SbavXJ+U/z8WZh5GTO6195qqIQWMoC9pnuwiYGbU5mKnUdTG735BV8cg4UieaE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775274224; c=relaxed/simple;
-	bh=Qut0eip6SIm3QPTH9kFywQnXB7+XdpapJ4Wln7A+0yg=;
+	s=arc-20240116; t=1775274228; c=relaxed/simple;
+	bh=Fevu2a82PlXG/VnCeAh0NGKL7leqJkc1uEpjelurYuo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gGbkrRVX5YZJ7Vk2Ti3a8hW3n56CpjuFADdaJuFzLCymu7KQ4XQq2b1PfxoyIy+cwypd6f+TbWhKXPsVkVLRI3gd9xrHtIO7Dt673gzj8BeaJdzYNc9vSGO3888CTntyrSjK/27KZ19zmcFsZxOe+K2L8lhqy4hWERUrcWGxNYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQ5niWtq; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=YleLTu8tWkwQPg76jqOOFNpEB4acALazbRmrKBoz6+rN7ralG0j03uRkqiMcmJ9dBYI5jbkhRDhwy2PbjOAabGKwESqiXS/rsBJQ3rdwOf5EPKLbMfFWNq6ypVsJQtJ1kERvpE6lrYK/q0xuzTPzv2F/dZWAGS0+lWrZTWjworc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SPEcGCuM; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQ5niWtq"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so3082107eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SPEcGCuM"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bda35eab74so2764965eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Apr 2026 20:43:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775274222; x=1775879022; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775274224; x=1775879024; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lRP4mslqNRcFh9/FqPp5a2E7CZAvgx589ItuQzR4cGA=;
-        b=JQ5niWtqz0cDux8EZPUd93frSlCGCGjn/EdjUR4lfVLvOYlTjNHn27k/DIPwe2hmH0
-         Dcz9BgNHWzwx+MRUhrhFO625Qw9f+P1TLTsk68VE93x+/SZqYs2+QCHH8DFyUzBJ6bF/
-         y6Kg3dxkVw+NRfoHFp8H/GJUS7vQ3bO6eSXQ5KdITOZxgdHt1E8l7qdouJ9aG14ZG5F6
-         bfB9qT2qLIvxn2WC2LS14w9pu+E90rDckJBIc76TXWNSMPkM3vXXRfiO4rCudPDGibdl
-         U+cDf4D200uxCLt8Lo3aKjUC4C+lO40cRL5kZr006pSRCuMoiIYrC+O/MWgpBbwVeDSV
-         0N3Q==
+        bh=MMicoKPUVT45rFv1ciMETBcWs9j9aG8Diqlif7Zccqo=;
+        b=SPEcGCuMyHSq/eLWo6AQn6hOHqETPZ2XwZRAGjGO4QHY6q0B7l+k9s3u4Gt3YckPBf
+         EhVlSge213U1lrQMxnxhHfet1cHQ9sAR76bNuXS4o7a8r1pXL40IDMYATFpdiimP6Zqx
+         Snx4oV+9WlPAByk5/Cv8O1sQiHVNB5owJWYG+qRoQeiUtZV8dy/WjO9gwSzbAqeUtvAe
+         3LUMjXq92D/ScjUOfTVJyKQL89++SUT0nxC0iWDEC66DNtHPGeYJLUdSr4zSMccYAf7S
+         TxYKXuNh4rFFv2DYxk2a7+HiJc6qCb1os+4oBzPxdj7KMhqOe10zFzZ/DjU6908swqp2
+         cL6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775274222; x=1775879022;
+        d=1e100.net; s=20251104; t=1775274224; x=1775879024;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lRP4mslqNRcFh9/FqPp5a2E7CZAvgx589ItuQzR4cGA=;
-        b=G0tKEJzmatncX7DAzmJLEm4/338qYWTjfX0PwRPUrFUHRz8GG6vAN/pzyEsKxy/XxU
-         cgJ/t1IjJ9enNoR/hjiJ2jOZlMQy6MEd+x4FRET6aZ/Gb35ayvNFWsnGOueWhDy7EBTf
-         ZF+XyG8MiRKz2u6o+yC0rf4TB7mcXgg87/dXVKQE6GiRcb0K7F62j4MFOIsYLLhJJHC5
-         FnvU1C4NXlbaHq29VAMZBcA9pkVTse5UKSt1o2ujUYdlh9yHLMh0i8yG17aLrFZfEsZr
-         59n2PiIGvm81djyzSZbCDoosoaVM8HlKDQNBAY8y/19VFiElXGRKVBcMaDWanj9Mb36e
-         3wyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFVZzVStbvilBHDKrI+16AvcYLpWf7qJk4aNAU+HR/aQDS199LpWWsg/6rRVIEItrtRzT1etesCyNnoKvEqmhz@vger.kernel.org
-X-Gm-Message-State: AOJu0YySLPvLrLKmrXD84e+7K0fi+rMgiaHZw25Ca0cwMFdlHT99j86m
-	4RjHGyI23AhYMk23O9xM+/z8P7OhkKaMC8TrOxvay5LMmSIF4iVkT+l7g7pRHf3no9inaxJ+Yu0
-	EpCAz6KT1Yg==
-X-Received: from dlea10-n1.prod.google.com ([2002:a05:701b:420a:10b0:12a:6c32:ffd2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61f:b0:128:d5f1:d595
- with SMTP id a92af1059eb24-12bfb6f3d84mr2262518c88.10.1775274221641; Fri, 03
- Apr 2026 20:43:41 -0700 (PDT)
-Date: Fri,  3 Apr 2026 20:43:03 -0700
+        bh=MMicoKPUVT45rFv1ciMETBcWs9j9aG8Diqlif7Zccqo=;
+        b=UwlOmr4/vCPNspUQqz1QA0NU1hhKce2tZ1gBJ5zmpFQtOAuWgGvetr6s+hGLbWzH7A
+         LoXYZxZYXNCTakajl7Kv5d8n6I2JAzmzpA48VbWJyZNGivpurAuWZS/a6rIHC54+ZRwC
+         pnGPeyZxQHlkZcnzgG8kQ6yhmqIyzwE1S8teZJhy6cmsmCd0eCnmAM4Go7KL3NWhrFl6
+         5atHqa2O7eA+ZrYxlu3kU2REaH7WhlxoW+dFgl3WkZ64N0ArOxldlG9wyaVynKSR6uD9
+         eb+TgGWRHOhFfMJEEztwwkO2qLwrtyH8BAsrliYlIqfzqRX8nG3Z5SmtGbAlaef55wEH
+         PvQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVBCpch2Gj/fhkhcLH57cvv+a7KSn6LIeW+TYUkPGybon0y7joL64vxnSJHf+dwkFm+rZzus9Kl3Lg2ZfEidco@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAc9mLKRalrxEB82g1WD+UVx0L8hWZ7m1FTzyBV9LAyZtciLBu
+	1n7MN34VZuGnIzBPXnotFwl0HanVo+xOItvIuKET2K5bRFPrbpYBzFBVPsmNpBSqgRsR36CpR+3
+	oA7lrrVF9QQ==
+X-Received: from dyw23.prod.google.com ([2002:a05:7300:8817:b0:2c8:8992:d02a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:3f09:b0:2c0:df3b:ec1e
+ with SMTP id 5a478bee46e88-2cad7e3729fmr3017680eec.11.1775274224157; Fri, 03
+ Apr 2026 20:43:44 -0700 (PDT)
+Date: Fri,  3 Apr 2026 20:43:04 -0700
 In-Reply-To: <20260404034325.3172592-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260403204017.2919994-1-irogers@google.com> <20260404034325.3172592-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260404034325.3172592-4-irogers@google.com>
-Subject: [PATCH v6 03/25] perf sample: Add evsel to struct perf_sample
+Message-ID: <20260404034325.3172592-5-irogers@google.com>
+Subject: [PATCH v6 04/25] perf tool: Remove evsel from tool APIs that pass the sample
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com, 
@@ -76,260 +76,728 @@ Cc: irogers@google.com, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Add the evsel from evsel__parse_sample into the struct
-perf_sample. Sometimes we want to alter the evsel associated with a
-sample, such as with off-cpu bpf-output events. In general the evsel
-and perf_sample are passed as a pair, but this makes an altered evsel
-something of a chore to keep checking for and setting up. Later
-patches will remove passing an evsel with the perf_sample and switch
-to just using the perf_sample's value.
+Now struct perf_sample has the evsel within it there is no need to
+pass the evsel along with the sample. In the called functions read the
+sample's evsel in to a variable if there are multiple uses, or use
+directly if there is just one use - the goal being to leave the code
+with as little change as possible. Some functions only use the evsel
+to pass to another function which they also pass the sample, in those
+cases just pass the sample and get the evsel in the called function.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c       |  6 +++---
- tools/perf/builtin-script.c       |  4 ++++
- tools/perf/tests/hists_cumulate.c |  2 +-
- tools/perf/tests/hists_filter.c   |  1 +
- tools/perf/tests/hists_output.c   |  2 +-
- tools/perf/util/evsel.c           |  1 +
- tools/perf/util/sample.c          |  1 +
- tools/perf/util/sample.h          |  3 +++
- tools/perf/util/session.c         | 35 +++++++++++++++++++------------
- 9 files changed, 37 insertions(+), 18 deletions(-)
+ tools/perf/builtin-annotate.c       |  3 +--
+ tools/perf/builtin-c2c.c            |  2 +-
+ tools/perf/builtin-diff.c           |  2 +-
+ tools/perf/builtin-inject.c         | 19 ++++++---------
+ tools/perf/builtin-kmem.c           |  2 +-
+ tools/perf/builtin-kvm.c            |  5 ++--
+ tools/perf/builtin-kwork.c          |  2 +-
+ tools/perf/builtin-lock.c           |  2 +-
+ tools/perf/builtin-mem.c            |  1 -
+ tools/perf/builtin-record.c         |  3 +--
+ tools/perf/builtin-report.c         | 10 +++-----
+ tools/perf/builtin-sched.c          |  4 +--
+ tools/perf/builtin-script.c         |  4 +--
+ tools/perf/builtin-timechart.c      |  2 +-
+ tools/perf/builtin-trace.c          |  2 +-
+ tools/perf/util/build-id.c          |  3 +--
+ tools/perf/util/build-id.h          |  7 +-----
+ tools/perf/util/data-convert-bt.c   |  2 +-
+ tools/perf/util/data-convert-json.c |  5 ++--
+ tools/perf/util/intel-tpebs.c       |  3 +--
+ tools/perf/util/jitdump.c           |  2 +-
+ tools/perf/util/session.c           | 38 ++++++++++++++---------------
+ tools/perf/util/tool.c              |  4 +--
+ tools/perf/util/tool.h              |  4 +--
+ 24 files changed, 55 insertions(+), 76 deletions(-)
 
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 530348b6981b..d492c33cd912 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -284,7 +284,6 @@ static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	struct perf_annotate *ann = container_of(tool, struct perf_annotate, tool);
+@@ -303,7 +302,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		goto out_put;
+ 
+ 	if (!al.filtered &&
+-	    evsel__add_sample(evsel, sample, &al, ann, machine)) {
++	    evsel__add_sample(sample->evsel, sample, &al, ann, machine)) {
+ 		pr_warning("problem incrementing symbol count, "
+ 			   "skipping event\n");
+ 		ret = -1;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e60eea62c2fc..dedd53cb5a86 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -314,9 +314,9 @@ static void perf_c2c__evsel_hists_inc_stats(struct evsel *evsel,
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	struct c2c_hists *c2c_hists = &c2c.hists;
+ 	struct c2c_hist_entry *c2c_he;
+ 	struct c2c_stats stats = { .nr_entries = 0, };
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 69069926dd0b..096adc65451c 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -390,11 +390,11 @@ struct hist_entry_ops block_hist_ops = {
+ static int diff__process_sample_event(const struct perf_tool *tool,
+ 				      union perf_event *event,
+ 				      struct perf_sample *sample,
+-				      struct evsel *evsel,
+ 				      struct machine *machine)
+ {
+ 	struct perf_diff *pdiff = container_of(tool, struct perf_diff, tool);
+ 	struct addr_location al;
++	struct evsel *evsel = sample->evsel;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry_iter iter = {
+ 		.evsel	= evsel,
 diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index d63191ae4c5b..05b769a2a825 100644
+index 05b769a2a825..a958ac7cec9d 100644
 --- a/tools/perf/builtin-inject.c
 +++ b/tools/perf/builtin-inject.c
-@@ -133,7 +133,7 @@ struct perf_inject {
- 	struct perf_file_section secs[HEADER_FEAT_BITS];
- 	struct guest_session	guest_session;
- 	struct strlist		*known_build_ids;
--	const struct evsel	*mmap_evsel;
-+	struct evsel		*mmap_evsel;
- 	struct ip_callchain	*raw_callchain;
- };
- 
-@@ -519,7 +519,7 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
-  * processing mmap events. If not stashed, search the evlist for the first mmap
-  * gathering event.
-  */
--static const struct evsel *inject__mmap_evsel(struct perf_inject *inject)
-+static struct evsel *inject__mmap_evsel(struct perf_inject *inject)
+@@ -363,18 +363,17 @@ typedef int (*inject_handler)(const struct perf_tool *tool,
+ static int perf_event__repipe_sample(const struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample,
+-				     struct evsel *evsel,
+ 				     struct machine *machine)
  {
- 	struct evsel *pos;
+-	struct perf_inject *inject = container_of(tool, struct perf_inject,
+-						  tool);
++	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
++	struct evsel *evsel = sample->evsel;
  
-@@ -1023,7 +1023,6 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
- 
- 	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
- 					/*symbols=*/false, mark_dso_hit_callback, &args);
--
- 	thread__put(thread);
- repipe:
- 	perf_event__repipe(tool, event, sample, machine);
-@@ -1432,6 +1431,7 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
- {
- 	struct machine *machine = perf_session__findnew_machine(inject->session, machine_pid);
- 	struct perf_sample synth_sample = {
-+		.evsel	   = inject__mmap_evsel(inject),
- 		.pid	   = -1,
- 		.tid	   = -1,
- 		.time	   = -1,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 622130d3aed4..42d4cc162039 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2910,8 +2910,12 @@ static int print_event_with_time(const struct perf_tool *tool,
- 		thread = machine__findnew_thread(machine, pid, tid);
- 
- 	if (evsel) {
-+		struct evsel *saved_evsel = sample->evsel;
-+
-+		sample->evsel = evsel;
- 		perf_sample__fprintf_start(script, sample, thread, evsel,
- 					   event->header.type, stdout);
-+		sample->evsel = saved_evsel;
+ 	if (evsel && evsel->handler) {
+ 		inject_handler f = evsel->handler;
+ 		return f(tool, event, sample, evsel, machine);
  	}
  
- 	perf_event__fprintf(event, machine, stdout);
-diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
-index 3eb9ef8d7ec6..606aa926a8fc 100644
---- a/tools/perf/tests/hists_cumulate.c
-+++ b/tools/perf/tests/hists_cumulate.c
-@@ -81,7 +81,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+-	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
++	build_id__mark_dso_hit(tool, event, sample, machine);
+ 
+ 	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
+ 		event = perf_inject__cut_auxtrace_sample(inject, event, sample);
+@@ -388,10 +387,10 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+ 						union perf_event *event,
+ 						struct perf_sample *sample,
+-						struct evsel *evsel,
+ 						struct machine *machine)
  {
- 	struct addr_location al;
- 	struct evsel *evsel = hists_to_evsel(hists);
--	struct perf_sample sample = { .period = 1000, };
-+	struct perf_sample sample = { .evsel = evsel, .period = 1000, };
- 	size_t i;
- 
- 	addr_location__init(&al);
-diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
-index 1cebd20cc91c..cc6b26e373d1 100644
---- a/tools/perf/tests/hists_filter.c
-+++ b/tools/perf/tests/hists_filter.c
-@@ -70,6 +70,7 @@ static int add_hist_entries(struct evlist *evlist,
- 			};
- 			struct hists *hists = evsel__hists(evsel);
- 
-+			sample.evsel = evsel;
- 			/* make sure it has no filter at first */
- 			hists->thread_filter = NULL;
- 			hists->dso_filter = NULL;
-diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
-index ee5ec8bda60e..7818950d786e 100644
---- a/tools/perf/tests/hists_output.c
-+++ b/tools/perf/tests/hists_output.c
-@@ -51,7 +51,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
- {
- 	struct addr_location al;
- 	struct evsel *evsel = hists_to_evsel(hists);
--	struct perf_sample sample = { .period = 100, };
-+	struct perf_sample sample = { .evsel = evsel, .period = 100, };
- 	size_t i;
- 
- 	addr_location__init(&al);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index df2392713edb..2ee87fd84d3e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3226,6 +3226,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	union u64_swap u;
- 
- 	perf_sample__init(data, /*all=*/true);
-+	data->evsel = evsel;
- 	data->cpu = data->pid = data->tid = -1;
- 	data->stream_id = data->id = data->time = -1ULL;
- 	data->period = evsel->core.attr.sample_period;
-diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
-index 2a30de4573f6..cf73329326d7 100644
---- a/tools/perf/util/sample.c
-+++ b/tools/perf/util/sample.c
-@@ -19,6 +19,7 @@ void perf_sample__init(struct perf_sample *sample, bool all)
- 	if (all) {
- 		memset(sample, 0, sizeof(*sample));
- 	} else {
-+		sample->evsel = NULL;
- 		sample->user_regs = NULL;
- 		sample->intr_regs = NULL;
- 		sample->merged_callchain = false;
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 5809c42631e5..3bd6d8b60586 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -5,6 +5,7 @@
- #include <linux/perf_event.h>
- #include <linux/types.h>
- 
-+struct evsel;
- struct machine;
- struct thread;
- 
-@@ -102,6 +103,8 @@ struct simd_flags {
-  * and clean up these values.
-  */
- struct perf_sample {
-+	/** @evsel: Backward reference to the evsel used when constructing the sample. */
-+	struct evsel *evsel;
- 	/** @ip: The sample event PERF_SAMPLE_IP value. */
- 	u64 ip;
- 	/** @pid: The sample event PERF_SAMPLE_TID pid value. */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 53fb2e628b71..7588cca110d2 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1264,8 +1264,9 @@ static int deliver_sample_value(struct evlist *evlist,
- 				bool per_thread)
- {
- 	struct perf_sample_id *sid = evlist__id2sid(evlist, v->id);
--	struct evsel *evsel;
-+	struct evsel *saved_evsel = sample->evsel;
- 	u64 *storage = NULL;
-+	int ret;
- 
- 	if (sid) {
- 		storage = perf_sample_id__get_period_storage(sid, sample->tid, per_thread);
-@@ -1289,8 +1290,10 @@ static int deliver_sample_value(struct evlist *evlist,
- 	if (!sample->period)
- 		return 0;
- 
--	evsel = container_of(sid->evsel, struct evsel, core);
--	return tool->sample(tool, event, sample, evsel, machine);
-+	sample->evsel = container_of(sid->evsel, struct evsel, core);
-+	ret = tool->sample(tool, event, sample, sample->evsel, machine);
-+	sample->evsel = saved_evsel;
-+	return ret;
+ 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 	union perf_event *event_copy = (void *)inject->event_copy;
+ 	struct callchain_cursor_node *node;
+@@ -988,10 +987,8 @@ static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
+ 			    args->mmap_evsel, map, /*sample_in_dso=*/false);
  }
  
- static int deliver_sample_group(struct evlist *evlist,
-@@ -1362,13 +1365,16 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
- 					      struct machine *machine)
+-int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct evsel *evsel __maybe_unused,
+-			       struct machine *machine)
++static int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *event,
++				      struct perf_sample *sample, struct machine *machine)
  {
- 	struct deferred_event *de, *tmp;
--	struct evsel *evsel;
- 	int ret = 0;
- 
- 	if (!tool->merge_deferred_callchains) {
--		evsel = evlist__id2evsel(evlist, sample->id);
--		return tool->callchain_deferred(tool, event, sample,
--						evsel, machine);
-+		struct evsel *saved_evsel = sample->evsel;
-+
-+		sample->evsel = evlist__id2evsel(evlist, sample->id);
-+		ret = tool->callchain_deferred(tool, event, sample,
-+					       sample->evsel, machine);
-+		sample->evsel = saved_evsel;
-+		return ret;
+ 	struct addr_location al;
+ 	struct thread *thread;
+@@ -1021,7 +1018,7 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
+ 			     /*sample_in_dso=*/true);
  	}
  
- 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-@@ -1392,9 +1398,9 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
- 		else
- 			orig_sample.deferred_callchain = false;
+-	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
++	sample__for_each_callchain_node(thread, sample->evsel, sample, PERF_MAX_STACK_DEPTH,
+ 					/*symbols=*/false, mark_dso_hit_callback, &args);
+ 	thread__put(thread);
+ repipe:
+@@ -1102,7 +1099,7 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
+ 	sample_sw.time	 = sample->time;
+ 	perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
+ 				      evsel->core.attr.read_format, &sample_sw);
+-	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
++	build_id__mark_dso_hit(tool, event_sw, &sample_sw, machine);
+ 	ret = perf_event__repipe(tool, event_sw, &sample_sw, machine);
+ 	perf_sample__exit(&sample_sw);
+ 	return ret;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 7929a5fa5f46..34852a4c3fc8 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -960,9 +960,9 @@ typedef int (*tracepoint_handler)(struct evsel *evsel,
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	int err = 0;
+ 	struct thread *thread = machine__findnew_thread(machine, sample->pid,
+ 							sample->tid);
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 0c5e6b3aac74..5e8e6fde097a 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -941,9 +941,9 @@ struct vcpu_event_record *per_vcpu_record(struct thread *thread,
  
--		evsel = evlist__id2evsel(evlist, orig_sample.id);
-+		orig_sample.evsel = evlist__id2evsel(evlist, orig_sample.id);
+ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
+ 			     struct thread *thread,
+-			     struct evsel *evsel,
+ 			     struct perf_sample *sample)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	struct vcpu_event_record *vcpu_record;
+ 	struct event_key key = { .key = INVALID_KEY,
+ 				 .exit_reasons = kvm->exit_reasons };
+@@ -1133,7 +1133,6 @@ static bool skip_sample(struct perf_kvm_stat *kvm,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	int err = 0;
+@@ -1156,7 +1155,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		return -1;
+ 	}
+ 
+-	if (!handle_kvm_event(kvm, thread, evsel, sample))
++	if (!handle_kvm_event(kvm, thread, sample))
+ 		err = -1;
+ 
+ 	thread__put(thread);
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 6f94a8f45f60..e34a1f35439e 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -1955,9 +1955,9 @@ typedef int (*tracepoint_handler)(const struct perf_tool *tool,
+ static int perf_kwork__process_tracepoint_sample(const struct perf_tool *tool,
+ 						 union perf_event *event __maybe_unused,
+ 						 struct perf_sample *sample,
+-						 struct evsel *evsel,
+ 						 struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	int err = 0;
+ 
+ 	if (evsel->handler != NULL) {
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5585aeb97684..4d8ddf6391e8 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1430,9 +1430,9 @@ typedef int (*tracepoint_handler)(struct evsel *evsel,
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	int err = 0;
+ 	struct thread *thread = machine__findnew_thread(machine, sample->pid,
+ 							sample->tid);
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index d43500b92a7b..6101a26b3a78 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -255,7 +255,6 @@ dump_raw_samples(const struct perf_tool *tool,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel __maybe_unused,
+ 				struct machine *machine)
+ {
+ 	return dump_raw_samples(tool, event, sample, machine);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e919d1f021c3..950ce56dba00 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1489,7 +1489,6 @@ static void set_timestamp_boundary(struct record *rec, u64 sample_time)
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	struct record *rec = container_of(tool, struct record, tool);
+@@ -1500,7 +1499,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		return 0;
+ 
+ 	rec->samples++;
+-	return build_id__mark_dso_hit(tool, event, sample, evsel, machine);
++	return build_id__mark_dso_hit(tool, event, sample, machine);
+ }
+ 
+ static int process_buildids(struct record *rec)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 95c0bdba6b11..848e2ccb1420 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -264,10 +264,10 @@ static int process_feature_event(const struct perf_tool *tool,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	struct report *rep = container_of(tool, struct report, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct addr_location al;
+ 	struct hist_entry_iter iter = {
+ 		.evsel 			= evsel,
+@@ -344,7 +344,6 @@ static int process_sample_event(const struct perf_tool *tool,
+ static int process_read_event(const struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample __maybe_unused,
+-			      struct evsel *evsel,
+ 			      struct machine *machine __maybe_unused)
+ {
+ 	struct report *rep = container_of(tool, struct report, tool);
+@@ -352,7 +351,7 @@ static int process_read_event(const struct perf_tool *tool,
+ 	if (rep->show_threads) {
+ 		int err = perf_read_values_add_value(&rep->show_threads_values,
+ 					   event->read.pid, event->read.tid,
+-					   evsel,
++					   sample->evsel,
+ 					   event->read.value);
+ 
+ 		if (err)
+@@ -778,11 +777,10 @@ static void report__output_resort(struct report *rep)
+ 
+ static int count_sample_event(const struct perf_tool *tool __maybe_unused,
+ 			      union perf_event *event __maybe_unused,
+-			      struct perf_sample *sample __maybe_unused,
+-			      struct evsel *evsel,
++			      struct perf_sample *sample,
+ 			      struct machine *machine __maybe_unused)
+ {
+-	struct hists *hists = evsel__hists(evsel);
++	struct hists *hists = evsel__hists(sample->evsel);
+ 
+ 	hists__inc_nr_events(hists);
+ 	return 0;
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index d083e2bb7703..296b9837278a 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1867,9 +1867,9 @@ typedef int (*tracepoint_handler)(const struct perf_tool *tool,
+ static int perf_sched__process_tracepoint_sample(const struct perf_tool *tool __maybe_unused,
+ 						 union perf_event *event __maybe_unused,
+ 						 struct perf_sample *sample,
+-						 struct evsel *evsel,
+ 						 struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	int err = 0;
+ 
+ 	if (evsel->handler != NULL) {
+@@ -3184,10 +3184,10 @@ typedef int (*sched_handler)(const struct perf_tool *tool,
+ static int perf_timehist__process_sample(const struct perf_tool *tool,
+ 					 union perf_event *event,
+ 					 struct perf_sample *sample,
+-					 struct evsel *evsel,
+ 					 struct machine *machine)
+ {
+ 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
++	struct evsel *evsel = sample->evsel;
+ 	int err = 0;
+ 	struct perf_cpu this_cpu = {
+ 		.cpu = sample->cpu,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 42d4cc162039..04cc5d64c174 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2645,10 +2645,10 @@ static bool filter_cpu(struct perf_sample *sample)
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct addr_location al;
+ 	struct addr_location addr_al;
+ 	int ret = 0;
+@@ -2729,10 +2729,10 @@ static int process_sample_event(const struct perf_tool *tool,
+ static int process_deferred_sample_event(const struct perf_tool *tool,
+ 					 union perf_event *event,
+ 					 struct perf_sample *sample,
+-					 struct evsel *evsel,
+ 					 struct machine *machine)
+ {
+ 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	struct evsel_script *es = evsel->priv;
+ 	unsigned int type = output_type(attr->type);
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 28f33e39895d..8692d11ccd29 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -574,10 +574,10 @@ typedef int (*tracepoint_handler)(struct timechart *tchart,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine)
+ {
+ 	struct timechart *tchart = container_of(tool, struct timechart, tool);
++	struct evsel *evsel = sample->evsel;
+ 
+ 	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
+ 		if (!tchart->first_time || tchart->first_time > sample->time)
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 873d144807e2..cf26edcd35fe 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3466,10 +3466,10 @@ static void trace__set_base_time(struct trace *trace,
+ static int trace__process_sample(const struct perf_tool *tool,
+ 				 union perf_event *event,
+ 				 struct perf_sample *sample,
+-				 struct evsel *evsel,
+ 				 struct machine *machine __maybe_unused)
+ {
+ 	struct trace *trace = container_of(tool, struct trace, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct thread *thread;
+ 	int err = 0;
+ 
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index fdb35133fde4..55b72235f891 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -55,7 +55,6 @@ static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data
+ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 			   union perf_event *event,
+ 			   struct perf_sample *sample,
+-			   struct evsel *evsel,
+ 			   struct machine *machine)
+ {
+ 	struct addr_location al;
+@@ -74,7 +73,7 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 
+ 	addr_location__exit(&al);
+ 
+-	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
++	sample__for_each_callchain_node(thread, sample->evsel, sample, PERF_MAX_STACK_DEPTH,
+ 					/*symbols=*/false, mark_dso_hit_callback, /*data=*/NULL);
+ 
+ 
+diff --git a/tools/perf/util/build-id.h b/tools/perf/util/build-id.h
+index 47e621cebe1b..73bad90b06f9 100644
+--- a/tools/perf/util/build-id.h
++++ b/tools/perf/util/build-id.h
+@@ -34,12 +34,7 @@ char *__dso__build_id_filename(const struct dso *dso, char *bf, size_t size,
+ 			       bool is_debug, bool is_kallsyms);
+ 
+ int build_id__mark_dso_hit(const struct perf_tool *tool, union perf_event *event,
+-			   struct perf_sample *sample, struct evsel *evsel,
+-			   struct machine *machine);
+-
+-int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *event,
+-			       struct perf_sample *sample, struct evsel *evsel,
+-			       struct machine *machine);
++			   struct perf_sample *sample, struct machine *machine);
+ 
+ bool perf_session__read_build_ids(struct perf_session *session, bool with_hits);
+ int perf_session__write_buildid_table(struct perf_session *session,
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index bece77cbc493..eb5d77eb6d01 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -803,10 +803,10 @@ static bool is_flush_needed(struct ctf_stream *cs)
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *_event,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine __maybe_unused)
+ {
+ 	struct convert *c = container_of(tool, struct convert, tool);
++	struct evsel *evsel = sample->evsel;
+ 	struct evsel_priv *priv = evsel->priv;
+ 	struct ctf_writer *cw = &c->writer;
+ 	struct ctf_stream *cs;
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 4b1b2f7bed25..b2bd287bf6d2 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -159,13 +159,12 @@ static void output_sample_callchain_entry(const struct perf_tool *tool,
+ static int process_sample_event(const struct perf_tool *tool,
+ 				union perf_event *event __maybe_unused,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel __maybe_unused,
+ 				struct machine *machine)
+ {
+ 	struct convert_json *c = container_of(tool, struct convert_json, tool);
+ 	FILE *out = c->out;
+ 	struct addr_location al;
+-	u64 sample_type = __evlist__combined_sample_type(evsel->evlist);
++	u64 sample_type = __evlist__combined_sample_type(sample->evsel->evlist);
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
+ 
+ 	addr_location__init(&al);
+@@ -245,7 +244,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+ 	if (sample->raw_data) {
+-		struct tep_event *tp_format = evsel__tp_format(evsel);
++		struct tep_event *tp_format = evsel__tp_format(sample->evsel);
+ 		struct tep_format_field **fields = tp_format ? tep_event_fields(tp_format) : NULL;
+ 
+ 		if (fields) {
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 8b615dc94e9e..ed8cfe2ba2fa 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -185,7 +185,6 @@ static bool should_ignore_sample(const struct perf_sample *sample, const struct
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event __maybe_unused,
+ 				struct perf_sample *sample,
+-				struct evsel *evsel,
+ 				struct machine *machine __maybe_unused)
+ {
+ 	struct tpebs_retire_lat *t;
+@@ -196,7 +195,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 		mutex_unlock(tpebs_mtx_get());
+ 		return 0;
+ 	}
+-	t = tpebs_retire_lat__find(evsel);
++	t = tpebs_retire_lat__find(sample->evsel);
+ 	if (!t) {
+ 		mutex_unlock(tpebs_mtx_get());
+ 		return -EINVAL;
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index e0ce8b904729..52e6ffac2b3e 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -642,7 +642,7 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	ret = jit_inject_event(jd, event);
+ 	if (!ret)
+-		build_id__mark_dso_hit(tool, event, &sample, NULL, jd->machine);
++		build_id__mark_dso_hit(tool, event, &sample, jd->machine);
+ out:
+ 	perf_sample__exit(&sample);
+ 	return ret;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 7588cca110d2..96dc2c358190 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1117,9 +1117,10 @@ char *get_page_size_name(u64 size, char *str)
+ 	return str;
+ }
+ 
+-static void dump_sample(struct machine *machine, struct evsel *evsel, union perf_event *event,
++static void dump_sample(struct machine *machine, union perf_event *event,
+ 			struct perf_sample *sample)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	u64 sample_type;
+ 	char str[PAGE_SIZE_NAME_LEN];
+ 	uint16_t e_machine = EM_NONE;
+@@ -1183,9 +1184,10 @@ static void dump_sample(struct machine *machine, struct evsel *evsel, union perf
+ 		sample_read__printf(sample, evsel->core.attr.read_format);
+ }
+ 
+-static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
+-				    struct perf_sample *sample)
++static void dump_deferred_callchain(union perf_event *event, struct perf_sample *sample)
+ {
++	struct evsel *evsel = sample->evsel;
++
+ 	if (!dump_trace)
+ 		return;
+ 
+@@ -1291,7 +1293,7 @@ static int deliver_sample_value(struct evlist *evlist,
+ 		return 0;
+ 
+ 	sample->evsel = container_of(sid->evsel, struct evsel, core);
+-	ret = tool->sample(tool, event, sample, sample->evsel, machine);
++	ret = tool->sample(tool, event, sample, machine);
+ 	sample->evsel = saved_evsel;
+ 	return ret;
+ }
+@@ -1323,8 +1325,9 @@ static int deliver_sample_group(struct evlist *evlist,
+ 
+ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool *tool,
+ 				  union  perf_event *event, struct perf_sample *sample,
+-				  struct evsel *evsel, struct machine *machine)
++				  struct machine *machine)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	/* We know evsel != NULL. */
+ 	u64 sample_type = evsel->core.attr.sample_type;
+ 	u64 read_format = evsel->core.attr.read_format;
+@@ -1332,7 +1335,7 @@ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool
+ 
+ 	/* Standard sample delivery. */
+ 	if (!(sample_type & PERF_SAMPLE_READ))
+-		return tool->sample(tool, event, sample, evsel, machine);
++		return tool->sample(tool, event, sample, machine);
+ 
+ 	/* For PERF_SAMPLE_READ we have either single or group mode. */
+ 	if (read_format & PERF_FORMAT_GROUP)
+@@ -1371,8 +1374,7 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 		struct evsel *saved_evsel = sample->evsel;
+ 
+ 		sample->evsel = evlist__id2evsel(evlist, sample->id);
+-		ret = tool->callchain_deferred(tool, event, sample,
+-					       sample->evsel, machine);
++		ret = tool->callchain_deferred(tool, event, sample, machine);
+ 		sample->evsel = saved_evsel;
+ 		return ret;
+ 	}
+@@ -1400,7 +1402,7 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
+ 
+ 		orig_sample.evsel = evlist__id2evsel(evlist, orig_sample.id);
  		ret = evlist__deliver_sample(evlist, tool, de->event,
--					     &orig_sample, evsel, machine);
-+					     &orig_sample, orig_sample.evsel, machine);
+-					     &orig_sample, orig_sample.evsel, machine);
++					     &orig_sample, machine);
  
  		perf_sample__exit(&orig_sample);
  		list_del(&de->list);
-@@ -1417,7 +1423,6 @@ static int session__flush_deferred_samples(struct perf_session *session,
- 	struct evlist *evlist = session->evlist;
- 	struct machine *machine = &session->machines.host;
- 	struct deferred_event *de, *tmp;
--	struct evsel *evsel;
- 	int ret = 0;
+@@ -1438,7 +1440,7 @@ static int session__flush_deferred_samples(struct perf_session *session,
  
- 	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-@@ -1431,9 +1436,9 @@ static int session__flush_deferred_samples(struct perf_session *session,
- 			break;
- 		}
- 
--		evsel = evlist__id2evsel(evlist, sample.id);
-+		sample.evsel = evlist__id2evsel(evlist, sample.id);
+ 		sample.evsel = evlist__id2evsel(evlist, sample.id);
  		ret = evlist__deliver_sample(evlist, tool, de->event,
--					     &sample, evsel, machine);
-+					     &sample, sample.evsel, machine);
+-					     &sample, sample.evsel, machine);
++					     &sample, machine);
  
  		perf_sample__exit(&sample);
  		list_del(&de->list);
-@@ -1458,8 +1463,12 @@ static int machines__deliver_event(struct machines *machines,
+@@ -1458,7 +1460,6 @@ static int machines__deliver_event(struct machines *machines,
+ 				   const struct perf_tool *tool, u64 file_offset,
+ 				   const char *file_path)
+ {
+-	struct evsel *evsel;
+ 	struct machine *machine;
  
  	dump_event(evlist, event, file_offset, sample, file_path);
+@@ -1468,21 +1469,20 @@ static int machines__deliver_event(struct machines *machines,
+ 	else
+ 		assert(sample->evsel == evlist__id2evsel(evlist, sample->id));
  
--	evsel = evlist__id2evsel(evlist, sample->id);
-+	if (!sample->evsel)
-+		sample->evsel = evlist__id2evsel(evlist, sample->id);
-+	else
-+		assert(sample->evsel == evlist__id2evsel(evlist, sample->id));
- 
-+	evsel = sample->evsel;
+-	evsel = sample->evsel;
  	machine = machines__find_for_cpumode(machines, event, sample);
  
  	switch (event->header.type) {
+ 	case PERF_RECORD_SAMPLE:
+-		if (evsel == NULL) {
++		if (sample->evsel == NULL) {
+ 			++evlist->stats.nr_unknown_id;
+ 			return 0;
+ 		}
+ 		if (machine == NULL) {
+ 			++evlist->stats.nr_unprocessable_samples;
+-			dump_sample(machine, evsel, event, sample);
++			dump_sample(machine, event, sample);
+ 			return 0;
+ 		}
+-		dump_sample(machine, evsel, event, sample);
++		dump_sample(machine, event, sample);
+ 		if (sample->deferred_callchain && tool->merge_deferred_callchains) {
+ 			struct deferred_event *de = malloc(sizeof(*de));
+ 			size_t sz = event->header.size;
+@@ -1499,7 +1499,7 @@ static int machines__deliver_event(struct machines *machines,
+ 			list_add_tail(&de->list, &evlist->deferred_samples);
+ 			return 0;
+ 		}
+-		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
++		return evlist__deliver_sample(evlist, tool, event, sample, machine);
+ 	case PERF_RECORD_MMAP:
+ 		return tool->mmap(tool, event, sample, machine);
+ 	case PERF_RECORD_MMAP2:
+@@ -1527,8 +1527,8 @@ static int machines__deliver_event(struct machines *machines,
+ 			evlist->stats.total_lost_samples += event->lost_samples.lost;
+ 		return tool->lost_samples(tool, event, sample, machine);
+ 	case PERF_RECORD_READ:
+-		dump_read(evsel, event);
+-		return tool->read(tool, event, sample, evsel, machine);
++		dump_read(sample->evsel, event);
++		return tool->read(tool, event, sample, machine);
+ 	case PERF_RECORD_THROTTLE:
+ 		return tool->throttle(tool, event, sample, machine);
+ 	case PERF_RECORD_UNTHROTTLE:
+@@ -1557,7 +1557,7 @@ static int machines__deliver_event(struct machines *machines,
+ 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
+ 		return tool->aux_output_hw_id(tool, event, sample, machine);
+ 	case PERF_RECORD_CALLCHAIN_DEFERRED:
+-		dump_deferred_callchain(evsel, event, sample);
++		dump_deferred_callchain(event, sample);
+ 		return evlist__deliver_deferred_callchain(evlist, tool, event,
+ 							  sample, machine);
+ 	default:
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 013c7839e2cf..0f285a2574c8 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -110,7 +110,6 @@ static int process_event_synth_event_update_stub(const struct perf_tool *tool __
+ int process_event_sample_stub(const struct perf_tool *tool __maybe_unused,
+ 			      union perf_event *event __maybe_unused,
+ 			      struct perf_sample *sample __maybe_unused,
+-			      struct evsel *evsel __maybe_unused,
+ 			      struct machine *machine __maybe_unused)
+ {
+ 	dump_printf(": unhandled!\n");
+@@ -348,12 +347,11 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
+ 	static int delegate_ ## name(const struct perf_tool *tool, \
+ 				     union perf_event *event, \
+ 				     struct perf_sample *sample, \
+-				     struct evsel *evsel, \
+ 				     struct machine *machine) \
+ 	{								\
+ 		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
+ 		struct perf_tool *delegate = del_tool->delegate;		\
+-		return delegate->name(delegate, event, sample, evsel, machine);	\
++		return delegate->name(delegate, event, sample, machine);	\
+ 	}
+ CREATE_DELEGATE_SAMPLE(read);
+ CREATE_DELEGATE_SAMPLE(sample);
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index 2d9a4b1ca9d0..2a4f124ffd8d 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -9,7 +9,6 @@
+ struct perf_session;
+ union perf_event;
+ struct evlist;
+-struct evsel;
+ struct perf_sample;
+ struct perf_tool;
+ struct machine;
+@@ -17,7 +16,7 @@ struct ordered_events;
+ 
+ typedef int (*event_sample)(const struct perf_tool *tool, union perf_event *event,
+ 			    struct perf_sample *sample,
+-			    struct evsel *evsel, struct machine *machine);
++			    struct machine *machine);
+ 
+ typedef int (*event_op)(const struct perf_tool *tool, union perf_event *event,
+ 			struct perf_sample *sample, struct machine *machine);
+@@ -103,7 +102,6 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool);
+ int process_event_sample_stub(const struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample,
+-			      struct evsel *evsel,
+ 			      struct machine *machine);
+ 
+ struct delegate_tool {
 -- 
 2.53.0.1213.gd9a14994de-goog
 
