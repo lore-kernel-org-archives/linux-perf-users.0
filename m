@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259D938E126;
-	Mon,  6 Apr 2026 17:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690CA38E126;
+	Mon,  6 Apr 2026 17:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775497884; cv=none; b=XAIlTxwBLYqLcJHJPKrkSnqcmMQeG8WfZeFMhkYHNMgMY19tVwf5eY3WtlgfinYv2FNScMwJfr8lqV2UJygXt8w7w5emTDQ6cNeKjAq+A30A94WISivZXFlJTdO4RIHvktxA3QWK5yE4iggXhoumw4mFtdtjRp49A7h9s69ZxkU=
+	t=1775497915; cv=none; b=otQ9GB+ss0JHRsOQlIeJsfhlU6+cZI+5bQlBs8cJYmm5i/TCobVkI/i6gbv4SF9byg0C+R3LDh/7eZgekBBRTMZCXuoFJa8/IxoNjXmYVdZvfZ0kAAK1W1dzdQj2KC5eZ4Jeg+CzNRdb67LJd35Z4kEGRi1Q4Otrk+uheP26+SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775497884; c=relaxed/simple;
-	bh=Raht2hMRD8r5iWIsBlgJs9eMy7Pwf3KEIYgWA6X/DXQ=;
+	s=arc-20240116; t=1775497915; c=relaxed/simple;
+	bh=Ve6x1AwkxFcLVietZY6qu5e3CEpbe2Rj0av5z42vphI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UoN56Qmim6DDfNvMrxrt0ma4dTipc2H7XatloNG2zylj1DhqyYGv7Ili40eBCZYHClOQLcn8ZWDD+/fHJe6DgTADo1i6SlBw4VQlHkmT7IWliWobMO4BU50hbnqZYtnBk67rfCsMqun8Fr2Wgy2vYRIeA4NyojP4EUuNR9gSJhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kx4Ffq1a; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KmGLZbM0D6pRBtnBZC1ksiWAqU2H+1IHHoWVRaMWV8nmZrRs7Q6y7oevYXwlYilZcS9PrSs0kNpuy3f51WI2NJGNHsmoAY5cS3VozT45B7CdEi0IqFYmt4CTy/Aj0VRSX8axewS9raCaxYDA6hv3xmBcNVZ47u5rjkY+S/7Z8IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOmPRRah; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kx4Ffq1a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535C4C4CEF7;
-	Mon,  6 Apr 2026 17:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOmPRRah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B150BC2BCAF;
+	Mon,  6 Apr 2026 17:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775497883;
-	bh=Raht2hMRD8r5iWIsBlgJs9eMy7Pwf3KEIYgWA6X/DXQ=;
+	s=k20201202; t=1775497915;
+	bh=Ve6x1AwkxFcLVietZY6qu5e3CEpbe2Rj0av5z42vphI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kx4Ffq1as7L5FF2oTV0eWxJJToYetjkqumdU+R87PAkfM2ZdK8kAryb40/jJfQdeq
-	 gbXashnFN7AnVeRIOzWFqNo3f2dJXoj5XlIiLfKA0EZV8Sud01yuC6aOucgCoki+N5
-	 QZoAOq26SI8TMRGu0GYn3175Xw/4WMI6H+bZ0YhlhzPxO55kYHvZTcVQJ8B1xq4+ea
-	 6SWYRnV4WekNxUz1/AvhqAGnDWl6TFiRahEVxwjuB9R9GUfkcj6qfLyyOezpLjPUSF
-	 6kymGfalqTKT1ywtqmbBWTe+VncEenqgCD0Vq6CE/gmnQGFN9jWU4m+g/ftzRvIXS2
-	 rrMY4Y/wLBh0w==
-Date: Mon, 6 Apr 2026 10:51:22 -0700
+	b=rOmPRRahTUiG9YLdi9Z9zuSIlbTOlUP+KYUrP+ziSh/9bJ45zVZRfB3Dqr8S12mro
+	 yxC5YfNXRBUMG5t9YnqTtncU6ZitzBmEELsdzmVA2LSk0H8c3a/0FBePhPKnDCYYzI
+	 fF7sQZhAqzmkU/racpwvirceYfH9isr6/HuQkpk2Ld7bJnbCd01N2c9wyfhp1lmEh3
+	 jLI8VFNqOlJE1QtCpMhxRq2WcydZwTohY4E7v+9riaMTtSUmA3ENMpociixD6FuDqJ
+	 1Cm1T6NSwbqRpqfgettAZUsxbmTn60lt6yat2QNcK1XgBE0ZWaAqjdmhk4HvNfZWxR
+	 WnjW5Zz502CYQ==
+Date: Mon, 6 Apr 2026 10:51:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [PATCH] perf test: Skip sched stats test for !root
-Message-ID: <adPymtEcVTMgIZ0Q@google.com>
-References: <20260405051644.61511-1-namhyung@kernel.org>
+To: Ricky Ringler <ricky.ringler@proton.me>
+Cc: irogers@google.com, mingo@redhat.com, acme@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v6] perf utilities: cln_size header
+Message-ID: <adPyuaptzUlTdpi6@google.com>
+References: <20260308172037.123654-1-ricky.ringler@proton.me>
+ <CAP-5=fVk22oOxLSN-2_MioJ3RKUpQwD2TWK9sA=WcegUc_dj1w@mail.gmail.com>
+ <20260321204145.26359-1-ricky.ringler@proton.me>
+ <acW2j7hki-u50YYz@google.com>
+ <20260328200442.134489-1-ricky.ringler@proton.me>
+ <actrosC-vqhjMA-A@google.com>
+ <20260403220758.41790-1-ricky.ringler@proton.me>
+ <adBbXHuhs6TlwJre@google.com>
+ <20260404011313.51901-4-ricky.ringler@proton.me>
+ <adND6AGUKu8d0YlO@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,17 +51,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260405051644.61511-1-namhyung@kernel.org>
+In-Reply-To: <adND6AGUKu8d0YlO@google.com>
 
-On Sat, Apr 04, 2026 at 10:16:44PM -0700, Namhyung Kim wrote:
-> Running perf sched stats requires root and it fails to open the
-> schedstat file for regular users.  Let's skip the test.
+On Sun, Apr 05, 2026 at 10:26:00PM -0700, Namhyung Kim wrote:
+> On Sat, Apr 04, 2026 at 01:16:56AM +0000, Ricky Ringler wrote:
+> > Forgive me for wasting your time with my last message...
+> > I switched work machines and attached the wrong patch file.
 > 
->   $ perf sched stats true
->   Failed to open /proc/sys/kernel/sched_schedstats
+> That's fine but you could send it as v7 so that the tools can pick the
+> latest version without confusion.
 > 
-> Cc: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > 
+> > ---
+> 
+> Also, adding this mark invalidates the following paragraphs and leave
+> them out from the commit message..  I'll update it this time but keep
+> that in mind for the next time.
 
 Applied to perf-tools-next, thanks!
 
