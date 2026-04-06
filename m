@@ -1,80 +1,80 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59ED239E9B
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Apr 2026 15:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FC52DAFD7
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Apr 2026 16:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775489783; cv=pass; b=BZaJaE0EeC3ODB1usvgcn43/lDeO/mZbbf+vERYDVMun3aMsx0GHyff9nKjCfoOERCpFJXS40sKGxbCpi+REiJPs/6PQ+paOSfISQkGYhWVI+t1I3CfnRVlLP4ZXUfAeKwPXeLNERkFy7V+1gmppH0O4uF1971lwiMMAJGb/134=
+	t=1775491890; cv=pass; b=j5rlYAfR72l3T6G0ZghRk+YC3Ralg4Gz65YMRYrXzwS91XsBmX7mUKP7NMpd+MCMNZVD5eo6aarCeyzcyHbWU0Gtqw3Z1iR3f/dbwvWky8+01/3/pgTPANTj73LUA5a0JP6YDvZVal4BkkdWHxd6UnZ49bDWFC9VElojRPjWhi0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775489783; c=relaxed/simple;
-	bh=nlWstzIKajjZsgq7ASMegQ3LfAZegoZeZgMhp3KDNdc=;
+	s=arc-20240116; t=1775491890; c=relaxed/simple;
+	bh=6rXUBCUZbg9vIzk9rudSe/qcgXU5Be5B8LMI2la5dYE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mhedb2c1IHhSBrpoSHCxga8RNTG51mLZBYTM+lhanabE3OLnb/OTDgizJJ2O/GCQK0VDY5JOaoDH+JD0jhqQarbCjHAQJ/8AgieIkDyhWyL97KJTYHG8hWEnSiRc6y1t5yM5b4C24xjHsOy95HV9UdWdlQkKMb6p1VfakHKzffM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Oz6BpW1X; arc=pass smtp.client-ip=209.85.214.170
+	 To:Cc:Content-Type; b=IWsNPxckJ5SfGxv4vwkW7PeztzcEuuOQU1RrnqexxhxX1uUc+CEEi/qN244+6DNeDwFLGjV9p+FkJbMJz+3hEaC5zUsCF6FIS+7vxC6+HUVYyqoOGPSR7/LzKMRwKGkF3TsqTKGqeWyTW9aADjFbBxgvnduSqha1z2PNmlw+FZ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qc0dgBI3; arc=pass smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oz6BpW1X"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2b0c12be0ecso266765ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2026 08:36:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775489781; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qc0dgBI3"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2b0b260d309so213435ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2026 09:11:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775491888; cv=none;
         d=google.com; s=arc-20240605;
-        b=OV13aL+Nb9c8LA6TnVC2vvXqLU55WWMEY97Sf0NW+dFkZZE7YeRtxzNcdg1OIiJPak
-         86YtCwZPrrcZUXxtaQMT3pLel3Y12zFna6G6OkbtAO0gxKLJJYQAoRFQfEtxgeV7in6P
-         xYcfBUL3cXR0qCNDFayGg4GUmoixmgSmV7EyTGRy3Itay4fHYyq6APJqLQNwNSt1o6eW
-         Ub+nv0CrSt7lqLVQ/vnWB518hzRgXroh4Ymqh7Ww1Ls4vy/IcYXzvIQhwhBQf1DBnCol
-         dn8GdKRc6zmLBpDaP9horHQDYGVAI2PK1tN0mlEYsNkfZE2Vvc8qu9BVmwU/ezhayl6e
-         cvPw==
+        b=gGh5MnQuuOX0c1kzaWocLKHZgbC0qhLiTr+ZVxSpjN9IgPO8Sq+nDZSfvynN7dj5X4
+         RvRpwIoGqz6WhIv6e++oYV97GvI9n0dODjSwaMudgNkz8doWwSLTyjQwbm+6vpqwycf8
+         dXx84WQ353+UlE599e0M6JkqhR1K/BnDBhiZwmy4iNvfeq1po7uqhomnzmBhGTIcZEJ6
+         PRizvylROBfrfkXTkl3yGv6MiEkT+I/1NA3Wi5foTXN+PLqHvaCevVDa3AKrpf7wlJJx
+         b+gXUS67J/YWsf6y0imQFM2xPlEh76ipCaAkex+Y6Q1lMJLOAGDXXaorDV0O/bdQP2Yn
+         Y1XA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=uaoUY6HpZKfM17HYDhxh0f2g0mDO1KbjYq9Ox6pQpq8=;
-        fh=SAZcVcSiJrDotUJ3gHEE5rWRz4focQiXOFdRqFC7LOs=;
-        b=RT7g/Gk1eMg1pCQG7t4Ik2xmGzuLXhLr+vil6SYmaqiPhKn1axe8BLOkIm4s3ScjZc
-         SH3OaBMTvxWuAZWHIuDcGo0KwXIYlPXVJm4utxim/4+fehb0vOB5JJteEIX2lqGOEpO3
-         PUuBpgyLRl6pk9WM1QJx5mcr+KJr3vCPf/1+y7t6oqYgpgTBPXUJxakg3xLwtW0RtZcH
-         BEB1vKI4eVosled9kEw1ohozf7aBL23x4ciky2Dl6W0L1VsYtpVvWit5KhgUOunoOjKn
-         gvIpSAUT/HkqinsK1TP6qEGav+y5rzMgNRxMZOHtu/Eby5sHc80fce/DZFW63KnCrzRH
-         25wA==;
+        bh=1x81r3iRTa3fxKPMBJ/Qvf8xplCbNBHfOYy0Aqmmj78=;
+        fh=SmoLkMJWC0ULDRn3J1kKRBX0cqZv0WyvmmmpWTdM4eU=;
+        b=ZXm8Nhno9WEzTUoJrPWFz8bLhrz0RlnnAXeXuG9ydSSO7yeIOnnqNgRldQFONLDU11
+         lQNEWbNG0smE931kRjImjBDSU+py1E4XeZp6JuIlPAlRlr08dhAG2nT7U3Q9os6uo47M
+         8OxSC1neoD+/HRXcBabQlMytbARUgop8vE0u5LKpLf+3jLWEQjuYSf47cYWnkUxbSC8b
+         UtCFBfZPNEWM6kDX3MALMCJd6P8B6m8O6HMQZwzKVliGMwjkLUMdhy9mvbHXS0EODmHb
+         N2CYBPcDNl6P2q8e9CCiZetEiO6nhAKQ0rtkzv36QbZy/94DZ7hmfT2k1V0DzzWix8b3
+         AenQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775489781; x=1776094581; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775491888; x=1776096688; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uaoUY6HpZKfM17HYDhxh0f2g0mDO1KbjYq9Ox6pQpq8=;
-        b=Oz6BpW1XzVgZq4mv9c7hTYgA/tnk1SKuKnH497qyZUODd7oGmbJmZ54wFak16DAWCh
-         zrXcidBF1u1pxtg66z4Geyva4pto0zGPkdXUe13m4rwIS0hKjK1luhqpC3s+2K3bg9C4
-         tvIfcVJAUnZXc8msG5azh4TZxXjOzYnSza1Fjeg9K0eH7PvZtidXMH1T+L401QfZAHdJ
-         PkxNqmHTdCsRIvlY0ZZhI5iIeKl0Eqo24S5/xcXc7+GIzXAqYCAmf5OvZLdBmxe/oBrM
-         HFCfrunNl6OEU4vbxqG9SxpR48/UKfLmcb+l7ug+FoCaA4csfX8vMOK9DVB4wukpRleZ
-         7ElA==
+        bh=1x81r3iRTa3fxKPMBJ/Qvf8xplCbNBHfOYy0Aqmmj78=;
+        b=qc0dgBI376ijqE+KGptbl77EYwV4p/eeqDfbUc/oKx6naAKunRo/h9XmKA0rxrCjl6
+         ScmRbrqiLkhMV9Mg2C8N0qelaL1bGbvtJLXnJns5ndCuUOiMJ+MIH6WQsqU4GMRhO48f
+         SGHZ5ZqgicvzGqqKE6m4tQAaneUK2/A+vRw3UBsLDGExQAapYhXNccU/kYarQHhh6VDp
+         BCfjmdcusq231aZsjRMdu1xBUHfv3tAZtkD44AqO+l0O29vHPCoukNBXnzt4SoKAsCP7
+         z25tqJkgDFr+KstwkNTqAjsHRZFBtcHYTzBNRc5+bANFKIx48CQmtaDvPD+zUAQgOp3v
+         N/zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775489781; x=1776094581;
+        d=1e100.net; s=20251104; t=1775491888; x=1776096688;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=uaoUY6HpZKfM17HYDhxh0f2g0mDO1KbjYq9Ox6pQpq8=;
-        b=ib/ui3b2TAV5ZM1qiHQFOA2QX9VQrKxsSyXE5HjbdQWUCQe9VVJa04CrRpQBMHgtlz
-         Dx/whXEq3/mChkPZz5k6zGL5mLtAqXxSuYER7LPpZe6oWcbxciduT132B7vXejQSKWJL
-         9D3WFrchcDTOnf9eBwJAFWz6MlhQzanZ2uyMWgFtyox6aAFTtVgEzkyOwUX+Jz8Ye61E
-         kJR043q0Orz60kLZv2dVmdO2yGPf+agVNQhzk7kmeZuTb3ftqPO6EbGf0c42yInNocsa
-         zNinlmmlDNEovSnWDzQ62thAI3OnxUgQs09x/fYEGc5aq3XHxDclUByYHoZt79FnikrX
-         fXDg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2LIeOzLktGBOSBY2CNZglQ9SmjNGjHXv9JLkV4bPDSwvOo9KNiXdIWbvb6OjcpIduTojDeJDcb6Z8sQq/LX5v@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5V0N9B28n4MOoOBBN9B8p3bMROov/u9LeRESjHADmjYSGCWfg
-	0lODN2OWjf+G9lQikdFGpY6mwgCnYtxx+4JuGeAPpUF6NwUnYvi6VZ6WHb+aERQ4s5fFDvgkpEL
-	lKxtcx/ZEj/y5fQcBayRfWkBia6LXtxNepY1R8Alm
-X-Gm-Gg: AeBDieujqOgi4UdWCkkaOKy5iI0yY9FYPlEVMJ6NhxO6BPVihknd7ThSZGCSHrApgxh
-	CT+v/6jmteITIvuGT7mOyAiSE7IVwDWldNp2elslePbm0CcfTO2XEiKmgRFNlMvdXiM98g5uWCB
-	Nc6uCgziP67uK9UPA83K9oinySg3epBeYvocglr2yNPTq5gZdyyYW3jcjV8FF7qCPcE+QDHu/sf
-	CHqvlNw+Srr4LsggcxgQoYfLwP0IixaDDBE9PwmwZ0BhtwfmQgNB6P+Fceu0LsFFIqMcC2N7iRE
-	W8KuZl1w91AXuf1P6xtjnb6wrGAM/oOv3eAKxi1JYXbur8kb
-X-Received: by 2002:a17:903:2c0e:b0:2ae:d10c:6382 with SMTP id
- d9443c01a7336-2b282f7f418mr7591915ad.20.1775489780632; Mon, 06 Apr 2026
- 08:36:20 -0700 (PDT)
+        bh=1x81r3iRTa3fxKPMBJ/Qvf8xplCbNBHfOYy0Aqmmj78=;
+        b=mDnxMq84fewiRJHUjeUJJ5E9sLXmk10ma85JWRY9XIv0hGIT6MrqdyEtPecU3fsnVi
+         w7XfxWnK8DZLgdZUPNZm+M+VI5BIUg6+/Nqaj/biV6WAFVoRzf5GySAPqummstx2EfgG
+         7PNlJgsMgKw0+MNvck7sdOv4DFjZ9mGVP5KyCI8tOD+76546VOeGdVlMm27V0PzAsNPP
+         FQCTOY/GvwKMFGCW7LhjG3CU92PY/hhwAXzbiLiuNR9OLB0ITzALw+/R25Q4SGg6QAGr
+         aRKos70Dlm4zghBuAQx8bCYAll9gctf7GhrV7a0UOPV7MWQqrqI4zBGVQcVv+M+xPpjA
+         Vj2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkzHjAC6/YBHA/nqMZdnSvNorX17Wa+ANmQ2Yt32SA+2W5CBFh3bwwEyUKP6N9JxN3m+XvKS6Exc/9ry5nQsQG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/Tq+wIZTDZKruN0NJ3PZnmsmFBWpWtVe1kh3pz520aoq61bl6
+	K0+WKIfoENUFoUbHO0LstGVmHChUjTpdoZeDIAtnRyw2QDk7fumGWepqi4HwDLt6orUwzOU5xsc
+	cH+ziJmbmsFR4+H+/t5OS680cWSmO8nCxhzPjTWol
+X-Gm-Gg: AeBDiet5yG/CubCESA27xSZK/YpkqwBJwHuPSypYZJpOiZ9XXMoQS+1VmbJMYtz9XsJ
+	9vAEz4TkViMiX9tAuIcKlVpEdoluVtdCkPDBz7/crWoGXTSCGZs994nBpNzx5xCmfmg4wxW9GaR
+	LOk5kBDyNKQ4zphLyQUTnJWb3mM3z8YIS+4pClRMk3s2F+Pkx5EYCN0ZDk/fhnxAiMNXE/qORiz
+	xTnlcn6ZvyVYeSurXEoQbaIzu+xBQNuMwgbn3vbTSDTvjO98IKW45qkRoQ4w5tV2ipWBO6BtgfV
+	hdfRMsBiETUyNSjLeP78OyiyS4DrSDf43ohR2g==
+X-Received: by 2002:a17:903:22d1:b0:2ae:7fa2:6bda with SMTP id
+ d9443c01a7336-2b283f049edmr7309275ad.1.1775491887460; Mon, 06 Apr 2026
+ 09:11:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -82,14 +82,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260326174521.1829203-1-irogers@google.com> <20260327045025.2276517-1-irogers@google.com>
- <20260327045025.2276517-2-irogers@google.com> <adM-_viYsw5KEoeV@google.com>
-In-Reply-To: <adM-_viYsw5KEoeV@google.com>
+ <20260327045025.2276517-3-irogers@google.com> <adNAQzNcCufAf6Jk@google.com>
+In-Reply-To: <adNAQzNcCufAf6Jk@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 6 Apr 2026 08:36:08 -0700
-X-Gm-Features: AQROBzAKTRtFLJ8MS4wmTBHobWacjfFthdSkbbee17nwzGFBy47KOe7WhybLKIw
-Message-ID: <CAP-5=fWMzWKpHKy9+qwNuaGEgVmmqpu2keMVa1+N0ssHE2PfNw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] perf env: Add perf_env__e_machine helper and use
- in perf_env__arch
+Date: Mon, 6 Apr 2026 09:11:14 -0700
+X-Gm-Features: AQROBzD6OZSk3B9NDHQDgnQVI83ou6Tcl6__NEgXrtGy9dCtraIUwzq2i7bBN4s
+Message-ID: <CAP-5=fXxa2rvxMqZoD5ayETiPjS8cf7A49TdVwwt+10uPu58Pw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] perf symbol: Lazily compute idle and use the perf_env
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: acme@kernel.org, tmricht@linux.ibm.com, agordeev@linux.ibm.com, 
 	gor@linux.ibm.com, hca@linux.ibm.com, jameshongleiwang@126.com, 
@@ -99,333 +98,73 @@ Cc: acme@kernel.org, tmricht@linux.ibm.com, agordeev@linux.ibm.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 5, 2026 at 10:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Sun, Apr 5, 2026 at 10:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Thu, Mar 26, 2026 at 09:50:24PM -0700, Ian Rogers wrote:
-> > Add a helper that lazily computes the e_machine and falls back of
-> > EM_HOST. Use the perf_env's arch to compute the e_machine if
-> > available. Use a binary search for some efficiency in this, but handle
-> > somewhat complex duplicate rules. Switch perf_env__arch to be derived
-> > the e_machine for consistency. This switches arch from being uname
-> > derived to matching that of the perf binary (via EM_HOST). Update
-> > session to use the helper, which may mean using EM_HOST when no
-> > threads are available. This also updates the perf data file header
-> > that gets the e_machine/e_flags from the session.
+> On Thu, Mar 26, 2026 at 09:50:25PM -0700, Ian Rogers wrote:
+> > Move the idle boolean to a helper symbol__is_idle function. In the
+> > function lazily compute whether a symbol is an idle function taking
+> > into consideration the kernel version and architecture of the
+> > machine. As symbols__insert no longer needs to know if a symbol is for
+> > the kernel, remove the argument.
+> >
+> > This change is inspired by mailing list discussion, particularly from
+> > Thomas Richter <tmricht@linux.ibm.com> and Heiko Carstens
+> > <hca@linux.ibm.com>:
+> > https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ibm.=
+com/
+> >
+> > The change switches x86 matches to use strstarts which means
+> > intel_idle_irq is matched as part of strstarts(name, "intel_idle"), a
+> > change suggested by Honglei Wang <jameshongleiwang@126.com> in:
+> > https://lore.kernel.org/lkml/20260323085255.98173-1-jameshongleiwang@12=
+6.com/
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/env.c     | 185 ++++++++++++++++++++++++++++++--------
-> >  tools/perf/util/env.h     |   1 +
-> >  tools/perf/util/session.c |  14 +--
-> >  3 files changed, 157 insertions(+), 43 deletions(-)
-> >
-> > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > index 93d475a80f14..ae08178870d7 100644
-> > --- a/tools/perf/util/env.c
-> > +++ b/tools/perf/util/env.c
-> > @@ -1,10 +1,12 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include "cpumap.h"
-> > +#include "dwarf-regs.h"
-> >  #include "debug.h"
-> >  #include "env.h"
-> >  #include "util/header.h"
-> >  #include "util/rwsem.h"
-> >  #include <linux/compiler.h>
-> > +#include <linux/kernel.h>
-> >  #include <linux/ctype.h>
-> >  #include <linux/rbtree.h>
-> >  #include <linux/string.h>
-> > @@ -588,51 +590,160 @@ void cpu_cache_level__free(struct cpu_cache_leve=
-l *cache)
-> >       zfree(&cache->size);
-> >  }
-> >
-> > +struct arch_to_e_machine {
-> > +     const char *prefix;
-> > +     uint16_t e_machine;
-> > +};
-> > +
-> >  /*
-> > - * Return architecture name in a normalized form.
-> > - * The conversion logic comes from the Makefile.
-> > + * A mapping from an arch prefix string to an ELF machine that can be =
-used in a
-> > + * bsearch. Some arch prefixes are shared an need additional processin=
-g as
-> > + * marked next to the architecture. The prefixes handle both perf's ar=
-chitecture
-> > + * naming and those from uname.
-> >   */
-> > -static const char *normalize_arch(char *arch)
-> > -{
-> > -     if (!strcmp(arch, "x86_64"))
-> > -             return "x86";
-> > -     if (arch[0] =3D=3D 'i' && arch[2] =3D=3D '8' && arch[3] =3D=3D '6=
-')
-> > -             return "x86";
-> > -     if (!strcmp(arch, "sun4u") || !strncmp(arch, "sparc", 5))
-> > -             return "sparc";
-> > -     if (!strncmp(arch, "aarch64", 7) || !strncmp(arch, "arm64", 5))
-> > -             return "arm64";
-> > -     if (!strncmp(arch, "arm", 3) || !strcmp(arch, "sa110"))
-> > -             return "arm";
-> > -     if (!strncmp(arch, "s390", 4))
-> > -             return "s390";
-> > -     if (!strncmp(arch, "parisc", 6))
-> > -             return "parisc";
-> > -     if (!strncmp(arch, "powerpc", 7) || !strncmp(arch, "ppc", 3))
-> > -             return "powerpc";
-> > -     if (!strncmp(arch, "mips", 4))
-> > -             return "mips";
-> > -     if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
-> > -             return "sh";
-> > -     if (!strncmp(arch, "loongarch", 9))
-> > -             return "loongarch";
-> > -
-> > -     return arch;
-> > +static const struct arch_to_e_machine prefix_to_e_machine[] =3D {
-> > +     {"aarch64", EM_AARCH64},
-> > +     {"alpha", EM_ALPHA},
-> > +     {"arc", EM_ARC},
-> > +     {"arm", EM_ARM}, /* Check also for EM_AARCH64. */
-> > +     {"avr", EM_AVR},  /* Check also for EM_AVR32. */
-> > +     {"bfin", EM_BLACKFIN},
-> > +     {"blackfin", EM_BLACKFIN},
-> > +     {"cris", EM_CRIS},
-> > +     {"csky", EM_CSKY},
-> > +     {"hppa", EM_PARISC},
-> > +     {"i386", EM_386},
-> > +     {"i486", EM_386},
-> > +     {"i586", EM_386},
-> > +     {"i686", EM_386},
-> > +     {"loongarch", EM_LOONGARCH},
-> > +     {"m32r", EM_M32R},
-> > +     {"m68k", EM_68K},
-> > +     {"microblaze", EM_MICROBLAZE},
-> > +     {"mips", EM_MIPS},
-> > +     {"msp430", EM_MSP430},
-> > +     {"parisc", EM_PARISC},
-> > +     {"powerpc", EM_PPC}, /* Check also for EM_PPC64. */
-> > +     {"ppc", EM_PPC}, /* Check also for EM_PPC64. */
-> > +     {"riscv", EM_RISCV},
-> > +     {"s390", EM_S390},
-> > +     {"sa110", EM_ARM},
-> > +     {"sh", EM_SH},
-> > +     {"sparc", EM_SPARC}, /* Check also for EM_SPARCV9. */
-> > +     {"sun4u", EM_SPARC},
-> > +     {"x86", EM_X86_64}, /* Check also for EM_386. */
-> > +     {"xtensa", EM_XTENSA},
-> > +};
-> > +
-> > +static int compare_prefix(const void *key, const void *element)
-> > +{
-> > +     const char *search_key =3D key;
-> > +     const struct arch_to_e_machine *map_element =3D element;
-> > +     size_t prefix_len =3D strlen(map_element->prefix);
-> > +
-> > +     return strncmp(search_key, map_element->prefix, prefix_len);
-> > +}
-> > +
-> > +static uint16_t perf_arch_to_e_machine(const char *perf_arch, bool is_=
-64_bit)
-> > +{
-> > +     /* Binary search for a matching prefix. */
-> > +     const struct arch_to_e_machine *result;
-> > +
-> > +     if (!perf_arch)
-> > +             return EM_HOST;
-> > +
-> > +     result =3D bsearch(perf_arch,
-> > +                      prefix_to_e_machine, ARRAY_SIZE(prefix_to_e_mach=
-ine),
-> > +                      sizeof(prefix_to_e_machine[0]),
-> > +                      compare_prefix);
-> > +
-> > +     if (!result) {
-> > +             pr_debug("Unknown perf arch for ELF machine mapping: %s\n=
-", perf_arch);
-> > +             return EM_NONE;
-> > +     }
-> > +
-> > +     /* Handle conflicting prefixes. */
-> > +     switch (result->e_machine) {
-> > +     case EM_ARM:
-> > +             return !strcmp(perf_arch, "arm64") ? EM_AARCH64 : EM_ARM;
-> > +     case EM_AVR:
-> > +             return !strcmp(perf_arch, "avr32") ? EM_AVR32 : EM_AVR;
-> > +     case EM_PPC:
-> > +             return is_64_bit || strstarts(perf_arch, "ppc64") ? EM_PP=
-C64 : EM_PPC;
+> [SNIP]
+> > +     if (e_machine =3D=3D EM_S390 && strstarts(name, "psw_idle")) {
+> > +             int major =3D 0, minor =3D 0;
+> > +             const char *release =3D env && env->os_release
+> > +                     ? env->os_release : perf_version_string;
 >
-> I'm curious what's the name `uname -m` returns for PPC64.  Is
-> "powerpc64" possible?
+> I think Sashiko's review is right.  You need to check the kernel version
+> instead of perf.
 
-It is.
-
-> > +     case EM_SPARC:
-> > +             return is_64_bit || !strcmp(perf_arch, "sparc64") ? EM_SP=
-ARCV9 : EM_SPARC;
-> > +     case EM_X86_64:
-> > +             return is_64_bit || !strcmp(perf_arch, "x86_64") ? EM_X86=
-_64 : EM_386;
-> > +     default:
-> > +             return result->e_machine;
-> > +     }
-> > +}
-> > +
-> > +static const char *e_machine_to_perf_arch(uint16_t e_machine)
-> > +{
-> > +     /*
-> > +      * Table for if either the perf arch string differs from uname or=
- there
-> > +      * are >1 ELF machine with the prefix.
-> > +      */
-> > +     static const struct arch_to_e_machine extras[] =3D {
-> > +             {"arm64", EM_AARCH64},
-> > +             {"avr32", EM_AVR32},
-> > +             {"powerpc", EM_PPC},
-> > +             {"powerpc", EM_PPC64},
->
-> Here it returns powerpc for both.
-
-Yep. This is 100% intentional as the existing code does the same:
+Doing this can create more problems and complexity than it solves. If
+we state that `os_release` can be NULL at this point, we recompute it
+using `uname`:
 https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/env.c?h=3Dperf-tools-next#n611
-```
-static const char *normalize_arch(char *arch)
-...
-if (!strncmp(arch, "powerpc", 7) || !strncmp(arch, "ppc", 3))
-return "powerpc";
-```
-The strncmp is limited to just the prefix of the uname string,
-ignoring the 64. So the arch "powerpc" can be 32-bit or 64-bit, just
-as "x86" can be 32-bit or 64-bit. To determine which case applies, the
-code should really check `struct perf_env`'s `kernel_is_64_bit`. I
-think this is generally much more painful than just using the
-e_machine - especially since you need to strcmp the name. For the
-e_machine, the problem is that on x86 we have 32-bit, x32 and x86_64.
-There is then also an ABI question regarding the use of SIMD registers
-and the newer APX registers. If there are no samples and no DSOs in
-play, making a choice of e_machine to set up variables with is
-somewhat arbitrary. I think EM_HOST, the e_machine of the current perf
-binary, is a good choice.
+t/tree/tools/perf/util/header.c?h=3Dperf-tools-next#n378
+then do we cache the value in env? What happens if a data/pipe file
+that assigns to the env later? Ad-hoc users of env->os_release
+recomputing it shouldn't happen; instead, in 'live' mode, we should
+assign os_release using uname either when the perf_env is created or
+lazily with a helper function. I dislike that with a helper we could
+potentially have multiple notions of os_release.
+
+I'll add a patch to refactor the use of os_release, but can we be
+mindful that this is clear feature creep with little benefit? We will
+still fall back on `perf_version_string` if uname fails and for all
+practical purposes, `perf_version_string` will differ little from
+uname in this case. I'm only going to add the patch because checking
+other uses of os_release suggests the change is benign.
 
 Thanks,
 Ian
 
-> > +             {"sparc", EM_SPARCV9},
-> > +             {"x86", EM_386},
-> > +             {"x86", EM_X86_64},
-> > +             {"none", EM_NONE},
-> > +     };
+> Thanks,
+> Namhyung
+>
 > > +
-> > +     for (size_t i =3D 0; i < ARRAY_SIZE(extras); i++) {
-> > +             if (extras[i].e_machine =3D=3D e_machine)
-> > +                     return extras[i].prefix;
+> > +             /* Before v6.10, s390 used psw_idle. */
+> > +             if (sscanf(release, "%d.%d", &major, &minor) !=3D 2 ||
+> > +                 major < 6 || (major =3D=3D 6 && minor < 10)) {
+> > +                     sym->idle =3D SYMBOL_IDLE__IDLE;
+> > +                     return true;
+> > +             }
 > > +     }
 > > +
-> > +     for (size_t i =3D 0; i < ARRAY_SIZE(prefix_to_e_machine); i++) {
-> > +             if (prefix_to_e_machine[i].e_machine =3D=3D e_machine)
-> > +                     return prefix_to_e_machine[i].prefix;
-> > +
-> > +     }
-> > +     return "unknown";
-> > +}
-> > +
-> > +uint16_t perf_env__e_machine(struct perf_env *env, uint32_t *e_flags)
-> > +{
-> > +     if (!env) {
-> > +             if (e_flags)
-> > +                     *e_flags =3D EF_HOST;
-> > +
-> > +             return EM_HOST;
-> > +     }
-> > +     if (env->e_machine =3D=3D EM_NONE) {
-> > +             env->e_machine =3D perf_arch_to_e_machine(env->arch, env-=
->kernel_is_64_bit);
-> > +
-> > +             if (env->e_machine =3D=3D EM_HOST)
-> > +                     env->e_flags =3D EF_HOST;
-> > +     }
-> > +     if (e_flags)
-> > +             *e_flags =3D env->e_flags;
-> > +
-> > +     return env->e_machine;
+> > +     sym->idle =3D SYMBOL_IDLE__NOT_IDLE;
+> > +     return false;
 > >  }
-> >
-> >  const char *perf_env__arch(struct perf_env *env)
-> >  {
-> > -     char *arch_name;
-> > +     if (!env)
-> > +             return e_machine_to_perf_arch(EM_HOST);
-> >
-> > -     if (!env || !env->arch) { /* Assume local operation */
-> > -             static struct utsname uts =3D { .machine[0] =3D '\0', };
-> > -             if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
-> > -                     return NULL;
-> > -             arch_name =3D uts.machine;
-> > -     } else
-> > -             arch_name =3D env->arch;
-> > +     if (!env->arch) {
-> > +             /*
-> > +              * Lazily compute/allocate arch. The e_machine may have b=
-een
-> > +              * read from a data file and so may not be EM_HOST.
-> > +              */
-> > +             uint16_t e_machine =3D perf_env__e_machine(env, /*e_flags=
-=3D*/NULL);
-> >
-> > -     return normalize_arch(arch_name);
-> > +             env->arch =3D strdup(e_machine_to_perf_arch(e_machine));
-> > +     }
-> > +     return env->arch;
-> >  }
-> >
-> >  #if defined(HAVE_LIBTRACEEVENT)
-> > diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> > index a4501cbca375..91ff252712f4 100644
-> > --- a/tools/perf/util/env.h
-> > +++ b/tools/perf/util/env.h
-> > @@ -186,6 +186,7 @@ int perf_env__read_cpu_topology_map(struct perf_env=
- *env);
-> >
-> >  void cpu_cache_level__free(struct cpu_cache_level *cache);
-> >
-> > +uint16_t perf_env__e_machine(struct perf_env *env, uint32_t *e_flags);
-> >  const char *perf_env__arch(struct perf_env *env);
-> >  const char *perf_env__arch_strerrno(struct perf_env *env, int err);
-> >  const char *perf_env__cpuid(struct perf_env *env);
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 4b465abfa36c..dcc9bef303aa 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -2996,14 +2996,16 @@ uint16_t perf_session__e_machine(struct perf_se=
-ssion *session, uint32_t *e_flags
-> >               return EM_HOST;
-> >       }
-> >
-> > +     /* Is the env caching an e_machine? */
-> >       env =3D perf_session__env(session);
-> > -     if (env && env->e_machine !=3D EM_NONE) {
-> > -             if (e_flags)
-> > -                     *e_flags =3D env->e_flags;
-> > -
-> > -             return env->e_machine;
-> > -     }
-> > +     if (env && env->e_machine !=3D EM_NONE)
-> > +             return perf_env__e_machine(env, e_flags);
-> >
-> > +     /*
-> > +      * Compute from threads, note this is more accurate than
-> > +      * perf_env__e_machine that falls back on EM_HOST and doesn't con=
-sider
-> > +      * mixed 32-bit and 64-bit threads.
-> > +      */
-> >       machines__for_each_thread(&session->machines,
-> >                                 perf_session__e_machine_cb,
-> >                                 &args);
-> > --
-> > 2.53.0.1018.g2bb0e51243-goog
-> >
