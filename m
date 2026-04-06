@@ -1,163 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038F3386431
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Apr 2026 14:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775487556; cv=none; b=TpYeyf0J8d69m3yU15Ve0qbsWI4P2yhci3A0RCpkVB4KP/gxwZ3HREVW5FxLtUsSN4SyTmFduZnIjOIuAWN8owl66bblBL2cmX4vpXma0I3P5llgaMSb5dOibNfyiwzNZGOWRnNGtuCQ20uMcsXAe7uo4Sv0VHh6IJ89+fOg598=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775487556; c=relaxed/simple;
-	bh=xQ7o66TtbbwulQnJW5l2ZtOfYQA79hhGSfn9VhPlO6U=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3923491C4
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Apr 2026 15:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775489086; cv=pass; b=N3s05zTe/qzjCL3VqtGGbhg09w6fNdD6n8WzsyDBlbuvueoyLtt4UHVPYyIZR/gOhuoW53CXQ//hHt8iDaB2lHk0/4a+oliS6gWSHTM6dJkweRG7zRpWDw9IsNiXd00AsA6Sp9ojqjbY9/YUwYHntODIItIhJ6WI3rQPqyLrf2A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775489086; c=relaxed/simple;
+	bh=uLoeCIltIV/+RQKE6bpskkDGmbsHHy8bI8CVux9obV0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A4Uc2hqwsSWX2xiIb1Vxfj1dEls8jNKXRe/iGl0KjoqSj1V2t3Je2uPPoE/DmUqiZ05p7SZ+Qk8rgfCw/AK68wuBj98mqBq0/flVWX/bd8d2VxcvRp2nR2KEXFJThuqTlNastD8U9Y1GPM+O2lsoRUILQwXK/4gLtn4krhIb3ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLkaENd1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=piQhMylVNrvACpbHKwYswo3YLrui4ck8CTdY32Wbub/8F1XxJbH4Eqy3c3zBWatkSTTjLLYyTtUP7vIgeBKVkSL8XjkLHIJODC15s0q+JRt+tf9QjrVrFDAN6E0TvIhdYQ7KQviXlo/RkSUnDLUn0WnOthwiTTRpfUjSFfIEdp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LbxRRq20; arc=pass smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLkaENd1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB782C2BCB5
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Apr 2026 14:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775487555;
-	bh=xQ7o66TtbbwulQnJW5l2ZtOfYQA79hhGSfn9VhPlO6U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MLkaENd1y02jG6YsphOhuZTp0iQI96L6WFY5DEmo/DZ6WCfvoSBDZJV2ohYZSu1N9
-	 ac4WV6CKVr3vtjWO5PyYEkAdXK0hp0G+RobW161z0dcu3s/VU0gY22kCs+MYXqUHBH
-	 Liz1EHAuKjE4fTRx4+YsiI+t4vTTDKeLdDI2YZy0dAHG/YzL3nR/Rt8+yoiTCr6Y7R
-	 31IDqYUjMqFbupJ1fx/4xFWsQpHeFVPqQZdMM9fWEudaIkvMRtjafaQw7H2b7xvoYg
-	 xYFQlwgI/yUaOmD2NLJlqgiOeQ45VmSMD64YK+4sRFnv7nXs5NX2dbzF574dvLBFqO
-	 XtniXv49RXROw==
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-46fc5b8a068so728945b6e.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2026 07:59:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHTf7xNDWQKO9QOMEg/nqiTxhJxzdqJ8s6VkQOi/AZH1z0OHa0FpLPNy0rAdhLED6RiAqL3Sg5643Bwbk0NLri@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFbhN8fzUoBnQSXtSgOQC9yFmmtzZhcQWjNdeMKuANUM4ol3Ro
-	g2mKdwbaoT3vm01nNSXUcM0dVKxONWLhBHPsudn8Wsq9WZ3miG3zwWoPSnqxL6yRx+pgyLLbioq
-	CpDtffmM2xpcojvrkqrkuqZo0ncrjuA0=
-X-Received: by 2002:a05:6808:1910:b0:468:776:1ead with SMTP id
- 5614622812f47-46ef5af739fmr6450744b6e.21.1775487554002; Mon, 06 Apr 2026
- 07:59:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LbxRRq20"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2b0b260d309so209405ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2026 08:24:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775489084; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XAlsKX3HTt5PDLzgZVPuu+aah8kIlb7Gw4kh5mrgv85ODA1X5+G7cUflEDOvjm8wpG
+         09JDV/AYwoA1wWfpUjwJ8V+AMkwLzgVtKdBAGEC+qqbfhwcWWSERoePvRSeasr46FfHF
+         zBiJ3od2AVXOqEWH5M8RBGpICSPZ+m+ed8NBtKP8Gca7Pb88a4RZTccuxRYFCRHOAWQh
+         YLpe4P4jzWsCloUTZKbFjePT3SWWtv8PVlDh+YlmiyiIKk/kxAbkTKOjm7BX4BnPI+6P
+         DIPb4CMdKMKNa8C+rvsoBdITnkR6F0NB+oV6ie6y9U52KsKsELdcuDBrCkMn96CT0bEI
+         Wf0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uLoeCIltIV/+RQKE6bpskkDGmbsHHy8bI8CVux9obV0=;
+        fh=FyNqMTokAC4IhA96rVCDw/2OcaF/2QBGi+nnj4bImMY=;
+        b=BnmjcZD7vAJYwGdxK2GEkY7+La839h+DxtqftxyQY6VyPBhPTNEGPb8oW0+OnGlfQX
+         aGgqX1+ub+6bTyEaG9GwZHCTQ0ScKBXF0jv7sLbGingXr1O3az+dBUTWpHySZ9F95LHY
+         DXu8tgLSclMymegOxG57PiEfHNYKJOMXMSNJgVlPChOejbGo7102c2nwic4lWQKDlvGC
+         My9MS2msytUZFAhJISKFDjetOCaoX19Wksfl1oAKQBh/QIdIG/s0H56enFTmuliCyNO2
+         50MyrboxH356eilqQL6GxTRaKvf0DzseUYHvA/xSEypMQGkbi8RigHXBv5pNtpFPqwd6
+         WoLg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775489084; x=1776093884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uLoeCIltIV/+RQKE6bpskkDGmbsHHy8bI8CVux9obV0=;
+        b=LbxRRq20omGeWQLfOxexn1t/124tmNnv7vSerpmvDfQSgkTp6ghRy2ZMGVav458I38
+         E0W2Gd7OhokaACtNQRt6ffQdpgYZ2EwDrgGLEvWHXCjj0z8/zZHhlGJyDB+ambWtXQxg
+         YAn8uILcZfpj6xyxnl2VoepoeU/qX4by08Vf15JSjuzLrbZ/Khrd7ib/EumK//pkgd4Q
+         Y41VoBiVoM3z1aGutO6CZEPtfz0/0ON9Kil8fRgzJNbV4XTXtAGFWJlE5aytTPH3TqIj
+         JojTs2oB25P41bGwwOZJN7PCBDFpBzibDPiMLLjAKceOxZrJTGD45dD3XBnOh9kKTqNS
+         N4ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775489084; x=1776093884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uLoeCIltIV/+RQKE6bpskkDGmbsHHy8bI8CVux9obV0=;
+        b=JaEBpK+g69nBKu0Ax3BTxgpa6jWZQ/z3FpxYHQLl3TE8k7FYzfNYxByFNzOCsqwsp6
+         HVQ09SDOVWJZuFVVi8x+JHVqlupfK9q4T7Iq6Kp/y1Q47MaejHljvprZ0TWQY9cKeYAj
+         lh8qRpkQCw1Yytz0bODctwZSy7HnUwt8HGy2Z0F3Fs+sCMP845CMIYNtfRhu4Sv1deRl
+         gzyNZ6p6r/CwqmNVsw1NZt/j3xeDfAAbkZ/dpz2n8+56q2iHCDhaisDyRVrDrPjCmUxh
+         4Yb6ifOAzxPvOnLeX9DBuMTFOZVMva5SgTlUXDeDgw+xvG8wIQrIJe/p3jfAjwSdh8uB
+         Tdjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbGKh6FzgxF0umknUPYTFoGmkklfBYTn4CngEmqJa18JScfyi41fd/Egp/4wJOPPGbnZW09oFf8iLjArtHmZyL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz72fQEriqhLnQ77DgpN2cpAGAXFz718lvJzPqODqQzMTgiek7
+	aVUHwwbmtlKnzygrVsl6vSlzPW45ZRBy0doUABUdRxCuxxfrFyox/fmqlqygIsoHJXT66TlEiFb
+	ZAyP16GiMo4QsC4Q7FMrGnL0hBv8OQFCKJsy1Vooo
+X-Gm-Gg: AeBDievg/8bSU9buZ/tL+ifCHGGid7mRUS9IUa50fJnS8aKUL7DNxlEgvFREw7IRC0T
+	RkFyRUk9Dy3j2evl8tG8WYZm6nvDwJeEpqOc4aIxneQACVQ4+AbNM4Jwfa4lV1H3moFn3ZFgrY+
+	UwWDie8kkXY1EBX6Z9qbumrSz0911vCKgpHMrIn6EHha9ZZ9h/jXfjE4W4456aOtHHGsNSrH7o2
+	YmlKC9bdmjLG8wm05zRLGFJ3BKqa0txWY59XXTyRw5rZ2OPh0opGCxdZaGNx2DgdnLhJ1C+ET/i
+	dZLSjmWfpd3vNxMn0D5toflPy+vZmRZjzKoEPA==
+X-Received: by 2002:a17:902:e545:b0:2b2:4a2e:5dd5 with SMTP id
+ d9443c01a7336-2b283f04a30mr6189795ad.3.1775489082914; Mon, 06 Apr 2026
+ 08:24:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401081640.26875-1-fengchengwen@huawei.com>
-In-Reply-To: <20260401081640.26875-1-fengchengwen@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 6 Apr 2026 16:58:58 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gE9jLbaGy0yJhNZdpQJTR9stE-ABNQVvP5jqss3LQpFw@mail.gmail.com>
-X-Gm-Features: AQROBzDy996ma1a9twY_5lJC3Avr9hchzSyUdEAhSG92k1NHCBaaPp2eIIIoft4
-Message-ID: <CAJZ5v0gE9jLbaGy0yJhNZdpQJTR9stE-ABNQVvP5jqss3LQpFw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v10 0/8] ACPI: Unify CPU UID interface and fix
- ARM64 TPH steer-tag issue
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, 
-	Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, 
-	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
-	James Clark <james.clark@linaro.org>, Besar Wicaksono <bwicaksono@nvidia.com>, 
-	Ma Ke <make24@iscas.ac.cn>, Wei Huang <wei.huang2@amd.com>, 
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com, suzuki.poulose@arm.com, 
-	ryan.roberts@arm.com, chenl311@chinatelecom.cn, masahiroy@kernel.org, 
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com, 
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com, 
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com, liuyonglong@huawei.com, 
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, stable@vger.kernel.org, x86@kernel.org
+References: <20260403204017.2919994-1-irogers@google.com> <20260404034325.3172592-1-irogers@google.com>
+ <20260404034325.3172592-7-irogers@google.com> <adNNa1lkyMXSyhuD@google.com>
+In-Reply-To: <adNNa1lkyMXSyhuD@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 6 Apr 2026 08:24:31 -0700
+X-Gm-Features: AQROBzD9I2V49obxc7lmG-oFxvsP5oB5M4QJ4jVT3smRdZZR9k5jQRtKp7gDDmM
+Message-ID: <CAP-5=fWC7WtUk7iT4pVLZC8aJYe-FwAhA03LH0rn5AFyL-jeKg@mail.gmail.com>
+Subject: Re: [PATCH v6 06/25] perf evsel: Refactor evsel tracepoint sample
+ accessors perf_sample
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	ak@linux.intel.com, alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
+	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
+	derek.foreman@collabora.com, dvyukov@google.com, howardchu95@gmail.com, 
+	hrishikesh123s@gmail.com, james.clark@linaro.org, jolsa@kernel.org, 
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com, tanze@kylinos.cn, thomas.falcon@intel.com, 
+	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 1, 2026 at 10:16=E2=80=AFAM Chengwen Feng <fengchengwen@huawei.=
-com> wrote:
+On Sun, Apr 5, 2026 at 11:06=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> This patchset unifies ACPI Processor UID retrieval across
-> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
-> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
+> On Fri, Apr 03, 2026 at 08:43:06PM -0700, Ian Rogers wrote:
+> > The evsel argument to evsel__intval, evsel__rawptr, and similar
+> > functions, is unnecessary as it can be read from the sample. Remove
+> > the evsel and rename the function to match that the data is coming
+> > from the sample.
+> >
+> > Add bounds checks to a number read values from review feedback. Make
+> > perf_sample__strval avoid returning NULL pointers, return an empty
+> > string instead. Fix the function type to reflect this, catching a bug
+> > in kwork where the string wasn't being duplicated.
 >
-> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
->      respective users)
-> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
-> 6: Clean up perf/arm_cspmu
-> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
-> 8: Pass ACPI Processor UID to Cache Locality _DSM
+> I'm not sure if it's a bug... the string was never freed and duplicating
+> it would create a lot of memory leaks.
 >
-> The interface refactor ensures consistent CPU UID retrieval across
-> architectures (no functional changes for valid inputs) and provides the
-> unified interface required for the ARM64 TPH fix
->
-> ---
-> Changes in v10-resend:
-> - Add Catalin's ack-by for arm64 commit
-> - Add CC to x86@kernel.org
->
-> Changes in v10:
-> - Refine commit header&log according to Punit's and Bjorn's review
-> - Split perf/arm_cspmu as a separate commit which address Punit's
->   review
->
-> Changes in v9:
-> - Address Bjorn's review: split commits to each platform so that make
->   them easy to review
->
-> Changes in v8:
-> - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
->   Jeremy's review
->
-> Chengwen Feng (8):
->   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID
->     retrieval
->   x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
->   ACPI: Centralize acpi_get_cpu_uid() declaration in
->     include/linux/acpi.h
->   perf: arm_cspmu: Switch to acpi_get_cpu_uid() from
->     get_acpi_id_for_cpu()
->   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
->   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
->
->  Documentation/PCI/tph.rst          |  4 +--
->  arch/arm64/include/asm/acpi.h      | 17 +---------
->  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
->  arch/loongarch/include/asm/acpi.h  |  5 ---
->  arch/loongarch/kernel/acpi.c       |  9 ++++++
->  arch/riscv/include/asm/acpi.h      |  4 ---
->  arch/riscv/kernel/acpi.c           | 16 ++++++++++
->  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
->  arch/x86/include/asm/cpu.h         |  1 -
->  arch/x86/include/asm/smp.h         |  1 -
->  arch/x86/kernel/acpi/boot.c        | 20 ++++++++++++
->  arch/x86/xen/enlighten_hvm.c       |  5 +--
->  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
->  drivers/acpi/riscv/rhct.c          |  7 ++++-
->  drivers/pci/tph.c                  | 16 +++++++---
->  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
->  include/linux/acpi.h               | 11 +++++++
->  include/linux/pci-tph.h            |  4 +--
->  18 files changed, 158 insertions(+), 57 deletions(-)
->
-> --
+> Also it seems you still check the return value of perf_sample__strval()
+> if it's NULL.
 
-Applied as 7.1 material, but please note that I haven't tagged it
-explicitly for "stable".
+Yeah, this is one of the areas where working with Sashiko is
+difficult. The kwork code has memory handling issues, and each patch
+series has revealed new warnings. I believe the issues are fixed in
+v6, but as you point out, I haven't addressed the pre-existing memory
+leaks. I don't think we need to overcomplicate fixing the evsel in
+perf_sample issue this series is addressing.
 
-The last patch carries a Fixes: tag which should be suitable for
-"stable" to pick it up and you may as well request the whole series to
-be picked up by "stable" when it hits the mainline.
+Specifically the current code will assign to struct perf_kwork name
+both a value within a sample:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-kwork.c?h=3Dperf-tools-next#n1021
+```
+work->name =3D evsel__strval(evsel, sample, "name");
+```
 
-Thanks!
+Or a strdup-ed value:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-kwork.c?h=3Dperf-tools-next#n1152
+```
+work->name =3D evsel__softirq_name(evsel, num);
+```
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-kwork.c?h=3Dperf-tools-next#n1125
+```
+static char *evsel__softirq_name(struct evsel *evsel, u64 num)
+...
+name =3D strdup(sym->str);
+...
+return name;
+```
+
+The name's lifetime must match that of a sample, which seems
+ridiculous given the ring buffer... will be overwritten. So in this
+change, based on the Sashiko feedback, I've strdup-ed the names to
+avoid the name pointing to memory within a sample that will change
+when the typically stack allocated value disappears. Sashiko
+originally complained about a lack of bounds checking, but then
+complained about strdups of NULL, etc. At some point I have to stop
+addressing every issue within the codebase that Sashiko raises, and
+kwork seems to generate more of those than elsewhere.
+
+I think it is pretty obvious the kwork memory handling at least needs
+a free function for struct perf_kwork, this can then also free the
+name, but refactoring and fixing kwork wasn't the point of this patch
+series. We've just merged the tests I sent out to provide minimal
+kwork coverage.
+
+Thanks,
+Ian
