@@ -1,48 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690CA38E126;
-	Mon,  6 Apr 2026 17:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261AB355F46;
+	Mon,  6 Apr 2026 17:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775497915; cv=none; b=otQ9GB+ss0JHRsOQlIeJsfhlU6+cZI+5bQlBs8cJYmm5i/TCobVkI/i6gbv4SF9byg0C+R3LDh/7eZgekBBRTMZCXuoFJa8/IxoNjXmYVdZvfZ0kAAK1W1dzdQj2KC5eZ4Jeg+CzNRdb67LJd35Z4kEGRi1Q4Otrk+uheP26+SY=
+	t=1775497943; cv=none; b=IgRtP0Kyk5sJ5l/4SjmYTPkpogN0n+mYMjV5n7IdDnSSodwj2yRDj3sRg19UbaBsns3AnLfyIENe327J45nAOfmX/Y+/mMUP+3Dm1mv7z6UGbQovay7qJFNOd+wOVdIuI0PygbSo3s1jPDyuVL5KyR7Ln9fId3k5dx3NrUW3THk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775497915; c=relaxed/simple;
-	bh=Ve6x1AwkxFcLVietZY6qu5e3CEpbe2Rj0av5z42vphI=;
+	s=arc-20240116; t=1775497943; c=relaxed/simple;
+	bh=L+fHFYIxwhhlhI1YHQoUhP8mu0wAvXjcXppHn+VVLGs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KmGLZbM0D6pRBtnBZC1ksiWAqU2H+1IHHoWVRaMWV8nmZrRs7Q6y7oevYXwlYilZcS9PrSs0kNpuy3f51WI2NJGNHsmoAY5cS3VozT45B7CdEi0IqFYmt4CTy/Aj0VRSX8axewS9raCaxYDA6hv3xmBcNVZ47u5rjkY+S/7Z8IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOmPRRah; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0ny6rKZo+FdqcsLBQzLK4/vMJm1ld1gbwkVzo0MpPhPOz59IeK6dNsSzYLDbc+DfjOjOmtv4nwp5IhfXcbSSIuXygfq+bYghVs13piEd1yabwUsiULX+7QRnTTdZsd9rhmHAIOOF1+rW0fo6ukSTcOT0x2EBpZi4SWVmB1foQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+b084kU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOmPRRah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B150BC2BCAF;
-	Mon,  6 Apr 2026 17:51:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+b084kU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1CAC4CEF7;
+	Mon,  6 Apr 2026 17:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775497915;
-	bh=Ve6x1AwkxFcLVietZY6qu5e3CEpbe2Rj0av5z42vphI=;
+	s=k20201202; t=1775497942;
+	bh=L+fHFYIxwhhlhI1YHQoUhP8mu0wAvXjcXppHn+VVLGs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rOmPRRahTUiG9YLdi9Z9zuSIlbTOlUP+KYUrP+ziSh/9bJ45zVZRfB3Dqr8S12mro
-	 yxC5YfNXRBUMG5t9YnqTtncU6ZitzBmEELsdzmVA2LSk0H8c3a/0FBePhPKnDCYYzI
-	 fF7sQZhAqzmkU/racpwvirceYfH9isr6/HuQkpk2Ld7bJnbCd01N2c9wyfhp1lmEh3
-	 jLI8VFNqOlJE1QtCpMhxRq2WcydZwTohY4E7v+9riaMTtSUmA3ENMpociixD6FuDqJ
-	 1Cm1T6NSwbqRpqfgettAZUsxbmTn60lt6yat2QNcK1XgBE0ZWaAqjdmhk4HvNfZWxR
-	 WnjW5Zz502CYQ==
-Date: Mon, 6 Apr 2026 10:51:53 -0700
+	b=R+b084kUGRB5foGiP1JoBAGzWvTaALApxAIHBCwvqcaVKNFyijR9PL3qXVIFd/MfL
+	 /mgeu54xF2gb2nFXz8q/wLk8uRhr4n0igR4SLCSUrcwdMtOJcc/Vgs8grFF5smmebf
+	 VtAYGNoChscJpAJ8L3sPyjepe2cADymkVp2tR7FpCOJlNDah5YPdAOxaGBuieGlBTA
+	 NZQWl5XGwWFiRJcZysn02+UurvthX1AuTk3FyTVzWdlYmnCGUnV9hTDoaq8WdVwi82
+	 lzVE/tUgH06WpMFJWXdc1wK6cV94YRpHpbsLeJDWiCk5Ve7mNp2Q9wpCddslNqA3n4
+	 3SCd6VJtCV65w==
+Date: Mon, 6 Apr 2026 10:52:20 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ricky Ringler <ricky.ringler@proton.me>
-Cc: irogers@google.com, mingo@redhat.com, acme@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6] perf utilities: cln_size header
-Message-ID: <adPyuaptzUlTdpi6@google.com>
-References: <20260308172037.123654-1-ricky.ringler@proton.me>
- <CAP-5=fVk22oOxLSN-2_MioJ3RKUpQwD2TWK9sA=WcegUc_dj1w@mail.gmail.com>
- <20260321204145.26359-1-ricky.ringler@proton.me>
- <acW2j7hki-u50YYz@google.com>
- <20260328200442.134489-1-ricky.ringler@proton.me>
- <actrosC-vqhjMA-A@google.com>
- <20260403220758.41790-1-ricky.ringler@proton.me>
- <adBbXHuhs6TlwJre@google.com>
- <20260404011313.51901-4-ricky.ringler@proton.me>
- <adND6AGUKu8d0YlO@google.com>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, bpf@vger.kernel.org,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org, sun.jian.kdev@gmail.com
+Subject: Re: [PATCH v2] perf cgroup: Update metric leader in
+ evlist__expand_cgroup
+Message-ID: <adPy1Og7FgOXKQID@google.com>
+References: <CAP-5=fVbwwP6QBO+GrFoSVFxX1GM9rTJFqUwMVdsona_Gt6rug@mail.gmail.com>
+ <20260404060552.1585709-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,22 +47,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <adND6AGUKu8d0YlO@google.com>
+In-Reply-To: <20260404060552.1585709-1-irogers@google.com>
 
-On Sun, Apr 05, 2026 at 10:26:00PM -0700, Namhyung Kim wrote:
-> On Sat, Apr 04, 2026 at 01:16:56AM +0000, Ricky Ringler wrote:
-> > Forgive me for wasting your time with my last message...
-> > I switched work machines and attached the wrong patch file.
+On Fri, Apr 03, 2026 at 11:05:52PM -0700, Ian Rogers wrote:
+> When the evlist is expanded the metric leader wasn't being updated. As
+> the original evsel is deleted this creates a use-after-free in
+> stat-shadow's prepare_metric. This was detected running the "perf stat
+> --bpf-counters --for-each-cgroup test" with sanitizers.
 > 
-> That's fine but you could send it as v7 so that the tools can pick the
-> latest version without confusion.
+> The change itself puts the copied evsel into the priv field (known
+> unused because of evsel__clone use) and then in a second pass over the
+> list updates the copied values using the priv pointer.
 > 
-> > 
-> > ---
-> 
-> Also, adding this mark invalidates the following paragraphs and leave
-> them out from the commit message..  I'll update it this time but keep
-> that in mind for the next time.
+> Fixes: d1c5a0e86a4e ("perf stat: Add --for-each-cgroup option")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Acked-by: Sun Jian <sun.jian.kdev@gmail.com>
 
 Applied to perf-tools-next, thanks!
 
