@@ -1,107 +1,216 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEB9389DEA;
-	Tue,  7 Apr 2026 06:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C065733E;
+	Tue,  7 Apr 2026 06:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775544828; cv=none; b=Le2QUi84P9W4F13mTbYmCP+9sy9cSDMOQ5+Y4KUc7+LrPEEktuFtqXmnayoBIVtJoFffdyjRiygatr10/I1SBM3EYykAA44TfghauUl4tz/cFajCiP8NPmQGbAt2DQPsF47KdqgvNlm4qIDZTDrjeexyP4ixakpmLaKD0qLg6yU=
+	t=1775545138; cv=none; b=e5/1BfgK5j4I+Vd9qhog+TsrIc9Fhdzv8CLCtAT8FjBFiK4YxK9+sYvvzKRGZi1oEulzVl7RdjLcMWDtprKOjN7egJcFBPT81gCupxs6Hkx0TGF4TKur2t6KvJRVgXWiknxzrNwFTMaVjDN6sxGiQNVCUPeJRzOKk2mJdnE2Tj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775544828; c=relaxed/simple;
-	bh=xmJOywtnqtcjtDrOIaLg4cNmmd9eqq3pTFEdQ1HGsDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rir+LCj3eAv9TyrY1hE5bWJtVJE04bpUZwtuZPjJ9Fl7H+K3gyRRp5df7OmLKOG6wbYD3KC1l2pXAhtazeNGM1NzXELeaQIiY+lTW0ta29DmdeAuRVSZ6qDDj9B8/VgLuVsGhs06t48ZdacQCgRJQY9nKj1sDrfNgCoUY/YtVYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gq19ZaG6; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1775545138; c=relaxed/simple;
+	bh=g7bkjH66o4SeSNHDvgXzoUbrOwo6ZCxKoLQk02t+TQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lXYGzNYkmI584Q/QXOBs6GaCZIyTgJi2EIEAJQ0XIxo2cLhvbT1TUG+MkPr3kcWaVQ4Md+4yrKEMu4FHgapIZbBJZbS83TKcU094BzPkS3VApzs3n8pptzKK8oFkOazZcJ6U/xyZK21GB4r3qqHpaCQmw0el7ItnsPng6KgUcuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSwF8f7x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gq19ZaG6"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B3F716F2;
-	Mon,  6 Apr 2026 23:53:39 -0700 (PDT)
-Received: from [10.164.18.83] (unknown [10.164.18.83])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6EB73F641;
-	Mon,  6 Apr 2026 23:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775544825; bh=xmJOywtnqtcjtDrOIaLg4cNmmd9eqq3pTFEdQ1HGsDk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gq19ZaG6H/Z6QLLA361dNnxs7Rcoy1FFoxh2es/ZkM34A3iiH7Q0NWkQ9Xjf85a/V
-	 Cw84yhYE9dms8niScH613/FI3ApHX6Wc/QmkYVNEjsQk3N+7VxRQ/QXYkr1v8tdtC2
-	 iPBeGS35uCwhoz4oVnSyTerqZzVYnRL5bM3gmw1g=
-Message-ID: <f5c9bd04-115b-4f34-bfd2-0bac756f84cb@arm.com>
-Date: Tue, 7 Apr 2026 12:23:39 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSwF8f7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D28C116C6;
+	Tue,  7 Apr 2026 06:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775545137;
+	bh=g7bkjH66o4SeSNHDvgXzoUbrOwo6ZCxKoLQk02t+TQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rSwF8f7xbRNG4PllD0FQ8BwsNIpo5Oy8FJcY39oDva/0c9TDy4mo8qn7CtJbLizSC
+	 i4NfA4g3ejDe92BhHITJL8LlvI9Tc6qAlSu2sXWLxNysNQZyN99xgIVhgH5qZT9oqB
+	 wI1V/FhZHggE0ewVuZQd66wcK1MXa0afGOzhaHQ7AwiR+4OgEHHhF8XEDVMdoGL6g8
+	 k9Z+c8bOSdgd5It6wq+JS6rNi32nnz2DQ1aIEWxcKECplchF8hobyFd/gs7ntgk8An
+	 vcmy9PndjbDDsY7qMe7pMlCVLzdY9P9FHY7Yf0AFFyvahn0zz2QKx5UvgBdt4QSA9l
+	 C1gtS0+5Eh1rw==
+Date: Mon, 6 Apr 2026 23:58:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+	Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+	Kim Phillips <kim.phillips@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 03/16] perf annotate-arm64: Generalize
+ arm64_mov__parse to support standard operands
+Message-ID: <adSrL-iZna3pyDrY@z2>
+References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+ <20260403094800.1418825-4-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
- accessors
-To: "David Hildenbrand (Arm)" <david@kernel.org>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
- <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
- <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260403094800.1418825-4-wutengda@huaweicloud.com>
 
-On 07/04/26 12:18 PM, David Hildenbrand (Arm) wrote:
-> On 4/7/26 05:28, Anshuman Khandual wrote:
->>
->>
->> On 27/02/26 11:57 AM, Anshuman Khandual wrote:
->>> Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
->>> standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
->>> accessors default to READ_ONCE() on platforms that don't override them. So
->>> there is no functional change on such platforms.
->>>
->>> However arm64 platform is being extended to support 128 bit page tables via
->>> a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
->>> provide required single copy atomic access for 128 bit page table entries.
->>> Although pxdp_get() accessors can later be overridden on arm64 platform to
->>> extend required single copy atomicity support on 128 bit entries.
->>>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: David Hildenbrand <david@kernel.org>
->>> Cc: Peter Zijlstra <peterz@infradead.org>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->>> Cc: Namhyung Kim <namhyung@kernel.org>
->>> Cc: linux-perf-users@vger.kernel.org
->>> Cc: linux-mm@kvack.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>> ---
->>> This patch applies both on v7.0-rc1 and mm-unstable.
->>>
->>> Part of the D128 series but independent. Hence could be considered on its own.
->>>
->>> https://lore.kernel.org/all/20260224051153.3150613-5-anshuman.khandual@arm.com/
->>>
->>> Collected Peter's tag from an off list conversation.
->>
->> Gentle ping. 
->>
->> Still don't see this patch in latest next-20260406. Hence just
->> wondering which tree and branch this patch is being picked up ?
+On Fri, Apr 03, 2026 at 09:47:47AM +0000, Tengda Wu wrote:
+> The current arm64_mov__parse() implementation strictly requires the
+> operand to contain a symbol suffix in the "<symbol>" format. This
+> causes the parser to fail for standard instructions that only contain
+> raw immediates or registers without symbolic annotations.
 > 
-> It's a trivial change and the last generic code change required for you
-> arm64 D128 change, right?
-
-Right.
-
+> Refactor the function to make symbol matching optional. The parser now
+> correctly extracts the target operand and only attempts to parse the
+> "<symbol>" suffix if it exists. This change also introduces better
+> handling for whitespace and comments, and adds support for multi-register
+> check via arm64__check_multi_regs(), ensuring compatibility with a
+> wider range of arm64 instruction formats.
 > 
-> I would assume this to go through the tip tree, but if Peter agrees we
-> could route this (mm) patch through the MM tree.
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  .../perf/util/annotate-arch/annotate-arm64.c  | 85 ++++++++++++++-----
+>  1 file changed, 65 insertions(+), 20 deletions(-)
 > 
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+> index 33080fdca125..4c42323b0c18 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> @@ -14,12 +14,38 @@ struct arch_arm64 {
+>  	regex_t jump_insn;
+>  };
+>  
+> +static bool arm64__check_multi_regs(const char *op)
+> +{
+> +	char *comma = strchr(op, ',');
+> +
+> +	while (comma) {
+> +		char *next = comma + 1;
+> +
+> +		next = skip_spaces(next);
+> +
+> +		/*
+> +		 * Check the first valid character after the comma:
+> +		 * - If it is '#', it indicates an immediate offset (e.g., [x1, #16]).
+> +		 * - If it is an alphabetic character, it is highly likely a
+> +		 *   register name (e.g., x, w, s, d, q, v, p, z).
+> +		 * - Special cases: Alias and control registers like sp, xzr,
+> +		 *   and wzr all start with an alphabetic character.
+> +		 */
+> +		if (*next && *next != '#' && isalpha(*next))
+> +			return true;
 
-Sure
+It seems you check any alphabet charactor after a comma for multi-regs.
+Does that mean the first component before the comma should be another
+register?
 
+> +
+> +		comma = strchr(next, ',');
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int arm64_mov__parse(const struct arch *arch __maybe_unused,
+>  			    struct ins_operands *ops,
+>  			    struct map_symbol *ms __maybe_unused,
+>  			    struct disasm_line *dl __maybe_unused)
+>  {
+> -	char *s = strchr(ops->raw, ','), *target, *endptr;
+> +	char *s = strchr(ops->raw, ','), *target, *endptr, *comment, prev;
+>  
+>  	if (s == NULL)
+>  		return -1;
+> @@ -31,29 +57,48 @@ static int arm64_mov__parse(const struct arch *arch __maybe_unused,
+>  	if (ops->source.raw == NULL)
+>  		return -1;
+>  
+> -	target = ++s;
+> +	target = skip_spaces(++s);
+> +	comment = strchr(s, arch->objdump.comment_char);
+> +
+> +	if (comment != NULL)
+> +		s = comment - 1;
+> +	else
+> +		s = strchr(s, '\0') - 1;
+
+An interesting use of strchr().  Oh, I found the strchr(3) man page
+also mentions that it's a supported use case.  TIL.
+
+
+> +
+> +	while (s > target && isspace(s[0]))
+> +		--s;
+> +	s++;
+> +	prev = *s;
+> +	*s = '\0';
+>  	ops->target.raw = strdup(target);
+> +	*s = prev;
+> +
+>  	if (ops->target.raw == NULL)
+>  		goto out_free_source;
+>  
+> -	ops->target.addr = strtoull(target, &endptr, 16);
+> -	if (endptr == target)
+> -		goto out_free_target;
+> -
+> -	s = strchr(endptr, '<');
+> -	if (s == NULL)
+> -		goto out_free_target;
+> -	endptr = strchr(s + 1, '>');
+> -	if (endptr == NULL)
+> -		goto out_free_target;
+> -
+> -	*endptr = '\0';
+> -	*s = ' ';
+> -	ops->target.name = strdup(s);
+> -	*s = '<';
+> -	*endptr = '>';
+> -	if (ops->target.name == NULL)
+> -		goto out_free_target;
+> +	ops->target.multi_regs = arm64__check_multi_regs(ops->target.raw);
+> +
+> +	/* Parse address followed by symbol name, e.g. "addr <symbol>" */
+> +	if (strchr(target, '<') != NULL) {
+> +		ops->target.addr = strtoull(target, &endptr, 16);
+> +		if (endptr == target)
+> +			goto out_free_target;
+
+Hmm.. shouldn't this part be executed regardless of presence of a symbol
+name?
+
+> +
+> +		s = strchr(endptr, '<');
+> +		if (s == NULL)
+> +			goto out_free_target;
+
+It'd be safer to check `if (*skip_spaces(endptr) == '<')` rather than
+strchr().
+
+
+> +		endptr = strchr(s + 1, '>');
+> +		if (endptr == NULL)
+> +			goto out_free_target;
+
+I'm afraid C++ programs can have symbols with <> for templates.
+Probably strrchr() would work.
+
+Thanks,
+Namhyung
+
+> +
+> +		*endptr = '\0';
+> +		*s = ' ';
+> +		ops->target.name = strdup(s);
+> +		*s = '<';
+> +		*endptr = '>';
+> +		if (ops->target.name == NULL)
+> +			goto out_free_target;
+> +	}
+>  
+>  	return 0;
+>  
+> -- 
+> 2.34.1
+> 
