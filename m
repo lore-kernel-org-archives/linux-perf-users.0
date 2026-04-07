@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FCA3BD258;
-	Tue,  7 Apr 2026 14:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF563BED79;
+	Tue,  7 Apr 2026 14:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775572214; cv=none; b=Llw10X76YmQdcpdFzoWPH7x+MOUpYTYhB94UyFDng+3F4efI/3NEwgaMyvJ99IJAvH19bWSSGSVghI4VMix9rSb3YnajyNF3V7NHNwZo0Kl0+qqhtARWWR0ms0AiT7NI1labxoNyNlOy3m63uFZnmoIfjHgOwUfILXqo/mos9zE=
+	t=1775572216; cv=none; b=oVZHccz72ONcmQkWtLjoWO6ix1RCOTk+AsU2ApBFcrDQ+yCi7L+L15Q7dCTeQfXuFtQmwZ4GlXB7Ocmq7FNLNRqBNfVtbHRCHW/n2j7JChcPpC9ieMtUPaGJqtRf4GaY1FGxce8Q6jZ9D61TCP19UWFfZtRKS9kpPfzQ7KSalL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775572214; c=relaxed/simple;
-	bh=2mBdtCMg5XJhO2It05OyZWImRJfyjVt9ZDQUn9Uv+L8=;
+	s=arc-20240116; t=1775572216; c=relaxed/simple;
+	bh=uUvq9MVXp8cNAvU8/2GcbzCtpuny4H9rPPxomu7v7sY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=glkJ2hhirsXFaTXtaNBg5c2nPmvlVHI8M30muXaorN0p6o8boCTwjJA3/CJ1R23myaC9SPv5z9TqvVXNmYzD5mHKRAPBrl/RWAGWKv0FI3KAG0+3dqvzvD2jBSxil1IrTJqZ12VhEbzQjakXZczs3Ls+p+hQyVxDyXSpfRigmUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5rUk0l1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bXj9XSbSbbd8kIWZH7iNlgoEL1N4RAupmrG1PfRT36VZCIsd6qrEaKlHdggiWRd7iGV4av68TkQ3y8EKE3uFX1zI9r3m2HRbXTQwzyvKPhDqViWJeCjys9pXih9JCWM/XNhKAm8Y9XXZi4VBoU0A7S1VF27M37tZ+bT1SeYe0qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy/SsEhE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5rUk0l1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C939DC2BCB2;
-	Tue,  7 Apr 2026 14:30:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy/SsEhE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AE5C2BCB2;
+	Tue,  7 Apr 2026 14:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775572214;
-	bh=2mBdtCMg5XJhO2It05OyZWImRJfyjVt9ZDQUn9Uv+L8=;
+	s=k20201202; t=1775572215;
+	bh=uUvq9MVXp8cNAvU8/2GcbzCtpuny4H9rPPxomu7v7sY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=P5rUk0l17s8TR/KCexB3phw3iVAAw23OVADZWDCjcg1bB08aGDgI4zPKMy1oLe5bs
-	 viE39t/tVnQSD21ApcnfZ0RNMwbq+DSQDctZlMR3sjHAvdllC8fDW1TtCxa2NfGlc1
-	 FLtai55m3VKhyc5TnXNphhf7fVspNz1aQm4TF2Bhwgt663SUsvRljb3P63Yv2cImNK
-	 mfwkuB8PgNOgQ7n4C96Rrzz6tGPfWMJKDqShG20TTCrOkzCQXXQ/VeiI9B8FRQjSc0
-	 Ino1vjGOmwJl9Oheg1jZ2jaPKwlG07F/8IG6MmBQc++Ua/MrvUC574ZL1DfiSevXdk
-	 xcCMoGn71QsJQ==
+	b=jy/SsEhEUWFlpfnTq1KI4r1d6pxJti65E4Z1yn9omGYV4MzOcFY8gZkxjuawQCxf1
+	 CQYvaEMbRdpdqMQl9EZVxBq2fyZJ4AVEY+0rS3WmwSnNIV3E9WB5VJEFHCMDea2lvu
+	 Z1nlthzoAQtoXaEB2jxZSQ51VxbZzwBA/34jzuXhinCjuUWz7SMwhqrfLTopdi9n6Z
+	 TU/bL5LZShtuIzau4bkAoSoZlZmIozavChyCxCkEaIGUw8jTFpra6NbpLP603qlmCY
+	 F7M6BC0qngv3ZR76nax53PV+PAkBdjj5ah/atADVYZVXHUC/JfKYjpokg4GwwbaikS
+	 qJod4SznuhSZA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Tue, 07 Apr 2026 09:29:45 -0500
-Subject: [PATCH v4 3/6] arm64: hw_breakpoint: Add
- lockdep_assert_irqs_disabled() on install/uninstall
+Date: Tue, 07 Apr 2026 09:29:46 -0500
+Subject: [PATCH v4 4/6] arm64/cpufeature: Add field details for
+ ID_AA64DFR1_EL1 register
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260407-arm-debug-8-9-v4-3-a4864e69b0ea@kernel.org>
+Message-Id: <20260407-arm-debug-8-9-v4-4-a4864e69b0ea@kernel.org>
 References: <20260407-arm-debug-8-9-v4-0-a4864e69b0ea@kernel.org>
 In-Reply-To: <20260407-arm-debug-8-9-v4-0-a4864e69b0ea@kernel.org>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -49,28 +49,66 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 X-Mailer: b4 0.15-dev
 
-The breakpoint install/uninstall/restore code depends on interrupts
-being disabled. Make this requirement explicit with a
-lockdep_assert_irqs_disabled() assertion.
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
+This adds required field details for ID_AA64DFR1_EL1, and also drops dummy
+ftr_raz[] array which is now redundant. These register fields will be used
+to enable increased breakpoint and watchpoint registers via FEAT_Debugv8p9
+later. The register fields have been marked as FTR_STRICT, unless there is
+a known variation in practice.
+
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/arm64/kernel/hw_breakpoint.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/cpufeature.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index bb39bc759810..a9266dc710b4 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -231,6 +231,8 @@ static int hw_breakpoint_control(struct perf_event *bp,
- 	enum dbg_active_el dbg_el = debug_exception_level(info->ctrl.privilege);
- 	u32 ctrl;
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index c31f8e17732a..24c8e9147e35 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -570,6 +570,21 @@ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+ 	ARM64_FTR_END,
+ };
  
-+	lockdep_assert_irqs_disabled();
++static const struct arm64_ftr_bits ftr_id_aa64dfr1[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ABL_CMPs_SHIFT, 8, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_DPFZS_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_EBEP_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ITE_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ABLE_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_PMICNTR_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_SPMU_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_CTX_CMPs_SHIFT, 8, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_WRPs_SHIFT, 8, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_BRPs_SHIFT, 8, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_SYSPMUID_SHIFT, 8, 0),
++	ARM64_FTR_END,
++};
 +
- 	if (info->ctrl.type == ARM_BREAKPOINT_EXECUTE) {
- 		/* Breakpoint */
- 		ctrl_reg = AARCH64_DBG_REG_BCR;
+ static const struct arm64_ftr_bits ftr_mvfr0[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR0_EL1_FPRound_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR0_EL1_FPShVec_SHIFT, 4, 0),
+@@ -756,10 +771,6 @@ static const struct arm64_ftr_bits ftr_single32[] = {
+ 	ARM64_FTR_END,
+ };
+ 
+-static const struct arm64_ftr_bits ftr_raz[] = {
+-	ARM64_FTR_END,
+-};
+-
+ #define __ARM64_FTR_REG_OVERRIDE(id_str, id, table, ovr) {	\
+ 		.sys_id = id,					\
+ 		.reg = 	&(struct arm64_ftr_reg){		\
+@@ -832,7 +843,7 @@ static const struct __ftr_reg_entry {
+ 
+ 	/* Op1 = 0, CRn = 0, CRm = 5 */
+ 	ARM64_FTR_REG(SYS_ID_AA64DFR0_EL1, ftr_id_aa64dfr0),
+-	ARM64_FTR_REG(SYS_ID_AA64DFR1_EL1, ftr_raz),
++	ARM64_FTR_REG(SYS_ID_AA64DFR1_EL1, ftr_id_aa64dfr1),
+ 
+ 	/* Op1 = 0, CRn = 0, CRm = 6 */
+ 	ARM64_FTR_REG(SYS_ID_AA64ISAR0_EL1, ftr_id_aa64isar0),
 
 -- 
 2.53.0
