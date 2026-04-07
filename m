@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A18F25776;
-	Tue,  7 Apr 2026 12:08:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781543AE18A;
+	Tue,  7 Apr 2026 12:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775563728; cv=none; b=vFCClxAcsCFV9Ts39A5zNf2L4KCQYbRM/gClcKoHSeGyTTz8+l2IejmcqbkW8r71y5fNHlInDwSQyHWh2OQSwNK91/XtMceYuH/xsNfV0+vUlmMfNyrsJmRRBwt1epuhN4Og457Xr3R8/63bdJ4cEdGZO2Tl095cR00tVZ5Fw/Q=
+	t=1775564400; cv=none; b=L/0EGAhNWtzc77YvAUTnaVoPVk8S/+bvFwn4s0em1u4HHeDIqLUd9yKB5MYGg1bSI1Ay+5T3QvXNS4iGlGzuUAfEXCZxOzYfXFxIukXAGyvXKgjKw5g2XbBlARQ1At2AR6jiHRNay/IQCz+PwHcz/nxQmNcCOrHk6sJd+ImT6dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775563728; c=relaxed/simple;
-	bh=r4CrN2dfvyMcTjw4pcJs5SrtdmOVDZyqLxzczWtx68g=;
+	s=arc-20240116; t=1775564400; c=relaxed/simple;
+	bh=i87THqj59PG6AQpmQ1TngcvxJhh6ncfTaLwXvBSuzB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOSfyG0MDAtPiwfEYx3B03jg94co0d8M37cQRDs7ueVJ4cfUDrrEJeZLBHjp7kYQkpFafjUeTwih2B2Z5VNaEqayE3A70CkK7wlEk7/mL3dkS02x/+jGPtQkMAPV67Lr/Z42jhUJ+9AQzwK4MXuQ/ef+F5E9kUBpaf58M97B68w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzB+45Yv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=C++yte0x5CLk9Lam2FcLoBXk4Cn2EgGkv7hCC/lHAZD/w85nVSfOQC0WV/Jn2CwDQyfr1Zehg36Y3aLHsXE38ZMDbwF46uNnnYqotVKt51NjVXZL49JfrfrLJ6Qc0oo98nK8XpouXS662GMAWPfkmlkDUR5bPiba+pItG0dZwL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrXxKE2q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzB+45Yv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9521C116C6;
-	Tue,  7 Apr 2026 12:08:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrXxKE2q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8F1C116C6;
+	Tue,  7 Apr 2026 12:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775563728;
-	bh=r4CrN2dfvyMcTjw4pcJs5SrtdmOVDZyqLxzczWtx68g=;
+	s=k20201202; t=1775564400;
+	bh=i87THqj59PG6AQpmQ1TngcvxJhh6ncfTaLwXvBSuzB8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tzB+45YvGxHOW+VJeu7y0wkP8NEqq90uj0tUIfozATz0JgMMp6oUAFNWd6JtHzXCC
-	 fY5NVtkK5GtW43VtI1rtL2SIlMiRXhH/VtNgSZmUHJMqrnPx1z1jWctiJRa0iAn9lA
-	 kYQV83PdHE5qLdxk+uU6mJy5tWY98whZlAqKcxPcOXLUtCtfZFSfcMddEYQ9VIPUZu
-	 hNPJaeXknZR7Vk58YuPcwfQ1qLsUWyALJ1mLGVC5jEcOYH2R//kqazi/wbnFX86S5w
-	 c43c1b5wDNxEmg6jPDOe0ZfT3C2twxsUyNzzUPG8COb7vxAHZOLdISBH5Awrt6gsPj
-	 ALIw19IFlR2Lw==
-Date: Tue, 7 Apr 2026 09:08:44 -0300
+	b=DrXxKE2quH0NqLF8ZBpxUUtWqrJMttQSiDB6HkuSq46vaqvIhQQxCxPnaLcbE3+ae
+	 1MZi1Lrh0HExUqGRw9REbyJGku+WznIsPcIUiBdQCAUn3nPyfQt9vf3NW58yj4J+X1
+	 38BZGprQTX7oY0Kn6cJvLLegS4CHV5skwBT8Wnh6EgGdqH01IWE1zoh/jRJ3e/oXwV
+	 irFVadu6lNMY7+/V7T5dmdUZAF5EXbGeAQVb4TfEXNjuUupZILW9B5EPM2hmF6IEn+
+	 dpj11hY1rpEvxAqrsw25960u/g9Dqw2+Udz6WmvQJ9rrrqU+UTmJWxBV4U2jxdY+va
+	 4xdH+lKK/9dDQ==
+Date: Tue, 7 Apr 2026 09:19:57 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 4/4] perf symbol: Add missing libgen.h include to get
- basename() prototype
-Message-ID: <adTzzKCWES52egGl@x1>
-References: <20260402001740.2220481-1-acme@kernel.org>
- <20260402001740.2220481-5-acme@kernel.org>
- <CAP-5=fVv=5H-6DOaAr4BSDE=pKrxWDa9oduYbVTozYc-ZeeuRg@mail.gmail.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf build: Fix detection of latest openjdk
+Message-ID: <adT2berZ52tb1O-P@x1>
+References: <20260407080320.45372-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,81 +47,108 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVv=5H-6DOaAr4BSDE=pKrxWDa9oduYbVTozYc-ZeeuRg@mail.gmail.com>
+In-Reply-To: <20260407080320.45372-1-namhyung@kernel.org>
 
-On Thu, Apr 02, 2026 at 08:19:24AM -0700, Ian Rogers wrote:
-> On Wed, Apr 1, 2026 at 5:20 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > This works in some places because there are tricks to prefer a GNU
-> > version instead of the XPG version, but started breaking in some musl
-> > libc systems due to some unrelated change that made libgen.h stop being
-> > included by chance.
-> >
-> > Since symbol.h is using basename(), make it include libgen.h.
+On Tue, Apr 07, 2026 at 01:03:20AM -0700, Namhyung Kim wrote:
+> My fedora system fails to find openjdk even if I installed the
+> 'java-latest-openjdk-devel' package as in the warning message.
+> It turns out that the directory path is different than what's in the
+> output of alternatives.
 > 
-> Huh, this is being flagged by Sashiko:
-> """
-> Could this include cause segmentation faults by exposing the POSIX version
-> of basename() to the rest of the tools?
+>   Makefile.config:1122: No openjdk development package found, please install JDK package,
+>                         e.g. openjdk-8-jdk, java-latest-openjdk-devel
 > 
-> According to the POSIX specification, if the input is an empty string
-> or slashes, basename() can return a pointer to a statically allocated,
-> read-only string literal (such as "." or "/").
+> The Makefile.config has the rule like below to detect the installed
+> directory with a version number.
 > 
-> In tools/perf/util/probe-event.c:convert_exec_to_group(), the code takes
-> the return value of basename() and modifies it in-place:
->     ptr = basename(exec);
->     ...
->     for (ptr2 = ptr; *ptr2 != '\0'; ptr2++) {
->             if (!isalnum(*ptr2) && *ptr2 != '_')
->                     *ptr2 = '_';
->     }
-> If a user provides an empty target or "/", the POSIX basename() would
-> return a read-only string. When the loop attempts to write a null or
-> underscore into it, wouldn't it trigger an immediate segmentation fault?
+>   $ alternatives --display java | tail -1 | cut -d ' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g'
+>   /usr/lib/jvm/java-21-openjdk
 > 
-> Is there a way we can safely duplicate the returned string before modifying it,
-> or ensure the inputs never resolve to these static strings?
-> """
+> This is to find a directory where the header file (jvmti.h) is like
+> /usr/lib/jvm/java-21-openjdk/include/jvmti.h.  However the header file
+> was in a different directory.
 > 
-> The story of the two basename versions and the issues appears in the
-> man pages. The whole thing makes me think we should avoid basename :-)
+>   $ rpm -ql java-latest-openjdk-devel | grep jvmti.h
+>   /usr/lib/jvm/java-latest-openjdk/include/jvmti.h
+> 
+> It seems the directory name is fixed to provide the latest version.
+> Let's check the directory name before using the parsed name.  With this
+> change, the warning is gone on my system.
 
-What sashiko pointed out is a problem in some other part of perf that is
-unrelated to this patch and requires a separate fix, no?
+Interesting, I'm not noticing this on Fedora rawhide (44), I created a
+fresh toolbox container with fedora:rawhide and had, as you, this:
 
-I.e. tools/perf/util/probe-event.c already includes libgen.h since
-581037151910126a ("perf probe: Add missing libgen.h header needed for
-using basename()") from March, 2024.
+⬢ [acme@toolbx perf-tools-next]$ m
+make: Entering directory '/home/acme/git/linux/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
+Makefile.config:1070: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+Makefile.config:1122: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-latest-openjdk-devel
 
-In the scope of this patch the potential problem isn't possible as
-__symbol__join_symfs() isn't changing the return of basename(), right?
 
-⬢ [acme@toolbx perf-tools-next]$ git grep '\<basename(' tools/perf
-tools/perf/builtin-daemon.c:    base = basename(basen);
-tools/perf/scripts/python/exported-sql-viewer.py:               if short_name[0:7] == "[kernel" and os.path.basename(long_name) == "kcore":
-tools/perf/util/annotate.c:             d_filename = basename(filename);
-tools/perf/util/dsos.c:        * basename() may modify path buffer, so we must pass
-tools/perf/util/dsos.c:          * basename() may return a pointer to internal
-tools/perf/util/dsos.c:         base = strdup(basename(lname));
-tools/perf/util/probe-event.c:  ptr1 = basename(exec_copy);
-tools/perf/util/symbol.h:               base = basename(path_copy);
+Then I just followed the suggestion and did a:
+
+$ sudo dnf install java-latest-openjdk-devel
+
+And after that the 1122 warning vanished and:
+
+⬢ [acme@toolbx perf-tools-next]$ ls -la /tmp/build/perf-tools-next/feature/test-jvmti*
+-rwxr-xr-x. 1 acme acme 12384 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti.bin
+-rwxr-xr-x. 1 acme acme 12392 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti-cmlr.bin
+-rw-r--r--. 1 acme acme  1188 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti-cmlr.d
+-rw-r--r--. 1 acme acme     0 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti-cmlr.make.output
+-rw-r--r--. 1 acme acme  1122 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti.d
+-rw-r--r--. 1 acme acme     0 Apr  7 09:14 /tmp/build/perf-tools-next/feature/test-jvmti.make.output
+⬢ [acme@toolbx perf-tools-next]$ cat /tmp/build/perf-tools-next/feature/test-jvmti.make.output
 ⬢ [acme@toolbx perf-tools-next]$
 
-It seems just the probe-event.c case needs fixing.
+⬢ [acme@toolbx perf-tools-next]$ alternatives --display java | tail -1 | cut -d ' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g'
+/usr/lib/jvm/java-latest-openjdk
+⬢ [acme@toolbx perf-tools-next]$
 
-And we also have this in tools/perf/util/srcline.c:
-
-/* basename version that takes a const input string */
-static const char *gnu_basename(const char *path)
-{
-        const char *base = strrchr(path, '/');
-
-        return base ? base + 1 : path;
-}
-
-That probably could be reused to avoid these basename() oddities?
+⬢ [acme@toolbx perf-tools-next]$ alternatives --display java
+java - status is auto.
+ link currently points to /usr/lib/jvm/java-latest-openjdk/bin/java
+/usr/lib/jvm/java-latest-openjdk/bin/java - priority 1
+ follower jre: /usr/lib/jvm/java-latest-openjdk
+ follower alt-java: /usr/lib/jvm/java-latest-openjdk/bin/alt-java
+ follower jcmd: /usr/lib/jvm/java-latest-openjdk/bin/jcmd
+ follower keytool: /usr/lib/jvm/java-latest-openjdk/bin/keytool
+ follower rmiregistry: /usr/lib/jvm/java-latest-openjdk/bin/rmiregistry
+ follower java.1.gz: /usr/lib/jvm/java-latest-openjdk/man/man1/java.1
+ follower alt-java.1.gz: /usr/lib/jvm/java-latest-openjdk/man/man1/alt-java.1
+ follower jcmd.1.gz: /usr/lib/jvm/java-latest-openjdk/man/man1/jcmd.1
+ follower keytool.1.gz: /usr/lib/jvm/java-latest-openjdk/man/man1/keytool.1
+ follower rmiregistry.1.gz: /usr/lib/jvm/java-latest-openjdk/man/man1/rmiregistry.1
+Current `best' version is /usr/lib/jvm/java-latest-openjdk/bin/java.
+⬢ [acme@toolbx perf-tools-next]$
 
 - Arnaldo
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Makefile.config | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 333ddd0e4bd814e9..e6686641761fd0bf 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1096,8 +1096,12 @@ ifndef NO_JVMTI
+>    ifneq (,$(wildcard /usr/sbin/update-java-alternatives))
+>      JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+>    else
+> -    ifneq (,$(wildcard /usr/sbin/alternatives))
+> -      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+> +    ifneq (,$(wildcard /usr/lib/jvm/java-latest-openjdk/include))
+> +      JDIR=/usr/lib/jvm/java-latest-openjdk
+> +    else
+> +      ifneq (,$(wildcard /usr/sbin/alternatives))
+> +        JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+> +      endif
+>      endif
+>    endif
+>    ifndef JDIR
+> -- 
+> 2.53.0
