@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD67D379EEF;
-	Tue,  7 Apr 2026 19:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA12379988;
+	Tue,  7 Apr 2026 19:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775591536; cv=none; b=k2vlI7mxM61fNZfirg0jfv3Caxpk+QBrku6bC7WeHosPqUtGVFJGYRnBNX4zCPtWK69cySDEG40oNzTobx4hmo0phHssoDJHZTxxiVu02AxEqlQG94EBFHnvGGFA69VFkSCV2jnLIlUKDzpI4PU44dAzFnfaSLIXbDEqxRyMQQw=
+	t=1775591540; cv=none; b=VZYJi4LWq1F4cR/JMwMpUAjJgwwz+ajAxcLmSkmgCCnXGXjB8Cah3zFqj7HZPkpxltVUYxzyNwuv6L8UrVs4AvYiqeNO6IWUIAX0TpAhHe0shLWuDhNXfMCjCwDdH/xNvtQ6VmilNcQtTWaaPCc/nwyuvMYdAYnuP8e1WtY5ZdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775591536; c=relaxed/simple;
-	bh=Cv2FnyOjtC2fslo4il83Rx3CQeohjducazxh+zauVS4=;
+	s=arc-20240116; t=1775591540; c=relaxed/simple;
+	bh=yMksQZpxRqpHOsAjR6fOn0HO1g7ZV12s4QLL+KOhC2Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P/ggdqK/lC3LSaERu5B5uW4NQpjB3bmHOgB2KzZSTFJ8F/DJmEfVaiLhs/srdfN9IwTmPCMwvqAQ/J0XuX7BZUk8YwRgPD+a++Iofl7INY6JZ3g6lcVH3nklQf6j8EvyfEnYo3Ah3mcTyEkgrSR7p5qSTMREpVMjsDxXgJxD+kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upwT1lMS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=psdfErlUyL78KA3h8gL1I5Dix4jmrhe/jtRuufpPSEODQwndKUTFerf1ntCPFjgYw0iHSZ6ZY2au5teBBqZiKkIHKmha9cziVr/GZvEICMxvaSMhsGtgDZS8S0h6+qSsKfPUkyQ1MPv4wvwGzuqen9jnfcU097ioaD5lAnv2NOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=towLaHDG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upwT1lMS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB97C2BCB0;
-	Tue,  7 Apr 2026 19:52:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="towLaHDG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D738C19421;
+	Tue,  7 Apr 2026 19:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775591536;
-	bh=Cv2FnyOjtC2fslo4il83Rx3CQeohjducazxh+zauVS4=;
+	s=k20201202; t=1775591540;
+	bh=yMksQZpxRqpHOsAjR6fOn0HO1g7ZV12s4QLL+KOhC2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=upwT1lMSeWzWlGBhXwLLms/2lvptwA4hdI6k9WNonyOfTyzWY6dgKwrl/VIYtONqQ
-	 GsOJK5nHsfLBWPvzNgJKgVIXNAAHhJfZCSQqvqCjVqpPytzSAI7ugKAdjtPAZnGDbu
-	 N6wFo12UisxIQbsksDIGaTBfog10TfXbnjCg9Dheutb9Av19kgs62+7ME1f6UQaI79
-	 caVTNomeUc4NjgsSKESgTbQqHAVjMeyIIP3bml6NXoMQBpXuB8l7n+8yn+NCA27C/J
-	 6F2oBOS8DoUATReAM77JPUFOg4mDe+dpJ5Rdk2/QtsA6VNibIgX62v2prTQQWcGehz
-	 mPB4tJPP5B+vQ==
+	b=towLaHDGlDFYNnaOHm35hY8IsNfxAEkh2dLcFBqeiFFQK6Mu1zriyS+mNOmp4kV5r
+	 qiAj8sEG3uZRL7Qww3zEa5Ne2pjXbVdbEbp7vVHlaOVzg+v/KH1eC/8RQ9ZOMDwVmX
+	 oJPtbT99mNGmv8KYw4jPpn5MFUXD9gwG2G00yLjOZbUJeXXiTkJE2HQsNjynDy6wPu
+	 1s49FbUX5ziQ6bsI2+bL7j5rlOYp0Pu0YB/raovSi5bk8+ncAqopojjGftTzhh/gQz
+	 WWzNkNGFGbzBvb9yKAUIzbOjW7B1Cur1tFlNY9DwhXfdD1qPpWhqYu6gjuRxDMRCel
+	 LMrZ+km9dahQg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/6] perf tools: Replace basename() calls with perf_basename()
-Date: Tue,  7 Apr 2026 16:51:44 -0300
-Message-ID: <20260407195145.2372104-6-acme@kernel.org>
+Subject: [PATCH 6/6] perf util: Kill die() prototype, dead for a long time
+Date: Tue,  7 Apr 2026 16:51:45 -0300
+Message-ID: <20260407195145.2372104-7-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260407195145.2372104-1-acme@kernel.org>
 References: <20260407195145.2372104-1-acme@kernel.org>
@@ -55,270 +55,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As noticed in a sashiko review for a patch adding a missing libgen.h
-in a file using basename():
-
-  https://sashiko.dev/#/patchset/20260402001740.2220481-1-acme%40kernel.org
-
-So avoid these subtleties and instead reuse the gnu_basename() function
-we had in srcline.c, renaming it to perf_basename() and replace
-basename() calls with it, simplifying several cases by removing now
-needless strdups.
+In fef2a735167a827a ("perf tools: Kill die()") the die() function was
+removed, but not the prototype in util.h, now when building with
+LIBPERL=1, during a 'make -C tools/perf build-test' routine test, it is
+failing as perl likes die() calls and then this clashes with this
+remnant, remove it.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-daemon.c         |  4 ++--
- tools/perf/util/annotate.c          |  3 +--
- tools/perf/util/data-convert-json.c |  4 ++--
- tools/perf/util/dsos.c              | 32 ++++++++---------------------
- tools/perf/util/probe-event.c       |  3 +--
- tools/perf/util/srcline.c           | 11 ++--------
- tools/perf/util/symbol.h            | 16 ++++-----------
- tools/perf/util/util.c              |  8 ++++++++
- tools/perf/util/util.h              |  2 ++
- 9 files changed, 31 insertions(+), 52 deletions(-)
+ tools/perf/util/util.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 33473e071392601e..c4632577d1296350 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1016,7 +1016,7 @@ static int setup_config_changes(struct daemon *daemon)
- {
- 	char *basen = strdup(daemon->config_real);
- 	char *dirn  = strdup(daemon->config_real);
--	char *base, *dir;
-+	const char *base, *dir;
- 	int fd, wd = -1;
- 
- 	if (!dirn || !basen)
-@@ -1029,7 +1029,7 @@ static int setup_config_changes(struct daemon *daemon)
- 	}
- 
- 	dir = dirname(dirn);
--	base = basename(basen);
-+	base = perf_basename(basen);
- 	pr_debug("config file: %s, dir: %s\n", base, dir);
- 
- 	wd = inotify_add_watch(fd, dir, IN_CLOSE_WRITE);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 63f0ee9d4c03ce4e..e745f3034a0e1c52 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -8,7 +8,6 @@
- 
- #include <errno.h>
- #include <inttypes.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include "util.h" // hex_width()
- #include "ui/ui.h"
-@@ -1245,7 +1244,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
- 	if (opts->full_path)
- 		d_filename = filename;
- 	else
--		d_filename = basename(filename);
-+		d_filename = perf_basename(filename);
- 
- 	if (evsel__is_group_event(evsel)) {
- 		evsel__group_desc(evsel, buf, sizeof(buf));
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 4b1b2f7bed251691..d526c91312ed8b93 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -326,7 +326,7 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
- 	output_json_format(out, false, 2, "]");
- }
- 
--int bt_convert__perf2json(const char *input_name, const char *output_name,
-+int bt_convert__perf2json(const char *_input_name, const char *output_name,
- 		struct perf_data_convert_opts *opts __maybe_unused)
- {
- 	struct perf_session *session;
-@@ -342,7 +342,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
- 	};
- 	struct perf_data data = {
- 		.mode = PERF_DATA_MODE_READ,
--		.path = input_name,
-+		.path = _input_name,
- 		.force = opts->force,
- 	};
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5cf8c878bab2a4a4..e927e707abace9c6 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -6,7 +6,6 @@
- #include "vdso.h"
- #include "namespaces.h"
- #include <errno.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include <string.h>
- #include <symbol.h> // filename__read_build_id
-@@ -297,34 +296,21 @@ struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short)
- 
- static void dso__set_basename(struct dso *dso)
- {
--	char *base, *lname;
-+	bool allocated = false;
-+	const char *base;
- 	int tid;
- 
- 	if (perf_pid_map_tid(dso__long_name(dso), &tid)) {
--		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
--			return;
--	} else {
--	      /*
--	       * basename() may modify path buffer, so we must pass
--               * a copy.
--               */
--		lname = strdup(dso__long_name(dso));
--		if (!lname)
--			return;
--
--		/*
--		 * basename() may return a pointer to internal
--		 * storage which is reused in subsequent calls
--		 * so copy the result.
--		 */
--		base = strdup(basename(lname));
-+		char *jitname;
- 
--		free(lname);
--
--		if (!base)
-+		if (asprintf(&jitname, "[JIT] tid %d", tid) < 0)
- 			return;
-+		allocated = true;
-+		base = jitname;
-+	} else {
-+		base = perf_basename(dso__long_name(dso));
- 	}
--	dso__set_short_name(dso, base, true);
-+	dso__set_short_name(dso, base, allocated);
- }
- 
- static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, const struct dso_id *id)
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index f37a783ea7723197..34b4badd2c14ade0 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -11,7 +11,6 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <errno.h>
--#include <libgen.h>
- #include <stdio.h>
- #include <unistd.h>
- #include <stdlib.h>
-@@ -229,7 +228,7 @@ static int convert_exec_to_group(const char *exec, char **result)
- 	if (!exec_copy)
- 		return -ENOMEM;
- 
--	ptr1 = basename(exec_copy);
-+	ptr1 = (char *)perf_basename(exec_copy);
- 	if (!ptr1) {
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index b58710624eadfe1b..db164d25816347ac 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -8,6 +8,7 @@
- #include "symbol.h"
- #include "libdw.h"
- #include "debug.h"
-+#include "util.h"
- 
- #include <inttypes.h>
- #include <string.h>
-@@ -74,14 +75,6 @@ int inline_list__append_tail(struct symbol *symbol, char *srcline, struct inline
- 	return 0;
- }
- 
--/* basename version that takes a const input string */
--static const char *gnu_basename(const char *path)
--{
--	const char *base = strrchr(path, '/');
--
--	return base ? base + 1 : path;
--}
--
- char *srcline_from_fileline(const char *file, unsigned int line)
- {
- 	char *srcline;
-@@ -90,7 +83,7 @@ char *srcline_from_fileline(const char *file, unsigned int line)
- 		return NULL;
- 
- 	if (!srcline_full_filename)
--		file = gnu_basename(file);
-+		file = perf_basename(file);
- 
- 	if (asprintf(&srcline, "%s:%u", file, line) < 0)
- 		return NULL;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index c67814d6d6d6f64a..bd6eb90c86683762 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -14,6 +14,7 @@
- #include "path.h"
- #include "symbol_conf.h"
- #include "spark.h"
-+#include "util.h"
- 
- #ifdef HAVE_LIBELF_SUPPORT
- #include <libelf.h>
-@@ -97,18 +98,9 @@ struct intlist;
- 
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
--	if (symbol_conf.symfs_layout_flat) {
--		char *path_copy = strdup(path);
--		char *base;
--		int ret;
--
--		if (!path_copy)
--			return -ENOMEM;
--		base = basename(path_copy);
--		ret = path__join(bf, size, symbol_conf.symfs, base);
--		free(path_copy);
--		return ret;
--	}
-+	if (symbol_conf.symfs_layout_flat)
-+		return path__join(bf, size, symbol_conf.symfs, perf_basename(path));
-+
- 	return path__join(bf, size, symbol_conf.symfs, path);
- }
- 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index c5fee8e394805544..25849434f0a4e5fd 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -545,3 +545,11 @@ int scandirat(int dirfd, const char *dirp,
- 	return err;
- }
- #endif
-+
-+/* basename version that takes a const input string */
-+const char *perf_basename(const char *path)
-+{
-+	const char *base = strrchr(path, '/');
-+
-+	return base ? base + 1 : path;
-+}
 diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 394dbfa944ac706c..8d32bc8895c9fe4b 100644
+index 8d32bc8895c9fe4b..87a0818a8c765c45 100644
 --- a/tools/perf/util/util.h
 +++ b/tools/perf/util/util.h
-@@ -87,6 +87,8 @@ struct perf_debuginfod {
- };
- void perf_debuginfod_setup(struct perf_debuginfod *di);
+@@ -30,7 +30,6 @@ extern bool perf_guest;
  
-+const char *perf_basename(const char *path);
-+
- char *filename_with_chroot(int pid, const char *filename);
+ /* General helper functions */
+ void usage(const char *err) __noreturn;
+-void die(const char *err, ...) __noreturn __printf(1, 2);
  
- int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
+ struct dirent;
+ struct strlist;
 -- 
 2.53.0
 
