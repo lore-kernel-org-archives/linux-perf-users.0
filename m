@@ -1,217 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A26F38F936;
-	Tue,  7 Apr 2026 07:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D24244692;
+	Tue,  7 Apr 2026 07:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775545761; cv=none; b=kJaNYDgL7YcFNKmACesaLePthyy1JS5o1BwUMLVIv2R2w47RVVObHLz5yWXeetFrfUE+FNi1ryGvz1pBLT+jY9xUcmprLhLuKN+AOlOolDbmqUNdQgXTAo7IF78mT4XIEyb2iTG06NcZJngAlL+e/LeRXzdKu4vA2rkJOmxC7So=
+	t=1775546313; cv=none; b=QKLDb8EBMTBZzmZm3OS7grDmnU/dTkRRr5IhBBWfMmUju2cgk3WWR2llRRQfhG92WhPR5AkpphVmAq43/nxAgnMH2zNds/V8i5v4nTbN4a+ERhIsGIfjAZSEdq/vuszUj67L7iLNjhFXooYJPND0KB+zEYoYSJE/YRqctsSYRuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775545761; c=relaxed/simple;
-	bh=yjqn7mxpmMG0XkkF6uF5LUIaTVIZDAEWzbEU7g3jtMs=;
+	s=arc-20240116; t=1775546313; c=relaxed/simple;
+	bh=7bLXUxNlUpcYuvTrZAqMUnacIkf9w6QeTruvWULg1Xc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDZeTO/6a26JZpmhldR2BHWOLwAJb1CuSUlS4STSCRfcGczWHFjaTQUx4mZAXHXUIhk/9v4WfEcIsQjv4J1OWlX6p1XvprNJxiFXc9dSos2hsB6vGA3n1RsL4ruaXaEbipq3yMH8TDNwU2xf5wZc9ZH2q+BatdM/rbOJ07NBCIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1jEdXwk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQEJxVldMLx42ow2m9YC4VVDYdo7Jusi8Sma8zCpYzI68/0QcLmmCwGX063gSXBwXsifzqsXXB6eYdSgsC5GOWXN7mQDzF/nXWwbTlqSd042I8dvyA23oGD3Onm02zDBUS9kXqDthaORfCAhgKl8C9SozbCbd8I653WMT7GkOXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nImR+pzl; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1jEdXwk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355DFC116C6;
-	Tue,  7 Apr 2026 07:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775545760;
-	bh=yjqn7mxpmMG0XkkF6uF5LUIaTVIZDAEWzbEU7g3jtMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f1jEdXwkvyAtoDAL1qIsKRo6JnBiJ6XjEWtNvjXO/BQ/ylys3bbn8hBfpxcDCmusu
-	 rPn1ChSdmjnM6rnh7WhITrs6netoHeKFqtBWrbP3rNykY3EelsM7MypfVzLxl7z63b
-	 MnKl/wDJQaLJyo+IJdTCFJwAE4oNcl13EwtPqgTKA2TwhdWA/05NQMaGfRvu8YIk1G
-	 dQs9E5kFEzhOqZyf9gi4l5XMA1HwV4kmRBJcTsRpBN7mhuT01GZccWP3IzY6CDAqJA
-	 b4OL9UPj5qQ3ImqBZnJLuD0DVIylVK6M+i/CIoAV1dhWBe+i2eiq3LGmNDkBG9I2Ta
-	 Spj1af/ztiaFg==
-Date: Tue, 7 Apr 2026 00:09:18 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
-	Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
-	Kim Phillips <kim.phillips@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nImR+pzl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=NDKl0CmwVm2mvyWYjyJbm938Bi5mo/cdP0hUqRq6tEE=; b=nImR+pzlf/E+k6Ma2TQTt6jT6l
+	2JLKZVmBxi17iw1W/l3Ap5rhlCZD1Sc8D4LNAz+UHSJhbItR7ODULzTGUXb9Nzytd/4aEziswqZXw
+	gPaLLGQv6i+rQKdovhwW1C42vaUPoDgcxwKtBaFFcHlCEZTRKwDRVgnvRTsLFMoCdCxaxGIkonduX
+	S3QeDEMcyVEWErBSyZ0ptrLQy4W1OdtaXKe8rSmHZDd22q+OtGs5+VXMOZz/P7fSvk9jox/wVhCT0
+	dMekWcdoBdB93vT4UGHyKzaP8Iep7ySwxQGJj8vjB8snrYcT4suIoX5TaTsDWFXaUB7YmCKAa0k24
+	p9hFBJfw==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wA0hc-00000007kG6-3xHX;
+	Tue, 07 Apr 2026 07:18:25 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D7DB73005E5; Tue, 07 Apr 2026 09:18:20 +0200 (CEST)
+Date: Tue, 7 Apr 2026 09:18:20 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 04/16] perf annotate-arm64: Handle load and store
- instructions
-Message-ID: <adStnrfA6IxkOfRN@z2>
-References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-5-wutengda@huaweicloud.com>
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
+ accessors
+Message-ID: <20260407071820.GA3738010@noisy.programming.kicks-ass.net>
+References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
+ <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
+ <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260403094800.1418825-5-wutengda@huaweicloud.com>
+In-Reply-To: <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
 
-On Fri, Apr 03, 2026 at 09:47:48AM +0000, Tengda Wu wrote:
-> Add ldst_ops to handle load and store instructions in order to parse
-> the data types and offsets associated with PMU events for memory access
-> instructions. There are many variants of load and store instructions in
-> ARM64, making it difficult to match all of these instruction names
-> completely. Therefore, only the instruction prefixes are matched. The
-> prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
-> matches atomic instructions, and 'prf' matches memory prefetch
-> instructions.
+On Tue, Apr 07, 2026 at 08:48:22AM +0200, David Hildenbrand (Arm) wrote:
+> On 4/7/26 05:28, Anshuman Khandual wrote:
+> > 
+> > 
+> > On 27/02/26 11:57 AM, Anshuman Khandual wrote:
+> >> Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
+> >> standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
+> >> accessors default to READ_ONCE() on platforms that don't override them. So
+> >> there is no functional change on such platforms.
+> >>
+> >> However arm64 platform is being extended to support 128 bit page tables via
+> >> a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
+> >> provide required single copy atomic access for 128 bit page table entries.
+> >> Although pxdp_get() accessors can later be overridden on arm64 platform to
+> >> extend required single copy atomicity support on 128 bit entries.
+> >>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: David Hildenbrand <david@kernel.org>
+> >> Cc: Peter Zijlstra <peterz@infradead.org>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >> Cc: linux-perf-users@vger.kernel.org
+> >> Cc: linux-mm@kvack.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >> This patch applies both on v7.0-rc1 and mm-unstable.
+> >>
+> >> Part of the D128 series but independent. Hence could be considered on its own.
+> >>
+> >> https://lore.kernel.org/all/20260224051153.3150613-5-anshuman.khandual@arm.com/
+> >>
+> >> Collected Peter's tag from an off list conversation.
+> > 
+> > Gentle ping. 
+> > 
+> > Still don't see this patch in latest next-20260406. Hence just
+> > wondering which tree and branch this patch is being picked up ?
 > 
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  .../perf/util/annotate-arch/annotate-arm64.c  | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
+> It's a trivial change and the last generic code change required for you
+> arm64 D128 change, right?
 > 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> index 4c42323b0c18..8209faaa6086 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> @@ -3,7 +3,9 @@
->  #include <errno.h>
->  #include <stdlib.h>
->  #include <string.h>
-> +#include <ctype.h>
->  #include <linux/zalloc.h>
-> +#include <linux/string.h>
->  #include <regex.h>
->  #include "../annotate.h"
->  #include "../disasm.h"
-> @@ -12,6 +14,7 @@ struct arch_arm64 {
->  	struct arch arch;
->  	regex_t call_insn;
->  	regex_t jump_insn;
-> +	regex_t ldst_insn; /* load and store instruction */
->  };
->  
->  static bool arm64__check_multi_regs(const char *op)
-> @@ -114,6 +117,59 @@ static const struct ins_ops arm64_mov_ops = {
->  	.scnprintf = mov__scnprintf,
->  };
->  
-> +static int arm64_ldst__parse(const struct arch *arch __maybe_unused,
+> I would assume this to go through the tip tree, but if Peter agrees we
+> could route this (mm) patch through the MM tree.
 
-The 'arch' is used. :)
+Right, I thought this was part of a larger series and figured it would
+ride along with whatever other patches.
 
-
-> +			     struct ins_operands *ops,
-> +			     struct map_symbol *ms __maybe_unused,
-> +			     struct disasm_line *dl __maybe_unused)
-> +{
-> +	char *s, *target;
-> +
-> +	/*
-> +	 * The part starting from the memory access annotation '[' is parsed
-> +	 * as 'target', while the part before it is parsed as 'source'.
-
-It'd be nice if you can show some examples.  So it always looks like:
-
-	LDR  x1, [x2, #4]
-	STR  x1, [x3], #8
-
-Right?  What about other instructions?
-
-
-> +	 */
-> +	target = s = strchr(ops->raw, arch->objdump.memory_ref_char);
-> +	if (!s)
-> +		return -1;
-> +
-> +	while (s > ops->raw && *s != ',')
-> +		--s;
-> +
-> +	if (s == ops->raw)
-> +		return -1;
-> +
-> +	*s = '\0';
-> +	ops->source.raw = strdup(ops->raw);
-> +
-> +	*s = ',';
-> +	if (!ops->source.raw)
-> +		return -1;
-> +
-> +	ops->source.multi_regs = arm64__check_multi_regs(ops->source.raw);
-
-Probably it's better to set ops->source.mem_ref to false.  Then you
-won't need to set multi_regs.
-
-Thanks,
-Namhyung
-
-> +
-> +	ops->target.raw = strdup(target);
-> +	if (!ops->target.raw) {
-> +		zfree(&ops->source.raw);
-> +		return -1;
-> +	}
-> +	ops->target.mem_ref = true;
-> +	ops->target.multi_regs = arm64__check_multi_regs(ops->target.raw);
-> +
-> +	return 0;
-> +}
-> +
-> +static int arm64_ldst__scnprintf(const struct ins *ins, char *bf, size_t size,
-> +				 struct ins_operands *ops, int max_ins_name)
-> +{
-> +	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
-> +			 ops->source.raw, ops->target.raw);
-> +}
-> +
-> +static struct ins_ops arm64_ldst_ops = {
-> +	.parse	   = arm64_ldst__parse,
-> +	.scnprintf = arm64_ldst__scnprintf,
-> +};
-> +
->  static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
->  {
->  	struct arch_arm64 *arm = container_of(arch, struct arch_arm64, arch);
-> @@ -124,6 +180,8 @@ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch,
->  		ops = &jump_ops;
->  	else if (!regexec(&arm->call_insn, name, 2, match, 0))
->  		ops = &call_ops;
-> +	else if (!regexec(&arm->ldst_insn, name, 2, match, 0))
-> +		ops = &arm64_ldst_ops;
->  	else if (!strcmp(name, "ret"))
->  		ops = &ret_ops;
->  	else
-> @@ -148,6 +206,8 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
->  	arch->id = *id;
->  	arch->objdump.comment_char	  = '/';
->  	arch->objdump.skip_functions_char = '+';
-> +	arch->objdump.memory_ref_char	  = '[';
-> +	arch->objdump.imm_char		  = '#';
->  	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
->  
->  	/* bl, blr */
-> @@ -161,8 +221,20 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
->  	if (err)
->  		goto out_free_call;
->  
-> +	/*
-> +	 * The ARM64 architecture has many variants of load/store instructions.
-> +	 * It is quite challenging to match all of them completely. Here, we
-> +	 * only match the prefixes of these instructions.
-> +	 */
-> +	err = regcomp(&arm->ldst_insn, "^(ld|st|cas|prf|swp)",
-> +		      REG_EXTENDED);
-> +	if (err)
-> +		goto out_free_jump;
-> +
->  	return arch;
->  
-> +out_free_jump:
-> +	regfree(&arm->jump_insn);
->  out_free_call:
->  	regfree(&arm->call_insn);
->  out_free_arm:
-> -- 
-> 2.34.1
-> 
+If you still want me to pick this up, I can, just state clearly where
+this ought to go.
