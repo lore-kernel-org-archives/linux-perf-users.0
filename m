@@ -1,179 +1,452 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F3347BBD
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Apr 2026 20:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97E613635E
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Apr 2026 23:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775594380; cv=none; b=Y0RIKJALys2qC58HlSAGDrBPJBlTVi8SrRB4OswnZfqFoUF+QSa++Fj8cvvk5TUjM+fPTTD15MYOMZSw1g2Nwu0rSjT00owXqh34ZMGrT89z/RiHNxPL2eI+JjsrcQt2K/EQGagPCkXthvdeUahttB5Eq9lcTENkTloiELE0vo4=
+	t=1775604008; cv=none; b=VekoE9mQTUr7tsut9WcNbKahINI6O/6oPftMIC76F7HCF5Va5ermnMvM1pGHUkAwjsRFgUzxOB8SYBi1zlZsy5P6SDNlKfHuDcDcILPalO2ipYxseQknqmLGJ68Vxtx1j1NcoP11gH2es8rVaEB5qDaFQWtGl1iCY7c3PwqDDuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775594380; c=relaxed/simple;
-	bh=qfQlCrwcd7V/Lgyy7of4i6EnWpoN8CvFvTdbIHdZD88=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J/HGDc54FL+OHKqFAO+fB9+5S6jNCE4v6fyT+bm6C4QBmi8voclxKP0TgPPPztX3ZdgCu9DuxQAs6EtybT/ksPw0T2mHVtWRV40c+laQKzCWM34NYAIY5XcnSiNTKnAqRxrwS99Hw/Ia3KrM/ADijUL6CKU4VaekmP4i8hIzUF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dX4gJvWs; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1775604008; c=relaxed/simple;
+	bh=QqmSXowrtT9kvcSN7mEKoAfyiBr0xvmpmJSnKpMnFO8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=oZ0TqtAgsLvQTJMGS1LNlkkDFCRp2d/wShLgzb3qk9onH0eOlxicCmwrHQAkEaawojnqPaXVtFP73s7w48hS8l3O4pfXG91RjwQSwdGNvqP/CFDEBsi2W875mVe9ORNKa1I0K0xZExQodXhw3g4cBd0fJd3twzrZRKMQ2ENLYec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TUrGbh81; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dX4gJvWs"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2cc75e79b97so24446685eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 13:39:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TUrGbh81"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1270dcd11c1so9529736c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 16:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775594378; x=1776199178; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+zbvbE5zu1nyMUeEn8sV/Np4P7VcDcjdDMhWQKoykU=;
-        b=dX4gJvWs3kE1MdnxJYVnDtk/l9olzOGbKcfwnECP1B0IEYHgUjCcpeHNzIgySF/Cnu
-         CpRemc1jvatijZXYG8LxxT/JAWQtL8UV8H0ACOSHu5lG1kEm4EcRxCYYIW4vAlzVUsRi
-         QiITDkWPpBkoJxM39BWDVofpChYvyZugPfDXw7Tb2cShskML4z8cJKjY9bLVa0EcKZ0S
-         Udcv++4QuKNQ9607Nlet6ZlMCZQMT495POeNmPDXgImNJ3aqFSqccpF/FcpJFWML2ZMW
-         OybiKVUf5ValDsy8jwLkdsNqJ49mck9ASTCxCYUxIO/s9tkqmaJcaYICVXRokOVb2dJ8
-         863Q==
+        d=google.com; s=20251104; t=1775604005; x=1776208805; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PAAu03rUUDVkmd5Km5mt7e46rL6Uw4QwsFFeop0+xVM=;
+        b=TUrGbh81Key/gVDVP7QdcazM7pi0ci/0cWvb+vl94CQtgJnhQLGvVc3m6fSzzQNyJj
+         N9dMFQH2cXAEdw4heBkaMHe8N+df38wta7TMrDXpl0IaOmzNXI1QqIJEqIB3iYnOkNNg
+         jiPSB3GZrAleDrE1L84qSTcU8EEgkLaZt9VadZ8OK7P4p/a5Jj1bSky7gv859vilX1vr
+         iDrJsjgS+wv4aSDElXIMqxWJf+Op6wCNw608E7KGBWlj63sXeN+m8tyjc0GjQWJg1mCl
+         8uaXGLh0CPbCphB21gFUChXrautybwDRU4d1b/Z5cA8Un38GiP7eGuLA4Wp+/YgtF5e5
+         tA0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775594378; x=1776199178;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+zbvbE5zu1nyMUeEn8sV/Np4P7VcDcjdDMhWQKoykU=;
-        b=WXF6DxkUub3BUudISAou80oFvxDLNkmw4hVMoczdTzcagZ9guLYlbEpKHOlg6p97f1
-         YonsqwYyhcNHa9+0Muv6EImWITjKUXZ+/wdQZWGXkBGDQoUf20v6MQtUr9Clx/v5I/+o
-         m2351oqsrJ6T63OMFKbYTOXdOgREKSmF9hfQM54dCkapVwoYrVWJAw6GHLPwIMW6T/zg
-         UmyR/33e0xvpRk8fo/u1X3lZBV3mAlGsCLwN/BwLrRPoZ58t9kRDROIkY/yQjeCAEsuq
-         qozCf4duazJyqvhpHP9RxxlOBxP333BuGSrCTH7JMMmVyGFVqLpL6xmwWtsqhNkfTm1y
-         kZaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDq8hzLo4slw5nhHBFzpUxB+n1WMzs4cUJarzAuQoD9m3J/pugrrqxy3kFvf4woZW617kklNZfOMZhvL+tYT2e@vger.kernel.org
-X-Gm-Message-State: AOJu0YykghNK+bkKa4F3fsfC28QkF3RwcKRDG0UqNTKf0x9pxRknJ2kt
-	ouVy8ssHi4RzRSkXyc1ihJ4loaobjMwJfbpEI/0sBXC/hGEJpIPgzj/bTIkjfr7gQOBBS+cAYTP
-	KcQCQfw==
-X-Received: from dycry1.prod.google.com ([2002:a05:7301:1001:b0:2c6:af43:29fd])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1688:b0:2cb:de38:c76d
- with SMTP id 5a478bee46e88-2cbfcb558f5mr8276208eec.30.1775594377816; Tue, 07
- Apr 2026 13:39:37 -0700 (PDT)
-Date: Tue,  7 Apr 2026 13:38:43 -0700
-In-Reply-To: <20260407203918.3178481-1-ctshao@google.com>
+        d=1e100.net; s=20251104; t=1775604005; x=1776208805;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PAAu03rUUDVkmd5Km5mt7e46rL6Uw4QwsFFeop0+xVM=;
+        b=ikgr6kxgPQPNm2ZtQUjd9nrsNFfvdeN7TAvdXN2rZ8nKGpAS4EdPi9O19P2NvG7EbV
+         Ls+tX8uh1f3Akz9BJWJMb0r1qqbulH5T+HioeGddECD2tGZfrEjEM+F/xTzVSPFbtKeu
+         XraufPyr5o7mQQtm1gZB/8Q3650qGLvLZ9oCOquf7b3+NM1p5zRlHIHbkL+5Ox2ntDNj
+         hyeZIBWegei7cfi063Y1zir6Bh0qXqpkfiOwNCF9x6NTfV3sqw/jxHhbE9KU+NbafbrT
+         zoxN6tP3EigTxjilCFpAyK00ojyThA8XzrMAUF63gsb5RH5TSXk7H6s4osGqKeW7j8/3
+         d9Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgo6ZfJ1/HxL2Zd40w6Onh7AQfFBePqEbFaSGFrvu2dnie1rxt/faLllZULi+HCadBFNPLirms7Hh8VM+f4YOH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjZpyx/C2EogYfR61k743E78cwv/lm/Gzi8uHtAZm/eIPmJr72
+	WO3TQyd5NBaz6pvjkVAwzjIiBQj38FGFLk6nQcSNp1JSWIPax1mthj6+mKqZJJ25b95nW4UxlJ7
+	fbQO3c+pIpQ==
+X-Received: from dlbvt7.prod.google.com ([2002:a05:7022:3f87:b0:12b:eb91:8863])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:b0c:b0:119:e56b:98a4
+ with SMTP id a92af1059eb24-12bfb700b66mr9624029c88.11.1775604004478; Tue, 07
+ Apr 2026 16:20:04 -0700 (PDT)
+Date: Tue,  7 Apr 2026 16:19:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260407203918.3178481-1-ctshao@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260407203918.3178481-2-ctshao@google.com>
-Subject: [PATCH v5 2/2] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on Emeraldrapids
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Zide Chen <zide.chen@intel.com>, 
-	Ian Rogers <irogers@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, ravi.bangoria@amd.com, 
-	linux-perf-users@vger.kernel.org
+Message-ID: <20260407231955.4119357-1-irogers@google.com>
+Subject: [PATCH v1] perf data: Clean up use_stdio and structures
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Chun-Tse Shao <ctshao@google.com>, 
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Similar to GNR [1], Emeraldrapids supports sub-NUMA clusters as well.
-Adjust cpumasks as the logic for GNR in [1].
+use_stdio was associated with struct perf_data and not perf_data_file
+meaning there was implicit use of fd rather than fptr that may not be
+safe. For example, in perf_data_file__write. Reorganize perf_data_file
+to better abstract use_stdio, add kernel-doc and more consistently use
+perf_data__ accessors so that use_stdio is better respected.
 
-Tested on Emeraldrapids with SNC2 enabled:
-  $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
-
-   Performance counter stats for 'system wide':
-
-  N0       30        72125876670      UNC_CHA_CLOCKTICKS
-  N0        4         8815163648      UNC_M_CLOCKTICKS
-  N1       30        72124958844      UNC_CHA_CLOCKTICKS
-  N1        4         8815014974      UNC_M_CLOCKTICKS
-  N2       30        72121049022      UNC_CHA_CLOCKTICKS
-  N2        4         8814592626      UNC_M_CLOCKTICKS
-  N3       30        72117133854      UNC_CHA_CLOCKTICKS
-  N3        4         8814012840      UNC_M_CLOCKTICKS
-
-         1.001574118 seconds time elapsed
-
-[1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
-
-Reviewed-by: Zide Chen <zide.chen@intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/pmu.c | 56 +++++++++++++++++++++++-----------
- 1 file changed, 38 insertions(+), 18 deletions(-)
+ tools/perf/builtin-inject.c |  7 ++--
+ tools/perf/builtin-record.c | 10 +++--
+ tools/perf/tests/topology.c |  3 +-
+ tools/perf/util/data.c      | 81 ++++++++++++++++++++++++-------------
+ tools/perf/util/data.h      | 52 ++++++++++++++++++++----
+ tools/perf/util/session.c   |  2 +-
+ 6 files changed, 109 insertions(+), 46 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 938be36ec0f7..3743f5145505 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -30,8 +30,9 @@ static bool x86__is_snc_supported(void)
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 5b29f4296861..14ced122c9a9 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -270,9 +270,8 @@ static s64 perf_event__repipe_auxtrace(const struct perf_tool *tool,
+ 	inject->have_auxtrace = true;
  
- 	if (!checked_if_snc_supported) {
+ 	if (!inject->output.is_pipe) {
+-		off_t offset;
++		off_t offset = perf_data__seek(&inject->output, 0, SEEK_CUR);
  
--		/* Graniterapids supports SNC configuration. */
-+		/* Emeraldrapids Graniterapids support SNC configuration. */
- 		static const char *const supported_cpuids[] = {
-+			"GenuineIntel-6-CF", /* Emeraldrapids */
- 			"GenuineIntel-6-A[DE]", /* Graniterapids */
- 		};
- 		char *cpuid = get_cpuid_str((struct perf_cpu){0});
-@@ -141,23 +142,42 @@ static int uncore_imc_snc(struct perf_pmu *pmu)
- 	// Compute the IMC SNC using lookup tables.
- 	unsigned int imc_num;
- 	int snc_nodes = snc_nodes_per_l3_cache();
--	const u8 snc2_map[] = {1, 1, 0, 0};
--	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2};
--	const u8 *snc_map;
--	size_t snc_map_len;
--
--	switch (snc_nodes) {
--	case 2:
--		snc_map = snc2_map;
--		snc_map_len = ARRAY_SIZE(snc2_map);
--		break;
--	case 3:
--		snc_map = snc3_map;
--		snc_map_len = ARRAY_SIZE(snc3_map);
--		break;
--	default:
--		/* Error or no lookup support for SNC with >3 nodes. */
--		return 0;
-+	char *cpuid;
-+	static const u8 emr_snc2_map[] = { 0, 0, 1, 1 };
-+	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
-+	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
-+	static const u8 *snc_map;
-+	static size_t snc_map_len;
-+
-+	/* snc_map is not inited yet. We only look up once to avoid expensive operations. */
-+	if (!snc_map) {
-+		switch (snc_nodes) {
-+		case 2:
-+			cpuid = get_cpuid_str((struct perf_cpu){ 0 });
-+			if (cpuid) {
-+				if (strcmp_cpuid_str("GenuineIntel-6-CF", cpuid) == 0) {
-+					snc_map = emr_snc2_map;
-+					snc_map_len = ARRAY_SIZE(emr_snc2_map);
-+				} else if (strcmp_cpuid_str("GenuineIntel-6-A[DE]", cpuid) == 0) {
-+					snc_map = gnr_snc2_map;
-+					snc_map_len = ARRAY_SIZE(gnr_snc2_map);
-+				}
-+				free(cpuid);
-+			}
-+			break;
-+		case 3:
-+			snc_map = snc3_map;
-+			snc_map_len = ARRAY_SIZE(snc3_map);
-+			break;
-+		default:
-+			/* Error or no lookup support for SNC with >3 nodes. */
-+			return 0;
-+		}
-+
-+		if (!snc_map) {
-+			pr_warning("Unexpected: can not find snc map config");
-+			return 0;
+-		offset = lseek(inject->output.file.fd, 0, SEEK_CUR);
+ 		if (offset == -1)
+ 			return -errno;
+ 		ret = auxtrace_index__auxtrace_event(&session->auxtrace_index,
+@@ -2479,12 +2478,12 @@ int cmd_inject(int argc, const char **argv)
+ 		.output = {
+ 			.path = "-",
+ 			.mode = PERF_DATA_MODE_WRITE,
+-			.use_stdio = true,
++			.file.use_stdio = true,
+ 		},
+ 	};
+ 	struct perf_data data = {
+ 		.mode = PERF_DATA_MODE_READ,
+-		.use_stdio = true,
++		.file.use_stdio = true,
+ 	};
+ 	int ret;
+ 	const char *known_build_ids = NULL;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e919d1f021c3..764afd93d8bd 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -453,7 +453,7 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
+ static int record__aio_push(struct record *rec, struct mmap *map, off_t *off)
+ {
+ 	int ret, idx;
+-	int trace_fd = rec->session->data->file.fd;
++	int trace_fd = perf_data__fd(rec->session->data);
+ 	struct record_aio aio = { .rec = rec, .size = 0 };
+ 
+ 	/*
+@@ -1640,7 +1640,7 @@ static int record__mmap_read_evlist(struct record *rec, struct evlist *evlist,
+ 	int rc = 0;
+ 	int nr_mmaps;
+ 	struct mmap **maps;
+-	int trace_fd = rec->data.file.fd;
++	int trace_fd = perf_data__fd(&rec->data);
+ 	off_t off = 0;
+ 
+ 	if (!evlist)
+@@ -1847,8 +1847,10 @@ record__finish_output(struct record *rec)
+ 	rec->session->header.data_size += rec->bytes_written;
+ 	data->file.size = lseek(perf_data__fd(data), 0, SEEK_CUR);
+ 	if (record__threads_enabled(rec)) {
+-		for (i = 0; i < data->dir.nr; i++)
+-			data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
++		for (i = 0; i < data->dir.nr; i++) {
++			data->dir.files[i].size =
++				perf_data_file__seek(&data->dir.files[i], 0, SEEK_CUR);
 +		}
  	}
  
- 	/* Compute SNC for PMU. */
+ 	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index 75b748ddf824..f54502ebef4b 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -54,7 +54,8 @@ static int session_write_header(char *path)
+ 	session->header.data_size += DATA_SIZE;
+ 
+ 	TEST_ASSERT_VAL("failed to write header",
+-			!perf_session__write_header(session, session->evlist, data.file.fd, true));
++			!perf_session__write_header(session, session->evlist,
++						    perf_data__fd(&data), true));
+ 
+ 	evlist__delete(session->evlist);
+ 	perf_session__delete(session);
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 90df41da1a32..b6ed3ee9b12a 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -20,18 +20,30 @@
+ #include "rlimit.h"
+ #include <internal/lib.h>
+ 
+-static void close_dir(struct perf_data_file *files, int nr)
++static void perf_data_file__close(struct perf_data_file *file)
+ {
+-	while (--nr >= 0) {
+-		close(files[nr].fd);
+-		zfree(&files[nr].path);
++	if (file->use_stdio) {
++		fclose(file->fptr);
++		file->fptr = NULL;
++	} else {
++		close(file->fd);
++		file->fd = -1;
+ 	}
++	zfree(&file->path);
++}
++
++static void close_dir(struct perf_data_file *files, int nr)
++{
++	while (--nr >= 0)
++		perf_data_file__close(&files[nr]);
++
+ 	free(files);
+ }
+ 
+ void perf_data__close_dir(struct perf_data *data)
+ {
+ 	close_dir(data->dir.files, data->dir.nr);
++	data->dir.files = NULL;
+ }
+ 
+ int perf_data__create_dir(struct perf_data *data, int nr)
+@@ -174,7 +186,7 @@ static bool check_pipe(struct perf_data *data)
+ 	}
+ 
+ 	if (is_pipe) {
+-		if (data->use_stdio) {
++		if (data->file.use_stdio) {
+ 			const char *mode;
+ 
+ 			mode = perf_data__is_read(data) ? "r" : "w";
+@@ -182,7 +194,7 @@ static bool check_pipe(struct perf_data *data)
+ 
+ 			if (data->file.fptr == NULL) {
+ 				data->file.fd = fd;
+-				data->use_stdio = false;
++				data->file.use_stdio = false;
+ 			}
+ 
+ 		/*
+@@ -344,7 +356,7 @@ int perf_data__open(struct perf_data *data)
+ 		return 0;
+ 
+ 	/* currently it allows stdio for pipe only */
+-	data->use_stdio = false;
++	data->file.use_stdio = false;
+ 
+ 	if (!data->path)
+ 		data->path = "perf.data";
+@@ -364,41 +376,55 @@ void perf_data__close(struct perf_data *data)
+ 	if (perf_data__is_dir(data))
+ 		perf_data__close_dir(data);
+ 
+-	zfree(&data->file.path);
+-
+-	if (data->use_stdio)
+-		fclose(data->file.fptr);
+-	else
+-		close(data->file.fd);
++	perf_data_file__close(&data->file);
+ }
+ 
+-ssize_t perf_data__read(struct perf_data *data, void *buf, size_t size)
++static ssize_t perf_data_file__read(struct perf_data_file *file, void *buf, size_t size)
+ {
+-	if (data->use_stdio) {
+-		if (fread(buf, size, 1, data->file.fptr) == 1)
++	if (file->use_stdio) {
++		if (fread(buf, size, 1, file->fptr) == 1)
+ 			return size;
+-		return feof(data->file.fptr) ? 0 : -1;
++		return feof(file->fptr) ? 0 : -1;
+ 	}
+-	return readn(data->file.fd, buf, size);
++	return readn(file->fd, buf, size);
++}
++
++ssize_t perf_data__read(struct perf_data *data, void *buf, size_t size)
++{
++	return perf_data_file__read(&data->file, buf, size);
+ }
+ 
+ ssize_t perf_data_file__write(struct perf_data_file *file,
+ 			      void *buf, size_t size)
+ {
++	if (file->use_stdio) {
++		if (fwrite(buf, size, /*nmemb=*/1, file->fptr) == 1)
++			return size;
++		return -1;
++	}
+ 	return writen(file->fd, buf, size);
+ }
+ 
+ ssize_t perf_data__write(struct perf_data *data,
+ 			 void *buf, size_t size)
+ {
+-	if (data->use_stdio) {
+-		if (fwrite(buf, size, 1, data->file.fptr) == 1)
+-			return size;
+-		return -1;
+-	}
+ 	return perf_data_file__write(&data->file, buf, size);
+ }
+ 
++off_t perf_data_file__seek(struct perf_data_file *file, off_t offset, int whence)
++{
++	if (file->use_stdio)
++		return fseek(file->fptr, offset, whence);
++
++	return lseek(file->fd, offset, whence);
++}
++
++off_t perf_data__seek(struct perf_data *data, off_t offset, int whence)
++{
++	assert(!data->is_pipe);
++	return perf_data_file__seek(&data->file, offset, whence);
++}
++
+ int perf_data__switch(struct perf_data *data,
+ 		      const char *postfix,
+ 		      size_t pos, bool at_exit,
+@@ -420,19 +446,18 @@ int perf_data__switch(struct perf_data *data,
+ 		pr_warning("Failed to rename %s to %s\n", data->path, *new_filepath);
+ 
+ 	if (!at_exit) {
+-		close(data->file.fd);
++		perf_data_file__close(&data->file);
+ 		ret = perf_data__open(data);
+ 		if (ret < 0)
+ 			goto out;
+ 
+-		if (lseek(data->file.fd, pos, SEEK_SET) == (off_t)-1) {
++		if (perf_data__seek(data, pos, SEEK_SET) == (off_t)-1) {
+ 			ret = -errno;
+-			pr_debug("Failed to lseek to %zu: %m\n",
+-				 pos);
++			pr_debug("Failed to seek to %zu: %m", pos);
+ 			goto out;
+ 		}
+ 	}
+-	ret = data->file.fd;
++	ret = perf_data__fd(data);
+ out:
+ 	return ret;
+ }
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 1438e32e0451..8299fb5fa7da 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -17,32 +17,70 @@ enum perf_dir_version {
+ 	PERF_DIR_VERSION	= 1,
+ };
+ 
++/**
++ * struct perf_data_file: A wrapper around a file used for perf.data reading or writing. Generally
++ * part of struct perf_data.
++ */
+ struct perf_data_file {
++	/**
++	 * @path: Path of file. Generally a copy of perf_data.path but for a
++	 * directory it is the file within the directory.
++	 */
+ 	char		*path;
+ 	union {
++		/** @fd: File descriptor for read/writes. Valid if use_stdio is false. */
+ 		int	 fd;
++		/**
++		 * @fptr: Stdio FILE. Valid if use_stdio is true, currently just
++		 * pipes in perf inject.
++		 */
+ 		FILE	*fptr;
+ 	};
++	/** @size: Size of file when opened. */
+ 	unsigned long	 size;
++	/** @use_stdio: Use buffered stdio operations. */
++	bool		 use_stdio;
+ };
+ 
++/**
++ * struct perf_data: A wrapper around a file used for perf.data reading or writing.
++ */
+ struct perf_data {
++	/** @path: Path to open and of the file. NULL implies 'perf.data' will be used. */
+ 	const char		*path;
++	/** @file: Underlying file to be used. */
+ 	struct perf_data_file	 file;
++	/** @is_pipe: Underlying file is a pipe. */
+ 	bool			 is_pipe;
++	/** @is_dir: Underlying file is a directory. */
+ 	bool			 is_dir;
++	/** @force: Ignore opening a file creating created by a different user. */
+ 	bool			 force;
+-	bool			 use_stdio;
++	/** @in_place_update: A file opened for reading but will be written to. */
+ 	bool			 in_place_update;
++	/** @mode: Read or write mode. */
+ 	enum perf_data_mode	 mode;
+ 
+ 	struct {
++		/** @version: perf_dir_version. */
+ 		u64			 version;
++		/** @files: perf data files for the directory. */
+ 		struct perf_data_file	*files;
++		/** @nr: Number of perf data files for the directory. */
+ 		int			 nr;
+ 	} dir;
+ };
+ 
++static inline int perf_data_file__fd(struct perf_data_file *file)
++{
++	return file->use_stdio ? fileno(file->fptr) : file->fd;
++}
++
++ssize_t perf_data_file__write(struct perf_data_file *file,
++			      void *buf, size_t size);
++off_t perf_data_file__seek(struct perf_data_file *file, off_t offset, int whence);
++
++
+ static inline bool perf_data__is_read(struct perf_data *data)
+ {
+ 	return data->mode == PERF_DATA_MODE_READ;
+@@ -70,10 +108,7 @@ static inline bool perf_data__is_single_file(struct perf_data *data)
+ 
+ static inline int perf_data__fd(struct perf_data *data)
+ {
+-	if (data->use_stdio)
+-		return fileno(data->file.fptr);
+-
+-	return data->file.fd;
++	return perf_data_file__fd(&data->file);
+ }
+ 
+ int perf_data__open(struct perf_data *data);
+@@ -81,8 +116,7 @@ void perf_data__close(struct perf_data *data);
+ ssize_t perf_data__read(struct perf_data *data, void *buf, size_t size);
+ ssize_t perf_data__write(struct perf_data *data,
+ 			 void *buf, size_t size);
+-ssize_t perf_data_file__write(struct perf_data_file *file,
+-			      void *buf, size_t size);
++off_t perf_data__seek(struct perf_data *data, off_t offset, int whence);
+ /*
+  * If at_exit is set, only rename current perf.data to
+  * perf.data.<postfix>, continue write on original data.
+@@ -99,8 +133,10 @@ int perf_data__open_dir(struct perf_data *data);
+ void perf_data__close_dir(struct perf_data *data);
+ unsigned long perf_data__size(struct perf_data *data);
+ int perf_data__make_kcore_dir(struct perf_data *data, char *buf, size_t buf_sz);
+-bool has_kcore_dir(const char *path);
+ char *perf_data__kallsyms_name(struct perf_data *data);
+ char *perf_data__guest_kallsyms_name(struct perf_data *data, pid_t machine_pid);
++
++bool has_kcore_dir(const char *path);
+ bool is_perf_data(const char *path);
++
+ #endif /* __PERF_DATA_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 3a911c70cd0e..f8f358bac5d3 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2569,7 +2569,7 @@ static int __perf_session__process_dir_events(struct perf_session *session)
+ 		if (!data->dir.files[i].size)
+ 			continue;
+ 		rd[readers] = (struct reader) {
+-			.fd		 = data->dir.files[i].fd,
++			.fd		 = perf_data_file__fd(&data->dir.files[i]),
+ 			.path		 = data->dir.files[i].path,
+ 			.data_size	 = data->dir.files[i].size,
+ 			.data_offset	 = 0,
 -- 
 2.53.0.1213.gd9a14994de-goog
 
