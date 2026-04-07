@@ -1,254 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51A81714AA;
-	Tue,  7 Apr 2026 06:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04AD1FBEBC;
+	Tue,  7 Apr 2026 06:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775544206; cv=none; b=URL/cFkSOPfgb1CfVZfiLolXxnai3+Ee7EeZH/5sZ0aCrSMhw7uqt0Q9YxiX3og979STeY6h5nuTZfPfgjRObDHO3sIfDIsNTAp32hv/7VBzObIp0gS6XYHEfB4l4K+YlZ55NYcWxy/fkHBnreu2aX8ZS8z6nWqGH6zlcuQPKlU=
+	t=1775544507; cv=none; b=ACWsc/HGfC5phIOFYnXRBYTf9Uh49kDUgbeE2OiVXw0fihZO9M/vYdrx5VXOD70bcaArvbav2n6GeUhEQ/EsXswVZ3MML1/sJ15vQX5EB0WEpEO6nl+jZam24MmiSTEDmorr3kX9FTXDATD1wa7LK/cUQdW/oPQp6o1fEDRLh68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775544206; c=relaxed/simple;
-	bh=RJY0OI3iws38tWzphXWx5YaOjiybb8QfQfQzYz02fl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KCYQVKoPDC/qhpAINhXmY7VTD1zjF8HembfllJwyjsBBbvbNFH20Kbyr3ttaEtDd3DojsDvl+c1o3J3GAb3TiSyRYIvPPXAN8fd29P2jvcbt1bbMcDXxlqhsH6+/Fz6FJQ1nj4k/wWRmfPDIoI8IM4QU49PYMPmI7GoJH9pnCKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YL7lSwf/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775544507; c=relaxed/simple;
+	bh=Ea/dgNWMCtrFcxVc9JR8+cREFl164xqobHdGsxImfvg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CUYJLYE0chho1KgCw2I/wwXrjotAS/yz1nfeOikHFQmXs1Ncj7SR7B6n8ArFHjHnOiBbS1kuJbOX5M9SWost4JS6QDq2KAbiqgvLsDYj/I2rdEFgsE8bGMoGxH5efoe7Ki9p1Eq2lWXOiwwG2DXr2BAa3bRFefU/De4hordLEAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwWWkCfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YL7lSwf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E00D4C116C6;
-	Tue,  7 Apr 2026 06:43:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwWWkCfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9A1C116C6;
+	Tue,  7 Apr 2026 06:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775544206;
-	bh=RJY0OI3iws38tWzphXWx5YaOjiybb8QfQfQzYz02fl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YL7lSwf/yk17uq3SkbXpqZfBMJW2OPXL8Vm7lYsBTtpUsVi4BvPM/k5Ki79rfZscg
-	 WncoMY6GEbK0prfAVjETeiqnF0OHjLjsH3uXsl2phSD12p/qNrTjaSjTsJCGq1uLOW
-	 CNscASMEjDxShlfegDEyP07OJ+RXN62Z73fQJ8DG8pvVTEX1BqjtiLWU5D9KtIXV+o
-	 lSg6ExdG1W7HtbZBpxLB6YfZnEubJDfBp10fTulK1KIZodZBLvg58dLieb8vU09M7E
-	 Gl/ZUWnc7DnNfoNg49YIZLtlaDWr2Y1iMpmjFATs4qfpFTvVSx2jP7X0cmfI5qv2z+
-	 XPMGIQ+lGV61w==
-Date: Mon, 6 Apr 2026 23:43:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
-	Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
-	Kim Phillips <kim.phillips@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 02/16] perf capstone: Fix arm64 jump/adrp disassembly
- mismatch with objdump
-Message-ID: <adSnjABSDeeg-9O8@z2>
-References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-3-wutengda@huaweicloud.com>
+	s=k20201202; t=1775544506;
+	bh=Ea/dgNWMCtrFcxVc9JR8+cREFl164xqobHdGsxImfvg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OwWWkCfmwSJazt6Bl6SPLtj1PCppUfp38Lf0p9XHHEmjjh+JRHXNZTlPpsgc5ZrT6
+	 HF+hnGowGlh0El7GD1dmDRBlKTxRvoTUeWng9Rq3yL8XQuBOeoIU6iWV+mwHe1Vc1G
+	 s6bsMuyDSlGRZgPHPI8oVfsOJm9b60+dLlml5UJlLxfA8cZkXEpj//0bws9rzxFROB
+	 Q+kXxxzJWzLIrR9OWXap6yZEKiQqz5V05GJ6xUCl9Ew6kfI3c3h/A/tTZgC6DIxOEk
+	 HYaMxGcUDSJXHfSqy7m/5WebBws7TkYXq5NePlRWkGnxGMSTQGUOFGMm3/nR7mJ8ar
+	 ROnSXMmw13vqA==
+Message-ID: <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
+Date: Tue, 7 Apr 2026 08:48:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260403094800.1418825-3-wutengda@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
+ accessors
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
+ <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 03, 2026 at 09:47:46AM +0000, Tengda Wu wrote:
-> The jump and adrp instructions parsed by libcapstone currently lack
-> symbolic representation and use a '#' prefix for addresses. This
-> format is inconsistent with objdump's output, which causes subsequent
-> parsing in jump__parse() and arm64_mov__parse() to fail.
+On 4/7/26 05:28, Anshuman Khandual wrote:
 > 
-> Example mismatch:
->   Current: b #0xffff8000800114c8
->   Fix:     b ffff8000800114c8 <el0t_64_sync+0x108>
 > 
->   Current: adrp x18, #0xffff800081f5f000
->   Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
+> On 27/02/26 11:57 AM, Anshuman Khandual wrote:
+>> Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
+>> standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
+>> accessors default to READ_ONCE() on platforms that don't override them. So
+>> there is no functional change on such platforms.
+>>
+>> However arm64 platform is being extended to support 128 bit page tables via
+>> a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
+>> provide required single copy atomic access for 128 bit page table entries.
+>> Although pxdp_get() accessors can later be overridden on arm64 platform to
+>> extend required single copy atomicity support on 128 bit entries.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: David Hildenbrand <david@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> This patch applies both on v7.0-rc1 and mm-unstable.
+>>
+>> Part of the D128 series but independent. Hence could be considered on its own.
+>>
+>> https://lore.kernel.org/all/20260224051153.3150613-5-anshuman.khandual@arm.com/
+>>
+>> Collected Peter's tag from an off list conversation.
 > 
-> Fix this by implementing extended formatting for these arm64
-> instructions during symbol__disassemble_capstone(). This ensures
-> the output matches objdump's expected style, including the raw
-> address and the associated <symbol+offset> suffix.
+> Gentle ping. 
 > 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  tools/perf/util/capstone.c | 107 ++++++++++++++++++++++++++++++++-----
->  tools/perf/util/disasm.c   |   5 ++
->  tools/perf/util/disasm.h   |   1 +
->  3 files changed, 101 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-> index 25cf6e15ec27..1d8421d2d98c 100644
-> --- a/tools/perf/util/capstone.c
-> +++ b/tools/perf/util/capstone.c
-> @@ -255,10 +255,6 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
->  	struct map *map = args->ms->map;
->  	struct symbol *sym;
->  
-> -	/* TODO: support more architectures */
-> -	if (!arch__is_x86(args->arch))
-> -		return;
-> -
->  	if (insn->detail == NULL)
->  		return;
->  
-> @@ -305,6 +301,98 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
->  	}
->  }
->  
-> +static void format_capstone_insn_x86(struct cs_insn *insn, char *buf,
-> +				     size_t len, struct annotate_args *args,
-> +				     u64 addr)
-> +{
-> +	int printed;
-> +
-> +	printed = scnprintf(buf, len, "       %-7s %s",
-> +			    insn->mnemonic, insn->op_str);
-> +	buf += printed;
-> +	len -= printed;
-> +
-> +	print_capstone_detail(insn, buf, len, args, addr);
-> +}
-> +
-> +static void format_capstone_insn_arm64(struct cs_insn *insn, char *buf,
-> +				       size_t len, struct annotate_args *args,
-> +				       u64 addr)
-> +{
-> +	struct map *map = args->ms->map;
-> +	struct symbol *sym;
-> +	char *last_imm, *endptr;
-> +	u64 orig_addr;
-> +
-> +	scnprintf(buf, len, "       %-7s %s",
-> +		  insn->mnemonic, insn->op_str);
-> +	/*
-> +	 * Adjust instructions to keep the existing behavior with objdump.
-> +	 *
-> +	 * Example conversion:
-> +	 * From: b #0xffff8000800114c8
-> +	 * To:   b ffff8000800114c8 <el0t_64_sync+0x108>
-> +	 */
-> +	switch (insn->id) {
-> +	case ARM64_INS_B:
-> +	case ARM64_INS_BL:
-> +	case ARM64_INS_CBNZ:
-> +	case ARM64_INS_CBZ:
-> +	case ARM64_INS_TBNZ:
-> +	case ARM64_INS_TBZ:
-> +	case ARM64_INS_ADRP:
-> +		/* Extract last immediate value as address */
-> +		last_imm = strrchr(buf, '#');
-> +		if (!last_imm)
-> +			return;
-> +
-> +		orig_addr = strtoull(last_imm + 1, &endptr, 16);
-> +		if (endptr == last_imm + 1)
-> +			return;
-> +
-> +		/* Relocate map that contains the address */
-> +		if (dso__kernel(map__dso(map))) {
-> +			map = maps__find(map__kmaps(map), orig_addr);
-> +			if (map == NULL)
-> +				return;
+> Still don't see this patch in latest next-20260406. Hence just
+> wondering which tree and branch this patch is being picked up ?
 
-I know you copied the logic from x86, but I've realized that it leaks a
-refcount for the new kernel map returned from maps__find().  This needs
-to be fixed separately.
+It's a trivial change and the last generic code change required for you
+arm64 D128 change, right?
 
-Thanks,
-Namhyung
+I would assume this to go through the tip tree, but if Peter agrees we
+could route this (mm) patch through the MM tree.
 
+-- 
+Cheers,
 
-> +		}
-> +
-> +		/* Convert it to map-relative address for search */
-> +		addr = map__map_ip(map, orig_addr);
-> +
-> +		sym = map__find_symbol(map, addr);
-> +		if (sym == NULL)
-> +			return;
-> +
-> +		/* Symbolize the resolved address */
-> +		len = len - (last_imm - buf);
-> +		if (addr == sym->start) {
-> +			scnprintf(last_imm, len, "%"PRIx64" <%s>",
-> +				  orig_addr, sym->name);
-> +		} else {
-> +			scnprintf(last_imm, len, "%"PRIx64" <%s+%#"PRIx64">",
-> +				  orig_addr, sym->name, addr - sym->start);
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +static void format_capstone_insn(struct cs_insn *insn, char *buf, size_t len,
-> +				 struct annotate_args *args, u64 addr)
-> +{
-> +	/* TODO: support more architectures */
-> +	if (arch__is_x86(args->arch))
-> +		format_capstone_insn_x86(insn, buf, len, args, addr);
-> +	else if (arch__is_arm64(args->arch))
-> +		format_capstone_insn_arm64(insn, buf, len, args, addr);
-> +	else {
-> +		scnprintf(buf, len, "       %-7s %s",
-> +			  insn->mnemonic, insn->op_str);
-> +	}
-> +}
-> +
->  struct find_file_offset_data {
->  	u64 ip;
->  	u64 offset;
-> @@ -381,14 +469,9 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
->  
->  	free_count = count = perf_cs_disasm(handle, buf, buf_len, start, buf_len, &insn);
->  	for (i = 0, offset = 0; i < count; i++) {
-> -		int printed;
-> -
-> -		printed = scnprintf(disasm_buf, sizeof(disasm_buf),
-> -				    "       %-7s %s",
-> -				    insn[i].mnemonic, insn[i].op_str);
-> -		print_capstone_detail(&insn[i], disasm_buf + printed,
-> -				      sizeof(disasm_buf) - printed, args,
-> -				      start + offset);
-> +		format_capstone_insn(&insn[i], disasm_buf,
-> +				     sizeof(disasm_buf), args,
-> +				     start + offset);
->  
->  		args->offset = offset;
->  		args->line = disasm_buf;
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 40fcaed5d0b1..988b2b748e11 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -202,6 +202,11 @@ bool arch__is_powerpc(const struct arch *arch)
->  	return arch->id.e_machine == EM_PPC || arch->id.e_machine == EM_PPC64;
->  }
->  
-> +bool arch__is_arm64(const struct arch *arch)
-> +{
-> +	return arch->id.e_machine == EM_AARCH64;
-> +}
-> +
->  static void ins_ops__delete(struct ins_operands *ops)
->  {
->  	if (ops == NULL)
-> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> index a6e478caf61a..d3730ed86dba 100644
-> --- a/tools/perf/util/disasm.h
-> +++ b/tools/perf/util/disasm.h
-> @@ -111,6 +111,7 @@ struct annotate_args {
->  const struct arch *arch__find(uint16_t e_machine, uint32_t e_flags, const char *cpuid);
->  bool arch__is_x86(const struct arch *arch);
->  bool arch__is_powerpc(const struct arch *arch);
-> +bool arch__is_arm64(const struct arch *arch);
->  
->  extern const struct ins_ops call_ops;
->  extern const struct ins_ops dec_ops;
-> -- 
-> 2.34.1
-> 
+David
