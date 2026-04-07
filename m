@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E622B9A4;
-	Tue,  7 Apr 2026 00:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F0C2B9A4
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Apr 2026 00:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775522820; cv=none; b=GAK2JYP97ixp4FXggpZZbdminxmhymqAqIPReAHmN9d/k4JUklknZvavABgtqeS+jRQGsA4J48s/gsa4d86los/l5iQVUabVU3wF1+kUIRZguYYgTUliVpecWPJ/pvFV//1DtReH44noGnvScDP1TX6HzdBr7hFzVafz1Hp/UdY=
+	t=1775522931; cv=none; b=hnCH3v1Rr+buc8vm0IeQjT1pDZvBAZQRoMwgzK4I5X/kzPfgv7lCX0s9HwALnXxtuTM7e54YBx2XrIPsrFMXCPM0kXkRQFKkwld5VFlS4FByBxkRQe/DIpIzjaQRnmpn1FMnrX/fvVumf0mIF/sDC8MUOeYiqINZm4L9P7mKo0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775522820; c=relaxed/simple;
-	bh=SLZuMDBLfxr63z1VMKqC4vFcGC0di2z0ijdCDyyJ/IY=;
+	s=arc-20240116; t=1775522931; c=relaxed/simple;
+	bh=q0lORJnMDOiHrU/bmhYtkGgfwfgoUhjyEzFVcbT3ieM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QdhvoCL3FLXVSVgI8JIg2yrf1izZN79eUSQ1PCP4o7qXf4TjVNPv+LjiRTEwoHlLXITa0Tox8rUJM4p2ktxPJhqghVv8PDRigmsEgnV3k2RMXS7oaRq/+OVdyNmv53xbbOsIFw/WNw7PCIxcsbEJVOIx/XfBCDcxcyU9NNaDgWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dSAva4R+; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=RQGD6Iv+sF1qC8xB7G7B1L+N4cRNO9Iy5Y1/yyXfWUBFU5fMKcXmBoS9Vpba4X8COQvey0BSjEAmyvOf4y0ZOLHwxs0TRSRLItjCpfTGtcqHKWyQjQoP/05RzHhv0/LTugHPJj8t7KGMlq2IxryGSInY+ng7q64C0tkM4hybAag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nlx2n1tw; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dSAva4R+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nlx2n1tw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775522818; x=1807058818;
+  t=1775522929; x=1807058929;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=SLZuMDBLfxr63z1VMKqC4vFcGC0di2z0ijdCDyyJ/IY=;
-  b=dSAva4R+jtncrmvyBajnULAdasRPt91x92PNmuk2UHBXjb7LPeoNQbHd
-   vKd9PLk1vTT89tAddKOPQUksV8GKJA1wFNi3uGlQV2SqnLQbieVlk6Uz+
-   aBhlxXXbrwFO327vOJaut186mzsy8RZojUN0C357clpHD6Zui1Q5+Dquz
-   QobqsnaOX5Sw4Jt/WSfGykHKnGnQV4EYnlZdJNbpzuGZbdE8Wq6rCcXsy
-   M9iE2A/skh8UjF5ed3og8uD8Z0BAoC5D74CxrRe8RncpSEQWhU5z58J8x
-   Mej5MArghtzlhuWAOJ0jyXRKIb+IDzPjbgGGNjHAf92BHd3TkYBvUWb/r
-   w==;
-X-CSE-ConnectionGUID: YQTh59kiSlGGXDv9DBYYLA==
-X-CSE-MsgGUID: vQ7zmAeNQvqADDnNonklow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11751"; a="87180024"
+  bh=q0lORJnMDOiHrU/bmhYtkGgfwfgoUhjyEzFVcbT3ieM=;
+  b=Nlx2n1twA4OiFJ5k06gMu8qgYkMfao9o35FBBC52db2fK24/m5nHGIgE
+   HU5L480AGievrVZ6+EXn8EXysV0rWG775ytfP9qQYyFo/jSUnbjoR71EK
+   pVHz1iOwIf97dOYllLupSgVFtoAWthV5BVZuEBr+5eGNbquiQcP8yhHxP
+   tOaFDOJaZxey7IGFdT4UN7W/e0IyaGVE0b88LehrQbzrXeNM2nezVEaaE
+   A5IjMMS0PUbSSHr2M3XbBocPe03bhNEks/Ibbjgr3HmZAY1W+blZdnc9a
+   7tzyvkTiO7/IIfn27F11KUgmE2X+bAxpCnoshVe+TIYcyVdZXZHb8N8jk
+   Q==;
+X-CSE-ConnectionGUID: Ex0c3JIpTeafn9tKzZdVvQ==
+X-CSE-MsgGUID: RRjHTcGxR7iBaRtZNq47Lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11751"; a="87180107"
 X-IronPort-AV: E=Sophos;i="6.23,164,1770624000"; 
-   d="scan'208";a="87180024"
+   d="scan'208";a="87180107"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 17:46:57 -0700
-X-CSE-ConnectionGUID: kNfO3ahBTfGiUs9knBEaWw==
-X-CSE-MsgGUID: gsB07j2xTf20A+ykczNmKA==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 17:48:49 -0700
+X-CSE-ConnectionGUID: c2RnWRKXTeKY7G/FJi3zoQ==
+X-CSE-MsgGUID: /EXLYtKpTEaTqnu1q0iOrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,164,1770624000"; 
-   d="scan'208";a="227184504"
+   d="scan'208";a="227184865"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 17:46:53 -0700
-Message-ID: <5d2c56a4-0e00-4bf9-aa60-3b367cb26c3f@linux.intel.com>
-Date: Tue, 7 Apr 2026 08:46:50 +0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 17:48:44 -0700
+Message-ID: <ec1e04d3-4235-4593-80bb-270a86e6b01f@linux.intel.com>
+Date: Tue, 7 Apr 2026 08:48:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,60 +52,280 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 0/7] Miscellaneous Intel uncore patches
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>, Chun-Tse Shao <ctshao@google.com>,
- Markus Elfring <Markus.Elfring@web.de>
-References: <20260403172146.158172-1-zide.chen@intel.com>
+Subject: Re: [PATCH] tools/perf/test: Check for perf stat return code in perf
+ all PMU test
+To: Ian Rogers <irogers@google.com>, "Falcon, Thomas"
+ <thomas.falcon@intel.com>, "Kleen, Andi" <andi.kleen@intel.com>
+Cc: "atrajeev@linux.ibm.com" <atrajeev@linux.ibm.com>,
+ "venkat88@linux.ibm.com" <venkat88@linux.ibm.com>,
+ "Shivani.Nittor@ibm.com" <Shivani.Nittor@ibm.com>,
+ "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
+ "hbathini@linux.vnet.ibm.com" <hbathini@linux.vnet.ibm.com>,
+ "mpetlan@redhat.com" <mpetlan@redhat.com>,
+ "Tanushree.Shah@ibm.com" <Tanushree.Shah@ibm.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "maddy@linux.ibm.com" <maddy@linux.ibm.com>, "Chen, Zide"
+ <zide.chen@intel.com>, "vmolnaro@redhat.com" <vmolnaro@redhat.com>,
+ "Tejas.Manhas1@ibm.com" <Tejas.Manhas1@ibm.com>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "acme@kernel.org" <acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+ "Mi, Dapeng1" <dapeng1.mi@intel.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>
+References: <20260315105751.86835-1-atrajeev@linux.ibm.com>
+ <7B7E5C6C-D15A-4B79-925B-B5F3EDD84774@linux.ibm.com>
+ <CAP-5=fWxDouXfCV3Xzk5JdouidUOaNqHBfZaf_c9JoEA8Ft-7g@mail.gmail.com>
+ <ec33d914a3eb3f8cc1a0ad16bf877ff7284072c9.camel@intel.com>
+ <cf702c86-7dea-44af-8dd2-0c27e19da1b5@linux.intel.com>
+ <CAP-5=fWR6v7kKSMVD+ANwMTmOdc4zKLEVY+9tNR5n+kq0F=Mkg@mail.gmail.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260403172146.158172-1-zide.chen@intel.com>
+In-Reply-To: <CAP-5=fWR6v7kKSMVD+ANwMTmOdc4zKLEVY+9tNR5n+kq0F=Mkg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The whole patch-set looks good to me.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 4/3/2026 11:39 PM, Ian Rogers wrote:
+> On Fri, Apr 3, 2026 at 12:36 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 4/3/2026 1:32 AM, Falcon, Thomas wrote:
+>>> On Wed, 2026-04-01 at 13:40 -0700, Ian Rogers wrote:
+>>>> On Mon, Mar 23, 2026 at 3:40 AM Venkat <venkat88@linux.ibm.com>
+>>>> wrote:
+>>>>>
+>>>>>> On 15 Mar 2026, at 4:27 PM, Athira Rajeev
+>>>>>> <atrajeev@linux.ibm.com> wrote:
+>>>>>>
+>>>>>> Currently in "perf all PMU test", for "perf stat -e <event>
+>>>>>> true",
+>>>>>> below checks are done:
+>>>>>> - if return code is zero, look for "not supported" to decide pass
+>>>>>>  scenario
+>>>>>> - check for "not supported" to ignore the event
+>>>>>> - looks for "No permission to enable" to skip the event.
+>>>>>> - If output has "Bad event name", fail the test.
+>>>>>> - Use "Access to performance monitoring and observability
+>>>>>> operations is
+>>>>>>  limited." to ignore fail due to access limitations
+>>>>>>
+>>>>>> If we failed to see event and it is supported, retries with
+>>>>>> longer
+>>>>>> workload "perf bench internals synthesize".
+>>>>>> - Here if output has <event>, the test is a pass.
+>>>>>>
+>>>>>> Snippet of code check:
+>>>>>>  ```
+>>>>>>  output=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>>>>>>  if echo "$output" | grep -q "$p"
+>>>>>>  ```
+>>>>>> - if output doesn't have event printed in logs, considers it
+>>>>>> fail.
+>>>>>>
+>>>>>> But this results in false pass for events in some cases.
+>>>>>> Example, if perf stat fails as below:
+>>>>>>
+>>>>>> # ./perf stat -e pmu/event/  true
+>>>>>> event syntax error: 'pmu/event/'
+>>>>>>                     \___ Bad event or PMU
+>>>>>>
+>>>>>> Unable to find PMU or event on a PMU of 'pmu'
+>>>>>> Run 'perf list' for a list of valid events
+>>>>>>
+>>>>>>  Usage: perf stat [<options>] [<command>]
+>>>>>>
+>>>>>>    -e, --event <event>   event selector. use 'perf list' to list
+>>>>>> available events
+>>>>>> # echo $?
+>>>>>> 129
+>>>>>>
+>>>>>> Since this has non-zero return code and doesn't have the
+>>>>>> fail strings being checked in the test, it will enter check using
+>>>>>> longer workload. and since the output fail log has event, it
+>>>>>> declares test as "supported".
+>>>>>>
+>>>>>> Since all the fail strings can't be added in the check, update
+>>>>>> the testcase to check return code before proceeding to longer
+>>>>>> workload run.
+>>>>>>
+>>>>>> Another missing scenario is when system wide monitoring is
+>>>>>> supported
+>>>>>> example:
+>>>>>> # ./perf stat -e pmu/event/ true
+>>>>>> Error:
+>>>>>> No supported events found.
+>>>>>>  Unsupported event (pmu/event/H) in per-thread mode, enable
+>>>>>> system wide with '-a'.
+>>>>>>
+>>>>>> Update testcase to check with "perf stat -a -e $p" as well
+>>>>>>
+>>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>>>>>> ---
+>>>>> Tested this patch.
+>>>>>
+>>>>>
+>>>>> With this patch:
+>>>>>
+>>>>> Testing hv_24x7/CPM_ADJUNCT_INST/ -- perf stat failed with non-zero
+>>>>> return code
+>>>>> Testing hv_24x7/CPM_ADJUNCT_PCYC/ -- perf stat failed with non-zero
+>>>>> return code
+>>>>>
+>>>>>
+>>>>>
+>>>>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>> Testing on an Intel Alderlake the test is now failing:
+>>>> ```
+>>>> ...
+>>>> Testing offcore_requests_outstanding.l3_miss_demand_data_rd --
+>>>> supported
+>>>> Testing ocr.full_streaming_wr.any_response -- perf stat failed with
+>>>> non-zero return code
+>>>> Testing ocr.partial_streaming_wr.any_response -- perf stat failed
+>>>> with
+>>>> non-zero return code
+>>>> Testing ocr.streaming_wr.any_response -- supported
+>>>> ...
+>>>> ```
+>>>>
+>>>> Running `perf stat` manually reveals an issue with the event:
+>>>> ```
+>>>> $ sudo perf stat -vv -e ocr.full_streaming_wr.any_response -a sleep
+>>>> 1
+>>>> Using CPUID GenuineIntel-6-B7-1
+>>>> Attempt to add: cpu_atom/ocr.full_streaming_wr.any_response/
+>>>> ..after resolving event:
+>>>> cpu_atom/event=0xb7,period=0x186a3,umask=0x1,offcore_rsp=0x8000000100
+>>>> 00/
+>>>> ocr.full_streaming_wr.any_response ->
+>>>> cpu_atom/ocr.full_streaming_wr.any_response/
+>>>> Control descriptor is not initialized
+>>>> ------------------------------------------------------------
+>>>> perf_event_attr:
+>>>>  type                             10 (cpu_atom)
+>>>>  size                             144
+>>>> ------------------------------------------------------------
+>>>> perf_event_attr:
+>>>>  type                             0 (PERF_TYPE_HARDWARE)
+>>>>  config                           0xa00000000
+>>>> (cpu_atom/PERF_COUNT_HW_CPU_CYCLES/)
+>>>>  disabled                         1
+>>>> ------------------------------------------------------------
+>>>> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 3
+>>>> ------------------------------------------------------------
+>>>> perf_event_attr:
+>>>>  type                             0 (PERF_TYPE_HARDWARE)
+>>>>  config                           0x400000000
+>>>> (cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+>>>>  disabled                         1
+>>>> ------------------------------------------------------------
+>>>> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 3
+>>>>  config                           0x1b7
+>>>> (ocr.demand_data_rd.l3_hit.snoop_hit_no_fwd)
+>>>>  sample_type                      IDENTIFIER
+>>>>  read_format
+>>>> TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>>>  disabled                         1
+>>>>  inherit                          1
+>>>>  { bp_addr, config1 }             0x800000010000
+>>>> ------------------------------------------------------------
+>>>> sys_perf_event_open: pid -1  cpu 16  group_fd -1  flags 0x8
+>>>> sys_perf_event_open failed, error -22
+>>>> switching off deferred callchain support
+>>>> Warning:
+>>>> ocr.full_streaming_wr.any_response event is not supported by the
+>>>> kernel.
+>>>> The sys_perf_event_open() syscall failed for event
+>>>> (ocr.full_streaming_wr.any_response): Invalid argument
+>>>> "dmesg | grep -i perf" may provide additional information.
+>>>>
+>>>> Error:
+>>>> No supported events found.
+>>>> The sys_perf_event_open() syscall failed for event
+>>>> (ocr.full_streaming_wr.any_response): Invalid argument
+>>>> "dmesg | grep -i perf" may provide additional information.
+>>>> ```
+>>>>
+>>>> This looks like a latent Intel cpu_atom PMU bug. Thomas, wdyt?
+>> Hmm, it looks the error is caused by the invalid bitmask of OFFCORE_RSP_x
+>> MSRs. Currently the valid bitmask of OFFCORE_RSP_x MSR is set to
+>> 0x3fffffffff in intel_grt_extra_regs[], while the msr value is set
+>> 0x800000010000 for the ocr.full_streaming_wr.any_response event. The bit 47
+>> is recognized an invalid bit and then abort the event creation.
+>>
+>> Base on the description "Table 21-56. MSR_OFFCORE_RSPx Request Type
+>> Definition" in SDM, bit 47 should be a valid bit now. Suppose bit 47 should
+>> not be a valid bit when adding the ADL PMU support, but it's updated and
+>> becomes valid later.
+>>
+>> Along with the constant updates of perf event lists
+>> (https://github.com/intel/perfmon), we have noticed there are mismatches
+>> more or less between the driver hardcoded events and perfmon event list.
+>> Currently we are summarizing the mismatches. Once these mismatches are
+>> finalized. we would submit a patchset to fix these mismatches.
+> That's great, if it takes too long perhaps we could just remove the
+> events for now.
 
-On 4/4/2026 1:21 AM, Zide Chen wrote:
-> I grouped these patches together for the convenience of the maintainers
-> and bumped the whole series to V7.
+Suppose it won't be too long. I plan to post the patchset in next release
+cycle. The code changes are simple but need much time to verify on all
+kinds of platforms. Thanks.
+
+
 >
-> Changes since v6:
-> - Drop patch v6 4/5: perf/x86/intel/uncore: Fix PMON enumeration with
->   NUMA disabled
+> Thanks,
+> Ian
 >
-> Changes since v5:
-> - Split patch v5 3/4 into two patches for clearer scope.
-> - Patch 2/5: Add changelog to clarify that it doesn't support die ID gaps.
-> - Patch 3/5: Change title and changelog to reflect the reduced scope.
-> - Patch 4/5: New patch. Remove redundant snbep_pci2phy_map_init() calls.
->
-> Changes since v4:
-> - Remove unused die_id variable from patch 3.
->
-> V6:
-> https://lore.kernel.org/lkml/20260330212444.117325-1-zide.chen@intel.com/
->
-> Previous versions:
-> https://lore.kernel.org/lkml/cda9ab9b-4581-409f-a9bb-0e8a67ad3530@web.de/T/
-> https://lore.kernel.org/lkml/20260116031113.45098-1-zide.chen@intel.com/
-> https://lore.kernel.org/lkml/20260206231203.11760-1-zide.chen@intel.com/
->
-> Zide Chen (4):
->   perf/x86/intel/uncore: Fix iounmap() leak on global_init failure
->   perf/x86/intel/uncore: Skip discovery table for offline dies
->   perf/x86/intel/uncore: Do not treat -1 die_id as error during UBOX
->     scan
->   perf/x86/intel/uncore: Remove extra double quote mark
->
->  arch/x86/events/intel/uncore_discovery.c | 17 ++++---
->  arch/x86/events/intel/uncore_snbep.c     | 57 +++++++++++-------------
->  2 files changed, 37 insertions(+), 37 deletions(-)
->
+>> Thanks.
+>>
+>>> +Dapeng, Zide, Andi
+>>>
+>>> Thanks,
+>>> Tom
+>>>
+>>>> Thanks,
+>>>> Ian
+>>>>
+>>>>> Regards,
+>>>>> Venkat.
+>>>>>
+>>>>>
+>>>>>
+>>>>>> tools/perf/tests/shell/stat_all_pmu.sh | 20 ++++++++++++++++++++
+>>>>>> 1 file changed, 20 insertions(+)
+>>>>>>
+>>>>>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh
+>>>>>> b/tools/perf/tests/shell/stat_all_pmu.sh
+>>>>>> index 9c466c0efa85..6c4d59cbfa5f 100755
+>>>>>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+>>>>>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+>>>>>> @@ -53,6 +53,26 @@ do
+>>>>>>     continue
+>>>>>>   fi
+>>>>>>
+>>>>>> +  # check with system wide if it is supported.
+>>>>>> +  output=$(perf stat -a -e "$p" true 2>&1)
+>>>>>> +  stat_result=$?
+>>>>>> +  if echo "$output" | grep -q "not supported"
+>>>>>> +  then
+>>>>>> +    # Event not supported, so ignore.
+>>>>>> +    echo "not supported"
+>>>>>> +    continue
+>>>>>> +  fi
+>>>>>> +
+>>>>>> +  # checked through possible access limitations and permissions.
+>>>>>> +  # At this step, non-zero return code from "perf stat" needs to
+>>>>>> +  # reported as fail for the user to investigate
+>>>>>> +  if [ $stat_result -ne 0 ]
+>>>>>> +  then
+>>>>>> +    echo "perf stat failed with non-zero return code"
+>>>>>> +    err=1
+>>>>>> +    continue
+>>>>>> +  fi
+>>>>>> +
+>>>>>>   # We failed to see the event and it is supported. Possibly the
+>>>>>> workload was
+>>>>>>   # too small so retry with something longer.
+>>>>>>   output=$(perf stat -e "$p" perf bench internals synthesize
+>>>>>> 2>&1)
+>>>>>> --
+>>>>>> 2.47.3
+>>>>>>
