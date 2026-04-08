@@ -1,103 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEA5D382283;
-	Wed,  8 Apr 2026 11:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E4438229D;
+	Wed,  8 Apr 2026 11:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775646939; cv=none; b=nGSuw9dzgvCqOvt5KHLIYiBNuhwxM3cPjencllBXk1qIk1B9CqfBLgFrpOE1QPMirv8QJrpd5z3K+APBNsQRDJO4Kj6Lz6v9W+XsoeiaTSfeoCWLRnU0wRItbXbhulZKx4tPo6Lv/O8Ve162UBo7Y1iZulUUHWimMyAGu6EVgA0=
+	t=1775647003; cv=none; b=KJTUrQIQPOQf0LP0PANLF4BMH7pfOGi6rC+Q4fXTeaI8UCXpKJ5b1puq02k3clHERIlWU+DtVHbEM/+A36brkdqnvG3sGUmX/GiIB5iRBcYv3LckhvSTD88vbadNVahW8Nw3yOXvZhF+wx9ZpseDvctLse3aQqoM/y0DYC/MrmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775646939; c=relaxed/simple;
-	bh=igR4tf9tvQIXuyv1BNumq6EyMN3XRctwsRk0w2FJVXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FqtHYpy4oFOlsT+Y+f2NfS9z4hc4RA2e2qnHoIgK2xMjnYZ3tGU17vRFGbDbeeQvWs9YvYWbiioYwBySUCcUdGs0oLMCC/AepcOwVtwifs+XKUW4/i4cXWBEDrBNx4wLXMbb7eTMs6iaK8vpJrPfMSc7RdHNPfBhcOTBxQKpZMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=vmSjwA7D; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1775647003; c=relaxed/simple;
+	bh=uFbMXrldq36UH6h3zAVxylgeW7SVg8YvoOzRknXJSSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCmfYlThboNcbnDgPDe8/h/OUfbqXL+6ynYk9O0o/lPBLcIeM1qA6TXgtb9oCDDfUw0G1sHH6pvjvMe+wT6+2Z8xsLKofA7W8uRBknFaHEkjo2TdtT6dgo/INxG5gSwldPdqYCCkbm4oYYKLlLKhTIIlFu5kHUB5cZ+7DPkfwO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P1bjmjpC; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="vmSjwA7D"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A5603161;
-	Wed,  8 Apr 2026 04:15:31 -0700 (PDT)
-Received: from [10.57.86.179] (unknown [10.57.86.179])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65DE03F641;
-	Wed,  8 Apr 2026 04:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775646937; bh=igR4tf9tvQIXuyv1BNumq6EyMN3XRctwsRk0w2FJVXM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vmSjwA7DZY/mrvzmHWRHTxc8XRQEDtjI/NSPo+eCaom6KcIlEdJNksO3Ug2p32frD
-	 bmssI77hNNjyHZbmiXYcj6Z+SnjoN3yx4TSxtECLlBIK9kTaVScZIcg+SWNq9WCl9l
-	 ei7sqx3WBZdUfzeW3vdvTzF2MEUrE172T8LpGmog=
-Message-ID: <2c1a1694-9597-400d-b441-714225b5377b@arm.com>
-Date: Wed, 8 Apr 2026 12:15:31 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P1bjmjpC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uFbMXrldq36UH6h3zAVxylgeW7SVg8YvoOzRknXJSSw=; b=P1bjmjpCaOgzgJVjOk1hfmq5Di
+	BO4I+Jbwk57MjUT5mmSNxC75RvYtheinmp6CY7ZoLxCdUJRZWR1o4hVrock8zxi885YpT9cnDw5vQ
+	5otBNk2rq4lNSj+6BuuTKXo0nOq9tGQvcaPKbDpO5OEq+P6rDaFhwffVLS/SvpPFk6TVf13ET+BD7
+	iO1Y1faEpUcmgHX7OjkWfYRdmZDLckZKo7jFiBImSFv8EiucEh8I59bKL9uLoqEB8TsPQOePn6/yF
+	v2r96F88Z8Cj9a63FZS+4eKXugUWu+d5TLupSOuwzKllNVEq+VPqKIcr99NA+hhMHctve/BFXaEDo
+	9su6MsIw==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wAQte-00000009v7A-3fvD;
+	Wed, 08 Apr 2026 11:16:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A46733021A4; Wed, 08 Apr 2026 13:16:32 +0200 (CEST)
+Date: Wed, 8 Apr 2026 13:16:32 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
+ accessors
+Message-ID: <20260408111632.GI3558198@noisy.programming.kicks-ass.net>
+References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
+ <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
+ <c7688962-d10c-49e1-a434-ab7ae2c64cdb@kernel.org>
+ <20260407071820.GA3738010@noisy.programming.kicks-ass.net>
+ <bcf784d9-5350-4b43-a827-a1cead862cad@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] arm-smmu-v3: Add PMCG child support and update PMU
- MMIO mapping
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Will Deacon <will@kernel.org>,
- Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-References: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bcf784d9-5350-4b43-a827-a1cead862cad@arm.com>
 
-On 2026-04-08 8:51 am, Peng Fan (OSS) wrote:
-> This patch series adds proper support for describing and probing the
-> Arm SMMU v3 PMCG (Performance Monitor Control Group) as a child node of
-> the SMMU in Devicetree, and updates the relevant drivers accordingly.
-> 
-> The SMMU v3 architecture allows an optional PMCG block, typically
-> associated with TCUs, to be implemented within the SMMU register
-> address space. For example, mmu700 PMCG is at the offset 0x2000 of the
-> TCU page 0.
+On Wed, Apr 08, 2026 at 04:28:48PM +0530, Anshuman Khandual wrote:
 
-But what's wrong with the existing binding? Especially given that it 
-even has an upstream user already:
+> It would be great if you could pick this up. Thanks !
 
-https://git.kernel.org/torvalds/c/aef9703dcbf8
-
-> Patch 1 updates the SMMU v3 Devicetree binding to allow PMCG child nodes,
-> referencing the existing arm,smmu-v3-pmcg binding.
-> 
-> Patch 2 updates the arm-smmu-v3 driver to populate platform devices for
-> child nodes described in DT once the SMMU probe succeeds.
-> 
-> Patch 3 updates the SMMUv3 PMU driver to correctly handle MMIO mapping when
-> PMCG is described as a child node. The PMCG registers occupy a sub-region
-> of the parent SMMU MMIO window, which is already requested by the SMMU
-
-That has not been the case since 52f3fab0067d ("iommu/arm-smmu-v3: Don't 
-reserve implementation defined register space") nearly 6 years ago, 
-where the whole purpose was to support Arm's PMCG implementation 
-properly. What kernel is this based on?
-
-Thanks,
-Robin.
-
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> Peng Fan (3):
->        dt-bindings: iommu: arm-smmu-v3: Allow PMU child nodes
->        iommu/arm-smmu-v3: Populate PMU child devices from Devicetree
->        perf/arm-smmuv3: Avoid double-requesting shared SMMU MMIO for PMCG
-> 
->   .../devicetree/bindings/iommu/arm,smmu-v3.yaml        | 10 ++++++++++
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c           |  3 +++
->   drivers/perf/arm_smmuv3_pmu.c                         | 19 ++++++++++++++++---
->   3 files changed, 29 insertions(+), 3 deletions(-)
-> ---
-> base-commit: f3e6330d7fe42b204af05a2dbc68b379e0ad179e
-> change-id: 20260408-smmu-perf-754367fe66c8
-> 
-> Best regards,
-
+OK done. Should be in tomorrow's -next I suppose.
