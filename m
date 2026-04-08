@@ -1,146 +1,236 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2180D2F3C18;
-	Wed,  8 Apr 2026 11:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5443637F750;
+	Wed,  8 Apr 2026 11:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775647917; cv=none; b=TjRtZe6KQWEdPOmQkI2MukzmUyXoxozHkK5RadxYut6QmXWmIF9+ghzs35C7mFBILSkofeFC3hF3joMHSsLD8JxuZsrg0lz2bg+JUvvmdx1vDEihSkfm+m20d5xiwN6YD/sc5ALKs52pIFo6crTb2cSWyTE67BVyEpfF7dHstHA=
+	t=1775648132; cv=none; b=krZ6hCJpJJ4BaGKth90unq7ol5zDgYSG1KbQKcRBWQsnOyoCWQWZ8gE3sfjeLWYdToDD4zZGccfrs0lFKhblKbzLf5WLX/0viRVKx2O/SBSv9f4HFeLppiOXJI0yB+Mw27rd/DxiUuDUoT0VGyf9K6EsQRGpW6TdnRJdFGwWrqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775647917; c=relaxed/simple;
-	bh=rKzk6mgKCPtLM4wQ+RvDbzYcb9KpxmVDIVwySQias80=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fOL8BI0En3BOJIUx5IjZU9br8UqmN/3NMMUtMcg2ffkcNstI8tLcDZBiEw6v2x04vCFrf8SeZ+xPiL4hipcAdKm+q0F+yJ8er3Lh86qRZxVb0wJgioVrk/sudV+b00QyQ0at4ZtE9WS8WRn/3njt8CCwqgcrS7e6r9Fq7ErAexE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eAgJlIUr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eAgJlIUr"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 638441eE2297727;
-	Wed, 8 Apr 2026 11:31:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=R31XZymasesZeWcOOhzDqz7xh3zahljlpFSsIbGxR
-	gk=; b=eAgJlIUreF8mE1z1xnbyykM10s6fS9OwZgKpQIVcZuT2vfbv5Njc9kyL3
-	0+MhTxQyogpmoEccuydDAeymz+kyVe4n0fL5dqFR2LBJPbjgi/SQ/amRe0TLR6HV
-	7vcUv6mVDYe1V2xBnHjOiTc7JYlQyTYVa6dEvT1dodA+GlEDovIR1aUy6bno5UMr
-	/ZqxbSQiNKtddXcZce5mtw26bqxCQ3MvK9XlKkmF6HT7IYdOxElE5TE/C+LPeYWS
-	26UvfyQzhAvaGwWuxhazL0gnyybUMRiPWsNa6qOPS7nbuKIdXSgt3cmrbqo6/CCV
-	3bbYQ/fc5kQSobmcx7+Ec7kgzs1sQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2fy4ug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Apr 2026 11:31:52 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 638BASBK013878;
-	Wed, 8 Apr 2026 11:31:51 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmf476ev-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Apr 2026 11:31:51 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 638BVl7e55968252
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 Apr 2026 11:31:47 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78CF12004D;
-	Wed,  8 Apr 2026 11:31:47 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3FFA42004B;
-	Wed,  8 Apr 2026 11:31:47 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  8 Apr 2026 11:31:47 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com, howardchu95@gmail.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf test: Run test 126 exclusive
-Date: Wed,  8 Apr 2026 13:31:43 +0200
-Message-ID: <20260408113143.1645091-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1775648132; c=relaxed/simple;
+	bh=ubx+mnYpUiL459SgD+QiTTaXpcbT44WpOX2D0QFbR3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jdEVzWMSrJhEbbK7p61vHpWEicEvI77ba8d0BPcsRO29cHYvCqEgr3PqBoLyGsWVpX7NYLv08+850UweNLqi3xJyj1PQyiGdlgVBjwqEbuX50YerbmHplQ4/PTOE5BVskpyzafIMu8rGuhaBpmwIvVAkRleIs8bj/5vT8dO8f9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4frLZh6XcJzYQtxY;
+	Wed,  8 Apr 2026 19:34:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id EFAB74056D;
+	Wed,  8 Apr 2026 19:35:26 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with SMTP id Syh0CgCXwQZ7PdZpOmlKDw--.29321S2;
+	Wed, 08 Apr 2026 19:35:24 +0800 (CST)
+Message-ID: <5fa89ec2-122e-4937-bec6-fe5dbe3ae07f@huaweicloud.com>
+Date: Wed, 8 Apr 2026 19:35:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=KeridwYD c=1 sm=1 tr=0 ts=69d63ca8 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=pGLkceISAAAA:8
- a=bNJXeJHnkcElx3EIz2QA:9
-X-Proofpoint-ORIG-GUID: TQCBUXivFhyzNaBdPcqMCAVRK4qFKhGC
-X-Proofpoint-GUID: tLGpT-52PWVfne8RAXaAzS5sLS0hrQbv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA4MDEwNCBTYWx0ZWRfXy0CKdNMEUPRC
- LRNOVEGNXF8Da+xHvdGOLjMZCkQ8uEdGjk9yzpi62K2eea1CXkH6fujntBPm61ahUBR+PEDHRO/
- UbCauAMzvULIVWOJhNPV9LZYqa0972urJ3kZEw4CF28DBX50pVHlumwb0HYg0zOUnynl6jhuhEf
- PM7Z/Yj6jzTFiEvaQrxmT6Fwoc3FtTa8aWIMgbLvK8VxUQMOF2622iCSX8BSIcjKcNTR1A2axC3
- 2B7bBDl3gTSBkBbbJGr04o4tzz7pl2KrBxXj2VOQavxXtBsLoUXT7z/Gn9v9nMYLTecLoM6AYBj
- MjzquXhdII7FY2zmesGAOq/nKT2ERXWISokcHHwOVWFaJkvKRgg6pq3+a2gkegJAXLIbZP4U/lZ
- DMq6xJsI9lCo3+t6hn2P3ntsczV87x9t0E4GSFYU0vU1ub/t/pezaotqYXhpD2YVqBBMaytV+iP
- DVnDoPUTeKepId9N7QQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-08_03,2026-04-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- clxscore=1015 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604080104
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] perf arm64: Support data type profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+ <adSkpI9AoTNgISU5@z2>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <adSkpI9AoTNgISU5@z2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgCXwQZ7PdZpOmlKDw--.29321S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Ary3uw18Jr13Wr4ktF4kXrb_yoWxAr18pa
+	9xCayfGr4UJrWF9w13JrZ7XFW3Kw4fJFWfGryrt3ySkF4jkF98tFWxtF1IkFWkGr98Aw47
+	Aw4Dtr1UWF1rCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-V1 --> V2 Fixed commit message
+Hi Namhyung,
 
-Running both tests cases 126 128 together causes the first test case
-126 to fail:
- # for i in $(seq 3); do ./perf test 126 128; done
- 126: perf trace BTF general tests    : FAILED!
- 128: perf trace record and replay    : Ok
- 126: perf trace BTF general tests    : FAILED!
- 128: perf trace record and replay    : Ok
- 126: perf trace BTF general tests    : FAILED!
- 128: perf trace record and replay    : Ok
- #
+Thank you for the feedback.
+I have received your comments and will get back to this as soon as I can.
 
-Test case 126 fails because test case 128 runs concurrently as can
-be observed using a ps -ef | grep perf output list on a different
-window. Both do a perf trace command concurrently.
-Make test case 'perf trace BTF general tests' exclusive.
+Best regards,
+Tengda
 
-Output after:
- # for i in $(seq 3); do ./perf test 'perf trace BTF general tests' \
-	'perf trace record and replay'; done
- 127: perf trace BTF general tests                   : Ok
- 155: perf trace record and replay                   : Ok
- 127: perf trace BTF general tests                   : Ok
- 155: perf trace record and replay                   : Ok
- 127: perf trace BTF general tests                   : Ok
- 155: perf trace record and replay                   : Ok
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/tests/shell/trace_btf_general.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-index ef2da806be6b..7a94a5743924 100755
---- a/tools/perf/tests/shell/trace_btf_general.sh
-+++ b/tools/perf/tests/shell/trace_btf_general.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf trace BTF general tests
-+# perf trace BTF general tests (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
- err=0
--- 
-2.53.0
+On 2026/4/7 14:31, Namhyung Kim wrote:
+> Hello,
+> 
+> On Fri, Apr 03, 2026 at 09:47:44AM +0000, Tengda Wu wrote:
+>> This patch series implements data type profiling support for arm64,
+>> building upon the foundational work previously contributed by Huafei [1].
+>> While the initial version laid the groundwork for arm64 data type analysis,
+>> this series iterates on that work by refining instruction parsing and
+>> extending support for core architectural features.
+> 
+> Thanks for working on this!  I'm happy to see that the changes are well
+> organized and each commit explained the issues clearly.  
+> 
+>>
+>> The series is organized as follows:
+>>
+>> 1. Fix disassembly mismatches (Patches 01-02)
+>>    Current perf annotate supports three disassembly backends: llvm,
+>>    capstone, and objdump. On arm64, inconsistencies between the output
+>>    of these backends (specifically llvm/capstone vs. objdump) often
+>>    prevent the tracker from correctly identifying registers and offsets.
+>>    These patches resolve these mismatches, ensuring consistent instruction
+>>    parsing across all supported backends.
+>>
+>> 2. Infrastructure for arm64 operand parsing (Patches 03-07)
+>>    These patches establish the necessary infrastructure for arm64-specific
+>>    operand handling. This includes implementing new callbacks and data
+>>    structures to manage arm64's unique addressing modes and register sets.
+>>    This foundation is essential for the subsequent type-tracking logic.
+> 
+> I've only checked up to this part so far.  Let me write replies soon.
+> I'll continue to review later in this week.
+> 
+>>
+>> 3. Core instruction tracking (Patches 08-16)
+>>    These patches implement the core logic for type tracking on arm64,
+>>    covering a wide range of instructions including:
+>>
+>>    * Memory Access: ldr/str variants (including stack-based access).
+>>    * Arithmetic & Data Processing: mov, add, and adrp.
+>>    * Special Access: System register access (mrs) and per-cpu variable
+>>      tracking.
+>>
+>> The implementation draws inspiration from the existing x86 logic while
+>> adapting it to the nuances of the AArch64 ISA [2][3]. With these changes,
+>> perf annotate can successfully resolve memory locations and register
+>> types, enabling comprehensive data type profiling on arm64 platforms.
+>>
+>> Example Result
+>> ==============
+>>
+>> # perf mem record -a -K -- sleep 1
+>> # perf annotate --data-type --type-stat --stdio
+>> Annotate data type stats:
+>> total 6204, ok 5091 (82.1%), bad 1113 (17.9%)
+> 
+> I'm impressed that the success rate is quite high.  But I think you need
+> to confirm that the findings are correct by taking a close look at each
+> result.  You can try `perf annotate --code-with-type`.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> -----------------------------------------------------------
+>>         29 : no_sym
+>>        196 : no_var
+>>        806 : no_typeinfo
+>>         82 : bad_offset
+>>       1370 : insn_track
+>>
+>> Annotate type: 'struct page' in [kernel.kallsyms] (59208 samples):
+>> ============================================================================
+>>  Percent     offset       size  field
+>>   100.00          0       0x40  struct page      {
+>>     9.95          0        0x8      long unsigned int   flags;
+>>    52.83        0x8       0x28      union        {
+>>    52.83        0x8       0x28          struct   {
+>>    37.21        0x8       0x10              union        {
+>>    37.21        0x8       0x10                  struct list_head        lru {
+>>    37.21        0x8        0x8                      struct list_head*   next;
+>>     0.00       0x10        0x8                      struct list_head*   prev;
+>>                                                 };
+>>    37.21        0x8       0x10                  struct   {
+>>    37.21        0x8        0x8                      void*       __filler;
+>>     0.00       0x10        0x4                      unsigned int        mlock_count;
+>>    ...
+>>
+>> Changes since v1: (reworked from Huafei's series):
+>>
+>>  - Fix inconsistencies in arm64 instruction output across llvm, capstone,
+>>    and objdump disassembly backends.
+>>  - Support arm64-specific addressing modes and operand formats. (Leo Yan)
+>>  - Extend instruction tracking to support mov and add instructions,
+>>    along with per-cpu and stack variables.
+>>  - Include real-world examples in commit messages to demonstrate
+>>    practical effects. (Namhyung Kim)
+>>  - Improve type-tracking success rate (type stat) from 64.2% to 82.1%.
+>>    https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
+>>
+>> Please let me know if you have any feedback.
+>>
+>> Thanks,
+>> Tengda
+>>
+>> [1] https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
+>> [2] https://developer.arm.com/documentation/102374/0103
+>> [3] https://github.com/flynd/asmsheets/releases/tag/v8
+>>
+>> ---
+>>
+>> Tengda Wu (16):
+>>   perf llvm: Fix arm64 adrp instruction disassembly mismatch with
+>>     objdump
+>>   perf capstone: Fix arm64 jump/adrp disassembly mismatch with objdump
+>>   perf annotate-arm64: Generalize arm64_mov__parse to support standard
+>>     operands
+>>   perf annotate-arm64: Handle load and store instructions
+>>   perf annotate: Introduce extract_op_location callback for
+>>     arch-specific parsing
+>>   perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
+>>   perf annotate-arm64: Implement extract_op_location() callback
+>>   perf annotate-arm64: Enable instruction tracking support
+>>   perf annotate-arm64: Support load instruction tracking
+>>   perf annotate-arm64: Support store instruction tracking
+>>   perf annotate-arm64: Support stack variable tracking
+>>   perf annotate-arm64: Support 'mov' instruction tracking
+>>   perf annotate-arm64: Support 'add' instruction tracking
+>>   perf annotate-arm64: Support 'adrp' instruction to track global
+>>     variables
+>>   perf annotate-arm64: Support per-cpu variable access tracking
+>>   perf annotate-arm64: Support 'mrs' instruction to track 'current'
+>>     pointer
+>>
+>>  .../perf/util/annotate-arch/annotate-arm64.c  | 642 +++++++++++++++++-
+>>  .../util/annotate-arch/annotate-powerpc.c     |  10 +
+>>  tools/perf/util/annotate-arch/annotate-x86.c  |  88 ++-
+>>  tools/perf/util/annotate-data.c               |  72 +-
+>>  tools/perf/util/annotate-data.h               |   7 +-
+>>  tools/perf/util/annotate.c                    | 108 +--
+>>  tools/perf/util/annotate.h                    |  12 +
+>>  tools/perf/util/capstone.c                    | 107 ++-
+>>  tools/perf/util/disasm.c                      |   5 +
+>>  tools/perf/util/disasm.h                      |   5 +
+>>  .../util/dwarf-regs-arch/dwarf-regs-arm64.c   |  20 +
+>>  tools/perf/util/dwarf-regs.c                  |   2 +-
+>>  tools/perf/util/include/dwarf-regs.h          |   1 +
+>>  tools/perf/util/llvm.c                        |  50 ++
+>>  14 files changed, 984 insertions(+), 145 deletions(-)
+>>
+>>
+>> base-commit: cf7c3c02fdd0dfccf4d6611714273dcb538af2cb
+>> -- 
+>> 2.34.1
+>>
 
