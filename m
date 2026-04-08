@@ -1,296 +1,132 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C757274641
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 06:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775628190; cv=none; b=GUQNEhNdyc6XYctw0FVlqXdghURQi9wcFBGWUoWNXMZwxljrlvbLrb1b08gTpK5Y18vvHmOa7u/vezCmKcOu68lmZV1z4BOiVs5Npa2JKtw/XXAx4tpJPyTLbfAjUQW7m6nka0spfsUc1lj7UMh93ZWe/LIb1IGhVjgR0SQOw3E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775628190; c=relaxed/simple;
-	bh=SqUkCtssHZjtchenMmI9MGEG7Qjfea2+lCP+ptgqA5U=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=nEIBYYE9R2J1HZwSzosBYlzIPtblwFi7PCYSRZgbRHqutTKrDMhyJEwdduL9oqJXdtNIHTf6awXiuGn8C5gPxcB+Q+icFu5i8MuxU/cONXjoHQQwaaAjqAsqGU1j7Y0SPxV/HvvA2ynqPhAJ8V6P2hK56udEGyZyR3V+EYeewQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hJleSMka; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374BD23EA8A
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 06:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775628714; cv=pass; b=pnSOt8xje6dWdRPfqIu4p1qFClGsqIxRV5E7rtemHu3dxBh4s0VybujGNozfGT9CI4UD/8MaqvIZ+FFNbE9lIT2kU7i3EPWW0uOmhl6ta+QizR+4BNyVQR9U1HZ6HQWyDF4tRHsBXB6PUaAIE6FKrzg9ARuO8Gl0h9Fr9RMTU30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775628714; c=relaxed/simple;
+	bh=d8r4vC2Psmtd9ki9qeJaX2mqMlw9JpSSK3rFBC9HuXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iat2X5FcUpLTUK33jBWhBtS1nQgaDVqEy3msnnSEADDzh+oQMS0wuIq0fwxqDCIfl/yZ6r3b55kiSmXRXqScRMZ/KsA2gc/EJXfZS1T6EygsZ7POJ+bVIFdZHY5N3YqictWvivN8XMp+gKJwW77IT22ubvG4EAMxrdqi4ghfGg4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=am9QuaUl; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hJleSMka"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-128ba70cc99so6455289c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 23:03:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="am9QuaUl"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b243198058so33185ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 23:11:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775628712; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UodRz76ph9ms/jX6gH1mz8PmxvcO9EEyNreBZZKifYy/h+AB49/sjWZ3XGjw/s0oBG
+         xmJXK+WmMkzIifGUJt4le2b8V2gyLhecHs0l3Bb1Q/42TQ5WZJyx5RoFh1sdt2wAZtMi
+         9ZZrkhTLpPZK0fBR2ViJUczwYPZfKGR37KlHpKwQ+0J4JGD6e8OgxnSCSsCtTHLl7t4H
+         JgBMgy6oQ4b69ehVy9y+OoJXCxZgXjt+v1pocWlJH2SWGwGj9iiv606Xwhhn8kdZU1uB
+         GVnMJS3vpbfeHlRYIeDCt4HzizfOyXejidLmB015N6aFGr8kT4OraoZmcAHK9ehSQ8bB
+         scbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3uK+tPLkSl9ANiO5LYE1+vG7slqSDtEHIZ+Ahv9m7KU=;
+        fh=IcCb/O7xfFuMIFtUR3B/X4yx8D4CfgU81a3duAuGsBU=;
+        b=gk6IF0fbHVXW/RvwM/lfYRL20RtAqAGlTyPIdNa0FR8xu4Hg64Zdsf6YwvMx6NMgD7
+         elCQq7k1kH6wZYY9Vy9rpGqCwu+2+xLofy6Yifw+++LdWIsPAh5bOAveqw+ktpla6wpy
+         2+p1enD8Xn+manfykDqznDVDK8lzhfPrVSxoyky3oz5ZdOShhSHiv1FeKs7vTuTE7e2C
+         v1NUfxkLfCjMPkzn7un6t4ZfdLRSIoN+akwqqWJVr5PuApvLm6PmtuBCc21fZt27AlHp
+         Zb7sAAeV7UWt3uP6fuOqtM44e/GPzJTexd2rXQpzwfSC78ypiOHz68ir5etIsV8QPXbl
+         sLoQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775628187; x=1776232987; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jCCEcPHnXw3tpU3CVkAF4Y3JSMJwwYfcpaRRv7MH8gM=;
-        b=hJleSMkanoHNjPDcQSA+r27MSSv+g8BPoQNNMruuPe7UQ1whpA93FTBnjwinIezFtP
-         O7Bu4lVGygjbyk3ChNW3nykGcTlInFlFKQ8zVl+ebNUecnPYkEIB9cCxojUP/B0qt1QH
-         8aDkCV88F6cDNGQAQA2tWC6SSSJ8+bscLl5gdDOKte4NtCpXobzoHtaE3ap0CBH+rWja
-         NHt12af6Qbi4LlOPiItXjJnrG+HdgO0KQj8Y/sj/JHt2nryyO0CS+BVc/+o16zh4v+Lv
-         F74buSqmtZ+v8EIYr+kI2NMvWU+SfbfJjDj2ZEPeu/mbgRDYdNcrQWy5d0f+3Cr71Y2Z
-         Dt8Q==
+        d=google.com; s=20251104; t=1775628712; x=1776233512; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3uK+tPLkSl9ANiO5LYE1+vG7slqSDtEHIZ+Ahv9m7KU=;
+        b=am9QuaUlJY8CkiMz13v30m5Fuqxde6FvfsGyb5mSDha6HhlXYJ1z173ek7/RFLQ7aw
+         mb5cDRLF/joXKd2k9J/FRALCnIbVsdFdwYz1cOQTixnTNu7mDoqFuGFeZYavXlp2sXEy
+         abkVV9MipqfaBcxmLUVtTbmJBm/cpXJpQncPtqu1YXO+7yFX3C31HXzBkIYD7xVz3d/E
+         A7twwGOlaPfulY/Pz8/SaTNKxahvCSt2Wauon/Gj0QWSu+I7/sOePIEn06cVFNFH7RT8
+         RL61Q2aA6X+f2oCdnKjvlXNV5U3U/7c0wMOFbDn+/N5EAZdSeybum+njxzphrR78CjqX
+         pwZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775628187; x=1776232987;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jCCEcPHnXw3tpU3CVkAF4Y3JSMJwwYfcpaRRv7MH8gM=;
-        b=diNHcivWg7Zg3k21bt/+4cZ+V4CbJLzDITFInYHSIvN/yM2SNCWUTieig8oM+U42g8
-         iU/RVZMeMcMdJ8Iaa/KT2YkGmG5Hq4Tz0bnO1h/sVqIEowRREBGmPqNZKB7eu7ga4AFX
-         t+LxRlb+idImaFIqucUb17QSMtpZvngfltUJ0cQp43QM93+amcjXR2/+UiiQnGOe+dnI
-         ETZ+8ubSll1bFH8Ma0ahuoHAi4qBVmR8lAQKLbpANHVHEN52BR7n8GVx8K4jcDSfbEi8
-         JMNPQKDunFrV8v+lsauUozdaDnDQd2LwJOxxOiO9BwVq19mad6JVxHhEKKznLR2F+GjQ
-         xbHA==
-X-Forwarded-Encrypted: i=1; AJvYcCV22iz1BY1z7q8ssuxTPgatPAGma7BlBeJ7/2ziZisvwa0C134eKDJX+MFFVmlkTlHfvYJ0khNySMyAzU+4C92k@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUzrMk/vq8VSHTaUVnvDOI/TCL1dGxZ+kMibjJUR6MOLGLj9tk
-	aMjoroTrO2zQd2Imja++18M7VDSZo2B7cguSHLte46/4grJX5ifpqCuGh8IAbYDOy4vJHmvEJ1/
-	nTgJmWA+YcA==
-X-Received: from dlbvt4.prod.google.com ([2002:a05:7022:3f84:b0:12a:8225:c504])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:52b:b0:12b:ee7b:51ec
- with SMTP id a92af1059eb24-12bfb6ed64amr10533193c88.1.1775628186984; Tue, 07
- Apr 2026 23:03:06 -0700 (PDT)
-Date: Tue,  7 Apr 2026 23:03:03 -0700
+        d=1e100.net; s=20251104; t=1775628712; x=1776233512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3uK+tPLkSl9ANiO5LYE1+vG7slqSDtEHIZ+Ahv9m7KU=;
+        b=c3m81ikS59dSYag7NzaK/tUNzYoJjqCwa98YizZlAeyVw87u65R+O9uycb/GnzpsU8
+         bKFZR+Sy/yTTeCkr7xVxIufELx8MoGtt4zl9EcTAuzhyl96ZNwSbElvFL0s9GO2qqfIy
+         syvHT+AYgtoa9PCZSTv/NkP6n53JaIZZhDSUd3nb+/BC91A7itPn7d6XpuuMRz8924kw
+         y7uIbj5L+Zg44wG++DF2oT9Tga466WFbqC7VuGELrGHVP789fvYgVqjNK6CXwUbZeMUr
+         PjksgPArfnaZkhiK/kSnSx3wuUYzFz4y2xHAYwSzwBTPy0XzjRTKYbrB6xcruMKdHkah
+         HvEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbsfAoI6skyoI1qkiPBNnFYNMHlf2GY6mfCtg+tIOp+DTOwVbS8RyxLdv6LvKer/hOGIQfU0Zi3QtaUVoJViQq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR7758H8LTtJxleEAhwi6IV/5hQzNN4SFGn7hUc5Q9RK1iYCXH
+	5qJ/6BvPx71kzt3NEtsl5e8OYG0eR0Eo3da2sqzyR1d7Fj0oSzJ+mkng79tk0PRFx8ono3FTd3k
+	XVSrrsZ/GRY3KChw+KjmcfFL7q/++XqsXkD1outwl
+X-Gm-Gg: AeBDietWFIF/uTTgqo5cncEMI/2BAgeRBNl5Sfq2ezH5jJUOAwt6vEWIoVNiImKKHei
+	9auZjdEq1jMWDid+NxnaW07rOiGY0xd3w3i0LwMNQRSsTcf2QKWnKR1SsZevLvCewz7dqw04okV
+	SOL8T4MwBTrUjBZ2YX4gdcr+Hx3Z8iXbPVdDYsS540cWz3dbovEPm6JTACdVYVV5gDgDES+teJv
+	sZNannpKQyhTKwKQt60YdRr9S3pJ0bAfwq8t6AD4za74PQzMXC08oIgvMiSmgo1lBj5N8c0KYTU
+	QC65vCc7
+X-Received: by 2002:a17:903:3c27:b0:2a8:ffed:4663 with SMTP id
+ d9443c01a7336-2b2b98435bcmr1389885ad.12.1775628712065; Tue, 07 Apr 2026
+ 23:11:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260408060303.51231-1-irogers@google.com>
-Subject: [PATCH v1] perf test: Fixes for check branch stack sampling
+MIME-Version: 1.0
+References: <20260408055259.374744-1-namhyung@kernel.org>
+In-Reply-To: <20260408055259.374744-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, German Gomez <german.gomez@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 7 Apr 2026 23:11:40 -0700
+X-Gm-Features: AQROBzCIZRFkgzKvk939GsXY9-5QBl8W2uQyJtp3-5_ytz1FzwnVUud-0d5jVLc
+Message-ID: <CAP-5=fXZLqqyWiadB1AtPP6Oi3X4WxpK8zYs-=4YVM0KfuB0QQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf build: Update error message for BUILD_NONDISTRO=1
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When filtering branch stack samples on user events they sample in user
-land but may have come from the kernel. Avoid the target address being
-a kernel address but allow the source to be the kernel.
+On Tue, Apr 7, 2026 at 10:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> It should say binutils-dev(el) instead of plain binutils package as it's
+> mostly installed already and can confuse people like me. :)
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-When filtering branch stack samples on kernel events they sample in
-kernel land but may have come from user land. Avoid the target being a
-user address but allow the source to be in user land.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Increase the duration of the system call sampling test to make the
-likelihood of sampling a system call higher (increased from 1000 to
-8000 loops - a number found through experimentation on an Intel
-Tigerlake laptop), also make the period of the event a prime number.
+Thanks,
+Ian
 
-Put unneeded perf record output into a temporary file so that the test
-output isn't cluttered. More clearly state which test is running and
-the pass, fail or skipped result of the test.
-
-These changes make the test on an Intel tigerlake laptop reliably pass
-rather than reliably fail.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/test_brstack.sh | 122 ++++++++++++++++---------
- 1 file changed, 78 insertions(+), 44 deletions(-)
-
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 85233d435be6..d317ed0e063e 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -40,7 +40,7 @@ is_arm64() {
- 
- check_branches() {
- 	if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$1"; then
--		echo "Branches missing $1"
-+		echo "ERROR: Branches missing $1"
- 		err=1
- 	fi
- }
-@@ -48,6 +48,8 @@ check_branches() {
- test_user_branches() {
- 	echo "Testing user branch stack sampling"
- 
-+	start_err=$err
-+	err=0
- 	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
- 	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
- 
-@@ -73,59 +75,81 @@ test_user_branches() {
- 	perf script -i "$TMPDIR/perf.data" --fields brstack | \
- 		tr ' ' '\n' > "$TMPDIR/perf.script"
- 
--	# There should be no kernel addresses with the u option, in either
--	# source or target addresses.
--	if grep -E -m1 "0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
--		echo "ERROR: Kernel address found in user mode"
-+	# There should be no kernel addresses in the target with the u option.
-+	if grep -q -E -m1 "^0x[0-9a-f]{16}/[89a-f][0-9a-f]{15}/" $TMPDIR/perf.script; then
-+		echo "Testing user branch stack sampling [Failed kernel address found in user mode]"
- 		err=1
- 	fi
- 	# some branch types are still not being tested:
- 	# IND COND_CALL COND_RET SYSRET SERROR NO_TX
-+	if [ $err -eq 0 ]; then
-+		echo "Testing user branch stack sampling [Passed]"
-+		err=$start_err
-+	else
-+		echo "Testing user branch stack sampling [Failed]"
-+	fi
- }
- 
- test_trap_eret_branches() {
- 	echo "Testing trap & eret branches"
-+
- 	if ! is_arm64; then
--		echo "skip: not arm64"
-+		echo "Testing trap & eret branches [Skipped not arm64]"
-+		return
-+	fi
-+	start_err=$err
-+	err=0
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
-+		perf test -w traploop 1000
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | \
-+		tr ' ' '\n' > $TMPDIR/perf.script
-+
-+	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
-+	check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
-+	check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
-+	if [ $err -eq 0 ]; then
-+		echo "Testing trap & eret branches [Passed]"
-+		err=$start_err
- 	else
--		perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
--			perf test -w traploop 1000
--		perf script -i $TMPDIR/perf.data --fields brstacksym | \
--			tr ' ' '\n' > $TMPDIR/perf.script
--
--		# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
--		check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
--		check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
-+		echo "Testing trap & eret branches [Failed]"
- 	fi
- }
- 
- test_kernel_branches() {
- 	echo "Testing that k option only includes kernel source addresses"
- 
--	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
--		echo "skip: not enough privileges"
-+	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
-+		echo "Testing that k option [Skipped not enough privileges]"
-+		return
-+	fi
-+	start_err=$err
-+	err=0
-+	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
-+		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
-+	perf script -i $TMPDIR/perf.data --fields brstack | \
-+		tr ' ' '\n' > $TMPDIR/perf.script
-+
-+	# Example of branch entries:
-+	#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
-+	# Source addresses come first and target address can be either
-+	# userspace or kernel even with k option, as long as the source
-+	# is in kernel.
-+
-+	# Look for source addresses with top bit set
-+	if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
-+		echo "Testing that k option [Failed kernel branches missing]"
-+		err=1
-+	fi
-+	# Look for no target addresses without top bit set
-+	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{0,15}/" $TMPDIR/perf.script; then
-+		echo "Testing that k option [Failed user branches found with kernel filter"
-+		err=1
-+	fi
-+	if [ $err -eq 0 ]; then
-+		echo "Testing that k option [Passed]"
-+		err=$start_err
- 	else
--		perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
--			perf bench syscall basic --loop 1000
--		perf script -i $TMPDIR/perf.data --fields brstack | \
--			tr ' ' '\n' > $TMPDIR/perf.script
--
--		# Example of branch entries:
--		#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
--		# Source addresses come first and target address can be either
--		# userspace or kernel even with k option, as long as the source
--		# is in kernel.
--
--		#Look for source addresses with top bit set
--		if ! grep -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
--			echo "ERROR: Kernel branches missing"
--			err=1
--		fi
--		# Look for no source addresses without top bit set
--		if grep -E -m1 "^0x[0-7][0-9a-f]{0,15}" $TMPDIR/perf.script; then
--			echo "ERROR: User branches found with kernel filter"
--			err=1
--		fi
-+		echo "Testing that k option [Failed]"
- 	fi
- }
- 
-@@ -136,14 +160,15 @@ test_filter() {
- 	test_filter_expect=$2
- 
- 	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
--	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
-+	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- \
-+		${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
- 	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
- 
- 	# fail if we find any branch type that doesn't match any of the expected ones
- 	# also consider UNKNOWN branch types (-)
- 	if [ ! -s "$TMPDIR/perf.script" ]
- 	then
--		echo "Empty script output"
-+		echo "Testing branch stack filtering [Failed empty script output]"
- 		err=1
- 		return
- 	fi
-@@ -154,27 +179,36 @@ test_filter() {
- 	  > "$TMPDIR/perf.script-filtered" || true
- 	if [ -s "$TMPDIR/perf.script-filtered" ]
- 	then
--		echo "Unexpected branch filter in script output"
-+		echo "Testing branch stack filtering [Failed unexpected branch filter]"
- 		cat "$TMPDIR/perf.script"
- 		err=1
- 		return
- 	fi
-+	echo "Testing branch stack filtering [Passed]"
- }
- 
- test_syscall() {
- 	echo "Testing syscalls"
-+	start_err=$err
-+	err=0
- 	# skip if perf doesn't have enough privileges
--	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
--		echo "skip: not enough privileges"
-+	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
-+		echo "Testing syscalls [Skipped: not enough privileges]"
- 	else
- 		perf record -o $TMPDIR/perf.data --branch-filter \
--			any_call,save_type,u,k -c 10000 -- \
--			perf bench syscall basic --loop 1000
-+			any_call,save_type,u,k -c 10007 -- \
-+			perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
- 		perf script -i $TMPDIR/perf.data --fields brstacksym | \
- 			tr ' ' '\n' > $TMPDIR/perf.script
- 
- 		check_branches "getppid[^ ]*/SYSCALL/"
- 	fi
-+	if [ $err -eq 0 ]; then
-+		echo "Testing syscalls [Passed]"
-+		err=$start_err
-+	else
-+		echo "Testing syscalls [Failed]"
-+	fi
- }
- set -e
- 
--- 
-2.53.0.1213.gd9a14994de-goog
-
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index e6686641761fd0bf..ad5401eb720e9e78 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -923,7 +923,7 @@ ifdef BUILD_NONDISTRO
+>    $(call feature_check,libbfd-liberty-z)
+>
+>    ifneq ($(feature-libbfd-threadsafe), 1)
+> -    $(error binutils 2.42 or later is required for non-distro builds)
+> +    $(error binutils-dev(el) 2.42 or later is required for non-distro bu=
+ilds)
+>    endif
+>
+>    # we may be on a system that requires -liberty and (maybe) -lz
+> --
+> 2.53.0
+>
