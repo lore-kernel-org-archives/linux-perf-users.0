@@ -1,84 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7D927707
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 11:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEA5D382283;
+	Wed,  8 Apr 2026 11:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775646899; cv=none; b=CTQVC2AuTOsvEM5oST2D9Tz5vDD+lfexYVpWVe9YUFWbktWyR8ZM5vA9vaCJoMTYpIRU+/3h7wwMfAt8/NpOprstu2DgE9q42vKvB8YG1b7NAbOlwXlL6rwUl+3H5G4BEV+o9eyya+cIOF3xN1RaGYogqkwg9YCyVfLy+4ufDc4=
+	t=1775646939; cv=none; b=nGSuw9dzgvCqOvt5KHLIYiBNuhwxM3cPjencllBXk1qIk1B9CqfBLgFrpOE1QPMirv8QJrpd5z3K+APBNsQRDJO4Kj6Lz6v9W+XsoeiaTSfeoCWLRnU0wRItbXbhulZKx4tPo6Lv/O8Ve162UBo7Y1iZulUUHWimMyAGu6EVgA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775646899; c=relaxed/simple;
-	bh=mueYoQ6sG5yyoDbGMzTDm09zIcf0bCrCc611dBsRLac=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jaScX/iIVvVogCt7kE33ISrVkOOw5nM9P0FzlscT98X65pwO8hK8Spu5Jm+yx0t5zoPv+GwDTAz5CLZVNUfce/Rn79lRAP7xeC6lSq7rf65Nu8RCMMuQ1F4VTiCRRIQDQe2wjstH7/PcITOTWlJycQFoBTbt6UO3OGvpqhcj3Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVtfr6lu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775646939; c=relaxed/simple;
+	bh=igR4tf9tvQIXuyv1BNumq6EyMN3XRctwsRk0w2FJVXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FqtHYpy4oFOlsT+Y+f2NfS9z4hc4RA2e2qnHoIgK2xMjnYZ3tGU17vRFGbDbeeQvWs9YvYWbiioYwBySUCcUdGs0oLMCC/AepcOwVtwifs+XKUW4/i4cXWBEDrBNx4wLXMbb7eTMs6iaK8vpJrPfMSc7RdHNPfBhcOTBxQKpZMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=vmSjwA7D; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVtfr6lu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6BDC19421;
-	Wed,  8 Apr 2026 11:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775646898;
-	bh=mueYoQ6sG5yyoDbGMzTDm09zIcf0bCrCc611dBsRLac=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=BVtfr6lugylLjT7/fPAOv6J8MsUpw03Xastcxsnz0kyvm84VoiJfG2daxx2GDPVbR
-	 wo0tk8/wY/fNv9ASnG/HSo5JUT7X2BmgK3XL40bFHvAEDY4yCC2k3sNYVizQQhvOy8
-	 qyx0p6ndUOYk77UncHcs3Zg4NR57mtCT2SvynPBUvp4dX8R4SKkOSOYwnaZYbnDRQJ
-	 oEYqeZ6tDntKxQeuY2qncHLod/pYpU0oirj/Hg1Xt8gSkOuCmUY0ht028BS6bps2K+
-	 qk5fZZIDL5h2jfjtFrCNR4CTL6+HyKGeWr+EbzSsU3HSwgo6BWzAYmq4/1VzP5BKtq
-	 k6RrZPKSVrC6w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf test: Run test 126 exclusive
-Reply-To: sashiko@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260408110707.1455185-1-tmricht@linux.ibm.com>
-References: <20260408110707.1455185-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Apr 2026 11:14:57 +0000
-Message-Id: <20260408111458.9D6BDC19421@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="vmSjwA7D"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A5603161;
+	Wed,  8 Apr 2026 04:15:31 -0700 (PDT)
+Received: from [10.57.86.179] (unknown [10.57.86.179])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65DE03F641;
+	Wed,  8 Apr 2026 04:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775646937; bh=igR4tf9tvQIXuyv1BNumq6EyMN3XRctwsRk0w2FJVXM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vmSjwA7DZY/mrvzmHWRHTxc8XRQEDtjI/NSPo+eCaom6KcIlEdJNksO3Ug2p32frD
+	 bmssI77hNNjyHZbmiXYcj6Z+SnjoN3yx4TSxtECLlBIK9kTaVScZIcg+SWNq9WCl9l
+	 ei7sqx3WBZdUfzeW3vdvTzF2MEUrE172T8LpGmog=
+Message-ID: <2c1a1694-9597-400d-b441-714225b5377b@arm.com>
+Date: Wed, 8 Apr 2026 12:15:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] arm-smmu-v3: Add PMCG child support and update PMU
+ MMIO mapping
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Will Deacon <will@kernel.org>,
+ Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+References: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The commit message demonstrates flawed validation of the fix. By=
- marking the test as `(exclusive)`, its numerical test ID changed because e=
-xclusive tests are deferred and sorted differently in `perf test`. In the '=
-Output after' section, the author runs `perf test 126 128`, but the output =
-shows this executed entirely different tests ('perf trace exit race' and 'm=
-map interface tests') rather than the intended 'perf trace BTF general test=
-s'. Thus, the provided proof of the fix is invalid.
---
+On 2026-04-08 8:51 am, Peng Fan (OSS) wrote:
+> This patch series adds proper support for describing and probing the
+> Arm SMMU v3 PMCG (Performance Monitor Control Group) as a child node of
+> the SMMU in Devicetree, and updates the relevant drivers accordingly.
+> 
+> The SMMU v3 architecture allows an optional PMCG block, typically
+> associated with TCUs, to be implemented within the SMMU register
+> address space. For example, mmu700 PMCG is at the offset 0x2000 of the
+> TCU page 0.
 
-commit c35ec49c9966f472a5d232107254f8f61709b80f
-Author: Thomas Richter <tmricht@linux.ibm.com>
+But what's wrong with the existing binding? Especially given that it 
+even has an upstream user already:
 
-perf test: Run test 126 exclusive
+https://git.kernel.org/torvalds/c/aef9703dcbf8
 
-This commit marks the 'perf trace BTF general tests' shell script as
-exclusive to prevent it from failing when run concurrently with other
-trace tests.
+> Patch 1 updates the SMMU v3 Devicetree binding to allow PMCG child nodes,
+> referencing the existing arm,smmu-v3-pmcg binding.
+> 
+> Patch 2 updates the arm-smmu-v3 driver to populate platform devices for
+> child nodes described in DT once the SMMU probe succeeds.
+> 
+> Patch 3 updates the SMMUv3 PMU driver to correctly handle MMIO mapping when
+> PMCG is described as a child node. The PMCG registers occupy a sub-region
+> of the parent SMMU MMIO window, which is already requested by the SMMU
 
-> Output after:
->  # for i in $(seq 3); do perf test 126 128; done
->  126: perf trace exit race                           : Ok
->  128: mmap interface tests                           :
->  128.1: Read samples using the mmap interface        : Ok
+That has not been the case since 52f3fab0067d ("iommu/arm-smmu-v3: Don't 
+reserve implementation defined register space") nearly 6 years ago, 
+where the whole purpose was to support Arm's PMCG implementation 
+properly. What kernel is this based on?
 
-Does this validation output demonstrate the correct tests being run?
+Thanks,
+Robin.
 
-In the first output block of the commit message, test 126 is 'perf trace
-BTF general tests' and 128 is 'perf trace record and replay'. In this later
-output block, 126 is 'perf trace exit race' and 128 is 'mmap interface test=
-s'.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> Peng Fan (3):
+>        dt-bindings: iommu: arm-smmu-v3: Allow PMU child nodes
+>        iommu/arm-smmu-v3: Populate PMU child devices from Devicetree
+>        perf/arm-smmuv3: Avoid double-requesting shared SMMU MMIO for PMCG
+> 
+>   .../devicetree/bindings/iommu/arm,smmu-v3.yaml        | 10 ++++++++++
+>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c           |  3 +++
+>   drivers/perf/arm_smmuv3_pmu.c                         | 19 ++++++++++++++++---
+>   3 files changed, 29 insertions(+), 3 deletions(-)
+> ---
+> base-commit: f3e6330d7fe42b204af05a2dbc68b379e0ad179e
+> change-id: 20260408-smmu-perf-754367fe66c8
+> 
+> Best regards,
 
-Did adding the exclusive tag shift the numeric test IDs, causing the
-validation command to run unrelated tests instead of verifying the fix
-for the intended BTF general tests?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260408110707.1455=
-185-1-tmricht@linux.ibm.com?part=3D1
