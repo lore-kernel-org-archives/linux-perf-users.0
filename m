@@ -1,324 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DCE3D75A1;
-	Wed,  8 Apr 2026 17:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5053D47A5
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 18:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775669570; cv=none; b=h5H+djFiZjDknyNOmneaZ+OKPg1MBVmfudQuQZKowZdKu4tWf0gplXlKXGl/YAf1xgjyj+z8n6xlOxndoCNeDzgs6ohA7YCwFshRv3rlIhOpSIv2HreNMQWdRfYilXVgm4stnwf/ieMnf+z9GdMUoHaIy0jpuycgEROkFnHNfHE=
+	t=1775671790; cv=none; b=KbU4E8IdtBkSUMlhL/db3win71IbwE7UP1NvHGucuse1hMSntGgo6zPD/bmFG0U92LspobihdFX53oKqzSWEUqjbpEmCs9gwvDPDbFoIdavlwBYRxel++F4+hSib/8Nf9TQx0BxDiUlWkO/Z1nRuUIK17CWm1LmYD7PCGeHzw4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775669570; c=relaxed/simple;
-	bh=IqrRyXkqBak8OIM3m25gc+YRTHUcPtmiNBZO0n9k2Co=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fFkqlH9rDY5bSkywj899DV/3FPNSV9WOqhmGCBNYpt59PuCKiaf914p87gUeutOlBF7bEwYdDZJxIERGIZmviM1Pv4j1PapB38CQ6P8VAoZVhQJxEsFkTufgoYsaWJUITG/M5uxoekf0kuoxv/wIhuMn2NCgt6VJx6kihmpfLzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr5AVzRS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775671790; c=relaxed/simple;
+	bh=o5PRpgiHpLd990ww/wVsqk+7DxXrMxIPG6rWwMujsWA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=T3quMsjHIjBp9qFXptIUpMIF+NVn1x50F7l9a2NaWuqTDgAGq9Q8jy8P50S4T4nddxAkbSd//wgpcUQetvBHp6LMVUFpEpJuB/VytJuBLQm1yDiiRx5qOnbx8iWjmbQnOkXoAxXZ8huMVg4yOwcsk2OD3JDmawoJVWOFenzz3do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lt9l+Xim; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr5AVzRS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BBBC2BC9E;
-	Wed,  8 Apr 2026 17:32:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lt9l+Xim"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9349BC19421;
+	Wed,  8 Apr 2026 18:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775669570;
-	bh=IqrRyXkqBak8OIM3m25gc+YRTHUcPtmiNBZO0n9k2Co=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gr5AVzRSCo7sz2XSuXXffQQYo9oKWgujP0wsZxK2sXXSEj8DGqsAPoLDZcK34O0D9
-	 gO7UV8slxm6JJH/AAkvJLZLCXKbHRpElQezWjmhscVoKvpZy26wAS+fXzZF2ktanho
-	 k6MKCUoo2shD5Ob+AB1clfadm5J51pwzxzeRGY8DGrqxFPZBtcBCmjEi/ah4HegV+U
-	 dJKTRCt+VgIQuPFy8I9M5X1KWViLupwRpsxi45jISXugpz9r09KOBdsQDUzp3kMicR
-	 rh4OP7FKmX2gRqyn59socQYN27b5w5PQTxz4snway6xV1yXCc+ajvoBw9gS8G6xi8i
-	 UZm/2X/PFpZpA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 8/8] perf tools: Replace basename() calls with perf_basename()
-Date: Wed,  8 Apr 2026 14:32:03 -0300
-Message-ID: <20260408173203.96700-9-acme@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260408173203.96700-1-acme@kernel.org>
-References: <20260408173203.96700-1-acme@kernel.org>
+	s=k20201202; t=1775671790;
+	bh=o5PRpgiHpLd990ww/wVsqk+7DxXrMxIPG6rWwMujsWA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Lt9l+XimgEx2kGYcY8pbMD7fAQmzkqYN1EY8KYQ5JCuUf7YNh7sR4eQqO3Tv3wWQC
+	 ZF2uRNlouJAjS7SsxcjANbeVbiLfgSp7JKtmY14734dytnLSTLpX+kA2QpsGx9b92o
+	 GXA/KpsL5hkLz+1mQxopBra+69ufoahC3ghQ89tu4Mh0Hdq1Dst9jnwCyqb9/ORLEj
+	 dgI1PA2rKpYyxYIHlvIbZKNvs9uLGccVFRkIAYNY48OHnJrAfH5BFaf3c1Ix2COQJS
+	 VD+q9uvwCs3AKKZ/YDkR1JJMtDIRBU8IWvfWMjqxnwq0Tb18Np54ZIhU37d88BW/wu
+	 E70v+0vTByNhA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 5/8] perf header: Use a max number of command line args
+Reply-To: sashiko@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260408173203.96700-6-acme@kernel.org>
+References: <20260408173203.96700-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Apr 2026 18:09:49 +0000
+Message-Id: <20260408180950.9349BC19421@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sashiko AI review found 2 potential issue(s):
+- [Critical] Unvalidated `ff->size` and unenforced string lengths lead to h=
+eap buffer overflow.
+- [High] Missing null-termination validation causes out-of-bounds reads.
+--
 
-As noticed in a sashiko review for a patch adding a missing libgen.h
-in a file using basename():
+commit 1f222a4afd391a2d476456be29b779929e17885b
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  https://sashiko.dev/#/patchset/20260402001740.2220481-1-acme%40kernel.org
+perf header: Use a max number of command line args
 
-So avoid these subtleties and instead reuse the gnu_basename() function
-we had in srcline.c, renaming it to perf_basename() and replace
-basename() calls with it, simplifying several cases by removing now
-needless strdups.
+This commit sets a reasonable maximum number of command line arguments to
+avoid overflows when reading perf.data files.
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-daemon.c         |  4 ++--
- tools/perf/util/annotate.c          |  3 +--
- tools/perf/util/data-convert-json.c |  4 ++--
- tools/perf/util/dsos.c              | 32 ++++++++---------------------
- tools/perf/util/probe-event.c       |  3 +--
- tools/perf/util/srcline.c           | 11 ++--------
- tools/perf/util/symbol.h            | 16 ++++-----------
- tools/perf/util/util.c              |  8 ++++++++
- tools/perf/util/util.h              |  2 ++
- 9 files changed, 31 insertions(+), 52 deletions(-)
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+[ ... ]
+> @@ -2804,6 +2807,9 @@ static int process_cmdline(struct feat_fd *ff, void=
+ *data __maybe_unused)
+>  	if (do_read_u32(ff, &nr))
+>  		return -1;
+> =20
+> +	if (nr > MAX_CMDLINE_NR)
+> +		return -1;
+> +
+>  	env->nr_cmdline =3D nr;
+> =20
+>  	cmdline =3D zalloc(ff->size + nr + 1);
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 33473e071392601e..c4632577d1296350 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1016,7 +1016,7 @@ static int setup_config_changes(struct daemon *daemon)
- {
- 	char *basen = strdup(daemon->config_real);
- 	char *dirn  = strdup(daemon->config_real);
--	char *base, *dir;
-+	const char *base, *dir;
- 	int fd, wd = -1;
- 
- 	if (!dirn || !basen)
-@@ -1029,7 +1029,7 @@ static int setup_config_changes(struct daemon *daemon)
- 	}
- 
- 	dir = dirname(dirn);
--	base = basename(basen);
-+	base = perf_basename(basen);
- 	pr_debug("config file: %s, dir: %s\n", base, dir);
- 
- 	wd = inotify_add_watch(fd, dir, IN_CLOSE_WRITE);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 63f0ee9d4c03ce4e..e745f3034a0e1c52 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -8,7 +8,6 @@
- 
- #include <errno.h>
- #include <inttypes.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include "util.h" // hex_width()
- #include "ui/ui.h"
-@@ -1245,7 +1244,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
- 	if (opts->full_path)
- 		d_filename = filename;
- 	else
--		d_filename = basename(filename);
-+		d_filename = perf_basename(filename);
- 
- 	if (evsel__is_group_event(evsel)) {
- 		evsel__group_desc(evsel, buf, sizeof(buf));
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 4b1b2f7bed251691..d526c91312ed8b93 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -326,7 +326,7 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
- 	output_json_format(out, false, 2, "]");
- }
- 
--int bt_convert__perf2json(const char *input_name, const char *output_name,
-+int bt_convert__perf2json(const char *_input_name, const char *output_name,
- 		struct perf_data_convert_opts *opts __maybe_unused)
- {
- 	struct perf_session *session;
-@@ -342,7 +342,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
- 	};
- 	struct perf_data data = {
- 		.mode = PERF_DATA_MODE_READ,
--		.path = input_name,
-+		.path = _input_name,
- 		.force = opts->force,
- 	};
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5cf8c878bab2a4a4..e927e707abace9c6 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -6,7 +6,6 @@
- #include "vdso.h"
- #include "namespaces.h"
- #include <errno.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include <string.h>
- #include <symbol.h> // filename__read_build_id
-@@ -297,34 +296,21 @@ struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short)
- 
- static void dso__set_basename(struct dso *dso)
- {
--	char *base, *lname;
-+	bool allocated = false;
-+	const char *base;
- 	int tid;
- 
- 	if (perf_pid_map_tid(dso__long_name(dso), &tid)) {
--		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
--			return;
--	} else {
--	      /*
--	       * basename() may modify path buffer, so we must pass
--               * a copy.
--               */
--		lname = strdup(dso__long_name(dso));
--		if (!lname)
--			return;
--
--		/*
--		 * basename() may return a pointer to internal
--		 * storage which is reused in subsequent calls
--		 * so copy the result.
--		 */
--		base = strdup(basename(lname));
-+		char *jitname;
- 
--		free(lname);
--
--		if (!base)
-+		if (asprintf(&jitname, "[JIT] tid %d", tid) < 0)
- 			return;
-+		allocated = true;
-+		base = jitname;
-+	} else {
-+		base = perf_basename(dso__long_name(dso));
- 	}
--	dso__set_short_name(dso, base, true);
-+	dso__set_short_name(dso, base, allocated);
- }
- 
- static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, const struct dso_id *id)
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index f37a783ea7723197..34b4badd2c14ade0 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -11,7 +11,6 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <errno.h>
--#include <libgen.h>
- #include <stdio.h>
- #include <unistd.h>
- #include <stdlib.h>
-@@ -229,7 +228,7 @@ static int convert_exec_to_group(const char *exec, char **result)
- 	if (!exec_copy)
- 		return -ENOMEM;
- 
--	ptr1 = basename(exec_copy);
-+	ptr1 = (char *)perf_basename(exec_copy);
- 	if (!ptr1) {
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index b58710624eadfe1b..db164d25816347ac 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -8,6 +8,7 @@
- #include "symbol.h"
- #include "libdw.h"
- #include "debug.h"
-+#include "util.h"
- 
- #include <inttypes.h>
- #include <string.h>
-@@ -74,14 +75,6 @@ int inline_list__append_tail(struct symbol *symbol, char *srcline, struct inline
- 	return 0;
- }
- 
--/* basename version that takes a const input string */
--static const char *gnu_basename(const char *path)
--{
--	const char *base = strrchr(path, '/');
--
--	return base ? base + 1 : path;
--}
--
- char *srcline_from_fileline(const char *file, unsigned int line)
- {
- 	char *srcline;
-@@ -90,7 +83,7 @@ char *srcline_from_fileline(const char *file, unsigned int line)
- 		return NULL;
- 
- 	if (!srcline_full_filename)
--		file = gnu_basename(file);
-+		file = perf_basename(file);
- 
- 	if (asprintf(&srcline, "%s:%u", file, line) < 0)
- 		return NULL;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index c67814d6d6d6f64a..bd6eb90c86683762 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -14,6 +14,7 @@
- #include "path.h"
- #include "symbol_conf.h"
- #include "spark.h"
-+#include "util.h"
- 
- #ifdef HAVE_LIBELF_SUPPORT
- #include <libelf.h>
-@@ -97,18 +98,9 @@ struct intlist;
- 
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
--	if (symbol_conf.symfs_layout_flat) {
--		char *path_copy = strdup(path);
--		char *base;
--		int ret;
--
--		if (!path_copy)
--			return -ENOMEM;
--		base = basename(path_copy);
--		ret = path__join(bf, size, symbol_conf.symfs, base);
--		free(path_copy);
--		return ret;
--	}
-+	if (symbol_conf.symfs_layout_flat)
-+		return path__join(bf, size, symbol_conf.symfs, perf_basename(path));
-+
- 	return path__join(bf, size, symbol_conf.symfs, path);
- }
- 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index c5fee8e394805544..25849434f0a4e5fd 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -545,3 +545,11 @@ int scandirat(int dirfd, const char *dirp,
- 	return err;
- }
- #endif
-+
-+/* basename version that takes a const input string */
-+const char *perf_basename(const char *path)
-+{
-+	const char *base = strrchr(path, '/');
-+
-+	return base ? base + 1 : path;
-+}
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index e935438451b81fda..87a0818a8c765c45 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -86,6 +86,8 @@ struct perf_debuginfod {
- };
- void perf_debuginfod_setup(struct perf_debuginfod *di);
- 
-+const char *perf_basename(const char *path);
-+
- char *filename_with_chroot(int pid, const char *filename);
- 
- int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
--- 
-2.53.0
+This problem wasn't introduced by this patch, but is there a potential inte=
+ger
+overflow here?
 
+Because ff->size is attacker-controlled data from the perf.data file header
+and is not validated, could an attacker set ff->size near the maximum value
+to cause an integer overflow, resulting in zalloc allocating a tiny buffer?
+
+Alternatively, even without an integer overflow, could an attacker set a sm=
+all
+ff->size but embed large strings in the file, bypassing validation if
+do_read_string() does not enforce that the read bytes fit within the declar=
+ed
+ff->size?
+
+This would cause the subsequent memcpy loop to write beyond the allocated
+cmdline buffer, leading to a heap buffer overflow.
+
+>  	if (!cmdline)
+>  		return -1;
+> =20
+>  	argv =3D zalloc(sizeof(char *) * (nr + 1));
+>  	if (!argv)
+>  		goto error;
+> =20
+>  	for (i =3D 0; i < nr; i++) {
+>  		str =3D do_read_string(ff);
+>  		if (!str)
+>  			goto error;
+> =20
+>  		argv[i] =3D cmdline + len;
+>  		memcpy(argv[i], str, strlen(str) + 1);
+
+This issue was also not introduced by this patch, but does this code cause =
+an
+out-of-bounds read if the string is not null-terminated?
+
+If do_read_string() allocates memory based on a length prefix and reads data
+directly from the file without explicitly appending a null terminator, coul=
+d a
+malicious perf.data file provide a string length but fill the content entir=
+ely
+with non-null bytes?
+
+This would cause strlen(str) to scan past the end of the str allocation unt=
+il
+it encounters a null byte in adjacent heap memory.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260408173203.9670=
+0-1-acme@kernel.org?part=3D5
