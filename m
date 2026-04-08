@@ -1,324 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD153A8744;
-	Wed,  8 Apr 2026 17:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DFF26A1AF;
+	Wed,  8 Apr 2026 17:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775669374; cv=none; b=u/R1jYCSK6HPGZLNVtnSm5Lkhrz7bXSt+JC3GgEM0Gck1zPg3nPrDHp7ElO4bx1cEMRYkQFerN1jycVwpZ02ZSOg6+iLCn7xiTIuDWR/7nWac8LYbEKfQV797yp0O+ArfMQ4kOb49I/xDODVjYpt4/1GdxufwlcBMda3CDC9l5w=
+	t=1775669386; cv=none; b=HyDL8OoZ5HrwLdFkiUn+CHZKLQiHEyQgGys+9pDIrV3v5cBSRigXsFQhiadvxb1YB8njOuhu3wNcHatyjkHbDTejueEIcMLQJOR34gmoSC6rrhUsdMlZIF4Iza2hSOV62ku5JCOmOTNWgo9BCR6kDCnAqpKCYn8VLzpxurCR8yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775669374; c=relaxed/simple;
-	bh=IqrRyXkqBak8OIM3m25gc+YRTHUcPtmiNBZO0n9k2Co=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aArKaEBZjOu+V7Rx8M1kzNOBLbZi2wI5nXC3PqxgTnFncHoo+9dojq3FaUlHwCmQLMsvrJ1KrKo8yXOs7Z9xt282SefiuskosW8lhfI7tHyIcb6AqC7jUyIlQVmHN7NhM0eED9cg8t0J7e9+L95fF6BUxhjK5sJcPyTje+OVhmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkKEysN/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775669386; c=relaxed/simple;
+	bh=ZOkmcxvnnfhXmDnQWSF3Id0JVhFdSBA+mcixESi7MAo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aPtSLwN69ihOPttfIqdA+fJb1v0SC6nNeqraTbGL/zVUeTM0uhmx6+j4PQLEAGUKYIxVw6kHZkXKRRq9Xs0pvXGi+aCZA3guGfHNkMMMoWrOqZMf0wCv/kiDGef25uSviOwygs+94b//2k4EHUzPSJaO2etRfupucQicP7VkBak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5eiAIuU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkKEysN/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34232C2BC87;
-	Wed,  8 Apr 2026 17:29:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5eiAIuU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B60C19421;
+	Wed,  8 Apr 2026 17:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775669374;
-	bh=IqrRyXkqBak8OIM3m25gc+YRTHUcPtmiNBZO0n9k2Co=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AkKEysN/LM5vkCFxcBlgoO2GMlptiVvjXoKdcVhMlie5BRCZVOPxWKuvHNDsjEb+1
-	 Q5K705QCDgxLy9Yct33XwFDBZ5/PaRlNAkiXorULbCgKZYENLpqxxWPgj8WzJ4QxpG
-	 0SFYcbczhGpkPBmI9En94IQafgndKuZkoc42B7QIf/+W/lgDvj0xPgnmsqSkEEt+y2
-	 rqOCRHInPkbX8EOpp+SwNoBN+kFEKhBDqGhrv+g9nNSQqYZ6aRyZebYWOHEiDFtb6j
-	 eLvC60LB+q+IzU+ELTBujdg8A7o/MDje3mcnbZ4pjZ9Eka55RIEUaAJEOBsuLXboDA
-	 AnXbGILkAqiag==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 8/8] perf tools: Replace basename() calls with perf_basename()
-Date: Wed,  8 Apr 2026 14:28:46 -0300
-Message-ID: <20260408172846.96360-9-acme@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260408172846.96360-1-acme@kernel.org>
-References: <20260408172846.96360-1-acme@kernel.org>
+	s=k20201202; t=1775669386;
+	bh=ZOkmcxvnnfhXmDnQWSF3Id0JVhFdSBA+mcixESi7MAo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=T5eiAIuUBCEp0491o1pBKGsLdiuyS68HpeHyPy1vXIq3LMDqsQ7UVTJYpmmtMkQSQ
+	 ILt3Av7TezdIMqp08R6vC+gefprV0yY3x/sYtv52JYfWuP4iKBBkzTkrs8It5uXH7X
+	 F1CLpzvAaLUZoMDT/vMSTxBlMp2kXYaH9/3bYee1m/5W8YtDbPTfLdwB0wyGEeMLEN
+	 j0N+YO2Q4aK0pl5LNAqrNwvcQhQD4G0B0UKZ+e7gyLfTlttb6Rh60BQpOjPRZQOwiK
+	 BzQyVuOXoy2ee0s/HTtN5wE6y1ZhXxcnL8lxKbclmEgKt+841Fk92IFDi79RTCpA+G
+	 IT3HU3PTlVE9A==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, acme@kernel.org, 
+ Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+ hca@linux.ibm.com, japo@linux.ibm.com
+In-Reply-To: <20260407100835.3488645-1-tmricht@linux.ibm.com>
+References: <20260407100835.3488645-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH v3 0/3] perf addr2line: Rework disable_add2line_warn
+Message-Id: <177566938575.2704582.17568865541232169508.b4-ty@kernel.org>
+Date: Wed, 08 Apr 2026 10:29:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, 07 Apr 2026 12:08:32 +0200, Thomas Richter wrote:
+> Introduce configurable addr2line_disable_warn entry in the .perfconfig
+> file. Clean up addr2line configuration.
+> 
+> V2 --> V3: Added comments from Kim Namhyung
+>            - Use perf_config_bool() to read addr2line-disable-warn
+> 	     value
+> 	   - Move perfconfig.txt update to proper patch file.
+> 	   - Fix invalid default value in documentation.
+> V1 --> V2: Update perf-config documentation.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-As noticed in a sashiko review for a patch adding a missing libgen.h
-in a file using basename():
+Best regards,
+Namhyung
 
-  https://sashiko.dev/#/patchset/20260402001740.2220481-1-acme%40kernel.org
-
-So avoid these subtleties and instead reuse the gnu_basename() function
-we had in srcline.c, renaming it to perf_basename() and replace
-basename() calls with it, simplifying several cases by removing now
-needless strdups.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-daemon.c         |  4 ++--
- tools/perf/util/annotate.c          |  3 +--
- tools/perf/util/data-convert-json.c |  4 ++--
- tools/perf/util/dsos.c              | 32 ++++++++---------------------
- tools/perf/util/probe-event.c       |  3 +--
- tools/perf/util/srcline.c           | 11 ++--------
- tools/perf/util/symbol.h            | 16 ++++-----------
- tools/perf/util/util.c              |  8 ++++++++
- tools/perf/util/util.h              |  2 ++
- 9 files changed, 31 insertions(+), 52 deletions(-)
-
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 33473e071392601e..c4632577d1296350 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1016,7 +1016,7 @@ static int setup_config_changes(struct daemon *daemon)
- {
- 	char *basen = strdup(daemon->config_real);
- 	char *dirn  = strdup(daemon->config_real);
--	char *base, *dir;
-+	const char *base, *dir;
- 	int fd, wd = -1;
- 
- 	if (!dirn || !basen)
-@@ -1029,7 +1029,7 @@ static int setup_config_changes(struct daemon *daemon)
- 	}
- 
- 	dir = dirname(dirn);
--	base = basename(basen);
-+	base = perf_basename(basen);
- 	pr_debug("config file: %s, dir: %s\n", base, dir);
- 
- 	wd = inotify_add_watch(fd, dir, IN_CLOSE_WRITE);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 63f0ee9d4c03ce4e..e745f3034a0e1c52 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -8,7 +8,6 @@
- 
- #include <errno.h>
- #include <inttypes.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include "util.h" // hex_width()
- #include "ui/ui.h"
-@@ -1245,7 +1244,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
- 	if (opts->full_path)
- 		d_filename = filename;
- 	else
--		d_filename = basename(filename);
-+		d_filename = perf_basename(filename);
- 
- 	if (evsel__is_group_event(evsel)) {
- 		evsel__group_desc(evsel, buf, sizeof(buf));
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 4b1b2f7bed251691..d526c91312ed8b93 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -326,7 +326,7 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
- 	output_json_format(out, false, 2, "]");
- }
- 
--int bt_convert__perf2json(const char *input_name, const char *output_name,
-+int bt_convert__perf2json(const char *_input_name, const char *output_name,
- 		struct perf_data_convert_opts *opts __maybe_unused)
- {
- 	struct perf_session *session;
-@@ -342,7 +342,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
- 	};
- 	struct perf_data data = {
- 		.mode = PERF_DATA_MODE_READ,
--		.path = input_name,
-+		.path = _input_name,
- 		.force = opts->force,
- 	};
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5cf8c878bab2a4a4..e927e707abace9c6 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -6,7 +6,6 @@
- #include "vdso.h"
- #include "namespaces.h"
- #include <errno.h>
--#include <libgen.h>
- #include <stdlib.h>
- #include <string.h>
- #include <symbol.h> // filename__read_build_id
-@@ -297,34 +296,21 @@ struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short)
- 
- static void dso__set_basename(struct dso *dso)
- {
--	char *base, *lname;
-+	bool allocated = false;
-+	const char *base;
- 	int tid;
- 
- 	if (perf_pid_map_tid(dso__long_name(dso), &tid)) {
--		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
--			return;
--	} else {
--	      /*
--	       * basename() may modify path buffer, so we must pass
--               * a copy.
--               */
--		lname = strdup(dso__long_name(dso));
--		if (!lname)
--			return;
--
--		/*
--		 * basename() may return a pointer to internal
--		 * storage which is reused in subsequent calls
--		 * so copy the result.
--		 */
--		base = strdup(basename(lname));
-+		char *jitname;
- 
--		free(lname);
--
--		if (!base)
-+		if (asprintf(&jitname, "[JIT] tid %d", tid) < 0)
- 			return;
-+		allocated = true;
-+		base = jitname;
-+	} else {
-+		base = perf_basename(dso__long_name(dso));
- 	}
--	dso__set_short_name(dso, base, true);
-+	dso__set_short_name(dso, base, allocated);
- }
- 
- static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, const struct dso_id *id)
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index f37a783ea7723197..34b4badd2c14ade0 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -11,7 +11,6 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <errno.h>
--#include <libgen.h>
- #include <stdio.h>
- #include <unistd.h>
- #include <stdlib.h>
-@@ -229,7 +228,7 @@ static int convert_exec_to_group(const char *exec, char **result)
- 	if (!exec_copy)
- 		return -ENOMEM;
- 
--	ptr1 = basename(exec_copy);
-+	ptr1 = (char *)perf_basename(exec_copy);
- 	if (!ptr1) {
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index b58710624eadfe1b..db164d25816347ac 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -8,6 +8,7 @@
- #include "symbol.h"
- #include "libdw.h"
- #include "debug.h"
-+#include "util.h"
- 
- #include <inttypes.h>
- #include <string.h>
-@@ -74,14 +75,6 @@ int inline_list__append_tail(struct symbol *symbol, char *srcline, struct inline
- 	return 0;
- }
- 
--/* basename version that takes a const input string */
--static const char *gnu_basename(const char *path)
--{
--	const char *base = strrchr(path, '/');
--
--	return base ? base + 1 : path;
--}
--
- char *srcline_from_fileline(const char *file, unsigned int line)
- {
- 	char *srcline;
-@@ -90,7 +83,7 @@ char *srcline_from_fileline(const char *file, unsigned int line)
- 		return NULL;
- 
- 	if (!srcline_full_filename)
--		file = gnu_basename(file);
-+		file = perf_basename(file);
- 
- 	if (asprintf(&srcline, "%s:%u", file, line) < 0)
- 		return NULL;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index c67814d6d6d6f64a..bd6eb90c86683762 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -14,6 +14,7 @@
- #include "path.h"
- #include "symbol_conf.h"
- #include "spark.h"
-+#include "util.h"
- 
- #ifdef HAVE_LIBELF_SUPPORT
- #include <libelf.h>
-@@ -97,18 +98,9 @@ struct intlist;
- 
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
--	if (symbol_conf.symfs_layout_flat) {
--		char *path_copy = strdup(path);
--		char *base;
--		int ret;
--
--		if (!path_copy)
--			return -ENOMEM;
--		base = basename(path_copy);
--		ret = path__join(bf, size, symbol_conf.symfs, base);
--		free(path_copy);
--		return ret;
--	}
-+	if (symbol_conf.symfs_layout_flat)
-+		return path__join(bf, size, symbol_conf.symfs, perf_basename(path));
-+
- 	return path__join(bf, size, symbol_conf.symfs, path);
- }
- 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index c5fee8e394805544..25849434f0a4e5fd 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -545,3 +545,11 @@ int scandirat(int dirfd, const char *dirp,
- 	return err;
- }
- #endif
-+
-+/* basename version that takes a const input string */
-+const char *perf_basename(const char *path)
-+{
-+	const char *base = strrchr(path, '/');
-+
-+	return base ? base + 1 : path;
-+}
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index e935438451b81fda..87a0818a8c765c45 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -86,6 +86,8 @@ struct perf_debuginfod {
- };
- void perf_debuginfod_setup(struct perf_debuginfod *di);
- 
-+const char *perf_basename(const char *path);
-+
- char *filename_with_chroot(int pid, const char *filename);
- 
- int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
--- 
-2.53.0
 
