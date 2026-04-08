@@ -1,120 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8F927979A
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 18:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBE23D9037
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 18:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775673536; cv=none; b=LJGkzSdpEE8H0H5vhUeUghZpM/KK9Z4Pv/kMU8gWFBtgsBgIY2ydjKKf5P9Kxbwbrb97tzdKhOZ/x2Y5jNnVOx49oANliwvIQIxoeIJ4Dabk4olImLU9+FH0YbQMuvFLadGra6S36WZrWYRpaX3riheNhnYSeiVLRPXMEDOqLMs=
+	t=1775674056; cv=none; b=iU8VYgYALeiKEO4IGj+VRUJpcMWMmINeC3XaWaShMUOJRERkvV3XTPcdbjf2fDbVxP7+N0Y4n17Q3NkX4ve/Ku572mqxNiiPYqqzQtjw6hDr/l3Nx8KszjFacFwZ72Q9XUNxExoe9OPQUQf450oEPUB7lbrVO1PHAVazoLn68cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775673536; c=relaxed/simple;
-	bh=LMp4WtZVka4RZjrt9yvRKkC7ZLhwqZKpeoN7+0r1n40=;
+	s=arc-20240116; t=1775674056; c=relaxed/simple;
+	bh=IZ7x+vG3/l6geRoWUchY6MmJRNGLX8uF6TOWwb8Bc4Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sdC6kxiIABTWppY0TSsqVY5nDXkeauJWn/xuC1k3bMPiCfIMRY1/NwNUSu+I+ooioLMSplvJ+8i9NaSZoEkxhbHs5Xr23I/bCxtvKVPA3Ab3fn80w7/FLSvx4ojw571GgnuyYVtdCLYHhVXreZy1jQUwXvmYuMy50kfQV1HjSjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMqC0gLS; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=MpzI8qYS8jcovuiciK4Yot6FTj6P0l/ZUNn8jvE/P1tzAvTO1Ca6lCgocMnt400EW2mYo61JOw9w683ZceCn2gF5YarvNQCO/y3wny997x48Gji8hvRuZDyaa/8FfxQX764wipHTLKCUC0LQQyfBpolQIac9DHk4xdNGnYkz/C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1Ksoo7x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMqC0gLS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA3AC19421;
-	Wed,  8 Apr 2026 18:38:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1Ksoo7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F572C19425;
+	Wed,  8 Apr 2026 18:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775673536;
-	bh=LMp4WtZVka4RZjrt9yvRKkC7ZLhwqZKpeoN7+0r1n40=;
+	s=k20201202; t=1775674056;
+	bh=IZ7x+vG3/l6geRoWUchY6MmJRNGLX8uF6TOWwb8Bc4Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=rMqC0gLSIBd3K/VyDJcKwPVz8isXzN8Xf7wKF3BzGYS8fI+xf1wccih9+GVbQUF4v
-	 Vt+BGYMTi8HRZBkNeT7Vb2iLPaKCg/DTvPsDSKK9GszQbZH1V+UHhT2VUHnAngxPax
-	 CgqD1WPPB1a/dpcUJECEn2NLwm1P9YDggNVBBn9ZJ3x9vq8hXMm3uIEprXdqCrUHLO
-	 96LlkhgpkYKQSRSUrOpZXIjoT6Me+/X5zxpY6XCENi9Z/kPMNMwfnSDU0AmPorT14f
-	 AHSv1m0dyhvSciwqiRQs+N53F0S/UpfLXqegJE7rcECdAqA53Bi1q2bs7ReO338zPw
-	 VzzI+SEqUPibg==
+	b=N1Ksoo7x+7oix66tkAhd5L025iVY+gOO3DN0CEzJhJuxn+WQhvWcL/YiX6o0Wif6e
+	 5fHtj1EzHrA+QrOoAC/wB7QgmDWHTB/w4fQSR2aRu0QSZFJQhooMrEyrhKKGFR7C40
+	 nLXBS+NvHkOHZ3QidAvPrKfobLOvRJbmLt5/5oP+mfjUz5uP8E6euzDbMMt3bBzCco
+	 6AUUd2xfZu9RaRuNVR4+Tr6QC/r2U/pwL+Lj/bhq8C6hUPxCGbsMftr/0TYb+YalKs
+	 d/+h7MaXxb0wtvOW815s0y0rTfy6urzWB8AlN3KM9tKxKXiH16f0ByhCBTIFHuZ82v
+	 69D15o9b/OvWg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/8] perf header: Do validation of perf.data
- HEADER_CPU_DOMAIN_INFO
+Subject: Re: [PATCH 7/8] perf tools: Use calloc() where applicable
 Reply-To: sashiko@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260408172846.96360-7-acme@kernel.org>
-References: <20260408172846.96360-7-acme@kernel.org>
+In-Reply-To: <20260408173203.96700-8-acme@kernel.org>
+References: <20260408173203.96700-8-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Apr 2026 18:38:55 +0000
-Message-Id: <20260408183856.0CA3AC19421@smtp.kernel.org>
+Date: Wed, 08 Apr 2026 18:47:35 +0000
+Message-Id: <20260408184736.6F572C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Critical] This problem wasn't introduced by this patch, but the patch fa=
-ils to completely validate untrusted data from the `perf.data` file, leavin=
-g a critical out-of-bounds read and arbitrary free vulnerability. The bound=
-s validation checks `cpu >=3D nra` and `domain >=3D max_sched_domains` but =
-misses the validation of `nr_domains`. The variable `nr_domains` is read di=
-rectly from the file and stored in `cd_map[cpu]->nr_domains`, while the `do=
-mains` array is allocated with a size of `max_sched_domains` (which is also=
- read from the file). There is no check ensuring `nr_domains <=3D max_sched=
-_domains`. If an attacker crafts a file where `nr_domains > max_sched_domai=
-ns` and induces an early exit (e.g., by providing an invalid `domain` index=
-, which the patch now explicitly catches and returns `-1`), the parsing fun=
-ction aborts and the cleanup function `free_cpu_domain_info()` is invoked. =
-The cleanup loop iterates `j` from `0` up to `cd_map[cpu]->nr_domains - 1`,=
- reading `cd_map[cpu]->domains[j]`. This reads out of bounds of the `domain=
-s` array, interpreting adjacent heap memory as `struct domain_info *` point=
-ers. If these out-of-bounds values are non-NULL, the code calls `zfree()` o=
-n their fields and the pointer itself, resulting in a severe memory corrupt=
-ion vulnerability.
+Sashiko AI review found 2 potential issue(s):
+- [High] Integer truncation in process_mem_topology() leads to an undersize=
+d allocation and a heap buffer overflow when parsing a crafted perf.data fi=
+le.
+- [High] Integer truncation in mem2node__init() via bitmap_weight() and tes=
+t_bit() causes an undersized allocation and heap buffer overflow.
 --
 
-commit 5c7601d84031087ca2a9bfeeedd3934e8e426309
+commit 06556b26772333b2ba2aa88d01fed0ea985e6ec4
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf header: Do validation of perf.data HEADER_CPU_DOMAIN_INFO
+perf tools: Use calloc() where applicable
 
-This commit validates the cpu and domain values read from perf.data files
-against nr_cpus_avail and max_sched_domains. The newly added validation
-prevents using out-of-bounds indices to access the cd_map and domains
-arrays.
+This commit replaces instances of zalloc with calloc across the perf tools
+codebase to better handle array allocations. It also adjusts includes for
+the standard library and kernel zalloc headers where dependencies changed.
 
 > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index a18f216f77c27..4925e33778b91 100644
 > --- a/tools/perf/util/header.c
 > +++ b/tools/perf/util/header.c
-
 [ ... ]
-
-> @@ -3736,6 +3741,12 @@ static int process_cpu_domain_info(struct feat_fd =
-*ff, void *data __maybe_unused
->  			if (do_read_u32(ff, &domain))
->  				return -1;
+> @@ -3260,7 +3260,7 @@ static int process_mem_topology(struct feat_fd *ff,
+>  	if (do_read_u64(ff, &nr))
+>  		return -1;
 > =20
-> +			if (domain >=3D max_sched_domains) {
-> +				pr_err("Invalid HEADER_CPU_DOMAIN_INFO: domain %d >=3D max_sched_dom=
-ains (%d)\n",
-> +				       domain, max_sched_domains);
-> +				return -1;
-> +			}
-> +
+> -	nodes =3D zalloc(sizeof(*nodes) * nr);
+> +	nodes =3D calloc(nr, sizeof(*nodes));
 
-Does this code leave nr_domains unvalidated against max_sched_domains?
+While not introduced by this patch, nr is read as a u64 from the file.
+On 32-bit architectures, passing it to calloc, which takes size_t,
+truncates it. For example, if nr is 0x100000002, calloc allocates space for
+only 2 elements.
 
-Earlier in process_cpu_domain_info(), nr_domains is read and assigned to
-the map, but the domains array is allocated using max_sched_domains:
+However, the subsequent loop for (i =3D 0; i < nr; i++) uses the full 64-bit
+nr value. Could this result in a heap buffer overflow when reading the
+entries if parsing a crafted perf.data file?
 
-	if (do_read_u32(ff, &nr_domains))
-		return -1;
+> diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+> --- a/tools/perf/util/mem2node.c
+> +++ b/tools/perf/util/mem2node.c
+[ ... ]
+> @@ -59,7 +59,7 @@ int mem2node__init(struct mem2node *map, struct perf_en=
+v *env)
+>  		max +=3D bitmap_weight(n->set, n->size);
+>  	}
+> =20
+> -	entries =3D zalloc(sizeof(*entries) * max);
+> +	entries =3D calloc(max, sizeof(*entries));
 
-	cd_map[cpu]->nr_domains =3D nr_domains;
+Similarly, in the preceding loop, n->size is a u64, but bitmap_weight
+expects an unsigned int for the number of bits. If n->size exceeds 32 bits,
+it is truncated, resulting in max being too small and an undersized
+allocation here.
 
-	cd_map[cpu]->domains =3D zalloc(sizeof(*d_info) * max_sched_domains);
-
-If a perf.data file contains a nr_domains value greater than
-max_sched_domains, and an invalid domain index triggers the new return -1
-path shown above, could this lead to an out-of-bounds read during cleanup?
-
-If the cleanup function iterates up to the unvalidated nr_domains, it would
-read past the end of the domains array. If these out-of-bounds values are
-then freed, could this regression result in an arbitrary free?
+Later, the loop for (bit =3D 0; bit < n->size; bit++) iterates u64 times
+and calls test_bit(bit, n->set). Since test_bit expects an int or unsigned
+int, bit is also truncated. Will this repeatedly re-test the first 32 bits
+and cause out-of-bounds writes into the entries array?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260408172846.9636=
-0-1-acme@kernel.org?part=3D6
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260408173203.9670=
+0-1-acme@kernel.org?part=3D7
