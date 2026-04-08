@@ -1,55 +1,55 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9C2EA754
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 02:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284103644C3
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 02:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775614144; cv=none; b=EJxpqDkifuK3WQSDPU2apZzY+J6b3sM2dDSdKdFjjgHIW0Ru5xVORuoJVM6E8nbIGYKDzoeRvZ5X1ByTavLoWIo2F0lEJk1Uwf1/iqLk523Q7/rJte7FzHlIbbyfII9afQ7oM6DMF+DfevTiZ/IA4QNCFSmjjZKlKPQWqxu3a2U=
+	t=1775614147; cv=none; b=iwlb1B3LaLwgYVUL29my2VbD9ATxssVwhlwksbJwQgRaHZd40uLx3cDAXfaWqpY1xy1THHW8Ftuj1H7omn/scUl9gwCCvOxwcPmy0NX1SiuA0/9gSxF37ooSNrAP+Gx+nZrHo1AbIaspZ2AJa/HjkOtnywUFv5ToWVdrxTaCt2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775614144; c=relaxed/simple;
-	bh=+od/pv8U9SPnqABn8T5vvA6IegNaRSsOs9j1AAwCO+Q=;
+	s=arc-20240116; t=1775614147; c=relaxed/simple;
+	bh=ls6KccABJtS6wEi5zCOCmpl36LobIF43ExSR2l/KAsI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a/iv13w+WgIVwHUXEaAlwZTTYy+UJ6+NZfuyEwHQA7pSfYD5HGHOhfbx7Rr8x8IPdL+djkvoe4qcNq+ABZ+GDXvJgjYVEGrwuxyVlgaIKPXOqSLDX9Ur7Emo/XCytOlrVjkw2gMbbf98gc2neRliOzBRthtFyM30cwawwCH7o4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KSMSo0JF; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=e1UKjQBfcAQngaG1GtBYirResVWJR0s0itji6Uo2ifuDi8HEdw0K+hZJfh0FUU5odjEyycBhWq1Bs8hlVJp9StF7f0T2eUH0Ji3BQyk9z6D9mj96s4ZCtEdW+H2GoNwdkp0nKbbWmFV2+3gyvDLPAzi+40ETaE5LgVHfjalyCek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3TsEPTa; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSMSo0JF"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0ba59a830so8001484eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 19:09:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3TsEPTa"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12711ec96fbso22464607c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2026 19:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775614143; x=1776218943; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775614145; x=1776218945; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDo6txpKcG/dWZi4YklRd+yQl0suoQaKKPebb6oTLYY=;
-        b=KSMSo0JF22zhiEEkypN2APlqXCII1Cq+k3bgdQ3stUwNt+KrHmdpbBM9cEOkAUR00w
-         oHn4n1FTZkWG2Gzd1gBJo1D8Y6fPjgF+xokkOE2P4nLNKFAZJvpXQV8k65mKIQltmOiR
-         6IjPNqta//41VxibndCwsbesvvjiH/2hY7lK50TBe3IoRhaDXGLBmc3nqGPY2ooICYty
-         T6EwU84MdElLUYwOkjxMqDPyVJSn+xWXTb5sMcgLFbgwFomKIU02nCebrJxxBlPiZ/Kz
-         9sNMMjN1Cjj2uFRewBjEckEqQ2pCx2pI20cx280mkzIcpSZoX7cpLeUpQq0VuQ9tNHaU
-         lAZg==
+        bh=SuodUyFXg9dje1u/LSyhIGJhaibjnsbjKrE5jzp9X50=;
+        b=l3TsEPTaT/+0Ns9HoVTiAeq7fGBXj4LZal1R59Oct24ecNG0CS/7wuhAzjqCIZad7l
+         sBtsyhGmsZqu/yQt3wIAX1WEATWk3US5dzajqYNIOfUFCoj271nylk4iVba/OKgUuUj/
+         g4EW5KqK65JDuqzFtNzYK964YK6DvnWsAcOCCQb7hQktqCG1ZP3y31C9+q7lo9+cN2if
+         NMd+uoO+R1M2Ct0ncJee5UuxlDSbN003IW8YXl6bgIYS0xn/AsSv0BUy1sBy5x2qaBDe
+         QownMVyblWtwORnE+Frbf4dXfF+B6teApKxgFNsExNxMCXlV9wtUuPs/braDJQ3/Q63x
+         hm0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775614143; x=1776218943;
+        d=1e100.net; s=20251104; t=1775614145; x=1776218945;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDo6txpKcG/dWZi4YklRd+yQl0suoQaKKPebb6oTLYY=;
-        b=rFyxmDWDFXJHBLKcC9kL6ExA4CXFFQ9qMpl/XF/EXqa8DtyC1Fbv5ECD7IEB9HpM0U
-         UBKXuZHBY+ZQZAmsA9oJ6Eq9tle7jhxHOUxIl2+1ePwVr6g6N2xKpudMzpYwPFcLF4qB
-         BVhn8cjH5brkG9ldd42AHu+QeZQLKncSR+/t55+yqhueWtMAKMHYi1NGjrcrM64kKvin
-         bC0VLO2v9pQI/7mwih0QJHQddzjSJV2asFfYIBYr6+juja6mJkJk+XOzhaUrDSbiGx3I
-         fjNMFEhOxR96g/A/D7vk/nAp7M3XwiIZH9Exl7JikUHqi5YaeRbeYBiR/HwLyfDDgZqt
-         2dqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlQjoEEck8gvfoZQ7epxqn+vf0RTS9kn8ywZ6V5jRVAQYJpCP3rVKvhhV2t+gN2xDPWBE9CJkbWaRGM7GLJhty@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcSzH8jIONx4LmhD8GWI8sZNFDfO7x7h93W2qpZLnnSGxFvVJH
-	v+HfarkbeAqVsHcf8QQUYyQ83DZVqfh/pdmcaDP79ShYLM0UbQeKrj5C8hG5eE40K0uR14pWCoH
-	Gjds8t62tMg==
-X-Received: from dycnr6-n1.prod.google.com ([2002:a05:7300:e9c6:10b0:2d1:9f26:a370])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:ed13:b0:2d1:815f:19c1
- with SMTP id 5a478bee46e88-2d1815f1b7bmr3127413eec.15.1775614142543; Tue, 07
- Apr 2026 19:09:02 -0700 (PDT)
-Date: Tue,  7 Apr 2026 19:08:36 -0700
-In-Reply-To: <CAP-5=fVqaqNo1VyGPWhZ+DvEv+oRUU=sMtBtpFbm4D-sJb-JNA@mail.gmail.com>
+        bh=SuodUyFXg9dje1u/LSyhIGJhaibjnsbjKrE5jzp9X50=;
+        b=dBSc1J1EhhyvtjTuq+czRFRvyx9fqU3FheHuejOAozH0DSj3eyxLDMsa59shCmTuV3
+         fJAoUPDC/1IU6uFlb7SvltYJuvE79C0vLigH28Edy2DS3XkAJYJKHQ82L3zcxX+P09NK
+         wfDShlpQUUkAlWSM+t6fXyaWTiJSkA6F94GgsZrM0b9Ta7Za3NwIGoZNWvTTG90Ywdqt
+         bfbg9EZiSsaGcrcVII1wiDetm3W39DSFbEG+fCGCWR+7Sumkuws0L569T3vuX5c3iwcK
+         J7Qq7NztzgB9VdCXLhqj7HyMVGY7TJp4vOjwGpyq+DoLAHmyVhVpGeYmfGQ3gX1W8uJB
+         nAvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFDInl7WZe48gtt8xmxpxdk2EZ+4aMRUTbJsPzlvDeB8R9Yds0tUFnIaHBFWgoMAfb05A/QR8P4mJwijUthN3s@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAJnE0ai3Px5oNVKUJZS3IHrs9VnrjhxNVqjTBfBPFYLq66t65
+	02HE1BgKHHArB1eSHAtp58fPyNRjgbfYgd2bWpHXrpXiECfCZi8n/HWsh7bLW0KK7hoA347dKMT
+	nMPMQ7R/zhw==
+X-Received: from dlbpu11.prod.google.com ([2002:a05:7022:e88b:b0:12c:20df:7530])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:52b:b0:128:d34a:320f
+ with SMTP id a92af1059eb24-12bfb6fdc70mr11066133c88.12.1775614144679; Tue, 07
+ Apr 2026 19:09:04 -0700 (PDT)
+Date: Tue,  7 Apr 2026 19:08:37 -0700
+In-Reply-To: <20260408020838.166906-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,9 +57,11 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <CAP-5=fVqaqNo1VyGPWhZ+DvEv+oRUU=sMtBtpFbm4D-sJb-JNA@mail.gmail.com>
+ <20260408020838.166906-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260408020838.166906-1-irogers@google.com>
-Subject: [PATCH v3 1/3] perf maps: Move getting debug_file to verbose path
+Message-ID: <20260408020838.166906-2-irogers@google.com>
+Subject: [PATCH v3 2/3] perf maps: Fix fixup_overlap_and_insert that can break
+ sorted by name order
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: irogers@google.com, adrian.hunter@intel.com, 
@@ -68,55 +70,36 @@ Cc: irogers@google.com, adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Getting debug_file can trigger warnings if not set. Avoid getting
-these warnings by pushing the use under the controlling if.
+When an entry in the address array is replaced, the corresponding name
+entry is replaced. The entries names may sort differently and so it is
+important that the sorted by name property be cleared on the maps.
 
+Fixes: 0d11fab32714 ("perf maps: Fixup maps_by_name when modifying maps_by_address")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/maps.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/util/maps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 4092211cff62..7dd6da9d1e4f 100644
+index 7dd6da9d1e4f..b44bc41f51f3 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -844,7 +844,6 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
- static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- {
- 	int err = 0;
--	FILE *fp = debug_file();
- 	unsigned int i, ni = INT_MAX; // Some gcc complain, but depends on maps_by_name...
+@@ -955,6 +955,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 			if (maps_by_name) {
+ 				map__put(maps_by_name[ni]);
+ 				maps_by_name[ni] = map__get(new);
++				maps__set_maps_by_name_sorted(maps, false);
+ 			}
  
- 	if (!maps__maps_by_address_sorted(maps))
-@@ -872,8 +871,8 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 				dso__name(map__dso(new)));
- 		} else if (verbose >= 2) {
- 			pr_debug("overlapping maps:\n");
--			map__fprintf(new, fp);
--			map__fprintf(pos, fp);
-+			map__fprintf(new, debug_file());
-+			map__fprintf(pos, debug_file());
- 		}
+ 			err = __maps__insert_sorted(maps, i + 1, after, NULL);
+@@ -981,6 +982,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 				if (maps_by_name) {
+ 					map__put(maps_by_name[ni]);
+ 					maps_by_name[ni] = map__get(new);
++					maps__set_maps_by_name_sorted(maps, false);
+ 				}
  
- 		if (maps_by_name)
-@@ -894,7 +893,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 			map__set_end(before, map__start(new));
- 
- 			if (verbose >= 2 && !use_browser)
--				map__fprintf(before, fp);
-+				map__fprintf(before, debug_file());
- 		}
- 		if (map__end(new) < map__end(pos)) {
- 			/* The new map isn't as long as the existing map. */
-@@ -912,7 +911,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 			       map__map_ip(after, map__end(new)));
- 
- 			if (verbose >= 2 && !use_browser)
--				map__fprintf(after, fp);
-+				map__fprintf(after, debug_file());
- 		}
- 		/*
- 		 * If adding one entry, for `before` or `after`, we can replace
+ 				check_invariants(maps);
 -- 
 2.53.0.1213.gd9a14994de-goog
 
