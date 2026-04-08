@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91CD384220
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 07:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67353859FA
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 07:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775633178; cv=none; b=s16tZM2nxcD34VS5i9rPeNb+NNmX1yOomEN6H/f9WHa/MZH8eGJZNEKNMD4v5V8Iie3fwWFcTaILU3rmBRU0IywzoCz4Xdbef3ekox3Bnfbpy1WN3UB9DaY9VHLMVVmQWcEVmNNCFkMRgqrLywITbNVPBty/bJ0eM1lko4TNrSg=
+	t=1775633180; cv=none; b=GNY/kGbo0mb102DLvMsN27s4Tm16uRb07gwC2EQKOLS9sqgWS4QDUFX8w7TeZZWgUhz5n1k2Fmgq6etQKYlb+UyYK6NPR7GPoB6gmsGlr2WvCFdj22zfxvS4nh1D8GFBpPCTsZqQBvZqHjXLq3+gPQwLUWusP6S1iBNXWPcteVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775633178; c=relaxed/simple;
-	bh=z5Gm8UpkhzGnJ27VVWc0CU9w0UcHCjs20RTv0h8BR7U=;
+	s=arc-20240116; t=1775633180; c=relaxed/simple;
+	bh=OJ4fj/ceTXl3wyPyO/bDDEJLY5TO9m90ese6zSP2IfE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M8i2y7KFFzNR9+Ht7Wo1ma9obccYUPNk5ek67EOJw5O5Uc/lNTVZEmlXTDRJn0VMXvlbs9MFsrgl2WGwURTR1eXwlXSaByKzqYG1DRIAV3f5VTwhO6cDlr+y+F1Ii9xod5vunnn0fqPWUc2iSefCwk7P9xYEmq6F6qxqHx2gsuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cPKRGJBE; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=hIaxLLYPL/rRv4cJCvW/+TCyGqwSvmXvHvPbItboPI0srADlIPlx90CVRo/WCufI0m/XhDLhvbMdGNA5Ansg+FiXBKkKecmv39XbtUE4m9edRO4GLGO4jCSrPMOxrmcDp4M+Cm/jtBiZYN7UfkAXWsXNNOWuBujMiF6bdE2Hs4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EjXWct79; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cPKRGJBE"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12bf9974587so28428281c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Apr 2026 00:26:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EjXWct79"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-127337c8e52so30102537c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Apr 2026 00:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775633176; x=1776237976; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775633178; x=1776237978; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOsKDU8RUwSKF1sH7naQYX2bK1YRBMlsuXwoyHBl/l4=;
-        b=cPKRGJBElqhXdY5RSPzS1a/KwrVG2WnveZOn+5IWfcEZldmYY2Lv9+NjbRGmiBKlt1
-         hLGuRva/MZ4W53SSJX3zT2pORPcbp83FQc5McrLqLizIa369qwufWqH4rAQ5SWUMWXXI
-         WjOwCbSfPWTwIGFp//M0xrKv/MKve8SzrBlbCxuwBaqgqUQYNVl3CiFNRQFWRup04dUM
-         VQYMIn/GP7b1TIDBPGTR1AzcN/+M35hr0yoz4leVixCMW49vKzfKAJnmIJ9unjKBhddz
-         GTY26PacH82oS8ur0a3gqhFeXtqRMy8auU5orlSNXneDYesTthR0dA2zgJ1BCzi+BafW
-         Zkaw==
+        bh=wSKO8kCpsbKECXOYQ7vo4YscjpszRTQ4LUGkn8KPV+o=;
+        b=EjXWct79A9TQ7j0V4Lfx+ku6EfGvGeTv3/J5EzRsPYkIP9G91husFh29FkJXMhxG2W
+         A6pOZfWzPoFgbnp/bf2rZ1jW8NibJmRuJtZxYirmILYCByfxlC/sjwB+3oIao4egbwSr
+         DAUmdKDhLG3xprEKXRPwhD0tdIqSX0RvGjoqSyLDakGxjNjsPHIY5WEGtcbEC1LjOQvX
+         EsJx/hylIPxTJDEj0nPd6ygcwIvW5bsfXvkGZz3JLhSA0dIbT4N/tPrXCqtEbrvu4YU0
+         EzYcM32Z+B/pWWyEEWl5HN22BSR7gKz8Jc/F0bLr/c3iCH/6Z9LTjO7cuziGzqLdD95n
+         Et5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775633176; x=1776237976;
+        d=1e100.net; s=20251104; t=1775633178; x=1776237978;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOsKDU8RUwSKF1sH7naQYX2bK1YRBMlsuXwoyHBl/l4=;
-        b=T9nLK7rLqtr6r33gu1xaIxw+oG14gQNh/YhQweGu5AYTXQUBZghDhC8KqERja+811E
-         HuWolaiRtMXJna3VYSjnYQAkcYe8EOv0jfvWZsFMnq9uH+cBZfHcflK2dgvV704rduXD
-         iRBvCx2W+9bleBO1DNfqB/0lmml1yb3RFEAKnXpYhe+NifZVAI1j1YW65vXhLC23VQOU
-         vybOmKyxHMzYthi3EwF/dSNfhOxP2od7gHvmO8q1UpwC2vHiq8cFWOmZnY/La3RsFfif
-         eAnOPVVDHhqh3YqFuRu2otHBgih+XvKCtzMwrjWtDG8pnujHHut7BOhtGm8k1zkREsQz
-         TlBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyhDeqsqNRQa6TWpSMTjUZwC7LVs4UKK01qtwSjGPh8U4Xbfw27zFhFxsYcGBvKZHmP2WNAL6quWXWiS4UkUGE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxttCx/dxmHoqfsbHeE4Mdsfk5DWuD6Q2dHIiBN8j0fszdrHN/g
-	vytif16ieAdgtnqPcE0yeGwlJOthRnPmdFwM0g9q45AI/+O+HkG/zP2eGWD7as5Edmx4roo2y07
-	jgsEuGfFDzQ==
-X-Received: from dlbep7.prod.google.com ([2002:a05:7022:1087:b0:12b:f959:6e78])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:221c:b0:128:d438:cad
- with SMTP id a92af1059eb24-12bfb74c7ecmr11678459c88.18.1775633175497; Wed, 08
- Apr 2026 00:26:15 -0700 (PDT)
-Date: Wed,  8 Apr 2026 00:25:42 -0700
+        bh=wSKO8kCpsbKECXOYQ7vo4YscjpszRTQ4LUGkn8KPV+o=;
+        b=eyW/XNfpHms9YxHmw0UkXDnWMA3jmXxLJFjd28oKALyezG4ylZAW9rlRYkHjkMHNzr
+         kxUOE8ZmC7f5DS99pVmaEuSOVbnnSwQogzZIpx2mu8BcFTLjiwI42pSTDFDdgIkA3KPe
+         37Sm7/e2jgTEMcr3grbgeRRIbX+7rc1439TZlQC6lW/HM0CGMWDtQdr72LypaotyqPZS
+         RXq7PT0rCkjS56WQewCP5jfyBAfJ5vFUI5hh+uq9amqv4edmc8Mx+0RltwN4fMeNkEUX
+         wHxhNtA0mGLGqSPhSN/rAkKtaeURt8Z1Fnk4iFfv/Z543uJ/nCfiOzdzQsuJF/879tKv
+         hv3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVWJrx27jiQrC+7Gbn16J0zAJInYLsh+guiWgV7LXSWvSMcXHqxCW/Se9S9dBmgLJfujcMIkxbU7JHGCeCQyJzL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmaoEwTPqF6XrlLon26t9GLOLlbemwT07yw5DkbPg/Yq4YCviM
+	Fw+a7XCVPvYDd1QtV9Cc5kjFFIi2+AWMI2OgZOJcB/CQTx0xwewpOuZ+KoLzZbw51uopsYUljZH
+	Dw/mKAXsoAA==
+X-Received: from dlbvt7.prod.google.com ([2002:a05:7022:3f87:b0:12b:eb91:8863])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:45a6:b0:11a:3734:3db3
+ with SMTP id a92af1059eb24-12bfb76924bmr10695114c88.32.1775633177823; Wed, 08
+ Apr 2026 00:26:17 -0700 (PDT)
+Date: Wed,  8 Apr 2026 00:25:43 -0700
 In-Reply-To: <20260408072601.210837-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <adPyeCq3rQrTurju@google.com> <20260408072601.210837-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260408072601.210837-5-irogers@google.com>
-Subject: [PATCH v7 04/23] perf kwork: Duplicate IRQ name in irq_work_init
+Message-ID: <20260408072601.210837-6-irogers@google.com>
+Subject: [PATCH v7 05/23] perf trace: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org, acme@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,47 +76,216 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-The IRQ name was set to a pointer within an event, making the lifetime
-memory management most likely a bug. In other instances the name for
-kwork_work is allocated, such as in evsel__softirq_name. Match that
-pattern by strdup-ing the name from the sample.
-
-Make the return type of perf_sample__strval a "const char *" rather
-than a "char *" as mutating the contents of an event through the
-sample isn't expected.
+The sample now contains the evsel and so don't unnecessarily pass the
+evsel.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kwork.c | 2 +-
- tools/perf/util/evsel.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c | 55 +++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index f600037ee460..dceb9b79aa6a 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -1018,7 +1018,7 @@ static void irq_work_init(struct perf_kwork *kwork,
- 		work->name = NULL;
- 	} else {
- 		work->id = perf_sample__intval(sample, "irq");
--		work->name = perf_sample__strval(sample, "name");
-+		work->name = strdup(perf_sample__strval(sample, "name") ?: "<unknown>");
- 	}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index b7c1e3803307..5c8cced4ca9b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -535,12 +535,12 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
+ 	return NULL;
  }
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 927e5b4756cc..cf495829dbb0 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -376,7 +376,7 @@ u64 perf_sample__intval(struct perf_sample *sample, const char *name);
- u64 perf_sample__intval_common(struct perf_sample *sample, const char *name);
- char perf_sample__taskstate(struct perf_sample *sample, const char *name);
+-#define perf_evsel__sc_tp_uint(evsel, name, sample) \
+-	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
++#define perf_evsel__sc_tp_uint(name, sample) \
++	({ struct syscall_tp *fields = __evsel__syscall_tp(sample->evsel); \
+ 	   fields->name.integer(&fields->name, sample); })
  
--static inline char *perf_sample__strval(struct perf_sample *sample, const char *name)
-+static inline const char *perf_sample__strval(struct perf_sample *sample, const char *name)
+-#define perf_evsel__sc_tp_ptr(evsel, name, sample) \
+-	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
++#define perf_evsel__sc_tp_ptr(name, sample) \
++	({ struct syscall_tp *fields = __evsel__syscall_tp(sample->evsel); \
+ 	   fields->name.pointer(&fields->name, sample); })
+ 
+ size_t strarray__scnprintf_suffix(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_suffix, int val)
+@@ -2723,8 +2723,8 @@ static int trace__printf_interrupted_entry(struct trace *trace)
+ 	return printed;
+ }
+ 
+-static int trace__fprintf_sample(struct trace *trace, struct evsel *evsel,
+-				 struct perf_sample *sample, struct thread *thread)
++static int trace__fprintf_sample(struct trace *trace, struct perf_sample *sample,
++				 struct thread *thread)
  {
- 	return perf_sample__rawptr(sample, name);
+ 	int printed = 0;
+ 
+@@ -2732,7 +2732,7 @@ static int trace__fprintf_sample(struct trace *trace, struct evsel *evsel,
+ 		double ts = (double)sample->time / NSEC_PER_MSEC;
+ 
+ 		printed += fprintf(trace->output, "%22s %10.3f %s %d/%d [%d]\n",
+-				   evsel__name(evsel), ts,
++				   evsel__name(sample->evsel), ts,
+ 				   thread__comm_str(thread),
+ 				   sample->pid, sample->tid, sample->cpu);
+ 	}
+@@ -2787,7 +2787,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	void *args;
+ 	int printed = 0;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1;
+ 	int augmented_args_size = 0, e_machine;
+ 	void *augmented_args = NULL;
+ 	struct syscall *sc;
+@@ -2802,9 +2802,9 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
+ 
+-	trace__fprintf_sample(trace, evsel, sample, thread);
++	trace__fprintf_sample(trace, sample, thread);
+ 
+-	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
++	args = perf_evsel__sc_tp_ptr(args, sample);
+ 
+ 	if (ttrace->entry_str == NULL) {
+ 		ttrace->entry_str = malloc(trace__entry_str_size);
+@@ -2859,12 +2859,11 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	return err;
  }
+ 
+-static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+-				    struct perf_sample *sample)
++static int trace__fprintf_sys_enter(struct trace *trace, struct perf_sample *sample)
+ {
+ 	struct thread_trace *ttrace;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1;
+ 	struct syscall *sc;
+ 	char msg[1024];
+ 	void *args, *augmented_args = NULL;
+@@ -2874,7 +2873,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
+ 	e_machine = thread__e_machine(thread, trace->host, /*e_flags=*/NULL);
+-	sc = trace__syscall_info(trace, evsel, e_machine, id);
++	sc = trace__syscall_info(trace, sample->evsel, e_machine, id);
+ 	if (sc == NULL)
+ 		goto out_put;
+ 	ttrace = thread__trace(thread, trace);
+@@ -2885,7 +2884,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
+ 
+-	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
++	args = perf_evsel__sc_tp_ptr(args, sample);
+ 	augmented_args = syscall__augmented_args(sc, sample, &augmented_args_size, trace->raw_augmented_syscalls_args_size);
+ 	printed += syscall__scnprintf_args(sc, msg, sizeof(msg), args, augmented_args, augmented_args_size, trace, thread);
+ 	fprintf(trace->output, "%.*s", (int)printed, msg);
+@@ -2895,10 +2894,11 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 	return err;
+ }
+ 
+-static int trace__resolve_callchain(struct trace *trace, struct evsel *evsel,
++static int trace__resolve_callchain(struct trace *trace,
+ 				    struct perf_sample *sample,
+ 				    struct callchain_cursor *cursor)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	struct addr_location al;
+ 	int max_stack = evsel->core.attr.sample_max_stack ?
+ 			evsel->core.attr.sample_max_stack :
+@@ -2933,7 +2933,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	u64 duration = 0;
+ 	bool duration_calculated = false;
+ 	struct thread *thread;
+-	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
++	int id = perf_evsel__sc_tp_uint(id, sample), err = -1, callchain_ret = 0, printed = 0;
+ 	int alignment = trace->args_alignment, e_machine;
+ 	struct syscall *sc;
+ 	struct thread_trace *ttrace;
+@@ -2947,9 +2947,9 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	if (ttrace == NULL)
+ 		goto out_put;
+ 
+-	trace__fprintf_sample(trace, evsel, sample, thread);
++	trace__fprintf_sample(trace, sample, thread);
+ 
+-	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
++	ret = perf_evsel__sc_tp_uint(ret, sample);
+ 
+ 	if (trace->summary)
+ 		thread__update_stats(thread, ttrace, id, sample, ret, trace);
+@@ -2971,7 +2971,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out;
+@@ -3186,9 +3186,10 @@ static void bpf_output__fprintf(struct trace *trace,
+ 	++trace->nr_events_printed;
+ }
+ 
+-static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
++static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
+ 				       struct thread *thread, void *augmented_args, int augmented_args_size)
+ {
++	struct evsel *evsel = sample->evsel;
+ 	char bf[2048];
+ 	size_t size = sizeof(bf);
+ 	const struct tep_event *tp_format = evsel__tp_format(evsel);
+@@ -3271,7 +3272,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out;
+@@ -3289,7 +3290,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 		trace__fprintf_comm_tid(trace, thread, trace->output);
+ 
+ 	if (evsel == trace->syscalls.events.bpf_output) {
+-		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
++		int id = perf_evsel__sc_tp_uint(id, sample);
+ 		int e_machine = thread
+ 			? thread__e_machine(thread, trace->host, /*e_flags=*/NULL)
+ 			: EM_HOST;
+@@ -3297,7 +3298,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 
+ 		if (sc) {
+ 			fprintf(trace->output, "%s(", sc->name);
+-			trace__fprintf_sys_enter(trace, evsel, sample);
++			trace__fprintf_sys_enter(trace, sample);
+ 			fputc(')', trace->output);
+ 			goto newline;
+ 		}
+@@ -3317,13 +3318,13 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 		const struct tep_event *tp_format = evsel__tp_format(evsel);
+ 
+ 		if (tp_format && (strncmp(tp_format->name, "sys_enter_", 10) ||
+-				  trace__fprintf_sys_enter(trace, evsel, sample))) {
++				  trace__fprintf_sys_enter(trace, sample))) {
+ 			if (trace->libtraceevent_print) {
+ 				event_format__fprintf(tp_format, sample->cpu,
+ 						      sample->raw_data, sample->raw_size,
+ 						      trace->output);
+ 			} else {
+-				trace__fprintf_tp_fields(trace, evsel, sample, thread, NULL, 0);
++				trace__fprintf_tp_fields(trace, sample, thread, NULL, 0);
+ 			}
+ 		}
+ 	}
+@@ -3382,7 +3383,7 @@ static int trace__pgfault(struct trace *trace,
+ 	if (sample->callchain) {
+ 		struct callchain_cursor *cursor = get_tls_callchain_cursor();
+ 
+-		callchain_ret = trace__resolve_callchain(trace, evsel, sample, cursor);
++		callchain_ret = trace__resolve_callchain(trace, sample, cursor);
+ 		if (callchain_ret == 0) {
+ 			if (cursor->nr < trace->min_stack)
+ 				goto out_put;
 -- 
 2.53.0.1213.gd9a14994de-goog
 
