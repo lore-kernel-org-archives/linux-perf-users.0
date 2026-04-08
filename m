@@ -1,104 +1,125 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57CF3612F6
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 12:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4766F3C9EFD
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Apr 2026 13:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775652574; cv=none; b=Xo6Z8mMuNrX126ZXBXrab6UipnTRwnsXidLv8XSY+XyvL78PnHbheY9pg8fQMuA3GhgLrfpijlbKPpV6keo2oT/dcXmSCXnX+cXrfr4tWc+QU9Zf4Id34PPjaMlT9Z7ooykzer0dhGt0s72NdhGzHbnDO5P1yLHtLtazBJYKmWU=
+	t=1775653591; cv=none; b=mYiYVKnEOqc26wecVID6HyqJbal6vNfXi+gB01Eak7YE7BTYEHQ+CrDGkfImQYH4itK6Kq2KKRwyFiYpLyfRzWs/b4utS840VVUznrade2P6y/+a41+1bXAeP5Ek2uumYLNFpXc0+okPVED0cWo45GD+geuNske22wa95+8adcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775652574; c=relaxed/simple;
-	bh=fKeSQVm9UzUuhq3H7y2QxxDaU89CuSYm7tZU3NJiUkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dPTvPZpAxKP2+Hj0GtWBhWoZ4CiFNWJwh6eYVJn8zk+ErPmDKFVDDC2Mo+8Y6kShbVXOhaF/7rNh+izxoDMsfU/XOMxPW2afXCb6kldG+2drEBnUPmEg8L2zT0erYAagt0tZ8v1fBpK3cX938a2eAQYC5ouUBilWUsuvexfttV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IgW9fyI8; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775653591; c=relaxed/simple;
+	bh=VeEEZRvZHPj6hEyz4I2tNXf7y8H+nP53Ailnp//pEDk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=W6XZD9bZjAT92Gwefc+LBnqZnp2xca99GaY+47jQOGrADLPFZhOUkX8nZobJokP1H02CNWjlGenaOG5ZNIAZfcz7cg1QoCnNx+hZYQFc5OdvKtZ15V7VuMMCtwsLj/iWG4OOXboWvw5VjZMAXno/HDZCNVNF1XbTBwDm5eQjiio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEIPddNI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgW9fyI8"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-488a041eae5so33122925e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Apr 2026 05:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775652571; x=1776257371; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DCiGh/TAopmTia/e16V2uyYbOgyzJf5l79QanUCh3kg=;
-        b=IgW9fyI8qB8jmz8X/rMlR9R+EW1h431jhQTJsWwwtszEbG4NaEImGSG7Yc8EVLKYt4
-         m4NfG4moOOoJQ1pXwErCosYEIVoSZiUog/dPLqIo9Cbf+HqAzaV3ZUYG5cy7EbWmfDnx
-         OctqTyK6Qh7sLkP2YXL8AcK4PmaC3sWAEJ0Aj7OKPvxE3SLKgKDBpv2jJAodRX39SP3n
-         FH3m4kzOtGehBri4ww55t4ON0sYOgp13XZF7QMvS2t9cdPij3YJdDO8iTP1BN/6fxUFP
-         hA8usDEmtADoSKNiooBYpCzvsP+/44ZGKkZ7/jVMY8WuEVNRCqNuCjTEJq0VQw0kvUOW
-         zKQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775652571; x=1776257371;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DCiGh/TAopmTia/e16V2uyYbOgyzJf5l79QanUCh3kg=;
-        b=Nyi26EgYRtOeT8CuqayK+OMrswdnzBEivxc52y7/jq9CY74cHUz9TGYrrgyRCXDhvz
-         RXeXR+0fvB8zroZUtD+BB8tuWrhwhYzFGXy2V75b+RwlsadUU42etuBZe5j5umW1xvOo
-         LUWKVg+IZo6JVyYrV8UnUoZcyxa2nZOMvf8lg2+nMPYy+myCuVTQ9XjV0qp0iogQp8el
-         dik/N6LHS/PmreYiRprytM3mEAB00Bwk0UGO/j5t43qFKnuw/qjeiBXFBobxzvfUhJ+U
-         NossR1l5wo8scCWH7fcxAb9oEzLFL2aeJQZTF3c3ExQeCbCEqEo8CxeihEnKzuPfK4lF
-         mmjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfdlm1B714UoIjOz45HW47yHj2nk/HXzVAVQaECeA2XbRPYlEz95S7SQntH/FFzbKsz1dI3Xl4Q9+dA+d01QsN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmF8xS9EvylGP16tACRixixr4LcDveS8P9rh3tDmMoI3urhoh5
-	mr9o2VFRWG7ecXTV2j7yXyelGJ9fk991mg4gOEdIlcZNbFvzFMEi7juq
-X-Gm-Gg: AeBDies0ZrhaMNrCmEgNk0ZOnIlmrQVWhOCq1ZG1+8vect7w8qTSNtQ+WuAKIMmPBBU
-	taZ/5IJOaD9JKdfCg0AMyjTc5+0ZJoyN7HA0sR/lD410nKB7TcLxgnfJ4j/jNlL9Qk8YrRv4k8X
-	3hcFh81+EgRflJ1bIf85nR5YGhZ0YHaQ6iIGeKmwEooL/BF2l5Su2gckjcT2TBmzSDvDphHeMCF
-	/ZpjTlcleElaY2sWsckOlHkv73InXEU8t7IOO1iiDZHPtlYdQdWDjEnpdvsp6QdZlyEwy3jrUxn
-	05+KaMhR7Be60KFMg6btXbPKPHZXu3v+27muHvQobwJ9Ci6PRtu5mmVPw0Um9hySQSns6/VvVDX
-	wZbomkYboBQiPnUfyok07wzRpX65vdPWqB3RYvMcPMFePovGtbANQbycpMBUSfXrJ75PK2HNM14
-	bfWW751O8hCajdo/7FF4dYVTLa5XirUpp0VOQw5J6Q7MwsSGLySFrArPk20usxyy1bGZg1t+i/+
-	Js=
-X-Received: by 2002:a05:600c:630a:b0:485:2fe9:336f with SMTP id 5b1f17b1804b1-488998e3cbemr296043305e9.30.1775652570938;
-        Wed, 08 Apr 2026 05:49:30 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488c5dc5fefsm24994505e9.7.2026.04.08.05.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 05:49:30 -0700 (PDT)
-Date: Wed, 8 Apr 2026 13:49:23 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, David
- Hildenbrand <david@redhat.com>, David Hildenbrand <david@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
- accessors
-Message-ID: <20260408134923.3a44a703@pumpkin>
-In-Reply-To: <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
-References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
-	<1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEIPddNI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB302C19421;
+	Wed,  8 Apr 2026 13:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775653591;
+	bh=VeEEZRvZHPj6hEyz4I2tNXf7y8H+nP53Ailnp//pEDk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=KEIPddNICjLi4DADYxKBPbnjyIg3wTJbsqHe49AW0T/gftRWm6IYP2dz9NMOoIwY1
+	 CoAJ2DV/7XD+dWvG1zAiB2Du0UFHg+RzKCaupVv/jXkn5p277sIXcMRv+x6J/q78jv
+	 zMPsdnIoB6R81djowqwbhi1EXB55CguaTj+sewLmjVZ0U2RV3utVmIwTszOq6uUbV+
+	 Wsak9FIvSAyh+eltytzLqAVy2mGU9yp2blxAeHbUmweE10RkBntAbOsDZkqNuJ7cQO
+	 Y4AFRpGi+fEZkcuBnilCFMmog9lohTgNgN0Mfn3zYj0gPkvJpgZxjftAa5AOcnQZcj
+	 keZuHWfSutiMA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf: enable unprivileged syscall tracing with perf
+ trace
+Reply-To: sashiko@lists.linux.dev
+To: "Anubhav Shelat" <ashelat@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260408123947.23779-2-ashelat@redhat.com>
+References: <20260408123947.23779-2-ashelat@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Apr 2026 13:06:29 +0000
+Message-Id: <20260408130630.EB302C19421@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 7 Apr 2026 08:58:46 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Sashiko AI review found 2 potential issue(s):
+- [Critical] Bypassing `perf_allow_kernel()` for task-attached tracepoints =
+allows unprivileged users to leak kernel registers, instruction pointers, a=
+nd callchains, completely defeating KASLR.
+- [Medium] The change to make the tracefs 'id' and 'format' files world-rea=
+dable is functionally ineffective for unprivileged users due to restrictive=
+ parent directory permissions.
+--
 
-> On 27/02/26 11:57 AM, Anshuman Khandual wrote:
-> > Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
-> > standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
-> > accessors default to READ_ONCE() on platforms that don't override them. So
-> > there is no functional change on such platforms.
-> > 
-> > However arm64 platform is being extended to support 128 bit page tables via
-> > a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
-> > provide required single copy atomic access for 128 bit page table entries.
-> > Although pxdp_get() accessors can later be overridden on arm64 platform to
-> > extend required single copy atomicity support on 128 bit entries.
->
+commit 45a1b7ae91ab57b705592c98cc8fb3677392ba0a
+Author: Anubhav Shelat <ashelat@redhat.com>
 
-Did you consider enhancing READ_ONCE() to support 128bit accesses on arm64?
+perf: enable unprivileged syscall tracing with perf trace
 
-	David
+This commit allows unprivileged users to trace their own processes' syscalls
+using perf trace by loosening the perf_allow_kernel() condition in
+perf_event_open() for task-attached tracepoint events. It also makes the fo=
+rmat
+and id tracefs files world-readable for tracepoints marked safe for
+unprivileged access.
+
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+[ ... ]
+> @@ -13832,7 +13832,7 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	if (err)
+>  		return err;
+> =20
+> -	if (!attr.exclude_kernel) {
+> +	if (!attr.exclude_kernel && !(attr.type =3D=3D PERF_TYPE_TRACEPOINT && =
+pid !=3D -1)) {
+>  		err =3D perf_allow_kernel();
+
+If we bypass the perf_allow_kernel() check here, does this allow unprivileg=
+ed
+users to request PERF_SAMPLE_IP, PERF_SAMPLE_CALLCHAIN, and
+PERF_SAMPLE_REGS_INTR for kernel tracepoints?
+
+Since perf_trace_event_perm() skips permission checks when PERF_SAMPLE_RAW =
+is
+not requested, an unprivileged user could attach to a tracepoint like
+sched:sched_switch, set exclude_kernel=3D0, and omit PERF_SAMPLE_RAW.
+
+When the tracepoint fires, would the perf core capture the actual kernel
+instruction pointer, callchain, and registers into the unprivileged user's
+ring buffer, potentially defeating KASLR?
+
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+[ ... ]
+> @@ -3050,7 +3050,9 @@ static int event_callback(const char *name, umode_t=
+ *mode, void **data,
+>  	struct trace_event_call *call =3D file->event_call;
+> =20
+>  	if (strcmp(name, "format") =3D=3D 0) {
+> -		*mode =3D TRACE_MODE_READ;
+> +		*mode =3D (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
+> +			(TRACE_MODE_READ | 0004) :
+> +			TRACE_MODE_READ;
+>  		*fops =3D &ftrace_event_format_fops;
+>  		return 1;
+>  	}
+
+Is making these files world-readable effective for unprivileged users given
+the permissions of the parent directories?
+
+The root tracefs directory (e.g., /sys/kernel/tracing/) and its
+subdirectories typically have restrictive permissions like 0750 without
+world-execute access.
+
+Would an unprivileged user attempting to read the id or format file receive
+-EACCES during path resolution at the parent directory level, requiring an
+administrator to manually relax permissions?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260408123947.2377=
+9-2-ashelat@redhat.com?part=3D1
