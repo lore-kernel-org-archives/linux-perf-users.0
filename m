@@ -1,371 +1,209 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021853A16AD
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 23:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C83139A818
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 23:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775775996; cv=none; b=Jo2uPrE9EkfgpewNsTeBbF+VlgIH0iv2KKys2z1BVrlu8lQ59Gfb3jZ8MD8sNJvebWN7j3YZ22U7uQV2o4tvY+QF2n0WPPdwKML0CpIZWpXkWaIi7HwQ9TyhI6sONNSl56eT308Y1DPDTWKfn5a/j+kTI+PaTJI9CiWiSK+eQ28=
+	t=1775777853; cv=none; b=ZELVs4jXrYpyhiKGgq3QtzBxmqR6K+oGBLGRpCDtaAvPjReImeedr2EIGcBV1N6Vkqn3ST6Qf5K+GNBzIs7ADaVP+Coi9/cJ5fWlUN4Wkx+tlxlmbBVLZcB6hHFROPnBCAcFG+3YAJdf4rOCpVXKcNO33OmxXwHuDavESqYb5XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775775996; c=relaxed/simple;
-	bh=kwaIKO/2lbXrb1wvinGWCcDIm8AJdRJjUS4AzOHgqK8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NMfvA2Hs3WxhWZYeuJxFWeSGoPs6FHqeYiPcLdi2nfjZcisR8XuOZezU+S7SFBDhSzDeNxufuowYKGoh2Xv2qpaJV5QbzJGobMu1gqplnr2WozE3IKtlFr5U1WK7C2+smHAI6s/kHYvmlL3t3gQXEPm9VvVqg1qnc8hLNpyL2eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iPze8wbX; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1775777853; c=relaxed/simple;
+	bh=f/yTPiGv/ChF9oagGG1MbhcjjwuSgDA/WygG5hGCuxY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=tLNSrPdrkRIXhtX4uGmkc1oCG/DGAMjk8OkgQvoGVhqQVYcPhqXnqMAvCtBi/xERCJmFQkvJQjqRQzmJSJAL9Hjxj4q6TUBFqtHeMYHmkrVh/fLOic0cWmus5tXtJC7i61qY3lrliKuZZMzXCC2r6BGug/p8YRbdINpN2IZhLzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjQ1neZn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPze8wbX"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2b24e9b4d82so11448255ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 16:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775775994; x=1776380794; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2uiPOwWAEdlPZssoT2GonMajxJ0IeQq8SJyhaHBfNjU=;
-        b=iPze8wbXnLGr1rktTrTXo2/DJR3+k5d7eZMFhbgf7UxdPMa98CSm4dZQOh30wuKbbT
-         TWq/Gz4QZw9+bt3fgts914NnceK3NkMIelkmBJrahF4K4l7V8nZk/Bpr4PnM2SUwt90G
-         H3wXZ90016mcDUQGeluAngsBJMWMsjMfaLapU3uX/bBFfLW2HuR9T6ZGvYF4Mlvwz0om
-         FuZDMEAFVo56M1Zw+nNLGU0+6511n6uXohL39yUv69yBurCEWYUy+iNNwEhYBGAPiEty
-         GbCkttLPrxy4z2/N6N+AXW4zqergOMqtch/0OXThoG2W8neDGcT3AwYlu1lIqbLL0fdl
-         dMnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775775994; x=1776380794;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2uiPOwWAEdlPZssoT2GonMajxJ0IeQq8SJyhaHBfNjU=;
-        b=YO0QwdEakx2zfNRTU1G6u2bYq+2uC1SX7i1HDkMFMfUgUR6yB0pwyUYlWw+eIPnCNs
-         p0wNGZyaecWQp1AhxL4bm1xtKrgV9U/1fXSXHlUYzXTswWc3BbEuAYgtSjaE+cgPDfp1
-         +2kWM3xcF2nXgBLTmsjTaSA1dM1gTIpQ/JVfobP//54RqrxwcFJOtT8VE9rZ6eFa0gZy
-         3QLN6rU1OgoTNG9SkSfIXV42tDwBB9THFJA7W9HMSS4L5bvm8H6wE8qBo2g1dEw9zq9z
-         taqWJKULBc8sH5GbdvcRfEqEMj3IJe8iVAF9XEBXkCB13+mBciyrMFgQILAf78mhaQWB
-         FwhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+UvFQIfHaUGZAi76Zs0SrPqeZTAatdI3WN6o6tRbQhljX90VA2K9aPXVwin95uAXW4rohUkwAM7WNBYXFISkr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMM/wemZsFdJ1uyZGR2xMyfPiQMnLjUkasw1zEGQv9i0wuayPQ
-	HTsZbfefn9rOLCbAXQLWoRFUJWV+hvsqqrZc4210fgnaDFcYPrbvEyL2Se8uJubkCPDMYbE0wME
-	XTIDq/jKPUA==
-X-Received: from pgar14.prod.google.com ([2002:a05:6a02:2e8e:b0:c76:81aa:4124])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3ca8:b0:398:71f2:59dd
- with SMTP id adf61e73a8af0-39fe447aba1mr655104637.9.1775775994222; Thu, 09
- Apr 2026 16:06:34 -0700 (PDT)
-Date: Thu,  9 Apr 2026 16:06:20 -0700
-In-Reply-To: <20260409230620.4176210-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjQ1neZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3D6C4CEF7;
+	Thu,  9 Apr 2026 23:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775777852;
+	bh=f/yTPiGv/ChF9oagGG1MbhcjjwuSgDA/WygG5hGCuxY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=JjQ1neZncw6/wGpMfHEbk+s9UAgMkk1Ps2JTkFOKqZwRUMgyJtmABnJ1KAlTexByZ
+	 XX48t/fEJIiZxCv3qIP4R3nWlqNMXEjyTwm0qdFc0b4iJg4Fq8C0jQbTgVocfe5uAu
+	 HUPhhkM4r7PAsn6mG6E8okhq+9DgPAHMT4Mhkej+uSeUaPZ/hbFarN2UPdoSbip4cu
+	 UL4JhNvvQLOsDlNZtIhA6oSxx9gBhm0uwP96ztsw7dG4PWaeTq5yenKVZgiW6wbCU9
+	 2zFkGtWo2X24011jvQa2jqaw0v+Q6HUjgISna772R6UMCmfnoEyU9GfSo165by0Pja
+	 y+jBrjttInYvQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 1/3] perf env: Add perf_env__e_machine helper and use
+ in perf_env__arch
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260409230620.4176210-2-irogers@google.com>
+References: <20260409230620.4176210-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Apr 2026 23:37:32 +0000
+Message-Id: <20260409233732.8F3D6C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260406170905.2614260-1-irogers@google.com> <20260409230620.4176210-1-irogers@google.com>
-X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260409230620.4176210-4-irogers@google.com>
-Subject: [PATCH v6 3/3] perf symbol: Lazily compute idle and use the perf_env
-From: Ian Rogers <irogers@google.com>
-To: namhyung@kernel.org
-Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
-	gor@linux.ibm.com, hca@linux.ibm.com, jameshongleiwang@126.com, 
-	japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
-	sumanthk@linux.ibm.com, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
 
-Move the idle boolean to a helper symbol__is_idle function. In the
-function lazily compute whether a symbol is an idle function taking
-into consideration the kernel version and architecture of the
-machine. As symbols__insert no longer needs to know if a symbol is for
-the kernel, remove the argument.
+Sashiko AI review found 4 potential issue(s):
+- [High] perf_session__e_machine() bypasses lazy evaluation of e_machine fr=
+om env->arch when env->e_machine is EM_NONE, breaking cross-architecture an=
+alysis of legacy perf.data files.
+- [High] Uninitialized env->kernel_is_64_bit coerces to true, causing 32-bi=
+t architectures to be parsed as 64-bit.
+- [High] write_arch() silently caches EM_HOST, permanently bypassing accura=
+te thread-based architecture detection during perf record.
+- [Medium] Unhandled OOM in process_arch() leaves env->arch as NULL, leadin=
+g to a subsequent NULL pointer dereference.
+--
 
-This change is inspired by mailing list discussion, particularly from
-Thomas Richter <tmricht@linux.ibm.com> and Heiko Carstens
-<hca@linux.ibm.com>:
-https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ibm.com/
+commit a2ed4a04364ee664047eec1e47e4e540e458eff9
+Author: Ian Rogers <irogers@google.com>
 
-The change switches x86 matches to use strstarts which means
-intel_idle_irq is matched as part of strstarts(name, "intel_idle"), a
-change suggested by Honglei Wang <jameshongleiwang@126.com> in:
-https://lore.kernel.org/lkml/20260323085255.98173-1-jameshongleiwang@126.com/
+perf env: Add perf_env__e_machine helper and use in perf_env__arch
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-top.c     |   6 +-
- tools/perf/util/symbol-elf.c |   2 +-
- tools/perf/util/symbol.c     | 103 ++++++++++++++++++++++-------------
- tools/perf/util/symbol.h     |  15 +++--
- 4 files changed, 82 insertions(+), 44 deletions(-)
+Add a helper that lazily computes the e_machine and falls back of
+EM_HOST. Use the perf_env's arch to compute the e_machine if
+available. Use a binary search for some efficiency in this, but handle
+somewhat complex duplicate rules.
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index f6eb543de537..95fa3a03e62d 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -751,6 +751,7 @@ static void perf_event__process_sample(const struct perf_tool *tool,
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 1e54e2c863605..339d62ca37bb8 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+[ ... ]
+> @@ -588,51 +590,160 @@ void cpu_cache_level__free(struct cpu_cache_level =
+*cache)
+[ ... ]
+> +uint16_t perf_env__e_machine(struct perf_env *env, uint32_t *e_flags)
+> +{
+> +	if (!env) {
+> +		if (e_flags)
+> +			*e_flags =3D EF_HOST;
+> +
+> +		return EM_HOST;
+> +	}
+> +	if (env->e_machine =3D=3D EM_NONE) {
+> +		env->e_machine =3D perf_arch_to_e_machine(env->arch, env->kernel_is_64=
+_bit);
+
+Is env->kernel_is_64_bit guaranteed to be a boolean here?
+
+If env->kernel_is_64_bit is uninitialized, it defaults to -1 in
+perf_env__init(). In C, -1 evaluates as true, which would cause 32-bit
+architectures to be parsed as 64-bit (e.g., returning EM_X86_64 instead
+of EM_386).
+
+Should this use the lazy evaluator perf_env__kernel_is_64_bit(env) instead?
+
+[ ... ]
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index c6efddb70aee2..9bb4a271b4f8a 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -370,21 +370,25 @@ static int write_osrelease(struct feat_fd *ff,
+[ ... ]
+> -static int write_arch(struct feat_fd *ff,
+> -		      struct evlist *evlist __maybe_unused)
+> +static int write_arch(struct feat_fd *ff, struct evlist *evlist)
+>  {
+>  	struct utsname uts;
+> -	int ret;
+> +	const char *arch =3D NULL;
+> =20
+> -	ret =3D uname(&uts);
+> -	if (ret < 0)
+> -		return -1;
+> +	if (evlist->session)
+> +		arch =3D perf_env__arch(perf_session__env(evlist->session));
+
+When write_arch() is called during perf record, it invokes perf_env__arch().
+Since env->arch is NULL and env->e_machine is EM_NONE, this falls back to
+perf_arch_to_e_machine(NULL, ...), locking env->e_machine to EM_HOST.
+
+Later, when write_e_machine() calls perf_session__e_machine(), the check for
+env->e_machine !=3D EM_NONE will evaluate to true.
+
+Will this permanently bypass the accurate thread-based architecture detecti=
+on
+(machines__for_each_thread) designed to handle mixed 32/64-bit threads?
+
+[ ... ]
+> @@ -2675,10 +2679,30 @@ static int process_##__feat(struct feat_fd *ff, v=
+oid *data __maybe_unused) \
+[ ... ]
+> +static int process_arch(struct feat_fd *ff, void *data __maybe_unused)
+> +{
+> +	uint16_t saved_e_machine =3D ff->ph->env.e_machine;
+> +
+> +	free(ff->ph->env.arch);
+> +	ff->ph->env.arch =3D do_read_string(ff);
+> +	if (!ff->ph->env.arch)
+> +		return -ENOMEM;
+> +	/*
+> +	 * Make the arch string canonical by computing the e_machine from it,
+> +	 * then turning the e_machine back into an arch string.
+> +	 */
+> +	ff->ph->env.e_machine =3D EM_NONE;
+> +	if (perf_env__e_machine(&ff->ph->env, /*e_flags=3D*/NULL) !=3D EM_NONE)=
  {
- 	struct perf_top *top = container_of(tool, struct perf_top, tool);
- 	struct addr_location al;
-+	struct dso *dso = NULL;
- 
- 	if (!machine && perf_guest) {
- 		static struct intlist *seen;
-@@ -830,7 +831,10 @@ static void perf_event__process_sample(const struct perf_tool *tool,
- 		}
- 	}
- 
--	if (al.sym == NULL || !al.sym->idle) {
-+	if (al.map)
-+		dso = map__dso(al.map);
-+
-+	if (al.sym == NULL || !symbol__is_idle(al.sym, dso, machine->env)) {
- 		struct hists *hists = evsel__hists(evsel);
- 		struct hist_entry_iter iter = {
- 			.evsel		= evsel,
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 7afa8a117139..e8f7fe3f19fc 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1727,7 +1727,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 
- 		arch__sym_update(f, &sym);
- 
--		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
-+		__symbols__insert(dso__symbols(curr_dso), f);
- 		nr++;
- 	}
- 	dso__put(curr_dso);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index fd332db56157..482fd47bead2 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -25,6 +25,8 @@
- #include "demangle-ocaml.h"
- #include "demangle-rust-v0.h"
- #include "dso.h"
-+#include "dwarf-regs.h"
-+#include "env.h"
- #include "util.h" // lsdir()
- #include "event.h"
- #include "machine.h"
-@@ -50,7 +52,6 @@
- 
- static int dso__load_kernel_sym(struct dso *dso, struct map *map);
- static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
--static bool symbol__is_idle(const char *name);
- 
- int vmlinux_path__nr_entries;
- char **vmlinux_path;
-@@ -358,8 +359,7 @@ void symbols__delete(struct rb_root_cached *symbols)
- 	}
- }
- 
--void __symbols__insert(struct rb_root_cached *symbols,
--		       struct symbol *sym, bool kernel)
-+void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
- {
- 	struct rb_node **p = &symbols->rb_root.rb_node;
- 	struct rb_node *parent = NULL;
-@@ -367,17 +367,6 @@ void __symbols__insert(struct rb_root_cached *symbols,
- 	struct symbol *s;
- 	bool leftmost = true;
- 
--	if (kernel) {
--		const char *name = sym->name;
--		/*
--		 * ppc64 uses function descriptors and appends a '.' to the
--		 * start of every instruction address. Remove it.
--		 */
--		if (name[0] == '.')
--			name++;
--		sym->idle = symbol__is_idle(name);
--	}
--
- 	while (*p != NULL) {
- 		parent = *p;
- 		s = rb_entry(parent, struct symbol, rb_node);
-@@ -394,7 +383,7 @@ void __symbols__insert(struct rb_root_cached *symbols,
- 
- void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
- {
--	__symbols__insert(symbols, sym, false);
-+	__symbols__insert(symbols, sym);
- }
- 
- static struct symbol *symbols__find(struct rb_root_cached *symbols, u64 ip)
-@@ -555,7 +544,7 @@ void dso__reset_find_symbol_cache(struct dso *dso)
- 
- void dso__insert_symbol(struct dso *dso, struct symbol *sym)
- {
--	__symbols__insert(dso__symbols(dso), sym, dso__kernel(dso));
-+	__symbols__insert(dso__symbols(dso), sym);
- 
- 	/* update the symbol cache if necessary */
- 	if (dso__last_find_result_addr(dso) >= sym->start &&
-@@ -717,47 +706,85 @@ int modules__parse(const char *filename, void *arg,
- 	return err;
- }
- 
-+static int sym_name_cmp(const void *a, const void *b)
-+{
-+	const char *name = a;
-+	const char *const *sym = b;
-+
-+	return strcmp(name, *sym);
-+}
-+
- /*
-  * These are symbols in the kernel image, so make sure that
-  * sym is from a kernel DSO.
-  */
--static bool symbol__is_idle(const char *name)
-+bool symbol__is_idle(struct symbol *sym, const struct dso *dso, struct perf_env *env)
- {
--	const char * const idle_symbols[] = {
-+	static const char * const idle_symbols[] = {
- 		"acpi_idle_do_entry",
- 		"acpi_processor_ffh_cstate_enter",
- 		"arch_cpu_idle",
- 		"cpu_idle",
- 		"cpu_startup_entry",
--		"idle_cpu",
--		"intel_idle",
--		"intel_idle_ibrs",
- 		"default_idle",
--		"native_safe_halt",
- 		"enter_idle",
- 		"exit_idle",
--		"mwait_idle",
--		"mwait_idle_with_hints",
--		"mwait_idle_with_hints.constprop.0",
-+		"idle_cpu",
-+		"native_safe_halt",
- 		"poll_idle",
--		"ppc64_runlatch_off",
- 		"pseries_dedicated_idle_sleep",
--		"psw_idle",
--		"psw_idle_exit",
--		NULL
- 	};
--	int i;
--	static struct strlist *idle_symbols_list;
-+	const char *name = sym->name;
-+	uint16_t e_machine = perf_env__e_machine(env, /*e_flags=*/NULL);
-+
-+	if (sym->idle)
-+		return sym->idle == SYMBOL_IDLE__IDLE;
-+
-+	if (!dso || dso__kernel(dso) == DSO_SPACE__USER) {
-+		sym->idle = SYMBOL_IDLE__NOT_IDLE;
-+		return false;
-+	}
- 
--	if (idle_symbols_list)
--		return strlist__has_entry(idle_symbols_list, name);
-+	/*
-+	 * ppc64 uses function descriptors and appends a '.' to the
-+	 * start of every instruction address. Remove it.
-+	 */
-+	if (name[0] == '.')
-+		name++;
- 
--	idle_symbols_list = strlist__new(NULL, NULL);
-+	if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
-+		    sizeof(idle_symbols[0]), sym_name_cmp)) {
-+		sym->idle = SYMBOL_IDLE__IDLE;
-+		return true;
-+	}
- 
--	for (i = 0; idle_symbols[i]; i++)
--		strlist__add(idle_symbols_list, idle_symbols[i]);
-+	if (e_machine == EM_386 || e_machine == EM_X86_64) {
-+		if (strstarts(name, "mwait_idle") ||
-+		    strstarts(name, "intel_idle")) {
-+			sym->idle = SYMBOL_IDLE__IDLE;
-+			return true;
-+		}
-+	}
- 
--	return strlist__has_entry(idle_symbols_list, name);
-+	if (e_machine == EM_PPC64 && !strcmp(name, "ppc64_runlatch_off")) {
-+		sym->idle = SYMBOL_IDLE__IDLE;
-+		return true;
-+	}
-+
-+	if (e_machine == EM_S390 && strstarts(name, "psw_idle")) {
-+		int major = 0, minor = 0;
-+		const char *release = perf_env__os_release(env);
-+
-+		/* Before v6.10, s390 used psw_idle. */
-+		if (release && sscanf(release, "%d.%d", &major, &minor) == 2 &&
-+		    (major < 6 || (major == 6 && minor < 10))) {
-+			sym->idle = SYMBOL_IDLE__IDLE;
-+			return true;
-+		}
-+	}
-+
-+	sym->idle = SYMBOL_IDLE__NOT_IDLE;
-+	return false;
- }
- 
- static int map__process_kallsym_symbol(void *arg, const char *name,
-@@ -786,7 +813,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
- 	 * We will pass the symbols to the filter later, in
- 	 * map__split_kallsyms, when we have split the maps per module
- 	 */
--	__symbols__insert(root, sym, !strchr(name, '['));
-+	__symbols__insert(root, sym);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index bd6eb90c8668..7e0036f80185 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -26,6 +26,7 @@ struct dso;
- struct map;
- struct maps;
- struct option;
-+struct perf_env;
- struct build_id;
- 
- /*
-@@ -43,6 +44,12 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
- 			     GElf_Shdr *shp, const char *name, size_t *idx);
- #endif
- 
-+enum symbol_idle_kind {
-+	SYMBOL_IDLE__UNKNOWN = 0,
-+	SYMBOL_IDLE__NOT_IDLE = 1,
-+	SYMBOL_IDLE__IDLE = 2,
-+};
-+
- /**
-  * A symtab entry. When allocated this may be preceded by an annotation (see
-  * symbol__annotation) and/or a browser_index (see symbol__browser_index).
-@@ -58,8 +65,8 @@ struct symbol {
- 	u8		type:4;
- 	/** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
- 	u8		binding:4;
--	/** Set true for kernel symbols of idle routines. */
--	u8		idle:1;
-+	/** Cache for symbol__is_idle holding enum symbol_idle_kind values. */
-+	u8		idle:2;
- 	/** Resolvable but tools ignore it (e.g. idle routines). */
- 	u8		ignore:1;
- 	/** Symbol for an inlined function. */
-@@ -194,8 +201,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
- 
- char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
- 
--void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
--		       bool kernel);
-+void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
- void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
- void symbols__fixup_duplicate(struct rb_root_cached *symbols);
- void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
-@@ -278,5 +284,6 @@ enum {
- };
- 
- int symbol__validate_sym_arguments(void);
-+bool symbol__is_idle(struct symbol *sym, const struct dso *dso, struct perf_env *env);
- 
- #endif /* __PERF_SYMBOL */
--- 
-2.53.0.1213.gd9a14994de-goog
+> +		zfree(&ff->ph->env.arch);
+> +		perf_env__arch(&ff->ph->env);
 
+If the strdup() inside perf_env__arch() fails due to memory constraints,
+it returns NULL and env->arch remains NULL.
+
+Since process_arch() unconditionally returns 0 here, could this lead to a
+NULL pointer dereference later if strncmp() is called on the architecture
+string?
+
+> +	}
+> +	ff->ph->env.e_machine =3D saved_e_machine;
+> +	return 0;
+> +}
+> +
+>  static int process_e_machine(struct feat_fd *ff, void *data __maybe_unus=
+ed)
+>  {
+>  	int ret;
+[ ... ]
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index fe0de2a0277f0..726568b888039 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -3023,14 +3023,16 @@ uint16_t perf_session__e_machine(struct perf_sess=
+ion *session, uint32_t *e_flags
+>  		return EM_HOST;
+>  	}
+> =20
+> +	/* Is the env caching an e_machine? */
+>  	env =3D perf_session__env(session);
+> -	if (env && env->e_machine !=3D EM_NONE) {
+> -		if (e_flags)
+> -			*e_flags =3D env->e_flags;
+> -
+> -		return env->e_machine;
+> -	}
+> +	if (env && env->e_machine !=3D EM_NONE)
+> +		return perf_env__e_machine(env, e_flags);
+
+For legacy perf.data files without HEADER_E_MACHINE, process_arch() restores
+env->e_machine to EM_NONE.
+
+Since the condition here explicitly requires env->e_machine !=3D EM_NONE, w=
+on't
+this completely bypass the new lazy evaluator and fall back to EM_HOST,
+potentially breaking cross-architecture analysis for legacy files?
+
+> =20
+> +	/*
+> +	 * Compute from threads, note this is more accurate than
+> +	 * perf_env__e_machine that falls back on EM_HOST and doesn't consider
+> +	 * mixed 32-bit and 64-bit threads.
+> +	 */
+>  	machines__for_each_thread(&session->machines,
+>  				  perf_session__e_machine_cb,
+>  				  &args);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260409230620.4176=
+210-1-irogers@google.com?part=3D1
