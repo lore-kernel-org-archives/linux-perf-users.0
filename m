@@ -1,212 +1,171 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012059.outbound.protection.outlook.com [52.101.66.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090418A6A8;
-	Thu,  9 Apr 2026 12:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09783DA7E6
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 14:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775738581; cv=fail; b=ON2HKbjo1spdvKQb7HUqaIlNrLKuUAUjZD4db9oHVcX671IYmDK40bVLfw+sjCXUynSrdCK6NK/qx5A4MZ0sw6xK+uBWELbmkQxfc1sbHVggxQ+1TYKz0cZeuyvwgKgbOwaUDgrU0hb0uJmlNgG5usy/jCqUAX70LT6yXsUiBvQ=
+	t=1775744594; cv=pass; b=Tjh6QSjqcDTYLCZavPaKkgaiznWgXZqI9sEkLYLZ6rHcH6vflko5d8M8S1uE4ljC9V4tJnL+cEF/OLtggVif0ZokAT4hLLkvreP52Ixr1+wPjnIYcLgLwaw6strE1ezkRL0KqAaQy94ka04duT7LvSvKXsrf7J7866C2Aj4/ClM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775738581; c=relaxed/simple;
-	bh=LoeFpHWX1fslxnkGrbtiITMU6WCvY4WZPCvPC3E7mAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=N+UU9ImZoKVv1+rz9MsiPUGowH6/5IkBXmR7jChP6wD/HO0fw7j8AjZEiDhMRiWbZhc9t6TZYNvFQCYEWGqYvkeg9kTHzoUA/JFhuzt9HC9jB6Z9rOxCrCYSlBIJ3JVT+ojguVfc2MlfQVvUIWnBdCJdso4Rv5C1GnG2zNqbc70=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=VVEdlLG5; arc=fail smtp.client-ip=52.101.66.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1775744594; c=relaxed/simple;
+	bh=sL+DbYXenYNmTUC/7Bv4zzz+q+E0oZ63r6JaIiUCHkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sDethsmmCvfBkEKr28gZZUbG5OrdxBXup7Sxiy9N/qovnpnEcW9uVFBi83a5k1aZKj0acGwfE16KZwXtmK59ogECIYT7jRavvOQxF+KomGA6c28Dby5f5IRNnMJGHaidQ7AhQXgN+Diiee5Wd/Jak2ZjVdkU2U9Xdw41e5LSTy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qdnkxGJZ; arc=pass smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VVEdlLG5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TeWu5wp4lqm5eWs4NIAEvFvWRkCizC7rTxqCmWx4bvAAYSwboszkZgYNceR+qgjkobiRKM8PAGreVLUPc1cn89ZTUYbQXg8strQAZu4lQW7luWAhk6+FPcog3A0T5/BLUzmxMubjo4sRSnulyHPvfrNx8gTL18Y0rDYiSBtMgosYmYovseEqwKbq79AePBlLKtQ8rtmd5e1dY36//NYsua0lFfTMT7rbnJL1y945coL9aEEfscbNmzOFDFJtmjjLgxfKcdtW5RnyRajKTW4oTV0ImieNxwwiMeOGZ7XRGS9kuYAHh4Uzni8G7a448YJjDY5vQQimtn2MjRDXuN7pYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zSEjgyhC+gpJo9SiL0Jqsge9W51TmiBUhfgtl4WYWDk=;
- b=BOyrPTtAcN9rK0Yn2SjUpV/S6GlwGb8PWT9oX4o01LhtShQ2MxCV372EjmjjZzfjXMQxd0wD0ov0UgOGuf1z3EcaqPqIBtZBKIMNvggkivHVgDzK7OxsjhrOC5cVQ/NCPHx7SKW6CnyemUw3N5lbRczxR5XD04/WIwkQ2HPkqBBdgBLJ5V/4N3MqK3C+Y9JEYVBBe7+0956Xs5EuXumxUZUyadvVn2ibzMdOvRZ381Z8ZAsXWMEpmHTo/pnv83Y2SbYmTOuxR1jpYgPPQeBuTOlbHUZvmmaY6ezpmWmtHG/Me+ddIGX7WhXw7ZntJM6Uof8P4BgTMSdQwbx3y5RNoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSEjgyhC+gpJo9SiL0Jqsge9W51TmiBUhfgtl4WYWDk=;
- b=VVEdlLG54O7nL4wk5tKzRmngunL3V3iCHh5CkxS6rbPGWDIWsf4RI6difi0vtz9Hl1NBai2t2RGKBU4hPQRc7wt/tcQKbVbSEmJsiYXcH0tUlTyIkyr7Q3qAeEgEYlWgr5Xszybs9YJC6vd1LdEMnGlQi1U1PXEw2wHFHSBBvFvK6rQd8UFTK/VcH55yTZNPQPTAWFPn15E2zJNR9nUsUUJ11kqnN65lDzQY2ssmTYe8QncynNjHM0Ce4pDcvYDMM1OKeDyGwn+ZKGY5oFuEievX1WzB3vODpTJLip4vtpIbKhoHECn8TMIAryS7XAZZj0FM6w93kfgh8NkPXRgaPg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GV1PR04MB10632.eurprd04.prod.outlook.com (2603:10a6:150:206::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.42; Thu, 9 Apr
- 2026 12:42:54 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e%3]) with mapi id 15.20.9723.030; Thu, 9 Apr 2026
- 12:42:54 +0000
-Date: Thu, 9 Apr 2026 20:45:16 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/3] dt-bindings: iommu: arm-smmu-v3: Allow PMU child
- nodes
-Message-ID: <adefXAmJQ/pYMENq@shlinux89>
-References: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
- <20260408-smmu-perf-v1-1-d75dac96e828@nxp.com>
- <20260409-outstanding-arboreal-peacock-2de6f1@quoll>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260409-outstanding-arboreal-peacock-2de6f1@quoll>
-X-ClientProxiedBy: MA5PR01CA0224.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1f3::7) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdnkxGJZ"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-8a05c18d3e2so9234836d6.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 07:23:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775744590; cv=none;
+        d=google.com; s=arc-20240605;
+        b=e2SMGxv6u/uVRsX9yNfSl/F3s8gCj+PmuiycT35XqC9q7qdad1mUdT8UYQpeTAiVPe
+         SASQ75mX6l0gl7i1BLjVa5Z23mkti/3GOe0ZbIvF301Aq9ZnFpyRkmb05EpK+ZPPZePy
+         HPr54axghuK9gKJH5B08X4n/g4nNp0cVXFB7iWnJ2hA3MeDJBWVmL0o/6lYkFmVM9MYY
+         zYkx22sD8Me4iKy+R2Oinou2myzptd9bbRtPvyIAjHhAx5qE6kR6NXC8zdUHE5HaeDpg
+         Nw6CsbToby3r5Dn7Y1djFiRBMGZv9fwaBFhNp56KICAu/CRw+aeX12NgGpOOLLpB8DS5
+         wHEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Ok9Bkvi/fMEfbhekzp5HJ85Ko8mmlKRoz8DsAPKgMiE=;
+        fh=KJ/1SdmJMNWF2zeDV9geaJbVpNVeoxtFTaHYKsLacjs=;
+        b=BZ5BTyxog9MDQkX/ch41buYMgS9ctdAoHbwzdgLDQ1eXID+1/nI8KgWleQlnRqvWRF
+         TIGJsCrG/+af7u1r5H4YtgWbiJ9COmOSb3pm5FnKFvg9RmWd3RPs4jR0WTvow5HlXWDU
+         8zr42qhdi5sgWtTridsT/PPhFgpNWKBhQ2LlHERsmLt4VbBfTE5F4s71FODxX72CYZva
+         Ir7AN1rmdy3KiCev3+VDl7AwveRt6YOOs9PfXFnX3YyMeJZD3FyHz0lCPuhktl/PiD5Q
+         LF9Ur29Y29UPMv7JD9C0xWhM4yCcjLI9HlXsgZHvYUMMJrUZnO10Iw51/2NHkslU/FNt
+         eG1g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775744590; x=1776349390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ok9Bkvi/fMEfbhekzp5HJ85Ko8mmlKRoz8DsAPKgMiE=;
+        b=qdnkxGJZZCiRNEBsHBSeD+AYXO/zsKdwjP93YoE7exuF2Lh0+7rJ0lRW35lEcC2UPb
+         r89CfTa0/037eoMWbAFc5PVhID72REAyYMZG2JR53ExcS4vgglnC1rw8+/MbHHPNbWEh
+         uGADsirmtrfx/HUXQFlq8mYPOlIHbIi4SAu1v6s3iuwnJBQqvHIRNjaKTbxa89tkdBEP
+         nUGMPHunpsn4ikMKfS7Ul+Et3jQfmt3ycA41PSe9K0jJF6vVnFV8n627p2xwwtCqRX/C
+         P54FeZr1Ce4T2IHwNkYS2gDiidKMZy8okGHf5zMy+Lg92bwQTdruPiKuexGnlumyjBMC
+         A/2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775744590; x=1776349390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ok9Bkvi/fMEfbhekzp5HJ85Ko8mmlKRoz8DsAPKgMiE=;
+        b=mBQo0bgtIvFEq5hIBnQgWE4X77aVFf3YZ5o+1tDSpydtPvGMj02HCwq7Pml+9YcKiH
+         cv/22nZZZ2h7Ierq226uzfB6X/lS3d5/lXVuYpxKyLZS9C4eM93XQ0Sj4q8E1Jw/edSg
+         gxgEY+3+igFJmvjqVtuudSN0zXrPgOCON7dst4lDd7fky1a17JUgkQH4U9FywdYLoXRj
+         u6LIX+eW8dNN8rBSRYxzE7CExfUC68L+/5lR9ZayzZLiWsBI/h41eu1O2whnssi1lBzX
+         k57t2nyAas3imgZwkeePDC6vzgPkN0I/tRZCU+Vj6ZxvNsPUyjJLZIpa3mC2bpwqd6zy
+         SXrA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8IihMSV9ennrkbvOLaVcTX/pXwTmLe8Y9aoXxHtjhLqZy4eMflz30mDLoz0yUX3m2U63GiKh5geR+2T+3AEX4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxrC+A+/fOgzCVJKq+F3l5uMQVPID7ypi5cvbkwVJFx5isfMpX
+	X7Om2TTu48ofQ50FApzlX2gMzCD/Kbyt2zImuWKKCttSvYEvu7s9Ttc1SBX+bII20OUqX2/6UKz
+	IuAzJ+JZGXYpdyyouJ90xN0ndHv1LpSE=
+X-Gm-Gg: AeBDieueGa/gauWUrE2LH1zbI20U2HwggFIvl8I8kwEYWQseIijk9kj9w9Ll4Yz+J+V
+	jzJs+2Oz90JTXe8P6cgp5rPNmkSTGVWI7nlBiFLuq8fRDdGZtWtkgInez/0icEtR/TLduWXtPgH
+	n8ETnb0pyMLGvJKer2M7RO4Ywv5koLhjYr+wLnPBm+BDcBtx84iC18mPp4ZF5N/8WCDuQyGnsmF
+	TqX4Se8tSQ8JHwIOS7LB9wTj+IyF2DrEYiZ5+BTuAIlYGCQbmmBbAH+exoxgM8dgX3lcMMuMDRo
+	QOe8dA==
+X-Received: by 2002:a05:6214:2484:b0:899:fa7f:7144 with SMTP id
+ 6a1803df08f44-8ac7469ee67mr54240186d6.26.1775744590254; Thu, 09 Apr 2026
+ 07:23:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GV1PR04MB10632:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72c14276-0522-41cd-5ede-08de963584c7
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|19092799006|366016|376014|7416014|52116014|38350700014|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	olbn8gnYEk4IBc8spyzk03wsuIlp29cfnC3S5Wb35nsLbupdgDQY5jOrKXsUmlKJSSgRKJ8wi7ZsLHI8q9kNoiiRHM+b9OL5mUrUrMvGh3KBBJM5eSuTNekU3oKCJoO/yy9haGnPJSBvgOQW7evoYoHYJ2Et0uL3dc8IjDx1OawlwU71bOoYNWgyU2iv879MyIvKOCovQW2cJQPIaUZRwoclAsoCB5U7JbXA1fM3yDffdoYHRZx37D1HDbSqzLeBIZJOW4iNMeRIqOAJK3C0RAt+gXF9llyKZiK4TbpRr88rhs16gfz+bjT0PH3VQNe6YTKvc1lnAuWtukzxbacM9+ZqvrN66TuPMN7zmVcq/g4kWBcDbXxS/ECH0K2oNoDxOJK9dW4+3NxZ5i/CMQ/6JbSeRQL/B4ytei8jNCxw6e3ZigRivTyBDzMxOpFKsZj42rSNIIej6AnU8lOvq/lfNvHAM/TQ1pNlCTaKpabb10vwhuZnvRdqRETZ5ypeywIcz9Y3Vgl4T5p2Y6RGyFmqzt8jvAK/C25m3hTw0ghYLp1DiDWemCdrlw9+WFBoHQ/uoyw/VBQZ6GIkhm7yOYX+gcB21ld2vp7o6MWDE+NJqEqMm2ZHPCe8jv6lQq+Li2h2VBGCQ1BjwmlfB4SJU0dxoxZXLimJiF5A0kitT4r7cNAtlU4KSFe4b+YKiEyrKH7MHLdFoggGQZMVrydsW0O5pntlYW78yQEKCyUZYcZPUuMgu5WJCklo+SHDv1QDNsKaaQ9Yp34BidisJ0arEwpuM6+BRkY3Df8GuWtcjlMFBs8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(366016)(376014)(7416014)(52116014)(38350700014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9/Ir9bkyFDd1laNOhcDbxOMh4BCdl36MbjIv0PS+1F1tCHBJUd32jFG9APlq?=
- =?us-ascii?Q?Y2jdXqNiKVsJfpnSCkwppEQhc3mWzibxbymcE4jA9nNVabKkryjSqac0D6W7?=
- =?us-ascii?Q?L7UEccPnrUKEtd8ozgxDV9JGgLnErIr4NOZOzb1FsS1uXsugQCPIvxWUvmCb?=
- =?us-ascii?Q?af9N6tLpobQmGTUAkHRrG3FlnQmud88ECSiTZSyilM7cD7ZJQEbPH5sPIx0C?=
- =?us-ascii?Q?wWoEBXcB72s49eqAsODnzf2lPjuN2WoSbg4tXjWnrCkUbtWkO7CudG7BVWKe?=
- =?us-ascii?Q?YxReLR7/7QqnCEPuIutGmp2Kf84Xl4w9GyCGdVKevwZf1dMDaVgXo9urhv13?=
- =?us-ascii?Q?t46qaCGgI0aWjNvkI7efFQ4uac2tHH063eN3tvdbMQwmz/VwwnFF4NAXfMN7?=
- =?us-ascii?Q?jiUmfF7nudgrQ/qul9V5QgH/Ct52B1VI59tGDGnntrmiQk7boBK4MOeZNtPE?=
- =?us-ascii?Q?yjyT/73KWfgxn+G7G1x5R6HanSXctAta6GE40kUYEQcsqamt6aF43Ste9Q0d?=
- =?us-ascii?Q?ps/QjRdTbn6tr7pULle6QOz3S5iTOiNnqnDoYhDjMA/D71rAxgPBbzFuMBZN?=
- =?us-ascii?Q?mmsjsdb+EdzLtjZG/Xdsv58MVRknx3N4PFcBxmboSYGduHxIQPEl9masdmAc?=
- =?us-ascii?Q?uJjhVMYr090usn+fHial3qP7YRw3zoqIv+IvyRoZCv0/GeE9iINIPPZ+opVz?=
- =?us-ascii?Q?YfbS/Z7ijDGJuW2tJiDWh7bZ3UQOf6kjdzxOSP/Y/fcf6DBsz5AWeerNWusb?=
- =?us-ascii?Q?cRzdHwrihK5n+KdegSbDmwDZRKAwH6jH+pY824vYz17DKQZ6pn4Cu6NmHbxE?=
- =?us-ascii?Q?TkrLN8n1N2VGIP9Wn+gSlHJWU1IUPnYQzoM7lDL0ngTSXVPDaK4vQUdQuqGL?=
- =?us-ascii?Q?uOlEuYZ5zWqI+hKf9lu5ABqwVzOTKLMHbk6AsK8/gqw5q2DWQ/CyMrLKEqc0?=
- =?us-ascii?Q?RgovUotFl/UnMYRSfcPbkwMbVLwdAwTgOqzbMBLdihhWy5nLgOY8eH1SNzDc?=
- =?us-ascii?Q?dc6JINM22qhs5xpq/QfelbTXw4ODidI9PlOma/da1uiCEUno+JLQz0AjpuLg?=
- =?us-ascii?Q?fedMcmWW7hjyMSjbKh8GpfD1DOeZ9U4gwKAkenReCg8djxckZ/sHmUc0oygB?=
- =?us-ascii?Q?OIcSUJfh68rNXZVVbr7f+d0xvy384eIWQuNgmKShGlz9IC8D7TWTchs4BZSV?=
- =?us-ascii?Q?GhvUB9wdY0bjf4Xkb8y704sh0nw0tGN0OOTbS5kPqhdT4nI50iHu6hQtn1Qe?=
- =?us-ascii?Q?dbnDUIxq/U7BkP744iZy4HbMkPgSDkGft2815PZku/bLUkUuy3hrjwXAT4ki?=
- =?us-ascii?Q?PkCcQmRZYlY3PD7D0wR+TSGeADmyngFOxeLiRvhaNmn8AUBTh00i3jsfffX7?=
- =?us-ascii?Q?ak3uRJcFhqinSMYCcodmBVKVHA6WNQHFhuY9IlaH6ZxI9foSfLa4JcXeya2b?=
- =?us-ascii?Q?n5XpEvypYOwLwR7MFj65nh4bdbrBkAMMpcObn2T6Wt7OwCi7FoFrxn062UOg?=
- =?us-ascii?Q?d9zhwFsk6z68TGef9o/BucqrpH6x1sEVbep8Mgm0ZvH4hEDyJzeWrt+PDibN?=
- =?us-ascii?Q?k3YX1MzYr2kIhF+qUhZmY7Dhuc0t1/SedOB02yIPzQRzU1Azfm5+6wlOXs4f?=
- =?us-ascii?Q?eirFABzRkBY4zufVQcoJ9a3P71WQnSPrgu1GozFBzeyp2WuJLATn1w9t0ViQ?=
- =?us-ascii?Q?cO7L6GWuWG2gwlNP0mZDxft6r3emX8yK619Z0V6k+tYJpJ0coOXH66Kqni0b?=
- =?us-ascii?Q?fpmtjBgy6g=3D=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72c14276-0522-41cd-5ede-08de963584c7
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2026 12:42:54.0736
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: opCwybZzUtNqLW6q/2ahIBjkriuHJH6j9aNB8WdWR3SSF4z7+oYU+DWOWGYbAhAxQHKtmgEeOyU+HMvG64gyrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10632
+References: <20260409081154.318898-1-tmricht@linux.ibm.com>
+In-Reply-To: <20260409081154.318898-1-tmricht@linux.ibm.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 9 Apr 2026 07:22:59 -0700
+X-Gm-Features: AQROBzD80gPK1y_3vDmxCmOBv6wyWKqbtFJ0-pk5BqD2bPZ7-uCZArSH8SDgDDI
+Message-ID: <CAH0uvoimMqbULq6gKaVt7Uv4n6Om2Xjpf7yUi7dmVJwtcj_SQg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Make perf trace enum augmentation tests exclusive
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 09, 2026 at 10:10:38AM +0200, Krzysztof Kozlowski wrote:
->On Wed, Apr 08, 2026 at 03:51:15PM +0800, Peng Fan (OSS) wrote:
->> From: Peng Fan <peng.fan@nxp.com>
->> 
->> The Arm SMMU v3 specification defines an optional PMCG (Performance
->
->"optional" in a meaning some SMMUv3 implementations do not have it?
+Hi Thomas,
 
-Per SMMUv3 architecture:
-Performance monitoring facilities are optional. When implemented, the SMMU has
-one or more Performance Monitor Counter Groups (PMCG) associated with it.
+On Thu, Apr 9, 2026 at 1:12=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
+m> wrote:
+>
+> Running both tests cases 'perf trace enum augmentation tests'
+> and 'perf trace BTF general tests' together causes the first test case
+> to fail:
+>  # for i in $(seq 5); do \
+>         ./perf test 'perf trace enum augmentation tests' \
+>         'perf trace BTF general tests'; \
+>    done
+>  125: perf trace enum augmentation tests  : Ok
+>  126: perf trace BTF general tests        : FAILED!
+>  125: perf trace enum augmentation tests  : Ok
+>  126: perf trace BTF general tests        : FAILED!
+>  125: perf trace enum augmentation tests  : Ok
+>  126: perf trace BTF general tests        : FAILED!
+>  125: perf trace enum augmentation tests  : Ok
+>  126: perf trace BTF general tests        : FAILED!
+>  125: perf trace enum augmentation tests  : Ok
+>  126: perf trace BTF general tests        : FAILED!
+>  #
+>
+> Test case perf trace enum augmentation tests' fails because  the second
+> test case 'perf trace BTF general tests' runs concurrently as can
+> be observed using a ps -ef | grep perf output list on a different
+> window. Both do a perf trace command concurrently.
+> Make test case 'perf trace enum augmentation tests' exclusive.
+>
+>  # for i in $(seq 5); do \
+>         ./perf test 'perf trace enum augmentation tests' \
+>         'perf trace BTF general tests'; \
+>    done
+>  125: perf trace BTF general tests        : Ok
+>  155: perf trace enum augmentation tests  : Ok
+>  125: perf trace BTF general tests        : Ok
+>  155: perf trace enum augmentation tests  : Ok
+>  125: perf trace BTF general tests        : Ok
+>  155: perf trace enum augmentation tests  : Ok
+>  125: perf trace BTF general tests        : Ok
+>  155: perf trace enum augmentation tests  : Ok
+>  125: perf trace BTF general tests        : Ok
+>  155: perf trace enum augmentation tests  : Ok
+>  #
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Howard Chu <howardchu95@gmail.com>
 
->
->> Monitor Control Group) block. Per MMU-700 TRM, it has three 64KB pages,
->> with TCU Performance Monitor Counter Group (PMCG) registers starting at
->> offset 0x02000 in page 0. So PMCG could be described as a child node of the
->> SMMU in Devicetree.
->> 
->> Add a patternProperties entry to the arm,smmu-v3 binding to allow child
->> nodes matching "pmu@<addr>" and reference the existing
->> arm,smmu-v3-pmcg.yaml schema.
->> 
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
->> index 82957334bea24402b583e47eb61b5724c91e4378..1d09c5476e5f1a7c3e5c935b677641ee6cc9897e 100644
->> --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
->> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
->> @@ -50,6 +50,10 @@ properties:
->>              - cmdq-sync   # CMD_SYNC complete
->>              - priq        # PRI Queue not empty
->>  
->> +  '#address-cells': true
->
->Instead enum [1, 2]
->
->> +  '#size-cells': true
->
->Same here
->
->> +  ranges: true
->
->I guess only one mapping is allowed so:
->maxItems: 1
-
-Accept above three comments.
-
->
->> +
->>    '#iommu-cells':
->>      const: 1
->>  
->> @@ -83,6 +87,12 @@ properties:
->>        register access with page 0 offsets. Set for Cavium ThunderX2 silicon that
->>        doesn't support SMMU page1 register space.
->>  
->> +patternProperties:
->> +  '^pmu@[0-9a-f]+$':
->> +    type: object
->> +    $ref: /schemas/perf/arm,smmu-v3-pmcg.yaml#
->> +    unevaluatedProperties: false
->
->Please add another example with 4-space indentation.
-
-ok.
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
-Peng
+Howard
 
+> ---
+>  tools/perf/tests/shell/trace_btf_enum.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->> +
->>  allOf:
->>    - if:
->>        not:
->> 
->> -- 
->> 2.37.1
->> 
+> diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/=
+shell/trace_btf_enum.sh
+> index 03e9f680a4a6..437510d46f58 100755
+> --- a/tools/perf/tests/shell/trace_btf_enum.sh
+> +++ b/tools/perf/tests/shell/trace_btf_enum.sh
+> @@ -1,5 +1,5 @@
+>  #!/bin/bash
+> -# perf trace enum augmentation tests
+> +# perf trace enum augmentation tests (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>
+>  err=3D0
+> --
+> 2.53.0
 >
