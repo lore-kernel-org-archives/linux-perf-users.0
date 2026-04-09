@@ -1,158 +1,343 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06AA3876B3;
-	Thu,  9 Apr 2026 08:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D6388398
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 08:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775722332; cv=none; b=NBalgb5dxwOGG2AcGTh7YPDKQlN00dVmthwjKNFORhejV3grL7XM0CC4VNuoIzp1qlVxUQ4iksjpSECFNy06/RMD5lvBCnyksTDZkHGxO1gxAENtdzim48ULb1AYX6irgIug8A50B25piH4se8GwsesV02f2JsWuWQYxqBrIFFs=
+	t=1775723041; cv=none; b=UG7+a/1dSROD4rEPQXN3SQmkc2xwMKIbBQGBkdWVH4OFihK9jinoMWnvzAXBfZJn2rnVIUXwMAX2rQEMuQK0kRutFGJ17AM+Wa2vFkFolTivUVCglv5LyFhzfMhxEdno3PHoNRNAeFNE1ee9rAok1WV1kXAKa+RTyVRQvrQ9aWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775722332; c=relaxed/simple;
-	bh=Pewli9JUBSraANg6axJRtKfvam44lJTWp3pyptw7rmo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gbwY8u9aguIbKBUP2FAepXccXEvJM9jgeubjsGks3iHHHk5MQ1H3aj8wRegKp7YWewEC4pwOSLU3NiBzn5oP4NSGZuK7IOOVXPyKR5BlMpeS3AsDecrBNoBJBTVjHGRZg7iwRy+e3kD5jM+AwiUKSrXiRgc/6xhp3ziR2QHUUfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=te0uBRyW; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1775723041; c=relaxed/simple;
+	bh=hsN+1Dyjtw+h6WDEWMgR6FdOsbGs/rAklDyaDGgXUn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MfkhmTWxi+QCgMQRm5ijGzShBvC8XEWFIGk3PFCZUwRICMBmC5qMJRCwbTMHpoBpB8vDlIc1Zwg1ix5luxDTaKW76Nfyj0WQ0MwKqjGoDaXYgEP8T3+622G4S4oSCD4Et6uOC9OIt/tKqZQMsJkRAyOPHWi/JrqJgBUBtWDi5w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lpCts/eY; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="te0uBRyW"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 638JaWNw2316280;
-	Thu, 9 Apr 2026 08:12:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=2T4MZ9LdtcX40D0UpT4e1bVO5bldl3j+qM05NI1/n
-	SY=; b=te0uBRyW1l6hwzaAuuICIUJbgMVeJjn38eerBI8KSBPQLeLgIF8qGdCE5
-	JwygM4NlyOqkW3Q4jEhe3SrnxCM6zRb2XcspPapN2fjiIOhd9tyam0HAyJyjVB5t
-	zzL6OrYTIQDBb1MN2Qz8giNuDbUesSvWI4J5DyjpqWyINEi97rVxMlvy0BA7KcYA
-	Pd94s3YQZQqElGiV7Ku0Aquj2bp/1dp7GzuUG0pSC58k29UQWUktO9yyTy2sWW1i
-	JbZimCJ9W1GV5c3ePdrPTjG+ybsvqKrjEKbPzikUwYduj6QyMk0Zc4AcimkBonoS
-	9HpIy99g1JIFQ846KYmM+9x+Pp8RQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2g3y3d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Apr 2026 08:12:08 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6397jfLE014348;
-	Thu, 9 Apr 2026 08:12:07 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcmg4ts1q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Apr 2026 08:12:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6398C3ka45744536
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Apr 2026 08:12:03 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2F1E72004B;
-	Thu,  9 Apr 2026 08:12:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F392B20043;
-	Thu,  9 Apr 2026 08:12:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 Apr 2026 08:12:02 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        howardchu95@gmail.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Make perf trace enum augmentation tests exclusive
-Date: Thu,  9 Apr 2026 10:11:54 +0200
-Message-ID: <20260409081154.318898-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpCts/eY"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso7238875e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 01:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1775723038; x=1776327838; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zJBR5DnCB+IoMrJrmV3CyYE8JNDWJ2jRPlxgDiETZOw=;
+        b=lpCts/eYsuAt/lU0BMFWi/igmjRYM3rjcJXOKMW1EYm8t85DZrtTrt078LP8vZNq72
+         V+e+tHSt1v56a8v11IaI4148v05kh2coXBj2PO4za1bnUAWDVD7xDnRUsYi82bbJfuSY
+         CBipXs/favA4PuALonHOvgxErEHDYGj+B1Kj/52nqlgajza9hcjj8y7DwSbLDANf+5zq
+         Wun8Tdw59T2iQnCp3ijLeg6Tw/rg6pTQxUR7bQve3wOJLYW4yww5ixV9c/RPW/h9X1Gf
+         DAUN1rK2SjIuIeIt5wxo7yORgMTUOLi6782iroVoqh9eiJ7euVeaTPNb6BR1S2z7hw40
+         8zeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775723038; x=1776327838;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zJBR5DnCB+IoMrJrmV3CyYE8JNDWJ2jRPlxgDiETZOw=;
+        b=fN5SYINCOIOzc/qCfFlmWc4daehXiNfMzM4YyxT/kUEE7joRdANeEa7lnwhprVhySu
+         aKcQ60kB7p6uOYMiSk5Uy7KsAYl2yBKtIwdlIwgX1QJGMtSMW3LK8ggFfA9tRr/HAxlO
+         VzdzW3lhK30CZ2Gh6Rg4NAG0XLh6jI3/KthbNlwHA7oL/nL9X7No+pjk9W1t2wPPhyHA
+         yPQnL/FMn86ZAy21hVfgcYYHB37L1bfnhxL38bmsl39+JL/gF2Dtkogmj814CiLfPf6S
+         MH3HYx93EQnyzYgRhOzfKFFF2mZujZYkRrVlXSswHDbfi9oxwxCwc13zj0Yvt8k0b/a6
+         BMYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDlF7BXNNPmsIqQdtB/JE8QnVNoKeuCMqlyJaRMRKGe8NWfLTCwJWuU55vPpkdN1l++fPXrJ2rRQ56RKD7sXJD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQK1SqhPU7haBmUzVLLCCfZXfRAq9etjXlg5nuTTK1+Od5/dGb
+	8vITD8FYDIf7WOJTDGg9a5tO4EibavEY0vsFXHzkXCF16BohvEEwHVs3clvzo/9nFko=
+X-Gm-Gg: AeBDieumJfpn7WgEznaNwekD+pm5fIN2h1itSrHYuLrw46p19tx5/vXxSNGvbeVtMzk
+	yBeb+dbh+et+lI5yEFdlClZ78euCf10zXKD3wGgsiUQ0EpPqcZFEoaU8AWyijijdH303tdIPF72
+	5BaavxvvLwF1TJYa30so6XHdZRnOq9uf4Mvyp30T88khlqFIIne/grc2vp3Zs9xjtbx8hs3lY1s
+	O1X+aymPh5AGDsnGeSChoIG90eXmk/GqQ3lKnNTTzdS9JM+4T70X3/NOZSm12AFewiwS+hGTIN4
+	PraePrv9fV2tzkv8foFbj5bhqH/2Geno/cEQW7GJXTA4RV/C9KGz9oM9dU9DC+T3mdPEqPimjuT
+	6qHH+EPxYbsabbkQ7g+v+O9ZpuAFbkR/i8UoEtm5wHi7poCxyMgrmAbeV8cezlbNpKHy1gzE9Yt
+	dF+bcwKK0k8HDJT3IU9no9i66DKj8mNlnu76qwGXc=
+X-Received: by 2002:a05:600c:c0dc:b0:486:fe83:861c with SMTP id 5b1f17b1804b1-488cd54140amr24229935e9.7.1775723037764;
+        Thu, 09 Apr 2026 01:23:57 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd1bb778sm56591285e9.7.2026.04.09.01.23.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2026 01:23:57 -0700 (PDT)
+Message-ID: <1d6da8c9-c8e2-4edf-adee-7eac2f832c51@linaro.org>
+Date: Thu, 9 Apr 2026 09:23:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=FKArAeos c=1 sm=1 tr=0 ts=69d75f58 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=pGLkceISAAAA:8
- a=cv1OQbefsp_F3cgJjgUA:9
-X-Proofpoint-ORIG-GUID: YKUN_5CYlh-WRnIGxrs_MHz_6gvrcOUk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA5MDA2OCBTYWx0ZWRfX8hiGUbzJcLII
- gA6+/BMU9Cf5MJ45vgWj3T/W5voKodQfbFIPKnBttD0lGWfGDBNQGbJsog3ilAJpm3xYaYSQaws
- WESQdxSHloj96xlnKA89yrwdZT/jGbLtJV+DJn9JvLgeA/n9pGr9YX7wOhopvdaU8jX/AzzWTZD
- JpC8gBSwnSjeJ7/lyY3+wXflmESeUQRvtyzOGUsvpm4BqE5TUXjU5JVa08E1GCk8noaP6ePMFeo
- BrJ95RZyTp1+RoQQjcpYuOSMwZ7NpGcedbIdqd7+CynOAE7MDA9/OXFBAcVbqPvVcZK+69eDa70
- 6nUJbLsrwB/gFmBQpaE3FxaVrTCP6KYa4qEJoqvL9YwNiwFO+bPVo1JN83kNJSBeVR62wyiekZZ
- Zhju7yuhV5q0aN7GUrlPCGT09EknmMWYN6YXgdBWPsJKnP2cSOSolqow+jojkCc9o15HwcHr/LC
- dvBnmn80vt7AsO52Zzg==
-X-Proofpoint-GUID: 2w0MDK0pVYGuojxeMDRlkVouijeh7n6Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-09_02,2026-04-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 bulkscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604090068
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] perf test: Fixes for check branch stack sampling
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, german.gomez@arm.com, jolsa@kernel.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
+References: <CAP-5=fUgSTa1+m6PXLm6JSxTcvEbZymwwDKqiV_X+OwcKXga9A@mail.gmail.com>
+ <20260409000216.196083-1-irogers@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260409000216.196083-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Running both tests cases 'perf trace enum augmentation tests'
-and 'perf trace BTF general tests' together causes the first test case
-to fail:
- # for i in $(seq 5); do \
-	./perf test 'perf trace enum augmentation tests' \
-	'perf trace BTF general tests'; \
-   done
- 125: perf trace enum augmentation tests  : Ok
- 126: perf trace BTF general tests        : FAILED!
- 125: perf trace enum augmentation tests  : Ok
- 126: perf trace BTF general tests        : FAILED!
- 125: perf trace enum augmentation tests  : Ok
- 126: perf trace BTF general tests        : FAILED!
- 125: perf trace enum augmentation tests  : Ok
- 126: perf trace BTF general tests        : FAILED!
- 125: perf trace enum augmentation tests  : Ok
- 126: perf trace BTF general tests        : FAILED!
- #
 
-Test case perf trace enum augmentation tests' fails because  the second
-test case 'perf trace BTF general tests' runs concurrently as can
-be observed using a ps -ef | grep perf output list on a different
-window. Both do a perf trace command concurrently.
-Make test case 'perf trace enum augmentation tests' exclusive.
 
- # for i in $(seq 5); do \
-	./perf test 'perf trace enum augmentation tests' \
-	'perf trace BTF general tests'; \
-   done
- 125: perf trace BTF general tests        : Ok
- 155: perf trace enum augmentation tests  : Ok
- 125: perf trace BTF general tests        : Ok
- 155: perf trace enum augmentation tests  : Ok
- 125: perf trace BTF general tests        : Ok
- 155: perf trace enum augmentation tests  : Ok
- 125: perf trace BTF general tests        : Ok
- 155: perf trace enum augmentation tests  : Ok
- 125: perf trace BTF general tests        : Ok
- 155: perf trace enum augmentation tests  : Ok
- #
+On 09/04/2026 1:02 am, Ian Rogers wrote:
+> When filtering branch stack samples on user events they sample in user
+> land but may have come from the kernel. Aarch64 avoids leaking the
+> kernel address for kaslr reasons but other platforms, for now,
+> don't. Be more permissive in allowing kernel addresses in the source
+> of user branch stacks.
+> 
+> When filtering branch stack samples on kernel events they sample in
+> kernel land but may have come from user land. Avoid the target being a
+> user address but allow the source to be in user land. Aarch64 may not
+> leak the user land addresses (making them 0) but other platforms
+> do. As the kernel address sampling implies privelege, just allow this.
+> 
+> Increase the duration of the system call sampling test to make the
+> likelihood of sampling a system call higher (increased from 1000 to
+> 8000 loops - a number found through experimentation on an Intel
+> Tigerlake laptop), also make the period of the event a prime number.
+> 
+> Put unneeded perf record output into a temporary file so that the test
+> output isn't cluttered. More clearly state which test is running and
+> the pass, fail or skipped result of the test.
+> 
+> These changes make the test on an Intel tigerlake laptop reliably pass
+> rather than reliably fail.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/tests/shell/trace_btf_enum.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-index 03e9f680a4a6..437510d46f58 100755
---- a/tools/perf/tests/shell/trace_btf_enum.sh
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf trace enum augmentation tests
-+# perf trace enum augmentation tests (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
- err=0
--- 
-2.53.0
+> ---
+> v4: Address feedback from James Clark.
+> v2,v3: Address Sashiko feedback.
+> ---
+>   tools/perf/tests/shell/test_brstack.sh | 146 ++++++++++++++++---------
+>   1 file changed, 96 insertions(+), 50 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+> index 85233d435be6..eb5837f82e39 100755
+> --- a/tools/perf/tests/shell/test_brstack.sh
+> +++ b/tools/perf/tests/shell/test_brstack.sh
+> @@ -38,9 +38,13 @@ is_arm64() {
+>   	[ "$(uname -m)" = "aarch64" ];
+>   }
+>   
+> +has_kaslr_bug() {
+> +	[ "$(uname -m)" != "aarch64" ];
+> +}
+> +
+>   check_branches() {
+>   	if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$1"; then
+> -		echo "Branches missing $1"
+> +		echo "ERROR: Branches missing $1"
+>   		err=1
+>   	fi
+>   }
+> @@ -48,6 +52,8 @@ check_branches() {
+>   test_user_branches() {
+>   	echo "Testing user branch stack sampling"
+>   
+> +	start_err=$err
+> +	err=0
+>   	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
+>   	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
+>   
+> @@ -73,59 +79,88 @@ test_user_branches() {
+>   	perf script -i "$TMPDIR/perf.data" --fields brstack | \
+>   		tr ' ' '\n' > "$TMPDIR/perf.script"
+>   
+> -	# There should be no kernel addresses with the u option, in either
+> -	# source or target addresses.
+> -	if grep -E -m1 "0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+> -		echo "ERROR: Kernel address found in user mode"
+> +	# There should be no kernel addresses in the target with the u option.
+> +	local regex="0x[89a-f][0-9a-f]{15}"
+> +	if has_kaslr_bug; then
+> +		# If the system has a kaslr bug that may leak kernel addresses
+> +		# in the source of something like an ERET/SYSRET. Make the regex
+> +		# more specific and just check the target address is in user
+> +		# code.
+> +		regex="^0x[0-9a-f]{0,16}/0x[89a-f][0-9a-f]{15}/"
+> +	fi
+> +	if grep -q -E -m1 "$regex" $TMPDIR/perf.script; then
+> +		echo "Testing user branch stack sampling [Failed kernel address found in user mode]"
+>   		err=1
+>   	fi
+>   	# some branch types are still not being tested:
+>   	# IND COND_CALL COND_RET SYSRET SERROR NO_TX
+> +	if [ $err -eq 0 ]; then
+> +		echo "Testing user branch stack sampling [Passed]"
+> +		err=$start_err
+> +	else
+> +		echo "Testing user branch stack sampling [Failed]"
+> +	fi
+>   }
+>   
+>   test_trap_eret_branches() {
+>   	echo "Testing trap & eret branches"
+> +
+>   	if ! is_arm64; then
+> -		echo "skip: not arm64"
+> +		echo "Testing trap & eret branches [Skipped not arm64]"
+> +		return
+> +	fi
+> +	start_err=$err
+> +	err=0
+> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+> +		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
+> +	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+> +		tr ' ' '\n' > $TMPDIR/perf.script
+> +
+> +	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
+> +	check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
+> +	check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
+> +	if [ $err -eq 0 ]; then
+> +		echo "Testing trap & eret branches [Passed]"
+> +		err=$start_err
+>   	else
+> -		perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+> -			perf test -w traploop 1000
+> -		perf script -i $TMPDIR/perf.data --fields brstacksym | \
+> -			tr ' ' '\n' > $TMPDIR/perf.script
+> -
+> -		# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
+> -		check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
+> -		check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
+> +		echo "Testing trap & eret branches [Failed]"
+>   	fi
+>   }
+>   
+>   test_kernel_branches() {
+> -	echo "Testing that k option only includes kernel source addresses"
+> +	echo "Testing kernel branch sampling"
+>   
+> -	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
+> -		echo "skip: not enough privileges"
+> +	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
+> +		echo "Testing that k option [Skipped not enough privileges]"
+> +		return
+> +	fi
+> +	start_err=$err
+> +	err=0
+> +	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+> +		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
+> +	perf script -i $TMPDIR/perf.data --fields brstack | \
+> +		tr ' ' '\n' > $TMPDIR/perf.script
+> +
+> +	# Example of branch entries:
+> +	#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
+> +	# Source addresses come first in user or kernel code. Next is the target
+> +	# address that must be in the kernel.
+> +
+> +	# Look for source addresses with top bit set
+> +	if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+> +		echo "Testing kernel branch sampling [Failed kernel branches missing]"
+> +		err=1
+> +	fi
+> +	# Look for no target addresses without top bit set
+> +	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{1,15}/" $TMPDIR/perf.script; then
+> +		echo "Testing kernel branch sampling [Failed user branches found]"
+> +		err=1
+> +	fi
+> +	if [ $err -eq 0 ]; then
+> +		echo "Testing kernel branch sampling [Passed]"
+> +		err=$start_err
+>   	else
+> -		perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+> -			perf bench syscall basic --loop 1000
+> -		perf script -i $TMPDIR/perf.data --fields brstack | \
+> -			tr ' ' '\n' > $TMPDIR/perf.script
+> -
+> -		# Example of branch entries:
+> -		#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
+> -		# Source addresses come first and target address can be either
+> -		# userspace or kernel even with k option, as long as the source
+> -		# is in kernel.
+> -
+> -		#Look for source addresses with top bit set
+> -		if ! grep -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+> -			echo "ERROR: Kernel branches missing"
+> -			err=1
+> -		fi
+> -		# Look for no source addresses without top bit set
+> -		if grep -E -m1 "^0x[0-7][0-9a-f]{0,15}" $TMPDIR/perf.script; then
+> -			echo "ERROR: User branches found with kernel filter"
+> -			err=1
+> -		fi
+> +		echo "Testing kernel branch sampling [Failed]"
+>   	fi
+>   }
+>   
+> @@ -136,14 +171,15 @@ test_filter() {
+>   	test_filter_expect=$2
+>   
+>   	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
+> -	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
+> +	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- \
+> +		${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
+>   	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
+>   
+>   	# fail if we find any branch type that doesn't match any of the expected ones
+>   	# also consider UNKNOWN branch types (-)
+>   	if [ ! -s "$TMPDIR/perf.script" ]
+>   	then
+> -		echo "Empty script output"
+> +		echo "Testing branch stack filtering [Failed empty script output]"
+>   		err=1
+>   		return
+>   	fi
+> @@ -154,26 +190,36 @@ test_filter() {
+>   	  > "$TMPDIR/perf.script-filtered" || true
+>   	if [ -s "$TMPDIR/perf.script-filtered" ]
+>   	then
+> -		echo "Unexpected branch filter in script output"
+> +		echo "Testing branch stack filtering [Failed unexpected branch filter]"
+>   		cat "$TMPDIR/perf.script"
+>   		err=1
+>   		return
+>   	fi
+> +	echo "Testing branch stack filtering [Passed]"
+>   }
+>   
+>   test_syscall() {
+>   	echo "Testing syscalls"
+>   	# skip if perf doesn't have enough privileges
+> -	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
+> -		echo "skip: not enough privileges"
+> +	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
+> +		echo "Testing syscalls [Skipped: not enough privileges]"
+> +		return
+> +	fi
+> +	start_err=$err
+> +	err=0
+> +	perf record -o $TMPDIR/perf.data --branch-filter \
+> +		any_call,save_type,u,k -c 10007 -- \
+> +		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
+> +	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+> +		tr ' ' '\n' > $TMPDIR/perf.script
+> +
+> +	check_branches "getppid[^ ]*/SYSCALL/"
+> +
+> +	if [ $err -eq 0 ]; then
+> +		echo "Testing syscalls [Passed]"
+> +		err=$start_err
+>   	else
+> -		perf record -o $TMPDIR/perf.data --branch-filter \
+> -			any_call,save_type,u,k -c 10000 -- \
+> -			perf bench syscall basic --loop 1000
+> -		perf script -i $TMPDIR/perf.data --fields brstacksym | \
+> -			tr ' ' '\n' > $TMPDIR/perf.script
+> -
+> -		check_branches "getppid[^ ]*/SYSCALL/"
+> +		echo "Testing syscalls [Failed]"
+>   	fi
+>   }
+>   set -e
+
 
