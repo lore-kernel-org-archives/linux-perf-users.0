@@ -1,56 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FDF255F2D;
-	Thu,  9 Apr 2026 01:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D12D7817;
+	Thu,  9 Apr 2026 01:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775698812; cv=none; b=b7sK6R3LqxqcvK+eYU72eb05paNIrCtx2gAC7cTLhJV3Se6bUh3yuafRobdlsOpcSbbv3HLnkgwgIN+gzUfo/UJsjGsD+slbcPQKVkpUflPl7PCg2O674BR+e9EmBoIRAHA37CLq7yywiMRiT06BwO0WymzoT3Don/8LNBlqaxU=
+	t=1775699509; cv=none; b=A1Gno/c+6/SZlDb99jDqe1mTHEZxIdoJL11ZpPh/IzYRCJwnwIauX6TfBLTkadHm81cl2AKZM2/dVOmf4lNGXR82QpFzzYBVZdUoHT8yvOedo78IJHJAHmydJtoHIc7GoGzR9vzKuNNGrd4ktT/QklOq5s2TE1bByofDtgTFT5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775698812; c=relaxed/simple;
-	bh=kRk1tClvEoWCo0S8Wt9II+hhTSZMcgXt/MhWHGKm0qI=;
+	s=arc-20240116; t=1775699509; c=relaxed/simple;
+	bh=rtymwEFPfh8Z5dK9imsoQ2aOCsbap5Zbqe7RVmpeLuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiTC7sXZyal6qeUks49mCJr/ttUySoA5Fu0B2ihtR7pi/O/v6o1sM8XK4c7WFcCiCAlDPnD5gNpm7aPEEBexJktcdlBS6rGJwNmfqzM2yytQUr9EaAnF8v031qCOAwcU3XSRigaSaZyQRwzYq+o/yDUv+EtsCBoKTuWOJmsK4UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRc2zkE4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tUalkKKHLlXYbzefeK2/6GLG7HEYCAEULqOJGC8W/su/MlGor6B88KhpLAFj0IZyQNfI4Txbq98nYELS22BjNWMdNaXXKBOroM2kphl1AE0lolR5HYeVxIMGY0P+vqF1rMVyFuJsHnoIbqR1iVi+Qup7X2cLBskaY6U1J8dkjAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIucprTS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRc2zkE4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CDEC19421;
-	Thu,  9 Apr 2026 01:40:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIucprTS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7475FC19421;
+	Thu,  9 Apr 2026 01:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775698811;
-	bh=kRk1tClvEoWCo0S8Wt9II+hhTSZMcgXt/MhWHGKm0qI=;
+	s=k20201202; t=1775699509;
+	bh=rtymwEFPfh8Z5dK9imsoQ2aOCsbap5Zbqe7RVmpeLuU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fRc2zkE46N+FSN7HK8OtEWOxZ0dMXKUJHR5lchr16ZCWYUbjJ0WA7anU6ruPxxhDp
-	 BJrPGLWu+Ey2qHbA7qKaejJIOz9WsbXfHLpAUsWKXO+5HoQsEf0TavnZyUjf874eOi
-	 LlWMBrQH2z9Ldx9Afv/mVZIqFwBOKQ7t7a6VAMZ8TxUfEEglsde0jMPu4mrqT899uE
-	 X6tBJ0UUMOS7g86a5ipVs58LQxJohUkCQSfwOwi94JVV65K2QwMpW334IhWf1ljJfz
-	 9DbWeUBJiFqcnUaNTxtOPJfehslmAGWNGrwmZqZCVOv+Hrq3gjAPzVxmVuyZDCd6Rx
-	 7REQKusf8fYOw==
-Date: Wed, 8 Apr 2026 18:40:07 -0700
+	b=GIucprTSxuxgoFzT/dZzMCD7cNqkj5NrJw7AeVKsrXZU2moZQfG7qNzPjzD+s+x99
+	 Nd0o5YI1QTjI31XfbO9X9v2f2leMCPtud82C/VMSWIJgg5fKWPK1HOrpJpj+lwnQoM
+	 xm31j3GqVda+XlUmiGT4ZAk42+hS1bQcSH9j/5Tgqj3Zo0Fi5NaAcgrptlO3bsFJAo
+	 rJSelG6kxBHanSLzebILMGS7SPoUym3fXMgCk3APT85eDLEf+yvVV2dXOgsA5VnY00
+	 kwWIrrzvcPnMD6J5v5Y3hJS+d74wmKtwjnZ0I3yMAUdLFfpYAlh9CidQKlBmgzxR0E
+	 UoNTgwk1Hl9ww==
+Date: Wed, 8 Apr 2026 18:51:46 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
-	ak@linux.intel.com, alex@ghiti.fr,
-	alexander.shishkin@linux.intel.com, anup@brainfault.org,
-	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
-	blakejones@google.com, ctshao@google.com,
-	dapeng1.mi@linux.intel.com, derek.foreman@collabora.com,
-	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn,
-	palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org,
-	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn,
-	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com,
-	zhouquan@iscas.ac.cn
-Subject: Re: [PATCH v6 00/25] perf tool: Add evsel to perf_sample
-Message-ID: <adcDd0eV1KQemet0@google.com>
-References: <20260403204017.2919994-1-irogers@google.com>
- <20260404034325.3172592-1-irogers@google.com>
- <adNOd_yaPL3nlXUr@google.com>
- <adPyeCq3rQrTurju@google.com>
- <CAP-5=fVyn+pLUnbMQ_XukhObb=qQiMuvus2g4p4Us+sY06rz7g@mail.gmail.com>
+To: sashiko@lists.linux.dev
+Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 03/23] perf evsel: Refactor evsel tracepoint sample
+ accessors perf_sample
+Message-ID: <adcGMruruUxSVBMZ@google.com>
+References: <20260408072601.210837-4-irogers@google.com>
+ <20260408082023.41F14C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,42 +44,96 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVyn+pLUnbMQ_XukhObb=qQiMuvus2g4p4Us+sY06rz7g@mail.gmail.com>
+In-Reply-To: <20260408082023.41F14C2BCB3@smtp.kernel.org>
 
-On Wed, Apr 08, 2026 at 12:30:05AM -0700, Ian Rogers wrote:
-> On Mon, Apr 6, 2026 at 10:50 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Sun, Apr 05, 2026 at 11:11:03PM -0700, Namhyung Kim wrote:
-> > > On Fri, Apr 03, 2026 at 08:43:00PM -0700, Ian Rogers wrote:
-> > > > Nearly all perf code ends up passing an evsel with the perf_sample,
-> > > > which is problematic if you want to rewrite the evsel such as with
-> > > > off-CPU processing - all uses of the evsel need fixing up. Previously
-> > > > I'd mailed this patch as an RFC with everything combined:
-> > > > https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
-> > > > and there was a request to break it up.
-> > > >
-> > > > I've started the series by adding documentation to struct
-> > > > perf_sample. Next I fixed missing perf_sample__init/exit largely from
-> > > > the recent perf inject callchain rewriting work. The 3rd patch adds
-> > > > the evsel to struct perf_sample and ensures it is correctly
-> > > > initialized. The next 22 patches avoid passing the evsel along with
-> > > > sample for different parts of the perf tool, along with some minor
-> > > > tweaks like constification and not determining the evsel if it is
-> > > > present in the sample.
-> > >
-> > > I'll test and process the first 3 patches first as I found an issue in
-> > > patch 6 and I guess applying patch 4 would break partial imports later.
-> >
-> > Applied the first 3 patches to perf-tools-next, thanks!
+On Wed, Apr 08, 2026 at 08:20:22AM +0000, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 1 potential issue(s):
+> - [Medium] Integer overflow and incomplete validation in the newly added tracepoint bounds checks allow out-of-bounds memory accesses.
+> --
 > 
-> It looks like you tweaked the documentation of struct perf_sample.
-> There is a typo s/PEF_SAMPLE_IDENTIFIER/PERF_SAMPLE_IDENTIFIER/.
+> commit f7dda507e65d40381a27ba2e39e45e8a6050afff
+> Author: Ian Rogers <irogers@google.com>
+> 
+> perf evsel: Refactor evsel tracepoint sample accessors perf_sample
+> 
+> This commit refactors tracepoint sample accessors to remove the evsel
+> argument. It also adds bounds checks when reading values from tracepoint
+> fields based on review feedback.
+> 
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 2ee87fd84d3ea..b653e683d7a12 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -3687,15 +3687,20 @@ struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *na
+> >  	return tp_format ? tep_find_common_field(tp_format, name) : NULL;
+> >  }
+> >  
+> > -void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name)
+> > +void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
+> >  {
+> > -	struct tep_format_field *field = evsel__field(evsel, name);
+> > +	struct tep_format_field *field = evsel__field(sample->evsel, name);
+> >  	int offset;
+> >  
+> >  	if (!field)
+> >  		return NULL;
+> >  
+> >  	offset = field->offset;
+> > +	if ((u32)(offset + field->size) > sample->raw_size) {
+> > +		pr_warning("Invalid trace point field offset %d for field of length %d in sample raw data of size %u\n",
+> > +			   offset, field->size, sample->raw_size);
+> > +		return NULL;
+> > +	}
+> 
+> Can this bounds check be bypassed due to integer overflow? If a malformed
+> perf.data file provides an exceptionally large offset (for example,
+> 0xFFFFFFFC) and a size of 4, the sum could wrap around to 0. Would this
+> allow an out-of-bounds read when accessing the memory?
 
-Oops, sorry.  Yeah, I think it's in my earlier review and forgotten.  So
-I did it myself but made a mistake. :(
+I think it's better not to include any bounds check in the patch.
+It's adding a lot of review noise and doesn't help making progress.
+You can ignore security issues in this series as they are pre-existing,
+and just make this patch simple, doing one thing - removing 'evsel'
+argument.
 
-Feel free to send a fix.
+The review comments can be addressed in a separate patch series
+(preferrably) or different patches in this series.
 
 Thanks,
 Namhyung
 
+> 
+> >  	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+> >  		offset = *(int *)(sample->raw_data + field->offset);
+> >  		offset &= 0xffff;
+> >  		if (tep_field_is_relative(field->flags))
+> >  			offset += field->offset + field->size;
+> >  	}
+> > 
+> >  	return sample->raw_data + offset;
+> 
+> Is the dynamically computed offset validated against sample->raw_size? It
+> appears the initial check covers the initial field offset, but the newly
+> computed offset for dynamic fields is added directly to sample->raw_data
+> without a subsequent bounds check, which might lead to out-of-bounds memory
+> accesses.
+> 
+> [ ... ]
+> 
+> > @@ -3713,6 +3718,12 @@ u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sam
+> >  	u64 value;
+> >  	void *ptr = sample->raw_data + field->offset;
+> >  
+> > +	if ((u32)(field->offset + field->size) > sample->raw_size) {
+> > +		pr_warning("Invalid trace point field offset %d for field of length %d in sample raw data of size %u\n",
+> > +			   field->offset, field->size, sample->raw_size);
+> > +		return 0;
+> > +	}
+> > +
+> 
+> Can this suffer from the same integer overflow issue? If field->offset and
+> field->size wrap around when added together, it looks like an out-of-bounds
+> pointer could be dereferenced when evaluating the field.
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260408072601.210837-1-irogers@google.com?part=3
