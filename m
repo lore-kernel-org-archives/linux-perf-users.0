@@ -1,343 +1,153 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D6388398
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 08:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F3737C10C;
+	Thu,  9 Apr 2026 10:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775723041; cv=none; b=UG7+a/1dSROD4rEPQXN3SQmkc2xwMKIbBQGBkdWVH4OFihK9jinoMWnvzAXBfZJn2rnVIUXwMAX2rQEMuQK0kRutFGJ17AM+Wa2vFkFolTivUVCglv5LyFhzfMhxEdno3PHoNRNAeFNE1ee9rAok1WV1kXAKa+RTyVRQvrQ9aWY=
+	t=1775730798; cv=none; b=q6wG/J/qjfwCP2+V94KVVaBmpeOIrJFr8v9btKaeaK3W62l2IIW4oSRKnz7z9vzOgSmZHFHSAYiuL/kS6FB3jBq+oVr0BKwecTTVf8t95URCPQ975uVBME3oAcyDh354PLW3fDVe7XqtnGXzQZi1gN7kH7iHoJnpFKAYvQmcddE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775723041; c=relaxed/simple;
-	bh=hsN+1Dyjtw+h6WDEWMgR6FdOsbGs/rAklDyaDGgXUn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MfkhmTWxi+QCgMQRm5ijGzShBvC8XEWFIGk3PFCZUwRICMBmC5qMJRCwbTMHpoBpB8vDlIc1Zwg1ix5luxDTaKW76Nfyj0WQ0MwKqjGoDaXYgEP8T3+622G4S4oSCD4Et6uOC9OIt/tKqZQMsJkRAyOPHWi/JrqJgBUBtWDi5w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lpCts/eY; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1775730798; c=relaxed/simple;
+	bh=8czUvg+EycwtHlbZWxF7J0jKdXRWUlyM2w5PFmEYPX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=neC73scYCI0O3QyjfmXsdRAUUoF1WC8qWxML8JQ2f/dSOHXE0G7Z22mV6dU7AQzucCIerQ7Xp+Iht0SAmsElws4RHRZvCrceBhnsQ6vsnfLD7roIH05qEDq8YqsUpivYM6lnIfqem41ILFRxAX4iKowtZnF88ld9uk/wSBKrZ3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcBUYY0N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpCts/eY"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso7238875e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 01:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775723038; x=1776327838; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zJBR5DnCB+IoMrJrmV3CyYE8JNDWJ2jRPlxgDiETZOw=;
-        b=lpCts/eYsuAt/lU0BMFWi/igmjRYM3rjcJXOKMW1EYm8t85DZrtTrt078LP8vZNq72
-         V+e+tHSt1v56a8v11IaI4148v05kh2coXBj2PO4za1bnUAWDVD7xDnRUsYi82bbJfuSY
-         CBipXs/favA4PuALonHOvgxErEHDYGj+B1Kj/52nqlgajza9hcjj8y7DwSbLDANf+5zq
-         Wun8Tdw59T2iQnCp3ijLeg6Tw/rg6pTQxUR7bQve3wOJLYW4yww5ixV9c/RPW/h9X1Gf
-         DAUN1rK2SjIuIeIt5wxo7yORgMTUOLi6782iroVoqh9eiJ7euVeaTPNb6BR1S2z7hw40
-         8zeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775723038; x=1776327838;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zJBR5DnCB+IoMrJrmV3CyYE8JNDWJ2jRPlxgDiETZOw=;
-        b=fN5SYINCOIOzc/qCfFlmWc4daehXiNfMzM4YyxT/kUEE7joRdANeEa7lnwhprVhySu
-         aKcQ60kB7p6uOYMiSk5Uy7KsAYl2yBKtIwdlIwgX1QJGMtSMW3LK8ggFfA9tRr/HAxlO
-         VzdzW3lhK30CZ2Gh6Rg4NAG0XLh6jI3/KthbNlwHA7oL/nL9X7No+pjk9W1t2wPPhyHA
-         yPQnL/FMn86ZAy21hVfgcYYHB37L1bfnhxL38bmsl39+JL/gF2Dtkogmj814CiLfPf6S
-         MH3HYx93EQnyzYgRhOzfKFFF2mZujZYkRrVlXSswHDbfi9oxwxCwc13zj0Yvt8k0b/a6
-         BMYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDlF7BXNNPmsIqQdtB/JE8QnVNoKeuCMqlyJaRMRKGe8NWfLTCwJWuU55vPpkdN1l++fPXrJ2rRQ56RKD7sXJD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQK1SqhPU7haBmUzVLLCCfZXfRAq9etjXlg5nuTTK1+Od5/dGb
-	8vITD8FYDIf7WOJTDGg9a5tO4EibavEY0vsFXHzkXCF16BohvEEwHVs3clvzo/9nFko=
-X-Gm-Gg: AeBDieumJfpn7WgEznaNwekD+pm5fIN2h1itSrHYuLrw46p19tx5/vXxSNGvbeVtMzk
-	yBeb+dbh+et+lI5yEFdlClZ78euCf10zXKD3wGgsiUQ0EpPqcZFEoaU8AWyijijdH303tdIPF72
-	5BaavxvvLwF1TJYa30so6XHdZRnOq9uf4Mvyp30T88khlqFIIne/grc2vp3Zs9xjtbx8hs3lY1s
-	O1X+aymPh5AGDsnGeSChoIG90eXmk/GqQ3lKnNTTzdS9JM+4T70X3/NOZSm12AFewiwS+hGTIN4
-	PraePrv9fV2tzkv8foFbj5bhqH/2Geno/cEQW7GJXTA4RV/C9KGz9oM9dU9DC+T3mdPEqPimjuT
-	6qHH+EPxYbsabbkQ7g+v+O9ZpuAFbkR/i8UoEtm5wHi7poCxyMgrmAbeV8cezlbNpKHy1gzE9Yt
-	dF+bcwKK0k8HDJT3IU9no9i66DKj8mNlnu76qwGXc=
-X-Received: by 2002:a05:600c:c0dc:b0:486:fe83:861c with SMTP id 5b1f17b1804b1-488cd54140amr24229935e9.7.1775723037764;
-        Thu, 09 Apr 2026 01:23:57 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd1bb778sm56591285e9.7.2026.04.09.01.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2026 01:23:57 -0700 (PDT)
-Message-ID: <1d6da8c9-c8e2-4edf-adee-7eac2f832c51@linaro.org>
-Date: Thu, 9 Apr 2026 09:23:56 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcBUYY0N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40E0C4CEF7;
+	Thu,  9 Apr 2026 10:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775730798;
+	bh=8czUvg+EycwtHlbZWxF7J0jKdXRWUlyM2w5PFmEYPX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hcBUYY0NnKBezFbYhem2WL28Vc0KnxeimOAEAOSzb6XkOhWdD0bobaa7WsIZ8/pug
+	 MKsF7Xm5AU0nDBEmzbr+L0WO3czOaNZUuknyMWFJ2xlvg+ml4fWLWFkGXzIOTOsvRy
+	 NTO8vNxXEMwaJuU1Jagl4GNMSdmhnGC0W003kYUNoHGlTz47XLtASNxmpE6uZp2ICs
+	 p/aVOfFvwiDS3fMVNzhxs/V6p1cY0WlBV2PA4qDgjh/hMSpAYnnvLSzVcBHhpLSVav
+	 auatanNlZldLFRolOhvPkkKHC0PXjszLy/okBVIErgeQ1ezaFqfJXBbmfYhfcwbtQa
+	 /dYGtwyVQI6zQ==
+Date: Thu, 9 Apr 2026 07:33:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHES perf-tools-next v6 0/8] Cleanups and fixes
+Message-ID: <adeAarNktqfAQHwG@x1>
+References: <20260408173203.96700-1-acme@kernel.org>
+ <adcM73wJFBaKZs5t@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] perf test: Fixes for check branch stack sampling
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, german.gomez@arm.com, jolsa@kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
-References: <CAP-5=fUgSTa1+m6PXLm6JSxTcvEbZymwwDKqiV_X+OwcKXga9A@mail.gmail.com>
- <20260409000216.196083-1-irogers@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260409000216.196083-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adcM73wJFBaKZs5t@google.com>
 
+On Wed, Apr 08, 2026 at 07:20:31PM -0700, Namhyung Kim wrote:
+> On Wed, Apr 08, 2026 at 02:31:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> >         Here are some cleanups, a refresh for a patch Ian sent and fell
+> > thru the cracks, using calloc where applicable, constify some arrays and
+> > add a missing header that was making the build fail on some musl
+> > systems.
 
+> > 	This also adds checks for perf.data headers that were suggested
+> > by sashiko.
 
-On 09/04/2026 1:02 am, Ian Rogers wrote:
-> When filtering branch stack samples on user events they sample in user
-> land but may have come from the kernel. Aarch64 avoids leaking the
-> kernel address for kaslr reasons but other platforms, for now,
-> don't. Be more permissive in allowing kernel addresses in the source
-> of user branch stacks.
-> 
-> When filtering branch stack samples on kernel events they sample in
-> kernel land but may have come from user land. Avoid the target being a
-> user address but allow the source to be in user land. Aarch64 may not
-> leak the user land addresses (making them 0) but other platforms
-> do. As the kernel address sampling implies privelege, just allow this.
-> 
-> Increase the duration of the system call sampling test to make the
-> likelihood of sampling a system call higher (increased from 1000 to
-> 8000 loops - a number found through experimentation on an Intel
-> Tigerlake laptop), also make the period of the event a prime number.
-> 
-> Put unneeded perf record output into a temporary file so that the test
-> output isn't cluttered. More clearly state which test is running and
-> the pass, fail or skipped result of the test.
-> 
-> These changes make the test on an Intel tigerlake laptop reliably pass
-> rather than reliably fail.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> It seems sashiko keeps creating new issues or finding bugs.  As we
+> discussed, I'd like to apply this series to fix known things first
+> and we can address other issues separately.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Sure, please merge v6 as-is if you think it is ok and I'll come up with
+follow up patches addressing more issues, for instance, here are some
+more checks I'm writing with the help of Claude:
 
-> ---
-> v4: Address feedback from James Clark.
-> v2,v3: Address Sashiko feedback.
-> ---
->   tools/perf/tests/shell/test_brstack.sh | 146 ++++++++++++++++---------
->   1 file changed, 96 insertions(+), 50 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> index 85233d435be6..eb5837f82e39 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -38,9 +38,13 @@ is_arm64() {
->   	[ "$(uname -m)" = "aarch64" ];
->   }
->   
-> +has_kaslr_bug() {
-> +	[ "$(uname -m)" != "aarch64" ];
-> +}
-> +
->   check_branches() {
->   	if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$1"; then
-> -		echo "Branches missing $1"
-> +		echo "ERROR: Branches missing $1"
->   		err=1
->   	fi
->   }
-> @@ -48,6 +52,8 @@ check_branches() {
->   test_user_branches() {
->   	echo "Testing user branch stack sampling"
->   
-> +	start_err=$err
-> +	err=0
->   	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
->   	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
->   
-> @@ -73,59 +79,88 @@ test_user_branches() {
->   	perf script -i "$TMPDIR/perf.data" --fields brstack | \
->   		tr ' ' '\n' > "$TMPDIR/perf.script"
->   
-> -	# There should be no kernel addresses with the u option, in either
-> -	# source or target addresses.
-> -	if grep -E -m1 "0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
-> -		echo "ERROR: Kernel address found in user mode"
-> +	# There should be no kernel addresses in the target with the u option.
-> +	local regex="0x[89a-f][0-9a-f]{15}"
-> +	if has_kaslr_bug; then
-> +		# If the system has a kaslr bug that may leak kernel addresses
-> +		# in the source of something like an ERET/SYSRET. Make the regex
-> +		# more specific and just check the target address is in user
-> +		# code.
-> +		regex="^0x[0-9a-f]{0,16}/0x[89a-f][0-9a-f]{15}/"
-> +	fi
-> +	if grep -q -E -m1 "$regex" $TMPDIR/perf.script; then
-> +		echo "Testing user branch stack sampling [Failed kernel address found in user mode]"
->   		err=1
->   	fi
->   	# some branch types are still not being tested:
->   	# IND COND_CALL COND_RET SYSRET SERROR NO_TX
-> +	if [ $err -eq 0 ]; then
-> +		echo "Testing user branch stack sampling [Passed]"
-> +		err=$start_err
-> +	else
-> +		echo "Testing user branch stack sampling [Failed]"
-> +	fi
->   }
->   
->   test_trap_eret_branches() {
->   	echo "Testing trap & eret branches"
-> +
->   	if ! is_arm64; then
-> -		echo "skip: not arm64"
-> +		echo "Testing trap & eret branches [Skipped not arm64]"
-> +		return
-> +	fi
-> +	start_err=$err
-> +	err=0
-> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
-> +		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
-> +	perf script -i $TMPDIR/perf.data --fields brstacksym | \
-> +		tr ' ' '\n' > $TMPDIR/perf.script
-> +
-> +	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
-> +	check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
-> +	check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
-> +	if [ $err -eq 0 ]; then
-> +		echo "Testing trap & eret branches [Passed]"
-> +		err=$start_err
->   	else
-> -		perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
-> -			perf test -w traploop 1000
-> -		perf script -i $TMPDIR/perf.data --fields brstacksym | \
-> -			tr ' ' '\n' > $TMPDIR/perf.script
-> -
-> -		# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
-> -		check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
-> -		check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
-> +		echo "Testing trap & eret branches [Failed]"
->   	fi
->   }
->   
->   test_kernel_branches() {
-> -	echo "Testing that k option only includes kernel source addresses"
-> +	echo "Testing kernel branch sampling"
->   
-> -	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-> -		echo "skip: not enough privileges"
-> +	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
-> +		echo "Testing that k option [Skipped not enough privileges]"
-> +		return
-> +	fi
-> +	start_err=$err
-> +	err=0
-> +	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
-> +		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
-> +	perf script -i $TMPDIR/perf.data --fields brstack | \
-> +		tr ' ' '\n' > $TMPDIR/perf.script
-> +
-> +	# Example of branch entries:
-> +	#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
-> +	# Source addresses come first in user or kernel code. Next is the target
-> +	# address that must be in the kernel.
-> +
-> +	# Look for source addresses with top bit set
-> +	if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
-> +		echo "Testing kernel branch sampling [Failed kernel branches missing]"
-> +		err=1
-> +	fi
-> +	# Look for no target addresses without top bit set
-> +	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{1,15}/" $TMPDIR/perf.script; then
-> +		echo "Testing kernel branch sampling [Failed user branches found]"
-> +		err=1
-> +	fi
-> +	if [ $err -eq 0 ]; then
-> +		echo "Testing kernel branch sampling [Passed]"
-> +		err=$start_err
->   	else
-> -		perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
-> -			perf bench syscall basic --loop 1000
-> -		perf script -i $TMPDIR/perf.data --fields brstack | \
-> -			tr ' ' '\n' > $TMPDIR/perf.script
-> -
-> -		# Example of branch entries:
-> -		#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
-> -		# Source addresses come first and target address can be either
-> -		# userspace or kernel even with k option, as long as the source
-> -		# is in kernel.
-> -
-> -		#Look for source addresses with top bit set
-> -		if ! grep -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
-> -			echo "ERROR: Kernel branches missing"
-> -			err=1
-> -		fi
-> -		# Look for no source addresses without top bit set
-> -		if grep -E -m1 "^0x[0-7][0-9a-f]{0,15}" $TMPDIR/perf.script; then
-> -			echo "ERROR: User branches found with kernel filter"
-> -			err=1
-> -		fi
-> +		echo "Testing kernel branch sampling [Failed]"
->   	fi
->   }
->   
-> @@ -136,14 +171,15 @@ test_filter() {
->   	test_filter_expect=$2
->   
->   	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
-> -	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
-> +	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- \
-> +		${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
->   	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
->   
->   	# fail if we find any branch type that doesn't match any of the expected ones
->   	# also consider UNKNOWN branch types (-)
->   	if [ ! -s "$TMPDIR/perf.script" ]
->   	then
-> -		echo "Empty script output"
-> +		echo "Testing branch stack filtering [Failed empty script output]"
->   		err=1
->   		return
->   	fi
-> @@ -154,26 +190,36 @@ test_filter() {
->   	  > "$TMPDIR/perf.script-filtered" || true
->   	if [ -s "$TMPDIR/perf.script-filtered" ]
->   	then
-> -		echo "Unexpected branch filter in script output"
-> +		echo "Testing branch stack filtering [Failed unexpected branch filter]"
->   		cat "$TMPDIR/perf.script"
->   		err=1
->   		return
->   	fi
-> +	echo "Testing branch stack filtering [Passed]"
->   }
->   
->   test_syscall() {
->   	echo "Testing syscalls"
->   	# skip if perf doesn't have enough privileges
-> -	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-> -		echo "skip: not enough privileges"
-> +	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
-> +		echo "Testing syscalls [Skipped: not enough privileges]"
-> +		return
-> +	fi
-> +	start_err=$err
-> +	err=0
-> +	perf record -o $TMPDIR/perf.data --branch-filter \
-> +		any_call,save_type,u,k -c 10007 -- \
-> +		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
-> +	perf script -i $TMPDIR/perf.data --fields brstacksym | \
-> +		tr ' ' '\n' > $TMPDIR/perf.script
-> +
-> +	check_branches "getppid[^ ]*/SYSCALL/"
-> +
-> +	if [ $err -eq 0 ]; then
-> +		echo "Testing syscalls [Passed]"
-> +		err=$start_err
->   	else
-> -		perf record -o $TMPDIR/perf.data --branch-filter \
-> -			any_call,save_type,u,k -c 10000 -- \
-> -			perf bench syscall basic --loop 1000
-> -		perf script -i $TMPDIR/perf.data --fields brstacksym | \
-> -			tr ' ' '\n' > $TMPDIR/perf.script
-> -
-> -		check_branches "getppid[^ ]*/SYSCALL/"
-> +		echo "Testing syscalls [Failed]"
->   	fi
->   }
->   set -e
-
-
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 22c44b6f0b098f95..2d23dbc666b676be 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2722,6 +2722,13 @@ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
+ 	ret = do_read_u32(ff, &nr_cpus_online);
+ 	if (ret)
+ 		return ret;
++
++	if (nr_cpus_online > nr_cpus_avail) {
++		pr_err("Invalid HEADER_NRCPUS: nr_cpus_online (%u) > nr_cpus_avail (%u)\n",
++		       nr_cpus_online, nr_cpus_avail);
++		return -1;
++	}
++
+ 	env->nr_cpus_avail = (int)nr_cpus_avail;
+ 	env->nr_cpus_online = (int)nr_cpus_online;
+ 	return 0;
+@@ -3698,6 +3705,17 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
+ 	nra = env->nr_cpus_avail;
+ 	nr = env->nr_cpus_online;
+ 
++	if (nra == 0 || nr == 0) {
++		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: missing HEADER_NRCPUS\n");
++		return -1;
++	}
++
++	if (ff->size < 2 * sizeof(u32) + nr * 2 * sizeof(u32)) {
++		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: section too small (%zu) for %u CPUs\n",
++		       (size_t)ff->size, nr);
++		return -1;
++	}
++
+ 	cd_map = calloc(nra, sizeof(*cd_map));
+ 	if (!cd_map)
+ 		return -1;
+@@ -3714,6 +3732,19 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Sanity check: real systems have at most ~10 sched domain levels
++	 * (SMT, CLS, MC, PKG + NUMA hops). Reject obviously bogus values
++	 * from malformed perf.data files before they cause excessive
++	 * allocation in the per-CPU loop.
++	 */
++#define MAX_SCHED_DOMAINS 64
++	if (max_sched_domains > MAX_SCHED_DOMAINS) {
++		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: max_sched_domains %u > %u\n",
++		       max_sched_domains, MAX_SCHED_DOMAINS);
++		return -1;
++	}
++
+ 	env->max_sched_domains = max_sched_domains;
+ 
+ 	for (i = 0; i < nr; i++) {
+@@ -3725,6 +3756,11 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
+ 			return -1;
+ 		}
+ 
++		if (cd_map[cpu]) {
++			pr_err("Invalid HEADER_CPU_DOMAIN_INFO: duplicate cpu %u\n", cpu);
++			return -1;
++		}
++
+ 		cd_map[cpu] = zalloc(sizeof(*cd_map[cpu]));
+ 		if (!cd_map[cpu])
+ 			return -1;
+@@ -3760,7 +3796,13 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
+ 			if (!d_info)
+ 				return -1;
+ 
+-			assert(cd_map[cpu]->domains[domain] == NULL);
++			if (cd_map[cpu]->domains[domain]) {
++				pr_err("Invalid HEADER_CPU_DOMAIN_INFO: duplicate domain %u for cpu %u\n",
++				       domain, cpu);
++				free(d_info);
++				return -1;
++			}
++
+ 			cd_map[cpu]->domains[domain] = d_info;
+ 			d_info->domain = domain;
+ 
