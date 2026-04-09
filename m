@@ -1,147 +1,122 @@
-Received: from mail-oo1-f98.google.com (mail-oo1-f98.google.com [209.85.161.98])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434493793BE
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 22:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1503439DBFE
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 23:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775772887; cv=none; b=Jj5aaIUQYgAV3ooYt1ciEtd//mLhCkxy8uErW+EGo/YwbZMQ9xYGloXySOuLREOJFnuxSoMzg6nzx6DdJMcQ4KyEhU/vdTbVYT1bpra86BWUHKJUUwAMRMwBdN3wMBOQVV3eKDNghnZH4VPQm9vrXPAB7uzoZF9uTWvmo2SOb78=
+	t=1775775991; cv=none; b=t5tz6eHzuxW2rY5rbXD4DGHOw+hYrkHfn8KhBzfYBG359m1L4Ihd29EaCL2bj/F/SVFxJ0Y5cZCdlI8cJ6wQ2kGGSM6F97H3L/8cZHLiYtBIELNCLtXiJJimVZZBYeZCezkUoqrKH17HiaNpLtY29BtYvbKGJH/WSwP+1sXTfhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775772887; c=relaxed/simple;
-	bh=LH71OM2mecZma8HEHsw5YLwqs4IX+ieliIcYvVpyBMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nagNy3rsfyaJS9+hUI0voDtkLkfWmpgf6CVvulyyJlSg07QrjcWn7GnQbkc1HKnxavHQ8OMluBHiCdjdlq0bPKeUCluIVabwrDeIJ7qPmmcK/RUMuITkkbu1HH+INmbqIwxm9zrSLGkQpuvDL3Zrf/0P40icTwy3a3QtZ1G3mvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gyBrg/ML; arc=none smtp.client-ip=209.85.161.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1775775991; c=relaxed/simple;
+	bh=DB/JCvQuzg0uvlhXm+oz0eVsqbSIkaRHhQAFtbMAapE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sl+H1btSfw4JIeBi/fMV6uECGfWUcXiMIZqGXUAHNXd6UcQcY+w/3yvayEyzLlioGP8EPLqWUAoAMCGWLfGuTXN6cKcGVnMu5GWhmummVSH0pqBniKdJ8nE8NkRc2DGSCXbt57QiXaAMcTotdeJEJJPiHJTsSnqKk0KkeWaRtvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZpCouREx; arc=none smtp.client-ip=74.125.82.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gyBrg/ML"
-Received: by mail-oo1-f98.google.com with SMTP id 006d021491bc7-679f6ee3fb0so562157eaf.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775772885; x=1776377685;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HOqEOVa/VITh1xF/avB48BwSmGbagcoSGHiOUBS/gqU=;
-        b=jgBQzZFTNt3UTg+H3tuCixFiNNZPNplgPq5pzkd4pfweFRg1Idq80X77BScinld3S9
-         FrBGmRqJkfHQMnHlWcyTv8CEKNPPtvOIIWR6D/2X5thZMjdauXxO8+RKfk5s617uMDgF
-         Zaqk9c0GB4fBf8UgBf6tQqWLB6msQEoPLqzbAH8gOq4KzLxtFZ7ywd/y3Ic1fVvZ7Ypz
-         /MpJkNLj4yXVtj1/22pRx5zvjY9kDk6usZaI9JedBpg67laEX9mpZc+S0PzTdwQyjFe6
-         x+2kB6Q6IaPuIlg5OdbTcL5oOe3UIWRJGb6r2ksX9fxrofW40LZY9zZO+EJw0kP5AEV/
-         Uxqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUD+eaQaWJvGWjSXcnZy3Xab4zHcHNM7CAxztHRRxaJlmfp9V1pkMiBkmK8fT/oD9xo1GwfP/zFQE8uN4PJhlTP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6NvWPFhRHtiZ2KJFCHI4QNkpMKZoT2OEFYBSlrucC825hYUGi
-	RkC9uFfpIZ1R3jAPjELqedHBtd9p//MotKJrA/CKa2bbzlgabRxl6cwmUHWFGiyAGtnUkSutA1R
-	SJjVFDcey4bamFz8sSehG+JcNRoZBdX1wR/eVFQX0dGZATMQqlTcnixlCGwL5jGC7qBChp8pmzh
-	1949MuFnn7eiEf1FuZ5mnblju6oDI8Z8rtHH8bRqTWF6In1OhmY2lQDeYGSDeR9Xl28/0u/rpER
-	Gxcx3zv2BhiFl0Dj9j1krMNc40=
-X-Gm-Gg: AeBDiev1ZqUfo2L1zymXtIoOfEWq0kqzNTA6Mjh3RQoCf2LQ3UXE3bDGCTp8UP4ZYVu
-	5JMdndjQR4qSWn7zBU/+pt+aCOhehNvaTY1aI12cRv8ztXLNMJeoLVIb4udyrHr+1quWPJxrJQx
-	KZEfFoVqRoHSLc/F4iuiEawBbUGvqm57+xlLyQRCU9H0nSBjpxosqeCYTkPIaVZJz2Qcp0pC9pC
-	JlmPXocGQVwdvvAD/hT9YuI4dRWIdDxOmEmg+ov844v40JSg9W390xxLGwbKbjnFuwFenSfzPbF
-	VhtX6PsHJAcwbGYByKq/fzk7+wekG1ACqTRcNT6CBOgle5gTypGdGDoYa1BwIIpFFFAWum3NTXS
-	z+IkYrPd0j/8eVWb/I4VzIUvlV+eH3Ur0wI3GolgNLAPuhtox6evhNODsJr0HpGZ4KWn7Bi8Ye7
-	VtmKwgtRx81QVhNe/eFKuRKC3GPYaHooPzf0Gh3JJl+oU5sNIy2wUS6SXB
-X-Received: by 2002:a05:6820:4b15:b0:684:743e:86a6 with SMTP id 006d021491bc7-68be64302c4mr504397eaf.20.1775772885207;
-        Thu, 09 Apr 2026 15:14:45 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-15.dlp.protect.broadcom.com. [144.49.247.15])
-        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-423dda061f5sm126463fac.10.2026.04.09.15.14.44
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2026 15:14:45 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8abd6e281c0so27883336d6.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZpCouREx"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1276e71652fso2071164c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 16:06:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1775772884; x=1776377684; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HOqEOVa/VITh1xF/avB48BwSmGbagcoSGHiOUBS/gqU=;
-        b=gyBrg/MLlmZ0IZND+ZR8KlftCSsopN8HqUmWY8yE2VMN7BAbWZkd2V8p8ihITV0Jek
-         +xZpEKscGYFBIQUap8VPQEWel4S9ewCzUhhDBqA5qsXEyqViZPXcs7uz9ybMq1dLUa68
-         pGPk5jQl3GhQcdxJ72o4FyHaK0DhXVS5JlL2w=
-X-Forwarded-Encrypted: i=1; AJvYcCWYabZtTdgu8NodEOD5zYmU8Ke8a/JbXZR9mQUyFjCG9q4p3ko/wV1y8LewgJe4H2F9N4H5Psuq2uelTDoVhWVT@vger.kernel.org
-X-Received: by 2002:ad4:5749:0:b0:8a5:fb34:c9fd with SMTP id 6a1803df08f44-8ac8628aa69mr10315486d6.25.1775772884164;
-        Thu, 09 Apr 2026 15:14:44 -0700 (PDT)
-X-Received: by 2002:ad4:5749:0:b0:8a5:fb34:c9fd with SMTP id 6a1803df08f44-8ac8628aa69mr10314836d6.25.1775772883540;
-        Thu, 09 Apr 2026 15:14:43 -0700 (PDT)
-Received: from lbrmn-mmayer.ric.broadcom.net ([192.19.161.248])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ac84a4355esm7228076d6.19.2026.04.09.15.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2026 15:14:42 -0700 (PDT)
-Received: by lbrmn-mmayer.ric.broadcom.net (Postfix, from userid 1000)
-	id 7E946D8A; Thu,  9 Apr 2026 15:14:41 -0700 (PDT)
-From: Markus Mayer <mmayer@broadcom.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Markus Mayer <mmayer@broadcom.com>,
-	Perf Mailing List <linux-perf-users@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/1] perf build: fix "argument list too long" in second location
-Date: Thu,  9 Apr 2026 15:14:17 -0700
-Message-ID: <20260409221418.185343-2-mmayer@broadcom.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260409221418.185343-1-mmayer@broadcom.com>
-References: <20260409221418.185343-1-mmayer@broadcom.com>
+        d=google.com; s=20251104; t=1775775988; x=1776380788; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxVDh2eRaCzt/S7N8luyaTOnSvmjRTK+RZcJFsYtPbA=;
+        b=ZpCouRExS2OCZoV2uDXMJtsUjeHV1yK1L3xP6Xz5GqYeWznF/ae5sbkUT0NEjZiJVR
+         HKm2wsTcVPjR9rzfHypOpcJr6/EUfZZVDpf3KPOMx7HikKRGJEx3lfCfDuC5szAs5+h7
+         iXWg/jtGH7MVKoO1OLJL3w1mYBhFm+GTts9kX/TIM/xtHq1m4NXtWH+veNvu7/RzEAI9
+         tvfbGwunZCA+a8XeescJ2AlNRdovYiXpgkpgMgH9YmnCfOyKrBN5d/ZHbcFvcaZgt6yL
+         6qKmUlvPx6weOHZ6RiXeHiN+0lY3MNRzh29chTUOKVZnj6knqXQuJ6cfc26KxGI3FRSq
+         enTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775775988; x=1776380788;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxVDh2eRaCzt/S7N8luyaTOnSvmjRTK+RZcJFsYtPbA=;
+        b=d1eBIt5o6Y2AkgrZ6aWauBRhIKvj0ciymRwNcUmUGzMZs0RCOzBCTY2S1o+7SvWhZe
+         YeWyOp3lGScL3OM9zfGKFYqBln2hoBLUZFuMAxoOEmkLq7bICRyrYfao2XnYrxeD2CTk
+         4LJUgdw9WLTNbtIAdAuhU24+PTW6VLsne+IvMHkDvpYpSAh8gRICOCDmQOCFr18M9S+Y
+         H6QT4gfVoG8p3t12KGCoQtxiA5pnURq0FWjLFb/Qoq+i3QDQjMyR1uoqs8czBGkaSYhL
+         bBEi0V/oNaBrEn/a3Z4VJugNSeomG6YIa0evER2rhp6KF5C2/XJRzUwhFPmamPa5mn7b
+         MrSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRGwMRQVvIV+KsvY24eGW6IviaDG3YrPmmsvjDKXr/HMpgHFady2ZfypLa4uCwm2zvwvPxmMqLeR2DsMNDIwfl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVj+rgaoFrm8yaoALKFif4rbP7T1CKpW40adT5NafDhbJ1gDUg
+	FUNQJHaaR2BfVckibobiC9MkFFW2Eejtd8FRj/01ibYb2LE4/V6qo3ugFZ0lbcVERtQotU+skHU
+	VcFxgXJFWog==
+X-Received: from dlbrh20.prod.google.com ([2002:a05:7022:f314:b0:12a:c608:a29b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4a2:b0:127:9ece:c47a
+ with SMTP id a92af1059eb24-12c34f160e8mr452729c88.36.1775775987959; Thu, 09
+ Apr 2026 16:06:27 -0700 (PDT)
+Date: Thu,  9 Apr 2026 16:06:17 -0700
+In-Reply-To: <20260406170905.2614260-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Mime-Version: 1.0
+References: <20260406170905.2614260-1-irogers@google.com>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260409230620.4176210-1-irogers@google.com>
+Subject: [PATCH v6 0/3] perf symbol/env: ELF machine clean up and lazy idle computation
+From: Ian Rogers <irogers@google.com>
+To: namhyung@kernel.org
+Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, jameshongleiwang@126.com, 
+	japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Turns out that displaying "RM $^" via quiet_cmd_rm can also upset the
-shell and cause it to display "argument list too long".
+Add a helper to perf_env to compute the e_machine if it is
+EM_NONE. Derive the value from the arch string if available. Similarly
+derive the arch string from the ELF machine if available, for
+consistency. This means perf's arch (machine type) is no longer
+determined by uname but set to match that of the perf ELF executable.
 
-Trying to quote $^ doesn't help.
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+`perf top`. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation is machine and
+kernel version dependent.
 
-In the end, *not* displaying the (potentially long) list of files is
-probably the right thing to do for a "quiet" message, anyway. Instead,
-let's display a count of how many files were removed. There is always
-V=1 if more detail is required.
+v6: Ensure arch is canonical by going to e_machine and back (Sashiko)
 
-  TEST    linux/tools/perf/pmu-events/metric_test.log
-  RM      ...634 orphan file(s)...
-  LD      linux/tools/perf/util/perf-util-in.o
+v5: Add perf_env os_release helper (Namhyung/Sashiko)
+    https://lore.kernel.org/lkml/20260406170905.2614260-1-irogers@google.com/
 
-Also move the comment regarding xargs before the rule, so it doesn't
-show up in the build output.
+v4: Fix Sashiko issues where an array element wasn't sorted properly,
+    the e_flags weren't returned properly, the idle type is change to
+    a u8 rather than an enum value and the s390 version check for
+    psw_idle is slightly reordered and tweaked.
+    https://lore.kernel.org/lkml/20260327045025.2276517-1-irogers@google.com/
 
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
----
- tools/perf/pmu-events/Build | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v3: Properly set up the e_machine coming from the perf_env as reported
+    by Honglei Wang.
+    https://lore.kernel.org/lkml/20260326174521.1829203-1-irogers@google.com/
 
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index dc5f94862a3b..dc1df2d57ddc 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -211,10 +211,10 @@ ifneq ($(strip $(ORPHAN_FILES)),)
- 
- # Message for $(call echo-cmd,rm). Generally cleaning files isn't part
- # of a build step.
--quiet_cmd_rm  = RM      $^
-+quiet_cmd_rm = RM      ...$(words $^) orphan file(s)...
- 
-+# The list of files can be long. Use xargs to prevent issues.
- prune_orphans: $(ORPHAN_FILES)
--	# The list of files can be long. Use xargs to prevent issues.
- 	$(Q)$(call echo-cmd,rm)echo "$^" | xargs rm -f
- 
- JEVENTS_DEPS += prune_orphans
+v2: Some minor white space clean up:
+    https://lore.kernel.org/lkml/20260325161836.1029457-1-irogers@google.com/
+
+v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
+
+Ian Rogers (3):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf env: Add helper to lazily compute the os_release
+  perf symbol: Lazily compute idle and use the perf_env
+
+ tools/perf/builtin-top.c          |   6 +-
+ tools/perf/util/data-convert-bt.c |   2 +-
+ tools/perf/util/env.c             | 206 ++++++++++++++++++++++++------
+ tools/perf/util/env.h             |   2 +
+ tools/perf/util/header.c          |  60 ++++++---
+ tools/perf/util/session.c         |  14 +-
+ tools/perf/util/symbol-elf.c      |   2 +-
+ tools/perf/util/symbol.c          | 107 ++++++++++------
+ tools/perf/util/symbol.h          |  15 ++-
+ 9 files changed, 309 insertions(+), 105 deletions(-)
+
 -- 
-2.53.0
+2.53.0.1213.gd9a14994de-goog
 
