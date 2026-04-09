@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A643AE1A2;
-	Thu,  9 Apr 2026 16:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DEF3E1CEF;
+	Thu,  9 Apr 2026 16:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775753179; cv=none; b=Ue8iXb6wocrkdIWjOmSkjdUyBIOm4Q9WvrZ03K52VrRH3lawhKsz5ACQ1TzpsBdd833e9zATyBWPIvsjN3Yyh/0e2K7NtYl5DOP3X9RhLuqkrcBJndQbz5NceWbZfWz6roynqOzLm/9bx8YNuKUxwAcvf8JQNGdEt4GsjgZxK8s=
+	t=1775753179; cv=none; b=u4+jSYxahE5AR3yUSh6oeJYwHOy1WP6TVfCkwQD7BHlbl5setmP7eH+tIjKWoNQgghS+0/xIyvEajiS9HLxvyNpgsdixcCXXV+B4egG86+EyvlwOSpooJB9vK5FLn8zxHQiDUMZapo4nRpGxAGWaohrtY79mmyMkugqgwZLYYRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775753179; c=relaxed/simple;
-	bh=tKQVxgdXF2RFuY/fVHca3yrRuAloPmHBZuIHBqeJwFA=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=h+GS1AKNf73X7IPC+dpQ2domw37B8vt0V5lZVvL5oLed8QYDQjoFk4l0EuiacqPBkHInv3r/Za70S9OQwQflVRgWf67N7ojttuZ7oQ0GzAFInbSsLa2LZsTk2DBC/oPElxP3/ZVrrrCjcvNSXNLLtLhloXPnPnQdC87E9Wz5if4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXdaVkEF; arc=none smtp.client-ip=10.30.226.201
+	bh=qpWD/yjK0arJ1obCvvRJEwshf6XF8B+xNDKzyynnsuE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Nx/WeiU23KabH7n8csbSEl0jw6oBK88TQx/u8ZcD+IpyQ7ItFx11RJmjgDAwejpDNoeWQbMkP31RBbVIdXbe2iMKF9S+HbBcZlFcSB47oEfJyzkfRfxqSyM8eIO11fdSWxb9Papk3F4/HukX+2bYCwVa9FfJFp1EAJGSeIZPi8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlFc87FI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXdaVkEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A32C2BCAF;
-	Thu,  9 Apr 2026 16:46:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlFc87FI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3B8C2BCB0;
+	Thu,  9 Apr 2026 16:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775753178;
-	bh=tKQVxgdXF2RFuY/fVHca3yrRuAloPmHBZuIHBqeJwFA=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=tXdaVkEFV51LZQ+n4aanCm+EqWfRVqY2rEDdCOHdacWormQ1JGbrWs+Nrak7lm8nN
-	 O4PCFbW8nBTM+91pcTNMqdqqXosGNlPqbdknTukWbP223mk2IWBj+w6qTEAhoB8cHZ
-	 3+27t8KpBDRF3cCH34NtuPdRYLy4Y5P8o7DABpMDOOSAEGuZ1bP5Yo5s8P6qHTxoMY
-	 +2WsY2BmRUFROUKEoEJazYAmRX76WAzzk/KDSK3bmPgocmPVpe2aBtdyQfYTkY7a94
-	 yqCsaBUJqlpbF2dVTc5J4UF36FecJ5PfYvhUrgXEEaZywUEve28hwcCoKBv0tn/WnE
-	 E1QzrhstVzHyQ==
+	s=k20201202; t=1775753179;
+	bh=qpWD/yjK0arJ1obCvvRJEwshf6XF8B+xNDKzyynnsuE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SlFc87FITQeeWUPbTYWeZFiH32YajmawhAI1LN86U6dmVY4V1gFxQPq/1pArIETFP
+	 FWALITz5RYt66o+w2Nh+WNRawjbK3Rs8EztPZcWdK9/xwugiKGBVe227XD86QpJiwm
+	 oGtkYbjh0CfJm3vbzuVV23eIhtQ0PwwxYz0Mhj0uBHjxf1qZ4AXI/0NbRlksZiujPf
+	 5dxktPU3m7JDkM0k1jebfxKAckIxkfOCuyzHeF0JBhgPIQUQI8u9by+4Z+kMaFNmN6
+	 IV6s5xmiLLj0hqJT6TSI2aCRMn1w6GzAAxbNEG5BbpslMdXd38i58un/Sp/NyQ9eAg
+	 iicGl2HI+8XRQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Chun-Tse Shao <ctshao@google.com>, 
- Swapnil Sapkal <swapnil.sapkal@amd.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20260408203858.100855-1-irogers@google.com>
-References: <20260408001416.101493-1-irogers@google.com>
- <20260408203858.100855-1-irogers@google.com>
-Subject: Re: [PATCH v5] perf data: Clean up use_stdio and structures
-Message-Id: <177575317842.128404.2482986120241211182.b4-ty@kernel.org>
-Date: Thu, 09 Apr 2026 09:46:18 -0700
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, acme@kernel.org, irogers@google.com, 
+ howardchu95@gmail.com, Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+ hca@linux.ibm.com, japo@linux.ibm.com
+In-Reply-To: <20260408113143.1645091-1-tmricht@linux.ibm.com>
+References: <20260408113143.1645091-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH v2] perf test: Run test 126 exclusive
+Message-Id: <177575317901.128404.8151097001939608130.b4-ty@kernel.org>
+Date: Thu, 09 Apr 2026 09:46:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,13 +47,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 08 Apr 2026 13:38:58 -0700, Ian Rogers wrote:
-> use_stdio was associated with struct perf_data and not perf_data_file
-> meaning there was implicit use of fd rather than fptr that may not be
-> safe. For example, in perf_data_file__write. Reorganize perf_data_file
-> to better abstract use_stdio, add kernel-doc and more consistently use
-> perf_data__ accessors so that use_stdio is better respected.
+On Wed, 08 Apr 2026 13:31:43 +0200, Thomas Richter wrote:
+> V1 --> V2 Fixed commit message
 > 
+> Running both tests cases 126 128 together causes the first test case
+> 126 to fail:
+>  # for i in $(seq 3); do ./perf test 126 128; done
+>  126: perf trace BTF general tests    : FAILED!
+>  128: perf trace record and replay    : Ok
+>  126: perf trace BTF general tests    : FAILED!
+>  128: perf trace record and replay    : Ok
+>  126: perf trace BTF general tests    : FAILED!
+>  128: perf trace record and replay    : Ok
+>  #
 > 
 > [...]
 Applied to perf-tools-next, thanks!
