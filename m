@@ -1,209 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C83139A818
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 23:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4C33A2553
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 23:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775777853; cv=none; b=ZELVs4jXrYpyhiKGgq3QtzBxmqR6K+oGBLGRpCDtaAvPjReImeedr2EIGcBV1N6Vkqn3ST6Qf5K+GNBzIs7ADaVP+Coi9/cJ5fWlUN4Wkx+tlxlmbBVLZcB6hHFROPnBCAcFG+3YAJdf4rOCpVXKcNO33OmxXwHuDavESqYb5XQ=
+	t=1775778659; cv=none; b=tt0G1HISdeJKoeszpXoieS05ZKp/0wN7NdCWRYP1ERsb96rePTEFa4VyOKjiP1omYOr8psrkxo9zxDdmmn6yd08440X6qwhJCLIY9WjHsbrhPTYi/xlVcOgiP34iwq2jLHBST1wR1a3Gg3DGlh1+Eyz6P6dE5/ROWgOXU7JJI30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775777853; c=relaxed/simple;
-	bh=f/yTPiGv/ChF9oagGG1MbhcjjwuSgDA/WygG5hGCuxY=;
+	s=arc-20240116; t=1775778659; c=relaxed/simple;
+	bh=fbUMyXJzH/afvAvb/qsDKdi8XMLNkvGhM73ehv2bxNo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tLNSrPdrkRIXhtX4uGmkc1oCG/DGAMjk8OkgQvoGVhqQVYcPhqXnqMAvCtBi/xERCJmFQkvJQjqRQzmJSJAL9Hjxj4q6TUBFqtHeMYHmkrVh/fLOic0cWmus5tXtJC7i61qY3lrliKuZZMzXCC2r6BGug/p8YRbdINpN2IZhLzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjQ1neZn; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=CeAcBMaPWOAL0EXCpGfB1o1wvysRyxlQ930Awpe/Vrz3LbIEzrA2PEwuesMBrAWrYJawSE+I02kvNS+jAOb5PAopkdsLbdT6W8jxsQVakWomcKZhvM46xxIPME6hbn4pfwKteoM3vlwJu/QwWkWe+XKa2y8MC7XUp5r/xX5rWVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjG+mlbD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjQ1neZn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3D6C4CEF7;
-	Thu,  9 Apr 2026 23:37:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjG+mlbD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB942C4CEF7;
+	Thu,  9 Apr 2026 23:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775777852;
-	bh=f/yTPiGv/ChF9oagGG1MbhcjjwuSgDA/WygG5hGCuxY=;
+	s=k20201202; t=1775778658;
+	bh=fbUMyXJzH/afvAvb/qsDKdi8XMLNkvGhM73ehv2bxNo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=JjQ1neZncw6/wGpMfHEbk+s9UAgMkk1Ps2JTkFOKqZwRUMgyJtmABnJ1KAlTexByZ
-	 XX48t/fEJIiZxCv3qIP4R3nWlqNMXEjyTwm0qdFc0b4iJg4Fq8C0jQbTgVocfe5uAu
-	 HUPhhkM4r7PAsn6mG6E8okhq+9DgPAHMT4Mhkej+uSeUaPZ/hbFarN2UPdoSbip4cu
-	 UL4JhNvvQLOsDlNZtIhA6oSxx9gBhm0uwP96ztsw7dG4PWaeTq5yenKVZgiW6wbCU9
-	 2zFkGtWo2X24011jvQa2jqaw0v+Q6HUjgISna772R6UMCmfnoEyU9GfSo165by0Pja
-	 y+jBrjttInYvQ==
+	b=VjG+mlbDAcO2O1E+vnPNkUCOxbSvk1UdAZtHIyLnZ7EhxnnuaVVEBKy+H0JpymUsq
+	 R/atBj5KnplVUBCtHQm1IsYJK2SQzfyoULu7qmyRA2F21fY7PDUNPtcObBB3BkAPgz
+	 EUnPZ4WV8ZIzZeR82XWR/YwnmDBu2SjzBopLe+Z3oXLzqjGqFnQZKUQA9CU6+VsHYA
+	 LKPTa193M1O9HZZ9pI/8G8ZdX2SPRjnSFOPqqrdTurDk+gBAFn7vxvWB6JTZpo9ORY
+	 jidLgqOdR7KXpL2Upa8mGRWaRwHOpIqOPQhtWWcGINYw6HNN8DWP8/OFHBS/yI6g/D
+	 UEhNzrfTF6m5A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 1/3] perf env: Add perf_env__e_machine helper and use
- in perf_env__arch
+Subject: Re: [PATCH v6 2/3] perf env: Add helper to lazily compute the
+ os_release
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260409230620.4176210-2-irogers@google.com>
-References: <20260409230620.4176210-2-irogers@google.com>
+In-Reply-To: <20260409230620.4176210-3-irogers@google.com>
+References: <20260409230620.4176210-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Apr 2026 23:37:32 +0000
-Message-Id: <20260409233732.8F3D6C4CEF7@smtp.kernel.org>
+Date: Thu, 09 Apr 2026 23:50:58 +0000
+Message-Id: <20260409235058.AB942C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [High] perf_session__e_machine() bypasses lazy evaluation of e_machine fr=
-om env->arch when env->e_machine is EM_NONE, breaking cross-architecture an=
-alysis of legacy perf.data files.
-- [High] Uninitialized env->kernel_is_64_bit coerces to true, causing 32-bi=
-t architectures to be parsed as 64-bit.
-- [High] write_arch() silently caches EM_HOST, permanently bypassing accura=
-te thread-based architecture detection during perf record.
-- [Medium] Unhandled OOM in process_arch() leaves env->arch as NULL, leadin=
-g to a subsequent NULL pointer dereference.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] Offline traces missing the OS_RELEASE header are polluted with t=
+he host's kernel version.
+- [Medium] Unhandled `strdup()` memory allocation failure leads to NULL poi=
+nter dereference in `snprintf()`.
 --
 
-commit a2ed4a04364ee664047eec1e47e4e540e458eff9
+commit 291bf2cc1c91c985c162c953f24ca34e304792c1
 Author: Ian Rogers <irogers@google.com>
 
-perf env: Add perf_env__e_machine helper and use in perf_env__arch
+perf env: Add helper to lazily compute the os_release
 
-Add a helper that lazily computes the e_machine and falls back of
-EM_HOST. Use the perf_env's arch to compute the e_machine if
-available. Use a binary search for some efficiency in this, but handle
-somewhat complex duplicate rules.
+This commit adds a lazy initialization helper for the os_release string in
+the perf environment, falling back to uname if it is not initialized.
 
 > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 1e54e2c863605..339d62ca37bb8 100644
 > --- a/tools/perf/util/env.c
 > +++ b/tools/perf/util/env.c
 [ ... ]
-> @@ -588,51 +590,160 @@ void cpu_cache_level__free(struct cpu_cache_level =
-*cache)
-[ ... ]
-> +uint16_t perf_env__e_machine(struct perf_env *env, uint32_t *e_flags)
-> +{
-> +	if (!env) {
-> +		if (e_flags)
-> +			*e_flags =3D EF_HOST;
-> +
-> +		return EM_HOST;
-> +	}
-> +	if (env->e_machine =3D=3D EM_NONE) {
-> +		env->e_machine =3D perf_arch_to_e_machine(env->arch, env->kernel_is_64=
-_bit);
-
-Is env->kernel_is_64_bit guaranteed to be a boolean here?
-
-If env->kernel_is_64_bit is uninitialized, it defaults to -1 in
-perf_env__init(). In C, -1 evaluates as true, which would cause 32-bit
-architectures to be parsed as 64-bit (e.g., returning EM_X86_64 instead
-of EM_386).
-
-Should this use the lazy evaluator perf_env__kernel_is_64_bit(env) instead?
-
-[ ... ]
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index c6efddb70aee2..9bb4a271b4f8a 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -370,21 +370,25 @@ static int write_osrelease(struct feat_fd *ff,
-[ ... ]
-> -static int write_arch(struct feat_fd *ff,
-> -		      struct evlist *evlist __maybe_unused)
-> +static int write_arch(struct feat_fd *ff, struct evlist *evlist)
->  {
->  	struct utsname uts;
-> -	int ret;
-> +	const char *arch =3D NULL;
+> @@ -330,6 +330,27 @@ int perf_env__kernel_is_64_bit(struct perf_env *env)
+>  	return env->kernel_is_64_bit;
+>  }
 > =20
-> -	ret =3D uname(&uts);
-> -	if (ret < 0)
-> -		return -1;
-> +	if (evlist->session)
-> +		arch =3D perf_env__arch(perf_session__env(evlist->session));
-
-When write_arch() is called during perf record, it invokes perf_env__arch().
-Since env->arch is NULL and env->e_machine is EM_NONE, this falls back to
-perf_arch_to_e_machine(NULL, ...), locking env->e_machine to EM_HOST.
-
-Later, when write_e_machine() calls perf_session__e_machine(), the check for
-env->e_machine !=3D EM_NONE will evaluate to true.
-
-Will this permanently bypass the accurate thread-based architecture detecti=
-on
-(machines__for_each_thread) designed to handle mixed 32/64-bit threads?
-
-[ ... ]
-> @@ -2675,10 +2679,30 @@ static int process_##__feat(struct feat_fd *ff, v=
-oid *data __maybe_unused) \
-[ ... ]
-> +static int process_arch(struct feat_fd *ff, void *data __maybe_unused)
+> +const char *perf_env__os_release(struct perf_env *env)
 > +{
-> +	uint16_t saved_e_machine =3D ff->ph->env.e_machine;
+> +	struct utsname uts;
+> +	int ret;
 > +
-> +	free(ff->ph->env.arch);
-> +	ff->ph->env.arch =3D do_read_string(ff);
-> +	if (!ff->ph->env.arch)
-> +		return -ENOMEM;
+> +	if (!env)
+> +		return perf_version_string;
+> +
+> +	if (env->os_release)
+> +		return env->os_release;
+> +
 > +	/*
-> +	 * Make the arch string canonical by computing the e_machine from it,
-> +	 * then turning the e_machine back into an arch string.
+> +	 * The os_release is being accessed but wasn't initialized from a data
+> +	 * file, assume this is 'live' mode and use the release from uname. If
+> +	 * uname fails then use the current perf tool version.
 > +	 */
-> +	ff->ph->env.e_machine =3D EM_NONE;
-> +	if (perf_env__e_machine(&ff->ph->env, /*e_flags=3D*/NULL) !=3D EM_NONE)=
- {
-> +		zfree(&ff->ph->env.arch);
-> +		perf_env__arch(&ff->ph->env);
-
-If the strdup() inside perf_env__arch() fails due to memory constraints,
-it returns NULL and env->arch remains NULL.
-
-Since process_arch() unconditionally returns 0 here, could this lead to a
-NULL pointer dereference later if strncmp() is called on the architecture
-string?
-
-> +	}
-> +	ff->ph->env.e_machine =3D saved_e_machine;
-> +	return 0;
+> +	ret =3D uname(&uts);
+> +	env->os_release =3D strdup(ret < 0 ? perf_version_string : uts.release);
+> +	return env->os_release;
 > +}
-> +
->  static int process_e_machine(struct feat_fd *ff, void *data __maybe_unus=
-ed)
->  {
->  	int ret;
+
+If we are processing an offline perf.data file with a tool like perf report
+or perf data convert, and the file is missing the HEADER_OSRELEASE feature,
+env->os_release will legitimately be NULL.
+
+Does this unconditional fallback to uname risk polluting the offline
+trace's metadata with the local analysis host's kernel version?
+
+This could potentially cause tools to incorrectly search for the target
+vmlinux using the host's kernel version, or embed the host's release into
+exported traces as the target's release.
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
 [ ... ]
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index fe0de2a0277f0..726568b888039 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -3023,14 +3023,16 @@ uint16_t perf_session__e_machine(struct perf_sess=
-ion *session, uint32_t *e_flags
->  		return EM_HOST;
->  	}
+> @@ -2226,7 +2226,7 @@ static int vmlinux_path__init(struct perf_env *env)
+>  		return 0;
 > =20
-> +	/* Is the env caching an e_machine? */
->  	env =3D perf_session__env(session);
-> -	if (env && env->e_machine !=3D EM_NONE) {
-> -		if (e_flags)
-> -			*e_flags =3D env->e_flags;
-> -
-> -		return env->e_machine;
-> -	}
-> +	if (env && env->e_machine !=3D EM_NONE)
-> +		return perf_env__e_machine(env, e_flags);
+>  	if (env) {
+> -		kernel_version =3D env->os_release;
+> +		kernel_version =3D perf_env__os_release(env);
 
-For legacy perf.data files without HEADER_E_MACHINE, process_arch() restores
-env->e_machine to EM_NONE.
+If the strdup call in perf_env__os_release fails, it will return NULL.
 
-Since the condition here explicitly requires env->e_machine !=3D EM_NONE, w=
-on't
-this completely bypass the new lazy evaluator and fall back to EM_HOST,
-potentially breaking cross-architecture analysis for legacy files?
+Since kernel_version is assigned the result directly, could this result in
+passing a NULL pointer to snprintf slightly further down in this function:
 
-> =20
-> +	/*
-> +	 * Compute from threads, note this is more accurate than
-> +	 * perf_env__e_machine that falls back on EM_HOST and doesn't consider
-> +	 * mixed 32-bit and 64-bit threads.
-> +	 */
->  	machines__for_each_thread(&session->machines,
->  				  perf_session__e_machine_cb,
->  				  &args);
+	snprintf(bf, sizeof(bf), vmlinux_paths_upd[i], kernel_version);
+
+Passing NULL to a %s format specifier can lead to undefined behavior and
+potential segmentation faults on certain C libraries like musl.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260409230620.4176=
-210-1-irogers@google.com?part=3D1
+210-1-irogers@google.com?part=3D2
