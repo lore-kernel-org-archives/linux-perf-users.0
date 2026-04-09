@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D12D7817;
-	Thu,  9 Apr 2026 01:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E350319857;
+	Thu,  9 Apr 2026 01:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775699509; cv=none; b=A1Gno/c+6/SZlDb99jDqe1mTHEZxIdoJL11ZpPh/IzYRCJwnwIauX6TfBLTkadHm81cl2AKZM2/dVOmf4lNGXR82QpFzzYBVZdUoHT8yvOedo78IJHJAHmydJtoHIc7GoGzR9vzKuNNGrd4ktT/QklOq5s2TE1bByofDtgTFT5g=
+	t=1775699705; cv=none; b=CFxa11TWhN0G681f1Md0U9NALFZFVDInLqnL5pfMRnN/8Ibuhuv3ZVvpuu3lXB6eiCe7MtyrWrmpBqmnWTF9YiR70KDTHSph0C3XDuixHrVDtix9XyPut4MPLn/CZU/oKv7Ts0nVIwtkp0Fbsx1SskgXuXHN53beEqE4H5XC0Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775699509; c=relaxed/simple;
-	bh=rtymwEFPfh8Z5dK9imsoQ2aOCsbap5Zbqe7RVmpeLuU=;
+	s=arc-20240116; t=1775699705; c=relaxed/simple;
+	bh=tfXnPO8QfGZiGbiLkCITS3SPUCv9zEX1laQcNw4VbZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tUalkKKHLlXYbzefeK2/6GLG7HEYCAEULqOJGC8W/su/MlGor6B88KhpLAFj0IZyQNfI4Txbq98nYELS22BjNWMdNaXXKBOroM2kphl1AE0lolR5HYeVxIMGY0P+vqF1rMVyFuJsHnoIbqR1iVi+Qup7X2cLBskaY6U1J8dkjAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIucprTS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bdqdKPSmxQCRyfsuy3NiFXcqTN+1tGpzsgz42a0oHLcrxf3aTczhK/2rB5x3EWVPov80W2T+AxHWUX31c/vsxWnem8hFxy2l5WDaj16WuOBH0qB5KVr5o+h2d2fo6U4KyxvVC6cdGkLMqTJ4Ygu4GIyVw1q5ab3Ww305dQcKmEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTrIrQ/T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIucprTS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7475FC19421;
-	Thu,  9 Apr 2026 01:51:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTrIrQ/T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96499C19421;
+	Thu,  9 Apr 2026 01:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775699509;
-	bh=rtymwEFPfh8Z5dK9imsoQ2aOCsbap5Zbqe7RVmpeLuU=;
+	s=k20201202; t=1775699704;
+	bh=tfXnPO8QfGZiGbiLkCITS3SPUCv9zEX1laQcNw4VbZ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GIucprTSxuxgoFzT/dZzMCD7cNqkj5NrJw7AeVKsrXZU2moZQfG7qNzPjzD+s+x99
-	 Nd0o5YI1QTjI31XfbO9X9v2f2leMCPtud82C/VMSWIJgg5fKWPK1HOrpJpj+lwnQoM
-	 xm31j3GqVda+XlUmiGT4ZAk42+hS1bQcSH9j/5Tgqj3Zo0Fi5NaAcgrptlO3bsFJAo
-	 rJSelG6kxBHanSLzebILMGS7SPoUym3fXMgCk3APT85eDLEf+yvVV2dXOgsA5VnY00
-	 kwWIrrzvcPnMD6J5v5Y3hJS+d74wmKtwjnZ0I3yMAUdLFfpYAlh9CidQKlBmgzxR0E
-	 UoNTgwk1Hl9ww==
-Date: Wed, 8 Apr 2026 18:51:46 -0700
+	b=aTrIrQ/TJvpsUoji4VVTjA6l88FY5p+D43L07saGWSN7RhXXLOs428KuJDhSv/E15
+	 naCgBlSNZJLT1VCyTp9of8GRsvllpeQwr7R1ovLBVru+H0mdzokmwvIDvm83mowgCn
+	 T/9FT63wxQfIp/+cNgBFJw0Ii9dS/RSixwxYvxDRsONi6aYV9509GTmlKuOkZ9+dfn
+	 EuiaAMFpNg/ZFZLex+BVWvatxNKoNNf0tQn3fjCfGDNHNpMPNVkzBFt/emY+Z9xZnd
+	 7riuNdvfBFddbFkcgMJdKOa1BibeaxlFCoMERHeYPF6wvTff+sGdUzAoY+8L+s1jyu
+	 es5VVGX5mBN7w==
+Date: Wed, 8 Apr 2026 18:55:01 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko@lists.linux.dev
 Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 03/23] perf evsel: Refactor evsel tracepoint sample
- accessors perf_sample
-Message-ID: <adcGMruruUxSVBMZ@google.com>
-References: <20260408072601.210837-4-irogers@google.com>
- <20260408082023.41F14C2BCB3@smtp.kernel.org>
+Subject: Re: [PATCH v7 04/23] perf kwork: Duplicate IRQ name in irq_work_init
+Message-ID: <adcG9Rlp1znYkgYJ@google.com>
+References: <20260408072601.210837-5-irogers@google.com>
+ <20260408080812.0EB34C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,96 +43,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260408082023.41F14C2BCB3@smtp.kernel.org>
+In-Reply-To: <20260408080812.0EB34C19424@smtp.kernel.org>
 
-On Wed, Apr 08, 2026 at 08:20:22AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 1 potential issue(s):
-> - [Medium] Integer overflow and incomplete validation in the newly added tracepoint bounds checks allow out-of-bounds memory accesses.
+On Wed, Apr 08, 2026 at 08:08:11AM +0000, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 2 potential issue(s):
+> - [High] Massive per-event memory leak of dynamically allocated IRQ names when updating existing `kwork_work` entries.
+> - [Medium] Missing check for `strdup()` allocation failure leads to undefined behavior in `snprintf()`.
 > --
 > 
-> commit f7dda507e65d40381a27ba2e39e45e8a6050afff
+> commit fd542621f59f12c7e1282f77ef0817d45c3b81a0
 > Author: Ian Rogers <irogers@google.com>
 > 
-> perf evsel: Refactor evsel tracepoint sample accessors perf_sample
+> perf kwork: Duplicate IRQ name in irq_work_init
 > 
-> This commit refactors tracepoint sample accessors to remove the evsel
-> argument. It also adds bounds checks when reading values from tracepoint
-> fields based on review feedback.
+> This commit duplicates the IRQ name string when initializing a kwork work
+> item to avoid lifecycle issues with pointers into the perf event sample.
+> It also updates perf_sample__strval to return a const char pointer.
 > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 2ee87fd84d3ea..b653e683d7a12 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -3687,15 +3687,20 @@ struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *na
-> >  	return tp_format ? tep_find_common_field(tp_format, name) : NULL;
-> >  }
-> >  
-> > -void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char *name)
-> > +void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
-> >  {
-> > -	struct tep_format_field *field = evsel__field(evsel, name);
-> > +	struct tep_format_field *field = evsel__field(sample->evsel, name);
-> >  	int offset;
-> >  
-> >  	if (!field)
-> >  		return NULL;
-> >  
-> >  	offset = field->offset;
-> > +	if ((u32)(offset + field->size) > sample->raw_size) {
-> > +		pr_warning("Invalid trace point field offset %d for field of length %d in sample raw data of size %u\n",
-> > +			   offset, field->size, sample->raw_size);
-> > +		return NULL;
-> > +	}
+> > diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+> > index f600037ee4603..dceb9b79aa6ac 100644
+> > --- a/tools/perf/builtin-kwork.c
+> > +++ b/tools/perf/builtin-kwork.c
+> > @@ -1018,7 +1018,7 @@ static void irq_work_init(struct perf_kwork *kwork,
+> >  		work->name = NULL;
+> >  	} else {
+> >  		work->id = perf_sample__intval(sample, "irq");
+> > -		work->name = perf_sample__strval(sample, "name");
+> > +		work->name = strdup(perf_sample__strval(sample, "name") ?: "<unknown>");
 > 
-> Can this bounds check be bypassed due to integer overflow? If a malformed
-> perf.data file provides an exceptionally large offset (for example,
-> 0xFFFFFFFC) and a size of 4, the sum could wrap around to 0. Would this
-> allow an out-of-bounds read when accessing the memory?
+> Does this code leak the allocated name string when processing existing work
+> items?
+> 
+> In event processing loops like work_push_atom() and work_pop_atom(), a
+> temporary kwork_work struct is allocated on the stack for every single trace
+> event. If the item is already present in the RB-tree, work_findnew() or
+> work_search() returns the existing kwork_work object which already has its
+> name populated.
 
-I think it's better not to include any bounds check in the patch.
-It's adding a lot of review noise and doesn't help making progress.
-You can ignore security issues in this series as they are pre-existing,
-and just make this patch simple, doing one thing - removing 'evsel'
-argument.
-
-The review comments can be addressed in a separate patch series
-(preferrably) or different patches in this series.
+Similarly, I think you can drop this patch unless you really want to fix
+the memory problems in kwork code base properly.
 
 Thanks,
 Namhyung
 
 > 
-> >  	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-> >  		offset = *(int *)(sample->raw_data + field->offset);
-> >  		offset &= 0xffff;
-> >  		if (tep_field_is_relative(field->flags))
-> >  			offset += field->offset + field->size;
-> >  	}
-> > 
-> >  	return sample->raw_data + offset;
+> Since the newly allocated name string on the temporary structure is ignored
+> for existing items, does this leak the duplicated string for every repeated
+> IRQ trace event?
 > 
-> Is the dynamically computed offset validated against sample->raw_size? It
-> appears the initial check covers the initial field offset, but the newly
-> computed offset for dynamic fields is added directly to sample->raw_data
-> without a subsequent bounds check, which might lead to out-of-bounds memory
-> accesses.
+> What happens if strdup() fails and returns NULL here?
+> 
+> Later in irq_work_name(), work->name is passed directly to snprintf() with
+> the %s format specifier:
+> 
+> static void irq_work_name(struct kwork_work *work, char *buf, int len)
+> {
+>         snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
+> }
+> 
+> Could this regression cause a segmentation fault during memory pressure if
+> work->name becomes NULL?
+> 
+> >  	}
+> >  }
 > 
 > [ ... ]
 > 
-> > @@ -3713,6 +3718,12 @@ u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sam
-> >  	u64 value;
-> >  	void *ptr = sample->raw_data + field->offset;
-> >  
-> > +	if ((u32)(field->offset + field->size) > sample->raw_size) {
-> > +		pr_warning("Invalid trace point field offset %d for field of length %d in sample raw data of size %u\n",
-> > +			   field->offset, field->size, sample->raw_size);
-> > +		return 0;
-> > +	}
-> > +
-> 
-> Can this suffer from the same integer overflow issue? If field->offset and
-> field->size wrap around when added together, it looks like an out-of-bounds
-> pointer could be dereferenced when evaluating the field.
-> 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260408072601.210837-1-irogers@google.com?part=3
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260408072601.210837-1-irogers@google.com?part=4
