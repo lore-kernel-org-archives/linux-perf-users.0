@@ -1,118 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f227.google.com (mail-yw1-f227.google.com [209.85.128.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3090237472D
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 17:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF9F355F43
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 22:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775756255; cv=none; b=dv7/pzKZQJZZNmUH0lIYkcCDyMQ4wfRgnhzvsMGoF/FsUIY3RUVD+bxsL2d/uXqvYSQcwYIO6TyIUMqMuLMCHSRUryscKNAfvxDSxDNjE3FDnP3uSUFOIscZxdicXQ4Da14ULpn/7JWUcgKy0n0EHUtMb9EV/VS2FxwGmQI588U=
+	t=1775772879; cv=none; b=HkjwF3YqDIP8dI3uO8kmkzjuXa6506xxhZq98Q3/gX6zWEZjMnsiQbinx81j94GVUNd56z37/WKRNgpUDiETylU/Qw45k1gJf9qGelBfOlDScVf814Lh2de6w3qiU0CjQXcszzNykyOccr56XWHJu5zN4xGQFegsHOV/5F+yF/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775756255; c=relaxed/simple;
-	bh=fjGSQuZlCZGB6mrZvw5UmBHFsOYwj2K7j7QQnGuwhA8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uapKxUGyvgofxpTYK5PKCkQquTD8atmuFhhG99sTx51C7Gj1gMTjpfsnyJqzTykLe6FtijoweAJCVGBWYgU8RHtNav+EcS3RoCuLto3ETRwf7PDqElt1+aDSDjpjZgC0ZglpJqEn0lJpKAxqylabyN11zb7hDc/a9R3Tva2CqvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t++V5A6c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775772879; c=relaxed/simple;
+	bh=IlEOEK9psHRcUCQ0TvYpAEPy8eKK+XtGT0cHQnAKG0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H/gRbWX1bq1NR5+Skkf2j0QUt4CmleQiAWQjzuHT1G71pi0ByvNhX5XUaH6Y22ycKXWuvWvJw9DLnz3I9e13Ptr+GWLlUwesPKaj/QUzNbdTAiMjA5/ZgqX31jaQB4b8dX6324YHxXWK1EmrpnreE8u8ZK5SgaUtQdq0OkxG+ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fsonaWf+; arc=none smtp.client-ip=209.85.128.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t++V5A6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1E5C4CEF7;
-	Thu,  9 Apr 2026 17:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775756254;
-	bh=fjGSQuZlCZGB6mrZvw5UmBHFsOYwj2K7j7QQnGuwhA8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=t++V5A6cUgoJtrXyOEEzvwnxonEQ1nPC9qTlsDnPWsBtebZ/RjUWeDU0V9czzYOQn
-	 YstM5JLBBJeCwJQhKiz5xvraBFLbJtmiISg7Rf3xV9sSAgcNPJDqlWpWABszAz3WAe
-	 mimB1fhprcoAmJEOSey7etMPVu0ApYxfsmxjxJ/RMef5RnAyNczQIyiUBZl+L9syKK
-	 XfkNnovsIg+snrwRRnrC5beQWRc5puuEDoc/MT79b6gAvsDIN7WqtowybY9ZS8czzW
-	 5PmZjuAGpCAdpw/hLJKN+JmSKJDgQboo3iOd2dTFSflj75Fr5CCIYefDDjQNtZrkAD
-	 uWvaWlqwmW07A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] perf lock contention: Fix SIGCHLD race in
- __cmd_contention()
-Reply-To: sashiko@lists.linux.dev
-To: "Swapnil Sapkal" <swapnil.sapkal@amd.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260409162249.25581-4-swapnil.sapkal@amd.com>
-References: <20260409162249.25581-4-swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Apr 2026 17:37:33 +0000
-Message-Id: <20260409173734.BC1E5C4CEF7@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fsonaWf+"
+Received: by mail-yw1-f227.google.com with SMTP id 00721157ae682-79a60975dc5so16269757b3.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775772877; x=1776377677;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uq61NuSioqeK9Ij19oY22/JbQCoqVgQAnKmc0h81Ayg=;
+        b=E9fPIuXSZS/6PsJNglzbssLjKNTDYHLJngSOZ7sQ7bNZngP7ZgUMN4rUPURYP5+oA0
+         9onVDVVCKaXDW0chNG9l1vDt1VjAaoUvroaaYRJ1S6+2cjsFSR1ZDXvIG6piqbgWd31o
+         bNVeV7hlxMGIk4Nakq4HvIYD3YYvwBI9UO1tgy3cGKJooLhexGO9KL5nr+aJsNdYVrZ6
+         l0NTBSbi+lqfYHyQIs0nXkgUpnX/AmN2ZCPXdzJ5vygncmP/8OKDXV+QIirx/ztn9O2g
+         gMJxWJVMs1jsuOWiSSH0vfIsLd33qAd5F6Hw5RwtRQoSKv84f2mr/4bEbwQ2jvbP5LSo
+         G0AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfLSdeCwTpA4j/NfYHXPNtEp6MZOjzecbe7MiGtS1Nqo48esBCHgaMGVKQoJlD4n0TF5mnFTE1omeHRBB0cs2l@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTqygHVu4YdnES1ZgUXS/oC//HmTv+OUuJBTva+Vq5SyCZYwMt
+	dnhiJRZLFds4ac8uFs52lGKH+3Cs8geE9nMAiDz2uiBlMd5kvAqp5MbTjnpF2T6a75vr2ggBvLo
+	G8OyK78tapZAxvJVOmYacJVPw+G46x+Q0dShX5IQ+h4MzSG0Rt4NjS1WvCp9lw4rnkBJLP+PFOT
+	1v5YC8o7lxOj4MoKS9UMkG/V0rs1Ahx/8IfNt08NDGnUeZ8RfMBeeyhaLm36czpV2A9+jr4ctfB
+	7D8dKz8LaGG90166ZieDgCf2Zw=
+X-Gm-Gg: AeBDietChj09BlgszkRjgvz45ynKeYLVoGqU43a1CLV/pOtXB7WuKk6keUHzEOYBXgi
+	2yzAoQgFQjm/0Albj3jyO4P/Q9K6u4H297ZWZCTcQVv8ZzeJO7EUpp2VEtPbrkgh1PdagTRFI3C
+	yjMPMvv2DJ6F+DF/hOtnej/Q4ePNgjUGaOsn0IhvHMVxtPn68Gts+rLku++SxaaKm86Z5ofUVkq
+	NUca8ByW/Si6xpx4voUh41//4iddj6uNYgy/8mKc4/bPb/krd1BJCZfc8XtRIuzspkb6wp72lDU
+	pAtNb/2Xu0ocU0RWJkscfdT1N4pDg1kAgq1RlZtFScq2FBmS40wVh02m6svlcrs8INMsW8Aauph
+	mqVN6aM6Bn6SnyCGf1MAyxsnXWdwsflIesOWEdxS2va72d3C+MtYhoKTsDMjFhwWWsFc+6iX3m5
+	fAxLfHXrWfixCnRZJIKUmlpywdlR9kIfcFOI+J3PiUoe4LmF+Pe4paQVrZ
+X-Received: by 2002:a05:690c:a052:b0:79a:b824:ccb0 with SMTP id 00721157ae682-7af7223b5e4mr6576067b3.46.1775772876932;
+        Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-15.dlp.protect.broadcom.com. [144.49.247.15])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7af3e46d62dsm597157b3.4.2026.04.09.15.14.36
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8d65190e52fso252817385a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1775772876; x=1776377676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uq61NuSioqeK9Ij19oY22/JbQCoqVgQAnKmc0h81Ayg=;
+        b=fsonaWf+mWJW+ulrDbDp/cxtsCmaurgvpaJek8uzLorTjmLn4Ru+PPz49XhUWsR4bN
+         lnM1o2R+bRJ+TH8FZhkGXrtDoHQ9iMvLda2wbrpjqXFzdd9eGrMwxdGV/jC5Q1FZ1/+u
+         vlRbaV0u0KgTyVV2OWje8Tjsn5tR3wAm/dK2c=
+X-Forwarded-Encrypted: i=1; AJvYcCU+L/LBS0+r4mmYN3qY4f9mXzgbrtbnVzOjoMsNtDhhSA19gf5lmU9n5YdlkGT//egpg76CxorIPdzrOD0t36ng@vger.kernel.org
+X-Received: by 2002:a05:620a:4688:b0:8da:358a:c481 with SMTP id af79cd13be357-8ddccb293f3mr107438185a.1.1775772875016;
+        Thu, 09 Apr 2026 15:14:35 -0700 (PDT)
+X-Received: by 2002:a05:620a:4688:b0:8da:358a:c481 with SMTP id af79cd13be357-8ddccb293f3mr107433985a.1.1775772874510;
+        Thu, 09 Apr 2026 15:14:34 -0700 (PDT)
+Received: from lbrmn-mmayer.ric.broadcom.net ([192.19.161.248])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ddb5f89ccdsm56866385a.5.2026.04.09.15.14.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2026 15:14:33 -0700 (PDT)
+Received: by lbrmn-mmayer.ric.broadcom.net (Postfix, from userid 1000)
+	id 7DF92D86; Thu,  9 Apr 2026 15:14:32 -0700 (PDT)
+From: Markus Mayer <mmayer@broadcom.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Markus Mayer <mmayer@broadcom.com>,
+	Perf Mailing List <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/1] perf build: fix "argument list too long" in second location
+Date: Thu,  9 Apr 2026 15:14:16 -0700
+Message-ID: <20260409221418.185343-1-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Unconditional use of `sigsuspend()` without a state flag fails to =
-fix the race condition and causes indefinite hangs.
---
+Hi all,
 
-commit bbcae9323bad3368550c5fd9165d487b92cd3bbd
-Author: Swapnil Sapkal <swapnil.sapkal@amd.com>
+My apologies for not catching this one sooner. Using xargs in the actual
+build recipe worked, but it turns out echoing $^ in quiet_cmd_rm also
+offends the shell. Somehow, it didn't show up during my tests before
+submitting the previous fix[1] for this issue or I would have addressed
+both together.
 
-perf lock contention: Fix SIGCHLD race in __cmd_contention()
+But then it did start to show up. Like this:
 
-This commit replaces pause() with sigsuspend() to prevent a race condition
-where a short-lived workload exits and delivers SIGCHLD before the wait
-begins.
+  GEN     linux/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/extra-metricgroups.json
+  TEST    linux/tools/perf/pmu-events/metric_test.log
+make[5]: /bin/sh: Argument list too long
+make[5]: *** [pmu-events/Build:220: prune_orphans] Error 127
 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index e8962c985d34a..2da689de134a4 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
+This was a bit of a head-scratcher before I realized that this came from
+    quiet_cmd_rm  = RM      $^
+and that no attempt of putting quotes around $^ would help.
 
-[ ... ]
+With change proposed here, it'll look like this instead:
 
-> @@ -2123,12 +2124,25 @@ static int __cmd_contention(int argc, const char =
-**argv)
->  	}
-> =20
->  	if (use_bpf) {
-> +		/*
-> +		 * Block all handled signals after evlist__prepare_workload()
-> +		 * so the forked child does not inherit a modified signal
-> +		 * mask, then use sigsuspend() to atomically unblock and
-> +		 * wait. This prevents a race where a short-lived workload
-> +		 * exits and delivers SIGCHLD before we are ready to wait.
-> +		 */
-> +		sigemptyset(&sig_mask);
-> +		sigaddset(&sig_mask, SIGCHLD);
-> +		sigaddset(&sig_mask, SIGINT);
-> +		sigaddset(&sig_mask, SIGTERM);
-> +		sigprocmask(SIG_BLOCK, &sig_mask, &oldmask);
-> +
->  		lock_contention_start();
->  		if (argc)
->  			evlist__start_workload(con.evlist);
-> =20
-> -		/* wait for signal */
-> -		pause();
-> +		sigsuspend(&oldmask);
+  GEN     linux/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/extra-metricgroups.json
+  TEST    linux/tools/perf/pmu-events/metric_test.log
+  RM      ...634 orphan file(s)...
+  LD      linux/tools/perf/util/perf-util-in.o
 
-If SIGINT or SIGCHLD is delivered before sigprocmask() blocks them, won't it
-be consumed by sighandler without setting any checked state, causing
-sigsuspend() to hang indefinitely?
+This is probably a good thing, regardless of the shell complaining,
+since listing 634 files in a so-called "quiet" message is probably not
+very fitting.
 
-The signals are registered earlier in the function, leaving a window during
-evlist__prepare_workload() and lock_contention_prepare() where they are
-unblocked.
+I don't know why my build has 634 orphans every single time it runs
+(straight-up cross-build on x86_64 for ARM64) or if that is a lot. I do
+get the impression that it is probably rather unusual. Not really doing
+anything special, though.
 
-Should there be a volatile sig_atomic_t flag set by sighandler that is
-checked in a loop, for example:
+Also, the build machines are running Ubuntu 24.04. As such, /bin/sh is
+provided by /bin/dash. This may also factor into why I might be seeing
+this issue while others may not.
 
-while (!done)
-        sigsuspend(&oldmask);
+Again, sorry for the churn. Hopefully this is it now on the orphan front.
 
-This would avoid missing signals that arrive before the block and ensure
-sigsuspend() doesn't hang.
+Regards,
+-Markus
 
-> +		sigprocmask(SIG_SETMASK, &oldmask, NULL);
-> =20
->  		lock_contention_stop();
->  		lock_contention_read(&con);
+[1] https://lore.kernel.org/linux-perf-users/20260303211503.165337-1-mmayer@broadcom.com/
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260409162249.2558=
-1-1-swapnil.sapkal@amd.com?part=3D3
+Markus Mayer (1):
+  perf build: fix "argument list too long" in second location
+
+ tools/perf/pmu-events/Build | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.53.0
+
