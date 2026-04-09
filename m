@@ -1,113 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E350319857;
-	Thu,  9 Apr 2026 01:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1755F3624C2;
+	Thu,  9 Apr 2026 01:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775699705; cv=none; b=CFxa11TWhN0G681f1Md0U9NALFZFVDInLqnL5pfMRnN/8Ibuhuv3ZVvpuu3lXB6eiCe7MtyrWrmpBqmnWTF9YiR70KDTHSph0C3XDuixHrVDtix9XyPut4MPLn/CZU/oKv7Ts0nVIwtkp0Fbsx1SskgXuXHN53beEqE4H5XC0Oo=
+	t=1775699980; cv=none; b=RDJcJG2g18J0dNpCUro1dtgPmnGU87uBS9oFuJClG5bbIMNZvODLhAv7uiJwXAQ68ZHWAVYQSn4F2gPv4x4wU9lqAJZeaykbnBnN+uhluccypIhblSwKnH97VNJcdC6UnTWNpH4NjTPV71dHmSWcvOw73i+saoLTk4+tbm8G5uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775699705; c=relaxed/simple;
-	bh=tfXnPO8QfGZiGbiLkCITS3SPUCv9zEX1laQcNw4VbZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdqdKPSmxQCRyfsuy3NiFXcqTN+1tGpzsgz42a0oHLcrxf3aTczhK/2rB5x3EWVPov80W2T+AxHWUX31c/vsxWnem8hFxy2l5WDaj16WuOBH0qB5KVr5o+h2d2fo6U4KyxvVC6cdGkLMqTJ4Ygu4GIyVw1q5ab3Ww305dQcKmEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTrIrQ/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775699980; c=relaxed/simple;
+	bh=2HrOp37fQxdFB47qXVdNlgwS0HuWdAv82BC0SjBQfS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S60A4ySg3Do+gaUfBobQ01L/W531ZFnRKCTVlD9IZDmGV6jFlfPcqC8es1NMfmld8qxXMVF2KQ6bw1thctLV0qXlk6rH/2TeY+fFOWqxh7zQARoxNo6+GBNJ09AJpGkX2rlIMtZEQdtcqSXIRXSUeThawIShao1cUOLBpD7za7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=RVC+g/My; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTrIrQ/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96499C19421;
-	Thu,  9 Apr 2026 01:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775699704;
-	bh=tfXnPO8QfGZiGbiLkCITS3SPUCv9zEX1laQcNw4VbZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aTrIrQ/TJvpsUoji4VVTjA6l88FY5p+D43L07saGWSN7RhXXLOs428KuJDhSv/E15
-	 naCgBlSNZJLT1VCyTp9of8GRsvllpeQwr7R1ovLBVru+H0mdzokmwvIDvm83mowgCn
-	 T/9FT63wxQfIp/+cNgBFJw0Ii9dS/RSixwxYvxDRsONi6aYV9509GTmlKuOkZ9+dfn
-	 EuiaAMFpNg/ZFZLex+BVWvatxNKoNNf0tQn3fjCfGDNHNpMPNVkzBFt/emY+Z9xZnd
-	 7riuNdvfBFddbFkcgMJdKOa1BibeaxlFCoMERHeYPF6wvTff+sGdUzAoY+8L+s1jyu
-	 es5VVGX5mBN7w==
-Date: Wed, 8 Apr 2026 18:55:01 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 04/23] perf kwork: Duplicate IRQ name in irq_work_init
-Message-ID: <adcG9Rlp1znYkgYJ@google.com>
-References: <20260408072601.210837-5-irogers@google.com>
- <20260408080812.0EB34C19424@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="RVC+g/My"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35B8135C7;
+	Wed,  8 Apr 2026 18:59:31 -0700 (PDT)
+Received: from [10.164.18.48] (unknown [10.164.18.48])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BD8F3F632;
+	Wed,  8 Apr 2026 18:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775699976; bh=2HrOp37fQxdFB47qXVdNlgwS0HuWdAv82BC0SjBQfS8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RVC+g/MypPGtgpKFXu94wOCcPJ3eIBmkEiXHw/lax/gsDseqBbNEtZmJDeS33+zkh
+	 wC+Cd92i4lyXqS6rZg9iJMBRJLOEAm+f1YWFMUscBpFSIFDG1QDDxq+6Eoq/SApNkh
+	 1NngORXJi74geLZMY+dO5MZP+ze4M+ooDU/mmax0=
+Message-ID: <0a466a66-e9a3-4789-a144-8e938df30010@arm.com>
+Date: Thu, 9 Apr 2026 07:29:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260408080812.0EB34C19424@smtp.kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/events: Replace READ_ONCE() with standard pgtable
+ accessors
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, David Hildenbrand <david@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260227062744.2215491-1-anshuman.khandual@arm.com>
+ <1267a6c0-f8e7-4708-96da-4d131b5c6069@arm.com>
+ <20260408134923.3a44a703@pumpkin>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20260408134923.3a44a703@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 08, 2026 at 08:08:11AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 2 potential issue(s):
-> - [High] Massive per-event memory leak of dynamically allocated IRQ names when updating existing `kwork_work` entries.
-> - [Medium] Missing check for `strdup()` allocation failure leads to undefined behavior in `snprintf()`.
-> --
+On 08/04/26 6:19 PM, David Laight wrote:
+> On Tue, 7 Apr 2026 08:58:46 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 > 
-> commit fd542621f59f12c7e1282f77ef0817d45c3b81a0
-> Author: Ian Rogers <irogers@google.com>
+>> On 27/02/26 11:57 AM, Anshuman Khandual wrote:
+>>> Replace raw READ_ONCE() dereferences of pgtable entries with corresponding
+>>> standard page table accessors pxdp_get() in perf_get_pgtable_size(). These
+>>> accessors default to READ_ONCE() on platforms that don't override them. So
+>>> there is no functional change on such platforms.
+>>>
+>>> However arm64 platform is being extended to support 128 bit page tables via
+>>> a new architecture feature i.e FEAT_D128 in which case READ_ONCE() will not
+>>> provide required single copy atomic access for 128 bit page table entries.
+>>> Although pxdp_get() accessors can later be overridden on arm64 platform to
+>>> extend required single copy atomicity support on 128 bit entries.
+>>
 > 
-> perf kwork: Duplicate IRQ name in irq_work_init
-> 
-> This commit duplicates the IRQ name string when initializing a kwork work
-> item to avoid lifecycle issues with pointers into the perf event sample.
-> It also updates perf_sample__strval to return a const char pointer.
-> 
-> > diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> > index f600037ee4603..dceb9b79aa6ac 100644
-> > --- a/tools/perf/builtin-kwork.c
-> > +++ b/tools/perf/builtin-kwork.c
-> > @@ -1018,7 +1018,7 @@ static void irq_work_init(struct perf_kwork *kwork,
-> >  		work->name = NULL;
-> >  	} else {
-> >  		work->id = perf_sample__intval(sample, "irq");
-> > -		work->name = perf_sample__strval(sample, "name");
-> > +		work->name = strdup(perf_sample__strval(sample, "name") ?: "<unknown>");
-> 
-> Does this code leak the allocated name string when processing existing work
-> items?
-> 
-> In event processing loops like work_push_atom() and work_pop_atom(), a
-> temporary kwork_work struct is allocated on the stack for every single trace
-> event. If the item is already present in the RB-tree, work_findnew() or
-> work_search() returns the existing kwork_work object which already has its
-> name populated.
+> Did you consider enhancing READ_ONCE() to support 128bit accesses on arm64?
 
-Similarly, I think you can drop this patch unless you really want to fix
-the memory problems in kwork code base properly.
-
-Thanks,
-Namhyung
-
-> 
-> Since the newly allocated name string on the temporary structure is ignored
-> for existing items, does this leak the duplicated string for every repeated
-> IRQ trace event?
-> 
-> What happens if strdup() fails and returns NULL here?
-> 
-> Later in irq_work_name(), work->name is passed directly to snprintf() with
-> the %s format specifier:
-> 
-> static void irq_work_name(struct kwork_work *work, char *buf, int len)
-> {
->         snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
-> }
-> 
-> Could this regression cause a segmentation fault during memory pressure if
-> work->name becomes NULL?
-> 
-> >  	}
-> >  }
-> 
-> [ ... ]
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260408072601.210837-1-irogers@google.com?part=4
+Yes although it does not really meet all requirements for 128 bit page table access.
