@@ -1,114 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CAF3D3490
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 17:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3090237472D
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 17:37:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775755107; cv=none; b=j1B4d9Gj+vp7bSciHEORZLUA1OK4xcQpX/hAZ/pbcnQbfAGx/yLWVL4Xmuqh5sDPCoHEjYvuhyyXplTCNsgauLxZ0/tOnNW0aL+sX00swyPuv/7qVDG13vSfHz2VOadPuml17IlYkmJGuTeFbkDXUb/4s/7C83C6xkSCUos3wzY=
+	t=1775756255; cv=none; b=dv7/pzKZQJZZNmUH0lIYkcCDyMQ4wfRgnhzvsMGoF/FsUIY3RUVD+bxsL2d/uXqvYSQcwYIO6TyIUMqMuLMCHSRUryscKNAfvxDSxDNjE3FDnP3uSUFOIscZxdicXQ4Da14ULpn/7JWUcgKy0n0EHUtMb9EV/VS2FxwGmQI588U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775755107; c=relaxed/simple;
-	bh=dEymuIC0J8TpxW/exhDoUQCr50KUY1LTqOdaNNtI7VY=;
+	s=arc-20240116; t=1775756255; c=relaxed/simple;
+	bh=fjGSQuZlCZGB6mrZvw5UmBHFsOYwj2K7j7QQnGuwhA8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=t5gqq+oWdh9ChSEuvzz/E13yE6Wr0hJN77T4Qo6oFwDM/qk4aPQiMefUAbqbLUQ0e/AizVwYLcEaLQropCvhLEq4cuTkLSdZo2IuERiV2nqLeB8DuR6IM8Hmir4zxRDGPAYg5mHkQbykkM5luOeM+wHd3m+N9RLwOs0GOHgHgz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=es2gupO/; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=uapKxUGyvgofxpTYK5PKCkQquTD8atmuFhhG99sTx51C7Gj1gMTjpfsnyJqzTykLe6FtijoweAJCVGBWYgU8RHtNav+EcS3RoCuLto3ETRwf7PDqElt1+aDSDjpjZgC0ZglpJqEn0lJpKAxqylabyN11zb7hDc/a9R3Tva2CqvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t++V5A6c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="es2gupO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85494C4CEF7;
-	Thu,  9 Apr 2026 17:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t++V5A6c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1E5C4CEF7;
+	Thu,  9 Apr 2026 17:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775755106;
-	bh=dEymuIC0J8TpxW/exhDoUQCr50KUY1LTqOdaNNtI7VY=;
+	s=k20201202; t=1775756254;
+	bh=fjGSQuZlCZGB6mrZvw5UmBHFsOYwj2K7j7QQnGuwhA8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=es2gupO/dQXH2J30jKnP3BYGEkuSAMVTY2RugsIAAswLavrxC5k3j7CfMCPRn4oHn
-	 VD7rnMCwoafLtYKzlMv5VG3HuuuwFLIF/gGciqp6+Mq+M0rZt8pHtUiZbi4kcBxf5p
-	 jlZRevLIwEBafIP9dKe5+TZSl20IW/84/L5doBKxzbDGqr5oygDbO+vl9IFmS2fCk8
-	 t0CDAt70o3TZ8u/+8BhD7RLiGEP1b1kLHDp6WaFLYHqZaeh3I2DNCnzBNWPmMfBlzY
-	 P18KStb32MCsndxaWi0stVquX7BlGwfLaGA7oWhqJY4cB/h93qrgZtBFi30SVwiFsd
-	 Sq1T9dNtXIzhQ==
+	b=t++V5A6cUgoJtrXyOEEzvwnxonEQ1nPC9qTlsDnPWsBtebZ/RjUWeDU0V9czzYOQn
+	 YstM5JLBBJeCwJQhKiz5xvraBFLbJtmiISg7Rf3xV9sSAgcNPJDqlWpWABszAz3WAe
+	 mimB1fhprcoAmJEOSey7etMPVu0ApYxfsmxjxJ/RMef5RnAyNczQIyiUBZl+L9syKK
+	 XfkNnovsIg+snrwRRnrC5beQWRc5puuEDoc/MT79b6gAvsDIN7WqtowybY9ZS8czzW
+	 5PmZjuAGpCAdpw/hLJKN+JmSKJDgQboo3iOd2dTFSflj75Fr5CCIYefDDjQNtZrkAD
+	 uWvaWlqwmW07A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/3] perf sched stats: Fix SIGCHLD race in
- schedstat_live()
+Subject: Re: [PATCH v2 3/3] perf lock contention: Fix SIGCHLD race in
+ __cmd_contention()
 Reply-To: sashiko@lists.linux.dev
 To: "Swapnil Sapkal" <swapnil.sapkal@amd.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260409162249.25581-3-swapnil.sapkal@amd.com>
-References: <20260409162249.25581-3-swapnil.sapkal@amd.com>
+In-Reply-To: <20260409162249.25581-4-swapnil.sapkal@amd.com>
+References: <20260409162249.25581-4-swapnil.sapkal@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Apr 2026 17:18:25 +0000
-Message-Id: <20260409171826.85494C4CEF7@smtp.kernel.org>
+Date: Thu, 09 Apr 2026 17:37:33 +0000
+Message-Id: <20260409173734.BC1E5C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Unconditional use of sigsuspend() without a state flag creates a w=
-indow where early signals are lost, leading to an indefinite hang.
-- [High] Workload child process is orphaned if the tool is interrupted via =
-SIGINT/SIGTERM.
+Sashiko AI review found 1 potential issue(s):
+- [High] Unconditional use of `sigsuspend()` without a state flag fails to =
+fix the race condition and causes indefinite hangs.
 --
 
-commit f1c0b504081c33314d50fb6bf644c4e537e47385
+commit bbcae9323bad3368550c5fd9165d487b92cd3bbd
 Author: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: perf sched stats: Fix SIGCHLD race in schedstat_live()
 
-This commit attempts to fix a lost-wakeup race by blocking SIGCHLD, SIGINT,
-and SIGTERM before starting the workload, and then using sigsuspend()
-instead of pause() to wait for the workload to finish.
+perf lock contention: Fix SIGCHLD race in __cmd_contention()
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 3f448acd5046f..c716dd33a9c93 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -4702,11 +4703,17 @@ static int perf_sched__schedstat_live(struct perf=
-_sched *sched,
->  	if (err < 0)
->  		goto out;
+This commit replaces pause() with sigsuspend() to prevent a race condition
+where a short-lived workload exits and delivers SIGCHLD before the wait
+begins.
+
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index e8962c985d34a..2da689de134a4 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+
+[ ... ]
+
+> @@ -2123,12 +2124,25 @@ static int __cmd_contention(int argc, const char =
+**argv)
+>  	}
 > =20
-> +	sigemptyset(&sig_mask);
-> +	sigaddset(&sig_mask, SIGCHLD);
-> +	sigaddset(&sig_mask, SIGINT);
-> +	sigaddset(&sig_mask, SIGTERM);
-> +	sigprocmask(SIG_BLOCK, &sig_mask, &oldmask);
-
-Will this still hang if a signal arrives before sigprocmask() is called?
-
-Because the registered signal handler is an empty dummy function without
-a state flag, any signal arriving before sigprocmask() will be consumed
-by the handler.
-
-If a signal such as SIGINT or a premature SIGCHLD arrives during the earlier
-setup phases (e.g., during /proc/schedstat parsing), the signal is
-discarded and sigsuspend() will block indefinitely waiting for a signal
-that has already arrived.
-
-Should this handler set a flag (like a volatile sig_atomic_t) that is
-checked after the sigprocmask(SIG_BLOCK) call but before sigsuspend()?
-
+>  	if (use_bpf) {
+> +		/*
+> +		 * Block all handled signals after evlist__prepare_workload()
+> +		 * so the forked child does not inherit a modified signal
+> +		 * mask, then use sigsuspend() to atomically unblock and
+> +		 * wait. This prevents a race where a short-lived workload
+> +		 * exits and delivers SIGCHLD before we are ready to wait.
+> +		 */
+> +		sigemptyset(&sig_mask);
+> +		sigaddset(&sig_mask, SIGCHLD);
+> +		sigaddset(&sig_mask, SIGINT);
+> +		sigaddset(&sig_mask, SIGTERM);
+> +		sigprocmask(SIG_BLOCK, &sig_mask, &oldmask);
 > +
->  	if (argc)
->  		evlist__start_workload(evlist);
+>  		lock_contention_start();
+>  		if (argc)
+>  			evlist__start_workload(con.evlist);
 > =20
-> -	/* wait for signal */
-> -	pause();
-> +	sigsuspend(&oldmask);
-> +	sigprocmask(SIG_SETMASK, &oldmask, NULL);
+> -		/* wait for signal */
+> -		pause();
+> +		sigsuspend(&oldmask);
 
-Does the exit path leave the child workload running if interrupted?
+If SIGINT or SIGCHLD is delivered before sigprocmask() blocks them, won't it
+be consumed by sighandler without setting any checked state, causing
+sigsuspend() to hang indefinitely?
 
-While not introduced by this patch, if sigsuspend() returns due to an
-interruption like SIGINT, the code proceeds to the cleanup path.
+The signals are registered earlier in the function, leaving a window during
+evlist__prepare_workload() and lock_contention_prepare() where they are
+unblocked.
 
-This path calls evlist__delete() but does not appear to send SIGTERM or
-SIGKILL to the workload child process (evlist->workload.pid), nor does it
-waitpid() for the child to terminate.
+Should there be a volatile sig_atomic_t flag set by sighandler that is
+checked in a loop, for example:
 
-Could this leave the workload executing as an orphaned process in the
-background, leaking resources?
+while (!done)
+        sigsuspend(&oldmask);
+
+This would avoid missing signals that arrive before the block and ensure
+sigsuspend() doesn't hang.
+
+> +		sigprocmask(SIG_SETMASK, &oldmask, NULL);
+> =20
+>  		lock_contention_stop();
+>  		lock_contention_read(&con);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260409162249.2558=
-1-1-swapnil.sapkal@amd.com?part=3D2
+1-1-swapnil.sapkal@amd.com?part=3D3
