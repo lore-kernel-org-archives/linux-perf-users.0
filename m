@@ -1,77 +1,79 @@
-Received: from mail-yw1-f227.google.com (mail-yw1-f227.google.com [209.85.128.227])
+Received: from mail-oo1-f98.google.com (mail-oo1-f98.google.com [209.85.161.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF9F355F43
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 22:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434493793BE
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Apr 2026 22:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775772879; cv=none; b=HkjwF3YqDIP8dI3uO8kmkzjuXa6506xxhZq98Q3/gX6zWEZjMnsiQbinx81j94GVUNd56z37/WKRNgpUDiETylU/Qw45k1gJf9qGelBfOlDScVf814Lh2de6w3qiU0CjQXcszzNykyOccr56XWHJu5zN4xGQFegsHOV/5F+yF/M=
+	t=1775772887; cv=none; b=Jj5aaIUQYgAV3ooYt1ciEtd//mLhCkxy8uErW+EGo/YwbZMQ9xYGloXySOuLREOJFnuxSoMzg6nzx6DdJMcQ4KyEhU/vdTbVYT1bpra86BWUHKJUUwAMRMwBdN3wMBOQVV3eKDNghnZH4VPQm9vrXPAB7uzoZF9uTWvmo2SOb78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775772879; c=relaxed/simple;
-	bh=IlEOEK9psHRcUCQ0TvYpAEPy8eKK+XtGT0cHQnAKG0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H/gRbWX1bq1NR5+Skkf2j0QUt4CmleQiAWQjzuHT1G71pi0ByvNhX5XUaH6Y22ycKXWuvWvJw9DLnz3I9e13Ptr+GWLlUwesPKaj/QUzNbdTAiMjA5/ZgqX31jaQB4b8dX6324YHxXWK1EmrpnreE8u8ZK5SgaUtQdq0OkxG+ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fsonaWf+; arc=none smtp.client-ip=209.85.128.227
+	s=arc-20240116; t=1775772887; c=relaxed/simple;
+	bh=LH71OM2mecZma8HEHsw5YLwqs4IX+ieliIcYvVpyBMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nagNy3rsfyaJS9+hUI0voDtkLkfWmpgf6CVvulyyJlSg07QrjcWn7GnQbkc1HKnxavHQ8OMluBHiCdjdlq0bPKeUCluIVabwrDeIJ7qPmmcK/RUMuITkkbu1HH+INmbqIwxm9zrSLGkQpuvDL3Zrf/0P40icTwy3a3QtZ1G3mvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gyBrg/ML; arc=none smtp.client-ip=209.85.161.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fsonaWf+"
-Received: by mail-yw1-f227.google.com with SMTP id 00721157ae682-79a60975dc5so16269757b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gyBrg/ML"
+Received: by mail-oo1-f98.google.com with SMTP id 006d021491bc7-679f6ee3fb0so562157eaf.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775772877; x=1776377677;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uq61NuSioqeK9Ij19oY22/JbQCoqVgQAnKmc0h81Ayg=;
-        b=E9fPIuXSZS/6PsJNglzbssLjKNTDYHLJngSOZ7sQ7bNZngP7ZgUMN4rUPURYP5+oA0
-         9onVDVVCKaXDW0chNG9l1vDt1VjAaoUvroaaYRJ1S6+2cjsFSR1ZDXvIG6piqbgWd31o
-         bNVeV7hlxMGIk4Nakq4HvIYD3YYvwBI9UO1tgy3cGKJooLhexGO9KL5nr+aJsNdYVrZ6
-         l0NTBSbi+lqfYHyQIs0nXkgUpnX/AmN2ZCPXdzJ5vygncmP/8OKDXV+QIirx/ztn9O2g
-         gMJxWJVMs1jsuOWiSSH0vfIsLd33qAd5F6Hw5RwtRQoSKv84f2mr/4bEbwQ2jvbP5LSo
-         G0AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfLSdeCwTpA4j/NfYHXPNtEp6MZOjzecbe7MiGtS1Nqo48esBCHgaMGVKQoJlD4n0TF5mnFTE1omeHRBB0cs2l@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTqygHVu4YdnES1ZgUXS/oC//HmTv+OUuJBTva+Vq5SyCZYwMt
-	dnhiJRZLFds4ac8uFs52lGKH+3Cs8geE9nMAiDz2uiBlMd5kvAqp5MbTjnpF2T6a75vr2ggBvLo
-	G8OyK78tapZAxvJVOmYacJVPw+G46x+Q0dShX5IQ+h4MzSG0Rt4NjS1WvCp9lw4rnkBJLP+PFOT
-	1v5YC8o7lxOj4MoKS9UMkG/V0rs1Ahx/8IfNt08NDGnUeZ8RfMBeeyhaLm36czpV2A9+jr4ctfB
-	7D8dKz8LaGG90166ZieDgCf2Zw=
-X-Gm-Gg: AeBDietChj09BlgszkRjgvz45ynKeYLVoGqU43a1CLV/pOtXB7WuKk6keUHzEOYBXgi
-	2yzAoQgFQjm/0Albj3jyO4P/Q9K6u4H297ZWZCTcQVv8ZzeJO7EUpp2VEtPbrkgh1PdagTRFI3C
-	yjMPMvv2DJ6F+DF/hOtnej/Q4ePNgjUGaOsn0IhvHMVxtPn68Gts+rLku++SxaaKm86Z5ofUVkq
-	NUca8ByW/Si6xpx4voUh41//4iddj6uNYgy/8mKc4/bPb/krd1BJCZfc8XtRIuzspkb6wp72lDU
-	pAtNb/2Xu0ocU0RWJkscfdT1N4pDg1kAgq1RlZtFScq2FBmS40wVh02m6svlcrs8INMsW8Aauph
-	mqVN6aM6Bn6SnyCGf1MAyxsnXWdwsflIesOWEdxS2va72d3C+MtYhoKTsDMjFhwWWsFc+6iX3m5
-	fAxLfHXrWfixCnRZJIKUmlpywdlR9kIfcFOI+J3PiUoe4LmF+Pe4paQVrZ
-X-Received: by 2002:a05:690c:a052:b0:79a:b824:ccb0 with SMTP id 00721157ae682-7af7223b5e4mr6576067b3.46.1775772876932;
-        Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775772885; x=1776377685;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HOqEOVa/VITh1xF/avB48BwSmGbagcoSGHiOUBS/gqU=;
+        b=jgBQzZFTNt3UTg+H3tuCixFiNNZPNplgPq5pzkd4pfweFRg1Idq80X77BScinld3S9
+         FrBGmRqJkfHQMnHlWcyTv8CEKNPPtvOIIWR6D/2X5thZMjdauXxO8+RKfk5s617uMDgF
+         Zaqk9c0GB4fBf8UgBf6tQqWLB6msQEoPLqzbAH8gOq4KzLxtFZ7ywd/y3Ic1fVvZ7Ypz
+         /MpJkNLj4yXVtj1/22pRx5zvjY9kDk6usZaI9JedBpg67laEX9mpZc+S0PzTdwQyjFe6
+         x+2kB6Q6IaPuIlg5OdbTcL5oOe3UIWRJGb6r2ksX9fxrofW40LZY9zZO+EJw0kP5AEV/
+         Uxqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD+eaQaWJvGWjSXcnZy3Xab4zHcHNM7CAxztHRRxaJlmfp9V1pkMiBkmK8fT/oD9xo1GwfP/zFQE8uN4PJhlTP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6NvWPFhRHtiZ2KJFCHI4QNkpMKZoT2OEFYBSlrucC825hYUGi
+	RkC9uFfpIZ1R3jAPjELqedHBtd9p//MotKJrA/CKa2bbzlgabRxl6cwmUHWFGiyAGtnUkSutA1R
+	SJjVFDcey4bamFz8sSehG+JcNRoZBdX1wR/eVFQX0dGZATMQqlTcnixlCGwL5jGC7qBChp8pmzh
+	1949MuFnn7eiEf1FuZ5mnblju6oDI8Z8rtHH8bRqTWF6In1OhmY2lQDeYGSDeR9Xl28/0u/rpER
+	Gxcx3zv2BhiFl0Dj9j1krMNc40=
+X-Gm-Gg: AeBDiev1ZqUfo2L1zymXtIoOfEWq0kqzNTA6Mjh3RQoCf2LQ3UXE3bDGCTp8UP4ZYVu
+	5JMdndjQR4qSWn7zBU/+pt+aCOhehNvaTY1aI12cRv8ztXLNMJeoLVIb4udyrHr+1quWPJxrJQx
+	KZEfFoVqRoHSLc/F4iuiEawBbUGvqm57+xlLyQRCU9H0nSBjpxosqeCYTkPIaVZJz2Qcp0pC9pC
+	JlmPXocGQVwdvvAD/hT9YuI4dRWIdDxOmEmg+ov844v40JSg9W390xxLGwbKbjnFuwFenSfzPbF
+	VhtX6PsHJAcwbGYByKq/fzk7+wekG1ACqTRcNT6CBOgle5gTypGdGDoYa1BwIIpFFFAWum3NTXS
+	z+IkYrPd0j/8eVWb/I4VzIUvlV+eH3Ur0wI3GolgNLAPuhtox6evhNODsJr0HpGZ4KWn7Bi8Ye7
+	VtmKwgtRx81QVhNe/eFKuRKC3GPYaHooPzf0Gh3JJl+oU5sNIy2wUS6SXB
+X-Received: by 2002:a05:6820:4b15:b0:684:743e:86a6 with SMTP id 006d021491bc7-68be64302c4mr504397eaf.20.1775772885207;
+        Thu, 09 Apr 2026 15:14:45 -0700 (PDT)
 Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-15.dlp.protect.broadcom.com. [144.49.247.15])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7af3e46d62dsm597157b3.4.2026.04.09.15.14.36
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-423dda061f5sm126463fac.10.2026.04.09.15.14.44
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+        Thu, 09 Apr 2026 15:14:45 -0700 (PDT)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8d65190e52fso252817385a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:36 -0700 (PDT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8abd6e281c0so27883336d6.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 15:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1775772876; x=1776377676; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uq61NuSioqeK9Ij19oY22/JbQCoqVgQAnKmc0h81Ayg=;
-        b=fsonaWf+mWJW+ulrDbDp/cxtsCmaurgvpaJek8uzLorTjmLn4Ru+PPz49XhUWsR4bN
-         lnM1o2R+bRJ+TH8FZhkGXrtDoHQ9iMvLda2wbrpjqXFzdd9eGrMwxdGV/jC5Q1FZ1/+u
-         vlRbaV0u0KgTyVV2OWje8Tjsn5tR3wAm/dK2c=
-X-Forwarded-Encrypted: i=1; AJvYcCU+L/LBS0+r4mmYN3qY4f9mXzgbrtbnVzOjoMsNtDhhSA19gf5lmU9n5YdlkGT//egpg76CxorIPdzrOD0t36ng@vger.kernel.org
-X-Received: by 2002:a05:620a:4688:b0:8da:358a:c481 with SMTP id af79cd13be357-8ddccb293f3mr107438185a.1.1775772875016;
-        Thu, 09 Apr 2026 15:14:35 -0700 (PDT)
-X-Received: by 2002:a05:620a:4688:b0:8da:358a:c481 with SMTP id af79cd13be357-8ddccb293f3mr107433985a.1.1775772874510;
-        Thu, 09 Apr 2026 15:14:34 -0700 (PDT)
+        d=broadcom.com; s=google; t=1775772884; x=1776377684; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HOqEOVa/VITh1xF/avB48BwSmGbagcoSGHiOUBS/gqU=;
+        b=gyBrg/MLlmZ0IZND+ZR8KlftCSsopN8HqUmWY8yE2VMN7BAbWZkd2V8p8ihITV0Jek
+         +xZpEKscGYFBIQUap8VPQEWel4S9ewCzUhhDBqA5qsXEyqViZPXcs7uz9ybMq1dLUa68
+         pGPk5jQl3GhQcdxJ72o4FyHaK0DhXVS5JlL2w=
+X-Forwarded-Encrypted: i=1; AJvYcCWYabZtTdgu8NodEOD5zYmU8Ke8a/JbXZR9mQUyFjCG9q4p3ko/wV1y8LewgJe4H2F9N4H5Psuq2uelTDoVhWVT@vger.kernel.org
+X-Received: by 2002:ad4:5749:0:b0:8a5:fb34:c9fd with SMTP id 6a1803df08f44-8ac8628aa69mr10315486d6.25.1775772884164;
+        Thu, 09 Apr 2026 15:14:44 -0700 (PDT)
+X-Received: by 2002:ad4:5749:0:b0:8a5:fb34:c9fd with SMTP id 6a1803df08f44-8ac8628aa69mr10314836d6.25.1775772883540;
+        Thu, 09 Apr 2026 15:14:43 -0700 (PDT)
 Received: from lbrmn-mmayer.ric.broadcom.net ([192.19.161.248])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ddb5f89ccdsm56866385a.5.2026.04.09.15.14.33
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ac84a4355esm7228076d6.19.2026.04.09.15.14.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2026 15:14:33 -0700 (PDT)
+        Thu, 09 Apr 2026 15:14:42 -0700 (PDT)
 Received: by lbrmn-mmayer.ric.broadcom.net (Postfix, from userid 1000)
-	id 7DF92D86; Thu,  9 Apr 2026 15:14:32 -0700 (PDT)
+	id 7E946D8A; Thu,  9 Apr 2026 15:14:41 -0700 (PDT)
 From: Markus Mayer <mmayer@broadcom.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -86,10 +88,12 @@ To: Peter Zijlstra <peterz@infradead.org>,
 Cc: Markus Mayer <mmayer@broadcom.com>,
 	Perf Mailing List <linux-perf-users@vger.kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/1] perf build: fix "argument list too long" in second location
-Date: Thu,  9 Apr 2026 15:14:16 -0700
-Message-ID: <20260409221418.185343-1-mmayer@broadcom.com>
+Subject: [PATCH 1/1] perf build: fix "argument list too long" in second location
+Date: Thu,  9 Apr 2026 15:14:17 -0700
+Message-ID: <20260409221418.185343-2-mmayer@broadcom.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260409221418.185343-1-mmayer@broadcom.com>
+References: <20260409221418.185343-1-mmayer@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -99,58 +103,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-Hi all,
+Turns out that displaying "RM $^" via quiet_cmd_rm can also upset the
+shell and cause it to display "argument list too long".
 
-My apologies for not catching this one sooner. Using xargs in the actual
-build recipe worked, but it turns out echoing $^ in quiet_cmd_rm also
-offends the shell. Somehow, it didn't show up during my tests before
-submitting the previous fix[1] for this issue or I would have addressed
-both together.
+Trying to quote $^ doesn't help.
 
-But then it did start to show up. Like this:
+In the end, *not* displaying the (potentially long) list of files is
+probably the right thing to do for a "quiet" message, anyway. Instead,
+let's display a count of how many files were removed. There is always
+V=1 if more detail is required.
 
-  GEN     linux/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/extra-metricgroups.json
-  TEST    linux/tools/perf/pmu-events/metric_test.log
-make[5]: /bin/sh: Argument list too long
-make[5]: *** [pmu-events/Build:220: prune_orphans] Error 127
-
-This was a bit of a head-scratcher before I realized that this came from
-    quiet_cmd_rm  = RM      $^
-and that no attempt of putting quotes around $^ would help.
-
-With change proposed here, it'll look like this instead:
-
-  GEN     linux/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/extra-metricgroups.json
   TEST    linux/tools/perf/pmu-events/metric_test.log
   RM      ...634 orphan file(s)...
   LD      linux/tools/perf/util/perf-util-in.o
 
-This is probably a good thing, regardless of the shell complaining,
-since listing 634 files in a so-called "quiet" message is probably not
-very fitting.
+Also move the comment regarding xargs before the rule, so it doesn't
+show up in the build output.
 
-I don't know why my build has 634 orphans every single time it runs
-(straight-up cross-build on x86_64 for ARM64) or if that is a lot. I do
-get the impression that it is probably rather unusual. Not really doing
-anything special, though.
-
-Also, the build machines are running Ubuntu 24.04. As such, /bin/sh is
-provided by /bin/dash. This may also factor into why I might be seeing
-this issue while others may not.
-
-Again, sorry for the churn. Hopefully this is it now on the orphan front.
-
-Regards,
--Markus
-
-[1] https://lore.kernel.org/linux-perf-users/20260303211503.165337-1-mmayer@broadcom.com/
-
-Markus Mayer (1):
-  perf build: fix "argument list too long" in second location
-
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+---
  tools/perf/pmu-events/Build | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index dc5f94862a3b..dc1df2d57ddc 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -211,10 +211,10 @@ ifneq ($(strip $(ORPHAN_FILES)),)
+ 
+ # Message for $(call echo-cmd,rm). Generally cleaning files isn't part
+ # of a build step.
+-quiet_cmd_rm  = RM      $^
++quiet_cmd_rm = RM      ...$(words $^) orphan file(s)...
+ 
++# The list of files can be long. Use xargs to prevent issues.
+ prune_orphans: $(ORPHAN_FILES)
+-	# The list of files can be long. Use xargs to prevent issues.
+ 	$(Q)$(call echo-cmd,rm)echo "$^" | xargs rm -f
+ 
+ JEVENTS_DEPS += prune_orphans
 -- 
 2.53.0
 
