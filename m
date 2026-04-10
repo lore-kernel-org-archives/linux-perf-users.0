@@ -1,105 +1,126 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDA5397E89;
-	Fri, 10 Apr 2026 12:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775822866; cv=none; b=gs1ixcLy4KF3xsmsioUU1cmYyH1q6kLi2skIJp2FwzLgC7h376A/iUYJmWIp58Dp3yV3kw6oGqf02swuahAusUWC7a8fZOsXon5hxEvc6oyVrGqrSvgJ8zXAKpZaFsFPNj5N6Aq2PfCHOKvjk1nomVq5R55xe0DbydTqZz0vMJM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775822866; c=relaxed/simple;
-	bh=PBPEIkPfiCepOPjFH4e7wRaebjN5PVqKZxeWMBytThY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1OQ7MOJUntYFUXNvzXgtwdMytGzsIrLcmXu+BFieMsZ1cwWvvb9zENgZsjktTG9adKKAq+uQEYJn48XFRbjEhMRVqz4aeZvpkX79syQOJ2IEnYwGAjjS+FIFaGcL65fsCrP1fZyQtH24xYCtOdfmRUxStBeia50ecpeMYOcglQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MWxTRcCu; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3E23A4513
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 13:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775827188; cv=pass; b=R/wTjSJtQKpuV64WcpU/pPHZZJg+55LUThIJG4lbKJXfJjde9WmZ9ezkKzrMrE07JyAnbRncYzCWMPxNwmc7Qq6LlfChqyFDzTVifKJksaP6YJNWm2lA7ByNn2kLjSuuQup1l+ihKJTek1wO0DV+TAc0TG943ymBlUjIPqkTeuc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775827188; c=relaxed/simple;
+	bh=c6Jgg/grfysHpxHwrZUQ5iCcEDSIAVzCSJdujGu2d9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=oUp0rtMCvnMK6qWT4l4qqohlhv7XslCbEERiELQI9eoscTG7MbGUHYza/lPSkFLFCay2/Ug2NLZ41THFycojePPKIK86kMPSveQFBXN8HLKmUoj//xIymqoNhdsEypJxzP8WMHN9ivm4a3cFiPGxYMl+MRXFJQDUof8ziDfJYfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i5wevTNp; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=qHmMcbj+; arc=pass smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MWxTRcCu"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F253F1DB5;
-	Fri, 10 Apr 2026 05:07:36 -0700 (PDT)
-Received: from [10.1.196.85] (e121345-lin.cambridge.arm.com [10.1.196.85])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A43533F632;
-	Fri, 10 Apr 2026 05:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775822862; bh=PBPEIkPfiCepOPjFH4e7wRaebjN5PVqKZxeWMBytThY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MWxTRcCuppU6dzrIFN6G/jMv8zUovaPZLaizogO1XSuzRTKsKhTzqcPgkSkwCYi0e
-	 hardPVlJK7OcUHDj8mLXeulGlOgawyIE/hmNe1PSfLr4+umktS5kKT37WPjdRuo4RO
-	 SbO2iH1TVJcEMghygqBS0UZdTc+SAMciAFgNUy6E=
-Message-ID: <65629411-0e1c-4c9c-bc9f-6488097bd77f@arm.com>
-Date: Fri, 10 Apr 2026 13:07:29 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i5wevTNp";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="qHmMcbj+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775827186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c6Jgg/grfysHpxHwrZUQ5iCcEDSIAVzCSJdujGu2d9Q=;
+	b=i5wevTNpdgiD35rH/wP5QTtXZoceoh8bjUTePYpIYnm1LJrmLHTTO9xSfdAbiW1AfmbuDS
+	GX3COXP3pxo+1ngEPTyTQetnEYMAi8/a41JBmDHB9Y2oAF8myxOZZQYSY9AQKb+c8GfSmF
+	eOwQf224KetcYKpdWHIPV8tNJZSirKk=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-331-O5biFcBBM3O0wtFcrDkvZw-1; Fri, 10 Apr 2026 09:19:45 -0400
+X-MC-Unique: O5biFcBBM3O0wtFcrDkvZw-1
+X-Mimecast-MFC-AGG-ID: O5biFcBBM3O0wtFcrDkvZw_1775827183
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-59e16c11f49so1832959e87.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 06:19:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775827182; cv=none;
+        d=google.com; s=arc-20240605;
+        b=csRWsGm617MrTE43gNW6T2g9o5UWCZLaIktX5bkLUALnbK/eEDiqW5bHtgS6oPpdOH
+         F/sKgyqwsknS/zPdokhak3Uo7TnWWWOkKt3t1aX++ANQqldRphJtdNZ22I6QVfee1jtn
+         lGpw35CZ3TchLCs9E9WP2OehtVO3Xkhv1h6HCVu70Ndt8QKdzgbSbOCU/1N8/S1VnbSY
+         0WtwH5cRnDEgh9ZH2at6YpQRZZlMuw0+Y+/iBgz7N+DIGf/KVjNWNN68aNzk8I4WS2lf
+         +PH8kvJ53n/uKKIaK74Y2l5BRqBvbhxDQqS0kYUfxhHqoCOfIq4rhK1Y55dfAMNMgyI4
+         3VYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=c6Jgg/grfysHpxHwrZUQ5iCcEDSIAVzCSJdujGu2d9Q=;
+        fh=gIcXGLotfzO2ZmnEhSjFNq+ft2UaQ90WGwRr7ybmEa4=;
+        b=X9FLLvweDQP8HscZhQREMN0CMb6y3Hvphpf9ay0ZL+h7RxnqMynqXZS4HVy7yQenyw
+         JPw0yZznVyfxzjCYJ/y/gz2fWfcNLSiDZVX7qDelVcYSf5/xfb55/4XnsS6ibyXWSkrt
+         7Xkwi6u4DcKYKf0uAPWFJv9Hrz9NYESpVuhU9v41qndsR0eSaAK/Gvhz/S0bzmoYINUU
+         iluFJjbrLb4j/4VXpBLCNVLhA6e77jTOqLUDMNCi2NuqWbRK6XzjIb6UQx41gAhdKPI7
+         zmLJ0IBVrW7qQTX6IvQWoLs3Q5eikNThKY1cvOoD8WgfSvMd8zcvid7x4UoBPmyGuQAE
+         n0Lg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1775827182; x=1776431982; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c6Jgg/grfysHpxHwrZUQ5iCcEDSIAVzCSJdujGu2d9Q=;
+        b=qHmMcbj+5A44XuIKsdMKOHrW/v4mk5SrVYYsdXnyHUDw1ZBzUOP555TTAdH23kU3UI
+         WJxFy9hIYQN1pQ6N97HjcEg3tFgbas7Y8L9kv3meb3K/qw3RqgmLasv/SWoItHaLuKPo
+         AGRXlHnnCoWquzs5MW6AEebpo1Q/9mx8XIiqf1Jc5gUm34imC4vr8T0Z2CI/orpneEzV
+         xaJYt4jyRh1z+h1Mvd7FwIcV3oLuTgHDl6zH7Ym467fBPZoNKXcyUw9I9vyEy+O4D7/N
+         9PYKeq2DYrdsWw8djIanbNeIxNUfZfL6RSSFiCvM02V4xQAOkjpfceO0/sO8I0FSl7OV
+         +MtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775827182; x=1776431982;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=c6Jgg/grfysHpxHwrZUQ5iCcEDSIAVzCSJdujGu2d9Q=;
+        b=U38YCHTGOc1FQaX41D6VXXL6WxzmP54GhczinlOe+QFPUNR6WFD3niebYIi3J8EUNb
+         IXub8LJk3CKf1Lvi0dml2WHToPiPnNfwc5yegWHolJgTkxWbiJGtsb+KgK8l7Md4fXb7
+         BblQ4/7r31n2A71VJCzZk6vQqeu+eHK6IJMbw4ZF/TKr9IERLsHGxlgS0vk5/pwSUUrK
+         aaLMicSFfs+k0vTCAy5kzZ06tgh30ivSOq0TPa55ZBqUOR+nCBnJ4u4JMe1DCE+vG5M/
+         1E9xqYZcHKn4vliAbCGpA46jB6x2RFt+a/ir2k+aaB+lNMokhepA1ti1yVOcXM9moagM
+         dp5g==
+X-Gm-Message-State: AOJu0YwY7Ur3Ii7WlFDoPluIBEajBoQNkxvhowT5VBOpi6idaQNV4g+r
+	99sFGl7h5z6U/Jb+M6ZKemknh3z5h0gclFL2bDKNy873n/cDNpKlth9ROCXOy5MY03v7LgOVPEz
+	DADuc26F8F1+NQjMwO3lFFLk/0FnDDoP8bxEjk6oNLOfW70Im36xJfQ18uBcwzPDWj1IjLC3/A/
+	d2WXB188cEkAt1TCa0Qh87KlncXuc9PLxub7XhIFpMASzDmGLDszf5Lw==
+X-Gm-Gg: AeBDievXXf3MNwZQkgZp0Lqcm0cfeHz7x1EKWfPGL/kq2u1bpeVG3gmHHrgtTRR9B8o
+	mSgOuIhjHLMf29GW1ysJXjGm8+/9rGB8w2KCccVqpgPd5JIvSvVk4BbD5PRNc1S+IGSpCwG9xSh
+	cM7lowD0D1Mw0x2q8fmQ5MWcz2vy97UfjdviV25wE0m6QFe9xCXIX1DYp0VrX+K8WhYe2+kDQAa
+	2ur8ONxa5nFmXthf8yRdO3pYd/Neq3AXJg=
+X-Received: by 2002:a05:6512:1596:b0:5a2:b51a:6a55 with SMTP id 2adb3069b0e04-5a3efb4178cmr1065497e87.29.1775827182387;
+        Fri, 10 Apr 2026 06:19:42 -0700 (PDT)
+X-Received: by 2002:a05:6512:1596:b0:5a2:b51a:6a55 with SMTP id
+ 2adb3069b0e04-5a3efb4178cmr1065485e87.29.1775827181791; Fri, 10 Apr 2026
+ 06:19:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] arm-smmu-v3: Add PMCG child support and update PMU
- MMIO mapping
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-References: <20260408-smmu-perf-v1-0-d75dac96e828@nxp.com>
- <2c1a1694-9597-400d-b441-714225b5377b@arm.com> <adZcaEKm3vIYSy3N@shlinux89>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <adZcaEKm3vIYSy3N@shlinux89>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260408123947.23779-2-ashelat@redhat.com> <20260408130630.EB302C19421@smtp.kernel.org>
+In-Reply-To: <20260408130630.EB302C19421@smtp.kernel.org>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Fri, 10 Apr 2026 09:19:28 -0400
+X-Gm-Features: AQROBzC9kZdi6at7gBFBjcWztyKOAls2O2g-ll9S1U2fFlwYLHpMFoo-Xf_P2BM
+Message-ID: <CA+G8DhKz-=CJkU6Hh66iO_R9rhg7OpJThnABT+HKa_FY50_OTQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: enable unprivileged syscall tracing with perf trace
+To: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/04/2026 2:47 pm, Peng Fan wrote:
-> On Wed, Apr 08, 2026 at 12:15:31PM +0100, Robin Murphy wrote:
->> On 2026-04-08 8:51 am, Peng Fan (OSS) wrote:
->>> This patch series adds proper support for describing and probing the
->>> Arm SMMU v3 PMCG (Performance Monitor Control Group) as a child node of
->>> the SMMU in Devicetree, and updates the relevant drivers accordingly.
->>>
->>> The SMMU v3 architecture allows an optional PMCG block, typically
->>> associated with TCUs, to be implemented within the SMMU register
->>> address space. For example, mmu700 PMCG is at the offset 0x2000 of the
->>> TCU page 0.
->>
->> But what's wrong with the existing binding? Especially given that it even has
->> an upstream user already:
->>
->> https://git.kernel.org/torvalds/c/aef9703dcbf8
->>
->>> Patch 1 updates the SMMU v3 Devicetree binding to allow PMCG child nodes,
->>> referencing the existing arm,smmu-v3-pmcg binding.
->>>
->>> Patch 2 updates the arm-smmu-v3 driver to populate platform devices for
->>> child nodes described in DT once the SMMU probe succeeds.
->>>
->>> Patch 3 updates the SMMUv3 PMU driver to correctly handle MMIO mapping when
->>> PMCG is described as a child node. The PMCG registers occupy a sub-region
->>> of the parent SMMU MMIO window, which is already requested by the SMMU
->>
->> That has not been the case since 52f3fab0067d ("iommu/arm-smmu-v3: Don't
->> reserve implementation defined register space") nearly 6 years ago, where the
->> whole purpose was to support Arm's PMCG implementation properly. What kernel
->> is this based on?
-> 
-> Seems I am wrong. I thought PMCG is in page 0, so there were resource
-> conflicts. I just retest without this patchset, all goes well.
-> 
-> But from dt perspective, should the TCU PMCG node be child node of
-> SMMU node?
+On Wed, Apr 8, 2026 at 9:11=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
+>
+> Sashiko AI review found 2 potential issue(s):
+> - [Critical] Bypassing `perf_allow_kernel()` for task-attached tracepoint=
+s allows unprivileged users to leak kernel registers, instruction pointers,=
+ and callchains, completely defeating KASLR.
+This makes sense, I'll send a v2 patch to fix this.
 
-No. PMCGs can be used entirely independently of the SMMU itself, and 
-while most of the events do relate to SMMU translation and thus aren't 
-necessarily meaningful if it's not in use, there are still some which 
-can be useful for basic traffic counting, monitoring GPT/translation 
-activity from _other_ security states (if observation is delegated to 
-Non-Secure) and possibly other things, even if the "main" Non-Secure 
-SMMU interface isn't advertised at all. It would be unreasonable to 
-require the SMMU node to be present and enabled *and* have a driver to 
-populate PMCGs, to monitor events which are outside the scope of that 
-driver.
+> - [Medium] The change to make the tracefs 'id' and 'format' files world-r=
+eadable is functionally ineffective for unprivileged users due to restricti=
+ve parent directory permissions.
+Some systems have /sys/kernel/tracefs mounted as 0755 so this change
+handles those systems.
 
-Thanks,
-Robin.
