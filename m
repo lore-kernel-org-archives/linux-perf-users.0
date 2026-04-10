@@ -1,123 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BEB150997
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 00:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEF026C3BD
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 00:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775779910; cv=none; b=R6gW2y6NK29F8kZgDj5Y2Ck7cNFP5YJQDT0ARlhNh4taGiOQUboFCMo0ZHYWx22zDImfi/r0xIrdOpyU2Zg5vxrnL8bqD5tj6nZIzl4bi/6UUn+2f0z/Oo0PDe0mkODRyMB5CdTmu+K1eqp9vEzcntFoCaHJNrK95ACRD/0/SRo=
+	t=1775780637; cv=none; b=K/J41GMWuv6gFPllhxdPrmy7Ii1kvt0PVeROxbcHD/usVG1t/+AMYftOtfeWsGN10Opn2hb62b4NfA1+D5fUFKHZd/Tok8bvEBSAu9zC2xkblbDCP0/jCMRnAodLP77MK6BTPVSNXT+/w3heUqTBgUYhoXIGquOaJNmt4IEC8yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775779910; c=relaxed/simple;
-	bh=y2jfLJktb+e+s/Ad982nXFwUMdIecgcIzz0a72U8m/w=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uu+Y2gRsCpLPRmA7q9qFOxNva38r38/xnJgDnWog9xVCaiEZ5LoLpA+2KHmCnGwkWHBSZqYL2XQyIOEsw+wbpJialkO/qz5SD3ZJbOTNQK6A8gEDbDcAhq+j7Cst7KpwJXQ9riszwluQKZ1XK0FbCzVMZUQj0cYQ0c4/m3vfDxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJbwY4L1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775780637; c=relaxed/simple;
+	bh=0aeGwRNW0xmntzjfP7YxxLFi+8s2M7WGQMmYb7loLl8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=VRE4+XQvVs2VUk0CfYGc0+IbeRT4aUQ3og3AIxey8YimJpKpoUh8ptTYxvm7F1ETNZZxnBacQzxzZK3Db/VrNPFqVu7gRJ6CzO8TzBvVF1ga/DsTodJiRyiekBtkOnVmYbOiMz1TUVVgG1XDNI6cGxAdMMvmGf3cvBsQVR+309w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+r6veey; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJbwY4L1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC0CC4CEF7;
-	Fri, 10 Apr 2026 00:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775779910;
-	bh=y2jfLJktb+e+s/Ad982nXFwUMdIecgcIzz0a72U8m/w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=LJbwY4L1nmFLtSC4U3NijORID/dcxygVgpA7laU3nCcQiV67LCvhwloelyDK80d+3
-	 6UHCysUb3nhmYdKRhn5PV+oVijAeHTdjwYNDqvAl58rLixpYsih9yQCHbWSoe/NXeW
-	 QJBTKb9JdNoRRuZS5KEHHehGzB4nwFMKH784tZ0PlTDlh516r0AkOLdzk6LZgwFQgL
-	 NdLU8l5DYmgXuHBJ/wUPhedsBuLSpGGQ5FvUCDTdW8f/zJ7IxclFtNkau9JOMnoHKG
-	 +t4VVJi5pbxblI+xRRkoUJgFyMt5ctcX3F5ZC0EMZRDc38Sf0I4XmZcpsGPUhGq8Ye
-	 TSyiiin1xzMuA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 3/3] perf symbol: Lazily compute idle and use the
- perf_env
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260409230620.4176210-4-irogers@google.com>
-References: <20260409230620.4176210-4-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 00:11:49 +0000
-Message-Id: <20260410001149.DEC0CC4CEF7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+r6veey"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c16233ee11so1980476eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Apr 2026 17:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775780635; x=1776385435; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=auhMbk+xHy2gdDd91CGiDgq/1FaWJaoeUXnY1AfHXxs=;
+        b=I+r6veeyXOIyUFLEJIfjuxBPTpmQIE7mg3p1u0W90HYG0zCPPH7G7SOPhphjfnz3ZD
+         TxbXH+cldjb9DWCrMARB+pWoLBszuwptQeXsTfcc3/4j5G/9dcx42xLgSQgD7mCiLLs1
+         woBD+BMF7HRwy/ohWDO/yMLUSNPT+6v11OxMDjsd3aZzoXwBGUWuthsolcdlArNH+ZXm
+         cMqYf/Dfkee/LiywlGMbF6uKEmEVNHx6eo1UsrLMpu1Von9ug1Gs1LBQH9L1fcesJd1u
+         W8pUU/ojrY+o0aFdS1VuzyMatwDkPf9IgO4e4PCPjbZ/LEqaSqukxRqwUED15egsXjAU
+         YXig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775780635; x=1776385435;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=auhMbk+xHy2gdDd91CGiDgq/1FaWJaoeUXnY1AfHXxs=;
+        b=g54LuFI0JLGAdWkNxANqZ0vB+N26erTRX16YruPUWc/HP9yDDT0XSzVKTyRvvv3ktr
+         e9RFkY1SjoUNZ47F+LHzeoggevXz4b9rJuXOM3Qpe3f4xSfBZb32Ny9THEgQfHSAPJtB
+         Sol58E69WXBgY62beRbyQSxSo+xMFTVJF2jlMiPK8tv55aS1anS3jZskpYwPNxAfoMU7
+         f51spScfwoW5LgMv+cjP/dCAPFvorjAoqPN2fvyOBZs7A+MAOv/sbqtmMKPo6EbqEt4W
+         vOg8+C4YZkQXhrN7D07xMrCeV1PS8auyFgqoL2MMZaLj8kJ9UnJOLy2uA0H1ESWdwMlz
+         8GHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXj/xLYH1HaX+iyPxINvhMCPNWDnN8KP//Twq80pOQ2q4+55yn4ZLpScsJ06AlGlwHwYdY/Ex/Q60j8G8z6bMkO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym9rsYmKzJkvfD7mO6SNAuGDayYqcGf0bOzvoR/qY6XP9vYMOc
+	Tpae0F5orx7v33lnCKa2bMdy1sgz4C+4MJavQRcy7+mUWTN1Z80ky0B844ni4VfIoXm/TGsCnjl
+	YNOrVRGXEBw==
+X-Received: from dycng24.prod.google.com ([2002:a05:7300:ce18:b0:2ca:8cd8:d7e0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2b05:b0:2c8:8954:1441
+ with SMTP id 5a478bee46e88-2d5891764cdmr655590eec.17.1775780634492; Thu, 09
+ Apr 2026 17:23:54 -0700 (PDT)
+Date: Thu,  9 Apr 2026 17:23:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260410002351.10856-1-irogers@google.com>
+Subject: [PATCH v1] perf test: Fix inet_pton probe failure due to multiple probes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Data race and undefined behavior due to unsynchronized bitfield up=
-dates in `struct symbol`.
---
+When adding a probe for libc's inet_pton, perf probe may create multiple
+probe points (e.g., due to inlining or multiple symbol resolutions),
+resulting in multiple identical event names being output (e.g.,
+`probe_libc:inet_pton_1`).
 
-commit 2ee008011b6949869303359cb5ce16b0c47431af
-Author: Ian Rogers <irogers@google.com>
-Subject: perf symbol: Lazily compute idle and use the perf_env
+The script previously used a brittle pipeline (`tail -n +2 | head -n -5`)
+and an awk script to extract the event name. When multiple probes were
+added, awk would output the event name multiple times, which expanded
+to multiple words in bash. This broke the subsequent `perf record` and
+`perf probe -d` commands, causing the test to fail with:
+`Error: another command except --add is set.`
 
-This commit defers computing whether a symbol is an idle function to a lazy
-evaluation using symbol__is_idle. It modifies struct symbol to cache this
-lazily computed value using an idle:2 bitfield, checking architectural and
-kernel versions using the perf_env.
+Fix this by removing the brittle `tail/head` commands and appending
+`| sort -u` to the awk extraction. This ensures that only a single,
+unique event name is captured, regardless of how many probe points
+are created.
 
-Link: https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ib=
-m.com/
-Link: https://lore.kernel.org/lkml/20260323085255.98173-1-jameshongleiwang@=
-126.com/
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index bd6eb90c86683..7e0036f801858 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-[ ... ]
-> @@ -58,8 +65,8 @@ struct symbol {
->  	u8		type:4;
->  	/** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBA=
-L. */
->  	u8		binding:4;
-> -	/** Set true for kernel symbols of idle routines. */
-> -	u8		idle:1;
-> +	/** Cache for symbol__is_idle holding enum symbol_idle_kind values. */
-> +	u8		idle:2;
->  	/** Resolvable but tools ignore it (e.g. idle routines). */
->  	u8		ignore:1;
->  	/** Symbol for an inlined function. */
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index ab99bef556bf..b717063f70c2 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -22,9 +22,9 @@ event_pattern='probe_libc:inet_pton(_[[:digit:]]+)?'
+ 
+ add_libc_inet_pton_event() {
+ 
+-	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
++	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | \
+ 			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
+-			("\\(on inet_pton in " l "\\)") {print $1}')
++			("\\(on inet_pton in " l "\\)") {print $1}' | sort -u)
+ 
+ 	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
+ 		printf "FAIL: could not add event\n"
+-- 
+2.53.0.1213.gd9a14994de-goog
 
-Could this lazy update of the idle bitfield cause a data race?
-
-Because idle is a bitfield sharing a byte with ignore, inlined, annotate2,
-and ifunc_alias, writing to it performs a non-atomic read-modify-write on
-the entire byte.
-
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index fd332db561575..482fd47bead24 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-[ ... ]
-> +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, struct p=
-erf_env *env)
->  {
-[ ... ]
-> +	if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
-> +		    sizeof(idle_symbols[0]), sym_name_cmp)) {
-> +		sym->idle =3D SYMBOL_IDLE__IDLE;
-> +		return true;
-> +	}
-
-In perf top, sample processing runs continuously in a background thread,
-calling symbol__is_idle() and writing to sym->idle:
-
-Thread 1 (Sample processing):
-    sym->idle =3D SYMBOL_IDLE__IDLE;
-
-Concurrently, the TUI thread processes user interactions and can set flags
-like annotate2:
-
-Thread 2 (TUI / User Interaction):
-    sym->annotate2 =3D 1;
-
-If these threads access the same symbol simultaneously, could one thread's
-write overwrite the other's modifications, silently corrupting the symbol
-state and causing features like UI annotation to break?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260409230620.4176=
-210-1-irogers@google.com?part=3D3
