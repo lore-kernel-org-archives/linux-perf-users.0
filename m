@@ -1,114 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B463271471;
-	Fri, 10 Apr 2026 00:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5893164DF
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 00:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775781693; cv=none; b=m+2ahYPzN4GPqufxnB8QUhdYIODMGXxgTgWHZsL/LKMx20v9ZQFJ7XEolZKJd29qnuEqTHp6LKC9Lf88qCNNXO/UVR7ZjHFOegc7RNlucSy94C+fyYKkVMsg6ZeDpPPyMXVjzJrjt0mMzzUi7b82/6QZgBruSA/zvpGc3tsyTS0=
+	t=1775782718; cv=none; b=WyPkXJdkIN5oQFG4XgATLsP6I1x+pbTkRislJtMHrwAokTGA0EAdiYG+ko6zBAswDkubvANr5NXoRrWY5sVjfxAHWy0Lw+s7E4CsZFysmX9l1p7+oBrVkE/caWYnfOI9CxWjkone2+GUD74j8tmAhcfiqB6Zg7Xc5VzbkxEoyZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775781693; c=relaxed/simple;
-	bh=akNYq1Yn19Qgx2qs2DWJrh+BFDtfahAZB0/XJt9XasM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PfmTG+5onvfHixBeBck05/4ep3KTfrXGWv+nK+1OJUQWN55m6Vtf6IShqE1IwPstOFnxC9kRsDxRRLMSau2gjwgaMHOjUKRitarDnyJaF6c995g1g+ILEPioRXvNroGFMGpJDtSYV525eRVSl1xPg9twKKRJMjZudMN/d6/ch7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qe2deoEI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775782718; c=relaxed/simple;
+	bh=lNKEtd+AWZ5H9HbPcPwWTw53H68E/RqQZkSbhbrDpmc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Pz7UtD6BJoS8IK3jRS/svjTvnAc0Dj8N51Fgq1oy2WmzIN07qmnt6Qb7LQZV1cyBcUlXyBNS3YpMLCeazJO4nmj/UP8Q15BjKj1r7oUglGHjAceTwtWcvnxyoO71a7pcVbCDGPHWZAkxP3unVOGSnuFFowhbCDWkgDseKcJi2cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ6GNOt0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qe2deoEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB78C2BC87;
-	Fri, 10 Apr 2026 00:41:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ6GNOt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3516C4CEF7;
+	Fri, 10 Apr 2026 00:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775781693;
-	bh=akNYq1Yn19Qgx2qs2DWJrh+BFDtfahAZB0/XJt9XasM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qe2deoEIfpWTEW29zU3B9r270MrD6qGYZLhEShJYSVr2mKaagG3ueGfkU6N+UNkhL
-	 P0zEpDi/C3YrVmQ7kbFyGxe2AKG9VwZrVHfAhYctNHsBq2D0Z87ieWp5Aw9v0nvp1a
-	 5eM9clWp67FFXUYc0Ozb5nsBY4bZdjE/2IXNzRI4UjkA+rGSgzLHUFgWdyu3ZyFaNE
-	 2k+iKxLB17wG3zi5zfhxnQwLX4qLHCr+4pX/m70/I+ClZWlhMGpeZjBS4/R9eHJY6/
-	 jOvM6ArJIS6Tg+XVlQkXRspNUmYDYgVPsBTt3lh9Psm73/r7SpUxwT/gZDnlxYRO2y
-	 qO9fb9Yt4GiVA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Song Liu <song@kernel.org>
-Subject: [PATCH 13/13] perf header: Add sanity checks to HEADER_BPF_BTF processing
-Date: Thu,  9 Apr 2026 21:40:00 -0300
-Message-ID: <20260410004000.148138-14-acme@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260410004000.148138-1-acme@kernel.org>
-References: <20260410004000.148138-1-acme@kernel.org>
+	s=k20201202; t=1775782717;
+	bh=lNKEtd+AWZ5H9HbPcPwWTw53H68E/RqQZkSbhbrDpmc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=bZ6GNOt0+i+VyUxEaibL2oamrJx6lF1nwrQzLrlm3lsFy9Bq5TkiUOtFX6/+a2LGo
+	 yOPrjwon1j8PSWzJF7V5pmBr8Vqivk2c0+Wm7OXjUBf9iwPv3CXwIPIe7G3ayp7zF6
+	 oU193X37kZmT4JEqVycnCJ2EjCG7zhUdBqXzokFgckdYwFGW+MQBn3bObsAWqEUN7y
+	 UtHalK0oAnKvJMSUBUynSjiOCW9VZZBsnxKHKqSLS/w0MkgS7FKUaoqnWFIe7Db464
+	 E2lkhf+zSrZ5gR/RSDLRYLf7Qy6DcSKGB8dCiy2acnjDUkSm7QQTC9e26u0YmJW0j0
+	 ZoeO7Br6ws3jg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 10/13] perf header: Sanity check HEADER_HYBRID_TOPOLOGY
+Reply-To: sashiko@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260410004000.148138-11-acme@kernel.org>
+References: <20260410004000.148138-11-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Apr 2026 00:58:37 +0000
+Message-Id: <20260410005837.D3516C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sashiko AI review found 1 potential issue(s):
+- [Low] The MAX_PMU_MAPPINGS macro is defined locally inside process_pmu_ma=
+ppings() but reused in process_hybrid_topology().
+--
 
-Validate the BTF entry count and individual data sizes when reading
-HEADER_BPF_BTF from perf.data files to prevent excessive memory
-allocation from malformed files.
+commit b5af27fec41475de3166cc72abe94ddc329689cc
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reuses the MAX_BPF_PROGS (131072) and MAX_BPF_DATA_LEN (256 MB)
-limits from HEADER_BPF_PROG_INFO processing.
+perf header: Sanity check HEADER_HYBRID_TOPOLOGY
 
-Cc: Song Liu <song@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Assisted-by: Claude Code:claude-opus-4-6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/header.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+This commit adds an upper bound check on nr_nodes in
+process_hybrid_topology() to harden against malformed perf.data files by
+reusing the MAX_PMU_MAPPINGS limit.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 628d091658c8c40e..f47b040b76292c81 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3619,6 +3619,17 @@ static int process_bpf_btf(struct feat_fd *ff  __maybe_unused, void *data __mayb
- 	if (do_read_u32(ff, &count))
- 		return -1;
- 
-+	if (count > MAX_BPF_PROGS) {
-+		pr_err("bpf btf count %u too large (max %u)\n", count, MAX_BPF_PROGS);
-+		return -1;
-+	}
-+
-+	if (ff->size < sizeof(u32) + count * 2 * sizeof(u32)) {
-+		pr_err("Invalid HEADER_BPF_BTF: section too small (%zu) for %u entries\n",
-+		       ff->size, count);
-+		return -1;
-+	}
-+
- 	down_write(&env->bpf_progs.lock);
- 
- 	for (i = 0; i < count; ++i) {
-@@ -3629,6 +3640,12 @@ static int process_bpf_btf(struct feat_fd *ff  __maybe_unused, void *data __mayb
- 		if (do_read_u32(ff, &data_size))
- 			goto out;
- 
-+		if (data_size > MAX_BPF_DATA_LEN) {
-+			pr_err("bpf btf data size %u too large (max %u)\n",
-+			       data_size, MAX_BPF_DATA_LEN);
-+			goto out;
-+		}
-+
- 		node = malloc(sizeof(struct btf_node) + data_size);
- 		if (!node)
- 			goto out;
--- 
-2.53.0
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3448,6 +3448,18 @@ static int process_hybrid_topology(struct feat_fd =
+*ff,
+>  	if (do_read_u32(ff, &nr))
+>  		return -1;
+> =20
+> +	if (nr > MAX_PMU_MAPPINGS) {
 
+This isn't a bug, but could this cause build failures if the functions are
+reordered in the future?
+
+MAX_PMU_MAPPINGS is currently defined locally inside process_pmu_mappings():
+
+tools/perf/util/header.c:process_pmu_mappings() {
+    ...
+#define MAX_PMU_MAPPINGS 4096
+	if (pmu_num > MAX_PMU_MAPPINGS) {
+    ...
+}
+
+While the C preprocessor doesn't respect function block scope, allowing it
+to be used here, this relies on process_pmu_mappings() always appearing
+lexically before process_hybrid_topology() in this file.
+
+Should this macro be hoisted to file scope to prevent accidental breakage
+during future refactoring?
+
+> +		pr_err("Invalid HEADER_HYBRID_TOPOLOGY: nr_nodes (%u) > %u\n",
+> +		       nr, MAX_PMU_MAPPINGS);
+> +		return -1;
+> +	}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410004000.1481=
+38-1-acme@kernel.org?part=3D10
