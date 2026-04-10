@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B693DFC7F;
-	Fri, 10 Apr 2026 22:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DD33E0259;
+	Fri, 10 Apr 2026 22:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775858996; cv=none; b=iH0sADBxab9/T0ko/J/6fscY8xOHMn6J7yCsc4ia3Gr8E+layG85dLDtS75bq1cmVto3ZNStucx6EYsr4yCQFnmpvT2qtxN/6L+vPGWdTy4NV0CtfClz2tlw8jzonQowPTDztMCBfw+OjJoR6p+8K4Mqt2QRL/Tv9uknHEuEAx4=
+	t=1775859000; cv=none; b=F2Lr5h/ojiKI3f//QYyEFBQ0m5TzuCgyU/Lgm31gq9hzn+541UNJwgkTaFBtwQJ8hGwMtTE7dgR0qAUzGx1V2n/8tIZpPy35ZRxr3Rk9LubhMclNqj6wsjL9odO6NhByWPpXnnEu+J8TuNEumgvWJ30b3QR+whluB4prnY/ggPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775858996; c=relaxed/simple;
-	bh=nTVueE5sivSHveP+KHEDhryCMxE648En1ksQQHY7Jgs=;
+	s=arc-20240116; t=1775859000; c=relaxed/simple;
+	bh=DGanuo7H1Cz0/iclidenEyL10ERjkYfUFJF7X9lfhus=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bo/8DtyaWRBvHVQ+6oaSYJqjoiktordjNKUenebb6jTcjSdhi7vySlFsjHesNVsLPenZ0Lkw8GJoN3Mj/frZO67TAiRvQc0gPWgCQdvBlO3u22AuRT13RMBdmHvqRyN4jIr/ARR0mxAFL/fLfyIVys/fh3t3sc9U6miOw0qiYuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnv1Qcyd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s4whjor1/ZJSPr2UDR4ed+bJHr6Uvi3vIH7L1+o+5CEiR7Z9d28qxEhvFYhHVgzo6a8Gog9iKenujV2iQtfxV58PYD0d/j4URnZGLwjN8rogWijUitixE/jNebraO06k2sdM2fvcSULUfvdQMD//TT/6mMcqu/KNOqipgp+qmKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eO8aW/f3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnv1Qcyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E83C19421;
-	Fri, 10 Apr 2026 22:09:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eO8aW/f3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E57FDC2BC87;
+	Fri, 10 Apr 2026 22:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775858996;
-	bh=nTVueE5sivSHveP+KHEDhryCMxE648En1ksQQHY7Jgs=;
+	s=k20201202; t=1775859000;
+	bh=DGanuo7H1Cz0/iclidenEyL10ERjkYfUFJF7X9lfhus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jnv1QcydL7ECC03ntPctojrO7tz66Jk2d9VFIc3khbpwOfARcRzsFZdYtWnqziHIO
-	 hZuEkn79E+nrMV4DsPla9bh+jNAwm+Lnem4yFbgMiiABQp48YPgsY/hSAp7PzSUAoF
-	 IfuUStITh906CcQWD1dRqd1qw42xkLlJVSy8b7Ah3BXB93/Fif9vXpZAMyP6kZGrUR
-	 1XpiBEbSFshRZQ1fU5tJFxrfpYL9yzT+x3rxvliFUDH9h+N2EbxG9aNqNUYeTUdSJ3
-	 umJtUJooBuAHAkrLwITMMwGfNYEKCyxVDYCn0FmuLDuN4mLdXcdRD4JrpRDW8HilIM
-	 1pbMqVBsxGy1Q==
+	b=eO8aW/f3k46yzxHjQTPVatlcK9ODnFUOg4ACs4PzRRAAfWlfOEUGc45QcPE0EBq2V
+	 CudnTYHBlRMvQy/dlYNCEWcUCSiLJ3LS3eciOOrwpDTdswfgJSfekAtbh6m04x+Buf
+	 kwidKVre5oQ5vSdI9JKSbxIFsW7U+ohOq0JHFmDUSxY/6hbgZ/Jz8wGjCi0DmfAWDu
+	 Y0Vs3TYlwdqZiYY1qbpLa+t2qYTxzIaw43q8zFAPVf0VEnc7wnTay+eFGsdmnGfsrX
+	 Uz2BST2OXXHyIicVSj62Hb+t2kRYt6e020E7raBfKtV0+BFFoLmrTrKm4s6ifzrSZX
+	 yUT/cVyvQqBBQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +38,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/13] perf header: Sanity check HEADER_HYBRID_TOPOLOGY
-Date: Fri, 10 Apr 2026 19:09:02 -0300
-Message-ID: <20260410220905.200051-11-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH 11/13] perf header: Sanity check HEADER_PMU_CAPS
+Date: Fri, 10 Apr 2026 19:09:03 -0300
+Message-ID: <20260410220905.200051-12-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260410220905.200051-1-acme@kernel.org>
 References: <20260410220905.200051-1-acme@kernel.org>
@@ -55,39 +56,63 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add upper bound check on nr_nodes in process_hybrid_topology() to
-harden against malformed perf.data files (reuses MAX_PMU_MAPPINGS,
-4096).
+Add upper bound checks in PMU capabilities processing to harden against
+malformed perf.data files:
 
+- nr_pmu bounded to MAX_PMU_MAPPINGS (4096) in process_pmu_caps()
+- nr_pmu_caps bounded to MAX_PMU_CAPS (512) in __process_pmu_caps()
+
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Code:claude-opus-4-6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/perf/util/header.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 749a522fe057e739..a609fc7d959fae04 100644
+index a609fc7d959fae04..37c1afbc081672f1 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -3450,6 +3450,18 @@ static int process_hybrid_topology(struct feat_fd *ff,
- 	if (do_read_u32(ff, &nr))
- 		return -1;
+@@ -66,6 +66,7 @@
+ #define MAX_CACHE_ENTRIES	32768
+ #define MAX_GROUP_DESC		32768
+ #define MAX_NUMA_NODES		4096
++#define MAX_PMU_CAPS		512
+ #define MAX_PMU_MAPPINGS	4096
+ #define MAX_SCHED_DOMAINS	64
  
-+	if (nr > MAX_PMU_MAPPINGS) {
-+		pr_err("Invalid HEADER_HYBRID_TOPOLOGY: nr_nodes (%u) > %u\n",
-+		       nr, MAX_PMU_MAPPINGS);
+@@ -3677,6 +3678,12 @@ static int __process_pmu_caps(struct feat_fd *ff, int *nr_caps,
+ 	if (!nr_pmu_caps)
+ 		return 0;
+ 
++	if (nr_pmu_caps > MAX_PMU_CAPS) {
++		pr_err("Invalid pmu caps: nr_pmu_caps (%u) > %u\n",
++		       nr_pmu_caps, MAX_PMU_CAPS);
 +		return -1;
 +	}
 +
-+	if (ff->size < sizeof(u32) + nr * 2 * sizeof(u32)) {
-+		pr_err("Invalid HEADER_HYBRID_TOPOLOGY: section too small (%zu) for %u nodes\n",
-+		       ff->size, nr);
+ 	*caps = calloc(nr_pmu_caps, sizeof(char *));
+ 	if (!*caps)
+ 		return -1;
+@@ -3754,6 +3761,18 @@ static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 	}
+ 
++	if (nr_pmu > MAX_PMU_MAPPINGS) {
++		pr_err("Invalid HEADER_PMU_CAPS: nr_pmu (%u) > %u\n",
++		       nr_pmu, MAX_PMU_MAPPINGS);
 +		return -1;
 +	}
 +
- 	nodes = calloc(nr, sizeof(*nodes));
- 	if (!nodes)
++	if (ff->size < sizeof(u32) + nr_pmu * sizeof(u32)) {
++		pr_err("Invalid HEADER_PMU_CAPS: section too small (%zu) for %u PMUs\n",
++		       ff->size, nr_pmu);
++		return -1;
++	}
++
+ 	pmu_caps = calloc(nr_pmu, sizeof(*pmu_caps));
+ 	if (!pmu_caps)
  		return -ENOMEM;
 -- 
 2.53.0
