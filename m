@@ -1,87 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF35F3A4F5D
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 08:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9453AB277;
+	Fri, 10 Apr 2026 08:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775809044; cv=none; b=adFtwJS/vxllO2StnSUW8sukEs8MxdcqVi6oNw6xCYAs8syKAA/4+Ghz6nsybBe2QMc/dTwfzqSkyvmHxwNPY63P6JtoNmFuCmg1ehWdOqcO12FBiTDqN9JmgtFPGYTBkghFDKy1yCgjGwKMvymiMWHUs1woNC9z5rXS84v6jfA=
+	t=1775809072; cv=none; b=tWOzNG3f6z7w9/MXGQKEdpeRtfvW2R9fDO6o5BuV7WXcIz6sdHACWxfLG90uv0yCirRUXF7RLSw9eKMR5HuViKwOESymzYCkK4OlGKQaiAD3MZlREzWnrVw8wyhHCdUvJ04AllNyM7Y57U1Xt0iFo1DwhT3Cl+6jMh8EyBN+IEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775809044; c=relaxed/simple;
-	bh=T3MWw+zUHygqID6q4WiCKYzmWs/UKZhGwhOCFto/Kro=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kBfcEy5D42YiYop4NwomCl4cz6AYIN2RnqwYFKHo355zB7Lyc7lW6SiDvwjhKc4Gg5ZHZR/bo+7iBzvLjwEAxpt40BXCmgsY8nQfjj2FPM2F0P1RI40JnxEN8M16sE8R1PZ4DF2ZPGOmUWZo+QIjdWcoVecqnUO8RZHiPT4rW2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdGhWnRC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdGhWnRC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B1EC19421;
-	Fri, 10 Apr 2026 08:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775809044;
-	bh=T3MWw+zUHygqID6q4WiCKYzmWs/UKZhGwhOCFto/Kro=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=YdGhWnRCJfI5pI7IOEmiQxfJ2kR57+hpoF4I+vU8psiSH8Kl3Y/XzPpv/cxWx1RtE
-	 wX/vb+EIP4oRNDJx9EEgrKns99x0Flq8irHRUOgmNYQlIcJn3xD2qK9Nv1j5J19zai
-	 k0gF2Kc3Zo7yKEkuF5cr/6Pzf2r19h+Aazbu85eeKpGUnFhaT7Ot+KG7OQ21SOHytg
-	 DsIGPSwGkxISSKsJqPg10MY+2PAQS3O/HYfnR4ZrwBfKgFVv1YLxqhaYcG1dIa0zIG
-	 PfJvVERH3v3i+oPV661iLt6IBfuLCMlz3vYwVlsLSA6Own6pOnzrcYEVuHvkozoka0
-	 1pkrjEUoKKkfA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf dso: Fix kallsyms DSO detection with fallback
- logic
-Reply-To: sashiko@lists.linux.dev
-To: "Tanushree Shah" <tshah@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260410071225.708005-2-tshah@linux.ibm.com>
-References: <20260410071225.708005-2-tshah@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 08:17:22 +0000
-Message-Id: <20260410081724.69B1EC19421@smtp.kernel.org>
+	s=arc-20240116; t=1775809072; c=relaxed/simple;
+	bh=7yPJy8+ELAbFCHiuiVyLdoOmHG1RhYqgN6WN3B5/QzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a7Iwf79XTwKjM3ZfxCCXd6diFDkULs6Ts437a3Hqk9n8gwGn4m8VPqehIz/iA/IZ8TMcJY5O124aDmU0QTKwb9Cn0uGmhe0f414QDHE91v1NCbleqKVDdKtVzgu8WK68ejGeo99heRUv44hgamEiCDZ+Fac6DiYN0L/ELxOLo+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fsV6K1TYwzKHMMx;
+	Fri, 10 Apr 2026 16:17:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B04C940561;
+	Fri, 10 Apr 2026 16:17:46 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with SMTP id _Ch0CgAnBVIosthpE+cXEA--.45623S2;
+	Fri, 10 Apr 2026 16:17:46 +0800 (CST)
+Message-ID: <4e38389d-b74a-4d50-b499-1fd76d9573ee@huaweicloud.com>
+Date: Fri, 10 Apr 2026 16:17:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] perf arm64: Support data type profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+ <adSkpI9AoTNgISU5@z2> <5fa89ec2-122e-4937-bec6-fe5dbe3ae07f@huaweicloud.com>
+ <adif9rnXtvUm7W8T@google.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <adif9rnXtvUm7W8T@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgAnBVIosthpE+cXEA--.45623S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1Uuw4xXF1xWFWrJFW8WFg_yoWfAFb_u3
+	y7KF1kCry5Gw4vk3WfGrnIqa9Y9rsrJry8XayFqF9ay34kJF9rZw4kurn7CwnxZr48tF4q
+	g3W5C34rA34avjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
+	0PDUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Sashiko AI review found 1 potential issue(s):
-- [Low] The macro `DSO__NAME_GUEST_KALLSYMS` is defined with an unbalanced =
-bracket, which is deceptive and prone to misuse.
---
 
-commit bff739892129d9369935f2dfb42b44d83b2f857d
-Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf dso: Fix kallsyms DSO detection with fallback logic
+On 2026/4/10 15:00, Namhyung Kim wrote:
+> On Wed, Apr 08, 2026 at 07:35:22PM +0800, Tengda Wu wrote:
+>> Hi Namhyung,
+>>
+>> Thank you for the feedback.
+>> I have received your comments and will get back to this as soon as I can.
+>  
+> Thanks, I've reviewed the instruction tracking part.
+> 
+> Basically my concern is that you should invalidate unknown or unhandled
+> cases so that it should strictly maintain the correct states of
+> registers and stack slots.  Otherwise it would contain many incorrect
+> results.
+> 
+> Also, please take a look at sashiko reviews which spotted many things.
+> 
+> https://sashiko.dev/#/patchset/20260403094800.1418825-1-wutengda%40huaweicloud.com
+> 
+> Thanks,
+> Namhyung
 
-This commit fixes kallsyms DSO detection during build-id injection when
-the binary type is not yet explicitly set. It implements a fallback that
-matches the long_name against known kallsyms strings to correctly identify
-the kernel DSO.
+Much appreciate the thorough review.
 
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index ede691e9a2495..e44071998c499 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-[ ... ]
-> @@ -20,6 +21,7 @@ struct perf_env;
-> =20
->  #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
->  #define DSO__NAME_KCORE		"[kernel.kcore]"
-> +#define DSO__NAME_GUEST_KALLSYMS	"[guest.kernel.kallsyms"
+There is a lot of valuable input here. I will take some time to deep-dive into
+each comment and ensure all concerns are properly addressed in V2.
 
-This isn't a bug, but there is a missing closing bracket in this macro
-definition.
+Thanks,
+Tengda
 
-While it looks like this was done intentionally to allow prefix matching
-against dynamic guest kallsyms names (which append a PID) using strncmp
-later in the patch, naming it DSO__NAME_GUEST_KALLSYMS implies it represents
-a complete, well-formed identifier like DSO__NAME_KALLSYMS.
-
-Could this macro be renamed to something like DSO__PREFIX_GUEST_KALLSYMS
-to make its intended use as a prefix clear, preventing it from being
-accidentally used in contexts expecting a full name?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410071225.7080=
-05-2-tshah@linux.ibm.com?part=3D1
