@@ -1,100 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA8B2D949F
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 00:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910B42765F5;
+	Fri, 10 Apr 2026 00:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775781486; cv=none; b=I3bcR146HiGZDYn7oNHnr9uAJpy7cWmJOgu1I0/keyuylBwbwAYFUj5ikBiUhl4qDe+ZIPflGBHBTVr+0Bd0J/vaf080SMBOs3FbFkrcVJkizxr5P+ExzhxBEA0b0JCnweFoXYEjdvBKV44dhJk/02LTrtZUkZRlCJ/co8kWJx4=
+	t=1775781622; cv=none; b=cQbkWqkqd6MZoO28E4eLVMeYjttEK/IPgTbQ3WJvA8X9Bn5/SzjVez3ixOyRIijit+/xDI4agUA5NlfVVYopBMkKEi3cUnHn2BztMuvRxxfruVRZAZ6XftMoVYnDpLS3bSxhuvRnJ2O1KB9ezTcOTyG+piwcFx12uFry8XlXvzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775781486; c=relaxed/simple;
-	bh=H04/IbOWw7GwAuVwKgfkE0UTGBrgNXBf70U9giWBmOI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hSWnJbQwYoHErs/0Fcymsvcuq78dPciXhSFue+9ZT7KYFy72ddaWXtRDdunYP1RdgwnC0Fadzgs36tZ1UWIM9/3QZ2m/l6YF7Aes36XetTYPAINu55+VWtxHCHl0FqE0aqop6MD2pcf5hMm/AdeKAlHetAm5/UAUhp1sWBLCW2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skBDuxjU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775781622; c=relaxed/simple;
+	bh=VCq3bOsYCM9BcnYJbWR2KntvzEnSM5cFyCtHri5v5eg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GKDs7euIZNx2ZzfR1ub6cPfGcZ/7ZA2uEAUHIIC6P48YLu0MeKyQT5PJ+5ymldS0htRahhGIbPS4KVHJfM0PPaYDbhIgOSwlAlNeOUVw1qocxKaSNEOkHP/eCCBJk0dXuP1T+srhTRh2mRRYMFYIdn8R+8rUMZOKyC5pDqt3BJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCxsEFxl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skBDuxjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27EC4C4CEF7;
-	Fri, 10 Apr 2026 00:38:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCxsEFxl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD23C4CEF7;
+	Fri, 10 Apr 2026 00:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775781486;
-	bh=H04/IbOWw7GwAuVwKgfkE0UTGBrgNXBf70U9giWBmOI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=skBDuxjUoueGk2HUXI5MeFBJEhb3JS0Bv4jXRVcTQsYkHV8RNDPleYSMMgmMWvJkc
-	 orSEWBYbpMDrQeFIf1S5hCG/p6AjD0FNcJYK4K21k0ZzT80jyLa19/gwebCVGgzBq+
-	 ghzT6CEwFe416CfaD5E+2qfnn0XDX4mcGNLKAz25fxfjUriMbOBN4khL0HJfSBXB8I
-	 MRyK0tDjNfYl12vayBBSJNi+BG6YLyjdULnxYOT7qJSTSDuBnT300NnTPG+Dw3/HVb
-	 seaTPDL+cCOwEeZPEHsSepsmbm/Kc2aOaFNVBjBszxBZ81g2LsRfUoMGtb9OUkoIGb
-	 /coYAw5WyNUdg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1] perf test: Fix inet_pton probe failure due to
- multiple probes
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260410002351.10856-1-irogers@google.com>
-References: <20260410002351.10856-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 00:38:05 +0000
-Message-Id: <20260410003806.27EC4C4CEF7@smtp.kernel.org>
+	s=k20201202; t=1775781622;
+	bh=VCq3bOsYCM9BcnYJbWR2KntvzEnSM5cFyCtHri5v5eg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tCxsEFxly4p9R6P1XqXayDU5OqHFqUzeq1YxLCvOAWNRs8YsymL//dKDpZkdEVb8M
+	 Bf4kht262PNIFvqcVNh0ATvgvE0SM82DLjEwiQIshCttM252yEYMrJBQ1fhlmS9Lvo
+	 9HZzu0JiG6Vq1Qde1MIBiHNCsdOEAsOfJ5GuweU/2G7twfX0+Wcts2+ZRn5dcDK/jc
+	 ayA0JtTDumY+XE2pnGWVbAPNjqk2xJkaIXSu4SEEedOmgwGMGDrN2hu5FvFwQIPSiQ
+	 NduzKkrF1OcU8mgpBPNerT0FOGm9p6PEaGxQqluWSNIo+K19gwR8OVnXdmtcwV/vF5
+	 M1ELSEL81lJRg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES perf-tools-next v1 00/13] Sanity check perf.data headers
+Date: Thu,  9 Apr 2026 21:39:47 -0300
+Message-ID: <20260410004000.148138-1-acme@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The use of `sort -u` fails to guarantee a single event name on s=
-ystems without uprobe multiprobe support, leaving the test broken in those =
-environments.
---
+Hi,
 
-commit 82ddf08abe58056272425532334245db796f2020
-Author: Ian Rogers <irogers@google.com>
+	Sashiko recently mentioned the lack of sanity checking headers
+in perf.data files, that with a fuzzy or maliciously crafted file could
+make processing a perf.data file cause deleterious results.
 
-perf test: Fix inet_pton probe failure due to multiple probes
+	Add sanity checks and some arbitrarily generous upper limits to
+headers, if some are found to be questionable, lets tweak them in
+upcoming versions of this patchset.
 
-This commit attempts to fix a test failure caused by perf probe outputting
-multiple probe points. It replaces a tail/head pipeline with sort -u to try
-and extract a single, unique event name from the awk script output.
+	As registered in the Assisted-by tags in the patches, this was
+done using Claude code to speed up development, hopefully no
+hallucinations are present.
 
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tool=
-s/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index ab99bef556bf0..b717063f70c27 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -22,9 +22,9 @@ event_pattern=3D'probe_libc:inet_pton(_[[:digit:]]+)?'
-> =20
->  add_libc_inet_pton_event() {
-> =20
-> -	event_name=3D$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | =
-head -n -5 | \
-> +	event_name=3D$(perf probe -f -x $libc -a inet_pton 2>&1 | \
->  			awk -v ep=3D"$event_pattern" -v l=3D"$libc" '$0 ~ ep && $0 ~ \
-> -			("\\(on inet_pton in " l "\\)") {print $1}')
-> +			("\\(on inet_pton in " l "\\)") {print $1}' | sort -u)
+	I'm also trying to get some of these checks into review-prompts
+skills, some of which were already merged, for instance:
 
-Does sort -u guarantee a single event name is captured on kernels without
-uprobe multiprobe support?
+  https://github.com/masoncl/review-prompts/commit/2bb2159893ea926e120105416e95629b9ef1508c
 
-On systems without multiprobe support, perf probe actively prevents name
-collisions by appending indices to subsequent probe points, outputting
-names like probe_libc:inet_pton and probe_libc:inet_pton_1.=20
+Thanks,
 
-Because these strings are textually distinct, sort -u will output all of
-them rather than deduplicating them.
+- Arnaldo
 
-This leaves the event_name variable containing multiple words separated by
-newlines. When expanded unquoted in the subsequent perf record and perf pro=
-be
-commands, bash word splitting causes the same syntax errors the patch inten=
-ds
-to fix.
+Arnaldo Carvalho de Melo (13):
+  perf header: Validate nr_domains when reading HEADER_CPU_DOMAIN_INFO
+  perf header: Bump up the max number of command line args allowed
+  perf header: Sanity check HEADER_NRCPUS and HEADER_CPU_DOMAIN_INFO
+  perf header: Sanity check HEADER_CPU_TOPOLOGY
+  perf header: Sanity check HEADER_NUMA_TOPOLOGY
+  perf header: Sanity check HEADER_MEM_TOPOLOGY
+  perf header: Sanity check HEADER_PMU_MAPPINGS
+  perf header: Sanity check HEADER_GROUP_DESC
+  perf header: Sanity check HEADER_CACHE
+  perf header: Sanity check HEADER_HYBRID_TOPOLOGY
+  perf header: Sanity check HEADER_PMU_CAPS
+  perf header: Sanity check HEADER_BPF_PROG_INFO
+  perf header: Add sanity checks to HEADER_BPF_BTF processing
 
-Could this use head -n 1 or awk '{print $1; exit}' instead to robustly
-guarantee a single name is captured across all environments?
+ tools/perf/util/header.c | 219 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 213 insertions(+), 6 deletions(-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410002351.1085=
-6-1-irogers@google.com?part=3D1
+-- 
+2.53.0
+
