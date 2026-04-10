@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81414334692
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 05:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD360312815;
+	Fri, 10 Apr 2026 06:09:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775797833; cv=none; b=Ce0OsBpfBlu2zgihOkFNXjOsuSZf4sXOigblR2LG2/4XieDHbqMssAziRd49XYFe+VOOIlSKsxaTmS0/xJPXOG3d1eGHetjZoo9C5ssqeEbtP3jLCKV/YSWPwLH/JDcqw5whf8YttY9RoBStNIN1Ecl0uV/pLK0pZ5dOKMDeJ7U=
+	t=1775801387; cv=none; b=ENmKMGJ61qIDzYeXSsljjZmNvJXHIQ7zMhxvVsn6DE6eU+oRw/D9TBR+Ypbf+iCDC1oBbYl818GughCyT8Rq9k2x8JWD4bxVPex0buAbKCMkTNQ94cS6/irfY13BVcHQQ4cMavcKIQ3hGqAw0UsRyN6fUBWpjwDrdejGhAO0TAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775797833; c=relaxed/simple;
-	bh=fJ7v0Jhvk3LlyZE3av0sez+GL2CuEUcfvz33Z3lQ5nQ=;
+	s=arc-20240116; t=1775801387; c=relaxed/simple;
+	bh=T5EvhFrIxER2QFYEsToO2rIyzFLR2rYS9S072vD0lHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mksWvXH7OKrchFG/X3rcKNoFqx/DwsMxgB14oQr2nglaa6sim3lWV7MVejHwtICvqpsdjP10chc6ScUMe6MPC076xjvHKmsdqo15m8WEvychdlKCF9qsz/09TkWjrKr6wr1Ux9r8Mu9bqTz1xpSxsoB0k92pW7FTxqZqGaYT1xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nw8D1mu8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TagLSHgeKdJNwAJfyURYKwIfkZFnW+EEj1cOM/F6yKUIuy4pyXvM+92ZxdcCq8hGgTHE/VxsGGh3BX8VmQySMQ6E0M/8l8/nzumpZEMasj8TJXpWIRgLcQjsLJb4LDctYUP6VZcJmXHBnKfFc4++bJGw8ncHjHLHycwfHKOhRPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph2dbOqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nw8D1mu8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F6C3C19421;
-	Fri, 10 Apr 2026 05:10:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph2dbOqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD9FC19421;
+	Fri, 10 Apr 2026 06:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775797833;
-	bh=fJ7v0Jhvk3LlyZE3av0sez+GL2CuEUcfvz33Z3lQ5nQ=;
+	s=k20201202; t=1775801387;
+	bh=T5EvhFrIxER2QFYEsToO2rIyzFLR2rYS9S072vD0lHg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nw8D1mu8rQkAZrj92tK/gsFrIws1UtWgBqPKeQBzjx3Up5YQMFlCWzsVmg8dvgLoh
-	 jd2LrFR24Z63p6cOktfLjLronZfIcyPOjZN1JuF3D7QQ0ruzGaon0a4YGOtzEUnOWj
-	 KS7nCdU42Eb7RELmhOb8oYKI7x/3ydQFR26CkgNL7so/ejxTtkhTmI1oHLsw6vToYG
-	 /FPWGLcF7E3kIpYyihRUFyHDsQjDsrRqLnzAZ8FKLJI/0Uw2+ufEkuyZMHO+iU4rWp
-	 pBNfPRLei0wTMHhxcxQtHv3tqgO6miMVcHFqt7+7vAwX0CR2/w1suBtXZI2Ha0Yuze
-	 UXK8ob8mOYuFQ==
-Date: Thu, 9 Apr 2026 22:10:31 -0700
+	b=ph2dbOqU3FDowtMVikm8ZV+Ct7/KHyYCCQKCh6qWPuT9h8+7+eLW55WfbQDTdyWaw
+	 7hDwJv220/NiR8RLgFJpBftAO7MJh6lYsSWxVEbXoITw1LeIqCHOh6ikw/uOCFB6HQ
+	 V1DddC2fg0YMD/BcTEOk25oscV7YdXpKIYvNdda8zk9Z+bekJ9+HbBSMm8bU+OlPNj
+	 lvhH9gVFpfF/WuV8yDl2W/IyAUUTDmKV9iq+R9VsASQysbdQtKtg2yaeVg9ELAFoEW
+	 zleieLAEqBAvBgePupp7j0DZ/k6ZMtfkQ2kEGwJMjPBdWI5cw1RoTTdenWullfN8XG
+	 w79ILjyrfKiNQ==
+Date: Thu, 9 Apr 2026 23:09:44 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+	Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+	Kim Phillips <kim.phillips@arm.com>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 0/4] perf arm_spe: Extend SIMD operations
-Message-ID: <adiGR-A-N1tMzxTE@google.com>
-References: <20260408-perf_support_arm_spev1-3-v5-0-b5bcea6217bb@arm.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 08/16] perf annotate-arm64: Enable instruction
+ tracking support
+Message-ID: <adiUKB1CTkDAGrB_@google.com>
+References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+ <20260403094800.1418825-9-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,74 +53,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260408-perf_support_arm_spev1-3-v5-0-b5bcea6217bb@arm.com>
+In-Reply-To: <20260403094800.1418825-9-wutengda@huaweicloud.com>
 
-On Wed, Apr 08, 2026 at 10:42:30AM +0100, Leo Yan wrote:
-> This series extends SIMD flag for Arm SPE and updated the document.
+On Fri, Apr 03, 2026 at 09:47:52AM +0000, Tengda Wu wrote:
+> Enable instruction tracking for the arm64 architecture in 'perf annotate'
+> to support data type profiling.
 > 
-> Since I failed to get perf core maintainer's review for uAPI header
-> updating for data source fields (since last year's Sepetember), this
-> series I dropped uAPI changes and sent only SIMD flag changes, hope
-> it is easier for perf tool maintainer's picking up.
+> Define ARM64_REG_SP as 31 to correctly identify the stack pointer
+> register during type state initialization. Update
+> arch_supports_insn_tracking() to include arm64, which allows
+> find_data_type_block() to process the instruction scope for arm64.
 > 
-> Anyway, uAPI patches will be sent out separately.
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  tools/perf/util/annotate-data.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> This version is rebased onto the latest perf-tools-next branch.
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 1eff0a27237d..fd6416d43a2e 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -28,6 +28,7 @@
+>  
+>  /* register number of the stack pointer */
+>  #define X86_REG_SP 7
+> +#define ARM64_REG_SP 31
+>  
+>  static void delete_var_types(struct die_var_type *var_types);
+>  
+> @@ -177,7 +178,8 @@ static void init_type_state(struct type_state *state, const struct arch *arch)
+>  		state->regs[11].caller_saved = true;
+>  		state->ret_reg = 0;
+>  		state->stack_reg = X86_REG_SP;
+> -	}
+> +	} else if (arch__is_arm64(arch))
+> +		state->stack_reg = ARM64_REG_SP;
 
-Unfortunately it doesn't apply due to a recent change.  Can you please
-rebase it once again?
+Probably you want to setup caller-saved registers and the return
+register as well.
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
-> Changes in v5:
-> - Dropped uAPI header changes for data source fields updating.
-> - Link to v4: https://lore.kernel.org/r/20260106-perf_support_arm_spev1-3-v4-0-b887bb999f6e@arm.com
-> 
-> Changes in v4 (resend):
-> - Updated for Ian and James' review tags.
-> - Link to v4: https://lore.kernel.org/r/20260106-perf_support_arm_spev1-3-v4-0-bb2d143b3860@arm.com
-> 
-> Changes in v4:
-> - Updated for Ian and James' review tags.
-> - Rebased on the latest perf-tools-next branch.
-> - Link to v3: https://lore.kernel.org/r/20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com
-> 
-> Changes in v3:
-> - Rebased on the latest perf-tools-next branch.
-> - Link to v2: https://lore.kernel.org/r/20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com
-> 
-> Changes in v2:
-> - Refined to use enums for 2nd operation types. (James)
-> - Avoided adjustment bit positions for operations. (James)
-> - Used enum for extended operation type in uapi header and defined
->   individual bit field for operation details in uaip header. (James)
-> - Refined SIMD flag definitions. (James)
-> - Extracted a separate commit for updating tool's header. (James/Arnaldo)
-> - Minor improvement for printing memory events.
-> - Rebased on the latest perf-tools-next branch.
-> - Link to v1: https://lore.kernel.org/r/20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com
-> 
-> ---
-> Leo Yan (4):
->       perf sort: Support sort ASE and SME
->       perf sort: Sort disabled and full predicated flags
->       perf report: Update document for SIMD flags
->       perf arm_spe: Improve SIMD flags setting
-> 
->  tools/perf/Documentation/perf-report.txt |  5 ++++-
->  tools/perf/util/arm-spe.c                | 26 ++++++++++++++++++++------
->  tools/perf/util/sample.h                 | 21 ++++++++++++++++-----
->  tools/perf/util/sort.c                   | 21 +++++++++++++++------
->  4 files changed, 55 insertions(+), 18 deletions(-)
-> ---
-> base-commit: dc647eb00969cd213c84d6caee90c480317e857d
-> change-id: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
-> 
-> Best regards,
+
+>  }
+>  
+>  static void exit_type_state(struct type_state *state)
+> @@ -1421,7 +1423,8 @@ static enum type_match_result find_data_type_insn(struct data_loc_info *dloc,
+>  
+>  static int arch_supports_insn_tracking(struct data_loc_info *dloc)
+>  {
+> -	if ((arch__is_x86(dloc->arch)) || (arch__is_powerpc(dloc->arch)))
+> +	if ((arch__is_x86(dloc->arch)) || (arch__is_powerpc(dloc->arch)) ||
+> +	    (arch__is_arm64(dloc->arch)))
+>  		return 1;
+>  	return 0;
+>  }
 > -- 
-> Leo Yan <leo.yan@arm.com>
+> 2.34.1
 > 
