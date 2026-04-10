@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9466A2DB7BB;
-	Fri, 10 Apr 2026 00:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3232E03EA;
+	Fri, 10 Apr 2026 00:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775781649; cv=none; b=VcDBgxu+GreeZI1WpiEXBpV5H93FW4gvDzcMcfccyi1/Gzzq8WYA7oK5+UacE5ftdgYLgQHEUuE9NE/ByNtI7h9RvsufVmoOKasSbZqtLLj1WhWcBlLY6z0RB6M99Z8+tAoyShJUj8kZFp6O/dTmqj3K5dZkbqHNdp3ePuYOaKo=
+	t=1775781654; cv=none; b=BP+JY5fBhBMC7wq0Awp2E/5UjJGwXMu1satycXohFLvgsykSL7J3XMf3UK/gdp0wpLrbyQD1a7e/f0kXl0djUGgWMbJs/R5o9I9Qo0wx3wc8roufoqBepJsQ3kn+kYouT2O7ev6XMCVS4kJS+43jFvO9Pxng2GKxQ+2ZPbfNmqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775781649; c=relaxed/simple;
-	bh=folCP2Wb/5RUUpetgte4BJuOPZbK5f7MP/6iR0y7jJ8=;
+	s=arc-20240116; t=1775781654; c=relaxed/simple;
+	bh=bSjw0l7vsHYRjhidUpSEWJ8ORo5VTXLn7Q7VZAsN0i8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ax3HGU5wsV8PkuSVm4p5KHw+Z2TfZATGgwaDSVl1xVMkrPqk8q67b9ldDQzJ2l9Z0kixOlAyppVFFgtS+vFxSZLWM0rxB9XNuiPeAelNfihOL/XLn3iWXMWm6Rf2F6cEDu+HkTvPK781WTCQ3XAgo8vBOO1X25JQS1UuUPrrdio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9KVevOw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U3HmhtmOZ0T1vFRVN4Pfq1JOoRm2Z2200kDpStCU3ZNvznMTRV+WvYVGZkMDctvjk7RvPxGyIpoF1C8wpzqWT9uknimKzyRZYRVS2/q/OFTIWSEKLfh5GlGT7D3MEXBdT2DmbcgShxFcl/MU+3qZA0RNaNVHTvFCkB2d4MhHBXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZfaHl5b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9KVevOw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86EC9C2BC9E;
-	Fri, 10 Apr 2026 00:40:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZfaHl5b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66DDC2BC9E;
+	Fri, 10 Apr 2026 00:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775781649;
-	bh=folCP2Wb/5RUUpetgte4BJuOPZbK5f7MP/6iR0y7jJ8=;
+	s=k20201202; t=1775781654;
+	bh=bSjw0l7vsHYRjhidUpSEWJ8ORo5VTXLn7Q7VZAsN0i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r9KVevOw+fJtqTfesgkKcjES75kjBNDdz5SSyD2Bb6YHA2Xy4jBc67sVE+hJ6knDM
-	 e11AkHFIbwa2uT/ZvrHAv5ROMKi8n62CxPSW+OMSFprb32tvXQfpZzcIOh3weYugK4
-	 G8bkmUaILXSSLq4dx679ceAFpTLb8TczlfVHvdf7yZLZ3+bW1lGRtydOkJnZcxm05e
-	 pc36IzZTU0220Vg404fzDwM3WgVuy9Y4PB2D8dM38WQ/leFX7Ro0F30GoZaP3vi0Ps
-	 xnvwTWwB40R1TKtJ/xXYkx6Sl1+/TndJgvvz5pL9gQL0leuwaKJWysfIdsVjm2m/Yh
-	 2jSUzjQHc9amw==
+	b=QZfaHl5bixkxXQsQE77cc+Ue187tCbBThcJKo7+avpqOXLiCZNQpHWwspSwXgDTgO
+	 b8Mza/VUsGOHJ28zE7LydIMqCsuMfAUgbridNgUNnmCrkFbei8EJEVZ/F9vdPbCIel
+	 +2OFLOMlSjCSBwLPtuLiEuVZ/dvHsH5G8oD5tPHzstCGUadP2ykDDNhXZAAjVaEdeb
+	 8Ody26PdrJ1UYH0hhdB/MtMs+gqqj5jd/d7nGLJVU8ZPNaSwlRuW9Sa4cvKO51BkD6
+	 l5IP2iZnfj4Q0djkmzD8w4tiHQRf644D63o9fl3Zkl/7ibwOyW9A4zjhqPvcwaMSjW
+	 ADjyeEaG+864A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 05/13] perf header: Sanity check HEADER_NUMA_TOPOLOGY
-Date: Thu,  9 Apr 2026 21:39:52 -0300
-Message-ID: <20260410004000.148138-6-acme@kernel.org>
+Subject: [PATCH 06/13] perf header: Sanity check HEADER_MEM_TOPOLOGY
+Date: Thu,  9 Apr 2026 21:39:53 -0300
+Message-ID: <20260410004000.148138-7-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260410004000.148138-1-acme@kernel.org>
 References: <20260410004000.148138-1-acme@kernel.org>
@@ -55,44 +55,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add validation to process_numa_topology() to harden against malformed
+Add validation to process_mem_topology() to harden against malformed
 perf.data files:
 
-- Upper bound check on nr_nodes (max 4096)
+- Upper bound check on nr_nodes (reuses MAX_NUMA_NODES, 4096)
 - Minimum section size check before allocating
+
+This is particularly important here since nr is u64, making unbounded
+values especially dangerous.
 
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Code:claude-opus-4-6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/perf/util/header.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index a7df8ed9a69e9231..2c6f7c96e2dccaf1 100644
+index 2c6f7c96e2dccaf1..45f533fbb8fdc3c6 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -3003,6 +3003,19 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	if (do_read_u32(ff, &nr))
+@@ -3306,6 +3306,18 @@ static int process_mem_topology(struct feat_fd *ff,
+ 	if (do_read_u64(ff, &nr))
  		return -1;
  
-+#define MAX_NUMA_NODES 4096
 +	if (nr > MAX_NUMA_NODES) {
-+		pr_err("Invalid HEADER_NUMA_TOPOLOGY: nr_nodes (%u) > %u\n",
-+		       nr, MAX_NUMA_NODES);
++		pr_err("Invalid HEADER_MEM_TOPOLOGY: nr_nodes (%llu) > %u\n",
++		       (unsigned long long)nr, MAX_NUMA_NODES);
 +		return -1;
 +	}
 +
-+	if (ff->size < sizeof(u32) + nr * (sizeof(u32) + 2 * sizeof(u64))) {
-+		pr_err("Invalid HEADER_NUMA_TOPOLOGY: section too small (%zu) for %u nodes\n",
-+		       ff->size, nr);
++	if (ff->size < 3 * sizeof(u64) + nr * 2 * sizeof(u64)) {
++		pr_err("Invalid HEADER_MEM_TOPOLOGY: section too small (%zu) for %llu nodes\n",
++		       ff->size, (unsigned long long)nr);
 +		return -1;
 +	}
 +
  	nodes = calloc(nr, sizeof(*nodes));
  	if (!nodes)
- 		return -ENOMEM;
+ 		return -1;
 -- 
 2.53.0
 
