@@ -1,129 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CAA2D8DD0
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 01:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F0431E848
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 01:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775783452; cv=none; b=Hm6XSrAj0/kIZRjEABDZ2OG9RGnqpLGHJHE7vkIHcy2dbMeIteLlZq2UFLjZ5ePWHjmq1QfT2z4EQRLuPqnXQKU3CnHpGz5ApdZshPUPQHKS8M56KwDMmQM8zf0w+BCd1StfEPxrtbnuPTTcLZDmP7UcG8g/sjfibLwll04Rr3k=
+	t=1775783668; cv=none; b=XwjNdBRFUMSqFna24L7s2d702C71VNAaaxBRY9x1P0Y1AuGaffUlAq8EvmMsJLT/IK/o+WeZutPDATELZUUTui65SMKyhhMaFetjU0M5TqR9wLsEkl1R5VogvgzEDE1/iEL3dzybqlHQhsD+DfJIWTXxsNaXi/jAb0EaayLs/Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775783452; c=relaxed/simple;
-	bh=+AvPPyAAHqL6Qmw1m8IbexLjIIBoHddBlvKJXvBXuIU=;
+	s=arc-20240116; t=1775783668; c=relaxed/simple;
+	bh=uDdFPgHm/1VtC95YiVCufr606OS7Hu8ivTZ8Oo4TPCk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=olso8kVD/+/q3xchmO2lsjqwUsivz0GX9OHopXd3KYBygBLweP/EeLWE5h/S+Oy/vMlKIBcYxDZ+slTdJzutk22EbzABNfc06pbYtGMOwCIgGabyIDX1YIbnV2SlPQuqBbAWYzyDDHNk/60u2p1EYQc8nQGAyN7QpI0BdmW2XjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZv7/QTY; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ikekL4nRLr8+mbkHsol+Ph9L5eQj9qvKQtaGERf6tG8EYj3pMD6Ni2m64dLh9GsPSegY5O0SfDfJiDCJWzzBd7ZUC7wI7wvCCtVbcxgoAyIR2B46+1Hc+4uv65KNGrcBsKWhm9OCUqc05PnAY3Ly2jbpveM44+hjEWBudd/8BjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cr/V7QZ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZv7/QTY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E36A2C4CEF7;
-	Fri, 10 Apr 2026 01:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cr/V7QZ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7864C4CEF7;
+	Fri, 10 Apr 2026 01:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775783452;
-	bh=+AvPPyAAHqL6Qmw1m8IbexLjIIBoHddBlvKJXvBXuIU=;
+	s=k20201202; t=1775783667;
+	bh=uDdFPgHm/1VtC95YiVCufr606OS7Hu8ivTZ8Oo4TPCk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=qZv7/QTYLNgA1yAsSRDIf7Mmz8MsY1Q6hpzimOyqC78g3lkZTLiR0MinjzUYgrJ6/
-	 i/A2IZPl6q9glEpWdV6eSdN1y9YT140RBxkYIO2nDiI2075ptuiv+0vImKOKV9VKLb
-	 wt80qZ8qyHgaZ95Yrt5P/POYL4d89B7+UcFn0rgZgIAOlwZ4ZEPw0M2F5FD+hEDGgp
-	 9uHmDKuOLY72rFBWfVsKILNvzEhv1pWeeGSwMeHv50mnjzZNGOWP1ay0xVJC5iFBez
-	 /JDuYlRdG57h26qUfSp3l89VCwXnENg4TwQc5wbDzff9YMwN4AqKTvyYUDwmGTwciT
-	 1nmIEiQJWuanQ==
+	b=cr/V7QZ8hgLTSpflaK559TFutu49uXwi5aUURaXg05KOW45JLXWKNklso6Y5e3xp5
+	 sRLTv9VQJJ+l0C8u6x2irux31Y9Q0wGjGvldutst/MuWS+kZnUDz0rAmMsdDvWW4fG
+	 1QfO8bQT8by7kTdmbEC2QEioTHhYIrq4UGx14mwOuZbrF5gcC+2QTNxJYDp/KGj9xz
+	 z52fxPJhN91UBnJuJjhWT4ezHn6UDoqQjv3/cchpXvQ8GXcrJtzTEGpO+wDZkLsMIP
+	 9o2Pxv7jLAixtd7oAiNG8FC6N0bHiYB2YWE1nteb0tm2ymrpVy3KtWp9Q+FBkEF1TA
+	 TxdCajgkYZOZQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 07/13] perf header: Sanity check HEADER_PMU_MAPPINGS
+Subject: Re: [PATCH 04/13] perf header: Sanity check HEADER_CPU_TOPOLOGY
 Reply-To: sashiko@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260410004000.148138-8-acme@kernel.org>
-References: <20260410004000.148138-8-acme@kernel.org>
+In-Reply-To: <20260410004000.148138-5-acme@kernel.org>
+References: <20260410004000.148138-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 01:10:51 +0000
-Message-Id: <20260410011051.E36A2C4CEF7@smtp.kernel.org>
+Date: Fri, 10 Apr 2026 01:14:27 +0000
+Message-Id: <20260410011427.C7864C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Incomplete Hardening / Brittle State Mutation leading to NULL Poin=
-ter Dereference
-- [High] Information Leak / Out-of-Bounds Read in `do_read_string()`
+Sashiko AI review found 1 potential issue(s):
+- [High] The patch introduces a deterministic NULL pointer dereference cras=
+h on malformed inputs by incorrectly freeing `env->cpu`. The author changed=
+ `return -1;` to `goto free_cpu;` (which calls `zfree(&env->cpu)`) under th=
+e mistaken assumption that `env->cpu` was leaking.
 --
 
-commit f8a3a1de8d8a986abb3e1819cdf6e18f8f1d826d
+commit 725d6d7d1ccd2df010084b584d9517330e1864ac
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf header: Sanity check HEADER_PMU_MAPPINGS
+perf header: Sanity check HEADER_CPU_TOPOLOGY
 
-Add upper bound check on pmu_num in process_pmu_mappings() to harden
-against malformed perf.data files (max 4096).
+This commit adds bounds checking for sibling counts against available
+CPUs in the CPU topology header and attempts to prevent a perceived
+leak of the env->cpu array on error paths.
 
 > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 45f533fbb8fdc..1d7ca467acf32 100644
+> index 2d23dbc666b67..a7df8ed9a69e9 100644
 > --- a/tools/perf/util/header.c
 > +++ b/tools/perf/util/header.c
-> @@ -3067,6 +3067,19 @@ static int process_pmu_mappings(struct feat_fd *ff=
+
+[ ... ]
+
+> @@ -2866,6 +2871,12 @@ static int process_cpu_topology(struct feat_fd *ff=
 , void *data __maybe_unused)
->  		return 0;
->  	}
+>  	if (do_read_u32(ff, &nr))
+>  		goto free_cpu;
 > =20
-> +#define MAX_PMU_MAPPINGS 4096
-> +	if (pmu_num > MAX_PMU_MAPPINGS) {
-> +		pr_err("Invalid HEADER_PMU_MAPPINGS: pmu_num (%u) > %u\n",
-> +		       pmu_num, MAX_PMU_MAPPINGS);
-> +		return -1;
+> +	if (nr > (u32)cpu_nr) {
+> +		pr_err("Invalid HEADER_CPU_TOPOLOGY: nr_sibling_cores (%u) > nr_cpus_a=
+vail (%d)\n",
+> +		       nr, cpu_nr);
+> +		goto free_cpu;
 > +	}
 > +
-> +	if (ff->size < sizeof(u32) + pmu_num * 2 * sizeof(u32)) {
-> +		pr_err("Invalid HEADER_PMU_MAPPINGS: section too small (%zu) for %u PM=
-Us\n",
-> +		       ff->size, pmu_num);
-> +		return -1;
-> +	}
-> +
->  	env->nr_pmu_mappings =3D pmu_num;
->  	if (strbuf_init(&sb, 128) < 0)
->  		return -1;
 
-This isn't a regression introduced by this patch, but since the goal is to
-harden process_pmu_mappings() against malformed files, does this leave a cr=
-ash
-condition if parsing fails later?
+[ ... ]
 
-If an error occurs after env->nr_pmu_mappings is set:
+>  error:
+>  	strbuf_release(&sb);
+>  	zfree(&str);
+>  free_cpu:
+>  	zfree(&env->cpu);
+>  	return -1;
+>  }
 
-	while (pmu_num) {
-		if (do_read_u32(ff, &type))
-			goto error;
+Does this zfree() cause a NULL pointer dereference regression on malformed
+inputs?
 
-		name =3D do_read_string(ff);
-		if (!name)
-			goto error;
+When a parsing error occurs, env->cpu is freed and set to NULL. However,
+perf_session__read_header() ignores the error returned by
+perf_header__process_sections() and proceeds with the session.
 
-the function jumps to the error label and returns -1.
+If the session continues, tools like perf stat will later call functions
+such as perf_env__get_socket_aggr_by_cpu(), which unconditionally
+dereferences env->cpu[cpu.cpu].socket_id.
 
-If the caller perf_session__read_header() ignores the error, we are left wi=
-th
-env->nr_pmu_mappings > 0 but env->pmu_mappings as NULL.
-
-Could this lead to a NULL pointer dereference in functions like
-perf_env__has_pmu_mapping() that iterate up to env->nr_pmu_mappings and pass
-env->pmu_mappings directly to strtoul()? Should env->nr_pmu_mappings only be
-updated on the success path?
-
-This is also not a regression introduced by this patch, but does
-do_read_string() ensure the returned string is null-terminated?
-
-		if (strbuf_addf(&sb, "%u:%s", type, name) < 0)
-			goto error;
-
-If a malformed perf.data file provides a string without a null terminator,
-and do_read_string() returns a buffer that isn't null-terminated, could the
-%s format specifier in strbuf_addf() read past the end of the allocation
-until it hits a null byte in adjacent heap memory?
-
-Could this lead to an out-of-bounds heap read, potentially crashing perf or
-leaking heap data into the PMU mappings output?
+Was env->cpu actually leaking before this change? It appears to be safely
+cleaned up during teardown by perf_env__exit() even if an error is
+encountered here.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410004000.1481=
-38-1-acme@kernel.org?part=3D7
+38-1-acme@kernel.org?part=3D4
