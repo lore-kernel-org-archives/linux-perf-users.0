@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8691A5B8A;
-	Fri, 10 Apr 2026 06:29:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14D4261B92;
+	Fri, 10 Apr 2026 06:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775802597; cv=none; b=rRbHofMn0C0cx5/ROXw9PkP1JmBpKY86x0qEM2Nhq13gsokdHabW1ukxe9vwXt8kvl1/BfIEEw/EejKxB0OPUPoPlm6Ldw81QD0Ox27Ad5hx0yh8kzF23wi5w+YcLDgy+gtoKpNKerjlkHR9XxuxZYAOkLT9aJSNVpe+gb8vAAw=
+	t=1775803162; cv=none; b=Kx6vBtK9rWvZZmpX7jfCeW+HTC7+MXSjjKYhAT8jW7Ag7bC8dHbrqdHAhYtEPhmWPZ76nIgCa9UXXoieftaMnDD15/l9TKpNw/9HPj29rINLppSaTPCNQtJizTK2zi5KB3nVMJfBCz46rOMilGyNh2497j7uyk/Q923CPGZFgRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775802597; c=relaxed/simple;
-	bh=Jf209jy2LDsgcZ7zir3N7eEGWXJlCBdNbzZVbtQLir4=;
+	s=arc-20240116; t=1775803162; c=relaxed/simple;
+	bh=2dJERKr+mp2TGfuWCFWrxNT+5Kd3HQjiEmfMx63zO4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVLPL1t6YyxZJ2/+CAW9W4+nu0ZJkJGd+5zpnEZNbXyCfPfjbn+c/MzqFo6Xis/Qd6JmDkR4uLizx0K1atScnW02/IUwkgfjoThABB9iLf5dOqJDzjLdcI1N8fohGcK0cYsM3I504gR/gWlWKgeOZ9zA3POIryBN4VVKlkjpkLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYLMIQjS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iCJyx8dp+uWkolawms9P0lPsyw3VLcNAgmDap+ElkRWQHcyDsK0g7wIYMxBM4bXWogd4RUiMSg0W+AjxDAnclVgUTGR3LfmM1TR/O5GOcLJ0+lILV9gLabLlXimXTA+h5EJxqjp/dVSxPEcL/mp7MBsXSi9dOLYWyjJNIBWoFvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIDoSOjd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYLMIQjS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E26ADC19421;
-	Fri, 10 Apr 2026 06:29:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIDoSOjd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7166C2BC9E;
+	Fri, 10 Apr 2026 06:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775802597;
-	bh=Jf209jy2LDsgcZ7zir3N7eEGWXJlCBdNbzZVbtQLir4=;
+	s=k20201202; t=1775803162;
+	bh=2dJERKr+mp2TGfuWCFWrxNT+5Kd3HQjiEmfMx63zO4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PYLMIQjS1YSvI/UvJgXHVFLjyZr+Z4AHGj2NtNJdhb5eRMYzyGAHzLENK/RyA20i5
-	 wiVMeqaXUgloNoDv2MZPmK76heEK27H288oZ3E+dW7/QOe3x3PkEkGTBTrhJzGjuJ2
-	 CvL9ijvcdebBZ22OF8n4l7HTodpdRjRRL1XDlWnJNpA/jzvvAaBrYRVbddT+9RGpES
-	 M6JfOTKIDJecUBjEx7LEBKa/zQ/OdFHUF/i15LWR8iMIPy1Bl65mhaXl+CJkOjOFeo
-	 JlRmfF2Q8Myh+D4X57Muqs3B0g3wh226WBZbJfs2rr+JrTXY8ThtCPIQNiav7/IDW6
-	 r68WZ8v17vE3g==
-Date: Thu, 9 Apr 2026 23:29:55 -0700
+	b=KIDoSOjdBBGL7fhziaywXI8ieKmQMorZuT71rZOPo8RSiyza2YAqgW6P8fzNXNSYD
+	 Y8e1QZb4c4n0bQN0CjkFXovjM9Z6hX1OXKnVObjpGQaJWVRrpoflohiz9tgEXV2P0U
+	 FM0MpS//+uVpU3J3QACaoQ02kYXSz1ci4HMu42gmm7w+POrfd1U2VdbuBhA1tvF6bQ
+	 IAM+ynR7ONn8qBRe95VNoApxKcop1cLjdDsDEj72dCiNoF83qJGRXVAj0GA55C64UM
+	 fMLivxSLherLZWecJX7f42Sjl9yiEmnOe39CJIKt0W0rUcTL5ULFRxia76aqTCNMxi
+	 yw22NMv30Ffyw==
+Date: Thu, 9 Apr 2026 23:39:20 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Tengda Wu <wutengda@huaweicloud.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
@@ -40,11 +40,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 11/16] perf annotate-arm64: Support stack variable
+Subject: Re: [PATCH v2 12/16] perf annotate-arm64: Support 'mov' instruction
  tracking
-Message-ID: <adiY4xJ9269L70mM@google.com>
+Message-ID: <adibGCaruYl4i9f8@google.com>
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-12-wutengda@huaweicloud.com>
+ <20260403094800.1418825-13-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,164 +53,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260403094800.1418825-12-wutengda@huaweicloud.com>
+In-Reply-To: <20260403094800.1418825-13-wutengda@huaweicloud.com>
 
-On Fri, Apr 03, 2026 at 09:47:55AM +0000, Tengda Wu wrote:
-> Extend update_insn_state() for arm64 to track data types stored on the
-> stack. This allows 'perf annotate' to maintain type information for
-> local variables that are spilled to or loaded from stack slots.
+On Fri, Apr 03, 2026 at 09:47:56AM +0000, Tengda Wu wrote:
+> Extend update_insn_state() for arm64 to handle register-to-register
+> 'mov' instructions.
 > 
-> The implementation handles:
-> 1. Stack Loads (LDR): Identify when a register is loaded from a stack
->    slot and update the register's type state based on the tracked
->    stack content or compound member types.
-> 2. Stack Stores (STR): Update or create new stack state entries when
->    a tracked register type is stored to the stack.
+> When a 'mov' instruction occurs between two registers, the data type
+> information (DWARF type, kind, and offset) needs to be propagated from
+> the source register to the destination register. This ensures that if
+> a pointer or a structure was previously identified in one register,
+> the tracker continues to recognize it after it is moved.
 > 
-> This enables the instruction tracker to follow data types as they move
-> between registers and memory, specifically for function local variables
-> and compiler-spilled values on arm64.
+> A real-world example is shown below:
+> 
+>   ffff8000803eebf8 <get_vma_policy>:
+>   ffff8000803eec20:  mov  x21, x0  // x0 (struct vm_area_struct*) -> x21
+>   ffff8000803eec28:  ldr  x2, [x0, #112]
+>   ffff8000803eec2c:  cbz  x2, ffff8000803eec94 <get_vma_policy+0x9c>
+>   ffff8000803eec94:  ldr  x0, [x21, #152]  // PMU sample
+> 
+> Before this commit, the type of x21 was unknown, causing the subsequent
+> inference to fail:
+> 
+>   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
+>   chk [9c] reg21 offset=0x98 ok=0 kind=0 cfa : no type information
+>   final result: no type information
+> 
+> After this commit, the type of x21 is correctly inferred as 'vm_area_struct':
+> 
+>   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
+>   mov [28] reg0 -> reg21 type='struct vm_area_struct*' size=0x8
+>   chk [9c] reg21 offset=0x98 ok=1 kind=1 (struct vm_area_struct*) : Good!
+>   found by insn track: 0x98(reg21) type-offset=0x98
+>   final result:  type='struct vm_area_struct' size=0xb0
 > 
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 > ---
->  .../perf/util/annotate-arch/annotate-arm64.c  | 83 ++++++++++++++++++-
->  1 file changed, 80 insertions(+), 3 deletions(-)
+>  .../perf/util/annotate-arch/annotate-arm64.c  | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> index 28647a778802..f9100230c2f6 100644
+> index f9100230c2f6..013b673f4861 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> @@ -11,6 +11,8 @@
->  #include "../disasm.h"
->  #include "../annotate-data.h"
->  #include "../debug.h"
-> +#include "../map.h"
-> +#include "../symbol.h"
->  
->  struct arch_arm64 {
->  	struct arch arch;
-> @@ -297,6 +299,8 @@ static void update_insn_state_arm64(struct type_state *state,
->  	Dwarf_Die type_die;
->  	u32 insn_offset = dl->al.offset;
->  	int sreg, dreg;
-> +	int fbreg = dloc->fbreg;
-> +	int fboff = 0;
->  
->  	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
->  		return;
-> @@ -304,17 +308,59 @@ static void update_insn_state_arm64(struct type_state *state,
+> @@ -308,6 +308,34 @@ static void update_insn_state_arm64(struct type_state *state,
 >  	sreg = src->reg1;
 >  	dreg = dst->reg1;
 >  
-> +	if (dloc->fb_cfa) {
-> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
-> +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
-> +
-> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-> +			fbreg = -1;
-> +	}
-> +
->  	/* Memory to register transfers */
->  	if (!strncmp(dl->ins.name, "ld", 2)) {
->  		struct type_state_reg dst_tsr;
->  
-> -		if (!has_reg_type(state, sreg) ||
-> -		    !has_reg_type(state, dreg) ||
-> -		    !state->regs[dreg].ok)
+> +	/* Register to register transfers */
+> +	if (!strcmp(dl->ins.name, "mov")) {
 > +		if (!has_reg_type(state, sreg))
->  			return;
->  
->  		tsr = &state->regs[sreg];
->  		tsr->copied_from = -1;
-> +
-> +		/* Check stack variables with offset */
-> +		if (sreg == fbreg || sreg == state->stack_reg) {
-> +			struct type_state_stack *stack;
-> +			int offset = src->offset - fboff;
-> +
-> +			stack = find_stack_state(state, offset);
-> +			if (stack == NULL) {
-> +				tsr->ok = false;
-> +				return;
-> +			} else if (!stack->compound) {
-> +				tsr->type = stack->type;
-> +				tsr->kind = stack->kind;
-> +				tsr->offset = stack->ptr_offset;
-> +				tsr->ok = true;
-> +			} else if (die_get_member_type(&stack->type,
-> +						       offset - stack->offset,
-> +						       &type_die)) {
-> +				tsr->type = type_die;
-> +				tsr->kind = TSR_KIND_TYPE;
-> +				tsr->offset = 0;
-> +				tsr->ok = true;
-> +			} else {
-> +				tsr->ok = false;
-> +				return;
-> +			}
-> +
-> +			pr_debug_dtp("ldr [%x] -%#x(stack) -> reg%d",
-> +				     insn_offset, -offset, sreg);
-> +			pr_debug_type_name(&tsr->type, tsr->kind);
 > +			return;
-
-Any chance the stack register changes the offset with the addressing
-mode?  I think it should be updated regardless of the result of this
-operation.
-
+> +
+> +		tsr = &state->regs[sreg];
+> +		tsr->copied_from = -1;
+> +
+> +		if (!has_reg_type(state, dreg) ||
+> +		    !state->regs[dreg].ok) {
+> +			tsr->ok = false;
+> +			return;
 > +		}
-> +
-> +		if (!has_reg_type(state, dreg) || !state->regs[dreg].ok)
-> +			return;
-> +
->  		dst_tsr = state->regs[dreg];
->  
->  		/* Dereference the pointer if it has one */
-> @@ -338,6 +384,37 @@ static void update_insn_state_arm64(struct type_state *state,
->  
->  	/* Register to memory transfers */
->  	if (!strncmp(dl->ins.name, "st", 2)) {
-> +		/* Check stack variables with offset */
-> +		if (dreg == fbreg || dreg == state->stack_reg) {
-> +			struct type_state_stack *stack;
-> +			int offset = dst->offset - fboff;
-> +
-> +			if (!has_reg_type(state, sreg) ||
-> +			    !state->regs[sreg].ok)
-> +				return;
-> +
-> +			tsr = &state->regs[sreg];
-> +
-> +			stack = find_stack_state(state, offset);
-> +			if (stack) {
-> +				if (!stack->compound)
-> +					set_stack_state(stack, offset, tsr->kind,
-> +							&tsr->type, tsr->offset);
-> +			} else {
-> +				findnew_stack_state(state, offset, tsr->kind,
-> +						    &tsr->type, tsr->offset);
-> +			}
-> +
-> +			pr_debug_dtp("str [%x] reg%d -> -%#x(stack)",
-> +				     insn_offset, sreg, -offset);
-> +			if (tsr->offset != 0) {
-> +				pr_debug_dtp(" reg%d offset %#x ->",
-> +					     sreg, tsr->offset);
-> +			}
-> +			pr_debug_type_name(&tsr->type, tsr->kind);
-> +			return;
 
-Ditto.
+Does this handle an immediate value?
+
+> +
+> +		tsr->type = state->regs[dreg].type;
+> +		tsr->kind = state->regs[dreg].kind;
+> +		tsr->offset = state->regs[dreg].offset;
+> +		tsr->ok = true;
+
+Probably safe to use 'state->regs[dreg].ok'.
+
+Anyway, the same concern.  The src and dst are reversed.
 
 Thanks,
 Namhyung
 
-
-> +		}
 > +
->  		/*
->  		 * Store instructions do not change the register type,
->  		 * but the base register must be updated for pre/post-index
+> +		if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
+> +			tsr->copied_from = dreg;
+> +
+> +		pr_debug_dtp("mov [%x] reg%d -> reg%d",
+> +			     insn_offset, dreg, sreg);
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +		return;
+> +	}
+> +
+>  	if (dloc->fb_cfa) {
+>  		u64 ip = dloc->ms->sym->start + dl->al.offset;
+>  		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
 > -- 
 > 2.34.1
 > 
