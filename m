@@ -1,111 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9F4369970;
-	Fri, 10 Apr 2026 19:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF83A38C414
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 20:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775850018; cv=none; b=nm+CFJ7272KYaGiBKiA/Y8lch8msGYFrACDm17g4L2/JutqiE2r47Zbu+1X1GgS4rGjq3rhTnOFH80frJ3GfpEBret0P3FV+FTaQf02Bf1nhFnuqvxjAOT39l2iICsLVyLfQMKXo6PgLjMq13b23fWBnhWD6JRR+l8hYj3TMx2s=
+	t=1775851292; cv=none; b=c2DXh70CuMHqYAte1JG0+vPtNgP5woqlIOdKVBotRRfFZ055hgVwG+nNeUdr6jxRCreKvMfA8Ez8dOeS43kd5bCjMOy+Sc+pq+4MFCbOVz/EQ9EkolzELVD7XiADMWPpJZX9sMqIPvKxGlj9Nnqyc9M8HC3RBXnz8yIMj46ufgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775850018; c=relaxed/simple;
-	bh=SZRbF2V9cH/xRIPq5gbjFT69OHMzCMHlDpzUw//I9oo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MGlw3rSbRVIHOU+P9NNcthgT7o37C7ciWbjjqqrWq62EUHSFrwe56TZsNHlbijyiXRW9R1UzYceB9hPhCUaTP7Gm791mrvLw05jOAo5z1LaCYF0hID7+gh+UMChrciGUsKYuE+OuX6jd3M+liK/OrH4B6zQGs0t/TJayUVayERw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nKsSVtWU; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775851292; c=relaxed/simple;
+	bh=RSxKsmoEAuMp+QGMdZURWruw7M8meI4PslaC8c+YCFc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Zkn88fF5yLr0myjedSh44tvfeO0U965NQFfLVBQ0tOZ99faEkTHbXkY3piySB3KoSdZiTJWManfm/aeNp/YrFtC3EH6Ehtd3k1dtY1LgHIbBKR/OtP1Cyvw9Ez5EOgUEEsNZk3PZkdPnHDgfhSrZn8sqDMSievtiPc5Y9W110AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BslJJIf8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nKsSVtWU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775850016; x=1807386016;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SZRbF2V9cH/xRIPq5gbjFT69OHMzCMHlDpzUw//I9oo=;
-  b=nKsSVtWUoPJzkItPopvUriku6C5NyS+YrBVzNzfsqgMFo7eWLqUuq+Ye
-   tfXtRs2ByaOcp/AWBRAdtp1l9Qa4KaScgaZQz7HJ8LAVaPIqKKUVPBIi0
-   45I7piDUNKs1VF5aZ1oty7eR94UstUSOpG+4M7+wY98STs0Bwh6b5WSdY
-   02e269AhSazanRik+RUSzn9UykZGF7+bWbk7EFGPcoWIJ6PW/ECJW7Rfb
-   J4y2UZ1hpiiY/hmhb8h0mtumqjnRIl9gHwvzygGAbeTChQFB8Tx/pAthj
-   VMFtzDlfJ1yhy0K5JdceWpQofqP/8XWiXGhVx0Ee625pYWFK3/Ux96c/c
-   w==;
-X-CSE-ConnectionGUID: AMq4j9v5Tfq9DM45XDDTSQ==
-X-CSE-MsgGUID: 7rlkH9xVSqaKGlIi8+zJvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="76767568"
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="76767568"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 12:40:11 -0700
-X-CSE-ConnectionGUID: Xktafb8bRLiHI4wvRGfSnw==
-X-CSE-MsgGUID: 6Bi/vppXQlePIKqSaHPlew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="225999195"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.221.104])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 12:40:08 -0700
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 2/2] perf/annotate: Fix missing branch counter column in TUI mode
-Date: Fri, 10 Apr 2026 14:40:00 -0500
-Message-ID: <20260410194000.219846-2-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260410194000.219846-1-thomas.falcon@intel.com>
-References: <20260410194000.219846-1-thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BslJJIf8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3BEC19421;
+	Fri, 10 Apr 2026 20:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775851291;
+	bh=RSxKsmoEAuMp+QGMdZURWruw7M8meI4PslaC8c+YCFc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=BslJJIf8ehFg1hV4MEgHqtWy83JbkPjrfQT9b9wa54E2S7U1Iz1Jy0TvExbDm8wxz
+	 AjVQvuKHxQOgwLUmWLZrywYGpNq6k+csaLJDEnOTilSOfDFIN5DEpl1QPtkMhbg/V+
+	 NF2+VvivSx+K+UUERS+ys4TadqKJhqkZYF9abONNF/HvqGzqP3GYS9+IEe3BmuOgQ1
+	 9dkltr/HopDe5lEO18c4b3ypaY7yaWR6choIsi+A2PscVarosgxyPVvwqUWFPZnL2Y
+	 ByC+fZRzQBstNgo6H93zSD9DWaf5YDsvqB1Vt7IKDRjk1XcD5GYQnJ2T9W6aCZzyFb
+	 YmKGAPz+Cjp9Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] perf/annotate: Fix missing branch counter column in
+ TUI mode
+Reply-To: sashiko@lists.linux.dev
+To: "Thomas Falcon" <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260410194000.219846-2-thomas.falcon@intel.com>
+References: <20260410194000.219846-2-thomas.falcon@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Apr 2026 20:01:30 +0000
+Message-Id: <20260410200131.1E3BEC19421@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf annotate checks that evlist->nr_br_cntr has been incremented
-to determine whether to show branch counter information. However,
-this data is not populated until after the check when events are
-processed. Therefore, this counter will always be less than zero
-and the Branch Count column is never shown. Do this check after
-events have been processed and branch counter data is updated.
+Sashiko AI review found 1 potential issue(s):
+- [Medium] The branch counter column is now enabled in standard stdio mode =
+where it cannot be populated, resulting in a useless empty column in the ou=
+tput.
+--
 
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
- tools/perf/builtin-annotate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+commit afd424a34255fcd5587246caa606560bc9b916c8
+Author: Thomas Falcon <thomas.falcon@intel.com>
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 5e57b78548f4..7fe23b05306f 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -563,6 +563,9 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 	if (ret)
- 		goto out;
- 
-+	if (session->evlist->nr_br_cntr > 0)
-+		annotate_opts.show_br_cntr = true;
-+
- 	if (dump_trace) {
- 		perf_session__fprintf_nr_events(session, stdout);
- 		evlist__fprintf_nr_events(session->evlist, stdout);
-@@ -928,8 +931,6 @@ int cmd_annotate(int argc, const char **argv)
- 	 */
- 	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack) {
- 		sort__mode = SORT_MODE__BRANCH;
--		if (annotate.session->evlist->nr_br_cntr > 0)
--			annotate_opts.show_br_cntr = true;
- 	}
- 
- 	if (setup_sorting(/*evlist=*/NULL, perf_session__env(annotate.session)) < 0)
--- 
-2.43.0
+perf/annotate: Fix missing branch counter column in TUI mode
 
+This commit moves the check for enabling the branch counter column into
+__cmd_annotate() so it occurs after events have been processed and the
+counter is updated.
+
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 5e57b78548f42..7fe23b05306f8 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -563,6 +563,9 @@ static int __cmd_annotate(struct perf_annotate *ann)
+>  	if (ret)
+>  		goto out;
+> =20
+> +	if (session->evlist->nr_br_cntr > 0)
+> +		annotate_opts.show_br_cntr =3D true;
+> +
+
+Will this cause an empty branch counter column to be displayed in standard
+stdio mode?
+
+The original code restricted this check to TUI and stdio2 modes where
+use_browser =3D=3D 1 or annotate.use_stdio2 is true. By moving the assignme=
+nt
+here, it becomes unconditional.
+
+In standard stdio mode, process_branch_callback() is skipped when adding
+samples, so branch stack data is not aggregated into the annotation notes.
+This leaves the counter data at 0 for all instructions. Could this result
+in the output rendering the column title but printing only empty spaces for
+all the rows?
+
+[ ... ]
+
+> @@ -928,8 +931,6 @@ int cmd_annotate(int argc, const char **argv)
+>  	 */
+>  	if ((use_browser =3D=3D 1 || annotate.use_stdio2) && annotate.has_br_st=
+ack) {
+>  		sort__mode =3D SORT_MODE__BRANCH;
+> -		if (annotate.session->evlist->nr_br_cntr > 0)
+> -			annotate_opts.show_br_cntr =3D true;
+>  	}
+> =20
+>  	if (setup_sorting(/*evlist=3D*/NULL, perf_session__env(annotate.session=
+)) < 0)
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410194000.2198=
+46-1-thomas.falcon@intel.com?part=3D2
