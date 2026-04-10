@@ -1,30 +1,30 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDFC38F649;
-	Fri, 10 Apr 2026 10:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23619342514;
+	Fri, 10 Apr 2026 10:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775818196; cv=none; b=VWcUaEadHww/SXSOzSkPyyXmfnYE8V5vpdos5cm+iSMcdqn7wbLwnS6UXzSiBvxwz4Ql4RCM8pq9HtI/XISoxL+T6DKdfK1caW+KdUt2u2cD67SRnw7gz5L15VzI8X1n6n8APQlW1+axbnvkhNN/s2OQMuxqDrC7e0Z5FX6ze+c=
+	t=1775818428; cv=none; b=vEKR+mEJZtLTg73B2L4RVl5l5eowAwXahNY7Y8PS3zMJAHiW0T82z1b6s3jYLFPKPwaD9ukZ4C6ZHyZcXUCNbmcKlB57A17+9AcYZ8IWImQeyTJChPKZEYYPBkQ6Jn2bAmUyyKuIBD8dUqTM1uKichM1axppWool+Nxy1m5WRTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775818196; c=relaxed/simple;
-	bh=fzooCiaJhwFmGIIp6QwM/1YCbrXY+5VNPVRPzyVLxOU=;
+	s=arc-20240116; t=1775818428; c=relaxed/simple;
+	bh=BRbrhMG0BID4yVcXbHkqRzCGgZVffk85Z2MRnAu4HdI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsGMDo9pMekwbrEN2JV4PYb1dQHYd2aDsskdPO7WPuG6GKMIQsbMssCu61UY28YIunQvoKhpIck1WdVxJ+6BBLAdOLHvW0TFZLWHi0+s8BRd9wIH0GOLGRjAVsl6auhMOSDCsDrWjWRj9xsNDEfgxWzDrd6hEcYDxW9epcLZt8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 In-Reply-To:Content-Type; b=rgbG3TWn30ld+bomAr/jfjBQPet6CL7R3hh+vmmaIY9HDhKdz00fRiAMg+ySl2AVjNYCi21L+uU2LP6cwyaX660b9xqKMqPESNx0pz5ZRAuhuBa6YwgQBIjE7vsaVFOwxvXQXFw5BNzah1mKQxnWduk0zAMQYaG04J86Hq3s9HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fsYT33ftNzYQtrY;
-	Fri, 10 Apr 2026 18:49:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E2C474056F;
-	Fri, 10 Apr 2026 18:49:48 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fsYZF4NTVzKHMSl;
+	Fri, 10 Apr 2026 18:53:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 4B38440575;
+	Fri, 10 Apr 2026 18:53:43 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with SMTP id Syh0CgA3YAXL1dhpGUo4EA--.56530S2;
-	Fri, 10 Apr 2026 18:49:48 +0800 (CST)
-Message-ID: <a68d02a9-6a9d-4c36-9392-fcb2b0bcf538@huaweicloud.com>
-Date: Fri, 10 Apr 2026 18:49:47 +0800
+	by APP3 (Coremail) with SMTP id _Ch0CgBXNVK21thpZuwkEA--.63083S2;
+	Fri, 10 Apr 2026 18:53:43 +0800 (CST)
+Message-ID: <7dd0cb46-086a-4d3e-9f07-ff62cc95da2a@huaweicloud.com>
+Date: Fri, 10 Apr 2026 18:53:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,7 +32,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/16] perf annotate-arm64: Support 'add' instruction
+Subject: Re: [PATCH v2 12/16] perf annotate-arm64: Support 'mov' instruction
  tracking
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
@@ -46,17 +46,17 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-14-wutengda@huaweicloud.com>
- <adib8wD8NPtxpQEL@google.com>
+ <20260403094800.1418825-13-wutengda@huaweicloud.com>
+ <adibGCaruYl4i9f8@google.com>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <adib8wD8NPtxpQEL@google.com>
+In-Reply-To: <adibGCaruYl4i9f8@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgA3YAXL1dhpGUo4EA--.56530S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCryDCr4ftw1fArykGrWxWFg_yoWrZrW8pa
-	yqkFWUGw47Xr12gwsIqrZxZF1fKws3GF1jkryqg3Wakr9Iyr1xtas2krW3uayrJrZxAw4x
-	Zr1Utr1fuw1qkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgBXNVK21thpZuwkEA--.63083S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCrykGF4kAF1DuFW7tw1rtFb_yoW5KFW7pa
+	n8Ga45Kw4qgr13KrnIqFWrXa4Sgrn3Kw1q93s0qa4ayryakr4ftF93Kay3ua15Xry8Cr47
+	Jw1Utry3Ww1DCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
 	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
@@ -68,134 +68,112 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxCryDCr4ftw1fArykGrWxWFg_yoWrZrW8pa
 	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
 	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
 	0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
+	6r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
 	xUsfMaUUUUU
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2026/4/10 14:42, Namhyung Kim wrote:
-> On Fri, Apr 03, 2026 at 09:47:57AM +0000, Tengda Wu wrote:
->> Extend update_insn_state() for arm64 to track pointer arithmetic and
->> member address calculations.
+On 2026/4/10 14:39, Namhyung Kim wrote:
+> On Fri, Apr 03, 2026 at 09:47:56AM +0000, Tengda Wu wrote:
+>> Extend update_insn_state() for arm64 to handle register-to-register
+>> 'mov' instructions.
 >>
->> The arm64 'add' instruction frequently calculates structure member
->> addresses, such as 'add x0, x1, #offset'. Tracking this is essential
->> to maintain the connection between a base pointer and its derived
->> member addresses.
-> 
-> What about other arithmetic instructions?  Can 'sub' be used in a
-> similar manner?  Maybe we want to invalidate the target register state
-> for all(?) other instructions.
-> 
-> Thanks,
-> Namhyung
-> 
-
-I need to investigate further if 'sub' is practically used for member address
-calculation in arm64. As for other instructions, I completely agree with the
-idea of invalidating the target register state to avoid any incorrect type matching.
-
-Thanks,
-Tengda
-
->>
->> The implementation checks if the base register contains a pointer
->> or a structure type. When an immediate offset is added, use
->> die_get_member_type() to verify that the resulting offset points to
->> a valid member within the data type. If valid, update the target
->> register's type state with the new offset while preserving the base
->> type information.
+>> When a 'mov' instruction occurs between two registers, the data type
+>> information (DWARF type, kind, and offset) needs to be propagated from
+>> the source register to the destination register. This ensures that if
+>> a pointer or a structure was previously identified in one register,
+>> the tracker continues to recognize it after it is moved.
 >>
 >> A real-world example is shown below:
 >>
->>   ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
->>   ffff80008001c9c4:  add  x19, x0, #0xeb8 // x0 (task_struct*) + 0xeb8 -> x19
->>   ffff80008001c9d0:  ldr  x0, [x19]       // PMU sample
+>>   ffff8000803eebf8 <get_vma_policy>:
+>>   ffff8000803eec20:  mov  x21, x0  // x0 (struct vm_area_struct*) -> x21
+>>   ffff8000803eec28:  ldr  x2, [x0, #112]
+>>   ffff8000803eec2c:  cbz  x2, ffff8000803eec94 <get_vma_policy+0x9c>
+>>   ffff8000803eec94:  ldr  x0, [x21, #152]  // PMU sample
 >>
->> Before this commit, the type flow broke at the 'add' instruction,
->> leaving the subsequent load with no type information:
+>> Before this commit, the type of x21 was unknown, causing the subsequent
+>> inference to fail:
 >>
->>   chk [28] reg19 offset=0 ok=0 kind=0 cfa : no type information
+>>   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
+>>   chk [9c] reg21 offset=0x98 ok=0 kind=0 cfa : no type information
 >>   final result: no type information
 >>
->> After this commit, the tracker correctly follows the member address
->> calculation:
+>> After this commit, the type of x21 is correctly inferred as 'vm_area_struct':
 >>
->>   var [0] reg0 offset 0 type='struct task_struct*'
->>   add [1c] address of 0xeb8(reg0) -> reg19 type='struct task_struct*'
->>   chk [28] reg19 offset=0 ok=1 kind=1 (struct task_struct*) : Good!
->>   found by insn track: 0(reg19) type-offset=0xeb8
->>   final result: type='struct task_struct'
+>>   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
+>>   mov [28] reg0 -> reg21 type='struct vm_area_struct*' size=0x8
+>>   chk [9c] reg21 offset=0x98 ok=1 kind=1 (struct vm_area_struct*) : Good!
+>>   found by insn track: 0x98(reg21) type-offset=0x98
+>>   final result:  type='struct vm_area_struct' size=0xb0
 >>
 >> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 >> ---
->>  .../perf/util/annotate-arch/annotate-arm64.c  | 45 +++++++++++++++++++
->>  1 file changed, 45 insertions(+)
+>>  .../perf/util/annotate-arch/annotate-arm64.c  | 28 +++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
 >>
 >> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 013b673f4861..d2557b9d6909 100644
+>> index f9100230c2f6..013b673f4861 100644
 >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -7,6 +7,7 @@
->>  #include <linux/zalloc.h>
->>  #include <linux/string.h>
->>  #include <regex.h>
->> +#include <inttypes.h>
->>  #include "../annotate.h"
->>  #include "../disasm.h"
->>  #include "../annotate-data.h"
->> @@ -308,6 +309,50 @@ static void update_insn_state_arm64(struct type_state *state,
+>> @@ -308,6 +308,34 @@ static void update_insn_state_arm64(struct type_state *state,
 >>  	sreg = src->reg1;
 >>  	dreg = dst->reg1;
 >>  
->> +	if (!strcmp(dl->ins.name, "add")) {
->> +		struct type_state_reg dst_tsr;
->> +
->> +		if (!has_reg_type(state, sreg) ||
->> +		    !has_reg_type(state, dreg) ||
->> +		    !state->regs[dreg].ok)
+>> +	/* Register to register transfers */
+>> +	if (!strcmp(dl->ins.name, "mov")) {
+>> +		if (!has_reg_type(state, sreg))
 >> +			return;
 >> +
 >> +		tsr = &state->regs[sreg];
 >> +		tsr->copied_from = -1;
->> +		dst_tsr = state->regs[dreg];
 >> +
->> +		/* Handle calculation of a register holding a typed pointer */
->> +		if (dst_tsr.kind == TSR_KIND_POINTER ||
->> +		    (dst_tsr.kind == TSR_KIND_TYPE &&
->> +		    dwarf_tag(&dst_tsr.type) == DW_TAG_pointer_type)) {
->> +			s32 offset;
->> +
->> +			if (dst_tsr.kind == TSR_KIND_TYPE &&
->> +			    __die_get_real_type(&dst_tsr.type, &type_die) == NULL)
->> +				return;
->> +
->> +			if (dst_tsr.kind == TSR_KIND_POINTER)
->> +				type_die = dst_tsr.type;
->> +
->> +			/* Check if the target type has a member at the new offset */
->> +			offset = dst->offset + dst_tsr.offset;
->> +			if (die_get_member_type(&type_die, offset, &type_die) == NULL)
->> +				return;
->> +
->> +			tsr->type = dst_tsr.type;
->> +			tsr->kind = dst_tsr.kind;
->> +			tsr->offset = offset;
->> +			tsr->ok = true;
->> +
->> +			pr_debug_dtp("add [%x] address of %s%#x(reg%d) -> reg%d",
->> +				     insn_offset, dst->offset < 0 ? "-" : "",
->> +				     abs(dst->offset), dreg, sreg);
->> +
->> +			pr_debug_type_name(&tsr->type, tsr->kind);
+>> +		if (!has_reg_type(state, dreg) ||
+>> +		    !state->regs[dreg].ok) {
+>> +			tsr->ok = false;
+>> +			return;
 >> +		}
+> 
+> Does this handle an immediate value?
+> 
+
+I actually had immediate value support in an earlier draft, but I removed it
+because the introduction of a new TSR_KIND_CONST type made state maintenance
+a bit complex, and I hadn't fully thought through the logic at that time.
+
+However, supporting it is definitely better for completeness. I'll try to
+implement it properly.
+
+Thanks,
+Tengda
+
+>> +
+>> +		tsr->type = state->regs[dreg].type;
+>> +		tsr->kind = state->regs[dreg].kind;
+>> +		tsr->offset = state->regs[dreg].offset;
+>> +		tsr->ok = true;
+> 
+> Probably safe to use 'state->regs[dreg].ok'.
+> 
+> Anyway, the same concern.  The src and dst are reversed.
+> 
+> Thanks,
+> Namhyung
+> 
+>> +
+>> +		if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
+>> +			tsr->copied_from = dreg;
+>> +
+>> +		pr_debug_dtp("mov [%x] reg%d -> reg%d",
+>> +			     insn_offset, dreg, sreg);
+>> +		pr_debug_type_name(&tsr->type, tsr->kind);
 >> +		return;
 >> +	}
 >> +
->>  	/* Register to register transfers */
->>  	if (!strcmp(dl->ins.name, "mov")) {
->>  		if (!has_reg_type(state, sreg))
+>>  	if (dloc->fb_cfa) {
+>>  		u64 ip = dloc->ms->sym->start + dl->al.offset;
+>>  		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
 >> -- 
 >> 2.34.1
 >>
