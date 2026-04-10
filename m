@@ -1,76 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD9F4A3E;
-	Fri, 10 Apr 2026 07:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF7C2BE056
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 07:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775804409; cv=none; b=AIJ3EM0gd57G4qaH1ExnHyIGqs4RGcfhf0S3fwPsZk28NX9OHOpYzRNJbBMLcWYNDb4Lm2a0HR05VeTLdim9nrtT/xTB8m1pYROm6Uv7236evB5vbVYWFJ6wYTHgI6yjN1nNwsN03bkBDdf6FlQf596tPxWyHWJ28JdtNjr+tS8=
+	t=1775805207; cv=none; b=uz1PchRWLE7j289cRJAWt4amRaDK1etRKig7KjJoc/7fCuIQI1Ybv9fVLBkuO7j784sxO89IzwIriFc7BFupZkCKos3ndqbTeuP11VLrXHyxNsF2XNqiQfmFZNM7KnnS1skGDkXIhGQzAb5CR4pqt90006UbgZw7xs4J1tVIAwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775804409; c=relaxed/simple;
-	bh=/5iuw3YRKqGstxJfyY4GNmGG5kxGM03Z5Gu7Tg3aZQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbQ3cU8N71krg8dBFnYK6ED82q6uDwqwJlPf7DyD7CSn3TrN9r+RREtfUCDHjdwvqVJFHN0hWJdXSRECqBeYZv3dGmlcOAmjh7senlaYfiRWnmBFw8rpW7geUc2yI8f2gMqgDaHlE0ZVi2Mp0CjPfHxGQhGzf+aJtvjvRR2BJYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgZffKWj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775805207; c=relaxed/simple;
+	bh=rzWNcN5QYU/CLLy8FSW3aHrQlNKM31AGGQk9t+TtM7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rYlGONjD+KlzPuUcQcd7Cip+u4pT8WtIwkDQluy2EvY1GIXZzhZw1QdIYwB18BElyzUP9zSvKFgFo/jhocik+AUF57eI/2PIjMZrYunUMJPxdl0OnvOnt05h68L083EItP9je80qVtnUz9MzwNaaqpzBX1O/8Md0GdoVAfeK9PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KVUdhQq0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgZffKWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46067C19421;
-	Fri, 10 Apr 2026 07:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775804408;
-	bh=/5iuw3YRKqGstxJfyY4GNmGG5kxGM03Z5Gu7Tg3aZQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IgZffKWjDucivecAhpxQH6q4k19yLRbCCFayivX6Lgi9TtTRyN0qbI42mWImI3RLi
-	 fMRYFzPbKgVk8yPjwkjKTBXseWGKQIbMssjKk429QNJ+qoV9Mb4KoGSp4iEfLw31tt
-	 TFxI4DuJ/fVgg3Iujbdk504VdQzoptxQncL3eWMMVJokHTT5ltWx+baoRThMEJznET
-	 OAXwq42kaV6YQ5D8aBmMC4BSw4wIVyOlMTIBCHN22PpZSjq8AYA6w//BSLC5xMpKF6
-	 rA5Jrg33Q9VeMWNU0qljxvPBAw+tQtz5GV+K3rVOQiu+yfG4wnwpFCu1NGBg8yFnxk
-	 ux7nOgan1T9+w==
-Date: Fri, 10 Apr 2026 00:00:06 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
-	Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
-	Kim Phillips <kim.phillips@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 00/16] perf arm64: Support data type profiling
-Message-ID: <adif9rnXtvUm7W8T@google.com>
-References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <adSkpI9AoTNgISU5@z2>
- <5fa89ec2-122e-4937-bec6-fe5dbe3ae07f@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KVUdhQq0"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63A14A4q2301620;
+	Fri, 10 Apr 2026 07:13:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2fcaUim6/MoybfQ8XimqaqTgNkIBb7CrmRyV7/b6G
+	TQ=; b=KVUdhQq0xRNSAyXw7oJKn5V4/OBFYjs6Fekf/ElFvvJFd7uOA/Q6X4J2z
+	1LQ63EiIymJd6lKK7soowsYYIDpO6gOgbvM+n3h+zv7ly6Jqh9dbl6++SUhlZk1W
+	k9FDcpT7SMjBiLGF5RnPWhAsoQ5EuB//E/v1Bqi5uthne2GAXmQG0KBpUvnf00ym
+	fHZDv2Cl4nFsGXWiftn1PtbvKNCwpYVGx0KUjY3gzCOejZeKO1cjUdjIlNKOE5Ko
+	8OqKOCdmMgVtc512XM3IGFEHUuDo8xXzsD53xxYTYqeoAXKbbVE+RztFmOP5yG0S
+	fbvWpbu8DCcsRRsaECZy3lBqsh31w==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2frs19-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Apr 2026 07:13:15 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63A2qI6I019113;
+	Fri, 10 Apr 2026 07:13:14 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcme9q06j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Apr 2026 07:13:14 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63A7DAoo27263366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 10 Apr 2026 07:13:10 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 873C820074;
+	Fri, 10 Apr 2026 07:13:10 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D0CC220071;
+	Fri, 10 Apr 2026 07:13:04 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.39.24.250])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 10 Apr 2026 07:13:04 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [PATCH] perf dso: Fix kallsyms DSO detection with fallback logic
+Date: Fri, 10 Apr 2026 12:42:26 +0530
+Message-ID: <20260410071225.708005-2-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5fa89ec2-122e-4937-bec6-fe5dbe3ae07f@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEwMDA2MSBTYWx0ZWRfX9t9DgVmbIq3F
+ HOzFSB35kqeFrB+vBN0TrsknWRXDYjFNt1KvedIHWRozZm+LKctWLoBkYahNLoFBSa0o73l828N
+ NxN0jbovjzlz004/XOw8bmADLkaJn08gLCITiXP2wllvy5ZhXJBXbSQwq8urtRms4lfxsjmp+0u
+ l+Yt9QIiN7CiwG0ybrcUC5dW1vjLNa44A5LJuFop03QeVVASvVxmjzdjMqWGwJd0Amt08r31wRN
+ N00Exmf6n9xjUMy2/FEjBefrOqkG83HEAjnqXKNWVAFAZ7P/BzAe/93N6Mm4joRtM/MDhFaDmjL
+ 19ckjdqW1KybGPCX9SO0TI4rqq0ygqBw6+haXODXGZi+JpDYKoJ93RBxue48pGWmgyZt/Phc316
+ NOYF0QkioP4/e5zZGedyQ0VbupNWTGC8FAVKPZDrHeNTj9e5SnaOKCxTO/WxP5G0NaZuIaJIvPT
+ 02e8COshOGrc6EgsUjg==
+X-Authority-Analysis: v=2.4 cv=FsY1OWrq c=1 sm=1 tr=0 ts=69d8a30b cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=yWhZYjjtwySg7tuK4IQA:9
+X-Proofpoint-ORIG-GUID: D_Os4Ua60O8cnm12uEr9TYfrpFZdvEsQ
+X-Proofpoint-GUID: r1Kt42aomKu8hR3vRWt6m2xeZRQ1Kp3t
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-10_02,2026-04-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 adultscore=0 malwarescore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604100061
 
-On Wed, Apr 08, 2026 at 07:35:22PM +0800, Tengda Wu wrote:
-> Hi Namhyung,
-> 
-> Thank you for the feedback.
-> I have received your comments and will get back to this as soon as I can.
+The current kallsyms detection in dso__is_kallsyms() uses the
+dso_binary_type enum which fixes the issue of kallsyms being cached in
+the build-id cache for out-of-tree modules.
+
+However, during build-id injection in perf record/inject, dso_binary_type
+has not been explicitly set yet,so dso__binary_type() returns
+DSO_BINARY_TYPE__NOT_FOUND instead of DSO_BINARY_TYPE__KALLSYMS for the
+kernel DSO. The current check then fails to identify it as kallsyms,
+causing build-id symlinks to not be created in ~/.debug/.build-id/ and
+perf archive to fail with "Cannot stat" errors.
+
+Steps to reproduce the issue:
+1. rm -rf ~/.debug/.build-id
+2. perf record sleep 1
+3. perf archive
+
+Fix by falling back to matching long_name against the known kallsyms
+strings explicitly when binary_type is not yet set
+(== DSO_BINARY_TYPE__NOT_FOUND).
+
+Fixes: ebf0b332732d ("perf dso: fix dso__is_kallsyms() check")
+Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+---
+ tools/perf/util/dso.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index ede691e9a249..e44071998c49 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -9,6 +9,7 @@
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <linux/bitops.h>
++#include <string.h>
+ #include "build-id.h"
+ #include "debuginfo.h"
+ #include "mutex.h"
+@@ -20,6 +21,7 @@ struct perf_env;
  
-Thanks, I've reviewed the instruction tracking part.
+ #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
+ #define DSO__NAME_KCORE		"[kernel.kcore]"
++#define DSO__NAME_GUEST_KALLSYMS	"[guest.kernel.kallsyms"
+ 
+ /**
+  * enum dso_binary_type - The kind of DSO generally associated with a memory
+@@ -915,6 +917,14 @@ static inline bool dso__is_kallsyms(const struct dso *dso)
+ {
+ 	enum dso_binary_type bt = dso__binary_type(dso);
+ 
++	if (bt == DSO_BINARY_TYPE__NOT_FOUND) {
++		return RC_CHK_ACCESS(dso)->kernel &&
++			((strncmp(RC_CHK_ACCESS(dso)->long_name, DSO__NAME_KALLSYMS,
++				strlen(DSO__NAME_KALLSYMS)) == 0) ||
++			(strncmp(RC_CHK_ACCESS(dso)->long_name, DSO__NAME_GUEST_KALLSYMS,
++				strlen(DSO__NAME_GUEST_KALLSYMS)) == 0));
++	}
++
+ 	return bt == DSO_BINARY_TYPE__KALLSYMS || bt == DSO_BINARY_TYPE__GUEST_KALLSYMS;
+ }
+ 
+-- 
+2.47.3
 
-Basically my concern is that you should invalidate unknown or unhandled
-cases so that it should strictly maintain the correct states of
-registers and stack slots.  Otherwise it would contain many incorrect
-results.
-
-Also, please take a look at sashiko reviews which spotted many things.
-
-https://sashiko.dev/#/patchset/20260403094800.1418825-1-wutengda%40huaweicloud.com
-
-Thanks,
-Namhyung
