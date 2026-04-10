@@ -1,30 +1,30 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25B937C0FA;
-	Fri, 10 Apr 2026 10:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C26F34EEF1;
+	Fri, 10 Apr 2026 10:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775815573; cv=none; b=WXHn/nIa8xmec7PNzHOUxHiE2Qbxzol7zmUpfduKlE7DGCtDwLhjTKirlQ8G7m83P6b8f0jwcep6yN4L+Nw8zC5Zr8bjNuxJuMXc1ip5pJmiVHhbE+UmHt7uRCYxYqOV5d997Jwl8GFGvFhcM9TUAWV0W6nUm+jFJbBK0FnvGrc=
+	t=1775816188; cv=none; b=CcN0HG7NBi1UOHiz8joQVZ9TT2JsQMBpSYp9AOZTVbMFUIEHsgM1IWsYachXMcGcteC8C5dTm0fKfAIzRqGIh94INwUW7e5BBogfihfqKz2crBIX38zpogpH+Y4Xl4+eC8cDBMltTi7r3ZFD97cO90eMTnCxQ5dhYcSImzgWYNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775815573; c=relaxed/simple;
-	bh=rh9fL/nAkhFCpcLjNMoyr+9oHMrRy9l4qTjAXEOZCfc=;
+	s=arc-20240116; t=1775816188; c=relaxed/simple;
+	bh=PdDbI/SCGQzmh42OBbIAbpGkXIr66DUm0k7jmQY1nZk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pJBUmN//NZwxy25bkJi2X43qr48p8MW24RGOFEsrivry1yusTU4JnvmDUos6ELTqtHk5moYSkzOsIDC66xxRFjfXVC83rptO5/m3RkchmyxD1HZ/+bZWaxenY5YTE9dCc/Na5IjHLKSVhl5wvxlJj4Y3/JJMFkZptJIN7S976mg=
+	 In-Reply-To:Content-Type; b=kFYP2mcvKPzEfQMhtmHLasHMdFRQePGx+TqACeGAwqg0O5Vi6hp4826WPJFLuALvx5NtSAmrnYAav3bSsmh9ggdosSKWQ/cpMIllzpc4Bs3xG86aaT8ssX+aRUOAiqy+tLyVTCQGcMgEpxOJKE2Cf7KOlyVcWnBT/NMmCs8pMt0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fsXWK4nJXzKHMSf;
-	Fri, 10 Apr 2026 18:06:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4A9BD40575;
-	Fri, 10 Apr 2026 18:06:07 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fsXl92WFyzKHMRb;
+	Fri, 10 Apr 2026 18:16:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id F325D4057B;
+	Fri, 10 Apr 2026 18:16:22 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with SMTP id cCh0CgCXmtqNy9hpevo1EA--.235S2;
-	Fri, 10 Apr 2026 18:06:07 +0800 (CST)
-Message-ID: <a94a11c8-2614-4dac-8d87-94a7f9e2e157@huaweicloud.com>
-Date: Fri, 10 Apr 2026 18:06:05 +0800
+	by APP2 (Coremail) with SMTP id Syh0CgA3YAX1zdhp6nw1EA--.50015S2;
+	Fri, 10 Apr 2026 18:16:22 +0800 (CST)
+Message-ID: <17d3b815-c730-41cc-bb56-e17b833fb829@huaweicloud.com>
+Date: Fri, 10 Apr 2026 18:16:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,8 +32,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/16] perf annotate-arm64: Generalize arm64_mov__parse
- to support standard operands
+Subject: Re: [PATCH v2 04/16] perf annotate-arm64: Handle load and store
+ instructions
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
@@ -46,208 +46,212 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-4-wutengda@huaweicloud.com> <adSrL-iZna3pyDrY@z2>
+ <20260403094800.1418825-5-wutengda@huaweicloud.com> <adStnrfA6IxkOfRN@z2>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <adSrL-iZna3pyDrY@z2>
+In-Reply-To: <adStnrfA6IxkOfRN@z2>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCXmtqNy9hpevo1EA--.235S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFWxAr1DWFyrKw4fuF45Wrg_yoW7Gr48pw
-	4qka45KF48trZ5Kw4aqa10qFy3Wwn2g3y7CF1xt3WrA3ZIkFyrKF43Kr12kFs3CFyxC3y8
-	AFnYvr1UGrs8GFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgA3YAX1zdhp6nw1EA--.50015S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WFyfKw48Aryftr1UXw1kXwb_yoW7AFW3pa
+	nrCa15JF4UXr18W3WSqFZrZFyfKw48JwnFk348Ja4ak3savr97tF1kKr1akF1rCrWkuw47
+	ZFn0vry8uF98ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
 	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
 	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
 	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
 	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
 	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
 	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
 	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
 	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
+	bAw3UUUUU==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2026/4/7 14:58, Namhyung Kim wrote:
-> On Fri, Apr 03, 2026 at 09:47:47AM +0000, Tengda Wu wrote:
->> The current arm64_mov__parse() implementation strictly requires the
->> operand to contain a symbol suffix in the "<symbol>" format. This
->> causes the parser to fail for standard instructions that only contain
->> raw immediates or registers without symbolic annotations.
+On 2026/4/7 15:09, Namhyung Kim wrote:
+> On Fri, Apr 03, 2026 at 09:47:48AM +0000, Tengda Wu wrote:
+>> Add ldst_ops to handle load and store instructions in order to parse
+>> the data types and offsets associated with PMU events for memory access
+>> instructions. There are many variants of load and store instructions in
+>> ARM64, making it difficult to match all of these instruction names
+>> completely. Therefore, only the instruction prefixes are matched. The
+>> prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
+>> matches atomic instructions, and 'prf' matches memory prefetch
+>> instructions.
 >>
->> Refactor the function to make symbol matching optional. The parser now
->> correctly extracts the target operand and only attempts to parse the
->> "<symbol>" suffix if it exists. This change also introduces better
->> handling for whitespace and comments, and adds support for multi-register
->> check via arm64__check_multi_regs(), ensuring compatibility with a
->> wider range of arm64 instruction formats.
->>
+>> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 >> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 >> ---
->>  .../perf/util/annotate-arch/annotate-arm64.c  | 85 ++++++++++++++-----
->>  1 file changed, 65 insertions(+), 20 deletions(-)
+>>  .../perf/util/annotate-arch/annotate-arm64.c  | 72 +++++++++++++++++++
+>>  1 file changed, 72 insertions(+)
 >>
 >> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 33080fdca125..4c42323b0c18 100644
+>> index 4c42323b0c18..8209faaa6086 100644
 >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -14,12 +14,38 @@ struct arch_arm64 {
+>> @@ -3,7 +3,9 @@
+>>  #include <errno.h>
+>>  #include <stdlib.h>
+>>  #include <string.h>
+>> +#include <ctype.h>
+>>  #include <linux/zalloc.h>
+>> +#include <linux/string.h>
+>>  #include <regex.h>
+>>  #include "../annotate.h"
+>>  #include "../disasm.h"
+>> @@ -12,6 +14,7 @@ struct arch_arm64 {
+>>  	struct arch arch;
+>>  	regex_t call_insn;
 >>  	regex_t jump_insn;
+>> +	regex_t ldst_insn; /* load and store instruction */
 >>  };
 >>  
->> +static bool arm64__check_multi_regs(const char *op)
+>>  static bool arm64__check_multi_regs(const char *op)
+>> @@ -114,6 +117,59 @@ static const struct ins_ops arm64_mov_ops = {
+>>  	.scnprintf = mov__scnprintf,
+>>  };
+>>  
+>> +static int arm64_ldst__parse(const struct arch *arch __maybe_unused,
+> 
+> The 'arch' is used. :)
+> 
+
+Oh, will fix it.
+
+> 
+>> +			     struct ins_operands *ops,
+>> +			     struct map_symbol *ms __maybe_unused,
+>> +			     struct disasm_line *dl __maybe_unused)
 >> +{
->> +	char *comma = strchr(op, ',');
+>> +	char *s, *target;
 >> +
->> +	while (comma) {
->> +		char *next = comma + 1;
->> +
->> +		next = skip_spaces(next);
->> +
->> +		/*
->> +		 * Check the first valid character after the comma:
->> +		 * - If it is '#', it indicates an immediate offset (e.g., [x1, #16]).
->> +		 * - If it is an alphabetic character, it is highly likely a
->> +		 *   register name (e.g., x, w, s, d, q, v, p, z).
->> +		 * - Special cases: Alias and control registers like sp, xzr,
->> +		 *   and wzr all start with an alphabetic character.
->> +		 */
->> +		if (*next && *next != '#' && isalpha(*next))
->> +			return true;
+>> +	/*
+>> +	 * The part starting from the memory access annotation '[' is parsed
+>> +	 * as 'target', while the part before it is parsed as 'source'.
 > 
-> It seems you check any alphabet charactor after a comma for multi-regs.
-> Does that mean the first component before the comma should be another
-> register?
+> It'd be nice if you can show some examples.  So it always looks like:
+> 
+> 	LDR  x1, [x2, #4]
+> 	STR  x1, [x3], #8
+> 
+> Right?  What about other instructions?
 > 
 
-I referred to the manual, and theoretically, that is the case. However,
-it might be more robust to add a check for the register before the comma as well?
+Yeah. Here are some representative examples that this patch handles:
 
->> +
->> +		comma = strchr(next, ',');
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>  static int arm64_mov__parse(const struct arch *arch __maybe_unused,
->>  			    struct ins_operands *ops,
->>  			    struct map_symbol *ms __maybe_unused,
->>  			    struct disasm_line *dl __maybe_unused)
->>  {
->> -	char *s = strchr(ops->raw, ','), *target, *endptr;
->> +	char *s = strchr(ops->raw, ','), *target, *endptr, *comment, prev;
->>  
->>  	if (s == NULL)
->>  		return -1;
->> @@ -31,29 +57,48 @@ static int arm64_mov__parse(const struct arch *arch __maybe_unused,
->>  	if (ops->source.raw == NULL)
->>  		return -1;
->>  
->> -	target = ++s;
->> +	target = skip_spaces(++s);
->> +	comment = strchr(s, arch->objdump.comment_char);
->> +
->> +	if (comment != NULL)
->> +		s = comment - 1;
->> +	else
->> +		s = strchr(s, '\0') - 1;
-> 
-> An interesting use of strchr().  Oh, I found the strchr(3) man page
-> also mentions that it's a supported use case.  TIL.
-> 
+ldr     x1, [x2]
+ldr     x2, [x0, #968]
+ldr     w3, [x25], #4
+ldp     x29, x30, [sp], #16
+ldr     x0, [x1, #16]!
+ldr     x6, [x23, w25, sxtw #3]
 
-Haha, TIL as well when I first encountered it.
+It might be better to add these examples as a block comment above
+the arm64_ldst__parse().
 
 > 
+>> +	 */
+>> +	target = s = strchr(ops->raw, arch->objdump.memory_ref_char);
+>> +	if (!s)
+>> +		return -1;
 >> +
->> +	while (s > target && isspace(s[0]))
+>> +	while (s > ops->raw && *s != ',')
 >> +		--s;
->> +	s++;
->> +	prev = *s;
+>> +
+>> +	if (s == ops->raw)
+>> +		return -1;
+>> +
 >> +	*s = '\0';
->>  	ops->target.raw = strdup(target);
->> +	*s = prev;
+>> +	ops->source.raw = strdup(ops->raw);
 >> +
->>  	if (ops->target.raw == NULL)
->>  		goto out_free_source;
->>  
->> -	ops->target.addr = strtoull(target, &endptr, 16);
->> -	if (endptr == target)
->> -		goto out_free_target;
->> -
->> -	s = strchr(endptr, '<');
->> -	if (s == NULL)
->> -		goto out_free_target;
->> -	endptr = strchr(s + 1, '>');
->> -	if (endptr == NULL)
->> -		goto out_free_target;
->> -
->> -	*endptr = '\0';
->> -	*s = ' ';
->> -	ops->target.name = strdup(s);
->> -	*s = '<';
->> -	*endptr = '>';
->> -	if (ops->target.name == NULL)
->> -		goto out_free_target;
->> +	ops->target.multi_regs = arm64__check_multi_regs(ops->target.raw);
+>> +	*s = ',';
+>> +	if (!ops->source.raw)
+>> +		return -1;
 >> +
->> +	/* Parse address followed by symbol name, e.g. "addr <symbol>" */
->> +	if (strchr(target, '<') != NULL) {
->> +		ops->target.addr = strtoull(target, &endptr, 16);
->> +		if (endptr == target)
->> +			goto out_free_target;
+>> +	ops->source.multi_regs = arm64__check_multi_regs(ops->source.raw);
 > 
-> Hmm.. shouldn't this part be executed regardless of presence of a symbol
-> name?
-> 
-
-Agreed.
-
->> +
->> +		s = strchr(endptr, '<');
->> +		if (s == NULL)
->> +			goto out_free_target;
-> 
-> It'd be safer to check `if (*skip_spaces(endptr) == '<')` rather than
-> strchr().
-
-Agreed.
-
-> 
-> 
->> +		endptr = strchr(s + 1, '>');
->> +		if (endptr == NULL)
->> +			goto out_free_target;
-> 
-> I'm afraid C++ programs can have symbols with <> for templates.
-> Probably strrchr() would work.
+> Probably it's better to set ops->source.mem_ref to false.  Then you
+> won't need to set multi_regs.
 > 
 > Thanks,
 > Namhyung
-> 
 
-And thanks for the reminder about C++ templates! I completely overlooked the nested <> case.
+Agreed.
 
 -- Tengda
 
+> 
 >> +
->> +		*endptr = '\0';
->> +		*s = ' ';
->> +		ops->target.name = strdup(s);
->> +		*s = '<';
->> +		*endptr = '>';
->> +		if (ops->target.name == NULL)
->> +			goto out_free_target;
+>> +	ops->target.raw = strdup(target);
+>> +	if (!ops->target.raw) {
+>> +		zfree(&ops->source.raw);
+>> +		return -1;
 >> +	}
+>> +	ops->target.mem_ref = true;
+>> +	ops->target.multi_regs = arm64__check_multi_regs(ops->target.raw);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int arm64_ldst__scnprintf(const struct ins *ins, char *bf, size_t size,
+>> +				 struct ins_operands *ops, int max_ins_name)
+>> +{
+>> +	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
+>> +			 ops->source.raw, ops->target.raw);
+>> +}
+>> +
+>> +static struct ins_ops arm64_ldst_ops = {
+>> +	.parse	   = arm64_ldst__parse,
+>> +	.scnprintf = arm64_ldst__scnprintf,
+>> +};
+>> +
+>>  static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
+>>  {
+>>  	struct arch_arm64 *arm = container_of(arch, struct arch_arm64, arch);
+>> @@ -124,6 +180,8 @@ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch,
+>>  		ops = &jump_ops;
+>>  	else if (!regexec(&arm->call_insn, name, 2, match, 0))
+>>  		ops = &call_ops;
+>> +	else if (!regexec(&arm->ldst_insn, name, 2, match, 0))
+>> +		ops = &arm64_ldst_ops;
+>>  	else if (!strcmp(name, "ret"))
+>>  		ops = &ret_ops;
+>>  	else
+>> @@ -148,6 +206,8 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
+>>  	arch->id = *id;
+>>  	arch->objdump.comment_char	  = '/';
+>>  	arch->objdump.skip_functions_char = '+';
+>> +	arch->objdump.memory_ref_char	  = '[';
+>> +	arch->objdump.imm_char		  = '#';
+>>  	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
 >>  
->>  	return 0;
+>>  	/* bl, blr */
+>> @@ -161,8 +221,20 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
+>>  	if (err)
+>>  		goto out_free_call;
 >>  
+>> +	/*
+>> +	 * The ARM64 architecture has many variants of load/store instructions.
+>> +	 * It is quite challenging to match all of them completely. Here, we
+>> +	 * only match the prefixes of these instructions.
+>> +	 */
+>> +	err = regcomp(&arm->ldst_insn, "^(ld|st|cas|prf|swp)",
+>> +		      REG_EXTENDED);
+>> +	if (err)
+>> +		goto out_free_jump;
+>> +
+>>  	return arch;
+>>  
+>> +out_free_jump:
+>> +	regfree(&arm->jump_insn);
+>>  out_free_call:
+>>  	regfree(&arm->call_insn);
+>>  out_free_arm:
 >> -- 
 >> 2.34.1
 >>
