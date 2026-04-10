@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439B52D9EF0;
-	Fri, 10 Apr 2026 00:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3612D9EF0;
+	Fri, 10 Apr 2026 00:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775781639; cv=none; b=aHZLI9YfMLNvvoA8D24QRVEfyKzXzOGi1isAqRq4jLcwcNFJw0V0JkPHLBm0qDKKXgudTRBxjrR+Yk2KgzElQcKKmWO52HjGXOMy0bI9cEYriexGcQPjgIAX0K519Cx9JMYm/m5MxpjMgAZEzBo5v1bo34czCNFm1ZPznb0Cb2c=
+	t=1775781644; cv=none; b=VTWs8he3bwTYyWcAHKENt0SdFkBDmLYlFUtvQ8rqCAZI00tm0um9T/6FizummoxB4LUR4zZAo/b6QAFg/zbz5k/Hzn3PPPhkpyF+vfMKiXI0pN/fuTmhb20Wmyk77bw39dx4N41hg02P3phGyWLhxKEkSseKLUljHS3mByEdwoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775781639; c=relaxed/simple;
-	bh=biYJmZbXc6Vv/jraHHe4RTvMieVhQJsZQN/flam6bRc=;
+	s=arc-20240116; t=1775781644; c=relaxed/simple;
+	bh=Jp9ziUk5X76/b2jCuzlaqwh1cSCiY99GdmNG2gPISJQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ab3FU++tjcv+GlWm46WMy9/sdJicEaBaM2doJjyh4SAn1fwjxjZK71bFKPfO3wiV0p0Vi723OyEksP7664vOC4scPV69BpQeIc4k/Wyx7Hq2xsmS0ZKqwwOYWvtDOSfmvsOgUdBLL3uBHupyFBu86GhLwybPmj0/Woq6HheSp94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5vXy6MG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IC78YXVtGv47JOHyHTKhXvcpErt80WX/7tckSSCThkif+WBlp1EH2GV1cYrZlrFkED8RWHy8xulKaCYRHBWKMqha7cPl/ND4Lc2o5/iwFvBlXFCEDsio2qvCnYzfb4TekWtdIRPEMR86fnIHAr6SStq9KBNQzpZNAl8gB6Ijizo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucuKUn0s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5vXy6MG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E3DC4CEF7;
-	Fri, 10 Apr 2026 00:40:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucuKUn0s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BDAC4CEF7;
+	Fri, 10 Apr 2026 00:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775781638;
-	bh=biYJmZbXc6Vv/jraHHe4RTvMieVhQJsZQN/flam6bRc=;
+	s=k20201202; t=1775781644;
+	bh=Jp9ziUk5X76/b2jCuzlaqwh1cSCiY99GdmNG2gPISJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H5vXy6MGkCkZ4c+HRRHhb47sFCpEnm33jwf8fLAzocrMeVME6xe+Zw48PPjUn58+9
-	 GRNbeX+PO69UO0pLOcBBskIczUhFcdXgcajJ5gf7yDy4Aw92TDuM4+3HHLJdlyKjRO
-	 JrbzMxP933TOMKCre9eVjitryCA5oU/BDVZx4B/LNGyKMhk+88mDgYEtmREy1kupb5
-	 5TaCOigsRMrlmwZbKd/6vMH3CivMI3rQ6lnVw2QDeVx1Z06u0T0KGSDI8eQODflzli
-	 N9iyzWfhOx/Ri0x1LG6M+Vy6gUHh3IugixxHnZWGMKyUg6pu9QGZuA4u/q/xjx88rs
-	 YK5+8QdYHfsDA==
+	b=ucuKUn0spmd3qonplG883bMrsGnNaTLSBwO+mLoumVorCf1Em37hP5Ssx02ie9EOD
+	 72A+h+DZg46aKsiPIaOxnfblra/2aa77KPSXyz4mTdqpndPTMLT80U3CxJa+nxzqRZ
+	 eSPpcv1nCwccCjXLW0GWYTFQDN8kS31bsogOhVEZ92o1td2lMGmXxCRcIjb6IsG0bt
+	 9jkcdb9HKWuVOLE7gt6RZcO0v/l6Mp8/uag2Txrphmc6sYBQ31cbOpcYUqwz0kvnP9
+	 wWhiUWN5a1RgYypsHkQvyQtNzzQ1pcoBkhWihhIO4u+SSgD7LX7ReHvpuUKy0z1azP
+	 luMuH1NvkXeDw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,11 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH 03/13] perf header: Sanity check HEADER_NRCPUS and HEADER_CPU_DOMAIN_INFO
-Date: Thu,  9 Apr 2026 21:39:50 -0300
-Message-ID: <20260410004000.148138-4-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 04/13] perf header: Sanity check HEADER_CPU_TOPOLOGY
+Date: Thu,  9 Apr 2026 21:39:51 -0300
+Message-ID: <20260410004000.148138-5-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260410004000.148138-1-acme@kernel.org>
 References: <20260410004000.148138-1-acme@kernel.org>
@@ -56,101 +55,80 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-While working on some cleanups sashiko questioned about pre-existing
-issues, namely lacking sanity checks for perf.data headers, add some
-with the help of Claude.
+Add validation to process_cpu_topology() to harden against malformed
+perf.data files:
 
+- Verify nr_cpus_avail was initialized (HEADER_NRCPUS processed first)
+- Bounds check sibling counts (cores, threads, dies) against nr_cpus_avail
+- Fix two bare 'return -1' that leaked env->cpu by using 'goto free_cpu'
+
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
-Cc: Swapnil Sapkal <swapnil.sapkal@amd.com>
 Assisted-by: Claude Code:claude-opus-4-6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 44 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+ tools/perf/util/header.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 22c44b6f0b098f95..2d23dbc666b676be 100644
+index 2d23dbc666b676be..a7df8ed9a69e9231 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -2722,6 +2722,13 @@ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
- 	ret = do_read_u32(ff, &nr_cpus_online);
- 	if (ret)
- 		return ret;
-+
-+	if (nr_cpus_online > nr_cpus_avail) {
-+		pr_err("Invalid HEADER_NRCPUS: nr_cpus_online (%u) > nr_cpus_avail (%u)\n",
-+		       nr_cpus_online, nr_cpus_avail);
-+		return -1;
-+	}
-+
- 	env->nr_cpus_avail = (int)nr_cpus_avail;
- 	env->nr_cpus_online = (int)nr_cpus_online;
- 	return 0;
-@@ -3698,6 +3705,17 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 	nra = env->nr_cpus_avail;
- 	nr = env->nr_cpus_online;
+@@ -2859,6 +2859,11 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	int cpu_nr = env->nr_cpus_avail;
+ 	u64 size = 0;
  
-+	if (nra == 0 || nr == 0) {
-+		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: missing HEADER_NRCPUS\n");
++	if (cpu_nr == 0) {
++		pr_err("Invalid HEADER_CPU_TOPOLOGY: missing HEADER_NRCPUS\n");
 +		return -1;
 +	}
 +
-+	if (ff->size < 2 * sizeof(u32) + nr * 2 * sizeof(u32)) {
-+		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: section too small (%zu) for %u CPUs\n",
-+		       (size_t)ff->size, nr);
-+		return -1;
-+	}
-+
- 	cd_map = calloc(nra, sizeof(*cd_map));
- 	if (!cd_map)
+ 	env->cpu = calloc(cpu_nr, sizeof(*env->cpu));
+ 	if (!env->cpu)
  		return -1;
-@@ -3714,6 +3732,19 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 	if (ret)
- 		return ret;
+@@ -2866,6 +2871,12 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	if (do_read_u32(ff, &nr))
+ 		goto free_cpu;
  
-+	/*
-+	 * Sanity check: real systems have at most ~10 sched domain levels
-+	 * (SMT, CLS, MC, PKG + NUMA hops). Reject obviously bogus values
-+	 * from malformed perf.data files before they cause excessive
-+	 * allocation in the per-CPU loop.
-+	 */
-+#define MAX_SCHED_DOMAINS 64
-+	if (max_sched_domains > MAX_SCHED_DOMAINS) {
-+		pr_err("Invalid HEADER_CPU_DOMAIN_INFO: max_sched_domains %u > %u\n",
-+		       max_sched_domains, MAX_SCHED_DOMAINS);
-+		return -1;
++	if (nr > (u32)cpu_nr) {
++		pr_err("Invalid HEADER_CPU_TOPOLOGY: nr_sibling_cores (%u) > nr_cpus_avail (%d)\n",
++		       nr, cpu_nr);
++		goto free_cpu;
 +	}
 +
- 	env->max_sched_domains = max_sched_domains;
+ 	env->nr_sibling_cores = nr;
+ 	size += sizeof(u32);
+ 	if (strbuf_init(&sb, 128) < 0)
+@@ -2885,7 +2896,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	env->sibling_cores = strbuf_detach(&sb, NULL);
  
- 	for (i = 0; i < nr; i++) {
-@@ -3725,6 +3756,11 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 			return -1;
- 		}
- 
-+		if (cd_map[cpu]) {
-+			pr_err("Invalid HEADER_CPU_DOMAIN_INFO: duplicate cpu %u\n", cpu);
-+			return -1;
-+		}
+ 	if (do_read_u32(ff, &nr))
+-		return -1;
++		goto free_cpu;
 +
- 		cd_map[cpu] = zalloc(sizeof(*cd_map[cpu]));
- 		if (!cd_map[cpu])
- 			return -1;
-@@ -3760,7 +3796,13 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 			if (!d_info)
- 				return -1;
++	if (nr > (u32)cpu_nr) {
++		pr_err("Invalid HEADER_CPU_TOPOLOGY: nr_sibling_threads (%u) > nr_cpus_avail (%d)\n",
++		       nr, cpu_nr);
++		goto free_cpu;
++	}
  
--			assert(cd_map[cpu]->domains[domain] == NULL);
-+			if (cd_map[cpu]->domains[domain]) {
-+				pr_err("Invalid HEADER_CPU_DOMAIN_INFO: duplicate domain %u for cpu %u\n",
-+				       domain, cpu);
-+				free(d_info);
-+				return -1;
-+			}
+ 	env->nr_sibling_threads = nr;
+ 	size += sizeof(u32);
+@@ -2934,7 +2951,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 
+ 	if (do_read_u32(ff, &nr))
+-		return -1;
++		goto free_cpu;
 +
- 			cd_map[cpu]->domains[domain] = d_info;
- 			d_info->domain = domain;
++	if (nr > (u32)cpu_nr) {
++		pr_err("Invalid HEADER_CPU_TOPOLOGY: nr_sibling_dies (%u) > nr_cpus_avail (%d)\n",
++		       nr, cpu_nr);
++		goto free_cpu;
++	}
  
+ 	env->nr_sibling_dies = nr;
+ 	size += sizeof(u32);
 -- 
 2.53.0
 
