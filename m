@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D63DE446
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 22:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE73A9D9E
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 22:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775860086; cv=none; b=bub7XHg4MLjUpyd+FKHMc7ZpdeUxsT/2/pJ9Na4ncdtn5FM32gA7ZqQibYHerD2TNYFvDaJQ8zXABu40HV5E5JjPI/KYx3O+42F0W0mvjL0SyEJCymMXn20g1mGfzwk9c/sQFoBEVUEhQWhjHalS6THUX0Gkm/soXvdcled7E9M=
+	t=1775860092; cv=none; b=EukB4TQtbPMjHpH6dazIG7ymxTIBivYNxi99mdjspRGgxOL3mfwMbvcaqQEH2CPM4DKEDWd7mCCOxGk9tL6xEJvPHwOP82uPzUikR+HiXzainnWDFHwzDSePqtfnCtlonXnARi+VUCMXYi2S4/EuSj0oml2K9Dr4KPmAEl6Mo1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775860086; c=relaxed/simple;
-	bh=3Ug9OxPhOpkKgehHAmMWF0eDnJgT7Y0iZmuY37Iv678=;
+	s=arc-20240116; t=1775860092; c=relaxed/simple;
+	bh=f6BfJp1nf6tV9qpb2zUpVBMY8NT1oH47UvSJZ84qzLA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hhNQMT7ltCHiUUWR2ncai/3NrIMkJKOEsWBuCijZn/ZA+ApoHkJAkaJGZaHCHheP7e4o/0/B/r2Us1vmnNFanpmH//jqsTXHhf8rqr0FbnPZ0oH1w3z6nqKqdN1SZbDcNOZJakqn+Dmrd+J9h3numKGYLnm95JMEwerIvQAYqlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlkWqUvU; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=bMEmz6QOoSRDIaK4ocmGW+X1SFusu+bm6r7P8BYvL3r9S5iXwe5K7jtd7E4ov14XIWSDvkbRH44O/nB4QRd+r0P7u/XloyEH6JvtjB8yopcF7LMSIvlFiUZt5Xa8HMXo9QrLy9Wt69UQH4vCJMSkrD2KmD7QlaE6yer6cf6lG0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMRViyzq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlkWqUvU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F245C19421;
-	Fri, 10 Apr 2026 22:28:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMRViyzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A28EC19421;
+	Fri, 10 Apr 2026 22:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775860086;
-	bh=3Ug9OxPhOpkKgehHAmMWF0eDnJgT7Y0iZmuY37Iv678=;
+	s=k20201202; t=1775860092;
+	bh=f6BfJp1nf6tV9qpb2zUpVBMY8NT1oH47UvSJZ84qzLA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=KlkWqUvUtH5xYn1wN6B/OuCcvdoBRcoqQoTZjvncpLhFcQpT8pnxemGhhIE7yD0pG
-	 Ha4M0qa7CqOnIh1RBtECWclQKTm/khiQ9mIu3s/BeBr1JJMqga2yhvpMZECGYYJZg7
-	 2Fj8qvnySjI6MzH+jxNnX+Ac5R0JTh/smBkvAjg5k/rIgtqQIpVYV79kyBVKe2h5z3
-	 IZhHpGE3OtTjKIH0ERes05haKz/jZF4Dkc50D1r6k80uywory2v6B6wG6Ep+bLQBe1
-	 i0FuCYfChV2wRimSdvB4wd/11sCx2XHI207nSFNDSMp3VCOxnvTEI93AyQ8CfVtfyn
-	 mFk7xnrCr6EuQ==
+	b=iMRViyzqvX07UImO3BR4yI/K6hkzILdTzDuiSyblWyEoTmcHjJaTjpR8/htD59hSe
+	 5K2ag8VtgXJdvJQNQjV2MgwrsMqDQxUWFBbLCQEQ1j/jJgnCgdOToP/PWJ6KeCYSTU
+	 unxwzNS7VwBYEa1gg1HGMxw947wDsxcvuq0iKYBuHdEdSPYJjnH2UOvtKEK8gP4mcR
+	 ysNujtKBNCAfNrOuS9k0OeC6Yu+hQcdLuYaORzq+6pate6irMJAvyvqMyBX61U5xaE
+	 Gl4HkWuQ4qaUg2oNANhnCNVpDKqgC5M4Q1xAan2brxmOit18V8wQiVdYCas1tODmgL
+	 dLJpZNuyf29Tw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/13] perf header: Sanity check HEADER_GROUP_DESC
+Subject: Re: [PATCH 05/13] perf header: Sanity check HEADER_NUMA_TOPOLOGY
 Reply-To: sashiko@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260410220905.200051-9-acme@kernel.org>
-References: <20260410220905.200051-9-acme@kernel.org>
+In-Reply-To: <20260410220905.200051-6-acme@kernel.org>
+References: <20260410220905.200051-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 22:28:05 +0000
-Message-Id: <20260410222806.3F245C19421@smtp.kernel.org>
+Date: Fri, 10 Apr 2026 22:28:11 +0000
+Message-Id: <20260410222812.0A28EC19421@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,74 +44,67 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 1 potential issue(s):
-- [High] Zero-length string allocations and missing null-termination lead t=
-o an out-of-bounds read in `strcmp`.
+- [Low] The minimum section size calculation for HEADER_NUMA_TOPOLOGY omits=
+ the mandatory string length field per node.
 --
 
-commit c734f9dc578da0aba3155da45962b841c79c7260
+commit 5064a9beb88eb8009f39a18c54d4d42f61a38a69
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf header: Sanity check HEADER_GROUP_DESC
+perf header: Sanity check HEADER_NUMA_TOPOLOGY
 
-This commit adds an upper bound check on nr_groups in process_group_desc()
-to harden against malformed perf.data files. It also moves the environment
-assignment after validation.
+This commit adds validation to process_numa_topology() to harden against
+malformed perf.data files. It introduces an upper bound check on nr_nodes
+and a minimum section size check before allocating memory.
 
 > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 77035d9b138cb..993e20debd5ca 100644
+> index acd6b07528e01..2f405776e5013 100644
 > --- a/tools/perf/util/header.c
 > +++ b/tools/perf/util/header.c
 
 [ ... ]
 
-> @@ -3132,12 +3133,25 @@ static int process_group_desc(struct feat_fd *ff,=
- void *data __maybe_unused)
->  	if (do_read_u32(ff, &nr_groups))
+> @@ -3005,6 +3006,18 @@ static int process_numa_topology(struct feat_fd *f=
+f, void *data __maybe_unused)
+>  	if (do_read_u32(ff, &nr))
 >  		return -1;
 > =20
-> -	env->nr_groups =3D nr_groups;
->  	if (!nr_groups) {
->  		pr_debug("group desc not available\n");
->  		return 0;
->  	}
-> =20
-> +	if (nr_groups > MAX_GROUP_DESC) {
-> +		pr_err("Invalid HEADER_GROUP_DESC: nr_groups (%u) > %u\n",
-> +		       nr_groups, MAX_GROUP_DESC);
+> +	if (nr > MAX_NUMA_NODES) {
+> +		pr_err("Invalid HEADER_NUMA_TOPOLOGY: nr_nodes (%u) > %u\n",
+> +		       nr, MAX_NUMA_NODES);
 > +		return -1;
 > +	}
 > +
-> +	if (ff->size < sizeof(u32) + nr_groups * 3 * sizeof(u32)) {
-> +		pr_err("Invalid HEADER_GROUP_DESC: section too small (%zu) for %u grou=
-ps\n",
-> +		       ff->size, nr_groups);
+> +	if (ff->size < sizeof(u32) + nr * (sizeof(u32) + 2 * sizeof(u64))) {
+
+Does this calculation omit the mandatory string length field for each node?
+
+The subsequent parsing loop reads the node ID, memory totals, and a CPU map
+string:
+
+        if (do_read_u32(ff, &n->node))
+                goto error;
+        if (do_read_u64(ff, &n->mem_total))
+                goto error;
+        if (do_read_u64(ff, &n->mem_free))
+                goto error;
+        str =3D do_read_string(ff);
+
+Since do_read_string() always reads a u32 length prefix before the string
+content, the true minimum size per node appears to be 24 bytes rather than =
+20
+bytes (sizeof(u32) + 2 * sizeof(u64) + sizeof(u32)).
+
+While truncated files will still safely fail later during the actual read
+operations, this calculation allows slightly truncated files to bypass the
+new validation check.
+
+> +		pr_err("Invalid HEADER_NUMA_TOPOLOGY: section too small (%zu) for %u n=
+odes\n",
+> +		       ff->size, nr);
 > +		return -1;
 > +	}
-> +
-> +	env->nr_groups =3D nr_groups;
-> +
->  	desc =3D calloc(nr_groups, sizeof(*desc));
->  	if (!desc)
->  		return -1;
-
-Since this patch hardens the parser against malformed files, should there
-also be validation on the strings returned by do_read_string(ff) later in
-this function?
-
-If a malformed perf.data file provides a string length of 0,
-do_read_string() can call malloc(0), which on systems like glibc
-returns a valid 0-byte allocation. Because 0 bytes are requested,
-the underlying read succeeds but provides no null terminator. It
-also does not appear to enforce null-termination for lengths > 0.
-
-When the code subsequently evaluates the string:
-
-    if (strcmp(desc[i].name, "{anon_group}")) {
-        evsel->group_name =3D desc[i].name;
-
-Can this lead to an out-of-bounds read and crash the perf utility if
-desc[i].name lacks a null terminator?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410220905.2000=
-51-1-acme@kernel.org?part=3D8
+51-1-acme@kernel.org?part=3D5
