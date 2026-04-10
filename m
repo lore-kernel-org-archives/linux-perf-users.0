@@ -1,110 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640FF346781;
-	Fri, 10 Apr 2026 22:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B421ADB7;
+	Fri, 10 Apr 2026 22:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775858713; cv=none; b=EExETPh8oZp6JV6aiVkpdRstTmlkVf5kzmty96DD5BNjWLikylIGU9MWil+Wsucrw+J/4noNLYjXX4PE6OYuxZn0wAHwncDpP8XzIXmixc++g8jddfdsO3Whu8K/rkPkZcGXvezEZEcMlbSDd6agyonBj0/1lacr4KE3cQOghPw=
+	t=1775858958; cv=none; b=QhJlElKqVRes/rpReGPLO1O+lpvqToUxpirZyGmRdlm6vkVvBSo8oiS5Fu/Ph6g7iyrJl45BMA0oxV8pYnjbH1lQqXz0lxrRnoxTXSyraifj4BqJbbS3NLFS/dAs+4f7pjn9XyIlvH7vGIBoLou6gSvOHSMwZi04g2wg+fL0rao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775858713; c=relaxed/simple;
-	bh=1aGhOd3AxAlBekv6ZZLQoxDGrkSC+gUNZs2lFVEs6QY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDpDs+dbfowq7hel9BlPLy9RVg2whp4yjr0sQrpIcapJfF4dx62cNhUbuT94mBeiFxFKUsz+Pl8G1gjzzXyqQrqzUhgH9kAvVPoaSgiPBPcWwgB+Xkpog3Ew0V7KoVCJ28xEQRQHVwoVInIIxlIiPyr7eHigBnSF/KsMh/9iQUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0D3VwgE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775858958; c=relaxed/simple;
+	bh=tZF48dGgF0GosxMj14ySV1goRj1R6i2nX/mDUzoqA4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VnFgGmuq9isK4BFA6iOvyFd4/tfGbkyIov4GOaWPCC0fA7puHQAjqT3lxBTPngZZdps2z/4BTOB5Mb5HegRVDwCE67BrXtnEF5yc5NAn3OTyGPfOdKQLiAy76NRKeXxE8UQfCwsdoAFd4THPnP+zgOlvQpya0n4TBxIuluWARB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHwG3KgH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0D3VwgE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86022C19421;
-	Fri, 10 Apr 2026 22:05:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHwG3KgH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9025AC19421;
+	Fri, 10 Apr 2026 22:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775858713;
-	bh=1aGhOd3AxAlBekv6ZZLQoxDGrkSC+gUNZs2lFVEs6QY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F0D3VwgEfA4Gcl4ZtdmHo3hzgBxOhkzxIU8sw54XsQGU/ywFJi8DvvRb/LGXrAt7s
-	 kkPcKoSPLtw3DkaWllEPRvRqUkBrUNb+27QxNcYfM757IzWqUq63gfDaDhXxyj6wbO
-	 iqDxeVqBSNHUfttFeAg11OXZdV8FcduMjJT+VwKbwDAWnAQEfcl4CPH21mkkRZ7398
-	 fRDA5oZ82rpDFpTS3fE2R5Q4MN35soFHSJPIeavX6MoNWkE4reDmK2kibVzID4tuRg
-	 7lKbhH/uR/8NyyjiIrKWV+lKDJ03AYMqqU7miCXMRqLQYbrZ1qFFBQGAT8QXFgXATg
-	 RvTo8g1ec3r+g==
-Date: Fri, 10 Apr 2026 19:05:09 -0300
+	s=k20201202; t=1775858957;
+	bh=tZF48dGgF0GosxMj14ySV1goRj1R6i2nX/mDUzoqA4U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iHwG3KgHhp6u1a4gMsxpynIA8zB875SdAk8vngvHfWzBL+6v4HZdp+4AKxIeM621+
+	 xbavzH2AzgTyv8dY4UTgRorRd+llrASbrWME0vOHjFXfGXhrOybStuqTS8VtkS8SUe
+	 PrlITiE2UYP0QbcI61ObJYLw8qrxs7iLO5SoUSDw3vo/gXyK4Wp4v2t+I/GVmMBFDY
+	 OuE0hcsnUHyTFCZ5pqVr//rc6VfdM4TVPpMjvS/1be+XrW11J1MCYrgAhhLg3NP4Pe
+	 UUr6X+9oIm2vhTtqdlVJHaW1WyzOGPFF4Sn2qbRqW+I/ja74BAf71GmHjdCHh7IfmH
+	 dwpIFNrAZXBwg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Al Grant <al.grant@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH v2 0/6] perf arm_spe: Dump IMPDEF events
-Message-ID: <adl0FblAxDv_at28@x1>
-References: <20260407-james-spe-impdef-decode-v2-0-55d3ef997c48@linaro.org>
- <adkqSLNceF2OQuBo@google.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES perf-tools-next v2 00/13] Sanity check perf.data headers
+Date: Fri, 10 Apr 2026 19:08:52 -0300
+Message-ID: <20260410220905.200051-1-acme@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adkqSLNceF2OQuBo@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 10, 2026 at 09:50:16AM -0700, Namhyung Kim wrote:
-> Hi James,
-> 
-> On Tue, Apr 07, 2026 at 03:05:14PM +0100, James Clark wrote:
-> > In the Arm SPE raw data dump, IMPDEF events aren't printed. Add the
-> > ability to add names for some known events or print the raw event number
-> > for unknown events.
-> > 
-> > For example:
-> > 
-> >   $ perf report -D
-> > 
-> >   ... ARM SPE data: size 0xd000 bytes
-> >   00000000: b0 18 c6 32 80 00 80 ff a0  PC 0xff80008032c618 el1 ns=1
-> >   00000009: 64 e7 42 00 00              CONTEXT 0x42e7 el1
-> >   0000000e: 00 00 00 00 00              PAD
-> >   00000013: 49 00                       LD GP-REG
-> >   00000015: 52 16 10               	EV RETIRED L1D-ACCESS TLB-ACCESS
-> > 
-> > On N1 the event line becomes:
-> > 
-> >   00000015: 52 16 10                    EV RETIRED L1D-ACCESS TLB-ACCESS LATE-PREFETCH
-> > 
-> > Or on other cores it becomes:
-> > 
-> >   00000015: 52 16 10                    EV RETIRED L1D-ACCESS TLB-ACCESS IMPDEF:12
-> > 
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> > ---
-> > Changes in v2:
-> > - Put MIDR in arm_spe_pkt (Leo)
-> > - Use for_each_set_bit() (Leo)
-> > - Use BIT_ULL() to fix 32bit builds (Ian)
-> > - Don't call strtol() with NULL (Ian)
-> > - Link to v1: https://lore.kernel.org/r/20260401-james-spe-impdef-decode-v1-0-ad0d372c220c@linaro.org
-> 
-> I'm getting this on 32-bit build.
-> 
->   In file included from /linux/tools/include/linux/bitmap.h:8,                    
->                    from util/arm-spe-decoder/arm-spe-pkt-decoder.c:11:            
->   util/arm-spe-decoder/arm-spe-pkt-decoder.c: In function 'arm_spe_pkt_desc_event':
->   util/arm-spe-decoder/arm-spe-pkt-decoder.c:377:37: error: passing argument 1 of 'find_first_bit' from incompatible pointer type [-Werror=incompatible-pointer-types]
->     377 |                 for_each_set_bit(i, &payload, 64) {                      
->   /linux/tools/include/linux/bitops.h:55:38: note: in definition of macro 'for_each_set_bit'
->      55 |         for ((bit) = find_first_bit((addr), (size));            \       
->         |                                      ^~~~                               
->   In file included from /linux/tools/include/linux/bitmap.h:9:                    
->   /linux/tools/include/linux/find.h:118:51: note: expected 'const long unsigned int *' but argument is of type 'u64 *' {aka 'long long unsigned int *'}
->     118 | unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
->         |                              ~~~~~~~~~~~~~~~~~~~~~^~~~
+Hi,
 
-I saw this as well.
+        Sashiko recently mentioned the lack of sanity checking headers
+in perf.data files, that with a fuzzy or maliciously crafted file could
+make processing a perf.data file cause deleterious results.
+
+        Add sanity checks and some arbitrarily generous upper limits to
+headers, if some are found to be questionable, lets tweak them in
+upcoming versions of this patchset.
+
+        As registered in the Assisted-by tags in the patches, this was
+done using Claude code to speed up development, hopefully no
+hallucinations are present.
+
+        I'm also trying to get some of these checks into review-prompts
+skills, some of which were already merged, for instance:
+
+  https://github.com/masoncl/review-prompts/commit/2bb2159893ea926e120105416e95629b9ef1508c
 
 - Arnaldo
+
+v2: Addressed some Sashiko comments for v1, some are valid but not
+introduced by this patchset and will be addressed in a follow up series.
+
+Arnaldo Carvalho de Melo (13):
+  perf header: Validate nr_domains when reading HEADER_CPU_DOMAIN_INFO
+  perf header: Bump up the max number of command line args allowed
+  perf header: Sanity check HEADER_NRCPUS and HEADER_CPU_DOMAIN_INFO
+  perf header: Sanity check HEADER_CPU_TOPOLOGY
+  perf header: Sanity check HEADER_NUMA_TOPOLOGY
+  perf header: Sanity check HEADER_MEM_TOPOLOGY
+  perf header: Sanity check HEADER_PMU_MAPPINGS
+  perf header: Sanity check HEADER_GROUP_DESC
+  perf header: Sanity check HEADER_CACHE
+  perf header: Sanity check HEADER_HYBRID_TOPOLOGY
+  perf header: Sanity check HEADER_PMU_CAPS
+  perf header: Sanity check HEADER_BPF_PROG_INFO
+  perf header: Add sanity checks to HEADER_BPF_BTF processing
+
+ tools/perf/util/header.c | 220 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 214 insertions(+), 6 deletions(-)
+
+-- 
+2.53.0
+
