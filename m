@@ -1,30 +1,30 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F4B2DC767;
-	Fri, 10 Apr 2026 10:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB8A38E120;
+	Fri, 10 Apr 2026 10:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775817451; cv=none; b=O+CJG4peaIT++l4Fz3P2yLCUvy72lbCvpeCMOfbDz1wzqbAdQRyBZihAyRv1pU/2OYewlR6H77P9gAEaCLrj+/YSXQijXelKhw16GldD6y6jsUPrdsdeoLvTcvSonrFbR7qNgQSBZ8zTFTfl2P9SasL7FHVt3iCZTMuR1yr4tTw=
+	t=1775817691; cv=none; b=ggUItOfpPJQzW7XSvynF84HZCDM1m0s2kC4X4zDF5OcSKls1vssg6RwMIX119g7Tz6nz/u57egmFTA97+yfVnNyXqAS5sCfvBTDeYF5VpZao723fI1qhQYO0ekD1qb0CjaxbTs29OM8BNVt3P1BO5UoF7K1l2Hq7sTrIQnnj/po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775817451; c=relaxed/simple;
-	bh=tOh4lNR7oHvWvB6lRJ7hUoazIX1+4iwuB4y9QLFjWAY=;
+	s=arc-20240116; t=1775817691; c=relaxed/simple;
+	bh=Vy8dKw9pfndnSFM5cJz/o/sVF7d1p/rIB/FdfMe0vSY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGwBVBd51Jx11FjZzxXUy1LqKtI75QQDm5PjWz2CI/8nR/eFhee2OMBAYNBpiRNhZ/RNUII25LLzSYfKZby6lFKNJFEOJhkH7Pom1WM6WOn4fFQE6gBI/g/AGlH+4YWX6JpxNiDUfM96QSbXu5rVzPzlFXbK2O1r/LirF0/o2qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 In-Reply-To:Content-Type; b=Jj0k82XUc5r/kDSUsa51M2DRqvAUMWDfJE/Khp2Yj0wnn05G1iwf1F7El+mHjCDOFMGSjdDOcZQOls00qkO/n8QW6Q6rUFWeWcZDYKdu+VP/X0KSNEg6axcVnw0enPH5hEerEt04oG58vsIJ2O3Fd7joMFz3aT4eLuMBzIjFvU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fsYBl5dPpzYQtth;
-	Fri, 10 Apr 2026 18:36:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2B3484058D;
-	Fri, 10 Apr 2026 18:37:25 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fsYHP0gS0zYQtlh;
+	Fri, 10 Apr 2026 18:40:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 45C2B40570;
+	Fri, 10 Apr 2026 18:41:26 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with SMTP id gCh0CgC3j0rj0thpG2BfEA--.28710S2;
-	Fri, 10 Apr 2026 18:37:24 +0800 (CST)
-Message-ID: <4fd9c0ca-42ed-4969-b09f-f4a0e7eb77e2@huaweicloud.com>
-Date: Fri, 10 Apr 2026 18:37:23 +0800
+	by APP3 (Coremail) with SMTP id _Ch0CgCHs1DV09hpneYjEA--.13331S2;
+	Fri, 10 Apr 2026 18:41:26 +0800 (CST)
+Message-ID: <ccce822c-043c-4c1c-84fc-5ea33b7c24de@huaweicloud.com>
+Date: Fri, 10 Apr 2026 18:41:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,7 +32,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/16] perf annotate-arm64: Support load instruction
+Subject: Re: [PATCH v2 11/16] perf annotate-arm64: Support stack variable
  tracking
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
@@ -46,17 +46,17 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-10-wutengda@huaweicloud.com>
- <adiXYBhkEpbBR0ZA@google.com>
+ <20260403094800.1418825-12-wutengda@huaweicloud.com>
+ <adiY4xJ9269L70mM@google.com>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <adiXYBhkEpbBR0ZA@google.com>
+In-Reply-To: <adiY4xJ9269L70mM@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3j0rj0thpG2BfEA--.28710S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3WFyDWFW7tr4Dtr1xXF4rGrg_yoWxXFy8pa
-	yDCas8Kr47Xr4agFsaqrZrur9agw1kWr1jkrZ0k3WayF92yr1rKa1kKrya9FWrJrZxCr12
-	vF1Utry3Ww1DCFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgCHs1DV09hpneYjEA--.13331S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WFyfuw17Zw15uw4Utr4fXwb_yoW7Xr4kpr
+	yDAFy3KF42gr47KFs3XFs8Xr92gws2gr1DC34Yq3WIyF9a9r1Skas5KFW29ay8Jr9rAw18
+	Aw1UtrsxWwsFkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
 	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
@@ -74,192 +74,170 @@ X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2026/4/10 14:23, Namhyung Kim wrote:
-> On Fri, Apr 03, 2026 at 09:47:53AM +0000, Tengda Wu wrote:
->> Implement update_insn_state() for arm64 to track register state changes
->> during load (LDR) instructions. This is essential for maintaining accurate
->> type information when data is moved from memory to registers.
+On 2026/4/10 14:29, Namhyung Kim wrote:
+> On Fri, Apr 03, 2026 at 09:47:55AM +0000, Tengda Wu wrote:
+>> Extend update_insn_state() for arm64 to track data types stored on the
+>> stack. This allows 'perf annotate' to maintain type information for
+>> local variables that are spilled to or loaded from stack slots.
 >>
->> The implementation handles the three primary arm64 addressing modes:
->> 1. Signed offset: [base, #imm]
->> 2. Pre-index: [base, #imm]!
->> 3. Post-index: [base], #imm
+>> The implementation handles:
+>> 1. Stack Loads (LDR): Identify when a register is loaded from a stack
+>>    slot and update the register's type state based on the tracked
+>>    stack content or compound member types.
+>> 2. Stack Stores (STR): Update or create new stack state entries when
+>>    a tracked register type is stored to the stack.
 >>
->> Introduce adjust_reg_index_state() to handle the side effects of pre-index
->> and post-index addressing, where the base register is updated with the
->> offset after or before the memory access. This ensures that the register's
->> offset within a structure is correctly tracked across sequential
->> instructions.
+>> This enables the instruction tracker to follow data types as they move
+>> between registers and memory, specifically for function local variables
+>> and compiler-spilled values on arm64.
 >>
->> A real-world example is shown below:
->>
->>   ffff80008011f5b0 <pick_task_stop>:
->>   ffff80008011f5b8:  ldr  x0, [x0, #2712] // x0: struct rq* -> task_struct*
->>   ffff80008011f5c0:  ldr  w1, [x0, #104]  // PMU sample at offset 0x68
->>
->> Before this commit, the type of x0 was incorrectly inferred as 'struct rq':
->>
->>   find data type for 0x68(reg0) at pick_task_stop+0x10
->>   var [8] reg0 offset 0 type='struct rq*'
->>   chk [10] reg0 offset=0x68 ok=1 kind=1 (struct rq*) : Good!
->>   final result:  type='struct rq'
->>
->> After this commit, the type of x0 is correctly inferred as 'struct task_struct':
->>
->>   find data type for 0x68(reg0) at pick_task_stop+0x10
->>   var [8] reg0 offset 0 type='struct rq*'
->>   ldr [8] 0xa98(reg0) -> reg0 type='struct task_struct*'
->>   chk [10] reg0 offset=0x68 ok=1 kind=1 (struct task_struct*) : Good!
->>   final result: type='struct task_struct'
->>
->> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 >> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 >> ---
->>  .../perf/util/annotate-arch/annotate-arm64.c  | 87 +++++++++++++++++++
->>  1 file changed, 87 insertions(+)
+>>  .../perf/util/annotate-arch/annotate-arm64.c  | 83 ++++++++++++++++++-
+>>  1 file changed, 80 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 1fe4c503431b..cac2bf0021c9 100644
+>> index 28647a778802..f9100230c2f6 100644
 >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -9,6 +9,8 @@
->>  #include <regex.h>
->>  #include "../annotate.h"
+>> @@ -11,6 +11,8 @@
 >>  #include "../disasm.h"
->> +#include "../annotate-data.h"
->> +#include "../debug.h"
+>>  #include "../annotate-data.h"
+>>  #include "../debug.h"
+>> +#include "../map.h"
+>> +#include "../symbol.h"
 >>  
 >>  struct arch_arm64 {
 >>  	struct arch arch;
->> @@ -254,6 +256,88 @@ static int extract_op_location_arm64(const struct arch *arch,
->>  	return 0;
->>  }
+>> @@ -297,6 +299,8 @@ static void update_insn_state_arm64(struct type_state *state,
+>>  	Dwarf_Die type_die;
+>>  	u32 insn_offset = dl->al.offset;
+>>  	int sreg, dreg;
+>> +	int fbreg = dloc->fbreg;
+>> +	int fboff = 0;
 >>  
->> +#ifdef HAVE_LIBDW_SUPPORT
->> +static int get_mem_offset(struct annotated_op_loc *op_loc, int type_offset)
->> +{
->> +	if (op_loc->addr_mode == INSN_ADDR_POST_INDEX)
->> +		return type_offset;
+>>  	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+>>  		return;
+>> @@ -304,17 +308,59 @@ static void update_insn_state_arm64(struct type_state *state,
+>>  	sreg = src->reg1;
+>>  	dreg = dst->reg1;
+>>  
+>> +	if (dloc->fb_cfa) {
+>> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
+>> +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
 >> +
->> +	return op_loc->offset + type_offset;
->> +}
+>> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+>> +			fbreg = -1;
+>> +	}
 >> +
->> +static void adjust_reg_index_state(struct type_state *state, int reg,
->> +				   struct annotated_op_loc *op_loc,
->> +				   const char *insn_name, u32 insn_offset)
->> +{
->> +	struct type_state_reg *tsr;
+>>  	/* Memory to register transfers */
+>>  	if (!strncmp(dl->ins.name, "ld", 2)) {
+>>  		struct type_state_reg dst_tsr;
+>>  
+>> -		if (!has_reg_type(state, sreg) ||
+>> -		    !has_reg_type(state, dreg) ||
+>> -		    !state->regs[dreg].ok)
+>> +		if (!has_reg_type(state, sreg))
+>>  			return;
+>>  
+>>  		tsr = &state->regs[sreg];
+>>  		tsr->copied_from = -1;
 >> +
->> +	if (!has_reg_type(state, reg) ||
->> +	    (op_loc->addr_mode != INSN_ADDR_PRE_INDEX &&
->> +	    op_loc->addr_mode != INSN_ADDR_POST_INDEX))
->> +		return;
+>> +		/* Check stack variables with offset */
+>> +		if (sreg == fbreg || sreg == state->stack_reg) {
+>> +			struct type_state_stack *stack;
+>> +			int offset = src->offset - fboff;
 >> +
->> +	tsr = &state->regs[reg];
->> +	tsr->offset = op_loc->offset + tsr->offset;
->> +	tsr->ok = true;
-> 
-> Maybe we can skip setting 'ok' here?
-> 
-> 
+>> +			stack = find_stack_state(state, offset);
+>> +			if (stack == NULL) {
+>> +				tsr->ok = false;
+>> +				return;
+>> +			} else if (!stack->compound) {
+>> +				tsr->type = stack->type;
+>> +				tsr->kind = stack->kind;
+>> +				tsr->offset = stack->ptr_offset;
+>> +				tsr->ok = true;
+>> +			} else if (die_get_member_type(&stack->type,
+>> +						       offset - stack->offset,
+>> +						       &type_die)) {
+>> +				tsr->type = type_die;
+>> +				tsr->kind = TSR_KIND_TYPE;
+>> +				tsr->offset = 0;
+>> +				tsr->ok = true;
+>> +			} else {
+>> +				tsr->ok = false;
+>> +				return;
+>> +			}
 >> +
->> +	pr_debug_dtp("%s [%x] %s-index %#x(reg%d) -> reg%d", insn_name,
->> +		     insn_offset, op_loc->addr_mode == INSN_ADDR_PRE_INDEX ?
->> +		     "pre" : "post", op_loc->offset, reg, reg);
->> +	pr_debug_type_name(&tsr->type, tsr->kind);
->> +}
->> +
->> +static void update_insn_state_arm64(struct type_state *state,
->> +				    struct data_loc_info *dloc, Dwarf_Die * cu_die __maybe_unused,
->> +				    struct disasm_line *dl)
->> +{
->> +	struct annotated_insn_loc loc;
->> +	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
->> +	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
->> +	struct type_state_reg *tsr;
->> +	Dwarf_Die type_die;
->> +	u32 insn_offset = dl->al.offset;
->> +	int sreg, dreg;
->> +
->> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
->> +		return;
->> +
->> +	sreg = src->reg1;
->> +	dreg = dst->reg1;
->> +
->> +	/* Memory to register transfers */
->> +	if (!strncmp(dl->ins.name, "ld", 2)) {
->> +		struct type_state_reg dst_tsr;
->> +
->> +		if (!has_reg_type(state, sreg) ||
->> +		    !has_reg_type(state, dreg) ||
->> +		    !state->regs[dreg].ok)
+>> +			pr_debug_dtp("ldr [%x] -%#x(stack) -> reg%d",
+>> +				     insn_offset, -offset, sreg);
+>> +			pr_debug_type_name(&tsr->type, tsr->kind);
 >> +			return;
 > 
-> I think we should set state->regs[sreg].ok to false if sreg is valid.
+> Any chance the stack register changes the offset with the addressing
+> mode?  I think it should be updated regardless of the result of this
+> operation.
 > 
->> +
->> +		tsr = &state->regs[sreg];
->> +		tsr->copied_from = -1;
->> +		dst_tsr = state->regs[dreg];
->> +
->> +		/* Dereference the pointer if it has one */
->> +		if (dst_tsr.kind == TSR_KIND_TYPE &&
->> +		    die_deref_ptr_type(&dst_tsr.type,
->> +				       get_mem_offset(dst, dst_tsr.offset),
->> +				       &type_die)) {
->> +			tsr->type = type_die;
->> +			tsr->kind = TSR_KIND_TYPE;
->> +			tsr->offset = 0;
->> +			tsr->ok = true;
->> +
->> +			pr_debug_dtp("ldr [%x] %#x(reg%d) -> reg%d",
->> +				     insn_offset, dst->offset, dreg, sreg);
-> 
-> It could confuse people since src and dst are opposite.  Maybe you can
-> change the parse function to set the source and target (destination)
-> properly for each instruction.
-> 
-
-Indeed. I kept the v1 definitions to keep things simple, but I agree it
-makes the code less readable and potentially confusing. I’ll be extra
-careful when refactoring the source and target logic in the next version.
-Haha.
-
-> 
->> +			pr_debug_type_name(&tsr->type, tsr->kind);
->> +
->> +			adjust_reg_index_state(state, dreg, dst, "ldr", insn_offset);
 >> +		}
+>> +
+>> +		if (!has_reg_type(state, dreg) || !state->regs[dreg].ok)
+>> +			return;
+>> +
+>>  		dst_tsr = state->regs[dreg];
+>>  
+>>  		/* Dereference the pointer if it has one */
+>> @@ -338,6 +384,37 @@ static void update_insn_state_arm64(struct type_state *state,
+>>  
+>>  	/* Register to memory transfers */
+>>  	if (!strncmp(dl->ins.name, "st", 2)) {
+>> +		/* Check stack variables with offset */
+>> +		if (dreg == fbreg || dreg == state->stack_reg) {
+>> +			struct type_state_stack *stack;
+>> +			int offset = dst->offset - fboff;
+>> +
+>> +			if (!has_reg_type(state, sreg) ||
+>> +			    !state->regs[sreg].ok)
+>> +				return;
+>> +
+>> +			tsr = &state->regs[sreg];
+>> +
+>> +			stack = find_stack_state(state, offset);
+>> +			if (stack) {
+>> +				if (!stack->compound)
+>> +					set_stack_state(stack, offset, tsr->kind,
+>> +							&tsr->type, tsr->offset);
+>> +			} else {
+>> +				findnew_stack_state(state, offset, tsr->kind,
+>> +						    &tsr->type, tsr->offset);
+>> +			}
+>> +
+>> +			pr_debug_dtp("str [%x] reg%d -> -%#x(stack)",
+>> +				     insn_offset, sreg, -offset);
+>> +			if (tsr->offset != 0) {
+>> +				pr_debug_dtp(" reg%d offset %#x ->",
+>> +					     sreg, tsr->offset);
+>> +			}
+>> +			pr_debug_type_name(&tsr->type, tsr->kind);
+>> +			return;
 > 
-> Also you will need to update index offset and set the 'ok' state
-> properly.
+> Ditto.
 > 
 > Thanks,
 > Namhyung
->
-Okay. I'll go over the 'ok' state handling again.
+> 
+
+Indeed. Pre/post-index addressing modes are very common for stack operations
+in arm64. It’s definitely necessary to update the offset regardless of the
+lookup result.
 
 -- Tengda
 
->> +		return;
->> +	}
->> +}
->> +#endif
+> 
+>> +		}
 >> +
->>  const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
->>  				   const char *cpuid __maybe_unused)
->>  {
->> @@ -273,6 +357,9 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
->>  	arch->objdump.imm_char		  = '#';
->>  	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
->>  	arch->extract_op_location	  = extract_op_location_arm64;
->> +#ifdef HAVE_LIBDW_SUPPORT
->> +	arch->update_insn_state		  = update_insn_state_arm64;
->> +#endif
->>  
->>  	/* bl, blr */
->>  	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
+>>  		/*
+>>  		 * Store instructions do not change the register type,
+>>  		 * but the base register must be updated for pre/post-index
 >> -- 
 >> 2.34.1
 >>
