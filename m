@@ -1,114 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F133E0259;
-	Fri, 10 Apr 2026 22:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D63DE446
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 22:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775859008; cv=none; b=uaia6nXTQlgDBp8asSYT1zy/A6Vd5y50pzit8ohyUL58t6PH6DORTyvwgUHE1PC/i+5jhKnHbtNm3z9cQF1FpBg0Z3iTdSyQ9jzpZRO6ahJdG0YhjAkFkfAv8xFAFFQeCUndT0vAwYtSPhVjl3x8v5NeLwku5cSF+XuWrbiI6kE=
+	t=1775860086; cv=none; b=bub7XHg4MLjUpyd+FKHMc7ZpdeUxsT/2/pJ9Na4ncdtn5FM32gA7ZqQibYHerD2TNYFvDaJQ8zXABu40HV5E5JjPI/KYx3O+42F0W0mvjL0SyEJCymMXn20g1mGfzwk9c/sQFoBEVUEhQWhjHalS6THUX0Gkm/soXvdcled7E9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775859008; c=relaxed/simple;
-	bh=SVo3R3WcxD6tKYAhSh+q4Dq63jZnP4Dt711T1CWLA5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sP2MsPABl3/JogXKmeM4+HeFdf3yZYi2i+esIFLCS855wtzAP/30BzAEnQYWuMnyMWd9YmPDw4lJOVRRaWCAaL2CsfPhcYDGDS7uVQisZyEixrLuRk+XV+cXNMdSe8f9u3Sy/NEShgeNXbD9xTXMxMV1Do+txRtbMAD8VU4Bhww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fx+Hig+4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775860086; c=relaxed/simple;
+	bh=3Ug9OxPhOpkKgehHAmMWF0eDnJgT7Y0iZmuY37Iv678=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hhNQMT7ltCHiUUWR2ncai/3NrIMkJKOEsWBuCijZn/ZA+ApoHkJAkaJGZaHCHheP7e4o/0/B/r2Us1vmnNFanpmH//jqsTXHhf8rqr0FbnPZ0oH1w3z6nqKqdN1SZbDcNOZJakqn+Dmrd+J9h3numKGYLnm95JMEwerIvQAYqlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlkWqUvU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fx+Hig+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47E0C19421;
-	Fri, 10 Apr 2026 22:10:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlkWqUvU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F245C19421;
+	Fri, 10 Apr 2026 22:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775859008;
-	bh=SVo3R3WcxD6tKYAhSh+q4Dq63jZnP4Dt711T1CWLA5o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fx+Hig+4WuWOLODjjQEJRvd4wysGljxFWgCsStdd8q1+UZjfTnASLZybs0/ir/v2g
-	 gxMkKqtpD+XLILhXbgpzAhXHpNn/1KwZGtblRccuPryVdcwoedUeFjI6Lj/IF11Zyj
-	 FmZXKC1t+g1t/lRlWb5WlRkt4RnRXNz8MYD43L30I2qvrmb+XcmV/Ne5/XxZAuaodJ
-	 MlEjR1XN5e1r9icDu656tyA2VVXNEoOc8mbd8/OE4gumnf7GfdxiBqLj1fy2ZZJ0Fk
-	 8oHyHskeS+MgMttHKiVGPLn2cfWoTHGc3I9ZCJrWf93lzly03Hs0Tq5AGEPv2ArHR3
-	 6mK13TncuFLww==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Song Liu <song@kernel.org>
-Subject: [PATCH 13/13] perf header: Add sanity checks to HEADER_BPF_BTF processing
-Date: Fri, 10 Apr 2026 19:09:05 -0300
-Message-ID: <20260410220905.200051-14-acme@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260410220905.200051-1-acme@kernel.org>
-References: <20260410220905.200051-1-acme@kernel.org>
+	s=k20201202; t=1775860086;
+	bh=3Ug9OxPhOpkKgehHAmMWF0eDnJgT7Y0iZmuY37Iv678=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=KlkWqUvUtH5xYn1wN6B/OuCcvdoBRcoqQoTZjvncpLhFcQpT8pnxemGhhIE7yD0pG
+	 Ha4M0qa7CqOnIh1RBtECWclQKTm/khiQ9mIu3s/BeBr1JJMqga2yhvpMZECGYYJZg7
+	 2Fj8qvnySjI6MzH+jxNnX+Ac5R0JTh/smBkvAjg5k/rIgtqQIpVYV79kyBVKe2h5z3
+	 IZhHpGE3OtTjKIH0ERes05haKz/jZF4Dkc50D1r6k80uywory2v6B6wG6Ep+bLQBe1
+	 i0FuCYfChV2wRimSdvB4wd/11sCx2XHI207nSFNDSMp3VCOxnvTEI93AyQ8CfVtfyn
+	 mFk7xnrCr6EuQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 08/13] perf header: Sanity check HEADER_GROUP_DESC
+Reply-To: sashiko@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260410220905.200051-9-acme@kernel.org>
+References: <20260410220905.200051-9-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Apr 2026 22:28:05 +0000
+Message-Id: <20260410222806.3F245C19421@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sashiko AI review found 1 potential issue(s):
+- [High] Zero-length string allocations and missing null-termination lead t=
+o an out-of-bounds read in `strcmp`.
+--
 
-Validate the BTF entry count and individual data sizes when reading
-HEADER_BPF_BTF from perf.data files to prevent excessive memory
-allocation from malformed files.
+commit c734f9dc578da0aba3155da45962b841c79c7260
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reuses the MAX_BPF_PROGS (131072) and MAX_BPF_DATA_LEN (256 MB)
-limits from HEADER_BPF_PROG_INFO processing.
+perf header: Sanity check HEADER_GROUP_DESC
 
-Cc: Song Liu <song@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Assisted-by: Claude Code:claude-opus-4-6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/header.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+This commit adds an upper bound check on nr_groups in process_group_desc()
+to harden against malformed perf.data files. It also moves the environment
+assignment after validation.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 705f1ab44bc93486..f30e48eb3fc32da2 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3622,6 +3622,17 @@ static int process_bpf_btf(struct feat_fd *ff  __maybe_unused, void *data __mayb
- 	if (do_read_u32(ff, &count))
- 		return -1;
- 
-+	if (count > MAX_BPF_PROGS) {
-+		pr_err("bpf btf count %u too large (max %u)\n", count, MAX_BPF_PROGS);
-+		return -1;
-+	}
-+
-+	if (ff->size < sizeof(u32) + count * 2 * sizeof(u32)) {
-+		pr_err("Invalid HEADER_BPF_BTF: section too small (%zu) for %u entries\n",
-+		       ff->size, count);
-+		return -1;
-+	}
-+
- 	down_write(&env->bpf_progs.lock);
- 
- 	for (i = 0; i < count; ++i) {
-@@ -3632,6 +3643,12 @@ static int process_bpf_btf(struct feat_fd *ff  __maybe_unused, void *data __mayb
- 		if (do_read_u32(ff, &data_size))
- 			goto out;
- 
-+		if (data_size > MAX_BPF_DATA_LEN) {
-+			pr_err("bpf btf data size %u too large (max %u)\n",
-+			       data_size, MAX_BPF_DATA_LEN);
-+			goto out;
-+		}
-+
- 		node = malloc(sizeof(struct btf_node) + data_size);
- 		if (!node)
- 			goto out;
--- 
-2.53.0
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 77035d9b138cb..993e20debd5ca 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
 
+[ ... ]
+
+> @@ -3132,12 +3133,25 @@ static int process_group_desc(struct feat_fd *ff,=
+ void *data __maybe_unused)
+>  	if (do_read_u32(ff, &nr_groups))
+>  		return -1;
+> =20
+> -	env->nr_groups =3D nr_groups;
+>  	if (!nr_groups) {
+>  		pr_debug("group desc not available\n");
+>  		return 0;
+>  	}
+> =20
+> +	if (nr_groups > MAX_GROUP_DESC) {
+> +		pr_err("Invalid HEADER_GROUP_DESC: nr_groups (%u) > %u\n",
+> +		       nr_groups, MAX_GROUP_DESC);
+> +		return -1;
+> +	}
+> +
+> +	if (ff->size < sizeof(u32) + nr_groups * 3 * sizeof(u32)) {
+> +		pr_err("Invalid HEADER_GROUP_DESC: section too small (%zu) for %u grou=
+ps\n",
+> +		       ff->size, nr_groups);
+> +		return -1;
+> +	}
+> +
+> +	env->nr_groups =3D nr_groups;
+> +
+>  	desc =3D calloc(nr_groups, sizeof(*desc));
+>  	if (!desc)
+>  		return -1;
+
+Since this patch hardens the parser against malformed files, should there
+also be validation on the strings returned by do_read_string(ff) later in
+this function?
+
+If a malformed perf.data file provides a string length of 0,
+do_read_string() can call malloc(0), which on systems like glibc
+returns a valid 0-byte allocation. Because 0 bytes are requested,
+the underlying read succeeds but provides no null terminator. It
+also does not appear to enforce null-termination for lengths > 0.
+
+When the code subsequently evaluates the string:
+
+    if (strcmp(desc[i].name, "{anon_group}")) {
+        evsel->group_name =3D desc[i].name;
+
+Can this lead to an out-of-bounds read and crash the perf utility if
+desc[i].name lacks a null terminator?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260410220905.2000=
+51-1-acme@kernel.org?part=3D8
