@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14D4261B92;
-	Fri, 10 Apr 2026 06:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3B8331205;
+	Fri, 10 Apr 2026 06:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775803162; cv=none; b=Kx6vBtK9rWvZZmpX7jfCeW+HTC7+MXSjjKYhAT8jW7Ag7bC8dHbrqdHAhYtEPhmWPZ76nIgCa9UXXoieftaMnDD15/l9TKpNw/9HPj29rINLppSaTPCNQtJizTK2zi5KB3nVMJfBCz46rOMilGyNh2497j7uyk/Q923CPGZFgRM=
+	t=1775803381; cv=none; b=oFinkqHCNAWYXWshvI410trHULH+uM7WEr/o+O4DI9uZA3c77OynVqJv/mUDlJgCBtQ5d016I5kIWUbryMnc3Lqlfij7VsMS+ELIyhkIuCxG1IzKRL6Y4O2sGJNQxt2D295zw8pjcg9IQV6AZrPVAjUXPDIu+Iv0x6hxLbvMJzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775803162; c=relaxed/simple;
-	bh=2dJERKr+mp2TGfuWCFWrxNT+5Kd3HQjiEmfMx63zO4Y=;
+	s=arc-20240116; t=1775803381; c=relaxed/simple;
+	bh=6AfwHIyjMoUJbdRY1JtZt0Zc+eudAwAKsKzHuGXmnQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iCJyx8dp+uWkolawms9P0lPsyw3VLcNAgmDap+ElkRWQHcyDsK0g7wIYMxBM4bXWogd4RUiMSg0W+AjxDAnclVgUTGR3LfmM1TR/O5GOcLJ0+lILV9gLabLlXimXTA+h5EJxqjp/dVSxPEcL/mp7MBsXSi9dOLYWyjJNIBWoFvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIDoSOjd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ezgAhiBZQNQUo8iH+4HbHc17l7ufe3z6Ct1GeEthnJAErf/unViK9lM5B+zY27nd9BSWScrGEEYGx+LuEKg2DLNMF6Km1kvfbUidt1acAVd4iO0n+Y7LfOFOUlzSDe6FOi21K6HAsJ9dqIo40pfFHHCZZTGpJ0WMEQvs/cJxJqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnvmT562; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIDoSOjd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7166C2BC9E;
-	Fri, 10 Apr 2026 06:39:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnvmT562"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBA0AC19421;
+	Fri, 10 Apr 2026 06:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775803162;
-	bh=2dJERKr+mp2TGfuWCFWrxNT+5Kd3HQjiEmfMx63zO4Y=;
+	s=k20201202; t=1775803381;
+	bh=6AfwHIyjMoUJbdRY1JtZt0Zc+eudAwAKsKzHuGXmnQg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KIDoSOjdBBGL7fhziaywXI8ieKmQMorZuT71rZOPo8RSiyza2YAqgW6P8fzNXNSYD
-	 Y8e1QZb4c4n0bQN0CjkFXovjM9Z6hX1OXKnVObjpGQaJWVRrpoflohiz9tgEXV2P0U
-	 FM0MpS//+uVpU3J3QACaoQ02kYXSz1ci4HMu42gmm7w+POrfd1U2VdbuBhA1tvF6bQ
-	 IAM+ynR7ONn8qBRe95VNoApxKcop1cLjdDsDEj72dCiNoF83qJGRXVAj0GA55C64UM
-	 fMLivxSLherLZWecJX7f42Sjl9yiEmnOe39CJIKt0W0rUcTL5ULFRxia76aqTCNMxi
-	 yw22NMv30Ffyw==
-Date: Thu, 9 Apr 2026 23:39:20 -0700
+	b=QnvmT562Hd5cUywf+X6Rwi+Ig5xO4PBHmHKvLmZ6o21tXNG10PIf0qzEGb2JFLM/w
+	 wsvcDe69qGeJeWQx9/nvDwQKTvyJSKpf0haoV2YshRNTMbnV0mF4pU8r4jncLjKc2X
+	 CHx8Y7UIDTAScRzeq90eSu/0FT29JFuxADXq3hUGu/2nLdADQ6ZyKtNsFbrRd0LVM/
+	 TnhjSv6jssIA+Fr/tiHTBA178R9bl7QtZ2ASwTlEGDamUiniEBqyi8PE65zNv77TMT
+	 ziqVXnoXeJMGSRETTfWZL5R1gbKBvaNb8GhOIEVMqBfeqITQ59CHqRXlKKtVGvoH9g
+	 eTqJ6+Jyt+doQ==
+Date: Thu, 9 Apr 2026 23:42:59 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Tengda Wu <wutengda@huaweicloud.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
@@ -40,11 +40,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 12/16] perf annotate-arm64: Support 'mov' instruction
+Subject: Re: [PATCH v2 13/16] perf annotate-arm64: Support 'add' instruction
  tracking
-Message-ID: <adibGCaruYl4i9f8@google.com>
+Message-ID: <adib8wD8NPtxpQEL@google.com>
 References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <20260403094800.1418825-13-wutengda@huaweicloud.com>
+ <20260403094800.1418825-14-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,96 +53,121 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260403094800.1418825-13-wutengda@huaweicloud.com>
+In-Reply-To: <20260403094800.1418825-14-wutengda@huaweicloud.com>
 
-On Fri, Apr 03, 2026 at 09:47:56AM +0000, Tengda Wu wrote:
-> Extend update_insn_state() for arm64 to handle register-to-register
-> 'mov' instructions.
+On Fri, Apr 03, 2026 at 09:47:57AM +0000, Tengda Wu wrote:
+> Extend update_insn_state() for arm64 to track pointer arithmetic and
+> member address calculations.
 > 
-> When a 'mov' instruction occurs between two registers, the data type
-> information (DWARF type, kind, and offset) needs to be propagated from
-> the source register to the destination register. This ensures that if
-> a pointer or a structure was previously identified in one register,
-> the tracker continues to recognize it after it is moved.
-> 
-> A real-world example is shown below:
-> 
->   ffff8000803eebf8 <get_vma_policy>:
->   ffff8000803eec20:  mov  x21, x0  // x0 (struct vm_area_struct*) -> x21
->   ffff8000803eec28:  ldr  x2, [x0, #112]
->   ffff8000803eec2c:  cbz  x2, ffff8000803eec94 <get_vma_policy+0x9c>
->   ffff8000803eec94:  ldr  x0, [x21, #152]  // PMU sample
-> 
-> Before this commit, the type of x21 was unknown, causing the subsequent
-> inference to fail:
-> 
->   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
->   chk [9c] reg21 offset=0x98 ok=0 kind=0 cfa : no type information
->   final result: no type information
-> 
-> After this commit, the type of x21 is correctly inferred as 'vm_area_struct':
-> 
->   var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
->   mov [28] reg0 -> reg21 type='struct vm_area_struct*' size=0x8
->   chk [9c] reg21 offset=0x98 ok=1 kind=1 (struct vm_area_struct*) : Good!
->   found by insn track: 0x98(reg21) type-offset=0x98
->   final result:  type='struct vm_area_struct' size=0xb0
-> 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  .../perf/util/annotate-arch/annotate-arm64.c  | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> index f9100230c2f6..013b673f4861 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> @@ -308,6 +308,34 @@ static void update_insn_state_arm64(struct type_state *state,
->  	sreg = src->reg1;
->  	dreg = dst->reg1;
->  
-> +	/* Register to register transfers */
-> +	if (!strcmp(dl->ins.name, "mov")) {
-> +		if (!has_reg_type(state, sreg))
-> +			return;
-> +
-> +		tsr = &state->regs[sreg];
-> +		tsr->copied_from = -1;
-> +
-> +		if (!has_reg_type(state, dreg) ||
-> +		    !state->regs[dreg].ok) {
-> +			tsr->ok = false;
-> +			return;
-> +		}
+> The arm64 'add' instruction frequently calculates structure member
+> addresses, such as 'add x0, x1, #offset'. Tracking this is essential
+> to maintain the connection between a base pointer and its derived
+> member addresses.
 
-Does this handle an immediate value?
-
-> +
-> +		tsr->type = state->regs[dreg].type;
-> +		tsr->kind = state->regs[dreg].kind;
-> +		tsr->offset = state->regs[dreg].offset;
-> +		tsr->ok = true;
-
-Probably safe to use 'state->regs[dreg].ok'.
-
-Anyway, the same concern.  The src and dst are reversed.
+What about other arithmetic instructions?  Can 'sub' be used in a
+similar manner?  Maybe we want to invalidate the target register state
+for all(?) other instructions.
 
 Thanks,
 Namhyung
 
+> 
+> The implementation checks if the base register contains a pointer
+> or a structure type. When an immediate offset is added, use
+> die_get_member_type() to verify that the resulting offset points to
+> a valid member within the data type. If valid, update the target
+> register's type state with the new offset while preserving the base
+> type information.
+> 
+> A real-world example is shown below:
+> 
+>   ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
+>   ffff80008001c9c4:  add  x19, x0, #0xeb8 // x0 (task_struct*) + 0xeb8 -> x19
+>   ffff80008001c9d0:  ldr  x0, [x19]       // PMU sample
+> 
+> Before this commit, the type flow broke at the 'add' instruction,
+> leaving the subsequent load with no type information:
+> 
+>   chk [28] reg19 offset=0 ok=0 kind=0 cfa : no type information
+>   final result: no type information
+> 
+> After this commit, the tracker correctly follows the member address
+> calculation:
+> 
+>   var [0] reg0 offset 0 type='struct task_struct*'
+>   add [1c] address of 0xeb8(reg0) -> reg19 type='struct task_struct*'
+>   chk [28] reg19 offset=0 ok=1 kind=1 (struct task_struct*) : Good!
+>   found by insn track: 0(reg19) type-offset=0xeb8
+>   final result: type='struct task_struct'
+> 
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  .../perf/util/annotate-arch/annotate-arm64.c  | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+> index 013b673f4861..d2557b9d6909 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/zalloc.h>
+>  #include <linux/string.h>
+>  #include <regex.h>
+> +#include <inttypes.h>
+>  #include "../annotate.h"
+>  #include "../disasm.h"
+>  #include "../annotate-data.h"
+> @@ -308,6 +309,50 @@ static void update_insn_state_arm64(struct type_state *state,
+>  	sreg = src->reg1;
+>  	dreg = dst->reg1;
+>  
+> +	if (!strcmp(dl->ins.name, "add")) {
+> +		struct type_state_reg dst_tsr;
 > +
-> +		if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
-> +			tsr->copied_from = dreg;
+> +		if (!has_reg_type(state, sreg) ||
+> +		    !has_reg_type(state, dreg) ||
+> +		    !state->regs[dreg].ok)
+> +			return;
 > +
-> +		pr_debug_dtp("mov [%x] reg%d -> reg%d",
-> +			     insn_offset, dreg, sreg);
-> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +		tsr = &state->regs[sreg];
+> +		tsr->copied_from = -1;
+> +		dst_tsr = state->regs[dreg];
+> +
+> +		/* Handle calculation of a register holding a typed pointer */
+> +		if (dst_tsr.kind == TSR_KIND_POINTER ||
+> +		    (dst_tsr.kind == TSR_KIND_TYPE &&
+> +		    dwarf_tag(&dst_tsr.type) == DW_TAG_pointer_type)) {
+> +			s32 offset;
+> +
+> +			if (dst_tsr.kind == TSR_KIND_TYPE &&
+> +			    __die_get_real_type(&dst_tsr.type, &type_die) == NULL)
+> +				return;
+> +
+> +			if (dst_tsr.kind == TSR_KIND_POINTER)
+> +				type_die = dst_tsr.type;
+> +
+> +			/* Check if the target type has a member at the new offset */
+> +			offset = dst->offset + dst_tsr.offset;
+> +			if (die_get_member_type(&type_die, offset, &type_die) == NULL)
+> +				return;
+> +
+> +			tsr->type = dst_tsr.type;
+> +			tsr->kind = dst_tsr.kind;
+> +			tsr->offset = offset;
+> +			tsr->ok = true;
+> +
+> +			pr_debug_dtp("add [%x] address of %s%#x(reg%d) -> reg%d",
+> +				     insn_offset, dst->offset < 0 ? "-" : "",
+> +				     abs(dst->offset), dreg, sreg);
+> +
+> +			pr_debug_type_name(&tsr->type, tsr->kind);
+> +		}
 > +		return;
 > +	}
 > +
->  	if (dloc->fb_cfa) {
->  		u64 ip = dloc->ms->sym->start + dl->al.offset;
->  		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+>  	/* Register to register transfers */
+>  	if (!strcmp(dl->ins.name, "mov")) {
+>  		if (!has_reg_type(state, sreg))
 > -- 
 > 2.34.1
 > 
