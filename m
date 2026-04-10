@@ -1,65 +1,33 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFD73B7B72
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 11:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4961381B1F;
+	Fri, 10 Apr 2026 11:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775819131; cv=none; b=T+ShjnFd2HKeHqMPn7TIsfTkSf9lYnaXqSXwbyGwybok2cKwlXrmcSua3USwX5sNpWUr/nKyftoR5dLF5CwxzvWz/6cOeHkdmIAv34cmu7GvGmpTIoqZU/i/4m3dX04PBAKTbOvjUzNIkyHCtOJzKUgWX2qM4AVaHAG86NuXEdU=
+	t=1775819640; cv=none; b=MWCYGdLjAAQtcXAN0b7bOpQdnIwn2MVspYlfwAx85eWcYmjQ92XeZMgu77M0otzL4X9+78tyls6eGunJpObMci+JKgeMLG6AS5NTsoW4XUWCrazmSFUPzKiaOPcE2/o16akXPIUFvRFc9iYr4+Sj/k8ErlmKkFusZvJ+YIuOAJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775819131; c=relaxed/simple;
-	bh=C4TzoVHzgf1rGpQWQodks9joyvbgLfJGekKr3dHfEuU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jUwNSOJHkQn2ulYi/ipHZv4CB0pisEF7hVf/Ezn2TgQME0C08+jpO36eMrq3B8yZdDEesW3M0UpjFHEbiz6gzW16ijpJ7nzbvoV6Jfgp5L07eHkQAFY2Fs6yx4xdl6mnrv4+xOSLN+7cezTi9A9lsWP7EQm+uFXLZiV6+pQhUd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M2WalfgO; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1775819640; c=relaxed/simple;
+	bh=B+QUl8qbju/pBIN9DhfQZaX2lFn1Cba5hp5XcfdQF78=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gNrQOy1tzN7mNIUH5yUkcgH7QCGENTLrvGVRuSua+a5YM9L3XaqCn1GynNwZTJataRYl7+Fq0H/Jic5PMjdqS5AlsKhnqiT+UCL/SM+Bo0vhJ6RL3xa3TGDYCGY4f9ELtec5+xWngfoj94HcNFtZMy2cqiqk7rRd32tSxE2M9Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Z7poZqBM; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2WalfgO"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43cf7683a28so1246261f8f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 04:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775819126; x=1776423926; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A6RQ1iN4kZujA3tCfjxC7Q5lmyqTavIYDLPFwYDheVU=;
-        b=M2WalfgOlheTBdQccBcnEtCdbx4hcd+i4mhflj3OqgEUf2lHdg9Z1UeXUzSRXpL2vl
-         pII027urvmQyEtHucfA79+pdXZupRQrQz+iKKDzWysDDIT/yKK6t0ngJmkxx4g3U6EbU
-         imM0aqkWrQeRnSsV7xgOn7yMMfzC1SGhYYTsupGnWN2DJ3eGZWe+1UzhpbTzEvR6Kos3
-         K4VqEwe/viSFFQlrQe7DnQc5BxNeI8zC3XbpXP0JSOWIcV++TD5LIyWMHhleFHd8DYrA
-         WrINJqq8eDtW66Yi2RjEoUpcXiIDEZYgHYbRuKNPTHU5wWa0Q0YIjaFwOCwpVwJP+ul+
-         PSRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775819126; x=1776423926;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A6RQ1iN4kZujA3tCfjxC7Q5lmyqTavIYDLPFwYDheVU=;
-        b=XvVcg6R/Pn1V2KJt+VUzVwWD7sarjUuC1CYNQh84R09e7uuFjwq5N0OVlblFJp53Yw
-         0I4mW4o2R6GzKZS23vZ7V5rPK/5j8unNezZf7ObJ11HJLpdOiLl61YwNg/YK3uYObdjK
-         nNjdqfqN171rr8VSt4vGYXCAfzz5iqpJ/6r/N/UYvPJGuTwJQBcDFZN2BwJd7eK5XBAB
-         BFHRFa0chFxHKlOUyhFZcER7+WzGMoWQeheMmPa1KiQipIpeQbkWzt9FJEz9b4OzxgMG
-         rNqGX9PpxIft7EqzPkFq+Usqia4amwuDku5yAB01wj3aHidYOCuKN5prNXEDGEi0cFqy
-         PmKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVv/DA61FsRML58CbPDO3TnfF9e7tswfilsKaIU7rpB3igZOFx0ULEai8Z+HYL1GQhCKbx2uC0WoDXO8aFkoJLA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSj5gicPDREYAOF2j1WdhTFfQp6uO4vOAn506IaQ+pnszI1V46
-	m636WnsCG2b/YotuorE6QTQRk8B/f9K5xvISQwLlBS5LR8RGka5yBjn6LFjujGg/sr0=
-X-Gm-Gg: AeBDieufb6qaaAuBpLPLotedv6S0et49RhkxrgmWtT6IidTUo+QHDll2W7CbGA3V8oe
-	qu3iZTym7vj1bUOjNIfw6Lef2jjb9riMOFXYBAm+FMehaC+AO3545M3LEMQqtrBLLwPhgpBDs/f
-	tsSup3iqrs0Uz5EKVDatQyp22PXrJoIHdUxEQSfoIo7zbDr9NHEotEFJpniZ8ln5JzxYEgA9qzC
-	JQAMkKbPANH7Ev0IHzFwLt6CJ+ELdd0u9DWyw/nK4kgTWAFFYyT+iPfUib5QeSiMkAeC2BaMCY+
-	nejDlCUcGOb/aHD6KebZ4Q/+MI2h1lYPWPClXHeHmgywmSsNjzeeyoI60yYQ0zBKaDVfDFj4qWq
-	blebHj5s2mQYHJBgoALprBhhvwnDQwRRbVnP8aorLrpjFDhKf+Y62iHpioEy7kgmzRfuw8rekNz
-	k8WH1KRnnIFrWET/KM3Wyhf1JXeW8iTwjm
-X-Received: by 2002:a5d:5d83:0:b0:43d:30af:a173 with SMTP id ffacd0b85a97d-43d64259b7emr3790576f8f.5.1775819125672;
-        Fri, 10 Apr 2026 04:05:25 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e5ccdasm6896930f8f.34.2026.04.10.04.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 04:05:25 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 10 Apr 2026 12:05:12 +0100
-Subject: [PATCH] perf arm-spe: Don't warn about the discard bit if it
- doesn't exist
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Z7poZqBM"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 798552682;
+	Fri, 10 Apr 2026 04:13:52 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 469F23FAF5;
+	Fri, 10 Apr 2026 04:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775819638; bh=B+QUl8qbju/pBIN9DhfQZaX2lFn1Cba5hp5XcfdQF78=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Z7poZqBMfML/LpZ4MhPR7y6beSuicz4X6RZAgrFIPfE7ZsXEHQyxI4xMaKFqfZ3xG
+	 jYnrW+01+Qtkf8XBDuaw9JAW52h/AVARG0wWaAZmuJJY1UuGgK/c+DAuzjQh6dUP8/
+	 DhUzAZtK7ExRByZIpqomUdPEKx2o1CXwGEf8XwgI=
+From: Leo Yan <leo.yan@arm.com>
+Date: Fri, 10 Apr 2026 12:13:44 +0100
+Subject: [PATCH v2] perf pmu: Skip test on Arm64 when #slots is zero
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,132 +36,123 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260410-james-spe-discard-warning-v1-1-985c02756ee4@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGfZ2GkC/x3MTQqDQAxA4atI1gbGqT+0VxEX6UzUCJ1KAlaQu
- btDl9/ivQuMVdjgVV2gfIjJNxU0dQVhpbQwSiwG73zv2sbhRh82tJ0xigXSiD/SJGlB1z7ffqD
- uQRSg9LvyLOf/PU453y4G0kJrAAAA
-To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
+Message-Id: <20260410-perf_fix_pmu_metrics_test-v2-1-61826ab3ca8b@arm.com>
+X-B4-Tracking: v=1; b=H4sIAGfb2GkC/42NQQ6CMBREr0K6tqatlFZX3sOQBtqP/EWBtJVoC
+ He3YOJWl28yb2YhEQJCJJdiIQFmjDgOGcShILZvhjtQdJmJYKJiJdN0gtCZDp9m8g/jIQW00SS
+ IiaqTLR04q6WWJPtTgNzbt2915h5jGsNrv5r5lv6zOnPKKVNKyBaYOCt3bYI/2tFvFx+fs18+1
+ 410mnWKt9XXr9d1fQPyUzK5AAEAAA==
+X-Change-ID: 20260408-perf_fix_pmu_metrics_test-73c4dedc8585
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775819636; l=3369;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=B+QUl8qbju/pBIN9DhfQZaX2lFn1Cba5hp5XcfdQF78=;
+ b=h/38BGz6cWSQmrFLDRR3BPs8rZk2fjacEBag+Yn9bXwsayvmKCQ0PhFGh8lBgilMmPaqmPmUO
+ M7uxnqPYYDsDUNoerLNQUR1aUXzL650eSiefUVfhVC+Yt7Mc9SFkZIw
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Opening an SPE event shows a warning that doesn't concern the user:
+Some Arm64 PMUs expose 'caps/slots' as 0 when the slot count is not
+implemented, tool_pmu__read_event() currently returns false for this,
+so metrics that reference #slots are reported as syntax error.
 
-  $ perf record -e arm_spe
-  Unknown/empty format name: discard
+Since the commit 3a61fd866ef9 ("perf expr: Return -EINVAL for syntax
+error in expr__find_ids()"), these syntax errors are populated as
+failures and make the PMU metric test fail:
 
-Perf only wants to know if the discard bit is set for configuring the
-event, not in response to anything the user has done. Fix it by adding
-another helper that returns if a config bit exists without warning.
+    9.3: Parsing of PMU event table metrics:
+    --- start ---
+    ...
 
-We should probably keep the warning in evsel__get_config_val() to avoid
-having every caller having to do it, and most format bits should never
-be missing.
+    Found metric 'backend_bound'
+    metric expr 100 * (stall_slot_backend / (#slots * cpu_cycles)) for backend_bound
+    parsing metric: 100 * (stall_slot_backend / (#slots * cpu_cycles))
+    Failure to read '#slots'
+    literal: #slots = nan
+    syntax error
+    Fail to parse metric or group `backend_bound'
 
-Add a test for the new helper. Rename the parent test function to be
-more generic rather than adding a new one as it requires a lot of
-boilerplate.
+    ...
+    ---- end(-1) ----
+    9.3: Parsing of PMU event table metrics    : FAILED!
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+This commit introduces a new function is_expected_broken_metric() to
+identify broken metrics, and treats metrics containing "#slots" as
+expected broken when #slots == 0 on Arm64 platforms.
+
+Fixes: 3a61fd866ef9 ("perf expr: Return -EINVAL for syntax error in expr__find_ids()")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/arch/arm64/util/arm-spe.c |  3 ++-
- tools/perf/tests/pmu.c               | 11 +++++++++--
- tools/perf/util/evsel.c              |  6 ++++++
- tools/perf/util/evsel.h              |  1 +
- 4 files changed, 18 insertions(+), 3 deletions(-)
+Changes in v2:
+- Checked pm->metric_expr instead of pm->metric_name and removed the
+  negation before strstr() suggested by sashiko.
+- Link to v1: https://lore.kernel.org/r/20260410-perf_fix_pmu_metrics_test-v1-1-18a5d80f71b6@arm.com
+---
+ tools/perf/tests/pmu-events.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index f00d72d087fc..91bb28cad79a 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -428,7 +428,8 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 	evlist__for_each_entry_safe(evlist, tmp, evsel) {
- 		if (evsel__is_aux_event(evsel)) {
- 			arm_spe_setup_evsel(evsel, cpus);
--			if (!evsel__get_config_val(evsel, "discard", &discard_bit))
-+			if (evsel__config_exists(evsel, "discard") &&
-+			    !evsel__get_config_val(evsel, "discard", &discard_bit))
- 				discard = !!discard_bit;
- 		}
- 	}
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 0ebf2d7b2cb4..d7be9d1c6f52 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -201,7 +201,8 @@ static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest
- 	return ret;
- }
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index a997168621688007c85495e2d9f6f459c2471516..b1609a7e1d8c9427e6bf9500380e8aac6167c7fa 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -15,6 +15,7 @@
+ #include "util/expr.h"
+ #include "util/hashmap.h"
+ #include "util/parse-events.h"
++#include "util/tool_pmu.h"
+ #include "metricgroup.h"
+ #include "stat.h"
  
--static int test__pmu_usr_chgs(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
-+				    int subtest __maybe_unused)
- {
- 	const char *event = "perf-pmu-test/config=15,config1=4,krava02=170,"
- 			    "krava03=1,krava11=27,krava12=1/";
-@@ -236,6 +237,12 @@ static int test__pmu_usr_chgs(struct test_suite *test __maybe_unused, int subtes
- 	}
- 	evsel = evlist__first(evlist);
- 
-+	/* Test evsel__config_exists() */
-+	TEST_ASSERT_EQUAL("krava01 should exist",
-+			  evsel__config_exists(evsel, "krava01"), true);
-+	TEST_ASSERT_EQUAL("krava99 should not exist",
-+			  evsel__config_exists(evsel, "krava99"), false);
-+
- 	/*
- 	 * Set via config=15, krava01 bits 0-1
- 	 * Set via config1=4, krava11 bit 1
-@@ -629,7 +636,7 @@ static struct test_case tests__pmu[] = {
- 	TEST_CASE("PMU name combining", name_len),
- 	TEST_CASE("PMU name comparison", name_cmp),
- 	TEST_CASE("PMU cmdline match", pmu_match),
--	TEST_CASE("PMU user config changes", pmu_usr_chgs),
-+	TEST_CASE("PMU config helpers", pmu_config_helpers),
- 	{	.name = NULL, }
+@@ -817,6 +818,26 @@ struct metric {
+ 	struct metric_ref metric_ref;
  };
  
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2ee87fd84d3e..685c4118aef3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1396,6 +1396,12 @@ void evsel__set_config_if_unset(struct evsel *evsel, const char *config_name,
- 	perf_pmu__format_pack(format->bits, val, vp, /*zero=*/true);
- }
- 
-+bool evsel__config_exists(const struct evsel *evsel, const char *config_name)
++static bool is_expected_broken_metric(const struct pmu_metric *pm)
 +{
-+	struct perf_pmu_format *format = pmu_find_format(&evsel->pmu->format, config_name);
++	if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
++	    !strcmp(pm->metric_name, "M3"))
++		return true;
 +
-+	return format && !bitmap_empty(format->bits, PERF_PMU_FORMAT_BITS);
++#if defined(__aarch64__)
++	/*
++	 * Arm64 platforms may return "#slots == 0", which is treated as a
++	 * syntax error by the parser. Don't test these metrics when running
++	 * on such platforms.
++	 */
++	if (strstr(pm->metric_expr, "#slots") &&
++	    !tool_pmu__cpu_slots_per_cycle())
++		return true;
++#endif
++
++	return false;
 +}
++
+ static int test__parsing_callback(const struct pmu_metric *pm,
+ 				  const struct pmu_metrics_table *table,
+ 				  void *data)
+@@ -852,8 +873,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
  
- int evsel__get_config_val(const struct evsel *evsel, const char *config_name,
- 			  u64 *val)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 339b5c08a33d..a255ae2b1f8e 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -578,6 +578,7 @@ void evsel__uniquify_counter(struct evsel *counter);
- 	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
- 
- u64 evsel__bitfield_swap_branch_flags(u64 value);
-+bool evsel__config_exists(const struct evsel *evsel, const char *config_name);
- int evsel__get_config_val(const struct evsel *evsel, const char *config_name,
- 			  u64 *val);
- void evsel__set_config_if_unset(struct evsel *evsel, const char *config_name,
+ 	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name);
+ 	if (err) {
+-		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
+-		    !strcmp(pm->metric_name, "M3")) {
++		if (is_expected_broken_metric(pm)) {
+ 			(*failures)--;
+ 			pr_debug("Expected broken metric %s skipping\n", pm->metric_name);
+ 			err = 0;
 
 ---
 base-commit: 4cf1f549bbcdfea9c20df52994bb342677472dcd
-change-id: 20260410-james-spe-discard-warning-049b27a53aac
+change-id: 20260408-perf_fix_pmu_metrics_test-73c4dedc8585
 
 Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+Leo Yan <leo.yan@arm.com>
 
