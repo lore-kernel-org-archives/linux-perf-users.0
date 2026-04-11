@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817333C9450
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6E13CA4A8
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775935083; cv=none; b=jPQGh/GGWTEyQzNZcwBNTWVU34kxakK8TAplB84bXKdLndynLcYn3C19LPm8tQ+DlpjESTEhLBsud15pfA1ZknTjyL4+1dri5BzqMx276bgiihInNWUP8lUkC7Ya7Yh9v1A8oNe7hpoiXlqsihig8n7Kfve0H6SqRp3xpynf4s8=
+	t=1775935086; cv=none; b=hDRAmtGQulK7nT1/SHcnjc5RQfhtXUW/AYdg5WztjvJlVdm/SeJwM+XnJdX/UXyGSrl9owXQcfkWLgHOmG2p+mu9lYPaqUhcSrKnuUbHSbqxRiBp9wXzaTH+pKjpyEFk5sGUamGwB5xLW5q/BugvvRuJdZvHyjIAud0KEGqVuBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775935083; c=relaxed/simple;
-	bh=D6J4TrILnw+Vd5duIq8Xx5kVQzeF4EcLXmzsOqpDjuo=;
+	s=arc-20240116; t=1775935086; c=relaxed/simple;
+	bh=aBbjJYLIj3JlgKicEywSIpg8iDK6n1Z+4CENOSS2sBg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GQoAN8lAD22c61Tk9YM25mQzTGy9oJYXlKhgk2+cwTtRxTsMYhn3X15ZeCHGTL6s+d9drScu5MjyURTzGN4iZYAwEH0r11wX+gJwjtO3estd/UgxzXI2tpH7gslNVeFh7oHw8fbdv7jdDmPtA4FlSeBUcACp1L87DBmsqeiMhvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GRpik4nx; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=FHll6amFdrDUXma67d6kGiqEGJ4XlEKve4jT2d2ZoSYY2jHm1tF2ZwgCJs5vjCRAfotYdvZMGmcsOJI+UG86vQMJmTX+iwpk4N+OUzFjlgefz2kVwZvY9EYD0uX2jUOjWxggc1Z8hmfPoqOn69+xgFWVYbhCzXqA032Nf/rSDbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GwaisWXk; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GRpik4nx"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1279caef718so15056235c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GwaisWXk"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdd327d970so1924948eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775935082; x=1776539882; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775935084; x=1776539884; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DtrEOzqaeIjI7JHJhlF1QdgQmfPYgnjdkQHTwBVDnJc=;
-        b=GRpik4nxvfpJAbEdCUd2o2G1Ycbj/eIzcWjP9ncsvcz25XCcFDuWO54dwGARo1QVs8
-         mK/jGsTX1CTFmJ6rUDlULo0vgZx4XdbN521jCeQ41AioC5584wK6Y/u52W1gXpBaaMrT
-         4pjCGreOHPBvnIwpDLJ9i4ZuqlbiFTlLPDmB8w+gs5apMgbfXe+HXiDzR5MqSw0+HVfy
-         VsbbRfwwn3uu36YUup2jXnzNzi3k5z5RvfyhBrCSSuj4wC234gIw0AL/5TM6EpGaq1SO
-         u35vcamPLi7guhoOjlMtcsBTPafX39Nmj76fi1X1gNBVLk/vqo1bJJruDpC0Aa+aAUYw
-         MFXg==
+        bh=kwG1W24uSzD7B/5afwjU1RRK24gDCHemA91ftb3lUmE=;
+        b=GwaisWXkuB0fJaodunvK1ejzpSltlrNgW4oxxTUrymdz/YxCO2Xcty0Jr8ARF7xFG6
+         XuAcQgt7szc8wkxygmTGyX0z8kxQjSnJ9znDbvhVsqprCn4ETO9c+lye+W9E7c3vwqAa
+         AkGbJM5ttafql5rfAMqPWQdRYem0nJH+b0i/vsrvPURgENN6HZoFkLqpUrEPuQu2Zs9u
+         ntPDp9jH16Bejkk+wW6Y4kdJRwDSQ42Z1f3mHtB4WHSp410DOYkcTdtpyWtmZXtWBEew
+         B/N01eSo/0LyEpqHkUWBXwh3kxuuq+2099IUVgovxhaBnPC7EhSvoidngR8ugat40nFw
+         /G4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775935082; x=1776539882;
+        d=1e100.net; s=20251104; t=1775935084; x=1776539884;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DtrEOzqaeIjI7JHJhlF1QdgQmfPYgnjdkQHTwBVDnJc=;
-        b=jtkMRYxTP3PjgPacV4HvXHZKF+GTkX9HfhksbHjNHLI2aEhUn1kR8ChlaWJ9atQnCw
-         1anFsbk9JENZW0BlopP6tKbb/Xsov9tjO1CoO95QsaKTR8Cqg4le4+DKaAXY3f0KOWnv
-         vuD+Vx75QOOISET/ASE4SeKNckjf5Lg4huaQE4yf5K8tm3IQv52DW5Hi4Nc4sWv3exV5
-         ybWXi1m+Qd/boUrgP0XJu+vxgVPMA0v2xF29Z0cTOjvi6HzARaGLU4vxKBd4sCKlvex0
-         ppvgE68n+USUK0wbQa0SjU4WzMR90cTvhulI1wvuHwZEjD/Qmh7UZmlE8g24MzVXMwEx
-         OwGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCKX1Byb0eRaks1FD0hDfjeg8M26EBAYLx1DKXInYp8D06it/xROOD0N3llPhUjYL2g/2fTxdycWVnD1jJqE72@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeRApmAGrYo9v5qt0cM+v8TBjuJngG+zqybITU2+1hSU+Dw2Q/
-	L3OM4x5drUUcmVCup1VaH8LqxQfMR/un8mT02+TpWWn5mCFALJR41wZqQfSzHpwMGn7DrznIys8
-	bRdB0WwXRAA==
-X-Received: from dlbrx1.prod.google.com ([2002:a05:7022:1701:b0:12a:6c32:ffd2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3d12:b0:12c:8b9:71d9
- with SMTP id a92af1059eb24-12c34eeb383mr4020337c88.27.1775935081489; Sat, 11
- Apr 2026 12:18:01 -0700 (PDT)
-Date: Sat, 11 Apr 2026 12:17:01 -0700
+        bh=kwG1W24uSzD7B/5afwjU1RRK24gDCHemA91ftb3lUmE=;
+        b=mXe/8MlVgp1C516IFFMGWT7Sc7u7puEaMkVSH94xDsOYUbwtcZER5uFnUzt1bL6Q7U
+         jQHCTN71mExnSyVACA4/tjqAefX4hkLKPauGv+XEfpJzholQ2CA/j8MnQVwthHBu/P7n
+         rkyL7mEKE8j6/T8Cz4xkDp+aTFeQXKuR+ZRhHyuVvdl9kfHvAkyX9gZymNlThguheOtA
+         lihP1rV0N6gWGfw1ptrdg49wTgTlBY0QUDEi40R6N5jh1CrNURz215FNjSYdkaT0VvNr
+         EvVqdgXjW1MpX70VcluXWQpiiDBQHsGrHOL6+GFMyiBPOg51ZvynB1nV1lwMm8oKKTXV
+         MQZg==
+X-Forwarded-Encrypted: i=1; AFNElJ/9wGRpPjxQWedYEOYkDhl/LNX/WlUUVWuFXqtJrH11b0elvilYZjSjTWDqsSjpGun4tqpc2FYuqgwqyIClm5iJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH2baLOdoGFKBwRqYd8kMJmxN+7RM7KtVczdN6Qhxtv/Z9Dtg1
+	bKUltl62A8pdL4gVg55XGFCPCfo86sn4X9AZhVJWUcSrtLpUBHPxuNtq+T9uvtcLznOVhnFHahS
+	225gHuaa1Gw==
+X-Received: from dyhd17.prod.google.com ([2002:a05:7300:8291:b0:2d4:6f8d:7bb5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:cd95:b0:2be:17b1:e49f
+ with SMTP id 5a478bee46e88-2d40ddfd6d0mr5455155eec.4.1775935083573; Sat, 11
+ Apr 2026 12:18:03 -0700 (PDT)
+Date: Sat, 11 Apr 2026 12:17:02 -0700
 In-Reply-To: <20260411191710.524998-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260411065718.372240-1-irogers@google.com> <20260411191710.524998-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260411191710.524998-21-irogers@google.com>
-Subject: [PATCH v9 20/29] perf evlist: Try to avoid computing evsel from sample
+Message-ID: <20260411191710.524998-22-irogers@google.com>
+Subject: [PATCH v9 21/29] perf script: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,61 +77,373 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-If the sample has an evsel, don't recompute using the sample.id.
+The sample contains the evsel and so it is unnecessary to pass the
+evsel as well. Remove the evsel from the struct scripting_context so
+that the sample version is always accessed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-top.c           | 4 +++-
- tools/perf/tests/mmap-basic.c      | 4 +++-
- tools/perf/tests/switch-tracking.c | 5 ++++-
- 3 files changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/builtin-script.c                   | 12 ++++--
+ .../util/scripting-engines/trace-event-perl.c | 21 +++++------
+ .../scripting-engines/trace-event-python.c    | 37 ++++++++-----------
+ tools/perf/util/trace-event-scripting.c       |  5 +--
+ tools/perf/util/trace-event.h                 |  3 --
+ 5 files changed, 33 insertions(+), 45 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 6cf73bb0c7af..c8474f7ac658 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1164,7 +1164,9 @@ static int deliver_event(struct ordered_events *qe,
- 		goto next_event;
- 	}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6ea739f20495..c8ecf250577f 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2418,12 +2418,13 @@ static bool show_event(struct perf_sample *sample,
+ }
  
--	evsel = evlist__id2evsel(session->evlist, sample.id);
-+	evsel = sample.evsel;
-+	if (!evsel)
-+		evsel = evlist__id2evsel(session->evlist, sample.id);
- 	assert(evsel != NULL);
- 
- 	if (event->header.type == PERF_RECORD_SAMPLE) {
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 3313c236104e..a18d84d858aa 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -142,7 +142,9 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+ static void process_event(struct perf_script *script,
+-			  struct perf_sample *sample, struct evsel *evsel,
++			  struct perf_sample *sample,
+ 			  struct addr_location *al,
+ 			  struct addr_location *addr_al,
+ 			  struct machine *machine)
+ {
+ 	struct thread *thread = al->thread;
++	struct evsel *evsel = sample->evsel;
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	unsigned int type = evsel__output_type(evsel);
+ 	struct evsel_script *es = evsel->priv;
+@@ -2715,9 +2716,9 @@ static int process_sample_event(const struct perf_tool *tool,
+ 				thread__resolve(al.thread, &addr_al, sample);
+ 			addr_al_ptr = &addr_al;
  		}
- 
- 		err = -1;
--		evsel = evlist__id2evsel(evlist, sample.id);
-+		evsel = sample.evsel;
-+		if (!evsel)
-+			evsel = evlist__id2evsel(evlist, sample.id);
- 		perf_sample__exit(&sample);
- 		if (evsel == NULL) {
- 			pr_debug("event with id %" PRIu64
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 22b0302252db..e32331fee277 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -138,7 +138,10 @@ static int process_sample_event(struct evlist *evlist,
- 		goto out;
+-		scripting_ops->process_event(event, sample, evsel, &al, addr_al_ptr);
++		scripting_ops->process_event(event, sample, &al, addr_al_ptr);
+ 	} else {
+-		process_event(scr, sample, evsel, &al, &addr_al, machine);
++		process_event(scr, sample, &al, &addr_al, machine);
  	}
  
--	evsel = evlist__id2evsel(evlist, sample.id);
-+	evsel = sample.evsel;
+ out_put:
+@@ -2893,9 +2894,12 @@ static int print_event_with_time(const struct perf_tool *tool,
+ {
+ 	struct perf_script *script = container_of(tool, struct perf_script, tool);
+ 	struct perf_session *session = script->session;
+-	struct evsel *evsel = evlist__id2evsel(session->evlist, sample->id);
++	struct evsel *evsel = sample->evsel;
+ 	struct thread *thread = NULL;
+ 
 +	if (!evsel)
-+		evsel = evlist__id2evsel(evlist, sample.id);
++		evsel = evlist__id2evsel(session->evlist, sample->id);
 +
- 	if (evsel == switch_tracking->switch_evsel) {
- 		next_tid = perf_sample__intval(&sample, "next_pid");
- 		prev_tid = perf_sample__intval(&sample, "prev_pid");
+ 	if (evsel && !evsel->core.attr.sample_id_all) {
+ 		sample->cpu = 0;
+ 		sample->time = timestamp;
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index af0d514b2397..7a18ea4b7d50 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -257,7 +257,6 @@ static void define_event_symbols(struct tep_event *event,
+ }
+ 
+ static SV *perl_process_callchain(struct perf_sample *sample,
+-				  struct evsel *evsel __maybe_unused,
+ 				  struct addr_location *al)
+ {
+ 	struct callchain_cursor *cursor;
+@@ -340,7 +339,6 @@ static SV *perl_process_callchain(struct perf_sample *sample,
+ }
+ 
+ static void perl_process_tracepoint(struct perf_sample *sample,
+-				    struct evsel *evsel,
+ 				    struct addr_location *al)
+ {
+ 	struct thread *thread = al->thread;
+@@ -355,6 +353,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 	unsigned long long nsecs = sample->time;
+ 	const char *comm = thread__comm_str(thread);
+ 	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
++	struct evsel *evsel = sample->evsel;
+ 
+ 	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
+ 	dSP;
+@@ -389,7 +388,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 	XPUSHs(sv_2mortal(newSVuv(ns)));
+ 	XPUSHs(sv_2mortal(newSViv(pid)));
+ 	XPUSHs(sv_2mortal(newSVpv(comm, 0)));
+-	XPUSHs(sv_2mortal(perl_process_callchain(sample, evsel, al)));
++	XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
+ 
+ 	/* common fields other than pid can be accessed via xsub fns */
+ 
+@@ -426,7 +425,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 		XPUSHs(sv_2mortal(newSVuv(nsecs)));
+ 		XPUSHs(sv_2mortal(newSViv(pid)));
+ 		XPUSHs(sv_2mortal(newSVpv(comm, 0)));
+-		XPUSHs(sv_2mortal(perl_process_callchain(sample, evsel, al)));
++		XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
+ 		call_pv("main::trace_unhandled", G_SCALAR);
+ 	}
+ 	SPAGAIN;
+@@ -435,9 +434,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 	LEAVE;
+ }
+ 
+-static void perl_process_event_generic(union perf_event *event,
+-				       struct perf_sample *sample,
+-				       struct evsel *evsel)
++static void perl_process_event_generic(union perf_event *event, struct perf_sample *sample)
+ {
+ 	dSP;
+ 
+@@ -448,7 +445,8 @@ static void perl_process_event_generic(union perf_event *event,
+ 	SAVETMPS;
+ 	PUSHMARK(SP);
+ 	XPUSHs(sv_2mortal(newSVpvn((const char *)event, event->header.size)));
+-	XPUSHs(sv_2mortal(newSVpvn((const char *)&evsel->core.attr, sizeof(evsel->core.attr))));
++	XPUSHs(sv_2mortal(newSVpvn((const char *)&sample->evsel->core.attr,
++				   sizeof(sample->evsel->core.attr))));
+ 	XPUSHs(sv_2mortal(newSVpvn((const char *)sample, sizeof(*sample))));
+ 	XPUSHs(sv_2mortal(newSVpvn((const char *)sample->raw_data, sample->raw_size)));
+ 	PUTBACK;
+@@ -461,13 +459,12 @@ static void perl_process_event_generic(union perf_event *event,
+ 
+ static void perl_process_event(union perf_event *event,
+ 			       struct perf_sample *sample,
+-			       struct evsel *evsel,
+ 			       struct addr_location *al,
+ 			       struct addr_location *addr_al)
+ {
+-	scripting_context__update(scripting_context, event, sample, evsel, al, addr_al);
+-	perl_process_tracepoint(sample, evsel, al);
+-	perl_process_event_generic(event, sample, evsel);
++	scripting_context__update(scripting_context, event, sample, al, addr_al);
++	perl_process_tracepoint(sample, al);
++	perl_process_event_generic(event, sample);
+ }
+ 
+ static void run_start_sub(void)
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 9e1069ec0578..8edd2f36e5a9 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -390,7 +390,6 @@ static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+ }
+ 
+ static PyObject *python_process_callchain(struct perf_sample *sample,
+-					 struct evsel *evsel __maybe_unused,
+ 					 struct addr_location *al)
+ {
+ 	PyObject *pylist;
+@@ -651,11 +650,9 @@ static PyObject *get_sample_value_as_tuple(struct sample_read_value *value,
+ 	return t;
+ }
+ 
+-static void set_sample_read_in_dict(PyObject *dict_sample,
+-					 struct perf_sample *sample,
+-					 struct evsel *evsel)
++static void set_sample_read_in_dict(PyObject *dict_sample, struct perf_sample *sample)
+ {
+-	u64 read_format = evsel->core.attr.read_format;
++	u64 read_format = sample->evsel->core.attr.read_format;
+ 	PyObject *values;
+ 	unsigned int i;
+ 
+@@ -741,11 +738,10 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, uint16_t e_machine,
+ 
+ static int set_regs_in_dict(PyObject *dict,
+ 			     struct perf_sample *sample,
+-			     struct evsel *evsel,
+ 			     uint16_t e_machine,
+ 			     uint32_t e_flags)
+ {
+-	struct perf_event_attr *attr = &evsel->core.attr;
++	struct perf_event_attr *attr = &sample->evsel->core.attr;
+ 
+ 	int size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
+ 	char *bf = NULL;
+@@ -831,7 +827,6 @@ static void python_process_sample_flags(struct perf_sample *sample, PyObject *di
+ }
+ 
+ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+-					 struct evsel *evsel,
+ 					 struct addr_location *al,
+ 					 struct addr_location *addr_al,
+ 					 PyObject *callchain)
+@@ -839,6 +834,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	PyObject *dict, *dict_sample, *brstack, *brstacksym;
+ 	uint16_t e_machine = EM_HOST;
+ 	uint32_t e_flags = EF_HOST;
++	struct evsel *evsel = sample->evsel;
+ 
+ 	dict = PyDict_New();
+ 	if (!dict)
+@@ -871,7 +867,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 			PyLong_FromUnsignedLongLong(sample->phys_addr));
+ 	pydict_set_item_string_decref(dict_sample, "addr",
+ 			PyLong_FromUnsignedLongLong(sample->addr));
+-	set_sample_read_in_dict(dict_sample, sample, evsel);
++	set_sample_read_in_dict(dict_sample, sample);
+ 	pydict_set_item_string_decref(dict_sample, "weight",
+ 			PyLong_FromUnsignedLongLong(sample->weight));
+ 	pydict_set_item_string_decref(dict_sample, "ins_lat",
+@@ -928,7 +924,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	if (al->thread)
+ 		e_machine = thread__e_machine(al->thread, /*machine=*/NULL, &e_flags);
+ 
+-	if (set_regs_in_dict(dict, sample, evsel, e_machine, e_flags))
++	if (set_regs_in_dict(dict, sample, e_machine, e_flags))
+ 		Py_FatalError("Failed to setting regs in dict");
+ 
+ 	return dict;
+@@ -936,7 +932,6 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+ static void python_process_tracepoint(struct perf_sample *sample,
+-				      struct evsel *evsel,
+ 				      struct addr_location *al,
+ 				      struct addr_location *addr_al)
+ {
+@@ -954,6 +949,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	const char *comm = thread__comm_str(al->thread);
+ 	const char *default_handler_name = "trace_unhandled";
+ 	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
++	struct evsel *evsel = sample->evsel;
+ 
+ 	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
+ 
+@@ -995,7 +991,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	PyTuple_SetItem(t, n++, context);
+ 
+ 	/* ip unwinding */
+-	callchain = python_process_callchain(sample, evsel, al);
++	callchain = python_process_callchain(sample, al);
+ 	/* Need an additional reference for the perf_sample dict */
+ 	Py_INCREF(callchain);
+ 
+@@ -1051,7 +1047,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 		PyTuple_SetItem(t, n++, dict);
+ 
+ 	if (get_argument_count(handler) == (int) n + 1) {
+-		all_entries_dict = get_perf_sample_dict(sample, evsel, al, addr_al,
++		all_entries_dict = get_perf_sample_dict(sample, al, addr_al,
+ 			callchain);
+ 		PyTuple_SetItem(t, n++,	all_entries_dict);
+ 	} else {
+@@ -1070,7 +1066,6 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ }
+ #else
+ static void python_process_tracepoint(struct perf_sample *sample __maybe_unused,
+-				      struct evsel *evsel __maybe_unused,
+ 				      struct addr_location *al __maybe_unused,
+ 				      struct addr_location *addr_al __maybe_unused)
+ {
+@@ -1465,7 +1460,6 @@ static int python_process_call_return(struct call_return *cr, u64 *parent_db_id,
+ }
+ 
+ static void python_process_general_event(struct perf_sample *sample,
+-					 struct evsel *evsel,
+ 					 struct addr_location *al,
+ 					 struct addr_location *addr_al)
+ {
+@@ -1488,8 +1482,8 @@ static void python_process_general_event(struct perf_sample *sample,
+ 		Py_FatalError("couldn't create Python tuple");
+ 
+ 	/* ip unwinding */
+-	callchain = python_process_callchain(sample, evsel, al);
+-	dict = get_perf_sample_dict(sample, evsel, al, addr_al, callchain);
++	callchain = python_process_callchain(sample, al);
++	dict = get_perf_sample_dict(sample, al, addr_al, callchain);
+ 
+ 	PyTuple_SetItem(t, n++, dict);
+ 	if (_PyTuple_Resize(&t, n) == -1)
+@@ -1502,24 +1496,23 @@ static void python_process_general_event(struct perf_sample *sample,
+ 
+ static void python_process_event(union perf_event *event,
+ 				 struct perf_sample *sample,
+-				 struct evsel *evsel,
+ 				 struct addr_location *al,
+ 				 struct addr_location *addr_al)
+ {
+ 	struct tables *tables = &tables_global;
+ 
+-	scripting_context__update(scripting_context, event, sample, evsel, al, addr_al);
++	scripting_context__update(scripting_context, event, sample, al, addr_al);
+ 
+-	switch (evsel->core.attr.type) {
++	switch (sample->evsel->core.attr.type) {
+ 	case PERF_TYPE_TRACEPOINT:
+-		python_process_tracepoint(sample, evsel, al, addr_al);
++		python_process_tracepoint(sample, al, addr_al);
+ 		break;
+ 	/* Reserve for future process_hw/sw/raw APIs */
+ 	default:
+ 		if (tables->db_export_mode)
+ 			db_export__sample(&tables->dbe, event, sample, al, addr_al);
+ 		else
+-			python_process_general_event(sample, evsel, al, addr_al);
++			python_process_general_event(sample, al, addr_al);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index fa850e44cb46..dc584ac316a3 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -103,12 +103,11 @@ int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char *spec)
+ void scripting_context__update(struct scripting_context *c,
+ 			       union perf_event *event,
+ 			       struct perf_sample *sample,
+-			       struct evsel *evsel,
+ 			       struct addr_location *al,
+ 			       struct addr_location *addr_al)
+ {
+ #ifdef HAVE_LIBTRACEEVENT
+-	const struct tep_event *tp_format = evsel__tp_format(evsel);
++	const struct tep_event *tp_format = evsel__tp_format(sample->evsel);
+ 
+ 	c->pevent = tp_format ? tp_format->tep : NULL;
+ #else
+@@ -117,7 +116,6 @@ void scripting_context__update(struct scripting_context *c,
+ 	c->event_data = sample->raw_data;
+ 	c->event = event;
+ 	c->sample = sample;
+-	c->evsel = evsel;
+ 	c->al = al;
+ 	c->addr_al = addr_al;
+ }
+@@ -134,7 +132,6 @@ static int stop_script_unsupported(void)
+ 
+ static void process_event_unsupported(union perf_event *event __maybe_unused,
+ 				      struct perf_sample *sample __maybe_unused,
+-				      struct evsel *evsel __maybe_unused,
+ 				      struct addr_location *al __maybe_unused,
+ 				      struct addr_location *addr_al __maybe_unused)
+ {
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index 914d9b69ed62..720121c74f1d 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -94,7 +94,6 @@ struct scripting_ops {
+ 	int (*stop_script) (void);
+ 	void (*process_event) (union perf_event *event,
+ 			       struct perf_sample *sample,
+-			       struct evsel *evsel,
+ 			       struct addr_location *al,
+ 			       struct addr_location *addr_al);
+ 	void (*process_switch)(union perf_event *event,
+@@ -124,7 +123,6 @@ struct scripting_context {
+ 	void *event_data;
+ 	union perf_event *event;
+ 	struct perf_sample *sample;
+-	struct evsel *evsel;
+ 	struct addr_location *al;
+ 	struct addr_location *addr_al;
+ 	struct perf_session *session;
+@@ -133,7 +131,6 @@ struct scripting_context {
+ void scripting_context__update(struct scripting_context *scripting_context,
+ 			       union perf_event *event,
+ 			       struct perf_sample *sample,
+-			       struct evsel *evsel,
+ 			       struct addr_location *al,
+ 			       struct addr_location *addr_al);
+ 
 -- 
 2.53.0.1213.gd9a14994de-goog
 
