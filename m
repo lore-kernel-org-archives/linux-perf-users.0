@@ -1,54 +1,54 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6C73CCA16
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC933CD8A8
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775935094; cv=none; b=EeuWjaWURdRpPwwOTioSdQxJfLHNrtG3iiwvCE0RU7UqRQ5Um4pjmRCG7ECFGAJFjVzbCAFwUy8Y1Qulbl0M4XoZ3+uzQgsSjh+rQPGZuqKGMWS9a4QSmwXuQFXdAjsJDwzUFI0Aen3j+a0EUlgIWYuVPpBibHOSb+pVguXsvoo=
+	t=1775935097; cv=none; b=r8mVNAglb5Beo63irsItCndYSKJZW8Xr3rB0kpk2rsDu6PICvheH4ALXe8pImmZMXeE8VypK5AGKsR0LUnuP/uSvD8AFH1Tq2wXmxK3OXEA0eMxrOlwEInfaXtVsA57ARUzc3m8R4aMVbDcV4QbahPyVZdvMUJxGrNAt4UeLEg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775935094; c=relaxed/simple;
-	bh=zSR89FimOo+a1ho86PLlAmAIRUBEG6ciri5qyIpa6GQ=;
+	s=arc-20240116; t=1775935097; c=relaxed/simple;
+	bh=nO+ijauoqQTWW9e2E9q8sHz+WHm6zTSnd8+xq3INW9U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DUkCoThYGvuDjfzfgIOhZObPa/h8rF/NoKIXq0Gck+ejRNNiGgWcMRzvu6C8ld3QD6PhI2fhTCMOlFkBMiebJOQ7xIXr4LQ9lmD0xgXHjvO2mUNBcgJIH9t2pZQo6QfPn7qxygdG5DgxcZhwkDThL/2mI+oT2tFymZLH0gp8ITw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ary3dn+b; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=rg6FvdztubrTj5CCmtwL2Ij3H+LcBwbUzoR6GK5srxad2ZpeuXC2N/aPjrY+Lc4wnlpMEX3LjIoe5DTCsaN0tA4H6h2Y6tdapQdf1oJE2K2Xv5lxBXLAFGGeqL1eXmn/cNxG5+61iiaGXMlfxSQKqx3SZTjauR6hgtA/afwX/4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hz+4TTij; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ary3dn+b"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12711ec96fbso8572426c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hz+4TTij"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12737f276a2so14019894c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775935093; x=1776539893; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775935095; x=1776539895; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bhB4ugJgO/oaf/OiGetNZif1o7sER/QECqKsaPKgFw8=;
-        b=ary3dn+biRDv3sbj+3GUTzrPjrLAzsXBMB5ZSijw14PE780u38PZqo0xvgOXNE/hcW
-         xKfyvggOv+Ea9krV/TC2wGsKl6r5Y3bA4MI65D4lO2oE8wboxVONGD/ZTuKE9mAfvaSU
-         WpTSPhBJg5FfCx78aH3Z+05dmvMl2pa9ftloBs+yivoOnS+AKDCp8lT4Dg2xxyGNMrzX
-         ab7tGp1En+M7ccKk0h7hcjsNhOgqibCEdPFT3W14tWxO2AhvOlAtnYegOLzFk39sDlK0
-         MHxwmzrvUW62S41TQiwoEe0xn5t6lPQJfKlOVRXaBhvWeBodz1PqR4Bl5hJWX0nDCSp1
-         xvyA==
+        bh=hc4PJRwo5dHcpILt7l0l61YfNSgCzUOPaqwcr0CTR3Q=;
+        b=Hz+4TTij4HHstvjiOi3N0XFQkuz1fZ4SZqRvwnw6vcD9Cqs1V9kAfl5q/fHmcPjrLJ
+         2eU3aYgoRig4wqrKE0tcPQmeXsrKpUoWdiiUWLAp+I/WtCq+KnK3RIh6cR9/DPiyRN+D
+         yyWlakBBjGxneBrWMe8o2sGf7kM1DI3Zqnr41XlmLS5aCK0545Mzsol6pOlyMV5qoXT8
+         g/uD4Tm7FyvfN4T27IkA9JlekMocEtRqGIosa2BlBtbwC+G6RcI2+xbQ6iYn9rgCeVs9
+         LBdwVexJhUkvt9JjA9IVTkc/2osUWDvGyjHDfaq52jw5ZYGWOEwHDxwoaKRGwKTAHQw0
+         h+VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775935093; x=1776539893;
+        d=1e100.net; s=20251104; t=1775935095; x=1776539895;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bhB4ugJgO/oaf/OiGetNZif1o7sER/QECqKsaPKgFw8=;
-        b=aSaYPy4Sq/69z0hNNsXwtOirQltqGU7GUxxhM+woM5lLe3R78M/5vIiRxQCrXJC2W9
-         GleW73ZtYlTBTVYfF2lEnofpJB1acrKcoqm6yV4lBrTtEer2GAMJEmdl1rf8WQ8qaMQ+
-         rQ941MHjoxdJyDZ3FHo+/g5Y1YkmefV6IQ/9DpEYRruNErU+l28jKOjNb8MxHEa/S1ai
-         FnAS+fOrinf9BDjakPTymGPgt5xIA26z0n+igMLbVXjk+Vec7UBNOjZ+el7jmSnqckwS
-         +T42KktZcSP3RwHDXdBJFRbFSwJggjC2LeuVsc8+AcHXWDw1vZ0n3QXtlAni7xj5/UqF
-         FjHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjBlWOC0eCbCPX1CUnf35l/BsXAZXbs/iYtHDxAx8xI/FiosZyXIPbAj9AJFLkJVvP5Z32UOmF6rfNbSf81Nyf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAu6hF9AoFgPT52JvP2SPcE3AHfM957fTGQbP1M48egOstrMUb
-	c6E4HMgb8dpdZDiZPNj+xSfaVKn6lFOLh9kdYinP3EN9NQ9jyisUKk2GcVfG2qwQl8PJ4QTpZoZ
-	PT2icoyp/aw==
-X-Received: from dlad11.prod.google.com ([2002:a05:701b:220b:b0:12a:8256:66b9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6891:b0:11a:e426:911a
- with SMTP id a92af1059eb24-12c34eb9b40mr5007446c88.15.1775935092641; Sat, 11
- Apr 2026 12:18:12 -0700 (PDT)
-Date: Sat, 11 Apr 2026 12:17:06 -0700
+        bh=hc4PJRwo5dHcpILt7l0l61YfNSgCzUOPaqwcr0CTR3Q=;
+        b=b27751pz+k4Eqg1ytfTLntKGAyVz6znSnWav2j2hAsLv6X0WowtAzVU6/jUHQt3A5l
+         VowRTdZ20eZTIk60KpuDtC2ZiQaXOVs2RxNFdNlOLEHzPLtXiA7ul1yqpIRDRoc8kD0a
+         ocpWKEjDwttf2V11/SaQT1GacVW69inAQEvoS206Kl4MZzkjWvm4WS98uvrfHUqARa1+
+         gCb+nbtHx9hTWHBoCLLc7Js3sU8wiAG2ZpJ4zVvEWO7AQVQAYurLSSeXu8Dod7XT5ina
+         IR4tY2RdS21l/pYGXLNZDcTXbfMPVbi+E/21YeZmqhhBEJiXWZRH6X2hWinpCWuE/wcb
+         m9kw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2tDB6RsofHQ/y8DKMLVQWmtfpsfDrFKVZA28UOP6Md0pNvoValVK3VnfRrbeX+fn6JJLAHE6lixluSAZXXzR/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4Tq7Wun6dO+Ll3ChNCgNeIv9kEPMNdc7Lr98SYsWrC8DSdb70
+	AsWbKg4gWVL2JTKbbVi1ZoAhq4FXWhjkXfQryBS/BoNadAhPP2dbaboAGw3qgocrIguJIFOL0+0
+	Yd5FRylS/uA==
+X-Received: from dykp42.prod.google.com ([2002:a05:7300:caa:b0:2cb:a16b:ff43])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6183:b0:11d:c22e:a131
+ with SMTP id a92af1059eb24-12c34e37b04mr4420048c88.3.1775935094731; Sat, 11
+ Apr 2026 12:18:14 -0700 (PDT)
+Date: Sat, 11 Apr 2026 12:17:07 -0700
 In-Reply-To: <20260411191710.524998-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260411065718.372240-1-irogers@google.com> <20260411191710.524998-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260411191710.524998-26-irogers@google.com>
-Subject: [PATCH v9 25/29] perf sched: Bounds check CPU in sched switch events
+Message-ID: <20260411191710.524998-27-irogers@google.com>
+Subject: [PATCH v9 26/29] perf timechart: Bounds check CPU
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -78,29 +78,103 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 Ensure the CPU is within expected bounds to avoid out of bound memory
-accesses.
+accesses in arrays tracking CPU state.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-sched.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/builtin-timechart.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 45439e2af8ff..6d0655d56e26 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1791,6 +1791,11 @@ static int process_sched_switch_event(const struct perf_tool *tool,
- 	u32 prev_pid = perf_sample__intval(sample, "prev_pid"),
- 	    next_pid = perf_sample__intval(sample, "next_pid");
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 64f69bd67c6b..64ff998c597a 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -607,6 +607,10 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+ 	u32 state  = perf_sample__intval(sample, "state");
+ 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
  
-+	if (this_cpu < 0 || this_cpu >= MAX_CPUS) {
-+		pr_debug("Out-of-bound sample CPU %d\n", this_cpu);
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
 +		return -1;
 +	}
-+
- 	if (sched->curr_pid[this_cpu] != (u32)-1) {
- 		/*
- 		 * Are we trying to switch away a PID that is
+ 	if (state == (u32)PWR_EVENT_EXIT)
+ 		c_state_end(tchart, cpu_id, sample->time);
+ 	else
+@@ -622,6 +626,10 @@ process_sample_cpu_frequency(struct timechart *tchart,
+ 	u32 state  = perf_sample__intval(sample, "state");
+ 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
++		return -1;
++	}
+ 	p_state_change(tchart, cpu_id, sample->time, state);
+ 	return 0;
+ }
+@@ -635,6 +643,10 @@ process_sample_sched_wakeup(struct timechart *tchart,
+ 	int waker = perf_sample__intval(sample, "common_pid");
+ 	int wakee = perf_sample__intval(sample, "pid");
+ 
++	if (sample->cpu >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
++	}
+ 	sched_wakeup(tchart, sample->cpu, sample->time, waker, wakee, flags, backtrace);
+ 	return 0;
+ }
+@@ -648,6 +660,10 @@ process_sample_sched_switch(struct timechart *tchart,
+ 	int next_pid   = perf_sample__intval(sample, "next_pid");
+ 	u64 prev_state = perf_sample__intval(sample, "prev_state");
+ 
++	if (sample->cpu >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
++	}
+ 	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
+ 		     prev_state, backtrace);
+ 	return 0;
+@@ -662,6 +678,10 @@ process_sample_power_start(struct timechart *tchart __maybe_unused,
+ 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 	u64 value  = perf_sample__intval(sample, "value");
+ 
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
++		return -1;
++	}
+ 	c_state_start(cpu_id, sample->time, value);
+ 	return 0;
+ }
+@@ -671,6 +691,10 @@ process_sample_power_end(struct timechart *tchart,
+ 			 struct perf_sample *sample,
+ 			 const char *backtrace __maybe_unused)
+ {
++	if (sample->cpu >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
++	}
+ 	c_state_end(tchart, sample->cpu, sample->time);
+ 	return 0;
+ }
+@@ -683,6 +707,10 @@ process_sample_power_frequency(struct timechart *tchart,
+ 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 	u64 value  = perf_sample__intval(sample, "value");
+ 
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
++		return -1;
++	}
+ 	p_state_change(tchart, cpu_id, sample->time, value);
+ 	return 0;
+ }
+@@ -697,7 +725,7 @@ static void end_sample_processing(struct timechart *tchart)
+ 	u64 cpu;
+ 	struct power_event *pwr;
+ 
+-	for (cpu = 0; cpu <= tchart->numcpus; cpu++) {
++	for (cpu = 0; cpu <= min_t(unsigned int, tchart->numcpus, MAX_CPUS); cpu++) {
+ 		/* C state */
+ #if 0
+ 		pwr = zalloc(sizeof(*pwr));
 -- 
 2.53.0.1213.gd9a14994de-goog
 
