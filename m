@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1183C4559
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C2D3CEB89
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775935101; cv=none; b=IPyqzu3f3xh9/hTB9BLC193U49sjtLYYjXJlU0UU3dR58EREsdpepd4LlQS016pkCQYSk7GtCmXmDNOYi+IGA8jOLDAR5i1vq40rz3WSMJCjUcmOipZStdIyCJkEck6/k+t5hthORiuEARnFLOuKEiqJDg80WiQd+XqnQ+8hbvg=
+	t=1775935104; cv=none; b=lbIswIsxKKKZ2hWeSzGd0HN9kN8F/F7ILcJf/13qdrLb/GsqU9TTDbfg6I1uXgmvCYQ+qsyx8K6aLeGk1sLJ1rqQSqlpTu5cMsck7LYsdHiAW3DagiQM/5EM4YLoOdR1E4Umy+L7Nu7XMyuWrNHAyyOCxLUm1uwI9iiNUzpsQGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775935101; c=relaxed/simple;
-	bh=AhVzzCWbIrOgzDTW4kDVy2c1BohAQENNularfrmecuk=;
+	s=arc-20240116; t=1775935104; c=relaxed/simple;
+	bh=RrHzZ8ghxG5HE9VCNtkjWSCU/1H8kvkq1r2N7CzVJC0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aRWX+KwEOHV8DgH6QED3tx/mGj8KBMfutlzwH1Pvcmn4n9MIl8roDtBbTtoiIKqZ+LMQ8vybUGHvr/1mHQSMzbMLukzZjgaU7pgG2R3I47ot4H3VTWH9a+YK0tFRyK9VrhWo970kykWgeYniEYrsR83Br0YFV7QOpPR8Cpz99Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IUuwRAa2; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=YQDRVVcmkaVSAg3MCSVeDXLcs7j2Ef0vZ4OjWpYpBVcDsktxgeHhRnTD7Rl3ovVgx/THsHjxYnCjm/COo4uQatDEQ98kS3B3Hc+xtH9qMbDNchaFxDpyxt9SvrqH+9NmDA8OzAsBWXv0LOBxIinhSz2jM06mPSYS3l0OkaRNu2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TGwzNbfy; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUuwRAa2"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-126e8ee6227so4517667c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TGwzNbfy"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d70f60aff7so2883706eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775935100; x=1776539900; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775935102; x=1776539902; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5QtNboS9t1D02oP5+ZDqEPjvbJuCZxOYWpoj1EJtrHo=;
-        b=IUuwRAa2RKhipw0S+WTAnrm0hCueHmp2poGsuxGUeVmmBfVFQ3+S7NSdV0RM43PH8d
-         D4IkAfDB/ipeqAsghaIVTQ5cXQ05t1euJlKD0Vbo8r1UCDw8FiCKxHWIBiZ1b6ojTeuW
-         IX5vM+hT2EKcu6WCvSytgJf+28BJFjXvR0PKgmTCeToYvq9Bt8fdt6NRxzvMpk9W6ecC
-         MPo4uCE5hm+iq6X6gqrv2XilP9tQGt9STHqqzEmj3adylChVTXTYHv6DeT6QsCD23uK2
-         8SYehdhfmUdIIBfgS9X4WyLcWHP33YvscGkOjXKdlNHM1PgU4c/jhUxe8oZi4reKN9Nt
-         Z/nw==
+        bh=FuuA45vEITA5zYwEKQkl24iWemZcAvcU6+3HK3Thar4=;
+        b=TGwzNbfyKmFQfo1XQR9KfL7XYByB1fpcmHvFOjvgG1e985JL3D1IIbPkzMyHHPbO+i
+         1CPNcvnk0U2e0hwUTCtW2rq0pQMYzzd7ErgugnSJEx5Sln6Ohu8P8OA0WChBoiK/A/pP
+         dy8Kr1wh7lmyvlD3VNNnyJ3LbY8WN1D/uO4W11UdxLCGGZvGLM7TgYf34fH+FGTWFdxp
+         pZFHJjIFj8sqG2Uk/A0RMajg8dCViTju1Alo33bqFbq6UPezRnPZU0RrCqU/VUvjEf/H
+         bw094Nsnjod2EdBg3ksxvMyczdZO56u99GRqNCmDu5oZye1lWSeQwsg/XSUV1SbQdytL
+         IUEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775935100; x=1776539900;
+        d=1e100.net; s=20251104; t=1775935102; x=1776539902;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5QtNboS9t1D02oP5+ZDqEPjvbJuCZxOYWpoj1EJtrHo=;
-        b=FqRgRs5g4PLDVu/zN7Jb1FHqbUdBxRZkgHN5oSzDWe3RC8yGWBDqkmVPG5u0oT/1Ge
-         dxeFkMQ5Bmx2suF6GQVB5i6wEnG1koNAPSDJKFgLAKoCjmi8dIVOffGYp81pKXX9QxXo
-         eCArrJ/iQLHbIRe+wgwjLmNldogh4+Qw+ZEPe0c+ShJUVkTrc3BeSePjqqk4+QeENFdz
-         oE9FB3zk8OePkNMpDF/6EUTEJZHdwWe8aZHMCvmmoFudZInYdekuHkTcsTTuAY/dXM9n
-         WMxSTB+j3PUEhAjlbJM5O5Y/YlXkMmmFW26h62kceCl34x7ipafUR2oZ9mOkn8A53rcr
-         s4DA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+GiT+VDIHI8Gpag4GzPIxJTgz4Pw+pT0ENeKscIRSl/wOMoEUAbI5Bk64hCIVH5kXxuBo6D5U/LsRABdxxytH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaV5C+0rXnnAwjkDY6D1GN/jfP7k6ztzDu8eqSqBGZ71irh7wt
-	dkgl6g5ZN/TaoEioq4aEq2z7p8AA6h5sotYEzCHaWXh3oni2wRti8WiS1pQLHyltyHiIt4DxZeP
-	WED4yVRXnoA==
-X-Received: from dlbvv21.prod.google.com ([2002:a05:7022:5f15:b0:12c:177a:ac1d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec1:b0:128:ca83:5aa1
- with SMTP id a92af1059eb24-12c34ea25e4mr4643715c88.16.1775935099385; Sat, 11
- Apr 2026 12:18:19 -0700 (PDT)
-Date: Sat, 11 Apr 2026 12:17:09 -0700
+        bh=FuuA45vEITA5zYwEKQkl24iWemZcAvcU6+3HK3Thar4=;
+        b=HNY8p9UWqh2m6bXfoWbp+b0auknXPDYcDZhc/x1MYCT1arlh869YTPiRO5q/8bftQQ
+         BeRlYlhq0d5ezMxLNNTgu2COXEXoI6xpDHVarGGcCPqbeIYaumMxfZRddip0Nr/Xz2aN
+         JUDBnBIuFmMyhuKvpjAiyh+t5dkFqitFUthuEmsx2OgLCSoZ1nJBBcLpmWghTiXDHIrF
+         tOGwQ8BYDB/tCuK8mnngoQR6NoEkU4lLrw+0HFqpIDXN5G+5xsQvf5vzbEHDF+p1PIMw
+         R2j+D+ijNa62c4o6x+2M5KRb/NxjUL4jNW4LB1AuUtgwW1WoiU06y8I0ru0fbICa0XzB
+         D+ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUd+0hCkU8CwU67tRswIHOYEecFn1A3mSDNPJQlwAuN6o5k50gK9jpiO2KOra5zPGB9UdAf9eVuv1oG5as3gLbZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGCjnLinzB3eObXL8alaqDCDxbFlat6V47IZFT3LUMMVnBlTYh
+	DE6DbsuLTPcrWtsFr+tF1pBmQ3YIyuMSKU1S31UVhLJ41J28r4vkOuA8Gct0WVW5GYbknWLDras
+	HKFJp6PiACA==
+X-Received: from dys21.prod.google.com ([2002:a05:693c:8015:b0:2be:4118:56f1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:5708:b0:2d1:299f:521a
+ with SMTP id 5a478bee46e88-2d58a19343emr4659530eec.26.1775935101501; Sat, 11
+ Apr 2026 12:18:21 -0700 (PDT)
+Date: Sat, 11 Apr 2026 12:17:10 -0700
 In-Reply-To: <20260411191710.524998-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260411065718.372240-1-irogers@google.com> <20260411191710.524998-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260411191710.524998-29-irogers@google.com>
-Subject: [PATCH v9 28/29] perf kwork: Fix address sanitizer issues
+Message-ID: <20260411191710.524998-30-irogers@google.com>
+Subject: [PATCH v9 29/29] perf kwork: Fix memory management of kwork_work
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,117 +77,350 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-There is a double free in the record array due to how parse_options
-will mutate the array. Fix by keeping an array that isn't
-mutated. Ensure kwork_usage is freed on all paths.
+This commit addresses several memory management issues in builtin-kwork.c:
+1. Implements a global cleanup function perf_kwork__exit to free all
+   kwork_work and kwork_atom_page objects at the end of the command.
+2. Ensures all 'name' fields in struct kwork_work are malloc-ed (or NULL)
+   and properly freed by using strdup and zfree.
+3. Fixes memory leaks in top_merge_tasks where kwork_work objects were
+   dropped without being freed.
+4. Adds robustness with NULL checks for name fields.
+5. Fixes workqueue_work_init to correctly resolve and strdup kernel
+   function names, preventing bad-free errors.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kwork.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ tools/perf/builtin-kwork.c  | 125 ++++++++++++++++++++++++++++--------
+ tools/perf/util/bpf_kwork.c |  14 ++--
+ tools/perf/util/kwork.h     |   2 +
+ 3 files changed, 112 insertions(+), 29 deletions(-)
 
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index ab17d3198b93..dfc1d43f20a5 100644
+index dfc1d43f20a5..75c50073c350 100644
 --- a/tools/perf/builtin-kwork.c
 +++ b/tools/perf/builtin-kwork.c
-@@ -2258,7 +2258,7 @@ static void setup_event_list(struct perf_kwork *kwork,
- static int perf_kwork__record(struct perf_kwork *kwork,
- 			      int argc, const char **argv)
- {
--	const char **rec_argv;
-+	const char **rec_argv, **to_free = NULL;
- 	unsigned int rec_argc, i, j;
- 	struct kwork_class *class;
- 	int ret;
-@@ -2295,16 +2295,27 @@ static int perf_kwork__record(struct perf_kwork *kwork,
+@@ -323,8 +323,8 @@ static struct kwork_work *work_search(struct rb_root_cached *root,
+ 		else if (cmp < 0)
+ 			node = node->rb_right;
+ 		else {
+-			if (work->name == NULL)
+-				work->name = key->name;
++			if (work->name == NULL && key->name != NULL)
++				work->name = strdup(key->name);
+ 			return work;
+ 		}
+ 	}
+@@ -371,11 +371,58 @@ static struct kwork_work *work_new(struct kwork_work *key)
  
- 	BUG_ON(i != rec_argc);
- 
-+	/* Save the pointers as the array will be mutated by cmd_record. */
-+	to_free = calloc(rec_argc + 1, sizeof(char *));
-+	if (to_free == NULL) {
-+		ret = -ENOMEM;
-+		goto EXIT;
-+	}
-+
- 	pr_debug("record comm: ");
--	for (j = 0; j < rec_argc; j++)
-+	for (j = 0; j < rec_argc; j++) {
- 		pr_debug("%s ", rec_argv[j]);
-+		to_free[j] = rec_argv[j];
-+	}
- 	pr_debug("\n");
- 
- 	ret = cmd_record(i, rec_argv);
- 
- EXIT:
- 	for (i = 0; i < rec_argc; i++)
--		free((void *)rec_argv[i]);
-+		free((void *)(to_free ? to_free[i] : rec_argv[i]));
-+
-+	free(to_free);
- 	free(rec_argv);
- 	return ret;
+ 	work->id = key->id;
+ 	work->cpu = key->cpu;
+-	work->name = key->name;
++	work->name = key->name ? strdup(key->name) : NULL;
+ 	work->class = key->class;
+ 	return work;
  }
-@@ -2447,6 +2458,7 @@ int cmd_kwork(int argc, const char **argv)
- 	const char *const kwork_subcommands[] = {
- 		"record", "report", "latency", "timehist", "top", NULL
- 	};
+ 
++void work_exit(struct kwork_work *work)
++{
++	zfree(&work->name);
++}
++
++static void work_delete(struct kwork_work *work)
++{
++	if (work) {
++		work_exit(work);
++		free(work);
++	}
++}
++
++static void kwork_work__free_root(struct rb_root_cached *root)
++{
++	struct rb_node *next;
++	struct kwork_work *work;
++
++	while ((next = rb_first_cached(root))) {
++		work = rb_entry(next, struct kwork_work, node);
++		rb_erase_cached(next, root);
++		work_delete(work);
++	}
++}
++
++static void perf_kwork__exit(struct perf_kwork *kwork)
++{
++	struct kwork_class *class;
++	struct kwork_atom_page *page, *tmp_page;
++
++	list_for_each_entry(class, &kwork->class_list, list) {
++		kwork_work__free_root(&class->work_root);
++	}
++
++	kwork_work__free_root(&kwork->sorted_work_root);
++
++	list_for_each_entry_safe(page, tmp_page, &kwork->atom_page_list, list) {
++		list_del_init(&page->list);
++		free(page);
++	}
++
++	INIT_LIST_HEAD(&kwork->class_list);
++	INIT_LIST_HEAD(&kwork->atom_page_list);
++	INIT_LIST_HEAD(&kwork->sort_list);
++	INIT_LIST_HEAD(&kwork->cmp_id);
++}
++
+ static struct kwork_work *work_findnew(struct rb_root_cached *root,
+ 				       struct kwork_work *key,
+ 				       struct list_head *sort_list)
+@@ -453,25 +500,29 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 			  struct kwork_work **ret_work,
+ 			  bool overwrite)
+ {
+-	struct kwork_atom *atom, *dst_atom, *last_atom;
++	struct kwork_atom *atom = NULL, *dst_atom, *last_atom;
+ 	struct kwork_work *work, key;
 +	int ret = 0;
  
- 	perf_tool__init(&kwork.tool, /*ordered_events=*/true);
- 	kwork.tool.mmap	  = perf_event__process_mmap;
-@@ -2463,7 +2475,7 @@ int cmd_kwork(int argc, const char **argv)
+ 	BUG_ON(class->work_init == NULL);
+ 	class->work_init(kwork, class, &key, src_type, sample, machine);
  
- 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		setup_event_list(&kwork, kwork_options, kwork_usage);
--		return perf_kwork__record(&kwork, argc, argv);
-+		ret = perf_kwork__record(&kwork, argc, argv);
- 	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
- 		kwork.sort_order = default_report_sort_order;
- 		if (argc > 1) {
-@@ -2474,7 +2486,7 @@ int cmd_kwork(int argc, const char **argv)
- 		kwork.report = KWORK_REPORT_RUNTIME;
- 		setup_sorting(&kwork, report_options, report_usage);
- 		setup_event_list(&kwork, kwork_options, kwork_usage);
--		return perf_kwork__report(&kwork);
-+		ret = perf_kwork__report(&kwork);
- 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
- 		kwork.sort_order = default_latency_sort_order;
- 		if (argc > 1) {
-@@ -2485,7 +2497,7 @@ int cmd_kwork(int argc, const char **argv)
- 		kwork.report = KWORK_REPORT_LATENCY;
- 		setup_sorting(&kwork, latency_options, latency_usage);
- 		setup_event_list(&kwork, kwork_options, kwork_usage);
--		return perf_kwork__report(&kwork);
-+		ret = perf_kwork__report(&kwork);
- 	} else if (strlen(argv[0]) > 2 && strstarts("timehist", argv[0])) {
- 		if (argc > 1) {
- 			argc = parse_options(argc, argv, timehist_options, timehist_usage, 0);
-@@ -2494,7 +2506,7 @@ int cmd_kwork(int argc, const char **argv)
+ 	atom = atom_new(kwork, sample);
+-	if (atom == NULL)
+-		return -1;
++	if (atom == NULL) {
++		ret = -1;
++		goto out;
++	}
+ 
+ 	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
+ 	if (work == NULL) {
+ 		atom_free(atom);
+-		return -1;
++		ret = -1;
++		goto out;
+ 	}
+ 
+ 	if (!profile_event_match(kwork, work, sample)) {
+ 		atom_free(atom);
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	if (dst_type < KWORK_TRACE_MAX) {
+@@ -498,8 +549,9 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 	}
+ 
+ 	list_add_tail(&atom->list, &work->atom_list[src_type]);
+-
+-	return 0;
++out:
++	work_exit(&key);
++	return ret;
+ }
+ 
+ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+@@ -510,7 +562,7 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 					struct machine *machine,
+ 					struct kwork_work **ret_work)
+ {
+-	struct kwork_atom *atom, *src_atom;
++	struct kwork_atom *atom = NULL, *src_atom;
+ 	struct kwork_work *work, key;
+ 
+ 	BUG_ON(class->work_init == NULL);
+@@ -521,15 +573,15 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 		*ret_work = work;
+ 
+ 	if (work == NULL)
+-		return NULL;
++		goto out;
+ 
+ 	if (!profile_event_match(kwork, work, sample))
+-		return NULL;
++		goto out;
+ 
+ 	atom = list_last_entry_or_null(&work->atom_list[dst_type],
+ 				       struct kwork_atom, list);
+ 	if (atom != NULL)
+-		return atom;
++		goto out;
+ 
+ 	src_atom = atom_new(kwork, sample);
+ 	if (src_atom != NULL)
+@@ -538,8 +590,9 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 		if (ret_work != NULL)
+ 			*ret_work = NULL;
+ 	}
+-
+-	return NULL;
++out:
++	work_exit(&key);
++	return atom;
+ }
+ 
+ static struct kwork_work *find_work_by_id(struct rb_root_cached *root,
+@@ -1002,13 +1055,16 @@ static void irq_work_init(struct perf_kwork *kwork,
+ 		work->name = NULL;
+ 	} else {
+ 		work->id = perf_sample__intval(sample, "irq");
+-		work->name = perf_sample__strval(sample, "name");
++		work->name = strdup(perf_sample__strval(sample, "name") ?: "<unknown>");
+ 	}
+ }
+ 
+ static void irq_work_name(struct kwork_work *work, char *buf, int len)
+ {
+-	snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
++	if (work->name != NULL)
++		snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
++	else
++		snprintf(buf, len, "%" PRIu64 "", work->id);
+ }
+ 
+ static struct kwork_class kwork_irq = {
+@@ -1135,7 +1191,10 @@ static void softirq_work_init(struct perf_kwork *kwork,
+ 
+ static void softirq_work_name(struct kwork_work *work, char *buf, int len)
+ {
+-	snprintf(buf, len, "(s)%s:%" PRIu64 "", work->name, work->id);
++	if (work->name != NULL)
++		snprintf(buf, len, "(s)%s:%" PRIu64 "", work->name, work->id);
++	else
++		snprintf(buf, len, "(s)%" PRIu64 "", work->id);
+ }
+ 
+ static struct kwork_class kwork_softirq = {
+@@ -1220,8 +1279,14 @@ static void workqueue_work_init(struct perf_kwork *kwork __maybe_unused,
+ 	work->class = class;
+ 	work->cpu = sample->cpu;
+ 	work->id = perf_sample__intval(sample, "work");
+-	work->name = function_addr == 0 ? NULL :
+-		machine__resolve_kernel_addr(machine, &function_addr, &modp);
++	work->name = NULL;
++
++	if (function_addr != 0) {
++		const char *name = machine__resolve_kernel_addr(machine, &function_addr, &modp);
++
++		if (name)
++			work->name = strdup(name);
++	}
+ }
+ 
+ static void workqueue_work_name(struct kwork_work *work, char *buf, int len)
+@@ -1284,16 +1349,16 @@ static void sched_work_init(struct perf_kwork *kwork __maybe_unused,
+ 
+ 	if (src_type == KWORK_TRACE_EXIT) {
+ 		work->id = perf_sample__intval(sample, "prev_pid");
+-		work->name = perf_sample__strval(sample, "prev_comm");
++		work->name = strdup(perf_sample__strval(sample, "prev_comm") ?: "<unknown>");
+ 	} else if (src_type == KWORK_TRACE_ENTRY) {
+ 		work->id = perf_sample__intval(sample, "next_pid");
+-		work->name = perf_sample__strval(sample, "next_comm");
++		work->name = strdup(perf_sample__strval(sample, "next_comm") ?: "<unknown>");
+ 	}
+ }
+ 
+ static void sched_work_name(struct kwork_work *work, char *buf, int len)
+ {
+-	snprintf(buf, len, "%s", work->name);
++	snprintf(buf, len, "%s", work->name ?: "");
+ }
+ 
+ static struct kwork_class kwork_sched = {
+@@ -2100,8 +2165,10 @@ static void top_merge_tasks(struct perf_kwork *kwork)
+ 		rb_erase_cached(node, &class->work_root);
+ 		data = rb_entry(node, struct kwork_work, node);
+ 
+-		if (!profile_name_match(kwork, data))
++		if (!profile_name_match(kwork, data)) {
++			work_delete(data);
+ 			continue;
++		}
+ 
+ 		cpu = data->cpu;
+ 		merged_work = find_work_by_id(&merged_root, data->id,
+@@ -2109,11 +2176,17 @@ static void top_merge_tasks(struct perf_kwork *kwork)
+ 		if (!merged_work) {
+ 			work_insert(&merged_root, data, &kwork->cmp_id);
+ 		} else {
++			if (merged_work->name == NULL && data->name != NULL)
++				merged_work->name = strdup(data->name);
++
+ 			merged_work->total_runtime += data->total_runtime;
+ 			merged_work->cpu_usage += data->cpu_usage;
  		}
- 		kwork.report = KWORK_REPORT_TIMEHIST;
- 		setup_event_list(&kwork, kwork_options, kwork_usage);
--		return perf_kwork__timehist(&kwork);
-+		ret = perf_kwork__timehist(&kwork);
- 	} else if (strlen(argv[0]) > 2 && strstarts("top", argv[0])) {
- 		kwork.sort_order = default_top_sort_order;
- 		if (argc > 1) {
-@@ -2507,12 +2519,12 @@ int cmd_kwork(int argc, const char **argv)
- 			kwork.event_list_str = "sched, irq, softirq";
- 		setup_event_list(&kwork, kwork_options, kwork_usage);
- 		setup_sorting(&kwork, top_options, top_usage);
--		return perf_kwork__top(&kwork);
-+		ret = perf_kwork__top(&kwork);
+ 
+ 		top_calc_load_runtime(kwork, data);
++
++		if (merged_work)
++			work_delete(data);
+ 	}
+ 
+ 	work_sort(kwork, class, &merged_root);
+@@ -2523,6 +2596,8 @@ int cmd_kwork(int argc, const char **argv)
  	} else
  		usage_with_options(kwork_usage, kwork_options);
  
++	perf_kwork__exit(&kwork);
++
  	/* free usage string allocated by parse_options_subcommand */
  	free((void *)kwork_usage[0]);
  
+diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
+index d3a2e548f2b6..2248f462a847 100644
+--- a/tools/perf/util/bpf_kwork.c
++++ b/tools/perf/util/bpf_kwork.c
+@@ -273,6 +273,7 @@ static int add_work(struct perf_kwork *kwork,
+ 		.cpu = key->cpu,
+ 	};
+ 	enum kwork_class_type type = key->type;
++	int ret = 0;
+ 
+ 	if (!valid_kwork_class_type(type)) {
+ 		pr_debug("Invalid class type %d to add work\n", type);
+@@ -287,8 +288,10 @@ static int add_work(struct perf_kwork *kwork,
+ 		return -1;
+ 
+ 	work = kwork->add_work(kwork, tmp.class, &tmp);
+-	if (work == NULL)
+-		return -1;
++	if (work == NULL) {
++		ret = -1;
++		goto out;
++	}
+ 
+ 	if (kwork->report == KWORK_REPORT_RUNTIME) {
+ 		work->nr_atoms = data->nr;
+@@ -304,13 +307,16 @@ static int add_work(struct perf_kwork *kwork,
+ 		work->max_latency_end = data->max_time_end;
+ 	} else {
+ 		pr_debug("Invalid bpf report type %d\n", kwork->report);
+-		return -1;
++		ret = -1;
++		goto out;
+ 	}
+ 
+ 	kwork->timestart = (u64)ts_start.tv_sec * NSEC_PER_SEC + ts_start.tv_nsec;
+ 	kwork->timeend = (u64)ts_end.tv_sec * NSEC_PER_SEC + ts_end.tv_nsec;
+ 
 -	return 0;
++out:
++	work_exit(&tmp);
 +	return ret;
  }
+ 
+ int perf_kwork__report_read_bpf(struct perf_kwork *kwork)
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index abf637d44794..c96f388b3159 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -164,6 +164,8 @@ struct kwork_class {
+ 			  char *buf, int len);
+ };
+ 
++void work_exit(struct kwork_work *work);
++
+ struct trace_kwork_handler {
+ 	int (*raise_event)(struct perf_kwork *kwork,
+ 			   struct kwork_class *class,
 -- 
 2.53.0.1213.gd9a14994de-goog
 
