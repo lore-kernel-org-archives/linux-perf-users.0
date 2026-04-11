@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03007331A4B
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 06:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C253264F5
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 06:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775890699; cv=none; b=gu8YC/ZB+PuA+rsz38Or3kuaeSoIj8O1HDB4YJvGeYvVnWog87L6PepyFGSMRYDNd/WQeFVBYTZ5HHDghdX3hA849BTxFAraNoemDLqFViVeIkjiyF0czAoBh/S/50l1e8Cfc5r3IeHXD93r/WGrYzJIlargD4OuNk+eRiRnOYc=
+	t=1775890701; cv=none; b=ke1q0QuuSmbUe8Gy66FNNkQH2STVKRVdQaqAXes8Xc5yedKhYARFxZn8Vc3VT+ukM5k6g0ymSoqPz+13Y80DAp5W+ximey9QS7axmMyQEmaBtaUlD1Oa2SZ0hTTzJhMf3gD23/FGG4IEbfCTb8zV8dY+NqUsWo8jTxxSpSEVHtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775890699; c=relaxed/simple;
-	bh=7eDRjxUlskf0jPR5n7ziyw0bbOj7tiw0HNf68rc8Zts=;
+	s=arc-20240116; t=1775890701; c=relaxed/simple;
+	bh=TORHr2hwj56t1K+9uUsjLQo6KHkuVY+QoSlV3b0luUk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qZwmBcLUUQx4x6mFJo9D0mIAxP2DWyKMMUShB7L+X3OA+5cV8B0CA1eUXyYGCbsl9Co2V88dP4QPUlbInfOGrf1dFWmqOV3uch7QRXZhkrcaNPTWpcl9D6SYdnp55Y6lSyiSiIZ6QIx6RfR09Qf5jgrrs4kQ7UYIFpQrezgt2eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wGi5yg5x; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=lY/c9ORjQbsDjJsQDN14QpRcMa/DmoRhDSepkcfu3Vx9Di04O6K4YoORLyE8Bpe1QyhlJjZxNrDApQFxhSry/2vQnzOzeKSEWiu7bPI48YZknqQHvB9kuJBUf8BFXzUx9BMNNiTAyvp9AJ4PjzbR5GeSGcLSTF7OKjirH/X0vH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ku2Zr54G; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wGi5yg5x"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1279caef718so14385507c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 23:58:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ku2Zr54G"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdf6fe90a9so3961842eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Apr 2026 23:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775890697; x=1776495497; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775890699; x=1776495499; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DXPY7HFKarR0XebItbgb3ocvXnkeDU8nFx5tZNKGnO4=;
-        b=wGi5yg5xUXMIdBkiPLJC7uxy0fb9BQafhNeyPsZkT/oYPI8ehpimwimigo/iNaZVVi
-         Surn/Rr9FP34lwOl6DXXRKvTCyq5EbwBvYYCz2bKVasKUh2cs9TFvNqfY1WOL7mqjHb6
-         pP7JE4Puqzil9PQ8HZQJKxgwJ5mXi77l/Z1KQIPSKJ/ugWdJQz1w3CfuQ2SUkcQ+uXo5
-         UAvCF1Y/o3pGXRitMykP4xWA9RZfWRhNB2R0w6ob70jMbBqCryA9JfLUo5DqJID6Eky4
-         094pHIzz9W9myMoXNJE5y8KGwUD52qpsscWIE2LRhoDJD4xjQvK6hK6iHJ4sJgAV7w6I
-         qSUA==
+        bh=hQS4P5hyltqhKwRzLCXyq1MWFkkdWjplTUZAMK0ialE=;
+        b=ku2Zr54G7Xhx/PQYEYHNz0TGtn7tQwtjzZaM+4w4sBfNBqVFwaS6gpYGJUR0fS2yDZ
+         RPePPbDUYTNsGwxGQ51EmJHtnWXWgY11KluTvCIfqphmj6s8dqPyPRt7ypCjPKJmJcvQ
+         f8aqsk710wLUl1FTyiZkuhy5yddBR4AvdY+wJv+jWkXI1WF4E70re9faTWirQQ/GclEX
+         yYkm8rSy1BLUCJ5dncZj69I8EsAqhKtf2+QEZldxMNrNIINoMdIOd7t7E3wxRGoEwC1R
+         Fck9tPFZAUAOUuhwjIcjp3qXGTrIe3hc2qf2SVI14kGijEdF7ZAVvkRaVSMV5Mep/6jY
+         umXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775890697; x=1776495497;
+        d=1e100.net; s=20251104; t=1775890699; x=1776495499;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DXPY7HFKarR0XebItbgb3ocvXnkeDU8nFx5tZNKGnO4=;
-        b=Lc5n6T8MN90b5CqhQyUbIKOqVdd8DzSG27vvCZwL/uZVNeHSvjK5sJD00TRNkapKLH
-         FbmIB6KnMj7an8f6XR7cNwNMBvQhDm63WlVbmgrtg9YUZN53tGTDBjiqVmXbyMy7JOle
-         ZaNIbuTjjVcq5NfVPuYwcMnhO+WUJFuWaQqwIPLSSEXA7yQ5+zrZJgVc6b9UOZac1DuU
-         t44MAQezeIeK7V+Rp8qRucWHXiWJ+pblknUPyBbidXNfWZzFAf6RubQ0s9xeOuil4+nU
-         1rZjc2y22bWO2NPj6WFpg6OvF3QvcxzWldMujoumrPbQ2K3yXvlM0dIbH4cBs7ciShji
-         HN6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUiSS9+ZlvpJe6hedBz+fofsb0yJGgolkkhR+AonBRVHHD65jLuOLUGyYVVPlD/d03TXc9eNkBdm9Aue4kjCzYI@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe9q3RDEgpsjMfGqUL+hOCtTgw5zcRy8hjggUyIxfYMz5rmhgO
-	l19WiyKedkwAyrZTnueQfeORNGbzOTZhpuZ+3iIyV3ULR/SbkauM6M8LmYB4FrYBytFMezcHE5R
-	LnLxhUSjYVw==
+        bh=hQS4P5hyltqhKwRzLCXyq1MWFkkdWjplTUZAMK0ialE=;
+        b=I8G10gJKj2bGAi3rvii8WOn6KtZzfjtzrrvcLMz+8+wSlWNDd5B3tSAdfOjbUiThr+
+         bSe7ZWMomV8lxw8YCx5aCuY1CNuaqBeL7GCmCwSB8CYW50l5uvROEtc5DCGMd9uCD9Su
+         8AvViOH5+F/+UdBE4HSJyJ5r07S5MLNgoFZ9RuyXD1gySX1Tv+im8SYa+xGUmDe7a9q+
+         CBW6PrJfkJwAyaUfzje50tAGzdLP5/j4eMr8/BGhcwJVwFeeFDvGAS5pKEL3nmwmYmWn
+         5VyOXZyudHBq5Lli2yu43pdkyAlBN82anb2/Qjn45dyvjB1O0jsJibehk8wBrHdfp4Xv
+         T3vg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8mSniIWaKpYeEnkBsCoWjgibsIlmhIz6fmpA1/fWLjLQH/uHwpAnjFGrshYASDCG9AZvP9hAu4u/LkQogJWmI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu6HId55Bnv+JiQHZ90m+8+jLdGWuYrXzDQ8nrnNYayuQj7D6z
+	JbgiD46jcjwR7h4XmMkgN3PN2NT08nciHIxclf762z5tw4bqi0tFHnJ1K2HgFfH7jlqxRCQ6uSs
+	ISx65CkuM8A==
 X-Received: from dlaf2.prod.google.com ([2002:a05:701b:2402:b0:128:cff2:6560])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6982:b0:11b:ade6:45a7
- with SMTP id a92af1059eb24-12c34e68d78mr3475036c88.1.1775890696740; Fri, 10
- Apr 2026 23:58:16 -0700 (PDT)
-Date: Fri, 10 Apr 2026 23:57:12 -0700
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:68d:b0:12c:33dd:fa15
+ with SMTP id a92af1059eb24-12c34ef1940mr3545599c88.34.1775890699174; Fri, 10
+ Apr 2026 23:58:19 -0700 (PDT)
+Date: Fri, 10 Apr 2026 23:57:13 -0700
 In-Reply-To: <20260411065718.372240-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260408072601.210837-1-irogers@google.com> <20260411065718.372240-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260411065718.372240-24-irogers@google.com>
-Subject: [PATCH v8 23/29] perf evsel: Don't pass evsel with sample
+Message-ID: <20260411065718.372240-25-irogers@google.com>
+Subject: [PATCH v8 24/29] perf kmem: Add bounds checks to tracepoint read values
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,138 +77,47 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Arrange for the sample to contain the evsel and so it is unnecessary
-to pass the evsel as well. This is done for uniformity, although
-parsing of the sample is arguably a special case. Add missing bound
-check in perf_evsel__parse_id_sample.
+Avoid out-of-bound memory accesses by bound checking order and
+migrate_type when coming from page_alloc_event and page_free_event.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 53 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 11 deletions(-)
+ tools/perf/builtin-kmem.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ee30e15af054..3c10b840778e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3003,24 +3003,39 @@ int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
- 	return ret;
- }
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index daf2272c7337..33585e353efe 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -826,6 +826,16 @@ static int evsel__process_page_alloc_event(struct perf_sample *sample)
+ 		.migrate_type = migrate_type,
+ 	};
  
--static int perf_evsel__parse_id_sample(const struct evsel *evsel,
--				       const union perf_event *event,
-+static int perf_evsel__parse_id_sample(const union perf_event *event,
- 				       struct perf_sample *sample)
- {
-+	const struct evsel *evsel = sample->evsel;
- 	u64 type = evsel->core.attr.sample_type;
--	const __u64 *array = event->sample.array;
-+	const __u64 *array, *array_begin = event->sample.array;
- 	bool swapped = evsel->needs_swap;
- 	union u64_swap u;
- 
--	array += ((event->header.size -
--		   sizeof(event->header)) / sizeof(u64)) - 1;
-+	if ((type & (PERF_SAMPLE_IDENTIFIER |
-+		     PERF_SAMPLE_CPU |
-+		     PERF_SAMPLE_STREAM_ID |
-+		     PERF_SAMPLE_ID |
-+		     PERF_SAMPLE_TIME |
-+		     PERF_SAMPLE_TID)) == 0)
-+		return 0;
++	if (order >= MAX_PAGE_ORDER) {
++		pr_debug("Out-of-bounds order %u\n", order);
++		return -1;
++	}
 +
-+	if (event->header.size < sizeof(event->header) + sizeof(u64))
-+		return -EFAULT;
- 
-+	array = array_begin + ((event->header.size - sizeof(event->header)) / sizeof(u64)) - 1;
- 	if (type & PERF_SAMPLE_IDENTIFIER) {
-+		if (array < array_begin)
-+			return -EFAULT;
++	if (migrate_type >= MAX_MIGRATE_TYPES) {
++		pr_debug("Out-of-bounds migratetype %u\n", migrate_type);
++		return -1;
++	}
 +
- 		sample->id = *array;
- 		array--;
- 	}
+ 	if (use_pfn)
+ 		page = perf_sample__intval(sample, "pfn");
+ 	else
+@@ -892,6 +902,11 @@ static int evsel__process_page_free_event(struct perf_sample *sample)
+ 		.order = order,
+ 	};
  
- 	if (type & PERF_SAMPLE_CPU) {
-+		if (array < array_begin)
-+			return -EFAULT;
++	if (order >= MAX_PAGE_ORDER) {
++		pr_debug("Out-of-bounds order %u\n", order);
++		return -1;
++	}
 +
- 		u.val64 = *array;
- 		if (swapped) {
- 			/* undo swap of u64, then swap on individual u32s */
-@@ -3033,21 +3048,33 @@ static int perf_evsel__parse_id_sample(const struct evsel *evsel,
- 	}
- 
- 	if (type & PERF_SAMPLE_STREAM_ID) {
-+		if (array < array_begin)
-+			return -EFAULT;
-+
- 		sample->stream_id = *array;
- 		array--;
- 	}
- 
- 	if (type & PERF_SAMPLE_ID) {
-+		if (array < array_begin)
-+			return -EFAULT;
-+
- 		sample->id = *array;
- 		array--;
- 	}
- 
- 	if (type & PERF_SAMPLE_TIME) {
-+		if (array < array_begin)
-+			return -EFAULT;
-+
- 		sample->time = *array;
- 		array--;
- 	}
- 
- 	if (type & PERF_SAMPLE_TID) {
-+		if (array < array_begin)
-+			return -EFAULT;
-+
- 		u.val64 = *array;
- 		if (swapped) {
- 			/* undo swap of u64, then swap on individual u32s */
-@@ -3244,15 +3271,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 		data->deferred_cookie = event->callchain_deferred.cookie;
- 
--		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
--
-+		if (evsel->core.attr.sample_id_all) {
-+			if (perf_evsel__parse_id_sample(event, data))
-+				goto out_efault;
-+		}
- 		return 0;
- 	}
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
--		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
-+		if (evsel->core.attr.sample_id_all) {
-+			if (perf_evsel__parse_id_sample(event, data))
-+				goto out_efault;
-+		}
- 		return 0;
- 	}
- 
-@@ -3614,12 +3644,13 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		struct perf_sample data = {
-+			.evsel = evsel,
- 			.time = -1ULL,
- 		};
- 
- 		if (!evsel->core.attr.sample_id_all)
- 			return -1;
--		if (perf_evsel__parse_id_sample(evsel, event, &data))
-+		if (perf_evsel__parse_id_sample(event, &data))
- 			return -1;
- 
- 		*timestamp = data.time;
+ 	if (use_pfn)
+ 		page = perf_sample__intval(sample, "pfn");
+ 	else
 -- 
 2.53.0.1213.gd9a14994de-goog
 
