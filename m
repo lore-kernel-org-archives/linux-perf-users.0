@@ -1,112 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A933264E4
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 07:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4513264F5
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 07:23:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775892119; cv=none; b=h5duUSdHCEXU2fvSJmode9G6xPD0LuO1KYHCr7Gt0O5MwCVdGH5YQNJF1xDjtb8kifNmQmIUp9zlD5bp4m+oOcFlQhD0zZpizUNW/03VIxohRYW+h4M7zGjv2M2wquWNk2Cb0UM5iFWkkXyz7WvWUfSfc9GcDd25brLHRMPKMmw=
+	t=1775892230; cv=none; b=nIfA4xxGK9MZV+8XEZTspvVW/QxaGfolWYG4Q7HnQ6ZSvPGymE2Prn0UrUe2Qw2g/xrJNiIQUFbZe2dNJFeDA6sR+khVImWCiBeofQtaL4Y9dt3QOjr34nmk1mGEKFmsYznxqV+zloyN6TYrxyhu1mFOlXMuWGDnLXlKu9z4vxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775892119; c=relaxed/simple;
-	bh=p3DoLS/XEIkLnXkAYwHLXTK427KiSvfOcRelULMuHDw=;
+	s=arc-20240116; t=1775892230; c=relaxed/simple;
+	bh=QoK4J9n3ZBCC3/gn0MwcRwBbhEdtWIhu6svmgXIkPWg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=raUgVZs3YVjxS7l6K0dZjZFa0m3+QpFD3ZFeio0LsJfcO4olXdOvjqhWQLbKRYScIZq8L2Z90u8dgUyXFRWa1t3C31fu2iGUmyo9f4JiZQPllCfD4GDxMe1WYGvbM8CWtkdbsGaNghfmVy9LAe+CXJtxmGvDbskzJFnONGfcQbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVUMP8PD; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=aJy6QVIo3WDJncx3237/45gJnUHvdBz1uTA69Jylgsqy4mHQ/IOv21+rAtEX42Bor8ccWkEe1KgUcEMtO5mn7+ftIGP6rCZ0W4dgJdy1nXMU6gAboLzNVhyG5FG8peMsnfd3qzl55r6dHQDD1EFYkF/jJiaMZaC/7rysCrVSNNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diRqs18O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVUMP8PD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8B2AC4CEF7;
-	Sat, 11 Apr 2026 07:21:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diRqs18O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B56C4CEF7;
+	Sat, 11 Apr 2026 07:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775892119;
-	bh=p3DoLS/XEIkLnXkAYwHLXTK427KiSvfOcRelULMuHDw=;
+	s=k20201202; t=1775892229;
+	bh=QoK4J9n3ZBCC3/gn0MwcRwBbhEdtWIhu6svmgXIkPWg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=RVUMP8PDafoAZZfg74SNEXI8xuHYX1xyqoIxGw9kYJkvhD/yy5BPcedgr0pnKE5dQ
-	 qRPbjsfkUTJLirfZTjF2+anywxgVqZtGAGNr81EEHk9s4Nufd8B+Ork5wNI+AQCepI
-	 NrcTdsbVR6nmiClXL6HqI74QsG4Z/WcaIsncc8CSIHusNEqadYGR5acZ4KpXXBSHsO
-	 dZ/UCULuKnsibzbkxONs6UwN+ddO8uaFGdb0jexGzdFrGcvHF6jHoQjkPySxCBnSxg
-	 XEVoDCtCkxdMcZ+9cXum8oK5ekwTqKFQAkei8iGuNblEU1AnZGufFKXgUdA4IE5avm
-	 8914mNZAFonwA==
+	b=diRqs18ODp/zBGdamgM3eD+CTG3irev+jSfxwrlGQTzagNLb+9GU/V1sSX3+aNzKa
+	 RHebk41LM3elJ3+pSMi+heWZOAOxPi/ywsj11h57XstfUmMUgLKL137Uw55t/OPlyu
+	 xQxy5WtcVrU2tcPO0aRePLzDwZs5JK6rQyJO5cEj0/b/Xqk8UOPnh1rtzPSeGRnXp7
+	 bZSF7MbboeMDaeFZdKtKupL1UzL93m2rqEDHD8rv8ncCui5VQvAeyTJ04Qw69GUDgs
+	 ZIFuG4YADmKG8Pbp4H794A5TXnkXja0+6YHwlpuXYgyPr5UnVnFo4Ez8hPlBCKlIyu
+	 ZIvUpt1oFIH1Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 24/29] perf kmem: Add bounds checks to tracepoint
- read values
+Subject: Re: [PATCH v8 27/29] perf evsel: Add bounds checking to trace point
+ raw data accessors
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260411065718.372240-25-irogers@google.com>
-References: <20260411065718.372240-25-irogers@google.com>
+In-Reply-To: <20260411065718.372240-28-irogers@google.com>
+References: <20260411065718.372240-28-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 11 Apr 2026 07:21:58 +0000
-Message-Id: <20260411072158.E8B2AC4CEF7@smtp.kernel.org>
+Date: Sat, 11 Apr 2026 07:23:49 +0000
+Message-Id: <20260411072349.B4B56C4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Returning -1 for unsupported page orders or migrate types silent=
-ly aborts the entire `perf` event processing loop.
+Sashiko AI review found 3 potential issue(s):
+- [High] The newly introduced bounds checks are vulnerable to integer under=
+flow, allowing a bypass that leads to out-of-bounds memory reads.
+- [High] The bounds checking for dynamic fields is incomplete; the dynamica=
+lly extracted offset is never validated against the sample size.
+- [High] Out-of-bounds read when extracting the dynamic field locator.
 --
 
-commit 3ddfc38ea8afb79021fcd1c50f48982373408ace
+commit 1b7f3d71f64676dc31522be7af5f5e046cadffb3
 Author: Ian Rogers <irogers@google.com>
 
-perf kmem: Add bounds checks to tracepoint read values
+perf evsel: Add bounds checking to trace point raw data accessors
 
-This commit adds bounds checks for the order and migrate_type fields in
-page_alloc and page_free events. It prevents out-of-bounds memory accesses
-when updating the order_stats tracking array.
+Avoid a tracepoint field accidentally reading out of bounds by
+checking the size of read fits.
 
-> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-> --- a/tools/perf/builtin-kmem.c
-> +++ b/tools/perf/builtin-kmem.c
-> @@ -826,6 +826,16 @@ static int evsel__process_page_alloc_event(struct pe=
-rf_sample *sample)
->  		.migrate_type =3D migrate_type,
->  	};
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 3c10b840778e0..1e0bb4cb995d4 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3727,6 +3727,11 @@ void *perf_sample__rawptr(struct perf_sample *samp=
+le, const char *name)
+>  		return NULL;
 > =20
-> +	if (order >=3D MAX_PAGE_ORDER) {
-> +		pr_debug("Out-of-bounds order %u\n", order);
-> +		return -1;
+>  	offset =3D field->offset;
+> +	if ((u32)(offset + field->size) > sample->raw_size) {
 
-Could returning -1 here abort the entire perf event processing loop?
+Since offset is a signed integer, could a negative offset bypass this check?
 
-On architectures like ARM64, the kernel's maximum page order can sometimes =
-be
-configured higher than 11. Since MAX_PAGE_ORDER is fixed at 11 in this file,
-valid high-order allocation events might be legitimately recorded in the
-trace.
+If a negative offset and a positive size are provided (e.g., offset =3D -4,
+size =3D 8), their sum could be a small positive number that passes the
+> sample->raw_size check, leading to an out-of-bounds read before the
+start of the buffer.
 
-If we return -1 on these events, does it completely stop the trace processi=
-ng
-for those architectures instead of just skipping the unsupported sample?
-Would it be safer to return 0 to ignore it?
+> +		pr_warning("Invalid trace point field offset %d for field of length %d=
+ in sample raw data of size %u\n",
+> +			   offset, field->size, sample->raw_size);
+> +		return NULL;
+> +	}
+> =20
+>  	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+>  		offset =3D *(int *)(sample->raw_data + field->offset);
 
+Does this 4-byte read have a bounds checking issue if field->size is less
+than 4?
+
+If the field is placed at the very end of sample->raw_data with a size of 2,
+the earlier check would pass, but this would read 2 bytes out of bounds.
+
+>  		offset &=3D 0xffff;
+>  		if (tep_field_is_relative(field->flags))
+>  			offset +=3D field->offset + field->size;
+>  	}
+> =20
+>  	return sample->raw_data + offset;
+
+Should this dynamically extracted offset be bounds checked against
+sample->raw_size before returning the pointer?
+
+Callers like perf_sample__strval() dereference the returned pointer,
+which could result in an out-of-bounds read if the extracted offset is
+beyond the sample size.
+
+>  }
+> =20
+> @@ -3744,6 +3749,12 @@ u64 format_field__intval(struct tep_format_field *=
+field, struct perf_sample *sam
+>  	u64 value;
+>  	void *ptr =3D sample->raw_data + field->offset;
+> =20
+> +	if ((u32)(field->offset + field->size) > sample->raw_size) {
+
+Could this check also be bypassed by a negative field->offset, similar to
+the check in perf_sample__rawptr() above?
+
+> +		pr_warning("Invalid trace point field offset %d for field of length %d=
+ in sample raw data of size %u\n",
+> +			   field->offset, field->size, sample->raw_size);
+> +		return 0;
 > +	}
 > +
-> +	if (migrate_type >=3D MAX_MIGRATE_TYPES) {
-> +		pr_debug("Out-of-bounds migratetype %u\n", migrate_type);
-> +		return -1;
-
-Similarly, could returning -1 here cause the tool to exit prematurely if an
-unexpected migrate_type is encountered?
-
-[ ... ]
-> @@ -892,6 +902,11 @@ static int evsel__process_page_free_event(struct per=
-f_sample *sample)
->  		.order =3D order,
->  	};
-> =20
-> +	if (order >=3D MAX_PAGE_ORDER) {
-> +		pr_debug("Out-of-bounds order %u\n", order);
-> +		return -1;
-
-Would returning 0 here also be better to avoid aborting the entire session
-when a free event with a large order arrives?
-
-[ ... ]
+>  	switch (field->size) {
+>  	case 1:
+>  		return *(u8 *)ptr;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260411065718.3722=
-40-1-irogers@google.com?part=3D24
+40-1-irogers@google.com?part=3D27
