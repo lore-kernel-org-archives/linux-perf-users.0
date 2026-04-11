@@ -1,92 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AB1212FAD
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 07:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A0D332621
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 07:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775893242; cv=none; b=BMYfb8MOp2PqyhhYHjcyS13n8a53Rl6ggVX1IDK5IQpKbYVYSwk006EvNIV2ilNLiTtycp8VydSUqQiy2Z9eBg3kIABiDwVF5uBzOzBB8XM+LB935N9+WrPBpXCcXGfN+aedre02scJGUUOfgFuMCpdx1GtLZ90uhoua100geGk=
+	t=1775893328; cv=none; b=Xm5yXAVbtH3FMvDUuCLt09tE/CC9sjZwV+FIIiYYRhg6mF5Ys3vB0QHW1fLqFU9B6W2AJwnsSZ+0wLs1mZu1MjjwsNJg743LJfeSwiQc2Nkz1Da+Sulg8hWfHDu2xjLXsrun1BsNXEVq9IvkV/7HV1JS75cxYUi/SaRBENEtGfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775893242; c=relaxed/simple;
-	bh=nACq7OApREvD5u1lby0hDBf6naB8gzaKXpW0rstwcHI=;
+	s=arc-20240116; t=1775893328; c=relaxed/simple;
+	bh=oZbLzGA9V/2InviTruxDPWbCtVfPLcbvlQsm9QTQSP0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QozhksjY4gtMZ7l29p1sd35pq7KQ1Xmg8RFgUtYZGUgKsq1hTl3KCLQZ1Hda4XqX0GqifCJkV1szMSwriOyyEKRh0vID8S0RoFLV5Xsp11c3FbMfyLQzMYtevp9SNYzIooc/KylSHolDvVul+Dio+IWDevFwNv4XlQaeOkiIRLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCxEGwlZ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=WvXdRBLZ2mpv3ezMUKnJ6drNB40MsE/g8jLbnZFuqR5vbb9BiY2DeHBLd2MJ8rgIaFMTKJt5HClSRP8k5dfIajYEP9orsnPyGImaqWtpHVHhEs0XoZTfdAJ0dFvflA3k/rO3UMULGIkFCDjcGLQx7vPIlj6lDT3OxkV9fE7Pfjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmsaho7r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCxEGwlZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352D5C4CEF7;
-	Sat, 11 Apr 2026 07:40:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmsaho7r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7CDC4CEF7;
+	Sat, 11 Apr 2026 07:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775893242;
-	bh=nACq7OApREvD5u1lby0hDBf6naB8gzaKXpW0rstwcHI=;
+	s=k20201202; t=1775893328;
+	bh=oZbLzGA9V/2InviTruxDPWbCtVfPLcbvlQsm9QTQSP0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NCxEGwlZhbjhg2yYLVNj5q1a4D3bh4BjhiBNLog4IreIbF2W6Hd6jg4MF2TVYpavi
-	 qCcJ/Dkvu7TxsLJeBGZPO0aayEW2WZEPp2QZjxBZOB/j+7ZqvExYgfFvyX6QKD7c+S
-	 DmUGQS61+8M1Pb9X8d9rRFDmomtpMqkSoAkVIhT4rRJLdWe+PX/15udp397/+8AvuB
-	 a5R44BfidANV6mBS3ranHdAgyWoogS5SURifcOmMSxWWL7HBYx3KNRf3t2ZLupDG1X
-	 0TUPRH1h74kymHewQtZH/dUavO/mIYv8jM3bv62KHBy5p4kTxUxM72FMB0odbfpLS3
-	 pdB+ZuSNIBKHw==
+	b=rmsaho7rcoYr/H9SNGEeiyVmrD3lmSpQuPk8CMIr13z58ZihfCuQw5pI1wq/eXZ90
+	 8DT8VcDLEaEBhXXMjZXws7WYSscAKaDosVKPdSqbZsHhc2gCu0njp6VL48xikBsMua
+	 CfBK9pViEdYxnVwA3711xx5SqwQJ/JyJAJSs/fjLwvb9mEdUZoXkXP5RWagHKqWFv3
+	 nWPMN/XyxZgFV5l0DBKvKjGSB23T5+0BruWxVYkJ9qSOPQquAgL47pkocRoyYPwLM0
+	 uxmu0KL7Y+DCTjm9dWbpwZ6LVEEc10R7inUi7PcVFkuoDypcLY3Q59jLrlw8EAs607
+	 7jqO4QsYWtWag==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 29/29] perf kwork: Fix memory management of
- kwork_work
+Subject: Re: [PATCH v8 25/29] perf sched: Bounds check CPU in sched switch
+ events
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260411065718.372240-30-irogers@google.com>
-References: <20260411065718.372240-30-irogers@google.com>
+In-Reply-To: <20260411065718.372240-26-irogers@google.com>
+References: <20260411065718.372240-26-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 11 Apr 2026 07:40:41 +0000
-Message-Id: <20260411074042.352D5C4CEF7@smtp.kernel.org>
+Date: Sat, 11 Apr 2026 07:42:07 +0000
+Message-Id: <20260411074208.0A7CDC4CEF7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Memory leak of `tmp.name` in `add_work()` in `tools/perf/util/bp=
-f_kwork.c` due to a change in ownership semantics.
+Sashiko AI review found 2 potential issue(s):
+- [High] Missing CPU bounds check in the 'timehist' subcommand's sched swit=
+ch and wakeup event handlers leads to out-of-bounds memory accesses.
+- [Medium] Returning -1 on an out-of-bounds CPU aborts the entire trace pro=
+cessing session without an explicit error message.
 --
 
-commit 2e5446a0c1c5c4b87f2d9f4c0b6711cbb57d82a7
+commit 468b69261d074326f363527184e94c05b18bc45c
 Author: Ian Rogers <irogers@google.com>
-perf kwork: Fix memory management of kwork_work
 
-This commit addresses several memory management issues in builtin-kwork.c
-by implementing a global cleanup function and ensuring name fields in
-struct kwork_work are properly managed with strdup and zfree.
+perf sched: Bounds check CPU in sched switch events
 
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index 8430a79a02ba8..1b8d4e216ae74 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-[ ... ]
-> @@ -371,11 +371,58 @@ static struct kwork_work *work_new(struct kwork_wor=
-k *key)
+This commit adds a bounds check on the CPU value extracted from perf samples
+in the sched switch event handler. It prevents out-of-bounds array accesses
+by checking if the CPU exceeds MAX_CPUS.
+
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 45439e2af8ffa..6d0655d56e269 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1791,6 +1791,11 @@ static int process_sched_switch_event(const struct=
+ perf_tool *tool,
+>  	u32 prev_pid =3D perf_sample__intval(sample, "prev_pid"),
+>  	    next_pid =3D perf_sample__intval(sample, "next_pid");
 > =20
->  	work->id =3D key->id;
->  	work->cpu =3D key->cpu;
-> -	work->name =3D key->name;
-> +	work->name =3D key->name ? strdup(key->name) : NULL;
->  	work->class =3D key->class;
->  	return work;
->  }
+> +	if (this_cpu < 0 || this_cpu >=3D MAX_CPUS) {
+> +		pr_debug("Out-of-bound sample CPU %d\n", this_cpu);
+> +		return -1;
 
-Does this change introduce a memory leak of tmp.name in add_work()?
+Returning -1 here aborts the entire trace processing session. Because the
+out-of-bounds condition is only logged via pr_debug(), normal users will
+not see any explanation for the failure, and the command will simply exit
+with a generic error message.
 
-Looking at add_work() in tools/perf/util/bpf_kwork.c, it allocates memory
-for tmp.name via get_work_name_from_map() which internally calls strdup().
-It then passes tmp to kwork->add_work().
+Could we either gracefully skip the unsupported sample by returning 0
+(similar to the established pattern in replay_switch_event()), or use
+pr_err() to explicitly inform the user why the session is being aborted?
 
-Before this patch, work_new() took direct ownership of the string pointer.
-However, since work_new() now always duplicates the string, the original
-tmp.name allocated in add_work() appears to be leaked for every BPF trace
-record processed.
+Additionally, do the timehist subcommand event handlers also need CPU
+bounds checks?
 
-While work_push_atom() and work_pop_atom() were updated to free the
-temporary key.name via work_exit(), add_work() seems to have been missed.
+Looking at timehist_sched_switch_event() and timehist_sched_wakeup_event(),
+they pass the unvalidated sample->cpu (a u32) to get_idle_thread(int cpu).
+If the trace contains a corrupted value like 0xFFFFFFFF, it is cast to -1.
+
+Since cpu is a signed int, the reallocation check bypasses reallocation if
+idle_threads is already initialized (because -1 >=3D idle_max_cpu is false).
+The code then attempts to read/write idle_threads[-1].
+
+Can this result in a negative out-of-bounds memory access that crashes the
+tool or causes memory corruption?
+
+> +	}
+> +
+>  	if (sched->curr_pid[this_cpu] !=3D (u32)-1) {
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260411065718.3722=
-40-1-irogers@google.com?part=3D29
+40-1-irogers@google.com?part=3D25
