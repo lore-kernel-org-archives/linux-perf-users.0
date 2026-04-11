@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AED43C5527
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1753BE624
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775935072; cv=none; b=m/Z86PEAZs5rfKQCXHEPIxEO+JM9nQygEKtOWmwaz+7HJ9NDX6yW9EKy8UzW9Pc89TUFNfe5NQ8SB/AdL3s4tzXVpl+0MrcqTNETjRIKnmTEFO4yNzDYLEIwe1WOvXMZ0sV1qTx/2poRC42D5mUzB7H2PW53bJtN7hTPtGXr8A4=
+	t=1775935075; cv=none; b=gAmTj6dM8Io2TPtoxzuK9s7Ucgkppoi6NCING9cjkqmJS+/770n+IS2+ehncW/pvfkZCSuzarq1WAm1W/CxF/bCdoE5Nae5FZCmYVh9inFsyn8OhjDHqzoBzMgLHdQJcsJW6zFAOgMZ4JiqOZQSnTMQFa33t7eR8ujUcu4GFVvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775935072; c=relaxed/simple;
-	bh=wuj8eHDVqu0tfjx5SmZhqut/DywEnXDT6OJBHolpYag=;
+	s=arc-20240116; t=1775935075; c=relaxed/simple;
+	bh=SE3cJDOBvf3PgP8DFewKacgMwSl2GoO2JdgZlKmqibg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PPDPql0L3eNhwUqd65I9Qnrl3U0Y3Su5c+TnoN1mHwRa2ZrKh0D+2j4wHx7R2Ef4v/w07rkqz3lghPgwbC2QQzni00i85ezSuT426zC/+is2+HXKze52iEcOjBdAExzX5UyoKVVDjCDHCMwo3NS5QlyX4LbjKCgQvnWReC0aVtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sgyf0/MQ; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=oNrtWvDv26zrI/TDl00vuyJGqqaIQZ5ZhDCSnWmbDfvnKYD/eSAIWcwEbVTuLtBWMHhgch9iVpjdvuZdUzHuc/gPDz6ya3UtSvY7dll1HjsZiwACF9F25fk+9B8wjWSdRo525lubPI7/ac6bp89Sjjq1T8ah/q2EcElIB2tFRzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mzl+eZas; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sgyf0/MQ"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdd327d970so1924871eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:17:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mzl+eZas"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c4cfe08c9dso6553048eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 12:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775935071; x=1776539871; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775935073; x=1776539873; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I094G/M3b5jYi7fA68w+DPTi9TUF14mA4YbtJieKwSk=;
-        b=Sgyf0/MQdVoYMt2XlsxLNR3Ye+hrqrpCxASgnBwyEAQo7ykwBZByfOFyCtdER8sfEj
-         3XXPQnBgqQnkh0LoUTLE2JeJvfhMkoX8ax0HrICkHaNoZ50ClO/+9lkS43+hcDH9OerC
-         mm24L8EHVWA2WznGt+uju22W0WCcDEa5qbJeyJW9P4UzZ3cyTDYOYlk3xTRCf0BwibPs
-         VFJES1CRuTyuhAkrJiAluscHb0vK33xLqu4YR9j44mbdyyWKU3xSglpKq4k+wQ49AFEB
-         8Q+WNPrxUE6J7OwAJm11V3Cpps0yx4DPUJ1AnLn4uRvNd1r0QT3Znae9e21onmqxXUWY
-         VWTw==
+        bh=kwN00VUURJ6vnbttYkG+wVIS3y4I1aMoOpY9cSqnbDI=;
+        b=mzl+eZasJsTOeU0DI7ETKomAy3x+1xYZMZAfQSUBKPu6os4mp/QpZnDjX7ziOqjLSd
+         f9+iMKzvTgE8j+IIDdl+DijU+ymrJbTRUetcCzpg7qRZpxCYYkUXWWq+JUIhLVatEZm9
+         IPd0unoP9mMweYC3kmp6oOtS9G0rfB4FKsk5Rg1wOeJdL8iUSr3G2liQa7Gd0hbkw/XG
+         la+hL5xUcKBzayJHGXJCiOZa7KM8JmgO6ArVPe+54ADIGN8vBHT9QAYgOxGvhfP1WvNq
+         Fc5pBJfS5UU/6XwvqVBrk1f2MT7HKz79VZuSkntXy5rdqOwsQfp9pgbWPcVNT7ZBJKoi
+         k47w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775935071; x=1776539871;
+        d=1e100.net; s=20251104; t=1775935073; x=1776539873;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I094G/M3b5jYi7fA68w+DPTi9TUF14mA4YbtJieKwSk=;
-        b=lBF5H2/6xxNDlEMhvK5OegM0XLANa6mFUPO45R6+4wAi3NJWLBv4Fhx1qW+tlhcmZK
-         1tXd9AKXrTZpoj9s/M4klWL5/NO5b32vyUahOX+J7PVYrmEux6WAFw/r9kxCkQv7bjrB
-         iXgBNmasRF384my/rmK6fQxc4WZ/PKh4Sr1H6F3JQa3T49hN9TATeqq6vgtcZha5iIgF
-         B+OjvYJWB1gVkcjM+2qJk8h5j5tlay0+LBhwzycUprhzqQAmr+MgQjavIVBGs8SIts26
-         ZPHnzNMqDMMJnfyDh6OsB2mcdksNpn3o9HKGpOTMqNkIwAqPP/bEoePaFK5ZfoWnth8F
-         QW0g==
-X-Forwarded-Encrypted: i=1; AFNElJ8dcQXXo2RpAyFwFJJRcZwyPPxkW+vvRm+LeJzAEzWzNOhnt0pmN4XXaPsC1oxjBNIc1KX3+X2d8cIaZguzB4Co@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYTekZgEpx8kX8tEm7ltkn5noH5EQvpsd/ikZLU8nMDyYMoaTJ
-	wZUMi4WTTCVN9U86F+3Xbj6MnkQfL5UwUs4WrxNvmNJMsB5iXW3IvLNiqEc8FG5zQMos0kudbys
-	/DdYP44Tpzw==
-X-Received: from dycal20.prod.google.com ([2002:a05:7301:1c94:b0:2d7:ab9e:d123])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3207:b0:2c5:6140:54d6
- with SMTP id 5a478bee46e88-2d40ddfc528mr5787102eec.1.1775935070288; Sat, 11
- Apr 2026 12:17:50 -0700 (PDT)
-Date: Sat, 11 Apr 2026 12:16:56 -0700
+        bh=kwN00VUURJ6vnbttYkG+wVIS3y4I1aMoOpY9cSqnbDI=;
+        b=RaareHCKim1+hUIhNH1OqzTj28MqqHac9n7O7Z/OwesfuLiuqX9WHr96u4mzYAI5JK
+         yBy95CDtLeqacy3dBwAt0gXxrFME2HgqAQls3sXlr3CvYI5xQKOmWbCQSB1/unh3AzS4
+         h3oMrWn8t2v6b3KrxMJjjoQDEoJ0iWtgk3KlnyqQIt4QiD1dzlV0gp2X+4zqAJpRol7/
+         pVA0P/H7x9kWlOZ/6WlLys/GXUitO2qFWhdma+SedOTl8+xaTCHG4NXg7Mg1sCH0q3xa
+         JsVszZZI2MfCZdmD5qyAzWfOm3F9P9Cin8isIdnV+cYor+Q8BU3CTeiI1INX9xzupAvI
+         bfXQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8pt2SXZl7JqV8k473zhwsbbATduTjQYaS/ZSmzrISMRve37aeV7moMm+4OX5qlNc6kgxB6mu8nnstXbYBTgNNu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/7U0J1IylKSOZOTobdQ+wiA/e4pm8e5NxJgpbhP0e4aCgYbq0
+	5TISmmCgdAIHUp+wpoh0xQfMeuRpHOl2VD9DUIF/v1xsZkid2GH48REjbxrwYNWFt8YdssesZ0e
+	7qlHZT13vCQ==
+X-Received: from dyon31.prod.google.com ([2002:a05:7300:6d1f:b0:2d4:49c9:3b10])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:320a:b0:2c5:b23e:48a6
+ with SMTP id 5a478bee46e88-2d5888a1ae6mr4833399eec.23.1775935072476; Sat, 11
+ Apr 2026 12:17:52 -0700 (PDT)
+Date: Sat, 11 Apr 2026 12:16:57 -0700
 In-Reply-To: <20260411191710.524998-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260411065718.372240-1-irogers@google.com> <20260411191710.524998-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260411191710.524998-16-irogers@google.com>
-Subject: [PATCH v9 15/29] perf kmem: Don't pass evsel with sample
+Message-ID: <20260411191710.524998-17-irogers@google.com>
+Subject: [PATCH v9 16/29] perf kwork: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -78,153 +78,444 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 The sample contains the evsel and so it is unnecessary to pass the
-evsel as well. Fix memory leaks on error paths spotted during code
-review.
+evsel as well. Remove the evsel from struct kwork_class.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kmem.c | 44 ++++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 19 deletions(-)
+ tools/perf/builtin-kwork.c | 74 +++++++++++++-------------------------
+ tools/perf/util/kwork.h    |  9 +++--
+ 2 files changed, 28 insertions(+), 55 deletions(-)
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 2cdc56bc2616..daf2272c7337 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -171,7 +171,7 @@ static int insert_caller_stat(unsigned long call_site,
- 	return 0;
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 177491eadb70..ab17d3198b93 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -448,7 +448,6 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+ 			  enum kwork_trace_type src_type,
+ 			  enum kwork_trace_type dst_type,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine,
+ 			  struct kwork_work **ret_work,
+@@ -458,7 +457,7 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 	struct kwork_work *work, key;
+ 
+ 	BUG_ON(class->work_init == NULL);
+-	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
++	class->work_init(kwork, class, &key, src_type, sample, machine);
+ 
+ 	atom = atom_new(kwork, sample);
+ 	if (atom == NULL)
+@@ -507,7 +506,6 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 					struct kwork_class *class,
+ 					enum kwork_trace_type src_type,
+ 					enum kwork_trace_type dst_type,
+-					struct evsel *evsel,
+ 					struct perf_sample *sample,
+ 					struct machine *machine,
+ 					struct kwork_work **ret_work)
+@@ -516,7 +514,7 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 	struct kwork_work *work, key;
+ 
+ 	BUG_ON(class->work_init == NULL);
+-	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
++	class->work_init(kwork, class, &key, src_type, sample, machine);
+ 
+ 	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
+ 	if (ret_work != NULL)
+@@ -599,18 +597,16 @@ static void report_update_exit_event(struct kwork_work *work,
+ 
+ static int report_entry_event(struct perf_kwork *kwork,
+ 			      struct kwork_class *class,
+-			      struct evsel *evsel,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
  }
  
--static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *sample)
-+static int evsel__process_alloc_event(struct perf_sample *sample)
+ static int report_exit_event(struct perf_kwork *kwork,
+ 			     struct kwork_class *class,
+-			     struct evsel *evsel,
+ 			     struct perf_sample *sample,
+ 			     struct machine *machine)
  {
- 	unsigned long ptr = perf_sample__intval(sample, "ptr"),
- 		      call_site = perf_sample__intval(sample, "call_site");
-@@ -198,7 +198,7 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
- 	 * If the tracepoint contains the field "node" the tool stats the
- 	 * cross allocation.
- 	 */
--	if (evsel__field(evsel, "node")) {
-+	if (evsel__field(sample->evsel, "node")) {
- 		int node1, node2;
+@@ -618,7 +614,7 @@ static int report_exit_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
  
- 		node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu});
-@@ -243,7 +243,7 @@ static struct alloc_stat *search_alloc_stat(unsigned long ptr,
- 	return NULL;
- }
- 
--static int evsel__process_free_event(struct evsel *evsel __maybe_unused, struct perf_sample *sample)
-+static int evsel__process_free_event(struct perf_sample *sample)
- {
- 	unsigned long ptr = perf_sample__intval(sample, "ptr");
- 	struct alloc_stat *s_alloc, *s_caller;
-@@ -751,8 +751,7 @@ static char *compact_gfp_string(unsigned long gfp_flags)
- 	return NULL;
- }
- 
--static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
--			   unsigned int gfp_flags)
-+static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
- {
- 	struct tep_record record = {
- 		.cpu = sample->cpu,
-@@ -773,7 +772,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
- 	}
- 
- 	trace_seq_init(&seq);
--	tp_format = evsel__tp_format(evsel);
-+	tp_format = evsel__tp_format(sample->evsel);
- 	if (tp_format)
- 		tep_print_event(tp_format->tep, &seq, &record, "%s", TEP_PRINT_INFO);
- 
-@@ -784,17 +783,21 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
- 
- 			new = realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
- 			if (new == NULL)
--				return -ENOMEM;
-+				goto err_out;
- 
- 			gfps = new;
--			new += nr_gfps++;
-+			new += nr_gfps;
- 
- 			new->flags = gfp_flags;
- 			new->human_readable = strdup(str + 10);
-+			if (!new->human_readable)
-+				goto err_out;
- 			new->compact_str = compact_gfp_flags(str + 10);
--			if (!new->human_readable || !new->compact_str)
--				return -ENOMEM;
--
-+			if (!new->compact_str) {
-+				free(new->human_readable);
-+				goto err_out;
-+			}
-+			nr_gfps++;
- 			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
- 		}
- 
-@@ -803,9 +806,12 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
- 
- 	trace_seq_destroy(&seq);
- 	return 0;
-+err_out:
-+	trace_seq_destroy(&seq);
-+	return -ENOMEM;
- }
- 
--static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_sample *sample)
-+static int evsel__process_page_alloc_event(struct perf_sample *sample)
- {
- 	u64 page;
- 	unsigned int order = perf_sample__intval(sample, "order");
-@@ -835,7 +841,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
- 		return 0;
- 	}
- 
--	if (parse_gfp_flags(evsel, sample, gfp_flags) < 0)
-+	if (parse_gfp_flags(sample, gfp_flags) < 0)
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (work == NULL)
  		return -1;
+@@ -654,18 +650,16 @@ static void latency_update_entry_event(struct kwork_work *work,
  
- 	callsite = find_callsite(sample);
-@@ -876,8 +882,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ static int latency_raise_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int latency_entry_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+@@ -673,7 +667,7 @@ static int latency_entry_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			     KWORK_TRACE_RAISE, evsel, sample,
++			     KWORK_TRACE_RAISE, sample,
+ 			     machine, &work);
+ 	if (work == NULL)
+ 		return -1;
+@@ -812,18 +806,16 @@ static void timehist_print_event(struct perf_kwork *kwork,
+ 
+ static int timehist_raise_event(struct perf_kwork *kwork,
+ 				struct kwork_class *class,
+-				struct evsel *evsel,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int timehist_entry_event(struct perf_kwork *kwork,
+ 				struct kwork_class *class,
+-				struct evsel *evsel,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+@@ -831,7 +823,7 @@ static int timehist_entry_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
+ 
+ 	ret = work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			     KWORK_TRACE_RAISE, evsel, sample,
++			     KWORK_TRACE_RAISE, sample,
+ 			     machine, &work, true);
+ 	if (ret)
+ 		return ret;
+@@ -844,7 +836,6 @@ static int timehist_entry_event(struct perf_kwork *kwork,
+ 
+ static int timehist_exit_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+@@ -861,7 +852,7 @@ static int timehist_exit_event(struct perf_kwork *kwork,
+ 	}
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (work == NULL) {
+ 		ret = -1;
+@@ -895,18 +886,16 @@ static void top_update_runtime(struct kwork_work *work,
+ 
+ static int top_entry_event(struct perf_kwork *kwork,
+ 			   struct kwork_class *class,
+-			   struct evsel *evsel,
+ 			   struct perf_sample *sample,
+ 			   struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int top_exit_event(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine)
+ {
+@@ -915,7 +904,7 @@ static int top_exit_event(struct perf_kwork *kwork,
+ 	struct kwork_atom *atom;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (!work)
+ 		return -1;
+@@ -936,7 +925,6 @@ static int top_exit_event(struct perf_kwork *kwork,
+ 
+ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 				  struct kwork_class *class,
+-				  struct evsel *evsel,
+ 				  struct perf_sample *sample,
+ 				  struct machine *machine)
+ {
+@@ -944,7 +932,7 @@ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (!work)
+ 		return -1;
+@@ -954,12 +942,11 @@ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 		atom_del(atom);
+ 	}
+ 
+-	return top_entry_event(kwork, class, evsel, sample, machine);
++	return top_entry_event(kwork, class, sample, machine);
+ }
+ 
+ static struct kwork_class kwork_irq;
+ static int process_irq_handler_entry_event(const struct perf_tool *tool,
+-					   struct evsel *evsel,
+ 					   struct perf_sample *sample,
+ 					   struct machine *machine)
+ {
+@@ -967,12 +954,11 @@ static int process_irq_handler_entry_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_irq,
+-						      evsel, sample, machine);
++						      sample, machine);
  	return 0;
  }
  
--static int evsel__process_page_free_event(struct evsel *evsel __maybe_unused,
--					  struct perf_sample *sample)
-+static int evsel__process_page_free_event(struct perf_sample *sample)
+ static int process_irq_handler_exit_event(const struct perf_tool *tool,
+-					  struct evsel *evsel,
+ 					  struct perf_sample *sample,
+ 					  struct machine *machine)
  {
- 	u64 page;
- 	unsigned int order = perf_sample__intval(sample, "order");
-@@ -954,8 +959,7 @@ static bool perf_kmem__skip_sample(struct perf_sample *sample)
- 	return false;
+@@ -980,7 +966,7 @@ static int process_irq_handler_exit_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_irq,
+-						     evsel, sample, machine);
++						     sample, machine);
+ 	return 0;
  }
  
--typedef int (*tracepoint_handler)(struct evsel *evsel,
--				  struct perf_sample *sample);
-+typedef int (*tracepoint_handler)(struct perf_sample *sample);
+@@ -1005,7 +991,6 @@ static void irq_work_init(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+ 			  struct kwork_work *work,
+ 			  enum kwork_trace_type src_type __maybe_unused,
+-			  struct evsel *evsel __maybe_unused,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine __maybe_unused)
+ {
+@@ -1038,7 +1023,6 @@ static struct kwork_class kwork_irq = {
  
- static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 				union perf_event *event,
-@@ -973,14 +977,16 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 		return -1;
+ static struct kwork_class kwork_softirq;
+ static int process_softirq_raise_event(const struct perf_tool *tool,
+-				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       struct machine *machine)
+ {
+@@ -1046,13 +1030,12 @@ static int process_softirq_raise_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->raise_event)
+ 		return kwork->tp_handler->raise_event(kwork, &kwork_softirq,
+-						      evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_softirq_entry_event(const struct perf_tool *tool,
+-				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       struct machine *machine)
+ {
+@@ -1060,13 +1043,12 @@ static int process_softirq_entry_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_softirq,
+-						      evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_softirq_exit_event(const struct perf_tool *tool,
+-				      struct evsel *evsel,
+ 				      struct perf_sample *sample,
+ 				      struct machine *machine)
+ {
+@@ -1074,7 +1056,7 @@ static int process_softirq_exit_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_softirq,
+-						     evsel, sample, machine);
++						     sample, machine);
+ 
+ 	return 0;
+ }
+@@ -1133,7 +1115,6 @@ static void softirq_work_init(struct perf_kwork *kwork,
+ 			      struct kwork_class *class,
+ 			      struct kwork_work *work,
+ 			      enum kwork_trace_type src_type __maybe_unused,
+-			      struct evsel *evsel,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine __maybe_unused)
+ {
+@@ -1148,7 +1129,7 @@ static void softirq_work_init(struct perf_kwork *kwork,
+ 	} else {
+ 		num = perf_sample__intval(sample, "vec");
+ 		work->id = num;
+-		work->name = evsel__softirq_name(evsel, num);
++		work->name = evsel__softirq_name(sample->evsel, num);
  	}
+ }
  
--	if (perf_kmem__skip_sample(sample))
-+	if (perf_kmem__skip_sample(sample)) {
-+		thread__put(thread);
- 		return 0;
-+	}
+@@ -1169,7 +1150,6 @@ static struct kwork_class kwork_softirq = {
  
- 	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
+ static struct kwork_class kwork_workqueue;
+ static int process_workqueue_activate_work_event(const struct perf_tool *tool,
+-						 struct evsel *evsel,
+ 						 struct perf_sample *sample,
+ 						 struct machine *machine)
+ {
+@@ -1177,13 +1157,12 @@ static int process_workqueue_activate_work_event(const struct perf_tool *tool,
  
+ 	if (kwork->tp_handler->raise_event)
+ 		return kwork->tp_handler->raise_event(kwork, &kwork_workqueue,
+-						    evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_workqueue_execute_start_event(const struct perf_tool *tool,
+-						 struct evsel *evsel,
+ 						 struct perf_sample *sample,
+ 						 struct machine *machine)
+ {
+@@ -1191,13 +1170,12 @@ static int process_workqueue_execute_start_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_workqueue,
+-						    evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
+-					       struct evsel *evsel,
+ 					       struct perf_sample *sample,
+ 					       struct machine *machine)
+ {
+@@ -1205,7 +1183,7 @@ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_workqueue,
+-						   evsel, sample, machine);
++						     sample, machine);
+ 
+ 	return 0;
+ }
+@@ -1233,7 +1211,6 @@ static void workqueue_work_init(struct perf_kwork *kwork __maybe_unused,
+ 				struct kwork_class *class,
+ 				struct kwork_work *work,
+ 				enum kwork_trace_type src_type __maybe_unused,
+-				struct evsel *evsel __maybe_unused,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+@@ -1267,7 +1244,6 @@ static struct kwork_class kwork_workqueue = {
+ 
+ static struct kwork_class kwork_sched;
+ static int process_sched_switch_event(const struct perf_tool *tool,
+-				      struct evsel *evsel,
+ 				      struct perf_sample *sample,
+ 				      struct machine *machine)
+ {
+@@ -1275,7 +1251,7 @@ static int process_sched_switch_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->sched_switch_event)
+ 		return kwork->tp_handler->sched_switch_event(kwork, &kwork_sched,
+-							     evsel, sample, machine);
++							     sample, machine);
+ 	return 0;
+ }
+ 
+@@ -1300,7 +1276,6 @@ static void sched_work_init(struct perf_kwork *kwork __maybe_unused,
+ 			    struct kwork_class *class,
+ 			    struct kwork_work *work,
+ 			    enum kwork_trace_type src_type,
+-			    struct evsel *evsel __maybe_unused,
+ 			    struct perf_sample *sample,
+ 			    struct machine *machine __maybe_unused)
+ {
+@@ -1946,7 +1921,6 @@ static int perf_kwork__report(struct perf_kwork *kwork)
+ }
+ 
+ typedef int (*tracepoint_handler)(const struct perf_tool *tool,
+-				  struct evsel *evsel,
+ 				  struct perf_sample *sample,
+ 				  struct machine *machine);
+ 
+@@ -1961,7 +1935,7 @@ static int perf_kwork__process_tracepoint_sample(const struct perf_tool *tool,
  	if (evsel->handler != NULL) {
  		tracepoint_handler f = evsel->handler;
--		err = f(evsel, sample);
-+		err = f(sample);
+ 
+-		err = f(tool, evsel, sample, machine);
++		err = f(tool, sample, machine);
  	}
  
- 	thread__put(thread);
+ 	return err;
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index db00269b73f2..abf637d44794 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -157,7 +157,6 @@ struct kwork_class {
+ 			  struct kwork_class *class,
+ 			  struct kwork_work *work,
+ 			  enum kwork_trace_type src_type,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine);
+ 
+@@ -167,19 +166,19 @@ struct kwork_class {
+ 
+ struct trace_kwork_handler {
+ 	int (*raise_event)(struct perf_kwork *kwork,
+-			   struct kwork_class *class, struct evsel *evsel,
++			   struct kwork_class *class,
+ 			   struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*entry_event)(struct perf_kwork *kwork,
+-			   struct kwork_class *class, struct evsel *evsel,
++			   struct kwork_class *class,
+ 			   struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*exit_event)(struct perf_kwork *kwork,
+-			  struct kwork_class *class, struct evsel *evsel,
++			  struct kwork_class *class,
+ 			  struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*sched_switch_event)(struct perf_kwork *kwork,
+-				  struct kwork_class *class, struct evsel *evsel,
++				  struct kwork_class *class,
+ 				  struct perf_sample *sample, struct machine *machine);
+ };
+ 
 -- 
 2.53.0.1213.gd9a14994de-goog
 
