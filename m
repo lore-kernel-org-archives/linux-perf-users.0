@@ -1,108 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE8285041
-	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 07:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136F672618
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 19:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775978239; cv=none; b=UM5WAvBLk140v7W0XXJXZDlpbCraJypPKHsPJMemaJx8TUhGKJXX/xSmGaqr+ta6kf5545nzsmeAvf1Gxtfy1QZqJlManRUH+vALNjSrP5k1OJpW/gQs4JljSYvLDCX/tFAnOKU4pAdMRSjT5KwcVAkys29bRARRIVUugIJBAcs=
+	t=1776021101; cv=none; b=aTzA9xM9qzt6HBVavQpZD93aC1m+z37j8peVuwJwPadh36xEVjloGiQ8wkXwL2TN8s+of1C7S85TB9tnx3N6KPuuYeQYAP9q/P5H5Y/r2d1/rFykcigLIZ+eLpF4GcA5WdSRgRygrVfnZCVUjL+Y5kB8n8l/P6WqyhZG4/J2pyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775978239; c=relaxed/simple;
-	bh=5GU+4swrEcqlTUv9EUuVLFuE8isb3JU7mQvQjX0zrC8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jII+/oc/1XAYBxhTXCIHITtggdZSYiAbTQSTNfKrUZbm1N+v4OHWjPBuvCggvGRXt3f6v0gR+imio3VM8K3mFowBc07oDYMFeGnFYDd96fTFiLWUgUDlih9r2Z3MFNytj4zbGrdqZRYln3y3l33gROKWSH4zWEs+6cUWj4lvWFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcnPcv+Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776021101; c=relaxed/simple;
+	bh=gGbgSScs/6yv2loBTaqcJB4wn8HJrACyqH6/wGBf4zs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WRzGxptdePvPQkjQfqmIr6cvYQb9pl4yB2K1eCrxK/ILV/qDAlTtYQiiZQ6Q24jmGg71EJJSbDLwKlRO09tMKgGrSLPVHY0eJMqhmRyisqMyZ9NHEBZ7NRuOqQgD6/hfJ5dtG7bLsV4D+wEW7TKGC5ElrN791xpoEItsLod4UXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TapbgaO3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcnPcv+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B339C19424;
-	Sun, 12 Apr 2026 07:17:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TapbgaO3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E8EC19424;
+	Sun, 12 Apr 2026 19:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775978239;
-	bh=5GU+4swrEcqlTUv9EUuVLFuE8isb3JU7mQvQjX0zrC8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=bcnPcv+ZxUjhMQFMHYCwKTgwE+w3uJocU1HbeaG34BsTcwE9s3Xr1rOCEa87Smd8R
-	 J0Un1ZVHoHpQCowInr5jdjtx9bGtSwF1b8K4qigb763/93AIo2aUSaaO/U1NDGv+QX
-	 LywV+msY7C7vfiE8M3annbbmlVn3vxbayWKvB7V8LwQgByFh7mRqwt4IYUiP1LlUv8
-	 PQwx7KyqUXghRky9qKJLA9R2NXv3zNc4kIFg5YJRhtEXN5futMJXv/y93QKBMV1Uec
-	 VUfd82XAo8L5y3hj7Rc/WWnwREwqNqXGJZZpDtKL1s1A/Dr9Ih8s/h0yJmoXpmp564
-	 auFPu7sIT9XDw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf annotate: Use jump__delete when freeing LoongArch
- jumps
-Reply-To: sashiko@lists.linux.dev
-To: "Rong Bao" <rong.bao@csmantle.top>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260412062828.1734637-1-rong.bao@csmantle.top>
-References: <20260412062828.1734637-1-rong.bao@csmantle.top>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 12 Apr 2026 07:17:18 +0000
-Message-Id: <20260412071719.5B339C19424@smtp.kernel.org>
+	s=k20201202; t=1776021100;
+	bh=gGbgSScs/6yv2loBTaqcJB4wn8HJrACyqH6/wGBf4zs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=TapbgaO3aoJbvTDU1En7fURsF9LQBe0h7ueajoMOXDRR2HUncnR91tr6nm8yzE5JY
+	 +didJhAwaIXjYrFlnhbxTNKBAN96mMelVPIzO2ZEUTwi7Hv+/1yAcOv0YLcgDEQCbm
+	 W+C1gaBgciMdhnmfDKgHKL5D00G7fqS8NBXxu0+3kkxqUdLfw0+eLDROne8UO8pSdF
+	 7mKt3wgpKKR+GwvPO3hgbQP/JpOxNRJa3Cw3KG994Sfx/4gTf+ShHSptJDoz3qCkvd
+	 hlkpKGShB/7Dgx0OWzAH6UvUw8dnfvi9iHlxDY0Sp7GklnM8m0Wm0moQ/nRWvnveyK
+	 cuJLRrfIBRAQw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20260410-perf_support_arm_spev1-3-v6-0-3c6f2dfe2cd3@arm.com>
+References: <20260410-perf_support_arm_spev1-3-v6-0-3c6f2dfe2cd3@arm.com>
+Subject: Re: [PATCH v6 0/4] perf arm_spe: Extend SIMD operations
+Message-Id: <177602110030.3380326.16901438429651843791.b4-ty@kernel.org>
+Date: Sun, 12 Apr 2026 12:11:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Missing NULL check in `loongarch_call__parse()` causes a segmentat=
-ion fault on malformed or stripped objdump output.
---
+On Fri, 10 Apr 2026 08:36:57 +0100, Leo Yan wrote:
+> This series extends SIMD flag for Arm SPE and updated the document.
+> 
+> This version is rebased onto the latest perf-tools-next branch.
+> 
+> 
+Applied to perf-tools-next, thanks!
 
-commit 031fe3089ac82ebce8ac1cc8c2f144a5b6abd009
-Author: Rong Bao <rong.bao@csmantle.top>
+Best regards,
+Namhyung
 
-perf annotate: Use jump__delete when freeing LoongArch jumps
 
-This commit fixes an invalid free crash in perf annotate for LoongArch by
-assigning jump__delete to the .free field in loongarch_jump_ops. This preve=
-nts
-fields that share the same buffer from being erroneously freed during clean=
-up.
-
-> diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/p=
-erf/util/annotate-arch/annotate-loongarch.c
-> index 950f34e59e5cd..c2addca77320b 100644
-> --- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-> +++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-> @@ -110,6 +110,7 @@ static int loongarch_jump__parse(const struct arch *a=
-rch, struct ins_operands *o
->  }
-> =20
->  static const struct ins_ops loongarch_jump_ops =3D {
-> +	.free	   =3D jump__delete,
->  	.parse	   =3D loongarch_jump__parse,
->  	.scnprintf =3D jump__scnprintf,
->  	.is_jump   =3D true,
-
-[ ... ]
-
-While reviewing these changes, I noticed a pre-existing issue in the nearby
-loongarch_call__parse() function in the same file:
-
-tools/perf/util/annotate-arch/annotate-loongarch.c:loongarch_call__parse() {
-        ...
-        ops->target.addr =3D strtoull(c, &endptr, 16);
-
-        name =3D strchr(endptr, '<');
-        name++;
-
-        if (arch->objdump.skip_functions_char &&
-            strchr(name, arch->objdump.skip_functions_char))
-                return -1;
-        ...
-}
-
-Could this cause a segmentation fault if the tool processes a stripped
-binary?
-
-If the objdump output for a call instruction lacks the <symbol> suffix
-(for example, bl #0x12345), strchr(endptr, '<') would return NULL.
-
-The subsequent name++ would then produce an invalid pointer, leading to a c=
-rash
-when it is used in the following strchr() and strdup() calls.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260412062828.1734=
-637-1-rong.bao@csmantle.top?part=3D1
