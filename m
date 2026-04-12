@@ -1,39 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DACC23D281;
-	Sun, 12 Apr 2026 20:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919D91A3164;
+	Sun, 12 Apr 2026 20:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776024765; cv=none; b=DnxhkVbVTfxcJzd9MLMJifr3WDN+7HN6boJkN6koxtfiC7mUm6usdJQvLj/MQpj0oHvTygRnFx0Fko/0I6aSJAtTiv/B8m4vqqfdryO57371CCw9Petq/zKoFnxUaYZpSw/EVFDPnallftBIDa424sIYS/chV/dmWgAOWnhdGUc=
+	t=1776024812; cv=none; b=osBWL+/jChXUYhTU+fPrXZieVESt9iK6URZP+70ViE+tERLEX1+5V75YbjtzDj3zLDPga6m/F2WZ2ngicI+USQP1S0gofHZGTPlNsxeEVh/axCF5KYiX554/hUOMd6vPVFZ0vytBJZceXJTsqrbdnzLPXY6YHOKHEqhWTGiUMag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776024765; c=relaxed/simple;
-	bh=DU5BZHOTji9QqmJcau8Pnait08nOU5BN2cF+78oUApU=;
+	s=arc-20240116; t=1776024812; c=relaxed/simple;
+	bh=6jAk7paEK3t/BCdIiBOMyynrj6ApRGNRxtPs3ZUtznU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fz2QOSXL45BCDg7PUFEx5qSMtR60bHO8ScNpstM0NSY/+1kJ/emfEHz8uy702TTcFGBqfZzQlsNGpVC2TEUuIbgcNY7vyO12Ny2D2DTzp9mhuwj5yMr8/57YEuEGGU/0wf0i9LAXkAAptGJlAlx5dEXVTXyhjnOwI00uv3rq61Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2r2sfmt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3peXomR+wVWtC9V9gupb4td6wZA/emVSy0prOx0QykzWgixwDneyuO1Pe4Esf1wTGhem/1RKGXPIexCwADQQV7CCW4A7kbbzRHUSGbf76lP/aZwjwnxOdD8G8mLGZ3WuJGhx/W1a40oQN3nfxEtA44MkYpcxoWWRaukv/XApfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8PFvhJC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2r2sfmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C741C19424;
-	Sun, 12 Apr 2026 20:12:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8PFvhJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007B2C19424;
+	Sun, 12 Apr 2026 20:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776024765;
-	bh=DU5BZHOTji9QqmJcau8Pnait08nOU5BN2cF+78oUApU=;
+	s=k20201202; t=1776024812;
+	bh=6jAk7paEK3t/BCdIiBOMyynrj6ApRGNRxtPs3ZUtznU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A2r2sfmt3EOc8C+xykv/fof4QZPTI1L6C+fGSH4K+7RaRTLHZHwXDG+LSZUm0nOym
-	 Knv+Bb72rdw9bFPNGZz6IZ3af3fJl5wjK8vA/vXn50NB1mqnWWuoXNRkPXh4Sspmbq
-	 Vjjk/HLWCwqz0qapovo81jyH0zAhKjLshjIMgNQoji+Dr3XzSlVw4bNitQtKhOgWLh
-	 iPkbpDE09BWpKxhquY12g2fFX35ZdhVBd1WjkDQM3N1HISLB5l3AuM6Af/+BEdiySy
-	 oFjc1TZOI+KY17BLw/I8gVNyditBDXB+My4jZoJEQMAYqG12QCiqEU1PNzcqLRSVba
-	 sQvplY5JFsZ0Q==
-Date: Sun, 12 Apr 2026 13:12:43 -0700
+	b=Z8PFvhJCz22nKPuHwiR2Bz7a+iIbGDccA7q5//4ETiJQd+lu1yLoPcokf3BzJ/uNJ
+	 zmxg5CfCXRFElEArUaXvxIAfyLxTpQseUIztQSpW1kV9mFdTfxQSFv7k83yutkIczc
+	 ujrQDMGQTX2Jg3Ss+E502tDIlZAyqfFtmsSA0NLxBIBADfR4TJtaxwPWzT7YOhbHnK
+	 WrBo7feYF9S54pEr7ZHrpZb740D0IiN3/5n3kHH+w8oCQpSKsXopvbKGM9X7sHBamd
+	 kX+TCocIYmQ0qJ1nnCq29SvN54jX+ukoqGvqeYlopqw3IekLjTeo+ftgeg21OoMRr7
+	 MEvFnGUjAih+g==
+Date: Sun, 12 Apr 2026 13:13:29 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v10 14/29] perf inject: Don't pass evsel with sample
-Message-ID: <adv8u4R70B1dpd6j@google.com>
-References: <20260412020833.641177-15-irogers@google.com>
- <20260412024011.E0C43C116C6@smtp.kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
+	ak@linux.intel.com, alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com, anup@brainfault.org,
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
+	blakejones@google.com, ctshao@google.com,
+	dapeng1.mi@linux.intel.com, derek.foreman@collabora.com,
+	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn,
+	palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org,
+	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn,
+	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com,
+	zhouquan@iscas.ac.cn
+Subject: Re: [PATCH v10 18/29] perf timechart: Don't pass evsel with sample
+Message-ID: <adv86QCTZ4oVyW5L@google.com>
+References: <20260411191710.524998-1-irogers@google.com>
+ <20260412020833.641177-1-irogers@google.com>
+ <20260412020833.641177-19-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,119 +57,292 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260412024011.E0C43C116C6@smtp.kernel.org>
+In-Reply-To: <20260412020833.641177-19-irogers@google.com>
 
-On Sun, Apr 12, 2026 at 02:40:11AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 3 potential issue(s):
-> - [High] Typo in bounds check for `build_id_size` in `perf_event__synthesize_mmap2_build_id` causes memory corruption and out-of-bounds read/write.
-> - [High] The bounds check for `build_id.size` in `perf_event__synthesize_build_id` limits the size to the destination buffer's capacity instead of the source buffer's capacity, allowing an out-of-bounds read.
-> - [Medium] The patch alters the PID and TID used in the synthesized ID sample of `mmap2` events, corrupting the event's sampling context.
-> --
-> 
-> commit 86c6e453885cee2a25c1c4a4cc9e00545f4ba854
-> Author: Ian Rogers <irogers@google.com>
-> 
-> perf inject: Don't pass evsel with sample
-> 
-> This commit cleans up the handling of sample and mmap_evsel when
-> synthesizing build id events. It also attempts to bound check the filename
-> length to avoid potential buffer overruns.
-> 
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index 85bee747f4cd2..9a6941cfaad34 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
+On Sat, Apr 11, 2026 at 07:08:21PM -0700, Ian Rogers wrote:
+> The sample contains the evsel and so it is unnecessary to pass the
+> evsel as well. Add missing backtrace argument to tracepoint_handler
+> functions and mark them unused. Fix missing free from cat_backtrace,
+> which requires copies of the backtrace being made in functions that
+> save it.
 
-I've removed all new bound checkings in this file for now.
+I've splitted the backtrace handling part into a new commit.
 
 Thanks,
 Namhyung
 
-> [ ... ]
-> > @@ -2252,17 +2267,22 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
-> [ ... ]
-> > +	if (filename_len >= sizeof(ev.mmap2.filename))
-> > +		return -EINVAL;
-> > +
-> > +	len = sizeof(ev.build_id) + filename_len + 1;
-> >  	len = PERF_ALIGN(len, sizeof(u64));
-> >  
-> > +	if (len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
-> > +		return -E2BIG;
-> > +
-> >  	memset(&ev, 0, len);
 > 
-> Since the commit message explicitly mentions fixing potential buffer overruns
-> in this function, is this out-of-bounds read another regression that needs
-> addressing?
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-timechart.c | 81 ++++++++++++++++------------------
+>  1 file changed, 39 insertions(+), 42 deletions(-)
 > 
-> Looking at the rest of perf_event__synthesize_build_id():
-> 
->     ev.build_id.size = bid->size;
->     if (ev.build_id.size > sizeof(ev.build_id.build_id))
->         ev.build_id.size = sizeof(ev.build_id.build_id);
->     memcpy(ev.build_id.build_id, bid->data, ev.build_id.size);
-> 
-> The check limits ev.build_id.size to the destination buffer's capacity
-> (24 bytes). However, bid->data is only 20 bytes. If a malformed file
-> provides a bid->size between 21 and 24, could memcpy() read out-of-bounds
-> from bid->data?
-> 
-> [ ... ]
-> > @@ -2308,13 +2328,24 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
-> [ ... ]
-> > +	if (filename_len >= sizeof(ev.mmap2.filename))
-> > +		return -EINVAL;
-> > +
-> > +	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len + 1;
-> >  	ev_len = PERF_ALIGN(ev_len, sizeof(u64));
-> >  
-> > +	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
-> > +		return -E2BIG;
-> > +
-> >  	memset(&ev, 0, ev_len);
-> 
-> Similar to the bounds check above, this function is mentioned in the commit
-> message as receiving bounds checks, but does this existing typo cause a
-> regression here?
-> 
-> Looking further down in perf_event__synthesize_mmap2_build_id():
-> 
->     ev.mmap2.build_id_size = bid->size;
->     if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
->         ev.build_id.size = sizeof(ev.mmap2.build_id);
->     memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
-> 
-> If ev.mmap2.build_id_size exceeds the bounds, it modifies ev.build_id.size
-> instead of truncating ev.mmap2.build_id_size. Could this result in an
-> out-of-bounds read and write in the subsequent memcpy(), potentially
-> corrupting adjacent fields like prot, flags, and filename?
-> 
-> [ ... ]
-> > @@ -2339,7 +2370,12 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
-> >  
-> >  	array = &ev;
-> >  	array += ev.header.size;
-> > -	ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
-> > +	ret = __perf_event__synthesize_id_sample(array, sample_type,
-> > +						pid, tid,
-> > +						sample->time,
-> > +						sample->id,
-> > +						sample->stream_id,
-> > +						sample->cpu);
-> >  	if (ret < 0)
-> >  		return ret;
-> 
-> Before this patch, the sample's PID and TID were extracted from the sampling
-> context (sample->pid and sample->tid). By switching to
-> __perf_event__synthesize_id_sample(), this now passes the mmap2 target
-> pid and tid.
-> 
-> If a thread maps memory for a different process, the target mmap.pid differs
-> from the sampling context sample->pid. Could this regression break event
-> correlation for tools relying on the sample ID to identify the thread that
-> generated the event?
-> 
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+> index 034e0ba3f9cb..64f69bd67c6b 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+> @@ -299,7 +299,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
+>  	sample->type = type;
+>  	sample->next = c->samples;
+>  	sample->cpu = cpu;
+> -	sample->backtrace = backtrace;
+> +	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
+>  	c->samples = sample;
+>  
+>  	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
+> @@ -433,7 +433,7 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
+>  
+>  	we->time = timestamp;
+>  	we->waker = waker;
+> -	we->backtrace = backtrace;
+> +	we->backtrace = backtrace ? strdup(backtrace) : NULL;
+>  
+>  	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
+>  		we->waker = -1;
+> @@ -489,9 +489,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
+>  	}
+>  }
+>  
+> -static const char *cat_backtrace(union perf_event *event,
+> -				 struct perf_sample *sample,
+> -				 struct machine *machine)
+> +static char *cat_backtrace(union perf_event *event,
+> +			   struct perf_sample *sample,
+> +			   struct machine *machine)
+>  {
+>  	struct addr_location al;
+>  	unsigned int i;
+> @@ -544,8 +544,10 @@ static const char *cat_backtrace(union perf_event *event,
+>  				 * It seems the callchain is corrupted.
+>  				 * Discard all.
+>  				 */
+> -				zfree(&p);
+> -				goto exit;
+> +				addr_location__exit(&al);
+> +				fclose(f);
+> +				free(p);
+> +				return NULL;
+>  			}
+>  			continue;
+>  		}
+> @@ -567,7 +569,6 @@ static const char *cat_backtrace(union perf_event *event,
+>  }
+>  
+>  typedef int (*tracepoint_handler)(struct timechart *tchart,
+> -				  struct evsel *evsel,
+>  				  struct perf_sample *sample,
+>  				  const char *backtrace);
+>  
+> @@ -578,6 +579,7 @@ static int process_sample_event(const struct perf_tool *tool,
+>  {
+>  	struct timechart *tchart = container_of(tool, struct timechart, tool);
+>  	struct evsel *evsel = sample->evsel;
+> +	int ret = 0;
+>  
+>  	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
+>  		if (!tchart->first_time || tchart->first_time > sample->time)
+> @@ -588,16 +590,17 @@ static int process_sample_event(const struct perf_tool *tool,
+>  
+>  	if (evsel->handler != NULL) {
+>  		tracepoint_handler f = evsel->handler;
+> -		return f(tchart, evsel, sample,
+> -			 cat_backtrace(event, sample, machine));
+> +		char *backtrace = cat_backtrace(event, sample, machine);
+> +
+> +		ret = f(tchart, sample, backtrace);
+> +		free(backtrace);
+>  	}
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int
+>  process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+> -			struct evsel *evsel __maybe_unused,
+>  			struct perf_sample *sample,
+>  			const char *backtrace __maybe_unused)
+>  {
+> @@ -613,7 +616,6 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+>  
+>  static int
+>  process_sample_cpu_frequency(struct timechart *tchart,
+> -			     struct evsel *evsel __maybe_unused,
+>  			     struct perf_sample *sample,
+>  			     const char *backtrace __maybe_unused)
+>  {
+> @@ -626,7 +628,6 @@ process_sample_cpu_frequency(struct timechart *tchart,
+>  
+>  static int
+>  process_sample_sched_wakeup(struct timechart *tchart,
+> -			    struct evsel *evsel __maybe_unused,
+>  			    struct perf_sample *sample,
+>  			    const char *backtrace)
+>  {
+> @@ -640,7 +641,6 @@ process_sample_sched_wakeup(struct timechart *tchart,
+>  
+>  static int
+>  process_sample_sched_switch(struct timechart *tchart,
+> -			    struct evsel *evsel __maybe_unused,
+>  			    struct perf_sample *sample,
+>  			    const char *backtrace)
+>  {
+> @@ -656,7 +656,6 @@ process_sample_sched_switch(struct timechart *tchart,
+>  #ifdef SUPPORT_OLD_POWER_EVENTS
+>  static int
+>  process_sample_power_start(struct timechart *tchart __maybe_unused,
+> -			   struct evsel *evsel __maybe_unused,
+>  			   struct perf_sample *sample,
+>  			   const char *backtrace __maybe_unused)
+>  {
+> @@ -669,7 +668,6 @@ process_sample_power_start(struct timechart *tchart __maybe_unused,
+>  
+>  static int
+>  process_sample_power_end(struct timechart *tchart,
+> -			 struct evsel *evsel __maybe_unused,
+>  			 struct perf_sample *sample,
+>  			 const char *backtrace __maybe_unused)
+>  {
+> @@ -679,7 +677,6 @@ process_sample_power_end(struct timechart *tchart,
+>  
+>  static int
+>  process_sample_power_frequency(struct timechart *tchart,
+> -			       struct evsel *evsel __maybe_unused,
+>  			       struct perf_sample *sample,
+>  			       const char *backtrace __maybe_unused)
+>  {
+> @@ -849,8 +846,8 @@ static int pid_end_io_sample(struct timechart *tchart, int pid, int type,
+>  
+>  static int
+>  process_enter_read(struct timechart *tchart,
+> -		   struct evsel *evsel __maybe_unused,
+> -		   struct perf_sample *sample)
+> +		   struct perf_sample *sample,
+> +		   const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_READ,
+> @@ -859,8 +856,8 @@ process_enter_read(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_read(struct timechart *tchart,
+> -		  struct evsel *evsel __maybe_unused,
+> -		  struct perf_sample *sample)
+> +		  struct perf_sample *sample,
+> +		  const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_READ,
+> @@ -869,8 +866,8 @@ process_exit_read(struct timechart *tchart,
+>  
+>  static int
+>  process_enter_write(struct timechart *tchart,
+> -		    struct evsel *evsel __maybe_unused,
+> -		    struct perf_sample *sample)
+> +		    struct perf_sample *sample,
+> +		    const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_WRITE,
+> @@ -879,8 +876,8 @@ process_enter_write(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_write(struct timechart *tchart,
+> -		   struct evsel *evsel __maybe_unused,
+> -		   struct perf_sample *sample)
+> +		   struct perf_sample *sample,
+> +		   const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_WRITE,
+> @@ -889,8 +886,8 @@ process_exit_write(struct timechart *tchart,
+>  
+>  static int
+>  process_enter_sync(struct timechart *tchart,
+> -		   struct evsel *evsel __maybe_unused,
+> -		   struct perf_sample *sample)
+> +		   struct perf_sample *sample,
+> +		   const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_SYNC,
+> @@ -899,8 +896,8 @@ process_enter_sync(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_sync(struct timechart *tchart,
+> -		  struct evsel *evsel __maybe_unused,
+> -		  struct perf_sample *sample)
+> +		  struct perf_sample *sample,
+> +		  const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_SYNC,
+> @@ -909,8 +906,8 @@ process_exit_sync(struct timechart *tchart,
+>  
+>  static int
+>  process_enter_tx(struct timechart *tchart,
+> -		 struct evsel *evsel __maybe_unused,
+> -		 struct perf_sample *sample)
+> +		 struct perf_sample *sample,
+> +		 const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_TX,
+> @@ -919,8 +916,8 @@ process_enter_tx(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_tx(struct timechart *tchart,
+> -		struct evsel *evsel __maybe_unused,
+> -		struct perf_sample *sample)
+> +		struct perf_sample *sample,
+> +		const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_TX,
+> @@ -929,8 +926,8 @@ process_exit_tx(struct timechart *tchart,
+>  
+>  static int
+>  process_enter_rx(struct timechart *tchart,
+> -		 struct evsel *evsel __maybe_unused,
+> -		 struct perf_sample *sample)
+> +		 struct perf_sample *sample,
+> +		 const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_RX,
+> @@ -939,8 +936,8 @@ process_enter_rx(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_rx(struct timechart *tchart,
+> -		struct evsel *evsel __maybe_unused,
+> -		struct perf_sample *sample)
+> +		struct perf_sample *sample,
+> +		const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_RX,
+> @@ -949,8 +946,8 @@ process_exit_rx(struct timechart *tchart,
+>  
+>  static int
+>  process_enter_poll(struct timechart *tchart,
+> -		   struct evsel *evsel __maybe_unused,
+> -		   struct perf_sample *sample)
+> +		   struct perf_sample *sample,
+> +		   const char *backtrace __maybe_unused)
+>  {
+>  	long fd = perf_sample__intval(sample, "fd");
+>  	return pid_begin_io_sample(tchart, sample->tid, IOTYPE_POLL,
+> @@ -959,8 +956,8 @@ process_enter_poll(struct timechart *tchart,
+>  
+>  static int
+>  process_exit_poll(struct timechart *tchart,
+> -		  struct evsel *evsel __maybe_unused,
+> -		  struct perf_sample *sample)
+> +		  struct perf_sample *sample,
+> +		  const char *backtrace __maybe_unused)
+>  {
+>  	long ret = perf_sample__intval(sample, "ret");
+>  	return pid_end_io_sample(tchart, sample->tid, IOTYPE_POLL,
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260412020833.641177-1-irogers@google.com?part=14
+> 2.53.0.1213.gd9a14994de-goog
+> 
