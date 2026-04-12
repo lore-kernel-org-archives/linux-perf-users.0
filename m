@@ -1,163 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670538C1F
-	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 02:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAF52367D3
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 02:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775961612; cv=none; b=P7fVb8Yx9hOqajAh2WJR9dGIoc4NOQ++oBSJE5npuHDTKMn0xUXCJskhhzPSQIi9U1lRlLcfVo/Xc12E54yTk1L47BJpY5Zqf6dTwik/TG/3T1mM8RK4hDSXcsAZFwxCgau2aEWBt9jB2OqxPAXVNZG14DvFwWlqvyEsf5SccwM=
+	t=1775962258; cv=none; b=IIPYIB3A9M3IfaDwsz5bVn3sIkde41lEa3Lf4763rIMazTPyDQvydohYXADV3kA39a4e8YQyukLrtX1D78S2MwflXUEiPAAgci/Oat2VmRHu95bdJpsa4VpWStgC68ZvISDwfQbivjihBIICuZ2xVGhhdg1fwhxvhDwet6O5Irc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775961612; c=relaxed/simple;
-	bh=uYs0iGNDRCwc81ld2ejRiFls3mCm8q+LGqtju5la5Ig=;
+	s=arc-20240116; t=1775962258; c=relaxed/simple;
+	bh=epKLVvkoQPukck1qDmr4CihEWozcgUAEZ/WDu1glXio=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gzhlOglEVdCtgO0nejXShphYEAkzbi5/xmXS1oDOlmjfoD1WnTC2aUATNyRI2iyl/O4dGlS/RorVUWYKS9gyf9WXG9LtL+BswvrO/1DkISuEi4/mz5Fh4J6Nz1yEbwUhwjc8iC9UaGe2vRzRZsjYWj9atyXv8qtSnbQufJJ5P48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUeZ8rts; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Jprpt1NvQn1NUBDli49mU1Dbs1lFEetjW108Iksfdpv1bHN6xe65OBJj+0/5teM85l4LQ8tVqILa+135RB66a7HlPIVw8JK6rY8b2FcoGFHYnaWlxcRY3AHCYrwijMmUrUHP+1Qvj4oY4C99rjB0J7Hk4UuYKUON2RYNSvyp0UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcPmAQso; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUeZ8rts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C43C116C6;
-	Sun, 12 Apr 2026 02:40:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcPmAQso"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF96DC116C6;
+	Sun, 12 Apr 2026 02:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775961612;
-	bh=uYs0iGNDRCwc81ld2ejRiFls3mCm8q+LGqtju5la5Ig=;
+	s=k20201202; t=1775962258;
+	bh=epKLVvkoQPukck1qDmr4CihEWozcgUAEZ/WDu1glXio=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=dUeZ8rtsLFBHLswN1Ncl9UzoYh+z8/Hc/Bkck3WSdGbbFUTGUKTrVE410J+xB14Ea
-	 6PiVftHZyFIgC6LrCl0paCaTCsFdfD1IiLaZpAOumbku7s9pAhkfvawXUNIOfoL05H
-	 J6UwXNrN5OoBYGpYHmnoQNaqzKO1KCx70Z4ig+UdzGi8k3SgD89o9tLVvQ5eSQueXO
-	 mqXhSRosjE3UF5JyKCzE7u4RoR91/DhPpkJpiZs6xrOXasxzgSSW/OKIhkOmYRO3eS
-	 PWrgFwtNYDAlZMVJG/vjZHByTg9TgHraEpVM8wiDC97l7H706DxlHLbzP6olU2FWoc
-	 kAd6Lku7ol6ew==
+	b=RcPmAQsoa1wygjC62Rf941M4NULpZ0zghxwvMRE4HHAV+1sttVBP0vNwyMENHmAMJ
+	 3uV+gHI5QVad9chJYcVg3bcPokn9gEGJ4liegmkXy0hQLxfXZrlPBAfrFMg9+gynJM
+	 9BjxmzmJtUsuPZTzbiK/Uv22xuJpP+PeH2GtT4lNfolT82JoeQktAXeetdVB9xqDhr
+	 9lHjbUqiLGPmUF0k72P577g1lPjMZX0hUNlOCIf1+sNR1yVFNv8B0p7vCc9I7SQl8C
+	 qFs6pPNM9aBlItDl7RpWLxjV/tGofqAYheHM1Q6akZPb3M5Ang1PNRYOBkEnQAgcPQ
+	 zZQSI9UpHVkVw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 14/29] perf inject: Don't pass evsel with sample
+Subject: Re: [PATCH v10 26/29] perf timechart: Bounds check CPU
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260412020833.641177-15-irogers@google.com>
-References: <20260412020833.641177-15-irogers@google.com>
+In-Reply-To: <20260412020833.641177-27-irogers@google.com>
+References: <20260412020833.641177-27-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 12 Apr 2026 02:40:11 +0000
-Message-Id: <20260412024011.E0C43C116C6@smtp.kernel.org>
+Date: Sun, 12 Apr 2026 02:50:57 +0000
+Message-Id: <20260412025057.DF96DC116C6@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [High] Typo in bounds check for `build_id_size` in `perf_event__synthesiz=
-e_mmap2_build_id` causes memory corruption and out-of-bounds read/write.
-- [High] The bounds check for `build_id.size` in `perf_event__synthesize_bu=
-ild_id` limits the size to the destination buffer's capacity instead of the=
- source buffer's capacity, allowing an out-of-bounds read.
-- [Medium] The patch alters the PID and TID used in the synthesized ID samp=
-le of `mmap2` events, corrupting the event's sampling context.
+Sashiko AI review found 1 potential issue(s):
+- [High] The bounds check for CPU IDs fails to protect the dynamically allo=
+cated `topology_map` array, allowing out-of-bounds heap reads during SVG re=
+ndering.
 --
 
-commit 86c6e453885cee2a25c1c4a4cc9e00545f4ba854
+commit 6083479d6ab93bb66bdea31d29ed3a4768c300e7
 Author: Ian Rogers <irogers@google.com>
 
-perf inject: Don't pass evsel with sample
+perf timechart: Bounds check CPU
 
-This commit cleans up the handling of sample and mmap_evsel when
-synthesizing build id events. It also attempts to bound check the filename
-length to avoid potential buffer overruns.
+This commit ensures the CPU ID is within expected bounds when processing
+samples. It aims to prevent out-of-bounds memory accesses in arrays
+tracking CPU state by bounding the CPU ID to MAX_CPUS.
 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 85bee747f4cd2..9a6941cfaad34 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
+t.c
+> index 64f69bd67c6b7..64903b54e8a73 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
 [ ... ]
-> @@ -2252,17 +2267,22 @@ int perf_event__synthesize_build_id(const struct =
-perf_tool *tool,
-[ ... ]
-> +	if (filename_len >=3D sizeof(ev.mmap2.filename))
-> +		return -EINVAL;
-> +
-> +	len =3D sizeof(ev.build_id) + filename_len + 1;
->  	len =3D PERF_ALIGN(len, sizeof(u64));
+> @@ -1517,6 +1544,8 @@ static int process_header(struct perf_file_section =
+*section __maybe_unused,
+>  	switch (feat) {
+>  	case HEADER_NRCPUS:
+>  		tchart->numcpus =3D ph->env.nr_cpus_avail;
+> +		if (tchart->numcpus > MAX_CPUS)
+> +			tchart->numcpus =3D MAX_CPUS;
+
+Does this bounds check fully protect the dynamically allocated topology_map
+array?
+
+While this limits tchart->numcpus to MAX_CPUS, topology_map is dynamically
+allocated in svg_build_topology_map() with a size based on
+env->nr_cpus_online.
+
+Because nr_cpus_avail can be larger than nr_cpus_online on systems with
+offline CPUs, and trace events can have CPU IDs up to MAX_CPUS - 1, could
+CPU indices exceed the bounds of topology_map?
+
+When perf timechart --topology is used, cpu2y() indexes into
+topology_map[cpu], which might still result in an out-of-bounds heap read
+during SVG rendering.
+
+>  		break;
 > =20
-> +	if (len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
-> +		return -E2BIG;
-> +
->  	memset(&ev, 0, len);
-
-Since the commit message explicitly mentions fixing potential buffer overru=
-ns
-in this function, is this out-of-bounds read another regression that needs
-addressing?
-
-Looking at the rest of perf_event__synthesize_build_id():
-
-    ev.build_id.size =3D bid->size;
-    if (ev.build_id.size > sizeof(ev.build_id.build_id))
-        ev.build_id.size =3D sizeof(ev.build_id.build_id);
-    memcpy(ev.build_id.build_id, bid->data, ev.build_id.size);
-
-The check limits ev.build_id.size to the destination buffer's capacity
-(24 bytes). However, bid->data is only 20 bytes. If a malformed file
-provides a bid->size between 21 and 24, could memcpy() read out-of-bounds
-from bid->data?
-
-[ ... ]
-> @@ -2308,13 +2328,24 @@ int perf_event__synthesize_mmap2_build_id(const s=
-truct perf_tool *tool,
-[ ... ]
-> +	if (filename_len >=3D sizeof(ev.mmap2.filename))
-> +		return -EINVAL;
-> +
-> +	ev_len =3D sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len =
-+ 1;
->  	ev_len =3D PERF_ALIGN(ev_len, sizeof(u64));
-> =20
-> +	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
-> +		return -E2BIG;
-> +
->  	memset(&ev, 0, ev_len);
-
-Similar to the bounds check above, this function is mentioned in the commit
-message as receiving bounds checks, but does this existing typo cause a
-regression here?
-
-Looking further down in perf_event__synthesize_mmap2_build_id():
-
-    ev.mmap2.build_id_size =3D bid->size;
-    if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
-        ev.build_id.size =3D sizeof(ev.mmap2.build_id);
-    memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
-
-If ev.mmap2.build_id_size exceeds the bounds, it modifies ev.build_id.size
-instead of truncating ev.mmap2.build_id_size. Could this result in an
-out-of-bounds read and write in the subsequent memcpy(), potentially
-corrupting adjacent fields like prot, flags, and filename?
-
-[ ... ]
-> @@ -2339,7 +2370,12 @@ int perf_event__synthesize_mmap2_build_id(const st=
-ruct perf_tool *tool,
-> =20
->  	array =3D &ev;
->  	array +=3D ev.header.size;
-> -	ret =3D perf_event__synthesize_id_sample(array, evsel->core.attr.sample=
-_type, sample);
-> +	ret =3D __perf_event__synthesize_id_sample(array, sample_type,
-> +						pid, tid,
-> +						sample->time,
-> +						sample->id,
-> +						sample->stream_id,
-> +						sample->cpu);
->  	if (ret < 0)
->  		return ret;
-
-Before this patch, the sample's PID and TID were extracted from the sampling
-context (sample->pid and sample->tid). By switching to
-__perf_event__synthesize_id_sample(), this now passes the mmap2 target
-pid and tid.
-
-If a thread maps memory for a different process, the target mmap.pid differs
-from the sampling context sample->pid. Could this regression break event
-correlation for tools relying on the sample ID to identify the thread that
-generated the event?
+>  	case HEADER_CPU_TOPOLOGY:
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260412020833.6411=
-77-1-irogers@google.com?part=3D14
+77-1-irogers@google.com?part=3D26
