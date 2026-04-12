@@ -1,157 +1,219 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C7F286D7D
-	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 01:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775956460; cv=pass; b=AFadwPfeZXAekZsG3Vu2tsYgWzW8A3XsTqKfwXblgSMP6Wkw8HhRl2ws49ptOYKLaq9aOdc/6hzWBSZw62q9tzzEGu8m5oKH5b7jhEqc0B5pzPoapz31OFBZGCqIamuE1sju/g3dcHy3czOUDkWaJHQMG4F9u6q3yB8bTuy/P9k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775956460; c=relaxed/simple;
-	bh=Ubu2BKqCV9U+N5NgZ9KEZNJCg58RCPUVHhvzRbPycMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eFFtpOiDKHw6gdi8tfepg52TUyFS1MzMdgZClSVhiNJGr9vBfZ1KT2ab1KrgHcSLWG2PVE0AsHsOE2CG/lKMO6MJS166J7efRBEJAoGtrDBwmgKoeu+sLhuB9WcJ87iCSMHAwx/B9+doaWUT4ww7DAuJVVLYffzvFw2qp/xuyHk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nj/e2U4k; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8086B19ADA4
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 02:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775959718; cv=none; b=WAXnrG3ODXQNPHXIwP3eXNZwZC98WDg5yJ+TY/cO5CT8wdAouSZpiLbCiBLUpp9Q4e6Jyrke893zIvqZzPhTbhCUqGAiWJb3WMHlqDFQzfDYq0mNAW2hfe68b1UswVR4lunJWYoo+VGiuy90CeX8CBx382AIESC/DJNhKL/z9ho=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775959718; c=relaxed/simple;
+	bh=9uDQCpi4DcOVvAJDJ7Wbqtl9Qp7O1GWYyOMU+RRtjwI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vm1WyZaBBhKgKslsNYS/KIar+VoTr+S+5eC0n/P/pbljBmEvErs0Dh6yuARn87MZOQQXxFn6ZG4t0ZpZA/Y7tBAQ+YTld5Pc2XINPgZSD1G9kU5dQ7yqyDGylNVAKHhWW++BLFTha9AukvW2WX2UkzjZ79WsBVgq00wzx3QiJoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q6zmq6+0; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nj/e2U4k"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2b243198058so277025ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 18:14:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775956459; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cqmZEf66v6qSs9h1WSdM9I/wiXRQnCW9S6nIrGd0jyo3abBT8kQqxCrtDrrBHT4KrU
-         xoRlxscLdEa410ahmVQezdXsdcjEjhtlrsb/YvmeKvGGT70WAr/NSp+wXTePT0fkGKEX
-         eoRGGqPyyA9WIWBIMuqVZOs/moS2B8sIoQEQHtge7GF8BJMpGNnQC4ztTS4R8NYRL/Y/
-         UxY8M8EA40Z79gI3BxahN65ZoAUVh3hdgJQGKzF+DgLJyqgQfrFJ0g4oNh2gHWi9GOlx
-         FdQFKHIn7Tsj8luyPIPcVqFMKcDH7VdfDiYqlhMLEaxfrjTBMjt6s3zwbQ7urPHjqId9
-         rJeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/AZhzxqPX5mqnjiLPy+maGxKzzx2/k1Y1sKM4rH1bFo=;
-        fh=7h0izHys8KHgVwAHFbDqh8DXgNjj235aXcN4iZY+6bA=;
-        b=gP4bjPyDO1TYILJ4D/pROdWJvYQvo0y+Zk9e9awsqtXkrjdA+cdAyrVe6VkWcf1jW4
-         QZb95nsMRxn8PH/KDjn6GD2VhvoM8e7hN4UC2PeGDLxSURzHCdWQtISP67h4JaR5t6W9
-         jH98W9LDlOQUkas298vQvVHtbaQQW6jpeb+kOgdIYwrlBYEryxVnPw+iIwDst3+9jGM8
-         5t8ax1tfmk1+QScCVFsKb+c8y9t5nYbT3/623zvwB2sUpdvsSjFwL2Gobmqf6K7vnUnV
-         1CsDJkEC7ohq4qzn/oKyaYyQZylJw5FOoXw/MicwcvtLPa2+xS1a10Ni5fwAI+JzfWxW
-         dghg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q6zmq6+0"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2d889997495so285571eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:08:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775956459; x=1776561259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/AZhzxqPX5mqnjiLPy+maGxKzzx2/k1Y1sKM4rH1bFo=;
-        b=Nj/e2U4k8PYAazx0m5HxvDzn3HLND+7ehfV84ziuYWSZZtVTYTfPyTSNqXE/u6T1qL
-         xSfBIdmLP5EPqs4HyI/95CYwKsyyjFk1LKjYYQgZP3bkHfYh2Z+OJaVGP7pceeUcSwPR
-         y1gGiFpHT1klnz3T/5q5nNk6+YuGWeLMcVzTb9QknlTXn+/ZC+Uy642GUeM/GGCku7Ro
-         W0V05MOmOEDeBlKFfDsSsu30HJmNmGmlnIF9Me2rvfGyJLJ37deMllwTQ6RG+4Xs1Jt1
-         vPTKqHB5yYpxVonuhZhB6aRmgAQMHkFelxtUERBY/d2C/Tz7zA9TShRLDR3LBuQYCecI
-         MPfg==
+        d=google.com; s=20251104; t=1775959717; x=1776564517; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vwv/AsxT8e+y1/cIVbNHf9WIAFVZR7e9Cq8Iq1m+uFM=;
+        b=Q6zmq6+0NJfNb7DfxWzcD+pBFxThPLURfTySNs9tuqwI/M3bCc5zSfnvRMl2xHY240
+         o92THuyxzNREYULRNLKUZbmetDAOtcgpchXCVW4jMseIZ3YmfqOJGVQMvX3D9pNKjsDq
+         0Ohg7E7ogSUtnNfpMtUO92XGiNLShkJRVd+Zz6Vhtm/B6aGjux57kMhpdGNcsi6z62vT
+         d4F9NGT+2qw3JR+1Lc0L9wRs+6w59sY3u4trYVOFD3SQnzWU5AXIu3MH9ZMh1pXyWTHE
+         4fVtO5VbSbFLLXPCSrsDUnLKksWQfuajlxwlYW9bLTDFzwCexYtEWDoVprtoBr1mQvlG
+         c6zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775956459; x=1776561259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/AZhzxqPX5mqnjiLPy+maGxKzzx2/k1Y1sKM4rH1bFo=;
-        b=n6wSVU9F+BUxvbYaOzDrtb8LxAxFlDdK2wqnX/24/RkkYEa0f6CuD8sb0cnhvEsyPZ
-         PbzYozg/iiGGsfx4ga8O14DpD4JNMYHOT0TTBSyC0o9177jThVRXuJbFfn78U2G2RMMb
-         OpZFlbsaSRMYk2YbITGYwe2+VD9kEKXFZnworP2LUZG1aj7Ae3Mjfiq30xJxQxkZaxqC
-         XOt0AlrD11HvzKJfseeyVVMA7Ey78tVBNMGPbXhzcARYzvoJ4m6Peltg/3Q/UqY9iADk
-         XbjACY9ZIEJEVmLjD6Ud8hICc3GleCYOE9zTqcZdOejooaws09rZgm62lScbD66T3L18
-         QgRQ==
-X-Gm-Message-State: AOJu0YwIQl4QumC7IB+9HhYvUzWGALlOcbVlXxC/0qXG/0l3Fos7bIiC
-	rFcx+GINuoN9+keUQbiS2ChEySBqv3hBiGwwqWRHEPYave1km17edq0p6sGhIEntendZhCwmUOM
-	zypGSz8gyKnXrEtnXEmtmvCLCSznkd4jZ9qliD6eF
-X-Gm-Gg: AeBDieu1o1gWYQWUHhyyFvQh4Ht2KbGUC3tL4xL8boWJHRom8u6mWp6GHLuRw3vSzWR
-	2xQLUsU4JtXBVoSgDZkIJYpG6owyY+A+lxp+7aC9/gDJ1xst8trf6z+BUc8n8um/8oi3afYp3ey
-	P2rkJ3S4IFL6oTYIOXzYWxKgyem+kwfDcjEcdHOhVvUbzEv7Spdl8cIKBPxdMrDpPoOx6e23V1o
-	wO1q61KKD+8YTMjJUxD9KO0Sqer/T1SolJmlzBS5IC6NPWGxbZUJfq0df0I+Hky6JTnEbAyKCry
-	PjF3fhbt4w/Z75TdgC4=
-X-Received: by 2002:a17:903:2b0f:b0:2b0:5e19:1862 with SMTP id
- d9443c01a7336-2b2c8c74a19mr9132395ad.5.1775956458063; Sat, 11 Apr 2026
- 18:14:18 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775959717; x=1776564517;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vwv/AsxT8e+y1/cIVbNHf9WIAFVZR7e9Cq8Iq1m+uFM=;
+        b=nMw+b5FwZ2upvMhJTX6dgYBwMy5Lr4S7+tr0GecFQytRKyQqEksJhitkQqjxyYKMfe
+         2s+4uc6YqUHqW5rJc8M9qaftyxJE1XyE/u42XwsHDHA6vhQDKMiwz49A1cCnwe+yNfVP
+         uCzJCZ8DZD6jEgKQXV72vkEWIA/1QPMyVvyXTCtSz059qkaMaqKALHJl2KVVeZoNgx/y
+         2wEnSB8A/28h1IAMY4wGdlJXAZiICEiiJwFWb3jDLJeFw4blaLIP4UR2kLmNUC0o7nGD
+         puOJfW4q9NJxoF+U+O67kmjpkpUkoxwR0Py6tNkS7XXPNKPZA9blKYazAJkEcYeH8HZU
+         iBsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWL1AiM/ZVU9DvnJsnvu2iM+WtQrviRXvB0cs8LhfJxdHOuAoDaGhvqmEbJu4YC2JN5rLDSdOnNvHMttnaYW92A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmcg2Zr7LsXXjy6qG4E4BjA11owQIQ864t84jNFvYryu73vnOJ
+	i81jt09ftt0x71bhvuGuQld6ADvdRfE9bYtm2Y9OypPLMo6IAV+HX/y99f+qbCGScXJ4Qcpho5v
+	96W3eZL8RRg==
+X-Received: from dlak10.prod.google.com ([2002:a05:701b:290a:b0:12b:eb82:4c63])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6187:b0:11d:e40f:ee69
+ with SMTP id a92af1059eb24-12c34f273b7mr5042771c88.36.1775959716083; Sat, 11
+ Apr 2026 19:08:36 -0700 (PDT)
+Date: Sat, 11 Apr 2026 19:08:03 -0700
+In-Reply-To: <20260411191710.524998-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260411193705.735269-1-irogers@google.com> <20260411195423.4C949C2BCAF@smtp.kernel.org>
-In-Reply-To: <20260411195423.4C949C2BCAF@smtp.kernel.org>
+Mime-Version: 1.0
+References: <20260411191710.524998-1-irogers@google.com>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260412020833.641177-1-irogers@google.com>
+Subject: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 11 Apr 2026 18:14:05 -0700
-X-Gm-Features: AQROBzCzmRC6_AJAS-FddXGPSNJ2tzJQjoSrAk5fV3Wn_jV8Rz-zjmDJ4IIO1Rk
-Message-ID: <CAP-5=fUvMcBbHTumUVRmxFA7OL6bBP-bC9SUeWHDi5XQJ=ZWkg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Fix inet_pton probe failure and unroll call graph
-To: sashiko@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
+	alex@ghiti.fr, alexander.shishkin@linux.intel.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, blakejones@google.com, 
+	ctshao@google.com, dapeng1.mi@linux.intel.com, derek.foreman@collabora.com, 
+	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com, 
+	james.clark@linaro.org, jolsa@kernel.org, krzysztof.m.lopatowski@gmail.com, 
+	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux@treblig.org, mingo@redhat.com, 
+	nichen@iscas.ac.cn, palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org, 
+	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn, 
+	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com, 
+	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 11, 2026 at 12:54=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Sashiko AI review found 1 potential issue(s):
-> - [Medium] Unconditionally requiring DWARF call-graphs causes the test to=
- falsely fail on perf builds lacking DWARF support.
-> --
->
-> commit dbec7073d294917f7866e8ea3a6b39004a7407ad
-> Author: Ian Rogers <irogers@google.com>
->
-> perf test: Fix inet_pton probe failure and unroll call graph
->
-> This commit fixes an issue where multiple identical event names were outp=
-ut
-> by perf probe when creating multiple probe points, which broke subsequent
-> commands. It also updates the backtrace collection to explicitly request
-> dwarf call-graphs and increases max-stack to 8 for all architectures.
->
-> > diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/to=
-ols/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > index ab99bef556bf0..eca629ee83f03 100755
-> > --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> [ ... ]
-> > @@ -40,12 +40,12 @@ trace_libc_inet_pton_backtrace() {
-> >       echo ".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" =
->> $expected
-> >       case "$(uname -m)" in
-> >       s390x)
-> > -             eventattr=3D'call-graph=3Ddwarf,max-stack=3D4'
-> > +             eventattr=3D'call-graph=3Ddwarf,max-stack=3D8'
-> >               echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:=
-xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
-> >               echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlin=
-ed|.*/bin/ping.*\)$" >> $expected
-> >               ;;
-> >       *)
-> > -             eventattr=3D'max-stack=3D4'
-> > +             eventattr=3D'call-graph=3Ddwarf,max-stack=3D8'
->
-> Will this cause the test to falsely fail on perf builds lacking DWARF sup=
-port?
->
-> If perf is compiled without libunwind or libdw, running perf record with
-> call-graph=3Ddwarf will exit with an error. Since the test script doesn't
-> appear to verify DWARF support before running, the test will report a har=
-d
-> failure rather than gracefully skipping on minimal perf builds.
+Nearly all perf code ends up passing an evsel with the perf_sample,
+which is problematic if you want to rewrite the evsel such as with
+off-CPU processing - all uses of the evsel need fixing up. Previously
+I'd mailed this patch as an RFC with everything combined:
+https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
+and there was a request to break it up.
 
-Since perf probe requires libdw and libunwind is deprecated this isn't
-a concern.
+v10: Changes to some of the bounds checks as prompted by Sashiko.
 
-Thanks,
-Ian
+v9: Clean up some error path nits caught by Sashiko and simple bound
+    checks Sashiko recommended.
+https://lore.kernel.org/linux-perf-users/20260411191710.524998-1-irogers@google.com/
 
-> >               echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bi=
-n/ping.*\)$" >> $expected
-> >               ;;
-> >       esac
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260411193705.73=
-5269-1-irogers@google.com?part=3D1
+v8: Fix address sanitizer issues with kwork and move patches, along
+    with bound check additions, to end of series.
+https://lore.kernel.org/linux-perf-users/20260411065718.372240-1-irogers@google.com/
+
+v7: Separate out kwork work->name to a strdup into its own patch, now patch 4.
+https://lore.kernel.org/linux-perf-users/20260408072601.210837-1-irogers@google.com/
+
+v6: Address more Sashiko feedback.
+https://lore.kernel.org/lkml/20260404034325.3172592-1-irogers@google.com/
+
+v5: Address feedback from Sashiko and Namhyung.
+https://lore.kernel.org/lkml/20260403204017.2919994-1-irogers@google.com/
+
+v4: Fix more sashiko issues: bounds checks, memory safety, making
+    refactors better, inconsistent evsels, mmap2 buildid injection
+    choice of evsel, mismatched function arguments.
+https://sashiko.dev/#/patchset/20260320080835.724836-1-irogers%40google.com
+https://lore.kernel.org/lkml/20260320192627.368357-1-irogers@google.com/
+
+v3: Fix various sashiko review comments particularly about unintended
+    behavior changes.
+https://lore.kernel.org/lkml/20260320080835.724836-1-irogers@google.com/
+
+v2: Add review feedback on the first 2 patches from Namhyung, fix a
+    missed evsel assignment running event2evsel in builtin-inject.
+https://lore.kernel.org/lkml/20260319232334.287517-1-irogers@google.com/
+
+v1: https://lore.kernel.org/lkml/20260209174032.4142096-1-irogers@google.com/
+
+Ian Rogers (29):
+  perf sample: Fix documentation typo
+  perf tool: Remove evsel from tool APIs that pass the sample
+  perf kvm: Don't pass evsel with sample
+  perf evsel: Refactor evsel tracepoint sample accessors perf_sample
+  perf trace: Don't pass evsel with sample
+  perf callchain: Don't pass evsel and sample
+  perf lock: Only pass sample to handlers
+  perf lock: Constify trace_lock_handler variables
+  perf hist: Remove evsel parameter from inc samples functions
+  perf db-export: Remove evsel from struct export_sample
+  perf hist: Remove evsel from struct hist_entry_iter
+  perf report: Directly use sample->evsel to avoid computing from
+    sample->id
+  perf annotate: Don't pass evsel to add_sample
+  perf inject: Don't pass evsel with sample
+  perf kmem: Don't pass evsel with sample
+  perf kwork: Don't pass evsel with sample
+  perf sched: Don't pass evsel with sample
+  perf timechart: Don't pass evsel with sample
+  perf trace: Don't pass evsel with sample
+  perf evlist: Try to avoid computing evsel from sample
+  perf script: Don't pass evsel with sample
+  perf s390-sample-raw: Don't pass evsel or its PMU with sample
+  perf evsel: Don't pass evsel with sample
+  perf kmem: Add bounds checks to tracepoint read values
+  perf sched: Bounds check CPU in sched switch events
+  perf timechart: Bounds check CPU
+  perf evsel: Add bounds checking to trace point raw data accessors
+  perf kwork: Fix address sanitizer issues
+  perf kwork: Fix memory management of kwork_work
+
+ tools/perf/builtin-annotate.c                 |  28 +-
+ tools/perf/builtin-c2c.c                      |   6 +-
+ tools/perf/builtin-diff.c                     |   5 +-
+ tools/perf/builtin-inject.c                   |  75 +++---
+ tools/perf/builtin-kmem.c                     |  95 ++++---
+ tools/perf/builtin-kvm.c                      |  22 +-
+ tools/perf/builtin-kwork.c                    | 253 +++++++++++-------
+ tools/perf/builtin-lock.c                     | 128 +++++----
+ tools/perf/builtin-mem.c                      |   1 -
+ tools/perf/builtin-record.c                   |   3 +-
+ tools/perf/builtin-report.c                   |  38 ++-
+ tools/perf/builtin-sched.c                    | 188 ++++++-------
+ tools/perf/builtin-script.c                   |  22 +-
+ tools/perf/builtin-timechart.c                | 170 +++++++-----
+ tools/perf/builtin-top.c                      |  19 +-
+ tools/perf/builtin-trace.c                    | 121 +++++----
+ tools/perf/tests/hists_cumulate.c             |   1 -
+ tools/perf/tests/hists_filter.c               |   1 -
+ tools/perf/tests/hists_output.c               |   1 -
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
+ tools/perf/tests/switch-tracking.c            |   9 +-
+ tools/perf/util/annotate.c                    |  19 +-
+ tools/perf/util/annotate.h                    |   6 +-
+ tools/perf/util/bpf_kwork.c                   |  14 +-
+ tools/perf/util/build-id.c                    |   3 +-
+ tools/perf/util/build-id.h                    |   7 +-
+ tools/perf/util/callchain.c                   |   8 +-
+ tools/perf/util/callchain.h                   |   6 +-
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/data-convert-json.c           |   5 +-
+ tools/perf/util/db-export.c                   |  13 +-
+ tools/perf/util/db-export.h                   |   3 +-
+ tools/perf/util/evsel.c                       |  94 ++++---
+ tools/perf/util/evsel.h                       |  12 +-
+ tools/perf/util/hist.c                        |  26 +-
+ tools/perf/util/hist.h                        |   3 +-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/intel-tpebs.c                 |   3 +-
+ tools/perf/util/jitdump.c                     |   2 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
+ .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 ++---
+ tools/perf/util/kvm-stat.c                    |  19 +-
+ tools/perf/util/kvm-stat.h                    |  18 +-
+ tools/perf/util/kwork.h                       |  11 +-
+ tools/perf/util/machine.c                     |  14 +-
+ tools/perf/util/machine.h                     |   3 -
+ tools/perf/util/s390-sample-raw.c             |  31 ++-
+ tools/perf/util/sample.h                      |   2 +-
+ .../util/scripting-engines/trace-event-perl.c |  23 +-
+ .../scripting-engines/trace-event-python.c    |  47 ++--
+ tools/perf/util/session.c                     |  38 +--
+ tools/perf/util/synthetic-events.c            |  68 +++--
+ tools/perf/util/synthetic-events.h            |   2 -
+ tools/perf/util/tool.c                        |   4 +-
+ tools/perf/util/tool.h                        |   4 +-
+ tools/perf/util/trace-event-scripting.c       |   5 +-
+ tools/perf/util/trace-event.h                 |   3 -
+ 62 files changed, 967 insertions(+), 905 deletions(-)
+
+-- 
+2.53.0.1213.gd9a14994de-goog
+
