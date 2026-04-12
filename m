@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D762426A0C7
-	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 02:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9667E31E84D
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 02:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775959742; cv=none; b=GyXW9bjQlqu3xAztLzgTSJzIXNBG46xDciI01+Dv4gT4D+Kgx1Z4vcjzNjQS3IpE/dkr89ucFUeV5eSx6QZ/IWfZq8VVEuqk/i3QuZBNfzLsCXfMKHABU5BCLNTREqKFipvvhIrOi2KzLdXG8yKpoEXBWvq6w+efRgJfsHSuDNA=
+	t=1775959745; cv=none; b=kXidYLbeKPp1LatNPJG5C4nR5z9XJp06NsRzO8GMcFiQSNvjmy13e7rqKSUz7EK4zwjToeIyPq5g4KiCuimOEx36OjQgbt+81SLV/EEecIGg6gpm7Uw+Uux75NbITAs7my7BJqDkkhPvRf/tdGumnRymy2j+WhxyG0fY3pgP7nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775959742; c=relaxed/simple;
-	bh=nrE8NbjgL5GodtjlelQu6WKY5Rt5ryJ3pELk9LbtElA=;
+	s=arc-20240116; t=1775959745; c=relaxed/simple;
+	bh=zocEQ15pqhkgaBM7JLqkF/pDJjGAt5zDiwcYu+1pxdw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=No5OViXIyWIcdm22YGvJiDw3H62XiJVgWbkWi5UQKUMyrMS8KgAFIY2NoprexFm19SDb3H/Zepng+f7+G5/84pgFiFB7JgZfyfNZkD5VPccl7Qy0u7jd5IWbhsaU5zxs3eoeNm918sf6uk+tvXb31mVfr6FrpDkc3hiUNDjkND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=elIANNrU; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=C9CfPB2vMMvv9FwQ6OAA3f0CfqqfCWcqFFuDtSjPunYDzF1YNnFGEEh6OZFs/RRBsYMVUSsBe6ni1mgqFM6OoV7cswCyLvVsiWcYedNa2wYddCRcXJY2EKC2Ou1cVSgjfpWNS7iHh7/6C0AWadlQt02SDQxCavh5kBwKDEJeq6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pdpi/aT7; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="elIANNrU"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d8a677cdfaso25554eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:09:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pdpi/aT7"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdd327d970so2036765eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2026 19:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775959740; x=1776564540; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775959743; x=1776564543; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYe/pTSkEo3bwawbKUcGMi5fd/X0VJXe6Y5bot3/3gQ=;
-        b=elIANNrUeNr/Knb5SxwQ0bkMqiklsgzLT2gnJSNS+05luswYuDLJ4c9zBJgIPABIgh
-         sTPqiYTPEENxLnqZVNj8GLsUHWP8U2cXeIHTHZMcfBbLcvclI1mt/qULzR4oIwg0yINj
-         3b8TTj/uAGWDwTWGwGzvuP+Tl8eQ22O8c4hcRZirbGM0zNBqb20+3JVLIHfQguhQACal
-         KOrGiSvU8MwJPnEm//Xkha5JjXAaikl9/CCMMGkN1TMkAwoEWTMVRJqGOcHIk1Ewu1i5
-         30HLsTiDSBvm48joSpHY6LWXx5IcUzLjbVijwUqn6ehZJJC4BGaLXz4CVw8iEgMLTyCO
-         h7sg==
+        bh=qFmOnjJwpBpu0n7wKSDPl2Bef0Eg6yPkVeQqUwZtmi0=;
+        b=pdpi/aT7I6s69pRNsb+KCgPZzSwzsfIX5KwZDPKIXhErMHffi2aIkBm1d3nrEZL9Z9
+         0uLGPCSeliSD2CwjDlsGehHYdv2r+EJLPJReWk8OZHaECRpXKUx47kO4Mz9FJ46BejvZ
+         xrEbLvQJbMGF5r9GHOY8vO9vudv6QErKZ8y5feNf/HV4fZZ/orFL2SvAq2zA2xGyatyL
+         RU89lkQVPfWlNKYQXtDaw6ZiN/V0arSLOAREOD3yEYcfA3IbuXc9SRoXkJ4bTgJog3fD
+         pkzTRCukssblhog+7Qm0PoRvbZM3JYWRqu0atufCBgqQCyqJ8FO2wGwt4zvV6EIc0cGy
+         4c/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775959740; x=1776564540;
+        d=1e100.net; s=20251104; t=1775959743; x=1776564543;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYe/pTSkEo3bwawbKUcGMi5fd/X0VJXe6Y5bot3/3gQ=;
-        b=JWzAu/iVyrEdVEEVpTPssVkjqTuQV59Qugsb+GAC3OdHwEkcyNoy5cto8QAoi75DIc
-         ZQ82D4JQQjQ/grQG6jBw/SPQZugj/5zWSCsj8yo80P+zlaDBNaF+/JhfNWjfrd3zNveX
-         mcWw0Z1lqrtu9acxLKqO2rxkBG7McZM1CZSn20ckIZL2TxkWN16v/GImqw5O5CwAQMhf
-         G5/fUHy3LJc+UKJ/iPyhOFrKciMe5Xqo4B8ShWxgtUsLEJpg7sg2p+Bjl7Eb3ZCNtWUT
-         BPdn6PR1BO9jGjlcppgxWy+QJ57Bbhj/4dEmV/xLLmxH8NAF88mdefdgPSztEtq+7nvU
-         8Wyw==
-X-Forwarded-Encrypted: i=1; AFNElJ/0Nxd0D0AfVTEyknuo0tu3Bq/pUi0n+JbK2krP9QOalB0TaamOKTPGaadBnFgAJ2U8uEuzvYtbUOIwI/2eIoVe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyioTr9964dn52j+kRerW0IDzjar/BFeppfWe6U9dzxqejm+WDC
-	vXe0WcD/g94zhuy3ZsmZ5ovmJkHh6feUo0Ye9lunTReJ+NWxeKjKjBUCQMf5eHVaR4dNDC0CvyL
-	HmzM1CIMunw==
-X-Received: from dyhd16.prod.google.com ([2002:a05:7300:8290:b0:2d7:87e:5f58])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7495:b0:2c1:85a:d25d
- with SMTP id 5a478bee46e88-2d5871afa9cmr5532040eec.1.1775959739861; Sat, 11
- Apr 2026 19:08:59 -0700 (PDT)
-Date: Sat, 11 Apr 2026 19:08:12 -0700
+        bh=qFmOnjJwpBpu0n7wKSDPl2Bef0Eg6yPkVeQqUwZtmi0=;
+        b=gOLuEZKv+oGxSUMOVeozE6IYokSEvBdmzr81xHkmvd/Ok+tWDLwUpnzYHtTJJMJbZU
+         FffkgiFiMl56UQG+IS39Q2MGb3ppYx+ce1EljQqwW96h3sH8Q8SL93Qw5rAJk27z49Wi
+         AixkefqO8xFKS/salIneXY/MRQcD4dTKvSPPAYjlceh6rYUvlI17To9rBWQh9m4TziiN
+         GiAIav/+NuSs5wlk8an/D9GZzbS1wQmOp+2G9OhJJETR/8tVMGRuo1B3ZhGC3uapNpDp
+         PZpcH0snBLMjlCibVqOKqmV0EOk/YPa67Z/gMv+yTYwxe/uu+kwzk9/MEXtIMoWbjZKS
+         8zgg==
+X-Forwarded-Encrypted: i=1; AFNElJ9PoBsFfdfXwEkEHSWUELdVnW2iR8+l70QWdE/4ge0DWK6GPTDcq5S65MNE3GG6pHzvnld7fTt42zpo1xotQ2ak@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGKFvYOqVjKTwVoo4HRRIIQLGRp8EJAjCt9aHlfUOuCDmKfNUO
+	1S8irNoLg4tfRJhRdrFFynCkPm6JPa4sNlwePu/RPMv2gyXKqZ/cGBRrfifLI09Z8ZlMWQ39UNS
+	iSYJcVkDT9Q==
+X-Received: from dybta16.prod.google.com ([2002:a05:7301:6f10:b0:2d8:9b3:87f2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2184:b0:2c0:c6f6:b075
+ with SMTP id 5a478bee46e88-2d40e9cad00mr4214612eec.8.1775959742427; Sat, 11
+ Apr 2026 19:09:02 -0700 (PDT)
+Date: Sat, 11 Apr 2026 19:08:13 -0700
 In-Reply-To: <20260412020833.641177-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260411191710.524998-1-irogers@google.com> <20260412020833.641177-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260412020833.641177-10-irogers@google.com>
-Subject: [PATCH v10 09/29] perf hist: Remove evsel parameter from inc samples functions
+Message-ID: <20260412020833.641177-11-irogers@google.com>
+Subject: [PATCH v10 10/29] perf db-export: Remove evsel from struct export_sample
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,243 +76,106 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-hist_entry__inc_addr_samples and addr_map_symbol__inc_samples
-unnecessarily take an evsel argument. Read the evsel from the sample
-instead.
+As the sample contains the evsel avoid the duplication. Remove the
+evsel from db_export__sample as it can also read from the sample.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-annotate.c |  7 +++----
- tools/perf/builtin-c2c.c      |  2 +-
- tools/perf/builtin-report.c   | 18 ++++++++----------
- tools/perf/builtin-top.c      |  6 +++---
- tools/perf/util/annotate.c    | 19 +++++++++----------
- tools/perf/util/annotate.h    |  6 ++----
- 6 files changed, 26 insertions(+), 32 deletions(-)
+ tools/perf/util/db-export.c                            | 5 ++---
+ tools/perf/util/db-export.h                            | 3 +--
+ tools/perf/util/scripting-engines/trace-event-python.c | 8 ++++----
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 58e56f826367..ee1ba2dc35f4 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -176,16 +176,15 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct hist_entry *he = iter->he;
- 	struct branch_info *bi;
- 	struct perf_sample *sample = iter->sample;
--	struct evsel *evsel = iter->evsel;
- 	int err;
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index d991e3168aed..ba54b1119ee6 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -344,14 +344,13 @@ static int db_export__threads(struct db_export *dbe, struct thread *thread,
+ }
  
- 	bi = he->branch_info;
--	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->from, sample);
+ int db_export__sample(struct db_export *dbe, union perf_event *event,
+-		      struct perf_sample *sample, struct evsel *evsel,
++		      struct perf_sample *sample,
+ 		      struct addr_location *al, struct addr_location *addr_al)
+ {
+ 	struct thread *thread = al->thread;
+ 	struct export_sample es = {
+ 		.event = event,
+ 		.sample = sample,
+-		.evsel = evsel,
+ 		.al = al,
+ 	};
+ 	struct thread *main_thread;
+@@ -364,7 +363,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 	if (!machine)
+ 		return -1;
  
+-	err = db_export__evsel(dbe, evsel);
++	err = db_export__evsel(dbe, sample->evsel);
  	if (err)
- 		goto out;
+ 		return err;
  
--	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->to, sample);
+diff --git a/tools/perf/util/db-export.h b/tools/perf/util/db-export.h
+index 23983cb35706..1abbfd398e3a 100644
+--- a/tools/perf/util/db-export.h
++++ b/tools/perf/util/db-export.h
+@@ -25,7 +25,6 @@ struct call_return;
+ struct export_sample {
+ 	union perf_event	*event;
+ 	struct perf_sample	*sample;
+-	struct evsel		*evsel;
+ 	struct addr_location	*al;
+ 	u64			db_id;
+ 	u64			comm_db_id;
+@@ -96,7 +95,7 @@ int db_export__symbol(struct db_export *dbe, struct symbol *sym,
+ int db_export__branch_type(struct db_export *dbe, u32 branch_type,
+ 			   const char *name);
+ int db_export__sample(struct db_export *dbe, union perf_event *event,
+-		      struct perf_sample *sample, struct evsel *evsel,
++		      struct perf_sample *sample,
+ 		      struct addr_location *al, struct addr_location *addr_al);
  
- out:
- 	return err;
-@@ -275,7 +274,7 @@ static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
- 	if (he == NULL)
- 		return -ENOMEM;
+ int db_export__branch_types(struct db_export *dbe);
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 1537122167d5..9e1069ec0578 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1312,7 +1312,7 @@ static void python_export_sample_table(struct db_export *dbe,
+ 	t = tuple_new(28);
  
--	ret = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+	ret = hist_entry__inc_addr_samples(he, sample, al->addr);
- 	hists__inc_nr_samples(hists, true);
- 	return ret;
- }
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 2fa3d7ec8a09..36f386949923 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -371,7 +371,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	tuple_set_d64(t, 0, es->db_id);
+-	tuple_set_d64(t, 1, es->evsel->db_id);
++	tuple_set_d64(t, 1, es->sample->evsel->db_id);
+ 	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
+ 	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
+ 	tuple_set_d64(t, 4, es->comm_db_id);
+@@ -1353,7 +1353,7 @@ static void python_export_synth(struct db_export *dbe, struct export_sample *es)
+ 	t = tuple_new(3);
  
- 	if (perf_c2c__has_annotation(NULL)) {
- 		perf_c2c__evsel_hists_inc_stats(evsel, he, sample);
--		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample, evsel);
-+		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample);
- 	}
+ 	tuple_set_d64(t, 0, es->db_id);
+-	tuple_set_d64(t, 1, es->evsel->core.attr.config);
++	tuple_set_d64(t, 1, es->sample->evsel->core.attr.config);
+ 	tuple_set_bytes(t, 2, es->sample->raw_data, es->sample->raw_size);
  
- 	ret = hist_entry__append_callchain(he, sample);
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 848e2ccb1420..46d839bbaeef 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -170,7 +170,6 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
- 	int err = 0;
- 	struct report *rep = arg;
- 	struct hist_entry *he = iter->he;
--	struct evsel *evsel = iter->evsel;
- 	struct perf_sample *sample = iter->sample;
- 	struct mem_info *mi;
- 	struct branch_info *bi;
-@@ -180,25 +179,25 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
+ 	call_object(tables->synth_handler, t, "synth_data");
+@@ -1368,7 +1368,7 @@ static int python_export_sample(struct db_export *dbe,
  
- 	if (sort__mode == SORT_MODE__BRANCH) {
- 		bi = he->branch_info;
--		err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+		err = addr_map_symbol__inc_samples(&bi->from, sample);
- 		if (err)
- 			goto out;
+ 	python_export_sample_table(dbe, es);
  
--		err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+		err = addr_map_symbol__inc_samples(&bi->to, sample);
+-	if (es->evsel->core.attr.type == PERF_TYPE_SYNTH && tables->synth_handler)
++	if (es->sample->evsel->core.attr.type == PERF_TYPE_SYNTH && tables->synth_handler)
+ 		python_export_synth(dbe, es);
  
- 	} else if (rep->mem_mode) {
- 		mi = he->mem_info;
--		err = addr_map_symbol__inc_samples(mem_info__daddr(mi), sample, evsel);
-+		err = addr_map_symbol__inc_samples(mem_info__daddr(mi), sample);
- 		if (err)
- 			goto out;
- 
--		err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+		err = hist_entry__inc_addr_samples(he, sample, al->addr);
- 
- 	} else if (symbol_conf.cumulate_callchain) {
- 		if (single)
--			err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+			err = hist_entry__inc_addr_samples(he, sample, al->addr);
- 	} else {
--		err = hist_entry__inc_addr_samples(he, sample, evsel, al->addr);
-+		err = hist_entry__inc_addr_samples(he, sample, al->addr);
- 	}
- 
- out:
-@@ -214,7 +213,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct report *rep = arg;
- 	struct branch_info *bi = he->branch_info;
- 	struct perf_sample *sample = iter->sample;
--	struct evsel *evsel = iter->evsel;
- 	int err;
- 
- 	branch_type_count(&rep->brtype_stat, &bi->flags,
-@@ -223,11 +221,11 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
- 
--	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->from, sample);
- 	if (err)
- 		goto out;
- 
--	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
-+	err = addr_map_symbol__inc_samples(&bi->to, sample);
- 
- out:
- 	return err;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index f6eb543de537..b4fc991b4eeb 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -199,7 +199,7 @@ static void ui__warn_map_erange(struct map *map, struct symbol *sym, u64 ip)
- static void perf_top__record_precise_ip(struct perf_top *top,
- 					struct hist_entry *he,
- 					struct perf_sample *sample,
--					struct evsel *evsel, u64 ip)
-+					u64 ip)
- 	EXCLUSIVE_LOCKS_REQUIRED(he->hists->lock)
- {
- 	struct annotation *notes;
-@@ -216,7 +216,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 	if (!annotation__trylock(notes))
- 		return;
- 
--	err = hist_entry__inc_addr_samples(he, sample, evsel, ip);
-+	err = hist_entry__inc_addr_samples(he, sample, ip);
- 
- 	annotation__unlock(notes);
- 
-@@ -735,7 +735,7 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
- 	struct evsel *evsel = iter->evsel;
- 
- 	if (perf_hpp_list.sym && single)
--		perf_top__record_precise_ip(top, iter->he, iter->sample, evsel, al->addr);
-+		perf_top__record_precise_ip(top, iter->he, iter->sample, al->addr);
- 
- 	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
- 			     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e745f3034a0e..470569745abe 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -213,9 +213,10 @@ static int __symbol__account_cycles(struct cyc_hist *ch,
- }
- 
- static int __symbol__inc_addr_samples(struct map_symbol *ms,
--				      struct annotated_source *src, struct evsel *evsel, u64 addr,
-+				      struct annotated_source *src, u64 addr,
- 				      struct perf_sample *sample)
- {
-+	struct evsel *evsel = sample->evsel;
- 	struct symbol *sym = ms->sym;
- 	long hash_key;
- 	u64 offset;
-@@ -318,7 +319,7 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists)
- }
- 
- static int symbol__inc_addr_samples(struct map_symbol *ms,
--				    struct evsel *evsel, u64 addr,
-+				    u64 addr,
- 				    struct perf_sample *sample)
- {
- 	struct symbol *sym = ms->sym;
-@@ -326,8 +327,8 @@ static int symbol__inc_addr_samples(struct map_symbol *ms,
- 
- 	if (sym == NULL)
- 		return 0;
--	src = symbol__hists(sym, evsel->evlist->core.nr_entries);
--	return src ? __symbol__inc_addr_samples(ms, src, evsel, addr, sample) : 0;
-+	src = symbol__hists(sym, sample->evsel->evlist->core.nr_entries);
-+	return src ? __symbol__inc_addr_samples(ms, src, addr, sample) : 0;
- }
- 
- static int symbol__account_br_cntr(struct annotated_branch *branch,
-@@ -581,16 +582,14 @@ static int annotation__compute_ipc(struct annotation *notes, size_t size,
  	return 0;
- }
- 
--int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
--				 struct evsel *evsel)
-+int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample)
- {
--	return symbol__inc_addr_samples(&ams->ms, evsel, ams->al_addr, sample);
-+	return symbol__inc_addr_samples(&ams->ms, ams->al_addr, sample);
- }
- 
--int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample,
--				 struct evsel *evsel, u64 ip)
-+int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample, u64 ip)
- {
--	return symbol__inc_addr_samples(&he->ms, evsel, ip, sample);
-+	return symbol__inc_addr_samples(&he->ms, ip, sample);
- }
- 
- 
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 696e36dbf013..1aa6df7d1618 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -422,8 +422,7 @@ static inline struct annotation *symbol__annotation(struct symbol *sym)
- 	return (void *)sym - symbol_conf.priv_size;
- }
- 
--int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
--				 struct evsel *evsel);
-+int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample);
- 
- struct annotated_branch *annotation__get_branch(struct annotation *notes);
- 
-@@ -433,8 +432,7 @@ int addr_map_symbol__account_cycles(struct addr_map_symbol *ams,
- 				    struct evsel *evsel,
- 				    u64 br_cntr);
- 
--int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample,
--				 struct evsel *evsel, u64 addr);
-+int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *sample, u64 addr);
- 
- struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
- void symbol__annotate_zero_histograms(struct symbol *sym);
+@@ -1517,7 +1517,7 @@ static void python_process_event(union perf_event *event,
+ 	/* Reserve for future process_hw/sw/raw APIs */
+ 	default:
+ 		if (tables->db_export_mode)
+-			db_export__sample(&tables->dbe, event, sample, evsel, al, addr_al);
++			db_export__sample(&tables->dbe, event, sample, al, addr_al);
+ 		else
+ 			python_process_general_event(sample, evsel, al, addr_al);
+ 	}
 -- 
 2.53.0.1213.gd9a14994de-goog
 
