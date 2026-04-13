@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3487137FF75
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8879C37F8D4
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776053558; cv=none; b=fg/jAMR95f/x+84d5ij6NBA0d9N1YwDffmWUAhO+REW6EWCKkWr14rxJNobhXjfpPvHLg2+4DoStuzLMF+IXHhbshrOJ0o4z3r0LhM/ZHlNU6ygdBX5Ud96UNRQL7X1puWm2rARIU/YnstauH4xf45Jz392elHAGi5BPr80W5Ro=
+	t=1776053557; cv=none; b=ml9+YZjrYl8WBf1tEprXqr0tEo9Y2OP2oaa3LIKvwrr9zON5P6SaVpkdI58Xw+NweTNwgU+QNpxfmqhlmCLnjl+/k6RAxyYn9GdZRyRoC4DrJm4nVORHudXL4lLUB1xPKuOlYAD55I4j9otSm8RDl9xgQLCEhfcEk1TVPj0jSmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776053558; c=relaxed/simple;
-	bh=U21YjZbTLKjhR+W4EfBEee1/yW+4HlS/oTGqe0Nrojw=;
+	s=arc-20240116; t=1776053557; c=relaxed/simple;
+	bh=495v7vwy/bxdki64nsuLUq2VLnkw+FqQnijSjVyewWk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=k7T60A/6kg3Uaz3GrIKZMKHmoFHa/ISpjTO0q0As8HG73lGwJbZdzHMena+WeLkBTjIly8iF51Hph8DfVRU9eZ4tGFXbeJ+7zLv3ZHitAJgqyek7d0+kXSzGLQqS4bnHwyg2XqZBX74LA/M4lpNLbA5WZDbDRnq+Ljcd0mcy044=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r9mxQ560; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=Zcf70IJQNVTwIZ2IJZ1x8v2Rukg3ix4ztY57Wf3hHiG9cVFO00FFh7S7Y+5KKCQFwhiotQL2l5SUrjcfT/cujsjJUw6gEVvFfNf7l9RQ3Bmpt9foGCh4GZB2vJRp5fj7qFt9maFdu7CpqrlcgPvlPeEw7jRLJxxIaPgUdBw+kJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QxFZMLK3; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r9mxQ560"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d8a677cdfaso786792eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:12:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QxFZMLK3"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2b458add85aso8313415ad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776053547; x=1776658347; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776053549; x=1776658349; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CexyOKGLd1wDyUtEXB2mYM32u5jxlu6R2jpDLPNHjCI=;
-        b=r9mxQ5608mNJEPgsG/cJnJOihZz8YDHCaGrUVu9ocpVX3R0AQx4hQwRgh/jW4FjtaX
-         2wmd+kLryshEY9l6XdPHEULKKYTOVMH4rV2o98ChLDfkRZZJ9cFH+BMJl4m49BgATbSY
-         9psMOT0/1trisglGvdUfunGEGmIJgJeFl3zpm9u1AfLQY//2qTvPE4CZWjnowmkO/YE/
-         m+cHJYL/6Z9nJhp5iEVSWyAs0BrUNMyePleA4U5BHHTbmkpgnshbwBjQ6c8EtUuXw7vf
-         JJZKF//tOpgaSUI7BLgC9XtKe+8A892QZ6n/wViQEDsWKhtWcIJKKdzMKge08aO1DdU3
-         37MA==
+        bh=TdCCiiHDf0G456jnJXOkKokcXFcoaXYbGwyy1xI9gh0=;
+        b=QxFZMLK3qmpziW9EJBM67GxbyIpffuE6fPf3fEgGVecGV+YvxHga4mPPBHCaXTR02B
+         gmW5xLHbiU99HMziJw4Ehr9OgmVQ6po5jzddl1H97FAKAeiVZGLwn9E0vUcn4yAIDdaW
+         wo5PZ3g6KflNMBVpdONHX1E2sY+5rDi2fVaphlpuAIND1vJNT90xKXttuiSFFdWptKoq
+         TfkhstLsBKcjovKX2hMbD7rmzzX1GOnbD0FqlJmXosypLqO8+8L+4RUQNRmm0R6QkHHd
+         A27qIgsKgLi9Acys+mWl2j7uUJ3ilPCojdFG6oY+ATi3Mksp3d/Q5Fi83pJcsg09D3C0
+         dypg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776053547; x=1776658347;
+        d=1e100.net; s=20251104; t=1776053549; x=1776658349;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CexyOKGLd1wDyUtEXB2mYM32u5jxlu6R2jpDLPNHjCI=;
-        b=TIN26HOpT4J8VMBIOXVz8oRzvJyBDZpWqS8b5G3RSxHrktSUAwxxpDx/ERhEYafW1w
-         3XuilUQWBkhoIrj7i48NVZpZ/rYcjnTt44Y8A1AQZz03NvI0waTHBj1AcnGZciqg5I47
-         He9dWoxY8jjOziYwOk6CAdPnx8KQNKOw4csFTr5ZfE7khtI8Ot6N5bxCvRVrvz5bMlNA
-         WtJBWFs4ltKfgFZ57S290Uqamti2Pr9FLWAtE5vZxEUpf82ofW7FmUGV0xLJZgOGQ21r
-         XckNrIu8FuEAaoER88chpLdDaQ78PIfPZGConnhhabf1zVw6ZwdR8DzBBdVL6Nbw/R2E
-         K5UA==
-X-Forwarded-Encrypted: i=1; AFNElJ9iDrwd0mpLO3YWbW4djUCbQLPpobAHMB5xDCU5VsZtU9Yz4TngHEXKuq+YFFTF38d5hylaxbYLOqvNZ8pfXE6v@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkbLYAYK1xP8Ui7o3bi7l5wS/F3h5mUEgYXmm2LI+QMis4rzgu
-	2DWKPRwROr9EiGTKoobrTnmc0kTcyroOPL2QALrSL9kO9k267UGM3BoNwBjU5Q2irh/aGKAReiv
-	IqriUC8hbWg==
-X-Received: from dyji40.prod.google.com ([2002:a05:7300:7a28:b0:2d8:dd18:baee])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d704:b0:2b7:fdb6:ccf6
- with SMTP id 5a478bee46e88-2d5890795cfmr6355216eec.14.1776053546399; Sun, 12
- Apr 2026 21:12:26 -0700 (PDT)
-Date: Sun, 12 Apr 2026 21:11:23 -0700
+        bh=TdCCiiHDf0G456jnJXOkKokcXFcoaXYbGwyy1xI9gh0=;
+        b=tPr1VCD2JwFg/2Ls1OKNMrSM2nKeCRzbSHrWvwVJrb1E1fzPLuQbBqkIlPaPbm8+g9
+         DFqd+S1tlywJ8xxv1sXSaQx33VhmHfIGOlzBlynn/cz4OiCvIynYFfm+P/QNyrWPZP4C
+         2e1wk1nA8pewQhe7OgSGuA/FRQ29uQ9KDh8IbFAFj3LaaX6kUopEZbGrgCIAtmKpEc51
+         K1Zn9aM+zXe36gapxCjSLmDlOWH71+LiF7x+mI9MLAdN1d4f+nBuFbh9o4811l0QW/2O
+         7XjY3IrRYxVd/47lKIqacPSTtyTASpmHWyskHxduavyDp6/heb8flma+yTHWTy4632SJ
+         dUOw==
+X-Forwarded-Encrypted: i=1; AFNElJ81osfBGYOP6bJtd/LHIajoF0WNGTzjwyCbiLw8beAPkzz2H4H1k2L1g01kcQYaLSfTzg7LZrR2QeXRyFUDHxLs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeUQcrbmACjl3dulS6DKZq753HaoUFBy8cpSvel7hAyKSs7KUx
+	SJHt309Gv1hR7N/9caQgaaVHdsi8IiGDUqLT1zexNgtgAlPW3vB74Jc1ilIOC02xqIp/hOXw4gd
+	p0nmHE1ZvZw==
+X-Received: from plbkp8.prod.google.com ([2002:a17:903:2808:b0:2b4:6553:4533])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:6942:b0:2b0:4aeb:dedc
+ with SMTP id d9443c01a7336-2b2d5a167c7mr85680495ad.26.1776053548825; Sun, 12
+ Apr 2026 21:12:28 -0700 (PDT)
+Date: Sun, 12 Apr 2026 21:11:24 -0700
 In-Reply-To: <20260413041143.1736055-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260413012227.1089445-1-irogers@google.com> <20260413041143.1736055-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413041143.1736055-14-irogers@google.com>
-Subject: [PATCH v12 13/33] perf inject: Don't pass evsel with sample
+Message-ID: <20260413041143.1736055-15-irogers@google.com>
+Subject: [PATCH v12 14/33] perf kmem: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -78,346 +78,119 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 The sample contains the evsel and so it is unnecessary to pass the
-evsel as well. Clean up handling of sample and mmap_evsel when
-synthesizing build id events and mmap2 events with build ids. For
-callchain walking and things that expect the evsel to match sample,
-the sample->evsel shouldn't change. The mmap_evsel should be used when
-making mmap2 events. Some minor tweaks to synthetic events to be
-robust to evsel being NULL and to remove an unnecessary branch (as the
-id sample will be empty) on the evsel.
+evsel as well.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c        | 52 ++++++++++++++++--------------
- tools/perf/util/synthetic-events.c | 30 ++++++++---------
- tools/perf/util/synthetic-events.h |  2 --
- 3 files changed, 40 insertions(+), 44 deletions(-)
+ tools/perf/builtin-kmem.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index f43c165c3a13..593d3ed5ac47 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -146,14 +146,12 @@ struct event_entry {
- static int tool__inject_build_id(const struct perf_tool *tool,
- 				 struct perf_sample *sample,
- 				 struct machine *machine,
--				 const struct evsel *evsel,
- 				 __u16 misc,
- 				 const char *filename,
- 				 struct dso *dso, u32 flags);
- static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 				      struct perf_sample *sample,
- 				      struct machine *machine,
--				      const struct evsel *evsel,
- 				      __u16 misc,
- 				      __u32 pid, __u32 tid,
- 				      __u64 start, __u64 len, __u64 pgoff,
-@@ -356,7 +354,6 @@ perf_inject__cut_auxtrace_sample(struct perf_inject *inject,
- typedef int (*inject_handler)(const struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
--			      struct evsel *evsel,
- 			      struct machine *machine);
- 
- static int perf_event__repipe_sample(const struct perf_tool *tool,
-@@ -369,7 +366,7 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
- 
- 	if (evsel && evsel->handler) {
- 		inject_handler f = evsel->handler;
--		return f(tool, event, sample, evsel, machine);
-+		return f(tool, event, sample, machine);
- 	}
- 
- 	build_id__mark_dso_hit(tool, event, sample, machine);
-@@ -583,11 +580,12 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
- 		}
- 
- 		if (dso && !dso__hit(dso)) {
--			struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
-+			if (!sample->evsel)
-+				sample->evsel = evlist__event2evsel(inject->session->evlist, event);
- 
--			if (evsel) {
-+			if (sample->evsel) {
- 				dso__set_hit(dso);
--				tool__inject_build_id(tool, sample, machine, evsel,
-+				tool__inject_build_id(tool, sample, machine,
- 						      /*misc=*/sample->cpumode,
- 						      filename, dso, flags);
- 			}
-@@ -614,23 +612,26 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
- 	}
- 	if ((inject->build_id_style == BID_RWS__MMAP2_BUILDID_ALL) &&
- 	    !(event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)) {
--		struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
-+		struct evsel *saved_evsel = sample->evsel;
- 
--		if (evsel && !dso_sought) {
-+		sample->evsel = evlist__event2evsel(inject->session->evlist, event);
-+		if (sample->evsel && !dso_sought) {
- 			dso = findnew_dso(pid, tid, filename, dso_id, machine);
- 			dso_sought = true;
- 		}
--		if (evsel && dso &&
--		    !tool__inject_mmap2_build_id(tool, sample, machine, evsel,
-+		if (sample->evsel && dso &&
-+		    !tool__inject_mmap2_build_id(tool, sample, machine,
- 						 sample->cpumode | PERF_RECORD_MISC_MMAP_BUILD_ID,
- 						 pid, tid, start, len, pgoff,
- 						 dso,
- 						 prot, flags,
- 						 filename)) {
- 			/* Injected mmap2 so no need to repipe. */
-+			sample->evsel = saved_evsel;
- 			dso__put(dso);
- 			return 0;
- 		}
-+		sample->evsel = saved_evsel;
- 	}
- 	dso__put(dso);
- 	if (inject->build_id_style == BID_RWS__MMAP2_BUILDID_LAZY)
-@@ -835,7 +836,6 @@ static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
- static int tool__inject_build_id(const struct perf_tool *tool,
- 				 struct perf_sample *sample,
- 				 struct machine *machine,
--				 const struct evsel *evsel,
- 				 __u16 misc,
- 				 const char *filename,
- 				 struct dso *dso, u32 flags)
-@@ -859,7 +859,7 @@ static int tool__inject_build_id(const struct perf_tool *tool,
- 
- 	err = perf_event__synthesize_build_id(tool, sample, machine,
- 					      perf_event__repipe,
--					      evsel, misc, dso__bid(dso),
-+					      misc, dso__bid(dso),
- 					      filename);
- 	if (err) {
- 		pr_err("Can't synthesize build_id event for %s\n", filename);
-@@ -872,7 +872,6 @@ static int tool__inject_build_id(const struct perf_tool *tool,
- static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 				       struct perf_sample *sample,
- 				       struct machine *machine,
--				       const struct evsel *evsel,
- 				       __u16 misc,
- 				       __u32 pid, __u32 tid,
- 				       __u64 start, __u64 len, __u64 pgoff,
-@@ -895,7 +894,6 @@ static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 
- 	err = perf_event__synthesize_mmap2_build_id(tool, sample, machine,
- 						    perf_event__repipe,
--						    evsel,
- 						    misc, pid, tid,
- 						    start, len, pgoff,
- 						    dso__bid(dso),
-@@ -912,7 +910,7 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 			const struct perf_tool *tool,
- 			struct perf_sample *sample,
- 			struct machine *machine,
--			const struct evsel *mmap_evsel,
-+			struct evsel *mmap_evsel,
- 			struct map *map, bool sample_in_dso)
- {
- 	struct dso *dso;
-@@ -940,9 +938,13 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 	dso = map__dso(map);
- 	if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
- 		if (dso && !dso__hit(dso)) {
-+			/*
-+			 * The sample is just read for identifiers which we want
-+			 * to match the for the event of the sample.
-+			 */
- 			dso__set_hit(dso);
- 			tool__inject_build_id(tool, sample, machine,
--					     mmap_evsel, misc, dso__long_name(dso), dso,
-+					     misc, dso__long_name(dso), dso,
- 					     map__flags(map));
- 		}
- 	} else if (inject->build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
-@@ -950,11 +952,13 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 			const struct build_id null_bid = { .size = 0 };
- 			const struct build_id *bid = dso ? dso__bid(dso) : &null_bid;
- 			const char *filename = dso ? dso__long_name(dso) : "";
-+			struct evsel *saved_evsel = sample->evsel;
- 
- 			map__set_hit(map);
-+			/* Creating a new mmap2 event which has an evsel for the mmap event. */
-+			sample->evsel = mmap_evsel;
- 			perf_event__synthesize_mmap2_build_id(tool, sample, machine,
- 								perf_event__repipe,
--								mmap_evsel,
- 								misc,
- 								sample->pid, sample->tid,
- 								map__start(map),
-@@ -964,6 +968,7 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 								map__prot(map),
- 								map__flags(map),
- 								filename);
-+			sample->evsel = saved_evsel;
- 		}
- 	}
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 2cdc56bc2616..68a39f56204d 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -171,7 +171,7 @@ static int insert_caller_stat(unsigned long call_site,
  	return 0;
-@@ -974,7 +979,7 @@ struct mark_dso_hit_args {
- 	const struct perf_tool *tool;
- 	struct perf_sample *sample;
- 	struct machine *machine;
--	const struct evsel *mmap_evsel;
-+	struct evsel *mmap_evsel;
- };
- 
- static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
-@@ -1029,7 +1034,6 @@ static int perf_event__inject_buildid(const struct perf_tool *tool, union perf_e
- static int perf_inject__sched_process_exit(const struct perf_tool *tool,
- 					   union perf_event *event __maybe_unused,
- 					   struct perf_sample *sample,
--					   struct evsel *evsel __maybe_unused,
- 					   struct machine *machine __maybe_unused)
- {
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-@@ -1049,13 +1053,12 @@ static int perf_inject__sched_process_exit(const struct perf_tool *tool,
- static int perf_inject__sched_switch(const struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample,
--				     struct evsel *evsel,
- 				     struct machine *machine)
- {
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	struct event_entry *ent;
- 
--	perf_inject__sched_process_exit(tool, event, sample, evsel, machine);
-+	perf_inject__sched_process_exit(tool, event, sample, machine);
- 
- 	ent = malloc(event->header.size + sizeof(struct event_entry));
- 	if (ent == NULL) {
-@@ -1074,13 +1077,13 @@ static int perf_inject__sched_switch(const struct perf_tool *tool,
- static int perf_inject__sched_stat(const struct perf_tool *tool,
- 				   union perf_event *event __maybe_unused,
- 				   struct perf_sample *sample,
--				   struct evsel *evsel,
- 				   struct machine *machine)
- {
- 	struct event_entry *ent;
- 	union perf_event *event_sw;
- 	struct perf_sample sample_sw;
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-+	struct evsel *evsel = sample->evsel;
- 	u32 pid = perf_sample__intval(sample, "pid");
- 	int ret;
- 
-@@ -1445,7 +1448,7 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
- 	dso__set_hit(dso);
- 
- 	return perf_event__synthesize_build_id(&inject->tool, &synth_sample, machine,
--					       process_build_id, inject__mmap_evsel(inject),
-+					       process_build_id,
- 					       /*misc=*/synth_sample.cpumode,
- 					       dso__bid(dso), dso__long_name(dso));
- }
-@@ -2007,7 +2010,6 @@ static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *
- static int drop_sample(const struct perf_tool *tool __maybe_unused,
- 		       union perf_event *event __maybe_unused,
- 		       struct perf_sample *sample __maybe_unused,
--		       struct evsel *evsel __maybe_unused,
- 		       struct machine *machine __maybe_unused)
- {
- 	return 0;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 85bee747f4cd..de812a2befbc 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2252,13 +2252,15 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine,
- 				    perf_event__handler_t process,
--				    const struct evsel *evsel,
- 				    __u16 misc,
- 				    const struct build_id *bid,
- 				    const char *filename)
- {
- 	union perf_event ev;
- 	size_t len;
-+	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
-+	void *array = &ev;
-+	int ret;
- 
- 	len = sizeof(ev.build_id) + strlen(filename) + 1;
- 	len = PERF_ALIGN(len, sizeof(u64));
-@@ -2275,23 +2277,17 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 	ev.build_id.header.size = len;
- 	strcpy(ev.build_id.filename, filename);
- 
--	if (evsel) {
--		void *array = &ev;
--		int ret;
--
--		array += ev.header.size;
--		ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
--		if (ret < 0)
--			return ret;
--
--		if (ret & 7) {
--			pr_err("Bad id sample size %d\n", ret);
--			return -EINVAL;
--		}
-+	array += ev.header.size;
-+	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
-+	if (ret < 0)
-+		return ret;
- 
--		ev.header.size += ret;
-+	if (ret & 7) {
-+		pr_err("Bad id sample size %d\n", ret);
-+		return -EINVAL;
- 	}
- 
-+	ev.header.size += ret;
- 	return process(tool, &ev, sample, machine);
  }
  
-@@ -2299,7 +2295,6 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 					  struct perf_sample *sample,
- 					  struct machine *machine,
- 					  perf_event__handler_t process,
--					  const struct evsel *evsel,
- 					  __u16 misc,
- 					  __u32 pid, __u32 tid,
- 					  __u64 start, __u64 len, __u64 pgoff,
-@@ -2309,6 +2304,7 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+-static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *sample)
++static int evsel__process_alloc_event(struct perf_sample *sample)
  {
- 	union perf_event ev;
- 	size_t ev_len;
-+	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
- 	void *array;
- 	int ret;
+ 	unsigned long ptr = perf_sample__intval(sample, "ptr"),
+ 		      call_site = perf_sample__intval(sample, "call_site");
+@@ -198,7 +198,7 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
+ 	 * If the tracepoint contains the field "node" the tool stats the
+ 	 * cross allocation.
+ 	 */
+-	if (evsel__field(evsel, "node")) {
++	if (evsel__field(sample->evsel, "node")) {
+ 		int node1, node2;
  
-@@ -2339,7 +2335,7 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 		node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu});
+@@ -243,7 +243,7 @@ static struct alloc_stat *search_alloc_stat(unsigned long ptr,
+ 	return NULL;
+ }
  
- 	array = &ev;
- 	array += ev.header.size;
--	ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
-+	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
- 	if (ret < 0)
- 		return ret;
+-static int evsel__process_free_event(struct evsel *evsel __maybe_unused, struct perf_sample *sample)
++static int evsel__process_free_event(struct perf_sample *sample)
+ {
+ 	unsigned long ptr = perf_sample__intval(sample, "ptr");
+ 	struct alloc_stat *s_alloc, *s_caller;
+@@ -751,8 +751,7 @@ static char *compact_gfp_string(unsigned long gfp_flags)
+ 	return NULL;
+ }
  
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index b0edad0c3100..473a43a78993 100644
---- a/tools/perf/util/synthetic-events.h
-+++ b/tools/perf/util/synthetic-events.h
-@@ -50,7 +50,6 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine,
- 				    perf_event__handler_t process,
--				    const struct evsel *evsel,
- 				    __u16 misc,
- 				    const struct build_id *bid,
- 				    const char *filename);
-@@ -58,7 +57,6 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 					  struct perf_sample *sample,
- 					  struct machine *machine,
- 					  perf_event__handler_t process,
--					  const struct evsel *evsel,
- 					  __u16 misc,
- 					  __u32 pid, __u32 tid,
- 					  __u64 start, __u64 len, __u64 pgoff,
+-static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+-			   unsigned int gfp_flags)
++static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
+ {
+ 	struct tep_record record = {
+ 		.cpu = sample->cpu,
+@@ -773,7 +772,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 	}
+ 
+ 	trace_seq_init(&seq);
+-	tp_format = evsel__tp_format(evsel);
++	tp_format = evsel__tp_format(sample->evsel);
+ 	if (tp_format)
+ 		tep_print_event(tp_format->tep, &seq, &record, "%s", TEP_PRINT_INFO);
+ 
+@@ -805,7 +804,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 	return 0;
+ }
+ 
+-static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_sample *sample)
++static int evsel__process_page_alloc_event(struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = perf_sample__intval(sample, "order");
+@@ -835,7 +834,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ 		return 0;
+ 	}
+ 
+-	if (parse_gfp_flags(evsel, sample, gfp_flags) < 0)
++	if (parse_gfp_flags(sample, gfp_flags) < 0)
+ 		return -1;
+ 
+ 	callsite = find_callsite(sample);
+@@ -876,8 +875,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ 	return 0;
+ }
+ 
+-static int evsel__process_page_free_event(struct evsel *evsel __maybe_unused,
+-					  struct perf_sample *sample)
++static int evsel__process_page_free_event(struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = perf_sample__intval(sample, "order");
+@@ -954,8 +952,7 @@ static bool perf_kmem__skip_sample(struct perf_sample *sample)
+ 	return false;
+ }
+ 
+-typedef int (*tracepoint_handler)(struct evsel *evsel,
+-				  struct perf_sample *sample);
++typedef int (*tracepoint_handler)(struct perf_sample *sample);
+ 
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+@@ -973,14 +970,15 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 		return -1;
+ 	}
+ 
+-	if (perf_kmem__skip_sample(sample))
++	if (perf_kmem__skip_sample(sample)) {
+ 		return 0;
++	}
+ 
+ 	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
+ 
+ 	if (evsel->handler != NULL) {
+ 		tracepoint_handler f = evsel->handler;
+-		err = f(evsel, sample);
++		err = f(sample);
+ 	}
+ 
+ 	thread__put(thread);
 -- 
 2.53.0.1213.gd9a14994de-goog
 
