@@ -1,120 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D84D155C97
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257828E00
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776045252; cv=none; b=r40EMI3fZgwpKLfOcK+cHTnxDmKoH+wu+94iXKCOgbIgFUKoeugoIG8GKkvCLY0KIm5IaZG4WS5tPoLXGDITq6Sc+l848ZOk5F+pZUkxODKOgCZk0KrxuTFx0aDRExqsqAcjpQk5AHKDo1g3SSuA4mz9LUsJDXR/mrbult/YLRk=
+	t=1776045358; cv=none; b=D1kJVCrUlt0oQIpf+BmDoqpm2eOmmFuVy6Z9dqPK8LpSlDICs9d52b683bhrUYriatuOCHsOokfwhL12sQDDduICY74wINMvf2rXm+U3CdNROzBI3AYLkdFTXeqj1/MnAen+Y8PA6IZnxTokC+q1T7BQbFA8oeTq1jbOXdlq4UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776045252; c=relaxed/simple;
-	bh=4FGbimmdJ7lkXBLkeWbljitxlpGO6S3civDUVyR6mfo=;
+	s=arc-20240116; t=1776045358; c=relaxed/simple;
+	bh=pwT3brcd7acgTH94yFHZC53kr9VQsTeFet2R/9Qfob8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mIDzkiuF2fuCpYmQmYajk6Q0VB1EeBPOT4WkAnoSJNYL9SelQ/hZ3zVjBQHz9VZBDNUkctfkNXGNgHUnJ/TZXtDHuOtUdLMPNfTACl3iHddiYqyb7D7SX4mOh3mmsCj71JAIIXsdQR0E88vUtP8eWbVCvcq53D5cixIEXFgY0/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGasE0CI; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=sfOFriiL7Ae1bv+nEmyR53fTeGfpo9GmxU5PMy9vaaRKoZv3az6+aDBd7/0JuqLeTmoRYjh7I1aYS2NyWzfo1TcmKHpgPuzRBrZXcBQ4WgWTv7LyvDj9oIJiKD+TYrMyVA+M+Jqd6X6LMsMXiKTxX+PZKLpg9e+7s5wpFetcxZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6zjNh8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGasE0CI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAF7C19424;
-	Mon, 13 Apr 2026 01:54:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6zjNh8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E35C19424;
+	Mon, 13 Apr 2026 01:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776045251;
-	bh=4FGbimmdJ7lkXBLkeWbljitxlpGO6S3civDUVyR6mfo=;
+	s=k20201202; t=1776045357;
+	bh=pwT3brcd7acgTH94yFHZC53kr9VQsTeFet2R/9Qfob8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=IGasE0CIk4ucAWIhZ6UE1FmPGBb2HgjJMWoglT+wC6Hs5/qtxqs0Qli/liKgkyOWq
-	 BDxqT1MiHYXPj1znnlIT6XH3474b5CG+WEwBr64NZd+0zK0wWvshdozvyg4/nDNLbs
-	 GkRiP1ZENZZNiOJbqGxPuQFNkNFYkRHvMe7Ze7wgD1Ct4KPNwmXNBtA+k4gJBH/zHA
-	 KtJSaw1J7F5rXiSBdI+n0e268MM2p0iEMG+I3k8h5abX0aU580ukdRZ0UlIlOkVTXA
-	 S4DW0IK+6cf3KvK8RCXEUPznh8YgfksogyilYp0hXgdroHrjM22LTsj/Lkx1dBetgJ
-	 AN6Z7Bl2HLfBg==
+	b=X6zjNh8CwBwa0t0VckjcypqppAVAHx0fxo2eqWPVRr3ioZL0vE6mLdoMmPiQtGkAE
+	 dLNKIbwZtuWIp7jZdDSXsS9MD/kZ83wQa2O/WalmwIVcGM/V5ImC2M6VnekBt/GKDw
+	 3/XRTkssRci1oOvoHIVQ6fQJVdDNFbH0Ljbw9JRXvmDn/28TeFTZkkfh13Cw2xJh+J
+	 w7e44w2FEioOlIb2MOn6dFR+mD7tKjFAv9FRg5piHcxEd29zjNqTI/wVZhip/HA2kl
+	 IdvVw3KQl4c8sRYl/AXfr29WXOMQfkT/KW+ae5CGCtPSqA+M15TLbWr4DM0RijjZCf
+	 FjTrXtSd7NoSQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 24/33] perf lock: Avoid segv if event is missing a
- callchain
+Subject: Re: [PATCH v11 27/33] perf synthetic-events: Bound check when
+ synthesizing mmap2 and build_id events
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413012227.1089445-25-irogers@google.com>
-References: <20260413012227.1089445-25-irogers@google.com>
+In-Reply-To: <20260413012227.1089445-28-irogers@google.com>
+References: <20260413012227.1089445-28-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 01:54:11 +0000
-Message-Id: <20260413015411.9CAF7C19424@smtp.kernel.org>
+Date: Mon, 13 Apr 2026 01:55:56 +0000
+Message-Id: <20260413015557.72E35C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Inconsistent error handling masks memory allocation failures, le=
-ading to silent data truncation. The patch modifies `get_callstack()` to re=
-turn `NULL` on `calloc()` failure, and changes the caller `report_lock_cont=
-ention_begin_event()` to return `0` instead of `-ENOMEM` when a callstack c=
-annot be obtained. While the commit message justifies this as a choice to "=
-skip the event" rather than "fail the entire file", it conflates a normal e=
-vent condition (a sample missing a callchain) with a global system resource=
- failure (OOM). This introduces an inconsistency because other memory alloc=
-ation failures within the exact same function (e.g., `lock_stat_findnew`, `=
-thread_stat_findnew`) still correctly return `-ENOMEM` and safely abort the=
- file processing. Silently dropping events on OOM without warning the user =
-(unless the tool is run with `-v`) degrades the reliability of the profilin=
-g tool by presenting incomplete results as successful.
+Sashiko AI review found 3 potential issue(s):
+- [Critical] Pre-existing buffer overflow and struct corruption due to copy=
+-paste error in build ID truncation.
+- [High] The new bounds check silently drops events for valid long paths by=
+ returning `-E2BIG`.
+- [Low] Abstraction break in bounds checking logic.
 --
 
-commit 13aefff8f4f4e8214a2931fe522b7eb9e3f8f481
+commit 7fd80916fb020cf9f0223c8f3c7b78eaf05a550e
 Author: Ian Rogers <irogers@google.com>
 
-perf lock: Avoid segv if event is missing a callchain
+perf synthetic-events: Bound check when synthesizing mmap2 and build_id eve=
+nts
 
-This commit adds a check to avoid a segmentation fault when a sample is
-missing a callchain. It also changes the error handling in
-report_lock_contention_begin_event() to skip the event rather than failing
-the entire file when get_callstack() returns NULL.
+This commit adds bound checks when synthesizing mmap2 and build_id events
+to make sure the filename doesn't overflow the event and lead to stack
+corruption.
 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -938,9 +938,16 @@ static u64 *get_callstack(struct perf_sample *sample=
-, int max_stack)
->  	u64 i;
->  	int c;
-> =20
-> +	if (!sample->callchain) {
-> +		pr_debug("Sample unexpectedly missing callchain\n");
-> +		return NULL;
-> +	}
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
+ic-events.c
+> index de812a2befbc7..a7fef7ac3da68 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2257,14 +2257,20 @@ int perf_event__synthesize_build_id(const struct =
+perf_tool *tool,
+>  				    const char *filename)
+>  {
+>  	union perf_event ev;
+> -	size_t len;
+> +	size_t len, filename_len =3D strlen(filename);
+[ ... ]
+> -	len =3D sizeof(ev.build_id) + strlen(filename) + 1;
+> +	if (filename_len >=3D sizeof(ev.mmap2.filename))
+> +		return -EINVAL;
+
+This isn't a bug, but does it make sense to check the filename length again=
+st
+ev.mmap2.filename in a build_id event? It might be cleaner to use PATH_MAX
+directly to avoid coupling the bounds check to the mmap2 struct definition.
+
 > +
->  	callstack =3D calloc(max_stack, sizeof(*callstack));
-> -	if (callstack =3D=3D NULL)
-> +	if (callstack =3D=3D NULL) {
-> +		pr_debug("Failed to allocate callstack\n");
->  		return NULL;
-> +	}
+> +	len =3D sizeof(ev.build_id) + filename_len + 1;
+>  	len =3D PERF_ALIGN(len, sizeof(u64));
+> =20
+> +	if (len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
+> +		return -E2BIG;
+
+Will this check silently drop events for valid but long paths?
+
+Since union perf_event is statically sized to fit its largest member, paths
+that approach the maximum length might leave less than 48 bytes of headroom
+for the sample ID headers.
+
+This would cause the function to return -E2BIG for valid files instead of
+safely truncating the filename to leave room for the sample IDs, potentially
+dropping the event entirely.
+
+> @@ -2303,14 +2309,21 @@ int perf_event__synthesize_mmap2_build_id(const s=
+truct perf_tool *tool,
+>  					  const char *filename)
+>  {
+>  	union perf_event ev;
+> +	size_t filename_len =3D strlen(filename);
 
 [ ... ]
 
-> @@ -1059,7 +1066,7 @@ static int report_lock_contention_begin_event(struc=
-t perf_sample *sample)
->  	if (needs_callstack()) {
->  		u64 *callstack =3D get_callstack(sample, max_stack_depth);
->  		if (callstack =3D=3D NULL)
-> -			return -ENOMEM;
-> +			return 0;
+While reviewing this function, there appears to be a pre-existing issue just
+below the diff context regarding how the build_id size is truncated:
 
-Because get_callstack() returns NULL for both a missing callchain and a
-calloc() failure, this change makes report_lock_contention_begin_event()
-return 0 in both cases.
+	ev.mmap2.build_id_size =3D bid->size;
+	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
+		ev.build_id.size =3D sizeof(ev.mmap2.build_id);
+	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
 
-Does this conflate a normal missing callchain with a memory exhaustion
-condition?
+Because ev is a union, modifying ev.build_id.size does not actually truncate
+ev.mmap2.build_id_size.
 
-By returning 0 on OOM, the tool will silently drop events under memory
-pressure rather than aborting, which might lead to incomplete and misleading
-profiling results. Other memory allocations in the same function, such as
-thread_stat_findnew(), still return -ENOMEM and correctly abort.
-
-Should the OOM case still propagate an error so the file processing aborts
-consistently on resource exhaustion?
+Could this allow the memcpy() to overflow the 20-byte mmap2.build_id array =
+and
+corrupt adjacent fields if bid->size is too large?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
-445-1-irogers@google.com?part=3D24
+445-1-irogers@google.com?part=3D27
