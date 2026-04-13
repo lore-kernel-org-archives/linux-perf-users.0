@@ -1,158 +1,340 @@
-Received: from mail-oi1-f207.google.com (mail-oi1-f207.google.com [209.85.167.207])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2173C9425
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 12:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.207
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776084699; cv=none; b=mQodHklzNGvKYmfT2oxlF0queJ2bdQOW3LuUIzk6cr4h/RAtjSbHt0k7UbpuZhrRP0kaG3hHDj2ukJCAthVV2lF8GpKxAe88457GibjfqoJu2SXTpo1Lh00WwIqV6HnTJFAHCc8BOUjO/I30tDc+xW/z2tE/cNMvLawAeoLHIs0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776084699; c=relaxed/simple;
-	bh=23inD9JIIZjzCV4/Xchyn5qBDzAOZr/JfA0i5oTHoRM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Vons7jG37dqj8fv1eF1Qzamlr04Y3wPh/G2Hl190++DJA6fgfmqZnTx4iMr40bCIwmPq0rQmV5wYsVsok43AzrpbdwZvcA06y3mNHugO3wAAFofdLyfITDd4mNIHhPbzebvJ1irwHi6hF6X48fLQveLANlr3rWPOt/Tg0hR74jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f207.google.com with SMTP id 5614622812f47-46f083f82c7so6147625b6e.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 05:51:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894291DED63
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 13:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776086153; cv=pass; b=L9CcHIu2uTpRzP7TNmznCo+Z7K+IbEmcGiiRRDMrRo0hqUrZCWh4fzdt9wJr438Zit/mD5iPs0Fsz1HWl4PyeTYqEXzbqs8ZhIBLhjPwU3sS+EKXYacfS5qfsFowNa3R0WGuQUml0gPffRByAn2V8Q83lvZolLAIpl8/pypjozA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776086153; c=relaxed/simple;
+	bh=rbtQWmZpZtpEyQaDLGpE4qXR8j+SUOJWytm4qdxIGUg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dN3sjXx5BfyHEPkQcb9x5WrqQYoLLeVodAx1aT948448vIEqjRH53M2j9CjjCZrbYg5Y7x+/d7uha9w2U60+r/PcrMC6h44B+bW1nV1nobYX5SwMeUItFKLjj4RpBMqKPjRQzgV+tx91JS/DKiu/l17JsIhGRhB7aHORRd2VeO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hn1HtZxD; arc=pass smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hn1HtZxD"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-66e129e457dso4405726a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 06:15:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776086150; cv=none;
+        d=google.com; s=arc-20240605;
+        b=AalOkEjadmKPspwQjliny0253T48fTEEOtbMp5okFQ/45Jxff5GN4lQu4svObvFVQb
+         9f+Y0b0NMbLFsSEeZ8D5PVDP+QZJ1mBods1obP4MdcagLfVySC8nV/24Hpbrdzpon3e1
+         FhJ7bH61T4TQZQOAlBCeWzlLIzMGTS9k15PuRG9KcBy3sgGxhzEXlaJJ9OpffOhwPGMx
+         AfShEK78XbwIeu+NZ5VRS/f2CAQNKqhG7FjLLxsKllFl2pHnPb+AOioI1ZBngl9Ghr7l
+         1C2vFp/CmCVjgK13fPzq2Riby14lpcyFXiAF6oHksxrSAlLaVWtKxAO1KWgqu8iwkTTT
+         29EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=TWFfKp/TWghMUUA6IzgBnGVqi4hfkBllldqvNPSkdJ0=;
+        fh=zbh6ccMJ2RjK8uvrn2jgVV8M5KB4YNPiIvq7WBUne8E=;
+        b=biMuwJEIxhCjKRQcRXp/GKxL4TehlH1g/Z4ApOOchQgL7Y6lhFi86NL1YpfI/OlWa4
+         dQUgvnG70Em3TSMLbXuX53LH+QBgwnQi9eehVgYtcgp2eCIWIo/5N2g0RMR5QeycSxtl
+         N3SIfPD2ms0tVH1abNlH194sSkUmVJwitcKapu2ii3PFvRRi2kRw6j5+LGCv2wA935qQ
+         VMz49QMWJqbwawjDLJDs7axcEjFBz54OUq4DPvPpGKadBVpt3ft6ikMRi121Tia+6QLT
+         mXY76mXO7u5HUkEbCgeTywpmXjFL+/C26RvYGvf2lBTWACj+qxVGCkLIMU4Kb0lA3z75
+         yVbQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776086150; x=1776690950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWFfKp/TWghMUUA6IzgBnGVqi4hfkBllldqvNPSkdJ0=;
+        b=Hn1HtZxD+r5eaGMFBOEWLOrq4Lqnxuj/JTC1pm0ATJsrv//E+/ISmNl+/2H2DF97Bk
+         bb7yiHHEV9MK3L07Nmt0M8axyc1aE0wKfjq5E/DGqXW9cLD97TsczqB+9v6C1n0SMOAo
+         CFnaL4YHvcyXrlPmvsF/hUub8pCOQttQCceXMkLfaTCKWbUxC2P1NI5h8lj5bo6l7qFi
+         TXNYwqjCaW/YSkZOneXwBfsgHVxf4yHfE4RBTBJXIdrLIIhcjq78vi0zxszf/PbWgRbv
+         bKQINsQolbYVA+/Hgyiny80dtEkKyfJUKvCHitIbXhaUsBxgCed5KscGgW1qsf8XqVuA
+         B8QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776084697; x=1776689497;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jRIdr1VgrQYf+zTp1aY4GLpmv27r2Op9rfFRPV8Wt6k=;
-        b=flkm3g3wGyPRdITBeNmu2VY+R1MzCwwG0OygoqDx+G/N789z9xvEWeDIoZhU9SzBwW
-         y/zZxcD1lNYj4d0b5vytZn6tSXzv5Y2zHO3xy1LALNRbI7zUn2OSWG7sqJRHPGJHRO2N
-         REQpjaeUdVM53F/GjvAaqrwbLjc5/DEm2IS5xMsQg27ttkPupL+gFkKPAU1F9UJmjmhG
-         RNcxoS+N6UgtjZX+lXhgB3PChpEOgj4zyy38bhn2BDT9BfEbVMLDhxXfMDT8iT1ikTUm
-         8vL5rKyjLlTGa3efp5FJMQ9QfeOF7A1qx0DIsj7yr0ukRBjdxtvt40ryrFL03QiwjaqL
-         o2DA==
-X-Forwarded-Encrypted: i=1; AFNElJ+3SDOE2w0+T1Z6ADMqYlnuzTzzyX9DgdyOX97Kcf6ep7xoTRxGLO1BbsHt+fw58c3ZDhluomBgL8rGOM+35/0J@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOQOKwEzNQTO5QQQATXdxcoXXMa95+asnGT3x0g2GYr3FvCmVL
-	RsA51w8OPUcPfeLioUQB/gO/2CU8jC610Xv4QnNhnovKlctkH+vEYKpHbbY2TYg1AZwbn22LURE
-	m5nRhpk2aw/TokYMTGmIefq/GqkAmjS73YJUZ3augWZztyIcvna8MIPBfpZE=
+        d=1e100.net; s=20251104; t=1776086150; x=1776690950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TWFfKp/TWghMUUA6IzgBnGVqi4hfkBllldqvNPSkdJ0=;
+        b=iRfkfP7djKzEkTSCkS8yjJRMGJvW79ht8UtgRh5h229/eHoznPHf2E+U0Pe6Pfpk8T
+         ddqaFzQRrTJb4yPxjmNauZNr/+C2B4UpdBY57d5k4iRZoK70mWFRMkSzu/NMOkfLCI9l
+         z47NetrQBz71FnxtYCkszXaEjd0WEIL2amFEMZhvwLmkQeF/almf6h5sK9xDJIgRocx8
+         mzcAXugDTUlkjTLQyOohyNhQa0d12Ag9WwF2SwkVXLYk3ukZeCAnbBrBaYqzUa+cXWVo
+         Ghgz5jpCNKAHfikwlkEmlp/EkrqunoMcc32GBX0WDu7vZ7TYkTzfsvxLSAqb9Q2vboGY
+         ODeA==
+X-Forwarded-Encrypted: i=1; AFNElJ+O4BhganZOlxSXEGLBaWZZredQtOf0l2bL9cNPHR28Wf0CYFQLUhpVE3bXzQfULk+eBni2OFR+xgk32/adQJcY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4AsOicj11oedz+tTlQl81Ew6+XqGHkXLGuVUilMMYUZO+CJo3
+	Pza+29+bIZpIVwwnX0Us7Y2iowNMalI1ShCCNwPwmKZSNXASgWCgN/9aKPFKkt4Zldbm3+XDe4k
+	RninmnMMLOGBc8+2kjx3FvMU/gKzkUUE=
+X-Gm-Gg: AeBDievF1+vH22T1XUvtI4LQdNudiZzRk55btBXuyHdCgLm1IN/ni772hQ69fwa8J2d
+	Jcbrh6+UzK/Ev4ce0uY5w8PPQZGtvJLulKnIITEi23itxlDqrwcHeZpxtpsHLXS/XnPs6y9ul5I
+	YDEeHvbwOovlSPDc8klg/hmxNXqe+D7gEj34R9H+cC67PgJtcRY6/M15ZPR6306X0MWsEdIC+TZ
+	zRkRBRY6xqdwGpyMjVfTaSqaUnihuWxNu10l1A87u6WYV+FZtgzi06wC8tkJy/ggSRTcBaFaLrS
+	6CsyCO+kg5W6AbLPdRydJwU=
+X-Received: by 2002:a17:907:3d51:b0:b9b:4519:7914 with SMTP id
+ a640c23a62f3a-b9d729665efmr793693166b.33.1776086149384; Mon, 13 Apr 2026
+ 06:15:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:4412:b0:686:f60b:dde8 with SMTP id
- 006d021491bc7-68a6a5ba019mr6463135eaf.24.1776084697105; Mon, 13 Apr 2026
- 05:51:37 -0700 (PDT)
-Date: Mon, 13 Apr 2026 05:51:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69dce6d9.a00a0220.468cb.0046.GAE@google.com>
-Subject: [syzbot] [perf?] KCSAN: data-race in event_sched_out / perf_mmap_rb
-From: syzbot <syzbot+1f011f617ab8493f3fdd@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+References: <20260318171706.2840512-1-puranjay@kernel.org> <20260318171706.2840512-4-puranjay@kernel.org>
+ <20260410192300.GA1050337-robh@kernel.org>
+In-Reply-To: <20260410192300.GA1050337-robh@kernel.org>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Mon, 13 Apr 2026 14:15:36 +0100
+X-Gm-Features: AQROBzCue1TP9mde88YkHmv2yOUt3MzeMPylxtPFcG41TotdWLOxWFNqGRjveP0
+Message-ID: <CANk7y0h1m1ECB7ud2Sw0_PTRq3bPstSm_CGg=nwU8d4yruxdfw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+To: Rob Herring <robh@kernel.org>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Leo Yan <leo.yan@arm.com>, 
+	Breno Leitao <leitao@debian.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Apr 10, 2026 at 8:23=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Wed, Mar 18, 2026 at 10:16:57AM -0700, Puranjay Mohan wrote:
+> > Enable the bpf_get_branch_snapshot() BPF helper on ARM64 by implementin=
+g
+> > the perf_snapshot_branch_stack static call for ARM's Branch Record Buff=
+er
+> > Extension (BRBE).
+> >
+> > The BPF helper bpf_get_branch_snapshot() allows BPF programs to capture
+> > hardware branch records on-demand. This was previously only available o=
+n
+> > x86 (Intel LBR) but not on ARM64 despite BRBE being available since
+> > ARMv9.
+> >
+> > BRBE is paused before disabling interrupts because local_irq_save() can
+> > trigger trace_hardirqs_off() which performs stack walking and pollutes
+> > the branch buffer. The sysreg read/write and ISB used to pause BRBE are
+> > branchless, so pausing first avoids this pollution.
+> >
+> > All exceptions are masked after pausing BRBE using local_daif_save() to
+> > prevent pseudo-NMI from PMU counter overflow from interfering with the
+> > snapshot read. A PMU overflow arriving between the pause and
+> > local_daif_save() can re-enable BRBE via the interrupt handler; the
+> > snapshot detects this by re-checking BRBFCR_EL1.PAUSED and bailing out.
+> >
+> > Branch records are read using the existing perf_entry_from_brbe_regset(=
+)
+> > helper with a NULL event pointer, which bypasses event-specific filteri=
+ng
+> > and captures all recorded branches. The BPF program is responsible for
+> > filtering entries based on its own criteria. The BRBE buffer is
+> > invalidated after reading to maintain contiguity for other consumers.
+> >
+> > On heterogeneous big.LITTLE systems, only some CPUs may implement
+> > FEAT_BRBE. The perf_snapshot_branch_stack static call is system-wide, s=
+o
+> > a per-CPU brbe_active flag is used to prevent BRBE sysreg access on CPU=
+s
+> > that do not implement FEAT_BRBE, where such access would be UNDEFINED.
+>
+> Is this something you've seen? IIRC, the existing assumption is all CPUs
+> have FEAT_BRBE or that perf has been limited to those CPUs. It is
+> allowed that the number of records can vary.
 
-syzbot found the following issue on:
+I just added it as a safeguard, but if you say that it is not
+possible, I will remove this in the next version.
 
-HEAD commit:    7c6c4ed80b87 Merge tag 'vfs-7.0-rc8.fixes' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1129b302580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3a78dd265deac3a9
-dashboard link: https://syzkaller.appspot.com/bug?extid=1f011f617ab8493f3fdd
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+>
+> >
+> > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > ---
+> >  drivers/perf/arm_brbe.c  | 79 +++++++++++++++++++++++++++++++++++++++-
+> >  drivers/perf/arm_brbe.h  |  9 +++++
+> >  drivers/perf/arm_pmuv3.c |  5 ++-
+> >  3 files changed, 90 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> > index ba554e0c846c..527c2d5ebba6 100644
+> > --- a/drivers/perf/arm_brbe.c
+> > +++ b/drivers/perf/arm_brbe.c
+> > @@ -8,9 +8,13 @@
+> >   */
+> >  #include <linux/types.h>
+> >  #include <linux/bitmap.h>
+> > +#include <linux/percpu.h>
+> >  #include <linux/perf/arm_pmu.h>
+> > +#include <asm/daifflags.h>
+> >  #include "arm_brbe.h"
+> >
+> > +static DEFINE_PER_CPU(bool, brbe_active);
+> > +
+> >  #define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
+> >                                  BRBFCR_EL1_INDIRECT | \
+> >                                  BRBFCR_EL1_RTN      | \
+> > @@ -533,6 +537,8 @@ void brbe_enable(const struct arm_pmu *arm_pmu)
+> >       /* Finally write SYS_BRBFCR_EL to unpause BRBE */
+> >       write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> >       /* Synchronization in PMCR write ensures ordering WRT PMU enablin=
+g */
+> > +
+> > +     this_cpu_write(brbe_active, true);
+> >  }
+> >
+> >  void brbe_disable(void)
+> > @@ -544,6 +550,7 @@ void brbe_disable(void)
+> >        */
+> >       write_sysreg_s(BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> >       write_sysreg_s(0, SYS_BRBCR_EL1);
+> > +     this_cpu_write(brbe_active, false);
+> >  }
+> >
+> >  static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXI=
+T + 1][2] =3D {
+> > @@ -618,10 +625,10 @@ static bool perf_entry_from_brbe_regset(int index=
+, struct perf_branch_entry *ent
+> >
+> >       brbe_set_perf_entry_type(entry, brbinf);
+> >
+> > -     if (!branch_sample_no_cycles(event))
+> > +     if (!event || !branch_sample_no_cycles(event))
+> >               entry->cycles =3D brbinf_get_cycles(brbinf);
+> >
+> > -     if (!branch_sample_no_flags(event)) {
+> > +     if (!event || !branch_sample_no_flags(event)) {
+> >               /* Mispredict info is available for source only and compl=
+ete branch records. */
+> >               if (!brbe_record_is_target_only(brbinf)) {
+> >                       entry->mispred =3D brbinf_get_mispredict(brbinf);
+> > @@ -803,3 +810,71 @@ void brbe_read_filtered_entries(struct perf_branch=
+_stack *branch_stack,
+> >  done:
+> >       branch_stack->nr =3D nr_filtered;
+> >  }
+> > +
+> > +/*
+> > + * Best-effort BRBE snapshot for BPF tracing. Pause BRBE to avoid
+> > + * self-recording and return 0 if the snapshot state appears disturbed=
+.
+> > + */
+> > +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, =
+unsigned int cnt)
+> > +{
+> > +     unsigned long flags;
+> > +     int nr_hw, nr_banks, nr_copied =3D 0;
+> > +     u64 brbidr, brbfcr, brbcr;
+> > +
+> > +     if (!cnt || !__this_cpu_read(brbe_active))
+> > +             return 0;
+> > +
+> > +     /* Pause BRBE first to avoid recording our own branches. */
+> > +     brbfcr =3D read_sysreg_s(SYS_BRBFCR_EL1);
+> > +     brbcr =3D read_sysreg_s(SYS_BRBCR_EL1);
+> > +     write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> > +     isb();
+>
+> Is there something that guarantees BRBE is enabled when you enter this
+> function and that it is not disabled in this window? A context switch
+> could disable it unless it's a global event for example.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The user space program handling this BPF program should create a
+system wide event in the expected use case. But you are right that it
+is not guaranteed to be enabled, I will check and return early in that
+case.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/952ebc34a0d7/disk-7c6c4ed8.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d3c6b295fa45/vmlinux-7c6c4ed8.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6cbdb6b4817a/bzImage-7c6c4ed8.xz
+>
+> > +
+> > +     /* Block local exception delivery while reading the buffer. */
+> > +     flags =3D local_daif_save();
+> > +
+> > +     /*
+> > +      * A PMU overflow before local_daif_save() could have re-enabled
+> > +      * BRBE, clearing the PAUSED bit. The overflow handler already
+> > +      * restored BRBE to its correct state, so just bail out.
+> > +      */
+> > +     if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
+> > +             local_daif_restore(flags);
+> > +             return 0;
+> > +     }
+> > +
+> > +     brbidr =3D read_sysreg_s(SYS_BRBIDR0_EL1);
+> > +     if (!valid_brbidr(brbidr))
+>
+> This is not possibly true if brbe_active is true. If BRBIDR is not
+> valid, then we would have rejected any event requesting branch stack.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1f011f617ab8493f3fdd@syzkaller.appspotmail.com
+Will remove it in the next version.
 
-==================================================================
-BUG: KCSAN: data-race in event_sched_out / perf_mmap_rb
+>
+> > +             goto out;
+> > +
+> > +     nr_hw =3D FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr);
+> > +     nr_banks =3D DIV_ROUND_UP(nr_hw, BRBE_BANK_MAX_ENTRIES);
+> > +
+> > +     for (int bank =3D 0; bank < nr_banks; bank++) {
+> > +             int nr_remaining =3D nr_hw - (bank * BRBE_BANK_MAX_ENTRIE=
+S);
+> > +             int nr_this_bank =3D min(nr_remaining, BRBE_BANK_MAX_ENTR=
+IES);
+> > +
+> > +             select_brbe_bank(bank);
+> > +
+> > +             for (int i =3D 0; i < nr_this_bank; i++) {
+>
+> I don't love all this being duplicated. Perhaps an iterator would help
+> here (and the other copy):
+>
+> static void next_slot(int *bank, int *bank_idx, int nr_hw)
+> {
+>         *bank_idx++;
+>         if (*bank_idx + (*bank * BRBE_BANK_MAX_ENTRIES) =3D=3D nr_hw)
+>                 bank =3D BRBE_MAX_BANKS;
+>         else if ((*bank_idx % BRBE_BANK_MAX_ENTRIES) =3D=3D 0) {
+>                 *bank_idx =3D 0;
+>                 select_brbe_bank(++(*bank));
+>         }
+>
+> }
+>
+> #define for_each_bank_slot(i, nr_hw) \
+> for (int bank =3D 0, int i =3D 0; bank < BRBE_MAX_BANKS; next_slot(&bank,
+> &i))
+>
+> Then here you just have:
+>
+> for_each_bank_slot(i, FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr)) {
+>         ...
+> }
+>
+> Feel free to come up with better naming. :)
 
-read to 0xffff88810e381fd0 of 8 bytes by task 21833 on cpu 0:
- __perf_update_times kernel/events/core.c:749 [inline]
- perf_event_update_time kernel/events/core.c:762 [inline]
- perf_mmap_rb+0x71d/0x950 kernel/events/core.c:7333
- perf_mmap+0x1d7/0x300 kernel/events/core.c:7460
- vfs_mmap include/linux/fs.h:2070 [inline]
- mmap_file mm/internal.h:167 [inline]
- __mmap_new_file_vma mm/vma.c:2468 [inline]
- __mmap_new_vma mm/vma.c:2532 [inline]
- __mmap_region mm/vma.c:2759 [inline]
- mmap_region+0x195e/0x20c0 mm/vma.c:2844
- do_mmap+0x9b2/0xbd0 mm/mmap.c:559
- vm_mmap_pgoff+0x183/0x2d0 mm/util.c:581
- ksys_mmap_pgoff+0x267/0x310 mm/mmap.c:605
- x64_sys_call+0x14df/0x3020 arch/x86/include/generated/asm/syscalls_64.h:10
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x12c/0x370 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Will add this to the next version, thanks
 
-write to 0xffff88810e381fd0 of 8 bytes by task 21809 on cpu 1:
- __perf_update_times kernel/events/core.c:-1 [inline]
- perf_event_update_time kernel/events/core.c:762 [inline]
- perf_event_set_state kernel/events/core.c:781 [inline]
- event_sched_out+0x4c9/0x760 kernel/events/core.c:2484
- group_sched_out kernel/events/core.c:2508 [inline]
- __pmu_ctx_sched_out+0x3e7/0x530 kernel/events/core.c:3555
- ctx_sched_out+0x279/0x2e0 kernel/events/core.c:3646
- task_ctx_sched_out+0x4d/0x70 kernel/events/core.c:2955
- perf_event_context_sched_out kernel/events/core.c:3853 [inline]
- __perf_event_task_sched_out+0x474/0x710 kernel/events/core.c:3953
- perf_event_task_sched_out include/linux/perf_event.h:1662 [inline]
- prepare_task_switch kernel/sched/core.c:5086 [inline]
- context_switch kernel/sched/core.c:5243 [inline]
- __schedule+0xd3b/0xd40 kernel/sched/core.c:6911
- preempt_schedule_common+0x11/0x30 kernel/sched/core.c:7095
- preempt_schedule_thunk+0x16/0x30 arch/x86/entry/thunk.S:12
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:179 [inline]
- _raw_spin_unlock_irqrestore+0x27/0x30 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:407 [inline]
- __wake_up_common_lock kernel/sched/wait.c:127 [inline]
- __wake_up+0x88/0xb0 kernel/sched/wait.c:146
- audit_log_end+0x1e0/0x250 kernel/audit.c:2804
- audit_seccomp+0xdb/0x100 kernel/auditsc.c:2955
- seccomp_log kernel/seccomp.c:1048 [inline]
- __seccomp_filter+0x8ec/0x1350 kernel/seccomp.c:1344
- __secure_computing+0x81/0x150 kernel/seccomp.c:1404
- syscall_trace_enter include/linux/entry-common.h:112 [inline]
- syscall_enter_from_user_mode_work include/linux/entry-common.h:156 [inline]
- syscall_enter_from_user_mode include/linux/entry-common.h:187 [inline]
- do_syscall_64+0xd3/0x370 arch/x86/entry/syscall_64.c:90
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x0000000003d41894 -> 0x0000000003d477ec
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 UID: 0 PID: 21809 Comm: syz.0.5496 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/18/2026
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+> > +                     if (nr_copied >=3D cnt)
+> > +                             goto done;
+> > +
+> > +                     if (!perf_entry_from_brbe_regset(i, &entries[nr_c=
+opied], NULL))
+> > +                             goto done;
+> > +
+> > +                     nr_copied++;
+> > +             }
+> > +     }
+> > +
+> > +done:
+> > +     brbe_invalidate();
+> > +out:
+> > +     /* Restore BRBCR before unpausing via BRBFCR, matching brbe_enabl=
+e(). */
+> > +     write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+> > +     isb();
+> > +     write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> > +     local_daif_restore(flags);
+> > +
+> > +     return nr_copied;
+> > +}
