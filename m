@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525F93806C8
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D6F3890E1
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776053582; cv=none; b=tOI7xJG4uTdRFyV+zJhGia34DZbSM+lL3cMVfU7X9bOhRdI57K6YZsw7vTzqI0yjKSj/UHl/w4zIuQflF+XoP/aEM7s5e6o34CEyibDvFYslZT0h7af8em1QRtCrD75ChwIYojaw4N/qu/NV7BsGTM83u7ZMlygQMn162hJvMIs=
+	t=1776053585; cv=none; b=fE48qo0CdhxBcc9g+0nG42kaxtYoesDyxKG61rJW3wqLm1MpyKihYCoFSJcI9rU0LSjflVypQR091J9iuR+LYxfh2rzpbqoT09Q9VJYy/5LlsOC/fWCyhzkxQyx8v7ldXK1LtAHIMLxmGSYuzmoSN2M/pWeRr0WFsA88JEDdWUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776053582; c=relaxed/simple;
-	bh=EIb6tJcKoSqkpkMiIWHT8GXSEcQ8tARRtV2V9HnrXoI=;
+	s=arc-20240116; t=1776053585; c=relaxed/simple;
+	bh=bwZsKPXpFj0EagILS74wobtw3QdQZQfP3x9LOTF4xSw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RTQtl5E0MIf6mFeOoRDo3gw4Q4PNKgAEXvtaT+YRczVglebZelnmUl30OKwZrNxd1GDpj2ps61Ox/bbx83Viiv19k1rMtdYWxSMIuZCbCZFQJJFh55SQgda2H/w75qVH0nuFgHx5BcqgHT1/1PjQuDkbg+lgMi3zuHoeJHPhv2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TzHxaXvj; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=dcr0q3p6Dlyo1z5c0gE2jiLaJ6WgSbsVWmTI2Fz3w8hY/kG6zdvT8RFOgY33JgChXlaLjVKRaLHtHwth3onNEi88pZnSnipeHM3Mj037iUa/CWdB7u5nR2aK7pPY9kkl2IqMBIswwdtqqzpZ4Dd+kkmFhyyuPWWBjXM4lraF1po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cEGBWILj; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzHxaXvj"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c20d5d7f4so13590895c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:12:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEGBWILj"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d9da2559aeso568357eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776053577; x=1776658377; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776053579; x=1776658379; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
-        b=TzHxaXvjGLb14R9HOTPaprWoItAlRBG2mG+9SiUsxkJJ02jH2CAPLrD7kEcYP4sW37
-         3nagCRTqQXjUhBtnsD/IVNvqUa/5Y1QtLal6KuI/msHtg8p81ibowRKvy6k1hsaJMqYB
-         Ucpycmx5lxo3RS7+G4P5pzNITLrtBi2CMXcYPuc1WFZkBzb5hs3DNUKb5NUuqv5w1DZG
-         mJrzk1qicRf+rPcDRTSAbwJPMkXOjtD5neetiuHY3BMZF0Avh+6rtNuvyARbyqH3ISE5
-         dQDaAcbJq04eYMPqfqmIkAIYRIcN2oz15+ohhW5qQl5R7yeB1uGIgDBYaF/cMlEyguKl
-         jtdQ==
+        bh=KJsfPYVO08tCC/QkaQf/uBEFF+74z2Xz18vy6UCdEwM=;
+        b=cEGBWILj9dchk5VJ4XZgp+XqHMbUtXf/d4QH45NmjuPZM2GljIQ0GW7/M3SRO5QynF
+         UvZNgJkyWNFw+3ga4b1TDAwFqomRWFFm9L3Q+emtNjtbgaXfCJOh3a3M/5C3d7IuXYHB
+         KC6mCFW9mkAEbWn+LfDFdhPfSMH11XmKnwoCfcWidJdxj3y7iZIvoLIlBdyT4GT/7Wcq
+         DMk/TlqBxn9qKcxXVn8D3wq/19NT1AUQNWH7A0d+BIzg9ZsijfWJnxmmwhuF0zqwkrDU
+         ChniBk9BpSkptlBMzihkKQ1eAcTx1Q/kfbMf4k1v1KjFr8+cgGBPNFXnLqjGFylbyMun
+         QFqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776053577; x=1776658377;
+        d=1e100.net; s=20251104; t=1776053579; x=1776658379;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
-        b=WObgFluVw4UxgG4DCK0B3+ik87F/2uvB/eABs/vordnYIen9hvlUMf2qTqnsu7Jd0q
-         fEKJGts1Ylsyrgzfl6ZvaodncryYH+atyPu8hA5Ao5umiHMWEBa6PD20V6FEyKtOc0Vb
-         W/IyyO/fv5fZLMx7tLRT8jnFQZKhEVqfbQsCtlv+hAHjrksd2TIVuvdxqB7lFQbzR3X1
-         7xL6tsNWEmGOAVjQPNeugDU10cCAcVYwTKA/OifAJI5sLBGclyY1FheOi7OPlR4O6tV9
-         szS2eAwXC0m/AWxqQ3RbiJCyezrdRnCxtEGZKGmXV+ePUi0Jx/X2cxYvoZAZ3YoOExYT
-         5hzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNVDG2EMEVbX9OzKUkVnO6ZHjNuCyhuShh9QQms2+vEC0NZng77VmLp5yl5U0fMnJ/ECgzDeRylR2iXflx9LAN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtNBu29Pam10ctwwQ/XDhRUdN3r2lS5axxsSvbVrhBZMFlJ8Q+
-	yoFixMTTVpJoxqaWP0Me7l4bMH7A3Mqo5D6jTQDDCAlyK3U7nSlJr707dAlo/HQeECEjJrEsLLj
-	fVznoPl88yg==
-X-Received: from dlbsn14.prod.google.com ([2002:a05:7022:b90e:b0:128:d185:c6ff])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f9d:b0:119:e56b:c75c
- with SMTP id a92af1059eb24-12c34f069edmr6642277c88.33.1776053576289; Sun, 12
- Apr 2026 21:12:56 -0700 (PDT)
-Date: Sun, 12 Apr 2026 21:11:36 -0700
+        bh=KJsfPYVO08tCC/QkaQf/uBEFF+74z2Xz18vy6UCdEwM=;
+        b=Hw5WsIY48BMoxN24I2V85IHXNftWFH/GauC9j0yRQC0D+SC1pxD8uvzf8tgQj0iljK
+         IsMMjQPiBxAJmZ6mSYxK9pa+MyK8UBK+7xqeLV6iSf5EDLg7G2ZvMbDLa1wsRxBSaUOy
+         SQk8GEQFsduTARYeRbD2GO3oAlfUYMw+6kfyL6rEyswc9P+iTmGmoyhuoiP4oT4wumv9
+         oYXDti7lPjDZ7qn6kvFwLe4eQt83RBKXTi0rUaGY6dr9r9y2kGjKpk6O4gh8FBIMd4Rv
+         D2kaoSY2K1KnM7k3E5cHJnrlAnMShE/yjVvhJTB/+DTh48tTyzDscuuvbQLm5k9j2Ee/
+         2aZQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/Ja8+wpGVjcMM9/VBx1U9BldGgnriTyvnlVfKXGMVgGcca1SFVShTVYcP4f9kri8gK7BKC/QDS71Zy4KmnfsC8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyND04nMzCd/cguOj3DfY2yQu3Agnr7F4ZNgijDwmuI7DwKXHAz
+	ttl4sLPFr1tiVDla6UZ3UwDjHzFGxUiuFufZrSdFDTuWHeYOPYd9KAjJZW3aeqcFNlC06WSUyes
+	3MYnVxLRNoQ==
+X-Received: from dyhb15.prod.google.com ([2002:a05:7300:148f:b0:2d1:4dd2:72fc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:cb0e:b0:2ce:f3d7:221
+ with SMTP id 5a478bee46e88-2d589463e5cmr6479369eec.17.1776053578696; Sun, 12
+ Apr 2026 21:12:58 -0700 (PDT)
+Date: Sun, 12 Apr 2026 21:11:37 -0700
 In-Reply-To: <20260413041143.1736055-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260413012227.1089445-1-irogers@google.com> <20260413041143.1736055-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413041143.1736055-27-irogers@google.com>
-Subject: [PATCH v12 26/33] perf kmem: Fix memory leaks on error path and when skipping
+Message-ID: <20260413041143.1736055-28-irogers@google.com>
+Subject: [PATCH v12 27/33] perf synthetic-events: Bound check when
+ synthesizing mmap2 and build_id events
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,63 +78,65 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing frees and thread__put as necessary. An issue detected by
-Sashiko code review.
+Prompted by Sashiko code review, add bound checks when synthesize
+mmap2 and build_id events to make sure the filename doesn't overflow
+the event and lead to stack corruption.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kmem.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ tools/perf/util/synthetic-events.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 68a39f56204d..daf2272c7337 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -783,17 +783,21 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index de812a2befbc..a7fef7ac3da6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -2257,14 +2257,20 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
+ 				    const char *filename)
+ {
+ 	union perf_event ev;
+-	size_t len;
++	size_t len, filename_len = strlen(filename);
+ 	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
+ 	void *array = &ev;
+ 	int ret;
  
- 			new = realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
- 			if (new == NULL)
--				return -ENOMEM;
-+				goto err_out;
+-	len = sizeof(ev.build_id) + strlen(filename) + 1;
++	if (filename_len >= sizeof(ev.mmap2.filename))
++		return -EINVAL;
++
++	len = sizeof(ev.build_id) + filename_len + 1;
+ 	len = PERF_ALIGN(len, sizeof(u64));
  
- 			gfps = new;
--			new += nr_gfps++;
-+			new += nr_gfps;
++	if (len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
++		return -E2BIG;
++
+ 	memset(&ev, 0, len);
  
- 			new->flags = gfp_flags;
- 			new->human_readable = strdup(str + 10);
-+			if (!new->human_readable)
-+				goto err_out;
- 			new->compact_str = compact_gfp_flags(str + 10);
--			if (!new->human_readable || !new->compact_str)
--				return -ENOMEM;
--
-+			if (!new->compact_str) {
-+				free(new->human_readable);
-+				goto err_out;
-+			}
-+			nr_gfps++;
- 			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
- 		}
+ 	ev.build_id.size = bid->size;
+@@ -2303,14 +2309,21 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 					  const char *filename)
+ {
+ 	union perf_event ev;
++	size_t filename_len = strlen(filename);
+ 	size_t ev_len;
+ 	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
+ 	void *array;
+ 	int ret;
  
-@@ -802,6 +806,9 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
+-	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + strlen(filename) + 1;
++	if (filename_len >= sizeof(ev.mmap2.filename))
++		return -EINVAL;
++
++	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len + 1;
+ 	ev_len = PERF_ALIGN(ev_len, sizeof(u64));
  
- 	trace_seq_destroy(&seq);
- 	return 0;
-+err_out:
-+	trace_seq_destroy(&seq);
-+	return -ENOMEM;
- }
++	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
++		return -E2BIG;
++
+ 	memset(&ev, 0, ev_len);
  
- static int evsel__process_page_alloc_event(struct perf_sample *sample)
-@@ -971,6 +978,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 	}
- 
- 	if (perf_kmem__skip_sample(sample)) {
-+		thread__put(thread);
- 		return 0;
- 	}
- 
+ 	ev.mmap2.header.type = PERF_RECORD_MMAP2;
 -- 
 2.53.0.1213.gd9a14994de-goog
 
