@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2CE220F49
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F6D384231
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776055132; cv=none; b=noy626ENrcESB8f2Oe5sG0A4Q3jQz7okIdpdlGU3IEOpQfqvnoIiNohCsO3RcqrnbSao+O/llVZTreyc+TlgevKRks4DKS5IoZ0HcUDbrcV1/Gm7QO86ugOWN4fmF4+Q+L+z8n2d5UmvyP0OoRBR1kqzvRr/HsYeULtOdUluib4=
+	t=1776055338; cv=none; b=QC4Ipy+eOYZKh1guUrTN0LpXZXEaI/3SKl+lNu3m5EN9pWSbgMpjFAsr9c8O/2qTHbS5+9PGowNuGzebYIxCPKr0D3rbrYZFdeaa3/L2KRoG+ummCvcx7vSXBAf8twyuQDTtUPH3yWaKPnm0bftPDFWFQRa3J6sEcE+P7pOjz60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776055132; c=relaxed/simple;
-	bh=D3NpVrCL+054D9h56LODERq+8oGnUo5rhD9kJL0RfU4=;
+	s=arc-20240116; t=1776055338; c=relaxed/simple;
+	bh=hfm7y3XvTQpnme1nrqEYkFSCy05ItGm6pduAsuCpFiU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=l+gZ8P4Ca4STBcI6wFu0m31U61zCNeEJykb//S5fImpgeoGUGhBle7mOGCUERb/iD3nOhbvI5HkEx4l+f+NXAIyVb5UAkHoBatQVBNIR/VTfluh6nQHyd/9+VcLPfyyoQJ3ykXIUoiLIACSk56CcfBIafOf2r2N5pWAZcPxXjR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1eoptgD; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Or8HPK9nK6jbQ7vRz7UeBZg31W7MkW1FqkvsxgrELRZXWSD1/j4SXwvYkcE+4UNVb7W2kOWxJgX1XBTD/9dEl6nTBQiO7oHc+JtE2K9i6kvF7r0O+L2v63st+XKNh/Jm/wwtmfqKkBYQHIRMs6mtmhcF2R3dQ7T7eOCk8Xa5/U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETTpllys; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1eoptgD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04AEC116C6;
-	Mon, 13 Apr 2026 04:38:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETTpllys"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1686C116C6;
+	Mon, 13 Apr 2026 04:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776055131;
-	bh=D3NpVrCL+054D9h56LODERq+8oGnUo5rhD9kJL0RfU4=;
+	s=k20201202; t=1776055337;
+	bh=hfm7y3XvTQpnme1nrqEYkFSCy05ItGm6pduAsuCpFiU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Y1eoptgD92i3EZUXQgkarLcDmgwugJSn3z1ryHj3FOfIq+bYf3RkgnrynF+va8ZFa
-	 d/9IWSNG98kix3OO51Rx4ToNSRM676T0Z+GUsybknxqYa6AzWisQAVNSUMR6rJJnOD
-	 xK16IdA93uT6HysHiZqy4lIu+LY2zvr2+MQ6KB1XMpdQF2Jzylm/ItJJRqSVYLXaDV
-	 aIp9L+mq6yz/4Jlqf0CG3qFChZr1WL/n/jI+tDmyLH30XVORc2GrA66dwlW3IFcuA8
-	 nWxAXPsTdWRzc4ELokPP3of2oikBeDrcdq0mrjEi4iLSh72lsRFucDhJHjftRHuDyS
-	 wPzOsQtgldpxw==
+	b=ETTpllysLe9f8n1//B8tTfwRfk7Aq9LFY37htH7VcPjbsDn/4AH73apMa3inq7FWk
+	 34Jli/SRwPC3pPxcnHlioTF0HbA5hBxLwAyqS+389k8hgdcosLXdWecOrn6QiFIGh4
+	 G4mRZoiEiHs9IvGIZsQUOblSfbidczJPPXm2zqgqWV11KofV6a/6DfPbNOSdc+cim1
+	 mCaWCgKYvhu1+edDE8ycwGzxaHxWEWfscSsKWP2OlxrMvxje4VvpTNBkANxKv6jUcp
+	 IVNkgXfauScGnyjswQeSxCT+85i8U/iDyu91SQ3NLh9PnhUicWJ0vmxvZpdgLe01aU
+	 Tnp5VkKaqbX8w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 16/33] perf sched: Don't pass evsel with sample
+Subject: Re: [PATCH v12 22/33] perf evsel: Don't pass evsel with sample
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413041143.1736055-17-irogers@google.com>
-References: <20260413041143.1736055-17-irogers@google.com>
+In-Reply-To: <20260413041143.1736055-23-irogers@google.com>
+References: <20260413041143.1736055-23-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 04:38:51 +0000
-Message-Id: <20260413043851.D04AEC116C6@smtp.kernel.org>
+Date: Mon, 13 Apr 2026 04:42:17 +0000
+Message-Id: <20260413044217.A1686C116C6@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,50 +44,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 1 potential issue(s):
-- [High] process_sched_switch_event() accesses the `sched->curr_pid` array =
-using `sample->cpu` without verifying it against MAX_CPUS.
+- [Medium] Integer Underflow and TOCTOU in `perf_evsel__parse_id_sample` Bo=
+unds Check
 --
 
-commit f56857eae8b9831a72ae998ca1a45fc0585d8ad9
+commit 763d668507b0088255a55ce64fb44fde670bed7b
 Author: Ian Rogers <irogers@google.com>
 
-perf sched: Don't pass evsel with sample
+perf evsel: Don't pass evsel with sample
 
-This patch simplifies the event handler signatures in perf sched by
-removing the evsel argument. The sample structure already contains a
-pointer to the evsel, making it unnecessary to pass both.
+This commit arranges for the sample to contain the evsel, making it unneces=
+sary
+to pass the evsel separately. It also adds bound checks in
+perf_evsel__parse_id_sample by switching to using an index and checking that
+it doesn't become negative.
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index aea14bff7e61c..45439e2af8ffa 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-
-[ ... ]
-
->  static int process_sched_switch_event(const struct perf_tool *tool,
-> -				      struct evsel *evsel,
->  				      struct perf_sample *sample,
->  				      struct machine *machine)
->  {
-
-[ ... ]
-
->  	if (sched->tp_handler->switch_event)
-> -		err =3D sched->tp_handler->switch_event(sched, evsel, sample, machine);
-> +		err =3D sched->tp_handler->switch_event(sched, sample, machine);
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ee30e15af054c..bb48568b8101a 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3003,52 +3003,62 @@ int evsel__open_per_thread(struct evsel *evsel, s=
+truct perf_thread_map *threads)
+>  	return ret;
+>  }
 > =20
->  	sched->curr_pid[this_cpu] =3D next_pid;
+> -static int perf_evsel__parse_id_sample(const struct evsel *evsel,
+> -				       const union perf_event *event,
+> +static int perf_evsel__parse_id_sample(const union perf_event *event,
+>  				       struct perf_sample *sample)
+>  {
+> +	const struct evsel *evsel =3D sample->evsel;
+>  	u64 type =3D evsel->core.attr.sample_type;
+>  	const __u64 *array =3D event->sample.array;
+>  	bool swapped =3D evsel->needs_swap;
+>  	union u64_swap u;
+> -
+> -	array +=3D ((event->header.size -
+> -		   sizeof(event->header)) / sizeof(u64)) - 1;
+> +	int i =3D ((event->header.size - sizeof(event->header)) / sizeof(u64)) =
+- 1;
 
-Can an out-of-bounds access occur here if a corrupted or malicious perf.data
-file supplies an arbitrary value for sample->cpu?=20
+Does this calculation properly protect against underflow on 32-bit platform=
+s?
 
-This is not a new issue introduced by this patch, but since sched->curr_pid
-is sized to MAX_CPUS (4096), an unchecked this_cpu value allows arbitrary
-memory reads and writes when parsing untrusted files.
+Since sizeof(event->header) evaluates to an unsigned size_t, the subtraction
+could underflow if event->header.size is less than 8.
 
-It looks like this is addressed in the later commit "perf sched: Bounds
-check CPU in sched switch events" in this patch series.
+On 32-bit platforms, this would result in a large positive integer (0x1FFFF=
+FFE).
+When assigned to the signed 32-bit int i, the value would remain positive,
+bypassing the i < 0 check.
+
+If a local attacker modifies the size field to 0 via a Time-of-Check to
+Time-of-Use (TOCTOU) race condition when the file is mapped with MAP_SHARED,
+could this regression still lead to an out-of-bounds array access?
+
+> =20
+>  	if (type & PERF_SAMPLE_IDENTIFIER) {
+> -		sample->id =3D *array;
+> -		array--;
+> +		if (i < 0)
+> +			return -EFAULT;
+> +
+> +		sample->id =3D array[i--];
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413041143.1736=
-055-1-irogers@google.com?part=3D16
+055-1-irogers@google.com?part=3D22
