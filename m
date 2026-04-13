@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB91279334
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DF5282F0A
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776043408; cv=none; b=gwyTYwREIDVtU0FGyPMYiKp/FQB2rp0rv24hPCqKexCmZuSWsYQYPv43IdhRxfnbIndxm3GNRChlPCmT3A7IBpposLR9GGdZUfnY37z6S9MaGakYtBIr34sgAuXtlW0KyWyQN0KmLCa5651dz7r5Ctcq7KkS7tZbdZuPLArlqjA=
+	t=1776043410; cv=none; b=dVpahtdG8V311UkLfzgOgpRmSGua/s9Qaa7gAX6muiB7Vfx8wGxX28hl+Yh9rrRF2bn2VwXKp+TaeVXKYxSxNFquR0pkaUXc3hZBJFHDBQCd9fwf9/SyuLCVxNP/NQN8TOag77/P3LS1Zq4UmVVte7MnOja6Yi1mTkGR0Oj8jGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776043408; c=relaxed/simple;
-	bh=har6PWz44n64Z/nOCmGTv6uCWfmF5LTdLFTZJWF2aH0=;
+	s=arc-20240116; t=1776043410; c=relaxed/simple;
+	bh=EIb6tJcKoSqkpkMiIWHT8GXSEcQ8tARRtV2V9HnrXoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EopJ+zOpsmtwfSkEW7mHnorG72o7eBT388aHq4PCZG7pjm2Uj82eQhFoW5BJD79y3ewudGaVpb84E+EgRvInlfhyfgusmhMaTpX9bI0NbIzqkXTyZgvcyZJrSacyPGJPE6i4C1dy3ErnyIOT968YaxL5GDqCjz/6pZTnP6OuW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3kMXnze; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=bMNTvC5HgYZ1Sf5KIGIsfgFVNWMo+xAIOAO+xCyjwbS7lvKM3DnJNeb2myuO0Th2blYSRBKmbuqyrJkwOZK+N7/3z/NyG7P7fVfcS1tsM0yWo/YSVjA6nGrzmuvdJzJJ1eYwyqgKvenqY45Bx7BNztGMNNwJOEzT3vITDZk2Ue4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U4gbsRf2; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3kMXnze"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35da4795b3cso6994668a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 18:23:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U4gbsRf2"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2d443c3b094so8551171eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 18:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776043407; x=1776648207; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776043409; x=1776648209; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
-        b=l3kMXnze0Q+fq2bbT6yf4G6edCeRpYoE8AzKTvNKozBoWC8HolLXVszwaB2+9OQNct
-         7AniNcNfgDnuY+FUnzwwF4AqkncsVhcPupVpaLL0HyaWyc13hATcgyjy8ebKLudI2BLE
-         SEY8e3nr8+kwjox3avMndIIp+VeoVSu26ccI56fCCWKkzX7snMz08KavVQi0ggiflYTo
-         04TyHDFy18SKCvvnc9JmPVypQqaLV4C6bntn6vpPQZbly8FVW0tkJLVtclQPyc8YUJ9y
-         YijK1YfcHsDMSO+a3wMcGGVQS74gap4B83Ei0QQG5T5lPUc4CJ7oE6X27iVG3/OB2Hp4
-         BMIQ==
+        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
+        b=U4gbsRf2qL6W1us9qhLvY5HiUc/UIapgVSuKGNqffMFSu/r+1u62+DAK/PYKZgAN4n
+         ORln2Lz1ad0D8yDjrNhLQtSpFhmaw0hh75ahnCZyFVMXf9pkKwTgAiAE35gbL04uwMq6
+         B8K3CA7Lte+SMVLgl9EFDA76F/gVN/8dhYIMzHQrK0eff5eVmmCYY2rXmNcpW+vHDFXo
+         1AcYpLRU+hjhtJ4exIfgjMFrMyJ8AYTKfEyJptdKyxsHIyq3y1bHbEhwaGPOoklViBkz
+         WAqyw5NRDeVkSyOzRtL+4nKkJBpkhpbBYbitAKYe07DY8EGo6hlgR0AiYEZWrf1ZRW8Z
+         zwRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776043407; x=1776648207;
+        d=1e100.net; s=20251104; t=1776043409; x=1776648209;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
-        b=BMmvvOuCT+VwucgwHjtFVgeEqVfr43+94rqSdK0hFFrks1T1tnTKtxJ14qxKTs6e1d
-         cgoZzdAsNFmuU6PgcLajnpHE+XzRyKTpnygviULb5TuRj+w41/mHNfk6IigXIK2v+UAq
-         eP5QpNo81Ksije88RGQY6ZweBDb6QdBT6mqU6Rcvp00DqSpVuhfKtcK8CG4k2kQpVd4T
-         B33yfndYvQxCAdyGxkXZhTIr8rrPV0fzl9UmdR9k/Oy4ZI7a5+wdcZBRD/r5KI42afjV
-         +eYEbULsYuBoebB5SU9HjZnY+qsDUZXvnHs9NLp8xE590zrPkErGEpcFYTntR+qbQoMW
-         0dRA==
-X-Forwarded-Encrypted: i=1; AFNElJ/35WhZokqoriRCVJYflq/4B+27la1k1AnX47GaofCgvZenjIFPulmydnUaV2WruzrRAMzTCGTkYHuRi3eMNeBe@vger.kernel.org
-X-Gm-Message-State: AOJu0YybHEz0kSxp1RZAV4abW3apBAVqs8yrtCQdOYhKktfRJgmLunK/
-	0MqbZDJgRkYa+cJJwMpwJNTRP2QvQ2vFG8w1M0Q+byOIRw9a18+xfu0Bdt9tcbXVuRz4n8/zCeI
-	TZ1QoSbeW3g==
-X-Received: from pjug23.prod.google.com ([2002:a17:90a:ce97:b0:35c:1a37:ace])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:118f:b0:35e:5aa5:ae38
- with SMTP id 98e67ed59e1d1-35e5aa5b2ecmr2427534a91.9.1776043406502; Sun, 12
- Apr 2026 18:23:26 -0700 (PDT)
-Date: Sun, 12 Apr 2026 18:22:19 -0700
+        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
+        b=qnP9n159MlKRKjohYxnliEQFcYfM7En8bjCF4c+WTGjIWgbnsQMjdMzaD6WBzMwaeU
+         dhntQLiPyp5QkGAq9czBhNhQX26PgaozRK2Q2x1S+Kwr354cqBPKy0gXxHfEgVkewAVY
+         xgX8rzL8pnjJkVZT+kHnAzZvH5REC+s6B29MU1wjRpQUhfUxyDycVGvYMdkSk3o2+hLg
+         xSGgvmncII+lVPRFk2xxoPXREK1t4bArH5NFNpG0Sh8Eo+/LUMWcF8kNiS+7bxUuZmhR
+         MPv7Acvk3JLVbynk9OcLaT2CdBUESL0PuILQz3Ry5H0tpY4Uo5o+L9k1v6xzDn4kylqZ
+         IprQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+STyAGdLNXVAowjFvqV750Nr3XxrSK7A8FECA2IshWMyA8tNneV3imdSFjAhC0+uqIKvJQy3MGIXXUgN5Qvef9@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl3Rk609Ev/XFxEx08b5z6qOWXH3vd7x7oYBwwFrO7KDHO1l8T
+	z7fwk11xVdrvb2YXIZfuPPto1NBwUapKnEWSxqaMWlP2SXvXbhrNzb+TYNAWCIWOisvONs+rKAK
+	/SFvvkGGpCQ==
+X-Received: from dybtv6.prod.google.com ([2002:a05:7300:f486:b0:2d8:5b05:964b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e82c:b0:2cb:990a:b5e
+ with SMTP id 5a478bee46e88-2d5881acd8dmr5868305eec.15.1776043408615; Sun, 12
+ Apr 2026 18:23:28 -0700 (PDT)
+Date: Sun, 12 Apr 2026 18:22:20 -0700
 In-Reply-To: <20260413012227.1089445-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260412020833.641177-1-irogers@google.com> <20260413012227.1089445-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413012227.1089445-26-irogers@google.com>
-Subject: [PATCH v11 25/33] perf timechart: Fix memory leaks
+Message-ID: <20260413012227.1089445-27-irogers@google.com>
+Subject: [PATCH v11 26/33] perf kmem: Fix memory leaks on error path and when skipping
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,86 +76,63 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Fix missing free from cat_backtrace, which requires copies of the
-backtrace being made in functions that save it.
+Add missing frees and thread__put as necessary. An issue detected by
+Sashiko code review.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-timechart.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ tools/perf/builtin-kmem.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 1d24d8738519..64f69bd67c6b 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -299,7 +299,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
- 	sample->type = type;
- 	sample->next = c->samples;
- 	sample->cpu = cpu;
--	sample->backtrace = backtrace;
-+	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
- 	c->samples = sample;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 68a39f56204d..daf2272c7337 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -783,17 +783,21 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
  
- 	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
-@@ -433,7 +433,7 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
+ 			new = realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
+ 			if (new == NULL)
+-				return -ENOMEM;
++				goto err_out;
  
- 	we->time = timestamp;
- 	we->waker = waker;
--	we->backtrace = backtrace;
-+	we->backtrace = backtrace ? strdup(backtrace) : NULL;
+ 			gfps = new;
+-			new += nr_gfps++;
++			new += nr_gfps;
  
- 	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
- 		we->waker = -1;
-@@ -489,9 +489,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
- 	}
- }
- 
--static const char *cat_backtrace(union perf_event *event,
--				 struct perf_sample *sample,
--				 struct machine *machine)
-+static char *cat_backtrace(union perf_event *event,
-+			   struct perf_sample *sample,
-+			   struct machine *machine)
- {
- 	struct addr_location al;
- 	unsigned int i;
-@@ -544,8 +544,10 @@ static const char *cat_backtrace(union perf_event *event,
- 				 * It seems the callchain is corrupted.
- 				 * Discard all.
- 				 */
--				zfree(&p);
--				goto exit;
-+				addr_location__exit(&al);
-+				fclose(f);
-+				free(p);
-+				return NULL;
- 			}
- 			continue;
+ 			new->flags = gfp_flags;
+ 			new->human_readable = strdup(str + 10);
++			if (!new->human_readable)
++				goto err_out;
+ 			new->compact_str = compact_gfp_flags(str + 10);
+-			if (!new->human_readable || !new->compact_str)
+-				return -ENOMEM;
+-
++			if (!new->compact_str) {
++				free(new->human_readable);
++				goto err_out;
++			}
++			nr_gfps++;
+ 			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
  		}
-@@ -577,6 +579,7 @@ static int process_sample_event(const struct perf_tool *tool,
- {
- 	struct timechart *tchart = container_of(tool, struct timechart, tool);
- 	struct evsel *evsel = sample->evsel;
-+	int ret = 0;
  
- 	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
- 		if (!tchart->first_time || tchart->first_time > sample->time)
-@@ -587,11 +590,13 @@ static int process_sample_event(const struct perf_tool *tool,
+@@ -802,6 +806,9 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
  
- 	if (evsel->handler != NULL) {
- 		tracepoint_handler f = evsel->handler;
-+		char *backtrace = cat_backtrace(event, sample, machine);
- 
--		return f(tchart, sample, cat_backtrace(event, sample, machine));
-+		ret = f(tchart, sample, backtrace);
-+		free(backtrace);
- 	}
- 
--	return 0;
-+	return ret;
+ 	trace_seq_destroy(&seq);
+ 	return 0;
++err_out:
++	trace_seq_destroy(&seq);
++	return -ENOMEM;
  }
  
- static int
+ static int evsel__process_page_alloc_event(struct perf_sample *sample)
+@@ -971,6 +978,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	}
+ 
+ 	if (perf_kmem__skip_sample(sample)) {
++		thread__put(thread);
+ 		return 0;
+ 	}
+ 
 -- 
 2.53.0.1213.gd9a14994de-goog
 
