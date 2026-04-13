@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA1F3806A9
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525F93806C8
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 04:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776053580; cv=none; b=EKPSovInDXVfA1VBau176ZdcDHWloNwb3NYXio4mgh83OrHbNs1hfJNVpnbafS6TpmS8ZIAmy+O8uiXZNevPzhavzjHqZHCAytuncl5WAeRpGB/P8wdP9pqyzbUuFnAtx/OkGm8p05Duv4gynAM/p5ZX2d4VHFLeWU7WF7QJF4o=
+	t=1776053582; cv=none; b=tOI7xJG4uTdRFyV+zJhGia34DZbSM+lL3cMVfU7X9bOhRdI57K6YZsw7vTzqI0yjKSj/UHl/w4zIuQflF+XoP/aEM7s5e6o34CEyibDvFYslZT0h7af8em1QRtCrD75ChwIYojaw4N/qu/NV7BsGTM83u7ZMlygQMn162hJvMIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776053580; c=relaxed/simple;
-	bh=har6PWz44n64Z/nOCmGTv6uCWfmF5LTdLFTZJWF2aH0=;
+	s=arc-20240116; t=1776053582; c=relaxed/simple;
+	bh=EIb6tJcKoSqkpkMiIWHT8GXSEcQ8tARRtV2V9HnrXoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s2welHqUdtpAN/2vjPAZ4bzU3tScbZgl1t6+HxkGAjhj3f3QaX+eiKKoe5t9MJn2fAFbjLPfq6OTVRTUT900/0BwYv0nC/mjcpjeavE5H7BT5jR8qOyU680C9HMooKlEt6QyoM+pkmaX4IY2wABgDD0aYRD512SkBq+yftSqlBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FI5r8pAb; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=RTQtl5E0MIf6mFeOoRDo3gw4Q4PNKgAEXvtaT+YRczVglebZelnmUl30OKwZrNxd1GDpj2ps61Ox/bbx83Viiv19k1rMtdYWxSMIuZCbCZFQJJFh55SQgda2H/w75qVH0nuFgHx5BcqgHT1/1PjQuDkbg+lgMi3zuHoeJHPhv2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TzHxaXvj; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FI5r8pAb"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2cc75e79b97so14279225eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:12:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzHxaXvj"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c20d5d7f4so13590895c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 21:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776053574; x=1776658374; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776053577; x=1776658377; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
-        b=FI5r8pAbkTHPtwavkzl91ibuV4WpfEKEwAVCCgwg44+D7FIjcfffgWBs2VXWR6Djb6
-         IX1uIUYWpXIEzZ655zTEpYLZbgSVRCfI3wVXacVVtw9HvsNDw6Kr0FHNNKLV91xdgCYd
-         V1HOy6DLZBogxJ6/SBDA+jzgZyrWQfFV9fhYBKHXo/IrgTSKNWDnaIgmt09n7sNHfM7N
-         bGSOjBx7Tty+c7gcgw9T8kHsPAzZySFwX6fjloaIRu9C3Ob/ZphSsXhyWmeDSfZRlpe7
-         WwdmHzsMFOme600plcVYlHBEv9A0drQiVZecpdv5SbAuN36xyPOvJMvr2JKRtqOWKYhT
-         Qxsw==
+        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
+        b=TzHxaXvjGLb14R9HOTPaprWoItAlRBG2mG+9SiUsxkJJ02jH2CAPLrD7kEcYP4sW37
+         3nagCRTqQXjUhBtnsD/IVNvqUa/5Y1QtLal6KuI/msHtg8p81ibowRKvy6k1hsaJMqYB
+         Ucpycmx5lxo3RS7+G4P5pzNITLrtBi2CMXcYPuc1WFZkBzb5hs3DNUKb5NUuqv5w1DZG
+         mJrzk1qicRf+rPcDRTSAbwJPMkXOjtD5neetiuHY3BMZF0Avh+6rtNuvyARbyqH3ISE5
+         dQDaAcbJq04eYMPqfqmIkAIYRIcN2oz15+ohhW5qQl5R7yeB1uGIgDBYaF/cMlEyguKl
+         jtdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776053574; x=1776658374;
+        d=1e100.net; s=20251104; t=1776053577; x=1776658377;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
-        b=Striwd8MC81IGc0Ig1W/Xx7w6kWhYiZ7QpQHl0HSmshVC2Od49R6snlNJYrcV7feLQ
-         aoRurSM+6CiSU3qSaT/02eQVw3gB0xcGINeNXDkXGys+3tUeXz/dwk96ZwzLei/S8KBm
-         7RfUOE0PPGp1uS2KDKqcDUzEPHLKfGhagOhfoVvgZU6Lc1AocRwtuATvltY/ra+bNuwv
-         8eYx0yp5JGsJg5YlvpSei0tnyWPpO6OHAVPyP/zO6BNgScv23lRNfHl2VD7Z1/FIZSjp
-         DAWSLKDOKMloVn9HdjpzBDo70z/pBnZb1fZMzEtxWD2iB1MgECGiQSY4hutz9/xLRN2E
-         mzfw==
-X-Forwarded-Encrypted: i=1; AFNElJ9iIwoOs2PkIENgWEY2QAjkmh0TigqCspS7SYOVaieG+1gZcCr1uCjZABCp2tXFigiTHlWvyjw4WuguPT1bp1xU@vger.kernel.org
-X-Gm-Message-State: AOJu0YywbVP91bDAvpeR9U6sp+Zt7EXd10lx3tdmHrAdy/imUDoTtfpj
-	l1wGQBm+X9cFdYaFd1mow/zIo1lhXAJk8h8s+TH9QvIcWYELuVIDhB0KKaDekBylZbV62susSfO
-	XW5Pc1WvqEg==
-X-Received: from dyt12.prod.google.com ([2002:a05:693c:808c:b0:2d7:37d5:85cf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d70e:b0:2cb:de38:c76d
- with SMTP id 5a478bee46e88-2d58a39c931mr6594989eec.30.1776053573784; Sun, 12
- Apr 2026 21:12:53 -0700 (PDT)
-Date: Sun, 12 Apr 2026 21:11:35 -0700
+        bh=k0NBhXTshGbMXUhORX+eVN1pO2rFpCDmkzuCKC25Nuc=;
+        b=WObgFluVw4UxgG4DCK0B3+ik87F/2uvB/eABs/vordnYIen9hvlUMf2qTqnsu7Jd0q
+         fEKJGts1Ylsyrgzfl6ZvaodncryYH+atyPu8hA5Ao5umiHMWEBa6PD20V6FEyKtOc0Vb
+         W/IyyO/fv5fZLMx7tLRT8jnFQZKhEVqfbQsCtlv+hAHjrksd2TIVuvdxqB7lFQbzR3X1
+         7xL6tsNWEmGOAVjQPNeugDU10cCAcVYwTKA/OifAJI5sLBGclyY1FheOi7OPlR4O6tV9
+         szS2eAwXC0m/AWxqQ3RbiJCyezrdRnCxtEGZKGmXV+ePUi0Jx/X2cxYvoZAZ3YoOExYT
+         5hzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNVDG2EMEVbX9OzKUkVnO6ZHjNuCyhuShh9QQms2+vEC0NZng77VmLp5yl5U0fMnJ/ECgzDeRylR2iXflx9LAN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtNBu29Pam10ctwwQ/XDhRUdN3r2lS5axxsSvbVrhBZMFlJ8Q+
+	yoFixMTTVpJoxqaWP0Me7l4bMH7A3Mqo5D6jTQDDCAlyK3U7nSlJr707dAlo/HQeECEjJrEsLLj
+	fVznoPl88yg==
+X-Received: from dlbsn14.prod.google.com ([2002:a05:7022:b90e:b0:128:d185:c6ff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f9d:b0:119:e56b:c75c
+ with SMTP id a92af1059eb24-12c34f069edmr6642277c88.33.1776053576289; Sun, 12
+ Apr 2026 21:12:56 -0700 (PDT)
+Date: Sun, 12 Apr 2026 21:11:36 -0700
 In-Reply-To: <20260413041143.1736055-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260413012227.1089445-1-irogers@google.com> <20260413041143.1736055-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413041143.1736055-26-irogers@google.com>
-Subject: [PATCH v12 25/33] perf timechart: Fix memory leaks
+Message-ID: <20260413041143.1736055-27-irogers@google.com>
+Subject: [PATCH v12 26/33] perf kmem: Fix memory leaks on error path and when skipping
 From: Ian Rogers <irogers@google.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -77,86 +77,63 @@ Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Fix missing free from cat_backtrace, which requires copies of the
-backtrace being made in functions that save it.
+Add missing frees and thread__put as necessary. An issue detected by
+Sashiko code review.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-timechart.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ tools/perf/builtin-kmem.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 1d24d8738519..64f69bd67c6b 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -299,7 +299,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
- 	sample->type = type;
- 	sample->next = c->samples;
- 	sample->cpu = cpu;
--	sample->backtrace = backtrace;
-+	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
- 	c->samples = sample;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 68a39f56204d..daf2272c7337 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -783,17 +783,21 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
  
- 	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
-@@ -433,7 +433,7 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
+ 			new = realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
+ 			if (new == NULL)
+-				return -ENOMEM;
++				goto err_out;
  
- 	we->time = timestamp;
- 	we->waker = waker;
--	we->backtrace = backtrace;
-+	we->backtrace = backtrace ? strdup(backtrace) : NULL;
+ 			gfps = new;
+-			new += nr_gfps++;
++			new += nr_gfps;
  
- 	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
- 		we->waker = -1;
-@@ -489,9 +489,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
- 	}
- }
- 
--static const char *cat_backtrace(union perf_event *event,
--				 struct perf_sample *sample,
--				 struct machine *machine)
-+static char *cat_backtrace(union perf_event *event,
-+			   struct perf_sample *sample,
-+			   struct machine *machine)
- {
- 	struct addr_location al;
- 	unsigned int i;
-@@ -544,8 +544,10 @@ static const char *cat_backtrace(union perf_event *event,
- 				 * It seems the callchain is corrupted.
- 				 * Discard all.
- 				 */
--				zfree(&p);
--				goto exit;
-+				addr_location__exit(&al);
-+				fclose(f);
-+				free(p);
-+				return NULL;
- 			}
- 			continue;
+ 			new->flags = gfp_flags;
+ 			new->human_readable = strdup(str + 10);
++			if (!new->human_readable)
++				goto err_out;
+ 			new->compact_str = compact_gfp_flags(str + 10);
+-			if (!new->human_readable || !new->compact_str)
+-				return -ENOMEM;
+-
++			if (!new->compact_str) {
++				free(new->human_readable);
++				goto err_out;
++			}
++			nr_gfps++;
+ 			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
  		}
-@@ -577,6 +579,7 @@ static int process_sample_event(const struct perf_tool *tool,
- {
- 	struct timechart *tchart = container_of(tool, struct timechart, tool);
- 	struct evsel *evsel = sample->evsel;
-+	int ret = 0;
  
- 	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
- 		if (!tchart->first_time || tchart->first_time > sample->time)
-@@ -587,11 +590,13 @@ static int process_sample_event(const struct perf_tool *tool,
+@@ -802,6 +806,9 @@ static int parse_gfp_flags(struct perf_sample *sample, unsigned int gfp_flags)
  
- 	if (evsel->handler != NULL) {
- 		tracepoint_handler f = evsel->handler;
-+		char *backtrace = cat_backtrace(event, sample, machine);
- 
--		return f(tchart, sample, cat_backtrace(event, sample, machine));
-+		ret = f(tchart, sample, backtrace);
-+		free(backtrace);
- 	}
- 
--	return 0;
-+	return ret;
+ 	trace_seq_destroy(&seq);
+ 	return 0;
++err_out:
++	trace_seq_destroy(&seq);
++	return -ENOMEM;
  }
  
- static int
+ static int evsel__process_page_alloc_event(struct perf_sample *sample)
+@@ -971,6 +978,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	}
+ 
+ 	if (perf_kmem__skip_sample(sample)) {
++		thread__put(thread);
+ 		return 0;
+ 	}
+ 
 -- 
 2.53.0.1213.gd9a14994de-goog
 
