@@ -1,125 +1,185 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06203ACF18;
-	Mon, 13 Apr 2026 08:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F96236B06F
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 09:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776070185; cv=none; b=n4L2gJwvtfjeX0WPMNIGYmninAovSnEJYVzUGDS+VrWWyQu3bKfRvSBz0/sc75Srkhsyyuu0P8t5jTjkskxBwetslZSpppUt0icsYcZoQbajybOyG3UguslR+BI88sPv3z3tkaJrzAbOrfFKEF9DDURBFlLUQdDLnTXYDu39Adg=
+	t=1776073271; cv=none; b=LshcnIBv/IVVwqLbD1xtLQDGqsG/SUy29EXmLA2ODNqauN0lVz5R//Xe8dYR2XBw8Ceu3ivlwPkLv8hYaC5YnOiuerJwb3PNr5po6AlobTKK68BO2rUYfZTba+MH70z7ITP/d1FTxLuZ1GHHok6ED1mONW6CdP2OS/RjgL0PLNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776070185; c=relaxed/simple;
-	bh=bdMEH6BffjYxwN/uwZveM6rAFybUgLDXqVkJob6/B/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F8Sm0nTnhlVTi1wkcb3x8AUK1pxS6QzKYAO9N6DOUvkaOFUaMGcbCx3KYDZKvYvInmBgcVN5hAvWpgIOfMBN6WU1juXi1B2envEuLjJVV90DojwHgjmp9TZj2M3NVlWalkfaoh0J491ZnPVReZP7IYAbUWq+9FclSnEyTuWe1qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=59OnR8mh; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=ZimjZvxp; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	s=arc-20240116; t=1776073271; c=relaxed/simple;
+	bh=MvsSjY800qzV9UiV/BKtYfdNcsgsGJXeu6GKFLkpDAY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=p0WQcUCDexkkuMKL/V9whlVMp5XSQ9WsTq6Mi/b54JbpGqEAvZGPl2NKUteiuv1krtdAHdlplTNIHOnCn98rgKVEhIMvz4B5GwcxTVwCchKbNVlF+NO+9FLbhs/e2ottVt+DjpxW9Eb97wPN7R6yU3VX+Sfmws/bwuehxV3ORjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XV1gnFUS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="59OnR8mh";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="ZimjZvxp"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:
-	References:BIMI-Selector; bh=6OrlQu4O57XEr1X3XLOvXNQM3/Z2iT8i6M9UMgn5zyc=;
-	t=1776070183; x=1776674983; b=59OnR8mhatYWey7D+KYQTQsB8vvpeAdPwqYms0ooeuu32Lc
-	wV63Jw7Z82GFtqKxUPyS0Xu6tpPjLrOVZJyuyBg==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:
-	References:BIMI-Selector; bh=6OrlQu4O57XEr1X3XLOvXNQM3/Z2iT8i6M9UMgn5zyc=;
-	t=1776070183; x=1776674983; b=ZimjZvxph+fbSdCj3U8j264HQ2GU+KfMq1j0vmnuvpUleg2
-	aYh3gALBIGqjqzXpRGMB3qP+bWTP/gSktdfixrqh2amHJJmJ3OwnbYghdaN3rdGl/L3WSgbqBObjh
-	98XnI2Q2Fr7Ey0Os9QcUuk/Bzw4eH8Zt9npzK/mkj3kddgs59M/xBjEkheXXwLR0rJl5MvqnylzvV
-	JxD9moZaasCA2GsNZL3U9C3TMU1EjuNy2Ifc3TCRl7XvmzfumHTSZEGsoZCbKHxZj6wviuV6XTX/i
-	DZ5E5ZJcL1bVqn8LY2bQasjdnblBXoRIeugM0y9MIzNb+oPW5vuoLBAuECZw4LfqvXNiIGTS6Xv0L
-	/CjKwhXo5vWXfSeSfZrDmjpdHeeWFxuhy/EziePczxG+6401mW1kU98yXEsumuzYS0MVuews3q/nU
-	F9Yb83CwUpFrN8KUqdvPjqejkSyjrWQPjVbYqmuIFxofmmqpiJgTuQxuXc17elZgOWcsldacDyjnI
-	Mys;
-Received: from [47.76.78.191] (helo=[172.16.23.20])
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wCCz7-00000000cn8-1TS6;
-	Mon, 13 Apr 2026 16:49:33 +0800
-Message-ID: <0160f8e5-56f5-4024-8e4f-a72c4ab19f97@csmantle.top>
-Date: Mon, 13 Apr 2026 16:49:28 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XV1gnFUS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CAAC116C6;
+	Mon, 13 Apr 2026 09:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776073270;
+	bh=MvsSjY800qzV9UiV/BKtYfdNcsgsGJXeu6GKFLkpDAY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=XV1gnFUSV92aB5sLX/dlK6gef6OGn8J9er30Em+bu2yXAZIUOpSmVyhkh7mCI21KG
+	 Z/SJF/2BrybKKuVwlwGxWwoiBPOaEXP+iOO3V9am4HC4/GKbvjTvsS5wo2Jh7iAt7j
+	 x9ttEmDymVvykJ2Nz7lRMSZdUcTs+sqbrheGZNnJHlwna7niy8F1kua5K/UP5r35QR
+	 Nm/aTy1cGdkVwp8McE5eP4nymEjpLucNBk88eac/IwOJ3IZPxQP4Svw1Rr3hhVJYYK
+	 8AgNZnbCb9vvLZcPmRwxafmlo+V+3w2vSyttfA1HSekqM839AXIUnKs0Of5Hn7umCw
+	 ZFcc2XP+Pw8fA==
+From: sashiko-bot@kernel.org
+Subject: Re: [GIT PULL] Performance events changes for v7.1
+Reply-To: sashiko@lists.linux.dev
+To: "Ingo Molnar" <mingo@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <adynEfZ0r_GIu06k@gmail.com>
+References: <adynEfZ0r_GIu06k@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 13 Apr 2026 09:41:09 +0000
+Message-Id: <20260413094110.C3CAAC116C6@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] perf annotate: Use jump__delete when freeing LoongArch
- jumps
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, stable@vger.kernel.org,
- WANG Rui <wangrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260412062828.1734637-1-rong.bao@csmantle.top>
- <CAAhV-H4NHEo_JnnDYkWAYdTwiNuyVGNYymyOLL89ZxQVrqRjuA@mail.gmail.com>
-Content-Language: en-US
-From: Rong Bao <rong.bao@csmantle.top>
-In-Reply-To: <CAAhV-H4NHEo_JnnDYkWAYdTwiNuyVGNYymyOLL89ZxQVrqRjuA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
 
-Hi Huacai,
+Sashiko AI review found 2 potential issue(s):
+- [Critical] Pre-existing Stack Buffer Overflow in AMD IBS NMI handler on C=
+PUs supporting `IBS_CAPS_OPDATA4`.
+- [High] Reference count leak of `perf_ctx_data` in `attach_global_ctx_data=
+()` when racing with a concurrent non-global context creation.
+--
 
-On 2026-04-13 16:33, Huacai Chen wrote:
-> Hi, Rong,
-> 
-> On Sun, Apr 12, 2026 at 2:28 PM Rong Bao <rong.bao@csmantle.top> wrote:
->> [...]
->> This patch adds the missing free() specialization in loongarch_jump_ops,
->> which prevents disasm_line__free() from invoking the default cleanup
->> function.
->>
->> Fixes: 4ca0d340ce206 ("perf annotate: Fix instruction association and parsing for LoongArch")
-> The original code works well, you are really fixing fb7fd2a14a503b9a
-> ("perf annotate: Move raw_comment and raw_func_start fields out of
-> 'struct ins_operands'").
+commit 167b4d230f2ffe8284d5afdbd849ef2f4f05ef9a
+Author: Ingo Molnar <mingo@kernel.org>
 
-Thanks, I'll fix the reference in v2.
+Performance events changes for v7.1
 
-> And LTS branches (6.12, 6.18) need different fixes because the code
-> has been restructed.
+This commit pulls in various performance event changes for v7.1. It includes
+an optimization to allocate task_ctx_data quickly on large systems, updates
+and fixes for the AMD PMU driver IBS support, Intel PEBS constraint
+validation, and MSR driver changes.
 
-I locally have a version based on the linux-6.19.y branch. Would you 
-mind providing me some pointers to the standard approach to submitting 
-this rebased version? I'm new to the process.
->> [...]
->> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
->> index a6e478caf61a9..6b7fef3bbc42f 100644
->> --- a/tools/perf/util/disasm.h
->> +++ b/tools/perf/util/disasm.h
->> @@ -158,6 +158,7 @@ int call__scnprintf(const struct ins *ins, char *bf, size_t size,
->>                      struct ins_operands *ops, int max_ins_name);
->>   int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
->>                      struct ins_operands *ops, int max_ins_name);
->> +void jump__delete(struct ins_operands *ops);
-> Don't put it among ***_scnprintf(), put it before ins__raw_scnprintf()
-> or after mov__scnprintf(), and add a blank line.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5487,6 +5487,12 @@ attach_global_ctx_data(struct kmem_cache *ctx_cach=
+e)
+>  					cd =3D NULL;
+>  			}
+>  			if (!cd) {
+> +				/*
+> +				 * Try to allocate context quickly before
+> +				 * traversing the whole thread list again.
+> +				 */
+> +				if (!attach_task_ctx_data(p, ctx_cache, true, GFP_NOWAIT))
+> +					continue;
+>  				get_task_struct(p);
+>  				goto alloc;
+>  			}
 
-Sure. This will be fixed in v2.
+Could the new GFP_NOWAIT fast-path in attach_global_ctx_data() leak the
+perf_ctx_data reference if it races with a concurrent non-global context
+creation?
 
-> 
-> Huacai
-> 
->> [...]
+If attach_task_ctx_data() races with a per-task event attaching a non-global
+context, it will find an existing context where old is not NULL. It increme=
+nts
+old->refcount and returns 0, but intentionally ignores the global argument
+and does not set old->global to 1.
 
--- 
-Regards,
-Rong Bao
+Because it returns success, attach_global_ctx_data() executes continue and
+skips to the next thread. The context for the thread is left with an
+extra reference but global remains 0.
+
+Later, when the global context is detached, __detach_global_ctx_data()
+iterates over all threads and only calls detach_task_ctx_data(p) if
+cd and cd->global are true. Since cd->global is 0, the context is skipped,
+permanently leaking the perf_ctx_data allocation.
+
+> @@ -5497,7 +5503,7 @@ attach_global_ctx_data(struct kmem_cache *ctx_cache)
+> =20
+>  	return 0;
+>  alloc:
+> -	ret =3D attach_task_ctx_data(p, ctx_cache, true);
+> +	ret =3D attach_task_ctx_data(p, ctx_cache, true, GFP_KERNEL);
+>  	put_task_struct(p);
+>  	if (ret) {
+>  		__detach_global_ctx_data();
+
+Can this result in a double-increment leak? If the same race occurs,
+attach_task_ctx_data() bumps the refcount without setting global to 1 and
+returns success. Then goto again restarts the loop.
+
+When the loop reaches the thread again, it evaluates:
+
+	cd =3D rcu_dereference(p->perf_ctx_data);
+	if (cd && !cd->global) {
+		cd->global =3D 1;
+		refcount_inc_not_zero(&cd->refcount);
+	}
+
+This bumps the refcount a second time. Since __detach_global_ctx_data()
+only decrements once, the extra reference is leaked.
+
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-=
+index.h
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -698,6 +698,8 @@
+>  #define MSR_AMD64_IBSBRTARGET		0xc001103b
+>  #define MSR_AMD64_ICIBSEXTDCTL		0xc001103c
+>  #define MSR_AMD64_IBSOPDATA4		0xc001103d
+> +#define MSR_AMD64_IBSOPCTL2		0xc001103e
+> +#define MSR_AMD64_IBSFETCHCTL2		0xc001103f
+>  #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET =
+*/
+
+This isn't a regression from the current patch, but looking at the adjacent
+MSR handling code, is there a potential stack buffer overflow in the IBS
+NMI handler on CPUs supporting IBS_CAPS_OPDATA4?
+
+In arch/x86/events/amd/ibs.c, struct perf_ibs_data is allocated on the
+stack in perf_ibs_handle_irq(). Its regs array is sized using
+MSR_AMD64_IBS_REG_COUNT_MAX, which is 8.
+
+When handling a perf_ibs_op event, the initial read loop fetches up to 7
+MSRs, advancing the pointer buf to &ibs_data.regs[7].
+
+Subsequently, the handler reads additional MSRs depending on CPU caps:
+
+	if (event->attr.sample_type & PERF_SAMPLE_RAW) {
+		if (perf_ibs =3D=3D &perf_ibs_op) {
+			if (ibs_caps & IBS_CAPS_BRNTRGT) {
+				rdmsrq(MSR_AMD64_IBSBRTARGET, *buf++);
+				br_target_idx =3D size;
+				size++;
+			}
+			if (ibs_caps & IBS_CAPS_OPDATA4) {
+				rdmsrq(MSR_AMD64_IBSOPDATA4, *buf++);
+				size++;
+			}
+		}
+
+If the CPU supports IBS_CAPS_BRNTRGT, MSR_AMD64_IBSBRTARGET is read into
+regs[7], advancing buf to &regs[8].
+
+If the CPU also supports IBS_CAPS_OPDATA4, it reads MSR_AMD64_IBSOPDATA4 in=
+to
+the next pointer position, which translates to regs[8]. This writes one
+element past the end of the 8-element array, overwriting adjacent local
+variables on the stack.
+
+Furthermore, ibs_data.size is incremented to 9, so
+perf_sample_save_raw_data() will subsequently read 72 bytes of regs,
+exposing the corrupted stack data to user-space in the raw perf record. Sin=
+ce
+unprivileged users can configure RAW IBS events, this might lead to
+unintended behavior.
+
+Should MSR_AMD64_IBS_REG_COUNT_MAX be increased to account for
+IBS_CAPS_OPDATA4?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/adynEfZ0r_GIu06k@gm=
+ail.com?part=3D1
