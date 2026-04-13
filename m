@@ -1,119 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4AB27470
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5747F27470
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776044830; cv=none; b=Cn0zzt/b0mguclxsUjl9EQgiTYKFZAX8A+Gd4CJmhxk5jCgMnt609ei/0NQlW7Rj2kHDOkDlZvD6/DDl/qkzD2em2RRIgaz0OMYZtiUlmLVqRY06/zWaQm8YoStFKrr0K1TYY4m7IuF9jq1EzadAV3E228JKhK3aBkRpWA3Lxko=
+	t=1776045006; cv=none; b=OKXydmVCQr8mx9o48zXy2HYfBnWEM8NnpNsriv3LRTps/JyWOdjLvU/fQLsBGCWQ4twPrHkfS7MkfUIqNkmkcIRAtD5OgjABCq1OFsW3rkmP49Y+vpgVdu+A5vY769+VZRhRWPix/Fgmo2yGt/MkHOq7FN5zNoOEauKOkfYuwhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776044830; c=relaxed/simple;
-	bh=eJScwfMSf7tdudMjNrpXKHGh6yJ5wLx61Gg1tODO18o=;
+	s=arc-20240116; t=1776045006; c=relaxed/simple;
+	bh=G3ujmnKH0Mfox1Wdlg9V5GVCf+FOLN3tyn+8Rf+ofX8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=m5JR7JI8vJuPCbP0i79Twrd6IsXQQJaJmXDFp78iIrvOtkkO/s01GYnxt4jCzjEjQO/LA716UGQITZgp02MXyiWPOMMJJNDJHWHgammuxXTkqbjI/5obTUyO220mmQXAiBD/bx88Z9n78dWTIYv8slKRy9YlHskAYelZFEX+bbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0z4idNL; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=j6iCwWY63eBsi16bZ9bqzaMOUBtfPvCF4bENn4AscV/hgyDoSOwz+ge759Ucqi3j+0Q4MuPGeSgRARXOkWF5+5h7mGZOmxX+EED331II58OE7MBwJUDmWmk1BCPbaHli/orZ8SUTsiTz3RJpoW0aEfNnxxCDbImCMkVMLUWqewI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SngOzQpu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0z4idNL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E82C19424;
-	Mon, 13 Apr 2026 01:47:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SngOzQpu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E15C19424;
+	Mon, 13 Apr 2026 01:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776044830;
-	bh=eJScwfMSf7tdudMjNrpXKHGh6yJ5wLx61Gg1tODO18o=;
+	s=k20201202; t=1776045005;
+	bh=G3ujmnKH0Mfox1Wdlg9V5GVCf+FOLN3tyn+8Rf+ofX8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=b0z4idNLu2pBL8tc1jwni7fXTcNwUQrEbkBawDxr1JNiEwK6b3pqlqJHYX3KINNR+
-	 Q1PG0zYEvYVcOZ7OZaIAkNCqrfs2kCyi3kVvQzDbyulH4Xjbgxy4Wfe7V/ooL+8NA+
-	 jlejAGVdc8zeejB3PszZ4eon0Ag9RIzn7GEiSjdmybaklejZgOmNgPmMgFlvCVZ3Pn
-	 Te39E1hQRwxn+D17hzxEgywqlwN8s5gYQ3xM+gs66Ag+ekxYoJ4d7YgDVFG7dkN5eS
-	 fAAW9Z49QbO/uEilQsVVvnCBKMm70CHSAe+Yif/2MXGG1QrE/NKcfm3BKkVU+3aw02
-	 QfSHIcQHdTZVQ==
+	b=SngOzQpuERrFOhAhZV98NOuyRKm3fEajKT//qT/dyy/G6Gv6U7nIH+0xEkbFw8Duo
+	 /kRJ8XWuZnHfLLWYNHLJGqPJj6/qDz5LSfMDvcUdLEHudXc/TAYtdiFGBcZhz4BUvT
+	 37Oeqrkxqe1y0RvlJtN0uubLvHOSCvcenv2942qRFUHQtjV7yzCaPpOlenvBkHKi2M
+	 O0rLwx6Yui8nBp1C8RHBL+e6V3cWptGAY2u1c7cHvgNmGyNKi26Qfj/4hUcDINcFes
+	 tUosq/5emq9tUnhwTh1MD051M9mqeynRUuuKn+4z6xDMf+Q5ttjj1HxVo1wCnV7wqE
+	 kNCa0/Zgu2z7w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 28/33] perf kmem: Add bounds checks to tracepoint
- read values
+Subject: Re: [PATCH v11 26/33] perf kmem: Fix memory leaks on error path and
+ when skipping
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413012227.1089445-29-irogers@google.com>
-References: <20260413012227.1089445-29-irogers@google.com>
+In-Reply-To: <20260413012227.1089445-27-irogers@google.com>
+References: <20260413012227.1089445-27-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 01:47:09 +0000
-Message-Id: <20260413014709.E1E82C19424@smtp.kernel.org>
+Date: Mon, 13 Apr 2026 01:50:05 +0000
+Message-Id: <20260413015005.C2E15C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The expression `kmem_page_size << order` is evaluated before the=
- bounds check on `order`, leading to undefined behavior for large values.
+Sashiko AI review found 2 potential issue(s):
+- [High] Integer overflow in gfpcmp() breaks qsort/bsearch strict weak orde=
+ring
+- [High] Valid but unrecognized GFP flags cause fatal -ENOMEM aborts
 --
 
-commit ca9443054d9f6f035d544a17db70ef586c3b3ae2
+commit 24b8d3629b127f6af817b78e1ca9d3a0f9e7d9fd
 Author: Ian Rogers <irogers@google.com>
 
-perf kmem: Add bounds checks to tracepoint read values
+perf kmem: Fix memory leaks on error path and when skipping
 
-This commit adds bounds checking for order and migrate_type in page
-allocation and free events to prevent out-of-bounds array accesses.
+This commit addresses memory leaks in the perf kmem tool by adding missing
+frees for allocated strings and dropping thread references when samples are
+skipped. It introduces an err_out label in parse_gfp_flags for cleaner error
+handling.
 
 > diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 68a39f56204db..daf2272c73372 100644
 > --- a/tools/perf/builtin-kmem.c
 > +++ b/tools/perf/builtin-kmem.c
-> @@ -826,6 +826,16 @@ static int evsel__process_page_alloc_event(struct pe=
-rf_sample *sample)
->  {
->  	u64 page;
->  	unsigned int order =3D perf_sample__intval(sample, "order");
->  	unsigned int gfp_flags =3D perf_sample__intval(sample, "gfp_flags");
->  	unsigned int migrate_type =3D perf_sample__intval(sample, "migratetype"=
-);
->  	u64 bytes =3D kmem_page_size << order;
-
-Could this bitwise shift invoke undefined behavior if a malformed event
-provides an order value larger than the bit width of kmem_page_size?
-
->  	u64 callsite;
->  	struct page_stat *pstat;
->  	struct page_stat this =3D {
->  		.order =3D order,
->  		.gfp_flags =3D gfp_flags,
->  		.migrate_type =3D migrate_type,
->  	};
-> =20
-> +	if (order >=3D MAX_PAGE_ORDER) {
-> +		pr_debug("Out-of-bounds order %u\n", order);
-> +		return -1;
-> +	}
-
-Since the bounds check on order happens down here, would it be safer to
-move the calculation of bytes until after the validation?
 
 [ ... ]
 
-> @@ -892,6 +902,11 @@ static int evsel__process_page_free_event(struct per=
-f_sample *sample)
->  {
->  	u64 page;
->  	unsigned int order =3D perf_sample__intval(sample, "order");
->  	u64 bytes =3D kmem_page_size << order;
-
-Does this have the same evaluation issue, where a corrupted order value
-could cause an invalid shift before reaching the bounds check?
-
->  	struct page_stat *pstat;
->  	struct page_stat this =3D {
->  		.order =3D order,
->  	};
+> @@ -783,17 +783,21 @@ static int parse_gfp_flags(struct perf_sample *samp=
+le, unsigned int gfp_flags)
 > =20
-> +	if (order >=3D MAX_PAGE_ORDER) {
-> +		pr_debug("Out-of-bounds order %u\n", order);
-> +		return -1;
-> +	}
+>  			new =3D realloc(gfps, (nr_gfps + 1) * sizeof(*gfps));
+>  			if (new =3D=3D NULL)
+> -				return -ENOMEM;
+> +				goto err_out;
 > =20
->  	if (use_pfn)
->  		page =3D perf_sample__intval(sample, "pfn");
+>  			gfps =3D new;
+> -			new +=3D nr_gfps++;
+> +			new +=3D nr_gfps;
+> =20
+>  			new->flags =3D gfp_flags;
+>  			new->human_readable =3D strdup(str + 10);
+> +			if (!new->human_readable)
+> +				goto err_out;
+>  			new->compact_str =3D compact_gfp_flags(str + 10);
+> -			if (!new->human_readable || !new->compact_str)
+> -				return -ENOMEM;
+> -
+> +			if (!new->compact_str) {
+> +				free(new->human_readable);
+> +				goto err_out;
+> +			}
+
+This isn't a new bug introduced by this patch, but does this error path
+incorrectly assume a memory allocation failure?
+
+If compact_gfp_flags() encounters a valid but unrecognized GFP flag (such
+as a newly added kernel flag not present in gfp_compact_table), it seems
+it can return NULL without it being an out of memory condition.
+
+Because the code jumps to err_out and returns -ENOMEM, could this cause the
+entire perf kmem session to fatally abort when processing data from newer
+kernels?
+
+> +			nr_gfps++;
+>  			qsort(gfps, nr_gfps, sizeof(*gfps), gfpcmp);
+
+This is another pre-existing issue, but could this qsort() lead to
+out-of-bounds memory accesses?
+
+Looking at gfpcmp(), the subtraction is done using unsigned 32-bit
+arithmetic:
+
+static int gfpcmp(const void *a, const void *b)
+{
+        const struct gfp_flag *fa =3D a;
+        const struct gfp_flag *fb =3D b;
+
+        return fa->flags - fb->flags;
+}
+
+If fa->flags has the MSB set (e.g. 0x80000000) and fb->flags is 0, the
+result is 0x80000000. When implicitly cast to a signed int for the return
+value, it becomes a negative number, indicating 0x80000000 is less than 0.
+Conversely, fb->flags - fa->flags would also yield a negative value.
+
+Since gfp_flags are parsed from the perf.data file, does this violate the
+strict weak ordering requirement of qsort() where cmp(a,b) and cmp(b,a)
+must not both be negative?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
-445-1-irogers@google.com?part=3D28
+445-1-irogers@google.com?part=3D26
