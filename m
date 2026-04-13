@@ -1,158 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D910233985;
-	Mon, 13 Apr 2026 01:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ECC1A681D
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776044116; cv=none; b=PiAkLLoO9D4XrbVFVVesZfJJPNewQmgYLncLQgkb2KDVPoQreNyd20cZQJI/ixl6zomsCPuG21wFsh5iyjm0zPwvA3uDO+DpVrYkkhDQ++Q5OFNDqn15Omu51UtFHn4/ZyqsCJj6QmNkMii7pqLXhp5l+sCg+Nw4fXD/UWHECrk=
+	t=1776044158; cv=none; b=pPNWK7wtEc7XeUk4KSZ8sCY972LYd6hX7ynM7sZDVB3PJ+CWqfMx5jXoLnuLuCx6Uo+JwiqNvG2gF6yA2nniFE5u3eMYRzQF4MDn7W9tfSNkcDeJueilBdGujPCbBHyiige/QE3G1kdQmn9Sgs7TD3gVJyzk0sN3uiunCLmDzCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776044116; c=relaxed/simple;
-	bh=H8ojr1/Z59yFFLI+pJSXLyDvEYNiURFhMaDCjyDCKF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A1wi1N8npmkP02KJhQpAmRC7uSnbVHu/XPOj3HSdLngShcVJ2d42QMwg+LWPVDMwUS2wrX3viMK9skk2DTqgXZIfFrTE0qGTZ0DrStwGXsH3o5AikaddogiLpsdcNBKzyduP9PjIvW+et6tYRjQamP2gWiARVQYpKRAvcwM1rrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lUikYCLP; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776044158; c=relaxed/simple;
+	bh=dS//zMF6LNVXPF6PLEN54n+dL3H6sgERyC2PYzSb/6o=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NA0GK2AjdmW0APB1lCqpfbnTbCKw5GaoRRF/CLfvjjTQqoqLvJZDrG1Nvg99Fx3zas+6kOw14ZC+Gc4hLc//NNoLI6RQd6G4Zt2sQtNCTPxvBv5Va20039rLX2znnMQPYs5gq3AhbaSkxJ/7lpwgfQAuxgjKBogLR+Ox50iBvx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNMiHZ6l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lUikYCLP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776044115; x=1807580115;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=H8ojr1/Z59yFFLI+pJSXLyDvEYNiURFhMaDCjyDCKF8=;
-  b=lUikYCLP6K2EgM9j3d8Oa/hTBBdrI6pQJjoy+m2QWl0vZeHt6qruQ5qL
-   hHnCZ5nAPPVu/DjTqxgVpnydUigx3eRb6Z0nqdvq6gKQajrBqlhfB+uCF
-   ojlDTDYHXoaWy1q7T7mX+QMs4ZCQGilRG4NKrFIz/U8Cg8eC+l02tcaAw
-   LGjQUatb9SiuPsRXhU4LytrayLtr8P3mZIMNHRjynyUuNTnIwwvDCU+8e
-   j+iOzvMROGWX3PiSPyn1/4ynygzms1DCt6Y74G0gizNf6fHV/3TUAYLHi
-   eN9h4uA3prpY7KNEJ2G4p62veDRH6JethkJEc3/HnNpbRivTKY+/t1b4p
-   A==;
-X-CSE-ConnectionGUID: 7vL70uogRfCY/KGppRw45g==
-X-CSE-MsgGUID: S7JnZjnrSuSe+mRiS5frLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="76850514"
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="76850514"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 18:35:15 -0700
-X-CSE-ConnectionGUID: adN1j3u/TsWwsH5U0O1vtQ==
-X-CSE-MsgGUID: NouznvFiScu0gI+8Dw0LrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="228623733"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 18:35:11 -0700
-Message-ID: <487eb56b-85a8-4c3b-a150-0de43fbb06d7@linux.intel.com>
-Date: Mon, 13 Apr 2026 09:35:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNMiHZ6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EFE3C19424;
+	Mon, 13 Apr 2026 01:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776044158;
+	bh=dS//zMF6LNVXPF6PLEN54n+dL3H6sgERyC2PYzSb/6o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=JNMiHZ6l5+3hWVSZ7d6gZGJBpnOBOwdKiSD8JODxE58oZSE80DZpkQ0m3bdDCLWzu
+	 giyVSklYEyN7GWiox6UY8FgRyTCBgQZgpoAvzhlP/e2zY2wUOJ7J5MU8tkL+J3gdPX
+	 84+e/KAQke60cfpCJ5yzC4sgb6TjdCpGNiQOf95/xmS0jUHkI0LW18ucUz/3V7Vh8N
+	 y7wNpZW/zwDNhnGEAXARBkJecO6KayJKPJFsZSOTTkcBGmbwJtl7ecR1r2V7k8r6IE
+	 2h3uD6fCdAIc3xDcm1acYGLNa41DNr58kxTqkgWjjPQgvEoAVVzZ9dsmlKaTlSABVY
+	 NTt1HJcseO1EA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf/x86/intel: Clear stale ACR mask before
+ updating new mask
+Reply-To: sashiko@lists.linux.dev
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260413010157.535990-2-dapeng1.mi@linux.intel.com>
+References: <20260413010157.535990-2-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 13 Apr 2026 01:35:57 +0000
+Message-Id: <20260413013558.0EFE3C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests: Add auto counter reload (ACR) sampling test
-To: Ian Rogers <irogers@google.com>, Falcon Thomas <thomas.falcon@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zide Chen <zide.chen@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260413010920.546501-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fW0Z0zXDjqR_tpJbT-0nbyXQO-Zcc+4Fpk=XejYX8uF4g@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fW0Z0zXDjqR_tpJbT-0nbyXQO-Zcc+4Fpk=XejYX8uF4g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Sashiko AI review found 2 potential issue(s):
+- [High] Incomplete Fix: Early return bypasses the newly added stale mask c=
+leanup for subsequent events.
+- [High] Missing bounds check on user-provided mask allows cross-event PMU =
+interference (cross-wiring).
+--
 
-On 4/13/2026 9:30 AM, Ian Rogers wrote:
-> On Sun, Apr 12, 2026 at 6:14 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Add auto counter reload sampling test to verify that the intended event
->> records can be captured and the self-reloaded events won't generate any
->> records.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/tests/shell/record.sh | 42 ++++++++++++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 7cb81cf3444a..1068843282f5 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -402,6 +402,47 @@ test_callgraph() {
->>    echo "Callgraph test [Success]"
->>  }
->>
->> +test_acr_sampling() {
->> +  events="{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}"
->> +  pebs_events="{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}"
->> +  echo "Auto counter reload sampling test"
->> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload sampling [Skipped not supported]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
->> +  then
->> +    echo "Auto counter reload sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
->> +  then
->> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  echo "Auto counter reload sampling [Success]"
-> Thanks Dapeng! Could we also test ratio-to-prev as well as just the
-> plain acr_mask?
+commit f516548e46c9feac44792cd958b5c0a840d60d43
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Good idea. Sure.
+perf/x86/intel: Clear stale ACR mask before updating new mask
 
+This commit clears the ACR mask before applying a new one to prevent
+stale bits from persisting during event rescheduling. It ensures the
+hardware state does not get polluted by previous configurations.
 
->
-> Thanks,
-> Ian
->
->> +}
->> +
->>  test_ratio_to_prev() {
->>    echo "ratio-to-prev test"
->>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
->> @@ -457,6 +498,7 @@ test_leader_sampling
->>  test_topdown_leader_sampling
->>  test_precise_max
->>  test_callgraph
->> +test_acr_sampling
->>  test_ratio_to_prev
->>
->>  # restore the default value
->>
->> base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
->> --
->> 2.34.1
->>
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 4768236c054bb..58c236ce47474 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3344,6 +3344,9 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_=
+events *cpuc)
+>  			event =3D cpuc->event_list[j];
+>  			if (event->group_leader !=3D leader->group_leader)
+>  				break;
+> +
+> +			/* Clear stale ACR mask first. */
+> +			event->hw.config1 =3D 0;
+>  			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_=
+IDX_MAX) {
+>  				if (i + idx >=3D cpuc->n_events ||
+>  				    !is_acr_event_group(cpuc->event_list[i + idx]))
+
+Could this validation check allow unprivileged users to cross-wire the PMU?
+
+Since is_acr_event_group() only verifies that the target event belongs to a=
+ny
+ACR group, rather than the same group_leader, does this allow a user-provid=
+ed
+out-of-bounds bit in config2 to point to an independent, system-wide ACR ev=
+ent
+running on the same CPU?
+
+If so, it seems the hardware counter index of an unrelated privileged event
+could be blindly copied into the user's hw.config1.
+
+>  					return;
+
+Does this early return bypass the newly added stale mask cleanup for subseq=
+uent
+events?
+
+Because attr.config2 is user-controlled, a user could supply a malformed ma=
+sk
+with an out-of-bounds bit to intentionally trigger this early return.
+
+Since it returns from intel_pmu_acr_late_setup() completely, wouldn't this =
+skip
+the event->hw.config1 =3D 0 cleanup for all subsequent ACR events scheduled=
+ on the
+same CPU, leaving them with a polluted hardware state?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413010157.5359=
+90-1-dapeng1.mi@linux.intel.com?part=3D1
