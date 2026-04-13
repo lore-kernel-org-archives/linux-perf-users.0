@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBF3347BA5;
-	Mon, 13 Apr 2026 20:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCAE38F93B;
+	Mon, 13 Apr 2026 20:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776111605; cv=none; b=Wu6vx+CxHGiznYZFX/vsG8zFeepTzLKRa9tyGy0HJvonPKqtKIkuZz38XS36SxDQnZKeOPkN3nEE1yqVbF/zIoqrmx+SO6TWFiKLNJVUAgjKAzdbVmFWltdOxuJpD3twP5P1RIHW8ccSJJW0Qd6TtZ4vk/RJzhLuM65yYBxQmIc=
+	t=1776111715; cv=none; b=fLW/WszscK8wdyI78alnei6GcgaDOxugCzonGQq1l59L0J+LvGlVE+DS8xzupmTKTdTyypTkAfDRaHmimoEhFcHJqdJdDLEhEzckl6wpTbc9aIthIMXcSaTAVvEnsf3X5UvVBhjxgHiK7t6WvZ0Oac7lCIFv9D1MRvsFLfk0yF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776111605; c=relaxed/simple;
-	bh=G8pF69hZPR3Py4CbXZwMkXyPMh1Uxl1HYtd3qO/DD28=;
+	s=arc-20240116; t=1776111715; c=relaxed/simple;
+	bh=fzQiXakGjGluf6D/pcF8Snn3bTVL/S7FErtfSveTYhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q/m82N6krG8nYP3lCiTZLeT/cW3Oiu+IwlF3QCwPomsgFfvA16bP8cd2QtkV3I7l1XY1ktohHlrXQdx73JoH7dt3P8qyOJewAbLnzZuYttc4sAMNLxJXCakAM3x6coJGLqEDrzNQq+1L1EhL8mIn1qtIv8ftTiMxtmAqzWVXXFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUuaXRuE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ja4HWHvtJMOmTwV9Ad7L+NiEgnjNDgD5+748uxZWy9OHJUbnsKYPc9fLO0y4L5ON4ixqbXapvSJIG9o7vnQtyhcYfb9eUA4d/uY/rBhqu5r5Zep7ia909HM03Lqv02tu7Mwh5R112cONKTqfdRZp/tswE1vRpSDPgLft4cV4Seg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAEAimsv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUuaXRuE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A63C2BCAF;
-	Mon, 13 Apr 2026 20:20:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAEAimsv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DC0C2BCAF;
+	Mon, 13 Apr 2026 20:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776111604;
-	bh=G8pF69hZPR3Py4CbXZwMkXyPMh1Uxl1HYtd3qO/DD28=;
+	s=k20201202; t=1776111715;
+	bh=fzQiXakGjGluf6D/pcF8Snn3bTVL/S7FErtfSveTYhE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KUuaXRuEjuHwyJxNKfEmtIb4CScfpaQMe3QsG2nhaYURls6LnKGG9XLEQPHo/GLJY
-	 SkruKBi1NwGop0UC+p2xLLdV4w7vrTaFrvyFddnB1VZXnMv09ZfvuQXHZEM/QvejX3
-	 9TSziJxL3+2TjzkcrLcCmRbUa/v6far/tX+CVaw2f0zH47/NEUWPOJNMuPN0HBaScc
-	 0irSTlFYAPBXXKmkkOsSlTK7rNAAaEZe6TRq3Av6rh0GWKYFfgf9eY/KgF5VAgYrVA
-	 pyiW+VDTOaXARnMBucmYSDVmyoP0bsYrce5SZQkXkLAl1DABM8hjyyGE0Wk4Wl/+zT
-	 BKSPaFyv3SXZA==
-Date: Mon, 13 Apr 2026 13:20:01 -0700
+	b=GAEAimsvOx6jRnzQH5eXIzLFw4NhKNoouIJ6GKurU6JidRn0aR8ZfKfai7kjkccug
+	 YkIi7vwsbKfC5KjR3sNvf5xG/n8mu6F9RL9qQupX0mQ0Vpf8x5l7WdQwaE2D7v4Q0O
+	 YrdcegEJ0jNIrfHOz9dDzMHvVCgnBc/dpIuf6EOaqRz6nHvxZ/j2FE072wzt56+WBT
+	 tdje5j8gQaHIvVCgRKB0N+LnE5AzlPpGjCVUd0hoEurMLRAhYshy3nM1FNl1eTMMW6
+	 OtGEYeV+/7DAlZY/2KBF5tJ6YCQalMSItOgEUL3mZRR4NlNPjjfwkU1H4wHY9qrkYi
+	 Bk5+a/PdJi6TQ==
+Date: Mon, 13 Apr 2026 13:21:52 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
@@ -44,14 +44,14 @@ Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
 	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn,
 	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com,
 	zhouquan@iscas.ac.cn
-Subject: Re: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
-Message-ID: <ad1P8ebyCyfKwXH6@google.com>
+Subject: Re: [PATCH v10 22/29] perf s390-sample-raw: Don't pass evsel or its
+ PMU with sample
+Message-ID: <ad1QYOR7DYgjVKKM@google.com>
 References: <20260411191710.524998-1-irogers@google.com>
  <20260412020833.641177-1-irogers@google.com>
- <adv8Ka16pvgVkm8R@google.com>
- <CAP-5=fVc-Ac09cnXYPUVcNwzHOqFod0v=-YjjDf_oVHvM7cHDw@mail.gmail.com>
- <ad0cfz-gUKea5bI8@google.com>
- <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
+ <20260412020833.641177-23-irogers@google.com>
+ <ad0cxk1PJ4EcZi_H@google.com>
+ <CAP-5=fUjXQgQWYZGQthYAcABn-rXtSGC4U2=OkaYMgjLif2x6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,38 +61,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
+In-Reply-To: <CAP-5=fUjXQgQWYZGQthYAcABn-rXtSGC4U2=OkaYMgjLif2x6g@mail.gmail.com>
 
-On Mon, Apr 13, 2026 at 09:57:02AM -0700, Ian Rogers wrote:
-> On Mon, Apr 13, 2026 at 9:40 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Mon, Apr 13, 2026 at 09:59:56AM -0700, Ian Rogers wrote:
+> On Mon, Apr 13, 2026 at 9:41 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > On Sun, Apr 12, 2026 at 05:52:57PM -0700, Ian Rogers wrote:
-> > > On Sun, Apr 12, 2026 at 1:10 PM Namhyung Kim <namhyung@kernel.org> wrote:
-[SNIP]
-> > > > I've picked the first 23 patches to tmp.perf-tools-next as the rest
-> > > > still has some issues.  Also I've touched some commits to either remove
-> > > > some parts or split them into separate commits.
-> > > >
-> > > > Please take a look.
-> > >
-> > > Hi Namhyung,
-> > >
-> > > thanks for doing this but I've done a similar clean up. To totally
-> > > separate the evsel refactoring from the rest of the changes, to fix
-> > > the address sanitizer issues with kwork, etc. I'll incorporate your
-> > > changes and then resend the series.
+> > On Sat, Apr 11, 2026 at 07:08:25PM -0700, Ian Rogers wrote:
+> > > The sample contains the evsel and its PMU so it is unnecessary to pass
+> > > the evsel as well.
 > >
-> > Thanks, I'd like to merge what's in the tmp.perf-tools-next unless
-> > there's a serious mistake.  You can rebase the rest changes on top.
+> > This patch is changed to minimize the diff.
 > 
-> I'd drop what's in tmp.perf-tools-next. Otherwise we're putting fixes
-> on top of fixes. Looking at v12 the sashiko issues are all minor and
-> the progression of the patches is more granular and natural.
+> I'm not sure what this means as the patch already attempted to
+> minimize the diff. I'm worried that not sending changes to my patches
+> via the list introduces errors because they don't go through Sashiko.
 
-The goal is to reduce the amount of work (including review) during the
-merge window.  Also I don't think there are many fixes in the tmp
-branch (have you looked at it?).  I think it's ok to add fixes on top
-in this case but I can drop non-conversion patches if you want.
+Please take a look at the tmp.perf-tools-next branch.  I kept the local
+evsel variable.
 
 Thanks,
 Namhyung
+
