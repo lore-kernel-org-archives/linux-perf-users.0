@@ -1,150 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2731354F;
-	Mon, 13 Apr 2026 21:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2484536165E
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 21:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776116605; cv=none; b=VaiFovSOv6FvWyJDYGyv1vOMfWKJCxPYGrAJ6TpHUEHLKyco9IXELBmOjy0BJkGVIIIj4rrZ3Qc62JxcTsWP0p4BeuuKH0UWuTPp0Edtw0ITyqKj+tiMiHOAHILWe1pdhfQGnUNPAlYPvwJzJbgib9S/KDfF0M7Dnaeb4djNwZg=
+	t=1776116669; cv=none; b=Ry742akbM+5cYHujBD1XbGxrw94b67btLxr/9qU6rxzST5oDAmt21EZPJ9QPO1K67ziIbJrpwihHt6ynjWrOXi24aF4CzWuBLWSapR0gEwHCh/KRkLrEAU5qSAUi8/STjjuPXN1ajewloqBC51WiKjxVwpwZN3mQFKfGlGlOXmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776116605; c=relaxed/simple;
-	bh=1iHlGppiEXtzNWnLwNq4X/Dkeax9YpKMiynLLQomu+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3mv5XhVMSOteNAaBNFaHFNbSS6moEjf24zeVcHhiYY0EcMQ45pskIZKKT5RiczyMfhghcmyUJUuYwxKWXLgRCW28Ijb+WHNVP6T7Ip/bSQl9IbJKRRdF4bQsCdl1uni/gWlJNX2SpGOcA8SfmIi8M0WqTtTy/8mFOLyX6ctXmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBkULrhj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776116669; c=relaxed/simple;
+	bh=R0HCdIRRPxoffT0I1c1c4F8Ur6cdPqm2MqYhG05qL0g=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ZmRkXjpR6gdmkKsC9iDJ9F3cSNWaX8tSKW7d5sBV8RCzVpVGK56ZX2nwxLVtMqqRgK6IKOjHYA1CcLEion8ybkbgNSiLMpKq/i0m6vmZR/lbNd2ZCFTEgjmQ2iJI2C5eXp4m9EyPVeUDSzKIzXlyuGLRuSXvrnLo9MLgiKiMfCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCYeeE1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBkULrhj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C76C2BCAF;
-	Mon, 13 Apr 2026 21:43:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCYeeE1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6A0C2BCAF;
+	Mon, 13 Apr 2026 21:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776116604;
-	bh=1iHlGppiEXtzNWnLwNq4X/Dkeax9YpKMiynLLQomu+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sBkULrhj6DL91An0Zug73cQ3C7221vWOWBHGroJC3+zlnD82xHSYE6vQZ4pHfxPGT
-	 Py5CA2MACm/Whg1CRHtqGhjaX8VwaUbM/AX5A7dnp9bAChrD0L76mGdFxcE/Jgt5X/
-	 ERujDCgwXDCg+IZJ/Cp+ttwPcfnO0lo29aLmJlRLwlUYnzLmFkX4GLWqgyg5Dugiaq
-	 ByWclwP3mwrPSzTFGOJTxNwgotTqA8nhCZOS4pamtD9O80+cw8KQt7q9gY4YI3wFP5
-	 D7A2vHQi/P0SwMHDzT+nskUCop+oseUcYiqCYhl+dF8VLxmOjek6SIPEwXpXXrAfj1
-	 3bS8kWmtugi0Q==
-Date: Mon, 13 Apr 2026 14:43:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko@lists.linux.dev
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [GIT PULL] Performance events changes for v7.1
-Message-ID: <ad1jeq0HC6Sa0wE0@google.com>
-References: <adynEfZ0r_GIu06k@gmail.com>
- <20260413094110.C3CAAC116C6@smtp.kernel.org>
+	s=k20201202; t=1776116668;
+	bh=R0HCdIRRPxoffT0I1c1c4F8Ur6cdPqm2MqYhG05qL0g=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=cCYeeE1lutnVhIyZIAkPqZxKozhvVu5jOCPyUpjUl/v3f3JRNvX0ezwaAIFvyq0dV
+	 4NipWIhkTIzvagEquzegT22JaqM3VgWVZxuDJO9ucMYE8rqBjYYvxd6fD7Gep4WS1N
+	 aAoXW99OfP15ts5EId4Sbx/OrKCDpgxzzx7XA40ea2tp8BWGdqYi+BXwJG1jL5mLZR
+	 u7nZmeb/AQODXuW3nsBa+uJGMckf3TzM92y26YWySyor2yGI9nE8TQE7XD68DFv5Q9
+	 XDAafqrtClc7FFW/u99MdJ6IufIBsG2SqQZkQzJwK7LJbtKyH0zO9pRk9OpOSW33A9
+	 Q7gZc2S1cPniQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] perf tests: top/kvm don't depend on coreutils
+ timeout
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260413213300.1700116-1-irogers@google.com>
+References: <20260413213300.1700116-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 13 Apr 2026 21:44:28 +0000
+Message-Id: <20260413214428.9D6A0C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260413094110.C3CAAC116C6@smtp.kernel.org>
 
-Hello,
+Sashiko AI review found 4 potential issue(s):
+- [High] Orphaned watcher process can send SIGTERM to unrelated system proc=
+esses (PID recycling).
+- [Medium] Exit code mismatch in timeout emulation falsely fails tests.
+- [Medium] Implicit standard input redirection breaks the protective pipeli=
+ne.
+- [Medium] Non-POSIX sleep argument causes immediate timeout on strict mini=
+mal systems.
+--
 
-It seems sashio removes receipients in a reply.  Added PeterZ.
+commit 17f50e3b3f4410cb65917a2951f5c28c36d9bf25
+Author: Ian Rogers <irogers@google.com>
 
-On Mon, Apr 13, 2026 at 09:41:09AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 2 potential issue(s):
-> - [Critical] Pre-existing Stack Buffer Overflow in AMD IBS NMI handler on CPUs supporting `IBS_CAPS_OPDATA4`.
-> - [High] Reference count leak of `perf_ctx_data` in `attach_global_ctx_data()` when racing with a concurrent non-global context creation.
-> --
-> 
-> commit 167b4d230f2ffe8284d5afdbd849ef2f4f05ef9a
-> Author: Ingo Molnar <mingo@kernel.org>
-> 
-> Performance events changes for v7.1
-> 
-> This commit pulls in various performance event changes for v7.1. It includes
-> an optimization to allocate task_ctx_data quickly on large systems, updates
-> and fixes for the AMD PMU driver IBS support, Intel PEBS constraint
-> validation, and MSR driver changes.
-> 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -5487,6 +5487,12 @@ attach_global_ctx_data(struct kmem_cache *ctx_cache)
-> >  					cd = NULL;
-> >  			}
-> >  			if (!cd) {
-> > +				/*
-> > +				 * Try to allocate context quickly before
-> > +				 * traversing the whole thread list again.
-> > +				 */
-> > +				if (!attach_task_ctx_data(p, ctx_cache, true, GFP_NOWAIT))
-> > +					continue;
-> >  				get_task_struct(p);
-> >  				goto alloc;
-> >  			}
-> 
-> Could the new GFP_NOWAIT fast-path in attach_global_ctx_data() leak the
-> perf_ctx_data reference if it races with a concurrent non-global context
-> creation?
-> 
-> If attach_task_ctx_data() races with a per-task event attaching a non-global
-> context, it will find an existing context where old is not NULL. It increments
-> old->refcount and returns 0, but intentionally ignores the global argument
-> and does not set old->global to 1.
-> 
-> Because it returns success, attach_global_ctx_data() executes continue and
-> skips to the next thread. The context for the thread is left with an
-> extra reference but global remains 0.
+perf tests: top/kvm don't depend on coreutils timeout
 
-Right, it looks like an existing problem.  It should set the old->global
-like below:
+This commit adds a bash-based fallback for the coreutils timeout command
+to prevent failures on minimal test systems. It then updates the kvm and
+top test scripts to use this new bash_timeout function.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 95d7a3e57268b6b4..af773bc750495706 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5447,6 +5447,8 @@ attach_task_ctx_data(struct task_struct *task, struct kmem_cache *ctx_cache,
-                }
- 
-                if (refcount_inc_not_zero(&old->refcount)) {
-+                       if (global)
-+                               old->global = 1;
-                        free_perf_ctx_data(cd); /* unused */
-                        return 0;
-                }
+> diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
+> index f88e859025c42..a27b3d6414e9d 100755
+> --- a/tools/perf/tests/shell/kvm.sh
+> +++ b/tools/perf/tests/shell/kvm.sh
+[ ... ]
+> @@ -102,7 +105,8 @@ test_kvm_stat_live() {
+> =20
+>          # Run perf kvm live for 5 seconds, monitoring that PID
+>  	# Use sleep to keep stdin open but silent, preventing EOF loop or inter=
+active spam
+> -	if ! sleep 10 | timeout 5s perf kvm stat live -p "${qemu_pid}" > "${log=
+_file}" 2>&1; then
+> +	if ! sleep 10 | bash_timeout 5s perf kvm stat live -p "${qemu_pid}" > "=
+${log_file}" 2>&1
 
-> 
-> Later, when the global context is detached, __detach_global_ctx_data()
-> iterates over all threads and only calls detach_task_ctx_data(p) if
-> cd and cd->global are true. Since cd->global is 0, the context is skipped,
-> permanently leaking the perf_ctx_data allocation.
-> 
-> > @@ -5497,7 +5503,7 @@ attach_global_ctx_data(struct kmem_cache *ctx_cache)
-> >  
-> >  	return 0;
-> >  alloc:
-> > -	ret = attach_task_ctx_data(p, ctx_cache, true);
-> > +	ret = attach_task_ctx_data(p, ctx_cache, true, GFP_KERNEL);
-> >  	put_task_struct(p);
-> >  	if (ret) {
-> >  		__detach_global_ctx_data();
-> 
-> Can this result in a double-increment leak? If the same race occurs,
-> attach_task_ctx_data() bumps the refcount without setting global to 1 and
-> returns success. Then goto again restarts the loop.
-> 
-> When the loop reaches the thread again, it evaluates:
-> 
-> 	cd = rcu_dereference(p->perf_ctx_data);
-> 	if (cd && !cd->global) {
-> 		cd->global = 1;
-> 		refcount_inc_not_zero(&cd->refcount);
-> 	}
-> 
-> This bumps the refcount a second time. Since __detach_global_ctx_data()
-> only decrements once, the extra reference is leaked.
+Does POSIX sleep support the "s" suffix passed as "5s" here?
 
-Looks correct and should be fixed by the above change as well.  I'll
-send a formal patch if you're ok.
+On minimal systems lacking coreutils, sleep "5s" might fail instantly, caus=
+ing
+the watcher script to kill the target command in 0 seconds.
 
-Thanks,
-Namhyung
+> +	then
+>  		retval=3D$?
+>  		if [ $retval -ne 124 ] && [ $retval -ne 0 ]; then
+
+When bash_timeout kills the process via SIGTERM, it returns 143 (128 + 15),=
+ not
+the GNU timeout exit code of 124.
+
+Since this code checks for 124, will an expected timeout incorrectly regist=
+er
+as a test failure?
+
+> diff --git a/tools/perf/tests/shell/lib/timeout.sh b/tools/perf/tests/she=
+ll/lib/timeout.sh
+> new file mode 100644
+> index 0000000000000..b4d2c0acf0e22
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lib/timeout.sh
+[ ... ]
+> +bash_timeout() {
+[ ... ]
+> +    local timeout_secs=3D"$1"
+> +    shift
+> +    local command=3D("$@")
+> +
+> +    # Execute the target command in the background
+> +    "${command[@]}" &
+
+Does placing the target command in the background automatically redirect its
+standard input from /dev/null?
+
+This appears to sever the connection to the "sleep 10 |" pipe used in the
+calling scripts, causing perf to read an immediate EOF and triggering the l=
+oop
+and interactive spam the pipe was meant to prevent.
+
+> +    local cmd_pid=3D$!
+> +
+> +    # Start a watcher process in the background
+> +    (
+> +        sleep "$timeout_secs"
+> +        kill -TERM "$cmd_pid" 2>/dev/null || true
+> +    ) &
+
+If the test script exits early (for example, due to set -e or an interrupt)
+before killing the watcher process, does the watcher survive as an orphaned
+background task?
+
+Since perf tests often run as root, this orphaned watcher might wake up lat=
+er
+and send SIGTERM to a recycled PID, potentially terminating unrelated system
+services.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413213300.1700=
+116-1-irogers@google.com?part=3D1
