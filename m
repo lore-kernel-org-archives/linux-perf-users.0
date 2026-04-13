@@ -1,146 +1,235 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A200329371;
-	Mon, 13 Apr 2026 16:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776099409; cv=none; b=sK6D68JCejhws/ZqdwX5UZYdOl7/2DxugSILqSwsW6X6sfl5hjMe29gpWVNrNMmEqW8qomY2EtjJd8cJJ26LqhWV21l9MhJ/IlvcC8FoOXeGVd5eoMasNBPvteeJDaX/EwwvAKv/EwYJixFaqAZKuJN+NGWI7uegoc2YcbShe8s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776099409; c=relaxed/simple;
-	bh=J61KCBRt23wqwl/LxmaxpMBr0QeQcZsLz8xDPCTO8v4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ht6TeyjKi7L/HAbs5WkSJ8tEe1K9gVQsygZeSRA39iQ14SF4oCC6FMcwnTguIkdSmsICzygs4+yHfdVHTqOEk7xolxIC0uFEP8Zvl5D9gQn+rYCpGglwcUSEfktDHdY1eEXN3CRRbRk90MjBUBfiLCIc/U8d3EXxoSgGwA9a6T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=auqwFBAb; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E977E326D73
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 16:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776099437; cv=pass; b=IKMyKmUi8kIGxRgGOodrVVloKB//QDroMhhUx/yE6zOLPt6hJKl9BR9hzJG2KA+OwiRQM+8c9W58IQ0jYenlWqNDOOQBDf7PkmvNankMx4RRmzH85FoaKvGZ4eXx1c162XT8dzPSLrPst2urc9CyVGQhHuZsADTvobV1A8zbU8Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776099437; c=relaxed/simple;
+	bh=eUYh5fZ2H/lrvWYY8ZArALVyB0TUBG8Z/B/6j5qezZs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BZ5JbU5Ok3RBOUBMv3ZJyP45TaBjHY+s8Y3eoGY36nCly4R1Xc380/hKTSvQbwGuoDHWBQ1zqg2JXzY6AD2dcjT1eoDks/LpGkpZzuH9i0VF0dLz7SIZcF5GXgkvo4oGpoYfXlh3RuslHakzmzLfTzxK/9IT4UILCSKCJFf5Cpw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=auU3US4Q; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="auqwFBAb"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DF4Vk6312862;
-	Mon, 13 Apr 2026 09:56:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=rV/MIWTwT48YMZwMmF2Cv5xUq
-	VS1qo4fO7NrYq2vYhI=; b=auqwFBAb8YInSVNCIuK+jLNVkxo+EjpGsweqU2CPi
-	6wVMde4KGm/Ze9Iy7oUxO3SXrHCGlaSqMG8ZrFHKGro5lsjN59TRPbBMTWSdI2Mv
-	xjKui+GaMfInr0CyI1EFSYBuh6d7p+CtlYlYCnvZp5wFyO+IOcCYGy7Bbfq6phNU
-	k8yqWThOSKzbt+UCWw0hGnobmqjrmmuHXxcsk4TtMG3hYUSdV03l6HwlX7ePiCjv
-	yN1t0+SOH+Q0zGoHtqreq+dC+/L22njNVZFradNG8DA0mGdVtUJhkE0In7EOgzjL
-	Zqekh4oLAt/n3ZmMbJC6qbLHratr/oWEDOYF5voa3tOtQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 4dgaja2k5d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Apr 2026 09:56:29 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 13 Apr 2026 09:56:29 -0700
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 13 Apr 2026 09:56:28 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
- Transport; Mon, 13 Apr 2026 09:56:28 -0700
-Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id D47D83F7075;
-	Mon, 13 Apr 2026 09:56:25 -0700 (PDT)
-From: Geetha sowjanya <gakula@marvell.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>
-Subject: [PATCH v5 1/2] dt-bindings: perf: marvell: Add CN20K DDR PMU binding
-Date: Mon, 13 Apr 2026 22:26:20 +0530
-Message-ID: <20260413165621.10921-2-gakula@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20260413165621.10921-1-gakula@marvell.com>
-References: <20260413165621.10921-1-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="auU3US4Q"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso128985ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 09:57:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776099435; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PcsrEdBbK+3He5o/Rk3+CGDzc2m0wLOYAM50OM78EygRFupkQUhGALmjYeKhHJl7uf
+         wXt6YyIv3mE+K08P5PUt6kInQcUCxEmStfQCyfuYVnwc0Yoi/JZLW7qfMmKGZXEBp/Fm
+         FjqNxeBgog7sEgI5YZ1dUwBGFuvGh+Frvd3Ws1GY8u41O7WBfGVCzMQKAbSlqa4lIhkT
+         KoqcaXEqlLLyONOEwK2eFKSLugGStb/z1mMLkkjB5VqIwwKgMJaqnb6rwapXZdNJ1Gty
+         8B+fWjVk04gqONCbv6Q1P3VaO51ibwHIJ/xgSVuqk76MPvZPsuUOCtqItF1aRhOiaD2Y
+         L5IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JNh/xfzQ80pt9xupHq6FNyqy/TiMnj92GOSqlZIM7lk=;
+        fh=VGWGnACjPzWFc48FUJX9YrxBRc4aose9+OGPBO3MEhQ=;
+        b=Q5l3y1KDP3NqQaLTK4VSNTJEK95sRy1TpeH5fOoQJkm8EjvpWkqKYbK48kdHvSf//y
+         x7Qra+HsyIV9kEs8nMwPnBDv2xtuazR/9RtI5eeghNQrdaNHKLLsewLuWV51lYpHYlM/
+         /nGcPWAXLIkzm2eUvOK5nBr2TIBD6kRe1NHcKP+fwZ4xWJEIrN/hyPH1yD3eymlnuIOY
+         oWiVxZLIcmRWcV4ANUQfPMadl3d8JUwDRhtYff7jvBjWT5A4ljAxDMZawa8Ie3qr2WPu
+         wpGVGvLg8x5Jc67O0UV/lyj6oU7de295pCf/2re5WhSxFOjcQt2NjYEkm3QwRTUNN0Wd
+         Fu5Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776099435; x=1776704235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JNh/xfzQ80pt9xupHq6FNyqy/TiMnj92GOSqlZIM7lk=;
+        b=auU3US4Qsir+k4xnDqyR2Y2WYziGB6GYdluyFYXOnYtjXQtsdHRC18CIP7a6jNrXjK
+         23MTCfKhT42J9TbqSdSsuf+sPCy+uq6P7+ujjISjFtuNoh31gXaqIb5xhJIRh+EeET0r
+         BSEPeE6vKuhWekGjSj5n6eyBjy7UXS+S56IMAvWumU9o2xkBU8WfG/k9dnwhZ7uYGYqm
+         yHE8xr1HFpiiMthrfZRQpV5ore4XtMtVzlpOBwG0BmpoVD5OxVBxMzd2q7X7AxUtPCdu
+         4yDVkujbP0KNV52UDPQC2D9GuctZj3LlroyGv5I7WG2+cx1mngLHfGKeB39YtCz9ny4i
+         lNLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776099435; x=1776704235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JNh/xfzQ80pt9xupHq6FNyqy/TiMnj92GOSqlZIM7lk=;
+        b=ZVJ16nAF6koYYH07y1qgDclPmvNXryZnxL7Vec2fjCKDaa2+VW6mSkv9PHyLv5PwLf
+         jUcbwMiRbeh6tBz4Qnk/YYNsUBv/jF1nnNbIgpZR7XoUvSOXVInqE2WxhDMo8ysErzRO
+         vwDtCMDwvAxltOldPFVeXVgSwKRp51Y7iVLobhke7a0becSXQt0klS4qmLL0Pd6daYyJ
+         TQOWis4HFBssxJYw2poRbqb6jGGFINC/De0rOv1+c9WRjHoP3v6bfPuW0YTtPs9xtiGI
+         Y2llJx6f1wJ05h1WefpaQ+ToUXuMGeIJ2X/mpG5YaF+PIRn7X7MgK76cZPulGBOhxY1j
+         AK2Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+/9OvtOhshKb2OP+Qcmwl7NLwtFzLaLKlgVsMgWdDadWVKqIHKVFl2+fBhxkfVN8J/bsDwQNPQKnx1tZD8+sFi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnzXVMLApO2KOeG5nN7eP8bOAGcS48Kxu+p4JdQ1DbVhLzxMPh
+	hkMvEKUDl9X6XbMY4sqpEcGp54i7tVVFUYslXpd3uIytGFn9M7N2XmhWJ2LETWfh1X34gSIcvCg
+	JGC89wawNMc07YRA30Iva/20+c5PDNLbEbdWTKs/K
+X-Gm-Gg: AeBDieuI+H6Ywv48Nc9gRh+db0JuLLhh034To5Uvd70Ii6mOKQuzFkTQUGEX3TDloPO
+	5Yn96MKVD3cSs0y971vOn0ZRIYtVxnj0GqX8e+GA5Thgh5ZQLAMU5Ea9Sa2NQkGX4o82rmQzOEx
+	+v3eXYvgFdPAan3CLGqUxGv7RJCiynqzKczTNDh2lT2PPUJ1iSarMgU2yBYzEL5yTOImAPc56X5
+	q80B541FbxQPBMgXdtUWBxuUBREYQ3StUEzgb5ZPes1FEKg7+G0GnJIFIA9DHvtLEgfh/8fGzYS
+	b5U00+tmBxYqrIY6kWCtBWPcFoeaYK+OPOBZ0KwlUukB2TUB
+X-Received: by 2002:a17:903:3c4e:b0:2b2:4663:abe0 with SMTP id
+ d9443c01a7336-2b2c8c7575bmr11795055ad.7.1776099434792; Mon, 13 Apr 2026
+ 09:57:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: LLxu3ot9QvGzWgNB7Ph-GtrQoGZD2oT0
-X-Authority-Analysis: v=2.4 cv=W4YIkxWk c=1 sm=1 tr=0 ts=69dd203d cx=c_pps
- a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
- a=TtqV-g6YmW1Jfm2GSLaY:22 a=gEfo2CItAAAA:8 a=M5GUcnROAAAA:8
- a=cxBr6QS3EhuSzrwsu80A:9 a=sptkURWiP4Gy88Gu7hUp:22 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDE2NiBTYWx0ZWRfX5Q/yJNJB8dYm
- WILQru0fbUve74KIVjxERaHrqdJplvCPoZKAXg6MqhCAv3NP+Mc1IvCLGkcykmnV8qGNuua71hq
- drwwSgTMg7HJC6Rfu5k6oZr/5ZapgNqO9mHez5zL8M7/GY9v8c5TVH91VFhTAJ3aBq+zthOXkNV
- DBxcK9bXAiIKuPzRnWnvZjgXPU7de3PxLg8k+/c+OQrHm3SR+nWNyvidW/Cl8Zo+N9uJi+VtFVg
- hNe0Tlf3Yi3SNEnO4BT2Suuzn/HctCmJXLcSQFtjzhzxhvcMqNXYw2T3nGEB8aMSmA+OhhBSdQA
- 3QFJ8XKQeYIlXqOfHCTdM0jzi5sQMKkLFUESdb+B1G6M0DcvPWl+6FsQxpecYH3h2QAoujOfiUG
- Rm69uKJPJxirTmeeTTBkNv/efbdBMlFPThEbGaRXHJzPTSka2Ne62pz9LBVa/4c91oyfWDdXcBy
- 92pLiHd1VIr+pVhizuQ==
-X-Proofpoint-GUID: LLxu3ot9QvGzWgNB7Ph-GtrQoGZD2oT0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-13_03,2026-04-13_04,2025-10-01_01
+References: <20260411191710.524998-1-irogers@google.com> <20260412020833.641177-1-irogers@google.com>
+ <adv8Ka16pvgVkm8R@google.com> <CAP-5=fVc-Ac09cnXYPUVcNwzHOqFod0v=-YjjDf_oVHvM7cHDw@mail.gmail.com>
+ <ad0cfz-gUKea5bI8@google.com>
+In-Reply-To: <ad0cfz-gUKea5bI8@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 13 Apr 2026 09:57:02 -0700
+X-Gm-Features: AQROBzDcjIbd6vcU20bgz2tcxZdP3TRqw5gtMprZEuqb37Pt7-4MkLe0t4ewu8s
+Message-ID: <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
+Subject: Re: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	ak@linux.intel.com, alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
+	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
+	derek.foreman@collabora.com, dvyukov@google.com, howardchu95@gmail.com, 
+	hrishikesh123s@gmail.com, james.clark@linaro.org, jolsa@kernel.org, 
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com, tanze@kylinos.cn, thomas.falcon@intel.com, 
+	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Marvell CN20K SoCs integrate a DDR Performance Monitoring Unit (PMU)
-associated with the DDR controller. The block provides hardware counters
-to monitor DDR traffic and performance events and is accessed via a
-dedicated MMIO region.
+On Mon, Apr 13, 2026 at 9:40=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Sun, Apr 12, 2026 at 05:52:57PM -0700, Ian Rogers wrote:
+> > On Sun, Apr 12, 2026 at 1:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Sat, Apr 11, 2026 at 07:08:03PM -0700, Ian Rogers wrote:
+> > > > Nearly all perf code ends up passing an evsel with the perf_sample,
+> > > > which is problematic if you want to rewrite the evsel such as with
+> > > > off-CPU processing - all uses of the evsel need fixing up. Previous=
+ly
+> > > > I'd mailed this patch as an RFC with everything combined:
+> > > > https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google=
+.com/
+> > > > and there was a request to break it up.
+> > > >
+> > > > v10: Changes to some of the bounds checks as prompted by Sashiko.
+> > > >
+> > > > v9: Clean up some error path nits caught by Sashiko and simple boun=
+d
+> > > >     checks Sashiko recommended.
+> > > > https://lore.kernel.org/linux-perf-users/20260411191710.524998-1-ir=
+ogers@google.com/
+> > > >
+> > > > v8: Fix address sanitizer issues with kwork and move patches, along
+> > > >     with bound check additions, to end of series.
+> > > > https://lore.kernel.org/linux-perf-users/20260411065718.372240-1-ir=
+ogers@google.com/
+> > > >
+> > > > v7: Separate out kwork work->name to a strdup into its own patch, n=
+ow patch 4.
+> > > > https://lore.kernel.org/linux-perf-users/20260408072601.210837-1-ir=
+ogers@google.com/
+> > > >
+> > > > v6: Address more Sashiko feedback.
+> > > > https://lore.kernel.org/lkml/20260404034325.3172592-1-irogers@googl=
+e.com/
+> > > >
+> > > > v5: Address feedback from Sashiko and Namhyung.
+> > > > https://lore.kernel.org/lkml/20260403204017.2919994-1-irogers@googl=
+e.com/
+> > > >
+> > > > v4: Fix more sashiko issues: bounds checks, memory safety, making
+> > > >     refactors better, inconsistent evsels, mmap2 buildid injection
+> > > >     choice of evsel, mismatched function arguments.
+> > > > https://sashiko.dev/#/patchset/20260320080835.724836-1-irogers%40go=
+ogle.com
+> > > > https://lore.kernel.org/lkml/20260320192627.368357-1-irogers@google=
+.com/
+> > > >
+> > > > v3: Fix various sashiko review comments particularly about unintend=
+ed
+> > > >     behavior changes.
+> > > > https://lore.kernel.org/lkml/20260320080835.724836-1-irogers@google=
+.com/
+> > > >
+> > > > v2: Add review feedback on the first 2 patches from Namhyung, fix a
+> > > >     missed evsel assignment running event2evsel in builtin-inject.
+> > > > https://lore.kernel.org/lkml/20260319232334.287517-1-irogers@google=
+.com/
+> > > >
+> > > > v1: https://lore.kernel.org/lkml/20260209174032.4142096-1-irogers@g=
+oogle.com/
+> > > >
+> > > > Ian Rogers (29):
+> > > >   perf sample: Fix documentation typo
+> > > >   perf tool: Remove evsel from tool APIs that pass the sample
+> > > >   perf kvm: Don't pass evsel with sample
+> > > >   perf evsel: Refactor evsel tracepoint sample accessors perf_sampl=
+e
+> > > >   perf trace: Don't pass evsel with sample
+> > > >   perf callchain: Don't pass evsel and sample
+> > > >   perf lock: Only pass sample to handlers
+> > > >   perf lock: Constify trace_lock_handler variables
+> > > >   perf hist: Remove evsel parameter from inc samples functions
+> > > >   perf db-export: Remove evsel from struct export_sample
+> > > >   perf hist: Remove evsel from struct hist_entry_iter
+> > > >   perf report: Directly use sample->evsel to avoid computing from
+> > > >     sample->id
+> > > >   perf annotate: Don't pass evsel to add_sample
+> > > >   perf inject: Don't pass evsel with sample
+> > > >   perf kmem: Don't pass evsel with sample
+> > > >   perf kwork: Don't pass evsel with sample
+> > > >   perf sched: Don't pass evsel with sample
+> > > >   perf timechart: Don't pass evsel with sample
+> > > >   perf trace: Don't pass evsel with sample
+> > > >   perf evlist: Try to avoid computing evsel from sample
+> > > >   perf script: Don't pass evsel with sample
+> > > >   perf s390-sample-raw: Don't pass evsel or its PMU with sample
+> > > >   perf evsel: Don't pass evsel with sample
+> > > >   perf kmem: Add bounds checks to tracepoint read values
+> > > >   perf sched: Bounds check CPU in sched switch events
+> > > >   perf timechart: Bounds check CPU
+> > > >   perf evsel: Add bounds checking to trace point raw data accessors
+> > > >   perf kwork: Fix address sanitizer issues
+> > > >   perf kwork: Fix memory management of kwork_work
+> > >
+> > > I've picked the first 23 patches to tmp.perf-tools-next as the rest
+> > > still has some issues.  Also I've touched some commits to either remo=
+ve
+> > > some parts or split them into separate commits.
+> > >
+> > > Please take a look.
+> >
+> > Hi Namhyung,
+> >
+> > thanks for doing this but I've done a similar clean up. To totally
+> > separate the evsel refactoring from the rest of the changes, to fix
+> > the address sanitizer issues with kwork, etc. I'll incorporate your
+> > changes and then resend the series.
+>
+> Thanks, I'd like to merge what's in the tmp.perf-tools-next unless
+> there's a serious mistake.  You can rebase the rest changes on top.
 
-The CN20K DDR PMU is functionally equivalent to the CN10K DDR PMU, with
-minor register offset differences.
+I'd drop what's in tmp.perf-tools-next. Otherwise we're putting fixes
+on top of fixes. Looking at v12 the sashiko issues are all minor and
+the progression of the patches is more granular and natural.
 
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
----
- .../bindings/perf/marvell,cn20k-ddr-pmu.yaml  | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml
+Thanks,
+Ian
 
-diff --git a/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml
-new file mode 100644
-index 000000000000..cc6aa760de49
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/perf/marvell,cn20k-ddr-pmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell CN20K DDR performance monitor
-+
-+description:
-+  Performance Monitoring Unit (PMU) for the DDR controller
-+  in Marvell CN20K SoCs.
-+
-+maintainers:
-+  - Geetha sowjanya <gakula@marvell.com>
-+
-+properties:
-+  compatible:
-+    const: marvell,cn20k-ddr-pmu
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        ddr-pmu@c200000000 {
-+            compatible = "marvell,cn20k-ddr-pmu";
-+            reg = <0xc200 0x00000000 0x0 0x100000>;
-+        };
-+    };
--- 
-2.25.1
-
+> Thanks,
+> Namhyung
+>
