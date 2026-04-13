@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE3438F94E;
-	Mon, 13 Apr 2026 18:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFB038C41C;
+	Mon, 13 Apr 2026 18:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776106706; cv=none; b=Ah8cQLORxmh/9+vo4Y4yz5eR9qbVTE9ZdyoTV+HlEX4OYLWrGNMi0eVj3XgzNy2wW61kWa5Yn39LCk0i6vGdzU2NV3KcCCj/xsM7rTKmMvRwkRlXvXF+kgiit5zyYDKd3RZZ+xmoBqtIeyg5RFUewqd1jF3hIKK994Jb7kXLdnw=
+	t=1776106709; cv=none; b=d0Eixpiwu3EoxZGNo8Ad5Oc7dchTkEs38HVAsab8OlnX5GXxFlsQxWJe2bGVBgtoeUJ2SV5wi1hV9+Ns324VP0sff2PNW6B2Ob2T+dtS3v0anXy1qRhI6OqeIXXdUQbpb160kciN1qj7O4HfqLVPkMmRMMN+hxzC+nk0pDh2dzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776106706; c=relaxed/simple;
-	bh=oWNqShly/dKLm6QH9Zz4OONYsqdxohN3rWDpuNVVnD0=;
+	s=arc-20240116; t=1776106709; c=relaxed/simple;
+	bh=JQPVHfvUkzj2ic9SS65cmjJ9pkCh/Jz8i86/isDKNZY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SZ1nuNywB63jVrDeOyu6HH11tD8qpITJ5EfsvAfvGVDADFbdnaqkmXbzYlTtNWP656wrWtqhOZRTWiupI6KULlddIFQaZt0JLmPVXYbqKy/5EBTQ+gybScsMyuyuTWHRVwqb47k84zm0mrv8G3asRjfKrNqaW/hAcdupyYGUI/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hK8Vv8mF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=umou21LcEr71Q3uByFotIk4GUlvmdlqpujgwEK9WvsDhIsYUkFT5dOpv085oPzryFlqctAagIXIv5NPvyMAqQgbedK4EfmNc8N5Jrs3Yjngd4vuIMs2NvfeyyQ0SFodjfM8P0/2kZD8P7X9LXKpxr+OyC2R6MbNyUICTDxrDruw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYOt2bz4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hK8Vv8mF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064C5C2BCAF;
-	Mon, 13 Apr 2026 18:58:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYOt2bz4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2382AC2BCB6;
+	Mon, 13 Apr 2026 18:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776106706;
-	bh=oWNqShly/dKLm6QH9Zz4OONYsqdxohN3rWDpuNVVnD0=;
+	s=k20201202; t=1776106709;
+	bh=JQPVHfvUkzj2ic9SS65cmjJ9pkCh/Jz8i86/isDKNZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hK8Vv8mFgWDEIp9XPGid+4bIdY5R6vAfgVzhC5yYWCbpVPhECmnS2bvbCv5BxyxdM
-	 usE7681SvMHyn2wOlNh3VFVCVLOrfc/Xe4wGG+8t4pQZ4g0yMwHEhMXe2YsTQHHrTM
-	 z7MP/uKNR0Geo2pb9YqogClOhStG9iRjwNXtC35CdomBUpIKpLOFfmpYKmLLefDPvr
-	 QQH3P+VBHZNeZFJzGesa6y28nsQMuRDln61sGFocqRxejcgoUBH4plyc4bjsBAb3o0
-	 qOtWLEc091pg2B6yGz7Hdes+cNQJCLpFlpXyrsFZQu4jh/cdU1D6HsI5z42lA5CtTX
-	 CvQVceOLPneqQ==
+	b=PYOt2bz4Gg+cTM8EoWwBy0FSyl4AWWaEADtib0LmRnPICQ5nItok66sSo64KYL8mU
+	 aWqAQc4VbMpftssTkn/Wy/zpsnc5JzF4mUUdKbiqIMFFAj0C/wLRHCFi3n8PeMwci/
+	 04Z/IJe7JjHwj9kdvmHXz+dtxwz7kq4jFgrQqzAyFS6MPxR41hkiI3jrsE8/VeVrJs
+	 uOOTZsHJzRBlIwNMmYDNyXbi4/uJsq3TKwC2AiWcItqUnBWZMQF1uF7x6GlmB7wWqU
+	 WkGVl3rfd5mstu6bqRKmYAEtrVubwR8mZNsRSTFFThxLqowYT9Tl8QZeKZZYREXkFA
+	 WRHj4cX6/k6QQ==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: bpf@vger.kernel.org
 Cc: Puranjay Mohan <puranjay@kernel.org>,
@@ -61,9 +61,9 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v3 1/4] perf/core: Fix NULL pmu_ctx passed to PMU sched_task callback
-Date: Mon, 13 Apr 2026 11:57:20 -0700
-Message-ID: <20260413185740.3286146-2-puranjay@kernel.org>
+Subject: [PATCH v3 2/4] perf: Use a union to clear branch entry bitfields
+Date: Mon, 13 Apr 2026 11:57:21 -0700
+Message-ID: <20260413185740.3286146-3-puranjay@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260413185740.3286146-1-puranjay@kernel.org>
 References: <20260413185740.3286146-1-puranjay@kernel.org>
@@ -75,46 +75,78 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-__perf_pmu_sched_task() passes cpc->task_epc to pmu->sched_task(),
-which is NULL when no per-task events exist for this PMU. With CPU-wide
-branch-stack events, PMU callbacks that dereference pmu_ctx crash.
+perf_clear_branch_entry_bitfields() zeroes individual bitfields of struct
+perf_branch_entry but has repeatedly fallen out of sync when new fields
+were added (new_type and priv were missed).
 
-On ARM64 this is easily triggered with:
+Wrap the bitfields in an anonymous struct inside a union with a u64
+bitfields member, and clear them all with a single assignment. This
+avoids having to update the clearing function every time a new bitfield
+is added.
 
-  perf record -b -e cycles -a -- ls
-
-which crashes on the first context switch:
-
-  Unable to handle kernel NULL pointer dereference at virtual address 00[.]
-  PC is at armv8pmu_sched_task+0x14/0x50
-  Call trace:
-    armv8pmu_sched_task+0x14/0x50 (P)
-    perf_pmu_sched_task+0xac/0x108
-    __perf_event_task_sched_out+0x6c/0xe0
-
-Fall back to &cpc->epc when cpc->task_epc is NULL so the callback
-always receives a valid pmu_ctx.
-
-Fixes: bd2756811766 ("perf: Rewrite core context handling")
+Fixes: bfe4daf850f4 ("perf/core: Add perf_clear_branch_entry_bitfields() helper")
 Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 ---
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/perf_event.h      |  9 +--------
+ include/uapi/linux/perf_event.h | 25 +++++++++++++++----------
+ 2 files changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1f5699b339ec..2a8fb78e1347 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3906,7 +3906,8 @@ static void __perf_pmu_sched_task(struct perf_cpu_pmu_context *cpc,
- 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	perf_pmu_disable(pmu);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 48d851fbd8ea..f7360c43f902 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1474,14 +1474,7 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
+  */
+ static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *br)
+ {
+-	br->mispred	= 0;
+-	br->predicted	= 0;
+-	br->in_tx	= 0;
+-	br->abort	= 0;
+-	br->cycles	= 0;
+-	br->type	= 0;
+-	br->spec	= PERF_BR_SPEC_NA;
+-	br->reserved	= 0;
++	br->bitfields = 0;
+ }
  
--	pmu->sched_task(cpc->task_epc, task, sched_in);
-+	pmu->sched_task(cpc->task_epc ? cpc->task_epc : &cpc->epc,
-+			task, sched_in);
+ extern void perf_output_sample(struct perf_output_handle *handle,
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index fd10aa8d697f..c2e7b1b1c4fa 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1491,16 +1491,21 @@ union perf_mem_data_src {
+ struct perf_branch_entry {
+ 	__u64	from;
+ 	__u64	to;
+-	__u64	mispred   :  1, /* target mispredicted */
+-		predicted :  1, /* target predicted */
+-		in_tx     :  1, /* in transaction */
+-		abort     :  1, /* transaction abort */
+-		cycles    : 16, /* cycle count to last branch */
+-		type      :  4, /* branch type */
+-		spec      :  2, /* branch speculation info */
+-		new_type  :  4, /* additional branch type */
+-		priv      :  3, /* privilege level */
+-		reserved  : 31;
++	union {
++		struct {
++			__u64	mispred   :  1, /* target mispredicted */
++				predicted :  1, /* target predicted */
++				in_tx     :  1, /* in transaction */
++				abort     :  1, /* transaction abort */
++				cycles    : 16, /* cycle count to last branch */
++				type      :  4, /* branch type */
++				spec      :  2, /* branch speculation info */
++				new_type  :  4, /* additional branch type */
++				priv      :  3, /* privilege level */
++				reserved  : 31;
++		};
++		__u64	bitfields;
++	};
+ };
  
- 	perf_pmu_enable(pmu);
- 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ /* Size of used info bits in struct perf_branch_entry */
 -- 
 2.52.0
 
