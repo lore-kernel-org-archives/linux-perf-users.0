@@ -1,181 +1,243 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8C73815DE
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 17:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D26036073E;
+	Mon, 13 Apr 2026 18:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776102659; cv=none; b=UmiZmADofAXCTdC/S2pjhX58asVpsVgk0mdJfkJiBTqKJ1de07OdUGYJqXpWgOwgQOw8Uxz1AnXhmFBvemFBmQzEIlMJwdqy/KXktGI1UIaiP2mTHLgFdRmaBOp0qYQlYMsN7D0OKATszMVJTNWpD+ZNKvZ/juqpLgLGXrxgdPk=
+	t=1776106697; cv=none; b=VBu2Awwrgd0JBHJI6hhEWLg0Jv4tB1IyfEN0HAiYWO0oMcWaKuyVvMQZ2EkaemCyAYfQVwQfrkfSpBhmNBWYwDNFOT3O7xNWVddTPaeYnOx6pRrVER3S/wBCNjxLt9qaW+XtltCjOW8BF7ddQTN+HePQlPF4I8S9D1YoeRv4vUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776102659; c=relaxed/simple;
-	bh=FMDQBLMwujNIvI3vTSmo+6CQvvROLWPSWmpRYJ1YCtk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tdJPfnUyk9RZqgL7g9RbmwfLE2All1Ph5llmQTSp9rqOs7LyrQnYwbYXzTDzciKBZZDy7+Lgi9OmyRNc+Je4I65GTN1ZEjyyqIXJZBqXvAqtCE+s5hAlNRu1xhscFVO+UFFAf5Nf9eY7pHWydPjmLl3fSHxxCk3zXHbxjZzsIQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOQCg+qR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776106697; c=relaxed/simple;
+	bh=ZIwtCZUtFAcxaWvpSxsXK2zFamF+0vNdar2fG1YYuk8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EVUom4M501Lp/jTYJ4S5oZa69nRPLaqnCqEVv+dUUGaEwnn9eXmwPVMks+oWQpBvHavSAmgpnTXK7KWU+UCxfmi6ALH8VQoez6h/cv8ImQDCc9TgF77G07n4mM6TBVNPMg0gYpb/utSCpSMVxiN4em6Hv3O9eYMtvM3svy9z4Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q25BzOsK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOQCg+qR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1700C2BCAF;
-	Mon, 13 Apr 2026 17:50:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q25BzOsK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F33BDC2BCAF;
+	Mon, 13 Apr 2026 18:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776102659;
-	bh=FMDQBLMwujNIvI3vTSmo+6CQvvROLWPSWmpRYJ1YCtk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=LOQCg+qRPsVW4/P/HwC9KnIA/HMRqFBozzgVgLsoJgaBu4J8e+FfopXubsA3UlkUx
-	 if1WVQXx4SF1ZkJMVhVeR7ibyMf3KilE+0oIlGeOA+rMAAcSegOrMrvFZ1YAAml9iF
-	 87C0+6lC9E9GdDDOwaBE78DgLnoeViZy7SLmN2+PoYeyH9zFxhtXRyyz7/ztN3SVe4
-	 5CTQ0NqmJ9OFHLiT3DfUm30QdN0r3utkrEKV1WUNWVOccQRttQbpqWghDoc4gdJy4t
-	 jTAuGAOwLEO1TQbdfXwxYsgXtVqk/3e/M2HGPzEn+Lrtcq1b6GFlSZWE8cy+CQXm10
-	 8mHo5G5fprd1g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf: marvell: Add CN20K DDR PMU support
-Reply-To: sashiko@lists.linux.dev
-To: "Geetha sowjanya" <gakula@marvell.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413165621.10921-3-gakula@marvell.com>
-References: <20260413165621.10921-3-gakula@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 17:50:58 +0000
-Message-Id: <20260413175058.E1700C2BCAF@smtp.kernel.org>
+	s=k20201202; t=1776106697;
+	bh=ZIwtCZUtFAcxaWvpSxsXK2zFamF+0vNdar2fG1YYuk8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q25BzOsKiK2Ph9Z9XF8bDoVKeWECh8ph2lSUriFzjTKVrv3lbZWzMCoL3JICKaMtP
+	 CcwAl+9tpVb7T880Q61O27tIn4wfeB36a625PJTuKGzopCSrWgCe6wpbUDih/eaNv2
+	 /uCmW5RqZy0eCaXnaARzCoVRWvpCHd9+7S8pGqU7oQelrvTs+w/2mhXFT3nFqPB34p
+	 ao214sKnpvR/ao64D9QaOGw9mq4JDpvxtGhPzdXJZ+eIL5C60YCIkCBkKdxDpQaTmD
+	 i5GrNrsexwSxRqmjninqISK0nsLeySTQ4rsDG+cd3W032WWDDy47WF+ZOQA2acObnC
+	 0DB8VDFwRzzSw==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: bpf@vger.kernel.org
+Cc: Puranjay Mohan <puranjay@kernel.org>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Leo Yan <leo.yan@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Stephane Eranian <eranian@google.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH v3 0/4] arm64: Add BRBE support for bpf_get_branch_snapshot()
+Date: Mon, 13 Apr 2026 11:57:19 -0700
+Message-ID: <20260413185740.3286146-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 4 potential issue(s):
-- [High] Missing Hardware Initialization for CN20K Programmable Counters.
-- [High] Undefined Behavior via Unvalidated Event `config` on CN20K.
-- [Medium] Event ID Conflicts and Incorrect Hardware Routing.
-- [Medium] Broken Enable Logic and Stale Hardware State for `cfg1_base` Eve=
-nts.
---
+v2: https://lore.kernel.org/all/20260318171706.2840512-1-puranjay@kernel.org/
+Changes in v3:
+- Move NULL pmu_ctx fix from arm_pmuv3.c to perf core (Leo Yan)
+- Use union to clear branch entry bitfields instead of per-field
+  zeroing (Leo Yan)
+- Remove per-CPU brbe_active flag; check BRBCR_EL1 == 0 instead (Rob
+  Herring)
+- Remove redundant valid_brbidr() check in snapshot path (Rob Herring)
+- Introduce for_each_brbe_entry() iterator to deduplicate bank
+  iteration (Rob Herring)
+- Include perf core maintainers (Leo Yan, Rob Herring)
 
-commit 5466234dfcbce6dad8475395fbdf56b2dfd56308
-Author: Geetha sowjanya <gakula@marvell.com>
+v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.org/
+Changes in v2:
+- Rebased on arm64/for-next/core
+- Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
+  on non-BRBE CPUs in heterogeneous big.LITTLE systems.
+- Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
+  zeroing new_type and priv bitfields, added as a separate patch with
+  Fixes tags (new patch 2).
+- Use architecture-specific selftest threshold (#if defined(__aarch64__))
+  instead of raising the global threshold, to preserve x86 regression
+  detection.
 
-    perf: marvell: Add CN20K DDR PMU support
-   =20
-    The CN20K DRAM Subsystem exposes eight programmable
-    performance counters and two fixed counters for DDR
-    read and write traffic.  Software selects events for
-    the programmable counters from traffic at the DDR PHY
-    interface, the CHI interconnect, or inside the DDR controller.
+RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel.org/
+Changes from RFC:
+ - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
+   found by Leo Yan during testing (patch 1)
+ - Pause BRBE before local_daif_save() to avoid branch pollution from
+   trace_hardirqs_off()
+ - Use local_daif_save() to prevent pNMI race from counter overflow
+   (Mark Rutland)
+ - Reuse perf_entry_from_brbe_regset() instead of duplicating register
+   read logic, by making it accept NULL event (Mark Rutland)
+ - Invalidate BRBE after reading to maintain record contiguity for
+   other consumers (Mark Rutland)
+ - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
+ - Tested on ARM FVP with BRBE enabled
 
-> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_=
-cn10k_ddr_pmu.c
-> index 72ac17efd846a..7e2e1823b009c 100644
-> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-[ ... ]
-> @@ -61,6 +73,23 @@
->   * DO NOT change these event-id numbers, they are used to
->   * program event bitmap in h/w.
->   */
-> +
-> +/* CN20K specific events */
-> +#define EVENT_PERF_OP_IS_RD16			61
-> +#define EVENT_PERF_OP_IS_RD32			60
-> +#define EVENT_PERF_OP_IS_WR16			59
-> +#define EVENT_PERF_OP_IS_WR32			58
-> +#define EVENT_OP_IS_ENTER_DSM			44
-> +#define EVENT_OP_IS_RFM				43
-> +
-> +#define EVENT_CN20K_OP_IS_TCR_MRR			50
-> +#define EVENT_CN20K_OP_IS_DQSOSC_MRR			49
-> +#define EVENT_CN20K_OP_IS_DQSOSC_MPC			48
-> +#define EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_WR	47
-> +#define EVENT_CN20K_VISIBLE_WIN_LIMIT_REACHED_RD	46
-> +#define EVENT_CN20K_OP_IS_ZQLATCH			21
-> +#define EVENT_CN20K_OP_IS_ZQSTART			22
-> +
+This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
+by implementing the perf_snapshot_branch_stack static call for ARM's
+Branch Record Buffer Extension (BRBE).
 
-Could these new EVENT_CN20K_OP_IS_ZQ* IDs conflict with existing events?
+bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
+branch records on-demand from any BPF tracing context. This was
+previously only available on x86 (Intel LBR) since v5.16. With BRBE
+available on ARMv9, this series closes the gap for ARM64.
 
-For example, EVENT_PRECHARGE_FOR_OTHER is also 21, and EVENT_RDWR_TRANSITIO=
-NS
-is 22. Since they share the same ID value, wouldn't standard events 21 and =
-22
-incorrectly trigger the cfg1_base routing logic added in
-cn10k_ddr_perf_event_add() for CN20K?
+Usage model
+-----------
 
-[ ... ]
-> @@ -524,9 +637,9 @@ static void cn10k_ddr_perf_counter_enable(struct cn10=
-k_ddr_pmu *pmu,
->  					  int counter, bool enable)
->  {
->  	const struct ddr_pmu_platform_data *p_data =3D pmu->p_data;
-> +	unsigned int silicon_flags =3D pmu->p_data->silicon_flags;
->  	u64 ctrl_reg =3D pmu->p_data->cnt_op_mode_ctrl;
->  	const struct ddr_pmu_ops *ops =3D pmu->ops;
-> -	bool is_ody =3D pmu->p_data->is_ody;
->  	u32 reg;
->  	u64 val;
-> =20
-> @@ -546,7 +659,7 @@ static void cn10k_ddr_perf_counter_enable(struct cn10=
-k_ddr_pmu *pmu,
-> =20
->  		writeq_relaxed(val, pmu->base + reg);
-> =20
-> -		if (is_ody) {
-> +		if (silicon_flags & IS_ODY) {
->  			if (enable) {
->  				/*
->  				 * Setup the PMU counter to work in
+The helper works in conjunction with perf events. The userspace
+component of the BPF application opens a perf event with
+PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
+to continuously record branches into BRBE (on ARM64) or LBR (on x86).
+A BPF program attached to a tracepoint, kprobe, or fentry hook can
+then call bpf_get_branch_snapshot() to snapshot the branch buffer at
+any point. Without an active perf event, BRBE is not recording and
+the buffer is empty.
 
-Are CN20K programmable counters ever actually enabled?
+On-demand branch snapshots from BPF are useful for diagnosing which
+specific code path was taken inside a function. Stack traces only show
+function boundaries, but branch records reveal the exact sequence of
+jumps, calls, and returns within a function -- making it possible to
+identify which specific error check triggered a failure, or which
+callback implementation was invoked through a function pointer.
 
-Unlike CN10K, CN20K does not register global .pmu_enable or .pmu_disable
-callbacks during probe. And since this check is only for IS_ODY, the hardwa=
-re
-counters are never configured to work in manual mode or started via
-cn10k_ddr_perf_counter_start(), which might leave them non-functional.
+For example, retsnoop [2] is a BPF-based tool for non-intrusive
+mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
+perf events with PERF_SAMPLE_BRANCH_STACK and then uses
+bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
+branch records whenever a traced function returns an error.
 
-Additionally, just before this block, the function applies EVENT_ENABLE
-exclusively to cfg_base:
+Consider debugging a bpf() syscall that returns -EINVAL when creating
+a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
+with BRBE to trace the bpf() syscall and array_map_alloc_check():
 
-    reg =3D DDRC_PERF_CFG(p_data->cfg_base, counter);
-    val =3D readq_relaxed(pmu->base + reg);
+  $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=any \
+             -F -k vmlinux --debug full-lbr
+  $ simfail bpf-bad-map-max-entries-array  # in another terminal
 
-    if (enable)
-        val |=3D EVENT_ENABLE;
+Output of retsnoop:
 
-How are the ZQSTART and ZQLATCH events handled, since they are supposed to =
-be
-written to cfg1_base? It looks like EVENT_ENABLE would inadvertently be
-applied to cfg_base instead.
+  --- fentry BPF program (entries #63-#17) ---
 
-[ ... ]
-> @@ -642,10 +756,17 @@ static int cn10k_ddr_perf_event_add(struct perf_eve=
-nt *event, int flags)
->  	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
->  		/* Generic counters, configure event id */
->  		reg_offset =3D DDRC_PERF_CFG(p_data->cfg_base, counter);
-> -		ret =3D ddr_perf_get_event_bitmap(config, &val, pmu);
-> -		if (ret)
-> -			return ret;
-> =20
-> +		if (silicon_flags & IS_CN20K) {
-> +			val =3D  (1ULL << (config - 1));
-> +			if (config =3D=3D EVENT_CN20K_OP_IS_ZQSTART ||
-> +			    config =3D=3D EVENT_CN20K_OP_IS_ZQLATCH)
-> +				reg_offset =3D DDRC_PERF_CFG(p_data->cfg1_base, counter);
-> +		} else {
-> +			ret =3D ddr_perf_get_event_bitmap(config, &val, pmu);
-> +			if (ret)
-> +				return ret;
-> +		}
->  		writeq_relaxed(val, pmu->base + reg_offset);
->  	} else {
+  [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (hashtab.c)
+  [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (hashtab.c:750)
+  [#57-#55] ... dump_bpf_prog internal branches ...
+  [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (helpers.c:225)
+  [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (helpers.c:225)
+  [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
+  [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
+  [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (hashtab.c:717)
+  [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (hashtab.c:750)
+  [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
+  [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (helpers.c:178)
+  [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cntpct
+  [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (timekeeping.c:493)
+  [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (helpers.c:178)
+  [#29-#25] ... dump_bpf_prog internal branches ...
+  [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (trampoline.c:1190)
+  [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (trampoline.c:1195)
 
-Is it possible for the config variable (which comes from event->attr.config)
-to cause undefined behavior here?
+  --- array_map_alloc_check (entries #16-#12) ---
 
-Since the CN20K path bypasses ddr_perf_get_event_bitmap(), it lacks
-bounds checking on config. If a user provides config =3D 0, config - 1
-could result in a negative shift. If config >=3D 65, the shift amount
-would exceed the width of the 64-bit operand.
+  [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (arraymap.c:55)
+  [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (arraymap.c:56)
+        . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
+  [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (arraymap.c:59)
+        . bpf_map_attr_numa_node
+  [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (arraymap.c:64)
+  [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (arraymap.c:82)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413165621.1092=
-1-1-gakula@marvell.com?part=3D2
+  --- fexit trampoline overhead (entries #11-#00) ---
+
+  [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (trampoline.c:1145)
+  [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (trampoline.c:1146)
+  [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (trampoline.c:1157)
+  [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
+  [#00] dump_bpf_prog+0xd340        -> arm_brbe_snapshot_branch_stack+0x0 (arm_brbe.c:814)
+
+                   el0t_64_sync+0x168
+                   el0t_64_sync_handler+0x98
+                   el0_svc+0x28
+                   do_el0_svc+0x4c
+                   invoke_syscall.constprop.0+0x54
+    373us [-EINVAL] __arm64_sys_bpf+0x8
+                    __sys_bpf+0x87c
+                    map_create+0x120
+     95us [-EINVAL] array_map_alloc_check+0x8
+
+The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
+64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
+trampoline that ran before the function, and entries #11-#00 (12)
+are consumed by the fexit trampoline that runs after. Entry #00
+shows the very last branch recorded before BRBE is paused: the call
+into arm_brbe_snapshot_branch_stack().
+
+The 5 useful entries (#16-#12) show the exact path taken inside
+array_map_alloc_check(). Record #14 shows a jump from line 56
+(bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
+shows an immediate jump from line 59 (attr->max_entries == 0) to
+line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
+max_entries==0 as the cause -- a diagnosis impossible with stack
+traces alone.
+
+[1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
+[2] https://github.com/anakryiko/retsnoop
+
+Puranjay Mohan (4):
+  perf/core: Fix NULL pmu_ctx passed to PMU sched_task callback
+  perf: Use a union to clear branch entry bitfields
+  perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+  selftests/bpf: Adjust wasted entries threshold for ARM64 BRBE
+
+ drivers/perf/arm_brbe.c                       | 107 +++++++++++++++---
+ drivers/perf/arm_brbe.h                       |   9 ++
+ drivers/perf/arm_pmuv3.c                      |   5 +-
+ include/linux/perf_event.h                    |   9 +-
+ include/uapi/linux/perf_event.h               |  25 ++--
+ kernel/events/core.c                          |   3 +-
+ .../bpf/prog_tests/get_branch_snapshot.c      |  13 ++-
+ 7 files changed, 130 insertions(+), 41 deletions(-)
+
+
+base-commit: 480a9e57cceaf42db6ff874dbfe91de201935035
+-- 
+2.52.0
+
