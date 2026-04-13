@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C51A3166
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 02:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06197232395
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 02:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776046029; cv=none; b=QFGAvkEdtOgzNQ16Rxn8xXV24kOa0jJG+oawh6Q8DvdDnP6rX9rlDR1D5HL9P0U7OvzCwCXOtwbZ9eImL2bBato/iHEgL1CkNAiNfqOSVG4pkHsaySOSvF1wvjWW4Ykvo6KIilHIBhKPfduHrINi/pf6AmRgT9dWsSpYwB/9fUM=
+	t=1776047411; cv=none; b=e9/c/3Voa+E5hJrydSqrYI2p60xGSlUnFSgCPecxT0XKi8Rqw05neyk4DTERkGN+FyOEEM4CXbZc89n/AUo1sDZMrrpCzKggefzlitCppXS9SRfZ7PEIiAit0CjcI8+KLCXSzgeYUfnKOr3imc0DRtEykrIuplszPRat9mOX1AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776046029; c=relaxed/simple;
-	bh=kmtztinpVMS8RhffFBS7rcEvXNuZhTgYBuRbUpTynhA=;
+	s=arc-20240116; t=1776047411; c=relaxed/simple;
+	bh=p3P5YrQ4C43zYKuV58zOvEYi2zd8NDC0I+Tjpzl9t5w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=obsMcJvShn+WZWmMbvjiGLT3L3LM64Cl5SEBGPwUKphvKg5m4UhuLLAjdl65O16BBNjL4ZcmQp99G3bGd8FUjmhemXgY2U4h5LQSMCzg+P+0O3+4bWvEV6K+3yH8oAWdUGhdP0/La8JJdR7Lq4MyYuH9hA9BYFrXLqEaWkdYEXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nlq1GuIL; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=kfqV7A13w2z7uf8vWL0Xw1gnufoYxH+u/+tAmzdmH6SXLNN9wJKKiposfHhFThb1kI7Lf5enH0WOUgB1nSMLN9AnuCMnWhqBA+jwXns62iqDFWa0MwLmh8wkt5/q5EWuw9TcSF4b3o7wTazgigeif+x+xm+Yvcl4zPD552KChkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDIJG+xK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nlq1GuIL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4511FC19424;
-	Mon, 13 Apr 2026 02:07:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDIJG+xK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70359C19424;
+	Mon, 13 Apr 2026 02:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776046029;
-	bh=kmtztinpVMS8RhffFBS7rcEvXNuZhTgYBuRbUpTynhA=;
+	s=k20201202; t=1776047410;
+	bh=p3P5YrQ4C43zYKuV58zOvEYi2zd8NDC0I+Tjpzl9t5w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Nlq1GuIL3P18YZ5c9GTZw/t5tBaTHs7LDPkPEDTel2M80DOHxjFnIjMzROX1Udbi4
-	 U4eBXbdSLT83+EPESf/N24Ntia0IJmgM8DusocFttwS61/4itatnU/5NZZwzZ9o2Id
-	 vudvcubcvJ8ubmjAdtUqWZDmdexebOWhxpxhpPpmkY+GZwGGIF881eI4jIBTYKhXCF
-	 wxp/0m6+ix1P/AzMDZ3B0tDnaz8ouP7NBnd+kwwlDIB9J/hav0ZvKy1hupLuOqLufl
-	 YTZCaCyCmsphZWjCbQ5B6rmm7Jwvg0kEVKrFA4H02odp8HfODID2AGM8he+bYIzq0m
-	 U/jmVl5hxC0Fg==
+	b=tDIJG+xKmwMSPBM+76Euy37DE0lag8AwStQigARdyWdkHSH5XolbUIYXfUZ5Dar/z
+	 tRl+29caDfj4B0YWLcg0Wz3FbRFWpNBkj/8yQmS8Jzp/Gwbu81USOvCNaTYIDPK3WX
+	 u+w89YmTZF1BiR9TliMAHoe6FMTWhk75Kq1b2Unf3CEjvz1XDi4XhQBJ92EaFIuyW3
+	 UWMJEqwCGbscnGy4UuHrK7ax4yUA7leXhIw8kfDFh/4O5sI6rfVy15STXkGaF4vH/m
+	 DUAoS/KxlmNOfO0/W2iMdnRKD4inAXN6kL4y+NgcixYPIPb/1lK2FZsTk2o57/0nky
+	 0CauKzwsYdkag==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 30/33] perf timechart: Bounds check CPU
+Subject: Re: [PATCH v11 29/33] perf sched: Bounds check CPU in sched switch
+ events
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413012227.1089445-31-irogers@google.com>
-References: <20260413012227.1089445-31-irogers@google.com>
+In-Reply-To: <20260413012227.1089445-30-irogers@google.com>
+References: <20260413012227.1089445-30-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 02:07:08 +0000
-Message-Id: <20260413020709.4511FC19424@smtp.kernel.org>
+Date: Mon, 13 Apr 2026 02:30:09 +0000
+Message-Id: <20260413023010.70359C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,75 +45,70 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [High] Returning `-1` on out-of-bounds CPU IDs causes the entire perf ses=
-sion processing to abort silently.
-- [High] Out-of-bounds read on the `topology_map` array when offline CPUs a=
-re present.
+- [Medium] Un-ratelimited warnings inside the per-sample processing loop ca=
+n cause severe console spam and performance degradation.
+- [Low] Type mismatch and format string errors cause compiler warnings that=
+ break the build under `-Werror`.
 --
 
-commit 2d402e787962a036968ba2be4ac85bf8a877dbe3
+commit 30019433f1de0fe00c79f330acfbb9ea9ed08603
 Author: Ian Rogers <irogers@google.com>
 
-perf timechart: Bounds check CPU
+perf sched: Bounds check CPU in sched switch events
 
-This commit adds bounds checking for CPU IDs across multiple sample
-processing callbacks in perf timechart to prevent out-of-bounds memory
-accesses when updating CPU state arrays.
+This commit adds bounds checking for the CPU index in various perf sched
+event handlers to prevent out-of-bounds memory accesses.
 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
-t.c
-> index 64f69bd67c6b7..64903b54e8a73 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1791,6 +1791,11 @@ static int process_sched_switch_event(const struct=
+ perf_tool *tool,
+>  	u32 prev_pid =3D perf_sample__intval(sample, "prev_pid"),
+>  	    next_pid =3D perf_sample__intval(sample, "next_pid");
+> =20
+> +	if (this_cpu < 0 || this_cpu >=3D MAX_CPUS) {
+> +		pr_warning("Out-of-bound sample CPU %d. Skipping sample\n", this_cpu);
+
+Could printing a warning for every out-of-bounds sample cause severe
+console spam and bottleneck trace processing?
+
+Since these functions are called per-sample in the perf.data file, a trace
+with corrupted data or recorded on a system with more than MAX_CPUS cores
+might print millions of lines.
+
+Would it be better to rate-limit this warning, aggregate the skipped counts,
+or lower the log level to pr_debug()?
+
+> +		return 0;
+> +	}
+> +
+>  	if (sched->curr_pid[this_cpu] !=3D (u32)-1) {
 
 [ ... ]
 
-> @@ -607,6 +607,10 @@ process_sample_cpu_idle(struct timechart *tchart __m=
-aybe_unused,
->  	u32 state  =3D perf_sample__intval(sample, "state");
->  	u32 cpu_id =3D perf_sample__intval(sample, "cpu_id");
+> @@ -1813,6 +1818,11 @@ static int process_sched_runtime_event(const struc=
+t perf_tool *tool,
+>  {
+>  	struct perf_sched *sched =3D container_of(tool, struct perf_sched, tool=
+);
 > =20
-> +	if (cpu_id >=3D MAX_CPUS) {
-> +		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
-> +		return -1;
+> +	if (sample->cpu < 0 || sample->cpu >=3D MAX_CPUS) {
+> +		pr_warning("Out-of-bound sample CPU %d. Skipping sample\n", sample->cp=
+u);
 
-Does returning -1 here cause the entire perf session processing to abort?=20
+Since sample->cpu is an unsigned 32-bit integer, will the sample->cpu < 0
+condition evaluate to always false and trigger a compiler warning?
 
-In the perf tool subsystem, returning a negative error code from a trace
-handler propagates up to perf_session__process_events(), which aborts
-parsing the rest of the trace file.
+Additionally, does using the %d format specifier for this unsigned value
+trigger a format string warning, potentially breaking the build under -Werr=
+or?
 
-Should this log a warning and return 0 instead to skip the invalid sample,
-so that a single corrupted sample or an unsupported high CPU ID does not
-prevent the generation of SVG output for the valid samples?=20
-
-Additionally, using pr_debug() hides the out-of-bounds notification from
-the user unless verbose mode is enabled.
-
-[ ... ]
-
-> @@ -1517,6 +1544,8 @@ static int process_header(struct perf_file_section =
-*section __maybe_unused,
->  	switch (feat) {
->  	case HEADER_NRCPUS:
->  		tchart->numcpus =3D ph->env.nr_cpus_avail;
-> +		if (tchart->numcpus > MAX_CPUS)
-> +			tchart->numcpus =3D MAX_CPUS;
->  		break;
-> =20
->  	case HEADER_CPU_TOPOLOGY:
-
-Does capping tchart->numcpus here fully prevent out-of-bounds reads when
-offline CPUs are present?
-
-While this bounds tchart->numcpus to MAX_CPUS, tchart->numcpus is
-initialized to ph->env.nr_cpus_avail. The topology_map is allocated in
-svg_build_topology_map() based on env->nr_cpus_online. On systems with
-offline CPUs, nr_cpus_avail is strictly greater than nr_cpus_online.
-
-Will iterating up to tchart->numcpus during rendering result in cpu2y()
-accessing the topology_map[] array out of bounds?
+> +		return 0;
+> +	}
+> +
+>  	if (sched->tp_handler->runtime_event)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
-445-1-irogers@google.com?part=3D30
+445-1-irogers@google.com?part=3D29
