@@ -1,48 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D8F35950;
-	Mon, 13 Apr 2026 01:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D13140DFC3;
+	Mon, 13 Apr 2026 01:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776042407; cv=none; b=lLeC6EjFdUsMbeQ/f7Z55/Bs3DGsPMN3PhaUJkKYfz8+QaD/ve2F3ltCbuUqDaA4zk6HSX+1sOaoqWe/wSn613j//l0yiEELklJqTtEj54cSWlsLbVL/J0B+9hRfJ71CM7+Qk97hD7MDVmCIWdEvyU9kHDz3aO6RWBF1Jrx+bZk=
+	t=1776042850; cv=none; b=XUvAdZbPe5gg2kH2oX2wTKe69hUAeX5Ysp07URWFQLoskAHxI38TjePPQaCiZvCkJ5k3SKLkTYW1PnU9egxRyMcxvUmD3Is+9NZgJhUfx2vkTtTZywgVuz9kDgLp6J565qbXEnSnqCm5p1o0z6i66DOSbnVhUHnAUTCDtDt9OXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776042407; c=relaxed/simple;
-	bh=129nPjVpDoaaHM2ZmHDbl767W7EK5HCaERwpRVcRLss=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D+PuufxFXu0gKHMt0Dk2Ea1AVEKmURNlIwO5sNHRINwPxY/vcTdDMD+N7P9PFK0Ear/webwNqeSR8xk2s7QSRkc7use0FgCE5TZld5EvFRs2Pz7C0tS8c4pQp/7o8iYlLofGfhMWHA27weyiVloy8zq+9qGP7fs65tKyjaHuNiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAs1d4Kh; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1776042850; c=relaxed/simple;
+	bh=XN1+YO7A+pjk8feH0l70+LPdjX09SYt+tbI57FLTsgk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U7cO9cahq8F/Ku0WuOZFaHVaTxYMW+ForivzMdBpsP4dmBATtPCPGARnygJ13s06XvQVxyQaWGlDUrFlp4s8nRYbyETZ7EGSMWcfy5MMf6XnHMa6ZzyI5mhYj+UjGBCKourRv+cK68SIo5SDx/deYEMGQD1mfk0OOvp3T1x5RI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nY1MKU7k; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAs1d4Kh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nY1MKU7k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776042407; x=1807578407;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=129nPjVpDoaaHM2ZmHDbl767W7EK5HCaERwpRVcRLss=;
-  b=ZAs1d4Khnr/DlezBrdZia31loZ7B+dUdc9KWVQwee0duPbgwg0WDwsQD
-   234BI+/l8TUS0oDR+OoVFP7tr2sWAYdcWjfaSnViIOhvDPyK6cfIM/raZ
-   BH2eNZQ5WAN7LrjKzcgpc8meNnrNg2xjrTEd9QfEll8bZBIGNNyI38wtg
-   2EcUC726Pilo2HWuBTyX2hYphHZdAQL2x8/oyL8YH1iUSjl8hNepHX52y
-   iKfms5/q8fGr2KpDbDEtCJ8yRDZdy72pFzEjayKdXrHAz1YUy0GvpVaDc
-   TBERqU3uWZv1rZKKqiOhMhRY5zO91H0bzqPhcRE0krRwZjTV5bLLWatzl
-   A==;
-X-CSE-ConnectionGUID: QQl0xPA6TzC6CxTUIbLFcA==
-X-CSE-MsgGUID: +Q8mPbupSv2zdJgOupssCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="76933887"
+  t=1776042849; x=1807578849;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XN1+YO7A+pjk8feH0l70+LPdjX09SYt+tbI57FLTsgk=;
+  b=nY1MKU7kKkimohZ3r1dhdBnAll9TlNyv0KFC7YPmY7ZGOr0BPihMWoi0
+   pqYUdpF5DfpJiw5XVmdYsRYQ2guXLraDy7oub6caSSqu+LGomFS6TUSxp
+   jLBhAp+v4xqdytC1LeGRqQGD1IE91LqCfn4SeMaipYulvVS36xKDbs0W3
+   qTkKX7j2cpprAYS6wVp0TRmBaA+G9oVZGk24iE5Y3yUyGZ9zGP3zn85er
+   S5GHBIWUj3uRcDSWCSutkXB4RTJLVGoAD3pCJOFOb5ek+xRO25lklos2F
+   YjhqKhBWlLBw9ugrfwGHrEezBXwnVZic3+UAHq/sE5sapoP0ykGyLdhmj
+   g==;
+X-CSE-ConnectionGUID: u6OlcDLDQByT0TaWqAzfGw==
+X-CSE-MsgGUID: GgUsQeZJQaOFQqx4z/4OXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="94365103"
 X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="76933887"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 18:06:46 -0700
-X-CSE-ConnectionGUID: bfdOK9msS7i+ksanHXsRGQ==
-X-CSE-MsgGUID: VCDL7359S+ChPkV8396+Hw==
+   d="scan'208";a="94365103"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 18:14:09 -0700
+X-CSE-ConnectionGUID: 5BZat5fBTyiPZXPY3Qc/Kw==
+X-CSE-MsgGUID: cxN0RObfQiWtEndYHBPtGQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="231366315"
+   d="scan'208";a="226942094"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa004.fm.intel.com with ESMTP; 12 Apr 2026 18:06:42 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 12 Apr 2026 18:14:05 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -50,23 +49,18 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] perf/x86/intel: Disable PMI for self-reloaded ACR events
-Date: Mon, 13 Apr 2026 09:01:57 +0800
-Message-Id: <20260413010157.535990-3-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH] perf tests: Add auto counter reload (ACR) sampling test
+Date: Mon, 13 Apr 2026 09:09:20 +0800
+Message-Id: <20260413010920.546501-1-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260413010157.535990-1-dapeng1.mi@linux.intel.com>
-References: <20260413010157.535990-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,91 +69,77 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On platforms with Auto Counter Reload (ACR) support, such as NVL, a
-"NMI received for unknown reason 30" warning is observed when running
-multiple events in a group with ACR enabled:
+Add auto counter reload sampling test to verify that the intended event
+records can be captured and the self-reloaded events won't generate any
+records.
 
-  $ perf record -e '{instructions/period=20000,acr_mask=0x2/u,\
-    cycles/period=40000,acr_mask=0x3/u}' ./test
-
-The warning occurs because the Performance Monitoring Interrupt (PMI)
-is enabled for the self-reloaded event (the cycles event in this case).
-According to the Intel SDM, the overflow bit
-(IA32_PERF_GLOBAL_STATUS.PMCn_OVF) is never set for self-reloaded events.
-Since the bit is not set, the perf NMI handler cannot identify the source
-of the interrupt, leading to the "unknown reason" message.
-
-Furthermore, enabling PMI for self-reloaded events is unnecessary and
-can lead to extraneous records that pollute the user's requested data.
-
-Disable the interrupt bit for all events configured with ACR self-reload.
-
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Cc: stable@vger.kernel.org
-Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 17 +++++++++++++----
- arch/x86/events/perf_event.h | 10 ++++++++++
- 2 files changed, 23 insertions(+), 4 deletions(-)
+ tools/perf/tests/shell/record.sh | 42 ++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 58c236ce4747..c45cd88c3710 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3118,11 +3118,11 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- 	intel_set_masks(event, idx);
- 
- 	/*
--	 * Enable IRQ generation (0x8), if not PEBS,
--	 * and enable ring-3 counting (0x2) and ring-0 counting (0x1)
--	 * if requested:
-+	 * Enable IRQ generation (0x8), if not PEBS and self-reloaded
-+	 * ACR event, and enable ring-3 counting (0x2) and ring-0
-+	 * counting (0x1) if requested:
- 	 */
--	if (!event->attr.precise_ip)
-+	if (!event->attr.precise_ip && !is_acr_self_reload_event(event))
- 		bits |= INTEL_FIXED_0_ENABLE_PMI;
- 	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
- 		bits |= INTEL_FIXED_0_USER;
-@@ -3306,6 +3306,15 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 		intel_set_masks(event, idx);
- 		static_call_cond(intel_pmu_enable_acr_event)(event);
- 		static_call_cond(intel_pmu_enable_event_ext)(event);
-+		/*
-+		 * For self-reloaded ACR event, Don't enable PMI since
-+		 * HW won't set overflow bit in GLOBAL_STATUS. Otherwise,
-+		 * the PMI would be recognized as a suspicious NMI.
-+		 */
-+		if (is_acr_self_reload_event(event))
-+			hwc->config &= ~ARCH_PERFMON_EVENTSEL_INT;
-+		else if (!event->attr.precise_ip)
-+			hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
- 		__x86_pmu_enable_event(hwc, enable_mask);
- 		break;
- 	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fad87d3c8b2c..524668dcf4cc 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -137,6 +137,16 @@ static inline bool is_acr_event_group(struct perf_event *event)
- 	return check_leader_group(event->group_leader, PERF_X86_EVENT_ACR);
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 7cb81cf3444a..1068843282f5 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -402,6 +402,47 @@ test_callgraph() {
+   echo "Callgraph test [Success]"
  }
  
-+static inline bool is_acr_self_reload_event(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (hwc->idx < 0)
-+		return false;
-+
-+	return test_bit(hwc->idx, (unsigned long *)&hwc->config1);
++test_acr_sampling() {
++  events="{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}"
++  pebs_events="{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}"
++  echo "Auto counter reload sampling test"
++  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
++  then
++    echo "Auto counter reload sampling [Skipped not supported]"
++    return
++  fi
++  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
++  then
++    echo "Auto counter reload sampling [Failed missing instructions event]"
++    err=1
++    return
++  fi
++  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
++  then
++    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
++    err=1
++    return
++  fi
++  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
++  then
++    echo "Auto counter reload PEBS sampling [Skipped not supported]"
++    return
++  fi
++  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
++  then
++    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
++    err=1
++    return
++  fi
++  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
++  then
++    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
++    err=1
++    return
++  fi
++  echo "Auto counter reload sampling [Success]"
 +}
 +
- struct amd_nb {
- 	int nb_id;  /* NorthBridge id */
- 	int refcnt; /* reference count */
+ test_ratio_to_prev() {
+   echo "ratio-to-prev test"
+   if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
+@@ -457,6 +498,7 @@ test_leader_sampling
+ test_topdown_leader_sampling
+ test_precise_max
+ test_callgraph
++test_acr_sampling
+ test_ratio_to_prev
+ 
+ # restore the default value
+
+base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
 -- 
 2.34.1
 
