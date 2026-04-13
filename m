@@ -1,129 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A6B3AE6FA
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 09:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E833B3888;
+	Mon, 13 Apr 2026 09:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776073277; cv=none; b=MmnF+pSrbRh0zOLnd0iJDiUpk52O4dmgEODVUhVvfDGCCPGQRSFXwfTkeHHFXlVerRmxvHDMySkwqVt+NLmUvfUGpyoWo7Fq1+tLNe+pbBFNiimHhszZZhlWdBVCA4fbXb2LSN3cWwZjMIsSDrXG1ABHnsgKzjCBRR10jMdm6dI=
+	t=1776073927; cv=none; b=g2pHz1/hTkV5FUj0V7UWm8dNJfZw0+f9zVinkd69dX9vundzsl4fmK3XugUIP47Nh9X7zVV7xt3eb3qWrVheYNRMcKK7y2qw/qgCBM72VnQ8bqvYEMpZsweQAGDUrsP/l7gASvKyZq631I/QXM+a+73YHsJ538WcN+Av/Iuf/0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776073277; c=relaxed/simple;
-	bh=jKgobCvhnClXPs9ic9AUlX/vjH6nWNDxSdU8/oPK5ew=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ffyMva78Mo8R6gNfRY3LrPg1qI2GvDn314K4m2sZP4pdOjVGtOYvhK0wIKN0asfPCDxX2XfKueGooLEoZEaL098dAi+XgnMXXI88mqSO15Vdnr2W4y97caTzJQbWcYsSX5C/z/LeCU/ej3md9n1OQUjqw/HhMR3mhx3JlEQK7y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCZV7Hnk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776073927; c=relaxed/simple;
+	bh=JG9jZqoBzqnJwy6iOUhHxZ1WPwalVtEYtkB525yIRcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLweTn4txay2igey35GQUFbxVDPKW0wM+Bf4nmpjJ2m68Jsz7lppjB9/BxJdx8qWkfsdPf75k2DCGom35D1eBeWXcaDptBIQ/cHNfhp3ctsjm12FCFLMqa7bSQmKDq/7g6cs+y6JfeFFLHyb94iFXXQ8iIoHyqQZJXlbOjV/DP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=hxiZD6cE; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCZV7Hnk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EFFC2BCB5
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 09:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776073277;
-	bh=jKgobCvhnClXPs9ic9AUlX/vjH6nWNDxSdU8/oPK5ew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lCZV7HnkEg9qjrt5yJt3B6UOUUNsvSheWS3hlh67TvGgdHhuIQyvzH4RfyBBEd/DD
-	 t49mzpzz83wOOvLHSaHoa7qvoTNB3FdFlcBtOY34a0pwope9YFuQXyQMy71m3Draba
-	 xuvvRSBw2xtk3ZOAMwhwuO3AEh7XuH9M3kcu1SuhIYvxLOGFvrlMUooeZB8y6cIb8B
-	 pnJIowqu01HBLZWG+0QUfR1b5iMXBZwELHm8BcsXuSmKUVWAZnpvrdlTFBO1aglQnz
-	 kx6E6ty3UBynRFt3GHLAGGpELrJI8uQ3xQyMfrmTefDLlvqGQjmmapcM47CTum6C6W
-	 CvdS2yGByNeyg==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b886fc047d5so665820866b.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 02:41:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/whnYxWeye9yEbcPxYd/KA12KVspyuTQMXBBZ63fbDwAM9F/m8ZlV0TKufZe6LsgjD5Qb0E6b1/8Wl5neY2/IJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCzULQofhvyZEgPSazuNwVhhiKHg/vO7P4zcRoOFM1hhVOtKJ/
-	bd0eqUBxWgv6OJCG7ATc5JJGATTlTXJO7ysbiI4f3vQz+hQV8VWm99eDI9gcBpqcPL9NoYUXqW2
-	RZc8KX2Bp/mS79IV46oalhdGNuRkI4eg=
-X-Received: by 2002:a17:906:6a03:b0:b97:cf49:efb8 with SMTP id
- a640c23a62f3a-b9d72796ab2mr732859066b.49.1776073275535; Mon, 13 Apr 2026
- 02:41:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="hxiZD6cE"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA7241684;
+	Mon, 13 Apr 2026 02:51:58 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE8B03F93E;
+	Mon, 13 Apr 2026 02:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1776073924; bh=JG9jZqoBzqnJwy6iOUhHxZ1WPwalVtEYtkB525yIRcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hxiZD6cEtMd+rnOziYfMFlmMO5AUT5tKQL1rmi+HS7I1jJ4jByZXvnMUBmd0scMWa
+	 SnHuVM15fmW+vdAOUaifwSaKtILDYe1V8CklDjfYK+y8A8ibVmzycZYnYHN4867zr0
+	 MVPahyfUqkNOXgN2GGTomb4R021uLcQ+CUeFGsPQ=
+Date: Mon, 13 Apr 2026 10:52:01 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Jie Gan <jie.gan@oss.qualcomm.com>
+Cc: James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Al Grant <al.grant@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] perf arm_spe: Print remaining IMPDEF event numbers
+Message-ID: <20260413095201.GB356832@e132581.arm.com>
+References: <20260407-james-spe-impdef-decode-v2-0-55d3ef997c48@linaro.org>
+ <20260407-james-spe-impdef-decode-v2-6-55d3ef997c48@linaro.org>
+ <3e7645cf-28cb-4021-89e6-e467e9555ff4@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260412062828.1734637-1-rong.bao@csmantle.top>
- <CAAhV-H4NHEo_JnnDYkWAYdTwiNuyVGNYymyOLL89ZxQVrqRjuA@mail.gmail.com> <0160f8e5-56f5-4024-8e4f-a72c4ab19f97@csmantle.top>
-In-Reply-To: <0160f8e5-56f5-4024-8e4f-a72c4ab19f97@csmantle.top>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 13 Apr 2026 17:41:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ovjm_rHz5B4QKFxfGNVU78qaGCDqRQSgOxFHwWaQLVw@mail.gmail.com>
-X-Gm-Features: AQROBzCCZvPEnqMbAcjzq1O6x3uVH944P_fNpz845jE1Jc5SAkHHOnlJdBgr5fo
-Message-ID: <CAAhV-H4ovjm_rHz5B4QKFxfGNVU78qaGCDqRQSgOxFHwWaQLVw@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Use jump__delete when freeing LoongArch jumps
-To: Rong Bao <rong.bao@csmantle.top>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, stable@vger.kernel.org, 
-	WANG Rui <wangrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e7645cf-28cb-4021-89e6-e467e9555ff4@oss.qualcomm.com>
 
-On Mon, Apr 13, 2026 at 4:49=E2=80=AFPM Rong Bao <rong.bao@csmantle.top> wr=
-ote:
->
-> Hi Huacai,
->
-> On 2026-04-13 16:33, Huacai Chen wrote:
-> > Hi, Rong,
-> >
-> > On Sun, Apr 12, 2026 at 2:28=E2=80=AFPM Rong Bao <rong.bao@csmantle.top=
-> wrote:
-> >> [...]
-> >> This patch adds the missing free() specialization in loongarch_jump_op=
-s,
-> >> which prevents disasm_line__free() from invoking the default cleanup
-> >> function.
-> >>
-> >> Fixes: 4ca0d340ce206 ("perf annotate: Fix instruction association and =
-parsing for LoongArch")
-> > The original code works well, you are really fixing fb7fd2a14a503b9a
-> > ("perf annotate: Move raw_comment and raw_func_start fields out of
-> > 'struct ins_operands'").
->
-> Thanks, I'll fix the reference in v2.
->
-> > And LTS branches (6.12, 6.18) need different fixes because the code
-> > has been restructed.
->
-> I locally have a version based on the linux-6.19.y branch. Would you
-> mind providing me some pointers to the standard approach to submitting
-> this rebased version? I'm new to the process.
-Just send V2 for upstream is OK.
+Hi Jie,
 
-If you want to fix 6.12/6.18/6.19, you can send dedicated patches as
-follows after the upstream version is merged.
-https://lore.kernel.org/loongarch/20260413023627.1363488-1-chenhuacai@loong=
-son.cn/T/#u
+On Sat, Apr 11, 2026 at 09:08:18AM +0800, Jie Gan wrote:
 
+[...]
 
-Huacai
+> > +	/*
+> > +	 * Print remaining IMPDEF bits that weren't printed above as raw
+> > +	 * "IMPDEF:1,2,3,4" etc.
+> > +	 */
+> > +	if (payload) {
+> > +		int i;
+> > +
+> > +		arm_spe_pkt_out_string(&err, &buf, &buf_len, " IMPDEF:");
+> > +		for_each_set_bit(i, &payload, 64) {
+> 
+> for_each_set_bit(i, &payload, 64) passes &payload where payload is u64. The
+> macro expands to find_next_bit(const unsigned long *addr, ...). On a 32-bit
+> host unsigned long is 32 bits wide, so only the low 32 bits of payload would
+> be scanned; bits 32–63 would be silently ignored.
 
-> >> [...]
-> >> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> >> index a6e478caf61a9..6b7fef3bbc42f 100644
-> >> --- a/tools/perf/util/disasm.h
-> >> +++ b/tools/perf/util/disasm.h
-> >> @@ -158,6 +158,7 @@ int call__scnprintf(const struct ins *ins, char *b=
-f, size_t size,
-> >>                      struct ins_operands *ops, int max_ins_name);
-> >>   int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
-> >>                      struct ins_operands *ops, int max_ins_name);
-> >> +void jump__delete(struct ins_operands *ops);
-> > Don't put it among ***_scnprintf(), put it before ins__raw_scnprintf()
-> > or after mov__scnprintf(), and add a blank line.
->
-> Sure. This will be fixed in v2.
->
-> >
-> > Huacai
-> >
-> >> [...]
->
-> --
-> Regards,
-> Rong Bao
->
+I think this is incorrect.
+
+Even though unsigned long / long is 32 bits on 32-bit CPU, this should
+be handled by the BITS_PER_LONG macro.  The FIND_NEXT_BIT() macro can
+fetch consecutive long values when the size > BITS_PER_LONG.
+
+> While perf is almost
+> always built on a 64-bit host today, the tools/ tree is explicitly portable
+> and the compiler will emit a -Wpointer-arith / -Wincompatible-pointer-types
+> warning on a 32-bit build.
+
+I agree we should fix building issue on 32-bit target.
+
+Thanks,
+Leo
