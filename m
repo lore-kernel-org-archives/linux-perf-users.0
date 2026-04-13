@@ -1,111 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ECC1A681D
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEDD495E5
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:45:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776044158; cv=none; b=pPNWK7wtEc7XeUk4KSZ8sCY972LYd6hX7ynM7sZDVB3PJ+CWqfMx5jXoLnuLuCx6Uo+JwiqNvG2gF6yA2nniFE5u3eMYRzQF4MDn7W9tfSNkcDeJueilBdGujPCbBHyiige/QE3G1kdQmn9Sgs7TD3gVJyzk0sN3uiunCLmDzCg=
+	t=1776044729; cv=none; b=V9wna3/SRblOzjJMOKkpyJLmu2hRzRu1MvUbEQwMK6VQL7HD9N8Z1XbU0ZX7tDLQMlulyy0+FbX5gkPjzfZdRXBUavC/gX3pcSBvHgIOIUh53xWs2I+nRX4uiJoVzlYaOPfVlIIF4e1j/MhWJVOmZf3zmzJ/31eRgCLpiow6CdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776044158; c=relaxed/simple;
-	bh=dS//zMF6LNVXPF6PLEN54n+dL3H6sgERyC2PYzSb/6o=;
+	s=arc-20240116; t=1776044729; c=relaxed/simple;
+	bh=U78Aaqj3uBe6DdKWhXx1RZ0yj0d6rQAuCOch+rXfDR8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NA0GK2AjdmW0APB1lCqpfbnTbCKw5GaoRRF/CLfvjjTQqoqLvJZDrG1Nvg99Fx3zas+6kOw14ZC+Gc4hLc//NNoLI6RQd6G4Zt2sQtNCTPxvBv5Va20039rLX2znnMQPYs5gq3AhbaSkxJ/7lpwgfQAuxgjKBogLR+Ox50iBvx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNMiHZ6l; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=KwEyOZ3NVQdhli0/9NdVQtNzLISHMVvs5cym2c6wmwlRuYagEyhg752S59JCiGFnPz4hnERQEqRsklI0b8WTc1dYfIzIrDmeVZ+aSnl8MnM3wJWcbuzuDUb9wUbBbxqsmAlFGgWkP4+LwOc+uMIV45d/t/OqizciYQFgd+BwGuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GElfT019; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNMiHZ6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EFE3C19424;
-	Mon, 13 Apr 2026 01:35:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GElfT019"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E60C19424;
+	Mon, 13 Apr 2026 01:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776044158;
-	bh=dS//zMF6LNVXPF6PLEN54n+dL3H6sgERyC2PYzSb/6o=;
+	s=k20201202; t=1776044729;
+	bh=U78Aaqj3uBe6DdKWhXx1RZ0yj0d6rQAuCOch+rXfDR8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=JNMiHZ6l5+3hWVSZ7d6gZGJBpnOBOwdKiSD8JODxE58oZSE80DZpkQ0m3bdDCLWzu
-	 giyVSklYEyN7GWiox6UY8FgRyTCBgQZgpoAvzhlP/e2zY2wUOJ7J5MU8tkL+J3gdPX
-	 84+e/KAQke60cfpCJ5yzC4sgb6TjdCpGNiQOf95/xmS0jUHkI0LW18ucUz/3V7Vh8N
-	 y7wNpZW/zwDNhnGEAXARBkJecO6KayJKPJFsZSOTTkcBGmbwJtl7ecR1r2V7k8r6IE
-	 2h3uD6fCdAIc3xDcm1acYGLNa41DNr58kxTqkgWjjPQgvEoAVVzZ9dsmlKaTlSABVY
-	 NTt1HJcseO1EA==
+	b=GElfT019lFjvik153Hym/7wnHSoQdy6/Uvz3EstFgGWZwVbH809ak9m3n2imVbeRI
+	 twbgr7ooqWOgsBWo+viKv7itGm2RO/V1P9EHA/RLsWCnMNHPd/RoFizJ8rev8HMCZa
+	 OyQ5bqKrPSPJ1fAnqPYz1KE4wWeZCeHb93ICn3E6waVUizDceusMdrFLfwId7fte5C
+	 +TF0jzKJX4HYSmOzbX2Oy/MY5NzeHq6uCcAzpA2Za62J2SsM4QXbk1ywauMhbikwoD
+	 MziPHdIhYm5i9NaXf7DpkXBK3zcP/0YTce/ZhJxsMjjN/i0ndUYa0wqnBZD90VMwMP
+	 GXvga9Wc6gnZQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/2] perf/x86/intel: Clear stale ACR mask before
- updating new mask
+Subject: Re: [PATCH v11 19/33] perf evlist: Try to avoid computing evsel
+ from sample
 Reply-To: sashiko@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413010157.535990-2-dapeng1.mi@linux.intel.com>
-References: <20260413010157.535990-2-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260413012227.1089445-20-irogers@google.com>
+References: <20260413012227.1089445-20-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 01:35:57 +0000
-Message-Id: <20260413013558.0EFE3C19424@smtp.kernel.org>
+Date: Mon, 13 Apr 2026 01:45:28 +0000
+Message-Id: <20260413014529.27E60C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Incomplete Fix: Early return bypasses the newly added stale mask c=
-leanup for subsequent events.
-- [High] Missing bounds check on user-provided mask allows cross-event PMU =
-interference (cross-wiring).
+Sashiko AI review found 1 potential issue(s):
+- [Low] The fallback check `if (!evsel) evsel =3D evlist__id2evsel(..., sam=
+ple.id);` introduced by this patch is mathematically unreachable dead code.
 --
 
-commit f516548e46c9feac44792cd958b5c0a840d60d43
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+commit 70039c4c6052c77672e3d3e7b9f3b386bae9924f
+Author: Ian Rogers <irogers@google.com>
 
-perf/x86/intel: Clear stale ACR mask before updating new mask
+perf evlist: Try to avoid computing evsel from sample
 
-This commit clears the ACR mask before applying a new one to prevent
-stale bits from persisting during event rescheduling. It ensures the
-hardware state does not get polluted by previous configurations.
+This commit modifies the event processing logic to use the evsel already
+present in the sample, falling back to looking it up by id if it is not
+present.
 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 4768236c054bb..58c236ce47474 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3344,6 +3344,9 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_=
-events *cpuc)
->  			event =3D cpuc->event_list[j];
->  			if (event->group_leader !=3D leader->group_leader)
->  				break;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+[ ... ]
+> @@ -1164,7 +1164,9 @@ static int deliver_event(struct ordered_events *qe,
+>  		goto next_event;
+>  	}
+> =20
+> -	evsel =3D evlist__id2evsel(session->evlist, sample.id);
+> +	evsel =3D sample.evsel;
+> +	if (!evsel)
+> +		evsel =3D evlist__id2evsel(session->evlist, sample.id);
+>  	assert(evsel !=3D NULL);
+
+Is the fallback check for !evsel ever reachable in this path, or could this
+be a dead code regression?
+
+Looking at the code just prior to this in deliver_event(),
+evlist__parse_sample() is executed and any parsing failure results in
+jumping to next_event.
+
+If evlist__parse_sample() succeeds, it appears to unconditionally
+populate sample.evsel. Does evlist__parse_sample() have a success path
+that leaves sample.evsel unpopulated?
+
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+[ ... ]
+> @@ -142,7 +142,9 @@ static int test__basic_mmap(struct test_suite *test _=
+_maybe_unused, int subtest
+>  		}
+> =20
+>  		err =3D -1;
+> -		evsel =3D evlist__id2evsel(evlist, sample.id);
+> +		evsel =3D sample.evsel;
+> +		if (!evsel)
+> +			evsel =3D evlist__id2evsel(evlist, sample.id);
+
+A similar pattern occurs here. Since evlist__parse_sample() is called
+just before this and errors branch to out_delete_evlist, would
+sample.evsel always be populated by the time we reach this check?
+
+> diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch=
+-tracking.c
+> --- a/tools/perf/tests/switch-tracking.c
+> +++ b/tools/perf/tests/switch-tracking.c
+[ ... ]
+> @@ -138,7 +138,10 @@ static int process_sample_event(struct evlist *evlis=
+t,
+>  		goto out;
+>  	}
+> =20
+> -	evsel =3D evlist__id2evsel(evlist, sample.id);
+> +	evsel =3D sample.evsel;
+> +	if (!evsel)
+> +		evsel =3D evlist__id2evsel(evlist, sample.id);
 > +
-> +			/* Clear stale ACR mask first. */
-> +			event->hw.config1 =3D 0;
->  			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_=
-IDX_MAX) {
->  				if (i + idx >=3D cpuc->n_events ||
->  				    !is_acr_event_group(cpuc->event_list[i + idx]))
 
-Could this validation check allow unprivileged users to cross-wire the PMU?
-
-Since is_acr_event_group() only verifies that the target event belongs to a=
-ny
-ACR group, rather than the same group_leader, does this allow a user-provid=
-ed
-out-of-bounds bit in config2 to point to an independent, system-wide ACR ev=
-ent
-running on the same CPU?
-
-If so, it seems the hardware counter index of an unrelated privileged event
-could be blindly copied into the user's hw.config1.
-
->  					return;
-
-Does this early return bypass the newly added stale mask cleanup for subseq=
-uent
-events?
-
-Because attr.config2 is user-controlled, a user could supply a malformed ma=
-sk
-with an out-of-bounds bit to intentionally trigger this early return.
-
-Since it returns from intel_pmu_acr_late_setup() completely, wouldn't this =
-skip
-the event->hw.config1 =3D 0 cleanup for all subsequent ACR events scheduled=
- on the
-same CPU, leaving them with a polluted hardware state?
+This section also shares the same behavior following
+evlist__parse_sample().
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413010157.5359=
-90-1-dapeng1.mi@linux.intel.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
+445-1-irogers@google.com?part=3D19
