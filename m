@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C35622652D
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB91279334
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 01:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776043406; cv=none; b=eDd3iaHS+gkFh633YtbHgGGtn8/75eaee6Wmh9Pu8zBKN8B3s6Dl/gMRuJ0LhWP3JfOvDzGTA5iK8Rv721uMXTj8pehT8DcwLmz3B6Xf5m8b5OZ9h8Qev5G9rxdVUav25JuXOGrT3g2ZhiYgQCU1zJDHobetuS8GRYUc9ZWvizo=
+	t=1776043408; cv=none; b=gwyTYwREIDVtU0FGyPMYiKp/FQB2rp0rv24hPCqKexCmZuSWsYQYPv43IdhRxfnbIndxm3GNRChlPCmT3A7IBpposLR9GGdZUfnY37z6S9MaGakYtBIr34sgAuXtlW0KyWyQN0KmLCa5651dz7r5Ctcq7KkS7tZbdZuPLArlqjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776043406; c=relaxed/simple;
-	bh=+R1TjR7D/n+SVy+MvcOVgKHmNVERa5SqQsXwquU4Gqc=;
+	s=arc-20240116; t=1776043408; c=relaxed/simple;
+	bh=har6PWz44n64Z/nOCmGTv6uCWfmF5LTdLFTZJWF2aH0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aIS5IIfOxAk4yO1ypyL1A08nWDNorZJoaVloky588Lce3Pe2stVAf/l+HMLVjgMFSAnrVPMcJyduKz7niTGJ8YRdmlFoERG9GOuv7s1BBwOO05M67ENDUYs4v3HRR6TZ1tZ4oOZoAffZ2OdbJKMFGJ5snAKuevWO84kNpDt0cto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aruvWU3f; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=EopJ+zOpsmtwfSkEW7mHnorG72o7eBT388aHq4PCZG7pjm2Uj82eQhFoW5BJD79y3ewudGaVpb84E+EgRvInlfhyfgusmhMaTpX9bI0NbIzqkXTyZgvcyZJrSacyPGJPE6i4C1dy3ErnyIOT968YaxL5GDqCjz/6pZTnP6OuW0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3kMXnze; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aruvWU3f"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c28353912so6250412c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 18:23:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3kMXnze"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35da4795b3cso6994668a91.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 18:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776043405; x=1776648205; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776043407; x=1776648207; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6cwCi85nL+UMzH5dHBjsjgh7zFGt951FXHMXIOHqdc=;
-        b=aruvWU3f5RJfrQ7Fpsp5kNoVwvW2SkPtuvqprWP+BKYdh0epXLLeRtzNIy0YyT6t9h
-         HRyxROjkJ9KwLuowKQRkRSpS6lYnkz/5idJw/rLNQ22UXJXdKKROWtqEVfc5cTR8Q7wW
-         AyyPOXtuCB50bXQ0XNiSwumWF4tLrIJ/CmUs5TSRx7p0krl10HUve+vCZoj6CvWvhwoL
-         1fPsfWtbGk/29mmBaIvsN8JrqumAGyAIJrsORCpiYEMpFATXZsgqgBLl1cNxv55qZfpe
-         z4p2AeDXt4f6Oj92OwUhs+s8ROgqt5cqrWk2yK6BQphlxocN9sRpyNGmGsJQ4K2y9SyV
-         NqQg==
+        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
+        b=l3kMXnze0Q+fq2bbT6yf4G6edCeRpYoE8AzKTvNKozBoWC8HolLXVszwaB2+9OQNct
+         7AniNcNfgDnuY+FUnzwwF4AqkncsVhcPupVpaLL0HyaWyc13hATcgyjy8ebKLudI2BLE
+         SEY8e3nr8+kwjox3avMndIIp+VeoVSu26ccI56fCCWKkzX7snMz08KavVQi0ggiflYTo
+         04TyHDFy18SKCvvnc9JmPVypQqaLV4C6bntn6vpPQZbly8FVW0tkJLVtclQPyc8YUJ9y
+         YijK1YfcHsDMSO+a3wMcGGVQS74gap4B83Ei0QQG5T5lPUc4CJ7oE6X27iVG3/OB2Hp4
+         BMIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776043405; x=1776648205;
+        d=1e100.net; s=20251104; t=1776043407; x=1776648207;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6cwCi85nL+UMzH5dHBjsjgh7zFGt951FXHMXIOHqdc=;
-        b=RavG3RtTEyNIUfMvaehwcNRCXFi6aA0G9uDQ7WoaaXVJrvjdwoJtj+5HhBZulF2zRr
-         iRGwDYNzaHvn/f0xVOpAXYAwJnawmoc1mMXSkxMIoS6Nw3D4mJFe6dL5qcXjNpoykR0u
-         QQPX698Y+2DSsD4Kj8m/AWwGp1+A+hFzx4iz2qG0yCqds6fAn3TH1zgPxOg5xYFndm5/
-         vQolLow+kr3WVrSmA5R4uqgx22Rdw3YKSJIebZd8USBYeQMlAgiMln12BWEcwt9WY6Cf
-         v1TbiOCDvLl69804M/5Mlw2qvsBlhdpEFM8cmbEo5ddRaPsEso3cTj4u5CTG6fMGGror
-         8rrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8G/kpZQwfvhyCgc2KrpWaiY8tAFudpggTjA0SvJY+JhaDS/6qBO6loBfyXqvyW8UxVTL/SN8b9lHKcyGcG+Vs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC+tQ80WUQrSc5Ovdg+1Nx9EUQL3TPKQNLI7TAslkraYbFGq/8
-	LKBNNVIi9wvAkCOTs/NG6xCULmc85vUDlzA2JiQHT/ALAZFvON1Vad1qzi3JgLgsQ19ZsSrkp61
-	yF5kr5aMB2g==
-X-Received: from dlbur20.prod.google.com ([2002:a05:7022:ea54:b0:12b:fc23:6fcb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:411:b0:128:c9fa:4c32
- with SMTP id a92af1059eb24-12c34eec551mr6848923c88.28.1776043404371; Sun, 12
- Apr 2026 18:23:24 -0700 (PDT)
-Date: Sun, 12 Apr 2026 18:22:18 -0700
+        bh=Ua2zhmG8fqK0z5FCerxKbCIotrtAFCVPNoRET7C/8tc=;
+        b=BMmvvOuCT+VwucgwHjtFVgeEqVfr43+94rqSdK0hFFrks1T1tnTKtxJ14qxKTs6e1d
+         cgoZzdAsNFmuU6PgcLajnpHE+XzRyKTpnygviULb5TuRj+w41/mHNfk6IigXIK2v+UAq
+         eP5QpNo81Ksije88RGQY6ZweBDb6QdBT6mqU6Rcvp00DqSpVuhfKtcK8CG4k2kQpVd4T
+         B33yfndYvQxCAdyGxkXZhTIr8rrPV0fzl9UmdR9k/Oy4ZI7a5+wdcZBRD/r5KI42afjV
+         +eYEbULsYuBoebB5SU9HjZnY+qsDUZXvnHs9NLp8xE590zrPkErGEpcFYTntR+qbQoMW
+         0dRA==
+X-Forwarded-Encrypted: i=1; AFNElJ/35WhZokqoriRCVJYflq/4B+27la1k1AnX47GaofCgvZenjIFPulmydnUaV2WruzrRAMzTCGTkYHuRi3eMNeBe@vger.kernel.org
+X-Gm-Message-State: AOJu0YybHEz0kSxp1RZAV4abW3apBAVqs8yrtCQdOYhKktfRJgmLunK/
+	0MqbZDJgRkYa+cJJwMpwJNTRP2QvQ2vFG8w1M0Q+byOIRw9a18+xfu0Bdt9tcbXVuRz4n8/zCeI
+	TZ1QoSbeW3g==
+X-Received: from pjug23.prod.google.com ([2002:a17:90a:ce97:b0:35c:1a37:ace])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:118f:b0:35e:5aa5:ae38
+ with SMTP id 98e67ed59e1d1-35e5aa5b2ecmr2427534a91.9.1776043406502; Sun, 12
+ Apr 2026 18:23:26 -0700 (PDT)
+Date: Sun, 12 Apr 2026 18:22:19 -0700
 In-Reply-To: <20260413012227.1089445-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260412020833.641177-1-irogers@google.com> <20260413012227.1089445-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413012227.1089445-25-irogers@google.com>
-Subject: [PATCH v11 24/33] perf lock: Avoid segv if event is missing a callchain
+Message-ID: <20260413012227.1089445-26-irogers@google.com>
+Subject: [PATCH v11 25/33] perf timechart: Fix memory leaks
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,48 +76,86 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Sashiko recognized a potential segv if a sample is missing a
-callchain. Return NULL for this case just as a memory allocation
-failure does. In the verbose pr_debug output describe the error and
-rather than fail the entire file just skip the event (return 0 rather
-than -ENOMEM).
+Fix missing free from cat_backtrace, which requires copies of the
+backtrace being made in functions that save it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/builtin-timechart.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 89a40d385b27..064b3aa4bad7 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -938,9 +938,16 @@ static u64 *get_callstack(struct perf_sample *sample, int max_stack)
- 	u64 i;
- 	int c;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 1d24d8738519..64f69bd67c6b 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -299,7 +299,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
+ 	sample->type = type;
+ 	sample->next = c->samples;
+ 	sample->cpu = cpu;
+-	sample->backtrace = backtrace;
++	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
+ 	c->samples = sample;
  
-+	if (!sample->callchain) {
-+		pr_debug("Sample unexpectedly missing callchain\n");
-+		return NULL;
-+	}
-+
- 	callstack = calloc(max_stack, sizeof(*callstack));
--	if (callstack == NULL)
-+	if (callstack == NULL) {
-+		pr_debug("Failed to allocate callstack\n");
- 		return NULL;
-+	}
+ 	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
+@@ -433,7 +433,7 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
  
- 	for (i = 0, c = 0; i < sample->callchain->nr && c < max_stack; i++) {
- 		u64 ip = sample->callchain->ips[i];
-@@ -1059,7 +1066,7 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
- 	if (needs_callstack()) {
- 		u64 *callstack = get_callstack(sample, max_stack_depth);
- 		if (callstack == NULL)
--			return -ENOMEM;
-+			return 0;
+ 	we->time = timestamp;
+ 	we->waker = waker;
+-	we->backtrace = backtrace;
++	we->backtrace = backtrace ? strdup(backtrace) : NULL;
  
- 		if (!match_callstack_filter(machine, callstack, max_stack_depth)) {
- 			free(callstack);
+ 	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
+ 		we->waker = -1;
+@@ -489,9 +489,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
+ 	}
+ }
+ 
+-static const char *cat_backtrace(union perf_event *event,
+-				 struct perf_sample *sample,
+-				 struct machine *machine)
++static char *cat_backtrace(union perf_event *event,
++			   struct perf_sample *sample,
++			   struct machine *machine)
+ {
+ 	struct addr_location al;
+ 	unsigned int i;
+@@ -544,8 +544,10 @@ static const char *cat_backtrace(union perf_event *event,
+ 				 * It seems the callchain is corrupted.
+ 				 * Discard all.
+ 				 */
+-				zfree(&p);
+-				goto exit;
++				addr_location__exit(&al);
++				fclose(f);
++				free(p);
++				return NULL;
+ 			}
+ 			continue;
+ 		}
+@@ -577,6 +579,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ {
+ 	struct timechart *tchart = container_of(tool, struct timechart, tool);
+ 	struct evsel *evsel = sample->evsel;
++	int ret = 0;
+ 
+ 	if (evsel->core.attr.sample_type & PERF_SAMPLE_TIME) {
+ 		if (!tchart->first_time || tchart->first_time > sample->time)
+@@ -587,11 +590,13 @@ static int process_sample_event(const struct perf_tool *tool,
+ 
+ 	if (evsel->handler != NULL) {
+ 		tracepoint_handler f = evsel->handler;
++		char *backtrace = cat_backtrace(event, sample, machine);
+ 
+-		return f(tchart, sample, cat_backtrace(event, sample, machine));
++		ret = f(tchart, sample, backtrace);
++		free(backtrace);
+ 	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int
 -- 
 2.53.0.1213.gd9a14994de-goog
 
