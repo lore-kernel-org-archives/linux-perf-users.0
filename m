@@ -1,65 +1,66 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2911FD4
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 02:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DC41A682A
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 02:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776048493; cv=none; b=r+Cupx/PNIckaQJApm2m8X+jihWBbCR/9Tgh3ZXXVEaX55dwMj0hWf3mmGrD287uUine5g3MWjeLMQaTaU3Ef7TpI1Za6TjU6Pzfh0qxxsmww5d2G0hc40Ag2hqXJkhnOdzl/PZ6Jd/lwXNOpSmBzl2KnkDrOQh4H9+BpeVIkmw=
+	t=1776048493; cv=none; b=tTRKgxulgm+PB/zEXqHiwhwPHvmiVPW6ZNqCMW3zV83U0Ghwk27YsdqGiYPKBSqArtzIUnChNECzE/d2sJ7Ls925JjsL0+3YgzLGUZx0lOJMptJ3UP63IRFd9PEqEFX3vCzTZX3vd+C3NoeuGwhr5Bpf5KDVEFMMNKr0rKAqxUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776048493; c=relaxed/simple;
-	bh=2E+9zj8/SkKfdVsNcdQAzHiLGCeLvBwcwaFg+Ma2uRw=;
+	bh=NGOvPSULtOiwO4WsoGhlqi9SC+bhgYprm97bl/VJw50=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SAPLfzxTXeWmzpfHZCofK9W5yeZIDpA8xupPNXkY3k8VG2f6o6GwrXO9XwcECrcmUPvFOtLfW34Y/OHK9aMZQgZ0GASRAloYTXgHhTo+MWSnDm88qC1vOG6PXeLjfIzOkYvCXXfdRZx0vzsrjc24fjDALKHT9r0mx2psWXPCqXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VQ1+/nt1; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=TM85XJ7UTRvibtwAhg3qSVkAJYrQdzciiWw1UNgvgrr73uWEFC9oQVXHPEt0ZCwyEGAbMOmpL22Kqc8QEUUo2ukTuKMuqxg3xN5deg9bmVI0kc+MTgW71IljuBwMUH6f7lNfbjlz7WT1+dOst99Olj/A+u1qG1M+R9AOzxemoXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E8wviETs; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQ1+/nt1"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2d443c3b094so8671896eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 19:48:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8wviETs"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so5429220eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Apr 2026 19:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776048490; x=1776653290; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776048491; x=1776653291; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1hYaaoL2TK3xqrMtTO2We7nUeIa8+5wMOYf3VUga0c=;
-        b=VQ1+/nt1A+XW245N43pxv/epCaWPhSRSmrof9Wrzqx4Q2TUQT5VLOneD/+ALLFxaip
-         Dt4UQ4yh9BQoxG/4Ofptkid8GYbNxWLYiHiL8Ol+wU2W7lCWuj8JJG/P/AtAJVvBgx6R
-         egV3GKyedEDJKuhOMkf2RO7yfDzOdQ2cvoQppF9PR9nD63cx5wvbFPogj2FLnotx7zul
-         doy7+3g8TftXnudDbm2pWsDIfDKZBzUSpvrraGCrs0LqbCS9psOE1een9icqlp5oz30T
-         O+CU70ClS3hehJlYw6ksoykeRO+OtI7kvmlReXrixQwgiUCdFhHdG/aXZQ74o7Ry7NB5
-         jEAg==
+        bh=YtjaYYRohAeuFObEpX2Nk4rOoZdzjEusCDWLEJOIbmo=;
+        b=E8wviETsriZdiJAORyTF5S9mpNVrzpI+gyKEyDvlwnb5xlkCHSHBGkN7FigVsuc1WH
+         +VXyMoso6VM0F/34AL4qBFChF0mN09wzdOWJRbhqYO1l36YirZoxsCtR6gb5YhFybcsj
+         7CK2Bs98mHlRZH61LtRBj4jSnr2LmDfcwdw45gkacDaqeZBcZvSK0HK49KLD1nzQIs7+
+         NT0KDGIVfQN8qZcSmgS52IP20Qh1CNEXR//8OOGlso4OefrElLrpxL1siuG54XbDTcxs
+         jmuXm4laVLQF1ncPbZdsQ5jns+pWLJlvTbrFCWoJjc3POYvqyBjWt0xPzw8CFL3BIXQH
+         thyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776048490; x=1776653290;
+        d=1e100.net; s=20251104; t=1776048491; x=1776653291;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1hYaaoL2TK3xqrMtTO2We7nUeIa8+5wMOYf3VUga0c=;
-        b=F44rNdeF/bhvOQu1ETjmXiafibYh/tpYPN1L35RCSGYXE5DDhMSHvCncMQEJk3w78a
-         L04Hvgxe2LrCv4SBILBtldyphjxpskPh3ubPJ0rUo0HMzz87FEemlX2XISsiDxae1wea
-         P59LY4ODQ0mKGbqN5hOzogPqPEtdwYgI8A68XHd58GTSflk8H6RDCbAetN7tnPnVGzxL
-         xRK4cApbPcQ1lAlKgDKdQF/Sk1EVystemzuo4YycvpWKPfDUswYiZteo9k0JJCcdeJnm
-         cIA+shyirtqqDCW6mF6s+J5YfQi+S8IbrVCSsIanhEWXIHrk96GczSzF4XWrZzwBxVq1
-         7BFQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9DyNX92DpRtpL2x0EXomUKDzIhCp6plDKJAqnxKUdnOVIGyizN/M5IMjqrTEIUn5C3qSBOmLFQ2b7fvDMG8f1d@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhv/725NILA0ftBburn76zujCAlcYRm3dowsW2/chb3PfuGFHw
-	xvp0M66R7stY7uKPldXsNcoFKNBpM7rS/a9T0wyCxNXPithdZD+UgziwdvHLh2HPLngwk61umNT
-	+7Be94m3SHQ==
-X-Received: from dyt12.prod.google.com ([2002:a05:693c:808c:b0:2d7:37d5:85cf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:5787:b0:2da:10f0:a8df
- with SMTP id 5a478bee46e88-2da10f0b2e4mr76194eec.12.1776048489353; Sun, 12
- Apr 2026 19:48:09 -0700 (PDT)
-Date: Sun, 12 Apr 2026 19:47:57 -0700
-In-Reply-To: <advv6twWCEVBo_Hc@x1>
+        bh=YtjaYYRohAeuFObEpX2Nk4rOoZdzjEusCDWLEJOIbmo=;
+        b=iYrbKWo2mvlx8FAqNMeY81NyZ9FvX9TD+5BtnRaEU9JcxPrqBDaV6i8zYIbjqU+7qd
+         WRsxh2ZVeBiq35NHKcY4uiu9q6WfAaQcyXgLaDJZfujIB9jYcq4v/WJG6F64jvnEmrbo
+         2jBw1FEd/Nj9JxBX+qbUEx3zXwQFEJfhx92iKs9FoQVNobCoB0zUIJ/rI9x0ytOOvP0g
+         l5FG7ObJW/FJKnZWbC89eQV6HDSFPiHoOcxm1YJ2aOTYgnsLpYI15iwIQHDwMy8JNYcH
+         HnAkueF609Qq25nTFpAl6imMlU6UJhf0rctF0vPmR5FBBZmvR/jQZG4Y0m90hDYV2TV1
+         1Oqw==
+X-Forwarded-Encrypted: i=1; AFNElJ8goZ4xC7xeaXDZ6YYzuk9ifNMte51iZyQNwwVMcvslCSIQm57kldRFmh1+7XBz1uM39UrdYtT2bseM42rKg1NN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjVN+QsmWX+8DQL31tNjakL7pxOsL4DVrKFBdOxT8tHfz0GvMy
+	5IIHhb/R9BZZmyLDk7vtFBj53kbFE8aPJPI7mPNt0vPXiqd5e822u9ZdaWYoHk+W/LsdES9KbKL
+	t68y5sdmWiQ==
+X-Received: from dybma11.prod.google.com ([2002:a05:7301:168b:b0:2cc:9049:2bf6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:dc06:b0:2be:7fc2:fc38
+ with SMTP id 5a478bee46e88-2d5870ad65fmr6464052eec.5.1776048491167; Sun, 12
+ Apr 2026 19:48:11 -0700 (PDT)
+Date: Sun, 12 Apr 2026 19:47:58 -0700
+In-Reply-To: <20260413024805.1316480-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <advv6twWCEVBo_Hc@x1>
+References: <advv6twWCEVBo_Hc@x1> <20260413024805.1316480-1-irogers@google.com>
 X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260413024805.1316480-1-irogers@google.com>
-Subject: [PATCH v4 0/8] perf libunwind multiple remote support
+Message-ID: <20260413024805.1316480-2-irogers@google.com>
+Subject: [PATCH v4 1/8] perf unwind: Refactor get_entries to allow dynamic
+ libdw/libunwind selection
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org
 Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
@@ -75,133 +76,377 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	tglozar@redhat.com, tmricht@linux.ibm.com, will@kernel.org, yuzhuo@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix the libunwind build for when libdw and libunwind are feature
-detected, currently failing with a duplicate symbol.
+Currently, both libdw and libunwind define 'unwind__get_entries'. This
+causes a duplicate symbol build failure when both are compiled into
+perf.
 
-Refactor the libunwind support so that whenever a remote target is
-available, perf functions using the ELF machine can use that remote
-target regardless of what the host/local machine is. Migrate existing
-libunwind supported architectures like powerpc, arm64 and loongarch so
-that they can work in a cross-architecture way. Add support for
-RISC-V. Make the code more regular in function names, etc. and avoid
-including a C-file. This increases the lines of code. It is similar in
-style to the unwind-libdw implementation. It is hoped that the more
-uniform nature of the code with help with refactoring the perf
-registers for SIMD/APX support.
+This commit refactors the DWARF unwind post-processing to be
+configurable at runtime via the .perfconfig file option
+'unwind.style', or using the argument '--unwind-style' in the commands
+'perf report', 'perf script' and 'perf inject', in a similar manner to
+the addr2line or the disassembler style.
 
-Aside from local host testing these patches are under tested, in part
-as I'm failing to see how to build libunwind with support for multiple
-remote targets. Please could I get help in testing.
+The file 'tools/perf/util/unwind.c' adds the top-level dispatch
+function 'unwind__get_entries'. The backend implementations are
+renamed to 'libdw__get_entries' and 'libunwind__get_entries'. Both are
+attempted as fallbacks if not configured, or if the primary backend
+fails.
 
-v4: Rebase, in particular the zalloc->calloc change conflicted.
-
-v3: Minor whitespace clean up and warn when a dynamic choice of libdw
-    or libunwind is selected for unwinding and support is missing (Arnaldo).
-https://lore.kernel.org/lkml/20260404054032.1538095-1-irogers@google.com/
-
-v2: Move two fixes patches to position 1 and 2 in the series. Fix
-    struct naming inconsistency, Andrew Jones
-    <andrew.jones@oss.qualcomm.com>. Fix other inconsistencies and
-    potential non-x86 build issues.
-https://lore.kernel.org/lkml/20260305221927.3237145-1-irogers@google.com/
-
-v1: https://lore.kernel.org/lkml/20260224142938.26088-1-irogers@google.com/
-
-Ian Rogers (8):
-  perf unwind: Refactor get_entries to allow dynamic libdw/libunwind
-    selection
-  perf build loongarch: Remove reference to missing file
-  tools build: Deduplicate test-libunwind for different architectures
-  perf build: Be more programmatic when setting up libunwind variables
-  perf unwind-libunwind: Make libunwind register reading cross platform
-  perf unwind-libunwind: Move flush/finish access out of local
-  perf unwind-libunwind: Remove libunwind-local
-  perf unwind-libunwind: Add RISC-V libunwind support
-
- tools/build/feature/Makefile                  |  38 +-
- tools/build/feature/test-libunwind-aarch64.c  |  27 -
- tools/build/feature/test-libunwind-arm.c      |  28 -
- .../test-libunwind-debug-frame-aarch64.c      |  17 -
- .../feature/test-libunwind-debug-frame-arm.c  |  17 -
- .../feature/test-libunwind-debug-frame.c      |   1 -
- tools/build/feature/test-libunwind-x86.c      |  28 -
- tools/build/feature/test-libunwind-x86_64.c   |  28 -
- tools/build/feature/test-libunwind.c          |   1 -
- tools/perf/Makefile.config                    | 215 ++---
- tools/perf/arch/arm/util/Build                |   2 -
- tools/perf/arch/arm/util/unwind-libunwind.c   |  50 --
- tools/perf/arch/arm64/util/Build              |   1 -
- tools/perf/arch/arm64/util/unwind-libunwind.c |  17 -
- tools/perf/arch/loongarch/util/Build          |   3 -
- .../arch/loongarch/util/unwind-libunwind.c    |  82 --
- tools/perf/arch/mips/Build                    |   1 -
- tools/perf/arch/mips/util/Build               |   1 -
- tools/perf/arch/mips/util/unwind-libunwind.c  |  22 -
- tools/perf/arch/powerpc/util/Build            |   1 -
- .../perf/arch/powerpc/util/unwind-libunwind.c |  92 --
- tools/perf/arch/x86/util/Build                |   3 -
- tools/perf/arch/x86/util/unwind-libunwind.c   | 115 ---
- tools/perf/builtin-inject.c                   |   4 +
- tools/perf/builtin-report.c                   |   4 +
- tools/perf/builtin-script.c                   |   4 +
- tools/perf/util/Build                         |   5 +-
- tools/perf/util/libunwind-arch/Build          |  11 +
- .../perf/util/libunwind-arch/libunwind-arch.c | 319 +++++++
- .../perf/util/libunwind-arch/libunwind-arch.h | 296 +++++++
- .../perf/util/libunwind-arch/libunwind-arm.c  | 290 ++++++
- .../util/libunwind-arch/libunwind-arm64.c     | 289 ++++++
- .../perf/util/libunwind-arch/libunwind-i386.c | 312 +++++++
- .../util/libunwind-arch/libunwind-loongarch.c | 297 +++++++
- .../perf/util/libunwind-arch/libunwind-mips.c | 299 +++++++
- .../util/libunwind-arch/libunwind-ppc32.c     | 301 +++++++
- .../util/libunwind-arch/libunwind-ppc64.c     | 303 +++++++
- .../util/libunwind-arch/libunwind-riscv.c     | 297 +++++++
- .../perf/util/libunwind-arch/libunwind-s390.c | 299 +++++++
- .../util/libunwind-arch/libunwind-x86_64.c    | 320 +++++++
- tools/perf/util/libunwind/arm64.c             |  40 -
- tools/perf/util/libunwind/x86_32.c            |  41 -
- tools/perf/util/maps.c                        |  29 +-
- tools/perf/util/maps.h                        |   4 +-
- tools/perf/util/symbol_conf.h                 |  10 +
- tools/perf/util/thread.c                      |  29 +-
- tools/perf/util/unwind-libdw.c                |   2 +-
- tools/perf/util/unwind-libunwind-local.c      | 831 ------------------
- tools/perf/util/unwind-libunwind.c            | 679 ++++++++++++--
- tools/perf/util/unwind.c                      |  98 +++
- tools/perf/util/unwind.h                      |  77 +-
- 51 files changed, 4549 insertions(+), 1731 deletions(-)
- delete mode 100644 tools/build/feature/test-libunwind-aarch64.c
- delete mode 100644 tools/build/feature/test-libunwind-arm.c
- delete mode 100644 tools/build/feature/test-libunwind-debug-frame-aarch64.c
- delete mode 100644 tools/build/feature/test-libunwind-debug-frame-arm.c
- delete mode 100644 tools/build/feature/test-libunwind-x86.c
- delete mode 100644 tools/build/feature/test-libunwind-x86_64.c
- delete mode 100644 tools/perf/arch/arm/util/unwind-libunwind.c
- delete mode 100644 tools/perf/arch/arm64/util/unwind-libunwind.c
- delete mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
- delete mode 100644 tools/perf/arch/mips/Build
- delete mode 100644 tools/perf/arch/mips/util/Build
- delete mode 100644 tools/perf/arch/mips/util/unwind-libunwind.c
- delete mode 100644 tools/perf/arch/powerpc/util/unwind-libunwind.c
- delete mode 100644 tools/perf/arch/x86/util/unwind-libunwind.c
- create mode 100644 tools/perf/util/libunwind-arch/Build
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-arch.h
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-arm64.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-i386.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-loongarch.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-mips.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc32.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-ppc64.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-riscv.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-s390.c
- create mode 100644 tools/perf/util/libunwind-arch/libunwind-x86_64.c
- delete mode 100644 tools/perf/util/libunwind/arm64.c
- delete mode 100644 tools/perf/util/libunwind/x86_32.c
- delete mode 100644 tools/perf/util/unwind-libunwind-local.c
+Fixes: 2e9191573a69 ("perf build: Remove NO_LIBDW_DWARF_UNWIND option")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-inject.c        |  4 ++
+ tools/perf/builtin-report.c        |  4 ++
+ tools/perf/builtin-script.c        |  4 ++
+ tools/perf/util/Build              |  1 +
+ tools/perf/util/symbol_conf.h      | 10 +++
+ tools/perf/util/unwind-libdw.c     |  2 +-
+ tools/perf/util/unwind-libunwind.c |  2 +-
+ tools/perf/util/unwind.c           | 98 ++++++++++++++++++++++++++++++
+ tools/perf/util/unwind.h           | 63 ++++++++++++-------
+ 9 files changed, 163 insertions(+), 25 deletions(-)
  create mode 100644 tools/perf/util/unwind.c
 
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index f174bc69cec4..60f0c7dab31b 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -26,6 +26,7 @@
+ #include "util/synthetic-events.h"
+ #include "util/thread.h"
+ #include "util/namespaces.h"
++#include "util/unwind.h"
+ #include "util/util.h"
+ #include "util/tsc.h"
+ 
+@@ -2562,6 +2563,9 @@ int cmd_inject(int argc, const char **argv)
+ 		OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "directory",
+ 			   "guest mount directory under which every guest os"
+ 			   " instance has a subdir"),
++		OPT_CALLBACK(0, "unwind-style", NULL, "unwind style",
++			     "unwind styles (libdw,libunwind)",
++			     unwind__option),
+ 		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
+ 			    "Generate callchains using DWARF and drop register/stack data"),
+ 		OPT_END()
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 95c0bdba6b11..0b0966d94128 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -48,6 +48,7 @@
+ #include "util/time-utils.h"
+ #include "util/auxtrace.h"
+ #include "util/units.h"
++#include "util/unwind.h"
+ #include "util/util.h" // perf_tip()
+ #include "ui/ui.h"
+ #include "ui/progress.h"
+@@ -1449,6 +1450,9 @@ int cmd_report(int argc, const char **argv)
+ 	OPT_CALLBACK(0, "addr2line-style", NULL, "addr2line style",
+ 		     "addr2line styles (libdw,llvm,libbfd,addr2line)",
+ 		     report_parse_addr2line_config),
++	OPT_CALLBACK(0, "unwind-style", NULL, "unwind style",
++		     "unwind styles (libdw,libunwind)",
++		     unwind__option),
+ 	OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
+ 		    "Symbol demangling. Enabled by default, use --no-demangle to disable."),
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c8ac9f01a36b..fd0b4609516b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -63,6 +63,7 @@
+ #include <linux/err.h>
+ #include "util/dlfilter.h"
+ #include "util/record.h"
++#include "util/unwind.h"
+ #include "util/util.h"
+ #include "util/cgroup.h"
+ #include "util/annotate.h"
+@@ -4159,6 +4160,9 @@ int cmd_script(int argc, const char **argv)
+ 			"Enable symbol demangling"),
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+ 			"Enable kernel symbol demangling"),
++	OPT_CALLBACK(0, "unwind-style", NULL, "unwind style",
++		     "unwind styles (libdw,libunwind)",
++		     unwind__option),
+ 	OPT_STRING(0, "addr2line", &symbol_conf.addr2line_path, "path",
+ 			"addr2line binary to use for line numbers"),
+ 	OPT_STRING(0, "time", &script.time_str, "str",
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 70cc91d00804..01edfccebb88 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -216,6 +216,7 @@ ifndef CONFIG_SETNS
+ perf-util-y += setns.o
+ endif
+ 
++perf-util-y += unwind.o
+ perf-util-$(CONFIG_LIBDW) += probe-finder.o
+ perf-util-$(CONFIG_LIBDW) += dwarf-aux.o
+ perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 6cd454d7c98e..0dee5aa6a534 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -9,6 +9,15 @@
+ struct strlist;
+ struct intlist;
+ 
++enum unwind_style {
++	UNWIND_STYLE_UNKNOWN = 0,
++	UNWIND_STYLE_LIBDW,
++	UNWIND_STYLE_LIBUNWIND,
++};
++
++#define MAX_UNWIND_STYLE (UNWIND_STYLE_LIBUNWIND + 1)
++
++
+ enum a2l_style {
+ 	A2L_STYLE_UNKNOWN = 0,
+ 	A2L_STYLE_LIBDW,
+@@ -81,6 +90,7 @@ struct symbol_conf {
+ 	const char		*addr2line_path;
+ 	enum a2l_style	addr2line_style[MAX_A2L_STYLE];
+ 	int             addr2line_timeout_ms;
++	enum unwind_style unwind_style[MAX_UNWIND_STYLE];
+ 	unsigned long	time_quantum;
+        struct strlist	*dso_list,
+ 			*comm_list,
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 05e8e68bd49c..d8a5b7d54192 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -339,7 +339,7 @@ frame_callback(Dwfl_Frame *state, void *arg)
+ 	       DWARF_CB_ABORT : DWARF_CB_OK;
+ }
+ 
+-int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
++int libdw__get_entries(unwind_entry_cb_t cb, void *arg,
+ 			struct thread *thread,
+ 			struct perf_sample *data,
+ 			int max_stack,
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index cb8be6acfb6f..a0016b897dae 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -79,7 +79,7 @@ void unwind__finish_access(struct maps *maps)
+ 		ops->finish_access(maps);
+ }
+ 
+-int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
++int libunwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 			 struct thread *thread,
+ 			 struct perf_sample *data, int max_stack,
+ 			 bool best_effort)
+diff --git a/tools/perf/util/unwind.c b/tools/perf/util/unwind.c
+new file mode 100644
+index 000000000000..86c2d1692d08
+--- /dev/null
++++ b/tools/perf/util/unwind.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "debug.h"
++#include "symbol_conf.h"
++#include "unwind.h"
++#include <linux/string.h>
++#include <string.h>
++#include <stdlib.h>
++
++int unwind__get_entries(unwind_entry_cb_t cb __maybe_unused, void *arg __maybe_unused,
++			struct thread *thread __maybe_unused,
++			struct perf_sample *data __maybe_unused,
++			int max_stack __maybe_unused,
++			bool best_effort __maybe_unused)
++{
++	int ret = 0;
++
++#if defined(HAVE_LIBDW_SUPPORT) || defined(HAVE_LIBUNWIND_SUPPORT)
++	if (symbol_conf.unwind_style[0] == UNWIND_STYLE_UNKNOWN) {
++		int i = 0;
++#ifdef HAVE_LIBDW_SUPPORT
++		symbol_conf.unwind_style[i++] = UNWIND_STYLE_LIBDW;
++#endif
++#ifdef HAVE_LIBUNWIND_SUPPORT
++		symbol_conf.unwind_style[i++] = UNWIND_STYLE_LIBUNWIND;
++#endif
++	}
++#endif //defined(HAVE_LIBDW_SUPPORT) || defined(HAVE_LIBUNWIND_SUPPORT)
++
++	for (size_t i = 0; i < ARRAY_SIZE(symbol_conf.unwind_style); i++) {
++		switch (symbol_conf.unwind_style[i]) {
++		case UNWIND_STYLE_LIBDW:
++			ret = libdw__get_entries(cb, arg, thread, data, max_stack, best_effort);
++			break;
++		case UNWIND_STYLE_LIBUNWIND:
++			ret = libunwind__get_entries(cb, arg, thread, data, max_stack, best_effort);
++			break;
++		case UNWIND_STYLE_UNKNOWN:
++		default:
++#if !defined(HAVE_LIBDW_SUPPORT) && !defined(HAVE_LIBUNWIND_SUPPORT)
++			pr_warning_once(
++				"Error: dwarf unwinding not supported, build perf with libdw or libunwind.\n");
++#endif
++			ret = -1;
++			break;
++		}
++		if (ret == 0)
++			break;
++	}
++	return ret;
++}
++
++int unwind__configure(const char *var, const char *value, void *cb __maybe_unused)
++{
++	static const char * const unwind_style_names[] = {
++		[UNWIND_STYLE_LIBDW] = "libdw",
++		[UNWIND_STYLE_LIBUNWIND] = "libunwind",
++		NULL
++	};
++	char *s, *p, *saveptr;
++	size_t i = 0;
++
++	if (strcmp(var, "unwind.style"))
++		return 0;
++
++	if (!value)
++		return -1;
++
++	s = strdup(value);
++	if (!s)
++		return -1;
++
++	p = strtok_r(s, ",", &saveptr);
++	while (p && i < ARRAY_SIZE(symbol_conf.unwind_style)) {
++		bool found = false;
++		char *q = strim(p);
++
++		for (size_t j = UNWIND_STYLE_LIBDW; j < MAX_UNWIND_STYLE; j++) {
++			if (!strcasecmp(q, unwind_style_names[j])) {
++				symbol_conf.unwind_style[i++] = j;
++				found = true;
++				break;
++			}
++		}
++		if (!found)
++			pr_warning("Unknown unwind style: %s\n", q);
++		p = strtok_r(NULL, ",", &saveptr);
++	}
++
++	free(s);
++	return 0;
++}
++
++int unwind__option(const struct option *opt __maybe_unused,
++		   const char *arg,
++		   int unset __maybe_unused)
++{
++	return unwind__configure("unwind.style", arg, NULL);
++}
+diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
+index 9f7164c6d9aa..ac0776e39f84 100644
+--- a/tools/perf/util/unwind.h
++++ b/tools/perf/util/unwind.h
+@@ -4,9 +4,10 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+-#include "util/map_symbol.h"
++#include "map_symbol.h"
+ 
+ struct maps;
++struct option;
+ struct perf_sample;
+ struct thread;
+ 
+@@ -26,7 +27,9 @@ struct unwind_libunwind_ops {
+ 			   struct perf_sample *data, int max_stack, bool best_effort);
+ };
+ 
+-#ifdef HAVE_DWARF_UNWIND_SUPPORT
++int unwind__configure(const char *var, const char *value, void *cb);
++int unwind__option(const struct option *opt, const char *arg, int unset);
++
+ /*
+  * When best_effort is set, don't report errors and fail silently. This could
+  * be expanded in the future to be more permissive about things other than
+@@ -36,8 +39,31 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 			struct thread *thread,
+ 			struct perf_sample *data, int max_stack,
+ 			bool best_effort);
+-/* libunwind specific */
++
++#ifdef HAVE_LIBDW_SUPPORT
++int libdw__get_entries(unwind_entry_cb_t cb, void *arg,
++		       struct thread *thread,
++		       struct perf_sample *data, int max_stack,
++		       bool best_effort);
++#else
++#include "debug.h"
++static inline int libdw__get_entries(unwind_entry_cb_t cb __maybe_unused, void *arg __maybe_unused,
++				     struct thread *thread __maybe_unused,
++				     struct perf_sample *data __maybe_unused,
++				     int max_stack __maybe_unused,
++				     bool best_effort __maybe_unused)
++{
++	pr_err("Error: libdw dwarf unwinding not built into perf\n");
++	return -1;
++}
++#endif
++
+ #ifdef HAVE_LIBUNWIND_SUPPORT
++/* libunwind specific */
++int libunwind__get_entries(unwind_entry_cb_t cb, void *arg,
++			   struct thread *thread,
++			   struct perf_sample *data, int max_stack,
++			   bool best_effort);
+ #ifndef LIBUNWIND__ARCH_REG_ID
+ #define LIBUNWIND__ARCH_REG_ID(regnum) libunwind__arch_reg_id(regnum)
+ #endif
+@@ -47,26 +73,16 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
+ void unwind__flush_access(struct maps *maps);
+ void unwind__finish_access(struct maps *maps);
+ #else
+-static inline int unwind__prepare_access(struct maps *maps __maybe_unused,
+-					 struct map *map __maybe_unused,
+-					 bool *initialized __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline void unwind__flush_access(struct maps *maps __maybe_unused) {}
+-static inline void unwind__finish_access(struct maps *maps __maybe_unused) {}
+-#endif
+-#else
+-static inline int
+-unwind__get_entries(unwind_entry_cb_t cb __maybe_unused,
+-		    void *arg __maybe_unused,
+-		    struct thread *thread __maybe_unused,
+-		    struct perf_sample *data __maybe_unused,
+-		    int max_stack __maybe_unused,
+-		    bool best_effort __maybe_unused)
++#include "debug.h"
++static inline int libunwind__get_entries(unwind_entry_cb_t cb __maybe_unused,
++					 void *arg __maybe_unused,
++					 struct thread *thread __maybe_unused,
++					 struct perf_sample *data __maybe_unused,
++					 int max_stack __maybe_unused,
++					 bool best_effort __maybe_unused)
+ {
+-	return 0;
++	pr_err("Error: libunwind dwarf unwinding not built into perf\n");
++	return -1;
+ }
+ 
+ static inline int unwind__prepare_access(struct maps *maps __maybe_unused,
+@@ -78,5 +94,6 @@ static inline int unwind__prepare_access(struct maps *maps __maybe_unused,
+ 
+ static inline void unwind__flush_access(struct maps *maps __maybe_unused) {}
+ static inline void unwind__finish_access(struct maps *maps __maybe_unused) {}
+-#endif /* HAVE_DWARF_UNWIND_SUPPORT */
++#endif
++
+ #endif /* __UNWIND_H */
 -- 
 2.53.0.1213.gd9a14994de-goog
 
