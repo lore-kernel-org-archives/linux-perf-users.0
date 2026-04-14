@@ -1,63 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A0A371D02;
-	Tue, 14 Apr 2026 20:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3D340DFB5;
+	Tue, 14 Apr 2026 20:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776199552; cv=none; b=dtxxJYUphphpugNVSSPh7fm9mWdPLsrockXdY38U55iO5eGZT73lv2KezQZEaGfMPeSDe8W5D1q9yxGgjECYApRK+DOrUoQiZVCZQxbWQcnzkAic6t34TnYzPxAZHQ5u8rA2u4ihWjVhtBAbbzUkYAmuMMj0JNKwlLNIup3g64A=
+	t=1776199736; cv=none; b=FpbLxrmnYA3aX0lfUHSI+o2g/nDgRClhHp3+3o1miROLrYwYhAeFV+x7tBU7olRkJeFdT1Asy3caa8ulYua1JkRFBjfzsnR5qlSXgNEkJjwiFnRngYAA3+92094nhtdAblda7+9uEGcdESYoblgtPozX/H+ADvHZJk4X/zLxCTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776199552; c=relaxed/simple;
-	bh=JyP2exsGuys7WmjrRNxlbtiiJOwA6rP27kRHtemAbZ0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Nv/QiZl/iZaVnoGo71orCWiyJbgn0Iy/vlhLOxSAL1/ebxBdHPiA7YFsqTz8PDYbuwunOovBJLyzbpx/1OoOU2wnIEkkWRbKC2uIdCC4bpBaRtv//AyyqDlpwq8SUrXfuCw2ra8eRjh2k44D0ZtFQ+4t1emiab6GJhTJqbXOjfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PX6rJ6O7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776199736; c=relaxed/simple;
+	bh=VAXZawxsXfTyt201CXFlUzntkIrbrneGqcP3zG29cBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nlvbB/q7f9rwp0XmupGzJ+JjH0uMLXjVfobOuW6gegxUiOEkjYAlOGE8IO8OAeXVhSQqIO99UC5IiG0LBnoh19ZTjm6fk85N3qRhbEtUBye/Hu4pubMaIDWm2+j+/PGoF8KDcn3AAe08sYC4/OZUhSg5h/6eLBNbEbSOm6gN/BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dfruv0qr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PX6rJ6O7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEECDC19425;
-	Tue, 14 Apr 2026 20:45:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dfruv0qr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FDCFC2BCB4;
+	Tue, 14 Apr 2026 20:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776199552;
-	bh=JyP2exsGuys7WmjrRNxlbtiiJOwA6rP27kRHtemAbZ0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=PX6rJ6O7wWT/G2kV0N1mCW921xGdUMPhK9yeYdkvTuQVpLJJgRDsdE9vSH9g+uJl9
-	 spd9c/GaCpkiLjOQdkPhNUP4t6EUkxNkvJgtmNVRriMmvQsHQ2DzRPqHweOH9P3Yk5
-	 /mtAPJN3ZTMq4eaSRjRWPEdiV95uItOj5jrU+KcjRLj/GPFgZk4uNaqXkU5GdjGi1N
-	 /KIPo/fBdpx6jHm2jubXst3naKkU+3DbCiRaPxCQq+6wcsYeMFC+JWXvspIjT1SsQj
-	 Jxe6SsP5hPnN2TgYV5Y3U5eMapzi8SUG6IY4V213PmERNTcuvbQTUcI5H/qPXcCnkQ
-	 VgHqqSLS1dWLQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7D08F3809A0C;
-	Tue, 14 Apr 2026 20:45:23 +0000 (UTC)
-Subject: Re: [GIT PULL] Performance events changes for v7.1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <adynEfZ0r_GIu06k@gmail.com>
-References: <adynEfZ0r_GIu06k@gmail.com>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <adynEfZ0r_GIu06k@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2026-04-13
-X-PR-Tracked-Commit-Id: 5a84b600050c5f16b8bba25dd0e7aea845880407
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 33c66eb5e9844429911bf5478c96c60f9f8af9d0
-Message-Id: <177619952207.1463863.14030529006553265079.pr-tracker-bot@kernel.org>
-Date: Tue, 14 Apr 2026 20:45:22 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Sean Christopherson <seanjc@google.com>
+	s=k20201202; t=1776199736;
+	bh=VAXZawxsXfTyt201CXFlUzntkIrbrneGqcP3zG29cBw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dfruv0qrBgBawxtiv9bF8Hm+DMLVPJtfx8oLCzGJGVcP4foExNQwvvLMwAuwpDhNt
+	 OHR7ciLeS9ToZCQZVPJHw+rJhJ7wxlARi7qHHOXpUOaTG/cpI0lD3vs1LveQmESzES
+	 m2EctU0NaYNNEEDEiNrutUK/flqas+6AUbGVzLiEmrwZb7pJWbp/QdcmWgEessnj9/
+	 LxS1pIEW3LcAxcNaMEONfzCeQ4eAqg/D1+DhLDvJN+y5EeIvqgdyXTA1Izx3wJb9RU
+	 WaPg30tcvrBUzMTJEcNH5w1/pMaH2rnh39hR4WBFt+/J0a5VQ4R0HaSgehI/wDoLO5
+	 PEGSyqbPjD9mg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES 0/4] More perf.data header validation
+Date: Tue, 14 Apr 2026 17:48:43 -0300
+Message-ID: <20260414204847.293557-1-acme@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 13 Apr 2026 10:19:29 +0200:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2026-04-13
+	This is picking up from what was reported in the previous
+series, pre-existing lack of perf.data file validation, processing files
+and buffers in header.c in a similar fashion.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/33c66eb5e9844429911bf5478c96c60f9f8af9d0
+	There is more to process in the trace data, but that is a
+different can of worms that needs to be dealt with in a similar,
+upcoming patch series,
 
-Thank you!
+	This is probably 7.2 material, but if feeling this can still
+sneak into 7.1, feel free to do it :-)
+
+	Now lets see what Sashiko discovers while I still don't have it
+running locally right after Claude, before submitting it publicly, which
+will soon happen :-)
+
+- Arnaldo
+
+Arnaldo Carvalho de Melo (4):
+  perf header: Add section bounds checking to the fd read path
+  perf header: Validate string length before allocating in do_read_string()
+  perf header: Sanity check HEADER_EVENT_DESC
+  perf header: Validate bitmap size before allocating in do_read_bitmap()
+
+ tools/perf/util/header.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.53.0
+
