@@ -1,67 +1,67 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85473D8127
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 11:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C183D8107
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 11:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776164796; cv=none; b=HTGY5JdxyyHZEmH+8hK+oTBkW3UhpGnIAS99JJEaK/En3bnYrygJgx9Z+hCbbPH13Ug2dD8B4/wPgPJyWEeywMD29PXxMPXTunkOTJKQgpz0r3v4DQ4Dbg7fJgNexWCbQDI1yZOhOHnOmVT4UtE31bis+qq9h+TCCYS3BxKpFjQ=
+	t=1776164802; cv=none; b=NKD9TkPN3kReaMSlegMWE5yqr2sck7XOVhQ8WrAKonSZO5MBjMToTXWUleLyMCZy2CdjEBRaZqL7ClZKMYoOqRShYpmazgil4sHpqDO0+12PuzMZs0E+MJB4nOGu3IoKcdPQQHQIxo4ldHAiFw5qoATs6tEFOxDa6qH2ASSaaFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776164796; c=relaxed/simple;
-	bh=+hAJHqlA9neGxwPbbyXGO8mgwNwORpfgUWNnvOZvG0o=;
+	s=arc-20240116; t=1776164802; c=relaxed/simple;
+	bh=/AzkEovsO9hXmRshBeGK0xV8fVdHRetAqtsdomf8VKE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ohWk+XC6jJJpBnRIcPnV2rSU3QMIJa+IK/3ojmsWGOJ7cvWWmvGqvjDS0E21/dU8KCH07L4dBxpQNEbD0xWgO+5ZHUJeTbkKBZjWWTcE6mDzRZCM4jGqbDDxkSec2udfp9HJqf+PJ+rwqTqfrJQMGb1/i4HYWPzmNODTHyIUDfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WOLZZQzH; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:To:Cc; b=ZNH8tAp4o8NXTXVjeOLS7zS5PkD2cugF1OtviC8z+9kv7kHTEsdICAeC9iITjoNmJs6olBjvG5Mtw9PcekNxBMSllsOk7GQctcc/gV30nMRwJKuXrIWloTLFdJ/YSlZbqY3mnE97OzJXejmQylxUYPVTdRjtpafYgof5sZt8/7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ce3rrReA; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOLZZQzH"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-488a29e6110so59226685e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 04:06:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ce3rrReA"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488d2079582so49235005e9.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 04:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776164793; x=1776769593; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1776164797; x=1776769597; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=h9CYFRKleV99FYE5YRfSxRGUGOIShzVFADPCbQgmgLs=;
-        b=WOLZZQzHDWsfL8lCSa6wmFllDUTBaNUDaenSwSBEM5qWBIKiuWHm5ysOGKJBRSNDP2
-         P8KY6jDmrXhBKYNWDVMO65GK8z44usI+hIx3AgWYxIrrBf56/io5kvl1e7juTfXzO3Vh
-         ySnAVw6Jon/Oa4lK0K0fMpWDFIwH3K1eBBQ975xqM8dbzXsJQKMv984HhqJgOUz81kkI
-         owJQdEOLd95+P4D0/6t9T8dwCYltRtJLdWMe/zXmBI8abXo/qSolcvlNmMK+4TdF540c
-         H0t4Zb8cn/cJyf07VNvdYOvG1r6J6cAmmBtBNvQtMsQGtVU1TVvUUJccAKGhSgO/C4+3
-         UUiw==
+        bh=SmMwrtSIePz754V0sje5TuC0YnmOAM3jxAH9WYpMnUs=;
+        b=Ce3rrReAf3xD/w1isok+d9t4CsxlVd0YXxhpLwbK1/Y7S2n3xC3fATzEyK9rPL1Wwu
+         cL8aWoB0iBt3kKP8rUaaVe4jl4se1ajLeF/oN8WwLOVPRmhz/wNGaVEXLrhlC+GdW9PH
+         /4QkhhC3tTaWDExR7bFHD2UlsScHGdQ/fXJbNgO/QBFpr/8bMvdBYcO8olY3UXabcRAU
+         AKKdlmj3CcWVMFVdeKAf7i86Cj9JDoBYNawY/eCyF3WoMeBYMXdd3H9AiFp+7Dn4ugog
+         U5f5FAcOMnBerqtN+xjgpFWfRz7acwM71wbu7dFbJL1HMhXTJyNXWrlMbab9+BKt+LH9
+         9Ggg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776164793; x=1776769593;
+        d=1e100.net; s=20251104; t=1776164797; x=1776769597;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=h9CYFRKleV99FYE5YRfSxRGUGOIShzVFADPCbQgmgLs=;
-        b=dTTXXHkdJcwCARUUzNHWTEZ4e1koKgyujB1iLwrKPu2or6zmP+oxCo6hnW0Cd/C8u3
-         gszk/AcoqpS8ySBf42M4VGm5RR3d+/npgfTKjiv4854vrL6jHV9YMSSidBxsIHAslFyS
-         +4iVGwGWhFjGkD57yk4qBhLd3zUFCvaEvhHZ7Byaw3zpd//seH0H3qSZH30glmk6u8yd
-         UuVnJqm0t00lJuKohwkdGlqpExPrO6O2eOQ1EdQDzvfntnT1KYPniGRV/8tuq2V1surF
-         9LUU30OMfhFLWIyPnUCq0pr4pCTp1QaeVFwdp7jgZcc8up2hevjI0MxYOnEegUlc10Ou
-         lpQw==
-X-Forwarded-Encrypted: i=1; AFNElJ+N3MUA44T9HJOC+z9catOUXbMbz1A+3dHRyVy+QVLK2v7Ca1JFzBBcChmae9BIqBWjekQBCwZkIUBYYq/Lh3gz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuP80OLqZ3oFqDXGWoO2WPBar7hemsl7NUFYd7+87oi5l+mv0e
-	AAyqpkuc/ci1s43YMCLLGBoGRJlXk8Mxg8gcBwywUCwHEC48qfgLaFnB5ah+ffQdK+LOsEOjpvd
-	np70PtAU=
-X-Gm-Gg: AeBDieuuhm8fB6nOjhCLjmKBWmu+0aWmDeS85p9D4S56MR2Y4JTk3umorgwk15ILRs3
-	p5Pwt8xK8cCoWlf9wt9pvf+RDCik1UX1UQVV2P30fatgP5Ywqfn6kOY9w739X6dO4E1ZJj8iBJj
-	CWYQj+yeCjdDBZAu6Ldd2yFYrGhvPjxlUI93zgKiFXhlgiYRWQ2t5CUi7G/5h18m87LCNDmOFV5
-	L52Spe2d1ddkMmzbJF7mRSzAkvsLD/EkkvWjx7a7ikJIatkNBGk7Yn+4mz4NKOIBj8CH620XBBg
-	/p40JrK+RRzZSqYCWskPXhcgH0KNK/2P+T5bHqLfhiAdUzhW9yv5CKm7a++8wR0OQTGr5Z9InRf
-	lRzEZPDRiP2X97VZ7mqzzFj59hBgtCvwgF2pOSMJQ67e7DNBuP/2uDepMbzBqn4MR+qxNFfq/5J
-	iHErNdEhWQba4JUXnfwxUxn2V64MaSEi/WB64F7cVb8A==
-X-Received: by 2002:a05:600c:8585:b0:488:ba19:da25 with SMTP id 5b1f17b1804b1-488d6822a0bmr168820335e9.12.1776164792947;
-        Tue, 14 Apr 2026 04:06:32 -0700 (PDT)
+        bh=SmMwrtSIePz754V0sje5TuC0YnmOAM3jxAH9WYpMnUs=;
+        b=npuaz2Q3HXgpskOQOBPwzSTejrYOQ3AhMc77A71KLNw/SUSIfuVoz28A1Deb1kABIU
+         CajbaVEVmVcBb2zYSB0+WYpYp9MMBfaUhHriJOeFuDZTOJ8/PiAz2CPceSr8+PfVq8qi
+         JLXJr0HR2nTyUmTwPTNPKMRNvBFgUec3iO5gtAhrKIldF25DdobD5Csp6RvBaS4btTSs
+         TXl8ibHU9FykmT70HIlh5BTAHxI3ZMXZjIeiYcinDQEzTesuZM4nKj9A+9B5FXSxrXvk
+         MsQB0bk1kC632ePoDeta103jwwPZmIxQXYqWqxQl9HMde/7kmK/pjmlcEatVNWepxjfT
+         er3Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/UClgf31wWVpV72mbkdoJdL5aygpGGaqKQ19feU2lVMWpTx1S0Tpp0O5cBmqn36lJ8S9HcENblYPvF/hJF+ztd@vger.kernel.org
+X-Gm-Message-State: AOJu0YztW16aBt7AF3KvGuuu7J2H/X3sGdIzoyapYVHlncujjkMrBqML
+	fhjOUAUG+0kJrTFcmYAUc8AwpfVS+I9DDeCRkvSxr1qHw4cSYjkmmTuRce1mB4aFn+Lp6bvldke
+	SjnGrfMo=
+X-Gm-Gg: AeBDieuPNdr1QCfU97n2X39GWmD6+FO2sFhc8qpDhY+SEaOJJldKsKW0kZ0Mw0TA3kX
+	bxwORmq33FMhpQTbGWwi0PmIjeL792/khEP1TGbO4lQFVhM6ETGa2r2nU9lPatT5dNHrhbF5P9V
+	b68EUPw6JDHKwYK4Ez48ld81lbqGH7CqpHlqStqneCE3N8dtbP1qH9uhtnoyzVK4pR551EX9h87
+	bg9d0iWtp9J9D3gjbxvdIdhHwd3f6ippOOo0frngR6EBzV4R/iakyCfkWJP6payzBkfXATLQsiy
+	oNpU1oexLBf9DD3+rMPLaKpohZNiqiOFFOGZBAWc2zQYze3TFWc9Jw1exrVh47V9bTKD5qBBETN
+	/7zUfsxKvT7cws0GEQygTmgw9wxtSbfukn9zE/kQBKoJz7WnU+/88fHHxT7DjH9DKyP0ZBi4CX/
+	v+p7SYxG2DNCjwQr6Gb552bDnUJVXL9+k5D59LvMAMeg==
+X-Received: by 2002:a05:600c:3b24:b0:488:b811:51c4 with SMTP id 5b1f17b1804b1-488d6872ed0mr236056315e9.25.1776164797092;
+        Tue, 14 Apr 2026 04:06:37 -0700 (PDT)
 Received: from e133063.arm.com ([213.137.22.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5d9dd86sm183254655e9.4.2026.04.14.04.06.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5d9dd86sm183254655e9.4.2026.04.14.04.06.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 04:06:30 -0700 (PDT)
+        Tue, 14 Apr 2026 04:06:34 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 14 Apr 2026 12:04:51 +0100
-Subject: [PATCH v3 5/6] perf arm_spe: Decode Arm N1 IMPDEF events
+Date: Tue, 14 Apr 2026 12:04:52 +0100
+Subject: [PATCH v3 6/6] perf arm_spe: Print remaining IMPDEF event numbers
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260414-james-spe-impdef-decode-v3-5-63baf9c893b1@linaro.org>
+Message-Id: <20260414-james-spe-impdef-decode-v3-6-63baf9c893b1@linaro.org>
 References: <20260414-james-spe-impdef-decode-v3-0-63baf9c893b1@linaro.org>
 In-Reply-To: <20260414-james-spe-impdef-decode-v3-0-63baf9c893b1@linaro.org>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
@@ -86,115 +86,54 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  Al Grant <al.grant@arm.com>, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
 
->From the TRM [1], N1 has one IMPDEF event which isn't covered by the
-common list. Add a framework so that more cores can be added in the
-future and that the N1 IMPDEF event can be decoded. Also increase the
-size of the buffer because we're adding more strings and if it gets
-truncated it falls back to a hex dump only.
-
-[1]: https://developer.arm.com/documentation/100616/0401/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
+Any IMPDEF events not printed out from a known core's IMPDEF list or for
+a completely unknown core will still not be shown to the user. Fix this
+by printing the remaining bits as comma separated raw numbers, e.g.
+"IMPDEF:1,2,3,4".
 
 Suggested-by: Al Grant <al.grant@arm.com>
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/arm-spe-decoder/Build              |  2 ++
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 39 +++++++++++++++++++++-
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |  2 +-
- 3 files changed, 41 insertions(+), 2 deletions(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
-index ab500e0efe2449fa2535d6efae2a30bc2690cb9e..97a298d1e2791bb9556cf893bd170ef938bfe631 100644
---- a/tools/perf/util/arm-spe-decoder/Build
-+++ b/tools/perf/util/arm-spe-decoder/Build
-@@ -1 +1,3 @@
- perf-util-y += arm-spe-pkt-decoder.o arm-spe-decoder.o
-+
-+CFLAGS_arm-spe-pkt-decoder.o += -I$(srctree)/tools/arch/arm64/include/ -I$(OUTPUT)arch/arm64/include/generated/
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index 67ca356100e53aaf6d47489717537ba27aa2b98e..b74f887a48f2a13b1be165947b4e3293f9987bd4 100644
+index b74f887a48f2a13b1be165947b4e3293f9987bd4..600677318f84c06970e4e618280c39cc83ac5b1e 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -15,6 +15,8 @@
+@@ -8,6 +8,7 @@
+ #include <string.h>
+ #include <endian.h>
+ #include <byteswap.h>
++#include <linux/bitmap.h>
+ #include <linux/bitops.h>
+ #include <stdarg.h>
+ #include <linux/kernel.h>
+@@ -365,6 +366,23 @@ static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
+ 						   payload);
+ 	}
  
- #include "arm-spe-pkt-decoder.h"
- 
-+#include "../../arm64/include/asm/cputype.h"
++	/*
++	 * Print remaining IMPDEF bits that weren't printed above as raw
++	 * "IMPDEF:1,2,3,4" etc.
++	 */
++	if (payload) {
++		arm_spe_pkt_out_string(&err, &buf, &buf_len, " IMPDEF:");
++		for (int i = 0; i < 64; i++) {
++			const char *sep = payload & (payload - 1) ? "," : "";
 +
- static const char * const arm_spe_packet_name[] = {
- 	[ARM_SPE_PAD]		= "PAD",
- 	[ARM_SPE_END]		= "END",
-@@ -308,6 +310,11 @@ static const struct ev_string common_ev_strings[] = {
- 	{ .event = 0, .desc = NULL },
- };
- 
-+static const struct ev_string n1_event_strings[] = {
-+	{ .event = 12, .desc = "LATE-PREFETCH" },
-+	{ .event = 0, .desc = NULL },
-+};
-+
- static u64 print_event_list(int *err, char **buf, size_t *buf_len,
- 			    const struct ev_string *ev_strings, u64 payload)
- {
-@@ -319,6 +326,26 @@ static u64 print_event_list(int *err, char **buf, size_t *buf_len,
- 	return payload;
- }
- 
-+struct event_print_handle {
-+	const struct midr_range *midr_ranges;
-+	const struct ev_string *ev_strings;
-+};
-+
-+#define EV_PRINT(range, strings)			\
-+	{					\
-+		.midr_ranges = range,		\
-+		.ev_strings = strings,	\
++			if (payload & BIT_ULL(i)) {
++				arm_spe_pkt_out_string(&err, &buf, &buf_len, "%d%s", i,
++						sep);
++				payload &= ~BIT_ULL(i);
++			}
++		}
 +	}
 +
-+static const struct midr_range n1_event_encoding_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-+	{},
-+};
-+
-+static const struct event_print_handle event_print_handles[] = {
-+	EV_PRINT(n1_event_encoding_cpus, n1_event_strings),
-+};
-+
- static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
- 				  char *buf, size_t buf_len)
- {
-@@ -326,7 +353,17 @@ static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
- 	int err = 0;
- 
- 	arm_spe_pkt_out_string(&err, &buf, &buf_len, "EV");
--	print_event_list(&err, &buf, &buf_len, common_ev_strings, payload);
-+	payload = print_event_list(&err, &buf, &buf_len, common_ev_strings,
-+				   payload);
-+
-+	/* Try to decode IMPDEF bits for known CPUs */
-+	for (unsigned int i = 0; i < ARRAY_SIZE(event_print_handles); i++) {
-+		if (is_midr_in_range_list(packet->midr,
-+					  event_print_handles[i].midr_ranges))
-+			payload = print_event_list(&err, &buf, &buf_len,
-+						   event_print_handles[i].ev_strings,
-+						   payload);
-+	}
- 
  	return err;
  }
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index a457821f3bccb67691cfd530de2f1c5bf9d8d50c..a3300bec4990a76608d23e34368d6146c9f4a5b5 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -11,7 +11,7 @@
- #include <stddef.h>
- #include <stdint.h>
  
--#define ARM_SPE_PKT_DESC_MAX		256
-+#define ARM_SPE_PKT_DESC_MAX		512
- 
- #define ARM_SPE_NEED_MORE_BYTES		-1
- #define ARM_SPE_BAD_PACKET		-2
 
 -- 
 2.34.1
