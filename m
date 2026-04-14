@@ -1,126 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF03313E30
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 05:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DE5223323;
+	Tue, 14 Apr 2026 05:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776145314; cv=none; b=NGWSFhml0wZJ8YLlEvXTXCgi3tFwKze9ZNwY5bPBOlKY9mwYHXqjCmF06jTXdWvZfgQPcISc8j4Whv8unPN1EcO6CyIns5fe+z20+8DW8UJ3Re3rEWQ86GVdPDjlH62+CAd2w3QwZgkpTyMt0ClE6UTZxXw30ZK1lqx/yJvHINQ=
+	t=1776145866; cv=none; b=YRAPBsXd9oNOYS6YqSz5IN9DlPYeDQT2s38AdmL23PbH0r7v7iSowAkuUI5FcKqh4u10nWVID/86tLowUUiyMBxAV6G6G9yM93Z+UKvRQRM7ouV7jSwYMBSztEmA3NPZ/YqAM8hyNsGMXaxdXgb1x1C0S9nmNWV4fhB2ch7lqbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776145314; c=relaxed/simple;
-	bh=WhM7y1PbpushOIS/C/VU5u7la+Pct9BbJzUIPWTRtQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XBZ9o33WHE7945jO/YxBXIy2wu7+MxhnStembX1/Zi304W0Xg1RwX2kgh6ZtiUVO6ZYMnUPNKiMtTyTjraC6JJ4wArevpLEXrp+wGN5+/6rSKeJ6kQvpmLw0xmrp4PQ/5eb/0b974GZmoz4Sn8X/Xm8vYLNackjDfjUMcYLBbmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fAhvit1s; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776145866; c=relaxed/simple;
+	bh=NWmyIt82aJGIhkA9bM5kw0zrXESL/v4qMM/khKZiXN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oShfOl1+XqHtHvhANe0F54j24Z/+JDzzlqnosbqWtcaJkbrGPUWvEoSijxSWpGBXaRXqHzwCbGzUBuD+VkA1kOU2RjguSsw3nI+jHBoE/5UaK7jpHK+TwA4pxUMZHYdBvsllcwVZc+N6FRtrktpCZYOzl/6nsGZtaKNa57Dzh+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZynjR6lS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fAhvit1s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776145309; x=1807681309;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WhM7y1PbpushOIS/C/VU5u7la+Pct9BbJzUIPWTRtQM=;
-  b=fAhvit1sOB2Q29z7zhfgSkz6e/PKUtEoPSjbijTrfbyI8bWApqDni2AN
-   mJiOBG9NBVoUoyg/5Xb4O8z58ImlOvA+zpKPZjHAMFPr9wcC1Ra2iILpg
-   4UtH148loFVcwunKt/wWykebPvPcyK2AGmYxzwLuCxy86z+NkP07W7PBI
-   nY4X36D6JrnVJC3+RmGOS2jnUlzdPof94mGPX+fYYG3qhyCilZpwQNooL
-   UqAaiDhfIlK1PMAr8/3CG003u0ful779X9IyATw6kPs8c1OZDBT19Qdpr
-   YH1MKmGAXkuywoRWgisnKaug596usuCGnnD8owtDJAm250x8CGqA8e0Ks
-   A==;
-X-CSE-ConnectionGUID: fKu2RUgRSDWtc5u+nPc/+w==
-X-CSE-MsgGUID: 9uBjaX7IQjexi0Ic78JGdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11758"; a="64624727"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="64624727"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 22:41:27 -0700
-X-CSE-ConnectionGUID: etRj/eaMTvyJqCzdBKRg+Q==
-X-CSE-MsgGUID: 3e9i+87MQMCKSU1w8FTBSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,178,1770624000"; 
-   d="scan'208";a="260410037"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 22:41:26 -0700
-Message-ID: <0b02aea9-a0b3-44cd-96ed-679f1339ccf4@linux.intel.com>
-Date: Tue, 14 Apr 2026 13:41:23 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZynjR6lS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 988E5C19425;
+	Tue, 14 Apr 2026 05:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776145866;
+	bh=NWmyIt82aJGIhkA9bM5kw0zrXESL/v4qMM/khKZiXN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZynjR6lSaJm6q7dSxF7ZRsbZ72q5bwCKXCZTN6KubqmGa6hW8ZJIFnkGfCvWWPeBK
+	 0icYGKgW/JKRbyU4q6dJABr80t7kqoNjzT2wPgnWmgw3xl2Ng42zeGvLe4L6Zyn4PC
+	 cqoKw2gzDw/pHypjNCcUK//uuT0uUgSFi2PqbeqUvHBhGbI4V0WuYOa4Db4Io+2N1j
+	 6DJG6C2kaopiJ6whWsZBk/13/YbO0/cUy9xLS9/5SsqiYjLvtbOCRo0PCEeGg7Xb7m
+	 uBl7EgKVS36QIt148Ms161Nn/wTy/rkPWLqTlMVzAKFUkezoQDxDeiQwL8eykOHx2C
+	 y1gL//JlOGyYw==
+Date: Mon, 13 Apr 2026 22:51:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
+	ak@linux.intel.com, alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com, anup@brainfault.org,
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
+	blakejones@google.com, ctshao@google.com,
+	dapeng1.mi@linux.intel.com, derek.foreman@collabora.com,
+	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn,
+	palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org,
+	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn,
+	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com,
+	zhouquan@iscas.ac.cn
+Subject: Re: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
+Message-ID: <ad3VxtQSL8ClGiEQ@google.com>
+References: <20260411191710.524998-1-irogers@google.com>
+ <20260412020833.641177-1-irogers@google.com>
+ <adv8Ka16pvgVkm8R@google.com>
+ <CAP-5=fVc-Ac09cnXYPUVcNwzHOqFod0v=-YjjDf_oVHvM7cHDw@mail.gmail.com>
+ <ad0cfz-gUKea5bI8@google.com>
+ <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
+ <ad1P8ebyCyfKwXH6@google.com>
+ <CAP-5=fWC7JT4mn-JwBpZ6YvUm4qBFp=wOb+bOj8AM79gxHK0_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86/intel: Fix kernel address leakages in LBR
- stack
-To: sashiko@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260414021440.928068-2-dapeng1.mi@linux.intel.com>
- <20260414031613.CC82EC2BCAF@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260414031613.CC82EC2BCAF@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWC7JT4mn-JwBpZ6YvUm4qBFp=wOb+bOj8AM79gxHK0_w@mail.gmail.com>
 
+On Mon, Apr 13, 2026 at 01:55:39PM -0700, Ian Rogers wrote:
+> On Mon, Apr 13, 2026 at 1:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Apr 13, 2026 at 09:57:02AM -0700, Ian Rogers wrote:
+> > > On Mon, Apr 13, 2026 at 9:40 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Sun, Apr 12, 2026 at 05:52:57PM -0700, Ian Rogers wrote:
+> > > > > On Sun, Apr 12, 2026 at 1:10 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > [SNIP]
+> > > > > > I've picked the first 23 patches to tmp.perf-tools-next as the rest
+> > > > > > still has some issues.  Also I've touched some commits to either remove
+> > > > > > some parts or split them into separate commits.
+> > > > > >
+> > > > > > Please take a look.
+> > > > >
+> > > > > Hi Namhyung,
+> > > > >
+> > > > > thanks for doing this but I've done a similar clean up. To totally
+> > > > > separate the evsel refactoring from the rest of the changes, to fix
+> > > > > the address sanitizer issues with kwork, etc. I'll incorporate your
+> > > > > changes and then resend the series.
+> > > >
+> > > > Thanks, I'd like to merge what's in the tmp.perf-tools-next unless
+> > > > there's a serious mistake.  You can rebase the rest changes on top.
+> > >
+> > > I'd drop what's in tmp.perf-tools-next. Otherwise we're putting fixes
+> > > on top of fixes. Looking at v12 the sashiko issues are all minor and
+> > > the progression of the patches is more granular and natural.
+> >
+> > The goal is to reduce the amount of work (including review) during the
+> > merge window.  Also I don't think there are many fixes in the tmp
+> > branch (have you looked at it?).  I think it's ok to add fixes on top
+> > in this case but I can drop non-conversion patches if you want.
+> 
+> While I'm glad the patches are landing, since the changes depending on
+> the refactor haven't been posted and won't make the 7.1 merge window,
+> I don't think there's a huge rush to land this series. That said, I
+> think v12 is in a good place regarding both the shape of the patches
+> and Sashiko happiness.
 
-On 4/14/2026 11:16 AM, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 1 potential issue(s):
-> - [High] The patch addresses kernel address leakage in Intel's LBR software filter but overlooks identical vulnerabilities in AMD's LBR and BRS software filters.
-> --
->
-> commit 8dbb741871f5824e6032a6a5fa35f5db78494ff9
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86/intel: Fix kernel address leakages in LBR stack
->
-> This commit fixes a kernel address leakage in the Intel LBR stack by extending
-> the software filtering to check both the source and destination addresses.
-> Prior to this change, kernel-to-user branches like SYSRET could leak kernel
-> addresses to user space even when PERF_SAMPLE_BRANCH_USER was requested.
->
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 16977e4c6f8a5..deef81c16571a 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
-> [ ... ]
->> @@ -1244,8 +1244,15 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  				type |= X86_BR_NO_TX;
->>  		}
->>  
->> -		/* if type does not correspond, then discard */
->> -		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
->> +		from_plm = kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
->> +		/*
->> +		 * If type does not correspond, then discard.
->> +		 * Especially filter out the entries whose from or to address
->> +		 * is a kernel address while only X86_BR_USER is set. This prevents
->> +		 * kernel address from being leaked into a user-space-only LBR stack.
->> +		 */
->> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type ||
->> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
->>  			cpuc->lbr_entries[i].from = 0;
->>  			compress = true;
->>  		}
-> This patch successfully addresses the kernel address leakage in Intel's LBR
-> software filter, but does it leave AMD platforms exposed to the same KASLR
-> bypass?
->
-> Looking at arch/x86/events/amd/lbr.c, amd_pmu_lbr_filter() appears to classify
-> branch privilege levels based exclusively on the destination address via
-> branch_type_fused(). Does this mean it classifies kernel-to-user branches as
-> user-space and leaks the source kernel address?
->
-> Similarly in arch/x86/events/amd/brs.c, amd_brs_drain() filters branches
-> using amd_brs_match_plm() which explicitly checks only kernel_ip(to). Would
-> this also blindly accept the branch and log the source kernel address?
->
-> Should equivalent privilege level checks for the source address be added to
-> the AMD routines to fully resolve the issue across platforms?
+Ok, then I'll drop the whole patches in the tmp.perf-tools-next except
+for the first one for a typo fix.  The v12 will aim to the 7.2 cycle.
 
-AMD guys have known the issue, suppose they would post the fix in a
-separate patch. Thanks.
+Thanks,
+Namhyung
 
-
->
