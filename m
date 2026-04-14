@@ -1,147 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC893E6DE7
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 13:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776172438; cv=none; b=WxqbPG4zYVE9LBl9pYL0SMU2ZoAJsmG56siIQE/buDCJtRUE9sDdGHjRzzHfDWVjRBr0rynsuFWWsX/l3og2b/qVr7j7hPVkaBaj9GeywoYcDzZjtrFW0Tqcna3+I5h1P3WdQil0tU6ot74Vxw2Bk6MZEJ7xKBnQO/nwPV8cVYc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776172438; c=relaxed/simple;
-	bh=LFnjbzMAUdeOKXBnJk1Hda37um56zu2mvcltRiPLSHI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LgTPRhSUvQhp9heAoVwMMzUEC6d9AMh9tVD+sUfhWVYjSqNs6/95SAZQ4xmGqQibgmyAJE2t1llKwvJr3PlTmVGoOnDQ1YxVwYogd9RjlishoNFv/fxv9sxMuwy7OkKa4IN2VxJ2T4Ca8kGwy7kSv/AdhM5FpywW0YBwBwedHjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gd0hx5oj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077AF3E6DD5
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 13:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776172451; cv=pass; b=NpMi5ItpVrMJTgQBkj9ku4t7twAuFmrrrhqmhH4kt8tImoRickuTiWhns9fuh1YgRAx/K1cxnKz/JTwmEtSgPJtrxOi9ti8luftcL6BKJmt4FLUiYTeY5ssMw4Jg3TTEtNCx6mkglf1plLO7cNv3DZB2ak3gpevEleRwRVJ8NtE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776172451; c=relaxed/simple;
+	bh=jOsViN4NIKUTK2djxj/LqGafrFIIjSXC4TelnhrR6zA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MQccnFAktddibJ61u0R93EA5ntTeVDq0hwVdA4wLvSiwm3v0zDGsqdzB5poBQRdX0IXXIDpW9iYuNaxiK6FxHzt29tXFm7C0kY5tN9KNRDp8N5vnQsiw+SyfKOLqRmh5S6mOmEi0/MdqNhY16wEtwxuSFA/yNhTPN/8qoEgXohs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJ4QDpd+; arc=pass smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd0hx5oj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A328DC19425;
-	Tue, 14 Apr 2026 13:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776172437;
-	bh=LFnjbzMAUdeOKXBnJk1Hda37um56zu2mvcltRiPLSHI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Gd0hx5ojT9EMeR9iFHmX89AHuj5u4Rfd/ZurfzQV4m3bpQXj/JwIJstFk5hBiCN/p
-	 spIIT4yMmG8cz9IeNyW02nIKPkIkMrax5z1KRyb3ENJDojMUHMHJJWcbLPhePFToDG
-	 t5SGMA12YkyGlct1aTG41KhA5JBKW5zsOOqgSDA2TlfylnwAzr6iW0/10ttl5PYM1z
-	 e1MOQp3Jzii09BUdgc2awOgIH9YvtRu51HdeUZ7cG3wP1TcVEYVzeNYguO0XSah5W/
-	 +u982H+TFkVKCCXZO7rE+54PNtLLNdqZchpWi1flQ0yeCuUn+kMiCos/SH0Ob7XnBb
-	 vj+mX8FfEWx5Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf callchain: Handle multiple address spaces
-Reply-To: sashiko@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260414124241.490185-1-tmricht@linux.ibm.com>
-References: <20260414124241.490185-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Apr 2026 13:13:57 +0000
-Message-Id: <20260414131357.A328DC19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJ4QDpd+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2b2591757fbso576055ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 06:14:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776172449; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dH87u85VIpFUgHWMc3R//ZJXsOF5TAgbL1hu15zPYbBpBaDhGcCQuCIPTkAs2mzZTN
+         xChzDOJmHFNNufJD7nMNwsLgPDcIqH3+zrEEdS7u4uPR1xgfQuQTNkMHoYrqxk4dsnr4
+         MeMLfq1nvODPIMwo4V5Ild0n4g2kihFTmAosbbWuVqof8M1f/WnvqyBgkEUcQpIT+MfJ
+         3CJsF4GXgrESgDAEtBrxEk8zCj6YaC3qkJMWPgfXJiiX8pGqSdoaSIJMrUYbKKb4G2Lk
+         LTT+9KgeMiT8+UMyDRbUDxRbO5K5pJC4rn1rOVYKyao/DnaQ8gzY2cYP+jQBkVWCp0Ox
+         SUMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=UJQ/3w1DBcgGlnLHAerUmdd07zGHcm64GaPdH458Eu0=;
+        fh=pmroGTm4pTg5eXmqiC+gvZQaHPS4M7dQsJXRQqf0gH0=;
+        b=BAv6JtzYoZ9yLRCQTCNiGkOwQj6JMjATkrXKn1viLxyCMycMU8m3RWLgs84vzd5CJp
+         6vPNhwU9g9UWWINHLgSYT+U4vsXwU1DndcZHS62xBap06mIg8ATKlzsWyZYC7AG0CsAF
+         hW2o9w9id1anp4/G9yWs+sE/jTwscD7teIlUkncJunBqkE8iRxghGSDv4KtAa5ousI0b
+         5/LLn/y/p+OrRX6VSLU0UnaeoilPohtHaEO6mKkNzTcf9IeUlKnVUzyE3TTGmwQeibzW
+         DqtI/pVWH7ISoa3RibV0RA5uNyBHRract+s7xrGIbFnqiK1rAFe3cI+lkQcJ2O/T6C5g
+         iIdQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776172449; x=1776777249; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UJQ/3w1DBcgGlnLHAerUmdd07zGHcm64GaPdH458Eu0=;
+        b=IJ4QDpd+dv5883rCErhENnX0qwehzP3e390o7PUBl9DLskSl6GdTG2rLtJ914HJF2V
+         +oNQ7IDOeLqayWSygauXeJzS2z52oYTT6ZspHgjVh+9N3z99KPWxChiQj3MyPk4iE0tx
+         yRPH7T59EJmBXNN8dDZEdv1aW/R9DmleCzaVyzzy0Qjewn9hWFfqtxPwamHUhGMdSBS0
+         D0rZkkTYxZlnMkpnpVRhBRKqde8LjaCt2pOXw7+AM+jG0fyVaURWqAIevWvum5nT8RjQ
+         hQ6cgpdZqz2b8rtS8424ofv2KqRGBDofeTJrsoTrc17AC7GtlnHdEji8FxGgwvDYQMJW
+         Xg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776172449; x=1776777249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UJQ/3w1DBcgGlnLHAerUmdd07zGHcm64GaPdH458Eu0=;
+        b=Kd3LCt8UbOIzbFe9Ob+jYn7Yye+7+ZjpsROYEUy6vjUzwSQNALrlqaGn6CDYkVCclb
+         0gqAHO3z8guA1gmZinmLReRQKKtB8sh6Epx6FZmW52dxeUkaZv8gqYDG7h6IjdJfTqtR
+         /jDHaC2KSec70YulSxYPkk5XrAJCaVoDYsP+/rCCGA+LsrWy55eSj5yDKJnLVJRZDSmG
+         p2MlL/N9CHedDlIoVF0ICxh5AiJqfcetYrmOPAkqew6/nzM49mWQSdzh3oGCT/lv+p7w
+         wRyA1U/oXT2KVdy2OHj9WFHaHnEAixN5Nd/ysgw4x74k42tqwOKBDgumPqJHMPYSPigO
+         PGUA==
+X-Gm-Message-State: AOJu0YxZ88WrPva9oqFRawzwv+Ku5OdqjN8s/YcwhZ2wODJfkUYVq+9K
+	CVUiyN3LgjNMfVDBwfam3qRb4+0XaHZSF5bFBLu4hZvF8fPFMzr7r1OD7JXm4Juxa8Ky2gpIItP
+	P806DTAuXKFDwpUYVeXUrl7Y9tqP0yL7+Eo+o1wNb
+X-Gm-Gg: AeBDievUEYcI9ug7/HKkl7DoU6whfRzCdTtkpz4LYSe+aFC33uMXp2bZ6jv06NWd3Ma
+	CQnetOf3fi85JxnvmKDlFjDSwDRe0ej9iG3Z2aha9qkFbgxsblszLaszAMpLJ20gk+DaWYKgOlJ
+	/q86XpZvo7IIXmQ5ys/g510WuIwLETvbGVP3TwKAeir7kr2nQuHcvvI6On3NSATqxwzLu6C66LE
+	gU1CKcTjLc0FV8R7eZqgrtp7CobgsrPs4Vy5zO9RUdn5zagbIjf028PWtdRJjkRjx6vKGV/dsi2
+	oK0LcX8XR3qCgum6tmOU5dgCDy49iA==
+X-Received: by 2002:a17:902:d28a:b0:2b0:b458:2dc3 with SMTP id
+ d9443c01a7336-2b468152a26mr964615ad.21.1776172448591; Tue, 14 Apr 2026
+ 06:14:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260414071242.95637-1-mgsharm@amazon.com>
+In-Reply-To: <20260414071242.95637-1-mgsharm@amazon.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 14 Apr 2026 06:13:55 -0700
+X-Gm-Features: AQROBzCo-GKeDRA6Lk3sTQXMfYYJ12DlhceopjwbpJatt3xI7c_OxYLcfadMFHc
+Message-ID: <CAP-5=fUPfjhyh4N6CqgAwwR=tQXOOVjS=YoEJSGkz70rHCp0Zw@mail.gmail.com>
+Subject: Re: [PATCH] libperf: fix parallel build race with header install
+To: Gaurav Sharma <sgaurav00719@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Gaurav Sharma <mgsharm@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Bypassing the kernel IP check on architectures with split address =
-spaces (like s390) causes kernel IPs to be duplicated into the user space c=
-allchain.
-- [High] Unbounded and off-by-one array writes to `inject->raw_callchain->i=
-ps` cause heap buffer overflows. This problem wasn't introduced by this pat=
-ch, but existed previously.
---
+On Tue, Apr 14, 2026 at 12:13=E2=80=AFAM Gaurav Sharma <sgaurav00719@gmail.=
+com> wrote:
+>
+> When perf is built with high parallelism (-j128), there is a race
+> condition between the install_headers and libperf.a targets in the
+> libperf sub-build. Both are invoked as targets of a single make
+> invocation from Makefile.perf:
+>
+>   $(MAKE) -C $(LIBPERF_DIR) ... $@ install_headers
+>
+> The perf tool's exported CFLAGS includes -I$(LIBPERF_OUTPUT)/include
+> which points to the header install destination. The coreutils install
+> command creates the destination file (truncated) before writing content.
+> If the compiler runs between file creation and content write, it
+> includes an empty header, causing incomplete type and missing prototype
+> errors in the libperf source files.
+>
+> Fix this by making the libperf compilation target depend on
+> install_headers, ensuring all headers are fully installed before any
+> source files are compiled.
+>
+> Fixes: 91009a3a9913 ("perf build: Install libperf locally when building")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gaurav Sharma <mgsharm@amazon.com>
 
-commit 26481cc9533f02e4ba0dd0fa26a4b3d91969b29b
-Author: Thomas Richter <tmricht@linux.ibm.com>
+I believe this was addressed by:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/tools/lib/perf/Makefile?h=3Dperf-tools-next&id=3D8c5b40678c63be6b8=
+5f1c2dc8c8b89d632faf988
 
-perf callchain: Handle multiple address spaces
+Thanks,
+Ian
 
-The patch modifies perf_event__convert_sample_callchain to handle
-architectures like s390 that use separate address spaces for user and
-kernel memory. It prevents incorrectly dropping user-space functions that
-happen to share the same instruction pointer values as kernel addresses.
-
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 5b29f42968611..4f07e90431546 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-
-[ ... ]
-
-> @@ -439,7 +439,8 @@ static int perf_event__convert_sample_callchain(const=
- struct perf_tool *tool,
-> =20
->  	node =3D cursor->first;
->  	for (k =3D 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
-
-This wasn't introduced by this patch, but does this loop and the preceding =
-code
-write past the end of the inject->raw_callchain->ips array?
-
-The raw_callchain buffer is allocated with
-calloc(PERF_MAX_STACK_DEPTH, sizeof(u64)), which allocates 1016 bytes
-(127 * 8). The struct ip_callchain begins with an 8-byte nr header,
-leaving only 126 elements for the ips flexible array.
-
-The first loop in perf_event__convert_sample_callchain() iterates up to
-sample->callchain->nr without any bounds check against PERF_MAX_STACK_DEPTH.
-Since sample->callchain->nr comes from the input perf.data file, a
-maliciously crafted file might cause a massive unbounded heap buffer overfl=
-ow
-when perf inject processes it.
-
-Additionally, this loop iterates while i < PERF_MAX_STACK_DEPTH
-(i.e. up to i =3D 126), which allows a write to ips[126]. Accessing ips[126]
-writes 8 bytes to offset 1016-1023, which is strictly past the 1016-byte
-allocation boundary, causing an off-by-one overflow even for well-formed
-callchains.
-
-> -		if (machine__kernel_ip(machine, node->ip))
-> +		if (machine->single_address_space &&
-> +		    machine__kernel_ip(machine, node->ip))
-
-Will this bypass of the kernel IP check on architectures with split address
-spaces (like s390) cause kernel IPs to be duplicated into the user space
-callchain?
-
-The cursor populated by thread__resolve_callchain() contains BOTH the kernel
-IPs (resolved from sample->callchain via thread__resolve_callchain_sample())
-and the user IPs (unwound from DWARF via thread__resolve_callchain_unwind()=
-).
-
-The first loop in perf_event__convert_sample_callchain() copies the kernel =
-IPs
-and the PERF_CONTEXT_USER marker directly from the raw sample->callchain in=
-to
-the newly injected callchain:
-
-	/* copy kernel callchain and context entries */
-	for (i =3D 0; i < sample->callchain->nr; i++) {
-		inject->raw_callchain->ips[i] =3D sample->callchain->ips[i];
-		if (sample->callchain->ips[i] =3D=3D PERF_CONTEXT_USER) {
-			i++;
-			break;
-		}
-	}
-
-Because the kernel IPs are present at the beginning of the cursor,
-the original code relied on machine__kernel_ip() to identify and skip
-them so they wouldn't be appended a second time.
-
-By completely bypassing this check when machine->single_address_space is
-false, the kernel IPs in the cursor are no longer skipped. Instead, they
-might be erroneously appended to the raw callchain after the
-PERF_CONTEXT_USER marker.
-
-This duplicates the kernel callchain and incorrectly classifies those kernel
-IPs as user-space addresses, corrupting the callchain data in the injected
-perf.data file.
-
->  			/* kernel IPs were added already */;
->  		else if (node->ms.sym && node->ms.sym->inlined)
->  			/* we can't handle inlined callchains */;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260414124241.4901=
-85-1-tmricht@linux.ibm.com?part=3D1
+> ---
+>  tools/lib/perf/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> index 32301a1d8f0c..8372cd9919b7 100644
+> --- a/tools/lib/perf/Makefile
+> +++ b/tools/lib/perf/Makefile
+> @@ -99,7 +99,7 @@ $(LIBAPI)-clean:
+>         $(call QUIET_CLEAN, libapi)
+>         $(Q)$(MAKE) -C $(LIB_DIR) O=3D$(OUTPUT) clean >/dev/null
+>
+> -$(LIBPERF_IN): FORCE
+> +$(LIBPERF_IN): install_headers FORCE
+>         $(Q)$(MAKE) $(build)=3Dlibperf
+>
+>  $(LIBPERF_A): $(LIBPERF_IN)
+> --
+> 2.50.1 (Apple Git-155)
+>
