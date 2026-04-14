@@ -1,170 +1,227 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022097.outbound.protection.outlook.com [52.101.96.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A640F396D1F;
-	Tue, 14 Apr 2026 14:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776177746; cv=fail; b=C1TzXQM0sCBZnIqdL/g3jjlr2kJYd0A17ageWJU3ccYtBjt9vBd4c65QuqMNKV0+uUyvqBEtQPXGSprTrDNmXcHvZPLGWwP47sivlStN6qF9IZZgLHEwCenYgakglhaEBlB0Na4uzxYKWvfh0wFoaUm8BQq/ImSbeOVkvy6xNrA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776177746; c=relaxed/simple;
-	bh=pWNLgvW1qNMq0etXkUNVCoIBBPXSYDDltWNbv07vcJ4=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=SJiyNZBcE5qc5s14G7TOxf78Nok7LRqXkP4oYiKZrMGMkZkCBsNQarB8NUiLV8fDQ4rdCCLZ1OEG+ODRZZpOvCjimlo0HPPmjvBxTY7tFEU2sJy+83jwtpV8mPlJ8nWQuejVQ6R4cbDOSOEuNWgN54CAQPKYwTUDhVYG1Q4P5F4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=W2VCd5Dl; arc=fail smtp.client-ip=52.101.96.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E9B3E9583
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 15:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776179414; cv=none; b=hObEZosDYK38tm6YoLwpmqj6JLLkGLJ2jkvoUBj6xJHvC4N5EWJjT3PrFbYXr4a8UWS+PqehZcwdpTWZ8sI5/1SzsT8WN0p8sGV5Bba5Hf/6DjtbeBoCpOzXPesG7iOeRpp7x0r4e9db2HhNL32QH/OtnEPkwRNwgq/J8IrdyWI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776179414; c=relaxed/simple;
+	bh=uMchkorxToYSrU6ghe2GS10pMnhri5zs8xu3S+YpKxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f5cRl4Thf2YL88ZcLcWIZOjoOITFTds42FO0HEpATQc2YWRHbT/I9WeoPGbqtGCZn5L499zs/6t/E+Yodb3faYZIBoiZ2dJxLbfFRJcML8T6NzFbcUsZRx+sx9XB+8u9FuSVekHQ9Nb3ty6xghrVqcSM1eWJB9XASk5bi4UibGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JzzaeOLt; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="W2VCd5Dl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RMmVdkQ0ggeQhVv2uVGeQ6IK20NKZI16ezNlv6vcIXtENifgiZbMUOSnQ1+4RUsKHS/AET9z26IgXA4vCmyMY0/PNzjRayinVrpPhnki9BUYWae2XQ1r0vNTYiQipwT7L0L2iQhpuqCC4OX31rKS8SkMSmDIN7/Gx4JOzVae06wWjHc9joYkElqnjjpigRCuQpCXp0NRIcoqYJJiShCQ8nOb9qDM46dPlaucuoeC4yULJdCDA7JGAHyW7TJjWvpwMPRzCyGDpLxLyJa2cRPwqgDQCIHHLL8rr9v3m86WcggzxZHXlh+keqMXI5VctDioCQ1M3DVGT+NWvhB116Z4Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F2xN+Pt4vFrmY6NYqiXWTOLj3UPsTxNFBNM3RH9vghw=;
- b=SQ+9Ymk1DpJ9Aeh9zPjDFz3SL2UcdSj+llFRL0joHE3IgQoJoRzJPI6IiCTKlRKzZCRq0dzUA64/YDrpnRv+8H+1AO8tdOQp9RCs+VO1/hnFd+0XYkAo3cVB1lEaAJUprm42g77sYqrQNE64Kq2etSvE4n3ZgdXLMHL33NRbLvH10f93DUUHTHyoc5SMuh59Q//S4CZIWbfj4jjPguC08xwUhI/tX+Wez0UA7M90yqUTGkjmq8QN5aqoNHeCWBHWt+S/tqx0o1vqnAMsZFcY3HEf0aeVDEebj9/80coEhxIxVCMU/zE92NhhmdSphUBuWv7WLYdFz3zk95sy7BuTeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F2xN+Pt4vFrmY6NYqiXWTOLj3UPsTxNFBNM3RH9vghw=;
- b=W2VCd5DlYfF02xwgyiPS8caDD0iY8LDqT55LzUOAOAUPoTfWnPKQdH8H3gVv0VGpkHNr1SssLofF3BzNmQcqjb0XuPEA+ViLPtS19KscvJ9L9YdZWgKhk0l+HoQWfCigOgCr+v1OR2CAxA9+pIB6IEBcWEkdu0/kHYpa/BEeycc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
- by LO0P265MB5894.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:289::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Tue, 14 Apr
- 2026 14:42:20 +0000
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.20.9769.046; Tue, 14 Apr 2026
- 14:42:20 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 14 Apr 2026 15:42:19 +0100
-Message-Id: <DHSYGL2DY5IU.19MOS6TI1QNOC@garyguo.net>
-Cc: "Ian Rogers" <irogers@google.com>, <miguel.ojeda.sandonis@gmail.com>,
- <a.hindborg@kernel.org>, <acme@kernel.org>, <aliceryhl@google.com>,
- <bjorn3_gh@protonmail.com>, <boqun@kernel.org>, <dakr@kernel.org>,
- <gary@garyguo.net>, <linux-kernel@vger.kernel.org>,
- <linux-perf-users@vger.kernel.org>, <lossin@kernel.org>,
- <ojeda@kernel.org>, <rust-for-linux@vger.kernel.org>, <tmgross@umich.edu>
-Subject: Re: [PATCH v1] perf test type profiling: Remote typedef on struct
-From: "Gary Guo" <gary@garyguo.net>
-To: "Dmitry Dolgov" <9erthalion6@gmail.com>, "Namhyung Kim"
- <namhyung@kernel.org>
-X-Mailer: aerc 0.21.0
-References: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz> <20260302235821.588686-1-irogers@google.com> <gfdliffsgy4j6q2vrilr6kapy3hczh4udszy4wcba6aal3ado4@hfeqa2eizu5y> <kr2bfp43sqatdssmhzpmogs2h27ddbmegvaknxb6by24n2t64h@hv4m5myvswpa> <acts0fXgsuirBp9G@google.com> <wqmqx6rnqrociriliyojihkxi3llractltkfcwznzu2g5gbieb@y7eaaiee5x2o>
-In-Reply-To: <wqmqx6rnqrociriliyojihkxi3llractltkfcwznzu2g5gbieb@y7eaaiee5x2o>
-X-ClientProxiedBy: LO4P123CA0239.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a7::10) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:488::16)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JzzaeOLt"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43d03db7f87so3566416f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 08:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1776179410; x=1776784210; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3QFDI9YfKzUZJ8z8gPIF1oW5RHbzvFlT0YT3Kdp1CRo=;
+        b=JzzaeOLt48ldvjt/An0SZcG4VKc6gosBtSwdPJn0csjM5FydWltcegy8e0dz9gD4Ts
+         wbdXoMRy/ghR0PCxbjM6heS9nf6enE7ZSpbynlzUhtOALq4ncoRQb25hNwipemDzup4b
+         gGQJLkYPjooWrp/Rfin1iZL3XOTVU2go8rsmGJ3fKT6MPBEOL2eAu7gGNMiN5+MXFxzY
+         QZQ+ITMh4xUEqK2s0KTwqJFwBfQj2nmC/fkRS06Q6De1sfhHdIHOofC01eZi2QvBDmNd
+         3Q5sjuKFJI7sCdioFfZQ0VzC7cuHD1MjP8RbwSWYK2HqwMfvc+H+TJNti5VdoCmFv0uS
+         aR/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776179410; x=1776784210;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3QFDI9YfKzUZJ8z8gPIF1oW5RHbzvFlT0YT3Kdp1CRo=;
+        b=OdtpJ/7A+pww9KY94yzf2IsXDXQ1Afhnk7KTQfN1lchtZGKTkHKzQQGEWRM8lOCrkz
+         iP7Agtnbm6kjQFohqmA+KeilqdGPNX4lhJnF7/UqNFocR/A+JS0eUq1iZCUtqAq0/2a0
+         IL/QKdVKjeSPBbupkFTDwkPyvjDbP/+Ov94RSYeRg2mHuD1nACY99dLzjbW31qqRB22w
+         oTWlDwJtQ81ZRJYjTY8YvvT2iRq1I0grXYxqIEtX2FaU7mP/7dY0v7FpY87duDaGQ6zY
+         rPJviTnAno3monjZnsgJOFXhEgcvmQ2dU2kgSdWNqBy9VgK7pd4eA5t1eR9bIVfi78Wd
+         HzGA==
+X-Forwarded-Encrypted: i=1; AFNElJ+hjgNkWNuklU5L346X3Ubl5mnVVDNrTyMiuCSD4g+gpuCbDqpyTwiQFS2e9RqoryOJje059Kyhdq1jmVBO1HkY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+zTq73epn5pXq+uTzSo3RYQCuu4mPO2L0H6W1k6b14C1ybc/4
+	N3YtD2vBkbzs+S4d6zm5DsGcajaHUAriahmOKqs930shy79L1ogyefNHPq4BBoJRApo=
+X-Gm-Gg: AeBDies6WX+qFwNM6vmj4q2qM3Fk3O01JrRBj+8R5cHY4wzBa25f5XztC1EufVEb+Zp
+	4glsvSDH5/av9mkEnHW7Zbbwkn0yZdaTW8Lu6sL8M8x/VOXwqOmBQBwmfRMaVwoTjCtbrvUGpdV
+	vxWPgCkmZGLSM80kLeVkaWYOJfaXLsvI1vFPiyIPlhIoiTQhfEc1UISCd38556ryFzwG1x/IhP6
+	puMePUbX46B2sbCUQaMDHjZoL2DAeaSFck7F3YWnHXvNXe+QLW+MwgtneHPJVa4s9vTPRPPXU82
+	iAvVF8Ypkqv+eVhV+1mXFN6aYXu8QfpD/FAilEK3jv4ArN3yq3g6XgENZOZaKAYu5map/hhgUal
+	MD9iTRv+THBwYn3UjIeCNgUi7Id7mXVEbkkuq6jp76XbPA/028Th/R2Cx4yw4tmyupPBA0XXfSE
+	MpPhErapdRCtkKCUMBqLUgue8V9aKMgTUMXzPinf2Y
+X-Received: by 2002:a05:6000:2c02:b0:43d:75a2:44aa with SMTP id ffacd0b85a97d-43d75a246a4mr14223665f8f.43.1776179410088;
+        Tue, 14 Apr 2026 08:10:10 -0700 (PDT)
+Received: from [172.17.16.20] ([213.137.22.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d7e61af8csm9304625f8f.34.2026.04.14.08.10.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2026 08:10:09 -0700 (PDT)
+Message-ID: <e0f7183b-784c-4928-bcbb-eadfb485ed33@linaro.org>
+Date: Tue, 14 Apr 2026 16:10:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO0P265MB5894:EE_
-X-MS-Office365-Filtering-Correlation-Id: a348da9e-9f03-43aa-894e-08de9a34084e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|10070799003|7416014|376014|366016|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	EnT3HrCQvtnTFCmiDGTpTQqYGxSjjMX2DOMy6hCXmIW5NEZLzFcd8WwPfkbCU/XBLOIBZoaJoj+xpKANmjhVo3PmX4SXrlIaI0xOIi0pkEJ0N1dE9mOdY2SOIhdX4xXZKRdp86VvN65m+LT6tjcwgFmlflys0xDYmE/99FeeJklYvNtDThKm3L0KRnQ/gmyKb9DHNDXu4JIF4VvKW9nCr5LLl4hpm9zKPlfjnRMwhpKZNBQOiqS7Rj+hPFEoV1WvUHIIJnUDKbbEyqmgunYo0vx0MuxqXuUHULCSgKCtz2hsuUJPRdsgtV87H3+O4JafE8Ah1da0gimoW9HcERamMCba+I3vsiKTZBd7XUtCFdDrr4u3K02Its/Qsar3ouCg7oksGe/syWYpaZvraJQrQEpu5A7wiW+UbmeguJi31NhD3Ss2od6+T8pMru8ZrrRnvEtBTaHWcqXQaeAzXSPz8P2KkQ35kUIsAnQiVFeXW2TtVuW3PO9qritZtqsyj9GXvQd9mqqO9IzKvFkJ/hchpV9dt/GX1qjkkHgr1dHnMoKI8xxL9+9Oz0PbDSMv1edbiW5jITt/ZOrVcjl1O4Hw04z9z58sAhhuyCQc5MX4167RvTrBGaDWILhkPTg7i9SdKhw9AuXR9X7uOD/ZFTZEkC2VyIk8D4PgkBeWaXQ4Nggqirzi3RPHFVJDqXgukep7xlMMwTFIgdd6L+zy3XJDRButZ1c4LHbFTCQuIEvR4wU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(7416014)(376014)(366016)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UmpidFNrUm9DY2FwUUI2dnRjcmF5aExielZtTmRnZm1QTVkwdkZsNmR1ZDNP?=
- =?utf-8?B?bWx0RkZSNTFuQUFnRWZBSzJwclNCRXZod2FqRFVxUHFEVGtQNTNJaEJtWUZ1?=
- =?utf-8?B?d0xuUkE3bGhZTy9CVWJQczVBU01iZ2lxU0V0eDVYSHp2ZXc3dGRGOE1OYjdn?=
- =?utf-8?B?UzdCRjhUL0lFYWlhYk91M3VjMkpzUk9saVpwUHViV0w0ZlJ2a2tPdGdpeGFy?=
- =?utf-8?B?S0Vlb0lsaDlCU00zV0RwWitGd2FOdGF6TGhQM2dkRmx2ZTRIMlZFd0o3dkgy?=
- =?utf-8?B?ZklTRldrUGczRlFNcXFCd2lUVnkvaVpuWVlOaHZvQjdPcGVPdlMzcnN0MDZz?=
- =?utf-8?B?Q0w4clFZZjZXcWg3M1l2dUtRSk5yTUdMNy9yUzdUQjdSeFFqSE5KdmMxK3Bk?=
- =?utf-8?B?cHpBelc0cXZabjVCYmNhWkxHNTM3MzJhSWFManptVzFoMFQ4T3hJbnhqSi9I?=
- =?utf-8?B?bUdoVXZxV0JTNU41MzZJaWYwamJHZ1JjaHQyWFVqcWhvelZ0aDI3QkFZdW9P?=
- =?utf-8?B?NysrM3FvRUNMR2krVlhqdityek05SW5WemkwdUxjTDFLZ3BOSkdlaWhFMHFx?=
- =?utf-8?B?Q0NwZloyNVg1SXdrajd3SkEyN2I3SUhPWm1YWVMxL2twRFNnQ0ZJbmJNV1Vx?=
- =?utf-8?B?UmxvMnFaMThXSG9iR0Rka3kvYllaWG93SlFVN0RmUXBSZ0cyQm5nR2lyK1FU?=
- =?utf-8?B?K3hPWWNDUlljM2kxd0VveVlKYUZnTFl0dFk0ZmJWOXc1ekdKOUNTU3VWWUxJ?=
- =?utf-8?B?Slo1QTZmRW43WTFuTE4vOXJ4bktkOWMvYUUydUlYL2JtVWM3Q1VuWGlJdnM1?=
- =?utf-8?B?ODhHNWJ0cXZlR1BnWkZUeE9mQTlaSTlrbXFWemtlbHE2c3E3eEJBWTRveE5R?=
- =?utf-8?B?RWhib3o5d3liZ3djemMxWXFvM0lpeDVENkszS2VuWXRiM0Y3VnhKRkdlaFZ3?=
- =?utf-8?B?cXgxMHpFYzd4MkMyUExRK2FncnJEVjRyOW1TNHdhRnhEWkxwT2NmMUZBNWw5?=
- =?utf-8?B?bDM2Uk5MM0tVakRPbzVMRndRcXc3b1V6UjZkS0F4ZGY3andZYmc2R1R6SlR2?=
- =?utf-8?B?bzcyTm1HdDdPdVlLNzJQNHJxbGVLd1piQWRmUWdQUDB0NFhDT3lQeUdXOHJJ?=
- =?utf-8?B?N1VxeHpKWHN1ampZZzVBU0c1YkhLbjF5L25PVVlTeFBJVmJTQkVCN3NkNm1w?=
- =?utf-8?B?c0kyaFhWdTc4ZkhaMTdxSXlIbk1SeURIeVY5Q1lvc252TkZ0N1pxZEdJaDdt?=
- =?utf-8?B?eVVxWForM2I3bCtNVVMvQnNLTHZ1bEpibXc0NVdUWGdWNHkxWjlEd2JuYW9B?=
- =?utf-8?B?eGhSQXZsd0VMSU1DZ0lVT3lqZ3JlNURUL09uUEkweWJSMXovNjJvSjZEcWlT?=
- =?utf-8?B?cDZ6SmZjVDNlVWE4QTU0aFdvM2l5eVdHZVU3STJCTXNXZ1pYMkVPdGZBSUpi?=
- =?utf-8?B?Uk9BbC84dnhaZW1TVkt3cVBjQXdieUFhRVhCeGdkSFIwd2dCeC9YMHZKMDFz?=
- =?utf-8?B?N3FEUkE5U3Y2WlZkc1dKM3hxNlh4QUlZWlczaHNWRVc4ZVQ1WDFMZWlCV05v?=
- =?utf-8?B?aTg0dGRFTkZYSDg2NXdUVGhZczRDNSs5MklqWTlFWU5RdVR0UExSOUQ3Y1Nx?=
- =?utf-8?B?OHRTdWtKZTdZKzRITnFlQlVSTFRDMktROThkM2FFSVBoVzNabzltM01MeUpv?=
- =?utf-8?B?a0ZwTkg0Kzd3cHRVeHdzL3RoV0ozOVVjdkhTeVgvZE52ZnpKMzhBMG8zQ3pQ?=
- =?utf-8?B?SFVzeEJsRWh0eVB5S0tmcXJPZFFSNFZEN0JMMXd6bE5oWHBCSmdpQW1KZFVW?=
- =?utf-8?B?OWFjdklMeEVxYUh6SzJFTnhyUjVjejBid2dpei8ySks3UHlldlZETVZ1WXZF?=
- =?utf-8?B?SDhRby9oR3hpRnlDdHAzcFJCNFUrQThPLzdEd0E0Q01ybzJ4cUNTTU0xcVBh?=
- =?utf-8?B?MGJoUTJ1ekduMzk1ZHJaaVYzWndiWmhKRVN1eWZJemcydFhWSUJQbS91cE1Q?=
- =?utf-8?B?Y2JieU9IVGVuWUc0VTRNK2tyRHRYUFh3TERIUU9ZbmJZTm1ZYS9iVnNSeld1?=
- =?utf-8?B?NncxQVJPUHlpa3RnWXd5QU9CTEtsaHFrQVVwL1QrVUgxakVZSGlhbWprdnMx?=
- =?utf-8?B?T1p2cUlXSnh1UXhSV0l5cHg5OHo4QlUyczkrblBrWnB0SENUWUNSbHRXaDBw?=
- =?utf-8?B?ODNlTVJKK1dEejA5NUlGVXZUdzY5d1QyR0FodGJOdkF6RDJBaytuRUVBL3pH?=
- =?utf-8?B?a2xpSVMyR3dMU3pYN1hQckUyL0dsZzJ5aUI4NllmT3FQQWRBT2JXc2tlOHZT?=
- =?utf-8?B?TzR3R2dLVWVGaUNnRVVGYmtTbU5rdkpPanNiQUlUN3FsYjgxQTh5dz09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: a348da9e-9f03-43aa-894e-08de9a34084e
-X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2026 14:42:20.2557
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e9I75EtFpyvHYwFSI8WNRjYC69O3qupVzt1ID1UXQTm8c75wyGVMzA9VsBz0QlC7Wd9e0zTZwWcz+e7PvH15Jg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB5894
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] perf arm64: Support data type profiling
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, leo.yan@linux.dev,
+ Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
+References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260403094800.1418825-1-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue Mar 31, 2026 at 8:22 PM BST, Dmitry Dolgov wrote:
->> On Mon, Mar 30, 2026 at 11:42:25PM -0700, Namhyung Kim wrote:
->>
->> We have this:
->>=20
->>   Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
->>   {
->>       do {
->>           vr_die =3D __die_get_real_type(vr_die, die_mem);
->>       } while (vr_die && dwarf_tag(vr_die) =3D=3D DW_TAG_typedef);
->> =20
->>       return vr_die;
->>   }
->
-> Indeed, I didn't finish the analysis, fooled that the diff was solving
-> the issue. Adding DW_TAG_typedef into __die_get_real_type still fixes
-> the problem, but due to different reasons:
->
-> * check_variable calls __die_get_real_type directly at the beginning and
->   stores the result in type_die, which is the result of the function.
->
-> * if it doesn't resolve DW_TAG_typedef, the flow goes into the
->   die_get_real_type, which stores the result in the local variable
->   sized_type. But it never copied into the type_die, and never returned
->   as a result of the check_variable.
->
-> Hence we either need to add DW_TAG_typedef into __die_get_real_type, or
-> copy sized_type into type_die. After some testing both seems to be
-> achieving the goal.
 
-Why is the code in `check_variable` resolving typedefs itself instead of us=
-ing
-`die_get_real_type` instead?
 
-Best,
-Gary
+On 03/04/2026 10:47, Tengda Wu wrote:
+> This patch series implements data type profiling support for arm64,
+> building upon the foundational work previously contributed by Huafei [1].
+> While the initial version laid the groundwork for arm64 data type analysis,
+> this series iterates on that work by refining instruction parsing and
+> extending support for core architectural features.
+> 
+> The series is organized as follows:
+> 
+> 1. Fix disassembly mismatches (Patches 01-02)
+>     Current perf annotate supports three disassembly backends: llvm,
+>     capstone, and objdump. On arm64, inconsistencies between the output
+>     of these backends (specifically llvm/capstone vs. objdump) often
+>     prevent the tracker from correctly identifying registers and offsets.
+>     These patches resolve these mismatches, ensuring consistent instruction
+>     parsing across all supported backends.
+> 
+> 2. Infrastructure for arm64 operand parsing (Patches 03-07)
+>     These patches establish the necessary infrastructure for arm64-specific
+>     operand handling. This includes implementing new callbacks and data
+>     structures to manage arm64's unique addressing modes and register sets.
+>     This foundation is essential for the subsequent type-tracking logic.
+> 
+> 3. Core instruction tracking (Patches 08-16)
+>     These patches implement the core logic for type tracking on arm64,
+>     covering a wide range of instructions including:
+> 
+>     * Memory Access: ldr/str variants (including stack-based access).
+>     * Arithmetic & Data Processing: mov, add, and adrp.
+>     * Special Access: System register access (mrs) and per-cpu variable
+>       tracking.
+> 
+> The implementation draws inspiration from the existing x86 logic while
+> adapting it to the nuances of the AArch64 ISA [2][3]. With these changes,
+> perf annotate can successfully resolve memory locations and register
+> types, enabling comprehensive data type profiling on arm64 platforms.
+> 
+> Example Result
+> ==============
+> 
+> # perf mem record -a -K -- sleep 1
+> # perf annotate --data-type --type-stat --stdio
+> Annotate data type stats:
+> total 6204, ok 5091 (82.1%), bad 1113 (17.9%)
+> -----------------------------------------------------------
+>          29 : no_sym
+>         196 : no_var
+>         806 : no_typeinfo
+>          82 : bad_offset
+>        1370 : insn_track
+> 
+> Annotate type: 'struct page' in [kernel.kallsyms] (59208 samples):
+> ============================================================================
+>   Percent     offset       size  field
+>    100.00          0       0x40  struct page      {
+>      9.95          0        0x8      long unsigned int   flags;
+>     52.83        0x8       0x28      union        {
+>     52.83        0x8       0x28          struct   {
+>     37.21        0x8       0x10              union        {
+>     37.21        0x8       0x10                  struct list_head        lru {
+>     37.21        0x8        0x8                      struct list_head*   next;
+>      0.00       0x10        0x8                      struct list_head*   prev;
+>                                                  };
+>     37.21        0x8       0x10                  struct   {
+>     37.21        0x8        0x8                      void*       __filler;
+>      0.00       0x10        0x4                      unsigned int        mlock_count;
+>     ...
+> 
+> Changes since v1: (reworked from Huafei's series):
+> 
+>   - Fix inconsistencies in arm64 instruction output across llvm, capstone,
+>     and objdump disassembly backends.
+>   - Support arm64-specific addressing modes and operand formats. (Leo Yan)
+>   - Extend instruction tracking to support mov and add instructions,
+>     along with per-cpu and stack variables.
+>   - Include real-world examples in commit messages to demonstrate
+>     practical effects. (Namhyung Kim)
+>   - Improve type-tracking success rate (type stat) from 64.2% to 82.1%.
+>     https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
+> 
+> Please let me know if you have any feedback.
+> 
+
+LGTM apart from a few small comments. I will do some testing as well.
+
+> Thanks,
+> Tengda
+> 
+> [1] https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
+> [2] https://developer.arm.com/documentation/102374/0103
+> [3] https://github.com/flynd/asmsheets/releases/tag/v8
+> 
+> ---
+> 
+> Tengda Wu (16):
+>    perf llvm: Fix arm64 adrp instruction disassembly mismatch with
+>      objdump
+>    perf capstone: Fix arm64 jump/adrp disassembly mismatch with objdump
+>    perf annotate-arm64: Generalize arm64_mov__parse to support standard
+>      operands
+>    perf annotate-arm64: Handle load and store instructions
+>    perf annotate: Introduce extract_op_location callback for
+>      arch-specific parsing
+>    perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
+>    perf annotate-arm64: Implement extract_op_location() callback
+>    perf annotate-arm64: Enable instruction tracking support
+>    perf annotate-arm64: Support load instruction tracking
+>    perf annotate-arm64: Support store instruction tracking
+>    perf annotate-arm64: Support stack variable tracking
+>    perf annotate-arm64: Support 'mov' instruction tracking
+>    perf annotate-arm64: Support 'add' instruction tracking
+>    perf annotate-arm64: Support 'adrp' instruction to track global
+>      variables
+>    perf annotate-arm64: Support per-cpu variable access tracking
+>    perf annotate-arm64: Support 'mrs' instruction to track 'current'
+>      pointer
+> 
+>   .../perf/util/annotate-arch/annotate-arm64.c  | 642 +++++++++++++++++-
+>   .../util/annotate-arch/annotate-powerpc.c     |  10 +
+>   tools/perf/util/annotate-arch/annotate-x86.c  |  88 ++-
+>   tools/perf/util/annotate-data.c               |  72 +-
+>   tools/perf/util/annotate-data.h               |   7 +-
+>   tools/perf/util/annotate.c                    | 108 +--
+>   tools/perf/util/annotate.h                    |  12 +
+>   tools/perf/util/capstone.c                    | 107 ++-
+>   tools/perf/util/disasm.c                      |   5 +
+>   tools/perf/util/disasm.h                      |   5 +
+>   .../util/dwarf-regs-arch/dwarf-regs-arm64.c   |  20 +
+>   tools/perf/util/dwarf-regs.c                  |   2 +-
+>   tools/perf/util/include/dwarf-regs.h          |   1 +
+>   tools/perf/util/llvm.c                        |  50 ++
+>   14 files changed, 984 insertions(+), 145 deletions(-)
+> 
+> 
+> base-commit: cf7c3c02fdd0dfccf4d6611714273dcb538af2cb
+
