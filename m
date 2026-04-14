@@ -1,66 +1,66 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D68F3D6471
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 11:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E754A39657D
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 11:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776164778; cv=none; b=Rwf8iqxpspNuW637LVC9AU0YdL4hyOP1kmze4JpYklqHpflhVbMyu/AYmSaIW85KHUfhjNKpphAMsPiM0n2GCEPVYmvgOhapmFrWE2yPgRz8LvNSV1vAjeCzP1qoLjNoSwbXCiQwLhoRT/ppSq+YYlEE+W5fRJJ1jdanpp4SEn8=
+	t=1776164785; cv=none; b=SqEKjkcQCSl56gikOqEdFrywy9W9nOy459qeiuZwdOVdIaeaPsvWl067qtA5nSbEwcvOcGbKvdLaqzupqO6nUml3xiPF1TA7h/byCqlLEeNc7n479RqbrjybfjA3YyD/fN5JdN6ieOdDtvEEb1rqVHHhU/OG0pYTxz6w6XkU5/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776164778; c=relaxed/simple;
-	bh=B4MOcb4BErEsKUcIM7RRmNpCR6Vyqi8cYdqj84QRn4U=;
+	s=arc-20240116; t=1776164785; c=relaxed/simple;
+	bh=c7qPGq5j/uORdeirWTlNi4LwnrslrbyzEVlVFo++RKY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aXaN+B2BihYkFE5kcr6MEl3UDokAoau4BkGWBdgudtXD5rSLWL7byPa88TAiG/IvmyWi0biNdppd/MmamompiP6GqEd0aMBEd8U6st7kEWJ/Giz0Pt66XdDv0GrzXvbY34/h3FGRcJY7tNKo3rvh9v3JZFs4ZBRz27W8ULcv1JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KOY2kjiy; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=Lazgad00553WQDaOADj394j4+/xRgv97+BMyUi1XLSPMPfCgEV39eN1usWy2tQWwUxRpRCRZcBU7xkebCIYJgOkKakG2h+qodqMRTz8Z8yssQv4a9wWz8incS3Rr7A0P1L3j4VHZmQdQb+zTt/hFS2IYUrJ7P/Qv1mb5XK0F1yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uvaxyHrH; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOY2kjiy"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-488ba840146so53117715e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 04:06:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uvaxyHrH"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso50913545e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 04:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776164775; x=1776769575; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1776164782; x=1776769582; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LkEHFh887Es+jtZSLZuibHtBrvBj/V7mtq/pJJpeMMk=;
-        b=KOY2kjiywJmcfZkhMW9HgUIB0CbFtc4ZTkCCRBgsJd42I66UYKLElLJVLqb/GfOZAH
-         R0tDiUKU3G30ybzfrguxs6yq1OjLeEiZa8kww+/dtGpafcg8gig6weolD9QhSq77WoN1
-         2V/wmQF8Do2tDJa2P8/TOnDut0wRJ7q6oeNy+Uw++8kBj6IzTf9QE+gRHnKI7E0b7YTs
-         nG8fm2C9Stuo1cbhLTsGG+X6WIHyZpy7R+QyN21+ZtxMY8xrASV7TD885qVVrpv4aXIw
-         ZNdIe+U8tNq11GQZNVdGsdiht2yiYVOB/B5XJiy5fUkUyvhuIwYWFXCrko2kqUYcZu8M
-         8bvA==
+        bh=A0m6CTk6wTQa2I/4VyueCvjJEv4p9jFA0baTHakVwpc=;
+        b=uvaxyHrHThMZoYmckEq57fT+VznSvXbnT5U/N6N2NObcn+pp7dZYnZC+DBC/HxpX/c
+         Pbc7SJJv65kkGrk2cIH12Akue4pcOCNlazYP2q+6QbQmKc9/qCdY3/iwegpx1FVJqPmg
+         9JPbJLLEIVtumi2gUUvsPiEDgZsC381Ak6/JnFMaIkNJjAOoWbYv+WOynvQrW6qyel1j
+         cYwzU6mYu1dv8DchOxSkPByyCuwDPCwhrYjiiUhQgi2e7dGysEFrFaq4Fo/iZWHjsgVV
+         grOlpc9009WPeUxQvd2xpVOAMyM8uoGbLrQa4dasLCwL3+gX3F4EgtNFyyPdV5cejzgG
+         9m2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776164775; x=1776769575;
+        d=1e100.net; s=20251104; t=1776164782; x=1776769582;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=LkEHFh887Es+jtZSLZuibHtBrvBj/V7mtq/pJJpeMMk=;
-        b=W7xUDky1lBLpcseaXmR3zM2t9wQj7DyhhbImxYgPHBQD7amapLFIajXrQ/QaIR2Yfr
-         O85bSTw2mX2Flofu9qSyjCjJJgZrhW9Y3LXYAUj2rsxfgO0I6uGgaCGEd16qtCZyDHdS
-         NvQfMtDx0HJwoMfrt0B6Rf7gof8qU3ahYjtucHwuMJApaIB1qVx5msXw9Oly90NFzU8r
-         WvOh3w3xku92so9B6+Ah+ah5nRLOFGMgOfEctCJ9qgDZY6SXwXpojVpV+Xsp/+cES5Kd
-         P5hvylTijPxJ4/RbK9yvYhwt5sAECQbjRCju2OIx3DGe9WdFRDQ9pUMgrxejP4JZQSt3
-         FSMg==
-X-Forwarded-Encrypted: i=1; AFNElJ8hlWNeH3nvhmMfbeAZLf7NDUK8aoiuQJs+EGn4l4aVNToTI23zodX/ZxDkzC2oi2Z+4+S6akegGp+CeSjukey4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgAb3NzVW5l2BTm8EvKks54JEqYoxOe15Wr4XCG6cCuSqTEDp9
-	91JoC6rPGt+txWAqfQx1Y7vh0vNx9uU8SUCuohuDLKVDxeCU1CH+hYoiQAuBWGxqr7Y=
-X-Gm-Gg: AeBDieue6ip6/Z74kqLYv/+jkZ1uWHSHUK1XRiF8fG1Gse6+5NRjGAmfDreBX+LRHYI
-	qQJfyngE99gKgaFW4ex5HWZ6FNXh5135pHNId2dWCFEevMT+C3ZgnDOtpOC3GwITYorbmuimlKR
-	Ky/lwGu3H2nxbxSd17IYe/SBQNauc1qyELW9GaIrdxzPe5rnMYlpbX2/evxFHXkd+y/83zzsD3+
-	sWtSRhNcMdDZW6PA0UondUTqaLSauYRKued8DgeQ+W0J8ITOLj7fcXk8AgNq/S8PW7vff2Wtsaz
-	rnxPqbSwIhdNECO0F6+XEbf2V3DE43GdSPeM6IL6L+NCFbeQv00HDDYqa+0hjJ0too8yXG1R8eL
-	V4RnHcxmj+vhXf3zknovcYbGY+GNRevvqStA3totpOiunCeyu8Qi9FNPLmvkcVVUNLxmEyVYEib
-	Gr5shAuvUh+uNkM2I9gnlkQvPxetjjnGFB94iti9Gdxw==
-X-Received: by 2002:a05:600c:c0da:b0:488:ab5b:d711 with SMTP id 5b1f17b1804b1-488d6864b6cmr191505975e9.23.1776164775580;
-        Tue, 14 Apr 2026 04:06:15 -0700 (PDT)
+        bh=A0m6CTk6wTQa2I/4VyueCvjJEv4p9jFA0baTHakVwpc=;
+        b=dK0PpCLGjno6Fi6LODkfoN3t3G/Ozp+RmchM2qtkzi9dNCsJ/6Q4+wdihOxjugEP/T
+         Nd9pHbtbL7rYEzD8DA7Ty+6jy6r6Y0naW5c35DJmQSgvf8Fpc6pdCu1zlwSsFqvltmhT
+         FKmC78RgLDeqECgJUPDzVQe0NSHkGJWQd5Z4ztBrjOq1/dIvKKyIm/nE4nCSdOnwWumX
+         yXQyb6WMjmQaEiuD7p3yyE9TIkeGbbnMqyCZyxW2NH5MJveHZCV6yTb7tNBJ4cYdHzAw
+         +Gyq3l1NrxIZbcd44+4iyxea8/vqSt3XQ78Qh6ZBZfkKm7Gkd/PNQzWNAz7bMCfvUlGN
+         4adg==
+X-Forwarded-Encrypted: i=1; AFNElJ/SD+lCbMUpVyCczQEmq7oJoK+LfKoXvzdLK/1n5I1YN7onJdKl6wfzT0QKxFYFJn/wRVpKzcwS1S9Kr3bMPd7Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEaYuJY8cK/aeT+ntcVt7q12nnUQWAqqUgSarOHGyKIB3LsUHA
+	CdJB0EuU3WTd2KvVE2LKhRe8tY5ieR4y/SIu4Zha1pnBtSx5QdrHDMlMKRzajUCxSZs=
+X-Gm-Gg: AeBDieunHbyZsGmw2pSPxBTL0AinDVvyC03N8xxtR10NEKtY5czjr05XKv2Gmmcjqc2
+	0g+7OcYaR9Pg+yZfSWs49bzXtm6tLiYUsA6R1s0mkvG2DS2YZ2BrVcXBrpveuIZ9XveZhbXJC/y
+	guR/E4xIR+CqU4qYsvM5+aCc4l2rPuceWcFf5Sbc2WGCEL264qciEU4fRItG5XHXSuVpAoigBiu
+	5cKZx9cE5jOgVckZMhcKi//dopBu+U9Cst+2ya1Og/34mtbF4M3ZS1dAwsP8y7FTUPzQBb1fMIz
+	CqRpX7yGBNHHv59vwIGmd8Vi/0rDZZBKRvBs7WlZwjnemIGMhGwsnUetofJwVMs/x60OxNaxnHx
+	MeQu51COjDUAVU5sMP4BpGVGoRz94c+3qWXX1F8/FzWe+nCcmgsjM6cV3Fp3EVqQvudjUj+iisM
+	Nc48ehwdnDdEPpIa0o9GCcIIL17SUW/nxOAdQnnYZMPw==
+X-Received: by 2002:a05:600c:8207:b0:488:a4d6:69ad with SMTP id 5b1f17b1804b1-488d688dd1bmr229092875e9.27.1776164782252;
+        Tue, 14 Apr 2026 04:06:22 -0700 (PDT)
 Received: from e133063.arm.com ([213.137.22.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5d9dd86sm183254655e9.4.2026.04.14.04.06.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5d9dd86sm183254655e9.4.2026.04.14.04.06.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 04:06:13 -0700 (PDT)
+        Tue, 14 Apr 2026 04:06:21 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 14 Apr 2026 12:04:47 +0100
-Subject: [PATCH v3 1/6] perf arm_spe: Make a function to get the MIDR
+Date: Tue, 14 Apr 2026 12:04:48 +0100
+Subject: [PATCH v3 2/6] perf arm_spe: Handle missing CPU IDs
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260414-james-spe-impdef-decode-v3-1-63baf9c893b1@linaro.org>
+Message-Id: <20260414-james-spe-impdef-decode-v3-2-63baf9c893b1@linaro.org>
 References: <20260414-james-spe-impdef-decode-v3-0-63baf9c893b1@linaro.org>
 In-Reply-To: <20260414-james-spe-impdef-decode-v3-0-63baf9c893b1@linaro.org>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
@@ -85,74 +85,47 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
 
-We'll need the MIDR to dump IMPDEF events in the next commits so extract
-a function for it.
+Don't call strtol() with a null pointer to avoid undefined behavior.
 
-No functional changes intended.
+I'm not sure of the exact scenario for missing CPU IDs but I don't think
+it happens in practice. SPE decoding can continue without them with
+reduced functionality, but print an error message anyway.
 
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/arm-spe.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ tools/perf/util/arm-spe.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index e5835042acdf7685f95e19665cd45f97ed868275..39046033e1433cff82ef0668074867aba4a462a4 100644
+index 39046033e1433cff82ef0668074867aba4a462a4..f9188fdb8e786fccff94cd8a92f367d90efc5cfe 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -972,14 +972,9 @@ static void arm_spe__synth_memory_level(struct arm_spe_queue *speq,
- 	}
- }
- 
--static void arm_spe__synth_ds(struct arm_spe_queue *speq,
--			      const struct arm_spe_record *record,
--			      union perf_mem_data_src *data_src)
-+static int arm_spe__get_midr(struct arm_spe *spe, int cpu, u64 *midr)
- {
--	struct arm_spe *spe = speq->spe;
--	u64 *metadata = NULL;
--	u64 midr;
--	unsigned int i;
-+	u64 *metadata;
- 
- 	/* Metadata version 1 assumes all CPUs are the same (old behavior) */
- 	if (spe->metadata_ver == 1) {
-@@ -987,15 +982,28 @@ static void arm_spe__synth_ds(struct arm_spe_queue *speq,
+@@ -982,16 +982,23 @@ static int arm_spe__get_midr(struct arm_spe *spe, int cpu, u64 *midr)
  
  		pr_warning_once("Old SPE metadata, re-record to improve decode accuracy\n");
  		cpuid = perf_env__cpuid(perf_session__env(spe->session));
--		midr = strtol(cpuid, NULL, 16);
--	} else {
--		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
--		if (!metadata)
--			return;
--
--		midr = metadata[ARM_SPE_CPU_MIDR];
-+		*midr = strtol(cpuid, NULL, 16);
-+		return 0;
++		if (!cpuid)
++			goto err;
++
+ 		*midr = strtol(cpuid, NULL, 16);
+ 		return 0;
  	}
  
-+	metadata = arm_spe__get_metadata_by_cpu(spe, cpu);
-+	if (!metadata)
-+		return -EINVAL;
+ 	metadata = arm_spe__get_metadata_by_cpu(spe, cpu);
+ 	if (!metadata)
+-		return -EINVAL;
++		goto err;
+ 
+ 	*midr = metadata[ARM_SPE_CPU_MIDR];
+ 	return 0;
 +
-+	*midr = metadata[ARM_SPE_CPU_MIDR];
-+	return 0;
-+}
-+
-+static void arm_spe__synth_ds(struct arm_spe_queue *speq,
-+			      const struct arm_spe_record *record,
-+			      union perf_mem_data_src *data_src)
-+{
-+	u64 midr;
-+	unsigned int i;
-+
-+	if (arm_spe__get_midr(speq->spe, speq->cpu, &midr))
-+		return;
-+
- 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
- 		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
- 			return data_source_handles[i].ds_synth(record, data_src);
++err:
++	pr_err("Failed to get MIDR for CPU %d\n", cpu);
++	return -EINVAL;
+ }
+ 
+ static void arm_spe__synth_ds(struct arm_spe_queue *speq,
 
 -- 
 2.34.1
