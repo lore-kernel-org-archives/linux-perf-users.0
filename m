@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DA92472A2;
-	Tue, 14 Apr 2026 20:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8209F2701CB;
+	Tue, 14 Apr 2026 20:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776199741; cv=none; b=uFtFdt1bJ1JRzimk2Ta7CEzXlEZ1A0Fg7DkoeB651870ofF+v4+GxWVEBKnwqedpuAaxI0Z+FuIEC2rrM206eIfyYTHFxDasnaB1vhJIPbKzIbjx/RFQOWraqiZPmPVvJU9UZykIbsPPk0XhVW8c8vv38UgfM7ROJveZYsE2mos=
+	t=1776199745; cv=none; b=TnMPn6qwMSGW/UcTp5crBbKIsOFrXd5YfwmpQiMH5jI28vfqqWqbx/NoFwUCzWQZQ/QZT32/vbJX+fQwvHIBxVgcMSo7mDkh8+XycGfEJJ0ZzaUHq8EFbNN0wIcgryAYKG07M3tpDxEcZhHCoUKHNsrOvRGpmR05tsWzDAJwPp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776199741; c=relaxed/simple;
-	bh=CIgnSUhZM+Rbymb25i8EGATOe7/4cgcm168q46PN6Q4=;
+	s=arc-20240116; t=1776199745; c=relaxed/simple;
+	bh=H6liez7WESmbfgSAy1NtmogDKAjTD1AhH+U1x5vV9kQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TT6Q9O7ZT19rpIFp6ejR6SVmIh09aQ5WyZwYqS2MWTT23BZFc6nO9F51+eHo/BTdrW+UeONvRBCkwGXScheYoZXToZKSMtjUY8nfoEkVFQ6R+OQ7rj5nVy9jMO9IPS+T2NJgZ6QeZAbLHyCebiRDmeejzUR/EtCJHwQNCxEMdrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgQwuaLP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dpitI6JRzC9lfCVpmmOQ1BwS0VykaWtVZKFfs1tGcW4frDNxFZtuztcbcCFGiQtck8+PGAe8KrbwnvfTJgQ6AyiFArSCToGVVe8bM4ynYSQepUZ3fEAIgyx75cmfD947kxWZpJZEus74tU1HZHJiMRdQNqTXR4NoHVk4dgr9gdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=suaLpmYW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgQwuaLP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47560C19425;
-	Tue, 14 Apr 2026 20:48:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="suaLpmYW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA5C2BCB5;
+	Tue, 14 Apr 2026 20:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776199740;
-	bh=CIgnSUhZM+Rbymb25i8EGATOe7/4cgcm168q46PN6Q4=;
+	s=k20201202; t=1776199745;
+	bh=H6liez7WESmbfgSAy1NtmogDKAjTD1AhH+U1x5vV9kQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fgQwuaLP7V1wOrxvS2JTLI26NuPEIxnlcSDYZvp7j+MkU6OyUSY9e1IDxb6VCMIgu
-	 FytBWA7g0xXw3D1cfNlhw/JawrvQ+9QyyLj0/QNjlX8K3CeOF4Wfa/zql1Jd35hc9B
-	 eIUO5CzCym1MM8BBVR+1LkYM8U5meSU1ESRNRyjbzEgkatZgFA8XwVNQpJCTUFN0v0
-	 hAz/TTeK3MFBN1fXgQQ9TMlwrRyoIiyCji6xe80CMyKdfzJArrg0mSI09TzIkuD0aF
-	 FdP4gRulM29kcRHVeDZFRnMSaCxHSFbkLnk5YnEyIQJoYMzMjUgnzyZFSujepOK8jd
-	 KPUYy/tq0rPNw==
+	b=suaLpmYWDxUR4L3YpLyTrPKEKkoslggBsWb94Kx2bhK/ilV3jLdnWQPWfVc1JOSvG
+	 Aok3iFWJa4Al/cH829Ud2lLx57XfTR0YslcRhyi8GgDJAY0yHwcI4IZJ2xDQbYZCIv
+	 QaE1LlAMNMHCbCLqRnswDVF7VfoCg70zuWG2xpYd/9bPV/K4s3JtwE7pPjSX3YH6Tn
+	 khB7tS2qE8iTUri27E4E6EBm9a3tEulMchzbM0x7FQLaVniOLd19/u3cjj9RiysKLC
+	 VhTv70O64FaqoDpKuGvGULWmty1LIgze87/ZqVFpf1Fx3rdCgJa10nHhOrk4Dgc7rZ
+	 UlgcHZ8F2w7SA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/4] perf header: Add section bounds checking to the fd read path
-Date: Tue, 14 Apr 2026 17:48:44 -0300
-Message-ID: <20260414204847.293557-2-acme@kernel.org>
+Subject: [PATCH 2/4] perf header: Validate string length before allocating in do_read_string()
+Date: Tue, 14 Apr 2026 17:48:45 -0300
+Message-ID: <20260414204847.293557-3-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260414204847.293557-1-acme@kernel.org>
 References: <20260414204847.293557-1-acme@kernel.org>
@@ -55,85 +55,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-__do_read_buf() validates reads against ff->size (section size), but
-__do_read_fd() had no such check, so a malformed perf.data with an
-understated section size could cause reads past the end of the current
-section into the next section's data.
+do_read_string() reads a u32 length from the file and immediately
+allocates that many bytes. A crafted perf.data could claim a huge
+string length, triggering a large allocation that would only be freed
+moments later when __do_read() rejects the read against the section
+bounds.
 
-Add the bounds check in __do_read(), the common caller of both helpers,
-so it is enforced uniformly for both the fd and buf paths.
-
-This requires two supporting changes:
-
-- perf_file_section__process(): initialize ff->offset to 0 so it
-  tracks bytes consumed from the section start (consistent with the
-  buf path), rather than the absolute file position.
-
-- process_build_id(): use lseek(ff->fd, 0, SEEK_CUR) to discover
-  the current file position instead of reading ff->offset.
+Check len against the remaining section size before the malloc().
 
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Code:claude-opus-4-6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ tools/perf/util/header.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f30e48eb3fc32da2..13bbf8df15f66cab 100644
+index 13bbf8df15f66cab..c27ed90727ea6629 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -213,23 +213,23 @@ static int __do_read_fd(struct feat_fd *ff, void *addr, ssize_t size)
+@@ -269,6 +269,9 @@ static char *do_read_string(struct feat_fd *ff)
+ 	if (do_read_u32(ff, &len))
+ 		return NULL;
  
- 	if (ret != size)
- 		return ret < 0 ? (int)ret : -1;
-+	ff->offset += size;
- 	return 0;
- }
- 
- static int __do_read_buf(struct feat_fd *ff, void *addr, ssize_t size)
- {
--	if (size > (ssize_t)ff->size - ff->offset)
--		return -1;
--
- 	memcpy(addr, ff->buf + ff->offset, size);
- 	ff->offset += size;
- 
- 	return 0;
--
- }
- 
- static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
- {
-+	if (size > (ssize_t)ff->size - ff->offset)
-+		return -1;
++	if (len > ff->size - ff->offset)
++		return NULL;
 +
- 	if (!ff->buf)
- 		return __do_read_fd(ff, addr, size);
- 	return __do_read_buf(ff, addr, size);
-@@ -2713,7 +2713,12 @@ static int process_tracing_data(struct feat_fd *ff __maybe_unused, void *data __
- 
- static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
- {
--	if (perf_header__read_build_ids(ff->ph, ff->fd, ff->offset, ff->size))
-+	off_t offset = lseek(ff->fd, 0, SEEK_CUR);
-+
-+	if (offset == (off_t)-1)
-+		return -1;
-+
-+	if (perf_header__read_build_ids(ff->ph, ff->fd, offset, ff->size))
- 		pr_debug("Failed to read buildids, continuing...\n");
- 	return 0;
- }
-@@ -4687,7 +4692,7 @@ static int perf_file_section__process(struct perf_file_section *section,
- 		.fd	= fd,
- 		.ph	= ph,
- 		.size	= section->size,
--		.offset	= section->offset,
-+		.offset	= 0,
- 	};
- 
- 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+ 	buf = malloc(len);
+ 	if (!buf)
+ 		return NULL;
 -- 
 2.53.0
 
