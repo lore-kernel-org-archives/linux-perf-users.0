@@ -1,106 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB593E5EE4
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 15:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54B53ED10B
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 16:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776181923; cv=none; b=Etepy4OP3+PWdbZEfVjIYjInWP1mEQI3hJ5rNQ4wqn7tvJdRz2dj80AXzqXfpW+yfDjP+9CNyTTGEM0g+2G1mHVoTsXZ+LuBY42rm1O+tzj5RYvCqu0w/tFWU5gVunA9EyimG0GNE/C3QHBN/5jGx2qXdGHPRw3qqLIaziqWfBY=
+	t=1776182927; cv=none; b=kfGvuSABz3a47nMcLerOk0wOkYhixqUxd+MOs8P3o+snzRLAD7akNyah68ILuqmZG+iBZfC8if3ZpohWzPstLxjdjHXGsJP/CFjixtxYJlGO5xmhfdrBgpKPd9K1siPhiBnyL6V6a1S2eZX/L6AQOPhE0BtrlbSTo+PQEFR5Oeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776181923; c=relaxed/simple;
-	bh=zd5IgtfWT8NYlOXSFFpvLC5IdnN0Kg66EeWn7mnzMPk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Jz0HDiHxV1hPOhVO1YQ1BoIznT3iPyDU7JT5sbbIn9mFeHPj8H/dtMncLHjzV2FVIgW4l4wbWYdqky45QXjsyvfrpAcsdWwQrP+Su0Hk1kTsKGDu4OoF2xPi1gTWd0MWagQCg1jZKVWxen8qv9XdBh0WIhb7mDMAWj5kZF2tyt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7ypcUxO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776182927; c=relaxed/simple;
+	bh=/3G/W1wqMw930Wo4/eVE463K5niQWuVxpstiG0s3fW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFERJ0HiK273+ygI9OiBrY9ikvLBQk8utczPpK5OFD1tNTo1TVA4cEQCimvdRKPRMjsjpe5zcATjqKAjsc5ZDJepFAjPvmfp8pKPewKY/XoO1j2A52kOrsRzW1UpwFfMU6Zlr+HSjjN+RLIxS2Mm7Ti8agn6miuxIniYaLVFHmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEbTDYUs; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7ypcUxO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B24CC19425;
-	Tue, 14 Apr 2026 15:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776181923;
-	bh=zd5IgtfWT8NYlOXSFFpvLC5IdnN0Kg66EeWn7mnzMPk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=d7ypcUxOHVK+yGDLmLW/2xNqqu9TZ07qYx9eLsZLliGUW9BPaBTmaDQEhAdHZCbAK
-	 TJjRNbuOopzM9i08UqatYIC4DvxX5e3Ge7aBnY3e27hG2WYFmzIM7JYFYrMdN0hjSt
-	 Ou2v/DoUVEWhDTVmHlWRM/W9pmC79R7EeSGfZDpdftilSKllKlB1vD+CDbhKnRaVbG
-	 BZrN75q+5WybQIHFFWupYPxQJKBmvwWpi1bKC9TLeOdrI+Jhz5XnhJVTjb2vBtw1mg
-	 S654i1TLwNQqEpS4c1uVpY1V7mCeE/VCQKlPH00t5ODgWBweuMVI9EcyD3/BHU+QYP
-	 a/Ry9N/vKHmNQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 5/6] perf arm_spe: Decode Arm N1 IMPDEF events
-Reply-To: sashiko@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260414-james-spe-impdef-decode-v4-5-1dd30783a33b@linaro.org>
-References: <20260414-james-spe-impdef-decode-v4-5-1dd30783a33b@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Apr 2026 15:52:02 +0000
-Message-Id: <20260414155203.0B24CC19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEbTDYUs"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b932fe2e1a7so799167766b.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 09:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776182923; x=1776787723; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G7WCECxx/155qJE2EfdL4KnE/38VJ4zuJHqpOqEVZxI=;
+        b=fEbTDYUsSq/jcbi4wuBr8bI41nLjVorgjNj9pzwrG0oQrg2/2yJaLSatCMTFlx+FcC
+         Rj2doBBt6m4ujgQr/aRpQFpB/ULVgwUluv0XXWwzCU9zADB2uIeV9P2MVUFZlryPXlii
+         5HgliJ5TsiSR/LRX1bGFU4XZCkVDzjXwe5Tf3KaLGlkX558YFUYgM+JNoXGSXkLXgRKq
+         YCrC7DBY/k0jKQH4wKr+3maruLh5CyVL6qPnyhHEOy4fLoP5Gbo5PNWgK425vDBAwEhf
+         ip/vxQGSVKqbaR+XXlFqrFYUat+OHbB7KJmtmcV6G+1TUoQ+iQ5icx6R9kWVOekQZqbo
+         PJOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776182923; x=1776787723;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7WCECxx/155qJE2EfdL4KnE/38VJ4zuJHqpOqEVZxI=;
+        b=WJ/SZd7tfD7MCAKnpnsil9Cci+bBHWYGLxFx75mPN0QY/AED/elw5m+pRZw/LnY7Sw
+         Tn8JXsrpcKDisQVWA7qWJex1yWg6OfdM9F/TWOSqpICUHrgo3Gl1lmhAKEYH+3nLt3nr
+         2gGwbQGPmH4+5V9tIjBNj+miHwEsOsa/e2aNT1SE4hADKCm87nChE9Cd50dlJoF/myVr
+         8J3CcpBQMZw+hZXukvYnRcNZ7WzVkuGh5BPZXh4AvvsCjMBD4KI9hd6kqYisQEm2PFUZ
+         Cs9HI8ak/6Ko3X0ypJB5j9lwjVWHZRSLMb2VEKUTWuA7OVwWUoRIofGHTo835ObeCqk3
+         ZwZA==
+X-Forwarded-Encrypted: i=1; AFNElJ8qf39KlzqSRuIlqOldTIfi2M9fv5Yl1zz0Sam8lVoSiEzoSRxQG18MYUdViZFMusLvg8LYqcRSmeUkUaGLqADb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZvTXXDJxzaXq51pQ9tw+g5wXBflqJ58ehMVFptjD5osJAplNv
+	JPDaLT1L979W1lnrGotGn0hhRfEDPAU8Blgc6bUle37BD6OiI4f3FSrh
+X-Gm-Gg: AeBDiesW0Ji7KVmBWPWhvPZjtMgGvPO4QWnfHnBw0WLx+hCImoRShYKGTccY/KAnAQH
+	1FO1990GLzz9JSF+LaEmDH8B022+W4oKKtcnXI2VVoVcfGrmLPWrSkQF1A5UGBfQSNF51hR054J
+	gbZCu/OFKzHA2lIlwLwuJItmr5Y5Pxjv/bmZTNLfpbZxEP5LmkBxFW9LjYXVMJYS03Jg2Ne1/6w
+	TrnkmUdPYAEr77l2fNgFenhbdKR1+4a/9vYnlsMJwSnAGQ271qOo+9Y2KPjJgu2rnbOmy8Opw/W
+	1q4FYSh0FMaY+Nti/kqNbhSDuwi/mUT0kJ/uO+4gfqwXpCg7AlCBB1eAEwNtG2I4rpRiIS2e8ao
+	GB/SxYCD/5Hlsoyz2y/kdo/yoB2YfokVjLwJBdAFEMOTdjDxekRlR/LKAuM7kpskbm02sQsibID
+	/SxIu7tZor+myqRUoNCWgD9EXx9tH9c8VQU4ChXAUuzCsj6BHs3o5VbReYR78NumidzRhIgrKL+
+	21gkEFrru5nF3YSPz4L/DFBcmFoTPeZWAEGDHle+LCgfs8O
+X-Received: by 2002:a17:907:6d27:b0:b9d:bcc8:4dc2 with SMTP id a640c23a62f3a-b9dbcc84e2emr714208666b.42.1776182922374;
+        Tue, 14 Apr 2026 09:08:42 -0700 (PDT)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-084-056-106-044.084.056.pools.vodafone-ip.de. [84.56.106.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e7c7c81sm408722766b.43.2026.04.14.09.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2026 09:08:41 -0700 (PDT)
+Date: Tue, 14 Apr 2026 18:08:39 +0200
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	miguel.ojeda.sandonis@gmail.com, a.hindborg@kernel.org, acme@kernel.org, aliceryhl@google.com, 
+	bjorn3_gh@protonmail.com, boqun@kernel.org, dakr@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, lossin@kernel.org, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu
+Subject: Re: [PATCH v1] perf test type profiling: Remote typedef on struct
+Message-ID: <sitnyvaxrsyen63qj3sr7ocelgh7wtgckj7uvsdc2pb5wm7pak@rm33rahctupp>
+References: <jiwt5mjma2puv7kjbgploxx2l5tankjm4zu2tsa75qkckwnwjk@f7mz5vlvzpjz>
+ <20260302235821.588686-1-irogers@google.com>
+ <gfdliffsgy4j6q2vrilr6kapy3hczh4udszy4wcba6aal3ado4@hfeqa2eizu5y>
+ <kr2bfp43sqatdssmhzpmogs2h27ddbmegvaknxb6by24n2t64h@hv4m5myvswpa>
+ <acts0fXgsuirBp9G@google.com>
+ <wqmqx6rnqrociriliyojihkxi3llractltkfcwznzu2g5gbieb@y7eaaiee5x2o>
+ <DHSYGL2DY5IU.19MOS6TI1QNOC@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DHSYGL2DY5IU.19MOS6TI1QNOC@garyguo.net>
 
-Sashiko AI review found 1 potential issue(s):
-- [Low] The relative include path `#include "../../arm64/include/asm/cputyp=
-e.h"` is invalid and relies on accidental directory traversal through a com=
-piler `-I` flag.
---
+> On Tue, Apr 14, 2026 at 03:42:19PM +0100, Gary Guo wrote:
+> > Indeed, I didn't finish the analysis, fooled that the diff was solving
+> > the issue. Adding DW_TAG_typedef into __die_get_real_type still fixes
+> > the problem, but due to different reasons:
+> >
+> > * check_variable calls __die_get_real_type directly at the beginning and
+> >   stores the result in type_die, which is the result of the function.
+> >
+> > * if it doesn't resolve DW_TAG_typedef, the flow goes into the
+> >   die_get_real_type, which stores the result in the local variable
+> >   sized_type. But it never copied into the type_die, and never returned
+> >   as a result of the check_variable.
+> >
+> > Hence we either need to add DW_TAG_typedef into __die_get_real_type, or
+> > copy sized_type into type_die. After some testing both seems to be
+> > achieving the goal.
+> 
+> Why is the code in `check_variable` resolving typedefs itself instead of using
+> `die_get_real_type` instead?
 
-commit 7fc153524fe60dc6d6f08fd73b7ea3f46e904e39
-Author: James Clark <james.clark@linaro.org>
-
-perf arm_spe: Decode Arm N1 IMPDEF events
-
-This commit adds a framework to decode the N1 IMPDEF event for Arm SPE,=20
-which isn't covered by the common list. It also increases the packet=20
-description buffer size to accommodate more strings without falling back=20
-to a hex dump.
-
-Link: https://developer.arm.com/documentation/100616/0401/Statistical-Profi=
-ling-Extension/implementation-defined-features-of-SPE
-
-> diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-=
-spe-decoder/Build
-> index ab500e0efe244..97a298d1e2791 100644
-> --- a/tools/perf/util/arm-spe-decoder/Build
-> +++ b/tools/perf/util/arm-spe-decoder/Build
-> @@ -1 +1,3 @@
->  perf-util-y +=3D arm-spe-pkt-decoder.o arm-spe-decoder.o
-> +
-> +CFLAGS_arm-spe-pkt-decoder.o +=3D -I$(srctree)/tools/arch/arm64/include/=
- -I$(OUTPUT)arch/arm64/include/generated/
-
-[ ... ]
-
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tool=
-s/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-> index 67ca356100e53..b74f887a48f2a 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-> @@ -15,6 +15,8 @@
-> =20
->  #include "arm-spe-pkt-decoder.h"
-> =20
-> +#include "../../arm64/include/asm/cputype.h"
-
-Is this relative include path correct?
-
-It looks like this file is located in tools/perf/util/arm-spe-decoder/, so
-the relative path resolves to tools/perf/arm64/include/asm/cputype.h,
-which doesn't exist.
-
-It seems this only compiles because the newly added -I flag in the Build
-file causes the preprocessor to resolve the include relative to
-tools/arch/arm64/include/. The path then inadvertently evaluates back to the
-correct file by traversing backwards out of the include directory and diving
-back in.
-
-Could this be made less brittle by relying directly on the include flag,
-using #include <asm/cputype.h> instead?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260414-james-spe-=
-impdef-decode-v4-0-1dd30783a33b@linaro.org?part=3D5
+Looks like it was done in 90d78e7b8e5 ("perf annotate-data: Show typedef
+names properly") for the purposes of resolving structs without a name
+slightly better.
