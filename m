@@ -1,53 +1,53 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5CC30B53C
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 17:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F530DD2A
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 19:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776189542; cv=none; b=MZRgJQjhKn03m8B4WW05jBBaFVb1Y6a+xJDMZnogpf14KmYXkeBrhcxCrGrmS9LYcaQfOemFT8ECbN+FlHYnBRWJCzl/1x4Ny/d8ePgsEvolvfD5VNCjWX+vki41RKgPFMuJ710jX4jhO80GqogpwxKiOH14Zta+j1USbu+nq3g=
+	t=1776194071; cv=none; b=g3nhFSUxk4TWWQmonprqQn6ppJtw1Ud1YWmGG+Bm3Vr9bXlASNoGaHgZV8OsTJHzu/uIDyIIxolyV8fU8XzvK+pxUsKWd1zhF/qapai/raKEsiAoLEdo8hZ5O/uDx+Txc0hA7z7RVUeycYfAgHtoH2rFWgVFkbxJ1n2JOwNbM2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776189542; c=relaxed/simple;
-	bh=Kp2PfuS3nx2OUfVs93QelDdpZy3qsgDX2nFQbF4Fu00=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=c7iRkcmI2w0O4yV5g4yPZXyF3hnPqP+EOOvr+YcmqxNNxiOmIL2NltuXSF5+ZqfD0+WB/gi/bk3vevG9IxvLMUe/2+y/fqOf4AcH5YsrSDsEgzGGcxueER6ekcV7qHpGRX6PAKXUeIqKldY2V5z1s3wVaxwq2zoI99MgeJVMfl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XEQcKwME; arc=none smtp.client-ip=74.125.82.73
+	s=arc-20240116; t=1776194071; c=relaxed/simple;
+	bh=Hqjfb4UHro0/tCw0trNzNsptlp3oTgVT7DeeM9tnrSE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SJuXFzgykAH7jq+lFiGamttOrFVkJGWZUSz/fExLcYmjgC3b3TLIAd8z4PnbrXMSpYFamWu80PtT7Bv1GQkX3oumTw3SUREpCgiQIMincJMqm3pyWIhQEvPoZTs60uRfSkOvFxHhEZNNcIf5RRdgPVNdO1f4oorvUrLTN/aiGPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M/Lp7cOq; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XEQcKwME"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c28353912so2171830c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 10:59:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M/Lp7cOq"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82f0f2b2641so3079408b3a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 12:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776189540; x=1776794340; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QsDGz/PU3e42c9nl3NR4MaQvOT7jRTzsi7EmBj171Cc=;
-        b=XEQcKwMEvc2yGq3D9mlqkiM5rbu8wqDILIDS/+QbfbN+OY1P8uoStMsbW/ei5mOlyf
-         AiRZa3dYiPZ34U3ChsQJfl1Dd2WNIvjdage2DZ4WC3Mm5+9Cf1CtFMsNhpyVHbkfCrao
-         HjFJA/qLFKZ4eE/cMtcY7gaVUTsjaxLjVUwtJoCjLnAl27HzP/cNlkShkw79hsycAMWv
-         XUpmyyVtCGQuaLCco+t13mEDPKXY9PXVf0eBbKhXSiTmIkL32YFgWi6h1eMoF+c257td
-         JN7XgIbypV++6wcp0ZGh81qknn2rMMXiwlC2gO9I/nAsMrUSXQyO0odtR0D31q4DWRqv
-         zJoQ==
+        d=google.com; s=20251104; t=1776194070; x=1776798870; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DBk0Qgh13xOWDZmdaDsLDUaSKogcM0uH9b/OnvPK9Jg=;
+        b=M/Lp7cOqEVj4wr6pX8fwgPoSwbu1VPKQr5qC4JVEksJld27b30GAm8BVdGmAOzsqMf
+         /fw7gGicC2Wh6buhML0l9if+AIwUCEJ5w02JlcOqY5qEJUbFgl/b7M80Y2JQ2T/jZDuv
+         WtTDPMwvKh2mN6QkymmIaHAnmphGwJ7BJegcb5ypk013V0FSGIMtEaQvtSY1TyBxcuiD
+         KxAFcHjHJfjw7V6ptuf7UO4nKodY5e+NGVSuQ0h0JDSVoL9sJiCPJ8PtclekEzS5rkcs
+         J0CVLSw64tJbeFEUKtLExics6bnzQuuUfUkTakGRgPDUUI6R+YNfCwNRXLOuJGWP4ySv
+         oyNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776189540; x=1776794340;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QsDGz/PU3e42c9nl3NR4MaQvOT7jRTzsi7EmBj171Cc=;
-        b=JdAElB8lo0wT3tgahWFUumIdivNAdhoXdCYc1R1SHdtxIXpb4KjIRdn5UcDcUETxCr
-         RotIn5FqWP3nq4AdyRu9HRfaNT+EKjp0MbP0e80UfW1h5Fu/ZmdUTQZgOdf3rwChZQMX
-         ZEJzu8h5ZAIhm4kGSEgmsfDI/7tzW01Rg82GTODNkF9pasL1u5j+7u/sRhEDqzlzB8Nr
-         meZda2eKv69sJG3i6v7dhyG8KoZJMsOAueZr8C7u001MnZ0f+PvUKcSAlMnrnRYFFUpY
-         ZwJEJ37wXexOfXkAwwXpGAUNnHHnzFtxRIgrXWiNMkyTVrDoYcXjj7QHAfu9PxYcV7SD
-         raqg==
-X-Forwarded-Encrypted: i=1; AFNElJ83xUWQ0T/mRV07YK1t/0AKdtiXRQPpjQRtvxqMNdhsOXslxfthZ4VBYR08r56ejSyR9qVHooP/IueY/GrEnXV/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrqX1qHSo+wcUF8tqa3afMuMy5Q3ig8vGITfmenzkcQB7/GqNo
-	WtUTg5gqcm96IQMq3HB2n2DPPfNw4gmfV4YvgR1ZmK85HJfImhWyhhVcLcOTjeRLns8ijpgDbK5
-	1c1mRIcJ40A==
-X-Received: from dlbvv21.prod.google.com ([2002:a05:7022:5f15:b0:12c:177a:ac1d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:eac7:b0:127:33e0:ea33
- with SMTP id a92af1059eb24-12c34ede98bmr10388284c88.22.1776189539357; Tue, 14
- Apr 2026 10:58:59 -0700 (PDT)
-Date: Tue, 14 Apr 2026 10:58:55 -0700
+        d=1e100.net; s=20251104; t=1776194070; x=1776798870;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DBk0Qgh13xOWDZmdaDsLDUaSKogcM0uH9b/OnvPK9Jg=;
+        b=AnkoZmQgFbkI6GCv6ZsMSsExLA9b8fsIG7/AqrSGRgP/vrG03IPAxfA7PvL2cs8H3f
+         /igOl6zxuyiPB+NsJG8YdU5R8yLATeWvxyUaExGG+IcNOslQdod+CHauzlh3pxqCfGiG
+         I74q+A/aww/vZzumgEOtS9nfNWSgZu0sf1lhKruEOSi3qfAXaokI7ZDF8DcdnPoRFZC5
+         tJ7iwm3I7yUYuCZLmHMk2V9yBhan9Q+lC+tViHo7H92MCLdekPmCB+F8d7NuC8Mv/zRA
+         7+vy4IoX2c5qc7YmwhmNEfs4ZFMbJmTTDsPphpfR2qmUH2mtK33P61+w5YXAnlbK3wlR
+         ENFQ==
+X-Gm-Message-State: AOJu0YzJo7yLvhMdrzQ8v9XiZTXlJYG4ulvyAoALCdTcyFlcXbujp2XQ
+	61fzgUtJFFz7aRjTPPvofPLHs5ZxRFzwJOYpP5F7IQ1MvWyW7H9IjemPQ1/ncSaSEqitQj8xfVT
+	T4eHA3A==
+X-Received: from pfbkh38.prod.google.com ([2002:a05:6a00:9466:b0:82a:5ddb:b051])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:35ce:b0:781:2291:1045
+ with SMTP id d2e1a72fcca58-82f0c1cf099mr18003866b3a.8.1776194069443; Tue, 14
+ Apr 2026 12:14:29 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 14 Apr 2026 12:14:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,62 +55,73 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.54.0.rc0.605.g598a273b03-goog
-Message-ID: <20260414175855.2089482-1-irogers@google.com>
-Subject: [PATCH v1] perf pmu-events AMD: Switch l2_itlb_misses to bp_l1_tlb_miss_l2_tlb_miss.all
-From: Ian Rogers <irogers@google.com>
+Message-ID: <20260414191425.2697918-1-seanjc@google.com>
+Subject: [PATCH 0/4] perf/x86: Don't write PEBS_ENABLED on KVM transitions
+From: Sean Christopherson <seanjc@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>, 
+	Mingwei Zhang <mizhang@google.com>, Stephane Eranian <eranian@google.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-l2_itlb_misses is a valid legacy cache event name, hence allowing it
-in all_events in metric.py. l2_itlb_misses was also a json event for
-AMD zen1, zen2 and zen3. For zen4, zen5 and zen6 the checking that
-metric events are within the json was skipping l2_itlb_misses as it is
-a valid legacy event, however, the PMU driver lacks the event mapping
-causing it to be a bad event when used in the metric. Add
-bp_l1_tlb_miss_l2_tlb_miss.all as the l2 itlb miss event (bp = branch
-predictor, the AMD way to say itlb), so that is used in preference to
-l2_itlb_misses when the event exists. Remove l2_itlb_misses from
-metric.py as the legacy event isn't used by any metrics and having it
-is error prone for newer AMD zen models.
+Rework the handling of PEBS_ENABLED (and related PEBS MSRs) to *never* touch
+PEBS_ENABLED if the CPU provides PEBS isolation, in which case disabling
+counters via PERF_GLOBAL_CTRL is sufficient to prevent generation of unwanted
+PEBS records.  For vCPUs without PEBS enabled, this saves upwards of 6 MSR
+writes on each roundtrip between the guest and host.  For vCPUS with PEBS,
+this saves 2 MSR writes per roundtrip.
 
-Fixes: e596f329668e ("perf jevents: Add itlb metric group for AMD")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/amd_metrics.py | 2 +-
- tools/perf/pmu-events/metric.py      | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+However, performance isn't the underlying motiviation.  We (more accurately,
+Jim, Mingwei, and Stephane) have been chasing issues where PEBS_ENABLED bits
+can get "stuck" in a '1' state when running KVM guests while profiling the host
+with PEBS events.  The working theory is that perf throttles PEBS events in
+NMI context, and thus clears bits in cpuc->pebs_enabled and PEBS_ENABLED, after
+generating the list of PMU MSRs to context switch but before VM-Entry.  And so
+when the host's PEBS_ENABLED is loaded on VM-Exit, the CPU ends up with a
+stale PEBS_ENABLED that doesn't get reset until something triggers an explicit
+reload in perf.
 
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 63e5098606c4..ee5381646a8d 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -287,7 +287,7 @@ def AmdDtlb() -> Optional[MetricGroup]:
- def AmdItlb():
-     global _zen_model
-     l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
--    l2m = Event("l2_itlb_misses")
-+    l2m = Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
-     l2r = l2h + l2m
- 
-     itlb_l1_mg = None
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index 0c41a502cf21..c1931b2a5170 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -25,7 +25,6 @@ def LoadEvents(directory: str) -> None:
-       "cycles",
-       "duration_time",
-       "instructions",
--      "l2_itlb_misses",
-   }
-   for file in os.listdir(os.fsencode(directory)):
-     filename = os.fsdecode(file)
+Testing this against our "PEBS_ENABLED is stuck" reproducer is a work
+in-progress (largely because the "reproducer" is currently "throw the kernel in
+a big test pool"), i.e. I don't know if this actually resolves the problems we
+are seeing.  But even if it doesn't fully resolve our woes, it seems like a
+no-brainer improvement, and if we're missing something with respect to "stuck"
+PEBS_ENABLED, it'd be nice to get feedback/input asap.
+
+Note, if the throttling theory is correct, then there are likely more fixes
+that need to be done, e.g. for CPUs without isolation, and/or if
+PERF_GLOBAL_CTRL can be modified from NMI context too.
+
+Patch 4 is a clean up that I posted as a standalone patch almost a year ago.
+I included it here because it's very related, and because I needed to refresh
+it anyways.
+
+Sean Christopherson (4):
+  perf/x86/intel: Don't write PEBS_ENABLED on host<=>guest xfers if CPU
+    has isolation
+  perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS
+    is unused
+  perf/x86/intel: Make @data a mandatory param for
+    intel_guest_get_msrs()
+  perf/x86: KVM: Have perf define a dedicated struct for getting guest
+    PEBS data
+
+ arch/x86/events/core.c            |  5 ++-
+ arch/x86/events/intel/core.c      | 71 +++++++++++++++++++------------
+ arch/x86/events/perf_event.h      |  3 +-
+ arch/x86/include/asm/kvm_host.h   |  9 ----
+ arch/x86/include/asm/perf_event.h | 12 +++++-
+ arch/x86/kvm/vmx/pmu_intel.c      | 20 +++++++--
+ arch/x86/kvm/vmx/vmx.c            | 11 +++--
+ arch/x86/kvm/vmx/vmx.h            |  2 +-
+ 8 files changed, 84 insertions(+), 49 deletions(-)
+
+
+base-commit: 6b802031877a995456c528095c41d1948546bf45
 -- 
 2.54.0.rc0.605.g598a273b03-goog
 
