@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8209F2701CB;
-	Tue, 14 Apr 2026 20:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD13E25A2C9;
+	Tue, 14 Apr 2026 20:49:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776199745; cv=none; b=TnMPn6qwMSGW/UcTp5crBbKIsOFrXd5YfwmpQiMH5jI28vfqqWqbx/NoFwUCzWQZQ/QZT32/vbJX+fQwvHIBxVgcMSo7mDkh8+XycGfEJJ0ZzaUHq8EFbNN0wIcgryAYKG07M3tpDxEcZhHCoUKHNsrOvRGpmR05tsWzDAJwPp4=
+	t=1776199749; cv=none; b=HC2D2ncYnUNMURpNefqDzRxnbaIFTqlQKK8v4YDdEumI50GbnVik2nCjSQYc8L1Re3y00sV1TYhpJFA6w9j6Ct7+W8DU3NAr4d1LVVY4iPsvlWgg1Uy8mxvxfFWwEKPJi6kdGnscJLHHpM4hah3GqFS58l7ZppJpz/FCEtbB8N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776199745; c=relaxed/simple;
-	bh=H6liez7WESmbfgSAy1NtmogDKAjTD1AhH+U1x5vV9kQ=;
+	s=arc-20240116; t=1776199749; c=relaxed/simple;
+	bh=bm3oJ/JS6e4E9s6WCF4O1PS1zkEWdUb9lIYo23abs3k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dpitI6JRzC9lfCVpmmOQ1BwS0VykaWtVZKFfs1tGcW4frDNxFZtuztcbcCFGiQtck8+PGAe8KrbwnvfTJgQ6AyiFArSCToGVVe8bM4ynYSQepUZ3fEAIgyx75cmfD947kxWZpJZEus74tU1HZHJiMRdQNqTXR4NoHVk4dgr9gdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=suaLpmYW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=taHqVWY2oskU0hHpPZkz9cO4PNrcjZ2EeIk4zfLP7o9BbXU/1WBgbHEQgUKUYk9Fm5WsWsO/2RVtrYJMP265RBL5APxYp9FIiqDrkXFBz/qDUiyEBidlhrIxt+Lnj1QF0VFnjgyoM9sL0uK+6Zla/sVc3Cxfa8inyAM3ZW8inIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2TegSh3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="suaLpmYW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA5C2BCB5;
-	Tue, 14 Apr 2026 20:49:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2TegSh3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128D2C2BCB5;
+	Tue, 14 Apr 2026 20:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776199745;
-	bh=H6liez7WESmbfgSAy1NtmogDKAjTD1AhH+U1x5vV9kQ=;
+	s=k20201202; t=1776199749;
+	bh=bm3oJ/JS6e4E9s6WCF4O1PS1zkEWdUb9lIYo23abs3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=suaLpmYWDxUR4L3YpLyTrPKEKkoslggBsWb94Kx2bhK/ilV3jLdnWQPWfVc1JOSvG
-	 Aok3iFWJa4Al/cH829Ud2lLx57XfTR0YslcRhyi8GgDJAY0yHwcI4IZJ2xDQbYZCIv
-	 QaE1LlAMNMHCbCLqRnswDVF7VfoCg70zuWG2xpYd/9bPV/K4s3JtwE7pPjSX3YH6Tn
-	 khB7tS2qE8iTUri27E4E6EBm9a3tEulMchzbM0x7FQLaVniOLd19/u3cjj9RiysKLC
-	 VhTv70O64FaqoDpKuGvGULWmty1LIgze87/ZqVFpf1Fx3rdCgJa10nHhOrk4Dgc7rZ
-	 UlgcHZ8F2w7SA==
+	b=p2TegSh3T5FYP7MImASUG/enWwZ7nA9Ix44dX/F64eZ2zf9BmR/pk1Ae3xGKirZ/C
+	 kvRZqxkaT7Kkm3B0m9sEFwg3P2EM/s/f9hAk9ky6kwXFq2T6CW5LnMClR4Xr0vLIu1
+	 q5+Gl5Dn0fUVqbUMtMPVi4r0LsOM1HBu83cAEcElk9oHHX5fLqob63n1+MAA/Hxbjw
+	 E5nwnaJc5T4UIWllzwyUYsOXanS18KWixjaUI1jtvqSsOoT1WGGln0gAh3t7CgG8bq
+	 Yb32wEmom44b7yJK+6Fff70KRDeEXpYnm6tYOxPx8JwDfiCVGxsZLhWeZwPL3TS5oE
+	 brxAhE7ck0CJA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/4] perf header: Validate string length before allocating in do_read_string()
-Date: Tue, 14 Apr 2026 17:48:45 -0300
-Message-ID: <20260414204847.293557-3-acme@kernel.org>
+Subject: [PATCH 3/4] perf header: Sanity check HEADER_EVENT_DESC
+Date: Tue, 14 Apr 2026 17:48:46 -0300
+Message-ID: <20260414204847.293557-4-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260414204847.293557-1-acme@kernel.org>
 References: <20260414204847.293557-1-acme@kernel.org>
@@ -55,35 +55,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-do_read_string() reads a u32 length from the file and immediately
-allocates that many bytes. A crafted perf.data could claim a huge
-string length, triggering a large allocation that would only be freed
-moments later when __do_read() rejects the read against the section
-bounds.
+read_event_desc() reads nre (event count), sz (attr size), and nr
+(IDs per event) from the file and uses them to control allocations
+and loops without validating them against the section size.
 
-Check len against the remaining section size before the malloc().
+A crafted perf.data could trigger large allocations or many loop
+iterations before __do_read() eventually rejects the reads.
 
+Add bounds checks:
+- Reject sz == 0 or sz exceeding the section size.
+- Check that nre events fit in the remaining section, using the
+  minimum per-event footprint of sz + sizeof(u32).
+- Check that nr IDs fit in the remaining section before allocating.
+
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Code:claude-opus-4-6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/header.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 13bbf8df15f66cab..c27ed90727ea6629 100644
+index c27ed90727ea6629..3302748bac786fdf 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -269,6 +269,9 @@ static char *do_read_string(struct feat_fd *ff)
- 	if (do_read_u32(ff, &len))
- 		return NULL;
+@@ -2141,6 +2141,13 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 	if (do_read_u32(ff, &sz))
+ 		goto error;
  
-+	if (len > ff->size - ff->offset)
-+		return NULL;
++	/*
++	 * The minimum section footprint per event is sz bytes for the attr
++	 * plus a u32 for the id count, check that nre events fit.
++	 */
++	if (sz == 0 || sz > ff->size || nre > (ff->size - ff->offset) / (sz + sizeof(u32)))
++		goto error;
 +
- 	buf = malloc(len);
+ 	/* buffer to hold on file attr struct */
+ 	buf = malloc(sz);
  	if (!buf)
- 		return NULL;
+@@ -2186,6 +2193,9 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 		if (!nr)
+ 			continue;
+ 
++		if (nr > (ff->size - ff->offset) / sizeof(*id))
++			goto error;
++
+ 		id = calloc(nr, sizeof(*id));
+ 		if (!id)
+ 			goto error;
 -- 
 2.53.0
 
