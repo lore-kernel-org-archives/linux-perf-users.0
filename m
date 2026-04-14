@@ -1,65 +1,66 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A6E21D590
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 12:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9CF3E638E
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 12:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776170896; cv=none; b=dRGSG0THK2R9XlN1ucicXgr/aBaRxq8ioTx5QxNO/9F9CBH5cFTO97ewwE6VTzqLuR9fDQEfhRo6Miz7Acc7SkZWtmZtTzO2zKJ4/p+Ys8w4Y054tywnCZ3vUI8ee0aIWOWPQEmyKr5P7bwpAVxb5+22uTQ0DAhXgl/z8RCUbIw=
+	t=1776170897; cv=none; b=TQWH0znZkisCwxMZmGg2JA//4tO+VXJo4eLEkXhJ6+DSYp50fVktdB2u6Sr2jOHQYTVUeMDlSNI+F/IcRkNHO+WPArQ4MpdA0+khjlLkbMvEN4k+tcSfn9UJRKfancEkePxpnkcy8s+Q0cINqWtKJpW50dMgAKmEhBUp7kn2gGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776170896; c=relaxed/simple;
-	bh=YrZo8Sz4peDwlBGDfyNFotxciFBk92jX4lJ+BDtt604=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eTet4Tprct5WR9y0EPAHSAkBkbbjnqvULNj7pBiXLu0UFE6LUjJPShE/7AE+urzc8eHb7LauSL8rW7B1o80tg7nmdeIsovL4sIFtY+8iw4rVQAMHMc9KKhevWaldut+DqG0smNmTnjMsPQac0a8P21t5Bg2roAbaIMrlXwSXcfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ohg8VUHe; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1776170897; c=relaxed/simple;
+	bh=B4MOcb4BErEsKUcIM7RRmNpCR6Vyqi8cYdqj84QRn4U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XUym/3zl/1m8yAsNNadCaNtxhw4yl3Gy+NcEtncCPaguTUKKGAwDijQnPnNB8Yurp3KCiy1hyt1XdLAUGmGbu5KW6oyYmV9mZn1YP7xjZsN62oErKPrA+Z0ySSxH076Gr0Vg5JE/u/38DBIow3l6mCSfQquSzXDKByYhuyWg8EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jZeWOTro; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ohg8VUHe"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so74470325e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 05:48:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZeWOTro"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488b0046078so55148075e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 05:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776170892; x=1776775692; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bRMqXcgfTBMb2taAmCioY8eT98K2Okrp/46Mz8Swy10=;
-        b=ohg8VUHePmvzL9lcNA0dJsecRvolTaXAEwi0+y1z87bXj2bSngi65lnWkEtfD7RpfK
-         NbU9pjbvwFQq/pJN1LXkKwqOkMzKkoWavZHvSj0OZFhe0GRTtZzNmfqiux7jhhXhbn88
-         sbCC6EZ05bRy3RGtYDDNboftydyyjYdUFt77Hm9ReoKXtGBIVm/C98rBwFlcGVnmmtIw
-         NQcb5LoUHJjqWyrqMLicyMytcd7OOH5uYmJygeq3fBrSt8pWUHqQ7AugsWVssB+SO1N0
-         6vegepQsKfxRaEezwZyyqf92fmWQcI2Yy5rp/Pa/qNLmk7OWaBZDc8ZVVBFMmoFYdavI
-         0LqA==
+        d=linaro.org; s=google; t=1776170894; x=1776775694; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LkEHFh887Es+jtZSLZuibHtBrvBj/V7mtq/pJJpeMMk=;
+        b=jZeWOTroFtLLV9F8C9Vw2d+u85VQxcUKNza/mJdvKe4sZyWkZMvoaUOM6EvuiB0lY1
+         9lXu0ZNQPUR2VEuFVbdGZfTB7FEkqA7xSzxdCUBT5Mao9gZgUCnO4bCN5Esuk5op79qB
+         p6eTcU+RpqKTYdzmz06VJOffbK7O62IkPrRp1hkYwS6jIXSSGnd58ZykPyB11DKoxzdx
+         LeOig1VH/AtYjqufYM9k/nR2TNdlu+99lTv5oh8+iMR5AIyk1fuKmEfKYqmHQD4FhQbq
+         7JAH9K3dYhkupXsaBfw/icTcyo9hiDNU6mxv2iWUzGY/jtl4r3xetOjI7orkDDR9uQwc
+         SQ1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776170892; x=1776775692;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRMqXcgfTBMb2taAmCioY8eT98K2Okrp/46Mz8Swy10=;
-        b=aOYRsUI7FEKVl+gKLVE5K8IU1GyiWco/tiGqO4nyxutqZlz16u9WpE3wnamPvxiG7d
-         1om8ufc6Vp5YZ/DfkRKP+z87wGJAZIhnhgXfssZN5kDKG4I+dWzpWq1gjkXX8mZmvNn5
-         uUG7wbQ8W2LhrmsxzKWXaEoVJrGknvkRvVxZmaAt26wie+CsPUWQwz9dTU9q5zNZpoHU
-         ZULIccU2WldN9rI9QOU1Jd3Rfx4FaiXdB9hw+gpfcQW8ieAeYR3kL09FticMdsbAzBTd
-         81CRUn/JPe4Gv8GVOXQMEADyljV4mCQJ6O8b/TJTUYqBxkK8valalnYmbc3pktSdPv9O
-         ODyw==
-X-Forwarded-Encrypted: i=1; AFNElJ+ArRS3ngSQ3077J6b/B/HgDw7CVpr/DR7iJpF+OqjTx8tmMV1DPV21syuoFpyQ/UD0C+2Q0RsySWXmZ0h6+w1T@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3pzQSnMVF5Ksa12LI7MkpuvTb2j6xX9zgX5MceGcqgdz3N2ny
-	u4ackockzlVyfnYZL/I3+gTezsok1qvKGVFKOLTZbU9QX+qBlB2ukIJzygVeCbcYiLA=
-X-Gm-Gg: AeBDiesjJGA7GtS6uP34DivzVFS4QKAthgpFQuLD3XNiuUQ8pHs5SYKf4VnijFL0vj5
-	OPr1Og/SDXSeCM9K3sdW+UiEOofdeFqf9ElLa9NJ3lbI86QwqDDFXws6GAgxMzWdqXrYNSBdasm
-	MhaAwrmEILe61sWk+mj7AdAEXZ7pawASrr0akfMtUxPxlB+o7C3v8AwMti7f348d6yOHRVFFx+5
-	bKNuTxwfbGT0avR7yIgNG1ue+N9Z2v4B8b8qMCFu8QAU3D2fGPbPDkNTgfFUa0n03kp1nFSEhyN
-	CJtYDgBc5Ke7tWtDtzqOJXAYK0BZbEoMSs5zbriEPHKZDc5KRnqkkmrR7GN1A8bqCwzIu0rxY7J
-	CXV7pFvin8CUa1n2Thl0dee0sD53NtSSD43tIW/6FIUhxw3QRWOdeSf8Ng5qIE9sm4eSOpks52y
-	guhtTFM3MrEo/s4VZ3koXf6EdCJLz/eNK7UcZJbg+wjw==
-X-Received: by 2002:a05:600c:820b:b0:483:2c98:4368 with SMTP id 5b1f17b1804b1-488d685b878mr245798645e9.18.1776170892428;
-        Tue, 14 Apr 2026 05:48:12 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776170894; x=1776775694;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LkEHFh887Es+jtZSLZuibHtBrvBj/V7mtq/pJJpeMMk=;
+        b=HDcYdRSXZ5b83pYNzVNLIgxJRkby0GvSyKT1MY0PbnynyA3OINCumOW/K6G2L1oZvQ
+         19QLHtZ2BkAt60qqpt4SZDUl5ZjHT8Dc/o6yncYXSYtlSOE/2+0IasDLNNaNYNA5H8aO
+         MI+uQ0kOw1c/jSg/M3PzzFElBvboIdRBoeQ3DtM3r675Cd5palslz+nE6BWPJa/8VTbW
+         eDEJpNhPu5M7pdqnNTY1pJzv+C/pRYZN0xzz96O4Sfb1OnhqE56Y81TYZ8IkT3hEZ5+T
+         1AhksHRdFCY+WdPQPolTb6mZcM5UIncfqTBNlmcsrwhZO+MCcEMEL/N074V+MFf6izkZ
+         NDZA==
+X-Forwarded-Encrypted: i=1; AFNElJ8skWTz0QylIhO+/Ay+hU5cdoZI0JwGcezG+ozsd8/HREWKaudcbnfstzRXg5ARGBGL12hpvaOvJTy1i5TkToup@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/ZJbKYCmO01Ff3JTpE1zwtGwD/NfepY72tNO2lP6zlx8fkMMH
+	MVNMnIfBLweVaWH3OsFw4wxL9CkqOx5AlTQrM2pZS7+jWIKN7CCPFHo6PxUgrtoX0VY=
+X-Gm-Gg: AeBDies0eZA+OnUMzTzcAYZ2sL7NG6+3iheGbOtVRA4Ynka2ii6RSsfpFA3ina3QQ90
+	zepKC4LfrrVNkAirM9p3hBgMHSsjjxb8U4MpnqKdDGY+Vg5ghppX6SXHb5dohOUfPmb1c4vTCNy
+	2CBYFGrQKdzNsQRAJS1Wl3PvoyIS2aDS/WQ/ZYCVYtpQOnsNsBzatsmiUCeToWjPa9TmeZb5uZr
+	nBzKnhQ4/jcbGm1SZSp07E3udbet9KZ3YloZZY7xnJ5JCorCQW4AnAjgIddUXz6YGu0fNlHNcxl
+	pGiEmVJLColltaHXtily6bg0wCEoC25oki9usCRwcdgQRQ6k6A6IFXUT8uVfL0VsTBs4QtTAxxV
+	XlyMcABOoK5gseA36Rl00sJNR90Hz92jRsEejuK0AvrcXcFY0i6ZyaAm6KNpuMXxWDS6MWAz82e
+	jtAcaXsXUNalhl9crhb9KPNJhU4gfYaZ4XeOl9VTq3NQ==
+X-Received: by 2002:a05:600c:c10d:b0:485:3ec6:e634 with SMTP id 5b1f17b1804b1-488d683982dmr166085705e9.15.1776170893726;
+        Tue, 14 Apr 2026 05:48:13 -0700 (PDT)
 Received: from e133063.arm.com ([213.137.22.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488ede1e05bsm81185285e9.6.2026.04.14.05.48.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488ede1e05bsm81185285e9.6.2026.04.14.05.48.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 05:48:11 -0700 (PDT)
+        Tue, 14 Apr 2026 05:48:13 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH v4 0/6] perf arm_spe: Dump IMPDEF events
-Date: Tue, 14 Apr 2026 13:47:58 +0100
-Message-Id: <20260414-james-spe-impdef-decode-v4-0-1dd30783a33b@linaro.org>
+Date: Tue, 14 Apr 2026 13:47:59 +0100
+Subject: [PATCH v4 1/6] perf arm_spe: Make a function to get the MIDR
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH433mkC/3XNSw7CIBCA4asY1mJ41Yor72FcUGZoMVoaMETT9
- O7SutGYLv+ZzDcjSRg9JnLcjCRi9smHvoTabojtTN8i9VCaCCb2TEpOr+aOiaahLO4DoKOANgB
- S0Eo55cA6V5NyPUR0/rnI50vpzqdHiK/lUebz9GMqtm5mThk1wEDWwgrB7OnmexPDLsSWzGgW3
- 1C9DokCVRVIdFrXVh3+IPkFcbUOyQLtZWOctgctG/4DTdP0BiIjJglRAQAA
-X-Change-ID: 20260331-james-spe-impdef-decode-d944f4fdcff7
+Message-Id: <20260414-james-spe-impdef-decode-v4-1-1dd30783a33b@linaro.org>
+References: <20260414-james-spe-impdef-decode-v4-0-1dd30783a33b@linaro.org>
+In-Reply-To: <20260414-james-spe-impdef-decode-v4-0-1dd30783a33b@linaro.org>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
  Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -83,71 +82,78 @@ To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>, 
- Leo Yan <leo.yan@arm.com>, Al Grant <al.grant@arm.com>
+ Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
 
-In the Arm SPE raw data dump, IMPDEF events aren't printed. Add the
-ability to add names for some known events or print the raw event number
-for unknown events.
+We'll need the MIDR to dump IMPDEF events in the next commits so extract
+a function for it.
 
-For example:
+No functional changes intended.
 
-  $ perf report -D
-
-  ... ARM SPE data: size 0xd000 bytes
-  00000000: b0 18 c6 32 80 00 80 ff a0  PC 0xff80008032c618 el1 ns=1
-  00000009: 64 e7 42 00 00              CONTEXT 0x42e7 el1
-  0000000e: 00 00 00 00 00              PAD
-  00000013: 49 00                       LD GP-REG
-  00000015: 52 16 10               	EV RETIRED L1D-ACCESS TLB-ACCESS
-
-On N1 the event line becomes:
-
-  00000015: 52 16 10                    EV RETIRED L1D-ACCESS TLB-ACCESS LATE-PREFETCH
-
-Or on other cores it becomes:
-
-  00000015: 52 16 10                    EV RETIRED L1D-ACCESS TLB-ACCESS IMPDEF:12
-
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-Changes in v4:
-- Change a pr_err() to pr_warning_once() to avoid spam (Sashiko)
-- Link to v3: https://lore.kernel.org/r/20260414-james-spe-impdef-decode-v3-0-63baf9c893b1@linaro.org
+ tools/perf/util/arm-spe.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-Changes in v3:
-- Revert for_each_set_bit() back to a loop with BIT_ULL to fix both 32
-  bit builds and decoding on big endian machines.
-- Link to v2: https://lore.kernel.org/r/20260407-james-spe-impdef-decode-v2-0-55d3ef997c48@linaro.org
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index e5835042acdf7685f95e19665cd45f97ed868275..39046033e1433cff82ef0668074867aba4a462a4 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -972,14 +972,9 @@ static void arm_spe__synth_memory_level(struct arm_spe_queue *speq,
+ 	}
+ }
+ 
+-static void arm_spe__synth_ds(struct arm_spe_queue *speq,
+-			      const struct arm_spe_record *record,
+-			      union perf_mem_data_src *data_src)
++static int arm_spe__get_midr(struct arm_spe *spe, int cpu, u64 *midr)
+ {
+-	struct arm_spe *spe = speq->spe;
+-	u64 *metadata = NULL;
+-	u64 midr;
+-	unsigned int i;
++	u64 *metadata;
+ 
+ 	/* Metadata version 1 assumes all CPUs are the same (old behavior) */
+ 	if (spe->metadata_ver == 1) {
+@@ -987,15 +982,28 @@ static void arm_spe__synth_ds(struct arm_spe_queue *speq,
+ 
+ 		pr_warning_once("Old SPE metadata, re-record to improve decode accuracy\n");
+ 		cpuid = perf_env__cpuid(perf_session__env(spe->session));
+-		midr = strtol(cpuid, NULL, 16);
+-	} else {
+-		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
+-		if (!metadata)
+-			return;
+-
+-		midr = metadata[ARM_SPE_CPU_MIDR];
++		*midr = strtol(cpuid, NULL, 16);
++		return 0;
+ 	}
+ 
++	metadata = arm_spe__get_metadata_by_cpu(spe, cpu);
++	if (!metadata)
++		return -EINVAL;
++
++	*midr = metadata[ARM_SPE_CPU_MIDR];
++	return 0;
++}
++
++static void arm_spe__synth_ds(struct arm_spe_queue *speq,
++			      const struct arm_spe_record *record,
++			      union perf_mem_data_src *data_src)
++{
++	u64 midr;
++	unsigned int i;
++
++	if (arm_spe__get_midr(speq->spe, speq->cpu, &midr))
++		return;
++
+ 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
+ 		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+ 			return data_source_handles[i].ds_synth(record, data_src);
 
-Changes in v2:
-- Put MIDR in arm_spe_pkt (Leo)
-- Use for_each_set_bit() (Leo)
-- Use BIT_ULL() to fix 32bit builds (Ian)
-- Don't call strtol() with NULL (Ian)
-- Link to v1: https://lore.kernel.org/r/20260401-james-spe-impdef-decode-v1-0-ad0d372c220c@linaro.org
-
----
-James Clark (6):
-      perf arm_spe: Make a function to get the MIDR
-      perf arm_spe: Handle missing CPU IDs
-      perf arm_spe: Store MIDR in arm_spe_pkt
-      perf arm_spe: Turn event name mappings into an array
-      perf arm_spe: Decode Arm N1 IMPDEF events
-      perf arm_spe: Print remaining IMPDEF event numbers
-
- tools/perf/util/arm-spe-decoder/Build              |   2 +
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  |  17 ++-
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  |   3 +-
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 144 ++++++++++++++-------
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |   5 +-
- tools/perf/util/arm-spe.c                          |  62 ++++++---
- 6 files changed, 158 insertions(+), 75 deletions(-)
----
-base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
-change-id: 20260331-james-spe-impdef-decode-d944f4fdcff7
-
-Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+2.34.1
 
