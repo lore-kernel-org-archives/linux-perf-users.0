@@ -1,66 +1,47 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAEE3E5ECE;
-	Tue, 14 Apr 2026 12:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3363721D590;
+	Tue, 14 Apr 2026 12:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776170597; cv=none; b=tpj+f0wuftSdI6To+Yb5OrmCdQ/802pbKrKaffiopRJS7PDXTrvJ0UB6h6rNy+hvd+lgEra7kL/5s5HxRdlUZjplDRpGrYrlo0IE46WrZDqeIIpJmWB688ybQtCafgxLdWQTO5EuERir7gZ1XhyYxW3WRwRjDjLgBL37G4Z9yGk=
+	t=1776170839; cv=none; b=auhHAJO3vMYAK71zB96d5z+C2ezdcsCmLhi82rBQs4iwhNjwuhRDUKFC3M0716UheM/y+oi23iJHhhOV82DYutCC4wY8exc3thPGfwE4PWzJkIW40soOWCKYfHJ91REDS7fxUczjiGa9T12QfiOFfzLp7gOEThUKmRJIta9p5Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776170597; c=relaxed/simple;
-	bh=it/qezOCeo425+XT/EipAoxG1JYU7yxw++mb7UuSfgk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gXE26fF2O+kEs6lJNIvhNVKgAfnqzJ6fmkeBc6LwBgIh96TMQ8bPG5W9ByunShMgL3rFLPnJplSL9EhCUYBdk1Hn0N+81q9SCRtftlhHVkXr/6oSnkSI8peEjSbIieaUNfjlt/n+7Wi9J2RAYuNEEGdOG7E36jT4jQaaLwEWVYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kiiowAWr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1776170839; c=relaxed/simple;
+	bh=5TB7t7ff/wzQPom09KzUP4EITYoBxMU0FYBpjeBDArA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AYc+Y9PMPnEgSTn4it1N6HAToNvuNoRmktZsXLHn3wnvsku6gbqH+Ymv7RxHYR3Ilj1fL1cuQeO57QKNaEINv/OQneBa7pYeR9fEwYM3ZTlGZIEbGDmJH5x2+s+w/9YGxZBZXcZKIyBgaTw+Bhedes3KkHFFYe1StOLmlMLFnv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=P64SKmmT; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kiiowAWr"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DLIbtT1805234;
-	Tue, 14 Apr 2026 12:43:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=5TpogUAlNoj47o6kBi1T8dlKUtiDSCaPNE3Va6Uw/
-	QA=; b=kiiowAWrFKdT2RKXVvZ/YjyDBTYWHI0rDNM0Wu+fttdMyX1mroQkw5pk8
-	PYRaU4TbXoMkrRsSu7DZyzK+N9IOVWf0UYk5QiEYQmll2XTMJKP4Bh+8/ls2N/Xt
-	OSJtT30RD8/drZVApIcDL0woMznUW5pFK1GBtZNcd2/HoP90ob/LiyO3bza2a/iE
-	0pDRf2vbXi5h0kRuXnZeEbwtM1qc7yP42Yb9u5B+Wz/lc0QiDJ2Z4OpyvIjrCKfM
-	d1IzYUgSTk1xvFxls991QtnfRtZCEqq29dFlRpDnD5oHawdu+eAfXNxoZYNCZT/K
-	CP5cus9N+emhXvIYXp30W0qwEpWYw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89k2kcc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Apr 2026 12:43:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63E9dpx2003586;
-	Tue, 14 Apr 2026 12:43:00 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dg1mn9f96-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Apr 2026 12:43:00 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63ECguUc9437514
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Apr 2026 12:42:56 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 99A7520040;
-	Tue, 14 Apr 2026 12:42:56 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62FCD2004B;
-	Tue, 14 Apr 2026 12:42:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 Apr 2026 12:42:56 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf callchain: Handle multiple address spaces
-Date: Tue, 14 Apr 2026 14:42:41 +0200
-Message-ID: <20260414124241.490185-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="P64SKmmT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1776170826; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=YqK86tN+5CwSiapRk+YDENrvDUQ4S2Gqqvz2QGp5ER4=;
+	b=P64SKmmTcooR/mNfisIkmnqAwzyFkm7ih0VdGjkG3bUlotDubYUGJa+BRYYmp6qw2/u8/p+vFJtEEmPNr8kLtV37h5oJEkLNr2T25OQpoTwtfssHkp3yMMLGamDQPM6qGvdmPJ0/6ZBcWkxTb3Y9uNfw3pjduc9r7KF+FnvS0cQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X11UUgK_1776170820;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X11UUgK_1776170820 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 14 Apr 2026 20:47:06 +0800
+From: cp0613@linux.alibaba.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	dapeng1.mi@linux.intel.com,
+	pjw@kernel.org,
+	alex@ghiti.fr,
+	guoren@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Pei <cp0613@linux.alibaba.com>
+Subject: [PATCH] perf riscv: Add SDT argument parsing for RISC-V
+Date: Tue, 14 Apr 2026 20:46:55 +0800
+Message-ID: <20260414124655.129463-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,157 +49,226 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: J_Vdq4hhhe31_oFQ-ube18utN5OHRl4i
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE0MDExNSBTYWx0ZWRfX7MALl5VlDJfy
- dIdu21Oi0uGUpovGlEHwAV548lEeX/JeRtYSRvJPEshofWblQqE3Fe1iX8KY23Pu6jDhnNc4YTS
- xxfb+6tuJFs4/EwzjT4WCNFIL+E4xm/TamGQT/7OtusDwc+2lWZGl1c0eB9QQrut6LtmKbMzZDt
- FaTrOUARPgQxJ2qOOg0hXlpGd+ubaf9XOxhb1mqBjKUH30Qbw9vM3pEMkk8QAV8nOfAiH7ptnFV
- UAiiT3+/XNZse4Gil5GmSiEHjYueySRbBFusOJs/dRyPd2peAUfwgChoN5u9o2a06pK+kIA/BjU
- q6du6JdmU3qaiTl+nxPcrV7B4Hm8wke5/LxtQeAZ9EvJMva1iJNXACAsVHWv/EwIkLA5YphoU1J
- YyaWlLwiRqZUQh83TsjS5Eo4m0lwk3kDLe1QapUnNeQTscOSNE1LlbhKkvBOBHSS7IfEETP+GZj
- wW1n83CCGNNYEsBazGw==
-X-Proofpoint-ORIG-GUID: J_Vdq4hhhe31_oFQ-ube18utN5OHRl4i
-X-Authority-Analysis: v=2.4 cv=W60IkxWk c=1 sm=1 tr=0 ts=69de3655 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=NsMrYSxA7xTIvm2-GKQA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-14_03,2026-04-13_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 priorityscore=1501 spamscore=0 bulkscore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604140115
 
-perf test 'perf inject to convert DWARF callchains to regular ones'
-fails on s390. It was introduced with
-commit 92ea788d2af4 ("perf inject: Add --convert-callchain option")
+From: Chen Pei <cp0613@linux.alibaba.com>
 
-The failure comes the difference in output. Without the inject script to
-convert DWARF the callchains is:
- # ./perf record -F 999 --call-graph dwarf -- perf test -w noploop
- # ./perf report -i perf.data --stdio --no-children -q \
-					 --percent-limit=1 > /tmp/111
- # cat /tmp/111
-    99.30%  perf-noploop  perf               [.] noploop
-            |
-            ---noploop
-               run_workload (inlined)
-               cmd_test
-               run_builtin (inlined)
-               handle_internal_command
-               run_argv (inlined)
-               main
-               __libc_start_call_main
-               __libc_start_main_impl (inlined)
-               _start
- #
+Implement __perf_sdt_arg_parse_op_riscv() to convert RISC-V GCC-generated
+SDT probe operands into uprobe-compatible format, and register it in the
+perf_sdt_arg_parse_op() dispatcher for EM_RISCV.
 
-With the inject script step the output is:
- # ./perf inject -i perf.data --convert-callchain -o /tmp/perf-inject-1.out
- # ./perf report -i /tmp/perf-inject-1.out --stdio --no-children -q \
-		--percent-limit=1 > /tmp/222
- # cat /tmp/222
-    99.40%  perf-noploop  perf               [.] noploop
-            |
-            ---noploop
-               run_workload (inlined)
-               cmd_test
-               run_builtin (inlined)
-               handle_internal_command
-               run_argv (inlined)
-               main
-               _start
- # diff /tmp/111 /tmp/222
- 1c1
- <     99.30%  perf-noploop  perf               [.] noploop
- ---
- >     99.40%  perf-noploop  perf               [.] noploop
- 10,11d9
- <                __libc_start_call_main
- <                __libc_start_main_impl (inlined)
- #
+RISC-V GCC uses the 'nor' constraint for SDT arguments, producing operands
+in the following formats:
 
-The difference are the symbols __libc_start_call_main and
-__libc_start_main_impl.
+  Format       Example      Uprobe format
+  -----------  -----------  -------------
+  register     a0           %a0
+  memory (+)   8(a0)        +8(%a0)
+  memory (-)   -20(s0)      -20(%s0)
+  constant     99           (skip, not supported by uprobe)
 
-On x86_64, kernel and user space share a single virtual address space,
-with the kernel mapped to the upper end of memory. The instruction
-pointer value alone is sufficient to distinguish between user space
-and kernel space addresses. This is not true for s390, which uses
-separate address spaces for user and kernel. The same virtual address
-can be valid in both address spaces, so the instruction pointer value
-alone cannot determine whether an address belongs to the kernel or
-user space. Instead, perf must rely on the cpumode metadata derived
-from the processor status word (PSW) at sample time.
+Key differences from other architectures:
+ - Register names use ABI aliases (a0-a7, t0-t6, s0-s11, sp, ra, etc.)
+   without any '%' prefix, unlike x86 (%rax) or arm64 (x0).
+ - Memory operands use OFFSET(REG) syntax where OFFSET may be negative,
+   unlike arm64's [sp, NUM] or powerpc's NUM(%rREG).
 
-In function perf_event__convert_sample_callchain() the first part
-copies a kernel callchain and context entries, if any.
-It then appends additional entries ignoring the address space
-architecture. Taking that into account, the symbols at addresses
+Two regexes are used:
+ - SDT_OP_REGEX1: matches all RISC-V ABI register names
+ - SDT_OP_REGEX2: matches [-]NUM(REG) memory operands
 
-   0x3ff970348cb __libc_start_call_main
-   0x3ff970349c5 __libc_start_main_impl
-
-(located after the kernel address space on s390) are now included.
-
-Output before:
- # ./perf test 83
- 83: perf inject to convert DWARF callchains to regular ones : FAILED!
-
-Output after:
- # ./perf test 83
- 83: perf inject to convert DWARF callchains to regular ones : Ok
-
-Question to Namhyung:
-In function perf_event__convert_sample_callchain() just before the
-for() loop this patch modifies, the kernel callchain is copied,
-see this comment and the next 5 lines:
-   /* copy kernel callchain and context entries */ 
-Then why is machine__kernel_ip() needed in the for() loop, when
-the kernel entries have been copied just before the loop?
-
-Note: This patch was tested on x86_64 virtual machine and succeeded.
-
-Fixes: 92ea788d2af4 ("perf inject: Add --convert-callchain option")
-Cc: Namhyung Kim <namhyung@kernel.org>
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 ---
- tools/perf/arch/common.c    | 4 +++-
- tools/perf/builtin-inject.c | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 21836f70f231..ad0cab830a4d 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -237,5 +237,7 @@ int perf_env__lookup_objdump(struct perf_env *env, char **path)
-  */
- bool perf_env__single_address_space(struct perf_env *env)
- {
--	return strcmp(perf_env__arch(env), "sparc");
-+	const char *arch = perf_env__arch(env);
-+
-+	return strcmp(arch, "s390") && strcmp(arch, "sparc");
- }
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index f174bc69cec4..6ab20df358c4 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -438,7 +438,8 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+Tested on RISC-V QEMU(rv64gc) with GCC-generated SDT probes.
+Requires systemtap-sdt-dev (provides <sys/sdt.h>) on the target system.
+
+  # cat sdt_test.c
+  #include <sys/sdt.h>
+  #include <stdio.h>
+  void my_func(int a, long b) {
+      DTRACE_PROBE2(myapp, my_probe, a, b);
+      printf("a=%d b=%ld\n", a, b);
+  }
+  int main() { my_func(42, -100); return 0; }
+
+  # gcc -O0 -Wl,--build-id -o sdt_test_O0 sdt_test.c  # stack args: -20(s0)
+  # gcc -O2 -Wl,--build-id -o sdt_test_O2 sdt_test.c  # reg args:   a0
+  # perf buildid-cache --add sdt_test_O0
+  # perf buildid-cache --add sdt_test_O2
+  # find ~/.debug -name "probes" | xargs cat
+  p:sdt_myapp/my_probe .../sdt_test_O0:0x... arg1=-20(%s0):s32 arg2=-32(%s0):s64
+  p:sdt_myapp/my_probe .../sdt_test_O2:0x... arg1=%a0:s32 arg2=%a1:s64
+
+ .../util/perf-regs-arch/perf_regs_riscv.c     | 126 ++++++++++++++++++
+ tools/perf/util/perf_regs.c                   |   3 +
+ tools/perf/util/perf_regs.h                   |   1 +
+ 3 files changed, 130 insertions(+)
+
+diff --git a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
+index 5b5f21fcba8c..51b43e68e0e3 100644
+--- a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
++++ b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
+@@ -1,8 +1,134 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- 	node = cursor->first;
- 	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
--		if (machine__kernel_ip(machine, node->ip))
-+		if (machine->single_address_space &&
-+		    machine__kernel_ip(machine, node->ip))
- 			/* kernel IPs were added already */;
- 		else if (node->ms.sym && node->ms.sym->inlined)
- 			/* we can't handle inlined callchains */;
++#include <errno.h>
++#include <regex.h>
++#include <string.h>
++#include <linux/kernel.h>
++#include <linux/zalloc.h>
++
++#include "../debug.h"
+ #include "../perf_regs.h"
+ #include "../../arch/riscv/include/perf_regs.h"
+ 
++/*
++ * RISC-V SDT argument formats (GCC 'nor' constraint):
++ *
++ * Register:  REG        e.g. a0, t1, s0, sp
++ * Memory:    NUM(REG)   e.g. 8(a0), -20(s0)
++ * Constant:  NUM        e.g. 99  (not supported by uprobe, skip)
++ *
++ * Uprobe target format:
++ *   Register: %REG       e.g. %a0
++ *   Memory:   +NUM(%REG) or -NUM(%REG)
++ */
++
++/* RISC-V register ABI names: zero, ra, sp, gp, tp, t0-t6, s0-s11, a0-a7 */
++#define SDT_OP_REGEX1  "^(zero|ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])$"
++
++/* RISC-V memory operand: [-]NUM(REG) */
++#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((zero|ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])\\)$"
++
++static regex_t sdt_op_regex1, sdt_op_regex2;
++
++static int sdt_init_op_regex(void)
++{
++	static int initialized;
++	int ret = 0;
++
++	if (initialized)
++		return 0;
++
++	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
++	if (ret)
++		goto error;
++
++	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
++	if (ret)
++		goto free_regex1;
++
++	initialized = 1;
++	return 0;
++
++free_regex1:
++	regfree(&sdt_op_regex1);
++error:
++	pr_debug4("Regex compilation error.\n");
++	return ret;
++}
++
++/*
++ * Parse OP and convert it into uprobe format.
++ * Possible variants of OP (RISC-V, GCC 'nor' constraint):
++ *
++ *   Format         Example       Uprobe
++ *   ----------------------------------------
++ *   REG            a0            %a0
++ *   NUM(REG)       8(a0)         +8(%a0)
++ *   -NUM(REG)      -20(s0)       -20(%s0)
++ *   NUM            99            (skip, constant not supported)
++ */
++int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op)
++{
++	int ret, new_len;
++	regmatch_t rm[4];
++	char prefix;
++
++	/*
++	 * Constant argument: pure integer with no trailing '(' (e.g. "99", "-1").
++	 * uprobe does not support immediate values, so skip them.
++	 * Memory operands like "8(a0)" or "-20(s0)" contain '(' so are NOT
++	 * treated as constants here; they will be matched by REGEX2 below.
++	 */
++	if (strchr(old_op, '(') == NULL &&
++	    ((*old_op >= '0' && *old_op <= '9') ||
++	     (*old_op == '-' && old_op[1] >= '0' && old_op[1] <= '9'))) {
++		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
++		return SDT_ARG_SKIP;
++	}
++
++	ret = sdt_init_op_regex();
++	if (ret < 0)
++		return ret;
++
++	if (!regexec(&sdt_op_regex1, old_op, 2, rm, 0)) {
++		/* REG --> %REG */
++		new_len = 2;	/* % NULL */
++		new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
++
++		*new_op = zalloc(new_len);
++		if (!*new_op)
++			return -ENOMEM;
++
++		scnprintf(*new_op, new_len, "%%%.*s",
++			(int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
++	} else if (!regexec(&sdt_op_regex2, old_op, 4, rm, 0)) {
++		/*
++		 * NUM(REG) or -NUM(REG) --> +NUM(%REG) or -NUM(%REG)
++		 * rm[1]: optional '-'
++		 * rm[2]: decimal offset
++		 * rm[3]: register name
++		 */
++		prefix = (rm[1].rm_so == -1) ? '+' : '-';
++
++		new_len = 5;	/* sign ( % ) NULL */
++		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
++		new_len += (int)(rm[3].rm_eo - rm[3].rm_so);
++
++		*new_op = zalloc(new_len);
++		if (!*new_op)
++			return -ENOMEM;
++
++		scnprintf(*new_op, new_len, "%c%.*s(%%%.*s)", prefix,
++			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
++			(int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so);
++	} else {
++		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
++		return SDT_ARG_SKIP;
++	}
++
++	return SDT_ARG_VALID;
++}
++
+ uint64_t __perf_reg_mask_riscv(bool intr __maybe_unused)
+ {
+ 	return PERF_REGS_MASK;
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index 5b8f34beb24e..57a1d227d1b2 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -19,6 +19,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op)
+ 	case EM_PPC64:
+ 		ret = __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
+ 		break;
++	case EM_RISCV:
++		ret = __perf_sdt_arg_parse_op_riscv(old_op, new_op);
++		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+ 		ret = __perf_sdt_arg_parse_op_x86(old_op, new_op);
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 7c04700bf837..e0b51b514ee0 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -53,6 +53,7 @@ const char *__perf_reg_name_powerpc(int id);
+ uint64_t __perf_reg_ip_powerpc(void);
+ uint64_t __perf_reg_sp_powerpc(void);
+ 
++int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op);
+ uint64_t __perf_reg_mask_riscv(bool intr);
+ const char *__perf_reg_name_riscv(int id);
+ uint64_t __perf_reg_ip_riscv(void);
 -- 
-2.53.0
+2.50.1
 
