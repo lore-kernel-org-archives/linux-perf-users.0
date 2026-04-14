@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE802F362B;
-	Tue, 14 Apr 2026 06:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE0C23372C;
+	Tue, 14 Apr 2026 06:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776147672; cv=none; b=WH0c8b7kmqxauxAU5vs7lILDgbG3oyJndhzW1z5jCxVBiPsRfqpZn3OR15r4/DFKRnTz4HQvAACeGrM46dQM6OTXH9ZpqkllZAvjaZydW0mHoEya8ydycrI7I60OSggqoyAtoUDnrF9To4f3HMbnbmPaXMG5Ajqe+isWeuxxat4=
+	t=1776148633; cv=none; b=VyaQDzz2qKINpvnaHATQtmDuaW+v8j9//iPXkUipWVAxL40DB/36o7q2SXZzhuG8RX6wDqRNzytKx52B8KpvWVAJ1z+xU+TT9PjzLPYJhulHK6p3JXUt6REpb09Q9N55pCiy/WwRe3fXqZjEwyvi2xPNRlNY5sQ84mKBMgRZeUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776147672; c=relaxed/simple;
-	bh=SLPXjxcBGOBc12xm3alZQDiFEKm1Y8dSnDsT4u3Zj9I=;
+	s=arc-20240116; t=1776148633; c=relaxed/simple;
+	bh=rAMrbuV7+mtv+mVSBX787Q2+LKMdBce5YJGLCl+57Yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPnqH2qNf+ieue0RwHTi/WBExGjCuSaYNZCuEjkTKNw8XJZmhK++gbPHtaNneA3z3Ri5tsqmCX/9X/pfqIxUALwb8MgHinsKUNa+obTAwj+7drYWfTuUkNF/oLWabkceYW1sZ6VaWAg/1oL2zZ41fAdtkxtGJa41NKOE+DmD5Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKA6+dAy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCznNOoKb2sIjEXhlCebmYNd6yuI6vnpkOrAJKShSwIZModS6kppBfsb7hyjFoXpY7N1taQS+nhoKAcP6wf59PJXsOdh1Z2eE6PmEeLB5WaDj1AuArauCSDNSXBgdCgEcaj+fUdVIJ9K5hg/AYDbqMlLAd5BQAwQU8HDcm6NQQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8wMl9dO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKA6+dAy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA0FC19425;
-	Tue, 14 Apr 2026 06:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8wMl9dO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1453C19425;
+	Tue, 14 Apr 2026 06:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776147671;
-	bh=SLPXjxcBGOBc12xm3alZQDiFEKm1Y8dSnDsT4u3Zj9I=;
+	s=k20201202; t=1776148633;
+	bh=rAMrbuV7+mtv+mVSBX787Q2+LKMdBce5YJGLCl+57Yk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKA6+dAyqzlUGCcfyEeEBM3TXMXG/CRVicioAFFobMufl1i4ke0lv4T0Evb6VS+oe
-	 IVlPVR2c8fq3Dane0FrwpkZDuxQSnKOjHCAgiZCQjvoL8w09+gYckIhMDzsLFfuN5Z
-	 wgFqlFGzq7A4YPcEyjnw0zpEZMDfav98jXO3rdmdkfM1Xca8X3ERjBa8y0/sjDDsKq
-	 YJgJG0ubIaDIGpuV2hqVXVSJ/hXnInfsYRpS+MdwGT4KaIthAtZaczqxelu+G81Nia
-	 zoH4Dz60Ydy2DI37XkNW5H3p7OdKo5fgfaKmOG9K5T/y5ray+pt51FJ0L2IYNph78D
-	 O++LVZgkslutg==
-Date: Mon, 13 Apr 2026 23:21:09 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHES perf-tools-next v2 00/13] Sanity check perf.data headers
-Message-ID: <ad3c1SY54y15YZYv@google.com>
-References: <20260410220905.200051-1-acme@kernel.org>
+	b=p8wMl9dOM5gbScWY+51w+Tin6WBAt5MJBIifiJkYYsD8wm7DUdFi3Kk3dkbO+MXZp
+	 2CPI6HDIYtnnUtR0xdsJNuIiehMobhCeIEqQc6CK7m/m/L9PUyBKgncxVWPIxyyV33
+	 S/+aGIwkub35q7KhzndWzz4fIsQkE5/HHqgiwa6HKeU63DdTyk26ZuyTrDm8IWPXeR
+	 qbrLT4pZBTcXkKcajCDcKoW9Hr9B6ojbzY2YdAHwV5Mkrfwwq+MgxFEmyKI/idqdQw
+	 Pwmo4hzguoKSZojNSRmqO8TK2b9lTolHil4n5z+bI/wsr2WvsyB1JUc6o/MxLqpFGd
+	 20Z4NCPxuBa4A==
+Date: Tue, 14 Apr 2026 08:37:10 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: sashiko@lists.linux.dev
+Cc: Geetha sowjanya <gakula@marvell.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: perf: marvell: Add CN20K DDR PMU
+ binding
+Message-ID: <20260414-tireless-skinny-cow-0e8cf6@quoll>
+References: <20260413165621.10921-2-gakula@marvell.com>
+ <20260413171206.F380AC2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,36 +43,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260410220905.200051-1-acme@kernel.org>
+In-Reply-To: <20260413171206.F380AC2BCAF@smtp.kernel.org>
 
-Hi Arnaldo,
-
-On Fri, Apr 10, 2026 at 07:08:52PM -0300, Arnaldo Carvalho de Melo wrote:
-> Hi,
+On Mon, Apr 13, 2026 at 05:12:06PM +0000, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 2 potential issue(s):
+> - [Low] DT binding example unit address and generic node name mismatch.
+> - [Low] Unnecessary duplication of binding files instead of updating the existing schema.
+> --
 > 
->         Sashiko recently mentioned the lack of sanity checking headers
-> in perf.data files, that with a fuzzy or maliciously crafted file could
-> make processing a perf.data file cause deleterious results.
+> commit e2d439a05897c67e7bc90170f7cf6e218505769a
+> Author: Geetha sowjanya <gakula@marvell.com>
 > 
->         Add sanity checks and some arbitrarily generous upper limits to
-> headers, if some are found to be questionable, lets tweak them in
-> upcoming versions of this patchset.
-
-Yep, I think it's a bit tricky to handle malformed files.  But this
-change would defend some of bad inputs.  We can add more later.
-
+> dt-bindings: perf: marvell: Add CN20K DDR PMU binding
 > 
->         As registered in the Assisted-by tags in the patches, this was
-> done using Claude code to speed up development, hopefully no
-> hallucinations are present.
-
-It looks fine.
-
+> This commit adds a new device tree binding for the DDR Performance Monitoring
+> Unit found in Marvell CN20K SoCs. The hardware provides counters to monitor
+> DDR traffic and is accessed via a dedicated MMIO region.
 > 
->         I'm also trying to get some of these checks into review-prompts
-> skills, some of which were already merged, for instance:
+> > diff --git a/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml
+> > new file mode 100644
+> > index 0000000000000..cc6aa760de49e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/perf/marvell,cn20k-ddr-pmu.yaml
 > 
->   https://github.com/masoncl/review-prompts/commit/2bb2159893ea926e120105416e95629b9ef1508c
+> The commit message notes that the CN20K DDR PMU is functionally equivalent
+> to the CN10K DDR PMU. Does it make sense to consolidate this by adding the new
+> compatible string to the existing marvell-cn10k-ddr.yaml schema instead of
+> introducing a new duplicate file?
+> 
 
-Thanks for doing this!
-Namhyung
+That's valid comment, I did not notice there is a file which is almost
+identical. Why isn't this part of that file?
+
+> Splitting schemas is typically recommended only when conditionals become
+> too unwieldy.
+> 
+> [ ... ]
+> 
+> > +examples:
+> > +  - |
+> > +    bus {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <2>;
+> > +
+> > +        ddr-pmu@c200000000 {
+> > +            compatible = "marvell,cn20k-ddr-pmu";
+> > +            reg = <0xc200 0x00000000 0x0 0x100000>;
+> > +        };
+> > +    };
+> 
+> Is there a unit address mismatch here? The 64-bit base address formed by the
+> reg property is 0xc20000000000, but the node name uses @c200000000, missing two
+> trailing zeros. This can trigger a unit_address_vs_reg regression during
+> dt_binding_check.
+> 
+
+Also valid.
+
+Best regards,
+Krzysztof
+
