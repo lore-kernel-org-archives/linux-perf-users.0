@@ -1,59 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DE5223323;
-	Tue, 14 Apr 2026 05:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE802F362B;
+	Tue, 14 Apr 2026 06:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776145866; cv=none; b=YRAPBsXd9oNOYS6YqSz5IN9DlPYeDQT2s38AdmL23PbH0r7v7iSowAkuUI5FcKqh4u10nWVID/86tLowUUiyMBxAV6G6G9yM93Z+UKvRQRM7ouV7jSwYMBSztEmA3NPZ/YqAM8hyNsGMXaxdXgb1x1C0S9nmNWV4fhB2ch7lqbI=
+	t=1776147672; cv=none; b=WH0c8b7kmqxauxAU5vs7lILDgbG3oyJndhzW1z5jCxVBiPsRfqpZn3OR15r4/DFKRnTz4HQvAACeGrM46dQM6OTXH9ZpqkllZAvjaZydW0mHoEya8ydycrI7I60OSggqoyAtoUDnrF9To4f3HMbnbmPaXMG5Ajqe+isWeuxxat4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776145866; c=relaxed/simple;
-	bh=NWmyIt82aJGIhkA9bM5kw0zrXESL/v4qMM/khKZiXN8=;
+	s=arc-20240116; t=1776147672; c=relaxed/simple;
+	bh=SLPXjxcBGOBc12xm3alZQDiFEKm1Y8dSnDsT4u3Zj9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oShfOl1+XqHtHvhANe0F54j24Z/+JDzzlqnosbqWtcaJkbrGPUWvEoSijxSWpGBXaRXqHzwCbGzUBuD+VkA1kOU2RjguSsw3nI+jHBoE/5UaK7jpHK+TwA4pxUMZHYdBvsllcwVZc+N6FRtrktpCZYOzl/6nsGZtaKNa57Dzh+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZynjR6lS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPnqH2qNf+ieue0RwHTi/WBExGjCuSaYNZCuEjkTKNw8XJZmhK++gbPHtaNneA3z3Ri5tsqmCX/9X/pfqIxUALwb8MgHinsKUNa+obTAwj+7drYWfTuUkNF/oLWabkceYW1sZ6VaWAg/1oL2zZ41fAdtkxtGJa41NKOE+DmD5Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKA6+dAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZynjR6lS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 988E5C19425;
-	Tue, 14 Apr 2026 05:51:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKA6+dAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA0FC19425;
+	Tue, 14 Apr 2026 06:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776145866;
-	bh=NWmyIt82aJGIhkA9bM5kw0zrXESL/v4qMM/khKZiXN8=;
+	s=k20201202; t=1776147671;
+	bh=SLPXjxcBGOBc12xm3alZQDiFEKm1Y8dSnDsT4u3Zj9I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZynjR6lSaJm6q7dSxF7ZRsbZ72q5bwCKXCZTN6KubqmGa6hW8ZJIFnkGfCvWWPeBK
-	 0icYGKgW/JKRbyU4q6dJABr80t7kqoNjzT2wPgnWmgw3xl2Ng42zeGvLe4L6Zyn4PC
-	 cqoKw2gzDw/pHypjNCcUK//uuT0uUgSFi2PqbeqUvHBhGbI4V0WuYOa4Db4Io+2N1j
-	 6DJG6C2kaopiJ6whWsZBk/13/YbO0/cUy9xLS9/5SsqiYjLvtbOCRo0PCEeGg7Xb7m
-	 uBl7EgKVS36QIt148Ms161Nn/wTy/rkPWLqTlMVzAKFUkezoQDxDeiQwL8eykOHx2C
-	 y1gL//JlOGyYw==
-Date: Mon, 13 Apr 2026 22:51:02 -0700
+	b=PKA6+dAyqzlUGCcfyEeEBM3TXMXG/CRVicioAFFobMufl1i4ke0lv4T0Evb6VS+oe
+	 IVlPVR2c8fq3Dane0FrwpkZDuxQSnKOjHCAgiZCQjvoL8w09+gYckIhMDzsLFfuN5Z
+	 wgFqlFGzq7A4YPcEyjnw0zpEZMDfav98jXO3rdmdkfM1Xca8X3ERjBa8y0/sjDDsKq
+	 YJgJG0ubIaDIGpuV2hqVXVSJ/hXnInfsYRpS+MdwGT4KaIthAtZaczqxelu+G81Nia
+	 zoH4Dz60Ydy2DI37XkNW5H3p7OdKo5fgfaKmOG9K5T/y5ray+pt51FJ0L2IYNph78D
+	 O++LVZgkslutg==
+Date: Mon, 13 Apr 2026 23:21:09 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
-	ak@linux.intel.com, alex@ghiti.fr,
-	alexander.shishkin@linux.intel.com, anup@brainfault.org,
-	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com,
-	blakejones@google.com, ctshao@google.com,
-	dapeng1.mi@linux.intel.com, derek.foreman@collabora.com,
-	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn,
-	palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org,
-	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn,
-	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com,
-	zhouquan@iscas.ac.cn
-Subject: Re: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
-Message-ID: <ad3VxtQSL8ClGiEQ@google.com>
-References: <20260411191710.524998-1-irogers@google.com>
- <20260412020833.641177-1-irogers@google.com>
- <adv8Ka16pvgVkm8R@google.com>
- <CAP-5=fVc-Ac09cnXYPUVcNwzHOqFod0v=-YjjDf_oVHvM7cHDw@mail.gmail.com>
- <ad0cfz-gUKea5bI8@google.com>
- <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
- <ad1P8ebyCyfKwXH6@google.com>
- <CAP-5=fWC7JT4mn-JwBpZ6YvUm4qBFp=wOb+bOj8AM79gxHK0_w@mail.gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHES perf-tools-next v2 00/13] Sanity check perf.data headers
+Message-ID: <ad3c1SY54y15YZYv@google.com>
+References: <20260410220905.200051-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,52 +47,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWC7JT4mn-JwBpZ6YvUm4qBFp=wOb+bOj8AM79gxHK0_w@mail.gmail.com>
+In-Reply-To: <20260410220905.200051-1-acme@kernel.org>
 
-On Mon, Apr 13, 2026 at 01:55:39PM -0700, Ian Rogers wrote:
-> On Mon, Apr 13, 2026 at 1:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Apr 13, 2026 at 09:57:02AM -0700, Ian Rogers wrote:
-> > > On Mon, Apr 13, 2026 at 9:40 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Sun, Apr 12, 2026 at 05:52:57PM -0700, Ian Rogers wrote:
-> > > > > On Sun, Apr 12, 2026 at 1:10 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > [SNIP]
-> > > > > > I've picked the first 23 patches to tmp.perf-tools-next as the rest
-> > > > > > still has some issues.  Also I've touched some commits to either remove
-> > > > > > some parts or split them into separate commits.
-> > > > > >
-> > > > > > Please take a look.
-> > > > >
-> > > > > Hi Namhyung,
-> > > > >
-> > > > > thanks for doing this but I've done a similar clean up. To totally
-> > > > > separate the evsel refactoring from the rest of the changes, to fix
-> > > > > the address sanitizer issues with kwork, etc. I'll incorporate your
-> > > > > changes and then resend the series.
-> > > >
-> > > > Thanks, I'd like to merge what's in the tmp.perf-tools-next unless
-> > > > there's a serious mistake.  You can rebase the rest changes on top.
-> > >
-> > > I'd drop what's in tmp.perf-tools-next. Otherwise we're putting fixes
-> > > on top of fixes. Looking at v12 the sashiko issues are all minor and
-> > > the progression of the patches is more granular and natural.
-> >
-> > The goal is to reduce the amount of work (including review) during the
-> > merge window.  Also I don't think there are many fixes in the tmp
-> > branch (have you looked at it?).  I think it's ok to add fixes on top
-> > in this case but I can drop non-conversion patches if you want.
+Hi Arnaldo,
+
+On Fri, Apr 10, 2026 at 07:08:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> Hi,
 > 
-> While I'm glad the patches are landing, since the changes depending on
-> the refactor haven't been posted and won't make the 7.1 merge window,
-> I don't think there's a huge rush to land this series. That said, I
-> think v12 is in a good place regarding both the shape of the patches
-> and Sashiko happiness.
+>         Sashiko recently mentioned the lack of sanity checking headers
+> in perf.data files, that with a fuzzy or maliciously crafted file could
+> make processing a perf.data file cause deleterious results.
+> 
+>         Add sanity checks and some arbitrarily generous upper limits to
+> headers, if some are found to be questionable, lets tweak them in
+> upcoming versions of this patchset.
 
-Ok, then I'll drop the whole patches in the tmp.perf-tools-next except
-for the first one for a typo fix.  The v12 will aim to the 7.2 cycle.
+Yep, I think it's a bit tricky to handle malformed files.  But this
+change would defend some of bad inputs.  We can add more later.
 
-Thanks,
+> 
+>         As registered in the Assisted-by tags in the patches, this was
+> done using Claude code to speed up development, hopefully no
+> hallucinations are present.
+
+It looks fine.
+
+> 
+>         I'm also trying to get some of these checks into review-prompts
+> skills, some of which were already merged, for instance:
+> 
+>   https://github.com/masoncl/review-prompts/commit/2bb2159893ea926e120105416e95629b9ef1508c
+
+Thanks for doing this!
 Namhyung
-
