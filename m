@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3D340DFB5;
-	Tue, 14 Apr 2026 20:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DA92472A2;
+	Tue, 14 Apr 2026 20:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776199736; cv=none; b=FpbLxrmnYA3aX0lfUHSI+o2g/nDgRClhHp3+3o1miROLrYwYhAeFV+x7tBU7olRkJeFdT1Asy3caa8ulYua1JkRFBjfzsnR5qlSXgNEkJjwiFnRngYAA3+92094nhtdAblda7+9uEGcdESYoblgtPozX/H+ADvHZJk4X/zLxCTs=
+	t=1776199741; cv=none; b=uFtFdt1bJ1JRzimk2Ta7CEzXlEZ1A0Fg7DkoeB651870ofF+v4+GxWVEBKnwqedpuAaxI0Z+FuIEC2rrM206eIfyYTHFxDasnaB1vhJIPbKzIbjx/RFQOWraqiZPmPVvJU9UZykIbsPPk0XhVW8c8vv38UgfM7ROJveZYsE2mos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776199736; c=relaxed/simple;
-	bh=VAXZawxsXfTyt201CXFlUzntkIrbrneGqcP3zG29cBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nlvbB/q7f9rwp0XmupGzJ+JjH0uMLXjVfobOuW6gegxUiOEkjYAlOGE8IO8OAeXVhSQqIO99UC5IiG0LBnoh19ZTjm6fk85N3qRhbEtUBye/Hu4pubMaIDWm2+j+/PGoF8KDcn3AAe08sYC4/OZUhSg5h/6eLBNbEbSOm6gN/BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dfruv0qr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776199741; c=relaxed/simple;
+	bh=CIgnSUhZM+Rbymb25i8EGATOe7/4cgcm168q46PN6Q4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TT6Q9O7ZT19rpIFp6ejR6SVmIh09aQ5WyZwYqS2MWTT23BZFc6nO9F51+eHo/BTdrW+UeONvRBCkwGXScheYoZXToZKSMtjUY8nfoEkVFQ6R+OQ7rj5nVy9jMO9IPS+T2NJgZ6QeZAbLHyCebiRDmeejzUR/EtCJHwQNCxEMdrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgQwuaLP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dfruv0qr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FDCFC2BCB4;
-	Tue, 14 Apr 2026 20:48:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgQwuaLP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47560C19425;
+	Tue, 14 Apr 2026 20:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776199736;
-	bh=VAXZawxsXfTyt201CXFlUzntkIrbrneGqcP3zG29cBw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Dfruv0qrBgBawxtiv9bF8Hm+DMLVPJtfx8oLCzGJGVcP4foExNQwvvLMwAuwpDhNt
-	 OHR7ciLeS9ToZCQZVPJHw+rJhJ7wxlARi7qHHOXpUOaTG/cpI0lD3vs1LveQmESzES
-	 m2EctU0NaYNNEEDEiNrutUK/flqas+6AUbGVzLiEmrwZb7pJWbp/QdcmWgEessnj9/
-	 LxS1pIEW3LcAxcNaMEONfzCeQ4eAqg/D1+DhLDvJN+y5EeIvqgdyXTA1Izx3wJb9RU
-	 WaPg30tcvrBUzMTJEcNH5w1/pMaH2rnh39hR4WBFt+/J0a5VQ4R0HaSgehI/wDoLO5
-	 PEGSyqbPjD9mg==
+	s=k20201202; t=1776199740;
+	bh=CIgnSUhZM+Rbymb25i8EGATOe7/4cgcm168q46PN6Q4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fgQwuaLP7V1wOrxvS2JTLI26NuPEIxnlcSDYZvp7j+MkU6OyUSY9e1IDxb6VCMIgu
+	 FytBWA7g0xXw3D1cfNlhw/JawrvQ+9QyyLj0/QNjlX8K3CeOF4Wfa/zql1Jd35hc9B
+	 eIUO5CzCym1MM8BBVR+1LkYM8U5meSU1ESRNRyjbzEgkatZgFA8XwVNQpJCTUFN0v0
+	 hAz/TTeK3MFBN1fXgQQ9TMlwrRyoIiyCji6xe80CMyKdfzJArrg0mSI09TzIkuD0aF
+	 FdP4gRulM29kcRHVeDZFRnMSaCxHSFbkLnk5YnEyIQJoYMzMjUgnzyZFSujepOK8jd
+	 KPUYy/tq0rPNw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -37,11 +38,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCHES 0/4] More perf.data header validation
-Date: Tue, 14 Apr 2026 17:48:43 -0300
-Message-ID: <20260414204847.293557-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 1/4] perf header: Add section bounds checking to the fd read path
+Date: Tue, 14 Apr 2026 17:48:44 -0300
+Message-ID: <20260414204847.293557-2-acme@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260414204847.293557-1-acme@kernel.org>
+References: <20260414204847.293557-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,34 +53,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	This is picking up from what was reported in the previous
-series, pre-existing lack of perf.data file validation, processing files
-and buffers in header.c in a similar fashion.
+__do_read_buf() validates reads against ff->size (section size), but
+__do_read_fd() had no such check, so a malformed perf.data with an
+understated section size could cause reads past the end of the current
+section into the next section's data.
 
-	There is more to process in the trace data, but that is a
-different can of worms that needs to be dealt with in a similar,
-upcoming patch series,
+Add the bounds check in __do_read(), the common caller of both helpers,
+so it is enforced uniformly for both the fd and buf paths.
 
-	This is probably 7.2 material, but if feeling this can still
-sneak into 7.1, feel free to do it :-)
+This requires two supporting changes:
 
-	Now lets see what Sashiko discovers while I still don't have it
-running locally right after Claude, before submitting it publicly, which
-will soon happen :-)
+- perf_file_section__process(): initialize ff->offset to 0 so it
+  tracks bytes consumed from the section start (consistent with the
+  buf path), rather than the absolute file position.
 
-- Arnaldo
+- process_build_id(): use lseek(ff->fd, 0, SEEK_CUR) to discover
+  the current file position instead of reading ff->offset.
 
-Arnaldo Carvalho de Melo (4):
-  perf header: Add section bounds checking to the fd read path
-  perf header: Validate string length before allocating in do_read_string()
-  perf header: Sanity check HEADER_EVENT_DESC
-  perf header: Validate bitmap size before allocating in do_read_bitmap()
+Cc: Ian Rogers <irogers@google.com>
+Assisted-by: Claude Code:claude-opus-4-6
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/header.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
- tools/perf/util/header.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
-
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index f30e48eb3fc32da2..13bbf8df15f66cab 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -213,23 +213,23 @@ static int __do_read_fd(struct feat_fd *ff, void *addr, ssize_t size)
+ 
+ 	if (ret != size)
+ 		return ret < 0 ? (int)ret : -1;
++	ff->offset += size;
+ 	return 0;
+ }
+ 
+ static int __do_read_buf(struct feat_fd *ff, void *addr, ssize_t size)
+ {
+-	if (size > (ssize_t)ff->size - ff->offset)
+-		return -1;
+-
+ 	memcpy(addr, ff->buf + ff->offset, size);
+ 	ff->offset += size;
+ 
+ 	return 0;
+-
+ }
+ 
+ static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
+ {
++	if (size > (ssize_t)ff->size - ff->offset)
++		return -1;
++
+ 	if (!ff->buf)
+ 		return __do_read_fd(ff, addr, size);
+ 	return __do_read_buf(ff, addr, size);
+@@ -2713,7 +2713,12 @@ static int process_tracing_data(struct feat_fd *ff __maybe_unused, void *data __
+ 
+ static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
+ {
+-	if (perf_header__read_build_ids(ff->ph, ff->fd, ff->offset, ff->size))
++	off_t offset = lseek(ff->fd, 0, SEEK_CUR);
++
++	if (offset == (off_t)-1)
++		return -1;
++
++	if (perf_header__read_build_ids(ff->ph, ff->fd, offset, ff->size))
+ 		pr_debug("Failed to read buildids, continuing...\n");
+ 	return 0;
+ }
+@@ -4687,7 +4692,7 @@ static int perf_file_section__process(struct perf_file_section *section,
+ 		.fd	= fd,
+ 		.ph	= ph,
+ 		.size	= section->size,
+-		.offset	= section->offset,
++		.offset	= 0,
+ 	};
+ 
+ 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
 -- 
 2.53.0
 
