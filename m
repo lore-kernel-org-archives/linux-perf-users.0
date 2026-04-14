@@ -1,108 +1,129 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FCD372B2A
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 20:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE023603CA
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 21:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776200252; cv=none; b=SItkKx3Igm9+bPzBqK2BmZFPlbFD2WJKwHJpllM/Kjs94WeM7ibwwQlcGt81nFoiAPKcQliGe4x/JMTJAD63SgMfSTSO3cbdAbOSH16TaYOIqEftMaQlIgE2NFh2O0UTFPkxUjQfY5tkp5toPErg28NXcUFmzeR/rNDMRdWZGHo=
+	t=1776201337; cv=none; b=KgpJQFXvqOaQiYXPIlxD3/NeUgcMlnmYql0IXbUPevFn/xq7VnrfPblvKd2UNwd5ZdUaX59OmU9aJWUAfAWzihfMKGZQwGW1wC5Xy/pvC0I+94u4xjec/r0zz9mSf4zW0ceLgXKX3aorMXVcfYD5PiLn3rTLUWYw3dvzP5/KuNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776200252; c=relaxed/simple;
-	bh=pFtcggkSnreuO7abd9zeWnsDQ3GUR2bcYtkELYF7a6M=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OygUYI7wzfwqmqnv9cO5SU9oA2BRvJmrVavaHvEUsn0IRq/yYAjRQsuyjLzQv1gMa1FjB69lBZ+MIQ5rvNL+cPUNuHz92j76koZaofs8t8N5SZ1luFT31eeWFpfRiujzWPfheSEkcbz+rhyhb/FBRwZ8WlNruh1IP7/ivz6OqkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fomEuYBn; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1776201337; c=relaxed/simple;
+	bh=U9LYC2ekeVA1ilUjog60/xFnxRaYy7JDW/8QBZKQLBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VCV9Bu+Gp8GG2jGhW3Z6byLnZUr4KPbi7tnqYiUI9EvA3EBV3MkgIC2/qlewC/VPl06FIxoco2h7IPm5V194rF81kGr6A4dhkhT5b4Eh9hyNAXIoIPmWEHJ6twrdzpD1oa5Ql3YcIQn9ngfe3pNJZ5yeO7RVRhR1rwOmIJX5JsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E02wMJy8; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fomEuYBn"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b465bf993cso21044115ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 13:57:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E02wMJy8"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488ba6366a7so74671495e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 14:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776200249; x=1776805049; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KNlXiJpMMppCiC6dL8z4Fp8Wz8OMyENA8qMCcjv6v7A=;
-        b=fomEuYBnwO1LTSj8cGx4NMFLUMkRRRbOGTjV3T8X5Fpgvr1qe4GzrRes9DTP4EG8H+
-         0kemJRBujfnr0Ne2JCi5I8fECwFwXIDIhX5/yJiMlB/DneJkaEPJoSWhHL6k81UR/e2t
-         SGdVSbWKqpkPLdG6bWh1x+nMPF3tKYZmK+YEClpk4aIuLIcWISJrAPHkeyIB4vJn2mnP
-         kD/5o+8IFoPipji0yeyfWV7Qhut+Uv460/OmDQivsKZnvWApbj8jAHDFx9pfadxX+e5y
-         V73ECEDtxUvfYePBxvAdxxtFGhMA0stI35ZycnfAhSaT64M+NZyLDbX7qKcCwQo0dz/k
-         RDDg==
+        d=gmail.com; s=20251104; t=1776201335; x=1776806135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=08SQJ/vGtL3UyQHWMHb9Cd/PD5t9iklvt968lKhjhaY=;
+        b=E02wMJy881lqQlL9mwcZb52TH7AeAnO9+9hM1kRCUdgZAW6bYqiCsbBvHmklwK3DEA
+         eiiWnic11Va9Yuq7y7QPgqNLgXXYJerxjlzIIWmaSLroDeTZdgh0or4muz9JYnjbvn9Q
+         xfmOqPAfK+ZH7W+6Tzvz+JYUF/LorgDiOJtWScNiqXWFUAsQJ27i8wLuKcu3h5ZDNslc
+         Wmvwi+CPb8TYc8bcpb3/xJaIZM8zNBB4gU6oHdlbnX2Oaceuc3zRslIvJKhG2YlnawzQ
+         nZv/hLt9owou1Eq3QAg/WH2csl5usoI13WkmomUmlexyCl8sBdaT61s/71yYa+db5L1o
+         fzmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776200249; x=1776805049;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KNlXiJpMMppCiC6dL8z4Fp8Wz8OMyENA8qMCcjv6v7A=;
-        b=Eb+wQizA9jtY8N60jE6Y0rWk7quuYfo1VQE8co/RI0JOOPdjGmuFtuadLbOpABA8xt
-         c5UB/2+3hJoUcj6lY1EVUT65ZyL60+9K9eClSO8EEM4WdOsp2GTjYFqAKppkJ81PtmdF
-         bmPOJ9j/ae+xBAHeqVvHTDk+yEcnvDwqMOZNQZ+FYqwWBiqtL6bmV8EGw+uW5NBPayrA
-         +YB9iKivX473UeUP+HuwZY7cbN8UkRs9j9YH9VOX1pZX7WNIc3WcA+hhzobJaIJMeVnf
-         LOet5hTGPUq4Tqwd1D/hm3rxkluhlVvJ2Mg/z2bcL77lsWtD9NBQ3ocHD2UWv9mxlkKV
-         PLhA==
-X-Forwarded-Encrypted: i=1; AFNElJ9661SyawVUjc+kqZmwPACScP/SYuZ050+V1iU31sRHSrVxyQYyncXuxoZDsVXQPEE/J65CgYtujn9KUfe2smtn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFPVOTub8a5YTnsRpDD7b1tnmEhsPQ6UuIIlH2m4syR3ceLdgB
-	6Nxfck5Fkv3efxs6jVnlZ6KjGoNq7HeaYnConlGFXGnSkwAHCqzg5vkSwsSkKgwdXcZ54KOZxvA
-	U7vq73fDC8Q==
-X-Received: from plpr21.prod.google.com ([2002:a17:903:3e35:b0:2b0:4da9:9b34])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:2b0:6e6a:8504
- with SMTP id d9443c01a7336-2b2d5a3033amr179829145ad.27.1776200249237; Tue, 14
- Apr 2026 13:57:29 -0700 (PDT)
-Date: Tue, 14 Apr 2026 13:57:25 -0700
+        d=1e100.net; s=20251104; t=1776201335; x=1776806135;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=08SQJ/vGtL3UyQHWMHb9Cd/PD5t9iklvt968lKhjhaY=;
+        b=W72rLjYWmkfiScORvGcqREjjEWeDBfuM2lol14cHZSFFfuEi26vfeiUV6RyFb8ZzvT
+         /fzNP4hhszO94d+Nl3iVOYDOkKotytX/Z4JSry4prDiAyW5bHzXVgXabGIBQMknLbjL4
+         q9V/W1v2oESp3y96TV006GnIhwj4tYkimsOvHEtdt4RSae8YysWJfBYhnPbLJ4TI/9ut
+         8OcOlFdKyMfjOy2Kgciy85YjJUMtSG5Db2lNOyTl9gJQRFHJ9S+GpPKIUHNnZHQE9r5/
+         dZxdBi1Jhg6+ThOE3hy5EBGFD24LN3IUqEYbdcbwtAvWSig0QLRS+6In+hdEIjBTppU6
+         7HBQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/beY87vurBs2+j7GKOjsBQ/NeOXFhDagRrLW4HPwZWX1PfA/6G7mp/Pujc+UUJHJlms6Z3p5pJ2KdY62K0NBEL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZMWS0tNqGOvupwA8u/ttGFBRAfpG2gACCwaMR8miTN9i7iAuB
+	rlWOElPjeJezTtSlbSHPln/H9D5WQZvTNxh0jphIm8XMr/i7MsjyFhdB
+X-Gm-Gg: AeBDiet48rpGo5SPP1rGgzXkSclCu2aE/j154FRxIX3TMHjqz7rlEThdKe0F+cR2Owi
+	bo4dqpJSL5mpQdOrrbDIfOW08k9o9RxBC6VQdXbTJlpo1+2+9NphKUpQPcCTf7bHv/Fhy/3ll7E
+	fVzozC7lMvgtLv33UiLMpcQtSmqUZTn1UNYZy1hV7JbpdGh795g7dfqI5Q19zje2ktw/xUbAVNZ
+	CFt36on7ii4RV2hnWUXgm575AEJqe5xQRQWz0+cmzOxKXqYWOul92ufQjHnCIv5x2X180MEMTke
+	ClT4eM2KX0dP8nEveQWBw7vWJ3dP+JCaiRww1uc7kH5k8nCTzrbJMBXXc+6R/e71M7gz2WcJRF7
+	bWWbqrbmEBdKAGGaWaDHlN1dVo28u3MMZ5FmWiMZjaupHv5xtmNLt9Vi6estQ1dbgujK36EyubB
+	62XezMElQ/u5VWrGpupc7QHaaQ1Hu6bZWx1i7+Z569m48y2wjWynnwRH5kZ3wvAwo7
+X-Received: by 2002:a05:600c:8594:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-488d67f9a73mr185836585e9.13.1776201334404;
+        Tue, 14 Apr 2026 14:15:34 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488f0943698sm4244985e9.4.2026.04.14.14.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2026 14:15:34 -0700 (PDT)
+Date: Tue, 14 Apr 2026 22:15:32 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim
+ <namhyung@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian
+ Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>,
+ Swapnil Sapkal <swapnil.sapkal@amd.com>, Anubhav Shelat
+ <ashelat@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf header: Ensure read strings are '\0' terminated
+Message-ID: <20260414221532.17623227@pumpkin>
+In-Reply-To: <20260414205725.2211169-1-irogers@google.com>
+References: <20260414205725.2211169-1-irogers@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.54.0.rc0.605.g598a273b03-goog
-Message-ID: <20260414205725.2211169-1-irogers@google.com>
-Subject: [PATCH v1] perf header: Ensure read strings are '\0' terminated
-From: Ian Rogers <irogers@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Anubhav Shelat <ashelat@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Sashiko reviews were complaining do_read_string didn't necessarily
-ensure strings were correctly terminated. Add checking for this and if
-a string isn't correctly terminated return NULL.
+On Tue, 14 Apr 2026 13:57:25 -0700
+Ian Rogers <irogers@google.com> wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/header.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> Sashiko reviews were complaining do_read_string didn't necessarily
+> ensure strings were correctly terminated. Add checking for this and if
+> a string isn't correctly terminated return NULL.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/header.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index f30e48eb3fc3..fa4f6d773874 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -269,6 +269,9 @@ static char *do_read_string(struct feat_fd *ff)
+>  	if (do_read_u32(ff, &len))
+>  		return NULL;
+>  
+> +	if (len == 0)
+> +		return NULL;
+> +
+>  	buf = malloc(len);
+>  	if (!buf)
+>  		return NULL;
+> @@ -279,7 +282,10 @@ static char *do_read_string(struct feat_fd *ff)
+>  		 * thus the actual strlen of buf
+>  		 * may be less than len
+>  		 */
+> -		return buf;
+> +		for (int i = (int)len - 1; i >= 0; i--) {
+> +			if (buf[i] == '\0')
+> +				return buf;
+> +		}
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f30e48eb3fc3..fa4f6d773874 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -269,6 +269,9 @@ static char *do_read_string(struct feat_fd *ff)
- 	if (do_read_u32(ff, &len))
- 		return NULL;
- 
-+	if (len == 0)
-+		return NULL;
-+
- 	buf = malloc(len);
- 	if (!buf)
- 		return NULL;
-@@ -279,7 +282,10 @@ static char *do_read_string(struct feat_fd *ff)
- 		 * thus the actual strlen of buf
- 		 * may be less than len
- 		 */
--		return buf;
-+		for (int i = (int)len - 1; i >= 0; i--) {
-+			if (buf[i] == '\0')
-+				return buf;
-+		}
- 	}
- 
- 	free(buf);
--- 
-2.54.0.rc0.605.g598a273b03-goog
+Would be a lot simpler to malloc(len + 1) and set buf[len] = 0.
+
+	david
+
+>  	}
+>  
+>  	free(buf);
 
