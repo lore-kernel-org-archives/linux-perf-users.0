@@ -1,90 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BAE3624AD
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 07:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792B435E95A
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 07:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776150752; cv=none; b=c9GKs+1rGDs4z/e1HQciIUH74h2Z1zk/uV6339jO99mwYgLS5pw8TBqtTv4tV4A7m2xHtU1NFq9vm7hsKm5DzK9bUoy2PBYKl9A0v0iNL/X1SGOcn26ggethSCdybPg2Yj/2rVweZaaHw9xcf47Na1p9EFX7RgKkyW2XS+uh9ek=
+	t=1776150807; cv=none; b=WEWfazuucaFCZq3n6UVZ0d4pF920etIkhblyu6lGgyK2p+QPlCvI+IIH7t5TiAev9XuW9+pk6C6C56Z5xznh4W/mpED599ubY2ohps0/etuV95D+xtRh0+jMkLKYmRJ460/gjsOcVrI0Hher+BH2YXL6avL1mkQKkHR1BMjNyWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776150752; c=relaxed/simple;
-	bh=7e7/qkPenvrl5SHxOd+nOJ9XiE9voHDzEHIXRcpng7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G4UyhAJ/N2TX8ads4emEmcIsANJAclKlLOhncJPQu5PRGD7cvZXcjBU7Cs5biJquHLdbFnuCXIMwjyHoW3dDNZs9e3ChdHKp9PO9QwsK5u0sJCI8y+a7NWO3aLNZ8eaTwt6EXKIV8GM9FYK0nzBHyTghnASkJfS0Fj6NaUChYPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sd0tPW9l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776150807; c=relaxed/simple;
+	bh=RrspV2M3q1YMPaUF6NAuszBGY+gIKbsLaOiFuToNw3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lyEaBTE9bRaOAzSUHDoDVkB9Ti4u2D6Nel+kx3COvKK0S0BN0Avrz7ZBW0HW7IIYbGcuErIDX5v0uvOJNqBNwPW5GHiU+ORLKVFrPLa1xXlZpqPTFFyrSvlQZ8lC0+dLYb46C4W30p180nxGoZZ66IE/uHmzNZoXkwJSvOLyFNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltlS0kZT; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sd0tPW9l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECC1C2BCB3
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 07:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776150751;
-	bh=7e7/qkPenvrl5SHxOd+nOJ9XiE9voHDzEHIXRcpng7k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sd0tPW9l6YabFbRlpxUZx3Q7m4Pxs6dDcdW5xSVHS32VURvRXcJAZqTeIUTFwwxHI
-	 ZjqQJfLQZeDlJYmfK6GeKqauGc8bP3lT7cmULhuxkWgIfi75W+OIxRIx6+cATeRwfd
-	 4iQAXrbBzy+4vITL8/WSG+mqU8X2jThnffSrQ4I4WJfqsZVTbR3kbRjjjIJqELPd0R
-	 q98oLT1JkXo4rOqs1cJXddXQqr8oCYMLn3Wsiz5pNVKjbiDGQdGFXgeWrspXBwEE6l
-	 /GKKb4gmPadPEN9HVKvygLK3ZLVOOjkelv6iyw3NNOptVBl0/z6KHb8W75xVFoKRkS
-	 1Jv12dDXOCxtw==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b980b35534eso722505666b.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 00:12:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+mmH8u/Q/M1zFsa4/5H7XQHlB8e8Dhji21l59YINVT9vsAB6nbv2+UeferToq1kg1NKC0NyGIkwEuOM4+FyBRa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqamhVT2dwcO1QhHrXaYiY+CwE5LhnoHkXSpn7Qerle6pibE0g
-	3Jshxs4nBI+cdHnFUfwfh2eADDRJ9II+3KEA1iTC7DHCs4cLVobtZOpPwfcFRWc45R6yJtjJsm8
-	6pErvSPSsHvA0PLV8Sqb+bGqGn5AwdrU=
-X-Received: by 2002:a17:907:fdcb:b0:b9c:11ee:3c2f with SMTP id
- a640c23a62f3a-b9d4600c3e6mr1019204066b.1.1776150750183; Tue, 14 Apr 2026
- 00:12:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltlS0kZT"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-82f431c0ab6so769247b3a.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 00:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776150805; x=1776755605; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ZR5ZSEZp74pl3SVnEkbEOwwj/yRKz7BitznZw1sh5s=;
+        b=ltlS0kZTR9RXOmax5ag2pon1pcI6NpXbpv58fJCWq26yTqXvNkagRRqZ7VGt7iRnSd
+         dGdUzMG/hihbx71ZdHfU65oTnKjRwM5GNOQwHQQXltvpHcbkZEhFkTq+KnH8WCVDf0le
+         w9dFLF7QTbvt1js9BSVvsyGQA/LoOliuBwRMzHFmpH3Vv9Ia1HjwOTHEl21ZCUE5ejdw
+         RZoZAHAZ4Y/JCg2ZVeNtJ4MAgYocoo/CGijc0AlcMeI7JQegIwI1M/LCGBHYjXVHHPJ5
+         BDDpES9RP/1AcBOjv1rkRLvJSP7efo3RNJFnRAlPvtUZhd8qpXSszjZ1vRLMyk6XdGjp
+         M6Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776150805; x=1776755605;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ZR5ZSEZp74pl3SVnEkbEOwwj/yRKz7BitznZw1sh5s=;
+        b=W8v6U7XFaRR+twQTJGjcb83NgkWHk2Gq+JGrUArcU+cUcmaFpvBL6AU/ky/m6bebAk
+         O7xFRDYMahOyq/4ZqXEhI6BgGxijdp9Eco/L/bo/JrlK97Q6YC4wyFgZ7Whjq7HMSAXf
+         UPfv/U9NL5sSyGUgTr8LieR4lXRo5I75uPfBiSZ8cCKtAE4KFd3DgS8KLjqZpI9S7ZRr
+         4eLRrewrT9YfqzQ46Pmuf+rI/IYY0JEhklPk4frj1aHJwS5BZQ5cgbKS/akDNyNyRniR
+         RbD1Pk2TEDv1adYKt+y089cSdi2oVN9yss6d/1fErlU+TRuXbUHUiJSLl3dPFfFTtyjB
+         rlPQ==
+X-Gm-Message-State: AOJu0Yw9GultMUNwCJ4Zmmlf2dlm9eCogi9FMC/F4myib47NfC78TgSW
+	UyI++cRBtJLJAzJrkcrydKJZdCFD16P1wZNlT2nbroxzSkT4GiA2IlemrNb00L6D
+X-Gm-Gg: AeBDiesPJ9IwKHWtCfNbtlqqJGEA0Z8uuZeD0nxBb+7Kw2yoKnXRh6qg9FlN/7+6cHC
+	DgrcjyB2sJnYFmw+rnreLEt9T3Ai6Pk7l+0a9RuX5FXneKh8SNbCeC4ofq5fWOu2lMfSRz36ZKD
+	gvsB/YhzVpVtfH94Vkal0chUax+Al/z06Tv86o/kpJGgMIKZsN5QPYPGNbzfNbcpdcVSmhu7bUR
+	A0xKCn+ScWD2NU6Vvo4e9nD0H2AdaI170YsS0ZhLsxxkVCG6c0V7i5wNluDhArMIeIKkRPTVWg9
+	Cpqrba5qvPPn2HkAUndpCtY2Jmcq5XltSlbBjmxWBQqeIs4g+EKAcqSKqv6dHZ6fzHED5RxgqyG
+	PH3xqZFsvk1fPVISOC7H9LjePRiWwxhleNFnDzUCJqsxOEIMrG5dMIumB0vTQ4vOoMAcokQLgji
+	11WVPNPQCaf3hdabrMaFsGPKuXnJWVip/JxIHnb4Gs3Mp35fj3zW7vevELJC0TXQMsbYVQTWe7W
+	TpdyldnkEJxcpcUKfxapv9oo9hmZQ==
+X-Received: by 2002:a05:6a00:140f:b0:82c:dd31:b844 with SMTP id d2e1a72fcca58-82f0c316a23mr16607277b3a.40.1776150805492;
+        Tue, 14 Apr 2026 00:13:25 -0700 (PDT)
+Received: from localhost.localdomain ([2601:600:8d02:27d0:15f3:5e9a:ad7d:22d1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f0c506150sm13172519b3a.52.2026.04.14.00.13.24
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 14 Apr 2026 00:13:25 -0700 (PDT)
+From: Gaurav Sharma <sgaurav00719@gmail.com>
+X-Google-Original-From: Gaurav Sharma <mgsharm@amazon.com>
+To: linux-perf-users@vger.kernel.org
+Cc: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gaurav Sharma <mgsharm@amazon.com>
+Subject: [PATCH] libperf: fix parallel build race with header install
+Date: Tue, 14 Apr 2026 00:12:42 -0700
+Message-ID: <20260414071242.95637-1-mgsharm@amazon.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260414005152.10550-1-r@hev.cc>
-In-Reply-To: <20260414005152.10550-1-r@hev.cc>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Apr 2026 15:12:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6fo4WzpNPckOK28PXFPzuhMbteCXCFS3dZ0JoO4kBg_g@mail.gmail.com>
-X-Gm-Features: AQROBzDCkDOhGwZDCutYcSxP-6C7pt5y-8aREcpE04Ti_HC1hFjxRTk35DOgh40
-Message-ID: <CAAhV-H6fo4WzpNPckOK28PXFPzuhMbteCXCFS3dZ0JoO4kBg_g@mail.gmail.com>
-Subject: Re: [PATCH] perf loongarch: Fix build failure with CONFIG_LIBDW_DWARF_UNWIND
-To: WANG Rui <r@hev.cc>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 14, 2026 at 8:52=E2=80=AFAM WANG Rui <r@hev.cc> wrote:
->
-> Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
-> enabled because unwind-libdw.o is still referenced in
-> arch/loongarch/util/Build.
->
-> Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
-> Signed-off-by: WANG Rui <r@hev.cc>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+When perf is built with high parallelism (-j128), there is a race
+condition between the install_headers and libperf.a targets in the
+libperf sub-build. Both are invoked as targets of a single make
+invocation from Makefile.perf:
 
-> ---
->  tools/perf/arch/loongarch/util/Build | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loong=
-arch/util/Build
-> index 3ad73d0289f3..8d91e78d31c9 100644
-> --- a/tools/perf/arch/loongarch/util/Build
-> +++ b/tools/perf/arch/loongarch/util/Build
-> @@ -1,4 +1,3 @@
->  perf-util-y +=3D header.o
->
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> --
-> 2.53.0
->
->
+  $(MAKE) -C $(LIBPERF_DIR) ... $@ install_headers
+
+The perf tool's exported CFLAGS includes -I$(LIBPERF_OUTPUT)/include
+which points to the header install destination. The coreutils install
+command creates the destination file (truncated) before writing content.
+If the compiler runs between file creation and content write, it
+includes an empty header, causing incomplete type and missing prototype
+errors in the libperf source files.
+
+Fix this by making the libperf compilation target depend on
+install_headers, ensuring all headers are fully installed before any
+source files are compiled.
+
+Fixes: 91009a3a9913 ("perf build: Install libperf locally when building")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gaurav Sharma <mgsharm@amazon.com>
+---
+ tools/lib/perf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 32301a1d8f0c..8372cd9919b7 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -99,7 +99,7 @@ $(LIBAPI)-clean:
+ 	$(call QUIET_CLEAN, libapi)
+ 	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+-$(LIBPERF_IN): FORCE
++$(LIBPERF_IN): install_headers FORCE
+ 	$(Q)$(MAKE) $(build)=libperf
+ 
+ $(LIBPERF_A): $(LIBPERF_IN)
+-- 
+2.50.1 (Apple Git-155)
+
