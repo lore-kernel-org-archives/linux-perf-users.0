@@ -1,142 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2484536165E
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 21:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A630224AFA
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 00:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776116669; cv=none; b=Ry742akbM+5cYHujBD1XbGxrw94b67btLxr/9qU6rxzST5oDAmt21EZPJ9QPO1K67ziIbJrpwihHt6ynjWrOXi24aF4CzWuBLWSapR0gEwHCh/KRkLrEAU5qSAUi8/STjjuPXN1ajewloqBC51WiKjxVwpwZN3mQFKfGlGlOXmU=
+	t=1776127961; cv=none; b=CiQfRSiHGPdZ1SHyZ1bkPIc2SiEr0fAkByZOwUeULAXahQdgrg+8EqE2+HwivaASTA2PyodZnikJlTaAuqU+v262h8sTZayb6lmbM0JLpRAY/leeNS4ZpCi8YUKnXyVdDVBeQG3hXBjMN/6vAPDniRwjyDUnhA01YznwdlwIYaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776116669; c=relaxed/simple;
-	bh=R0HCdIRRPxoffT0I1c1c4F8Ur6cdPqm2MqYhG05qL0g=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZmRkXjpR6gdmkKsC9iDJ9F3cSNWaX8tSKW7d5sBV8RCzVpVGK56ZX2nwxLVtMqqRgK6IKOjHYA1CcLEion8ybkbgNSiLMpKq/i0m6vmZR/lbNd2ZCFTEgjmQ2iJI2C5eXp4m9EyPVeUDSzKIzXlyuGLRuSXvrnLo9MLgiKiMfCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCYeeE1l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776127961; c=relaxed/simple;
+	bh=QWpq9riX/z5vABZSqFL2iQ5ORl/fWBZU5VsGZXFuyZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l+wmYRRXah2xnUt18YOzTheg+056pwdUwnmcZWSQeLvItQBXpgfWlBAOwPD4MHK1cSyugecFP7UoFzbKgO0hSCxPoF4z5dcHhU5CXuYXpFUdLqiuQuDXYw5GtwwIfX/UgThSHdxEROCSgQBzr6Hsksh0xf+dmMfD66bTQv312BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=SdF0qibm; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCYeeE1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6A0C2BCAF;
-	Mon, 13 Apr 2026 21:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776116668;
-	bh=R0HCdIRRPxoffT0I1c1c4F8Ur6cdPqm2MqYhG05qL0g=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=cCYeeE1lutnVhIyZIAkPqZxKozhvVu5jOCPyUpjUl/v3f3JRNvX0ezwaAIFvyq0dV
-	 4NipWIhkTIzvagEquzegT22JaqM3VgWVZxuDJO9ucMYE8rqBjYYvxd6fD7Gep4WS1N
-	 aAoXW99OfP15ts5EId4Sbx/OrKCDpgxzzx7XA40ea2tp8BWGdqYi+BXwJG1jL5mLZR
-	 u7nZmeb/AQODXuW3nsBa+uJGMckf3TzM92y26YWySyor2yGI9nE8TQE7XD68DFv5Q9
-	 XDAafqrtClc7FFW/u99MdJ6IufIBsG2SqQZkQzJwK7LJbtKyH0zO9pRk9OpOSW33A9
-	 Q7gZc2S1cPniQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1] perf tests: top/kvm don't depend on coreutils
- timeout
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413213300.1700116-1-irogers@google.com>
-References: <20260413213300.1700116-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Apr 2026 21:44:28 +0000
-Message-Id: <20260413214428.9D6A0C2BCAF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="SdF0qibm"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-35d95017a68so3120563a91.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Apr 2026 17:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1776127959; x=1776732759; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
+        b=SdF0qibmsEObSxOuUUtK6N/2Q+HbeGZLGvWwnnVRWZutpGKCY5UooHOT8LDdsgDbYW
+         MuM4B3j7NUsGUb4GqF7jOG42vpvVlYQ+i3/6r8rmJz18MU5Q1Ug4eL9FTNBIY3MN70Vw
+         GMwsDeTaeJw0BRyoj/1HbAIRYb0WUDkOSjVoCXeDq0dOWbcC4H1zpJc5ytURwX0y3nJX
+         6KQCef+JCR4cCKxw1ElFIXDbH8B8+OCPsyQRltzC3CwhLqtN4InJCsCYZCrdUFzG+ysN
+         AbI1TzMmEmqErZpQAXxq6l9J0bOsfr8+sAUppcmS2Yun0O5YCVjN0G+FX2xjqVAOrNJr
+         ROYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776127959; x=1776732759;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
+        b=QvZVjjfC73RkXJuSLVmYyNIfYZnoCO6MsodWrAoeSb+AnY38GT2+cjYZd9t99d1CZa
+         14SimdOjnCu/xwQok8xjcXPRXNwhx3RbCrDKVbSf1B+i+xawcqvt77YWGSLp3kIclVM9
+         x9O2bVplriBmJEVCOgMIpr2Wt5gNTLZvVzkQL+pttoH8vxNlOYMj4cRgzsbOmEkVHqQ4
+         PCUYMIR04irkXiozwb30m1hCctPzjt3iJa4jETDm5dr5OUkbv99bF55uVZvYciCYPvJT
+         LYkBEfEIfGXBvZuNWZ3ksdvMg95MRdLhDiLOisZRsdAvXKXJplA8N01EHUcyjmntopNr
+         rpVA==
+X-Forwarded-Encrypted: i=1; AFNElJ/fJhwxfw+VXuE7YXvkyR/gkLakBExQY5oRy63SPtDkYZJz7WoDRweWXrg+8/TmEYGN5+lxkjd1cvfs1iCOyq2Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJmvo0ld8a2YJVkVyWvt1j62V3he40j5QbCyYKfEytPSwJZWNC
+	br0P1vKZl4DCyijrf980hGULNVK22K1isv/lCojNWXniRvwg+vKEzeBr15nePeiuBK4=
+X-Gm-Gg: AeBDietPGdVZntaqqPGMtfyL8y/9r95mPp8uxfo2eveioWmWScK7SbNaVlQQ/h9e53O
+	ZoRIfGj33jkF0J/M6Owrq8LGfjAYOSlohrBxleD2eqGxCJqwV20ENy3CncvuwQoff+ZW9/TbpXG
+	IBOpqP9hXtFjkmWzn7Wn9R1MugtRZysyXWEJdUb2+B+NP+HW3EvtnLPozMVNx0dJ1qYFepHUZ5x
+	rLzW3OGaaqwFSLPMjqd5GzRO/YcdZLU6e1gGkNJ2BKxx1A5fcEVg28y0CgdzjeC9H99hioiLPtm
+	T0vqCSB1xQ/Hp2szgCyHIUpky6duGCBGzE6mdM+6czeryrv0/7dBfD7gS+R/+MHZedwk7AOtoec
+	+Nr7MnQYNgeuvxVTPtS3F3v4dUDKxSP9z6SF0JDtNZ6rGiKyn6esQdcdy7MnXzDKZ3Ez6ReyRAC
+	+JYsIZIfjHCg4=
+X-Received: by 2002:a17:90b:2dc8:b0:35c:a8f:5c5f with SMTP id 98e67ed59e1d1-35e427708acmr16148191a91.8.1776127958859;
+        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
+Received: from gpc ([2400:8902:e002:dea1:c507:1213:2c85:ae99])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e41bba7bfsm5906431a91.0.2026.04.13.17.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	WANG Rui <r@hev.cc>
+Subject: [PATCH] perf loongarch: Fix build failure with CONFIG_LIBDW_DWARF_UNWIND
+Date: Tue, 14 Apr 2026 08:51:52 +0800
+Message-ID: <20260414005152.10550-1-r@hev.cc>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 4 potential issue(s):
-- [High] Orphaned watcher process can send SIGTERM to unrelated system proc=
-esses (PID recycling).
-- [Medium] Exit code mismatch in timeout emulation falsely fails tests.
-- [Medium] Implicit standard input redirection breaks the protective pipeli=
-ne.
-- [Medium] Non-POSIX sleep argument causes immediate timeout on strict mini=
-mal systems.
---
+Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
+enabled because unwind-libdw.o is still referenced in
+arch/loongarch/util/Build.
 
-commit 17f50e3b3f4410cb65917a2951f5c28c36d9bf25
-Author: Ian Rogers <irogers@google.com>
+Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
+Signed-off-by: WANG Rui <r@hev.cc>
+---
+ tools/perf/arch/loongarch/util/Build | 1 -
+ 1 file changed, 1 deletion(-)
 
-perf tests: top/kvm don't depend on coreutils timeout
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+index 3ad73d0289f3..8d91e78d31c9 100644
+--- a/tools/perf/arch/loongarch/util/Build
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -1,4 +1,3 @@
+ perf-util-y += header.o
+ 
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+-perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+-- 
+2.53.0
 
-This commit adds a bash-based fallback for the coreutils timeout command
-to prevent failures on minimal test systems. It then updates the kvm and
-top test scripts to use this new bash_timeout function.
-
-> diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
-> index f88e859025c42..a27b3d6414e9d 100755
-> --- a/tools/perf/tests/shell/kvm.sh
-> +++ b/tools/perf/tests/shell/kvm.sh
-[ ... ]
-> @@ -102,7 +105,8 @@ test_kvm_stat_live() {
-> =20
->          # Run perf kvm live for 5 seconds, monitoring that PID
->  	# Use sleep to keep stdin open but silent, preventing EOF loop or inter=
-active spam
-> -	if ! sleep 10 | timeout 5s perf kvm stat live -p "${qemu_pid}" > "${log=
-_file}" 2>&1; then
-> +	if ! sleep 10 | bash_timeout 5s perf kvm stat live -p "${qemu_pid}" > "=
-${log_file}" 2>&1
-
-Does POSIX sleep support the "s" suffix passed as "5s" here?
-
-On minimal systems lacking coreutils, sleep "5s" might fail instantly, caus=
-ing
-the watcher script to kill the target command in 0 seconds.
-
-> +	then
->  		retval=3D$?
->  		if [ $retval -ne 124 ] && [ $retval -ne 0 ]; then
-
-When bash_timeout kills the process via SIGTERM, it returns 143 (128 + 15),=
- not
-the GNU timeout exit code of 124.
-
-Since this code checks for 124, will an expected timeout incorrectly regist=
-er
-as a test failure?
-
-> diff --git a/tools/perf/tests/shell/lib/timeout.sh b/tools/perf/tests/she=
-ll/lib/timeout.sh
-> new file mode 100644
-> index 0000000000000..b4d2c0acf0e22
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/lib/timeout.sh
-[ ... ]
-> +bash_timeout() {
-[ ... ]
-> +    local timeout_secs=3D"$1"
-> +    shift
-> +    local command=3D("$@")
-> +
-> +    # Execute the target command in the background
-> +    "${command[@]}" &
-
-Does placing the target command in the background automatically redirect its
-standard input from /dev/null?
-
-This appears to sever the connection to the "sleep 10 |" pipe used in the
-calling scripts, causing perf to read an immediate EOF and triggering the l=
-oop
-and interactive spam the pipe was meant to prevent.
-
-> +    local cmd_pid=3D$!
-> +
-> +    # Start a watcher process in the background
-> +    (
-> +        sleep "$timeout_secs"
-> +        kill -TERM "$cmd_pid" 2>/dev/null || true
-> +    ) &
-
-If the test script exits early (for example, due to set -e or an interrupt)
-before killing the watcher process, does the watcher survive as an orphaned
-background task?
-
-Since perf tests often run as root, this orphaned watcher might wake up lat=
-er
-and send SIGTERM to a recycled PID, potentially terminating unrelated system
-services.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413213300.1700=
-116-1-irogers@google.com?part=3D1
