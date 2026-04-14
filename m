@@ -1,104 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1DB25A2C9
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 20:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FCD372B2A
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 20:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776199799; cv=none; b=bG7O4TQGBKe5X+fkj7R701IUAw970EBqX3+6jRtv+cEoAd2v38XEC8FLT62Cjj1pBMXQ99wQwssiJzmDKgJS3p73SAVD3uAhsxKeVQnY2pGmeVmmntFoyqZvr2ufxJmgGu3R5s5hYKktUXb+bZtWMQBnHlW8LDMVUyHMIl8f1Oo=
+	t=1776200252; cv=none; b=SItkKx3Igm9+bPzBqK2BmZFPlbFD2WJKwHJpllM/Kjs94WeM7ibwwQlcGt81nFoiAPKcQliGe4x/JMTJAD63SgMfSTSO3cbdAbOSH16TaYOIqEftMaQlIgE2NFh2O0UTFPkxUjQfY5tkp5toPErg28NXcUFmzeR/rNDMRdWZGHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776199799; c=relaxed/simple;
-	bh=W0/jEgy52SpfoYngp5WKnk+fijN2JLn3E9O1YbrQdbw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=o6U2lHTzoL/wpeHkDD1f9WQwjFmnRWReI75JvIKI3ZrgJ8sPkZDicYDGLcFF7CGzfwb14Fr0lawBM+0J9eQBoodrAX9tW6DP4cP/CB35CFjHy6PidGUykr3M+NLBETnmepmTKazvSIz8HESFbPkysoVvCK6CLiztaHw1um+4Huk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhKGpfvk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776200252; c=relaxed/simple;
+	bh=pFtcggkSnreuO7abd9zeWnsDQ3GUR2bcYtkELYF7a6M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OygUYI7wzfwqmqnv9cO5SU9oA2BRvJmrVavaHvEUsn0IRq/yYAjRQsuyjLzQv1gMa1FjB69lBZ+MIQ5rvNL+cPUNuHz92j76koZaofs8t8N5SZ1luFT31eeWFpfRiujzWPfheSEkcbz+rhyhb/FBRwZ8WlNruh1IP7/ivz6OqkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fomEuYBn; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhKGpfvk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866B1C19425;
-	Tue, 14 Apr 2026 20:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776199798;
-	bh=W0/jEgy52SpfoYngp5WKnk+fijN2JLn3E9O1YbrQdbw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=IhKGpfvk7mrfTbLYT2NC2r4vLYw/d/ydTvDUFCJoaixy3BhQyVwVq/vmyhYso3gI/
-	 NqI5WuUpR9WuC8E6zyS3XG/CkkCPOzsL0V2c6AHUenawp2mvPmTnWHz3cIonoj8sNw
-	 hVwnpLi/EbqwvCUHSPtD7mHI4a3cQl2sPhSGCHhghvcnyo2LmPNdak8U95QhlzavC2
-	 SMMX+F8sfIaqGY6aVa7qXj8ZigJJ9i0/ar7201mzk5f5DmnQWTaN/aMb5ZCRM1+W+b
-	 hnu4q+LNEW1lV3qj/4m4nV5N1rK/YJHku8VmkYbeA7R1/84evNTl/5fXYcgddPctX2
-	 acixCWAsjhcMw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/4] perf/x86/intel: Don't context switch DS_AREA (and
- PEBS config) if PEBS is unused
-Reply-To: sashiko@lists.linux.dev
-To: "Sean Christopherson" <seanjc@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260414191425.2697918-3-seanjc@google.com>
-References: <20260414191425.2697918-3-seanjc@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Apr 2026 20:49:57 +0000
-Message-Id: <20260414204958.866B1C19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fomEuYBn"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b465bf993cso21044115ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2026 13:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776200249; x=1776805049; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KNlXiJpMMppCiC6dL8z4Fp8Wz8OMyENA8qMCcjv6v7A=;
+        b=fomEuYBnwO1LTSj8cGx4NMFLUMkRRRbOGTjV3T8X5Fpgvr1qe4GzrRes9DTP4EG8H+
+         0kemJRBujfnr0Ne2JCi5I8fECwFwXIDIhX5/yJiMlB/DneJkaEPJoSWhHL6k81UR/e2t
+         SGdVSbWKqpkPLdG6bWh1x+nMPF3tKYZmK+YEClpk4aIuLIcWISJrAPHkeyIB4vJn2mnP
+         kD/5o+8IFoPipji0yeyfWV7Qhut+Uv460/OmDQivsKZnvWApbj8jAHDFx9pfadxX+e5y
+         V73ECEDtxUvfYePBxvAdxxtFGhMA0stI35ZycnfAhSaT64M+NZyLDbX7qKcCwQo0dz/k
+         RDDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776200249; x=1776805049;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KNlXiJpMMppCiC6dL8z4Fp8Wz8OMyENA8qMCcjv6v7A=;
+        b=Eb+wQizA9jtY8N60jE6Y0rWk7quuYfo1VQE8co/RI0JOOPdjGmuFtuadLbOpABA8xt
+         c5UB/2+3hJoUcj6lY1EVUT65ZyL60+9K9eClSO8EEM4WdOsp2GTjYFqAKppkJ81PtmdF
+         bmPOJ9j/ae+xBAHeqVvHTDk+yEcnvDwqMOZNQZ+FYqwWBiqtL6bmV8EGw+uW5NBPayrA
+         +YB9iKivX473UeUP+HuwZY7cbN8UkRs9j9YH9VOX1pZX7WNIc3WcA+hhzobJaIJMeVnf
+         LOet5hTGPUq4Tqwd1D/hm3rxkluhlVvJ2Mg/z2bcL77lsWtD9NBQ3ocHD2UWv9mxlkKV
+         PLhA==
+X-Forwarded-Encrypted: i=1; AFNElJ9661SyawVUjc+kqZmwPACScP/SYuZ050+V1iU31sRHSrVxyQYyncXuxoZDsVXQPEE/J65CgYtujn9KUfe2smtn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFPVOTub8a5YTnsRpDD7b1tnmEhsPQ6UuIIlH2m4syR3ceLdgB
+	6Nxfck5Fkv3efxs6jVnlZ6KjGoNq7HeaYnConlGFXGnSkwAHCqzg5vkSwsSkKgwdXcZ54KOZxvA
+	U7vq73fDC8Q==
+X-Received: from plpr21.prod.google.com ([2002:a17:903:3e35:b0:2b0:4da9:9b34])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:2b0:6e6a:8504
+ with SMTP id d9443c01a7336-2b2d5a3033amr179829145ad.27.1776200249237; Tue, 14
+ Apr 2026 13:57:29 -0700 (PDT)
+Date: Tue, 14 Apr 2026 13:57:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.rc0.605.g598a273b03-goog
+Message-ID: <20260414205725.2211169-1-irogers@google.com>
+Subject: [PATCH v1] perf header: Ensure read strings are '\0' terminated
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	Anubhav Shelat <ashelat@redhat.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Sashiko AI review found 1 potential issue(s):
-- [Critical] Omitting MSRs from the returned array fails to clear them from=
- KVM's VMCS autoload list, defeating the optimization and causing host PMU =
-state corruption and cross-CPU memory corruption.
---
+Sashiko reviews were complaining do_read_string didn't necessarily
+ensure strings were correctly terminated. Add checking for this and if
+a string isn't correctly terminated return NULL.
 
-commit 96e2a3492ccedcf6d37eda9e864908154fe181d9
-Author: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/header.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS is u=
-nused
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index f30e48eb3fc3..fa4f6d773874 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -269,6 +269,9 @@ static char *do_read_string(struct feat_fd *ff)
+ 	if (do_read_u32(ff, &len))
+ 		return NULL;
+ 
++	if (len == 0)
++		return NULL;
++
+ 	buf = malloc(len);
+ 	if (!buf)
+ 		return NULL;
+@@ -279,7 +282,10 @@ static char *do_read_string(struct feat_fd *ff)
+ 		 * thus the actual strlen of buf
+ 		 * may be less than len
+ 		 */
+-		return buf;
++		for (int i = (int)len - 1; i >= 0; i--) {
++			if (buf[i] == '\0')
++				return buf;
++		}
+ 	}
+ 
+ 	free(buf);
+-- 
+2.54.0.rc0.605.g598a273b03-goog
 
-This commit conditionally omits DS_AREA and MSR_PEBS_DATA_CFG from the list
-of MSRs to be loaded by KVM on VMX transitions when PEBS is not active in
-the guest. The goal is to save MSR writes and eliminate pointless writes
-on roundtrips when the guest isn't using PEBS.
-
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-[ ... ]
-> +	/*
-> +	 * Context switch DS_AREA and PEBS_DATA_CFG if and only if PEBS will be
-> +	 * active in the guest; if no records will be generated while the guest
-> +	 * is running, then running with host values is safe (see above).
-> +	 */
-> +	if (!guest_pebs_mask)
-> +		return arr;
-
-Will KVM actually stop context switching these MSRs if they are simply omit=
-ted
-from the array?
-
-To instruct KVM to stop context switching an MSR, the perf subsystem
-needs to explicitly return the MSR in the array with .host =3D=3D .guest,
-which triggers KVM to call clear_atomic_switch_msr().
-
-By dynamically omitting MSR_IA32_DS_AREA and MSR_PEBS_DATA_CFG when
-guest_pebs_mask is 0, KVM never processes these MSRs and permanently leaves
-them in its msr_autoload lists with stale .host and .guest values.
-
-Does this regression cause cross-CPU memory corruption?
-
-If a vCPU migrates to a different physical CPU while guest PEBS is disabled,
-the VMCS retains the old physical CPU's MSR_IA32_DS_AREA host pointer.
-On VM-Exit, the new physical CPU will load the old CPU's DS_AREA pointer.
-
-Any subsequent host PEBS records generated on the new CPU would then be
-erroneously written to the old CPU's memory.
-
-> +
->  	arr[(*nr)++] =3D (struct perf_guest_switch_msr){
->  		.msr =3D MSR_IA32_DS_AREA,
->  		.host =3D (unsigned long)cpuc->ds,
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260414191425.2697=
-918-1-seanjc@google.com?part=3D2
