@@ -1,182 +1,144 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013061.outbound.protection.outlook.com [40.93.201.61])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCD23016E3;
-	Wed, 15 Apr 2026 06:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776233024; cv=fail; b=aNeFakeinWMdRWGgPXh0leg4YwuU9SUtaF9Qhq9TfqQFquFYEAFRm32nDA8+07WIVwiTfOygK59xjZTWp48oS7f8xIOYUW3bt64n8jio76Py19soLG9BsZhgi0UR2Qf2QQZuLVTNiQ2tvwuE4PBJkwucGc1RysBqlrUbDOYt3fw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776233024; c=relaxed/simple;
-	bh=11pkZut9rP6qjblba7WvrsJS+RKSJTz4J/ZYZwuLzTQ=;
-	h=Message-ID:Date:From:Subject:To:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=T6UoknM8hx9efYlUmjryBPkSqJmORIZWqJ44sl3/n3gAsjEeJOQOAoRlBx7ztk/kMAxZhkkIcd1zE66g9G9/mqfvkQ+4W+13ywCaWIIfwNTvhOt7IqlklWFMCS7ZoIXhyImP2i7Uw0JbAhHYza7WEOD5qCw+AJ2Akjbs0hRLuXk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sKy/toi1; arc=fail smtp.client-ip=40.93.201.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C3130E82D;
+	Wed, 15 Apr 2026 06:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776236207; cv=none; b=I5QyVVIZ8d9QzAeKBDlfb9jayZmK+djhLWEQewW+aPn8Vj7jLlVoFtbxo5YhoYTyJxVE1Ejch1xlvSwFvRUbOe9Jy5XsrD5uy3wSyRO6Z2ig43xpwNWI4tMODyqfIag9M8EiDE4Pkfo3hnpO8dvYHrp+FBbcUMfDH9LvzRE7yKA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776236207; c=relaxed/simple;
+	bh=MVX/vYQurhaopMrf+nsihoTaRYybtqgxwIvNR5JY+4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W8IjGJchX8pxmZvBpmQPDI/Eqx6x4E9ZLNxUt1f8mqXCYlKNQS1phCKKOtglT7DtGHABPgfn41gDZDCyXHP31yOOSS9dzUGvuTMWe7ZJoVQ0znPA2z+i1VS1Rgn0v4DCBrZ1Q4Cr+pBS3/zxbYvk3SjdxtrM8ConqHCAkfH8UhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E5K8/ydj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sKy/toi1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eope3U2wIeTRYw6+hEDDuI4rG2rbiyVLSvilP9sGzHAuWzOU3SQBlaH48q7gYUwCruVfhFjYEk60JZP7++RktTdX79XtW7YAVfXk+T8tlzw4kY7+yXk7UL+fwHvhJnvGqfk57kNrB4PXjh4cR8RVMxNdzy5NZhqne+yTcVQYpvc1GhVfBfU4YxoiCkjjagEcnRvBFqrHxtZ5poD8GGzVyFx6hcwJmBgIGLlLTTplNtDJ/omTN7K5zUN34JW/Clp13KJu5MverWG/XME9VCWfL/RBqtPwZyWM1ad/OONmxp9AXLp1LgzxWf0EkrI8+jnOezYfLEmd5HmdTGk7eBvqwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pqsvG8gX5u6vSibxvCpC3j3YQKDhJ9mYvdUcB+cuHnA=;
- b=XOGfz5dxJ0QIV0xcS3K1Ka2HYR5IroCdQriAsXxVmYFiKSBr34b+ZhG9T1N859mgE8QKP1JwuXMFoxqNoDmaUgbcwsv8wTc5BpQat/1mS/VsRe1GOjs40BtR/qKP2bZny+QyWbYeX02AMYzjbxr1A9XAxxa9EjDRMNggrTIKegIgH+bRTwnsLxwcJu0DKxZ9h+aQ0g4Sk0zVeV1Y/pFl0DZJYWy+5aLd/2OY+BomUMQ9KzNQ2dND4/pCnrIQuExHV20MN+MqM6q5abdWTSB4ehGFUAEBLVCPwXTQy2yljhmQdZ/tNsB0Hv6DowXLceVKwCrKRNXM0NEs/bdaucyAfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqsvG8gX5u6vSibxvCpC3j3YQKDhJ9mYvdUcB+cuHnA=;
- b=sKy/toi1xMKJwDUvrxc+t8t1HcZV8Zp9vHG6gkBrWDZQDpYwcMnzPoyxyscuQukA62mT3MLUP6Ou2OcZhZCAmw36DUfMrSg+SAs7pQXHVRy52sxtN+If9F8UW3oxb/D6t9E0xwe3IuIpMRnO+aUj5hQuc8QX3E35SSzDXQucosw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by MN0PR12MB5787.namprd12.prod.outlook.com (2603:10b6:208:376::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Wed, 15 Apr
- 2026 06:03:39 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.20.9818.017; Wed, 15 Apr 2026
- 06:03:39 +0000
-Message-ID: <a33a42ae-253b-41ce-8a2d-9d9ae58372d2@amd.com>
-Date: Wed, 15 Apr 2026 11:33:32 +0530
-User-Agent: Mozilla Thunderbird
-From: Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v1] perf pmu-events AMD: Switch l2_itlb_misses to
- bp_l1_tlb_miss_l2_tlb_miss.all
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260414175855.2089482-1-irogers@google.com>
-Content-Language: en-US
-In-Reply-To: <20260414175855.2089482-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5P287CA0180.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1af::12) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E5K8/ydj"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F4q1MX1842840;
+	Wed, 15 Apr 2026 06:56:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=s7FiuM
+	MxGzAPUeniN10CFqtTWCLOjA1F0k5lQ+KohKg=; b=E5K8/ydjsvXET6jBB4QXSt
+	8N87lEYR/IPjbGEGW3zLgNI+IBvbI2PI6YOB6ToxpXEn7lFg1w7cS5u9PXdATRMP
+	Bceyt2g1WIHd1RPV0Nvo1/hw9ZF1lxCelSgLd/saAo8GgcrxahsyWDpdQqR47AAq
+	EFy4Q4y0NFvBHqQpNzDRwsqw1nu/U0YBuoOmRJfR43pXiwdPaqOIy0xdmYHZVUq/
+	kQ5Z+SE7GJSkUg7HguwFG3r5gUw4Gfa108Yxp4gBzUlN08qJ36ZObaZOXwwDsxx5
+	AYfE0pDwdLdF5N2i+St01EAGWhxHCliT4t+SplvuaxmJi+eMtqkNQ2ejmsTnD14w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89mpqms-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Apr 2026 06:56:45 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63F4t4JV025801;
+	Wed, 15 Apr 2026 06:56:44 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dg3b1mtq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Apr 2026 06:56:44 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63F6uhWL15467214
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 Apr 2026 06:56:44 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A3C7A58063;
+	Wed, 15 Apr 2026 06:56:43 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B61025804B;
+	Wed, 15 Apr 2026 06:56:42 +0000 (GMT)
+Received: from [9.39.27.100] (unknown [9.39.27.100])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 15 Apr 2026 06:56:42 +0000 (GMT)
+Message-ID: <157c4ffb-0d81-4394-bea5-12a9b8f08307@linux.ibm.com>
+Date: Wed, 15 Apr 2026 12:26:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|MN0PR12MB5787:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1da21301-7fd0-4504-8e1f-08de9ab4bd1f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	UvYiRdBlz+AVbdyL1L3zKZvHXRyz9rRyubq2/ebVbLUC3PZ1rzXYplR5pzio2RI0P58uh3YMw7RI4iGIV6cgirTUdUb5pCUxSS1Ne6AVXeR8HiiMm7nRFtJVyKHnemENlnoZeHCxaTIMlt4YX1LWlMMeMrWXuF0llKIv4M/XubZ0uEXaNq0RfaSzmev4CFz7XgySLMyggXo51LadYdLLMGS7/YbkPRqa6Zuvkpdxo1rOn77aYn57ZDPpgYs/DAIxm/XO6yCQQb8C0LVj9VKZ208YuYiph9JBg3gPxVVHR0MpjvQwY31TU8CzOUqfc3RnbcdyF2Xk0HRVWtT/eWZuJgHu8tqSrYmONhLrsd/HANidXXqL5L5GSScOLWJoRR0ocHGVS0KzERupUS2C22GglzrQowce+43x4+5VMfAfqCS+3SU4t6kM1KcQeNrE1nZjmCFaRGS1eHMDUfV2Cd4PbSCq1IAaIDs8FanyW3Qw9UB5/foqRpG6xGI71MZn98WbXlGjd7elnAS3AdmbPjL1BlTc5bK1RLKliC8pejnu9PSOAa3hsWX5L6V1hGmrhgj6aErERlFz0y8AlyEM3D0OWCRyVwzq0me61tPKKini366u9ud1we3jrcYf7dv3N7+srtnxyq+FCTqNxBcOKqjsACnfZQSu/fwvoULslEGk4Q/j74Vlm1cW/mHIVCmp5BGyaPQdX7sRjGq83NyQX1b5Eqq6/dTsE0BFkI3anH1Q7BJcit30F1I1P98HUF++4qCZ3WJ/RRmwxAccCht/+Mf/uQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eVdUS0dGUHJ1cTJmK1BadURtQmZwaUJNRDkrVkRwdUhnNWNQQ0x5TmQ2Rkkv?=
- =?utf-8?B?SFpPcFNDOEFxamhOYnFqQ0ozVGx5cUtUNlRMSUpFbTRFMHR1K1VjbXZVbjVs?=
- =?utf-8?B?ZXYvc0JkTTcwcjhZajFQdXFPWnd1eU1CSjhHN1M2bDJvKzc4NDNzS1dGbVhN?=
- =?utf-8?B?OGNsUXdjL05SWmpMUHBJZk51TlFwalVxd2xzOFROY2xxbmJqb291NHZ0V1hK?=
- =?utf-8?B?bGkyV1JFT0tHeG4xSHNOdi8zaWhSeWJVMWZuVXBTdEFNYVBGK1RnUElhLzcv?=
- =?utf-8?B?K2MxWHNrWDZ4ZHJjUlVTb1l6enhtSU5jUUtnWWxIMnBuVmtTREZ1cFp1WFFE?=
- =?utf-8?B?SGFYU0Z4UXF5OFdaSlI1QTZ4em1DSFdyZnJrb2tMZEsvYTdRbzRrdGN3aFlM?=
- =?utf-8?B?T3lIVXVodTVFNk93dGJNTDM5dkNnN1hQSlVPT2U4aEVITTByek0wc2FuSFVs?=
- =?utf-8?B?VlhhUE5oZ2I0YmFmQ1YweXYyTjdBK1JKSGRVdCtvYXp5bFlZUTVEdm1GTUlL?=
- =?utf-8?B?MFBwYWdrSFN5ZEJST0gyMHFneHcxK3g2TEpBcFRiTE9KRHRaVHVhVFRBd2dP?=
- =?utf-8?B?Vk9IYlRzZHhkK1ZuMFpzQnBaZUxNcmIvSzljTjVjaFBnR2xJMStTczc3S0Fw?=
- =?utf-8?B?SlJDbmRMZjlsOWNwZjg5WlhNWmpUNGJKNURuWGNUZUlmTHJKWGdRWkcxakk5?=
- =?utf-8?B?VStEcExqeHdHaElzN1lDb1VWNXRPeUljVkM1R3JRK0IrTzJBbDVvNDduZTBX?=
- =?utf-8?B?NThmVUs5V2RReitKZVViMDFJbzRxWnRlK1Q5ZkVRM0tmbURhbElMT3h0Nkxq?=
- =?utf-8?B?aWxTclY2NmVJdzhwSUF0dGU3MzRRVmllUWpMei8xaXNpZS83T1ZzMmFHbTcy?=
- =?utf-8?B?ODdmVlBKYnZ1OThWeUpwMWExT0pORTQ1SllrTVRYbVJ5NlRLZFQ1L0pUeUFW?=
- =?utf-8?B?TUFEZXJQbE8vYVcwcTBrc3JzYUhXYzJraE5YSVcvOEs0MzZXUlBzS3VXNEtX?=
- =?utf-8?B?NXQrN0JXQnNoWjNQd2ZpR3ZoNklTY2lzK2M0Q25QZUdxRUtiN1I5ZDlXQXNo?=
- =?utf-8?B?cWhMOGNsVzc5U1BiSkhPdW0zZFQ1OXRmSUI2VWpMNU52SzFpZEFhS20yMFgw?=
- =?utf-8?B?WlIyVlZRcjUyMDZxclplK3YzYUhJSFdNZzNQWHBOVTJQTEhVMTNWQXIzTkdM?=
- =?utf-8?B?c3ZQRmFZall5UE5pK09xVHc2OWJhK1N6Z1NqRkxuYXZ0NHhHTG5lWVdLeTNx?=
- =?utf-8?B?ZGpiYjFoSlJBZys2emc1VkRkU0tLQjRIOWJPNjZPaFRYRWlDUENPY3ptMFZS?=
- =?utf-8?B?MHpMTHJCc3hldXpCcEh0cGdXb3NqQnR2VHFwY1VjQjE1Nzh1cU52MGM1Z1Vw?=
- =?utf-8?B?ZDFNaW5sOS93U1VPQ1ZNMHBwRHVvTVViY3ZiRnh1Rk1zaVF5SjVscERyVFRi?=
- =?utf-8?B?OHNYcklKaDFyK042VTAzbTVVeFRKeGRHK3ZxK1BJQkxpeUl0MDZHSkplelcz?=
- =?utf-8?B?TFcvN0tMeUJuWG5TVTVJNFBZTUllZ250allWcWpXTjRiRnIremY5Q0d2dHZh?=
- =?utf-8?B?QW9YOGlUT3RqRC9wTnlXampDMTM1dGhjaURZQ0lJb08vaU8xY0JTZ0ZEeDRW?=
- =?utf-8?B?Wkx6Q2ZYODhKN0NINHpDK2dQVEorY09UNUFIR2VFMlNMVzUyQXRuNXM4SlFp?=
- =?utf-8?B?bWoxTjRtYytMaE1YVTBtMDNIU1hKUzNSRjgyWjFGWnJPOFFJeGNEMmdnbnpQ?=
- =?utf-8?B?d3NvL0VySkJFQUdCQW5UZGR3S0dHSDZTOE1ORzBLOGM1YUxaUG1yY2VlWjBW?=
- =?utf-8?B?NHkwRkdlV3dUbHhIbTV0YWNSVFJ3WEtqWmhFMUd0NURmMnV6NHcrUnpTWjNX?=
- =?utf-8?B?UjQ5dFA5ajg5YlpTeDJWNmNROGV5Q3NhaWM2aHZpeWlrdmpjdmRPdFpiTEY5?=
- =?utf-8?B?clFUOWsxaUZBdk8xRWZXQisxeXdjSThXYWZ6MHl4d242T1VMTUhJb0w0eHdN?=
- =?utf-8?B?eGhCSlNoN05SVnZOWnA3bHUyekx6OUQ1NG9IWlkyVmhhRllyM0Q5QVFQb3hZ?=
- =?utf-8?B?dWJJeUNwd1RqK2sxR2pVOWQvQ1l1aFBaOUZDQlJSblBYZUd5NW16K2hkTllv?=
- =?utf-8?B?QU1LTVNPVXl0dTB1TVpIbWZRMTB3eFk0ZGdPQnBNTzBJZmJZNTVUMGo2VTZa?=
- =?utf-8?B?Z2dsZ2ZlbnBnSFFqSTF1aEtpY1FkdUgzZUtkb0hWM2tEdEQyUFhHNHRpaWJy?=
- =?utf-8?B?ZjE1UlBkcnVZNm4zSnRoY1ducGdwaXVvMDFDSk1PNGpHUHpuY2ZFVGl2QVFO?=
- =?utf-8?B?Z0FPb2tMdDBHL2xPNTdkK09vZDFkWTJ5MFpOa3dWUUdJS3RuaDJRZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1da21301-7fd0-4504-8e1f-08de9ab4bd1f
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2026 06:03:39.4468
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zBjMRqQUgYU5wM+BdKGcsWcljROvqRNnqp2hvWQmYm8jDxlb889rjMtHh3ktUFhbOhnSnWVPKPRzFl1He8KYeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5787
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf dso: Fix kallsyms DSO detection with fallback logic
+To: sashiko@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260410071225.708005-2-tshah@linux.ibm.com>
+ <20260410081724.69B1EC19421@smtp.kernel.org>
+Content-Language: en-US
+From: tshah <tshah@linux.ibm.com>
+In-Reply-To: <20260410081724.69B1EC19421@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDA2MSBTYWx0ZWRfX6r1X3As/AQQN
+ hHXkb3PO2eG2+XM0pcDhT4BCas5xlig6PQa0AsprFwRzrhGYdCH6rPSnCcH7tvtQHuK8uIPx7aR
+ P0rS1HUKKB8wBThPnXUQrkjo6rHpbxARuHfirHq2/XPDsx0PzetstSKogyW2RyhPyL6jT/NoxWj
+ lkx/dWR49zEOXyhp7h5CLQow0Ri6XZ7kCTxt3d0zq1uzjw/+Hdv0qvfDiS0o3WXP6TsUM0m4cIO
+ oB9q2TWLM+AwsRsoTeye2699UpunWdCa0pvT/80vRN7bAws/Z1df0IvzAx2CyJ9gQXQuuRsYAmG
+ GRhNVZpGr/bv7rs1ia/5GDRtx9hCzd1ioLJ03Sd8iPGmTN6ENBCRG218DU2wWLrcuKo5XZemPjT
+ wOmd0XDMYdDo/8035icAFbWAk33zc9T/yhuGDrumaLXCxoSK49PfGEFdeOb3DVhbLSQy2L6JtpF
+ mCvP+fZL8Zl0D2m6TLw==
+X-Authority-Analysis: v=2.4 cv=eJ4jSnp1 c=1 sm=1 tr=0 ts=69df36ad cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=rFWBiRdqTB6FeBwMLQYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: DblJSxG3F5sRKTabsH1nI7H2UlsS8guz
+X-Proofpoint-ORIG-GUID: DblJSxG3F5sRKTabsH1nI7H2UlsS8guz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-14_04,2026-04-13_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
+ definitions=main-2604150061
 
-On 14-04-2026 23:28, Ian Rogers wrote:
-> l2_itlb_misses is a valid legacy cache event name, hence allowing it
-> in all_events in metric.py. l2_itlb_misses was also a json event for
-> AMD zen1, zen2 and zen3. For zen4, zen5 and zen6 the checking that
-> metric events are within the json was skipping l2_itlb_misses as it is
-> a valid legacy event, however, the PMU driver lacks the event mapping
-> causing it to be a bad event when used in the metric. Add
-> bp_l1_tlb_miss_l2_tlb_miss.all as the l2 itlb miss event (bp = branch
-> predictor, the AMD way to say itlb), so that is used in preference to
-> l2_itlb_misses when the event exists. Remove l2_itlb_misses from
-> metric.py as the legacy event isn't used by any metrics and having it
-> is error prone for newer AMD zen models.
-> 
-> Fixes: e596f329668e ("perf jevents: Add itlb metric group for AMD")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/amd_metrics.py | 2 +-
->  tools/perf/pmu-events/metric.py      | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-> index 63e5098606c4..ee5381646a8d 100755
-> --- a/tools/perf/pmu-events/amd_metrics.py
-> +++ b/tools/perf/pmu-events/amd_metrics.py
-> @@ -287,7 +287,7 @@ def AmdDtlb() -> Optional[MetricGroup]:
->  def AmdItlb():
->      global _zen_model
->      l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
-> -    l2m = Event("l2_itlb_misses")
-> +    l2m = Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
->      l2r = l2h + l2m
->  
->      itlb_l1_mg = None
-> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-> index 0c41a502cf21..c1931b2a5170 100644
-> --- a/tools/perf/pmu-events/metric.py
-> +++ b/tools/perf/pmu-events/metric.py
-> @@ -25,7 +25,6 @@ def LoadEvents(directory: str) -> None:
->        "cycles",
->        "duration_time",
->        "instructions",
-> -      "l2_itlb_misses",
->    }
->    for file in os.listdir(os.fsencode(directory)):
->      filename = os.fsdecode(file)
+Thanks for the suggestion. The missing closing bracket is intentional. I 
+Will rename it to DSO__PREFIX_GUEST_KALLSYMS to make this intent 
+explicit and avoid confusion with complete name macros like 
+DSO__NAME_KALLSYMS
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+On 10/04/26 13:47, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 1 potential issue(s):
+> - [Low] The macro `DSO__NAME_GUEST_KALLSYMS` is defined with an unbalanced bracket, which is deceptive and prone to misuse.
+> --
+> 
+> commit bff739892129d9369935f2dfb42b44d83b2f857d
+> Author: Tanushree Shah <tshah@linux.ibm.com>
+> 
+> perf dso: Fix kallsyms DSO detection with fallback logic
+> 
+> This commit fixes kallsyms DSO detection during build-id injection when
+> the binary type is not yet explicitly set. It implements a fallback that
+> matches the long_name against known kallsyms strings to correctly identify
+> the kernel DSO.
+> 
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index ede691e9a2495..e44071998c499 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+> [ ... ]
+>> @@ -20,6 +21,7 @@ struct perf_env;
+>>   
+>>   #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
+>>   #define DSO__NAME_KCORE		"[kernel.kcore]"
+>> +#define DSO__NAME_GUEST_KALLSYMS	"[guest.kernel.kallsyms"
+> 
+> This isn't a bug, but there is a missing closing bracket in this macro
+> definition.
+> 
+> While it looks like this was done intentionally to allow prefix matching
+> against dynamic guest kallsyms names (which append a PID) using strncmp
+> later in the patch, naming it DSO__NAME_GUEST_KALLSYMS implies it represents
+> a complete, well-formed identifier like DSO__NAME_KALLSYMS.
+> 
+> Could this macro be renamed to something like DSO__PREFIX_GUEST_KALLSYMS
+> to make its intended use as a prefix clear, preventing it from being
+> accidentally used in contexts expecting a full name?
+> 
 
