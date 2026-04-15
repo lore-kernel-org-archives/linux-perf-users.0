@@ -1,257 +1,122 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBEB3E51C7
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 17:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776273226; cv=pass; b=mtLZLmWNz2fY07mCCNxtqXmC6qsti1HWNTDItG6/LQs5VDmBUuYPkmGM+WRrzGWxJnkm/aTZ+AQp0MR0iDNTaAoDo+wnXkDFvIt3EsVOxpt10yPZt+NE31OTBClwPBwHMYUPc65KOlKidrg917ufl6viO36y/XdaWcmkDFJmkSs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776273226; c=relaxed/simple;
-	bh=s3TlneGTtgZkhf2a6cRw8SxgcpnVtRXJ0p5SucE/8Dc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JG/9eNMFtdQWaoXabhKY7OGnpn8b8lnagJBAJI5zXRLbaFXmugTULWKYndRIYKtQgWTDge6YQ/rTUP/dIrCUGKYh8cdK8GghSua6lh0Wh//L/sDC4ZpG+z2Yzkm7F/mS4ZGHHK7E7RaygBRtNS/rnog4B6MjoUrYdO9C6F0zLaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EBngt3Aq; arc=pass smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F17C39099A
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 17:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776274932; cv=none; b=K1QyOWZ0i9fcuREDTaAewrqepzIMAEq4G0GaLfQOYaghynpuIcx58KXSGDyRGXpXlDldOki0tJNy3qSbFJ/G0k+diLJadTJyIEUpjqX0DjjVfUnE6I4wnC6WD5pKozorNeGAn1jrh6NaZmkqaXxgpkrT+qpVsNsOp/aPzXEoJ8c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776274932; c=relaxed/simple;
+	bh=OfEpoQQCvbruyEEiVw52qe009gbsqV/tWcOBBRa19tw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X8OR2EPVdf5ztvFRgD7lZbuvF+LgDz+bXP/U/jGFUgQ03JcSNLq75lzaWJYoChr4jbJQ3Ef91AIWOf1h95U04Xe5X7/d88SSKAqsAuQvxGvoTC+upN26R+h5ntFvOf4K/+FiJZHYwWSHSDV4G5bFysUzmlBLYGfjX+m6OCs3XSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBHfCfzn; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EBngt3Aq"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso25885ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 10:13:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776273224; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BJuyZcAj6o+gSUxdYH1yLzfcj0Hmd6R9AfBdoRZccFVfhWIfPlcff/QeLzQP0Leuuw
-         Tqh8NNY2kFoyldoKdygV5Ye8+Rzo85mDJ+Kz9pRjrUhS5CP7IBai0XTOVcmQcOAzJARI
-         3ejICoyXrktGKWpv1AQnRagLMbTldVZlY42Q1K4RIbxPaE+Hfif5+9E3jRNFpnTptJPR
-         6E8fAjLF8Tq061kcHH9g1D46FDvZm8K1rinuKqmldPgad4w62ysEVTVIKtbNkIzSYzcr
-         U4+w8MFHAlrmbM6JlbLw1mTEkezf/SJlYL+/ujGs9tfu0kldqiWD6amh44m+L/I97kXy
-         M7vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FYcWcz5aJypLjGST25Dvn/EADFHU0gHzqJMvhyb9K8o=;
-        fh=8k1JbqdnfM6Aq2diHhWkRcG9GmnPfyLe6G4r3vvmQTw=;
-        b=N64Y6jQURlABf011XnrJY90rxV9gQn1H2EjSLqj5tHCahTTrC3HCYru+WmhEkYsO4+
-         KoXBM0pzROp1n81WEoYyS4RNPlZpTUKNkmZUj+Xu+VWtQQ4n9frJ2p/JdfAYhjDP04Wq
-         f+UF2iNKSKWbGPwMwwsDDpl+QkXNYwSOJr4IWkNQbsIbTjC3li0be093iYOkbkeN0zht
-         HbxzxC2gdVqywrFH8npBcWX6QXzO/Jq0fTReIrMqGch7gsibDJEOyf+FfnF89kZWkyxr
-         Ipequ2EOWFOiEkN6Iuy5dj5NTdi4SlmOW9iaFoXCBYn4g//So5kk9mCkzi1FNpVX8//T
-         wDIQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBHfCfzn"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2b2503753efso61882475ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 10:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776273224; x=1776878024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FYcWcz5aJypLjGST25Dvn/EADFHU0gHzqJMvhyb9K8o=;
-        b=EBngt3AqL1FXfZovC9035UT3ywR7LMeLulqQV++HemIu3UgH/WlezVFhZ8xNKu0AVr
-         lg0cGcd1Vxwlh0kpAMFYmEh4ALWWdlaHiPIapvjxeHz/H2MA0Hej6d+2+lx++4Lv91Ro
-         3KNbRjlIt+saB0XIy8L0LzAgfmKIqcZnbljBb7qjG7tqV7VESwM76taR22FgxIouOfsN
-         P57SwhRGV1PoeeNHtUErP4RsA658mqyMoKQtgMptBozKCSTshzGOIF2M53gtSSLtCKax
-         PGcaM3gjpZwC+Pltb1Uea7IOW2uOyQ46y1tEi5g2EgIfB7ZJP6iChF06mUmqyIidxvee
-         hSMA==
+        d=gmail.com; s=20251104; t=1776274931; x=1776879731; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NJ/g0M6nIzsGKbX6brZJSUwMyF1dOX6znsTMtk5A1OI=;
+        b=XBHfCfznBWOBlNUya6LVCeZPr/6rGOAwcS75+nsMKFYDSdAYZDnjUx1U4ynNpNCSyZ
+         RuZQfPgey20aBRklXxX8gZCb8gQ/6DdhqRfSl22ey92r3CSm9zoXPVZ2e+z3aphfyOAg
+         o+kVCRkS6YjUwc3O1o2RE4c/D+VOhK6+mOsG8jFftQSuIyg03fcgc2Q8J3OZA4P7F2Nn
+         Nhi66mrEYeqy9wI06141OJ5sibnhs89hw20cvawm7wE9d3/AN/ln/ggMpimewVZL20g1
+         vVzNFHwcwvp2EmBwekNFetxPoQgL9hkOH9yeMPXA04eZKQnqFL1UlY1hDr10/L8FLDO2
+         dNeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776273224; x=1776878024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FYcWcz5aJypLjGST25Dvn/EADFHU0gHzqJMvhyb9K8o=;
-        b=M4esyExLdqRIhBJ9j37ysmOMZjeQaLhUQj1F8ZXkEyINP3dqK08kxbikgNmIZHKveS
-         z3f2Rg4+8BBtgEGussO9Kl46j1KXXpKWmanSm2qkdE+0MBFgm7+lYJ132bT3C4mSK6Xe
-         /YVB8wmnUljd5Oxkt9Q+guxzXMzz+y1IQQUU+0EsPOKNg28giPhTOGE7+jjIuUolz478
-         xBQ6JZmBZxzi4NYhxFf8vi8/oMEX2qMRzJ0saHPdq1SI19rPWWDdk9LmeQUAVg65OTrP
-         2M8mCTQ1ASQLsPVs1jM8Ucn3U7/c9MBtaKxTpD0t6XPmm1cGO+uatPpphu6RXxrL4L4F
-         yFRg==
-X-Forwarded-Encrypted: i=1; AFNElJ90tNYVAO9vtEpQN2c/VPb/GWxoJ8vhi99kPb9doxHvptWpKGwDcG/eIwLLfMuIoRdxAVlkco3V2fw2gFcT+hRy@vger.kernel.org
-X-Gm-Message-State: AOJu0YySgQlziMOqYGiUCPln+KYHM/3aLNCe8wnK1aktTV08YArjgYia
-	hfWeER8SbWfIznVqNcUhFmrNhjrPv8AEl1YOPvjpCwXuj5unCJ4YhDzxwteWWp5EYGGne7T0Rlm
-	O6qy6JcAQu0wnYqwPfoCcGGFUVzea7qhUKCEGAh3k
-X-Gm-Gg: AeBDiesZ76UakMh7+fFcdgFs9XugMAF/aI7u2mPVmayIQLfR+WhMHzG3yh1PnGdwOHJ
-	YoPIErk32ny1Vi7x2BCSA+Sm1cHDhBJXv2lKwJj6u5tPgwA9yDikPE9MENiriqpSmVROorjo4iw
-	FwYH1E19r2445v3IqQpLqPNI1hJJil4sVczh1khoPNwmvsKnQuv0Avnm3pNgH5KHig2l9rR2oiN
-	6AnhGDzQTc4yJA42vxgyIlxb6oONr4jfIc7ZVqP+pTRs7eEilu5Nt8Vy7wCS7rcpdhGoGD3AJ7U
-	xdOb0H0OM0OAbnUr6EiqW/D2OBGl+3a6eX4JdU9wO+WzUOgEpr+MHnC9J+4=
-X-Received: by 2002:a17:903:37d0:b0:2b0:5c88:51e1 with SMTP id
- d9443c01a7336-2b5eb1e1dc5mr69755ad.14.1776273223556; Wed, 15 Apr 2026
- 10:13:43 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776274931; x=1776879731;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NJ/g0M6nIzsGKbX6brZJSUwMyF1dOX6znsTMtk5A1OI=;
+        b=de9tQkDkYorbdol6Z8aAxNPuYRVvkzBXSky+Xomcyud1oaemASypk2A0A9xkm55JgS
+         vWOc8DQ8xZjsNGJkYsWiDU8ShgeiU32tBirxsy+Bzbsh1gajw7PkrN9BPu9wQo4IhAqB
+         fRd8Yb7/9/tHFoKFqEvQFlqQeWo/F/koA3qvp5rTIl7139buAFYbuIbXSTp1SUh+pkE4
+         XiGTwIyD1k3SFDHLfqF82hB/n4G1Q6doIgQnOW7W4qo3mhepmZ0Knf/AK0ATxx3+NL+2
+         xtfJ3xsbU2Tvd0S+BDmyPatgdVpYsrs656l8XhN12lnawKbdDTeEbDmOqtxyJQ0/+wi8
+         Qk8A==
+X-Forwarded-Encrypted: i=1; AFNElJ8vyI4JMbQL0oGe9698CMfuFIpIPatPl2rEBWSHhWEGEP/T/04ga7+ICOkgEf3zHGhK+APbFbRsekZg1kDQSSGA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza0P3GvT1j6oX6sK6+ttR3JJwpzt0AeTdAQuDgo1FjszcnoTgv
+	JRF/+ah/G8OcIVRnTWf8tfqOh1sb6TiMYW8Ga8QMZggJXF6dwFFeuXXD
+X-Gm-Gg: AeBDietMFFwf3LjsmStmelkjfd9wVCro18t25JjnsXaVFDBONyBoiQrYCYZQeYpSApT
+	kKpJGeO90WPx9D7mifVlV8nGZ5xeaEP7+cN0Y4JjEtU6fO9DALUgZB3uPLRTozzwW4wGJFN0FFw
+	Pgo5BsRmSvbbChyNTIypyuV+eYWxrZLJ/wVX4EaErMYoq2drIrhtUcszVdJhB4mXtjliQH/rzr5
+	xH8z+AltLpZWFtcGdVhu7wBnVobp9umqZceveebPgc3h6+6DN+bOReKfJ4y6uegYxNVIlwBoVLj
+	f7Qlr+H2P7JtN7OW+Nd7cloWfisirHDYvJRFuM85KFv82nN0WOOpaC7Kihs5icEksfHHh4gWHF2
+	rmEbwTeri9LBt9diFzTD3rUNHofJLJc7iZaDKYZacRdod/8pDp8qE5onVnU1dJQVcbnCZrRMO6O
+	DFa5rrpd5zPY1dDQatDzLm8dRe07c4lnpYMEI0
+X-Received: by 2002:a17:903:b0e:b0:2b4:5cea:f61c with SMTP id d9443c01a7336-2b45ceaf83emr139663995ad.4.1776274930985;
+        Wed, 15 Apr 2026 10:42:10 -0700 (PDT)
+Received: from lgs.. ([2409:893d:1171:10e2:48dd:8f21:beaa:cec8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b47829a4eesm33777805ad.60.2026.04.15.10.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2026 10:42:10 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] arm_pmu: acpi: fix reference leak on failed device registration
+Date: Thu, 16 Apr 2026 01:41:59 +0800
+Message-ID: <20260415174159.3625777-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260413010920.546501-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fW0Z0zXDjqR_tpJbT-0nbyXQO-Zcc+4Fpk=XejYX8uF4g@mail.gmail.com> <0ce093d8-3647-4879-9d65-acd52d4c0ab0@linux.intel.com>
-In-Reply-To: <0ce093d8-3647-4879-9d65-acd52d4c0ab0@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 Apr 2026 10:13:30 -0700
-X-Gm-Features: AQROBzBLlxn_CLuDJq8Ee0GFbBIzQ5Gr21sA0tYXXyRcxkgluYHfBfXbVnFkFqU
-Message-ID: <CAP-5=fWj4PaadfdmkoNyOVnbNb9aAdhgxOr-CG+R8OLx2jFRCg@mail.gmail.com>
-Subject: Re: [PATCH] perf tests: Add auto counter reload (ACR) sampling test
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Falcon Thomas <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Zide Chen <zide.chen@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 15, 2026 at 2:19=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 4/13/2026 9:30 AM, Ian Rogers wrote:
-> > On Sun, Apr 12, 2026 at 6:14=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.int=
-el.com> wrote:
-> >> Add auto counter reload sampling test to verify that the intended even=
-t
-> >> records can be captured and the self-reloaded events won't generate an=
-y
-> >> records.
-> >>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> ---
-> >>  tools/perf/tests/shell/record.sh | 42 +++++++++++++++++++++++++++++++=
-+
-> >>  1 file changed, 42 insertions(+)
-> >>
-> >> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell=
-/record.sh
-> >> index 7cb81cf3444a..1068843282f5 100755
-> >> --- a/tools/perf/tests/shell/record.sh
-> >> +++ b/tools/perf/tests/shell/record.sh
-> >> @@ -402,6 +402,47 @@ test_callgraph() {
-> >>    echo "Callgraph test [Success]"
-> >>  }
-> >>
-> >> +test_acr_sampling() {
-> >> +  events=3D"{instructions/period=3D20000,acr_mask=3D0x2/u,cycles/peri=
-od=3D40000,acr_mask=3D0x3/u}"
-> >> +  pebs_events=3D"{instructions/period=3D20000,acr_mask=3D0x2/pu,cycle=
-s/period=3D40000,acr_mask=3D0x3/u}"
-> >> +  echo "Auto counter reload sampling test"
-> >> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /de=
-v/null
-> >> +  then
-> >> +    echo "Auto counter reload sampling [Skipped not supported]"
-> >> +    return
-> >> +  fi
-> >> +  if ! perf script -i "${perfdata}" | grep -q "period=3D20000,acr_mas=
-k=3D0x2"
-> >> +  then
-> >> +    echo "Auto counter reload sampling [Failed missing instructions e=
-vent]"
-> >> +    err=3D1
-> >> +    return
-> >> +  fi
-> >> +  if perf script -i "${perfdata}" | grep -q "period=3D40000,acr_mask=
-=3D0x3"
-> >> +  then
-> >> +    echo "Auto counter reload sampling [Failed cycles event shouldn't=
- be sampled]"
-> >> +    err=3D1
-> >> +    return
-> >> +  fi
-> >> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2=
-> /dev/null
-> >> +  then
-> >> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
-> >> +    return
-> >> +  fi
-> >> +  if ! perf script -i "${perfdata}" | grep -q "period=3D20000,acr_mas=
-k=3D0x2"
-> >> +  then
-> >> +    echo "Auto counter reload PEBS sampling [Failed missing instructi=
-ons event]"
-> >> +    err=3D1
-> >> +    return
-> >> +  fi
-> >> +  if perf script -i "${perfdata}" | grep -q "period=3D40000,acr_mask=
-=3D0x3"
-> >> +  then
-> >> +    echo "Auto counter reload PEBS sampling [Failed cycles event shou=
-ldn't be sampled]"
-> >> +    err=3D1
-> >> +    return
-> >> +  fi
-> >> +  echo "Auto counter reload sampling [Success]"
-> > Thanks Dapeng! Could we also test ratio-to-prev as well as just the
-> > plain acr_mask?
->
-> Ian, it could be hard to validate ratio-to-prev option in this test. On
-> platforms which don't support ACR, perf would automatically fallback the
-> ACR sampling to normal sampling, this would lead to false positives on
-> checking the existence of records from cycles event. I didn't find a good
-> way to figure out this fallback.
->
-> Since we already have independent test case to validate the ratio_to_prev
-> parsing. It may be unnecessary to add ratio-to-prev validation in this AC=
-R
-> test.
+When platform_device_register() fails in arm_acpi_register_pmu_device(),
+the embedded struct device in pdev has already been initialized by
+device_initialize(), but the failure path only unregisters the GSI and
+does not drop the device reference for the current platform device:
 
-So the ratio_to_prev test covers parsing the ratio-to-prev option (it
-only has `perf record` commands) and ensures it is acted upon, but it
-doesn't check the option's functional behavior - what the output is.
-This test makes sure the acr_mask option is functional and so would be
-complemented by ratio-to-prev testing somethig like:
-```
-  rtp_events=3D"{instructions,cycles/period=3D40000,ratio-to-prev=3D0.5/u}"
+  arm_acpi_register_pmu_device()
+    -> platform_device_register(pdev)
+       -> device_initialize(&pdev->dev)
+       -> setup_pdev_dma_masks(pdev)
+       -> platform_device_add(pdev)
 
-  # Test ratio-to-prev
-  if ! perf record -o "${perfdata}" -e "${rtp_events}" ${testprog} 2> /dev/=
-null
-  then
-    echo "Auto counter reload ratio-to-prev sampling [Failed record
-ratio-to-prev]"
-    err=3D1
-    return
-  fi
-  if ! perf script -i "${perfdata}" | grep -q "instructions"
-  then
-    echo "Auto counter reload ratio-to-prev sampling [Failed missing
-instructions event]"
-    err=3D1
-    return
-  fi
-  if perf script -i "${perfdata}" | grep -q "cycles"
-  then
-    echo "Auto counter reload ratio-to-prev sampling [Failed cycles
-event shouldn't be sampled]"
-    err=3D1
-    return
-  fi
-```
-The first thing your test does is to make sure the acr_mask is
-supported, so I'm not sure how the fall back can happen?
-We could additionally check for
-`/sys/bus/event_source/devices/cpu*/format/acr_mask`.
+This leads to a reference leak when platform_device_register() fails.
+Fix this by calling platform_device_put() after unregistering the GSI.
 
-Thanks,
-Ian
+The issue was identified by a static analysis tool I developed and
+confirmed by manual review.
 
-> >
-> > Thanks,
-> > Ian
-> >
-> >> +}
-> >> +
-> >>  test_ratio_to_prev() {
-> >>    echo "ratio-to-prev test"
-> >>    if ! perf record -o /dev/null -e "{instructions, cycles/period=3D10=
-0000,ratio-to-prev=3D0.5/}" \
-> >> @@ -457,6 +498,7 @@ test_leader_sampling
-> >>  test_topdown_leader_sampling
-> >>  test_precise_max
-> >>  test_callgraph
-> >> +test_acr_sampling
-> >>  test_ratio_to_prev
-> >>
-> >>  # restore the default value
-> >>
-> >> base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
-> >> --
-> >> 2.34.1
-> >>
+Fixes: 81e5ee4716098 ("arm_pmu: acpi: Refactor arm_spe_acpi_register_device()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+ drivers/perf/arm_pmu_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index e80f76d95e68..5ce382661e34 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -119,8 +119,10 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
+ 
+ 	pdev->resource[0].start = irq;
+ 	ret = platform_device_register(pdev);
+-	if (ret)
++	if (ret) {
+ 		acpi_unregister_gsi(gsi);
++		platform_device_put(pdev);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.43.0
+
