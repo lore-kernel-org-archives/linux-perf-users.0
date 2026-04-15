@@ -1,162 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F16B132BF24;
-	Wed, 15 Apr 2026 18:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44836212566
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 18:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776277159; cv=none; b=RMXNTPsk3ksUKMCcvYnLJvr6ERcAvjxANrgHCNpsW/c/vJXOw2Tl3a8HI6c/ouYn/o2Uzj5bSbziCUXhiuleKtrr9yn7di1plo9+PsGiQIm6gqMetNZdIs1YoLP6IZ+mLJPW0T469QbEyoDQggxXSLnQwamKmvN17xz7n7AAQRI=
+	t=1776277899; cv=none; b=j9njUW1BftuJTOOiTBvpD/cleoXd+kJLHnKwrkawm+YBBuDUiH/FEbs3SdDn7U82sHRKJ6h9bm8na97cq3uZ4t6CC5nzGXW6q6knv2ql0+wd00B9YUlGfDcD6yIjXHbS7RIML+gJs8WlSKKuvSGbxjQlzkltF59UqxMWb9AQh54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776277159; c=relaxed/simple;
-	bh=T5wSEKNxd+WK6Gf12aNHbt22JqawJsPgYLmrIq9kvGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rz9c1oOTynKV+A9WAYeTx9eBfG6/PKmby8gmMaqkFpdIDWjRbhU7Kfm1ZxC9y082jec4xiiD9ba+p0c0LJaiwgaQ7T70MGDzPULXuSJO0EWwbBwAPnblDEvoYgg5U6AUj8fa8WdWaK/VUSnCqV1TrHLY3DiCPwIColHHAzCO79E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=d6UUQyGb; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1776277899; c=relaxed/simple;
+	bh=eGsGktjT2G1Nh3cNmX82smd5+4wPPrtcTpiiSvGzozM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=OD1BCwWiMfoLfW2sUywdLneV8ug5glnyAH+QuzWfTd1PafT5dNSToH03KXqxRzto/d17XUqcaHjeLPl9I7HCHb0ihttyf47arloOzXrkqua/gi2sMEPjS6CTcvlROKAlR3gL1IHaChHtWvcEFb+q3uxLXw2csMeYGc9jX2WLP6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsCf4+5H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="d6UUQyGb"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68BA2BC0;
-	Wed, 15 Apr 2026 11:19:08 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 977123F7D8;
-	Wed, 15 Apr 2026 11:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1776277154; bh=T5wSEKNxd+WK6Gf12aNHbt22JqawJsPgYLmrIq9kvGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d6UUQyGbDM+4d1xYsZHLm7gPViLNXhJiX2q68G5XuHafRIDjh8ZMJc5aP582JXxtM
-	 LhKTA6OlAkHj3A+WUEf7VYl20ppC2Z7d26LDku2Y/1B+6Of6R7/SASqNriYcKfb6qD
-	 U57viy9EAm2s3J+iHKUfW4sSGseR1g1YAwDy8MGM=
-Date: Wed, 15 Apr 2026 19:19:06 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Guangshuo Li <lgs201920130244@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Will Deacon <will@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsCf4+5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64C7C19424;
+	Wed, 15 Apr 2026 18:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776277898;
+	bh=eGsGktjT2G1Nh3cNmX82smd5+4wPPrtcTpiiSvGzozM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=nsCf4+5HgNWFfWAFh7e8XPV7huMKDBM9LxyaCy0ypKRGWrABRsw3tpWYHX5CWm+5m
+	 uOGJIsJnASxYN6X9KSaU2RVuZIPki48xlDKNPudP9o74vIubBSHcZra+vqiKxhX5F1
+	 2L+B7WpVd7tJzWCPB9a3MkxcNnVb1OGNHPAJOLnaloPmQV62JDPLli5wnKmKgY6QLH
+	 unxgFqmALZCItHK79mGu9rLgJawhzVRi3PuudeKQjEgVgRGiv6AbH7vHF/fh4eeSd8
+	 PUqhDdXMYAGWRnPxYmTHZQ6MqtBgYN2B5XEwLvp7rit1C3jOJQZ83tOkYSy5ZHyKYa
+	 BBZ/WLxfjxkTQ==
+From: sashiko-bot@kernel.org
 Subject: Re: [PATCH] arm_pmu: acpi: fix reference leak on failed device
  registration
-Message-ID: <ad_WmuauLJ3xDKqh@J2N7QTR9R3>
+Reply-To: sashiko@lists.linux.dev
+To: "Guangshuo Li" <lgs201920130244@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260415174159.3625777-1-lgs201920130244@gmail.com>
 References: <20260415174159.3625777-1-lgs201920130244@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Apr 2026 18:31:38 +0000
+Message-Id: <20260415183138.C64C7C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260415174159.3625777-1-lgs201920130244@gmail.com>
 
-Hi,
+Sashiko AI review found 1 potential issue(s):
+- [High] Calling platform_device_put() on statically allocated platform dev=
+ices triggers a kernel WARN.
+--
 
-Thanks for the patch, but from a quick skim, I don't think this is the right
-fix.
+commit 3d6b3748275060c9fa53f46ef32bdbc93f8522c7
+Author: Guangshuo Li <lgs201920130244@gmail.com>
 
-Greg, I think we might want to rework the core API here; question for
-you at the end.
+arm_pmu: acpi: fix reference leak on failed device registration
 
-On Thu, Apr 16, 2026 at 01:41:59AM +0800, Guangshuo Li wrote:
-> When platform_device_register() fails in arm_acpi_register_pmu_device(),
-> the embedded struct device in pdev has already been initialized by
-> device_initialize(), but the failure path only unregisters the GSI and
-> does not drop the device reference for the current platform device:
-> 
->   arm_acpi_register_pmu_device()
->     -> platform_device_register(pdev)
->        -> device_initialize(&pdev->dev)
->        -> setup_pdev_dma_masks(pdev)
->        -> platform_device_add(pdev)
-> 
-> This leads to a reference leak when platform_device_register() fails.
+This commit attempts to fix a reference leak when platform_device_register()
+fails in arm_acpi_register_pmu_device() by calling platform_device_put()
+on the failed path.
 
-AFAICT you're saying that the reference was taken *within*
-platform_device_register(), and then platform_device_register() itself
-has failed. I think it's surprising that platform_device_register()
-doesn't clean that up itself in the case of an error.
-
-There are *tonnes* of calls to platform_device_register() throughout the
-kernel that don't even bother to check the return value, and many that
-just pass the return onto a caller that can't possibly know to call
-platform_device_put().
-
-Code in the same file as platform_device_register() expects it to clean up
-after itself, e.g.
-
-| int platform_add_devices(struct platform_device **devs, int num) 
-| {
-|         int i, ret = 0; 
-| 
-|         for (i = 0; i < num; i++) {
-|                 ret = platform_device_register(devs[i]);
-|                 if (ret) {
-|                         while (--i >= 0)
-|                                 platform_device_unregister(devs[i]);
-|                         break;
-|                 }    
-|         }    
-| 
-|         return ret; 
-| }
-
-That's been there since the initial git commit, and back then,
-platform_device_register() didn't mention that callers needed to perform
-any cleanup.
-
-I see a comment was added to platform_device_register() in commit:
-
-  67e532a42cf4 ("driver core: platform: document registration-failure requirement")
-
-... and that copied the commend added for device_register() in commit:
-
-  5739411acbaa ("Driver core: Clarify device cleanup.")
-
-... but the potential brokenness is so widespread, and the behaviour is
-so surprising, that I'd argue the real but is that device_register()
-doesn't clean up in case of error. I don't think it's worth changing
-this single instance given the prevalance and churn fixing all of that
-would involve.
-
-I think it would be far better to fix the core driver API such that when
-those functions return an error, they've already cleaned up for
-themselves.
-
-Greg, am I missing some functional reason why we can't rework
-device_register() and friends to handle cleanup themselves? I appreciate
-that'll involve churn for some callers, but AFAICT the majority of
-callers don't have the required cleanup.
-
-Mark.
-
-> Fix this by calling platform_device_put() after unregistering the GSI.
-> 
-> The issue was identified by a static analysis tool I developed and
-> confirmed by manual review.
-> 
-> Fixes: 81e5ee4716098 ("arm_pmu: acpi: Refactor arm_spe_acpi_register_device()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
-> ---
->  drivers/perf/arm_pmu_acpi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
 > diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-> index e80f76d95e68..5ce382661e34 100644
+> index e80f76d95e68b..5ce382661e344 100644
 > --- a/drivers/perf/arm_pmu_acpi.c
 > +++ b/drivers/perf/arm_pmu_acpi.c
-> @@ -119,8 +119,10 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
->  
->  	pdev->resource[0].start = irq;
->  	ret = platform_device_register(pdev);
+[ ... ]
+> @@ -119,8 +119,10 @@ arm_acpi_register_pmu_device(struct platform_device =
+*pdev, u8 len,
+> =20
+>  	pdev->resource[0].start =3D irq;
+>  	ret =3D platform_device_register(pdev);
 > -	if (ret)
 > +	if (ret) {
 >  		acpi_unregister_gsi(gsi);
 > +		platform_device_put(pdev);
+
+Does this cause a kernel warning when called on statically allocated platfo=
+rm
+devices?
+
+The arm_acpi_register_pmu_device() function is called with statically
+allocated platform devices:
+
+arm_spe_acpi_register_device()
+    arm_acpi_register_pmu_device(&spe_dev, ...)
+
+arm_trbe_acpi_register_device()
+    arm_acpi_register_pmu_device(&trbe_dev, ...)
+
+Because these devices are statically allocated and not created via
+platform_device_alloc(), they do not have a .dev.release callback
+configured.
+
+When platform_device_put() drops the reference count to 0, the driver core's
+device_release() function will see the missing release callback and trigger
+a warning splat.
+
+On systems with panic_on_warn enabled, could this turn a benign device
+registration failure into a kernel panic?
+
 > +	}
->  
+> =20
 >  	return ret;
 >  }
-> -- 
-> 2.43.0
-> 
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260415174159.3625=
+777-1-lgs201920130244@gmail.com?part=3D1
