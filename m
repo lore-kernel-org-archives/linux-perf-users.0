@@ -1,67 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAB8283C82;
-	Thu, 16 Apr 2026 19:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CD03845D5
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 19:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776368142; cv=none; b=IvpCKRe03HJnp0zRo6jm2lz8p8bxC4Hp1FfsPdMCFiFWOwlyjDFCxEjmlWZcl0X+CcfriCeY8WBh9e+l89mnvoQQrNSj3hnebV5F0oYUhWqOFDu/JJHfEYuxlUw6z1mANUA0C+l+5s2DmS0gxkhQs/TGdFMrfoq+Zc/aaeDT9Kk=
+	t=1776368335; cv=none; b=VO+HBhwbT1UEwp9683ji+AkfRZ2cS62es0IWypYo515vfeggV8iM/xVeQc0dFSMpzgpJG5XJpzEZhbWrhNI5MBb17Eg74WQ3uYCXfYRDx1/SCB5sOjRtswqz0guPFJZuU5HLJGCurpAb2IXwDJPYpfQk7YiT4qmIWGO5x4gIY8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776368142; c=relaxed/simple;
-	bh=gBlWVg+IPb8Kd75Wg1wM2Qt9jfUoi72p10vM1ry0jCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJMiBUwgH8KOZkXIPnc17N2N82Y27Oupx6Hbn/TeZoqQ+62/RLqVAGEViQurgqTJeNwo6h0N82rwZ+RWwD1fauTr2uluNOT5k29RSGIbdI3obX2PAuoC3IZWrIlrR9sdI20/L2o1Ldr1qqpl8dsmhSZeEnK4Hz10hIKJrLnYd2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4GNIpBN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776368335; c=relaxed/simple;
+	bh=ysLa6ksEOUYVMmhdG9ZT9GZLHSpQavIhtm92MOWxgRM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ACfR8hS3uVugN5+7NG7z7Wkk9X+RO9duFykxcSU2EfQUvzmrZo+po5y2lWvQNVry6X66d0NgscFHRXRICL70IxHZ26gUdvIyruaX0ZzkM4VjErI4vL0/oAVGVM+nmsqMZ7fR0Wg0LYQuSMdH6hmEGWn+FEalUNiF928NPtET4sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QA0N+lt+; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4GNIpBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3865BC2BCAF;
-	Thu, 16 Apr 2026 19:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776368141;
-	bh=gBlWVg+IPb8Kd75Wg1wM2Qt9jfUoi72p10vM1ry0jCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R4GNIpBNd4xetC2h0JWKFo7LIEgrrsoSagktffgljmC0tkL/QTzr0uqvaCKIFluRW
-	 uMpXU6FyMoDC72gDoW2095ier8Q3CJxY+y/5ZluR4BP2yiBr4VS981A5wgTnoOSCJw
-	 QngU1A2ea8CBeL1buZsvs239W++2vfiL84cBouMVFhEbNi6pOXS0KvvmHOB6fNOQeI
-	 syFhgRjdCOr0Rjbacr/T+yhXK4ZAs+gg8XnrEHuxCEA6eYOwP4OQj1oGfQWbq7cOri
-	 61BiJfCgGC0ftkn3JE1Fuib8HCu/btq58K5aHL71BPICSCAktyf4ML5KWY/GxGDoKP
-	 Jiy+apJUgFDSQ==
-Date: Thu, 16 Apr 2026 16:35:37 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHES 0/5 v2] More perf.data header validation
-Message-ID: <aeE6CSp4zafjAUNR@x1>
-References: <20260416001424.362797-1-acme@kernel.org>
- <2231f14c-0467-41d7-8774-5f720edc0e18@linaro.org>
- <aeEAG2F3ERbSv94-@x1>
- <aeESd1KY7NqC5sYH@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QA0N+lt+"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82f6610a6c8so1259386b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 12:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776368331; x=1776973131; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=S4kcc1nmfLe/qZYFBrnwpUX8iJIcKjKD0pIVP+tkdCo=;
+        b=QA0N+lt+3MOuNXIatUTJ/9rnYKhuleyJizI0cnqBx7rfHOHFLboUaZ2BZvbzmKek5l
+         SRmGmP2+G3sfqZERHWWnYNTiEygzovhw6i0pKpeSChtl4BduUjRUu9vnKSIVDrXL2OLS
+         sf7/o7SmAMbxb6GSNP46f41yZt4DwshU9fOMpnlG6iZB2nBMGI61Wiq3lx6V3v+ZVPXC
+         9IU2ZHU8Oufo0LFLW0wjXV3BjRaSiltQ8Fpsl0mFq3SXDaXsrdSvQvP3VAA1T/+BtQk0
+         BeVedJOXaEdn1nuaBUtOKwoZDjHgTK2qndlwa251dnyccf/Ncv5+qJt5J92BFdgkX0WM
+         Zaqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776368331; x=1776973131;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S4kcc1nmfLe/qZYFBrnwpUX8iJIcKjKD0pIVP+tkdCo=;
+        b=ZTH7T8lzywHG6cF51sZn51WdkYLKfkbZ+DfeMGSS0BOGNJTGzC6926/4DQVEP9N83u
+         okUGNodgCBu6/7h5D/2fXvZ8ur6sYEawyS0vqTQM6BK+eZ/me3OccDM8B9Eaj0YCWFk7
+         1K3rQAoIXWpWJFH2jT18uYmro6DmbjZSzqdE1l6bNrzo6yTiec4KnNg4NuuRZlTm2vOY
+         UAvAQxSkzCZ1OIT9AQDjvC9CUVU0+vAmxBXAU7svXTjyYp9FRn1cbbKoM3bUv9H0jmx7
+         hhy09tShwRx4LbtFWWgNPnqCEixSkRA7/neu9pfCjkuzfmJBqi1ePp/mriY3n+1PiSvV
+         YhvA==
+X-Forwarded-Encrypted: i=1; AFNElJ8i5nE1SLYWimc+oHtI6eKBPuTfwe+yvvpKRZG/dwELWVKkE85hU30Ns6GtEY8U18GFxPvaDDZKJelsvTr7g8VI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVjkKaWN7OCaFf8M6Hp2Na0fQgpgK2rxKupKbOEm//9j1U7a6y
+	M5U8pUY1l250Tb5Jz7fzv1WIUj5k6MirXMSl86vysxkluJNBr4L/UmYOovhuXcZXP/WJCeHoWej
+	VZrEEcw==
+X-Received: from pfgs39.prod.google.com ([2002:a05:6a00:17a7:b0:82a:108d:4308])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:18a7:b0:82f:6bd2:eac5
+ with SMTP id d2e1a72fcca58-82f885645f2mr646007b3a.2.1776368330543; Thu, 16
+ Apr 2026 12:38:50 -0700 (PDT)
+Date: Thu, 16 Apr 2026 12:38:49 -0700
+In-Reply-To: <aeEpV9kfBSQrxwm-@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aeESd1KY7NqC5sYH@google.com>
+Mime-Version: 1.0
+References: <20260414191425.2697918-1-seanjc@google.com> <20260414191425.2697918-2-seanjc@google.com>
+ <aeEpV9kfBSQrxwm-@google.com>
+Message-ID: <aeE6yYGaq2rnj77v@google.com>
+Subject: Re: [PATCH 1/4] perf/x86/intel: Don't write PEBS_ENABLED on
+ host<=>guest xfers if CPU has isolation
+From: Sean Christopherson <seanjc@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	Stephane Eranian <eranian@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Apr 16, 2026 at 09:46:47AM -0700, Namhyung Kim wrote:
-> On Thu, Apr 16, 2026 at 12:28:27PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Apr 16, 2026 at 02:17:37PM +0100, James Clark wrote:
-> > > On 16/04/2026 01:14, Arnaldo Carvalho de Melo wrote:
-> > > > 	This is probably 7.2 material, but if feeling this can still
-> > > > sneak into 7.1, feel free to do it :-)
- 
-> Right, I don't want to add non-urgent changes to 7.1 at this point.
-> I'll work on finalizing the PR message.
+On Thu, Apr 16, 2026, Namhyung Kim wrote:
+> > +	/*
+> > +	 * Disable counters where the guest PMC is different than the host PMC
+> > +	 * being used on behalf of the guest, as the PEBS record includes
+> > +	 * PERF_GLOBAL_STATUS, i.e. the guest will see overflow status for the
+> > +	 * wrong counter(s).  Similarly, disallow PEBS in the guest if the host
+> > +	 * is using PEBS, to avoid bleeding host state into PEBS records.
+> > +	 */
+> > +	guest_pebs_mask &= kvm_pmu->pebs_enable & ~kvm_pmu->host_cross_mapped_mask;
+> > +	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
+> > +		guest_pebs_mask = 0;
+> >  
+> > +	/*
+> > +	 * Do NOT mess with PEBS_ENABLED.  As above, disabling counters via
+> > +	 * PERF_GLOBAL_CTRL is sufficient, and loading a stale PEBS_ENABLED,
+> > +	 * e.g. on VM-Exit, can put the system in a bad state.  Simply enable
+> > +	 * counters in PERF_GLOBAL_CTRL, as perf load PEBS_ENABLED with the
+> > +	 * full value, i.e. perf *also* relies on PERF_GLOBAL_CTRL.
+> > +	 */
+> > +	arr[global_ctrl].guest |= guest_pebs_mask;
+> 
+> I was confused by the earlier comment in the funcion that says it is not
+> enough to disable counters but I've realized it's only for the case PEBS
+> isolation is not supported by CPU/ucode.
 
-Agreed, I'm addressing some more Sashiko review comments and trying to
-run it locally before sending a new version for this series.
+Yeah, me too, more than once. :-/
 
-- Arnaldo
+> I think it's ok for disabling guest PEBS, but I'm curious if there's a
+> case to enable PEBS only in guest and it'd be handled correctly.
+
+Yep, if PEBS is being virtualized for the guest, unless the host is also profiling,
+then PEBS will be active for the guest but not the host.  KVM tests for PEBS pass,
+and while they aren't exactly comprehensive, they should detect outright breakage.
