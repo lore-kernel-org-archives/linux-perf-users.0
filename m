@@ -1,137 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75F63DFC87;
-	Thu, 16 Apr 2026 14:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BFC3A7F50;
+	Thu, 16 Apr 2026 15:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776350616; cv=none; b=OYrbAYbVNB07PHohbKJZtbR0DZo4QH0BcsL3O7kLR/eBKox60gwMfYoCn5I6fSbcrjg5iO0rSC9+kcFRCbmRiiOFWVGZ0eKXRmbM43ceHPyV6AXpgloiqx/kEqTbihwaFIVRofk2T6uqmR7046cGzVdotyXZ6V3I7EXN3b8bkP8=
+	t=1776352296; cv=none; b=QJBhxw1R2ph3jI6/fJwvpF+H6hl63hT7gSMq+ab2OEyQfTOWjjuwj/pJVuaB6P1tXsYLedgaqVC3Fuk0U+ORq33gvNLAl6wuTF9C3M8fK8gokLtpM1/Wu3HBVStwSnYwO/NrhuPoS+NpInAewFQRpaudLgw6Ybj8ZDSCgTaIt2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776350616; c=relaxed/simple;
-	bh=Nr3kyOY/iXNQ7TiFF686KJx3OJadZva8m6nAJb/lMJY=;
+	s=arc-20240116; t=1776352296; c=relaxed/simple;
+	bh=VW7LlkXvkacJQVvvguP5uS0I0c0tHqOdhNJP6DiAy18=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WtFK4dqTuvpBOzHUFfYHsVtcQCRAly/Fl+gOkD1MSf9WEFiEpwIgq9nrwhg/I0kifrdGc9IO/8sadD/Sw8f38MiZLyak/4s741BypwcJOlXadFAaArdPaa7s+Rhiv1xTsQTsKY1BwjjNbsvNAyfDDkuHsIhA5BeqCK+ba+K7oyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izXKgom1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=maSXdXaIdIgrw/t7nc9m6BgrY6NygNHWj1yyZeRy1rjk0Kkhl6UfLIBf0baN9wvMteJiEw43d4AHe4x8BlhSV49K+jZC94LQzg5O4wuTUEzmRxzXXHCI8Ni/behq8M5Jk0XkUKo66jyq6CtFnuzjVxO2mwv2GA4hJsnI0ZAtApU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEWInt2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izXKgom1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350F0C2BCAF;
-	Thu, 16 Apr 2026 14:43:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEWInt2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AA9C2BCAF;
+	Thu, 16 Apr 2026 15:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776350615;
-	bh=Nr3kyOY/iXNQ7TiFF686KJx3OJadZva8m6nAJb/lMJY=;
+	s=k20201202; t=1776352296;
+	bh=VW7LlkXvkacJQVvvguP5uS0I0c0tHqOdhNJP6DiAy18=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=izXKgom1wLsdJw2Ccn7xwi42Snlj7AsGNtMqRcu2Xe7+ZKY2/Bgkf36SAzwc+Q7lH
-	 WpYfc7BqlB2n6sPDwGOYI20vgHSCRVOOwBC3NWzxLusDGMrH4Hy0VGG4UlqlMBm/TO
-	 OtDVWJTZNogGYkEjIeECLY8FSqhPVcwFVDJIYjX6Oc2ZkuVTPXJ/37aRh0syFCgDDG
-	 iQb1Hpq1rpXEduzw0kB1Ycw+ivfJ0ZI6FAPGECG0POGFbonApN1Kh6s8xCO2qkQEWc
-	 fuMil/QdEBzLuBZAlCarYFX055eV+ZEyFRLpm7tVvxgj28+qYgbDQZ47n0av5Gy/Wr
-	 7oOBtMr6CbrPg==
-Date: Thu, 16 Apr 2026 11:43:31 -0300
+	b=MEWInt2Fzzw3c+0IeWC7n/mDr9qwi1gVXN6V478h5qw7lDI4JPTAsoksFh6oiGJZZ
+	 JshCFs27ukaJp6L7J54CsB/bb3T+FPCidSi/NS9e5MJxyod58Vz/D/xVs2JYtmq2hy
+	 ec/sl35U60lAHedggPJ1fh5UF7Kz06CvYaEZN4f34GqIqzDVeoRSznOTWYeo7ZVq3Z
+	 fRywerMxXM7/nQ/+m8dcrTv1GvfDChs3mYzpg4N2UDOzEdWzcQg4XxOT8k/9Q9nfpc
+	 4mqe3e1VV+HgxgUfxbH9NXpQ0OJ61SQ54GMaUgLx3d4HdwZd/gGlekv3B8LuzeYgEa
+	 noRF6MU46OYPg==
+Date: Thu, 16 Apr 2026 12:11:31 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: sashiko@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf header: Add section bounds checking to the fd
- read path
-Message-ID: <aeD1k3vd6Thk_NtO@x1>
-References: <20260416001424.362797-2-acme@kernel.org>
- <20260416005915.B86DAC19424@smtp.kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 3/5] perf header: Sanity check HEADER_EVENT_DESC
+Message-ID: <aeD8I8IYFuyk9GL2@x1>
+References: <20260416001424.362797-4-acme@kernel.org>
+ <20260416015456.40645C19424@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260416005915.B86DAC19424@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260416015456.40645C19424@smtp.kernel.org>
 
-On Thu, Apr 16, 2026 at 12:59:15AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 4 potential issue(s):
-> - [Critical] The newly added bounds check in `__do_read()` is vulnerable to an integer bypass on 32-bit architectures, allowing a severe heap buffer overflow.
-> - [Critical] Stack buffer overflow in `perf_header__read_build_ids` and `perf_header__read_build_ids_abi_quirk` via missing size bounds checks.
-> - [High] Missing null-termination enforcement in `do_read_string` causes an out-of-bounds heap read and information disclosure.
-> - [Medium] Adding the section bounds check to `__do_read()` breaks `perf report --header` functionality because `perf_file_section__fprintf_info()` leaves `ff.size` uninitialized (zero).
+On Thu, Apr 16, 2026 at 01:54:55AM +0000, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 3 potential issue(s):
+> - [Critical] An integer overflow in `nre + 1` causes a 0-byte allocation, leading to a massive heap out-of-bounds write.
+> - [Critical] `perf_event__attr_swap()` reads and writes out-of-bounds on the heap due to an unvalidated internal `attr->size` field.
+> - [High] The expression `sz + sizeof(u32)` can overflow to zero on 32-bit architectures, causing a division by zero crash.
 > --
 > 
-> commit a967949f0160c2901e835f301c2e340a342b95db
+> commit b80424f0e9f35df0a96f24ae74fd6b6f3c4d97e2
 > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> perf header: Add section bounds checking to the fd read path
+> perf header: Sanity check HEADER_EVENT_DESC
 > 
-> This commit adds a bounds check to __do_read() to prevent reading past the end
-> of a section when using the file descriptor read path. It centralizes the
-> check for both buffer and fd paths. It also updates perf_file_section__process()
-> and process_build_id() to support this change.
+> This commit adds bounds checks to read_event_desc() to prevent large
+> allocations or excessive loop iterations by validating sizes against the
+> section size.
 > 
 > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 9142a8ba40195..ca0c9e80345b2 100644
+> > index f8acd06ae9235..696f19739074e 100644
 > > --- a/tools/perf/util/header.c
 > > +++ b/tools/perf/util/header.c
 > [ ... ]
-> >  static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
-> >  {
-> > +	if (size > (ssize_t)ff->size - ff->offset)
-> > +		return -1;
-> > +
-> 
-> In perf_file_section__fprintf_info(), the struct feat_fd ff is
-> instantiated using a compound literal that only initializes .fd and .ph,
-> leaving .size and .offset as 0.
-> 
-> When feature printing callbacks (like print_event_desc()) call into this
-> path, will this bounds check evaluate to true (e.g., 4 > 0 - 0) and cause the
-> read to fail? Could this break perf report --header functionality?
-
-Will fix.
- 
-> Also, on 32-bit architectures, ssize_t is a 32-bit signed integer. If a
-> crafted perf.data file provides a large 32-bit length for a dynamic feature
-> (such as data_len in process_bpf_prog_info()), does the size parameter
-> implicitly convert to a negative ssize_t (e.g., 0xFFFFFFF0 becomes -16)?
-
-Will fix.
- 
-> If so, could this negative value bypass the bounds check and cause the
-> subsequent readn() call in __do_read_fd() to overwrite memory past the
-> dynamically allocated heap buffer?
-> 
-> [ ... ]
-> > @@ -2655,7 +2655,12 @@ static int process_tracing_data(struct feat_fd *ff, void *data)
+> > @@ -2101,6 +2101,13 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+> >  	if (do_read_u32(ff, &sz))
+> >  		goto error;
 > >  
-> >  static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
-> >  {
-> > -	if (perf_header__read_build_ids(ff->ph, ff->fd, ff->offset, ff->size))
-> > +	off_t offset = lseek(ff->fd, 0, SEEK_CUR);
+> > +	/*
+> > +	 * The minimum section footprint per event is sz bytes for the attr
+> > +	 * plus a u32 for the id count, check that nre events fit.
+> > +	 */
+> > +	if (sz == 0 || sz > ff->size || nre > (ff->size - ff->offset) / (sz + sizeof(u32)))
+> > +		goto error;
 > > +
-> > +	if (offset == (off_t)-1)
-> > +		return -1;
-> > +
-> > +	if (perf_header__read_build_ids(ff->ph, ff->fd, offset, ff->size))
-> >  		pr_debug("Failed to read buildids, continuing...\n");
-> >  	return 0;
-> >  }
 > 
-> While looking at the build ID processing updated here, does
-> perf_header__read_build_ids() safely handle crafted event sizes?
+> Can the expression sz + sizeof(u32) overflow to zero on 32-bit architectures?
 > 
-> If a perf.data file provides an event where bev.header.size < sizeof(bev),
-> could the length calculation len = bev.header.size - sizeof(bev) underflow
-> to a large positive value?
+> Since sz is a u32 read directly from the file, if an attacker crafts a file
+> where sz is UINT32_MAX - 3 (0xFFFFFFFC), the addition wraps around to exactly 0
+> in 32-bit arithmetic. This would cause the bounds check to divide by zero.
 > 
-> If it exceeds sizeof(bev) + PATH_MAX, would the subsequent
-> readn(input, filename, len) call overflow the filename stack buffer?
+> The preceding sz > ff->size check might not prevent this because ff->size is
+> read from the file header and could be arbitrarily large.
+> 
+> >  	/* buffer to hold on file attr struct */
+> >  	buf = malloc(sz);
+> >  	if (!buf)
+> >  		goto error;
+> >  
+> >  	/* the last event terminates with evsel->core.attr.size == 0: */
+> >  	events = calloc(nre + 1, sizeof(*events));
+> 
+> Could nre + 1 wrap around to 0 if nre is UINT32_MAX?
 
-will check
+Will fix
  
-> Additionally, while reviewing the string reading operations in this file
-> for regressions, does do_read_string() enforce null-termination?
+> The new bounds check restricts nre based on ff->size, but if ff->size is
+> controlled by the file and set to UINT64_MAX, nre can still be 0xFFFFFFFF.
 > 
-> The function reads a length len from the file, allocates exactly len bytes,
-> and copies the data into the buffer. If a crafted perf.data file lacks a null
-> terminator for a string feature, could subsequent C string operations like
-> strdup or printf read past the allocated buffer and cause an out-of-bounds
-> heap read?
+> If nre + 1 wraps to 0, calloc returns a minimal valid 0-byte allocation. The
+> loop below would then write out of bounds on its first iteration:
+> 
+>     for (i = 0, evsel = events; i < nre; evsel++, i++) {
+>         evsel->core.idx = i;
+>         ...
+> 
+> >  	if (!events)
+> >  		goto error;
+> >  
+> >  	msz = sizeof(evsel->core.attr);
+> >  	if (sz < msz)
+> >  		msz = sz;
+> >  
+> >  	for (i = 0, evsel = events; i < nre; evsel++, i++) {
+> >  		evsel->core.idx = i;
+> >  
+> >  		/*
+> >  		 * must read entire on-file attr struct to
+> >  		 * sync up with layout.
+> >  		 */
+> >  		if (__do_read(ff, buf, sz))
+> >  			goto error;
+> >  
+> >  		if (ff->ph->needs_swap)
+> >  			perf_event__attr_swap(buf);
+> 
+> Is it possible for perf_event__attr_swap() to read and write beyond the buf
+> allocation here?
+> 
+> The buf allocation is sized using the user-provided sz. When
+> perf_event__attr_swap(buf) executes, it byte-swaps the attr->size field inside
+> the buffer, and then uses the newly swapped attr->size to determine how many
+> subsequent fields to byte-swap.
+> 
+> If sz is small, but the embedded attr->size in the payload is large,
+> perf_event__attr_swap() will swap fields based on the larger internal size
+> instead of the allocated sz bytes, causing an out-of-bounds access.
 
-I think Ian Rogers is working on this one.
+So this is valid but pre-existing, no? I'll cover this in an upcoming
+patch series.
 
 - Arnaldo
+ 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260416001424.362797-1-acme@kernel.org?part=3
