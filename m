@@ -1,162 +1,236 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503CD246766;
-	Thu, 16 Apr 2026 18:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AA832C8B
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 18:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776363866; cv=none; b=YYAs1Ky+w5TXvCBvYSsjnUzGi8J07oW3/1W50Fbxz7EBS20phJaV3Uhlv9jXr7c3cnyi6UdsYgNTaMqLSS5XZLwYQhFheRGMrcHH1a7NVSKzbrMbcX7Wu3sVd6RgzQ77CqbodLXN20CnAShjUf2R+azHYBBwq5L4y9OA+72EjcU=
+	t=1776364251; cv=none; b=C7z64WlBkoF9XJ2TDm2u3sb3fiFj1xxJlmPwCqtTfgM4dK4NZ1tEr3xqoVDw9RBcAtspoIDve61uapXKSaIZM35BStJDUTe+6X6wPRi2bHVEXG0gXiI1e2X7fFwy8pg/fPcSt0UPdl9MK+ymUC6QSe0R4w2en0/0xYpr39kgurc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776363866; c=relaxed/simple;
-	bh=EET7AEqsqeNKGUh2djycBsR6CuvbqaXpc6GyzCzF1uM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kGkKR//cgjylRCwAtMFd3YX+OIbKa017jh035eajcUhEeROT+4Feot2kHppYMvP/u3f+CHKc3xYdiOeUXl3RPuP4HfY+AWSsBLsrDvSEpEroBpTzpqSNq0nPr2oXUlfBjIVnESq5S3QiMQMEK55/QKSgCcwQwOykXt9zrMr6hCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtOBSa+Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776364251; c=relaxed/simple;
+	bh=vonVHiOX1IAm8kJPd6glOwar216lMXSpcSv6+v+REoY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=bHOaVdVkAGzTAlnUlBWSyuaZgNIbFt8yjJaDtwMs/QzUxb3cX0BE2WI9VZjRyK2ZfohYs1YvXOMftVEv1KmgjSOz3GJSnRGIURr9PLaJ66KLbjnsuQUAKAnyYCKMt3GIVjKzYYMud2BUkwGJ+zcQgj3sgp2WgK3y8KLIvWUV9kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ulXslhCv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtOBSa+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AB08C2BCAF;
-	Thu, 16 Apr 2026 18:24:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ulXslhCv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5B7C2BCAF;
+	Thu, 16 Apr 2026 18:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776363865;
-	bh=EET7AEqsqeNKGUh2djycBsR6CuvbqaXpc6GyzCzF1uM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AtOBSa+ZrmPjRc3npo+3iI35i2uEA4vTVE9yk686rN3DHUu3ws4f+TfZfDMSXBWxt
-	 keL3RrBXqFcCRB4lohq3VRewIEvEvDMk6IUGFhrZtpYM6soYyuQk4fjOUp4aOTEACk
-	 ZE76HwcWXm8F1xnkSEUU+nVPzUraUGGoWmj3FX7h+XwhbLdyPN5p/90xK8xfqJeI54
-	 Thauo5LHFrD2uSJO1CKgd8+WqpkBx6atfkfsGy/IL9IRB7y/JdeM+dag9XvySiQ0a1
-	 1jmZhX1wu2YZsC6vUMylAaRwIGYgsIo2h61jJDF8gJNQFOb5i/ygH3chfd086V3vXJ
-	 I86QMs7FNqtqQ==
-Date: Thu, 16 Apr 2026 11:24:23 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH 1/4] perf/x86/intel: Don't write PEBS_ENABLED on
- host<=>guest xfers if CPU has isolation
-Message-ID: <aeEpV9kfBSQrxwm-@google.com>
-References: <20260414191425.2697918-1-seanjc@google.com>
- <20260414191425.2697918-2-seanjc@google.com>
+	s=k20201202; t=1776364251;
+	bh=vonVHiOX1IAm8kJPd6glOwar216lMXSpcSv6+v+REoY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=ulXslhCv3U81HUYlF/xoxlSfQYQ2ge1BD+bkO2Qd/xT6c0DtwvI1cYsrWgqnn6wdR
+	 dJwmM0SWwsD/mZePm2az/Xk3RngE8Sb5TDX5kcLrjQXdU6Dw1AMVE8UfvYR/veiait
+	 /v85A6nrvde9Uz5XanvIjZSKdKL6RIlOA3sPhU5krYADtIBbuzY5cvFk+ijQBYwfcj
+	 omOV1XPvXnkfhKGRYchE5JI4KXppRLwCBVgb/mZD0yZ9HG/FxJk8qRves1kEH2wIKs
+	 ZKLdI6pwvBWpHMW0X2L5zn3h0KVIAZDcPIviuc+6tIBCAki3NE8FRiy3qFkYNWYUd8
+	 z8x3QDVWt/gEQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 4/7] perf test: Introduce storing logs for shell
+ tests
+Reply-To: sashiko@lists.linux.dev
+To: "Jakub Brnak" <jbrnak@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260416111419.385010-5-jbrnak@redhat.com>
+References: <20260416111419.385010-5-jbrnak@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 Apr 2026 18:30:50 +0000
+Message-Id: <20260416183050.DE5B7C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260414191425.2697918-2-seanjc@google.com>
 
-Hello,
+Sashiko AI review found 6 potential issue(s):
+- [High] Returning 1 from the `nftw` callback to enforce a depth limit inco=
+rrectly aborts the entire directory traversal, resulting in permanent tempo=
+rary file leaks.
+- [High] The directory filtering logic in `delete_file` fails to protect th=
+e contents of unknown directories and causes parent directories to be leake=
+d.
+- [High] The size calculation for the log directory array `tmpdir` is vulne=
+rable to integer overflow on 32-bit systems, leading to a heap buffer overf=
+low.
+- [Medium] The `PERFSUITE_RUN_DIR` environment variable is leaked to subseq=
+uent test suites that do not request logs.
+- [Medium] Test suites are executed even when log directory creation fails,=
+ causing them to use a stale environment.
+- [Medium] Using unsanitized test suite descriptions in the `mkdtemp` templ=
+ate causes predictable directory creation failures or shell variable escapi=
+ng issues.
+--
 
-On Tue, Apr 14, 2026 at 12:14:22PM -0700, Sean Christopherson wrote:
-> When filling the list of MSRs to be loaded by KVM on VM-Enter and VM-Exit,
-> *never* insert an entry for PEBS_ENABLED if the CPU properly isolates PEBS
-> events, in which case disabling counters via PERF_GLOBAL_CTRL is sufficient
-> to prevent unwanted PEBS events in the guest (or host).  Because perf loads
-> PEBS_ENABLE with the unfiltered cpu_hw_events.pebs_enabled, i.e. with both
-> host and guest masks, there is no need to load different values for the
-> guest versus host, perf+KVM can and should simply control which counters
-> are enabled/disabled via PERF_GLOBAL_CTRL.
-> 
-> Avoiding touching PEBS_ENABLED fixes a bug where PEBS_ENABLED can end up
-> with "stuck" bits if a PEBS event is throttled better generating the list
-> and actually entering the guest (Intel CPUs can't arbtitrarily block NMIs).
-> And stating the obvious, leaving PEBS_ENABLED as-is avoids two MSR writes
-> on every VMX transition.
-> 
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Mingwei Zhang <mizhang@google.com>
-> Cc: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/events/intel/core.c | 42 ++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 793335c3ce78..002d809f82ef 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4999,12 +4999,15 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  	struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
->  	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
->  	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-> -	int global_ctrl, pebs_enable;
-> +	u64 guest_pebs_mask = pebs_mask & ~cpuc->intel_ctrl_host_mask;
-> +	int global_ctrl;
->  
->  	/*
->  	 * In addition to obeying exclude_guest/exclude_host, remove bits being
->  	 * used for PEBS when running a guest, because PEBS writes to virtual
-> -	 * addresses (not physical addresses).
-> +	 * addresses (not physical addresses).  If the guest wants to utilize
-> +	 * PEBS, and PEBS can safely enabled in the guest, bits for the guest's
-> +	 * PEBS-enabled counters will be OR'd back in as appropriate.
->  	 */
->  	*nr = 0;
->  	global_ctrl = (*nr)++;
-> @@ -5051,24 +5054,25 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  		};
->  	}
->  
-> -	pebs_enable = (*nr)++;
-> -	arr[pebs_enable] = (struct perf_guest_switch_msr){
-> -		.msr = MSR_IA32_PEBS_ENABLE,
-> -		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
-> -		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
-> -	};
-> -
-> -	if (arr[pebs_enable].host) {
-> -		/* Disable guest PEBS if host PEBS is enabled. */
-> -		arr[pebs_enable].guest = 0;
-> -	} else {
-> -		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
-> -		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
-> -		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
-> -		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
-> -		arr[global_ctrl].guest |= arr[pebs_enable].guest;
-> -	}
-> +	/*
-> +	 * Disable counters where the guest PMC is different than the host PMC
-> +	 * being used on behalf of the guest, as the PEBS record includes
-> +	 * PERF_GLOBAL_STATUS, i.e. the guest will see overflow status for the
-> +	 * wrong counter(s).  Similarly, disallow PEBS in the guest if the host
-> +	 * is using PEBS, to avoid bleeding host state into PEBS records.
-> +	 */
-> +	guest_pebs_mask &= kvm_pmu->pebs_enable & ~kvm_pmu->host_cross_mapped_mask;
-> +	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
-> +		guest_pebs_mask = 0;
->  
-> +	/*
-> +	 * Do NOT mess with PEBS_ENABLED.  As above, disabling counters via
-> +	 * PERF_GLOBAL_CTRL is sufficient, and loading a stale PEBS_ENABLED,
-> +	 * e.g. on VM-Exit, can put the system in a bad state.  Simply enable
-> +	 * counters in PERF_GLOBAL_CTRL, as perf load PEBS_ENABLED with the
-> +	 * full value, i.e. perf *also* relies on PERF_GLOBAL_CTRL.
-> +	 */
-> +	arr[global_ctrl].guest |= guest_pebs_mask;
+commit d3121febf07f1014f3c0ec5faf10998a2927559e
+Author: Jakub Brnak <jbrnak@redhat.com>
 
-I was confused by the earlier comment in the funcion that says it is not
-enough to disable counters but I've realized it's only for the case PEBS
-isolation is not supported by CPU/ucode.
+perf test: Introduce storing logs for shell tests
 
-I think it's ok for disabling guest PEBS, but I'm curious if there's a
-case to enable PEBS only in guest and it'd be handled correctly.
+Create temporary directories for storing log files for shell tests
+that could help while debugging. If the variable PERFTEST_KEEP_LOGS
+is set keep the logs, else delete them.
 
-Thanks,
-Namhyung
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 76fc37b440be4..306ecfe5e22ff 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
 
->  	return arr;
+[ ... ]
+
+> @@ -288,6 +292,91 @@ static bool test_exclusive(const struct test_suite *=
+t, int test_case)
+>  	return t->test_cases[test_case].exclusive;
 >  }
->  
-> -- 
-> 2.54.0.rc0.605.g598a273b03-goog
-> 
+> =20
+> +static int delete_file(const char *fpath, const struct stat *sb __maybe_=
+unused,
+> +		       int typeflag, struct FTW *ftwbuf)
+> +{
+> +	/* Stop traversal if going too deep */
+> +	if (ftwbuf->level > 5) {
+> +		pr_err("Tree traversal reached level %d, stopping.", ftwbuf->level);
+> +		return 1;
+> +	}
+
+Does returning 1 from the nftw callback incorrectly abort the entire
+directory traversal? Per POSIX specifications, returning a non-zero
+value stops nftw completely. This could abandon all remaining unvisited
+files and directories within the test's log directory and potentially
+lead to /tmp exhaustion.
+
+> +
+> +	/* Remove only expected directories */
+> +	if (typeflag =3D=3D FTW_D || typeflag =3D=3D FTW_DP) {
+> +		const char *dirname =3D fpath + ftwbuf->base;
+> +
+> +		if (strcmp(dirname, "logs") && strcmp(dirname, "examples") &&
+> +		    strcmp(dirname, "header_tar") && strncmp(dirname, "perf_", 5)) {
+> +			pr_err("Unknown directory %s", dirname);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	/* Attempt to remove the file, continue on failure */
+> +	if (remove(fpath))
+> +		pr_err("Failed to remove file: %s", fpath);
+> +
+> +	return 0;
+> +}
+
+Because nftw is called with FTW_DEPTH (post-order traversal), files inside
+the directory are visited first. For regular files (FTW_F), this directory
+name check is bypassed, and remove() unconditionally deletes them.
+
+Are all files within the protected directory deleted before the directory
+itself is evaluated?=20
+
+Also, because the now-empty unknown directory is not deleted, would the
+parent directory's subsequent remove() fail with ENOTEMPTY, leaking the
+directory structure?
+
+[ ... ]
+
+> +static char *setup_shell_logs(const char *name)
+> +{
+> +	char template[PATH_MAX];
+> +	char *temp_dir;
+> +
+> +	if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name) >=3D=
+ PATH_MAX) {
+> +		pr_err("Failed to create log dir template");
+> +		return NULL; /* Skip the testsuite */
+> +	}
+> +
+> +	temp_dir =3D mkdtemp(template);
+
+Can the test suite description string contain slashes or spaces? Slashes
+would cause mkdtemp to fail with ENOENT because intermediate directories do
+not exist. Spaces could cause issues when the unquoted PERFSUITE_RUN_DIR
+is used in shell scripts.
+
+I see this issue is addressed later in the series in commit
+deaef0503b790e27361344881ded63d280631c12.
+
+> +	if (temp_dir) {
+> +		setenv("PERFSUITE_RUN_DIR", temp_dir, 1);
+> +		return strdup(temp_dir);
+> +	}
+> +
+> +	pr_err("Failed to create the temporary directory");
+> +
+> +	return NULL; /* Skip the testsuite */
+> +}
+> +
+> +static void cleanup_shell_logs(char *dirname)
+> +{
+> +	char *keep_logs =3D getenv("PERFTEST_KEEP_LOGS");
+> +
+> +	/* Check if logs should be kept or do cleanup */
+> +	if (dirname) {
+> +		if (!keep_logs || strcmp(keep_logs, "y") !=3D 0)
+> +			nftw(dirname, delete_file, 8, FTW_DEPTH | FTW_PHYS);
+> +		free(dirname);
+> +	}
+> +
+> +	unsetenv("PERFSUITE_RUN_DIR");
+> +}
+
+Is the PERFSUITE_RUN_DIR environment variable leaked to subsequent test
+suites that do not request logs? The unsetenv() is only called during
+cleanup_shell_logs(). If a test does not request logs, could it inherit
+the value pointing to the previous test's directory?
+
+[ ... ]
+
+> @@ -627,9 +716,19 @@ static int __cmd_test(struct test_suite **suites, in=
+t argc, const char *argv[],
+>  	 * runs the exclusive tests sequentially. In other modes all tests are
+>  	 * run in pass 1.
+>  	 */
+> +
+>  	for (int pass =3D 1; pass <=3D 2; pass++) {
+>  		int child_test_num =3D 0;
+>  		int curr_suite =3D 0;
+> +		size_t tmpdir_sz =3D num_logged_suites * runs_per_test;
+> +		char **tmpdir =3D tmpdir_sz ? calloc(tmpdir_sz, sizeof(*tmpdir)) : NUL=
+L;
+
+Is there an integer overflow risk on 32-bit systems here? The runs_per_test
+variable is controlled via a command-line argument. Providing a large value
+could cause the multiplication to wrap around, resulting in calloc allocati=
+ng
+a small buffer, which may lead to an out-of-bounds heap write during the
+loop.
+
+[ ... ]
+
+>  			for (unsigned int run =3D 0; run < runs_per_test; run++) {
+> +				/* Setup temporary log directories for shell test suites */
+> +				if (create_logs(*t, pass)) {
+> +					struct shell_test_info *info =3D (*t)->priv;
+> +
+> +					tmpdir[logged_suites] =3D setup_shell_logs((*t)->desc);
+> +					/* Couldn't create log dir, skip test suite */
+> +					if (tmpdir[logged_suites] =3D=3D NULL) {
+> +						if (info->has_setup !=3D NO_SETUP)
+> +							info->has_setup =3D FAILED_SETUP;
+> +					} else {
+> +						logged_suites++;
+> +						if (info->has_setup =3D=3D PASSED_SETUP ||
+> +						    info->has_setup =3D=3D FAILED_SETUP)
+> +							info->has_setup =3D RUN_SETUP;
+> +					}
+> +				}
+> +
+>  				test_suite__for_each_test_case(*t, curr_test_case) {
+
+The comment says to skip the test suite, but there is no continue statement
+here. Are the test cases still executed without the intended logging setup
+if setup_shell_logs() returns NULL?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260416111419.3850=
+10-1-jbrnak@redhat.com?part=3D4
