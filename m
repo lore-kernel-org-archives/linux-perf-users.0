@@ -1,122 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5D720C029
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 18:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9F631E831
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 19:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776365777; cv=none; b=d556y5YdKvorWXQU5IfMs3JOIWlimv69anOfZZmlDgPvDo9EPBVJA9iGOQmm6AR6JPcJTzqpVfxRB6/RmXTVOlQ+/rArUVVqvg/sFatB4gdRcCpMTeOcJz++stwB7xVBRppMjxOUUSxi8NZRt1TtdYR0p43DtPePMEgtWL6M8DU=
+	t=1776366495; cv=none; b=UcA42ZNApAoZOaeTTq+1jizwB6lkssP//yJ0HTIr40kU4TmdqrqHtBKs1dS/Isb/7clGok0kB7VKl8xX+41mA6CsJz0PN/upSBnmZjOZU6pY6IMBoEA1jHrOaudB6NjGKsiL+gkwzgteCKnCfWlt5cahskHRBxXcKLoGxDcLZ3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776365777; c=relaxed/simple;
-	bh=gRWFQdOQweeEIKD0jQggvRdtaTO2Nwa6zFHUoVI4eYw=;
+	s=arc-20240116; t=1776366495; c=relaxed/simple;
+	bh=ZwSZpf6u3WYhCaJI9gEu4XynOcpuomGw0mSmSLaA8T0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OUcAByZM6Ukxom05Nf2lRMZdNdMw73pXuoc+PXbnDGDUliduOp0/8RYc3XxKJA4t2imikTzp1C5ZAgA7jMUVTKCtgJlahecZAga4EZQIK4/3U0YtD0BioDDu9xuA3SXg4XgUORmtIuvm/XvpMMz/fnCR0vIcOIyrfWhaakHxE4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XN4vUa+f; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=qNp7Bx4Fbg5NrB7VGfL7H1JbRVyaS9Xwmk6ve5LpEcBL7SZF5YGiS97pnzg3PIt2VXx7JSi9U5Qo8kbah5J46/4y/BHji4B1Nr8Xz/VtnIIc1zhjIRIS0w13OTPCiYeuevfhea6N1hKa4MO6bG3ybpJDlNvRqR4SN2oGIlTNi4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEPxKIrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XN4vUa+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15AFC2BCAF;
-	Thu, 16 Apr 2026 18:56:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEPxKIrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A16C2BCAF;
+	Thu, 16 Apr 2026 19:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776365777;
-	bh=gRWFQdOQweeEIKD0jQggvRdtaTO2Nwa6zFHUoVI4eYw=;
+	s=k20201202; t=1776366494;
+	bh=ZwSZpf6u3WYhCaJI9gEu4XynOcpuomGw0mSmSLaA8T0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=XN4vUa+fw//qEMpTdKM8cwJJ+XHeeGxLb2krz159tnHQV3KHgQnvHn1WJUeRYMvI4
-	 WqGQS4VHDVc9hmVrrHjvnV2d7NF8ISv9vi7XFPlBPXWbgygfve/CG4in1Rvfqq1YKt
-	 eV7Unf5DD49IdDHRieTLrw7H5VFTA6N24swLsdFCffaLIDKNpAE+3OnFwk77150Bih
-	 nzxhw7cTZgtUbeKR51kq3g4MlxY77RD/GJY6RtyYByI3KefE0RZEgB/ysEAe/kkjeB
-	 dydgqqqtCtH0ZqHqlzPrlPrfX26TYSNwfKXbvd3gi4rhHfCyJR7sygUFId/rdtkROC
-	 kkjccrs+fgn6w==
+	b=GEPxKIrK0kzsxUFrQgZZLDH9NHmvTccxhRYixRX7jM2quk70rKL+tVJNSKIc8w4Ga
+	 xMnyipY9KbtvmOQxiWDYcM32EuC5c0fm0DZg45aWgZppFnFWXwxduyTN8xD6Ec9Gza
+	 4i7CUbjSCNsS8Whe2NyAYNuaLUOhAG44N9wszUt1mTgXUpnaenKIQpoPPOVB6f7t8G
+	 FJDp4Rt820mx4nFtbyPh9qsKuy5tcQkFacn8B9TWBEopJgmqsj9/90148c9G00IPVV
+	 +Sr/6tnVV3j+1q7tXzR7LHlEe926NzYPcovlt7kx/WMTdFnIj3FLPZ020q6ztmHwYv
+	 PqK2U8Rl2MDWw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 5/7] perf test: Format log directories for shell
- tests
+Subject: Re: [PATCH v7 6/7] perf test: Remove perftool drivers
 Reply-To: sashiko@lists.linux.dev
 To: "Jakub Brnak" <jbrnak@redhat.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260416111419.385010-6-jbrnak@redhat.com>
-References: <20260416111419.385010-6-jbrnak@redhat.com>
+In-Reply-To: <20260416111419.385010-7-jbrnak@redhat.com>
+References: <20260416111419.385010-7-jbrnak@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Apr 2026 18:56:16 +0000
-Message-Id: <20260416185616.D15AFC2BCAF@smtp.kernel.org>
+Date: Thu, 16 Apr 2026 19:08:13 +0000
+Message-Id: <20260416190814.84A16C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] Temporary directory resource leak when strdup() fails.
-- [Low] Implementation of character replacement is overly aggressive and mi=
-saligned with the commit intent.
+Sashiko AI review found 1 potential issue(s):
+- [Critical] Out-of-bounds stack write in `append_script_to_suite` and `pre=
+pare_test_suite` when reading directory paths via `/proc/self/fd/`.
 --
 
-commit deaef0503b790e27361344881ded63d280631c12
+commit 1230f358b280e45e7854550cfac958f0de10d7ac
 Author: Jakub Brnak <jbrnak@redhat.com>
 
-perf test: Format log directories for shell tests
+perf test: Remove perftool drivers
 
-This commit creates a temporary directory for shell tests using a template =
-based
-on the test suite name. It replaces non-alphanumeric characters with unders=
-cores
-to avoid issues with whitespace or special characters when logging.
+The perf now provides all of the features required for running the
+perftool test cases, such as creating log directories, running
+setup scripts and the tests are structured by the base_ directories.
 
->     Replace the whitespace characters with an underscore to prevent the
->     possible issues caused by the name splitting.
-
-This isn't a bug, but the commit message mentions replacing whitespace
-characters, while the implementation replaces all non-alphanumeric characte=
-rs.
-Could the commit message be updated to match the code?
-
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index 306ecfe5e22ff..6cdff3687a828 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
 [ ... ]
-> @@ -342,16 +342,28 @@ static bool create_logs(struct test_suite *t, int p=
-ass)
->  	return false;
->  }
-> =20
-> +static const char PERF_LOG_PREFIX[] =3D "/tmp/perf_test_";
-> +static const char PERF_LOG_SUFFIX[] =3D ".XXXXXX";
-> +
->  static char *setup_shell_logs(const char *name)
->  {
->  	char template[PATH_MAX];
->  	char *temp_dir;
-> +	size_t i, len;
-> =20
-> -	if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name) >=3D=
- PATH_MAX) {
-> +	if (snprintf(template, PATH_MAX, "%s%s%s", PERF_LOG_PREFIX, name,
-> +		     PERF_LOG_SUFFIX) >=3D PATH_MAX) {
->  		pr_err("Failed to create log dir template");
->  		return NULL; /* Skip the testsuite */
->  	}
-> =20
-> +	/* Replace non-alphanumeric characters with _ in the name part */
-> +	len =3D strlen(template);
-> +	for (i =3D sizeof(PERF_LOG_PREFIX) - 1; i < len - (sizeof(PERF_LOG_SUFF=
-IX) - 1); i++) {
-> +		if (!isalnum((unsigned char)template[i]))
-> +			template[i] =3D '_';
-> +	}
-> +
->  	temp_dir =3D mkdtemp(template);
->  	if (temp_dir) {
->  		setenv("PERFSUITE_RUN_DIR", temp_dir, 1);
 
-If strdup(temp_dir) fails right after this and returns NULL, do we leave the
-newly created temporary directory on the filesystem?=20
+> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
+ripts.c
+> index fc5e1b835ecc3..a83e30ee4a099 100644
+> --- a/tools/perf/tests/tests-scripts.c
+> +++ b/tools/perf/tests/tests-scripts.c
+> @@ -487,9 +487,6 @@ static void append_suites_in_dir(int dir_fd,
+>  		if (!is_directory_fd(dir_fd, ent))
+>  			continue;
+> =20
+> -		if (strncmp(ent->d_name, "base_", 5) =3D=3D 0)
+> -			continue; /* Skip scripts that have a separate driver. */
+> -
 
-It looks like mkdtemp() creates the directory, but there is no cleanup if t=
-he
-memory allocation fails. Additionally, should we unset the PERFSUITE_RUN_DIR
-environment variable on this error path?
+Since this patch exposes base_ directories to the parsing logic, can this
+lead to an out-of-bounds stack write in append_script_to_suite() when readi=
+ng
+directory paths via /proc/self/fd/?
+
+Looking at append_script_to_suite(), readlink() reads the directory path in=
+to
+a stack buffer file_name[PATH_MAX]:
+
+append_script_to_suite() {
+	...
+	char file_name[PATH_MAX], link[128];
+	...
+	len =3D readlink(link, file_name, sizeof(file_name));
+	if (len < 0) {
+		...
+	}
+	file_name[len++] =3D '/';
+	strcpy(&file_name[len], name);
+	...
+}
+
+readlink() does not null-terminate and returns up to the buffer size.
+
+If the directory's absolute path length is PATH_MAX or greater, readlink()
+returns PATH_MAX.
+
+The subsequent code file_name[len++] =3D '/' then writes to file_name[PATH_=
+MAX],
+which is past the end of the array.
+
+Does the following strcpy() overflow file_name[], causing a regression with
+a stack buffer overflow?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260416111419.3850=
-10-1-jbrnak@redhat.com?part=3D5
+10-1-jbrnak@redhat.com?part=3D6
