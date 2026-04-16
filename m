@@ -1,249 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743EC283C82;
-	Thu, 16 Apr 2026 03:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0661B1C84AB;
+	Thu, 16 Apr 2026 03:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776308780; cv=none; b=AvukmPKyQVqsiwc6cwJK3G0PkEM+hfATgd+CPjmm8YXl79bSOkOvEbcaKeB4Vmr3xh1jBeLXWll0JeLXc11nYJIDYVzI+rkdB2bjZIVP104urj2VYGDxCAuKc4QnO1KaYshYC8fjKIyocNFupqKhbnjQ/1h7GsJF6D2q28PJHmA=
+	t=1776308926; cv=none; b=fqGhVqHVtdd/8o7mC9h1suB6JVzGEekSMze+Uh0ccFbyBVmenkQnd7yHnogzy8IacZjwBXGTdbQ+9zTKLssBUe8CmvIH28R9JiXBB4KoELZQm21996c5+lfqY65w5e3uimYTUjb4VauIqAbCuV/2Q2giiKxqF/y2QvYpVGAAp/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776308780; c=relaxed/simple;
-	bh=JNEL27OQghnc7yHAC1ljRKc5DBcMbiY+zulln07KwhY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mD0lwiwHn1N0xakYuuTqbKb+dlx+SExZ0x2lpghz5fKU8k0SOeLjdQ8uyETJjSvu/8Td+vglOedHAdu+yDCgFZSRLkJq1XpLR4Hc8l6Wxv4I3hD4sIOgBPocihKezG5KAscfWlqtX40AbfAJiX0kGmI2hR4PbRR63Vd//0wONo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DrOSosi8; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776308926; c=relaxed/simple;
+	bh=+eMmYoc43mZN1cskmw2Qk3r3jda5ooUzLxuQ6pKbQSM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Khc4frq98jRVR4SqEDMWLKbhs7kyRjTzqm8ZJAZYRS5G+0tTswEPZpE0VeVqd7pDR/hgdbFsYShzB7Rnnx7dsWQfYX+CdCAAfBOPFrtzw83HcHFs8+ABvN9dJ6IdKiUeB2AA6pWMkxdAggV6JG11bykLD1C7c2+IgZOXnoMqdNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=zaiRqOVT; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DrOSosi8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776308779; x=1807844779;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JNEL27OQghnc7yHAC1ljRKc5DBcMbiY+zulln07KwhY=;
-  b=DrOSosi8/+DT3bPAAsxCNo04gTQ5CAaH93J4ueohA6ohp61AI8a3nejT
-   8d5TjHhgRSxhKmX/899m10HIXXpv5RGjS/SZLl0h6jI3T1Z07cfapIVJi
-   KBQU4DAtnAHuRkN/x7xr8puQSFPvIdHtxg2IhLubjUhiC9AA/eO7yVH1/
-   FzrecFuahiM5O5AAG6Kxi+Rj58KtWGZCMl5AuTCak2uq/uDKZOAIWqDw9
-   gXigOAp1yegxphqGx5EAqcsqBXVzdUqvqkPbvbAcS1n42hi/a5LyYXCeV
-   +sWeiAdcEt0nL3Y+ZRbxLVCtInJ4+sBqt57H1pfXZGQmI8YEJSZmZGxVI
-   Q==;
-X-CSE-ConnectionGUID: 2pjGjm4cQM+3MJ5GM9e4qQ==
-X-CSE-MsgGUID: Xd6e51XpTQSsuowRiFc8SQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="81171126"
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="81171126"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 20:06:18 -0700
-X-CSE-ConnectionGUID: YCrsOTYRSyOtpIvoOECCmw==
-X-CSE-MsgGUID: QK4HBZ4cT6uljZQByY9WOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="224089386"
-Received: from unknown (HELO [10.238.1.30]) ([10.238.1.30])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 20:06:12 -0700
-Message-ID: <52a669dd-243c-4956-855e-ae76f6951ec4@linux.intel.com>
-Date: Thu, 16 Apr 2026 11:06:09 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="zaiRqOVT"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=DXWV+0Q+J0decG6Kzcc/vZ96Yy+u5VrWmMLp0yvHQVM=;
+	b=zaiRqOVTyWm3cu87ldXhlirnQh1Xua11zQjEc+Ee6lp0T9UD13YfZJuEY5jTfDBRtpmEMiMNt
+	sUDc+qIyiCwGHf78FG4kQPwl8fkI9CaRXpqLotkHPpc7NvNSbqig7QcPWjN6CI6KTczGhB/aB5c
+	NTeHrxBg9aHDSNcWNEDP0LY=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fx2qY0ybGzRhV0;
+	Thu, 16 Apr 2026 11:02:17 +0800 (CST)
+Received: from kwepemj100017.china.huawei.com (unknown [7.202.194.11])
+	by mail.maildlp.com (Postfix) with ESMTPS id E161A40574;
+	Thu, 16 Apr 2026 11:08:35 +0800 (CST)
+Received: from huawei.com (10.67.174.193) by kwepemj100017.china.huawei.com
+ (7.202.194.11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 16 Apr
+ 2026 11:08:35 +0800
+From: Luo Gengkun <luogengkun2@huawei.com>
+To: <peterz@infradead.org>
+CC: <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<james.clark@linaro.org>, <elver@google.com>, <dvyukov@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] perf/core: Fix race between perf_event_exit_task and perf_pending_task
+Date: Thu, 16 Apr 2026 03:34:43 +0000
+Message-ID: <20260416033443.1492483-1-luogengkun2@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests: Add auto counter reload (ACR) sampling test
-To: Ian Rogers <irogers@google.com>
-Cc: Falcon Thomas <thomas.falcon@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zide Chen <zide.chen@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260413010920.546501-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fW0Z0zXDjqR_tpJbT-0nbyXQO-Zcc+4Fpk=XejYX8uF4g@mail.gmail.com>
- <0ce093d8-3647-4879-9d65-acd52d4c0ab0@linux.intel.com>
- <CAP-5=fWj4PaadfdmkoNyOVnbNb9aAdhgxOr-CG+R8OLx2jFRCg@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fWj4PaadfdmkoNyOVnbNb9aAdhgxOr-CG+R8OLx2jFRCg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemj100017.china.huawei.com (7.202.194.11)
 
+A race condition exists between perf_event_exit_task() and perf_pending_task().
 
-On 4/16/2026 1:13 AM, Ian Rogers wrote:
-> On Wed, Apr 15, 2026 at 2:19 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>
->> On 4/13/2026 9:30 AM, Ian Rogers wrote:
->>> On Sun, Apr 12, 2026 at 6:14 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->>>> Add auto counter reload sampling test to verify that the intended event
->>>> records can be captured and the self-reloaded events won't generate any
->>>> records.
->>>>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> ---
->>>>  tools/perf/tests/shell/record.sh | 42 ++++++++++++++++++++++++++++++++
->>>>  1 file changed, 42 insertions(+)
->>>>
->>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->>>> index 7cb81cf3444a..1068843282f5 100755
->>>> --- a/tools/perf/tests/shell/record.sh
->>>> +++ b/tools/perf/tests/shell/record.sh
->>>> @@ -402,6 +402,47 @@ test_callgraph() {
->>>>    echo "Callgraph test [Success]"
->>>>  }
->>>>
->>>> +test_acr_sampling() {
->>>> +  events="{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}"
->>>> +  pebs_events="{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}"
->>>> +  echo "Auto counter reload sampling test"
->>>> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->>>> +  then
->>>> +    echo "Auto counter reload sampling [Skipped not supported]"
->>>> +    return
->>>> +  fi
->>>> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
->>>> +  then
->>>> +    echo "Auto counter reload sampling [Failed missing instructions event]"
->>>> +    err=1
->>>> +    return
->>>> +  fi
->>>> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
->>>> +  then
->>>> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
->>>> +    err=1
->>>> +    return
->>>> +  fi
->>>> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
->>>> +  then
->>>> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
->>>> +    return
->>>> +  fi
->>>> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
->>>> +  then
->>>> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
->>>> +    err=1
->>>> +    return
->>>> +  fi
->>>> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
->>>> +  then
->>>> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
->>>> +    err=1
->>>> +    return
->>>> +  fi
->>>> +  echo "Auto counter reload sampling [Success]"
->>> Thanks Dapeng! Could we also test ratio-to-prev as well as just the
->>> plain acr_mask?
->> Ian, it could be hard to validate ratio-to-prev option in this test. On
->> platforms which don't support ACR, perf would automatically fallback the
->> ACR sampling to normal sampling, this would lead to false positives on
->> checking the existence of records from cycles event. I didn't find a good
->> way to figure out this fallback.
->>
->> Since we already have independent test case to validate the ratio_to_prev
->> parsing. It may be unnecessary to add ratio-to-prev validation in this ACR
->> test.
-> So the ratio_to_prev test covers parsing the ratio-to-prev option (it
-> only has `perf record` commands) and ensures it is acted upon, but it
-> doesn't check the option's functional behavior - what the output is.
-> This test makes sure the acr_mask option is functional and so would be
-> complemented by ratio-to-prev testing somethig like:
-> ```
->   rtp_events="{instructions,cycles/period=40000,ratio-to-prev=0.5/u}"
->
->   # Test ratio-to-prev
->   if ! perf record -o "${perfdata}" -e "${rtp_events}" ${testprog} 2> /dev/null
->   then
->     echo "Auto counter reload ratio-to-prev sampling [Failed record
-> ratio-to-prev]"
->     err=1
->     return
->   fi
->   if ! perf script -i "${perfdata}" | grep -q "instructions"
->   then
->     echo "Auto counter reload ratio-to-prev sampling [Failed missing
-> instructions event]"
->     err=1
->     return
->   fi
->   if perf script -i "${perfdata}" | grep -q "cycles"
->   then
->     echo "Auto counter reload ratio-to-prev sampling [Failed cycles
-> event shouldn't be sampled]"
->     err=1
->     return
->   fi
-> ```
-> The first thing your test does is to make sure the acr_mask is
-> supported, so I'm not sure how the fall back can happen?
-> We could additionally check for
-> `/sys/bus/event_source/devices/cpu*/format/acr_mask`.
+During begin_new_exec(), perf_event_exit_task() may be called, and the
+PF_EXITING flag is not set on task. so perf_sigtrap() continues to execute
+and triggers WARN_ON_ONCE(event->ctx->task != current).
 
-Yes, that's initially what I intended to do, but it would cause false
-positives on some hybrid platform, like PTL which only supports ACR on E-core.
+To fix this problem, also check if the event->ctx->task is TASK_TOMBSTONE.
 
-```
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Signed-off-by: Luo Gengkun <luogengkun2@huawei.com>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-$ grep . /sys/bus/event_source/devices/cpu_core/format/*
-/sys/bus/event_source/devices/cpu_core/format/cmask:config:24-31
-/sys/bus/event_source/devices/cpu_core/format/edge:config:18
-/sys/bus/event_source/devices/cpu_core/format/eq:config:36
-/sys/bus/event_source/devices/cpu_core/format/event:config:0-7
-/sys/bus/event_source/devices/cpu_core/format/frontend:config1:0-23
-/sys/bus/event_source/devices/cpu_core/format/inv:config:23
-/sys/bus/event_source/devices/cpu_core/format/ldlat:config1:0-15
-/sys/bus/event_source/devices/cpu_core/format/metrics_clear:config1:0
-/sys/bus/event_source/devices/cpu_core/format/offcore_rsp:config1:0-63
-/sys/bus/event_source/devices/cpu_core/format/pc:config:19
-/sys/bus/event_source/devices/cpu_core/format/umask:config:8-15,40-47
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1f5699b339ec..3422900263fa 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7543,7 +7543,7 @@ static void perf_sigtrap(struct perf_event *event)
+ 	 * Both perf_pending_task() and perf_pending_irq() can race with the
+ 	 * task exiting.
+ 	 */
+-	if (current->flags & PF_EXITING)
++	if (current->flags & PF_EXITING || event->ctx->task == TASK_TOMBSTONE)
+ 		return;
+ 
+ 	/*
+-- 
+2.34.1
 
-$ grep . /sys/bus/event_source/devices/cpu_atom/format/*
-/sys/bus/event_source/devices/cpu_atom/format/acr_mask:config2:0-63
-/sys/bus/event_source/devices/cpu_atom/format/cmask:config:24-31
-/sys/bus/event_source/devices/cpu_atom/format/edge:config:18
-/sys/bus/event_source/devices/cpu_atom/format/eq:config:36
-/sys/bus/event_source/devices/cpu_atom/format/event:config:0-7
-/sys/bus/event_source/devices/cpu_atom/format/inv:config:23
-/sys/bus/event_source/devices/cpu_atom/format/ldlat:config1:0-15
-/sys/bus/event_source/devices/cpu_atom/format/offcore_rsp:config1:0-63
-/sys/bus/event_source/devices/cpu_atom/format/pc:config:19
-/sys/bus/event_source/devices/cpu_atom/format/snoop_rsp:config1:0-63
-/sys/bus/event_source/devices/cpu_atom/format/umask:config:8-15,40-47
-
-```
-
-So strictly speaking, we need to check if it's a hybrid platform first and
-then check if the exact P-core/E-core supports ACR, then run the above ACR
-tests. It seems a little bit over-complicated and I'm not sure if it's
-accepted to add so much Intel specific check in the record.sh.
-
-How's your idea on this? Thanks.
-
-
->
-> Thanks,
-> Ian
->
->>> Thanks,
->>> Ian
->>>
->>>> +}
->>>> +
->>>>  test_ratio_to_prev() {
->>>>    echo "ratio-to-prev test"
->>>>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
->>>> @@ -457,6 +498,7 @@ test_leader_sampling
->>>>  test_topdown_leader_sampling
->>>>  test_precise_max
->>>>  test_callgraph
->>>> +test_acr_sampling
->>>>  test_ratio_to_prev
->>>>
->>>>  # restore the default value
->>>>
->>>> base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
->>>> --
->>>> 2.34.1
->>>>
