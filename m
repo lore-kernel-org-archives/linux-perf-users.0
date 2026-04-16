@@ -1,145 +1,249 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C6F231A3B
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 02:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743EC283C82;
+	Thu, 16 Apr 2026 03:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776307764; cv=none; b=FoZGsguS50SH7hQeVqIkxcPszdSg9X6vBi4UFrXOw4uKYT8azPTYfGQIl+aE1MoH52Q41695Au8zcNYMmiC3BbQlG7heK5hcv0EVNLmk2ZCrU/OcSZ2qHWjbveVfiTBEF1w2pXujP5MJsxRtzwK9dFFY/befLbxBr2Bg1fhGnLw=
+	t=1776308780; cv=none; b=AvukmPKyQVqsiwc6cwJK3G0PkEM+hfATgd+CPjmm8YXl79bSOkOvEbcaKeB4Vmr3xh1jBeLXWll0JeLXc11nYJIDYVzI+rkdB2bjZIVP104urj2VYGDxCAuKc4QnO1KaYshYC8fjKIyocNFupqKhbnjQ/1h7GsJF6D2q28PJHmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776307764; c=relaxed/simple;
-	bh=j7e17LDifneIOjOnZrc8mnGt63vusi8zEfl/w8qeblk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LS9Cwde55daGLI3hBElhfym0HBqZGRUWb41TR0ULuYd2x4pTtpFGr/tTuEElklx9p0XMcp2N9yLnRviI6WCATYVfAKoplvxcfBrB3009wiVKrS4jLiomg5jHmDBXqQ+/sTrUz/3lg3kD6K1jMke56CMOCGPQPte9WKvrMYNE6X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WWtOdCM2; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1776308780; c=relaxed/simple;
+	bh=JNEL27OQghnc7yHAC1ljRKc5DBcMbiY+zulln07KwhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mD0lwiwHn1N0xakYuuTqbKb+dlx+SExZ0x2lpghz5fKU8k0SOeLjdQ8uyETJjSvu/8Td+vglOedHAdu+yDCgFZSRLkJq1XpLR4Hc8l6Wxv4I3hD4sIOgBPocihKezG5KAscfWlqtX40AbfAJiX0kGmI2hR4PbRR63Vd//0wONo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DrOSosi8; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WWtOdCM2"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1776307755; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=5ekEIn/dZVWD2qMUuw46y5eHBbDEAF08FRZBv3kB4Ro=;
-	b=WWtOdCM23scA0zNrC06ImOnIJ5nwQuieziqVaxQmoWEsGi2iDWNMWNMRvKJ7E10ufNOjWjb4nNetvYs7F89QrgSx7cuA80tDnGhJe4UYYWk2QLTtcqCIwfwg0yQoCZCA3iIZGpuLZ34ipM7ifaVWhnsydZynZ5JPDdi+hQ5lpqI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X16f.G6_1776307750;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X16f.G6_1776307750 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 16 Apr 2026 10:49:15 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: sashiko-bot@kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	sashiko@lists.linux.dev
-Subject: Re: [PATCH] perf riscv: Add SDT argument parsing for RISC-V
-Date: Thu, 16 Apr 2026 10:49:03 +0800
-Message-ID: <20260416024910.20041-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260414131753.7E1E2C19425@smtp.kernel.org>
-References: <20260414131753.7E1E2C19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DrOSosi8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776308779; x=1807844779;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JNEL27OQghnc7yHAC1ljRKc5DBcMbiY+zulln07KwhY=;
+  b=DrOSosi8/+DT3bPAAsxCNo04gTQ5CAaH93J4ueohA6ohp61AI8a3nejT
+   8d5TjHhgRSxhKmX/899m10HIXXpv5RGjS/SZLl0h6jI3T1Z07cfapIVJi
+   KBQU4DAtnAHuRkN/x7xr8puQSFPvIdHtxg2IhLubjUhiC9AA/eO7yVH1/
+   FzrecFuahiM5O5AAG6Kxi+Rj58KtWGZCMl5AuTCak2uq/uDKZOAIWqDw9
+   gXigOAp1yegxphqGx5EAqcsqBXVzdUqvqkPbvbAcS1n42hi/a5LyYXCeV
+   +sWeiAdcEt0nL3Y+ZRbxLVCtInJ4+sBqt57H1pfXZGQmI8YEJSZmZGxVI
+   Q==;
+X-CSE-ConnectionGUID: 2pjGjm4cQM+3MJ5GM9e4qQ==
+X-CSE-MsgGUID: Xd6e51XpTQSsuowRiFc8SQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="81171126"
+X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
+   d="scan'208";a="81171126"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 20:06:18 -0700
+X-CSE-ConnectionGUID: YCrsOTYRSyOtpIvoOECCmw==
+X-CSE-MsgGUID: QK4HBZ4cT6uljZQByY9WOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
+   d="scan'208";a="224089386"
+Received: from unknown (HELO [10.238.1.30]) ([10.238.1.30])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 20:06:12 -0700
+Message-ID: <52a669dd-243c-4956-855e-ae76f6951ec4@linux.intel.com>
+Date: Thu, 16 Apr 2026 11:06:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tests: Add auto counter reload (ACR) sampling test
+To: Ian Rogers <irogers@google.com>
+Cc: Falcon Thomas <thomas.falcon@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zide Chen <zide.chen@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260413010920.546501-1-dapeng1.mi@linux.intel.com>
+ <CAP-5=fW0Z0zXDjqR_tpJbT-0nbyXQO-Zcc+4Fpk=XejYX8uF4g@mail.gmail.com>
+ <0ce093d8-3647-4879-9d65-acd52d4c0ab0@linux.intel.com>
+ <CAP-5=fWj4PaadfdmkoNyOVnbNb9aAdhgxOr-CG+R8OLx2jFRCg@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fWj4PaadfdmkoNyOVnbNb9aAdhgxOr-CG+R8OLx2jFRCg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 14 Apr 2026 13:17:52 +0000, sashiko-bot@kernel.org wrote:
 
-> > diff --git a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-> > index 5b5f21fcba8c6..51b43e68e0e3d 100644
-> > --- a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-> > +++ b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-> 
-> [ ... ]
-> 
-> > +/* RISC-V register ABI names: zero, ra, sp, gp, tp, t0-t6, s0-s11, a0-a7 */
-> > +#define SDT_OP_REGEX1  "^(zero|ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])$"
-> > +
-> > +/* RISC-V memory operand: [-]NUM(REG) */
-> > +#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((zero|ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])\\)$"
-> 
-> Since the 'zero' register is hardwired and not saved in pt_regs, will the
-> kernel reject probes with a BAD_REG_NAME error when perf translates it
-> to '%zero' for tracefs?
-> 
-> Should 'zero' be excluded from these regexes and instead treated as an
-> unsupported constant-like argument to be skipped with SDT_ARG_SKIP?
+On 4/16/2026 1:13 AM, Ian Rogers wrote:
+> On Wed, Apr 15, 2026 at 2:19 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 4/13/2026 9:30 AM, Ian Rogers wrote:
+>>> On Sun, Apr 12, 2026 at 6:14 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>>>> Add auto counter reload sampling test to verify that the intended event
+>>>> records can be captured and the self-reloaded events won't generate any
+>>>> records.
+>>>>
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>  tools/perf/tests/shell/record.sh | 42 ++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 42 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>>> index 7cb81cf3444a..1068843282f5 100755
+>>>> --- a/tools/perf/tests/shell/record.sh
+>>>> +++ b/tools/perf/tests/shell/record.sh
+>>>> @@ -402,6 +402,47 @@ test_callgraph() {
+>>>>    echo "Callgraph test [Success]"
+>>>>  }
+>>>>
+>>>> +test_acr_sampling() {
+>>>> +  events="{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}"
+>>>> +  pebs_events="{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}"
+>>>> +  echo "Auto counter reload sampling test"
+>>>> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
+>>>> +  then
+>>>> +    echo "Auto counter reload sampling [Skipped not supported]"
+>>>> +    return
+>>>> +  fi
+>>>> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
+>>>> +  then
+>>>> +    echo "Auto counter reload sampling [Failed missing instructions event]"
+>>>> +    err=1
+>>>> +    return
+>>>> +  fi
+>>>> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
+>>>> +  then
+>>>> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
+>>>> +    err=1
+>>>> +    return
+>>>> +  fi
+>>>> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
+>>>> +  then
+>>>> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
+>>>> +    return
+>>>> +  fi
+>>>> +  if ! perf script -i "${perfdata}" | grep -q "period=20000,acr_mask=0x2"
+>>>> +  then
+>>>> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
+>>>> +    err=1
+>>>> +    return
+>>>> +  fi
+>>>> +  if perf script -i "${perfdata}" | grep -q "period=40000,acr_mask=0x3"
+>>>> +  then
+>>>> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
+>>>> +    err=1
+>>>> +    return
+>>>> +  fi
+>>>> +  echo "Auto counter reload sampling [Success]"
+>>> Thanks Dapeng! Could we also test ratio-to-prev as well as just the
+>>> plain acr_mask?
+>> Ian, it could be hard to validate ratio-to-prev option in this test. On
+>> platforms which don't support ACR, perf would automatically fallback the
+>> ACR sampling to normal sampling, this would lead to false positives on
+>> checking the existence of records from cycles event. I didn't find a good
+>> way to figure out this fallback.
+>>
+>> Since we already have independent test case to validate the ratio_to_prev
+>> parsing. It may be unnecessary to add ratio-to-prev validation in this ACR
+>> test.
+> So the ratio_to_prev test covers parsing the ratio-to-prev option (it
+> only has `perf record` commands) and ensures it is acted upon, but it
+> doesn't check the option's functional behavior - what the output is.
+> This test makes sure the acr_mask option is functional and so would be
+> complemented by ratio-to-prev testing somethig like:
+> ```
+>   rtp_events="{instructions,cycles/period=40000,ratio-to-prev=0.5/u}"
+>
+>   # Test ratio-to-prev
+>   if ! perf record -o "${perfdata}" -e "${rtp_events}" ${testprog} 2> /dev/null
+>   then
+>     echo "Auto counter reload ratio-to-prev sampling [Failed record
+> ratio-to-prev]"
+>     err=1
+>     return
+>   fi
+>   if ! perf script -i "${perfdata}" | grep -q "instructions"
+>   then
+>     echo "Auto counter reload ratio-to-prev sampling [Failed missing
+> instructions event]"
+>     err=1
+>     return
+>   fi
+>   if perf script -i "${perfdata}" | grep -q "cycles"
+>   then
+>     echo "Auto counter reload ratio-to-prev sampling [Failed cycles
+> event shouldn't be sampled]"
+>     err=1
+>     return
+>   fi
+> ```
+> The first thing your test does is to make sure the acr_mask is
+> supported, so I'm not sure how the fall back can happen?
+> We could additionally check for
+> `/sys/bus/event_source/devices/cpu*/format/acr_mask`.
 
-Good point. The 'zero' register (x0) is not saved in pt_regs and is absent
-from regoffset_table in arch/riscv/kernel/ptrace.c, so passing '%zero' to
-tracefs would trigger BAD_REG_NAME. Fixed by removing 'zero' from both regexes
-and letting it fall through to SDT_ARG_SKIP.
+Yes, that's initially what I intended to do, but it would cause false
+positives on some hybrid platform, like PTL which only supports ACR on E-core.
 
-> [ ... ]
-> 
-> > +static int sdt_init_op_regex(void)
-> > +{
-> > + static int initialized;
-> > + int ret = 0;
-> > +
-> > + if (initialized)
-> > +  return 0;
-> > +
-> > + ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> > + if (ret)
-> > +  goto error;
-> > +
-> > + ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> > + if (ret)
-> > +  goto free_regex1;
-> > +
-> > + initialized = 1;
-> > + return 0;
-> > +
-> > +free_regex1:
-> > + regfree(&sdt_op_regex1);
-> > +error:
-> > + pr_debug4("Regex compilation error.\n");
-> > + return ret;
-> > +}
-> 
-> [ ... ]
-> 
-> > +int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op)
-> > +{
-> > + int ret, new_len;
-> > + regmatch_t rm[4];
-> > + char prefix;
-> 
-> [ ... ]
-> 
-> > + ret = sdt_init_op_regex();
-> > + if (ret < 0)
-> > +  return ret;
-> 
-> Does this properly catch regex compilation failures? 
-> 
-> POSIX regcomp() returns a strictly positive integer (like REG_ESPACE)
-> on error, so this condition will evaluate to false if regcomp() fails.
-> 
-> If the first regcomp() in sdt_init_op_regex() fails, could this lead to a
-> crash when calling regexec() on the zero-initialized sdt_op_regex1 below?
-> 
-> Alternatively, if the second regcomp() fails, sdt_init_op_regex()
-> calls regfree(&sdt_op_regex1) before returning the positive error code.
-> 
-> Could this cause a use-after-free when regexec() operates on the freed
-> regex object?
+```
 
-Good catch. regcomp() returns a strictly positive integer on error, so
-ret < 0 was indeed always false, causing regexec() to be called on an
-uninitialized or freed regex object.
+$ grep . /sys/bus/event_source/devices/cpu_core/format/*
+/sys/bus/event_source/devices/cpu_core/format/cmask:config:24-31
+/sys/bus/event_source/devices/cpu_core/format/edge:config:18
+/sys/bus/event_source/devices/cpu_core/format/eq:config:36
+/sys/bus/event_source/devices/cpu_core/format/event:config:0-7
+/sys/bus/event_source/devices/cpu_core/format/frontend:config1:0-23
+/sys/bus/event_source/devices/cpu_core/format/inv:config:23
+/sys/bus/event_source/devices/cpu_core/format/ldlat:config1:0-15
+/sys/bus/event_source/devices/cpu_core/format/metrics_clear:config1:0
+/sys/bus/event_source/devices/cpu_core/format/offcore_rsp:config1:0-63
+/sys/bus/event_source/devices/cpu_core/format/pc:config:19
+/sys/bus/event_source/devices/cpu_core/format/umask:config:8-15,40-47
 
-Fixed by returning -ret at the error path, so the caller's if (ret < 0)
-check properly catches the failure and bails out before reaching regexec().
+$ grep . /sys/bus/event_source/devices/cpu_atom/format/*
+/sys/bus/event_source/devices/cpu_atom/format/acr_mask:config2:0-63
+/sys/bus/event_source/devices/cpu_atom/format/cmask:config:24-31
+/sys/bus/event_source/devices/cpu_atom/format/edge:config:18
+/sys/bus/event_source/devices/cpu_atom/format/eq:config:36
+/sys/bus/event_source/devices/cpu_atom/format/event:config:0-7
+/sys/bus/event_source/devices/cpu_atom/format/inv:config:23
+/sys/bus/event_source/devices/cpu_atom/format/ldlat:config1:0-15
+/sys/bus/event_source/devices/cpu_atom/format/offcore_rsp:config1:0-63
+/sys/bus/event_source/devices/cpu_atom/format/pc:config:19
+/sys/bus/event_source/devices/cpu_atom/format/snoop_rsp:config1:0-63
+/sys/bus/event_source/devices/cpu_atom/format/umask:config:8-15,40-47
 
-> > +
-> > + if (!regexec(&sdt_op_regex1, old_op, 2, rm, 0)) {
-> > +  /* REG --> %REG */
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260414124655.129463-1-cp0613@linux.alibaba.com?part=1
+```
 
-Thanks,
-Pei
+So strictly speaking, we need to check if it's a hybrid platform first and
+then check if the exact P-core/E-core supports ACR, then run the above ACR
+tests. It seems a little bit over-complicated and I'm not sure if it's
+accepted to add so much Intel specific check in the record.sh.
+
+How's your idea on this? Thanks.
+
+
+>
+> Thanks,
+> Ian
+>
+>>> Thanks,
+>>> Ian
+>>>
+>>>> +}
+>>>> +
+>>>>  test_ratio_to_prev() {
+>>>>    echo "ratio-to-prev test"
+>>>>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
+>>>> @@ -457,6 +498,7 @@ test_leader_sampling
+>>>>  test_topdown_leader_sampling
+>>>>  test_precise_max
+>>>>  test_callgraph
+>>>> +test_acr_sampling
+>>>>  test_ratio_to_prev
+>>>>
+>>>>  # restore the default value
+>>>>
+>>>> base-commit: 4e03d6494f9504f8af46ba68a2a8b6877c196789
+>>>> --
+>>>> 2.34.1
+>>>>
