@@ -1,124 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350801DA60D
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 06:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776320173; cv=none; b=VPY0KJ/8YJSONeaf2ZC+SmK6ExG/P1jeC0eXesTlKuJbraH5o1vizGhdYgxj4GZ68H1y+E4gmc4uirAecyHrWZ5Qc/Iem/6Xu+FJHmPzjBV5DPI0E7itPEr29OK4lep7rs8PuA0qVEGDphTSPK2yQDQ2qGxuF48zqEjxh5D1osY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776320173; c=relaxed/simple;
-	bh=QG726S2UJCuBuVXGvcVWhqTE39Nuffe2Ix2Ttnu0CNs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qY8CeqzVTm2tAzwl9BbgnYw4daVa+QeuwqnjRRlBwLiPShq8pi0nb3p2w9k8gRSbtQIZhBBCh6JSuysTODgcNtwPCZ78YNbL+TREOfCnwljNApX3CSS2eK7B/ueSMe8Y1/oIh8xXxfYUpmKnFIiBXStdh/wCpBoHOiinefS+ouE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkaOst91; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D995937B011
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 06:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776321298; cv=pass; b=V/oguv5X+Mm+1tBb7U8VnoRDLUECPRB5jPEIRbER1V5TLR+3fQ8GdgyL7O7fDt0lgVlFRlLqktJeLlAsJIDRPM59HmxNAxat4qMC/F/WPxkzA2rQzopA26Zrs4ee1i6dw1f+wGWvk41uCPV5tC8Fm1kaoGJIec7JysP66ccX4mg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776321298; c=relaxed/simple;
+	bh=zkE8BBtcWTfxhbp67Vqhj2WQ70db3sr/Z6W8Xr2/kkU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T61EVUVXAGTAvAuvMfVJxmTatxvA3Vng+x0ucldJtzbNFD/3Mjrii/bbhKxfEIP7mOjvegdoKeV60WVcKtnbP+/QV1R/kO0xG4IGfjiH5fhKSqbkJ3fE4Iy+yBr4ISytn1zsW4RRbWKhJgXXpsyeu7L/HkGH1aTk4D6xVvXwt34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=skxriIEd; arc=pass smtp.client-ip=74.125.224.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkaOst91"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B03C2BCAF;
-	Thu, 16 Apr 2026 06:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776320172;
-	bh=QG726S2UJCuBuVXGvcVWhqTE39Nuffe2Ix2Ttnu0CNs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=hkaOst917xjakUCpeO8vNLQUQGivKgVwFIjJ/YwPh0OUWpjGmQaje/G2HkXNi74FY
-	 42HHFxkvLnJ+rQiJ+4nSfBkvlJ2Q8C7MRFQWMIiCceuYgoGXv+ylGclVDw0hh1b9Si
-	 EGjzxr2BbxxfGkwOQWSjodToKsBe2AK41k9kSj4OCpYlJu0v36lCGJX/+6eBe7soyy
-	 dyhpVYi/mokXRq8Wn1RGP4oIQgC9zOoljcWI9icqcYy6sDX6TDR5sWmfDHqGLvg3Z6
-	 7oNRHwS0sa7eoezHY0jADk8ce1kjSLBWnUsk5IM94LEoxTuN9DEd9uSE2FRn4H29Ln
-	 2fX8Qczbs26DA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/x86/intel/uncore: Re-register PMU on PCI device
- hot-add
-Reply-To: sashiko@lists.linux.dev
-To: "Guixin Liu" <kanie@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260416054549.45585-1-kanie@linux.alibaba.com>
-References: <20260416054549.45585-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Apr 2026 06:16:12 +0000
-Message-Id: <20260416061612.A7B03C2BCAF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skxriIEd"
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-651d692e833so3650391d50.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Apr 2026 23:34:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776321296; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bgkc7wsAit5zZrklZWrdVwnb/1rVpJWs+PxbfuZOMg33sM1a0DGewi0zFbjnqSfHFA
+         vZ7CL0vuci6Czsn70GpjTaRb9D0WQlpSW3GqdPIXRfbOf2vFY2IGAwL3U4UPZ9ku5c0r
+         MU8So0+0oDqUjWcplYlMtY5XlpFRHgsFawsZoBGRObaFeZhbCRL2T1Z42LZUMm20xPIk
+         yo7E4nNG/Wx6akeKWR9tF0Gq/hJca2kAmJ72w05tTkZGltr6c7bTupjQ4cf2S/M5HAaZ
+         SJooJ/N/bxKY5iuYrM5BO717ZWM/tZ4NzuvDsWzpRMlSkorHVhoTzl9ga0QBaVzygRJ2
+         x2kQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=6WBIGgQfqXhM97YbaJTI7B6LyiqfGzNm6rs6snpZKzw=;
+        fh=eO5XS7XuBxIN0/nNdG7gHhxsy2OYLrarjv73Vs3cQ2M=;
+        b=JCt1ArGT6FzCZnBMck/TeDghs6N8Hyk8JwBIJRWydMVPf3qFQQqjJ1IQ9W3WST0LG4
+         briZ7blOQsb/P8xcyMo1jjNPvxNxoY/FT/eBS5g/HBS2s/Ymv1iB6ADiEVysYmIVIy5f
+         LpFMR5cvXk4kjSOZN40zG9a8N2kVDQC3QfKV9JmKj39Ix0TlcIWJrJkTBEG8BH/+zDel
+         /DbNRS7mfHPsjA2Y+gjTfDrSESRcyz/UnWi96pmGnAU0uofou6aL4C10uWmQDsFjS+Y+
+         iv2sls7/o4UNJkQC82ysnNp9J3EVwN2oqKQo+LYlv8yBpMNjIfikMvvJYgEhQHxwBK26
+         zcAw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776321296; x=1776926096; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6WBIGgQfqXhM97YbaJTI7B6LyiqfGzNm6rs6snpZKzw=;
+        b=skxriIEdwSjqBRMsG8xs3mf9nTwcXFgl5P1Heebx4izhtUdhBD+/UcL2Y/5Vs0JZyE
+         cx55vP/KEGzceTxdi/XFL5PGAU8sbQoj1KIuGWrlIl9Booy/PUXoqKszxtEVAcyTpXwL
+         cTU9NEu4vTSDYQtJ0EMmM6nqfHaaxhWokVd2uSAKsK6o6hwmkxyFLEJvRzODQcnIgZy0
+         zBnCEXrmeUHTun602imJhotTY4OSWIe3XURcwq4trzBge7DBQ62uhaNl0CTTWSfNUHXx
+         u4lzMCZaVA4fTe/XKFfiJ3AoU5ojovOVZTp6HaBvf4tQn0FQpO79YO+NSnQyjy8XJKch
+         JyLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776321296; x=1776926096;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6WBIGgQfqXhM97YbaJTI7B6LyiqfGzNm6rs6snpZKzw=;
+        b=tXTpszJX37zUE37wGpBSf9sdJ+XM48TsghUPZ/gfdzgezauuD5UTVF/4PqmAR7aHIv
+         WecDqL4kuIeQ2n7/5dwUS/7nreYKhyMmlW01Y9CPaO0fUPM6TKUwkmLL7h2lXzELVy8f
+         2seJtB0JdsXpB6Aaa0/oAukVcnhvLUVyshUtqZgLAjukqhcLwFL9uz5elCxYidTMywq/
+         6I2CPjywDRuNKE6V8vePHEOx0jcs/Fz7IfraqFr2X9UcYNf0yCElhWojfmS0o3rfvERr
+         UTIcnwPE8B3YReMRZicJEUH2Nh8nYA1LMJqXGKwsyYe6iNah3xyXLRLbntLAPCC6Cjqh
+         I3fA==
+X-Forwarded-Encrypted: i=1; AFNElJ+1bLpLU0c3zrbj+0qhfPqWo4bW9H8z87vWmMgKU6f+FowCrYUuENKZ3kx1IKoMtFbJqIY6kg3IaiNtviNblfXI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLxlkVYM2wKOZ5CfmW25xxqydsZdxoBmvl8gunBV/0xGyAGWaN
+	DSe960SULUyG3HZ3m4RIaBP6K/uIwNIlvUIXkdSBKQFVPngws2TQyWo004yUcn2RD0dBRi5Eafy
+	+6CXi8Oq3Rr/DNxnHG1w1z0qhYxPHnjrlS0LBNFZRFvMY
+X-Gm-Gg: AeBDietR7qCLgDP/LM7oHxcPCyskW6kgG3W6oH2HS4/bX1yPP/YzaaJsyp72xdJ5Z9n
+	9gfzjIMtjZ4ZsKeVIRMoWQzbn5/sMHGoJET77kKT8NB2odq1XJIaYqSyiutFYVQsldcjxKOVkBX
+	Hc4tAlMbS//L+ETGOj5OQuAQ3Bn/0T2JLWH43O/buF6IWhaZbCmYkfTEJSvOU7anx2ob9N9fVGQ
+	rffogZq/Fw7xZtLy9UpFT1poWFMt0CMR8uVwG6GS56A7SveN+ouu/kutp1J2clSh6/XNNBxUl6+
+	06X5pWxoAdMVAJ+jQw==
+X-Received: by 2002:a05:690e:1209:b0:651:d23c:3d70 with SMTP id
+ 956f58d0204a3-651d23c47afmr12655185d50.16.1776321295868; Wed, 15 Apr 2026
+ 23:34:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260415174159.3625777-1-lgs201920130244@gmail.com>
+ <ad_WmuauLJ3xDKqh@J2N7QTR9R3> <2026041603-guts-crested-ef76@gregkh>
+In-Reply-To: <2026041603-guts-crested-ef76@gregkh>
+From: Guangshuo Li <lgs201920130244@gmail.com>
+Date: Thu, 16 Apr 2026 14:34:41 +0800
+X-Gm-Features: AQROBzCOpZzRmD41Y6QW8paZXFQAYd1mYTjiI8Mq73St9Vcp-8vYTmlQsIfc7_Q
+Message-ID: <CANUHTR89FUUFxL-TKxOOAugNFp9oR3dc9Zf87-kEEXSrRWxk5g@mail.gmail.com>
+Subject: Re: [PATCH] arm_pmu: acpi: fix reference leak on failed device registration
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Sashiko AI review found 3 potential issue(s):
-- [Critical] The patch does not fully resolve the NULL pointer dereference =
-because it ignores registration failures during hot-add, leaving the unregi=
-ster function vulnerable.
-- [Critical] Pre-existing Use-After-Free and state corruption when removing=
- unregistered alias PCI devices.
-- [Critical] Pre-existing Use-After-Free due to uncore box being freed whil=
-e hrtimer and performance events are active.
---
+Hi Mark, Greg,
 
-commit d861b5908dfa0b5575cf18dc6c31bb0673e86c3a
-Author: Guixin Liu <kanie@linux.alibaba.com>
+Thanks for the feedback.
 
-perf/x86/intel/uncore: Re-register PMU on PCI device hot-add
+On Thu, 16 Apr 2026 at 12:41, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Apr 15, 2026 at 07:19:06PM +0100, Mark Rutland wrote:
+> > Hi,
+> >
+> > Thanks for the patch, but from a quick skim, I don't think this is the right
+> > fix.
+> >
+> > Greg, I think we might want to rework the core API here; question for
+> > you at the end.
+> >
+> > On Thu, Apr 16, 2026 at 01:41:59AM +0800, Guangshuo Li wrote:
+> > > When platform_device_register() fails in arm_acpi_register_pmu_device(),
+> > > the embedded struct device in pdev has already been initialized by
+> > > device_initialize(), but the failure path only unregisters the GSI and
+> > > does not drop the device reference for the current platform device:
+> > >
+> > >   arm_acpi_register_pmu_device()
+> > >     -> platform_device_register(pdev)
+> > >        -> device_initialize(&pdev->dev)
+> > >        -> setup_pdev_dma_masks(pdev)
+> > >        -> platform_device_add(pdev)
+> > >
+> > > This leads to a reference leak when platform_device_register() fails.
+> >
+> > AFAICT you're saying that the reference was taken *within*
+> > platform_device_register(), and then platform_device_register() itself
+> > has failed. I think it's surprising that platform_device_register()
+> > doesn't clean that up itself in the case of an error.
+> >
+> > There are *tonnes* of calls to platform_device_register() throughout the
+> > kernel that don't even bother to check the return value, and many that
+> > just pass the return onto a caller that can't possibly know to call
+> > platform_device_put().
+> >
+> > Code in the same file as platform_device_register() expects it to clean up
+> > after itself, e.g.
+> >
+> > | int platform_add_devices(struct platform_device **devs, int num)
+> > | {
+> > |         int i, ret = 0;
+> > |
+> > |         for (i = 0; i < num; i++) {
+> > |                 ret = platform_device_register(devs[i]);
+> > |                 if (ret) {
+> > |                         while (--i >= 0)
+> > |                                 platform_device_unregister(devs[i]);
+> > |                         break;
+> > |                 }
+> > |         }
+> > |
+> > |         return ret;
+> > | }
+> >
+> > That's been there since the initial git commit, and back then,
+> > platform_device_register() didn't mention that callers needed to perform
+> > any cleanup.
+> >
+> > I see a comment was added to platform_device_register() in commit:
+> >
+> >   67e532a42cf4 ("driver core: platform: document registration-failure requirement")
+> >
+> > ... and that copied the commend added for device_register() in commit:
+> >
+> >   5739411acbaa ("Driver core: Clarify device cleanup.")
+> >
+> > ... but the potential brokenness is so widespread, and the behaviour is
+> > so surprising, that I'd argue the real but is that device_register()
+> > doesn't clean up in case of error. I don't think it's worth changing
+> > this single instance given the prevalance and churn fixing all of that
+> > would involve.
+> >
+> > I think it would be far better to fix the core driver API such that when
+> > those functions return an error, they've already cleaned up for
+> > themselves.
+> >
+> > Greg, am I missing some functional reason why we can't rework
+> > device_register() and friends to handle cleanup themselves? I appreciate
+> > that'll involve churn for some callers, but AFAICT the majority of
+> > callers don't have the required cleanup.
+>
+> Yes, we should fix the platform core code here, this should not be
+> required to do everywhere as obviously we all got it wrong.
+>
+> Guangshuo, can you submit a patch to do that instead and ask for all of
+> your other patches to not be applied as well?
+>
+> thanks,
+>
+> greg k-h
 
-This commit extends the uncore PCI bus notifier to handle
-BUS_NOTIFY_ADD_DEVICE events. When a previously-registered uncore PCI device
-is re-added, it calls uncore_pci_pmu_register to recreate the box and
-restore the PMU state.
+I agree that fixing this in the platform core makes more sense than
+handling it in individual callers.
 
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
-e.c
-> index e228e564b15ea..4a8fec0590465 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
+I'll look into the core code and send a patch for that instead. I'll
+also ask for my other related patches not to be applied.
 
-[ ... ]
-
-> @@ -1284,7 +1283,16 @@ static int uncore_bus_notify(struct notifier_block=
- *nb,
->  	if (uncore_pci_get_dev_die_info(pdev, &die))
->  		return NOTIFY_DONE;
-> =20
-> -	uncore_pci_pmu_unregister(pmu, die);
-> +	switch (action) {
-> +	case BUS_NOTIFY_DEL_DEVICE:
-> +		uncore_pci_pmu_unregister(pmu, die);
-
-Are there pre-existing issues with uncore_pci_pmu_unregister during
-device removal?
-
-If a duplicate or alias PCI device mapping to the same PMU and die is
-hotplugged, uncore_pci_pmu_register safely rejects it. However, if that
-rejected device is later removed, could uncore_pci_pmu_unregister wrongfully
-free the legitimate box belonging to the original active device, since it d=
-oes
-not verify device ownership?
-
-Also, could calling uncore_pci_pmu_unregister here cause a use-after-free
-if the uncore box is freed while the hrtimer and performance events are
-still active?
-
-> +		break;
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		uncore_pci_pmu_register(pdev, pmu->type, pmu, die);
-
-What happens if uncore_pci_pmu_register fails during a hot-add event, such
-as when uncore_alloc_box returns -ENOMEM?
-
-The notifier currently ignores the return value, which would leave the box
-uninitialized. If the device is subsequently removed, BUS_NOTIFY_DEL_DEVICE
-would unconditionally call uncore_pci_pmu_unregister.
-
-Could this lead to a NULL pointer dereference when uncore_pci_pmu_unregister
-retrieves the missing box and passes it to uncore_box_exit? Would adding a
-check for a missing box in uncore_pci_pmu_unregister help prevent this?
-
-> +		break;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> =20
->  	return NOTIFY_OK;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260416054549.4558=
-5-1-kanie@linux.alibaba.com?part=3D1
+Thanks,
+Guangshuo
