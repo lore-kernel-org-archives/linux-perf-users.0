@@ -1,199 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09712741A0
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2026 11:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B593B25A357;
+	Thu, 16 Apr 2026 11:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776339528; cv=none; b=p8NlqqtWGTTztIZqSOCq9sCxYIXMMAqHA02N9oQhZudnvKKmIzIFBv7cPX3f/nauUCTJEU3HEslynQHkHG2yzPYWmHdTU5lDW2dmXdm6K8ks5C8u7l/2ANfItG6iZF5BC+Ybl9CHVUSzwRu6KaEjT93+cyXwKhgpFOEmJogqd/E=
+	t=1776340131; cv=none; b=n7vztheC25PJ42u+XM3Vyu3vWQuPeliSPE+teGWXHhC46/4VfWORoeOJ6iP0yXFj5hmiCuqTQ0wck8Yu4cUf03SST5ZXjRBFECK8T6YkKd5LdtBc5Cb97TtIp0M+Mkoct4nD3SC5JOBRlA4lzmdU1A9ai2P/ptEPwTHfW9fTDi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776339528; c=relaxed/simple;
-	bh=hpvE3HNF0WMD5qs1EVy6f5M+GWu2NMi4gay9M/WvTxQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A70G8HCT9ArkpZImHjsgjsmaUHnr0iiNYDOdEi2O8PpH/afF32qdc52gvR++rw2uZynLmKlh2w7ZUgPzgnjo6E2BepVpNNnahaURKxjdmlK5Q8HqbUqWSUxG2op5JPgh/aKFdZ8d9IekSdrQhHWigU53kYCzjDkXvYDTZTkOS4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=muVm1SAQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="muVm1SAQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6FEC2BCAF;
-	Thu, 16 Apr 2026 11:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776339528;
-	bh=hpvE3HNF0WMD5qs1EVy6f5M+GWu2NMi4gay9M/WvTxQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=muVm1SAQYAqJbKNDJv3rVEZXmYY0/0BSg4tW8Qz+rXOXI8U8GMOECfLlxKEJFSbqd
-	 tTjaNwxu96X/WaFbOjsi0SV4e/7rD+2ryov+e3ZggB0EYEjFKKm4RKuQaJRyah1sOa
-	 NUF+5M+felkurniEA19hfYWPNcMCAGryuHTUMmHEOtVq9VrkP8SZ5nglMeHt2OZRw0
-	 zoqPV58l3Z/HZAC3PB7vQqD42E0re+KBkVffB0Opaxilp1oSVSxbbn/vVGrp/ai7Ka
-	 hf+VlVZQdT86XmopJEcxzLMmE9pY+hCq0UYdRuWHSWs3p9BqxYObzYM9XP820bQ9+9
-	 abErGZmJrXoXQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/7] perf tests: Create a structure for shell tests
-Reply-To: sashiko@lists.linux.dev
-To: "Jakub Brnak" <jbrnak@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260416111419.385010-2-jbrnak@redhat.com>
-References: <20260416111419.385010-2-jbrnak@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Apr 2026 11:38:47 +0000
-Message-Id: <20260416113848.5E6FEC2BCAF@smtp.kernel.org>
+	s=arc-20240116; t=1776340131; c=relaxed/simple;
+	bh=zyZe1jx0hO5jVoW7hrnjF3AvZ7XWdFK+r/bsC+RDY5w=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvvqxOxm5zElrMjEgTeVVxYQMnp6Vj8j9jaxj24xlQEq6YVmPjuVNdXhASCrNwvB4FMuLfRZLJG0JfpHDck9hbIJK8zgUa+YkLDWmOT3S7Lrx2G7x3xYo/THOIxod1HKqBEoJb+YsxocKSbIn4kLP3CM9n3Zs+5EWea2wJafU7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fxGVj1kD1z1YQpmX;
+	Thu, 16 Apr 2026 19:48:29 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fxGVh5pwfz1YQpmX;
+	Thu, 16 Apr 2026 19:48:28 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id CC695300D1F6;
+	Thu, 16 Apr 2026 19:46:31 +0800 (CST)
+Received: from SH-HV00110.Hygon.cn (172.19.26.208) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 16 Apr
+ 2026 19:48:27 +0800
+Date: Thu, 16 Apr 2026 19:48:24 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: Mateusz Guzik <mjguzik@gmail.com>
+CC: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<muchun.song@linux.dev>, <osalvador@suse.de>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>
+Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
+Message-ID: <aeDMiBqscm-CZA6D@SH-HV00110.Hygon.cn>
+References: <20260413062042.804-1-huangsj@hygon.cn>
+ <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+ <ad4EvoDcAKE2Sl4+@hsj-2U-Workstation>
+ <CAGudoHGLaoc+CoBPNCvFRYojnj+6E_Lsdv7NaJWxFMoHezemMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHGLaoc+CoBPNCvFRYojnj+6E_Lsdv7NaJWxFMoHezemMQ@mail.gmail.com>
+X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-Sashiko AI review found 3 potential issue(s):
-- [High] Stack buffer overflow when constructing file paths with readlink().
-- [High] Unsanitized file paths are passed to system(), leading to test fai=
-lures and arbitrary command execution.
-- [Medium] Inconsistent symlink traversal in `is_directory_fd` can cause in=
-finite recursion.
---
+On Thu, Apr 16, 2026 at 12:29:50PM +0200, Mateusz Guzik wrote:
+> On Tue, Apr 14, 2026 at 11:11 AM Huang Shijie <huangsj@hygon.cn> wrote:
+> >
+> > On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
+> > > On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
+> > > >   In NUMA, there are maybe many NUMA nodes and many CPUs.
+> > > > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> > > > In the UnixBench tests, there is a test "execl" which tests
+> > > > the execve system call.
+> > > >
+> > > >   When we test our server with "./Run -c 384 execl",
+> > > > the test result is not good enough. The i_mmap locks contended heavily on
+> > > > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have
+> > > > over 6000 VMAs, all the VMAs can be in different NUMA mode.
+> > > > The insert/remove operations do not run quickly enough.
+> > > >
+> > > > patch 1 & patch 2 are try to hide the direct access of i_mmap.
+> > > > patch 3 splits the i_mmap into sibling trees, and we can get better
+> > > > performance with this patch set:
+> > > >     we can get 77% performance improvement(10 times average)
+> > > >
+> > >
+> > > To my reading you kept the lock as-is and only distributed the protected
+> > > state.
+> > >
+> > > While I don't doubt the improvement, I'm confident should you take a
+> > > look at the profile you are going to find this still does not scale with
+> > > rwsem being one of the problems (there are other global locks, some of
+> > > which have experimental patches for).
+> > IMHO, when the number of VMAs in the i_mmap is very large, only optimise the rwsem
+> > lock does not help too much for our NUMA case.
+> >
+> > In our NUMA server, the remote access could be the major issue.
+> >
+> 
+> I'm confused how this is not supposed to help. You moved your data to
+> be stored per-domain. With my proposal the lock itself will also get
+> that treatment.
+> 
+> Modulo the issue of what to do with code wanting to iterate the entire
+> thing, this is blatantly faster.
+> 
 
-commit 3485f6ce4f46698279bf2224bae7f656e8fcbc73
-Author: Jakub Brnak <jbrnak@redhat.com>
+I tested an old lock patch yesterday. It really helps a lot.
+The lock patch is from this link:
+  https://lkml.org/lkml/2024/9/14/280
 
-perf tests: Create a structure for shell tests
+The test results:
+   v7.0-rc5 + (lock patch)                    : improve about %60%
+   v7.0-rc5 + (lock patch) + (this patch set) : improve about 130%			   
 
-This commit implements a new structure for shell test suites, grouping them
-by subdirectories within perf/tests/shell instead of placing them all into a
-single list.
+						
+> >
+> > >
+> > > Apart from that this does nothing to help high core systems which are
+> > > all one node, which imo puts another question mark on this specific
+> > > proposal.
+> > Yes, this patch set only focus on the NUMA case.
+> > The one-node case should use the original i_mmap.
+> >
+> > Maybe I can add a new config, CONFIG_SPILT_I_MMAP. The config is disabled
+> > by default, and enabled when the NUMA node is not one.
+> >
+> > >
+> > > Of course one may question whether a RB tree is the right choice here,
+> > > it may be the lock-protected cost can go way down with merely a better
+> > > data structure.
+> > >
+> > > Regardless of that, for actual scalability, there will be no way around
+> > > decentralazing locking around this and partitioning per some core count
+> > > (not just by numa awareness).
+> > >
+> > > Decentralizing locking is definitely possible, but I have not looked
+> > > into specifics of how problematic it is. Best case scenario it will
+> > > merely with separate locks. Worst case scenario something needs a fully
+> > > stabilized state for traversal, in that case another rw lock can be
+> > Yes.
+> >
+> > The traversal may need to hold many locks.
+> >
+> 
+> The very paragraph you partially quoted answers what to do in that
+> case: wrap everything with a new rwsem taken for reading when
+> adding/removing entries and taken for writing when iterating the
+> entire thing. Then the iteration sticks to one lock.
+> 
+> The new rw lock puts an upper ceiling on scalability of the thing, but
+> it is way higher than the current state.
+Could you tell me the patch about it?
+Is this lock patch merged ? or not?
 
-> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
-ripts.c
-> index f18c4cd337c8f..680dfe650f146 100644
-> --- a/tools/perf/tests/tests-scripts.c
-> +++ b/tools/perf/tests/tests-scripts.c
-> @@ -151,14 +200,64 @@ static char *strdup_check(const char *str)
->  	return newstr;
->  }
-> =20
-> -static int shell_test__run(struct test_suite *test, int subtest __maybe_=
-unused)
-> +/* Check if dirent entry is a directory using file descriptor, handling =
-DT_UNKNOWN case */
-> +static bool is_directory_fd(int dir_fd, struct dirent *ent)
->  {
-> -	const char *file =3D test->priv;
-> +	struct stat st;
-> +
-> +	if (ent->d_type =3D=3D DT_DIR)
-> +		return true;
-> +
-> +	if (ent->d_type !=3D DT_UNKNOWN)
-> +		return false;
-> +
-> +	/* Need to stat the file to determine if it's a directory */
-> +	if (fstatat(dir_fd, ent->d_name, &st, 0) !=3D 0)
-> +		return false;
+I can test it.
 
-Could this cause inconsistent symlink traversal depending on the filesystem?
-If the filesystem returns DT_UNKNOWN, fstatat() without the AT_SYMLINK_NOFO=
-LLOW
-flag will follow symlinks and report them as directories. This differs from=
- the
-fast path which correctly skips symlinks because their d_type is DT_LNK.
-Could this lead to infinite recursion if a symlink loops back to a parent
-directory?
+> 
+> Given the extra overhead associated with it one could consider
+> sticking to one centralized state by default and switching to
+> distributed state if there is enough contention.
+> 
+> > > slapped around this, creating locking order read lock -> per-subset
+> > > write lock -- this will suffer scalability due to the read locking, but
+> > > it will still scale drastically better as apart from that there will be
+> > > no serialization. In this setting the problematic consumer will write
+> > > lock the new thing to stabilize the state.
+> > >
+> > > So my non-maintainer opinion is that the patchset is not worth it as it
+> > > fails to address anything for significantly more common and already
+> > > affected setups.
+> > This patch set is to reduce the remote access latency for insert/remove VMA
+> > in NUMA.
+> >
+> 
+> And I am saying the mmap semaphore is a significant problem already on
+> high-core no-numa setups. Addressing scalability in that case would
+> sort out the problem in your setup and to a significantly higher
+> extent.
+I am afraid even the lock patch resolves the scalability high-core no-numa setups,
+we still need to split the i_mmap for NUMA.
 
-> +
-> +	return S_ISDIR(st.st_mode);
-> +}
+> 
+> > >
+> > > Have you looked into splitting the lock?
+> > >
+> > I ever tried.
+> >
+> > But there are two disadvantages:
+> >   1.) The traversal may need to hold many locks which makes the
+> >       code very horrible.
+> >
+> 
+> I already above this is avoidable.
+> 
+> >   2.) Even we split the locks. Each lock protects a tree, when the tree becomes
+> >       big enough, the VMA insert/remove will also become slow in NUMA.
+> >       The reason is that the tree has VMAs in different NUMA nodes.
+> >
+> 
+> This is orthogonal to my proposal. In fact, if one is to pretend this
+> is never a factor with your patch, I would like to point out it will
+> remain not a factor if the per-numa struct gets its own lock.
+Yes. It is orthogonal to your proposal.
 
-[ ... ]
+Thanks
+Huang Shijie
 
-> +static int shell_test__run(struct test_suite *test, int subtest)
-> +{
-> +	const char *file;
->  	int err;
->  	char *cmd =3D NULL;
-> =20
-> +	/* Get absolute file path */
-> +	if (subtest >=3D 0)
-> +		file =3D test->test_cases[subtest].name;
-> +	else	/* Single test case */
-> +		file =3D test->test_cases[0].name;
-> +
->  	if (asprintf(&cmd, "%s%s", file, verbose ? " -v" : "") < 0)
->  		return TEST_FAIL;
-> +
->  	err =3D system(cmd);
-
-Since file contains the absolute path to the test script, what happens if t=
-he
-kernel source tree is located in a directory path containing spaces or shell
-metacharacters? Will system() fail to execute the path properly?
-
-[ ... ]
-
-> @@ -167,65 +266,117 @@ static int shell_test__run(struct test_suite *test=
-, int subtest __maybe_unused)
->  	return WEXITSTATUS(err) =3D=3D 2 ? TEST_SKIP : TEST_FAIL;
->  }
-> =20
-> -static void append_script(int dir_fd, const char *name, char *desc,
-> -			  struct test_suite ***result,
-> -			  size_t *result_sz)
-> +static struct test_suite *prepare_test_suite(int dir_fd)
->  {
-> -	char filename[PATH_MAX], link[128];
-> -	struct test_suite *test_suite, **result_tmp;
-> -	struct test_case *tests;
-> +	char dirpath[PATH_MAX], link[128];
->  	ssize_t len;
-> -	char *exclusive;
-> +	struct test_suite *test_suite =3D NULL;
-> +	struct shell_test_info *test_info;
-> =20
-> +	/* Get dir absolute path */
->  	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
-> -	len =3D readlink(link, filename, sizeof(filename));
-> +	len =3D readlink(link, dirpath, sizeof(dirpath));
->  	if (len < 0) {
->  		pr_err("Failed to readlink %s", link);
-> -		return;
-> +		return NULL;
->  	}
-> -	filename[len++] =3D '/';
-> -	strcpy(&filename[len], name);
-> +	dirpath[len++] =3D '/';
-> +	dirpath[len] =3D '\0';
-
-If readlink() fills the entire dirpath array, returning a length of PATH_MA=
-X,
-won't these assignments write out of bounds and corrupt the stack?
-
-[ ... ]
-
-> +static void append_script_to_suite(int dir_fd, const char *name, char *d=
-esc,
-> +					struct test_suite *test_suite, size_t *tc_count)
-> +{
-> +	char file_name[PATH_MAX], link[128];
-> +	struct test_case *tests;
-> +	ssize_t len;
-> +	char *exclusive;
-
-[ ... ]
-
-> +	/* Get path to the test script */
-> +	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
-> +	len =3D readlink(link, file_name, sizeof(file_name));
-> +	if (len < 0) {
-> +		pr_err("Failed to readlink %s", link);
-> +		free(desc);
-> +		return;
-> +	}
-> +	file_name[len++] =3D '/';
-> +	strcpy(&file_name[len], name);
-
-Similarly here, if readlink() returns PATH_MAX, file_name[len++] will write=
- past
-the end of the array. Also, won't strcpy() overflow the buffer if there isn=
-'t
-enough space left in file_name to hold the script name?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260416111419.3850=
-10-1-jbrnak@redhat.com?part=3D1
