@@ -1,30 +1,40 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8D14D719;
-	Fri, 17 Apr 2026 01:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49BB2D73A0;
+	Fri, 17 Apr 2026 06:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776390832; cv=none; b=IfOc+NZ2/MaM2LoJo9vSsopo5H1xF0IlGwdqpuThRTDST5C4ccJSIVtUZBc0HIgD1d5NET/6aM/FCY0iViguvI+URCtJmKxEg8UzGHi6Q9hztBicMO5gFshHxwTdZLpl18dIGW2ZkkoebIPRcifm+bsuOD41HAwTJStgPynBeoc=
+	t=1776406676; cv=none; b=slxj/4eIWRKi8c4SE3poGYKfJA8nYsQGj7HB4g/VK/0JnsEObzpGkGkyzIB7lZ08MaRpXLJvZR6iQW6npO8eo9MfS+rrAP4IJdP3nZt8LUglU8j4J8mMgMCX15RpY0NlZgCWXpNc4j3To6XOJqzkKZg0Ct4ywtkBQz99GmeIxkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776390832; c=relaxed/simple;
-	bh=lL1fIYuHJdnxaEpGoyqD6hEpMyPEgADxhU5LLkKP4p8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pcz07vaP4uawVfHv4L1jcGNqyhkpMcsIBdJzHJNopK88M7bfoEPzKEeukQAsXI/VZwIc/gUpBdZVYXY1jv3hu8cAawyA2u0GN+ygQg508nKoTCKzL9WQsSXmPbBQJGMLt8SDYyTtxPyio4215NtsoQcUBj1hH32Q5Kkir5rhdXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fxdDy0szJzYQtny;
-	Fri, 17 Apr 2026 09:52:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id C32FD40561;
-	Fri, 17 Apr 2026 09:53:38 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with SMTP id cCh0CgDniwafkuFpYd25Ag--.52386S2;
-	Fri, 17 Apr 2026 09:53:36 +0800 (CST)
-Message-ID: <7c6754bf-c544-4c27-bf7c-71b989f75273@huaweicloud.com>
-Date: Fri, 17 Apr 2026 09:53:34 +0800
+	s=arc-20240116; t=1776406676; c=relaxed/simple;
+	bh=uO/lJ//U7kXZ1IFldsdT5KRdj+2XQ8peZcRIbI9Gstc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PAiSZtUZhaTT+JUEetxXNWVOULmztFFoY1FfV+2+fCbwIRbCJlEGZQ/le8tnJQ3ahfcZ/esxP3yvewm++x3mtbO0VhLLLfyvSPMIg1tZK9Pgm1irI7BfuQ5Q7f2MZGoWY3gh4PRFtNU6K+ZxWV+QWMeLjcwpDm2C8Dj2zJT3mn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=DRSC9I4a; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="DRSC9I4a"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=vSnJsJOeCgcCgm2gAmOfdh0JncsYtTj/1lIO/Mqol8c=;
+	b=DRSC9I4aLYTX6sTgOdxZLbeJAYsqwDIMjF04daOh+Il4DapmNFVFGalsvejReZaN6HaQIbWSQ
+	GgTmXmM7HkN/T7Mui+N5tXGKXBmw/s9dkkoGD7WhW59R91EI7UFezAj+0FvrgJu/yEHGuItaj5n
+	KWAH8KshHXnSXVWFe/uGLJI=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fxkzQ04GqzmV66;
+	Fri, 17 Apr 2026 14:11:30 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id EBA3340561;
+	Fri, 17 Apr 2026 14:17:50 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 17 Apr 2026 14:17:50 +0800
+Message-ID: <932f808a-947f-48af-a9aa-ce200b76dd64@huawei.com>
+Date: Fri, 17 Apr 2026 14:17:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,230 +42,119 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/16] perf arm64: Support data type profiling
-To: James Clark <james.clark@linaro.org>
-Cc: Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, leo.yan@linux.dev,
- Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
- Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
-References: <20260403094800.1418825-1-wutengda@huaweicloud.com>
- <55fde39f-36b4-44b4-bb9f-4179c6d2d066@linaro.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <55fde39f-36b4-44b4-bb9f-4179c6d2d066@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [linux-next:master] [perf tools] 74e2dbe7be:
+ RIP:cpuidle_enter_state
+To: kernel test robot <oliver.sang@intel.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Namhyung Kim
+	<namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <202604161630.4fec10e1-lkp@intel.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <202604161630.4fec10e1-lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDniwafkuFpYd25Ag--.52386S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKF1fGr1UWr45tF4DAF15XFb_yoWfZw18pF
-	s3try7JrWUGr1ktr17Jr4UXry5Jr4UJw1UGr18JFy8Jr4UAr1jqr47Xr10gFy7GrWxAr1U
-	Jr1Utr1UZr1UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
 
 
-On 2026/4/16 23:31, James Clark wrote:
+On 2026/4/16 16:24:37, kernel test robot <oliver.sang@intel.com> wrote:
 > 
 > 
-> On 03/04/2026 10:47, Tengda Wu wrote:
->> This patch series implements data type profiling support for arm64,
->> building upon the foundational work previously contributed by Huafei [1].
->> While the initial version laid the groundwork for arm64 data type analysis,
->> this series iterates on that work by refining instruction parsing and
->> extending support for core architectural features.
->>
->> The series is organized as follows:
->>
->> 1. Fix disassembly mismatches (Patches 01-02)
->>     Current perf annotate supports three disassembly backends: llvm,
->>     capstone, and objdump. On arm64, inconsistencies between the output
->>     of these backends (specifically llvm/capstone vs. objdump) often
->>     prevent the tracker from correctly identifying registers and offsets.
->>     These patches resolve these mismatches, ensuring consistent instruction
->>     parsing across all supported backends.
->>
->> 2. Infrastructure for arm64 operand parsing (Patches 03-07)
->>     These patches establish the necessary infrastructure for arm64-specific
->>     operand handling. This includes implementing new callbacks and data
->>     structures to manage arm64's unique addressing modes and register sets.
->>     This foundation is essential for the subsequent type-tracking logic.
->>
->> 3. Core instruction tracking (Patches 08-16)
->>     These patches implement the core logic for type tracking on arm64,
->>     covering a wide range of instructions including:
->>
->>     * Memory Access: ldr/str variants (including stack-based access).
->>     * Arithmetic & Data Processing: mov, add, and adrp.
->>     * Special Access: System register access (mrs) and per-cpu variable
->>       tracking.
->>
->> The implementation draws inspiration from the existing x86 logic while
->> adapting it to the nuances of the AArch64 ISA [2][3]. With these changes,
->> perf annotate can successfully resolve memory locations and register
->> types, enabling comprehensive data type profiling on arm64 platforms.
->>
->> Example Result
->> ==============
->>
->> # perf mem record -a -K -- sleep 1
->> # perf annotate --data-type --type-stat --stdio
+> Hello,
 > 
-> Hi Tengda,
+> kernel test robot noticed "RIP:cpuidle_enter_state" on:
 > 
-> Did you run this with any itrace options? If I run your command I get repeated blocks of duplicate stats and types, which is very confusing. One for each sample type that we generate decoding SPE.
+> commit: 74e2dbe7be5037a5e5eed6bc1ad562747ac88566 ("perf tools: Add --pmu-filter option for filtering PMUs")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 > 
-> For example the default perf report output has all these groups:
+> [test failed on linux-next/master 2febe6e6ee6e34c7754eff3c4d81aa7b0dcb7979]
 > 
->   Available samples
->   0 arm_spe_0/
->     ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
->   0 dummy:u
->   3 l1d-miss
->   18 l1d-access
->   0 llc-miss
->   0 llc-access
->   0 tlb-miss
->   22 tlb-access
->   0 branch
->   0 remote-access
->   22 memory
->   22 instructions
+> in testcase: perf-sanity-tests
+> version:
+> with following parameters:
 > 
-> Obviously there are 22 samples total (instructions) and they get duplicated into whatever other categories they happen to have flags for.
+> 	perf_compiler: clang
+> 	group: group-00
 > 
-
-Yes, I agree. The duplication makes the type stats misleading.
-De-duplication is definitely necessary here.
-
-> To remove the duplicates you have to do --itrace=i1i. Could that need to be default for perf annotate with SPE?
 > 
-I'll look into making this the default behavior for SPE data-type
-annotation.
+> 
+> config: x86_64-rhel-9.4-bpf
+> compiler: gcc-14
+> test machine: 20 threads 1 sockets (Commet Lake) with 16G memory
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202604161630.4fec10e1-lkp@intel.com
+> 
+> 
+> 
+> kern  :warn  : [  447.822940] [     C15]  common_interrupt (kbuild/src/consumer/arch/x86/kernel/irq.c:326 (discriminator 35))
+> kern  :warn  : [  447.822946] [     C15]  </IRQ>
+> kern  :warn  : [  447.822947] [     C15]  <TASK>
+> kern  :warn  : [  447.822949] [     C15]  asm_common_interrupt (kbuild/src/consumer/arch/x86/include/asm/idtentry.h:569)
+> kern  :warn  : [  447.822953] [     C15] RIP: 0010:cpuidle_enter_state (kbuild/src/consumer/drivers/cpuidle/cpuidle.c:294)
+> kern  :warn  : [  447.822957] [     C15] Code: ff 8b 73 04 bf ff ff ff ff 49 89 c6 e8 de 28 94 ff 31 ff e8 17 25 67 fe 45 84 ff 0f 85 34 01 00 00 e8 49 c0 86 fe fb 45 85 e4 <0f> 88 0e 01 00 00 4d 63 fc 4c 89 f7 4b 8d 04 7f 49 8d 04 87 4c 8d
+> All code
+> ========
+>     0:	ff 8b 73 04 bf ff    	decl   -0x40fb8d(%rbx)
+>     6:	ff                   	(bad)
+>     7:	ff                   	(bad)
+>     8:	ff 49 89             	decl   -0x77(%rcx)
+>     b:	c6                   	(bad)
+>     c:	e8 de 28 94 ff       	call   0xffffffffff9428ef
+>    11:	31 ff                	xor    %edi,%edi
+>    13:	e8 17 25 67 fe       	call   0xfffffffffe67252f
+>    18:	45 84 ff             	test   %r15b,%r15b
+>    1b:	0f 85 34 01 00 00    	jne    0x155
+>    21:	e8 49 c0 86 fe       	call   0xfffffffffe86c06f
+>    26:	fb                   	sti
+>    27:	45 85 e4             	test   %r12d,%r12d
+>    2a:*	0f 88 0e 01 00 00    	js     0x13e		<-- trapping instruction
+>    30:	4d 63 fc             	movslq %r12d,%r15
+>    33:	4c 89 f7             	mov    %r14,%rdi
+>    36:	4b 8d 04 7f          	lea    (%r15,%r15,2),%rax
+>    3a:	49 8d 04 87          	lea    (%r15,%rax,4),%rax
+>    3e:	4c                   	rex.WR
+>    3f:	8d                   	.byte 0x8d
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>     0:	0f 88 0e 01 00 00    	js     0x114
+>     6:	4d 63 fc             	movslq %r12d,%r15
+>     9:	4c 89 f7             	mov    %r14,%rdi
+>     c:	4b 8d 04 7f          	lea    (%r15,%r15,2),%rax
+>    10:	49 8d 04 87          	lea    (%r15,%rax,4),%rax
+>    14:	4c                   	rex.WR
+>    15:	8d                   	.byte 0x8d
+> kern  :warn  : [  447.822960] [     C15] RSP: 0018:ffff8881014e7d90 EFLAGS: 00000206
+> kern  :warn  : [  447.822964] [     C15] RAX: 000000000068479b RBX: ffffe8ffffb81580 RCX: 0000000000000000
+> kern  :warn  : [  447.822966] [     C15] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff82e3d547
+> kern  :warn  : [  447.822968] [     C15] RBP: ffffffff85570820 R08: 0000000000000001 R09: 0000000000000000
+> kern  :warn  : [  447.822970] [     C15] R10: ffffffff85a9b6a7 R11: 0000000000000000 R12: 0000000000000003
+> kern  :warn  : [  447.822972] [     C15] R13: 0000000000000003 R14: 0000006843e122ac R15: 0000000000000000
+> kern  :warn  : [  447.822980] [     C15]  ? cpuidle_enter_state (kbuild/src/consumer/arch/x86/include/asm/irqflags.h:42 kbuild/src/consumer/arch/x86/include/asm/irqflags.h:119 kbuild/src/consumer/drivers/cpuidle/cpuidle.c:292)
+> kern  :warn  : [  447.822989] [     C15]  cpuidle_enter (kbuild/src/consumer/drivers/cpuidle/cpuidle.c:393 (discriminator 2))
+> kern  :warn  : [  447.822995] [     C15]  cpuidle_idle_call (kbuild/src/consumer/kernel/sched/idle.c:161 kbuild/src/consumer/kernel/sched/idle.c:237)
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20260416/202604161630.4fec10e1-lkp@intel.com
+> 
+> 
+> 
+Hello，
+This kernel warning (irq 26 nobody cared) appears to be unrelated to my
+perf userspace patch. It comes from the tps6598x Type-C controller
+driver, which is likely a hardware or driver issue on the test machine.
+All perf test cases passed successfully.
+Please consider this as pre-existing test environment noise.
 
->> Annotate data type stats:
->> total 6204, ok 5091 (82.1%), bad 1113 (17.9%)
->> -----------------------------------------------------------
->>          29 : no_sym
->>         196 : no_var
->>         806 : no_typeinfo
->>          82 : bad_offset
->>        1370 : insn_track
->>
-
-Here are the results with --itrace=i1i (a slight decrease in accuracy):
-
-Annotate data type stats:
-total 1138, ok 877 (77.1%), bad 261 (22.9%)
------------------------------------------------------------
-         6 : no_sym
-        44 : no_var
-       197 : no_typeinfo
-        14 : bad_offset
-       238 : insn_track
-
-This will be the new baseline, and I will work on further optimizations
-from here.
-
-Best regards,
-Tengda
-
->> Annotate type: 'struct page' in [kernel.kallsyms] (59208 samples):
->> ============================================================================
->>   Percent     offset       size  field
->>    100.00          0       0x40  struct page      {
->>      9.95          0        0x8      long unsigned int   flags;
->>     52.83        0x8       0x28      union        {
->>     52.83        0x8       0x28          struct   {
->>     37.21        0x8       0x10              union        {
->>     37.21        0x8       0x10                  struct list_head        lru {
->>     37.21        0x8        0x8                      struct list_head*   next;
->>      0.00       0x10        0x8                      struct list_head*   prev;
->>                                                  };
->>     37.21        0x8       0x10                  struct   {
->>     37.21        0x8        0x8                      void*       __filler;
->>      0.00       0x10        0x4                      unsigned int        mlock_count;
->>     ...
->>
->> Changes since v1: (reworked from Huafei's series):
->>
->>   - Fix inconsistencies in arm64 instruction output across llvm, capstone,
->>     and objdump disassembly backends.
->>   - Support arm64-specific addressing modes and operand formats. (Leo Yan)
->>   - Extend instruction tracking to support mov and add instructions,
->>     along with per-cpu and stack variables.
->>   - Include real-world examples in commit messages to demonstrate
->>     practical effects. (Namhyung Kim)
->>   - Improve type-tracking success rate (type stat) from 64.2% to 82.1%.
->>     https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
->>
->> Please let me know if you have any feedback.
->>
->> Thanks,
->> Tengda
->>
->> [1] https://lore.kernel.org/all/20250314162137.528204-1-lihuafei1@huawei.com/
->> [2] https://developer.arm.com/documentation/102374/0103
->> [3] https://github.com/flynd/asmsheets/releases/tag/v8
->>
->> ---
->>
->> Tengda Wu (16):
->>    perf llvm: Fix arm64 adrp instruction disassembly mismatch with
->>      objdump
->>    perf capstone: Fix arm64 jump/adrp disassembly mismatch with objdump
->>    perf annotate-arm64: Generalize arm64_mov__parse to support standard
->>      operands
->>    perf annotate-arm64: Handle load and store instructions
->>    perf annotate: Introduce extract_op_location callback for
->>      arch-specific parsing
->>    perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
->>    perf annotate-arm64: Implement extract_op_location() callback
->>    perf annotate-arm64: Enable instruction tracking support
->>    perf annotate-arm64: Support load instruction tracking
->>    perf annotate-arm64: Support store instruction tracking
->>    perf annotate-arm64: Support stack variable tracking
->>    perf annotate-arm64: Support 'mov' instruction tracking
->>    perf annotate-arm64: Support 'add' instruction tracking
->>    perf annotate-arm64: Support 'adrp' instruction to track global
->>      variables
->>    perf annotate-arm64: Support per-cpu variable access tracking
->>    perf annotate-arm64: Support 'mrs' instruction to track 'current'
->>      pointer
->>
->>   .../perf/util/annotate-arch/annotate-arm64.c  | 642 +++++++++++++++++-
->>   .../util/annotate-arch/annotate-powerpc.c     |  10 +
->>   tools/perf/util/annotate-arch/annotate-x86.c  |  88 ++-
->>   tools/perf/util/annotate-data.c               |  72 +-
->>   tools/perf/util/annotate-data.h               |   7 +-
->>   tools/perf/util/annotate.c                    | 108 +--
->>   tools/perf/util/annotate.h                    |  12 +
->>   tools/perf/util/capstone.c                    | 107 ++-
->>   tools/perf/util/disasm.c                      |   5 +
->>   tools/perf/util/disasm.h                      |   5 +
->>   .../util/dwarf-regs-arch/dwarf-regs-arm64.c   |  20 +
->>   tools/perf/util/dwarf-regs.c                  |   2 +-
->>   tools/perf/util/include/dwarf-regs.h          |   1 +
->>   tools/perf/util/llvm.c                        |  50 ++
->>   14 files changed, 984 insertions(+), 145 deletions(-)
->>
->>
->> base-commit: cf7c3c02fdd0dfccf4d6611714273dcb538af2cb
+-- 
+Thanks,
+Qinxin
 
