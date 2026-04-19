@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEDD3290A6
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 23:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61939331A43
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 23:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643192; cv=none; b=c0t5uL6yx247d0er966OnryFg8lxuPozhb9LkxD4HILC0BhljPxQ0Vx/Qc19KIcHC7yhjA+i2pK+2eNBN0AKWflzKIYtyuw/fLkrDXK91IygD1fugzZ+9CFvyF1fdALzq0OzAnH+7eRq5HYNxCugu4PQhSV5Ng5ATRVd/jTHswA=
+	t=1776643195; cv=none; b=FcfnVUeQOyWH0Au0T6ZDmRPjilFdTlUvAnTHOJoe7hTuhMk+wyR1fSJKbHOV6Rt6TrImA9QgxS5kSRPeVXnQT6kL+DAVeQEToHHdjYAw6ArDGUplS8BJj5daFgeK9UPFpl3si2tPSqht3CqlQHE7vbBkMlfCUv47AqDD6+ioPeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643192; c=relaxed/simple;
-	bh=boLLMF2QtEVMyUjFVQ8TQQDT2nZ6aU224jb8PV/EJWU=;
+	s=arc-20240116; t=1776643195; c=relaxed/simple;
+	bh=KB5eb8G5ppS1tD92rNkQmYQD3K2H/4j5mGJeuDqEZK0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uztWgvY54AD5OtRNAilk58t5WGLYjzjg2y8NOhEBHczN+v/nfjbAleDjIPFzhgfyG8omNfD2QE4E9XUDbZQg3DGg+K7ZNbRIA5MPtgGQB/d0l/ohVx6l1xNqDT5G1oBJIP4DmitunbW9xyNiwLIal5lJfEJDmrWuTW5Gr5sQBqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p0az/Esi; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=txuem98VVKoMml/lH2W18IK44hGK7HxE1hcaKcgmE38853zl26wK7w8RQh3LRxbABPw0DcPRtNAxPykQzPBrB4EjKZb2DN0FnhY8DwBPMMGZbYj6ZOZom12iCVSmpkc5qW9bjVJadLo3Nny1pwTACJZtWRBmlDRp7FhNlC4wuiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LUmveLbl; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0az/Esi"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2dd6fb4c867so1916382eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 16:59:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LUmveLbl"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2adef9d486bso22452335ad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 16:59:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643190; x=1777247990; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643193; x=1777247993; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q36CpGFhO4kxK2qbwmzIOsr9S2LUQ4s/PljcVh1oH6U=;
-        b=p0az/EsiEQeOM7WK75/mfijOViHhjP7hHaN7gnBMQgEdaoASgWbWbfeBmjJnopRUBM
-         qzxnK5U1xqWmJ3H9nXSo07rrozPjO9wcpT0kx+wu6Ncj3nI3OtKnr2h1FQLD+hiOCIqm
-         1+o3OMRvA6KdSsvrTBfyFBMoFwmvDZjmKeGqSsuzicAqZkLM+48TkgeksN4Dy2ID5DAs
-         m3DLcSQvubobkzY7iyvrxPfD/nZYyDzwqFI2GsbIdILBl+oYdUUAIgdFJ0633hXH/+hG
-         V8EsVZfrVB0jZTLs9KcoQ9D5R2+CcERNInr8pWZUyJcX4aX/UZX1oHURsSlnd7XwSvxP
-         lyrA==
+        bh=3E8o38VQEe3FFnmAO2qFuVmo0iKyuhRBjtl6iw6sg4o=;
+        b=LUmveLblFyGtEmRAn03Wr+JXRctgqB4rv9GROS3KzU5au5j8lAXZMVatAZ7dcjJJ0u
+         fe9LoEU5asRuY0hPwnjWRVbKDFl2MDmf4RHvlKpdg4uBjVOe3ZnixT7WcVON5prG+rT4
+         qhawceSAeuinRePpymD9y0cScF/blsbX1GaZAXRysUvvMLlDmkQcIUKYfKK0GIlhHAqq
+         0g9mHPC5RDC+HTXUl0Il79UQO2DLtvnmFIyM7Ki4SVKAn7pqAPjLgLqqVyE9RcWpeptC
+         ylLsaKKibbrdjRckIRAwJPU4K1oinaC1rpW/085Ssip1GGDWoYVfOCcNJGao5KGk923T
+         XGBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643190; x=1777247990;
+        d=1e100.net; s=20251104; t=1776643193; x=1777247993;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q36CpGFhO4kxK2qbwmzIOsr9S2LUQ4s/PljcVh1oH6U=;
-        b=SZJKePaR40ZI0VV84xIj8H4NIMh6IxqVnppekJ8veHjrrcvwyPxVLA55H+Q2VMxK4j
-         ZzKm5JJ8dew+sLg2JPifXunknV14GWpkRDEEEb9rAQP6bSt8rP3z7CzpiTNPkyvlHA7k
-         EprkVi5jIp5wiaQY8mhA1SLIERSbQrMDrqqPRYTmouaJBnhXlpECnRtLz3Oy0TOly6KD
-         UjvOOeZUfaeiV4w9zAw+JDvyNbJmktnxCBpn863bC86T0S8mqpu7BJh4gmcDBS7QNrHC
-         cIwsY47GmQ25HW1D1Abdr93Pb4kp9KLNQ/Kyvsp6ZXNLVJH30yWKN85ak9GxtsiWZkdy
-         qT7Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+QZuYrzNE4BIhO6qPNkU+0TwI0MFyUrVYn48JEGBBYTc7pj+C3XtriVswG8DqS1RElbL1fdlNmpt0/znzKZcg+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaPVTGR+PNMsqIKGWjBoappq1NWb+lMQG0ML3gMFPOAaHvR+Xv
-	IjE4Sjr5fW/d79XTCrgnl4JfNG/jUea7Lgzio2w29giUImhWBu/xi4SnkPrvmpYP47rbR9MPiL+
-	op189svCayQ==
-X-Received: from dycnr11-n1.prod.google.com ([2002:a05:7300:e9cb:10b0:2e5:fa99:f6e4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7491:b0:2df:7b88:a1b0
- with SMTP id 5a478bee46e88-2e4873f31a7mr6396278eec.27.1776643189974; Sun, 19
- Apr 2026 16:59:49 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:25 -0700
+        bh=3E8o38VQEe3FFnmAO2qFuVmo0iKyuhRBjtl6iw6sg4o=;
+        b=WQmzZvjSWPUAG8T1ratjnCPuoRNcandjDVyuGKHih74qisgV7IYMvMzUKoC633Pu6/
+         b5z8hSluaEqexoM9UeKRuHdIbWK7eOMrC10L9RnmVDKdSlsqPGspzhHbyI4djQAS+sKA
+         mj87kXGxChnra/eOJ5UzVi7wIh2JOoZ2BnuHw3NhFF4X0c4ZiJHzdNqTOxy5ZJKFtCMv
+         JZ95sn4g4o3XgJAZ5C8txSVlxHWb+ozf/Y71Ql9ciEa2/8YScwYiA1Pi6XpfmiT6XLl9
+         BgSv1/zuTHeJBU+wj6IaDlijq0vH89psH34t3Djf/zn8xWGYfTZ/tZNOO9fWeQi/BZln
+         tSjg==
+X-Forwarded-Encrypted: i=1; AFNElJ8spadxfh1FBAAYWUdFg7JTAyquZZRv3NEWRQdDVK+4XGAeu5hZAhhGJxHRBerjbRVVuD7vIccGorJGZKrHIZuo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHhrFrsUYB73NhoPLrjx7AISroc43JxJG5sB3ulH8yzp4lpGgE
+	9e9MtcoZJau3+mRyjPppPwxDCeSNTG0/bs06Z7lFF0+PhCafdMEMzN+FGMTuiDvTs5oVpeT2QSt
+	Iaew8DiN/7A==
+X-Received: from pltg9.prod.google.com ([2002:a17:902:6b49:b0:2b2:6eb1:9306])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1ae7:b0:2ae:ba5f:3ac3
+ with SMTP id d9443c01a7336-2b5f9e77afamr112892385ad.2.1776643192396; Sun, 19
+ Apr 2026 16:59:52 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:26 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-14-irogers@google.com>
-Subject: [PATCH v1 13/58] perf python: Use evsel in sample in pyrf_event
+Message-ID: <20260419235911.2186050-15-irogers@google.com>
+Subject: [PATCH v1 14/58] perf python: Add wrapper for perf_data file abstraction
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,61 +92,119 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid a duplicated evsel by using the one in sample.
+The perf_data struct is needed for session supported.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ tools/perf/util/python.c | 74 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index e72b9d52e9ff..46fe173c6b5c 100644
+index 46fe173c6b5c..f0dff69f67df 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -43,7 +43,6 @@ PyMODINIT_FUNC PyInit_perf(void);
+@@ -10,6 +10,7 @@
  
- struct pyrf_event {
- 	PyObject_HEAD
--	struct evsel *evsel;
- 	struct perf_sample sample;
- 	union perf_event   event;
- };
-@@ -274,7 +273,7 @@ static PyMemberDef pyrf_sample_event__members[] = {
- 
- static void pyrf_sample_event__delete(struct pyrf_event *pevent)
- {
--	evsel__put(pevent->evsel);
-+	evsel__put(pevent->sample.evsel);
- 	perf_sample__exit(&pevent->sample);
- 	Py_TYPE(pevent)->tp_free((PyObject*)pevent);
- }
-@@ -296,7 +295,7 @@ static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
- #ifdef HAVE_LIBTRACEEVENT
- static bool is_tracepoint(const struct pyrf_event *pevent)
- {
--	return pevent->evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
-+	return pevent->sample.evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
+ #include "callchain.h"
+ #include "counts.h"
++#include "data.h"
+ #include "event.h"
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -2279,6 +2280,73 @@ static PyObject *pyrf__metrics(PyObject *self, PyObject *args)
+ 	return list;
  }
  
- static PyObject*
-@@ -343,7 +342,7 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
- static PyObject*
- get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
- {
--	struct evsel *evsel = pevent->evsel;
-+	struct evsel *evsel = pevent->sample.evsel;
- 	struct tep_event *tp_format = evsel__tp_format(evsel);
- 	struct tep_format_field *field;
++struct pyrf_data {
++	PyObject_HEAD
++
++	struct perf_data data;
++};
++
++static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyObject *kwargs)
++{
++	static char *kwlist[] = { "path", "fd", NULL };
++	char *path = NULL;
++	int fd = -1;
++
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|si", kwlist, &path, &fd))
++		return -1;
++
++	pdata->data.path = NULL;
++	if (path) {
++		pdata->data.path = strdup(path);
++		if (!pdata->data.path) {
++			PyErr_NoMemory();
++			return -1;
++		}
++	}
++	pdata->data.mode = PERF_DATA_MODE_READ;
++	pdata->data.file.fd = fd;
++	if (perf_data__open(&pdata->data) < 0) {
++		PyErr_Format(PyExc_IOError, "Failed to open perf data: %s",
++			     pdata->data.path ? pdata->data.path : "perf.data");
++		return -1;
++	}
++	return 0;
++}
++
++static void pyrf_data__delete(struct pyrf_data *pdata)
++{
++	perf_data__close(&pdata->data);
++	free((char *)pdata->data.path);
++	Py_TYPE(pdata)->tp_free((PyObject *)pdata);
++}
++
++static PyObject *pyrf_data__str(PyObject *self)
++{
++	const struct pyrf_data *pdata = (const struct pyrf_data *)self;
++
++	return PyUnicode_FromString(pdata->data.path);
++}
++
++static const char pyrf_data__doc[] = PyDoc_STR("perf data file object.");
++
++static PyTypeObject pyrf_data__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.data",
++	.tp_basicsize	= sizeof(struct pyrf_data),
++	.tp_dealloc	= (destructor)pyrf_data__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= pyrf_data__doc,
++	.tp_init	= (initproc)pyrf_data__init,
++	.tp_repr	= pyrf_data__str,
++	.tp_str		= pyrf_data__str,
++};
++
++static int pyrf_data__setup_types(void)
++{
++	pyrf_data__type.tp_new = PyType_GenericNew;
++	return PyType_Ready(&pyrf_data__type);
++}
++
+ static PyMethodDef perf__methods[] = {
+ 	{
+ 		.ml_name  = "metrics",
+@@ -2341,7 +2409,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	    pyrf_cpu_map__setup_types() < 0 ||
+ 	    pyrf_pmu_iterator__setup_types() < 0 ||
+ 	    pyrf_pmu__setup_types() < 0 ||
+-	    pyrf_counts_values__setup_types() < 0)
++	    pyrf_counts_values__setup_types() < 0 ||
++	    pyrf_data__setup_types() < 0)
+ 		return module;
  
-@@ -1770,8 +1769,6 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 			return Py_None;
- 		}
+ 	/* The page_size is placed in util object. */
+@@ -2389,6 +2458,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	Py_INCREF(&pyrf_counts_values__type);
+ 	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
  
--		pevent->evsel = evsel;
--
- 		perf_mmap__consume(&md->core);
- 
- 		err = evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
++	Py_INCREF(&pyrf_data__type);
++	PyModule_AddObject(module, "data", (PyObject *)&pyrf_data__type);
++
+ 	dict = PyModule_GetDict(module);
+ 	if (dict == NULL)
+ 		goto error;
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
