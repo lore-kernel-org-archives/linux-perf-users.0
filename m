@@ -1,54 +1,54 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4602F1C28E
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFF0C145
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643561; cv=none; b=KXD9UKZOVTEPiXoixCo4gdv3ecI7ODA7DSeUvhYEoY8+NPaaFjGzGHN0KBWZXlfqPcWDdJAFHw0OkuSEtloDsbPjRNwegqtDE/H9Qa1VRqjnhbl3tloTxMuW3XhrWL59GGOJzOOL8l67sN1/8HyFSsamaggahnSMrZ7FXhNbUT0=
+	t=1776643627; cv=none; b=EembIQzbpadeF188kIFuAVMW17Pr3OtlHkEufO4kpABpOXbmfa8as6/DoRkRevUmGWQKW9sWdze6dTlyjDC4e0k8XyrShP3tPG/8a4LAtjdIWAIZvalMrgV3pYHhPBUiaLm9F6ESZnMoIlflqXzJ+EUxRStJL7i11dDstfyXImE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643561; c=relaxed/simple;
-	bh=Yp/VpyJcqD2RPLWZalVa+xixDAFI4lAEMRa/FZFIMb0=;
+	s=arc-20240116; t=1776643627; c=relaxed/simple;
+	bh=lGdVO9+cr52Pnryq9kYG/lX0HikHA2TFNC7djqZcnb8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=es94I0lVgtCyajrkuuKpafK86fpiQuV0W4Pvb7eXTQaiKS1RmSIyurS6ENk2zHfg9/zQNMNJ0rxQDIVxFt7Smrbbwil4MXBeSBZfUDENCIJVCSoUJnFCpjcYNJPLw/bcxNxJVfiX6635Fa9kMAepL8ESTPrUrziOXXhd58US3VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V8dyu+uv; arc=none smtp.client-ip=209.85.160.74
+	 To:Cc:Content-Type; b=iNVj+b5WQHfYmCyxSnDz4WtTOhwwRlnbHF238R0nxEFhiK09g9lJmGTFL7GTBmqCEE8XbxK8DgY4Dx+0NbkvLT7CDDp4zt8O4nJAZkBAjy1kxV9HiZmT0VhQ3SCLz4ssTTA4ZJgr0E7wV/ukVtI9f8d5QxA6WMVbvgOv9O2lka8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FaRThAqa; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V8dyu+uv"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-41c02dec5c1so3979752fac.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FaRThAqa"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35e5791871fso4791275a91.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643559; x=1777248359; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643625; x=1777248425; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7WQ7kcwMxBpCOrBoZ47jd2yOsX0OA41N9Sof9Sy1W94=;
-        b=V8dyu+uvvIfzdRHK73SecQzoK22BBMQxi/8d3DIj2ocyaQNE8P3k4Z7Kwfp/DI4qjn
-         Na5/JmtMSvC7FQcD+72GgFK1ThI4hpCdlBvl9TMxNnbTosBUPuziuk8gy98RXznmIDu+
-         X+XtPISlxZNuNoE8tJd7qIe7ZGk8QgWdz63WV5yMnVuitU7FwsFLHHEgDgloAh97/aHq
-         oBZ9PPD0ON6+ulFsmtzq6Wft/CyCVF3eC8j/HYUt2Y4Cc49iYa763LPXvx+t9Tb3ucc2
-         AG3tdo6DfVpnve1o0DalqU5BXKloI9tD7mXzWEcOaLoRi6+DPiVb3EeAgNRWcYt/RONf
-         Oh1w==
+        bh=bI2SIpeP78m2dFf3X0Bk4cSbTlDU17jXo3mhkaxloZw=;
+        b=FaRThAqat01MTO1VhbI8bliGMJoH0rgB5YV7Hup/3mRs8bTnBT9pkHyr+2GPKQ4qBO
+         f/SH0Pq/NFA6+SYqwHMCQ335AFRX8tw1gmGfk0/nel1zmRK8kNjsFqueLudcRLqThCkm
+         K1u2K1rCnFCvl6j8EYkmP/4wPcey+ymi/NFZiMtl4erpgaaHk1XQ1sMwrg1VpsdXFc/Y
+         gYAH3F4S+pqnxZhNap9so0ZePcKTj6jKanM23Znq0ADZ3rTkY6hYjBq1tfdZ4Qn2rKYq
+         KLQ3jh0eLnq7Z7SVdJ0Tew6Y0SLw5mzLB/boFLEHhhXTQdD4MRp7UthyPixt/u77q79L
+         K4LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643559; x=1777248359;
+        d=1e100.net; s=20251104; t=1776643625; x=1777248425;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7WQ7kcwMxBpCOrBoZ47jd2yOsX0OA41N9Sof9Sy1W94=;
-        b=qLkFld8DSAC80uF7NwuYb3cXX0K4kEDwl9QxIGQyBZfjIb3wFBTu3Lwi1qDocicOCj
-         yfJKTD7ETtrG03kicUFbfaETgpFSgg7p+KK8TTDEfckM+29OH06dHP1IUJAumDeIXUDg
-         p2xMIdAnasCg1uiOiHbAe2H/2sZ9jWA7fiRMm58Sz6QugDbG9NM1dLSaGqZay+bWyJMU
-         XFEjw24A8kX9JGasKK6KXbXnw9ntK9ogSoBy5cJ3zvN0dGIA4Jbv7Voeqzg0X/CrHj/R
-         zhQ/wDA7dWmNYechQf53DM+RpOFCwEgrsQMlZQPXGGMgTitcl7Y0/wYFc9qI1onVklvz
-         B4Sg==
-X-Forwarded-Encrypted: i=1; AFNElJ+N8yRG3Rqi3nhyc/dQvcwEgM28SQLbk8AIJNE4APygKMUPzcc+6U+M076YHQZHTfx2M8/I2GmhdClAdlBspLwb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy59uU6q3LyK2Mo9iS7lm4/Uxasf/AbAgZVVEPX1sjqvcUgUTux
-	3zqvomUglq1y+De7pbx6Baatg4n4mBey+xG8NY0oc7+7wjVXfAsGWasmZkv1qTIrep8/uISc7LH
-	SvQPZQqt1Vw==
-X-Received: from dlag4.prod.google.com ([2002:a05:701b:2504:b0:12b:e83a:8d31])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7f13:b0:12c:873f:eba3
- with SMTP id a92af1059eb24-12c873fef0fmr651782c88.8.1776643220753; Sun, 19
- Apr 2026 17:00:20 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:38 -0700
+        bh=bI2SIpeP78m2dFf3X0Bk4cSbTlDU17jXo3mhkaxloZw=;
+        b=ltxR8Yi3pS9DZK9/6oFFFHWb59XbwPG/B5fbW+F68iY+MozUAJIulz1WMK6+6zt2ud
+         7oRwJdCVi2dg1QIxGfnu/Y4lWufZB9JQ+zXLecON+Td768DW/3pcAtY7RDQTN25P97X9
+         DORXWe1y9PCX138Ra9ORh4DRSCviK09/iW2Im3eziKzJdZScZBp22o+dB5SPlzNLBy3V
+         fr9uAzKZCZHkPcG0fPzndIxXZ41VouLiNq0YvDQAN5slyqQyPg7epFiUfXMiI4PKHKpq
+         kVBjGcwbp0RcP8Ys+4yxUoXQVEu2dnremJaIJdRyRfVL3+SG1wikkYfMBKjlEiI1VHX/
+         2sKQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9QAqbmsr7LM+Q1sfWFJ78Mi+4bcLUql9SPtPxYEptOUSYZbZJZmH9iD4moq6+pZU9b7suvSKY0kR6dGTNW+RXV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGqgGsEhWjS8X1fW7dTJjgAirL1pP7RP4T3PAoheKF9tnKLCiq
+	IjRXNJHltE/cIABWYcQEibnyhstQ0Phx1w/0kcqjq+8GaTQIDarskD1FrfT3usg5DL42+sPpVDV
+	WU2te76ziMg==
+X-Received: from dycnl14.prod.google.com ([2002:a05:7300:d10e:b0:2da:b59f:1e95])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7fa5:b0:2d9:ad46:4a92
+ with SMTP id 5a478bee46e88-2e478a2f27amr5951295eec.13.1776643223731; Sun, 19
+ Apr 2026 17:00:23 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:39 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-27-irogers@google.com>
-Subject: [PATCH v1 26/58] perf mem-phys-addr: Port mem-phys-addr to use python module
+Message-ID: <20260419235911.2186050-28-irogers@google.com>
+Subject: [PATCH v1 27/58] perf syscall-counts: Port syscall-counts to use
+ python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,138 +93,127 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Give an example of using the perf python session API to load a
-perf.data file and perform the behavior of
-tools/perf/scripts/python/mem-phys-addr.py.
+Rewrite tools/perf/scripts/python/syscall-counts.py to use the python
+module and various style changes. By avoiding the overheads in the
+`perf script` execution the performance improves by more than 4x as
+shown in the following (with PYTHON_PATH and PERF_EXEC_PATH set as
+necessary):
+
+```
+$ perf record -e raw_syscalls:sys_enter -a sleep 1
+...
+$ time perf script tools/perf/scripts/python/syscall-counts.py perf
+Install the python-audit package to get syscall names.
+For example:
+  # apt-get install python3-audit (Ubuntu)
+  # yum install python3-audit (Fedora)
+  etc.
+
+Press control+C to stop and show the summary
+Warning:
+1 out of order events recorded.
+
+syscall events for perf:
+
+event                                          count
+ --------------------------------------  ------------
+1                                             538989
+16                                                32
+203                                               17
+3                                                  2
+257                                                1
+204                                                1
+15                                                 1
+7                                                  1
+0                                                  1
+
+real    0m3.887s
+user    0m3.578s
+sys     0m0.308s
+$ time python3 tools/perf/python/syscall-counts.py perf
+Warning:
+1 out of order events recorded.
+
+syscall events for perf:
+
+event                                         count
+ -------------------------------------- ------------
+write                                        538989
+ioctl                                            32
+sched_setaffinity                                17
+close                                             2
+openat                                            1
+sched_getaffinity                                 1
+rt_sigreturn                                      1
+poll                                              1
+read                                              1
+
+real    0m0.953s
+user    0m0.905s
+sys     0m0.048s
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/mem-phys-addr.py | 116 +++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100755 tools/perf/python/mem-phys-addr.py
+ tools/perf/python/syscall-counts.py | 49 +++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100755 tools/perf/python/syscall-counts.py
 
-diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-phys-addr.py
+diff --git a/tools/perf/python/syscall-counts.py b/tools/perf/python/syscall-counts.py
 new file mode 100755
-index 000000000000..17d6fd4f1a2b
+index 000000000000..a2e0994ab736
 --- /dev/null
-+++ b/tools/perf/python/mem-phys-addr.py
-@@ -0,0 +1,116 @@
++++ b/tools/perf/python/syscall-counts.py
+@@ -0,0 +1,49 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""mem-phys-addr.py: Resolve physical address samples"""
++# Displays system-wide system call totals, broken down by syscall.
++# If a [comm] arg is specified, only syscalls called by [comm] are displayed.
 +
-+import bisect
-+import collections
-+import os
++import argparse
++from collections import defaultdict
 +import perf
-+import re
-+import sys
-+from dataclasses import dataclass
-+from typing import (Dict, Optional)
 +
-+@dataclass(frozen=True)
-+class IomemEntry:
-+    """Read from a line in /proc/iomem"""
-+    begin: int
-+    end: int
-+    indent: int
-+    label: str
++syscalls = defaultdict(int)
++for_comm = None
++session = None
 +
-+# Physical memory layout from /proc/iomem. Key is the indent and then
-+# a list of ranges.
-+iomem: Dict[int, list[IomemEntry]] = collections.defaultdict(list)
-+# Child nodes from the iomem parent.
-+children: Dict[IomemEntry, set[IomemEntry]] = collections.defaultdict(set)
-+# Maximum indent seen before an entry in the iomem file.
-+max_indent: int = 0
-+# Count for each range of memory.
-+load_mem_type_cnt: Dict[IomemEntry, int] = collections.Counter()
-+# Perf event name set from the first sample in the data.
-+event_name: Optional[str] = None
 +
-+def parse_iomem():
-+    """Populate iomem from /proc/iomem file"""
-+    global iomem
-+    global max_indent
-+    global children
-+    with open('/proc/iomem', 'r', encoding='ascii') as f:
-+        for line in f:
-+            indent = 0
-+            while line[indent] == ' ':
-+                indent += 1
-+            if indent > max_indent:
-+                max_indent = indent
-+            m = re.split('-|:', line, maxsplit=2)
-+            begin = int(m[0], 16)
-+            end = int(m[1], 16)
-+            label = m[2].strip()
-+            entry = IomemEntry(begin, end, indent, label)
-+            # Before adding entry, search for a parent node using its begin.
-+            if indent > 0:
-+                parent = find_memory_type(begin)
-+                assert parent, f"Given indent expected a parent for {label}"
-+                children[parent].add(entry)
-+            iomem[indent].append(entry)
++def print_syscall_totals():
++    if for_comm is not None:
++        print(f"\nsyscall events for {for_comm}:\n")
++    else:
++        print("\nsyscall events:\n")
 +
-+def find_memory_type(phys_addr) -> Optional[IomemEntry]:
-+    """Search iomem for the range containing phys_addr with the maximum indent"""
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        position = bisect.bisect_right(iomem[i], phys_addr,
-+                                       key=lambda entry: entry.begin)
-+        if position is None:
-+            continue
-+        iomem_entry = iomem[i][position-1]
-+        if  iomem_entry.begin <= phys_addr <= iomem_entry.end:
-+            return iomem_entry
-+    print(f"Didn't find {phys_addr}")
-+    return None
++    print(f"{'event':<40} {'count':>10}")
++    print("---------------------------------------- -----------")
 +
-+def print_memory_type():
-+    print(f"Event: {event_name}")
-+    print(f"{'Memory type':<40}  {'count':>10}  {'percentage':>10}")
-+    print(f"{'-' * 40:<40}  {'-' * 10:>10}  {'-' * 10:>10}")
-+    total = sum(load_mem_type_cnt.values())
-+    # Add count from children into the parent.
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        for entry in iomem[i]:
-+            global children
-+            for child in children[entry]:
-+                if load_mem_type_cnt[child] > 0:
-+                    load_mem_type_cnt[entry] += load_mem_type_cnt[child]
++    for id, val in sorted(syscalls.items(),
++                          key=lambda kv: (kv[1], kv[0]), reverse=True):
++        print(f"{perf.syscall_name(id):<40} {val:>10}")
 +
-+    def print_entries(entries):
-+        """Print counts from parents down to their children"""
-+        global children
-+        for entry in sorted(entries,
-+                            key = lambda entry: load_mem_type_cnt[entry],
-+                            reverse = True):
-+            count = load_mem_type_cnt[entry]
-+            if count > 0:
-+                mem_type = ' ' * entry.indent + f"{entry.begin:x}-{entry.end:x} : {entry.label}"
-+                percent = 100 * count / total
-+                print(f"{mem_type:<40}  {count:>10}  {percent:>10.1f}")
-+                print_entries(children[entry])
 +
-+    print_entries(iomem[0])
++def process_event(sample):
++    event_name = str(sample.evsel)
++    if event_name == "evsel(raw_syscalls:sys_enter)":
++        id = sample.id
++    elif event_name.startswith("evsel(syscalls:sys_enter_"):
++        id = sample.__syscall_nr
++    else:
++        return
++    if for_comm and session.process(sample.sample_pid).comm() != for_comm:
++        return
++    syscalls[id] += 1
++
 +
 +if __name__ == "__main__":
-+    def process_event(sample):
-+        phys_addr  = sample.sample_phys_addr
-+        entry = find_memory_type(phys_addr)
-+        if entry:
-+            load_mem_type_cnt[entry] += 1
-+
-+            global event_name
-+            if event_name is None:
-+                event_name  = str(sample.evsel)
-+
-+    parse_iomem()
-+    perf.session(perf.data("perf.data"), sample=process_event).process_events()
-+    print_memory_type()
++    ap = argparse.ArgumentParser()
++    ap.add_argument("comm", nargs="?", help="Only report syscalls for comm")
++    args = ap.parse_args()
++    for_comm = args.comm
++    session = perf.session(perf.data("perf.data"), sample=process_event)
++    session.process_events()
++    print_syscall_totals()
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
