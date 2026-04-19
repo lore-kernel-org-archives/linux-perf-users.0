@@ -1,80 +1,40 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52137E2EF
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 15:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776611364; cv=pass; b=b7RIacRayB7zL+01/62p9HY8X/qp8SB00S46+Z8gFsWJY0NKkUCsBtZASt2rXjvz969sG4KSKcSzbeHLakRoBwDaAGu6Xfe80tycotzSt2r4QSA+VFMZPNLSC1EYVupXuE/ALjcVFD5DTBOKWxEgc083S7MIfRScQcP1grYANOw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776611364; c=relaxed/simple;
-	bh=Ao0nihYBq6gxen8PC7TDuoruhfTVU7iutw6p3zp+Nn8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880FF27B353
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 15:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776613992; cv=none; b=fkOpMqKahmpxJIthfcMuAjpncPLkC6Zf/uwWEbOJovEIf6kPoj7H2ZFKWwlq3Bu3i6IR0XOxIOd7Y5NTCB+vSByG0kH/22eeJxHm+oAImvBip5NBsOboQx4eid+ZzDYserDpuve1g+PNnyUMKpAJkL22NSxgjRZMkDoRm7Fjp/o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776613992; c=relaxed/simple;
+	bh=W2ps7HWtJIiArRdAAL/3nACtnoo0+3kJ8+QtzDs2/pc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WW3NeluRK9LfaRVRKKyybYdQ+2G8tOV1e7gmuAAGJ1Fxjz+Sr2UjWZ1B4vOy8QllQM8FCUp0atlWluhd9f1m7k8tNjWNM+AGJ2iFFYc1l0Zxgg9QfrU/h9pxi/LwaIbNHlqS32iKxeOsBkMEjD0r3CY9LXcmjfHiRxdkmoNfhqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CwkEOl01; arc=pass smtp.client-ip=74.125.82.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=NRkcyn7jLCgbhyC6WVi/HKXe7qBkGPWfYC/XbVBz9w/8mPXKWMu+7EsB/o5GT8PdryUJ9SMimNTTpehuPgXlxn2u56/QtTxjdZd1p4bCFmg/nisA5aOh23rDNjsWISb5tUCCSiezWIBzwdrLfd9Ufmfw6XgRSkuhRsTHCwRU+Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exwRqyF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CwkEOl01"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1270fc2bdf2so8779c88.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 08:09:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776611361; cv=none;
-        d=google.com; s=arc-20240605;
-        b=X1XFWvsqx8lzY9DnYq63Ohm153wuZkugPF1GvLuBWjKGgvIEQsnzcQZaPsdQ2UZNRp
-         GI8L2TX0W9R9h3KPU5uvQciTSDN/FrjGxlW2uJPhSM7n8kGxGYHWZxMFGsWH8vl7EGCL
-         l/OfFWWHIaKUFWAKzv6+NzNT/1wuC7GO2BlwL7sdhz09+hehwdZedNanYJB9/SPEQxvP
-         yEDhw4JXYDI+/XS6W13trMEbj4G8Cxl3tSwuE4XKSPabSNiNbZEQ72e5/ipKfaUYw5ga
-         Yi2S/paSYHcwrJhoEow+4AkzQJOhxI+TrJmfFSFTyUzx1zqVrxiNEBRH/3toEkYPQ8Gy
-         +VGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
-        fh=4Cq9g/Ib/PtmTA5gFQp/YGWX8GwFXmhRVBSv60wUXbI=;
-        b=bfqTmdbxs9amWAT1+9MDjGy5uY5s61PNUCBZ07PbUfuCxMOVETRaAxZAbsdTPEN99c
-         msMeEl6uXkYIkdub15TG/HeVJYrCrVxI6S531JhKf4H+tWO4+2Wh53xWLMhQp+/DzkAD
-         /f8ZqCSXrvln5RK2GwtyS7Awbjv1V+rT0vPiUfCHBY7dbpFx/ELzllfFmnLgrQjpp9oY
-         0vhD1XGvB8Q8qSka6Ulp1yO31hfuTYZgiyBi4MMa/TEKYdvZshpZiMbgxkKxDFSddmbm
-         1VpOJmigoIK+ORgFqbJthR2R8dFUmflYNJbAgxPbyYOVXrT8Cti+xi9kpK4uwg5PPR0o
-         rFiw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776611361; x=1777216161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
-        b=CwkEOl01Hex69AmduZ4eJ7RYeBb8pyxf6QNOWEcbqibCURBKhmdVjIw9o80bo3Q0GO
-         BZJyw02ofPp22L8OKIlQoukUPBudUQTMV8O4yyAGC0DyWGEF1ZzpcCCqAZniPPvZGKdm
-         jAlqqXX5GYbRx9ARZHeSmu3rH3NR8pMpEc7n9hHGiBjOc2siVbgjLy9L2Vs3wgG5Yh08
-         1uBNcIBlizqAckm67dUvn3sNdo0jVQ2b5MuitBEK3fd30rqAkJIiYB41774LdiYNyO+q
-         2qEinWAkaLTyxLV/b2Al/KTCIKciCcPGAYU2FhSb8f+oLZjR/q3NAIqPj7gVVe6RnJ7G
-         hTtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776611361; x=1777216161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
-        b=l3GrF24kZ9RclfyEWV33YZylyDd7U4gRFignW5nNqDZnfHlk/qfy0awYHVepehqFO2
-         4q6aX5pgGHXmV5IXQMhOZSym9PRT2X3Qqyefh7TTRlT1yi2m4pnaw7g/RKhFh3oZBosw
-         rYyQs1+pVgnSd2mSjZBEO2YkutRYIFi7k2o0q9jYe+PK2xwP4Pn5B4DuD/6c47GjBl30
-         1S0kVmfVwBVSniyJvn+mTLi0GGvfHG/NZ8mcX96r/1ErrxRMJLEtU3AFca6piSrZ0w7X
-         bSN0f6tPSX2Ta6pDkm5WfgvlRpPfr0yuYjHnsCtitpfKmUrS8KUbxWyyoIpmyiqm/zNT
-         rDNQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/cy5lYCu7x3DBMTzmz3T6yI8ZgHJ4kFhsCdoSNMGi0gtwIpt4sw/HbqmXpt1Ch/FwwQfOq2Zn7bJSVQujpKA5b@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbFxx8dvO+NszczYR5L7Fod7ezzQk8J1ijwa0iyBJV2i6a0Jia
-	YDrU53hxVyWg8jGKiZ9naOF8wMjdPsS4mHfR8U7wXQjLgUf7M6uNuU0qspi+NJTAVvseJDc48bR
-	k23f6TgW7+riZxYD5FnDG2zFYQj/GTO3ghcbuhe2z
-X-Gm-Gg: AeBDietyzeKBdabtiXH4OSy1Hhnmi/uQqA8jTR8ssFGb2tvfqAp6xTwsdfanQiYka5J
-	UVzi7EcnxsNu+ShA2WCkfQ32juOFnmR3set5YEag7+YfPFMw/vGxEFk4oKwrd2IfH86+6z3EbXn
-	OB+Xm/GpQRsCS+E37d/o27YRQB2CC0AlxMWoNZExhe0b5soxRD/PhQGa9HmVSPRJDvDY6ZKEQpt
-	osxEKSAVV1yrLHon9mDnh9+dhosXvP8qNvGUgNRa7a23Xu3S25JfgqLTwhCpjg/dyS3bHV+1hDA
-	R11fZh/wcQV0srCXHUBo/3dcLRTXlg==
-X-Received: by 2002:a05:701a:c971:b0:12c:8392:d1ee with SMTP id
- a92af1059eb24-12c8392d2d0mr86845c88.6.1776611360026; Sun, 19 Apr 2026
- 08:09:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exwRqyF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE19C2BCC4
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 15:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776613992;
+	bh=W2ps7HWtJIiArRdAAL/3nACtnoo0+3kJ8+QtzDs2/pc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=exwRqyF800BUlxdKMlZGqkEX9YQ72vHa2Sgze69vPoMaIZDwN23PzTRc3dfl2aQjE
+	 9/CU5+mfSgUv9HGffHFGAyaxdR3+R9yBEMVQ0L/3wIKv6BKMAO0wQ6aJYmN6POOSbz
+	 3GXjQ+aSqfTS6ZiIkicORSirZAqjE4K5VA5RqoPclKJgPwRM28rPXEM+gJtIi3ar0N
+	 lL2Cj4HxhQXh3XUjGGNQ1vaFVtLsoPVZUPuYZ2XJcFXFAfrXoezS7tg8qUkvFtOe4j
+	 CHqQLgOZcupWkATTw4NKJ1jCAbfgFlV90jR9tyb6HjhL7MAkXdwA7zCVRO6OL5LYQd
+	 CfonkouWb3B9Q==
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43eb05b1875so1273942f8f.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 08:53:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+pI9uiEDuPFQMTzkwXBUv5d3RvS6Uokdd6sLhSNcFKDX+rZGp9ZVDP2b7asVrhqTGHS9UZ0deB59vwt51guPWl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo361yW5PofYqJEVbpmZ/rxMdh4WfuNV+k/T0XGxgpYucKTNsN
+	iWfkvDT/WB6zGST2ATqvCSbxVbbbSUZhA0mvge/aOUSTLS7G1bMK7pkdHea9DEVVGLGrgsxQb1K
+	Ma9FVw6Nt3lFa9UA0cpgyQpQoOri3K10=
+X-Received: by 2002:a5d:584c:0:b0:43d:7403:4b57 with SMTP id
+ ffacd0b85a97d-43fe3db3ca7mr15739232f8f.10.1776613990622; Sun, 19 Apr 2026
+ 08:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -83,20 +43,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260416124945.121699-1-cp0613@linux.alibaba.com>
 In-Reply-To: <20260416124945.121699-1-cp0613@linux.alibaba.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 19 Apr 2026 08:09:07 -0700
-X-Gm-Features: AQROBzCMCLhdDeYuAe5tl925RzNcwTQBo-MiPANwNdzAB1OR6F-MmqWkkdz12AA
-Message-ID: <CAP-5=fWUovz+a8o4j=1iZqPTKvtSDnCAqh+6WFsE3QKLJUfesw@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Sun, 19 Apr 2026 23:52:57 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS+yEPPrpS-mAHPhHmdxrgGpy5ev5t_4kJ9G=-emjLZoA@mail.gmail.com>
+X-Gm-Features: AQROBzCp8BQ4zGanAz-DuE3xjxGsT-ZKPPqGeGQV1DtociQY8ZaDmODR5lp3mMg
+Message-ID: <CAJF2gTS+yEPPrpS-mAHPhHmdxrgGpy5ev5t_4kJ9G=-emjLZoA@mail.gmail.com>
 Subject: Re: [PATCH v2] perf riscv: Add SDT argument parsing for RISC-V
 To: Chen Pei <cp0613@linux.alibaba.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, dapeng1.mi@linux.intel.com, pjw@kernel.org, 
-	alex@ghiti.fr, guoren@kernel.org, linux-perf-users@vger.kernel.org, 
+	namhyung@kernel.org, irogers@google.com, dapeng1.mi@linux.intel.com, 
+	pjw@kernel.org, alex@ghiti.fr, linux-perf-users@vger.kernel.org, 
 	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 16, 2026 at 5:50=E2=80=AFAM Chen Pei <cp0613@linux.alibaba.com>=
+Hi Chen,
+
+On Thu, Apr 16, 2026 at 8:50=E2=80=AFPM Chen Pei <cp0613@linux.alibaba.com>=
  wrote:
 >
 > Implement __perf_sdt_arg_parse_op_riscv() to convert RISC-V GCC-generated
@@ -125,18 +88,6 @@ s
 >  - SDT_OP_REGEX2: matches [-]NUM(REG) memory operands
 >
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-
-Thanks, unfortunately there was a sashiko timeout and so we lack that revie=
-w:
-https://sashiko.dev/#/patchset/20260416124945.121699-1-cp0613%40linux.aliba=
-ba.com
-Everything looks good and fits the existing format.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
 > ---
 >
 > Tested on RISC-V QEMU(rv64gc) with GCC-generated SDT probes.
@@ -353,4 +304,10 @@ _op, char **new_op)
 > --
 > 2.50.1
 >
->
+LGTM!
+
+Reviewed-by: Guo Ren <guoren@kernel.org>
+
+--=20
+Best Regards
+ Guo Ren
