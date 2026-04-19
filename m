@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B11341AB1
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F2934107F
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643266; cv=none; b=ob2VOxuyUhUNPytNEt54QXsVCBedeg0aGS1EEJna0Z9GioFSG5YImzLQTg/P9AK81iSpRg9zmFRtXUHHk1zcsh6VK1QMfMXzdBZtpwBJkv6BEh/zAncrukvT65SPezEdsgHT10mVjIZb3CH0cTWJG3ILBOSDnY0IJmhfHOGEHDs=
+	t=1776643268; cv=none; b=rA+5dnAGYrXQvRg0MnC8iMx8nOsMGqrlbEKRNvVNcX3ChveOv7E19OudlDKtTdgNyVGf5BRWJmjzWS60yfGaDDkC8SwDPM9X4oNFTezHdWlyRYs2FL4t9HXZTjYJL9nvMMupPWgwbDZraq+os/puRrn4qKOBuODN8SnwhqNCFkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643266; c=relaxed/simple;
-	bh=rMqFIYIkvaaGFeMjdFBR/Cc+MYTocflKxBPL52q09TE=;
+	s=arc-20240116; t=1776643268; c=relaxed/simple;
+	bh=KESoBbVt4qbZ8quTRsYtOmtUEsNIWIoj0lzmaYfKtaE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kLbq3tzsGRAeQxuxRtXhcA2ckK5oKhYqK9onmSPGYcRSASTOXYEcHuvIeEfIwPEwmXF2ISqjJtT0XW88+4MB3yr3AUq1wR2Gm+DDLauxRdavje0VX2S9lXRHKYvVRSK0To60SMNg+p3zOMmGvGW2tTSi+IAef+rKd46v9uvw+Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dzUpZLZq; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=uocDpn6SRCtZ8DneTCa6GT0cQY7qF17xNAyiNOmt0ddcN4WMUfIKe7/Fko9JbGEWXg97hljk7/USijgPfTCcXnixqbrW4SIaXJAzn8dTTq+2HmhQZWgk4HFovqnOYo4t+2gAVikWy15Z7ZHeRYC3/DvVIItSfwHsqhdF2snimR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KWfEM5Ik; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dzUpZLZq"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d93379001eso819389eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:01:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KWfEM5Ik"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c20d5d7f4so3514486c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643263; x=1777248063; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643265; x=1777248065; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6Z3uLzqcBo0688zE8JUqYPeXg2WRmZzgQJbIPTtO/o=;
-        b=dzUpZLZqXjfIbc+Va1mjx/zRfsLTjZ+bCtb3/aN97uedsAC+vQ6aPibnF1ZPZxVgBL
-         0Z6c5fAvXbKiCd5r9GMeAPY0MCHgnovF7rSH5oq0+/cSdmvKCx28S9HYQ+qCQRLzF+vl
-         y4l6cC3rtIzhi4m1zJeE9ZzmnvhAebIumPhWJji4/kRPjlkevvBQT6pxD35+GyOOJYC0
-         eic9QdAxNR1s09TUIq+/WqpXwk5+iLsnhRTglJHpA1jO0EltwD/MiHWlhsCfidrNVw9u
-         E6STuG0bvf9NZkj6czTotFJ+qm+DBZMnie6l5bsbhLE9/scOSZh2O+8CafpccDmlogh7
-         olEQ==
+        bh=U3t+HRf9SwLQ0SM4OsODRpnUfHqTFKXUpfXt9AwIABc=;
+        b=KWfEM5IkJ0e/rL69NVdPISLAz/YNmxwMaZyM33LMcBv81Sw2ky8DgNKyZleEA/3vEg
+         X5yYIjnHVW9OmN6+vpg9IQcP75Bb9S8JqoA7GgAf1QWmB8d7xqexLgvWKJCbG0GzwOFe
+         IKzJ/zZk1dwtqm4NYuJ4qwvCOlyApbfP+aUTvsfLbsPS66Gi2Z43MkeVtDe4/SX6Xpt5
+         cxW2xsr87Be8J++d2X8rbMpFwt4nvx1p4FbL+CA1R53muMM3KrKzyoj/w8P83FL9z1LM
+         0xWYqufZVgaZwjx1jdzPQ2uVMiEtU0LQxucP1DF+NgjLip7CRDwhlhJ+q5kBQzM25Mce
+         O7Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643263; x=1777248063;
+        d=1e100.net; s=20251104; t=1776643265; x=1777248065;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6Z3uLzqcBo0688zE8JUqYPeXg2WRmZzgQJbIPTtO/o=;
-        b=SoXCSWWJGMllp5TG6sDLK1n8zCPlwbwhIVXCaYPfLNXC1XNcsfTiq6vacQA9LqNv0k
-         0IMi9cDeIO0yOddYwNnV2S1KpBxMG6qkrRoW54dkFRu5kUTfxQOPw7w4qBGap+GruuOZ
-         xGZBcHTE/1bfSO1djNSfRhbu90eb1u5dRKoOYttIUceJXa7kUlu+tMRXESBKZN76fbxb
-         TIOddwU46QCaUCCCktuGmD0Ub6v3GI3K5tqrDxOMTUTv0gbVB5/U5jqU2c8qVwxgn7NO
-         6bv+PNsncAK9csUOWQg3JosndrCyqQP+/T8V+zUs4MiUv+tHUR8GzW3KUmAHVsIOvMCl
-         puBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+2r9K0pv6ZaVvL5aJs5b+bkAkTGeuFKCqYJTdM5TUkdZ29iaTJ15LaJQXeiqElOSEbjkup3eqHELxNxH02v78j@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlSVMeUbXEHLcErEZlJ6SGqCAzJEDFm9pAskXoL/wrQVEM5VgO
-	T0xNpahaBDzDV7d2yjr7+1fjCanMWZ0wux79zBhF1XPSPTjMip3eEwj79towwqEEOftFp2TmD0/
-	Gkdydfuo7iw==
-X-Received: from dycpp12.prod.google.com ([2002:a05:7301:dd8c:b0:2dc:7d1e:d0e7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:ed18:b0:2d8:7302:d3b
- with SMTP id 5a478bee46e88-2e4788392e5mr6224287eec.18.1776643262867; Sun, 19
- Apr 2026 17:01:02 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:56 -0700
+        bh=U3t+HRf9SwLQ0SM4OsODRpnUfHqTFKXUpfXt9AwIABc=;
+        b=dwc8+XS/ykpHdndLfCg26jGIqzQ2iia2mM9L16FLe/d81t9h+vp5fJYZCRctsiPf+A
+         +Y7L/ZTDVnism5WdxmOnXbcILxbJ7Mh1emdFdx+wZ1wYHcRnXTJn+vAX5RsRQHJ3eMGp
+         GB7QJAbbdLDVH/phhQrEhTWr/G918m8iYsNa56pTINaaOB0v0/g047jEKD2fAiYqqFJA
+         FUYvI0aS/sgbXCAh22Ch1s3se3CHOzhhT05M/zYfqByzhNLCUOX7Vmm6aZdWTx7RSP+Q
+         NfK0iMqEfeDh1jZF8Qp313ddVyYrfWfd8ytdv/UznaScryDdxHEJOMhn8IaD8hyU8mY/
+         uEsw==
+X-Forwarded-Encrypted: i=1; AFNElJ+cBh7EfdctVt8/xKnODnVxyPZXEqfCh+p5C06qJEbRV62S1kxcfugstVi4L/tdngBqn72RVb9J9E2SrM9+Sx0r@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHu6J4kVkhRyujRIx5CJ5YIatI1FVe2bPu3Pob6hYylqJJRoyy
+	J8lLlfGE48L8ohlWPFF4QmbBc53siQw6l0LBm08zJX+c2lnfm72bGDTD2hwCbqZ+chRdeb0icSa
+	8+kAQQX7aEQ==
+X-Received: from dlbrl28.prod.google.com ([2002:a05:7022:f51c:b0:12c:3532:1d17])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:383:b0:12b:ebb9:1c18
+ with SMTP id a92af1059eb24-12c73fa739fmr6415650c88.31.1776643265188; Sun, 19
+ Apr 2026 17:01:05 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:57 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-45-irogers@google.com>
-Subject: [PATCH v1 44/58] perf sctop: Port sctop to use python module
+Message-ID: <20260419235911.2186050-46-irogers@google.com>
+Subject: [PATCH v1 45/58] perf stackcollapse: Port stackcollapse to use python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,173 +92,140 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Port sctop.py from tools/perf/scripts/python/ to tools/perf/python/,
-refactoring it to use a class-based structure (SCTopAnalyzer) and the
-perf.session API.
-
-Also add support for live mode using the LiveSession helper when no
-input file is specified, with a fallback strategy for tracepoint names
-(raw_syscalls:sys_enter or syscalls:sys_enter) to support different
-systems.
+Modernize the legacy stackcollapse.py trace script by refactoring it
+into a class-based architecture (StackCollapseAnalyzer).
+The script uses perf.session for event processing and aggregates call
+stacks to produce output suitable for flame graphs.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/sctop.py | 149 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100755 tools/perf/python/sctop.py
+ tools/perf/python/stackcollapse.py | 120 +++++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
+ create mode 100755 tools/perf/python/stackcollapse.py
 
-diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stackcollapse.py
 new file mode 100755
-index 000000000000..6daa5f0a3b21
+index 000000000000..22caf97c9cac
 --- /dev/null
-+++ b/tools/perf/python/sctop.py
-@@ -0,0 +1,149 @@
++++ b/tools/perf/python/stackcollapse.py
+@@ -0,0 +1,120 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+System call top
++stackcollapse.py - format perf samples with one line per distinct call stack
 +
-+Periodically displays system-wide system call totals, broken down by
-+syscall.  If a [comm] arg is specified, only syscalls called by
-+[comm] are displayed. If an [interval] arg is specified, the display
-+will be refreshed every [interval] seconds.  The default interval is
-+3 seconds.
++This script's output has two space-separated fields.  The first is a semicolon
++separated stack including the program name (from the "comm" field) and the
++function names from the call stack.  The second is a count:
 +
-+Ported from tools/perf/scripts/python/sctop.py
++ swapper;start_kernel;rest_init;cpu_idle;default_idle;native_safe_halt 2
++
++The file is sorted according to the first field.
++
++Ported from tools/perf/scripts/python/stackcollapse.py
 +"""
 +
 +import argparse
 +from collections import defaultdict
 +import sys
-+import threading
 +import perf
-+from perf_live import LiveSession
 +
 +
++class StackCollapseAnalyzer:
++    """Accumulates call stacks and prints them collapsed."""
 +
++    def __init__(self, args: argparse.Namespace) -> None:
++        self.args = args
++        self.lines: dict[str, int] = defaultdict(int)
 +
-+class SCTopAnalyzer:
-+    """Periodically displays system-wide system call totals."""
++    def tidy_function_name(self, sym: str, dso: str) -> str:
++        """Beautify function names based on options."""
++        if sym is None:
++            sym = "[unknown]"
 +
-+    def __init__(self, for_comm: str | None, interval: int):
-+        self.for_comm = for_comm
-+        self.interval = interval
-+        self.syscalls: dict[int, int] = defaultdict(int)
-+        self.lock = threading.Lock()
-+        self.stop_event = threading.Event()
-+        self.thread = threading.Thread(target=self.print_syscall_totals)
++        sym = sym.replace(";", ":")
++        if self.args.tidy_java:
++            # Beautify Java signatures
++            sym = sym.replace("<", "")
++            sym = sym.replace(">", "")
++            if sym.startswith("L") and "/" in sym:
++                sym = sym[1:]
++            try:
++                sym = sym[:sym.index("(")]
++            except ValueError:
++                pass
 +
-+    def syscall_name(self, syscall_id: int) -> str:
-+        """Lookup syscall name by ID."""
-+        try:
-+            return perf.syscall_name(syscall_id)
-+        except Exception:  # pylint: disable=broad-exception-caught
-+            pass
-+        return str(syscall_id)
++        if self.args.annotate_kernel and dso == "[kernel.kallsyms]":
++            return sym + "_[k]"
++        return sym
 +
 +    def process_event(self, sample: perf.sample_event) -> None:
-+        """Collect syscall events."""
-+        name = str(sample.evsel)
-+        comm = getattr(sample, "comm", "Unknown")
-+        syscall_id = getattr(sample, "id", -1)
++        """Collect call stack for each sample."""
++        stack = []
++        if hasattr(sample, "callchain"):
++            for node in sample.callchain:
++                stack.append(self.tidy_function_name(node.symbol, node.dso))
++        else:
++            # Fallback if no callchain
++            sym = getattr(sample, "symbol", "[unknown]")
++            dso = getattr(sample, "dso", "[unknown]")
++            stack.append(self.tidy_function_name(sym, dso))
 +
-+        if syscall_id == -1:
-+            return
++        if self.args.include_comm:
++            comm = getattr(sample, "comm", "Unknown").replace(" ", "_")
++            sep = "-"
++            if self.args.include_pid:
++                comm = f"{comm}{sep}{getattr(sample, 'sample_pid', 0)}"
++                sep = "/"
++            if self.args.include_tid:
++                comm = f"{comm}{sep}{getattr(sample, 'sample_tid', 0)}"
++            stack.append(comm)
 +
-+        if name in ("evsel(raw_syscalls:sys_enter)", "evsel(syscalls:sys_enter)"):
-+            if self.for_comm is not None and comm != self.for_comm:
-+                return
-+            with self.lock:
-+                self.syscalls[syscall_id] += 1
++        stack_string = ";".join(reversed(stack))
++        self.lines[stack_string] += 1
 +
-+    def print_syscall_totals(self):
-+        """Periodically print syscall totals."""
-+        while not self.stop_event.is_set():
-+            # Clear terminal
-+            print("\x1b[2J\x1b[H", end="")
-+
-+            if self.for_comm is not None:
-+                print(f"\nsyscall events for {self.for_comm}:\n")
-+            else:
-+                print("\nsyscall events:\n")
-+
-+            print(f"{'event':40s}  {'count':10s}")
-+            print(f"{'-' * 40:40s}  {'-' * 10:10s}")
-+
-+            with self.lock:
-+                current_syscalls = list(self.syscalls.items())
-+                self.syscalls.clear()
-+
-+            current_syscalls.sort(key=lambda kv: (kv[1], kv[0]), reverse=True)
-+
-+            for syscall_id, val in current_syscalls:
-+                print(f"{self.syscall_name(syscall_id):<40s}  {val:10d}")
-+
-+            self.stop_event.wait(self.interval)
-+
-+    def start(self):
-+        """Start the background thread."""
-+        self.thread.start()
-+
-+    def stop(self):
-+        """Stop the background thread."""
-+        self.stop_event.set()
-+        self.thread.join()
++    def print_totals(self) -> None:
++        """Print sorted collapsed stacks."""
++        for stack in sorted(self.lines):
++            print(f"{stack} {self.lines[stack]}")
 +
 +
 +def main():
 +    """Main function."""
-+    ap = argparse.ArgumentParser(description="System call top")
-+    ap.add_argument("args", nargs="*", help="[comm] [interval] or [interval]")
-+    ap.add_argument("-i", "--input", help="Input file name")
++    ap = argparse.ArgumentParser(
++        description="Format perf samples with one line per distinct call stack"
++    )
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    ap.add_argument("--include-tid", action="store_true", help="include thread id in stack")
++    ap.add_argument("--include-pid", action="store_true", help="include process id in stack")
++    ap.add_argument("--no-comm", dest="include_comm", action="store_false", default=True,
++                    help="do not separate stacks according to comm")
++    ap.add_argument("--tidy-java", action="store_true", help="beautify Java signatures")
++    ap.add_argument("--kernel", dest="annotate_kernel", action="store_true",
++                    help="annotate kernel functions with _[k]")
++
 +    args = ap.parse_args()
 +
-+    for_comm = None
-+    default_interval = 3
-+    interval = default_interval
-+
-+    if len(args.args) > 2:
-+        print("Usage: perf script -s sctop.py [comm] [interval]")
++    if args.include_tid and not args.include_comm:
++        print("requesting tid but not comm is invalid", file=sys.stderr)
++        sys.exit(1)
++    if args.include_pid and not args.include_comm:
++        print("requesting pid but not comm is invalid", file=sys.stderr)
 +        sys.exit(1)
 +
-+    if len(args.args) > 1:
-+        for_comm = args.args[0]
-+        try:
-+            interval = int(args.args[1])
-+        except ValueError:
-+            print(f"Invalid interval: {args.args[1]}")
-+            sys.exit(1)
-+    elif len(args.args) > 0:
-+        try:
-+            interval = int(args.args[0])
-+        except ValueError:
-+            for_comm = args.args[0]
-+            interval = default_interval
-+
-+    analyzer = SCTopAnalyzer(for_comm, interval)
-+    analyzer.start()
++    analyzer = StackCollapseAnalyzer(args)
 +
 +    try:
-+        if args.input:
-+            session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+            session.process_events()
-+        else:
-+            try:
-+                live_session = LiveSession(
-+                    "raw_syscalls:sys_enter", sample_callback=analyzer.process_event
-+                )
-+            except OSError:
-+                live_session = LiveSession(
-+                    "syscalls:sys_enter", sample_callback=analyzer.process_event
-+                )
-+            live_session.run()
++        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
++        session.process_events()
++    except IOError as e:
++        print(f"Error: {e}", file=sys.stderr)
++        sys.exit(1)
 +    except KeyboardInterrupt:
 +        pass
-+    except IOError as e:
-+        print(f"Error: {e}")
-+    finally:
-+        analyzer.stop()
++
++    analyzer.print_totals()
 +
 +
 +if __name__ == "__main__":
