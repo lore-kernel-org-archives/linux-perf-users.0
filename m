@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E520833BBD2
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D44331213
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643221; cv=none; b=ojY3A5As/RA8qUcIgamhXHIwahbg/XOQT/h1fzjYUjly4iBfkNkH6aLLZzvBCn/uMtCQICWLPsTetx0RT9CHoEYbhOGzSb2FtxJ7Y7Ah/Zi4cEkADtYYvNRuiHzbQ4QQQ+/ObKhwrRFJiNWlGEKEhWAeHW/xcJ3X4EpxQpCnq58=
+	t=1776643228; cv=none; b=ZFFMTzJ6BEOyD3eXsMCTnjm60yWf+6aNJ1PquxI1oSH2XLTqjgIjqyqXk/ESM/ylV3d/A+VYmMEnRWy2EEUMKYNbKNPPR3XO7zEs5M6CHDXE2OMnGP3CKyuaxdOBwR5EEyv4a8d9v1SyB/H3tpDsZ3h1WYAKGsQmKo5IMfqdZwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643221; c=relaxed/simple;
-	bh=TKBt91by0ASHDouqC2QvWoLh1rQghpG6sFJWOZkRT8g=;
+	s=arc-20240116; t=1776643228; c=relaxed/simple;
+	bh=DzB75MX46r8NYOZ8kRddsMuCMasac1w7ZyRDwYztpOQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UZmAe9DvhnCugV6xwG2HV2YOvrsEBzbSuI+vJgqN69DEC5twaZ5iHUjvRJ87W324fl9gZWUEscqNbiBmTjGyE00i0JsiNsSOlwSzCmxNmUdrjKZuKA0Q6nvZgpbgV0UmJkafK+FYp6rzeFakIu1Y1025cgDhFR2RNyH8yVB4P2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Eg9qXpnx; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=Mvvn8/HOzrlLAwFVrWCGIgbFxIWr/d3xG6xZCQebbG0hytnGwnQ2/ozNu2K9HSugQrGtXuA05EtWYGlMS7rVuXpw6LakbjqWvjN2ODXDFoQ4/YAevmd1g5gB3KgsX5e/DXfTnCCJw/QTLfeMc4sEGi2OMsxr4gAANbsQlqIBwmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uj7Xo2xI; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eg9qXpnx"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2e60238adb1so918608eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uj7Xo2xI"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d93379001eso818273eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643219; x=1777248019; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643227; x=1777248027; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EuEIGZNS/N0CIixILejBNz5VJmoW/Pts7HVmIwyB1Sw=;
-        b=Eg9qXpnx0/UvC4YpVREave722rjdjV/C8/WUAor3A6gzVx/NwemlptrjmyjDrXlpcr
-         Od68gQun4xMbVywGvy2PLpn4+fvwdQqPk2//oED4ll5sOm2j8ZA7CxA9OKLNCqiA8JZx
-         BG/5CR7XeeOAB9krxXT1qcr8G9Pq9/mCzl82m8JOAa8c/6cifjDBJyggI11yZoyCa/J7
-         W2pjj8boQNzH1v2Bv3U+Cn1RpcoJE3bVeEzssfmMgTPPRGl+wqd+rfU2JsFMolSQSLOI
-         lB+gjUyel2GQFug46FDVJgmfraNweNcOVj2RTN/LL2avTTocjyk1dkYCItp2ksPY0WCx
-         s26g==
+        bh=P9qsHMN9tAhuUL70nibwzRG0VKjYsgSCZZlqinKu7Ls=;
+        b=Uj7Xo2xI7YVJI5HHyKmFU2vFo06xzH8c+Hu+MTP23X0e1G5PufjKGd3DNcHhu/bWmy
+         xzWOQcFpZ7MvE3oz/pHmN4j0dGLkgb2b5zvtzPPfTyZ0zBjTwn1X/C2v14pQXbiOQWPR
+         RAkK4W1cc8PHVEfSXh29Wgu/4o5LSwG9BpmYoovKlQF7ASfNh1iNYTkNL2SuLkP4swd9
+         1Vb5XOCbNaCk/KVm2kTcAc7t4un99rmMi/4ZsKcZZ5+eLghZHzCUR3Ea1mdcKm1qv0zt
+         MEg/AYdqYi6BF5iZsibVVNVnHfLIWkATvLALcrAIl8b5Ov9a0vSSaFpabTWu+VezJ8EE
+         dLOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643219; x=1777248019;
+        d=1e100.net; s=20251104; t=1776643227; x=1777248027;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EuEIGZNS/N0CIixILejBNz5VJmoW/Pts7HVmIwyB1Sw=;
-        b=aaU46A3f1kc/1GJGCW2fwDzxl269qQgUlPwihxvNCS3Tc7caDcT4hzTnjUYx/kc1I6
-         et6MWgthF0BqxCYgIUcRNgO4JvxC+gEZY4qC75n7XImfXjZfzw2y6eMFGPRWvTzVjfMl
-         VqXeHImO2/NTqjVA/V0yxIc6pQuQTWfemE2zwoVM9P1IZChGZzdr0z9ndhnH8JwsJRE1
-         0iRGzhbQrCIqRjKkQG8B0iaUITf37+buCsA/YXjPkezIJSVRTOmzDveFF0pHXwCBda5M
-         PW1RoqSWSAsqZaQy0gR/ojI1uLsBo3YVPUh3TizsqIeRZnUJcT17w2KHU+jLtEFC1Z+z
-         a7dQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/dxWdwllKRclw+OVCBlfpa2sjG5fyTFLTao9RQFpYkSsnrR7biCGukCQmxdc9bA2M7XlpVGy5GTA0HttxAlI6t@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY6cUVnMOTT+QTLl+ualhPeT3AB3Do9wLM8ME3r/c5OrMpLTkP
-	RU0CcwY4baLlsJh0NtcIf3LSs2Q7G+ZxTsvgji1J/liZNrcCk/wtk9GYUTVLuE1pObIIfq5TTpU
-	W9Xvwq/Lfiw==
-X-Received: from dybnj5.prod.google.com ([2002:a05:7300:d085:b0:2dd:4573:2897])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:8628:b0:2d8:1efe:51dc
- with SMTP id 5a478bee46e88-2e464ea8c23mr6449187eec.6.1776643218636; Sun, 19
- Apr 2026 17:00:18 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:37 -0700
+        bh=P9qsHMN9tAhuUL70nibwzRG0VKjYsgSCZZlqinKu7Ls=;
+        b=rK0EL0oNUCldunl5JgxvH7Rn19462palEQxvmw5Rh6mxmc/lKjl9gmKEUvRcSVQc9s
+         WE5PERDtE7FLNMJZj0i5Ds61hwSmUXfpwvnULjbbxHpooRqiWvlR84LSiC1uzeu6GMxV
+         cmjAeJktFSV8mdHk1L1kVcrSbRbW7ljRvu9PqFpKKq9e1xHQayFN0KSxYSp7T587o88s
+         0PgOvwOaBllRsxHiLui/+8VTgt7bnTqQJj/LCQz+JYEDY2rQZ7l0doVCscyCzxuFmYFN
+         qXYMygHMKFYvaDxEL0TBqkI1aKvDeq0Rax8pvyzk80uuvUwLDjoiFDLF9b6xGL4CDyqo
+         eycg==
+X-Forwarded-Encrypted: i=1; AFNElJ/KEuG+imPvHYdc9Ocd7p0ZgmXXqJzPa3e+lFBM0jrAELHX7Ga/vqmtuGZbK0dmEJ6XwUyTZOQped5Ai6gczpoi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBPP40OwW2shFa7OvVgvnFDPjhyRE7TpCzu8QYVFOWxKCld0WH
+	xggh5SfanTpRzmlJDXTUsS19gBzbX1EbVHCHr4BxfI6EPKq6yotjjjdxt8FBCyoEGWJ8FEGJwoo
+	90kvhYazr9A==
+X-Received: from dybml37.prod.google.com ([2002:a05:7301:1525:b0:2db:47a8:4b3c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:72cc:b0:2cb:8d2f:e247
+ with SMTP id 5a478bee46e88-2e478839116mr5041963eec.13.1776643226195; Sun, 19
+ Apr 2026 17:00:26 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:40 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-26-irogers@google.com>
-Subject: [PATCH v1 25/58] perf stat-cpi: Port stat-cpi to use python module
+Message-ID: <20260419235911.2186050-29-irogers@google.com>
+Subject: [PATCH v1 28/58] perf syscall-counts-by-pid: Port syscall-counts-by-pid
+ to use python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,163 +93,143 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Port stat-cpi.py from the legacy framework to a standalone script.
-Support both file processing mode (using perf.session) and live mode
-(reading counters directly via perf.parse_events and evsel.read). Use
-argparse for command line options handling. Calculate and display CPI
-(Cycles Per Instruction) per interval per CPU/thread.
+Rewrite tools/perf/scripts/python/syscall-counts-by-pid.py to use the
+python module and various style changes. By avoiding the overheads in
+the `perf script` execution the performance improves by more than 3.8x
+as shown in the following (with PYTHON_PATH and PERF_EXEC_PATH set as
+necessary):
+
+```
+$ perf record -e raw_syscalls:sys_enter -a sleep 1
+...
+$ time perf script tools/perf/scripts/python/syscall-counts-by-pid.py perf
+Install the python-audit package to get syscall names.
+For example:
+  # apt-get install python3-audit (Ubuntu)
+  # yum install python3-audit (Fedora)
+  etc.
+
+Press control+C to stop and show the summary
+Warning:
+1 out of order events recorded.
+
+syscall events for perf:
+
+comm [pid]/syscalls                            count
+ ---------------------------------------  ----------
+
+perf [3886080]
+  1                                           538989
+  16                                              32
+  203                                             17
+  3                                                2
+  257                                              1
+  204                                              1
+  15                                               1
+  0                                                1
+
+perf [3886082]
+  7                                                1
+
+real    0m3.852s
+user    0m3.512s
+sys     0m0.336s
+$ time python3 tools/perf/python/syscall-counts-by-pid.py perf
+Warning:
+1 out of order events recorded.
+
+syscall events for perf:
+
+comm [pid]/syscalls                           count
+ --------------------------------------- -----------
+
+perf [3886080]
+  write                                      538989
+  ioctl                                          32
+  sched_setaffinity                              17
+  close                                           2
+  openat                                          1
+  sched_getaffinity                               1
+  rt_sigreturn                                    1
+  read                                            1
+
+perf [3886082]
+  poll                                            1
+
+real    0m1.011s
+user    0m0.963s
+sys     0m0.048s
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/stat-cpi.py | 139 ++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
- create mode 100755 tools/perf/python/stat-cpi.py
+ tools/perf/python/syscall-counts-by-pid.py | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100755 tools/perf/python/syscall-counts-by-pid.py
 
-diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
+diff --git a/tools/perf/python/syscall-counts-by-pid.py b/tools/perf/python/syscall-counts-by-pid.py
 new file mode 100755
-index 000000000000..6f9c2343520e
+index 000000000000..a5d91060b18d
 --- /dev/null
-+++ b/tools/perf/python/stat-cpi.py
-@@ -0,0 +1,139 @@
++++ b/tools/perf/python/syscall-counts-by-pid.py
+@@ -0,0 +1,57 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""Calculate CPI from perf stat data or live."""
++# Displays system-wide system call totals, broken down by syscall.
++# If a [comm] arg is specified, only syscalls called by [comm] are displayed.
 +
 +import argparse
-+import sys
-+import time
-+from typing import Any, Optional
++from collections import defaultdict
 +import perf
 +
-+class StatCpiAnalyzer:
-+    """Accumulates cycles and instructions and calculates CPI."""
++syscalls = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
++for_comm = None
++session = None
 +
-+    def __init__(self, args: argparse.Namespace) -> None:
-+        self.args = args
-+        self.data: dict[str, tuple[int, int, int]] = {}
-+        self.cpus: list[int] = []
-+        self.threads: list[int] = []
 +
-+    def get_key(self, event: str, cpu: int, thread: int) -> str:
-+        """Get key for data dictionary."""
-+        return f"{event}-{cpu}-{thread}"
-+
-+    def store_key(self, cpu: int, thread: int) -> None:
-+        """Store CPU and thread IDs."""
-+        if cpu not in self.cpus:
-+            self.cpus.append(cpu)
-+        if thread not in self.threads:
-+            self.threads.append(thread)
-+
-+    def store(self, event: str, cpu: int, thread: int, counts: tuple[int, int, int]) -> None:
-+        """Store counter values."""
-+        self.store_key(cpu, thread)
-+        key = self.get_key(event, cpu, thread)
-+        self.data[key] = counts
-+
-+    def get(self, event: str, cpu: int, thread: int) -> int:
-+        """Get counter value."""
-+        key = self.get_key(event, cpu, thread)
-+        return self.data[key][0] if key in self.data else 0
-+
-+    def process_stat_event(self, event: Any, name: Optional[str] = None) -> None:
-+        """Process PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events."""
-+        if event.type == perf.RECORD_STAT:
-+            if name:
-+                if "cycles" in name:
-+                    event_name = "cycles"
-+                elif "instructions" in name:
-+                    event_name = "instructions"
-+                else:
-+                    return
-+                self.store(event_name, event.cpu, event.thread, (event.val, event.ena, event.run))
-+        elif event.type == perf.RECORD_STAT_ROUND:
-+            timestamp = getattr(event, "time", 0)
-+            self.print_interval(timestamp)
-+            self.data.clear()
-+            self.cpus.clear()
-+            self.threads.clear()
-+
-+    def print_interval(self, timestamp: int) -> None:
-+        """Print CPI for the current interval."""
-+        for cpu in self.cpus:
-+            for thread in self.threads:
-+                cyc = self.get("cycles", cpu, thread)
-+                ins = self.get("instructions", cpu, thread)
-+                cpi = 0.0
-+                if ins != 0:
-+                    cpi = cyc / float(ins)
-+                t_sec = timestamp / 1000000000.0
-+                print(f"{t_sec:15f}: cpu {cpu}, thread {thread} -> cpi {cpi:f} ({cyc}/{ins})")
-+
-+    def read_counters(self, evlist: Any) -> None:
-+        """Read counters live."""
-+        for evsel in evlist:
-+            name = str(evsel)
-+            if "cycles" in name:
-+                event_name = "cycles"
-+            elif "instructions" in name:
-+                event_name = "instructions"
-+            else:
-+                continue
-+
-+            for cpu in evsel.cpus():
-+                for thread in evsel.threads():
-+                    try:
-+                        counts = evsel.read(cpu, thread)
-+                        self.store(event_name, cpu, thread,
-+                                   (counts.val, counts.ena, counts.run))
-+                    except OSError:
-+                        pass
-+
-+    def run_file(self) -> None:
-+        """Process events from file."""
-+        session = perf.session(perf.data(self.args.input), stat=self.process_stat_event)
-+        session.process_events()
-+
-+    def run_live(self) -> None:
-+        """Read counters live."""
-+        evlist = perf.parse_events("cycles,instructions")
-+        if not evlist:
-+            print("Failed to parse events", file=sys.stderr)
-+            return
-+        try:
-+            evlist.open()
-+        except OSError as e:
-+            print(f"Failed to open events: {e}", file=sys.stderr)
-+            return
-+
-+        print("Live mode started. Press Ctrl+C to stop.")
-+        try:
-+            while True:
-+                time.sleep(self.args.interval)
-+                timestamp = time.time_ns()
-+                self.read_counters(evlist)
-+                self.print_interval(timestamp)
-+                self.data.clear()
-+                self.cpus.clear()
-+                self.threads.clear()
-+        except KeyboardInterrupt:
-+            print("\nStopped.")
-+        finally:
-+            evlist.close()
-+
-+def main() -> None:
-+    """Main function."""
-+    ap = argparse.ArgumentParser(description="Calculate CPI from perf stat data or live")
-+    ap.add_argument("-i", "--input", help="Input file name (enables file mode)")
-+    ap.add_argument("-I", "--interval", type=float, default=1.0,
-+                    help="Interval in seconds for live mode")
-+    args = ap.parse_args()
-+
-+    analyzer = StatCpiAnalyzer(args)
-+    if args.input:
-+        analyzer.run_file()
++def print_syscall_totals():
++    if for_comm is not None:
++        print(f"\nsyscall events for {for_comm}:\n")
 +    else:
-+        analyzer.run_live()
++        print("\nsyscall events:\n")
++
++    print(f"{'comm [pid]/syscalls':<40} {'count':>10}")
++    print("---------------------------------------- -----------")
++
++    comm_keys = syscalls.keys()
++    for comm in comm_keys:
++        pid_keys = syscalls[comm].keys()
++        for pid in pid_keys:
++            print(f"\n{comm} [{pid}]")
++            id_keys = syscalls[comm][pid].keys()
++            for id, val in sorted(syscalls[comm][pid].items(),
++                                  key=lambda kv: (kv[1], kv[0]), reverse=True):
++                print(f"  {perf.syscall_name(id):<38} {val:>10}")
++
++
++def process_event(sample):
++    event_name = str(sample.evsel)
++    if event_name == "evsel(raw_syscalls:sys_enter)":
++        id = sample.id
++    elif event_name.startswith("evsel(syscalls:sys_enter_"):
++        id = sample.__syscall_nr
++    else:
++        return
++    pid = sample.sample_pid
++    comm = session.process(pid).comm()
++    if for_comm and comm != for_comm:
++        return
++    syscalls[comm][pid][id] += 1
++
 +
 +if __name__ == "__main__":
-+    main()
++    ap = argparse.ArgumentParser()
++    ap.add_argument("comm", nargs="?", help="Only report syscalls for comm")
++    args = ap.parse_args()
++    for_comm = args.comm
++    session = perf.session(perf.data("perf.data"), sample=process_event)
++    session.process_events()
++    print_syscall_totals()
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
