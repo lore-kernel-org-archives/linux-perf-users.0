@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A993E320CD3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C6933EB1A
 	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643236; cv=none; b=spJRO7kCageXxiIgwimnN9AdwG2wvxeFmRzFNoriHQVzD9lU2WGG729YQdb+8FA7Gleb7mSY0BYzUnalCJmobBeSJ7BRYzzR5rUbfbFhFb2AwRmQUNl039ank02WwezPw/Vu2kP646BOK/DwmmQkBnqIcgXMN2rbdRyAdwpKazc=
+	t=1776643236; cv=none; b=QM/f/Dl/Qm7tuXMnOMVYDNGhGWZj8ra1Sct34Be89XLTvTTfT19CNUH9NPLGsfMuWv6e4PlosNy3jXuoOhs5Cq9wt/VfV7HYuMoqqoBR8hbCBls99Y2Djxg1D310MoujcWTx4nQBOQ28oEzkl81kiVj9xgQ50R1YVdRPOylcnDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776643236; c=relaxed/simple;
-	bh=etuLy1V1F0RX5awGDhdA4GPSQBYNAwEBuodb0W6q4j0=;
+	bh=prXTEa0foglSS6FeZGt1/On1JxW4ePLiZA9BWFc31Jc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cNgeQrmZSkJLuknQVeIWy4wIjioyyXUjiaV1y559XME/q/G7M6G4cyp5Lq9WuqbDmDjEd5r0qfzeWDoaCL3/PoQOuw530JERl4RMD5bIPSeKHUwAUDbKM810RnhFHsw24K83CPHzQTaVaXGdi7kryi7H6OyBd57PK20WBo6lgs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VcGDqSYx; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=Zai17w0jUHvXXwNNxIlRzMF7UBTSbiy0Tvj1mM0iFCcc028FXuOl8epfkCP/i3ANsx0rnfJEPnh3vXremKC5mZjtF3feySk9fkuNF7dJ5Xm+Km9M3jAvOI0EmNh/CsECLbyLU6I9bBbZ+DiyKrwqHEtT65CmSqfD9KWSS9wTCyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8Dy4tVK; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VcGDqSYx"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so2555787eec.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8Dy4tVK"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdf6fe90a9so3059753eec.1
         for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20251104; t=1776643234; x=1777248034; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vugcSbemdk82js8t3EG1fRcF5eIw7MxVSdfYxHmqMQc=;
-        b=VcGDqSYxqGYTrIWOqhsabiIxveUck4uITBodjlF2FHHuqQtZVQ++l5fdHPx/l3LrSR
-         NsH9zeNuB2nMJGnsS/68jEfhaXRcmqJLBnUcbA3ep1BiByGCt3WYgtAE9sn7yBENyU6C
-         uDqe2nZIW+czcrPXy6x2rdE7sHAk+XcdVUfHNsHqZtQkfZdaTJA3ExqkWlqqTbPPBSJO
-         v2S1l8kvoPzB/095TK8xSQPP1di8Ud0BVd4FOOdKCtcV+1qelZMM6T2vNAmol9Md3iEZ
-         ZYPi5UfKbKx82zX8BDG6bCENNze9qjUtxOggFivt5WWIjR63C/Clx8P8XlfNm2wT3SKH
-         uR+A==
+        bh=7MvtLngZzqLKzhUYZHJ4hGrsLLgMCO53EoUEuQKHEI8=;
+        b=r8Dy4tVK1XLHGbzt5rblYMQBMjf697Mm+WN5j+Ry87BrHwxHLrEoYASNDDV/lCbIkU
+         agheDBuffKRlg2OXdZJ2h5xHltPN8H+8TYNMHd3mVVtX7ukEFLUgYbWN/hY7OhvMNGdH
+         /KksPNK3OuQvUnV9j818W9liY4H4FTnZ2+ajYOO20NryzMtS7OvxF19BykAv7o1/qRrX
+         G+hae0J5orQyPd/vlJ4XLbo2ZkV3AIGZYXg+5IMsmil8gL2/9WAUOXfU6eAVwra5f9sR
+         A7MiI4ag63oaOiYCBIUcEU6BcPwzU/6NY45D40t8Z3r8gHbdhS/V+Z4bR/qId+WC8fDk
+         O99w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1776643234; x=1777248034;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vugcSbemdk82js8t3EG1fRcF5eIw7MxVSdfYxHmqMQc=;
-        b=WW6I3xdBnJpWGRB2HaZBdEY7hq0ZrdkV5KkhKL/QG/TY7ROKCPTXBLmxxNf2g8NKoP
-         yWJ8iCJADwHiaxCyGIO0hm5Y0GVnlxO4y6vk8M++MtZCkp1Y50fv1ixVRReVnIqPh71N
-         co5CxJ1oiKvDQ8ZDoJhWC+VMgqUEfa3JNI0+4PaOn+hAKBupyChm4XzN7oQ7xnva3d1j
-         GVojrCnQI83W8mjdBye591kJk/8etXCOmz2W9koKy/dSaPxggRuBaWsJ+pTcIhPdanIr
-         FpzVGZNfHuWCRfUI7NvoKMwlo14789Ch09/TG5D5Mv8yY1yCuu7SumcSKY6E9r2r8Njp
-         yQ3Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8P6TBtOuemspBYa0jL4flZMZfpJmcmUm23eWL4waPIgBqIYm/coWPgRYcE5+NvKel51bXL2wdS4c5hZhWhDgZu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT9KbvBg+dhHG6PPwOH8He67Q56z096+ZAftVcFAHq3AYDzewt
-	6j8nbDB7ki2FNg1KfokAuEEgnMVWVjZmtqyrhW96gLQYMef+VRqPJ4Kg/UJQ/KKa/4DI8V01+i7
-	TqWDtaRbulw==
-X-Received: from dycns6.prod.google.com ([2002:a05:7300:f786:b0:2df:c53c:24a5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:168a:b0:2d1:815f:19c1
- with SMTP id 5a478bee46e88-2e479c0427dmr4988093eec.15.1776643230492; Sun, 19
- Apr 2026 17:00:30 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:42 -0700
+        bh=7MvtLngZzqLKzhUYZHJ4hGrsLLgMCO53EoUEuQKHEI8=;
+        b=RagfgOpULplEKgV9XCgtFudfar+zQAsj6DcEalMpe292hbN95O9EdlV4TS1hNzAEXv
+         0Awk1iFAORt23M1NOb41A0AEh9H1tgeb6Nao9O6eESm0SjNxvDo9xwKI2bhQfN/3lyAj
+         kPwPpShIW/I+KXk+/roYCCEg+oF7bUWTUH3rb8eNKPvVnQNk2jsiTzp1l7dMP4h833E7
+         j975JXCYq0lDCZ7D0ifzl10V08jrBz5vGGc3zImj11TWBDOTe1jtLfK1SdMCGlUlz2+7
+         6jemIlU2ITSwUTh3uKl7A4pWhqQDnfKW/yu7NaSAK9X4CHiXAb4MNVsMMi0Qg215HEyY
+         qnYA==
+X-Forwarded-Encrypted: i=1; AFNElJ/R3J5un/mfAFrSLp5QY8YqxpzNC+/pPZK9l3hClYG9yfH4rv6x/zw/KX++oTUtR4KVmONUBSoZBgdAn5OcYa4U@vger.kernel.org
+X-Gm-Message-State: AOJu0YweGsMn41eOlTklVgRgBWl/zxUjoksSQfFp9ZxJfCCwrdoktA5c
+	T4qgkRpdIjqOxV8iM6Rm6WARTTZ/t2RhmGITbL3LaE04bSvTQK/qykXKOBkCX55ebYVcM+2ZFs3
+	fEdnM6dPl+A==
+X-Received: from dybnj1.prod.google.com ([2002:a05:7300:d081:b0:2da:5e63:c8e4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1693:b0:2d4:7656:4ec1
+ with SMTP id 5a478bee46e88-2e47873a687mr6249196eec.17.1776643232524; Sun, 19
+ Apr 2026 17:00:32 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:43 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-31-irogers@google.com>
-Subject: [PATCH v1 30/58] perf flamegraph: Port flamegraph to use python module
+Message-ID: <20260419235911.2186050-32-irogers@google.com>
+Subject: [PATCH v1 31/58] perf gecko: Port gecko to use python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,7 +92,7 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a port of the flamegraph script that uses the perf python module
+Add a port of the gecko script that uses the perf python module
 directly. This approach is significantly faster than using perf script
 callbacks as it avoids creating intermediate dictionaries for all
 event fields.
@@ -100,257 +100,387 @@ event fields.
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/flamegraph.py | 242 ++++++++++++++++++++++++++++++++
- 1 file changed, 242 insertions(+)
- create mode 100755 tools/perf/python/flamegraph.py
+ tools/perf/python/gecko.py | 372 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 372 insertions(+)
+ create mode 100755 tools/perf/python/gecko.py
 
-diff --git a/tools/perf/python/flamegraph.py b/tools/perf/python/flamegraph.py
+diff --git a/tools/perf/python/gecko.py b/tools/perf/python/gecko.py
 new file mode 100755
-index 000000000000..090e07a0992d
+index 000000000000..5d55bcb8ac01
 --- /dev/null
-+++ b/tools/perf/python/flamegraph.py
-@@ -0,0 +1,242 @@
++++ b/tools/perf/python/gecko.py
+@@ -0,0 +1,372 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+flamegraph.py - create flame graphs from perf samples using perf python module
++gecko.py - Convert perf record output to Firefox's gecko profile format
 +"""
 +
 +import argparse
-+import hashlib
 +import json
 +import os
 +import subprocess
 +import sys
-+import urllib.request
-+from typing import Dict, Optional, Union
++import threading
++import urllib.parse
++import webbrowser
++from dataclasses import dataclass, field
++from http.server import HTTPServer, SimpleHTTPRequestHandler
++from typing import Dict, List, NamedTuple, Optional, Tuple
++
 +import perf
 +
-+MINIMAL_HTML = """<head>
-+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
-+</head>
-+<body>
-+  <div id="chart"></div>
-+  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
-+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
-+  <script type="text/javascript">
-+  const stacks = [/** @flamegraph_json **/];
-+  // Note, options is unused.
-+  const options = [/** @options_json **/];
 +
-+  var chart = flamegraph();
-+  d3.select("#chart")
-+        .datum(stacks[0])
-+        .call(chart);
-+  </script>
-+</body>
-+"""
++# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
++class Frame(NamedTuple):
++    """A single stack frame in the gecko profile format."""
++    string_id: int
++    relevantForJS: bool
++    innerWindowID: int
++    implementation: None
++    optimizations: None
++    line: None
++    column: None
++    category: int
++    subcategory: Optional[int]
 +
-+class Node:
-+    """A node in the flame graph tree."""
-+    def __init__(self, name: str, libtype: str):
-+        self.name = name
-+        self.libtype = libtype
-+        self.value: int = 0
-+        self.children: list[Node] = []
 +
-+    def to_json(self) -> Dict[str, Union[str, int, list[Dict]]]:
-+        """Convert the node to a JSON-serializable dictionary."""
++# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L216
++class Stack(NamedTuple):
++    """A single stack in the gecko profile format."""
++    prefix_id: Optional[int]
++    frame_id: int
++
++
++# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L90
++class Sample(NamedTuple):
++    """A single sample in the gecko profile format."""
++    stack_id: Optional[int]
++    time_ms: float
++    responsiveness: int
++
++
++@dataclass
++class Tables:
++    """Interned tables for the gecko profile format."""
++    frame_table: List[Frame] = field(default_factory=list)
++    string_table: List[str] = field(default_factory=list)
++    string_map: Dict[str, int] = field(default_factory=dict)
++    stack_table: List[Stack] = field(default_factory=list)
++    stack_map: Dict[Tuple[Optional[int], int], int] = field(default_factory=dict)
++    frame_map: Dict[str, int] = field(default_factory=dict)
++
++
++@dataclass
++class Thread:
++    """A builder for a profile of the thread."""
++    comm: str
++    pid: int
++    tid: int
++    user_category: int
++    kernel_category: int
++    samples: List[Sample] = field(default_factory=list)
++    tables: Tables = field(default_factory=Tables)
++
++    def _intern_stack(self, frame_id: int, prefix_id: Optional[int]) -> int:
++        """Gets a matching stack, or saves the new stack. Returns a Stack ID."""
++        key = (prefix_id, frame_id)
++        stack_id = self.tables.stack_map.get(key)
++        if stack_id is None:
++            stack_id = len(self.tables.stack_table)
++            self.tables.stack_table.append(Stack(prefix_id=prefix_id, frame_id=frame_id))
++            self.tables.stack_map[key] = stack_id
++        return stack_id
++
++    def _intern_string(self, string: str) -> int:
++        """Gets a matching string, or saves the new string. Returns a String ID."""
++        string_id = self.tables.string_map.get(string)
++        if string_id is not None:
++            return string_id
++        string_id = len(self.tables.string_table)
++        self.tables.string_table.append(string)
++        self.tables.string_map[string] = string_id
++        return string_id
++
++    def _intern_frame(self, frame_str: str) -> int:
++        """Gets a matching stack frame, or saves the new frame. Returns a Frame ID."""
++        frame_id = self.tables.frame_map.get(frame_str)
++        if frame_id is not None:
++            return frame_id
++        frame_id = len(self.tables.frame_table)
++        self.tables.frame_map[frame_str] = frame_id
++        string_id = self._intern_string(frame_str)
++
++        category = self.user_category
++        if (frame_str.find('kallsyms') != -1 or
++                frame_str.find('/vmlinux') != -1 or
++                frame_str.endswith('.ko)')):
++            category = self.kernel_category
++
++        self.tables.frame_table.append(Frame(
++            string_id=string_id,
++            relevantForJS=False,
++            innerWindowID=0,
++            implementation=None,
++            optimizations=None,
++            line=None,
++            column=None,
++            category=category,
++            subcategory=None,
++        ))
++        return frame_id
++
++    def add_sample(self, comm: str, stack: List[str], time_ms: float) -> None:
++        """Add a timestamped stack trace sample to the thread builder."""
++        if self.comm != comm:
++            self.comm = comm
++
++        prefix_stack_id: Optional[int] = None
++        for frame in stack:
++            frame_id = self._intern_frame(frame)
++            prefix_stack_id = self._intern_stack(frame_id, prefix_stack_id)
++
++        if prefix_stack_id is not None:
++            self.samples.append(Sample(stack_id=prefix_stack_id,
++                                       time_ms=time_ms,
++                                       responsiveness=0))
++
++    def to_json_dict(self) -> Dict:
++        """Converts current Thread to GeckoThread JSON format."""
 +        return {
-+            "n": self.name,
-+            "l": self.libtype,
-+            "v": self.value,
-+            "c": [x.to_json() for x in self.children]
++            "tid": self.tid,
++            "pid": self.pid,
++            "name": self.comm,
++            "markers": {
++                "schema": {
++                    "name": 0,
++                    "startTime": 1,
++                    "endTime": 2,
++                    "phase": 3,
++                    "category": 4,
++                    "data": 5,
++                },
++                "data": [],
++            },
++            "samples": {
++                "schema": {
++                    "stack": 0,
++                    "time": 1,
++                    "responsiveness": 2,
++                },
++                "data": self.samples
++            },
++            "frameTable": {
++                "schema": {
++                    "location": 0,
++                    "relevantForJS": 1,
++                    "innerWindowID": 2,
++                    "implementation": 3,
++                    "optimizations": 4,
++                    "line": 5,
++                    "column": 6,
++                    "category": 7,
++                    "subcategory": 8,
++                },
++                "data": self.tables.frame_table,
++            },
++            "stackTable": {
++                "schema": {
++                    "prefix": 0,
++                    "frame": 1,
++                },
++                "data": self.tables.stack_table,
++            },
++            "stringTable": self.tables.string_table,
++            "registerTime": 0,
++            "unregisterTime": None,
++            "processType": "default",
 +        }
 +
 +
-+class FlameGraphCLI:
-+    """Command-line interface for generating flame graphs."""
++class CORSRequestHandler(SimpleHTTPRequestHandler):
++    """Enable CORS for requests from profiler.firefox.com."""
++    def end_headers(self):
++        self.send_header('Access-Control-Allow-Origin', 'https://profiler.firefox.com')
++        super().end_headers()
++
++
++@dataclass
++class CategoryData:
++    """Category configuration for the gecko profile."""
++    user_index: int = 0
++    kernel_index: int = 1
++    categories: List[Dict] = field(default_factory=list)
++
++
++class GeckoCLI:
++    """Command-line interface for converting perf data to Gecko format."""
 +    def __init__(self, args):
 +        self.args = args
-+        self.stack = Node("all", "root")
++        self.tid_to_thread: Dict[int, Thread] = {}
++        self.start_time_ms: Optional[float] = None
 +        self.session = None
-+
-+    @staticmethod
-+    def get_libtype_from_dso(dso: Optional[str]) -> str:
-+        """Determine the library type from the DSO name."""
-+        if dso and (dso == "[kernel.kallsyms]" or dso.endswith("/vmlinux") or dso == "[kernel]"):
-+            return "kernel"
-+        return ""
-+
-+    @staticmethod
-+    def find_or_create_node(node: Node, name: str, libtype: str) -> Node:
-+        """Find a child node with the given name or create a new one."""
-+        for child in node.children:
-+            if child.name == name:
-+                return child
-+        child = Node(name, libtype)
-+        node.children.append(child)
-+        return child
++        self.product = subprocess.check_output(['uname', '-op']).decode().strip()
++        self.cat_data = CategoryData(
++            categories=[
++                {
++                    "name": 'User',
++                    "color": args.user_color,
++                    "subcategories": ['Other']
++                },
++                {
++                    "name": 'Kernel',
++                    "color": args.kernel_color,
++                    "subcategories": ['Other']
++                },
++            ]
++        )
 +
 +    def process_event(self, sample) -> None:
 +        """Process a single perf sample event."""
 +        if self.args.event_name and str(sample.evsel) != self.args.event_name:
 +            return
 +
++        # sample_time is in nanoseconds. Gecko wants milliseconds.
++        time_ms = sample.sample_time / 1000000.0
 +        pid = sample.sample_pid
-+        dso_type = ""
++        tid = sample.sample_tid
++
++        if self.start_time_ms is None:
++            self.start_time_ms = time_ms
++
 +        try:
-+            thread = self.session.process(sample.sample_tid)
-+            comm = thread.comm()
-+            # Try to get libtype from thread's main executable
-+            # This is a bit of a hack as pyrf_thread doesn't expose maps easily
++            thread_info = self.session.process(tid)
++            comm = thread_info.comm()
 +        except Exception:
 +            comm = "[unknown]"
 +
-+        if pid == 0:
-+            comm = "swapper"
-+            dso_type = "kernel"
-+        else:
-+            comm = f"{comm} ({pid})"
-+
-+        node = self.find_or_create_node(self.stack, comm, dso_type)
-+
++        stack = []
 +        callchain = sample.callchain
 +        if callchain:
-+            # We want to traverse from root to leaf.
-+            # perf callchain iterator gives leaf to root.
-+            # We collect them and reverse.
-+            frames = list(callchain)
-+            for entry in reversed(frames):
-+                name = entry.symbol or "[unknown]"
-+                libtype = self.get_libtype_from_dso(entry.dso)
-+                node = self.find_or_create_node(node, name, libtype)
-+        node.value += 1
++            for entry in callchain:
++                symbol = entry.symbol or "[unknown]"
++                dso = entry.dso or "[unknown]"
++                stack.append(f"{symbol} (in {dso})")
++            # Reverse because Gecko wants root first.
++            stack.reverse()
++        else:
++            # Fallback if no callchain is present
++            try:
++                # If the perf module exposes symbol/dso directly on sample
++                # when callchain is missing, we use them.
++                symbol = getattr(sample, 'symbol', '[unknown]')
++                dso = getattr(sample, 'dso', '[unknown]')
++                stack.append(f"{symbol} (in {dso})")
++            except AttributeError:
++                stack.append("[unknown] (in [unknown])")
 +
-+    def get_report_header(self) -> str:
-+        """Get the header from the perf report."""
-+        try:
-+            input_file = self.args.input or "perf.data"
-+            output = subprocess.check_output(["perf", "report", "--header-only", "-i", input_file])
-+            result = output.decode("utf-8")
-+            if self.args.event_name:
-+                result += "\nFocused event: " + self.args.event_name
-+            return result
-+        except Exception:
-+            return ""
++        thread = self.tid_to_thread.get(tid)
++        if thread is None:
++            thread = Thread(comm=comm, pid=pid, tid=tid,
++                            user_category=self.cat_data.user_index,
++                            kernel_category=self.cat_data.kernel_index)
++            self.tid_to_thread[tid] = thread
++        thread.add_sample(comm=comm, stack=stack, time_ms=time_ms)
 +
 +    def run(self) -> None:
-+        """Run the flame graph generation."""
++        """Run the conversion process."""
 +        input_file = self.args.input or "perf.data"
 +        if not os.path.exists(input_file):
-+            print(f"Error: {input_file} not found. (try 'perf record' first)", file=sys.stderr)
++            print(f"Error: {input_file} not found.", file=sys.stderr)
 +            sys.exit(1)
 +
 +        try:
-+            self.session = perf.session(perf.data(input_file),
-+                                        sample=self.process_event)
++            self.session = perf.session(perf.data(input_file), sample=self.process_event)
 +        except Exception as e:
 +            print(f"Error opening session: {e}", file=sys.stderr)
 +            sys.exit(1)
 +
 +        self.session.process_events()
 +
-+        stacks_json = json.dumps(self.stack, default=lambda x: x.to_json())
++        threads = [t.to_json_dict() for t in self.tid_to_thread.values()]
 +
-+        if self.args.format == "html":
-+            report_header = self.get_report_header()
-+            options = {
-+                "colorscheme": self.args.colorscheme,
-+                "context": report_header
-+            }
-+            options_json = json.dumps(options)
++        gecko_profile = {
++            "meta": {
++                "interval": 1,
++                "processType": 0,
++                "product": self.product,
++                "stackwalk": 1,
++                "debug": 0,
++                "gcpoison": 0,
++                "asyncstack": 1,
++                "startTime": self.start_time_ms,
++                "shutdownTime": None,
++                "version": 24,
++                "presymbolicated": True,
++                "categories": self.cat_data.categories,
++                "markerSchema": [],
++            },
++            "libs": [],
++            "threads": threads,
++            "processes": [],
++            "pausedRanges": [],
++        }
 +
-+            template = self.args.template
-+            template_md5sum = None
-+            output_str = None
-+            if not os.path.isfile(template):
-+                if not self.args.allow_download:
-+                    print(f"Warning: Flame Graph template '{template}' does not exist.",
-+                          file=sys.stderr)
-+                    template = (
-+                        "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/"
-+                        "d3-flamegraph-base.html"
-+                    )
-+                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
-+                    if not sys.stdin.isatty():
-+                        print("Non-interactive environment detected, skipping download.")
-+                        template = None
-+                    else:
-+                        s = None
-+                        while s not in ["y", "n"]:
-+                            s = input("Do you wish to download a template from cdn.jsdelivr.net? " +
-+                                      "(this warning can be suppressed with --allow-download) [yn] "
-+                                      ).lower()
-+                        if s == "n":
-+                            template = None
-+                            template_md5sum = None
-+
-+            use_minimal = False
-+            try:
-+                if not template:
-+                    use_minimal = True
-+                elif template.startswith("http"):
-+                    with urllib.request.urlopen(template) as url_template:
-+                        output_str = "".join([l.decode("utf-8") for l in url_template.readlines()])
-+                else:
-+                    with open(template, "r", encoding="utf-8") as f:
-+                        output_str = f.read()
-+            except Exception as err:
-+                print(f"Error reading template {template}: {err}\n", file=sys.stderr)
-+                use_minimal = True
-+
-+            if use_minimal:
-+                print("Using internal minimal HTML that refers to d3's web site. JavaScript " +
-+                      "loaded this way from a local file is typically blocked unless your " +
-+                      "browser has relaxed permissions.")
-+                output_str = MINIMAL_HTML
-+
-+            elif template_md5sum:
-+                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
-+                if download_md5sum != template_md5sum:
-+                    s = None
-+                    while s not in ["y", "n"]:
-+                        s = input(f"""Unexpected template md5sum.
-+{download_md5sum} != {template_md5sum}, for:
-+{output_str}
-+continue?[yn] """).lower()
-+                    if s == "n":
-+                        sys.exit(1)
-+
-+            output_str = output_str.replace("/** @options_json **/", options_json)
-+            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
-+            output_fn = self.args.output or "flamegraph.html"
++        output_file = self.args.save_only
++        if output_file is None:
++            output_file = 'gecko_profile.json'
++            self._write_and_launch(gecko_profile, output_file)
 +        else:
-+            output_str = stacks_json
-+            output_fn = self.args.output or "stacks.json"
++            print(f'[ perf gecko: Captured and wrote into {output_file} ]')
++            with open(output_file, 'w', encoding='utf-8') as f:
++                json.dump(gecko_profile, f, indent=2)
 +
-+        if output_fn == "-":
-+            sys.stdout.write(output_str)
-+        else:
-+            print(f"dumping data to {output_fn}")
-+            with open(output_fn, "w", encoding="utf-8") as out:
-+                out.write(output_str)
++    def _write_and_launch(self, profile: Dict, filename: str) -> None:
++        """Write the profile to a file and launch the Firefox profiler."""
++        print("Starting Firefox Profiler on your default browser...")
++        with open(filename, 'w', encoding='utf-8') as f:
++            json.dump(profile, f, indent=2)
++
++        # Start HTTP server in a daemon thread
++        def start_server():
++            server_address = ('', 8000)
++            httpd = HTTPServer(server_address, CORSRequestHandler)
++            httpd.serve_forever()
++
++        thread = threading.Thread(target=start_server, daemon=True)
++        thread.start()
++
++        # Open the browser
++        safe_string = urllib.parse.quote_plus(f'http://localhost:8000/{filename}')
++        url = f'https://profiler.firefox.com/from-url/{safe_string}'
++        webbrowser.open(url)
++
++        print(f'[ perf gecko: Captured and wrote into {filename} ]')
++        print("Press Ctrl+C to stop the local server.")
++        try:
++            # Keep the main thread alive so the daemon thread can serve requests
++            while True:
++                threading.Event().wait(1)
++        except KeyboardInterrupt:
++            print("\nStopping server...")
 +
 +
 +if __name__ == "__main__":
-+    parser = argparse.ArgumentParser(description="Create flame graphs using perf python module.")
-+    parser.add_argument("-f", "--format", default="html", choices=["json", "html"],
-+                        help="output file format")
-+    parser.add_argument("-o", "--output", help="output file name")
-+    parser.add_argument("--template",
-+                        default="/usr/share/d3-flame-graph/d3-flamegraph-base.html",
-+                        help="path to flame graph HTML template")
-+    parser.add_argument("--colorscheme", default="blue-green",
-+                        help="flame graph color scheme", choices=["blue-green", "orange"])
++    parser = argparse.ArgumentParser(
++        description="Convert perf.data to Firefox's Gecko Profile format"
++    )
++    parser.add_argument('--user-color', default='yellow',
++                        help='Color for the User category',
++                        choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red',
++                                 'grey', 'magenta'])
++    parser.add_argument('--kernel-color', default='orange',
++                        help='Color for the Kernel category',
++                        choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red',
++                                 'grey', 'magenta'])
++    parser.add_argument('--save-only',
++                        help='Save the output to a file instead of opening Firefox\'s profiler')
 +    parser.add_argument("-i", "--input", help="input perf.data file")
-+    parser.add_argument("--allow-download", default=False, action="store_true",
-+                        help="allow unprompted downloading of HTML template")
 +    parser.add_argument("-e", "--event", default="", dest="event_name", type=str,
-+                        help="specify the event to generate flamegraph for")
++                        help="specify the event to generate gecko profile for")
 +
 +    cli_args = parser.parse_args()
-+    cli = FlameGraphCLI(cli_args)
++    cli = GeckoCLI(cli_args)
 +    cli.run()
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
