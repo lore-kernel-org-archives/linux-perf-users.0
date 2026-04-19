@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D777336EE1
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E3718A93F
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643205; cv=none; b=IuEacyYJfStUiAeXCHdN59kXbzvOCGd2RLyh0tIWkRP0qidKa/cq4duPF6xxem34RZLMdzy2CJYZuhhZ0JbWlVYgFUFQthUCJUp4HXrzg2qpWKvykydVw9LGdex+tXuxqHMyhCWzb+c8fZWuoucH9zp/RwUgZYKIVNQX1+Pd9j4=
+	t=1776643207; cv=none; b=NB4m6/VKZ10hwUZnenOyNVOFytGPw2K4EqFik3If65b2SqPiBoBhvvd1MPoFZum95pGbBaI4LzcdIs2OjtNPK0UtDmh2g1CdJyV4OUbQvmmpUAnjqwHNVB14CkB+Zuc3mwEKljcZtuLS4Frxqzz1KnOw4B8TAVFjpAHUCxZ9YUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643205; c=relaxed/simple;
-	bh=w6qF2Dp5WBenrQB+GWwCm8gNspOujBAITf2k5B/kQLw=;
+	s=arc-20240116; t=1776643207; c=relaxed/simple;
+	bh=GztvdGHfQIrSysgHZ6mog5jtOvCG9PF8BBx1ZcL32vw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=biaIunN2gEFCjsAVsxViAbzNo99j9W3Zda5IJ9H75HwTwJ3uCVRHZZT8lOxYIZak3AhsYhYiVFJeAS1r+gFg46HgDx8QH1VwgtWTVmZDqjfZpaUkAr+3347sPRWj+6MAScP2ntqM/NMFFjIRwmPtct6sE9iqX+y+9fIaqQBg7yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BxWEsRyt; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=uFGcTHelfxZDmmBCQamLeS6NTRcYH/+/KIQ7VSzNyZnhDx4de2j23GL56krSi8ab3mkMUWDSzIJMWF95pIvDj5nKUQGLAI5tNTZhoPDwuf2kqboxjH6qgVXFUUb3vfCS4cpicUinYvbvKkpeQMJRV2BTv1s4UWGzgyLYiq+VZS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JmB4Xz5W; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BxWEsRyt"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c16233ee11so3409152eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmB4Xz5W"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2dd6fb4c867so1916648eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643202; x=1777248002; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643204; x=1777248004; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQ3TjyG2TqHvChMMttRj9q841UswYarUqQ8JlEldfog=;
-        b=BxWEsRytGCmQ2LXMtpRFQ828EAqCLPR3DTO3ozOrP0hIB59OSjWgqeMtIq5EQG3CiM
-         yyZosv+JeTKTwpbwaYPRDLkERQplHr8XJmY70odijMTcXAXUA/5ByloRTt5TMz7uDPQ9
-         HsZwRFyDlfUEDZ0TAJ2SITzw/kS69s2pXpzNysrqX4+588Az1Nx7e6jxMVrYDSm8sAlb
-         BdcY5ZltD3sq663rybOGI3iKcVB7Y0rL8Wzr2gcykiw+pr7LFVjo3yfFaJfN3mFuCq05
-         NDayyBSWI1/DQeUK8h9sAobP1HKvmoScY1PscUi7s1EAeRYDwvMUYXBixUIu7BSxs3By
-         8wgw==
+        bh=s3qCsPBrj8NjguiteEn+YIxZCMV7sPaGLx4K9rrDO14=;
+        b=JmB4Xz5WZQk541Q077L/dz3jeWhDVdkLn+/JuD/ueqRwkSMioJyCh1LApZvcssfN2M
+         iOP1S4I3vJtvG0qMzWJFQ1FfW++wdSx8AXe22n0HYGKI98F0swxCJ9OHbhM4JqVOljk9
+         XgeZvwQjQikGi7yYNC2dImKlCM5rB/deO0v/oHRfFQS89HPye/bf6tU23O/eUrNbjgDI
+         W7cnFYYGMBeFja2Rxi2exXEFYS8kaw0b/wAotaoOOFoNWrf4LkLartZsygt2nyQbhC6s
+         /Vru4+VEgKrBgEbwT8/imNMkvt8jFah0E1udxm85rnGzuryYoyJBNfM+wqeBF3qozDun
+         83vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643202; x=1777248002;
+        d=1e100.net; s=20251104; t=1776643204; x=1777248004;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQ3TjyG2TqHvChMMttRj9q841UswYarUqQ8JlEldfog=;
-        b=KfcdtLdjkdups0HEXl0VLL5fWKJPgXQTiZjo3k59zBqIVyv6e2k7PcTV6M5zPy84+A
-         gRoOOEU92/YVIlwbAQeoWkJNAI79Uj/NGeGnwuwSz4a0U/kCxFx/Dtkf6CUkA57q0sSC
-         wF8bAHHO1CaNinLdFglnfC6NBF/AbLLxNp2Rq8AK1uhPpJV3ZXfX9NrBXHR/Uh601Lx6
-         FmXbcmjRuVbuVLBxP09fV2cnUmkgHdhRhTXMv8B4Fl+C7SsptXiCRhoogXYlEIzMcqzh
-         u1UTvrCUkYCg2SdBqaPtDQmCFo7gxentaaxorf95G8DjSKXQwkicz/tiD3CKAqzGrq2H
-         YHUA==
-X-Forwarded-Encrypted: i=1; AFNElJ+tebYH52lHSoWqZK3U/h1zGy0gbpUhVaB2n7AHOqwB8WLQoKcGgGcV4+XDUCvK5DmS9xkRAZvMYuZ2H3so3/SI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkZn6Mi5Jx4tgqmGSWVgmR6b0PlbNm4cOpH8VQv+tV98jHTmhg
-	w5wXevRqDOMAl7dPsuqNK9hY46FFVI1PF8gvVIVzHY2HFM/cyou6zfVLC/QliHFYXwD1Zm7sEFg
-	J5TV1lZzJyQ==
-X-Received: from dyfv9.prod.google.com ([2002:a05:7300:8249:b0:2df:7541:1895])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1292:b0:2c0:c415:cfd6
- with SMTP id 5a478bee46e88-2e47873bca2mr5611154eec.13.1776643201232; Sun, 19
- Apr 2026 17:00:01 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:30 -0700
+        bh=s3qCsPBrj8NjguiteEn+YIxZCMV7sPaGLx4K9rrDO14=;
+        b=ds4x4/pPipziW4+eM5tmPYDe2Vw4g6e/jng++Fmrtl0Vv/47sKwwHpqPPhSpVhnN5n
+         4p1EezOzOQpvmNIRRADJ+4LWsTOWb80WxrvypocQPfLpVhvlPrkRRGvI9JQ/+kEXmFh7
+         9oAOLXBqrTYnbhiBSNUHCvJM8l6f6AflSLVoLDdNKPPRa3uFBvGJHBlwFtb2SRsg859N
+         wilRQpXhWnFLOutAeF6mIhXX07HkczvEEZwNbHaHReRBIhvKnIrs6z72i+UwxAl/bWSv
+         MR33QA7oCw+TCR1Y3zj23rx3yw79O3/1fG5kyHk6s5uHjd+SwYhOqq99arqQo/5FVfjH
+         RghQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/uKBGoTXooQ7ij0uX3PPJUNwX4RrOBsTWffCMeXV7CbUpsL4FB58/80bYBZ+BnUYFmyEmiKlgGnCGWxY8iPkKV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2jMRkqXqqH/8ymKJ1LeSubEUI6zzaSnSL6/q/V7pNfUNA1xa5
+	ElrkzSMOhaXkNy2bfaOHZYYgAjMVrq7Y5ZBvtJsApL9elcolEumGON7DvMTN60iHrTv3n4P/9kI
+	2U27/ohbR8Q==
+X-Received: from dybb21.prod.google.com ([2002:a05:693c:6095:b0:2d9:61d4:4d0e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d517:b0:2e0:4edd:64e8
+ with SMTP id 5a478bee46e88-2e47a2faf4amr6245972eec.24.1776643204137; Sun, 19
+ Apr 2026 17:00:04 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:31 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-19-irogers@google.com>
-Subject: [PATCH v1 18/58] perf python: Add callchain support
+Message-ID: <20260419235911.2186050-20-irogers@google.com>
+Subject: [PATCH v1 19/58] perf python: Add config file access
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,250 +92,54 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Implement pyrf_callchain_node and pyrf_callchain types for lazy
-iteration over callchain frames. Add callchain property to
-sample_event.
+Enhance the perf Python module by adding lazy address resolution and
+Add perf.config_get(name) to expose the perf configuration system.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 202 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 202 insertions(+)
+ tools/perf/util/python.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 09b566707563..6baf38a08690 100644
+index 6baf38a08690..e5f96bc695fd 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -609,6 +609,193 @@ static PyObject *pyrf_sample_event__insn(PyObject *self, PyObject *args __maybe_
- 					 pevent->sample.insn_len);
+@@ -12,6 +12,7 @@
+ #include "build-id.h"
+ #include "callchain.h"
+ #include "comm.h"
++#include "config.h"
+ #include "counts.h"
+ #include "data.h"
+ #include "debug.h"
+@@ -3130,7 +3131,26 @@ static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args)
+ 	return PyLong_FromLong(id);
  }
  
-+struct pyrf_callchain_node {
-+	PyObject_HEAD
-+	u64 ip;
-+	struct map *map;
-+	struct symbol *sym;
-+};
-+
-+static void pyrf_callchain_node__delete(struct pyrf_callchain_node *pnode)
++static PyObject *pyrf__config_get(PyObject *self, PyObject *args)
 +{
-+	map__put(pnode->map);
-+	Py_TYPE(pnode)->tp_free((PyObject*)pnode);
-+}
++	const char *config_name, *val;
 +
-+static PyObject *pyrf_callchain_node__get_ip(struct pyrf_callchain_node *pnode,
-+					     void *closure __maybe_unused)
-+{
-+	return PyLong_FromUnsignedLongLong(pnode->ip);
-+}
-+
-+static PyObject *pyrf_callchain_node__get_symbol(struct pyrf_callchain_node *pnode,
-+						 void *closure __maybe_unused)
-+{
-+	if (pnode->sym)
-+		return PyUnicode_FromString(pnode->sym->name);
-+	return PyUnicode_FromString("[unknown]");
-+}
-+
-+static PyObject *pyrf_callchain_node__get_dso(struct pyrf_callchain_node *pnode,
-+					      void *closure __maybe_unused)
-+{
-+	const char *dsoname = "[unknown]";
-+
-+	if (pnode->map) {
-+		struct dso *dso = map__dso(pnode->map);
-+		if (dso) {
-+			if (symbol_conf.show_kernel_path && dso__long_name(dso))
-+				dsoname = dso__long_name(dso);
-+			else
-+				dsoname = dso__name(dso);
-+		}
-+	}
-+	return PyUnicode_FromString(dsoname);
-+}
-+
-+static PyGetSetDef pyrf_callchain_node__getset[] = {
-+	{ .name = "ip",     .get = (getter)pyrf_callchain_node__get_ip, },
-+	{ .name = "symbol", .get = (getter)pyrf_callchain_node__get_symbol, },
-+	{ .name = "dso",    .get = (getter)pyrf_callchain_node__get_dso, },
-+	{ .name = NULL, },
-+};
-+
-+static PyTypeObject pyrf_callchain_node__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.callchain_node",
-+	.tp_basicsize	= sizeof(struct pyrf_callchain_node),
-+	.tp_dealloc	= (destructor)pyrf_callchain_node__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf callchain node object.",
-+	.tp_getset	= pyrf_callchain_node__getset,
-+};
-+
-+struct pyrf_callchain_frame {
-+	u64 ip;
-+	struct map *map;
-+	struct symbol *sym;
-+};
-+
-+struct pyrf_callchain {
-+	PyObject_HEAD
-+	struct pyrf_event *pevent;
-+	struct pyrf_callchain_frame *frames;
-+	u64 nr_frames;
-+	u64 pos;
-+	bool resolved;
-+};
-+
-+static void pyrf_callchain__delete(struct pyrf_callchain *pchain)
-+{
-+	Py_XDECREF(pchain->pevent);
-+	if (pchain->frames) {
-+		for (u64 i = 0; i < pchain->nr_frames; i++)
-+			map__put(pchain->frames[i].map);
-+		free(pchain->frames);
-+	}
-+	Py_TYPE(pchain)->tp_free((PyObject*)pchain);
-+}
-+
-+static PyObject *pyrf_callchain__next(struct pyrf_callchain *pchain)
-+{
-+	struct pyrf_callchain_node *pnode;
-+
-+	if (!pchain->resolved) {
-+		struct evsel *evsel = pchain->pevent->sample.evsel;
-+		struct evlist *evlist = evsel->evlist;
-+		struct perf_session *session = evlist ? evlist->session : NULL;
-+		struct addr_location al;
-+		struct callchain_cursor *cursor;
-+		struct callchain_cursor_node *node;
-+		u64 i;
-+
-+		if (!session || !pchain->pevent->sample.callchain)
-+			return NULL;
-+
-+		addr_location__init(&al);
-+		if (machine__resolve(&session->machines.host, &al, &pchain->pevent->sample) < 0) {
-+			addr_location__exit(&al);
-+			return NULL;
-+		}
-+
-+		cursor = get_tls_callchain_cursor();
-+		if (thread__resolve_callchain(al.thread, cursor, evsel,
-+					      &pchain->pevent->sample, NULL, NULL,
-+					      PERF_MAX_STACK_DEPTH) != 0) {
-+			addr_location__exit(&al);
-+			return NULL;
-+		}
-+		callchain_cursor_commit(cursor);
-+
-+		pchain->nr_frames = cursor->nr;
-+		if (pchain->nr_frames > 0) {
-+			pchain->frames = calloc(pchain->nr_frames, sizeof(*pchain->frames));
-+			if (!pchain->frames) {
-+				addr_location__exit(&al);
-+				return PyErr_NoMemory();
-+			}
-+
-+			for (i = 0; i < pchain->nr_frames; i++) {
-+				node = callchain_cursor_current(cursor);
-+				pchain->frames[i].ip = node->ip;
-+				pchain->frames[i].map = map__get(node->ms.map);
-+				pchain->frames[i].sym = node->ms.sym;
-+				callchain_cursor_advance(cursor);
-+			}
-+		}
-+		pchain->resolved = true;
-+		addr_location__exit(&al);
-+	}
-+
-+	if (pchain->pos >= pchain->nr_frames)
++	if (!PyArg_ParseTuple(args, "s", &config_name))
 +		return NULL;
 +
-+	pnode = PyObject_New(struct pyrf_callchain_node, &pyrf_callchain_node__type);
-+	if (!pnode)
-+		return NULL;
-+
-+	pnode->ip = pchain->frames[pchain->pos].ip;
-+	pnode->map = map__get(pchain->frames[pchain->pos].map);
-+	pnode->sym = pchain->frames[pchain->pos].sym;
-+
-+	pchain->pos++;
-+	return (PyObject *)pnode;
++	val = perf_config_get(config_name);
++	if (!val)
++		Py_RETURN_NONE;
++	return PyUnicode_FromString(val);
 +}
 +
-+static PyTypeObject pyrf_callchain__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.callchain",
-+	.tp_basicsize	= sizeof(struct pyrf_callchain),
-+	.tp_dealloc	= (destructor)pyrf_callchain__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf callchain object.",
-+	.tp_iter	= PyObject_SelfIter,
-+	.tp_iternext	= (iternextfunc)pyrf_callchain__next,
-+};
-+
-+static PyObject *pyrf_sample_event__get_callchain(PyObject *self, void */*closure*/)
-+{
-+	struct pyrf_event *pevent = (void *)self;
-+	struct pyrf_callchain *pchain;
-+
-+	if (!pevent->sample.callchain) {
-+		Py_INCREF(Py_None);
-+		return Py_None;
-+	}
-+
-+	pchain = PyObject_New(struct pyrf_callchain, &pyrf_callchain__type);
-+	if (!pchain)
-+		return NULL;
-+
-+	Py_INCREF(pevent);
-+	pchain->pevent = pevent;
-+	pchain->frames = NULL;
-+	pchain->nr_frames = 0;
-+	pchain->pos = 0;
-+	pchain->resolved = false;
-+	return (PyObject *)pchain;
-+}
-+
- static PyObject*
- pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- {
-@@ -623,6 +810,12 @@ pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- }
- 
- static PyGetSetDef pyrf_sample_event__getset[] = {
+ static PyMethodDef perf__methods[] = {
 +	{
-+		.name = "callchain",
-+		.get = pyrf_sample_event__get_callchain,
-+		.set = NULL,
-+		.doc = "event callchain.",
++		.ml_name  = "config_get",
++		.ml_meth  = (PyCFunction) pyrf__config_get,
++		.ml_flags = METH_VARARGS,
++		.ml_doc	  = PyDoc_STR("Get a perf config value.")
 +	},
  	{
- 		.name = "raw_buf",
- 		.get = (getter)pyrf_sample_event__get_raw_buf,
-@@ -791,6 +984,12 @@ static int pyrf_event__setup_types(void)
- 	err = PyType_Ready(&pyrf_context_switch_event__type);
- 	if (err < 0)
- 		goto out;
-+	err = PyType_Ready(&pyrf_callchain_node__type);
-+	if (err < 0)
-+		goto out;
-+	err = PyType_Ready(&pyrf_callchain__type);
-+	if (err < 0)
-+		goto out;
- out:
- 	return err;
- }
-@@ -2836,6 +3035,9 @@ static int pyrf_session__init(struct pyrf_session *psession, PyObject *args, PyO
- 		return -1;
- 	}
- 
-+	symbol_conf.use_callchain = true;
-+	symbol_conf.show_kernel_path = true;
-+	symbol_conf.inline_name = false;
- 	if (symbol__init(perf_session__env(psession->session)) < 0) {
- 		perf_session__delete(psession->session);
- 		Py_DECREF(pdata);
+ 		.ml_name  = "metrics",
+ 		.ml_meth  = (PyCFunction) pyrf__metrics,
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
