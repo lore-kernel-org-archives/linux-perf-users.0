@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C6933EB1A
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D631A2392
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643236; cv=none; b=QM/f/Dl/Qm7tuXMnOMVYDNGhGWZj8ra1Sct34Be89XLTvTTfT19CNUH9NPLGsfMuWv6e4PlosNy3jXuoOhs5Cq9wt/VfV7HYuMoqqoBR8hbCBls99Y2Djxg1D310MoujcWTx4nQBOQ28oEzkl81kiVj9xgQ50R1YVdRPOylcnDg=
+	t=1776643238; cv=none; b=RhxkqQ/N/xj4at87ewxHglhvaXi5EJHP0dlWud0NladoXrAux+JxD3oiJ0DmbA4+2AROf4gkGjZwBrceJFJ9rkeZ0nbNrErTHbH+MCCKElnGdvmGqS+ByKcZ6KP9hEX/sDk8BDtac8YDPbsVfRoJQA0jaHHUpYLfHJvhVTGpwVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643236; c=relaxed/simple;
-	bh=prXTEa0foglSS6FeZGt1/On1JxW4ePLiZA9BWFc31Jc=;
+	s=arc-20240116; t=1776643238; c=relaxed/simple;
+	bh=hOi0uwqL0ZmhHuxQSsdQpg68ZDJ70pRXqTj76zDDMH0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Zai17w0jUHvXXwNNxIlRzMF7UBTSbiy0Tvj1mM0iFCcc028FXuOl8epfkCP/i3ANsx0rnfJEPnh3vXremKC5mZjtF3feySk9fkuNF7dJ5Xm+Km9M3jAvOI0EmNh/CsECLbyLU6I9bBbZ+DiyKrwqHEtT65CmSqfD9KWSS9wTCyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8Dy4tVK; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=JnvGo6/MzIg32ioVz0a0AD3kyJjhzNn3E7sC+HSJuFiiCJD30JBA59XXJF+oTM77ZP5ynQmPun0HFkxER+4sVXcP9uE7xfk18e8i2lSafE4SyvLR6yWVVSmoTJWyNDGsSB1bnrbKOO7+E+ot3na7q3TZu9qckrGNoEbcfyac0nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DqGXwsBt; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8Dy4tVK"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdf6fe90a9so3059753eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DqGXwsBt"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2c0ba59a830so3565639eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643234; x=1777248034; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643235; x=1777248035; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MvtLngZzqLKzhUYZHJ4hGrsLLgMCO53EoUEuQKHEI8=;
-        b=r8Dy4tVK1XLHGbzt5rblYMQBMjf697Mm+WN5j+Ry87BrHwxHLrEoYASNDDV/lCbIkU
-         agheDBuffKRlg2OXdZJ2h5xHltPN8H+8TYNMHd3mVVtX7ukEFLUgYbWN/hY7OhvMNGdH
-         /KksPNK3OuQvUnV9j818W9liY4H4FTnZ2+ajYOO20NryzMtS7OvxF19BykAv7o1/qRrX
-         G+hae0J5orQyPd/vlJ4XLbo2ZkV3AIGZYXg+5IMsmil8gL2/9WAUOXfU6eAVwra5f9sR
-         A7MiI4ag63oaOiYCBIUcEU6BcPwzU/6NY45D40t8Z3r8gHbdhS/V+Z4bR/qId+WC8fDk
-         O99w==
+        bh=vHodQzbiM33+deYp9ZxQ58WnBiGA2JQveFOB2csZbNY=;
+        b=DqGXwsBte0oMg1LYgyPSMZNbxEAlqKcdUfPNNlsJ4W/QU9ejobLrVpSZfELOyV9ihK
+         6drbQZ4+rXsUmEyf4BVt2qfKdkNFJwma/LFezfyqEaxg0wtsxqc7lz6EEytF+h3Pu3g5
+         E3OTguK6iyR/mro6C0Op4SgPAS/BAgyJGMqkQOf/toF2wXrF9V+VsNsp3TwIe5XufyAM
+         XPBrMN2qOQSxZPkBQ8p9+mtK3+pGsRXL2pHMekwj+G2z7EpxtDwKGwvYi7/PeUpBhJnM
+         PMH+1hIBZD/jNxHA2hkdxjmrN23RQf6YU9rvurigs5jFvelp1vRBxmE5EV828Dzfpzcc
+         0rLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643234; x=1777248034;
+        d=1e100.net; s=20251104; t=1776643235; x=1777248035;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MvtLngZzqLKzhUYZHJ4hGrsLLgMCO53EoUEuQKHEI8=;
-        b=RagfgOpULplEKgV9XCgtFudfar+zQAsj6DcEalMpe292hbN95O9EdlV4TS1hNzAEXv
-         0Awk1iFAORt23M1NOb41A0AEh9H1tgeb6Nao9O6eESm0SjNxvDo9xwKI2bhQfN/3lyAj
-         kPwPpShIW/I+KXk+/roYCCEg+oF7bUWTUH3rb8eNKPvVnQNk2jsiTzp1l7dMP4h833E7
-         j975JXCYq0lDCZ7D0ifzl10V08jrBz5vGGc3zImj11TWBDOTe1jtLfK1SdMCGlUlz2+7
-         6jemIlU2ITSwUTh3uKl7A4pWhqQDnfKW/yu7NaSAK9X4CHiXAb4MNVsMMi0Qg215HEyY
-         qnYA==
-X-Forwarded-Encrypted: i=1; AFNElJ/R3J5un/mfAFrSLp5QY8YqxpzNC+/pPZK9l3hClYG9yfH4rv6x/zw/KX++oTUtR4KVmONUBSoZBgdAn5OcYa4U@vger.kernel.org
-X-Gm-Message-State: AOJu0YweGsMn41eOlTklVgRgBWl/zxUjoksSQfFp9ZxJfCCwrdoktA5c
-	T4qgkRpdIjqOxV8iM6Rm6WARTTZ/t2RhmGITbL3LaE04bSvTQK/qykXKOBkCX55ebYVcM+2ZFs3
-	fEdnM6dPl+A==
-X-Received: from dybnj1.prod.google.com ([2002:a05:7300:d081:b0:2da:5e63:c8e4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1693:b0:2d4:7656:4ec1
- with SMTP id 5a478bee46e88-2e47873a687mr6249196eec.17.1776643232524; Sun, 19
- Apr 2026 17:00:32 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:43 -0700
+        bh=vHodQzbiM33+deYp9ZxQ58WnBiGA2JQveFOB2csZbNY=;
+        b=gdYRL9g5khh7MJ8HpVMgrqaaOOzUYl3MQzkSddPNdHCBKwy2qGMcOz92S8SGGLA967
+         dEB1gFMudVpyXzOQ1nhT9Xo2fnVJ+P5L9kVcixGEcgiEI3K2vCkq5tBgdUGEnkXxwgYt
+         AM9vf9vGYnXdlnPm7yt43spQ7ehF+RW88xllcsSXpGrrjzYSLU8hu16WANXJTdzMGLdX
+         D1hcwSaz804r19ETJAZz6AIqR42Ufa5nNnDirFLSu4yHLH9sVPfOrOdNDQhcsHnBheMk
+         ABoQrFQnIXyFRj3T8h7gSl2NmgdydVimd1CkEh6uyf0BZMo6SxXeNDk0AnwKNg5ARNzD
+         Mtcg==
+X-Forwarded-Encrypted: i=1; AFNElJ8vLnrMYxrUiANc3cKLHGxL+7NxGmjMH4WNMPYJFTwr9UfG5nX1pBmqj5wQXaaaAvBOZ4ADELTQp4c6mMI3oLoD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX7J4BfgTD7q+BRY8VHll+Te6+0rQ1o+aq4RL+1dLynIZ8Ga3u
+	rOnbv1PL91/HYQs4sINoCaPUMTMMZrLrfUU/kfKTA0mZDwtlhOWYazV0juAUEiQ9lot2MAQi+oR
+	Da/DMMWjm/Q==
+X-Received: from dybgl28.prod.google.com ([2002:a05:7300:e01c:b0:2d8:1265:1a34])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:3016:b0:2d0:239a:23c9
+ with SMTP id 5a478bee46e88-2e479c04339mr4759146eec.16.1776643234457; Sun, 19
+ Apr 2026 17:00:34 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:44 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-32-irogers@google.com>
-Subject: [PATCH v1 31/58] perf gecko: Port gecko to use python module
+Message-ID: <20260419235911.2186050-33-irogers@google.com>
+Subject: [PATCH v1 32/58] perf arm-cs-trace-disasm: Port arm-cs-trace-disasm
+ to use python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,304 +93,313 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a port of the gecko script that uses the perf python module
-directly. This approach is significantly faster than using perf script
-callbacks as it avoids creating intermediate dictionaries for all
-event fields.
+Add a port of the arm-cs-trace-disasm script that uses the perf python
+module directly. This approach is significantly faster than using perf
+script callbacks as it avoids creating intermediate dictionaries for
+all event fields. Update the testing to use the ported script.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/gecko.py | 372 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 372 insertions(+)
- create mode 100755 tools/perf/python/gecko.py
+ tools/perf/python/arm-cs-trace-disasm.py      | 333 ++++++++++++++++++
+ .../tests/shell/test_arm_coresight_disasm.sh  |  10 +-
+ 2 files changed, 339 insertions(+), 4 deletions(-)
+ create mode 100755 tools/perf/python/arm-cs-trace-disasm.py
 
-diff --git a/tools/perf/python/gecko.py b/tools/perf/python/gecko.py
+diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python/arm-cs-trace-disasm.py
 new file mode 100755
-index 000000000000..5d55bcb8ac01
+index 000000000000..3557a02b03fb
 --- /dev/null
-+++ b/tools/perf/python/gecko.py
-@@ -0,0 +1,372 @@
++++ b/tools/perf/python/arm-cs-trace-disasm.py
+@@ -0,0 +1,333 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+gecko.py - Convert perf record output to Firefox's gecko profile format
++arm-cs-trace-disasm.py: ARM CoreSight Trace Dump With Disassember using perf python module
 +"""
 +
-+import argparse
-+import json
 +import os
-+import subprocess
++from os import path
++import re
++from subprocess import check_output
++import argparse
++import platform
 +import sys
-+import threading
-+import urllib.parse
-+import webbrowser
-+from dataclasses import dataclass, field
-+from http.server import HTTPServer, SimpleHTTPRequestHandler
-+from typing import Dict, List, NamedTuple, Optional, Tuple
++from typing import Dict, List, Optional
 +
-+import perf
++# Initialize global dicts and regular expression
++DISASM_CACHE: Dict[str, List[str]] = {}
++CPU_DATA: Dict[str, int] = {}
++DISASM_RE = re.compile(r"^\s*([0-9a-fA-F]+):")
++DISASM_FUNC_RE = re.compile(r"^\s*([0-9a-fA-F]+)\s.*:")
++CACHE_SIZE = 64*1024
++SAMPLE_IDX = -1
 +
++GLB_SOURCE_FILE_NAME: Optional[str] = None
++GLB_LINE_NUMBER: Optional[int] = None
++GLB_DSO: Optional[str] = None
 +
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L156
-+class Frame(NamedTuple):
-+    """A single stack frame in the gecko profile format."""
-+    string_id: int
-+    relevantForJS: bool
-+    innerWindowID: int
-+    implementation: None
-+    optimizations: None
-+    line: None
-+    column: None
-+    category: int
-+    subcategory: Optional[int]
++KVER = platform.release()
++VMLINUX_PATHS = [
++    f"/usr/lib/debug/boot/vmlinux-{KVER}.debug",
++    f"/usr/lib/debug/lib/modules/{KVER}/vmlinux",
++    f"/lib/modules/{KVER}/build/vmlinux",
++    f"/usr/lib/debug/boot/vmlinux-{KVER}",
++    f"/boot/vmlinux-{KVER}",
++    "/boot/vmlinux",
++    "vmlinux"
++]
 +
++def default_objdump() -> str:
++    """Return the default objdump path from perf config or 'objdump'."""
++    try:
++        config = perf.config_get("annotate.objdump")
++        return str(config) if config else "objdump"
++    except (AttributeError, TypeError):
++        return "objdump"
 +
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L216
-+class Stack(NamedTuple):
-+    """A single stack in the gecko profile format."""
-+    prefix_id: Optional[int]
-+    frame_id: int
++def find_vmlinux() -> Optional[str]:
++    """Find the vmlinux file in standard paths."""
++    if hasattr(find_vmlinux, "path"):
++        return getattr(find_vmlinux, "path")
 +
++    for v in VMLINUX_PATHS:
++        if os.access(v, os.R_OK):
++            setattr(find_vmlinux, "path", v)
++            return v
++    setattr(find_vmlinux, "path", None)
++    return None
 +
-+# https://github.com/firefox-devtools/profiler/blob/53970305b51b9b472e26d7457fee1d66cd4e2737/src/types/gecko-profile.js#L90
-+class Sample(NamedTuple):
-+    """A single sample in the gecko profile format."""
-+    stack_id: Optional[int]
-+    time_ms: float
-+    responsiveness: int
++def get_dso_file_path(dso_name: str, dso_build_id: str, vmlinux: Optional[str]) -> str:
++    """Return the path to the DSO file."""
++    if dso_name in ("[kernel.kallsyms]", "vmlinux"):
++        if vmlinux:
++            return vmlinux
++        return find_vmlinux() or dso_name
 +
++    if dso_name == "[vdso]":
++        append = "/vdso"
++    else:
++        append = "/elf"
 +
-+@dataclass
-+class Tables:
-+    """Interned tables for the gecko profile format."""
-+    frame_table: List[Frame] = field(default_factory=list)
-+    string_table: List[str] = field(default_factory=list)
-+    string_map: Dict[str, int] = field(default_factory=dict)
-+    stack_table: List[Stack] = field(default_factory=list)
-+    stack_map: Dict[Tuple[Optional[int], int], int] = field(default_factory=dict)
-+    frame_map: Dict[str, int] = field(default_factory=dict)
++    buildid_dir = os.environ.get('PERF_BUILDID_DIR')
++    if not buildid_dir:
++        buildid_dir = os.path.join(os.environ.get('HOME', ''), '.debug')
 +
++    dso_path = buildid_dir + "/" + dso_name + "/" + dso_build_id + append
++    # Replace duplicate slash chars to single slash char
++    dso_path = dso_path.replace('//', '/', 1)
++    return dso_path
 +
-+@dataclass
-+class Thread:
-+    """A builder for a profile of the thread."""
-+    comm: str
-+    pid: int
-+    tid: int
-+    user_category: int
-+    kernel_category: int
-+    samples: List[Sample] = field(default_factory=list)
-+    tables: Tables = field(default_factory=Tables)
++def read_disam(dso_fname: str, dso_start: int, start_addr: int,
++               stop_addr: int, objdump: str) -> List[str]:
++    """Read disassembly from a DSO file using objdump."""
++    addr_range = f"{start_addr}:{stop_addr}:{dso_fname}"
 +
-+    def _intern_stack(self, frame_id: int, prefix_id: Optional[int]) -> int:
-+        """Gets a matching stack, or saves the new stack. Returns a Stack ID."""
-+        key = (prefix_id, frame_id)
-+        stack_id = self.tables.stack_map.get(key)
-+        if stack_id is None:
-+            stack_id = len(self.tables.stack_table)
-+            self.tables.stack_table.append(Stack(prefix_id=prefix_id, frame_id=frame_id))
-+            self.tables.stack_map[key] = stack_id
-+        return stack_id
++    # Don't let the cache get too big, clear it when it hits max size
++    if len(DISASM_CACHE) > CACHE_SIZE:
++        DISASM_CACHE.clear()
 +
-+    def _intern_string(self, string: str) -> int:
-+        """Gets a matching string, or saves the new string. Returns a String ID."""
-+        string_id = self.tables.string_map.get(string)
-+        if string_id is not None:
-+            return string_id
-+        string_id = len(self.tables.string_table)
-+        self.tables.string_table.append(string)
-+        self.tables.string_map[string] = string_id
-+        return string_id
++    if addr_range in DISASM_CACHE:
++        disasm_output = DISASM_CACHE[addr_range]
++    else:
++        start_addr = start_addr - dso_start
++        stop_addr = stop_addr - dso_start
++        disasm = [objdump, "-d", "-z",
++                  f"--start-address={start_addr:#x}",
++                  f"--stop-address={stop_addr:#x}"]
++        disasm += [dso_fname]
++        disasm_output = check_output(disasm).decode('utf-8').split('\n')
++        DISASM_CACHE[addr_range] = disasm_output
 +
-+    def _intern_frame(self, frame_str: str) -> int:
-+        """Gets a matching stack frame, or saves the new frame. Returns a Frame ID."""
-+        frame_id = self.tables.frame_map.get(frame_str)
-+        if frame_id is not None:
-+            return frame_id
-+        frame_id = len(self.tables.frame_table)
-+        self.tables.frame_map[frame_str] = frame_id
-+        string_id = self._intern_string(frame_str)
++    return disasm_output
 +
-+        category = self.user_category
-+        if (frame_str.find('kallsyms') != -1 or
-+                frame_str.find('/vmlinux') != -1 or
-+                frame_str.endswith('.ko)')):
-+            category = self.kernel_category
++def print_disam(dso_fname: str, dso_start: int, start_addr: int,
++                stop_addr: int, objdump: str) -> None:
++    """Print disassembly for a given address range."""
++    for line in read_disam(dso_fname, dso_start, start_addr, stop_addr, objdump):
++        m = DISASM_FUNC_RE.search(line)
++        if m is None:
++            m = DISASM_RE.search(line)
++            if m is None:
++                continue
++        print(f"\t{line}")
 +
-+        self.tables.frame_table.append(Frame(
-+            string_id=string_id,
-+            relevantForJS=False,
-+            innerWindowID=0,
-+            implementation=None,
-+            optimizations=None,
-+            line=None,
-+            column=None,
-+            category=category,
-+            subcategory=None,
-+        ))
-+        return frame_id
++def print_sample(sample: perf.sample_event) -> None:
++    """Print sample details."""
++    print(f"Sample = {{ cpu: {sample.sample_cpu:04d} addr: {sample.sample_addr:016x} "
++          f"phys_addr: {sample.sample_phys_addr:016x} ip: {sample.sample_ip:016x} "
++          f"pid: {sample.sample_pid} tid: {sample.sample_tid} period: {sample.sample_period} "
++          f"time: {sample.sample_time} index: {SAMPLE_IDX}}}")
 +
-+    def add_sample(self, comm: str, stack: List[str], time_ms: float) -> None:
-+        """Add a timestamped stack trace sample to the thread builder."""
-+        if self.comm != comm:
-+            self.comm = comm
++def common_start_str(comm: str, sample: perf.sample_event) -> str:
++    """Return common start string for sample output."""
++    sec = int(sample.sample_time / 1000000000)
++    ns = sample.sample_time % 1000000000
++    cpu = sample.sample_cpu
++    pid = sample.sample_pid
++    tid = sample.sample_tid
++    return f"{comm:>16s} {pid:5u}/{tid:<5u} [{cpu:04d}] {sec:9d}.{ns:09d}  "
 +
-+        prefix_stack_id: Optional[int] = None
-+        for frame in stack:
-+            frame_id = self._intern_frame(frame)
-+            prefix_stack_id = self._intern_stack(frame_id, prefix_stack_id)
++def print_srccode(comm: str, sample: perf.sample_event, symbol: str, dso: str) -> None:
++    """Print source code and symbols for a sample."""
++    ip = sample.sample_ip
++    if symbol == "[unknown]":
++        start_str = common_start_str(comm, sample) + f"{ip:x}".rjust(16).ljust(40)
++    else:
++        symoff = 0
++        sym_start = sample.sym_start
++        if sym_start is not None:
++            symoff = ip - sym_start
++        offs = f"+{symoff:#x}" if symoff != 0 else ""
++        start_str = common_start_str(comm, sample) + (symbol + offs).ljust(40)
 +
-+        if prefix_stack_id is not None:
-+            self.samples.append(Sample(stack_id=prefix_stack_id,
-+                                       time_ms=time_ms,
-+                                       responsiveness=0))
++    global GLB_SOURCE_FILE_NAME, GLB_LINE_NUMBER, GLB_DSO
 +
-+    def to_json_dict(self) -> Dict:
-+        """Converts current Thread to GeckoThread JSON format."""
-+        return {
-+            "tid": self.tid,
-+            "pid": self.pid,
-+            "name": self.comm,
-+            "markers": {
-+                "schema": {
-+                    "name": 0,
-+                    "startTime": 1,
-+                    "endTime": 2,
-+                    "phase": 3,
-+                    "category": 4,
-+                    "data": 5,
-+                },
-+                "data": [],
-+            },
-+            "samples": {
-+                "schema": {
-+                    "stack": 0,
-+                    "time": 1,
-+                    "responsiveness": 2,
-+                },
-+                "data": self.samples
-+            },
-+            "frameTable": {
-+                "schema": {
-+                    "location": 0,
-+                    "relevantForJS": 1,
-+                    "innerWindowID": 2,
-+                    "implementation": 3,
-+                    "optimizations": 4,
-+                    "line": 5,
-+                    "column": 6,
-+                    "category": 7,
-+                    "subcategory": 8,
-+                },
-+                "data": self.tables.frame_table,
-+            },
-+            "stackTable": {
-+                "schema": {
-+                    "prefix": 0,
-+                    "frame": 1,
-+                },
-+                "data": self.tables.stack_table,
-+            },
-+            "stringTable": self.tables.string_table,
-+            "registerTime": 0,
-+            "unregisterTime": None,
-+            "processType": "default",
-+        }
++    source_file_name, line_number, source_line, _ = sample.srccode()
++    if source_file_name:
++        if GLB_LINE_NUMBER == line_number and GLB_SOURCE_FILE_NAME == source_file_name:
++            src_str = ""
++        else:
++            if len(source_file_name) > 40:
++                src_file = f"...{source_file_name[-37:]} "
++            else:
++                src_file = source_file_name.ljust(41)
 +
++            if source_line is None:
++                src_str = f"{src_file}{line_number:>4d} <source not found>"
++            else:
++                src_str = f"{src_file}{line_number:>4d} {source_line}"
++        GLB_DSO = None
++    elif dso == GLB_DSO:
++        src_str = ""
++    else:
++        src_str = dso
++        GLB_DSO = dso
 +
-+class CORSRequestHandler(SimpleHTTPRequestHandler):
-+    """Enable CORS for requests from profiler.firefox.com."""
-+    def end_headers(self):
-+        self.send_header('Access-Control-Allow-Origin', 'https://profiler.firefox.com')
-+        super().end_headers()
++    GLB_LINE_NUMBER = line_number
++    GLB_SOURCE_FILE_NAME = source_file_name
 +
++    print(start_str, src_str)
 +
-+@dataclass
-+class CategoryData:
-+    """Category configuration for the gecko profile."""
-+    user_index: int = 0
-+    kernel_index: int = 1
-+    categories: List[Dict] = field(default_factory=list)
++class TraceDisasm:
++    """Class to handle trace disassembly."""
++    def __init__(self, cli_options: argparse.Namespace):
++        self.options = cli_options
++        self.sample_idx = -1
++        self.session: Optional[perf.session] = None
 +
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Process a single perf event."""
++        self.sample_idx += 1
++        global SAMPLE_IDX
++        SAMPLE_IDX = self.sample_idx
 +
-+class GeckoCLI:
-+    """Command-line interface for converting perf data to Gecko format."""
-+    def __init__(self, args):
-+        self.args = args
-+        self.tid_to_thread: Dict[int, Thread] = {}
-+        self.start_time_ms: Optional[float] = None
-+        self.session = None
-+        self.product = subprocess.check_output(['uname', '-op']).decode().strip()
-+        self.cat_data = CategoryData(
-+            categories=[
-+                {
-+                    "name": 'User',
-+                    "color": args.user_color,
-+                    "subcategories": ['Other']
-+                },
-+                {
-+                    "name": 'Kernel',
-+                    "color": args.kernel_color,
-+                    "subcategories": ['Other']
-+                },
-+            ]
-+        )
-+
-+    def process_event(self, sample) -> None:
-+        """Process a single perf sample event."""
-+        if self.args.event_name and str(sample.evsel) != self.args.event_name:
++        if self.options.start_time and sample.sample_time < self.options.start_time:
++            return
++        if self.options.stop_time and sample.sample_time > self.options.stop_time:
++            return
++        if self.options.start_sample and self.sample_idx < self.options.start_sample:
++            return
++        if self.options.stop_sample and self.sample_idx > self.options.stop_sample:
 +            return
 +
-+        # sample_time is in nanoseconds. Gecko wants milliseconds.
-+        time_ms = sample.sample_time / 1000000.0
-+        pid = sample.sample_pid
-+        tid = sample.sample_tid
++        ev_name = str(sample.evsel)
++        if self.options.verbose:
++            print(f"Event type: {ev_name}")
++            print_sample(sample)
 +
-+        if self.start_time_ms is None:
-+            self.start_time_ms = time_ms
++        dso = sample.dso or '[unknown]'
++        symbol = sample.symbol or '[unknown]'
++        dso_bid = sample.dso_bid or '[unknown]'
++        dso_start = sample.map_start
++        dso_end = sample.map_end
++        map_pgoff = sample.map_pgoff or 0
 +
 +        try:
-+            thread_info = self.session.process(tid)
++            thread_info = self.session.process(sample.sample_tid)
 +            comm = thread_info.comm()
 +        except Exception:
 +            comm = "[unknown]"
 +
-+        stack = []
-+        callchain = sample.callchain
-+        if callchain:
-+            for entry in callchain:
-+                symbol = entry.symbol or "[unknown]"
-+                dso = entry.dso or "[unknown]"
-+                stack.append(f"{symbol} (in {dso})")
-+            # Reverse because Gecko wants root first.
-+            stack.reverse()
-+        else:
-+            # Fallback if no callchain is present
-+            try:
-+                # If the perf module exposes symbol/dso directly on sample
-+                # when callchain is missing, we use them.
-+                symbol = getattr(sample, 'symbol', '[unknown]')
-+                dso = getattr(sample, 'dso', '[unknown]')
-+                stack.append(f"{symbol} (in {dso})")
-+            except AttributeError:
-+                stack.append("[unknown] (in [unknown])")
++        cpu = sample.sample_cpu
++        addr = sample.sample_addr
 +
-+        thread = self.tid_to_thread.get(tid)
-+        if thread is None:
-+            thread = Thread(comm=comm, pid=pid, tid=tid,
-+                            user_category=self.cat_data.user_index,
-+                            kernel_category=self.cat_data.kernel_index)
-+            self.tid_to_thread[tid] = thread
-+        thread.add_sample(comm=comm, stack=stack, time_ms=time_ms)
++        if CPU_DATA.get(str(cpu) + 'addr') is None:
++            CPU_DATA[str(cpu) + 'addr'] = addr
++            return
++
++        if dso == '[unknown]':
++            return
++
++        if dso_start is None or dso_end is None:
++            print(f"Failed to find valid dso map for dso {dso}")
++            return
++
++        if ev_name.startswith("instructions"):
++            print_srccode(comm, sample, symbol, dso)
++            return
++
++        if not ev_name.startswith("branches"):
++            return
++
++        self._process_branch(sample, comm, symbol, dso, dso_bid, dso_start, dso_end, map_pgoff)
++
++    def _process_branch(self, sample: perf.sample_event, comm: str, symbol: str, dso: str,
++                        dso_bid: str, dso_start: int, dso_end: int, map_pgoff: int) -> None:
++        """Helper to process branch events."""
++        cpu = sample.sample_cpu
++        ip = sample.sample_ip
++        addr = sample.sample_addr
++
++        start_addr = CPU_DATA[str(cpu) + 'addr']
++        stop_addr  = ip + 4
++
++        # Record for previous sample packet
++        CPU_DATA[str(cpu) + 'addr'] = addr
++
++        # Filter out zero start_address. Optionally identify CS_ETM_TRACE_ON packet
++        if start_addr == 0:
++            if stop_addr == 4 and self.options.verbose:
++                print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
++            return
++
++        if start_addr < dso_start or start_addr > dso_end:
++            print(f"Start address {start_addr:#x} is out of range [ {dso_start:#x} .. "
++                  f"{dso_end:#x} ] for dso {dso}")
++            return
++
++        if stop_addr < dso_start or stop_addr > dso_end:
++            print(f"Stop address {stop_addr:#x} is out of range [ {dso_start:#x} .. "
++                  f"{dso_end:#x} ] for dso {dso}")
++            return
++
++        if self.options.objdump is not None:
++            if dso == "[kernel.kallsyms]" or dso_start == 0x400000:
++                dso_vm_start = 0
++                map_pgoff_local = 0
++            else:
++                dso_vm_start = dso_start
++                map_pgoff_local = map_pgoff
++
++            dso_fname = get_dso_file_path(dso, dso_bid, self.options.vmlinux)
++            if path.exists(dso_fname):
++                print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff_local,
++                            stop_addr + map_pgoff_local, self.options.objdump)
++            else:
++                print(f"Failed to find dso {dso} for address range [ "
++                      f"{start_addr + map_pgoff_local:#x} .. {stop_addr + map_pgoff_local:#x} ]")
++
++        print_srccode(comm, sample, symbol, dso)
 +
 +    def run(self) -> None:
-+        """Run the conversion process."""
-+        input_file = self.args.input or "perf.data"
++        """Run the trace disassembly session."""
++        input_file = self.options.input or "perf.data"
 +        if not os.path.exists(input_file):
 +            print(f"Error: {input_file} not found.", file=sys.stderr)
 +            sys.exit(1)
 +
++        print('ARM CoreSight Trace Data Assembler Dump')
 +        try:
 +            self.session = perf.session(perf.data(input_file), sample=self.process_event)
 +        except Exception as e:
@@ -397,91 +407,72 @@ index 000000000000..5d55bcb8ac01
 +            sys.exit(1)
 +
 +        self.session.process_events()
-+
-+        threads = [t.to_json_dict() for t in self.tid_to_thread.values()]
-+
-+        gecko_profile = {
-+            "meta": {
-+                "interval": 1,
-+                "processType": 0,
-+                "product": self.product,
-+                "stackwalk": 1,
-+                "debug": 0,
-+                "gcpoison": 0,
-+                "asyncstack": 1,
-+                "startTime": self.start_time_ms,
-+                "shutdownTime": None,
-+                "version": 24,
-+                "presymbolicated": True,
-+                "categories": self.cat_data.categories,
-+                "markerSchema": [],
-+            },
-+            "libs": [],
-+            "threads": threads,
-+            "processes": [],
-+            "pausedRanges": [],
-+        }
-+
-+        output_file = self.args.save_only
-+        if output_file is None:
-+            output_file = 'gecko_profile.json'
-+            self._write_and_launch(gecko_profile, output_file)
-+        else:
-+            print(f'[ perf gecko: Captured and wrote into {output_file} ]')
-+            with open(output_file, 'w', encoding='utf-8') as f:
-+                json.dump(gecko_profile, f, indent=2)
-+
-+    def _write_and_launch(self, profile: Dict, filename: str) -> None:
-+        """Write the profile to a file and launch the Firefox profiler."""
-+        print("Starting Firefox Profiler on your default browser...")
-+        with open(filename, 'w', encoding='utf-8') as f:
-+            json.dump(profile, f, indent=2)
-+
-+        # Start HTTP server in a daemon thread
-+        def start_server():
-+            server_address = ('', 8000)
-+            httpd = HTTPServer(server_address, CORSRequestHandler)
-+            httpd.serve_forever()
-+
-+        thread = threading.Thread(target=start_server, daemon=True)
-+        thread.start()
-+
-+        # Open the browser
-+        safe_string = urllib.parse.quote_plus(f'http://localhost:8000/{filename}')
-+        url = f'https://profiler.firefox.com/from-url/{safe_string}'
-+        webbrowser.open(url)
-+
-+        print(f'[ perf gecko: Captured and wrote into {filename} ]')
-+        print("Press Ctrl+C to stop the local server.")
-+        try:
-+            # Keep the main thread alive so the daemon thread can serve requests
-+            while True:
-+                threading.Event().wait(1)
-+        except KeyboardInterrupt:
-+            print("\nStopping server...")
-+
++        print('End')
 +
 +if __name__ == "__main__":
-+    parser = argparse.ArgumentParser(
-+        description="Convert perf.data to Firefox's Gecko Profile format"
-+    )
-+    parser.add_argument('--user-color', default='yellow',
-+                        help='Color for the User category',
-+                        choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red',
-+                                 'grey', 'magenta'])
-+    parser.add_argument('--kernel-color', default='orange',
-+                        help='Color for the Kernel category',
-+                        choices=['yellow', 'blue', 'purple', 'green', 'orange', 'red',
-+                                 'grey', 'magenta'])
-+    parser.add_argument('--save-only',
-+                        help='Save the output to a file instead of opening Firefox\'s profiler')
-+    parser.add_argument("-i", "--input", help="input perf.data file")
-+    parser.add_argument("-e", "--event", default="", dest="event_name", type=str,
-+                        help="specify the event to generate gecko profile for")
++    def int_arg(v: str) -> int:
++        """Helper for integer command line arguments."""
++        val = int(v)
++        if val < 0:
++            raise argparse.ArgumentTypeError("Argument must be a positive integer")
++        return val
 +
-+    cli_args = parser.parse_args()
-+    cli = GeckoCLI(cli_args)
-+    cli.run()
++    arg_parser = argparse.ArgumentParser(description="ARM CoreSight Trace Dump With Disassembler")
++    arg_parser.add_argument("-i", "--input", help="input perf.data file")
++    arg_parser.add_argument("-k", "--vmlinux",
++                            help="Set path to vmlinux file. Omit to autodetect")
++    arg_parser.add_argument("-d", "--objdump", nargs="?", const=default_objdump(),
++                            help="Show disassembly. Can also be used to change the objdump path")
++    arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable debugging log")
++    arg_parser.add_argument("--start-time", type=int_arg,
++                            help="Monotonic clock time of sample to start from.")
++    arg_parser.add_argument("--stop-time", type=int_arg,
++                            help="Monotonic clock time of sample to stop at.")
++    arg_parser.add_argument("--start-sample", type=int_arg,
++                            help="Index of sample to start from.")
++    arg_parser.add_argument("--stop-sample", type=int_arg,
++                            help="Index of sample to stop at.")
++
++    parsed_options = arg_parser.parse_args()
++    if (parsed_options.start_time and parsed_options.stop_time and \
++       parsed_options.start_time >= parsed_options.stop_time):
++        print("--start-time must less than --stop-time")
++        sys.exit(2)
++    if (parsed_options.start_sample and parsed_options.stop_sample and \
++       parsed_options.start_sample >= parsed_options.stop_sample):
++        print("--start-sample must less than --stop-sample")
++        sys.exit(2)
++
++    td = TraceDisasm(parsed_options)
++    td.run()
+diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+index 0dfb4fadf531..9749501cbf78 100755
+--- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+@@ -45,8 +45,9 @@ branch_search="\sbl${sep}b${sep}b.ne${sep}b.eq${sep}cbz\s"
+ if [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+ 	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/null 2>&1
+-	perf script -i ${perfdata} -s python:${script_path} -- \
+-		-d --stop-sample=30 2> /dev/null > ${file}
++	# shellcheck source=lib/setup_python.sh
++	. "$(dirname "$0")"/lib/setup_python.sh
++	$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=30 2> /dev/null > ${file}
+ 	grep -q -e ${branch_search} ${file}
+ 	echo "Found kernel branches"
+ else
+@@ -57,8 +58,9 @@ fi
+ ## Test user ##
+ echo "Testing userspace disassembly"
+ perf record -o ${perfdata} -e cs_etm//u -- touch $file > /dev/null 2>&1
+-perf script -i ${perfdata} -s python:${script_path} -- \
+-	-d --stop-sample=30 2> /dev/null > ${file}
++# shellcheck source=lib/setup_python.sh
++. "$(dirname "$0")"/lib/setup_python.sh
++$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=30 2> /dev/null > ${file}
+ grep -q -e ${branch_search} ${file}
+ echo "Found userspace branches"
+ 
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
