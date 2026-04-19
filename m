@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41AF33D6ED
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A993E320CD3
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643232; cv=none; b=sezwVDAFR1fRMayj90UNzM90TGQLgv98Qcang/kdwWkOBYzg2l3rIHfwS+xDs/C4NJMLF8E0y/bnfEPvx7mKimJHs/dOQSg8yeVF26QKvimzAXGFf9Joy56IrkY2gj4tZ+CuMYNBP5f6XF8GcMq1hg4HV9Hze2+DJNW8w++/rYY=
+	t=1776643236; cv=none; b=spJRO7kCageXxiIgwimnN9AdwG2wvxeFmRzFNoriHQVzD9lU2WGG729YQdb+8FA7Gleb7mSY0BYzUnalCJmobBeSJ7BRYzzR5rUbfbFhFb2AwRmQUNl039ank02WwezPw/Vu2kP646BOK/DwmmQkBnqIcgXMN2rbdRyAdwpKazc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643232; c=relaxed/simple;
-	bh=cDuFLi2du+A89h0gYkjo9peFw+CrlxGqdX81Q3lgXHE=;
+	s=arc-20240116; t=1776643236; c=relaxed/simple;
+	bh=etuLy1V1F0RX5awGDhdA4GPSQBYNAwEBuodb0W6q4j0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=V/DvopaFbDNJyd4wIIYU3LFupOAhN+Ih54SaRoASuJZOtP5NJ3MSTjIcCM14JrvqVgjW86cZe2rJbyKnWWVL7OPgQoza7rRQ9JrGQSu3dI6M/U1CoEtrhfro4OhGb1iNQ7/4eEJBoDbbzjY3FVzQ02yOS93N7+nEzcYIj4n7B0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jP8UnuB9; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=cNgeQrmZSkJLuknQVeIWy4wIjioyyXUjiaV1y559XME/q/G7M6G4cyp5Lq9WuqbDmDjEd5r0qfzeWDoaCL3/PoQOuw530JERl4RMD5bIPSeKHUwAUDbKM810RnhFHsw24K83CPHzQTaVaXGdi7kryi7H6OyBd57PK20WBo6lgs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VcGDqSYx; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jP8UnuB9"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35d9278587bso2937619a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VcGDqSYx"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so2555787eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643229; x=1777248029; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643234; x=1777248034; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nVsg/jCIPX02y9A0P2mg9Ec+DDgRaIKZvPz/ydAVnaQ=;
-        b=jP8UnuB94x5L9GSaM91sg+cet9ThhkUyuyE3AOpjRtim1SGf8IyWHHWlwn76sMQ7Af
-         Nh/9Vt6mvf9AfkgR1qcPu4YMWHcrhtMsc83WYu8IvS1UgWZbOrW9yOitdQiL/0Z3aCWI
-         eDY0+AfHqUf155HSNrE3jPo/Y+6Llo1uH3nLhQ4hGTZP4Ielb5Ynd4FA+4y34DOPXVFG
-         KzPHl0QZm2ameMjMO5BfYAQrNLQoQHCleJOGU6sSqCwpSyU2MzC+tUKtR9L1A+QgbvX4
-         iaXYZ7bT/ZRk/fl1MF8HSwV8fnu49N8CaJsaw8tK25I+8ICH894y70hsV69YCoMZ2BQy
-         I1lA==
+        bh=vugcSbemdk82js8t3EG1fRcF5eIw7MxVSdfYxHmqMQc=;
+        b=VcGDqSYxqGYTrIWOqhsabiIxveUck4uITBodjlF2FHHuqQtZVQ++l5fdHPx/l3LrSR
+         NsH9zeNuB2nMJGnsS/68jEfhaXRcmqJLBnUcbA3ep1BiByGCt3WYgtAE9sn7yBENyU6C
+         uDqe2nZIW+czcrPXy6x2rdE7sHAk+XcdVUfHNsHqZtQkfZdaTJA3ExqkWlqqTbPPBSJO
+         v2S1l8kvoPzB/095TK8xSQPP1di8Ud0BVd4FOOdKCtcV+1qelZMM6T2vNAmol9Md3iEZ
+         ZYPi5UfKbKx82zX8BDG6bCENNze9qjUtxOggFivt5WWIjR63C/Clx8P8XlfNm2wT3SKH
+         uR+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643229; x=1777248029;
+        d=1e100.net; s=20251104; t=1776643234; x=1777248034;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nVsg/jCIPX02y9A0P2mg9Ec+DDgRaIKZvPz/ydAVnaQ=;
-        b=MhU+ZT994AW5OeaClOyORvhyjNfF/lbXX2sGKyqlRSoaw5pSm64vD0qwucX9jwaAQs
-         lCvoyH53K8Yae/yFCYMlk9NG6M02QFkrxrMxyrCC4f22Kbsw4J7FkI0JDT0OUOBrOTbo
-         rU2xQ1rXiPcanoyt0Wo5sfYLwzcsq3rwooD7S2rD33cMU8TorTw6glyqPBCMgSq9ZA4l
-         lwnNlqbj6i66xuiAWxAkJUJH/uUNVBSZ3QK1IG67giD7MCxevWHLaM5Xqt1lOr1AoXk0
-         mjSJNfp0Gi8XGPVLQcy0ejAEM88VWCjWQuOT5Qt744E/CWKT1etyvEJW7AfU29XoeUId
-         M56w==
-X-Forwarded-Encrypted: i=1; AFNElJ9Eo9KbQuhqxV8cFRJGb9Z/Hvb+aLYAVAhleM+b4RUpJS2bIikELnvIsLw35TGvoXsufAdDRmVW0fIjptf+/5Yh@vger.kernel.org
-X-Gm-Message-State: AOJu0YysOQIARKqhc7etz7TzDYFSry39UnKGo1a9Amgb4SZqNzTkT6iN
-	JfeJxTmdA4+vPwun8/Oowm7YlVZtGAbIDDSWtUBEA1uBRHbtkhl+pdspVhwGeDEvtViu3RA3Z9+
-	r0NKrI5gkXg==
-X-Received: from pjre11.prod.google.com ([2002:a17:90a:b38b:b0:35d:ae01:8b69])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c8c:b0:35f:c1cc:fef0
- with SMTP id 98e67ed59e1d1-36140473e42mr11974997a91.13.1776643228258; Sun, 19
- Apr 2026 17:00:28 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:41 -0700
+        bh=vugcSbemdk82js8t3EG1fRcF5eIw7MxVSdfYxHmqMQc=;
+        b=WW6I3xdBnJpWGRB2HaZBdEY7hq0ZrdkV5KkhKL/QG/TY7ROKCPTXBLmxxNf2g8NKoP
+         yWJ8iCJADwHiaxCyGIO0hm5Y0GVnlxO4y6vk8M++MtZCkp1Y50fv1ixVRReVnIqPh71N
+         co5CxJ1oiKvDQ8ZDoJhWC+VMgqUEfa3JNI0+4PaOn+hAKBupyChm4XzN7oQ7xnva3d1j
+         GVojrCnQI83W8mjdBye591kJk/8etXCOmz2W9koKy/dSaPxggRuBaWsJ+pTcIhPdanIr
+         FpzVGZNfHuWCRfUI7NvoKMwlo14789Ch09/TG5D5Mv8yY1yCuu7SumcSKY6E9r2r8Njp
+         yQ3Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8P6TBtOuemspBYa0jL4flZMZfpJmcmUm23eWL4waPIgBqIYm/coWPgRYcE5+NvKel51bXL2wdS4c5hZhWhDgZu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT9KbvBg+dhHG6PPwOH8He67Q56z096+ZAftVcFAHq3AYDzewt
+	6j8nbDB7ki2FNg1KfokAuEEgnMVWVjZmtqyrhW96gLQYMef+VRqPJ4Kg/UJQ/KKa/4DI8V01+i7
+	TqWDtaRbulw==
+X-Received: from dycns6.prod.google.com ([2002:a05:7300:f786:b0:2df:c53c:24a5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:168a:b0:2d1:815f:19c1
+ with SMTP id 5a478bee46e88-2e479c0427dmr4988093eec.15.1776643230492; Sun, 19
+ Apr 2026 17:00:30 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:42 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-30-irogers@google.com>
-Subject: [PATCH v1 29/58] perf futex-contention: Port futex-contention to use
- python module
+Message-ID: <20260419235911.2186050-31-irogers@google.com>
+Subject: [PATCH v1 30/58] perf flamegraph: Port flamegraph to use python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -93,101 +92,266 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rewrite tools/perf/scripts/python/futex-contention.py to use the
-python module and various style changes. By avoiding the overheads in
-the `perf script` execution the performance improves by more than 3.2x
-as shown in the following (with PYTHON_PATH and PERF_EXEC_PATH set as
-necessary):
+Add a port of the flamegraph script that uses the perf python module
+directly. This approach is significantly faster than using perf script
+callbacks as it avoids creating intermediate dictionaries for all
+event fields.
 
-```
-$ perf record -e syscalls:sys_*_futex -a sleep 1
-...
-$ time perf script tools/perf/scripts/python/futex-contention.py
-Install the python-audit package to get syscall names.
-For example:
-  # apt-get install python3-audit (Ubuntu)
-  # yum install python3-audit (Fedora)
-  etc.
-
-Press control+C to stop and show the summary
-aaa/4[2435653] lock 7f76b380c878 contended 1 times, 1099 avg ns [max: 1099 ns, min 1099 ns]
-...
-real    0m1.007s
-user    0m0.935s
-sys     0m0.072s
-$ time python3 tools/perf/python/futex-contention.py
-...
-real    0m0.314s
-user    0m0.259s
-sys     0m0.056s
-```
-
+Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/futex-contention.py | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100755 tools/perf/python/futex-contention.py
+ tools/perf/python/flamegraph.py | 242 ++++++++++++++++++++++++++++++++
+ 1 file changed, 242 insertions(+)
+ create mode 100755 tools/perf/python/flamegraph.py
 
-diff --git a/tools/perf/python/futex-contention.py b/tools/perf/python/futex-contention.py
+diff --git a/tools/perf/python/flamegraph.py b/tools/perf/python/flamegraph.py
 new file mode 100755
-index 000000000000..153583de9cde
+index 000000000000..090e07a0992d
 --- /dev/null
-+++ b/tools/perf/python/futex-contention.py
-@@ -0,0 +1,54 @@
++++ b/tools/perf/python/flamegraph.py
+@@ -0,0 +1,242 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+# Measures futex contention.
-+from collections import defaultdict
-+from typing import Dict
++"""
++flamegraph.py - create flame graphs from perf samples using perf python module
++"""
++
++import argparse
++import hashlib
++import json
++import os
++import subprocess
++import sys
++import urllib.request
++from typing import Dict, Optional, Union
 +import perf
 +
-+process_names: Dict[int, str] = {}
-+start_times: Dict[int, [int, int]] = {}
-+session = None
-+durations: Dict[[int, int], list] = defaultdict(list)
++MINIMAL_HTML = """<head>
++  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
++</head>
++<body>
++  <div id="chart"></div>
++  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
++  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
++  <script type="text/javascript">
++  const stacks = [/** @flamegraph_json **/];
++  // Note, options is unused.
++  const options = [/** @options_json **/];
 +
-+FUTEX_WAIT = 0
-+FUTEX_WAKE = 1
-+FUTEX_PRIVATE_FLAG = 128
-+FUTEX_CLOCK_REALTIME = 256
-+FUTEX_CMD_MASK = ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
++  var chart = flamegraph();
++  d3.select("#chart")
++        .datum(stacks[0])
++        .call(chart);
++  </script>
++</body>
++"""
++
++class Node:
++    """A node in the flame graph tree."""
++    def __init__(self, name: str, libtype: str):
++        self.name = name
++        self.libtype = libtype
++        self.value: int = 0
++        self.children: list[Node] = []
++
++    def to_json(self) -> Dict[str, Union[str, int, list[Dict]]]:
++        """Convert the node to a JSON-serializable dictionary."""
++        return {
++            "n": self.name,
++            "l": self.libtype,
++            "v": self.value,
++            "c": [x.to_json() for x in self.children]
++        }
 +
 +
-+def process_event(sample):
-+    def handle_start(tid: int, uaddr: int, op: int, start_time: int) -> None:
-+        if (op & FUTEX_CMD_MASK) != FUTEX_WAIT:
++class FlameGraphCLI:
++    """Command-line interface for generating flame graphs."""
++    def __init__(self, args):
++        self.args = args
++        self.stack = Node("all", "root")
++        self.session = None
++
++    @staticmethod
++    def get_libtype_from_dso(dso: Optional[str]) -> str:
++        """Determine the library type from the DSO name."""
++        if dso and (dso == "[kernel.kallsyms]" or dso.endswith("/vmlinux") or dso == "[kernel]"):
++            return "kernel"
++        return ""
++
++    @staticmethod
++    def find_or_create_node(node: Node, name: str, libtype: str) -> Node:
++        """Find a child node with the given name or create a new one."""
++        for child in node.children:
++            if child.name == name:
++                return child
++        child = Node(name, libtype)
++        node.children.append(child)
++        return child
++
++    def process_event(self, sample) -> None:
++        """Process a single perf sample event."""
++        if self.args.event_name and str(sample.evsel) != self.args.event_name:
 +            return
-+        if tid not in process_names:
++
++        pid = sample.sample_pid
++        dso_type = ""
++        try:
++            thread = self.session.process(sample.sample_tid)
++            comm = thread.comm()
++            # Try to get libtype from thread's main executable
++            # This is a bit of a hack as pyrf_thread doesn't expose maps easily
++        except Exception:
++            comm = "[unknown]"
++
++        if pid == 0:
++            comm = "swapper"
++            dso_type = "kernel"
++        else:
++            comm = f"{comm} ({pid})"
++
++        node = self.find_or_create_node(self.stack, comm, dso_type)
++
++        callchain = sample.callchain
++        if callchain:
++            # We want to traverse from root to leaf.
++            # perf callchain iterator gives leaf to root.
++            # We collect them and reverse.
++            frames = list(callchain)
++            for entry in reversed(frames):
++                name = entry.symbol or "[unknown]"
++                libtype = self.get_libtype_from_dso(entry.dso)
++                node = self.find_or_create_node(node, name, libtype)
++        node.value += 1
++
++    def get_report_header(self) -> str:
++        """Get the header from the perf report."""
++        try:
++            input_file = self.args.input or "perf.data"
++            output = subprocess.check_output(["perf", "report", "--header-only", "-i", input_file])
++            result = output.decode("utf-8")
++            if self.args.event_name:
++                result += "\nFocused event: " + self.args.event_name
++            return result
++        except Exception:
++            return ""
++
++    def run(self) -> None:
++        """Run the flame graph generation."""
++        input_file = self.args.input or "perf.data"
++        if not os.path.exists(input_file):
++            print(f"Error: {input_file} not found. (try 'perf record' first)", file=sys.stderr)
++            sys.exit(1)
++
++        try:
++            self.session = perf.session(perf.data(input_file),
++                                        sample=self.process_event)
++        except Exception as e:
++            print(f"Error opening session: {e}", file=sys.stderr)
++            sys.exit(1)
++
++        self.session.process_events()
++
++        stacks_json = json.dumps(self.stack, default=lambda x: x.to_json())
++
++        if self.args.format == "html":
++            report_header = self.get_report_header()
++            options = {
++                "colorscheme": self.args.colorscheme,
++                "context": report_header
++            }
++            options_json = json.dumps(options)
++
++            template = self.args.template
++            template_md5sum = None
++            output_str = None
++            if not os.path.isfile(template):
++                if not self.args.allow_download:
++                    print(f"Warning: Flame Graph template '{template}' does not exist.",
++                          file=sys.stderr)
++                    template = (
++                        "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/"
++                        "d3-flamegraph-base.html"
++                    )
++                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
++                    if not sys.stdin.isatty():
++                        print("Non-interactive environment detected, skipping download.")
++                        template = None
++                    else:
++                        s = None
++                        while s not in ["y", "n"]:
++                            s = input("Do you wish to download a template from cdn.jsdelivr.net? " +
++                                      "(this warning can be suppressed with --allow-download) [yn] "
++                                      ).lower()
++                        if s == "n":
++                            template = None
++                            template_md5sum = None
++
++            use_minimal = False
 +            try:
-+                process = session.process(tid)
-+            except Exception:
-+                return
-+            process_names[tid] = process.comm()
-+        start_times[tid] = (uaddr, start_time)
++                if not template:
++                    use_minimal = True
++                elif template.startswith("http"):
++                    with urllib.request.urlopen(template) as url_template:
++                        output_str = "".join([l.decode("utf-8") for l in url_template.readlines()])
++                else:
++                    with open(template, "r", encoding="utf-8") as f:
++                        output_str = f.read()
++            except Exception as err:
++                print(f"Error reading template {template}: {err}\n", file=sys.stderr)
++                use_minimal = True
 +
-+    def handle_end(tid: int, end_time: int) -> None:
-+        if tid not in start_times:
-+            return
-+        (uaddr, start_time) = start_times[tid]
-+        del start_times[tid]
-+        durations[(tid, uaddr)].append(end_time - start_time)
-+    event_name = str(sample.evsel)
-+    if event_name == "evsel(syscalls:sys_enter_futex)":
-+        handle_start(sample.sample_tid, sample.uaddr,
-+                     sample.op, sample.sample_time)
-+    elif event_name == "evsel(syscalls:sys_exit_futex)":
-+        handle_end(sample.sample_tid, sample.sample_time)
++            if use_minimal:
++                print("Using internal minimal HTML that refers to d3's web site. JavaScript " +
++                      "loaded this way from a local file is typically blocked unless your " +
++                      "browser has relaxed permissions.")
++                output_str = MINIMAL_HTML
++
++            elif template_md5sum:
++                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
++                if download_md5sum != template_md5sum:
++                    s = None
++                    while s not in ["y", "n"]:
++                        s = input(f"""Unexpected template md5sum.
++{download_md5sum} != {template_md5sum}, for:
++{output_str}
++continue?[yn] """).lower()
++                    if s == "n":
++                        sys.exit(1)
++
++            output_str = output_str.replace("/** @options_json **/", options_json)
++            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
++            output_fn = self.args.output or "flamegraph.html"
++        else:
++            output_str = stacks_json
++            output_fn = self.args.output or "stacks.json"
++
++        if output_fn == "-":
++            sys.stdout.write(output_str)
++        else:
++            print(f"dumping data to {output_fn}")
++            with open(output_fn, "w", encoding="utf-8") as out:
++                out.write(output_str)
 +
 +
 +if __name__ == "__main__":
-+    session = perf.session(perf.data("perf.data"), sample=process_event)
-+    session.process_events()
-+    for ((tid, uaddr), vals) in sorted(durations.items()):
-+        avg = sum(vals) / len(vals)
-+        max_val = max(vals)
-+        min_val = min(vals)
-+        print(f"{process_names[tid]}[{tid}] lock {uaddr:x} contended {len(vals)} "
-+              f"times, {avg} avg ns [max: {max_val} ns, min {min_val} ns]")
++    parser = argparse.ArgumentParser(description="Create flame graphs using perf python module.")
++    parser.add_argument("-f", "--format", default="html", choices=["json", "html"],
++                        help="output file format")
++    parser.add_argument("-o", "--output", help="output file name")
++    parser.add_argument("--template",
++                        default="/usr/share/d3-flame-graph/d3-flamegraph-base.html",
++                        help="path to flame graph HTML template")
++    parser.add_argument("--colorscheme", default="blue-green",
++                        help="flame graph color scheme", choices=["blue-green", "orange"])
++    parser.add_argument("-i", "--input", help="input perf.data file")
++    parser.add_argument("--allow-download", default=False, action="store_true",
++                        help="allow unprompted downloading of HTML template")
++    parser.add_argument("-e", "--event", default="", dest="event_name", type=str,
++                        help="specify the event to generate flamegraph for")
++
++    cli_args = parser.parse_args()
++    cli = FlameGraphCLI(cli_args)
++    cli.run()
 -- 
 2.54.0.rc1.513.gad8abe7a5a-goog
 
