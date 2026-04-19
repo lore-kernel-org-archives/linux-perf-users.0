@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4FD336EC9
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8792533F36D
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776643260; cv=none; b=chFwrLqyo23hq9KhHApo9s+87XmM/qvyrBiT/nqpZc4MpfPW6tGUp6ikl0rJDUcoXIOpdAMLGGEOd/Zgzbr799iZFF5kJy0I1RqX9pH3dQabQI8+zmjdbI9HbRPsr/irobSilZdmKTMSScpJ3504UbRs6neCsmtAsEWbGrJQBkA=
+	t=1776643262; cv=none; b=ZH0WwiFCHfrthIIMi98Eb17N/uKe1r9xdPnSQ0hskohx/1HvJn/SuaGBYWHM4mCwnyXCPcmE+fWK6ga0EA51eOVwlTLQdzipaMXbZsEHQwbt+J2Tz8X3QQnXbNhqHR+m8P6hCLiRDHn/kY2YRdUI3hRML+o/LJEflVKNOqI/dcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776643260; c=relaxed/simple;
-	bh=bl72Ai2rV9UR5Qfuw1rwxScorJV57Ml/Wz9Q4sg1D2k=;
+	s=arc-20240116; t=1776643262; c=relaxed/simple;
+	bh=GcFxBHARgV5EOcssRcFukPmoIoDQSabuyM75bJyjua4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZDe3rXqfkAv9PEpa/ioBfl/725TzwwlETrV5c1u/cINgHenVEv5YFKQglKG7wz4eH+pseQelDC4GNLxVF3XSp3qc4j8A1aYr60leGDXfZBVzuNqQV65o5SaXcu9Cvpqyy4LPZya80AFb3hY/281/f5KPt3Tsrkd+iUzFUXoT6oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QXm8wTcy; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=P8kO9qDU0OK/MmNYAVMuuTq3jUXl6PDx/8AVsXFjOggsXg7nc1VCMtcA0vRldf8x68iPUBRYKY0Mcpy0r/fLWOGSZtygwtR9GeboDuW8bs9a5R6e0vaRq/5Bd7njSOxrcgMmPm3uCpAIGGqmNI4RlFL2rd0R9axxBT4WrqRTMt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MNTpO5Pz; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QXm8wTcy"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c7169f3a9so3200801c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MNTpO5Pz"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c66fdd4aeso3440090c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 17:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776643257; x=1777248057; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776643259; x=1777248059; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXXkWlpBil/P0+4XZSg0Rntw8kz3KzyjLlLhJU7HUDQ=;
-        b=QXm8wTcywS8n5SHRf9Dg+GZshCNYL/hGR1BeP+1zzaobJKNOoDVFmfWFPSpvLmle5k
-         0Ymd3zWR/FTRP4Q+lfipSjJwmZC4/MTlNC0IcCCAO5/ivWS88rxtbnm4/4M/nQ1V709x
-         pKoaBJkiOeRgzu0URFNwGhweWa3tRWJ6Yd1oZQp6TNKEaZ/xEMXDVWPRwzxYwtN8HvIN
-         n//D601RJJ65bFTR6O8ls0yMvQeG1YNDtwNsN0Hw8YZMY81jqt4ujEIAaE6zP/LDcCYq
-         qOv3tESufPkqnGkvkkuVpXbWHM3M9QtEnhv2NfyLfsiP9jg5GaIGUPpNlkz3m1FtsA8r
-         GKdw==
+        bh=NyrFoUu3L0EVB0QuLa+r0az4stTS3Wrbpyaex+opNlE=;
+        b=MNTpO5PzeQycXkDqL6DCcyP7Gu3FFZ2Iphebn5nAInp+qhWvUWjCLIGZHyVp6BHdEj
+         xNFye+/d1NSf/zclp11wlqEGsmOPQW1kzBcVi7pdDAWLSrvDgxQNod2rN5Dz6Rra06I7
+         PTTAx1DHtUNVeCKJ6F72qNTWzarAyKHfjPqJkzN9V/Bz+7g45ZKOOLHo5vU5auDY5p6k
+         epRuxfp/c4s1f0Qou0mFiFDMBhNvVnx36dXJvdadSxv6Q3bv83yUPspXmHQ+CtHJ+BrP
+         ezGCtWj+m6o4Er+de/v1TzdenXYNgSwZLwQHwfLsiP0YMwOrGYS9IXo0ZqBmNOtfBn4M
+         Y0Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776643257; x=1777248057;
+        d=1e100.net; s=20251104; t=1776643259; x=1777248059;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXXkWlpBil/P0+4XZSg0Rntw8kz3KzyjLlLhJU7HUDQ=;
-        b=qcjBjMABs4X2MNXf+cb7PYfD6p0JAMTgO01gt6tdlnmow0IbwZ65dW9FyuF1B+9X1/
-         ux6PD1gmx4R1ztSN0B0GeEK3Ca7LDt5mcPyZD/US17xDmSZ8RxPh61/sO1xw8ClC3ctq
-         v2hJwihKEi2IXGvq0GuRaEGbUu/9pyPu+s0D0MuL5Cpq7//aj/FF3d+A0sdzLiyliblo
-         ye/uK2hKjGd7lP/3DAWwvvqhDGLo7pziTLFI0HVr5U5NBwtBQu3yQCRH3D3pENH03WUH
-         Gra0YHkfV/mJ4Y/4AItE5SfbeonG/mSc2jRpA+Zavmt7ywYajZDcpiX+Sln7YsR1aIj6
-         LLFw==
-X-Forwarded-Encrypted: i=1; AFNElJ9ny2DjcgxPlRzFfihiVGa5HuLNLqJQY5y8KpnETZkWcYzOOlVydf5ym50c577s2dEz5sKZcIjw2Mau4mR9aCWJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp4+9b84dcRVf4K3Noh68jIUA6xNSl78ebM/UafzLNcVWTAl9R
-	BKq83Vm4ZccHhXKZXKqER3BYsuroktupoJV/rafMSXS701LctKk5p6/Kz20KixQ3d60BeIb2eIP
-	e+13XMd8uYQ==
-X-Received: from dlbrx12.prod.google.com ([2002:a05:7022:170c:b0:12b:f977:8848])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6191:b0:11b:9b9f:426b
- with SMTP id a92af1059eb24-12c73f9725amr5630532c88.20.1776643256080; Sun, 19
- Apr 2026 17:00:56 -0700 (PDT)
-Date: Sun, 19 Apr 2026 16:58:53 -0700
+        bh=NyrFoUu3L0EVB0QuLa+r0az4stTS3Wrbpyaex+opNlE=;
+        b=fK2fMVRa3Gae6QMmVFQ2R3liWAY+k9kMwEznjk6m9ZWqrD9eZnJ8OCylpC2e0lNUyh
+         hp0bLmUnqMKC6wac+fNKutEFlhTX9/pjMpe30pzrln5Drn23YMar6e6NNt07Q5moimJ3
+         G6VpO9JEYkW6OSJ9EDInRqTbhveRL35BkuC5a+484XOmV1qZwKbvLZ+rjk+6RgOUg9H3
+         /slXU++UqwDuDN1mQSVpHpRwzBrpdvM4pScmFwDDszrUR98kAkRjrr4XRk2Me9VK8ze4
+         kiLdGCE4a/pppe7TRXaa4CDvvnASkmegGCaUZ3aYWS04GRGTqxbndNBQ6oSoD9bEtETR
+         17gQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/eLPhFjQqaX9bFfc2DhX2xnJXBVnkhxTqTdL7VF4uX4DIoUywDcVwyuhstZA1C88dIih/8ewERJh7ilFAcBeaY@vger.kernel.org
+X-Gm-Message-State: AOJu0YydMk6bBgiNfuj9JPmQ2TXGCzKnQcp2YK2PBo86NXqb0ggJ225R
+	6VyU+BB3snTgfZ9kmrnRWbvraiJya5QZ3hW5ov+dyQ04PTDDfDQzIRdOBBxvbc2xuYQFLMhy00S
+	MWCr0JSBXIA==
+X-Received: from dlbsn14.prod.google.com ([2002:a05:7022:b90e:b0:128:d185:c6ff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec1:b0:128:d51a:5157
+ with SMTP id a92af1059eb24-12c73fbcb96mr5002494c88.33.1776643258350; Sun, 19
+ Apr 2026 17:00:58 -0700 (PDT)
+Date: Sun, 19 Apr 2026 16:58:54 -0700
 In-Reply-To: <20260419235911.2186050-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
-Message-ID: <20260419235911.2186050-42-irogers@google.com>
-Subject: [PATCH v1 41/58] perf netdev-times: Port netdev-times to use python module
+Message-ID: <20260419235911.2186050-43-irogers@google.com>
+Subject: [PATCH v1 42/58] perf powerpc-hcalls: Port powerpc-hcalls to use
+ python module
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -93,490 +94,230 @@ Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
 Ported from tools/perf/scripts/python/.
-- Refactored the script to use a class structure (NetDevTimesAnalyzer)
-  to encapsulate state.
-- Used perf.session for event collection and processed them in time
-  order at the end to match legacy behavior.
-- Extracted tracepoint fields directly from sample attributes.
-- Moved format string constants to module level.
-- Cleaned up Python 2 compatibility artifacts (like cmp_to_key).
+- Refactored the script to use a class structure (HCallAnalyzer) to
+  encapsulate state.
+- Used perf.session for event processing.
+- Tracked hcall entry and exit to calculate duration and aggregate
+  statistics.
+- Moved the large hcall_table to a module-level constant HCALL_TABLE.
+- Cleaned up Python 2 compatibility artifacts.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/netdev-times.py | 469 ++++++++++++++++++++++++++++++
- 1 file changed, 469 insertions(+)
- create mode 100755 tools/perf/python/netdev-times.py
+ tools/perf/python/powerpc-hcalls.py | 209 ++++++++++++++++++++++++++++
+ 1 file changed, 209 insertions(+)
+ create mode 100755 tools/perf/python/powerpc-hcalls.py
 
-diff --git a/tools/perf/python/netdev-times.py b/tools/perf/python/netdev-times.py
+diff --git a/tools/perf/python/powerpc-hcalls.py b/tools/perf/python/powerpc-hcalls.py
 new file mode 100755
-index 000000000000..c7110a006405
+index 000000000000..066d206e8f2f
 --- /dev/null
-+++ b/tools/perf/python/netdev-times.py
-@@ -0,0 +1,469 @@
++++ b/tools/perf/python/powerpc-hcalls.py
+@@ -0,0 +1,209 @@
 +#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++# SPDX-License-Identifier: GPL-2.0+
 +"""
-+Display a process of packets and processed time.
-+It helps us to investigate networking or network device.
++Hypervisor call statistics
 +
-+Ported from tools/perf/scripts/python/netdev-times.py
++Copyright (C) 2018 Ravi Bangoria, IBM Corporation
++Ported from tools/perf/scripts/python/powerpc-hcalls.py
 +"""
 +
 +import argparse
 +from collections import defaultdict
-+import sys
 +import perf
 +
-+# Format for displaying rx packet processing
-+PF_IRQ_ENTRY = "  irq_entry(+%.3fmsec irq=%d:%s)"
-+PF_SOFT_ENTRY = "  softirq_entry(+%.3fmsec)"
-+PF_NAPI_POLL = "  napi_poll_exit(+%.3fmsec %s)"
-+PF_JOINT = "         |"
-+PF_WJOINT = "         |            |"
-+PF_NET_RECV = "         |---netif_receive_skb(+%.3fmsec skb=%x len=%d)"
-+PF_NET_RX = "         |---netif_rx(+%.3fmsec skb=%x)"
-+PF_CPY_DGRAM = "         |      skb_copy_datagram_iovec(+%.3fmsec %d:%s)"
-+PF_KFREE_SKB = "         |      kfree_skb(+%.3fmsec location=%x)"
-+PF_CONS_SKB = "         |      consume_skb(+%.3fmsec)"
++# Hypervisor call table
++HCALL_TABLE = {
++    4: 'H_REMOVE',
++    8: 'H_ENTER',
++    12: 'H_READ',
++    16: 'H_CLEAR_MOD',
++    20: 'H_CLEAR_REF',
++    24: 'H_PROTECT',
++    28: 'H_GET_TCE',
++    32: 'H_PUT_TCE',
++    36: 'H_SET_SPRG0',
++    40: 'H_SET_DABR',
++    44: 'H_PAGE_INIT',
++    48: 'H_SET_ASR',
++    52: 'H_ASR_ON',
++    56: 'H_ASR_OFF',
++    60: 'H_LOGICAL_CI_LOAD',
++    64: 'H_LOGICAL_CI_STORE',
++    68: 'H_LOGICAL_CACHE_LOAD',
++    72: 'H_LOGICAL_CACHE_STORE',
++    76: 'H_LOGICAL_ICBI',
++    80: 'H_LOGICAL_DCBF',
++    84: 'H_GET_TERM_CHAR',
++    88: 'H_PUT_TERM_CHAR',
++    92: 'H_REAL_TO_LOGICAL',
++    96: 'H_HYPERVISOR_DATA',
++    100: 'H_EOI',
++    104: 'H_CPPR',
++    108: 'H_IPI',
++    112: 'H_IPOLL',
++    116: 'H_XIRR',
++    120: 'H_MIGRATE_DMA',
++    124: 'H_PERFMON',
++    220: 'H_REGISTER_VPA',
++    224: 'H_CEDE',
++    228: 'H_CONFER',
++    232: 'H_PROD',
++    236: 'H_GET_PPP',
++    240: 'H_SET_PPP',
++    244: 'H_PURR',
++    248: 'H_PIC',
++    252: 'H_REG_CRQ',
++    256: 'H_FREE_CRQ',
++    260: 'H_VIO_SIGNAL',
++    264: 'H_SEND_CRQ',
++    272: 'H_COPY_RDMA',
++    276: 'H_REGISTER_LOGICAL_LAN',
++    280: 'H_FREE_LOGICAL_LAN',
++    284: 'H_ADD_LOGICAL_LAN_BUFFER',
++    288: 'H_SEND_LOGICAL_LAN',
++    292: 'H_BULK_REMOVE',
++    304: 'H_MULTICAST_CTRL',
++    308: 'H_SET_XDABR',
++    312: 'H_STUFF_TCE',
++    316: 'H_PUT_TCE_INDIRECT',
++    332: 'H_CHANGE_LOGICAL_LAN_MAC',
++    336: 'H_VTERM_PARTNER_INFO',
++    340: 'H_REGISTER_VTERM',
++    344: 'H_FREE_VTERM',
++    348: 'H_RESET_EVENTS',
++    352: 'H_ALLOC_RESOURCE',
++    356: 'H_FREE_RESOURCE',
++    360: 'H_MODIFY_QP',
++    364: 'H_QUERY_QP',
++    368: 'H_REREGISTER_PMR',
++    372: 'H_REGISTER_SMR',
++    376: 'H_QUERY_MR',
++    380: 'H_QUERY_MW',
++    384: 'H_QUERY_HCA',
++    388: 'H_QUERY_PORT',
++    392: 'H_MODIFY_PORT',
++    396: 'H_DEFINE_AQP1',
++    400: 'H_GET_TRACE_BUFFER',
++    404: 'H_DEFINE_AQP0',
++    408: 'H_RESIZE_MR',
++    412: 'H_ATTACH_MCQP',
++    416: 'H_DETACH_MCQP',
++    420: 'H_CREATE_RPT',
++    424: 'H_REMOVE_RPT',
++    428: 'H_REGISTER_RPAGES',
++    432: 'H_DISABLE_AND_GETC',
++    436: 'H_ERROR_DATA',
++    440: 'H_GET_HCA_INFO',
++    444: 'H_GET_PERF_COUNT',
++    448: 'H_MANAGE_TRACE',
++    468: 'H_FREE_LOGICAL_LAN_BUFFER',
++    472: 'H_POLL_PENDING',
++    484: 'H_QUERY_INT_STATE',
++    580: 'H_ILLAN_ATTRIBUTES',
++    592: 'H_MODIFY_HEA_QP',
++    596: 'H_QUERY_HEA_QP',
++    600: 'H_QUERY_HEA',
++    604: 'H_QUERY_HEA_PORT',
++    608: 'H_MODIFY_HEA_PORT',
++    612: 'H_REG_BCMC',
++    616: 'H_DEREG_BCMC',
++    620: 'H_REGISTER_HEA_RPAGES',
++    624: 'H_DISABLE_AND_GET_HEA',
++    628: 'H_GET_HEA_INFO',
++    632: 'H_ALLOC_HEA_RESOURCE',
++    644: 'H_ADD_CONN',
++    648: 'H_DEL_CONN',
++    664: 'H_JOIN',
++    676: 'H_VASI_STATE',
++    688: 'H_ENABLE_CRQ',
++    696: 'H_GET_EM_PARMS',
++    720: 'H_SET_MPP',
++    724: 'H_GET_MPP',
++    748: 'H_HOME_NODE_ASSOCIATIVITY',
++    756: 'H_BEST_ENERGY',
++    764: 'H_XIRR_X',
++    768: 'H_RANDOM',
++    772: 'H_COP',
++    788: 'H_GET_MPP_X',
++    796: 'H_SET_MODE',
++    61440: 'H_RTAS',
++}
 +
 +
-+class NetDevTimesAnalyzer:
-+    """Analyzes network device events and prints charts."""
++class HCallAnalyzer:
++    """Analyzes hypervisor calls and aggregates statistics."""
 +
-+    def __init__(self, cfg: argparse.Namespace):
-+        self.args = cfg
-+        self.show_tx = cfg.tx or (not cfg.tx and not cfg.rx)
-+        self.show_rx = cfg.rx or (not cfg.tx and not cfg.rx)
-+        self.dev = cfg.dev
-+        self.debug = cfg.debug
++    def __init__(self):
++        # output: {opcode: {'min': min, 'max': max, 'time': time, 'cnt': cnt}}
++        self.output = defaultdict(lambda: {'time': 0, 'cnt': 0, 'min': float('inf'), 'max': 0})
++        # d_enter: {cpu: {opcode: nsec}}
++        self.d_enter = defaultdict(dict)
++        self.print_ptrn = '%-28s%10s%10s%10s%10s'
 +
-+        self.all_event_list: list[dict] = []
-+        self.irq_dic: dict[int, list[dict]] = defaultdict(list)
-+        self.net_rx_dic: dict[int, dict] = {}
-+        self.receive_hunk_list: list[dict] = []
-+        self.rx_skb_list: list[dict] = []
-+        self.tx_queue_list: list[dict] = []
-+        self.tx_xmit_list: list[dict] = []
-+        self.tx_free_list: list[dict] = []
++    def hcall_table_lookup(self, opcode: int) -> str:
++        """Lookup hcall name by opcode."""
++        return HCALL_TABLE.get(opcode, str(opcode))
 +
-+        self.buffer_budget = 65536
-+        self.of_count_rx_skb_list = 0
-+        self.of_count_tx_queue_list = 0
-+        self.of_count_tx_xmit_list = 0
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Process a single sample event."""
++        name = str(sample.evsel)
++        cpu = sample.sample_cpu
++        time = sample.sample_time
++        opcode = getattr(sample, "opcode", -1)
 +
-+    def diff_msec(self, src: int, dst: int) -> float:
-+        """Calculate a time interval(msec) from src(nsec) to dst(nsec)."""
-+        return (dst - src) / 1000000.0
-+
-+    def print_transmit(self, hunk: dict) -> None:
-+        """Display a process of transmitting a packet."""
-+        if self.dev and hunk['dev'].find(self.dev) < 0:
++        if opcode == -1:
 +            return
-+        queue_t_sec = hunk['queue_t'] // 1000000000
-+        queue_t_usec = hunk['queue_t'] % 1000000000 // 1000
-+        print(f"{hunk['dev']:7s} {hunk['len']:5d} "
-+              f"{queue_t_sec:6d}.{queue_t_usec:06d}sec "
-+              f"{self.diff_msec(hunk['queue_t'], hunk['xmit_t']):12.3f}msec      "
-+              f"{self.diff_msec(hunk['xmit_t'], hunk['free_t']):12.3f}msec")
 +
-+    def print_receive(self, hunk: dict) -> None:
-+        """Display a process of received packets and interrupts."""
-+        show_hunk = False
-+        irq_list = hunk['irq_list']
-+        if not irq_list:
-+            return
-+        cpu = irq_list[0]['cpu']
-+        base_t = irq_list[0]['irq_ent_t']
++        if name == "evsel(powerpc:hcall_entry)":
++            self.d_enter[cpu][opcode] = time
++        elif name == "evsel(powerpc:hcall_exit)":
++            if cpu in self.d_enter and opcode in self.d_enter[cpu]:
++                diff = time - self.d_enter[cpu][opcode]
++                del self.d_enter[cpu][opcode]
 +
-+        if self.dev:
-+            for irq in irq_list:
-+                if irq['name'].find(self.dev) >= 0:
-+                    show_hunk = True
-+                    break
-+        else:
-+            show_hunk = True
-+
-+        if not show_hunk:
-+            return
-+
-+        base_t_sec = base_t // 1000000000
-+        base_t_usec = base_t % 1000000000 // 1000
-+        print(f"{base_t_sec}.{base_t_usec:06d}sec cpu={cpu}")
-+        for irq in irq_list:
-+            print(PF_IRQ_ENTRY %
-+                  (self.diff_msec(base_t, irq['irq_ent_t']),
-+                   irq['irq'], irq['name']))
-+            print(PF_JOINT)
-+            irq_event_list = irq['event_list']
-+            for irq_event in irq_event_list:
-+                if irq_event['event'] == 'netif_rx':
-+                    print(PF_NET_RX %
-+                          (self.diff_msec(base_t, irq_event['time']),
-+                           irq_event['skbaddr']))
-+                    print(PF_JOINT)
-+
-+        print(PF_SOFT_ENTRY % self.diff_msec(base_t, hunk['sirq_ent_t']))
-+        print(PF_JOINT)
-+        event_list = hunk['event_list']
-+        for i, event in enumerate(event_list):
-+            if event['event_name'] == 'napi_poll':
-+                print(PF_NAPI_POLL %
-+                      (self.diff_msec(base_t, event['event_t']),
-+                       event['dev']))
-+                if i == len(event_list) - 1:
-+                    print("")
-+                else:
-+                    print(PF_JOINT)
-+            else:
-+                print(PF_NET_RECV %
-+                      (self.diff_msec(base_t, event['event_t']),
-+                       event['skbaddr'],
-+                       event['len']))
-+                if 'comm' in event:
-+                    print(PF_WJOINT)
-+                    print(PF_CPY_DGRAM %
-+                          (self.diff_msec(base_t, event['comm_t']),
-+                           event['pid'], event['comm']))
-+                elif 'handle' in event:
-+                    print(PF_WJOINT)
-+                    if event['handle'] == "kfree_skb":
-+                        print(PF_KFREE_SKB %
-+                              (self.diff_msec(base_t, event['comm_t']),
-+                               event['location']))
-+                    elif event['handle'] == "consume_skb":
-+                        print(PF_CONS_SKB %
-+                              self.diff_msec(base_t, event['comm_t']))
-+                print(PF_JOINT)
-+
-+    def handle_irq_handler_entry(self, event: dict) -> None:
-+        """Handle irq:irq_handler_entry event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        irq = event['irq']
-+        irq_name = event['irq_name']
-+        irq_record = {'irq': irq, 'name': irq_name, 'cpu': cpu,
-+                      'irq_ent_t': time, 'event_list': []}
-+        self.irq_dic[cpu].append(irq_record)
-+
-+    def handle_irq_handler_exit(self, event: dict) -> None:
-+        """Handle irq:irq_handler_exit event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        irq = event['irq']
-+        if cpu not in self.irq_dic or not self.irq_dic[cpu]:
-+            return
-+        irq_record = self.irq_dic[cpu].pop()
-+        if irq != irq_record['irq']:
-+            return
-+        irq_record['irq_ext_t'] = time
-+        # if an irq doesn't include NET_RX softirq, drop.
-+        if irq_record['event_list']:
-+            self.irq_dic[cpu].append(irq_record)
-+
-+    def handle_irq_softirq_raise(self, event: dict) -> None:
-+        """Handle irq:softirq_raise event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        if cpu not in self.irq_dic or not self.irq_dic[cpu]:
-+            return
-+        irq_record = self.irq_dic[cpu].pop()
-+        irq_record['event_list'].append({'time': time, 'event': 'sirq_raise'})
-+        self.irq_dic[cpu].append(irq_record)
-+
-+    def handle_irq_softirq_entry(self, event: dict) -> None:
-+        """Handle irq:softirq_entry event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        self.net_rx_dic[cpu] = {'sirq_ent_t': time, 'event_list': []}
-+
-+    def handle_irq_softirq_exit(self, event: dict) -> None:
-+        """Handle irq:softirq_exit event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        irq_list = []
-+        event_list = []
-+        sirq_ent_t = None
-+
-+        if cpu in self.irq_dic:
-+            irq_list = self.irq_dic[cpu]
-+            del self.irq_dic[cpu]
-+        if cpu in self.net_rx_dic:
-+            sirq_ent_t = self.net_rx_dic[cpu]['sirq_ent_t']
-+            event_list = self.net_rx_dic[cpu]['event_list']
-+            del self.net_rx_dic[cpu]
-+        if not irq_list or not event_list or sirq_ent_t is None:
-+            return
-+        rec_data = {'sirq_ent_t': sirq_ent_t, 'sirq_ext_t': time,
-+                    'irq_list': irq_list, 'event_list': event_list}
-+        self.receive_hunk_list.append(rec_data)
-+
-+    def handle_napi_poll(self, event: dict) -> None:
-+        """Handle napi:napi_poll event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        dev_name = event['dev_name']
-+        work = event['work']
-+        budget = event['budget']
-+        if cpu in self.net_rx_dic:
-+            event_list = self.net_rx_dic[cpu]['event_list']
-+            rec_data = {'event_name': 'napi_poll',
-+                        'dev': dev_name, 'event_t': time,
-+                        'work': work, 'budget': budget}
-+            event_list.append(rec_data)
-+
-+    def handle_netif_rx(self, event: dict) -> None:
-+        """Handle net:netif_rx event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        skbaddr = event['skbaddr']
-+        skblen = event['skblen']
-+        dev_name = event['dev_name']
-+        if cpu not in self.irq_dic or not self.irq_dic[cpu]:
-+            return
-+        irq_record = self.irq_dic[cpu].pop()
-+        irq_record['event_list'].append({'time': time, 'event': 'netif_rx',
-+                                         'skbaddr': skbaddr, 'skblen': skblen,
-+                                         'dev_name': dev_name})
-+        self.irq_dic[cpu].append(irq_record)
-+
-+    def handle_netif_receive_skb(self, event: dict) -> None:
-+        """Handle net:netif_receive_skb event."""
-+        time = event['time']
-+        cpu = event['cpu']
-+        skbaddr = event['skbaddr']
-+        skblen = event['skblen']
-+        if cpu in self.net_rx_dic:
-+            rec_data = {'event_name': 'netif_receive_skb',
-+                        'event_t': time, 'skbaddr': skbaddr, 'len': skblen}
-+            event_list = self.net_rx_dic[cpu]['event_list']
-+            event_list.append(rec_data)
-+            self.rx_skb_list.insert(0, rec_data)
-+            if len(self.rx_skb_list) > self.buffer_budget:
-+                self.rx_skb_list.pop()
-+                self.of_count_rx_skb_list += 1
-+
-+    def handle_net_dev_queue(self, event: dict) -> None:
-+        """Handle net:net_dev_queue event."""
-+        time = event['time']
-+        skbaddr = event['skbaddr']
-+        skblen = event['skblen']
-+        dev_name = event['dev_name']
-+        skb = {'dev': dev_name, 'skbaddr': skbaddr, 'len': skblen, 'queue_t': time}
-+        self.tx_queue_list.insert(0, skb)
-+        if len(self.tx_queue_list) > self.buffer_budget:
-+            self.tx_queue_list.pop()
-+            self.of_count_tx_queue_list += 1
-+
-+    def handle_net_dev_xmit(self, event: dict) -> None:
-+        """Handle net:net_dev_xmit event."""
-+        time = event['time']
-+        skbaddr = event['skbaddr']
-+        rc = event['rc']
-+        if rc == 0:  # NETDEV_TX_OK
-+            for i, skb in enumerate(self.tx_queue_list):
-+                if skb['skbaddr'] == skbaddr:
-+                    skb['xmit_t'] = time
-+                    self.tx_xmit_list.insert(0, skb)
-+                    del self.tx_queue_list[i]
-+                    if len(self.tx_xmit_list) > self.buffer_budget:
-+                        self.tx_xmit_list.pop()
-+                        self.of_count_tx_xmit_list += 1
-+                    return
-+
-+    def handle_kfree_skb(self, event: dict) -> None:
-+        """Handle skb:kfree_skb event."""
-+        time = event['time']
-+        skbaddr = event['skbaddr']
-+        comm = event['comm']
-+        pid = event['pid']
-+        location = event['location']
-+        for i, skb in enumerate(self.tx_queue_list):
-+            if skb['skbaddr'] == skbaddr:
-+                del self.tx_queue_list[i]
-+                return
-+        for i, skb in enumerate(self.tx_xmit_list):
-+            if skb['skbaddr'] == skbaddr:
-+                skb['free_t'] = time
-+                self.tx_free_list.append(skb)
-+                del self.tx_xmit_list[i]
-+                return
-+        for i, rec_data in enumerate(self.rx_skb_list):
-+            if rec_data['skbaddr'] == skbaddr:
-+                rec_data.update({'handle': "kfree_skb",
-+                                 'comm': comm, 'pid': pid, 'comm_t': time, 'location': location})
-+                del self.rx_skb_list[i]
-+                return
-+
-+    def handle_consume_skb(self, event: dict) -> None:
-+        """Handle skb:consume_skb event."""
-+        time = event['time']
-+        skbaddr = event['skbaddr']
-+        for i, skb in enumerate(self.tx_xmit_list):
-+            if skb['skbaddr'] == skbaddr:
-+                skb['free_t'] = time
-+                self.tx_free_list.append(skb)
-+                del self.tx_xmit_list[i]
-+                return
-+
-+    def handle_skb_copy_datagram_iovec(self, event: dict) -> None:
-+        """Handle skb:skb_copy_datagram_iovec event."""
-+        time = event['time']
-+        skbaddr = event['skbaddr']
-+        comm = event['comm']
-+        pid = event['pid']
-+        for i, rec_data in enumerate(self.rx_skb_list):
-+            if skbaddr == rec_data['skbaddr']:
-+                rec_data.update({'handle': "skb_copy_datagram_iovec",
-+                                 'comm': comm, 'pid': pid, 'comm_t': time})
-+                del self.rx_skb_list[i]
-+                return
-+
-+    def process_events(self) -> None:
-+        """Process all collected events."""
-+        # order all events in time
-+        self.all_event_list.sort(key=lambda a: a['time'])
-+
-+        # process all events
-+        for event in self.all_event_list:
-+            name = event['name']
-+            if name == 'irq:softirq_exit':
-+                self.handle_irq_softirq_exit(event)
-+            elif name == 'irq:softirq_entry':
-+                self.handle_irq_softirq_entry(event)
-+            elif name == 'irq:softirq_raise':
-+                self.handle_irq_softirq_raise(event)
-+            elif name == 'irq:irq_handler_entry':
-+                self.handle_irq_handler_entry(event)
-+            elif name == 'irq:irq_handler_exit':
-+                self.handle_irq_handler_exit(event)
-+            elif name == 'napi:napi_poll':
-+                self.handle_napi_poll(event)
-+            elif name == 'net:netif_receive_skb':
-+                self.handle_netif_receive_skb(event)
-+            elif name == 'net:netif_rx':
-+                self.handle_netif_rx(event)
-+            elif name == 'skb:skb_copy_datagram_iovec':
-+                self.handle_skb_copy_datagram_iovec(event)
-+            elif name == 'net:net_dev_queue':
-+                self.handle_net_dev_queue(event)
-+            elif name == 'net:net_dev_xmit':
-+                self.handle_net_dev_xmit(event)
-+            elif name == 'skb:kfree_skb':
-+                self.handle_kfree_skb(event)
-+            elif name == 'skb:consume_skb':
-+                self.handle_consume_skb(event)
++                stats = self.output[opcode]
++                stats['time'] += diff
++                stats['cnt'] += 1
++                if diff < stats['min']:
++                    stats['min'] = diff
++                if diff > stats['max']:
++                    stats['max'] = diff
 +
 +    def print_summary(self) -> None:
-+        """Print charts."""
-+        self.process_events()
++        """Print aggregated statistics."""
++        print(self.print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
++        print('-' * 68)
++        for opcode in sorted(self.output.keys()):
++            h_name = self.hcall_table_lookup(opcode)
++            stats = self.output[opcode]
++            time = stats['time']
++            cnt = stats['cnt']
++            min_t = stats['min']
++            max_t = stats['max']
 +
-+        # display receive hunks
-+        if self.show_rx:
-+            for hunk in self.receive_hunk_list:
-+                self.print_receive(hunk)
++            # Avoid float representation for large integers if possible,
++            # or use formatted strings. Legacy used time//cnt.
++            avg_t = time // cnt if cnt > 0 else 0
 +
-+        # display transmit hunks
-+        if self.show_tx:
-+            print("   dev    len      Qdisc        "
-+                  "       netdevice             free")
-+            for hunk in self.tx_free_list:
-+                self.print_transmit(hunk)
++            # If min was not updated, it remains inf, but cnt should be > 0 if in output
++            if min_t == float('inf'):
++                min_t = 0
 +
-+        if self.debug:
-+            print("debug buffer status")
-+            print("----------------------------")
-+            print(f"xmit Qdisc:remain:{len(self.tx_queue_list)} "
-+                  f"overflow:{self.of_count_tx_queue_list}")
-+            print(f"xmit netdevice:remain:{len(self.tx_xmit_list)} "
-+                  f"overflow:{self.of_count_tx_xmit_list}")
-+            print(f"receive:remain:{len(self.rx_skb_list)} "
-+                  f"overflow:{self.of_count_rx_skb_list}")
-+
-+    def collect_event(self, sample: perf.sample_event) -> None:
-+        """Collect events into all_event_list."""
-+        name = str(sample.evsel)
-+        event_data = {
-+            'name': name[6:-1] if name.startswith("evsel(") else name,
-+            'time': sample.sample_time,
-+            'cpu': sample.sample_cpu,
-+            'pid': sample.sample_pid,
-+            'comm': getattr(sample, "comm", "Unknown"),
-+        }
-+
-+        # Extract specific fields based on event type
-+        if name.startswith("evsel(irq:softirq_"):
-+            event_data['vec'] = getattr(sample, "vec", 0)
-+            # Filter for NET_RX
-+            try:
-+                # type: ignore
-+                if perf.symbol_str("irq:softirq_entry", "vec", event_data['vec']) != "NET_RX":
-+                    return
-+            except AttributeError:
-+                # Fallback if symbol_str not available or fails
-+                if event_data['vec'] != 3:  # NET_RX_SOFTIRQ is usually 3
-+                    return
-+        elif name == "evsel(irq:irq_handler_entry)":
-+            event_data['irq'] = getattr(sample, "irq", -1)
-+            event_data['irq_name'] = getattr(sample, "name", "[unknown]")
-+        elif name == "evsel(irq:irq_handler_exit)":
-+            event_data['irq'] = getattr(sample, "irq", -1)
-+            event_data['ret'] = getattr(sample, "ret", 0)
-+        elif name == "evsel(napi:napi_poll)":
-+            event_data['napi'] = getattr(sample, "napi", 0)
-+            event_data['dev_name'] = getattr(sample, "dev_name", "[unknown]")
-+            event_data['work'] = getattr(sample, "work", 0)
-+            event_data['budget'] = getattr(sample, "budget", 0)
-+        elif name in ("evsel(net:netif_receive_skb)", "evsel(net:netif_rx)",
-+                      "evsel(net:net_dev_queue)"):
-+            event_data['skbaddr'] = getattr(sample, "skbaddr", 0)
-+            event_data['skblen'] = getattr(sample, "skblen", 0)
-+            event_data['dev_name'] = getattr(sample, "dev_name", "[unknown]")
-+        elif name == "evsel(net:net_dev_xmit)":
-+            event_data['skbaddr'] = getattr(sample, "skbaddr", 0)
-+            event_data['skblen'] = getattr(sample, "skblen", 0)
-+            event_data['rc'] = getattr(sample, "rc", 0)
-+            event_data['dev_name'] = getattr(sample, "dev_name", "[unknown]")
-+        elif name == "evsel(skb:kfree_skb)":
-+            event_data['skbaddr'] = getattr(sample, "skbaddr", 0)
-+            event_data['location'] = getattr(sample, "location", 0)
-+            event_data['protocol'] = getattr(sample, "protocol", 0)
-+            event_data['reason'] = getattr(sample, "reason", 0)
-+        elif name == "evsel(skb:consume_skb)":
-+            event_data['skbaddr'] = getattr(sample, "skbaddr", 0)
-+            event_data['location'] = getattr(sample, "location", 0)
-+        elif name == "evsel(skb:skb_copy_datagram_iovec)":
-+            event_data['skbaddr'] = getattr(sample, "skbaddr", 0)
-+            event_data['skblen'] = getattr(sample, "skblen", 0)
-+
-+        self.all_event_list.append(event_data)
++            print(self.print_ptrn % (h_name, cnt, int(min_t), int(max_t), avg_t))
 +
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser(description="Display a process of packets and processed time.")
++    ap = argparse.ArgumentParser(description="Hypervisor call statistics")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    ap.add_argument("tx", nargs="?", help="show only tx chart")
-+    ap.add_argument("rx", nargs="?", help="show only rx chart")
-+    ap.add_argument("dev", nargs="?", help="show only specified device")
-+    ap.add_argument("debug", nargs="?", help="work with debug mode. It shows buffer status.")
 +    args = ap.parse_args()
 +
-+    parsed_args = argparse.Namespace(tx=False, rx=False, dev=None, debug=False, input=args.input)
-+
-+    for arg in sys.argv[1:]:
-+        if arg == 'tx':
-+            parsed_args.tx = True
-+        elif arg == 'rx':
-+            parsed_args.rx = True
-+        elif arg.startswith('dev='):
-+            parsed_args.dev = arg[4:]
-+        elif arg == 'debug':
-+            parsed_args.debug = True
-+
-+    analyzer = NetDevTimesAnalyzer(parsed_args)
++    analyzer = HCallAnalyzer()
 +
 +    try:
-+        session = perf.session(perf.data(parsed_args.input), sample=analyzer.collect_event)
++        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
 +        session.process_events()
 +        analyzer.print_summary()
 +    except KeyboardInterrupt:
