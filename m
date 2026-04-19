@@ -1,142 +1,356 @@
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B8240DFD7
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 15:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52137E2EF
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 15:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776610918; cv=pass; b=XmdSEM3UjCE7uMQ4JYmeodrjQEjqM0GbE1fwiaMAqO++vKzCDRw7ECAywuzqx4KTxacRCftN+nY1Dmr6W4uk8pW6SamXkra6vLxxte+6xxMpFH/mmOnNvqoN4rrvuMeD3y/teWyRh1ILXcmFfMvhkG9OKfWxbJs4yaSW5RClB2Y=
+	t=1776611364; cv=pass; b=b7RIacRayB7zL+01/62p9HY8X/qp8SB00S46+Z8gFsWJY0NKkUCsBtZASt2rXjvz969sG4KSKcSzbeHLakRoBwDaAGu6Xfe80tycotzSt2r4QSA+VFMZPNLSC1EYVupXuE/ALjcVFD5DTBOKWxEgc083S7MIfRScQcP1grYANOw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776610918; c=relaxed/simple;
-	bh=oajmnfUT0ewEISMxls8cp07i4k5MNYH63Qg3BrPwfTw=;
+	s=arc-20240116; t=1776611364; c=relaxed/simple;
+	bh=Ao0nihYBq6gxen8PC7TDuoruhfTVU7iutw6p3zp+Nn8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cz62tfCsecj1vK4wPmBDq7bK6xjKYwFz1LzRN9vw1P8Dzxecu3Rnhlrr2NHVS+QQBP9/wWh898QE9MtYFlypvL/ajyQxElh3HfjaZebZyahYJGCkx+qYUAH5T4zHt7IHx8PqixUipkHqvwL3KJmXKDSlrxu3Nj+i0mCQQO1qMnU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jP5d7BXv; arc=pass smtp.client-ip=74.125.82.42
+	 To:Cc:Content-Type; b=WW3NeluRK9LfaRVRKKyybYdQ+2G8tOV1e7gmuAAGJ1Fxjz+Sr2UjWZ1B4vOy8QllQM8FCUp0atlWluhd9f1m7k8tNjWNM+AGJ2iFFYc1l0Zxgg9QfrU/h9pxi/LwaIbNHlqS32iKxeOsBkMEjD0r3CY9LXcmjfHiRxdkmoNfhqU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CwkEOl01; arc=pass smtp.client-ip=74.125.82.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jP5d7BXv"
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-1270fc2bdf2so8759c88.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 08:01:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776610916; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CwkEOl01"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1270fc2bdf2so8779c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Apr 2026 08:09:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776611361; cv=none;
         d=google.com; s=arc-20240605;
-        b=iee/0R/jQQ82Hx9/FNvKIAyGUMRZLC2Cf9JGvSCyDyDeiDPS5d/7coBtq1UjZm5MEy
-         BV4w6rK8GgXNGBASbKF8adlai926sCmFCSYKW+k8Qh5wASFFXZ/+e9rTDHf+c8vpRscd
-         4KGDCCPl6EuUiVaoAuKnUC7BGy8NYeOeJERfWT9DeBdUgT6RXSfh8paq6fOozZbg82sm
-         lytCP8jE0QOO+x64MIDViNOgFMIixGJwyR6fwpV9NFtsdZJuFnHhDmkRNBerl7QfBMYd
-         LYkD6DorFkbGdj4mUhdAy0NpTV2XUFoKmPBp0QgNI/ElG2J6REUasu/YSQBk22TbDqcI
-         4mig==
+        b=X1XFWvsqx8lzY9DnYq63Ohm153wuZkugPF1GvLuBWjKGgvIEQsnzcQZaPsdQ2UZNRp
+         GI8L2TX0W9R9h3KPU5uvQciTSDN/FrjGxlW2uJPhSM7n8kGxGYHWZxMFGsWH8vl7EGCL
+         l/OfFWWHIaKUFWAKzv6+NzNT/1wuC7GO2BlwL7sdhz09+hehwdZedNanYJB9/SPEQxvP
+         yEDhw4JXYDI+/XS6W13trMEbj4G8Cxl3tSwuE4XKSPabSNiNbZEQ72e5/ipKfaUYw5ga
+         Yi2S/paSYHcwrJhoEow+4AkzQJOhxI+TrJmfFSFTyUzx1zqVrxiNEBRH/3toEkYPQ8Gy
+         +VGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=EO7gB0nQmhkZHYAXrduT64kOSIDUwU/IpbCgv7t2Vks=;
-        fh=PpezhjMR9xcL7Kc2cus+zxivQTx1/j2A1QHaZFw+LqM=;
-        b=k/y9QtcxQ5f+s/nAuvvu8+v7UT8AGoeqB2TTBc5S3qC/wdw+PuTm31dIizk93BZFVB
-         lvGa1Ce5YuQIKwosEMznX7RIdym4kqIzvtzeCcUpEm03bd2VnaNklfXePoPt3PIjnFBL
-         Xs6FfCoDSrJUb66DDUe8WAW9necKDYLBbVEiG3kvLmKH8rSuyOVPeALj4wop3DZ6Ls2f
-         ClpXFXO+eaou1B4x++oXacnI27DKiP1xQ83M68rnH0KxylDFf+XZjJe2rJxMTOmHe18q
-         eEDjJCJ1UPFNhJxxaV0fcmvLIIMJZWeqlCYY3a5G6mCtu95xDgD4PX+jK6ie8zQnZUIp
-         t6Ow==;
+        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
+        fh=4Cq9g/Ib/PtmTA5gFQp/YGWX8GwFXmhRVBSv60wUXbI=;
+        b=bfqTmdbxs9amWAT1+9MDjGy5uY5s61PNUCBZ07PbUfuCxMOVETRaAxZAbsdTPEN99c
+         msMeEl6uXkYIkdub15TG/HeVJYrCrVxI6S531JhKf4H+tWO4+2Wh53xWLMhQp+/DzkAD
+         /f8ZqCSXrvln5RK2GwtyS7Awbjv1V+rT0vPiUfCHBY7dbpFx/ELzllfFmnLgrQjpp9oY
+         0vhD1XGvB8Q8qSka6Ulp1yO31hfuTYZgiyBi4MMa/TEKYdvZshpZiMbgxkKxDFSddmbm
+         1VpOJmigoIK+ORgFqbJthR2R8dFUmflYNJbAgxPbyYOVXrT8Cti+xi9kpK4uwg5PPR0o
+         rFiw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776610916; x=1777215716; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776611361; x=1777216161; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EO7gB0nQmhkZHYAXrduT64kOSIDUwU/IpbCgv7t2Vks=;
-        b=jP5d7BXvcwNVjM20UEiD9ex4aGzM0e+Sha8gOXVAHC+8tcqYxza9qQp9hUREbeL2oZ
-         Wl4w6dj8DSfE+wL0cwbGZEpvYGO7bibb9Lssr53/RiQ8aqtVPvzrx5VMkEdNnPBcfHI7
-         KYOVbQ8G/bbhTXCu4Wful/BJhF70XSdRLSlQBzOLDtWFLEtcF0jDgw7jjN2B9CC4ZInS
-         c+Pw0xhQ4LsHnKMW/6yJe25DYfdlORXAmshJ9fV9Y1JuqK16QV9mmpTOZEe8+6AF611H
-         r2YdiYtcgrE91TRL9FiljfCM6znomgv7xCNHGqLXNTf/ryooIofQwK47xApSxNRcoX+h
-         qmsg==
+        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
+        b=CwkEOl01Hex69AmduZ4eJ7RYeBb8pyxf6QNOWEcbqibCURBKhmdVjIw9o80bo3Q0GO
+         BZJyw02ofPp22L8OKIlQoukUPBudUQTMV8O4yyAGC0DyWGEF1ZzpcCCqAZniPPvZGKdm
+         jAlqqXX5GYbRx9ARZHeSmu3rH3NR8pMpEc7n9hHGiBjOc2siVbgjLy9L2Vs3wgG5Yh08
+         1uBNcIBlizqAckm67dUvn3sNdo0jVQ2b5MuitBEK3fd30rqAkJIiYB41774LdiYNyO+q
+         2qEinWAkaLTyxLV/b2Al/KTCIKciCcPGAYU2FhSb8f+oLZjR/q3NAIqPj7gVVe6RnJ7G
+         hTtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776610916; x=1777215716;
+        d=1e100.net; s=20251104; t=1776611361; x=1777216161;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EO7gB0nQmhkZHYAXrduT64kOSIDUwU/IpbCgv7t2Vks=;
-        b=kDWFtNRypk//P9Z+WnotjTHpWaTxeQN2OCqpyLgBZkjt+7GrvneuuehH8LrHaSEhwV
-         uAsvi7Ehf+VkMGrLH84bE1msIul+aCAvsT0ryAV4I23bfTufpM3uy4KMzU6pdkYJhUv/
-         mD4kyrcdInO4QXOtkaki1q1642xDiwJj/oNPjN/B1nMLwxZRVUQjMh+hB7/WJjiZ3ylN
-         A9NfCb93enk2zDdCWfa6m4Ehzayq5uNbtV7L0FyoiC8gP6yiE3cn6L+tyIdjgaGu+XO1
-         GwlWKn3/KReqDH0NPHc6uEgK5x17BIBsHeCssWAO2YdIjUg+E/KY4uvcL9pIqZTSlTr6
-         MJ7w==
-X-Forwarded-Encrypted: i=1; AFNElJ8e2rYFr+2PZvFXSSApNDNABiF4Ds9BJJ5Xc/nd5WdN7Kg6zF4XQ20bqCBJkWox2xF5mNd18yMsRsLVgZumLc8+@vger.kernel.org
-X-Gm-Message-State: AOJu0YywekxuuB0On+Q7yVjkRLwjVtYKOdzzQFJnTFlTgMmABbhbc+Cv
-	bnBAyEx2hLzfP9mtfaokusdXVTAXRe1nY9YbOUoav7nmoHxBmbxuA/FWzIPnSM884v6IJw33R3l
-	K2quvj5aXMhMkyfjh/zcJ5/sNlBgLm98LtWR4yXOD
-X-Gm-Gg: AeBDieu0r5DCOBgGCipEPgpZyMoyc6cREpM4ZpvRhGnOVhhzC5NFgdZRFcxjBfaX+vg
-	Sle4HeMdBTbeQVB9iQgg6HTpnoKPzgPwPgoxmc/HGBZ5IFqOUtv3Kyqs9E7zP9KajyeMXV6TYcY
-	qQ0zuMJeJ7flO3ibWLgAzGkcbFVmWgf47J82BbsNXr/YvOP7pu2TUREklCnXeWBEUgNE7uOXMop
-	BJ7L7wdMtjgCJtaRFUcREYzTsU2/N1kDyxuBIdmfoHsjCuxy53gTiYJaMbjLN2UsKQcX6OSVQ1e
-	8VFtc6QWQDDo8grMxm/RvpB9tvZH4A==
-X-Received: by 2002:a05:7023:b04:b0:12b:fa7f:e24b with SMTP id
- a92af1059eb24-12c7b2570b1mr107867c88.13.1776610915457; Sun, 19 Apr 2026
- 08:01:55 -0700 (PDT)
+        bh=obbqGjiZLz/Ypsgbt7b8Ynbl8OramoDnvcg92+0TJAM=;
+        b=l3GrF24kZ9RclfyEWV33YZylyDd7U4gRFignW5nNqDZnfHlk/qfy0awYHVepehqFO2
+         4q6aX5pgGHXmV5IXQMhOZSym9PRT2X3Qqyefh7TTRlT1yi2m4pnaw7g/RKhFh3oZBosw
+         rYyQs1+pVgnSd2mSjZBEO2YkutRYIFi7k2o0q9jYe+PK2xwP4Pn5B4DuD/6c47GjBl30
+         1S0kVmfVwBVSniyJvn+mTLi0GGvfHG/NZ8mcX96r/1ErrxRMJLEtU3AFca6piSrZ0w7X
+         bSN0f6tPSX2Ta6pDkm5WfgvlRpPfr0yuYjHnsCtitpfKmUrS8KUbxWyyoIpmyiqm/zNT
+         rDNQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/cy5lYCu7x3DBMTzmz3T6yI8ZgHJ4kFhsCdoSNMGi0gtwIpt4sw/HbqmXpt1Ch/FwwQfOq2Zn7bJSVQujpKA5b@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbFxx8dvO+NszczYR5L7Fod7ezzQk8J1ijwa0iyBJV2i6a0Jia
+	YDrU53hxVyWg8jGKiZ9naOF8wMjdPsS4mHfR8U7wXQjLgUf7M6uNuU0qspi+NJTAVvseJDc48bR
+	k23f6TgW7+riZxYD5FnDG2zFYQj/GTO3ghcbuhe2z
+X-Gm-Gg: AeBDietyzeKBdabtiXH4OSy1Hhnmi/uQqA8jTR8ssFGb2tvfqAp6xTwsdfanQiYka5J
+	UVzi7EcnxsNu+ShA2WCkfQ32juOFnmR3set5YEag7+YfPFMw/vGxEFk4oKwrd2IfH86+6z3EbXn
+	OB+Xm/GpQRsCS+E37d/o27YRQB2CC0AlxMWoNZExhe0b5soxRD/PhQGa9HmVSPRJDvDY6ZKEQpt
+	osxEKSAVV1yrLHon9mDnh9+dhosXvP8qNvGUgNRa7a23Xu3S25JfgqLTwhCpjg/dyS3bHV+1hDA
+	R11fZh/wcQV0srCXHUBo/3dcLRTXlg==
+X-Received: by 2002:a05:701a:c971:b0:12c:8392:d1ee with SMTP id
+ a92af1059eb24-12c8392d2d0mr86845c88.6.1776611360026; Sun, 19 Apr 2026
+ 08:09:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260419090756.2190201-1-zhengxingda@iscas.ac.cn>
-In-Reply-To: <20260419090756.2190201-1-zhengxingda@iscas.ac.cn>
+References: <20260416124945.121699-1-cp0613@linux.alibaba.com>
+In-Reply-To: <20260416124945.121699-1-cp0613@linux.alibaba.com>
 From: Ian Rogers <irogers@google.com>
-Date: Sun, 19 Apr 2026 08:01:43 -0700
-X-Gm-Features: AQROBzBStw1beLm8GiHCmsv5MOwelYHHtOzwIKqt0bbRh8Hc1as4FPv9pELhQFw
-Message-ID: <CAP-5=fX=+2oNYHDqsNnFrOZya=RxpnPFF_ojZTQP8v8Umt951w@mail.gmail.com>
-Subject: Re: [PATCH] perf unwind-libdw: Fix stale object reference in arch/loongarch
-To: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Shimin Guo <shimin.guo@skydio.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Sun, 19 Apr 2026 08:09:07 -0700
+X-Gm-Features: AQROBzCMCLhdDeYuAe5tl925RzNcwTQBo-MiPANwNdzAB1OR6F-MmqWkkdz12AA
+Message-ID: <CAP-5=fWUovz+a8o4j=1iZqPTKvtSDnCAqh+6WFsE3QKLJUfesw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf riscv: Add SDT argument parsing for RISC-V
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, dapeng1.mi@linux.intel.com, pjw@kernel.org, 
+	alex@ghiti.fr, guoren@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 19, 2026 at 2:08=E2=80=AFAM Icenowy Zheng <zhengxingda@iscas.ac=
-.cn> wrote:
+On Thu, Apr 16, 2026 at 5:50=E2=80=AFAM Chen Pei <cp0613@linux.alibaba.com>=
+ wrote:
 >
-> The arch/loongarch/util/unwind-libdw.c file is already moved to util/,
-> but the Build statement for it is forgot to be removed.
+> Implement __perf_sdt_arg_parse_op_riscv() to convert RISC-V GCC-generated
+> SDT probe operands into uprobe-compatible format, and register it in the
+> perf_sdt_arg_parse_op() dispatcher for EM_RISCV.
 >
-> Remove the stale Build statement.
+> RISC-V GCC uses the 'nor' constraint for SDT arguments, producing operand=
+s
+> in the following formats:
 >
-> This fixes the build failure of perf tool in kernel v7.0 on LoongArch.
+>   Format       Example      Uprobe format
+>   -----------  -----------  -------------
+>   register     a0           %a0
+>   memory (+)   8(a0)        +8(%a0)
+>   memory (-)   -20(s0)      -20(%s0)
+>   constant     99           (skip, not supported by uprobe)
 >
-> Fixes: e62fae9d9e85 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
-> Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-> Cc: stable@vger.kernel.org
+> Key differences from other architectures:
+>  - Register names use ABI aliases (a0-a7, t0-t6, s0-s11, sp, ra, etc.)
+>    without any '%' prefix, unlike x86 (%rax) or arm64 (x0).
+>  - Memory operands use OFFSET(REG) syntax where OFFSET may be negative,
+>    unlike arm64's [sp, NUM] or powerpc's NUM(%rREG).
+>
+> Two regexes are used:
+>  - SDT_OP_REGEX1: matches RISC-V ABI register names saved in pt_regs
+>  - SDT_OP_REGEX2: matches [-]NUM(REG) memory operands
+>
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-I think this is already fixed:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/?h=3Dperf-tools-next
-I also sent out a fix, fwiw:
-https://lore.kernel.org/linux-perf-users/20260305221927.3237145-3-irogers@g=
-oogle.com/
+Thanks, unfortunately there was a sashiko timeout and so we lack that revie=
+w:
+https://sashiko.dev/#/patchset/20260416124945.121699-1-cp0613%40linux.aliba=
+ba.com
+Everything looks good and fits the existing format.
+
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
 > ---
->  tools/perf/arch/loongarch/util/Build | 1 -
->  1 file changed, 1 deletion(-)
 >
-> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loong=
-arch/util/Build
-> index 3ad73d0289f3e..8d91e78d31c94 100644
-> --- a/tools/perf/arch/loongarch/util/Build
-> +++ b/tools/perf/arch/loongarch/util/Build
-> @@ -1,4 +1,3 @@
->  perf-util-y +=3D header.o
+> Tested on RISC-V QEMU(rv64gc) with GCC-generated SDT probes.
+> Requires systemtap-sdt-dev (provides <sys/sdt.h>) on the target system.
 >
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
+>   # cat sdt_test.c
+>   #include <sys/sdt.h>
+>   #include <stdio.h>
+>   void my_func(int a, long b) {
+>       DTRACE_PROBE2(myapp, my_probe, a, b);
+>       printf("a=3D%d b=3D%ld\n", a, b);
+>   }
+>   int main() { my_func(42, -100); return 0; }
+>
+>   # gcc -O0 -Wl,--build-id -o sdt_test_O0 sdt_test.c  # stack args: -20(s=
+0)
+>   # gcc -O2 -Wl,--build-id -o sdt_test_O2 sdt_test.c  # reg args:   a0
+>   # perf buildid-cache --add sdt_test_O0
+>   # perf buildid-cache --add sdt_test_O2
+>   # find ~/.debug -name "probes" | xargs cat
+>   p:sdt_myapp/my_probe .../sdt_test_O0:0x530 arg1=3D-20(%s0):s32 arg2=3D-=
+32(%s0):s64
+>   p:sdt_myapp/my_probe .../sdt_test_O2:0x538 arg1=3D%a0:s32 arg2=3D%a1:s6=
+4
+>
+> Changes in v2:
+>  - Remove 'zero' (x0) from register regexes.
+>  - Fix sdt_init_op_regex() to return -ret on error.
+>
+>  .../util/perf-regs-arch/perf_regs_riscv.c     | 128 ++++++++++++++++++
+>  tools/perf/util/perf_regs.c                   |   3 +
+>  tools/perf/util/perf_regs.h                   |   1 +
+>  3 files changed, 132 insertions(+)
+>
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c b/tools/per=
+f/util/perf-regs-arch/perf_regs_riscv.c
+> index 5b5f21fcba8c..bf769304c97c 100644
+> --- a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
+> @@ -1,8 +1,136 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+> +#include <errno.h>
+> +#include <regex.h>
+> +#include <string.h>
+> +#include <linux/kernel.h>
+> +#include <linux/zalloc.h>
+> +
+> +#include "../debug.h"
+>  #include "../perf_regs.h"
+>  #include "../../arch/riscv/include/perf_regs.h"
+>
+> +/*
+> + * RISC-V SDT argument formats (GCC 'nor' constraint):
+> + *
+> + * Register:  REG        e.g. a0, t1, s0, sp
+> + * Memory:    NUM(REG)   e.g. 8(a0), -20(s0)
+> + * Constant:  NUM        e.g. 99  (not supported by uprobe, skip)
+> + *
+> + * Note: 'zero' (x0) is hardwired to 0 and not in pt_regs; skip it.
+> + *
+> + * Uprobe target format:
+> + *   Register: %REG       e.g. %a0
+> + *   Memory:   +NUM(%REG) or -NUM(%REG)
+> + */
+> +
+> +/* RISC-V register ABI names: ra, sp, gp, tp, t0-t6, s0-s11, a0-a7 */
+> +#define SDT_OP_REGEX1  "^(ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])$"
+> +
+> +/* RISC-V memory operand: [-]NUM(REG) */
+> +#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((ra|sp|gp|tp|t[0-6]|s[0-9]|s1[=
+01]|a[0-7])\\)$"
+> +
+> +static regex_t sdt_op_regex1, sdt_op_regex2;
+> +
+> +static int sdt_init_op_regex(void)
+> +{
+> +       static int initialized;
+> +       int ret =3D 0;
+> +
+> +       if (initialized)
+> +               return 0;
+> +
+> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
+> +       if (ret)
+> +               goto error;
+> +
+> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
+> +       if (ret)
+> +               goto free_regex1;
+> +
+> +       initialized =3D 1;
+> +       return 0;
+> +
+> +free_regex1:
+> +       regfree(&sdt_op_regex1);
+> +error:
+> +       pr_debug4("Regex compilation error.\n");
+> +       return -ret;
+> +}
+> +
+> +/*
+> + * Parse OP and convert it into uprobe format.
+> + * Possible variants of OP (RISC-V, GCC 'nor' constraint):
+> + *
+> + *   Format         Example       Uprobe
+> + *   ----------------------------------------
+> + *   REG            a0            %a0
+> + *   NUM(REG)       8(a0)         +8(%a0)
+> + *   -NUM(REG)      -20(s0)       -20(%s0)
+> + *   NUM            99            (skip, constant not supported)
+> + */
+> +int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op)
+> +{
+> +       int ret, new_len;
+> +       regmatch_t rm[4];
+> +       char prefix;
+> +
+> +       /*
+> +        * Constant argument: pure integer with no trailing '(' (e.g. "99=
+", "-1").
+> +        * uprobe does not support immediate values, so skip them.
+> +        * Memory operands like "8(a0)" or "-20(s0)" contain '(' so are N=
+OT
+> +        * treated as constants here; they will be matched by REGEX2 belo=
+w.
+> +        */
+> +       if (strchr(old_op, '(') =3D=3D NULL &&
+> +           ((*old_op >=3D '0' && *old_op <=3D '9') ||
+> +            (*old_op =3D=3D '-' && old_op[1] >=3D '0' && old_op[1] <=3D =
+'9'))) {
+> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
+op);
+> +               return SDT_ARG_SKIP;
+> +       }
+> +
+> +       ret =3D sdt_init_op_regex();
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (!regexec(&sdt_op_regex1, old_op, 2, rm, 0)) {
+> +               /* REG --> %REG */
+> +               new_len =3D 2;    /* % NULL */
+> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
+> +
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%%%.*s",
+> +                       (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].=
+rm_so);
+> +       } else if (!regexec(&sdt_op_regex2, old_op, 4, rm, 0)) {
+> +               /*
+> +                * NUM(REG) or -NUM(REG) --> +NUM(%REG) or -NUM(%REG)
+> +                * rm[1]: optional '-'
+> +                * rm[2]: decimal offset
+> +                * rm[3]: register name
+> +                */
+> +               prefix =3D (rm[1].rm_so =3D=3D -1) ? '+' : '-';
+> +
+> +               new_len =3D 5;    /* sign ( % ) NULL */
+> +               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
+> +               new_len +=3D (int)(rm[3].rm_eo - rm[3].rm_so);
+> +
+> +               *new_op =3D zalloc(new_len);
+> +               if (!*new_op)
+> +                       return -ENOMEM;
+> +
+> +               scnprintf(*new_op, new_len, "%c%.*s(%%%.*s)", prefix,
+> +                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
+rm_so,
+> +                       (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].=
+rm_so);
+> +       } else {
+> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
+op);
+> +               return SDT_ARG_SKIP;
+> +       }
+> +
+> +       return SDT_ARG_VALID;
+> +}
+> +
+>  uint64_t __perf_reg_mask_riscv(bool intr __maybe_unused)
+>  {
+>         return PERF_REGS_MASK;
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 5b8f34beb24e..57a1d227d1b2 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -19,6 +19,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old=
+_op, char **new_op)
+>         case EM_PPC64:
+>                 ret =3D __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
+>                 break;
+> +       case EM_RISCV:
+> +               ret =3D __perf_sdt_arg_parse_op_riscv(old_op, new_op);
+> +               break;
+>         case EM_386:
+>         case EM_X86_64:
+>                 ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index 7c04700bf837..e0b51b514ee0 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -53,6 +53,7 @@ const char *__perf_reg_name_powerpc(int id);
+>  uint64_t __perf_reg_ip_powerpc(void);
+>  uint64_t __perf_reg_sp_powerpc(void);
+>
+> +int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op);
+>  uint64_t __perf_reg_mask_riscv(bool intr);
+>  const char *__perf_reg_name_riscv(int id);
+>  uint64_t __perf_reg_ip_riscv(void);
 > --
-> 2.52.0
+> 2.50.1
+>
 >
