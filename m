@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEE040DFCE
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054D340DFCE
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776644522; cv=none; b=g8dXB2SmRqiUmhCcSUfZJCDh4s9KN+1/RPPTbDgiDdZpLzT9T361BwJuCHB21YJR3xv9C+X4QgV7dm5I4aRaQ2kcKBKUYjPD07PGKqWEIDJgDnTAhTRaa3Znxkp+Nr0t6UouCr2Y7geJ0+2C7a5SOGkwfcAIQwQVyYjZeedkbZk=
+	t=1776644563; cv=none; b=f9F+/qmYCFcbYpYNvAf+9PvvhhMG05IbwXHWrnswA7prMX0lU+3Kmykr5IM61YVYUiiMGnmu+milrA7esROAH246ztnDDY4Pp4KIEE1zQQNaRk9omDVy68yHSmxNrPCCwLMgGIsde90QDCsctZZCRk2FLq26M2fI/8J8tVDOkPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776644522; c=relaxed/simple;
-	bh=gzjjWtuZSL9ZMifnn3M7BUxrAzT/z/VWEsgqRg3F3FM=;
+	s=arc-20240116; t=1776644563; c=relaxed/simple;
+	bh=o91V7QoyGnMUVVP31itJtKh4uG5qz/qyO3TbV9ujO3Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=KdjylexamrMVzbi8dcQIpqJKTxSym+Yqnap7hQKy0RSKYvKpoYdsamgNNOcOPRxPzPE8NUtfenmDbzoQgDjnDtnG6jdMVoOSBOFzd2LAwXyVAH9I4RvSvnF3hHDGZ4GzFSHXLQc3moBL0dNX01gvXsfmXB/RitDQO+74HLlk/HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/Pv3gg6; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=CLvPPobw83lc8WDHSHEdA5v+zIAqZveLH2kKdI/UNAhIJIq6t/0oBUbhiq/Z2qX2sI/029Ykq3FBB3v3OJeeBgqVCV/SnQ7tWlDLxvnA4QBjWsholT+uCfVZxJbG0cH2swTXK3olpn76c9/ISPzwXUmFBSrtkvSFumCXD3LY1VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiPmBpuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/Pv3gg6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDC1C2BCAF;
-	Mon, 20 Apr 2026 00:22:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiPmBpuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830F9C2BCAF;
+	Mon, 20 Apr 2026 00:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776644521;
-	bh=gzjjWtuZSL9ZMifnn3M7BUxrAzT/z/VWEsgqRg3F3FM=;
+	s=k20201202; t=1776644562;
+	bh=o91V7QoyGnMUVVP31itJtKh4uG5qz/qyO3TbV9ujO3Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=i/Pv3gg6fotlXfX7KtNsrVGCufEIn+a31V9ywE5mEJrmIjMAapehOHDUsvMyoW2KM
-	 uo8dbO25Ku7+Y3LlxN6qTSTEUhAFz4lyCM8D7wV0c79P7RTnCCUij81am7pfIO9thP
-	 5VtHOUMY8isTIH8R/ym8BW7fZvjU0gGkn7gRTsGe4d/+gQbNjQsMsz7uQAIifIqqp6
-	 0Y5jXK7Gzqc5k+GpV2ZZv4IAJIrxnJ8c31jB0TUexrLfhGRxIu4at8wxt5TN+6rDPK
-	 JPP1qKMgwccC/viiMy/fMI687MpUWrentmbIg8eYamMn7QBofZpNKW+sxHRGMwdx+4
-	 ziNLJAMZYWf3Q==
+	b=TiPmBpuWBUvzdgWuyJPYHBBfE6hrBewD/lN6w6fyI5A8rS/csrHJoTbsg0x8VhvYb
+	 I5YdvfOmy1UoXq6pEPI0ugmd7z/irC4UQ8HBuwx6buo7dOMRzOterC352y8rCn2otB
+	 eqXeLrCvuXw2W543aMGmtpbrV3OfP0q+T7Z4syVzbYtZHiuq1yqKLKTFx5nHluIhwk
+	 GQAfNLEpw8aVMXSSJUAWGOKTP4dZlOSCIIPdaPTI3h5FctQl9vGbSEOcruwFLhQraD
+	 a+7PRq8XOrADfEDyuKM6iX++NBrkhRdlQXUHc6txxWf8oD+PZP9LB/4i8NXYCll0NK
+	 RDXnRvADIBN2A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 24/58] perf python: Move exported-sql-viewer.py and
- parallel-perf.py to tools/perf/python/
+Subject: Re: [PATCH v1 40/58] perf net_dropmonitor: Port net_dropmonitor to
+ use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-25-irogers@google.com>
-References: <20260419235911.2186050-25-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-41-irogers@google.com>
+References: <20260419235911.2186050-41-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:22:01 +0000
-Message-Id: <20260420002201.BCDC1C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:22:41 +0000
+Message-Id: <20260420002242.830F9C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,62 +45,69 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [Medium] Moving parallel-perf.py breaks the parallel-perf test in tools/p=
-erf/tests/shell/script.sh.
-- [Low] Usage examples in exported-sql-viewer.py reference the old script p=
-ath.
+- [Medium] The `KeyboardInterrupt` exception handler unintentionally restar=
+ts the cleanup phase, leading to duplicated data.
+- [Medium] Drop locations are incorrectly sorted lexicographically as strin=
+gs instead of numerically.
 --
 
-commit 015eb1b3b886beef12696f70686c41ba97d413c0
+commit 944cd5b52d19260b42c7e0a2807670526ba16f3d
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Move exported-sql-viewer.py and parallel-perf.py to tools/perf=
-/python/
+perf net_dropmonitor: Port net_dropmonitor to use python module
 
-This commit moves the exported-sql-viewer.py and parallel-perf.py scripts
-from tools/perf/scripts/python/ to tools/perf/python/ as they are standalone
-and do not use the perf script libpython support.
+This patch ports net_dropmonitor to use the python module by encapsulating
+state in a DropMonitor class. It replaces legacy global handlers with
+perf.session for event processing and removes Python 2 compatibility
+artifacts.
 
-> diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/per=
-f/python/exported-sql-viewer.py
-> similarity index 100%
-> rename from tools/perf/scripts/python/exported-sql-viewer.py
-> rename to tools/perf/python/exported-sql-viewer.py
+> diff --git a/tools/perf/python/net_dropmonitor.py b/tools/perf/python/net=
+_dropmonitor.py
+> new file mode 100755
+> index 0000000000000..474b616725b8f
+> --- /dev/null
+> +++ b/tools/perf/python/net_dropmonitor.py
+[ ... ]
+> +    def print_drop_table(self) -> None:
+> +        """Print aggregated results."""
+> +        print(f"{'LOCATION':>25} {'OFFSET':>25} {'COUNT':>25}")
+> +        for i in sorted(self.drop_log.keys()):
 
-This isn't a bug, but do the usage examples inside exported-sql-viewer.py
-still reference the old script path?
+Since drop_log stores string keys, will sorted(self.drop_log.keys()) order
+the memory locations lexicographically rather than numerically?
 
-The comments at the top of the script appear to instruct users to run it
-using the old path, which might lead to confusion when the examples fail to
-execute:
+[ ... ]
+> +    def process_event(self, sample: perf.sample_event) -> None:
+[ ... ]
+> +        slocation =3D str(location)
+> +        self.drop_log[slocation] +=3D 1
+[ ... ]
+> +    try:
+> +        print("Starting trace (Ctrl-C to dump results)")
+> +        session =3D perf.session(perf.data(args.input), sample=3Dmonitor=
+.process_event)
+> +        session.process_events()
+> +
+> +        print("Gathering kallsyms data")
+> +        monitor.get_kallsyms_table()
+> +        monitor.print_drop_table()
+> +    except KeyboardInterrupt:
+> +        print("\nGathering kallsyms data")
+> +        monitor.get_kallsyms_table()
+> +        monitor.print_drop_table()
 
-python tools/perf/scripts/python/exported-sql-viewer.py
+If a KeyboardInterrupt occurs while gathering kallsyms data or printing the
+table, will this exception handler execute the cleanup phase a second time?
 
-> diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/pyth=
-on/parallel-perf.py
-> similarity index 100%
-> rename from tools/perf/scripts/python/parallel-perf.py
-> rename to tools/perf/python/parallel-perf.py
+Looking at get_kallsyms_table():
 
-Does this move break the parallel-perf test in
-tools/perf/tests/shell/script.sh?
-
-The test_parallel_perf() function seems to hardcode the script path:
-
-tools/perf/tests/shell/script.sh:test_parallel_perf() {
-    ...
-    pp=3D$(dirname "$0")/../../scripts/python/parallel-perf.py
-    if [ ! -f "${pp}" ]; then
+    def get_kallsyms_table(self) -> None:
         ...
-}
+                    self.kallsyms.append((loc, name))
 
-Since the path in the test is not updated in tandem with the script move, w=
-ill
-this cause the check to evaluate to true and silently skip the test?
-
-This appears to result in a permanent loss of test coverage, as subsequent
-commits do not seem to resolve the path mismatch.
+Because it appends to the kallsyms list, could restarting this phase lead
+to duplicated entries?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D24
+050-1-irogers@google.com?part=3D40
