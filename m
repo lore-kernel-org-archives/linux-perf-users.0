@@ -1,140 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84663377EDA;
-	Mon, 20 Apr 2026 08:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E5A277035
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 09:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776672316; cv=none; b=oKyQrrE16QRPtO2r+L9CYp6lxSVnrmTqb2P+C0IaRueMTY4ULUwXfE1fZxJ5eVhU0VSaxP7J3D/onQaPq5A+2CVPtWc/I/dAfznE+CpOhZ6/EpFNmYUPBR4hs4zlzx+lHo+u1Rg9FRBgV4bFDjuVlJmpiZTK2VkUMUL7j/BwHj0=
+	t=1776676607; cv=none; b=VP/cLw+5tQKLbFWf4zHCIUIKW4urb9g540VU4hqb73E9xm8DY1f1OJ50oNq2s3o/YN3wl84NKsGp+0NlMW7VFu9lY4ezkxg83v/ci3I9pEuv+VJxWeIRStFH/4y0TGJoo3Sk2lG/9hthGWEvxY4gqCEupeY8PSfL+LLYbUnJgpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776672316; c=relaxed/simple;
-	bh=MMupEMtX6NN4l5jTf+bz3F5R6Vo4CjtgyIq7YTbFxHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qNweI98x8cdqzZd65DTwP0Bs+6EPQ5k6kHqS3U7FpkXttF/vKLh24UjTAjES8sxzizKPwK4mhIN6Xs5afSj5Tkw4vatcShFigmEq3RMZsoTsxMmcMF+fSi7bjv+0ofDJvOqpAGjVLF4yYc8CpqF1P50rTGKA2TG/7M4agrDYQTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LykavP4p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776676607; c=relaxed/simple;
+	bh=0u7s7OdRRqv5aE5o36d3vPC5dHuzyC07aujDS6QjbK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z7L8VMW9lX6+zGHfDieqqWPLRicejwAOlQ047fS2ZAkrQiJDPsLtohfvCPfmkJ7TQMTt8W3kWOrss9nehjNVJoif3SQPiq6jRyGad5FTu41J65rC5chTQKsrU82UBl3mM1ObmmUSzszLmLFh2aB6Y1Km9QAzkgrRM7gw4KKZbdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dUpFezg5; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dUpFezg5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LykavP4p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA67C19425;
-	Mon, 20 Apr 2026 08:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776672316;
-	bh=MMupEMtX6NN4l5jTf+bz3F5R6Vo4CjtgyIq7YTbFxHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LykavP4pX3GCYTqTdeEIBtIbX2DFZs8B3m6RCglX/J79jIEazMhTA/jfI/Sz6kS0t
-	 EA81PvZXntRDBoIBhWQM68Sk1Inud9l6WkYI/yut6CarTLOqKJAe94IELYel9aIbRM
-	 Hc5HKHnCor3a4biY021qGQM2JgimR27cRrxQmTaw=
-Date: Mon, 20 Apr 2026 10:05:13 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Guangshuo Li <lgs201920130244@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm_pmu: acpi: fix reference leak on failed device
- registration
-Message-ID: <2026042058-charm-storable-4ad8@gregkh>
-References: <20260415174159.3625777-1-lgs201920130244@gmail.com>
- <ad_WmuauLJ3xDKqh@J2N7QTR9R3>
- <2026041603-guts-crested-ef76@gregkh>
- <aeCOdWLaVpH-5w8s@hovoldconsulting.com>
- <aeCsLy-45QyeCwGA@J2N7QTR9R3>
- <aeXVr5enpjb3rfq7@hovoldconsulting.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dUpFezg5";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dUpFezg5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4D4625BD1B;
+	Mon, 20 Apr 2026 09:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1776676604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=CQVMt/nwmvdC4aLWh2feF4IWYAWPMMt31/pIymKulAc=;
+	b=dUpFezg5BYtaT/06Ap1bKCGQDZ9j+tzwjh0AkwNjvSIP/+KFwk4hJyj8L09wAKjtSPohzg
+	CKOyuYJE3iqxkF2x7rb7bQlQdpAimcydS249IG4Hsaqlab9g1WftdIfXvGPSw3F4zudy/S
+	dsk8cd7b76Mczp1CWHJa9jrscaLFK2w=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=dUpFezg5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1776676604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=CQVMt/nwmvdC4aLWh2feF4IWYAWPMMt31/pIymKulAc=;
+	b=dUpFezg5BYtaT/06Ap1bKCGQDZ9j+tzwjh0AkwNjvSIP/+KFwk4hJyj8L09wAKjtSPohzg
+	CKOyuYJE3iqxkF2x7rb7bQlQdpAimcydS249IG4Hsaqlab9g1WftdIfXvGPSw3F4zudy/S
+	dsk8cd7b76Mczp1CWHJa9jrscaLFK2w=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D5828593AE;
+	Mon, 20 Apr 2026 09:16:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lAcLM/vu5Wm3PQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 20 Apr 2026 09:16:43 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+Date: Mon, 20 Apr 2026 11:16:28 +0200
+Message-ID: <20260420091634.128787-1-jgross@suse.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aeXVr5enpjb3rfq7@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	URIBL_BLOCKED(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Queue-Id: 4D4625BD1B
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
 
-On Mon, Apr 20, 2026 at 09:28:47AM +0200, Johan Hovold wrote:
-> On Thu, Apr 16, 2026 at 10:30:23AM +0100, Mark Rutland wrote:
-> > On Thu, Apr 16, 2026 at 09:23:33AM +0200, Johan Hovold wrote:
-> 
-> > > It's not just the platform code as this directly reflects the behaviour
-> > > of device_register() as Mark pointed out.
-> > > 
-> > > It is indeed an unfortunate quirk of the driver model, but one can argue
-> > > that having a registration function that frees its argument on errors
-> > > would be even worse. And even more so when many (or most) users get this
-> > > right.
-> > 
-> > Ah, sorry; I had missed that the _put() step would actually free the
-> > object (and as you explain below, how that won't work for many callers).
-> > 
-> > > So if we want to change this, I think we would need to deprecate
-> > > device_register() in favour of explicit device_initialize() and
-> > > device_add().
-> > 
-> > Is is possible to have {platfom_,}device_uninitialize() functions that
-> > does everything except the ->release() call? If we had that, then we'd
-> > be able to have a flow along the lines of:
-> > 
-> > 	int some_init_function(void)
-> > 	{
-> > 		int err;
-> > 	
-> > 		platform_device_init(&static_pdev);
-> > 	
-> > 		err = platform_device_add(&static_pdev))
-> > 		if (err)
-> > 			goto out_uninit;
-> > 	
-> > 		return 0;
-> > 	
-> > 	out_uninit:
-> > 		platform_device_uninit(&static_pdev);
-> > 		return err;
-> > 	}
-> > 
-> > ... which I think would align with what people generally expect to have
-> > to do.
-> 
-> The issue here is that platform_device_add() allocates a device name and
-> such resources are not released until the last reference is dropped.
-> 
-> It's been this way since 2008, but some of the static platform devices
-> predates that and they both lack a release callback (explicitly required
-> since 2003) and are not cleaned up on registration failure.
-> 
-> Since registration would essentially only fail during development (e.g.
-> due to name collision or fault injection), this is hardly something to
-> worry about, but we could consider moving towards dynamic objects to
-> address both issues.
+This is a RFC for renaming the main MSR access functions. The main
+motivations for doing that are:
 
-Agreed, this whole thing, including the error handling, is all just
-theoretical as no real user ever hits this, which is why it has been
-_way_ down my priority list.
+- Prepare for wide spread use cases of WRMSRNS by making it easily
+  visible whether a MSR write is serializing or not. This has the
+  advantage that new use cases of MSR writes would need to decide
+  whether a serializing MSR write is needed or not. Using today's
+  MSR write interfaces would probably result in most new use cases
+  to use the serializing form, having a negative performance impact.
 
-> We have a few functions for allocating *and* registering platform
-> devices that could be used in many of these cases (and they already
-> clean up after themselves on errors):
-> 
-> 	platform_device_register_simple()
-> 	platform_device_register_data()
-> 	platform_device_register_resndata()
-> 	platform_device_register_full()
-> 
-> and where those do not fit (and cannot be extended) we have the
-> underlying:
-> 
-> 	platform_device_alloc()
-> 	platform_device_add_resources()
-> 	platform_device_add_data()
-> 	plaform_device_add()
-> 
-> But there are some 800 static platform devices left, mostly in legacy
-> platform code and board files that I assume few people care about.
+- Use functions instead of macros for accessing MSRs, which will drop
+  modifying variables passed as a parameter.
 
-Yes, I agree that we do have all of the needed apis here already, we
-should just work at converting existing drivers to the new apis OR just
-not caring at all as again, no one will ever hit these code paths :)
+- Eliminate multiple accessors doing exactly the same thing (e.g.
+  rdmsrl() and rdmsrq()).
 
-thanks,
+- Instead of having function names based on the underlying instruction
+  mnemonics, have functions of a common name space (msr_*()).
 
-greg k-h
+This series is containing only a needed prerequisite patch removing a
+name collision with the new access functions, 3 patches introducing
+the new access functions, and 2 example patches adapting users to use
+the new functions instead the old ones.
+
+I have selected the 2 example patches based on the needed code changes:
+
+Patch 5 is very simple, because all the changes are really trivial.
+While using a mixture of serializing and non-serializing MSR writes,
+the non-serializing form is used only in case another MSR write is
+following in the same function, resulting in each function doing MSR
+writes having still serializing semantics (it might be possible to
+change that later, but I wanted to be conservative just in case).
+
+Patch 6 is a little bit less simple, as there are a couple of cases
+where the new functions are no direct replacements of the old
+interfaces. The new functions only work on 64-bit values, so in cases
+where 2 32-bit values are needed, "struct msr" is used as a conversion
+layer. I thought about adding macros for the same purpose, but in the
+end this seemed to be a more simple and readable solution.
+
+In case the general idea is accepted, I'd do the conversion of the rest
+of the users (this will be probably a rather large, but mostly trivial
+series).
+
+As this series is RFC, I have done only basic compile testing.
+
+Juergen Gross (6):
+  x86/msr: Rename msr_read() and msr_write()
+  x86/msr: Create a new minimal set of local MSR access functions
+  x86/msr: Create a new minimal set of inter-CPU MSR access functions
+  x86/msr: Rename the *_safe_regs[_on_cpu]() MSR functions
+  x86/events: Switch core parts to use new MSR access functions
+  x86/cpu/mce: Switch code to use new MSR access functions
+
+ arch/x86/events/core.c            |  42 ++++++-------
+ arch/x86/events/msr.c             |   2 +-
+ arch/x86/events/perf_event.h      |  26 ++++----
+ arch/x86/events/probe.c           |   2 +-
+ arch/x86/events/rapl.c            |   8 +--
+ arch/x86/include/asm/msr.h        |  87 ++++++++++++++++++++++---
+ arch/x86/kernel/cpu/amd.c         |   4 +-
+ arch/x86/kernel/cpu/mce/amd.c     | 101 +++++++++++++++---------------
+ arch/x86/kernel/cpu/mce/core.c    |  18 +++---
+ arch/x86/kernel/cpu/mce/inject.c  |  40 ++++++------
+ arch/x86/kernel/cpu/mce/intel.c   |  32 +++++-----
+ arch/x86/kernel/cpu/mce/p5.c      |  16 ++---
+ arch/x86/kernel/cpu/mce/winchip.c |  10 +--
+ arch/x86/kernel/msr.c             |  16 ++---
+ arch/x86/lib/msr-reg-export.c     |   4 +-
+ arch/x86/lib/msr-reg.S            |  16 ++---
+ arch/x86/lib/msr-smp.c            |  20 +++---
+ arch/x86/lib/msr.c                |  12 ++--
+ 18 files changed, 263 insertions(+), 193 deletions(-)
+
+-- 
+2.53.0
+
