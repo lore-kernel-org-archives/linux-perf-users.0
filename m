@@ -1,172 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7506B3D3CF8
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177913B961D
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776692213; cv=none; b=EYtjeo9c7q9mDZ51CDvLZRz379syvw7T3/faAuU/UENkeRf4GI2kacE4lBfgEF7w4rZKiq3PvHw8IqrzEtyqq0VqLi7mXX/lp7gejYScAQuNQlaRaHrGjWN64Y3YMtki8RSQaWHU0Cqo1/U5Akrw/2287LdpwMvH2Y3YENCpUwI=
+	t=1776692687; cv=none; b=OWxIHMA3rmbAUUjXbv4LmFLJLuooCdbVEHPwL/z7HIVc+FS8wWMeAPRSQVQd0++OrmjCQvdGAPUie+HPRSktEIegzhxXjRtBZhr4ctC/xlZYjpvzJcApZzezsOl1TqgnBThKaYIlhCERxgXNv9XxS2Y0lnQxpZI0z00a3mHG9Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776692213; c=relaxed/simple;
-	bh=hr4nIKsCrYsnTSZjlYHxBkKHAl6M27PQwXO2iXmxZgs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TIsvXX7GHDbkZwA6oVKmmtQo4Kf+p35Je8+VvMKlyF3F3vKhi1rPoB2zHwnazXC6U886BN1E/2aRbefa3+64Tc9AVxhAYSc4bi4WxPBmM6AnBjnpvZd4YQGyD2L4IsiZziVft1b14LymxD/sLH7uBBadPlCc1qnsmDi49l3MFrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIZViw1V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776692687; c=relaxed/simple;
+	bh=Sb9N6ZxOpG6EYjxD6uzTvGIWgwlDE5T3Exa+z8je0Wg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=T0gGlriwssTJMRBheHCfK1Hbq70L9Z5K9gDMJXzl55hDDpQ9XvJxkImUzV58jZXE4ergG6GdSwm2ZBup4cCGmUGqHRl1tdAsMtJL2bHceFbY0b6uzUUPjlwbb1lYzzg3nUQ6O7qLCx5Vtm9ishofq+MoZ1Ojg+zd0/a3tn9NaU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tM6o+DUc; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIZViw1V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A21C19425;
-	Mon, 20 Apr 2026 13:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776692213;
-	bh=hr4nIKsCrYsnTSZjlYHxBkKHAl6M27PQwXO2iXmxZgs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NIZViw1VsGeuod44vgzbVN9Fu5kg2ecG1H9QdfDS8ByOn1laas7me9ZYr6oRIchaH
-	 WAt/+w/vwy6Ffx8yc4SE2qKDoKsh56zedH6qZZTEsLn3I0RMQWOvlVe1xYNbHEjWzb
-	 Z21BNtZFY5nztarBBQpM21X4dY4iE5dF66YSPfvpWej3Dq460okPyDLHKfiTmn85J+
-	 EjC8CTZetEByj5jpByItg1btQp8JnHdOOXCFwe5/olKxolUAdsM6FDIx/vC5GQ7gUO
-	 zjHC7fEl005VMGcteEs1VyINPikdbQWs4uUodFL/OkdW5txYt918adbezseXiTpd4m
-	 U6QoZCDjWZjIg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 5/6] x86/events: Switch core parts to use new MSR
- access functions
-Reply-To: sashiko@lists.linux.dev
-To: "Juergen Gross" <jgross@suse.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260420091634.128787-6-jgross@suse.com>
-References: <20260420091634.128787-6-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 13:36:52 +0000
-Message-Id: <20260420133653.06A21C19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tM6o+DUc"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82f504f6b75so1661104b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 06:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776692685; x=1777297485; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sudcedv7bb6KmmokVjUGDtJIDuJ5fsha2RP++MmI/64=;
+        b=tM6o+DUcUMJzSLJ/XOoDOIJk84847spcLhdH1DnBtK5UXlUijFWO9ZdJgURQhdpnwE
+         MQpoNiVobJ/ErOguT9vWaeIjYzBv4eN4x9NwFCf8Y8+lAHcdOFclO5swsRDvM05Tearj
+         Z8s8eJhd6KdmGuSWcJLX+w2m0inK6+BjNvwsgYW4+Z9eNuFZdViB1JrbK/KWgZiBRw+U
+         fowlV75Ea2NfqRzezs01uDfyKlxjQJ6VR0kKGj25HrqEsdxegdNu7i1+BChaLQOg7/f9
+         8nCXflUBr7IRzQCJONlshnJZFZH0CS/WeCqounYyCjnvgaH+9m2GuFrlHskV0mKe42jx
+         nmLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776692685; x=1777297485;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sudcedv7bb6KmmokVjUGDtJIDuJ5fsha2RP++MmI/64=;
+        b=MdFgT267r+PqAsfkInrTjGs/T5cPzdI2UuW1y5HZp7SndFiIX2+UJ59WR5yehKJXDg
+         DWtWc7qjinV0oc+FUbHL/bWGVtxTzQThCs2QUzrp3nbJk9IxQKsJfs4TqHJThnh+AcyB
+         ZwdDtDRP7zA/si9FvOVOI036bRQtz/gX2OxLJqwOnATbZ7xPwTyUTmaHRHZJUWDUfXOH
+         J8OZu9Ivhb2JoQ1RcYi0Trxta4i5iBX+2+L5N0VEfJWH2Bpljt2Z6foyivRrztjW1wTD
+         BUdxpyGlrOhqcJMICP7xkVX/3t0G6gpazov2/mdCCC+ZyU2KRnoL/Qp28uaOV6pb5D7a
+         ld7A==
+X-Forwarded-Encrypted: i=1; AFNElJ/nyHKpCTZt0QxlOHr8F3ZLLSx/jxYIEGovpirXP7OZFx6/GzYmeRilZBK7NZHRoUWgOYkKPZ2V1pTYkVkkOvfh@vger.kernel.org
+X-Gm-Message-State: AOJu0YywRQiR+IpnEtSVIluE5A6L2YU7PXV42IgJ0/FyJl01PG7T/nco
+	jruu3198RbTYxtvMAJtvd0vCO7Btr0ge58VXXqQ5VwPeAiKTDsfmgbes4jxbY9Pet4SKHKjgGsu
+	lYHaP4g==
+X-Received: from pfgs39.prod.google.com ([2002:a05:6a00:17a7:b0:82c:e9cd:a73f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3315:b0:81f:ac81:d597
+ with SMTP id d2e1a72fcca58-82f8c2a9ed7mr12914323b3a.0.1776692685198; Mon, 20
+ Apr 2026 06:44:45 -0700 (PDT)
+Date: Mon, 20 Apr 2026 06:44:43 -0700
+In-Reply-To: <d730553e-b7ca-4f90-a367-4c0ce0d8e7f4@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260420091634.128787-1-jgross@suse.com> <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
+ <20260420114117.GC3102924@noisy.programming.kicks-ass.net> <d730553e-b7ca-4f90-a367-4c0ce0d8e7f4@suse.com>
+Message-ID: <aeYty5kU8Rp44USr@google.com>
+Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?=" <jgross@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Inconsistent application of `msr_write_noser()` and `msr_write_ser=
-()` APIs, violating the commit's design rules and risking hardware-level ra=
-ce conditions.
---
+On Mon, Apr 20, 2026, J=C3=BCrgen Gro=C3=9F wrote:
+> On 20.04.26 13:41, Peter Zijlstra wrote:
+> > On Mon, Apr 20, 2026 at 01:35:12PM +0200, Peter Zijlstra wrote:
+> > > On Mon, Apr 20, 2026 at 11:16:28AM +0200, Juergen Gross wrote:
+> > >=20
+> > > > - Use functions instead of macros for accessing MSRs, which will dr=
+op
+> > > >    modifying variables passed as a parameter.
+> > > >=20
+> > > > - Eliminate multiple accessors doing exactly the same thing (e.g.
+> > > >    rdmsrl() and rdmsrq()).
+> > >=20
+> > > So far so sane.
+> > >=20
+> > > > - Instead of having function names based on the underlying instruct=
+ion
+> > > >    mnemonics, have functions of a common name space (msr_*()).
+> > >=20
+> > > Not sure on this one. The whole msr_{read,write}_{safe,noser}() thing=
+ is
+> > > a royal pain. Also 'noser' reads to me as the noun that goes with 'to
+> > > nose' [he that noses (around), like baker: he that bakes].
+> > >=20
+> > > I would much rather we just stick to the mnemonics here. All of this
+> > > really is about wrapping single instructions, no need to make it an
+> > > unreadable mess.
+> >=20
+> > Also, the _safe suffix should just go away. All MSR accessors should be
+> > 'safe'.
+>=20
+> That would be fine by me, but I'd like to have some confirmation this is
+> really the route to go.
 
-commit 3fc3352a68324488e42156725645cf2d490b75c7
-Author: Juergen Gross <jgross@suse.com>
+I don't care what the suffix is called, or if there is even a suffix, but t=
+here
+needs to be a way for the caller to communicate that it wants to handle fau=
+lts,
+so that the "caller isn't going to handle a fault" case generates a WARN if=
+ the
+access does #GP.
 
-x86/events: Switch core parts to use new MSR access functions
+If we make rdmsr() return a u64, then we can vacate __rdmsr() and use that =
+for
+the version with a label.
 
-This commit switches the core x86 events subsystem to use the new msr_*()=20
-access functions. The commit message establishes a rule to use=20
-msr_write_noser() when another MSR write follows in the same function, and=
-=20
-msr_write_ser() for the final MSR write.
+E.g. something like this if we provide both the out-param and label variant=
+s:
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 810ab21ffd991..c15e0d1a66584 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-[ ... ]
-> @@ -713,13 +713,13 @@ void x86_pmu_disable_all(void)
-> =20
->  		if (!test_bit(idx, cpuc->active_mask))
->  			continue;
-> -		rdmsrq(x86_pmu_config_addr(idx), val);
-> +		val =3D msr_read(x86_pmu_config_addr(idx));
->  		if (!(val & ARCH_PERFMON_EVENTSEL_ENABLE))
->  			continue;
->  		val &=3D ~ARCH_PERFMON_EVENTSEL_ENABLE;
-> -		wrmsrq(x86_pmu_config_addr(idx), val);
-> +		msr_write_noser(x86_pmu_config_addr(idx), val);
->  		if (is_counter_pair(hwc))
-> -			wrmsrq(x86_pmu_config_addr(idx + 1), 0);
-> +			msr_write_noser(x86_pmu_config_addr(idx + 1), 0);
->  	}
->  }
+static __always_inline u64 rdmsr(u32 msr)
+{
+	<this version WARNs on fault>
+}
 
-The commit message mentions using msr_write_ser() for the last MSR write in=
- a
-function. Since msr_write_noser() relies on a non-serializing instruction,
-could leaving the final write non-serialized here allow the CPU to proceed=
-=20
-into critical sections before the hardware PMU disable actually completes?=
-=20
+#define __rdmsr(msr, label)
+({
+	u64 __val;
 
-If the hardware is still actively counting, this might risk triggering=20
-unexpected PMIs.
+	<this version jumps to @label on fault>
+	__val;
+})
 
-[ ... ]
-> @@ -1446,14 +1446,14 @@ int x86_perf_event_set_period(struct perf_event *=
-event)
->  	 */
->  	local64_set(&hwc->prev_count, (u64)-left);
-> =20
-> -	wrmsrq(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-> +	msr_write_noser(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-> =20
->  	/*
->  	 * Sign extend the Merge event counter's upper 16 bits since
->  	 * we currently declare a 48-bit counter width
->  	 */
->  	if (is_counter_pair(hwc))
-> -		wrmsrq(x86_pmu_event_addr(idx + 1), 0xffff);
-> +		msr_write_noser(x86_pmu_event_addr(idx + 1), 0xffff);
-> =20
->  	perf_event_update_userpage(event);
-> =20
->  	return ret;
->  }
-
-Similar to the above, this function finishes without a serializing MSR write
-or a barrier. Should this final write use msr_write_ser() to match the desi=
-gn
-rules outlined in the commit description?
-
-[ ... ]
-> @@ -2560,9 +2560,9 @@ void perf_clear_dirty_counters(void)
->  			if (!test_bit(i - INTEL_PMC_IDX_FIXED, hybrid(cpuc->pmu, fixed_cntr_m=
-ask)))
->  				continue;
-> =20
-> -			wrmsrq(x86_pmu_fixed_ctr_addr(i - INTEL_PMC_IDX_FIXED), 0);
-> +			msr_write_noser(x86_pmu_fixed_ctr_addr(i - INTEL_PMC_IDX_FIXED), 0);
->  		} else {
-> -			wrmsrq(x86_pmu_event_addr(i), 0);
-> +			msr_write_noser(x86_pmu_event_addr(i), 0);
->  		}
->  	}
-> =20
-
-The final MSR write in this loop also exclusively uses msr_write_noser().
-Is it intended to leave the PMU clearing un-serialized upon returning from=
-=20
-this function?
-
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index fad87d3c8b2ca..cce2e7b67c01f 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-[ ... ]
-> @@ -1296,10 +1296,10 @@ static inline void x86_pmu_disable_event(struct p=
-erf_event *event)
->  	u64 disable_mask =3D __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
->  	struct hw_perf_event *hwc =3D &event->hw;
-> =20
-> -	wrmsrq(hwc->config_base, hwc->config & ~disable_mask);
-> +	msr_write_ser(hwc->config_base, hwc->config & ~disable_mask);
-> =20
->  	if (is_counter_pair(hwc))
-> -		wrmsrq(x86_pmu_config_addr(hwc->idx + 1), 0);
-> +		msr_write_ser(x86_pmu_config_addr(hwc->idx + 1), 0);
->  }
-
-Here the first write uses msr_write_ser() even when a second write might fo=
-llow=20
-(when is_counter_pair(hwc) is true).=20
-
-Should the first write use msr_write_noser() instead to take advantage of t=
-he=20
-optimization mentioned in the commit message?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420091634.1287=
-87-1-jgross@suse.com?part=3D5
+static __always_inline int rdmsr_p(u32 msr, u64 *val)
+{
+	<this version zeros *val on fault and returns 0/-errno>
+}
