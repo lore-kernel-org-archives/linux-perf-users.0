@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0FA3BE163;
-	Mon, 20 Apr 2026 13:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BEB3CE48F;
+	Mon, 20 Apr 2026 13:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776691034; cv=none; b=T16jrXx77rn1jfsMePp4pmcgJsA4DJmJTBwX6+FTHFughDi9K8xqbbGcUxHpCZ4sRaB7BAxWNENZylTmUmHZ3aG7h4dOKERtrSFIbs/pPEZqRzpdjwMp2xdxzcUEB5aMOXNiIc6eDscnAFhPsL19X/W9Y1YTlmZePdc5jD7o3jY=
+	t=1776691071; cv=none; b=ouszW+IXexEYePNVi2i62uU6nNzhJMhSjQMzPpz8P+FfEYBX2BiPTdNkNhsEG1rsvPQ/fMHT6L5p+fwSfOHI1ST8Mda2ni9i74DbFGIIdw0IETU8dv3+uxQoUdP5g9a4T0xGmfJbc+l+xt/xKa95OsztsXQwkLJeXONC4JD+n/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776691034; c=relaxed/simple;
-	bh=81Ng9CutKyy/7MQcL5BdbyBnhxSmd8NnfjmHPiUjoww=;
+	s=arc-20240116; t=1776691071; c=relaxed/simple;
+	bh=D4gzbApaCmFCoqZH8AOrVXrd+GNGxB6eS1Wa4nuDa5U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AzPksNp6Em/rcf8A1fsonTUq0B8qS6yTQKhDOOyyCkimsHE6I6zHk8FB+DWVW1lCOnbuCCUC47oas7JKrbvBbI4gzk7Qot4ObkZAbwDfKS+HEY+Hgb6r0IxPOQXkfjJ4QUQTCGY6RzSSpdVvUAh/fEOzfCmZe/hEOfduGmCXclw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJ/o9J/b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=X2BrTp+vQI5LEn0GwxXncUeAieoYfarw8S9fMhqGPgj9mhxR/+YDukc7SCROb1rs1V2Pz3Na/akPgQzfXk/MvRme2Ba9P6upI2Iwm9NA09x7PnH/Um1VQgbQ19iQBUV22LggapE1Frp62GI8DNM1VbyaK7jwYLaUHf1to4jTpYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpH8x8/q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJ/o9J/b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FF5C19425;
-	Mon, 20 Apr 2026 13:17:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpH8x8/q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EFCC2BCB4;
+	Mon, 20 Apr 2026 13:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776691034;
-	bh=81Ng9CutKyy/7MQcL5BdbyBnhxSmd8NnfjmHPiUjoww=;
+	s=k20201202; t=1776691070;
+	bh=D4gzbApaCmFCoqZH8AOrVXrd+GNGxB6eS1Wa4nuDa5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tJ/o9J/bpQZkCfaH7vEDlqjQ+RRyxFtJOrygjdNpPdMUD/r7+n/iaycw6SatXYAcS
-	 Ef2asPmDLuv/X/DWI8DTNkCnOMnEFhEZwslrD0Jl9hdn8vbwj1Q2yFlvs4pGlHi0YP
-	 w4SQuv4INozniKWmN2Xc2tDeuClPhpPdObygaJmku5P1MfYLW1Z4343Syl9nI5RtzB
-	 CbDtJ2DdgskfcRbG7RCWXG1x5rvME0vXxPUHJDoFIZHGqIiMfrFpzdTCFMra84EB/O
-	 V+LpQEiCitUz0E6Eokqi3L1T4uqlsDJ+1lJC2C+A1EDtZvWuZS+++gJlf9rjsZyEgB
-	 4rrpF1VW3RISw==
+	b=DpH8x8/qgyZjDOfv3yPtBigz4IsvUJuLL4s1If0D2jG2FTMmLGP6CIdPdd6aRvLWB
+	 rnFo3jwOYmuWhhD/WjFUD1w/Hbs9wGOXk2XtFjyDfZoQvQWrYMg/WIoPGZX6YpR9wk
+	 WG/9QZcxxXh4MlBZOiz3UIHWh5kd5b7hFBeCp4tAuCCbf/zeOFKTWPuxAclxneCVOM
+	 iFt7hvcRDNX/lSDQ2+ZXFLE4hwr5AGZt1AJHAwb3VB0Q83PX8AEQqqdgSZHD1t/Ge1
+	 sf0IukJY+AjKD8SLlphOVOna8MuxUeInRdmbAfOjK/lnaEJp4v26Tb+C0bjoMsSP46
+	 A+JUnEKEZeLag==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -35,15 +35,15 @@ Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
 	mingo@redhat.com,
 	acme@kernel.org,
-	tglx@kernel.org,
+	tglx@linutronix.de,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 7.0-5.10] perf/amd/ibs: Avoid race between event add and NMI
-Date: Mon, 20 Apr 2026 09:08:41 -0400
-Message-ID: <20260420131539.986432-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 7.0-6.18] perf/amd/ibs: Limit ldlat->l3missonly dependency to Zen5
+Date: Mon, 20 Apr 2026 09:09:02 -0400
+Message-ID: <20260420131539.986432-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260420131539.986432-1-sashal@kernel.org>
 References: <20260420131539.986432-1-sashal@kernel.org>
@@ -61,424 +61,313 @@ Content-Transfer-Encoding: 8bit
 
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 
-[ Upstream commit 1b044ff3c17e9d7fd93ffc0ba541ccdeb992d7f5 ]
+[ Upstream commit 898138efc99096c3ee836fea439ba6da3cfafa4d ]
 
-Consider the following race:
+The ldlat dependency on l3missonly is specific to Zen 5; newer generations
+are not affected. This quirk is documented as an erratum in the following
+Revision Guide.
 
-  --------
-  o OP_CTL contains stale value: OP_CTL[Val]=1, OP_CTL[En]=0
-  o A new IBS OP event is being added
-  o [P]: Process context, [N]: NMI context
+  Erratum: 1606 IBS (Instruction Based Sampling) OP Load Latency Filtering
+           May Capture Unwanted Samples When L3Miss Filtering is Disabled
 
-  [P] perf_ibs_add(event) {
-  [P]     if (test_and_set_bit(IBS_ENABLED, pcpu->state))
-  [P]         return;
-  [P]     /* pcpu->state = IBS_ENABLED */
-  [P]
-  [P]     pcpu->event = event;
-  [P]
-  [P]     perf_ibs_start(event) {
-  [P]         set_bit(IBS_STARTED, pcpu->state);
-  [P]         /* pcpu->state = IBS_ENABLED | IBS_STARTED */
-  [P]         clear_bit(IBS_STOPPING, pcpu->state);
-  [P]         /* pcpu->state = IBS_ENABLED | IBS_STARTED */
-
-  [N] --> NMI due to genuine FETCH event. perf_ibs_handle_irq()
-  [N]     called for OP PMU as well.
-  [N]
-  [N] perf_ibs_handle_irq(perf_ibs) {
-  [N]     event = pcpu->event; /* See line 6 */
-  [N]
-  [N]     if (!test_bit(IBS_STARTED, pcpu->state)) /* false */
-  [N]         return 0;
-  [N]
-  [N]     if (WARN_ON_ONCE(!event)) /* false */
-  [N]         goto fail;
-  [N]
-  [N]     if (!(*buf++ & perf_ibs->valid_mask)) /* false due to stale
-  [N]                                            * IBS_OP_CTL value */
-  [N]         goto fail;
-  [N]
-  [N]         ...
-  [N]
-  [N]     perf_ibs_enable_event() // *Accidentally* enable the event.
-  [N] }
-  [N]
-  [N] /*
-  [N]  * Repeated NMIs may follow due to accidentally enabled IBS OP
-  [N]  * event if the sample period is very low. It could also lead
-  [N]  * to pcpu->state corruption if the event gets throttled due
-  [N]  * to too frequent NMIs.
-  [N]  */
-
-  [P]         perf_ibs_enable_event();
-  [P]     }
-  [P] }
-  --------
-
-We cannot safely clear IBS_{FETCH|OP}_CTL while disabling the event,
-because the register might be read again later. So, clear the register
-in the enable path - before we update pcpu->state and enable the event.
-This guarantees that any NMI that lands in the gap finds Val=0 and
-bails out cleanly.
+  Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors,
+  Pub. 58251 Rev. 1.30 July 2025
+  https://bugzilla.kernel.org/attachment.cgi?id=309193
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://patch.msgid.link/20260216042216.1440-6-ravi.bangoria@amd.com
+Link: https://patch.msgid.link/20260216042216.1440-3-ravi.bangoria@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-Now I have a thorough understanding. Let me compile the full analysis.
+Now I have all the information needed. Let me compile the full analysis.
 
 ---
 
 ## PHASE 1: COMMIT MESSAGE FORENSICS
 
-### Step 1.1: Subject Line
-- **Subsystem**: `perf/amd/ibs` (AMD Instruction-Based Sampling perf PMU
-  driver)
-- **Action verb**: "Avoid" (almost always indicates fixing a bug)
-- **Summary**: Prevent race between adding a perf event and NMI handling
-  in IBS
+**Step 1.1: PARSE THE SUBJECT LINE**
+Record: [perf/amd/ibs] [Limit] Constrains the ldlat->l3missonly hardware
+workaround to only apply on Zen5 CPUs, per AMD Erratum 1606.
 
-### Step 1.2: Tags
-- **Signed-off-by: Ravi Bangoria** - the author, AMD IBS subsystem
-  expert
-- **Signed-off-by: Peter Zijlstra (Intel)** - perf core maintainer,
-  committed the patch
-- **Acked-by: Namhyung Kim** - another perf subsystem maintainer
-- **Link**:
-  `https://patch.msgid.link/20260216042216.1440-6-ravi.bangoria@amd.com`
-  - patch 5/5 (originally numbered 6 including cover letter) in a series
-- **No Fixes: tag** - expected for manual review candidates
-- **No Cc: stable tag** - expected
+**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
+- Signed-off-by: Ravi Bangoria (author, AMD IBS expert at AMD)
+- Signed-off-by: Peter Zijlstra (Intel) (perf subsystem maintainer)
+- Acked-by: Namhyung Kim (perf co-maintainer)
+- Link: patch.msgid.link URL to lore thread
+- No Fixes: tag (expected for candidates)
+- No Cc: stable (expected for candidates)
 
-Record: Strong reviewer/maintainer endorsement. No syzbot or bug
-reports.
+Record: Strong reviewer credentials. The patch was authored by the AMD
+IBS subsystem expert, merged by the perf maintainer, and acked by the
+perf co-maintainer.
 
-### Step 1.3: Commit Body
-The commit body provides an extremely detailed, step-by-step walkthrough
-of the race:
-1. `OP_CTL` has stale `Val=1, En=0` from a previous IBS sample
-2. In process context, `perf_ibs_add()` → `perf_ibs_start()` sets
-   `IBS_STARTED`
-3. Before `perf_ibs_enable_event()` is called, an NMI arrives (from a
-   FETCH event)
-4. NMI handler sees `IBS_STARTED=true`, reads stale `OP_CTL[Val]=1`,
-   treats it as valid
-5. NMI handler calls `perf_ibs_enable_event()`, **accidentally**
-   enabling the OP event
-6. Results in: repeated NMIs, `pcpu->state` corruption, potential
-   throttle issues
+**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
+The commit describes AMD Erratum 1606: "IBS OP Load Latency Filtering
+May Capture Unwanted Samples When L3Miss Filtering is Disabled." This
+erratum is specific to AMD Family 1Ah Models 00h-0Fh (Zen5). The
+original ldlat code unconditionally forced `IBS_OP_L3MISSONLY` alongside
+`IBS_OP_LDLAT_EN`, but this workaround should only apply to Zen5.
 
-**Failure mode**: NMI storm and state corruption.
+Record: Bug = erratum workaround applied too broadly. Symptom = on non-
+Zen5 hardware, ldlat filtering incorrectly forces L3-miss-only sampling.
+Root cause = original ldlat feature lacked CPU generation check.
 
-### Step 1.4: Hidden Bug Fix Detection
-This is explicitly described as a race condition fix - not disguised at
-all.
-
----
+**Step 1.4: DETECT HIDDEN BUG FIXES**
+Record: This IS a bug fix. It corrects incorrect hardware configuration
+on non-Zen5 processors. The word "Limit" indicates constraining overly
+broad behavior to only the affected hardware.
 
 ## PHASE 2: DIFF ANALYSIS
 
-### Step 2.1: Inventory
-- **Files changed**: 1 (`arch/x86/events/amd/ibs.c`)
-- **Lines added**: +8 (6 comment lines + 1 blank + 1 code line)
-- **Lines removed**: 0
-- **Functions modified**: `perf_ibs_start()`
-- **Scope**: Single-function surgical fix
+**Step 2.1: INVENTORY**
+- 1 file: `arch/x86/events/amd/ibs.c` (+4/-1, net +3 lines)
+- Function modified: `perf_ibs_init()`
+- Scope: single-file surgical fix
 
-### Step 2.2: Code Flow Change
-**Before**: After computing `config`, `perf_ibs_start()` sets
-`IBS_STARTED`, clears `IBS_STOPPING`, and enables the event. The IBS
-control MSR may contain stale `Val=1` data from a previous sample.
+**Step 2.2: CODE FLOW CHANGE**
+Before: When ldlat event is configured, ALWAYS sets both
+`IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN`.
+After: Always sets `IBS_OP_LDLAT_EN`, but only sets `IBS_OP_L3MISSONLY`
+when `cpu_feature_enabled(X86_FEATURE_ZEN5)` is true.
 
-**After**: Before setting `IBS_STARTED`, the code calls
-`perf_ibs_disable_event(perf_ibs, hwc, 0)` which writes 0 to the IBS
-control MSR, clearing `Val` and `En` bits. Any NMI arriving in the
-window between this write and the actual event enable will read `Val=0`
-and bail out.
+**Step 2.3: BUG MECHANISM**
+Category: Hardware workaround refinement. The Zen5 erratum 1606 required
+forcing l3missonly alongside ldlat, but this constraint was applied to
+all CPUs unconditionally. On post-Zen5 hardware, this forces unwanted
+filtering that limits the utility of ldlat profiling.
 
-### Step 2.3: Bug Mechanism
-**Category**: Race condition between process context and NMI context
-- The NMI handler (`perf_ibs_handle_irq`) is called for both FETCH and
-  OP PMUs on every IBS NMI (see `perf_ibs_nmi_handler` at line
-  1396-1411)
-- A stale `Val=1` in the OP_CTL MSR fools the handler into thinking a
-  valid sample exists
-- The handler then re-enables the event prematurely
-
-### Step 2.4: Fix Quality
-- **Obviously correct**: A single MSR zero-write before enabling, using
-  an existing function
-- **Minimal/surgical**: 1 functional line + comments
-- **Regression risk**: Extremely low - clearing a register before
-  writing new values into it is safe. The MSR was going to be written
-  anyway a few instructions later by `perf_ibs_enable_event()`
-- **No red flags**: Single function, single file, existing API
-
----
+**Step 2.4: FIX QUALITY**
+- Obviously correct: constrains documented erratum workaround to the
+  affected CPU generation
+- Minimal (3 actual lines of change)
+- Zero regression risk on Zen5 (behavior unchanged); corrects behavior
+  on all other generations
+- No red flags
 
 ## PHASE 3: GIT HISTORY INVESTIGATION
 
-### Step 3.1: Blame
-The IBS state machine code (set_bit/clear_bit for STARTED/STOPPING) was
-introduced by:
-- `5a50f529170113` (Peter Zijlstra, 2016-03-16): "Fix race with
-  IBS_STARTING state"
-- `85dc600263c229` (Peter Zijlstra, 2016-03-21): "Fix pmu::stop()
-  nesting"
+**Step 3.1: BLAME**
+The buggy line (`config |= IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN`) was
+introduced by commit d20610c19b4a22 ("perf/amd/ibs: Add support for OP
+Load Latency Filtering") by Ravi Bangoria on 2025-02-05. This was the
+initial ldlat feature addition, first appearing in v6.15-rc1.
 
-Both were merged in kernel 4.7. The race condition has existed since
-then — present in **all active stable trees**.
+**Step 3.2: FIXES TAG**
+No explicit Fixes: tag. The implicit fix target is d20610c19b4a22. That
+commit appeared in v6.15-rc1, confirmed by `git tag --contains`.
 
-### Step 3.2: No Fixes: tag (expected)
+**Step 3.3: FILE HISTORY**
+The file has active development from Ravi Bangoria. This is patch 2/5 in
+a series "[PATCH v2 0/5] perf/amd/ibs: Assorted fixes" but it is
+completely self-contained — it modifies a single line with no dependency
+on the other patches.
 
-### Step 3.3: File History
-Recent changes to `ibs.c` are mostly feature additions (ldlat filtering,
-min_period, etc.) and cleanups (MSR rename, syscore changes). This fix
-doesn't conflict with any of them.
+**Step 3.4: AUTHOR**
+Ravi Bangoria is the primary AMD IBS developer with 10+ commits to this
+file. He works at AMD and is the domain expert for this code.
 
-### Step 3.4: Author
-Ravi Bangoria is the AMD IBS subsystem maintainer/expert with 15+
-commits to `arch/x86/events/amd/ibs.c`. This fix carries strong
-authority.
+**Step 3.5: DEPENDENCIES**
+None. The patch only changes the conditional expression around setting
+`IBS_OP_L3MISSONLY`. The check `cpu_feature_enabled(X86_FEATURE_ZEN5)`
+already exists in the tree (used in `drivers/cpufreq/amd-pstate.c` and
+`drivers/platform/x86/amd/pmc/mp1_stb.c`). `X86_FEATURE_ZEN5` is defined
+in `arch/x86/include/asm/cpufeatures.h`.
 
-### Step 3.5: Dependencies
-This is patch 5/5 in a series titled "perf/amd/ibs: Assorted fixes":
-1. "Account interrupt for discarded samples"
-2. "Limit ldlat->l3missonly dependency to Zen5"
-3. "Preserve PhyAddrVal bit when clearing PhyAddr MSR"
-4. "Avoid calling perf_allow_kernel() from the IBS NMI handler"
-5. "Avoid race between event add and NMI" (this patch)
+## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
 
-**Critical finding**: This patch is **completely standalone**. It only
-adds a call to the existing `perf_ibs_disable_event()` function. It does
-not depend on any changes from patches 1-4 (which address unrelated
-bugs).
+**Step 4.1: PATCH DISCUSSION**
+Found the original submission at spinics.net. The patch was v2 of a
+series. Namhyung Kim acked the entire series. No NAKs or concerns. Peter
+Zijlstra merged it on Feb 27, 2026 as commit
+898138efc99096c3ee836fea439ba6da3cfafa4d in tip/perf/core.
 
----
+**Step 4.2: REVIEWERS**
+Peter Zijlstra (perf maintainer) committed it. Namhyung Kim (perf co-
+maintainer) acked it. Both appropriate reviewers for this subsystem.
 
-## PHASE 4: MAILING LIST RESEARCH
+**Step 4.3: BUG REPORT**
+The bug is based on AMD's published erratum 1606 in the Revision Guide
+for Family 1Ah processors. This is vendor-documented hardware behavior,
+not a user-reported crash.
 
-### Step 4.1: Patch Discussion
-- Found via patchew.org and spinics.net
-- Upstream commit: `1b044ff3c17e9d7fd93ffc0ba541ccdeb992d7f5`
-- Merged into tip/perf/core on Feb 27, 2026 by Peter Zijlstra
-- v2 series (v1 was at different URL, split from enhancements)
+**Step 4.4: RELATED PATCHES**
+This is patch 2/5. The other patches fix unrelated issues (interrupt
+accounting, PhyAddrVal bit, NMI safety, race condition). None of the
+other patches are in the 7.0 tree. This patch is fully standalone.
 
-### Step 4.2: Reviewers
-- **Namhyung Kim** Acked the entire series
-- **Peter Zijlstra** (perf core maintainer) committed it
-- All appropriate subsystem maintainers were involved
-
-### Step 4.3-4.5: No specific bug report (author-found via code
-analysis), no stable-specific discussion found.
-
----
+**Step 4.5: STABLE DISCUSSION**
+No specific stable discussion found. The series was labeled "Assorted
+fixes" and contains patches with "fix" characteristics.
 
 ## PHASE 5: CODE SEMANTIC ANALYSIS
 
-### Step 5.1: Key Functions
-- `perf_ibs_start()` (modified) - called from `perf_ibs_add()` during
-  event scheduling
-- `perf_ibs_disable_event()` (called, not modified) - writes 0 to IBS
-  control MSR
+**Step 5.1: KEY FUNCTIONS**
+Modified function: `perf_ibs_init()` — the event initialization function
+for IBS PMU events.
 
-### Step 5.2: Callers of perf_ibs_start
-- `perf_ibs_add()` → `perf_ibs_start()` — called during perf event
-  scheduling to CPU
-- This is a standard perf PMU operation, triggered whenever a perf event
-  using IBS is scheduled
+**Step 5.2: CALLERS**
+`perf_ibs_init()` is registered as the `.event_init` callback for both
+`perf_ibs_fetch` and `perf_ibs_op` PMU structures. It's called during
+perf event creation via the perf_event_open() syscall path.
 
-### Step 5.3-5.4: Call Chain
-`perf_event_open()` → context scheduling → `perf_ibs_add()` →
-`perf_ibs_start()`. The race is triggerable from userspace by using
-`perf record` with IBS events on AMD processors. This is a common usage
-path.
+**Step 5.3-5.4: CALL CHAIN**
+The ldlat path is gated by `perf_ibs_ldlat_event()`, which checks
+`perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_OPLDLAT)`. This means
+the code only runs on CPUs that advertise the ldlat capability. The path
+is reachable from userspace via perf_event_open().
 
-### Step 5.5: Similar Patterns
-The existing IBS state machine already had two prior race fixes (5a50f52
-and 85dc600) for similar NMI vs. process context races. This is a third
-variant of the same class of bug.
-
----
+**Step 5.5: SIMILAR PATTERNS**
+`cpu_feature_enabled(X86_FEATURE_ZEN5)` is used in 2 other places in the
+kernel for Zen5-specific behavior, confirming this is an established
+pattern.
 
 ## PHASE 6: STABLE TREE ANALYSIS
 
-### Step 6.1: Buggy Code in Stable
-The vulnerable code (`set_bit(IBS_STARTED, ...)` followed by
-`perf_ibs_enable_event()` without clearing stale MSR data) has existed
-since kernel 4.7 (2016). It exists in **all active stable trees**:
-5.4.y, 5.10.y, 5.15.y, 6.1.y, 6.6.y, 6.12.y.
+**Step 6.1: CODE EXISTS IN STABLE?**
+The ldlat feature (d20610c19b4a22) was introduced in v6.15-rc1. Only
+stable trees >= 6.15 contain this code. The 7.0 tree does contain the
+buggy code at line 359. Older stable trees (6.12.y, 6.6.y, 6.1.y, etc.)
+do NOT have this code.
 
-### Step 6.2: Backport Complications
-The `perf_ibs_start()` function has seen minor changes over the years
-(8b0bed7d in v5.9 added config variable, fa5d0a82 added min_period
-check), but the core structure — compute config, set STARTED, enable
-event — has remained stable. The MSR accessor names changed (`wrmsrl` →
-`wrmsrq`) in newer trees, but the older trees still have
-`perf_ibs_disable_event()` with the same signature. The patch should
-apply cleanly to recent stable trees, and with trivial adjustments to
-older ones.
+**Step 6.2: BACKPORT COMPLICATIONS**
+The diff context matches the 7.0 tree exactly (verified by reading line
+359). Clean application expected.
 
-### Step 6.3: No related fixes already in stable for this specific race.
-
----
+**Step 6.3: RELATED FIXES IN STABLE**
+No related fixes found for this issue in any stable tree.
 
 ## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
 
-### Step 7.1: Subsystem
-- **Path**: `arch/x86/events/amd/ibs.c`
-- **Subsystem**: x86 perf/PMU (AMD IBS)
-- **Criticality**: IMPORTANT — AMD IBS is used by all AMD processor
-  users running perf profiling, which is standard practice for
-  performance analysis
+**Step 7.1: SUBSYSTEM**
+Subsystem: perf/x86/amd (performance monitoring for AMD CPUs).
+Criticality: PERIPHERAL — affects AMD users who use IBS profiling.
+However, IBS is the primary hardware profiling mechanism on AMD, so it's
+important for AMD users who do performance analysis.
 
-### Step 7.2: Activity
-Actively maintained by Ravi Bangoria at AMD with regular fixes and
-enhancements.
-
----
+**Step 7.2: ACTIVITY**
+Actively developed, with many recent commits from the author.
 
 ## PHASE 8: IMPACT AND RISK ASSESSMENT
 
-### Step 8.1: Who is Affected
-All users of AMD processors (Zen and later) using `perf` with IBS
-events. This includes server workloads, desktop profiling, and CI
-systems running performance testing.
+**Step 8.1: AFFECTED USERS**
+AMD CPU users on post-Zen5 hardware who use IBS ldlat profiling (`perf
+record -e ibs_op/ldlat=N/`). This is a specialized but real use case.
 
-### Step 8.2: Trigger Conditions
-- Both IBS FETCH and IBS OP events are in use (or hardware has residual
-  FETCH state)
-- NMI from FETCH arrives during OP event initialization
-- OP_CTL MSR has stale Val=1 from a previous sample
-- More likely with low sample periods (high sampling frequency)
-- Triggered from unprivileged perf usage (with appropriate
-  perf_event_paranoid)
+**Step 8.2: TRIGGER CONDITIONS**
+Any use of ldlat filtering on non-Zen5 AMD hardware that supports the
+ldlat capability (IBS_CAPS_OPLDLAT). Easily triggered when the feature
+is used.
 
-### Step 8.3: Failure Mode
-- **NMI storm**: Repeated NMIs can occur if the sample period is very
-  low
-- **State corruption**: `pcpu->state` can become corrupted if the event
-  gets throttled
-- **Severity**: HIGH — NMI storms can make a system unresponsive; state
-  corruption can lead to further crashes or undefined behavior
+**Step 8.3: FAILURE MODE SEVERITY**
+Wrong profiling results — forces L3-miss-only sampling when user didn't
+request it, causing ldlat to only capture L3 cache misses instead of all
+loads meeting the latency threshold. Not a crash, security issue, or
+data corruption. Severity: LOW-MEDIUM.
 
-### Step 8.4: Risk-Benefit Ratio
-- **Benefit**: Prevents NMI storms and state corruption on AMD systems
-  during IBS profiling — HIGH benefit
-- **Risk**: Single function call to an existing function, writing 0 to
-  an MSR before writing new values — VERY LOW risk
-- **Ratio**: Extremely favorable
-
----
+**Step 8.4: RISK-BENEFIT RATIO**
+- Benefit: MEDIUM — corrects hardware configuration for ldlat profiling
+  on post-Zen5 hardware
+- Risk: VERY LOW — 3-line change, zero behavior change on Zen5,
+  obviously correct
+- Ratio: Favorable
 
 ## PHASE 9: FINAL SYNTHESIS
 
-### Step 9.1: Evidence Summary
+**Evidence FOR backporting:**
+- Fixes a real bug: incorrect hardware configuration on non-Zen5
+  processors
+- Small and surgical: 3 lines, single file
+- Obviously correct: constrains documented erratum workaround to
+  affected hardware
+- Strong review: authored by subsystem expert, merged by perf
+  maintainer, acked by co-maintainer
+- Standalone: no dependencies on other patches
+- Hardware erratum workaround (exception category)
+- Clean application to 7.0 tree
 
-**FOR backporting:**
-- Fixes a concrete race condition between process context and NMI
-  context
-- Can cause NMI storms and state corruption (HIGH severity)
-- Single line of functional code + comments (VERY LOW risk)
-- Uses existing `perf_ibs_disable_event()` function (no new code paths)
-- Self-contained — no dependencies on other patches
-- Written by the AMD IBS maintainer, committed by perf core maintainer
-- Acked by Namhyung Kim (another perf maintainer)
-- Bug exists in all stable trees (since v4.7, 2016)
-- Obviously correct — clearing a register before enabling it
+**Evidence AGAINST backporting:**
+- Failure mode is not severe (wrong perf results, not
+  crash/corruption/security)
+- Post-Zen5 hardware with ldlat capability may not be widely available
+  yet
+- Specialized debugging tool (perf IBS profiling)
+- Only relevant for stable trees >= 6.15
 
-**AGAINST backporting:**
-- No user-reported bug or syzbot report (found via code analysis)
-- Part of a 5-patch series (but confirmed standalone)
-- No explicit stable nomination
+**Stable Rules Checklist:**
+1. Obviously correct? YES — constrains erratum to documented affected
+   hardware
+2. Fixes a real bug? YES — wrong hardware configuration on non-Zen5
+3. Important issue? MEDIUM — wrong profiling results for hardware users
+4. Small and contained? YES — 3 lines, 1 file
+5. No new features or APIs? YES — only constrains existing behavior
+6. Can apply to stable? YES — clean application to 7.0
 
-### Step 9.2: Stable Rules Checklist
-1. **Obviously correct and tested?** YES — single MSR write, committed
-   by PeterZ, Acked by Namhyung
-2. **Fixes a real bug?** YES — documented race causing NMI storms and
-   state corruption
-3. **Important issue?** YES — NMI storm = system hang; state corruption
-   = undefined behavior
-4. **Small and contained?** YES — 1 functional line in 1 function in 1
-   file
-5. **No new features or APIs?** Correct — no new features
-6. **Can apply to stable trees?** YES — clean apply expected
-
-### Step 9.3: Exception Categories
-Not an exception category — this is a standard race condition bug fix.
-
-### Step 9.4: Decision
-Strong YES. This is a textbook stable backport candidate: a minimal,
-obviously correct fix for a real race condition with severe consequences
-(NMI storms, state corruption), written and reviewed by the appropriate
-maintainers.
-
----
+**Exception category:** Hardware quirk/workaround refinement
 
 ## Verification
 
-- [Phase 1] Parsed tags: Signed-off-by (Bangoria, PeterZ), Acked-by
-  (Namhyung Kim), Link to patchew/lore
-- [Phase 2] Diff analysis: 1 functional line added
-  (`perf_ibs_disable_event(perf_ibs, hwc, 0)`) + 7 comment/blank lines
-  in `perf_ibs_start()`
-- [Phase 2] Verified `perf_ibs_disable_event()` with config=0 writes 0
-  to the MSR (lines 451-459 of ibs.c)
-- [Phase 2] Verified NMI handler checks `valid_mask` at line 1261 —
-  stale Val=1 bypasses this check
-- [Phase 2] Verified NMI handler is called for both FETCH and OP PMUs at
-  lines 1402-1403
-- [Phase 3] git blame: IBS_STARTED state machine introduced by
-  5a50f529170113 (v4.7, 2016) and refined by 85dc600263c229 (v4.7, 2016)
-  — present in all stable trees
-- [Phase 3] git log --author="Ravi Bangoria": 15+ commits to ibs.c —
-  confirmed subsystem expert
-- [Phase 3] Verified no dependencies on other patches in series — only
-  uses existing `perf_ibs_disable_event()`
-- [Phase 4] patchew.org: confirmed patch 5/5 in "Assorted fixes" series,
-  all Acked by Namhyung
-- [Phase 4] spinics.net: confirmed upstream commit
-  1b044ff3c17e9d7fd93ffc0ba541ccdeb992d7f5, merged Feb 27, 2026
-- [Phase 4] Verified series patches 1-4 are independent bug fixes
-  (different issues)
-- [Phase 5] Verified `perf_ibs_start()` called from `perf_ibs_add()`
-  (line 568), a standard PMU scheduling path
-- [Phase 6] git log v6.6.. and v6.1..: ibs.c has had changes but core
-  start() structure is preserved
-- [Phase 8] Failure mode: NMI storm + state corruption → severity HIGH
-- UNVERIFIED: Could not access lore.kernel.org directly due to Anubis
-  bot protection — used patchew.org and spinics.net mirrors instead
+- [Phase 1] Parsed tags: Signed-off-by from AMD author, perf maintainer;
+  Acked-by from perf co-maintainer
+- [Phase 2] Diff analysis: 3 lines changed in perf_ibs_init(), adds
+  cpu_feature_enabled(X86_FEATURE_ZEN5) guard around IBS_OP_L3MISSONLY
+- [Phase 3] git blame: buggy code introduced in d20610c19b4a22
+  (v6.15-rc1), Ravi Bangoria
+- [Phase 3] git tag --contains d20610c19b4a22: confirmed first in
+  v6.15-rc1, present in 7.0
+- [Phase 3] Author has 10+ commits to this file, is the AMD IBS domain
+  expert
+- [Phase 4] spinics.net: found original submission [PATCH v2 2/5],
+  Namhyung Kim acked entire series
+- [Phase 4] tip-bot2: merged as 898138efc99096c3ee836fea439ba6da3cfafa4d
+  on Feb 27 2026
+- [Phase 5] perf_ibs_init() is .event_init callback, reachable from
+  perf_event_open() syscall
+- [Phase 5] X86_FEATURE_ZEN5 defined in cpufeatures.h,
+  cpu_feature_enabled() used elsewhere for Zen5
+- [Phase 6] Verified line 359 in 7.0 tree matches pre-fix code; patch
+  applies cleanly
+- [Phase 6] ldlat code does NOT exist in stable trees < 6.15
+- [Phase 8] Failure mode: wrong perf sampling results (not
+  crash/security), severity LOW-MEDIUM
+- UNVERIFIED: Could not access lore.kernel.org or bugzilla.kernel.org
+  due to anti-bot measures; relied on spinics.net mirrors
+
+## Decision
+
+This is a small, obviously correct hardware erratum workaround fix from
+the subsystem expert. It constrains the Zen5-specific Erratum 1606
+workaround to only apply on Zen5 hardware, preventing incorrect IBS
+configuration on newer AMD generations. While the failure mode (wrong
+profiling results) is not severe, the fix carries essentially zero
+regression risk and falls into the "hardware quirk/workaround" exception
+category. It is standalone, applies cleanly, and was reviewed by the
+appropriate maintainers.
 
 **YES**
 
- arch/x86/events/amd/ibs.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/events/amd/ibs.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index e35132c5448dd..705e9a65c9ac9 100644
+index aca89f23d2e00..e35132c5448dd 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -490,6 +490,14 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	}
- 	config |= period >> 4;
+@@ -356,7 +356,10 @@ static int perf_ibs_init(struct perf_event *event)
+ 		ldlat >>= 7;
  
-+	/*
-+	 * Reset the IBS_{FETCH|OP}_CTL MSR before updating pcpu->state.
-+	 * Doing so prevents a race condition in which an NMI due to other
-+	 * source might accidentally activate the event before we enable
-+	 * it ourselves.
-+	 */
-+	perf_ibs_disable_event(perf_ibs, hwc, 0);
+ 		config |= (ldlat - 1) << 59;
+-		config |= IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN;
 +
++		config |= IBS_OP_LDLAT_EN;
++		if (cpu_feature_enabled(X86_FEATURE_ZEN5))
++			config |= IBS_OP_L3MISSONLY;
+ 	}
+ 
  	/*
- 	 * Set STARTED before enabling the hardware, such that a subsequent NMI
- 	 * must observe it.
 -- 
 2.53.0
 
