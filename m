@@ -1,119 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18203A1C9
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124382135AD
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776645672; cv=none; b=JfeyXn9H7VOgsdovCKVwdeJYBeYC3C+JBySZv1+5crPtMg+GM4poJ1Q0hzU7Ha0wuE0jBV+S1in49uKEd9ZN63tYDNDdi/Y0h95MVu2QSnaGZiBw52GaU4JS2ZZtLzjyvrVLlnyUws4bC86E2eBcj0mUuwWDrtCTMy2yP5yNMws=
+	t=1776645708; cv=none; b=rq3pwxAL5eXIo4OvDIWUTc9tVHmjJpjsMHqzfEGwSHynBhDvJzadtoQMvSkoApc8bPK/47d45Y+e7C2RNiFnaWdzqSLEvxzToxKpoO83xEkGo4NmBMMXsYfgl8sTpmVsasNVEybgOdrl5mZ8ENEeTzpNzKIY1P0LBYm+VC1DcEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776645672; c=relaxed/simple;
-	bh=qlZCxqFE1wLYjqkjwIv0Bnox3SXFoHHX4J3KkLndGns=;
+	s=arc-20240116; t=1776645708; c=relaxed/simple;
+	bh=o7bYxv6U4DpMQBSz5hJPQFmeIU1puJDREeSWL+x8czw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CE5JPVBNdFIlXixmmLxYbHF7IHfTIKTv9C/+JM79ueyN8BGsqnVrbTuRhaqUdDB6Km5grl1sNcU0e0Igl0PW9YBnALZqlAcE0AENa4THkyaCWaH3Ht5vBm2QJek54W5vQxIQJvi9XH38SFsXQJ0Q/br+7dpM0RmYNsUl338v/uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtg4cBJ7; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=c0QwdBc5Z7XuZiHkUO7Ga6SB9mQzGjIUZehwq+X1oobD9B6wmCtTJbBUhzTUGZaFeaUhE/Gvpb14pSn9fLFHfaToRaF43rl4SR9nzLui5yyKzYkef6ZvUzPTItbjboOKTYvURl0ktga//jdC1TrF7i3Bt/yA5cNb2eVoeIcAQpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swlpW150; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtg4cBJ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72364C2BCAF;
-	Mon, 20 Apr 2026 00:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swlpW150"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91750C2BCAF;
+	Mon, 20 Apr 2026 00:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776645671;
-	bh=qlZCxqFE1wLYjqkjwIv0Bnox3SXFoHHX4J3KkLndGns=;
+	s=k20201202; t=1776645707;
+	bh=o7bYxv6U4DpMQBSz5hJPQFmeIU1puJDREeSWL+x8czw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=gtg4cBJ76D64nOmcfnOik3uep9X+7oVfmmgwm4hLNkCE6uXoEpyUhvsS0Ssh7CvQZ
-	 qcjA/NBlnSnrxjJwCO4yAiduKqgRSKW5p9210w+xx+99EXoLElk6iaOs/b/oWycMXu
-	 nZ2MP4yxcKGKJdbJMv3yjPU8vLvAt54YYinxlILjxBfbMT9nZWBGQPHnstKFrC9a21
-	 /rFaoZVukQdnq98mO2u7S9j4bW9lDtwdGWSqDbk+MJLm9Wfif6Im3mwX+od9uoJiEp
-	 kxVMs1qLVeZgH1tKyyGE/lHw7N56F+LooAf2D9BYOzhLYK5yLcFn8+zOB2yHrX4EXa
-	 o3dj9ZfTK6vHA==
+	b=swlpW150c8OKI5jbkawZiV8X9cP/WFPwkCf2FXIaaFR3I3dqLYD1u88ADt5UNGjC5
+	 NknfdolaTJiEi8f5TGsyEnIfIlBjwkBjno/ESbcHDptW4f3rs31q3E0a2IN3X2i0pX
+	 wKpaasDdalwQdB3jGw1o7SHzG0xVIr2gnV38pFOpR4J8iNlAVqvg6BA2gtJLUCYVBv
+	 /O9uxLqOqgrojfEhhj8OUgc27/Um9yVQqMElsO+puTAWf/2TPk8BlrVkxzeyOHkXL2
+	 YEJPnhRMHkxO0GudpQd/0T3SlB1xS3AGSwrPOQuyzL3lt6BszKmmTuh8/W0Kw63Zs/
+	 J54TqP0M63H5w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 45/58] perf stackcollapse: Port stackcollapse to use
- python module
+Subject: Re: [PATCH v1 27/58] perf syscall-counts: Port syscall-counts to
+ use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-46-irogers@google.com>
-References: <20260419235911.2186050-46-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-28-irogers@google.com>
+References: <20260419235911.2186050-28-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:41:10 +0000
-Message-Id: <20260420004111.72364C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:41:46 +0000
+Message-Id: <20260420004147.91750C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] Script crashes with a TypeError on samples without callchains du=
-e to a flawed hasattr() check.
-- [Medium] All samples are incorrectly grouped under an 'Unknown' process n=
-ame because perf.sample_event lacks a 'comm' attribute.
+Sashiko AI review found 4 potential issue(s):
+- [High] The script crashes with a TypeError when a thread lookup fails dur=
+ing 'for_comm' filtering.
+- [High] The script crashes with a TypeError if 'perf.syscall_name(id)' enc=
+ounters an unmapped syscall ID.
+- [High] The script crashes with an AttributeError on older kernels where t=
+he tracepoint field is 'nr' instead of '__syscall_nr'.
+- [Medium] The standalone script hardcodes the input trace file to 'perf.da=
+ta', breaking the ability to analyze arbitrarily named trace files.
 --
 
-commit 83683025e1c59392ea964951295fc45bfce78ff1
+commit 6f15d3f04b68eebb0fdc02fb0dd260ac9c6fdf6a
 Author: Ian Rogers <irogers@google.com>
 
-perf stackcollapse: Port stackcollapse to use python module
+perf syscall-counts: Port syscall-counts to use python module
 
-Modernize the legacy stackcollapse.py trace script by refactoring it
-into a class-based architecture. The script uses perf.session for event
-processing and aggregates call stacks to produce output suitable for
-flame graphs.
+This commit rewrites the tools/perf/scripts/python/syscall-counts.py script=
+ to
+use the python module directly. This avoids the overhead of executing via p=
+erf
+script, improving execution performance.
 
-> diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stack=
-collapse.py
+> diff --git a/tools/perf/python/syscall-counts.py b/tools/perf/python/sysc=
+all-counts.py
 > new file mode 100755
-> index 0000000000000..22caf97c9cac0
+> index 0000000000000..a2e0994ab7369
 > --- /dev/null
-> +++ b/tools/perf/python/stackcollapse.py
-> @@ -0,0 +1,120 @@
+> +++ b/tools/perf/python/syscall-counts.py
 
 [ ... ]
 
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Collect call stack for each sample."""
-> +        stack =3D []
-> +        if hasattr(sample, "callchain"):
-> +            for node in sample.callchain:
-
-Does this code crash when a sample lacks a callchain?
-
-The perf.sample_event object exposes callchain as a C API property descript=
-or.
-If a sample lacks a callchain, pyrf_sample_event__get_callchain explicitly
-returns Py_None.
-
-Because returning None does not raise an AttributeError,
-hasattr(sample, "callchain") evaluates to True. The script then attempts
-to iterate over None in the for loop, which raises a TypeError and
-terminates the script.
-
-> +                stack.append(self.tidy_function_name(node.symbol, node.d=
-so))
-> +        else:
-> +            # Fallback if no callchain
-> +            sym =3D getattr(sample, "symbol", "[unknown]")
-> +            dso =3D getattr(sample, "dso", "[unknown]")
-> +            stack.append(self.tidy_function_name(sym, dso))
+> +def print_syscall_totals():
+> +    if for_comm is not None:
+> +        print(f"\nsyscall events for {for_comm}:\n")
+> +    else:
+> +        print("\nsyscall events:\n")
 > +
-> +        if self.args.include_comm:
-> +            comm =3D getattr(sample, "comm", "Unknown").replace(" ", "_")
+> +    print(f"{'event':<40} {'count':>10}")
+> +    print("---------------------------------------- -----------")
+> +
+> +    for id, val in sorted(syscalls.items(),
+> +                          key=3Dlambda kv: (kv[1], kv[0]), reverse=3DTru=
+e):
+> +        print(f"{perf.syscall_name(id):<40} {val:>10}")
 
-Are all samples grouped under an "Unknown" process name?
+What happens if perf.syscall_name(id) returns None for an unmapped syscall
+ID?
 
-The C extension's perf.sample_event type does not expose a comm attribute,
-unlike the legacy perf script dictionary. Consequently, getattr will silent=
-ly
-and perpetually default to "Unknown", preventing proper process separation =
-in
-the collapsed output.
+Applying a width specifier (<40) to a NoneType object throws a TypeError,
+which will abort the output. Should there be a fallback mechanism, such as
+using the numeric ID when the name is unknown?
 
-> +            sep =3D "-"
-> +            if self.args.include_pid:
-> +                comm =3D f"{comm}{sep}{getattr(sample, 'sample_pid', 0)}"
-> +                sep =3D "/"
+> +def process_event(sample):
+> +    event_name =3D str(sample.evsel)
+> +    if event_name =3D=3D "evsel(raw_syscalls:sys_enter)":
+> +        id =3D sample.id
+> +    elif event_name.startswith("evsel(syscalls:sys_enter_"):
+> +        id =3D sample.__syscall_nr
+
+On some older kernels and architectures, the tracepoint format field for
+syscalls is named nr instead of __syscall_nr.
+
+Will accessing sample.__syscall_nr raise an AttributeError in those
+environments? Is it possible to check for nr as a fallback?
+
+> +    else:
+> +        return
+> +    if for_comm and session.process(sample.sample_pid).comm() !=3D for_c=
+omm:
+
+If a thread lookup fails (for example, for short-lived processes or samples
+recorded before procfs synthesis completes), session.process() returns NULL
+and sets a Python TypeError.
+
+Can this uncaught exception bubble up and cause the script to crash?
+
+> +        return
+> +    syscalls[id] +=3D 1
+> +
+> +
+> +if __name__ =3D=3D "__main__":
+> +    ap =3D argparse.ArgumentParser()
+> +    ap.add_argument("comm", nargs=3D"?", help=3D"Only report syscalls fo=
+r comm")
+> +    args =3D ap.parse_args()
+> +    for_comm =3D args.comm
+> +    session =3D perf.session(perf.data("perf.data"), sample=3Dprocess_ev=
+ent)
+
+The previous implementation running under perf script automatically support=
+ed
+standard options like -i my_trace.data to override the input file.
+
+Since the file path is now hardcoded to perf.data, does this introduce a
+regression in usability by preventing the analysis of arbitrarily named
+trace files?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D45
+050-1-irogers@google.com?part=3D27
