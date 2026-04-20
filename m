@@ -1,110 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27FC47884A;
-	Mon, 20 Apr 2026 13:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEADF3A3E78
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776691848; cv=none; b=Nybd1A1h1XRT6uXHmlg6jq4RgeGdITFEPiSZxOzSDFpeP7W8Me1KtNrBcopQvXNqzqpSNhPm3nAnUYFuupCEAqBp0sp55Csrgw+X5YKSaMPJibA/CeHOVpkzcxXh3zm+7d6shSjMO70UyIZklo8YaJ+wn0wx5MXTTL4gLLvMKT8=
+	t=1776692181; cv=none; b=cSxDVIbHeG+h4MZzDcmgxzoHwWfc0P0tHGQNXXkQKER6xrnrTF2eUX9GzYxSlEZW3rp0+F2wmie7oHorJgb3ZBGNSPLjeuVegAXd0HwQQSfcokEBCDE97K0cJmwFbmYK23jbqrU4pPB+E+FsOnSfoqm34hWdEPIzUQmIXEP9wk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776691848; c=relaxed/simple;
-	bh=TeoLPPwq3Fx1XsavGr3Vtm/74wb5AG2x7nwXrg7SrGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fnHDJ9g0ZzxsGioQkXJzfC0tnAGh73PgYzDFjktdA1HZAuzjIiY9/Ao5mXmZaFTbQjbKHk5fc+U3skyJnVJlnz/7ujy16jpjVyLHAOsrWSXLcdcRgO/28h1vIMDSJER1ixl2pW2TfONmjUdO/rl1QmZTTbJHrGuydjPhTZ8304I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzVUsg9x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776692181; c=relaxed/simple;
+	bh=/T9u1OBu3RnPmdffOOjLVw5WQiCkhk8xPbI9fHnomtk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GDg3g/+kxu4wMOiQFOjNkrWdlAPx3SzNu/7/9YFc7njeeGFrTL4G79NDXBL24F29OaQIXEcs98f0+xLJMvgxHRh+uGhKtayoac19TW5Ih1LJMdJ5jDPt+Vc7N6wMxcUuHRfnxGQHUuuj/gzhFhaVmeO9oXTY4ffCRMhojZm1MwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KDmE0a1L; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzVUsg9x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369A2C2BCB7;
-	Mon, 20 Apr 2026 13:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776691847;
-	bh=TeoLPPwq3Fx1XsavGr3Vtm/74wb5AG2x7nwXrg7SrGg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OzVUsg9xqCwzNrVSeobTlH3x/6RGtaqaec2Zb/MqTKpSJ8hpuJEnYmHO1uUZXwNpf
-	 Q3XunUBvaMnr9D7Cta2ubLfISfQmK3AlLGh6BO0AeS8iNNa8JgTccKndHHhO52Up+z
-	 QNAGJpQNfZM8nvza7Tw/2tv827dUPrGukJWnlnIV3E8UYqWmUjr1tTrbCCSy5ZDh9g
-	 stIwe6geu853gba9Fh8ZxAJ8qHa5k63fimKHMwXOdGbAcw+x/EufvFFpF3uvIsDvHa
-	 udmioWx7qD7TQwB9Tk6HGE/HpWxwqkXLIYwwjREsnHlmaV21a5bx4waZW00Y46iX67
-	 sN9dwDit17JMw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Zide Chen <zide.chen@intel.com>,
-	Steve Wahl <steve.wahl@hpe.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18] perf/x86/intel/uncore: Skip discovery table for offline dies
-Date: Mon, 20 Apr 2026 09:20:23 -0400
-Message-ID: <20260420132314.1023554-229-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260420132314.1023554-1-sashal@kernel.org>
-References: <20260420132314.1023554-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KDmE0a1L"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c798ace3d02so370033a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 06:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776692179; x=1777296979; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2icCSdhtFYr6JZTgZwrOHg4sAd4pPViB0mMNXcuFYXI=;
+        b=KDmE0a1LvSu7cccqq4faL+8E+sMwwG+HJOn6hLcTbOQUaV3A0ZX7lfNKNE/vf+LTWX
+         J3fUYSY+XxT7ACFuiM4s9UAg1SOox7+WDCoGlkG+qaGe7GZFmMBu6vu4QlCt4ZMeWr8b
+         jaliuI+iJUUoTbyPUyuPmcr2otj8nzOZOjPgDpDg65TYw5Cxmcj9+DvHX7f9qV8vNZO2
+         PpkDN/HlcdKTpRgrHD8xgMCDSFm90IsgkujcIwtwtQoKuAyR52WkDsmIfsZVZrOqI+Nj
+         kbzrb22+QBFW63bR/7weXW7P1PbrU8io8VGeA4VciExRC+709O3zbwMGAkNVAe9DbwEV
+         bnqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776692179; x=1777296979;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2icCSdhtFYr6JZTgZwrOHg4sAd4pPViB0mMNXcuFYXI=;
+        b=KGuaZuJmaWQWMXZINFzieOTTbh7I5Rc8b1yILV/cdeFw++HNc0oz+ZIWA6mdMrjNVJ
+         EHZwE8zaGvscRJGhFXvcMN8xxnOduxQnIKDdbCsyOUBkjx9+QUZpXOQOv4KoYt5W3G52
+         RmSmOwlo90eYBpCj84dK1XGqLD0otUrD3pwAFsMZ/P8MY+3lIfLkCE2tbFcSDNkYWK6l
+         9YZW7oqxAcMunLutSnQxV4NnE0EFMh4zV0xRaEcF8zVOB2Rqqt1mqKEERnBZQ5+Vc1lS
+         2MGmqHNmdVoIbO3XlWBfotTFbBT4rBURLlkvIKjfpdI1YLyqiQPY/PIJe+2FF5vTp+6L
+         LmJA==
+X-Forwarded-Encrypted: i=1; AFNElJ+9sWnv5T2MGsFCD5yRvnS31j5faZkcdMiGnB59nMUVFIv7U9+ehEESUg95n9OFgdb2661JrYt9Wp4/JaKSwdDn@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI+pcAqqmZrku1u5pZoNLTBG81XyjcweUftvMOjc5JlYqfjzjW
+	Zj5J+DGyJpcVkl+nSrlga17BXV6R7foz4y8DPDlze6G9d88sAZZ8v3oiglFzm7QyyC7T12JwVuw
+	2zma9JA==
+X-Received: from pgch35.prod.google.com ([2002:a05:6a02:50a3:b0:c79:83b3:cdf8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:eec9:20b0:398:6ea8:21d2
+ with SMTP id adf61e73a8af0-3a08d732f3cmr8611429637.19.1776692179130; Mon, 20
+ Apr 2026 06:36:19 -0700 (PDT)
+Date: Mon, 20 Apr 2026 06:36:17 -0700
+In-Reply-To: <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18.23
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260420091634.128787-1-jgross@suse.com> <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
+ <74aa6707-356f-40d4-8611-5f6d116855ac@suse.com> <20260420123352.GH3102624@noisy.programming.kicks-ass.net>
+ <7078f664-719c-42bc-9eb9-d6bc9ff1f57e@suse.com> <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
+Message-ID: <aeYr0dMxDs7-2VzO@google.com>
+Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?=" <jgross@suse.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zide Chen <zide.chen@intel.com>
+On Mon, Apr 20, 2026, Peter Zijlstra wrote:
+> On Mon, Apr 20, 2026 at 03:01:31PM +0200, J=C3=BCrgen Gro=C3=9F wrote:
+> > On 20.04.26 14:33, Peter Zijlstra wrote:
+> > > The only interesting question is what to do with the 'safe' aspect. T=
+he
+> > > instruction takes a fault, we do the extable, but rdmsr() above alrea=
+dy
+> > > has a return value, so that can't be used.
+> > >=20
+> > > One option is to, like uaccess and the proposed overflow, is to use
+> > > labels like:
+> > >=20
+> > > 	val =3D rdmsr(msr, label);
+> > >=20
+> > > And then, even though the wrmsr*() functions have the return availabl=
+e,
+> > > do we want to be consistent and do:
+> > >=20
+> > > 	wrmsr(msr, val, label);
+> > > 	wrmsrns(msr, val, label);
+> > >=20
+> > > rather than be inconsistent and have them have a boolean return for
+> > > success.
+> > >=20
+> > > What am I missing?
+> >=20
+> > I like the idea to use a label, but this would result in the need to us=
+e
+> > macros instead of functions. So this is trading one aspect against anot=
+her.
+> > I'm not sure which is the better one here.
+> >=20
+> > An alternative might be to switch rdmsr() to the interface used by rdms=
+r_safe(),
+> > i.e. let all the accessors return a bool for success/failure and use a =
+pointer
+> > for the MSR value in rdmsr().
+>=20
+> Yes, either way around works. Perhaps that is 'better' because mostly we
+> don't care about the faults since we've checked the 'feature' earlier.
+>=20
+> Its just inconvenient to have return in argument crud, but whatever ;-)
 
-[ Upstream commit 7b568e9eba2fad89a696f22f0413d44cf4a1f892 ]
+Why not do both?  There are definitely flows where one is obviously more re=
+adable
+than the the other.  E.g. if the RDMSR is being fed right back into a WRMSR=
+, the
+out-param version requires a local variable.  And it can be visually jarrin=
+g if
+the surrounding code is a bunch of "val =3D xyz" expressions.
 
-This warning can be triggered if NUMA is disabled and the system
-boots with fewer CPUs than the number of CPUs in die 0.
+On the other hand, the outparam with a 0/-errno return can be very useful t=
+oo,
+e.g. when wrapping the RDMSR in a multi-expression if-statement:
 
-WARNING: CPU: 9 PID: 7257 at uncore.c:1157 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
+	if (rdmsrq_safe(MSR_IA32_CR_PAT, &host_pat) ||
+	    (host_pat & GENMASK(2, 0)) !=3D 6) {
 
-Currently, the discovery table continues to be parsed even if all CPUs
-in the associated die are offline.  This can lead to an array overflow
-at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
-trigger the warning above or cause other issues.
+As it avoids having to assign with '=3D' in the if-statement, and avoids ha=
+ving to
+define a label.
 
-Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
-Reported-by: Steve Wahl <steve.wahl@hpe.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Tested-by: Steve Wahl <steve.wahl@hpe.com>
-Link: https://patch.msgid.link/20260313174050.171704-3-zide.chen@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Error: Failed to generate final synthesis
-
- arch/x86/events/intel/uncore_discovery.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 7d57ce706feb1..c5adbe4409047 100644
---- a/arch/x86/events/intel/uncore_discovery.c
-+++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -383,7 +383,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
- 				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
- 
- 			die = get_device_die_id(dev);
--			if (die < 0)
-+			if ((die < 0) || (die >= uncore_max_dies()))
- 				continue;
- 
- 			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
--- 
-2.53.0
-
+It would be trivial to add a wrapper around the label version, the hard par=
+t is
+just the naming :-)
