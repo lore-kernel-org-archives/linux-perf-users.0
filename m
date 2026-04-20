@@ -1,45 +1,44 @@
-Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898BD3A6B85;
-	Mon, 20 Apr 2026 17:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB2039BFED;
+	Mon, 20 Apr 2026 18:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776706249; cv=none; b=VVPH9PxGk9g50jy9snZZFnX810PmpPGWNs9QyOYJmtHyubO8oOnHVXt2tjVWxrHPUjUiT1juc7XsF4pmYu8iHYPaMi7eHv5Pbu3KdW+n3A6PAzHsdJqMmr24vn0WTcRtJ3ktgElVkXBQ/qcrjwjOmeZi416IwFBDN8YdHhmevUw=
+	t=1776708547; cv=none; b=GiskU6QiEuqdppa8rMGr42xSXsuiamQJY83wyFM5RkLeqI7Yy5IIqTw00I4NXfgKQBTjxOnuLLkahkwIBRxjDmHhHkx3S2yY2GUvKQ9d9Xv/SjRo3p5W8zs2gKneRKpzi0U6/ZuTmK/gSX1c6rGYzBEzwHZ56yw1Cm0QnK4Yf9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776706249; c=relaxed/simple;
-	bh=fAtgfDnQlrAhdJL0D/l9O7uqwoiPleTxuU/8C2kzeRw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X0w8k4k2XLFIzm6CtGm4//9ZZTHof/YmYITuG3dfXzuJFu7YgBNR8HXtgwSx9NWxZfWCHR+XMK49Ra5YV1FKUNjEDM1td5W0KtzowbAq6Sczm6+1ZFfRimVXRr9iA8vSBp1XJPX+0bEcYrerJTpytzMI+DqfizDJdX0r+6xEzOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=tW3yHB7v; arc=none smtp.client-ip=133.167.8.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
+	s=arc-20240116; t=1776708547; c=relaxed/simple;
+	bh=ugXANQpGDWXWXLhUDxqaXGflX7mG8CbTgtz54WX+3fM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qCPUdHtMbIzcDUWRQ6b2jXJ1YHjdJSVGSse+6f3KMAMjOVIn3JJM3UkSZJcHk27HQanOudesahvDYFpmy5pxA4WBgirrXy6AtGu9wyCrXQX6vjr1itxk1RTgSr9vwfUA+OIW10dFxopPbJlI06Bq5VnUSJWt2b4niBVBu9g+yfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpIHmBrW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="tW3yHB7v"
-Received: from fedora (p3620132-ipxg00f01tokaisakaetozai.aichi.ocn.ne.jp [124.96.189.132])
-	(authenticated bits=0)
-	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 63KGXjxq043500
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 21 Apr 2026 01:33:47 +0900 (JST)
-	(envelope-from k@mgml.me)
-DKIM-Signature: a=rsa-sha256; bh=NpBhwTLvJtZZxXwnLOfamyMbZalhbdGTHgxjie6TEIg=;
-        c=relaxed/relaxed; d=mgml.me;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250315; t=1776702827; v=1;
-        b=tW3yHB7v0+9mdaElCGqyFVWYJZWuuZE43adHxAHGtQhdGmH7VfpkyB1rnl3hyTx/
-         3Rt8C0HFOGtH1MTgC7j+pqkKyJfa/qQJKR6c9pNpHioMerEj4eSEszXnv+TvlGNH
-         UKLgfSVk4QrKb6G/o4+MDJrr+dT2ti1Oblif00QW4oicDGkByre2wXm5tBHbUUbI
-         yzIuKDEtfzR+iYxTIo0ZUMFjFialVpNB/fqUEfqBySv9XZmxf9XTKBzczIXyxjoo
-         ouiyoCP1rDp7vPJ+Y1e6wUJlRd6Vk5fUX8WYixYWefnk7uYKxgQuR1gzJZI+P9AK
-         IPMUU3GKJg3EooxhCnf3rQ==
-From: Kenta Akagi <k@mgml.me>
-To: gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: stable@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Kenta Akagi <k@mgml.me>
-Subject: [PATCH 6.6.y] Revert "perf unwind-libdw: Fix invalid reference counts"
-Date: Tue, 21 Apr 2026 01:32:22 +0900
-Message-ID: <20260420163222.23517-1-k@mgml.me>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpIHmBrW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B60AC19425;
+	Mon, 20 Apr 2026 18:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776708547;
+	bh=ugXANQpGDWXWXLhUDxqaXGflX7mG8CbTgtz54WX+3fM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JpIHmBrWMY3EzlkDsxGohkhCxh9F/o9ZdN/EDHRGa06oGyv63SiPh0x2J1RR21NSm
+	 PoceLn4JjqDluNcCyVgaORxq0o33Gw79GHKeWIyBq3vfz8MYY0cQ0I7KT12DcKidSf
+	 bzVzRN/iIAF9F202nj0y85m8u+FVNjJWcjKQ3FroFfhhDDijyAGEttPrrkVLKx1hw7
+	 GOcKgMLoxkNGu7DgZ5demzTpm97awPgiVgOoVUrMObduqsMQ+5h+9oT11w0AV7F9Il
+	 hIIKBQGORSiHpwEq+boTAMntAPKeHsINy3jq5Tm3ox3YFTDtY0IUuB+DjmbPJeGHNn
+	 QBlVgr/FQ0qfg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf build-id: Fix wrong return value checking
+Date: Mon, 20 Apr 2026 11:08:58 -0700
+Message-ID: <20260420180858.129075-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.54.0.rc1.555.g9c883467ad-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,48 +47,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit eddddf4ed7f69697cb54e714e773f764c8d3b67e.
+The {sysfs,filename}__snprintf_build_id() both return the actual length
+of build-ID.  But in their fprintf counterparts check with sbuild_id
+length which contain a terminating NUL bytes.  So they cannot match.
 
-Upstream commit f815fc0c66e7 ("perf unwind-libdw: Fix invalid reference counts"),
-was backported to v6.6.128 as eddddf4ed7f6.
+This resulted in perf buildid-list -k prints nothing.  With this fix,
+it can show the following result.
 
-However, this commit depends on map_symbol__exit, which was introduced
-in v6.7 as commit 56e144fe9826 ("perf mem_info: Add and use
-map_symbol__exit and addr_map_symbol__exit") and is absent in v6.6.y.
-This results in a build failure.
+  $ perf buildid-list -k
+  9524074000cb36cf2559a5b52f0555dab47da553
 
-This is a revert of a backport, so there is no upstream commit.
-
-Signed-off-by: Kenta Akagi <k@mgml.me>
+Fixes: fccaaf6fbbc59910e ("perf build-id: Change sprintf functions to snprintf")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/unwind-libdw.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ tools/perf/builtin-buildid-list.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index bd027fdf6af1..6013335a8dae 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -133,8 +133,8 @@ static int entry(u64 ip, struct unwind_info *ui)
- 	}
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index a91bbb34ac946360..8ad39ff9a4b8a4b4 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -61,7 +61,7 @@ static int sysfs__fprintf_build_id(FILE *fp)
+ 	int ret;
  
- 	e->ip	  = ip;
--	e->ms.maps = maps__get(al.maps);
--	e->ms.map = map__get(al.map);
-+	e->ms.maps = al.maps;
-+	e->ms.map = al.map;
- 	e->ms.sym = al.sym;
+ 	ret = sysfs__snprintf_build_id("/", sbuild_id, sizeof(sbuild_id));
+-	if (ret != sizeof(sbuild_id))
++	if (ret != sizeof(sbuild_id) - 1)
+ 		return ret < 0 ? ret : -EINVAL;
  
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
-@@ -319,9 +319,6 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 	if (err)
- 		pr_debug("unwind: failed with '%s'\n", dwfl_errmsg(-1));
+ 	return fprintf(fp, "%s\n", sbuild_id);
+@@ -73,7 +73,7 @@ static int filename__fprintf_build_id(const char *name, FILE *fp)
+ 	int ret;
  
--	for (i = 0; i < ui->idx; i++)
--		map_symbol__exit(&ui->entries[i].ms);
--
- 	dwfl_end(ui->dwfl);
- 	free(ui);
- 	return 0;
+ 	ret = filename__snprintf_build_id(name, sbuild_id, sizeof(sbuild_id));
+-	if (ret != sizeof(sbuild_id))
++	if (ret != sizeof(sbuild_id) - 1)
+ 		return ret < 0 ? ret : -EINVAL;
+ 
+ 	return fprintf(fp, "%s\n", sbuild_id);
 -- 
-2.50.1
+2.54.0.rc1.555.g9c883467ad-goog
 
