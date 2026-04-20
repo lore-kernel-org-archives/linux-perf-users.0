@@ -1,118 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705852135AD
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18203A1C9
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776645480; cv=none; b=mCghEi1w5h/1VPpPfRlk9bA9UcHp3upGDL6m9NU14Mz5BikhE8oSGxx4GCJeJdz968Drup6YWnLCnHn8j7C3GlqKsPJjT6wevGmMVVRzNCsNZEAAO0xw7+Z5UepzPB1kCHqUMjydsmbqrH2xOWXdYQ2U8sYtdV+iOpTH/7H8T8o=
+	t=1776645672; cv=none; b=JfeyXn9H7VOgsdovCKVwdeJYBeYC3C+JBySZv1+5crPtMg+GM4poJ1Q0hzU7Ha0wuE0jBV+S1in49uKEd9ZN63tYDNDdi/Y0h95MVu2QSnaGZiBw52GaU4JS2ZZtLzjyvrVLlnyUws4bC86E2eBcj0mUuwWDrtCTMy2yP5yNMws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776645480; c=relaxed/simple;
-	bh=oO/onD8PHZ+iX6AL2MnMcenjtLIKwceTn9uccrIggSc=;
+	s=arc-20240116; t=1776645672; c=relaxed/simple;
+	bh=qlZCxqFE1wLYjqkjwIv0Bnox3SXFoHHX4J3KkLndGns=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NqDoyFUAGbq3t9usJ283R374RJgLRUPFn6uuoYR0+PCDcpqfmUTontyWRx2RqRq2KN2VKt4pqOBDhhuK58q2fzFJ65X0HtiW0vJxZcrE+ZJ8l9Y+rf+2rHlEenq346LF8gbR/QFvVn18ujnlak0b5KyGksp3Z6RcfxzS176wEyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtU2UgDD; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=CE5JPVBNdFIlXixmmLxYbHF7IHfTIKTv9C/+JM79ueyN8BGsqnVrbTuRhaqUdDB6Km5grl1sNcU0e0Igl0PW9YBnALZqlAcE0AENa4THkyaCWaH3Ht5vBm2QJek54W5vQxIQJvi9XH38SFsXQJ0Q/br+7dpM0RmYNsUl338v/uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtg4cBJ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtU2UgDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10243C2BCAF;
-	Mon, 20 Apr 2026 00:38:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtg4cBJ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72364C2BCAF;
+	Mon, 20 Apr 2026 00:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776645480;
-	bh=oO/onD8PHZ+iX6AL2MnMcenjtLIKwceTn9uccrIggSc=;
+	s=k20201202; t=1776645671;
+	bh=qlZCxqFE1wLYjqkjwIv0Bnox3SXFoHHX4J3KkLndGns=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=jtU2UgDD9eI0zrpFfzbAa81uInnDStUrREJ7K8iHmcU2+NldVZPTxmOJvbIEPGAPo
-	 ckINleb6qTl5WZia1UxuNvLkK53c+010VGbl1fVOFAoOe4zgBeYYvQNw03Sig0trDz
-	 gUeA2IQZCmq5CgI8tyDlD8OOtzpNOLe6ebEiCnS5yq3tqmqLf0+n6zDDG9r858Vc+1
-	 a3pnxBxs6g02bfDb399heCqge9ZfOqw/VkxgEtVIsEwlIB3aQICjvmwSu5K8qLHr6L
-	 Pwvh7WnGjX4RqqvhAQ8QQX+4IEz49AvpXJosIMZX2Lw6Z+dUp+kwks6izYwQHLV9qm
-	 yFD9kaM+vqaVg==
+	b=gtg4cBJ76D64nOmcfnOik3uep9X+7oVfmmgwm4hLNkCE6uXoEpyUhvsS0Ssh7CvQZ
+	 qcjA/NBlnSnrxjJwCO4yAiduKqgRSKW5p9210w+xx+99EXoLElk6iaOs/b/oWycMXu
+	 nZ2MP4yxcKGKJdbJMv3yjPU8vLvAt54YYinxlILjxBfbMT9nZWBGQPHnstKFrC9a21
+	 /rFaoZVukQdnq98mO2u7S9j4bW9lDtwdGWSqDbk+MJLm9Wfif6Im3mwX+od9uoJiEp
+	 kxVMs1qLVeZgH1tKyyGE/lHw7N56F+LooAf2D9BYOzhLYK5yLcFn8+zOB2yHrX4EXa
+	 o3dj9ZfTK6vHA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 29/58] perf futex-contention: Port futex-contention
- to use python module
+Subject: Re: [PATCH v1 45/58] perf stackcollapse: Port stackcollapse to use
+ python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-30-irogers@google.com>
-References: <20260419235911.2186050-30-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-46-irogers@google.com>
+References: <20260419235911.2186050-46-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:37:59 +0000
-Message-Id: <20260420003800.10243C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:41:10 +0000
+Message-Id: <20260420004111.72364C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [High] Fatal TypeError due to invalid type hinting syntax.
-- [Medium] Unbounded memory growth leading to OOM risks on large trace file=
-s.
-- [Medium] Hardcoded input file drops support for custom trace files.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] Script crashes with a TypeError on samples without callchains du=
+e to a flawed hasattr() check.
+- [Medium] All samples are incorrectly grouped under an 'Unknown' process n=
+ame because perf.sample_event lacks a 'comm' attribute.
 --
 
-commit 1b6a7eb3db688a2d738e2a6cae094deea81591b4
+commit 83683025e1c59392ea964951295fc45bfce78ff1
 Author: Ian Rogers <irogers@google.com>
 
-perf futex-contention: Port futex-contention to use python module
+perf stackcollapse: Port stackcollapse to use python module
 
-This commit rewrites tools/perf/scripts/python/futex-contention.py to use
-the python module. It aims to improve performance by avoiding the overheads
-in the perf script execution.
+Modernize the legacy stackcollapse.py trace script by refactoring it
+into a class-based architecture. The script uses perf.session for event
+processing and aggregates call stacks to produce output suitable for
+flame graphs.
 
-> diff --git a/tools/perf/python/futex-contention.py b/tools/perf/python/fu=
-tex-contention.py
+> diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stack=
+collapse.py
 > new file mode 100755
-> index 0000000000000..153583de9cdee
+> index 0000000000000..22caf97c9cac0
 > --- /dev/null
-> +++ b/tools/perf/python/futex-contention.py
-> @@ -0,0 +1,54 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Measures futex contention.
-> +from collections import defaultdict
-> +from typing import Dict
-> +import perf
+> +++ b/tools/perf/python/stackcollapse.py
+> @@ -0,0 +1,120 @@
+
+[ ... ]
+
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Collect call stack for each sample."""
+> +        stack =3D []
+> +        if hasattr(sample, "callchain"):
+> +            for node in sample.callchain:
+
+Does this code crash when a sample lacks a callchain?
+
+The perf.sample_event object exposes callchain as a C API property descript=
+or.
+If a sample lacks a callchain, pyrf_sample_event__get_callchain explicitly
+returns Py_None.
+
+Because returning None does not raise an AttributeError,
+hasattr(sample, "callchain") evaluates to True. The script then attempts
+to iterate over None in the for loop, which raises a TypeError and
+terminates the script.
+
+> +                stack.append(self.tidy_function_name(node.symbol, node.d=
+so))
+> +        else:
+> +            # Fallback if no callchain
+> +            sym =3D getattr(sample, "symbol", "[unknown]")
+> +            dso =3D getattr(sample, "dso", "[unknown]")
+> +            stack.append(self.tidy_function_name(sym, dso))
 > +
-> +process_names: Dict[int, str] =3D {}
-> +start_times: Dict[int, [int, int]] =3D {}
-> +session =3D None
-> +durations: Dict[[int, int], list] =3D defaultdict(list)
+> +        if self.args.include_comm:
+> +            comm =3D getattr(sample, "comm", "Unknown").replace(" ", "_")
 
-Will this raise a TypeError at module import time? typing.Dict requires
-types as arguments, not list instances. Should this use Tuple[int, int]
-instead?
+Are all samples grouped under an "Unknown" process name?
 
-[ ... ]
+The C extension's perf.sample_event type does not expose a comm attribute,
+unlike the legacy perf script dictionary. Consequently, getattr will silent=
+ly
+and perpetually default to "Unknown", preventing proper process separation =
+in
+the collapsed output.
 
-> +    def handle_end(tid: int, end_time: int) -> None:
-> +        if tid not in start_times:
-> +            return
-> +        (uaddr, start_time) =3D start_times[tid]
-> +        del start_times[tid]
-> +        durations[(tid, uaddr)].append(end_time - start_time)
-
-Does storing every single duration in a list risk unbounded memory growth
-and potential Out-Of-Memory crashes on large traces with high-frequency
-futex workloads?
-
-The original perf script based utility function maintained a running O(1)
-memory aggregate (min, max, avg, count) for each lock.
-
-[ ... ]
-
-> +if __name__ =3D=3D "__main__":
-> +    session =3D perf.session(perf.data("perf.data"), sample=3Dprocess_ev=
-ent)
-
-Does this hardcode the input file to perf.data in the current working
-directory?
-
-Unlike other ported scripts that use argparse and sys.argv, this script
-drops support for custom trace files. This breaks compatibility with
-workflows where users specify custom trace locations (e.g., perf script -i
-my_trace.data).
+> +            sep =3D "-"
+> +            if self.args.include_pid:
+> +                comm =3D f"{comm}{sep}{getattr(sample, 'sample_pid', 0)}"
+> +                sep =3D "/"
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D29
+050-1-irogers@google.com?part=3D45
