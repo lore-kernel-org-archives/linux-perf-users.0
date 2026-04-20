@@ -1,373 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BEB3CE48F;
-	Mon, 20 Apr 2026 13:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152723D4132
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776691071; cv=none; b=ouszW+IXexEYePNVi2i62uU6nNzhJMhSjQMzPpz8P+FfEYBX2BiPTdNkNhsEG1rsvPQ/fMHT6L5p+fwSfOHI1ST8Mda2ni9i74DbFGIIdw0IETU8dv3+uxQoUdP5g9a4T0xGmfJbc+l+xt/xKa95OsztsXQwkLJeXONC4JD+n/k=
+	t=1776691420; cv=none; b=tffpzkEGVTMUnO+04fvfZ5yBqCrnEDKtiyXAHvTvyfJai2IKcMrjJHwKZKIMqt8wBSeXmASRKpskCRZeVxgtOB/J0tD/VipEV9sDWBWBWZQUjNfHlYCkb9KyYTrJzrWJWOxQ//pXy6kt1O12O1gSdqoGt1jGUSC2BygT83O69yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776691071; c=relaxed/simple;
-	bh=D4gzbApaCmFCoqZH8AOrVXrd+GNGxB6eS1Wa4nuDa5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X2BrTp+vQI5LEn0GwxXncUeAieoYfarw8S9fMhqGPgj9mhxR/+YDukc7SCROb1rs1V2Pz3Na/akPgQzfXk/MvRme2Ba9P6upI2Iwm9NA09x7PnH/Um1VQgbQ19iQBUV22LggapE1Frp62GI8DNM1VbyaK7jwYLaUHf1to4jTpYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpH8x8/q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776691420; c=relaxed/simple;
+	bh=fK/zENPSnVF2cK+TRMMrx7mAfOOVTpL/t2ABi2qgYk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XW5vfURaBPmuqW5EWZn3m5ro+B+rWWXMW+jFyk961omGVZah/hdzOmU7KmYfEkFRscyZT0TezgPbhKbSLpH2Q0Dj72lEeEuqy3dXpSMRUz8m18n5l/9pSYMgW2gKCMr/TIrKZ3keH9U+vqeD6nr6RPd5+Y8zQue8Ksfw0Hov2qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ug39R98O; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpH8x8/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EFCC2BCB4;
-	Mon, 20 Apr 2026 13:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776691070;
-	bh=D4gzbApaCmFCoqZH8AOrVXrd+GNGxB6eS1Wa4nuDa5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DpH8x8/qgyZjDOfv3yPtBigz4IsvUJuLL4s1If0D2jG2FTMmLGP6CIdPdd6aRvLWB
-	 rnFo3jwOYmuWhhD/WjFUD1w/Hbs9wGOXk2XtFjyDfZoQvQWrYMg/WIoPGZX6YpR9wk
-	 WG/9QZcxxXh4MlBZOiz3UIHWh5kd5b7hFBeCp4tAuCCbf/zeOFKTWPuxAclxneCVOM
-	 iFt7hvcRDNX/lSDQ2+ZXFLE4hwr5AGZt1AJHAwb3VB0Q83PX8AEQqqdgSZHD1t/Ge1
-	 sf0IukJY+AjKD8SLlphOVOna8MuxUeInRdmbAfOjK/lnaEJp4v26Tb+C0bjoMsSP46
-	 A+JUnEKEZeLag==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 7.0-6.18] perf/amd/ibs: Limit ldlat->l3missonly dependency to Zen5
-Date: Mon, 20 Apr 2026 09:09:02 -0400
-Message-ID: <20260420131539.986432-76-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260420131539.986432-1-sashal@kernel.org>
-References: <20260420131539.986432-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ug39R98O"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6729c6f0ca7so3566409a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 06:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1776691417; x=1777296217; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fK/zENPSnVF2cK+TRMMrx7mAfOOVTpL/t2ABi2qgYk4=;
+        b=Ug39R98OwP8JTE8YBzUfKd/ma33E47bsjs3xR/wWgddinfaWGcGjk8cazYyjqjw4VK
+         BY2XhupzLUay9mH8cc1EO+gnLkEQKyA/B90wEFgRJX7qG49UkupCw+MNLjbvb9rVhBsy
+         t11pUUgLP2c5Db0Wl9DlNeA5zx13zx3gYOWXCJ1Gh4+LfolBHGLwNSd+B+q5nskiYYvR
+         YxdlGIGwzCNRep85u4bvGBgE5T27JlcK4MYzw2AZzxXFx5SVhlfF9Iydkz5fpMbh/pof
+         Tec9jiJQRyM2AItY/gxUbJRqzCViAlltPg54mFvrxHuQ95Dx4j3HarG0M2/JBHxkwG4/
+         f4XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776691417; x=1777296217;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fK/zENPSnVF2cK+TRMMrx7mAfOOVTpL/t2ABi2qgYk4=;
+        b=k+QkwNziLGuewbRKVK9peiZ2sqoNxPIOc+KU/zjavyVcyhEtJvxtQda8uYs4xzpf8F
+         ixgwAYKAXdKiNqGxB5jkCBKKRzZamkYcsYbajGt1SuHt535D2gZCiIYPag6aM4OC2urM
+         +yXyZPVTzdWCb83XvShKX6UOyJzlakIcVRlpvPW8uD0+tBPVOB80aNN5iOBX3eCBQdUJ
+         DZjXuWf0iMcRnU9UGBxwvwn3rpF3RhM7dgjsqGx4HK7Ezmiw7lZflq4qw7Tor+PXZ88h
+         O7+Xn98Wsm+roCnSMBvp3GDW1NxO/lnt1fdGx1XjwUmpNWeSc2jk7pj4gP+X7kt1tlE3
+         fOYQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/xN2EvlgTglGi+IPYWDVhU7+pWXVYmYs5CdQWaGPB7JhxJKGC7xbijLX6k1fxg/fS1qNQgWcitAzMNyUvdB9Ql@vger.kernel.org
+X-Gm-Message-State: AOJu0YxihVSO3GGwuoEZ+ZVFE11tmF8CTBM8m595F72ieDQPl7KF6qXD
+	C8IK71r5pczjTfpHq4Un7znu44nnSoPIku9wr6PrLBen1XCaq8uWZataNrsABCZ8aqU=
+X-Gm-Gg: AeBDieuAJ3uuBasna6ugRo3tR+MTGqVbr6ajKZNPH0HeJGo6C5L2VhVqbYYSo5ZmkjM
+	i5IfVVu/tsF9GlaWucTMU67Y4WL0vWn2Q6o5G1S26Olxjd8OSfuOgrEs4buOMDsBi3dq78kRDZt
+	zPYwQRHwNbdW6lmS/SHVGotPBrfCOHTuLw58zgix57fa3ZljXjwu2DvJ+sdF8X5627kC2qgiszu
+	92ZFxVt7UPdOrXMD9sZikxOha7MGWAvAiFFva+VvRxN+JucjZkcFks76YyWxkUIrbRzRuz6sIgt
+	wXnXS07JCxTlHyvJf6EJxXF5X1s+Jj14WtzKt8NV7GK9ZDh7r+1WDNAJ6/HmwVuOmcR6uTP9VpL
+	B6zFoZwNYbAVlGyx9xu6/RFavBJkIaoIg+Ah6JSFg7CvfAmVuV+WzuoPpjjXm9R33mMwe475+q2
+	LttEl6sGFjfchj8NChfMHuKO03fMT3nazZN+V3pOT7IZoB8Y4ktjSs9v2fiXoQPhiz+iR7PBE1K
+	3dr2ACIzu9p3AQrLceA7uguZx4llTyLsFzZGnNJoUydJkKBLJ4rnC5DXnCVMHHq0OqAiO/+heI=
+X-Received: by 2002:a17:907:6d15:b0:b98:411a:116f with SMTP id a640c23a62f3a-ba419076c8emr691220466b.2.1776691417073;
+        Mon, 20 Apr 2026 06:23:37 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba455045652sm348965366b.51.2026.04.20.06.23.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2026 06:23:36 -0700 (PDT)
+Message-ID: <a49e3a07-1154-4c6a-8763-0bd565cd3179@suse.com>
+Date: Mon, 20 Apr 2026 15:23:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 7.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
+References: <20260420091634.128787-1-jgross@suse.com>
+ <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
+ <74aa6707-356f-40d4-8611-5f6d116855ac@suse.com>
+ <20260420123352.GH3102624@noisy.programming.kicks-ass.net>
+ <7078f664-719c-42bc-9eb9-d6bc9ff1f57e@suse.com>
+ <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------0VbizIsoaPic0Srt4Z20cgX7"
 
-From: Ravi Bangoria <ravi.bangoria@amd.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------0VbizIsoaPic0Srt4Z20cgX7
+Content-Type: multipart/mixed; boundary="------------MkMxazCF9eScsL1LcWp4rGxE";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
+Message-ID: <a49e3a07-1154-4c6a-8763-0bd565cd3179@suse.com>
+Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+References: <20260420091634.128787-1-jgross@suse.com>
+ <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
+ <74aa6707-356f-40d4-8611-5f6d116855ac@suse.com>
+ <20260420123352.GH3102624@noisy.programming.kicks-ass.net>
+ <7078f664-719c-42bc-9eb9-d6bc9ff1f57e@suse.com>
+ <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260420131020.GI3102624@noisy.programming.kicks-ass.net>
 
-[ Upstream commit 898138efc99096c3ee836fea439ba6da3cfafa4d ]
+--------------MkMxazCF9eScsL1LcWp4rGxE
+Content-Type: multipart/mixed; boundary="------------xqV4SofOq8n9i0M2OANdlkJj"
 
-The ldlat dependency on l3missonly is specific to Zen 5; newer generations
-are not affected. This quirk is documented as an erratum in the following
-Revision Guide.
+--------------xqV4SofOq8n9i0M2OANdlkJj
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-  Erratum: 1606 IBS (Instruction Based Sampling) OP Load Latency Filtering
-           May Capture Unwanted Samples When L3Miss Filtering is Disabled
+T24gMjAuMDQuMjYgMTU6MTAsIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiBPbiBNb24sIEFw
+ciAyMCwgMjAyNiBhdCAwMzowMTozMVBNICswMjAwLCBKw7xyZ2VuIEdyb8OfIHdyb3RlOg0K
+Pj4gT24gMjAuMDQuMjYgMTQ6MzMsIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiANCj4+PiBU
+aGF0IGlzLCB3ZSBoYXZlIHRoZSBmb2xsb3dpbmcgaW5zdHJ1Y3Rpb25zOiBSRE1TUiwgV1JN
+U1IsIFdSTVNSTlMNCj4+PiBBbmQgd2Ugc2hvdWxkIGhhdmUgdGhlIGV4YWN0IHNhbWUgZnVu
+Y3Rpb25zOg0KPj4+DQo+Pj4gCXZhbCA9IHJkbXNyKG1zcik7DQo+Pj4gCXdybXNyKG1zciwg
+dmFsKTsNCj4+PiAJd3Jtc3Jucyhtc3IsIHZhbCk7DQo+Pg0KPj4gUGVvcGxlIHRlbmQgdG8g
+Y29weSBzaW1pbGFyIGNvZGUsIG1heWJlIHVzaW5nIG9sZGVyIGtlcm5lbHMgYXMgdGhlIHNv
+dXJjZS4NCj4+DQo+PiBTbyBldmVuIGlmIHdybXNybnMoKSB3b3VsZCBiZSBmaW5lIChhbmQs
+IHJlc3VsdGluZyBmcm9tIHRoYXQsIGJldHRlciksIHRoZXkNCj4+IHdpbGwgbW9yZSBsaWtl
+bHkgZW5kIHVwIHVzaW5nIHdybXNyKCkgaW5zdGVhZC4NCj4+DQo+PiBVc2luZyBuZXcgZnVu
+Y3Rpb24gbmFtZXMgaW1wbHlpbmcgdGhlIGV4YWN0IHNlbWFudGljcyAoc2VyaWFsaXppbmcg
+dnMuDQo+PiBub24tc2VyaWFsaXppbmcpIHdpbGwgbWFrZSBpdCBtb3JlIGxpa2VseSB0aGUg
+Y29ycmVjdCBvbmUgaXMgYmVpbmcgdXNlZC4NCj4gDQo+IFlvdSBjYW5ub3QgZml4IHN0dXBp
+ZC4gSWYgeW91IHdhbnQgZnJpY3Rpb24sIHRoZSBsYWJlbCB0aGluZyB3aWxsDQo+IGVuc3Vy
+ZSAnb2xkJyBjb2RlIGRvZXNuJ3QgY29tcGlsZSBhbmQgd2lsbCBuZWVkIGZpeGluZy4NCj4g
+DQo+IEFsc28sIGlmIHdybXNybnMoKSByZWFsbHkgaXMgZmFzdGVyLCB0aGUgcGVyZm9ybWFu
+Y2UgZm9sa3Mgd2lsbCBmaW5nZXINCj4gJ2luY29ycmVjdCcgd3Jtc3IoKSB1c2FnZSBzb29u
+ZXIgb3IgbGF0ZXIuDQoNCkZpbmUgd2l0aCBtZS4gOi0pDQoNCj4gDQo+Pj4gVGhlIG9ubHkg
+aW50ZXJlc3RpbmcgcXVlc3Rpb24gaXMgd2hhdCB0byBkbyB3aXRoIHRoZSAnc2FmZScgYXNw
+ZWN0LiBUaGUNCj4+PiBpbnN0cnVjdGlvbiB0YWtlcyBhIGZhdWx0LCB3ZSBkbyB0aGUgZXh0
+YWJsZSwgYnV0IHJkbXNyKCkgYWJvdmUgYWxyZWFkeQ0KPj4+IGhhcyBhIHJldHVybiB2YWx1
+ZSwgc28gdGhhdCBjYW4ndCBiZSB1c2VkLg0KPj4+DQo+Pj4gT25lIG9wdGlvbiBpcyB0bywg
+bGlrZSB1YWNjZXNzIGFuZCB0aGUgcHJvcG9zZWQgb3ZlcmZsb3csIGlzIHRvIHVzZQ0KPj4+
+IGxhYmVscyBsaWtlOg0KPj4+DQo+Pj4gCXZhbCA9IHJkbXNyKG1zciwgbGFiZWwpOw0KPj4+
+DQo+Pj4gQW5kIHRoZW4sIGV2ZW4gdGhvdWdoIHRoZSB3cm1zciooKSBmdW5jdGlvbnMgaGF2
+ZSB0aGUgcmV0dXJuIGF2YWlsYWJsZSwNCj4+PiBkbyB3ZSB3YW50IHRvIGJlIGNvbnNpc3Rl
+bnQgYW5kIGRvOg0KPj4+DQo+Pj4gCXdybXNyKG1zciwgdmFsLCBsYWJlbCk7DQo+Pj4gCXdy
+bXNybnMobXNyLCB2YWwsIGxhYmVsKTsNCj4+Pg0KPj4+IHJhdGhlciB0aGFuIGJlIGluY29u
+c2lzdGVudCBhbmQgaGF2ZSB0aGVtIGhhdmUgYSBib29sZWFuIHJldHVybiBmb3INCj4+PiBz
+dWNjZXNzLg0KPj4+DQo+Pj4gV2hhdCBhbSBJIG1pc3Npbmc/DQo+Pg0KPj4gSSBsaWtlIHRo
+ZSBpZGVhIHRvIHVzZSBhIGxhYmVsLCBidXQgdGhpcyB3b3VsZCByZXN1bHQgaW4gdGhlIG5l
+ZWQgdG8gdXNlDQo+PiBtYWNyb3MgaW5zdGVhZCBvZiBmdW5jdGlvbnMuIFNvIHRoaXMgaXMg
+dHJhZGluZyBvbmUgYXNwZWN0IGFnYWluc3QgYW5vdGhlci4NCj4+IEknbSBub3Qgc3VyZSB3
+aGljaCBpcyB0aGUgYmV0dGVyIG9uZSBoZXJlLg0KPj4NCj4+IEFuIGFsdGVybmF0aXZlIG1p
+Z2h0IGJlIHRvIHN3aXRjaCByZG1zcigpIHRvIHRoZSBpbnRlcmZhY2UgdXNlZCBieSByZG1z
+cl9zYWZlKCksDQo+PiBpLmUuIGxldCBhbGwgdGhlIGFjY2Vzc29ycyByZXR1cm4gYSBib29s
+IGZvciBzdWNjZXNzL2ZhaWx1cmUgYW5kIHVzZSBhIHBvaW50ZXINCj4+IGZvciB0aGUgTVNS
+IHZhbHVlIGluIHJkbXNyKCkuDQo+IA0KPiBZZXMsIGVpdGhlciB3YXkgYXJvdW5kIHdvcmtz
+LiBQZXJoYXBzIHRoYXQgaXMgJ2JldHRlcicgYmVjYXVzZSBtb3N0bHkgd2UNCj4gZG9uJ3Qg
+Y2FyZSBhYm91dCB0aGUgZmF1bHRzIHNpbmNlIHdlJ3ZlIGNoZWNrZWQgdGhlICdmZWF0dXJl
+JyBlYXJsaWVyLg0KPiANCj4gSXRzIGp1c3QgaW5jb252ZW5pZW50IHRvIGhhdmUgcmV0dXJu
+IGluIGFyZ3VtZW50IGNydWQsIGJ1dCB3aGF0ZXZlciA7LSkNCg0KT2theSwgc28gd291bGQg
+eW91IGJlIGZpbmUgd2l0aCB0aGUgZm9sbG93aW5nIHBsYW4/DQoNCi0gZHJvcCAqX3NhZmUo
+KSB2YXJpYW50cywgc3dpdGNoIHRoZSAibm9ybWFsIiBvbmVzIHRvICJzYWZlIiBzZW1hbnRp
+Y3MuDQotIG1ha2UgYWxsIGludGVyZmFjZXMgcmV0dXJuIGEgYm9vbCAodHJ1ZSA9PSBzdWNj
+ZXNzLCBmYWxzZSA9PSBmYWlsdXJlKQ0KLSBzd2l0Y2ggYWxsIGludGVyZmFjZXMgdG8gdXNl
+IDY0LWJpdCB2YWx1ZXMsIGRyb3AgdGhlIDMyLWJpdCBsb3cvaGlnaA0KICAgc3BsaXQgdmFy
+aWFudHMNCi0gdXNlIGFsd2F5c19pbmxpbmUgZnVuY3Rpb25zIGZvciBhbGwgbG9jYWwgTVNS
+IGFjY2Vzc29ycw0KDQpUaGlzIHdpbGwgcmVzdWx0IGluIHJkbXNyKCksIHdybXNyKCkgYW5k
+IHdybXNybnMoKSBhcyB0aGUgb25seSBhdmFpbGFibGUNCk1TUiBhY2Nlc3MgZnVuY3Rpb25z
+IChwbHVzIHRoZSByZWxhdGVkICpfb25fY3B1W3NdKCkgb25lcykuDQoNCg0KSnVlcmdlbg0K
 
-  Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors,
-  Pub. 58251 Rev. 1.30 July 2025
-  https://bugzilla.kernel.org/attachment.cgi?id=309193
+--------------xqV4SofOq8n9i0M2OANdlkJj
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://patch.msgid.link/20260216042216.1440-3-ravi.bangoria@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-LLM Generated explanations, may be completely bogus:
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Now I have all the information needed. Let me compile the full analysis.
+--------------xqV4SofOq8n9i0M2OANdlkJj--
 
----
+--------------MkMxazCF9eScsL1LcWp4rGxE--
 
-## PHASE 1: COMMIT MESSAGE FORENSICS
+--------------0VbizIsoaPic0Srt4Z20cgX7
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-**Step 1.1: PARSE THE SUBJECT LINE**
-Record: [perf/amd/ibs] [Limit] Constrains the ldlat->l3missonly hardware
-workaround to only apply on Zen5 CPUs, per AMD Erratum 1606.
+-----BEGIN PGP SIGNATURE-----
 
-**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
-- Signed-off-by: Ravi Bangoria (author, AMD IBS expert at AMD)
-- Signed-off-by: Peter Zijlstra (Intel) (perf subsystem maintainer)
-- Acked-by: Namhyung Kim (perf co-maintainer)
-- Link: patch.msgid.link URL to lore thread
-- No Fixes: tag (expected for candidates)
-- No Cc: stable (expected for candidates)
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmnmKNgFAwAAAAAACgkQsN6d1ii/Ey9W
+nQf/a8KCCCnhL59crmzgb9E3zj7DudGcc4GmDui6Rx3AJ7o8Gy/7WyHGvFccmZJmyxsqGWaw843/
+AeploPO7UpLkhrn05bh7jmPhsvEJ5UgNJQ2olAyBQsQUwCuGjmLdpMN5ToEXWFquvT7olB2a14NF
+XN+cStYh/rYCxlhPipnrQFjvmVeMeoQ5IIrnnC0ekxa4zvs4iBYVhcEeykHGUhGJD2w8mIVn73Z8
+GOREY0UyH0taMIDwf7hk+Dqc+YTREqOxjE2Fa0vgeLmNbdgK2vwyfp22VQsS9dTQO9qxmeTMo+W5
+CJu0KpUG/duVoJIIF3GVfQ6/1JDODJaE4RXb7TU9sA==
+=1QUQ
+-----END PGP SIGNATURE-----
 
-Record: Strong reviewer credentials. The patch was authored by the AMD
-IBS subsystem expert, merged by the perf maintainer, and acked by the
-perf co-maintainer.
-
-**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
-The commit describes AMD Erratum 1606: "IBS OP Load Latency Filtering
-May Capture Unwanted Samples When L3Miss Filtering is Disabled." This
-erratum is specific to AMD Family 1Ah Models 00h-0Fh (Zen5). The
-original ldlat code unconditionally forced `IBS_OP_L3MISSONLY` alongside
-`IBS_OP_LDLAT_EN`, but this workaround should only apply to Zen5.
-
-Record: Bug = erratum workaround applied too broadly. Symptom = on non-
-Zen5 hardware, ldlat filtering incorrectly forces L3-miss-only sampling.
-Root cause = original ldlat feature lacked CPU generation check.
-
-**Step 1.4: DETECT HIDDEN BUG FIXES**
-Record: This IS a bug fix. It corrects incorrect hardware configuration
-on non-Zen5 processors. The word "Limit" indicates constraining overly
-broad behavior to only the affected hardware.
-
-## PHASE 2: DIFF ANALYSIS
-
-**Step 2.1: INVENTORY**
-- 1 file: `arch/x86/events/amd/ibs.c` (+4/-1, net +3 lines)
-- Function modified: `perf_ibs_init()`
-- Scope: single-file surgical fix
-
-**Step 2.2: CODE FLOW CHANGE**
-Before: When ldlat event is configured, ALWAYS sets both
-`IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN`.
-After: Always sets `IBS_OP_LDLAT_EN`, but only sets `IBS_OP_L3MISSONLY`
-when `cpu_feature_enabled(X86_FEATURE_ZEN5)` is true.
-
-**Step 2.3: BUG MECHANISM**
-Category: Hardware workaround refinement. The Zen5 erratum 1606 required
-forcing l3missonly alongside ldlat, but this constraint was applied to
-all CPUs unconditionally. On post-Zen5 hardware, this forces unwanted
-filtering that limits the utility of ldlat profiling.
-
-**Step 2.4: FIX QUALITY**
-- Obviously correct: constrains documented erratum workaround to the
-  affected CPU generation
-- Minimal (3 actual lines of change)
-- Zero regression risk on Zen5 (behavior unchanged); corrects behavior
-  on all other generations
-- No red flags
-
-## PHASE 3: GIT HISTORY INVESTIGATION
-
-**Step 3.1: BLAME**
-The buggy line (`config |= IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN`) was
-introduced by commit d20610c19b4a22 ("perf/amd/ibs: Add support for OP
-Load Latency Filtering") by Ravi Bangoria on 2025-02-05. This was the
-initial ldlat feature addition, first appearing in v6.15-rc1.
-
-**Step 3.2: FIXES TAG**
-No explicit Fixes: tag. The implicit fix target is d20610c19b4a22. That
-commit appeared in v6.15-rc1, confirmed by `git tag --contains`.
-
-**Step 3.3: FILE HISTORY**
-The file has active development from Ravi Bangoria. This is patch 2/5 in
-a series "[PATCH v2 0/5] perf/amd/ibs: Assorted fixes" but it is
-completely self-contained — it modifies a single line with no dependency
-on the other patches.
-
-**Step 3.4: AUTHOR**
-Ravi Bangoria is the primary AMD IBS developer with 10+ commits to this
-file. He works at AMD and is the domain expert for this code.
-
-**Step 3.5: DEPENDENCIES**
-None. The patch only changes the conditional expression around setting
-`IBS_OP_L3MISSONLY`. The check `cpu_feature_enabled(X86_FEATURE_ZEN5)`
-already exists in the tree (used in `drivers/cpufreq/amd-pstate.c` and
-`drivers/platform/x86/amd/pmc/mp1_stb.c`). `X86_FEATURE_ZEN5` is defined
-in `arch/x86/include/asm/cpufeatures.h`.
-
-## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
-
-**Step 4.1: PATCH DISCUSSION**
-Found the original submission at spinics.net. The patch was v2 of a
-series. Namhyung Kim acked the entire series. No NAKs or concerns. Peter
-Zijlstra merged it on Feb 27, 2026 as commit
-898138efc99096c3ee836fea439ba6da3cfafa4d in tip/perf/core.
-
-**Step 4.2: REVIEWERS**
-Peter Zijlstra (perf maintainer) committed it. Namhyung Kim (perf co-
-maintainer) acked it. Both appropriate reviewers for this subsystem.
-
-**Step 4.3: BUG REPORT**
-The bug is based on AMD's published erratum 1606 in the Revision Guide
-for Family 1Ah processors. This is vendor-documented hardware behavior,
-not a user-reported crash.
-
-**Step 4.4: RELATED PATCHES**
-This is patch 2/5. The other patches fix unrelated issues (interrupt
-accounting, PhyAddrVal bit, NMI safety, race condition). None of the
-other patches are in the 7.0 tree. This patch is fully standalone.
-
-**Step 4.5: STABLE DISCUSSION**
-No specific stable discussion found. The series was labeled "Assorted
-fixes" and contains patches with "fix" characteristics.
-
-## PHASE 5: CODE SEMANTIC ANALYSIS
-
-**Step 5.1: KEY FUNCTIONS**
-Modified function: `perf_ibs_init()` — the event initialization function
-for IBS PMU events.
-
-**Step 5.2: CALLERS**
-`perf_ibs_init()` is registered as the `.event_init` callback for both
-`perf_ibs_fetch` and `perf_ibs_op` PMU structures. It's called during
-perf event creation via the perf_event_open() syscall path.
-
-**Step 5.3-5.4: CALL CHAIN**
-The ldlat path is gated by `perf_ibs_ldlat_event()`, which checks
-`perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_OPLDLAT)`. This means
-the code only runs on CPUs that advertise the ldlat capability. The path
-is reachable from userspace via perf_event_open().
-
-**Step 5.5: SIMILAR PATTERNS**
-`cpu_feature_enabled(X86_FEATURE_ZEN5)` is used in 2 other places in the
-kernel for Zen5-specific behavior, confirming this is an established
-pattern.
-
-## PHASE 6: STABLE TREE ANALYSIS
-
-**Step 6.1: CODE EXISTS IN STABLE?**
-The ldlat feature (d20610c19b4a22) was introduced in v6.15-rc1. Only
-stable trees >= 6.15 contain this code. The 7.0 tree does contain the
-buggy code at line 359. Older stable trees (6.12.y, 6.6.y, 6.1.y, etc.)
-do NOT have this code.
-
-**Step 6.2: BACKPORT COMPLICATIONS**
-The diff context matches the 7.0 tree exactly (verified by reading line
-359). Clean application expected.
-
-**Step 6.3: RELATED FIXES IN STABLE**
-No related fixes found for this issue in any stable tree.
-
-## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
-
-**Step 7.1: SUBSYSTEM**
-Subsystem: perf/x86/amd (performance monitoring for AMD CPUs).
-Criticality: PERIPHERAL — affects AMD users who use IBS profiling.
-However, IBS is the primary hardware profiling mechanism on AMD, so it's
-important for AMD users who do performance analysis.
-
-**Step 7.2: ACTIVITY**
-Actively developed, with many recent commits from the author.
-
-## PHASE 8: IMPACT AND RISK ASSESSMENT
-
-**Step 8.1: AFFECTED USERS**
-AMD CPU users on post-Zen5 hardware who use IBS ldlat profiling (`perf
-record -e ibs_op/ldlat=N/`). This is a specialized but real use case.
-
-**Step 8.2: TRIGGER CONDITIONS**
-Any use of ldlat filtering on non-Zen5 AMD hardware that supports the
-ldlat capability (IBS_CAPS_OPLDLAT). Easily triggered when the feature
-is used.
-
-**Step 8.3: FAILURE MODE SEVERITY**
-Wrong profiling results — forces L3-miss-only sampling when user didn't
-request it, causing ldlat to only capture L3 cache misses instead of all
-loads meeting the latency threshold. Not a crash, security issue, or
-data corruption. Severity: LOW-MEDIUM.
-
-**Step 8.4: RISK-BENEFIT RATIO**
-- Benefit: MEDIUM — corrects hardware configuration for ldlat profiling
-  on post-Zen5 hardware
-- Risk: VERY LOW — 3-line change, zero behavior change on Zen5,
-  obviously correct
-- Ratio: Favorable
-
-## PHASE 9: FINAL SYNTHESIS
-
-**Evidence FOR backporting:**
-- Fixes a real bug: incorrect hardware configuration on non-Zen5
-  processors
-- Small and surgical: 3 lines, single file
-- Obviously correct: constrains documented erratum workaround to
-  affected hardware
-- Strong review: authored by subsystem expert, merged by perf
-  maintainer, acked by co-maintainer
-- Standalone: no dependencies on other patches
-- Hardware erratum workaround (exception category)
-- Clean application to 7.0 tree
-
-**Evidence AGAINST backporting:**
-- Failure mode is not severe (wrong perf results, not
-  crash/corruption/security)
-- Post-Zen5 hardware with ldlat capability may not be widely available
-  yet
-- Specialized debugging tool (perf IBS profiling)
-- Only relevant for stable trees >= 6.15
-
-**Stable Rules Checklist:**
-1. Obviously correct? YES — constrains erratum to documented affected
-   hardware
-2. Fixes a real bug? YES — wrong hardware configuration on non-Zen5
-3. Important issue? MEDIUM — wrong profiling results for hardware users
-4. Small and contained? YES — 3 lines, 1 file
-5. No new features or APIs? YES — only constrains existing behavior
-6. Can apply to stable? YES — clean application to 7.0
-
-**Exception category:** Hardware quirk/workaround refinement
-
-## Verification
-
-- [Phase 1] Parsed tags: Signed-off-by from AMD author, perf maintainer;
-  Acked-by from perf co-maintainer
-- [Phase 2] Diff analysis: 3 lines changed in perf_ibs_init(), adds
-  cpu_feature_enabled(X86_FEATURE_ZEN5) guard around IBS_OP_L3MISSONLY
-- [Phase 3] git blame: buggy code introduced in d20610c19b4a22
-  (v6.15-rc1), Ravi Bangoria
-- [Phase 3] git tag --contains d20610c19b4a22: confirmed first in
-  v6.15-rc1, present in 7.0
-- [Phase 3] Author has 10+ commits to this file, is the AMD IBS domain
-  expert
-- [Phase 4] spinics.net: found original submission [PATCH v2 2/5],
-  Namhyung Kim acked entire series
-- [Phase 4] tip-bot2: merged as 898138efc99096c3ee836fea439ba6da3cfafa4d
-  on Feb 27 2026
-- [Phase 5] perf_ibs_init() is .event_init callback, reachable from
-  perf_event_open() syscall
-- [Phase 5] X86_FEATURE_ZEN5 defined in cpufeatures.h,
-  cpu_feature_enabled() used elsewhere for Zen5
-- [Phase 6] Verified line 359 in 7.0 tree matches pre-fix code; patch
-  applies cleanly
-- [Phase 6] ldlat code does NOT exist in stable trees < 6.15
-- [Phase 8] Failure mode: wrong perf sampling results (not
-  crash/security), severity LOW-MEDIUM
-- UNVERIFIED: Could not access lore.kernel.org or bugzilla.kernel.org
-  due to anti-bot measures; relied on spinics.net mirrors
-
-## Decision
-
-This is a small, obviously correct hardware erratum workaround fix from
-the subsystem expert. It constrains the Zen5-specific Erratum 1606
-workaround to only apply on Zen5 hardware, preventing incorrect IBS
-configuration on newer AMD generations. While the failure mode (wrong
-profiling results) is not severe, the fix carries essentially zero
-regression risk and falls into the "hardware quirk/workaround" exception
-category. It is standalone, applies cleanly, and was reviewed by the
-appropriate maintainers.
-
-**YES**
-
- arch/x86/events/amd/ibs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index aca89f23d2e00..e35132c5448dd 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -356,7 +356,10 @@ static int perf_ibs_init(struct perf_event *event)
- 		ldlat >>= 7;
- 
- 		config |= (ldlat - 1) << 59;
--		config |= IBS_OP_L3MISSONLY | IBS_OP_LDLAT_EN;
-+
-+		config |= IBS_OP_LDLAT_EN;
-+		if (cpu_feature_enabled(X86_FEATURE_ZEN5))
-+			config |= IBS_OP_L3MISSONLY;
- 	}
- 
- 	/*
--- 
-2.53.0
-
+--------------0VbizIsoaPic0Srt4Z20cgX7--
