@@ -1,90 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE99946C
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138BB946C
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776645113; cv=none; b=VmecR6UR7Bhc61WzbwZmGBkujcrpHQusBtFaOu70seHlu1FcB/C+RVcdr6ivMutF0HzuD+auQBy6o8TaTNf99UhkA/zy9LUpWfIvOPR6ZvmEDlPzL/6jUxYRXdv9ZusmwibW3MEDnh88cPAJSTMivBTLsD3t2nv2jYz1svLQ/z8=
+	t=1776645135; cv=none; b=j8rtMdqpXiUoTx/bPQ69swqFF6UmUIg/yj3c1zdAHMso0HKXbj2aBb8hQ7IWOMGY1F9lMpyfMup9fiXIT7Iv/MZpPp0Y91auXcDMMhYAayRTGeUKCho7hjsdjhd3imxWYL7WQ1M0+idX0E8hRkoycNJ5gi3xk+SAAbg3LfVJVHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776645113; c=relaxed/simple;
-	bh=kDtm/PRHGQosQvI2qcvl0ciHN6eRkK/kwvHqNut14xU=;
+	s=arc-20240116; t=1776645135; c=relaxed/simple;
+	bh=pWcLhDqg6Oo4J7R+6oaWaO6uncd5MDVKZI29pHq0rRI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ib1ugdJoLUlrqNc73hs9WEsFKg/jYmGihqmBnJpdXGoIVYQEwf0rqj2RWph7uArwiL20cFw/MXR4WK9KmVHEHkqU8lAiRLpP51aayyEmwUTzrKYAZD6a+3iPiramn1XZ7PoOEA/60LJaTwKeJ+AxFfvJT12eBiJ1EMAC+pd4hng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZmdrG7A; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=qsi1mYci3iZhPH14ktP7LgHeaH/owHCzEEJ5YfAHbELdGzW7TuvN5r1rveyWF/nkk9TvKD5ekFWQEag4Qp7kN/rq5aRPKlybJTdfdI2d6l1xB4dHXwL1B/ckQhaDf8CZmkl5Q8zxccNu04Nxp8kzao267DoQZZdfGppfwOFOCkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZZOeG4D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZmdrG7A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7579CC2BCAF;
-	Mon, 20 Apr 2026 00:31:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZZOeG4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C212C2BCAF;
+	Mon, 20 Apr 2026 00:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776645113;
-	bh=kDtm/PRHGQosQvI2qcvl0ciHN6eRkK/kwvHqNut14xU=;
+	s=k20201202; t=1776645134;
+	bh=pWcLhDqg6Oo4J7R+6oaWaO6uncd5MDVKZI29pHq0rRI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=hZmdrG7AEBoq+onfVFjgTNXsRKUUksvL4uD40lfULswlkp77fSuTCN5c0chMDqtaN
-	 Ydwy/yNrXUWxzV+veIaFAyWRQTrgtBwwsXubYXbDmLcHsG5g8gUZBGItpMCsCjDMr+
-	 IFL2nBRAPe/tiFmiXGGG6ZQYa4RNw71BBmVKfgxe5fnmouglDrZ80wuwZ3a6LLee38
-	 hmftck6UrBlAHcsCBeH9a1yiRFJ1M2yxW32zbqIbf/HtFVQeqYOelgIMf8dEboBcL7
-	 V0ODMDSC/qvcQ5Yjv64OecgkvE1d5YFUMcshq4g8aoUAdtrQAF44OPFNoHQC53PSqV
-	 RT70N/NZLcmcw==
+	b=VZZOeG4DZo75U5/FVJsRcOqoFK/Dwv44WuiJpiIYfPycx10V6emNVINTlyjjBg6hW
+	 +gHwgG0lkeyWHCHsB+zRtgjRZEQf/Of8qpUIadUVCmdUKel6KaiO+2C38FdPP9v7Qe
+	 cnhTVvfcNHbVhgLuDHpb8kH7rjr5/yLaR73hh9DHrI6JJX+uZz3aXbGKjY7v4cuZVh
+	 gYFDLywQ06LLIttoZeh8WoacE4jNnHTfMkai2S3RfZIHgQcJ8JnFqCMA66s0CW7QeL
+	 0xCVk5jMx9lPv3m8JGfYeRIwadKHTffjvMM5bBYLxa6STnOC8npzngtcWtoQA+yOSy
+	 ypumNnNX6YnvQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 33/58] perf check-perf-trace: Port check-perf-trace
- to use python module
+Subject: Re: [PATCH v1 38/58] perf failed-syscalls-by-pid: Port
+ failed-syscalls-by-pid to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-34-irogers@google.com>
-References: <20260419235911.2186050-34-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-39-irogers@google.com>
+References: <20260419235911.2186050-39-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:31:52 +0000
-Message-Id: <20260420003153.7579CC2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:32:13 +0000
+Message-Id: <20260420003214.7C212C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The script accesses a non-existent `sample_comm` attribute on `p=
-erf.sample_event` objects, causing an unconditional `AttributeError` at run=
-time.
+Sashiko AI review found 2 potential issue(s):
+- [High] The script attempts to extract the process comm using `getattr(sam=
+ple, 'comm', 'Unknown')`, but the new perf Python module does not inject `c=
+omm` into the sample object. This causes all events to be aggregated under =
+'Unknown', fundamentally breaking the output grouping and causing the `--co=
+mm` filter to drop all events.
+- [High] Formatting a potentially `None` syscall name with a width specifie=
+r causes a `TypeError` crash.
 --
 
-commit c7ead2d8a935aefa471da2549e7433796e508f75
+commit 9366fa7bfa752a994e4a854653a22852e8debe63
 Author: Ian Rogers <irogers@google.com>
 
-perf check-perf-trace: Port check-perf-trace to use python module
+perf failed-syscalls-by-pid: Port failed-syscalls-by-pid to use python modu=
+le
 
-This commit adds a python script port of check-perf-trace that uses the perf
-python module directly. This approach improves performance by avoiding the
-creation of intermediate dictionaries for event fields.
+This commit ports the failed-syscalls-by-pid script to the new perf Python
+module API. It updates syscall name resolution, statistic aggregation, error
+string lookup, and adds optional COMM/PID filtering.
 
-> diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/ch=
-eck-perf-trace.py
+> diff --git a/tools/perf/python/failed-syscalls-by-pid.py b/tools/perf/pyt=
+hon/failed-syscalls-by-pid.py
 > new file mode 100755
-> index 0000000000000..a5c6081c422c2
+> index 0000000000000..3873cff947bcd
 > --- /dev/null
-> +++ b/tools/perf/python/check-perf-trace.py
+> +++ b/tools/perf/python/failed-syscalls-by-pid.py
 
 [ ... ]
 
-> +def print_header(event_name: str, sample: perf.sample_event) -> None:
-> +    """Prints common header for events."""
-> +    secs =3D sample.sample_time // 1000000000
-> +    nsecs =3D sample.sample_time % 1000000000
-> +    print(f"{event_name:<20} {sample.sample_cpu:5} {secs:05}.{nsecs:09} "
-> +          f"{sample.sample_pid:8} {sample.sample_comm:<20} ", end=3D' ')
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Process a single sample event."""
+> +        if str(sample.evsel) not in ("evsel(raw_syscalls:sys_exit)", "ev=
+sel(syscalls:sys_exit)"):
+> +            return
+> +
+> +        comm =3D getattr(sample, "comm", "Unknown")
 
-Will this raise an AttributeError when accessing sample.sample_comm?
+Does the perf.sample_event object expose a comm attribute in the new Python
+API?=20
 
-The perf.sample_event C-extension wrapper implemented in
-tools/perf/util/python.c does not appear to expose a sample_comm attribute
-or property.
+If it is missing, getattr will fall back to "Unknown" for every event. This
+would cause all events to be aggregated together under a single name, and
+would drop all events if the comm filter is active.
 
-Because sample_comm is also not a tracepoint field, the dynamic fallback in
-get_tracepoint_field() will likely fail, causing PyObject_GenericGetAttr()
-to raise an exception and stop the script when processing the first event.
+Should this resolve the comm by querying the session, for example by
+calling session.process(sample.pid).comm() instead?
+
+[ ... ]
+
+> +    def print_summary(self) -> None:
+> +        """Print aggregated statistics."""
+
+[ ... ]
+
+> +        for comm in sorted(self.syscalls.keys()):
+> +            for pid in sorted(self.syscalls[comm].keys()):
+> +                print(f"\n{comm} [{pid}]")
+> +                for syscall_id in sorted(self.syscalls[comm][pid].keys()=
+):
+> +                    try:
+> +                        name =3D perf.syscall_name(syscall_id)
+> +                    except AttributeError:
+> +                        name =3D str(syscall_id)
+> +                    print(f"  syscall: {name:<16}")
+
+If perf.syscall_name() returns None for invalid or unknown syscall IDs
+(such as the fallback -1), will applying a width format specifier (<16) to
+a NoneType cause a TypeError and crash the script?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D33
+050-1-irogers@google.com?part=3D38
