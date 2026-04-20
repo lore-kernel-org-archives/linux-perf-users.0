@@ -1,143 +1,210 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177913B961D
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD832D63E5
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 13:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776692687; cv=none; b=OWxIHMA3rmbAUUjXbv4LmFLJLuooCdbVEHPwL/z7HIVc+FS8wWMeAPRSQVQd0++OrmjCQvdGAPUie+HPRSktEIegzhxXjRtBZhr4ctC/xlZYjpvzJcApZzezsOl1TqgnBThKaYIlhCERxgXNv9XxS2Y0lnQxpZI0z00a3mHG9Qk=
+	t=1776692935; cv=none; b=qVbVb3KEQAzuBg78FGtmi9UcFx2LJibR92DF6JezqCZGeD6B1gZvnP5zN6Udwz+WBXZxZvbvuPW2W1OY6u7MlBJjMsCta6Xp0Sd4HJOPTrVPtpr3yy+bnwUkhOJ2Zuskve6o5AJimi0rWlxDD70HXhl08839HwyvqJGXIcyNzEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776692687; c=relaxed/simple;
-	bh=Sb9N6ZxOpG6EYjxD6uzTvGIWgwlDE5T3Exa+z8je0Wg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T0gGlriwssTJMRBheHCfK1Hbq70L9Z5K9gDMJXzl55hDDpQ9XvJxkImUzV58jZXE4ergG6GdSwm2ZBup4cCGmUGqHRl1tdAsMtJL2bHceFbY0b6uzUUPjlwbb1lYzzg3nUQ6O7qLCx5Vtm9ishofq+MoZ1Ojg+zd0/a3tn9NaU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tM6o+DUc; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1776692935; c=relaxed/simple;
+	bh=SKfYPvzrgT1y7LAQk992dLOb1/Ozag4guC9nIE4K0QY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LntYwIQyyksE5iTeun+AHxjh9/USsJ6x9mXYDx5ih+ISP/GiUyZ7b5WZWaUjMr+JBR8QaSBi5trZ+pcoaRHqhtH3TyOUig9bWXe8nn3smLWNUh5GVZUFb8/J1EZbgVEM5sPpHnoJyJJ8TFvMNqiz3MoDqCzwtIfpVN9szh9249U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lLOw1NFe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pS3fKW/B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lLOw1NFe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pS3fKW/B; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tM6o+DUc"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82f504f6b75so1661104b3a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 06:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776692685; x=1777297485; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Sudcedv7bb6KmmokVjUGDtJIDuJ5fsha2RP++MmI/64=;
-        b=tM6o+DUcUMJzSLJ/XOoDOIJk84847spcLhdH1DnBtK5UXlUijFWO9ZdJgURQhdpnwE
-         MQpoNiVobJ/ErOguT9vWaeIjYzBv4eN4x9NwFCf8Y8+lAHcdOFclO5swsRDvM05Tearj
-         Z8s8eJhd6KdmGuSWcJLX+w2m0inK6+BjNvwsgYW4+Z9eNuFZdViB1JrbK/KWgZiBRw+U
-         fowlV75Ea2NfqRzezs01uDfyKlxjQJ6VR0kKGj25HrqEsdxegdNu7i1+BChaLQOg7/f9
-         8nCXflUBr7IRzQCJONlshnJZFZH0CS/WeCqounYyCjnvgaH+9m2GuFrlHskV0mKe42jx
-         nmLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776692685; x=1777297485;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Sudcedv7bb6KmmokVjUGDtJIDuJ5fsha2RP++MmI/64=;
-        b=MdFgT267r+PqAsfkInrTjGs/T5cPzdI2UuW1y5HZp7SndFiIX2+UJ59WR5yehKJXDg
-         DWtWc7qjinV0oc+FUbHL/bWGVtxTzQThCs2QUzrp3nbJk9IxQKsJfs4TqHJThnh+AcyB
-         ZwdDtDRP7zA/si9FvOVOI036bRQtz/gX2OxLJqwOnATbZ7xPwTyUTmaHRHZJUWDUfXOH
-         J8OZu9Ivhb2JoQ1RcYi0Trxta4i5iBX+2+L5N0VEfJWH2Bpljt2Z6foyivRrztjW1wTD
-         BUdxpyGlrOhqcJMICP7xkVX/3t0G6gpazov2/mdCCC+ZyU2KRnoL/Qp28uaOV6pb5D7a
-         ld7A==
-X-Forwarded-Encrypted: i=1; AFNElJ/nyHKpCTZt0QxlOHr8F3ZLLSx/jxYIEGovpirXP7OZFx6/GzYmeRilZBK7NZHRoUWgOYkKPZ2V1pTYkVkkOvfh@vger.kernel.org
-X-Gm-Message-State: AOJu0YywRQiR+IpnEtSVIluE5A6L2YU7PXV42IgJ0/FyJl01PG7T/nco
-	jruu3198RbTYxtvMAJtvd0vCO7Btr0ge58VXXqQ5VwPeAiKTDsfmgbes4jxbY9Pet4SKHKjgGsu
-	lYHaP4g==
-X-Received: from pfgs39.prod.google.com ([2002:a05:6a00:17a7:b0:82c:e9cd:a73f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3315:b0:81f:ac81:d597
- with SMTP id d2e1a72fcca58-82f8c2a9ed7mr12914323b3a.0.1776692685198; Mon, 20
- Apr 2026 06:44:45 -0700 (PDT)
-Date: Mon, 20 Apr 2026 06:44:43 -0700
-In-Reply-To: <d730553e-b7ca-4f90-a367-4c0ce0d8e7f4@suse.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lLOw1NFe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pS3fKW/B";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lLOw1NFe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pS3fKW/B"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 883D25BCD1;
+	Mon, 20 Apr 2026 13:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1776692932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3G7vl254hKLWmCISgkXy81NC1sunGjVh1MU4tFAFiY=;
+	b=lLOw1NFeI/E4bVnzlRZvuI38z+UOWMiJ6WCTcpZ7bGOxdHC30NjLoPiW+EgsgZl/Pzst6V
+	qqY5/ua481n4ZfLe9BpQM7lLgTHMduMezIRA5R/zGegZWQ2wkp2XrVz3v9snvhnbPIKdkH
+	AZMDGB1IyMTJ/tZtJPo/Maum0DoAIeU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1776692932;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3G7vl254hKLWmCISgkXy81NC1sunGjVh1MU4tFAFiY=;
+	b=pS3fKW/BmxFU27m5F7wLrXMPhRUqPkVS5iBg7mv0bFsGeCijAraUqYAcOgioByN5iNlbUq
+	OJM/4gggnCadI6AA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lLOw1NFe;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="pS3fKW/B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1776692932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3G7vl254hKLWmCISgkXy81NC1sunGjVh1MU4tFAFiY=;
+	b=lLOw1NFeI/E4bVnzlRZvuI38z+UOWMiJ6WCTcpZ7bGOxdHC30NjLoPiW+EgsgZl/Pzst6V
+	qqY5/ua481n4ZfLe9BpQM7lLgTHMduMezIRA5R/zGegZWQ2wkp2XrVz3v9snvhnbPIKdkH
+	AZMDGB1IyMTJ/tZtJPo/Maum0DoAIeU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1776692932;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3G7vl254hKLWmCISgkXy81NC1sunGjVh1MU4tFAFiY=;
+	b=pS3fKW/BmxFU27m5F7wLrXMPhRUqPkVS5iBg7mv0bFsGeCijAraUqYAcOgioByN5iNlbUq
+	OJM/4gggnCadI6AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61675593AE;
+	Mon, 20 Apr 2026 13:48:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c5N1FMMu5mnXQwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Mon, 20 Apr 2026 13:48:51 +0000
+Date: Mon, 20 Apr 2026 14:48:49 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Huang Shijie <huangsj@hygon.cn>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, akpm@linux-foundation.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, muchun.song@linux.dev, osalvador@suse.de, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	nvdimm@lists.linux.dev, zhongyuan@hygon.cn, fangbaoshun@hygon.cn, yingzhiwei@hygon.cn
+Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
+Message-ID: <hshxzebq5y4gavo7mbrgn7qitz5j5wyun73wy7ooiiehzzpcui@hlknbp34sgja>
+References: <20260413062042.804-1-huangsj@hygon.cn>
+ <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+ <aeWLCxru6cLWsxvQ@SH-HV00110.Hygon.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260420091634.128787-1-jgross@suse.com> <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
- <20260420114117.GC3102924@noisy.programming.kicks-ass.net> <d730553e-b7ca-4f90-a367-4c0ce0d8e7f4@suse.com>
-Message-ID: <aeYty5kU8Rp44USr@google.com>
-Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
-From: Sean Christopherson <seanjc@google.com>
-To: "=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?=" <jgross@suse.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aeWLCxru6cLWsxvQ@SH-HV00110.Hygon.cn>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,zeniv.linux.org.uk,kernel.org,kvack.org,vger.kernel.org,lists.infradead.org,linux.dev,suse.de,lists.linux.dev,hygon.cn];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 883D25BCD1
 
-On Mon, Apr 20, 2026, J=C3=BCrgen Gro=C3=9F wrote:
-> On 20.04.26 13:41, Peter Zijlstra wrote:
-> > On Mon, Apr 20, 2026 at 01:35:12PM +0200, Peter Zijlstra wrote:
-> > > On Mon, Apr 20, 2026 at 11:16:28AM +0200, Juergen Gross wrote:
-> > >=20
-> > > > - Use functions instead of macros for accessing MSRs, which will dr=
-op
-> > > >    modifying variables passed as a parameter.
-> > > >=20
-> > > > - Eliminate multiple accessors doing exactly the same thing (e.g.
-> > > >    rdmsrl() and rdmsrq()).
-> > >=20
-> > > So far so sane.
-> > >=20
-> > > > - Instead of having function names based on the underlying instruct=
-ion
-> > > >    mnemonics, have functions of a common name space (msr_*()).
-> > >=20
-> > > Not sure on this one. The whole msr_{read,write}_{safe,noser}() thing=
- is
-> > > a royal pain. Also 'noser' reads to me as the noun that goes with 'to
-> > > nose' [he that noses (around), like baker: he that bakes].
-> > >=20
-> > > I would much rather we just stick to the mnemonics here. All of this
-> > > really is about wrapping single instructions, no need to make it an
-> > > unreadable mess.
-> >=20
-> > Also, the _safe suffix should just go away. All MSR accessors should be
-> > 'safe'.
->=20
-> That would be fine by me, but I'd like to have some confirmation this is
-> really the route to go.
+BTW you're missing _a lot_ of CC's here, including the whole of mm/rmap.c
+maintainership.
 
-I don't care what the suffix is called, or if there is even a suffix, but t=
-here
-needs to be a way for the caller to communicate that it wants to handle fau=
-lts,
-so that the "caller isn't going to handle a fault" case generates a WARN if=
- the
-access does #GP.
+On Mon, Apr 20, 2026 at 10:10:19AM +0800, Huang Shijie wrote:
+> On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
+> > On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
+> > >   In NUMA, there are maybe many NUMA nodes and many CPUs.
+> > > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> > > In the UnixBench tests, there is a test "execl" which tests
+> > > the execve system call.
+> > > 
+> > >   When we test our server with "./Run -c 384 execl",
+> > > the test result is not good enough. The i_mmap locks contended heavily on
+> > > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have 
+> > > over 6000 VMAs, all the VMAs can be in different NUMA mode.
+> > > The insert/remove operations do not run quickly enough.
+> > > 
+> > > patch 1 & patch 2 are try to hide the direct access of i_mmap.
+> > > patch 3 splits the i_mmap into sibling trees, and we can get better 
+> > > performance with this patch set:
+> > >     we can get 77% performance improvement(10 times average)
+> > > 
+> > 
+> > To my reading you kept the lock as-is and only distributed the protected
+> > state.
+> > 
+> > While I don't doubt the improvement, I'm confident should you take a
+> > look at the profile you are going to find this still does not scale with
+> > rwsem being one of the problems (there are other global locks, some of
+> > which have experimental patches for).
+> > 
+> > Apart from that this does nothing to help high core systems which are
+> > all one node, which imo puts another question mark on this specific
+> > proposal.
+> > 
+> > Of course one may question whether a RB tree is the right choice here,
+> > it may be the lock-protected cost can go way down with merely a better
+> > data structure.
+> > 
+> > Regardless of that, for actual scalability, there will be no way around
+> > decentralazing locking around this and partitioning per some core count
+> > (not just by numa awareness).
+> > 
+> > Decentralizing locking is definitely possible, but I have not looked
+> > into specifics of how problematic it is. Best case scenario it will
+> > merely with separate locks. Worst case scenario something needs a fully
+> > stabilized state for traversal, in that case another rw lock can be
+> > slapped around this, creating locking order read lock -> per-subset
+> > write lock -- this will suffer scalability due to the read locking, but
+> > it will still scale drastically better as apart from that there will be
+> > no serialization. In this setting the problematic consumer will write
+> > lock the new thing to stabilize the state.
+> > 
+> I thought over again.
+> I can change this patch set to support the non-NUMA case by:
+>   1.) Still use one rw lock.
 
-If we make rdmsr() return a u64, then we can vacate __rdmsr() and use that =
-for
-the version with a label.
+No. This doesn't help anything.
 
-E.g. something like this if we provide both the out-param and label variant=
-s:
+>   2.) For NUMA, keep the patch set as it is.
 
-static __always_inline u64 rdmsr(u32 msr)
-{
-	<this version WARNs on fault>
-}
+Please no. No NUMA vs non-NUMA case.
 
-#define __rdmsr(msr, label)
-({
-	u64 __val;
+>   3.) For non-NUMA case, split the i_mmap tree to several subtrees.
+>       For example, if a machine has 192 CPUs, split the 32 CPUs as a tree.
 
-	<this version jumps to @label on fault>
-	__val;
-})
+If lock contention is the problem, I don't see how splitting the tree helps,
+unless it helps reduce lock hold time in a way that randomly helps your workload.
+But that's entirely random.
 
-static __always_inline int rdmsr_p(u32 msr, u64 *val)
-{
-	<this version zeros *val on fault and returns 0/-errno>
-}
+> 
+> So extend the patch set to support both the NUMA and non-NUMA machines.
+
+FYI I've discussed some concrete ideas for reworking file rmap with Mateusz.
+I'll be giving them a shot. Note that this needs to be done _carefully_,
+particularly as there are some hidden assumptions wrt forking that aren't
+very clear as to how they work[1].
+
+[1] https://lore.kernel.org/all/bnukmnuxxuhdfeasjz33miemgr7w35c4aa6pqdmgupx7oxmeeb@gozgc3yxhcdd/
+-- 
+Pedro
