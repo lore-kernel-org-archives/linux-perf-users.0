@@ -1,116 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C7C52F8B
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B56B52F8B
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776646235; cv=none; b=dWQ8CJ8FhjOHKE2h1VyLZSUbGLD5e10xaOzQGoOz+zHwwfOWk6M7XnWr1kvufjWJEsjqx63gojAVn04VA/JacNGe2f+FMUfzRht6mNQ4Ajj7PIwGQ8XMEYle6wHzM9GmcK2dOKK73nCQLotOhzSs7cy5prttddUuG/bL873K99Q=
+	t=1776646421; cv=none; b=J5tBHFUuzBtgkqGV6PFRWIcWmLMjYlnNPH9IAaBHfX2Esp+nDvkCaPNsD5ZucwyDoUvkK4eXT3HME6SvNPyy2V5uMdbRU5zZ3nepaXWQX0vR/Ixdhc2S0LrCWgYpQxpx+6Y76igeLBeUKcrsbVfxtN/RzeKwu6paRhuSh5fRD9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776646235; c=relaxed/simple;
-	bh=4Eli2SNE28sxpdQyllREpGmvcknawV/Krr2XyJeg1x8=;
+	s=arc-20240116; t=1776646421; c=relaxed/simple;
+	bh=MAjy9yRgC3VFzkiLLPBSiQUuM/hNwJ7x+vdaVZXSY6U=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WKFkVuabk6RiY9iupLB3S1xrDzypm29iN41yTUjfJ96rBvYFcPptJ0ugvDdrnJcKRQ6zyLvPXCb2ec8vSjq7OV3izigj9RA982bOTfRTOHqik7VfB9rIXZpd8Qmq7mO6Dg+kIaFqNkSiQasd87yYfVYm6HfocrF03MXRRYLuhG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNoBgg7B; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=B97MBhDb3NIZ0HmOIdwxdvCwBli6HRAgMuK8KXo8Ym3yk3aqXtU01dSf4eZVQrhGOdFr0h72CMvWXDgG5/+/LUzwaIlkOFP7eayrjEaZKmFd/qlylZgYbWeD4VKqHo5ia0LUgzA5fFsZHzFoi5h2N59lfiURJOvh0qnBbXx2dCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Si84I92q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNoBgg7B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF53C2BCAF;
-	Mon, 20 Apr 2026 00:50:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Si84I92q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C67C2BCB5;
+	Mon, 20 Apr 2026 00:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776646235;
-	bh=4Eli2SNE28sxpdQyllREpGmvcknawV/Krr2XyJeg1x8=;
+	s=k20201202; t=1776646421;
+	bh=MAjy9yRgC3VFzkiLLPBSiQUuM/hNwJ7x+vdaVZXSY6U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=VNoBgg7Bm5/WYkbOaxRWDp6qWuge5fG1yZ2lWL6xuRYq1Y++PmTFGcQQYS3G2BRPH
-	 mTw6doKcApAyGEhO4Rp4gJToeCTh8Wbfx13hwmW5JrrVkTzPUrmfhGUvR/egO0deTL
-	 GeKFZFkWGQvHaYIGpd9JYqsijJUwEyWxXjG89s0c2o9edvAATy1pK+TgF1+mk0mKjF
-	 xFD2+GENvuOqGftctm1HClj2Ae2Of0aHxGtIoo1/PEKLmBuf+4fQzFd3IctnXVkZtg
-	 VDCzI8Aa2lae1J1T1LOCKvcCEU8UO4N7r8EDFXs59mw52NXNQIn4qVK+z9Zrf3eKLk
-	 xBS82XB8NzHoA==
+	b=Si84I92q46B5/dBkJ9yJIQzeM/3ezHT/XybsuNArNlNET0PI1HQ3gbsrta+kcOlEM
+	 IpT/iUO8tAuxZbdGhLEXCy5p03GDfLM5w5ldwww2LD9m1kPzLWGpaG7SWBkqDoIo9e
+	 VU2x0Q+FOcASwNA1HaM6fFSaMJWsGNfMiEOw8MEegRurDEoVgjWcYk02qDdetsMItH
+	 4n5SD6X/UUdAbsGsuVOvoxw79rsj12sWI2HBVB90qceALJkaq6P0gjNV/jU8a/paax
+	 cvn3l4S+yrk84ueiy4Z0a5UXkO0hP6Ke0YYBZdjezhrKeke5tm6quHL2YfD/bpwHaM
+	 bnkqtNtf+lEfA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 48/58] perf rw-by-file: Port rw-by-file to use python
- module
+Subject: Re: [PATCH v1 10/58] perf evlist: Add reference count
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-49-irogers@google.com>
-References: <20260419235911.2186050-49-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-11-irogers@google.com>
+References: <20260419235911.2186050-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:50:34 +0000
-Message-Id: <20260420005034.CCF53C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:53:40 +0000
+Message-Id: <20260420005341.06C67C2BCB5@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] Events missing expected fields (like `fd` or `count`) are silent=
-ly dropped instead of being logged as unhandled.
-- [Medium] Inconsistent syscall substring matching leads to some variants b=
-eing silently dropped while others are correctly marked as unhandled.
+Sashiko AI review found 4 potential issue(s):
+- [High] Calling `evlist__put()` in the Python bindings triggers `free()` o=
+n an interior pointer, corrupting the heap.
+- [High] Accessing an evlist item from Python returns a detached clone, bre=
+aking interaction with opened events.
+- [High] Double `evlist__put()` causing a Use-After-Free / Double Free in `=
+builtin-trace.c`.
+- [Medium] `pyrf_evlist__init` leaks the previously allocated `evlist` if `=
+__init__` is called multiple times.
 --
 
-commit 5972219e821f09bb793ad6f36fe0a7dd43826dc1
+commit c68aec7a307f75660ac1e10cdc04f9b5d7aa17be
 Author: Ian Rogers <irogers@google.com>
 
-perf rw-by-file: Port rw-by-file to use python module
+perf evlist: Add reference count
 
-This commit ports the legacy Perl script rw-by-file.pl to a Python script
-using the perf module in tools/perf/python. It leverages the perf.session
-API to track read and write activity by file descriptor for a given program.
+This patch introduces a reference count for the evlist structure, replacing
+evlist__delete with evlist__put. In the Python bindings, the evlist is now
+allocated dynamically instead of inline, preparing the way for further
+reference counting changes for evsels.
 
-> diff --git a/tools/perf/python/rw-by-file.py b/tools/perf/python/rw-by-fi=
-le.py
-> new file mode 100755
-> index 0000000000000..4dd164a091e2f
-> --- /dev/null
-> +++ b/tools/perf/python/rw-by-file.py
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
 [ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Process events."""
-> +        event_name =3D str(sample.evsel)
+> @@ -5364,7 +5364,7 @@ static void trace__exit(struct trace *trace)
+>  		zfree(&trace->syscalls.table);
+>  	}
+>  	zfree(&trace->perfconfig_events);
+> -	evlist__delete(trace->evlist);
+> +	evlist__put(trace->evlist);
+
+Can this cause a use-after-free and double free? Looking at trace__replay(),
+trace->evlist is assigned to session->evlist without taking a reference. At
+the end of that function, perf_session__delete() is called, which drops the
+reference to session->evlist and frees it. Then cmd_trace() calls
+trace__exit(), which executes this evlist__put() on the freed memory.
+
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 [ ... ]
-> +        if "sys_enter_read" in event_name:
+> @@ -1285,15 +1285,21 @@ static int pyrf_evlist__init(struct pyrf_evlist *=
+pevlist,
+>  	if (!PyArg_ParseTuple(args, "OO", &pcpus, &pthreads))
+>  		return -1;
+> =20
+> +	pevlist->evlist =3D evlist__new();
+> +	if (!pevlist->evlist) {
+> +		PyErr_NoMemory();
+> +		return -1;
+> +	}
 
-Does this substring check inadvertently match variants like sys_enter_readv
-or sys_enter_readlink?=20
+Does this leak the previously allocated evlist if __init__ is called multip=
+le
+times on the same instance? In Python, __init__ can be called repeatedly, a=
+nd
+the previous pointer would be unconditionally overwritten without calling
+evlist__put().
 
-If these variants are matched but lack a count field, they will trigger an
-AttributeError below, whereas other variants like sys_enter_pread64 would
-correctly fall through to the unhandled block.
+[ ... ]
+>  static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
+>  {
+> -	evlist__exit(&pevlist->evlist);
+> +	evlist__put(pevlist->evlist);
+>  	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
+>  }
 
-> +            try:
-> +                fd =3D sample.fd
-> +                count =3D sample.count
-> +                self.reads[fd]["bytes_requested"] +=3D count
-> +                self.reads[fd]["total_reads"] +=3D 1
-> +            except AttributeError:
-> +                return
+Can this trigger free() on an interior pointer and corrupt the heap? In
+pyrf_evlist__add(), an evsel embedded inside a Python object is added direc=
+tly
+to the C evlist. When the reference count drops to 0 here, evlist__put() ca=
+lls
+evlist__purge(), which iterates over the entries and calls evsel__delete().
+This blindly invokes free() on the embedded pointer.
 
-If an event is missing expected fields (such as if the user did not record
-trace fields, or if a syscall variant like sys_enter_readv is matched),
-should it be added to the self.unhandled tracker instead of silently
-returning here?=20
+I see from upstream discussions that this issue is resolved in a later comm=
+it
+(perf evsel: Add reference count).
 
-Silently dropping these events could result in misleading statistics without
-alerting the user.
+[ ... ]
+> @@ -1794,17 +1816,16 @@ static PyObject *pyrf_evlist__item(PyObject *obj,=
+ Py_ssize_t i)
+>  	struct pyrf_evlist *pevlist =3D (void *)obj;
+>  	struct evsel *pos;
+> =20
+> -	if (i >=3D pevlist->evlist.core.nr_entries) {
+> +	if (i >=3D pevlist->evlist->core.nr_entries) {
+>  		PyErr_SetString(PyExc_IndexError, "Index out of range");
+>  		return NULL;
+>  	}
+> =20
+> -	evlist__for_each_entry(&pevlist->evlist, pos) {
+> +	evlist__for_each_entry(pevlist->evlist, pos) {
+>  		if (i-- =3D=3D 0)
+>  			break;
+>  	}
+> -
+> -	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
+> +	return pyrf_evsel__from_evsel(pos);
+>  }
 
-> +        elif "sys_enter_write" in event_name:
-> +            try:
-> +                fd =3D sample.fd
-> +                count =3D sample.count
-> +                self.writes[fd]["bytes_written"] +=3D count
-> +                self.writes[fd]["total_writes"] +=3D 1
-> +            except AttributeError:
-> +                return
+Does accessing an evlist item from Python return a detached clone? The new
+return path uses pyrf_evsel__from_evsel(), which deep-copies the event via
+evsel__clone() instead of returning the opened event. Modifying the returned
+event or accessing its file descriptors would operate on this copy.
 
-Similarly, is it intended for write events missing the fd or count fields to
-be silently dropped rather than tracked as unhandled?
-
-> +        else:
-> +            self.unhandled[event_name] +=3D 1
+I note this is addressed in a later patch in the series (perf evsel: Add
+reference count).
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D48
+050-1-irogers@google.com?part=3D10
