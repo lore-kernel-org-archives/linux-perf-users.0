@@ -1,111 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F31054652
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE31A6807
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776645181; cv=none; b=ECv9FW49zXcWOWX2nE7ebdkOT/leAf/4E83V7XHkUgtA/Ys9ClhYylz7aYapTnvrdiMy4sy6XKCyxzPce11iuPyK0QpEWS8powUb9ZY3YwNQLXdkdshqszKbWRcQ0AYb6nWtykCqkA4x+q97x+L1oTMmAUh+MnIgkIozUiJ+MPY=
+	t=1776645202; cv=none; b=orIrieJRL0iABc1RYYjQni29l1f45r8J4edvpc/2Mpk1BWG6Rm0JvQJzfzG0KtzdS0MYymN/OyzGEyImER3a4jvxotpJTV8NR4QyQNTDP+uTAvKTfsdgaOCWxlyHPNCinMaE7ZrwP3Jx4O9semosfGXWvTzeRH96FeAGNy5+ZpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776645181; c=relaxed/simple;
-	bh=PEP78inPiyb3Y/Fd7YgKt5ksGnbhGhtU+FBji7jGsWo=;
+	s=arc-20240116; t=1776645202; c=relaxed/simple;
+	bh=CDFkACnvZz+tuPfkzXw7NdDoed3+PFRT2St9aQMS/O0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fVOUWZQP03OzQXnoWf4xEnB/KSimtZt9a+K40Pkm9mYB2I7rI0QbxVKbvgSYMK4dH1VVmCF5h9a7XqCdmeck8Rmzffz9c8YUhqkw4WFj0asea0XLX6HfkXm5ABYLwCJAj5Y5pvVc3AxAmoWp41nF9K7k41Hew0NQi9oRz1DpLsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byd/ghkb; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=MYdaC5vyMWSmnjnCQYo879J3L3pLfIOVfwqvEDeclUPU+2DOakh/Uo8rer/HKJiti3Gri1un/8pt+q2Gf0iCg7MevdJ2X2ey42ICBNUL2Fv4AbmGlVPZcBtb3GF9R5/9+v43rsTEY1C5/2k9ZJfIBBqiQWEKlmJlhB0gK+gSS6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaEk+GoN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byd/ghkb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D88C2BCAF;
-	Mon, 20 Apr 2026 00:33:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaEk+GoN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA5DC2BCAF;
+	Mon, 20 Apr 2026 00:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776645181;
-	bh=PEP78inPiyb3Y/Fd7YgKt5ksGnbhGhtU+FBji7jGsWo=;
+	s=k20201202; t=1776645202;
+	bh=CDFkACnvZz+tuPfkzXw7NdDoed3+PFRT2St9aQMS/O0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=byd/ghkbIU02gAtKMJv6PRB4FNfZcTE3GuWN0sHt7JRE3b0UABLC5b6cvrChD39p1
-	 i8nujskbdr6VBxg/CWMdxxj6FJEPcooIdQHjfRtv1VUXAD/7yvfeaaKtvdDNpOyjHZ
-	 r8WdK0X5xBfRr299yFYYN2URU9duL+ybiI/HhNPHGWs8OvpSaf/8RX6lnTN8pFMfAS
-	 440g3pNFqdvPlIPJP5wFhzbbWZVsLAytyDvN4vhkm/vqHTmSmngFB+/2kUVajVVEgo
-	 FYUaE+98cm7N9VgPoFxjxjcjalAoKR9uoQRgeMaCkxbpDqhjYNLaLB3xQVFxxIig68
-	 JtmAn+ffspHgg==
+	b=RaEk+GoNcT7/WQHFA5LFhMG2HnVquy7Q0c2dU2q1KzdjssvsEsHB/lBttimsKj8qP
+	 DoQXyUp6BWNTAC+CKcjy0Eaap0WiA15D3SFaMbnvRBabVCF0fdmBPvt512aO/+yH/r
+	 IUi+qn1axWQm4FWpNnlSGYL2SUFO/GRRBC+6nk5lVXVXETIcB29zFUFfhybXlA6UOy
+	 mFL5ZoSw4BWnvn8wgQSl7ktLZVE1bGghYkdqXhd/67QEwE/X6x3ZFPAZ3yOPL/G+aH
+	 J1i7IpnevqVoUGeqi41pT12mzJhB+eBkz1+UZV8UAfEX2xv10KRIDQhrgv1cP1CDX2
+	 DJTTpJRo7+dIQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 44/58] perf sctop: Port sctop to use python module
+Subject: Re: [PATCH v1 22/58] perf python: Add perf.pyi stubs file
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-45-irogers@google.com>
-References: <20260419235911.2186050-45-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-23-irogers@google.com>
+References: <20260419235911.2186050-23-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:33:00 +0000
-Message-Id: <20260420003301.20D88C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:33:21 +0000
+Message-Id: <20260420003321.DFA5DC2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Silent data loss and missing output in offline trace mode due to i=
-ncorrect background thread synchronization.
+Sashiko AI review found 3 potential issue(s):
+- [Medium] The `perf.pyi` type stub provides incorrect attribute names that=
+ will cause runtime crashes.
+- [Medium] The `perf.pyi` stub file is not installed by the build system.
+- [Medium] The `perf.pyi` type stubs omit several functions and classes exp=
+orted by the C extension.
 --
 
-commit 49888999983c8368caac2c5b2d68dc07aa8060d6
+commit a3e3e83a491ec2415a1bdbbfc8f84367197595fd
 Author: Ian Rogers <irogers@google.com>
 
-perf sctop: Port sctop to use python module
+perf python: Add perf.pyi stubs file
 
-This commit ports sctop.py to tools/perf/python/, refactoring it to use a
-class-based structure and the perf.session API. It also adds support for
-live mode using the LiveSession helper when no input file is specified.
+This commit adds Python type stubs (perf.pyi) for the perf module to
+improve editor support and static analysis. It includes docstrings for
+classes, methods, and constants derived from the python extension.
 
-> diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
-> new file mode 100755
-> index 0000000000000..6daa5f0a3b218
+> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+> new file mode 100644
+> index 0000000000000..0aa897f453153
 > --- /dev/null
-> +++ b/tools/perf/python/sctop.py
+> +++ b/tools/perf/python/perf.pyi
+
+Looking at tools/perf/util/setup.py and tools/perf/Makefile.perf,
+it appears only .py files are copied during installation.
+
+Is this a regression where the build system leaves the .pyi file
+behind in the source tree, making it inaccessible to the user's
+Python environment?
+
 [ ... ]
-> +    def print_syscall_totals(self):
-> +        """Periodically print syscall totals."""
-> +        while not self.stop_event.is_set():
+
+> +def parse_events(
+> +    event_string: str,
+> +    cpus: Optional[cpu_map] =3D None,
+> +    threads: Optional[Any] =3D None
+> +) -> 'evlist':
+
+Functions like parse_metrics, pmus, and tracepoint appear to be absent
+from these stubs.
+
+Could this regression cause static analyzers to flag valid uses of the
+interface because module-level functions exported by the python
+extension are missing?
+
 [ ... ]
-> +            for syscall_id, val in current_syscalls:
-> +                print(f"{self.syscall_name(syscall_id):<40s}  {val:10d}")
+
+> +class evsel:
+> +    """Event selector, represents a single event being monitored."""
+> +    def __str__(self) -> str:
+
+Instantiable classes like evsel and evlist appear to be missing their
+constructors in the stubs.
+
+Is it a regression that this class does not include its __init__ method?
+
+[ ... ]
+
+> +class sample_event:
+> +    """Represents a sample event from perf."""
+> +    evsel: evsel
+> +    sample_cpu: int
+> +    sample_time: int
+> +    sample_pid: int
+> +    sample_comm: str
+
+Looking at pyrf_sample_event__members in tools/perf/util/python.c,
+sample_comm does not appear to be exported.
+
+Could this regression pass static analysis but fail with an
+AttributeError at runtime if developers use event.sample_comm?
+
+[ ... ]
+
+> +class branch_entry:
+> +    """Represents a branch entry in the branch stack.
 > +
-> +            self.stop_event.wait(self.interval)
-
-Does this code drop the final batch of accumulated syscall events when
-running in offline mode?
-
-When process_events() completes, the script reaches the finally block and
-calls stop():
-
-> +    def stop(self):
-> +        """Stop the background thread."""
-> +        self.stop_event.set()
-> +        self.thread.join()
-
-Setting stop_event causes stop_event.wait(self.interval) to return
-immediately. The loop condition evaluates to false, and the thread exits
-without printing any events that were gathered since the last loop iteratio=
-n.
-
-If the trace file takes less than the default 3 seconds to parse, would the
-script exit silently without producing any output at all?
+> +    Attributes:
+> +        from_: Source address of the branch (corresponds to 'from' keywo=
+rd).
+> +        to: Destination address of the branch.
 
 [ ... ]
-> +    try:
-> +        if args.input:
-> +            session =3D perf.session(perf.data(args.input), sample=3Dana=
-lyzer.process_event)
-> +            session.process_events()
-[ ... ]
-> +    finally:
-> +        analyzer.stop()
 
-Also, since process_events() parses the trace file as fast as the CPU allows
-during offline mode, does relying on a wall-clock wait() mean the interval
-sizes are dependent on the host's parsing speed rather than the trace
-duration?
+> +    from_: int
+> +    to: int
+
+The python extension explicitly exports this branch entry attribute as
+"from" via pyrf_branch_entry__getset.
+
+Since "from" is a Python keyword, it is typically accessed via
+getattr(entry, 'from').
+
+Would defining it as from_ be a regression that leads to an
+AttributeError at runtime?
+
+[ ... ]
+
+> +class evlist:
+> +    def open(self) -> None:
+> +        """Open the events in the list."""
+> +        ...
+
+The stubs omit several event classes entirely, such as mmap_event,
+lost_event, comm_event, task_event, throttle_event, read_event, and
+switch_event.
+
+Is it a regression that methods like get_pollfd and add are also missing
+from evlist?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D44
+050-1-irogers@google.com?part=3D22
