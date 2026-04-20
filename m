@@ -1,141 +1,146 @@
-Received: from mail-qk1-f228.google.com (mail-qk1-f228.google.com [209.85.222.228])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4453AE6E2
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 18:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5423BA24C
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 18:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776709619; cv=none; b=IuaNdRYN8lvaqowWelQpsbgQ6OscNUIigXKoR8YQt4WxUgte+cW05Zvj2/Vo8iMIdRNsD3Q/HZceFvlKNHD2wOT2ONbgdE9LXbVCSBd0pCrdYVNmpEErFMfEQFiSUFiQh4OuZUjP+aTCRvVAi/uAERFbIpV4rIjEajalmAcgfew=
+	t=1776710837; cv=none; b=mG16Ew3FieZxT8hK117bcnI6ExZ8YnrSJdXrFdeCvw7MTzCLoXedcsc/ySf49mczvV4isoikWBLs6MUrnRaQE5h0GeLac893WsnxfzL5WWsFKMYugqzoilEmLbrGKbFA6asUFqBqzpAcnvjv0HgrUoaoyvjJ0ZmsNEnJsAY89pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776709619; c=relaxed/simple;
-	bh=tdCDk7kQqLLm0xmEYfvTgPbL8wkqXQgP5yooxxBSc5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=asW2r1H81WDYRAfjeTfYjSEOkBHsOHpVaC+ta8ZAzVHuVd40QWRRtWyZs1r0G85MU4EALwDNBrv54HxUogKZ66Q/buGQYikLuy+VlIPb2mnuksJLGfTt8B1UQeZUXZbUixfGrYTTn/M791zx8U89hDDHxB3mDMXMV1HO0MT+QEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Pydp2RHl; arc=none smtp.client-ip=209.85.222.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1776710837; c=relaxed/simple;
+	bh=vW02KOU5qndWFI5Kbr8zih/4D7EhB9UqxDCMlU5uBtE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mt6hM2Nv7jbs2C0FaJMQw9Sja9MwlnxjdvLd8pMkAOUEFtOS20ygPGLdXeit1Wgaa8aXKS+XO5W1yCvk4GyTDIqXC6jAWPpb3J1Qg90CjaBLATFv+Vsc1JkRKJo8S+wvl5SJoxx6t6c/FY0DchRvAC+sRXOvd5nMPLCdDStTCdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7VfrFoP; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Pydp2RHl"
-Received: by mail-qk1-f228.google.com with SMTP id af79cd13be357-8d7e7f48499so381753885a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 11:26:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776709617; x=1777314417;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWPe8++bYX46RiubHBos5NK0oKztWZClINrpZVnlUMc=;
-        b=ZNClMzwuBc1TASWxRupv1Q4O2l5rkGLv72XXti37vpq2U8Wf4EqgMZLEeM2te+L3oJ
-         eXT/NvbJtUWOcYoQts7l84oBIUpzLzJYI/0htlezaX6DGd3pcO76yk0dbwd25tF8TE0W
-         S3I9p49UYA0puX5IeVdgNkccSLdBfoj/pPvA7Ge6ic85m/KTaCu8gEXoAwfcYNKm5tev
-         gfiVe7vZRCLEQycob0B8hvCJgZBLiuIylr8cbcCxIjLqUWwYDM1VdHZf1KLtOdxAxoID
-         ErZsSU3kf1PnQolfA9BbPb+7LAww6JrEd9v/ch29CJ0V4vkFO6AWuTFl6AwugqbLjvAS
-         NokA==
-X-Gm-Message-State: AOJu0YwxfmbOTt1QAdWRTJpTRYYJnVW0qndQv4l6WqSdX0bZxstU8p/j
-	ZPIcAvgcCXq9q6uu/f4QfvAFNmWLwQdq+A/Jw9rDR2V+9wKLqkhfokdel1Fup39dzg7Hdj6utEp
-	gS/ZSZT2d1jhF0nKnl7yrZZpAqhhAvfx4WOVCe4IjLUKbNzQ28e+he84i7J6tSukS2lne+LwNGT
-	4SJP9J24T9/eVDkBXohnaXCFw3JfmIgJ+m8WuwWbRmYE6Re43Co/QY0pIJg3mPD1XOEQS6qE+1J
-	mEHwYimDooz85MkRfz98XLDToQ=
-X-Gm-Gg: AeBDievbVFejW6OzL4JSG2nAj1vuARQYT75oMMF1LdismJVUvoreunwI+zjR/kQiM2t
-	WKNNhBecR84pMN+HqY9CRsYG1/pxBdbLbwLuLdO8faTI6eYQgLvt5EwohKD3Q/jSO0eA49NUKIJ
-	RMCQZI/DYWfbsFiTU/U6QgWhPpYAAiQGN+obwWI9i0RQswCBlv6c0Tl6sUqhcLp7nvcb9rWbqoN
-	tv3o/t//lJ/SKKoYaxsgp4lIsejI3PgRTd4b34nBsaPL8sBSDPLneHqE3TceeKMVzi4B7mdsIJI
-	9Ix5khCC7WtlOQSqzLk1qyHJtE8agTbJemm8vUATBDOCQZCUSrPVGMrgU0gX04mUK7FsnANjTfO
-	WBkYfX/sKgytTTI9Qet8U/IAyYfbNDkjK/iE/WoHASivQit5UgYFH/87qIY5od1ck28lWaqigvM
-	iAbiegRcpEcaPWgWf65C79mB17NqhB0ike2avl3kAii0XEJhc1hA7T2aVRAzOKxTx9RtU=
-X-Received: by 2002:a05:620a:4052:b0:8ee:17ba:9eb1 with SMTP id af79cd13be357-8ee17babdbcmr108489285a.51.1776709617198;
-        Mon, 20 Apr 2026 11:26:57 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-15.dlp.protect.broadcom.com. [144.49.247.15])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-8b02ae87b06sm8286036d6.27.2026.04.20.11.26.56
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Apr 2026 11:26:57 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b9399d68111so370186266b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 11:26:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7VfrFoP"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ad21f437eeso22276415ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 11:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1776709616; x=1777314416; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eWPe8++bYX46RiubHBos5NK0oKztWZClINrpZVnlUMc=;
-        b=Pydp2RHlLgK/IX3geo2ZFS7Mu7b5F0e5LB5KYX6757FFW4D5CMruwTeP/V6WUs5mOJ
-         o7S6q6I5Vm+J6EwqysHnwcI3wAu/bdzziXS/7/APPJKMUfh0APU3i1f+aLU0lCnSqr9w
-         YNgcSADBDK8uc0rw67Opgb91qPf1+tCrQYywY=
-X-Received: by 2002:a17:907:7286:b0:ba5:bef2:2ab0 with SMTP id a640c23a62f3a-ba5bef232d4mr489878866b.20.1776709615490;
-        Mon, 20 Apr 2026 11:26:55 -0700 (PDT)
-X-Received: by 2002:a17:907:7286:b0:ba5:bef2:2ab0 with SMTP id
- a640c23a62f3a-ba5bef232d4mr489875666b.20.1776709614781; Mon, 20 Apr 2026
- 11:26:54 -0700 (PDT)
+        d=gmail.com; s=20251104; t=1776710829; x=1777315629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9zb1CzXElV/JafdZJDqAqdzrpLqJEbxaPbWiaVDaWpI=;
+        b=c7VfrFoPzfksxrVeKnfwPUcPAmNou4e30BlJP8q8rgwgTE7Km/f0qOvDPrg48NUD4A
+         Ym4ST+iPmDXhx106c+h9+yOATQxcAHbhkmYv5COGGsPnydF6P8KkVWWRFv09tU8cwOOQ
+         AH/nGvpXtlicD6RD60yjSU1dqv2/JefDTop/WAOv2DNGXuohlY50pYL65EMQobiPWn+A
+         smwJzNdlldSs0S2yxZLynHC1hElB0aOanRjrzhTdPVzcF1oFhG7M51QJm8Q2975g49Bx
+         Gx6ULK+NYFsQFd2uFvcTPGaiWntWRGabg3kYai0q4yz1sSkKGUoc4V/QoqVJvIOJHwJB
+         PQOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776710829; x=1777315629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9zb1CzXElV/JafdZJDqAqdzrpLqJEbxaPbWiaVDaWpI=;
+        b=pxYLGa1mCbL5RqYK+zJEaD/Z+Ad8CL3tLJ/9ji9zhm+/Xr/dzHqy95Y1FaDygufSdM
+         VlGfmHgWjuIelB5BITRH0oign3gxetSAd7pf/+I7hCtwFqhaTw/G+XtRcOZ8icVxlnIa
+         mLNdi+6DexeLYzAzfjp9bbc5GFRP4rO5aaD7jg6xi/fcAPdhFNUHrDa1QIHnfNkUYEZA
+         CSxpmF3eWaz+shvGWDWuA/eDQjec3bdk1xFlQxmMObeGZ+x5/Cr4W/DX+kEsNmureScY
+         M5my/RMLtQ5xzZ3vkeilTHRqksCptdhjyfnA6jokX3NBRSjRCXVCoNRERbtkHTSLkhI+
+         BFPw==
+X-Forwarded-Encrypted: i=1; AFNElJ9uQldYq9T4oEhAtrYqj7jCvDHskuZat24ztf6GpyFcN647JDkQPMKjwI4gaUc8EphP9uM2ZBEAV+ER2idkvxVJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YymlcnHdWpOP742lE83hjZ9x/Uuj9A6c6+7y3Rl95rRvFgUEzVu
+	abgHqDH0RjLSufOzZHeagYiX+893zgOnh8k81TR0fiRu6pJJQ3uaMrEN
+X-Gm-Gg: AeBDieuT7v1xXo7iaowZpI0nxkXguKQPJ+RH6k4l2ZCC7/T24xRIUC8wAwmA2K8dCQg
+	YqsWODNfEfI5OeeNGnaN7bL/sHTxio0iiT6esY5nUx3P4+g4pcf2XSZHruIQqz3WCltqRkXZlAE
+	agROkxP1H6iiRHEI9rdCoaEy+GuJfPxnkC3KIAgTHYi3WoEHpqpQSzHsv1VVrRf3zMrFMV6LjOd
+	fm2qbx5tcm6m6AyAk8+zvBalAhmcCwVU+ADk4hFzTOPXq1PDTt3qSOG36cSnRWeVzJnwhIpb5wI
+	/8iwcWCmn5fX2BRtdHbPwS70mdx4U5csUKXT6n4+21eDzbIq2NUwRTNJ8/hMC5uFdOQM3me7WW6
+	kGTKj2uIj+/Jkwv/S4xlz/WqAI/j1cfcT9DBoLu2rTvYEGo2gQrJgDeRVLLpA6j9QCd7l1PXCwX
+	FgqqwCGJgXoMcfshrpKFYLY8t3t2BiiSye7A0wY4vIkQ==
+X-Received: by 2002:a17:903:11c3:b0:2ae:5346:d4e6 with SMTP id d9443c01a7336-2b5f9ef78e0mr130724395ad.28.1776710828613;
+        Mon, 20 Apr 2026 11:47:08 -0700 (PDT)
+Received: from archlinux ([205.254.163.40])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab0d0f8sm103913295ad.47.2026.04.20.11.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2026 11:47:08 -0700 (PDT)
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	tycho@kernel.org,
+	suchitkarunakaran@gmail.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH] perf/lock: enable end-timestamp accounting for cgroup aggregation
+Date: Tue, 21 Apr 2026 00:16:56 +0530
+Message-ID: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260409221418.185343-1-mmayer@broadcom.com> <20260409221418.185343-2-mmayer@broadcom.com>
- <d9c9eddf-8f66-4757-98b4-16b4ba505f5e@linaro.org> <CAGt4E5tinak=M+301yDCE_R0qREcQvWY6uGQ9vPZjhfrCTxk7g@mail.gmail.com>
- <ee8e6379-6bb4-4a83-87d3-5ae30fc0e95c@linaro.org>
-In-Reply-To: <ee8e6379-6bb4-4a83-87d3-5ae30fc0e95c@linaro.org>
-From: Markus Mayer <mmayer@broadcom.com>
-Date: Mon, 20 Apr 2026 11:26:42 -0700
-X-Gm-Features: AQROBzDzrB56doXH0tRh7A1w1QmSJaKB2dN5yhxrMpNQeCQoaIzy1ijfgrMPZeA
-Message-ID: <CAGt4E5t4v3ztJPFRX-x0ygTk3cgnM_SwB_t+vvbNJ+_ifa=KHA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf build: fix "argument list too long" in second location
-To: James Clark <james.clark@linaro.org>
-Cc: Perf Mailing List <linux-perf-users@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Transfer-Encoding: 8bit
 
-On Tue, 14 Apr 2026 at 03:43, James Clark <james.clark@linaro.org> wrote:
->
-> On 11/04/2026 02:07, Markus Mayer wrote:
-> > On Fri, 10 Apr 2026 at 02:25, James Clark <james.clark@linaro.org> wrote:
-> >>
-> >> On 09/04/2026 11:14 pm, Markus Mayer wrote:
-> >>> Turns out that displaying "RM $^" via quiet_cmd_rm can also upset the
-> >>> shell and cause it to display "argument list too long".
-> >>>
-> >>> Trying to quote $^ doesn't help.
-> >>>
-> >>> In the end, *not* displaying the (potentially long) list of files is
-> >>> probably the right thing to do for a "quiet" message, anyway. Instead,
-> >>> let's display a count of how many files were removed. There is always
-> >>> V=1 if more detail is required.
-> >>>
-> >>>     TEST    linux/tools/perf/pmu-events/metric_test.log
-> >>>     RM      ...634 orphan file(s)...
-> >>>     LD      linux/tools/perf/util/perf-util-in.o
-> >>>
-> >>> Also move the comment regarding xargs before the rule, so it doesn't
-> >>> show up in the build output.
-> >>>
-> >>
-> >> I'm assuming this is just a cosmetic issue so it doesn't need a fixes
-> >> tag? And "upsetting the shell" doesn't cause a build failure?
-> >
-> > No. It's not just cosmetic. It absolutely DOES cause a build failure.
-> >
-> >  From the cover letter in this thread:
-> >
-> >    GEN     linux/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/extra-metricgroups.json
-> >    TEST    linux/tools/perf/pmu-events/metric_test.log
-> > make[5]: /bin/sh: Argument list too long
-> > make[5]: *** [pmu-events/Build:220: prune_orphans] Error 127
-> >
->
-> Ah in that case it should have a fixes: tag then. And it's worth putting
-> the actual build failure in the commit message IMO.
+update_lock_stat() handles lock contentions that start but never reach a
+contention_end event (e.g., locks still held when profiling stops), but
+previously treated LOCK_AGGR_CGROUP as a no-op due to missing cgroup
+context in userspace; fix this by adding a cgroup_id field to
+struct tstamp_data, recording it at contention_begin using
+get_current_cgroup_id() when aggr_mode == LOCK_AGGR_CGROUP, and using
+ts_data->cgroup_id to build the aggregation key in update_lock_stat(),
+matching the contention_end behavior in BPF and ensuring correct
+attribution of incomplete events.
 
-Unfortunately, it looks like the patch was already applied.[1] Is
-there anything I (or someone else) can do to fix up that commit
-message in the way you are suggesting?
+Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+---
+ tools/perf/util/bpf_lock_contention.c          | 4 ++--
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 ++
+ tools/perf/util/bpf_skel/lock_data.h           | 1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-Thanks,
--Markus
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index cbd7435579fe..1a5bd2ff8ee4 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -463,8 +463,8 @@ static void update_lock_stat(int map_fd, int pid, u64 end_ts,
+ 		stat_key.lock_addr_or_cgroup = ts_data->lock;
+ 		break;
+ 	case LOCK_AGGR_CGROUP:
+-		/* TODO */
+-		return;
++		stat_key.lock_addr_or_cgroup = ts_data->cgroup_id;
++		break;
+ 	default:
+ 		return;
+ 	}
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 96e7d853b9ed..d0e2cad02fa3 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -536,6 +536,8 @@ int contention_begin(u64 *ctx)
+ 	pelem->timestamp = bpf_ktime_get_ns();
+ 	pelem->lock = (__u64)ctx[0];
+ 	pelem->flags = (__u32)ctx[1];
++	if (aggr_mode == LOCK_AGGR_CGROUP)
++		pelem->cgroup_id = get_current_cgroup_id();
+ 
+ 	if (needs_callstack) {
+ 		u32 i = 0;
+diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+index 28c5e5aced7f..652e114e6b87 100644
+--- a/tools/perf/util/bpf_skel/lock_data.h
++++ b/tools/perf/util/bpf_skel/lock_data.h
+@@ -13,6 +13,7 @@ struct owner_tracing_data {
+ struct tstamp_data {
+ 	u64 timestamp;
+ 	u64 lock;
++	u64 cgroup_id;
+ 	u32 flags;
+ 	s32 stack_id;
+ };
+-- 
+2.53.0
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=97ab89686a9e
