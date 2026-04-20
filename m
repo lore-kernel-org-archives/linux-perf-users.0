@@ -1,130 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F88A2032D
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 02:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952833C532;
+	Mon, 20 Apr 2026 02:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776651264; cv=none; b=eUKp0byJcHZN+Ba3glAsZn4sYI/yy4I8xA1elYbIk+47CSgJ4y5prqhS5qedqyCgz/DpTaBeGvlUJ9sMJtMhSC32xxcVv3RxPlCFOZDJ+mF2a5Fc/hStN6QCcCOY4SepAvzGaRWUnTL09T4eegBbhRhR/o4RMgdRl6JHQd5Sxuc=
+	t=1776653411; cv=none; b=E2YBazrSm6qNDnU2ju9fpg3eG7TwPKWwx6oVbaeO0WymmOye0vhkcc7nNUNr+OrcrMvKDDQ5sHylS8niENTKBQFwcbzjJTeUhm2cEk0w6rTi8ME030Nl6fTaa8UmNYf2eefr/VFyJkLcPtLeIVs3YAweg4M1vZcBs4/MTUp/n3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776651264; c=relaxed/simple;
-	bh=+GnObtH4mnIFMxSJTvlPsmbPc3NfrCVIdMTBHQKQlxM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=F/uhYnItbvCkm+FpkJjQHCZKx+McUf6vFD+qevhzYBYqsiy2COp9GUz3JdEcGuAtqnXp2kET8bVbT9TW+Fgx94n8Da1b7bE7mhuHMqNkR6rWspEXlRQ+ZqvwpiF1vHg2PS1SdaoU/6rYws/T4xdC8WApkJSrMDIIQ3cXxsK43SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV3o/n/K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776653411; c=relaxed/simple;
+	bh=+eRofx/aTZs3332sRA6uS4ZL4OTUWvjaAUt6u9EgDfU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=t+tMmkZtS0kPoDpSAeZ4ILvQxg/vjjmyYsYigHO+PoYyCh0aYuLghiG8OLfSOHRM3YXg9AStR8Ob8ravljqx9pt2046vZiEy4cbKeehm85yYSNmSJ0osj+uRPPmkHPjTribIF+5aqwN5OlTT0d1kzqGcfc1Yr0/EP/3tyhMKpZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C1qibRK0; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV3o/n/K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C52C2BCAF;
-	Mon, 20 Apr 2026 02:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776651263;
-	bh=+GnObtH4mnIFMxSJTvlPsmbPc3NfrCVIdMTBHQKQlxM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=bV3o/n/K1D/5qdDg4G0JP3/jpTztmDPweQGFLLCGBoTP5btwU/svmWXUePa7SkP3q
-	 DBYTHSdlCvEjAfx8kw0CBrm0Hww6y24fHtjz2wz5Jwf1bdeYUOlep+dmlXGfZEosiP
-	 fVI0gTLFppS3csgj0V0smAakkb/uPe7RL5eZMpAD5xsMdoCL0LQkpwhiQZJ/+Pjsp4
-	 M1fB+WS/o82uGPqrp730EU/HL8EAGgt+9DnPxQj91k4OCRkvA4/Evl6drI1fBTaEDo
-	 +noMnXDAy61/yGUSpTa8QdOxl6naKvEUzamHrLvTWVJLJeXx7ZYVdUKdF4NGzT5DN2
-	 gT4SOmlPUn9cg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 23/58] perf python: Add LiveSession helper
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-24-irogers@google.com>
-References: <20260419235911.2186050-24-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 02:14:23 +0000
-Message-Id: <20260420021423.A3C52C2BCAF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C1qibRK0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776653410; x=1808189410;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+eRofx/aTZs3332sRA6uS4ZL4OTUWvjaAUt6u9EgDfU=;
+  b=C1qibRK0KukK/iblt0RsZKH+7W53MpFVUTGU7xJlNslurqYBsabQ82/w
+   j0kLQkukyPa5NGvs+iKXSy1w32HFdFAmUiuHOa9bRhGTzD38pfpGcSu1i
+   lWXgMv8GeDPxZFuoGfbmdc/GpBN4ndmNKE8ezl7c/r+WB2xYio/mwdqLm
+   wx5qTjprRbbJazJ7AirNqowhjKN2m4/l9/XwBbn54LQLHhCJqlSTrOMh8
+   6uNckdsUWqIy0GuLBQOldSGAgocn+uzjNWf/rbOVtKMUhaLNmqc0Ew1wn
+   E9Mvi0LqcasqzAkBjd52b4x9yg3reIuzzEvzZrEXeGFIigwg0MQUHQCsg
+   Q==;
+X-CSE-ConnectionGUID: vzMAAvvhSe+/IQMiQm4FSQ==
+X-CSE-MsgGUID: kjhSij7ISHOPSeXZ4c3kvA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="81442146"
+X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
+   d="scan'208";a="81442146"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2026 19:50:09 -0700
+X-CSE-ConnectionGUID: eIz9uAfjQEu8invxAzoqIQ==
+X-CSE-MsgGUID: RZAyYEh/TSOv3PySUrM2DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
+   d="scan'208";a="228907988"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Apr 2026 19:50:05 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 0/4] perf/x86/intel: Fix several bugs of auto counter
+Date: Mon, 20 Apr 2026 10:45:24 +0800
+Message-Id: <20260420024528.2130065-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 3 potential issue(s):
-- [Medium] File descriptors are leaked if `self.evlist.mmap()` raises an ex=
-ception.
-- [Medium] Events are not configured for sampling, preventing the generatio=
-n of `PERF_RECORD_SAMPLE` events.
-- [Medium] Unhandled `InterruptedError` during `evlist.poll()` causes the s=
-ession to crash.
---
+Changes:
+v1 -> v2:
+- Clear stale mask for all events (Sashiko, Patch 1/4)
+- Enable auto counter reload for DMR. (Patch 3/4)
+- Remove duplicated CFG_C MSR value tracking. (Patch 4/4)
 
-commit 124f0d8a2c7d1fd2c50503c9af92fd9cf4a5c8b5
-Author: Ian Rogers <irogers@google.com>
 
-perf python: Add LiveSession helper
+This small patch-set fixes 2 issues in auto counter reload support.
+- The stale ACR mask is not cleared before setting a new one. Patch 1/2
+  fixes this issue.
+- PMI is enabled by default for self-reloaded ACR events which causes
+  suspicious NMI warning. Patch 2/2 fixes this issue.
 
-This commit introduces the LiveSession class in tools/perf/python/perf_live=
-.py.
-It allows running callbacks for live events using perf.evlist and
-perf.parse_events, avoiding the need to fork a perf record process or use a
-perf.data file.
+Besides an ACR unit test is added into perf tests which would be posted
+in a separate session.
 
-> diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live=
-.py
-> new file mode 100755
-> index 0000000000000..81d92f720b586
-> --- /dev/null
-> +++ b/tools/perf/python/perf_live.py
-[ ... ]
-> +    def run(self):
-> +        """Run the live session."""
-> +        self.evlist.open()
-> +        self.evlist.mmap()
-> +
-> +        try:
+Tests:
 
-If self.evlist.mmap() raises an exception, will the file descriptors acquir=
-ed
-by self.evlist.open() be leaked?
+Run below ACR sampling commands on CWF, DMR, PTL and NVL (hybrid
+platforms), no issues are found.
 
-Since the try block begins after these calls, an exception in mmap() would
-cause the function to exit without reaching the finally clause that calls
-self.evlist.close().
+a. Non-PEBS ACR sampling
 
-Could the try block be expanded to include self.evlist.mmap() to ensure
-cleanup occurs on all exit paths?
+perf record -e '{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}' ~/test
 
-> +            while True:
-> +                # Poll for events with 100ms timeout
-> +                self.evlist.poll(100)
+b. PEBS ACR sampling
 
-Can this poll call raise an InterruptedError?
+perf record -e '{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}' ~/test
 
-The Python extension wraps the system poll() call. If it is interrupted by a
-non-fatal signal like SIGWINCH, it returns -1 with EINTR, which translates
-to an InterruptedError in Python.
 
-Since the except block below only catches KeyboardInterrupt, would this cau=
-se
-the live session to crash on normal signals instead of safely retrying?
+History:
+v1: https://lore.kernel.org/all/20260413010157.535990-1-dapeng1.mi@linux.intel.com/
 
-> +                for cpu in self.cpus:
-> +                    event =3D self.evlist.read_on_cpu(cpu)
-> +                    while event:
-> +                        if event.type =3D=3D perf.RECORD_SAMPLE:
 
-Will event.type ever equal perf.RECORD_SAMPLE with this setup?
+Dapeng Mi (4):
+  perf/x86/intel: Clear stale ACR mask before updating new mask
+  perf/x86/intel: Disable PMI for self-reloaded ACR events
+  perf/x86/intel: Enable auto counter reload for DMR
+  perf/x86/intel: Consolidate MSR_IA32_PERF_CFG_C tracking
 
-The LiveSession constructor initializes the event list using
-perf.parse_events(), which configures standard events as counting events
-(attr.sample_period =3D 0) by default.
+ arch/x86/events/intel/core.c | 37 ++++++++++++++++++++++++++----------
+ arch/x86/events/perf_event.h | 14 +++++++++++---
+ 2 files changed, 38 insertions(+), 13 deletions(-)
 
-Because self.evlist.config() is never called to enable sampling or set up
-PERF_SAMPLE_* fields, it seems the kernel will not generate
-PERF_RECORD_SAMPLE events. Could this cause the poll loop to time out
-indefinitely instead of invoking the callback?
 
-> +                            self.sample_callback(event)
-> +                        event =3D self.evlist.read_on_cpu(cpu)
-> +        except KeyboardInterrupt:
-> +            pass
-> +        finally:
-> +            self.evlist.close()
+base-commit: 9805ed3c91478b08a586861b874bd8b6a2fed648
+-- 
+2.34.1
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D23
