@@ -1,114 +1,130 @@
-Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1797140DFC7;
-	Mon, 20 Apr 2026 02:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F88A2032D
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 02:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776651061; cv=none; b=VQsDpwkxDHrwrOOtqGxyXYMFm8Jdedc+wIz6bJAbDETWVz1n7o6uYTeM1h5HGoEFjWPBzyJmDGPRg2IkTtq7Tr7A8mjuA2Godd88Lb7aBPAiGls0G8A0sUKXRhchGQD94ToD7m94Kg1RXUk0kku4yaRXFTzDFpTK83jC6TUHN2E=
+	t=1776651264; cv=none; b=eUKp0byJcHZN+Ba3glAsZn4sYI/yy4I8xA1elYbIk+47CSgJ4y5prqhS5qedqyCgz/DpTaBeGvlUJ9sMJtMhSC32xxcVv3RxPlCFOZDJ+mF2a5Fc/hStN6QCcCOY4SepAvzGaRWUnTL09T4eegBbhRhR/o4RMgdRl6JHQd5Sxuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776651061; c=relaxed/simple;
-	bh=XZMDY39SIKnjgr9AwOz4guH12QSe5xlaKf0Q6+yWohc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeXaFwLQNaepgAnoSOwzn1tIGaAqquX4ZisCGD4MlGIz59T97GtwiNlg6CS2hf++rjXLtQh6TaqhV6bI5HneZbNK4e2b8Noo1BYO+qVmrxZxHghFxBRnzJo15WMImPC4DcEHXqKwRoqZ951OrTdWdi3mjfNaGJXdF+aU2FYP078=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
-	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fzTTx2xMWz1YQpmD;
-	Mon, 20 Apr 2026 10:10:29 +0800 (CST)
-Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
-	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fzTTw3BqFz1YQpmD;
-	Mon, 20 Apr 2026 10:10:28 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp1.hygon.cn (Postfix) with ESMTPS id 29C42B53C;
-	Mon, 20 Apr 2026 10:10:25 +0800 (CST)
-Received: from SH-HV00110.Hygon.cn (172.19.26.208) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 20 Apr
- 2026 10:10:17 +0800
-Date: Mon, 20 Apr 2026 10:10:19 +0800
-From: Huang Shijie <huangsj@hygon.cn>
-To: Mateusz Guzik <mjguzik@gmail.com>
-CC: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<muchun.song@linux.dev>, <osalvador@suse.de>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>
-Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
-Message-ID: <aeWLCxru6cLWsxvQ@SH-HV00110.Hygon.cn>
-References: <20260413062042.804-1-huangsj@hygon.cn>
- <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+	s=arc-20240116; t=1776651264; c=relaxed/simple;
+	bh=+GnObtH4mnIFMxSJTvlPsmbPc3NfrCVIdMTBHQKQlxM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=F/uhYnItbvCkm+FpkJjQHCZKx+McUf6vFD+qevhzYBYqsiy2COp9GUz3JdEcGuAtqnXp2kET8bVbT9TW+Fgx94n8Da1b7bE7mhuHMqNkR6rWspEXlRQ+ZqvwpiF1vHg2PS1SdaoU/6rYws/T4xdC8WApkJSrMDIIQ3cXxsK43SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV3o/n/K; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV3o/n/K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C52C2BCAF;
+	Mon, 20 Apr 2026 02:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776651263;
+	bh=+GnObtH4mnIFMxSJTvlPsmbPc3NfrCVIdMTBHQKQlxM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=bV3o/n/K1D/5qdDg4G0JP3/jpTztmDPweQGFLLCGBoTP5btwU/svmWXUePa7SkP3q
+	 DBYTHSdlCvEjAfx8kw0CBrm0Hww6y24fHtjz2wz5Jwf1bdeYUOlep+dmlXGfZEosiP
+	 fVI0gTLFppS3csgj0V0smAakkb/uPe7RL5eZMpAD5xsMdoCL0LQkpwhiQZJ/+Pjsp4
+	 M1fB+WS/o82uGPqrp730EU/HL8EAGgt+9DnPxQj91k4OCRkvA4/Evl6drI1fBTaEDo
+	 +noMnXDAy61/yGUSpTa8QdOxl6naKvEUzamHrLvTWVJLJeXx7ZYVdUKdF4NGzT5DN2
+	 gT4SOmlPUn9cg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 23/58] perf python: Add LiveSession helper
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260419235911.2186050-24-irogers@google.com>
+References: <20260419235911.2186050-24-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 20 Apr 2026 02:14:23 +0000
+Message-Id: <20260420021423.A3C52C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
 
-On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
-> On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
-> >   In NUMA, there are maybe many NUMA nodes and many CPUs.
-> > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
-> > In the UnixBench tests, there is a test "execl" which tests
-> > the execve system call.
-> > 
-> >   When we test our server with "./Run -c 384 execl",
-> > the test result is not good enough. The i_mmap locks contended heavily on
-> > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have 
-> > over 6000 VMAs, all the VMAs can be in different NUMA mode.
-> > The insert/remove operations do not run quickly enough.
-> > 
-> > patch 1 & patch 2 are try to hide the direct access of i_mmap.
-> > patch 3 splits the i_mmap into sibling trees, and we can get better 
-> > performance with this patch set:
-> >     we can get 77% performance improvement(10 times average)
-> > 
-> 
-> To my reading you kept the lock as-is and only distributed the protected
-> state.
-> 
-> While I don't doubt the improvement, I'm confident should you take a
-> look at the profile you are going to find this still does not scale with
-> rwsem being one of the problems (there are other global locks, some of
-> which have experimental patches for).
-> 
-> Apart from that this does nothing to help high core systems which are
-> all one node, which imo puts another question mark on this specific
-> proposal.
-> 
-> Of course one may question whether a RB tree is the right choice here,
-> it may be the lock-protected cost can go way down with merely a better
-> data structure.
-> 
-> Regardless of that, for actual scalability, there will be no way around
-> decentralazing locking around this and partitioning per some core count
-> (not just by numa awareness).
-> 
-> Decentralizing locking is definitely possible, but I have not looked
-> into specifics of how problematic it is. Best case scenario it will
-> merely with separate locks. Worst case scenario something needs a fully
-> stabilized state for traversal, in that case another rw lock can be
-> slapped around this, creating locking order read lock -> per-subset
-> write lock -- this will suffer scalability due to the read locking, but
-> it will still scale drastically better as apart from that there will be
-> no serialization. In this setting the problematic consumer will write
-> lock the new thing to stabilize the state.
-> 
-I thought over again.
-I can change this patch set to support the non-NUMA case by:
-  1.) Still use one rw lock.
-  2.) For NUMA, keep the patch set as it is.
-  3.) For non-NUMA case, split the i_mmap tree to several subtrees.
-      For example, if a machine has 192 CPUs, split the 32 CPUs as a tree.
+Sashiko AI review found 3 potential issue(s):
+- [Medium] File descriptors are leaked if `self.evlist.mmap()` raises an ex=
+ception.
+- [Medium] Events are not configured for sampling, preventing the generatio=
+n of `PERF_RECORD_SAMPLE` events.
+- [Medium] Unhandled `InterruptedError` during `evlist.poll()` causes the s=
+ession to crash.
+--
 
-So extend the patch set to support both the NUMA and non-NUMA machines.
+commit 124f0d8a2c7d1fd2c50503c9af92fd9cf4a5c8b5
+Author: Ian Rogers <irogers@google.com>
 
-Thanks
-Huang Shijie
+perf python: Add LiveSession helper
 
+This commit introduces the LiveSession class in tools/perf/python/perf_live=
+.py.
+It allows running callbacks for live events using perf.evlist and
+perf.parse_events, avoiding the need to fork a perf record process or use a
+perf.data file.
+
+> diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live=
+.py
+> new file mode 100755
+> index 0000000000000..81d92f720b586
+> --- /dev/null
+> +++ b/tools/perf/python/perf_live.py
+[ ... ]
+> +    def run(self):
+> +        """Run the live session."""
+> +        self.evlist.open()
+> +        self.evlist.mmap()
+> +
+> +        try:
+
+If self.evlist.mmap() raises an exception, will the file descriptors acquir=
+ed
+by self.evlist.open() be leaked?
+
+Since the try block begins after these calls, an exception in mmap() would
+cause the function to exit without reaching the finally clause that calls
+self.evlist.close().
+
+Could the try block be expanded to include self.evlist.mmap() to ensure
+cleanup occurs on all exit paths?
+
+> +            while True:
+> +                # Poll for events with 100ms timeout
+> +                self.evlist.poll(100)
+
+Can this poll call raise an InterruptedError?
+
+The Python extension wraps the system poll() call. If it is interrupted by a
+non-fatal signal like SIGWINCH, it returns -1 with EINTR, which translates
+to an InterruptedError in Python.
+
+Since the except block below only catches KeyboardInterrupt, would this cau=
+se
+the live session to crash on normal signals instead of safely retrying?
+
+> +                for cpu in self.cpus:
+> +                    event =3D self.evlist.read_on_cpu(cpu)
+> +                    while event:
+> +                        if event.type =3D=3D perf.RECORD_SAMPLE:
+
+Will event.type ever equal perf.RECORD_SAMPLE with this setup?
+
+The LiveSession constructor initializes the event list using
+perf.parse_events(), which configures standard events as counting events
+(attr.sample_period =3D 0) by default.
+
+Because self.evlist.config() is never called to enable sampling or set up
+PERF_SAMPLE_* fields, it seems the kernel will not generate
+PERF_RECORD_SAMPLE events. Could this cause the poll loop to time out
+indefinitely instead of invoking the callback?
+
+> +                            self.sample_callback(event)
+> +                        event =3D self.evlist.read_on_cpu(cpu)
+> +        except KeyboardInterrupt:
+> +            pass
+> +        finally:
+> +            self.evlist.close()
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
+050-1-irogers@google.com?part=3D23
