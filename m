@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124382135AD
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F393A1C9
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 00:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776645708; cv=none; b=rq3pwxAL5eXIo4OvDIWUTc9tVHmjJpjsMHqzfEGwSHynBhDvJzadtoQMvSkoApc8bPK/47d45Y+e7C2RNiFnaWdzqSLEvxzToxKpoO83xEkGo4NmBMMXsYfgl8sTpmVsasNVEybgOdrl5mZ8ENEeTzpNzKIY1P0LBYm+VC1DcEw=
+	t=1776645754; cv=none; b=cimihPLd0D4wWY3QG6UGEAr52SYBa+X2AHI0OwbFdF9CnYiytyzWN+7mfDvhH7PKRX7ZpY15aJDUJ/Vwid/79ZE3JtCx9eDqElitEHvkg3elOmq8R+RB5PmwiPvbLCF+uOCCql8i0APWJd6IdFA99wpHKtF2b3lwWMJYmBqWzKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776645708; c=relaxed/simple;
-	bh=o7bYxv6U4DpMQBSz5hJPQFmeIU1puJDREeSWL+x8czw=;
+	s=arc-20240116; t=1776645754; c=relaxed/simple;
+	bh=5Oi0XFlYX29NLKN4pyGyeU6WguXiZYYWiPZULg3qMKU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=c0QwdBc5Z7XuZiHkUO7Ga6SB9mQzGjIUZehwq+X1oobD9B6wmCtTJbBUhzTUGZaFeaUhE/Gvpb14pSn9fLFHfaToRaF43rl4SR9nzLui5yyKzYkef6ZvUzPTItbjboOKTYvURl0ktga//jdC1TrF7i3Bt/yA5cNb2eVoeIcAQpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swlpW150; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=AXbij98z6T4nMR612Mn06PWOsGV8FA2C3YfEwAMNvqnt7jL5+8cIwqW/U7f9tUCoLgNhyLbAmgopNFGKGEyyrjMAB7FIUUe1AeUXW9dM8dkxNpC8+5yDkh7A6EDVMb6HiaUJ49a5H+957s5IuIWvhyCg8Yp8Mprjp+nLq1wLzFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QamUyTfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swlpW150"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91750C2BCAF;
-	Mon, 20 Apr 2026 00:41:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QamUyTfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12100C2BCAF;
+	Mon, 20 Apr 2026 00:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776645707;
-	bh=o7bYxv6U4DpMQBSz5hJPQFmeIU1puJDREeSWL+x8czw=;
+	s=k20201202; t=1776645754;
+	bh=5Oi0XFlYX29NLKN4pyGyeU6WguXiZYYWiPZULg3qMKU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=swlpW150c8OKI5jbkawZiV8X9cP/WFPwkCf2FXIaaFR3I3dqLYD1u88ADt5UNGjC5
-	 NknfdolaTJiEi8f5TGsyEnIfIlBjwkBjno/ESbcHDptW4f3rs31q3E0a2IN3X2i0pX
-	 wKpaasDdalwQdB3jGw1o7SHzG0xVIr2gnV38pFOpR4J8iNlAVqvg6BA2gtJLUCYVBv
-	 /O9uxLqOqgrojfEhhj8OUgc27/Um9yVQqMElsO+puTAWf/2TPk8BlrVkxzeyOHkXL2
-	 YEJPnhRMHkxO0GudpQd/0T3SlB1xS3AGSwrPOQuyzL3lt6BszKmmTuh8/W0Kw63Zs/
-	 J54TqP0M63H5w==
+	b=QamUyTfm1HqiFloM+gh/f7kOSXK+TnZtLnHKfvvaZ7EoRhhBDPTsTmyVtGUmj99Ig
+	 MF0GVXfh2ZooBixRHgRWAmh7m8HGScU5F/fI+DBWKvQ9WgLib2/8BZHh1Ubt81FxIN
+	 31RK05ZAJPFdgUVLzhLygAVInTeaD8gv3U51HJ/AxXTlSLIynmB5ZipPStVvL9nIni
+	 C7ZhE9m61rfhi3D45iAOVDo35Wve3LowsSMqNpEok6tyMWHx6CLvZ8+iKTCuDdw89U
+	 s7FQWewA3+HZNC/ONeq2ZyPB9QW3nDEJjVmoeBF9hsC9qALKf1zNb8Vng7jrM6SZkI
+	 A8ahmSnHkgVFw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 27/58] perf syscall-counts: Port syscall-counts to
- use python module
+Subject: Re: [PATCH v1 50/58] perf rwtop: Port rwtop to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260419235911.2186050-28-irogers@google.com>
-References: <20260419235911.2186050-28-irogers@google.com>
+In-Reply-To: <20260419235911.2186050-51-irogers@google.com>
+References: <20260419235911.2186050-51-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 00:41:46 +0000
-Message-Id: <20260420004147.91750C2BCAF@smtp.kernel.org>
+Date: Mon, 20 Apr 2026 00:42:33 +0000
+Message-Id: <20260420004234.12100C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,102 +44,102 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 4 potential issue(s):
-- [High] The script crashes with a TypeError when a thread lookup fails dur=
-ing 'for_comm' filtering.
-- [High] The script crashes with a TypeError if 'perf.syscall_name(id)' enc=
-ounters an unmapped syscall ID.
-- [High] The script crashes with an AttributeError on older kernels where t=
-he tracepoint field is 'nr' instead of '__syscall_nr'.
-- [Medium] The standalone script hardcodes the input trace file to 'perf.da=
-ta', breaking the ability to analyze arbitrarily named trace files.
+- [Medium] Loose substring matching for tracepoint names matches unrelated =
+syscalls and desynchronizes operation counts from byte counts.
+- [Medium] Hardcoded ANSI clear-screen escapes combined with event-time flu=
+shing breaks offline processing.
+- [Medium] Writes track requested bytes instead of actual bytes written, le=
+ading to incorrect accounting.
+- [Low] Error tracking dictionaries are populated but never used or display=
+ed.
 --
 
-commit 6f15d3f04b68eebb0fdc02fb0dd260ac9c6fdf6a
+commit 2f7b010334a549f6b163fe08533ebb5646479da4
 Author: Ian Rogers <irogers@google.com>
 
-perf syscall-counts: Port syscall-counts to use python module
+perf rwtop: Port rwtop to use python module
 
-This commit rewrites the tools/perf/scripts/python/syscall-counts.py script=
- to
-use the python module directly. This avoids the overhead of executing via p=
-erf
-script, improving execution performance.
+This commit ports the legacy Perl script rwtop.pl to a python script using
+the perf module in tools/perf/python. It uses a class-based architecture to
+periodically display system-wide r/w call activity, broken down by PID.
 
-> diff --git a/tools/perf/python/syscall-counts.py b/tools/perf/python/sysc=
-all-counts.py
+> diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
 > new file mode 100755
-> index 0000000000000..a2e0994ab7369
+> index 0000000000000..e895b34b71147
 > --- /dev/null
-> +++ b/tools/perf/python/syscall-counts.py
+> +++ b/tools/perf/python/rwtop.py
 
 [ ... ]
 
-> +def print_syscall_totals():
-> +    if for_comm is not None:
-> +        print(f"\nsyscall events for {for_comm}:\n")
-> +    else:
-> +        print("\nsyscall events:\n")
+> +        if "sys_enter_read" in event_name:
+> +            self._handle_sys_enter_read(sample, pid, comm)
+> +        elif "sys_exit_read" in event_name:
+> +            self._handle_sys_exit_read(sample, pid)
+> +        elif "sys_enter_write" in event_name:
+> +            self._handle_sys_enter_write(sample, pid, comm)
+> +        elif "sys_exit_write" in event_name:
+> +            self._handle_sys_exit_write(sample, pid)
+> +        else:
+> +            self.unhandled[event_name] +=3D 1
+
+Will this loose substring match catch unrelated syscalls like
+sys_enter_readv?
+
+If sys_enter_readv is caught, it lacks a count field, which raises an
+AttributeError in _handle_sys_enter_read() that is silently caught. But
+sys_exit_readv has a ret field, so _handle_sys_exit_read() will add to
+bytes_read without incrementing the read count.
+
+Does this lead to desynchronized operation counts from byte counts, and
+hide these unhandled variants from the unhandled events dictionary?
+
+[ ... ]
+
+> +    def _handle_sys_enter_write(self, sample: perf.sample_event, pid: in=
+t, comm: str) -> None:
+> +        try:
+> +            count =3D sample.count
+> +            self.writes[pid]["bytes_written"] +=3D count
+> +            self.writes[pid]["total_writes"] +=3D 1
+> +            self.writes[pid]["comm"] =3D comm
+> +        except AttributeError:
+> +            pass
 > +
-> +    print(f"{'event':<40} {'count':>10}")
-> +    print("---------------------------------------- -----------")
-> +
-> +    for id, val in sorted(syscalls.items(),
-> +                          key=3Dlambda kv: (kv[1], kv[0]), reverse=3DTru=
-e):
-> +        print(f"{perf.syscall_name(id):<40} {val:>10}")
+> +    def _handle_sys_exit_write(self, sample: perf.sample_event, pid: int=
+) -> None:
+> +        try:
+> +            ret =3D sample.ret
+> +            if ret <=3D 0:
+> +                self.writes[pid]["errors"][ret] +=3D 1
+> +        except AttributeError:
+> +            pass
 
-What happens if perf.syscall_name(id) returns None for an unmapped syscall
-ID?
+Does this code incorrectly track requested bytes instead of actual bytes
+written?
 
-Applying a width specifier (<40) to a NoneType object throws a TypeError,
-which will abort the output. Should there be a fallback mechanism, such as
-using the numeric ID when the name is unknown?
+For reads, bytes_requested and bytes_read are separated, but here
+bytes_written uses the requested count and ignores sample.ret on successful
+writes, which might overcount partial writes.
 
-> +def process_event(sample):
-> +    event_name =3D str(sample.evsel)
-> +    if event_name =3D=3D "evsel(raw_syscalls:sys_enter)":
-> +        id =3D sample.id
-> +    elif event_name.startswith("evsel(syscalls:sys_enter_"):
-> +        id =3D sample.__syscall_nr
+This isn't a bug, but it looks like the error tracking dictionaries are
+populated here and in _handle_sys_exit_read(), but never used or displayed
+in print_totals().
 
-On some older kernels and architectures, the tracepoint format field for
-syscalls is named nr instead of __syscall_nr.
+[ ... ]
 
-Will accessing sample.__syscall_nr raise an AttributeError in those
-environments? Is it possible to check for nr as a fallback?
+> +    def print_totals(self) -> None:
+> +        """Print summary tables."""
+> +        # Clear terminal using ANSI escape codes
+> +        print("\x1b[H\x1b[2J", end=3D"")
 
-> +    else:
-> +        return
-> +    if for_comm and session.process(sample.sample_pid).comm() !=3D for_c=
-omm:
+The commit message states this is "robust for file-based processing", but
+does the combination of event-time flushing and hardcoded ANSI clear-screen
+escapes break offline processing?
 
-If a thread lookup fails (for example, for short-lived processes or samples
-recorded before procfs synthesis completes), session.process() returns NULL
-and sets a Python TypeError.
-
-Can this uncaught exception bubble up and cause the script to crash?
-
-> +        return
-> +    syscalls[id] +=3D 1
-> +
-> +
-> +if __name__ =3D=3D "__main__":
-> +    ap =3D argparse.ArgumentParser()
-> +    ap.add_argument("comm", nargs=3D"?", help=3D"Only report syscalls fo=
-r comm")
-> +    args =3D ap.parse_args()
-> +    for_comm =3D args.comm
-> +    session =3D perf.session(perf.data("perf.data"), sample=3Dprocess_ev=
-ent)
-
-The previous implementation running under perf script automatically support=
-ed
-standard options like -i my_trace.data to override the input file.
-
-Since the file path is now hardcoded to perf.data, does this introduce a
-regression in usability by preventing the analysis of arbitrarily named
-trace files?
+When parsing an offline perf.data file, the processing happens at CPU speed,
+which will instantly clear the terminal for every interval and only leave
+the final output visible, or garble the output if piped.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260419235911.2186=
-050-1-irogers@google.com?part=3D27
+050-1-irogers@google.com?part=3D50
