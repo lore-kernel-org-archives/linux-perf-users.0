@@ -1,242 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862B339D6EC;
-	Tue, 21 Apr 2026 11:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776769811; cv=none; b=aonnwL/TRhl4kfo0IZI3oEQIxbhweYOsYi9an60DlcMpx9XmKk22jTLY6VPNfmgU0ibobnyebmEyZ5MwqR+8YDBM8N+UTfGxt+oJRjOQYoJ/TxO1O1gam3UahA7wcdUn5/Le+x4Tal3PmCYvjSrYVKuThAFnEz1vo5JKC8agdoo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776769811; c=relaxed/simple;
-	bh=cPk3mES7mCJ/WDcKqXzzjVByzo8p0Ai0Pd6KZm0mkoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qoR9n7Y8ITPTHbBEZ2XoTpy6Fvrs7a7vmEW1W0srqbxAt/tVJDfE18PPAjQCWet3385tIG9zf9q9MLbEj8YZLmPBNwNDT/7Ic/T9vXTZNUJSoRq3EuYgoRLq1VMgb59EstK+1uelwPEQtC/VulwodFSynN1XW1oGzo4Pi4j017A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KjYKwrus; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B0E3BD226
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 12:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776774927; cv=pass; b=AKYsL10hZkno3iZqSTKGJ3aIQkXRQigBL6pOmHV85aMJcbhGvz7waLfq8YVP9O0HZ8/rLRPc6j0Bt2rMp5zsbtRqOTcw24gnsWGiwYytYOrRvPeRmhr9CIOyrWgg95wAG7AVf1kCj5EFKCEnec4CtlY8sQ4KcTwnF2YppQLngQ4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776774927; c=relaxed/simple;
+	bh=vGQpb6xeRunUba6drZXCbVzcVDq6G+FXK09EM7ydFx4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZaNBI/b283qIZPNh9w1LFF/Hmy17pwWQnViDiU3Rx+Pj+5dULlsFw+xIaObf7/ELp7IZkx2eRIceDuQwgdztg9xYQPY/LM9Uvw+BSkAM1CfVygZpokgTygrGvBVE7zyeelvuRkP3Xql/RH4B17Gbtg39OcW90grhPgcOOCnZAdc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ok00lHc0; arc=pass smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KjYKwrus"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgouT1926392;
-	Tue, 21 Apr 2026 11:10:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=uCFhvG
-	MWp+E2OWU0REWyRzcUCWJ8WpxUycLDtmZuVvU=; b=KjYKwrusBhJunFsgWZREHp
-	tIPAvbv9q5ckhz0agqDyid1k1erwdz4nZo5vLeyKbIUg+3+BFkJF4sCZPoFL65bH
-	VbXfnsq9JEqKM1pbBwucKLZRGZkz2GnIsILlKlKYmz/ar7Ib2HQO8ClYGbVeGecl
-	hqT/hwTte+Q4Y+5m72qNHKYQLxug7+kh4keA7gpRkdTkbuO493CrIXfc7wH8ql9A
-	HSocE9CJInyN46gHOP5R9Kjt1ymxhQ/rNRBN1PHcUKq2u+PFihKcKWwXpvw9Q/Sp
-	uW4gCPI+2GvVzVEnkXxyb5TskOLsu/5eRc4gJdop6+cLqJS04QaBu1gm7Lcsu+BA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2nf3ykg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 11:10:07 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LB5WMe030287;
-	Tue, 21 Apr 2026 11:10:06 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dmpyy06g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 11:10:06 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LBA3ru46268698
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 11:10:03 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2C8052004B;
-	Tue, 21 Apr 2026 11:10:03 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED79A2004D;
-	Tue, 21 Apr 2026 11:10:02 +0000 (GMT)
-Received: from [9.52.199.37] (unknown [9.52.199.37])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Apr 2026 11:10:02 +0000 (GMT)
-Message-ID: <f00388eb-a3d9-4df2-8786-70b938e57a78@linux.ibm.com>
-Date: Tue, 21 Apr 2026 13:10:02 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ok00lHc0"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c76bde70ec9so1565987a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 05:35:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776774925; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MEOPw0jaY7vKM4FOrleERPZj0LOITOM7aTnVPCpVQGhfzhhp/MC6D+CSoOe4NQDNz+
+         mdv/qzbRo1kzkfBmUrg/UuQ0BCQ1Fxu2NSZVjk/qG1+AF4XShUS5+N97jnQauhWsOU/k
+         0fySKOsKkCxAJX1LL+ZontAkmRHaZ80ql6Sape5WxM+9Zw482ooOPFrM56EDTcFxCL1T
+         /F7SgpSQ/e+bTvqjNYKjJHxZuYUfSUr7WCgYiiod2qrnnIGmGnqVhO4Vj9Tdm9U1jK6Q
+         QCo/r6Btili98uZSPT1bCh1bp418hKIwmZizg/ZsWTuQb7ehs2mzqvyYb8bBMUgheXnI
+         PUgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=vGQpb6xeRunUba6drZXCbVzcVDq6G+FXK09EM7ydFx4=;
+        fh=exOB0J8UrkXBn5+/hebcDfMC9bGRg+KDHbyKWQuLvNE=;
+        b=TeoRh73gts7lo+qjtOr91QPIGxlbn62xigvNNfXej/rhYk+3TP7A/cInrZPM5Mu1Ao
+         ckvzxK7uFcpxilD5TuVjAd/tOMsHTlG4ANDwZeA8JimPUq1uXqxpxejHrAisco7ql2yI
+         VEprhCHC6QjlyveYgE3LWKLQNqTd+QjTeB4O8p5yzJnhnKGNfkKH+q5rbDXoiwSsGHAw
+         rMqw+ztoQJ8gHxCUsA1LqyQF27p0+xlN0uK1741aZNdamCcPBd4MbrTEqxD2kjRaUSrw
+         40ycmT4h90xFnUWVAY4GbGKtWFmZ4bwBQjsjRaXAw2qBl6MCTYoEzJ9ZYjwPEh248N/V
+         sHUw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776774925; x=1777379725; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vGQpb6xeRunUba6drZXCbVzcVDq6G+FXK09EM7ydFx4=;
+        b=ok00lHc0XmduvdNKYdPJvrkIAJht3bl8pm5v0sNfG1+1CoGEjxggUeGeB0JpXfCqzh
+         5OIH7dHuIawVLMTjwIIGeDRy+D7qXSCwfKNITfXn1Z3kC8FMV0qDgqSKwbHYxUQM8Al7
+         rrmPyj9XD0WVI+8/jpO+TG4aP2VKrKG3HJr4EfWXUQwQkFDFX0tWgJ/LKX6olRl/HY7u
+         6GW3xaWv9MHqsX8uL4WZ188CEjOLc21GAPARBFGeIX+Mc0o9jOaRQVadXOJhTIkgNeFk
+         q7xe5AI363zYjs9T+9YhNrZlA+6cT5mmQU1kEiDPKxxEGJHcznBiqr5ve27tGuafHZ6u
+         UBTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776774925; x=1777379725;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vGQpb6xeRunUba6drZXCbVzcVDq6G+FXK09EM7ydFx4=;
+        b=mY8rlpSE2KxU1j5AwneOhcYUSgAvzDyeMyIrwA92KaDOpMk+cCDnYSKyWSjNaz7Qw6
+         VQYvr0zsNtklyAp0Z8883cFcJoo+Fx/JwM7v0YY6le8DUgeW0hCyopBr6sdu1hI0e2wA
+         vjOKNe7y+b0pH9IJB0Ac1kaoI442yDj/afxYQCWwIzTCVAeBei0AVUsPSejg8hn8v/DY
+         S+TuTjT65kRrPtu5DJDiPwtVskAQLjYhELZEJiq4mG33KI+i5FwYQBwOf8v4LzgbywOU
+         EbEJH8pm+UnksHGL2muS1+SOKRN0kwM4jSdMSFe/BD3CQTdQvhmHYtxnn4877Imxo5Je
+         zYRA==
+X-Forwarded-Encrypted: i=1; AFNElJ8ED4v5aK2yCCdtCdujdrBg1jL7lJtKMkNHIsAmN1EEmmaJgHabqTtVTk+HoYNjNRJybZ0hngNad5fT28Gvu+a3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvDjzGSWBZsi3k2B8Z2YY50GaM+BOiMqSMvt0GxBOVzfmQrDml
+	KQ27uQ600C/TGiDKC4x6r8vzwR0HTbR/Mh7zZtwWYkT8rCwcoY3YXsrr/H7i5ZbG9CNDYcY38qk
+	68TqWCCLtaPSY4C+CMuEKB2YDGSJ5m1wwftR2IxxtGg==
+X-Gm-Gg: AeBDievIzuEB4ScbmnZsHqcJ5rLQvjRIPVgQKNY6dLa3X854+jH7oUdHKMxfbWFNz+F
+	w7nFg4ObHWJvvxtK4PFCp9J1VZyeSw9fqPC1MNX6eaUmFfOb4XUombb454YT8t+a+VcpRhoKmsu
+	tbaaKAJbCJIE4VDYphtjrpI3BhcprpVwj7lrFGAxxYxPCFakzMwmP3nPAfq+IZyhhLlQQ4i5fnK
+	cOzlNtUOd+3hl/uLStK+O5Z0vjJFVNHK3GIZX3nmcTJG/bM8w0oE9qIdxAh7NlIL8lw0sGEaOPI
+	WZAP68KUy/0Mts2QRA==
+X-Received: by 2002:a05:6300:218a:b0:39f:94cb:1bc with SMTP id
+ adf61e73a8af0-3a08d687dbamr19761416637.1.1776774925270; Tue, 21 Apr 2026
+ 05:35:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH Ping ] perf callchain: Handle multiple address spaces
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com
-References: <20260414124241.490185-1-tmricht@linux.ibm.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20260414124241.490185-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: SqFu4eD-lqQ1BL7_iby81zPXIM1sxIlc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDEwNyBTYWx0ZWRfX9eLBIpaXb+Yy
- HuYuDgGrv87FN44cUXNHy3i63Bv9Tq6TJjOjhOmr0D6xvA+FA0pb/0980NpWZpMPlaP3ObENTUh
- 0P5OGKCv0rqrsHav22oGX9WLizoX8Cr2fCoRnxAn4o1XOKGZ7l109E1Z4xetzXYL+GxhAMV2Snm
- SYkBBNbE4HJja8k8xR+kZX4wtRdVWNMBdbbWEeuoiqdkiA5A+GsYsCkm9UEZJwdd4jU2JT/SyWX
- VcIrFs29tbQ9f7UaX51swx5pfu0GXdFHwTvLbKuwwAfrzJGiT5ENPtecgZck0ZZ/pA5xwsfbSEL
- jq/oPrEA2KTnrjXRMEjULwrHmRqDLY22aR8zEUZ3oi352xgWyBabyx8BIHvosgwZgEPQto2WLFS
- EbHF7rrPCH4IinNY7ET2tCh6II94+n6K37/ewBdFxIn/AGikNc23I8ujrZ6H+nqvuL7T+R1mjAA
- 5OkhQBSjKciLvzy6Hjw==
-X-Proofpoint-GUID: SqFu4eD-lqQ1BL7_iby81zPXIM1sxIlc
-X-Authority-Analysis: v=2.4 cv=B7iJFutM c=1 sm=1 tr=0 ts=69e75b0f cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=xDvo_LaBMGlJbYMeWJQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-21_02,2026-04-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 spamscore=0 impostorscore=0 adultscore=0
- bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604210107
+From: Zw Tang <shicenci@gmail.com>
+Date: Tue, 21 Apr 2026 20:35:14 +0800
+X-Gm-Features: AQROBzCLGQh41tCx9CrHdN7_ys9WFl9T3wGnYz6BKTQR2WXmewF3VbD-7EcWDxE
+Message-ID: <CAPHJ_VL11XkFkLj5P7zT2CsRkTH7Xb9Vyxpdh-tGRr-4YY5dUg@mail.gmail.com>
+Subject: BUG: soft lockup in run_timer_softirq
+To: anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Friendly ping...
+Hi,
 
-On 4/14/26 14:42, Thomas Richter wrote:
-> perf test 'perf inject to convert DWARF callchains to regular ones'
-> fails on s390. It was introduced with
-> commit 92ea788d2af4 ("perf inject: Add --convert-callchain option")
-> 
-> The failure comes the difference in output. Without the inject script to
-> convert DWARF the callchains is:
->  # ./perf record -F 999 --call-graph dwarf -- perf test -w noploop
->  # ./perf report -i perf.data --stdio --no-children -q \
-> 					 --percent-limit=1 > /tmp/111
->  # cat /tmp/111
->     99.30%  perf-noploop  perf               [.] noploop
->             |
->             ---noploop
->                run_workload (inlined)
->                cmd_test
->                run_builtin (inlined)
->                handle_internal_command
->                run_argv (inlined)
->                main
->                __libc_start_call_main
->                __libc_start_main_impl (inlined)
->                _start
->  #
-> 
-> With the inject script step the output is:
->  # ./perf inject -i perf.data --convert-callchain -o /tmp/perf-inject-1.out
->  # ./perf report -i /tmp/perf-inject-1.out --stdio --no-children -q \
-> 		--percent-limit=1 > /tmp/222
->  # cat /tmp/222
->     99.40%  perf-noploop  perf               [.] noploop
->             |
->             ---noploop
->                run_workload (inlined)
->                cmd_test
->                run_builtin (inlined)
->                handle_internal_command
->                run_argv (inlined)
->                main
->                _start
->  # diff /tmp/111 /tmp/222
->  1c1
->  <     99.30%  perf-noploop  perf               [.] noploop
->  ---
->  >     99.40%  perf-noploop  perf               [.] noploop
->  10,11d9
->  <                __libc_start_call_main
->  <                __libc_start_main_impl (inlined)
->  #
-> 
-> The difference are the symbols __libc_start_call_main and
-> __libc_start_main_impl.
-> 
-> On x86_64, kernel and user space share a single virtual address space,
-> with the kernel mapped to the upper end of memory. The instruction
-> pointer value alone is sufficient to distinguish between user space
-> and kernel space addresses. This is not true for s390, which uses
-> separate address spaces for user and kernel. The same virtual address
-> can be valid in both address spaces, so the instruction pointer value
-> alone cannot determine whether an address belongs to the kernel or
-> user space. Instead, perf must rely on the cpumode metadata derived
-> from the processor status word (PSW) at sample time.
-> 
-> In function perf_event__convert_sample_callchain() the first part
-> copies a kernel callchain and context entries, if any.
-> It then appends additional entries ignoring the address space
-> architecture. Taking that into account, the symbols at addresses
-> 
->    0x3ff970348cb __libc_start_call_main
->    0x3ff970349c5 __libc_start_main_impl
-> 
-> (located after the kernel address space on s390) are now included.
-> 
-> Output before:
->  # ./perf test 83
->  83: perf inject to convert DWARF callchains to regular ones : FAILED!
-> 
-> Output after:
->  # ./perf test 83
->  83: perf inject to convert DWARF callchains to regular ones : Ok
-> 
-> Question to Namhyung:
-> In function perf_event__convert_sample_callchain() just before the
-> for() loop this patch modifies, the kernel callchain is copied,
-> see this comment and the next 5 lines:
->    /* copy kernel callchain and context entries */ 
-> Then why is machine__kernel_ip() needed in the for() loop, when
-> the kernel entries have been copied just before the loop?
-> 
-> Note: This patch was tested on x86_64 virtual machine and succeeded.
-> 
-> Fixes: 92ea788d2af4 ("perf inject: Add --convert-callchain option")
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/arch/common.c    | 4 +++-
->  tools/perf/builtin-inject.c | 3 ++-
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-> index 21836f70f231..ad0cab830a4d 100644
-> --- a/tools/perf/arch/common.c
-> +++ b/tools/perf/arch/common.c
-> @@ -237,5 +237,7 @@ int perf_env__lookup_objdump(struct perf_env *env, char **path)
->   */
->  bool perf_env__single_address_space(struct perf_env *env)
->  {
-> -	return strcmp(perf_env__arch(env), "sparc");
-> +	const char *arch = perf_env__arch(env);
-> +
-> +	return strcmp(arch, "s390") && strcmp(arch, "sparc");
->  }
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index f174bc69cec4..6ab20df358c4 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -438,7 +438,8 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
->  
->  	node = cursor->first;
->  	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
-> -		if (machine__kernel_ip(machine, node->ip))
-> +		if (machine->single_address_space &&
-> +		    machine__kernel_ip(machine, node->ip))
->  			/* kernel IPs were added already */;
->  		else if (node->ms.sym && node->ms.sym->inlined)
->  			/* we can't handle inlined callchains */;
+I am reporting a soft lockup issue triggered by a syzkaller reproducer on
+Linux 7.0.0-08391-g1d51b370a0f8.
+
+The system gets stuck with CPU#1 spinning in the timer softirq path for more
+than 22 seconds. The lockup is observed in run_timer_softirq(), with the
+interrupt stack showing the CPU stuck in __run_timer_base.part.0(). The
+reproducer repeatedly invokes perf_event_open() with crafted
+perf_event_attr values, so this looks like a timer softirq stall likely
+triggered by the perf event subsystem.
+
+Reproducer:
+C reproducer: pastebin.com/raw/Rghf0nF6
+console output: pastebin.com/raw/rWkVMZF2
+kernel config: pastebin.com/raw/NSpXqAz9
+
+Kernel:
+HEAD commit: 1d51b370a0f8
+git tree:
+kernel version: 7.0.0-08391-g1d51b370a0f8 #1 PREEMPT(lazy) (QEMU)
+
+The observed crash log is:
+
+watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [repro:684]
+CPU: 1 UID: 0 PID: 684 Comm: repro Tainted: G B D W N
+7.0.0-08391-g1d51b370a0f8 #1 PREEMPT(lazy)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
+1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:_raw_spin_unlock_irq+0x2b/0x40
+
+Call Trace:
+
+__run_timer_base.part.0+0x6e4/0xb10
+? call_timer_fn+0x590/0x590
+? __sysvec_apic_timer_interrupt+0x2d6/0x3a0
+run_timer_softirq+0x16c/0x1e0
+handle_softirqs+0x195/0x7f0
+? __hrtimer_rearm_deferred+0x1fd/0x580
+irq_exit_rcu+0x141/0x1c0
+sysvec_apic_timer_interrupt+0x70/0x80
 
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+asm_sysvec_apic_timer_interrupt+0x1a/0x20
+finish_task_switch+0x1e5/0x8e0
+__schedule+0x11b9/0x4a20
+preempt_schedule_common+0x2f/0x50
+preempt_schedule_thunk+0x16/0x30
+_raw_spin_unlock+0x2e/0x30
+do_wp_page+0xb4a/0x3c60
+__handle_mm_fault+0x1ac9/0x2ab0
+handle_mm_fault+0x40f/0xd90
+do_user_addr_fault+0x6be/0x1970
+exc_page_fault+0xb0/0x180
+asm_exc_page_fault+0x26/0x30
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+The reproducer mainly performs repeated perf_event_open() calls with unusual
+attribute combinations. Based on the stack, the visible stall point is in the
+timer softirq path rather than in the userspace fault path. My current guess is
+that some timer callback associated with perf events gets the CPU stuck inside
+__run_timer_base.part.0().
 
-Geschäftsführung: David Faller
+Please let me know if I should provide a minimized reproducer or any additional
+debugging information.
 
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks.
