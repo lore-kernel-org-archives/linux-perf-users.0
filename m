@@ -1,65 +1,66 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F003D7D8D
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 14:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D9D3D75DC
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 14:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776781213; cv=none; b=p+LNI2lM9y8Hy9ovsdlMK+xJaZvEhArYsW0Tce3LSPX66kij17JhgezlC4ZSTYCX3SB1up1Is8QNwSg8TDim6DmtJf1UMGxlCOKhbmynQf+USOGquNPjth7j7aX1u5wtnfYrmnODj4U4TiNxVIqhgjjUb8jES0jUmS2xskz1dY8=
+	t=1776781993; cv=none; b=A6rL+1kitOod3KHLH/2TlKNz/ZQygBf+D6ZxCgrQ9jo3PbcLSuUeleVCeY/sKMjIZungVghKPa5NAbDWo5r53tpCMOPVadHxrg/hivsu8txkKpcO/NqGzlR1inJ9A8OnfBoZ+7J/fIY9zCP3uPmMTpnaVGBYQeo91Z4xLDip6HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776781213; c=relaxed/simple;
-	bh=5IB9lqw+mz6Tskyz56EWlWJxPelFuW+MU16QzNSfeRs=;
+	s=arc-20240116; t=1776781993; c=relaxed/simple;
+	bh=IHRvS3C1jeZEyoYmpFk9W8/Od1wo6/pY6I19NPtYnYk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSl08vPYnzLKuw8lS9KVDtx0FB2yU+LFF7Le1uu5NBJVJvJVkbbpJEq4GumSgaD2gdM8dg2u66aiwYEj0hE/SgskS4MtzL5O2joH6gv9btJ2Wux1XqigGp5d9yCgMit7iKdzBaRIWUmuqbdJ/5y7fDoC76PNr0ttgv5FHrRilgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jk5jK2dj; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:Content-Type; b=P3f3TcFBltRn+FesEXgBWB5zxRWiAKJ/lNygKxtJMeCtez0Tix0yyIJpKAcnP53eQkThTXUcvxhJvf2XfXMT4CKz2TYTvrzbXDW4Xq+cbKymhHkY3axDvHu+tg9EvweMZxTjbeA9ECoqj+Yz9dtkZa/OFsxEiRKx9qiFjqnWKAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nXpvdFER; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jk5jK2dj"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488a9033b2cso49337485e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 07:20:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nXpvdFER"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4891f625344so24690035e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 07:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776781210; x=1777386010; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1776781990; x=1777386790; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9gWWMZ/XGb+roMC5rDdb0/e8GJ+Anq2iEJhqHT77U8c=;
-        b=jk5jK2djtxuFJ2tTg0nN6FqNmD/GaeVmZQGlx7IKcfUE4Zbq3ZKmGeIemW5be+c9mg
-         kEtjqtdjYmhq/jJnHPBnH66Tpgdd1fcznk68ahS06I6Ji7RhwIJal4TMuqKdM85vzIvu
-         JQ4DQUSbqbuejOLhd62MLNdvsAPNrwGFLjNPIW37VR6BYCHicjJbnOxloipSOz2Dj/yt
-         lpCgjGDO/MYo1pf5Xl2pzQX3n4lJyPHMYzyLHwNnJgBS1RhlHHS06hPSrDU3g8tjoNTe
-         ZrGJyVl9rxKEyQA4bbI7OOXO9ZHSZV7/xCsY3kn2x7FTXMiHZrx07kXvvLEfq73PyONU
-         lk3Q==
+        bh=I86X5f7o1KhxjdDA+yrUKD5IZ9a2fkcl2651mUvpB2I=;
+        b=nXpvdFER/OhwcnXMfQq8af9GCjkxKH4winTg0zM2fmCAeZ/ww2fA6BlZJm1Faap2ye
+         G+het7+WI4piQUP5A0SamWz1orXPPMToRydfUAsQv5vsF6IbtEPmL06l4Jrc+96xFSBu
+         EmQRFKoBzj2hxJBNaNHAwWxnYzsB67NGWcuJDfhj3POa1dtzbQ5LQpQW0L/k9CgNv28U
+         ygdfPAes680JdwslRsUZ87NoeSOV1HbTchZQq11PItb6n2B2ou/DAAwW2yCn5dfVfCnR
+         qZ3NB8M09VP4M8OxDqivx/wcCQPwRv1QwNQsqc2+fAJtsVi3FPHXKebmmijh23N0bcXV
+         Zqeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776781210; x=1777386010;
+        d=1e100.net; s=20251104; t=1776781990; x=1777386790;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9gWWMZ/XGb+roMC5rDdb0/e8GJ+Anq2iEJhqHT77U8c=;
-        b=OVfw+fdJi5SwVbGvKJvEiMXOGJzZk8dx0fYevh5B1fVuKBOkpCrjzs6HOWZoWp9bBg
-         3m+Ifc0fxyKdrqWssE2hpUGhUfZFXnPGY923LZcAJyOo/f6Ti8pmxXsS6eHQwgt/mmTX
-         JDiDOL6+nofoPrKYx3i2L7LYSAGE0pXRrWUoQ2Sc0bKE4hpNHmnqijxC5ahBlm4ppLh+
-         eaJ2W+qS9U9sFJqu3g7ps15csznWR2DWXS9yuE4DUFvrLLlFH/+zDsDx/X65R7+LsqIj
-         Wc+kzdYNpIEPMKpDRH3uIL8X7pEcCYuOPr5x19ISbIreWgiRsgfVmFxt78tQrsIJK8mV
-         exNw==
-X-Gm-Message-State: AOJu0YwWcg8pOokGdNhbeym8XXG2NEHoQ+MnE0XgZXvGOPoLhanw9iWD
-	+Wt6TSmbhuZ+pVCZBawrxXg7qKBQXj28uZrittwi2SR8Nx9pAq/cMs7Cpt7bgZv4ikc=
-X-Gm-Gg: AeBDievzm3PqBZk9VsiwBGxkuyeI6GjFMAn3DfIgOrovNbpq2CyhCTaLGK3MRbZtxuF
-	lhRL+IhQceQhpIsJcrUbydgBITzprP5KcZKZtp7gN4+7xF3qqFZcyJV4Yb9vtQ37q7u4bREaAQr
-	3uZ114OaofesDu6kjH13rEVdywyNTsXrdmfkVzSwHkOFYPQG42tcSBKPxs0EoKDz+5qlo3RoBWk
-	rFDizjFmKJO9CGhk2oKYPlALDp4Z4RQGkwNK/0d5aLUgZntaHOIzM/U5rWhrT9p/4+XOp8sYrG/
-	WSU7yxp9qZ9/rJQn+/lVn1ZXHDz3Z5s9okx0ZpN2+8UkdZhdQAZdxXdH+KEXP50uzQotrB70Qq0
-	SpPCfyS3twupSnPokt784/MXM5KBOYgLR/rz3EisIVERksICTSC5s2CMvVvFdWxgNVmO5pSl0Hh
-	DXaAfiNhY/ogcxoOd7lSn2G8GLykz5rjOfncNcW4Dm688=
-X-Received: by 2002:a05:600c:1d86:b0:48a:53ea:1405 with SMTP id 5b1f17b1804b1-48a53ea14f5mr68676215e9.12.1776781210113;
-        Tue, 21 Apr 2026 07:20:10 -0700 (PDT)
+        bh=I86X5f7o1KhxjdDA+yrUKD5IZ9a2fkcl2651mUvpB2I=;
+        b=Kc6Mn9sTrF5zqaQTcFJ7o7+L4/zFLmkUBGwXoKN1hZmWKLh1uCdjzxQaVpnxxrB3lA
+         4PgpCCGHrjyNbkH6Y9baYdRh02earIPCWr9u2J6DxwEwm66W0xAgdruemoE+67kbVWN7
+         06GdzW6+rTOc6c/skKdlzV7udmWc+t2GrRk5PshvvTe3EtN4JugR7/Ze+3CceBYCbHIZ
+         zzcPPq2335FWEQ8E4CmZ8vgtHQAu+0Kp6bkOdUBgqQORo6YObLC0Hfg2LBd9flKBjh+q
+         yVZmpm12TOl+wihwO6v8aPwquGTk55lLRJ9HDYAWFmkX98fTsRSNvUrFcbjoi6poQcei
+         WNRw==
+X-Forwarded-Encrypted: i=1; AFNElJ9T8Xj88qFQYQf6y1X4YVGHKW3dyy6LxFqtUGVNiV6j/Q1jI2XvITz2O5XqjBwrCVm+n2lI3bQ/S76+mIWT6gUe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTrucvzAFTygJ1CZwoXtkshaQ+hUMCz9et3Ktzp2DUqB1mvmMR
+	5ffm+qvPcO8KdkeTnL2/aMl4Ilh+v9L8VnK0TnsHFpxPoxBlu7T9ZSC360UI7xLOBUE=
+X-Gm-Gg: AeBDiesRQ68orJDIZbauGknELu+cY+NztoTGxxCtgIZWlYAYOvueq+IjZHw8e8PyGTy
+	n+Nw4/58UM2auhEV291IoDlGEIeKeH/V7TS4zCihDAIVqSXM5gntixpWKaE0xJiqG2n9uJdXemu
+	bYoHqj2iWLDrOXg5xZoLZgG9YZDr2lCXzb7Y28DhR3gJuP8cmmfKhg4b965j6I9MlH84P8XTH6k
+	0XFiibjvJIR5jTAxJIFn7wfJhuntSzmzP0ePR9IoxLhqyacYO3X1JDBhzqIK9OwBrYN4CziHNIr
+	PDUbADbGw9R7sUj52dPUVOp9qG6gO8peIwzOus8xu9vdUYI2c9g0SAMP78PXorwRvzbV8x+5wES
+	oSJhm6aCi4Zj85bZBA7nPnbY7qWaFCzxqROeBLfPpmeiha9GXR9olCw7qKZbth2BXRFKr7PCbU+
+	Iav02R3BAjbN8d1zmFxRzf0NX5T1rmreAi0cQg0HPHBYw=
+X-Received: by 2002:a05:600c:33a4:b0:489:1abb:5559 with SMTP id 5b1f17b1804b1-4891abb574amr73260305e9.5.1776781989776;
+        Tue, 21 Apr 2026 07:33:09 -0700 (PDT)
 Received: from [192.168.178.64] ([84.246.200.167])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc1393f5sm348999685e9.9.2026.04.21.07.20.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc0f82bbsm621187595e9.3.2026.04.21.07.33.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2026 07:20:09 -0700 (PDT)
-Message-ID: <98ddaa65-747a-4b3e-9f72-05b90fc4eadb@linaro.org>
-Date: Tue, 21 Apr 2026 15:20:08 +0100
+        Tue, 21 Apr 2026 07:33:09 -0700 (PDT)
+Message-ID: <d350c96d-8a1f-47cb-bdc2-355ca0dfa2c1@linaro.org>
+Date: Tue, 21 Apr 2026 15:33:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,119 +68,62 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf pmu: Skip test on Arm64 when #slots is zero
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <20260410-perf_fix_pmu_metrics_test-v2-1-61826ab3ca8b@arm.com>
+Subject: Re: [PATCH] perf build-id: Fix wrong return value checking
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20260420180858.129075-1-namhyung@kernel.org>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260410-perf_fix_pmu_metrics_test-v2-1-61826ab3ca8b@arm.com>
+In-Reply-To: <20260420180858.129075-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/04/2026 12:13, Leo Yan wrote:
-> Some Arm64 PMUs expose 'caps/slots' as 0 when the slot count is not
-> implemented, tool_pmu__read_event() currently returns false for this,
-> so metrics that reference #slots are reported as syntax error.
+On 20/04/2026 19:08, Namhyung Kim wrote:
+> The {sysfs,filename}__snprintf_build_id() both return the actual length
+> of build-ID.  But in their fprintf counterparts check with sbuild_id
+> length which contain a terminating NUL bytes.  So they cannot match.
 > 
-> Since the commit 3a61fd866ef9 ("perf expr: Return -EINVAL for syntax
-> error in expr__find_ids()"), these syntax errors are populated as
-> failures and make the PMU metric test fail:
+> This resulted in perf buildid-list -k prints nothing.  With this fix,
+> it can show the following result.
 > 
->      9.3: Parsing of PMU event table metrics:
->      --- start ---
->      ...
+>    $ perf buildid-list -k
+>    9524074000cb36cf2559a5b52f0555dab47da553
 > 
->      Found metric 'backend_bound'
->      metric expr 100 * (stall_slot_backend / (#slots * cpu_cycles)) for backend_bound
->      parsing metric: 100 * (stall_slot_backend / (#slots * cpu_cycles))
->      Failure to read '#slots'
->      literal: #slots = nan
->      syntax error
->      Fail to parse metric or group `backend_bound'
-> 
->      ...
->      ---- end(-1) ----
->      9.3: Parsing of PMU event table metrics    : FAILED!
-> 
-> This commit introduces a new function is_expected_broken_metric() to
-> identify broken metrics, and treats metrics containing "#slots" as
-> expected broken when #slots == 0 on Arm64 platforms.
-> 
-> Fixes: 3a61fd866ef9 ("perf expr: Return -EINVAL for syntax error in expr__find_ids()")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Fixes: fccaaf6fbbc59910e ("perf build-id: Change sprintf functions to snprintf")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 
 > ---
-> Changes in v2:
-> - Checked pm->metric_expr instead of pm->metric_name and removed the
->    negation before strstr() suggested by sashiko.
-> - Link to v1: https://lore.kernel.org/r/20260410-perf_fix_pmu_metrics_test-v1-1-18a5d80f71b6@arm.com
-> ---
->   tools/perf/tests/pmu-events.c | 24 ++++++++++++++++++++++--
->   1 file changed, 22 insertions(+), 2 deletions(-)
+>   tools/perf/builtin-buildid-list.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index a997168621688007c85495e2d9f6f459c2471516..b1609a7e1d8c9427e6bf9500380e8aac6167c7fa 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -15,6 +15,7 @@
->   #include "util/expr.h"
->   #include "util/hashmap.h"
->   #include "util/parse-events.h"
-> +#include "util/tool_pmu.h"
->   #include "metricgroup.h"
->   #include "stat.h"
+> diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+> index a91bbb34ac946360..8ad39ff9a4b8a4b4 100644
+> --- a/tools/perf/builtin-buildid-list.c
+> +++ b/tools/perf/builtin-buildid-list.c
+> @@ -61,7 +61,7 @@ static int sysfs__fprintf_build_id(FILE *fp)
+>   	int ret;
 >   
-> @@ -817,6 +818,26 @@ struct metric {
->   	struct metric_ref metric_ref;
->   };
+>   	ret = sysfs__snprintf_build_id("/", sbuild_id, sizeof(sbuild_id));
+> -	if (ret != sizeof(sbuild_id))
+> +	if (ret != sizeof(sbuild_id) - 1)
+>   		return ret < 0 ? ret : -EINVAL;
 >   
-> +static bool is_expected_broken_metric(const struct pmu_metric *pm)
-> +{
-> +	if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
-> +	    !strcmp(pm->metric_name, "M3"))
-> +		return true;
-> +
-> +#if defined(__aarch64__)
-> +	/*
-> +	 * Arm64 platforms may return "#slots == 0", which is treated as a
-> +	 * syntax error by the parser. Don't test these metrics when running
-> +	 * on such platforms.
-> +	 */
-> +	if (strstr(pm->metric_expr, "#slots") &&
-> +	    !tool_pmu__cpu_slots_per_cycle())
-> +		return true;
-> +#endif
-> +
-> +	return false;
-> +}
-> +
->   static int test__parsing_callback(const struct pmu_metric *pm,
->   				  const struct pmu_metrics_table *table,
->   				  void *data)
-> @@ -852,8 +873,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+>   	return fprintf(fp, "%s\n", sbuild_id);
+> @@ -73,7 +73,7 @@ static int filename__fprintf_build_id(const char *name, FILE *fp)
+>   	int ret;
 >   
->   	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name);
->   	if (err) {
-> -		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
-> -		    !strcmp(pm->metric_name, "M3")) {
-> +		if (is_expected_broken_metric(pm)) {
->   			(*failures)--;
->   			pr_debug("Expected broken metric %s skipping\n", pm->metric_name);
->   			err = 0;
-> 
-> ---
-> base-commit: 4cf1f549bbcdfea9c20df52994bb342677472dcd
-> change-id: 20260408-perf_fix_pmu_metrics_test-73c4dedc8585
-> 
-> Best regards,
+>   	ret = filename__snprintf_build_id(name, sbuild_id, sizeof(sbuild_id));
+> -	if (ret != sizeof(sbuild_id))
+> +	if (ret != sizeof(sbuild_id) - 1)
+>   		return ret < 0 ? ret : -EINVAL;
+>   
+>   	return fprintf(fp, "%s\n", sbuild_id);
 
