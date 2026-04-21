@@ -1,209 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FFB29B764;
-	Tue, 21 Apr 2026 04:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B287D1C5F1B
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 05:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776747593; cv=none; b=WFR62quY3oj0XCbk2oj6kfqiMZ6jNKZPAIzg0kdy6eQXsAA7NYLRY94W5kRjYdmlTZDKgmctelZEi/Um/un9neab5JkIQ391wNMxJ6j7B3EuO+cKxDZuL/mv+szR4SEo4ywrjtC4c8NNy7PSSvEzjQti2RwS8IwyuP1R7tSxL9Y=
+	t=1776747834; cv=none; b=HvfbYOmldpcN4C0eRnQzxVwAfbCRd+i971Hx3oCodIdTxoEZvIAl/mPtBw97D0JUoDLUwy1SPf6d88gGKPlYnjnTpGwuAzKh/X56gzcSAlrVHte6OCX/jBIrVqw7yXLRCw3u319etT19wnntNU9ROeoBp2f/c0DhF9Ms9S8Cz6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776747593; c=relaxed/simple;
-	bh=pMEhY5pchgg3oj5SAPs5y6BH35Qkhkz4ykk6XhyYFEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cwDTTpvo3/uWOJSyZbiFA7OxMlGus2KC6p8oVK9RPO57uCHlk3zRxSmaygld/MtPkISTvwJq0Sl2bPVHaguOcElvTxYWw83P8yh+JwUnO43EwlVOHS49TPISw5S9ygks5IgCbK4TBK5wpzjfy7bRIuEFBY8LEK76U0wKoTnHt7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMnSVA5D; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1776747834; c=relaxed/simple;
+	bh=xwMKmWiI4a6VfwuR3Q9PRfDn8JfujjN/eAGvdJrq3ew=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WOF2DWYIKvfyNjeV7KBawERPHfBElPE0aff5rVX/L8aD2JTkH2Yo0cnDzmVqLNVodUdQH0jC+qKRJcjJ7Sx2y/eCEHq4wcuenjlNegAKPdzS+4YIGjPq2G5SHHAtOLUF4gy/wqMXYKKAp3xizY38GFb4+0Hv5uAKYUmGGF+zCBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jr94sFhu; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMnSVA5D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jr94sFhu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776747592; x=1808283592;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pMEhY5pchgg3oj5SAPs5y6BH35Qkhkz4ykk6XhyYFEE=;
-  b=dMnSVA5DHbXbgDZZr231V3PjbvEUL71f/biHQQB0nu+mUdr3/zLz2LOn
-   xhZyp3m8vUQRSKE/uBn4Fpsai/oawGnb3TPGEdoSIkBVzbYB/vQae2xCN
-   guj2iqOQA0dYhQ+ekfCW3CNG452AJcFw3qJQ1LIoQuNwBy/FB6tFEczrx
-   GrNALwjB2Ny245UjMB+eeCRPEL4+VjZcOb621KYmlDMtfR/PImKQJEbAE
-   ryCp2Am5qY0RFrEP/dCrnxNESVRRPll4o4X2NZPyoBIsp1HZUY+9SVfsB
-   KDK3YVVo9kyKzdwIQ2kWKB+wDKLgbuzkaHZg5MIfgwxPpiMCa4s7rV5gB
-   g==;
-X-CSE-ConnectionGUID: TUOnEoqRQGCfnhGN1jOX6g==
-X-CSE-MsgGUID: +iF9qogrR7G5A7MWfaCO1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="87975698"
+  t=1776747833; x=1808283833;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=xwMKmWiI4a6VfwuR3Q9PRfDn8JfujjN/eAGvdJrq3ew=;
+  b=Jr94sFhuwvTXediV8DMF1xErhvFzPxTlcx0x0Zbn6angx2OmSNYHIlri
+   KqF+iOUpVNACbucs2LmX8hCaMfeCmV91haOnHS1SSzkfgIQ02zRDL8tLa
+   VK3mvTEVhdDuzECJ8IGSuO3G9MUmBImbNNQRh09UqMffg3LlcnF+A40k1
+   mgqiGuvKgq0/BREoMkizNNYkghTrF7IKo69uOtih7Cy5nedb1ZzNUOuIz
+   BCSyHQ+bz4mbKACfX+Pak1vUcmf+dQhzQMle2ET6ihXV4f9NQ4c7zjEya
+   vsGHFGcwhVPuyJb6aAoSzTiaZy6w/wxHecXx4vufoeAMujOhmvE6qL9pq
+   A==;
+X-CSE-ConnectionGUID: 7jiqJ8BkTcOecsqbcNE5Gw==
+X-CSE-MsgGUID: Pj+6ifO8QVa0luTnP6lOGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="76838112"
 X-IronPort-AV: E=Sophos;i="6.23,191,1770624000"; 
-   d="scan'208";a="87975698"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 21:59:51 -0700
-X-CSE-ConnectionGUID: U+3NeBHLR0W/d0HZgACDXg==
-X-CSE-MsgGUID: gC0b50VkRuOKVUxqGQBcvQ==
+   d="scan'208";a="76838112"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 22:03:52 -0700
+X-CSE-ConnectionGUID: 4HJyDC6VTLyUbswsUb1p2A==
+X-CSE-MsgGUID: YgYpZ6wTQEaRL+HcrslMUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,191,1770624000"; 
-   d="scan'208";a="227287215"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa006.fm.intel.com with ESMTP; 20 Apr 2026 21:59:48 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3] perf tests: Add auto counter reload (ACR) sampling test
-Date: Tue, 21 Apr 2026 12:55:11 +0800
-Message-Id: <20260421045511.2401316-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="232205989"
+Received: from unknown (HELO [10.238.3.127]) ([10.238.3.127])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 22:03:51 -0700
+Message-ID: <3a54cbc0-a707-438f-b87e-5f608b5c26db@linux.intel.com>
+Date: Tue, 21 Apr 2026 13:03:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 1/4] perf/x86/intel: Clear stale ACR mask before
+ updating new mask
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: sashiko@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260420024528.2130065-2-dapeng1.mi@linux.intel.com>
+ <20260420032402.A8971C19425@smtp.kernel.org>
+ <717f00c7-be8d-4f69-88ab-5a060a6a7e65@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <717f00c7-be8d-4f69-88ab-5a060a6a7e65@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add auto counter reload sampling test to verify that the intended event
-records can be captured and the self-reloaded events won't generate any
-records.
 
-Additionally, enhance ratio_to_prev test to verify ACR sampling as well
-if ACR is supported.
+On 4/20/2026 2:29 PM, Mi, Dapeng wrote:
+> On 4/20/2026 11:24 AM, sashiko-bot@kernel.org wrote:
+>> Sashiko AI review found 1 potential issue(s):
+>> - [High] Unvalidated user input in ACR setup leads to cross-user hardware state corruption and PMU DoS
+>> --
+>>
+>> commit 67dc3d7b096879ed6418f54978bf45536496156f
+>> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>
+>> perf/x86/intel: Clear stale ACR mask before updating new mask
+>>
+>> This commit zeroes out the ACR mask (event->hw.config1) for all scheduled
+>> events before applying a new mask. This ensures that bits from a previous
+>> stale ACR mask do not persist and pollute the hardware state during event
+>> rescheduling.
+>>
+>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>> index 4768236c054bb..774ae9a4eeaf8 100644
+>>> --- a/arch/x86/events/intel/core.c
+>>> +++ b/arch/x86/events/intel/core.c
+>>> @@ -3334,6 +3334,12 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+>>>  	struct perf_event *event, *leader;
+>>>  	int i, j, idx;
+>>>  
+>>> +	/* Clear stale ACR mask first. */
+>>> +	for (i = 0; i < cpuc->n_events; i++) {
+>>> +		event = cpuc->event_list[i];
+>>> +		event->hw.config1 = 0;
+>>> +	}
+>>> +
+>> Does this new clearing loop inadvertently amplify an existing regression where
+>> a single user can disable Auto Counter Reload for all processes on the same CPU?
+>>
+>> Looking further down in the same function, the code iterates over
+>> user-controlled bits from event->attr.config2:
+>>
+>> arch/x86/events/intel/core.c:intel_pmu_acr_late_setup() {
+>>     ...
+>>     for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
+>>         if (i + idx >= cpuc->n_events ||
+>>             !is_acr_event_group(cpuc->event_list[i + idx]))
+>>             return;
+>>         __set_bit(cpuc->assign[i + idx], (unsigned long *)&event->hw.config1);
+>>     }
+>>     ...
+>> }
+>>
+>> Because idx is derived from the user-controlled event->attr.config2 mask
+>> without being validated against the actual size of the event group, a
+>> user could provide an artificially large idx.
+>>
+>> The validation in intel_pmu_hw_config() only checks the weight of the mask
+>> using hweight64(), rather than checking the actual bit indices, leaving this
+>> exposed. Subsequent patches in the series do not fix this.
+>>
+>> If the computed index hits a non-ACR event or exceeds cpuc->n_events, the
+>> loop triggers an early return. Since the newly added code zeroes out
+>> event->hw.config1 for all scheduled events before this loop, wouldn't this
+>> early return leave all subsequent valid ACR events with a cleared mask?
+>>
+>> Additionally, if the out-of-bounds idx points to another user's valid ACR
+>> group, is_acr_event_group() returns true, and the code proceeds to update
+>> the event->hw.config1 with the victim's hardware counter index.
+>>
+>> Could this also result in cross-user state corruption of event->hw.config1
+>> when the event overflows and cross-reloads the victim's counter?
+> That looks a real potential issue. Current validation for the acr_mask
+> needs to be enhanced. The acr_mask from user space should not exceeds the
+> index bitmap of current ACR events group.
+> Thanks.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
+The following changes would be done to address all current found issues.
+ - Calculate the indices bitmap for each ACR events group. Any bits in
+    the user-space mask not present in the group's bitmap are now dropped.
+ - Instead of an early return on invalid bits, drop only the invalid
+    portions and continue iterating through all ACR events to ensure full
+    configuration.
+ - Explicitly clear the stale hardware ACR mask for each event prior to
+    writing the new configuration.
 
-V3: Move ratio-to-prev ACR sampling test into ratio_to_prev test.
-V2: https://lore.kernel.org/all/20260420025501.2133495-1-dapeng1.mi@linux.intel.com/
-v1: https://lore.kernel.org/all/20260413010920.546501-1-dapeng1.mi@linux.intel.com/
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4768236c054b..1a2c268018a2 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3332,23 +3332,41 @@ static void intel_pmu_enable_event(struct
+perf_event *event)
+ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+ {
+        struct perf_event *event, *leader;
+-       int i, j, idx;
++       int i, j, k, bit, idx;
++       u64 group_mask;
 
- tools/perf/tests/shell/record.sh | 92 +++++++++++++++++++++++++++++++-
- 1 file changed, 91 insertions(+), 1 deletion(-)
+        for (i = 0; i < cpuc->n_events; i++) {
+                leader = cpuc->event_list[i];
+                if (!is_acr_event_group(leader))
+                        continue;
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 7cb81cf3444a..091d8b0a998b 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -402,7 +402,52 @@ test_callgraph() {
-   echo "Callgraph test [Success]"
- }
- 
-+test_acr_sampling() {
-+  events="{instructions/period=40000,acr_mask=0x2/u,cycles/period=20000,acr_mask=0x3/u}"
-+  pebs_events="{instructions/period=40000,acr_mask=0x2/pu,cycles/period=20000,acr_mask=0x3/u}"
-+  echo "Auto counter reload (ACR) sampling test"
-+  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
-+  then
-+    echo "Auto counter reload sampling [Skipped not supported]"
-+    return
-+  fi
-+  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
-+  then
-+    echo "Auto counter reload sampling [Failed missing instructions event]"
-+    err=1
-+    return
-+  fi
-+  if perf script -i "${perfdata}" -F event | grep -q "cycles"
-+  then
-+    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
-+    err=1
-+    return
-+  fi
-+  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
-+  then
-+    echo "Auto counter reload PEBS sampling [Skipped not supported]"
-+    echo "Auto counter reload sampling [Success]"
-+    return
-+  fi
-+  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
-+  then
-+    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
-+    err=1
-+    return
-+  fi
-+  if perf script -i "${perfdata}" -F event | grep -q "cycles"
-+  then
-+    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
-+    err=1
-+    return
-+  fi
-+  echo "Auto counter reload sampling [Success]"
-+}
+-               /* The ACR events must be contiguous. */
++               /* Find the last event of the ACR group. */
+                for (j = i; j < cpuc->n_events; j++) {
+                        event = cpuc->event_list[j];
+                        if (event->group_leader != leader->group_leader)
+                                break;
+-                       for_each_set_bit(idx, (unsigned long
+*)&event->attr.config2, X86_PMC_IDX_MAX) {
+-                               if (i + idx >= cpuc->n_events ||
+-                                   !is_acr_event_group(cpuc->event_list[i
++ idx]))
+-                                       return;
+-                               __set_bit(cpuc->assign[i + idx], (unsigned
+long *)&event->hw.config1);
++               }
 +
- test_ratio_to_prev() {
-+  ratio_events="{instructions:u,cycles/period=20000,ratio-to-prev=0.5/u}"
-+  p_core_ratio_events="{cpu_core/instructions/u,cpu_core/cycles,period=20000,ratio-to-prev=0.5/u}"
-+  e_core_ratio_events="{cpu_atom/instructions/u,cpu_atom/cycles,period=20000,ratio-to-prev=0.5/u}"
-   echo "ratio-to-prev test"
-   if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
-      true 2> /dev/null
-@@ -438,7 +483,51 @@ test_ratio_to_prev() {
-     err=1
-     return
-   fi
--  echo "Basic ratio-to-prev record test [Success]"
++               /* Figure out the group indices bitmap. */
++               group_mask = 0;
++               for (k = i; k < j; k++)
++                       group_mask |= BIT_ULL(cpuc->assign[k]);
 +
-+  ratio_err=0
-+  do_ratio_to_prev_test() {
-+    local events=$1
-+    local cpu=$2
-+    if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
-+    then
-+      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed sampling]"
-+      ratio_err=1
-+      return
-+    fi
-+    if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
-+    then
-+      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed missing instructions event]"
-+      ratio_err=1
-+      return
-+    fi
-+    if perf script -i "${perfdata}" -F event | grep -q "cycles"
-+    then
-+      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed cycles event shouldn't be sampled]"
-+      ratio_err=1
-+      return
-+    fi
-+  }
-+
-+  # ratio-to-prev sampling would fallback to normal sampling if ACR sampling
-+  # is not supported, so acr_mask must be checked before testing ratio-to-prev sampling.
-+  if [ -e /sys/bus/event_source/devices/cpu/format/acr_mask ]
-+  then
-+    do_ratio_to_prev_test "${ratio_events}" ""
-+  fi
-+  if [ -e /sys/bus/event_source/devices/cpu_core/format/acr_mask ]
-+  then
-+    do_ratio_to_prev_test "${p_core_ratio_events}" "P-core"
-+  fi
-+  if [ -e /sys/bus/event_source/devices/cpu_atom/format/acr_mask ]
-+  then
-+    do_ratio_to_prev_test "${e_core_ratio_events}" "E-core"
-+  fi
-+  if test "$ratio_err" -eq 0
-+  then
-+    echo "Basic ratio-to-prev record test [Success]"
-+  else
-+    err="${ratio_err}"
-+  fi
- }
- 
- # raise the limit of file descriptors to minimum
-@@ -457,6 +546,7 @@ test_leader_sampling
- test_topdown_leader_sampling
- test_precise_max
- test_callgraph
-+test_acr_sampling
- test_ratio_to_prev
- 
- # restore the default value
--- 
-2.34.1
++               /*
++                * Translate the user-space ACR mask (attr.config2) into
+the physical
++                * counter bitmask (hw.config1) for each ACR event in the
+group.
++                * NOTE: ACR event contiguity is guaranteed by
+intel_pmu_hw_config().
++                */
++               for (k = i; k < j; k++) {
++                       event = cpuc->event_list[k];
++                       event->hw.config1 = 0;
++                       for_each_set_bit(bit, (unsigned long
+*)&event->attr.config2, X86_PMC_IDX_MAX) {
++                               idx = i + bit;
++                               if (idx >= cpuc->n_events ||
++                                   !(BIT_ULL(cpuc->assign[idx]) &
+group_mask) ||
++                                   !is_acr_event_group(cpuc->event_list[idx]))
++                                       continue;
++                               __set_bit(cpuc->assign[idx], (unsigned long
+*)&event->hw.config1);
+                        }
+                }
+                i = j - 1;
 
+
+>
+>
+>>>  	for (i = 0; i < cpuc->n_events; i++) {
+>>>  		leader = cpuc->event_list[i];
+>>>  		if (!is_acr_event_group(leader))
