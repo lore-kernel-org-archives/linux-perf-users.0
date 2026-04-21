@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60091D54FA
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 00:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BEE156F45;
+	Tue, 21 Apr 2026 00:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776731405; cv=none; b=RiajQaE/AuQa41gipkOhVaKQ05W+lqjU1wkBYNge4xDXoy4f3gZ2cpH537X2aqQUGYdkWupABVJLYEZba3HLrACK5E9p4nURxzuVEuaaaARkeOLw575LQQhKM/0+kmvJcAvntRwAR/Gb/OF4tahlyz4+PGHhvPT517b8Zb/QqK0=
+	t=1776732313; cv=none; b=CvvMZGkbr9aKjXd8CM+L02aDzunCeqNloKD6xpUw8ox5dgWKjviED8ZQ+T4SOJNYfts/g3mxLPVjS6EyoB+oVp+VvQj9QGiqdUpYPv7IJhc1siZVXXw5kyQsSQVVEoaLd8ehJvJNO51JVmpirKK34XKbr2eXW7RGF4qDoqYNBQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776731405; c=relaxed/simple;
-	bh=iBwA84b6o8whna4pDwTSJQe3ci4s8oneQjepbczxCHY=;
+	s=arc-20240116; t=1776732313; c=relaxed/simple;
+	bh=zZCiWNX58ldRE9uO6niC7LJKoDQSavu2WQtxZGKPslM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=K7Mxx1LrT4V14rYVPozAEouwwSxFI9H8V9sHFWEEXpKoz7W8bSK2K7an3lWSaPCtK8yEzUC7w+gqPOPy4uVyLZGmDFDvBKHQbU+OURtkq/XxRxOzc0ALKQz4cuvDHtqWpfaj3bYHb/1Egf5DU1Dc8SsKa+kbZTtELfnfwr8t+Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mN4SA5gE; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=pmiWvCqrUdpJ3efznbIRjY2LinhTOp+gZPiBDtYGI4xbTtKEG1s5xt8tKDM4B1o6i18l5YwzshlUvhMB+5O/sSVJkYA5suJBplHJyLxvFKVSW/jSZ77KTKE35eqz516+7BiZU64dJ/9aCRKHFZ41IG8QFe+sk8yIM2LTC7cf6Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXGKBwgz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mN4SA5gE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E7CC19425;
-	Tue, 21 Apr 2026 00:30:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXGKBwgz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE13C19425;
+	Tue, 21 Apr 2026 00:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776731405;
-	bh=iBwA84b6o8whna4pDwTSJQe3ci4s8oneQjepbczxCHY=;
+	s=k20201202; t=1776732313;
+	bh=zZCiWNX58ldRE9uO6niC7LJKoDQSavu2WQtxZGKPslM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=mN4SA5gEkJHpy2tfoOTy3KLZ/ekBBCckx0XOeWR0T9jMHUtgx3fe+eulPXmJ5FAjZ
-	 CcOWuMTNTppVMZN5undYRyG1JyGeGWeaM+OFL09jZL8kJ/ZFpt3sI8cLnBflXDpdJ1
-	 0PL6JTJ1qUI7iyWm0+C33sOElQeBg/oLrisF/GpXkmBWn6Pe0Gu0u2k/fpkpqn0nRX
-	 LN9BQbnQYgc4be/DP3v5MzyIyootz6+7n2fFz0lze8zhxDLHA7pke1JyGiWw1q/MXx
-	 4rYAVVe0ZySzfXwRhohIZFG9B8e9hQOCq1bgWBIZJfqc1i6YU43iHxBXeWQ/8iI77e
-	 hbPOBUc9pf9fQ==
+	b=XXGKBwgzfs1bBU1pRpN4Jyp+L7NYXy+jmXYb8fbkiMRQv/BwDrun3F5Q6byxj7Jjq
+	 PGnjEJ5DwjeAD3NKspUZY8Ey67YtaGMMJKtGcuyiP7TFPmRUkowQATxIQQeyX2VNFj
+	 B+uU6FUr8x1cWxX2k2DGEOgLvzrqkL3fO6rNvVRg7ES8xuRpS4Omh0hVQ9eURjoQXA
+	 mxvAswsvI5OOAfDyhXBZz51qROOeSdDVvECN5kw0eDA0TwN3rYhzW8mKoelNWmyy6a
+	 ctp5IC8Er5LicC3zHFZDIFplNE/9bRGAFeOszTDv+LD95rFbz9mEB2i0O2YaWXbk0a
+	 gzMjgtwx6jy8Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf build-id: Fix wrong return value checking
+Subject: Re: [PATCH] perf/lock: enable end-timestamp accounting for cgroup
+ aggregation
 Reply-To: sashiko@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260420180858.129075-1-namhyung@kernel.org>
-References: <20260420180858.129075-1-namhyung@kernel.org>
+To: "Suchit Karunakaran" <suchitkarunakaran@gmail.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
+References: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Apr 2026 00:30:04 +0000
-Message-Id: <20260421003005.38E7CC19425@smtp.kernel.org>
+Date: Tue, 21 Apr 2026 00:45:12 +0000
+Message-Id: <20260421004512.CDE13C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,74 +45,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [High] Missing O_NONBLOCK during build-ID extraction enables indefinite h=
-angs on FIFOs via TOCTOU race.
-- [Medium] The strict length check rejects valid 16-byte build IDs (e.g., M=
-D5/UUID), causing `perf buildid-list` to fail for them.
+- [High] Incomplete spinlock and rwlock contentions are silently dropped fo=
+r LOCK_AGGR_CGROUP because account_end_timestamp() skips the per-CPU tstamp=
+ map.
+- [Medium] Inconsistent cgroup attribution between complete and incomplete =
+lock contentions when a task migrates cgroups.
 --
 
-commit 7e5fc011b65e40f9f999c08196173059dcbc7f79
-Author: Namhyung Kim <namhyung@kernel.org>
+commit 7ba25dc647534f97eb1ae9f34c6c8d38e7fef074
+Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
 
-perf build-id: Fix wrong return value checking
+perf/lock: enable end-timestamp accounting for cgroup aggregation
 
-This commit adjusts the return value checks of the build-id snprintf
-functions to correctly account for the terminating NUL byte when comparing
-lengths. This ensures perf buildid-list properly displays build IDs instead
-of returning errors.
+This commit adds a cgroup_id field to struct tstamp_data to properly account
+for incomplete lock contention events when aggregating by cgroup. It records
+the cgroup ID at contention_begin and uses it to build the aggregation key
+in userspace.
 
-> diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-build=
-id-list.c
-> --- a/tools/perf/builtin-buildid-list.c
-> +++ b/tools/perf/builtin-buildid-list.c
-> @@ -60,8 +60,8 @@ static int sysfs__fprintf_build_id(FILE *fp)
->  	char sbuild_id[SBUILD_ID_SIZE];
->  	int ret;
-> =20
->  	ret =3D sysfs__snprintf_build_id("/", sbuild_id, sizeof(sbuild_id));
-> -	if (ret !=3D sizeof(sbuild_id))
-> +	if (ret !=3D sizeof(sbuild_id) - 1)
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
+lock_contention.c
+> index cbd7435579fea..1a5bd2ff8ee4c 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -463,8 +463,8 @@ static void update_lock_stat(int map_fd, int pid, u64=
+ end_ts,
+>  		stat_key.lock_addr_or_cgroup =3D ts_data->lock;
+>  		break;
+>  	case LOCK_AGGR_CGROUP:
+> -		/* TODO */
+> -		return;
+> +		stat_key.lock_addr_or_cgroup =3D ts_data->cgroup_id;
+> +		break;
 
-Could this strict length check reject valid 16-byte build IDs?
+Does this fully enable end-timestamp accounting for cgroup aggregation
+on per-CPU locks like spinlocks and rwlocks?
 
-The kernel and perf subsystem natively support shorter 16-byte build IDs
-like MD5 or UUID. For these, sysfs__snprintf_build_id() would correctly
-return 32.
+Looking at account_end_timestamp() in tools/perf/util/bpf_lock_contention.c,
+there is an early return that skips the per-CPU tstamp map:
 
-Since 32 does not equal sizeof(sbuild_id) - 1 (which evaluates to 40), will
-this erroneously return -EINVAL and cause perf buildid-list to silently
-ignore valid kernel maps and binaries?
+static void account_end_timestamp(struct lock_contention *con)
+{
+	...
+	/* Now it'll check per-cpu tstamp map which doesn't have TID. */
+	if (aggr_mode =3D=3D LOCK_AGGR_TASK || aggr_mode =3D=3D LOCK_AGGR_CGROUP)
+		return;
 
->  		return ret < 0 ? ret : -EINVAL;
-> =20
->  	return fprintf(fp, "%s\n", sbuild_id);
->  }
+	total_cpus =3D cpu__max_cpu().cpu;
+	ts_fd =3D bpf_map__fd(skel->maps.tstamp_cpu);
+	...
+}
+
+Since account_end_timestamp() skips iterating over skel->maps.tstamp_cpu
+when aggr_mode is LOCK_AGGR_CGROUP, are all incomplete contentions for
+spinlocks and rwlocks still silently dropped?
 
 [ ... ]
 
-> @@ -72,8 +72,8 @@ static int filename__fprintf_build_id(const char *name,=
- FILE *fp)
->  	char sbuild_id[SBUILD_ID_SIZE];
->  	int ret;
-> =20
->  	ret =3D filename__snprintf_build_id(name, sbuild_id, sizeof(sbuild_id));
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
+util/bpf_skel/lock_contention.bpf.c
+> index 96e7d853b9edf..d0e2cad02fa36 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -536,6 +536,8 @@ int contention_begin(u64 *ctx)
+>  	pelem->timestamp =3D bpf_ktime_get_ns();
+>  	pelem->lock =3D (__u64)ctx[0];
+>  	pelem->flags =3D (__u32)ctx[1];
+> +	if (aggr_mode =3D=3D LOCK_AGGR_CGROUP)
+> +		pelem->cgroup_id =3D get_current_cgroup_id();
 
-Does the underlying build-ID extraction sequence miss an O_NONBLOCK flag,
-potentially allowing indefinite hangs?
+If a task migrates to a different cgroup while blocked on a lock, could this
+lead to inconsistent attribution between complete and incomplete contention=
+s?
 
-When filename__snprintf_build_id() processes user-supplied file paths, the
-underlying open() call happens without O_NONBLOCK.=20
+The cgroup ID is statically recorded here at contention_begin() and used by
+userspace for incomplete events.
 
-While there is an is_regular_file() check beforehand, could a time-of-check
-to time-of-use race allow swapping the file with a FIFO or blocking device
-immediately after the check, causing the tool to hang indefinitely?
+However, contention_end() continues to dynamically resolve the cgroup ID:
 
-> -	if (ret !=3D sizeof(sbuild_id))
-> +	if (ret !=3D sizeof(sbuild_id) - 1)
->  		return ret < 0 ? ret : -EINVAL;
-> =20
->  	return fprintf(fp, "%s\n", sbuild_id);
+SEC("tp_btf/contention_end")
+int contention_end(u64 *ctx)
+{
+	...
+	case LOCK_AGGR_CGROUP:
+		key.lock_addr_or_cgroup =3D get_current_cgroup_id();
+		break;
+	...
+}
+
+Would it be more consistent for contention_end() to also use the statically
+recorded pelem->cgroup_id, ensuring that both completed and incomplete even=
+ts
+attribute the contention time to the exact same cgroup?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420180858.1290=
-75-1-namhyung@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420184656.3313=
+06-1-suchitkarunakaran@gmail.com?part=3D1
