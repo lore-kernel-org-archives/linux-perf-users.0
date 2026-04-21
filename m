@@ -1,142 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BEE156F45;
-	Tue, 21 Apr 2026 00:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9784540DFA1;
+	Tue, 21 Apr 2026 00:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776732313; cv=none; b=CvvMZGkbr9aKjXd8CM+L02aDzunCeqNloKD6xpUw8ox5dgWKjviED8ZQ+T4SOJNYfts/g3mxLPVjS6EyoB+oVp+VvQj9QGiqdUpYPv7IJhc1siZVXXw5kyQsSQVVEoaLd8ehJvJNO51JVmpirKK34XKbr2eXW7RGF4qDoqYNBQE=
+	t=1776732685; cv=none; b=FvG5evL7JOxdiTsuFL1trkS5WUANuuOWnyPQ/mBDhXunMmRZBpYuwMengYXmNh+8/N0mtCDcUOUP7ugXJChwB+APq1RPLyB7VdJsAzrnrZ2J2g8hQQVdUO0MSaUTJlnoG3HFGQOBbWQO1J3bc9hiQ20gFL1dwpPlmu4+EIU8j5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776732313; c=relaxed/simple;
-	bh=zZCiWNX58ldRE9uO6niC7LJKoDQSavu2WQtxZGKPslM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pmiWvCqrUdpJ3efznbIRjY2LinhTOp+gZPiBDtYGI4xbTtKEG1s5xt8tKDM4B1o6i18l5YwzshlUvhMB+5O/sSVJkYA5suJBplHJyLxvFKVSW/jSZ77KTKE35eqz516+7BiZU64dJ/9aCRKHFZ41IG8QFe+sk8yIM2LTC7cf6Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXGKBwgz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776732685; c=relaxed/simple;
+	bh=7xsug3MzVT3sa/rbi3MyvHMTLTWa19C7FdsnVZB5LBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jzvAA5YZVpXtLyN1Qu+djeJ0g7Q1g9EwgajC77VMZLfhVwlF6Z8KzpNuqom0Mw+YyPP9Aei/rGG24pD2R8w1WqSvBc0qwQ2dV7GD+Z1LjB09L6voXz1DWngKjSZ0T+vhVhRj+Th58OvOXddHokPAtc1l6FraGQQceWlvhhFgYPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJJdheIR; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXGKBwgz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE13C19425;
-	Tue, 21 Apr 2026 00:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776732313;
-	bh=zZCiWNX58ldRE9uO6niC7LJKoDQSavu2WQtxZGKPslM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=XXGKBwgzfs1bBU1pRpN4Jyp+L7NYXy+jmXYb8fbkiMRQv/BwDrun3F5Q6byxj7Jjq
-	 PGnjEJ5DwjeAD3NKspUZY8Ey67YtaGMMJKtGcuyiP7TFPmRUkowQATxIQQeyX2VNFj
-	 B+uU6FUr8x1cWxX2k2DGEOgLvzrqkL3fO6rNvVRg7ES8xuRpS4Omh0hVQ9eURjoQXA
-	 mxvAswsvI5OOAfDyhXBZz51qROOeSdDVvECN5kw0eDA0TwN3rYhzW8mKoelNWmyy6a
-	 ctp5IC8Er5LicC3zHFZDIFplNE/9bRGAFeOszTDv+LD95rFbz9mEB2i0O2YaWXbk0a
-	 gzMjgtwx6jy8Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/lock: enable end-timestamp accounting for cgroup
- aggregation
-Reply-To: sashiko@lists.linux.dev
-To: "Suchit Karunakaran" <suchitkarunakaran@gmail.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
-References: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Apr 2026 00:45:12 +0000
-Message-Id: <20260421004512.CDE13C19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJJdheIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776732684; x=1808268684;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7xsug3MzVT3sa/rbi3MyvHMTLTWa19C7FdsnVZB5LBA=;
+  b=AJJdheIR8YorGGhH63Fkz1JzIFD24DAX2O0L5ZgRhczm0XdM7JPAi5hk
+   0+zaSW20Uq+EFX8+iMiMuluvGDaPQ3ylN2+tCZv1ecmtTL9Cfb8ViaVOv
+   hZg+Uzhh1loUR8fLdbN+PgLVBnF0X1R/LrRsvzpeabyKdIALSb1hI/xTc
+   m1wT+58Z5drxjrexZMqns+7Inttqxdwx0yesZG/t3ofDV5pRPYBXUa0Aj
+   AadDSHepzCDufVNuRIdBgIERRxdaHCGgWf3dt702Xwp/wgLnuQLCgMOXP
+   ad10tHi2iL69XAqN8lh7seyngW9xY3JKa9DrxP4BqZZeFmyEFy83YVmyl
+   A==;
+X-CSE-ConnectionGUID: zV76Ew5gR6GDMGJVIIxcfQ==
+X-CSE-MsgGUID: +33yshXcS1aDL123Nlo2qw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="100317720"
+X-IronPort-AV: E=Sophos;i="6.23,190,1770624000"; 
+   d="scan'208";a="100317720"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 17:51:24 -0700
+X-CSE-ConnectionGUID: 9VrBqzQ4TbSEK5ZV2rsACw==
+X-CSE-MsgGUID: AGT141nnSWCAA/hZYbzhIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,190,1770624000"; 
+   d="scan'208";a="228718544"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 17:51:19 -0700
+Message-ID: <d93ccac4-d1c6-4d56-9714-33a32e5c4f48@linux.intel.com>
+Date: Tue, 21 Apr 2026 08:51:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Remove anythread_deprecated bit from
+ perf_capabilities
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ stable@vger.kernel.org
+References: <20260415021010.1248083-1-dapeng1.mi@linux.intel.com>
+ <aeaZUZyILpy6HKnJ@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aeaZUZyILpy6HKnJ@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Incomplete spinlock and rwlock contentions are silently dropped fo=
-r LOCK_AGGR_CGROUP because account_end_timestamp() skips the per-CPU tstamp=
- map.
-- [Medium] Inconsistent cgroup attribution between complete and incomplete =
-lock contentions when a task migrates cgroups.
---
 
-commit 7ba25dc647534f97eb1ae9f34c6c8d38e7fef074
-Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+On 4/21/2026 5:23 AM, Namhyung Kim wrote:
+> On Wed, Apr 15, 2026 at 10:10:10AM +0800, Dapeng Mi wrote:
+>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+>> represent "anythread deprecation" in perf_capabilities. It leads to the
+>> anythread_deprecated bit could be overwritten by the real value of
+>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+>>
+>> ```
+>> if (!intel_pmu_broken_perf_cap()) {
+>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+>> }
+>> ```
+>>
+>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+>> these support Perfmon v6 platforms, like Clearwater Forest.
+>>
+>> ```
+>> $grep . /sys/devices/cpu/format/*
+>> /sys/devices/cpu/format/acr_mask:config2:0-63
+>> /sys/devices/cpu/format/any:config:21
+>> /sys/devices/cpu/format/cmask:config:24-31
+>> ```
+>>
+>> So remove the anythread_deprecated bit from perf_capabilities structure
+>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+>> deprecated.
+>>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Namhyung Kim <namhyung@kernel.org>
+>> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
+>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/core.c | 9 +++------
+>>  arch/x86/events/perf_event.h | 2 +-
+>>  2 files changed, 4 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 793335c3ce78..450c63165a22 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -7612,11 +7612,8 @@ __init int intel_pmu_init(void)
+>>  
+>>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+>>  
+>> -	if (version >= 5) {
+>> -		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
+>> -		if (x86_pmu.intel_cap.anythread_deprecated)
+>> -			pr_cont(" AnyThread deprecated, ");
+>> -	}
+>> +	if (version >= 5 && edx.split.anythread_deprecated)
+>> +		pr_cont(" AnyThread deprecated, ");
+>>  
+>>  	/* The perf side of core PMU is ready to support the mediated vPMU. */
+>>  	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
+>> @@ -8467,7 +8464,7 @@ __init int intel_pmu_init(void)
+>>  				      &x86_pmu.intel_ctrl);
+>>  
+>>  	/* AnyThread may be deprecated on arch perfmon v5 or later */
+>> -	if (x86_pmu.intel_cap.anythread_deprecated)
+>> +	if (edx.split.anythread_deprecated)
+> Do we need to check the version here as well?
 
-perf/lock: enable end-timestamp accounting for cgroup aggregation
+hmm, it should be enough to only check the CPUID
+"edx.split.anythread_deprecated" bit  in practice. But if we want to follow
+the SDM 100%, the version check should be added here.
 
-This commit adds a cgroup_id field to struct tstamp_data to properly account
-for incomplete lock contention events when aggregating by cgroup. It records
-the cgroup ID at contention_begin and uses it to build the aggregation key
-in userspace.
+I would add an version check here. Thanks.
 
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index cbd7435579fea..1a5bd2ff8ee4c 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -463,8 +463,8 @@ static void update_lock_stat(int map_fd, int pid, u64=
- end_ts,
->  		stat_key.lock_addr_or_cgroup =3D ts_data->lock;
->  		break;
->  	case LOCK_AGGR_CGROUP:
-> -		/* TODO */
-> -		return;
-> +		stat_key.lock_addr_or_cgroup =3D ts_data->cgroup_id;
-> +		break;
 
-Does this fully enable end-timestamp accounting for cgroup aggregation
-on per-CPU locks like spinlocks and rwlocks?
-
-Looking at account_end_timestamp() in tools/perf/util/bpf_lock_contention.c,
-there is an early return that skips the per-CPU tstamp map:
-
-static void account_end_timestamp(struct lock_contention *con)
-{
-	...
-	/* Now it'll check per-cpu tstamp map which doesn't have TID. */
-	if (aggr_mode =3D=3D LOCK_AGGR_TASK || aggr_mode =3D=3D LOCK_AGGR_CGROUP)
-		return;
-
-	total_cpus =3D cpu__max_cpu().cpu;
-	ts_fd =3D bpf_map__fd(skel->maps.tstamp_cpu);
-	...
-}
-
-Since account_end_timestamp() skips iterating over skel->maps.tstamp_cpu
-when aggr_mode is LOCK_AGGR_CGROUP, are all incomplete contentions for
-spinlocks and rwlocks still silently dropped?
-
-[ ... ]
-
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index 96e7d853b9edf..d0e2cad02fa36 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -536,6 +536,8 @@ int contention_begin(u64 *ctx)
->  	pelem->timestamp =3D bpf_ktime_get_ns();
->  	pelem->lock =3D (__u64)ctx[0];
->  	pelem->flags =3D (__u32)ctx[1];
-> +	if (aggr_mode =3D=3D LOCK_AGGR_CGROUP)
-> +		pelem->cgroup_id =3D get_current_cgroup_id();
-
-If a task migrates to a different cgroup while blocked on a lock, could this
-lead to inconsistent attribution between complete and incomplete contention=
-s?
-
-The cgroup ID is statically recorded here at contention_begin() and used by
-userspace for incomplete events.
-
-However, contention_end() continues to dynamically resolve the cgroup ID:
-
-SEC("tp_btf/contention_end")
-int contention_end(u64 *ctx)
-{
-	...
-	case LOCK_AGGR_CGROUP:
-		key.lock_addr_or_cgroup =3D get_current_cgroup_id();
-		break;
-	...
-}
-
-Would it be more consistent for contention_end() to also use the statically
-recorded pelem->cgroup_id, ensuring that both completed and incomplete even=
-ts
-attribute the contention time to the exact same cgroup?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420184656.3313=
-06-1-suchitkarunakaran@gmail.com?part=3D1
+>
+> Thanks,
+> Namhyung
+>
+>
+>>  		x86_pmu.format_attrs = intel_arch_formats_attr;
+>>  
