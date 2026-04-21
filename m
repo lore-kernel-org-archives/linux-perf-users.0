@@ -1,122 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F2C212D7C
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Apr 2026 23:55:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60091D54FA
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 00:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776729310; cv=none; b=BlnKJHmQkBf/ZaBf+6Fj6Xyv9qiXEeYHoLAQz0GXdaP8jdNbbcOf0W7HKj76JzEItnibk19T2IuxDV8xh/KpE6EIBUrmz2u8UjXgxU2dYDhopTtslVsiUwDJDva6hKNpnzSwm0dhwe0qSf77RFl62VuePbCzxko8FFk6xRL872c=
+	t=1776731405; cv=none; b=RiajQaE/AuQa41gipkOhVaKQ05W+lqjU1wkBYNge4xDXoy4f3gZ2cpH537X2aqQUGYdkWupABVJLYEZba3HLrACK5E9p4nURxzuVEuaaaARkeOLw575LQQhKM/0+kmvJcAvntRwAR/Gb/OF4tahlyz4+PGHhvPT517b8Zb/QqK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776729310; c=relaxed/simple;
-	bh=VzEQZCoCQPNbs4nT0sS1llVNPtMpmdE5YzSXSXdwmxU=;
+	s=arc-20240116; t=1776731405; c=relaxed/simple;
+	bh=iBwA84b6o8whna4pDwTSJQe3ci4s8oneQjepbczxCHY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C1L3wGoVbAFF+XNiF+n0DZdf9etLmbJSOfGhcrROkERDCydFOiqVQBDTuIRFtNIDhTNNl1/GD8KFrw4XgRBd1T1ZqIdct5nCXlBpf/++GkPQhfEcX55AH/hX3nkpCOFr4zaonOoQoZ3ksO03ApNdJvpuJlHhoKm9qPRDyg9GnbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqnihT4N; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=K7Mxx1LrT4V14rYVPozAEouwwSxFI9H8V9sHFWEEXpKoz7W8bSK2K7an3lWSaPCtK8yEzUC7w+gqPOPy4uVyLZGmDFDvBKHQbU+OURtkq/XxRxOzc0ALKQz4cuvDHtqWpfaj3bYHb/1Egf5DU1Dc8SsKa+kbZTtELfnfwr8t+Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mN4SA5gE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqnihT4N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBF2C19425;
-	Mon, 20 Apr 2026 23:55:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mN4SA5gE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E7CC19425;
+	Tue, 21 Apr 2026 00:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776729310;
-	bh=VzEQZCoCQPNbs4nT0sS1llVNPtMpmdE5YzSXSXdwmxU=;
+	s=k20201202; t=1776731405;
+	bh=iBwA84b6o8whna4pDwTSJQe3ci4s8oneQjepbczxCHY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=oqnihT4N4ZuXZZKMLk7rROdunpEDsXgE0nYmEEwrai1Mr/u7jo0BUmjJHUx1mXZDh
-	 srciR/oL35TUFI+AejzCJk0S3FJEPsNGyDsuhOpwJn9kRpylt/6tFZdUbd0/uDRBoF
-	 8E8MtYySG5WRkmiq/3QRIxMgUgM+fwyUncdOrAHBTYdoIwI+jX8vBnqsnHzJtqgerc
-	 CBQpq4TOFCt2IqDFaKgwfwx2XNGF9+a8XEHS3CCobcdGcYJ05RiUeyzMxttz3ujW/L
-	 hSD6JAx4K3VdugtpC5oBtuVWzUsyeBV28TFESqKyyMwt6YuJP6VqamSPX02mNzDOFX
-	 mluImy9jf8l3A==
+	b=mN4SA5gEkJHpy2tfoOTy3KLZ/ekBBCckx0XOeWR0T9jMHUtgx3fe+eulPXmJ5FAjZ
+	 CcOWuMTNTppVMZN5undYRyG1JyGeGWeaM+OFL09jZL8kJ/ZFpt3sI8cLnBflXDpdJ1
+	 0PL6JTJ1qUI7iyWm0+C33sOElQeBg/oLrisF/GpXkmBWn6Pe0Gu0u2k/fpkpqn0nRX
+	 LN9BQbnQYgc4be/DP3v5MzyIyootz6+7n2fFz0lze8zhxDLHA7pke1JyGiWw1q/MXx
+	 4rYAVVe0ZySzfXwRhohIZFG9B8e9hQOCq1bgWBIZJfqc1i6YU43iHxBXeWQ/8iI77e
+	 hbPOBUc9pf9fQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6.6.y] Revert "perf unwind-libdw: Fix invalid reference
- counts"
+Subject: Re: [PATCH] perf build-id: Fix wrong return value checking
 Reply-To: sashiko@lists.linux.dev
-To: "Kenta Akagi" <k@mgml.me>
+To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260420163222.23517-1-k@mgml.me>
-References: <20260420163222.23517-1-k@mgml.me>
+In-Reply-To: <20260420180858.129075-1-namhyung@kernel.org>
+References: <20260420180858.129075-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 23:55:09 +0000
-Message-Id: <20260420235510.4EBF2C19425@smtp.kernel.org>
+Date: Tue, 21 Apr 2026 00:30:04 +0000
+Message-Id: <20260421003005.38E7CC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Reverting a valid bug fix to resolve a backport build failure re=
-introduces a use-after-free vulnerability in perf's libdw unwinder.
+Sashiko AI review found 2 potential issue(s):
+- [High] Missing O_NONBLOCK during build-ID extraction enables indefinite h=
+angs on FIFOs via TOCTOU race.
+- [Medium] The strict length check rejects valid 16-byte build IDs (e.g., M=
+D5/UUID), causing `perf buildid-list` to fail for them.
 --
 
-commit 476f57f8f24801b0104204e756b3e024069b04e7
-Author: Kenta Akagi <k@mgml.me>
+commit 7e5fc011b65e40f9f999c08196173059dcbc7f79
+Author: Namhyung Kim <namhyung@kernel.org>
 
-Revert "perf unwind-libdw: Fix invalid reference counts"
+perf build-id: Fix wrong return value checking
 
-This commit reverts a backport to resolve a build failure in v6.6.y caused
-by the absence of map_symbol__exit().
+This commit adjusts the return value checks of the build-id snprintf
+functions to correctly account for the terminating NUL byte when comparing
+lengths. This ensures perf buildid-list properly displays build IDs instead
+of returning errors.
 
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
-w.c
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -133,8 +133,8 @@ static int entry(u64 ip, struct unwind_info *ui)
->  	}
+> diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-build=
+id-list.c
+> --- a/tools/perf/builtin-buildid-list.c
+> +++ b/tools/perf/builtin-buildid-list.c
+> @@ -60,8 +60,8 @@ static int sysfs__fprintf_build_id(FILE *fp)
+>  	char sbuild_id[SBUILD_ID_SIZE];
+>  	int ret;
 > =20
->  	e->ip	  =3D ip;
-> -	e->ms.maps =3D maps__get(al.maps);
-> -	e->ms.map =3D map__get(al.map);
-> +	e->ms.maps =3D al.maps;
-> +	e->ms.map =3D al.map;
->  	e->ms.sym =3D al.sym;
+>  	ret =3D sysfs__snprintf_build_id("/", sbuild_id, sizeof(sbuild_id));
+> -	if (ret !=3D sizeof(sbuild_id))
+> +	if (ret !=3D sizeof(sbuild_id) - 1)
+
+Could this strict length check reject valid 16-byte build IDs?
+
+The kernel and perf subsystem natively support shorter 16-byte build IDs
+like MD5 or UUID. For these, sysfs__snprintf_build_id() would correctly
+return 32.
+
+Since 32 does not equal sizeof(sbuild_id) - 1 (which evaluates to 40), will
+this erroneously return -EINVAL and cause perf buildid-list to silently
+ignore valid kernel maps and binaries?
+
+>  		return ret < 0 ? ret : -EINVAL;
 > =20
->  	pr_debug("unwind: %s:ip =3D 0x%" PRIx64 " (0x%" PRIx64 ")\n",
-
-Does removing these reference increments reintroduce a use-after-free
-regression?
-
-Directly after these assignments, entry() calls addr_location__exit():
-
-tools/perf/util/unwind-libdw.c:entry() {
-        ...
-        addr_location__exit(&al);
-        return 0;
-}
-
-This drops the references held by al. If these were the last references,
-the map and maps objects will be freed.=20
-
-The e->ms.maps and e->ms.map pointers are later accessed in
-unwind__get_entries() when it invokes the callback, potentially using
-memory that has already been freed:
-
-tools/perf/util/unwind-libdw.c:unwind__get_entries() {
-        ...
-        err =3D ui->entries[j].ip ? ui->cb(&ui->entries[j], ui->arg) : 0;
-        ...
-}
+>  	return fprintf(fp, "%s\n", sbuild_id);
+>  }
 
 [ ... ]
 
-> @@ -319,9 +319,6 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *a=
-rg,
->  	if (err)
->  		pr_debug("unwind: failed with '%s'\n", dwfl_errmsg(-1));
+> @@ -72,8 +72,8 @@ static int filename__fprintf_build_id(const char *name,=
+ FILE *fp)
+>  	char sbuild_id[SBUILD_ID_SIZE];
+>  	int ret;
 > =20
-> -	for (i =3D 0; i < ui->idx; i++)
-> -		map_symbol__exit(&ui->entries[i].ms);
-> -
->  	dwfl_end(ui->dwfl);
->  	free(ui);
->  	return 0;
+>  	ret =3D filename__snprintf_build_id(name, sbuild_id, sizeof(sbuild_id));
 
-Instead of reverting the fix entirely because map_symbol__exit() is absent =
-in
-v6.6.y, would it be safer to retain the map__get() and maps__get() calls in
-entry() and replace this loop with manual decrements using map__zput() and
-maps__zput() here?
+Does the underlying build-ID extraction sequence miss an O_NONBLOCK flag,
+potentially allowing indefinite hangs?
+
+When filename__snprintf_build_id() processes user-supplied file paths, the
+underlying open() call happens without O_NONBLOCK.=20
+
+While there is an is_regular_file() check beforehand, could a time-of-check
+to time-of-use race allow swapping the file with a FIFO or blocking device
+immediately after the check, causing the tool to hang indefinitely?
+
+> -	if (ret !=3D sizeof(sbuild_id))
+> +	if (ret !=3D sizeof(sbuild_id) - 1)
+>  		return ret < 0 ? ret : -EINVAL;
+> =20
+>  	return fprintf(fp, "%s\n", sbuild_id);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420163222.2351=
-7-1-k@mgml.me?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260420180858.1290=
+75-1-namhyung@kernel.org?part=3D1
