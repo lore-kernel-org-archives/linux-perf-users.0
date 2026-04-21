@@ -1,155 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9784540DFA1;
-	Tue, 21 Apr 2026 00:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35326375ABD;
+	Tue, 21 Apr 2026 03:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776732685; cv=none; b=FvG5evL7JOxdiTsuFL1trkS5WUANuuOWnyPQ/mBDhXunMmRZBpYuwMengYXmNh+8/N0mtCDcUOUP7ugXJChwB+APq1RPLyB7VdJsAzrnrZ2J2g8hQQVdUO0MSaUTJlnoG3HFGQOBbWQO1J3bc9hiQ20gFL1dwpPlmu4+EIU8j5U=
+	t=1776740850; cv=none; b=bBMslRj/kNVpfnh2k5A2T0WOvDpTgyQjLpbhbl5lEyJHFIbtGanPebh8MuAaFRvwzYvuexyqFUAujIRcxTRDZ3FVm84ll6+SBz6iAE1/ObIORjlI9yIEOwe+CEJN6pWOTz14CAYYh1gChVFW500v79RlbvpBD3iOIlBDJjnnV2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776732685; c=relaxed/simple;
-	bh=7xsug3MzVT3sa/rbi3MyvHMTLTWa19C7FdsnVZB5LBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jzvAA5YZVpXtLyN1Qu+djeJ0g7Q1g9EwgajC77VMZLfhVwlF6Z8KzpNuqom0Mw+YyPP9Aei/rGG24pD2R8w1WqSvBc0qwQ2dV7GD+Z1LjB09L6voXz1DWngKjSZ0T+vhVhRj+Th58OvOXddHokPAtc1l6FraGQQceWlvhhFgYPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJJdheIR; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJJdheIR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776732684; x=1808268684;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7xsug3MzVT3sa/rbi3MyvHMTLTWa19C7FdsnVZB5LBA=;
-  b=AJJdheIR8YorGGhH63Fkz1JzIFD24DAX2O0L5ZgRhczm0XdM7JPAi5hk
-   0+zaSW20Uq+EFX8+iMiMuluvGDaPQ3ylN2+tCZv1ecmtTL9Cfb8ViaVOv
-   hZg+Uzhh1loUR8fLdbN+PgLVBnF0X1R/LrRsvzpeabyKdIALSb1hI/xTc
-   m1wT+58Z5drxjrexZMqns+7Inttqxdwx0yesZG/t3ofDV5pRPYBXUa0Aj
-   AadDSHepzCDufVNuRIdBgIERRxdaHCGgWf3dt702Xwp/wgLnuQLCgMOXP
-   ad10tHi2iL69XAqN8lh7seyngW9xY3JKa9DrxP4BqZZeFmyEFy83YVmyl
-   A==;
-X-CSE-ConnectionGUID: zV76Ew5gR6GDMGJVIIxcfQ==
-X-CSE-MsgGUID: +33yshXcS1aDL123Nlo2qw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="100317720"
-X-IronPort-AV: E=Sophos;i="6.23,190,1770624000"; 
-   d="scan'208";a="100317720"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 17:51:24 -0700
-X-CSE-ConnectionGUID: 9VrBqzQ4TbSEK5ZV2rsACw==
-X-CSE-MsgGUID: AGT141nnSWCAA/hZYbzhIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,190,1770624000"; 
-   d="scan'208";a="228718544"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 17:51:19 -0700
-Message-ID: <d93ccac4-d1c6-4d56-9714-33a32e5c4f48@linux.intel.com>
-Date: Tue, 21 Apr 2026 08:51:16 +0800
+	s=arc-20240116; t=1776740850; c=relaxed/simple;
+	bh=vVd/7SelOp7jYayhI2w6h4uvD0LPeSpGH137yQgPMc4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpD2H0V+Y+/C5HNTwGLLCCcvLPj1NE2PY5/G9MLx9TBZLxc5LJo7BO7qnL9yrOVlVmhaC+F6WdrbzK0VeTt8uXxYqdSQPnZL+ai4CJ0dmkwVOCLU1v49G1B1C1PJxnnoMHEOx1gjdOrEc+c9HNY+jl0SlRmYS70ZLuv5U3pJTFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4g06hl3478z1YQpmD;
+	Tue, 21 Apr 2026 11:07:03 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4g06hj31Ffz1YQpmD;
+	Tue, 21 Apr 2026 11:07:01 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id A77E933D4F40;
+	Tue, 21 Apr 2026 11:07:00 +0800 (CST)
+Received: from hsj-2U-Workstation (172.19.20.61) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 21 Apr
+ 2026 11:06:53 +0800
+Date: Tue, 21 Apr 2026 11:06:59 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: Pedro Falcato <pfalcato@suse.de>
+CC: Mateusz Guzik <mjguzik@gmail.com>, <akpm@linux-foundation.org>,
+	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <muchun.song@linux.dev>,
+	<osalvador@suse.de>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>,
+	<yingzhiwei@hygon.cn>
+Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
+Message-ID: <aebp06qEMBx3yjHg@hsj-2U-Workstation>
+References: <20260413062042.804-1-huangsj@hygon.cn>
+ <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+ <aeWLCxru6cLWsxvQ@SH-HV00110.Hygon.cn>
+ <hshxzebq5y4gavo7mbrgn7qitz5j5wyun73wy7ooiiehzzpcui@hlknbp34sgja>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Remove anythread_deprecated bit from
- perf_capabilities
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- stable@vger.kernel.org
-References: <20260415021010.1248083-1-dapeng1.mi@linux.intel.com>
- <aeaZUZyILpy6HKnJ@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aeaZUZyILpy6HKnJ@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <hshxzebq5y4gavo7mbrgn7qitz5j5wyun73wy7ooiiehzzpcui@hlknbp34sgja>
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
+On Mon, Apr 20, 2026 at 02:48:49PM +0100, Pedro Falcato wrote:
+> BTW you're missing _a lot_ of CC's here, including the whole of mm/rmap.c
+> maintainership.
 
-On 4/21/2026 5:23 AM, Namhyung Kim wrote:
-> On Wed, Apr 15, 2026 at 10:10:10AM +0800, Dapeng Mi wrote:
->> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
->> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
->> represent "anythread deprecation" in perf_capabilities. It leads to the
->> anythread_deprecated bit could be overwritten by the real value of
->> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
->>
->> ```
->> if (!intel_pmu_broken_perf_cap()) {
->> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
->> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
->> }
->> ```
->>
->> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
->> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
->> these support Perfmon v6 platforms, like Clearwater Forest.
->>
->> ```
->> $grep . /sys/devices/cpu/format/*
->> /sys/devices/cpu/format/acr_mask:config2:0-63
->> /sys/devices/cpu/format/any:config:21
->> /sys/devices/cpu/format/cmask:config:24-31
->> ```
->>
->> So remove the anythread_deprecated bit from perf_capabilities structure
->> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
->> deprecated.
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: Namhyung Kim <namhyung@kernel.org>
->> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
->> Acked-by: Namhyung Kim <namhyung@kernel.org>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 9 +++------
->>  arch/x86/events/perf_event.h | 2 +-
->>  2 files changed, 4 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 793335c3ce78..450c63165a22 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -7612,11 +7612,8 @@ __init int intel_pmu_init(void)
->>  
->>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
->>  
->> -	if (version >= 5) {
->> -		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
->> -		if (x86_pmu.intel_cap.anythread_deprecated)
->> -			pr_cont(" AnyThread deprecated, ");
->> -	}
->> +	if (version >= 5 && edx.split.anythread_deprecated)
->> +		pr_cont(" AnyThread deprecated, ");
->>  
->>  	/* The perf side of core PMU is ready to support the mediated vPMU. */
->>  	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
->> @@ -8467,7 +8464,7 @@ __init int intel_pmu_init(void)
->>  				      &x86_pmu.intel_ctrl);
->>  
->>  	/* AnyThread may be deprecated on arch perfmon v5 or later */
->> -	if (x86_pmu.intel_cap.anythread_deprecated)
->> +	if (edx.split.anythread_deprecated)
-> Do we need to check the version here as well?
+Thanks, my fault.
 
-hmm, it should be enough to only check the CPUID
-"edx.split.anythread_deprecated" bit  in practice. But if we want to follow
-the SDM 100%, the version check should be added here.
+> 
+> On Mon, Apr 20, 2026 at 10:10:19AM +0800, Huang Shijie wrote:
+> > On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
+> > > On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
+> > > >   In NUMA, there are maybe many NUMA nodes and many CPUs.
+> > > > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> > > > In the UnixBench tests, there is a test "execl" which tests
+> > > > the execve system call.
+> > > > 
+> > > >   When we test our server with "./Run -c 384 execl",
+> > > > the test result is not good enough. The i_mmap locks contended heavily on
+> > > > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have 
+> > > > over 6000 VMAs, all the VMAs can be in different NUMA mode.
+> > > > The insert/remove operations do not run quickly enough.
+> > > > 
+> > > > patch 1 & patch 2 are try to hide the direct access of i_mmap.
+> > > > patch 3 splits the i_mmap into sibling trees, and we can get better 
+> > > > performance with this patch set:
+> > > >     we can get 77% performance improvement(10 times average)
+> > > > 
+> > > 
+> > > To my reading you kept the lock as-is and only distributed the protected
+> > > state.
+> > > 
+> > > While I don't doubt the improvement, I'm confident should you take a
+> > > look at the profile you are going to find this still does not scale with
+> > > rwsem being one of the problems (there are other global locks, some of
+> > > which have experimental patches for).
+> > > 
+> > > Apart from that this does nothing to help high core systems which are
+> > > all one node, which imo puts another question mark on this specific
+> > > proposal.
+> > > 
+> > > Of course one may question whether a RB tree is the right choice here,
+> > > it may be the lock-protected cost can go way down with merely a better
+> > > data structure.
+> > > 
+> > > Regardless of that, for actual scalability, there will be no way around
+> > > decentralazing locking around this and partitioning per some core count
+> > > (not just by numa awareness).
+> > > 
+> > > Decentralizing locking is definitely possible, but I have not looked
+> > > into specifics of how problematic it is. Best case scenario it will
+> > > merely with separate locks. Worst case scenario something needs a fully
+> > > stabilized state for traversal, in that case another rw lock can be
+> > > slapped around this, creating locking order read lock -> per-subset
+> > > write lock -- this will suffer scalability due to the read locking, but
+> > > it will still scale drastically better as apart from that there will be
+> > > no serialization. In this setting the problematic consumer will write
+> > > lock the new thing to stabilize the state.
+> > > 
+> > I thought over again.
+> > I can change this patch set to support the non-NUMA case by:
+> >   1.) Still use one rw lock.
+> 
+> No. This doesn't help anything.
+> 
+> >   2.) For NUMA, keep the patch set as it is.
+> 
+> Please no. No NUMA vs non-NUMA case.
+> 
+> >   3.) For non-NUMA case, split the i_mmap tree to several subtrees.
+> >       For example, if a machine has 192 CPUs, split the 32 CPUs as a tree.
+> 
+> If lock contention is the problem, I don't see how splitting the tree helps,
+> unless it helps reduce lock hold time in a way that randomly helps your workload.
+> But that's entirely random.
+We actually face two issues:
+   1.) the lock contention
+   2.) the lock hold time.
 
-I would add an version check here. Thanks.
+IMHO, if we can reduce the lock hold time, we can ease the lock contention too.
+So this patch set is to reduce the lock hold time, which is much helpful in our
+NUMA server in UnixBench test.
 
+If we split the lock into small locks, we can also benefit from it. 
+If you or Mateusz create the patch in future, I can test it on our server.
+I wonder if it can give us better performance then current patch set.
 
->
-> Thanks,
-> Namhyung
->
->
->>  		x86_pmu.format_attrs = intel_arch_formats_attr;
->>  
+Thanks
+Huang Shijie
+
