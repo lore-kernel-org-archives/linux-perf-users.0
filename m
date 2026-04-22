@@ -1,216 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9836A2737E3
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 17:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1323F0AB1
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 19:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776879390; cv=none; b=K/HbbdbF7g48BX9QO0uDye3kFieR6l8jcKYOxBJxEAkVxhDXY1nbkzhOi/nKCoWX6Xcijn6kKzHFHxz6EFGNSVCp3EJLm723yj2O6T8stMyalsjaHdESXi2IGxqx/NTIKKEFLs8LbW/YgYIVuuikOq4T6VEtQJKc11tmMRoF+ss=
+	t=1776885681; cv=none; b=VMYLH+SILWwPnVFuZEacvtlEO88PiZkKiPrL1z44jqzC99BhhN5G2KlGlA/6T/mdjzgNWc65d7uMX77F88UVHdw2nxUwzXBUdN4o5Smn7eEXqVnuq3BN4ngADUbQVt0Od3dutQunuR8SEy+hD6OCw3dlWUxg5oqU0MLauMC6KIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776879390; c=relaxed/simple;
-	bh=Uk+23ep+tZpY/WpE3EeHt/K9wHXIfbl//xmkje7rKT4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=khzLHqby7x+FzXVvH8n3vmKUuIjDKdJKecUuM/2rCkd4P4mfcL4ghYvQyE05rwo8TY+C0kBRSrsIbh/NOpn7xmLAqNnv7NJ+kREE3dCN5HT5VkKFJzLBdXjWdRWZmjaxJIHsKI0vfVbDIq42Cf3f9Ael8miwMXzHJeU0BatCx/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i7EOUKez; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1776885681; c=relaxed/simple;
+	bh=JSDNMDdj6RBvtVEwzv907ejZyctuNojqTmmTQ8K/xx4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TnPKpx2VuXSO7+aD8K6IyKUMosUpdxk3PcRII5Fe1LdEOcFwajpol2o7SvZqoVoVXgJfjKA4N9XFD2x91/ltumVFMVyTI67LH5YcDGaAt3IPzdmKm0gNcZkZAzJm1hF/Kcivqkdir/VA2jflNmsFoeRD+SxbHk4hEwrw6Dy4E8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ffph252g; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i7EOUKez"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63MGMep03515444;
-	Wed, 22 Apr 2026 17:36:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=s2BqK87P3busZvwnKMqLZKct+u+esfha5cyZCzHRZ
-	kU=; b=i7EOUKezNPThLibWCTqm9JzX1lp+JxOtgcYWCSBB1wbgsfCWv/UaWSP6K
-	jLKePsQCWhRTl/MSS/ouZVuZ5nccm1Tof1388I+qHgnZzpc0i4A9RpiVyOtGmZVJ
-	BrsvBSc2tWKiYp+lLW7T85f+xwNOOlV+H4FoVoev8BkM/URWLsx4LOrxxTv4k2vS
-	G3i8oKknqQYcoBb9ncdN1dMC91bvoQpNzhWBg4hd1xZTN8PEuRTZsgjdDiXWZjSQ
-	Mklf0qrLz1PAllob4kW/29/0IrW5DzJ/jT9526QobFAvEeG+za6+FGpiPvpcRMTu
-	yNz2FbyatguckwVrSQyQ0mXOcKD4A==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dpeu24sgp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Apr 2026 17:36:19 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63MHZKeV003564;
-	Wed, 22 Apr 2026 17:36:18 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dpjkxu7kv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Apr 2026 17:36:18 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63MHaEo130409064
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Apr 2026 17:36:14 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A613820043;
-	Wed, 22 Apr 2026 17:36:14 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C721020040;
-	Wed, 22 Apr 2026 17:36:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.39.30.235])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Apr 2026 17:36:11 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Subject: [PATCH] perf sched: Fix crash in sched stats diff due to uninitialized perf_data structure
-Date: Wed, 22 Apr 2026 23:05:45 +0530
-Message-Id: <20260422173545.73144-1-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ffph252g"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-82fa5ecd760so2656300b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 12:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776885669; x=1777490469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y+/vNTslcH/cppWkVgQ41I/n1943Jgelp7T3O60OjFk=;
+        b=ffph252gxQ9r/qrE3dsCr6k8bknSCKbmRtutCOi37Xbzc+baIYdn/mPFLB0LAnj3pr
+         kl1l5x6oL3hy6NGF2tshXW5he6LP3tZpXj8yqdqV03MPsf0KR1Y4ZlalJJHfGdhoJo1U
+         MiWjQ4GXdlDziDUATO24FNrd49b8gtuo9eFVXAKa4HmEaCyPFovZb/+7c2f6e3c1oD41
+         4YQvxucR1Dw2A96sgzSX5hPhefaL6bH9i9Im+6dMjAH/0D+6mFdlIC3402o1bPcw8Opm
+         zI8DGHXWhbDCwhPy+G+/nwkzu3OmPjPx2Fh70y+Sxsufxxqj2oWE/m1Pg1bqAPSCxMAz
+         lK/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776885669; x=1777490469;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y+/vNTslcH/cppWkVgQ41I/n1943Jgelp7T3O60OjFk=;
+        b=scxgqddIaoNPWZxvVoPMjU7ezwfiprxN+pEZcbTgYLZU3G18OuEGp5TeXdnmcuCGAF
+         tiz39HAlMfJr0obHHmqDfu3RCRgJkKlLIVr1KNN/ucBVKDpblz36aatzspgLJF++pu8H
+         cl3YKtnna4bl8ORZH2InGKwKOxNch3bbH8LPIofnUZ7CJYDjje8jodIJecrcwIElQoPp
+         mhmJ/RTCeVIylXIxwiskVxbcSHPrYN784DKdnzPnphCyAR13X2oVeHN287z7oefy0ufc
+         L0Qr+MEhMTsy1RD+DScI//4VtFOoCQi4XVCyGeSOfqrfeKPBh+6xAIHtt0DGdQCShUex
+         JxXw==
+X-Forwarded-Encrypted: i=1; AFNElJ+Y+mexxT0B2c5JpYFpX5OmWRsF3MUi8Awi8h1FbBY2SzYNu8IBlF9YiE/KYiUb+7bRV+2ba1+a/sLh9zbVxHZh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6rnuVSIiQhgOsMksDdA68C0vRI0kfnOTXOoxBcptiwjfIKMdE
+	egnKxLD2pgkbECPrsrrDYJ6d9U0x6qV+jSA9huIpu6GedqIcpihRAuy9+IJKeIZOQS1TKYVChFu
+	Y7Rmkwg==
+X-Received: from pfgg10.prod.google.com ([2002:a05:6a00:bd8a:b0:82f:bea1:81f4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:cd6:b0:82c:eafa:8875
+ with SMTP id d2e1a72fcca58-82f8c82e889mr26141949b3a.2.1776885669168; Wed, 22
+ Apr 2026 12:21:09 -0700 (PDT)
+Date: Wed, 22 Apr 2026 12:21:07 -0700
+In-Reply-To: <0f0e5ba5-e6af-45ca-98b8-ea3bcbcede59@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIyMDE2NyBTYWx0ZWRfXz7XoSV/kWtvR
- YznATFeblMFplDhVI5eegDomNE30dm7QopcRBNthuIZSQ26z0MDEYeF3gw3m/SPoAy6CyfmRx0Y
- lgMUCRaJpyetNy/6ib6yhDOL14Srp0o3Xaos5r9xScB1HOVfNTNOoRXA77pSEDymYuwgOb/SRyT
- QULz66Z4YbiQhj/5q7Psdkr3/dx1k4YwNtifVks0/Q+CeS1TNsU4nyl2tcicY6cRFdyPriq7Yjj
- dAj+KkgbhP/W5S1vKj1qC+FM6MI6SPFsjnMn7QfvBJj61JPz56zgAUQOnCCHSo5SFDgKJRIBodL
- 5urd01EUcKWxXGI79+bpQLMfv8oPQywlncjGEKBACGLDB9zJQTn4iH6mQP77owVuWq6mpMpbm4z
- dBU4YMfswRY+uhp0CfhmhJaNL1RUo4q8yLUddU4nDYyMmkwRPgoPChnDKrD1+eXd5V0PgvdKPVv
- sZURajTxo+zFlOmHcjg==
-X-Proofpoint-ORIG-GUID: kO37_hnscnMYR81Tnn_nPId96kExk12C
-X-Proofpoint-GUID: NM2Xa-JT7Lu4q0-Md1peximJP9oTjLfd
-X-Authority-Analysis: v=2.4 cv=XMUAjwhE c=1 sm=1 tr=0 ts=69e90713 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=gqBEGFNiBRC4Mxh7sp8A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-22_02,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604220167
+Mime-Version: 1.0
+References: <20260420091634.128787-1-jgross@suse.com> <20260420113512.GG3102624@noisy.programming.kicks-ass.net>
+ <20260420114117.GC3102924@noisy.programming.kicks-ass.net>
+ <d730553e-b7ca-4f90-a367-4c0ce0d8e7f4@suse.com> <aeYty5kU8Rp44USr@google.com> <0f0e5ba5-e6af-45ca-98b8-ea3bcbcede59@suse.com>
+Message-ID: <aekfoxmXbsvYn5eB@google.com>
+Subject: Re: [PATCH RFC 0/6] x86/msr: Rename MSR access functions
+From: Sean Christopherson <seanjc@google.com>
+To: Juergen Gross <jgross@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-perf sched stats diff fails sometimes with below logs:
+On Wed, Apr 22, 2026, Juergen Gross wrote:
+> On 20.04.26 15:44, Sean Christopherson wrote:
+> > On Mon, Apr 20, 2026, J=C3=BCrgen Gro=C3=9F wrote:
+> > > On 20.04.26 13:41, Peter Zijlstra wrote:
+> > > > On Mon, Apr 20, 2026 at 01:35:12PM +0200, Peter Zijlstra wrote:
+> > > > > On Mon, Apr 20, 2026 at 11:16:28AM +0200, Juergen Gross wrote:
+> > > > >=20
+> > > > > > - Use functions instead of macros for accessing MSRs, which wil=
+l drop
+> > > > > >     modifying variables passed as a parameter.
+> > > > > >=20
+> > > > > > - Eliminate multiple accessors doing exactly the same thing (e.=
+g.
+> > > > > >     rdmsrl() and rdmsrq()).
+> > > > >=20
+> > > > > So far so sane.
+> > > > >=20
+> > > > > > - Instead of having function names based on the underlying inst=
+ruction
+> > > > > >     mnemonics, have functions of a common name space (msr_*()).
+> > > > >=20
+> > > > > Not sure on this one. The whole msr_{read,write}_{safe,noser}() t=
+hing is
+> > > > > a royal pain. Also 'noser' reads to me as the noun that goes with=
+ 'to
+> > > > > nose' [he that noses (around), like baker: he that bakes].
+> > > > >=20
+> > > > > I would much rather we just stick to the mnemonics here. All of t=
+his
+> > > > > really is about wrapping single instructions, no need to make it =
+an
+> > > > > unreadable mess.
+> > > >=20
+> > > > Also, the _safe suffix should just go away. All MSR accessors shoul=
+d be
+> > > > 'safe'.
+> > >=20
+> > > That would be fine by me, but I'd like to have some confirmation this=
+ is
+> > > really the route to go.
+> >=20
+> > I don't care what the suffix is called, or if there is even a suffix, b=
+ut there
+> > needs to be a way for the caller to communicate that it wants to handle=
+ faults,
+> > so that the "caller isn't going to handle a fault" case generates a WAR=
+N if the
+> > access does #GP.
+>=20
+> So this calls for keeping the *_safe() variants (keeping the name or not)=
+.
+>=20
+> Using the label based error handling for those is a no-go IMHO, as we are
+> trying to inline all MSR accesses as much as possible in order to avoid
+> calls and the associated possible retpoline stuff (request by Thomas Glei=
+xner
+> IIRC). Doing the WARN inline will bloat code more than necessary, especia=
+lly
+> as we already have the central WARN today when fixing up the #GP.
 
- # perf sched stats record ls
+I don't see why those two are mutually exclusive.  Keep the WARN in the exc=
+eption
+fixup code, and let the caller use a label (or not).  Label-based error han=
+dling
+should allow for the best of both worlds, as the RDMSR/WRMSR can be inlined=
+, with
+the (presumably) unlikely error path being shoved into an out-of-line, cold=
+ path.
 
- # perf sched stats diff
-  *** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: terminated
-  Aborted (core dumped)
+> In order not having to modify the logic for current use cases it would be
+> best to keep the main interface of the *_safe() functions (let them retur=
+n
+> 0/-errno, use a pointer for the value returned by rdmsr_safe()).
+>=20
+> We can add label variants on top using macros.
 
-Also in some runs, perf sched stats tests fails
-
- ./perf test "perf sched stats tests"
- 92: perf sched stats tests                                          : FAILED!
-
-==172375== Conditional jump or move depends on uninitialised value(s)
-==172375==    at 0x10393BD0: open_file_read (data.c:264)
-==172375==    by 0x10393F63: open_file (data.c:317)
-==172375==    by 0x10394067: open_file_dup (data.c:334)
-==172375==    by 0x103942DF: perf_data__open (data.c:379)
-==172375==    by 0x102F7CAF: __perf_session__new (session.c:169)
-==172375==    by 0x100B5E63: perf_session__new (session.h:116)
-==172375==    by 0x100D5D37: perf_sched__schedstat_diff (builtin-sched.c:4568)
-==172375==    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
-==172375==    by 0x1010231F: run_builtin (perf.c:348)
-==172375==    by 0x1010262F: handle_internal_command (perf.c:398)
-==172375==    by 0x1010286F: run_argv (perf.c:442)
-==172375==    by 0x10102C67: main (perf.c:549)
-==172375==
-==172375== Conditional jump or move depends on uninitialised value(s)
-==172375==    at 0x10393D20: open_file_read (data.c:282)
-==172375==    by 0x10393F63: open_file (data.c:317)
-==172375==    by 0x10394067: open_file_dup (data.c:334)
-==172375==    by 0x103942DF: perf_data__open (data.c:379)
-==172375==    by 0x102F7CAF: __perf_session__new (session.c:169)
-==172375==    by 0x100B5E63: perf_session__new (session.h:116)
-==172375==    by 0x100D5D37: perf_sched__schedstat_diff (builtin-sched.c:4568)
-==172375==    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
-==172375==    by 0x1010231F: run_builtin (perf.c:348)
-==172375==    by 0x1010262F: handle_internal_command (perf.c:398)
-==172375==    by 0x1010286F: run_argv (perf.c:442)
-==172375==    by 0x10102C67: main (perf.c:549)
-
-The valgrind logs and error message from the logs points to
-below snippet:
-
-     static int open_file_read(struct perf_data *data)
-     {
-            int flags = data->in_place_update ? O_RDWR : O_RDONLY;
-            struct stat st;
-            int fd;
-
-            fd = open(data->file.path, flags);
-
-The "struct perf_data" is defined here :
-
-    static int perf_sched__schedstat_diff(struct perf_sched *sched,
-                                      int argc, const char **argv)
-    {
-        struct cpu_domain_map **cd_map0 = NULL, **cd_map1 = NULL;
-        struct list_head cpu_head_ses0, cpu_head_ses1;
-        struct perf_session *session[2];
-        struct perf_data data[2];
-        int ret = 0, err = 0;
-        static const char *defaults[] = {
-                "perf.data.old",
-                "perf.data",
-        };
-
-Here due to uninitialized "struct perf_data", the arguments to "open"
-is getting wrongly passed sometimes depending on value in stack.
-When perf_data__open() function calls open_file_read(),the
-"in_place_update" could contain garbage value.
-
-After initializing "struct perf_data" in perf_sched__schedstat_diff() function,
-perf sched stats tests runs without issues in multiple attempts and also
-"perf sched stats diff" ran individual without issues.
-
-for i in {0..20}; do ./perf test "perf sched stats tests"; done
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
- 92: perf sched stats tests                                          : Ok
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
- tools/perf/builtin-sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 555247568e7a..5d2740099eed 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -4538,7 +4538,7 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
- 	struct cpu_domain_map **cd_map0 = NULL, **cd_map1 = NULL;
- 	struct list_head cpu_head_ses0, cpu_head_ses1;
- 	struct perf_session *session[2];
--	struct perf_data data[2];
-+	struct perf_data data[2] = { 0 };
- 	int ret = 0, err = 0;
- 	static const char *defaults[] = {
- 		"perf.data.old",
--- 
-2.47.3
-
+But that's likely going to defeat the value of using labels.  Or at least m=
+ake
+it more difficult to generate optimal code.
