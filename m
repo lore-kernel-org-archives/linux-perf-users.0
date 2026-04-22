@@ -1,160 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD503148C9;
-	Wed, 22 Apr 2026 02:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776825660; cv=none; b=OTMWuUe49JNnE4oUDyp/STUsmFypaf+otFYc9JNYmcEuvj+cNXIc7hAQJLUEv4kbuXKeH7eHsaeX31aSCf7/9GasUGlPBbnrdfL8BLqv8DaR0DbI9a3FPts5G+2CUBSO6HLOH/YvdTKF0dFOTnrGS0C9zbFf+xV0UP3tbj902yY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776825660; c=relaxed/simple;
-	bh=bKu9cPgYERopw0PQgTINDBcTh6EB/aziLsJ1miFX1LQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+6CTfAfM+H9FjgsnqxgOHnGLexZaETMxQW1TTZ9zMLrwcKqA59EhuZrTdCGHVV3ck955CpAQ8UUEiGTK3rJz1/8i6vdOGYTEheG7i3UFNyAL07O73OB5xtdl1D9Y/pi8mYWax8Bp1NEVLE5p3ZaUe0wMQ5l/vLv1oyoiWCNVh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lb4MGnQ7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641FD3431E3
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 03:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776830287; cv=pass; b=HF422iQyMicIL1ofYiR0t/u6OSK5x4+RDavSk/l8oCNcBwXD87ltqufb7x05pNAnUjYzGCCVOsO9SzWRETT+YseoQV5VBTeSxF2butrz5jHS/oa+YvbPEA8DzBIXAM/MJ3w7RZStUOR6iRKfaOFJ9euIt0+QxqR4YaOwtSUgJ5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776830287; c=relaxed/simple;
+	bh=5GJsF08pQ4paFemCsTpWN6URgMlZJlEsZk5kOl6oVVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BhtZZQ9J6KDSysQ/fCzrMolJ3n/OkJUqgVnyJjOpd6qJ7lL9xIEmMwf38T39uNHEU+FkFjTwVWuRR1Taz4Thxr0ToFUnmuxf02ud8PpHMQkZMl6TuRe4VSoJF3v5EDDCMQjMezqgen8E5RxrR8dxCiB9eBMuhSDj0ImNXKEH/6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TcnKmgUE; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lb4MGnQ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED021C2BCB0;
-	Wed, 22 Apr 2026 02:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776825659;
-	bh=bKu9cPgYERopw0PQgTINDBcTh6EB/aziLsJ1miFX1LQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lb4MGnQ7IUicomGOoNsXKG6wNL1Q8DdaoVGu+hv0YKOSKP3dyelTb8fdNq93Eq1WC
-	 laZ1joIJf40dQRkyaqgYdIJ8y7CnxlxkM2wox5i3TKNASb5mW7FIDlOrTctxh8ChV0
-	 Pu1B48a9nb7iHTaTSFf1h8fMRZVPntFG4VEj4FS0paDqw5nUMCz2OlFVdppGhEP3hP
-	 2wjrhckgJLXmmRDowH7tnH+y5XObtdWl00u3P/x3LNoF2LyOmqe2886FCeYCkXU7Js
-	 C6mXx2yWOHLF80eAA5r9x+tvVg1Rn9cZeXyf4iKsmUyfNQtpwPQ7aFIdm/e7Md6u8o
-	 ZkXxlpR1qNjGw==
-Date: Tue, 21 Apr 2026 19:40:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] perf/lock: Fix non-atomic max/time and min_time updates
- in contention_data
-Message-ID: <aeg1ORW2I-YLvpFL@google.com>
-References: <20260419182754.143225-1-suchitkarunakaran@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TcnKmgUE"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso341315ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2026 20:58:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776830286; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DY80YPOsM66QUUGcRplwKzjf1Mu1c1S9TrhmiRoPfJR1LVqMZ7tz13sXMv2oaOC7+g
+         QeWhDyh60Ze+wuo9TlUpNAmGFhv2jNSq6aIMMxNNbRLxulh6tBngtwdIqyAoruCgAkai
+         dMkb1d9b4JY6YNvDx0CxXqys0WKeiqlFH7xfFDao8j4oeVH6YOvoxQuSgJEFqxy+xlZm
+         GOuPHDoQrIlprJR36pXQQe/e4wyPv1m5IusZbkyKgpm1My//yEWlOthcHJ1SuxEJZekz
+         iNG9/UksneJ0F5wcKfcY2kH+YEOPJfpl3ULaWNlyPsSu2CVkl95Ew7dX2rBzNj7hXvCT
+         RtDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3vcY4nYueHrKZZVkH9OI6RsVYJ+Oz/SvjOA/ZYvuSpk=;
+        fh=5agR9RMzbtRDSs9mp5CNxG6teRUQ1DPZOR/Le71rEgA=;
+        b=dCiJ2MWv1JuRLh0ZZdbTkg+Byhteq4cJF7duBoeyc5k068IwmfSxZBxdlIqOH+Ws67
+         KIWa6A1qPbZbSieiOtauIgu3puhLYBHjOYXLTvVlApWF3Memc3lK/52BpUOVtCAGJAB5
+         ezG0/PcipPvNbLAwuDKMb6mR4W1BS/mEUUxD6pIqpFoi9t9u4qVkgqtQQvGyDEdrifOP
+         IR9rwmpUIYtDwfxDp8YQwVUMryfXPiY4B6t6uoI9YqJpUclxAZ++mZBee/Mblr+V2uy9
+         3bGv64vX6/lhXE0dgWzudJmakuQPu1473zt5L1PrYEk2mz+UgT/wXR7eNzuoXjtW5jJR
+         2cZA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776830286; x=1777435086; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3vcY4nYueHrKZZVkH9OI6RsVYJ+Oz/SvjOA/ZYvuSpk=;
+        b=TcnKmgUE804Im54iq5k+0rNI8BlfgWgdjX4MrkX6gPlwGAt6z6l+ADTdXxHSliEtPI
+         pVFQMUqCJLAJfq5ON4qDJuZNAWgkfxPRd21PFzGHqq9e19S0lt624PDs+icg1gK9EmzX
+         xTypPGQWBYndUWyjH5z/QTlszo14tpVhSs9dFAI+TnrqVkgIdRjCnoXoMT7zhtqMHvjl
+         Fofz/6WIG30Jdm+zbpoDNw3lQmvvO7XIik15AYaPCdvxdhg3G5Y57RZjARokXi+277ek
+         Te5ghPU2YnPNItkwfgj8uv4xX4aygSXvOKVfVBFgV/K/Ig9xdbN5YE1KBx7T9JDtcLEW
+         iaGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776830286; x=1777435086;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3vcY4nYueHrKZZVkH9OI6RsVYJ+Oz/SvjOA/ZYvuSpk=;
+        b=P4rotJdw7EjOY0et/Gk8hvx/DX6GFP/daTNZOuADCbQ6XyY59kvHHoKAw+v7FAX7SV
+         fCRQhZQxExXmJ7y5m2/dbRbtyoduyoX/tw1xOMXduj+USpFRjuRyF+owXCJiC4KFcqak
+         nv/lc4mM9rnlQEVGvwJfj/m7BmDpjE3U551BnhuycOE9gZO1WS4tW5MJCzy00wbsAoQc
+         cFqOPmfPP99/5WI4TL5XmyppEuFptZB0R1qbmmaKYmrnYuZApwypBX5S3Jh78x031hL+
+         cZkVlKcGd8WFGwSaIx42tEqmRl4NZg4QJbgDRarPHRLwT9C4USm8ZrI1Ze0AqwdiLO8i
+         Ifwg==
+X-Forwarded-Encrypted: i=1; AFNElJ+HIcsrTj6UhAtsR/rXYpbo4CfgzEXq8nd+yjDYRrkS3OMF+FXcQudO/FdyvvA9//L3Xe5qc4O7ppSSoNI3LO8Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAGUMBmjv+0V6iMRdSb1qEemvXfV6FqEZBwYH+QtfKbHT1QJEV
+	FjaErlNxNcxk0La/f4zUUIis7levkn2+Dn57bzZiZASxeuvtFC9ZHZSXvlNOeiRK7pp8qQapRMT
+	pQlZZTN9lLsmIR0pP8Ys+ProAn5/l+UFsm2emEmpR
+X-Gm-Gg: AeBDietLpjYjVVH6UBpDy8lMJe2Cgg/A9nnO88kH+Fb6xs6XtnOm+eUM6KC+QUJH+2v
+	4cojhqPOkd6wA+kxA4z4hWmFHV4YbGVPMy1u2xcsDtf3gLFCPizSn7uxT9BMuSRmWetYbom4pNl
+	HJvYOgwog+anCxswbGrvEDkfHFe0DPX/Shj+Q4CANeKTW5w8bJs0uNluggV8/Dan2PffkT8D3FJ
+	ioWdJuPRALRY+aQjxYfLzkv+Gi3tLJejS8esu64MJ/K/jFJOeZFDq8af1NgPBcz5SeOFj6+1q1m
+	OT7t6mm1+dnZZNsTXgJIWIqql5Xhlg==
+X-Received: by 2002:a17:903:3c25:b0:2b0:7a9b:82f3 with SMTP id
+ d9443c01a7336-2b602f29b8cmr11673045ad.8.1776830285187; Tue, 21 Apr 2026
+ 20:58:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260419182754.143225-1-suchitkarunakaran@gmail.com>
+References: <20260420163222.23517-1-k@mgml.me>
+In-Reply-To: <20260420163222.23517-1-k@mgml.me>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 21 Apr 2026 20:57:54 -0700
+X-Gm-Features: AQROBzBstMSbYsgzkCg7_5Jl2E-TdlnEQEqq7tZplAslGn5jZ5R7E3duoojwy2c
+Message-ID: <CAP-5=fVQS=otsfMEtZNHixairsG3=-mr=+fepBpjSs8JbbnHyw@mail.gmail.com>
+Subject: Re: [PATCH 6.6.y] Revert "perf unwind-libdw: Fix invalid reference counts"
+To: Kenta Akagi <k@mgml.me>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, 
+	linux-stable <stable@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Apr 20, 2026 at 9:34=E2=80=AFAM Kenta Akagi <k@mgml.me> wrote:
+>
+> This reverts commit eddddf4ed7f69697cb54e714e773f764c8d3b67e.
+>
+> Upstream commit f815fc0c66e7 ("perf unwind-libdw: Fix invalid reference c=
+ounts"),
+> was backported to v6.6.128 as eddddf4ed7f6.
+>
+> However, this commit depends on map_symbol__exit, which was introduced
+> in v6.7 as commit 56e144fe9826 ("perf mem_info: Add and use
+> map_symbol__exit and addr_map_symbol__exit") and is absent in v6.6.y.
+> This results in a build failure.
+>
+> This is a revert of a backport, so there is no upstream commit.
 
-On Sun, Apr 19, 2026 at 11:57:54PM +0530, Suchit Karunakaran wrote:
-> The update_contention_data() had a FIXME noting that max_time and
-> min_time updates lacked atomicity. Two CPUs could simultaneously
-> read a stale value, pass the comparison check and race on the
-> write-back, with the smaller value potentially overwriting the
-> larger one and silently corrupting the statistics.
-> 
-> Fix this by replacing the bare conditional assignments with a
-> bpf_loop()-based CAS retry loop. Each field tracks its own
-> convergence independently via max_done/min_done flags in cas_ctx,
-> so a successful CAS on one field is never retried even if the
-> other field needs more attempts.
+I confirm map_symbol__exit is missing in 6.6.y:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/t=
+ools/perf/util/map_symbol.h?h=3Dlinux-6.6.y
+but present later:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
+mmit/tools/perf/util/map_symbol.h?h=3Dperf-tools-next&id=3D56e144fe98260a0f=
+8a17326993ceb576ef859ed5
 
-Interesting!
-
-It looks like bpf_loop() is added at v5.17 - more than 4 years ago.
-Then I think it's ok to have it now.
-
-> 
-> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
+Ian
 
+> Signed-off-by: Kenta Akagi <k@mgml.me>
 > ---
->  .../perf/util/bpf_skel/lock_contention.bpf.c  | 50 +++++++++++++++++--
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 96e7d853b9ed..5c8431be674a 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -175,6 +175,13 @@ struct mm_struct___new {
->  	struct rw_semaphore mmap_lock;
->  } __attribute__((preserve_access_index));
->  
-> +struct cas_ctx {
-> +	struct contention_data *data;
-> +	u64 duration;
-> +	int max_done;
-> +	int min_done;
-> +};
-> +
->  extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
->  
->  /* control flags */
-> @@ -486,16 +493,49 @@ static inline s32 get_owner_stack_id(u64 *stacktrace)
->  	return -1;
->  }
->  
-> +static long cas_min_max_cb(u64 idx, void *arg)
-> +{
-> +	struct cas_ctx *ctx = arg;
-> +
-> +	if (!ctx->max_done) {
-> +		u64 old_max = ctx->data->max_time;
-> +
-> +		if (old_max >= ctx->duration) {
-> +			ctx->max_done = 1;
-> +		} else {
-> +			u64 r = __sync_val_compare_and_swap(
-> +				&ctx->data->max_time, old_max, ctx->duration);
-> +			if (r == old_max)
-> +				ctx->max_done = 1;
-> +		}
-> +	}
-> +
-> +	if (!ctx->min_done) {
-> +		u64 old_min = ctx->data->min_time;
-> +
-> +		if (old_min <= ctx->duration) {
-> +			ctx->min_done = 1;
-> +		} else {
-> +			u64 r = __sync_val_compare_and_swap(
-> +				&ctx->data->min_time, old_min, ctx->duration);
-> +			if (r == old_min)
-> +				ctx->min_done = 1;
-> +		}
-> +	}
-> +
-> +	return (ctx->max_done && ctx->min_done) ? 1 : 0;
-> +}
-> +
->  static inline void update_contention_data(struct contention_data *data, u64 duration, u32 count)
->  {
->  	__sync_fetch_and_add(&data->total_time, duration);
->  	__sync_fetch_and_add(&data->count, count);
->  
-> -	/* FIXME: need atomic operations */
-> -	if (data->max_time < duration)
-> -		data->max_time = duration;
-> -	if (data->min_time > duration)
-> -		data->min_time = duration;
-> +	struct cas_ctx ctx = {
-> +		.data     = data,
-> +		.duration = duration,
-> +		.max_done = 0,
-> +		.min_done = 0,
-> +	};
-> +	bpf_loop(64, cas_min_max_cb, &ctx, 0);
->  }
->  
->  static inline void update_owner_stat(u32 id, u64 duration, u32 flags)
-> -- 
-> 2.53.0
-> 
+>  tools/perf/util/unwind-libdw.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
+w.c
+> index bd027fdf6af1..6013335a8dae 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -133,8 +133,8 @@ static int entry(u64 ip, struct unwind_info *ui)
+>         }
+>
+>         e->ip     =3D ip;
+> -       e->ms.maps =3D maps__get(al.maps);
+> -       e->ms.map =3D map__get(al.map);
+> +       e->ms.maps =3D al.maps;
+> +       e->ms.map =3D al.map;
+>         e->ms.sym =3D al.sym;
+>
+>         pr_debug("unwind: %s:ip =3D 0x%" PRIx64 " (0x%" PRIx64 ")\n",
+> @@ -319,9 +319,6 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *a=
+rg,
+>         if (err)
+>                 pr_debug("unwind: failed with '%s'\n", dwfl_errmsg(-1));
+>
+> -       for (i =3D 0; i < ui->idx; i++)
+> -               map_symbol__exit(&ui->entries[i].ms);
+> -
+>         dwfl_end(ui->dwfl);
+>         free(ui);
+>         return 0;
+> --
+> 2.50.1
+>
