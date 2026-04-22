@@ -1,46 +1,46 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010059.outbound.protection.outlook.com [52.101.193.59])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012037.outbound.protection.outlook.com [40.93.195.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905162BDC16;
-	Wed, 22 Apr 2026 05:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2B02E173B;
+	Wed, 22 Apr 2026 05:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776834403; cv=fail; b=ltuJGszaDGPuQgiuTedvaEWWfiKVkaaA4++M3FCjtO9TAHsPKry98DtFxPuwCN8Q76ORhLCCnu5C4uLp95TtWZUYgMPS3u93wrfZ3sTu1JM9wSLjG8Jksw2AgEqtKw5eQZ7KPw4ZGkF0ejr8mlMa4To3DMW1sUthpVC2nfHCWuo=
+	t=1776834418; cv=fail; b=VeYHP8T/ndHsVcszrI0wIBVelgwTKZUK1JBzGEVyfl3uHvUr9l8whgGA/Ax419HxTSQI77ap2K0bWcYMMnq2OHYZigX71Un1cia04f3OKw7cD76KrBOsamIpA0pvOdQJjeu7pYbEY6gHMBv7nkXFUKgP5/TyzzMBwqTmSAztn9I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776834403; c=relaxed/simple;
-	bh=PEgPHtFPbwlRQkZQy47LaYuSa8CSfJH8HJGhWBYegGc=;
+	s=arc-20240116; t=1776834418; c=relaxed/simple;
+	bh=eRmKVieMb2GQhY7FLV+GuhjTyrJ/5jRV8s2yAiUwRpI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M3pXow/NmMSua7CmrgCiGUhjdQpYwCL3hzHpRyHPN5l9EiPzUYiExVKe4i3jbzFbn7Pc4zXPwG3sFQOc/+G2GHnYQmRPki1MP02K6KJv5BhQPNJK2QBrXAAm8Koy8DOmXbYJXXX8rhXWmZVKEaZQTb++LHpSXngCU5BTP/hijqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GHDsQorV; arc=fail smtp.client-ip=52.101.193.59
+	 MIME-Version:Content-Type; b=jzyEjWQZ4syVhdfMxT3bG1qxw068zeCEIGs2Ez9rHTSiQ/xStkKUqWZqNeHt0oORUOyVppUJsbnpRuZAvTskvM3IbTGCDpTpFXM+4ysXVVwp1OICpc6J2UZ+u+OsbcL/w5gQYjvJzk/PVNU3dkP9wLop+DHEs/zAgwYqEYKsG1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zMb8vq9c; arc=fail smtp.client-ip=40.93.195.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GHDsQorV"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zMb8vq9c"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fqGMXjPut99lqdqZzehLrrTzYjH3dTTLHRLfi43pfUhOsKG1ucix2eljAXRBGNw2pdJENj9be6N96Eux3UQauK9d6rPuJW3Opa8VRctcGOdoQ/jPx3x/V+vriQFd/uxi9a2wh1wYMfXf9lVIQYg2/GSxSHERfLW1cKsv0Trr2WR+0m5D7h3OkCJlPlDx6bYz+AgA+0RE5EgDgXdB2oM5R9IiFqgXHF6r5yB7d6XQ1jfelCxM5fUlL2wErrdlYHSmPw4sW0260Lw+Wy1VHKtXA7snkfBwa0eJsoK642tnjqD+yqTSPPWK7daDTXAB22ery7wefBVlnAraK31CGaIPGg==
+ b=barJt9y7i9l6IISN2Z2q56XDNqtr0jwQ6GTDstZiFfajxbYz2M9nwjZ1LkmWbRP8c021yL66Ni8v8SH5rmuEWvgbkPY7CCXE6MLdgNnzYHZ4FhVNVQqGQEGbhRSMOJbUflP14NejSwL9B3FKgWRgZQmCyCeAdcQCMZnFY9sENQ8hCCEOpXneP3U+0YTNzrI5x7orfPgePp9vicg3bf47TfU3IlJ0g8G2XERTMXa459u3TTYQJvRX7inAJHsseNATiD/tdc26z9d/yhNtBJgzKsm5wYeUxFuQx1FZzCAWZpGFLtPwAwZ7hJVgzSRytBQdcv0FbOZiSG8Sc3J67RDY0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OPHvLcXyeC14CRYvKcXSgmMXnbTtiQi1ioD5nB66/CQ=;
- b=jYQK0WW5nLRESZYlhFw9KXdXVZox2EdYhRX/f6tCnQd0H+1o+DXUQecWOmnOgd0B2i5sn+VQWlJtuXfJ/QOD32rJhBqcdHoPMqprSaeJXpzEHLWSSy3+gsolRXgeFU1GrM3vMJE1tNNxdEZKZ2ZOw0QEXIhOF/X1sBuPYqBbUXe+bMEqGmpwUBvr9l8SaIyaR5SBcqBQewTjpVOyQtFU14iDyabX4ex5mTLicUySsZlI6pP3iIO9jAtjJ2VQFXU8RoX0EnL/poduUyztPV4d7rRkF4iMYzXil+05M1gsUwoa+wtnLjHDXiFwEYD5KvXWU12GsHBYVZ9f6jS1OmYNJQ==
+ bh=XiD3E2u1rQ4an8KSILuwSnhvlQsSqE/mAAb9qDjIOlo=;
+ b=p+r7ehnD98cIDUYEp50CuawnUGgd7BZsdCMzKKYLmhisLZfZSXRUgkX6uG+ejKzabu5nCUswfAH1JfO82oXKB5JBATP3pEdsl+8U7zDhLLD19PfZUNpAyNcpRbTWAcjCH5LpIeGljEIBzKIEx6NMRl6+iveck+kN0wasJayag73fwPjo9HBUPfFp9kIY4G7N4Bb8ZqjrOceul7L7lTyDiLoP0eoi+CbfzLqIwl1Orxmd59vdKFJ1jvr78IhaJtaT0x6iNhDTSPGqKxUUr0P5+XIJM4qxmiKll+EzK1YSpfJ4O/2NktQBhsLOnmHFuVasp8HhOxJXjK1xbh2OgQWfzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OPHvLcXyeC14CRYvKcXSgmMXnbTtiQi1ioD5nB66/CQ=;
- b=GHDsQorV/HWKZhC0I+evECGaPdFkJeYnKGykcoJu6X98WL+wTKjfRO4hUdBatEpFQwFpnqikEL1e5JJEPy/MLXT1YcdjAAn4ioCWgiPtx7AzkbHI/88xY5HPW90h/MX4SB0MF6xWbP83s35W1Se4glQhhYGZjpl+X7YECW3B0zQ=
-Received: from BY5PR16CA0022.namprd16.prod.outlook.com (2603:10b6:a03:1a0::35)
- by CY8PR12MB7363.namprd12.prod.outlook.com (2603:10b6:930:51::9) with
+ bh=XiD3E2u1rQ4an8KSILuwSnhvlQsSqE/mAAb9qDjIOlo=;
+ b=zMb8vq9cpCb9OGtQjuq0O8Cd40vGn4FYuXmqE+49q4VPEB2FzigAJTM00VNvbcyOHGwLKrJMkconnG2QKhDWKTF5Ua/AniQKJLShsHQ9onasXfibHHnE+wphgCsXTDVhdnQBxFwNBoMlTtuvUVYao1K9+kY/kb5u+5OLj/W1nBs=
+Received: from SJ0PR13CA0206.namprd13.prod.outlook.com (2603:10b6:a03:2c3::31)
+ by BY5PR12MB4274.namprd12.prod.outlook.com (2603:10b6:a03:206::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.16; Wed, 22 Apr
- 2026 05:06:35 +0000
-Received: from MWH0EPF000C618B.namprd02.prod.outlook.com
- (2603:10b6:a03:1a0:cafe::b0) by BY5PR16CA0022.outlook.office365.com
- (2603:10b6:a03:1a0::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9791.48 via Frontend Transport; Wed,
- 22 Apr 2026 05:06:35 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Wed, 22 Apr
+ 2026 05:06:53 +0000
+Received: from MWH0EPF000C618A.namprd02.prod.outlook.com
+ (2603:10b6:a03:2c3:cafe::1c) by SJ0PR13CA0206.outlook.office365.com
+ (2603:10b6:a03:2c3::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.15 via Frontend Transport; Wed,
+ 22 Apr 2026 05:06:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- MWH0EPF000C618B.mail.protection.outlook.com (10.167.249.123) with Microsoft
+ MWH0EPF000C618A.mail.protection.outlook.com (10.167.249.122) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Wed, 22 Apr 2026 05:06:35 +0000
+ 15.20.9846.18 via Frontend Transport; Wed, 22 Apr 2026 05:06:51 +0000
 Received: from tapi.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 22 Apr
- 2026 00:06:31 -0500
+ 2026 00:06:47 -0500
 From: Swapnil Sapkal <swapnil.sapkal@amd.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@linaro.org>
@@ -62,9 +62,9 @@ CC: <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
 	<jolsa@kernel.org>, <adrian.hunter@intel.com>, <ravi.bangoria@amd.com>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Swapnil
  Sapkal" <swapnil.sapkal@amd.com>
-Subject: [PATCH v3 1/3] perf sched stats: Fix SIGCHLD vs pause() race in schedstat_record()
-Date: Wed, 22 Apr 2026 05:05:43 +0000
-Message-ID: <20260422050545.129448-2-swapnil.sapkal@amd.com>
+Subject: [PATCH v3 2/3] perf sched stats: Fix SIGCHLD vs pause() race in schedstat_live()
+Date: Wed, 22 Apr 2026 05:05:44 +0000
+Message-ID: <20260422050545.129448-3-swapnil.sapkal@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260422050545.129448-1-swapnil.sapkal@amd.com>
 References: <20260422050545.129448-1-swapnil.sapkal@amd.com>
@@ -80,78 +80,51 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C618B:EE_|CY8PR12MB7363:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ac79da7-6e64-4f02-dc1f-08dea02ced53
+X-MS-TrafficTypeDiagnostic: MWH0EPF000C618A:EE_|BY5PR12MB4274:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43540684-3013-43db-61fe-08dea02cf73f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700016|82310400026|18002099003|22082099003|56012099003;
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700016|22082099003|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	5b+K+yrknmT8p2yHWUYjNzVQXuRWdERYBv3UY3AMCV2C4BIlU+AIxQ+XZ2F8vsQYlfB5jm1PYJ6oVb1NbOCEV/X7fj4uvfx63ZKuzzt1pjj5cR3P4tuSOgzNsl0i90/YYth2SAZDeoA5DO/Fd0xkPH/U5EFX1VJsGKMFlFjQnXIUCyX2PC87C/wIJp2HMsHodKlin2jMjRaQDCPAO17c9MhW6YvLHtnDVfmX5vdyjLl0+mvwRmpxPoefCAXceH/hL8BL4/F1tCSyjlL8iqRu4275Ty7csQMxKI01TRSo0KGopbVzzqfNZDO7Il1SQ9vqR9eN+h1ZyTASPz4cUjWam1VXc5uWwkCWxvdkJvV+o9M35KFZmk2JbOxGCOD51mOYGB4x4c9frFwH8XH61+7US3/VPh5KiaSe64CF3zA3YubZBqttDKmdKm1WGr6evqtXr8IiHYGdZGEtUjPQM4r0w+DOfzM2SaSiutUd/m4WWzmy1QtFPCxq8mO1WLk92q2PhXv/ZsdOwHlTF7IybydQSTdHHQV/wSN+Y31D4OC4kFonSIW3snFOFYz83RwTLkPvDS0jKIGirvHWxyBC3WJmwYnqkrWErDK7NjCG9ZW0iDAWn4q3Wwu7LTrh6I7TinoS7v0DJy+fkduUwHZIIPEcutQc1vPNMWgWQRhYUXPxPNfwoyd3N4/7tALIp/fP/FbMFcRBlilv1abV+dJ7RVIWH7NcQiInS5dEIxSCrOJMqUyDARmUAgWEmWIqU4vikl6I/3JI9FgJwU0kxImKAujbjw==
+	ID/RBAirMN5WS0HcGl+DDPdeF7JJEz/sOaTn0ok7rOtOwAPGxuiGL1Q4crtfpMlUuDxxBWI0cKIXnGMit36MzuCCCToZIG9rJSgFZvhWuEojDeaYEeNjq0B2t6cMUYWCpI2K5ezDjpT/zRXcJs+DO8AA2UtTgEGOk3aMhZvKcr/MRx+pg/YihdodCWPTvZunpWKW/raMwS0lbtpIpyJJb/fxjhQ6Nl8Uv38ADeWcyaUCu4nFqtMieNnunh4G4IMpJyWUXIkthiRLsU9O3nTKnltuyfoCWssyalewV8BjNKZMvXpb0s6/mvgDr/Lg8wlAExiovM0bBiIkWrr9wwgnqsN2HGGvZu7Y2n71Xn9eN1z1HL8rcDkg11571zEEzJXnn1OalpwJTLqw2OeL5/aYiT5Y/rnQCwO0V87ENtE4WEtrWkduS2l7JrkYlSa59mJuJLwX0WPXDOURj3Eat037mqIPtUTdGq61T2DNOgY1VWd6YEUtGwbMyjP7HIkLURmYgjh5JLKo8et4WDzRFdn/nhtBzS9YFHgR73fjZSHM8A+yX4EV6GBEsJpjtrXaMnOsv1CG/EbAtxngX9G3FEvee0Dap5Qk+hiqp7tsbFHfthqRYugwDXn5YMcuRZR4PlrNa0m8MMklXdWjp3WM/wiGGdx+AFMFaQt3I6yLHrQT0IFBUccdM8dARXFSbWnmoiCFRhGSWotOUsgvkpi8iewjG6bBrbOk1IWXlqhaAHdSTWO2a2IY0coQSQEOWvho7TIVbPnS7GtnMRB7l9DIPkNRyw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700016)(82310400026)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Mg+llaAIAB/wibS1sqWVUsdcjuFcu0xSawoJ3YHc0RIrTfCCDUgFxLmrxEavK+Q4/5xRwlf5c95bQ5dkOzexzqy/w0vN5jQVp96OpSnBaa9ySXyASKBuVMVF4r1yBbqY/yjIiYNyXBpfttjX1j4Pmmgy2avFZ3CSb5lI4SoWkHuOZEwCpLliv+GhAMaNFIA+Pb/6rrhftHHiidsmne2SCECJFchge5o1Tr73Ec47R3L0FKOoOaAe8fIgCfU4PXCa0jC3gv6PJJ0VrlcYh+HEY8IpmUZhVTAwnQX/xtwWZLixxQembXfCjLQT2lQXusItPwnTekNI4BHsoFCtsNs5DL31Qph+g7X0S9uegxuyR6ird58Txc7ThLcXSU8GcoS/LThNJbWthYT4lEUld4XZQ7iQ2Q3acbzDS1iatLx48cTYn8Hdxak2ioU3Zc7v9jxU
+	ZgSoJFTDrRxN0L/3/bxS3Hw/YXiTiepljFVLdyu+h2sacTik9sNgjTu0EhBG0l0Yw6oBTM9ulV3vL1ozZPWnoXsESM32k9H75ikATGXj12iJcNgHvy5Ibq1EgvzqyWgvOTlJPYmWNb3HVQzgXZqkupsT8e0ColW9EOFQnsMTo5wcdd99dUDIQxukkq+bo1pkizGWJkLyjCf57tnN+M8+SB1z+OffsgUwyjEXgxaa+fpDdjgcRYs10or7UJc64wLUXOaRNyPQqMIm3QKmXU40XH1ycz4+qw70r/vDI6pujV/D9fAwAzKfZ4s74trYsGky9BumxcAk07NlDiQUpiE2N2jGoOfzDoAr0BCGilldTh7y+zO9ENOj40F5P7cqrjM1ooXWFLcRnFTjAQCY526SoqqXwUJvmtUNzcc3npevkeYRZ1gvykJxh5QYK6M21ffq
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2026 05:06:35.2807
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2026 05:06:51.9511
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ac79da7-6e64-4f02-dc1f-08dea02ced53
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43540684-3013-43db-61fe-08dea02cf73f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000C618B.namprd02.prod.outlook.com
+	MWH0EPF000C618A.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7363
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4274
 
-If the profiled workload exits very quickly, SIGCHLD can be delivered
-and consumed by the empty signal handler before the process enters
-pause(), causing an indefinite hang.
+perf_sched__schedstat_live() has the same lost-wakeup race as
+perf_sched__schedstat_record(): a short-lived workload's SIGCHLD
+can be consumed by the signal handler before pause() is entered,
+hanging the process.
 
-Fix this with a simpler approach:
-
- - When a workload is given, use waitpid() to directly wait for the
-   child to exit.  This is race-free since waitpid() will collect the
-   child regardless of when it exited.
-
- - In system-wide mode (no workload), use 'while (!done) sleep(1)'
-   to wait for SIGINT/SIGTERM.  The signal handler now sets a
-   'volatile sig_atomic_t done' flag, and sleep() is interrupted
-   by signal delivery, so the flag is checked promptly.
+Apply the same fix: use waitpid() for workload mode and
+'while (!done) sleep(1)' for system-wide mode.
 
 Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
 ---
- tools/perf/builtin-sched.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/builtin-sched.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 3f509cfdd58c..cfd93bf11c2e 100644
+index cfd93bf11c2e..36fbc20dbebd 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -36,6 +36,7 @@
- #include <linux/zalloc.h>
- #include <sys/prctl.h>
- #include <sys/resource.h>
-+#include <sys/wait.h>
- #include <inttypes.h>
- 
- #include <errno.h>
-@@ -3757,8 +3758,11 @@ static int process_synthesized_schedstat_event(const struct perf_tool *tool,
- 	return 0;
- }
- 
-+static volatile sig_atomic_t done;
-+
- static void sighandler(int sig __maybe_unused)
- {
-+	done = 1;
- }
- 
- static int enable_sched_schedstats(int *reset)
-@@ -3899,11 +3903,15 @@ static int perf_sched__schedstat_record(struct perf_sched *sched,
+@@ -4695,11 +4695,15 @@ static int perf_sched__schedstat_live(struct perf_sched *sched,
  	if (err < 0)
  		goto out;
  
