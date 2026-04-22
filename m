@@ -1,132 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2003736B044;
-	Wed, 22 Apr 2026 07:12:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E482DC77F
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 07:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776841961; cv=none; b=QQCp0iwoSG6anEjPgZcFb1K7MSy2Y7PwbownD2PSGJVfMdxbEvrcn2z3ykn5mdEwZT2hdrLx7wRXMEYt+PS48f0NTThUOXNnSxGvsMsjDZrZj4AYj5IJkbfAr4u94vmK5Yxjsn2e0InXRtaYPgqqr59TYKQ8+AaKNjTUo+9bVQ8=
+	t=1776842444; cv=none; b=S5wmwDcKIbTuoPCGWOn10fDYTfoZThj3sZw47wEtwx3GknR0NGup5Fit0ILGkcTfRAlGmhJ6YtJve6UPAT6OQeLim7b0pLNvixm8G6Ui8WvjuzxTjJSu+MPuG6DX6N1jrkkKF0FcLA5NYsK2HQNOqrjD8A9zqAOGUnykmSD3MeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776841961; c=relaxed/simple;
-	bh=r2hDqGz+4tfYw9UMLtpNDeVaHUrcpNklZbUb9y9DTt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aDhAR1V4qmwmPn1teDV/QT3J01ji38hlRooFV8dHHj3RQGRc4j+FKjx8TjwT7DyA7ewX/E5TDyDbDOhWq73im3giqLv6Q22ZmGHN7Pf62eDQ6Izb5M+CaRR4OWq1wEpj/dgSJiAb3Up4Ak4ykDdb3bGXUI2V9no1DAM4LR8EEnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfOBc0D+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776842444; c=relaxed/simple;
+	bh=kfe/I9yUpqeUUSy67eR3Jkmg4Pr+y4jEBX52TCtc9aw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MOTEBMnwm8fPtolPbR9sNN+Iml0slZOXA9ww4+5KThXnuVVWEa/govb7d5XxqZvgwKVdz14WtV62mZDLvyJ4iAV9CAn2izI8KDV3J4ApsIbqRZHvO6aE+r40bIuXrgcoTNB0xbhI/n6aMW2ktHgOmOIDc2lqNjkF0K0pux0G4eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cH9eexhF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfOBc0D+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4A4C19425;
-	Wed, 22 Apr 2026 07:12:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cH9eexhF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE3CC19425;
+	Wed, 22 Apr 2026 07:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776841960;
-	bh=r2hDqGz+4tfYw9UMLtpNDeVaHUrcpNklZbUb9y9DTt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jfOBc0D+HWmbe3SMW2k1LP0C6pCxlQITYanOpZXrB67sv4Q1CQoNK9j5f/0R9NxZ9
-	 zDaemFyK5p/uorDQstkOXdJn/47Pjr75CCNRpIMBj00wFBEyR+XhZwpBhSGebIWavb
-	 FUNn0aRxCupRFnEQJdTu3n7bd2ld35Lpcls0WPX+d9fkFGaokoI0Xr6SaQOxJNAC5o
-	 Ri9GuW5psAH8H1QdYp0g3dtCImHRr1CH2QdYYXMtDLlWf0QZHrKDTVoGqTCKOWlshy
-	 hL613Ehf5LMeJYKfbIq257myHVGAi5W2bsDAB5qxgRqSXkLVMT5G/aiCXQgkbxpcyB
-	 UgMZDMHFNCd4g==
-Date: Wed, 22 Apr 2026 00:12:39 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko@lists.linux.dev
+	s=k20201202; t=1776842443;
+	bh=kfe/I9yUpqeUUSy67eR3Jkmg4Pr+y4jEBX52TCtc9aw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=cH9eexhFs9HZVgy9Da68SyhItOE/WIMbnNQnCnDjpUpt2cOBDkPZOhbnJQCA5fnQB
+	 uoazOw/1Xobi81kR6Vv/Se43rKU72+huZtP0CphHQr984tWVdbVclOXOW2KbkFXMBy
+	 rIbCB6N6wVMP+B0v0iYB3KxkgdqDrqhmNmm2oG0KaTBHAleMNt7TF4bhHeF4uXoLK0
+	 CRdH8ggdrmHNsbca8W8ANHHY2gcoYH1Z0k30LhIu9J35VwOMkmbbOosZzNRFa7dGjl
+	 yS26YwA3QhJWjtxGvy+37G3yCsimsVGPnRvwp41ryShjuq/ekGAb/w24iBQ4W/2DLt
+	 aGRl3Q6F0oepQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 2/3] perf sched stats: Fix SIGCHLD vs pause() race in
+ schedstat_live()
+Reply-To: sashiko@lists.linux.dev
+To: "Swapnil Sapkal" <swapnil.sapkal@amd.com>
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf build-id: Fix wrong return value checking
-Message-ID: <aeh05xy0gnlk33PN@google.com>
-References: <20260420180858.129075-1-namhyung@kernel.org>
- <20260421003005.38E7CC19425@smtp.kernel.org>
+In-Reply-To: <20260422050545.129448-3-swapnil.sapkal@amd.com>
+References: <20260422050545.129448-3-swapnil.sapkal@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Apr 2026 07:20:42 +0000
+Message-Id: <20260422072043.7BE3CC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260421003005.38E7CC19425@smtp.kernel.org>
 
-It's annoying that sashiko removes all recipients.
+Sashiko AI review found 2 potential issue(s):
+- [High] Overwriting `done` with `0` defeats the intended fix for the lost-=
+wakeup race, causing an indefinite hang.
+- [High] The blocking `waitpid()` ignores `SIGTERM` and `SIGINT` because of=
+ `SA_RESTART` semantics, causing the tool to hang unresponsively.
+--
 
-On Tue, Apr 21, 2026 at 12:30:04AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 2 potential issue(s):
-> - [High] Missing O_NONBLOCK during build-ID extraction enables indefinite hangs on FIFOs via TOCTOU race.
-> - [Medium] The strict length check rejects valid 16-byte build IDs (e.g., MD5/UUID), causing `perf buildid-list` to fail for them.
-> --
-> 
-> commit 7e5fc011b65e40f9f999c08196173059dcbc7f79
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf build-id: Fix wrong return value checking
-> 
-> This commit adjusts the return value checks of the build-id snprintf
-> functions to correctly account for the terminating NUL byte when comparing
-> lengths. This ensures perf buildid-list properly displays build IDs instead
-> of returning errors.
-> 
-> > diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-> > --- a/tools/perf/builtin-buildid-list.c
-> > +++ b/tools/perf/builtin-buildid-list.c
-> > @@ -60,8 +60,8 @@ static int sysfs__fprintf_build_id(FILE *fp)
-> >  	char sbuild_id[SBUILD_ID_SIZE];
-> >  	int ret;
-> >  
-> >  	ret = sysfs__snprintf_build_id("/", sbuild_id, sizeof(sbuild_id));
-> > -	if (ret != sizeof(sbuild_id))
-> > +	if (ret != sizeof(sbuild_id) - 1)
-> 
-> Could this strict length check reject valid 16-byte build IDs?
-> 
-> The kernel and perf subsystem natively support shorter 16-byte build IDs
-> like MD5 or UUID. For these, sysfs__snprintf_build_id() would correctly
-> return 32.
-> 
-> Since 32 does not equal sizeof(sbuild_id) - 1 (which evaluates to 40), will
-> this erroneously return -EINVAL and cause perf buildid-list to silently
-> ignore valid kernel maps and binaries?
+commit 5047a8fcd3c2b9c566153aee1d997f695b5b0543
+Author: Swapnil Sapkal <swapnil.sapkal@amd.com>
 
-I'm not sure about this but I guess it's supported (by padding zeros at
-the end?) as we've been using this for a while.
+perf sched stats: Fix SIGCHLD vs pause() race in schedstat_live()
 
-Also this is not related to this patch anyway.
+This commit addresses a lost-wakeup race in perf_sched__schedstat_live()
+by replacing pause() with waitpid() for workloads, and using a while (!done)
+sleep loop for system-wide mode.
 
-> 
-> >  		return ret < 0 ? ret : -EINVAL;
-> >  
-> >  	return fprintf(fp, "%s\n", sbuild_id);
-> >  }
-> 
-> [ ... ]
-> 
-> > @@ -72,8 +72,8 @@ static int filename__fprintf_build_id(const char *name, FILE *fp)
-> >  	char sbuild_id[SBUILD_ID_SIZE];
-> >  	int ret;
-> >  
-> >  	ret = filename__snprintf_build_id(name, sbuild_id, sizeof(sbuild_id));
-> 
-> Does the underlying build-ID extraction sequence miss an O_NONBLOCK flag,
-> potentially allowing indefinite hangs?
-> 
-> When filename__snprintf_build_id() processes user-supplied file paths, the
-> underlying open() call happens without O_NONBLOCK. 
-> 
-> While there is an is_regular_file() check beforehand, could a time-of-check
-> to time-of-use race allow swapping the file with a FIFO or blocking device
-> immediately after the check, causing the tool to hang indefinitely?
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index cfd93bf11c2ee..36fbc20dbebd8 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4695,11 +4695,15 @@ static int perf_sched__schedstat_live(struct perf=
+_sched *sched,
+>  	if (err < 0)
+>  		goto out;
+> =20
+> -	if (argc)
+> -		evlist__start_workload(evlist);
+> +	done =3D 0;
 
-Well, I think that's technically possible but I'm not sure how practical
-it is.  Maybe it's ok to add O_NONBLOCK anyway.
+Could setting done =3D 0 here inadvertently overwrite the state if a signal
+was received during the setup phase?
 
-And again, this is not from this patch.
+If a termination signal like SIGINT or SIGTERM is delivered during the
+earlier perf_event__synthesize_schedstat() call, the signal handler
+sets done =3D 1. This assignment unconditionally resets it back to 0, which
+seems to bypass the intended fix and could cause the subsequent loop to
+hang indefinitely.
 
-Thanks,
-Namhyung
+> =20
+> -	/* wait for signal */
+> -	pause();
+> +	if (argc) {
+> +		evlist__start_workload(evlist);
+> +		waitpid(evlist->workload.pid, NULL, 0);
 
-> 
-> > -	if (ret != sizeof(sbuild_id))
-> > +	if (ret != sizeof(sbuild_id) - 1)
-> >  		return ret < 0 ? ret : -EINVAL;
-> >  
-> >  	return fprintf(fp, "%s\n", sbuild_id);
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260420180858.129075-1-namhyung@kernel.org?part=1
+Could this blocking waitpid() cause the tool to become unresponsive to
+SIGINT or SIGTERM?
+
+Since the tool uses signal() for handler registration, glibc provides BSD
+semantics which sets the SA_RESTART flag. If a signal arrives while
+waitpid() is blocked, the signal handler executes and sets done =3D 1, but
+the waitpid() syscall is automatically restarted by the kernel instead of
+returning EINTR.
+
+Because the code is blocked inside waitpid() and doesn't check the done
+flag, the tool might ignore termination signals and hang until the workload
+completes.
+
+Would a non-blocking wait combined with sleep prevent this issue?
+For example:
+
+while (!done) {
+        if (waitpid(evlist->workload.pid, NULL, WNOHANG) !=3D 0)
+                break;
+        sleep(1);
+}
+
+> +	} else {
+> +		while (!done)
+> +			sleep(1);
+> +	}
+> =20
+>  	if (reset) {
+>  		err =3D disable_sched_schedstat();
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260422050545.1294=
+48-1-swapnil.sapkal@amd.com?part=3D2
