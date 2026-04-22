@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363692BB17;
-	Wed, 22 Apr 2026 00:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE4F1DF26E;
+	Wed, 22 Apr 2026 00:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776818668; cv=none; b=N3nA7jd4203cJHwVfrnQJPh5lTzu7b0ckvWqEPyVKPvLLxMtubTcPmrxemZ5YdVxgbyIlpe4GasD/8z0Qi6PJ+2ObIuK50TXRVfalA/5F2M8BgcD7cCX8i+MM2XwerHFO/llK20Uwnr0f47JPklIjfzBdHk8XXOY8yt0x3g+zl0=
+	t=1776819449; cv=none; b=I/8LXENhLo857b7Q6ht4IiKbWJi3Kuj9co0igP+aYvPw+KeeP+zGtShFmPpUvM+SSYJr/NsSWkaZ93ubX5iHD4GnEZHhFbf3QUWx1nN41rjnd77RQ2Zlbzib7v/ftrrl4+onDWqrbEagm/DcA5dqCiBVsI9LFflqwEg8KUiEkF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776818668; c=relaxed/simple;
-	bh=3j/LizLwq1l/lmZqE/geXkCSf6D6OvycLCTTOhWFih0=;
+	s=arc-20240116; t=1776819449; c=relaxed/simple;
+	bh=nhehAw6Z+DPT+nNjSZV2c7dJLnh4W2YjeY8ZBqsswOs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XBMuU2ypZpxsPiEap39QSbl2WBG08vF39FNg/7Tar8jP8xoTpjevi8dtdR+xAr9olGog7BHoNaKF7qoXHRzDlhjXQ4oYoXBzbSnl16KT1PZxsWyJrHN+3Gt5wjTMZPigVBkl1wdIIIT6Om0AaAvVLS7iwj9OZxrwbT1CxqPt5hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FehnSMxt; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=iF4Z9Rth3Lwwa1h0cJMUj8BAGiMsO1BOGyWLfYQ8HBuGmJKjIBwNJeUdb6Lyykyo33H6T6/w4I1sfoi/WQSs5zSxc7y+2Z0pHdt9xlju/Hy+VDBUInnaSEfMPLXWLloYOem8pIJ8J01WYIlhdPN30gMwaBPdVPcZfGpOTXJbWDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ow712zn0; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FehnSMxt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ow712zn0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776818666; x=1808354666;
+  t=1776819448; x=1808355448;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3j/LizLwq1l/lmZqE/geXkCSf6D6OvycLCTTOhWFih0=;
-  b=FehnSMxtvELH+gKrrXEke/3UUwK2Eext+mQnivWEylY8njOZVQng4ivn
-   33FIPzAReAkxLxn8gZlP4LlYrKdGgZTTkGH4CPAJrenlUm9aVPo9VT1r5
-   FawOpXGOjeWlu2Z3Ci7lygczCE+VvOFApImmX2CLPNL126iu0/bLanPFE
-   5Ie5BC7sVKhRt+r4rwAZwHsZBEMqfhw9I95jptF9P9moUm6hDYdIi4cWk
-   dLjS/+jhPuRJ6Ufd6bWe8+x1RcTfMIeuSG+3A0Pa5RPgeotHOcn7eXDqS
-   EUsUKmyIA2J1WlCSutwRANMKz/GJKL8itjXWRixgp3YhiWIeYkb+Gk0OS
-   A==;
-X-CSE-ConnectionGUID: qpeixwIvQdSh1h8y1kEhaA==
-X-CSE-MsgGUID: O8Oy4NLzQH6KCClPrpEPLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="89235980"
+  bh=nhehAw6Z+DPT+nNjSZV2c7dJLnh4W2YjeY8ZBqsswOs=;
+  b=Ow712zn0mgufhCneo08gYIOyrqv4WXbNFHeT6vxcMyLB3PIPZMrRtqAr
+   9AdOj4MudeRoI7r/b6qrTww5N9LpCfbvPDK0uqFGZtVTzsL1YRMjX8s5j
+   Sytg+3wk+WTvErb7RS0cliUWH2zIhEe1yP++WRUJkF3bNbinfJvgAq12O
+   m5+0BSWgt0GZsgB0sVSckRw6wLeP1DGyTNzWiQFp1129P0AnpiO+DGHi6
+   k4xz6CPHVKoer8dtvp1+S9k3R7NG1AYAr1cxlPlJjXrsU9XqrCh9PlzK8
+   B16V9fpFleZKjZfFNtjUSMuDXRhEidJl7x34rpsfqs+0DF04aNpBFa2jc
+   w==;
+X-CSE-ConnectionGUID: qiPHIe0DTLCrCNFeqtYPxA==
+X-CSE-MsgGUID: 0oNrcRYURmiRR+55gWYPlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="77835357"
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="89235980"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:43:41 -0700
-X-CSE-ConnectionGUID: tSR8a4URQi2rwe6fyZZGUg==
-X-CSE-MsgGUID: Exw9zhAASh+ScNDIM2OoGg==
+   d="scan'208";a="77835357"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:57:27 -0700
+X-CSE-ConnectionGUID: u7N3OE2PTwK/DKD5a6g9kw==
+X-CSE-MsgGUID: qniPAnqBRme7nBL9zTBu6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="236207788"
+   d="scan'208";a="255673856"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:43:37 -0700
-Message-ID: <9479cd37-f54d-46bb-89d4-4c5fea1a0996@linux.intel.com>
-Date: Wed, 22 Apr 2026 08:43:33 +0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:57:23 -0700
+Message-ID: <e25134c3-87c8-4c2e-b9f6-d6222bfaa5eb@linux.intel.com>
+Date: Wed, 22 Apr 2026 08:57:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,115 +52,52 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Remove anythread_deprecated bit from
- perf_capabilities
-To: "Chen, Zide" <zide.chen@intel.com>, Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [Patch v2 1/4] perf/x86/intel: Clear stale ACR mask before
+ updating new mask
+To: Andi Kleen <ak@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
  Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-References: <20260415021010.1248083-1-dapeng1.mi@linux.intel.com>
- <aeaZUZyILpy6HKnJ@google.com>
- <d93ccac4-d1c6-4d56-9714-33a32e5c4f48@linux.intel.com>
- <546d7ebd-492c-4544-bcb0-adf4046a2447@intel.com>
+References: <20260420024528.2130065-1-dapeng1.mi@linux.intel.com>
+ <20260420024528.2130065-2-dapeng1.mi@linux.intel.com>
+ <aef6XiN8TTWdIAiK@tassilo>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <546d7ebd-492c-4544-bcb0-adf4046a2447@intel.com>
+In-Reply-To: <aef6XiN8TTWdIAiK@tassilo>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 4/22/2026 5:58 AM, Chen, Zide wrote:
+On 4/22/2026 6:29 AM, Andi Kleen wrote:
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 4768236c054b..774ae9a4eeaf 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -3334,6 +3334,12 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+>>  	struct perf_event *event, *leader;
+>>  	int i, j, idx;
+>>  
+>> +	/* Clear stale ACR mask first. */
+>> +	for (i = 0; i < cpuc->n_events; i++) {
+>> +		event = cpuc->event_list[i];
+>> +		event->hw.config1 = 0;
+>> +	}
+> Are you sure nothing else could be using config1?
 >
-> On 4/20/2026 5:51 PM, Mi, Dapeng wrote:
->> On 4/21/2026 5:23 AM, Namhyung Kim wrote:
->>> On Wed, Apr 15, 2026 at 10:10:10AM +0800, Dapeng Mi wrote:
->>>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
->>>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
->>>> represent "anythread deprecation" in perf_capabilities. It leads to the
->>>> anythread_deprecated bit could be overwritten by the real value of
->>>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
->>>>
->>>> ```
->>>> if (!intel_pmu_broken_perf_cap()) {
->>>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
->>>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
->>>> }
->>>> ```
->>>>
->>>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
->>>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
->>>> these support Perfmon v6 platforms, like Clearwater Forest.
->>>>
->>>> ```
->>>> $grep . /sys/devices/cpu/format/*
->>>> /sys/devices/cpu/format/acr_mask:config2:0-63
->>>> /sys/devices/cpu/format/any:config:21
->>>> /sys/devices/cpu/format/cmask:config:24-31
->>>> ```
->>>>
->>>> So remove the anythread_deprecated bit from perf_capabilities structure
->>>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
->>>> deprecated.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Reported-by: Namhyung Kim <namhyung@kernel.org>
->>>> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
->>>> Acked-by: Namhyung Kim <namhyung@kernel.org>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> ---
->>>>  arch/x86/events/intel/core.c | 9 +++------
->>>>  arch/x86/events/perf_event.h | 2 +-
->>>>  2 files changed, 4 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 793335c3ce78..450c63165a22 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -7612,11 +7612,8 @@ __init int intel_pmu_init(void)
->>>>  
->>>>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
->>>>  
->>>> -	if (version >= 5) {
->>>> -		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
->>>> -		if (x86_pmu.intel_cap.anythread_deprecated)
->>>> -			pr_cont(" AnyThread deprecated, ");
->>>> -	}
->>>> +	if (version >= 5 && edx.split.anythread_deprecated)
->>>> +		pr_cont(" AnyThread deprecated, ");
->>>>  
->>>>  	/* The perf side of core PMU is ready to support the mediated vPMU. */
->>>>  	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
->>>> @@ -8467,7 +8464,7 @@ __init int intel_pmu_init(void)
->>>>  				      &x86_pmu.intel_ctrl);
->>>>  
->>>>  	/* AnyThread may be deprecated on arch perfmon v5 or later */
->>>> -	if (x86_pmu.intel_cap.anythread_deprecated)
->>>> +	if (edx.split.anythread_deprecated)
->>> Do we need to check the version here as well?
->> hmm, it should be enough to only check the CPUID
->> "edx.split.anythread_deprecated" bit  in practice. But if we want to follow
->> the SDM 100%, the version check should be added here.
->>
->> I would add an version check here. Thanks.
-> How about merging pr_cont(" AnyThread deprecated, ") to here? No need to
-> repeat "if (version >= 5 && edx.split.anythread_deprecated)" twice in
-> one single API.
+> In principle ACR events can be used with some config1 setting.
 
-OK. Although it would change the perfmon print message order slightly, on
-one should care about the message order. Thanks.
+Yes, the field "hw.config1" is introduced for support auto counter reload,
+it's only used to store the ACR counter indices. Thanks.
+
+https://lore.kernel.org/all/20250327195217.2683619-6-kan.liang@linux.intel.com/
 
 
 >
 >
->>> Thanks,
->>> Namhyung
->>>
->>>
->>>>  		x86_pmu.format_attrs = intel_arch_formats_attr;
->>>>  
->
+> -Andi
