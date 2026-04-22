@@ -1,104 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9131282F;
-	Tue, 21 Apr 2026 22:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363692BB17;
+	Wed, 22 Apr 2026 00:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776811047; cv=none; b=WLmJDOL90bv0k6w8F4FO76AIwY49tHpPxzvKEO+SabDgXFqiBLYbYCro6boaRIxl73ZwgnWVhd+ig3lq9cdn8cPsQM9Gv6/DF+AOnswXSaAwmpebJd70RgiBiw5bMAekC6evyFVPSy6Xj2Ykb5KQixOrcHdInlooHp+SEdrujPM=
+	t=1776818668; cv=none; b=N3nA7jd4203cJHwVfrnQJPh5lTzu7b0ckvWqEPyVKPvLLxMtubTcPmrxemZ5YdVxgbyIlpe4GasD/8z0Qi6PJ+2ObIuK50TXRVfalA/5F2M8BgcD7cCX8i+MM2XwerHFO/llK20Uwnr0f47JPklIjfzBdHk8XXOY8yt0x3g+zl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776811047; c=relaxed/simple;
-	bh=9asddOYunBnLRNQiRd5AYd47HrnxvGGkWFIRCnjNamY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4FUVR9GMeftolxSnswvOTtrCk70AfX71MHcMQdarv/zY710z1yKT7GKtNtNTDcf5KE7Pn7ItcJGSF8+UWjRXcUvNW4mu5IvKduRE+lrMiHPav81cEuMIQ6GvzlcnJ2AiZiWVQH9Kc1KNVHyEkBUVgDEJPH1p9McfwdnZuWtcVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaXyqS3k; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1776818668; c=relaxed/simple;
+	bh=3j/LizLwq1l/lmZqE/geXkCSf6D6OvycLCTTOhWFih0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XBMuU2ypZpxsPiEap39QSbl2WBG08vF39FNg/7Tar8jP8xoTpjevi8dtdR+xAr9olGog7BHoNaKF7qoXHRzDlhjXQ4oYoXBzbSnl16KT1PZxsWyJrHN+3Gt5wjTMZPigVBkl1wdIIIT6Om0AaAvVLS7iwj9OZxrwbT1CxqPt5hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FehnSMxt; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaXyqS3k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FehnSMxt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776811046; x=1808347046;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9asddOYunBnLRNQiRd5AYd47HrnxvGGkWFIRCnjNamY=;
-  b=WaXyqS3knDUZqfJHEIWALQdWTOdjlaj5wub5G0exDtD37I2/grY1VTa4
-   1lj71r7Zz4QRHG/IJsKLCkcstNP1UwqyXKwOtLh5SNR1FVWHlKNmlfy9c
-   y+R6RIbTvwdZQcx7+Mek3nfNXp1KEqYipWfvBp26r161ral9jBRtnfvOd
-   qvnEfnD0VDh4ULyk3QwkO414s/F01BbupoF/xx4x5xg/2Nb6d9e1ofRzH
-   k5uP3FURWnUXQlbR+aQUgnjn7lOO0SP/5YGfs7ODacpMNooqermxnPFGt
-   ePAQ6j9Y6yYBZTepAupEBRR2CqbOmKcWknEaMg0iVr3re8+tU+IrkI2Cs
-   w==;
-X-CSE-ConnectionGUID: Pu7bgGWdRB292F8NepyWow==
-X-CSE-MsgGUID: I3+QqWRnQZWdG2RX3ngGng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="77670599"
+  t=1776818666; x=1808354666;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3j/LizLwq1l/lmZqE/geXkCSf6D6OvycLCTTOhWFih0=;
+  b=FehnSMxtvELH+gKrrXEke/3UUwK2Eext+mQnivWEylY8njOZVQng4ivn
+   33FIPzAReAkxLxn8gZlP4LlYrKdGgZTTkGH4CPAJrenlUm9aVPo9VT1r5
+   FawOpXGOjeWlu2Z3Ci7lygczCE+VvOFApImmX2CLPNL126iu0/bLanPFE
+   5Ie5BC7sVKhRt+r4rwAZwHsZBEMqfhw9I95jptF9P9moUm6hDYdIi4cWk
+   dLjS/+jhPuRJ6Ufd6bWe8+x1RcTfMIeuSG+3A0Pa5RPgeotHOcn7eXDqS
+   EUsUKmyIA2J1WlCSutwRANMKz/GJKL8itjXWRixgp3YhiWIeYkb+Gk0OS
+   A==;
+X-CSE-ConnectionGUID: qpeixwIvQdSh1h8y1kEhaA==
+X-CSE-MsgGUID: O8Oy4NLzQH6KCClPrpEPLQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="89235980"
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="77670599"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 15:37:25 -0700
-X-CSE-ConnectionGUID: LV++u1zaSXm15/wOZgckRw==
-X-CSE-MsgGUID: ueANhsdgQh+/0shTyaXZKQ==
+   d="scan'208";a="89235980"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:43:41 -0700
+X-CSE-ConnectionGUID: tSR8a4URQi2rwe6fyZZGUg==
+X-CSE-MsgGUID: Exw9zhAASh+ScNDIM2OoGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="262567024"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 15:37:25 -0700
-Date: Tue, 21 Apr 2026 15:37:22 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-Subject: Re: [Patch v2 2/4] perf/x86/intel: Disable PMI for self-reloaded ACR
- events
-Message-ID: <aef8InBGlZaXNuPk@tassilo>
-References: <20260420024528.2130065-1-dapeng1.mi@linux.intel.com>
- <20260420024528.2130065-3-dapeng1.mi@linux.intel.com>
+   d="scan'208";a="236207788"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 17:43:37 -0700
+Message-ID: <9479cd37-f54d-46bb-89d4-4c5fea1a0996@linux.intel.com>
+Date: Wed, 22 Apr 2026 08:43:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260420024528.2130065-3-dapeng1.mi@linux.intel.com>
-
-On Mon, Apr 20, 2026 at 10:45:26AM +0800, Dapeng Mi wrote:
-> @@ -3306,6 +3306,15 @@ static void intel_pmu_enable_event(struct perf_event *event)
->  		intel_set_masks(event, idx);
->  		static_call_cond(intel_pmu_enable_acr_event)(event);
->  		static_call_cond(intel_pmu_enable_event_ext)(event);
-> +		/*
-> +		 * For self-reloaded ACR event, don't enable PMI since
-> +		 * HW won't set overflow bit in GLOBAL_STATUS. Otherwise,
-> +		 * the PMI would be recognized as a suspicious NMI.
-> +		 */
-> +		if (is_acr_self_reload_event(event))
-> +			hwc->config &= ~ARCH_PERFMON_EVENTSEL_INT;
-> +		else if (!event->attr.precise_ip)
-> +			hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
-
-It seems weird to either clear or set the bit. You don't know the previous
-state of the bit here? I would assume it starts with zero?
-
-> +static inline bool is_acr_self_reload_event(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
-> +
-> +	if (hwc->idx < 0)
-> +		return false;
-> +
-> +	return test_bit(hwc->idx, (unsigned long *)&hwc->config1);
-
-Are you sure this doesn't conflict with some other non ACR usage of config1?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Remove anythread_deprecated bit from
+ perf_capabilities
+To: "Chen, Zide" <zide.chen@intel.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
+References: <20260415021010.1248083-1-dapeng1.mi@linux.intel.com>
+ <aeaZUZyILpy6HKnJ@google.com>
+ <d93ccac4-d1c6-4d56-9714-33a32e5c4f48@linux.intel.com>
+ <546d7ebd-492c-4544-bcb0-adf4046a2447@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <546d7ebd-492c-4544-bcb0-adf4046a2447@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
--Andi
+On 4/22/2026 5:58 AM, Chen, Zide wrote:
+>
+> On 4/20/2026 5:51 PM, Mi, Dapeng wrote:
+>> On 4/21/2026 5:23 AM, Namhyung Kim wrote:
+>>> On Wed, Apr 15, 2026 at 10:10:10AM +0800, Dapeng Mi wrote:
+>>>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+>>>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+>>>> represent "anythread deprecation" in perf_capabilities. It leads to the
+>>>> anythread_deprecated bit could be overwritten by the real value of
+>>>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+>>>>
+>>>> ```
+>>>> if (!intel_pmu_broken_perf_cap()) {
+>>>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+>>>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+>>>> }
+>>>> ```
+>>>>
+>>>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+>>>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+>>>> these support Perfmon v6 platforms, like Clearwater Forest.
+>>>>
+>>>> ```
+>>>> $grep . /sys/devices/cpu/format/*
+>>>> /sys/devices/cpu/format/acr_mask:config2:0-63
+>>>> /sys/devices/cpu/format/any:config:21
+>>>> /sys/devices/cpu/format/cmask:config:24-31
+>>>> ```
+>>>>
+>>>> So remove the anythread_deprecated bit from perf_capabilities structure
+>>>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+>>>> deprecated.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Reported-by: Namhyung Kim <namhyung@kernel.org>
+>>>> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
+>>>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>  arch/x86/events/intel/core.c | 9 +++------
+>>>>  arch/x86/events/perf_event.h | 2 +-
+>>>>  2 files changed, 4 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index 793335c3ce78..450c63165a22 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -7612,11 +7612,8 @@ __init int intel_pmu_init(void)
+>>>>  
+>>>>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+>>>>  
+>>>> -	if (version >= 5) {
+>>>> -		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
+>>>> -		if (x86_pmu.intel_cap.anythread_deprecated)
+>>>> -			pr_cont(" AnyThread deprecated, ");
+>>>> -	}
+>>>> +	if (version >= 5 && edx.split.anythread_deprecated)
+>>>> +		pr_cont(" AnyThread deprecated, ");
+>>>>  
+>>>>  	/* The perf side of core PMU is ready to support the mediated vPMU. */
+>>>>  	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
+>>>> @@ -8467,7 +8464,7 @@ __init int intel_pmu_init(void)
+>>>>  				      &x86_pmu.intel_ctrl);
+>>>>  
+>>>>  	/* AnyThread may be deprecated on arch perfmon v5 or later */
+>>>> -	if (x86_pmu.intel_cap.anythread_deprecated)
+>>>> +	if (edx.split.anythread_deprecated)
+>>> Do we need to check the version here as well?
+>> hmm, it should be enough to only check the CPUID
+>> "edx.split.anythread_deprecated" bit  in practice. But if we want to follow
+>> the SDM 100%, the version check should be added here.
+>>
+>> I would add an version check here. Thanks.
+> How about merging pr_cont(" AnyThread deprecated, ") to here? No need to
+> repeat "if (version >= 5 && edx.split.anythread_deprecated)" twice in
+> one single API.
+
+OK. Although it would change the perfmon print message order slightly, on
+one should care about the message order. Thanks.
+
+
+>
+>
+>>> Thanks,
+>>> Namhyung
+>>>
+>>>
+>>>>  		x86_pmu.format_attrs = intel_arch_formats_attr;
+>>>>  
+>
