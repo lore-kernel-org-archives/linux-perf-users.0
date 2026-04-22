@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05F3328B7A;
-	Wed, 22 Apr 2026 21:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460DF1D63F0;
+	Wed, 22 Apr 2026 21:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776892889; cv=none; b=XdoRhDqrvwVlklZ2M1+02686YEQLtgzcWVUOFCu5+eKJyWGOKy+YhexCYVDn+adG/qYf0z4mUu/HmoWHR93hpvjdHiT+0vSdTPJTY6nB2r16JLo5XoqUplZmF1/YvcUuTbnhO2KTgCX3rdft+23kaS7lu40a1mUjb7som9SU4zQ=
+	t=1776893288; cv=none; b=RsSJyexOlOYnr0J/ox1j2dV48wcdbt2pOa2RwqreTGnMdC1hznQ/wTl4I2B1Zsf7XY88ixnlnMVfJ50WJk62C9QMITrmdLSQiKakWx5QWsnCgOqT4iNSrrOI4e+BfXZ9vTQ3eNpxEUVLPdpNYl8BKJNtwBV2/Wf7DWpQEJW8BKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776892889; c=relaxed/simple;
-	bh=ltJnzYWq/n5kfmRjHNR0fHpGkQumF68vxulMx81Zpj4=;
+	s=arc-20240116; t=1776893288; c=relaxed/simple;
+	bh=CMuT/V9zBpFyvDZhpAvD8tTpAypPAEeQ/XsYgHFkRIM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4qWuP46YqAZRwLWATa/7ketlewTY3V1NatX4ONlQ6dDW5jeVbB2WwFHtlVHIiAxKHUJk7xFi3L8xwBEM+VlgVH+WDhEM/qHUWC8ToC0yyA+f8luqHDmJikSpxSUHjISgFTGofIT+rAuSQgvMlSRltqUzpF1F1Bo6/37L8xL3tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCbl/cXt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TxmkFpFSkwmgzLF9o10alF05hEDbPrcDcUveKbthRUlBltOrhh/PuwSZEB0Ur6CNBohAZJ5/8TvfiIHfxP23H9Z3GBzBDSfpfBayC6lx5Je1DrHUpa/cUlNfAAsXurRvonvINhg8C9J8fKxKunmtrtJkuOB9HaO+4grkyUCdpVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyMfptUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCbl/cXt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A18C19425;
-	Wed, 22 Apr 2026 21:21:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyMfptUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4782AC19425;
+	Wed, 22 Apr 2026 21:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776892889;
-	bh=ltJnzYWq/n5kfmRjHNR0fHpGkQumF68vxulMx81Zpj4=;
+	s=k20201202; t=1776893287;
+	bh=CMuT/V9zBpFyvDZhpAvD8tTpAypPAEeQ/XsYgHFkRIM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BCbl/cXtJaOeGi9NvxOKvklyREmaa2NfN+cmlJNkzTZRrFDEurZq6V7iRzU08OLkF
-	 Ep9yAa/konI6khyF342fyOkaJq4pjh3L21K6TVDUx6z45i2XAea3U/9SMs1VcBYSy4
-	 7P10MI2kHPT8rqeyUxBSeyDgJ9X5cmw9UEutRX3LxBlaOCzh1PFPfLpS2uX2a/pS+T
-	 khCVtN5NdY6OEuAr0mNZ8mG7gHxgczbODQm0R+fKh0zDicWiBV2Kr+hILmukSTwcC2
-	 F7n0N8uIBr22AIcOw0tXu0leaD2JkbeUDwDs5ZO5ulqcNqDoXEhTmuvNpZq9A2dHd+
-	 ijYYOoi50vIBA==
-Date: Wed, 22 Apr 2026 14:21:27 -0700
+	b=UyMfptUFwsGE8dO87G09902t/2+7SkHuEf5uElyD74H0Qr8NJfj2KZvc19E7SyX9k
+	 tfvnl9OgFMge7aDeOM4Hl2Gweo9FN723141PFW5ccNR8sP/GH7rqzMvp+HnpyNkmkY
+	 6drMNnZf+f4u6JNLb+5PklFw4VXcNCqaHq7unUZGlSSQTkH9eARmw2/YtTsKNEEsK5
+	 FEOb3nNwwQJsGARolqbX98Cp641x6hbBsmnsJ/NPvOmcnaiAwsbfS16T7eAJtJSuaW
+	 Ke3lTwJZgCaOqamY5qb8XjWnbKXYCrWR41WW+xbl7rAKeDATtB+DwBV5XxrjoQqlV9
+	 1vKbmv8llA6+w==
+Date: Wed, 22 Apr 2026 14:28:05 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko@lists.linux.dev
-Cc: Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] perf sched stats: Fix SIGCHLD vs pause() race in
- schedstat_record()
-Message-ID: <aek71-nfrJJv-WPi@google.com>
-References: <20260422050545.129448-2-swapnil.sapkal@amd.com>
- <20260422052953.29209C19425@smtp.kernel.org>
+To: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, tycho@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf/lock: enable end-timestamp accounting for cgroup
+ aggregation
+Message-ID: <aek9ZQvchuPoUBo4@google.com>
+References: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,92 +47,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260422052953.29209C19425@smtp.kernel.org>
+In-Reply-To: <20260420184656.331306-1-suchitkarunakaran@gmail.com>
 
-Hello,
+On Tue, Apr 21, 2026 at 12:16:56AM +0530, Suchit Karunakaran wrote:
+> update_lock_stat() handles lock contentions that start but never reach a
+> contention_end event (e.g., locks still held when profiling stops), but
+> previously treated LOCK_AGGR_CGROUP as a no-op due to missing cgroup
+> context in userspace; fix this by adding a cgroup_id field to
+> struct tstamp_data, recording it at contention_begin using
+> get_current_cgroup_id() when aggr_mode == LOCK_AGGR_CGROUP, and using
+> ts_data->cgroup_id to build the aggregation key in update_lock_stat(),
+> matching the contention_end behavior in BPF and ensuring correct
+> attribution of incomplete events.
+> 
+> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> ---
+>  tools/perf/util/bpf_lock_contention.c          | 4 ++--
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 ++
+>  tools/perf/util/bpf_skel/lock_data.h           | 1 +
+>  3 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index cbd7435579fe..1a5bd2ff8ee4 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -463,8 +463,8 @@ static void update_lock_stat(int map_fd, int pid, u64 end_ts,
+>  		stat_key.lock_addr_or_cgroup = ts_data->lock;
+>  		break;
+>  	case LOCK_AGGR_CGROUP:
+> -		/* TODO */
+> -		return;
+> +		stat_key.lock_addr_or_cgroup = ts_data->cgroup_id;
+> +		break;
+>  	default:
+>  		return;
+>  	}
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 96e7d853b9ed..d0e2cad02fa3 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -536,6 +536,8 @@ int contention_begin(u64 *ctx)
+>  	pelem->timestamp = bpf_ktime_get_ns();
+>  	pelem->lock = (__u64)ctx[0];
+>  	pelem->flags = (__u32)ctx[1];
+> +	if (aggr_mode == LOCK_AGGR_CGROUP)
+> +		pelem->cgroup_id = get_current_cgroup_id();
 
-On Wed, Apr 22, 2026 at 05:29:52AM +0000, sashiko-bot@kernel.org wrote:
-> Sashiko AI review found 2 potential issue(s):
-> - [High] Blocking waitpid() ignores the cancellation flag, causing a hang or premature exit.
-> - [Medium] Unconditional `done = 0;` assignment discards termination signals received during initialization.
-> --
-> 
-> commit 1c95f818d983ad8f7f5ed28e4a0036553b2d2758
-> Author: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> 
-> perf sched stats: Fix SIGCHLD vs pause() race in schedstat_record()
-> 
-> This commit replaces pause() with waitpid() or a sleep() loop to fix an
-> indefinite hang if SIGCHLD is delivered before the process enters pause().
-> It also introduces a sig_atomic_t flag set by the signal handler.
-> 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 3f509cfdd58c4..cfd93bf11c2ee 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> [ ... ]
-> > @@ -3899,11 +3903,15 @@ static int perf_sched__schedstat_record(struct perf_sched *sched,
-> >  	if (err < 0)
-> >  		goto out;
-> >  
-> > -	if (argc)
-> > -		evlist__start_workload(evlist);
-> > +	done = 0;
-> 
-> Is it possible that this unconditional assignment discards termination signals
-> received during initialization?
-> 
-> Since the signal handlers are registered at the beginning of the function,
-> if a user sends SIGINT during the setup phase, the handler will set done to 1.
-> This assignment would then erase the early cancellation request, requiring the
-> user to send the signal again.
-
-Right, as it's initialized to 0 you don't need to set it here.
-
-> 
-> >  
-> > -	/* wait for signal */
-> > -	pause();
-> > +	if (argc) {
-> > +		evlist__start_workload(evlist);
-> > +		waitpid(evlist->workload.pid, NULL, 0);
-> 
-> Could this blocking waitpid() cause the tool to ignore the cancellation flag?
-> 
-> Because perf is compiled with _GNU_SOURCE, glibc's signal() uses the
-> SA_RESTART flag by default. This causes waitpid() to automatically restart
-> after the signal handler returns.
-> 
-> If the profiled workload ignores or delays handling SIGINT, waitpid() will
-> continue to block indefinitely and ignore the done flag.
-> 
-> Conversely, if SA_RESTART were disabled, waitpid() would return -1 (EINTR).
-> Since the return value is not checked, the program would exit prematurely
-> and leave the workload orphaned in the background.
-> 
-> Would it be safer to use waitpid() with WNOHANG inside a loop that checks
-> the done flag?
-
-Right, something like this? (not tested)
-
-	while (!done) {
-		if (argc && waitpid(evlist->workload.pid, NULL, WNOHANG) > 0)
-			break;
-		sleep(1);
-	}
+If we do this, we can use it in contention_end() too.
 
 Thanks,
 Namhyung
 
-> 
-> > +	} else {
-> > +		while (!done)
-> > +			sleep(1);
-> > +	}
-> >  
-> >  	if (reset) {
-> >  		err = disable_sched_schedstat();
-> 
+>  
+>  	if (needs_callstack) {
+>  		u32 i = 0;
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+> index 28c5e5aced7f..652e114e6b87 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -13,6 +13,7 @@ struct owner_tracing_data {
+>  struct tstamp_data {
+>  	u64 timestamp;
+>  	u64 lock;
+> +	u64 cgroup_id;
+>  	u32 flags;
+>  	s32 stack_id;
+>  };
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260422050545.129448-1-swapnil.sapkal@amd.com?part=1
+> 2.53.0
+> 
