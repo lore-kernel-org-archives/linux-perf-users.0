@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D6231282F
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07982DCF57
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918433; cv=none; b=OM26HSwrtexJH5l9cxQ++FwilBgByZQPG2qMcIuCwAc93ShARK7coPoqrQhceSNoizrzm8q7P2yFh/txACZv3H51fBewRbGD+3zWBUdisZc+iEhLGP7Y+UdSrgWneKxsAefuT++ZP5RfXt7/AgeabIRMjbMqywc0+biIXbGRPAk=
+	t=1776918540; cv=none; b=Axgvxpmcp46vGdIhxER8XymuXAl/Lw6jOYuLBSShhxOlcm5pM3X56HM4fxwGCSuRpg+3pHSrpmtqf3Nclr89F4InvIPbLsR2Ou6KzYoV4dK6nua03PIvDsFDU9o26s3oGJ03HViYWSm9/P++e+Ny7rau+BS/PEb5ZJUl1ZThENs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918433; c=relaxed/simple;
-	bh=qJqz0U65QlrTSKOmM5E5PpP+7fx3+gIS6iyA1qbzcpY=;
+	s=arc-20240116; t=1776918540; c=relaxed/simple;
+	bh=BOBUcAMU+9wAzMhPF11+/4w2xe+DUMvLN/MTloIpHnY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mkkwy+5/cLtEB50eO1QLcCMwV5A8NQ48csYFF6DSaQuDmJc9CUycZ+aKhUp3Vou1NS5LWWiYjN7HM3lTNkq7vy3CjxSo+/e9BvnO6CXjaCZy5eICK/MZnMgwK1/nr/lIrsJT8BZUvLfgaFwQJQDFBkb7t+D9k+SPHobW+4adKtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYfsp2Bj; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ClPfz8+vUd3ejjs8djOfQm8rQ+OHC8c+97pB94WOGNy35z0zSPZPoO309vaf0r8kPEn4RsUujEMw1aaR3izGHB6bnwREWH+RlFgDakLio/qeU8e4redhTto5vlnbCR8Q91404TZCIbdOYcl3rl4qFynK0GXR3FaPTLFfRDSUfp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3xyE181; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYfsp2Bj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26493C2BCB2;
-	Thu, 23 Apr 2026 04:27:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3xyE181"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8D0C2BCB2;
+	Thu, 23 Apr 2026 04:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918433;
-	bh=qJqz0U65QlrTSKOmM5E5PpP+7fx3+gIS6iyA1qbzcpY=;
+	s=k20201202; t=1776918539;
+	bh=BOBUcAMU+9wAzMhPF11+/4w2xe+DUMvLN/MTloIpHnY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=DYfsp2Bj6x8R0X7c3I+kR0lO/5ktph+gHe9e4JSqWwqZatLkAaZl3QjMEJCfVOe3+
-	 +4Bjqzf1TucLh+PY2JXItBqj3Hq/Pg7tFbpE5x/UB3bPNcIgJpuIiLoSPZSgiPaATm
-	 OKGqLvpBE8QJ+7o9RlhHVR3qqXfPrzQYY653Cj4tJiH4N5tFsDfHHEusiawNR9pRzm
-	 x2MWDMYYL6T7X1ho1scRyLcR1BWyDx1YHuu3HdRtIbKnCEaWsrogUnpPtk6O3iYfiw
-	 OsHoa+6bA64qXsbqfD+GHsiJ+7NX+CHZJKXZm0VP0aXCvPYIQh5MxRVUNEz/sQZdrQ
-	 3Q0maK4o/wJjw==
+	b=G3xyE181NBI3ckXpDC2q4BDwj708xaRilOI/qpqlJELSOjXdy3Z57JVDMQhsHts85
+	 pvV/b0S30skaoRuH5vRnuwJIbQ+Ow/wGEHIDeqTSMcVMzkaNlYnt9BGfJpEJdEkB+A
+	 RUa6NrK52/99z1ZQ1cbE+SXjQGD1rvRtO9Q7w7w4MZsPBgq/Zz2vmNa+U2WCpWnvbw
+	 PSM5tXVEl0D8A/C7OU58qxUz3WawGs6nYb8gLtYpfp5M5X7QO4JUwqpO3g5RApm+If
+	 hM4+zZnUdyoWjA0PWtyeICT0Cn2lTBb69hj73ooTErezEwESpddOX3fhYcaTfEZMRE
+	 EpBxrw74qCNew==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 52/58] perf test: Migrate Intel PT virtual LBR test
- to use Python API
+Subject: Re: [PATCH v2 48/58] perf rw-by-file: Port rw-by-file to use python
+ module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-53-irogers@google.com>
-References: <20260423035526.1537178-53-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-49-irogers@google.com>
+References: <20260423035526.1537178-49-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:27:12 +0000
-Message-Id: <20260423042713.26493C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:28:58 +0000
+Message-Id: <20260423042859.7D8D0C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,82 +45,70 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [Medium] The `perf_brstack_max.py` script hardcodes the `perf` python mod=
-ule path to the source tree, which breaks out-of-tree tests.
-- [Medium] Removing the explicit `perf version` feature check for Python su=
-pport combined with ignored script exit codes causes false test failures on=
- systems built without the `perf` Python extension.
+- [Medium] Unconditional script crash due to accessing non-existent `sample=
+.evsel.name` attribute.
+- [Medium] Hallucinated tracepoints `raw_syscalls:sys_enter_read` and `raw_=
+syscalls:sys_enter_write`.
 --
 
-commit 476471672d05f0679b27caaca9409c70c20a974a
+commit e4f0d99904b4502561143e05b3d670fc00f299f5
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Migrate Intel PT virtual LBR test to use Python API
+perf rw-by-file: Port rw-by-file to use python module
 
-This commit migrates the Intel PT virtual LBR test to use the newly added
-brstack iterator API in the perf Python module, replacing an ad-hoc Python
-script that parsed branch stacks.
+This commit ports the legacy Perl script rw-by-file.pl to a python script
+using the perf module in tools/perf/python. It uses the perf.session API
+to track read and write activity by file descriptor for a given program.
 
-> diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/=
-tests/shell/lib/perf_brstack_max.py
-> new file mode 100644
-> index 0000000000000..c826e14160d64
+> diff --git a/tools/perf/python/rw-by-file.py b/tools/perf/python/rw-by-fi=
+le.py
+> new file mode 100755
+> index 0000000000000..f71e0b21f64ec
 > --- /dev/null
-> +++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
-> @@ -0,0 +1,43 @@
+> +++ b/tools/perf/python/rw-by-file.py
 [ ... ]
-> +import os
-> +
-> +script_dir =3D os.path.dirname(os.path.abspath(__file__))
-> +python_dir =3D os.path.abspath(os.path.join(script_dir, "../../../python=
-"))
-> +sys.path.insert(0, python_dir)
-> +
-> +import perf
-
-Does hardcoding the python path to the source tree break out-of-tree builds?
-
-In out-of-tree builds using O=3D..., the compiled perf.so extension is
-generated in the build directory, not the source tree. This would cause
-the import to fail with a ModuleNotFoundError.
-
-> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/s=
-hell/test_intel_pt.sh
-> index 8ee761f03c38b..d711ecdf5be02 100755
-> --- a/tools/perf/tests/shell/test_intel_pt.sh
-> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> @@ -0,0 +1,103 @@
 [ ... ]
-> @@ -539,34 +538,20 @@ test_kernel_trace()
->  test_virtual_lbr()
->  {
->  	echo "--- Test virtual LBR ---"
-> -	# Check if python script is supported
-> -	libpython=3D$(perf version --build-options | grep python | grep -cv OFF)
-> -	if [ "${libpython}" !=3D "1" ] ; then
-> -		echo "SKIP: python scripting is not supported"
-> +	# shellcheck source=3Dlib/setup_python.sh
-> +	. "$(dirname "$0")"/lib/setup_python.sh
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Process events."""
+> +        event_name =3D sample.evsel.name  # type: ignore
+
+Will this raise an AttributeError and crash the script on the first event?
+
+The Python perf.evsel object implemented in the C extension
+(tools/perf/util/python.c) does not appear to expose a .name attribute.
+
+Since this access occurs before the try/except AttributeError blocks below,
+it seems this will bypass the exception handler entirely and halt execution.
+
+[ ... ]
+> +        if comm !=3D self.for_comm:
+> +            return
 > +
-> +	if [ -z "$PYTHON" ] ; then
-> +		echo "SKIP: Python not found"
->  		return 2
->  	fi
+> +        if event_name in ("syscalls:sys_enter_read", "raw_syscalls:sys_e=
+nter_read"):
 
-Will removing the perf version build-options check for python scripting
-cause false test failures on systems built without the perf Python extensio=
-n?
+Do these raw_syscalls variants actually exist in the kernel?
 
-The setup_python.sh script only verifies if a Python executable exists on t=
-he
-host, not if perf was built with Python support.
+The kernel's raw syscall tracepoints are generic (like raw_syscalls:sys_ent=
+er)
+and do not have per-syscall variants.
 
-If the perf Python extension is missing, perf_brstack_max.py will crash with
-a ModuleNotFoundError. Because test_virtual_lbr is invoked within an OR-lis=
-t,
-POSIX shell rules disable set -e, effectively ignoring the script's crash.
-The test evaluates the empty output as times_val=3D0 and fails instead of
-gracefully skipping.
+Even if generic raw syscall tracepoints were used, wouldn't they carry an
+args array rather than distinct named fields like fd and count? Attempting
+to extract these fields from raw tracepoints later in this block would
+likely result in missing attributes.
+
+> +            try:
+> +                fd =3D sample.fd
+> +                count =3D sample.count
+> +                self.reads[fd]["bytes_requested"] +=3D count
+> +                self.reads[fd]["total_reads"] +=3D 1
+> +            except AttributeError:
+> +                self.unhandled[event_name] +=3D 1
+> +        elif event_name in ("syscalls:sys_enter_write", "raw_syscalls:sy=
+s_enter_write"):
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D52
+178-1-irogers@google.com?part=3D48
