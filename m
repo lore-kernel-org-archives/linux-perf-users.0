@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7C8F49
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08733C188
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918021; cv=none; b=BRrnFLp6kooJYcJ1zkZQceOkYTDc58aaCibwWFeUDbVgLhyRNlhSpJ8WzNdVT2DAC8pYDY9hMtATqnqeqpXTM1z6iG9x6WPaLUd4SFWHjDkpw7m1pREEuz8PAy2L1uo8IrLwVS45pr7xYLBmWbn/zMiMaUuaAiDT0VQoCXNcN4s=
+	t=1776918027; cv=none; b=a+GEx1qX255hqOYcmcQmU7cI2/ZPbPDhrxPGUM+Zn8NCGd/KG0AQQip7UjxqRZpzuDc0vhqzxhcTYOqnVuLypr43Nzb2ypHZjetHJqaRgRkMkvXQ2EiGNxcgRMO9VSFx4CZI2L1MNQTPLXoHeMHziZ9HLbnjc2/CMbh/K4DRbsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918021; c=relaxed/simple;
-	bh=ryUbI6WDceqh22H8TJ+1Yb6Ukgl0mycENVAKkbqBwdw=;
+	s=arc-20240116; t=1776918027; c=relaxed/simple;
+	bh=99MNnI17M3EeBu7+1zM/cwhnhrnWPPboSGUECFwOd80=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fZmBFITHsAjEu2M1+KOCINd3FxLWFzJNdvr9X4iVSvOVGcMWIFwOKL6Co5Jlxs0uBoTmxlL65qfz1DIiQ0i92nkgt/Fi40CL2lyuMnITnk9OKajeFfNCDzC1v8sfIQHC5cMUHAu8I41yjdi05DdwYSBf+L5yGMOnBPMR6BhtN9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NV1VVFAi; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=G7Skjlv9oKR2T7hxKAHLsDGERA7Nz3PvBb4WPIgrwDKvNp2E9zrAEB22tGR/F6uiI1rsgZyDyJ6qM3GJiMg4uj8pE/xDlt+oszsMlNtm0zTGcwr9NsvQzS2qOBgLsyztT/hdUl1DemZp5uvc1u2Z5S6PVujw8JrpsQbHKAzDmxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0pcqDPE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NV1VVFAi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CA8C2BCB2;
-	Thu, 23 Apr 2026 04:20:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0pcqDPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322ECC2BCB2;
+	Thu, 23 Apr 2026 04:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918021;
-	bh=ryUbI6WDceqh22H8TJ+1Yb6Ukgl0mycENVAKkbqBwdw=;
+	s=k20201202; t=1776918027;
+	bh=99MNnI17M3EeBu7+1zM/cwhnhrnWPPboSGUECFwOd80=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NV1VVFAihvRUhZXsPQZDs+C3BtMDGbIZieE0lBvgEqNIXd9hjAfdfzPJdCVCm2iib
-	 PuK4OloYTx6WQz9iasla/AGErmiyuMKoqyZMKE92YIXXA8oKhMQGRuFpRajiuAX/Z7
-	 OSkshnWzkdCW4sI2BLP6SYF1IJNepWrgJp+GA8LkMSBBA1mQVQTaW4IRik1A3rsmpH
-	 7TmDIefVPFQi7mP23or6pBQMev9SL/9RLELtdWLiqzfQaTHDwRUweFKdvHJc4/NQtI
-	 4Hd1y9bfKVPvJ7hzqc9E93Iqq4HA8o/byEpwIetzON4MbSovEYCESyI1f9Y7nqP2uU
-	 jeBz0dz2pq6mQ==
+	b=q0pcqDPEds6HL63b14i4VHj9B2JhERiolaJ6Vgz06INZyRPI1WNm4ryF5GAHn2aJO
+	 xZ1R8wwBkUb+ypqzeRY0nTUBtdeouEV7+kTGTSk4qYraYn2Vz2EO7WhAj+rbu3C+Nu
+	 W9nDpEUCL2gNtI/k5YIhkAvV2OOM57zv/vQgGX6yVCYEkCIGMNLSVru3rkhtbtuTmP
+	 AGbpIydNarmkOQ/hKjj0GqZDivQnBdUY+yTbl/DiE8UbjsrCXljED6xjEbISWiN/BT
+	 hV/2QzAT15yox1aBqk7ms/KsdPZntLBFALmn1BGJmtLmTTsPow1SPUXmYYNUtYwx4x
+	 IVjDelxt1OeVQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 44/58] perf sctop: Port sctop to use python module
+Subject: Re: [PATCH v2 31/58] perf gecko: Port gecko to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-45-irogers@google.com>
-References: <20260423035526.1537178-45-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-32-irogers@google.com>
+References: <20260423035526.1537178-32-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:20:20 +0000
-Message-Id: <20260423042021.74CA8C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:20:26 +0000
+Message-Id: <20260423042027.322ECC2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,102 +44,85 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 3 potential issue(s):
-- [High] Live mode process filtering is broken due to non-existent `comm` a=
-ttribute on sample events.
-- [High] Offline mode interval reporting is non-functional due to incorrect=
- timestamp attribute and timer starvation.
-- [Low] Outdated hardcoded usage message contradicts standalone script exec=
-ution.
+- [High] The local HTTP server exposes the entire current working directory=
+ to any local user.
+- [High] Unsafe file writing to a predictable filename can lead to arbitrar=
+y file overwrite (Symlink Attack).
+- [Medium] The `--event` filtering logic is broken and will silently filter=
+ out all events.
 --
 
-commit abb433706222dd69bc39b0037938568f893314f9
+commit 53bc6a67d41c378acf03d12753bf2e1052ed93f0
 Author: Ian Rogers <irogers@google.com>
 
-perf sctop: Port sctop to use python module
+perf gecko: Port gecko to use python module
 
-This commit ports sctop.py from tools/perf/scripts/python/ to
-tools/perf/python/, refactoring it into a class-based structure. It also ad=
-ds
-support for live mode using LiveSession when no input file is specified.
+This patch adds a port of the gecko script that uses the perf python
+module directly. This approach is intended to be significantly faster
+than using perf script callbacks by avoiding the creation of
+intermediate dictionaries for all event fields.
 
-> diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+> diff --git a/tools/perf/python/gecko.py b/tools/perf/python/gecko.py
 > new file mode 100755
-> index 0000000000000..d7ac922da510c
+> index 0000000000000..15b0198e4e1c7
 > --- /dev/null
-> +++ b/tools/perf/python/sctop.py
+> +++ b/tools/perf/python/gecko.py
 [ ... ]
-> @@ -0,0 +1,174 @@
+> +class CORSRequestHandler(SimpleHTTPRequestHandler):
+> +    """Enable CORS for requests from profiler.firefox.com."""
+> +    def end_headers(self):
+> +        self.send_header('Access-Control-Allow-Origin', 'https://profile=
+r.firefox.com')
+> +        super().end_headers()
+
+While this behavior might be inherited from the original script being porte=
+d,
+SimpleHTTPRequestHandler serves the entire current working directory by
+default.=20
+
+Since the server binds to 127.0.0.1 and stays open until interrupted, could
+this cause a regression where any unprivileged local user can connect to the
+port and read arbitrary files from the directory where the script was run?
+
 [ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Collect syscall events."""
-> +        name =3D str(sample.evsel)
-> +        syscall_id =3D getattr(sample, "id", -1)
-> +
-> +        if syscall_id =3D=3D -1:
+> +    def process_event(self, sample) -> None:
+> +        """Process a single perf sample event."""
+> +        if self.args.event_name and str(sample.evsel) !=3D self.args.eve=
+nt_name:
 > +            return
-> +
-> +        if hasattr(self, 'session') and self.session:
-> +            comm =3D self.session.process(sample.sample_pid).comm()
-> +        else:
-> +            comm =3D getattr(sample, "comm", "Unknown")
 
-Are we sure the sample object has a comm attribute in live mode?
+Does str(sample.evsel) return the event name wrapped in "evsel(...)"?
 
-Since perf.sample_event objects do not natively possess a comm attribute,
-it looks like this will always evaluate to Unknown. If a user specifies a
-process to filter via the command line, the filter condition will always dr=
-op
-the events because Unknown won't match the requested process name.
+Looking at the pyrf_evsel string representation in tools/perf/util/python.c,
+it seems to use PyUnicode_FromFormat("evsel(%s)", evsel__name(evsel)).
 
-> +
-> +        if name in ("evsel(raw_syscalls:sys_enter)", "evsel(syscalls:sys=
-_enter)"):
-> +            if self.for_comm is not None and comm !=3D self.for_comm:
-> +                return
-> +            with self.lock:
-> +                self.syscalls[syscall_id] +=3D 1
-> +
-> +        if self.offline and hasattr(sample, "time"):
+If a user runs the script with "-e cycles", event_name would be "cycles".
+Would the comparison "evsel(cycles)" !=3D "cycles" always be true, causing a
+regression where all events are silently filtered out?
 
-Does the C extension export the timestamp field as time, or is it sample_ti=
-me?
-
-If the attribute is actually sample_time, hasattr(sample, "time") will alwa=
-ys
-be false, preventing offline periodic updates from being printed.
-
-Additionally, this timer update block is placed after the early returns for
-unmatched events.
-
-If the monitored process goes idle while other processes continue generating
-events, will the offline timer freeze and prevent steady periodic updates?
-
-> +            interval_ns =3D self.interval * (10 ** 9)
-> +            if self.last_print_time is None:
-> +                self.last_print_time =3D sample.time
-> +            elif sample.time - self.last_print_time >=3D interval_ns:
-> +                self.print_current_totals()
-> +                self.last_print_time =3D sample.time
 [ ... ]
-> +def main():
-> +    """Main function."""
-> +    ap =3D argparse.ArgumentParser(description=3D"System call top")
-> +    ap.add_argument("args", nargs=3D"*", help=3D"[comm] [interval] or [i=
-nterval]")
-> +    ap.add_argument("-i", "--input", help=3D"Input file name")
-> +    args =3D ap.parse_args()
-> +
-> +    for_comm =3D None
-> +    default_interval =3D 3
-> +    interval =3D default_interval
-> +
-> +    if len(args.args) > 2:
-> +        print("Usage: perf script -s sctop.py [comm] [interval]")
+> +        output_file =3D self.args.save_only
+> +        if output_file is None:
+> +            output_file =3D 'gecko_profile.json'
+> +            self._write_and_launch(gecko_profile, output_file)
+[ ... ]
+> +    def _write_and_launch(self, profile: Dict, filename: str) -> None:
+> +        """Write the profile to a file and launch the Firefox profiler."=
+""
+> +        print("Starting Firefox Profiler on your default browser...")
+> +        with open(filename, 'w', encoding=3D'utf-8') as f:
+> +            json.dump(profile, f, indent=3D2)
 
-This isn't a bug, but since the script was ported to a standalone executable
-using argparse, this usage message seems outdated and contradicts the new
-execution model.
+While this issue might not be new to the port, writing to a predictable,
+hardcoded filename like gecko_profile.json could be vulnerable to symlink
+attacks if the script is run in a shared or world-writable directory.
+
+Would this regression allow an attacker to pre-create a symbolic link with
+this name pointing to a system file, causing it to be overwritten?
+
+Would it be safer to use the tempfile module or os.open with O_CREAT and
+O_EXCL flags to securely create the file?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D44
+178-1-irogers@google.com?part=3D31
