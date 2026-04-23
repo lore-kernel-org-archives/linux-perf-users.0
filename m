@@ -1,65 +1,65 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CD82E282B
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF903313E21
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776916541; cv=none; b=uX/VbiB3ZfMYtQ9drUc0rWSmlUd2takgqw6lZS/s6/0GgbjonDsCZmXW9LuaURsLHVO9amlRNuiCNeBbqYkAmBdlPJeWcQNbEUn4+XMVucqPxWD/+YMKxBgEb7OHHTPrk8LYl8C6eD1udViIio/5VCzy6KvKpeQzLO3agTbwvp0=
+	t=1776916543; cv=none; b=J00xXhS/DVmxiQ+CNd1m/73wrkQus/ZFUK71xh/3mJC3t6S4epjK66k1mwEYUcAkT1ke0JI9QPqyUjJU4oqSa9tgafGXKuegjvCB96nNMKnxUrp+0bVh44PfOIJr7OUrm01fwp3tI51QceFDFyUNvrRFjod1tiXSwCiyeyQz+m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776916541; c=relaxed/simple;
-	bh=1XZZfWa7+rkB4Ok8uhf+ZfiIJIMleSsA/qMOwHpoHBg=;
+	s=arc-20240116; t=1776916543; c=relaxed/simple;
+	bh=tVKOBmLNqWgHdZobt7/J/BxHC6RmpcSox97mEXfx+wI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iZH2Ru/olq3ycQOEkDhJmuPa/tgS9fC30FoUAJZEewgLpy0YZh+TDaqxAHnXi14KKuXZGJouj8yhzx5wT157L+K9kMG53doc33jSfcYN2xnfskAn/+L17VtmuUCZvKvHL5eMJ9t1QPw+Z/qw3PzIMzO4Kt1rPLknjgpyi0XYeC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ezr3vo7Y; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=Ymmn/6K3mvUVKEFGWcRQDQF1+3CdVW+lHDwMrOb8Y/71EzaVj4dLI+c/4n7mkRRZ6d24ysN82L0mA69hlKlEODSpqPV9BHFAVq9UsZbnNR1H52d5asAwx45LpWj9A1LPTX7NPgGemf8vtKnTP++Ju0kOUCj1SHx0rpRxpft0mio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QSWYufU2; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ezr3vo7Y"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2e60238adb1so12096475eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:55:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QSWYufU2"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0ba59a830so9745880eec.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:55:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776916538; x=1777521338; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776916540; x=1777521340; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A4uFtAC2N3e42CegW5GC7hfHEjc4by9HNdr6FqWoI8c=;
-        b=ezr3vo7YLZTvLEjTFw/w71PgPU0LkEk+SKbXaLB0jikqwJdfsLL/Q9CbJqW3TZ3Jwe
-         geMpErM3HS/VSv5VfwLpaivS7WLl0uUgbcJ/T9eMV06TQP6ucL+ZanHtXTSLvHQnissd
-         tKLGGcMf/RUDKnkFBml/rzPAA1CC1qWPQoGiH7P3R3p9UjNqI+jcG//c30JFFCe9fcrr
-         tZjxuK5ZuWGx+BKBIca1dQdcTqcqrPfPDoTWUJi5pDdD4fwowFMTe42mTs52oEDJex/a
-         npLxvcdbX8EiPbYsqE8hDdetiri9dE7JqkrwYALUUdgI/F6CJpEPDkXDU/w4reEuVucE
-         S+Rg==
+        bh=AxtmqseDtr5mJPZNjDEApDOsVsfDy7YNxScFg8gRhTs=;
+        b=QSWYufU2X/AZ2HiBsDJwI1lI2tLL4ArX2YLpXUy+TThvMpG9iioowjrBX+/sT5BiTS
+         Z3D/WEoe7au4BtDMm8YzanFITD4o5K4jfTmCVE219PvxG9qQl3VkjGOv6CpwwLE7cRy2
+         SCc3qHL+PNaWLOl103FpJmbTwfEmClZFYcBc2Y1auEtN49rdQXtYPlwMmTlHu077oG0d
+         Bbq7MI5sHMYJnUa7Y0x5dtayvnLP9yf7SJdm4jugdV/Hlk/XOBiMNyGvG8UAF5TcNtnL
+         iGDzncKUsIHU9YJZ8ZQTpU3Zx8oa2+z9cYr7mo2zNs6uazy5hA4IkdvRbsDO0bXm7PD8
+         bM/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776916538; x=1777521338;
+        d=1e100.net; s=20251104; t=1776916540; x=1777521340;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A4uFtAC2N3e42CegW5GC7hfHEjc4by9HNdr6FqWoI8c=;
-        b=Jzs/7DskVzCaAtGg8ZUOCZx0+Q9F7jEllx5sixq9d7Oe9mdH7pCZMgHFOqGZrmZGgT
-         fnjWSB9tP0uwX/ZQJE0bUEnS7hZ8gNmDHYo4eOwCFY/X1w+hv9jyarDy418/Ekp6tzlu
-         zTi73NX9w76ChHt7+kf/UCODJ/NnpiI+MO/vomau5Cc25eriCxia4oz+QJESOrzFh/eL
-         VmVwjMJ0YYux0LZRByxglbUwAnKtN9H1m1eZO/C4as+RV8SO/J454PXllbpk6upGatK8
-         3k2AU2A/aEGQUM8+7Sl6TqgyGiv3iIegZSTMcDQkLl3p++K7L2Td1YjHOKeaWtQqnx6C
-         ZEtQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9jDBCZyezoki7jkitWq6rWOh1vApJtcXP3ujjje/l7mOoIzEUKBx2ZdZ9uT7zwZCXOLE3qS1wIypHzfDMtRg0r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmyld/AnbMlDpDGQYDlMhfd4jwrP4NKRu7YKAODgvGn4KSD0Xp
-	kcbDX3fG3LopYR9zeRRIQouUTAtQhc3pPd0teHmhcO7TzhRs5rpC8QhwagOzxvE0lZe9SfMGv7k
-	/BRJJZdrAhA==
-X-Received: from dybrp14.prod.google.com ([2002:a05:7301:460e:b0:2ca:9b08:e7c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1291:b0:2ea:5057:a333
- with SMTP id 5a478bee46e88-2ea5057b8dfmr6524277eec.15.1776916537748; Wed, 22
- Apr 2026 20:55:37 -0700 (PDT)
-Date: Wed, 22 Apr 2026 20:54:27 -0700
-In-Reply-To: <20260419235911.2186050-27-irogers@google.com>
+        bh=AxtmqseDtr5mJPZNjDEApDOsVsfDy7YNxScFg8gRhTs=;
+        b=Rs1rd6Wnr++3jr9ZW+eI+K5FYgtj3kMKIDFcnNoE55nxjA5i6zhYQJsSufqUYp3dFR
+         9FIgbLpu2oc8jS32dWeqWpYqJIELvuZP0pmYUdbevyFZ+wfp9tykoITyjRsTQVuR8f3G
+         KsCmTQRPUOtaJ/KRelCFpUmz6ZeahGl8tMLC7LQpVZIZyfkgt5XiUdqdCdpb2xPi5aKu
+         D0KoXqqvwyZlBJIGtXEMqb1TWUYcgKtquqAm3Jc60mQQktcCZZrR18xSGHeWExZo4ppA
+         tKqFUVbZc9vMQ/Ev9wzCPESVVDAIpKU3eeBUJZIhuNJE9vf+dMveEf5n3rW8DromVRjB
+         LbVw==
+X-Forwarded-Encrypted: i=1; AFNElJ9ndtIEnVQz8jVcwzco+7vB/77j9kQfUe4/kacQttmbI4HnLPzbbbHWxocHeRDfQNbMKxSUXEHRenZb+Ap5WgCg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRqeOhKNMrPs+6uUjqD1hUOF5AiqbgHLF6Hatf8ctYBxm/EaaJ
+	58CRcEFeOgl8FcbAaBC+FAWslzLkvjwfmvObt4uFJmqsReT4vhhUVjr4d/+iqWw2BoqZ1EEIhWc
+	kk/n5gU7nFQ==
+X-Received: from dybgp27.prod.google.com ([2002:a05:7301:211b:b0:2e3:c168:2677])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:f90:b0:2ea:7901:8d72
+ with SMTP id 5a478bee46e88-2ea79019c06mr4025672eec.17.1776916539674; Wed, 22
+ Apr 2026 20:55:39 -0700 (PDT)
+Date: Wed, 22 Apr 2026 20:54:28 -0700
+In-Reply-To: <20260423035526.1537178-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260419235911.2186050-27-irogers@google.com>
+References: <20260419235911.2186050-27-irogers@google.com> <20260423035526.1537178-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.533.g4f5dca5207-goog
-Message-ID: <20260423035526.1537178-1-irogers@google.com>
-Subject: [PATCH v2 00/58] perf: Reorganize scripting support
+Message-ID: <20260423035526.1537178-2-irogers@google.com>
+Subject: [PATCH v2 01/58] perf inject: Fix itrace branch stack synthesis
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org, 
@@ -84,596 +84,409 @@ Cc: 9erthalion6@gmail.com, adityab1@linux.ibm.com,
 	zhiguo.zhou@intel.com, zli94@ncsu.edu
 Content-Type: text/plain; charset="UTF-8"
 
-The `perf script` command has long supported running Python and Perl
-scripts by embedding `libpython` and `libperl`. This approach has
-several drawbacks:
- - overhead by creating Python dictionaries for every event (whether used or not),
- - complex build dependencies on specific Python/Perl versions,
- - complications with threading due to perf being the interpreter,
- - no clear way to run standalone scripts like `ilist.py`.
+When using "perf inject --itrace=L" to synthesize branch stacks from
+AUX data, several issues caused failures:
 
-This series takes a different approach with some initial
-implementation posted as an RFC last October:
-https://lore.kernel.org/linux-perf-users/20251029053413.355154-1-irogers@google.com/
-with the motivation coming up on the mailing list earlier:
-https://lore.kernel.org/lkml/CAP-5=fWDqE8SYfOLZkg_0=4Ayx6E7O+h7uUp4NDeCFkiN4b7-w@mail.gmail.com/
+1. The synthesized samples were delivered without the
+   PERF_SAMPLE_BRANCH_STACK flag if it was not in the original event's
+   sample_type. Fixed by using sample_type | evsel->synth_sample_type
+   in intel_pt_deliver_synth_event.
 
-The changes remove the embedded `libpython` and `libperl` support from
-`perf` entirely. Instead, they expand the existing `perf` Python
-module to provide full access to perf data files and events, allowing
-scripts to be run as standalone Python applications.
+2. The record layout was misaligned because of inconsistent handling
+   of PERF_SAMPLE_BRANCH_HW_INDEX. Fixed by explicitly writing nr and
+   hw_idx in perf_event__synthesize_sample.
 
-To demonstrate the benefits, we ported all existing Python and Perl
-scripts to use the new Python session API. The performance improvement
-is dramatic. For example, porting `mem-phys-addr.py`:
+3. Modifying evsel->core.attr.sample_type early in __cmd_inject caused
+   parse failures for subsequent records in the input file. Fixed by
+   moving this modification to just before writing the header.
 
-Before (using embedded libpython in `perf script`):
-```
-$ perf mem record -a sleep 1
-$ time perf script tools/perf/scripts/python/mem-phys-addr.py
-Event: cpu_core/mem-loads-aux/
-Memory type                                    count  percentage
- ---------------------------------------  ----------  ----------
-0-fff : Reserved                                3217       100.0
+4. perf_event__repipe_sample was narrowed to only synthesize samples
+   when branch stack injection was requested, and restored the use of
+   perf_inject__cut_auxtrace_sample as a fallback to preserve
+   functionality.
 
-real    0m3.754s
-user    0m0.023s
-sys     0m0.018s
-```
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+Issues fixed in v2:
 
-After (using standalone Python script with `perf` module):
-```
-$ PYTHONPATH=/tmp/perf/python time python3 tools/perf/python/mem-phys-addr.py
-Event: evsel(cpu_core/mem-loads-aux/)
-Memory type                                    count  percentage
- ---------------------------------------  ----------  ----------
-0-fff : Reserved                                3217       100.0
+1. Potential Heap Overflow in perf_event__repipe_sample : Addressed by
+   adding a check that prints an error and returns -EFAULT if the
+   calculated event size exceeds PERF_SAMPLE_MAX_SIZE , as you
+   requested.
 
-real    0m0.106s
-user    0m0.021s
-sys     0m0.020s
-```
+2. Header vs Payload Mismatch in __cmd_inject : Addressed by narrowing
+   the condition so that HEADER_BRANCH_STACK is only set in the file
+   header if add_last_branch was true.
 
-This is a roughly 35x speedup!
+3. NULL Pointer Dereference in intel-pt.c : Addressed by updating the
+   condition in intel_pt_do_synth_pebs_sample to fill sample.
+   branch_stack if it was synthesized, even if not in the original
+   sample_type .
 
-The change is large (11285 insertions, 15963 deletions - net 4678
-deletions) due to porting all existing perl and python code to the new
-API. Gemini was used to achieve this and to improve the code
-quality. Removing support may be controversial, however, the first 52
-patches are additive and merging those would allow us to focus on the
-remaining 6 patches that finalize the new `perf script` behavior.
+4. Unsafe Reads for events lacking HW_INDEX in synthetic-events.c :
+   Addressed by using the perf_sample__branch_entries() macro and
+   checking sample->no_hw_idx .
 
-** v2 Changes
+5. Size mismatch in perf_event__sample_event_size : Addressed by
+   passing branch_sample_type to it and conditioning the hw_idx size on
+   PERF_SAMPLE_BRANCH_HW_INDEX .
+---
+ tools/perf/bench/inject-buildid.c  |  9 ++--
+ tools/perf/builtin-inject.c        | 77 ++++++++++++++++++++++++++++--
+ tools/perf/tests/dlfilter-test.c   |  8 +++-
+ tools/perf/tests/sample-parsing.c  |  5 +-
+ tools/perf/util/arm-spe.c          |  7 ++-
+ tools/perf/util/cs-etm.c           |  6 ++-
+ tools/perf/util/intel-bts.c        |  3 +-
+ tools/perf/util/intel-pt.c         | 13 +++--
+ tools/perf/util/synthetic-events.c | 25 +++++++---
+ tools/perf/util/synthetic-events.h |  6 ++-
+ 10 files changed, 129 insertions(+), 30 deletions(-)
 
-Focus on addressing Sashiko, leak sanitizer and runtime issues.
-
-*** 1. String Match and Event Name Accuracy
-
-* Replaced loose substring event matching across the script suite with
-  exact matches or specific prefix constraints (`syscalls:sys_exit_`,
-  `evsel(skb:kfree_skb)`, etc.).
-
-* Added `getattr()` safety checks to prevent script failures caused by
-  unresolved attributes from older kernel traces.
-
-*** 2. OOM and Memory Protections
-
-* Refactored `netdev-times.py` to compute and process network
-  statistics chronologically on-the-fly, eliminating an unbounded
-  in-memory list that caused Out-Of-Memory crashes on large files.
-
-* Implemented threshold limits on `intel-pt-events.py` to cap memory
-  allocation during event interleaving.
-
-* Optimized `export-to-sqlite.py` to periodically commit database
-  transactions (every 10,000 samples) to reduce temporary SQLite
-  journal sizes.
-
-*** 3. Portability & Environment Independence
-
-* Re-keyed internal tracking dictionaries in scripts like
-  `powerpc-hcalls.py` to use thread `PIDs` instead of `CPUs`, ensuring
-  correctness when threads migrate.
-
-* Switched `net_dropmonitor.py` from host-specific `/proc/kallsyms`
-  parsing to `perf`'s built-in symbol resolution API.
-
-* Added the `--iomem` parameter to `mem-phys-addr.py` to support
-  offline analysis of data collected on different architectures.
-
-*** 4. Standalone Scripting Improvements
-
-* Patched `builtin-script.c` to ensure `--input` parameters are
-  successfully passed down to standalone execution pipelines via
-  `execvp()`.
-
-* Guarded against string buffer overflows during `.py` extension path
-  resolving.
-
-*** 5. Code Cleanups
-
-* Removed stale `perl` subdirectories from being detected by the TUI
-  script browser.
-
-* Ran the entire script suite through `mypy` and `pylint` to achieve
-  strict static type checking and resolve unreferenced variables.
-
-Ian Rogers (58):
-  perf inject: Fix itrace branch stack synthesis
-  perf arch arm: Sort includes and add missed explicit dependencies
-  perf arch x86: Sort includes and add missed explicit dependencies
-  perf tests: Sort includes and add missed explicit dependencies
-  perf script: Sort includes and add missed explicit dependencies
-  perf util: Sort includes and add missed explicit dependencies
-  perf python: Add missed explicit dependencies
-  perf evsel/evlist: Avoid unnecessary #includes
-  perf data: Add open flag
-  perf evlist: Add reference count
-  perf evsel: Add reference count
-  perf evlist: Add reference count checking
-  perf python: Use evsel in sample in pyrf_event
-  perf python: Add wrapper for perf_data file abstraction
-  perf python: Add python session abstraction wrapping perf's session
-  perf python: Add syscall name/id to convert syscall number and name
-  perf python: Refactor and add accessors to sample event
-  perf python: Add callchain support
-  perf python: Add config file access
-  perf python: Extend API for stat events in python.c
-  perf python: Expose brstack in sample event
-  perf python: Add perf.pyi stubs file
-  perf python: Add LiveSession helper
-  perf python: Move exported-sql-viewer.py and parallel-perf.py to
-    tools/perf/python/
-  perf stat-cpi: Port stat-cpi to use python module
-  perf mem-phys-addr: Port mem-phys-addr to use python module
-  perf syscall-counts: Port syscall-counts to use python module
-  perf syscall-counts-by-pid: Port syscall-counts-by-pid to use python
-    module
-  perf futex-contention: Port futex-contention to use python module
-  perf flamegraph: Port flamegraph to use python module
-  perf gecko: Port gecko to use python module
-  perf arm-cs-trace-disasm: Port arm-cs-trace-disasm to use python
-    module
-  perf check-perf-trace: Port check-perf-trace to use python module
-  perf compaction-times: Port compaction-times to use python module
-  perf event_analyzing_sample: Port event_analyzing_sample to use python
-    module
-  perf export-to-sqlite: Port export-to-sqlite to use python module
-  perf export-to-postgresql: Port export-to-postgresql to use python
-    module
-  perf failed-syscalls-by-pid: Port failed-syscalls-by-pid to use python
-    module
-  perf intel-pt-events: Port intel-pt-events/libxed to use python module
-  perf net_dropmonitor: Port net_dropmonitor to use python module
-  perf netdev-times: Port netdev-times to use python module
-  perf powerpc-hcalls: Port powerpc-hcalls to use python module
-  perf sched-migration: Port sched-migration/SchedGui to use python
-    module
-  perf sctop: Port sctop to use python module
-  perf stackcollapse: Port stackcollapse to use python module
-  perf task-analyzer: Port task-analyzer to use python module
-  perf failed-syscalls: Port failed-syscalls to use python module
-  perf rw-by-file: Port rw-by-file to use python module
-  perf rw-by-pid: Port rw-by-pid to use python module
-  perf rwtop: Port rwtop to use python module
-  perf wakeup-latency: Port wakeup-latency to use python module
-  perf test: Migrate Intel PT virtual LBR test to use Python API
-  perf: Remove libperl support, legacy Perl scripts and tests
-  perf: Remove libpython support and legacy Python scripts
-  perf Makefile: Update Python script installation path
-  perf script: Refactor to support standalone scripts and remove legacy
-    features
-  perf Documentation: Update for standalone Python scripts and remove
-    obsolete data
-  perf python: Improve perf script -l descriptions
-
- tools/build/Makefile.feature                  |    5 +-
- tools/build/feature/Makefile                  |   23 +-
- tools/build/feature/test-all.c                |    6 +-
- tools/build/feature/test-libperl.c            |   10 -
- tools/build/feature/test-libpython.c          |   10 -
- tools/build/feature/test-python-module.c      |   12 +
- tools/perf/Documentation/perf-check.txt       |    2 -
- tools/perf/Documentation/perf-script-perl.txt |  216 --
- .../perf/Documentation/perf-script-python.txt |  702 +-----
- tools/perf/Documentation/perf-script.txt      |   70 +-
- tools/perf/Makefile.config                    |   37 +-
- tools/perf/Makefile.perf                      |   22 +-
- tools/perf/arch/arm/util/cs-etm.c             |   36 +-
- tools/perf/arch/arm64/util/arm-spe.c          |    8 +-
- tools/perf/arch/arm64/util/hisi-ptt.c         |    2 +-
- tools/perf/arch/x86/tests/hybrid.c            |   22 +-
- tools/perf/arch/x86/tests/topdown.c           |    2 +-
- tools/perf/arch/x86/util/auxtrace.c           |    2 +-
- tools/perf/arch/x86/util/intel-bts.c          |   26 +-
- tools/perf/arch/x86/util/intel-pt.c           |   38 +-
- tools/perf/arch/x86/util/iostat.c             |    8 +-
- tools/perf/bench/evlist-open-close.c          |   29 +-
- tools/perf/bench/inject-buildid.c             |    9 +-
- tools/perf/builtin-annotate.c                 |    2 +-
- tools/perf/builtin-check.c                    |    3 +-
- tools/perf/builtin-ftrace.c                   |   14 +-
- tools/perf/builtin-inject.c                   |   81 +-
- tools/perf/builtin-kvm.c                      |   14 +-
- tools/perf/builtin-kwork.c                    |    8 +-
- tools/perf/builtin-lock.c                     |    2 +-
- tools/perf/builtin-record.c                   |   95 +-
- tools/perf/builtin-report.c                   |    6 +-
- tools/perf/builtin-sched.c                    |   26 +-
- tools/perf/builtin-script.c                   |  895 +++----
- tools/perf/builtin-stat.c                     |   81 +-
- tools/perf/builtin-top.c                      |  104 +-
- tools/perf/builtin-trace.c                    |   60 +-
- tools/perf/python/SchedGui.py                 |  219 ++
- tools/perf/python/arm-cs-trace-disasm.py      |  338 +++
- tools/perf/python/check-perf-trace.py         |  113 +
- tools/perf/python/compaction-times.py         |  326 +++
- tools/perf/python/counting.py                 |    1 +
- tools/perf/python/event_analyzing_sample.py   |  296 +++
- tools/perf/python/export-to-postgresql.py     |  697 ++++++
- tools/perf/python/export-to-sqlite.py         |  380 +++
- .../python/exported-sql-viewer.py             |    6 +-
- tools/perf/python/failed-syscalls-by-pid.py   |  119 +
- tools/perf/python/failed-syscalls.py          |   78 +
- tools/perf/python/flamegraph.py               |  250 ++
- tools/perf/python/futex-contention.py         |   87 +
- tools/perf/python/gecko.py                    |  380 +++
- tools/perf/python/intel-pt-events.py          |  435 ++++
- tools/perf/python/libxed.py                   |  122 +
- .../{scripts => }/python/mem-phys-addr.py     |   66 +-
- tools/perf/python/net_dropmonitor.py          |   58 +
- tools/perf/python/netdev-times.py             |  472 ++++
- .../{scripts => }/python/parallel-perf.py     |    0
- tools/perf/python/perf.pyi                    |  579 +++++
- tools/perf/python/perf_live.py                |   48 +
- tools/perf/python/powerpc-hcalls.py           |  211 ++
- tools/perf/python/rw-by-file.py               |  103 +
- tools/perf/python/rw-by-pid.py                |  158 ++
- tools/perf/python/rwtop.py                    |  219 ++
- tools/perf/python/sched-migration.py          |  469 ++++
- tools/perf/python/sctop.py                    |  174 ++
- tools/perf/python/stackcollapse.py            |  126 +
- tools/perf/python/stat-cpi.py                 |  151 ++
- tools/perf/python/syscall-counts-by-pid.py    |   88 +
- tools/perf/python/syscall-counts.py           |   72 +
- tools/perf/python/task-analyzer.py            |  546 ++++
- tools/perf/python/tracepoint.py               |    1 +
- tools/perf/python/twatch.py                   |    1 +
- tools/perf/python/wakeup-latency.py           |   88 +
- tools/perf/scripts/Build                      |    4 -
- tools/perf/scripts/perl/Perf-Trace-Util/Build |    9 -
- .../scripts/perl/Perf-Trace-Util/Context.c    |  122 -
- .../scripts/perl/Perf-Trace-Util/Context.xs   |   42 -
- .../scripts/perl/Perf-Trace-Util/Makefile.PL  |   18 -
- .../perf/scripts/perl/Perf-Trace-Util/README  |   59 -
- .../Perf-Trace-Util/lib/Perf/Trace/Context.pm |   55 -
- .../Perf-Trace-Util/lib/Perf/Trace/Core.pm    |  192 --
- .../Perf-Trace-Util/lib/Perf/Trace/Util.pm    |   94 -
- .../perf/scripts/perl/Perf-Trace-Util/typemap |    1 -
- .../scripts/perl/bin/check-perf-trace-record  |    2 -
- .../scripts/perl/bin/failed-syscalls-record   |    3 -
- .../scripts/perl/bin/failed-syscalls-report   |   10 -
- tools/perf/scripts/perl/bin/rw-by-file-record |    3 -
- tools/perf/scripts/perl/bin/rw-by-file-report |   10 -
- tools/perf/scripts/perl/bin/rw-by-pid-record  |    2 -
- tools/perf/scripts/perl/bin/rw-by-pid-report  |    3 -
- tools/perf/scripts/perl/bin/rwtop-record      |    2 -
- tools/perf/scripts/perl/bin/rwtop-report      |   20 -
- .../scripts/perl/bin/wakeup-latency-record    |    6 -
- .../scripts/perl/bin/wakeup-latency-report    |    3 -
- tools/perf/scripts/perl/check-perf-trace.pl   |  106 -
- tools/perf/scripts/perl/failed-syscalls.pl    |   47 -
- tools/perf/scripts/perl/rw-by-file.pl         |  106 -
- tools/perf/scripts/perl/rw-by-pid.pl          |  184 --
- tools/perf/scripts/perl/rwtop.pl              |  203 --
- tools/perf/scripts/perl/wakeup-latency.pl     |  107 -
- .../perf/scripts/python/Perf-Trace-Util/Build |    4 -
- .../scripts/python/Perf-Trace-Util/Context.c  |  225 --
- .../Perf-Trace-Util/lib/Perf/Trace/Core.py    |  116 -
- .../lib/Perf/Trace/EventClass.py              |   97 -
- .../lib/Perf/Trace/SchedGui.py                |  184 --
- .../Perf-Trace-Util/lib/Perf/Trace/Util.py    |   92 -
- .../scripts/python/arm-cs-trace-disasm.py     |  355 ---
- .../python/bin/compaction-times-record        |    2 -
- .../python/bin/compaction-times-report        |    4 -
- .../python/bin/event_analyzing_sample-record  |    8 -
- .../python/bin/event_analyzing_sample-report  |    3 -
- .../python/bin/export-to-postgresql-record    |    8 -
- .../python/bin/export-to-postgresql-report    |   29 -
- .../python/bin/export-to-sqlite-record        |    8 -
- .../python/bin/export-to-sqlite-report        |   29 -
- .../python/bin/failed-syscalls-by-pid-record  |    3 -
- .../python/bin/failed-syscalls-by-pid-report  |   10 -
- .../perf/scripts/python/bin/flamegraph-record |    2 -
- .../perf/scripts/python/bin/flamegraph-report |    3 -
- .../python/bin/futex-contention-record        |    2 -
- .../python/bin/futex-contention-report        |    4 -
- tools/perf/scripts/python/bin/gecko-record    |    2 -
- tools/perf/scripts/python/bin/gecko-report    |    7 -
- .../scripts/python/bin/intel-pt-events-record |   13 -
- .../scripts/python/bin/intel-pt-events-report |    3 -
- .../scripts/python/bin/mem-phys-addr-record   |   19 -
- .../scripts/python/bin/mem-phys-addr-report   |    3 -
- .../scripts/python/bin/net_dropmonitor-record |    2 -
- .../scripts/python/bin/net_dropmonitor-report |    4 -
- .../scripts/python/bin/netdev-times-record    |    8 -
- .../scripts/python/bin/netdev-times-report    |    5 -
- .../scripts/python/bin/powerpc-hcalls-record  |    2 -
- .../scripts/python/bin/powerpc-hcalls-report  |    2 -
- .../scripts/python/bin/sched-migration-record |    2 -
- .../scripts/python/bin/sched-migration-report |    3 -
- tools/perf/scripts/python/bin/sctop-record    |    3 -
- tools/perf/scripts/python/bin/sctop-report    |   24 -
- .../scripts/python/bin/stackcollapse-record   |    8 -
- .../scripts/python/bin/stackcollapse-report   |    3 -
- .../python/bin/syscall-counts-by-pid-record   |    3 -
- .../python/bin/syscall-counts-by-pid-report   |   10 -
- .../scripts/python/bin/syscall-counts-record  |    3 -
- .../scripts/python/bin/syscall-counts-report  |   10 -
- .../scripts/python/bin/task-analyzer-record   |    2 -
- .../scripts/python/bin/task-analyzer-report   |    3 -
- tools/perf/scripts/python/check-perf-trace.py |   84 -
- tools/perf/scripts/python/compaction-times.py |  311 ---
- .../scripts/python/event_analyzing_sample.py  |  192 --
- .../scripts/python/export-to-postgresql.py    | 1114 ---------
- tools/perf/scripts/python/export-to-sqlite.py |  799 ------
- .../scripts/python/failed-syscalls-by-pid.py  |   79 -
- tools/perf/scripts/python/flamegraph.py       |  267 --
- tools/perf/scripts/python/futex-contention.py |   57 -
- tools/perf/scripts/python/gecko.py            |  395 ---
- tools/perf/scripts/python/intel-pt-events.py  |  494 ----
- tools/perf/scripts/python/libxed.py           |  107 -
- tools/perf/scripts/python/net_dropmonitor.py  |   78 -
- tools/perf/scripts/python/netdev-times.py     |  473 ----
- tools/perf/scripts/python/powerpc-hcalls.py   |  202 --
- tools/perf/scripts/python/sched-migration.py  |  462 ----
- tools/perf/scripts/python/sctop.py            |   89 -
- tools/perf/scripts/python/stackcollapse.py    |  127 -
- tools/perf/scripts/python/stat-cpi.py         |   79 -
- .../scripts/python/syscall-counts-by-pid.py   |   75 -
- tools/perf/scripts/python/syscall-counts.py   |   65 -
- tools/perf/scripts/python/task-analyzer.py    |  934 -------
- tools/perf/tests/backward-ring-buffer.c       |   26 +-
- tools/perf/tests/code-reading.c               |   14 +-
- tools/perf/tests/dlfilter-test.c              |    8 +-
- tools/perf/tests/event-times.c                |    6 +-
- tools/perf/tests/event_update.c               |    4 +-
- tools/perf/tests/evsel-roundtrip-name.c       |    8 +-
- tools/perf/tests/evsel-tp-sched.c             |    4 +-
- tools/perf/tests/expand-cgroup.c              |   12 +-
- tools/perf/tests/hists_cumulate.c             |    2 +-
- tools/perf/tests/hists_filter.c               |    2 +-
- tools/perf/tests/hists_link.c                 |    2 +-
- tools/perf/tests/hists_output.c               |    2 +-
- tools/perf/tests/hwmon_pmu.c                  |   21 +-
- tools/perf/tests/keep-tracking.c              |   10 +-
- tools/perf/tests/make                         |    9 +-
- tools/perf/tests/mmap-basic.c                 |   42 +-
- tools/perf/tests/openat-syscall-all-cpus.c    |    6 +-
- tools/perf/tests/openat-syscall-tp-fields.c   |   26 +-
- tools/perf/tests/openat-syscall.c             |    6 +-
- tools/perf/tests/parse-events.c               |  139 +-
- tools/perf/tests/parse-metric.c               |    8 +-
- tools/perf/tests/parse-no-sample-id-all.c     |    2 +-
- tools/perf/tests/perf-record.c                |   38 +-
- tools/perf/tests/perf-time-to-tsc.c           |   12 +-
- tools/perf/tests/pfm.c                        |   12 +-
- tools/perf/tests/pmu-events.c                 |   11 +-
- tools/perf/tests/pmu.c                        |    4 +-
- tools/perf/tests/sample-parsing.c             |   39 +-
- .../perf/tests/shell/lib/perf_brstack_max.py  |   43 +
- tools/perf/tests/shell/script.sh              |    2 +-
- tools/perf/tests/shell/script_perl.sh         |  102 -
- tools/perf/tests/shell/script_python.sh       |  113 -
- .../tests/shell/test_arm_coresight_disasm.sh  |   12 +-
- tools/perf/tests/shell/test_intel_pt.sh       |   35 +-
- tools/perf/tests/shell/test_task_analyzer.sh  |   79 +-
- tools/perf/tests/sw-clock.c                   |   20 +-
- tools/perf/tests/switch-tracking.c            |   10 +-
- tools/perf/tests/task-exit.c                  |   20 +-
- tools/perf/tests/time-utils-test.c            |   14 +-
- tools/perf/tests/tool_pmu.c                   |    7 +-
- tools/perf/tests/topology.c                   |    4 +-
- tools/perf/ui/browsers/annotate.c             |    2 +-
- tools/perf/ui/browsers/hists.c                |   22 +-
- tools/perf/ui/browsers/scripts.c              |    7 +-
- tools/perf/util/Build                         |    1 -
- tools/perf/util/amd-sample-raw.c              |    2 +-
- tools/perf/util/annotate-data.c               |    2 +-
- tools/perf/util/annotate.c                    |   10 +-
- tools/perf/util/arm-spe.c                     |    7 +-
- tools/perf/util/auxtrace.c                    |   14 +-
- tools/perf/util/block-info.c                  |    4 +-
- tools/perf/util/bpf_counter.c                 |    2 +-
- tools/perf/util/bpf_counter_cgroup.c          |   10 +-
- tools/perf/util/bpf_ftrace.c                  |    9 +-
- tools/perf/util/bpf_lock_contention.c         |   12 +-
- tools/perf/util/bpf_off_cpu.c                 |   44 +-
- tools/perf/util/bpf_trace_augment.c           |    8 +-
- tools/perf/util/cgroup.c                      |   26 +-
- tools/perf/util/cs-etm.c                      |    6 +-
- tools/perf/util/data-convert-bt.c             |    2 +-
- tools/perf/util/data.c                        |   26 +-
- tools/perf/util/data.h                        |    4 +-
- tools/perf/util/evlist.c                      |  484 ++--
- tools/perf/util/evlist.h                      |  273 +-
- tools/perf/util/evsel.c                       |  109 +-
- tools/perf/util/evsel.h                       |   35 +-
- tools/perf/util/expr.c                        |    2 +-
- tools/perf/util/header.c                      |   51 +-
- tools/perf/util/header.h                      |    2 +-
- tools/perf/util/intel-bts.c                   |    3 +-
- tools/perf/util/intel-pt.c                    |   13 +-
- tools/perf/util/intel-tpebs.c                 |    7 +-
- tools/perf/util/map.h                         |    9 +-
- tools/perf/util/metricgroup.c                 |   12 +-
- tools/perf/util/parse-events.c                |   10 +-
- tools/perf/util/parse-events.y                |    2 +-
- tools/perf/util/perf_api_probe.c              |   20 +-
- tools/perf/util/pfm.c                         |    4 +-
- tools/perf/util/print-events.c                |    2 +-
- tools/perf/util/print_insn.h                  |    5 +-
- tools/perf/util/python.c                      | 1853 ++++++++++++--
- tools/perf/util/record.c                      |   11 +-
- tools/perf/util/s390-sample-raw.c             |   19 +-
- tools/perf/util/sample-raw.c                  |    4 +-
- tools/perf/util/sample.c                      |   16 +-
- tools/perf/util/scripting-engines/Build       |    9 -
- .../util/scripting-engines/trace-event-perl.c |  773 ------
- .../scripting-engines/trace-event-python.c    | 2209 -----------------
- tools/perf/util/session.c                     |   58 +-
- tools/perf/util/sideband_evlist.c             |   40 +-
- tools/perf/util/sort.c                        |    2 +-
- tools/perf/util/stat-display.c                |    6 +-
- tools/perf/util/stat-shadow.c                 |   24 +-
- tools/perf/util/stat.c                        |   20 +-
- tools/perf/util/stream.c                      |    4 +-
- tools/perf/util/synthetic-events.c            |   36 +-
- tools/perf/util/synthetic-events.h            |    6 +-
- tools/perf/util/time-utils.c                  |   12 +-
- tools/perf/util/top.c                         |    4 +-
- tools/perf/util/trace-event-parse.c           |   65 -
- tools/perf/util/trace-event-scripting.c       |  410 ---
- tools/perf/util/trace-event.h                 |   75 +-
- 268 files changed, 11285 insertions(+), 15963 deletions(-)
- delete mode 100644 tools/build/feature/test-libperl.c
- delete mode 100644 tools/build/feature/test-libpython.c
- create mode 100644 tools/build/feature/test-python-module.c
- delete mode 100644 tools/perf/Documentation/perf-script-perl.txt
- create mode 100755 tools/perf/python/SchedGui.py
- create mode 100755 tools/perf/python/arm-cs-trace-disasm.py
- create mode 100755 tools/perf/python/check-perf-trace.py
- create mode 100755 tools/perf/python/compaction-times.py
- create mode 100755 tools/perf/python/event_analyzing_sample.py
- create mode 100755 tools/perf/python/export-to-postgresql.py
- create mode 100755 tools/perf/python/export-to-sqlite.py
- rename tools/perf/{scripts => }/python/exported-sql-viewer.py (99%)
- create mode 100755 tools/perf/python/failed-syscalls-by-pid.py
- create mode 100755 tools/perf/python/failed-syscalls.py
- create mode 100755 tools/perf/python/flamegraph.py
- create mode 100755 tools/perf/python/futex-contention.py
- create mode 100755 tools/perf/python/gecko.py
- create mode 100755 tools/perf/python/intel-pt-events.py
- create mode 100755 tools/perf/python/libxed.py
- rename tools/perf/{scripts => }/python/mem-phys-addr.py (73%)
- mode change 100644 => 100755
- create mode 100755 tools/perf/python/net_dropmonitor.py
- create mode 100755 tools/perf/python/netdev-times.py
- rename tools/perf/{scripts => }/python/parallel-perf.py (100%)
- create mode 100644 tools/perf/python/perf.pyi
- create mode 100755 tools/perf/python/perf_live.py
- create mode 100755 tools/perf/python/powerpc-hcalls.py
- create mode 100755 tools/perf/python/rw-by-file.py
- create mode 100755 tools/perf/python/rw-by-pid.py
- create mode 100755 tools/perf/python/rwtop.py
- create mode 100755 tools/perf/python/sched-migration.py
- create mode 100755 tools/perf/python/sctop.py
- create mode 100755 tools/perf/python/stackcollapse.py
- create mode 100755 tools/perf/python/stat-cpi.py
- create mode 100755 tools/perf/python/syscall-counts-by-pid.py
- create mode 100755 tools/perf/python/syscall-counts.py
- create mode 100755 tools/perf/python/task-analyzer.py
- create mode 100755 tools/perf/python/wakeup-latency.py
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Build
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.c
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.xs
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/README
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/typemap
- delete mode 100644 tools/perf/scripts/perl/bin/check-perf-trace-record
- delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-record
- delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-report
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-record
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-report
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-record
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-report
- delete mode 100644 tools/perf/scripts/perl/bin/rwtop-record
- delete mode 100644 tools/perf/scripts/perl/bin/rwtop-report
- delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-record
- delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-report
- delete mode 100644 tools/perf/scripts/perl/check-perf-trace.pl
- delete mode 100644 tools/perf/scripts/perl/failed-syscalls.pl
- delete mode 100644 tools/perf/scripts/perl/rw-by-file.pl
- delete mode 100644 tools/perf/scripts/perl/rw-by-pid.pl
- delete mode 100644 tools/perf/scripts/perl/rwtop.pl
- delete mode 100644 tools/perf/scripts/perl/wakeup-latency.pl
- delete mode 100644 tools/perf/scripts/python/Perf-Trace-Util/Build
- delete mode 100644 tools/perf/scripts/python/Perf-Trace-Util/Context.c
- delete mode 100644 tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
- delete mode 100755 tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/EventClass.py
- delete mode 100644 tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/SchedGui.py
- delete mode 100644 tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py
- delete mode 100755 tools/perf/scripts/python/arm-cs-trace-disasm.py
- delete mode 100644 tools/perf/scripts/python/bin/compaction-times-record
- delete mode 100644 tools/perf/scripts/python/bin/compaction-times-report
- delete mode 100644 tools/perf/scripts/python/bin/event_analyzing_sample-record
- delete mode 100644 tools/perf/scripts/python/bin/event_analyzing_sample-report
- delete mode 100644 tools/perf/scripts/python/bin/export-to-postgresql-record
- delete mode 100644 tools/perf/scripts/python/bin/export-to-postgresql-report
- delete mode 100644 tools/perf/scripts/python/bin/export-to-sqlite-record
- delete mode 100644 tools/perf/scripts/python/bin/export-to-sqlite-report
- delete mode 100644 tools/perf/scripts/python/bin/failed-syscalls-by-pid-record
- delete mode 100644 tools/perf/scripts/python/bin/failed-syscalls-by-pid-report
- delete mode 100755 tools/perf/scripts/python/bin/flamegraph-record
- delete mode 100755 tools/perf/scripts/python/bin/flamegraph-report
- delete mode 100644 tools/perf/scripts/python/bin/futex-contention-record
- delete mode 100644 tools/perf/scripts/python/bin/futex-contention-report
- delete mode 100644 tools/perf/scripts/python/bin/gecko-record
- delete mode 100755 tools/perf/scripts/python/bin/gecko-report
- delete mode 100644 tools/perf/scripts/python/bin/intel-pt-events-record
- delete mode 100644 tools/perf/scripts/python/bin/intel-pt-events-report
- delete mode 100644 tools/perf/scripts/python/bin/mem-phys-addr-record
- delete mode 100644 tools/perf/scripts/python/bin/mem-phys-addr-report
- delete mode 100755 tools/perf/scripts/python/bin/net_dropmonitor-record
- delete mode 100755 tools/perf/scripts/python/bin/net_dropmonitor-report
- delete mode 100644 tools/perf/scripts/python/bin/netdev-times-record
- delete mode 100644 tools/perf/scripts/python/bin/netdev-times-report
- delete mode 100644 tools/perf/scripts/python/bin/powerpc-hcalls-record
- delete mode 100644 tools/perf/scripts/python/bin/powerpc-hcalls-report
- delete mode 100644 tools/perf/scripts/python/bin/sched-migration-record
- delete mode 100644 tools/perf/scripts/python/bin/sched-migration-report
- delete mode 100644 tools/perf/scripts/python/bin/sctop-record
- delete mode 100644 tools/perf/scripts/python/bin/sctop-report
- delete mode 100755 tools/perf/scripts/python/bin/stackcollapse-record
- delete mode 100755 tools/perf/scripts/python/bin/stackcollapse-report
- delete mode 100644 tools/perf/scripts/python/bin/syscall-counts-by-pid-record
- delete mode 100644 tools/perf/scripts/python/bin/syscall-counts-by-pid-report
- delete mode 100644 tools/perf/scripts/python/bin/syscall-counts-record
- delete mode 100644 tools/perf/scripts/python/bin/syscall-counts-report
- delete mode 100755 tools/perf/scripts/python/bin/task-analyzer-record
- delete mode 100755 tools/perf/scripts/python/bin/task-analyzer-report
- delete mode 100644 tools/perf/scripts/python/check-perf-trace.py
- delete mode 100644 tools/perf/scripts/python/compaction-times.py
- delete mode 100644 tools/perf/scripts/python/event_analyzing_sample.py
- delete mode 100644 tools/perf/scripts/python/export-to-postgresql.py
- delete mode 100644 tools/perf/scripts/python/export-to-sqlite.py
- delete mode 100644 tools/perf/scripts/python/failed-syscalls-by-pid.py
- delete mode 100755 tools/perf/scripts/python/flamegraph.py
- delete mode 100644 tools/perf/scripts/python/futex-contention.py
- delete mode 100644 tools/perf/scripts/python/gecko.py
- delete mode 100644 tools/perf/scripts/python/intel-pt-events.py
- delete mode 100644 tools/perf/scripts/python/libxed.py
- delete mode 100755 tools/perf/scripts/python/net_dropmonitor.py
- delete mode 100644 tools/perf/scripts/python/netdev-times.py
- delete mode 100644 tools/perf/scripts/python/powerpc-hcalls.py
- delete mode 100644 tools/perf/scripts/python/sched-migration.py
- delete mode 100644 tools/perf/scripts/python/sctop.py
- delete mode 100755 tools/perf/scripts/python/stackcollapse.py
- delete mode 100644 tools/perf/scripts/python/stat-cpi.py
- delete mode 100644 tools/perf/scripts/python/syscall-counts-by-pid.py
- delete mode 100644 tools/perf/scripts/python/syscall-counts.py
- delete mode 100755 tools/perf/scripts/python/task-analyzer.py
- create mode 100644 tools/perf/tests/shell/lib/perf_brstack_max.py
- delete mode 100755 tools/perf/tests/shell/script_perl.sh
- delete mode 100755 tools/perf/tests/shell/script_python.sh
- delete mode 100644 tools/perf/util/scripting-engines/Build
- delete mode 100644 tools/perf/util/scripting-engines/trace-event-perl.c
- delete mode 100644 tools/perf/util/scripting-engines/trace-event-python.c
- delete mode 100644 tools/perf/util/trace-event-scripting.c
-
+diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
+index aad572a78d7f..bfd2c5ec9488 100644
+--- a/tools/perf/bench/inject-buildid.c
++++ b/tools/perf/bench/inject-buildid.c
+@@ -228,9 +228,12 @@ static ssize_t synthesize_sample(struct bench_data *data, struct bench_dso *dso,
+ 
+ 	event.header.type = PERF_RECORD_SAMPLE;
+ 	event.header.misc = PERF_RECORD_MISC_USER;
+-	event.header.size = perf_event__sample_event_size(&sample, bench_sample_type, 0);
+-
+-	perf_event__synthesize_sample(&event, bench_sample_type, 0, &sample);
++	event.header.size = perf_event__sample_event_size(&sample, bench_sample_type,
++							   /*read_format=*/0,
++							   /*branch_sample_type=*/0);
++	perf_event__synthesize_sample(&event, bench_sample_type,
++				      /*read_format=*/0,
++				      /*branch_sample_type=*/0, &sample);
+ 
+ 	return writen(data->input_pipe[1], &event, event.header.size);
+ }
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index f174bc69cec4..88c0ef4f5ff1 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -375,7 +375,59 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+ 
+ 	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
+ 
+-	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
++	if (inject->itrace_synth_opts.set &&
++	    (inject->itrace_synth_opts.last_branch ||
++	     inject->itrace_synth_opts.add_last_branch)) {
++		union perf_event *event_copy = (void *)inject->event_copy;
++		struct branch_stack dummy_bs = { .nr = 0 };
++		int err;
++		size_t sz;
++		u64 orig_type = evsel->core.attr.sample_type;
++		u64 orig_branch_type = evsel->core.attr.branch_sample_type;
++
++		if (event_copy == NULL) {
++			inject->event_copy = malloc(PERF_SAMPLE_MAX_SIZE);
++			if (!inject->event_copy)
++				return -ENOMEM;
++
++			event_copy = (void *)inject->event_copy;
++		}
++
++		if (!sample->branch_stack)
++			sample->branch_stack = &dummy_bs;
++
++		if (inject->itrace_synth_opts.add_last_branch) {
++			/* Temporarily add in type bits for synthesis. */
++			evsel->core.attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
++			evsel->core.attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
++			evsel->core.attr.sample_type &= ~PERF_SAMPLE_AUX;
++		}
++
++		sz = perf_event__sample_event_size(sample, evsel->core.attr.sample_type,
++						   evsel->core.attr.read_format,
++						   evsel->core.attr.branch_sample_type);
++
++		if (sz > PERF_SAMPLE_MAX_SIZE) {
++			pr_err("Sample size %zu exceeds max size %d\n", sz, PERF_SAMPLE_MAX_SIZE);
++			return -EFAULT;
++		}
++
++		event_copy->header.type = PERF_RECORD_SAMPLE;
++		event_copy->header.size = sz;
++
++		err = perf_event__synthesize_sample(event_copy, evsel->core.attr.sample_type,
++						    evsel->core.attr.read_format,
++						    evsel->core.attr.branch_sample_type, sample);
++
++		evsel->core.attr.sample_type = orig_type;
++		evsel->core.attr.branch_sample_type = orig_branch_type;
++
++		if (err) {
++			pr_err("Failed to synthesize sample\n");
++			return err;
++		}
++		event = event_copy;
++	} else if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
+ 		event = perf_inject__cut_auxtrace_sample(inject, event, sample);
+ 		if (IS_ERR(event))
+ 			return PTR_ERR(event);
+@@ -464,7 +516,8 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+ 	sample_type &= ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER);
+ 
+ 	perf_event__synthesize_sample(event_copy, sample_type,
+-				      evsel->core.attr.read_format, sample);
++				      evsel->core.attr.read_format,
++				      evsel->core.attr.branch_sample_type, sample);
+ 	return perf_event__repipe_synth(tool, event_copy);
+ }
+ 
+@@ -1100,7 +1153,8 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
+ 	sample_sw.period = sample->period;
+ 	sample_sw.time	 = sample->time;
+ 	perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
+-				      evsel->core.attr.read_format, &sample_sw);
++				      evsel->core.attr.read_format,
++				      evsel->core.attr.branch_sample_type, &sample_sw);
+ 	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
+ 	ret = perf_event__repipe(tool, event_sw, &sample_sw, machine);
+ 	perf_sample__exit(&sample_sw);
+@@ -2434,12 +2488,25 @@ static int __cmd_inject(struct perf_inject *inject)
+ 		 * synthesized hardware events, so clear the feature flag.
+ 		 */
+ 		if (inject->itrace_synth_opts.set) {
++			struct evsel *evsel;
++
+ 			perf_header__clear_feat(&session->header,
+ 						HEADER_AUXTRACE);
+-			if (inject->itrace_synth_opts.last_branch ||
+-			    inject->itrace_synth_opts.add_last_branch)
++
++			evlist__for_each_entry(session->evlist, evsel) {
++				evsel->core.attr.sample_type &= ~PERF_SAMPLE_AUX;
++			}
++
++			if (inject->itrace_synth_opts.add_last_branch) {
+ 				perf_header__set_feat(&session->header,
+ 						      HEADER_BRANCH_STACK);
++
++				evlist__for_each_entry(session->evlist, evsel) {
++					evsel->core.attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
++					evsel->core.attr.branch_sample_type |=
++						PERF_SAMPLE_BRANCH_HW_INDEX;
++				}
++			}
+ 		}
+ 
+ 		/*
+diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
+index e63790c61d53..204663571943 100644
+--- a/tools/perf/tests/dlfilter-test.c
++++ b/tools/perf/tests/dlfilter-test.c
+@@ -188,8 +188,12 @@ static int write_sample(struct test_data *td, u64 sample_type, u64 id, pid_t pid
+ 
+ 	event->header.type = PERF_RECORD_SAMPLE;
+ 	event->header.misc = PERF_RECORD_MISC_USER;
+-	event->header.size = perf_event__sample_event_size(&sample, sample_type, 0);
+-	err = perf_event__synthesize_sample(event, sample_type, 0, &sample);
++	event->header.size = perf_event__sample_event_size(&sample, sample_type,
++							   /*read_format=*/0,
++							   /*branch_sample_type=*/0);
++	err = perf_event__synthesize_sample(event, sample_type,
++					    /*read_format=*/0,
++					    /*branch_sample_type=*/0, &sample);
+ 	if (err)
+ 		return test_result("perf_event__synthesize_sample() failed", TEST_FAIL);
+ 
+diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+index a7327c942ca2..55f0b73ca20e 100644
+--- a/tools/perf/tests/sample-parsing.c
++++ b/tools/perf/tests/sample-parsing.c
+@@ -310,7 +310,8 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 		sample.read.one.lost  = 1;
+ 	}
+ 
+-	sz = perf_event__sample_event_size(&sample, sample_type, read_format);
++	sz = perf_event__sample_event_size(&sample, sample_type, read_format,
++					   evsel.core.attr.branch_sample_type);
+ 	bufsz = sz + 4096; /* Add a bit for overrun checking */
+ 	event = malloc(bufsz);
+ 	if (!event) {
+@@ -324,7 +325,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 	event->header.size = sz;
+ 
+ 	err = perf_event__synthesize_sample(event, sample_type, read_format,
+-					    &sample);
++					    evsel.core.attr.branch_sample_type, &sample);
+ 	if (err) {
+ 		pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
+ 			 "perf_event__synthesize_sample", sample_type, err);
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index e5835042acdf..c4ed9f10e731 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -484,8 +484,11 @@ static void arm_spe__prep_branch_stack(struct arm_spe_queue *speq)
+ 
+ static int arm_spe__inject_event(union perf_event *event, struct perf_sample *sample, u64 type)
+ {
+-	event->header.size = perf_event__sample_event_size(sample, type, 0);
+-	return perf_event__synthesize_sample(event, type, 0, sample);
++	event->header.type = PERF_RECORD_SAMPLE;
++	event->header.size = perf_event__sample_event_size(sample, type, /*read_format=*/0,
++							   /*branch_sample_type=*/0);
++	return perf_event__synthesize_sample(event, type, /*read_format=*/0,
++					     /*branch_sample_type=*/0, sample);
+ }
+ 
+ static inline int
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 8a639d2e51a4..1ebc1a6a5e75 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1425,8 +1425,10 @@ static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
+ static int cs_etm__inject_event(union perf_event *event,
+ 			       struct perf_sample *sample, u64 type)
+ {
+-	event->header.size = perf_event__sample_event_size(sample, type, 0);
+-	return perf_event__synthesize_sample(event, type, 0, sample);
++	event->header.size = perf_event__sample_event_size(sample, type, /*read_format=*/0,
++							   /*branch_sample_type=*/0);
++	return perf_event__synthesize_sample(event, type, /*read_format=*/0,
++					     /*branch_sample_type=*/0, sample);
+ }
+ 
+ 
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 382255393fb3..0b18ebd13f7c 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -303,7 +303,8 @@ static int intel_bts_synth_branch_sample(struct intel_bts_queue *btsq,
+ 		event.sample.header.size = bts->branches_event_size;
+ 		ret = perf_event__synthesize_sample(&event,
+ 						    bts->branches_sample_type,
+-						    0, &sample);
++						    /*read_format=*/0, /*branch_sample_type=*/0,
++						    &sample);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index fc9eec8b54b8..2dce6106c038 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -1731,8 +1731,12 @@ static void intel_pt_prep_b_sample(struct intel_pt *pt,
+ static int intel_pt_inject_event(union perf_event *event,
+ 				 struct perf_sample *sample, u64 type)
+ {
+-	event->header.size = perf_event__sample_event_size(sample, type, 0);
+-	return perf_event__synthesize_sample(event, type, 0, sample);
++	event->header.type = PERF_RECORD_SAMPLE;
++	event->header.size = perf_event__sample_event_size(sample, type, /*read_format=*/0,
++							   /*branch_sample_type=*/0);
++
++	return perf_event__synthesize_sample(event, type, /*read_format=*/0,
++					     /*branch_sample_type=*/0, sample);
+ }
+ 
+ static inline int intel_pt_opt_inject(struct intel_pt *pt,
+@@ -2486,7 +2490,7 @@ static int intel_pt_do_synth_pebs_sample(struct intel_pt_queue *ptq, struct evse
+ 		intel_pt_add_xmm(intr_regs, pos, items, regs_mask);
+ 	}
+ 
+-	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
++	if ((sample_type | evsel->synth_sample_type) & PERF_SAMPLE_BRANCH_STACK) {
+ 		if (items->mask[INTEL_PT_LBR_0_POS] ||
+ 		    items->mask[INTEL_PT_LBR_1_POS] ||
+ 		    items->mask[INTEL_PT_LBR_2_POS]) {
+@@ -2557,7 +2561,8 @@ static int intel_pt_do_synth_pebs_sample(struct intel_pt_queue *ptq, struct evse
+ 		sample.transaction = txn;
+ 	}
+ 
+-	ret = intel_pt_deliver_synth_event(pt, event, &sample, sample_type);
++	ret = intel_pt_deliver_synth_event(pt, event, &sample,
++					   sample_type | evsel->synth_sample_type);
+ 	perf_sample__exit(&sample);
+ 	return ret;
+ }
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 85bee747f4cd..2461f25a4d7d 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1455,7 +1455,8 @@ int perf_event__synthesize_stat_round(const struct perf_tool *tool,
+ 	return process(tool, (union perf_event *) &event, NULL, machine);
+ }
+ 
+-size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type, u64 read_format)
++size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type, u64 read_format,
++				     u64 branch_sample_type)
+ {
+ 	size_t sz, result = sizeof(struct perf_record_sample);
+ 
+@@ -1515,8 +1516,10 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 
+ 	if (type & PERF_SAMPLE_BRANCH_STACK) {
+ 		sz = sample->branch_stack->nr * sizeof(struct branch_entry);
+-		/* nr, hw_idx */
+-		sz += 2 * sizeof(u64);
++		/* nr */
++		sz += sizeof(u64);
++		if (branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)
++			sz += sizeof(u64);
+ 		result += sz;
+ 	}
+ 
+@@ -1605,7 +1608,7 @@ static __u64 *copy_read_group_values(__u64 *array, __u64 read_format,
+ }
+ 
+ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
+-				  const struct perf_sample *sample)
++				  u64 branch_sample_type, const struct perf_sample *sample)
+ {
+ 	__u64 *array;
+ 	size_t sz;
+@@ -1719,9 +1722,17 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+ 
+ 	if (type & PERF_SAMPLE_BRANCH_STACK) {
+ 		sz = sample->branch_stack->nr * sizeof(struct branch_entry);
+-		/* nr, hw_idx */
+-		sz += 2 * sizeof(u64);
+-		memcpy(array, sample->branch_stack, sz);
++
++		*array++ = sample->branch_stack->nr;
++
++		if (branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX) {
++			if (sample->no_hw_idx)
++				*array++ = 0;
++			else
++				*array++ = sample->branch_stack->hw_idx;
++		}
++
++		memcpy(array, perf_sample__branch_entries((struct perf_sample *)sample), sz);
+ 		array = (void *)array + sz;
+ 	}
+ 
+diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
+index b0edad0c3100..8c7f49f9ccf5 100644
+--- a/tools/perf/util/synthetic-events.h
++++ b/tools/perf/util/synthetic-events.h
+@@ -81,7 +81,8 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool, union perf_
+ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_namespaces(const struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_cgroups(const struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
+-int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format, const struct perf_sample *sample);
++int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
++				  u64 branch_sample_type, const struct perf_sample *sample);
+ int perf_event__synthesize_stat_config(const struct perf_tool *tool, struct perf_stat_config *config, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_stat_events(struct perf_stat_config *config, const struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process, bool attrs);
+ int perf_event__synthesize_stat_round(const struct perf_tool *tool, u64 time, u64 type, perf_event__handler_t process, struct machine *machine);
+@@ -97,7 +98,8 @@ void perf_event__synthesize_final_bpf_metadata(struct perf_session *session,
+ 
+ int perf_tool__process_synth_event(const struct perf_tool *tool, union perf_event *event, struct machine *machine, perf_event__handler_t process);
+ 
+-size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type, u64 read_format);
++size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
++				     u64 read_format, u64 branch_sample_type);
+ 
+ int __machine__synthesize_threads(struct machine *machine, const struct perf_tool *tool,
+ 				  struct target *target, struct perf_thread_map *threads,
 -- 
 2.54.0.rc2.533.g4f5dca5207-goog
 
