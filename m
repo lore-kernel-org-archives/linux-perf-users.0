@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15129277C88
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409AD8F49
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776917869; cv=none; b=r0+Pml/4Lv5Ij3wMc3N5410JKLE+qtvlO2/yWMi6roER6sBvxH7famIGTQ5YLwgLD/K2lqW/7fIvTmZDVpisbg+Ztj4/cja4MgMnIaog3WKKqNTP3i3QtaqWa15zmCe6bjm05g2boyjKZ8l4YQw4qIlWzKdBI8hZQ0VdEiOvTyg=
+	t=1776917905; cv=none; b=iq1/dfj95m10s4NSTSCDcFa/I+US0v48lUUYkRbbpJ85NafLazAT28fnubkUom3Sr2/0Y3vIEVb7UqPAkZh9MVPpxF+R5D0HiCD5Lr0voDSq+hdI/l9XeuDjeqgBsnV6r+xmA+zvUF/MaIVeLnPnXH0hmXbCwLpYlOMs03mAXAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776917869; c=relaxed/simple;
-	bh=9kwtNHyqv0eb5/ps2r8wb0W8yCSrcNde43YwR9Dnyd4=;
+	s=arc-20240116; t=1776917905; c=relaxed/simple;
+	bh=/PGzGvrhTyv/K/7bPPZQe8nYO+aq6VGIJEyFKJqC0o4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=O1p2ZbrRnPMgGmL3IPXgoc6tDw2OjOtwvNFMPoAF+b/CgbCIswMfnIZeYrOdAePCkaQmD9pAkZuu9mCcllQFkVx7qC+iuj00hWNNwoUATUqQyK05GM7cabpLGlnEeZbFIcZ1AEtLy46ieJGbkPjCrx5RHsGKuAdM56YpnQidZPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkPacOTe; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=hOCw0qZHnl/JW8yjv1E+m3NZInrh+jF9Z8Knnm10C2Bm1PO/yL17p08AZyn7eChPa3b9GSWEsFkc5iILt+m/0D1MdV5pddoorqn99RAG6s6vhUrF2vNGQd3Tu0Wi2FLgGf/N2qh6P8a8dj05MJnzyCA7zWheEJMFQlRU5qeML58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ad1z8e9H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkPacOTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B90FBC2BCB2;
-	Thu, 23 Apr 2026 04:17:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ad1z8e9H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9A4C2BCB2;
+	Thu, 23 Apr 2026 04:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776917868;
-	bh=9kwtNHyqv0eb5/ps2r8wb0W8yCSrcNde43YwR9Dnyd4=;
+	s=k20201202; t=1776917904;
+	bh=/PGzGvrhTyv/K/7bPPZQe8nYO+aq6VGIJEyFKJqC0o4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=tkPacOTeE9L6YBid52yKhQm4gNseP4SDZW7GaKeSkCa+/DKd0did7u7sRuLgglwKJ
-	 Lp9eZUrG/6PyVBoJlwOpM0EYcoEisqaS1A6JjBHQ/YdyZr9TfHsQK6RVk5hRTl5uU/
-	 8pZdnjeV2V3OBcWIDh9B8iqgkIY5k96e7U8biiO4TXgxBTxb5lMOj9IoygtVe7TY0A
-	 DgpmzXLfW4xAwx5ymHQ34lQCXtV4Rn8vHfKQQQAxysaI1hgltBSemexb5NtmjZ8OwX
-	 nOkhuaUeQOdvFaqBnySI2IQFvX7F9A/NVYBXZoUDyRaJEotwbNpAfX4j/37+ORCCUl
-	 5hSoAN6grO9fQ==
+	b=Ad1z8e9HkHV6cNfp0qyi8RapoFQxIpuqgTcdI0iDSD1C8nmVretbdP/uaFrA/kw9K
+	 +/sb8d8wh+C3k+XbfXEhUngcvkfTf2Y8kK3wF9BvGB2ow5Qydr3iBC1HYQJBFwnIrJ
+	 upn2m4Pv46iPWdZehRTYu5ZOzzAcUzalG/zO4gSaLYp4L20CvSV5zyqKqqabEWkLVb
+	 6mn0HJk+aPPZEuiu0rF2FEg74w0gc60KQ2utox5uro4ECUDo72mhzfsVPsQWL/TFPr
+	 1HgnPfTcQYJL2ynWjOq2EFZ68f98WSNfDT3JN/dI1v+ITRIWZ4teWykL1/orYig7Xz
+	 55yMGOHWo4UYA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 45/58] perf stackcollapse: Port stackcollapse to use
- python module
+Subject: Re: [PATCH v2 25/58] perf stat-cpi: Port stat-cpi to use python
+ module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-46-irogers@google.com>
-References: <20260423035526.1537178-46-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-26-irogers@google.com>
+References: <20260423035526.1537178-26-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:17:48 +0000
-Message-Id: <20260423041748.B90FBC2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:18:23 +0000
+Message-Id: <20260423041824.7D9A4C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,65 +45,78 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [High] Unhandled TypeError crashes trace processing when a thread cannot =
-be found.
-- [High] Multi-threaded applications lose thread-specific comm breakdown du=
-e to passing `sample_pid` to `session.process()`.
+- [Medium] Double subtraction of counter values in live mode leads to mathe=
+matically meaningless CPI metrics.
+- [Medium] Missing `evsel.read_format` configuration silently disables even=
+t multiplexing scaling in live mode.
 --
 
-commit 8033337e08bc60a928a1c42fc1269626cb2e0069
+commit 382086625819b9250d682672f3e663444a565126
 Author: Ian Rogers <irogers@google.com>
 
-perf stackcollapse: Port stackcollapse to use python module
+perf stat-cpi: Port stat-cpi to use python module
 
-Modernize the legacy stackcollapse.py trace script by refactoring it
-into a class-based architecture. The script uses perf.session for event
-processing and aggregates call stacks to produce output suitable for flame
-graphs.
+Port stat-cpi.py from the legacy framework to a standalone script. Support
+both file processing mode and live mode. Calculate and display CPI per
+interval per CPU/thread.
 
-> diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stack=
-collapse.py
+> diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
 > new file mode 100755
-> index 0000000000000..fae0f0f503a35
+> index 0000000000000..4b1f1f69c94a6
 > --- /dev/null
-> +++ b/tools/perf/python/stackcollapse.py
+> +++ b/tools/perf/python/stat-cpi.py
+> @@ -0,0 +1,151 @@
+[ ... ]
+> +    def store(self, event: str, cpu: int, thread: int, counts: tuple[int=
+, int, int]) -> None:
+> +        """Store counter values, computing difference from previous abso=
+lute values."""
+> +        self.store_key(cpu, thread)
+> +        key =3D self.get_key(event, cpu, thread)
+> +
+> +        val, ena, run =3D counts
+> +        if key in self.prev_data:
+> +            prev_val, prev_ena, prev_run =3D self.prev_data[key]
+> +            cur_val =3D val - prev_val
+> +            cur_ena =3D ena - prev_ena
+> +            cur_run =3D run - prev_run
+
+In live mode, evsel.read() relies on the C extension function which already
+computes and returns the count delta since the last read.
+
+Does subtracting the previous interval's values again here calculate the
+acceleration of the counts instead of the velocity, producing incorrect
+metrics?
 
 [ ... ]
+> +    def run_live(self) -> None:
+> +        """Read counters live."""
+> +        evlist =3D perf.parse_events("cycles,instructions")
+> +        if not evlist:
+> +            print("Failed to parse events", file=3Dsys.stderr)
+> +            return
+> +        try:
+> +            evlist.open()
 
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Collect call stack for each sample."""
+perf.parse_events() generates an evlist with default attributes, which do
+not include perf.FORMAT_TOTAL_TIME_ENABLED and perf.FORMAT_TOTAL_TIME_RUNNI=
+NG
+flags.
 
-[ ... ]
+If these flags are not added to evsel.read_format before calling
+evlist.open(), will the kernel omit timing data and leave the ena and run
+fields at 0?
 
-> +        if self.args.include_comm:
-> +            if hasattr(self, 'session') and self.session:
-> +                comm =3D self.session.process(sample.sample_pid).comm()
+Since the script relies on run > 0 to apply scaling:
 
-When a thread cannot be found in the perf session (due to dropped events
-or late starting), the C implementation pyrf_session__process() raises a
-TypeError.
+    def get(self, event: str, cpu: int, thread: int) -> float:
+        ...
+        if run > 0:
+            return val * (ena / float(run))
 
-Since there is no try...except block around this call, will this unhandled
-exception abort the session.process_events() loop and crash the script?
-
-Other ported scripts like syscall-counts.py wrap this in a check for
-TypeError and AttributeError to handle missing threads safely.
-
-Additionally, does passing sample.sample_pid to session.process() cause
-multi-threaded applications to lose their thread-specific comm breakdown?
-
-In Linux perf, sample_pid is the process ID (TGID). Passing it forces the
-lookup to return the process's main thread.
-
-Sub-threads will have their call stacks collapsed under the main process
-comm instead of their actual thread names.
-
-> +            else:
-> +                comm =3D "Unknown"
-> +            comm =3D comm.replace(" ", "_")
-
-[ ... ]
+Could this bypass scaling logic and produce incorrect CPI calculations if
+hardware PMU counters are overcommitted?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D45
+178-1-irogers@google.com?part=3D25
