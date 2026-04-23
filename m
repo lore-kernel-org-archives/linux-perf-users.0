@@ -1,70 +1,70 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF7E335BA
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 00:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7CE1F3BA4
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 00:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776905003; cv=none; b=nXiT/5fr4wcZvJYr0cQFfy0WwD/i2Z78JkF11nfEuSAA0H59ZNi+4D5xxFflzasLNjTkZqC69lyMPVoyDUCt4QyxqlaY2IIcCosLqRXbzKkQiAjO75rGqgRvekPMpYvx0Psr+IZrPKVB+V2DdI9KWPupGojzYk7642dI2wlPj4o=
+	t=1776905003; cv=none; b=C6M2LhkpFEVl5UqtAICxosIqvMJuCrwRwznIRpzGKIZXg0/o09UhAc8AI51mtLtaDOXIlCUfWIoB6VrNYjZ6+I9eb4NT1uVfXneNryytPRO5GHkJg1pWO8mTCqqKajeWunmtBlUQfxKDlJHUVlSqIO7/3+pTQs6gqeq77PPl9zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776905003; c=relaxed/simple;
-	bh=kCu7zNq+y5kRTsli6n5wrRrlJJ6Q3Li4VX9WeSw1Z4g=;
+	bh=jZd45ZdUB7d8PBIX0VwBunnG1rIf+cmqKA66rheBVy8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wbdtfn1jn6oA90l1N5nTkg36hcbiPW2aFLc2YFqf7Vc/cIyroKhMQnuZAJdd673MLHszB+QPNB124JrOGbvcq8rfVJBz4/4yrfbTDV8uwNtRdMTDUav98Pbhi61FeiW7DxmedPS8iBS8oISa3Dzs8qwaSim/PHo7gWcHbPivujI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6derO4I; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=KMHloiPbPMD4hGo1H0/eESFdfLKJdUn8l5NdY08FIzzakTvyC4O5AGJxnUVgJpPhD4SDrtdnvXdmJ66HQPYEYDXwelzBRzL0atBwjg8fJmN6OWJleGTP6Mup/60dP7en/EfWPG907INUu5tsUJqO8ArUY3n0zAmlCbPjs4QxvFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q0WvlE1D; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6derO4I"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2aaf43014d0so37393745ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 17:43:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0WvlE1D"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35e576110adso4117181a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 17:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776905000; x=1777509800; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776905001; x=1777509801; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zOXe1rethwzY+08hEtSCjTzdTDB2rEKnvZJR0mvkp/E=;
-        b=L6derO4I2QNWaJgI+pL0eYzyF0TcMoT6T1/ZNxJd5QdCnah4ZkgfxQGNSOvezVVEJJ
-         9PXLo70rGkpXHGwn3kDF/34mM/kpPekJoVInhs5ceViLRpfi9EehwBkLnUF3lYVhLdNJ
-         UjjZfiO+dGffr+TOYhyf8k8DYr49EGS/JOujbBwRuA0HMhUfXn5cPLEsc8YzBPkOERis
-         ufuTvy/lwLyZAlpZpdmdIjRw0umv54Yxy9dBvYRjv8NZA0Zad8UkvpEcczWVLitG7dOr
-         ftsNGbP8wAandHGzhYImO1c4c2twKYbsgLmD76RMfyHQMMaVnNCNN8g9qdi/dszFift+
-         IWNw==
+        bh=qtalh6zbKNjbvuq2euPG1xhgePyOONZZRM8Q06aWf/Y=;
+        b=q0WvlE1DWPeOeGNzoGrvu3VZ3u6KnWJFK4d5acmlQsVMCsibPxqfo7gYwREYZOgA08
+         mgsfkev0Bh5bv0HR746N93+6Oud5SRGwY4u6+cZT/OhQR+MdS2jJXAlzW3L00Gh3lqmR
+         7Cf09UiiKz+cuxjT9NyogRJcnNMM1QOjdUko/W+qYRP4NUJDBo09K/Ivi9aAs8wwiyaj
+         zaj9Kc7Q4cjpZjd/2jh8QS8PFAeOZyY0TEVlbuAPz+pRLvI09KzzVua1MXr29vwnrpES
+         oxAIw2Z7zeK1NfWXs5CIc1PnZySxMWLg5yGjtVxVTCK/Utz4EbNX5KsGA+bsRmxNeeh3
+         TA5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776905000; x=1777509800;
+        d=1e100.net; s=20251104; t=1776905001; x=1777509801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zOXe1rethwzY+08hEtSCjTzdTDB2rEKnvZJR0mvkp/E=;
-        b=hgDMXCXjPw41ori3JC5Uhp44le2Ya3j/NwPnelxeANdFA3GAANUMj7bu77KJUGrlB4
-         cYxC0PsNxxTCx3fnRCrL3YDX6VAhRybj4OcOlIDY30vxOwIYwMnqOx/Tc3Kvv6LmLk7u
-         NuVzxDp/wNhaXKo3VHOSgFcaAKcm/4tAtCE8KrGlmMO0VpZBFrWysMhMRSTINA7yRl0L
-         X3XNzufzPX9Mh8jojOgQvUO6PSro0hF87GmYluF9T+zrzNzCA0MiVt2mTbW33AhxiIcp
-         ImohYJtalgKoCeDrNiFsLpVB6V7TCgg/rwTlqTFsrKav64KT2/rP8ze0fZ1HC8BX8wQu
-         OwTw==
-X-Gm-Message-State: AOJu0Yxc3v4Xi5O+fHKoniRZqHLp6HANXvV+JLpDCDZSQcT4RkqRClfe
-	7ZRTER0zAVICMJVFe3HbVdHJQqLL4Gexck0A1vvDBIOWbW5LcnVzwOmyMdK+UA==
-X-Gm-Gg: AeBDiev5KDUlS4IwyrrgYdJbTcINFYHd/OxZvMvMz27SVnO/orbXRNjaDu9QAH+AoFR
-	l5EZhIqixq9EM+JFkdm1ydaoJ5Cti6TGbfQiFzhXKOjFstV50ZK9VLh3UWj52J8hC5M9Wtxbo4P
-	FKNjVq5f8hgiw8CqSYIVdgh4+7NsRQPAWmVl/Zh9JateM/e1jGFpNYVXRMaOB3U/FndBQKJr+LI
-	HkRRJKxSDUM/ui9ve9JrQWB3QV8u1i0OV0+VqHFfjxlXGuv/eSqg8hHVzdrl1ffKsyCvhCrmn0B
-	Onz+5kL8SWGpz7F0ORvKv5761oz7N9RujlZm0HRcPEyV5E7N5oKk6tI+Lo9p+JySC+rJdCw8jP7
-	wfr4iFWsKKdBcj+mdLLdvQZzY4GuAvXP7SALmwTpDaeefgxhyuEsFXdeRJhb3mk0Va9ip6LlQHm
-	3h3gyOKTwcYVUB3T+qvDs4ESln19vZq+8hL3u44dK+Opc53Tlt
-X-Received: by 2002:a17:903:2984:b0:2b0:4f9a:b794 with SMTP id d9443c01a7336-2b5f9fd146amr257845035ad.37.1776905000056;
-        Wed, 22 Apr 2026 17:43:20 -0700 (PDT)
+        bh=qtalh6zbKNjbvuq2euPG1xhgePyOONZZRM8Q06aWf/Y=;
+        b=MdkjQGA91vfd/rJXLHgu3TxIoJb/AKgTok1v06GMv51Rm3sF47x5iSEtgYhVQ14E8C
+         zrDS1cw4zhLQ08SUmOE8Z7Cv3p2fz0SOvZ/ls2PiARGdvg8AJNalQdL+9vx6liA+W7HP
+         hb1nWzhbc10IMbXAdLapNxMZQPClvQWe3nzGv/mtiEIT3qcReKzWSxx9c+FxNnEQr3Ks
+         GUkj6CIZPRI7Urdi7cJWebM0jjk311u2kFf+eMEFcgKRTgwbpvVcNqYw7R+hofB9RYvt
+         gjK3AbuqmAnFw8d7p06WtdtJfKZ9zPJb57Bn7P+UxpzPNs/mwEuOyaejuYZYmdGpUl74
+         2cvg==
+X-Gm-Message-State: AOJu0YyEEwc5AXL9vO4SMac+Vjero2SUJVqurGoHmgWSrRCO1hWRrXM8
+	ssn5US6T9zc1xdNKN6uxslKmjmnGG7EltQdAb9fv6tZYk//VsN6QNo/HNqYl4w==
+X-Gm-Gg: AeBDieuJRuo1v1fYuhDP89wZZYom7ucYPwMoOzwx4xEyq0YVb2nsV/3DxoXxYnyK6oi
+	8YVV8cA5kNuhC+4gxAqm/a8uyBgCMhaO1cW6XMT4CrkzrJmOlpiqM8fnlFsg0KeKXJQ/K0B/w/7
+	1oeQMr506jr/xf6JH8zQ/6uyD2BtpW05+AyXVxfZQLi8CfGZLv4wZCa0ar0kRtXATtWSVOZrgU3
+	33wftMzdwZ+qCkY3c4aDAtFlgx7VuAs6El1No6UX83fs60aVOanPMHr3HXVax5/CZ6w7zqkZlb6
+	3q9SgFQMwMD8wVC3jCwt8vs6DWq+lcBsqLJTwOooz0FZZaGfNkYh1rz55xHawVkWqmZiMUXCPCG
+	83pJKw0cSl4We8n3zNkRhNtIezQC1lqGL1gAt0BjnGLZOe6erdkXLZIY1nwFJgAJ3IyIh6ManxR
+	4hFxaJtW1qESj6tWcSrIDSpcdaDybjU+5Oo8LKRXEY/7IrA6uN
+X-Received: by 2002:a17:90b:4a51:b0:35b:939c:e859 with SMTP id 98e67ed59e1d1-3614029b0d0mr21493410a91.12.1776905001292;
+        Wed, 22 Apr 2026 17:43:21 -0700 (PDT)
 Received: from localhost.localdomain ([240f:34:212d:1:963d:c5da:6762:8843])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab4bf7bsm176724085ad.81.2026.04.22.17.43.19
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab4bf7bsm176724085ad.81.2026.04.22.17.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 17:43:19 -0700 (PDT)
+        Wed, 22 Apr 2026 17:43:20 -0700 (PDT)
 From: Akinobu Mita <akinobu.mita@gmail.com>
 To: damon@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org,
 	sj@kernel.org,
 	akinobu.mita@gmail.com
-Subject: [RFC PATCH v3 2/4] mm/damon/core: add common code for perf event based access check
-Date: Thu, 23 Apr 2026 09:42:08 +0900
-Message-ID: <20260423004211.7037-3-akinobu.mita@gmail.com>
+Subject: [RFC PATCH v3 3/4] mm/damon/vaddr: support perf event based access check
+Date: Thu, 23 Apr 2026 09:42:09 +0900
+Message-ID: <20260423004211.7037-4-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260423004211.7037-1-akinobu.mita@gmail.com>
 References: <20260423004211.7037-1-akinobu.mita@gmail.com>
@@ -76,934 +76,325 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch creates the necessary infrastructure (structure definitions,
-functions, sysfs interfaces) to support perf event based access checks
-for both physical and virtual address space monitoring.
+This patch adds perf event based access check for virtual address space
+monitoring.
 
-Perf events can be added through the following sysfs interface:
+The perf event that can be specified for perf event-based access check
+must be able to obtain the data source address corresponding to the
+sample.  In other words, PERF_SAMPLE_DATA_SRC must be able to be
+specified in perf_event_attr.sample_type
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/nr_perf_events
-Description: Writing a number 'N' to this file creates the number of
-directories for controlling each perf event named '0' to 'N-1' under the
-perf_events/ directory.
+The perf event based access check is performed as follows:
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/type
-Description: Writing to and reading from this file sets and gets the
-"type" field of struct perf_event_attr for perf event based access
-check.
+1. During the sampling interval, samples of the perf event are stored in
+   a sampling buffer.
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config
-Description: Same as above.
+2. After the sampling interval ends, during the access check, a
+   histogram showing the number of accesses to each memory address is
+   generated based on each sample contained in the sampling buffer.
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config1
-Description: Same as above.
+If the sampling buffer is full during a sampling interval, the sampling
+buffer is expanded to prepare for the next sampling interval.
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config2
-Description: Same as above.
+If you configure the memory addresses corresponding to the perf event
+samples to be obtained as virtual addresses, the histogram is
+implemented as a two-dimensional xarray indexed by pid and virtual
+memory address.
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/sample_freq
-Description: Same as above.
+If you configure perf event samples to have their corresponding memory
+addresses retrieved by physical addresses, the histogram is implemented
+using an xarray indexed by physical addresses.
 
-What: /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/sample_phys_addr
-Description: Writing to and reading from this file sets and gets the
-PERF_SAMPLE_PHYS_ADDR bitfield in the "sample_type" field of struct
-perf_event_attr for perf event based access check.
-
-The perf event that can be specified for the perf event based access
-check must be able to obtain the data source address corresponding to
-the sample.
-
-One way to find such perf event settings is to run `perf mem record -vv`
-and look for a dump of the perf_event_attr structure given to the
-perf_event_open() system call in the debug messages output.
-
-If at least one perf event is specified, the perf event based access
-check will be enabled instead of the existing PTE accessed-bit based
-access check.  In other words, if no perf event is specified, the
-existing PTE accessed-bit based access check will be used.
-
-Add the following common functions required for both physical and
-virtual address space monitoring:
-
-damon_perf_init()
-Each perf event specified by the sysfs interface is initialized with
-perf_event_create_kernel_counter().
-
-damon_perf_cleanup()
-Release each initialized perf event with perf_event_release_kernel().
-
-damon_perf_prepare_access_checks()
-Enable each initialized perf event with perf_event_enable().
+3. For each monitoring target region, the number of accesses is updated
+   based on the histogram.
 
 Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- .../ABI/testing/sysfs-kernel-mm-damon         |   8 +
- include/linux/damon.h                         |  34 ++
- mm/damon/core.c                               |  67 ++++
- mm/damon/ops-common.h                         |  29 ++
- mm/damon/sysfs.c                              | 377 +++++++++++++++++-
- mm/damon/vaddr.c                              | 158 ++++++++
- 6 files changed, 669 insertions(+), 4 deletions(-)
+ mm/damon/core.c       |  42 ++++-
+ mm/damon/ops-common.h |  24 +++
+ mm/damon/vaddr.c      | 348 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 412 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-damon b/Documentation/ABI/testing/sysfs-kernel-mm-damon
-index 2424237ebb10..aa69ce09789a 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-damon
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-damon
-@@ -576,3 +576,11 @@ Contact:	SeongJae Park <sj@kernel.org>
- Description:	Reading this file returns the size of the memory in the region
- 		that passed DAMON operations layer-handled filters of the
- 		scheme in bytes.
-+
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/nr_perf_events
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/type
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config1
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/config2
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/sample_phys_addr
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/sample/primitives/perf_events/<P>/sample_freq
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 9ba26d8a0bce..2e7b5939f350 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -120,6 +120,7 @@ struct damon_target {
-  * @size:		The size of the accessed address range.
-  * @cpu:		The id of the CPU that made the access.
-  * @tid:		The task id of the task that made the access.
-+ * @tgid:		The task group id of the task that made the access.
-  * @is_write:		Whether the access is write.
-  *
-  * Any DAMON API callers that notified access events can report the information
-@@ -132,6 +133,7 @@ struct damon_access_report {
- 	unsigned long size;
- 	unsigned int cpu;
- 	pid_t tid;
-+	pid_t tgid;
- 	bool is_write;
- /* private: */
- 	unsigned long report_jiffies;	/* when this report is made */
-@@ -831,6 +833,36 @@ struct damon_sample_filter {
- 	struct list_head list;
- };
- 
-+/**
-+ * struct damon_perf_event_attr - raw PMU event attr for access check
-+ *
-+ * @type:		raw PMU event type for access check
-+ * @config:		raw PMU event config for access check
-+ * @config1:		raw PMU event config1 for access check
-+ * @config2:		raw PMU event config2 for access check
-+ * @sample_phys_addr:	raw PMU event PERF_SAMPLE_PHYS_ADDR in sample_type for access check
-+ * @sample_freq:	raw PMU event sample_freq for access check
-+ */
-+struct damon_perf_event_attr {
-+	u32 type;
-+	u64 config;
-+	u64 config1;
-+	u64 config2;
-+	bool sample_phys_addr;
-+	u64 sample_freq;
-+};
-+
-+/**
-+ * struct damon_perf_event - perf event for access check
-+ *
-+ * @priv:		Monitoring operations-specific data
-+ */
-+struct damon_perf_event {
-+	struct damon_perf_event_attr attr;
-+	void *priv;
-+	struct list_head list;
-+};
-+
- /**
-  * struct damon_ctx - Represents a context for each monitoring.  This is the
-  * main interface that allows users to set the attributes and get the results
-@@ -855,6 +887,7 @@ struct damon_sample_filter {
-  * @ops:	Set of monitoring operations for given use cases.
-  * @addr_unit:	Scale factor for core to ops address conversion.
-  * @min_region_sz:	Minimum region size.
-+ * @perf_events:	Head of perf events (&damon_perf_event) list.
-  * @adaptive_targets:	Head of monitoring targets (&damon_target) list.
-  * @schemes:		Head of schemes (&damos) list.
-  */
-@@ -909,6 +942,7 @@ struct damon_ctx {
- 	unsigned long addr_unit;
- 	unsigned long min_region_sz;
- 
-+	struct list_head perf_events;
- 	struct list_head adaptive_targets;
- 	struct list_head schemes;
- };
 diff --git a/mm/damon/core.c b/mm/damon/core.c
-index a52b2962aa22..220b105482da 100644
+index 220b105482da..def72672982a 100644
 --- a/mm/damon/core.c
 +++ b/mm/damon/core.c
-@@ -20,6 +20,8 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/damon.h>
- 
-+#include "ops-common.h"
-+
- static DEFINE_MUTEX(damon_lock);
- static int nr_running_ctxs;
- static bool running_exclusive_ctxs;
-@@ -605,6 +607,7 @@ struct damon_ctx *damon_new_ctx(void)
- 	ctx->addr_unit = 1;
- 	ctx->min_region_sz = DAMON_MIN_REGION_SZ;
- 
-+	INIT_LIST_HEAD(&ctx->perf_events);
- 	INIT_LIST_HEAD(&ctx->adaptive_targets);
- 	INIT_LIST_HEAD(&ctx->schemes);
- 
-@@ -619,6 +622,19 @@ static void damon_destroy_targets(struct damon_ctx *ctx)
- 		damon_destroy_target(t, ctx);
- }
- 
-+static void damon_perf_destroy(struct damon_ctx *ctx)
-+{
-+	while (!list_empty(&ctx->perf_events)) {
-+		struct damon_perf_event *event =
-+			list_first_entry(&ctx->perf_events, typeof(*event), list);
-+
-+		damon_perf_cleanup(ctx, event);
-+		list_del(&event->list);
-+		kfree(event);
-+	}
-+
-+}
-+
- void damon_destroy_ctx(struct damon_ctx *ctx)
- {
- 	struct damos *s, *next_s;
-@@ -628,6 +644,8 @@ void damon_destroy_ctx(struct damon_ctx *ctx)
- 	damon_for_each_scheme_safe(s, next_s, ctx)
- 		damon_destroy_scheme(s);
- 
-+	damon_perf_destroy(ctx);
-+
- 	kfree(ctx);
- }
- 
-@@ -1311,6 +1329,42 @@ static int damon_commit_targets(
- 	return 0;
- }
- 
-+static int damon_commit_perf_events(struct damon_ctx *dst, struct damon_ctx *src)
-+{
-+	struct damon_perf_event *src_event, *new_event;
-+	int err = 0;
-+
-+	damon_perf_destroy(dst);
-+
-+	list_for_each_entry(src_event, &src->perf_events, list) {
-+		new_event = kzalloc_obj(*new_event);
-+		if (!new_event) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
-+
-+		new_event->attr.type = src_event->attr.type;
-+		new_event->attr.config = src_event->attr.config;
-+		new_event->attr.config1 = src_event->attr.config1;
-+		new_event->attr.config2 = src_event->attr.config2;
-+		new_event->attr.sample_phys_addr = src_event->attr.sample_phys_addr;
-+		new_event->attr.sample_freq = src_event->attr.sample_freq;
-+
-+		if (damon_is_running(dst)) {
-+			err = damon_perf_init(dst, new_event);
-+			if (err) {
-+				kfree(new_event);
-+				goto out;
-+			}
-+		}
-+		list_add_tail(&new_event->list, &dst->perf_events);
-+	}
-+	return 0;
-+out:
-+	damon_perf_destroy(dst);
-+	return err;
-+}
-+
- /**
-  * damon_commit_ctx() - Commit parameters of a DAMON context to another.
-  * @dst:	The commit destination DAMON context.
-@@ -1336,6 +1390,9 @@ int damon_commit_ctx(struct damon_ctx *dst, struct damon_ctx *src)
- 	if (err)
- 		return err;
- 	err = damon_commit_targets(dst, src);
-+	if (err)
-+		return err;
-+	err = damon_commit_perf_events(dst, src);
- 	if (err)
- 		return err;
- 	/*
-@@ -2933,6 +2990,7 @@ static void kdamond_init_ctx(struct damon_ctx *ctx)
- 	unsigned long sample_interval = ctx->attrs.sample_interval ?
- 		ctx->attrs.sample_interval : 1;
- 	struct damos *scheme;
-+	struct damon_perf_event *event, *next;
- 
- 	ctx->passed_sample_intervals = 0;
- 	ctx->next_aggregation_sis = ctx->attrs.aggr_interval / sample_interval;
-@@ -2945,6 +3003,15 @@ static void kdamond_init_ctx(struct damon_ctx *ctx)
- 		damos_set_next_apply_sis(scheme, ctx);
- 		damos_set_filters_default_reject(scheme);
+@@ -3014,6 +3014,40 @@ static void kdamond_init_ctx(struct damon_ctx *ctx)
  	}
-+
-+	list_for_each_entry_safe(event, next, &ctx->perf_events, list) {
-+		int err = damon_perf_init(ctx, event);
-+
-+		if (err) {
-+			list_del(&event->list);
-+			kfree(event);
-+		}
-+	}
  }
  
++static void kdamond_prepare_perf_event_report(struct damon_ctx *ctx)
++{
++	struct damon_perf_event *event;
++
++	list_for_each_entry(event, &ctx->perf_events, list)
++		damon_perf_prepare_access_checks(ctx, event);
++}
++
++static unsigned int kdamond_check_perf_event_reported_accesses(struct damon_ctx *ctx)
++{
++	struct damon_target *t;
++	struct damon_perf_event *event;
++	unsigned int max_nr_accesses = 0;
++
++	if (damon_target_has_pid(ctx)) {
++		list_for_each_entry(event, &ctx->perf_events, list)
++			damon_va_perf_check_accesses(ctx, event);
++	}
++
++	damon_for_each_target(t, ctx) {
++		struct damon_region *r;
++
++		damon_for_each_region(r, t) {
++			if (r->access_reported)
++				r->access_reported = false;
++			else
++				damon_update_region_access_rate(r, false, &ctx->attrs);
++			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
++		}
++	}
++
++	return max_nr_accesses;
++}
++
  /*
+  * The monitoring daemon that runs as a kernel thread
+  */
+@@ -3057,13 +3091,17 @@ static int kdamond_fn(void *data)
+ 		if (kdamond_wait_activation(ctx))
+ 			break;
+ 
+-		if (ctx->ops.prepare_access_checks)
++		if (!list_empty(&ctx->perf_events))
++			kdamond_prepare_perf_event_report(ctx);
++		else if (ctx->ops.prepare_access_checks)
+ 			ctx->ops.prepare_access_checks(ctx);
+ 
+ 		kdamond_usleep(sample_interval);
+ 		ctx->passed_sample_intervals++;
+ 
+-		if (ctx->ops.check_accesses)
++		if (!list_empty(&ctx->perf_events))
++			max_nr_accesses = kdamond_check_perf_event_reported_accesses(ctx);
++		else if (ctx->ops.check_accesses)
+ 			max_nr_accesses = ctx->ops.check_accesses(ctx);
+ 
+ 		if (time_after_eq(ctx->passed_sample_intervals,
 diff --git a/mm/damon/ops-common.h b/mm/damon/ops-common.h
-index 5efa5b5970de..e28c5afab7f0 100644
+index e28c5afab7f0..da39abe07cfc 100644
 --- a/mm/damon/ops-common.h
 +++ b/mm/damon/ops-common.h
-@@ -23,3 +23,32 @@ bool damos_folio_filter_match(struct damos_filter *filter, struct folio *folio);
- unsigned long damon_migrate_pages(struct list_head *folio_list, int target_nid);
+@@ -27,14 +27,33 @@ bool damos_ops_has_filter(struct damos *s);
+ #ifdef CONFIG_PERF_EVENTS
  
- bool damos_ops_has_filter(struct damos *s);
-+
-+#ifdef CONFIG_PERF_EVENTS
-+
-+void damon_perf_prepare_access_checks(struct damon_ctx *ctx, struct damon_perf_event *event);
-+int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event);
-+void damon_perf_cleanup(struct damon_ctx *ctx, struct damon_perf_event *event);
-+
-+struct damon_perf {
-+	struct perf_event * __percpu *event;
-+	struct damon_perf_buffer __percpu *buffer;
+ void damon_perf_prepare_access_checks(struct damon_ctx *ctx, struct damon_perf_event *event);
++void damon_va_perf_check_accesses(struct damon_ctx *ctx, struct damon_perf_event *event);
+ int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event);
+ void damon_perf_cleanup(struct damon_ctx *ctx, struct damon_perf_event *event);
+ 
++struct damon_vaddr_histogram {
++	struct xarray targets;
 +};
 +
-+#else /* CONFIG_PERF_EVENTS */
++struct damon_paddr_histogram {
++	struct xarray accesses;
++};
 +
-+static inline void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
+ struct damon_perf {
+ 	struct perf_event * __percpu *event;
+ 	struct damon_perf_buffer __percpu *buffer;
++	union {
++		struct damon_vaddr_histogram vaddr_histogram;
++		struct damon_paddr_histogram paddr_histogram;
++	};
+ };
+ 
++void damon_paddr_histogram_init(struct damon_paddr_histogram *histogram);
++unsigned long damon_paddr_histogram_count(struct damon_paddr_histogram *histogram, u64 paddr);
++void damon_paddr_histogram_destroy(struct damon_paddr_histogram *histogram);
++
++void damon_perf_populate_paddr_histogram(struct damon_ctx *ctx, struct damon_perf_event *event);
++
+ #else /* CONFIG_PERF_EVENTS */
+ 
+ static inline void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
+@@ -42,6 +61,11 @@ static inline void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
+ {
+ }
+ 
++static inline void damon_va_perf_check_accesses(struct damon_ctx *ctx,
 +		struct damon_perf_event *event)
 +{
 +}
 +
-+static inline int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event)
-+{
-+	return 0;
-+}
-+
-+static inline void damon_perf_cleanup(struct damon_ctx *ctx, struct damon_perf_event *event)
-+{
-+}
-+
-+#endif /* CONFIG_PERF_EVENTS */
-diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
-index c19556f2af3b..9a3b42d241d4 100644
---- a/mm/damon/sysfs.c
-+++ b/mm/damon/sysfs.c
-@@ -747,6 +747,309 @@ static const struct kobj_type damon_sysfs_intervals_ktype = {
- 	.default_groups = damon_sysfs_intervals_groups,
- };
- 
-+/*
-+ * perf_event_attr directory
-+ */
-+
-+struct damon_sysfs_perf_event_attr {
-+	struct kobject kobj;
-+	u32 type;
-+	u64 config;
-+	u64 config1;
-+	u64 config2;
-+	bool sample_phys_addr;
-+	u64 sample_freq;
-+};
-+
-+static struct damon_sysfs_perf_event_attr *damon_sysfs_perf_event_attr_alloc(void)
-+{
-+	return kzalloc(sizeof(struct damon_sysfs_perf_event_attr), GFP_KERNEL);
-+}
-+
-+static ssize_t attr_type_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "0x%x\n", perf_event_attr->type);
-+}
-+
-+static ssize_t attr_type_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	int err = kstrtou32(buf, 0, &perf_event_attr->type);
-+
-+	if (err)
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static ssize_t config_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "0x%llx\n", perf_event_attr->config);
-+}
-+
-+static ssize_t config_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	int err = kstrtou64(buf, 0, &perf_event_attr->config);
-+
-+	if (err)
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static ssize_t config1_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "0x%llx\n", perf_event_attr->config1);
-+}
-+
-+static ssize_t config1_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	int err = kstrtou64(buf, 0, &perf_event_attr->config1);
-+
-+	if (err)
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static ssize_t config2_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "0x%llx\n", perf_event_attr->config2);
-+}
-+
-+static ssize_t config2_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	int err = kstrtou64(buf, 0, &perf_event_attr->config2);
-+
-+	if (err)
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static ssize_t sample_phys_addr_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "%d\n", perf_event_attr->sample_phys_addr);
-+}
-+
-+static ssize_t sample_phys_addr_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	bool sample_phys_addr;
-+	int err = kstrtobool(buf, &sample_phys_addr);
-+
-+	if (err)
-+		return -EINVAL;
-+
-+	perf_event_attr->sample_phys_addr = sample_phys_addr;
-+	return count;
-+}
-+
-+static ssize_t sample_freq_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+
-+	return sysfs_emit(buf, "%llu\n", perf_event_attr->sample_freq);
-+}
-+
-+static ssize_t sample_freq_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_event_attr *perf_event_attr = container_of(kobj,
-+			struct damon_sysfs_perf_event_attr, kobj);
-+	int err = kstrtou64(buf, 0, &perf_event_attr->sample_freq);
-+
-+	if (err)
-+		return -EINVAL;
-+	return count;
-+}
-+
-+static void damon_sysfs_perf_event_attr_release(struct kobject *kobj)
-+{
-+	kfree(container_of(kobj, struct damon_sysfs_perf_event_attr, kobj));
-+}
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_type_attr =
-+		__ATTR(type, 0600, attr_type_show, attr_type_store);
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_config_attr =
-+		__ATTR_RW_MODE(config, 0600);
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_config1_attr =
-+		__ATTR_RW_MODE(config1, 0600);
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_config2_attr =
-+		__ATTR_RW_MODE(config2, 0600);
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_sample_phys_addr_attr =
-+		__ATTR_RW_MODE(sample_phys_addr, 0600);
-+
-+static struct kobj_attribute damon_sysfs_perf_event_attr_sample_freq_attr =
-+		__ATTR_RW_MODE(sample_freq, 0600);
-+
-+static struct attribute *damon_sysfs_perf_event_attr_attrs[] = {
-+	&damon_sysfs_perf_event_attr_type_attr.attr,
-+	&damon_sysfs_perf_event_attr_config_attr.attr,
-+	&damon_sysfs_perf_event_attr_config1_attr.attr,
-+	&damon_sysfs_perf_event_attr_config2_attr.attr,
-+	&damon_sysfs_perf_event_attr_sample_phys_addr_attr.attr,
-+	&damon_sysfs_perf_event_attr_sample_freq_attr.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(damon_sysfs_perf_event_attr);
-+
-+static const struct kobj_type damon_sysfs_perf_event_attr_ktype = {
-+	.release = damon_sysfs_perf_event_attr_release,
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_groups = damon_sysfs_perf_event_attr_groups,
-+};
-+
-+/*
-+ * perf_events directory
-+ */
-+
-+struct damon_sysfs_perf_events {
-+	struct kobject kobj;
-+	struct damon_sysfs_perf_event_attr **attrs_arr;
-+	int nr;
-+};
-+
-+static struct damon_sysfs_perf_events *damon_sysfs_perf_events_alloc(void)
-+{
-+	return kzalloc(sizeof(struct damon_sysfs_perf_events), GFP_KERNEL);
-+}
-+
-+static void damon_sysfs_perf_events_rm_dirs(struct damon_sysfs_perf_events *events)
-+{
-+	struct damon_sysfs_perf_event_attr **attrs_arr = events->attrs_arr;
-+	int i;
-+
-+	for (i = 0; i < events->nr; i++)
-+		kobject_put(&attrs_arr[i]->kobj);
-+	events->nr = 0;
-+	kfree(attrs_arr);
-+	events->attrs_arr = NULL;
-+}
-+
-+static int damon_sysfs_perf_events_add_dirs(struct damon_sysfs_perf_events *events,
-+		int nr_events)
-+{
-+	struct damon_sysfs_perf_event_attr **attrs_arr, *attr;
-+	int err, i;
-+
-+	damon_sysfs_perf_events_rm_dirs(events);
-+	if (!nr_events)
-+		return 0;
-+
-+	attrs_arr = kmalloc_array(nr_events, sizeof(*attrs_arr), GFP_KERNEL);
-+	if (!attrs_arr)
-+		return -ENOMEM;
-+	events->attrs_arr = attrs_arr;
-+
-+	for (i = 0; i < nr_events; i++) {
-+		attr = damon_sysfs_perf_event_attr_alloc();
-+		if (!attr) {
-+			damon_sysfs_perf_events_rm_dirs(events);
-+			return -ENOMEM;
-+		}
-+
-+		err = kobject_init_and_add(&attr->kobj,
-+				&damon_sysfs_perf_event_attr_ktype, &events->kobj,
-+				"%d", i);
-+		if (err) {
-+			kobject_put(&attr->kobj);
-+			damon_sysfs_perf_events_rm_dirs(events);
-+			return err;
-+		}
-+		attrs_arr[i] = attr;
-+		events->nr++;
-+	}
-+	return 0;
-+}
-+
-+static ssize_t nr_perf_events_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_perf_events *events = container_of(kobj,
-+			struct damon_sysfs_perf_events, kobj);
-+
-+	return sysfs_emit(buf, "%d\n", events->nr);
-+}
-+
-+static ssize_t nr_perf_events_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_perf_events *events;
-+	int nr, err = kstrtoint(buf, 0, &nr);
-+
-+	if (err)
-+		return err;
-+	if (nr < 0)
-+		return -EINVAL;
-+
-+	events = container_of(kobj, struct damon_sysfs_perf_events, kobj);
-+
-+	if (!mutex_trylock(&damon_sysfs_lock))
-+		return -EBUSY;
-+	err = damon_sysfs_perf_events_add_dirs(events, nr);
-+	mutex_unlock(&damon_sysfs_lock);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+
-+static void damon_sysfs_perf_events_release(struct kobject *kobj)
-+{
-+	kfree(container_of(kobj, struct damon_sysfs_perf_events, kobj));
-+}
-+
-+static struct kobj_attribute damon_sysfs_perf_events_nr_attr =
-+		__ATTR_RW_MODE(nr_perf_events, 0600);
-+
-+static struct attribute *damon_sysfs_perf_events_attrs[] = {
-+	&damon_sysfs_perf_events_nr_attr.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(damon_sysfs_perf_events);
-+
-+static const struct kobj_type damon_sysfs_perf_events_ktype = {
-+	.release = damon_sysfs_perf_events_release,
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_groups = damon_sysfs_perf_events_groups,
-+};
-+
- /*
-  * access check report filter directory
-  */
-@@ -1048,6 +1351,7 @@ struct damon_sysfs_primitives {
- 	struct kobject kobj;
- 	bool page_table;
- 	bool page_fault;
-+	struct damon_sysfs_perf_events *perf_events;
- };
- 
- static struct damon_sysfs_primitives *damon_sysfs_primitives_alloc(
-@@ -1159,6 +1463,24 @@ static struct damon_sysfs_sample *damon_sysfs_sample_alloc(void)
- 	return sample;
- }
- 
-+static int damon_sysfs_context_set_perf_events(struct damon_sysfs_primitives
-+		*primitives)
-+{
-+	struct damon_sysfs_perf_events *events = damon_sysfs_perf_events_alloc();
-+	int err;
-+
-+	if (!events)
-+		return -ENOMEM;
-+	err = kobject_init_and_add(&events->kobj, &damon_sysfs_perf_events_ktype,
-+			&primitives->kobj, "perf_events");
-+	if (err) {
-+		kobject_put(&events->kobj);
-+		return err;
-+	}
-+	primitives->perf_events = events;
-+	return 0;
-+}
-+
- static int damon_sysfs_sample_add_dirs(
- 		struct damon_sysfs_sample *sample)
+ static inline int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event)
  {
-@@ -1176,10 +1498,14 @@ static int damon_sysfs_sample_add_dirs(
- 		goto put_primitives_out;
- 	sample->primitives = primitives;
- 
-+	err = damon_sysfs_context_set_perf_events(primitives);
-+	if (err)
-+		goto put_primitives_out;
-+
- 	filters = damon_sysfs_sample_filters_alloc();
- 	if (!filters) {
- 		err = -ENOMEM;
--		goto put_primitives_out;
-+		goto put_perf_events_out;
- 	}
- 	err = kobject_init_and_add(&filters->kobj,
- 			&damon_sysfs_sample_filters_ktype, &sample->kobj,
-@@ -1191,6 +1517,9 @@ static int damon_sysfs_sample_add_dirs(
- put_filters_out:
- 	kobject_put(&filters->kobj);
- 	sample->filters = NULL;
-+put_perf_events_out:
-+	kobject_put(&primitives->perf_events->kobj);
-+	primitives->perf_events = NULL;
- put_primitives_out:
- 	kobject_put(&primitives->kobj);
- 	sample->primitives = NULL;
-@@ -1200,8 +1529,11 @@ static int damon_sysfs_sample_add_dirs(
- static void damon_sysfs_sample_rm_dirs(
- 		struct damon_sysfs_sample *sample)
- {
--	if (sample->primitives)
-+	if (sample->primitives) {
-+		damon_sysfs_perf_events_rm_dirs(sample->primitives->perf_events);
-+		kobject_put(&sample->primitives->perf_events->kobj);
- 		kobject_put(&sample->primitives->kobj);
-+	}
- 	if (sample->filters) {
- 		damon_sysfs_sample_filters_rm_dirs(sample->filters);
- 		kobject_put(&sample->filters->kobj);
-@@ -1450,10 +1782,10 @@ static int damon_sysfs_context_add_dirs(struct damon_sysfs_context *context)
- 
- 	err = damon_sysfs_context_set_schemes(context);
- 	if (err)
--		goto put_targets_attrs_out;
-+		goto put_targets_out;
  	return 0;
- 
--put_targets_attrs_out:
-+put_targets_out:
- 	kobject_put(&context->targets->kobj);
- 	context->targets = NULL;
- rmdir_put_attrs_out:
-@@ -1929,6 +2261,40 @@ static int damon_sysfs_add_targets(struct damon_ctx *ctx,
- 	return 0;
- }
- 
-+static int damon_sysfs_add_perf_event(struct damon_sysfs_perf_event_attr *sys_attr,
-+		struct damon_ctx *ctx)
-+{
-+	struct damon_perf_event *event = kzalloc(sizeof(*event), GFP_KERNEL);
-+
-+	if (!event)
-+		return -ENOMEM;
-+
-+	event->attr.type = sys_attr->type;
-+	event->attr.config = sys_attr->config;
-+	event->attr.config1 = sys_attr->config1;
-+	event->attr.config2 = sys_attr->config2;
-+	event->attr.sample_phys_addr = sys_attr->sample_phys_addr;
-+	event->attr.sample_freq = sys_attr->sample_freq;
-+
-+	list_add_tail(&event->list, &ctx->perf_events);
-+	return 0;
-+}
-+
-+static int damon_sysfs_add_perf_events(struct damon_ctx *ctx,
-+		struct damon_sysfs_perf_events *sysfs_perf_events)
-+{
-+	int i, err;
-+
-+	for (i = 0; i < sysfs_perf_events->nr; i++) {
-+		struct damon_sysfs_perf_event_attr *attr = sysfs_perf_events->attrs_arr[i];
-+
-+		err = damon_sysfs_add_perf_event(attr, ctx);
-+		if (err)
-+			return err;
-+	}
-+	return 0;
-+}
-+
- /*
-  * damon_sysfs_upd_schemes_stats() - Update schemes stats sysfs files.
-  * @data:	The kobject wrapper that associated to the kdamond thread.
-@@ -1970,6 +2336,9 @@ static int damon_sysfs_apply_inputs(struct damon_ctx *ctx,
- 		ctx->min_region_sz = max(
- 				DAMON_MIN_REGION_SZ / sys_ctx->addr_unit, 1);
- 	err = damon_sysfs_set_attrs(ctx, sys_ctx->attrs);
-+	if (err)
-+		return err;
-+	err = damon_sysfs_add_perf_events(ctx, sys_ctx->attrs->sample->primitives->perf_events);
- 	if (err)
- 		return err;
- 	err = damon_sysfs_add_targets(ctx, sys_ctx->targets);
 diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-index b069dbc7e3d2..1534372e7637 100644
+index 1534372e7637..1afbad9dfe64 100644
 --- a/mm/damon/vaddr.c
 +++ b/mm/damon/vaddr.c
-@@ -15,6 +15,9 @@
- #include <linux/pagewalk.h>
- #include <linux/sched/mm.h>
+@@ -17,6 +17,7 @@
  
-+#include <linux/circ_buf.h>
-+#include <linux/perf_event.h>
-+
+ #include <linux/circ_buf.h>
+ #include <linux/perf_event.h>
++#include <linux/xarray.h>
+ 
  #include "../internal.h"
  #include "ops-common.h"
+@@ -948,6 +949,63 @@ struct damon_perf_buffer {
+ 	unsigned long size;
+ };
  
-@@ -936,6 +939,161 @@ static int damon_va_scheme_score(struct damon_ctx *context,
- 	return DAMOS_MAX_SCORE;
- }
- 
-+#ifdef CONFIG_PERF_EVENTS
-+
-+struct damon_perf_buffer {
-+	struct damon_access_report *reports;
-+	unsigned long head;
-+	unsigned long tail;
-+	unsigned long size;
++struct damon_vaddr_histogram_per_target {
++	struct xarray accesses;
 +};
 +
-+static void damon_perf_overflow(struct perf_event *perf_event, struct perf_sample_data *data,
-+				struct pt_regs *regs)
++static void damon_vaddr_histogram_init(struct damon_vaddr_histogram *histogram)
 +{
-+	struct damon_perf_event *event = perf_event->overflow_handler_context;
-+	struct damon_perf *perf = event->priv;
-+	struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, smp_processor_id());
-+	unsigned long head = buffer->head;
-+	unsigned long tail = READ_ONCE(buffer->tail);
-+
-+	if (CIRC_SPACE(head, tail, buffer->size) >= 1) {
-+		struct damon_access_report *report = &buffer->reports[head];
-+
-+		report->tid = task_pid_nr(current);
-+		report->tgid = task_tgid_nr(current);
-+		report->vaddr = data->addr;
-+		report->paddr = data->phys_addr;
-+
-+		smp_store_release(&buffer->head, (head + 1) & (buffer->size - 1));
-+	}
++	xa_init(&histogram->targets);
 +}
 +
-+#define DAMON_PERF_MAX_RECORDS (1UL << 20)
-+#define DAMON_PERF_INIT_RECORDS (1UL << 15)
-+
-+int damon_perf_init(struct damon_ctx *ctx, struct damon_perf_event *event)
++static void damon_vaddr_histogram_add(struct damon_vaddr_histogram *histogram, u32 pid,
++						u64 vaddr)
 +{
-+	struct damon_perf *perf;
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_RAW,
-+		.size = sizeof(attr),
-+		.type = event->attr.type,
-+		.config = event->attr.config,
-+		.config1 = event->attr.config1,
-+		.config2 = event->attr.config2,
-+		.sample_freq = event->attr.sample_freq,
-+		.freq = 1,
-+		.sample_type = PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR |
-+			PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC |
-+			(event->attr.sample_phys_addr ? PERF_SAMPLE_PHYS_ADDR : 0) |
-+			PERF_SAMPLE_WEIGHT_STRUCT,
-+		.precise_ip = 2,
-+		.pinned = 1,
-+		.disabled = 1,
-+	};
-+	int cpu;
-+	int err = -ENOMEM;
-+	bool found = false;
++	struct damon_vaddr_histogram_per_target *target;
++	unsigned long nr_accesses;
 +
-+	perf = kzalloc_obj(*perf);
-+	if (!perf)
-+		return -ENOMEM;
++	while (!(target = xa_load(&histogram->targets, pid))) {
++		target = kmalloc_obj(*target);
++		if (!target)
++			return;
 +
-+	perf->event = alloc_percpu(typeof(*perf->event));
-+	if (!perf->event)
-+		goto free_percpu;
++		xa_init(&target->accesses);
 +
-+	perf->buffer = alloc_percpu(typeof(*perf->buffer));
-+	if (!perf->buffer)
-+		goto free_percpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct perf_event *perf_event;
-+		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
-+
-+		perf_event = perf_event_create_kernel_counter(&attr, cpu, NULL,
-+				damon_perf_overflow, event);
-+		if (IS_ERR(perf_event)) {
-+			err = PTR_ERR(perf_event);
-+			if (err == -ENODEV)
-+				continue;
-+			pr_err("perf event create on CPU %d failed with %d\n", cpu, err);
-+			goto free_for_each_cpu;
++		if (xa_err(xa_store(&histogram->targets, pid, target, GFP_KERNEL))) {
++			pr_warn_once("Failed to store target histogram\n");
++			kfree(target);
++			return;
 +		}
-+		found = true;
-+		*per_cpu_ptr(perf->event, cpu) = perf_event;
-+
-+		buffer->size = DAMON_PERF_INIT_RECORDS;
-+		buffer->reports = kvcalloc_node(buffer->size, sizeof(buffer->reports[0]),
-+						GFP_KERNEL, cpu_to_node(cpu));
-+		if (!buffer->reports)
-+			goto free_for_each_cpu;
 +	}
-+	event->priv = perf;
 +
-+	return found ? 0 : -ENODEV;
-+
-+free_for_each_cpu:
-+	for_each_possible_cpu(cpu) {
-+		struct perf_event *perf_event = per_cpu(*perf->event, cpu);
-+		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
-+
-+		if (perf_event)
-+			perf_event_release_kernel(perf_event);
-+		kvfree(buffer->reports);
-+	}
-+free_percpu:
-+	free_percpu(perf->event);
-+	free_percpu(perf->buffer);
-+	kfree(perf);
-+
-+	return err;
++	nr_accesses = xa_to_value(xa_load(&target->accesses, vaddr));
++	xa_store(&target->accesses, vaddr, xa_mk_value(nr_accesses + 1), GFP_KERNEL);
 +}
 +
-+void damon_perf_cleanup(struct damon_ctx *ctx, struct damon_perf_event *event)
++static unsigned long damon_vaddr_histogram_count(struct damon_vaddr_histogram *histogram,
++							u32 pid, u64 vaddr)
++{
++	struct damon_vaddr_histogram_per_target *target;
++	unsigned long nr_accesses = 0;
++
++	target = xa_load(&histogram->targets, pid);
++	if (target)
++		nr_accesses = xa_to_value(xa_load(&target->accesses, vaddr));
++
++	return nr_accesses;
++}
++
++static void damon_vaddr_histogram_destroy(struct damon_vaddr_histogram *histogram)
++{
++	unsigned long index;
++	struct damon_vaddr_histogram_per_target *target;
++
++	xa_for_each(&histogram->targets, index, target)
++		xa_destroy(&target->accesses);
++
++	xa_destroy(&histogram->targets);
++}
++
+ static void damon_perf_overflow(struct perf_event *perf_event, struct perf_sample_data *data,
+ 				struct pt_regs *regs)
+ {
+@@ -1092,6 +1150,296 @@ void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
+ 	}
+ }
+ 
++static void damon_va_perf_check_accesses_by_vaddr(struct damon_ctx *ctx,
++		struct damon_perf_event *event)
 +{
 +	struct damon_perf *perf = event->priv;
++	struct damon_target *t;
 +	int cpu;
++	unsigned int tidx = 0;
 +
 +	if (!perf)
 +		return;
 +
++	damon_vaddr_histogram_init(&perf->vaddr_histogram);
++
 +	for_each_possible_cpu(cpu) {
 +		struct perf_event *perf_event = per_cpu(*perf->event, cpu);
 +		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
++		unsigned long head, tail, count, i;
 +
 +		if (!perf_event)
 +			continue;
++
 +		perf_event_disable(perf_event);
-+		perf_event_release_kernel(perf_event);
-+		kvfree(buffer->reports);
++
++		head = smp_load_acquire(&buffer->head);
++		tail = buffer->tail;
++		count = CIRC_CNT(head, tail, buffer->size);
++
++		for (i = 0; i < count; i++) {
++			struct damon_access_report *report =
++				&buffer->reports[(tail + i) & (buffer->size - 1)];
++
++			damon_vaddr_histogram_add(&perf->vaddr_histogram, report->tgid,
++							report->vaddr & PAGE_MASK);
++		}
++		smp_store_release(&buffer->tail, (tail + count) & (buffer->size - 1));
++
++		if ((count == buffer->size - 1) && (buffer->size < DAMON_PERF_MAX_RECORDS)) {
++			void *new_reports = kvcalloc_node(buffer->size * 2,
++					sizeof(buffer->reports[0]), GFP_KERNEL,
++					cpu_to_node(cpu));
++
++			if (new_reports) {
++				kvfree(buffer->reports);
++				buffer->reports = new_reports;
++				buffer->head = 0;
++				buffer->tail = 0;
++				buffer->size *= 2;
++			}
++		}
 +	}
-+	free_percpu(perf->event);
-+	free_percpu(perf->buffer);
-+	kfree(perf);
-+	event->priv = NULL;
++
++	damon_for_each_target(t, ctx) {
++		struct damon_region *r;
++		u32 pid = pid_nr(t->pid);
++
++		damon_for_each_region(r, t) {
++			unsigned long addr;
++
++			if (r->access_reported)
++				continue;
++
++			for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
++				if (damon_vaddr_histogram_count(&perf->vaddr_histogram, pid,
++									addr & PAGE_MASK)) {
++					damon_update_region_access_rate(r, true, &ctx->attrs);
++					r->access_reported = true;
++					break;
++				}
++			}
++		}
++		tidx++;
++	}
++
++	damon_vaddr_histogram_destroy(&perf->vaddr_histogram);
 +}
 +
-+void damon_perf_prepare_access_checks(struct damon_ctx *ctx,
-+		struct damon_perf_event *event)
++struct damon_paddr_walk {
++	struct damon_paddr_histogram *histogram;
++	bool accessed;
++};
++
++static void damon_paddr_histogram_add(struct damon_paddr_histogram *histogram, u64 paddr);
++static const struct mm_walk_ops damon_paddr_ops;
++
++void damon_perf_populate_paddr_histogram(struct damon_ctx *ctx, struct damon_perf_event *event)
 +{
 +	struct damon_perf *perf = event->priv;
 +	int cpu;
@@ -1013,17 +404,205 @@ index b069dbc7e3d2..1534372e7637 100644
 +
 +	for_each_possible_cpu(cpu) {
 +		struct perf_event *perf_event = per_cpu(*perf->event, cpu);
++		struct damon_perf_buffer *buffer = per_cpu_ptr(perf->buffer, cpu);
++		unsigned long head, tail, count, i;
 +
-+		if (perf_event)
-+			perf_event_enable(perf_event);
++		if (!perf_event)
++			continue;
++
++		perf_event_disable(perf_event);
++
++		head = smp_load_acquire(&buffer->head);
++		tail = buffer->tail;
++		count = CIRC_CNT(head, tail, buffer->size);
++
++		for (i = 0; i < count; i++) {
++			struct damon_access_report *report =
++				&buffer->reports[(tail + i) & (buffer->size - 1)];
++
++			damon_paddr_histogram_add(&perf->paddr_histogram,
++							report->paddr & PAGE_MASK);
++		}
++		smp_store_release(&buffer->tail, (tail + count) & (buffer->size - 1));
++
++		if ((count == buffer->size - 1) && (buffer->size < DAMON_PERF_MAX_RECORDS)) {
++			void *new_reports = kvcalloc_node(buffer->size * 2,
++					sizeof(buffer->reports[0]), GFP_KERNEL,
++					cpu_to_node(cpu));
++
++			if (new_reports) {
++				kvfree(buffer->reports);
++				buffer->reports = new_reports;
++				buffer->head = 0;
++				buffer->tail = 0;
++				buffer->size *= 2;
++			}
++		}
 +	}
 +}
 +
-+#endif /* CONFIG_PERF_EVENTS */
++static void damon_va_perf_check_accesses_by_paddr(struct damon_ctx *ctx,
++		struct damon_perf_event *event)
++{
++	struct damon_perf *perf = event->priv;
++	struct damon_target *t;
++	unsigned int tidx = 0;
 +
++	if (!perf)
++		return;
++
++	damon_paddr_histogram_init(&perf->paddr_histogram);
++
++	damon_perf_populate_paddr_histogram(ctx, event);
++
++	damon_for_each_target(t, ctx) {
++		struct damon_region *r;
++		struct mm_struct *mm = damon_get_mm(t);
++
++		if (!mm)
++			continue;
++
++		mmap_read_lock(mm);
++		damon_for_each_region(r, t) {
++			struct damon_paddr_walk walk_private = {
++				.histogram = &perf->paddr_histogram,
++				.accessed = false,
++			};
++
++			if (r->access_reported)
++				continue;
++
++			walk_page_range(mm, r->ar.start, r->ar.end, &damon_paddr_ops,
++					&walk_private);
++			if (walk_private.accessed) {
++				damon_update_region_access_rate(r, true, &ctx->attrs);
++				r->access_reported = true;
++			}
++		}
++		mmap_read_unlock(mm);
++		mmput(mm);
++		tidx++;
++	}
++
++	damon_paddr_histogram_destroy(&perf->paddr_histogram);
++}
++
++void damon_va_perf_check_accesses(struct damon_ctx *ctx, struct damon_perf_event *event)
++{
++	if (event->attr.sample_phys_addr)
++		return damon_va_perf_check_accesses_by_paddr(ctx, event);
++	else
++		return damon_va_perf_check_accesses_by_vaddr(ctx, event);
++}
++
++void damon_paddr_histogram_init(struct damon_paddr_histogram *histogram)
++{
++	xa_init(&histogram->accesses);
++}
++
++static void damon_paddr_histogram_add(struct damon_paddr_histogram *histogram,
++						u64 paddr)
++{
++	unsigned long nr_accesses;
++
++	nr_accesses = xa_to_value(xa_load(&histogram->accesses, paddr));
++	xa_store(&histogram->accesses, paddr, xa_mk_value(nr_accesses + 1), GFP_KERNEL);
++}
++
++unsigned long damon_paddr_histogram_count(struct damon_paddr_histogram *histogram, u64 paddr)
++{
++	return xa_to_value(xa_load(&histogram->accesses, paddr));
++}
++
++void damon_paddr_histogram_destroy(struct damon_paddr_histogram *histogram)
++{
++	xa_destroy(&histogram->accesses);
++}
++
++static int damon_paddr_pmd_entry(pmd_t *pmd, unsigned long addr,
++		unsigned long next, struct mm_walk *walk)
++{
++	pte_t *pte;
++	spinlock_t *ptl;
++	struct damon_paddr_walk *paddr_walk = walk->private;
++
++	ptl = pmd_trans_huge_lock(pmd, walk->vma);
++	if (ptl) {
++		pmd_t pmde = pmdp_get(pmd);
++
++		if (pmd_present(pmde)) {
++			for (; addr < next && !paddr_walk->accessed; addr += PAGE_SIZE) {
++				u64 frame = pmd_pfn(pmde) +
++					((addr & ~HPAGE_PMD_MASK) >> PAGE_SHIFT);
++
++				if (damon_paddr_histogram_count(paddr_walk->histogram,
++						PFN_PHYS(frame))) {
++					paddr_walk->accessed = true;
++					break;
++				}
++			}
++		}
++		spin_unlock(ptl);
++		return paddr_walk->accessed ? 1 : 0;
++	}
++
++	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
++	if (!pte) {
++		walk->action = ACTION_AGAIN;
++		return 0;
++	}
++
++	for (; addr < next && !paddr_walk->accessed; pte++, addr += PAGE_SIZE) {
++		pte_t ptent = ptep_get(pte);
++
++		if (pte_present(ptent)) {
++			if (damon_paddr_histogram_count(paddr_walk->histogram,
++					PFN_PHYS(pte_pfn(ptent)))) {
++				paddr_walk->accessed = true;
++			}
++		}
++	}
++
++	pte_unmap_unlock(pte - 1, ptl);
++
++	return paddr_walk->accessed ? 1 : 0;
++}
++
++#ifdef CONFIG_HUGETLB_PAGE
++static int damon_paddr_hugetlb_entry(pte_t *pte, unsigned long hmask,
++		unsigned long addr, unsigned long end,
++		struct mm_walk *walk)
++{
++	struct damon_paddr_walk *paddr_walk = walk->private;
++	pte_t entry = huge_ptep_get(walk->mm, addr, pte);
++
++	if (pte_present(entry)) {
++		for (; addr < end; addr += PAGE_SIZE) {
++			u64 frame = pte_pfn(entry) + ((addr & ~hmask) >> PAGE_SHIFT);
++
++			if (damon_paddr_histogram_count(paddr_walk->histogram,
++						PFN_PHYS(frame))) {
++				paddr_walk->accessed = true;
++				break;
++			}
++		}
++	}
++
++	return paddr_walk->accessed ? 1 : 0;
++}
++#else
++#define damon_perf_hugetlb_entry NULL
++#endif /* CONFIG_HUGETLB_PAGE */
++
++static const struct mm_walk_ops damon_paddr_ops = {
++	.pmd_entry = damon_paddr_pmd_entry,
++	.hugetlb_entry = damon_paddr_hugetlb_entry,
++	.walk_lock = PGWALK_RDLOCK,
++};
++
+ #endif /* CONFIG_PERF_EVENTS */
+ 
  static int __init damon_va_initcall(void)
- {
- 	struct damon_operations ops = {
 -- 
 2.43.0
 
