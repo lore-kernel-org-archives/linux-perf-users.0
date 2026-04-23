@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC158F49
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7C8F49
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918016; cv=none; b=mW6x3dMe7dpWZwGckna3AueTUJ649aJz3+im6s2qk0JpiwueYsdhEfY9Svwj9RbcsIZujRWnQVwonelcn2bEb4lJn9cfUtmVmvVuaJDCsCElxSEmGQtMrRBgmI2IgS6gLpe3PnWDLFK+wGkKGdQwobgsasSZ36ht76gnIrCzciE=
+	t=1776918021; cv=none; b=BRrnFLp6kooJYcJ1zkZQceOkYTDc58aaCibwWFeUDbVgLhyRNlhSpJ8WzNdVT2DAC8pYDY9hMtATqnqeqpXTM1z6iG9x6WPaLUd4SFWHjDkpw7m1pREEuz8PAy2L1uo8IrLwVS45pr7xYLBmWbn/zMiMaUuaAiDT0VQoCXNcN4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918016; c=relaxed/simple;
-	bh=GXKDmcJ/SftSVex1hdDBYusFyBL1uyMhJpJsF0z1ngY=;
+	s=arc-20240116; t=1776918021; c=relaxed/simple;
+	bh=ryUbI6WDceqh22H8TJ+1Yb6Ukgl0mycENVAKkbqBwdw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HIiLt8/bNw2aKQiZSbaTh+hEuAvhdI7Odm5pKKn9VouSrcNXE6bOuDNbufOzat1KZKEeKGOMg4vyXu5Iot0ve/p4mOu/h+W2hiuar8LPGSK7ZvuHLjX/DUnXRCKLAKsVxzTz7ebj8dgHrZQeEpaB40eH0+ViFyIxQY926Q+IbEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyvK3fPy; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=fZmBFITHsAjEu2M1+KOCINd3FxLWFzJNdvr9X4iVSvOVGcMWIFwOKL6Co5Jlxs0uBoTmxlL65qfz1DIiQ0i92nkgt/Fi40CL2lyuMnITnk9OKajeFfNCDzC1v8sfIQHC5cMUHAu8I41yjdi05DdwYSBf+L5yGMOnBPMR6BhtN9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NV1VVFAi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyvK3fPy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5EC5C2BCB2;
-	Thu, 23 Apr 2026 04:20:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NV1VVFAi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CA8C2BCB2;
+	Thu, 23 Apr 2026 04:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918015;
-	bh=GXKDmcJ/SftSVex1hdDBYusFyBL1uyMhJpJsF0z1ngY=;
+	s=k20201202; t=1776918021;
+	bh=ryUbI6WDceqh22H8TJ+1Yb6Ukgl0mycENVAKkbqBwdw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=uyvK3fPynu5OAEofk6/eRCHMk9W/QsAnU2XRtGCV+x5s73VIFRGqROpPNWWcRV6hH
-	 LrP7Vg6hItHDiJfjIv0A/P2IAbBR/sG3PYZhmMH9SiM2p7aGLuRB6DEna7MU2yAKxP
-	 Ie7CSV6/oShYewPy4wOw1OMm2WvuOXAzgNRAADnHpKb1iyWvrCNVG6MjOLv4WrEpUe
-	 JBZCwNg965h1oFn9+qWJelAi2MTWOvV5a7LzV2sZ0XMVdgLLZJv0ZeVHia5M8HBo0j
-	 FFvAOaZVr0rPEZQiQ8a/TeceBpzgw3FMSMUDIklBoDi1SOw2bqUEF7zwPDvme3+9oZ
-	 5GEi8rwAYYEHA==
+	b=NV1VVFAihvRUhZXsPQZDs+C3BtMDGbIZieE0lBvgEqNIXd9hjAfdfzPJdCVCm2iib
+	 PuK4OloYTx6WQz9iasla/AGErmiyuMKoqyZMKE92YIXXA8oKhMQGRuFpRajiuAX/Z7
+	 OSkshnWzkdCW4sI2BLP6SYF1IJNepWrgJp+GA8LkMSBBA1mQVQTaW4IRik1A3rsmpH
+	 7TmDIefVPFQi7mP23or6pBQMev9SL/9RLELtdWLiqzfQaTHDwRUweFKdvHJc4/NQtI
+	 4Hd1y9bfKVPvJ7hzqc9E93Iqq4HA8o/byEpwIetzON4MbSovEYCESyI1f9Y7nqP2uU
+	 jeBz0dz2pq6mQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 22/58] perf python: Add perf.pyi stubs file
+Subject: Re: [PATCH v2 44/58] perf sctop: Port sctop to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-23-irogers@google.com>
-References: <20260423035526.1537178-23-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-45-irogers@google.com>
+References: <20260423035526.1537178-45-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:20:15 +0000
-Message-Id: <20260423042015.A5EC5C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:20:20 +0000
+Message-Id: <20260423042021.74CA8C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,181 +44,102 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 3 potential issue(s):
-- [Medium] Missing build system integration for `perf.pyi`
-- [Medium] Inaccurate and incomplete API method signatures in `perf.pyi`
-- [Medium] Hallucinated and missing attributes in event class stubs
+- [High] Live mode process filtering is broken due to non-existent `comm` a=
+ttribute on sample events.
+- [High] Offline mode interval reporting is non-functional due to incorrect=
+ timestamp attribute and timer starvation.
+- [Low] Outdated hardcoded usage message contradicts standalone script exec=
+ution.
 --
 
-commit 91be6bb21ba4a262cbe51c81656804886324284d
+commit abb433706222dd69bc39b0037938568f893314f9
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add perf.pyi stubs file
+perf sctop: Port sctop to use python module
 
-This commit adds Python type stubs (perf.pyi) for the perf module to improve
-IDE support and static analysis. It includes docstrings for classes, method=
-s,
-and constants based on C source and JSON definitions.
+This commit ports sctop.py from tools/perf/scripts/python/ to
+tools/perf/python/, refactoring it into a class-based structure. It also ad=
+ds
+support for live mode using LiveSession when no input file is specified.
 
-> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
-> new file mode 100644
-> index 0000000000000..7ab0dfc44d1cb
+> diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+> new file mode 100755
+> index 0000000000000..d7ac922da510c
 > --- /dev/null
-> +++ b/tools/perf/python/perf.pyi
-
-Since perf.pyi isn't added to tools/perf/util/setup.py or
-tools/perf/Makefile.perf, will this file actually get installed? Python type
-stubs typically need to be distributed and installed in the site-packages
-directory to be discovered by IDEs and static analysis tools like mypy.
-
-> @@ -0,0 +1,579 @@
-> +"""Type stubs for the perf Python module."""
-> +from typing import Callable, Dict, List, Optional, Any, Iterator
-
-Are there missing functions in this module? The module-level function
-perf.tracepoint() is explicitly exported by the C extension but is complete=
-ly
-missing from these stubs.
-
+> +++ b/tools/perf/python/sctop.py
 [ ... ]
-
-> +class counts_values:
-> +    """Raw counter values."""
-> +    val: int
-> +    ena: int
-> +    run: int
-
-Are these attributes complete? The C extension also includes id, lost, and
-values attributes for this class.
-
+> @@ -0,0 +1,174 @@
 [ ... ]
-
-> +class evsel:
-> +    """Event selector, represents a single event being monitored."""
-> +    def __init__(
-> +        self,
-> +        type: int =3D ...,
-> +        config: int =3D ...,
-> +        sample_freq: int =3D ...,
-> +        sample_period: int =3D ...,
-> +        sample_type: int =3D ...,
-> +        read_format: int =3D ...,
-> +        disabled: bool =3D ...,
-> +        inherit: bool =3D ...,
-> +        pinned: bool =3D ...,
-> +        exclusive: bool =3D ...,
-> +        exclude_user: bool =3D ...,
-> +        exclude_kernel: bool =3D ...,
-> +        exclude_hv: bool =3D ...,
-> +        exclude_idle: bool =3D ...,
-> +        mmap: bool =3D ...,
-> +        context_switch: bool =3D ...,
-> +        comm: bool =3D ...,
-> +        freq: bool =3D ...,
-> +        idx: int =3D ...,
-> +    ) -> None: ...
-
-Do these arguments match the C API? The C extension accepts over 20 keyword
-arguments (including inherit_stat, enable_on_exec, watermark, etc.), which
-are omitted here. Additionally, the idx argument doesn't appear to be
-supported by the C code.
-
-> +    def __str__(self) -> str:
-> +        """Return string representation of the event."""
-> +        ...
-> +    def open(self) -> None:
-
-Does this match the C implementation? In the C code, open() accepts
-cpus, threads, group, and inherit arguments, but this stub restricts
-it to zero arguments.
-
-[ ... ]
-
-> +class sample_event:
-> +    """Represents a sample event from perf."""
-> +    evsel: evsel
-> +    sample_cpu: int
-> +    sample_time: int
-> +    sample_pid: int
-> +    type: int
-> +    brstack: Optional['branch_stack']
-> +    callchain: Optional['callchain']
-
-Is this missing some properties and methods exported by the C extension?
-Attributes like sym_end and methods like srccode() and insn() are missing
-from this stub.
-
-> +    def __getattr__(self, name: str) -> Any: ...
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Collect syscall events."""
+> +        name =3D str(sample.evsel)
+> +        syscall_id =3D getattr(sample, "id", -1)
 > +
-> +class mmap_event:
-> +    """Represents a mmap event from perf."""
-> +    type: int
-> +    pid: int
-> +    tid: int
-> +    addr: int
-
-Does the C extension export addr here? It appears to export a start
-attribute instead of addr, and also includes a misc field that is missing
-from this stub.
-
-Additionally, event classes exported by the C extension (except sample_even=
-t)
-include fields generated by the sample_members macro (like sample_pid,
-sample_tid, sample_time). Should those be included in these event stubs?
-
-> +    len: int
-> +    pgoff: int
-> +    filename: str
+> +        if syscall_id =3D=3D -1:
+> +            return
 > +
-> +class lost_event:
-> +    """Represents a lost events record."""
-> +    type: int
+> +        if hasattr(self, 'session') and self.session:
+> +            comm =3D self.session.process(sample.sample_pid).comm()
+> +        else:
+> +            comm =3D getattr(sample, "comm", "Unknown")
 
-Does the PyMemberDef array in C actually export a type attribute for
-lost_event? Referencing it in Python might result in an AttributeError.
+Are we sure the sample object has a comm attribute in live mode?
 
-[ ... ]
-
-> +class read_event:
-> +    """Represents a READ record."""
-> +    type: int
-> +    pid: int
-> +    tid: int
-> +    value: int
-
-Do type and value exist on read_event at runtime? The C implementation
-doesn't seem to export these, which could lead to AttributeError at runtime.
+Since perf.sample_event objects do not natively possess a comm attribute,
+it looks like this will always evaluate to Unknown. If a user specifies a
+process to filter via the command line, the filter condition will always dr=
+op
+the events because Unknown won't match the requested process name.
 
 > +
-> +class switch_event:
+> +        if name in ("evsel(raw_syscalls:sys_enter)", "evsel(syscalls:sys=
+_enter)"):
+> +            if self.for_comm is not None and comm !=3D self.for_comm:
+> +                return
+> +            with self.lock:
+> +                self.syscalls[syscall_id] +=3D 1
+> +
+> +        if self.offline and hasattr(sample, "time"):
 
-Is this class named correctly? The C extension registers this type as
-perf.context_switch_event rather than switch_event.
+Does the C extension export the timestamp field as time, or is it sample_ti=
+me?
 
+If the attribute is actually sample_time, hasattr(sample, "time") will alwa=
+ys
+be false, preventing offline periodic updates from being printed.
+
+Additionally, this timer update block is placed after the early returns for
+unmatched events.
+
+If the monitored process goes idle while other processes continue generating
+events, will the offline timer freeze and prevent steady periodic updates?
+
+> +            interval_ns =3D self.interval * (10 ** 9)
+> +            if self.last_print_time is None:
+> +                self.last_print_time =3D sample.time
+> +            elif sample.time - self.last_print_time >=3D interval_ns:
+> +                self.print_current_totals()
+> +                self.last_print_time =3D sample.time
 [ ... ]
+> +def main():
+> +    """Main function."""
+> +    ap =3D argparse.ArgumentParser(description=3D"System call top")
+> +    ap.add_argument("args", nargs=3D"*", help=3D"[comm] [interval] or [i=
+nterval]")
+> +    ap.add_argument("-i", "--input", help=3D"Input file name")
+> +    args =3D ap.parse_args()
+> +
+> +    for_comm =3D None
+> +    default_interval =3D 3
+> +    interval =3D default_interval
+> +
+> +    if len(args.args) > 2:
+> +        print("Usage: perf script -s sctop.py [comm] [interval]")
 
-> +class evlist:
-> +    def __init__(self, cpus: cpu_map, threads: thread_map) -> None: ...
-> +    def open(self) -> None:
-> +        """Open the events in the list."""
-> +        ...
-> +    def close(self) -> None:
-> +        """Close the events in the list."""
-> +        ...
-> +    def mmap(self) -> None:
-
-Does this match the C API? The C implementation of evlist.mmap() accepts
-optional pages and overwrite arguments, but this stub restricts it to
-zero arguments.
-
-> +        """Memory map the event buffers."""
-> +        ...
-> +    def poll(self, timeout: int) -> int:
-
-Should timeout be optional here? The C implementation defaults to -1 and
-can be called without arguments.
-
-[ ... ]
+This isn't a bug, but since the script was ported to a standalone executable
+using argparse, this usage message seems outdated and contradicts the new
+execution model.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D22
+178-1-irogers@google.com?part=3D44
