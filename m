@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1303D8119
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 23:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500BE282F16
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 23:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776985811; cv=none; b=cMhiy4tVF6wQJ5tVV+zHX6O7IXDysWBajZOexsiETpmrW72APz8gbfMcBRL+S9RJ1MkPmYhMKQi9i/FQJIDxWnRyQz/JxrPZFSQjuzNBNFypaWdN4L8RNQ3Pbwr9El8eWYzXjgCqF+kbgO5cDraTywnX6/2mMWec4s9GCaCVgKo=
+	t=1776987106; cv=none; b=VH+X0j4+EEd3tR+s7HQxHTL3780mDsPthlp+wzlyk6dg+z04wcb2kerKGDAoNBNVjCYpSJxdTyG7bxWmtNjko7gsNgnoqWsQSztNCrWt/IQgM91HbvLoswUu6HBaS9pZhMrUKUFx0giypOHClWkyeuTySRdyva4t93dnCBT4wCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776985811; c=relaxed/simple;
-	bh=0ZhZV1M+dVR1kq4pZE9pUSetZ7NLoElZcHmx7qYtJ0w=;
+	s=arc-20240116; t=1776987106; c=relaxed/simple;
+	bh=FkmWitNqson7U9T29IH6ytAQ/lMECWjaHSuT4hoWXtk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=H8yuIeIfMyFCb/mPph7VtTQjKFSJlD6lzQB8BbOmRMiG9tKdka6auPEAdwL2h1U0bmt4ObHTLsSVmkOfKPxBLrvW4fyK/R29bsxWwNhikS2No8MQyIk7zRaJqBmbD/W+nrDyJP7WJZg8kDvIV66Ld9Y0g+6hD1jbu/Rxp9ggkHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgP2qBvI; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=WtV2NCPz0jg9poGseYO2W0wiRWOgHzgpsMUoAaFCMyhaGfRVe+zO5IaCxHTAUKaAOiD3PHdvJBw5AKKyfnRjyIdj6liAUWGbgpFXjqDqwfqXbpfSMeEOW+6Wa7ArVaX70WVTniDtK5IeVg88zfFQTkzHB5a6QsVxREiQJNPA0bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rgd84Rlz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgP2qBvI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 615FCC2BCAF;
-	Thu, 23 Apr 2026 23:10:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rgd84Rlz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC5BC2BCAF;
+	Thu, 23 Apr 2026 23:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776985810;
-	bh=0ZhZV1M+dVR1kq4pZE9pUSetZ7NLoElZcHmx7qYtJ0w=;
+	s=k20201202; t=1776987106;
+	bh=FkmWitNqson7U9T29IH6ytAQ/lMECWjaHSuT4hoWXtk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=QgP2qBvIVdtVRdZ1lTZnOyxxDGqEZhttiQpJM/ISzSZ9dg5phRnH++022B3QA6szr
-	 2Zg+b68mI+Bbmbc1gcpLseP5isvUhERwb2fxcCJ6JYZK6tuRZZjRVIz34O2OaD1XJR
-	 1jvnutJVI1WT08frh/jCLvoZ0nR2LuSvsniFEKddvlcpFdIvEFT0lV3Y/Y2KPkGTSL
-	 Yyph10wTcQyrmZCPc3hY5nJQPYM46zRc8U1+9/EVNNX2TAMBjC3f4GZGCApPwEGQur
-	 o91uAOgrA2tRClfDeFGt/y5Gx5YSAZjyFJgQckXdLX3jPXlo0/n2zWRA3yAvtgYoCO
-	 oqgHythFcmS7Q==
+	b=Rgd84RlzhmO7714azdoJvbKvm7DppmJmesQm4OvTdWGIs3lCKJ7jAHd61UKVz+fuz
+	 J9OrRdW1w2GeCOY7JZUuAO86L/wUsxZpxQqAKuBU16aQVGhvbj0eJUtX+4wHfIOMvD
+	 cUGE0uZU7kLRXAkD0AZnIXQX4Q7CsMcw5jFVn1wsXUQjUpB/Jx3IkHZwZxe5j0zMPo
+	 Jzygh8EEz1iiK6AZ2mDwilT3H7FoXE9nR9y2b+JIsLzPUtQZv1pHKuLXb8sW5LypeS
+	 +O23u+5K9YX+9bNiuMAiTCTlJlDmBo7qzAcv0GNmSBmAzl39ntyXlFCse3ju4Xaww2
+	 U7G91FfNxaakw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/3] perf: enable unprivileged syscall tracing with
- perf trace
+Subject: Re: [PATCH v2 4/4] perf/x86: KVM: Have perf define a dedicated
+ struct for getting guest PEBS data
 Reply-To: sashiko@lists.linux.dev
-To: "Anubhav Shelat" <ashelat@redhat.com>
+To: "Sean Christopherson" <seanjc@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423151746.16258-3-ashelat@redhat.com>
-References: <20260423151746.16258-3-ashelat@redhat.com>
+In-Reply-To: <20260423150340.463896-5-seanjc@google.com>
+References: <20260423150340.463896-5-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 23:10:09 +0000
-Message-Id: <20260423231010.615FCC2BCAF@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 23:31:45 +0000
+Message-Id: <20260423233145.DDC5BC2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,63 +45,60 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 1 potential issue(s):
-- [High] Unconditional rejection of unprivileged tracepoint counting breaks=
- perf_event_paranoid functionality and creates an inverted security policy.
+- [Medium] Unconditional external function call to intel_pmu_get_cross_mapp=
+ed_mask() introduced in the VMX hot path.
 --
 
-commit 741720c90ed77115c5603e05c7d2cdfc3f218082
-Author: Anubhav Shelat <ashelat@redhat.com>
+commit bf596eb4f1ae159ccdd3b9e0517c0eaa4c80ce4a
+Author: Sean Christopherson <seanjc@google.com>
 
-perf: enable unprivileged syscall tracing with perf trace
+perf/x86: KVM: Have perf define a dedicated struct for getting guest PEBS d=
+ata
 
-This commit allows unprivileged users to trace their own processes' syscalls
-using perf trace without requiring CAP_PERFMON. It loosens the condition in
-perf_event_open() for task-attached events that do not expose kernel addres=
-ses
-and makes format and id files readable for TRACE_EVENT_FL_CAP_ANY tracepoin=
-ts.
+This commit introduces a dedicated struct (x86_guest_pebs) for passing guest
+PEBS data from KVM to perf. It replaces the previous method of passing an
+opaque pointer to kvm_pmu, allowing perf to define its own data requirements
+independently of KVM-internal state.
 
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_p=
-erf.c
-> index a6bb7577e8c596..e8347df7ede5c2 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -73,8 +73,18 @@ static int perf_trace_event_perm(struct trace_event_ca=
-ll *tp_event,
->  	}
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index a29896a9ef1456..e6c1c64a8c949d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7313,12 +7313,15 @@ static void atomic_switch_perf_msrs(struct vcpu_v=
+mx *vmx)
+>  	if (kvm_vcpu_has_mediated_pmu(&vmx->vcpu))
+>  		return;
 > =20
->  	/* No tracing, just counting, so no obvious leak */
-> -	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
-> +	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
-> +		/*
-> +		 * Only allow CAP_ANY tracepoints for unprivileged
-> +		 * task-attached events in case kernel context is exposed.
-> +		 */
-> +		if (!p_event->attr.exclude_kernel && !perfmon_capable()) {
-> +			if (!(p_event->attach_state =3D=3D PERF_ATTACH_TASK &&
-> +			      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
-> +				return -EACCES;
-> +		}
->  		return 0;
-> +	}
+> -	pmu->host_cross_mapped_mask =3D 0;
+> -	if (pmu->pebs_enable & pmu->global_ctrl)
+> -		intel_pmu_cross_mapped_check(pmu);
+> +	struct x86_guest_pebs guest_pebs =3D {
+> +		.enable =3D pmu->pebs_enable,
+> +		.ds_area =3D pmu->ds_area,
+> +		.data_cfg =3D pmu->pebs_data_cfg,
+> +		.cross_mapped_mask =3D intel_pmu_get_cross_mapped_mask(pmu),
+> +	};
 
-Does this new check unconditionally block unprivileged tracepoint counting
-even when sysctl_perf_event_paranoid is set to allow it?
+Does this introduce an unnecessary function call overhead on the VMX hot pa=
+th?
 
-Before this patch, if sysctl_perf_event_paranoid <=3D 1, unprivileged users
-could count any tracepoint. It appears this check now returns -EACCES for
-counting events without exclude_kernel, breaking tools like perf stat for
-unprivileged users.
+Prior to this patch, the external function intel_pmu_cross_mapped_check()
+was conditionally called only when PEBS was enabled, which avoided an
+external function call in the vast majority of cases.
 
-Additionally, if sysctl_perf_event_paranoid =3D=3D -1, doesn't this create =
-an
-inverted security policy?
+Because intel_pmu_get_cross_mapped_mask() is in a different compilation
+unit (pmu_intel.c), calling it unconditionally here results in a function
+call on every VM-entry.
 
-An unprivileged user requesting simple counting would be rejected here,
-but if they request full raw event data via PERF_SAMPLE_RAW, execution
-bypasses this block entirely and reaches perf_allow_tracepoint(), which
-would succeed.
+Would it be better to restore the inline condition check, perhaps using a
+ternary operator when initializing cross_mapped_mask?
+
+> =20
+>  	/* Note, nr_msrs may be garbage if perf_guest_get_msrs() returns NULL. =
+*/
+> -	msrs =3D perf_guest_get_msrs(&nr_msrs, (void *)pmu);
+> +	msrs =3D perf_guest_get_msrs(&nr_msrs, &guest_pebs);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423151746.1625=
-8-1-ashelat@redhat.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423150340.4638=
+96-1-seanjc@google.com?part=3D4
