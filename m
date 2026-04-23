@@ -1,220 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16EA14EC73
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0C114EC73
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:19:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776917978; cv=none; b=e3E1nMG7tEjHJl0/xgN+vTHms+dUQsl/H74EkUm5IwOjxgIDnjz7YKPpFl08M34isNNGVpel+gCtOaWnYQx7JBPhrfURTBxU1zR3RJKFE1ju77m8kUItf64bW0Yg0oMkF6yiySn7tR5AkSn2ZBI+Fq9NMO4fTPkKmy+Yn6bOftc=
+	t=1776917984; cv=none; b=XdO40zHFOa7GbYT1Nh090moaGnpY0abU4WcRqGH3kfTjOrhYvM5ojG8fZXy0NrI/aqTgyxEiQtN2GRb0ky5GhvEZa4nVW3T5XnqUq6MrkkgWGfQff1yU/bp+JqLLBd1+XAW+Rier4TKHds090LmENumQCG4sCLJGKNOuH/wUcU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776917978; c=relaxed/simple;
-	bh=MfTbZw0TgzhPwqIzKPyPi6wa0h3W5RwbPNfAupzXsD4=;
+	s=arc-20240116; t=1776917984; c=relaxed/simple;
+	bh=kEbAvr1RHmJ3lRH4opHmX7ZXcnNxbJbKdGJw0b3v3UU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pxRiwUvASXohAy1+KIZaUOgsOv61hCfQKgEnleU0XkophrFuaoWMJQA+RIX7KP5AUFX+K1U/cEcEW/CheWF+zoaIcvDTCugGBVo4EAQ6/ajSMXyHIbEE8MXXKdsIJ9FQQ7kruz49K1wnWehQh/hBEc1Zt/lbhhymRwN1ggEyahY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EA3TU7o4; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Pd4J3SDaSzYbd+nCJ6XKQv84UGFlvxjdWPQQTnQcgLXVMfAdF62+GjV1Zn0fJG25dj6S+/CoT/6Ix15vshQuFJqiK3RYcq+G1dVF8bQKuryT40BUb08pvpCb653kQWG5s9qIn7rO1nITGo3SctexvLX5/MsIeVf0EABijPQynzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE8qmXWP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EA3TU7o4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4077CC2BCB2;
-	Thu, 23 Apr 2026 04:19:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE8qmXWP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117B2C2BCB2;
+	Thu, 23 Apr 2026 04:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776917978;
-	bh=MfTbZw0TgzhPwqIzKPyPi6wa0h3W5RwbPNfAupzXsD4=;
+	s=k20201202; t=1776917984;
+	bh=kEbAvr1RHmJ3lRH4opHmX7ZXcnNxbJbKdGJw0b3v3UU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=EA3TU7o4B1rJvXti8QtDMuw+GbwXgxd0PnSm5lpf6hDmglaizSoNnj7RGRr3Fm7lK
-	 h8FyTEtAstqqcgWfoaG7/YyYIU+2Uft6TtVyZTohu554UxFwwxV37EYJf0F5oHtF1H
-	 hGiFuYGBvI6otnzl5AyFA4GxTsnrAopJf1NbhbvBlyebrVanqUgEYdw6F+Rk9TKp8L
-	 SH4nLcqQ772JSGD8DKlfsUYmDZCTXL3wj4QWuLbEcYmiPBkA/RPBxAjmh6e83yjSb7
-	 ZgZjH0/ejG8fXjYOVbSrjzvFpM1TSs226Wzw98Vbbcd0P3pjt/3NL9LlDYpglEPDve
-	 qpA9uXtmh9r5Q==
+	b=ZE8qmXWPlkwuPR0vErgOdWjdGmlXL3TDNm20cNzzbfQjjj7qKdhvEumtwV2wB/wDo
+	 6GiDGW/yi1wpl39vg8aMSnilb1qlykVZG/DexZbj16DtEUrXaSLxZ852E9Znu9HHol
+	 XdImSbPXz0jIie5U8uKuSEl4VPfaJHwS9z4UtUGtZmd1KaI7H7DYBZZb7L34rxWz/1
+	 AvVtfWcIpoHqqq62F3cMK6y56BVSYKDRMSB1hRg/3FxUAVgJ5YpFY2Xa5yBJMAtt6m
+	 aATmJpy4jDdUJARHIlwz6Vmt3LJNytVqotPZSJ2ABhKbO4M+6Q215i/SbV5eVyvLMN
+	 c8Xe0KkZiNh2g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 18/58] perf python: Add callchain support
+Subject: Re: [PATCH v2 10/58] perf evlist: Add reference count
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-19-irogers@google.com>
-References: <20260423035526.1537178-19-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-11-irogers@google.com>
+References: <20260423035526.1537178-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:19:37 +0000
-Message-Id: <20260423041938.4077CC2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:19:43 +0000
+Message-Id: <20260423041944.117B2C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [High] Unbreakable reference cycle between pyrf_event and pyrf_callchain =
-causes a severe memory leak.
-- [Medium] Leftover deferred resolution block in pyrf_callchain__next() is =
-unreachable dead code.
-- [Medium] Implementation-defined behavior when resolving a callchain with =
-0 frames.
+Sashiko AI review found 2 potential issue(s):
+- [High] Invalid free() on Python-embedded evsel objects causes heap corrup=
+tion during evlist teardown
+- [High] Python evlist item access returns a disconnected clone, discarding=
+ modifications and breaking object identity
 --
 
-commit 73aebb639c981fd42b85740cef6e54f7fa723e79
+commit 493a283e594520e58a08e73743511567aac59ef5
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add callchain support
+perf evlist: Add reference count
 
-This commit implements pyrf_callchain_node and pyrf_callchain types for lazy
-iteration over callchain frames. It also adds a callchain property to
-sample_event to expose this information to Python scripts.
+This commit introduces a reference count to the evlist structure. The
+reference count is initialized to 1 at allocation and decremented in the new
+evlist__put() function, which performs the deletion when the count reaches =
+0.
+This change prepares for future modifications to the Python bindings.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 3e0534744f0a2..ebbb10c0efeb8 100644
+> index 1e6c99efff90e..3f0758d5bd904 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-
 [ ... ]
-
-> @@ -621,6 +624,181 @@ static PyObject *pyrf_sample_event__insn(PyObject *=
-self, PyObject *args __maybe_
->  					 pevent->sample.insn_len);
+> @@ -1302,7 +1309,7 @@
+> =20
+>  static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
+>  {
+> -	evlist__exit(&pevlist->evlist);
+> +	evlist__put(pevlist->evlist);
+>  	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
 >  }
-> =20
+
+Does calling evlist__put() here introduce a regression where evlist__purge()
+will eventually attempt to call free() on an evsel that is embedded inside a
+pyrf_evsel object allocated by Python's memory allocator?=20
+
+The commit message mentions changes being broken apart, but could this
+intermediate state break git bisectability by causing heap corruption during
+teardown?
 
 [ ... ]
-
-> +static PyObject *pyrf_callchain__next(struct pyrf_callchain *pchain)
-> +{
-> +	struct pyrf_callchain_node *pnode;
-> +
-> +	if (!pchain->resolved) {
-
-Is this deferred resolution block reachable?
-
-It appears that pchain->resolved is unconditionally set to true when the
-callchain is eagerly resolved in pyrf_session_tool__sample(). Since the
-pyrf_callchain__type does not define a tp_new function to be instantiated
-directly from Python, it seems this condition will never be met, making this
-dead code.
-
-> +		struct evsel *evsel =3D pchain->pevent->sample.evsel;
-> +		struct evlist *evlist =3D evsel->evlist;
-> +		struct perf_session *session =3D evlist ? evlist__session(evlist) : NU=
-LL;
-> +		struct addr_location al;
-> +		struct callchain_cursor *cursor;
-> +		struct callchain_cursor_node *node;
-> +		u64 i;
-> +
-> +		if (!session || !pchain->pevent->sample.callchain)
-> +			return NULL;
-> +
-> +		addr_location__init(&al);
-> +		if (machine__resolve(&session->machines.host, &al, &pchain->pevent->sa=
-mple) < 0) {
-> +			addr_location__exit(&al);
-> +			return NULL;
-> +		}
-> +
-> +		cursor =3D get_tls_callchain_cursor();
-> +		if (thread__resolve_callchain(al.thread, cursor, evsel,
-> +					      &pchain->pevent->sample, NULL, NULL,
-> +					      PERF_MAX_STACK_DEPTH) !=3D 0) {
-> +			addr_location__exit(&al);
-> +			return NULL;
-> +		}
-> +		callchain_cursor_commit(cursor);
-> +
-> +		pchain->nr_frames =3D cursor->nr;
-> +		if (pchain->nr_frames > 0) {
-> +			pchain->frames =3D calloc(pchain->nr_frames, sizeof(*pchain->frames));
-> +			if (!pchain->frames) {
-> +				addr_location__exit(&al);
-> +				return PyErr_NoMemory();
-> +			}
-> +
-> +			for (i =3D 0; i < pchain->nr_frames; i++) {
-> +				node =3D callchain_cursor_current(cursor);
-> +				pchain->frames[i].ip =3D node->ip;
-> +				pchain->frames[i].map =3D map__get(node->ms.map);
-> +				pchain->frames[i].sym =3D node->ms.sym;
-> +				callchain_cursor_advance(cursor);
-> +			}
-> +		}
-> +		pchain->resolved =3D true;
-> +		addr_location__exit(&al);
-> +	}
-
-[ ... ]
-
-> @@ -2807,6 +2998,49 @@ static int pyrf_session_tool__sample(const struct =
-perf_tool *tool,
->  	if (pevent->sample.merged_callchain)
->  		pevent->sample.callchain =3D NULL;
+> @@ -1794,17 +1817,16 @@ static PyObject *pyrf_evlist__item(PyObject *obj,=
+ Py_ssize_t i)
+>  	struct pyrf_evlist *pevlist =3D (void *)obj;
+>  	struct evsel *pos;
 > =20
-> +	if (sample->callchain) {
-> +		struct addr_location al;
-> +		struct callchain_cursor *cursor;
-> +		u64 i;
-> +		struct pyrf_callchain *pchain;
-> +
-> +		addr_location__init(&al);
-> +		if (machine__resolve(&psession->session->machines.host, &al, sample) >=
-=3D 0) {
-> +			cursor =3D get_tls_callchain_cursor();
-> +			if (thread__resolve_callchain(al.thread, cursor, evsel, sample,
-> +						      NULL, NULL, PERF_MAX_STACK_DEPTH) =3D=3D 0) {
-> +				callchain_cursor_commit(cursor);
-> +
-> +				pchain =3D PyObject_New(struct pyrf_callchain, &pyrf_callchain__type=
-);
-> +				if (pchain) {
-> +					pchain->pevent =3D pevent;
-> +					Py_INCREF(pevent);
+> -	if (i >=3D pevlist->evlist.core.nr_entries) {
+> +	if (i >=3D pevlist->evlist->core.nr_entries) {
+>  		PyErr_SetString(PyExc_IndexError, "Index out of range");
+>  		return NULL;
+>  	}
+> =20
+> -	evlist__for_each_entry(&pevlist->evlist, pos) {
+> +	evlist__for_each_entry(pevlist->evlist, pos) {
+>  		if (i-- =3D=3D 0)
+>  			break;
+>  	}
+> -
+> -	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
+> +	return pyrf_evsel__from_evsel(pos);
+>  }
 
-Does this create an unbreakable reference cycle?
+Does returning pyrf_evsel__from_evsel() here result in a disconnected clone
+rather than the original wrapper?
 
-pchain takes a strong reference to pevent here, and shortly below,
-pevent takes ownership of pchain via pevent->callchain =3D (PyObject *)pcha=
-in.
-
-Since neither pyrf_event__type nor pyrf_callchain__type implements the
-Py_TPFLAGS_HAVE_GC flag and the required tp_traverse/tp_clear callbacks,
-the Python garbage collector won't be able to break this circular reference.
-Will this cause both objects, the frames buffer, and the map references to
-leak for every sample event with a callchain?
-
-> +					pchain->nr_frames =3D cursor->nr;
-> +					pchain->pos =3D 0;
-> +					pchain->resolved =3D true;
-> +					pchain->frames =3D calloc(pchain->nr_frames,
-> +								sizeof(*pchain->frames));
-
-What happens when resolving a callchain with 0 frames?
-
-If cursor->nr is 0, we pass 0 to calloc(), which is implementation-defined.
-If libc returns NULL (like musl), the subsequent if (pchain->frames) check
-will fail, discarding pchain and leaving event.callchain as None.
-If libc returns a valid pointer (like glibc), the check passes and
-event.callchain becomes an empty iterator.
-
-Could we skip the allocation or handle the 0-frame case explicitly to avoid
-inconsistent API behavior across different libc implementations?
-
-> +					if (pchain->frames) {
-> +						struct callchain_cursor_node *node;
-> +
-> +						for (i =3D 0; i < pchain->nr_frames; i++) {
-> +							node =3D callchain_cursor_current(cursor);
-> +							pchain->frames[i].ip =3D node->ip;
-> +							pchain->frames[i].map =3D
-> +								map__get(node->ms.map);
-> +							pchain->frames[i].sym =3D node->ms.sym;
-> +							callchain_cursor_advance(cursor);
-> +						}
-> +						pevent->callchain =3D (PyObject *)pchain;
-> +					} else {
-> +						Py_DECREF(pchain);
-> +					}
-> +				}
-> +			}
-> +			addr_location__exit(&al);
-> +		}
-> +	}
+If so, could this cause any modifications made to the returned object from
+Python scripts to only affect the clone, leaving the actual evsel in the
+list unchanged?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D18
+178-1-irogers@google.com?part=3D10
