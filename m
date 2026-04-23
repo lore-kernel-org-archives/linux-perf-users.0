@@ -1,229 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2923CCFC8
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6224F377543
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776917465; cv=none; b=VVpUBVHcGXL2L4qZCUAVEPQyulWsBEipbqJ7kgjUeXuRyJlWI9GPjIc9oigMtVF5REXr9kITjG7t/oc2jF75X4YcWFLoKOWQGYEO7RrJfGIFLBtm/knAYVvVIA4SCsv1rAX0bqKDaLVjdEmRm1KjaIYjDYoxQPqFlhmWiB1Lurc=
+	t=1776917480; cv=none; b=BEqZvuvncUeWhAhyJsKLhqA3PuwQE5D4xj6krLnqKL5BmbuNLXO5EsPR0n9dv3q72xkgALJjt/urf12a8VPDKLwALk/RCWmEsvQj4qiXgg5x/FzS0LxocLziQF2SBqr62JKysP9lkDjQ4J5tzZr9B0nvGVuDUnR7S61ArfckX+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776917465; c=relaxed/simple;
-	bh=SvADZ5i0bin4ZezXuyvTEFwzA6vEZU84FgdhlnLZ4Aw=;
+	s=arc-20240116; t=1776917480; c=relaxed/simple;
+	bh=vJZEZhywyqexIvircDfDCH9xgYHgKH2SKgR+WoNhY4Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UJrEG7Zf6ZRHAokLTpFi5WNhl/MXVyLz/X7XVhoDakfwk/MrS1dkGwFnljrVGWWUxHkgFbXF11w69lUz21e7U5G68SRqHrksvNmOt8mexjPX9Ete1aWOjeTkGTgQMVJ/UauYzrPfvRnbmvoov1+fiKJMG9jZRJvf4JpxKPgtj/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JK43xPVp; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Q287gcXxAAbeUEY237ncx1uyaSr7S6NZc9DCGiMEql4V5gUhVm+h4v2SYg8BGEOZuYXK8gaCtJfAZBI+NbhqdSspTB5l8w2PEVDKfmSnAtG+M9aWPXQquvxrYGj7SDH06rprAiAu0gumZOgBOPPPsWVTcbdpbzEmQBxXSYwRQ4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uwa47Nmd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JK43xPVp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5477BC2BCB2;
-	Thu, 23 Apr 2026 04:11:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uwa47Nmd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC41C2BCB2;
+	Thu, 23 Apr 2026 04:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776917464;
-	bh=SvADZ5i0bin4ZezXuyvTEFwzA6vEZU84FgdhlnLZ4Aw=;
+	s=k20201202; t=1776917480;
+	bh=vJZEZhywyqexIvircDfDCH9xgYHgKH2SKgR+WoNhY4Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=JK43xPVpecPPTLpMDSwZkSANKjlPVydjMQqn2oJmXKqEhPrtVSsvOXoledbTVMa1t
-	 sKmjPF0tCMKm8zo7p7GdMyaEUMpp9ZTBOgnFjgZjgWZhYYTpF+y5Ytf7IhXInuNSnw
-	 dS8m+R1VJLb1ME1Nd4+zxTavlWuOfEyCkRDgfTGxO44tB8dTfjmfUSZpg+J6ZJHP20
-	 spqlH7wwTxRKkKMA+mR7Ah2uRe7DjkDpxJ9UWngkWpGjGEXBAUIARJWape57IemQyl
-	 /bQVqBJKzvBSnS/VYxc/a+oyFP+opEdpgYosbnAussx412tNukqGyrRUbT1X6oPCVL
-	 gwjW/zgMi1+QQ==
+	b=Uwa47NmdXLJdRtA36GNP2gvpAjWyQ5ULsRE728fEnefeCKNOVrgPSedQPCmx07sUD
+	 f+hpfbUMUs6qyy6nrkNy5YiugJ53NseCGrsHHt2OxFx/p7Y2NZKVEJ0EncTS0j2I2m
+	 3fU1GJ5XtKKmJ7ROYnOExPuPbKtK80USX3Wv+v1cv7Mqh6eFvKGpsanhSUWmjYr2HX
+	 6tdjgVUjlD5jXI+tiS/20DKTxue4n9Psku1Cho1gZwupZ3Cs2z6lWqD4eetfuTTRfv
+	 IA/mxsf/q7D7mGtICDa/EUnu7sCwG3raPFm5oRRd1h2rgAj1yfUp+HxxA1nkvYrF9G
+	 HSZ4/9g5afLuQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 41/58] perf netdev-times: Port netdev-times to use
- python module
+Subject: Re: [PATCH v2 39/58] perf intel-pt-events: Port
+ intel-pt-events/libxed to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-42-irogers@google.com>
-References: <20260423035526.1537178-42-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-40-irogers@google.com>
+References: <20260423035526.1537178-40-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:11:03 +0000
-Message-Id: <20260423041104.5477BC2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:11:19 +0000
+Message-Id: <20260423041120.0AC41C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 6 potential issue(s):
-- [High] Brittle string matching for the `evsel(` prefix will cause unhandl=
-ed `KeyError` exceptions if the prefix is missing.
-- [High] `consume_skb` events for received packets are ignored because `han=
-dle_consume_skb` skips the receive list.
-- [High] `print_receive()` falsely prints `kfree_skb` events as `skb_copy_d=
-atagram_iovec` due to shadowed dictionary keys.
-- [Medium] The commit message contradicts the actual code execution regardi=
-ng event processing order.
-- [Medium] Manual iteration over `sys.argv[1:]` conflicts with `argparse`, =
-treating arbitrary arguments or input filenames as command flags.
-- [Medium] The use of `list.insert(0, ...)` on large bounded arrays creates=
- an O(N^2) performance bottleneck.
+Sashiko AI review found 4 potential issue(s):
+- [High] Invalid Python f-string integer format code (`u`) will cause a Val=
+ueError.
+- [High] Invalid Python f-string string alignment specifier (`-`) will caus=
+e a ValueError.
+- [Medium] Unhandled `struct.error` due to lack of `raw_buf` length validat=
+ion.
+- [Medium] Context switch event tracking has been dropped, resulting in dea=
+d code.
 --
 
-commit fd34e11e0e39840623949e7e6ae5732c89401b44
+commit a17b74084afffdae113ced9a1063e6977c2a9358
 Author: Ian Rogers <irogers@google.com>
 
-perf netdev-times: Port netdev-times to use python module
+perf intel-pt-events: Port intel-pt-events/libxed to use python module
 
-This commit ports the netdev-times script to Python 3, refactoring it
-to use a class structure and the perf.session module to collect and
-process events.
+Ported from tools/perf/scripts/python/.
+- Refactored intel-pt-events.py to use a class structure to eliminate
+  global state and improve maintainability.
+- Removed Python 2 compatibility checks.
+- Renamed methods in libxed.py to snake_case (Instruction ->
+  instruction, SetMode -> set_mode, DisassembleOne -> disassemble_one)
+  to comply with pylint.
 
-> perf netdev-times: Port netdev-times to use python module
->=20
-> Ported from tools/perf/scripts/python/.
-> - Refactored the script to use a class structure (NetDevTimesAnalyzer)
->   to encapsulate state.
-> - Used perf.session for event collection and processed them in time
->   order at the end to match legacy behavior.
-
-Does the commit message accurately reflect the implementation? The code in
-process_event() appears to call handle_single_event() immediately, processi=
-ng
-events on the fly as they are received rather than collecting them for
-end-of-run time ordering.
-
-> - Extracted tracepoint fields directly from sample attributes.
-> - Moved format string constants to module level.
-> - Cleaned up Python 2 compatibility artifacts (like cmp_to_key).
->=20
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-diff --git a/tools/perf/python/netdev-times.py b/tools/perf/python/netdev-t=
-imes.py
-new file mode 100755
-index 0000000000000..568986e2d4924
---- /dev/null
-+++ b/tools/perf/python/netdev-times.py
+> diff --git a/tools/perf/python/intel-pt-events.py b/tools/perf/python/int=
+el-pt-events.py
+> new file mode 100755
+> index 0000000000000..682bf80becfee
+> --- /dev/null
+> +++ b/tools/perf/python/intel-pt-events.py
 [ ... ]
-> +    def print_receive(self, hunk: dict) -> None:
-[ ... ]
-> +            else:
-> +                print(PF_NET_RECV %
-> +                      (self.diff_msec(base_t, event['event_t']),
-> +                       event['skbaddr'],
-> +                       event['len']))
-> +                if 'comm' in event:
-> +                    print(PF_WJOINT)
-> +                    print(PF_CPY_DGRAM %
-> +                          (self.diff_msec(base_t, event['comm_t']),
-> +                           event['pid'], event['comm']))
-> +                elif 'handle' in event:
-> +                    print(PF_WJOINT)
-> +                    if event['handle'] =3D=3D "kfree_skb":
-> +                        print(PF_KFREE_SKB %
-> +                              (self.diff_msec(base_t, event['comm_t']),
-> +                               event['location']))
+> +    def print_ptwrite(self, raw_buf: bytes) -> None:
+> +        """Print PTWRITE data."""
+> +        data =3D struct.unpack_from("<IQ", raw_buf)
 
-Will kfree_skb events be misreported as skb_copy_datagram_iovec here?
-Since handle_kfree_skb() also injects the 'comm' key into the event, the
-first condition ('comm' in event) will evaluate to true, preventing the
-'handle' in event branch from executing.
+If raw_buf is empty or smaller than the format size (which can happen if
+sample.raw_buf falls back to an empty byte string later in the code), won't
+this raise an unhandled struct.error and crash the script?
 
 [ ... ]
-> +    def handle_netif_receive_skb(self, event: dict) -> None:
-> +        """Handle net:netif_receive_skb event."""
-> +        time =3D event['time']
-> +        cpu =3D event['cpu']
-> +        skbaddr =3D event['skbaddr']
-> +        skblen =3D event['skblen']
-> +        if cpu in self.net_rx_dic:
-> +            rec_data =3D {'event_name': 'netif_receive_skb',
-> +                        'event_t': time, 'skbaddr': skbaddr, 'len': skbl=
-en}
-> +            event_list =3D self.net_rx_dic[cpu]['event_list']
-> +            event_list.append(rec_data)
-> +            self.rx_skb_list.insert(0, rec_data)
-
-Could inserting at the beginning of the list cause a performance bottleneck?
-In Python, inserting at index 0 requires shifting all subsequent elements.
-With the list bounded to 65,536 elements, this could degrade execution time
-when processing many events.
-
-[ ... ]
-> +    def handle_consume_skb(self, event: dict) -> None:
-> +        """Handle skb:consume_skb event."""
-> +        time =3D event['time']
-> +        skbaddr =3D event['skbaddr']
-> +        for i, skb in enumerate(self.tx_xmit_list):
-> +            if skb['skbaddr'] =3D=3D skbaddr:
-> +                skb['free_t'] =3D time
-> +                self.tx_free_list.append(skb)
-> +                del self.tx_xmit_list[i]
-> +                return
-
-Does this function also need to loop through self.rx_skb_list, similarly
-to handle_kfree_skb()? By skipping the receive list, incoming packet events
-will never be matched with their consume_skb counterpart, and they will not
-be reported properly in print_receive().
-
-[ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Process events directly on-the-fly."""
-> +        name =3D str(sample.evsel)
+> +    def common_start_str(self, comm: str, sample: perf.sample_event) -> =
+str:
+> +        """Return common start string for display."""
+> +        ts =3D sample.sample_time
+> +        cpu =3D sample.sample_cpu
 > +        pid =3D sample.sample_pid
-> +        if hasattr(self, 'session') and self.session:
-> +            comm =3D self.session.process(pid).comm()
-> +        else:
-> +            comm =3D "Unknown"
-> +        event_data =3D {
-> +            'name': name[6:-1] if name.startswith("evsel(") else name,
-> +            'time': sample.sample_time,
-> +            'cpu': sample.sample_cpu,
-> +            'pid': pid,
-> +            'comm': comm,
-> +        }
-> +
-> +        # Extract specific fields based on event type
-> +        if name.startswith("evsel(irq:softirq_"):
-> +            event_data['vec'] =3D getattr(sample, "vec", 0)
-> +            # Filter for NET_RX
+> +        tid =3D sample.tid
+> +        machine_pid =3D getattr(sample, "machine_pid", 0)
+> +        if machine_pid:
+> +            vcpu =3D getattr(sample, "vcpu", -1)
+> +            return (f"VM:{machine_pid:5d} VCPU:{vcpu:03d} {comm:>16s} {p=
+id:5u}/{tid:<5u} "
+> +                    f"[{cpu:03u}] {ts // 1000000000:9u}.{ts % 1000000000=
+:09u}  ")
+> +        return (f"{comm:>16s} {pid:5u}/{tid:<5u} [{cpu:03u}] "
+> +                f"{ts // 1000000000:9u}.{ts % 1000000000:09u}  ")
+
+Does Python 3 support the "u" format specifier for integers in f-strings?
+
+It appears that "u" is a valid format code in C-style formatting, but Python
+f-strings use "d" for integers. This might raise a ValueError on the first
+sample.
+
+[ ... ]
+> +    def print_common_ip(self, sample: perf.sample_event, symbol: str, ds=
+o: str) -> None:
+> +        """Print IP and symbol info."""
+> +        ip =3D sample.sample_ip
+[ ... ]
+> +        if self.insn and self.disassembler is not None:
 > +            try:
-> +                if perf.symbol_str("irq:softirq_entry", "vec",  # type: =
-ignore
-> +                                   event_data['vec']) !=3D "NET_RX":
-> +                    return
+> +                insn =3D sample.insn()
 > +            except AttributeError:
-> +                # Fallback if symbol_str not available or fails
-> +                if event_data['vec'] !=3D 3:  # NET_RX_SOFTIRQ is usuall=
-y 3
-> +                    return
-> +        elif name =3D=3D "evsel(irq:irq_handler_entry)":
+> +                insn =3D None
+> +            if insn:
+> +                cnt, text =3D self.disassem(insn, ip)
+> +                byte_str =3D (f"{ip:x}").rjust(16)
+> +                for k in range(cnt):
+> +                    byte_str +=3D f" {insn[k]:02x}"
+> +                print(f"{byte_str:-40s}  {text:-30s}", end=3D' ')
 
-What happens if str(sample.evsel) lacks the "evsel(" prefix?
-The condition for extracting tracepoint-specific fields would fail.
-Since the event name in event_data has the prefix stripped, it would still
-be dispatched to handle_irq_handler_entry(), which would then try to access
-event['irq'] and result in a KeyError crash.
+Is the "-" character allowed as a string alignment specifier in Python
+f-strings?
 
-[ ... ]
-> +if __name__ =3D=3D "__main__":
-> +    ap =3D argparse.ArgumentParser(description=3D"Display a process of p=
-ackets and processed time.")
-> +    ap.add_argument("-i", "--input", default=3D"perf.data", help=3D"Inpu=
-t file name")
-> +    ap.add_argument("tx", nargs=3D"?", help=3D"show only tx chart")
-> +    ap.add_argument("rx", nargs=3D"?", help=3D"show only rx chart")
-> +    ap.add_argument("dev", nargs=3D"?", help=3D"show only specified devi=
-ce")
-> +    ap.add_argument("debug", nargs=3D"?", help=3D"work with debug mode. =
-It shows buffer status.")
-> +    args =3D ap.parse_args()
-> +
-> +    parsed_args =3D argparse.Namespace(tx=3DFalse, rx=3DFalse, dev=3DNon=
-e, debug=3DFalse, input=3Dargs.input)
-> +
-> +    for arg in sys.argv[1:]:
-> +        if arg =3D=3D 'tx':
-> +            parsed_args.tx =3D True
-
-Is there a chance this manual loop over sys.argv conflicts with argparse?
-If a user passes an input file named "tx" via "-i tx" or "--input tx", the
-manual loop will see the string "tx" and incorrectly activate parsed_args.t=
-x.
+Applying it to a string format type might raise a ValueError. Would using "=
+<"
+for left-alignment work instead?
 
 [ ... ]
+> +    def do_process_event(self, sample: perf.sample_event) -> None:
+> +        """Process event and print info."""
+> +        comm =3D "Unknown"
+[ ... ]
+> +        cpu =3D sample.sample_cpu
+> +        if cpu in self.switch_str:
+> +            print(self.switch_str[cpu])
+> +            del self.switch_str[cpu]
+
+Are switch events being tracked correctly here?
+
+It looks like self.switch_str is never populated anywhere in the code. Along
+with the --all-switch-events argparse flag seemingly not being used, was the
+context switch event logic dropped during the refactoring?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D41
+178-1-irogers@google.com?part=3D39
