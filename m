@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056503A8722
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 16:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DD63A5444
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 16:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776960663; cv=none; b=SL++DMMhlxfIslI1rxBHRVMiEghtGW7DhT4LUSGxa1GuWtNdCsPuYPWZuCRp9cX8zMzMoDkH0isOzMfqobSndlWY0GysVXLtxROzOLNVl0RGkiMQ1bboZ5B1P/Qtv3wrgMnLBPDWlNf7MCs5O9/VHts7usT/7/t3DIRPJ1mi1nE=
+	t=1776960663; cv=none; b=QLKIgt+ML0qs6UKgzy53aeUU/UuqFMPMZBFAtPw2WKglb9HLZ/xjXPUhd26VA/tLdsy8AGMttQ5984MoUu0Cf+ndeZu6Ag39A6gXv520ufSf2eFVOy+4ItxbjKiSAKLRBv99GG6KQPv/6fJ3u9Wl8h+kXxwgvZViChPzzhVNg1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776960663; c=relaxed/simple;
-	bh=U5ed5UD8ND189hCJocoFAO/xoClwrpfP0M8q93I9pXU=;
+	bh=21yvkvvibRcBFyLCzkOEhs7yL1I2GHfegyLuugszGUs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ixAXv6cWTzbIlj2PKdn7MJaFReuJz3olMeKJr9ztvaxuFHlUUHAzgtX9Nvgkigr06Ytetnd+JF+5RjeylnYvbwuny4uDIKHBIiWFnoprOhABRrJoNwARyuCgkwjNMq9eXJeWC1/l+ZF1yDP8Wnde+U0urq4aX3SSVU4XQJ/+lE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXzbo77d; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=NCR7u0zeGYjBcJ0oLfdnmhYIORM5rtWjktJb9NXwmDz0t630nHkhpUqzdkiUPpgcSC42oqCqNXxIo2gJESPHNTPIex57Au+k7MUIBJrObRSSKTv26I/qPDprMm8SbnezRJNNGxw7xNo4VXmgUxwaahROpyGSxZjM8IlTUjCWcrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uCtxKUfY; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXzbo77d"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12dba1e866dso1806075c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 09:10:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uCtxKUfY"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c726f4055so6000324c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 09:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776960659; x=1777565459; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776960661; x=1777565461; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLd765eBKPEXGLkxBjQ8yx3J3rdqDCE01wTvhiGW76I=;
-        b=KXzbo77dwKyzX/5BmPhgtzoE4mV4HZXUSUlZa/gWdOOKalHXapkGqIsVou8z/XGIOq
-         A/qdaTu08qnSh1HdL+IRFPgXrw6mHnyhZgMgPUQ1p50hVhRHUxYO57fIhY+KRqVNJr3f
-         SdxG/QazYUyV8Z1uHObHQgvOUprjePrmsCDdu/wSz5yLDxw++h2JxA072GqvM1a9DLDF
-         CF2iUN4GZ7YlhfzpcNHiMMtrQ/tfhcpmH4AQVBkDnb3/L5IbmOBvj4xOAphEyyQl283/
-         /VVBQlMtFEy1VJ8XltE522Yy3kvT/P+YZfSBoWghQyDyZXnzfaA3yFU2crT3aMwAUKdt
-         ssGQ==
+        bh=E/UtXMyLWjYDcjA91HkS9s0ti5HVEoifX0Xw3V4fIII=;
+        b=uCtxKUfYapiKwXhFW7REj9jqfER0TDJ71G8xV0Z/N++c/oJQjpm7w1jHDnTLtQ14D0
+         pNwaWa2EpFb3TrDWLg7VwYU6uyWMOJ/6i/JArrTE6461LeTo7G700shIXICnz+UviHls
+         XS5A4RDHyc9xrcTfKMsZGcBzWeQskSkxFEdfhxKP+MOkJMZqHqBO/TbTOsKE+dcOos5T
+         t9Sqlro0d3sZYBKpEk71fJxB7RUqa+gzHnqQrOy5mu0hZftOVNUaVrCzJGS2x2psDsXd
+         IN10M2unDGqIu9pXRGhEOHVDpELGPuyobdYQf6sL+Wuh9d5pTERjxDtaBC1ZH5GxnBoE
+         F/Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776960659; x=1777565459;
+        d=1e100.net; s=20251104; t=1776960661; x=1777565461;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLd765eBKPEXGLkxBjQ8yx3J3rdqDCE01wTvhiGW76I=;
-        b=IjcCnqf1YsjPITORe3yTUWQwYiET9nGLGsEi1NSxSnOBwaoR/NZYWDkhCoD3S4f2WP
-         LmrVpYW2de+RaVzBvG0e/bQHshjK3ol9Tl5B4zc9mr8LPlNUw5NR0gB8CI8tPWNx4uVo
-         YZCBxbN6L6+Cc2AmjrSNh7w7DzaKuvF9XDqpxkTonXqYZ7O4H/xbs7DY8nQXAufDP0vR
-         9qFuiApBs5d7BLjWtkjueGg1ZlNXz4zf7+y+GJ4KGkzGtu/pdxwCYLdyoYs8cQ3etUg7
-         hMaPuTrxHhDp4LVZXart/CtJKrd58kiJyjP0QJ7OdC6bVghkY7XXiwfG1ij0U+hh7kK/
-         JKrg==
-X-Forwarded-Encrypted: i=1; AFNElJ/ve0jHlkYCVcUWXmRVayV1ZmeUsjnluDJXz4U+1AQEXG2N3YthWtzXb1of9j1npETWq2751NiQFmJKB7W7zNi5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd1DFaTWQonUrJpCLsd97IWKaH1Sc33ib2Uk+I58YHJBl7w4LA
-	UsDSSAt4+lOJTLDgI+N4/xcj49h+IqAGXJrpz/LFRh77xauGbpOYLwRmTGcU0YacW9KufsNbCzc
-	ZqhMv5yNCNw==
-X-Received: from dlbpu1.prod.google.com ([2002:a05:7022:e881:b0:12c:4955:b382])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e29:b0:12d:c4b7:5625
- with SMTP id a92af1059eb24-12dc4b756cfmr3301c88.9.1776960658696; Thu, 23 Apr
- 2026 09:10:58 -0700 (PDT)
-Date: Thu, 23 Apr 2026 09:09:31 -0700
+        bh=E/UtXMyLWjYDcjA91HkS9s0ti5HVEoifX0Xw3V4fIII=;
+        b=qKffApzjDc4oyluisqyIEzIk2x+NK7/Lw9xsunSO7r0Cf9D2ntO7hEUDk+kMFgOPU6
+         FHBA0a8OZBMuynJKN6IAfrq9VfjaRcqZWogDA1NLI8fCu3t6KoJthf189bPGlu0SUiRS
+         OhSXoqX2nsiXQIvb7PJnz7r/8kxl3jFElCf4RRSaGWP+VFVOlHqIvHuNi12SlGX46qc4
+         9EGJNF9z3y+Hat4TatRZThzQ9mruwIPvqEQz0xtqWEm27FZD4YrHwSBz3ZG1W7Oe67pU
+         aVg/C6XadIA1LaMAwhhnvqNObI1RaNdKi/QLj91XmBU63nqbaoyex9fUtmtFboM9EF4a
+         HuKQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/Ys18Zu+FTHar87598/d40LD6TAbBFnBRjAA92HN1qVQ3Wl9r1vYKeORe+PHtkzsRkQKH1CDuudt3SlHIYRrcx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtljp8h/9NcnoFHLpksaOwwkfE9w4xYeI5AXcWKnynHHQgZBSw
+	/dNCT0wqFNrCsuX5CW22OQoAvM3nnlYAdd6uGHtCzmFZUJJarBv1XpQbD4Q5Xg12+fV08LF8GBH
+	m+MHfLyqxUA==
+X-Received: from dlbvg2.prod.google.com ([2002:a05:7022:7f02:b0:12a:9ef0:93ed])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6b99:b0:12c:2dd7:9099
+ with SMTP id a92af1059eb24-12c73f9fb84mr15302324c88.30.1776960660831; Thu, 23
+ Apr 2026 09:11:00 -0700 (PDT)
+Date: Thu, 23 Apr 2026 09:09:32 -0700
 In-Reply-To: <20260423161006.1762700-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260423035526.1537178-1-irogers@google.com> <20260423161006.1762700-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.533.g4f5dca5207-goog
-Message-ID: <20260423161006.1762700-25-irogers@google.com>
-Subject: [PATCH v3 24/58] perf stat-cpi: Port stat-cpi to use python module
+Message-ID: <20260423161006.1762700-26-irogers@google.com>
+Subject: [PATCH v3 25/58] perf mem-phys-addr: Port mem-phys-addr to use python module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org, 
@@ -84,208 +84,142 @@ Cc: 9erthalion6@gmail.com, adityab1@linux.ibm.com,
 	zhiguo.zhou@intel.com, zli94@ncsu.edu
 Content-Type: text/plain; charset="UTF-8"
 
-Port stat-cpi.py from the legacy framework to a standalone script.
-Support both file processing mode (using perf.session) and live mode
-(reading counters directly via perf.parse_events and evsel.read). Use
-argparse for command line options handling. Calculate and display CPI
-(Cycles Per Instruction) per interval per CPU/thread.
+Give an example of using the perf python session API to load a
+perf.data file and perform the behavior of
+tools/perf/scripts/python/mem-phys-addr.py.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v2:
-
-1. Accurate CPI Calculation (Multiplexing Support):
-  - Before: The get() method returned the raw counter value directly,
-    ignoring whether the counter ran for the full interval.
-
-  - After: The get() method now scales the raw value by the ratio of
-    enabled time to running time ( val * (ena / float(run)) ) when run
-    > 0 . This handles cases where PMU counters are overcommitted and
-    multiplexed.
-
-2. Per-Interval CPI in File Mode:
-  - Before: store() saved absolute counter values as read from
-    PERF_RECORD_STAT . Since these are cumulative from the start of
-    the trace, and data.clear() was called every round, the script
-    computed cumulative CPI rather than per-interval CPI.
-
-  - After: store() now computes the delta between the current absolute
-    value and the value from the previous interval. It saves this
-    delta in self.data and retains the absolute value in self.
-    prev_data for the next delta computation.
-
-3. Prevention of Dummy Output (Cartesian Product Fix):
-  - Before: self.cpus and self.threads lists accumulated all unique
-    CPUs and threads seen independently. The nested loops in
-    print_interval() then created a Cartesian product of all seen CPUs
-    and threads, querying data for combinations that might never have
-    occurred.
-  - After: Replaced lists with a self.recorded_pairs set that stores
-    (cpu, thread) tuples only when a sample actually records them. The
-    output loop now iterates strictly over these verified pairs.
+v2: Added command line '-i' option and cleaned up pylint issues.
 ---
- tools/perf/python/stat-cpi.py | 151 ++++++++++++++++++++++++++++++++++
- 1 file changed, 151 insertions(+)
- create mode 100755 tools/perf/python/stat-cpi.py
+ tools/perf/python/mem-phys-addr.py | 117 +++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100755 tools/perf/python/mem-phys-addr.py
 
-diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
+diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-phys-addr.py
 new file mode 100755
-index 000000000000..4b1f1f69c94a
+index 000000000000..ba874d7a2011
 --- /dev/null
-+++ b/tools/perf/python/stat-cpi.py
-@@ -0,0 +1,151 @@
++++ b/tools/perf/python/mem-phys-addr.py
+@@ -0,0 +1,117 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""Calculate CPI from perf stat data or live."""
-+
++"""mem-phys-addr.py: Resolve physical address samples"""
 +import argparse
-+import sys
-+import time
-+from typing import Any, Optional
++import bisect
++import collections
++from dataclasses import dataclass
++import re
++from typing import (Dict, Optional)
++
 +import perf
 +
-+class StatCpiAnalyzer:
-+    """Accumulates cycles and instructions and calculates CPI."""
++@dataclass(frozen=True)
++class IomemEntry:
++    """Read from a line in /proc/iomem"""
++    begin: int
++    end: int
++    indent: int
++    label: str
 +
-+    def __init__(self, args: argparse.Namespace) -> None:
-+        self.args = args
-+        self.data: dict[str, tuple[int, int, int]] = {}
-+        self.prev_data: dict[str, tuple[int, int, int]] = {}
-+        self.recorded_pairs: set[tuple[int, int]] = set()
++# Physical memory layout from /proc/iomem. Key is the indent and then
++# a list of ranges.
++iomem: Dict[int, list[IomemEntry]] = collections.defaultdict(list)
++# Child nodes from the iomem parent.
++children: Dict[IomemEntry, set[IomemEntry]] = collections.defaultdict(set)
++# Maximum indent seen before an entry in the iomem file.
++max_indent: int = 0
++# Count for each range of memory.
++load_mem_type_cnt: Dict[IomemEntry, int] = collections.Counter()
++# Perf event name set from the first sample in the data.
++event_name: Optional[str] = None
 +
-+    def get_key(self, event: str, cpu: int, thread: int) -> str:
-+        """Get key for data dictionary."""
-+        return f"{event}-{cpu}-{thread}"
++def parse_iomem(iomem_path: str):
++    """Populate iomem from iomem file"""
++    global max_indent
++    with open(iomem_path, 'r', encoding='ascii') as f:
++        for line in f:
++            indent = 0
++            while line[indent] == ' ':
++                indent += 1
++            max_indent = max(max_indent, indent)
++            m = re.split('-|:', line, maxsplit=2)
++            begin = int(m[0], 16)
++            end = int(m[1], 16)
++            label = m[2].strip()
++            entry = IomemEntry(begin, end, indent, label)
++            # Before adding entry, search for a parent node using its begin.
++            if indent > 0:
++                parent = find_memory_type(begin)
++                assert parent, f"Given indent expected a parent for {label}"
++                children[parent].add(entry)
++            iomem[indent].append(entry)
 +
-+    def store_key(self, cpu: int, thread: int) -> None:
-+        """Store CPU and thread IDs."""
-+        self.recorded_pairs.add((cpu, thread))
++def find_memory_type(phys_addr) -> Optional[IomemEntry]:
++    """Search iomem for the range containing phys_addr with the maximum indent"""
++    for i in range(max_indent, -1, -1):
++        if i not in iomem:
++            continue
++        position = bisect.bisect_right(iomem[i], phys_addr,
++                                       key=lambda entry: entry.begin)
++        if position is None:
++            continue
++        iomem_entry = iomem[i][position-1]
++        if  iomem_entry.begin <= phys_addr <= iomem_entry.end:
++            return iomem_entry
++    print(f"Didn't find {phys_addr}")
++    return None
 +
-+    def store(self, event: str, cpu: int, thread: int, counts: tuple[int, int, int]) -> None:
-+        """Store counter values, computing difference from previous absolute values."""
-+        self.store_key(cpu, thread)
-+        key = self.get_key(event, cpu, thread)
++def print_memory_type():
++    """Print the resolved memory types and their counts."""
++    print(f"Event: {event_name}")
++    print(f"{'Memory type':<40}  {'count':>10}  {'percentage':>10}")
++    print(f"{'-' * 40:<40}  {'-' * 10:>10}  {'-' * 10:>10}")
++    total = sum(load_mem_type_cnt.values())
++    # Add count from children into the parent.
++    for i in range(max_indent, -1, -1):
++        if i not in iomem:
++            continue
++        for entry in iomem[i]:
++            for child in children[entry]:
++                if load_mem_type_cnt[child] > 0:
++                    load_mem_type_cnt[entry] += load_mem_type_cnt[child]
 +
-+        val, ena, run = counts
-+        if key in self.prev_data:
-+            prev_val, prev_ena, prev_run = self.prev_data[key]
-+            cur_val = val - prev_val
-+            cur_ena = ena - prev_ena
-+            cur_run = run - prev_run
-+        else:
-+            cur_val = val
-+            cur_ena = ena
-+            cur_run = run
++    def print_entries(entries):
++        """Print counts from parents down to their children"""
++        for entry in sorted(entries,
++                            key = lambda entry: load_mem_type_cnt[entry],
++                            reverse = True):
++            count = load_mem_type_cnt[entry]
++            if count > 0:
++                mem_type = ' ' * entry.indent + f"{entry.begin:x}-{entry.end:x} : {entry.label}"
++                percent = 100 * count / total
++                print(f"{mem_type:<40}  {count:>10}  {percent:>10.1f}")
++                print_entries(children[entry])
 +
-+        self.data[key] = (cur_val, cur_ena, cur_run)
-+        self.prev_data[key] = counts # Store absolute value for next time
-+
-+    def get(self, event: str, cpu: int, thread: int) -> float:
-+        """Get scaled counter value."""
-+        key = self.get_key(event, cpu, thread)
-+        if key not in self.data:
-+            return 0.0
-+        val, ena, run = self.data[key]
-+        if run > 0:
-+            return val * (ena / float(run))
-+        return float(val)
-+
-+    def process_stat_event(self, event: Any, name: Optional[str] = None) -> None:
-+        """Process PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events."""
-+        if event.type == perf.RECORD_STAT:
-+            if name:
-+                if "cycles" in name:
-+                    event_name = "cycles"
-+                elif "instructions" in name:
-+                    event_name = "instructions"
-+                else:
-+                    return
-+                self.store(event_name, event.cpu, event.thread, (event.val, event.ena, event.run))
-+        elif event.type == perf.RECORD_STAT_ROUND:
-+            timestamp = getattr(event, "time", 0)
-+            self.print_interval(timestamp)
-+            self.data.clear()
-+            self.recorded_pairs.clear()
-+
-+    def print_interval(self, timestamp: int) -> None:
-+        """Print CPI for the current interval."""
-+        for cpu, thread in sorted(self.recorded_pairs):
-+            cyc = self.get("cycles", cpu, thread)
-+            ins = self.get("instructions", cpu, thread)
-+            cpi = 0.0
-+            if ins != 0:
-+                cpi = cyc / float(ins)
-+            t_sec = timestamp / 1000000000.0
-+            print(f"{t_sec:15f}: cpu {cpu}, thread {thread} -> cpi {cpi:f} ({cyc:.0f}/{ins:.0f})")
-+
-+    def read_counters(self, evlist: Any) -> None:
-+        """Read counters live."""
-+        for evsel in evlist:
-+            name = str(evsel)
-+            if "cycles" in name:
-+                event_name = "cycles"
-+            elif "instructions" in name:
-+                event_name = "instructions"
-+            else:
-+                continue
-+
-+            for cpu in evsel.cpus():
-+                for thread in evsel.threads():
-+                    try:
-+                        counts = evsel.read(cpu, thread)
-+                        self.store(event_name, cpu, thread,
-+                                   (counts.val, counts.ena, counts.run))
-+                    except OSError:
-+                        pass
-+
-+    def run_file(self) -> None:
-+        """Process events from file."""
-+        session = perf.session(perf.data(self.args.input), stat=self.process_stat_event)
-+        session.process_events()
-+
-+    def run_live(self) -> None:
-+        """Read counters live."""
-+        evlist = perf.parse_events("cycles,instructions")
-+        if not evlist:
-+            print("Failed to parse events", file=sys.stderr)
-+            return
-+        try:
-+            evlist.open()
-+        except OSError as e:
-+            print(f"Failed to open events: {e}", file=sys.stderr)
-+            return
-+
-+        print("Live mode started. Press Ctrl+C to stop.")
-+        try:
-+            while True:
-+                time.sleep(self.args.interval)
-+                timestamp = time.time_ns()
-+                self.read_counters(evlist)
-+                self.print_interval(timestamp)
-+                self.data.clear()
-+                self.recorded_pairs.clear()
-+        except KeyboardInterrupt:
-+            print("\nStopped.")
-+        finally:
-+            evlist.close()
-+
-+def main() -> None:
-+    """Main function."""
-+    ap = argparse.ArgumentParser(description="Calculate CPI from perf stat data or live")
-+    ap.add_argument("-i", "--input", help="Input file name (enables file mode)")
-+    ap.add_argument("-I", "--interval", type=float, default=1.0,
-+                    help="Interval in seconds for live mode")
-+    args = ap.parse_args()
-+
-+    analyzer = StatCpiAnalyzer(args)
-+    if args.input:
-+        analyzer.run_file()
-+    else:
-+        analyzer.run_live()
++    print_entries(iomem[0])
 +
 +if __name__ == "__main__":
-+    main()
++    ap = argparse.ArgumentParser(description="Resolve physical address samples")
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    ap.add_argument("--iomem", default="/proc/iomem", help="Path to iomem file")
++    args = ap.parse_args()
++
++    def process_event(sample):
++        """Process a single sample event."""
++        phys_addr  = sample.sample_phys_addr
++        entry = find_memory_type(phys_addr)
++        if entry:
++            load_mem_type_cnt[entry] += 1
++
++            global event_name
++            if event_name is None:
++                event_name  = str(sample.evsel)
++
++    parse_iomem(args.iomem)
++    perf.session(perf.data(args.input), sample=process_event).process_events()
++    print_memory_type()
 -- 
 2.54.0.rc2.533.g4f5dca5207-goog
 
