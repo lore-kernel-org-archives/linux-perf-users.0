@@ -1,142 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64D3783B0;
-	Thu, 23 Apr 2026 10:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B8C386444
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 10:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776938614; cv=none; b=ZjUyQant3VKWEuPRChw1dSGY4VcJY6rbPxUFybdJJbBY4MuDdyNc9XYFAyoTjHFJte227dBz06CeOHwTvbJicOtw0XHR8/evG8oFID7ZLCjBsGfzXfTJpDeFVrY9jILZLHhpgOAVwm74TVAsGOeULNaDWT5bf+r1cDI0w73vmz0=
+	t=1776940539; cv=none; b=Ppj8iEFk6IpGNdRHZFbQhjNfRvOTAvBk/g70Uus+gg0vamjrE/xhCJ45n4HXlKAcjbag4LpcjBF6kD9kXoMnNpHj+Lhw2WGoOWFlL9Ck5j35Tu8cFkviamjuSg6NAhWR7iV4x5yuxvwxuwhahGtI98S4PXGlSgEr3IqwCV+htso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776938614; c=relaxed/simple;
-	bh=Azg/igA/f/cP5AIaraXVha1Gl/boZpu99PKyfUfh8Lw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBp7PswP6amet8CHPJvw4ZoVz6UFYi85Ei3AL2Z6ldOXB/ZEn+vo+6WYS37veYEUSd/YHoopsuo7ubFu0m8PXxJTgycoUjQD8rGrWBHapvIEMyeWhQY0ggsTIpuFkj87LajCTGjJhkHha28quJDrI2/fR+2pNFXMUsqFZdiTYKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ljsEoqmd; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1776940539; c=relaxed/simple;
+	bh=xJ6Bk7I5SF1vqoFR5e+KmB+y6SkLYL+ygQiSFoOCb9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OEumC56muBA37kBJad+yYdsisswpNUwiGkOKziuvoycz2WbggvpF/aFfBEA5PWO0kkhpscbbmvNY00/77fP7gJNyMrWDdy031zeNGK5YbfV8qjivoQQKP2rF10QDA9rqBf9BvNsediZJECyeDIVlIXPlLW2/R5lUAtMuhiXxDf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K29FHxU0; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ljsEoqmd"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63N8jTDI3291900;
-	Thu, 23 Apr 2026 10:03:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7L1INj
-	zZ0akyYYKzFCaSJcIPFCZviwywxCiLunkrXpg=; b=ljsEoqmdZ+GUpVhowSTLZs
-	Qo83Otx9NE00oqLj+k4I7Uo7hZ1Xa3jL19B3TywQBaYXxlJrUeODpnoDFCqMgAEB
-	tPEPdiO+Mu+cGX7RD3DHKTDvUZR/Yhz9OpM13Cu38GHwBun1edQQSiVdldgPXIRK
-	dGV5A57rHPxyvPCKTzoYofbt1JbIvc9zKCvT5tgwv//Mm3x15gmpKnZXLo3TqzXL
-	3h+pzzuIH3RESzFdp3EpZpxTZdyU9BL91o10m1KjKwcz0ZZFPdO0E1dksUe5hbSP
-	G0BnrVt9aY5/4oerpspiUS3HDhEM3whbi3R6DY2l7/zL/hbCrj6COMRgRhXrCRSg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dphfrfe3r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Apr 2026 10:03:08 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63N9oMbj026952;
-	Thu, 23 Apr 2026 10:03:07 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dpjkxx3r8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Apr 2026 10:03:07 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63NA368J13762848
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Apr 2026 10:03:06 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0FE4120043;
-	Thu, 23 Apr 2026 10:03:06 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C6032005A;
-	Thu, 23 Apr 2026 10:03:05 +0000 (GMT)
-Received: from [9.87.134.47] (unknown [9.87.134.47])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 23 Apr 2026 10:03:05 +0000 (GMT)
-Message-ID: <38110c0f-f731-414f-9c5c-f30e5a3d01da@linux.ibm.com>
-Date: Thu, 23 Apr 2026 12:03:04 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K29FHxU0"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82f68b3aaf7so2463850b3a.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776940537; x=1777545337; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MTOiYWe3w6Vu7hnJzTQ5ZvV3Qw4Abvs4TqqonSRF/2M=;
+        b=K29FHxU0lSIKoIjXxp9yaGJNDlzI6KKqUix0JiXS21JXcr2GrysNb5TlGb0rgbAkb4
+         EXRafH2sOQaacB1UPlNUCvet1/AVTzBLHaaf3nadvWoALvFMLvzTKLdVCj7y273wwXQk
+         ngkoVRxcXdjKCK7N7xHuoZQNAS4dpQnSUmjddLOFqeeDpBgOJTC+Eh09Kj4+omlLGoZK
+         d0OKTB2FT1/j/woDrfBMfIxl3ftjYh5+FaR4WkN2qbEmB/0jRzhn/ans1ERexKXArS0C
+         ILzvPGaqQjbirDtrtgQ+422jZJYjZht0di2Vcw31HlpjfhoQzK+LWXJKMwhze5ouDzB7
+         U9tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776940537; x=1777545337;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MTOiYWe3w6Vu7hnJzTQ5ZvV3Qw4Abvs4TqqonSRF/2M=;
+        b=c5DIYy+cWqgI3XDcPBZHrI7Nyn0X4MQJneTsCSnWK3wbvzYwqPX3StOjKJyRCqYPx2
+         bjRDbMojXvUqH5DWJ4ZxAxaZtXG/Jic4BnJmsCV6/47O+jYiQDq8LLc5QXwUPh0SVyzp
+         +lWxF5ZgNq38aJosAE1ZaT3yVlNF6p7jGd6hp0kRLXOjMXSOVMiHVK97fSU/V/C4jQVk
+         Q4Ege/1S/WqtJeRGMJMqRQVue1LqQomq7uJ785X8ffBLGh6XPXW1E2/ulgXFEiGdns5v
+         HUpjN9Iok8lJBHrc/sUMIhF5nfGl9WouDyp6hrtt4L+diKA6vMwh7D8yVuWABCkCRmF4
+         HgDQ==
+X-Gm-Message-State: AOJu0YwDtEsAq7IzYvMLHOaTk0NrVeDFlOdRkhjVfLCA90oeh0Cv9va1
+	qN5CBrpCIdVwaV26iaRjTd4MhhaZKBejsa+SyO/DxcbYhIqxG50bhAlc
+X-Gm-Gg: AeBDievIHe6VPf1QggjBSZbe0RO3fCIjd3DlhboPVQcBiaKIHjEb/8FiImxNukAZXyU
+	KQ0ThYGDXnMt9vvurVMPZCdNOlDFMqUeQbncN2bR0GsRYJ4l4yIWGDOHfw6TwMrffaBeUmXsbbc
+	GbG4qBTnMuUjQrZAhueBH0l/e3DoryMhOAJXOJRBIB71mHck2WjL1i+dUNUXfDJGsMO5q6KX46O
+	rt/XyCyn6KyKduDTsDJW8zO+hW7XLf0+cxV5uLQq+UFLBxgXfKRauax8z+6Mi3bbI/OV+y4AWbs
+	d3FIjZ4JwPqcKUi5x9XihX3x9GIEXUmLwTvjBzuPCldvDKZD9Hq8Dl/KsUKD/H1Uw6IJ7zhdCCV
+	iupmfkSFeZhGVtRBkcovmjDJ0E5CZGOMXBQ8nSwZ91mlnZJR8NRYtl49t3LsYnRlPy2GS+nCAGl
+	pKe4NbHf1itiWXe4sSHGpjFkX9SpSRTPN8jdQXQtyDekDWvJtzS0cPcoA=
+X-Received: by 2002:a05:6a00:1749:b0:82c:d7c4:4c6b with SMTP id d2e1a72fcca58-82f8c81dd75mr27533723b3a.11.1776940537240;
+        Thu, 23 Apr 2026 03:35:37 -0700 (PDT)
+Received: from localhost.localdomain ([14.116.239.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ebb38f2sm19099318b3a.30.2026.04.23.03.35.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2026 03:35:36 -0700 (PDT)
+From: Jianping Liu <frankljpliu@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	wangming01@loongson.cn,
+	wangrui@loongson.cn,
+	frankljpliu@gmail.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jianping Liu <frankjpliu@tencent.com>
+Subject: [PATCH v2] perf annotate: Fix NULL pointer dereference in loongarch_call__parse
+Date: Thu, 23 Apr 2026 18:35:30 +0800
+Message-ID: <20260423103530.3938202-1-frankljpliu@gmail.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf dwarf-regs: s390: Fix an off by one bug
-To: Dan Carpenter <error27@gmail.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Guo Ren <guoren@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <aenFGy9WDllTEO0S@stanley.mountain>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <aenFGy9WDllTEO0S@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: sVg9ei9-2nV2zs-nfHdtl7BkrrCjRpjx
-X-Proofpoint-ORIG-GUID: w2jsbNsJVEOCj-oy4cfWDXgwzTEjlw23
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIzMDA5NSBTYWx0ZWRfX9FQoFmoDHAtt
- mmIrI61qF3puVKhEfeJyj32CGTZEkkZEAZ3oGQQDx7FaiVAkimtrs4gaqjzfI+lgG4r1Bx5jeO/
- 9a2RMfvZl3NF9bRTc3+zDHK33SYbOydu5RtAfbgZUbWDfb8mtgp6Gct9Jik1BqRN1t/EDmpQqT9
- Qicn6VdRbm4IGVX6xNC7I+pgjHeQoJuT/ueTs6KqI/lgCNRiA7SdHQhfLbmUqPtDADt5919EjZ6
- vuN8NJdZ8BeaaVyK6OYk4bRwRwoSjiDyC+J85Frm9GZ7f0GXg6Hfunm/2dL0Vyldq0+Fz21LVfN
- kWGPld7e2zjk6VpVnxMNbCorkdUAC3R6xvCLcfdWvfIuGzOW2jttqdKqXh80gLcbJ9xRYrqVI2l
- yG0xFLUlZIF15lyRWmWhimpSBi0Fw3b1i8qc1BohlktvlxrOLoSUQbM5vovOe2/sm0AGn0itixL
- wLFY715tE7hvBtsmsoA==
-X-Authority-Analysis: v=2.4 cv=SJxykuvH c=1 sm=1 tr=0 ts=69e9ee5d cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=pGLkceISAAAA:8
- a=VnNF1IyMAAAA:8 a=x4kxwI2lhZTCVj833_4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-23_02,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 phishscore=0 clxscore=1011 adultscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604230095
 
-On 4/23/26 09:07, Dan Carpenter wrote:
-> Change the > comparison to >= to prevent an out of bounds access of
-> the dwarf_s390_regnums[] array.
-> 
-> Fixes: 1e452dd850f3 ("perf dwarf-regs: Add S390 perf to DWARF register number mapping functions")
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
-> ---
->  tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c | 1 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-> index 310a37451bdc..f79216a7665a 100644
-> --- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-> @@ -45,7 +45,7 @@ int __get_dwarf_regnum_for_perf_regnum_s390(int perf_regnum)
->  	if (perf_regnum == 0)
->  		return 0;
->  
-> -	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_s390_regnums) ||
-> +	if (perf_regnum <  0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_s390_regnums) ||
->  	    dwarf_s390_regnums[perf_regnum] == 0)
->  		return -ENOENT;
->  
+From: Jianping Liu <frankjpliu@tencent.com>
 
-Acked-by: Thomas Richter <tmricht@linux.ibm.com>
+loongarch_call__parse() dereferences the return value of strchr()
+without NULL check:
 
+  name = strchr(endptr, '<');
+  name++;
+
+When objdump output for a 'bl' (branch-and-link) instruction does not
+contain a symbol name delimited by '<' and '>' (e.g., when the call
+target has no associated symbol), strchr() returns NULL, and the
+subsequent name++ produces a wild pointer (0x1). This leads to a
+segmentation fault when strchr() is later called with this invalid
+pointer:
+
+  #0  __strchr_lasx () from /lib64/libc.so.6
+  #1  loongarch_call__parse () at arch/loongarch/annotate/instructions.c:29
+  #2  disasm_line__init_ins () at util/annotate.c:1205
+  ...
+
+The objdump line triggering the crash looks like:
+
+  bl              98824   # 0x9000000000641ea0
+
+Note the absence of "<function_name>" after the address.
+
+Rather than aborting parse with -1 (which would clear dl->ins.ops and
+lose the is_call attribute, preventing the TUI from drawing branch
+arrows and navigating the call), follow the same pattern as the generic
+call__parse() in util/disasm.c: when the symbol name is absent, jump to
+the address-based symbol lookup so that ops->target.sym can still be
+resolved via maps__find_ams() using the already-parsed target address.
+This preserves is_call semantics and keeps TUI navigation working.
+
+---
+Changes from v1:
+- Instead of returning -1 when the '<sym>' token is absent jump to the
+  address-based symbol lookup so that maps__find_ams() can still resolve
+  ops->target.sym from the already parsed target address.
+
+- Link to v1: https://lore.kernel.org/all/20260423053102.3717015-1-frankljpliu@gmail.com/
+---
+
+Fixes: 4ca0d340ce20 ("perf annotate: Fix instruction association and parsing for LoongArch")
+Signed-off-by: Jianping Liu <frankjpliu@tencent.com>
+Reviewed-by: Ming Wang <wangming01@loongson.cn>
+---
+ tools/perf/util/annotate-arch/annotate-loongarch.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
+index c2addca77320..a949b4392dd4 100644
+--- a/tools/perf/util/annotate-arch/annotate-loongarch.c
++++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+@@ -29,6 +29,9 @@ static int loongarch_call__parse(const struct arch *arch, struct ins_operands *o
+ 	ops->target.addr = strtoull(c, &endptr, 16);
+ 
+ 	name = strchr(endptr, '<');
++	if (name == NULL)
++		goto find_target;
++
+ 	name++;
+ 
+ 	if (arch->objdump.skip_functions_char &&
+@@ -46,6 +49,7 @@ static int loongarch_call__parse(const struct arch *arch, struct ins_operands *o
+ 	if (ops->target.name == NULL)
+ 		return -1;
+ 
++find_target:
+ 	target = (struct addr_map_symbol) {
+ 		.ms = { .map = map__get(map), },
+ 		.addr = map__objdump_2mem(map, ops->target.addr),
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+2.43.7
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
