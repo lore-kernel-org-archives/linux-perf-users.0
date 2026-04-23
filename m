@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FE53D0929
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93773D3487
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776916588; cv=none; b=bj9g17rox3MhPDVE7FdrVJttEhB+mtmTPRRm1vgpDCCxzQVkIx8I5XKSyH70CKsaRr1Ecpjho9w2NxuA6YBuj5RJOvl/T3Ftv1fGR/AKixW5bykcDElfGEdOWUAgrx00vexWRgDuMlBPvy9Ck/4APGqPeW4G6LKL2ov93401Tj4=
+	t=1776916590; cv=none; b=h7wobHJ2O1AD4wOkdbZrgzIYtdg4WFKo008cWmIpUgWqD5WJ3TKRd5riv7WzRttQXHwYUAlUYlnVgQE9UlTXcudSIqwulsX17ODe8oGlCQSZh6pu4nzahbqVO3K/e7zJBTEPFQX4O+QsieL9rh6t/7pv6hkeKjrPxwzBlvqB+9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776916588; c=relaxed/simple;
-	bh=WFDMhKuu3BFqFsv2w40b0o7hPwy4zzx9X3skPUxJuJE=;
+	s=arc-20240116; t=1776916590; c=relaxed/simple;
+	bh=9WQTtZJ6BOs2jlbQ/thEMBdqWJFDW7uWagIcEBbxnk8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oxzqpTokZbij3LoyqHpd8XEotKd2IBFpRyX/VYavCFm0bcP8Dsl36RWYghXWDcrLZ+aA8/4JeeKhVCLEoI+h7aO+r6l0fmAbkOKk1K0ELaIvNY8a8dcj7GDwvwlMeFb2gIH20egzTLfz0CItadtlrTzNpWKan4b6T5ZXB0t9NOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t2kgTvnE; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=onUgQGII3AZHGFIDzCNp+XDRuS2+xtCJ4qIeezrzla0ZWKoHefmke0t/geoe0hQyJIrEQZhe6uWQ0h8XP3B+fE6lKp1uBBVARZ+d0R8VwbwME58rh1q8Ap8RktxQlrvDE/i4S4MsiIpYaG6yjs2sYwfKi7jiWi351DHi96PdZsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CygTHvvP; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t2kgTvnE"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0ba59a830so9746471eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:56:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CygTHvvP"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c91ef7009so10462680c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:56:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776916586; x=1777521386; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776916588; x=1777521388; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PmfkDHgGkhhc8Ci3nU27rOXJ2A7e5StlaPZmf/zqGxg=;
-        b=t2kgTvnENXaALYbOANaLx3TlMIbPodwGy6G14Syf+wuqO5BotSz3ZA4JIow7EE+0Rf
-         FqvxG2EzBA5SOczFhXZFHCfvfjIxjUoqmkMtViUgCFTIf25WX6WFi9ve6SVY7zAMV0uQ
-         eUcMWYrvq8eXazaBAkCx9x24vd9R5PZVRuVrX0imW9D5BJxIXnA/KfhzRlpHSQg7jdSw
-         Lslsf4hZbs6BzvUyfyYP+3KFXx59ApF+Xxz59xmcqkRiHSBYDgbgyEAfsY02Jy/2nwT2
-         kYsRotXhe5jknFxgDCBcVcNF9XaF0frH33hkAZZIf4Kc2MJmT8bbnPQXSWQHQKZDB/lC
-         E4NQ==
+        bh=X5V+95Q5Ie0huXAoonJqgxmxTdwrZQqVv/lbi4uyNBU=;
+        b=CygTHvvPGcRMyBYHvDiCIGEA5RQzdZ5r4q3OaWQF34Fx4tZoAG3e4aA3IYzmO4vGic
+         SLJEgdXNYdlqaKw+KgbfYQ2BunOwrgGF9Rcm5sRf8e0GvA6SikHi+MYTLhOTahVT27VS
+         i1KeQYl5e+4qs2l7W+P9kcMOqYSwzwbFYS2rHS9EKXxEb0dsJPqx8om/GFeLR+ZPjXcY
+         rLFFxp7SNKEgoJO6ZbS0CTW4VHcky8eFOANhUJKAmwkf3mLDYSwIrT82UDTKeNyQGVts
+         Je8c+bhyzOl0Y0UYeCIBUeSN0WiDBeoiiAFiheEC6P6isyk0NyRSoI8hZ/boxNpmcSrt
+         98uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776916586; x=1777521386;
+        d=1e100.net; s=20251104; t=1776916588; x=1777521388;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PmfkDHgGkhhc8Ci3nU27rOXJ2A7e5StlaPZmf/zqGxg=;
-        b=bx2VlC6hrezvYwWAvybdVuJdS5SQvt9NYdtLxpHKYs24eL125y2f+T8cM3PS9ptjQF
-         aF7svqm2gK4nmnC720BNJGtZ4ql2sEBFWFqGUcgTq2u4qG9lEBzbFp4AM70o7QSC9Byn
-         jToGq3Ry2N6iuBbNM3z7plNY5v4gSqLJz028IzDucuhTScfBc4SA3AxcX/g/NQ+sxCGC
-         DfqDWLv375VWJPte/3mgLM6Fx70Rv+fqu6RbwUYak9V5UltzxEGVbOY9XmtUFJagOLsW
-         eXf5CmLcYIvrCPqH4ujenuMAuUSvJa2fsQ/xuJlA9rH0Fa/d4/eMGGhP8kTBk0dly6d8
-         F8Yg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Ub6ciF6ABQaEZipm+WbeRQhz83VeW/Xs2m5yEnohY2JE2nRySn7hj9NOqbaPfSKdWDFtmeBrfLAUPZFXEwlwr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT4zrd8p6zZCV7phB2hO68Ao8684cKgLmXkgHDPDJ3sZ/gEjox
-	/MzbxSViaURitW5OlaoXq+NuhpooN+nF3HhIi8GUYM7vEPvCNRGZuqi2gVRlgl6hTYB+Ssl6H/Z
-	nKWaQVIzPaQ==
-X-Received: from dybso7.prod.google.com ([2002:a05:7301:6907:b0:2d8:e3a6:d707])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:dc05:b0:2c0:bfe3:b95c
- with SMTP id 5a478bee46e88-2e466044086mr12419456eec.4.1776916585477; Wed, 22
- Apr 2026 20:56:25 -0700 (PDT)
-Date: Wed, 22 Apr 2026 20:54:50 -0700
+        bh=X5V+95Q5Ie0huXAoonJqgxmxTdwrZQqVv/lbi4uyNBU=;
+        b=aelUe1yLj1cSCx4bHErv9UH5kyrfMTmQpg1bdPfn5OY8MyHxQ9xhu8HMpYOPVI1HmA
+         74pafW6IY+20lHwCoWa8XlAZk6cpUwCo61NrN9o+8vuczr0XB7t46Jbiu7PpemiW/uv1
+         +MRsPRHbnNpkVk6YGC6c7Gt+lCulZPTbYWDDFQe5T2KLicVn15beS6OLZ2M8qG821nay
+         m5wbKf/EnTtEYX886B30nsk10WGOUYfXiCJAJnzFY5rP32yAZfIoECfFHha+WpCZoNoI
+         Ckj4B9g3ebz7OEIIVY5HdFwetQyCy6+b54KctQh/KVxNYVAq1adPOWFH66Z4iGU4B5F7
+         BcxQ==
+X-Forwarded-Encrypted: i=1; AFNElJ99aCBPKk6moPJrAC1+7qKpqbfHumJy9fKortu4byfwHms0fbCiw9sHYabKTdLBsGbsfgyzp0zttLxPV74tt38d@vger.kernel.org
+X-Gm-Message-State: AOJu0YxefW1C/0g20d4tsLw/g6dCV7yvwIBn0NKcFm0nkunw1gadBlnU
+	q0cvb6qmC/QG16eFKLNnDxtYF4Qv6P2pV8Wae68kN8ciYw7l+hyRGmfYtiDEzX7ktWf4gyeczL0
+	cCyPXSQwQ9A==
+X-Received: from dlbsn12.prod.google.com ([2002:a05:7022:b90c:b0:12d:b26a:1571])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:23a0:b0:11e:163:be60
+ with SMTP id a92af1059eb24-12c73fadd10mr13985996c88.31.1776916587524; Wed, 22
+ Apr 2026 20:56:27 -0700 (PDT)
+Date: Wed, 22 Apr 2026 20:54:51 -0700
 In-Reply-To: <20260423035526.1537178-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-27-irogers@google.com> <20260423035526.1537178-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.533.g4f5dca5207-goog
-Message-ID: <20260423035526.1537178-24-irogers@google.com>
-Subject: [PATCH v2 23/58] perf python: Add LiveSession helper
+Message-ID: <20260423035526.1537178-25-irogers@google.com>
+Subject: [PATCH v2 24/58] perf python: Move exported-sql-viewer.py and
+ parallel-perf.py to tools/perf/python/
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org, 
@@ -84,92 +85,68 @@ Cc: 9erthalion6@gmail.com, adityab1@linux.ibm.com,
 	zhiguo.zhou@intel.com, zli94@ncsu.edu
 Content-Type: text/plain; charset="UTF-8"
 
-Add LiveSession class in tools/perf/python/perf_live.py to support
-live event collection using perf.evlist and perf.parse_events,
-avoiding the need to fork a separate perf record process.
+These scripts are standalone and not using the `perf script` libpython
+support. Move to tools/perf/python in an effort to deprecate the
+tools/perf/scripts/python support.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
-Assisted-by: Gemini:gemini-3.1-pro-preview
 ---
 v2:
 
-1. Fixed File Descriptor Leak: I moved self.evlist.mmap() inside the
-   try block so that if it raises an exception, the finally block will
-   still be executed and call self.evlist.close() , preventing file
-   descriptor leaks.
+1. Updated exported-sql-viewer.py : I updated the comments at the top
+   of the script to use the new path
+   tools/perf/python/exported-sql-viewer.py in the usage examples.
 
-2. Handled InterruptedError in poll() : I wrapped the poll() call in a
-   try-except block to catch InterruptedError and continue the
-   loop. This prevents the live session from crashing on non-fatal
-   signals like SIGWINCH .
-
-3. Added evlist.config() : I added a call to self.evlist.config() in
-   the constructor after parse_events() . This applies the default
-   record options to the events, enabling sampling and setting up
-   PERF_SAMPLE_* fields so that the kernel will actually generate
-   PERF_RECORD_SAMPLE events.
-
-4. Enable the evlist and be robust to exceptions from reading unsupported
-   events like mmap2.
+2. Fixed Test Path in script.sh : I updated the path in
+   tools/perf/tests/shell/script.sh to point to the new location of
+   parallel-perf.py at ../../python/parallel-perf.py .
 ---
- tools/perf/python/perf_live.py | 48 ++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100755 tools/perf/python/perf_live.py
+ tools/perf/{scripts => }/python/exported-sql-viewer.py | 4 ++--
+ tools/perf/{scripts => }/python/parallel-perf.py       | 0
+ tools/perf/tests/shell/script.sh                       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+ rename tools/perf/{scripts => }/python/exported-sql-viewer.py (99%)
+ rename tools/perf/{scripts => }/python/parallel-perf.py (100%)
 
-diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live.py
-new file mode 100755
-index 000000000000..d1dcbab1150b
---- /dev/null
-+++ b/tools/perf/python/perf_live.py
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0
-+"""
-+Live event session helper using perf.evlist.
-+
-+This module provides a LiveSession class that allows running a callback
-+for each event collected live from the system, similar to perf.session
-+but without requiring a perf.data file.
-+"""
-+
-+import perf
-+
-+
-+class LiveSession:
-+    """Represents a live event collection session."""
-+
-+    def __init__(self, event_string: str, sample_callback):
-+        self.event_string = event_string
-+        self.sample_callback = sample_callback
-+        # Create a cpu map for all online CPUs
-+        self.cpus = perf.cpu_map()
-+        # Parse events and set maps
-+        self.evlist = perf.parse_events(self.event_string, self.cpus)
-+        self.evlist.config()
-+
-+    def run(self):
-+        """Run the live session."""
-+        self.evlist.open()
-+        try:
-+            self.evlist.mmap()
-+            self.evlist.enable()
-+
-+            while True:
-+                # Poll for events with 100ms timeout
-+                try:
-+                    self.evlist.poll(100)
-+                except InterruptedError:
-+                    continue
-+                for cpu in self.cpus:
-+                    try:
-+                        event = self.evlist.read_on_cpu(cpu)
-+                        if event and event.type == perf.RECORD_SAMPLE:
-+                            self.sample_callback(event)
-+                    except Exception:
-+                        pass
-+        except KeyboardInterrupt:
-+            pass
-+        finally:
-+            self.evlist.close()
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/python/exported-sql-viewer.py
+similarity index 99%
+rename from tools/perf/scripts/python/exported-sql-viewer.py
+rename to tools/perf/python/exported-sql-viewer.py
+index e0b2e7268ef6..f3ac96ada1f5 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/python/exported-sql-viewer.py
+@@ -10,12 +10,12 @@
+ # Following on from the example in the export scripts, a
+ # call-graph can be displayed for the pt_example database like this:
+ #
+-#	python tools/perf/scripts/python/exported-sql-viewer.py pt_example
++#	python tools/perf/python/exported-sql-viewer.py pt_example
+ #
+ # Note that for PostgreSQL, this script supports connecting to remote databases
+ # by setting hostname, port, username, password, and dbname e.g.
+ #
+-#	python tools/perf/scripts/python/exported-sql-viewer.py "hostname=myhost username=myuser password=mypassword dbname=pt_example"
++#	python tools/perf/python/exported-sql-viewer.py "hostname=myhost username=myuser password=mypassword dbname=pt_example"
+ #
+ # The result is a GUI window with a tree representing a context-sensitive
+ # call-graph.  Expanding a couple of levels of the tree and adjusting column
+diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/python/parallel-perf.py
+similarity index 100%
+rename from tools/perf/scripts/python/parallel-perf.py
+rename to tools/perf/python/parallel-perf.py
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index 7007f1cdf761..2051c6e05569 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -76,7 +76,7 @@ test_parallel_perf()
+ 		err=2
+ 		return
+ 	fi
+-	pp=$(dirname "$0")/../../scripts/python/parallel-perf.py
++	pp=$(dirname "$0")/../../python/parallel-perf.py
+ 	if [ ! -f "${pp}" ] ; then
+ 		echo "SKIP: parallel-perf.py script not found "
+ 		err=2
 -- 
 2.54.0.rc2.533.g4f5dca5207-goog
 
