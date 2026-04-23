@@ -1,138 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A8135F61E
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E7731282F
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918311; cv=none; b=Z+Wf19FTyrmY8929Ko49zk3IWZMQCcbfUn+mdbUGCUsmsjVCkBXpB8ezy1WV24qwSALHp0BmNxnyTKarIjGKmUyTidIBNibXIMyLto34105LixrmxXcGzLY5S8Fm03qruwfCJT9K3nsAfxVaV2c5j5l3UqGqDyMB32H51M+fDXU=
+	t=1776918382; cv=none; b=BrDrI/vnAYAGu5hD5B2EV6XOfJMst7y42kYnDhbWx2yFiLd4abFEKXSDop3cHKxT8g/a9PVFDXmPepBwiw3ZRP77L7sZGlilC/sr1e1VOZwabnM7VrNgppu6hJ75pLNn/yLyWpSKooVwhd0Twg3arY2bnKod3eg/ZiUzWZWVNZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918311; c=relaxed/simple;
-	bh=5eM9aDZfBiaDmcL1toSVfNI2cbNbsTm1yx0Sbvy6+rU=;
+	s=arc-20240116; t=1776918382; c=relaxed/simple;
+	bh=AV1Yw65SI/j30zB5w6uSpP2huRtgAlv3zoUqXXXAdy4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VanBhmJ8UHgBA6pmMGKC/2SEDCcWiVidoMbejUHYjcT07RApbGOEZ5rYDY6xzEVckokeQIpdQGxNh7akVJ1ONJfoK6LMzWCIAU8o35euxS0lvLjqXdVmgk0mMZyQ9tQLLDL/fhSmWQcI5x1Gs+xPh7nDA3QXNE47SIBd0vVzQpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDcxCqPG; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=eZktG7/OpVEpdaHQR0uvA0GpIXSTQhtu/WoObYLaekc3RWVf60wxKEKHpslFNXTS8hSK0mKHNkMrCC4Y1etUaLlDTlTUVEnvIEpr3dWVYWdjccNE7Tk+Q9I0uA3qZv4CMmf51tXJ/XvJRw4LdelDlIAf06rTkeIni8my18/zy+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZUYt5e3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDcxCqPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FC8C2BCB2;
-	Thu, 23 Apr 2026 04:25:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZUYt5e3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 531F0C2BCB2;
+	Thu, 23 Apr 2026 04:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918311;
-	bh=5eM9aDZfBiaDmcL1toSVfNI2cbNbsTm1yx0Sbvy6+rU=;
+	s=k20201202; t=1776918382;
+	bh=AV1Yw65SI/j30zB5w6uSpP2huRtgAlv3zoUqXXXAdy4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=MDcxCqPG93ZIcdTrFMxNELg3kGWpEFucIHPrglq9zjKl1j48PZiL2GaI265dYrccP
-	 nAkJDT4Llu+5OKxjb30wJuEM327Pw3yh5cfyT02Kpa84YgsGOsyUQez2nlw2crIDzO
-	 09EonDdUW/td/zQAFud48pDwIHsxKM5kXhtYFEuo0UQudmsgO0onmW+bzK3ZcDSrvN
-	 nhN9WYQvB1w0vZNHA9AEnLSNH/0zytcoXwxCTd2gaGNEiWcnaiGU2u7GNZJxcqTj1+
-	 f7XVCCTmfGOrkuk1PkptPn6wm/rLTV/9ivAW4xaewywwLsrlPMT0zf06YFEpRyrSwc
-	 94IQGUcfiw+7w==
+	b=WZUYt5e3dufT/kqOnmXhEwiIZZsuct8qKZL2rA3p9mTLi+psJEORCHy4bMpr/n0rF
+	 7ZbD+jSb+JXcJFiqr6UAMc1zLwjDMDdm2JyUvJx4zzJJNCM56OvdU4UUh3lsUJTDNc
+	 Td0pbpHG7rWhPfUVCVtZZwn8VyKk8Uusao/iiVJhbOPhmdc/hmJI11py6h1+777I3j
+	 X/uWRlrxMXSgGEYkoT61XbbNO1dHL/kaaJHQzqzgJhJg6GX+uYNqXqpnDFZv0jAJyQ
+	 STlmMOW2rJJIkdYFAxjx5fS0UlosXsviEyhaMTjMVskUhR5mgdxxExvij4UH74ewnz
+	 YKy1h9v9m2fUA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 14/58] perf python: Add wrapper for perf_data file
- abstraction
+Subject: Re: [PATCH v2 50/58] perf rwtop: Port rwtop to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-15-irogers@google.com>
-References: <20260423035526.1537178-15-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-51-irogers@google.com>
+References: <20260423035526.1537178-51-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:25:10 +0000
-Message-Id: <20260423042511.51FC8C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:26:21 +0000
+Message-Id: <20260423042622.531F0C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [High] The `fd` argument is ignored and overwritten, leading to file desc=
-riptor leaks and unintended file operations.
-- [High] The `perf.data` object inadvertently closes standard input when `p=
-ath=3D'-'` is used, corrupting the Python process's file descriptor table.
-- [Medium] The wrapper's file opening logic executes blocking `open()` syst=
-em calls without releasing the Python Global Interpreter Lock (GIL).
+Sashiko AI review found 5 potential issue(s):
+- [Medium] Meaningful code and commit message mismatch regarding terminal c=
+learing.
+- [Medium] The fallback logic for LiveSession uses invalid kernel tracepoin=
+ts.
+- [Medium] 0-byte completions (EOF) for read() and write() are incorrectly =
+classified as errors.
+- [Medium] Reference cycle with C extension type causes a memory and file d=
+escriptor leak.
+- [Low] Unhandled events tally is omitted when terminating Live Mode.
 --
 
-commit 55f9762e67ceebe9ab438d4e7a27fffc79b9eea7
+commit bcee736641b044aae62f7cca526d939e320836b7
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add wrapper for perf_data file abstraction
+perf rwtop: Port rwtop to use python module
 
-This commit introduces a Python wrapper for the perf_data file abstraction,
-which is needed to provide session support.
+This commit ports the legacy Perl script rwtop.pl to a python script using
+the perf module. It uses a class-based architecture to periodically display
+system-wide r/w call activity broken down by PID.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 0424290f8b77f..a2cdd92e05482 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+> - Used ANSI escape codes (\x1b[H\x1b[2J) to clear the terminal.
 
-[ ... ]
+The commit message mentions using ANSI escape codes to clear the terminal,
+but looking at the print_totals() function in the diff, these escape
+sequences don't appear to be used. This means the script will continuously
+scroll its output instead of refreshing in place.
 
-> +static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyOb=
-ject *kwargs)
-> +{
-> +	static char *kwlist[] =3D { "path", "fd", NULL };
-> +	char *path =3D NULL;
-> +	int fd =3D -1;
-> +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|si", kwlist, &path, &f=
-d))
-> +		return -1;
-> +
-> +	if (pdata->data.open)
-> +		perf_data__close(&pdata->data);
-> +	free((char *)pdata->data.path);
-> +
-> +	if (!path)
-> +		path =3D "perf.data";
-> +
-> +	pdata->data.path =3D strdup(path);
+> diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
+> new file mode 100755
+> index 0000000000000..952d178e99c5a
+> --- /dev/null
+> +++ b/tools/perf/python/rwtop.py
 
 [ ... ]
 
-> +	pdata->data.mode =3D PERF_DATA_MODE_READ;
-> +	pdata->data.file.fd =3D fd;
-> +	if (perf_data__open(&pdata->data) < 0) {
+> +        elif event_name in ("evsel(syscalls:sys_exit_read)", "evsel(raw_=
+syscalls:sys_exit_read)"):
+> +            try:
+> +                ret =3D sample.ret
+> +                if ret > 0:
+> +                    self.reads[pid]["bytes_read"] +=3D ret
+> +                else:
+> +                    self.reads[pid]["errors"][ret] +=3D 1
 
-Could this introduce a regression where the provided fd is leaked?=20
+Are 0-byte completions (EOF) for read() incorrectly classified as errors he=
+re?
 
-If fd is provided but path is not, path defaults to "perf.data" earlier in
-this function. When perf_data__open() is called, it relies on check_pipe()
-which only recognizes a pipe if the path is exactly "-".
+If a system call returns 0, the code falls into the else block and incremen=
+ts
+errors[0]. A return value of 0 for read() signifies End-Of-File (EOF), which
+is a normal successful condition, not a system call failure.
 
-Will this cause perf_data__open() to assume it is a regular file, open
-"perf.data" from disk, and overwrite pdata->data.file.fd instead of using t=
-he
-one provided?
+[ ... ]
 
-Additionally, is there a potential regression here regarding the Python GIL?
-Since perf_data__open() can perform a blocking open() on the provided path,
-could this block indefinitely without releasing the Python Global Interpret=
-er
-Lock if the path points to a FIFO or special device?
+> +        elif event_name in ("evsel(syscalls:sys_exit_write)", "evsel(raw=
+_syscalls:sys_exit_write)"):
+> +            try:
+> +                ret =3D sample.ret
+> +                if ret > 0:
+> +                    self.writes[pid]["bytes_written"] +=3D ret
+> +                else:
+> +                    self.writes[pid]["errors"][ret] +=3D 1
 
-> +		PyErr_Format(PyExc_IOError, "Failed to open perf data: %s",
-> +			     pdata->data.path ? pdata->data.path : "perf.data");
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void pyrf_data__delete(struct pyrf_data *pdata)
-> +{
-> +	perf_data__close(&pdata->data);
+Does this have the same issue with classifying 0-byte completions for
+write() as errors instead of a successful EOF condition?
 
-Does this cleanup path introduce a regression when handling standard input?
+[ ... ]
 
-If path was set to "-", perf_data__open() sets the fd to STDIN_FILENO. When
-the python object is garbage collected, does perf_data__close()
-unconditionally close STDIN_FILENO and disrupt the Python process's file
-descriptor table?
+> +    def run(self, input_file: str) -> None:
+> +        """Run the session."""
+> +        self.session =3D perf.session(perf.data(input_file), sample=3Dse=
+lf.process_event)
 
-> +	free((char *)pdata->data.path);
-> +	Py_TYPE(pdata)->tp_free((PyObject *)pdata);
-> +}
+Does this create a reference cycle that leaks the session and file
+descriptor?
+
+By passing self.process_event to perf.session and storing the session in
+self.session, a cycle is formed. The perf.session C extension type lacks
+garbage collection support, so Python's cyclic GC cannot break it. This
+could lead to a resource leak if the class is used programmatically to
+process multiple files in the same process.
+
+[ ... ]
+
+> +            try:
+> +                live_session =3D LiveSession(events, sample_callback=3Da=
+nalyzer.process_event)
+> +            except OSError:
+> +                events =3D (
+> +                    "raw_syscalls:sys_enter_read,raw_syscalls:sys_exit_r=
+ead,"
+> +                    "raw_syscalls:sys_enter_write,raw_syscalls:sys_exit_=
+write"
+> +                )
+
+Are these fallback tracepoints valid?
+
+The raw_syscalls subsystem only exports generic sys_enter and sys_exit
+tracepoints. Per-syscall tracepoints like raw_syscalls:sys_enter_read do
+not exist, meaning this fallback will invariably raise an OSError and
+terminate the script.
+
+[ ... ]
+
+> +    except KeyboardInterrupt:
+> +        print("\nStopping live mode...", file=3Dsys.stderr)
+> +        if analyzer.reads or analyzer.writes:
+> +            analyzer.print_totals()
+
+Should the unhandled events tally be printed here as well?
+
+When processing an offline file, the run() method prints the contents of the
+unhandled dictionary. Omitting this in the KeyboardInterrupt handler creates
+an inconsistency where dropped or malformed events aren't shown when
+terminating live mode.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D14
+178-1-irogers@google.com?part=3D50
