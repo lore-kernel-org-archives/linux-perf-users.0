@@ -1,152 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DF3359A74
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 05:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12D53822B4;
+	Thu, 23 Apr 2026 05:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776922296; cv=none; b=XOvc1VZpex56uvkVkr9cHX+alh8RuHWxQ5SqyJvtHb73cLEHE1lBmjpNTFI3ysj0Xi41kdHSpWY9y65JCWPKX++gNP6HGWo09evoefHDuKAM34+W1K3xQ1z2PvxJ665s7qzLabg3PAyi3x4UILRc9ENi3nvqKKU2SENu1g9zs4M=
+	t=1776922679; cv=none; b=Tg+/hZu+w61jdcxxnAF2JSlyCtsEdKHrm57ZTM1Ci7HDEyzJDQCv5DpvNVBe1cronN8WZO5Zxj2qOf8UofIcGeM21QVYhkIDN/erMTJxE7JtEYCttbB9kWH6ta7MAbUjV3J/KAEa6SmnXimDfyfW3YZrLRbpkc6xCiCYcfTI4Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776922296; c=relaxed/simple;
-	bh=Dpnb+jB9yIGecfYSbCDn1RAXZm2i8UQJi+56vhXO3zY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hQqWN//v7aidyxMOv3QFgt/bLL5ZqvAA4ASnPy1ZyzUKRDwEbDGlKaI5hvR08QF+EJ0whLvnedv7RiJCCwfqxsdkLSVKOrKUH3JQNgEw8/tIh2nah20YvXclSxzgNPNl6/agxvV63K5PrAb1eUQRAumO7iptRlsH86fVKmOxKic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7NNrNhB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776922679; c=relaxed/simple;
+	bh=IanSBZnzXQTn/o4tGwZn5ZMNo5dJokDyOqRzwr8+Qxk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=crKUS8gU2bYuBnWmGT71jj/Sg++WB7LVqF7yLcPZY/CM8TCzqUbrn3mZbGKfMwikT9P7Ngds7IEJADcAVQ4wo+xTK87RSmvtEhQMmXchinF6DBj5WRU5hINd8LUB0PFIg4i7T4bkSH4/mfRULSIo3p+iiZUApFdz0oKdoL3DHQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDWzTc2q; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7NNrNhB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679C9C2BCB2;
-	Thu, 23 Apr 2026 05:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776922296;
-	bh=Dpnb+jB9yIGecfYSbCDn1RAXZm2i8UQJi+56vhXO3zY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=F7NNrNhBP1Zl0AucUdKUyX3q0EAnkWsTO4BzUqIHBFpDUpivqAAyWGtyqsrvLH3uW
-	 JhysLoud7dyFb7tQ6FaY+lWMWPEaQA0jJCg6kPF2tbscAu4SpBakhk9NS2yxHJICcc
-	 e6JQ75xhg8Z2hSpAc4MkVjhhHDSi0fTL7Hzqqf/OUchdzSw1/63naO+fF3F7Q7/PhG
-	 jgKsfujuNQIKT2t+2gfz3890EfG+NO8HMdd36kDG7741APFiChEnRQS7XpHHWLauoC
-	 YVEr6O5EPqjp2kdifvkneHoXRONq5nvX6xB76Aj1SeTMmtlvvErUJsb1ezJdKK+6gd
-	 F6LhgwWEssGfQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 57/58] perf Documentation: Update for standalone
- Python scripts and remove obsolete data
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-58-irogers@google.com>
-References: <20260423035526.1537178-58-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 05:31:35 +0000
-Message-Id: <20260423053136.679C9C2BCB2@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDWzTc2q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776922678; x=1808458678;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IanSBZnzXQTn/o4tGwZn5ZMNo5dJokDyOqRzwr8+Qxk=;
+  b=mDWzTc2qDrJMXXnj/JIiWFtMBl4fkXM7iuj75acdTEz7PRP29QBkIUXp
+   Ql19tC6ilgROb2iCfGdHKSVL043W6iehrDX/uLk5wrsgIdruWdOAYlDwO
+   CtRZMK3+aLV0AVk4CB/nVIoun6HU5a6zVr4DKXp+SzfaipJbU3x1Ewkmv
+   BtIEyzPY4J3R3TUl/ZGlLI3fVXnasdXKlDMoQuAWsIu48u1Y2YINsJ2uT
+   vEvZEkoefV4ulqfjvV3aVScq5NI/oZNfekO6TyersHFTfYH4aqEsM4Z5E
+   JiTetsmlsotcBc70mP/jNveaJc4XCZIRsL+wt9N3PF3bsCjHn8WBMhzqt
+   A==;
+X-CSE-ConnectionGUID: QfcwcuZuRp2IjqaJMLwAvg==
+X-CSE-MsgGUID: +feKwGIhTDWZ0aIpVg13fA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="77799258"
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="77799258"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 22:37:57 -0700
+X-CSE-ConnectionGUID: ztRr1Jt4TN2ryjHeP/8YFw==
+X-CSE-MsgGUID: tvCCPdPUS8yF+Nu8oSI3rA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="226041648"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa009.fm.intel.com with ESMTP; 22 Apr 2026 22:37:52 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [Patch v2] perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
+Date: Thu, 23 Apr 2026 13:33:06 +0800
+Message-Id: <20260423053306.3033331-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] Incorrect Python API documentation for perf.data.__init__ causin=
-g runtime errors
-- [Low] Obsolete reference to 'report mode' in --show-info documentation
---
+AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+represent "anythread deprecation" in perf_capabilities. It leads to the
+anythread_deprecated bit could be overwritten by the real value of
+PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
 
-commit c8608ebf0770d6f59d09319da7fc7cb3688932bb
-Author: Ian Rogers <irogers@google.com>
+```
+if (!intel_pmu_broken_perf_cap()) {
+	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+}
+```
 
-perf Documentation: Update for standalone Python scripts and remove obsolet=
-e data
+It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+these support Perfmon v6 platforms, like Clearwater Forest.
 
-This commit removes obsolete perf script documentation for Perl and older P=
-ython
-modes, and updates the Python documentation to reflect the new standalone
-script usage with the perf module.
+```
+$grep . /sys/devices/cpu/format/*
+/sys/devices/cpu/format/acr_mask:config2:0-63
+/sys/devices/cpu/format/any:config:21
+/sys/devices/cpu/format/cmask:config:24-31
+```
 
-> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf=
-/Documentation/perf-script-python.txt
-> index 27a1cac6fe763..9293057cee8e2 100644
-> --- a/tools/perf/Documentation/perf-script-python.txt
-> +++ b/tools/perf/Documentation/perf-script-python.txt
+So remove the anythread_deprecated bit from perf_capabilities structure
+and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+deprecated.
 
-[ ... ]
+Cc: stable@vger.kernel.org
+Reported-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
 
-> +### `perf.data`
-> =20
-> -ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
-> -addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
-> -brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
-> -weight, transaction, raw_buf, attr, cpumode.
-> +Represents a trace file.
-> =20
-> -Fields that may also be present:
-> -
-> - flags - sample flags
-> - flags_disp - sample flags display
-> - insn_cnt - instruction count for determining instructions-per-cycle (IP=
-C)
-> - cyc_cnt - cycle count for determining IPC
-> - addr_correlates_sym - addr can correlate to a symbol
-> - addr_dso - addr dso
-> - addr_symbol - addr symbol
-> - addr_symoff - addr symbol offset
-> +- `__init__(filename, mode=3Dperf.DATA_MODE_READ)`: Opens a trace file.
+V2: Address Namhyung and Zide's comments.
 
-Is the signature __init__(filename, mode=3Dperf.DATA_MODE_READ) consistent
-with the underlying C extension implementation?
+V1: https://lore.kernel.org/all/20260415021010.1248083-1-dapeng1.mi@linux.intel.com/
 
-Looking at pyrf_data__init in python.c, it appears to use
-PyArg_ParseTupleAndKeywords with the keyword list {"path", "fd", NULL} and
-hardcodes the internal mode to PERF_DATA_MODE_READ.
+ arch/x86/events/intel/core.c | 10 +++-------
+ arch/x86/events/perf_event.h |  2 +-
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-It also seems DATA_MODE_READ is not exported as a constant to Python in the
-perf__constants array. Additionally, the .pyi stubs specify
-def __init__(self, path: str =3D ..., fd: int =3D ...).
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 793335c3ce78..f57a2903e4d6 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -7612,12 +7612,6 @@ __init int intel_pmu_init(void)
+ 
+ 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+ 
+-	if (version >= 5) {
+-		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
+-		if (x86_pmu.intel_cap.anythread_deprecated)
+-			pr_cont(" AnyThread deprecated, ");
+-	}
+-
+ 	/* The perf side of core PMU is ready to support the mediated vPMU. */
+ 	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
+ 
+@@ -8467,8 +8461,10 @@ __init int intel_pmu_init(void)
+ 				      &x86_pmu.intel_ctrl);
+ 
+ 	/* AnyThread may be deprecated on arch perfmon v5 or later */
+-	if (x86_pmu.intel_cap.anythread_deprecated)
++	if (version >= 5 && edx.split.anythread_deprecated) {
+ 		x86_pmu.format_attrs = intel_arch_formats_attr;
++		pr_cont("AnyThread deprecated, ");
++	}
+ 
+ 	intel_pmu_check_event_constraints_all(NULL);
+ 
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index fad87d3c8b2c..01217c663dff 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -660,7 +660,7 @@ union perf_capabilities {
+ 		u64	perf_metrics:1;
+ 		u64	pebs_output_pt_available:1;
+ 		u64	pebs_timing_info:1;
+-		u64	anythread_deprecated:1;
++		u64	__reserved:1;
+ 		u64	rdpmc_metrics_clear:1;
+ 	};
+ 	u64	capabilities;
+-- 
+2.34.1
 
-If a user follows this documentation and passes mode=3Dperf.DATA_MODE_READ,
-will their script crash with an AttributeError for the missing constant and=
- a
-TypeError for the invalid keyword argument?
-
-[ ... ]
-
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Docume=
-ntation/perf-script.txt
-> index 200ea25891d88..93ed1ea704c95 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-
-[ ... ]
-
-> @@ -23,52 +20,9 @@ There are several variants of perf script:
->    'perf script' to see a detailed trace of the workload that was
->    recorded.
-> =20
-> -  You can also run a set of pre-canned scripts that aggregate and
-> -  summarize the raw trace data in various ways (the list of scripts is
-> -  available via 'perf script -l').  The following variants allow you to
-> -  record and run those scripts:
-> -
-> -  'perf script record <script> <command>' to record the events required
-> -  for 'perf script report'.  <script> is the name displayed in the
-> -  output of 'perf script --list' i.e. the actual script name minus any
-> -  language extension.  If <command> is not specified, the events are
-> -  recorded using the -a (system-wide) 'perf record' option.
-> -
-> -  'perf script report <script> [args]' to run and display the results
-
-Since the perf script report functionality is removed here, should the
-documentation for the --show-info option also be updated?
-
-Further down in this file, the documentation for --show-info currently
-states: "It can only be used with the perf script report mode."
-
-As this mode no longer exists and the option functions independently in the
-C implementation, does leaving this text mislead users into thinking the
-option is tied to a deprecated mode?
-
-> -  of <script>.  <script> is the name displayed in the output of 'perf
-> -  script --list' i.e. the actual script name minus any language
-> -  extension.  The perf.data output from a previous run of 'perf script
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D57
