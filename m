@@ -1,100 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04E52DB7BA
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 05:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613FC2D3ED2
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 06:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776923678; cv=none; b=H9QhvMhMTRj2nnS1fuLKe91kITYBT5ujgEUaZsijMlNNS1yOGChWNKa0Ujy+r816sRvaRRscqlwxAuCCAwA7pV1ZmlHVGjfKmaPIt/XO50G6PyofD6UEcteD/9wUpeCkhGqbskNvXQ0DVWx90UY49Y+fFUcbPiR/9d+CKb6Q3Ng=
+	t=1776924060; cv=none; b=fi3gh9en5XTp3Ki3DPY6AipoZoCsSDjFY61X3wv1pBrWFULATZ18ea9lnnYa4YzV3YR7n9MX0wtB+S/qDzxxID8qOsXLtkl9uzJFoE2uauOn7l+m7Q8IoJN40I18zkpSaQjbUn5Zassg7sGPVdN6SjfSqcNIvYovwzjMut2zfhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776923678; c=relaxed/simple;
-	bh=jxgrPFZV4dk6kbnpWv/69+zAIR9BCwGIBhu79kQOgus=;
+	s=arc-20240116; t=1776924060; c=relaxed/simple;
+	bh=978y1Hy8A0IogvNGbuR/tNK4wAyVCbxsHYYcSHkicY8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Td8v/fLs9VP8JADvFf7SUQxgQLnlXN6WShvvwJKitJVSFOn8taYnZnraDKmozE9ez+bY4tqMDPfPN46RUw4+jIkLrYgZtHpvHgmg7zPKx6GY7dl+xhZ/5WJ/A6wqbZic2KAfxf3uEc6EAZnNm7d+hlKFBGFrbMqENS6QZ6TIeQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twd8WoeR; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ZD1FLGYKIzO2pheUAuLGYHznoD7tguvlJOylF2tAZXA6cA0o31jUiMf8Emst+5vS7M/6W/OI4ziL3NmbG5BMZp5B2I1PhPfD4CYOADG9lZkMgHE47wPB7zln30gbwZFMOdtT1arB3niEkFSLX1lTdQCw+OlX7hiY7zwMR01Asvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c68bfMij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twd8WoeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4599FC2BCB2;
-	Thu, 23 Apr 2026 05:54:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c68bfMij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 062BDC2BCAF;
+	Thu, 23 Apr 2026 06:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776923678;
-	bh=jxgrPFZV4dk6kbnpWv/69+zAIR9BCwGIBhu79kQOgus=;
+	s=k20201202; t=1776924060;
+	bh=978y1Hy8A0IogvNGbuR/tNK4wAyVCbxsHYYcSHkicY8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=twd8WoeR6MrGBwpBiSkhFhE9p4qh3DfGDeqk7njEiFHhVq0V6UrvkiN3d+hUxfDJh
-	 HQ4yBXOawlNC1NcimOFeXBx5mny3MBkKvQmaOcOUVO78NlWSDSv5zvcI5+3xJguZ39
-	 jTViYPZy55/yd5SRNXsMpqcT0Mw7Hhf35bLp+/eD5f7HIQN3jRshMjVNz+FIJuP/RF
-	 t7bE41deCJYF5THo9mHxye089Zvof5FSWd5KCRJlrY/GytLktJmbsGYH+HQaMcPwgr
-	 U/4XOYAkjSOWCnBSxxRj223+YRrX1Nge4S0H//QBg9PHfTn1VY54mgMkPcHA1drbdx
-	 rgC9MQu5M7OyA==
+	b=c68bfMijhLfO0JZfKOVHr7elblVf7PkyJLAv9mAwNZBrujCMLFOK0AXpkG0RQAocL
+	 otGjkwC2uOREgxAV/SmAW7XKT4/sgY8sYod9ABuDAQE+6sbBumsIEibBGLUFYR+WjL
+	 jrtSxXYW/IGSlqJPJKUyyeOPcjGk1Da5rIuWRJ7HGTBmcCXo0ZHDCa8frd+DsLGGrI
+	 jND+LKEGqiKiqnw4GIBErLx3acXbW2FBWHGFyIl6lu1K0aHnc1dFNUV4v2d0v+sBF9
+	 Z+vrpheEd/AFDqMv2QCE4/PiLwdpRCpab9nAa5tCxa/qiBJx9WMDVCJSKpBXaE7rMo
+	 nltWcW1MTaoMQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf annotate: Fix NULL pointer dereference in
-  loongarch_call__parse
+Subject: Re: [PATCH v2 13/58] perf python: Use evsel in sample in pyrf_event
 Reply-To: sashiko@lists.linux.dev
-To: "Jianping Liu" <frankljpliu@gmail.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423053102.3717015-1-frankljpliu@gmail.com>
-References: <20260423053102.3717015-1-frankljpliu@gmail.com>
+In-Reply-To: <20260423035526.1537178-14-irogers@google.com>
+References: <20260423035526.1537178-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 05:54:37 +0000
-Message-Id: <20260423055438.4599FC2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 06:00:59 +0000
+Message-Id: <20260423060100.062BDC2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The fix correctly prevents a NULL pointer dereference, but impro=
-perly aborts instruction parsing by returning `-1`. This strips the `is_cal=
-l` attribute and degrades `perf annotate` functionality, whereas it should =
-bypass name extraction and resolve the target using the already extracted a=
-ddress.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] Double-put of `evsel` reference count on `evsel__parse_sample()`=
+ error paths.
+- [Medium] `evsel` reference leak in the Python perf extension for non-samp=
+le events.
 --
 
-commit 807b803f1f78132524dc6117283161821fab508a
-Author: Jianping Liu <frankljpliu@gmail.com>
+commit e5d351204a63fd8edb73b920515cecae1b0cd957
+Author: Ian Rogers <irogers@google.com>
 
-perf annotate: Fix NULL pointer dereference in loongarch_call__parse
+perf python: Use evsel in sample in pyrf_event
 
-This commit prevents a segmentation fault in loongarch_call__parse()
-by adding a NULL check for the return value of strchr() when parsing
-objdump output. It handles cases where a branch-and-link instruction
-lacks a symbol name.
+This commit avoids a duplicated evsel by using the one present in the sampl=
+e.
+It adds evsel__get() and evsel__put() to the evsel stored in perf_sample.
 
-> Add a NULL check for the return value of strchr() before dereferencing
-> it, consistent with s390_call__parse() which handles the same case
-> correctly.
-
-Does s390_call__parse() actually handle this correctly without regressions?
-
-Returning -1 causes disasm_line__init_ins() to receive a negative return
-value and set dl->ins.ops =3D NULL. This makes ins__is_call() evaluate to
-false, meaning the instruction completely loses its call semantics in the T=
-UI.
-
-> diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/p=
-erf/util/annotate-arch/annotate-loongarch.c
-> --- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-> +++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-> @@ -29,6 +29,9 @@ static int loongarch_call__parse(const struct arch *arc=
-h, struct ins_operands *o
->  	ops->target.addr =3D strtoull(c, &endptr, 16);
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 0162d8a625de3..0424290f8b77f 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+[ ... ]
+> @@ -274,7 +273,6 @@ static PyMemberDef pyrf_sample_event__members[] =3D {
 > =20
->  	name =3D strchr(endptr, '<');
-> +	if (name =3D=3D NULL)
-> +		return -1;
-> +
->  	name++;
+>  static void pyrf_sample_event__delete(struct pyrf_event *pevent)
+>  {
+> -	evsel__put(pevent->evsel);
+>  	perf_sample__exit(&pevent->sample);
+>  	Py_TYPE(pevent)->tp_free((PyObject*)pevent);
+>  }
 
-Could this code bypass the name extraction and proceed directly to symbol
-resolution using the already extracted target address?
+Does this leak the evsel reference for non-sample events?
 
-Since ops->target.addr is successfully parsed right above this check,
-skipping the name parsing and returning 0 instead of aborting with -1 would
-preserve the is_call attribute. This would allow the TUI to still draw
-branch arrows and navigate the call.
+In pyrf_evlist__read_on_cpu(), evsel__parse_sample() is called for all
+event types, which acquires an evsel reference and stores it in the Python
+event object:
+
+pyrf_evlist__read_on_cpu()
+    err =3D evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
+
+However, only pyrf_sample_event__type has a custom tp_dealloc method
+(pyrf_sample_event__delete) that calls perf_sample__exit().
+
+Other event types fall back to the default Python deallocator and bypass
+perf_sample__exit(), which skips dropping the refcount and leaks the evsel
+reference along with any dynamic structures in perf_sample.
+
+I see this regression is fixed later in the patch series by commit
+ce9c27681f1b (perf python: Refactor and add accessors to sample event),
+which adds a universal tp_dealloc for all event types.
+
+[ ... ]
+> diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
+> index cf73329326d72..106848404fdf0 100644
+> --- a/tools/perf/util/sample.c
+> +++ b/tools/perf/util/sample.c
+[ ... ]
+> @@ -29,6 +34,7 @@ void perf_sample__init(struct perf_sample *sample, bool=
+ all)
+> =20
+>  void perf_sample__exit(struct perf_sample *sample)
+>  {
+> +	evsel__put(sample->evsel);
+>  	zfree(&sample->user_regs);
+>  	zfree(&sample->intr_regs);
+
+Does this cause a double-put on error paths?
+
+If evsel__parse_sample() encounters an error and jumps to out_efault, it
+calls perf_sample__exit() internally and drops the refcount.
+
+If callers like do_test() in tools/perf/tests/sample-parsing.c or
+pyrf_evlist__read_on_cpu() catch the error, they execute their own
+cleanup paths and call perf_sample__exit() again on the same sample object.
+
+Since sample->evsel is not set to NULL after evsel__put() here, could the
+second call lead to a reference count underflow and a use-after-free?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423053102.3717=
-015-1-frankljpliu@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
+178-1-irogers@google.com?part=3D13
