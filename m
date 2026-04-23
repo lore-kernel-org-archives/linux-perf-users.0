@@ -1,153 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBFB244687
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B13244687;
+	Thu, 23 Apr 2026 04:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918826; cv=none; b=dnzprZtCMm3i0SaRn8TAWhECmZsaZW/WmQD0Bd+oRkoFc3HsTyoPu0gT5ajBItE+PbTK0WaQhv8/1SQA5rMXJ1MbJ6N2VAZcFvRBh2Drh2X3psJ5LYn4ep0Y3mzN475VBe4BzcpixHbQA2lBvrIpjSFA8ZuL3UAYcz2o9immzlA=
+	t=1776918845; cv=none; b=G7ONXpUhxfOGovI5OVCS8x4LL2zLdCtHYQNwUhc9ZDYKRi1KVuE77l6NHE6ybFOHNa7n7tUaZQA/3PbLHPruNFwB0/S46b/RpCM1CGNlsqtQ+rW/9yVn8EfLMMmHPIXLgBjPWW/mELQw8KWMkpQ4sb7HAjsV3tDLIs/O82RD3hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918826; c=relaxed/simple;
-	bh=qcnxA3d7vMoOU4ILPi2Gmn7xiweGM+CrVdSFKau72a8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Cl8dcN0z4HMSLiadtVynKZ4RYircIFzQBnsW0mnHoSRlj6TJ+5jYFx+vih0WyaW3pKJji6e9lBkE6faOLJQm1vlpd1mmpAXrq8bNyOBguZ8hxQYejdTHB7r+yAianBYZ6+xk+ENALc8rqUYdCjYecf+WGTXIwcrHPbsycZakldc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSU/eAYm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776918845; c=relaxed/simple;
+	bh=iD0H50adZDwGWXLJOO4CRJlKJwS0xbiIeb45xY3Tau4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QK79O1UKtupyW92QgU2Iim0loOvC6p1cbjztKPVSxdAc1wA6RrGUqqevShLVNhsraJe4ItCHsx0/+Nt6YRrhZUuUkByu8CH2NITBxW4yvgyPGV6KwVBgk9C3keEpHlLsnlChTG+0qVHrhUg/jKbNHy5BOa7gnMMohbxPGq5DGvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlEJS9I7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSU/eAYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FF1C2BCB2;
-	Thu, 23 Apr 2026 04:33:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlEJS9I7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44B8C2BCB2;
+	Thu, 23 Apr 2026 04:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918825;
-	bh=qcnxA3d7vMoOU4ILPi2Gmn7xiweGM+CrVdSFKau72a8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=MSU/eAYmrLzqx9nDRCttvyZBLtMrg8HQWM0+J6+ppr/NFl2bhFbEu4ZmlqRn+ANQ7
-	 W5DVGuB/JipPyQ5Q1wNXoVv/sUIfWvh6B1si8g58ydygfpQgiarPSwoTvk//ADFEMe
-	 HEV9yxHfs5EPCo8UCseu0Cg2sgNM4PQ5dZravQSwJT36j4HjlUdR3+ApJnWIwWhJA9
-	 P1frrZp4pdG8/uLfZlhU0F3R7Jd65qumkNqMxltgtUskGXzRCsYAupLM8tftElFB9p
-	 j2XP7KSTSCZogEcJkVGYM77aBurW6RRSYpCpDoheE/Mw0nT3pIggIN+C1zLV6L6X0Y
-	 6ftagKpgUIYaA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 55/58] perf Makefile: Update Python script
- installation path
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-56-irogers@google.com>
-References: <20260423035526.1537178-56-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:33:45 +0000
-Message-Id: <20260423043345.85FF1C2BCB2@smtp.kernel.org>
+	s=k20201202; t=1776918844;
+	bh=iD0H50adZDwGWXLJOO4CRJlKJwS0xbiIeb45xY3Tau4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tlEJS9I76/d5S2u83ylwBcaesc3cu6tiYqfB7pPrpZTXt1s+j2eu8AB/RqNvtIKbC
+	 u5/nna2CvUh1YhUBfAV8690S+1/gvwFTFUkLO6hjJFHZgTxTa8Xkf5UT5en7izBuVj
+	 mnUyARcMAfn4GHe43KzHXbc8VniGpftk1KRakXwoM3lI1auMcqh8CH6UMNrMjXwKma
+	 ffegpqgNyTdQudgbvi3Ue9Xko2qOdZkRFsklgM5bmjsraf14HZmU7D0ptlFIuKqlLZ
+	 wM6h9LZZwLiNZicXcqgC2daWH4IocOndJALq8HislwpY86/I64sqRDY+NxAC09/oJR
+	 kW7r8RCjq6t5g==
+From: SeongJae Park <sj@kernel.org>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/4] mm/damon: introduce perf event based access check
+Date: Wed, 22 Apr 2026 21:34:02 -0700
+Message-ID: <20260423043402.92389-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260423004211.7037-1-akinobu.mita@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 3 potential issue(s):
-- [High] The TUI script browser fails to locate Python scripts due to hardc=
-oded legacy paths.
-- [High] Standalone Python scripts are installed with non-executable permis=
-sions (`-m 644`), breaking script execution.
-- [Medium] Test targets `make_no_scripts` and `make_minimal` no longer disa=
-ble Python module support.
---
+Hello Akinobu,
 
-commit 615391f35d543aa8e125cf128454ccde6c3b24ac
-Author: Ian Rogers <irogers@google.com>
+On Thu, 23 Apr 2026 09:42:06 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
 
-perf Makefile: Update Python script installation path
-   =20
-Remove libpython feature test that is now a python-module feature
-test. Update references from libpython to python-module accordingly.
+> DAMON currently only provides PTE accessed-bit based access check, this
+> patch series adds a new perf event based access check.
+> 
+> Since perf event-based access checks do not require modifying the PTE
+> accessed-bit for pages representing each damon region, it reduces the
+> overhead of monitoring at a fixed granularity of the page size.
 
-[ ... ]
+As I also commented to the previous version, the high level idea makes sense to
+me.  I think this can be useful.
 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 2020532bab9cf..e50b1e8cf85df 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
+Also as I commented to the previous version, I understand the page level
+monitoring overhead reduction is the main purpose of this patch, and it makes
+sense to me.  Nonetheless, I like this mainly because the perf event could
+provide more detailed information including from which CPU/thread the access is
+made, and whether the access is for read/write, to my understanding.  Please
+let me know if my understanding is wrong.
 
-[ ... ]
+> 
+> Here is a method and its results for comparing access checks using
+> existing access bits and new perf events.
+[...]
+> Using accessed bit, prepare_access_checks takes 7 seconds and
+> check_accesses takes 5 seconds.
+[...]
+> Using perf event, prepare_access_checks takes 0.01 seconds and
+> check_accesses takes 2.6 seconds.
 
-> @@ -1099,10 +1097,10 @@ endif
->  	$(call QUIET_INSTALL, perf-iostat) \
->  		$(INSTALL) $(OUTPUT)perf-iostat -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ=
-)'
-> =20
-> -ifndef NO_LIBPYTHON
-> +ifndef NO_PYTHON_MODULE
->  	$(call QUIET_INSTALL, python-scripts) \
-> -		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/pyth=
-on'; \
-> -		$(INSTALL) python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/=
-scripts/python'
-> +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/python'; \
-> +		$(INSTALL) python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/=
-python'
->  endif
+Thank you so much for sharing these great test results with the detailed setup
+description!
 
-Since the commit message mentions a move to standalone scripts, will
-installing these python files with non-executable permissions (-m 644)
-prevent them from being run?
+> ```
+> $ sudo $HOME/damo/damo stop
+> $ sudo $HOME/damo/damo start --ops vaddr \
+> 	--perf_event 5000 0 0x4 0x1cd 0x1f 0 \
+> 	--monitoring_intervals 5s 60s 300s \
+> 	--monitoring_nr_regions_range 1000000000 1000000000 \
+> 	--target_pid $(cat /tmp/memcached.pid)
+[...]
+> Note: damo's --perf_event option
+> 
+> Using these features also requires modifications to damo, but these
+> are not included in this patch series and are currently under
+> development in the following branch:
+> 
+> * https://github.com/mita/damo/tree/damo-perf-for-v3.2.2
 
-If scripts are transitioned to be executed directly via execvp(), it looks
-like they will fail with a permission denied error because they lack execute
-permissions.
+Thank you for sharing this, too!
 
-This isn't a bug in the modified file, but does changing the installation
-directory to no longer use 'scripts/' break script discovery in the TUI
-script browser?
+> 
+> The option newly added to damo for perf event-based access check has the
+> following format:
+> 
+> `--perf_event <sample freq> <sample phys addr> <type> <config> <config1> <config2>`
 
-Looking at tools/perf/ui/browsers/scripts.c:find_scripts():
+I think we may need to discuss more for final interface.  But I think that
+could be done later, after the kerenl ABI is fixed.
 
-	{
-		char scripts_path[PATH_MAX];
+> 
+> - `sample freq`: A higher frequency improves access accuracy, but also
+>   increases overhead.
+> - `sample phys addr`: specify 0 for vaddr and 1 for paddr.
+> - The remaining type, config, config1, and config2 settings can be found
+>   as follows:
 
-		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
-		scripts_dir_fd =3D open(scripts_path, O_DIRECTORY);
-		pr_err("Failed to open directory '%s'", scripts_path);
+The values look bit human-unfriendly.  I wonder if we could use more
+human-friendly values, e.g., 'cpu' for type,
+'mem_trans_retired.load_latency_gt_1024' for config, etc.  Not necessarily we
+need to fix this right now.  Let's keep discussing.
 
-Will the interactive TUI script browser fail to locate or execute any
-installed python scripts because it still hardcodes the old lookup path?
+> 
+> Run `perf mem record -vv` to obtain the log, and then find the part in
+> the log where `perf_event_open` was executed successfully.
+> ```
+> $ sudo perf mem record -vv echo > /tmp/perf-mem-record.log 2>&1
+> $ cat /tmp/perf-mem-record.log
+> ...
+> perf_event_attr:
+>   type                             4 (cpu)
+>   size                             144
+>   config                           0x1cd (mem_trans_retired.load_latency_gt_1024)
+[...]
+> ...
+> ```
+> 
+> The values for `type` and `config` are taken from this output.
+> Use the values of `config1` and `config2` if they are included in the log;
+> otherwise, set them to 0.
 
-[ ... ]
+The above information will also be very useful for early testers of this patch
+series including myself.  Thank you for sharing.
 
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 31b064928cfca..f2c5f1c254a7c 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -75,8 +75,6 @@ make_jevents_all    :=3D JEVENTS_ARCH=3Dall
->  make_no_bpf_skel    :=3D BUILD_BPF_SKEL=3D0
->  make_gen_vmlinux_h  :=3D GEN_VMLINUX_H=3D1
-> =20
-> -make_no_libpython   :=3D NO_LIBPYTHON=3D1
-> -make_no_scripts     :=3D NO_LIBPYTHON=3D1
->  make_no_slang       :=3D NO_SLANG=3D1
+> 
+> Any feedback or advice on the patch set would be greatly appreciated.
 
-By removing NO_LIBPYTHON=3D1 from make_no_scripts without replacing it with
-the new NO_PYTHON_MODULE=3D1 flag, does this target fail to disable Python
-module support?
+Again, I like the high level concept of this patch series.  I definitely want
+this to be merged.  Nonetheless, not exactly as it is right now.  I think we
+should spend enough time for the user interface design.  I hope the final
+interface is long-term maintainable and easy to extend.
 
-It seems make_no_scripts now evaluates to an empty configuration rather than
-a script-less build test.
+> 
+> * RFC v3
+> - drop "reintroduce damon_operations->cleanup()" as no longer needed
+> - drop "allow user to set min size of region" (will be sent separately)
+> - add tgid to struct damon_access_report and use it instead of tid
+> - set perf_event_attr.precise_ip to 2
+> - prepare for the transition to report-based monitoring
+> - switch to use access_reported in struct damon_region
+> - switch to use sample/primitives/perf_events sysfs directory
 
-[ ... ]
+Thank you for doing this revisioning.
 
-> @@ -118,7 +116,7 @@ make_install_prefix_slash :=3D install prefix=3D/tmp/=
-krava/
->  make_static         :=3D LDFLAGS=3D-static NO_PERF_READ_VDSO32=3D1 NO_PE=
-RF_READ_VDSOX32=3D1 NO_JVMTI=3D1 NO_LIBTRACEEVENT=3D1 NO_LIBELF=3D1
-> =20
->  # all the NO_* variable combined
-> -make_minimal        :=3D NO_LIBPYTHON=3D1 NO_GTK2=3D1
-> +make_minimal        :=3D NO_GTK2=3D1
+For the user interface and also internal interface, I suggested to consider
+reusing those for page fault events based per-CPUs/threads/reads/writes
+monitoring DAMON extension patch series in our previous discussion.  I think
+this version is following the right direction much more than the previous
+version.
 
-Similarly, will make_minimal incorrectly include Python support if the
-development headers are present on the host system? Does this invalidate the
-minimal build test because it no longer represents a truly minimal
-configuration?
+But, nowadays I'm thinking about a new user interface for the
+per-CPUs/threads/reads/writes monitoring that can easily also extended for perf
+event based monitoring and for not only access monitoring but general and
+multiple data attributes monitoring.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D55
+It is still under the development and I'm planning to share a very early RFC
+version of that by LSFMMBPF.  I will try to add my idea about how this perf
+event based monitoring could also implemented by reusing the interface on the
+early RFC version.
+
+Could we wait until the early RFC version is published, review my idea about
+how this perf event based monitoring could reuse it, and continue discussions
+about the next steps of this patch series?
+
+[1] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
+
+
+Thanks,
+SJ
+
+[...]
