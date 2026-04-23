@@ -1,149 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F9277C88
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFB08F49
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776917915; cv=none; b=BE67z7N3u3+mazDFyR2N7QVwbb41MRy09TvdhbrkOoGEKAgQ4p7oP10Fj3e3WGbXEJtrex+qdDVteRiEloCjZSYwuB4RTGbCfmmEH8m+Z6VexmZhiGQVGubaQnOJ/4f5RT24hNiGNMHcPY8L7DJoswbBc2n3B/3np5VVD+vI/fw=
+	t=1776917941; cv=none; b=DQ7jgM/hGfnhj9QbUamFW/dKIjE54kjqCCGxPeuRIg6JcFX2c41c9m0bUJdmePWiqO6QzniOihZCZeOpiDQTRxFHn89YYSpqEu9F5LaJggg+GDQJytSLLMGpM3dD2I1Ca8CbWCCj/cE6q+D5vZaTAoTKWB0r2HaHg46fbp1hgqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776917915; c=relaxed/simple;
-	bh=NzJpHCIr0G/+srGE+2Eenc3a5NW4ncB4sgnydO4uWqY=;
+	s=arc-20240116; t=1776917941; c=relaxed/simple;
+	bh=FhgNHZWdFTsjEPqb8NVAwwS/4eUtkcrwUGgS+HwRv+Y=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tMpr5kffTvnxanGbNOYtJ0rTh8EjVHOBLOeuUUWWdTXLXgUW1qLrd8q+2B0MCJ9O0PvJBcD6eyw4I5/XhbjdVR8lhUZMrVH91uXHri2xJs+5DJ+J1V4arioyfuoAVlM2Q0QE0kucclI6lewfLv3Q5meN+fIDTy2QI3mttz7kbGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSrLe2mr; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=cD9mGDmKRbwpzXxDmHmFYBy0jvyhR1D5sxmO9Cu1ri0uAL7aqJW/ousFaYddWKuhQM2cmsf8c64R6mPa6Rh5mxb1RmrmV/l114e5vG4f3hVpGOGYspZPlfpBwY+qCAqwEiIEjnzI5aBOvOtgq9243U2KzutYmNCQO9ApI4Q8PiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF78K5D+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSrLe2mr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39746C2BCB2;
-	Thu, 23 Apr 2026 04:18:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF78K5D+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D03C2BCB2;
+	Thu, 23 Apr 2026 04:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776917915;
-	bh=NzJpHCIr0G/+srGE+2Eenc3a5NW4ncB4sgnydO4uWqY=;
+	s=k20201202; t=1776917941;
+	bh=FhgNHZWdFTsjEPqb8NVAwwS/4eUtkcrwUGgS+HwRv+Y=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=PSrLe2mrGLuG3CPW0Ou1BDZUvwnZJBYqkCwN8ZpMEnbh7rZOuOTiF+FUZciI12Viq
-	 DxZ7hZlVxu1D+ITaGQ03uD+OHBHLvkDTyZB3YFblPkLdA8e894qpAq1m4VhmquR0eh
-	 J3MvrzqsdcPFYZdvGW/fG2tJYcUNgPryJTNU8aUJKyLXoptAB9ZqeYB85yFjomeUCh
-	 iuS50izB3Ons2XKHKj7mtU/ttsQLuUZwGDzwQcNZq9Q84GtvF056AROg5U0Y0b0DF4
-	 sYwQULaphBFkB4hdtKWBkNBDhSkGE/Zx/j4KOuTUHx67CYT0fm+51oy7yKf4woOfY/
-	 8Q7QzQU2jugqA==
+	b=LF78K5D+Hw5azYXoc7/uJLAbrjOf3v3B0e01jJqUHjZugZXj/lAqQa7av74nLP5H5
+	 tPyFxrvnayBe4EiYokE6H1MBfFGeS4uNmdZtQc0dYCTxucZVGkM/E5EnZhO2YMuW/c
+	 WPXmura0tiHxrvWXpjYSwehEz3jpfB4isHotA5P76l4Vz0oUxc6fcRrsh34vEsnZuz
+	 08rAmvl9ggF6/Lz7CXdgxKIJLnYq4TfxRbicE9yqhsBu5JQP/Njo23EPV6aJu1QSon
+	 jd5AvyPUTcb4Ih+bfvHpsvUNPW1G0pniVfoUjaVSt6wZ6BhuZiwjfDwGPjQZf6D7pw
+	 2DP/jhrLfiVaw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 33/58] perf check-perf-trace: Port check-perf-trace
- to use python module
+Subject: Re: [PATCH v2 21/58] perf python: Expose brstack in sample event
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-34-irogers@google.com>
-References: <20260423035526.1537178-34-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-22-irogers@google.com>
+References: <20260423035526.1537178-22-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:18:34 +0000
-Message-Id: <20260423041835.39746C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:19:00 +0000
+Message-Id: <20260423041900.F2D03C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [Medium] The ported script hardcodes tracepoint string resolution, removi=
-ng its intended test coverage.
-- [Medium] The script uses `sample_pid` instead of `sample_tid`, causing in=
-correct thread reporting.
-- [Medium] An unhandled `TypeError` when looking up untracked threads will =
-crash the script.
-- [Medium] The PEP-585 type hint causes a runtime crash on Python 3.8 and o=
-lder.
+Sashiko AI review found 2 potential issue(s):
+- [High] A circular reference between `pyrf_event` and `pyrf_branch_stack` =
+causes a permanent memory leak on every sample containing a branch stack.
+- [Medium] The `brstack` property returns a single-use iterator instead of =
+an iterable collection, leading to unexpected API behavior.
 --
 
-commit 928333ee9c2bd4abdb3f2cca77abb3355dd5e54f
+commit 7706b9a1f76a3982766c802596501351980d123a
 Author: Ian Rogers <irogers@google.com>
 
-perf check-perf-trace: Port check-perf-trace to use python module
+perf python: Expose brstack in sample event
 
-This commit adds a port of the check-perf-trace script that uses the perf
-python module directly, aiming for faster execution by avoiding intermediate
-dictionaries.
+Implement pyrf_branch_entry and pyrf_branch_stack for lazy iteration
+over branch stack entries.
 
-> diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/ch=
-eck-perf-trace.py
-> new file mode 100755
-> index 0000000000000..4c05540bdc057
-> --- /dev/null
-> +++ b/tools/perf/python/check-perf-trace.py
-> @@ -0,0 +1,113 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +"""
-> +Basic test of Python scripting support for perf.
-> +Ported from tools/perf/scripts/python/check-perf-trace.py
-> +"""
-> +
-> +import argparse
-> +import collections
-> +import perf
-> +
-> +unhandled: collections.defaultdict[str, int] =3D collections.defaultdict=
-(int)
-
-Will this type hint cause a runtime crash on older Python versions?
-
-Using subscripted standard collections like collections.defaultdict[str, in=
-t]
-was introduced in PEP 585 for Python 3.9. Without a future import, Python
-3.8 and earlier will evaluate this at runtime and raise a TypeError.
-
-> +session =3D None
-> +
-> +softirq_vecs =3D {
-> +    0: "HI_SOFTIRQ",
-> +    1: "TIMER_SOFTIRQ",
-> +    2: "NET_TX_SOFTIRQ",
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index b7f877189f8cf..5ace996267151 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 
 [ ... ]
 
-> +    8: "HRTIMER_SOFTIRQ",
-> +    9: "RCU_SOFTIRQ",
+> +struct pyrf_branch_stack {
+> +	PyObject_HEAD
+> +	struct pyrf_event *pevent;
+> +	struct branch_entry *entries;
+> +	u64 nr;
+> +	u64 pos;
+> +};
+
+[ ... ]
+
+> +static PyObject *pyrf_branch_stack__next(struct pyrf_branch_stack *pstac=
+k)
+> +{
+> +	struct pyrf_branch_entry *pentry;
+> +
+> +	if (pstack->pos >=3D pstack->nr)
+> +		return NULL;
+> +
+> +	pentry =3D PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__t=
+ype);
+> +	if (!pentry)
+> +		return NULL;
+> +
+> +	pentry->from =3D pstack->entries[pstack->pos].from;
+> +	pentry->to =3D pstack->entries[pstack->pos].to;
+> +	pentry->flags =3D pstack->entries[pstack->pos].flags;
+> +
+> +	pstack->pos++;
+> +	return (PyObject *)pentry;
 > +}
 
-[ ... ]
+Since the property returns the same object and advances pstack->pos during
+iteration without resetting it, does this mean the iterator gets permanently
+exhausted after one use?
 
-> +def symbol_str(event_name: str, field_name: str, value: int) -> str:
-> +    """Resolves symbol values to strings."""
-> +    if event_name =3D=3D "irq__softirq_entry" and field_name =3D=3D "vec=
-":
-> +        return softirq_vecs.get(value, str(value))
-> +    return str(value)
-
-Does hardcoding the tracepoint string resolution here bypass the original
-intent of the test?
-
-The original script delegated trace field resolution to the perf scripting
-engine to verify its correctness, but using a hardcoded dictionary drops
-that test coverage for the Python scripting API.
+Would it be better for the property to return a new iterator object or
+implement sequence semantics?
 
 [ ... ]
 
-> +def print_header(event_name: str, sample: perf.sample_event) -> None:
-> +    """Prints common header for events."""
-> +    secs =3D sample.sample_time // 1000000000
-> +    nsecs =3D sample.sample_time % 1000000000
-> +    comm =3D session.process(sample.sample_pid).comm() if session else "=
-[unknown]"
+> @@ -3157,6 +3312,28 @@ static int pyrf_session_tool__sample(const struct =
+perf_tool *tool,
+>  		}
+>  	}
+> =20
+> +	if (sample->branch_stack) {
+> +		struct branch_stack *bs =3D sample->branch_stack;
+> +		struct branch_entry *entries =3D perf_sample__branch_entries(sample);
+> +		struct pyrf_branch_stack *pstack;
+> +
+> +		pstack =3D PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__=
+type);
+> +		if (pstack) {
+> +			Py_INCREF(pevent);
+> +			pstack->pevent =3D pevent;
+> +			pstack->pos =3D 0;
+> +			pstack->nr =3D bs->nr;
+> +			pstack->entries =3D calloc(bs->nr, sizeof(struct branch_entry));
+> +			if (pstack->entries) {
+> +				memcpy(pstack->entries, entries,
+> +				       bs->nr * sizeof(struct branch_entry));
+> +				pevent->brstack =3D (PyObject *)pstack;
 
-Does using sample.sample_pid instead of sample.sample_tid cause incorrect
-thread reporting?
+Does this create a strong reference cycle where pstack->pevent holds a
+reference to pevent, and pevent->brstack holds a reference to pstack?
 
-In the perf subsystem, the pid field corresponds to the process group leader
-(TGID) while the tid field corresponds to the actual thread ID, which might
-output the group leader's name instead of the specific thread generating
-the event.
+Since neither pyrf_event__type nor pyrf_branch_stack__type implements
+Python's Py_TPFLAGS_HAVE_GC and tp_traverse or tp_clear protocols, can the
+Python cyclic garbage collector detect or break this cycle?
 
-Also, can session.process() raise an unhandled TypeError here?
+When the Python user script discards the event, wouldn't pevent's reference
+count remain at 1, preventing pyrf_event__delete from executing and
+leaking pevent, pstack, and pstack->entries for every event containing a
+branch stack?
 
-When machine__find_thread() cannot find the thread (which is common in
-truncated traces), the C extension raises a TypeError. Without a try-except
-block, this could crash the script.
+Since pstack->entries eagerly deep-copies the branch stack data, is it
+necessary for pstack to hold a reference to pevent to remain valid?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D33
+178-1-irogers@google.com?part=3D21
