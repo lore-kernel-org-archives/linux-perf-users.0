@@ -1,99 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A3135C183;
-	Thu, 23 Apr 2026 09:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E353E1CE3;
+	Thu, 23 Apr 2026 09:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776936637; cv=none; b=QhummEYJq/6xvBrUlbS2wwVjV8dJOunNDwcfV1PFQWBZwxSZanIjkK4W80sGegadoDA6wj6Pl6uPKs2QEqbkG7OA43ZLKNAza35UsvaOAnNZX3QfRfrmM8Z8p13IobPSmh6MyU2osOQTkpoqLqkaTh3Og4WCVMKrPF3Ok7B57Z4=
+	t=1776937767; cv=none; b=ewa/6ugviUN4YvZUEHwMGZgJOw9FhsO3diUnMNZtoKMpf2eWJQ31DJyJ31i+Aw+prR/2PyKjNv3sXXWDoHtYe7GyBn0ypDV24VHvCAeRE/jhuFTiZ48OdO/HYgSg4r+Pd7UTQB0MlWRPKoN1ALT+RMB5STYQSvy3H1tBMeEFcOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776936637; c=relaxed/simple;
-	bh=Lw5CoPM3yw6I/ruCGCCd366Q19a0AsNp39fk5OWzGVU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BxpooB4y1uK+mkDECDIGDtbqiIi119fiyjP6TpGER11ZjH4cPLRsw35/iw0XnOZEa18gcVuruglNUHmE+Ow2SlaJ/rVESwHd7G3hL+qref/FDvZzhkNasz4fpLkRCZW/fSSqqOY3M7eVwurA7KUpw7CRRatclN2tgPuImVZGcnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dikejyKK; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dikejyKK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776936636; x=1808472636;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=Lw5CoPM3yw6I/ruCGCCd366Q19a0AsNp39fk5OWzGVU=;
-  b=dikejyKK3ZRIxRV3VfYioBJLR27kiZlrBJGScb3SqeAZII4FjYEHqn75
-   yup5Zq1vDW6Awaa3jHuaRbYlVpBA4tfHTQ6aPyIk+F1Yu95yX6dcY71tV
-   oK6TW+BM3luD1EEPM2IOAHzJyXI9Wza0kJpRhbrvPBUJi/GzeTMP105Vt
-   tmo2u4r6HhvMJJ0ogLFMMqYWJww4G4xGF1soYKTEqc7R7V7nbska7hBJ8
-   mpiSeFVk765De8B739mq9aXkrOeP8Md1xq+3kQBNiPc47rCfUenvM25pH
-   AR5LBd3602k8J9LTMtoQ1ERfsf2fd35pQUPI3P9san13qLYdi2M08sGkG
-   g==;
-X-CSE-ConnectionGUID: wz252mQ8TgqX6BH0/XxR6Q==
-X-CSE-MsgGUID: Io/2PEyGQGmpuLqdUdBKyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="77784671"
-X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
-   d="scan'208";a="77784671"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 02:30:34 -0700
-X-CSE-ConnectionGUID: +eplm5smQu61G0DcQrX+8g==
-X-CSE-MsgGUID: w1QmiCopTbSIvsQci7p5Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
-   d="scan'208";a="263001252"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 02:30:24 -0700
-Message-ID: <4dc87e05-7a94-4f8b-a31a-b9be7183f483@linux.intel.com>
-Date: Thu, 23 Apr 2026 17:30:21 +0800
+	s=arc-20240116; t=1776937767; c=relaxed/simple;
+	bh=omlYnhoKI15TtGgZPMTNBrhT3/9GqJZ1kep5PMH9UHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+0d9HOX20VxSaMjMmX/zFvTTk74/TcfHlAXUe4ni2GWM08Dxq7JNV08sGZBA++sb1x6eiTXdCWkZJ5+vr5S6iuAJbVBcnyCtU5i6ca/nTiHr4+rF7w1+gLvmMhQ0UfPyaWVYcMkMOl/3jvMNFvoOY+iLcWnVp7P4mLXDuuL7hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from gentoo.org (gentoo.cern.ch [IPv6:2001:1458:202:227::100:45])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: amadio)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id B3DED34223F;
+	Thu, 23 Apr 2026 09:49:21 +0000 (UTC)
+Date: Thu, 23 Apr 2026 11:49:16 +0200
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, libunwind-devel@nongnu.org
+Subject: Re: perf performance with libdw vs libunwind
+Message-ID: <aenrHEOZDiBKG4Sy@gentoo.org>
+References: <aejMem8Pt3iCxaka@gentoo.org>
+ <CAP-5=fX6PT2FsvAoy+0AGq3AFEQ9XU_HBhGkZdX0fn0Ltss-JA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 2/4] perf/x86/intel: Disable PMI for self-reloaded ACR
- events
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-References: <20260420024528.2130065-1-dapeng1.mi@linux.intel.com>
- <20260420024528.2130065-3-dapeng1.mi@linux.intel.com>
- <aef8InBGlZaXNuPk@tassilo>
- <f1cb6c84-d8ff-46a0-a062-816fce9fc164@linux.intel.com>
- <aekAUXkbHfOfPxX1@tassilo>
- <4b7e6df6-3a9c-45c2-84ae-f738e5741bb6@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <4b7e6df6-3a9c-45c2-84ae-f738e5741bb6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fX6PT2FsvAoy+0AGq3AFEQ9XU_HBhGkZdX0fn0Ltss-JA@mail.gmail.com>
 
+Hi Ian,
 
-On 4/23/2026 9:01 AM, Mi, Dapeng wrote:
-> On 4/23/2026 1:07 AM, Andi Kleen wrote:
->>>> Are you sure this doesn't conflict with some other non ACR usage of config1?
->>> Yes, currently hw.config1 is only used to store ACR  event indices.
->> Thanks. Should probably rename the field to make that clear.
-> Yeah, would do. Thanks.
+On Wed, Apr 22, 2026 at 09:21:52PM -0700, Ian Rogers wrote:
+> Hi Guilherme,
+> 
+> Thanks for the feedback but I'm a little confused. Your .perfconfig is
+> set to use frame-pointer-based unwinding, so neither libunwind nor
+> libdw should be used for unwinding. With framepointer unwinding, a
+> sample contains an array of IPs gathered by walking the linked list of
+> frame pointers on the stack. With --call-graph=dwarf a region of
+> memory is copied into a sample (the stack) along with some initial
+> register values, libdw or libunwind is then used to process this
+> memory using the dwarf information in the ELF binary.
 
-Just look the code again, the config1 is defined in hw_perf_event structure
-which is a generic structure used by all kinds of different architectures.
-Although currently it's only used to save the ACR events index mask by x86,
-it could still be used for other specific usages on other architectures in
-the future. So we'd better keep this generic name "config1" then. 
+Thanks for your reply and pardon my ignorance, I thought that the libraries
+were generically used for stack unwinding, regardless of if it's fp or dwarf.
+I should have looked a bit deeper before reporting this, but we are on the
+right track.
 
-Thanks.
+> So something that changed in v7.0 is that with the dwarf libdw or
+> libunwind unwinding we always had all inline functions on the stack
+> but not with frame pointers. The IP in the frame pointer array can be
+> of an instruction within an inlined function. In v7.0 we added a patch
+> that includes inline information for both frame pointer and LBR-based
+> stack traces:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/tools/perf/util/machine.c?h=perf-tools-next&id=28cb835f7645892f4559b92fcfeb25a81646f4cf
 
+This is a nice development, I have been using --call-graph=dwarf to see
+the inlined symbols, so having the ability to see inlined functions with
+fp unwinding, which is much more lightweight in terms of space (i.e. the
+size of the final perf.data files), is great.
 
->
->
->> -Andi
->>
+> By default we try to add inline information using libdw if that fails
+> we try llvm, then libbfd and finally the command line addr2line tool:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/srcline.c?h=perf-tools-next&id=28cb835f7645892f4559b92fcfeb25a81646f4cf#n145
+> I suspect the slow down is for doing all this addr2line work on a
+> binary that's been stripped. The good news here is that if you can add
+> a config option to avoid all the fallbacks, "addr2line.style=libdw".
+> You can also disable inline information by adding "--no-inline" to
+> your `perf report` command line.
+
+The binary and its direct dependent libraries, as well as most other dependencies
+are not stripped, but it's possible that some dependency in the full chain might be.
+
+When I run perf report using --no-inline I indeed recover the performance I
+had before with perf-6.19.12. However, setting addr2line.style=libdw did not
+help much. Here is what I observe:
+
+$ perf config
+call-graph.record-mode=fp
+$ perf version
+perf version 7.0
+$ time perf record -g -F max -e cycles:uk -- root.exe -l -q
+info: Using a maximum frequency rate of 63800 Hz
+[ perf record: Woken up 18 times to write data ]
+[ perf record: Captured and wrote 4.720 MB perf.data (16552 samples) ]
+1.26
+$ time perf report -q --stdio -g none --children --no-inline --percent-limit 75
+    92.65%     0.00%  root.exe  root.exe              [.] main
+    92.64%     0.00%  root.exe  libc.so.6             [.] __libc_start_call_main
+    92.64%     0.00%  root.exe  libc.so.6             [.] __libc_start_main@@GLIBC_2.34
+    92.64%     0.00%  root.exe  root.exe              [.] _start
+    91.63%     0.00%  root.exe  libCore.so.6.38.04    [.] ROOT::GetROOT()
+    89.46%     0.00%  root.exe  libRint.so.6.38.04    [.] TRint::TRint(char const*, int*, char**, void*, int, bool, bool)
+    88.31%     0.00%  root.exe  libCore.so.6.38.04    [.] TApplication::TApplication(char const*, int*, char**, void*, int)
+    88.22%     0.00%  root.exe  libCore.so.6.38.04    [.] ROOT::Internal::GetROOT2()
+    88.20%     0.00%  root.exe  libCore.so.6.38.04    [.] TROOT::InitInterpreter()
+    76.34%     0.00%  root.exe  libCling.so.6.38.04   [.] CreateInterpreter
+    76.34%     0.00%  root.exe  libCling.so.6.38.04   [.] TCling::TCling(char const*, char const*, char const* const*, void*)
+
+1.70
+Flamegraph: https://amadio.web.cern.ch/perf/perf-report-noinline.svg
+
+Now without --no-inline, and this first command is without addr2line.style=libdw in the config:
+
+$ time perf report -q --stdio -g none --children --percent-limit 75
+    92.65%     0.00%  root.exe  root.exe              [.] main
+    92.64%     0.00%  root.exe  libc.so.6             [.] __libc_start_call_main
+    92.64%     0.00%  root.exe  root.exe              [.] _start
+    88.22%     0.00%  root.exe  libCore.so.6.38.04    [.] GetROOT2 (inlined)
+    76.34%     0.00%  root.exe  libCling.so.6.38.04   [.] CreateInterpreter
+
+241.60
+Flamegraph: https://amadio.web.cern.ch/perf/perf-report-addr2line.svg
+
+$ perf config addr2line.style=libdw
+$ perf config
+call-graph.record-mode=fp
+addr2line.style=libdw
+$ time perf report -q --stdio -g none --children --percent-limit 75
+    92.65%     0.00%  root.exe  root.exe              [.] main
+    92.64%     0.00%  root.exe  libc.so.6             [.] __libc_start_call_main
+    92.64%     0.00%  root.exe  root.exe              [.] _start
+    88.22%     0.00%  root.exe  libCore.so.6.38.04    [.] GetROOT2 (inlined)
+
+137.93
+Flamegraph: https://amadio.web.cern.ch/perf/perf-report-libdw.svg
+
+The flame graphs above are for the perf-report commands themselves.
+
+So, the performance is fine with --no-inline, and it's better with addr2line.style=libdw.
+However, the function names are not the best in the last two reports, so this problem remains.
+
+> Your report suggests we should tweak the defaults for showing inline
+> information. Could you try the options I've suggested and see if they
+> remedy the issue for you?
+
+Thank you for the suggestions. Indeed --no-inline seems to bring back the
+previous performance. Please let me know if you would like me to try more
+things and what other information you need for the cases without --no-inline.
+
+Best regards,
+-Guilherme
