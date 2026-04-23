@@ -1,165 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E7731282F
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D6231282F
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918382; cv=none; b=BrDrI/vnAYAGu5hD5B2EV6XOfJMst7y42kYnDhbWx2yFiLd4abFEKXSDop3cHKxT8g/a9PVFDXmPepBwiw3ZRP77L7sZGlilC/sr1e1VOZwabnM7VrNgppu6hJ75pLNn/yLyWpSKooVwhd0Twg3arY2bnKod3eg/ZiUzWZWVNZk=
+	t=1776918433; cv=none; b=OM26HSwrtexJH5l9cxQ++FwilBgByZQPG2qMcIuCwAc93ShARK7coPoqrQhceSNoizrzm8q7P2yFh/txACZv3H51fBewRbGD+3zWBUdisZc+iEhLGP7Y+UdSrgWneKxsAefuT++ZP5RfXt7/AgeabIRMjbMqywc0+biIXbGRPAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918382; c=relaxed/simple;
-	bh=AV1Yw65SI/j30zB5w6uSpP2huRtgAlv3zoUqXXXAdy4=;
+	s=arc-20240116; t=1776918433; c=relaxed/simple;
+	bh=qJqz0U65QlrTSKOmM5E5PpP+7fx3+gIS6iyA1qbzcpY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eZktG7/OpVEpdaHQR0uvA0GpIXSTQhtu/WoObYLaekc3RWVf60wxKEKHpslFNXTS8hSK0mKHNkMrCC4Y1etUaLlDTlTUVEnvIEpr3dWVYWdjccNE7Tk+Q9I0uA3qZv4CMmf51tXJ/XvJRw4LdelDlIAf06rTkeIni8my18/zy+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZUYt5e3; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=mkkwy+5/cLtEB50eO1QLcCMwV5A8NQ48csYFF6DSaQuDmJc9CUycZ+aKhUp3Vou1NS5LWWiYjN7HM3lTNkq7vy3CjxSo+/e9BvnO6CXjaCZy5eICK/MZnMgwK1/nr/lIrsJT8BZUvLfgaFwQJQDFBkb7t+D9k+SPHobW+4adKtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYfsp2Bj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZUYt5e3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 531F0C2BCB2;
-	Thu, 23 Apr 2026 04:26:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYfsp2Bj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26493C2BCB2;
+	Thu, 23 Apr 2026 04:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918382;
-	bh=AV1Yw65SI/j30zB5w6uSpP2huRtgAlv3zoUqXXXAdy4=;
+	s=k20201202; t=1776918433;
+	bh=qJqz0U65QlrTSKOmM5E5PpP+7fx3+gIS6iyA1qbzcpY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=WZUYt5e3dufT/kqOnmXhEwiIZZsuct8qKZL2rA3p9mTLi+psJEORCHy4bMpr/n0rF
-	 7ZbD+jSb+JXcJFiqr6UAMc1zLwjDMDdm2JyUvJx4zzJJNCM56OvdU4UUh3lsUJTDNc
-	 Td0pbpHG7rWhPfUVCVtZZwn8VyKk8Uusao/iiVJhbOPhmdc/hmJI11py6h1+777I3j
-	 X/uWRlrxMXSgGEYkoT61XbbNO1dHL/kaaJHQzqzgJhJg6GX+uYNqXqpnDFZv0jAJyQ
-	 STlmMOW2rJJIkdYFAxjx5fS0UlosXsviEyhaMTjMVskUhR5mgdxxExvij4UH74ewnz
-	 YKy1h9v9m2fUA==
+	b=DYfsp2Bj6x8R0X7c3I+kR0lO/5ktph+gHe9e4JSqWwqZatLkAaZl3QjMEJCfVOe3+
+	 +4Bjqzf1TucLh+PY2JXItBqj3Hq/Pg7tFbpE5x/UB3bPNcIgJpuIiLoSPZSgiPaATm
+	 OKGqLvpBE8QJ+7o9RlhHVR3qqXfPrzQYY653Cj4tJiH4N5tFsDfHHEusiawNR9pRzm
+	 x2MWDMYYL6T7X1ho1scRyLcR1BWyDx1YHuu3HdRtIbKnCEaWsrogUnpPtk6O3iYfiw
+	 OsHoa+6bA64qXsbqfD+GHsiJ+7NX+CHZJKXZm0VP0aXCvPYIQh5MxRVUNEz/sQZdrQ
+	 3Q0maK4o/wJjw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 50/58] perf rwtop: Port rwtop to use python module
+Subject: Re: [PATCH v2 52/58] perf test: Migrate Intel PT virtual LBR test
+ to use Python API
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-51-irogers@google.com>
-References: <20260423035526.1537178-51-irogers@google.com>
+In-Reply-To: <20260423035526.1537178-53-irogers@google.com>
+References: <20260423035526.1537178-53-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 04:26:21 +0000
-Message-Id: <20260423042622.531F0C2BCB2@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 04:27:12 +0000
+Message-Id: <20260423042713.26493C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 5 potential issue(s):
-- [Medium] Meaningful code and commit message mismatch regarding terminal c=
-learing.
-- [Medium] The fallback logic for LiveSession uses invalid kernel tracepoin=
-ts.
-- [Medium] 0-byte completions (EOF) for read() and write() are incorrectly =
-classified as errors.
-- [Medium] Reference cycle with C extension type causes a memory and file d=
-escriptor leak.
-- [Low] Unhandled events tally is omitted when terminating Live Mode.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] The `perf_brstack_max.py` script hardcodes the `perf` python mod=
+ule path to the source tree, which breaks out-of-tree tests.
+- [Medium] Removing the explicit `perf version` feature check for Python su=
+pport combined with ignored script exit codes causes false test failures on=
+ systems built without the `perf` Python extension.
 --
 
-commit bcee736641b044aae62f7cca526d939e320836b7
+commit 476471672d05f0679b27caaca9409c70c20a974a
 Author: Ian Rogers <irogers@google.com>
 
-perf rwtop: Port rwtop to use python module
+perf test: Migrate Intel PT virtual LBR test to use Python API
 
-This commit ports the legacy Perl script rwtop.pl to a python script using
-the perf module. It uses a class-based architecture to periodically display
-system-wide r/w call activity broken down by PID.
+This commit migrates the Intel PT virtual LBR test to use the newly added
+brstack iterator API in the perf Python module, replacing an ad-hoc Python
+script that parsed branch stacks.
 
-> - Used ANSI escape codes (\x1b[H\x1b[2J) to clear the terminal.
-
-The commit message mentions using ANSI escape codes to clear the terminal,
-but looking at the print_totals() function in the diff, these escape
-sequences don't appear to be used. This means the script will continuously
-scroll its output instead of refreshing in place.
-
-> diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
-> new file mode 100755
-> index 0000000000000..952d178e99c5a
+> diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/=
+tests/shell/lib/perf_brstack_max.py
+> new file mode 100644
+> index 0000000000000..c826e14160d64
 > --- /dev/null
-> +++ b/tools/perf/python/rwtop.py
-
+> +++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
+> @@ -0,0 +1,43 @@
 [ ... ]
+> +import os
+> +
+> +script_dir =3D os.path.dirname(os.path.abspath(__file__))
+> +python_dir =3D os.path.abspath(os.path.join(script_dir, "../../../python=
+"))
+> +sys.path.insert(0, python_dir)
+> +
+> +import perf
 
-> +        elif event_name in ("evsel(syscalls:sys_exit_read)", "evsel(raw_=
-syscalls:sys_exit_read)"):
-> +            try:
-> +                ret =3D sample.ret
-> +                if ret > 0:
-> +                    self.reads[pid]["bytes_read"] +=3D ret
-> +                else:
-> +                    self.reads[pid]["errors"][ret] +=3D 1
+Does hardcoding the python path to the source tree break out-of-tree builds?
 
-Are 0-byte completions (EOF) for read() incorrectly classified as errors he=
-re?
+In out-of-tree builds using O=3D..., the compiled perf.so extension is
+generated in the build directory, not the source tree. This would cause
+the import to fail with a ModuleNotFoundError.
 
-If a system call returns 0, the code falls into the else block and incremen=
-ts
-errors[0]. A return value of 0 for read() signifies End-Of-File (EOF), which
-is a normal successful condition, not a system call failure.
-
+> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/s=
+hell/test_intel_pt.sh
+> index 8ee761f03c38b..d711ecdf5be02 100755
+> --- a/tools/perf/tests/shell/test_intel_pt.sh
+> +++ b/tools/perf/tests/shell/test_intel_pt.sh
 [ ... ]
+> @@ -539,34 +538,20 @@ test_kernel_trace()
+>  test_virtual_lbr()
+>  {
+>  	echo "--- Test virtual LBR ---"
+> -	# Check if python script is supported
+> -	libpython=3D$(perf version --build-options | grep python | grep -cv OFF)
+> -	if [ "${libpython}" !=3D "1" ] ; then
+> -		echo "SKIP: python scripting is not supported"
+> +	# shellcheck source=3Dlib/setup_python.sh
+> +	. "$(dirname "$0")"/lib/setup_python.sh
+> +
+> +	if [ -z "$PYTHON" ] ; then
+> +		echo "SKIP: Python not found"
+>  		return 2
+>  	fi
 
-> +        elif event_name in ("evsel(syscalls:sys_exit_write)", "evsel(raw=
-_syscalls:sys_exit_write)"):
-> +            try:
-> +                ret =3D sample.ret
-> +                if ret > 0:
-> +                    self.writes[pid]["bytes_written"] +=3D ret
-> +                else:
-> +                    self.writes[pid]["errors"][ret] +=3D 1
+Will removing the perf version build-options check for python scripting
+cause false test failures on systems built without the perf Python extensio=
+n?
 
-Does this have the same issue with classifying 0-byte completions for
-write() as errors instead of a successful EOF condition?
+The setup_python.sh script only verifies if a Python executable exists on t=
+he
+host, not if perf was built with Python support.
 
-[ ... ]
-
-> +    def run(self, input_file: str) -> None:
-> +        """Run the session."""
-> +        self.session =3D perf.session(perf.data(input_file), sample=3Dse=
-lf.process_event)
-
-Does this create a reference cycle that leaks the session and file
-descriptor?
-
-By passing self.process_event to perf.session and storing the session in
-self.session, a cycle is formed. The perf.session C extension type lacks
-garbage collection support, so Python's cyclic GC cannot break it. This
-could lead to a resource leak if the class is used programmatically to
-process multiple files in the same process.
-
-[ ... ]
-
-> +            try:
-> +                live_session =3D LiveSession(events, sample_callback=3Da=
-nalyzer.process_event)
-> +            except OSError:
-> +                events =3D (
-> +                    "raw_syscalls:sys_enter_read,raw_syscalls:sys_exit_r=
-ead,"
-> +                    "raw_syscalls:sys_enter_write,raw_syscalls:sys_exit_=
-write"
-> +                )
-
-Are these fallback tracepoints valid?
-
-The raw_syscalls subsystem only exports generic sys_enter and sys_exit
-tracepoints. Per-syscall tracepoints like raw_syscalls:sys_enter_read do
-not exist, meaning this fallback will invariably raise an OSError and
-terminate the script.
-
-[ ... ]
-
-> +    except KeyboardInterrupt:
-> +        print("\nStopping live mode...", file=3Dsys.stderr)
-> +        if analyzer.reads or analyzer.writes:
-> +            analyzer.print_totals()
-
-Should the unhandled events tally be printed here as well?
-
-When processing an offline file, the run() method prints the contents of the
-unhandled dictionary. Omitting this in the KeyboardInterrupt handler creates
-an inconsistency where dropped or malformed events aren't shown when
-terminating live mode.
+If the perf Python extension is missing, perf_brstack_max.py will crash with
+a ModuleNotFoundError. Because test_virtual_lbr is invoked within an OR-lis=
+t,
+POSIX shell rules disable set -e, effectively ignoring the script's crash.
+The test evaluates the empty output as times_val=3D0 and fails instead of
+gracefully skipping.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D50
+178-1-irogers@google.com?part=3D52
