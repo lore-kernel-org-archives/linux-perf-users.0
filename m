@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CF3DA5A5
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041D3D47AB
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 03:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776916647; cv=none; b=eyrzxmtfB/ll7bELQU5TvMzegGrcaGR8rToFwfQf7PYpdLl0R9GOKDCRss9soVktbMIE5k8MYovocNJruv5UzhyGKKrFaA9McnC/EeEmLt8yqGctR9ilO89MBBp+Utb9rCLRaCD7mqSTy0kTAE2+W0XGQ8PRwx+eHAazEn2YIxM=
+	t=1776916650; cv=none; b=hQvk8p1IWeXKUj+iIaEIJbRvSbAvAVW2KDGahdJvcRB2S+d9zA3aKlfe0eNaHaj7v7Yyxv0MfGYsMVFY++nipn0wUONw1jg7rOeOVRfVH95mRo/AaNJHRffPWZFSQD9qfC0L7erRjzDds7qk/1dBrFa646FGiLT7mjDtbK06jpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776916647; c=relaxed/simple;
-	bh=uMcVqY3tLFf/EBgLaCY85EAcAR6+CrqpmehkhosaJ6A=;
+	s=arc-20240116; t=1776916650; c=relaxed/simple;
+	bh=NMqsKicJTuqtdYFfXPtWuoov4B0G8lfLcJ3XRwJCIyU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OmLi6FbjhGi9RWBtMs9njlyVjznatDD/URldjdiRu8FgDflMhEXXCZq4cLvUfSvNiyHYmP3eM9STxfg6758OeC8AI9RjPx2SY5P96a9vCvkLVNRfXG/bohyW2t5gJ634H9U9wpimUEdOqiy5h+tpUrqIiQOed1+N4X5UVSejwkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvDJcDha; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=ptE3TrmFx5vJgpvecbIUj9zGCVEquZOLFzfPlS//VqMqhKVqIQwj5jgUR4IieeAhhVNAfq3/gJPMFd0Ev1mv5mBQdG834/7asYZwoX6KHLuhCZNZUtuwEsx1ajw7dGjQRmfTX3w3YW4oyEjkrp5bw3viSu3cNCC81s1bbO8U7SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QCb3Ij0z; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvDJcDha"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so6541188eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:57:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCb3Ij0z"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c8ccc7593so6404408c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 20:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776916644; x=1777521444; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1776916647; x=1777521447; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kptrmifDisWizsrGAKahHsaLZwGfXMmsel5Fko6HAYA=;
-        b=tvDJcDhaHTKQ4bbL2QWBiXO+D0Jla5H1noGllQBY4mTYyokj9Aamu8ZDAvJ9MsF9J4
-         QCcFdetszc6WSBR8dG48/JHKEi1EY5nS3/T0i2xVCf6+6ZY+C+TQSh1x4dnSReXl3IMh
-         emPKIGCHThB4t1Sf6pdnPzRPrAiYEdejOd44wzeBKw8mf+kWdjr2h5KKy6JzFwamqgT7
-         BYtJ4oroA//4RLUDjnDZhmDujXa27qheHzMjkXsQ0UjGYlyA614a2jOrVn5nMvQ3uMbJ
-         Ztu7xv6E+NTsVCZP52ULTERaSGJswhJynQrE06HCUAdAE2q6IYWTbslZf5Nw5v795OH6
-         li2w==
+        bh=ukc5CMlv1Gxs4NWpWueaT52blfG4//jTmS7zbd0Bxpo=;
+        b=QCb3Ij0z3hPyWCJHILtF9YO10gxHh8iF1nIUqBEhXsGD0k66CpXgth79NB85qluMJv
+         O3lXkNsCzx7T+7vmYnQkAHa8Lgzo5vKk1FcknSXquGODlrsO2EPGo8OeTCb2N5esP/Z+
+         g8Ms7fpa6y5kxcdvJwnobo1updDA2+vrVlnxqXsPYB5nKgECL+EdTvmzc3ntisWrFMHe
+         FKrvDxRQSp0aXqJLRebEHkDB1K940WACIK1LZZDk+sTJHGegWjC3Xg2R+7hDeJRbzf+J
+         LhrZAuoA4GeQDnmOAs48OBKOxPiHW2hMH7Kw6wWnykhc0jtewGggJAWrTdM4fBSGbMqc
+         hqRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776916644; x=1777521444;
+        d=1e100.net; s=20251104; t=1776916647; x=1777521447;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kptrmifDisWizsrGAKahHsaLZwGfXMmsel5Fko6HAYA=;
-        b=pOcfq+5aqEm5RPHi0J9IoGa81JPfzEyNmHAXCi7CPe8obZk+h2r8NTmODKBj/3Cc0e
-         IfxzGpCgqMr57e8ofS1vzgZTNjcVxv/SCeQXowNEnmZAVMu9jZPVZPfFfD3+aNQjZ7mF
-         T+Gf/UYA1cJ8Lztgfm4BCq/68EjdmfgHyxBrDef2/y/QwOVZ2EE+e6D2Ypsd5YIzIDuz
-         xIDWXy1dcOJxG15upaB4x2nTG82+VqM7RNYTl9ftKKuoxHGZ+SjFxEcnJHOiSxus0skG
-         MrDkRrEzs2ToxE8LWVsuQ62XecFwp2NdJAruMvJnXVziLchDTgKCK6PkhK+pSrkAhVTE
-         /IMQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9TYMl19bjVcSKA9Ogep9gBI0utDLezWB7nFaGdzVY5kcSygqlbf678K3VLtLXL8QJFI++Ui+f+JWVjicLrseTd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyERRPURQjtY05/T5UjIZzfdLyFDnS09/mJ8kHpil4StvfvZMoR
-	bb6sr/qLDjjG7684DAfjWvX3JY3fc1yiYFsPv5+FM8ynjTQoDjCaVjAaXp8p3iu8kAuf1VUUcf0
-	daanqBgb9yw==
-X-Received: from dlbcy15.prod.google.com ([2002:a05:7022:b8f:b0:12d:bef6:56f4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f9c:b0:12b:f899:7185
- with SMTP id a92af1059eb24-12c73f99df1mr13405246c88.16.1776916643844; Wed, 22
- Apr 2026 20:57:23 -0700 (PDT)
-Date: Wed, 22 Apr 2026 20:55:17 -0700
+        bh=ukc5CMlv1Gxs4NWpWueaT52blfG4//jTmS7zbd0Bxpo=;
+        b=Mx3IrGDt5CGteWu43v1Iya0R0xm8dyBayM1D+WpP5XuXNf/nixxaIgS1xnhlx5yJpK
+         DaztrPX/+pJV1Dr4KTBUfBBTL2E0SIKxcW2bvVdsWamQMDOwSJRgWzV9N+Og9tHPDmAI
+         /rFx+0BBKgN9/NmRK46yP1mHXXW/xlaUy8gn7Xgwj01aUfKsWqAzvg0dVUVsfXXW+vfP
+         u+wE5a4gqvNzbjwVlAj55Og2dFgnv3UltJ3JnNqFn6kCO6RBa6HBJ6XQbDq7oy2nRwiG
+         UsJ7wS4HbkThnZItUuIQhsoF+kxQlPlgEhF1z1nPy3V/dq8LdPGdXcaoMjImgwCxdYQN
+         t40A==
+X-Forwarded-Encrypted: i=1; AFNElJ+nG1OnW9GKGIzyj9KGBb/m42wZqGxGH18dYN2vJIvBhNEWr5Ar0ghJ4QJqM4icpV/gj0AE6Wg4GiIV3uPhq+Y4@vger.kernel.org
+X-Gm-Message-State: AOJu0YypB6Nzy97/JeuHzCvpPX6cmNNv1YXy90LOPBvwG1xPhMxh/tcz
+	119hZYSsEE/uRwUepSKCEh/rsHJclRq7iColrqKPr7zwQVe9wxh0bY1qP5HTKBNt9gH8V2/CMd1
+	X6byeO4infg==
+X-Received: from dlbqc1.prod.google.com ([2002:a05:7023:a81:b0:12c:87ba:191d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2213:b0:128:cf80:deea
+ with SMTP id a92af1059eb24-12c73f697edmr13039924c88.1.1776916646007; Wed, 22
+ Apr 2026 20:57:26 -0700 (PDT)
+Date: Wed, 22 Apr 2026 20:55:18 -0700
 In-Reply-To: <20260423035526.1537178-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260419235911.2186050-27-irogers@google.com> <20260423035526.1537178-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.533.g4f5dca5207-goog
-Message-ID: <20260423035526.1537178-51-irogers@google.com>
-Subject: [PATCH v2 50/58] perf rwtop: Port rwtop to use python module
+Message-ID: <20260423035526.1537178-52-irogers@google.com>
+Subject: [PATCH v2 51/58] perf wakeup-latency: Port wakeup-latency to use
+ python module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org, 
@@ -84,21 +85,18 @@ Cc: 9erthalion6@gmail.com, adityab1@linux.ibm.com,
 	zhiguo.zhou@intel.com, zli94@ncsu.edu
 Content-Type: text/plain; charset="UTF-8"
 
-Port the legacy Perl script rwtop.pl to a python script using the perf
-module in tools/perf/python.
+Port the legacy Perl script wakeup-latency.pl to a python script using
+the perf module in tools/perf/python.
 
 The new script uses a class-based architecture and leverages the
 perf.session API for event processing.
 
-It periodically displays system-wide r/w call activity, broken down by
-PID, refreshed every interval.
+It measures wakeup latency by tracking timestamps of
+sched:sched_wakeup and sched:sched_switch events.
 
 Complications:
-- Implemented periodic display based on event timestamps
-  (sample.sample_time) instead of relying on SIGALRM, making it robust
-  for file-based processing.
-- Used ANSI escape codes (\x1b[H\x1b[2J) to clear the terminal.
-- Fixed unused imports and indentation issues identified by pylint.
+- Used min() and max() built-in functions instead of if blocks to
+  satisfy pylint recommendations.
 - pylint warns about the module name not being snake_case, but it is
   kept for consistency with the original script name.
 
@@ -107,229 +105,90 @@ Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v2:
 
- - Added Live Session Support: Updated main() to start a LiveSession
-   when the input file does not exist (or is the default "perf.data"
-   and doesn't exist). It traces read and write entry/exit
-   tracepoints.
+ - Fixed Wakeup Latency Logic: Modified the script to track wakeup
+   timestamps per task (using sample.pid as the key) instead of per
+   CPU.  This ensures that context switches are correctly paired with
+   the specific task that was woken up, even if multiple tasks are
+   woken up on the same CPU or if a task is migrated to a different
+   CPU before running.
 
- - Fixed Live Mode Comm Resolution: Fixed a bug in process_event()
-   where it would attempt to use self.session to resolve the command
-   name when running in live mode (where self.session is None ). It
-   now falls back to f"PID({pid})" when in live mode or if resolution
-   fails.
+ - Prevented Memory Growth: Added del self.last_wakeup[next_pid] after
+   successful latency calculation to prevent the dictionary from
+   growing unbounded over time.
 
- - Fixed Substring Matching: Replaced loose substring checks like if
-   "sys_enter_read" in event_name: with exact matches against
-   "evsel(syscalls:sys_enter_read)" and
-   "evsel(raw_syscalls:sys_enter_read)" using str(sample.evsel) . This
-   prevents unrelated syscalls with similar names (like readv or
-   readahead ) from being incorrectly aggregated. Similar fixes were
-   applied for exit events and write events.
-
- - Inlined Handlers and Tracked Errors: Inlined the _handle_sys_*
-   helper methods into process_event() . Now, if a sample lacks
-   expected fields, it is added to the self.unhandled tracker instead
-   of being silently ignored.
-
- - Fixed Write Byte Counting: Updated the write exit handler to use
-   sample.ret to count actual bytes written on success, and tracked
-   requested bytes separately in the enter handler, matching the read
-   behavior.
-
- - Added Error Tables to Output: Added tables to display failed reads
-   and writes by PID in print_totals() , which were previously tracked
-   but never displayed.
-
- - Fixed Offline Output (Ghosting): Removed the hardcoded ANSI
-   clear-screen escape codes in print_totals() , as they corrupted
-   output when processing offline trace files at CPU speed or when
-   piping the output.
-
- - Code Cleanup: Fixed a bug where fd was printed instead of pid in
-   the read counts table, and broke long lines to satisfy pylint.
+ - Added Error Tracking: Added try-except blocks around tracepoint
+   field access in process_event() and tracked missing fields in self.
+   unhandled instead of ignoring them.
 ---
- tools/perf/python/rwtop.py | 219 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 219 insertions(+)
- create mode 100755 tools/perf/python/rwtop.py
+ tools/perf/python/wakeup-latency.py | 88 +++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100755 tools/perf/python/wakeup-latency.py
 
-diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
+diff --git a/tools/perf/python/wakeup-latency.py b/tools/perf/python/wakeup-latency.py
 new file mode 100755
-index 000000000000..952d178e99c5
+index 000000000000..1b0db115abcf
 --- /dev/null
-+++ b/tools/perf/python/rwtop.py
-@@ -0,0 +1,219 @@
++++ b/tools/perf/python/wakeup-latency.py
+@@ -0,0 +1,88 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0-only
-+"""Periodically displays system-wide r/w call activity, broken down by pid."""
++"""Display avg/min/max wakeup latency."""
 +
 +import argparse
 +from collections import defaultdict
-+import os
 +import sys
-+from typing import Optional, Dict, Any
++from typing import Optional, Dict
 +import perf
-+from perf_live import LiveSession
 +
-+class RwTop:
-+    """Periodically displays system-wide r/w call activity."""
-+    def __init__(self, interval: int = 3, nlines: int = 20) -> None:
-+        self.interval_ns = interval * 1000000000
-+        self.nlines = nlines
-+        self.reads: Dict[int, Dict[str, Any]] = defaultdict(
-+            lambda: {
-+                "bytes_requested": 0,
-+                "bytes_read": 0,
-+                "total_reads": 0,
-+                "comm": "",
-+                "errors": defaultdict(int),
-+            }
-+        )
-+        self.writes: Dict[int, Dict[str, Any]] = defaultdict(
-+            lambda: {
-+                "bytes_requested": 0,
-+                "bytes_written": 0,
-+                "total_writes": 0,
-+                "comm": "",
-+                "errors": defaultdict(int),
-+            }
-+        )
++class WakeupLatency:
++    """Tracks and displays wakeup latency statistics."""
++    def __init__(self) -> None:
++        self.last_wakeup: Dict[int, int] = defaultdict(int)
++        self.max_wakeup_latency = 0
++        self.min_wakeup_latency = 1000000000
++        self.total_wakeup_latency = 0
++        self.total_wakeups = 0
 +        self.unhandled: Dict[str, int] = defaultdict(int)
 +        self.session: Optional[perf.session] = None
-+        self.last_print_time: int = 0
 +
-+    def process_event(self, sample: perf.sample_event) -> None:  # pylint: disable=too-many-branches
++    def process_event(self, sample: perf.sample_event) -> None:
 +        """Process events."""
 +        event_name = str(sample.evsel)
-+        pid = sample.sample_pid
 +        sample_time = sample.sample_time
 +
-+        if self.last_print_time == 0:
-+            self.last_print_time = sample_time
-+
-+        # Check if interval has passed
-+        if sample_time - self.last_print_time >= self.interval_ns:
-+            self.print_totals()
-+            self.last_print_time = sample_time
-+
-+        try:
-+            comm = f"PID({pid})" if not self.session else self.session.process(pid).comm()
-+        except Exception:  # pylint: disable=broad-except
-+            comm = f"PID({pid})"
-+
-+        if event_name in ("evsel(syscalls:sys_enter_read)", "evsel(raw_syscalls:sys_enter_read)"):
++        if "sched:sched_wakeup" in event_name:
 +            try:
-+                count = sample.count
-+                self.reads[pid]["bytes_requested"] += count
-+                self.reads[pid]["total_reads"] += 1
-+                self.reads[pid]["comm"] = comm
++                pid = sample.pid
++                self.last_wakeup[pid] = sample_time
 +            except AttributeError:
 +                self.unhandled[event_name] += 1
-+        elif event_name in ("evsel(syscalls:sys_exit_read)", "evsel(raw_syscalls:sys_exit_read)"):
++        elif "sched:sched_switch" in event_name:
 +            try:
-+                ret = sample.ret
-+                if ret > 0:
-+                    self.reads[pid]["bytes_read"] += ret
-+                else:
-+                    self.reads[pid]["errors"][ret] += 1
-+            except AttributeError:
-+                self.unhandled[event_name] += 1
-+        elif event_name in ("evsel(syscalls:sys_enter_write)",
-+                            "evsel(raw_syscalls:sys_enter_write)"):
-+            try:
-+                count = sample.count
-+                self.writes[pid]["bytes_requested"] += count
-+                self.writes[pid]["total_writes"] += 1
-+                self.writes[pid]["comm"] = comm
-+            except AttributeError:
-+                self.unhandled[event_name] += 1
-+        elif event_name in ("evsel(syscalls:sys_exit_write)", "evsel(raw_syscalls:sys_exit_write)"):
-+            try:
-+                ret = sample.ret
-+                if ret > 0:
-+                    self.writes[pid]["bytes_written"] += ret
-+                else:
-+                    self.writes[pid]["errors"][ret] += 1
++                next_pid = sample.next_pid
++                wakeup_ts = self.last_wakeup.get(next_pid, 0)
++                if wakeup_ts:
++                    latency = sample_time - wakeup_ts
++                    self.max_wakeup_latency = max(self.max_wakeup_latency, latency)
++                    self.min_wakeup_latency = min(self.min_wakeup_latency, latency)
++                    self.total_wakeup_latency += latency
++                    self.total_wakeups += 1
++                    del self.last_wakeup[next_pid]
 +            except AttributeError:
 +                self.unhandled[event_name] += 1
 +        else:
 +            self.unhandled[event_name] += 1
 +
 +    def print_totals(self) -> None:
-+        """Print summary tables."""
-+        print("read counts by pid:\n")
-+        print(
-+            f"{'pid':>6s}  {'comm':<20s}  {'# reads':>10s}  "
-+            f"{'bytes_req':>10s}  {'bytes_read':>10s}"
-+        )
-+        print(f"{'-'*6}  {'-'*20}  {'-'*10}  {'-'*10}  {'-'*10}")
-+
-+        count = 0
-+        for pid, data in sorted(self.reads.items(),
-+                                key=lambda kv: kv[1]["bytes_read"], reverse=True):
-+            print(
-+                f"{pid:6d}  {data['comm']:<20s}  {data['total_reads']:10d}  "
-+                f"{data['bytes_requested']:10d}  {data['bytes_read']:10d}"
-+            )
-+            count += 1
-+            if count >= self.nlines:
-+                break
-+
-+        print("\nfailed reads by pid:\n")
-+        print(f"{'pid':>6s}  {'comm':<20s}  {'error #':>6s}  {'# errors':>10s}")
-+        print(f"{'-'*6}  {'-'*20}  {'-'*6}  {'-'*10}")
-+
-+        errcounts = []
-+        for pid, data in self.reads.items():
-+            for error, cnt in data["errors"].items():
-+                errcounts.append((pid, data["comm"], error, cnt))
-+
-+        sorted_errcounts = sorted(errcounts, key=lambda x: x[3], reverse=True)
-+        for pid, comm, error, cnt in sorted_errcounts[:self.nlines]:
-+            print(f"{pid:6d}  {comm:<20s}  {error:6d}  {cnt:10d}")
-+
-+        print("\nwrite counts by pid:\n")
-+        print(
-+            f"{'pid':>6s}  {'comm':<20s}  {'# writes':>10s}  "
-+            f"{'bytes_req':>10s}  {'bytes_written':>13s}"
-+        )
-+        print(f"{'-'*6}  {'-'*20}  {'-'*10}  {'-'*10}  {'-'*13}")
-+
-+        count = 0
-+        for pid, data in sorted(self.writes.items(),
-+                                key=lambda kv: kv[1]["bytes_written"], reverse=True):
-+            print(
-+                f"{pid:6d}  {data['comm']:<20s}  {data['total_writes']:10d}  "
-+                f"{data['bytes_requested']:10d}  {data['bytes_written']:13d}"
-+            )
-+            count += 1
-+            if count >= self.nlines:
-+                break
-+
-+        print("\nfailed writes by pid:\n")
-+        print(f"{'pid':>6s}  {'comm':<20s}  {'error #':>6s}  {'# errors':>10s}")
-+        print(f"{'-'*6}  {'-'*20}  {'-'*6}  {'-'*10}")
-+
-+        errcounts = []
-+        for pid, data in self.writes.items():
-+            for error, cnt in data["errors"].items():
-+                errcounts.append((pid, data["comm"], error, cnt))
-+
-+        sorted_errcounts = sorted(errcounts, key=lambda x: x[3], reverse=True)
-+        for pid, comm, error, cnt in sorted_errcounts[:self.nlines]:
-+            print(f"{pid:6d}  {comm:<20s}  {error:6d}  {cnt:10d}")
-+
-+        # Reset counts
-+        self.reads.clear()
-+        self.writes.clear()
-+
-+    def run(self, input_file: str) -> None:
-+        """Run the session."""
-+        self.session = perf.session(perf.data(input_file), sample=self.process_event)
-+        self.session.process_events()
-+
-+        # Print final totals if there are any left
-+        if self.reads or self.writes:
-+            self.print_totals()
++        """Print summary statistics."""
++        print("wakeup_latency stats:\n")
++        print(f"total_wakeups: {self.total_wakeups}")
++        if self.total_wakeups:
++            avg = self.total_wakeup_latency // self.total_wakeups
++            print(f"avg_wakeup_latency (ns): {avg}")
++        else:
++            print("avg_wakeup_latency (ns): N/A")
++        print(f"min_wakeup_latency (ns): {self.min_wakeup_latency}")
++        print(f"max_wakeup_latency (ns): {self.max_wakeup_latency}")
 +
 +        if self.unhandled:
 +            print("\nunhandled events:\n")
@@ -338,42 +197,24 @@ index 000000000000..952d178e99c5
 +            for event_name, count in self.unhandled.items():
 +                print(f"{event_name:<40s}  {count:10d}")
 +
++    def run(self, input_file: str) -> None:
++        """Run the session."""
++        self.session = perf.session(perf.data(input_file), sample=self.process_event)
++        self.session.process_events()
++        self.print_totals()
++
 +def main() -> None:
 +    """Main function."""
-+    parser = argparse.ArgumentParser(description="Trace r/w activity by PID")
-+    parser.add_argument(
-+        "interval", type=int, nargs="?", default=3, help="Refresh interval in seconds"
-+    )
++    parser = argparse.ArgumentParser(description="Trace wakeup latency")
 +    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
 +    args = parser.parse_args()
 +
-+    analyzer = RwTop(args.interval)
++    analyzer = WakeupLatency()
 +    try:
-+        if not os.path.exists(args.input) and args.input == "perf.data":
-+            # Live mode
-+            events = (
-+                "syscalls:sys_enter_read,syscalls:sys_exit_read,"
-+                "syscalls:sys_enter_write,syscalls:sys_exit_write"
-+            )
-+            try:
-+                live_session = LiveSession(events, sample_callback=analyzer.process_event)
-+            except OSError:
-+                events = (
-+                    "raw_syscalls:sys_enter_read,raw_syscalls:sys_exit_read,"
-+                    "raw_syscalls:sys_enter_write,raw_syscalls:sys_exit_write"
-+                )
-+                live_session = LiveSession(events, sample_callback=analyzer.process_event)
-+            print("Live mode started. Press Ctrl+C to stop.", file=sys.stderr)
-+            live_session.run()
-+        else:
-+            analyzer.run(args.input)
++        analyzer.run(args.input)
 +    except IOError as e:
 +        print(e, file=sys.stderr)
 +        sys.exit(1)
-+    except KeyboardInterrupt:
-+        print("\nStopping live mode...", file=sys.stderr)
-+        if analyzer.reads or analyzer.writes:
-+            analyzer.print_totals()
 +
 +if __name__ == "__main__":
 +    main()
