@@ -1,69 +1,73 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51118335BA
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 00:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EEF1F3BA4
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 00:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776904999; cv=none; b=d73mOKWWfRPQYu7izj58pqI21klWcl1WN66iAZoXlbL84DJq8D0DL428XrjtrC47KJsjjHTD/fZc9qpYGKYzmZT5UJuHFXmpWNnESHa9mom4fI91qgA02UgRBNz8xzASSBvQCVjDhDLr5zIezXomidOkNM5+IQXCjjoBpgM8auQ=
+	t=1776905001; cv=none; b=d6mTXOPsBWq36zVi2fiagAsaZX2Ku2Sjt5J4QRV0wkt0cchE4Lu8c07YjavFKfPN9dic4lBXbmxN4NUyQu2MHDvZiBRW6T0T3eiU6DazarTpl6Wx4A5ow8oFYXem8PO1ENX+HiZ1qMHA397uRz2tE5z96IE1FE3qG00Mb2L/FfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776904999; c=relaxed/simple;
-	bh=03/Nz7I9y/2C2L6mQIhV/CFh40AiCHKK+NtUEn+FO2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cm4ytykzxsGGO9fA+b3+GDmC2ouPNJYRjeKDX+B8tUybOnap698hYks8TII2hZaZBxtPAmw4Q4nxEXqQgZqI8i667fpAmVL6VIia9YwNk4eKtiSnjKzOUszoFCv489TGpH94G60ahQz8mvagdHhXQwXYOVYUvbie95GIfcdlw2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s4c8n1rF; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1776905001; c=relaxed/simple;
+	bh=p2VMbwx9CRVU8YlKJde9eWW6nK8l8Jg9QZWedI6GXbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sOnrCmdqAhkPpVugUREEZiT80P33s+6lXQvbhOedwi2IFsAAPDhRXjtWU4eQwnfx84H7o/J11RErC3hVs08JvXKqSRrIqVtoJtV5C06QgjZjIvF4SXMfm+EHQjrp6VSaxyugqYREVxE3h8mEI9t3GVpzi4nAXRuraNYmSMgvcCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IU8Iyx7E; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s4c8n1rF"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ad9a9be502so37798845ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 17:43:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IU8Iyx7E"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b25cf1b5f0so33512055ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 17:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776904997; x=1777509797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+tG2Z5j0bG2Jz4vsU5nysQGQqcBOT5VAsxoLEyOLy5w=;
-        b=s4c8n1rF6v7DoavXQGcdtUx+EL9ZARxeW6hd1PpwMNSZ4LUVJCnk/U234ExCl+1gkQ
-         WIqTEkRAfhCxbqWKiGAJs4qEzOEbYIfQvtwhmt1s9DSnDMBo8qWHeLdXTG+60OT85UiG
-         eQkva9w0APS/Hv2WpPIr+gyTx0XnZzms/p4RE2E1U9RdXb4zrCAtEqCLcEKh7IWja1vc
-         VYxREgIJe9X/xkxfOdyAY2GCHsX2H3NJ5N1TuhcvgLL41NxscxTYrqz8cZh8yfywNT+V
-         6ms+B+5u5bdxHXgcrLNjU5seNL5dW9PxrmleCrwpQ+rLIDuz28ZokTx38ajyeazi6qLm
-         d1xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776904997; x=1777509797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1776904999; x=1777509799; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+tG2Z5j0bG2Jz4vsU5nysQGQqcBOT5VAsxoLEyOLy5w=;
-        b=GclCaoLMvHRzYCQSoSzvEwZFdpN+wu8By5btnSfyYindKmpTS3ayv0dUX+hwWc2leR
-         wLdcGf1JDjmAJZwXS/pbLDHzye1Al1didS1bhp2c0kl8WI7bBqTXwnNaVG1X93z2PkHh
-         RDUUmbzAnGl1AaQmT04/utsjn8nNDJyWQoxkgUfPGe+X6q0W9Q48IGm4awuLwKsiwqrD
-         zKZxB/R9WH2kqIoyZJ8y05sW43QKQznjYwaUWecb7l9CyIzvtO4f9XgVoyBsIajE7SiV
-         UXYd8IWuLHGM8VQTvWwurJcdDK0vlsquP0L5MD80WB+a8hO4lu7/Mb2+x5sCnw1GRmU0
-         +E7Q==
-X-Gm-Message-State: AOJu0YxJ4LF6ERrzne+Iof75LWCopHyAE9BWzzDEUWPv9IEiGhjHit4u
-	Ho7Dar5HeUzVDl5lkWqaEAxf8FAiag5z3sFxrZzrJ4QE+99+DWvSz2VX
-X-Gm-Gg: AeBDietjzy4vurAiWp9SFbHhGj0EnRlwTcXmLhEQ/lA+Snw5m3Os/e6TrymVSuxSJsr
-	GjyHgPB6BD6iqxLKwWaLKjO33Ecm4gUhPTO8+feKifeIAess7HoE/GbfzErD8fCWnnTMJuCaDFr
-	v5C5tPTdj+u4ET7Q+t0WXNRLDXQRKlOOw0KNEyaSN6yYuisknS8mGnba3c2DuFU3qjgWlv2ajWv
-	JO5PuVolmKkpq9YRlPO1PXiTyoAHuryZ8sK7aLsQlbwoe93dwF4n1qKkxqo8h/afVQMQiKTxr7Q
-	wLjghVXKOmzbPpCHMjZDFNTeGlHENTNplPf6lRd8drHJxhuz0TwHnKQiraw+wUIPP8LXS4+5qs2
-	bM8P45bGgQq6wGafjWwGNfw6vmS93kHrgZ2GV984WK7kX7snYa7dYyiuifo7YdPdC6pEoDuQ391
-	nXFylvZGkZMU1svFmOdbIGd4Va8hELBZM+mRsyMDqy1nNNhmcn
-X-Received: by 2002:a17:903:38c4:b0:2b4:5f69:715d with SMTP id d9443c01a7336-2b5f9f36ea9mr296776365ad.25.1776904997329;
-        Wed, 22 Apr 2026 17:43:17 -0700 (PDT)
+        bh=KGyaTZAVR0gi4W8cRPqgOT4qBMfHwh1rPE8qwQ7RFhc=;
+        b=IU8Iyx7EW4mfc1uBaJunDQuL4hyRXuG7KtFHJJ4Zxx9pnXkxgHM2XIMsy8fxInmbg9
+         wdwORXTTmoVhcgEsosHyXTxOUOvGIOAVipX8kivEiP1DTaCTwdVjVGoD3/V5IUmOKg5b
+         2k79CKx/XB6ZVUZDt7A7uv5K4tzM4vNKN/zJOeKfafam5/yU+4I0CHHPwEDBcMn66see
+         DdQrAVTcfiY23stIGTLb4mrfXCz2MoKVrIkD3dmZIfUBMHbbjHKCqXQphSwNsF6sfUh8
+         KOgFhRUzsAni6Y8ra60bvC2wRa5sJXjqSeGIQFCReyUWvKmtnuEBDZ17C77rqYTJERHg
+         0Szw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776904999; x=1777509799;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KGyaTZAVR0gi4W8cRPqgOT4qBMfHwh1rPE8qwQ7RFhc=;
+        b=KLVa/0b0qvbW5Z9i3fXtwKPlXPJMubYOGowj1xiqe10IDCmEd7U2ECWlnMYqe8C8MJ
+         cBFXBl9E/973FAMMz0shMifqt7kbNmVlUk38/MJRwy7L646GfCCAo6FMJGoyyxyMFbHO
+         fUWOrfvTTRLAMmL29dyorWg5J5TLuq5RUro2SwX1Boid7gUQ+pqg7qnYXXRnzKcrzz6n
+         lmmKYtvfqBciqW49ykmc7U5Ilybrk8FuEI7aOZzKBOulNDfEtOlt8ih+aG1AI+yh02wz
+         n+GFYp3CXufLUA7uGao96UcblNE+USKzxJkUf+FAmpaCB8HafSUvhrj6eHfNNWbM4ZaS
+         WiiQ==
+X-Gm-Message-State: AOJu0YzqX4RHjUc6Olv5bRXssUcsEH4DUrDrCfR77MUP9ziMq2mqGr0l
+	MAFN22hY3DVJl4mqJtRC6rTh8QK5r9CVzav4Fkc/xZspsrS+iMpzcKR3mLF3Zw==
+X-Gm-Gg: AeBDietiM/YWSg5yEOrqBTq4PynQZa0ljbskCMJ4Qc8T7dQg13mUIZffBIHjY+7uKUF
+	z1MDIgIA/b+tEKrvMCtqr+SOxDPmy+WuXRzCSycfLmXLq4LGKl/ioFfBSC81KTFjzmeDdwHvhip
+	D1N0BiJgKPV+KXxfXxsI0fNTxEhcDdzWh8O4UVQRLynJQkvhadEj4L7K5ZRNWxZivrzwn/Eio+N
+	UuJj1yW4YHsQGaUFDfUzdmt5A+waM1Ohl9XjXSRbL0XlA6+UcnfYO59iUg1WU1k8bzLBqMj5Voa
+	93I4ybYgDW+4q3l0B0AmpvW2gVXUrxO4uRsn1geo7Kx2Q4SYXY0axs+WinBt69Q3Cfnt/N3E7+9
+	zO/0crmRbOmH+RcdqebWj7LEqzpohXNhd5L2BO1s74x01+IRjojFhcNoRrU8m/scFoD6Ng/KJ8X
+	GeeaGDBT7tufKXxF8tFudBdN0EcgqDUP27OW/ZenXDZE4IH5dS
+X-Received: by 2002:a17:903:120d:b0:2ae:8253:1452 with SMTP id d9443c01a7336-2b5f9e8195fmr265633975ad.11.1776904998793;
+        Wed, 22 Apr 2026 17:43:18 -0700 (PDT)
 Received: from localhost.localdomain ([240f:34:212d:1:963d:c5da:6762:8843])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab4bf7bsm176724085ad.81.2026.04.22.17.43.15
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab4bf7bsm176724085ad.81.2026.04.22.17.43.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 17:43:16 -0700 (PDT)
+        Wed, 22 Apr 2026 17:43:18 -0700 (PDT)
 From: Akinobu Mita <akinobu.mita@gmail.com>
 To: damon@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org,
 	sj@kernel.org,
 	akinobu.mita@gmail.com
-Subject: [RFC PATCH v3 0/4] mm/damon: introduce perf event based access check
-Date: Thu, 23 Apr 2026 09:42:06 +0900
-Message-ID: <20260423004211.7037-1-akinobu.mita@gmail.com>
+Subject: [RFC PATCH v3 1/4] mm/damon/core: add code borrowed from report-based monitoring work
+Date: Thu, 23 Apr 2026 09:42:07 +0900
+Message-ID: <20260423004211.7037-2-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260423004211.7037-1-akinobu.mita@gmail.com>
+References: <20260423004211.7037-1-akinobu.mita@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,224 +76,666 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMON currently only provides PTE accessed-bit based access check, this
-patch series adds a new perf event based access check.
+The perf event-based monitoring will be implemented on top of the
+report-based monitoring infrastructure, but since the migration is
+still in progress, only borrow the following necessary code for now.
 
-Since perf event-based access checks do not require modifying the PTE
-accessed-bit for pages representing each damon region, it reduces the
-overhead of monitoring at a fixed granularity of the page size.
+* struct damon_access_report
+* access_reported field in struct damon_region
+* sample/primitives/ sysfs directory
 
-Here is a method and its results for comparing access checks using
-existing access bits and new perf events.
+[1] https://lore.kernel.org/linux-mm/20251208062943.68824-6-sj@kernel.org/T/
+---
+ include/linux/damon.h |  68 ++++++
+ mm/damon/core.c       |   1 +
+ mm/damon/sysfs.c      | 499 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 568 insertions(+)
 
-The time required for the access check will be measured using the
-following steps.
-
-Start a memcached server with approximately 100GB of memory and run a
-benchmark client.
-```
-# Run memcached as a daemon
-memcached --daemon --pidfile=/tmp/memcached.pid --port=7777 \
-  --memory-limit=200000 --threads=8
-# Load keys
-memtier_benchmark -s 127.0.0.1 -p 7777 --key-maximum=100000000 \
-  --data-size=1000 --threads=8 --protocol=memcache_text \
-  --key-pattern=P:P --ratio=1:0 --requests=allkeys
-# Run benchmark in the background
-memtier_benchmark -s 127.0.0.1 -p 7777 --key-maximum=100000000 \
-  --data-size=1000 --threads=8 --protocol=memcache_text \
-  --key-pattern=Z:Z --ratio=50:50 --test-time=999999 --pipeline=10 \
-  --distinct-client-seed --randomize &> /tmp/memtier.log &
-```
-
-Measure the time required for access checks when monitoring memcached at
-page size granularity.
-
-Using accessed bit, prepare_access_checks takes 7 seconds and
-check_accesses takes 5 seconds.
-```
-$ sudo $HOME/damo/damo start --ops vaddr \
-	--monitoring_intervals 5s 60s 300s \
-	--monitoring_nr_regions_range 1000000000 1000000000 \
-	--target_pid $(cat /tmp/memcached.pid)
-$ sudo perf ftrace latency -a --hide-empty \
-  -T damon_va_prepare_access_checks -- sleep 60
-#   DURATION     |      COUNT | GRAPH                                          |
-     1 - ...  s  |          4 | ############################################## |
-
-# statistics  (in usec)
-  total time:             28624961
-    avg time:              7156240
-    max time:              7322209
-    min time:              6859464
-       count:                    4
-$ sudo perf ftrace latency -a --hide-empty \
-  -T damon_va_check_accesses -- sleep 60
-#   DURATION     |      COUNT | GRAPH                                          |
-     1 - ...  s  |          3 | ############################################## |
-
-# statistics  (in usec)
-  total time:             16007973
-    avg time:              5335991
-    max time:              5369579
-    min time:              5300285
-       count:                    3
-```
-
-Using perf event, prepare_access_checks takes 0.01 seconds and
-check_accesses takes 2.6 seconds.
-```
-$ sudo $HOME/damo/damo stop
-$ sudo $HOME/damo/damo start --ops vaddr \
-	--perf_event 5000 0 0x4 0x1cd 0x1f 0 \
-	--monitoring_intervals 5s 60s 300s \
-	--monitoring_nr_regions_range 1000000000 1000000000 \
-	--target_pid $(cat /tmp/memcached.pid)
-$ sudo perf ftrace latency -a --hide-empty \
-  -T kdamond_prepare_perf_event_report -- sleep 60
-#   DURATION     |      COUNT | GRAPH                                          |
-     4 -    8 ms |          7 | ############################################## |
-
-# statistics  (in usec)
-  total time:                75641
-    avg time:                10806
-    max time:                11174
-    min time:                 9945
-       count:                    7
-$ sudo perf ftrace latency -a --hide-empty \
-  -T kdamond_check_perf_event_reported_accesses -- sleep 60
-#   DURATION     |      COUNT | GRAPH                                          |
-     1 - ...  s  |          7 | ############################################## |
-
-# statistics  (in usec)
-  total time:             18101248
-    avg time:              2585893
-    max time:              2834578
-    min time:              2504466
-       count:                    7
-$ kill $(cat /tmp/memcached.pid)
-```
-
-The time required for prepare_access_checks is proportional to the size of
-the monitoring region when using the accessed bit, but it takes almost no
-time when using the perf event as it only requires enabling it.
-
-The time required for check_accesses is proportional to the size of the
-monitoring region, regardless of whether you use the accessed bit or
-perf-event.
-
-This indicates that monitoring even larger memory ranges at page
-granularity could take even longer.
-
-However, when using perf-event, there is room in the future to make the
-time proportional to the number of perf event samples by changing the
-monitoring region management from an address-order linear list to a tree
-structure.
-
-It is important to note that with perf events, extra memory such as
-sampling buffers needs to be allocated, and there is overhead due to perf
-event interrupts (NMI) during the sampling interval.
-
-Note: damo's --perf_event option
-
-Using these features also requires modifications to damo, but these
-are not included in this patch series and are currently under
-development in the following branch:
-
-* https://github.com/mita/damo/tree/damo-perf-for-v3.2.2
-
-The option newly added to damo for perf event-based access check has the
-following format:
-
-`--perf_event <sample freq> <sample phys addr> <type> <config> <config1> <config2>`
-
-- `sample freq`: A higher frequency improves access accuracy, but also
-  increases overhead.
-- `sample phys addr`: specify 0 for vaddr and 1 for paddr.
-- The remaining type, config, config1, and config2 settings can be found
-  as follows:
-
-Run `perf mem record -vv` to obtain the log, and then find the part in
-the log where `perf_event_open` was executed successfully.
-```
-$ sudo perf mem record -vv echo > /tmp/perf-mem-record.log 2>&1
-$ cat /tmp/perf-mem-record.log
-...
-perf_event_attr:
-  type                             4 (cpu)
-  size                             144
-  config                           0x1cd (mem_trans_retired.load_latency_gt_1024)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|ADDR|ID|PERIOD|DATA_SRC|WEIGHT_STRUCT
-  read_format                      ID|LOST
-  disabled                         1
-  inherit                          1
-  mmap                             1
-  comm                             1
-  freq                             1
-  enable_on_exec                   1
-  task                             1
-  precise_ip                       2
-  mmap_data                        1
-  sample_id_all                    1
-  mmap2                            1
-  comm_exec                        1
-  ksymbol                          1
-  bpf_event                        1
-  build_id                         1
-  { bp_addr, config1 }             0x1f
-------------------------------------------------------------
-sys_perf_event_open: pid 287986  cpu 0  group_fd -1  flags 0x8 = 5
-...
-```
-
-The values for `type` and `config` are taken from this output.
-Use the values of `config1` and `config2` if they are included in the log;
-otherwise, set them to 0.
-
-Any feedback or advice on the patch set would be greatly appreciated.
-
-* RFC v3
-- drop "reintroduce damon_operations->cleanup()" as no longer needed
-- drop "allow user to set min size of region" (will be sent separately)
-- add tgid to struct damon_access_report and use it instead of tid
-- set perf_event_attr.precise_ip to 2
-- prepare for the transition to report-based monitoring
-- switch to use access_reported in struct damon_region
-- switch to use sample/primitives/perf_events sysfs directory
-
-* RFC v2: https://lore.kernel.org/damon/20260309010009.11639-1-akinobu.mita@gmail.com/T/
-- reintroduce damon_operations->cleanup()
-- introduce struct damon_access_report
-- use struct damon_access_report instead of introducing struct
-  damon_perf_record
-- remove maximum region size setting
-
-* RFC v1: https://lore.kernel.org/damon/20260123021014.26915-1-akinobu.mita@gmail.com/T/
-
-* TODO
-- Integrate into report-based monitoring
-- Explain actual usage examples and test results
-- Send the necessary patches to damo
-- Set maybe_corrupted when it detects that a useless perf_event has
-  been specified.
-- Check if it works in a virtual environment using vPMU
-
-Akinobu Mita (4):
-  mm/damon/core: add code borrowed from report-based monitoring work
-  mm/damon/core: add common code for perf event based access check
-  mm/damon/vaddr: support perf event based access check
-  mm/damon/paddr: support perf event based access check
-
- .../ABI/testing/sysfs-kernel-mm-damon         |   8 +
- include/linux/damon.h                         | 102 ++
- mm/damon/core.c                               | 113 ++-
- mm/damon/ops-common.h                         |  59 ++
- mm/damon/paddr.c                              |  41 +
- mm/damon/sysfs.c                              | 872 +++++++++++++++++-
- mm/damon/vaddr.c                              | 506 ++++++++++
- 7 files changed, 1697 insertions(+), 4 deletions(-)
-
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index f2cdb7c3f5e6..9ba26d8a0bce 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -85,6 +85,7 @@ struct damon_region {
+ 	unsigned int age;
+ /* private: Internal value for age calculation. */
+ 	unsigned int last_nr_accesses;
++	bool access_reported;
+ };
+ 
+ /**
+@@ -112,6 +113,30 @@ struct damon_target {
+ 	bool obsolete;
+ };
+ 
++/**
++ * struct damon_access_report - Represent single access report information.
++ * @paddr:		Start physical address of the accessed address range.
++ * @vaddr:		Start virtual address of the accessed address range.
++ * @size:		The size of the accessed address range.
++ * @cpu:		The id of the CPU that made the access.
++ * @tid:		The task id of the task that made the access.
++ * @is_write:		Whether the access is write.
++ *
++ * Any DAMON API callers that notified access events can report the information
++ * to DAMON using damon_report_access().  This struct contains the reporting
++ * information.  Refer to damon_report_access() for more details.
++ */
++struct damon_access_report {
++	unsigned long paddr;
++	unsigned long vaddr;
++	unsigned long size;
++	unsigned int cpu;
++	pid_t tid;
++	bool is_write;
++/* private: */
++	unsigned long report_jiffies;	/* when this report is made */
++};
++
+ /**
+  * enum damos_action - Represents an action of a Data Access Monitoring-based
+  * Operation Scheme.
+@@ -763,6 +788,49 @@ struct damon_attrs {
+ 	unsigned long aggr_samples;
+ };
+ 
++/**
++ * enum damon_sample_filter_type - Type of &struct damon_sample_filter.
++ *
++ * @DAMON_FILTER_TYPE_CPUMASK:	Filter by access-generated CPUs.
++ * @DAMON_FILTER_TYPE_THREADS:	Filter by access-generated threads.
++ * @DAMON_FILTER_TYPE_WRITE:	Filter by whether the access was for writing.
++ *
++ * Read &struct damon_sample_control for more details.
++ */
++enum damon_sample_filter_type {
++	DAMON_FILTER_TYPE_CPUMASK,
++	DAMON_FILTER_TYPE_THREADS,
++	DAMON_FILTER_TYPE_WRITE,
++};
++
++/**
++ * struct damon_sample_filter - &struct damon_access_report filter.
++ *
++ * @type:	The type of this filter.
++ * @matching:	Whether it is for condition-matching reports.
++ * @allow:	Whether to include or excludie the @matching reports.
++ * @cpumask:	Access-generated CPUs if @type is DAMON_FILTER_TYPE_CPUMASK.
++ * @tid_arr:	Array of access-generated thread ids, if @type is
++ *		DAMON_FILTER_TYPE_THREADS.
++ * @nr_tids:	Size of @tid_arr, if @type is DAMON_FILTER_TYPE_THREADS.
++ * @list:	List head for siblings.
++ *
++ * Read &struct damon_sample_control for more details.
++ */
++struct damon_sample_filter {
++	enum damon_sample_filter_type type;
++	bool matching;
++	bool allow;
++	union {
++		cpumask_t cpumask;
++		struct {
++			pid_t *tid_arr;
++			int nr_tids;
++		};
++	};
++	struct list_head list;
++};
++
+ /**
+  * struct damon_ctx - Represents a context for each monitoring.  This is the
+  * main interface that allows users to set the attributes and get the results
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 3dbbbfdeff71..a52b2962aa22 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -142,6 +142,7 @@ struct damon_region *damon_new_region(unsigned long start, unsigned long end)
+ 
+ 	region->age = 0;
+ 	region->last_nr_accesses = 0;
++	region->access_reported = false;
+ 
+ 	return region;
+ }
+diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
+index eefa959aa30a..c19556f2af3b 100644
+--- a/mm/damon/sysfs.c
++++ b/mm/damon/sysfs.c
+@@ -747,6 +747,483 @@ static const struct kobj_type damon_sysfs_intervals_ktype = {
+ 	.default_groups = damon_sysfs_intervals_groups,
+ };
+ 
++/*
++ * access check report filter directory
++ */
++
++struct damon_sysfs_sample_filter {
++	struct kobject kobj;
++	enum damon_sample_filter_type type;
++	bool matching;
++	bool allow;
++	cpumask_t cpumask;
++};
++
++static struct damon_sysfs_sample_filter *damon_sysfs_sample_filter_alloc(void)
++{
++	return kzalloc(sizeof(struct damon_sysfs_sample_filter), GFP_KERNEL);
++}
++
++struct damon_sysfs_sample_filter_type_name {
++	enum damon_sample_filter_type type;
++	char *name;
++};
++
++static const struct damon_sysfs_sample_filter_type_name
++damon_sysfs_sample_filter_type_names[] = {
++	{
++		.type = DAMON_FILTER_TYPE_CPUMASK,
++		.name = "cpumask",
++	},
++};
++
++static ssize_t type_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++	int i = 0;
++
++	for (; i < ARRAY_SIZE(damon_sysfs_sample_filter_type_names); i++) {
++		const struct damon_sysfs_sample_filter_type_name *type_name;
++
++		type_name = &damon_sysfs_sample_filter_type_names[i];
++		if (type_name->type == filter->type)
++			return sysfs_emit(buf, "%s\n", type_name->name);
++	}
++	return -EINVAL;
++}
++
++static ssize_t type_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++	ssize_t ret = -EINVAL;
++	int i = 0;
++
++	for (; i < ARRAY_SIZE(damon_sysfs_sample_filter_type_names); i++) {
++		const struct damon_sysfs_sample_filter_type_name *type_name;
++
++		type_name = &damon_sysfs_sample_filter_type_names[i];
++		if (sysfs_streq(buf, type_name->name)) {
++			filter->type = type_name->type;
++			ret = count;
++			break;
++		}
++	}
++	return ret;
++}
++
++static ssize_t matching_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++
++	return sysfs_emit(buf, "%c\n", filter->matching ? 'Y' : 'N');
++}
++
++static ssize_t matching_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++	bool matching;
++	int err = kstrtobool(buf, &matching);
++
++	if (err)
++		return err;
++
++	filter->matching = matching;
++	return count;
++}
++
++static ssize_t allow_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++
++	return sysfs_emit(buf, "%c\n", filter->allow ? 'Y' : 'N');
++}
++
++static ssize_t allow_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++	bool allow;
++	int err = kstrtobool(buf, &allow);
++
++	if (err)
++		return err;
++
++	filter->allow = allow;
++	return count;
++}
++
++static ssize_t cpumask_show(struct kobject *kobj, struct kobj_attribute *attr,
++		char *buf)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++
++	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&filter->cpumask));
++}
++
++static ssize_t cpumask_store(struct kobject *kobj, struct kobj_attribute *attr,
++		const char *buf, size_t count)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++	cpumask_t cpumask;
++	int err = cpulist_parse(buf, &cpumask);
++
++	if (err)
++		return err;
++	filter->cpumask = cpumask;
++	return count;
++}
++
++static void damon_sysfs_sample_filter_release(struct kobject *kobj)
++{
++	struct damon_sysfs_sample_filter *filter = container_of(kobj,
++			struct damon_sysfs_sample_filter, kobj);
++
++	kfree(filter);
++}
++
++static struct kobj_attribute damon_sysfs_sample_filter_type_attr =
++		__ATTR_RW_MODE(type, 0600);
++
++static struct kobj_attribute damon_sysfs_sample_filter_matching_attr =
++		__ATTR_RW_MODE(matching, 0600);
++
++static struct kobj_attribute damon_sysfs_sample_filter_allow_attr =
++		__ATTR_RW_MODE(allow, 0600);
++
++static struct kobj_attribute damon_sysfs_sample_filter_cpumask_attr =
++		__ATTR_RW_MODE(cpumask, 0600);
++
++static struct attribute *damon_sysfs_sample_filter_attrs[] = {
++	&damon_sysfs_sample_filter_type_attr.attr,
++	&damon_sysfs_sample_filter_matching_attr.attr,
++	&damon_sysfs_sample_filter_allow_attr.attr,
++	&damon_sysfs_sample_filter_cpumask_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(damon_sysfs_sample_filter);
++
++static const struct kobj_type damon_sysfs_sample_filter_ktype = {
++	.release = damon_sysfs_sample_filter_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damon_sysfs_sample_filter_groups,
++};
++
++/*
++ * access check report filters directory
++ */
++
++struct damon_sysfs_sample_filters {
++	struct kobject kobj;
++	struct damon_sysfs_sample_filter **filters_arr;
++	int nr;
++};
++
++static struct damon_sysfs_sample_filters *
++damon_sysfs_sample_filters_alloc(void)
++{
++	return kzalloc(sizeof(struct damon_sysfs_sample_filters), GFP_KERNEL);
++}
++
++static void damon_sysfs_sample_filters_rm_dirs(
++		struct damon_sysfs_sample_filters *filters)
++{
++	struct damon_sysfs_sample_filter **filters_arr = filters->filters_arr;
++	int i;
++
++	for (i = 0; i < filters->nr; i++)
++		kobject_put(&filters_arr[i]->kobj);
++	filters->nr = 0;
++	kfree(filters_arr);
++	filters->filters_arr = NULL;
++}
++
++static int damon_sysfs_sample_filters_add_dirs(
++		struct damon_sysfs_sample_filters *filters, int nr_filters)
++{
++	struct damon_sysfs_sample_filter **filters_arr, *filter;
++	int err, i;
++
++	damon_sysfs_sample_filters_rm_dirs(filters);
++	if (!nr_filters)
++		return 0;
++
++	filters_arr = kmalloc_array(nr_filters, sizeof(*filters_arr),
++			GFP_KERNEL | __GFP_NOWARN);
++	if (!filters_arr)
++		return -ENOMEM;
++	filters->filters_arr = filters_arr;
++
++	for (i = 0; i < nr_filters; i++) {
++		filter = damon_sysfs_sample_filter_alloc();
++		if (!filter) {
++			damon_sysfs_sample_filters_rm_dirs(filters);
++			return -ENOMEM;
++		}
++
++		err = kobject_init_and_add(&filter->kobj,
++				&damon_sysfs_sample_filter_ktype,
++				&filters->kobj, "%d", i);
++		if (err) {
++			kobject_put(&filter->kobj);
++			damon_sysfs_sample_filters_rm_dirs(filters);
++			return err;
++		}
++
++		filters_arr[i] = filter;
++		filters->nr++;
++	}
++	return 0;
++}
++
++static ssize_t nr_filters_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_sample_filters *filters = container_of(kobj,
++			struct damon_sysfs_sample_filters, kobj);
++
++	return sysfs_emit(buf, "%d\n", filters->nr);
++}
++
++static ssize_t nr_filters_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_sample_filters *filters;
++	int nr, err = kstrtoint(buf, 0, &nr);
++
++	if (err)
++		return err;
++	if (nr < 0)
++		return -EINVAL;
++
++	filters = container_of(kobj, struct damon_sysfs_sample_filters, kobj);
++
++	if (!mutex_trylock(&damon_sysfs_lock))
++		return -EBUSY;
++	err = damon_sysfs_sample_filters_add_dirs(filters, nr);
++	mutex_unlock(&damon_sysfs_lock);
++	if (err)
++		return err;
++
++	return count;
++}
++
++static void damon_sysfs_sample_filters_release(struct kobject *kobj)
++{
++	kfree(container_of(kobj, struct damon_sysfs_sample_filters, kobj));
++}
++
++static struct kobj_attribute damon_sysfs_sample_filters_nr_attr =
++		__ATTR_RW_MODE(nr_filters, 0600);
++
++static struct attribute *damon_sysfs_sample_filters_attrs[] = {
++	&damon_sysfs_sample_filters_nr_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(damon_sysfs_sample_filters);
++
++static const struct kobj_type damon_sysfs_sample_filters_ktype = {
++	.release = damon_sysfs_sample_filters_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damon_sysfs_sample_filters_groups,
++};
++
++/*
++ * access check primitives directory
++ */
++
++struct damon_sysfs_primitives {
++	struct kobject kobj;
++	bool page_table;
++	bool page_fault;
++};
++
++static struct damon_sysfs_primitives *damon_sysfs_primitives_alloc(
++		bool page_table, bool page_fault)
++{
++	struct damon_sysfs_primitives *primitives = kmalloc(
++			sizeof(*primitives), GFP_KERNEL);
++
++	if (!primitives)
++		return NULL;
++
++	primitives->kobj = (struct kobject){};
++	primitives->page_table = page_table;
++	primitives->page_fault = page_fault;
++	return primitives;
++}
++
++static ssize_t page_table_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_primitives *primitives = container_of(kobj,
++			struct damon_sysfs_primitives, kobj);
++
++	return sysfs_emit(buf, "%c\n", primitives->page_table ? 'Y' : 'N');
++}
++
++static ssize_t page_table_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_primitives *primitives = container_of(kobj,
++			struct damon_sysfs_primitives, kobj);
++	bool enable;
++	int err = kstrtobool(buf, &enable);
++
++	if (err)
++		return err;
++	primitives->page_table = enable;
++	return count;
++}
++
++static ssize_t page_fault_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_primitives *primitives = container_of(kobj,
++			struct damon_sysfs_primitives, kobj);
++
++	return sysfs_emit(buf, "%c\n", primitives->page_fault ? 'Y' : 'N');
++}
++
++static ssize_t page_fault_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_primitives *primitives = container_of(kobj,
++			struct damon_sysfs_primitives, kobj);
++	bool enable;
++	int err = kstrtobool(buf, &enable);
++
++	if (err)
++		return err;
++	primitives->page_fault = enable;
++	return count;
++}
++
++static void damon_sysfs_primitives_release(struct kobject *kobj)
++{
++	struct damon_sysfs_primitives *primitives = container_of(kobj,
++			struct damon_sysfs_primitives, kobj);
++
++	kfree(primitives);
++}
++
++static struct kobj_attribute damon_sysfs_primitives_page_table_attr =
++		__ATTR_RW_MODE(page_table, 0600);
++
++static struct kobj_attribute damon_sysfs_primitives_page_fault_attr =
++		__ATTR_RW_MODE(page_fault, 0600);
++
++static struct attribute *damon_sysfs_primitives_attrs[] = {
++	&damon_sysfs_primitives_page_table_attr.attr,
++	&damon_sysfs_primitives_page_fault_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(damon_sysfs_primitives);
++
++static const struct kobj_type damon_sysfs_primitives_ktype = {
++	.release = damon_sysfs_primitives_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damon_sysfs_primitives_groups,
++};
++
++/*
++ * sample directory
++ */
++
++struct damon_sysfs_sample {
++	struct kobject kobj;
++	struct damon_sysfs_primitives *primitives;
++	struct damon_sysfs_sample_filters *filters;
++};
++
++static struct damon_sysfs_sample *damon_sysfs_sample_alloc(void)
++{
++	struct damon_sysfs_sample *sample = kmalloc(
++			sizeof(*sample), GFP_KERNEL);
++
++	if (!sample)
++		return NULL;
++	sample->kobj = (struct kobject){};
++	return sample;
++}
++
++static int damon_sysfs_sample_add_dirs(
++		struct damon_sysfs_sample *sample)
++{
++	struct damon_sysfs_primitives *primitives;
++	struct damon_sysfs_sample_filters *filters;
++	int err;
++
++	primitives = damon_sysfs_primitives_alloc(true, false);
++	if (!primitives)
++		return -ENOMEM;
++	err = kobject_init_and_add(&primitives->kobj,
++			&damon_sysfs_primitives_ktype, &sample->kobj,
++			"primitives");
++	if (err)
++		goto put_primitives_out;
++	sample->primitives = primitives;
++
++	filters = damon_sysfs_sample_filters_alloc();
++	if (!filters) {
++		err = -ENOMEM;
++		goto put_primitives_out;
++	}
++	err = kobject_init_and_add(&filters->kobj,
++			&damon_sysfs_sample_filters_ktype, &sample->kobj,
++			"filters");
++	if (err)
++		goto put_filters_out;
++	sample->filters = filters;
++	return 0;
++put_filters_out:
++	kobject_put(&filters->kobj);
++	sample->filters = NULL;
++put_primitives_out:
++	kobject_put(&primitives->kobj);
++	sample->primitives = NULL;
++	return err;
++}
++
++static void damon_sysfs_sample_rm_dirs(
++		struct damon_sysfs_sample *sample)
++{
++	if (sample->primitives)
++		kobject_put(&sample->primitives->kobj);
++	if (sample->filters) {
++		damon_sysfs_sample_filters_rm_dirs(sample->filters);
++		kobject_put(&sample->filters->kobj);
++	}
++}
++
++static void damon_sysfs_sample_release(struct kobject *kobj)
++{
++	kfree(container_of(kobj, struct damon_sysfs_sample, kobj));
++}
++
++static struct attribute *damon_sysfs_sample_attrs[] = {
++	NULL,
++};
++ATTRIBUTE_GROUPS(damon_sysfs_sample);
++
++static const struct kobj_type damon_sysfs_sample_ktype = {
++	.release = damon_sysfs_sample_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damon_sysfs_sample_groups,
++};
++
+ /*
+  * monitoring_attrs directory
+  */
+@@ -755,6 +1232,7 @@ struct damon_sysfs_attrs {
+ 	struct kobject kobj;
+ 	struct damon_sysfs_intervals *intervals;
+ 	struct damon_sysfs_ul_range *nr_regions_range;
++	struct damon_sysfs_sample *sample;
+ };
+ 
+ static struct damon_sysfs_attrs *damon_sysfs_attrs_alloc(void)
+@@ -771,6 +1249,7 @@ static int damon_sysfs_attrs_add_dirs(struct damon_sysfs_attrs *attrs)
+ {
+ 	struct damon_sysfs_intervals *intervals;
+ 	struct damon_sysfs_ul_range *nr_regions_range;
++	struct damon_sysfs_sample *sample;
+ 	int err;
+ 
+ 	intervals = damon_sysfs_intervals_alloc(5000, 100000, 60000000);
+@@ -799,8 +1278,26 @@ static int damon_sysfs_attrs_add_dirs(struct damon_sysfs_attrs *attrs)
+ 	if (err)
+ 		goto put_nr_regions_intervals_out;
+ 	attrs->nr_regions_range = nr_regions_range;
++
++	sample = damon_sysfs_sample_alloc();
++	if (!sample) {
++		err = -ENOMEM;
++		goto put_nr_regions_intervals_out;
++	}
++	err = kobject_init_and_add(&sample->kobj,
++			&damon_sysfs_sample_ktype, &attrs->kobj,
++			"sample");
++	if (err)
++		goto put_sample_out;
++	err = damon_sysfs_sample_add_dirs(sample);
++	if (err)
++		goto put_sample_out;
++	attrs->sample = sample;
+ 	return 0;
+ 
++put_sample_out:
++	kobject_put(&sample->kobj);
++	attrs->sample = NULL;
+ put_nr_regions_intervals_out:
+ 	kobject_put(&nr_regions_range->kobj);
+ 	attrs->nr_regions_range = NULL;
+@@ -817,6 +1314,8 @@ static void damon_sysfs_attrs_rm_dirs(struct damon_sysfs_attrs *attrs)
+ 	kobject_put(&attrs->nr_regions_range->kobj);
+ 	damon_sysfs_intervals_rm_dirs(attrs->intervals);
+ 	kobject_put(&attrs->intervals->kobj);
++	damon_sysfs_sample_rm_dirs(attrs->sample);
++	kobject_put(&attrs->sample->kobj);
+ }
+ 
+ static void damon_sysfs_attrs_release(struct kobject *kobj)
 -- 
 2.43.0
 
