@@ -1,103 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E108A1ACEDF;
-	Thu, 23 Apr 2026 22:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2F3263F4A
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 22:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776983795; cv=none; b=bLJGXm+tDY1tG7vUtlcQwaTPkwPu+k8uM1qrdENUcbLNUxe6PgqfY/iz54RdGRPeAwvKYhTh1cKjkM6I3Ja3rLWj/AtK9ESFHLVzr7WCjOG+Yex/X0oFqNRhCCuGecA8x7uiNTuAoa+ClXn0vTDjDs4/Or++H+JtCT+xwvveQZ4=
+	t=1776984133; cv=none; b=f+kF+hhgyhIlgU7J366fkE8smgvASwgBB7gu6MuLyeH284hWhsmq4L88eCnGZjKwDsKW4iakfAoaX4Gt1rt0456ndjVqSIY91S8q6n7AVpuQK5pWS8tvKuF4pRanDFVHgEnwO2YLiv1uJ6MpKNC6drjYY4mW56ydkawLefJDH08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776983795; c=relaxed/simple;
-	bh=zwKqxsU235qut8eY8vpfS9vY/tKvp6P+DbH4/1TZTUU=;
+	s=arc-20240116; t=1776984133; c=relaxed/simple;
+	bh=YpDN8GQ4p10JL7SVRSuVuJ1L1tx+s5Bbs0lklxBrez4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=t4C+aCfUj6gllYQ1YO4aVr4XJuHruI+PgWjk4GgzpybNZhsip6/rvpWfRFzxGloWj+r50jEVC6KrctOAr4vSM/5xWBVosz/ASkfo0mx6cDr3PW4sr+ZqWwyQY7JJxYbEdyb+34LUS/ESfa0Gf/JC12oK8XswFBut580qV00ER8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLPAFlh5; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=cWxxYwOu+dhTkEFmw0/P8HRvNCAq4pxbsRATHvzy5iUzsMd2ICeT3B9lQlQdmWgpp7LnFucjkiSnt5d3NwJrtl8dUuk4rwamw1IOWpWQiLxgwTSmv1/YOE1CJi0k1TA8XixQBARXEDceoNHJVZghkyYlvq+/hGsSIIg980j/zBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4EEFLZt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLPAFlh5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A071EC2BCAF;
-	Thu, 23 Apr 2026 22:36:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4EEFLZt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF9B5C2BCAF;
+	Thu, 23 Apr 2026 22:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776983794;
-	bh=zwKqxsU235qut8eY8vpfS9vY/tKvp6P+DbH4/1TZTUU=;
+	s=k20201202; t=1776984133;
+	bh=YpDN8GQ4p10JL7SVRSuVuJ1L1tx+s5Bbs0lklxBrez4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=oLPAFlh5Ss1OQrVTsO31+uEvpUuIhIr/F+bGa5bAjAM2byQnzR3axFJQAweb36Jzv
-	 AI8yljhO4Z/wDwDC+Ixjz7zvW4wBslRU8F1MpyD3hUnee1lXG6zAPh5p07LESJ1kQK
-	 vNOE55VouKZHAnWRISiG7IKkB3AsyeF7ndOqPP0drRITuDvfvmCi3RuQJESFxBafI8
-	 IQtZaP8S764/2CIrNnBOTMuJIvnKJIh58YW28rW5ylz40yJjEMjtq9GS/vr+zDkSAg
-	 HwOmtOvjYYLhtwW9f1nwlihJ3IROS9OcT+24BZ4hlLCDlF046z4Q4CvM5L4bxza4Dk
-	 xD+W1t4Yj8F1g==
+	b=o4EEFLZt3SbaIVIzAHPTHD9e8NuV+4vkWQhAnPUkCymHvk4OuvhPc6aQFYmx4XTPn
+	 vUGxZsH1VO2tb2R+zTPFCNod3+ZSv4Zo6wABMoVh+vplMHLvSy/7ogeayYTtAxB8W0
+	 zeXftPvrm/vsaylIYGeWVX+ai3UN8tccylW7jj6TUlIapswty7K4W6chNDzo6DP4fQ
+	 HjxFIS6aM2XsomqJGpfVVL4GB0kc4o2N37EVu9inOKSRLCxx3UZqqS6WYqNpXAQOye
+	 cskd4O3+6kHOIZLy5NzzJJL8dbahNyvi0jaHGymSLL959THFTPrIvd75kbN9CeUnUE
+	 OJHdlAzl9+xhw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/lock: enable end-timestamp accounting for
- cgroup aggregation
+Subject: Re: [PATCH v2] perf trace: Introduce --show-cpu option to display
+ cpu id
 Reply-To: sashiko@lists.linux.dev
-To: "Suchit Karunakaran" <suchitkarunakaran@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260423173505.73223-1-suchitkarunakaran@gmail.com>
-References: <20260423173505.73223-1-suchitkarunakaran@gmail.com>
+To: "Aaron Tomlin" <atomlin@atomlin.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260423192445.131351-1-atomlin@atomlin.com>
+References: <20260423192445.131351-1-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 22:36:34 +0000
-Message-Id: <20260423223634.A071EC2BCAF@smtp.kernel.org>
+Date: Thu, 23 Apr 2026 22:42:12 +0000
+Message-Id: <20260423224212.DF9B5C2BCAF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Incomplete spinlock and rwlock contentions are silently dropped =
-under cgroup aggregation because of a leftover early return.
+Sashiko AI review found 2 potential issue(s):
+- [High] Hardcoded CPU 0 misattributes interrupted syscalls.
+- [Medium] Tautological check on unsigned integer and format string mismatc=
+h.
 --
 
-commit 5bccbbefb61cd7effb0fec5a7f0bee5add3ba114
-Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+commit 1c192dba8ca61a6516bab340989a37ca856bfece
+Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf/lock: enable end-timestamp accounting for cgroup aggregation
-   =20
-This commit adds a cgroup_id field to struct tstamp_data, recording it at
-contention_begin for cgroup aggregation mode. It also updates update_lock_s=
-tat()
-to use this recorded cgroup_id, enabling accounting for incomplete contenti=
-ons
-that start but never reach a contention_end event.
+perf trace: Introduce --show-cpu option to display cpu id
 
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index cbd7435579feaf..1a5bd2ff8ee4c2 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -463,8 +463,8 @@ static void update_lock_stat(int map_fd, int pid, u64=
- end_ts,
->  		stat_key.lock_addr_or_cgroup =3D ts_data->lock;
->  		break;
->  	case LOCK_AGGR_CGROUP:
-> -		/* TODO */
-> -		return;
-> +		stat_key.lock_addr_or_cgroup =3D ts_data->cgroup_id;
-> +		break;
->  	default:
->  		return;
->  	}
+This commit adds a new --show-cpu command-line option to perf trace.=20
+When enabled, it extracts the CPU ID from the perf sample and includes it=20
+in the trace output immediately following the timestamp.
 
-Now that update_lock_stat() handles cgroup aggregation, does
-account_end_timestamp() also need an update to stop returning early?
-
-Looking at account_end_timestamp() in tools/perf/util/bpf_lock_contention.c:
-
-	/* Now it'll check per-cpu tstamp map which doesn't have TID. */
-	if (aggr_mode =3D=3D LOCK_AGGR_TASK || aggr_mode =3D=3D LOCK_AGGR_CGROUP)
-		return;
-
-	total_cpus =3D cpu__max_cpu().cpu;
-	ts_fd =3D bpf_map__fd(skel->maps.tstamp_cpu);
-
-Because of this early return, will incomplete spinlock and rwlock contentio=
-ns
-(which use the tstamp_cpu map) still be dropped when using cgroup
-aggregation?
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 311d9da9896a41..264e4762ea28d2 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
 
 [ ... ]
 
+> +static size_t trace__fprintf_cpu(u32 cpu, FILE *fp)
+> +{
+> +	size_t printed =3D 0;
+> +
+> +	if (cpu >=3D 0)
+
+Since cpu is an unsigned 32-bit integer (u32), is this comparison always
+true? This might trigger a compiler warning for tautological comparisons.
+
+> +		printed +=3D fprintf(fp, "[%03d] ", cpu);
+
+Given that cpu is unsigned, should this use the %03u format specifier
+instead of %03d to avoid a format signedness mismatch?
+
+> +
+> +	return printed;
+> +}
+
+[ ... ]
+
+> @@ -2704,7 +2729,9 @@ static int trace__printf_interrupted_entry(struct t=
+race *trace)
+>  	if (!ttrace->entry_pending)
+>  		return 0;
+> =20
+> -	printed  =3D trace__fprintf_entry_head(trace, trace->current, 0, false,=
+ ttrace->entry_time, trace->output);
+> +	printed =3D trace__fprintf_entry_head(trace, trace->current, 0, false,
+> +					    ttrace->entry_time, 0,
+> +					    trace->output);
+
+Does passing a hardcoded 0 for the cpu argument cause all interrupted events
+to be incorrectly attributed to CPU 0 when the --show-cpu option is enabled=
+?=20
+
+If the actual entry CPU isn't saved in struct thread_trace, would it be
+better to pass (u32)-1 here so the CPU printout is properly omitted,
+matching the check inside trace__fprintf_entry_head()?
+
+[ ... ]
+
+> @@ -3277,6 +3308,9 @@ static int trace__event_handler(struct trace *trace=
+, struct evsel *evsel,
+>  	trace__printf_interrupted_entry(trace);
+>  	trace__fprintf_tstamp(trace, sample->time, trace->output);
+> =20
+> +	if (trace->show_cpu && sample->cpu !=3D (u32)-1)
+> +		fprintf(trace->output, "[%03d] ", sample->cpu);
+
+Similar to the function above, should this use %03u since sample->cpu is
+an unsigned integer?
+
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423173505.7322=
-3-1-suchitkarunakaran@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423192445.1313=
+51-1-atomlin@atomlin.com?part=3D1
