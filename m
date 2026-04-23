@@ -1,193 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA6E3822AA
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 05:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C6136494A
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 05:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776922195; cv=none; b=SkINqWmF4cojqM8dgLg6KDjJ+d6iIPxU6d0yl18t8cVna4phDqOMLKCT69FhSIEnAKjMCvwijk4BGT+bvO00Imgic7Pq/ISPGDCT28ytsgAeO/ezPIyxnAExh3rNFPzfSwqcRx+Ekm96C0x5eJY0Yq6PVB2nlvOSWt+h4VziKEc=
+	t=1776922276; cv=none; b=IAybxXDfov1nztZ99VNJRU16KJYc/DGA4r1trA8gjNZSnyb824tbdpBjsUQOBC11olUYsEWZHJc4N3Vi8svQVhIFwS494vnS+JbbYJsWOFqcfoc+d2g1B/KvcoOLf7oOaIkmAfeBolGzDzJaN4wqOyzcE7Mr4efI8bQfFMt08N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776922195; c=relaxed/simple;
-	bh=WFqT9jj6x6NC9U2IsXczUk/yQD1DeRCht/2thyElsFw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sisHghIM6HSxtxgvuxOKbERbuGUelECEpKs8pDZSY8YitHmiZtMuCukf9c3Rx3WwOdvMUOfVJWhcQEicmvWq6Cp6fNTgHZOstIhNqQE8d/h1cjYF2nLKerRd7TU2LACSXVixVjWk6dnM8ioMxBSbMZa1BYXmRyLYW7GvFLJpgLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0CehK/R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776922276; c=relaxed/simple;
+	bh=ixNZgL6I+s9Q7NnsT9wVdgFw1Ll16T9Sj/4u6fVFle8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JRloG882DUe2/5N2NZ4juacvedFreA3SQ3qRFcSyglRIE11QCPef97i5+E5/fYGmuYfNgE8qafL8ZmuZTnPDfYs/B+lx0eYamwYIp9QORjnY9mJBTn9sDub8ukEb8KD9c4Y3z717n5V3/McOSQQ6Y7DkIA7zawhefcTbfsg86BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gB8YX9Iv; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0CehK/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EA3C2BCB2;
-	Thu, 23 Apr 2026 05:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776922195;
-	bh=WFqT9jj6x6NC9U2IsXczUk/yQD1DeRCht/2thyElsFw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=H0CehK/RNCQgQJEZ2hgaYElmJltTSl/GU4rFb8dX1UVoohWhKvk15TsoXuPK2OxDC
-	 Bzh12KsfgO2SR6wfD3Vp+/IpaG3Xd0jRy1ZKtn8WnwchX7dlau3idqKXvmN+EcQ8bx
-	 /KO8cKgt2ZOKMdf1doxdAUFKKZ03alYtxPOr8DKO1lYUQo06qba9GxfXsdgA+46+Uo
-	 HnekeBfTGW9w3k0a/Xk8MDCMoNhPCDELLNDqENnAeC5Ls4K4CqE6wnL05CTaKJYX2p
-	 8Od+V8Ej/eVVhINJTZJZD7m9RpVbg6XzBs9flSeaRe+vXj246n//OzTy/Wdbxcg4eY
-	 Cc+XyrMPhbc7A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 17/58] perf python: Refactor and add accessors to
- sample event
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260423035526.1537178-18-irogers@google.com>
-References: <20260423035526.1537178-18-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Apr 2026 05:29:54 +0000
-Message-Id: <20260423052955.36EA3C2BCB2@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gB8YX9Iv"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c798fc1a28cso1596580a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Apr 2026 22:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776922275; x=1777527075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/FD1FV0ffYsy3LxXhovkzmPDGgobrJWkZafkNu/+vQ=;
+        b=gB8YX9IvCCfYnE2D/p+WBqgqZ9NCa1N3g91O+hKw604NwyqjScAzy9dADLgojN2YSM
+         IAPl+SDOZVEu92i25NQAj/qNarF224YJKesS8050p5clv8Kh4xPOAvhtK2+qbmx6hyTl
+         obdWLd6AcIihMLItsXao+i8Rou3TY3Se4fIMQx+cJoh5igbmMJIUh2wh95E/GIybr12B
+         MJCvaCo8gNWRpA0ROH8YPurjLEMq59r5O3GqFzVN7eQhMMe+wRclJMKby4A5tli50iIm
+         DVeL18opj6uraMjbJrOEn6hEY6BqNH97tmau2A5fQpVmkT8KAZu/f9HW2l0Af0sg+P4k
+         +yzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776922275; x=1777527075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v/FD1FV0ffYsy3LxXhovkzmPDGgobrJWkZafkNu/+vQ=;
+        b=QTEUwD2NBnDCDClCQSiF0UZwLJEFyBQRIpUx0mZl7tyeWA/lbeHhDSEMxMugAXSWEw
+         i9OpMNW9c+KbqgX7GdmGuBrEgj3OO1JtGoyLazwVjAF9c8AQrbqUpTWr3H6xUaAz/4GX
+         rrreTKtjTLDhc/A4oVY0wI1aiNp90GZnBf/C8yGHiXcYHcFwCQeZfSOjxQOCIZaksiby
+         lDC6v7ZOZZYKK3xspE72nfD4DQh8Hh6tD0mCQV9Y48YynM35YJ6EdHETydfD6eFts0dC
+         bRkXX7o/4/AO1tqO6jh3TYIsaSBufkDmH/1gTj6gISRZU/3FVm/ZEq9ygowNmqk4GGAI
+         Mo4w==
+X-Gm-Message-State: AOJu0YztXx/PbVXo5EMxtg/4lcvc5prFlQZ7ao/v2pBBmXGw6OoAKjGL
+	LVh0714Wpn73cknLNej0X6Hg2vErU48OeKoTH7rjqDMFfrMkNY0+L7zN
+X-Gm-Gg: AeBDieueQYnomoI4zCdRe2PIeJsVN/o7e4n+kZYry90ZXFdxuQPYpVPKDBpG9lnD0oS
+	7CXiKsKmOwWNqN7zoGyNLGFsp/V+rUtjVHLJWRWnzKGCFwLJuMcuMP+SjHB0rDFKula51OaDSXI
+	rjyKXlbSZUh4B3PpBX0TBag2UE0/xykWcFAZHo1H/P/lgccE5BNt7GiZTetH9e7USf9uQvDm9rz
+	/chwqvJQBJog0dar62qqfExuK3LmJJcW1pzK0twrXQGZkp7odVrasLagpFidz84FKE4/aHGK269
+	KMAYYf5zVKFp1LwcxdBciI1yOxhfhUFiJQeEp0hQWUUKLnozuc0B2Np++3kv/S2i3ATpSgSx+KC
+	QwxgHIOOtcsaOOmQR7U2ZcwGeTyGHA4QTaZuVSYlqGMmzTh2X3w9KrP3cAGVn7DMuO0LrCK+zTP
+	a1q2878fr/CcmTWjG/rK5WXRqkX/UZEXRiI/7GHv4Hs6m63vryfoRLdg==
+X-Received: by 2002:a05:6a20:938e:b0:398:7ca0:43a9 with SMTP id adf61e73a8af0-3a08d89fa06mr25628629637.36.1776922274709;
+        Wed, 22 Apr 2026 22:31:14 -0700 (PDT)
+Received: from localhost.localdomain ([14.22.11.165])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ea09914sm18576129b3a.26.2026.04.22.22.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2026 22:31:14 -0700 (PDT)
+From: Jianping Liu <frankljpliu@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	wangming01@loongson.cn,
+	wangrui@loongson.cn,
+	frankljpliu@gmail.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jianping Liu <frankjpliu@tencent.com>
+Subject: [PATCH] perf annotate: Fix NULL pointer dereference in  loongarch_call__parse
+Date: Thu, 23 Apr 2026 13:31:02 +0800
+Message-ID: <20260423053102.3717015-1-frankljpliu@gmail.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sashiko AI review found 4 potential issue(s):
-- [Critical] Removing perf_sample__init from pyrf_event__new leaves pevent-=
->sample pointer fields uninitialized, leading to a wild free crash during e=
-vent deallocation.
-- [High] The Python property getters pyrf_sample_event__get_dso, pyrf_sampl=
-e_event__get_dso_long_name, and pyrf_sample_event__get_dso_bid dereference =
-the DSO pointer without checking if it is NULL.
-- [High] A failure in evsel__parse_sample causes a double evsel__put() on t=
-he event's evsel reference, leading to a refcount underflow.
-- [Medium] pyrf_comm_event__type and pyrf_read_event__type are missing the =
-.tp_new and .tp_dealloc definitions.
---
+loongarch_call__parse() dereferences the return value of strchr()
+without NULL check:
 
-commit ce9c27681f1b9926dd2fe6af946174166412ca45
-Author: Ian Rogers <irogers@google.com>
+  name = strchr(endptr, '<');
+  name++;
 
-perf python: Refactor and add accessors to sample event
+When objdump output for a 'bl' (branch-and-link) instruction does not
+contain a symbol name delimited by '<' and '>' (e.g., when the call
+target has no associated symbol), strchr() returns NULL, and the
+subsequent name++ produces a wild pointer (0x1). This leads to a
+segmentation fault when strchr() is later called with this invalid
+pointer:
 
-This commit adds a common evsel field for events and moves sample-specific
-fields to only be present in sample events. It also introduces new accessors
-for sample events and refactors object type initialization in the Python
-bindings.
+  #0  __strchr_lasx () from /lib64/libc.so.6
+  #1  loongarch_call__parse () at arch/loongarch/annotate/instructions.c:29
+  #2  disasm_line__init_ins () at util/annotate.c:1205
+  ...
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index d90aa24e53105..3e0534744f0a2 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+The objdump line triggering the crash looks like:
 
-[ ... ]
+  bl              98824   # 0x9000000000641ea0
 
-> @@ -172,6 +218,7 @@ static PyTypeObject pyrf_comm_event__type =3D {
->  	.tp_flags	=3D Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
->  	.tp_doc		=3D pyrf_comm_event__doc,
->  	.tp_members	=3D pyrf_comm_event__members,
-> +	.tp_getset	=3D pyrf_event__getset,
->  	.tp_repr	=3D (reprfunc)pyrf_comm_event__repr,
->  };
+Note the absence of "<function_name>" after the address.
 
-Are pyrf_comm_event__type and pyrf_read_event__type missing their .tp_new a=
-nd
-.tp_dealloc assignments after the initialization refactor?
+Add a NULL check for the return value of strchr() before dereferencing
+it, consistent with s390_call__parse() which handles the same case
+correctly.
 
-Without these, it appears direct Python instantiation could break, and miss=
-ing
-the C-level destructors could leave their lifecycle management inconsistent
-compared to other perf event objects.
+Fixes: 4ca0d340ce20 ("perf annotate: Fix instruction association and parsing for LoongArch")
+Signed-off-by: Jianping Liu <frankjpliu@tencent.com>
+Reviewed-by: Ming Wang <wangming01@loongson.cn>
+---
+ tools/perf/util/annotate-arch/annotate-loongarch.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-[ ... ]
+diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
+index c2addca77320..0179062a6cf9 100644
+--- a/tools/perf/util/annotate-arch/annotate-loongarch.c
++++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+@@ -29,6 +29,9 @@ static int loongarch_call__parse(const struct arch *arch, struct ins_operands *o
+ 	ops->target.addr = strtoull(c, &endptr, 16);
+ 
+ 	name = strchr(endptr, '<');
++	if (name == NULL)
++		return -1;
++
+ 	name++;
+ 
+ 	if (arch->objdump.skip_functions_char &&
+-- 
+2.43.7
 
-> +static PyObject *pyrf_sample_event__get_dso(struct pyrf_event *pevent,
-> +					    void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__name(map__dso(pevent->al.map)));
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_dso_long_name(struct pyrf_event =
-*pevent,
-> +						      void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__long_name(map__dso(pevent->al.map)));
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_dso_bid(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	char sbuild_id[SBUILD_ID_SIZE];
-> +
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	build_id__snprintf(dso__bid(map__dso(pevent->al.map)), sbuild_id, sizeo=
-f(sbuild_id));
-> +	return PyUnicode_FromString(sbuild_id);
-> +}
-
-Could map__dso(pevent->al.map) return NULL here?
-
-The accessors check if pevent->al.map is NULL, but if map__dso() itself ret=
-urns
-NULL, passing it to dso__name(), dso__long_name(), or dso__bid() could trig=
-ger
-a NULL pointer dereference.
-
-[ ... ]
-
-> @@ -516,7 +847,9 @@ static PyObject *pyrf_event__new(const union perf_eve=
-nt *event)
->  	pevent =3D PyObject_New(struct pyrf_event, ptype);
->  	if (pevent !=3D NULL) {
->  		memcpy(&pevent->event, event, event->header.size);
-> -		perf_sample__init(&pevent->sample, /*all=3D*/false);
-> +		pevent->sample.evsel =3D NULL;
-> +		pevent->al_resolved =3D false;
-> +		addr_location__init(&pevent->al);
->  	}
->  	return (PyObject *)pevent;
->  }
-
-Since PyObject_New() does not zero-initialize memory, does removing
-perf_sample__init() leave pointer fields in pevent->sample uninitialized?
-
-If pevent is later garbage collected (for non-sample events, or if
-evlist__event2evsel() fails below), pyrf_event__delete() will call
-perf_sample__exit(&pevent->sample). This attempts to free pointers like
-sample->user_regs or sample->intr_regs. Could this lead to a wild free crash
-when it operates on uninitialized heap memory?
-
-[ ... ]
-
-> @@ -1807,8 +2137,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct py=
-rf_evlist *pevlist,
->  		return pyevent;
->  	}
->  end:
-> -	Py_INCREF(Py_None);
-> -	return Py_None;
-> +	Py_RETURN_NONE;
->  }
-
-While not introduced directly by this patch, it seems the failure path for
-evsel__parse_sample() right above this block might have a refcount underflow
-issue:
-
-	err =3D evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
-	if (err) {
-		Py_DECREF(pyevent);
-
-If evsel__parse_sample() fails, it cleans up by calling perf_sample__exit(),
-which calls evsel__put() on the evsel reference without setting sample->evs=
-el
-to NULL.
-
-When Py_DECREF(pyevent) is subsequently called here, it triggers the
-pyrf_event__delete() destructor, which will call perf_sample__exit() a seco=
-nd
-time. Does this cause a double evsel__put() and potential use-after-free?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
-178-1-irogers@google.com?part=3D17
