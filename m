@@ -1,189 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B13244687;
-	Thu, 23 Apr 2026 04:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EB2269D18
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Apr 2026 04:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918845; cv=none; b=G7ONXpUhxfOGovI5OVCS8x4LL2zLdCtHYQNwUhc9ZDYKRi1KVuE77l6NHE6ybFOHNa7n7tUaZQA/3PbLHPruNFwB0/S46b/RpCM1CGNlsqtQ+rW/9yVn8EfLMMmHPIXLgBjPWW/mELQw8KWMkpQ4sb7HAjsV3tDLIs/O82RD3hk=
+	t=1776918882; cv=none; b=Bw0/Xvmdg3MmRaWdjUbnaXmF0GLQd0E1AojKgtgFyNDyv/JBKoGN7FoGhSphk4mK9NKVn+g4BVqM3fLn+4iYynT9WpTRXEVQ6JV62B/rhJFvqvJ+hYYC9H9vSkEPnwk3JU4IJAlJoREMnLeHDR/rsOTFrTI3rDUXwd+72oeH8PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918845; c=relaxed/simple;
-	bh=iD0H50adZDwGWXLJOO4CRJlKJwS0xbiIeb45xY3Tau4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QK79O1UKtupyW92QgU2Iim0loOvC6p1cbjztKPVSxdAc1wA6RrGUqqevShLVNhsraJe4ItCHsx0/+Nt6YRrhZUuUkByu8CH2NITBxW4yvgyPGV6KwVBgk9C3keEpHlLsnlChTG+0qVHrhUg/jKbNHy5BOa7gnMMohbxPGq5DGvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlEJS9I7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776918882; c=relaxed/simple;
+	bh=51rezRCmkTtYjr4gHY1XIAluVXQOy40k0sYI/sukCTo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=SYLnsB0PF6kjsr/mQDNzVOQpuaZDuVkKltnGrWI2glCGwG5/kZq5LIrHPTgtC/1ccEG+bRiERrjW2QWR56BKvwJiudlkrUNRjB6EwzI+cA8TyUaaWEFIHY+Qwq7te17NzHDEaIeKCrStWc6Fc1skoFcr0gJcqTW9cnhPc1yk2kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anDcWUJc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlEJS9I7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44B8C2BCB2;
-	Thu, 23 Apr 2026 04:34:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="anDcWUJc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF98C2BCB2;
+	Thu, 23 Apr 2026 04:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918844;
-	bh=iD0H50adZDwGWXLJOO4CRJlKJwS0xbiIeb45xY3Tau4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tlEJS9I76/d5S2u83ylwBcaesc3cu6tiYqfB7pPrpZTXt1s+j2eu8AB/RqNvtIKbC
-	 u5/nna2CvUh1YhUBfAV8690S+1/gvwFTFUkLO6hjJFHZgTxTa8Xkf5UT5en7izBuVj
-	 mnUyARcMAfn4GHe43KzHXbc8VniGpftk1KRakXwoM3lI1auMcqh8CH6UMNrMjXwKma
-	 ffegpqgNyTdQudgbvi3Ue9Xko2qOdZkRFsklgM5bmjsraf14HZmU7D0ptlFIuKqlLZ
-	 wM6h9LZZwLiNZicXcqgC2daWH4IocOndJALq8HislwpY86/I64sqRDY+NxAC09/oJR
-	 kW7r8RCjq6t5g==
-From: SeongJae Park <sj@kernel.org>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/4] mm/damon: introduce perf event based access check
-Date: Wed, 22 Apr 2026 21:34:02 -0700
-Message-ID: <20260423043402.92389-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260423004211.7037-1-akinobu.mita@gmail.com>
-References: 
+	s=k20201202; t=1776918881;
+	bh=51rezRCmkTtYjr4gHY1XIAluVXQOy40k0sYI/sukCTo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=anDcWUJc8X/M5QZz3DFb+hneOP+g0RCb4JgPNQdU8E1rZE4z7UE8doqdR0fBQws20
+	 9/RQE36/sLEbFHibzu8XkH1xSNHbTbx25knqEKDTEsFS99VxHuD3w2mknYEh0QpsT/
+	 t6gTc2lMjonUuh//TxvxztWY7YZ07Dj9NsR/tlyGz87PdOpsu2uwkWEKN2nq1jp6AX
+	 DOWddxtmeRgJVR7G1B+wuUP9wlpx+sIoFa1AUtLV0LDEjlpyPwEfv/DaV6e1Uuux6w
+	 6VJ0Q0vOvR1DkjG/ocdSffuWvhjNISYW754DWCsgKfISCEB5j7bYQiI55YvgU76qI/
+	 s1m6yw2l3Hgpw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 12/58] perf evlist: Add reference count checking
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260423035526.1537178-13-irogers@google.com>
+References: <20260423035526.1537178-13-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Apr 2026 04:34:40 +0000
+Message-Id: <20260423043441.6BF98C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hello Akinobu,
+Sashiko AI review found 4 potential issue(s):
+- [High] Deterministic Use-After-Free in `evlist__remove` due to incorrect =
+order of operations
+- [High] Thread-safety violation in `evlist__put` cyclic reference detectio=
+n leading to double-free race conditions
+- [Medium] Refcount leak of `evsel` objects during sample delivery
+- [Low] Missing NULL check on `from_list_start()` result in `perf_evlist__m=
+map_cb_idx()`
+--
 
-On Thu, 23 Apr 2026 09:42:06 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
+commit 3bea95f5803afd016cc89a08d42f43d3d2c999dd
+Author: Ian Rogers <irogers@google.com>
 
-> DAMON currently only provides PTE accessed-bit based access check, this
-> patch series adds a new perf event based access check.
-> 
-> Since perf event-based access checks do not require modifying the PTE
-> accessed-bit for pages representing each damon region, it reduces the
-> overhead of monitoring at a fixed granularity of the page size.
+    perf evlist: Add reference count checking
 
-As I also commented to the previous version, the high level idea makes sense to
-me.  I think this can be useful.
+    Now the evlist is reference counted, add reference count checking so
+    that gets and puts are paired and easy to debug. Reference count
+    checking is documented here:
+    https://perfwiki.github.io/main/reference-count-checking/
 
-Also as I commented to the previous version, I understand the page level
-monitoring overhead reduction is the main purpose of this patch, and it makes
-sense to me.  Nonetheless, I like this mainly because the perf event could
-provide more detailed information including from which CPU/thread the access is
-made, and whether the access is for read/write, to my understanding.  Please
-let me know if my understanding is wrong.
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+[ ... ]
+> @@ -211,25 +225,44 @@ static void evlist__exit(struct evlist *evlist)
+>  void evlist__put(struct evlist *evlist)
+>  {
+> +	struct evsel *evsel;
+> +	unsigned int count;
+> +
+>  	if (evlist =3D=3D NULL)
+>  		return;
+> =20
+> -	if (!refcount_dec_and_test(&evlist->refcnt))
+> -		return;
+> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
+> +		goto out_delete;
+> =20
+> +	count =3D refcount_read(evlist__refcnt(evlist));
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count)
+> +			count--;
+> +	}
+> +	if (count !=3D 0) {
+> +		/*
+> +		 * Not the last reference except for back references from
+> +		 * evsels.
+> +		 */
+> +		RC_CHK_PUT(evlist);
+> +		return;
+> +	}
+> +out_delete:
 
-> 
-> Here is a method and its results for comparing access checks using
-> existing access bits and new perf events.
-[...]
-> Using accessed bit, prepare_access_checks takes 7 seconds and
-> check_accesses takes 5 seconds.
-[...]
-> Using perf event, prepare_access_checks takes 0.01 seconds and
-> check_accesses takes 2.6 seconds.
+Is this new cyclic reference detection thread-safe?
 
-Thank you so much for sharing these great test results with the detailed setup
-description!
+It appears to perform a non-atomic two-step check. If refcount_dec_and_test=
+()
+returns false, it proceeds to read the decremented refcount and iterate over
+the entries without holding any locks.
 
-> ```
-> $ sudo $HOME/damo/damo stop
-> $ sudo $HOME/damo/damo start --ops vaddr \
-> 	--perf_event 5000 0 0x4 0x1cd 0x1f 0 \
-> 	--monitoring_intervals 5s 60s 300s \
-> 	--monitoring_nr_regions_range 1000000000 1000000000 \
-> 	--target_pid $(cat /tmp/memcached.pid)
-[...]
-> Note: damo's --perf_event option
-> 
-> Using these features also requires modifications to damo, but these
-> are not included in this patch series and are currently under
-> development in the following branch:
-> 
-> * https://github.com/mita/damo/tree/damo-perf-for-v3.2.2
+If two threads drop their external references concurrently, could both thre=
+ads
+compute count =3D=3D 0 and concurrently fall through to the out_delete path=
+? This
+would lead to list corruption and a double free.
 
-Thank you for sharing this, too!
+[ ... ]
+> @@ -238,15 +271,16 @@ void evlist__add(struct evlist *evlist, struct evse=
+l *entry)
+> =20
+>  void evlist__remove(struct evlist *evlist, struct evsel *evsel)
+>  {
+> +	evlist__put(evsel->evlist);
+>  	evsel->evlist =3D NULL;
+> -	perf_evlist__remove(&evlist->core, &evsel->core);
+> +	perf_evlist__remove(evlist__core(evlist), &evsel->core);
+>  }
 
-> 
-> The option newly added to damo for perf event-based access check has the
-> following format:
-> 
-> `--perf_event <sample freq> <sample phys addr> <type> <config> <config1> <config2>`
+Can this order of operations trigger a use-after-free?
 
-I think we may need to discuss more for final interface.  But I think that
-could be done later, after the kerenl ABI is fixed.
+Because evlist__put() is called before perf_evlist__remove(), the evsel
+is still linked in the list. When evlist__put() iterates over the list to
+detect cyclic references, it might count this evsel as an internal referenc=
+e.
 
-> 
-> - `sample freq`: A higher frequency improves access accuracy, but also
->   increases overhead.
-> - `sample phys addr`: specify 0 for vaddr and 1 for paddr.
-> - The remaining type, config, config1, and config2 settings can be found
->   as follows:
+This could artificially reduce the external reference count to 0 and
+prematurely free the evlist. Immediately after evlist__put() returns,
+perf_evlist__remove() is called, which would dereference the freshly freed
+evlist pointer.
 
-The values look bit human-unfriendly.  I wonder if we could use more
-human-friendly values, e.g., 'cpu' for type,
-'mem_trans_retired.load_latency_gt_1024' for config, etc.  Not necessarily we
-need to fix this right now.  Let's keep discussing.
+[ ... ]
+> @@ -881,14 +910,24 @@ static void
+>  perf_evlist__mmap_cb_idx(struct perf_evlist *_evlist,
+>  			 struct perf_evsel *_evsel,
+>  			 struct perf_mmap_param *_mp,
+>  			 int idx)
+>  {
+> -	struct evlist *evlist =3D container_of(_evlist, struct evlist, core);
+> +	struct evlist *evlist =3D from_list_start(_evlist);
+>  	struct mmap_params *mp =3D container_of(_mp, struct mmap_params, core);
+>  	struct evsel *evsel =3D container_of(_evsel, struct evsel, core);
+> =20
+>  	auxtrace_mmap_params__set_idx(&mp->auxtrace_mp, evlist, evsel, idx);
+> +
+> +	from_list_end(evlist);
+>  }
 
-> 
-> Run `perf mem record -vv` to obtain the log, and then find the part in
-> the log where `perf_event_open` was executed successfully.
-> ```
-> $ sudo perf mem record -vv echo > /tmp/perf-mem-record.log 2>&1
-> $ cat /tmp/perf-mem-record.log
-> ...
-> perf_event_attr:
->   type                             4 (cpu)
->   size                             144
->   config                           0x1cd (mem_trans_retired.load_latency_gt_1024)
-[...]
-> ...
-> ```
-> 
-> The values for `type` and `config` are taken from this output.
-> Use the values of `config1` and `config2` if they are included in the log;
-> otherwise, set them to 0.
+Should we verify if evlist is NULL before using it?
 
-The above information will also be very useful for early testers of this patch
-series including myself.  Thank you for sharing.
+When REFCNT_CHECKING is enabled, from_list_start() allocates memory for a
+new wrapper and can return NULL on failure. In this case, passing evlist to
+auxtrace_mmap_params__set_idx() will dereference it, which might cause a
+segmentation fault.
 
-> 
-> Any feedback or advice on the patch set would be greatly appreciated.
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+[ ... ]
+> @@ -1371,13 +1371,15 @@ static int evlist__deliver_deferred_callchain(str=
+uct evlist *evlist,
+>  		struct evsel *saved_evsel =3D sample->evsel;
+> =20
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+> +		if (sample->evsel)
+> +			sample->evsel =3D evsel__get(sample->evsel);
+>  		ret =3D tool->callchain_deferred(tool, event, sample,
+>  					       sample->evsel, machine);
+>  		sample->evsel =3D saved_evsel;
+>  		return ret;
+>  	}
 
-Again, I like the high level concept of this patch series.  I definitely want
-this to be merged.  Nonetheless, not exactly as it is right now.  I think we
-should spend enough time for the user interface design.  I hope the final
-interface is long-term maintainable and easy to extend.
+Is it possible that we are leaking an evsel reference here?
 
-> 
-> * RFC v3
-> - drop "reintroduce damon_operations->cleanup()" as no longer needed
-> - drop "allow user to set min size of region" (will be sent separately)
-> - add tgid to struct damon_access_report and use it instead of tid
-> - set perf_event_attr.precise_ip to 2
-> - prepare for the transition to report-based monitoring
-> - switch to use access_reported in struct damon_region
-> - switch to use sample/primitives/perf_events sysfs directory
+The code acquires a reference with evsel__get(), but then sample->evsel is
+overwritten with saved_evsel without a corresponding call to evsel__put().
 
-Thank you for doing this revisioning.
+Since Perf processes millions of events, could this leak a reference for ev=
+ery
+processed sample?
 
-For the user interface and also internal interface, I suggested to consider
-reusing those for page fault events based per-CPUs/threads/reads/writes
-monitoring DAMON extension patch series in our previous discussion.  I think
-this version is following the right direction much more than the previous
-version.
+There are similar additions of evsel__get() without evsel__put() in
+session__flush_deferred_samples() and machines__deliver_event() in this fil=
+e.
 
-But, nowadays I'm thinking about a new user interface for the
-per-CPUs/threads/reads/writes monitoring that can easily also extended for perf
-event based monitoring and for not only access monitoring but general and
-multiple data attributes monitoring.
-
-It is still under the development and I'm planning to share a very early RFC
-version of that by LSFMMBPF.  I will try to add my idea about how this perf
-event based monitoring could also implemented by reusing the interface on the
-early RFC version.
-
-Could we wait until the early RFC version is published, review my idea about
-how this perf event based monitoring could reuse it, and continue discussions
-about the next steps of this patch series?
-
-[1] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
-
-
-Thanks,
-SJ
-
-[...]
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260423035526.1537=
+178-1-irogers@google.com?part=3D12
