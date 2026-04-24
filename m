@@ -1,348 +1,937 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022105.outbound.protection.outlook.com [52.101.96.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C4327453;
-	Fri, 24 Apr 2026 21:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777066183; cv=fail; b=njGEqWXMX0HS5uVU958ZkFeWErpDMG1/ah7zMzbcZYf5MfXJralQTDMZC5Xmsh1T8uNu0YW+qStBaOHMa1Ou7aA82UoU0rVDZ3LzTgOB5xEdSMDTkM4Q0KojaIY1/w1zn2sJh/VnZDhkdanHhWAl3hn58dWgy8B2yXUhdwqyiik=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777066183; c=relaxed/simple;
-	bh=377qNWaWQhmQdbfgUn9avJNy3nWMqg+gdtz/p0KvfVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dFa9YbpWwjnZBOOlXUHQJPswjc3EeqJqtJjMyzFjPwvj/zvG8j9sCr/QnZaW2NYyI/owCEl/EbIV/GZIEY2H6uizI30iJ48Kj5Z39zpT1Z4rD7FQr0gb1nQhrZXuSHOwjcqbAW9LwHpLoMZ0Ozyq0IT/eD2KBYyIs3Z86MnItbQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ajF5fbJk3zqLk1iZ+qUH9aJf33xZDnFHkY/HeIAFZno7Y6g1YTHPACnQL7aC7NmaoRFmkZtYrmL3kWZxweKsXk6wqn/DCb64ugK4Ny1KuOFbQXMAxLmMEQOwZ4kXD8L3dsb9Q35T8Mie0Usxo4wJxZM+bRjcNiqUDboJZseMC8r9RmfS+qz8G0/+Vgs0+1Zn1zFbv05gXUjF98PZuJ1TWHKR1jP6dkamYfgUO52B1L9xfvBf8f5DzFjSUPEFe0Q77lxTGpjGI1IRF0wkXuXEtFRuR022UAT6CXG8+otede3BHpDaAbgm/PgiDekni3oHFBcOJNSnSiaZLnDDbxe4rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2rp3+2Z4CQRoxgPGkHmAHPS5wCqEwId0xqRuVj6IvfI=;
- b=ntkAe1zSbVyenBV9q8zEW/rseHjRIQjIQmnVj75WscvUDlU1hbq6ZciWf65wUM+vZDERi5K0rj6FNcW6bpeWhfTMGdu5mO/hrKS/iIADx2rY2vIe35WLTrjKG9bUL3oHC+9gWZfa43xlWEt+L5SIpXii8uRcOFZsoTWvbVFJWJiSoBkQus4ZO/GRqW9FCO+dpqEfQj3GDj22xJ7dv6+XKYUcNwo/gdiDKKkJoUezdyVs2JUrppp+DQkb3w7xNdSGXhALSqCu0ivqVElPT+T33zhoWjSplOcncclgL9IZ1+39W4fSTabAP2h1/TmmAGMdAb31gIhukUXlScIdMSTSbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LO0P123MB6366.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:28a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.22; Fri, 24 Apr
- 2026 21:29:38 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9846.021; Fri, 24 Apr 2026
- 21:29:38 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	howardchu95@gmail.com,
-	atomlin@atomlin.com,
-	neelx@suse.com,
-	sean@ashe.io,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] perf trace: Introduce --show-cpu option to display cpu id
-Date: Fri, 24 Apr 2026 17:29:33 -0400
-Message-ID: <20260424212933.151154-1-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.51.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR19CA0068.namprd19.prod.outlook.com
- (2603:10b6:208:19b::45) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F92349AF6
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 22:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777068336; cv=none; b=VXjRhUhfmtDh+tbAo5o9DeE3AkXe0QSdLbQw6aADeqMyMF0+frMfar/4PuKOHkcdvOp4Wbu06tb2V9jJ5NT1HAFFULDKGBCuQa3z+p4qNeAipoO5GmZNYqtsqPpImLsdi4hbntBulxo5+yUlW9wHducZ+/+/AUiU+7CSvhiVt+g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777068336; c=relaxed/simple;
+	bh=0auYcSHiFu1nwu0TaukaSorrFweIhqSQTMdP4IEkvjc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=hBTaNX0RhwPNI5TqYvzR2UaDfFvxbTcqM/XnyECENX6/LPKJowBeWf5nnKSeDxw8vsClIrk5mhfx6z9BN7NhiPFDOYZ6Vit89LlPwnSvMZrA474Y1XGI0GrMC/EzVYqfpOQTrthAtAkpFE12sQNFeGQAIYtl8YkuJToNba6A8iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fczt6eCY; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fczt6eCY"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c8ccc7593so9515669c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 15:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777068332; x=1777673132; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=azmgCemCK8Xwqe/44mIBMUFPHRwckw2cSrOaSLiv3RU=;
+        b=fczt6eCYXPMdC44tsUuAXctGN4T8yDHD3dvSaawoK+Lyf+e5IkZ30fGROBtCdu+31v
+         Olqe+QeOqmxn8+n+6fUvBeEsF1LltqS/YJaATNc3v7ps/2PSyYp+pluuLdh5DDRwOi23
+         cCI3yVLfI84IqOzu6PAz68ILkdbSFQPjkMBtUx0QHev0ZgQAn3IU09A3Jfp/P8hup/S1
+         C8lT5OL0FXaHWyxEr/l1yTbNR2bTF+QBtvBuV0u2UEFmPniAilz0m2Lt1HUkBwT/kX11
+         s2UFH7SIqys/pdNqmt0udThS9lK0npqp4R5D+MlfcRODRBP0W8HxdYavFMyZ1zRAl4t6
+         coZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777068332; x=1777673132;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=azmgCemCK8Xwqe/44mIBMUFPHRwckw2cSrOaSLiv3RU=;
+        b=LGnflfaUQo9xFExucz+gwLa24oTWyeFRjpBbhtOfQiOIUu2htBjw/GvkdkkBAI6uev
+         0g1TWX9DZnOFh3XBHKUv4v1QBSR8Yae339lg5D5iJuhAC2TQzW0DQHNTAnHnJQ0PcdLG
+         BfOmtdNq7pFJGGgMlrAu/6X74Fmk2+AU/cVpUU/ZSGfbWFyFlQ0jSiSaSsnOjHoZW3nf
+         MDSO6Nd+ZPe2I4dk7NcbCIxFD8d5+jnTjLiO9VXAnmBr/LGfpvrONRfV9UPs2x/FSk92
+         oOkYDbvdb9KdBb70NiC69ruDUBEN/Bz2XsWPofng2P5GgFU+X8RKcAq4mP1V9g/5MnVS
+         L2nQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9DepIB1B0rcortdNcz8UTwCh7OxtPz29Kv1Eg/Dn8mFY8A/1Ne6M9H92IuALfioL+xG61se2DgPguYzp/YgMX2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGeOOdsgK8Yi8NQgoExyzXJ68MJj3By7zT9LE/1BxDQDiP82BB
+	36xWJ1iawlGUMtC2qXoC71p2mUplVFhO+gCm2VCA49yF7zMWFbjqrGbWoFV5OLk7yBqRYjFNg4j
+	Q0P/9fZ5F2g==
+X-Received: from dlbcf24.prod.google.com ([2002:a05:7022:4598:b0:12d:b2ba:b551])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6714:b0:12c:8e7f:1b11
+ with SMTP id a92af1059eb24-12c8e7f1d18mr11938239c88.7.1777068332348; Fri, 24
+ Apr 2026 15:05:32 -0700 (PDT)
+Date: Fri, 24 Apr 2026 15:05:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO0P123MB6366:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8fe241c7-c2fe-4e1d-7252-08dea248966f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	G8gIphbramkmnkcYAhz8E/HXEC/8KljvZ102tLND/kp4yWifp3ammRPl5ueNUyQZKt81o4519nHawNsBUqLMAbEEW6EULXspe421JjiQDIshRzl3pef5kJ/pIAM0DZygqrErDIs5wyKFOWxyYzqIiSJjtC5cuwrsY5PhkvthPMivcK2j3QTM3fAjD3muwiiO5tDiX0+riEG/kZfYfhJ3M/kU3go/prJmolX+pRtb6S5HK9EYiL55EQxGRLVkyFon+F3z8D0Oph8/+t0bdcRkxQOF8iObdLeORdsDZNZ5rHxjQInzi3QROSzMzJnRxdkk5mBkJXa3GF3l0rkhhOc5rNI53Mj6ocdiaJXvMooziH9PHK/rNCtLDRUzmzYxEpKMwJb5nBiIZxQ9TmgbDiqQE9KAMaeE9u6KRSXXI8GVY9xKaHUm9QgY682hD6ImuMh9F5cW//jUXke/TnF0Q4xAmRkrSah/rQSAQCfpzh2C/qZxeH2W2VDZUy1fLbHBkU9y/RqhJzqwd70QCLTLk+mVIYQoLNakmyeH+V68LuUOXm8dmndjKQgzXNKs2/xBgH1NgYZEonDV2yZsyKo3ycU1PmwgGcrZf2v9j0dYmo2wmq1SQtuxIodjY4Og3U3r0ONmjRAMrXfyMsu41VfLuWnDg+Z/RV5nifNDQFOCAq9pOLZLzkNDAc5mXVpTZY6HABafpGGEy0TW0yGv7XwKRUn0uW5nlwzzAhODEmMXNDolCMY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(18002099003)(56012099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eq01Ic/vfnVJITPnKwE4l1KjFBYJVI8k2Fd7LBV8iOCKnVxESYNiODXZcKLs?=
- =?us-ascii?Q?9J/v4SgJUmlAKRaTfxbCyl1hNyHf58/ESMdr5KIm/w8v3mm3eqkvDqsTZCdY?=
- =?us-ascii?Q?t7m00GFCj49n8unUkOHJDv5V5N7oA06pWLvPh9UXb/tm+wS9u8aSud8LdIxw?=
- =?us-ascii?Q?jMHsolY6y9+DSqejJe9UFAFDBtLEWFG6AS92250c+VyhdImF+9ZlAdoJp5qn?=
- =?us-ascii?Q?nDHgNpwp7RRnYc5XnUc30CWg7F/6uUlTrmfkgGS2eh5s0qEnVmUzDShkEOCs?=
- =?us-ascii?Q?zGownzk7FsvRXcMLJ8XeJAM//8Xtsenj2osi+7WdO291fjcnLmEVv3k2H/h5?=
- =?us-ascii?Q?I4ohD3mLT5mdI+y01qGYGfAaC8nQclpOR+wlL8Nd70/MT+KB0GrjWC5PnuzA?=
- =?us-ascii?Q?VCFtphVp8rhf7qiLIB/dPbxyx4hX0jZcffMSw1BLlqtmcjiBxSj0QdZbD35y?=
- =?us-ascii?Q?fuljdjaobFVT8tOehno1BqcJ+HLkhJF8LVYTO6m5MQkB1IezPR2KkdlwRukL?=
- =?us-ascii?Q?TDLotqFjG3gwV9WNKaCafWBMvhJ5boByVKSOESG4jHSjjmyz+3eRBK9BwWXp?=
- =?us-ascii?Q?HdjqdVRL/yi6mfXaFx0XlO+yxgGc0ARbBKvZapLGPJyF64/2Eu/7bf7dTNJ2?=
- =?us-ascii?Q?XybW+uh605baCJAkF+961VvI96Zmbv1oe3SrY3MMnTRjQnYdO8jY+piFkVn/?=
- =?us-ascii?Q?EgtKrim36SdL6XQoC0lILB0D/ULK0+FBP5wdclsQyG95KTXkTJK/hSH6NFdO?=
- =?us-ascii?Q?Z94G3CYsaLHRerMY8OsqWa9mtTSfGdf2kNKrJyanQekRZ+93B0gR5pLc/PFh?=
- =?us-ascii?Q?bms3LDMndiVuBzIvuCA2ace8Fef6Uh5F/I+qzxxMCb23tYE8nSf/j0zLFr/7?=
- =?us-ascii?Q?Qqi1uc0jSb9E3U3EKStqE5FO30AW4TuOAvSt8PB7RYDejcV4bBqpete53KxA?=
- =?us-ascii?Q?+jGf39CYzow1NboqIHt9RJkFVwk1PziIjbOBbPhb3LzRZ25NyFzkAPxchtcl?=
- =?us-ascii?Q?L5n5+Gfug6pIksSz/mA3H0gW2p/cTw4b5q0tx5FNrlLZEPutdHL8sxEalRM0?=
- =?us-ascii?Q?afZM986OdaMAwLWSt/LBXB2yasdlJ0xiynE5z7lVTmYK39tkUSwZKXBVIlSp?=
- =?us-ascii?Q?YMfe4yB8QBQD7pK03lN9lMFkrHoeDHXza45WWcoPhBZ9GbszTvrRrDDrKOhi?=
- =?us-ascii?Q?TA4TgasABrt8O4ij+nMKRK+RxaIg+S6nBPsYG0xFgyy43WDEU1MizLoRGtmq?=
- =?us-ascii?Q?X2d4lLNrnTDBXWvb58OtaI5GVO8yXcon6kd18EIzfOF06qY4hLXe+CPRiSd2?=
- =?us-ascii?Q?EgfAwiCNd0YItNEsa8goFAOMotTFLr82CNEopA35xMWSlfbzEpJQLaYZFufV?=
- =?us-ascii?Q?CQi54WxPGHxFLZkZGNOqwn7YaA542RmXehLpkQUxuoO+BzdNiIpJ2LxDgKRP?=
- =?us-ascii?Q?RyyRZjaMlmpQH9ZTHYWX4Q1bl5Ou3ckPluoOQCamBFlIp0fUrTkHV24XbToi?=
- =?us-ascii?Q?tVpw1yJ+zxYQ4tfkT4xbNbPruwSpCmpd6blieRLEacevBAD7MVHxSb4m0s54?=
- =?us-ascii?Q?rUMPqnFwPXSwaCm+o74wTmQ03BhxU6b5X4mkM5sx71YlSwld2Gmuys0TdXq7?=
- =?us-ascii?Q?5m9JhgGWzrOUSkflocr8jtsaRGpBfg6aBxcz/rDSMNl9T2cY6xsJti6YpSfT?=
- =?us-ascii?Q?AfrIWEoEnAXXQkLpSQ/pIk5rrfq8IiRaJCSnDE1ugxJ3NnfieA+Mb5Dwory1?=
- =?us-ascii?Q?Tm0gn2XLeg=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fe241c7-c2fe-4e1d-7252-08dea248966f
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2026 21:29:38.0299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xsZ1OhB/XADtPe9MiE0RXZxavdgM36Lbmek7eTjp7vXwQShhhHKjz5iAoqYqMZyKn0xnDDwFi1B0YDNCK9jjKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6366
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260424220519.2743472-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf inject/aslr: Add aslr tool to remap/obfuscate
+ virtual addresses
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Gabriel Marin <gmx@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When tracing system-wide workloads or specific events, it is highly
-valuable to know exactly which CPU executed a specific event. Currently,
-perf trace output defaults to omitting CPU information.
+If perf.data files are taken from one machine to another they make
+leak virtual addresses and so weaken ASLR on the machine they are
+coming from. Add a '--aslr' option for perf inject that remaps all
+virtual addresses, or drops data/events, so that the virtual address
+information isn't leaked.
 
-Introduce a new "--show-cpu" command-line option. When provided, this
-flag extracts the CPU from the perf sample and prints it in a "[000]"
-format immediately following the timestamp. This mirrors the behaviour of
-other tracing tools like ftrace and perf script. For example:
+When events are not known/handled by the tool they are dropped. This
+makes the tool conservative and it should never leak ASLR information,
+but it means virtual address remapping is needed for cases like
+auxtrace.
 
-  # perf trace -e sched:sched_switch --max-events 5 --show-cpu
-       0.000 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "rcu_preempt", next_pid: 16 (rcu_preempt), next_prio: 120)
-       0.009 [002] rcu_preempt/16 sched:sched_switch(prev_comm: "rcu_preempt", prev_pid: 16 (rcu_preempt), prev_prio: 120, prev_state: 128, next_comm: "swapper/2", next_prio: 120)
-       0.033 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "kworker/u32:48", next_pid: 35840 (kworker/u32:48-), next_prio: 120)
-       0.041 [002] kworker/u32:48/35840 sched:sched_switch(prev_comm: "kworker/u32:48", prev_pid: 35840 (kworker/u32:48-), prev_prio: 120, prev_state: 128, next_comm: "swapper/2", next_prio: 120)
-       0.045 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "kworker/u32:48", next_pid: 35840 (kworker/u32:48-), next_prio: 120)
-
-The feature is implemented strictly as an opt-in toggle to prevent
-cluttering the standard output and to preserve backwards compatibility
-for scripts parsing the default output format.
-
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Co-developed-by: Gabriel Marin <gmx@google.com>
+Signed-off-by: Gabriel Marin <gmx@google.com>
 ---
-Changes since v3 [1]:
- - Extended struct thread_trace to track the entry_cpu. This resolves
-   a visual alignment bug and prevents the loss of CPU information when
-   printing pending/interrupted system call entries
+ tools/perf/builtin-inject.c |  11 +-
+ tools/perf/util/Build       |   1 +
+ tools/perf/util/aslr.c      | 752 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/aslr.h      |  10 +
+ 4 files changed, 773 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/util/aslr.c
+ create mode 100644 tools/perf/util/aslr.h
 
-Changes since v2 [2]:
- - Fixed a tautological check in trace__fprintf_cpu(). It now correctly
-   guards against missing CPU data by checking against (u32)-1
-
- - Corrected the format specifier in trace__fprintf_cpu()
-
- - Replaced the hardcoded CPU ID of 0 with (u32)-1 in
-   trace__printf_interrupted_entry() to prevent false CPU attribution
-
- - Refactored trace__event_handler() to utilise the trace__fprintf_cpu()
-   helper, removing duplicated formatting logic
-
-Changes since v1 [3]:
- - Fixed a silent failure where core trace events (e.g., system calls and
-   page faults) ignored the --show-cpu flag. All primary workload events
-   correctly display the CPU ID when required
-
- - Updated all core event handlers (i.e., trace__sys_enter,
-   trace__sys_exit, trace__pgfault and trace__printf_interrupted_entry)
-   to extract sample->cpu and pass it down into the entry head
-   formatter
-
- - Abstracted the CPU formatting logic into a dedicated, documented helper
-   function trace__fprintf_cpu()
-
- - Added a safety guard to verify the CPU data is actually present
-   (cpu != (u32)-1) before attempting to print it, preventing dummy
-   values from polluting the output when sample data is missing
-
-[1]: https://lore.kernel.org/linux-perf-users/20260423194032.134416-1-atomlin@atomlin.com/
-[2]: https://lore.kernel.org/linux-perf-users/20260423192445.131351-1-atomlin@atomlin.com/
-[3]: https://lore.kernel.org/linux-perf-users/20260421203934.64032-1-atomlin@atomlin.com/
----
- tools/perf/Documentation/perf-trace.txt |  3 ++
- tools/perf/builtin-trace.c              | 51 ++++++++++++++++++++++---
- 2 files changed, 49 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index 892c82a9bf40..d0b6c771a1b9 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -199,6 +199,9 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- --show-on-off-events::
- 	Show the --switch-on/off events too.
- 
-+--show-cpu::
-+	Show cpu id.
-+
- --max-stack::
-         Set the stack depth limit when parsing the callchain, anything
-         beyond the specified depth will be ignored. Note that at this point
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e58c49d047a2..e9cc870a5acd 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -217,6 +217,7 @@ struct trace {
- 	bool			kernel_syscallchains;
- 	s16			args_alignment;
- 	bool			show_tstamp;
-+	bool			show_cpu;
- 	bool			show_duration;
- 	bool			show_zeros;
- 	bool			show_arg_names;
-@@ -1531,6 +1532,7 @@ static size_t fprintf_duration(unsigned long t, bool calculated, FILE *fp)
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index f174bc69cec4..fa3a71e23f1b 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -8,6 +8,7 @@
   */
- struct thread_trace {
- 	u64		  entry_time;
-+	u32		  entry_cpu;
- 	bool		  entry_pending;
- 	unsigned long	  nr_events;
- 	unsigned long	  pfmaj, pfmin;
-@@ -1893,6 +1895,27 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
- 	return fprintf(fp, "         ? ");
- }
+ #include "builtin.h"
  
-+/**
-+ * trace__fprintf_cpu - Print the CPU ID to a given file stream
-+ * @cpu: The CPU ID to print
-+ * @fp: The file stream to write to
-+ *
-+ * Formats and prints the specified CPU ID enclosed in brackets
-+ * (e.g., "[003] ") to the provided file pointer. It is used to
-+ * align and display the CPU ID consistently within the trace output.
-+ *
-+ * Return: The number of characters printed.
-+ */
-+static size_t trace__fprintf_cpu(u32 cpu, FILE *fp)
++#include "util/aslr.h"
+ #include "util/color.h"
+ #include "util/dso.h"
+ #include "util/vdso.h"
+@@ -123,6 +124,7 @@ struct perf_inject {
+ 	bool			in_place_update_dry_run;
+ 	bool			copy_kcore_dir;
+ 	bool			convert_callchain;
++	bool			aslr;
+ 	const char		*input_name;
+ 	struct perf_data	output;
+ 	u64			bytes_written;
+@@ -2564,6 +2566,8 @@ int cmd_inject(int argc, const char **argv)
+ 			   " instance has a subdir"),
+ 		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
+ 			    "Generate callchains using DWARF and drop register/stack data"),
++		OPT_BOOLEAN(0, "aslr", &inject.aslr,
++			    "Remap virtual memory addresses similar to ASLR"),
+ 		OPT_END()
+ 	};
+ 	const char * const inject_usage[] = {
+@@ -2571,6 +2575,7 @@ int cmd_inject(int argc, const char **argv)
+ 		NULL
+ 	};
+ 	bool ordered_events;
++	struct perf_tool *tool = &inject.tool;
+ 
+ 	if (!inject.itrace_synth_opts.set) {
+ 		/* Disable eager loading of kernel symbols that adds overhead to perf inject. */
+@@ -2684,7 +2689,9 @@ int cmd_inject(int argc, const char **argv)
+ 	inject.tool.schedstat_domain	= perf_event__repipe_op2_synth;
+ 	inject.tool.dont_split_sample_group = true;
+ 	inject.tool.merge_deferred_callchains = false;
+-	inject.session = __perf_session__new(&data, &inject.tool,
++	if (inject.aslr)
++		tool = aslr_tool__new(&inject.tool);
++	inject.session = __perf_session__new(&data, tool,
+ 					     /*trace_event_repipe=*/inject.output.is_pipe,
+ 					     /*host_env=*/NULL);
+ 
+@@ -2789,6 +2796,8 @@ int cmd_inject(int argc, const char **argv)
+ 	strlist__delete(inject.known_build_ids);
+ 	zstd_fini(&(inject.session->zstd_data));
+ 	perf_session__delete(inject.session);
++	if (inject.aslr)
++		aslr_tool__delete(tool);
+ out_close_output:
+ 	if (!inject.in_place_update)
+ 		perf_data__close(&inject.output);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 70cc91d00804..65b96f3b87e2 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -6,6 +6,7 @@ perf-util-y += arm64-frame-pointer-unwind-support.o
+ perf-util-y += addr2line.o
+ perf-util-y += addr_location.o
+ perf-util-y += annotate.o
++perf-util-y += aslr.o
+ perf-util-y += blake2s.o
+ perf-util-y += block-info.o
+ perf-util-y += block-range.o
+diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+new file mode 100644
+index 000000000000..23ef7b68896c
+--- /dev/null
++++ b/tools/perf/util/aslr.c
+@@ -0,0 +1,752 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "aslr.h"
++
++#include "addr_location.h"
++#include "debug.h"
++#include "event.h"
++#include "evsel.h"
++#include "machine.h"
++#include "map.h"
++#include "thread.h"
++#include "tool.h"
++
++#include <internal/lib.h>  // page_size
++#include <linux/compiler.h>
++#include <errno.h>
++#include <inttypes.h>
++
++struct remap_addresses_key {
++	u64 start_addr;
++	pid_t pid;
++};
++
++struct aslr_tool {
++	/** @tool: The tool implemented here and a pointer to a delegate to process the data. */
++	struct delegate_tool tool;
++	/** @machine: The machine with the input, not remapped, virtual address layout. */
++	struct machine machine;
++	/** @event_copy: Buffer used to create an event to pass to the delegate. */
++	char event_copy[PERF_SAMPLE_MAX_SIZE];
++	/** @remap_addresses: mapping from remap_addresses_key to remapped address. */
++	struct hashmap remap_addresses;
++	/** @top_addresses: mapping from process to max remapped address. */
++	struct hashmap top_addresses;
++	/** @first_kernel_mapping: flag indicating if we are still to process any kernel mapping. */
++	bool first_kernel_mapping;
++};
++
++static const pid_t kernel_pid = -1;
++
++/* Start remapping user processes from a small non-zero offset. */
++static const u64 user_space_start = 0x200000;
++static const u64 kernel_space_start = 0xffff800010000000;
++
++static size_t remap_addresses__hash(long _key, void *ctx __maybe_unused)
 +{
-+	size_t printed = 0;
++	struct remap_addresses_key *key = (struct remap_addresses_key *)_key;
 +
-+	if (cpu != (u32)-1)
-+		printed += fprintf(fp, "[%03u] ", cpu);
-+
-+	return printed;
++	return key->start_addr ^ (key->start_addr >> 12) ^ key->pid;
 +}
 +
- static pid_t workload_pid = -1;
- static volatile sig_atomic_t done = false;
- static volatile sig_atomic_t interrupted = false;
-@@ -1923,12 +1946,15 @@ static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread
- }
- 
- static size_t trace__fprintf_entry_head(struct trace *trace, struct thread *thread,
--					u64 duration, bool duration_calculated, u64 tstamp, FILE *fp)
-+					u64 duration, bool duration_calculated,
-+					u64 tstamp, u32 cpu, FILE *fp)
- {
- 	size_t printed = 0;
- 
- 	if (trace->show_tstamp)
- 		printed = trace__fprintf_tstamp(trace, tstamp, fp);
-+	if (trace->show_cpu && cpu != (u32)-1)
-+		printed += trace__fprintf_cpu(cpu, fp);
- 	if (trace->show_duration)
- 		printed += fprintf_duration(duration, duration_calculated, fp);
- 	return printed + trace__fprintf_comm_tid(trace, thread, fp);
-@@ -2707,7 +2733,9 @@ static int trace__printf_interrupted_entry(struct trace *trace)
- 	if (!ttrace->entry_pending)
- 		return 0;
- 
--	printed  = trace__fprintf_entry_head(trace, trace->current, 0, false, ttrace->entry_time, trace->output);
-+	printed = trace__fprintf_entry_head(trace, trace->current, 0, false,
-+					    ttrace->entry_time, ttrace->entry_cpu,
-+					    trace->output);
- 	printed += len = fprintf(trace->output, "%s)", ttrace->entry_str);
- 
- 	if (len < trace->args_alignment - 4)
-@@ -2825,6 +2853,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
- 	if (evsel != trace->syscalls.events.sys_enter)
- 		augmented_args = syscall__augmented_args(sc, sample, &augmented_args_size, trace->raw_augmented_syscalls_args_size);
- 	ttrace->entry_time = sample->time;
-+	ttrace->entry_cpu = sample->cpu;
- 	msg = ttrace->entry_str;
- 	printed += scnprintf(msg + printed, trace__entry_str_size - printed, "%s(", sc->name);
- 
-@@ -2835,7 +2864,9 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
- 		if (!(trace->duration_filter || trace->summary_only || trace->failure_only || trace->min_stack)) {
- 			int alignment = 0;
- 
--			trace__fprintf_entry_head(trace, thread, 0, false, ttrace->entry_time, trace->output);
-+			trace__fprintf_entry_head(trace, thread, 0, false,
-+						  ttrace->entry_time,
-+						  sample->cpu, trace->output);
- 			printed = fprintf(trace->output, "%s)", ttrace->entry_str);
- 			if (trace->args_alignment > printed)
- 				alignment = trace->args_alignment - printed;
-@@ -2980,7 +3011,9 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
- 	if (trace->summary_only || (ret >= 0 && trace->failure_only))
- 		goto out;
- 
--	trace__fprintf_entry_head(trace, thread, duration, duration_calculated, ttrace->entry_time, trace->output);
-+	trace__fprintf_entry_head(trace, thread, duration,
-+				  duration_calculated, ttrace->entry_time,
-+				  sample->cpu, trace->output);
- 
- 	if (ttrace->entry_pending) {
- 		printed = fprintf(trace->output, "%s", ttrace->entry_str);
-@@ -3280,6 +3313,9 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 	trace__printf_interrupted_entry(trace);
- 	trace__fprintf_tstamp(trace, sample->time, trace->output);
- 
-+	if (trace->show_cpu)
-+		trace__fprintf_cpu(sample->cpu, trace->output);
++static bool remap_addresses__equal(long _key1, long _key2, void *ctx __maybe_unused)
++{
++	struct remap_addresses_key *key1 = (struct remap_addresses_key *)_key1;
++	struct remap_addresses_key *key2 = (struct remap_addresses_key *)_key2;
 +
- 	if (trace->trace_syscalls && trace->show_duration)
- 		fprintf(trace->output, "(         ): ");
- 
-@@ -3405,7 +3441,8 @@ static int trace__pgfault(struct trace *trace,
- 
- 	thread__find_symbol(thread, sample->cpumode, sample->ip, &al);
- 
--	trace__fprintf_entry_head(trace, thread, 0, true, sample->time, trace->output);
-+	trace__fprintf_entry_head(trace, thread, 0, true, sample->time,
-+				  sample->cpu, trace->output);
- 
- 	fprintf(trace->output, "%sfault [",
- 		evsel->core.attr.config == PERF_COUNT_SW_PAGE_FAULTS_MAJ ?
-@@ -5432,6 +5469,7 @@ int cmd_trace(int argc, const char **argv)
- 	OPT_CALLBACK('m', "mmap-pages", &trace.opts.mmap_pages, "pages",
- 		     "number of mmap data pages", evlist__parse_mmap_pages),
- 	OPT_STRING('u', "uid", &trace.uid_str, "user", "user to profile"),
-+	OPT_BOOLEAN(0, "show-cpu", &trace.show_cpu, "show cpu id"),
- 	OPT_CALLBACK(0, "duration", &trace, "float",
- 		     "show only events with duration > N.M ms",
- 		     trace__set_duration),
-@@ -5566,6 +5604,9 @@ int cmd_trace(int argc, const char **argv)
- 			goto out;
- 	}
- 
-+	if (trace.show_cpu)
-+		trace.opts.sample_cpu = true;
++	return key1->pid == key2->pid && key1->start_addr == key2->start_addr;
++}
 +
- 	if ((nr_cgroups || trace.cgroup) && !trace.opts.target.system_wide) {
- 		usage_with_options_msg(trace_usage, trace_options,
- 				       "cgroup monitoring only available in system-wide mode");
++static size_t top_addresses__hash(long key, void *ctx __maybe_unused)
++{
++	return key;
++}
++
++static bool top_addresses__equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return key1 == key2;
++}
++
++static u64 round_up_to_page_size(u64 addr)
++{
++	return (addr + page_size - 1) & ~((u64)page_size - 1);
++}
++
++static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
++				    struct thread *aslr_thread,
++				    u8 cpumode,
++				    u64 addr)
++{
++	struct addr_location al;
++	struct remap_addresses_key key;
++	u64 remap_addr = 0;
++	u8 effective_cpumode = cpumode;
++
++	if (!aslr_thread)
++		return 0; // No thread.
++
++	addr_location__init(&al);
++	if (!thread__find_map(aslr_thread, cpumode, addr, &al)) {
++		/*
++		 * If lookup fails with specified cpumode, try fallback to the other space
++		 * to be robust against bad cpumode in samples.
++		 */
++		effective_cpumode = (cpumode == PERF_RECORD_MISC_KERNEL) ?
++				    PERF_RECORD_MISC_USER : PERF_RECORD_MISC_KERNEL;
++		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
++			pr_debug("Cannot find mmap for address %lx in either space, pid=%d\n",
++				 addr, aslr_thread->pid_);
++			addr_location__exit(&al);
++			return 0; // No mmap.
++		}
++	}
++
++	key.pid = effective_cpumode == PERF_RECORD_MISC_KERNEL ? kernel_pid : aslr_thread->pid_;
++	key.start_addr = map__start(al.map);
++	if (!hashmap__find(&aslr->remap_addresses, &key, &remap_addr)) {
++		pr_debug("Cannot find a remapped entry for address %lx in mapping %lx(%lx) for pid=%d\n",
++			 addr, map__start(al.map), map__size(al.map), key.pid);
++		addr_location__exit(&al);
++		return 0;
++	}
++	remap_addr += addr - map__start(al.map);
++	addr_location__exit(&al);
++	return remap_addr;
++}
++
++static u64 aslr_tool__remap_mapping(struct aslr_tool *aslr,
++				    struct thread *aslr_thread,
++				    u8 cpumode,
++				    u64 start, u64 len)
++{
++	struct addr_location prev_al;
++	struct remap_addresses_key key;
++	u64 remap_addr = 0;
++	/* If mapping is contiguous to the previous process mapping. */
++	bool is_contiguous = false;
++	bool first_mapping = false; // first process mapping.
++
++	if (!aslr_thread)
++		return 0; // No thread.
++
++	addr_location__init(&prev_al);
++	if (thread__find_map(aslr_thread, cpumode, start-1, &prev_al)) {
++		if (map__start(prev_al.map) + map__size(prev_al.map) == start) {
++			is_contiguous = true;
++		} else  {
++			pr_debug("Previous mmap [%lx, %lx] overlaps current map [%lx, %lx]\n",
++				 map__start(prev_al.map),
++				 map__start(prev_al.map) + map__size(prev_al.map),
++				 start, start+len);
++		}
++	}
++	addr_location__exit(&prev_al);
++
++	key.pid = cpumode == PERF_RECORD_MISC_KERNEL ? kernel_pid : aslr_thread->pid_;
++	key.start_addr = start;
++	if (hashmap__find(&aslr->remap_addresses, &key, &remap_addr))
++		return remap_addr;
++
++	if (!hashmap__find(&aslr->top_addresses, key.pid, &remap_addr)) {
++		/* First mapping in this process. Don't add a page gap. */
++		first_mapping = true;
++		remap_addr = (cpumode == PERF_RECORD_MISC_KERNEL ?
++			      kernel_space_start : user_space_start);
++	}
++
++	remap_addr = round_up_to_page_size(remap_addr);
++	if (!is_contiguous && !first_mapping)
++		remap_addr += page_size;
++
++	{
++		struct remap_addresses_key *new_key = malloc(sizeof(*new_key));
++
++		if (!new_key)
++			return 0;
++		*new_key = key;
++		if (hashmap__add(&aslr->remap_addresses, new_key, remap_addr) != 0) {
++			pr_debug("Failed to add remap_addresses entry for pid=%d, mapping start=%lx, remapped start=%lx",
++					key.pid, start, remap_addr);
++			free(new_key);
++			return 0;
++		}
++	}
++
++	hashmap__insert(&aslr->top_addresses, key.pid, remap_addr+len,
++				first_mapping ? HASHMAP_ADD : HASHMAP_UPDATE, NULL, NULL);
++	return remap_addr;
++}
++
++static u64 aslr_tool__remap_ksymbol(struct aslr_tool *aslr,
++				    struct thread *aslr_thread,
++				    u64 addr, u32 len)
++{
++	struct remap_addresses_key key;
++	u64 remap_addr = 0;
++	bool first_mapping = false;
++
++	if (!aslr_thread)
++		return 0; // No thread.
++
++	key.pid = aslr_thread->pid_;
++	key.start_addr = addr;
++	if (hashmap__find(&aslr->remap_addresses, &key, &remap_addr))
++		return remap_addr;
++
++	first_mapping = !hashmap__find(&aslr->top_addresses, key.pid, &remap_addr);
++	if (first_mapping)
++		remap_addr = kernel_space_start;
++	remap_addr = round_up_to_page_size(remap_addr) + page_size;
++
++	{
++		struct remap_addresses_key *new_key = malloc(sizeof(*new_key));
++
++		if (!new_key)
++			return 0;
++		*new_key = key;
++		if (hashmap__add(&aslr->remap_addresses, new_key, remap_addr) < 0) {
++			pr_debug("Failed to add remap_addresses entry for pid=%d, ksymbol=%lx, remapped address=%lx",
++					key.pid, addr, remap_addr);
++			free(new_key);
++			return 0;
++		}
++	}
++
++	hashmap__insert(&aslr->top_addresses, key.pid, remap_addr+len,
++			first_mapping ? HASHMAP_ADD : HASHMAP_UPDATE, NULL, NULL);
++	return remap_addr;
++}
++
++
++static int aslr_tool__process_mmap(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++	u8 cpumode   = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
++	struct thread *thread;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_mmap(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	thread = machine__findnew_thread(&aslr->machine, event->mmap.pid, event->mmap.tid);
++	memcpy(&new_event->mmap, &event->mmap, event->mmap.header.size);
++	/* Remaps the mmap.start. */
++	new_event->mmap.start = aslr_tool__remap_mapping(aslr, thread, cpumode,
++							   event->mmap.start, event->mmap.len);
++	if (aslr->first_kernel_mapping && cpumode == PERF_RECORD_MISC_KERNEL) {
++		/* If this is the first kernel image, we need to adjust the pgoff by a
++		 * similar delta.
++		 */
++		new_event->mmap.pgoff = event->mmap.pgoff - event->mmap.start +
++					new_event->mmap.start;
++		aslr->first_kernel_mapping = false;
++	}
++	return delegate->mmap(delegate, new_event, sample, machine);
++}
++
++static int aslr_tool__process_mmap2(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++	u8 cpumode   = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
++	struct thread *thread;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_mmap2(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	thread = machine__findnew_thread(&aslr->machine, event->mmap2.pid, event->mmap2.tid);
++	memcpy(&new_event->mmap2, &event->mmap2, event->mmap2.header.size);
++	/* Remaps the mmap.start. */
++	new_event->mmap2.start = aslr_tool__remap_mapping(aslr, thread, cpumode,
++							   event->mmap2.start, event->mmap2.len);
++	if (aslr->first_kernel_mapping && cpumode == PERF_RECORD_MISC_KERNEL) {
++		/* If this is the first kernel image, we need to adjust the pgoff by a
++		 * similar delta.
++		 */
++		new_event->mmap2.pgoff = event->mmap2.pgoff - event->mmap2.start +
++					 new_event->mmap2.start;
++		aslr->first_kernel_mapping = false;
++	}
++	return delegate->mmap2(delegate, new_event, sample, machine);
++}
++
++static int aslr_tool__process_comm(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_comm(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	return delegate->comm(delegate, event, sample, machine);
++}
++
++static int aslr_tool__process_fork(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_fork(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	return delegate->fork(delegate, event, sample, machine);
++}
++
++static int aslr_tool__process_exit(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_exit(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	return delegate->exit(delegate, event, sample, machine);
++}
++
++static int aslr_tool__process_text_poke(const struct perf_tool *tool,
++					union perf_event *event,
++					struct perf_sample *sample,
++					struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++	u8 cpumode   = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
++	struct thread *thread;
++
++	thread = machine__findnew_thread(&aslr->machine, sample->pid, sample->tid);
++	memcpy(&new_event->text_poke, &event->text_poke, event->text_poke.header.size);
++	new_event->text_poke.addr = aslr_tool__remap_address(aslr, thread, cpumode,
++							     event->text_poke.addr);
++
++	return delegate->text_poke(delegate, new_event, sample, machine);
++}
++
++static int aslr_tool__process_ksymbol(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++	struct thread *thread;
++	int err;
++
++	/* Create the thread, map, etc. in the ASLR before virtual address space. */
++	err = perf_event__process_ksymbol(tool, event, sample, &aslr->machine);
++	if (err)
++		return err;
++
++	thread = machine__findnew_thread(&aslr->machine, kernel_pid, 0);
++	memcpy(&new_event->ksymbol, &event->ksymbol, event->ksymbol.header.size);
++	/* Remaps the ksymbol.start */
++	new_event->ksymbol.addr = aslr_tool__remap_ksymbol(aslr, thread,
++							   event->ksymbol.addr, event->ksymbol.len);
++
++	return delegate->ksymbol(delegate, new_event, sample, machine);
++}
++
++static inline int copy_u64(__u64 *in_array, __u64 *out_array,
++			   size_t *i, size_t *j, const __u64 max_i)
++{
++	if (*i > max_i)
++		return -EFAULT;
++	out_array[(*j)++] = in_array[(*i)++];
++	return 0;
++}
++
++static int aslr_tool__process_sample(const struct perf_tool *tool, union perf_event *event,
++				struct perf_sample *sample,
++				struct evsel *evsel, struct machine *machine)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	int ret;
++	u64 sample_type = evsel->core.attr.sample_type;
++	struct thread *thread = machine__findnew_thread(&aslr->machine, sample->pid, sample->tid);
++	const __u64 max_i = event->header.size / sizeof(__u64);
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++	struct perf_sample new_sample;
++	__u64 *in_array, *out_array;
++	u8 cpumode = sample->cpumode;
++	u64 addr;
++	size_t i = 0, j = 0;
++
++	new_event->sample.header = event->sample.header;
++
++	in_array = &event->sample.array[0];
++	out_array = &new_event->sample.array[0];
++
++
++
++	if (sample_type & PERF_SAMPLE_IDENTIFIER)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // id
++	if (sample_type & PERF_SAMPLE_IP) {
++		i++;
++		out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode,
++							  sample->ip);
++	}
++	if (sample_type & PERF_SAMPLE_TID)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // pid, tid
++	if (sample_type & PERF_SAMPLE_TIME)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // time
++	if (sample_type & PERF_SAMPLE_ADDR) {
++		i++; // addr
++		out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode,
++							  sample->addr);
++	}
++	if (sample_type & PERF_SAMPLE_ID)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // id
++	if (sample_type & PERF_SAMPLE_STREAM_ID)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // stream_id
++	if (sample_type & PERF_SAMPLE_CPU)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // cpu, res
++	if (sample_type & PERF_SAMPLE_PERIOD)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // period
++	if (sample_type & PERF_SAMPLE_READ) {
++		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
++			if (copy_u64(in_array, out_array, &i, &j, max_i))
++				return -EFAULT; // value
++			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // time_enabled
++			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // time_running
++			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // id
++			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // lost
++		} else {
++			u64 nr;
++
++			if (i > max_i)
++				return -EFAULT;
++			nr = out_array[j++] = in_array[i++];
++			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // time_enabled
++			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // time_running
++			for (u64 cntr = 0; cntr < nr; cntr++) {
++				if (copy_u64(in_array, out_array, &i, &j, max_i))
++					return -EFAULT; // value
++				if (evsel->core.attr.read_format & PERF_FORMAT_ID)
++					if (copy_u64(in_array, out_array, &i, &j, max_i))
++						return -EFAULT; // id
++				if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
++					if (copy_u64(in_array, out_array, &i, &j, max_i))
++						return -EFAULT; // lost
++			}
++		}
++	}
++	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // nr
++
++		for (u64 cntr = 0; cntr < sample->callchain->nr; cntr++) {
++			if (i > max_i)
++				return -EFAULT;
++			i++;
++			addr = sample->callchain->ips[cntr];
++			if (addr >= PERF_CONTEXT_MAX) {
++				// Copy context values as is.
++				out_array[j++] = addr;
++				switch (addr) {
++				case PERF_CONTEXT_HV:
++					cpumode = PERF_RECORD_MISC_HYPERVISOR;
++					break;
++				case PERF_CONTEXT_KERNEL:
++					cpumode = PERF_RECORD_MISC_KERNEL;
++					break;
++				case PERF_CONTEXT_USER:
++					cpumode = PERF_RECORD_MISC_USER;
++					break;
++				default:
++					pr_debug("invalid callchain context: %"PRIx64"\n", addr);
++					/*
++					 * It seems the callchain is corrupted.
++					 * Discard sample.
++					 */
++					return 0;
++				}
++				continue;
++			}
++			out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode,
++								  sample->callchain->ips[cntr]);
++		}
++	}
++	if (sample_type & PERF_SAMPLE_RAW) {
++		size_t bytes = sizeof(u32) + sample->raw_size;
++
++		if ((i + (bytes / sizeof(u64))) > max_i)
++			return -EFAULT;
++		memcpy(&out_array[j], &in_array[i], bytes);
++		i += bytes / sizeof(u64);
++		j += bytes / sizeof(u64);
++		// TODO: certain raw samples can be remapped, such as
++		// tracepoints by examining their fields.
++		pr_debug("Dropping raw samples as possible ASLR leak\n");
++		return 0;
++	}
++	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // nr
++		if (sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)
++			if (copy_u64(in_array, out_array, &i, &j, max_i))
++				return -EFAULT; // hw_idx
++		if (i + (sample->branch_stack->nr * 3) > max_i)
++			return -EFAULT;
++		for (u64 cntr = 0; cntr < sample->branch_stack->nr; cntr++) {
++			out_array[j++] = aslr_tool__remap_address(aslr, thread, sample->cpumode,
++								  in_array[i++]); // from
++			out_array[j++] = aslr_tool__remap_address(aslr, thread, sample->cpumode,
++								  in_array[i++]); // to
++			if (copy_u64(in_array, out_array, &i, &j, max_i))
++				return -EFAULT; // flags
++		}
++		if (sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
++			if (i + sample->branch_stack->nr > max_i)
++				return -EFAULT;
++			memcpy(&out_array[j], &in_array[i], sample->branch_stack->nr * sizeof(u64));
++			i += sample->branch_stack->nr;
++			j += sample->branch_stack->nr;
++			// TODO: confirm branch counters don't leak ASLR information.
++			pr_debug("Dropping sample branch counters as possible ASLR leak\n");
++			return 0;
++		}
++	}
++	if (sample_type & PERF_SAMPLE_REGS_USER) {
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // abi
++		if (sample->user_regs->abi != PERF_SAMPLE_REGS_ABI_NONE) {
++			u64 nr = hweight64(evsel->core.attr.sample_regs_user);
++
++			if (i + nr > max_i)
++				return -EFAULT;
++			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
++			i += nr;
++			j += nr;
++		}
++		// TODO: can this be less conservative?
++		pr_debug("Dropping regs user sample as possible ASLR leak\n");
++		return 0;
++	}
++	if (sample_type & PERF_SAMPLE_STACK_USER) {
++		u64 size;
++
++		if (i > max_i)
++			return -EFAULT;
++		size = out_array[j++] = in_array[i++];
++		if (size > 0) {
++			memcpy(&out_array[j], &in_array[i], size);
++			i += size / sizeof(u64);
++			j += size / sizeof(u64);
++			if (copy_u64(in_array, out_array, &i, &j, max_i))
++				return -EFAULT; // dyn_size
++		}
++		// TODO: can this be less conservative?
++		pr_debug("Dropping stack user sample as possible ASLR leak\n");
++		return 0;
++	}
++	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // perf_sample_weight
++	if (sample_type & PERF_SAMPLE_DATA_SRC)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // data_src
++	if (sample_type & PERF_SAMPLE_TRANSACTION)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // transaction
++	if (sample_type & PERF_SAMPLE_REGS_INTR) {
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // abi
++		if (sample->intr_regs->abi != PERF_SAMPLE_REGS_ABI_NONE) {
++			u64 nr = hweight64(evsel->core.attr.sample_regs_intr);
++
++			if (i + nr > max_i)
++				return -EFAULT;
++			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
++			i += nr;
++			j += nr;
++		}
++		// TODO: can this be less conservative?
++		pr_debug("Dropping interrupt register sample as possible ASLR leak\n");
++		return 0;
++	}
++	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // phys_addr
++		// TODO: can this be less conservative?
++		pr_debug("Dropping physical address sample as possible ASLR leak\n");
++		return 0;
++	}
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // cgroup
++	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // data_page_size
++	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
++		if (copy_u64(in_array, out_array, &i, &j, max_i))
++			return -EFAULT; // code_page_size
++
++	if (sample_type & PERF_SAMPLE_AUX) {
++		u64 size;
++
++		if (i > max_i)
++			return -EFAULT;
++		size = out_array[j++] = in_array[i++];
++		if (i + (size / sizeof(u64)) > max_i)
++			return -EFAULT;
++		memcpy(&out_array[j], &in_array[i], size);
++		i += size / sizeof(u64);
++		j += size / sizeof(u64);
++		// TODO: can this be less conservative?
++		pr_debug("Dropping aux sample as possible ASLR leak\n");
++		return 0;
++	}
++
++	if (evsel__is_offcpu_event(evsel)) {
++		// TODO: can this be less conservative?
++		pr_debug("Dropping off-CPU sample as possible ASLR leak\n");
++		return 0;
++	}
++
++	perf_sample__init(&new_sample, /*all=*/ true);
++	ret = evsel__parse_sample(evsel, new_event, &new_sample);
++	if (ret)
++		return ret;
++
++	ret = delegate->sample(delegate, new_event, &new_sample, evsel, machine);
++	perf_sample__exit(&new_sample);
++	return ret;
++}
++
++static int aslr_tool__process_attr(const struct perf_tool *tool,
++				   union perf_event *event,
++				   struct evlist **pevlist)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct perf_tool *delegate = aslr->tool.delegate;
++	union perf_event *new_event = (union perf_event *)aslr->event_copy;
++
++	memcpy(&new_event->attr, &event->attr, event->attr.header.size);
++	new_event->attr.attr.bp_addr = 0;  // Conservatively remove addresses.
++	new_event->attr.attr.kprobe_addr = 0;  // Conservatively remove addresses.
++
++	return delegate->attr(delegate, new_event, pevlist);
++}
++
++static void aslr_tool__init(struct aslr_tool *aslr, struct perf_tool *delegate)
++{
++	delegate_tool__init(&aslr->tool, delegate);
++	aslr->tool.tool.ordered_events = true;
++
++	machine__init(&aslr->machine, "", HOST_KERNEL_ID);
++
++	hashmap__init(&aslr->remap_addresses,
++		      remap_addresses__hash, remap_addresses__equal,
++		      /*ctx=*/NULL);
++	hashmap__init(&aslr->top_addresses,
++		      top_addresses__hash, top_addresses__equal,
++		      /*ctx=*/NULL);
++	aslr->first_kernel_mapping = true;
++
++	aslr->tool.tool.sample	= aslr_tool__process_sample;
++	// read - reads a counter, okay to delegate.
++	aslr->tool.tool.mmap	= aslr_tool__process_mmap;
++	aslr->tool.tool.mmap2	= aslr_tool__process_mmap2;
++	aslr->tool.tool.comm	= aslr_tool__process_comm;
++	aslr->tool.tool.fork	= aslr_tool__process_fork;
++	aslr->tool.tool.exit	= aslr_tool__process_exit;
++	// namesspaces, cgroup, lost, lost_sample, aux,
++	// itrace_start, aux_output_hw_id, context_switch, throttle, unthrottle
++	// - no virtual addresses.
++	aslr->tool.tool.ksymbol	= aslr_tool__process_ksymbol;
++	// bpf - no virtual address.
++	aslr->tool.tool.text_poke = aslr_tool__process_text_poke;
++	aslr->tool.tool.attr = aslr_tool__process_attr;
++	// event_update, tracing_data, finished_round, build_id, id_index,
++	// auxtrace_info, auxtrace_error, time_conv, thread_map, cpu_map,
++	// stat_config, stat, feature, finished_init, bpf_metadata, compressed,
++	// auxtrace - no virtual addresses.
++}
++
++struct perf_tool *aslr_tool__new(struct perf_tool *delegate)
++{
++	struct aslr_tool *aslr = malloc(sizeof(*aslr));
++
++	if (!aslr)
++		return NULL;
++
++	aslr_tool__init(aslr, delegate);
++	return &aslr->tool.tool;
++}
++
++void aslr_tool__delete(struct perf_tool *tool)
++{
++	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
++	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
++	struct hashmap_entry *cur;
++	size_t bkt;
++
++	hashmap__for_each_entry(&aslr->remap_addresses, cur, bkt)
++		zfree(&cur->pkey);
++
++	hashmap__clear(&aslr->remap_addresses);
++	hashmap__clear(&aslr->top_addresses);
++	machine__exit(&aslr->machine);
++	free(aslr);
++}
+diff --git a/tools/perf/util/aslr.h b/tools/perf/util/aslr.h
+new file mode 100644
+index 000000000000..ea984d82681f
+--- /dev/null
++++ b/tools/perf/util/aslr.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_ASLR_H
++#define __PERF_ASLR_H
++
++struct perf_tool;
++
++struct perf_tool *aslr_tool__new(struct perf_tool *delegate);
++void aslr_tool__delete(struct perf_tool *aslr);
++
++#endif /* __PERF_ASLR_H */
 -- 
-2.51.0
+2.54.0.545.g6539524ca2-goog
 
