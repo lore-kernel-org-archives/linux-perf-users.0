@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AFA18CBE1
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B021D5AD4
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777052184; cv=none; b=l5sgYLBu4Uakoe7Pwew3yKjjSoODk3XxQAW65rl9hEHMiT0DnlXNadEWi0Vjb8kFAFWgkn5qwCdEMrh5a8Wd7TfCFyQk4HrefvbUnuTxDtuUjikLrLcJS3VyPzHH2OVFdPV2sqvFIwyJx158BQIY05NO7aQz4HBUKRcyxWdSlEM=
+	t=1777052266; cv=none; b=U7kq1+JULfXNcwTox8IRW0yNl2OjjbzMqCh0uT7EzfX2NO2RdDy96WZaLElMPgDQnm0wNl2ROsIjELai5huP0pOslsJ6bVSUFeXCRZ8Ke99H67ycj0qR6JA7KGiKcxqowYxfm8+K+0GsO+wTkStNxZzi4ntXfdx5w6ccPUBvBdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777052184; c=relaxed/simple;
-	bh=yqAy8QTrUeWV2GB5/+Lwg/Kj5skKKDfX5nltKFAk3Jg=;
+	s=arc-20240116; t=1777052266; c=relaxed/simple;
+	bh=Y7gOVcGZmNQl5pS6/PTKING4iWjDxx+cRy9lGH7PV88=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GlLyrs7Be1wIZZIR8Tzbq4e7THc2mVLCxiyRypWfOBPR4ogcjWZNU04YPmoIGELBjBKKIOYgXaIwmXYxVvsmt+00O97ZxZB/y+CfJf25Vop2JuIeHkRQGuAb11y0vAMNZp9j+iOyC6/UWA/tPKADtPBHY5TTcd1asupcY4l+yWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGLVdQgP; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ZgvlMu+JXn32KhS27sT5qV7oz39rC3qFYeiAD89SxTY1hXPe3I3V3qS06XyDiZgXlBF0yJ4n1WEPjKyjYyfXVFzDB46oCfyWvAV66Mndwgd+Kqwy/dJQw58ZBiCLkY/sSYOpNld/F1rNPn3pSjoUTvcCvi8KgkvI8Ube/WyoFiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/ilqF+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGLVdQgP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2891C19425;
-	Fri, 24 Apr 2026 17:36:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/ilqF+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9AA4C19425;
+	Fri, 24 Apr 2026 17:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777052183;
-	bh=yqAy8QTrUeWV2GB5/+Lwg/Kj5skKKDfX5nltKFAk3Jg=;
+	s=k20201202; t=1777052265;
+	bh=Y7gOVcGZmNQl5pS6/PTKING4iWjDxx+cRy9lGH7PV88=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=uGLVdQgPR6ndl/ChVqC5RhV99KtPwKY8ozzmvQfCHj6bJk2rQhUzaNwSPtPHEeEMu
-	 F7XIyHMWQNbGC4RZKg1qKDET2cIpQg9seJu/dt01kvaucQhtBqk05Hvk1hR+mbIovw
-	 OI8EwuPTrtQGxGWwH7sXo4Jzr9y6HAxBe5875z8OB7P12vn1axoRnbIylVFjSTYXwG
-	 mR3wosmSYROjexW8GP6yiVShm36x0vL1SPbFYkme+z9y+Eyvr8dl4v6hmiS23HC8Ri
-	 KhPCtD3LGDSFSTZe+2sQD8U1EvjR88KxrCC262UXbl+iTv8eT98Ff5M1thkS+sFSvr
-	 dW3c+VfUd6sGg==
+	b=B/ilqF+cXi2L2hfEu8Pa2o0fHdEqlNU6oeKeIglIsd2HckzO1Xowa6fgMGB4PHV7f
+	 5jgcE3PCFxzyjww3akr0/jxc6CJ7HgV+TJC5/oezmcglNDfDsuFN/jiYeZY3XAKlbQ
+	 r5/EBTHmQKitPxwzG8WeMWwVbxVzIosPSM0obWk+XM6uB5LZoaqqMU+hBxvXpJqHeX
+	 jlTbNgg00s0VvcYbdtdP4vym65ZDhSsYynuzQ8c+yB2656nqrtDbqsovLcYoGCXf46
+	 on8sKSf6F8C8sYdeTkINF4FxPwPiU7SQbN5FWxlv7+vpxYGj11OUdqv456NnWbjULA
+	 r7JBuzkQANDSg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 32/58] perf arm-cs-trace-disasm: Port
- arm-cs-trace-disasm to use python module
+Subject: Re: [PATCH v5 12/58] perf evlist: Add reference count checking
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-33-irogers@google.com>
-References: <20260424164721.2229025-33-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-13-irogers@google.com>
+References: <20260424164721.2229025-13-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:36:23 +0000
-Message-Id: <20260424173623.B2891C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:37:45 +0000
+Message-Id: <20260424173745.C9AA4C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,110 +44,131 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 3 potential issue(s):
-- [High] Event names are incorrectly matched because `str(sample.evsel)` in=
-cludes the `evsel(...)` wrapper.
-- [Medium] Incorrect mathematical calculation of the symbol offset `symoff`=
- due to mixing absolute and map-relative addresses.
-- [Medium] The updated shell test silently fails on out-of-tree builds beca=
-use it lacks the necessary environment setup to locate the `perf` Python mo=
-dule.
+- [High] Time-Of-Check to Time-Of-Use (TOCTOU) race condition in `evlist__p=
+ut()` breaks atomic reference counting, leading to Double Free or Use-After=
+-Free.
+- [High] Reassigning the local parameter `evlist` in `iostat_prepare()` cau=
+ses a Use-After-Free crash in `cmd_stat()`. (Pre-existing issue)
+- [Medium] Leaked `evlist` reference when removing `probe:vfs_getname` even=
+ts due to bypassing `evlist__remove()`.
 --
 
-commit 33d6193e9a3497d76e5e326cbe424187e713bad0
+commit 277a4b5e346eb6e74fad04ad6b9e88d0d32aa103
 Author: Ian Rogers <irogers@google.com>
 
-perf arm-cs-trace-disasm: Port arm-cs-trace-disasm to use python module
+perf evlist: Add reference count checking
 
-Add a port of the arm-cs-trace-disasm script that uses the perf python
-module directly. This approach is significantly faster than using perf
-script callbacks as it avoids creating intermediate dictionaries for
-all event fields. Update the testing to use the ported script.
+This patch adds reference count checking to the perf evlist object so that
+gets and puts are paired and easy to debug. It also introduces accessors to
+evlist functions and updates the codebase to use them.
 
-> diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python=
-/arm-cs-trace-disasm.py
-> new file mode 100755
-> index 00000000000000..d1227e809adf68
-> --- /dev/null
-> +++ b/tools/perf/python/arm-cs-trace-disasm.py
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index a362f338f1044a..29588af735e5af 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
 [ ... ]
-> +def print_srccode(comm: str, sample: perf.sample_event, symbol: str, dso=
-: str) -> None:
-> +    """Print source code and symbols for a sample."""
-> +    ip =3D sample.sample_ip
-> +    if symbol =3D=3D "[unknown]":
-> +        start_str =3D common_start_str(comm, sample) + f"{ip:x}".rjust(1=
-6).ljust(40)
-> +    else:
-> +        symoff =3D 0
-> +        sym_start =3D sample.sym_start
-> +        if sym_start is not None:
-> +            symoff =3D ip - sym_start
-
-Does this calculate the correct offset for dynamically loaded libraries?
-If sample.sample_ip is an absolute instruction pointer, and sample.sym_star=
-t=20
-is map-relative, won't subtracting them yield an incorrect offset?=20
-
-The original C-side code avoided this by using the pre-computed offset
-via al->addr - sym->start.
-
-[ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Process a single perf event."""
-> +        self.sample_idx +=3D 1
-> +        global SAMPLE_IDX
-> +        SAMPLE_IDX =3D self.sample_idx
-[ ... ]
-> +        ev_name =3D str(sample.evsel)
-[ ... ]
-> +        if ev_name.startswith("instructions"):
-> +            print_srccode(comm, sample, symbol, dso)
-> +            return
+> @@ -215,16 +225,32 @@ static void evlist__exit(struct evlist *evlist)
+> =20
+>  void evlist__put(struct evlist *evlist)
+>  {
+> +	struct evsel *evsel;
+> +	unsigned int count;
 > +
-> +        if not ev_name.startswith("branches"):
-> +            return
+>  	if (evlist =3D=3D NULL)
+>  		return;
+> =20
+> -	if (!refcount_dec_and_test(&evlist->refcnt))
+> -		return;
+> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
+> +		goto out_delete;
+> =20
+> +	count =3D refcount_read(evlist__refcnt(evlist));
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count)
+> +			count--;
+> +	}
+> +	if (count !=3D 0) {
+> +		/*
+> +		 * Not the last reference except for back references from
+> +		 * evsels.
+> +		 */
+> +		RC_CHK_PUT(evlist);
+> +		return;
+> +	}
+> +out_delete:
 
-Will this correctly match the event names?
-The __str__ representation of pyrf_evsel in tools/perf/util/python.c return=
-s=20
-the event name wrapped as "evsel(%s)".=20
+Can this sequence result in a race condition that breaks atomic reference
+counting?
 
-Does this cause ev_name to be evaluated as strings like=20
-"evsel(instructions:u)", which would fail both startswith() checks and=20
-result in the script silently dropping all events?
+Because the decrement via refcount_dec_and_test() and the subsequent read
+are not atomic, concurrent calls to evlist__put() could both decrement the
+refcount before either reads it. Both threads would then read the same coun=
+t,
+subtract the back-references, see a count of zero, and proceed to out_delet=
+e,
+causing a double free.
 
-> diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/=
-perf/tests/shell/test_arm_coresight_disasm.sh
-> index 0dfb4fadf53177..c15cd60e1c2464 100755
-> --- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-> +++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+Similarly, a concurrent evlist__get() could increment the refcount after
+the count is read, leaving the other thread with a dangling pointer since
+the first thread proceeds to free the evlist.
+
 [ ... ]
-> @@ -45,8 +45,9 @@ branch_search=3D"\sbl${sep}b${sep}b.ne${sep}b.eq${sep}c=
-bz\s"
->  if [ -e /proc/kcore ]; then
->  	echo "Testing kernel disassembly"
->  	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/n=
-ull 2>&1
-> -	perf script -i ${perfdata} -s python:${script_path} -- \
-> -		-d --stop-sample=3D30 2> /dev/null > ${file}
-> +	# shellcheck source=3Dlib/setup_python.sh
-> +	. "$(dirname "$0")"/lib/setup_python.sh
-> +	$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=3D30 2> /dev/nul=
-l > ${file}
+> @@ -235,10 +257,11 @@ void evlist__put(struct evlist *evlist)
+> =20
+>  void evlist__add(struct evlist *evlist, struct evsel *entry)
+>  {
+> -	perf_evlist__add(&evlist->core, &entry->core);
+> -	entry->evlist =3D evlist;
+> +	perf_evlist__add(evlist__core(evlist), &entry->core);
+> +	evlist__put(entry->evlist);
+> +	entry->evlist =3D evlist__get(evlist);
+>  	entry->tracking =3D !entry->core.idx;
 
-Could this fail silently on out-of-tree builds?
-If the perf python module is not installed globally, the script will fail to
-import perf with a ModuleNotFoundError.=20
+Does this change leak the evlist reference when probe:vfs_getname events
+are removed in evlist__add_vfs_getname()?
 
-Because the PYTHONPATH is not exported and sys.path is not modified to poin=
-t=20
-to the built python extension directory, and errors are swallowed by=20
-2> /dev/null, the output file ends up empty.
+With the new reference counting semantics, adding an evsel to an evlist
+acquires a reference to the evlist. In evlist__add_vfs_getname(), unmatched
+evsels are manually removed from the list by explicitly setting
+evsel->evlist =3D NULL and calling evsel__put(evsel).
 
-Would it be better to ensure PYTHONPATH includes the built extension direct=
-ory
-similar to how it is handled in python-use.sh?
+By bypassing evlist__remove() and setting evsel->evlist =3D NULL without
+calling evlist__put(), the reference to the evlist acquired during insertion
+is permanently leaked.=20
+
+Because the event is removed from the linked list, the cycle-breaking loop
+in evlist__put() will not traverse it. The evlist reference count will never
+reach 0, leaking the entire list and its resources upon exit.
+
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util=
+/iostat.c
+> index e0417552b0cbd1..a0baa6cdefd891 100644
+> --- a/tools/perf/arch/x86/util/iostat.c
+> +++ b/tools/perf/arch/x86/util/iostat.c
+[ ... ]
+> @@ -334,7 +334,7 @@ static int iostat_event_group(struct evlist *evl,
+> =20
+>  int iostat_prepare(struct evlist *evlist, struct perf_stat_config *confi=
+g)
+>  {
+> -	if (evlist->core.nr_entries > 0) {
+> +	if (evlist__nr_entries(evlist) > 0) {
+>  		pr_warning("The -e and -M options are not supported."
+>  			   "All chosen events/metrics will be dropped\n");
+>  		evlist__put(evlist);
+>  		evlist =3D evlist__new();
+
+This isn't a bug introduced by this patch, but does this code cause a
+use-after-free when reassigning the evlist?
+
+Since evlist is passed by value, reassigning evlist =3D evlist__new() only
+updates the local parameter. If the user passes unsupported arguments,
+evlist__nr_entries(evlist) > 0 evaluates to true, and evlist__put(evlist)
+frees the original list.
+
+The caller retains its original pointer, which now points to freed memory,
+potentially causing a crash when it iterates over it later.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D32
+025-1-irogers@google.com?part=3D12
