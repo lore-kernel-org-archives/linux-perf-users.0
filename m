@@ -1,178 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73CF3E123E
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCBB2D780E
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050887; cv=none; b=UNCr2gGk9Kbz0oU4xGA3pVcWLN9KqD4j7MSfvA8rTCKYJH5WnmwbF9ExAnh+SLn9Z8XX3gL6JSeWJlcP7NPb/sythkTVwSpZxeLBna7M7wVLWWZpGaJOOEV3QqXSHftNNXAST0eQ46q/UF1T2wzJOXAuiDjfhxiRTDBtslJ13cY=
+	t=1777050909; cv=none; b=FDOQTJuHFF50b8W8QVowhUIH5VeG+T3IuKHe5wnsgII++q1lRXWBfb7GtfxVyPj27O0l9+U1DkFD3sir5yfsGG4CKaLQyT5XN9a27d5Yn4/sb81KVZ6pXzvtcp89OIK8Ep84COwRdXGScsV13hHTnP4bBmKy+UMRl5vP7yLbFx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050887; c=relaxed/simple;
-	bh=kCeMAu8SvIF/1IhrqSJ+rJZDxPvzq2otY5psLZE9hvQ=;
+	s=arc-20240116; t=1777050909; c=relaxed/simple;
+	bh=FAym0ETu7lUUIFjUyxtsN7QDfHeDuIZVb6OttQLe2Dg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pvGcXn3JIEl/wTOxoiqAq6LqfaGo61nIoYJtLHr+O0/EfOev9c0hnUJjjprYiHO5JOihwS+IBWC08THojOUvh+pj4rRzKQp1sUdALW37Byp6nDGVb/S9pp6hSwj86SBIQR71hA2Bx/EBI4MYGaw2IKxkgKgScrU5NzSscDM9SxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLQpwmOu; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=XV4Q5gk2RBNIr5ZL46+TSHZidYgriZV7ggPCGQOuIeJBom9n2gN1Kht6Iy+/mRnI5pPE47MT2oBqGYBt4u0ziE22lA/AJ4d1S01zYfhEwMti+uOVjlsw11/VpjVv93oLXzNf3plAuiCLTtZTCXVPkdDYluFzYDigwMFJoHwFRgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4lK9fZa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLQpwmOu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C0DC19425;
-	Fri, 24 Apr 2026 17:14:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4lK9fZa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF9FC19425;
+	Fri, 24 Apr 2026 17:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050887;
-	bh=kCeMAu8SvIF/1IhrqSJ+rJZDxPvzq2otY5psLZE9hvQ=;
+	s=k20201202; t=1777050908;
+	bh=FAym0ETu7lUUIFjUyxtsN7QDfHeDuIZVb6OttQLe2Dg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=fLQpwmOuWPoKPnYTrkxwVyMpQ219wA0eN7zzOsNlZGibkESpDOAlLjBU/G3Yv6XRZ
-	 UWylWMn/VG7+uPHe9SyhY+a4dIB1/EP0BJSfTt6ssKQw18IdpNNtZaFSz+NCV4GHDr
-	 O4eyRA71Gdy4oclaixNasVrK/sdsLnRp2C6IY7VXfO0Y8KIxZ0HCQp6UE1ACbbx57+
-	 X3smszMZ+2ZXGEQyFN6SSMsXqGiu1oUX3Mz8PujfHOHwj5rRi/dUKNjjw3WVr/ekme
-	 qzqGF0vUsX2lOmk1uhgwKSUoEDBEgwdP+zKtLAeb+jD25vjQ2CaljSCGbr81bwhjJQ
-	 dNCRBlLdIPsvw==
+	b=a4lK9fZaoxC1LYkHU/do5aAQNp97eqUrCwGosg7SJHeLtXmQvrpNUbgReNUhWjVyU
+	 Wmr4BXnDT8N9Sh8O+ua+tztCedWe8gSP+z+9PwLnVl4+/Z8iEAIFnfu9jfYe+rr364
+	 deFInGdivOhYr6SDXOIDwb2B52d17DuWLEEM+Rze07+yz7awwrPvyXQ9cMIqqrYrKR
+	 r5AML6pxYn6NcLqdp3HF9tPxpomFQH3wMA0/vptH2NJCivV9QxIS9CECfkjCo7TC+B
+	 9h/GUl3BKlIhXizHBxeJoUAZXeHhCL3CYZqzL+VGgvSL/ctZjrRgHpAwKLpYX+huWF
+	 yx3QMPcwm7zOQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 50/58] perf rwtop: Port rwtop to use python module
+Subject: Re: [PATCH v5 24/58] perf python: Move exported-sql-viewer.py and
+ parallel-perf.py to tools/perf/python/
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-51-irogers@google.com>
-References: <20260424164721.2229025-51-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-25-irogers@google.com>
+References: <20260424164721.2229025-25-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:14:46 +0000
-Message-Id: <20260424171447.64C0DC19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:15:08 +0000
+Message-Id: <20260424171508.CDF9FC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 5 potential issue(s):
-- [Medium] The commit message claims to use ANSI escape codes to clear the =
-terminal, but the code does not implement this.
-- [Medium] The fallback events for `raw_syscalls` use invalid tracepoint na=
-mes.
-- [Medium] Command name (comm) resolution is completely broken in live mode.
-- [Medium] Read and write system calls returning 0 (such as EOF) are incorr=
-ectly tracked as errors.
-- [Medium] Process names (`comm`) will be missing from the output for cross=
--interval events.
+Sashiko AI review found 1 potential issue(s):
+- [Medium] Moving `exported-sql-viewer.py` and `parallel-perf.py` to `tools=
+/perf/python/` breaks their installation and skips the `parallel-perf` test=
+ because `Makefile.perf` is not updated in this commit.
 --
 
-commit 54cf450fd705476f413ab144cabc91c84a299a63
+commit c423130f6ca40765cfc1d50d745c2cdf9bf08db1
 Author: Ian Rogers <irogers@google.com>
 
-perf rwtop: Port rwtop to use python module
+perf python: Move exported-sql-viewer.py and parallel-perf.py to tools/perf=
+/python/
 
-This commit ports the legacy rwtop.pl Perl script to a Python script
-using the perf module. It leverages the perf.session API for event
-processing to display system-wide read and write call activity periodically.
-
-> - Used ANSI escape codes (\x1b[H\x1b[2J) to clear the terminal.
-
-Is this description accurate?
-
-Looking at print_totals() in the code, there do not appear to be any ANSI
-escape sequences emitted. This results in the terminal scrolling continuous=
-ly
-instead of clearing.
-
-> diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
-> new file mode 100755
-> index 00000000000000..952d178e99c5a1
-> --- /dev/null
-> +++ b/tools/perf/python/rwtop.py
-[ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:  # pylin=
-t: disable=3Dtoo-many-branches
-> +        """Process events."""
-> +        event_name =3D str(sample.evsel)
-> +        pid =3D sample.sample_pid
-> +        sample_time =3D sample.sample_time
-> +
-> +        if self.last_print_time =3D=3D 0:
-> +            self.last_print_time =3D sample_time
-> +
-> +        # Check if interval has passed
-> +        if sample_time - self.last_print_time >=3D self.interval_ns:
-> +            self.print_totals()
-> +            self.last_print_time =3D sample_time
-> +
-> +        try:
-> +            comm =3D f"PID({pid})" if not self.session else self.session=
-.process(pid).comm()
-> +        except Exception:  # pylint: disable=3Dbroad-except
-> +            comm =3D f"PID({pid})"
-
-Will process names resolve correctly in live mode?
-
-When running with the LiveSession path in main(), self.session is never
-initialized. It appears this will always fall back to printing the PID inst=
-ead
-of the command name.
+This commit moves standalone Python scripts from tools/perf/scripts/python/=
+ to
+tools/perf/python/. It updates the test script to reference the new paths.
 
 [ ... ]
-> +        elif event_name in ("evsel(syscalls:sys_exit_read)", "evsel(raw_=
-syscalls:sys_exit_read)"):
-> +            try:
-> +                ret =3D sample.ret
-> +                if ret > 0:
-> +                    self.reads[pid]["bytes_read"] +=3D ret
-> +                else:
-> +                    self.reads[pid]["errors"][ret] +=3D 1
 
-Does this incorrectly classify EOF as an error?
+> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/sc=
+ript.sh
+> index 7007f1cdf761b4..2051c6e055695b 100755
+> --- a/tools/perf/tests/shell/script.sh
+> +++ b/tools/perf/tests/shell/script.sh
+> @@ -76,7 +76,7 @@ test_parallel_perf()
+>  		err=3D2
+>  		return
+>  	fi
+> -	pp=3D$(dirname "$0")/../../scripts/python/parallel-perf.py
+> +	pp=3D$(dirname "$0")/../../python/parallel-perf.py
+>  	if [ ! -f "${pp}" ] ; then
+>  		echo "SKIP: parallel-perf.py script not found "
+>  		err=3D2
 
-A return value of 0 indicates End-Of-File for reads, which is a normal
-operational state, whereas actual syscall errors return negative values.
+Does moving these scripts without updating tools/perf/Makefile.perf break t=
+he
+installation step and cause this test to skip?
 
-[ ... ]
-> +        elif event_name in ("evsel(syscalls:sys_exit_write)", "evsel(raw=
-_syscalls:sys_exit_write)"):
-> +            try:
-> +                ret =3D sample.ret
-> +                if ret > 0:
-> +                    self.writes[pid]["bytes_written"] +=3D ret
-> +                else:
-> +                    self.writes[pid]["errors"][ret] +=3D 1
+Prior to this patch, Makefile.perf copied scripts/python/*.py to the
+installation directory. Since the Makefile isn't updated in this commit, the
+scripts are omitted from make install.
 
-Similarly for writes, a return value of 0 indicates 0 bytes written.
+When perf test runs from an installed tree, it expects to find
+parallel-perf.py at the installed python/ directory. Since the installation=
+ is
+missing, the test silently skips.
 
-Should this be checking for ret >=3D 0 instead, or strictly tracking negati=
-ve
-values as errors?
-
-[ ... ]
-> +    def print_totals(self) -> None:
-[ ... ]
-> +        # Reset counts
-> +        self.reads.clear()
-> +        self.writes.clear()
-
-Will this result in missing process names for syscalls that span across
-interval boundaries?
-
-Because the dictionaries are cleared completely, if a sys_exit event arrives
-in the new interval without a preceding sys_enter, the defaultdict will
-recreate the entry with an empty string for comm. The summary table might
-then display a blank command name for that pid.
-
-[ ... ]
-> +def main() -> None:
-[ ... ]
-> +            try:
-> +                live_session =3D LiveSession(events, sample_callback=3Da=
-nalyzer.process_event)
-> +            except OSError:
-> +                events =3D (
-> +                    "raw_syscalls:sys_enter_read,raw_syscalls:sys_exit_r=
-ead,"
-> +                    "raw_syscalls:sys_enter_write,raw_syscalls:sys_exit_=
-write"
-> +                )
-
-Are these fallback tracepoint names valid?
-
-The raw_syscalls subsystem only exposes generic sys_enter and sys_exit
-tracepoints. It does not append the syscall name, so attempting to attach
-to raw_syscalls:sys_enter_read will fail.
+I see this is fixed in a later commit 00f5f415c2dee0 ("perf Makefile: Update
+Python script installation path"), but does leaving the Makefile out of this
+commit break bisectability?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D50
+025-1-irogers@google.com?part=3D24
