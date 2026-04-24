@@ -1,111 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78BE33DEC2
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:03:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C67376481
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050182; cv=none; b=gXGUPi1lwdVxxZvRhhG2cwjAjmmskOoRG0SUlvIODjlogx7OHKkeXFAVpbfssxbtRjvtlPl6C7OKFfVH4CyGSdlR02oWr6ToQS3ncm9pQby5W+4kG4WovWXCcbZaKqz+lm/Sgpb1K0SVALQtChzl6tO0JNGgQQpF+EnGE1sDhGc=
+	t=1777050434; cv=none; b=leFyq5GQvIQ68A+qUIEHhOymyiQsX/cS7kuULxvwNImJmLQk315s8aDfiQoBWomT3bLO4hAybmi57L7YPSOE4EhxT/bifL8J5Nrq2HRnc0mA7sWXCZ3Bvgq6rZj4jPzb1mIvNUj5xgIGUZMmlohMQcBDPlVxH91sWJULBQdevjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050182; c=relaxed/simple;
-	bh=CAiFGGzzXDwiBki/RxYHRnPEmxohjizCMCdsDBAfL2k=;
+	s=arc-20240116; t=1777050434; c=relaxed/simple;
+	bh=PJX46QcOixcvd364/YUuLfP4zqtg13d4gwaM+RLoRdc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C2Weezp4lVB6h+ZnReVsUpUWJTYDo1GzEKvQfw/hG9wgZEVEmUOakor8DVFtgpIU0UnyPy+qFkE9Qg+mhZ7xdderyXSY3Oyk2qSrrbLwjgreAJ2x/O/ZEK92khEcX6xN7hc0wE1ri2gzmdCNl5Zdqw/1ePPSqcOuKWXD8F6o4JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvuuW+oW; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=DxZKxmPwhzY1ynn112seAU6ofoA4HNzM0yMwS08mtr81wx9v/OOFws5YZxcpY/FVQMM1qXegMFD6caaGrq2w9FUl9qYYCQ9e7Bpz/yoCYg1pPLhLw9xp/njhIkukVpy3SeljeyRdiHN9sGzyiqVbduPbrcjK7tQp0B6PtbL8E/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPgWE+yt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvuuW+oW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC52C19425;
-	Fri, 24 Apr 2026 17:03:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPgWE+yt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D16C19425;
+	Fri, 24 Apr 2026 17:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050181;
-	bh=CAiFGGzzXDwiBki/RxYHRnPEmxohjizCMCdsDBAfL2k=;
+	s=k20201202; t=1777050433;
+	bh=PJX46QcOixcvd364/YUuLfP4zqtg13d4gwaM+RLoRdc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=KvuuW+oWgJ3UQ5H7xzMpYTQECMj9BZI1o4G/Xj70yUngq28nzcqCxOqRAhW0TrkS1
-	 XfguCTjqWTBbspeuSXtyOUD1DMiGrzR5d/Ob77UpqwZQfjm/yg3m5OjpI6S0MON4Ok
-	 lw94TbqFX4II1tuGtOIsuyTC6LmCDB+IL0HUAfH2QeoUTTOHdMEq04cFu5DtCRC9ck
-	 SgKBhFKZgL4w0p5kkdVNwuOw0i3t7eqopEuuaXUdv4zFD98vTLW7CuPesj2/bidySJ
-	 G67fTO8QruM8UAcmpjp9wIyfguJhLVPugzUUgTqgOx9YwU3D6X0PLvT9nS5faNZL27
-	 IVqm0llhbmjsg==
+	b=DPgWE+yt5IfqsqEIE688vtGO44ztnGi2q6kmfd6mdWI335mVAsvuGy9iCKemNNJpm
+	 3PVRwyzMNgZze/5RD28aSaAie7sdheS9itIjV0vTVQ95CXCB+1lP6UJobrL/w9uNN+
+	 anlCrt72OsrjnP2zLOavqsn3Gjvfc3mFsn+hbR+f5yo8lZHGFPk7HE11pE1F1qCVu+
+	 LBhfpKblunW+nND9MylEIbqS5DVl9Bt1NOkI4hI+CDRLRSdnScCVOGmVMK5M42SeB7
+	 +0Nx6anHpq7fzttIU6G1kg+ic0fA9G/1AMaizrXDJBmeSE5qBiYZmCGt0mlOp8RcTU
+	 59DCAKcgl1atg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 40/58] perf net_dropmonitor: Port net_dropmonitor to
- use python module
+Subject: Re: [PATCH v5 38/58] perf failed-syscalls-by-pid: Port
+ failed-syscalls-by-pid to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-41-irogers@google.com>
-References: <20260424164721.2229025-41-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-39-irogers@google.com>
+References: <20260424164721.2229025-39-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:03:00 +0000
-Message-Id: <20260424170301.7DC52C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:07:12 +0000
+Message-Id: <20260424170713.70D16C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Functional regression: script incorrectly aggregates drops by the =
-sample instruction pointer instead of the drop location, and missing kallsy=
-ms parsing contradicts the commit message.
-- [Medium] Dead code in `process_event` due to catching `AttributeError` fr=
-om a `getattr` call that provides a default value.
+Sashiko AI review found 4 potential issue(s):
+- [High] Chaining `.comm()` directly on `self.session.process(pid)` is unsa=
+fe and prone to crashing due to an unhandled `TypeError`.
+- [Medium] Filtering by PID 0 is ignored due to a falsy condition check.
+- [Medium] Meaningful code and commit message mismatch regarding nested sta=
+tistics aggregation.
+- [Low] Unhandled events are aggregated but silently discarded without bein=
+g displayed.
 --
 
-commit aeda053dba70774e82fead7325506ebffb58c7b8
+commit 76816da881d00075e4983b987c755a57bd2cf9b9
 Author: Ian Rogers <irogers@google.com>
 
-perf net_dropmonitor: Port net_dropmonitor to use python module
+perf failed-syscalls-by-pid: Port failed-syscalls-by-pid to use python modu=
+le
 
-This commit ports the net_dropmonitor script to use a Python module,
-refactoring it to use a class structure and perf.session for event
-processing.
+This commit ports the failed-syscalls-by-pid script to the perf Python
+module API. It updates syscall name resolution, error string resolution,
+and adds support for command-line filtering by comm or pid.
 
->     - Maintained the manual /proc/kallsyms reading and binary search for
->       symbol resolution as in the original script.
+>     - Used standard collections.defaultdict for nested statistics
+>       aggregation.
 
-The commit message states that manual /proc/kallsyms reading and binary sea=
-rch
-for symbol resolution is maintained. Is this description accurate? Looking =
-at
-the script, this logic appears to have been removed entirely.
+Is this description accurate? The implementation uses a flat dictionary
+keyed by a 4-tuple rather than nested aggregation.
 
-> diff --git a/tools/perf/python/net_dropmonitor.py b/tools/perf/python/net=
-_dropmonitor.py
+> diff --git a/tools/perf/python/failed-syscalls-by-pid.py b/tools/perf/pyt=
+hon/failed-syscalls-by-pid.py
 > new file mode 100755
-> index 00000000000000..25ea2a66ed3c89
+> index 00000000000000..1a8c9bb7e90c48
 > --- /dev/null
-> +++ b/tools/perf/python/net_dropmonitor.py
+> +++ b/tools/perf/python/failed-syscalls-by-pid.py
 
 [ ... ]
 
 > +    def process_event(self, sample: perf.sample_event) -> None:
 > +        """Process a single sample event."""
-> +        if str(sample.evsel) !=3D "evsel(skb:kfree_skb)":
+> +        event_name =3D str(sample.evsel)
+> +        if "sys_exit" not in event_name:
 > +            return
 > +
-> +        try:
-> +            symbol =3D getattr(sample, "symbol", "[unknown]")
-> +            symoff =3D getattr(sample, "symoff", 0)
+> +        pid =3D sample.sample_pid
+> +        if hasattr(self, 'session') and self.session:
+> +            comm =3D self.session.process(pid).comm()
 
-Does this correctly identify the drop locations? By using sample.symbol and
-sample.symoff, it appears the script resolves the instruction pointer where
-the sample was taken (which will likely always point to kfree_skb itself).
+Could session.process(pid) raise a TypeError if the PID cannot be resolved
+in the thread map? If so, this might crash the script when it encounters
+an unresolved PID instead of safely falling back to "Unknown".
 
-Should this be extracting the raw drop address from the event's "location"
-payload field instead, to accurately report where the packets were dropped?
+> +        else:
+> +            comm =3D "Unknown"
+> +
+> +        if self.for_comm and comm !=3D self.for_comm:
+> +            return
+> +        if self.for_pid and pid !=3D self.for_pid:
 
-> +            self.drop_log[(symbol, symoff)] +=3D 1
-> +        except AttributeError:
+Will this bypass the filter if the user intends to filter by PID 0 (the swa=
+pper
+task), since self.for_pid evaluates to False? Would it be better to explici=
+tly
+check if self.for_pid is not None?
 
-Can this exception handler ever be reached? Because getattr() is called abo=
-ve
-with default values ("[unknown]" and 0), it will return the default instead=
- of
-raising an AttributeError when the attribute is missing.
+> +            return
+> +
+> +        ret =3D getattr(sample, "ret", 0)
+> +        if ret < 0:
+> +            syscall_id =3D getattr(sample, "id", -1)
+> +            if syscall_id =3D=3D -1:
+> +                syscall_id =3D getattr(sample, "sys_id", -1)
+> +
+> +            if syscall_id !=3D -1:
+> +                self.syscalls[(comm, pid, syscall_id, ret)] +=3D 1
+> +            else:
+> +                self.unhandled[event_name] +=3D 1
 
-> +            self.unhandled[str(sample.evsel)] +=3D 1
+The script populates self.unhandled here, but it doesn't appear to be used
+in print_summary() or anywhere else. Was the intention to display these
+unhandled events in the summary?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D40
+025-1-irogers@google.com?part=3D38
