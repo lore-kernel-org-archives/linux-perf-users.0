@@ -1,145 +1,288 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30053344025
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13AA2D780E
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777051024; cv=none; b=XdNJ8gPx8ePf5b8Ze8xBlbZuabmZGddAHiMI+AzI9e7OcUp+tVS7G6kMmSfXOkPb2+XrSEAu6bZCaYiQiLAPdw2NvHrb4a5DAPCyUVUJJ1Y6WNOjKfpUOpWsSiXZpCjzqS+Ti7OPRkB4mAqMQen9WgR7eloTwNO88bIz4Y0/12w=
+	t=1777051041; cv=none; b=chBobCT+lQVGfcJy6eM+hB0cDKCTnCC67IV+aLLCpvvVIjljHTIZ76s0uEdzIi1WLHaajyVxWj/JHaQ8T5b4JrO58Rk8kaduOJsgdNDr5kAEAkW4F3LggtELrUFCAIsut1smEfx7DfHXClAhlJz3yHzvNlInzbdYKsHE5mdQass=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777051024; c=relaxed/simple;
-	bh=HLS2nzO3AqMPwgNHEAMA02zB/o8jSZ5cjdqimbKAiWw=;
+	s=arc-20240116; t=1777051041; c=relaxed/simple;
+	bh=BCvKTs/hVaEPMURKYg/ZKPvljTrZFveVh3TIVHWZmSg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ij+eZ/WGXgJgZo/W9ALE+N4Rv6g1lPWEP0VCyQfSy+iTr4rNWQX5BI1J8uxl9sgj6foj4eMli91Phrk9xh+HeK2EFHV+6mMHShNAD19rHxkQSTqTqbS6lusNwBJzYeoBTysgY7AjlPjZUjQIzHUr1g5wjxfrnunzpHsFpAAj0oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CH1bUfHD; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=EtQgjU3XG55k6QrylCcu+G7aGvraKWRF341nJWOSxSQ7yUDfLjfZGmltpmOVnEBGG5836akVCsUl+JCwfTPEng2gZuB8MkC/jLJkGkaxghiZDDJgbw61nvDMV4exq3JoEmUFnnHThJFfNbaeV9h0aQ19FyJNrzN8lIDu41i61J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6ndEPhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CH1bUfHD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A0CC2BCB2;
-	Fri, 24 Apr 2026 17:17:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6ndEPhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E347C2BCB5;
+	Fri, 24 Apr 2026 17:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777051023;
-	bh=HLS2nzO3AqMPwgNHEAMA02zB/o8jSZ5cjdqimbKAiWw=;
+	s=k20201202; t=1777051041;
+	bh=BCvKTs/hVaEPMURKYg/ZKPvljTrZFveVh3TIVHWZmSg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=CH1bUfHD0MVVkWbpl5nKfoXaavhlWWDhhSgPV/0QP90PIv5KPm616Dkfd2FOrOKXw
-	 GY+5wbZMs7rJzLtFqu2dSYeIeDpxvBFfpMap9ga/IYsP3u2c8jtZClR06+INCTIRvG
-	 d69EyNpPdf2cRHO8WUHjjrYpwJrwDj7PWFhhT7iJLe98HwLT2GYzunoDDmDh8XIS8u
-	 mw877Flp1xL05fdi8iKvARgBRkWqLeuH4lcJ4Rls2bgcO0rAuDQfE1IV7uc8IIbkNn
-	 0+9WG7ajtlYN9FNqXwwohmmy+i4/6idYLjljuM3CIdjOEXlv3S8Sf2ylAG86H2SoYo
-	 A4HZacmwC0oMg==
+	b=M6ndEPhpZG+Axnd8xEXfp7h25wFAxnVgEy+C2xKiUttQ3s5TIvZaRLl4+jxCLZhfO
+	 Cwkyl+IHgFY9mTm9FVCQRz8Rs0eZWK4dInbnYNBTkS/oJUYKlXQ7TPqIaR6Y4n5yv1
+	 u+39fSia2Oe2TAE+DeBOe6Kzb7P7PMxtABRoa4xXoOhJRvQBqmeQ8xc7SVTWQxlgpn
+	 pVekQbkW67PtWchEGUbYweRc5RkY7MFCUxVkunfEsJ/9uDYM1frBCxkgX+SmcZ6qjs
+	 y0WX0ZG69QXtvZGHj71qvPQE8a1y9eHBdu1TVfENBE3LL50fI7tXLt+c6WPSjv8J4Y
+	 R48i8qgq0s3lg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 20/58] perf python: Extend API for stat events in
- python.c
+Subject: Re: [PATCH v5 36/58] perf export-to-sqlite: Port export-to-sqlite
+ to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-21-irogers@google.com>
-References: <20260424164721.2229025-21-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-37-irogers@google.com>
+References: <20260424164721.2229025-37-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:17:03 +0000
-Message-Id: <20260424171703.B1A0CC2BCB2@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:17:20 +0000
+Message-Id: <20260424171721.9E347C2BCB5@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [Critical] The `stat_round_type` field has an incorrect memory offset, le=
-ading to memory corruption.
-- [High] The `pyrf_session_tool__stat_round` function leaks memory and fail=
-s to handle Python exceptions.
-- [High] A single Python callback is overloaded for `stat` and `stat_round`=
- events with incompatible argument signatures.
-- [High] Exposing `sample_members` for stat events without initialization l=
-eaks garbage memory data to Python.
+Sashiko AI review found 6 potential issue(s):
+- [High] The script silently drops sample data by querying incorrect or non=
+-existent attributes from the perf.sample_event python object.
+- [High] Callchain DSO and symbol names are unconditionally recorded as 'Un=
+known_dso' and 'Unknown_symbol' due to improper attribute lookup on strings.
+- [High] Insufficient cache keys for DB entities (`comms`, `dsos`, `symbols=
+`) cause erroneous merging of distinct objects, leading to schema corruptio=
+n and data loss.
+- [High] The `process_id` in the `threads` table is incorrectly populated w=
+ith the OS `pid` instead of the database primary key `id` of the main threa=
+d, breaking relational joins.
+- [Medium] The ported script drops support for branch samples, hardcoding b=
+ranch targets and branch types to 0.
+- [Medium] The attempt to fix a TOCTOU race condition when creating the dat=
+abase file merely shifts the race window, leaving the script vulnerable to =
+symlink attacks if run in an untrusted directory.
 --
 
-commit fdd2ccb8d95335f5dbcb00dd40bf892c370291b7
+commit 3639169c4ea864d5644c2a97081aef058020783f
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Extend API for stat events in python.c
+perf export-to-sqlite: Port export-to-sqlite to use python module
 
-Add stat information to the session. Add call backs for stat events.
+This commit ports the export-to-sqlite.py script to use the modern perf
+Python module and the standard library sqlite3 module. It drops the
+dependency on PySide2.QtSql.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index dc10d8a42d9247..c4f0e01b64f364 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -299,6 +299,76 @@ static PyTypeObject pyrf_lost_event__type =3D {
-
-[ ... ]
-
-> +static PyMemberDef pyrf_stat_event__members[] =3D {
-> +	sample_members
-
-Do the sample_members macros expose uninitialized memory here? Unlike
-sample events where evsel__parse_sample() initializes the pevent->sample
-structure, stat events are created with PyObject_New() which does not
-zero-initialize the memory.
-
-If a Python script accesses any sample_* attribute on a stat event, could
-this read uninitialized C heap memory?
-
-> +	member_def(perf_event_header, type, T_UINT, "event type"),
-> +	member_def(perf_record_stat, id, T_ULONGLONG, "event id"),
+> diff --git a/tools/perf/python/export-to-sqlite.py b/tools/perf/python/ex=
+port-to-sqlite.py
+> new file mode 100755
+> index 00000000000000..a662b4f22cdb98
+> --- /dev/null
+> +++ b/tools/perf/python/export-to-sqlite.py
 
 [ ... ]
 
-> +static PyMemberDef pyrf_stat_round_event__members[] =3D {
-> +	sample_members
-> +	member_def(perf_event_header, type, T_UINT, "event type"),
-> +	{ .name =3D "stat_round_type", .type =3D T_ULONGLONG,
-> +	  .offset =3D offsetof(struct perf_record_stat_round, type), .doc =3D "=
-round type" },
+> +    def get_thread_id(self, pid: int, tid: int) -> int:
+> +        """Get or create thread ID."""
+> +        key =3D (pid, tid)
+> +        if key in self.caches['threads']:
+> +            return self.caches['threads'][key]
+> +        thread_id =3D self.next_id['thread']
+> +        self.con.execute("INSERT INTO threads VALUES (?, ?, ?, ?, ?)",
+> +                         (thread_id, 0, pid, pid, tid))
 
-Does this offset calculation corrupt the Python object header?
+Are we inserting the OS pid into the process_id column here?
 
-The member_def macro correctly calculates offsets from the base of the
-allocated Python object by adding offsetof(struct pyrf_event, event).
+Looking at the database schema, the process_id column acts as a foreign key
+pointing to the database-generated id of the process's main thread, not the
+OS pid.
 
-By omitting the base offset for struct pyrf_event, reading or writing
-stat_round_type in Python might write directly into the PyObject_HEAD field=
-s.
+Since the auto-increment id space does not intersect with the OS pid
+space, will this break downstream queries that attempt to group threads by
+joining process_id =3D threads.id?
 
-> +	member_def(perf_record_stat_round, time, T_ULONGLONG, "round time"),
-> +	{ .name =3D NULL, },
-> +};
-
-[ ... ]
-
-> +static int pyrf_session_tool__stat_round(const struct perf_tool *tool,
-> +					 struct perf_session *session __maybe_unused,
-> +					 union perf_event *event)
-> +{
-> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> +	PyObject *pyevent =3D pyrf_event__new(event);
+> +        self.caches['threads'][key] =3D thread_id
+> +        self.next_id['thread'] +=3D 1
+> +        return thread_id
 > +
-> +	if (pyevent =3D=3D NULL)
-> +		return -ENOMEM;
+> +    def get_comm_id(self, comm: str, thread_id: int) -> int:
+> +        """Get or create comm ID."""
+> +        if comm in self.caches['comms']:
+> +            return self.caches['comms'][comm]
+
+Does caching exclusively by the command string cause relational data loss f=
+or
+comm_threads?
+
+When multiple distinct threads execute the same command string, the cache
+will return a hit for the first thread's comm_id.
+
+This bypasses the INSERT INTO comm_threads execution for all subsequent
+threads, omitting them from the comm_threads table entirely.
+
+> +        comm_id =3D self.next_id['comm']
+> +        self.con.execute("INSERT INTO comms VALUES (?, ?, ?, ?, ?)",
+> +                         (comm_id, comm, thread_id, 0, 0))
+> +        self.con.execute("INSERT INTO comm_threads VALUES (?, ?, ?)",
+> +                         (comm_id, comm_id, thread_id))
+> +        self.caches['comms'][comm] =3D comm_id
+> +        self.next_id['comm'] +=3D 1
+> +        return comm_id
 > +
-> +	PyObject_CallFunction(psession->stat, "O", pyevent);
+> +    def get_dso_id(self, short_name: str, long_name: str,
+> +                   build_id: str) -> int:
+> +        """Get or create DSO ID."""
+> +        if short_name in self.caches['dsos']:
+> +            return self.caches['dsos'][short_name]
 
-Since psession->stat is used here with one argument ("O"), but
-pyrf_session_tool__stat calls it with two arguments ("Os"), will this cause
-a TypeError in Python when a single callback function is registered for
-both events?
+Does using only short_name as the cache key risk discarding the long_name
+and build_id?
 
-Also, should the return value of PyObject_CallFunction() be checked and
-decremented?
+If a DSO is first encountered during a callchain traversal where those
+fields are missing, future lookups for the same short_name will return
+the cached ID without updating the database with the missing fields.
 
-It returns a new reference on success which seems to leak since Py_DECREF()
-is not called.
+> +        dso_id =3D self.next_id['dso']
+> +        self.con.execute("INSERT INTO dsos VALUES (?, ?, ?, ?, ?)",
+> +                         (dso_id, 0, short_name, long_name, build_id))
+> +        self.caches['dsos'][short_name] =3D dso_id
+> +        self.next_id['dso'] +=3D 1
+> +        return dso_id
 
-Additionally, if the Python callback raises an exception, the function
-returns NULL. Without a check and a call to PyErr_Print(), the Python
-interpreter might remain in an error state.
+[ ... ]
 
-> +	Py_DECREF(pyevent);
-> +	return 0;
-> +}
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Callback for processing events."""
+
+[ ... ]
+
+> +        # Handle callchain
+> +        call_path_id =3D 0
+> +        if hasattr(sample, 'callchain') and sample.callchain:
+> +            parent_id =3D 0
+> +            for node in sample.callchain:
+> +                node_dso =3D getattr(node, 'dso', None) or getattr(node,=
+ 'map', None)
+> +                node_symbol =3D getattr(node, 'symbol', None) or getattr=
+(node, 'sym', None)
+> +
+> +                dso_name =3D "Unknown_dso"
+> +                if node_dso:
+> +                    dso_name =3D getattr(node_dso, 'name', "Unknown_dso"=
+) or "Unknown_dso"
+> +
+> +                symbol_name =3D "Unknown_symbol"
+> +                if node_symbol:
+> +                    symbol_name =3D getattr(node_symbol, 'name', "Unknow=
+n_symbol") or "Unknown_symbol"
+
+Will this result in callchain entries always being recorded as 'Unknown_dso'
+and 'Unknown_symbol'?
+
+In the perf Python API, pyrf_callchain_node__get_dso and
+pyrf_callchain_node__get_symbol return Python strings, not objects.
+
+Since Python strings do not have a name attribute, the getattr() calls here
+will always fail and default to the unknown strings.
+
+> +
+> +                node_dso_id =3D self.get_dso_id(dso_name, dso_name, "")
+> +                node_symbol_id =3D self.get_symbol_id(node_dso_id, symbo=
+l_name, 0, 0)
+> +
+> +                parent_id =3D self.get_call_path_id(parent_id, node_symb=
+ol_id, node.ip)
+> +            call_path_id =3D parent_id
+> +        else:
+> +            call_path_id =3D 0
+> +
+> +        # Insert sample
+> +        self.con.execute("""
+> +            INSERT INTO samples VALUES (
+> +                NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,=
+ ?, ?, ?, ?, ?, ?, ?
+> +            )
+> +        """, (
+> +            self.get_event_id(getattr(sample.evsel, 'name', str(sample.e=
+vsel))),
+> +            0, thread_id, comm_id,
+> +            dso_id, symbol_id, getattr(sample, 'sym_offset', 0),
+> +            sample.sample_ip, sample.sample_time, sample.sample_cpu,
+> +            0, 0, 0, 0,  # to_dso, to_symbol, to_sym_offset, to_ip
+> +            getattr(sample, 'sample_period', 0) or 0,
+> +            getattr(sample, 'sample_weight', 0) or 0,
+> +            getattr(sample, 'transaction_', 0),
+> +            getattr(sample, 'data_src', 0),
+> +            0,  # branch_type
+> +            getattr(sample, 'in_tx', 0),
+> +            call_path_id,
+> +            getattr(sample, 'insn_count', 0),
+> +            getattr(sample, 'cyc_count', 0),
+> +            getattr(sample, 'flags', 0)
+> +        ))
+
+Are we querying the correct attributes from the perf.sample_event object?
+
+The perf Python C-extension exposes these attributes with a sample_ prefix,
+such as sample_insn_count, sample_cyc_count, and sample_data_src.
+
+Because getattr(sample, 'insn_count', 0) and similar calls omit the prefix,
+they will silently return the default value of 0. Furthermore, fields like
+sym_offset, transaction_, in_tx, and flags are not exposed by the API at al=
+l,
+which might lead to silent loss of critical performance metrics and
+transaction data.
+
+Additionally, does this hardcoding drop support for branch samples?
+
+The legacy script extracted branch data elements, but here the to_dso,
+to_symbol, to_sym_offset, to_ip, and branch_type fields are hardcoded to 0.
+The perf Python API exposes sample.brstack via pyrf_sample_event__get_brsta=
+ck,
+but it appears to be ignored here, which might break downstream branch trac=
+ing
+visualization.
+
+> +
+> +        self.sample_count +=3D 1
+> +        if self.sample_count % 10000 =3D=3D 0:
+> +            self.commit()
+
+[ ... ]
+
+> +if __name__ =3D=3D "__main__":
+> +    ap =3D argparse.ArgumentParser(
+> +        description=3D"Export perf data to a sqlite3 database")
+> +    ap.add_argument("-i", "--input", default=3D"perf.data",
+> +                    help=3D"Input file name")
+> +    ap.add_argument("-o", "--output", default=3D"perf.db",
+> +                    help=3D"Output database name")
+> +    args =3D ap.parse_args()
+> +
+> +    try:
+> +        fd =3D os.open(args.output, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+> +        os.close(fd)
+> +    except FileExistsError:
+> +        print(f"Error: {args.output} already exists")
+> +        sys.exit(1)
+> +
+> +    exporter =3D DatabaseExporter(args.output)
+
+Is there a race condition between closing the file and opening the database?
+
+The script safely creates the file with os.open(..., O_CREAT | O_EXCL) but
+immediately closes the file descriptor.
+
+It then delegates the database connection to sqlite3.connect() via the
+DatabaseExporter constructor, which re-opens the file by path and follows
+symlinks.
+
+If executed in a shared directory like /tmp, could an attacker delete the
+newly created file and replace it with a symlink before the connect() runs,
+causing the SQLite initialization queries to overwrite the target file?
+
+> +
+> +    session =3D None
+> +    error_occurred =3D False
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D20
+025-1-irogers@google.com?part=3D36
