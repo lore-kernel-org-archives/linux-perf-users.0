@@ -1,352 +1,128 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFB435F8B7
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 10:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E5639A063;
+	Fri, 24 Apr 2026 12:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777025251; cv=none; b=oW88ojPtdOv4UaV2732/v0MBUYGJHpGNaxT1ACihHPnh4Ux23+uG3WIZrt3EB98VHUUSz3N9r9ceXXRI1U+bNawQqvA0YFqBkYmoVh6ZW5l5Pha66G+5OthVuWr4XTo0wHOZYNhiKuzGBPQ2xqZkteGw0kdXEuSsYY24xQGV4tc=
+	t=1777033070; cv=none; b=Qn0xKdCqx290c2MJd3jSqlMhHDTPLaShTiNBcQXmdiHFDV0gnKdI267PfSHRz0Hm/gCPH5OHkCwqhco4JVuNYpQheuF0Js3dP9FeOooD+SmL7lmHZaBm12oPHQKP7ICr3pyPNcqunytcpa446mtmgoI5ui++49Vy2uoeVTMLOpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777025251; c=relaxed/simple;
-	bh=np3+E0whgk003QIFXUmWpKZWjczCSJat+HexjwjaO8E=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=i88za7nHlW0cTIkY3EzrJn+1im5hsgpLQYf5Bl9ICWBmn6KLPDxjL9d6tgP4xCrXY9pP4m/2JFJzQpuKkp/un4hhvlFBKQ4Qs/W9BAJVVslq5aL+PznclWIkx8oFr+8Pc8K/MI+a68iEclWNPUzktLQj3PBaJLs/xOJTAfHg0co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T/sspNRH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1777033070; c=relaxed/simple;
+	bh=FHatZV0vxTbMFsegeFsT8M9akO6TeF8HXnisWmSZQOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lIo6P/s3gMpGLeO/UZ4B6W7OCrdpCACWxdU5YH7S5T/CyMcuezX3IaA5KlDJgaBammPivpwUofkvoDeIXQamyZwwqV0zuXEIvWUoqO3CYWGith5WtEbDuBop3J2h8n4FsA+ploMlNESwjulZ4K/eTsP2ek5vmKzLgGzbTF1IQ+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqyqzNIL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T/sspNRH"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63NKBQkw3229166;
-	Fri, 24 Apr 2026 10:07:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2e4cLy
-	vCeUYn/m/JWr1++G6Lw+UXEferIhyfZI1nahg=; b=T/sspNRHjvS2upDJKfLqE6
-	Eah5RBBur5vIl9gYj2+fWe2RD9WVGxkc+cVq7GBLn2NYW5ABi34yCnxmxYVd5ULw
-	U/JgBmWD6BTWkKZqV+1zFb6LiVs8LZImN11xlm3xUlnDUFGmi4AM+2JEItFpfW0p
-	CjjY+T5Vqrgi+BJXdXAnUnNUST02Uxp0VFmyG2wLQArYwrK7xi/t9phY+8p7cuQk
-	trON7QE05rqOouNEUZY35Vbm1UndNFEUc58DyIsndctTx02TxOsvEWGph2ppGswy
-	Ue0pSPodE3ox0qv1bjzHOKwIva4EgwPGppoUY56ytY/sCAZ57rMLY4kHZ+Y7GNbQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dpeu2d75k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Apr 2026 10:07:13 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63OA5GdL024228;
-	Fri, 24 Apr 2026 10:07:12 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dpjkyjb82-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Apr 2026 10:07:12 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63OA7A7Q27787882
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 24 Apr 2026 10:07:10 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E1225812F;
-	Fri, 24 Apr 2026 09:40:52 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A910C58127;
-	Fri, 24 Apr 2026 09:40:47 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.242.34])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 24 Apr 2026 09:40:47 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqyqzNIL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777033070; x=1808569070;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FHatZV0vxTbMFsegeFsT8M9akO6TeF8HXnisWmSZQOw=;
+  b=eqyqzNILYyMYj2q3hdxiLvYqRuzFODQGHDB9z92N2OFJmiIg+VczSzDJ
+   Sc5TH9qNpamJchlkEAgIXuER3PNBVC67a/Thz3ak/yGcueMNdPoPi1GNr
+   2ZF4sW4YSxwo/xAVKAkbj6CwxFePlQqDiIYbnatCAhi4KcPwY18aVDtjJ
+   +15fDWuOAMEsxg86caqQh9Hlk+L1H2Ok7uPrmbVO0qgjuaCjHwBSv5SxB
+   3282ShDVbs3iHevTcLJWsosRlUKKB+2/GMCCKv2LJdaGLyC97aWz4TpM2
+   OzBQyHadgFnVhYoGT4RU4b/88tFmkHmYFCAgNCh2Ty+qMRWkoN6edoUwZ
+   g==;
+X-CSE-ConnectionGUID: 5Aw6N5xdSZC9avfkiXCQFA==
+X-CSE-MsgGUID: SdfUeMJ2Qau8Goy4ojz6bw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11765"; a="77898124"
+X-IronPort-AV: E=Sophos;i="6.23,196,1770624000"; 
+   d="scan'208";a="77898124"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2026 05:17:49 -0700
+X-CSE-ConnectionGUID: 1ZBKnFo2RFGUiwRkHrAqoA==
+X-CSE-MsgGUID: Hv2gsVGWT56JkD/4uWUTGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,196,1770624000"; 
+   d="scan'208";a="232846618"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2026 05:17:45 -0700
+Message-ID: <3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com>
+Date: Fri, 24 Apr 2026 20:17:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH] perf sched: Fix crash in sched stats diff due to
- uninitialized perf_data structure
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <e6358476-d85a-441e-97e9-80abc9e1dee6@linaro.org>
-Date: Fri, 24 Apr 2026 15:10:34 +0530
-Cc: Athira Rajeev <atrajeev@linux.ibm.com>, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
-        acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E2E0C2AA-F6D5-427C-92DB-47777491C76D@linux.ibm.com>
-References: <20260422173545.73144-1-atrajeev@linux.ibm.com>
- <e6358476-d85a-441e-97e9-80abc9e1dee6@linaro.org>
-To: James Clark <james.clark@linaro.org>,
-        Athira Rajeev <atrajeev@linux.ibm.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 0VQAzIRii6Ewj9C4fKNGiXCx9TwcCJyr
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI0MDA5MSBTYWx0ZWRfXzzU3XwzMMTau
- R7vWjLK1r3cB2qV/OxdFqWtqhQSaQ1UuQmqyo9xSPLQU4bPPqjVXGkTdfuUVTl2z8uzRQHyMAJt
- jgMDuwZINQ6ea3n1a+DKZCguRlPFPh5FxYrnvjo604vV9UlwImziDLdblvONAhNUFB1uGAbUFOn
- fKWuMKo9IdGoq4aCM6joX8CyszPaFl6mQ9NrX0uudpt3G6R7VTBSsyeZVw8JKv765DPJ3rQDKIc
- Q0LcVHZxzPgROa2SJRjE7R6+VELfL869ldMUQymK+2/Ir2L8QeCcVtNC004Y+2URON1RMVCGqnH
- TxL92Cn+32T9ny62P7g+f0iqQGqfRXCFHdPj2zLwA+drltPBzpnJAofYVZdGkwp72tsNQJNOSmt
- cBzPN1Kf26vh4iER+IBYMlL+0dOgT5sCWuOvFway8Tfi3zyqaZ4kY3Tcw4gOILlw2MZt9G0R5ng
- ibDAuZxRO/zCYK05fmA==
-X-Authority-Analysis: v=2.4 cv=C8LZDwP+ c=1 sm=1 tr=0 ts=69eb40d1 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=KKAkSRfTAAAA:8
- a=VnNF1IyMAAAA:8 a=9k4NiTpGiv_xEMfOVrAA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: BxHAVBhDVeiwQbiBGzSSdhPOSaO93wmD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-23_03,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 impostorscore=0 spamscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2604240091
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] perf/x86: Don't write PEBS_ENABLED on KVM
+ transitions
+To: Peter Zijlstra <peterz@infradead.org>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>,
+ Stephane Eranian <eranian@google.com>
+References: <20260423150340.463896-1-seanjc@google.com>
+ <20260423161641.GA641209@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260423161641.GA641209@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
+On 4/24/2026 12:16 AM, Peter Zijlstra wrote:
+> On Thu, Apr 23, 2026 at 08:03:36AM -0700, Sean Christopherson wrote:
+>> Testing this against our "PEBS_ENABLED is stuck" reproducer is (still) a work
+>> in-progress (largely because the "reproducer" is currently "throw the kernel in
+>> a big test pool"), i.e. I don't know if this actually resolves the problems we
+>> are seeing.  But even if it doesn't fully resolve our woes, it seems like a
+>> no-brainer improvement, and if we're missing something with respect to "stuck"
+>> PEBS_ENABLED, it'd be nice to get feedback/input asap.
+>>
+>> Note, if the throttling theory is correct (which is looking unlikely at the
+>> moment), then there are likely more fixes that need to be done, e.g. for CPUs
+>> without isolation, and/or if PERF_GLOBAL_CTRL can be modified from NMI context
+>> too.
+> Throttle does: pmu->stop() := x86_pmu_stop() -> intel_pmu_disable_event()
+>
+> Which in turn should:
+>
+>   x86_pmu_disable_event()
+>     wrmsrq(config_base, config & ~EN);
+>   x86_pmu_pebs_disable() := intel_pmu_pebs_disable()
+>     wrmsr(PEBS_ENABLE, pebs_enabled & ~(1<<idx));
+>
+> So that's just the counter EN bit and PEBS_ENABLED cleared. However, if
+> this is from PMI, then the PMI handler should also update GLOBAL_CTRL --
+> provided it wasn't 0.
+>
+> See intel_pmu_handle_irq():
+>
+>   if (pmu_enabled)
+>   	__intel_pmu_enable_all()
+> 	  wrmsrq(GLOBAL_CTRL, intel_ctrl);
+>
+Yes, currently all valid bits in GLOBAL_CTRL would be set by default on
+Intel platforms. IIUC, this issue looks more like a race condition between
+Perf and KVM.
 
-> On 24 Apr 2026, at 2:57=E2=80=AFPM, James Clark =
-<james.clark@linaro.org> wrote:
->=20
->=20
->=20
-> On 22/04/2026 18:35, Athira Rajeev wrote:
->> perf sched stats diff fails sometimes with below logs:
->>  # perf sched stats record ls
->>  # perf sched stats diff
->>   *** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: =
-terminated
->>   Aborted (core dumped)
->> Also in some runs, perf sched stats tests fails
->>  ./perf test "perf sched stats tests"
->>  92: perf sched stats tests                                          =
-: FAILED!
->> =3D=3D172375=3D=3D Conditional jump or move depends on uninitialised =
-value(s)
->> =3D=3D172375=3D=3D    at 0x10393BD0: open_file_read (data.c:264)
->> =3D=3D172375=3D=3D    by 0x10393F63: open_file (data.c:317)
->> =3D=3D172375=3D=3D    by 0x10394067: open_file_dup (data.c:334)
->> =3D=3D172375=3D=3D    by 0x103942DF: perf_data__open (data.c:379)
->> =3D=3D172375=3D=3D    by 0x102F7CAF: __perf_session__new =
-(session.c:169)
->> =3D=3D172375=3D=3D    by 0x100B5E63: perf_session__new =
-(session.h:116)
->> =3D=3D172375=3D=3D    by 0x100D5D37: perf_sched__schedstat_diff =
-(builtin-sched.c:4568)
->> =3D=3D172375=3D=3D    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
->> =3D=3D172375=3D=3D    by 0x1010231F: run_builtin (perf.c:348)
->> =3D=3D172375=3D=3D    by 0x1010262F: handle_internal_command =
-(perf.c:398)
->> =3D=3D172375=3D=3D    by 0x1010286F: run_argv (perf.c:442)
->> =3D=3D172375=3D=3D    by 0x10102C67: main (perf.c:549)
->> =3D=3D172375=3D=3D
->> =3D=3D172375=3D=3D Conditional jump or move depends on uninitialised =
-value(s)
->> =3D=3D172375=3D=3D    at 0x10393D20: open_file_read (data.c:282)
->> =3D=3D172375=3D=3D    by 0x10393F63: open_file (data.c:317)
->> =3D=3D172375=3D=3D    by 0x10394067: open_file_dup (data.c:334)
->> =3D=3D172375=3D=3D    by 0x103942DF: perf_data__open (data.c:379)
->> =3D=3D172375=3D=3D    by 0x102F7CAF: __perf_session__new =
-(session.c:169)
->> =3D=3D172375=3D=3D    by 0x100B5E63: perf_session__new =
-(session.h:116)
->> =3D=3D172375=3D=3D    by 0x100D5D37: perf_sched__schedstat_diff =
-(builtin-sched.c:4568)
->> =3D=3D172375=3D=3D    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
->> =3D=3D172375=3D=3D    by 0x1010231F: run_builtin (perf.c:348)
->> =3D=3D172375=3D=3D    by 0x1010262F: handle_internal_command =
-(perf.c:398)
->> =3D=3D172375=3D=3D    by 0x1010286F: run_argv (perf.c:442)
->> =3D=3D172375=3D=3D    by 0x10102C67: main (perf.c:549)
->> The valgrind logs and error message from the logs points to
->> below snippet:
->>      static int open_file_read(struct perf_data *data)
->>      {
->>             int flags =3D data->in_place_update ? O_RDWR : O_RDONLY;
->>             struct stat st;
->>             int fd;
->>             fd =3D open(data->file.path, flags);
->> The "struct perf_data" is defined here :
->>     static int perf_sched__schedstat_diff(struct perf_sched *sched,
->>                                       int argc, const char **argv)
->>     {
->>         struct cpu_domain_map **cd_map0 =3D NULL, **cd_map1 =3D NULL;
->>         struct list_head cpu_head_ses0, cpu_head_ses1;
->>         struct perf_session *session[2];
->>         struct perf_data data[2];
->>         int ret =3D 0, err =3D 0;
->>         static const char *defaults[] =3D {
->>                 "perf.data.old",
->>                 "perf.data",
->>         };
->> Here due to uninitialized "struct perf_data", the arguments to "open"
->> is getting wrongly passed sometimes depending on value in stack.
->> When perf_data__open() function calls open_file_read(),the
->> "in_place_update" could contain garbage value.
->> After initializing "struct perf_data" in perf_sched__schedstat_diff() =
-function,
->> perf sched stats tests runs without issues in multiple attempts and =
-also
->> "perf sched stats diff" ran individual without issues.
->> for i in {0..20}; do ./perf test "perf sched stats tests"; done
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->>  92: perf sched stats tests                                          =
-: Ok
->> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
->> ---
->>  tools/perf/builtin-sched.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
->> index 555247568e7a..5d2740099eed 100644
->> --- a/tools/perf/builtin-sched.c
->> +++ b/tools/perf/builtin-sched.c
->> @@ -4538,7 +4538,7 @@ static int perf_sched__schedstat_diff(struct =
-perf_sched *sched,
->>   struct cpu_domain_map **cd_map0 =3D NULL, **cd_map1 =3D NULL;
->>   struct list_head cpu_head_ses0, cpu_head_ses1;
->>   struct perf_session *session[2];
->> - struct perf_data data[2];
->> + struct perf_data data[2] =3D { 0 };
->>   int ret =3D 0, err =3D 0;
->>   static const char *defaults[] =3D {
->>   "perf.data.old",
+1. KVM saves the value of host PEBS_ENABLE before VM-entry.
 
-Tested this patch by applying on top of linux mainline kernel and it =
-fixes the issue.
+2. PMI is triggered and interrupts the upcoming VM-entry. PEBS events are
+throttled and PEBS_ENABLE MSR is updated in the PMI handler, then the KVM
+saved host PEBS_ENABLE value gets stale. 
 
-WithOut this Patch:
+3. VM entry continues and then the next VM-exit occurs, the stale
+PEBS_ENABLE value is restored. 
 
-# ./perf sched stats diff
-*** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: =
-terminated
-Aborted (core dumped)
+4. The PEBS_ENABLE MSR keeps the stale value until next write.
 
-# ./perf test -v "perf sched stats tests"
---- start ---
-test child forked, pid 11151
-Basic perf sched stats record test
-Basic perf sched stats record test [Success]
-Basic perf sched stats report test
-[ perf sched stats: Wrote samples to =
-/tmp/__perf_test_sched_stats.perf.data.dysu3 ]
-Basic perf sched stats report test [Success]
-Basic perf sched stats live mode test
-Basic perf sched stats live mode test [Success]
-Basic perf sched stats diff test
-[ perf sched stats: Wrote samples to =
-/tmp/__perf_test_sched_stats.perf.data.dysu3 ]
-[ perf sched stats: Wrote samples to =
-/tmp/__perf_test_sched_stats.perf.data.p0lnk ]
-*** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: =
-terminated
-/linux/tools/perf/tests/shell/perf_sched_stats.sh: line 67: 11170 =
-Aborted                 (core dumped) perf sched stats diff =
-"${perfdata}" "${perfdata2}" > /dev/null
-Basic perf sched stats diff test [Failed]
----- end(-1) ----
- 92: perf sched stats tests                                          : =
-FAILED!
+Seems an alternative way to fix this issue is to disable the PMU (Clearing
+GLOBAL_CTRL) before KVM saving the PMU MSRs?
 
-With This Patch:
-
-#=20
-for i in {1..20}; do
-    ./perf test "perf sched stats tests"
-done
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
- 92: perf sched stats tests                                          : =
-Ok
-
-Please add below tag.
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-Regards,
-Venkat.
->=20
-> Reviewed-by: James Clark <james.clark@linaro.org>
->=20
-> I had a quick look for other instances of the same thing and didn't =
-see any.
+Thanks.
 
 
