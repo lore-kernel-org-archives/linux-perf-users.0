@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEC13A5E98
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AF93E1CE1
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777051280; cv=none; b=Rp2Q0wZGO3R/hFjzY/nBDpnqvJjxkAWJZMe98RJdwG18q+NRFl2tkKxz+0mycv7f+84EBgOutH2S0em/g3FO08WbqmQ4yD7pmW0mzrN/LXt+ilsHKblGHFh+GuHu3MxivN9gDq4sQZPYozkEnB3oGtwxL0X5XJQLWZGTzDbzzng=
+	t=1777051327; cv=none; b=fwrmKClM/Bd89lqJkqxifmBS7ew6L3I2zxXU+Bz4TpNLe2hGMJKGV05MGIldfr2xV8OcCeLqBrVRMe7RdIQmBZ3f73F2WOJ99bEgNsbmOldctjQLYNzfL2EpbI7SuhqngVes1Jg50um6m7u9Mts4NUTENpDDsulIjkGEnJ+Onp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777051280; c=relaxed/simple;
-	bh=v05QzMt5UrGganQeuRYF1gp8w++WY3UxJtdDzlCKWWw=;
+	s=arc-20240116; t=1777051327; c=relaxed/simple;
+	bh=FnxO6i0pVIvOnjj6T6nn8A1U1brXgREj8WtHjCp+1l0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=scs0WX2CldsGOM8Dee4Qg7APZB1Q6JYAuwuxSBKUSlKzHV0zaUoQyZ8iYZOzqb8urAyanV8obNr02zFJx3eduZ7NoQi0qcPzPmaVntWMykhHI+Q+VI1K/hKSeWGdfWtMzWBedDxlb/Ec8DYF6uXixQEfZlUEoLeGgkqh20gLge4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyaNXIt0; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Aydp4NrKqtR3XwuXaM+vVwKc7GVyTEvKKvYzySPzlrILkLF8kexCG12PMYlJAP/4E/UwuP7lfXDpIjuIHqY6sYbHsJ06Gh0OuWv0cFsQZqFNEEWWTBlkEb6nMD1LNzwjt5fX/yyP0VZe4oD5QIk5/0oEzDLCQoIvzkN/Ln9MHIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYtmYo71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyaNXIt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 116F9C19425;
-	Fri, 24 Apr 2026 17:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYtmYo71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C98E8C19425;
+	Fri, 24 Apr 2026 17:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777051280;
-	bh=v05QzMt5UrGganQeuRYF1gp8w++WY3UxJtdDzlCKWWw=;
+	s=k20201202; t=1777051326;
+	bh=FnxO6i0pVIvOnjj6T6nn8A1U1brXgREj8WtHjCp+1l0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=cyaNXIt0pmHCWQGzfuKhfhn/NV/iMCm0CLQvaoE7O9HhiJpVE0lHK0oRQLkkeHqdK
-	 yERtsD3xdC2Uu8h+NJCSKzGtaqc41WU3dNtgzHh7n6GOsgoozEvYtOaIFJe4LyBfcT
-	 ivfv20gda5bCJmFbPHKJAIFxztJuSQ4duXTm1M2H5K/5oIx/sB+TvgFRd7l2TZcT23
-	 0Xw/Ga6erAOqA0ZNNamdTTe+whIlFfXVTlIPFtzNqbVA4mMrOQUXCH+kkbOmQHFU6v
-	 tfIJOodDirBNm1qtHv53ESw6dqWHsXhRRAlvms4LLqJWvAAL4gk47tRWe403XRFtFN
-	 acYMcsRC5BT7Q==
+	b=nYtmYo71MrnVZmaNOFFOYInJqScUzkjB0As6wO5+tprArsn97DStb1xvqNruWbk0E
+	 7/KivmHWXHxqOv1Mt56rXae30/GENWmoXbY0OU461rGWduhji69JTFk3S/21J625sf
+	 8CUlW5Mqz4f+6R3ab0CnoJV7IAK928FfM/132JU2FPI3GN2lmKO3EG/jRQJHRVX9UN
+	 I/Pb9nvEwYlk9xbohmcaAXNSERIkd1nAfosarDd1yuoyuMal00t6DFGUI/VyDQdqXX
+	 P8w4ZiaJNME8/e7Q11fWHIbUhdFgtVx3OiJfBoCJjb79ivJ+Da75lC/MVl9RlWc7TJ
+	 +FOd/rrET7GQA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 49/58] perf rw-by-pid: Port rw-by-pid to use python
- module
+Subject: Re: [PATCH v5 42/58] perf powerpc-hcalls: Port powerpc-hcalls to
+ use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-50-irogers@google.com>
-References: <20260424164721.2229025-50-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-43-irogers@google.com>
+References: <20260424164721.2229025-43-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:21:19 +0000
-Message-Id: <20260424172120.116F9C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:22:06 +0000
+Message-Id: <20260424172206.C98E8C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,59 +45,65 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [High] The script will crash immediately with an AttributeError when atte=
-mpting to access `sample.evsel.name`.
-- [Medium] The commit message claims a refactoring was performed that is ab=
-sent from the code.
+- [Medium] The script will crash unconditionally with an AttributeError bec=
+ause it accesses a non-existent `sample.time` attribute.
+- [Medium] Tracking hypercall entry and exit using `sample.sample_pid` (Pro=
+cess ID / TGID) causes state corruption and dropped events for multi-thread=
+ed virtualization workloads.
 --
 
-commit fa022167cb73c3a8cdc423dc6ad08d78d2de4be7
+commit 8faf550d56fb4a760cc8e05aa599b316511d58ed
 Author: Ian Rogers <irogers@google.com>
 
-perf rw-by-pid: Port rw-by-pid to use python module
+perf powerpc-hcalls: Port powerpc-hcalls to use python module
 
-This commit ports the legacy Perl rw-by-pid script to Python. It introduces
-a class-based architecture that uses the perf.session API to track read and
-write activity by process ID.
+This commit ports the powerpc-hcalls script to use a Python module structur=
+e.
+It introduces the HCallAnalyzer class to encapsulate state and processes ev=
+ents
+using perf.session to track hypervisor call statistics.
 
-> Complications:
-> - Refactored process_event to extract helper methods
->   (_handle_sys_enter_read, etc.) to reduce the number of branches and
->   satisfy pylint.
-
-Does this portion of the commit message accurately reflect the changes? It
-mentions extracting helper methods like _handle_sys_enter_read, but the
-implementation uses a single monolithic method with a pylint disable comment
-instead.
-
-> diff --git a/tools/perf/python/rw-by-pid.py b/tools/perf/python/rw-by-pid=
-.py
+> diff --git a/tools/perf/python/powerpc-hcalls.py b/tools/perf/python/powe=
+rpc-hcalls.py
 > new file mode 100755
-> index 00000000000000..53e16b373111a4
+> index 00000000000000..c4fa539174c9dc
 > --- /dev/null
-> +++ b/tools/perf/python/rw-by-pid.py
+> +++ b/tools/perf/python/powerpc-hcalls.py
 
 [ ... ]
 
-> +    def process_event(self, sample: perf.sample_event) -> None:  # pylin=
-t: disable=3Dtoo-many-branches
-> +        """Process events."""
-> +        event_name =3D sample.evsel.name  # type: ignore
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Process a single sample event."""
+> +        name =3D str(sample.evsel)
+> +        pid =3D sample.sample_pid
 
-Does the perf.evsel object expose a name attribute?
+Does using sample_pid correctly track concurrent hypercalls for multi-threa=
+ded
+virtualization workloads?
 
-Looking at the python C API bindings, it appears only attributes like ids,
-config, and type are exposed. If this raises an AttributeError, the script
-will crash on the first event.
+In Linux perf, sample_pid corresponds to the Thread Group ID (Process ID).
+Virtualization software like QEMU executes multiple Virtual CPUs as separate
+threads within the same process, meaning all VCPUs share the same sample_pi=
+d.
 
-Additionally, if this were bypassed by using str(sample.evsel), which retur=
-ns
-a string like evsel(syscalls:sys_enter_read), would the subsequent string
-matching in the if/elif branches fail? The branches check for exact matches
-like "syscalls:sys_enter_read", so the events might be silently ignored.
+If concurrent hypercalls execute on different VCPUs, wouldn't they overwrite
+each other's timestamps in the d_enter dictionary?=20
+
+Could this instead use sample_tid or sample_cpu to safely isolate concurrent
+operations like the legacy script did?
+
+> +        time =3D sample.time
+
+Will this script encounter an AttributeError when accessing the timestamp?
+
+In the perf Python extension bindings in tools/perf/util/python.c, the event
+timestamp is exposed as sample_time, not time. It appears assigning
+time =3D sample.time will raise an exception on the first processed sample.
+
+> +        opcode =3D getattr(sample, "opcode", -1)
 
 [ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D49
+025-1-irogers@google.com?part=3D42
