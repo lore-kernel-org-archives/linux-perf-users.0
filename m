@@ -1,164 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8930BF4F
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0056230BF4F
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050796; cv=none; b=jDo3eWf4mixonVnxM63hRRseNb5xIS4ry81ASl8PcTYMelP1uHmlB3wKYcP6Fr+CH27+sm6icbw7G3qhapCeN7NtM/JIJa4lLeYntE8JEAfUVD5J+2+tKlleE+0vfEFkQBZujmU5fW4tn0TutR9d1AIUB0EkJv6kzGluEha7B3o=
+	t=1777050802; cv=none; b=empSueDcGFeM8QS/JsYcqaFDgheoHq9qk6Q+THdAcbDFd29gDR4lFkxRBQmNAyzMCHAVMEPhKh2pWJlqm/zKeP5LtoRX5LWthAMKGlTQFWyMA2xHrsF7nINELgLaq9VEIMpczTlYA7i5JXJSxp3L2M1U/jj6XssLxgCHnlR75As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050796; c=relaxed/simple;
-	bh=w6ngN0VH/fxYjtmLQ9t/vM3pAF3i/WbzUGbG/7ioT7k=;
+	s=arc-20240116; t=1777050802; c=relaxed/simple;
+	bh=9xOlKe/Xv8F9fkyW4Y7N6BSPU82MlY59LLcy7gN8pvg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=F+mLsXTs7QiQMzau/2l6/TclAICRbv1IyGItGa1Yqt0iBSEb6YabFwfU7lXZlfOMQlIT9RGO0C7dMQZ7vqbMRuutbew07v/yZPMGKENGw4b9afgzVHaKq2EWYDZbuyUEbCEOgNHcsDF0g9/uUbuIS4Iq30qKC3xuvpg8twynCkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKWuel4x; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=m41tOzoEE1keTFMFBWpVnL9pKFI7R/GvSvGf+501LI2ve/pJTfHYcIgnBWmR8kALFnZzdJl4+hbWDACCulljbulAa+W8MGvcVbZYpkBytwvJBcsYsfEMPKIGA0YZTRRBGus56TDw/icfpRLPD0FXDK6W1N3cP5wQ/lY23N0rbrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhoWW4lL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKWuel4x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97FBC19425;
-	Fri, 24 Apr 2026 17:13:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhoWW4lL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9A9C19425;
+	Fri, 24 Apr 2026 17:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050795;
-	bh=w6ngN0VH/fxYjtmLQ9t/vM3pAF3i/WbzUGbG/7ioT7k=;
+	s=k20201202; t=1777050801;
+	bh=9xOlKe/Xv8F9fkyW4Y7N6BSPU82MlY59LLcy7gN8pvg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=UKWuel4xmHGQ9rQ8xrP42/V0WCTtHhyq08g4vmtZfR/30HjtiPRG2CJyy4dIq+k9r
-	 tdijl+nC9cj6SViY7OR9EDlechl0VmvZYG3VV6guay8uEPxAg89ptqn1e8j1lx8ni2
-	 M4zMZUZFfZ4kKITw/fBpnDP5+nxlLChfDTCsv9ghNu2k5W/DbE0FQr1fFZqfOVcKkG
-	 ORmKa7TlrLiEYXFlv6QxG0PKJfyC4mL1jpbwi9xsPoNzEg+ynruOc3c66JuKISnIeT
-	 lsuhAYZy0iXviNyy6xTcuBsY7TEmS5doQHKtTQE3XzPKv9lKW/4GOHtrgerACxg7bY
-	 FSRY/u6U+rqIQ==
+	b=YhoWW4lLfe8VT+6/VqVScjtcGT9LjKlsVzc+uOjp+lLLEEAaFMO/YFxFb90Z+Uo8T
+	 CSFX1SEWHrAIXj4jr1AFMp0B9f6ZfIXEW3r0Vj6/OJKxWR5nqUiQLqNKurCqdjX86Z
+	 jI27coLZRTjgCX8nrDTzU9yZ4BUYIfpHKXafzW3pEBte/Go76ckNgrqxQogC1BC+3z
+	 Zp5LfKUzoT//6mWI8bty+Dy+4VcX0IePq9Z0HHl4xJSZ0K3BtLSEaHgU/exfO0OWeu
+	 YTdu6haR+/tbgD5n4Iv+5zL65vPgtqzoNN77pwCZBUspmrSEqw4jKoxCOYgVde6R+p
+	 tTIfu3pINP73w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 39/58] perf intel-pt-events: Port
- intel-pt-events/libxed to use python module
+Subject: Re: [PATCH v5 22/58] perf python: Add perf.pyi stubs file
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-40-irogers@google.com>
-References: <20260424164721.2229025-40-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-23-irogers@google.com>
+References: <20260424164721.2229025-23-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:13:14 +0000
-Message-Id: <20260424171315.A97FBC19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:13:20 +0000
+Message-Id: <20260424171321.9A9A9C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [Medium] Invalid formatting specifiers in f-strings cause unconditional r=
-untime crashes.
-- [Medium] Missing buffer length validations before struct unpacking cause =
-script crashes on truncated events.
-- [Medium] Context switch reporting functionality is silently broken due to=
- missing API support.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] Missing API definitions in the `.pyi` type stub file
+- [Medium] Undefined constant `COUNT_HW_REF_CPU_CYCLES` in type stub
 --
 
-commit 143d7221680f46960b8970a937b1e04169a639ed
+commit b859998ec9e4f050ffb4d7fd378f075e01490e9f
 Author: Ian Rogers <irogers@google.com>
 
-perf intel-pt-events: Port intel-pt-events/libxed to use python module
+perf python: Add perf.pyi stubs file
 
-This commit refactors intel-pt-events.py to use a class structure and the
-perf python module. It eliminates global state, removes Python 2
-compatibility checks, and updates libxed.py methods to comply with pylint.
+This commit introduces Python type stubs for the perf module to improve IDE
+support and static analysis. It adds docstrings and type definitions for
+classes, methods, and constants derived from the C source.
 
-> diff --git a/tools/perf/python/intel-pt-events.py b/tools/perf/python/int=
-el-pt-events.py
-> new file mode 100755
-> index 00000000000000..682bf80becfeef
+> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+> new file mode 100644
+> index 00000000000000..7ab0dfc44d1cb9
 > --- /dev/null
-> +++ b/tools/perf/python/intel-pt-events.py
+> +++ b/tools/perf/python/perf.pyi
+> @@ -0,0 +1,579 @@
 
 [ ... ]
 
-> +    def print_ptwrite(self, raw_buf: bytes) -> None:
-> +        """Print PTWRITE data."""
-> +        data =3D struct.unpack_from("<IQ", raw_buf)
+> +def parse_metrics(metrics_string: str) -> 'evlist':
+> +    """Parse a string of metrics or metric groups and return an evlist."=
+""
+> +    ...
 
-Can raw_buf be too small or empty here?
+Should this include the optional pmu, cpus, and threads arguments? It
+looks like the C extension parses them using "s|sOO".
 
-The exception handler in do_process_event() defaults raw_buf to b""
-if the sample lacks raw data. Calling struct.unpack_from() on an empty
-buffer might raise a struct.error and immediately abort the trace session.
+> +def pmus() -> Iterator[Any]:
+> +    """Returns a sequence of pmus."""
+> +    ...
 
-[ ... ]
-
-> +    def print_pwre(self, raw_buf: bytes) -> None:
-> +        """Print PWRE data."""
-> +        data =3D struct.unpack_from("<IQ", raw_buf)
-
-Are length checks needed here as well? Unlike print_cbr() which explicitly
-checks if len(raw_buf) is sufficient, functions like print_pwre(),
-print_exstop(), and print_evt() appear to unpack without validating the
-length of raw_buf.
+Is the tracepoint() function missing from these module-level definitions?
+It appears to be exported by the C module but omitted from this stub.
 
 [ ... ]
 
-> +    def common_start_str(self, comm: str, sample: perf.sample_event) -> =
-str:
-> +        """Return common start string for display."""
-> +        ts =3D sample.sample_time
-> +        cpu =3D sample.sample_cpu
-> +        pid =3D sample.sample_pid
-> +        tid =3D sample.tid
-> +        machine_pid =3D getattr(sample, "machine_pid", 0)
-> +        if machine_pid:
-> +            vcpu =3D getattr(sample, "vcpu", -1)
-> +            return (f"VM:{machine_pid:5d} VCPU:{vcpu:03d} {comm:>16s} {p=
-id:5u}/{tid:<5u} "
-> +                    f"[{cpu:03u}] {ts // 1000000000:9u}.{ts % 1000000000=
-:09u}  ")
-> +        return (f"{comm:>16s} {pid:5u}/{tid:<5u} [{cpu:03u}] "
-> +                f"{ts // 1000000000:9u}.{ts % 1000000000:09u}  ")
+> +class evsel:
+> +    """Event selector, represents a single event being monitored."""
+> +    def __init__(
+> +        self,
+> +        type: int =3D ...,
+> +        config: int =3D ...,
+> +        sample_freq: int =3D ...,
+> +        sample_period: int =3D ...,
+> +        sample_type: int =3D ...,
+> +        read_format: int =3D ...,
+> +        disabled: bool =3D ...,
+> +        inherit: bool =3D ...,
+> +        pinned: bool =3D ...,
+> +        exclusive: bool =3D ...,
+> +        exclude_user: bool =3D ...,
+> +        exclude_kernel: bool =3D ...,
+> +        exclude_hv: bool =3D ...,
+> +        exclude_idle: bool =3D ...,
+> +        mmap: bool =3D ...,
+> +        context_switch: bool =3D ...,
+> +        comm: bool =3D ...,
+> +        freq: bool =3D ...,
+> +        idx: int =3D ...,
+> +    ) -> None: ...
 
-Will this crash with a ValueError? Python f-strings do not support the 'u'
-format specifier for integers. Because common_start_str() is called for
-most events, this might crash unconditionally on the very first event
-processed.
+Does this constructor need the remaining keyword arguments defined in the
+C extension?=20
 
-[ ... ]
-
-> +    def print_common_ip(self, sample: perf.sample_event, symbol: str, ds=
-o: str) -> None:
-
-[ ... ]
-
-> +        if self.insn and self.disassembler is not None:
-> +            try:
-> +                insn =3D sample.insn()
-> +            except AttributeError:
-> +                insn =3D None
-> +            if insn:
-> +                cnt, text =3D self.disassem(insn, ip)
-> +                byte_str =3D (f"{ip:x}").rjust(16)
-> +                for k in range(cnt):
-> +                    byte_str +=3D f" {insn[k]:02x}"
-> +                print(f"{byte_str:-40s}  {text:-30s}", end=3D' ')
-
-Does Python allow the '-' sign modifier in string format specifiers? It
-looks like this might raise a ValueError, and perhaps '<' should be used
-for left alignment instead.
+The underlying kwlist defines 29 distinct arguments, but this stub only
+lists 19. Missing arguments like inherit_stat, enable_on_exec, task,
+watermark, and precise_ip might cause static analysis tools and IDEs to flag
+valid code.
 
 [ ... ]
 
-> +    def do_process_event(self, sample: perf.sample_event) -> None:
-> +        """Process event and print info."""
-> +        comm =3D "Unknown"
+> +class sample_event:
+> +    """Represents a sample event from perf."""
+> +    evsel: evsel
+> +    sample_cpu: int
+> +    sample_time: int
+> +    sample_pid: int
+> +    type: int
+> +    brstack: Optional['branch_stack']
+> +    callchain: Optional['callchain']
+> +    def __getattr__(self, name: str) -> Any: ...
+
+Should this class also define attributes like sample_tid, sample_ip,
+sample_addr, and sample_period, along with methods like srccode() and
+insn()?=20
+
+The C extension exports these, so their omission might negatively affect
+static analysis.
 
 [ ... ]
 
-> +        cpu =3D sample.sample_cpu
-> +        if cpu in self.switch_str:
-> +            print(self.switch_str[cpu])
-> +            del self.switch_str[cpu]
+> +COUNT_HW_STALLED_CYCLES_BACKEND: int
+> +"""Stalled cycles during retirement [This event is an alias of idle-cycl=
+es-backend]."""
+> +
+> +COUNT_HW_REF_CPU_CYCLES: int
+> +"""Total cycles; not affected by CPU frequency scaling."""
+> +
+> +
+> +# Cache Counters
 
-Is the --all-switch-events feature still functional after porting to the
-standalone perf.session API?
-
-It looks like self.switch_str is never populated because the new session
-only registers a sample callback, losing the legacy context_switch callback
-that previously recorded switch events.
+Could this cause an AttributeError at runtime? It looks like
+COUNT_HW_REF_CPU_CYCLES is not actually exported in the perf__constants arr=
+ay
+in tools/perf/util/python.c, which would cause issues for anyone relying on
+the stub's declaration.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D39
+025-1-irogers@google.com?part=3D22
