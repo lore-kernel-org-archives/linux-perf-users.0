@@ -1,114 +1,292 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A713E3E556D
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7E33E556E
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777051406; cv=none; b=nyDFfK6ngUiogQGM5rTGu0CTgQG22ALixAJYZnP0VIZHxpEY88sCS2yyN5i4Riq6kq3F+6wuHVIt4Q184c+Ln3tghLwxWJvZucH1pPVKMtxmEmO4GlwzpL0Y9r0htl+aNWO+4c4CDiNRx6v9zL4NN+7hUtI6zhIpXlUT5fu5q7I=
+	t=1777051501; cv=none; b=kQhX6A3i8IaqZSGQ1KZWDGkKK0P/hFkhIEwlTUL4Q3NTW2n5NEzmWI/YjMvtFQ8/3I/d4bwGp7VPGGdRVGXLES4kQkRdx3wCwAIUN087RlVMAaX4+hgzI1Dg+5Jw5bVUS856/FlQIL3VSYEm4iR2QDpU+/zz79U7NTHSQCWAVQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777051406; c=relaxed/simple;
-	bh=Cyd1qRpd21au0DQHZyUFXDXz549QH/rCMRrc65kWx5Q=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZmKRAblDVdoGmuuAAWOmZUK6kdM40OhmMv0S4PpCIUx4nJGywP7TnkowL/f9TLcVjZ6os8NOE/q88vfzS7i00E6ZTNvkw5vhb/qHaECxjtrSmxobcMHmoaPqxB9S2FA4kp8akfH+BRqrR1ZaG3cNS8Z7vZ+R98mvzITUJdvmPtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaIuQbE7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777051501; c=relaxed/simple;
+	bh=jlpqOXF5rtX3FxgHcM71bMFTz29ARVeZPd33hZ2qlFI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GYLRvV76OxL7HS6HbrtlL03fqkfDoXDxVkTxJp/NuCRYLFbTrX+M5DL0FCeSE7o/cfOAXmyS050gCaHurwQJg/IyDppT3fGugiVOjWJ5b19ltuZ/cGyZPLOS9Ytq5Eawd/XveRBatoyapUlqKb6iLn2DxAPFo8N676EkBMvo0JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fvYNBsz1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaIuQbE7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECBF5C19425;
-	Fri, 24 Apr 2026 17:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777051406;
-	bh=Cyd1qRpd21au0DQHZyUFXDXz549QH/rCMRrc65kWx5Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=oaIuQbE77miwfYF5gyoKphLtQkvADzjT9yli4xTQCLXNCOnEythg/IWapJhijqCrB
-	 4lEueJxO3+MGk92VnGLmA2CmUCREaLMJcpW+Z91dXYwrUMJV407iFOIrF5ZGwSNB3V
-	 2q0TxbgRsHnwPK8EXzz8/0Kf67YnawjCQiHoVYlwNWKheWDrba2Y0xjpRX8HlBlhyT
-	 92Vr8UH7sifOUJtA6sAHc0iVL3hGwL9koPgrkTdReHlTH0W1dL08RIm8AfuInGwySG
-	 FWKdxtiKd21tKxTocGgceJ7aokapJJ51WuLUPY5KV1RXXPMdBoZkYbKRry0phx9u10
-	 tCreQgzNPB1Og==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 45/58] perf stackcollapse: Port stackcollapse to use
- python module
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-46-irogers@google.com>
-References: <20260424164721.2229025-46-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:23:25 +0000
-Message-Id: <20260424172325.ECBF5C19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fvYNBsz1"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63O6Z2Fp365114;
+	Fri, 24 Apr 2026 17:24:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=/cB85TzxeRYGL5Odl5N8QteFy9OAAU3sdsj9rYuH1
+	O8=; b=fvYNBsz144WBDQgkTM88ctT9ssOJrjNs5Gt7KHng5egoiYha8Wnx5zHJE
+	FMm85o9VkzuisY/7QWRTwEwzedfDJ0MAYdPkTlhWBSOvrhUjUDRzkDOkkOtZDwzI
+	ICCIdjAXP0uShhhk1ixe9tJg36rRYc6P9tWVwOi/mmZgu1GqTdPeK5kqPbfYWb3c
+	jbwCnjaIsNDoSNHLUjwnPPfH3MQYoEQBKVtnV4m+D0mnvWlCg/ZIbMIfJOKkJ5Ek
+	qdU3ueRTh40HeuEKuAnmLy86xV4FFYLvgoIiZdNt9t9nCoX/kUlPwx5aOL6+CMgF
+	6wFPQnf7iQhRDzyKFMTeM2tIEX1Kw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dphfrpexp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Apr 2026 17:24:47 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63OHKMIo008912;
+	Fri, 24 Apr 2026 17:24:46 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dpjkyus5w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Apr 2026 17:24:45 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63OHOgcA51839234
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 24 Apr 2026 17:24:42 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 381212004D;
+	Fri, 24 Apr 2026 17:24:42 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ABEA020040;
+	Fri, 24 Apr 2026 17:24:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.219.242])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 24 Apr 2026 17:24:38 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: [PATCH V3] tools/perf/tests: Update test_adding_kernel.sh to handle proper debuginfo check
+Date: Fri, 24 Apr 2026 22:54:35 +0530
+Message-Id: <20260424172435.91725-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: YjCa_2gnaxastfQMauDVt-2uALpe3MT1
+X-Proofpoint-ORIG-GUID: SNk5dnMaD0qg3b5xw5IHv1twqOHt33c-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI0MDE2OCBTYWx0ZWRfXy2vPscDy0r2z
+ wx6fyETH5tQmEqA0QMLcrpSs4llFo07WIZ5GJV5yFfucWbZ3KuAOnGRVXRWu011zhvNkQuUfQGj
+ 3z+Sc5uApnyhICJEkAkI/+OPNMuxqGlUpYL01zBDFOxSmavaFK4h2DfXBhy2JI9sTKD/tUzPQ0A
+ PS0/+hBb/vIfMPGGmbn9YbUwewJo64dm9K19OZ7b+2uY2sxk2QoGfAuYVJAJxOg0LPf2CdxjXzw
+ +ZbuGcUfk+f/4rHxj+j3+mS4AdilGv3U+IkmC83gF71/zF1t8BZUCaGXsZvJPTdI/DykEqGfe8Y
+ Cdu6bMV3O4N19AJPXg74e661YJ50jrvPBOBymdgdS+3kRpDRwPuSC48frHpWRt0P5AH+1k/6mW+
+ J5kaXgmPcggTn+ZIyLlvbFH0ZHCj5ONV2Xa2AWQ0ZOumBdJOOs1FxdNf2t+pOiNzq5hyhFhBlqB
+ zl1wTsZ1cLrxuVA8WGg==
+X-Authority-Analysis: v=2.4 cv=SJxykuvH c=1 sm=1 tr=0 ts=69eba75f cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
+ a=E34RJTyr9ZXJz0s_rhIA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-24_02,2026-04-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 clxscore=1015 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604240168
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Unhandled exception in stackcollapse.py when resolving missing t=
-hreads crashes the script
---
+Perf test perftool-testsuite_probe fails as below:
 
-commit ab838b6c5dd629db6581ba16f91528100745626d
-Author: Ian Rogers <irogers@google.com>
+ Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+ -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+ -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+ Regexp not found: "probe:vfs_mknod"
+ Regexp not found: "probe:vfs_create"
+ Regexp not found: "probe:vfs_rmdir"
+ Regexp not found: "probe:vfs_link"
+ Regexp not found: "probe:vfs_write"
+ -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+ Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+ Regexp not found: "in this function|at this address"
+ -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
+ ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
 
-perf stackcollapse: Port stackcollapse to use python module
+Further analysing, the failed testcase is for "test_adding_kernel".
+If the kernel debuginfo is missing, perf probe fails as below:
 
-This commit modernizes the legacy stackcollapse.py trace script by refactor=
-ing
-it into a class-based StackCollapseAnalyzer architecture. It uses perf.sess=
-ion
-for event processing and aggregates call stacks to produce flame graph outp=
-ut.
+perf probe -nf --max-probes=512 -a 'vfs_* $params'
+Failed to find the path for the kernel: No such file or directory
+  Error: Failed to add events.
 
-> diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stack=
-collapse.py
-> new file mode 100755
-> index 00000000000000..fae0f0f503a354
-> --- /dev/null
-> +++ b/tools/perf/python/stackcollapse.py
-[ ... ]
-> @@ -0,0 +1,126 @@
-> +#!/usr/bin/env python3
-[ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Collect call stack for each sample."""
-> +        stack =3D []
-> +        callchain =3D getattr(sample, "callchain", None)
-> +        if callchain is not None:
-> +            for node in callchain:
-> +                stack.append(self.tidy_function_name(node.symbol, node.d=
-so))
-> +        else:
-> +            # Fallback if no callchain
-> +            sym =3D getattr(sample, "symbol", "[unknown]")
-> +            dso =3D getattr(sample, "dso", "[unknown]")
-> +            stack.append(self.tidy_function_name(sym, dso))
-> +
-> +        if self.args.include_comm:
-> +            if hasattr(self, 'session') and self.session:
-> +                comm =3D self.session.process(sample.sample_pid).comm()
+skip_if_no_debuginfo has check to handle whether debuginfo is present
+and the testcase checks for debuginfo since this :
+commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
+testcases fail when kernel debuginfo is not present")
 
-Could this crash the script if a thread cannot be found or if its comm
-string is missing?
+Recently a change got added in "tests/shell/lib/probe_vfs_getname.sh"
+via this another fix:
+commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
+line detected")
+Since this commit, first add_probe_vfs_getname is used to prevent false
+failures. And based on return code of add_probe_vfs_getname, skip_if_no_debuginfo
+is used to skip testcase if debuginfo is present. And this modified other
+testcases to call add_probe_vfs_getname first and invoke
+skip_if_no_debuginfo based on return value.
 
-If the underlying C API (pyrf_session__process) fails to find the thread
-for the given PID, it explicitly raises a TypeError. Similarly, if the
-thread has no valid comm string, pyrf_thread__comm() can raise a SystemErro=
-r.
+The tests in test_adding_kernel.sh which depends on presence of
+debuginfo are:
+1. probe add for inode_permission
+2. probe max-probes option using 'vfs_* $params'
+3. non-existing variable probing
 
-Since there is no try...except block around this call, will an exception
-from a lost event or short-lived process propagate to the C wrapper and
-abruptly abort perf_session__process_events()?
+For these tests, probe check for specific line is not required.
+So call skip_if_no_debuginfo with argument to say if line check is
+needed. This is to convey to skip_if_no_debuginfo() function
+that test only needs to check for debuginfo, and not specifically
+line number. Update skip_if_no_debuginfo to use simple "perf probe"
+check if test only needs to check for debuginfo. And for other
+tests which rely on line number, use add_probe_vfs_getname()
+Update other places which uses skip_if_no_debuginfo to use argument
+as zero.
 
-> +            else:
-> +                comm =3D "Unknown"
-> +            comm =3D comm.replace(" ", "_")
-> +            sep =3D "-"
-> +            if self.args.include_pid:
-> +                comm =3D f"{comm}{sep}{getattr(sample, 'sample_pid', 0)}"
-[ ... ]
+With the change, verified that only three which required debuginfo only
+is skipped and others ran successfully. Also tested with debuginfo
+to make sure tests are not skipped.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D45
+Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changelog:
+v2 -> v3:
+- Update other callsites to use "skip_if_no_debuginfo 0"
+- Use "perf probe -vn --add inode_permission $params"
+
+v1 -> v2:
+- First version used "perf probe -v -L getname_flags" for debuginfo
+  check. This will not catch fail string "Debuginfo-analysis is not
+supported" which is used in cases when perf is built without dwarf.
+ So use "perf probe -vn add inode_permission" to capture cases when
+ tools built with NO_LIBDWARF=1. This will capture debuginfo missing as
+well as tool built without dwarf case.
+
+ .../tests/shell/base_probe/test_adding_kernel.sh  | 15 ++++++++++++++-
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
+ tools/perf/tests/shell/probe_vfs_getname.sh       |  7 ++++++-
+ .../shell/record+script_probe_vfs_getname.sh      |  7 ++++++-
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh |  7 ++++++-
+ 5 files changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+index 555a825d55f2..f3db125c8669 100755
+--- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
++++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+@@ -23,10 +23,23 @@ TEST_RESULT=0
+ . "$DIR_PATH/../lib/probe_vfs_getname.sh"
+ 
+ TEST_PROBE=${TEST_PROBE:-"inode_permission"}
++PROBE_NO_LINE_CHECK=1
+ 
+ # set NO_DEBUGINFO to skip testcase if debuginfo is not present
+ # skip_if_no_debuginfo returns 2 if debuginfo is not present
+-skip_if_no_debuginfo
++#
++# The perf probe checks which depends on presence of debuginfo and
++# used in this testcase are:
++# 1. probe add for inode_permission
++# 2. probe max-probes option using 'vfs_* $params'
++# 3. non-existing variable probing
++#
++# For these tests, probe check for specific line is not
++# required ( add_probe_vfs_getname does that ). So call
++# skip_if_no_debuginfo with argument as 1. This is to convey
++# that test only needs to check for debuginfo, and not specifically
++# line number
++skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
+ if [ $? -eq 2 ]; then
+ 	NO_DEBUGINFO=1
+ fi
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 88cd0e26d5f6..2c5252a38ea1 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -39,7 +39,18 @@ add_probe_vfs_getname() {
+ }
+ 
+ skip_if_no_debuginfo() {
+-	add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
++	no_line_check=$1
++	debug_str="^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)"
++
++	# search for debug_str using simple perf probe if the
++	# test only needs to check for debuginfo, and not specifically
++	# line number.
++	if [ $no_line_check -eq 1 ]; then
++		perf probe -vn --add 'inode_permission $params' 2>&1 | grep -E -q "$debug_str" && return 2
++	else
++		add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return 2
++	fi
++
+ 	return 1
+ }
+ 
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index 5fe5682c28ce..b0878f571449 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -16,8 +16,13 @@ skip_if_no_perf_probe || exit 2
+ add_probe_vfs_getname
+ err=$?
+ 
++# Invoke skip_if_no_debuginfo with argument as 0,
++# since the test needs suitable line number for getname
++# along with debuginfo check.
++# Argument "1" is used when to convey that test only needs to
++# check for debuginfo, and not specifically line number.
+ if [ $err -eq 1 ] ; then
+-	skip_if_no_debuginfo
++	skip_if_no_debuginfo 0
+ 	err=$?
+ fi
+ 
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index 002f7037f182..48063fc2b221 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -38,8 +38,13 @@ perf_script_filenames() {
+ add_probe_vfs_getname
+ err=$?
+ 
++# Invoke skip_if_no_debuginfo with argument as 0,
++# since the test needs suitable line number for getname
++# along with debuginfo check.
++# Argument "1" is used when to convey that test only needs to
++# check for debuginfo, and not specifically line number.
+ if [ $err -eq 1 ] ; then
+-        skip_if_no_debuginfo
++        skip_if_no_debuginfo 0
+         err=$?
+ fi
+ 
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 7a0b1145d0cd..6833fba12086 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -28,8 +28,13 @@ trace_open_vfs_getname() {
+ add_probe_vfs_getname
+ err=$?
+ 
++# Invoke skip_if_no_debuginfo with argument as 0,
++# since the test needs suitable line number for getname
++# along with debuginfo check.
++# Argument "1" is used when to convey that test only needs to
++# check for debuginfo, and not specifically line number.
+ if [ $err -eq 1 ] ; then
+-        skip_if_no_debuginfo
++        skip_if_no_debuginfo 0
+         err=$?
+ fi
+ 
+-- 
+2.47.3
+
