@@ -1,104 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD98D22FE0E
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AFA18CBE1
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777052135; cv=none; b=jivYRu4+eiY1EP0bzp5RNRx4NIMW3ssMfzNOK46uxLxEzV8MsJiVdHgTyD+5xrzkmHv7f4qi2EN7HOl7X97zf4B76ncUbFTROYaW8osrziQm2g5h5N39BJie0AP+OqWSqzjznGQTvZXZiUyvUaLjeHWNOWTKE2nX9xDeGXmn1xU=
+	t=1777052184; cv=none; b=l5sgYLBu4Uakoe7Pwew3yKjjSoODk3XxQAW65rl9hEHMiT0DnlXNadEWi0Vjb8kFAFWgkn5qwCdEMrh5a8Wd7TfCFyQk4HrefvbUnuTxDtuUjikLrLcJS3VyPzHH2OVFdPV2sqvFIwyJx158BQIY05NO7aQz4HBUKRcyxWdSlEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777052135; c=relaxed/simple;
-	bh=yi/YkUZlHER1r3azo+snk8bWUFKHmCekW69pBEIY1xw=;
+	s=arc-20240116; t=1777052184; c=relaxed/simple;
+	bh=yqAy8QTrUeWV2GB5/+Lwg/Kj5skKKDfX5nltKFAk3Jg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p2Gn5TshadijyJguIvUyG1xclWiyvEdSxFG901PufEO+f8G6NXQd5fPrrQDhJ53OZGZMiiaRYAopbwFgE/AYQ9s/FJ4xwbn27+ggEk3zXBcLTkFWclR2ejhbN17Y8C02AIyHJXypkAdTuzRsmIxIPQgeoPf5BP01wPS4OrMvMBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/Ii87/2; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=GlLyrs7Be1wIZZIR8Tzbq4e7THc2mVLCxiyRypWfOBPR4ogcjWZNU04YPmoIGELBjBKKIOYgXaIwmXYxVvsmt+00O97ZxZB/y+CfJf25Vop2JuIeHkRQGuAb11y0vAMNZp9j+iOyC6/UWA/tPKADtPBHY5TTcd1asupcY4l+yWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGLVdQgP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/Ii87/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82460C19425;
-	Fri, 24 Apr 2026 17:35:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGLVdQgP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2891C19425;
+	Fri, 24 Apr 2026 17:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777052135;
-	bh=yi/YkUZlHER1r3azo+snk8bWUFKHmCekW69pBEIY1xw=;
+	s=k20201202; t=1777052183;
+	bh=yqAy8QTrUeWV2GB5/+Lwg/Kj5skKKDfX5nltKFAk3Jg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=J/Ii87/2abkHtvQeYHhVestTinRJjMzsNL3pHagkKUnuTDmkxWMvG7rWvvQ8Qvkj/
-	 g2Wj56MflU7r0xjngpC2silL89zKvaQP4ZxlztlQmt8AZYmF0TJKFq6+e4yyInMKaz
-	 lUcZHdxAewW7qsRh/oUISUUGn9qBK+4zwJ6jv7o0bjIISDgP+UFJUlQOlv8z/FAVUq
-	 xjyCfWAIWa8OYKVX5FUDVz6gcO4cLo2RFqYBHsEcG0770xUec3xSBikrmjomsFOsSF
-	 RrPXZ7S+jDgjIBr8zUDWVYgJEjWuGStzTelvINemeEAY4GIkjY3UGBovJtTdsOSZqN
-	 Vk0OAT+BL8siQ==
+	b=uGLVdQgPR6ndl/ChVqC5RhV99KtPwKY8ozzmvQfCHj6bJk2rQhUzaNwSPtPHEeEMu
+	 F7XIyHMWQNbGC4RZKg1qKDET2cIpQg9seJu/dt01kvaucQhtBqk05Hvk1hR+mbIovw
+	 OI8EwuPTrtQGxGWwH7sXo4Jzr9y6HAxBe5875z8OB7P12vn1axoRnbIylVFjSTYXwG
+	 mR3wosmSYROjexW8GP6yiVShm36x0vL1SPbFYkme+z9y+Eyvr8dl4v6hmiS23HC8Ri
+	 KhPCtD3LGDSFSTZe+2sQD8U1EvjR88KxrCC262UXbl+iTv8eT98Ff5M1thkS+sFSvr
+	 dW3c+VfUd6sGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 58/58] perf python: Improve perf script -l
- descriptions
+Subject: Re: [PATCH v5 32/58] perf arm-cs-trace-disasm: Port
+ arm-cs-trace-disasm to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-59-irogers@google.com>
-References: <20260424164721.2229025-59-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-33-irogers@google.com>
+References: <20260424164721.2229025-33-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:35:34 +0000
-Message-Id: <20260424173535.82460C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:36:23 +0000
+Message-Id: <20260424173623.B2891C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The commit message claims to update the descriptions for `twatch=
-.py` and `exported-sql-viewer.py`, but the updates are ineffective and resu=
-lt in a meaningful mismatch between the commit message and actual behavior.
+Sashiko AI review found 3 potential issue(s):
+- [High] Event names are incorrectly matched because `str(sample.evsel)` in=
+cludes the `evsel(...)` wrapper.
+- [Medium] Incorrect mathematical calculation of the symbol offset `symoff`=
+ due to mixing absolute and map-relative addresses.
+- [Medium] The updated shell test silently fails on out-of-tree builds beca=
+use it lacks the necessary environment setup to locate the `perf` Python mo=
+dule.
 --
 
-commit 95fbe28eb15f529282a5c7b545c5be06fa83c1a1
+commit 33d6193e9a3497d76e5e326cbe424187e713bad0
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Improve perf script -l descriptions
+perf arm-cs-trace-disasm: Port arm-cs-trace-disasm to use python module
 
-This commit adds docstrings to several Python scripts in the perf tools
-to improve the descriptions shown when running "perf script -l".
+Add a port of the arm-cs-trace-disasm script that uses the perf python
+module directly. This approach is significantly faster than using perf
+script callbacks as it avoids creating intermediate dictionaries for
+all event fields. Update the testing to use the ported script.
+
+> diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python=
+/arm-cs-trace-disasm.py
+> new file mode 100755
+> index 00000000000000..d1227e809adf68
+> --- /dev/null
+> +++ b/tools/perf/python/arm-cs-trace-disasm.py
+[ ... ]
+> +def print_srccode(comm: str, sample: perf.sample_event, symbol: str, dso=
+: str) -> None:
+> +    """Print source code and symbols for a sample."""
+> +    ip =3D sample.sample_ip
+> +    if symbol =3D=3D "[unknown]":
+> +        start_str =3D common_start_str(comm, sample) + f"{ip:x}".rjust(1=
+6).ljust(40)
+> +    else:
+> +        symoff =3D 0
+> +        sym_start =3D sample.sym_start
+> +        if sym_start is not None:
+> +            symoff =3D ip - sym_start
+
+Does this calculate the correct offset for dynamically loaded libraries?
+If sample.sample_ip is an absolute instruction pointer, and sample.sym_star=
+t=20
+is map-relative, won't subtracting them yield an incorrect offset?=20
+
+The original C-side code avoided this by using the pre-computed offset
+via al->addr - sym->start.
 
 [ ... ]
-> diff --git a/tools/perf/python/exported-sql-viewer.py b/tools/perf/python=
-/exported-sql-viewer.py
-> index f3ac96ada1f51e..6d526a2502ca13 100755
-> --- a/tools/perf/python/exported-sql-viewer.py
-> +++ b/tools/perf/python/exported-sql-viewer.py
-> @@ -1,6 +1,6 @@
->  #!/usr/bin/env python
->  # SPDX-License-Identifier: GPL-2.0
-> -# exported-sql-viewer.py: view data from sql database
-> +"""exported-sql-viewer.py: view data from sql database."""
-
-Will "perf script -l" actually display this description?
-
-Looking at read_script_info() in builtin-script.c, when it matches a
-single-line docstring it copies the text and breaks out of the
-quote-matching loop, but fails to break out of the file-reading
-while loop.
-
-Because exported-sql-viewer.py contains subsequent """ blocks later in the
-file, won't the parser overwrite this newly added description with the later
-text, leaking the memory allocated for the first string and preventing the
-intended description from being displayed?
-
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Process a single perf event."""
+> +        self.sample_idx +=3D 1
+> +        global SAMPLE_IDX
+> +        SAMPLE_IDX =3D self.sample_idx
 [ ... ]
-> diff --git a/tools/perf/python/twatch.py b/tools/perf/python/twatch.py
-> index 04f3db29b9bc18..e50cc2feb58a36 100755
-> --- a/tools/perf/python/twatch.py
-> +++ b/tools/perf/python/twatch.py
-> @@ -1,5 +1,6 @@
->  #! /usr/bin/env python
->  # SPDX-License-Identifier: GPL-2.0-only
-> +"""Example to show how to enable a tracepoint and access its fields."""
+> +        ev_name =3D str(sample.evsel)
+[ ... ]
+> +        if ev_name.startswith("instructions"):
+> +            print_srccode(comm, sample, symbol, dso)
+> +            return
+> +
+> +        if not ev_name.startswith("branches"):
+> +            return
 
-Does this suffer from the same issue?
+Will this correctly match the event names?
+The __str__ representation of pyrf_evsel in tools/perf/util/python.c return=
+s=20
+the event name wrapped as "evsel(%s)".=20
 
-Similar to exported-sql-viewer.py, twatch.py also contains subsequent """
-blocks further down the file. The pre-existing parser behavior might cause
-this update to be functionally ineffective, resulting in a mismatch between
-the output claimed in the commit message and the actual command behavior.
+Does this cause ev_name to be evaluated as strings like=20
+"evsel(instructions:u)", which would fail both startswith() checks and=20
+result in the script silently dropping all events?
+
+> diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/=
+perf/tests/shell/test_arm_coresight_disasm.sh
+> index 0dfb4fadf53177..c15cd60e1c2464 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+[ ... ]
+> @@ -45,8 +45,9 @@ branch_search=3D"\sbl${sep}b${sep}b.ne${sep}b.eq${sep}c=
+bz\s"
+>  if [ -e /proc/kcore ]; then
+>  	echo "Testing kernel disassembly"
+>  	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/n=
+ull 2>&1
+> -	perf script -i ${perfdata} -s python:${script_path} -- \
+> -		-d --stop-sample=3D30 2> /dev/null > ${file}
+> +	# shellcheck source=3Dlib/setup_python.sh
+> +	. "$(dirname "$0")"/lib/setup_python.sh
+> +	$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=3D30 2> /dev/nul=
+l > ${file}
+
+Could this fail silently on out-of-tree builds?
+If the perf python module is not installed globally, the script will fail to
+import perf with a ModuleNotFoundError.=20
+
+Because the PYTHONPATH is not exported and sys.path is not modified to poin=
+t=20
+to the built python extension directory, and errors are swallowed by=20
+2> /dev/null, the output file ends up empty.
+
+Would it be better to ensure PYTHONPATH includes the built extension direct=
+ory
+similar to how it is handled in python-use.sh?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D58
+025-1-irogers@google.com?part=3D32
