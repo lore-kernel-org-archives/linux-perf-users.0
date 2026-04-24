@@ -1,140 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE7337BB5
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30053344025
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050922; cv=none; b=OekJOm9tOUJP2i3+DewAhoLvBOTEZBF8StAEGOAOvIfc9v1i44j7VwofWR3L3hauNlMyOGfyEza5xPmNUlbZEBf8DjVYJADm/XIic6SUe6s6efbhV08Lnlof4vLdHwP0J81hvphvyrFQzD///DABJuUFvefliaaXZWrxdKcnZM8=
+	t=1777051024; cv=none; b=XdNJ8gPx8ePf5b8Ze8xBlbZuabmZGddAHiMI+AzI9e7OcUp+tVS7G6kMmSfXOkPb2+XrSEAu6bZCaYiQiLAPdw2NvHrb4a5DAPCyUVUJJ1Y6WNOjKfpUOpWsSiXZpCjzqS+Ti7OPRkB4mAqMQen9WgR7eloTwNO88bIz4Y0/12w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050922; c=relaxed/simple;
-	bh=kxLX41ZL4wGTwxCHBlaRiiUNv2VuHUQqILVu6wFysdA=;
+	s=arc-20240116; t=1777051024; c=relaxed/simple;
+	bh=HLS2nzO3AqMPwgNHEAMA02zB/o8jSZ5cjdqimbKAiWw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nT5po+3wNRnKcEiCfQvxi79734SAHo9VhpERzlrZFjZIdxdl0nmpGIF98wyDQcHUBoZOJGCnjKAB6rQcTJc/9FGfJ9OvXqHu4BCPinS3vhdEffZIUeiz1//0YVBbi7PfCFMCRpdNu00IAijCcXhrUJhGygUHHW7WyNrJz6I75+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Evv7yHAv; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ij+eZ/WGXgJgZo/W9ALE+N4Rv6g1lPWEP0VCyQfSy+iTr4rNWQX5BI1J8uxl9sgj6foj4eMli91Phrk9xh+HeK2EFHV+6mMHShNAD19rHxkQSTqTqbS6lusNwBJzYeoBTysgY7AjlPjZUjQIzHUr1g5wjxfrnunzpHsFpAAj0oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CH1bUfHD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Evv7yHAv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF75C19425;
-	Fri, 24 Apr 2026 17:15:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CH1bUfHD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A0CC2BCB2;
+	Fri, 24 Apr 2026 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050922;
-	bh=kxLX41ZL4wGTwxCHBlaRiiUNv2VuHUQqILVu6wFysdA=;
+	s=k20201202; t=1777051023;
+	bh=HLS2nzO3AqMPwgNHEAMA02zB/o8jSZ5cjdqimbKAiWw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Evv7yHAvCJBZPF0XUYFotWIre3gIQmZ7xdta4jhgzLRp2ZWq/iNs6IfWefhX5fdZv
-	 rhkihvAOKjSDUHihfhowRxkzMnKjWhk/MIZ+yp1+lFPJ3+qJw3WtT/aNJFKOgQjnk7
-	 kATCq6NOSW8ytVcJIQAcPICqwA5YtUpXE5ZNdNYI7kNDC7hD7l/A3tbMCzDa6pMGey
-	 DOSfatVYOIayT8VWyiR1o/mZkQLsdhixtPNDx6mUS8qEX/g5/9+iuv1PFWGUXj53vH
-	 Bd2GCznUNEBpPVlfm6t1h9T7oSKQlUls9hxlwlOjglY4Ucg8pONq4n+gbfBiCe5WpP
-	 eREzxWuW9n8jg==
+	b=CH1bUfHD0MVVkWbpl5nKfoXaavhlWWDhhSgPV/0QP90PIv5KPm616Dkfd2FOrOKXw
+	 GY+5wbZMs7rJzLtFqu2dSYeIeDpxvBFfpMap9ga/IYsP3u2c8jtZClR06+INCTIRvG
+	 d69EyNpPdf2cRHO8WUHjjrYpwJrwDj7PWFhhT7iJLe98HwLT2GYzunoDDmDh8XIS8u
+	 mw877Flp1xL05fdi8iKvARgBRkWqLeuH4lcJ4Rls2bgcO0rAuDQfE1IV7uc8IIbkNn
+	 0+9WG7ajtlYN9FNqXwwohmmy+i4/6idYLjljuM3CIdjOEXlv3S8Sf2ylAG86H2SoYo
+	 A4HZacmwC0oMg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 34/58] perf compaction-times: Port compaction-times
- to use python module
+Subject: Re: [PATCH v5 20/58] perf python: Extend API for stat events in
+ python.c
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-35-irogers@google.com>
-References: <20260424164721.2229025-35-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-21-irogers@google.com>
+References: <20260424164721.2229025-21-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:15:21 +0000
-Message-Id: <20260424171522.6CF75C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:17:03 +0000
+Message-Id: <20260424171703.B1A0CC2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [Medium] Unhandled TypeError when retrieving missing thread metadata abor=
-ts event processing.
-- [Medium] Directly accessing dynamic tracepoint fields on `sample` objects=
- can cause an unhandled AttributeError.
-- [Medium] Filtering specifically for PID 0 behaves incorrectly and instead=
- includes all processes.
+Sashiko AI review found 4 potential issue(s):
+- [Critical] The `stat_round_type` field has an incorrect memory offset, le=
+ading to memory corruption.
+- [High] The `pyrf_session_tool__stat_round` function leaks memory and fail=
+s to handle Python exceptions.
+- [High] A single Python callback is overloaded for `stat` and `stat_round`=
+ events with incompatible argument signatures.
+- [High] Exposing `sample_members` for stat events without initialization l=
+eaks garbage memory data to Python.
 --
 
-commit 3ab6430708ee13be91972c552a27a60bf585751f
+commit fdd2ccb8d95335f5dbcb00dd40bf892c370291b7
 Author: Ian Rogers <irogers@google.com>
 
-perf compaction-times: Port compaction-times to use python module
+perf python: Extend API for stat events in python.c
 
-This commit adds a port of the compaction-times script that uses the perf
-python module directly. This approach is significantly faster than using
-perf script callbacks as it avoids creating intermediate dictionaries.
+Add stat information to the session. Add call backs for stat events.
 
-> diff --git a/tools/perf/python/compaction-times.py b/tools/perf/python/co=
-mpaction-times.py
-> new file mode 100755
-> index 00000000000000..153b47930e3ccf
-> --- /dev/null
-> +++ b/tools/perf/python/compaction-times.py
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index dc10d8a42d9247..c4f0e01b64f364 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -299,6 +299,76 @@ static PyTypeObject pyrf_lost_event__type =3D {
 
 [ ... ]
 
-> +def get_pid_filter(low_str: str, high_str: str) -> Callable[[int, str], =
-bool]:
-> +    """Returns a filter function based on PID range."""
-> +    low =3D 0 if low_str =3D=3D "" else int(low_str)
-> +    high =3D 0 if high_str =3D=3D "" else int(high_str)
-> +
-> +    def filter_func(pid: int, _comm: str) -> bool:
-> +        return not (pid >=3D low and (high =3D=3D 0 or pid <=3D high))
-> +    return filter_func
+> +static PyMemberDef pyrf_stat_event__members[] =3D {
+> +	sample_members
 
-Does this filter behave correctly when specifically filtering for PID 0?
+Do the sample_members macros expose uninitialized memory here? Unlike
+sample events where evsel__parse_sample() initializes the pevent->sample
+structure, stat events are created with PyObject_New() which does not
+zero-initialize the memory.
 
-If a user explicitly requests to filter only PID 0 by passing "0" or "0-0",
-high_str evaluates to "0", making high =3D 0.
+If a Python script accesses any sample_* attribute on a stat event, could
+this read uninitialized C heap memory?
 
-Since high =3D=3D 0 is used as a sentinel condition for no upper limit, the
-condition (high =3D=3D 0) evaluates to True. This simplifies the logic to
-not (pid >=3D 0).=20
-
-Since all PIDs are >=3D 0, the expression returns False for every PID,
-bypassing the filter entirely and including all processes.
+> +	member_def(perf_event_header, type, T_UINT, "event type"),
+> +	member_def(perf_record_stat, id, T_ULONGLONG, "event id"),
 
 [ ... ]
 
-> +def process_event(sample: perf.sample_event) -> None:
-> +    """Callback for processing events."""
-> +    event_name =3D str(sample.evsel)
-> +    pid =3D sample.sample_pid
-> +    comm =3D session.process(pid).comm() if session else "[unknown]"
+> +static PyMemberDef pyrf_stat_round_event__members[] =3D {
+> +	sample_members
+> +	member_def(perf_event_header, type, T_UINT, "event type"),
+> +	{ .name =3D "stat_round_type", .type =3D T_ULONGLONG,
+> +	  .offset =3D offsetof(struct perf_record_stat_round, type), .doc =3D "=
+round type" },
 
-Will this code safely handle cases where the thread metadata is missing?
+Does this offset calculation corrupt the Python object header?
 
-In the underlying C API wrapper pyrf_session__process(), if the requested
-thread is not found in the session's machine thread lists, it explicitly se=
-ts
-a TypeError.
+The member_def macro correctly calculates offsets from the base of the
+allocated Python object by adding offsetof(struct pyrf_event, event).
 
-Since this call isn't wrapped in a try/except block, the exception propagat=
-es
-back to the C caller. The C callback prints the exception traceback and
-returns -1, which abruptly terminates the entire process_events() loop.
+By omitting the base offset for struct pyrf_event, reading or writing
+stat_round_type in Python might write directly into the PyObject_HEAD field=
+s.
 
-> +    secs =3D sample.sample_time // 1000000000
-> +    nsecs =3D sample.sample_time % 1000000000
+> +	member_def(perf_record_stat_round, time, T_ULONGLONG, "round time"),
+> +	{ .name =3D NULL, },
+> +};
+
+[ ... ]
+
+> +static int pyrf_session_tool__stat_round(const struct perf_tool *tool,
+> +					 struct perf_session *session __maybe_unused,
+> +					 union perf_event *event)
+> +{
+> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
+n, tool);
+> +	PyObject *pyevent =3D pyrf_event__new(event);
 > +
-> +    if "evsel(compaction:mm_compaction_begin)" in event_name:
-> +        Chead.create_pending(pid, comm, secs, nsecs)
-> +    elif "evsel(compaction:mm_compaction_end)" in event_name:
-> +        Chead.complete_pending(pid, secs, nsecs)
-> +    elif "evsel(compaction:mm_compaction_migratepages)" in event_name:
-> +        Chead.increment_pending(pid, Pair(sample.nr_migrated, sample.nr_=
-failed), None, None)
+> +	if (pyevent =3D=3D NULL)
+> +		return -ENOMEM;
+> +
+> +	PyObject_CallFunction(psession->stat, "O", pyevent);
 
-Can accessing these tracepoint fields directly on the sample object
-cause an unhandled AttributeError?
+Since psession->stat is used here with one argument ("O"), but
+pyrf_session_tool__stat calls it with two arguments ("Os"), will this cause
+a TypeError in Python when a single callback function is registered for
+both events?
 
-These properties are resolved dynamically by pyrf_sample_event__getattro
-using libtraceevent. If libtraceevent fails to resolve the field, it sets an
-AttributeError.
+Also, should the return value of PyObject_CallFunction() be checked and
+decremented?
 
-Similar to the thread lookup issue, this exception would be uncaught and
-propagate back to C, causing the loop to abort prematurely. Could this be
-updated to use getattr() to safely retrieve the fields with a fallback?
+It returns a new reference on success which seems to leak since Py_DECREF()
+is not called.
+
+Additionally, if the Python callback raises an exception, the function
+returns NULL. Without a check and a call to PyErr_Print(), the Python
+interpreter might remain in an error state.
+
+> +	Py_DECREF(pyevent);
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D34
+025-1-irogers@google.com?part=3D20
