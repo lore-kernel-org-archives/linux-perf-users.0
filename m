@@ -1,119 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01D319D89E
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070C83D6CB6
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777051504; cv=none; b=YnVWFHENiMzcLi5WTBv6wsWkKjZd7YnSJLQyt/iRa8v+v1jM1TlcnhfmPhWpWn0CpHh2p+3m8LC/LWI4NMmQ6TWZfYyEPqHoMA0KUfjkKlB5JaNzLQekOgbcJACFTClr2xwQIiCEmZmQ8ls/6VCeh5bRCANx74Hb90d+YCveYi8=
+	t=1777051605; cv=none; b=aRH9M995W2vNk4u/gHVwPFipNGp1HsyRONshvVkv7rQ4bWaazVoKk+zbm9yWeeyLRSRl8el09UyjrOTrwQtBF5JJzwIvysIBo6lXE9A5sJevtAyh3UMT02/A/7hJsy6BeIVoejQQ415LSp0V+3ptJmBFVjeUMn6zK3Gb4jXVplo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777051504; c=relaxed/simple;
-	bh=fP4jFs44z0MxE3ihaA+psM2FKR0fFw63jEXECCSiwoA=;
+	s=arc-20240116; t=1777051605; c=relaxed/simple;
+	bh=Ob8RzFKxz2HP3+SA8B8tqrhAaCPEDgFzYz3vGxrP44w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tz2JX/Yb6qHdA6uvIiliid0kXx+ikdOzlYV07wA/Hk3r2406QjRhY4kFYImiUqwFR7UrShSU/LGzdy+BUEqEqrSl8kNnWCMXeGDQHaP/REkIkDKv7Q2YHh9Ecx5O84Fu442JSHKC6JNy5j+cYVXjIPLOyfunKnhD5pDLhUXeU70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbUKXZ8r; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=M8z87Bo7ThBvITqNz3dE0K7TzkZbSNDaGXF7ohNawFKBSCoQ9ulz+v8v7VQfZ8afQUmT7nRGQSbNuOEjuovqGCWo37x8U3h7Zq7WczFEaBnBMtlDAcsnMGe4T/0G+2j8CfMYmPEI+Jck4IYeZbIjpXi7IwtumatFhGCEY9XOhQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1StMsY9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbUKXZ8r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5147C19425;
-	Fri, 24 Apr 2026 17:25:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1StMsY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC91C19425;
+	Fri, 24 Apr 2026 17:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777051503;
-	bh=fP4jFs44z0MxE3ihaA+psM2FKR0fFw63jEXECCSiwoA=;
+	s=k20201202; t=1777051604;
+	bh=Ob8RzFKxz2HP3+SA8B8tqrhAaCPEDgFzYz3vGxrP44w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NbUKXZ8rt9Yzff2RQePvXbzjpHYkRSaIPA2mFIlrpw7Ox108MdD2GGaZGWR3UQn8H
-	 khVddM3cjFWzI/5ar0oVtMc8a+RcNkeltl9+EFNu/yF03D1p7oOFBzjsX6JWUHqhkO
-	 RIyL9H+pQwIAudLpZEpYUk7J8kLohcsaJ5q0uiO3PdFsF6tRtxKq76DW/o/B9wqNAo
-	 8nAiJplAAMQru9I0W4q1bPCaWLHgEIKDv08ALxXBVTOXeG9NTUSGgcT0YNylGnVNMv
-	 o0zW8WXviS3Fa6BUquZa1IrgO86vIW/L90HKviYMir/3PKX20fTN3JDbTW7UHIHeZ9
-	 vKwC435j0j6RA==
+	b=s1StMsY9cVyXhPkPmWEbT/DarpRL/nDIl04fJaMg6N4zavr460gAr8MxbMWbuAx2J
+	 X4fMygvzwzAHj7ZNMOc2WlZqYvjvwgBgXYCPJ+13LPck1rPv8zJKl/LtO2mzCt+P0R
+	 gaGp8l52RVHM6Z9sSaI3dRz7UEqADypYqcOBQglvYpugynAb9FgB8VGua9fy0lXIR3
+	 jfjriSpAt7i1jLDgYQJhV1ZZY5cu7ra9OyA4uDqgwDdoHepMabTxeTf+VadRPOiukY
+	 T9fwcedbfd/ywFdzRKFrGLWGI0W8nKQPWKs8qYGJ/CcO8AVxKfGewmVGDt3ZKky8bc
+	 PNj4T9nwOnz8g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 10/58] perf evlist: Add reference count
+Subject: Re: [PATCH v5 44/58] perf sctop: Port sctop to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-11-irogers@google.com>
-References: <20260424164721.2229025-11-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-45-irogers@google.com>
+References: <20260424164721.2229025-45-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:25:02 +0000
-Message-Id: <20260424172503.B5147C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:26:43 +0000
+Message-Id: <20260424172644.8BC91C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Python API crash (BUG_ON) and semantic breakage in `evlist[i]` due=
- to dynamic cloning.
-- [High] Heap corruption due to invalid `free()` of an interior Python obje=
-ct pointer during `evlist` destruction.
+Sashiko AI review found 4 potential issue(s):
+- [High] The fallback logic for `syscalls:sys_enter` checks the wrong trace=
+ field, causing all fallback events to be discarded.
+- [High] Offline interval tracking is non-functional because it accesses a =
+non-existent `time` attribute instead of `sample_time`.
+- [High] Command name (`comm`) filtering in live mode silently discards all=
+ events.
+- [High] Offline thread resolution crashes the script with an unhandled `Ty=
+peError` when a PID is missing from the thread map.
 --
 
-commit f86d4772779db7dfab01f3dc1c165176b797dc57
+commit ef53d21c08cbcaad6543cee9b7d81aa70d4ca99f
 Author: Ian Rogers <irogers@google.com>
 
-perf evlist: Add reference count
+perf sctop: Port sctop to use python module
 
-This commit introduces a reference count for the evlist to prevent issues
-with cloning in the python code. It switches from evlist__delete() to
-a refcounted evlist__put() approach.
+This commit ports sctop.py from tools/perf/scripts/python/ to
+tools/perf/python/ using a class-based structure. It also adds live mode
+support using the LiveSession helper with a fallback strategy for
+tracepoint names.
 
-> The combination is needed for the python code to operate
-> correctly (not hit asserts in the evsel clone), but the changes are
-> broken apart for the sake of smaller patches.
-
-Does this intentionally break bisectability? Even though the fix is
-introduced in the next patch ("perf evsel: Add reference count"), leaving
-intermediate commits broken makes bisection difficult.
-
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -1285,15 +1285,22 @@ static int pyrf_evlist__init(struct pyrf_evlist *=
-pevlist,
-[ ... ]
->  static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
->  {
-> -	evlist__exit(&pevlist->evlist);
-> +	evlist__put(pevlist->evlist);
->  	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
->  }
-
-Does this trigger an invalid free when destroying the evlist? Calling
-evlist__put() will drop the refcount and eventually call evlist__purge(),
-which iterates over elements and calls evsel__delete() (which calls free).
-
-However, when an evsel is added from Python via pyrf_evlist__add():
-
-tools/perf/util/python.c:pyrf_evlist__add() {
-    ...
-    evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;
-    evlist__add(evlist, evsel);
-    ...
-}
-
-The evsel is an interior pointer embedded within a Python-allocated
-pyrf_evsel object. Passing this interior pointer to free() will corrupt
-the heap.
+> diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+> new file mode 100755
+> index 00000000000000..d7ac922da510cd
+> --- /dev/null
+> +++ b/tools/perf/python/sctop.py
 
 [ ... ]
-> @@ -1794,17 +1817,16 @@ static PyObject *pyrf_evlist__item(PyObject *obj,=
- Py_ssize_t i)
-[ ... ]
-> -	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
-> +	return pyrf_evsel__from_evsel(pos);
->  }
 
-Can this cause crashes and semantic changes for python scripts? The new
-pyrf_evsel__from_evsel() dynamically clones the evsel using evsel__clone().
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Collect syscall events."""
+> +        name =3D str(sample.evsel)
+> +        syscall_id =3D getattr(sample, "id", -1)
 
-If a script calls evlist.open() before iterating, the underlying
-evsel__clone() hits a BUG_ON(orig->core.fd) and crashes. Also, returning a
-detached clone means any modifications made to the event by the Python
-script are discarded and do not affect the actual event in the list.
+Is the id field available for syscalls:sys_enter tracepoints? The fallback
+tracepoint defines its field as __syscall_nr (or nr on older kernels),
+whereas raw_syscalls:sys_enter provides id. Will this cause getattr to
+return -1 and silently drop all fallback events?
+
+> +
+> +        if syscall_id =3D=3D -1:
+> +            return
+> +
+> +        if hasattr(self, 'session') and self.session:
+> +            comm =3D self.session.process(sample.sample_pid).comm()
+
+Can this raise an unhandled type error exception? If the PID is not present
+in the thread map, the C extension function pyrf_session__process raises an
+exception. Could this exception propagate back to the C callback loop and
+prematurely abort processing?
+
+> +        else:
+> +            comm =3D getattr(sample, "comm", "Unknown")
+
+Does the sample have a comm attribute in live mode? Native sample_event
+objects do not have a comm attribute, and sys_enter tracepoints do not
+expose it. Will this always default to Unknown and cause the live mode
+command filter to discard all events?
+
+> +
+> +        if name in ("evsel(raw_syscalls:sys_enter)", "evsel(syscalls:sys=
+_enter)"):
+> +            if self.for_comm is not None and comm !=3D self.for_comm:
+> +                return
+> +            with self.lock:
+> +                self.syscalls[syscall_id] +=3D 1
+> +
+> +        if self.offline and hasattr(sample, "time"):
+
+Does the Python sample_event API expose the timestamp as time or
+sample_time? Since sys_enter tracepoints do not contain a time trace field,
+it looks like this will evaluate to False and bypass the periodic printing
+logic entirely.
+
+> +            interval_ns =3D self.interval * (10 ** 9)
+> +            if self.last_print_time is None:
+> +                self.last_print_time =3D sample.time
+> +            elif sample.time - self.last_print_time >=3D interval_ns:
+> +                self.print_current_totals()
+> +                self.last_print_time =3D sample.time
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D10
+025-1-irogers@google.com?part=3D44
