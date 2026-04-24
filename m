@@ -1,147 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00963264E6
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D322D3CF66B
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050512; cv=none; b=DEoaGYMdpMryglII2e1zJ+zLJrmMJ7WbrlqcjqZm8S+Q9wLyp9zBVWI7RcACQqzlGmTjdrpMzyLp0Cxvz7acv+MDfTuHzG1aOkqiV9FiAmopTOXHxOP2Lmvy32qwVMLJjiKa0+6fpHjJKSlNpg2SfahU1xv46FeGh+sqQA+FJ8k=
+	t=1777050538; cv=none; b=jTTWdo+dqI4sC6SJhCtPbOiK9OgFbN2mkmUyP69ufDBTa6jLg2doP82USwRD2GcflsaGasEIpyHrwHTxo8U8X17s37bLgVNG8r7J27jJVsnriXZTPhQ84ulir/Z5lIO1p58UDFjWkaSVKuxLxGagqTNHJ5Y+aZHp1e02QGaeb7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050512; c=relaxed/simple;
-	bh=5lia/BBEwFQQiBv6CMUtk7K85qKmtywZaqRmlsfEVgQ=;
+	s=arc-20240116; t=1777050538; c=relaxed/simple;
+	bh=itZsqRm0hufhndv+brrlj1DGAzqR95NzaCgYqF7P7ho=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ncRbhO8w50344/JtQynupSBEvWdFjGNOZGq2HfBKQlEXhjBgWhaSOZbGRCpsj5XX43a2FDGuuaDkcd38tR+yXwv6cXBBibW9DZCVHxdbbxezD/bfP21Xzqxo9ASZ/Y+dTM/Q5BJlJN3FhMf94ikj9n8AF7L4cPIubCFZtjtAu1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmwROByQ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=fJPjGA5z/nWqRPZhiq2ZY0rdQb4WUcZCE7TKEXOxg3FaNpCjk0XggUdq3TOLK+mCoz0VgFZ/cPJvJnnaLe8ER3GQVevDACZJD7xl8Eu6CaYltopZ/Y6fUOrCTC+/r31vIOutDgqTniGgKccXQPjy/LzPrL0x7kxcNIvoQ0ajq+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQB79WIz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmwROByQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A364EC19425;
-	Fri, 24 Apr 2026 17:08:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQB79WIz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BB9C19425;
+	Fri, 24 Apr 2026 17:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050512;
-	bh=5lia/BBEwFQQiBv6CMUtk7K85qKmtywZaqRmlsfEVgQ=;
+	s=k20201202; t=1777050538;
+	bh=itZsqRm0hufhndv+brrlj1DGAzqR95NzaCgYqF7P7ho=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=rmwROByQ6KG3pNkpgU6oBjhdEdV5cOrRCAL7034FCWpQZtW+FQeZ+yoNvR1LhYEH3
-	 IJhji6yUN5Fe8uQ3R0Au1Uayuo0S96z0PiP8L7h71MN/zuguGdcG9ehMBQf2/w315l
-	 QUdr3DbZA5x7r6SzgkZM3OYrDSfpRrMBbDU/O+RiIu1ANNM4oF+n6NS2Crq7as/jaO
-	 aRs8Zv0TYhDuzvkCk9YUT6CxcVOaHjos+fP/eliKtPHhyxq5zCThDKJnD075MFlc4g
-	 mzAJ5DpVQ+v9XQHiG6rClwcJM9C//y/nudlu9CBejbvL4/Qu9Fm9/JOoAK40Cifdt8
-	 fwpgO03AKQOXA==
+	b=DQB79WIzlDCnW5TK++52xbAy4dTRe0XTUrk3fHeJOExUbw9bdpT9yklFTZEUWv6hd
+	 eA5ZTSUHbzQsmyOAaiuCse1fP//0XGnN/b4Y3JaGB8JEtLQNxNSkrrPxAnBkXl9zhR
+	 S5G0pAnr1/KlF6+vHevwWTmjLyhJzCYU3KzVRbf/V9MSbmhh5ZKlbndWmeSU14/Zhl
+	 RaxhPHb6cI8MRbJ2NfsMk9c8kmlHXdv3DLN15gKrENaD+ZwJHjjkRk+S9QiJp6tl4q
+	 CP9SbvBUunjo5ESrI6zovy14h0Dq5J3E7VAhf72XcWo5teDTAbVdchA/Vq6km3eThF
+	 WmUKhiRp+hXbg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 26/58] perf mem-phys-addr: Port mem-phys-addr to use
- python module
+Subject: Re: [PATCH v5 02/58] perf arch arm: Sort includes and add missed
+ explicit dependencies
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-27-irogers@google.com>
-References: <20260424164721.2229025-27-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-3-irogers@google.com>
+References: <20260424164721.2229025-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:08:31 +0000
-Message-Id: <20260424170832.A364EC19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:08:57 +0000
+Message-Id: <20260424170858.62BB9C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [Medium] Python 3.10+ requirement breaks compatibility on older LTS distr=
-ibutions.
-- [Medium] Per-sample print statements for unresolved physical addresses wi=
-ll severely spam stdout.
-- [Medium] Missing validation of physical address presence risks silent out=
-put corruption.
-- [Low] Logic flaw in binary search return value handling causes unintended=
- negative list indexing.
+Sashiko AI review found 1 potential issue(s):
+- [Low] The generic utility header `../../../util/cs-etm.h` is mistakenly p=
+laced at the very top of the file, while the actual local primary header `"=
+cs-etm.h"` is relegated to the bottom.
 --
 
-commit 2fe83bab7027dd98239e7ac8be26c0436646b4a9
+commit 9e010dab2620eb3c40fc54789365c1d0f47e3438
 Author: Ian Rogers <irogers@google.com>
 
-perf mem-phys-addr: Port mem-phys-addr to use python module
+perf arch arm: Sort includes and add missed explicit dependencies
 
-This commit adds an example script demonstrating the perf python API to
-load a perf.data file and resolve physical address samples based on
-/proc/iomem.
+This commit fixes missing includes found while cleaning header files and
+sorts the remaining headers for consistency.
 
-> diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-p=
-hys-addr.py
-> new file mode 100755
-> index 00000000000000..ba874d7a2011cf
-> --- /dev/null
-> +++ b/tools/perf/python/mem-phys-addr.py
-> @@ -0,0 +1,117 @@
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util=
+/cs-etm.c
+> index b7a839de870755..cdf8e3e6060670 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -3,10 +3,13 @@
+>   * Copyright(C) 2015 Linaro Limited. All rights reserved.
+>   * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+>   */
+> +#include "../../../util/cs-etm.h"
 
-[ ... ]
+This isn't a bug, but standard practice dictates that a source file should
+include its corresponding local header file first to guarantee that the hea=
+der
+is self-contained.
 
-> +# Physical memory layout from /proc/iomem. Key is the indent and then
-> +# a list of ranges.
-> +iomem: Dict[int, list[IomemEntry]] =3D collections.defaultdict(list)
-> +# Child nodes from the iomem parent.
-> +children: Dict[IomemEntry, set[IomemEntry]] =3D collections.defaultdict(=
-set)
-
-The built-in collection parameterization using list[IomemEntry] and
-set[IomemEntry] was introduced in Python 3.9.
-
-Will this script crash with a TypeError on systems running older Python
-environments like Python 3.8?
+Was the generic utility header ../../../util/cs-etm.h mistakenly placed here
+at the top instead of the local primary header "cs-etm.h" due to a name
+collision?
 
 [ ... ]
 
-> +def find_memory_type(phys_addr) -> Optional[IomemEntry]:
-> +    """Search iomem for the range containing phys_addr with the maximum =
-indent"""
-> +    for i in range(max_indent, -1, -1):
-> +        if i not in iomem:
-> +            continue
-> +        position =3D bisect.bisect_right(iomem[i], phys_addr,
-> +                                       key=3Dlambda entry: entry.begin)
+>  #include "../../../util/session.h"
+> -
+> -#include <errno.h>
+> -#include <stdlib.h>
+> -#include <sys/stat.h>
+> +#include "cs-etm.h"
 
-The key parameter for bisect.bisect_right() was added in Python 3.10.
-
-Does this create a strict dependency on Python 3.10+?
-
-> +        if position is None:
-> +            continue
-
-The bisect_right function always returns an integer, so checking for None
-appears to be dead code.
-
-> +        iomem_entry =3D iomem[i][position-1]
-
-If phys_addr is strictly less than the first element's begin address,
-bisect_right returns 0.
-
-Does this cause position - 1 to evaluate to -1, which then inadvertently
-accesses the last element of the iomem[i] list?
-
-> +        if  iomem_entry.begin <=3D phys_addr <=3D iomem_entry.end:
-> +            return iomem_entry
-> +    print(f"Didn't find {phys_addr}")
-
-Since find_memory_type() is called for every single sample in the dataset,
-won't this print statement heavily spam standard output if a dataset contai=
-ns
-many unmapped physical addresses?
-
-> +    return None
-
-[ ... ]
-
-> +    def process_event(sample):
-> +        """Process a single sample event."""
-> +        phys_addr  =3D sample.sample_phys_addr
-> +        entry =3D find_memory_type(phys_addr)
-
-If a user runs the script on a perf dataset recorded without --phys-data,
-sample_phys_addr may default to 0.
-
-Without validating if physical addresses are actually present in the sample=
-s,
-could this silently attribute all such samples to whatever memory range
-contains address 0?
+The local primary header is relegated to the bottom here. Should "cs-etm.h"
+be the one included at the very top instead?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D26
+025-1-irogers@google.com?part=3D2
