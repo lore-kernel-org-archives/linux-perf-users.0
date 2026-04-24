@@ -1,139 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757832CCB9
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69050262808
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777051802; cv=none; b=iszC1F8hukg970JOP19XSGVCakWP3s8YFhWUoRlRQn6kyWCYTmMATmbPCQzaFbGjG0H7qO9YqDkc7iGl/nMi6WK5I/bQp00w16UwXNEyEILsJTK06R4EyJ6JgBca+H5/hDGQHSGAipuPBhuj2NffcWtEBvv4eTI2irz11RfcYJg=
+	t=1777051855; cv=none; b=SGRUmAA5c15hOopBYrgQ7HXFesvYHrebJVJmdlzjAJJzr/G7tIQDNoPCFc95wQfDWV03IJuWgPjmz512cfmD6RKxPFhw18jP/f76QcD0F0+uPXdF9FajC7iNEIQC52bcQZdK1wAfxT9aurPuoOWPSa/GpGsJUYNGG2GIweiI68o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777051802; c=relaxed/simple;
-	bh=zDHdL19FTbvmz0vIjimIXZVWmdpjFoEnRbvisRLUS7U=;
+	s=arc-20240116; t=1777051855; c=relaxed/simple;
+	bh=3ntN14HzLQyb0HD6i7VunBMDzBfSD758QFAq5NEl7VU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Y9Rm/k0vrbdYyfU/C57Vxq2SFXS1O3b/+OnLiMRjiCIdQJKy2sv3S7NsVbnQrZB1kXqV+IffQ3vy8z2yG3ttgtkjVwVS2CsbXpgrC19T0F1pDlsl/G6b3+pOhtnP+ed12HpZ9Cn1/xlRZE1wEAlg8MQd5o0Qlc1KPSgU8R8kPZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuUw4+eC; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=VdFRgV/Sl4FCB4S3k+lUFLYlv7nkfZso8Leyn6AItb/ndobCuXfvM+Rypph0M9F5S3NasXqRVkWPMlNStM3lZ3jsu4FfFGMJigtkVrhsBjVZ4Aq7yuyio+5iq9H//BEHSfkHYjF1581mMtUoLnCyP6nRuJfkzMzBPCXfbjtzXXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNfbzkdq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuUw4+eC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9B0C2BCB2;
-	Fri, 24 Apr 2026 17:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNfbzkdq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13ED0C19425;
+	Fri, 24 Apr 2026 17:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777051802;
-	bh=zDHdL19FTbvmz0vIjimIXZVWmdpjFoEnRbvisRLUS7U=;
+	s=k20201202; t=1777051855;
+	bh=3ntN14HzLQyb0HD6i7VunBMDzBfSD758QFAq5NEl7VU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=nuUw4+eC3BcGfHBbUoRilmZMb4s2ApBx88bps5fO2JjVqSUr46ORFil64JDTUD2cm
-	 zfZYvseF4nfHgc0xT2MKIz0qcojsiXftPwYBvTI0HUKrX8jb6A03pxHwwrQ40TKn30
-	 Bh3r+D6Qlkuaoh69hSVJMpILwFCI1+4s9Rs6cJa5xI2MPDGFyFcGymIKELDw3jrGum
-	 QuevE/zUj92yI99VhtnLdWJULZHCIET+5//5WHA/ZjRCcQk6pulq95AVZ+250MLLMZ
-	 WtqX0IhTQdTHuijIdGfe/QR6NgkKeiurZNdZPkj7ZcB/yutb2+vPPwOXAzYgC5t5Jt
-	 c0v1nAcprbqJQ==
+	b=eNfbzkdqGaZnVduY8r+lwgtBk1BbcaYkYR4L6iVrMaWxM8CMAGRyd4+bz5MD900+V
+	 e7sCHNApdMGelWaKXAgUqgLP2EMldTfXO1w0n3MDTUQyaHILHXoKmQu5Z/4KY20vAR
+	 56YNZVQvfoPtZRx03HmJcjWMPE7TMr4smwwXwYOW6mY+ozBkJNgcOrgCBjuL+EJFis
+	 He34JTe+pWSq38slUBOdm55bPqtdUg6dG1UFBsHUlf/RNqtFwsmN2IsWjpMEiCTYI1
+	 iT1HyGAPdoO7z5w2xq6XbRvS/vBETX8S2TrXir43YPHe2CQaRk9AdKEQwDKxit618U
+	 H4mMPgs6t5weg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 46/58] perf task-analyzer: Port task-analyzer to use
- python module
+Subject: Re: [PATCH v5 57/58] perf Documentation: Update for standalone
+ Python scripts and remove obsolete data
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-47-irogers@google.com>
-References: <20260424164721.2229025-47-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-58-irogers@google.com>
+References: <20260424164721.2229025-58-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:30:01 +0000
-Message-Id: <20260424173001.EA9B0C2BCB2@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:30:53 +0000
+Message-Id: <20260424173055.13ED0C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [High] Guaranteed crash in file mode due to invalid attribute access on p=
-erf.thread
-- [High] Unbounded memory leak in live mode due to forever-growing TID dict=
-ionary
-- [Medium] Incomplete implementation of summary features causing functional=
- regression
-- [Medium] Unhandled KeyError on invalid color name crashes the script
+Sashiko AI review found 3 potential issue(s):
+- [Low] The rewritten `perf-script-python.txt` drastically under-documents =
+the attributes of the `Sample Object`.
+- [Low] Obsolete tip referring to the removed '-g' option in tips.txt.
+- [Low] Dangling reference to 'perf script report mode' in perf-script.txt.
 --
 
-commit 8267c099d8f1d79e0b7b0dc86b79b9bad42e67cc
+commit 5be26cdce292df0900056c86e7f08c9c434bea21
 Author: Ian Rogers <irogers@google.com>
 
-perf task-analyzer: Port task-analyzer to use python module
+perf Documentation: Update for standalone Python scripts and remove obsolet=
+e data
 
-This commit ports the task-analyzer tool to use the perf python module and
-refactors it to use a class-based architecture. It also introduces support
-for both file mode and live mode analysis.
+This commit rewrites perf-script-python.txt to describe standalone script
+usage with the perf module. It also removes obsolete documentation for the =
+-g
+and -s options in perf-script.txt, and drops the obsolete perf-script-perl.=
+txt.
 
-> diff --git a/tools/perf/python/task-analyzer.py b/tools/perf/python/task-=
-analyzer.py
-> new file mode 100755
-> index 00000000000000..5894ed0b5a402c
-> --- /dev/null
-> +++ b/tools/perf/python/task-analyzer.py
+> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf=
+/Documentation/perf-script-python.txt
+> index 27a1cac6fe7638..9293057cee8e2d 100644
+> --- a/tools/perf/Documentation/perf-script-python.txt
+> +++ b/tools/perf/Documentation/perf-script-python.txt
 [ ... ]
-> +    def _print_task_finish(self, task: Task) -> None:
+> -SUPPORTED FIELDS
+> -----------------
+> -
+> -Currently supported fields:
+> -
+> -ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
+> -addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
+> -brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
+> -weight, transaction, raw_buf, attr, cpumode.
 [ ... ]
-> +        if str(task.tid) in self.args.highlight_tasks_map:
-> +            c_row_set =3D TaskAnalyzer._COLORS[self.args.highlight_tasks=
-_map[str(task.tid)]]
-> +            c_row_reset =3D TaskAnalyzer._COLORS["reset"]
-> +        if task.comm in self.args.highlight_tasks_map:
-> +            c_row_set =3D TaskAnalyzer._COLORS[self.args.highlight_tasks=
-_map[task.comm]]
-> +            c_row_reset =3D TaskAnalyzer._COLORS["reset"]
+> +### Sample Object
+> =20
+> +Passed to the callback function in `perf.session`.
+> =20
+> +- `evsel`: The event selector (name of the event).
+> +- `sample_cpu`: The CPU on which the event occurred.
+> +- `sample_time`: The timestamp of the event.
+> +- `sample_pid`: The PID of the process.
+> +- `sample_tid`: The TID of the thread.
+> +- `raw_buf`: Raw buffer containing event specific data.
 
-What happens if a user passes an invalid color name via the highlight-tasks
-argument? It looks like this dictionary access could raise a KeyError and
-abort the script when the targeted task context switches.
+Does the new documentation intentionally omit the comprehensive list of sup=
+ported
+fields?
 
-[ ... ]
-> +    def _record_by_tid(self, task: Task) -> None:
-> +        tid =3D task.tid
-> +        if tid not in self.db["tid"]:
-> +            self.db["tid"][tid] =3D []
-> +        self.db["tid"][tid].append(task)
-> +        self.db["tid"][tid] =3D self._record_cleanup(self.db["tid"][tid])
+The C-extension (tools/perf/util/python.c) still exports many fields like
+sample_ip, sample_addr, sample_phys_addr, brstack, and callchain, which are
+actively used by scripts (e.g., intel-pt-events.py). The rewritten section
+appears to drastically under-document the attributes of the Sample Object.
 
-Will self.db["tid"] grow indefinitely in live mode?
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Docume=
+ntation/perf-script.txt
+> index 200ea25891d88d..93ed1ea704c950 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -9,10 +9,7 @@ SYNOPSIS
+>  --------
+>  [verse]
+>  'perf script' [<options>]
+> -'perf script' [<options>] record <script> [<record-options>] <command>
+> -'perf script' [<options>] report <script> [script-args]
+> -'perf script' [<options>] <script> <required-script-args> [<record-optio=
+ns>] <command>
+> -'perf script' [<options>] <top-script> [script-args]
+> +'perf script' [<options>] <script> [script-args]
 
-While _record_cleanup caps the list size for each active TID, it appears
-inactive TIDs are never removed from the dictionary itself. This could leak
-memory continuously over long monitoring sessions as new transient processes
-are created and destroyed.
+Since the concept of 'report mode' has been excised here and in the
+DESCRIPTION, should the documentation for the --show-info option in this fi=
+le
+also be updated?
 
-[ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
-[ ... ]
-> +        # Task finish for previous task
-> +        if self.session:
-> +            prev_tgid =3D self.session.process(prev_pid).pid  # type: ig=
-nore
-> +        else:
-> +            prev_tgid =3D prev_pid # Fallback
-> +        self._handle_task_finish(prev_pid, common_cpu, time_ns, prev_tgi=
-d)
+It currently contains the dangling reference: "It can only be used with
+the perf script report mode."
 
-Is the pid attribute available on the thread object returned by
-self.session.process?
+> @@ -90,18 +44,7 @@ OPTIONS
+>  --list=3D::
+>          Display a list of available trace scripts.
+> =20
+> --s ['lang']::
+> ---script=3D::
+> -        Process trace data with the given script ([lang]:script[.ext]).
+> -	If the string 'lang' is specified in place of a script name, a
+> -        list of supported languages will be displayed instead.
+> =20
+> --g::
+> ---gen-script=3D::
+> -	Generate a starter script. If a language is given then the
+> -        script is named perf-script.[ext] according to the
+> -        language. If a file path is given then python is used for
+> -        files ending '.py' and perl used for files ending '.pl'.
 
-The python perf bindings for threads generally only expose a comm method. If
-pid is missing, this could raise an AttributeError on the first event.
-Additionally, might self.session.process raise a TypeError if the thread
-cannot be found, causing the event processing loop to unexpectedly exit?
+Is it also necessary to remove the obsolete tip from
+tools/perf/Documentation/tips.txt?
 
-[ ... ]
-> +    def print_summary(self) -> None:
-[ ... ]
-> +        # Simplified summary logic for brevity, full logic can be ported=
- if needed
-> +        print("\nSummary (Simplified)", file=3Dself.fd_sum)
-> +        if self.args.summary_extended:
-> +            print("Inter Task Times", file=3Dself.fd_sum)
-> +        # ... port full Summary class logic here ...
-
-Does this leave the summary features functionally incomplete? Users passing
-arguments like --summary or --summary-extended might be expecting the fully
-calculated metric tables rather than just the printed headers.
+It still suggests using the removed -g option: "Generate a script for your
+data: perf script -g <lang>".
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D46
+025-1-irogers@google.com?part=3D57
