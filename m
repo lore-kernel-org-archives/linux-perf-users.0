@@ -1,152 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEF62BDC26
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E363E1224
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 18:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777052857; cv=none; b=DZy7HUCxHM24VGqfWUVErfk8Cdanual6h16tg4j0XfR3uySRZjde/bE25Te8pnbzFtExR40aatq3Vma6tsKVXiLl3EuWQ2VsX+DKeHVhhBr9nGIR3+QSYLN9+tcGUdGOx8Ncla+VOr1LIedMp1tjt2N8GDLEL6DE0jhbGrdRUvE=
+	t=1777054126; cv=none; b=U3grbEzCqG3sNSYRKi28G4M772InJdP72HFAuU3CgKoRtHC6/Lqq6J0ltmJqErdUg1yuM0xBAwoa4vFIbCpUzAwes+qQ3FS6jBE97qYOHuZMtwQ8oQaogxTYSshe0XG2fsi8ZMoKKuWAN/Y6CBnL2incOnL7V/zCTHGy6M5VUiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777052857; c=relaxed/simple;
-	bh=aIRJiqM/ULw/j5cWbfRyR1NcjWyKNycINB4pdPt3t/I=;
+	s=arc-20240116; t=1777054126; c=relaxed/simple;
+	bh=hjG6xYHZRvCBCgM7llt1OnYw7ssBV2wIqfScLyEnfPg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qbE7GU7ufRImx6enwFEemVZtUSdNyqVWGh1a7yl30dObuGV1HcmVOFAmj5NvHYP2DujzqNIBfRMtfpgbf/mwT2VZoT3f3n9y5KMzDSfxFqN4QX49Pg1+b4nOlgAnOi9z0N01Z8mdlEpndWpiErnEXOn3qfUmpdf02LX7Az3X2hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cICG3EXJ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=VvpsOYtpqhUKsi9BHQRyr2LM+kUByJbxNMtJhYTrbu1HSUt8a1tWxHh3+hXqocLipXysx0ScpmvUCagQkDG7y8mQemjZYngf7hXnRWKWUmQ8KRoKMwtD4eKmvttk7D++0abc7XioiBSLWNZMMMzjk2V1ryFQGp11XXVOsm0/ff8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roZPm18C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cICG3EXJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817B7C19425;
-	Fri, 24 Apr 2026 17:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roZPm18C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6088FC19425;
+	Fri, 24 Apr 2026 18:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777052856;
-	bh=aIRJiqM/ULw/j5cWbfRyR1NcjWyKNycINB4pdPt3t/I=;
+	s=k20201202; t=1777054126;
+	bh=hjG6xYHZRvCBCgM7llt1OnYw7ssBV2wIqfScLyEnfPg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=cICG3EXJf25B06/vAMLD1+TWpCEqHnNWAVFCvxDS+ExU08oe2brLRJxYf5LnCKMJS
-	 agBSZyvV/1X/U+YgINtkcX4OiAF8fCfFYEa1hS3kU7PZjgojV7ggXUaxd5Xtld4Ru2
-	 dNgzArAuTBvdMIddnQfQrpAihRclGqk1+xGbmt/5/DE84y3Tw5tplGsqCa/c6bWRNI
-	 BqTaN+JOMJe6SZNP2YAJUL7ebs6QAHv3uj3nGHioJVGBFXm4eSPWHoer99Z9IcPn1k
-	 NYdkfFluCq0AxX/AreQDU8Wk6hXN8DR1MaerDrePnkwPcq7sCCf6t31GKjxC26T9HY
-	 XzH15whHwm9vw==
+	b=roZPm18CXsNFR4YY5D2++z/P6TOeC0Mi58GKjZzakXQFrWeUfFVtzf9H4Y0+jL+1n
+	 bTtkUQ7vtVHhbcBNoABddcAHvkkUXZn1Au8RC1SwwBRS3Axsbhe4ATFLSL8eSs3mfW
+	 3zBeqXQgu9iPcdUD2iY+QCwWjV+Vv4aHhyL0ZYvllXoS+jtovNwIQjRLwBsXdyCmJW
+	 5l77wMVapW/yeILuUEjdUw9T8FRGCT3B6lpIX6xUwiZfU1nvmfnDJYW4uFa0w2nWtV
+	 JogiRVTqDFiaQy2P0U0NGxPiwufaILvyPeVYTDB55ilF3HTHwOdW8fbGZrM4fxvMfi
+	 D6dB/3gLVTPyQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 53/58] perf: Remove libperl support, legacy Perl
- scripts and tests
+Subject: Re: [PATCH v5 15/58] perf python: Add python session abstraction
+ wrapping perf's session
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-54-irogers@google.com>
-References: <20260424164721.2229025-54-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-16-irogers@google.com>
+References: <20260424164721.2229025-16-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:47:35 +0000
-Message-Id: <20260424174736.817B7C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 18:08:45 +0000
+Message-Id: <20260424180846.6088FC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Critical] A stack buffer overflow occurs in `check_ev_match()` when pars=
-ing an event name from a script's `-record` file.
-- [Critical] Improper size calculations and missing bounds checks lead to a=
-n exploitable heap buffer overflow in `find_scripts()` when extracting scri=
-pt names.
+Sashiko AI review found 5 potential issue(s):
+- [Medium] Memory leak of dynamically allocated sample data in `pyrf_sessio=
+n_tool__sample`.
+- [Medium] Segmentation fault in `pyrf_thread__comm` when `thread__comm_str=
+` returns NULL.
+- [Medium] Python C-API violation causes SystemError when an event creation=
+ fails.
+- [Medium] NULL pointer dereference in `pyrf_session__process` and `pyrf_se=
+ssion__process_events` due to missing initialization checks.
+- [Low] Memory and reference leaks in `pyrf_session__init` if called multip=
+le times.
 --
 
-commit 573b39340e3ff8ff394b5f6ed03e2d363a352ad4
+commit bd2d603bd2c22dec754101a17b6b19313c563182
 Author: Ian Rogers <irogers@google.com>
 
-perf: Remove libperl support, legacy Perl scripts and tests
+perf python: Add python session abstraction wrapping perf's session
 
-This commit removes embedded Perl interpreter support from perf, as all
-legacy Perl scripts have been ported to Python or are no longer needed.
-The changes include removing libperl feature detection, build rules,
-and the scripts themselves.
+Adds a Python wrapper for perf_session to allow processing perf.data files
+directly in Python scripts. This introduces new abstractions for sessions a=
+nd
+threads, including a callback mechanism for handling sample events.
+
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index a2cdd92e05482b..35eda69a32e164 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+[ ... ]
+> +static PyObject *pyrf_thread__comm(PyObject *obj)
+> +{
+> +	struct pyrf_thread *pthread =3D (void *)obj;
+> +	const char *str =3D thread__comm_str(pthread->thread);
+> +
+> +	return PyUnicode_FromString(str);
+> +}
+
+Can thread__comm_str() return a null pointer if the thread doesn't have an
+associated comm string? Passing a null pointer to PyUnicode_FromString()
+would crash the Python interpreter.
 
 [ ... ]
-
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/sc=
-ripts.c
-> index 1e8c2c2f952d42..27a099af2135e3 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -200,14 +200,13 @@ static int find_scripts(char **scripts_array, char =
-**scripts_path_array, int num
->  		if (!strcmp(lang_dirent->d_name, ".") || !strcmp(lang_dirent->d_name, =
-".."))
->  			continue;
-> =20
-> -#ifndef HAVE_LIBPERL_SUPPORT
-> -		if (strstr(lang_dirent->d_name, "perl"))
-> -			continue;
-> -#endif
+> +static int pyrf_session_tool__sample(const struct perf_tool *tool,
+> +				     union perf_event *event,
+> +				     struct perf_sample *sample,
+> +				     struct evsel *evsel,
+> +				     struct machine *machine __maybe_unused)
+> +{
+> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
+n, tool);
+> +	PyObject *pyevent =3D pyrf_event__new(event);
+> +	struct pyrf_event *pevent =3D (struct pyrf_event *)pyevent;
+> +	PyObject *ret;
 > +
->  #ifndef HAVE_LIBPYTHON_SUPPORT
->  		if (strstr(lang_dirent->d_name, "python"))
->  			continue;
->  #endif
-> +		if (strstr(lang_dirent->d_name, "perl"))
-> +			continue;
-> =20
->  		lang_dir_fd =3D openat(scripts_dir_fd, lang_dirent->d_name, O_DIRECTOR=
-Y);
->  		if (lang_dir_fd =3D=3D -1)
+> +	if (pyevent =3D=3D NULL)
+> +		return -ENOMEM;
 
-These aren't regressions introduced by this patch, but while reviewing this
-area I noticed two pre-existing issues nearby that could lead to buffer
-overflows.
+If pyrf_event__new() fails and returns a null pointer, it sets a Python
+exception. By returning -ENOMEM here, the error bubbles up to
+pyrf_session__process_events() which then returns a valid PyLong object.
 
-First, does the extraction of script names in find_scripts() have a bounds
-checking issue?
+Does returning a valid Python object while an exception is pending violate
+the Python C-API and trigger a SystemError?
 
-The size passed to snprintf() is derived from the input filename's length
-rather than the destination buffer's fixed size:
+> +
+> +	memcpy(&pevent->event, event, event->header.size);
+> +	if (evsel__parse_sample(evsel, &pevent->event, &pevent->sample) < 0) {
+> +		Py_DECREF(pyevent);
+> +		return -1;
+> +	}
+> +	/* Avoid shallow copy pointing to lazily allocated memory that would be=
+ double freed. */
+> +	pevent->sample.user_regs =3D NULL;
+> +	pevent->sample.intr_regs =3D NULL;
 
-tools/perf/ui/browsers/scripts.c:find_scripts() {
-    ...
-		while ((script_dirent =3D readdir(lang_dir)) !=3D NULL) {
-            ...
-			temp =3D strchr(script_dirent->d_name, '.');
-			snprintf(scripts_array[i],
-				(temp - script_dirent->d_name) + 1,
-				"%s", script_dirent->d_name);
-    ...
-}
+Does evsel__parse_sample() dynamically allocate memory for register dumps
+into these fields? By explicitly setting these to null pointers, does this
+overwrite the only references to that memory and cause a memory leak when
+the Python object is later garbage collected?
 
-If a script filename exceeds 127 characters, snprintf() will write past the
-128-byte boundary of scripts_array[i] and overwrite the adjacent
-scripts_path_array[i] buffer, leading to a heap buffer overflow.
+> +	if (pevent->sample.merged_callchain)
+> +		pevent->sample.callchain =3D NULL;
+> +
+> +	ret =3D PyObject_CallFunction(psession->sample, "O", pyevent);
+[ ... ]
+> +static PyObject *pyrf_session__process(struct pyrf_session *psession, Py=
+Object *args)
+> +{
+> +	struct machine *machine;
+> +	struct thread *thread =3D NULL;
+> +	PyObject *result;
+> +	int pid;
+> +
+> +	if (!PyArg_ParseTuple(args, "i", &pid))
+> +		return NULL;
+> +
+> +	machine =3D &psession->session->machines.host;
 
-Additionally, if the filename lacks a dot, temp evaluates to NULL, which
-causes an integer underflow that disables snprintf()'s truncation entirely.
+If a script instantiates the session object via __new__ without calling
+__init__, psession->session will be uninitialized. Could this result in a
+null pointer dereference when accessing psession->session->machines?
 
-Second, does check_ev_match() overflow the event name buffer when parsing a
-script's -record file?
+> +	thread =3D machine__find_thread(machine, pid, pid);
+[ ... ]
+> +static int pyrf_session__init(struct pyrf_session *psession, PyObject *a=
+rgs, PyObject *kwargs)
+> +{
+> +	struct pyrf_data *pdata;
+> +	PyObject *sample =3D NULL;
+> +	static char *kwlist[] =3D { "data", "sample", NULL };
+> +
+> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!|O", kwlist, &pyrf_da=
+ta__type, &pdata,
+> +					 &sample))
+> +		return -1;
+> +
+> +	Py_INCREF(pdata);
+> +	psession->pdata =3D pdata;
 
-The length of the event name is calculated and then directly passed to
-snprintf() with a fixed 128-byte stack array:
+Python allows __init__ to be called multiple times on the same object.
+If this happens, does this leak the previously acquired references to pdata
+and the old perf_session allocation?
 
-tools/perf/ui/browsers/scripts.c:check_ev_match() {
-    ...
-		while (strlen(p)) {
-            ...
-			char evname[128];
+> +	perf_tool__init(&psession->tool, /*ordered_events=3D*/true);
+> +	psession->tool.ordering_requires_timestamps =3D true;
+[ ... ]
+> +static PyObject *pyrf_session__process_events(struct pyrf_session *psess=
+ion)
+> +{
+> +	int err =3D perf_session__process_events(psession->session);
 
-			p =3D strstr(p, "-e");
-            ...
-			p +=3D 2;
-			p =3D skip_spaces(p);
-			len =3D strcspn(p, " \t");
-            ...
-			snprintf(evname, len + 1, "%s", p);
-    ...
-}
+Could psession->session be uninitialized here if the Python object was
+created without calling __init__?
 
-If the event name in the -record file exceeds 127 characters, snprintf() wi=
-ll
-write beyond the bounds of the array, resulting in a stack buffer overflow.
-An attacker could exploit this by placing a maliciously crafted -record file
-in the script directory.
+> +	return PyLong_FromLong(err);
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D53
+025-1-irogers@google.com?part=3D15
