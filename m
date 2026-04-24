@@ -1,116 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15ED2C11E2
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73CF3E123E
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Apr 2026 17:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050877; cv=none; b=rnDrioKXvmOdrtM5bFWv1if2LRKxa7UxhNrMDiXjxL/XTcjjuLmRnVVgyTzk8+MrNo6+NaR4DarrQKG2DrnDM0KAJgt/oN2jhv1WegaQudPDNooA8RGe+D58cP0crDVsE+ltizm9ZuiYY+KcIrO8WtAr6qxctQDMHOm09ZKR/aU=
+	t=1777050887; cv=none; b=UNCr2gGk9Kbz0oU4xGA3pVcWLN9KqD4j7MSfvA8rTCKYJH5WnmwbF9ExAnh+SLn9Z8XX3gL6JSeWJlcP7NPb/sythkTVwSpZxeLBna7M7wVLWWZpGaJOOEV3QqXSHftNNXAST0eQ46q/UF1T2wzJOXAuiDjfhxiRTDBtslJ13cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050877; c=relaxed/simple;
-	bh=ppnmkfDXkttEI7RLeUHVI6U5vDpmpQlfo2T2OlqC2kM=;
+	s=arc-20240116; t=1777050887; c=relaxed/simple;
+	bh=kCeMAu8SvIF/1IhrqSJ+rJZDxPvzq2otY5psLZE9hvQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lIKlEw6KxNj+qROafQp2GaF+567BDknQGXNT6Ac0CrPVl/1shkOiJEM1Xj0d7k0TVYs7e/TPzvaq+ArXI6JJAOE6pHPId72YTKclS/oZ4KKaOoH4RIVUpFL9Ju/fXM6OoYggN8tumHINPbvIqrDys2eM6mZnhklx68bARMLhgMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQIZMoy/; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=pvGcXn3JIEl/wTOxoiqAq6LqfaGo61nIoYJtLHr+O0/EfOev9c0hnUJjjprYiHO5JOihwS+IBWC08THojOUvh+pj4rRzKQp1sUdALW37Byp6nDGVb/S9pp6hSwj86SBIQR71hA2Bx/EBI4MYGaw2IKxkgKgScrU5NzSscDM9SxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLQpwmOu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQIZMoy/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCB4C19425;
-	Fri, 24 Apr 2026 17:14:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLQpwmOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C0DC19425;
+	Fri, 24 Apr 2026 17:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050876;
-	bh=ppnmkfDXkttEI7RLeUHVI6U5vDpmpQlfo2T2OlqC2kM=;
+	s=k20201202; t=1777050887;
+	bh=kCeMAu8SvIF/1IhrqSJ+rJZDxPvzq2otY5psLZE9hvQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=WQIZMoy/8gf7/dvD2kWVE6uXA0OammIetqFqs4QF9VeRSbZEs44lyRQoUW7CrKZRR
-	 9NuIYmOFJ9Wf/chxDlx3lsXjsZEW5nmazVhZXKyeSwknKyKkDLbrINHCtGS9DiRYhe
-	 cxAoH+WgVug383zdbEEziXI3Ub2pRzzh3vQ8qjhPPkmbL0m1bR0gEjHfejk1YVS03d
-	 qD8rXI11fxFkzjviP1Szfuv6J1RC+2RaTKnSoT8uinUIkezJHwqzca9BHtHv4qbdss
-	 AI/zBo2d/bBIKo/DGcsuDz0foCnJ3MwE2JiPPvPSeTK44KHlcn5c/PDjfHoEjmtuWb
-	 IQ5fyTI9XS0SQ==
+	b=fLQpwmOuWPoKPnYTrkxwVyMpQ219wA0eN7zzOsNlZGibkESpDOAlLjBU/G3Yv6XRZ
+	 UWylWMn/VG7+uPHe9SyhY+a4dIB1/EP0BJSfTt6ssKQw18IdpNNtZaFSz+NCV4GHDr
+	 O4eyRA71Gdy4oclaixNasVrK/sdsLnRp2C6IY7VXfO0Y8KIxZ0HCQp6UE1ACbbx57+
+	 X3smszMZ+2ZXGEQyFN6SSMsXqGiu1oUX3Mz8PujfHOHwj5rRi/dUKNjjw3WVr/ekme
+	 qzqGF0vUsX2lOmk1uhgwKSUoEDBEgwdP+zKtLAeb+jD25vjQ2CaljSCGbr81bwhjJQ
+	 dNCRBlLdIPsvw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 33/58] perf check-perf-trace: Port check-perf-trace
- to use python module
+Subject: Re: [PATCH v5 50/58] perf rwtop: Port rwtop to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260424164721.2229025-34-irogers@google.com>
-References: <20260424164721.2229025-34-irogers@google.com>
+In-Reply-To: <20260424164721.2229025-51-irogers@google.com>
+References: <20260424164721.2229025-51-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 17:14:35 +0000
-Message-Id: <20260424171436.7DCB4C19425@smtp.kernel.org>
+Date: Fri, 24 Apr 2026 17:14:46 +0000
+Message-Id: <20260424171447.64C0DC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] The script crashes with an unhandled TypeError if an event's threa=
-d is not found in the thread map, and incorrectly uses sample_pid instead o=
-f sample_tid.
-- [Medium] Substring matching incorrectly routes `kmem:kmalloc_node` events=
- to the `kmem:kmalloc` handler.
+Sashiko AI review found 5 potential issue(s):
+- [Medium] The commit message claims to use ANSI escape codes to clear the =
+terminal, but the code does not implement this.
+- [Medium] The fallback events for `raw_syscalls` use invalid tracepoint na=
+mes.
+- [Medium] Command name (comm) resolution is completely broken in live mode.
+- [Medium] Read and write system calls returning 0 (such as EOF) are incorr=
+ectly tracked as errors.
+- [Medium] Process names (`comm`) will be missing from the output for cross=
+-interval events.
 --
 
-commit 88d07d08354cf3878fe6e4a135b0948803fe0d76
+commit 54cf450fd705476f413ab144cabc91c84a299a63
 Author: Ian Rogers <irogers@google.com>
 
-perf check-perf-trace: Port check-perf-trace to use python module
-   =20
-This commit adds a port of the check-perf-trace script that uses the perf
-python module directly. This approach is significantly faster than using pe=
-rf
-script callbacks as it avoids creating intermediate dictionaries for all
-event fields.
+perf rwtop: Port rwtop to use python module
 
-> diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/ch=
-eck-perf-trace.py
+This commit ports the legacy rwtop.pl Perl script to a Python script
+using the perf module. It leverages the perf.session API for event
+processing to display system-wide read and write call activity periodically.
+
+> - Used ANSI escape codes (\x1b[H\x1b[2J) to clear the terminal.
+
+Is this description accurate?
+
+Looking at print_totals() in the code, there do not appear to be any ANSI
+escape sequences emitted. This results in the terminal scrolling continuous=
+ly
+instead of clearing.
+
+> diff --git a/tools/perf/python/rwtop.py b/tools/perf/python/rwtop.py
 > new file mode 100755
-> index 00000000000000..4c05540bdc057b
+> index 00000000000000..952d178e99c5a1
 > --- /dev/null
-> +++ b/tools/perf/python/check-perf-trace.py
+> +++ b/tools/perf/python/rwtop.py
+[ ... ]
+> +    def process_event(self, sample: perf.sample_event) -> None:  # pylin=
+t: disable=3Dtoo-many-branches
+> +        """Process events."""
+> +        event_name =3D str(sample.evsel)
+> +        pid =3D sample.sample_pid
+> +        sample_time =3D sample.sample_time
+> +
+> +        if self.last_print_time =3D=3D 0:
+> +            self.last_print_time =3D sample_time
+> +
+> +        # Check if interval has passed
+> +        if sample_time - self.last_print_time >=3D self.interval_ns:
+> +            self.print_totals()
+> +            self.last_print_time =3D sample_time
+> +
+> +        try:
+> +            comm =3D f"PID({pid})" if not self.session else self.session=
+.process(pid).comm()
+> +        except Exception:  # pylint: disable=3Dbroad-except
+> +            comm =3D f"PID({pid})"
+
+Will process names resolve correctly in live mode?
+
+When running with the LiveSession path in main(), self.session is never
+initialized. It appears this will always fall back to printing the PID inst=
+ead
+of the command name.
 
 [ ... ]
+> +        elif event_name in ("evsel(syscalls:sys_exit_read)", "evsel(raw_=
+syscalls:sys_exit_read)"):
+> +            try:
+> +                ret =3D sample.ret
+> +                if ret > 0:
+> +                    self.reads[pid]["bytes_read"] +=3D ret
+> +                else:
+> +                    self.reads[pid]["errors"][ret] +=3D 1
 
-> +def print_header(event_name: str, sample: perf.sample_event) -> None:
-> +    """Prints common header for events."""
-> +    secs =3D sample.sample_time // 1000000000
-> +    nsecs =3D sample.sample_time % 1000000000
-> +    comm =3D session.process(sample.sample_pid).comm() if session else "=
-[unknown]"
+Does this incorrectly classify EOF as an error?
 
-Could this crash when encountering short-lived or untracked threads?
-
-The underlying Python C extension raises a TypeError if the thread is not
-found in the thread map.
-
-Should this also use sample.sample_tid instead of sample.sample_pid to
-correctly look up non-leader threads?
-
-> +    print(f"{event_name:<20} {sample.sample_cpu:5} {secs:05}.{nsecs:09} "
-> +          f"{sample.sample_pid:8} {comm:<20} ", end=3D' ')
+A return value of 0 indicates End-Of-File for reads, which is a normal
+operational state, whereas actual syscall errors return negative values.
 
 [ ... ]
+> +        elif event_name in ("evsel(syscalls:sys_exit_write)", "evsel(raw=
+_syscalls:sys_exit_write)"):
+> +            try:
+> +                ret =3D sample.ret
+> +                if ret > 0:
+> +                    self.writes[pid]["bytes_written"] +=3D ret
+> +                else:
+> +                    self.writes[pid]["errors"][ret] +=3D 1
 
-> +def process_event(sample: perf.sample_event) -> None:
-> +    """Callback for processing events."""
-> +    event_name =3D str(sample.evsel)
-> +    if event_name =3D=3D "evsel(irq:softirq_entry)":
-> +        irq__softirq_entry(sample)
-> +    elif "evsel(kmem:kmalloc)" in event_name:
+Similarly for writes, a return value of 0 indicates 0 bytes written.
 
-Will this substring match inadvertently catch evsel(kmem:kmalloc_node) even=
-ts?
+Should this be checking for ret >=3D 0 instead, or strictly tracking negati=
+ve
+values as errors?
 
-Using exact equality, similar to the irq:softirq_entry check above, might
-prevent kmalloc_node events from bypassing trace_unhandled() and misreporti=
-ng
-the event type while silently dropping their node field.
+[ ... ]
+> +    def print_totals(self) -> None:
+[ ... ]
+> +        # Reset counts
+> +        self.reads.clear()
+> +        self.writes.clear()
 
-> +        kmem__kmalloc(sample)
-> +    else:
-> +        trace_unhandled(event_name)
+Will this result in missing process names for syscalls that span across
+interval boundaries?
+
+Because the dictionaries are cleared completely, if a sys_exit event arrives
+in the new interval without a preceding sys_enter, the defaultdict will
+recreate the entry with an empty string for comm. The summary table might
+then display a blank command name for that pid.
+
+[ ... ]
+> +def main() -> None:
+[ ... ]
+> +            try:
+> +                live_session =3D LiveSession(events, sample_callback=3Da=
+nalyzer.process_event)
+> +            except OSError:
+> +                events =3D (
+> +                    "raw_syscalls:sys_enter_read,raw_syscalls:sys_exit_r=
+ead,"
+> +                    "raw_syscalls:sys_enter_write,raw_syscalls:sys_exit_=
+write"
+> +                )
+
+Are these fallback tracepoint names valid?
+
+The raw_syscalls subsystem only exposes generic sys_enter and sys_exit
+tracepoints. It does not append the syscall name, so attempting to attach
+to raw_syscalls:sys_enter_read will fail.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260424164721.2229=
-025-1-irogers@google.com?part=3D33
+025-1-irogers@google.com?part=3D50
