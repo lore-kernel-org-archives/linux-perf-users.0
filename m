@@ -1,117 +1,165 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066423AF676;
-	Fri, 24 Apr 2026 12:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE7D290DBB;
+	Fri, 24 Apr 2026 16:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777033421; cv=none; b=p0s+AetQKzlU2caZqxLhhqjUQ6bqM85gIBh493bS4Ow7fWN+5eJ09jeBzt2P9MTIHHSpTge7VE1FA6rwFQ+CsGUxWwZOnXoEn4SX/FfmKrE8eUvtq3d0JY+75NkQ8sFYe9DFK7Qmi9eOIBbQm+jjjeBVyjqMI8yEh4wRFGYQJos=
+	t=1777046466; cv=none; b=CTDGRLKOrh7R05C13dEbMBWF90YcgzcKUiUQVCSr9SlQRABrP+aiK9vtX2bGTTsbmj31pQoSkawIwEE0OfXHjN7qdOgMb5WSY9ki02IB/8XdNWueyJZaoz4yZfPwGYL3RB3if5LTBlJ8vsKaqB3zsxDPn4ZZnHnSuW1p8u5SCtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777033421; c=relaxed/simple;
-	bh=GLGraWvtQHBOFIhN97oPQw0hR+WnjpVdiVnGX9C2HVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQRLqhREfGFOQn86+hLSBfx01qByfjTxHt2mFXbpnf8Uq+5tGHD4NcBg/cTgt0QR2GUbtj64E3F+q4FX/s0Ct3ODN+o57Ic31QQt1uGF+zDkuZKMGjjttK0FJVtMsGqMtV9rJfqvhFimLGFOkGQU7LUuaxZLUcugBUMIcxqTAM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eZeQCcx+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1777046466; c=relaxed/simple;
+	bh=KBT7vvmv0IVOWGMiLj2J36zsnQ02LrEe5v671QjMNCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LmW4iQN0G4N0bQGrzQgWlMPP1HCXuIQUKqrdT0fFgt+6Iah7YrRIW0i93fUJrDx/w6hmHe+OodyrTkISip68j2E78wRj7TyJTPjtzZpo1TF4OzeXwJobdeNlcxhou9ifTFmUqbdpyG9WL4VPduVz/8qp7dg3rotcSytrd4VlCtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nrr1iPsx; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eZeQCcx+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=SUqnbh3lZC0aoG+4uV14UrcKIahclGM3EDChFHr17qg=; b=eZeQCcx+MSHSKZuM8saudpTOKX
-	KzB2IxNqKhjEqg0Gu/gcijNpg/kRaam9UFeJq95Cdl/z7At7sbMcAGq1NPGn/SO93qDNLYJ8y2WzE
-	hSifPRo0mzwTTYoxEcMSxdDJ6y2xkTVgTOahFfwFxnOOyz+5RZDBV7pomb5juzh1o78h+IDLC53Vx
-	t7q2vV2GkV+3dBiVUh09KWZQkSiegXDIM8Xg3z0ow/Nbqi0TW4UNw+K7xGsY5PN+9uzIPfFCvCr87
-	rDKf33ulb3Q6GAVe+5iGVkcyCKohH/kkxBdBYaip0xkdEiCgkCqn0Ij5ePJcqUfj8C4pj+PA76IeE
-	YFYNChMQ==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wGFZB-0000000F6wR-0asY;
-	Fri, 24 Apr 2026 12:23:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9F10130301B; Fri, 24 Apr 2026 14:23:27 +0200 (CEST)
-Date: Fri, 24 Apr 2026 14:23:27 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/4] perf/x86: Don't write PEBS_ENABLED on KVM
- transitions
-Message-ID: <20260424122327.GD641209@noisy.programming.kicks-ass.net>
-References: <20260423150340.463896-1-seanjc@google.com>
- <20260423161641.GA641209@noisy.programming.kicks-ass.net>
- <3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nrr1iPsx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777046465; x=1808582465;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KBT7vvmv0IVOWGMiLj2J36zsnQ02LrEe5v671QjMNCw=;
+  b=nrr1iPsxtkaQlJrNyLSP9Kmi95jG4P9immba5yKMjalze8eXWbd5JCig
+   x+ai28sfHPpIBVXH9pijo2aJj7X3OEfLoUCfx2RfVhrBHzB3Bs+nhHKdm
+   XAMG5Nutb+vk1+O0pDhLviUXIY6RhyhZuRShbbkZDt8HZaNoWYJyvieef
+   lRwpQZ0U0REniIcIGuB5yKaCFqR/mj6A4OokvkoTqPsjSdJbDreiB2ZYL
+   NE6rNFOs3/bAYfWRM9RSwkCQwbZjcBFWeaw+Hp+gOQuOQ0PnQdJMUdY0I
+   BUGpPrfceillq/8FycCKKaBmGNnIUocM8yztUO/EiiUfYihbf/VKNEO4s
+   g==;
+X-CSE-ConnectionGUID: Xjqyp5grQeq+/tdiKvxUeQ==
+X-CSE-MsgGUID: YWZi8dhnRG+kHi0ZX4ndrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11766"; a="88728726"
+X-IronPort-AV: E=Sophos;i="6.23,196,1770624000"; 
+   d="scan'208";a="88728726"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2026 09:01:04 -0700
+X-CSE-ConnectionGUID: FYfcxKl3R+WAg9B6m7YpQQ==
+X-CSE-MsgGUID: /KJGgbsCS4+oJ7yTlVrFHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,196,1770624000"; 
+   d="scan'208";a="238048509"
+Received: from unknown (HELO [10.241.240.162]) ([10.241.240.162])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2026 09:01:04 -0700
+Message-ID: <9248da24-350e-412e-acaa-619356c3ff21@intel.com>
+Date: Fri, 24 Apr 2026 09:01:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2] perf/x86/intel: Remove anythread_deprecated bit from
+ perf_capabilities
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
+References: <20260423053306.3033331-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260423053306.3033331-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 24, 2026 at 08:17:42PM +0800, Mi, Dapeng wrote:
-> 
-> On 4/24/2026 12:16 AM, Peter Zijlstra wrote:
-> > On Thu, Apr 23, 2026 at 08:03:36AM -0700, Sean Christopherson wrote:
-> >> Testing this against our "PEBS_ENABLED is stuck" reproducer is (still) a work
-> >> in-progress (largely because the "reproducer" is currently "throw the kernel in
-> >> a big test pool"), i.e. I don't know if this actually resolves the problems we
-> >> are seeing.  But even if it doesn't fully resolve our woes, it seems like a
-> >> no-brainer improvement, and if we're missing something with respect to "stuck"
-> >> PEBS_ENABLED, it'd be nice to get feedback/input asap.
-> >>
-> >> Note, if the throttling theory is correct (which is looking unlikely at the
-> >> moment), then there are likely more fixes that need to be done, e.g. for CPUs
-> >> without isolation, and/or if PERF_GLOBAL_CTRL can be modified from NMI context
-> >> too.
-> > Throttle does: pmu->stop() := x86_pmu_stop() -> intel_pmu_disable_event()
-> >
-> > Which in turn should:
-> >
-> >   x86_pmu_disable_event()
-> >     wrmsrq(config_base, config & ~EN);
-> >   x86_pmu_pebs_disable() := intel_pmu_pebs_disable()
-> >     wrmsr(PEBS_ENABLE, pebs_enabled & ~(1<<idx));
-> >
-> > So that's just the counter EN bit and PEBS_ENABLED cleared. However, if
-> > this is from PMI, then the PMI handler should also update GLOBAL_CTRL --
-> > provided it wasn't 0.
-> >
-> > See intel_pmu_handle_irq():
-> >
-> >   if (pmu_enabled)
-> >   	__intel_pmu_enable_all()
-> > 	  wrmsrq(GLOBAL_CTRL, intel_ctrl);
-> >
-> Yes, currently all valid bits in GLOBAL_CTRL would be set by default on
-> Intel platforms. IIUC, this issue looks more like a race condition between
-> Perf and KVM.
-> 
-> 1. KVM saves the value of host PEBS_ENABLE before VM-entry.
-> 
-> 2. PMI is triggered and interrupts the upcoming VM-entry. PEBS events are
-> throttled and PEBS_ENABLE MSR is updated in the PMI handler, then the KVM
-> saved host PEBS_ENABLE value gets stale. 
-> 
-> 3. VM entry continues and then the next VM-exit occurs, the stale
-> PEBS_ENABLE value is restored. 
-> 
-> 4. The PEBS_ENABLE MSR keeps the stale value until next write.
-> 
-> Seems an alternative way to fix this issue is to disable the PMU (Clearing
-> GLOBAL_CTRL) before KVM saving the PMU MSRs?
 
-Yes, that would seem a prudent thing to do.
+
+On 4/22/2026 10:33 PM, Dapeng Mi wrote:
+> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+> represent "anythread deprecation" in perf_capabilities. It leads to the
+> anythread_deprecated bit could be overwritten by the real value of
+> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+> 
+> ```
+> if (!intel_pmu_broken_perf_cap()) {
+> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+> }
+> ```
+> 
+> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+> these support Perfmon v6 platforms, like Clearwater Forest.
+> 
+> ```
+> $grep . /sys/devices/cpu/format/*
+> /sys/devices/cpu/format/acr_mask:config2:0-63
+> /sys/devices/cpu/format/any:config:21
+> /sys/devices/cpu/format/cmask:config:24-31
+> ```
+> 
+> So remove the anythread_deprecated bit from perf_capabilities structure
+> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+> deprecated.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+
+Reviewed-by:  Zide Chen <zide.chen@intel.com>
+
+
+> 
+> V2: Address Namhyung and Zide's comments.
+> 
+> V1: https://lore.kernel.org/all/20260415021010.1248083-1-dapeng1.mi@linux.intel.com/
+> 
+>  arch/x86/events/intel/core.c | 10 +++-------
+>  arch/x86/events/perf_event.h |  2 +-
+>  2 files changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 793335c3ce78..f57a2903e4d6 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -7612,12 +7612,6 @@ __init int intel_pmu_init(void)
+>  
+>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+>  
+> -	if (version >= 5) {
+> -		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
+> -		if (x86_pmu.intel_cap.anythread_deprecated)
+> -			pr_cont(" AnyThread deprecated, ");
+> -	}
+> -
+>  	/* The perf side of core PMU is ready to support the mediated vPMU. */
+>  	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
+>  
+> @@ -8467,8 +8461,10 @@ __init int intel_pmu_init(void)
+>  				      &x86_pmu.intel_ctrl);
+>  
+>  	/* AnyThread may be deprecated on arch perfmon v5 or later */
+> -	if (x86_pmu.intel_cap.anythread_deprecated)
+> +	if (version >= 5 && edx.split.anythread_deprecated) {
+>  		x86_pmu.format_attrs = intel_arch_formats_attr;
+> +		pr_cont("AnyThread deprecated, ");
+> +	}
+>  
+>  	intel_pmu_check_event_constraints_all(NULL);
+>  
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index fad87d3c8b2c..01217c663dff 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -660,7 +660,7 @@ union perf_capabilities {
+>  		u64	perf_metrics:1;
+>  		u64	pebs_output_pt_available:1;
+>  		u64	pebs_timing_info:1;
+> -		u64	anythread_deprecated:1;
+> +		u64	__reserved:1;
+>  		u64	rdpmc_metrics_clear:1;
+>  	};
+>  	u64	capabilities;
+
