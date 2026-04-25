@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B41371880
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4463136607C
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777139383; cv=none; b=s5aKsxTGPcq44tB86qp74kyA6AyaDmVI8dT1bLNQMa9ta6m23G4ZE8UcSCmhRQuOegnpjaKHCsnKmLDafgXPDMlwMesNUOlR7cFA4xj1HnIUIczw8V12zgjXIba70YGA6n1dBaXMlCQtcr48L7Z4V4x/VKmnPFjtn8Hh45DuxYQ=
+	t=1777139386; cv=none; b=Ub4YW5NEgiLWcjEPvApMT3zYd8l4S2A7x4NPxQ5zyMH5TUScZeH4uuiGae9NHJPHJpeQNPpzxZyJyGcal7HsBXftZ0IioUdRnKJZNW7z+qJ8dUz2jJBDZyV9xIAGDPikfvE1d/wnGX7WRVTvvtk965IIPcj5lrTkpDHltNxexu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777139383; c=relaxed/simple;
-	bh=4co4sVbAW2ppQ4UiaObqaywzsylVfP0uEey5+h3QFGc=;
+	s=arc-20240116; t=1777139386; c=relaxed/simple;
+	bh=4VD9kNdZloFVtIPVA7OK/aHl6A9Bxpf4aSdYWFABsqE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pCrFXuPELWWDYMmLrPbtYVYQ7MHbaB4b73yLDPR9V5mZDfFD/yWMeICIpRHpjuMuOSFnjXhefsBqOzWzGkdSQCUsgymNmVfSoelJ3mHqdknLFIINHiGYmWyhaZKqraE7/KIOn+m2afN8+9cYdasXcrXun3YOuZAqEnbhERgFM6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r6y5JuLt; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=C7OjsWhvR/AUsXvSX4fYb+e1wgoE1a9IPqIlyUCDz2F9r8w+8DIDEL1MveaQtMGnLHk6Hkn916MA/eb2CAjSJ1Wl8cPME+hKWgiISOwwT0jp+P/7aU2kE6C6JfD37HPxNjOChD8yRLdawLq+73RADo6HNm4c5fIIF1WKM1kZH58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WaJxOKVh; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r6y5JuLt"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bda35eab74so7643241eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:49:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WaJxOKVh"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so8951234c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777139381; x=1777744181; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777139382; x=1777744182; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SP+0lsiDdzNCVN0ltPixIRraLs+b7x8VVL39ZhCrgV4=;
-        b=r6y5JuLt+674ngmYkE5SEQaVNHNrQCAVDQt1mAFRfSi8w2tb0qTRaVZiIE6BZwqA0g
-         lQLr53vfm+8lHItU+eLt7/DkGZtd4BjrWwr29W9Pykju8kp8B3nJLK/1akBKW8SRVzIr
-         UUaQJY5TSbPqechx0cANV01U4Ltmphzrl2jRBOwanLfsxWaP8V0Kp8esYd1vwIh9HlqF
-         ztbR72nSJ+qp+5fkj33R9Nny2ht4CXyIATaw3mN98G2n8P74SS+OVVev8CU5gv/Nezp8
-         6BaDsMyJMvhtdJM9dNpTd5WO3/Hl0BNi8CU4bZVirDtSjwIzR29+nFCdyx84fTjSVhLX
-         X1qg==
+        bh=OXYCLsoBfoQAgmWO8J8vbq23pbG+So95UFsAHQwLOpA=;
+        b=WaJxOKVh37dKbj2mrYnJblj3Dd7KhMHMJRoOH08rWbyGfbHDIJauHe9P8aEbKHzQkT
+         ziDIOWRz5TNxbEt61OlBVqH2Z+w67gkae1vBItlRwSkkqNSy0TwNUqSFFs7EG3/GfZV3
+         MlYT3eoNcEcdYajf4+Uv/woZ0kBWNFsbAAHYa/GidPaqL19aAu2dtbTq0P5LJa1xzyaV
+         7y1F5P4VYv6fp33Mygw4BefIA4dY5XmL5hrBTwCzgDY2r1Xj2UW2pH3Dx2OcpZo8o9mz
+         1RVpMjnFxw2FDOsfOYcucucJGzEplkCBnJ87WMXNjP35k8q2u6isEv+rcAyK1j5y0F4a
+         1azQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777139381; x=1777744181;
+        d=1e100.net; s=20251104; t=1777139382; x=1777744182;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SP+0lsiDdzNCVN0ltPixIRraLs+b7x8VVL39ZhCrgV4=;
-        b=pOP479rN8WdoPv1b0WVnMjzYH3dgrw/3INyAmhmB7Tm0ke+PlOqPnhhKWz+LtdSzLi
-         muqO4pwmUgGhCAzQcv3Qi76u/T0wD342RzDcx3K03haylZHf1rqA5fGzprEBqB9+6TTC
-         3ogQyg+SFmO/0A5tR1MoLLzjwWV/a5oIIzN5/cRE2X4xDuDVJWYLKCtN/2lgXqcpfHqp
-         mpmWcL2Z3Vh1I5Bzjp+88Y42czFV2x5e6zFdzJsQuvW53+DzCp9UNQ/rylEwtTS7JeZw
-         OzWkenk+lDPxD3yz6YJOkmLoKWfQk2piUe9zyuV2h0sP5Ivz7Oq3/s7a/+HyQ+KX0evu
-         FT0Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8eh4ArrZMp4RML+vXF6ylcUNUsomguu8zx3WJsnNz9Xngp+CAtHhIe3IQSN5a/lzfh/rwFAUDN6KCGVsXi+9I1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9O6ho1p6IUdwnyrNAz52xDBt+gtJ2XVTHLOAunfEJi4T9lmDJ
-	gx1we9b5NedP+EzYbfNlrpvgGcNrsV/QHXi6MhBnuUA1ZrKqRWI+Ouim/ZypJCvqP5VhgRaYsKw
-	jA0QsaNKY2Q==
-X-Received: from dyblz34.prod.google.com ([2002:a05:7301:1622:b0:2e6:f22b:f849])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6787:b0:2d2:d5a3:e97c
- with SMTP id 5a478bee46e88-2e42dc07d8fmr13078187eec.12.1777139380455; Sat, 25
- Apr 2026 10:49:40 -0700 (PDT)
-Date: Sat, 25 Apr 2026 10:48:18 -0700
+        bh=OXYCLsoBfoQAgmWO8J8vbq23pbG+So95UFsAHQwLOpA=;
+        b=Xmb5HOeh3CGrZG4crtO14PWo8fqLAWM0oYyy8t0d7GDawnHTdek7pJZ+R0eRjdl8WW
+         vZZDsrwbfP+sxj4U42wsRLCqMNf9zIHIY/hJEJ7k0msyL60+tI4oAljYCdgXf2VzVFO/
+         SANQNUdaFh4CyP6HhZlIz/m7XoSrJSbOJRjC9ffHYolD+zwm6hD7p+f/+SaTUG67dxOi
+         +o/5hdmjNZEuOscn6X/fHBttHXbnU4B7YnnMJ1J2fpTbPLNRQjbFmZYHA8/eP1WutT3Q
+         TSbpWikfX1aY1BYwvKudvacdzMnoz70DQXEycfMgJxYNmjXxgafFLf3uArmK3weNGzFT
+         Jcfw==
+X-Forwarded-Encrypted: i=1; AFNElJ8ZyFy9j/bPchIaEeMnAeqX4kaHFxmTvsyZ3IuonMtl+K1A7GO7pNOWbrTVgcb4p0k4u2cjMPPsp3/s6xzMmWyT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3NSb/89BDDNMXSLjeHGBaSt9V9a53GGRWgda/Z8sOv3Jutrg6
+	jQ7GuVY7jjnfOSZkZO/6LQTrliHliOzRe4gyX8Hb30riGd5M97B1nW0iBbi+vvjPLsIkeM2P14v
+	FGTOlLTdWYQ==
+X-Received: from dlbqq11.prod.google.com ([2002:a05:7022:ed0b:b0:12a:7182:6cb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec13:b0:12c:6e85:505c
+ with SMTP id a92af1059eb24-12c73f6444amr16784479c88.4.1777139382211; Sat, 25
+ Apr 2026 10:49:42 -0700 (PDT)
+Date: Sat, 25 Apr 2026 10:48:19 -0700
 In-Reply-To: <20260425174858.3922152-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260424164721.2229025-1-irogers@google.com> <20260425174858.3922152-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425174858.3922152-21-irogers@google.com>
-Subject: [PATCH v6 20/59] perf python: Extend API for stat events in python.c
+Message-ID: <20260425174858.3922152-22-irogers@google.com>
+Subject: [PATCH v6 21/59] perf python: Expose brstack in sample event
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -69,270 +69,294 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add stat information to the session. Add call backs for stat events.
+Implement pyrf_branch_entry and pyrf_branch_stack for lazy
+iteration over branch stack entries.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v5:
-1. Fix Memory Corruption: Corrected the memory offset for `stat_round_type`
-   in `pyrf_stat_round_event__members` by adding the base offset of
-   `struct pyrf_event`.
-2. Fix Memory Leak: Added `Py_XDECREF()` to free the unused return value
-   of the Python callback in `pyrf_session_tool__stat_round()`.
+v2:
+
+1. Avoided Keyword Collision: Renamed the properties "from" and "to"
+   to "from_ip" and "to_ip" in pyrf_branch_entry__getset[] to prevent
+   syntax errors in Python.
+
+2. Eager Branch Stack Resolution: Updated pyrf_session_tool__sample()
+   to allocate and copy the branch stack entries eagerly when the
+   event is processed, instead of deferring it to iteration time. This
+   avoids reading from potentially overwritten or unmapped mmap
+   buffers.
+
+3. Updated Iterators: Updated pyrf_branch_stack and
+   pyrf_branch_stack__next() to use the copied entries rather than
+   pointing directly to the sample's buffer.
+
+4. Avoided Reference Leak on Init Failure: Added proper error checking
+   for PyModule_AddObject() in the module initialization function,
+   decrementing references on failure.
+
+v6:
+- Moved branch stack resolution from `session_tool__sample` to
+  `pyrf_event__new`.
 ---
- tools/perf/util/python.c | 171 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 167 insertions(+), 4 deletions(-)
+ tools/perf/util/python.c | 188 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 188 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index b358852b3528..37764a287a71 100644
+index 37764a287a71..228c1c628bf4 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -299,6 +299,76 @@ static PyTypeObject pyrf_lost_event__type = {
- 	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
+@@ -19,6 +19,7 @@
+ #include "dso.h"
+ #include "dwarf-regs.h"
+ #include "event.h"
++#include "branch.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "expr.h"
+@@ -69,6 +70,8 @@ struct pyrf_event {
+ 	bool al_resolved;
+ 	/** @callchain: Resolved callchain, eagerly computed if requested. */
+ 	PyObject *callchain;
++	/** @brstack: Resolved branch stack, eagerly computed if requested. */
++	PyObject *brstack;
+ 	/** @event: The underlying perf_event that may be in a file or ring buffer. */
+ 	union perf_event event;
  };
- 
-+static const char pyrf_stat_event__doc[] = PyDoc_STR("perf stat event object.");
-+
-+static PyMemberDef pyrf_stat_event__members[] = {
-+	sample_members
-+	member_def(perf_event_header, type, T_UINT, "event type"),
-+	member_def(perf_record_stat, id, T_ULONGLONG, "event id"),
-+	member_def(perf_record_stat, cpu, T_UINT, "event cpu"),
-+	member_def(perf_record_stat, thread, T_UINT, "event thread"),
-+	member_def(perf_record_stat, val, T_ULONGLONG, "counter value"),
-+	member_def(perf_record_stat, ena, T_ULONGLONG, "enabled time"),
-+	member_def(perf_record_stat, run, T_ULONGLONG, "running time"),
-+	{ .name = NULL, },
-+};
-+
-+static PyObject *pyrf_stat_event__repr(const struct pyrf_event *pevent)
-+{
-+	return PyUnicode_FromFormat(
-+		"{ type: stat, id: %llu, cpu: %u, thread: %u, val: %llu, ena: %llu, run: %llu }",
-+		pevent->event.stat.id,
-+		pevent->event.stat.cpu,
-+		pevent->event.stat.thread,
-+		pevent->event.stat.val,
-+		pevent->event.stat.ena,
-+		pevent->event.stat.run);
-+}
-+
-+static PyTypeObject pyrf_stat_event__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.stat_event",
-+	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_new		= PyType_GenericNew,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= pyrf_stat_event__doc,
-+	.tp_members	= pyrf_stat_event__members,
-+	.tp_getset	= pyrf_event__getset,
-+	.tp_repr	= (reprfunc)pyrf_stat_event__repr,
-+};
-+
-+static const char pyrf_stat_round_event__doc[] = PyDoc_STR("perf stat round event object.");
-+
-+static PyMemberDef pyrf_stat_round_event__members[] = {
-+	sample_members
-+	member_def(perf_event_header, type, T_UINT, "event type"),
-+	{ .name = "stat_round_type", .type = T_ULONGLONG,
-+	  .offset = offsetof(struct pyrf_event, event) + offsetof(struct perf_record_stat_round, type), .doc = "round type" },
-+	member_def(perf_record_stat_round, time, T_ULONGLONG, "round time"),
-+	{ .name = NULL, },
-+};
-+
-+static PyObject *pyrf_stat_round_event__repr(const struct pyrf_event *pevent)
-+{
-+	return PyUnicode_FromFormat("{ type: stat_round, type: %llu, time: %llu }",
-+				   pevent->event.stat_round.type,
-+				   pevent->event.stat_round.time);
-+}
-+
-+static PyTypeObject pyrf_stat_round_event__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.stat_round_event",
-+	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_new		= PyType_GenericNew,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= pyrf_stat_round_event__doc,
-+	.tp_members	= pyrf_stat_round_event__members,
-+	.tp_getset	= pyrf_event__getset,
-+	.tp_repr	= (reprfunc)pyrf_stat_round_event__repr,
-+};
-+
- static const char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
- 
- static PyMemberDef pyrf_read_event__members[] = {
-@@ -986,6 +1056,12 @@ static int pyrf_event__setup_types(void)
- 	if (err < 0)
- 		goto out;
- 	err = PyType_Ready(&pyrf_context_switch_event__type);
-+	if (err < 0)
-+		goto out;
-+	err = PyType_Ready(&pyrf_stat_event__type);
-+	if (err < 0)
-+		goto out;
-+	err = PyType_Ready(&pyrf_stat_round_event__type);
- 	if (err < 0)
- 		goto out;
- 	err = PyType_Ready(&pyrf_callchain_node__type);
-@@ -1010,6 +1086,8 @@ static PyTypeObject *pyrf_event__type[] = {
- 	[PERF_RECORD_SAMPLE]	 = &pyrf_sample_event__type,
- 	[PERF_RECORD_SWITCH]	 = &pyrf_context_switch_event__type,
- 	[PERF_RECORD_SWITCH_CPU_WIDE]  = &pyrf_context_switch_event__type,
-+	[PERF_RECORD_STAT]	 = &pyrf_stat_event__type,
-+	[PERF_RECORD_STAT_ROUND] = &pyrf_stat_round_event__type,
- };
- 
- static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *evsel,
-@@ -1025,7 +1103,9 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
- 	if ((event->header.type < PERF_RECORD_MMAP ||
- 	     event->header.type > PERF_RECORD_SAMPLE) &&
- 	    !(event->header.type == PERF_RECORD_SWITCH ||
--	      event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)) {
-+	      event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
-+	      event->header.type == PERF_RECORD_STAT ||
-+	      event->header.type == PERF_RECORD_STAT_ROUND)) {
- 		PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
- 			     event->header.type);
- 		return NULL;
-@@ -1937,7 +2017,40 @@ static PyObject *pyrf_evsel__get_attr_wakeup_events(PyObject *self, void */*clos
- 	return PyLong_FromUnsignedLong(pevsel->evsel->core.attr.wakeup_events);
+@@ -107,6 +110,7 @@ static void pyrf_event__delete(struct pyrf_event *pevent)
+ 	if (pevent->al_resolved)
+ 		addr_location__exit(&pevent->al);
+ 	Py_XDECREF(pevent->callchain);
++	Py_XDECREF(pevent->brstack);
+ 	perf_sample__exit(&pevent->sample);
+ 	Py_TYPE(pevent)->tp_free((PyObject *)pevent);
+ }
+@@ -870,6 +874,144 @@ static PyObject *pyrf_sample_event__get_callchain(PyObject *self, void *closure
+ 	return pevent->callchain;
  }
  
-+static PyObject *pyrf_evsel__get_ids(struct pyrf_evsel *pevsel, void *closure __maybe_unused)
-+{
-+	struct evsel *evsel = pevsel->evsel;
-+	PyObject *list = PyList_New(0);
++struct pyrf_branch_entry {
++	PyObject_HEAD
++	u64 from;
++	u64 to;
++	struct branch_flags flags;
++};
 +
-+	if (!list)
++static void pyrf_branch_entry__delete(struct pyrf_branch_entry *pentry)
++{
++	Py_TYPE(pentry)->tp_free((PyObject *)pentry);
++}
++
++static PyObject *pyrf_branch_entry__get_from(struct pyrf_branch_entry *pentry,
++					     void *closure __maybe_unused)
++{
++	return PyLong_FromUnsignedLongLong(pentry->from);
++}
++
++static PyObject *pyrf_branch_entry__get_to(struct pyrf_branch_entry *pentry,
++					   void *closure __maybe_unused)
++{
++	return PyLong_FromUnsignedLongLong(pentry->to);
++}
++
++static PyObject *pyrf_branch_entry__get_mispred(struct pyrf_branch_entry *pentry,
++						void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.mispred);
++}
++
++static PyObject *pyrf_branch_entry__get_predicted(struct pyrf_branch_entry *pentry,
++						  void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.predicted);
++}
++
++static PyObject *pyrf_branch_entry__get_in_tx(struct pyrf_branch_entry *pentry,
++					      void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.in_tx);
++}
++
++static PyObject *pyrf_branch_entry__get_abort(struct pyrf_branch_entry *pentry,
++					      void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.abort);
++}
++
++static PyObject *pyrf_branch_entry__get_cycles(struct pyrf_branch_entry *pentry,
++					       void *closure __maybe_unused)
++{
++	return PyLong_FromUnsignedLongLong(pentry->flags.cycles);
++}
++
++static PyObject *pyrf_branch_entry__get_type(struct pyrf_branch_entry *pentry,
++					     void *closure __maybe_unused)
++{
++	return PyLong_FromLong(pentry->flags.type);
++}
++
++static PyGetSetDef pyrf_branch_entry__getset[] = {
++	{ .name = "from_ip",      .get = (getter)pyrf_branch_entry__get_from, },
++	{ .name = "to_ip",        .get = (getter)pyrf_branch_entry__get_to, },
++	{ .name = "mispred",   .get = (getter)pyrf_branch_entry__get_mispred, },
++	{ .name = "predicted", .get = (getter)pyrf_branch_entry__get_predicted, },
++	{ .name = "in_tx",     .get = (getter)pyrf_branch_entry__get_in_tx, },
++	{ .name = "abort",     .get = (getter)pyrf_branch_entry__get_abort, },
++	{ .name = "cycles",    .get = (getter)pyrf_branch_entry__get_cycles, },
++	{ .name = "type",      .get = (getter)pyrf_branch_entry__get_type, },
++	{ .name = NULL, },
++};
++
++static PyTypeObject pyrf_branch_entry__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.branch_entry",
++	.tp_basicsize	= sizeof(struct pyrf_branch_entry),
++	.tp_dealloc	= (destructor)pyrf_branch_entry__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= "perf branch entry object.",
++	.tp_getset	= pyrf_branch_entry__getset,
++};
++
++struct pyrf_branch_stack {
++	PyObject_HEAD
++	struct pyrf_event *pevent;
++	struct branch_entry *entries;
++	u64 nr;
++	u64 pos;
++};
++
++static void pyrf_branch_stack__delete(struct pyrf_branch_stack *pstack)
++{
++	Py_XDECREF(pstack->pevent);
++	free(pstack->entries);
++	Py_TYPE(pstack)->tp_free((PyObject *)pstack);
++}
++
++static PyObject *pyrf_branch_stack__next(struct pyrf_branch_stack *pstack)
++{
++	struct pyrf_branch_entry *pentry;
++
++	if (pstack->pos >= pstack->nr)
 +		return NULL;
 +
-+	for (u32 i = 0; i < evsel->core.ids; i++) {
-+		PyObject *id = PyLong_FromUnsignedLongLong(evsel->core.id[i]);
-+		int ret;
++	pentry = PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__type);
++	if (!pentry)
++		return NULL;
 +
-+		if (!id) {
-+			Py_DECREF(list);
-+			return NULL;
-+		}
-+		ret = PyList_Append(list, id);
-+		Py_DECREF(id);
-+		if (ret < 0) {
-+			Py_DECREF(list);
-+			return NULL;
-+		}
-+	}
++	pentry->from = pstack->entries[pstack->pos].from;
++	pentry->to = pstack->entries[pstack->pos].to;
++	pentry->flags = pstack->entries[pstack->pos].flags;
 +
-+	return list;
++	pstack->pos++;
++	return (PyObject *)pentry;
 +}
 +
- static PyGetSetDef pyrf_evsel__getset[] = {
++static PyTypeObject pyrf_branch_stack__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.branch_stack",
++	.tp_basicsize	= sizeof(struct pyrf_branch_stack),
++	.tp_dealloc	= (destructor)pyrf_branch_stack__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= "perf branch stack object.",
++	.tp_iter	= PyObject_SelfIter,
++	.tp_iternext	= (iternextfunc)pyrf_branch_stack__next,
++};
++
++static PyObject *pyrf_sample_event__get_brstack(PyObject *self, void *closure __maybe_unused)
++{
++	struct pyrf_event *pevent = (void *)self;
++
++	if (!pevent->brstack)
++		Py_RETURN_NONE;
++
++	Py_INCREF(pevent->brstack);
++	return pevent->brstack;
++}
++
+ static PyObject*
+ pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
+ {
+@@ -890,6 +1032,12 @@ static PyGetSetDef pyrf_sample_event__getset[] = {
+ 		.set = NULL,
+ 		.doc = "event callchain.",
+ 	},
 +	{
-+		.name = "ids",
-+		.get = (getter)pyrf_evsel__get_ids,
++		.name = "brstack",
++		.get = pyrf_sample_event__get_brstack,
 +		.set = NULL,
-+		.doc = "event IDs.",
++		.doc = "event branch stack.",
 +	},
  	{
- 		.name = "tracking",
- 		.get = pyrf_evsel__get_tracking,
-@@ -2690,6 +2803,8 @@ static const struct perf_constant perf__constants[] = {
- 	PERF_CONST(RECORD_LOST_SAMPLES),
- 	PERF_CONST(RECORD_SWITCH),
- 	PERF_CONST(RECORD_SWITCH_CPU_WIDE),
-+	PERF_CONST(RECORD_STAT),
-+	PERF_CONST(RECORD_STAT_ROUND),
- 
- 	PERF_CONST(RECORD_MISC_SWITCH_OUT),
- 	{ .name = NULL, },
-@@ -3051,6 +3166,47 @@ static int pyrf_session_tool__sample(const struct perf_tool *tool,
- 	return 0;
+ 		.name = "raw_buf",
+ 		.get = (getter)pyrf_sample_event__get_raw_buf,
+@@ -1070,6 +1218,12 @@ static int pyrf_event__setup_types(void)
+ 	err = PyType_Ready(&pyrf_callchain__type);
+ 	if (err < 0)
+ 		goto out;
++	err = PyType_Ready(&pyrf_branch_entry__type);
++	if (err < 0)
++		goto out;
++	err = PyType_Ready(&pyrf_branch_stack__type);
++	if (err < 0)
++		goto out;
+ out:
+ 	return err;
  }
+@@ -1124,6 +1278,7 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
+ 	memcpy(&pevent->event, event, event->header.size);
+ 	perf_sample__init(&pevent->sample, /*all=*/true);
+ 	pevent->callchain = NULL;
++	pevent->brstack = NULL;
+ 	pevent->al_resolved = false;
+ 	addr_location__init(&pevent->al);
  
-+static int pyrf_session_tool__stat(const struct perf_tool *tool,
-+				   struct perf_session *session,
-+				   union perf_event *event)
-+{
-+	struct pyrf_session *psession = container_of(tool, struct pyrf_session, tool);
-+	struct evsel *evsel = evlist__id2evsel(session->evlist, event->stat.id);
-+	PyObject *pyevent = pyrf_event__new(event, evsel, psession->session);
-+	const char *name = evsel ? evsel__name(evsel) : "unknown";
-+	PyObject *ret;
+@@ -1180,6 +1335,27 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
+ 			addr_location__exit(&al);
+ 		}
+ 	}
++	if (sample->branch_stack) {
++		struct branch_stack *bs = sample->branch_stack;
++		struct branch_entry *entries = perf_sample__branch_entries(sample);
++		struct pyrf_branch_stack *pstack;
 +
-+	if (pyevent == NULL)
-+		return -ENOMEM;
-+
-+	ret = PyObject_CallFunction(psession->stat, "Os", pyevent, name);
-+	if (!ret) {
-+		PyErr_Print();
-+		Py_DECREF(pyevent);
-+		return -1;
++		pstack = PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__type);
++		if (pstack) {
++			Py_INCREF(pevent);
++			pstack->pevent = pevent;
++			pstack->pos = 0;
++			pstack->nr = bs->nr;
++			pstack->entries = calloc(bs->nr, sizeof(struct branch_entry));
++			if (pstack->entries) {
++				memcpy(pstack->entries, entries,
++				       bs->nr * sizeof(struct branch_entry));
++				pevent->brstack = (PyObject *)pstack;
++			} else {
++				Py_DECREF(pstack);
++			}
++		}
 +	}
-+	Py_DECREF(ret);
-+	Py_DECREF(pyevent);
-+	return 0;
-+}
-+
-+static int pyrf_session_tool__stat_round(const struct perf_tool *tool,
-+					 struct perf_session *session __maybe_unused,
-+					 union perf_event *event)
-+{
-+	struct pyrf_session *psession = container_of(tool, struct pyrf_session, tool);
-+	PyObject *pyevent = pyrf_event__new(event, /*evsel=*/NULL, psession->session);
-+	PyObject *ret;
-+
-+	if (pyevent == NULL)
-+		return -ENOMEM;
-+
-+	ret = PyObject_CallFunction(psession->stat, "O", pyevent);
-+	Py_XDECREF(ret);
-+	Py_DECREF(pyevent);
-+	return 0;
-+}
-+
- static PyObject *pyrf_session__find_thread(struct pyrf_session *psession, PyObject *args)
- {
- 	struct machine *machine;
-@@ -3083,10 +3239,11 @@ static int pyrf_session__init(struct pyrf_session *psession, PyObject *args, PyO
- {
- 	struct pyrf_data *pdata;
- 	PyObject *sample = NULL;
--	static char *kwlist[] = { "data", "sample", NULL };
-+	PyObject *stat = NULL;
-+	static char *kwlist[] = { "data", "sample", "stat", NULL };
- 
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!|O", kwlist, &pyrf_data__type, &pdata,
--					 &sample))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!|OO", kwlist, &pyrf_data__type, &pdata,
-+					 &sample, &stat))
- 		return -1;
- 
- 	Py_INCREF(pdata);
-@@ -3108,8 +3265,13 @@ static int pyrf_session__init(struct pyrf_session *psession, PyObject *args, PyO
- 	} while (0)
- 
- 	ADD_TOOL(sample);
-+	ADD_TOOL(stat);
- 	#undef ADD_TOOL
- 
-+	if (stat)
-+		psession->tool.stat_round = pyrf_session_tool__stat_round;
-+
-+
- 	psession->tool.comm		= perf_event__process_comm;
- 	psession->tool.mmap		= perf_event__process_mmap;
- 	psession->tool.mmap2            = perf_event__process_mmap2;
-@@ -3151,6 +3313,7 @@ static void pyrf_session__delete(struct pyrf_session *psession)
- {
- 	Py_XDECREF(psession->pdata);
- 	Py_XDECREF(psession->sample);
-+	Py_XDECREF(psession->stat);
- 	perf_session__delete(psession->session);
- 	Py_TYPE(psession)->tp_free((PyObject *)psession);
+ 	return (PyObject *)pevent;
  }
+ 
+@@ -3543,6 +3719,18 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	Py_INCREF(&pyrf_session__type);
+ 	PyModule_AddObject(module, "session", (PyObject *)&pyrf_session__type);
+ 
++	Py_INCREF(&pyrf_branch_entry__type);
++	if (PyModule_AddObject(module, "branch_entry", (PyObject *)&pyrf_branch_entry__type) < 0) {
++		Py_DECREF(&pyrf_branch_entry__type);
++		goto error;
++	}
++
++	Py_INCREF(&pyrf_branch_stack__type);
++	if (PyModule_AddObject(module, "branch_stack", (PyObject *)&pyrf_branch_stack__type) < 0) {
++		Py_DECREF(&pyrf_branch_stack__type);
++		goto error;
++	}
++
+ 	dict = PyModule_GetDict(module);
+ 	if (dict == NULL)
+ 		goto error;
 -- 
 2.54.0.545.g6539524ca2-goog
 
