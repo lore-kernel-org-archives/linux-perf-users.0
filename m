@@ -1,220 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3913537BE70
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:43:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C339219ADA4
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 19:06:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777142615; cv=none; b=bm2UKc65cLkU77OggL+aMQXv0egGjPpJu1ds1C4HvzkjHKIj+FXcpckYQbGlSJnoibY5wNfPxR3JQAl4hKj2r/WshNAF/cOTfWtSt1wwj9q7KkxNeNyo4+mlOOMcexraiWu0ff5EpJ8YXRrlcOP1TsT5r/czQTvHuqVj5sBLNIw=
+	t=1777143993; cv=none; b=mx4IcU4l6RD0dH6/mx/VcQrDZNPO2q4SkiKuKeLjnfGbDh/SX/aKpd8af4fJi20SegaeOV/0gikE3wtiAzvzofpCBR04H5cWNOep2QGaXbh8r9gUze/UhMS9MhCXM+fEAPeCwNWGybl0bCXgzcOc4EMLNXAAoBWopJs61kEZSyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777142615; c=relaxed/simple;
-	bh=V/R6mAPgvflUTT+Qthhf5AcqlA3Dr+gBBNIFpbbtd6U=;
+	s=arc-20240116; t=1777143993; c=relaxed/simple;
+	bh=MJ7LR+fDiG51rh0z50SoRHWyLtuCgRhVT0Ws2wtCSjw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kmmJhZFjQ5wRXOpNPdYfE5UxXFJlg+DuBgfn4sXkrT0+yl4vKGXr3hc+Bac/Icl7rPESqKGnFkxT3s7EXCTaNspUADP4EGRHke4W7ZzDZaCZXhWWwJ0vVpAmLhPguRwbZ+F/SrMe6mvR1BCCUpf9Lm+S7+93adI8lVZcawoWCsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIi/A3Qk; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=WZ3zmfirYp336n5gZkpvYAtBKLTLnQu8jethTK3OR4LooCc9XFYJ+ReDKhZs0bFYSv3zEuLk+HP6ygunhapTg60dgi9Nfq2aeo7WE942sLqccWQcY+7wAOZ6/WNvhQLAtEl2aMM1jcp5K5lYra1jDagLOrqGYYuhQbeoyToSxr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDy0a0ln; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIi/A3Qk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3B79C2BCB0;
-	Sat, 25 Apr 2026 18:43:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDy0a0ln"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7465AC2BCB0;
+	Sat, 25 Apr 2026 19:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777142614;
-	bh=V/R6mAPgvflUTT+Qthhf5AcqlA3Dr+gBBNIFpbbtd6U=;
+	s=k20201202; t=1777143993;
+	bh=MJ7LR+fDiG51rh0z50SoRHWyLtuCgRhVT0Ws2wtCSjw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=vIi/A3QkdKwzUtrxtfXobJ0P9AaazedOX6YrbxAnmZlWJK4dsLac+mlwoJAF41GCe
-	 SorgHMJXkx6IevBOdSkWezIZD120Xai44F8Mus7XP6g/mL6R0cwX88G/whK38pWJaE
-	 9VO4NJrBXkI/9/pSimqq4794C1P5oPEWfZfAKO5ikf+NjrJRu66Tm3pSzRMDI1M1Nw
-	 pC4296oYMmrEdgLF2nQRcywpFWckg2FeqlNeZ3cIsq8RF+5Pr1SUyzSDnMvr4OChOo
-	 wPQcjwudcazDpyUUAPWHdSbOTXeqAEWVRb4fsYrfMjaYSPwLxNWbV5PGG4LMALp/au
-	 Ybq7QgfEo+f0A==
+	b=LDy0a0ln/kzCouBUT8OAdkvOkgAZGAbT1cMYbXJ1vYG3+JRKRG6yVYk8RuP8wSDsm
+	 IFwuvD9HrHz/LMhIYkGCsYrYVThLc2Z9M2GiXXfR3vZCbzC3hsyHbn79xI5kr9hIKB
+	 +YVPct9AZveGQsolGCYTDbOHRfoxUaCp+5/X56d4BQyUSiFfFInG/UN3cLzgbxzAZS
+	 KoUWvtBJi2GPXFOaenz/iEYnH9Q3GRqLSfW+DWy2q6csx2cKcBjJLhhD7SPeGWpRlF
+	 yq6i3fyPU3AHg1usbLHO8l6mEJ7LgVpv/rLoaERze3gmTpEWpdQOn6jM5w0CwdF0Hn
+	 qj5cv71Hy5B/A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 17/59] perf python: Refactor and add accessors to
- sample event
+Subject: Re: [PATCH v6 13/59] perf python: Use evsel in sample in pyrf_event
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-18-irogers@google.com>
-References: <20260425174858.3922152-18-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-14-irogers@google.com>
+References: <20260425174858.3922152-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:43:34 +0000
-Message-Id: <20260425184334.B3B79C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 19:06:32 +0000
+Message-Id: <20260425190633.7465AC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [Critical] Dynamically allocating `pyrf_event` based on `event->header.si=
-ze` while exposing fixed-offset `PyMemberDef` attributes causes a heap out-=
-of-bounds read/write vulnerability and violates the Python C API.
-- [High] Missing `.tp_dealloc` initialization for `pyrf_comm_event__type` a=
-nd `pyrf_read_event__type` leads to memory and reference leaks.
-- [High] Unsafe dereference of `map__dso()` leads to a NULL pointer derefer=
-ence in `pyrf_sample_event__get_dso`, `pyrf_sample_event__get_dso_long_name=
-`, and `pyrf_sample_event__get_dso_bid`.
-- [Medium] Address truncation of 64-bit map boundaries on 32-bit architectu=
-res in `pyrf_sample_event__get_map_start` and `pyrf_sample_event__get_map_e=
-nd`.
+Sashiko AI review found 2 potential issue(s):
+- [High] Python bindings leak the `evsel` reference for all non-SAMPLE even=
+t types upon garbage collection.
+- [High] Reassigning `sample.evsel` without dropping the existing reference=
+ causes an evsel reference leak for deferred callchains.
 --
 
-commit 1daefbea296a47c601e164eb4259aa0b9834a12a
+commit 7853ce0ab6089ce39f4b73ee696251d881df5b58
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Refactor and add accessors to sample event
+perf python: Use evsel in sample in pyrf_event
 
-This commit refactors the Python perf module by adding a common evsel
-field for events, moving sample specific fields to only be present in
-sample events, and adding accessors for sample events.
+Avoid a duplicated evsel by using the one in sample. Add evsel__get/put to
+the evsel in perf_sample.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index a10c4a292756..0de3c657d023 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -172,6 +218,7 @@ static PyTypeObject pyrf_comm_event__type =3D {
->  	.tp_flags	=3D Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
->  	.tp_doc		=3D pyrf_comm_event__doc,
->  	.tp_members	=3D pyrf_comm_event__members,
-> +	.tp_getset	=3D pyrf_event__getset,
->  	.tp_repr	=3D (reprfunc)pyrf_comm_event__repr,
->  };
-
-It looks like .tp_dealloc and .tp_new are not initialized for
-pyrf_comm_event__type or pyrf_read_event__type in this patch.
-
-Since pyrf_event__new() now unconditionally calls evsel__parse_sample(),
-which populates the sample and grabs an evsel reference, will this leak
-memory and evsel references when the Python garbage collector cleans up
-COMM and READ events?
-
-[ ... ]
-> @@ -373,6 +428,199 @@ get_tracepoint_field(struct pyrf_event *pevent, PyO=
-bject *attr_name)
->  }
->  #endif /* HAVE_LIBTRACEEVENT */
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 3015b9b4b4da..9b16d832810f 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3235,7 +3235,7 @@ int evsel__parse_sample(struct evsel *evsel, union =
+perf_event *event,
+>  	union u64_swap u;
 > =20
-> +static int pyrf_sample_event__resolve_al(struct pyrf_event *pevent)
-> +{
-[ ... ]
-> +static PyObject *pyrf_sample_event__get_dso(struct pyrf_event *pevent,
-> +					    void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__name(map__dso(pevent->al.map)));
-> +}
+>  	perf_sample__init(data, /*all=3D*/true);
+> -	data->evsel =3D evsel;
+> +	data->evsel =3D evsel__get(evsel);
 
-Is it possible for map__dso(pevent->al.map) to return a NULL pointer here?
+Will this leak the evsel reference for non-SAMPLE event types in the Python
+bindings?
 
-If a map doesn't have an associated DSO, passing it directly to dso__name(),
-dso__long_name(), or dso__bid() could cause a segmentation fault. I notice
-that pyrf_sample_event__srccode() safely checks if the DSO exists before
-using it:
+In tools/perf/util/python.c, pyrf_evlist__read_on_cpu() calls
+evsel__parse_sample() for all event types read from the ring buffer. This n=
+ow
+unconditionally acquires an evsel reference.
 
-	if (al.map) {
-		struct dso *dso =3D map__dso(al.map);
+However, pyrf_event__setup_types() only registers the custom destructor
+pyrf_sample_event__delete() (which calls perf_sample__exit() to drop the
+reference) for pyrf_sample_event__type. Other event types fall back to the
+default deallocator, bypassing perf_sample__exit(). When these objects are
+garbage collected, the evsel reference appears to be permanently leaked.
 
-		if (dso) {
-			srcfile =3D get_srcline_split(dso, ...);
+I see this regression was fixed later in the series in commit 1daefbea296a4=
+7c
+("perf python: Refactor and add accessors to sample event"), but wanted
+to confirm the behavior introduced here.
 
-Would it make sense to add a similar check to these getters?
+Could this also cause an evsel reference leak for deferred callchains?
 
-> +
-> +static PyObject *pyrf_sample_event__get_dso_long_name(struct pyrf_event =
-*pevent,
-> +						      void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__long_name(map__dso(pevent->al.map)));
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_dso_bid(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	char sbuild_id[SBUILD_ID_SIZE];
-> +
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	build_id__snprintf(dso__bid(map__dso(pevent->al.map)), sbuild_id, sizeo=
-f(sbuild_id));
-> +	return PyUnicode_FromString(sbuild_id);
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_start(struct pyrf_event *pev=
-ent,
-> +						  void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__start(pevent->al.map));
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_end(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__end(pevent->al.map));
-> +}
+In tools/perf/util/session.c, both evlist__deliver_deferred_callchain() and
+session__flush_deferred_samples() process deferred samples by calling
+evlist__parse_sample(), which internally calls evsel__parse_sample(),
+acquiring the reference here.
 
-Since map__start() and map__end() return 64-bit unsigned integers (u64)
-to handle 64-bit virtual addresses via PAE, does passing them to
-PyLong_FromUnsignedLong() truncate the addresses on 32-bit architectures?
+Immediately after, both functions execute:
 
-Would it be safer to use PyLong_FromUnsignedLongLong() here, similar to
-how map__pgoff() and the symbol boundaries are handled?
+    sample.evsel =3D evlist__id2evsel(evlist, sample.id);
+    if (sample.evsel)
+        sample.evsel =3D evsel__get(sample.evsel);
 
-[ ... ]
-> @@ -504,19 +838,30 @@ static PyObject *pyrf_event__new(const union perf_e=
-vent *event)
->  		return NULL;
->  	}
-> =20
-> -	// FIXME this better be dynamic or we need to parse everything
-> -	// before calling perf_mmap__consume(), including tracepoint fields.
-> -	if (sizeof(pevent->event) < event->header.size) {
-> -		PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %u",
-> -			     sizeof(pevent->event), event->header.size);
-> -		return NULL;
-> -	}
-> -
->  	ptype =3D pyrf_event__type[event->header.type];
-> -	pevent =3D PyObject_New(struct pyrf_event, ptype);
-> -	if (pevent !=3D NULL) {
-> -		memcpy(&pevent->event, event, event->header.size);
-> -		perf_sample__init(&pevent->sample, /*all=3D*/false);
-> +
-> +	/* Allocate just enough memory for the size of event. */
-> +	size =3D offsetof(struct pyrf_event, event) + event->header.size;
-> +	pevent =3D (struct pyrf_event *)PyObject_Malloc(size);
-> +	if (pevent =3D=3D NULL)
-> +		return PyErr_NoMemory();
-> +
-> +	/* Copy the event for memory safety and initilaize variables. */
-> +	PyObject_Init((PyObject *)pevent, ptype);
+Does this overwrite the non-NULL sample.evsel pointer without dropping the
+original reference, and then increment the reference count a second time?
 
-The code allocates a variable amount of memory based on event->header.size,
-but the Python types (like pyrf_mmap_event__type) declare their size
-statically with .tp_basicsize =3D sizeof(struct pyrf_event).
+If so, perf_sample__exit() will only drop one reference, permanently leaking
+the first one for every deferred sample.
 
-Is it valid in the Python C API to allocate a smaller buffer than what is
-defined in .tp_basicsize?
-
-If a malformed file provides an intentionally small header.size, could
-this lead to out-of-bounds heap accesses? The PyMemberDef structures use
-fixed offsets (like offsetof(struct perf_record_mmap, filename)), so if
-Python scripts access these properties, they might blindly read or write
-past the end of the undersized allocation.
+>  	data->cpu =3D data->pid =3D data->tid =3D -1;
+>  	data->stream_id =3D data->id =3D data->time =3D -1ULL;
+>  	data->period =3D evsel->core.attr.sample_period;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D17
+152-1-irogers@google.com?part=3D13
