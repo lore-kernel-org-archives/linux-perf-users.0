@@ -1,155 +1,208 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677FA38F65F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C18A38F92F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777159028; cv=none; b=GDu00Dxcg0rdp/E1nK8RkbrgvZmQ/DrsbrB5KmcaJ6Ro98zok0iDnXZMWAHdCYOc6NA7Oyx13KJPcaI4x30W9RcX4/6YXFR6jr0oQLAOQQg5koyGqu+C3FeWq821ximlK5Yxhkmt9/V9EulhTYkWstikeOezrXDoGSBIbW8me3Y=
+	t=1777159086; cv=none; b=WBfJ2xVONVP7v5k936KaUkdybZv1tKaHEJhmMMneC9m0ZqYdIIVBdnVzFYoEuWv6TVQ4M0LufaOyMPDcdqlGaMsvpaZZZBZ5e1j3N8VCdGGxjeCYKkEhDQbG/qZw2tMSPDimyQj3zAc5eSTLytcqW93sxhTeEFiNxlYcjTmIF+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777159028; c=relaxed/simple;
-	bh=1g1ZET6dWAA9EaW6A7utZ+G5qALrqQRo5K7DWL0wyww=;
+	s=arc-20240116; t=1777159086; c=relaxed/simple;
+	bh=7sKKXYpFT7lWUAdn2v8DBW8+86G3usPSaF4tLkjspUc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=J3xQfRT1qXBWJkqXu1XQQZ1Ytjxx8GOFfML4LuxLTJ3b3VzJ2kC/+eAFFPJvqb5dfytykvz7/BqMs3lxXIEasvA7hc82Bvl+sf6yqzv8oPb+0kpaKYJ3qlKb2sHXOqZvJMltQkK2YvLu3VuJ2gVTNPRVFUyi3h8Uspc0olStf/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEHLCLGb; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=tayGbqvORnKJ6QcsLoPkJa2fxBFbfCn0YQ/P29fsfLtaeZP2ef3FoZG9i33TbSSH3nNi0UwBsoe6agl6IJB8rs1zmZTmtClkKLbXwIYFIl0VnE5slxY7/FnBTvnxTlCeLyy3gizdwitdLLNHw8TVAQse1HSEIInwS8sxTr1ihtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ/y07H7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEHLCLGb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2CD0C2BCB0;
-	Sat, 25 Apr 2026 23:17:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ/y07H7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF7FC2BCB0;
+	Sat, 25 Apr 2026 23:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777159028;
-	bh=1g1ZET6dWAA9EaW6A7utZ+G5qALrqQRo5K7DWL0wyww=;
+	s=k20201202; t=1777159086;
+	bh=7sKKXYpFT7lWUAdn2v8DBW8+86G3usPSaF4tLkjspUc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=TEHLCLGb1o1RpbDGZHW9g1XoAvdbSNuR1FbuQ3dcPc0BKGERlhfdk4k2OmBDoDWLz
-	 qweaXLqrGOkC0HdyrPgGy73gvPQxU5Vv7iYtp3Hj9piBZkzGXrNAT5/fYdb1NOusBh
-	 vjK5I44ZstKpFewbzBEm+m2z2WTTJ1di+4n8vEcmQSJdI2TScTc4cLRuQ9AcZl+Sr0
-	 xUQln4bcY8NggbI34jnPCbEJT45OAC8O6OIVSuaq9F1QO6OvXDMlv11HHnlzJmM4Ps
-	 Gqi8TSADd/wC6TAgEVnVR2RGVPrstm4bBBxW3gfbF9fl1vB6/r+ecLw4uODY/pptrQ
-	 NQdjzV6q00O4w==
+	b=dQ/y07H78+tdGThhjI/JDQLckhl7Z+SqeDwLs//ZFPaEfMuFgNWdHHrfRXd7oJdtX
+	 HD+7FXCUWpQSvw62PWYOgae05KHwYDCrm0VnCVlv8henZU/yrsgbnjvzi0a4/pt7yv
+	 /limYkhtIDrKiAD7y+5TNlxMMJe97tvEENuBIPZBodINdTGhhGuY5jW+Lba1vozdtu
+	 jcxvciwdLd3k/jDoFt230ZltpOLAScJihdimTuGidjWLaQqo2sm6eNJ4WaDTyc2QGf
+	 igoWmGyVWyl60DQmKibC8lCx2XFBc7orNO8d8SlZ6GOM4jGOSW6z3eUuAvp/b647OM
+	 gvtnahLN+wWEA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 10/59] perf evlist: Add reference count
+Subject: Re: [PATCH v7 11/59] perf evsel: Add reference count
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-11-irogers@google.com>
-References: <20260425224951.174663-11-irogers@google.com>
+In-Reply-To: <20260425224951.174663-12-irogers@google.com>
+References: <20260425224951.174663-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:17:07 +0000
-Message-Id: <20260425231707.F2CD0C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:18:05 +0000
+Message-Id: <20260425231805.CCF7FC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Invalid free and heap corruption during garbage collection of Pyth=
-on evlist objects.
-- [High] Semantic breakage of `evlist[i]` and potential heap corruption via=
- `evsel__clone()`.
+Sashiko AI review found 5 potential issue(s):
+- [Critical] `pyrf_evlist__add` blindly casts arbitrary Python objects, all=
+owing type confusion and arbitrary memory writes.
+- [High] Premature `evsel__put()` on a borrowed pointer in `evlist__deliver=
+_deferred_callchain()` causes a use-after-free.
+- [High] Uninitialized Python `perf.evsel` objects bypass `tp_getattro` pro=
+tection, causing NULL pointer dereferences.
+- [High] Early deallocation of `pyrf_event` passes uninitialized memory to =
+`perf_sample__exit()`, risking a crash.
+- [Medium] Python wrapper leaks `evsel` reference counts for non-sample eve=
+nts.
 --
 
-commit e33440fbca0408414cb97b8a9d0bb28896b24bf7
+commit 29b017250bae114f17460d0bc6b4902994eeb29d
 Author: Ian Rogers <irogers@google.com>
 
-perf evlist: Add reference count
+perf evsel: Add reference count
 
-This commit introduces reference counting for struct evlist to aid in
-lifecycle management, especially for the Python bindings. It replaces
-evlist__delete() with evlist__put(), which decrements the reference
-count and cleans up the object when the count drops to zero.
+This commit adds reference counting to evsel to prevent assertion failures
+in the Python code when events are cloned. It initializes the reference cou=
+nt
+to 1 at allocation and decrements it on deletion. Getset functions are added
+for the evsel members so the Python API remains unchanged.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-> @@ -1285,15 +1285,22 @@ static int pyrf_evlist__init(struct pyrf_evlist *=
-pevlist,
 [ ... ]
->  static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
->  {
-> -	evlist__exit(&pevlist->evlist);
-> +	evlist__put(pevlist->evlist);
->  	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
+> @@ -506,8 +507,10 @@ static PyObject *pyrf_event__new(const union perf_ev=
+ent *event)
+> =20
+>  	ptype =3D pyrf_event__type[event->header.type];
+>  	pevent =3D PyObject_New(struct pyrf_event, ptype);
+> -	if (pevent !=3D NULL)
+> +	if (pevent !=3D NULL) {
+>  		memcpy(&pevent->event, event, event->header.size);
+> +		pevent->evsel =3D NULL;
+> +	}
+>  	return (PyObject *)pevent;
 >  }
 
-Can this lead to an invalid free during garbage collection?
+Does this pass uninitialized memory to perf_sample__exit()?
 
-When evlist__put() drops the reference count to zero, it calls
-evlist__purge(), which iterates over the events and calls
-evsel__delete(). evsel__delete() unconditionally calls free(evsel).
+When pyrf_event__new() creates a new object, pevent->sample is left
+uninitialized. If event parsing fails shortly after creation, the object
+is deallocated:
 
-However, for events added via the Python API (evlist.add()), the evsel
-pointer passed to the C evlist is an interior pointer embedded directly
-within the Python pyrf_evsel object (set up via
-evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;). Calling free() on this
-interior pointer would cause heap corruption.
-
-I notice this issue is resolved in a subsequent commit "perf evsel: Add
-reference count", which dynamically allocates evsel and implements proper
-reference counting.
-
-[ ... ]
-> @@ -1786,7 +1793,23 @@ static Py_ssize_t pyrf_evlist__length(PyObject *ob=
-j)
+>  static void pyrf_sample_event__delete(struct pyrf_event *pevent)
 >  {
+> +	evsel__put(pevent->evsel);
+>  	perf_sample__exit(&pevent->sample);
+>  	Py_TYPE(pevent)->tp_free((PyObject*)pevent);
+>  }
+
+Calling perf_sample__exit() on garbage memory will attempt to free invalid
+pointers, such as zfree(&sample->user_regs).
+
+I see this was fixed later in the patch series (perf python: Use evsel
+in sample in pyrf_event) by adding perf_sample__init(&pevent->sample, false)
+to the initialization, but I wanted to mention it here.
+
 [ ... ]
-> +static PyObject *pyrf_evsel__from_evsel(struct evsel *evsel)
+> +static PyObject *pyrf_evsel__str(PyObject *self)
 > +{
-> +	struct pyrf_evsel *pevsel =3D PyObject_New(struct pyrf_evsel, &pyrf_evs=
-el__type);
+> +	struct pyrf_evsel *pevsel =3D (void *)self;
+> +	struct evsel *evsel =3D pevsel->evsel;
 > +
-> +	if (!pevsel)
-> +		return NULL;
-> +
-> +	memset(&pevsel->evsel, 0, sizeof(pevsel->evsel));
-> +	evsel__init(&pevsel->evsel, &evsel->core.attr, evsel->core.idx);
-> +
-> +	evsel__clone(&pevsel->evsel, evsel);
-> +	if (evsel__is_group_leader(evsel))
-> +		evsel__set_leader(&pevsel->evsel, &pevsel->evsel);
-> +	return (PyObject *)pevsel;
->  }
-> =20
->  static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
-> @@ -1794,17 +1817,16 @@ static PyObject *pyrf_evlist__item(PyObject *obj,=
- Py_ssize_t i)
->  	struct pyrf_evlist *pevlist =3D (void *)obj;
->  	struct evsel *pos;
-> =20
-> -	if (i >=3D pevlist->evlist.core.nr_entries) {
-> +	if (i >=3D pevlist->evlist->core.nr_entries) {
->  		PyErr_SetString(PyExc_IndexError, "Index out of range");
+> +	return PyUnicode_FromFormat("evsel(%s/%s/)", evsel__pmu_name(evsel), ev=
+sel__name(evsel));
+> +}
+
+Could an uninitialized perf.evsel object cause a NULL pointer dereference
+here?
+
+The patch adds a tp_getattro handler to protect against uninitialized
+objects (where pevsel->evsel is NULL). However, tp_getattro only intercepts
+attribute reads.
+
+Direct method calls like str(e) or repr(e) invoke tp_str, which passes the
+NULL pointer directly to evsel__pmu_name(), leading to a segmentation fault.
+Similarly, property setters (like e.tracking =3D True) use the C setters
+directly, bypassing tp_getattro and dereferencing the NULL pointer.
+
+[ ... ]
+> @@ -1566,9 +1738,9 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlis=
+t *pevlist,
 >  		return NULL;
->  	}
 > =20
-> -	evlist__for_each_entry(&pevlist->evlist, pos) {
-> +	evlist__for_each_entry(pevlist->evlist, pos) {
->  		if (i-- =3D=3D 0)
->  			break;
->  	}
-> -
-> -	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
-> +	return pyrf_evsel__from_evsel(pos);
+>  	Py_INCREF(pevsel);
+> -	evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;
+> +	evsel =3D ((struct pyrf_evsel *)pevsel)->evsel;
+>  	evsel->core.idx =3D evlist->core.nr_entries;
+> -	evlist__add(evlist, evsel);
+> +	evlist__add(evlist, evsel__get(evsel));
+> =20
+>  	return Py_BuildValue("i", evlist->core.nr_entries);
 >  }
 
-Does returning a clone of the evsel instead of the original object break
-the semantics of evlist[i]?
+Can this lead to an arbitrary memory write if a Python user passes the wrong
+object type?
 
-Python scripts that rely on retrieving and modifying an event inside an
-evlist (for example, evsel =3D evlist[0]; evsel.sample_freq =3D 100) will n=
-ow
-modify the ephemeral clone, leaving the original event untouched.
+PyArg_ParseTuple(args, "O", &pevsel) accepts any Python object without
+checking if it is actually a pyrf_evsel. It is then blindly cast to
+struct pyrf_evsel *, and its evsel pointer is dereferenced to write the
+index.
 
-Additionally, if evsel__clone() fails internally, its error path calls
-evsel__delete(dest) on the provided pointer. Since dest here points to
-the interior evsel embedded in the Python object, this would trigger an
-invalid free and corrupt the heap.
+While this type confusion existed before this patch, changing it from an
+address-of operator to a direct pointer dereference turns it into an
+arbitrary memory write. Should this use "O!" with &pyrf_evsel__type to
+enforce type safety?
 
-This semantic breakage and heap corruption issue is also fixed in the
-subsequent commit "perf evsel: Add reference count", which removes this
-cloning workaround.
+[ ... ]
+> @@ -1626,7 +1798,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct py=
+rf_evlist *pevlist,
+>  			return Py_None;
+>  		}
+> =20
+> -		pevent->evsel =3D evsel;
+> +		pevent->evsel =3D evsel__get(evsel);
+> =20
+>  		perf_mmap__consume(&md->core);
+
+Does this leak reference counts for non-sample events?
+
+Here, evsel__get() is called for all parsed events. However, only
+pyrf_sample_event__type overrides the destructor to call evsel__put():
+
+>  static void pyrf_sample_event__delete(struct pyrf_event *pevent)
+>  {
+> +	evsel__put(pevent->evsel);
+>  	perf_sample__exit(&pevent->sample);
+>  	Py_TYPE(pevent)->tp_free((PyObject*)pevent);
+>  }
+
+Other event types (like mmap or comm) fall back to the default deallocator,
+meaning their evsel reference counts are never decremented.
+
+I note this is addressed in subsequent commits by unifying the event
+destructors, but wanted to bring it up.
+
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+[ ... ]
+> @@ -1373,6 +1373,7 @@ static int evlist__deliver_deferred_callchain(struc=
+t evlist *evlist,
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+>  		ret =3D tool->callchain_deferred(tool, event, sample,
+>  					       sample->evsel, machine);
+> +		evsel__put(sample->evsel);
+>  		sample->evsel =3D saved_evsel;
+>  		return ret;
+>  	}
+
+Does this cause a use-after-free? evlist__id2evsel() returns a borrowed
+pointer to the evsel without incrementing its reference count. Calling
+evsel__put() here drops the reference count incorrectly.
+
+I see this was fixed later in the patch series (in perf python: Use evsel
+in sample in pyrf_event) by adding the missing evsel__get(), but I am
+pointing it out for completeness.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D10
+63-1-irogers@google.com?part=3D11
