@@ -1,159 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101D9183CC3
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EC1183CC3
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:06:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158415; cv=none; b=c7CBkCbdCq2SJ447RwKrS7i+66pb9IpvhfeC46QuLRCdSFS8H/KqY4EAaX/U4GeANa9/tZCmYf8/ZcQj/hBBxQku8IGR55zSNCgIS9ZCM4tIwlYCytE/3jvV/eRNWdx5qUZMt7CS6jpHbhrXX46eK/tFh9V9dyO45TwPKLyU3Uo=
+	t=1777158415; cv=none; b=csZ0WQaWy5MLrlipcxPCa1AMqDKDqKQE6C4Txe1LGPssjFVFbXkF4987QCDrpMEzzE8TbwnRvYtFWy4gDadENC5DTJHRV+iHhjN/OPFNo7/httNkmREd/L616B5kE7YUUfOJygbsp9e1YORIhDH1IlD38/Jq4/BLj/CER1u/7FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777158415; c=relaxed/simple;
-	bh=b6p5QyAuZuwKggwsYUuptBzd5nM1ZAysP+/audmHxmw=;
+	bh=H4damUE7CCz1ChANrgakId1KXcY5y8zIJ6ip9/H5Zzc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BWVXXbeSagTx2Uj/x2Xee+yvL0t0X4gOEcGU0EZr2clKpl1fdhMvMAztU6zBw+1acMRaPadWhQrG70u3pqPd85Oilq6S7vrYyKvs43QoPCVrzZAyQ0K4zIXAzxFHWq5ghfRSgQtPRn064XBUq6EPk7EvcA5mY8UUOaC4aGKSegI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWqJIUn8; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ca2AVhGJX2IgU+pXbyheU0+iFMGEX0t+6LB/yZMtt/9/oNl+Bo9M/DLUvjmnW09jgzJepwyiSn/Wnh4GZMs9GIfIo3MnSM54qgrIG23va4bvKJOxXuem7vpa+U4hGXO0kguLKDCZ87jgzBP6MCmFx/OEx+I5MqLYY5JkT5YI7nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQ1thTca; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWqJIUn8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 920E2C2BCB0;
-	Sat, 25 Apr 2026 23:06:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ1thTca"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41398C2BCB0;
+	Sat, 25 Apr 2026 23:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158414;
-	bh=b6p5QyAuZuwKggwsYUuptBzd5nM1ZAysP+/audmHxmw=;
+	s=k20201202; t=1777158415;
+	bh=H4damUE7CCz1ChANrgakId1KXcY5y8zIJ6ip9/H5Zzc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=WWqJIUn8nXZ04mdRkDmiua578veY+0ismrCYU3T+P9nZgy0VmNeAhHk3nvYTC9Sc/
-	 ZMTDeq8rWnEMkK9Wndhp2M1UCMD54HjrxOT2evFY6i1lVVNl6Kr54H6y0UZ2RW49tL
-	 0lKwE6f3mzrfeZjfGIA2Do+w3KSqaIOZD6sQz+VbBFIsMSI673ZDa6xH2KhMQm5wLt
-	 Pf6fW4ZAMGw2pFfvkf2VKV/LI7zRNf33xF6huZXCRjGGuCEw3ltwBN9AwMZ+XvFSYD
-	 FuczX3T8r0H8ywX+YqwX/Vxk/W8DDTaWMTKDKVPJqFMqMW4dD7xSe5BVkiCctC+z8U
-	 s4qnPTJR+Getw==
+	b=PQ1thTca6x3Q47kUAvcRzvL82KKPcDA/Ok51QS6xQqkqvis2CVwnkt7hoyM3E+HKS
+	 9KsCsKku87BqXzzoTc98wRMAyvIUGkKJHzQRlEWv84SLFpKtBkAhcKiuSs/mIIIHtn
+	 Dq9hENVuraKDVuFPLZ9cWiQbGufY8vjgDl8sKdARWEw2LGT9QJkGJRLy+J9grOaRMf
+	 HOCwJPTUGt/uHg/XoMkPmgVJZ6Zu1yW8t8TH1Jf9jW3VjUw1voamwW/0mX9DNPxXEm
+	 FF4vuA5HXsBDoI3zHL+PtHW6pRaYmxzzzSHhCG95qfboqYaW0WZEUuoebQJfBqKKuj
+	 +Ag3AE716MqLg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 31/59] perf gecko: Port gecko to use python module
+Subject: Re: [PATCH v7 38/59] perf failed-syscalls-by-pid: Port
+ failed-syscalls-by-pid to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-32-irogers@google.com>
-References: <20260425224951.174663-32-irogers@google.com>
+In-Reply-To: <20260425224951.174663-39-irogers@google.com>
+References: <20260425224951.174663-39-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Sat, 25 Apr 2026 23:06:54 +0000
-Message-Id: <20260425230654.920E2C2BCB0@smtp.kernel.org>
+Message-Id: <20260425230655.41398C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 4 potential issue(s):
-- [Medium] Unchecked return value from `self.session.process_events()` mask=
-s processing errors.
-- [Medium] Generated profiler URL is not printed, breaking usage on headles=
-s environments.
-- [Medium] Local HTTP server uses a predictable filename, allowing local in=
-formation disclosure.
-- [Low] Unreachable `except AttributeError:` block in `process_event`.
+Sashiko AI review found 3 potential issue(s):
+- [High] The script aborts event processing prematurely if `perf.session.fi=
+nd_thread()` fails to find a thread.
+- [High] The script crashes with a TypeError during summary sorting if a th=
+read's command string is missing.
+- [Medium] The script fails to group errors by system call and loses freque=
+ncy-based sorting, directly contradicting the commit message.
 --
 
-commit 280d1922588c70d042653eee3d46f2293162d4af
+commit 0c01206d74ebfd6bae49fe56d591c99446342a80
 Author: Ian Rogers <irogers@google.com>
 
-perf gecko: Port gecko to use python module
-
-This commit ports the gecko script to use the perf Python module directly.
-It replaces perf script callbacks with direct event processing to avoid
-creating intermediate dictionaries and improve execution speed.
-
-> diff --git a/tools/perf/python/gecko.py b/tools/perf/python/gecko.py
-> new file mode 100755
-> index 000000000000..01e9052f225e
-> --- /dev/null
-> +++ b/tools/perf/python/gecko.py
-
-[ ... ]
-
-> +    def process_event(self, sample) -> None:
-
-[ ... ]
-
-> +        else:
-> +            # Fallback if no callchain is present
-> +            try:
-> +                # If the perf module exposes symbol/dso directly on samp=
+perf failed-syscalls-by-pid: Port failed-syscalls-by-pid to use python modu=
 le
-> +                # when callchain is missing, we use them.
-> +                symbol =3D getattr(sample, 'symbol', '[unknown]') or '[u=
-nknown]'
-> +                dso =3D getattr(sample, 'dso', '[unknown]') or '[unknown=
-]'
-> +                stack.append(f"{symbol} (in {dso})")
-> +            except AttributeError:
-> +                stack.append("[unknown] (in [unknown])")
 
-Because getattr is called with a default value like '[unknown]', it returns
-that default instead of raising an AttributeError when the attribute is
-missing. Does this make the try/except construct unnecessary and the except
-block unreachable code?
+This commit ports the failed-syscalls-by-pid script to use the new perf Pyt=
+hon
+module API. It updates syscall name resolution, error code strings, and adds
+filtering by COMM or PID.
+
+>     - Used standard collections.defaultdict for nested statistics
+>       aggregation.
+
+Does the implementation actually use nested statistics aggregation as descr=
+ibed
+in the commit message?
+
+Looking at the initialization of self.syscalls, it is defined as a flat
+dictionary with a 4-tuple key: (comm, pid, syscall_id, ret).
+
+Linear iteration over these flattened keys prints redundant syscall headers=
+ for
+each distinct error code of a single syscall, instead of grouping them. This
+flat structure also breaks the frequency-based sorting of error codes by co=
+unt.
+
+> diff --git a/tools/perf/python/failed-syscalls-by-pid.py b/tools/perf/pyt=
+hon/failed-syscalls-by-pid.py
+> new file mode 100755
+> index 000000000000..eecd553cbf8f
+> --- /dev/null
+> +++ b/tools/perf/python/failed-syscalls-by-pid.py
+[ ... ]
+> +    def process_event(self, sample: perf.sample_event) -> None:
+> +        """Process a single sample event."""
+> +        event_name =3D str(sample.evsel)
+> +        if "sys_exit" not in event_name:
+> +            return
+> +
+> +        pid =3D sample.sample_pid
+> +        if hasattr(self, 'session') and self.session:
+> +            comm =3D self.session.find_thread(pid).comm()
+
+Can this cause a regression where the event loop aborts prematurely?
+
+If find_thread() fails to find a thread, the underlying C extension raises a
+TypeError.
+
+Without a try-except block here, this exception propagates back to the C ca=
+ller
+and causes process_events() to abort the entire event loop, stopping the tr=
+ace
+processing instead of gracefully defaulting to 'Unknown'.
 
 [ ... ]
-
-> +    def run(self) -> None:
-> +        """Run the conversion process."""
-> +        input_file =3D self.args.input or "perf.data"
-> +        if not os.path.exists(input_file):
-> +            print(f"Error: {input_file} not found.", file=3Dsys.stderr)
-> +            sys.exit(1)
-> +
-> +        try:
-> +            self.session =3D perf.session(perf.data(input_file), sample=
-=3Dself.process_event)
-> +        except Exception as e:
-> +            print(f"Error opening session: {e}", file=3Dsys.stderr)
-> +            sys.exit(1)
-> +
-> +        self.session.process_events()
-
-Is the return value of process_events() intentionally ignored?
-
-If the underlying perf_session__process_events C function fails due to a
-corrupted perf.data file or a parsing error, will this script silently
-continue and generate an incomplete profile without notifying the user?
-
+> +    def print_summary(self) -> None:
+> +        """Print aggregated statistics."""
 [ ... ]
-
-> +    def _write_and_launch(self, profile: Dict) -> None:
-> +        """Write the profile to a file and launch the Firefox profiler."=
-""
-> +        print("Starting Firefox Profiler on your default browser...")
+> +        print(f"{'comm [pid]':<30}  {'count':>10}")
+> +        print(f"{'-' * 30:<30}  {'-' * 10:>10}")
 > +
-> +        with tempfile.TemporaryDirectory() as tmp_dir_name:
-> +            filename =3D os.path.join(tmp_dir_name, 'gecko_profile.json')
+> +        sorted_keys =3D sorted(self.syscalls.keys(), key=3Dlambda k: (k[=
+0], k[1], k[2]))
 
-Serving a predictable filename like gecko_profile.json on localhost could
-allow another local user to quickly port scan and download the profile data,
-which contains process names and memory trace data.
+Could this trigger a TypeError crash regression during summary generation?
 
-Could this use a randomly generated token in the filename to prevent local
-data leaks?
+The thread command extension can return None if a thread lacks a command st=
+ring.
+This None value is then used as the first element in the tuple key for
+self.syscalls.
 
-> +
-> +            with open(filename, 'w', encoding=3D'utf-8') as f:
-> +                json.dump(profile, f, indent=3D2)
-
-[ ... ]
-
-> +            # Open the browser
-> +            safe_string =3D urllib.parse.quote_plus(f'http://127.0.0.1:{=
-port}/gecko_profile.json')
-> +            url =3D f'https://profiler.firefox.com/from-url/{safe_string=
-}'
-> +            webbrowser.open(url)
-
-In headless environments or remote SSH sessions, webbrowser.open(url) fails
-and returns False.
-
-Because this return value is ignored and the target url is never printed to
-standard output, how can users on headless servers discover the dynamically
-assigned port and correct url to access their profile?
+During this sort operation, Python 3 will raise a TypeError when attempting=
+ to
+compare None with a string, which happens in normal traces.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D31
+63-1-irogers@google.com?part=3D38
