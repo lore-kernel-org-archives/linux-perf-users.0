@@ -1,136 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADFC314D26
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447803203A0
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158892; cv=none; b=kq27Z0/zEpQSwYePwDH+ji4RcBe1JK/AEpR8IiypvDLeQ/3j9vQFG9EtVc3IRRIK0/Er2zYLVQwnR1bkMU1bgExrGJr5hlMfYgSpb9RKl2qsItFAja8Mts+uYQFE9sKudXzjHBPMzz3NybU1NcE0qE0s1NAPc7PRQL77mxtIn3M=
+	t=1777158903; cv=none; b=kCn8/QLlXMJd2oUdQJchMO8CFppqQYaLHifWtcupvsOMflX/dhTFKlLLu5R+GLRml5Xrf7YMkMTwlwn1XvSFWEwaNTqg7GbL3i33Oebmbt+JDlXkW+ORB0NrZWo2dOpOjGtZhXDrZ2plY9Xy2Y3g+tHYS/uU7e73BxpA35A8Zd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158892; c=relaxed/simple;
-	bh=n44a8ha14sbHmdSZfiYP6ALs+vlLAXCGE9+4y0AnIOo=;
+	s=arc-20240116; t=1777158903; c=relaxed/simple;
+	bh=QnKCOmgiAuwEHpgmwnYvn7F+BvsqpwvNSGMXl/3SxDs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OyMJCkksrFkozYdztDA85pAAlgLHpuoG3P36p7+UqrfXDwFbSdfT+HMo9ffvexvTGvj7plafx+GxOoV/thv6DsTinROFNNBtm4ehyom9Ku5Vo7TmhYp30vJIEMADEhPIz7hMVnfTUQx8gQNJ5IGV4jisqPjH0RpzPls8XKpBynU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIHyaN6e; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=scIC9TEmPBx2r3RbVZyI2Agg/wODcEqa4KlHtG1MES6M194gQFz3yFafBiWhBQlGTExKk/issPN1vNaIqoABhrha1UpVtc7VrLGEYoFeA3AVF3WZntQtdAyXFAPJ8fLDK740c1GnnyGFKtF7zA31eRQD705b4k6Qh4OCFVF/vqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PMTSkdJD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIHyaN6e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F127C2BCB0;
-	Sat, 25 Apr 2026 23:14:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PMTSkdJD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAAC4C2BCB0;
+	Sat, 25 Apr 2026 23:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158892;
-	bh=n44a8ha14sbHmdSZfiYP6ALs+vlLAXCGE9+4y0AnIOo=;
+	s=k20201202; t=1777158902;
+	bh=QnKCOmgiAuwEHpgmwnYvn7F+BvsqpwvNSGMXl/3SxDs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=iIHyaN6e+mvFBBaTLK0AM1BbyyfW+bjtICA7Bp48/V1w+W0GWGdQe5T0T4i/YZ1rp
-	 JOadCdffJA4TRJNDy88/v14QGvlwRKlgaqF2jU8O6Tgf255WAMVV4ukHVb7+qtArR7
-	 tXc5dJaUNVLbkO8OD8ZMh8lKFHwzMtQAAQOiL8SuYWu5mZfV2rlOVMPF5sYzzRtoqV
-	 142l/Y58wornX9CaYaAcLBUqM8CdmZeb5YHxh5f5XWOIC179Zg38T+Hcleom8BDwzv
-	 zru/qkMjRUggS0TYYOQf2LLYfD4p1Lml2gW8GDwUQz1jevufI8tID7PevpMzp+udCN
-	 wY9lutUcUkWXQ==
+	b=PMTSkdJDeqTNJoCJV4xjs/Jc2LQHsVAnv2ImGD+mfT7PHkxizfVwulu/YXofJiLPc
+	 0gxC2GAOy9diHOIX8uCrFWVbd0fhdDgEFkafW0pGNFu/15svcnpk6148UnjNxT6mPf
+	 Qqljq80chpsKBPcw3e19aWlRBpFQoMVa1ggoZvJH9ADbjyyPxOF27mQhNb0w46szMZ
+	 WTx3ao4RCPAcHtNdsukti5RrY+JkC41687W7QtZJBhHNzDBvIntGWtAQDYF6Drrw22
+	 07uIvurhZkeeZmlp19m185mKZRD5bwaNmQMAmn8Aw26K+jmV5onmTYvgG8A3LWlh6I
+	 gWwLDJs51TZCg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 52/59] perf test: Migrate Intel PT virtual LBR test
- to use Python API
+Subject: Re: [PATCH v7 20/59] perf python: Extend API for stat events in
+ python.c
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-53-irogers@google.com>
-References: <20260425224951.174663-53-irogers@google.com>
+In-Reply-To: <20260425224951.174663-21-irogers@google.com>
+References: <20260425224951.174663-21-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:14:51 +0000
-Message-Id: <20260425231452.0F127C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:15:02 +0000
+Message-Id: <20260425231502.CAAC4C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] The test fails instead of gracefully skipping when perf is compi=
-led without Python support.
-- [Medium] Hardcoded module path in `perf_brstack_max.py` breaks out-of-tre=
-e builds and installed test executions.
+Sashiko AI review found 4 potential issue(s):
+- [High] Unhandled Python exception leak in `pyrf_session_tool__stat_round`=
+ causes interpreter crashes.
+- [High] Callback argument mismatch causes immediate `TypeError` in `STAT_R=
+OUND` events.
+- [Medium] Unreachable size checks for new event types in `pyrf_event__new`=
+ due to restrictive bounds check.
+- [Medium] Out-of-bounds read in `pyrf_session_tool__stat` before event siz=
+e validation.
 --
 
-commit 80b4743807670a643e81f4cb7853f698004da24d
+commit 33c7e886484e5f9d497ef1294d8391080e491f8c
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Migrate Intel PT virtual LBR test to use Python API
+perf python: Extend API for stat events in python.c
 
-This commit migrates the Intel PT virtual LBR test from using an inline
-ad-hoc python script to a dedicated Python script that utilizes the new
-brstack iterator API in the perf Python module.
+This commit adds stat information to the session and introduces callbacks f=
+or
+stat events in the perf python extension.
 
-> diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/=
-tests/shell/lib/perf_brstack_max.py
-> new file mode 100644
-> index 000000000000..bd1cdb463f28
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
-> @@ -0,0 +1,43 @@
-> +#!/usr/bin/python
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Determine the maximum size of branch stacks in a perf.data file.
-> +
-> +import argparse
-> +import sys
-> +
-> +import os
-> +
-> +script_dir =3D os.path.dirname(os.path.abspath(__file__))
-> +python_dir =3D os.path.abspath(os.path.join(script_dir, "../../../python=
-"))
-> +sys.path.insert(0, python_dir)
-> +
-> +import perf
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 5478561ca62c..17d0ee15336f 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+[ ... ]
+> @@ -1026,7 +1105,9 @@ static PyObject *pyrf_event__new(const union perf_e=
+vent *event, struct evsel *ev
+>  	if ((event->header.type < PERF_RECORD_MMAP ||
+>  	     event->header.type > PERF_RECORD_SAMPLE) &&
+>  	    !(event->header.type =3D=3D PERF_RECORD_SWITCH ||
+> -	      event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE)) {
+> +	      event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE ||
+> +	      event->header.type =3D=3D PERF_RECORD_STAT ||
+> +	      event->header.type =3D=3D PERF_RECORD_STAT_ROUND)) {
+>  		PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
+>  			     event->header.type);
+>  		return NULL;
+> @@ -1038,6 +1119,9 @@ static PyObject *pyrf_event__new(const union perf_e=
+vent *event, struct evsel *ev
+>  	case PERF_RECORD_MMAP:
+>  		min_size =3D sizeof(struct perf_record_mmap);
+>  		break;
+> +	case PERF_RECORD_MMAP2:
+> +		min_size =3D sizeof(struct perf_record_mmap2);
+> +		break;
 
-Will this hardcoded path cause the test to fail in out-of-tree builds or
-installed environments?
+Are the new switch cases reachable for events like PERF_RECORD_MMAP2 and
+PERF_RECORD_AUX?
 
-In out-of-tree builds (like make O=3D/tmp/build), the compiled perf.so
-extension resides in the build directory, not the source tree. Similarly,
-when running perf test from an installed location, this relative path
-won't point to the correct system installation path.
+The if condition at the start of the function restricts event->header.type =
+to
+be <=3D PERF_RECORD_SAMPLE, or one of a few explicitly allowed types like
+SWITCH or STAT.
 
-In both cases, import perf will fail and cause the test to crash.
+Since MMAP2 and other newly added types fall outside this whitelist, it see=
+ms
+they will be rejected early with a TypeError before reaching this switch
+statement.
 
 [ ... ]
+> @@ -3117,6 +3326,47 @@ static int pyrf_session_tool__sample(const struct =
+perf_tool *tool,
+>  	return 0;
+>  }
+> =20
+> +static int pyrf_session_tool__stat(const struct perf_tool *tool,
+> +				   struct perf_session *session,
+> +				   union perf_event *event)
+> +{
+> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
+n, tool);
+> +	struct evsel *evsel =3D evlist__id2evsel(session->evlist, event->stat.i=
+d);
 
-> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/s=
-hell/test_intel_pt.sh
-> index 8ee761f03c38..d711ecdf5be0 100755
-> --- a/tools/perf/tests/shell/test_intel_pt.sh
-> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+Does reading event->stat.id here bypass size bounds checking?
 
-[ ... ]
+This reads the event structure before passing it to pyrf_event__new(),
+which performs the size validation against min_size.
 
-> @@ -539,34 +538,20 @@ test_kernel_trace()
->  test_virtual_lbr()
->  {
->  	echo "--- Test virtual LBR ---"
-> -	# Check if python script is supported
-> -	libpython=3D$(perf version --build-options | grep python | grep -cv OFF)
-> -	if [ "${libpython}" !=3D "1" ] ; then
-> -		echo "SKIP: python scripting is not supported"
-> +	# shellcheck source=3Dlib/setup_python.sh
-> +	. "$(dirname "$0")"/lib/setup_python.sh
+If a truncated event is smaller than sizeof(struct perf_record_stat), will
+this read past the end of the event buffer?
+
+> +	PyObject *pyevent =3D pyrf_event__new(event, evsel, psession->session);
+> +	const char *name =3D evsel ? evsel__name(evsel) : "unknown";
+> +	PyObject *ret;
 > +
-> +	if [ -z "$PYTHON" ] ; then
-> +		echo "SKIP: Python not found"
->  		return 2
->  	fi
+> +	if (pyevent =3D=3D NULL)
+> +		return -ENOMEM;
+> +
+> +	ret =3D PyObject_CallFunction(psession->stat, "Os", pyevent, name);
+> +	if (!ret) {
+> +		PyErr_Print();
+> +		Py_DECREF(pyevent);
+> +		return -1;
+> +	}
+> +	Py_DECREF(ret);
+> +	Py_DECREF(pyevent);
+> +	return 0;
+> +}
+> +
+> +static int pyrf_session_tool__stat_round(const struct perf_tool *tool,
+> +					 struct perf_session *session __maybe_unused,
+> +					 union perf_event *event)
+> +{
+> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
+n, tool);
+> +	PyObject *pyevent =3D pyrf_event__new(event, /*evsel=3D*/NULL, psession=
+->session);
+> +	PyObject *ret;
+> +
+> +	if (pyevent =3D=3D NULL)
+> +		return -ENOMEM;
+> +
+> +	ret =3D PyObject_CallFunction(psession->stat, "O", pyevent);
 
-Can this change cause the test to fail instead of gracefully skipping when
-perf is compiled without Python support?
+Does this mismatch in argument counts cause problems for the Python callbac=
+k?
 
-The setup_python.sh script only checks if a Python interpreter exists on
-the host, not whether perf was actually compiled with the Python extension.
-If perf is compiled with NO_LIBPYTHON=3D1 or without the required headers,
-setup_python.sh will still succeed, but perf_brstack_max.py will crash on
-import perf with a ModuleNotFoundError.
+In pyrf_session__init(), the identical user-provided callback (psession->st=
+at)
+is assigned for both PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events.
 
-Since the Python crash output goes to stderr, the test reads an empty
-stdout, assigns times_val=3D0, and fails instead of skipping.
+However, pyrf_session_tool__stat() calls it with two arguments ("Os"), while
+this function calls it with just one ("O").
+
+If the user's Python callback is defined to accept two arguments, will it
+raise a TypeError when a STAT_ROUND event arrives?
+
+> +	Py_XDECREF(ret);
+> +	Py_DECREF(pyevent);
+> +	return 0;
+
+If the Python callback raises an exception, PyObject_CallFunction() returns
+NULL.
+
+Since this function doesn't clear the exception (via PyErr_Clear() or
+PyErr_Print()) and returns 0, does this leak an unhandled Python exception?
+
+Returning to the C-API caller with an active exception usually causes a
+SystemError in the interpreter.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D52
+63-1-irogers@google.com?part=3D20
