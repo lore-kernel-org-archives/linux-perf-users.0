@@ -1,112 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C72FFDCB
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:05:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8B8381AFB
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158346; cv=none; b=Cq1zAmZbu30izucj9j/r1HH/soPdYG8QY86B4qh/7voYk4O4nHsiZqynHYW5hugJyv4mma6Cfc0ij2QMYD4LW2hAmIwpnTHwVOVQUZXpJASwMMjVYzbaTTACxztrqjEhIunhPqBqGaWuhitckPyVS4oFv7E/7rKe7X15EZ00v+g=
+	t=1777158367; cv=none; b=KnAmXfYk5EblIhWQpV3Ir07ZoUdk/1IdJqwYiLbXkQB4zguiIk7+9ZIoyFRDi7mLzTnHk75CI9Qmgbcy5B0XJrq7vVb0DZCVCP5pHhihGj4OminBHqnMBNINWL7W54N5wDsHAk0PEEKVkMG6ujFicuNb8Nm688NE/LobAsZx7lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158346; c=relaxed/simple;
-	bh=LdU3NCTbYRjhhaSeZZTbBCDcIAkptfed6tX4pQjo9KI=;
+	s=arc-20240116; t=1777158367; c=relaxed/simple;
+	bh=WhahERFi/CglrrQYxEW1ZUgvJA3v6cDGQPcz/dMqqfU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FFF3bdsoNSfPhpoKWiv1Va2VObq87+ajqtfqY6Jq5rKS7nJeA4iyiSYK4QJsO+U6xmvPL2XR2qw28IqG5ZJ2ycsaMU/GsIGePgwF6a1d5bk+QGxHVjP9MtICST+wzAXzLNbwTInywQlDIkvlkCzp0NOt+Lbz7ZRLoranZP/1h3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWzmFOoe; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=FWJ7NV2BWzm/2tjWyCNSvOyfVZkHGlcIDQqyrPuGgBmivA9p+0mjr6l5lj/F1NPttTH/Khvv9PxNz23AbN5ayslOJrUgzuxCl8FdT4YcOAon/5t8KRX0VpKB4DyC8TbAx6YvIAtnTnjjFlzdyds+ORknXNH6BwHENxNH826dxO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXaVww8d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWzmFOoe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C72BC2BCB0;
-	Sat, 25 Apr 2026 23:05:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXaVww8d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254E4C2BCB0;
+	Sat, 25 Apr 2026 23:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158346;
-	bh=LdU3NCTbYRjhhaSeZZTbBCDcIAkptfed6tX4pQjo9KI=;
+	s=k20201202; t=1777158367;
+	bh=WhahERFi/CglrrQYxEW1ZUgvJA3v6cDGQPcz/dMqqfU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=kWzmFOoeqQGzJ5fyI9lATDap+mUFWOHNV9MPLQOd/AqGwmpnfdZXk47aDtTo7rfd+
-	 iXSlhUQ51vcH28TkJhtwj8MD0sj7DwswgXX8lcxYsJ2F4v1RUH3cSlza7SmZds205J
-	 O7Q1OVa7I52mzAarjGfUXfj6OQtgmu1hw2RTXQSRzGTrm3BkCn32s7+WiFzvtf96nA
-	 6L6AKfoou5fx73Ng8aKW+C675jfKTp/gpTUoIq+MQR5Gbb3qWndq0C3CxzO3CQirmo
-	 2QJ/7L35I56DPVX66sqDqWxSYmZrnP9UAjp6mETdvVq/OCA+ZSm88LTf020XuYN5fe
-	 nCkj8psWZoWOg==
+	b=TXaVww8dDx2az3bjujZkX05SBNhvMlpiLdZ2f0lHJQnI2iSr59qzjZd2Zzt6bkImM
+	 zgdDXtN3G3mJcr8Zkpo0ll6qrHdhQExZwrcIh13knuUjGzXBHHm3OGeTbwwk3tKjzM
+	 dufJmE50Wu+EcdihF7DrTeV3XwkJcxktTB36Pau6zFnCJWOHzxfNDcAtlqbDW9bVzZ
+	 NFtr0eg8NEnhnvAcYQuEVclzX6jKHLIN+ElETt0d5UywI38bfwaQXePHkpiKz6rFkH
+	 HO1wrQha4PHvDR56aVlywNgcmQXlWTJYd9P+p0m398J5HmRsyHD4PRwpBkA3kcc4W1
+	 2TDnBRrd0ZEYg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 28/59] perf syscall-counts-by-pid: Port
- syscall-counts-by-pid to use python module
+Subject: Re: [PATCH v7 26/59] perf mem-phys-addr: Port mem-phys-addr to use
+ python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-29-irogers@google.com>
-References: <20260425224951.174663-29-irogers@google.com>
+In-Reply-To: <20260425224951.174663-27-irogers@google.com>
+References: <20260425224951.174663-27-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:05:45 +0000
-Message-Id: <20260425230546.6C72BC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:06:06 +0000
+Message-Id: <20260425230607.254E4C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] The new script sorts the syscall output numerically by syscall I=
-D instead of descending by frequency, contradicting the commit message.
-- [Medium] Filtering by PID 0 fails and incorrectly aggregates all processe=
-s, bypassing the filter entirely.
+Sashiko AI review found 3 potential issue(s):
+- [Medium] Python 3.10+ and 3.9+ specific syntax breaks backward compatibil=
+ity.
+- [Medium] Leftover debug `print` causes massive stdout spam and performanc=
+e degradation.
+- [Low] Unintended negative indexing due to flawed bounds checking logic.
 --
 
-commit c3142c05615edbdf9215f073db18a13c7a7e116c
+commit e001fd33f0feacc6bc55010469946b81f05191b8
 Author: Ian Rogers <irogers@google.com>
 
-perf syscall-counts-by-pid: Port syscall-counts-by-pid to use python module
+perf mem-phys-addr: Port mem-phys-addr to use python module
 
-This commit rewrites the tools/perf/scripts/python/syscall-counts-by-pid.py
-script to use the new perf Python module. By bypassing the perf script
-execution overhead, it improves performance significantly while displaying
-system call totals broken down by syscall and optionally filtered by comm or
-PID.
+Give an example of using the perf python session API to load a
+perf.data file and perform the behavior of
+tools/perf/scripts/python/mem-phys-addr.py.
 
-> diff --git a/tools/perf/python/syscall-counts-by-pid.py b/tools/perf/pyth=
-on/syscall-counts-by-pid.py
+> diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-p=
+hys-addr.py
 > new file mode 100755
-> index 000000000000..ff962334a143
+> index 000000000000..ba874d7a2011
 > --- /dev/null
-> +++ b/tools/perf/python/syscall-counts-by-pid.py
-> @@ -0,0 +1,88 @@
+> +++ b/tools/perf/python/mem-phys-addr.py
 [ ... ]
-> +def print_syscall_totals():
-[ ... ]
-> +    print(f"{'comm [pid]/syscalls':<40} {'count':>10}")
-> +    print("---------------------------------------- -----------")
+> +@dataclass(frozen=3DTrue)
+> +class IomemEntry:
+> +    """Read from a line in /proc/iomem"""
+> +    begin: int
+> +    end: int
+> +    indent: int
+> +    label: str
 > +
-> +    sorted_keys =3D sorted(syscalls.keys(), key=3Dlambda k: (k[0], k[1],=
- k[2]))
+> +# Physical memory layout from /proc/iomem. Key is the indent and then
+> +# a list of ranges.
+> +iomem: Dict[int, list[IomemEntry]] =3D collections.defaultdict(list)
+> +# Child nodes from the iomem parent.
+> +children: Dict[IomemEntry, set[IomemEntry]] =3D collections.defaultdict(=
+set)
 
-Does this sort order match the expected output?
+Does using list[IomemEntry] and set[IomemEntry] break compatibility with
+Python versions older than 3.9? These generic type hints were introduced in
+Python 3.9, which might cause TypeError crashes on older supported
+distributions.
 
-The commit message demonstrates the syscall output being sorted descending =
-by
-frequency count (e.g., 538989, 32, 17, 2, 1).
-
-By sorting on the keys, it looks like the syscalls are printed in ascending
-order of their syscall ID instead.
-
-> +    current_comm_pid =3D None
-> +    for comm, pid, sc_id in sorted_keys:
 [ ... ]
-> +def process_event(sample):
-[ ... ]
-> +    pid =3D sample.sample_pid
-> +
-> +    if for_pid and pid !=3D for_pid:
+> +def find_memory_type(phys_addr) -> Optional[IomemEntry]:
+> +    """Search iomem for the range containing phys_addr with the maximum =
+indent"""
+> +    for i in range(max_indent, -1, -1):
+> +        if i not in iomem:
+> +            continue
+> +        position =3D bisect.bisect_right(iomem[i], phys_addr,
+> +                                       key=3Dlambda entry: entry.begin)
 
-If a user filters by PID 0 (the idle task), will this logic bypass the
-filter?
+The key parameter for bisect.bisect_right() was introduced in Python 3.10.
+Will this cause TypeError crashes on systems with Python 3.9 or older?
 
-Since for_pid evaluates to False in Python when it is 0, it seems the script
-would incorrectly accumulate events for all PIDs instead of restricting them
-to PID 0.
+> +        if position is None:
+> +            continue
+> +        iomem_entry =3D iomem[i][position-1]
 
-> +        return
-> +
-> +    comm =3D "unknown"
+Since bisect_right() always returns an integer, position is None will never=
+ be
+true.
+
+If phys_addr is smaller than the first element's begin address, position wi=
+ll
+evaluate to 0. Doesn't this mean position-1 evaluates to -1, accessing the
+last element of the list instead of correctly handling the out-of-bounds ca=
+se?
+
+> +        if  iomem_entry.begin <=3D phys_addr <=3D iomem_entry.end:
+> +            return iomem_entry
+> +    print(f"Didn't find {phys_addr}")
+
+Will this print statement flood standard output if a large number of physic=
+al
+addresses cannot be resolved? Since find_memory_type() is called for every
+sample in the perf data, it might severely degrade performance and make the
+intended summary output unreadable.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D28
+63-1-irogers@google.com?part=3D26
