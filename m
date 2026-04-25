@@ -1,106 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CFE38C402
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B313F38F248
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158709; cv=none; b=uu6KTqOOEzWDpgwZD1Ctbia/WCk5+1vGJvXe3ur2Z0g7ggSTCPBvV0CwMBF7KLf5241f0qciW0BWuG1/W8cShFdun01LqFB47f7TZqOEWSP7HkwBbT+WrDAiJBRGzcFn8cXKQ08y1f6Nq6W9TXfH9Y4sUpTp0doZTlIKUMhX6XM=
+	t=1777158715; cv=none; b=XwnRnaeiceVelfAHvNZBZupvyqKbTEFVW9VPwX/S98BqvhobR1EFHRfVHlYDthQJIf9rY4enp1U8Y9L8CpvOR+iuWPt6QR6TG6hVZw2jfKwMAVZbnsmhfobSM6XkkVek/EApoxdzWkPLRJjQHrpUCCvAQJOABcS9LRPruCppyeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158709; c=relaxed/simple;
-	bh=lY56A7SIpZ1a7X7tK0CbSFON7Ub6XtBhl4uP4Hg7FsY=;
+	s=arc-20240116; t=1777158715; c=relaxed/simple;
+	bh=HI2lj/n3rjlkkWYtDzjdsjD+mOh7k1gi3RVKHj3Zv4c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=f3gDXiWkTpY5JdH9oCwPD+md389ecYZ9DF+tgnJm4s0t9LE+YqO8pUd3nO2IVikNHi+q2uqoz2wv3Cm0mkcGSQgzlCPBR2DEzW3Hev599lLyr5Z+24AS/bqF/PwMvtwfvbjwlubtIorE0DLYcs9GvbxpVIDjHKVCv7LPeCl5TjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNmIOeKH; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Y17avzSKDM0p5ZlDrN2BBkX0KPjjcr9ul9vbG5mYQ0+dIHt5rwDSnuBM3s+Ak0dk2si5uVLDe/m+CDZdizPrGQcFKwrSNVDrsHMW5W4Na1VVCt/JOpJtUMtTEt2Qv3Fo617baOrkKukjBIusB8jpSNcm3eIzYX0AZzgYTyrzVb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYO3eiq6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNmIOeKH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A5DC2BCB0;
-	Sat, 25 Apr 2026 23:11:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYO3eiq6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CFBC2BCB0;
+	Sat, 25 Apr 2026 23:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158709;
-	bh=lY56A7SIpZ1a7X7tK0CbSFON7Ub6XtBhl4uP4Hg7FsY=;
+	s=k20201202; t=1777158715;
+	bh=HI2lj/n3rjlkkWYtDzjdsjD+mOh7k1gi3RVKHj3Zv4c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=vNmIOeKH74k2JEmXYLA6oNPpo1MCjhjwPJQ26JMSb1loZHuehbSuXLVN7STwiD0vc
-	 ZyDOSYeminVNGQuk78bIFG8FSULMr85KcEzF0KOw/xR1BEh5+sNkf1E/9JKRtIjRHt
-	 sUIdRiRZEG8v/hVKKI7qGI+gPUncgfiYbXXIcBdBPSqPNY1/L0uJsOCU5DRNpAKdKB
-	 2olg3qrbGPafIqRceet72onsURkSNCQWdWK2bFjv2xjAsMwsl2GNVKQghE+KJD1wNN
-	 3wnexB/7ClbN5lHDmvxS3UO1rK6abGG4pChhrbzm2SaHejYhH5eg11If3IGIygVhwh
-	 VUf3hsWXwz97A==
+	b=mYO3eiq6/vdBcFmeioOvxJbm6GTpbiavRHUCfyQ5d+zKml7xh2THLTb00EAYQYg8i
+	 BSh3EkvDHYf+wCushnk8fvLvfu/3pJXllpXtFOAVIrsJJB/Fo+KePE85d6zF9F8Y9q
+	 JBGCIggmoDFMp3rXoOCOJhks70JKMvJcd8olRre8BMT3MSa5fz1mFBQKRFhTRuo1QL
+	 hijX+7kFCUTUVzDgYJLx1qmsydgbG4rw9EuiScI+UzbEsZGPBD1uFeGOlU97pdcV87
+	 5GpET8atgxS7pSe4ufs/owlNegSE3F1a+9lhEhYaXiXnjEeS5oJNXLTTdGIMgTgBmt
+	 OSP25B9GjU2iw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 24/59] perf python: Move exported-sql-viewer.py and
- parallel-perf.py to tools/perf/python/
+Subject: Re: [PATCH v7 29/59] perf futex-contention: Port futex-contention
+ to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-25-irogers@google.com>
-References: <20260425224951.174663-25-irogers@google.com>
+In-Reply-To: <20260425224951.174663-30-irogers@google.com>
+References: <20260425224951.174663-30-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:11:48 +0000
-Message-Id: <20260425231149.38A5DC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:11:54 +0000
+Message-Id: <20260425231154.E8CFBC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] Moving `exported-sql-viewer.py` and `parallel-perf.py` to `tools=
-/perf/python/` drops them from the `make install` target, breaking installe=
-d tests and user availability.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] Silent omission of futex contention data for unresolved threads.
+- [Medium] Silent bogus statistics when tracepoint fields are missing from =
+the sample.
 --
 
-commit 96b6213f3c26c1df2ecfda1cfe0e88d0ee35dbee
+commit 1635cde526332c6725539102876bd82917ff0ff3
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Move exported-sql-viewer.py and parallel-perf.py to tools/perf=
-/python/
+perf futex-contention: Port futex-contention to use python module
 
-This commit moves the standalone scripts exported-sql-viewer.py and
-parallel-perf.py from tools/perf/scripts/python/ to tools/perf/python/.
-This is done in an effort to deprecate the tools/perf/scripts/python
-support.
+Rewrite tools/perf/scripts/python/futex-contention.py to use the python
+module to improve execution performance.
 
-> diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/pyth=
-on/parallel-perf.py
-> similarity index 100%
-> rename from tools/perf/scripts/python/parallel-perf.py
-> rename to tools/perf/python/parallel-perf.py
-
-Does this change miss updating the installation rules in
-tools/perf/Makefile.perf?
-
-If the makefile relies on a rule like install scripts/python/*.py, moving
-these scripts means they will no longer be matched and installed by
-make install.
-
+> diff --git a/tools/perf/python/futex-contention.py b/tools/perf/python/fu=
+tex-contention.py
+> new file mode 100755
+> index 000000000000..1fc87ec0e6e5
+> --- /dev/null
+> +++ b/tools/perf/python/futex-contention.py
 [ ... ]
+> +    def handle_start(tid: int, uaddr: int, op: int, start_time: int) -> =
+None:
+> +        if (op & FUTEX_CMD_MASK) !=3D FUTEX_WAIT:
+> +            return
+> +        if tid not in process_names:
+> +            try:
+> +                if session:
+> +                    process =3D session.find_thread(tid)
+> +                    if process:
+> +                        process_names[tid] =3D process.comm()
+> +            except (TypeError, AttributeError):
+> +                return
 
-> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/sc=
-ript.sh
-> index 7007f1cdf761..f983b80e77b7 100755
-> --- a/tools/perf/tests/shell/script.sh
-> +++ b/tools/perf/tests/shell/script.sh
+Does this early return introduce a regression causing silent data loss for
+unresolved threads?
 
+If an exception occurs when resolving the thread name, the script returns e=
+arly
+and completely skips the start_times[tid] assignment below. Because the thr=
+ead
+ID is never added to process_names, subsequent events for the same thread w=
+ill
+hit this same branch and fail again, dropping all lock tracking for the thr=
+ead.
+
+Could the script instead ignore the exception and rely on the
+process_names.get(t, 'unknown') fallback during final output?
+
+> +        start_times[tid] =3D (uaddr, start_time)
 [ ... ]
+> +    event_name =3D str(sample.evsel)
+> +    if event_name =3D=3D "evsel(syscalls:sys_enter_futex)":
+> +        uaddr =3D getattr(sample, "uaddr", 0)
+> +        op =3D getattr(sample, "op", 0)
 
-> @@ -76,7 +78,7 @@ test_parallel_perf()
->  		err=3D2
->  		return
->  	fi
-> -	pp=3D$(dirname "$0")/../../scripts/python/parallel-perf.py
-> +	pp=3D$(dirname "$0")/../../python/parallel-perf.py
->  	if [ ! -f "${pp}" ] ; then
->  		echo "SKIP: parallel-perf.py script not found "
->  		err=3D2
+Will this regression corrupt the contention measurements with bogus data if
+tracepoint fields are missing from the sample?
 
-When the test suite is executed from an installed environment via
-make install-tests, will test_parallel_perf silently skip because
-parallel-perf.py is not installed to the expected path?
+If uaddr or op are not present on the sample object (for example, due to
+missing libtraceevent support or unparsed tracepoints), getattr defaults bo=
+th
+variables to 0.
 
-I note that this regression is fixed later in the patch series by the
-commit "perf Makefile: Update Python script installation path".
+Because 0 exactly matches the value of FUTEX_WAIT, every sys_enter_futex ev=
+ent
+(including wakes and requeues) would be incorrectly treated as a wait
+contention on lock address 0x0.
+
+> +        handle_start(sample.sample_tid, uaddr, op, sample.sample_time)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D24
+63-1-irogers@google.com?part=3D29
