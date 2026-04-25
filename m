@@ -1,113 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20C9372EE9
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED0735F16E
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:19:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777141167; cv=none; b=I39jVxcPK3cUHpA10opuViufMbD/igZhFecEV2LSGf+fO07OFM0iTXBpsspAAmGEYFspltDp7xx/2meIpkZ15KC/gKGbu8kGr+8Orw7c6VD9T+QDsbqvyEpcUKWSs6cCDhgYEQxQjrZgZMcm28AX3uOoQruNU9k2NM8+EVcT2po=
+	t=1777141188; cv=none; b=ZksNe6GVUWNaYXvI6eIBD7m0jhkaZAmL3A0ZUC+D0gP2yPAlnpqgNggprCLC1pPENWYFFN6Ynjw7FFYlOY/sz0966DJOad98KYZsEmQ2aWIweAcilAekwQ/4+ln5/aHQoeLXTRsv3E69VgmA101jYr9D+NhY4vrFcwuSOBC5IYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777141167; c=relaxed/simple;
-	bh=psqje0YFf17howMe/9dwUkiovmInbPT1Co+haidoNU0=;
+	s=arc-20240116; t=1777141188; c=relaxed/simple;
+	bh=9TwVIQQ1K/ILX31lrQZqSwVEfw9kt51hw1hQjm1juUQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FIekztsP+LirqgE4qwpiDWz1vV0CP6Ab8nUEG3MobbWYqciWoTiEXsiZ19XZuXQcv+zeALIF7XYuH/DnvhoQmH0I98PtWTNs4Lbn1DOb5YOwAyeO4zBBe5RgjYbJ5H6b3IPLc/hERzzp7xhlBmEtRryKyq8aDwqHYtHQRbP+0i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbWpqE1r; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=cuj7ED4Nl2NH5aSz4o+JD8DUYegFsbF0e15zmEzqPVG0O5vwJlcLbimhZTYYL+Xhi6wYi17zyKjMOG+WF9XWu7BjtI0XGoDEq9SHuW+ZpB4kEx1cA6O3EhCqSZrTakXRnXXm1dCO7fGZnyb7MDLlBbXGuq9DQ4yiQ/Sy7yEqMGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTBz3+Ty; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbWpqE1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9601AC2BCB0;
-	Sat, 25 Apr 2026 18:19:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTBz3+Ty"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C43FC2BCB3;
+	Sat, 25 Apr 2026 18:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777141167;
-	bh=psqje0YFf17howMe/9dwUkiovmInbPT1Co+haidoNU0=;
+	s=k20201202; t=1777141188;
+	bh=9TwVIQQ1K/ILX31lrQZqSwVEfw9kt51hw1hQjm1juUQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=gbWpqE1rTXZ8EfmRXgO8PAjwHlw21YjNl4uZRROl2I7PML6wSfk/FEEnuj4NPszno
-	 fQBgi93gkgzrmkT21gdDCgqnFjiCXdzFxrJagFyHXBCwPRJO/iqjnPEIay5iAaeOmF
-	 9D1/LPhcIyPCSb/0e3ZwPHbNBlIG1Lu4xmURgZM6CpvFoHzeXr4F+PkK8b1AIXnOwT
-	 VIhl64ebE6rX22TCppmbjxbqaZky7UthPHF+D9ehHef71ooKusIyIz8N/lzp0bIOZ2
-	 Dol2w1SjaZw1K+kry8djLyqYSOvY3lWRXrGF1WMON6W3NGUzAbjdKCh13o7En24LCI
-	 8HqyED+mPw1OA==
+	b=mTBz3+Ty2iAJFxawr3+Ght4ExT/N4GKkF2YsgfI3INID8sTAIx1qnrm8RuORcESID
+	 F/vWS56s3jbRJ9+He5d240TYMrnC9cOxs5NOzke0Hvty1+nf71M/+2kuMLcj1t6YRl
+	 kZUaI41xYTWRNTeaEUHFhA7SEAjTFdCMIhKpQgfZ1HzFA/C+fxjApAGu6U6Wn2XtoS
+	 xYm3BvPnGl9LHFTUd2X4zPrvFUotC+oSDJHGW8l2yGvY23INn6lR+mvZCqj5O7bBX1
+	 nd7MzW+3iQQxw3Uk3df5WArZ1KbJnI5AxgFS1G0REXYRabtaPv8TZe9VdLhqRaMPJ1
+	 7v2wg5I3JE6Iw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 14/59] perf python: Add wrapper for perf_data file
- abstraction
+Subject: Re: [PATCH v6 11/59] perf evsel: Add reference count
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-15-irogers@google.com>
-References: <20260425174858.3922152-15-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-12-irogers@google.com>
+References: <20260425174858.3922152-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:19:27 +0000
-Message-Id: <20260425181927.9601AC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:19:47 +0000
+Message-Id: <20260425181948.6C43FC2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] The `fd` argument in `perf.data(fd=3D...)` is silently ignored a=
-nd overwritten, leading to a file descriptor leak and reading from the wron=
-g source.
-- [Medium] Opening a FIFO via `perf.data()` without releasing the Python GI=
-L causes the Python process to hang indefinitely.
+Sashiko AI review found 3 potential issue(s):
+- [High] An unbalanced `evsel__put()` on a borrowed reference in `evlist__d=
+eliver_deferred_callchain` leads to a Use-After-Free.
+- [Medium] The python bindings for `pyrf_evsel` are vulnerable to NULL poin=
+ter dereferences via property setters and methods when operating on uniniti=
+alized objects.
+- [Medium] The Python `pevsel` object is permanently leaked in `pyrf_evlist=
+__add` because `Py_INCREF` is used without a corresponding `Py_DECREF`.
 --
 
-commit f0f569c0460c34314c3be2d7c3dfa4916ea585ce
+commit d6eb43f99f56ffae4384c4511200f73c5097a9ab
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add wrapper for perf_data file abstraction
+perf evsel: Add reference count
 
-This commit adds a python wrapper around the perf_data struct. This wrapper
-is intended to support session management within python scripts.
+This commit adds reference counting to evsel to resolve issues with the
+python code cloning evsels. It initializes the count to 1 at allocation
+and updates the Python bindings to use getset functions and reference
+counting instead of cloning.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
 [ ... ]
-> +static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyOb=
-ject *kwargs)
+> +static int pyrf_evsel__set_attr_config(PyObject *self, PyObject *val, vo=
+id */*closure*/)
 > +{
-> +	static char *kwlist[] =3D { "path", "fd", NULL };
-> +	char *path =3D NULL;
-> +	int fd =3D -1;
-[ ... ]
-> +	if (!path)
-> +		path =3D "perf.data";
-[ ... ]
-> +	pdata->data.mode =3D PERF_DATA_MODE_READ;
-> +	pdata->data.file.fd =3D fd;
-> +	if (perf_data__open(&pdata->data) < 0) {
-
-Does perf_data__open() overwrite the user-provided fd?
-
-If the path defaults to "perf.data", it appears perf_data__open() will open
-that file from the filesystem and overwrite pdata->data.file.fd with the new
-file descriptor.
-
-Alternatively, if the path is explicitly set to "-" to trigger pipe mode,
-the underlying check_pipe() function unconditionally assigns STDIN_FILENO
-for read operations.
-
-Could this sequence cause the provided fd to be leaked and completely ignor=
-ed?
-
-Also, can opening a FIFO here block the entire Python process?
-
-perf_data__open() eventually executes a blocking open(path, O_RDONLY) system
-call.=20
-
-Since the Python Global Interpreter Lock (GIL) is not released before
-this blocking I/O operation (for example, by using Py_BEGIN_ALLOW_THREADS),
-will this freeze all other Python threads and prevent Python-level signal
-handlers like Ctrl+C from executing if the FIFO is waiting for a writer?
-
-> +		PyErr_Format(PyExc_IOError, "Failed to open perf data: %s",
-> +			     pdata->data.path ? pdata->data.path : "perf.data");
-> +		return -1;
-> +	}
-> +	return 0;
+> +	struct pyrf_evsel *pevsel =3D (void *)self;
+> +
+> +	pevsel->evsel->core.attr.config =3D PyLong_AsUnsignedLongLong(val);
+> +	return PyErr_Occurred() ? -1 : 0;
 > +}
+
+Does this code allow a NULL pointer dereference if the python object is
+instantiated without calling __init__?
+
+While tp_getattro was added to check for initialization during attribute
+reads, it seems tp_setattro is not overridden.
+
+When setting an attribute, the setter is called directly and blindly
+dereferences pevsel->evsel, which would be NULL and crash the interpreter.
+The same issue appears to exist in pyrf_evlist__add below.
+
+[ ... ]
+> @@ -1566,9 +1728,9 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlis=
+t *pevlist,
+>  		return NULL;
+> =20
+>  	Py_INCREF(pevsel);
+> -	evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;
+> +	evsel =3D ((struct pyrf_evsel *)pevsel)->evsel;
+>  	evsel->core.idx =3D evlist->core.nr_entries;
+> -	evlist__add(evlist, evsel);
+> +	evlist__add(evlist, evsel__get(evsel));
+> =20
+>  	return Py_BuildValue("i", evlist->core.nr_entries);
+>  }
+
+Does this code leak the Python pevsel object?
+
+The patch changes the C evsel to be reference counted, and evsel__get takes
+a reference for the evlist.
+
+However, Py_INCREF is still used here without a corresponding Py_DECREF
+because pevlist does not track it internally, leading to a memory leak every
+time evlist.add is called.
+
+Additionally, as mentioned above, if pevsel was created without __init__,
+evsel would be NULL here, leading to a crash when dereferencing
+evsel->core.idx.
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1373,6 +1373,7 @@ static int evlist__deliver_deferred_callchain(struc=
+t evlist *evlist,
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+>  		ret =3D tool->callchain_deferred(tool, event, sample,
+>  					       sample->evsel, machine);
+> +		evsel__put(sample->evsel);
+>  		sample->evsel =3D saved_evsel;
+>  		return ret;
+>  	}
+
+Can this cause a use-after-free?
+
+evlist__id2evsel returns a borrowed reference from the evlist without
+incrementing the refcount. Calling evsel__put here drops a reference it nev=
+er
+acquired, which might prematurely free the evsel while it remains in the
+evlist.
+
+Note that I see this was addressed in a later commit 7675a76ec470 ("perf
+evlist: Add reference count checking") which adds the missing evsel__get.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D14
+152-1-irogers@google.com?part=3D11
