@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB2237B41A
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892BA39EF12
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777139461; cv=none; b=LkfzA2pHpF2tAGrGZe4IaW58sNrb6r/1r+JIF+P+ksoL0pkwfenDR4WD8FuupcyLwIFghXjFzgGCgSvb055ykiiQThwe0vViq2HmrAj7RUJ9rU8tZMEKHLW+cywrcV+yRP3mSRcKrhoq8tTbNdbcLazu+uGpROAILH4JxnRMzgQ=
+	t=1777139464; cv=none; b=m2INdbpiYIWqqLAY/8gF04sNLoKOooY1jSHBf1ychwt92kj7t571ui+ncf1Af5dtywI125/YszyYmQ/cRaa5Op1wr5gP8Ry3IHV7YUheKLDFTaRlrQp5ECuvHvz1UZhIkESwOWMkWlq+Z23Ew1K0mmuZOgniHlTmdJXE5VoHh0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777139461; c=relaxed/simple;
-	bh=09jol+SFrpt78a7mk9KaHDxujms3UCNYgdElYzCCWh4=;
+	s=arc-20240116; t=1777139464; c=relaxed/simple;
+	bh=b8WChMU2GFjZaAMy6D9g7SBa1GQPwudhcSXhEV1GN7A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T3HPxDmR+4hOZuqMshhT9p1oUtx7t/wjmsa4sBCbN2ObeKxIoIffm5Npp9rCIHenqwy4/QcE8gRvLg3vnscxQKkATmB1b8Zn7GtiKiUZyIF6FAzftnr2LT2wVibAlhz/brHk4VbbzZkNVfe4oBoKhVHPgphNJPYbFtzYvn5taos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l4f7vZE7; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=AZ8cTD1GwaUq+jclUwfmkBkwTAdynK+KRpCj57aUteGkJPBeI8LlUaMwXahM8ZMJUfazluv5ixysLYqTrTK/7CS+3LDPJCOV/nWMBIklb24+kag/NM9nCeljBUuDoIWsf6gXkiodmx4/rUPwSnpzQY3jZTLqqfd2maTRkCGJSBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r0+R1T4N; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l4f7vZE7"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so10250620eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:50:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0+R1T4N"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdf6fe90a9so13450045eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777139456; x=1777744256; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777139460; x=1777744260; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zKsR0uveqcOXj5JincOO7p/wkB48KaaLUK1F2HfU7cI=;
-        b=l4f7vZE7derNVPamQMc7NBwkeFMItkeeBICnsDXf/DVxm/x0C3GPwXB06C0DeGg9Cs
-         i2Zia0qeYtrSPIoq527y00eVR9l+ABAsbrRTvoDJXzkrP6TbYw4fReP1m8vc3TZ3oAYQ
-         MgCCE6/EljqeCvaeuQ9DlZy9KxNRJmVgVlVPvpNluE8tAmWiYASA33o/Tyk16m5tGm6s
-         vZZCwY8tx8v8QMnMruB6bugU2wQ2+rnYxf9Zg5gojhkWqoJxEANT8SlE3sOtN4oPNsZN
-         h7xpIXkpt3DaMH8dFv50fUFACWK6nrgMz+AHLRzBkvxeoSF71xjz/N87f4WcD+oKh4/o
-         w4sQ==
+        bh=OlWrNjVnLs3USTmPSqIGY0FmcUo+LUNpaODSh5R9ico=;
+        b=r0+R1T4NOIpYOg5FNg9voMDY4yNh9sf2sQQLqRVCWy1sBdJnVC/6TFJdb8GOWgB8d5
+         9NU1984cPTReKTv42POAPQIMj2MCWRaRUIb5zRqFy7CpTf8kSLDmO/ptDaNO2bMu9Z2L
+         F+y6NAy5zkFftvJxdxRm6euuT8tlIoRSCU9haarDWSbf989aQWiTseN7+sHXrPB/XZte
+         KDGGW3TX7Q0vIYbgK99ccQlB8Vt8BmA222aaGkg+kN7qe9z5iwFtueB1zjUkC/z04JG3
+         wIXpUuZnAX3g/VatTFRnjBV7lWbxd6he/roUZ8I/2Hm+NJZcTMkPRx0SZFXq09OcbElG
+         Y/zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777139456; x=1777744256;
+        d=1e100.net; s=20251104; t=1777139460; x=1777744260;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zKsR0uveqcOXj5JincOO7p/wkB48KaaLUK1F2HfU7cI=;
-        b=cS3MvjiQoPMCrpLHbkIgpWUIyQZGsW/z2Yap7pVNcnTGxvxpxMZoC+q/6vc0EZPf0o
-         b0floljgRM4qUehVe/mfPpjTsydrQGlc23hc1jucVTMxVhuMcyZ5O4Y+D0GsnPxYPVwI
-         WYTr0vcRSLLHFTZCEJ22FmaPkUETuk61Xbgp+si23xrpuZXrTu10fMRUkeM0cA21uD+5
-         5fXotjodl5PG0LHkx3IziBHGg8Qy1pC5Nic1SJ+upPFmWxEVvRRoAoqYBEN9nyOWi4iC
-         d/5kWNDU35O2blnSk+nQtbbwQYuhrEMYFwTSv97UrRNL+iMtEUkmI3XJfsSc8II/vC+l
-         UsWQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/LU1MGhmXwgn9JSRpEdbeuUJbEDJbCbriH1ZFF/xKrVGuhvV3ch+FIP8bejRyP5RlX7gHFFMju8QV8FJL+yFO0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmY6E0vFPrX9BwG1uatKfqdtWJ+7Rrhqc5RqN8l/V9hqSH2xro
-	SfqxqvyKbYW9Ih2m1LycaccNTbwF2szD9b/lGLnHuWkJs6QBQYLL4YoCAylOXNKDiDThHVNpb+C
-	6Yhs622ka8g==
-X-Received: from dlah28.prod.google.com ([2002:a05:701b:261c:b0:12c:912f:7ce9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e22:b0:128:d494:a1ab
- with SMTP id a92af1059eb24-12c73f83681mr21035351c88.15.1777139455464; Sat, 25
- Apr 2026 10:50:55 -0700 (PDT)
-Date: Sat, 25 Apr 2026 10:48:55 -0700
+        bh=OlWrNjVnLs3USTmPSqIGY0FmcUo+LUNpaODSh5R9ico=;
+        b=arQAY03TmZfL/TVGhe6PcyqmfkPE99VEtsuo/q0u8hsnCMBQFEqqsXNS5aMK8k+jbm
+         rvnkDirRoM7VYmrpm2dRANpdpTTgHQrNkL1BTbJvEo06G/uc0H1cmozWJuDJZBswx0Y1
+         8RZCFxh3r7AaVFzcY09wSTAdvixzJ+Q6d34e2Bfgw/t3itx7qNIbRcIfTUB46ERpL8m7
+         4ByZrI7GBqXhWoHrKV4uuFJWy+wWG+zOqcOj8lJAASEO3guT3mg1kvTWAas3YqDM12sD
+         fiku9O9qb2rT+BYZH2yaYOHlvWYJQ/V/16rF991K4fXAy3w43gUCeB3wNKY824Pagvfv
+         kAQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+H41HOdMJtMruGdFU3THSqJMj1zUPaeGkPUTQNbxksKUBfcmN0h4pgWUqe2lPc8/5oZeexQtxj7DSzaAfPSU/D@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmlYWSfDdIfGKUCcicoI94GY/GIg9WiqplvRGZOi7pAd9ZLdO/
+	4TSc4AgQQ8rj1qK26Izpc5OTV/NC1GAFk25jIQynOdW+gkvt3Qf0NuKEHzYbvY+/hsdggwol+iB
+	OqWqtsWGq8A==
+X-Received: from dybvu5.prod.google.com ([2002:a05:7300:f805:b0:2cc:a1bf:2dd9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1693:b0:2d4:7656:4ec1
+ with SMTP id 5a478bee46e88-2e47873a687mr20478389eec.17.1777139459410; Sat, 25
+ Apr 2026 10:50:59 -0700 (PDT)
+Date: Sat, 25 Apr 2026 10:48:57 -0700
 In-Reply-To: <20260425174858.3922152-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260424164721.2229025-1-irogers@google.com> <20260425174858.3922152-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425174858.3922152-58-irogers@google.com>
-Subject: [PATCH v6 57/59] perf Documentation: Update for standalone Python
- scripts and remove obsolete data
+Message-ID: <20260425174858.3922152-60-irogers@google.com>
+Subject: [PATCH v6 59/59] perf sched stats: Fix segmentation faults in diff mode
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -70,1118 +69,216 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-- Remove documentation for -g and -s options in perf-script.txt.
-- Remove links to perf-script-perl in perf-script.txt.
-- Rewrite perf-script-python.txt to describe the new standalone script
-  usage with perf module.
-- Remove obsolete perf-script-perl.txt.
+Address several segmentation fault vectors in `perf sched stats diff`:
+
+1. When processing invalid or empty data files, the CPU domain maps may
+   be NULL. Added NULL checks for `cd_map1` and `cd_map2` in
+   `show_schedstat_data()` to fail gracefully.
+
+2. When files contain a different number of CPUs or domains, the parallel
+   list iteration in `show_schedstat_data()` could wrap around the list
+   heads and dereference invalid memory. Added `list_is_last` checks
+   to safely terminate iteration at the end of each list.
+
+3. When summarizing CPU statistics in `get_all_cpu_stats()`, parallel list
+   iteration over domains could similarly wrap around if a CPU has more
+   domains than the first CPU. Added `list_is_last` check to prevent this.
+
+4. Added bounds checks for `cs1->cpu` and `cs2->cpu` against `nr1` and
+   `nr2` (passed from `env->nr_cpus_avail`) to prevent out-of-bounds
+   reads from `cd_map1` and `cd_map2` when processing data from machines
+   with different CPU configurations.
+
+5. Added NULL checks for `cd_info1` and `cd_info2` in `show_schedstat_data()`
+   to prevent crashes when a CPU has samples in the data file but no
+   corresponding domain info in the header (which leaves the map entry NULL).
+
+6. Added NULL checks for `dinfo1` and `dinfo2` in `show_schedstat_data()`
+   to prevent crashes when a domain is present in the list but has no
+   corresponding info in the CPU domain map (which leaves the entry NULL).
+
+7. Zero-initialized the `perf_data` array in `perf_sched__schedstat_diff()`
+   to prevent stack garbage from causing `perf_data_file__fd()` to attempt
+   to use a NULL `fptr` when `use_stdio` happened to be non-zero.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
-
-v6:
-- Updated `perf-script-python.txt` to use indented code blocks to fix
-  man page formatting, and documented `find_thread` and `elf_machine`.
 ---
- tools/perf/Documentation/perf-script-perl.txt | 216 ------
- .../perf/Documentation/perf-script-python.txt | 713 +++---------------
- tools/perf/Documentation/perf-script.txt      |  70 +-
- 3 files changed, 96 insertions(+), 903 deletions(-)
- delete mode 100644 tools/perf/Documentation/perf-script-perl.txt
+ tools/perf/builtin-sched.c | 85 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 69 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
-deleted file mode 100644
-index 5b479f5e62ff..000000000000
---- a/tools/perf/Documentation/perf-script-perl.txt
-+++ /dev/null
-@@ -1,216 +0,0 @@
--perf-script-perl(1)
--===================
--
--NAME
------
--perf-script-perl - Process trace data with a Perl script
--
--SYNOPSIS
----------
--[verse]
--'perf script' [-s [Perl]:script[.pl] ]
--
--DESCRIPTION
-------------
--
--This perf script option is used to process perf script data using perf's
--built-in Perl interpreter.  It reads and processes the input file and
--displays the results of the trace analysis implemented in the given
--Perl script, if any.
--
--STARTER SCRIPTS
-----------------
--
--You can avoid reading the rest of this document by running 'perf script
---g perl' in the same directory as an existing perf.data trace file.
--That will generate a starter script containing a handler for each of
--the event types in the trace file; it simply prints every available
--field for each event in the trace file.
--
--You can also look at the existing scripts in
--~/libexec/perf-core/scripts/perl for typical examples showing how to
--do basic things like aggregate event data, print results, etc.  Also,
--the check-perf-script.pl script, while not interesting for its results,
--attempts to exercise all of the main scripting features.
--
--EVENT HANDLERS
----------------
--
--When perf script is invoked using a trace script, a user-defined
--'handler function' is called for each event in the trace.  If there's
--no handler function defined for a given event type, the event is
--ignored (or passed to a 'trace_unhandled' function, see below) and the
--next event is processed.
--
--Most of the event's field values are passed as arguments to the
--handler function; some of the less common ones aren't - those are
--available as calls back into the perf executable (see below).
--
--As an example, the following perf record command can be used to record
--all sched_wakeup events in the system:
--
-- # perf record -a -e sched:sched_wakeup
--
--Traces meant to be processed using a script should be recorded with
--the above option: -a to enable system-wide collection.
--
--The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
--
------
-- format:
--        field:unsigned short common_type;
--        field:unsigned char common_flags;
--        field:unsigned char common_preempt_count;
--        field:int common_pid;
--
--        field:char comm[TASK_COMM_LEN];
--        field:pid_t pid;
--        field:int prio;
--        field:int success;
--        field:int target_cpu;
------
--
--The handler function for this event would be defined as:
--
------
--sub sched::sched_wakeup
--{
--   my ($event_name, $context, $common_cpu, $common_secs,
--       $common_nsecs, $common_pid, $common_comm,
--       $comm, $pid, $prio, $success, $target_cpu) = @_;
--}
------
--
--The handler function takes the form subsystem::event_name.
--
--The $common_* arguments in the handler's argument list are the set of
--arguments passed to all event handlers; some of the fields correspond
--to the common_* fields in the format file, but some are synthesized,
--and some of the common_* fields aren't common enough to to be passed
--to every event as arguments but are available as library functions.
--
--Here's a brief description of each of the invariant event args:
--
-- $event_name 	  	    the name of the event as text
-- $context		    an opaque 'cookie' used in calls back into perf
-- $common_cpu		    the cpu the event occurred on
-- $common_secs		    the secs portion of the event timestamp
-- $common_nsecs		    the nsecs portion of the event timestamp
-- $common_pid		    the pid of the current task
-- $common_comm		    the name of the current process
--
--All of the remaining fields in the event's format file have
--counterparts as handler function arguments of the same name, as can be
--seen in the example above.
--
--The above provides the basics needed to directly access every field of
--every event in a trace, which covers 90% of what you need to know to
--write a useful trace script.  The sections below cover the rest.
--
--SCRIPT LAYOUT
---------------
--
--Every perf script Perl script should start by setting up a Perl module
--search path and 'use'ing a few support modules (see module
--descriptions below):
--
------
-- use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
-- use lib "./Perf-Trace-Util/lib";
-- use Perf::Trace::Core;
-- use Perf::Trace::Context;
-- use Perf::Trace::Util;
------
--
--The rest of the script can contain handler functions and support
--functions in any order.
--
--Aside from the event handler functions discussed above, every script
--can implement a set of optional functions:
--
--*trace_begin*, if defined, is called before any event is processed and
--gives scripts a chance to do setup tasks:
--
------
-- sub trace_begin
-- {
-- }
------
--
--*trace_end*, if defined, is called after all events have been
-- processed and gives scripts a chance to do end-of-script tasks, such
-- as display results:
--
------
--sub trace_end
--{
--}
------
--
--*trace_unhandled*, if defined, is called after for any event that
-- doesn't have a handler explicitly defined for it.  The standard set
-- of common arguments are passed into it:
--
------
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs,
--        $common_nsecs, $common_pid, $common_comm) = @_;
--}
------
--
--The remaining sections provide descriptions of each of the available
--built-in perf script Perl modules and their associated functions.
--
--AVAILABLE MODULES AND FUNCTIONS
---------------------------------
--
--The following sections describe the functions and variables available
--via the various Perf::Trace::* Perl modules.  To use the functions and
--variables from the given module, add the corresponding 'use
--Perf::Trace::XXX' line to your perf script script.
--
--Perf::Trace::Core Module
--~~~~~~~~~~~~~~~~~~~~~~~~
--
--These functions provide some essential functions to user scripts.
--
--The *flag_str* and *symbol_str* functions provide human-readable
--strings for flag and symbolic fields.  These correspond to the strings
--and values parsed from the 'print fmt' fields of the event format
--files:
--
--  flag_str($event_name, $field_name, $field_value) - returns the string representation corresponding to $field_value for the flag field $field_name of event $event_name
--  symbol_str($event_name, $field_name, $field_value) - returns the string representation corresponding to $field_value for the symbolic field $field_name of event $event_name
--
--Perf::Trace::Context Module
--~~~~~~~~~~~~~~~~~~~~~~~~~~~
--
--Some of the 'common' fields in the event format file aren't all that
--common, but need to be made accessible to user scripts nonetheless.
--
--Perf::Trace::Context defines a set of functions that can be used to
--access this data in the context of the current event.  Each of these
--functions expects a $context variable, which is the same as the
--$context variable passed into every event handler as the second
--argument.
--
-- common_pc($context) - returns common_preempt count for the current event
-- common_flags($context) - returns common_flags for the current event
-- common_lock_depth($context) - returns common_lock_depth for the current event
--
--Perf::Trace::Util Module
--~~~~~~~~~~~~~~~~~~~~~~~~
--
--Various utility functions for use with perf script:
--
--  nsecs($secs, $nsecs) - returns total nsecs given secs/nsecs pair
--  nsecs_secs($nsecs) - returns whole secs portion given nsecs
--  nsecs_nsecs($nsecs) - returns nsecs remainder given nsecs
--  nsecs_str($nsecs) - returns printable string in the form secs.nsecs
--  avg($total, $n) - returns average given a sum and a total number of values
--
--SEE ALSO
----------
--linkperf:perf-script[1]
-diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-index 27a1cac6fe76..6bcf98e4e6c6 100644
---- a/tools/perf/Documentation/perf-script-python.txt
-+++ b/tools/perf/Documentation/perf-script-python.txt
-@@ -3,676 +3,143 @@ perf-script-python(1)
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index d3fa9c70790f..f6c7d100729a 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -4212,12 +4212,20 @@ static int get_all_cpu_stats(struct list_head *head)
  
- NAME
- ----
--perf-script-python - Process trace data with a Python script
-+perf-script-python - Process trace data with a Python script using perf module
+ 		cnt++;
+ 		summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
+-		tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
+-					 domain_list);
++		if (!list_empty(&summary_head->domain_head))
++			tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
++						 domain_list);
++		else
++			tdptr = NULL;
  
- SYNOPSIS
- --------
- [verse]
--'perf script' [-s [Python]:script[.py] ]
-+'perf script' <script>.py
+ 		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+-			summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
+-			tdptr = list_next_entry(tdptr, domain_list);
++			if (tdptr) {
++				summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
++				if (list_is_last(&tdptr->domain_list, &summary_head->domain_head))
++					tdptr = NULL;
++				else
++					tdptr = list_next_entry(tdptr, domain_list);
++			}
+ 		}
+ 	}
  
- DESCRIPTION
- -----------
+@@ -4225,8 +4233,8 @@ static int get_all_cpu_stats(struct list_head *head)
+ 	return ret;
+ }
  
--This perf script option is used to process perf script data using perf's
--built-in Python interpreter.  It reads and processes the input file and
--displays the results of the trace analysis implemented in the given
--Python script, if any.
-+This document describes how to use the `perf` Python module to process
-+trace data recorded by `perf record`.
+-static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1,
+-			       struct list_head *head2, struct cpu_domain_map **cd_map2,
++static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1, int nr1,
++			       struct list_head *head2, struct cpu_domain_map **cd_map2, int nr2,
+ 			       bool summary_only)
+ {
+ 	struct schedstat_cpu *cptr1 = list_first_entry(head1, struct schedstat_cpu, cpu_list);
+@@ -4238,6 +4246,15 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+ 	bool is_summary = true;
+ 	int ret = 0;
+ 
++	if (!cd_map1) {
++		pr_err("Error: CPU domain map 1 is missing.\n");
++		return -1;
++	}
++	if (head2 && !cd_map2) {
++		pr_err("Error: CPU domain map 2 is missing.\n");
++		return -1;
++	}
 +
-+With the removal of embedded Python interpreter from `perf`, scripts
-+are now run as standalone Python programs that import the `perf`
-+module to access trace data.
+ 	printf("Description\n");
+ 	print_separator2(SEP_LEN, "", 0);
+ 	printf("%-30s-> %s\n", "DESC", "Description of the field");
+@@ -4269,12 +4286,31 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+ 		struct cpu_domain_map *cd_info1 = NULL, *cd_info2 = NULL;
  
- A QUICK EXAMPLE
- ---------------
+ 		cs1 = cptr1->cpu_data;
++		if (cs1->cpu >= (u32)nr1) {
++			pr_err("Error: CPU %d exceeds domain map size %d\n", cs1->cpu, nr1);
++			return -1;
++		}
+ 		cd_info1 = cd_map1[cs1->cpu];
++		if (!cd_info1) {
++			pr_err("Error: CPU %d domain info is missing in map 1.\n", cs1->cpu);
++			return -1;
++		}
+ 		if (cptr2) {
+ 			cs2 = cptr2->cpu_data;
++			if (cs2->cpu >= (u32)nr2) {
++				pr_err("Error: CPU %d exceeds domain map size %d\n", cs2->cpu, nr2);
++				return -1;
++			}
+ 			cd_info2 = cd_map2[cs2->cpu];
+-			dptr2 = list_first_entry(&cptr2->domain_head, struct schedstat_domain,
+-						 domain_list);
++			if (!cd_info2) {
++				pr_err("Error: CPU %d domain info is missing in map 2.\n", cs2->cpu);
++				return -1;
++			}
++			if (!list_empty(&cptr2->domain_head))
++				dptr2 = list_first_entry(&cptr2->domain_head, struct schedstat_domain,
++							 domain_list);
++			else
++				dptr2 = NULL;
+ 		}
  
--This section shows the process, start to finish, of creating a working
--Python script that aggregates and extracts useful information from a
--raw perf script stream.  You can avoid reading the rest of this
--document if an example is enough for you; the rest of the document
--provides more details on each step and lists the library functions
--available to script writers.
--
--This example actually details the steps that were used to create the
--'syscall-counts' script you see when you list the available perf script
--scripts via 'perf script -l'.  As such, this script also shows how to
--integrate your script into the list of general-purpose 'perf script'
--scripts listed by that command.
--
--The syscall-counts script is a simple script, but demonstrates all the
--basic ideas necessary to create a useful script.  Here's an example
--of its output (syscall names are not yet supported, they will appear
--as numbers):
--
------
--syscall events:
--
--event                                          count
------------------------------------------  -----------
--sys_write                                     455067
--sys_getdents                                    4072
--sys_close                                       3037
--sys_swapoff                                     1769
--sys_read                                         923
--sys_sched_setparam                               826
--sys_open                                         331
--sys_newfstat                                     326
--sys_mmap                                         217
--sys_munmap                                       216
--sys_futex                                        141
--sys_select                                       102
--sys_poll                                          84
--sys_setitimer                                     12
--sys_writev                                         8
--15                                                 8
--sys_lseek                                          7
--sys_rt_sigprocmask                                 6
--sys_wait4                                          3
--sys_ioctl                                          3
--sys_set_robust_list                                1
--sys_exit                                           1
--56                                                 1
--sys_access                                         1
------
--
--Basically our task is to keep a per-syscall tally that gets updated
--every time a system call occurs in the system.  Our script will do
--that, but first we need to record the data that will be processed by
--that script.  Theoretically, there are a couple of ways we could do
--that:
--
--- we could enable every event under the tracing/events/syscalls
--  directory, but this is over 600 syscalls, well beyond the number
--  allowable by perf.  These individual syscall events will however be
--  useful if we want to later use the guidance we get from the
--  general-purpose scripts to drill down and get more detail about
--  individual syscalls of interest.
--
--- we can enable the sys_enter and/or sys_exit syscalls found under
--  tracing/events/raw_syscalls.  These are called for all syscalls; the
--  'id' field can be used to distinguish between individual syscall
--  numbers.
--
--For this script, we only need to know that a syscall was entered; we
--don't care how it exited, so we'll use 'perf record' to record only
--the sys_enter events:
--
------
--# perf record -a -e raw_syscalls:sys_enter
--
--^C[ perf record: Woken up 1 times to write data ]
--[ perf record: Captured and wrote 56.545 MB perf.data (~2470503 samples) ]
------
--
--The options basically say to collect data for every syscall event
--system-wide and multiplex the per-cpu output into a single stream.
--That single stream will be recorded in a file in the current directory
--called perf.data.
--
--Once we have a perf.data file containing our data, we can use the -g
--'perf script' option to generate a Python script that will contain a
--callback handler for each event type found in the perf.data trace
--stream (for more details, see the STARTER SCRIPTS section).
--
------
--# perf script -g python
--generated Python script: perf-script.py
--
--The output file created also in the current directory is named
--perf-script.py.  Here's the file in its entirety:
--
--# perf script event handlers, generated by perf script -g python
--# Licensed under the terms of the GNU GPL License version 2
--
--# The common_* event handler fields are the most useful fields common to
--# all events.  They don't necessarily correspond to the 'common_*' fields
--# in the format files.  Those fields not available as handler params can
--# be retrieved using Python functions of the form common_*(context).
--# See the perf-script-python Documentation for the list of available functions.
--
--import os
--import sys
--
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
--from perf_trace_context import *
--from Core import *
--
--def trace_begin():
--	print "in trace_begin"
--
--def trace_end():
--	print "in trace_end"
--
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
--		print_header(event_name, common_cpu, common_secs, common_nsecs,
--			common_pid, common_comm)
--
--		print "id=%d, args=%s\n" % \
--		(id, args),
--
--def trace_unhandled(event_name, context, event_fields_dict):
--		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
--
--def print_header(event_name, cpu, secs, nsecs, pid, comm):
--	print "%-20s %5u %05u.%09u %8u %-20s " % \
--	(event_name, cpu, secs, nsecs, pid, comm),
------
--
--At the top is a comment block followed by some import statements and a
--path append which every perf script script should include.
--
--Following that are a couple generated functions, trace_begin() and
--trace_end(), which are called at the beginning and the end of the
--script respectively (for more details, see the SCRIPT_LAYOUT section
--below).
--
--Following those are the 'event handler' functions generated one for
--every event in the 'perf record' output.  The handler functions take
--the form subsystem\__event_name, and contain named parameters, one for
--each field in the event; in this case, there's only one event,
--raw_syscalls__sys_enter().  (see the EVENT HANDLERS section below for
--more info on event handlers).
--
--The final couple of functions are, like the begin and end functions,
--generated for every script.  The first, trace_unhandled(), is called
--every time the script finds an event in the perf.data file that
--doesn't correspond to any event handler in the script.  This could
--mean either that the record step recorded event types that it wasn't
--really interested in, or the script was run against a trace file that
--doesn't correspond to the script.
--
--The script generated by -g option simply prints a line for each
--event found in the trace stream i.e. it basically just dumps the event
--and its parameter values to stdout.  The print_header() function is
--simply a utility function used for that purpose.  Let's rename the
--script and run it to see the default output:
--
------
--# mv perf-script.py syscall-counts.py
--# perf script -s syscall-counts.py
--
--raw_syscalls__sys_enter     1 00840.847582083     7506 perf                  id=1, args=
--raw_syscalls__sys_enter     1 00840.847595764     7506 perf                  id=1, args=
--raw_syscalls__sys_enter     1 00840.847620860     7506 perf                  id=1, args=
--raw_syscalls__sys_enter     1 00840.847710478     6533 npviewer.bin          id=78, args=
--raw_syscalls__sys_enter     1 00840.847719204     6533 npviewer.bin          id=142, args=
--raw_syscalls__sys_enter     1 00840.847755445     6533 npviewer.bin          id=3, args=
--raw_syscalls__sys_enter     1 00840.847775601     6533 npviewer.bin          id=3, args=
--raw_syscalls__sys_enter     1 00840.847781820     6533 npviewer.bin          id=3, args=
--.
--.
--.
------
--
--Of course, for this script, we're not interested in printing every
--trace event, but rather aggregating it in a useful way.  So we'll get
--rid of everything to do with printing as well as the trace_begin() and
--trace_unhandled() functions, which we won't be using.  That leaves us
--with this minimalistic skeleton:
--
------
--import os
--import sys
--
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
--from perf_trace_context import *
--from Core import *
--
--def trace_end():
--	print "in trace_end"
--
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
------
--
--In trace_end(), we'll simply print the results, but first we need to
--generate some results to print.  To do that we need to have our
--sys_enter() handler do the necessary tallying until all events have
--been counted.  A hash table indexed by syscall id is a good way to
--store that information; every time the sys_enter() handler is called,
--we simply increment a count associated with that hash entry indexed by
--that syscall id:
--
------
--  syscalls = autodict()
--
--  try:
--    syscalls[id] += 1
--  except TypeError:
--    syscalls[id] = 1
------
--
--The syscalls 'autodict' object is a special kind of Python dictionary
--(implemented in Core.py) that implements Perl's 'autovivifying' hashes
--in Python i.e. with autovivifying hashes, you can assign nested hash
--values without having to go to the trouble of creating intermediate
--levels if they don't exist e.g syscalls[comm][pid][id] = 1 will create
--the intermediate hash levels and finally assign the value 1 to the
--hash entry for 'id' (because the value being assigned isn't a hash
--object itself, the initial value is assigned in the TypeError
--exception.  Well, there may be a better way to do this in Python but
--that's what works for now).
--
--Putting that code into the raw_syscalls__sys_enter() handler, we
--effectively end up with a single-level dictionary keyed on syscall id
--and having the counts we've tallied as values.
--
--The print_syscall_totals() function iterates over the entries in the
--dictionary and displays a line for each entry containing the syscall
--name (the dictionary keys contain the syscall ids, which are passed to
--the Util function syscall_name(), which translates the raw syscall
--numbers to the corresponding syscall name strings).  The output is
--displayed after all the events in the trace have been processed, by
--calling the print_syscall_totals() function from the trace_end()
--handler called at the end of script processing.
--
--The final script producing the output shown above is shown in its
--entirety below (syscall_name() helper is not yet available, you can
--only deal with id's for now):
--
------
--import os
--import sys
--
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
--from perf_trace_context import *
--from Core import *
--from Util import *
--
--syscalls = autodict()
--
--def trace_end():
--	print_syscall_totals()
--
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
--	try:
--		syscalls[id] += 1
--	except TypeError:
--		syscalls[id] = 1
--
--def print_syscall_totals():
--    if for_comm is not None:
--	    print "\nsyscall events for %s:\n\n" % (for_comm),
--    else:
--	    print "\nsyscall events:\n\n",
--
--    print "%-40s  %10s\n" % ("event", "count"),
--    print "%-40s  %10s\n" % ("----------------------------------------", \
--                                 "-----------"),
--
--    for id, val in sorted(syscalls.iteritems(), key = lambda(k, v): (v, k), \
--				  reverse = True):
--	    print "%-40s  %10d\n" % (syscall_name(id), val),
------
--
--The script can be run just as before:
--
--  # perf script -s syscall-counts.py
--
--So those are the essential steps in writing and running a script.  The
--process can be generalized to any tracepoint or set of tracepoints
--you're interested in - basically find the tracepoint(s) you're
--interested in by looking at the list of available events shown by
--'perf list' and/or look in /sys/kernel/tracing/events/ for
--detailed event and field info, record the corresponding trace data
--using 'perf record', passing it the list of interesting events,
--generate a skeleton script using 'perf script -g python' and modify the
--code to aggregate and display it for your particular needs.
--
--After you've done that you may end up with a general-purpose script
--that you want to keep around and have available for future use.  By
--writing a couple of very simple shell scripts and putting them in the
--right place, you can have your script listed alongside the other
--scripts listed by the 'perf script -l' command e.g.:
--
------
--# perf script -l
--List of available trace scripts:
--  wakeup-latency                       system-wide min/max/avg wakeup latency
--  rw-by-file <comm>                    r/w activity for a program, by file
--  rw-by-pid                            system-wide r/w activity
------
--
--A nice side effect of doing this is that you also then capture the
--probably lengthy 'perf record' command needed to record the events for
--the script.
--
--To have the script appear as a 'built-in' script, you write two simple
--scripts, one for recording and one for 'reporting'.
--
--The 'record' script is a shell script with the same base name as your
--script, but with -record appended.  The shell script should be put
--into the perf/scripts/python/bin directory in the kernel source tree.
--In that script, you write the 'perf record' command-line needed for
--your script:
--
------
--# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-record
--
--#!/bin/bash
--perf record -a -e raw_syscalls:sys_enter
------
--
--The 'report' script is also a shell script with the same base name as
--your script, but with -report appended.  It should also be located in
--the perf/scripts/python/bin directory.  In that script, you write the
--'perf script -s' command-line needed for running your script:
-+This section shows how to create a simple Python script that reads a
-+`perf.data` file and prints event information.
+ 		if (cs2 && cs1->cpu != cs2->cpu) {
+@@ -4303,9 +4339,17 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
  
------
--# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-report
-+Create a file named `print_events.py` with the following content:
+ 			ds1 = dptr1->domain_data;
+ 			dinfo1 = cd_info1->domains[ds1->domain];
++			if (!dinfo1) {
++				pr_err("Error: Domain %d info is missing for CPU %d in map 1.\n", ds1->domain, cs1->cpu);
++				return -1;
++			}
+ 			if (dptr2) {
+ 				ds2 = dptr2->domain_data;
+ 				dinfo2 = cd_info2->domains[ds2->domain];
++				if (!dinfo2) {
++					pr_err("Error: Domain %d info is missing for CPU %d in map 2.\n", ds2->domain, cs2->cpu);
++					return -1;
++				}
+ 			}
  
--#!/bin/bash
--# description: system-wide syscall counts
--perf script -s ~/libexec/perf-core/scripts/python/syscall-counts.py
------
-+    #!/usr/bin/env python3
-+    import perf
+ 			if (dinfo2 && dinfo1->domain != dinfo2->domain) {
+@@ -4334,14 +4378,22 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+ 			print_domain_stats(ds1, ds2, jiffies1, jiffies2);
+ 			print_separator2(SEP_LEN, "", 0);
  
--Note that the location of the Python script given in the shell script
--is in the libexec/perf-core/scripts/python directory - this is where
--the script will be copied by 'make install' when you install perf.
--For the installation to install your script there, your script needs
--to be located in the perf/scripts/python directory in the kernel
--source tree:
-+    def process_event(sample):
-+        print(f"Event: {sample.evsel} on CPU {sample.sample_cpu} at {sample.sample_time}")
+-			if (dptr2)
+-				dptr2 = list_next_entry(dptr2, domain_list);
++			if (dptr2) {
++				if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
++					dptr2 = NULL;
++				else
++					dptr2 = list_next_entry(dptr2, domain_list);
++			}
+ 		}
+ 		if (summary_only)
+ 			break;
  
------
--# ls -al kernel-source/tools/perf/scripts/python
--total 32
--drwxr-xr-x 4 trz trz 4096 2010-01-26 22:30 .
--drwxr-xr-x 4 trz trz 4096 2010-01-26 22:29 ..
--drwxr-xr-x 2 trz trz 4096 2010-01-26 22:29 bin
---rw-r--r-- 1 trz trz 2548 2010-01-26 22:29 check-perf-script.py
--drwxr-xr-x 3 trz trz 4096 2010-01-26 22:49 Perf-Trace-Util
---rw-r--r-- 1 trz trz 1462 2010-01-26 22:30 syscall-counts.py
------
-+    # Open the session with perf.data file
-+    session = perf.session(perf.data("perf.data"), sample=process_event)
+-		if (cptr2)
+-			cptr2 = list_next_entry(cptr2, cpu_list);
++		if (cptr2) {
++			if (list_is_last(&cptr2->cpu_list, head2))
++				cptr2 = NULL;
++			else
++				cptr2 = list_next_entry(cptr2, cpu_list);
++		}
  
--Once you've done that (don't forget to do a new 'make install',
--otherwise your script won't show up at run-time), 'perf script -l'
--should show a new entry for your script:
-+    # Process all events
-+    session.process_events()
+ 		is_summary = false;
+ 	}
+@@ -4523,7 +4575,7 @@ static int perf_sched__schedstat_report(struct perf_sched *sched)
+ 		}
  
------
--# perf script -l
--List of available trace scripts:
--  wakeup-latency                       system-wide min/max/avg wakeup latency
--  rw-by-file <comm>                    r/w activity for a program, by file
--  rw-by-pid                            system-wide r/w activity
--  syscall-counts                       system-wide syscall counts
------
-+Make the script executable:
-+    $ chmod +x print_events.py
+ 		cd_map = session->header.env.cpu_domain;
+-		err = show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
++		err = show_schedstat_data(&cpu_head, cd_map, session->header.env.nr_cpus_avail, NULL, NULL, 0, false);
+ 	}
  
--You can now perform the record step via 'perf script record':
-+Record some data:
-+    $ perf record -a sleep 1
+ out:
+@@ -4538,7 +4590,7 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
+ 	struct cpu_domain_map **cd_map0 = NULL, **cd_map1 = NULL;
+ 	struct list_head cpu_head_ses0, cpu_head_ses1;
+ 	struct perf_session *session[2];
+-	struct perf_data data[2];
++	struct perf_data data[2] = {0};
+ 	int ret = 0, err = 0;
+ 	static const char *defaults[] = {
+ 		"perf.data.old",
+@@ -4610,7 +4662,8 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
+ 		goto out_delete_ses0;
+ 	}
  
--  # perf script record syscall-counts
-+Run the script:
-+    $ perf script print_events.py
+-	show_schedstat_data(&cpu_head_ses0, cd_map0, &cpu_head_ses1, cd_map1, true);
++	show_schedstat_data(&cpu_head_ses0, cd_map0, session[0]->header.env.nr_cpus_avail,
++			    &cpu_head_ses1, cd_map1, session[1]->header.env.nr_cpus_avail, true);
  
--and display the output using 'perf script report':
-+Or run it directly with Python, ensuring `perf.so` is in your `PYTHONPATH`:
-+    $ PYTHONPATH=/path/to/perf/python python3 print_events.py
+ out_delete_ses1:
+ 	free_schedstat(&cpu_head_ses1);
+@@ -4720,7 +4773,7 @@ static int perf_sched__schedstat_live(struct perf_sched *sched,
+ 		goto out;
+ 	}
  
--  # perf script report syscall-counts
--
--STARTER SCRIPTS
-+THE PERF MODULE
- ---------------
- 
--You can quickly get started writing a script for a particular set of
--trace data by generating a skeleton script using 'perf script -g
--python' in the same directory as an existing perf.data trace file.
--That will generate a starter script containing a handler for each of
--the event types in the trace file; it simply prints every available
--field for each event in the trace file.
--
--You can also look at the existing scripts in
--~/libexec/perf-core/scripts/python for typical examples showing how to
--do basic things like aggregate event data, print results, etc.  Also,
--the check-perf-script.py script, while not interesting for its results,
--attempts to exercise all of the main scripting features.
--
--EVENT HANDLERS
----------------
--
--When perf script is invoked using a trace script, a user-defined
--'handler function' is called for each event in the trace.  If there's
--no handler function defined for a given event type, the event is
--ignored (or passed to a 'trace_unhandled' function, see below) and the
--next event is processed.
--
--Most of the event's field values are passed as arguments to the
--handler function; some of the less common ones aren't - those are
--available as calls back into the perf executable (see below).
--
--As an example, the following perf record command can be used to record
--all sched_wakeup events in the system:
--
-- # perf record -a -e sched:sched_wakeup
--
--Traces meant to be processed using a script should be recorded with
--the above option: -a to enable system-wide collection.
--
--The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
--
------
-- format:
--        field:unsigned short common_type;
--        field:unsigned char common_flags;
--        field:unsigned char common_preempt_count;
--        field:int common_pid;
--
--        field:char comm[TASK_COMM_LEN];
--        field:pid_t pid;
--        field:int prio;
--        field:int success;
--        field:int target_cpu;
------
--
--The handler function for this event would be defined as:
--
------
--def sched__sched_wakeup(event_name, context, common_cpu, common_secs,
--       common_nsecs, common_pid, common_comm,
--       comm, pid, prio, success, target_cpu):
--       pass
------
--
--The handler function takes the form subsystem__event_name.
--
--The common_* arguments in the handler's argument list are the set of
--arguments passed to all event handlers; some of the fields correspond
--to the common_* fields in the format file, but some are synthesized,
--and some of the common_* fields aren't common enough to to be passed
--to every event as arguments but are available as library functions.
--
--Here's a brief description of each of the invariant event args:
--
-- event_name 	  	    the name of the event as text
-- context		    an opaque 'cookie' used in calls back into perf
-- common_cpu		    the cpu the event occurred on
-- common_secs		    the secs portion of the event timestamp
-- common_nsecs		    the nsecs portion of the event timestamp
-- common_pid		    the pid of the current task
-- common_comm		    the name of the current process
--
--All of the remaining fields in the event's format file have
--counterparts as handler function arguments of the same name, as can be
--seen in the example above.
--
--The above provides the basics needed to directly access every field of
--every event in a trace, which covers 90% of what you need to know to
--write a useful trace script.  The sections below cover the rest.
--
--SCRIPT LAYOUT
---------------
--
--Every perf script Python script should start by setting up a Python
--module search path and 'import'ing a few support modules (see module
--descriptions below):
--
------
-- import os
-- import sys
--
-- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	      '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
-- from perf_trace_context import *
-- from Core import *
------
--
--The rest of the script can contain handler functions and support
--functions in any order.
--
--Aside from the event handler functions discussed above, every script
--can implement a set of optional functions:
--
--*trace_begin*, if defined, is called before any event is processed and
--gives scripts a chance to do setup tasks:
--
------
--def trace_begin():
--    pass
------
--
--*trace_end*, if defined, is called after all events have been
-- processed and gives scripts a chance to do end-of-script tasks, such
-- as display results:
--
------
--def trace_end():
--    pass
------
--
--*trace_unhandled*, if defined, is called after for any event that
-- doesn't have a handler explicitly defined for it.  The standard set
-- of common arguments are passed into it:
--
------
--def trace_unhandled(event_name, context, event_fields_dict):
--    pass
------
--
--*process_event*, if defined, is called for any non-tracepoint event
--
------
--def process_event(param_dict):
--    pass
------
--
--*context_switch*, if defined, is called for any context switch
--
------
--def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, out_preempt, *x):
--    pass
------
--
--*auxtrace_error*, if defined, is called for any AUX area tracing error
--
------
--def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
--    pass
------
--
--The remaining sections provide descriptions of each of the available
--built-in perf script Python modules and their associated functions.
--
--AVAILABLE MODULES AND FUNCTIONS
---------------------------------
--
--The following sections describe the functions and variables available
--via the various perf script Python modules.  To use the functions and
--variables from the given module, add the corresponding 'from XXXX
--import' line to your perf script script.
--
--Core.py Module
--~~~~~~~~~~~~~~
-+The `perf` module provides several classes and functions to interact
-+with trace data.
- 
--These functions provide some essential functions to user scripts.
-+### Module Functions
- 
--The *flag_str* and *symbol_str* functions provide human-readable
--strings for flag and symbolic fields.  These correspond to the strings
--and values parsed from the 'print fmt' fields of the event format
--files:
-+- `config_get(name)`: Get a perf config value.
-+- `metrics()`: Returns a list of metrics represented as string values in dictionaries.
-+- `tracepoint(subsystem, name)`: Get tracepoint config.
-+- `parse_events(string)`: Parse a string of events and return an `evlist`.
-+- `parse_metrics(string, pmu=None)`: Parse a string of metrics or metric groups and return an `evlist`.
-+- `pmus()`: Returns a sequence of PMUs.
-+- `syscall_name(num, *, elf_machine=None)`: Turns a syscall number to a string.
-+- `syscall_id(name, *, elf_machine=None)`: Turns a syscall name to a number.
- 
--  flag_str(event_name, field_name, field_value) - returns the string representation corresponding to field_value for the flag field field_name of event event_name
--  symbol_str(event_name, field_name, field_value) - returns the string representation corresponding to field_value for the symbolic field field_name of event event_name
-+### `perf.pmu`
- 
--The *autodict* function returns a special kind of Python
--dictionary that implements Perl's 'autovivifying' hashes in Python
--i.e. with autovivifying hashes, you can assign nested hash values
--without having to go to the trouble of creating intermediate levels if
--they don't exist.
-+Represents a Performance Monitoring Unit.
- 
--  autodict() - returns an autovivifying dictionary instance
-+- `events()`: Returns a sequence of events encoded as dictionaries.
-+- `name()`: Name of the PMU including suffixes.
- 
-+### `perf.evlist`
- 
--perf_trace_context Module
--~~~~~~~~~~~~~~~~~~~~~~~~~
-+Represents a list of event selectors.
- 
--Some of the 'common' fields in the event format file aren't all that
--common, but need to be made accessible to user scripts nonetheless.
-+- `all_cpus()`: CPU map union of all evsel CPU maps.
-+- `metrics()`: List of metric names within the evlist.
-+- `compute_metric(name, cpu, thread)`: Compute metric for given name, cpu and thread.
-+- `mmap()`: mmap the file descriptor table.
-+- `open()`: open the file descriptors.
-+- `close()`: close the file descriptors.
-+- `poll()`: poll the file descriptor table.
-+- `get_pollfd()`: get the poll file descriptor table.
-+- `add(evsel)`: adds an event selector to the list.
-+- `read_on_cpu(cpu)`: reads an event.
-+- `config()`: Apply default record options to the evlist.
-+- `disable()`: Disable the evsels in the evlist.
-+- `enable()`: Enable the evsels in the evlist.
- 
--perf_trace_context defines a set of functions that can be used to
--access this data in the context of the current event.  Each of these
--functions expects a context variable, which is the same as the
--context variable passed into every tracepoint event handler as the second
--argument. For non-tracepoint events, the context variable is also present
--as perf_trace_context.perf_script_context .
-+### `perf.evsel`
- 
-- common_pc(context) - returns common_preempt count for the current event
-- common_flags(context) - returns common_flags for the current event
-- common_lock_depth(context) - returns common_lock_depth for the current event
-- perf_sample_insn(context) - returns the machine code instruction
-- perf_set_itrace_options(context, itrace_options) - set --itrace options if they have not been set already
-- perf_sample_srcline(context) - returns source_file_name, line_number
-- perf_sample_srccode(context) - returns source_file_name, line_number, source_line
-- perf_config_get(config_name) - returns the value of the named config item, or None if unset
-+Represents an event selector.
- 
--Util.py Module
--~~~~~~~~~~~~~~
-+- `open()`: open the event selector file descriptor table.
-+- `cpus()`: CPUs the event is to be used with.
-+- `threads()`: threads the event is to be used with.
-+- `read(cpu, thread)`: read counters. Returns a count object with `val`, `ena`, and `run` attributes.
- 
--Various utility functions for use with perf script:
-+### `perf.session`
- 
--  nsecs(secs, nsecs) - returns total nsecs given secs/nsecs pair
--  nsecs_secs(nsecs) - returns whole secs portion given nsecs
--  nsecs_nsecs(nsecs) - returns nsecs remainder given nsecs
--  nsecs_str(nsecs) - returns printable string in the form secs.nsecs
--  avg(total, n) - returns average given a sum and a total number of values
-+Manages a trace session.
- 
--SUPPORTED FIELDS
------------------
-+- `__init__(data, sample=None)`: Creates a new session. `data` is a `perf.data` object. `sample` is a callback function called for each sample event.
-+- `process_events()`: Reads the trace data and calls the sample callback for each event.
-+- `find_thread(tid)`: Returns the thread associated with a TID.
- 
--Currently supported fields:
-+### `perf.data`
- 
--ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
--addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
--brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
--weight, transaction, raw_buf, attr, cpumode.
-+Represents a trace file.
- 
--Fields that may also be present:
-+- `__init__(filename, mode=perf.DATA_MODE_READ)`: Opens a trace file.
- 
-- flags - sample flags
-- flags_disp - sample flags display
-- insn_cnt - instruction count for determining instructions-per-cycle (IPC)
-- cyc_cnt - cycle count for determining IPC
-- addr_correlates_sym - addr can correlate to a symbol
-- addr_dso - addr dso
-- addr_symbol - addr symbol
-- addr_symoff - addr symbol offset
-+### Sample Object
- 
--Some fields have sub items:
-+Passed to the callback function in `perf.session`.
- 
--brstack:
--    from, to, from_dsoname, to_dsoname, mispred,
--    predicted, in_tx, abort, cycles.
-+- `evsel`: The event selector (name of the event).
-+- `sample_cpu`: The CPU on which the event occurred.
-+- `sample_time`: The timestamp of the event.
-+- `sample_pid`: The PID of the process.
-+- `sample_tid`: The TID of the thread.
-+- `raw_buf`: Raw buffer containing event specific data.
- 
--brstacksym:
--    items: from, to, pred, in_tx, abort (converted string)
-+COUNTER AND METRIC APIS
-+-----------------------
- 
--For example,
--We can use this code to print brstack "from", "to", "cycles".
-+The following APIs are used in `tools/perf/python/ilist.py` for
-+interactive listing and reading of counters and metrics:
- 
--if 'brstack' in dict:
--	for entry in dict['brstack']:
--		print "from %s, to %s, cycles %s" % (entry["from"], entry["to"], entry["cycles"])
-+- `perf.pmus()`: Used to get all available PMUs.
-+- `pmu.events()`: Used to get all events for a specific PMU.
-+- `perf.metrics()`: Used to get all available metrics.
-+- `perf.parse_metrics(metric_name, pmu)`: Used to parse a metric and get an `evlist`.
-+- `evlist.compute_metric(metric_name, cpu, thread)`: Used to compute a metric value for a specific CPU and thread.
-+- `evsel.read(cpu, thread)`: Used to read raw counter values.
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 200ea25891d8..93ed1ea704c9 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -9,10 +9,7 @@ SYNOPSIS
- --------
- [verse]
- 'perf script' [<options>]
--'perf script' [<options>] record <script> [<record-options>] <command>
--'perf script' [<options>] report <script> [script-args]
--'perf script' [<options>] <script> <required-script-args> [<record-options>] <command>
--'perf script' [<options>] <top-script> [script-args]
-+'perf script' [<options>] <script> [script-args]
- 
- DESCRIPTION
- -----------
-@@ -23,52 +20,9 @@ There are several variants of perf script:
-   'perf script' to see a detailed trace of the workload that was
-   recorded.
- 
--  You can also run a set of pre-canned scripts that aggregate and
--  summarize the raw trace data in various ways (the list of scripts is
--  available via 'perf script -l').  The following variants allow you to
--  record and run those scripts:
--
--  'perf script record <script> <command>' to record the events required
--  for 'perf script report'.  <script> is the name displayed in the
--  output of 'perf script --list' i.e. the actual script name minus any
--  language extension.  If <command> is not specified, the events are
--  recorded using the -a (system-wide) 'perf record' option.
--
--  'perf script report <script> [args]' to run and display the results
--  of <script>.  <script> is the name displayed in the output of 'perf
--  script --list' i.e. the actual script name minus any language
--  extension.  The perf.data output from a previous run of 'perf script
--  record <script>' is used and should be present for this command to
--  succeed.  [args] refers to the (mainly optional) args expected by
--  the script.
--
--  'perf script <script> <required-script-args> <command>' to both
--  record the events required for <script> and to run the <script>
--  using 'live-mode' i.e. without writing anything to disk.  <script>
--  is the name displayed in the output of 'perf script --list' i.e. the
--  actual script name minus any language extension.  If <command> is
--  not specified, the events are recorded using the -a (system-wide)
--  'perf record' option.  If <script> has any required args, they
--  should be specified before <command>.  This mode doesn't allow for
--  optional script args to be specified; if optional script args are
--  desired, they can be specified using separate 'perf script record'
--  and 'perf script report' commands, with the stdout of the record step
--  piped to the stdin of the report script, using the '-o -' and '-i -'
--  options of the corresponding commands.
--
--  'perf script <top-script>' to both record the events required for
--  <top-script> and to run the <top-script> using 'live-mode'
--  i.e. without writing anything to disk.  <top-script> is the name
--  displayed in the output of 'perf script --list' i.e. the actual
--  script name minus any language extension; a <top-script> is defined
--  as any script name ending with the string 'top'.
--
--  [<record-options>] can be passed to the record steps of 'perf script
--  record' and 'live-mode' variants; this isn't possible however for
--  <top-script> 'live-mode' or 'perf script report' variants.
--
--  See the 'SEE ALSO' section for links to language-specific
--  information on how to write and run your own trace scripts.
-+  You can also run standalone scripts that aggregate and summarize the
-+  raw trace data in various ways (the list of scripts is available via
-+  'perf script -l').
- 
- OPTIONS
- -------
-@@ -90,18 +44,7 @@ OPTIONS
- --list=::
-         Display a list of available trace scripts.
- 
---s ['lang']::
----script=::
--        Process trace data with the given script ([lang]:script[.ext]).
--	If the string 'lang' is specified in place of a script name, a
--        list of supported languages will be displayed instead.
- 
---g::
----gen-script=::
--	Generate a starter script. If a language is given then the
--        script is named perf-script.[ext] according to the
--        language. If a file path is given then python is used for
--        files ending '.py' and perl used for files ending '.pl'.
- 
- --dlfilter=<file>::
- 	Filter sample events using the given shared object file.
-@@ -543,6 +486,5 @@ include::guest-files.txt[]
- 
- SEE ALSO
- --------
--linkperf:perf-record[1], linkperf:perf-script-perl[1],
--linkperf:perf-script-python[1], linkperf:perf-intel-pt[1],
--linkperf:perf-dlfilter[1]
-+linkperf:perf-record[1], linkperf:perf-script-python[1],
-+linkperf:perf-intel-pt[1], linkperf:perf-dlfilter[1]
+-	show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
++	show_schedstat_data(&cpu_head, cd_map, nr, NULL, NULL, 0, false);
+ 	free_cpu_domain_info(cd_map, sv, nr);
+ out:
+ 	free_schedstat(&cpu_head);
 -- 
 2.54.0.545.g6539524ca2-goog
 
