@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AD737BE89
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14CF37C911
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 17:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777139399; cv=none; b=es+FdNvd7YpIHDpeDRV818GsoJZRaD7XqpxxaFMHy+ldqqEJjYk1Iyfj2jclWWvid+a4K6AwKwSoG9kCRLdiqIXsd3i5C4bwy/9Mv/N0RBAztoVK9vde5rvoL/EbIt82v5lwpwFFTpvLCsbwKIQjhXtMl9azbriEz4qCIBx8E5c=
+	t=1777139402; cv=none; b=hW040pd/Qzlqfmfih1CYMaF6rWkCnU2212tmT4OCQbGI25Tk67VGpQvdCkuBReXVBex0QfBgJG4BRrede7wmQ0ju00VlRicbIT8XnQmtW4RE4E2tiaEojN4wxy80gv8PLxbPxEtYGxt14VXaZOTfaAdhN6y2VbckNFC5FgOsQCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777139399; c=relaxed/simple;
-	bh=tx0Y+ZL/2KY67zQgnrtOWDh6Wuqzo7a1zM65iqPR+1c=;
+	s=arc-20240116; t=1777139402; c=relaxed/simple;
+	bh=FRJkB1Cquz79cOSRZrWQZxDQ+1Gx96tDBQLRgM6VsPA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M5jJ0gH63yJvBjYF2LPvaJ22sNURvC/YW/54xbZllKTA0WJhxbwHYapWQmdWaOw3NiFY/vaefH+Cpu15vmMuBYjQDTwH7rAy1wqPSLfJvj/ZxtNuZsNWWfL3iOdnV7a9RZMA/3FrW9Mt6sjUHp1iDyVlVum06/KiwyHK3Vax2RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q25EpgXK; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=qWuwnozWaSpHYRWsSP7Fi/XKEihYf7hILdvz6JKRRhXFTxDO5vesIF+i9isfg8P9UG1VjsC+wcb036NXdSuT5oJqEivHeesGHeoI6inDujXwHZ5xJE4sXWA2bRfOrQ22MOmMHy3zb4E4+eiWl/7JWOM1ZjeyO38T57UpzZ3SoLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d899G5D3; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q25EpgXK"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12db218e265so14120336c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:49:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d899G5D3"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2de07c12745so24740325eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 10:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777139397; x=1777744197; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777139399; x=1777744199; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FIUPQnj9Sm31hxCjwi2GzFaWFVwRkKGchfSFKojE+/g=;
-        b=Q25EpgXKWdjEfv4GqFpH6XSiLvZ0+WZb0HbAB4QVMgMC0eOC1/D75udVAvPJaARgau
-         s1+S9T40ootdZpaqGLDcmk+b8NvNttCy14DhKd1s6mZDudVxmnrU981R9I99AXXmAxn2
-         gVm88nJhXD8d6u0vhGjCET17dY42/mtZx4ZNRYp+o3g1k1tqIfBVb9nbYni5Gp9hw/fO
-         wIAb+3Ye6Ognv1jEeE3IurX7fdcNM0C+ez7gTzvvZGv5ADFb94R59skzEAOdL9oa8hyF
-         UzdI8UY/IIWueMv+d7n43vVGnaFPt4+iqRKj/rKTQY55ah2Lf6Ti9Fmz4v4epP4iFanv
-         413A==
+        bh=GkS04/94NBW5ShfL0EcvB/IZEgEtB93nGkm6zSZzY+Q=;
+        b=d899G5D3jgaZkoO1V+9j1uORyrPIk357QxlUmw58hJUfmFd4hmi8FQazOpWB6S25YJ
+         DUltgiRXyjH+jbTmorgaj9MqeSuq0fWGlqpayNRKDnmD61Y1lz2PSE2l2+RxcwIFodaq
+         NsmHoQv6oIJDJiCx5Nj0W+9ZcOzxs5j+sVUWPvWd0i0FVyryZvH1q27oPDSz8KH0aIIV
+         KkzjzUHci6KxXtOThHDYqnCIGgRLO4f/UGTnJbl5yzxKK1/Q3IJHjfziQSpx15yxIDCi
+         ozuKSeMPrnAmoOcC94Xp9piLvTzMs7bf3PiA86VcqpiPrDxIUWSdKEN2kYPqjUHt3k5z
+         l/tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777139397; x=1777744197;
+        d=1e100.net; s=20251104; t=1777139399; x=1777744199;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FIUPQnj9Sm31hxCjwi2GzFaWFVwRkKGchfSFKojE+/g=;
-        b=Diz43gQbbxbWcSsKlOA/i3hewNBYbrmC1Onxf7jCRekXWUZ1EuwuxpVzyAZSAKVzM9
-         yeiaOHLRJCC1d8Ld6wh1cc8aajnNMOT1Y/+dgEB3H6CeIHTHh8SRteLUYV7miB/IC2EU
-         /NThjvSx5IYM710INamgXPmedKuwY85oeT6tEqN9xuQx9d4c/t2J/8reCQxj7fAEUpVF
-         C8bLgeebM1Je/+99z7RAzUxMtJbjOVqeUs4bMiC8xBs2pcgFUeF8eQKQSksw7tlETh3F
-         UAsu+YDdeILJ/bT8Sha+YCuas9faT81NWN1Up4gz/bAJ+S9VY5shWyqvg0HALj4EDlb/
-         Gisw==
-X-Forwarded-Encrypted: i=1; AFNElJ+eHnnGadJvWZTfG4iqD4IDol/uAfLXodfCtbV7QCHjccXl2O3KjtKrirdImtaad9Kf0xshEi+LdtxkwpMmLN1E@vger.kernel.org
-X-Gm-Message-State: AOJu0YzggMLtQul13dBr+OR8OlWzWJSZviov2xVZ0k2F1U8sFILJfUSA
-	NKlBkmr73JV+nKl1BQHvb/GbFJ/m8qsB6BqTcJw+MjvY/VZg/OCP11SQWK3OZ9zbhf6g/pl6dRs
-	Dgv+V5DVInQ==
-X-Received: from dlbpt10.prod.google.com ([2002:a05:7022:e80a:b0:12d:b1c5:1596])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2512:b0:12d:c039:65d1
- with SMTP id a92af1059eb24-12dc03968d7mr4725972c88.1.1777139396731; Sat, 25
- Apr 2026 10:49:56 -0700 (PDT)
-Date: Sat, 25 Apr 2026 10:48:26 -0700
+        bh=GkS04/94NBW5ShfL0EcvB/IZEgEtB93nGkm6zSZzY+Q=;
+        b=bPiYEqJ2CDOgiZq1bWCUYN0HEY5+cMmVbpLWqJHv5X7XZ1Vm26FZdHMoZAHU8R97xT
+         cn2yx+Qw6mVBxbG3+lQoBlzqbhbDsJ6AXjYy23MwImM5mgBlL2l7Tj1LHJS4I09/THX4
+         i2Y7bnX7F9M9atcXUAhIfY568XSOoPiCNwEFuo98Ndo2giZaMhRk2vdrY+iW0Rutfc1T
+         nwEuMGzOu/vDXNxQiglpLk1tLHA0uuteq2iPBA2lm/nK7yl1a99AZD1/QAasLUIND/OF
+         t4a9ABzXV0o/QFkMw7OkJ34xPBvCljGRt7HEKqEpTFL7c/ou75rhQRZpUdYncJJpI2MQ
+         c6Sg==
+X-Forwarded-Encrypted: i=1; AFNElJ/634wIDha6OmK769Qo5XuKSjOClGEIFEAPDu5VnpJ4ch8dOORGON3PaS6wNS6Yyce3+1Wqxz+f8SmvBU7UikSx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx115jhdbhJ4/i+YifpHWnrH5TxpDb/ElGDvjEtC0zdrwyRSChf
+	7zD6QDJJ06BdjubWyNxiUZ0NkT12HjGfUjlcPUFH27CLOwGY4B24SpGimtsx6RLcCIXlt5elLdP
+	5jFg0cEljpA==
+X-Received: from dybsc19.prod.google.com ([2002:a05:7301:4b13:b0:2e6:a17a:3fa3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7491:b0:2df:7b88:a1b0
+ with SMTP id 5a478bee46e88-2e4873f31a7mr22475971eec.27.1777139398906; Sat, 25
+ Apr 2026 10:49:58 -0700 (PDT)
+Date: Sat, 25 Apr 2026 10:48:27 -0700
 In-Reply-To: <20260425174858.3922152-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260424164721.2229025-1-irogers@google.com> <20260425174858.3922152-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425174858.3922152-29-irogers@google.com>
-Subject: [PATCH v6 28/59] perf syscall-counts-by-pid: Port syscall-counts-by-pid
- to use python module
+Message-ID: <20260425174858.3922152-30-irogers@google.com>
+Subject: [PATCH v6 29/59] perf futex-contention: Port futex-contention to use
+ python module
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -70,16 +70,16 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rewrite tools/perf/scripts/python/syscall-counts-by-pid.py to use the
+Rewrite tools/perf/scripts/python/futex-contention.py to use the
 python module and various style changes. By avoiding the overheads in
-the `perf script` execution the performance improves by more than 3.8x
+the `perf script` execution the performance improves by more than 3.2x
 as shown in the following (with PYTHON_PATH and PERF_EXEC_PATH set as
 necessary):
 
 ```
-$ perf record -e raw_syscalls:sys_enter -a sleep 1
+$ perf record -e syscalls:sys_*_futex -a sleep 1
 ...
-$ time perf script tools/perf/scripts/python/syscall-counts-by-pid.py perf
+$ time perf script tools/perf/scripts/python/futex-contention.py
 Install the python-audit package to get syscall names.
 For example:
   # apt-get install python3-audit (Ubuntu)
@@ -87,55 +87,16 @@ For example:
   etc.
 
 Press control+C to stop and show the summary
-Warning:
-1 out of order events recorded.
-
-syscall events for perf:
-
-comm [pid]/syscalls                            count
- ---------------------------------------  ----------
-
-perf [3886080]
-  1                                           538989
-  16                                              32
-  203                                             17
-  3                                                2
-  257                                              1
-  204                                              1
-  15                                               1
-  0                                                1
-
-perf [3886082]
-  7                                                1
-
-real    0m3.852s
-user    0m3.512s
-sys     0m0.336s
-$ time python3 tools/perf/python/syscall-counts-by-pid.py perf
-Warning:
-1 out of order events recorded.
-
-syscall events for perf:
-
-comm [pid]/syscalls                           count
- --------------------------------------- -----------
-
-perf [3886080]
-  write                                      538989
-  ioctl                                          32
-  sched_setaffinity                              17
-  close                                           2
-  openat                                          1
-  sched_getaffinity                               1
-  rt_sigreturn                                    1
-  read                                            1
-
-perf [3886082]
-  poll                                            1
-
-real    0m1.011s
-user    0m0.963s
-sys     0m0.048s
+aaa/4[2435653] lock 7f76b380c878 contended 1 times, 1099 avg ns [max: 1099 ns, min 1099 ns]
+...
+real    0m1.007s
+user    0m0.935s
+sys     0m0.072s
+$ time python3 tools/perf/python/futex-contention.py
+...
+real    0m0.314s
+user    0m0.259s
+sys     0m0.056s
 ```
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
@@ -143,127 +104,123 @@ Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v2:
 
-1. Removed Unused Variable: Removed id_keys which was assigned but
-   never read.
+1. Fixed Module Import Failure: Corrected the type annotations from
+   [int, int] to Tuple[int, int] .  The previous code would raise a
+   TypeError at module import time because lists cannot be used as
+   types in dictionary annotations.
 
-2. Fallback for Unknown Syscalls: If perf.syscall_name() returns None
-   for an unmapped ID, it now falls back to the numeric ID string to
-   prevent TypeError crashes during string formatting.
+2. Prevented Out-Of-Memory Crashes: Replaced the approach of storing
+   every single duration in a list with a LockStats class that
+   maintains running aggregates (count, total time, min, max). This
+   ensures O(1) memory usage per lock/thread pair rather than
+   unbounded memory growth.
 
-3. Fallback for Syscall Number Attribute: It now checks for
-   __syscall_nr first, and if missing, falls back to checking for nr .
+3. Support for Custom Input Files: Added a -i / --input command-line
+   argument to support processing arbitrarily named trace files,
+   removing the hardcoded "perf.data" restriction.
 
-4. Robust Process Resolution: Added a try-except block around
-   session.process(sample.pid).comm() to handle untracked PIDs
-   gracefully instead of crashing on a TypeError .
-
-5. Restored PID Filtering: The script now attempts to parse the
-   positional argument as an integer to filter by Process ID. If that
-   fails, it treats it as a command name (COMM) string to filter by,
-   restoring behavior from the original legacy script.
-
-6. Support for Custom Input Files: Added a -i / --input command-line
-   argument to support arbitrarily named trace files, removing the
-   hardcoded "perf.data" restriction.
+4. Robust Process Lookup: Added a check to ensure session is
+   initialized before calling session.  process() , preventing
+   potential NoneType attribute errors if events are processed during
+   initialization.
 ---
- tools/perf/python/syscall-counts-by-pid.py | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100755 tools/perf/python/syscall-counts-by-pid.py
+ tools/perf/python/futex-contention.py | 87 +++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100755 tools/perf/python/futex-contention.py
 
-diff --git a/tools/perf/python/syscall-counts-by-pid.py b/tools/perf/python/syscall-counts-by-pid.py
+diff --git a/tools/perf/python/futex-contention.py b/tools/perf/python/futex-contention.py
 new file mode 100755
-index 000000000000..ff962334a143
+index 000000000000..1fc87ec0e6e5
 --- /dev/null
-+++ b/tools/perf/python/syscall-counts-by-pid.py
-@@ -0,0 +1,88 @@
++++ b/tools/perf/python/futex-contention.py
+@@ -0,0 +1,87 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""
-+Displays system-wide system call totals, broken down by syscall.
-+If a [comm] arg is specified, only syscalls called by [comm] are displayed.
-+"""
++"""Measures futex contention."""
 +
 +import argparse
 +from collections import defaultdict
++from typing import Dict, Tuple
 +import perf
 +
-+syscalls: dict[tuple[str, int, int], int] = defaultdict(int)
-+for_comm = None
-+for_pid = None
++class LockStats:
++    """Aggregate lock contention information."""
++    def __init__(self) -> None:
++        self.count = 0
++        self.total_time = 0
++        self.min_time = 0
++        self.max_time = 0
++
++    def add(self, duration: int) -> None:
++        """Add a new duration measurement."""
++        self.count += 1
++        self.total_time += duration
++        if self.count == 1:
++            self.min_time = duration
++            self.max_time = duration
++        else:
++            self.min_time = min(self.min_time, duration)
++            self.max_time = max(self.max_time, duration)
++
++    def avg(self) -> float:
++        """Return average duration."""
++        return self.total_time / self.count if self.count > 0 else 0.0
++
++process_names: Dict[int, str] = {}
++start_times: Dict[int, Tuple[int, int]] = {}
 +session = None
++durations: Dict[Tuple[int, int], LockStats] = defaultdict(LockStats)
++
++FUTEX_WAIT = 0
++FUTEX_WAKE = 1
++FUTEX_PRIVATE_FLAG = 128
++FUTEX_CLOCK_REALTIME = 256
++FUTEX_CMD_MASK = ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
 +
 +
-+def print_syscall_totals():
-+    """Print aggregated statistics."""
-+    if for_comm is not None:
-+        print(f"\nsyscall events for {for_comm}:\n")
-+    elif for_pid is not None:
-+        print(f"\nsyscall events for PID {for_pid}:\n")
-+    else:
-+        print("\nsyscall events:\n")
-+
-+    print(f"{'comm [pid]/syscalls':<40} {'count':>10}")
-+    print("---------------------------------------- -----------")
-+
-+    sorted_keys = sorted(syscalls.keys(), key=lambda k: (k[0], k[1], k[2]))
-+    current_comm_pid = None
-+    for comm, pid, sc_id in sorted_keys:
-+        if current_comm_pid != (comm, pid):
-+            print(f"\n{comm} [{pid}]")
-+            current_comm_pid = (comm, pid)
-+        name = perf.syscall_name(sc_id) or str(sc_id)
-+        print(f"  {name:<38} {syscalls[(comm, pid, sc_id)]:>10}")
-+
-+
-+def process_event(sample):
++def process_event(sample: perf.sample_event) -> None:
 +    """Process a single sample event."""
++    def handle_start(tid: int, uaddr: int, op: int, start_time: int) -> None:
++        if (op & FUTEX_CMD_MASK) != FUTEX_WAIT:
++            return
++        if tid not in process_names:
++            try:
++                if session:
++                    process = session.find_thread(tid)
++                    if process:
++                        process_names[tid] = process.comm()
++            except (TypeError, AttributeError):
++                return
++        start_times[tid] = (uaddr, start_time)
++
++    def handle_end(tid: int, end_time: int) -> None:
++        if tid not in start_times:
++            return
++        (uaddr, start_time) = start_times[tid]
++        del start_times[tid]
++        durations[(tid, uaddr)].add(end_time - start_time)
++
 +    event_name = str(sample.evsel)
-+    if event_name == "evsel(raw_syscalls:sys_enter)":
-+        sc_id = getattr(sample, "id", -1)
-+    elif event_name.startswith("evsel(syscalls:sys_enter_"):
-+        sc_id = getattr(sample, "__syscall_nr", None)
-+        if sc_id is None:
-+            sc_id = getattr(sample, "nr", -1)
-+    else:
-+        return
-+
-+    if sc_id == -1:
-+        return
-+
-+    pid = sample.sample_pid
-+
-+    if for_pid and pid != for_pid:
-+        return
-+
-+    comm = "unknown"
-+    try:
-+        if session:
-+            proc = session.find_thread(pid)
-+            if proc:
-+                comm = proc.comm()
-+    except (TypeError, AttributeError):
-+        pass
-+
-+    if for_comm and comm != for_comm:
-+        return
-+    syscalls[(comm, pid, sc_id)] += 1
++    if event_name == "evsel(syscalls:sys_enter_futex)":
++        uaddr = getattr(sample, "uaddr", 0)
++        op = getattr(sample, "op", 0)
++        handle_start(sample.sample_tid, uaddr, op, sample.sample_time)
++    elif event_name == "evsel(syscalls:sys_exit_futex)":
++        handle_end(sample.sample_tid, sample.sample_time)
 +
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument("filter", nargs="?", help="COMM or PID to filter by")
++    ap = argparse.ArgumentParser(description="Measure futex contention")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
 +    args = ap.parse_args()
 +
-+    if args.filter:
-+        try:
-+            for_pid = int(args.filter)
-+        except ValueError:
-+            for_comm = args.filter
-+
 +    session = perf.session(perf.data(args.input), sample=process_event)
 +    session.process_events()
-+    print_syscall_totals()
++
++    for ((t, u), stats) in sorted(durations.items()):
++        avg_ns = stats.avg()
++        print(f"{process_names.get(t, 'unknown')}[{t}] lock {u:x} contended {stats.count} times, "
++              f"{avg_ns:.0f} avg ns [max: {stats.max_time} ns, min {stats.min_time} ns]")
 -- 
 2.54.0.545.g6539524ca2-goog
 
