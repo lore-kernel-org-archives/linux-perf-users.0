@@ -1,129 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C24B23BF9F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140B035AC0B
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140433; cv=none; b=fHwT1EULr2DWAGe4ybMcOz7LXP/ITaXIMUEZk7ISJVNPAmAmBvc4fjeLvOjfAkLww8yTN8L91ntzUi4leOxqAVWQdvapgldpiLal8fKyWj/Dqn94fb9dl5og63Va1N8PNawtMeHYYAXOGzulZLSCls+vxyt/TVStsvMd5zfOObI=
+	t=1777140475; cv=none; b=gmwOYyPYlskD5kG78OxaN0O4AaANKLbZnKkcxkaoEY7Se/RoyI7MDXMYXRd2I6jbChmTn/wS6TSd/elA8M9HYmafmXZaUR7Ij3UwCuAdUYwrGqyQOxiwI0TxqI6rEnNXMcejf2vdMU00ZSRf1bfJHf5KekFaZFewirpcpctDYpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777140433; c=relaxed/simple;
-	bh=8LTgkvRKnG1+4yu4FNKfpop8N2AzYy09F8arlrd2814=;
+	s=arc-20240116; t=1777140475; c=relaxed/simple;
+	bh=TmqQjvLdoxuCv05YmK1d4pk+n5UyjJUuTw6Vc1LPTyI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AxdppqpkcADW06CpksCSWF31t/GpUCHu8ti9xJIVVWwF9TvnjG8jh9ZfUnF9O3s77oo3tA6HBtJwZ/uWCIUXiOM9/jC0MNAZ2YpGGCLjWIbWLHQQwTfZEng8lh3O7+7N1n7cVOnRlrz70r/BEIUTnPPgSEXZhl7YmCxDlPy0wzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNSRRfmd; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=a1FPWvjpjRxFT7hkgNr98sDt64StlUW/ZiqL+yQL4I1RC9sd7INxzJ2o8ECtFqcu4idCO0dU38ohmLtjfKeRqhHXScond/Os3FnWZwz62SVqHFKeeE5kQ2Td0BOVnzdUednWpb81kznHXlHeHkbwB1aCYSGiThtbyIvy1KhORAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVoQjbBr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNSRRfmd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A0FC2BCB0;
-	Sat, 25 Apr 2026 18:07:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVoQjbBr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9220AC2BCB0;
+	Sat, 25 Apr 2026 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140433;
-	bh=8LTgkvRKnG1+4yu4FNKfpop8N2AzYy09F8arlrd2814=;
+	s=k20201202; t=1777140474;
+	bh=TmqQjvLdoxuCv05YmK1d4pk+n5UyjJUuTw6Vc1LPTyI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=eNSRRfmdKcFb0JEdU+EIl8K81UIL4e3DlMUlxn3e4vyRZfUZ/RD/4P6UwaysUs/b7
-	 QRQj/P2gM9blnDaPC+0kNfEsqjjjMV1QFfwcS0KeRxu2uNwwwHxjMqoxYeym3Uu3h9
-	 Q1n69xN8Zc+S59A4/uWM6zYIPVNQYnXGAFEgurEAyqtU12/ZT2tgOSaUeddpvQEuRd
-	 99lly+DpThioMddS7P4AR64a4M29v9BrgyN+zXhUbeDKlF3tegIR74uot142jNiKR1
-	 1IrtkKwdBCcwEIWR//wrm+Nai61NoNxuH3vWQyevc17O/ZfNLVVYLkgLCPmCZvzkYh
-	 SI6Qmbg9cBKKw==
+	b=YVoQjbBrI6QSj7F5QPvOzw2cYqlDLAFhiUXASpbuueb5p92azW5WZGGgWsuU2wAoo
+	 0SIwWM3zU2S+ZcdQPQ22STYamdFbDkR6GRaCOR/LQyEHF1NHTOfh/ScnEXJ76BzMhP
+	 o5Jnjh3F/1n+eAWjlbfQUzh0Z8rfcbl/IIbRhGZyR56BOYc6VU/XaoakNwcx0i/cTp
+	 p+/9KWnr/Ic0605tUVIloYf2LBSyEBfpuZhfYuTDNbNDS/LhT/wll6Fgal4GiV8649
+	 E6cqW6FBEG7NaVymALWmzw1fUUkh2nTZqWuPVTq5AkBChQl1JILCVnlKfO4+9oSf20
+	 z0cPIiXubGO6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 26/59] perf mem-phys-addr: Port mem-phys-addr to use
- python module
+Subject: Re: [PATCH v6 25/59] perf stat-cpi: Port stat-cpi to use python
+ module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-27-irogers@google.com>
-References: <20260425174858.3922152-27-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-26-irogers@google.com>
+References: <20260425174858.3922152-26-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:07:12 +0000
-Message-Id: <20260425180712.F3A0FC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:07:54 +0000
+Message-Id: <20260425180754.9220AC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 3 potential issue(s):
-- [Medium] The script uses modern Python features that break compatibility =
-with older Python 3 versions commonly used in enterprise distributions.
-- [Medium] Unrestricted per-sample printing of unmapped physical addresses =
-causes severe log spam and performance degradation.
-- [Low] Incorrect handling of the `bisect_right` return value masks a logic=
-al flaw via negative indexing.
+Sashiko AI review found 1 potential issue(s):
+- [High] In live mode, `store()` incorrectly subtracts previous values from=
+ `counts` that are already computed as deltas, resulting in invalid (often =
+negative) counter and multiplexing scaling values.
 --
 
-commit 904dd2cfff43ebbf4c77eb8c22a3d0c319e26d8c
+commit e4c0de46cf600fa6527454dc5cc7c9aea1ab53f1
 Author: Ian Rogers <irogers@google.com>
 
-perf mem-phys-addr: Port mem-phys-addr to use python module
+perf stat-cpi: Port stat-cpi to use python module
 
-This commit adds a Python script that uses the perf python session API to
-process a perf.data file. It demonstrates resolving physical address samples
-to memory types by parsing /proc/iomem.
+This patch ports stat-cpi.py from the legacy framework to a standalone scri=
+pt
+that supports both file processing and live mode. It accumulates cycles and
+instructions to calculate and display Cycles Per Instruction per interval p=
+er
+CPU or thread.
 
-> diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-p=
-hys-addr.py
+> diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
 > new file mode 100755
-> index 000000000000..ba874d7a2011
+> index 000000000000..4b1f1f69c94a
 > --- /dev/null
-> +++ b/tools/perf/python/mem-phys-addr.py
-> @@ -0,0 +1,117 @@
-[ ... ]
-> +# Physical memory layout from /proc/iomem. Key is the indent and then
-> +# a list of ranges.
-> +iomem: Dict[int, list[IomemEntry]] =3D collections.defaultdict(list)
-
-Will this cause a TypeError on Python versions older than 3.9? Generic type
-hints in standard collections like list require Python 3.9+. Older Python
-versions commonly used in enterprise distributions might fail here.
-
-> +# Child nodes from the iomem parent.
-> +children: Dict[IomemEntry, set[IomemEntry]] =3D collections.defaultdict(=
-set)
-
-Similarly, will using set[] instead of Set[] from the typing module cause
-exceptions on Python environments older than 3.9?
+> +++ b/tools/perf/python/stat-cpi.py
 
 [ ... ]
-> +def find_memory_type(phys_addr) -> Optional[IomemEntry]:
-> +    """Search iomem for the range containing phys_addr with the maximum =
-indent"""
-> +    for i in range(max_indent, -1, -1):
-> +        if i not in iomem:
-> +            continue
-> +        position =3D bisect.bisect_right(iomem[i], phys_addr,
-> +                                       key=3Dlambda entry: entry.begin)
 
-Does this break compatibility with Python versions older than 3.10? The key
-parameter in bisect.bisect_right() was introduced in Python 3.10, so this
-might result in a TypeError on older systems.
+> +    def store(self, event: str, cpu: int, thread: int, counts: tuple[int=
+, int, int]) -> None:
+> +        """Store counter values, computing difference from previous abso=
+lute values."""
+> +        self.store_key(cpu, thread)
+> +        key =3D self.get_key(event, cpu, thread)
+> +
+> +        val, ena, run =3D counts
+> +        if key in self.prev_data:
+> +            prev_val, prev_ena, prev_run =3D self.prev_data[key]
+> +            cur_val =3D val - prev_val
+> +            cur_ena =3D ena - prev_ena
+> +            cur_run =3D run - prev_run
 
-> +        if position is None:
+Does this subtraction work correctly for both file and live modes?
 
-Since bisect.bisect_right() always returns an integer, is this check for
-None necessary?
+In file mode, PERF_RECORD_STAT events provide cumulative, absolute values, =
+so
+taking the difference here extracts the interval delta correctly.
 
-> +            continue
-> +        iomem_entry =3D iomem[i][position-1]
+However, in live mode, read_counters() calls evsel.read(). The Python perf
+extension (pyrf_evsel__read in tools/perf/util/python.c) already computes
+and returns the delta since the last read.
 
-If phys_addr is smaller than the lowest address in the list, position will
-be 0. This would result in accessing index -1, which fetches the last eleme=
-nt
-of the list via negative indexing wrap-around.
+If counts already contains the interval delta in live mode, won't subtracti=
+ng
+prev_val here effectively calculate current_delta - previous_delta, leading=
+ to
+invalid or negative values?
 
-While the bounds check below will handle it safely, relying on this behavior
-seems logically incorrect. Would it be better to check for position =3D=3D 0
-instead of checking for None?
+Also, since the run delta is typically constant across intervals, wouldn't
+cur_run become near zero and break the multiplexing scaling math in get()?
 
-> +        if  iomem_entry.begin <=3D phys_addr <=3D iomem_entry.end:
-> +            return iomem_entry
-> +    print(f"Didn't find {phys_addr}")
+> +        else:
+> +            cur_val =3D val
+> +            cur_ena =3D ena
+> +            cur_run =3D run
+> +
+> +        self.data[key] =3D (cur_val, cur_ena, cur_run)
+> +        self.prev_data[key] =3D counts # Store absolute value for next t=
+ime
 
-Because process_event() evaluates thousands or millions of samples, won't
-this print statement cause massive log spam and severely degrade performance
-for unmapped physical addresses?
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D26
+152-1-irogers@google.com?part=3D25
