@@ -1,128 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E20288AD
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA24288AD
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158944; cv=none; b=HXtDjsER6oYGhAd05zXgtITZlCXjwfVcEVMuzeFUwv91TjHWxUdYrg62n4ifhjwgyc8sfD6d7NlSFsMOP02Ex+DGjIra5Pt7M7cWg/id+OcGkrGIir+j7IN1g/pYGjtRTrOrN9pC3dycYgoxBq7G9hhDk2pwzOrpI//vSKcu+Os=
+	t=1777158976; cv=none; b=COe8QFegGEPXcQh3Ue3KhAWnG2wE4bu3QDQMm4KkMn5G0DE5/bstN4XL3VnHyxH1JDxhZzVW2pP5lzBWUxfgtBOU+lJ/n/BpJX3Qb1o/s6UQsfKoqxBZ7mDNGSr17X4OPLH2p/7zJoTFqYWtou2lwWdZu6cM6NmFtO+x4AWZG2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158944; c=relaxed/simple;
-	bh=XRG9vv2H0FSFBXfSOZQa8Lq8ovOBP24jJkqxdIAnXK8=;
+	s=arc-20240116; t=1777158976; c=relaxed/simple;
+	bh=AqiNcZRK3auhd6RhW+8OfBhF/otXq1FMTHlZeHlGJgw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gX3Dt889ODZpuT5UloIOSoB6fd8YK1kIqlbsZv740hTFc1RNAuy/REfjDM6Kk8f788966zpAAsLxfMgZVxU97fCLwJLOWVb0b9p8JmL2Nf7v0tjrDvye0K55G7meZQD4JEC0Sbn1Je/YALP38Zv8mpGia+ZdEnL9d5hzMuPLPGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQtwR9rY; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=mqAOC0/nBi1wSgqO4VVfdrT4Q+ZuujbSBRy3SW07tSSGQlDVRmxK28YdHrmv5TGPiM7oENLqPyVgjBJSMIL9xMd2E0O5OL3SeTXydZugdZrV+DUKErLfYqcxJPbJtSSao/AN8BAi50A2AccTnPP+29aQMC0p44+8N2GNznVYbKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj7L/KBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQtwR9rY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B798C2BCB0;
-	Sat, 25 Apr 2026 23:15:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj7L/KBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A15B1C2BCB0;
+	Sat, 25 Apr 2026 23:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158944;
-	bh=XRG9vv2H0FSFBXfSOZQa8Lq8ovOBP24jJkqxdIAnXK8=;
+	s=k20201202; t=1777158975;
+	bh=AqiNcZRK3auhd6RhW+8OfBhF/otXq1FMTHlZeHlGJgw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=mQtwR9rYZPBaWnhSFFr7ku81Q9VFxoB+Ni2nPmKMvnNExFpk9jrn7f9bn4HFhL7Mf
-	 pY8SkOAoOYYDUaQgG9g+BJ1Jrv7XFE5EPA7/vXenj8Y8Y3DN9ixI0r61lDf3K5Izmw
-	 w3j8+Y/tlrq4JGBrBe1lc5CznE4xIOIi9QhmuuiQO2BuC3wUtYplyPFMjbHmJcvUst
-	 mqVOa9FMdlOW6ax6Vjx2tRC+XzgQeuAtMy4Z7Zq5JhDDn7cI3q8I0srdpGtm7fFPeK
-	 Igc6mMvm0QC5s1aHd8LEtw98pcav+mn+ZWhVuRv5FaeV3m2a28OftlHTX2uFZElzYf
-	 FOFMktJg2oyhQ==
+	b=nj7L/KBjhik3u7texZpFUE3K/9vSo7YE9fAJAOSWq5eXQYQ4PDf7RSMEBKMz73yPy
+	 fgnB9p10Ubs/4CO9ATW13DIEOTe6/xKgGN2AG4PNiuhBTxnrXUyx6HhYCvtzv35k0J
+	 wp7rRncoXxMvCT41N6xH/2JOLvl8OkuZeHI7FXCRnSWeGIqr6+PJidp2CHzt+ZXNt+
+	 2JYUW87AyydrascVrvHXkJQpWNoUgGIrToZaTkww0dC94oqSjzQz9T1TV6YcNN22CU
+	 xWvVa8yi+eFBu/NTVux5trdq35GwKMXxrCg3EMqJgcKxnQSA/gtaXk8PDiCbZ7nv0I
+	 rTulvfpie1neA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 16/59] perf python: Add syscall name/id to convert
- syscall number and name
+Subject: Re: [PATCH v7 18/59] perf python: Add callchain support
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-17-irogers@google.com>
-References: <20260425224951.174663-17-irogers@google.com>
+In-Reply-To: <20260425224951.174663-19-irogers@google.com>
+References: <20260425224951.174663-19-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:15:43 +0000
-Message-Id: <20260425231544.7B798C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:16:15 +0000
+Message-Id: <20260425231615.A15B1C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Low] The use of `static char * const kwlist[]` causes a fatal compiler w=
-arning (treated as an error) on widely used Python versions.
+Sashiko AI review found 4 potential issue(s):
+- [High] A strong reference cycle between `pyrf_event` and `pyrf_callchain`=
+ causes a massive memory leak for every parsed event with a callchain.
+- [High] Missing `addr_location__exit(&al)` cleanup when `machine__resolve(=
+)` fails, leading to reference leaks.
+- [Medium] Callchain frames are unconditionally resolved eagerly, contradic=
+ting the commit message's claim of lazy iteration and introducing significa=
+nt performance overhead.
+- [Medium] The `callchain` property returns an exhaustible iterator rather =
+than a reusable iterable, violating expected property semantics and causing=
+ silent data loss on subsequent accesses.
 --
 
-commit 255ac1bdc670015e70083350909742474af1b56e
+commit b62d05aa15240820653407b6e4ce71632cf3899c
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add syscall name/id to convert syscall number and name
+perf python: Add callchain support
 
-This commit adds syscalltbl support to the perf python module. It provides
-functions to convert between syscall numbers and names using the host
-machine's syscall table, removing the dependency on python libaudit.
+This commit adds python bindings for callchain iteration in perf scripts.
+It introduces pyrf_callchain_node and pyrf_callchain types and adds a
+callchain property to sample events.
+
+> Implement pyrf_callchain_node and pyrf_callchain types for lazy
+> iteration over callchain frames. Add callchain property to
+> sample_event.
+
+Does this actually provide lazy iteration?=20
+
+The pyrf_event__new() implementation unconditionally performs the
+machine__resolve() and thread__resolve_callchain() operations, allocating
+all frames upfront whenever an event has callchain data.
+
+This eager execution appears to make the lazy evaluation fallback logic in
+pyrf_callchain__next() unreachable.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 1af53480661f..861973144106 100644
+> index 824cf58645e0..2953c4c8e142 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-
 [ ... ]
-
-> @@ -2669,6 +2671,40 @@ static int pyrf_session__setup_types(void)
->  	return PyType_Ready(&pyrf_session__type);
+> @@ -635,6 +813,12 @@ pyrf_sample_event__getattro(struct pyrf_event *peven=
+t, PyObject *attr_name)
 >  }
 > =20
-> +static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyOb=
-ject *kwargs)
-> +{
-> +	const char *name;
-> +	int id;
-> +	int elf_machine =3D EM_HOST;
-> +	static char * const kwlist[] =3D { "id", "elf_machine", NULL };
+>  static PyGetSetDef pyrf_sample_event__getset[] =3D {
+> +	{
+> +		.name =3D "callchain",
+> +		.get =3D pyrf_sample_event__get_callchain,
+> +		.set =3D NULL,
+> +		.doc =3D "event callchain.",
+> +	},
 
-Does this declaration cause a build failure on older Python versions?
+Will this property return an exhaustible iterator rather than a reusable
+iterable?
 
-In Python versions up to 3.12, PyArg_ParseTupleAndKeywords() expects the
-keywords argument to be char ** (or char *keywords[]). Passing char * const=
- *
-drops the const qualifier, which triggers an incompatible-pointer-types war=
-ning
-in GCC. Since tools/perf builds with -Werror by default, this warning becom=
-es
-a fatal build error.
+When a script accesses the callchain property, it receives the exact same
+pyrf_callchain iterator instance. As the script iterates over it,
+pyrf_callchain__next() increments pchain->pos.
 
-> +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &el=
-f_machine))
-> +		return NULL;
-> +
-> +	name =3D syscalltbl__name(elf_machine, id);
-> +	if (!name)
-> +		Py_RETURN_NONE;
-> +	return PyUnicode_FromString(name);
-> +}
-> +
-> +static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObje=
-ct *kwargs)
-> +{
-> +	const char *name;
-> +	int id;
-> +	int elf_machine =3D EM_HOST;
-> +	static char * const kwlist[] =3D { "name", "elf_machine", NULL };
+Once consumed, pchain->pos is not rewound, so any subsequent iteration
+attempts on the same event will silently yield an empty sequence.
 
-Could this declaration also be updated to drop the const qualifier for the
-same reason?
+[ ... ]
+> @@ -896,6 +1089,49 @@ static PyObject *pyrf_event__new(const union perf_e=
+vent *event, struct evsel *ev
+>  		return PyErr_Format(PyExc_OSError,
+>  				    "perf: can't parse sample, err=3D%d", err);
+>  	}
+> +	sample =3D &pevent->sample;
+> +	if (machine && sample->callchain) {
+> +		struct addr_location al;
+> +		struct callchain_cursor *cursor;
+> +		u64 i;
+> +		struct pyrf_callchain *pchain;
+> +
+> +		addr_location__init(&al);
+> +		if (machine__resolve(machine, &al, sample) >=3D 0) {
 
+If machine__resolve() partially populates the addr_location structure but
+ultimately fails and returns a negative value, is it possible to leak the
+thread or map references?
+
+Since addr_location__exit() is only called inside the success block at the
+end of this function, the failure path skips the cleanup entirely.
+
+> +			cursor =3D get_tls_callchain_cursor();
+> +			if (thread__resolve_callchain(al.thread, cursor, evsel, sample,
+> +						      NULL, NULL, PERF_MAX_STACK_DEPTH) =3D=3D 0) {
+> +				callchain_cursor_commit(cursor);
 > +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|$i", kwlist, &name, &=
-elf_machine))
-> +		return NULL;
-> +
-> +	id =3D syscalltbl__id(elf_machine, name);
-> +	if (id < 0) {
-> +		PyErr_Format(PyExc_ValueError, "Failed to find syscall %s", name);
-> +		return NULL;
-> +	}
-> +	return PyLong_FromLong(id);
-> +}
+> +				pchain =3D PyObject_New(struct pyrf_callchain, &pyrf_callchain__type=
+);
+> +				if (pchain) {
+> +					pchain->pevent =3D pevent;
+> +					Py_INCREF(pevent);
+
+Could this create an uncollectable strong reference cycle between the
+pyrf_event and pyrf_callchain objects?
+
+The newly created pchain takes a strong reference to pevent here, and later
+pevent takes ownership of the callchain:
+
+    pevent->callchain =3D (PyObject *)pchain;
+
+Because neither of these C extension types implement Python cycle garbage
+collector hooks, it looks like this cyclic reference will never be broken,
+leaking both objects and their dynamically allocated structures on every
+parsed sample.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D16
+63-1-irogers@google.com?part=3D18
