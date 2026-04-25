@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EC5179A3
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E7730F957
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140486; cv=none; b=gpAYLwW79f7KYfyEkts7xIMVSTXiLO+C2/6V/epA/xJr9//IBZ8irSP/vLJusgusvl2TAYG1Fyf7zsfnLL/K9rkr16mTVRnBnnA3GW2utRp5RrE1RXFpzd//PguUHYE/ZgNVdO5vNjgt5iLPUidttYVFwTja4UV55G7BdgJTqC0=
+	t=1777140486; cv=none; b=OjlnPcU04EC/Rw+HJ6iDpzI05hn7SFPA77TQDIpwEh9OoB2fDHpn59sHGneXlw9Bk3d3Q6K9rTU0lhBa132cehx3SZx5EvS5kmRQ73MjDhMY6ntQprPZ3ecGYKzE0NJ8JHWD2Kr8ghBN34HkjJEY8dQLPE92slJ3bqGzIFRrAM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777140486; c=relaxed/simple;
-	bh=l1XQF0drAwfMlTgb5IuV6asC38lJa1m2iSLpMokOHK0=;
+	bh=dE9Y0eDvQwAi3X8MwG/EOcYiFhnRgwiXVQuXA7wY6f4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GWEJe7LB5hH2R0uPCY2cJrgPhRy2D6U6BdUQbEmJ9IXDz4Dp1aYJoWx5Ahtr8HSPQX0DX3mbagzCEl3k6mQ+Qpt/hIL0c1/3xQHd4zDSd/mPl17/90KQPLmY1qiN+KMke/Nd+gmCoBCg6T8AtjYujFogZ9gNuDWljhvKEgJX3j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSh5aW8a; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=TsVPzGR4zZPfrK63YUPCogIPEBJKlhodFd3xEnU9EEqMLf3HLfRSKS6dSavyvq8o1z6ZHhEeXl2Nk7HihB8uvc1Klgpq+O9gty+EcP0CDsnRH/Z9GoOND1uDVc/SzMHxxne+ZPKcbOXkHx8LC8HnAQ9759Iz/KvFWFP/YfE9bjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pz0fNIne; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSh5aW8a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F5EC2BCB0;
-	Sat, 25 Apr 2026 18:08:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pz0fNIne"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E09C2BCB3;
+	Sat, 25 Apr 2026 18:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140485;
-	bh=l1XQF0drAwfMlTgb5IuV6asC38lJa1m2iSLpMokOHK0=;
+	s=k20201202; t=1777140486;
+	bh=dE9Y0eDvQwAi3X8MwG/EOcYiFhnRgwiXVQuXA7wY6f4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=uSh5aW8aME57+2KK+69JXOzVGaZutLUccba6uwQ2HOvMxjxWcSp9GSHx0EDEvcngJ
-	 WUktOUQefhg4G9c+a79PjY7iL2qvB0Zq3ZE4WAcmnmSOLi4G4k/paHkDeG+IxOKt1j
-	 e5SLWxeEGj6Bu4eVHboXv1FX0ffwA+kS0RYFGZAxRGFQoCoyu88yFMk0sxFHu6sCiA
-	 yrw6uwczJ+CcyfhrODZV+w1wXELqSLydTmRjP6lqcdU6l1g80tppQaStIweBGNJsqL
-	 H3PzIQ26MRXjZ6GObr0fxUI5VydM3lQnC8A3wdNgSkc9wjI3wVXf9oHGO+tS1d3z5g
-	 8t0XAowwIb08A==
+	b=pz0fNInefvCuyXh799Oj0H1q59ZRPreSaf5HvTtpURIpR3EFNv8rNtLI7BiVIFbAr
+	 Hzz/ltO7OcDM+ST+NLxoYznm52cUZ609C/0nD+6DjQAI6d6O+sHAzY4K7FNMJ3sc1G
+	 HsbvOrHl9UUx3qOrYy/tbc0/PUGaLMU21sIOUXaRF/ZLaDu+tekO52m6CSQ9e+8dpc
+	 VEEnSdJPNhk3IfqM0dbYkmpQTTiV3n8iF1KM6wE5ndpSoLl6tCSdBjCJ/xGCamQn8O
+	 EA5mXJ+allAqCzXdeix287FBSUAMeV0UEEUBiiGZg3d44yPy1jGjZyoUDxMIIFj57n
+	 sE1J3u3zzIfQg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 47/59] perf failed-syscalls: Port failed-syscalls to
- use python module
+Subject: Re: [PATCH v6 45/59] perf stackcollapse: Port stackcollapse to use
+ python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-48-irogers@google.com>
-References: <20260425174858.3922152-48-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-46-irogers@google.com>
+References: <20260425174858.3922152-46-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:08:04 +0000
-Message-Id: <20260425180805.73F5EC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:08:05 +0000
+Message-Id: <20260425180806.20E09C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,43 +45,63 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 1 potential issue(s):
-- [Medium] The script incorrectly filters out `raw_syscalls:sys_exit` event=
-s because it requires the event name to end with an underscore.
+- [Medium] Unhandled TypeError in stackcollapse.py when resolving unknown t=
+hreads causes the script to crash.
 --
 
-commit d0669a431485bb5878875ee3c2d4a44c47d0f2ae
+commit 702f12c8a01187fcead25d5d7f9e4ce41f1f01ae
 Author: Ian Rogers <irogers@google.com>
 
-perf failed-syscalls: Port failed-syscalls to use python module
+perf stackcollapse: Port stackcollapse to use python module
 
-This commit ports the legacy failed-syscalls.pl Perl script to Python using
-the perf module. It leverages the perf.session API to filter sys_exit event=
-s,
-track failed system calls, and aggregate the counts per command name.
+This commit modernizes the legacy stackcollapse.py trace script by
+refactoring it into a class-based architecture. It uses perf.session
+for event processing and aggregates call stacks to produce output
+suitable for flame graphs.
 
-> diff --git a/tools/perf/python/failed-syscalls.py b/tools/perf/python/fai=
-led-syscalls.py
+> diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stack=
+collapse.py
 > new file mode 100755
-> index 000000000000..c3b58664eb57
+> index 000000000000..996c73246ebc
 > --- /dev/null
-> +++ b/tools/perf/python/failed-syscalls.py
+> +++ b/tools/perf/python/stackcollapse.py
+
 [ ... ]
+
 > +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Process sys_exit events."""
-> +        event_name =3D str(sample.evsel)
-> +        if not event_name.startswith("evsel(syscalls:sys_exit_") and \
-> +           not event_name.startswith("evsel(raw_syscalls:sys_exit_"):
 
-Will this condition unintentionally drop raw_syscalls:sys_exit events?
+[ ... ]
 
-The stringified event name for raw syscall exits is
-"evsel(raw_syscalls:sys_exit)", which does not have a trailing underscore.
-Because the startswith check here specifically includes the trailing
-underscore, it looks like traces recorded with raw_syscalls:sys_exit will be
-discarded prematurely, leaving the script with empty output.
+> +        if self.args.include_comm:
+> +            if hasattr(self, 'session') and self.session:
+> +                comm =3D self.session.find_thread(sample.sample_pid).com=
+m()
 
-> +            return
+Will this crash the script if the thread cannot be found?
+
+The Python extension function pyrf_session__find_thread() in
+tools/perf/util/python.c raises a TypeError if the thread lookup fails:
+
+tools/perf/util/python.c:pyrf_session__find_thread() {
+    ...
+    thread =3D machine__findnew_thread(machine, -1, pid);
+    if (thread =3D=3D NULL) {
+        PyErr_Format(PyExc_TypeError, "Fail to find thread for mac %d and p=
+id %d",
+                     machine->pid, pid);
+        return NULL;
+    }
+    ...
+}
+
+If perf.data contains samples with unmapped or unresolved PIDs, won't
+calling self.session.find_thread() without a try-except block result in an
+unhandled TypeError and terminate the script?
+
+> +            else:
+> +                comm =3D "Unknown"
+> +            comm =3D comm.replace(" ", "_")
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D47
+152-1-irogers@google.com?part=3D45
