@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B8339F184
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83963A0E8E
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777157465; cv=none; b=XFE2/OIwVCfj1A/68aM5RvJordelOQJNRQW2paudGsRdnOkTg9V1D0W2szzPwjAj676u4DDcrznjyEoueABsCNtmFM6teSMco587dqgqmdQj01gUbPMCFuXfCVmsmT39F7loINiIY/aI6SoCArnIU/u8aX10kbpDWo6KIKsJG3s=
+	t=1777157468; cv=none; b=o6mIm/rADHoBsM2OzcnuXnS8o7Fqeus8PAx6Xn8ZgDwKXT4MEAAbwgw9IxcxBnzuG27a7wBe6gUoniZSqxPJH5TZaOLbWyIjjPM0rponImtzZTBGf3v0rWB42NT7idGTgsoaLfnKZw6LLDZXtXJltng0YPQI47GPwH7Vex3NCJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777157465; c=relaxed/simple;
-	bh=QiFIbgAs9hH4vFZpTy1iQiMx4BtLAVtLXQUTOjfmcRY=;
+	s=arc-20240116; t=1777157468; c=relaxed/simple;
+	bh=eJ9kVepVnSBQCHOyn4G/66b2UzKOBaVMlZphDP73+zk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HIO1pBcERFvJ+3Md63XKbobDuToRurkjJLzHmlnL7dD7n6OpZ9gbUOdWfU26/mu5lVUD9JGpIknzv4EBM/6W9jxgP/+D9rXkvoLVNJjVqwSWMom1N3dzdqUDcQAJlpvu5XWJ+4dE3hzvqHzaQxvlbRClxgHOqAHYBSY+Z+zZwCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ikri6p3h; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=hh+TLSljUIvhYVmk77Lo70TU5Rew7rX9Tsx0IVo3CQfu9M3Lu4ozkukyc84Lvw4vruIlU+rPgIUsr47kCmvm7jvpSnrjPl+bmhzsc1BeAahPS2dsFXF0OVSoRZ7Rlzm9BujqbFMijqhSb/TSVOurVXMAYm4MAvEtxNQnHcOoWq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mUkOMUAC; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ikri6p3h"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c87ba0890so30473628c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUkOMUAC"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b24611696eso61950275ad.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777157463; x=1777762263; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777157465; x=1777762265; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FvZ6XnZhDqeAbUzg1oigROcVSwy0qm3+WBD99Jn9WsU=;
-        b=Ikri6p3hNkV+WKobE7wXjy3xFHdWttlLKCucVQqTYJhphseiueL3NGH/wAkcviOJ3C
-         0mE/KfJJfyEmUVFuReR1qQJ9wZSz9iDPpXrhP7bYdj8hiy3bo9JQJECnCCsefgpOTHOB
-         76wFTScmOoJ3UJaUp8wHyvCx8dggDMKWfKclVD9WPLC+ap7EPIcXmp9C/rdgtGPvcpmB
-         vBPpVZrsfAB3rAg08c1Hbx8lH+iW1Bnu1zG+k9uqh75obzEJrQQcl44IoLOXWY89kx4y
-         ijB2+kCoawnhQzt4yStAh3gJWA6d/AXRHNtuxB+/kMfuzQCJdPhhSWm1vULn/veNe6PT
-         Y40w==
+        bh=VNEC1d+XQU6xcwJqo0QpL4AVBd93i989y6KjyJp07QI=;
+        b=mUkOMUACwco5bvOeeJyQGnU7ilpBVtqjjlO8JB1EO1myXfwkV3tIyDxS/wYOvywsvJ
+         kl5bPPtEeHOBHXWyjvDzFszJ/ETstDkl0zV3YDuH+WSN0rQi0JvsrcdGZLz6KXoEBr8d
+         L2SjSvmXtxNMGcNwphM+7sQbWueS7uZAGLDsO4KyvYxxwqT6Mqr3q+YLS+cgrBAH1Qzp
+         RHOdqDaShmDQXabQLZPa2z7/ZdaCd/ZqfB83RKZuKJklGPB1yagwGNx8ZTKx4I/MEApt
+         EpW+ulxDWd1+wkw/v2CAzoLCbD205Vsr0ntXJY8GNJerYSkbt6QixJ336Gw/oUVuForp
+         6jKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777157463; x=1777762263;
+        d=1e100.net; s=20251104; t=1777157465; x=1777762265;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FvZ6XnZhDqeAbUzg1oigROcVSwy0qm3+WBD99Jn9WsU=;
-        b=MHXQM3p7Pq4lUGcDHp4Ok5hOrBa22wlnaJX8I56++7VfhgdaMvZIdvDnBFRqdl9lkQ
-         tfNF8+6vGDQMnLEuAHgecDoZ3wNj7z5B4wL0WytBrFTLyLX9VlAGMkhgLyd+79oOAk6D
-         Z+IfZ9wJthWGZQZQZR+HKni3D6Q4zeOVT0volRWFgN/B3YMxISA4XxAt5Ms7xNdtOVCQ
-         Zzv/K88ddgbjT+AQkIYG6971uP+868d47pgBqVn6TER+QccGwTLtGgmIviPWTSFkGe1r
-         Irp4MUPppf6YWLBs4v1EwAFP2MdxANAhQ1HxVMSDR6vv4X+pRkn1Ao45AdqaZZ+pJmvx
-         KedQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9wml5bTfZN3r4zbwf4dY0wrW2fA6xh4j0SXLFrcQcpPCCu9t3nqzAWefvPc/Veu/8bJXWaRQj50JZzPQpUOp29@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2JxXUmoCQ/PbmIPyHNf7QHBBYAIWFvQZa+mWjdVy0DIgjxgaS
-	vmnzOh4Z4ai/RSzLmqmM0CgHnD5mpJCVh7m5gV7famwgow79GLw3nyRXoy8jEsHDBv/IvSLf3Gk
-	63H16aqg1xw==
-X-Received: from dyb19.prod.google.com ([2002:a05:693c:6313:b0:2d9:db60:7492])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f40b:b0:12d:ce36:8930
- with SMTP id a92af1059eb24-12dce369210mr1680182c88.3.1777157462870; Sat, 25
- Apr 2026 15:51:02 -0700 (PDT)
-Date: Sat, 25 Apr 2026 15:49:16 -0700
+        bh=VNEC1d+XQU6xcwJqo0QpL4AVBd93i989y6KjyJp07QI=;
+        b=DQCUiFH4sUVMBXmiBBC3ugFY0KA+Gs4k5cxqyEe6RJbLSpgtxFxRAJNo+sYHGEU8Os
+         Jcf1bIclOCzR3qn5FdPMaCYdJgLGgjJXnotkSSB1t6wHYg2vDJGoYPIfr3EebzJm0Ne/
+         PTSN0JXit3uOp2lmKw8hiGDn/KNoFJXXeTKp+EGhqnhTRTChAu3aXtoCtfIaNOF3SMEs
+         AduRM3QlmgwS4jlbuEVYT9C9ToqLGgjjw0vsZ8hHTxdTRqDhs+GmC+JZgdIbbE5wf3Fa
+         8ziTx/02nt8G5ZaPdZlvA4ARG3H9hYzeLcVxgtmS5o/+jjrlRp35HH93Ll+HDE58O2UB
+         /EbQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+HsHC2qLIZ0PaefHCBq74vf6D84hjgQBHTr4W83oPz75GQzFIG2ULp6eJqNVbWG//Z5UEF9ObWjZhyHcaHDY3B@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgHusXFurEhkfj7Y7Y2JlVeeNGlB5wfsCTCgzN4N7fbk2NWgP1
+	y4YxJzJOyEw8fcKZiwdmfT8lVtRpR5R8DhE/sCUWYhy1z56hbzW9qrDblhW5c3EgduwjVBHhtCC
+	TYuiWztyiww==
+X-Received: from plfh1.prod.google.com ([2002:a17:902:f541:b0:2b7:f9d8:3d1b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1ac6:b0:2b2:5840:808e
+ with SMTP id d9443c01a7336-2b5f9ee9487mr368769035ad.10.1777157465041; Sat, 25
+ Apr 2026 15:51:05 -0700 (PDT)
+Date: Sat, 25 Apr 2026 15:49:17 -0700
 In-Reply-To: <20260425224951.174663-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425174858.3922152-1-irogers@google.com> <20260425224951.174663-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425224951.174663-25-irogers@google.com>
-Subject: [PATCH v7 24/59] perf python: Move exported-sql-viewer.py and
- parallel-perf.py to tools/perf/python/
+Message-ID: <20260425224951.174663-26-irogers@google.com>
+Subject: [PATCH v7 25/59] perf stat-cpi: Port stat-cpi to use python module
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -70,88 +69,208 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-These scripts are standalone and not using the `perf script` libpython
-support. Move to tools/perf/python in an effort to deprecate the
-tools/perf/scripts/python support.
+Port stat-cpi.py from the legacy framework to a standalone script.
+Support both file processing mode (using perf.session) and live mode
+(reading counters directly via perf.parse_events and evsel.read). Use
+argparse for command line options handling. Calculate and display CPI
+(Cycles Per Instruction) per interval per CPU/thread.
 
+Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v2:
-1. Updated exported-sql-viewer.py : I updated the comments at the top
-   of the script to use the new path
-   tools/perf/python/exported-sql-viewer.py in the usage examples.
 
-2. Fixed Test Path in script.sh : I updated the path in
-   tools/perf/tests/shell/script.sh to point to the new location of
-   parallel-perf.py at ../../python/parallel-perf.py .
+1. Accurate CPI Calculation (Multiplexing Support):
+  - Before: The get() method returned the raw counter value directly,
+    ignoring whether the counter ran for the full interval.
 
-v5:
-1. Fix Test 105 Failure: Added a shebang line and marked the generated
-   `db_test.py` script as executable in `script.sh`, preventing
-   permission denied errors during standalone execution.
+  - After: The get() method now scales the raw value by the ratio of
+    enabled time to running time ( val * (ena / float(run)) ) when run
+    > 0 . This handles cases where PMU counters are overcommitted and
+    multiplexed.
+
+2. Per-Interval CPI in File Mode:
+  - Before: store() saved absolute counter values as read from
+    PERF_RECORD_STAT . Since these are cumulative from the start of
+    the trace, and data.clear() was called every round, the script
+    computed cumulative CPI rather than per-interval CPI.
+
+  - After: store() now computes the delta between the current absolute
+    value and the value from the previous interval. It saves this
+    delta in self.data and retains the absolute value in self.
+    prev_data for the next delta computation.
+
+3. Prevention of Dummy Output (Cartesian Product Fix):
+  - Before: self.cpus and self.threads lists accumulated all unique
+    CPUs and threads seen independently. The nested loops in
+    print_interval() then created a Cartesian product of all seen CPUs
+    and threads, querying data for combinations that might never have
+    occurred.
+  - After: Replaced lists with a self.recorded_pairs set that stores
+    (cpu, thread) tuples only when a sample actually records them. The
+    output loop now iterates strictly over these verified pairs.
 ---
- tools/perf/{scripts => }/python/exported-sql-viewer.py | 4 ++--
- tools/perf/{scripts => }/python/parallel-perf.py       | 0
- tools/perf/tests/shell/script.sh                       | 4 +++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
- rename tools/perf/{scripts => }/python/exported-sql-viewer.py (99%)
- rename tools/perf/{scripts => }/python/parallel-perf.py (100%)
+ tools/perf/python/stat-cpi.py | 151 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100755 tools/perf/python/stat-cpi.py
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/python/exported-sql-viewer.py
-similarity index 99%
-rename from tools/perf/scripts/python/exported-sql-viewer.py
-rename to tools/perf/python/exported-sql-viewer.py
-index e0b2e7268ef6..f3ac96ada1f5 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/python/exported-sql-viewer.py
-@@ -10,12 +10,12 @@
- # Following on from the example in the export scripts, a
- # call-graph can be displayed for the pt_example database like this:
- #
--#	python tools/perf/scripts/python/exported-sql-viewer.py pt_example
-+#	python tools/perf/python/exported-sql-viewer.py pt_example
- #
- # Note that for PostgreSQL, this script supports connecting to remote databases
- # by setting hostname, port, username, password, and dbname e.g.
- #
--#	python tools/perf/scripts/python/exported-sql-viewer.py "hostname=myhost username=myuser password=mypassword dbname=pt_example"
-+#	python tools/perf/python/exported-sql-viewer.py "hostname=myhost username=myuser password=mypassword dbname=pt_example"
- #
- # The result is a GUI window with a tree representing a context-sensitive
- # call-graph.  Expanding a couple of levels of the tree and adjusting column
-diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/python/parallel-perf.py
-similarity index 100%
-rename from tools/perf/scripts/python/parallel-perf.py
-rename to tools/perf/python/parallel-perf.py
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index 7007f1cdf761..f983b80e77b7 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -43,6 +43,7 @@ test_db()
- 	fi
- 
- 	cat << "_end_of_file_" > "${db_test}"
+diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
+new file mode 100755
+index 000000000000..4b1f1f69c94a
+--- /dev/null
++++ b/tools/perf/python/stat-cpi.py
+@@ -0,0 +1,151 @@
 +#!/usr/bin/env python3
- perf_db_export_mode = True
- perf_db_export_calls = False
- perf_db_export_callchains = True
-@@ -53,6 +54,7 @@ def sample_table(*args):
- def call_path_table(*args):
-     print(f'call_path_table({args}')
- _end_of_file_
-+	chmod +x "${db_test}"
- 	case $(uname -m)
- 	in s390x)
- 		cmd_flags="--call-graph dwarf -e cpu-clock";;
-@@ -76,7 +78,7 @@ test_parallel_perf()
- 		err=2
- 		return
- 	fi
--	pp=$(dirname "$0")/../../scripts/python/parallel-perf.py
-+	pp=$(dirname "$0")/../../python/parallel-perf.py
- 	if [ ! -f "${pp}" ] ; then
- 		echo "SKIP: parallel-perf.py script not found "
- 		err=2
++# SPDX-License-Identifier: GPL-2.0
++"""Calculate CPI from perf stat data or live."""
++
++import argparse
++import sys
++import time
++from typing import Any, Optional
++import perf
++
++class StatCpiAnalyzer:
++    """Accumulates cycles and instructions and calculates CPI."""
++
++    def __init__(self, args: argparse.Namespace) -> None:
++        self.args = args
++        self.data: dict[str, tuple[int, int, int]] = {}
++        self.prev_data: dict[str, tuple[int, int, int]] = {}
++        self.recorded_pairs: set[tuple[int, int]] = set()
++
++    def get_key(self, event: str, cpu: int, thread: int) -> str:
++        """Get key for data dictionary."""
++        return f"{event}-{cpu}-{thread}"
++
++    def store_key(self, cpu: int, thread: int) -> None:
++        """Store CPU and thread IDs."""
++        self.recorded_pairs.add((cpu, thread))
++
++    def store(self, event: str, cpu: int, thread: int, counts: tuple[int, int, int]) -> None:
++        """Store counter values, computing difference from previous absolute values."""
++        self.store_key(cpu, thread)
++        key = self.get_key(event, cpu, thread)
++
++        val, ena, run = counts
++        if key in self.prev_data:
++            prev_val, prev_ena, prev_run = self.prev_data[key]
++            cur_val = val - prev_val
++            cur_ena = ena - prev_ena
++            cur_run = run - prev_run
++        else:
++            cur_val = val
++            cur_ena = ena
++            cur_run = run
++
++        self.data[key] = (cur_val, cur_ena, cur_run)
++        self.prev_data[key] = counts # Store absolute value for next time
++
++    def get(self, event: str, cpu: int, thread: int) -> float:
++        """Get scaled counter value."""
++        key = self.get_key(event, cpu, thread)
++        if key not in self.data:
++            return 0.0
++        val, ena, run = self.data[key]
++        if run > 0:
++            return val * (ena / float(run))
++        return float(val)
++
++    def process_stat_event(self, event: Any, name: Optional[str] = None) -> None:
++        """Process PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events."""
++        if event.type == perf.RECORD_STAT:
++            if name:
++                if "cycles" in name:
++                    event_name = "cycles"
++                elif "instructions" in name:
++                    event_name = "instructions"
++                else:
++                    return
++                self.store(event_name, event.cpu, event.thread, (event.val, event.ena, event.run))
++        elif event.type == perf.RECORD_STAT_ROUND:
++            timestamp = getattr(event, "time", 0)
++            self.print_interval(timestamp)
++            self.data.clear()
++            self.recorded_pairs.clear()
++
++    def print_interval(self, timestamp: int) -> None:
++        """Print CPI for the current interval."""
++        for cpu, thread in sorted(self.recorded_pairs):
++            cyc = self.get("cycles", cpu, thread)
++            ins = self.get("instructions", cpu, thread)
++            cpi = 0.0
++            if ins != 0:
++                cpi = cyc / float(ins)
++            t_sec = timestamp / 1000000000.0
++            print(f"{t_sec:15f}: cpu {cpu}, thread {thread} -> cpi {cpi:f} ({cyc:.0f}/{ins:.0f})")
++
++    def read_counters(self, evlist: Any) -> None:
++        """Read counters live."""
++        for evsel in evlist:
++            name = str(evsel)
++            if "cycles" in name:
++                event_name = "cycles"
++            elif "instructions" in name:
++                event_name = "instructions"
++            else:
++                continue
++
++            for cpu in evsel.cpus():
++                for thread in evsel.threads():
++                    try:
++                        counts = evsel.read(cpu, thread)
++                        self.store(event_name, cpu, thread,
++                                   (counts.val, counts.ena, counts.run))
++                    except OSError:
++                        pass
++
++    def run_file(self) -> None:
++        """Process events from file."""
++        session = perf.session(perf.data(self.args.input), stat=self.process_stat_event)
++        session.process_events()
++
++    def run_live(self) -> None:
++        """Read counters live."""
++        evlist = perf.parse_events("cycles,instructions")
++        if not evlist:
++            print("Failed to parse events", file=sys.stderr)
++            return
++        try:
++            evlist.open()
++        except OSError as e:
++            print(f"Failed to open events: {e}", file=sys.stderr)
++            return
++
++        print("Live mode started. Press Ctrl+C to stop.")
++        try:
++            while True:
++                time.sleep(self.args.interval)
++                timestamp = time.time_ns()
++                self.read_counters(evlist)
++                self.print_interval(timestamp)
++                self.data.clear()
++                self.recorded_pairs.clear()
++        except KeyboardInterrupt:
++            print("\nStopped.")
++        finally:
++            evlist.close()
++
++def main() -> None:
++    """Main function."""
++    ap = argparse.ArgumentParser(description="Calculate CPI from perf stat data or live")
++    ap.add_argument("-i", "--input", help="Input file name (enables file mode)")
++    ap.add_argument("-I", "--interval", type=float, default=1.0,
++                    help="Interval in seconds for live mode")
++    args = ap.parse_args()
++
++    analyzer = StatCpiAnalyzer(args)
++    if args.input:
++        analyzer.run_file()
++    else:
++        analyzer.run_live()
++
++if __name__ == "__main__":
++    main()
 -- 
 2.54.0.545.g6539524ca2-goog
 
