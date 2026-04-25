@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B443B39282F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2673438F64F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777157441; cv=none; b=LzVWPjIwHiCyQiD/IKAMfc2EnlFV+23H9/4/q6erTw5zg4CetYAwYatFO2VUEIT21i7JcPK0fe9Ff23zviFy6T8F490OAe97hYZqs0WJNLXHGZlnZmBWH39O4FUQO+3Ra3CAEKhtHsvRyIH+DAbP510iFNXjwFY4bUc3e5WgRSU=
+	t=1777157445; cv=none; b=aboVs1UJfjBZ3Ixymz3GCRQKqsIncBMImFNFLPzT1IlocFsOG27X7qiAtanXm+RcTZSZ8fK6xB0DYDfQH6hHriObozL7KypLNAIc3aFwbRsTbbXBKAce1twSh5ROknLPIaOdCyXs8WPTWouziRACWK4+UFHAIlfwkYcae24ptPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777157441; c=relaxed/simple;
-	bh=Xy1jdvXXR0/CcW74V/SbsmucLwmcO9cvRlkHAX93Xiw=;
+	s=arc-20240116; t=1777157445; c=relaxed/simple;
+	bh=zQJJTQ7WIIRdlqmfoLZApYom+sX71HVjnn5QQIJluZY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bWddN9fN9ZDib0B/G5mOwHxwhFwcM93dB7pfFv3lmFMC/wLO3YKQMCWClXnLTJUp8SQNMd+evsHkNTQyvm4p/9AdImxJ1yWlaAnq1DwUYoDi5xdspVXGL5rzCFrlTMF9L3k0t9wzM82a5FnynSQgJppoUC+PTLRKLMApvOhzTBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DrQ1hPH6; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=FC2IQlrwU4AySnahkPI9TGJAxsG9aIGuqiYqcYxUJUcJjRQjojqVyen3ZJ07LFAkHa26vLLpf9wr4pGdgBmv1/yURzuQfwxp7nRughBe82VATsYio6qTfjocOtmyF9RDnVv/jtHptkFtCbJeMeltYR/l12Q0SrxSn1XX6X7VWLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=muq6mXeB; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DrQ1hPH6"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2de07c12745so25488296eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:50:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="muq6mXeB"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-126e8ee6227so9132355c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777157439; x=1777762239; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777157442; x=1777762242; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vR8VHmbPIJQPTIZrNWt9fCtSF5PQGv7sK1eCsyjJo0=;
-        b=DrQ1hPH6lkcxsuEERQyIL8UsbJgw60gVowXWOtcL8l10l8JvBaNTeR53npdpOlejct
-         8Yl43TjeNcWU5wbtuHlCO48JhSKCbrqtj+m+qgR0o8P0rIt4LMoZaKcg2MeHNTROHfzU
-         VJR4Ad8p6TMnbpM9bjWkcQyUiMItONHZr3iBZH8Z/A9rnjwPFl+9KJBUdMqbX1cOnSfZ
-         OMTujXx4Bc3zT/abxyiJY3nsESMH9LTd70rkEQEKlsGDbYMfnnfbq/GsFrssc84umB0I
-         erw8/5hev4YYB/4squq4N1Rm0GLl8+LWew224OQYBeBilaQfIR2ldbD9baPqSDfA53Re
-         TYUg==
+        bh=9169CYggYX8a+HEsC3bSJNy6IomTsX+Hp0FHeVzozsY=;
+        b=muq6mXeBGZ/X9NDZJsUoS52+cZ25HB+wEDNv/Y//BkP08/IMmdjJS6eRSub7+amFio
+         /A9lsq2W9qeOQq+ASSi+FbLveC2khknCePoxsxxo5Lm1PESAtoKXsILLHSlJjALuGolV
+         02J9VIy/PivkiblF+U/DghVfjuECUxvXbZ0KnXZksV4QmtUkb7FHghS+BRpJFJbGHsWu
+         xKYcIE928cX/4daBU/q5AizNlFj+580s4EAPFyrLcCEEoIZxqBX4+Wy5a3Dab0Wfrmz7
+         jLd+I9Onz4a+Odp0jmmvPIqcsqIknS2dJ1AjrSV2pOOgBAO4DaXBgXakL4QwO7b/TvIB
+         blwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777157439; x=1777762239;
+        d=1e100.net; s=20251104; t=1777157442; x=1777762242;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vR8VHmbPIJQPTIZrNWt9fCtSF5PQGv7sK1eCsyjJo0=;
-        b=oRvWoMxwDLpWRBk8UgbcVtFqxqdGqO0MoflhGMScKOgd3UnBynKtWuFcB7NY2qaUJr
-         zxIfne4uCTymCc8CuTzVOqHpaWsdNYSemG+oifASQ+aXaTW0j6H5RNRB5LkY9rn0cKWJ
-         cDOnMalBi4i7G9EQpek2MXyGCFJOrNHx83V/FEM3uiyZFDbatClSwpbuNKzC9vV/Ft3n
-         Pq9W1QmBIY/m3gEcGreA3ZkDX3+2RzYYdVKHGVJ6RCqeUgvYLMSXG2rQyosbfwqlhwJg
-         D+PtTS+7xkVHcmUUpjoqciEUgYiY31jht3QO5/HmHqfJCYccStAsPEIvV/nHNZsD9uU6
-         fWbA==
-X-Forwarded-Encrypted: i=1; AFNElJ9qmHS7qmAtUzW56WuzmOoHONhVUV9+KIC43GA13UXoDYkoPbfSYhjfe42NwKe6C+LwOabKXDjnDD0Ok1PMvGlq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwksoYS53xBlqXy8kEA+IE6VY9q7SNHbptb/lc+drSex2BmfhJ8
-	9h6xmtwtdgRc4wUx7WJLqyruuciyQi6lp8BxWaGvK7hafx7XjTaf+tVztKFir6TBi2m7OqfSucf
-	Q/fsWGXHqMQ==
-X-Received: from dlbqq1.prod.google.com ([2002:a05:7022:ed01:b0:12c:8bfc:84e3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:397:b0:128:d438:cad
- with SMTP id a92af1059eb24-12c73f973a7mr21020269c88.18.1777157438616; Sat, 25
- Apr 2026 15:50:38 -0700 (PDT)
-Date: Sat, 25 Apr 2026 15:49:05 -0700
+        bh=9169CYggYX8a+HEsC3bSJNy6IomTsX+Hp0FHeVzozsY=;
+        b=kWBbiWIAG7XjDdWhdx2C3udlLSzrImeHFIgvFQvg74brbp+Aukz020drZt6rP48417
+         awH+PsRYNDQ577M7qmqdvzMbcaZjDb4K1sWv3fordFkGubnQiWOQtuMVLk+lryOeiN1H
+         TBdZYOzTqrUjMZj2BpOdrBAekEaNoWBwVr/2GZ7BiUqmyUj1ZyZlEU7RMJnUW76hizmi
+         g5dqRPIfTK8fe3YRURyA/ENkWspHTTwiQgwzSllgS/wWcdGWNC3MUTdFhtsisvpAj2Iv
+         VAGa+IdWwG97FUlCrt7VadJvrxmX0BUGuyhslyuz9xzKlPyrpUz2DVoLxbqkwGGUMNbS
+         c5yg==
+X-Forwarded-Encrypted: i=1; AFNElJ9yjZjozI0fVNwjRagyGVo+m/Bv+tQdRQl6zEoGOW8D+8wTD+oOHeh6u4FFaVhcs/dsYKHjs8pvZbsRfryXO2Ih@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHv02zGYLsdLN1qVOH9c4/+J8Kqq9rpkinSNb1UJxmIJMcWcrj
+	zHZhImL/XQQi6OZMDyfBbx2/F9zRjPp+TddCB5q62BIohSwk4y2Uj1Z9wy62VGMrV62B7kLQrNh
+	fnEz8qMB5nA==
+X-Received: from dlbto5.prod.google.com ([2002:a05:7022:3b05:b0:12c:1f83:7b4c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3d87:b0:12a:85ef:1e50
+ with SMTP id a92af1059eb24-12c73f6c614mr20784618c88.12.1777157442219; Sat, 25
+ Apr 2026 15:50:42 -0700 (PDT)
+Date: Sat, 25 Apr 2026 15:49:06 -0700
 In-Reply-To: <20260425224951.174663-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425174858.3922152-1-irogers@google.com> <20260425224951.174663-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425224951.174663-14-irogers@google.com>
-Subject: [PATCH v7 13/59] perf python: Use evsel in sample in pyrf_event
+Message-ID: <20260425224951.174663-15-irogers@google.com>
+Subject: [PATCH v7 14/59] perf python: Add wrapper for perf_data file abstraction
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -69,127 +69,170 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid a duplicated evsel by using the one in sample. Add
-evsel__get/put to the evsel in perf_sample.
+The perf_data struct is needed for session supported.
 
+Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c  |  2 +-
- tools/perf/util/python.c | 10 +++-------
- tools/perf/util/sample.c | 17 ++++++++++++-----
- 3 files changed, 16 insertions(+), 13 deletions(-)
+v2:
+1. Fixed Memory & FD Leaks in pyrf_data__init : Added cleanup of old
+   state (closing file and freeing path) if __init__ is called
+   multiple times on the same object.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3015b9b4b4da..9b16d832810f 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3235,7 +3235,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	union u64_swap u;
- 
- 	perf_sample__init(data, /*all=*/true);
--	data->evsel = evsel;
-+	data->evsel = evsel__get(evsel);
- 	data->cpu = data->pid = data->tid = -1;
- 	data->stream_id = data->id = data->time = -1ULL;
- 	data->period = evsel->core.attr.sample_period;
+2. Fixed Invalid Free in pyrf_data__delete : Ensured pdata->data.path
+   is always dynamically allocated via strdup() , even for the default
+   "perf.data" . This avoids passing a static string literal to free().
+
+3. Fixed NULL Pointer Dereference in pyrf_data__str : Added a check
+   for NULL path to prevent segfaults if str() or repr() is called on
+   an uninitialized object.
+
+4. Guarded fd Argument Usage: Added a check to ensure that if an fd is
+   provided, it corresponds to a pipe, failing gracefully with a
+   ValueError otherwise.
+
+v7:
+- Added pyrf_data__new to zero-initialize pdata->data to fix
+  crash on re-initialization.
+---
+ tools/perf/util/python.c | 103 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 102 insertions(+), 1 deletion(-)
+
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 22cc57914ad4..2ba3556c4f16 100644
+index 2ba3556c4f16..aa63c7ffe822 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -43,7 +43,6 @@ PyMODINIT_FUNC PyInit_perf(void);
+@@ -10,6 +10,7 @@
  
- struct pyrf_event {
- 	PyObject_HEAD
--	struct evsel *evsel;
- 	struct perf_sample sample;
- 	union perf_event   event;
- };
-@@ -274,7 +273,6 @@ static PyMemberDef pyrf_sample_event__members[] = {
- 
- static void pyrf_sample_event__delete(struct pyrf_event *pevent)
- {
--	evsel__put(pevent->evsel);
- 	perf_sample__exit(&pevent->sample);
- 	Py_TYPE(pevent)->tp_free((PyObject*)pevent);
- }
-@@ -296,7 +294,7 @@ static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
- #ifdef HAVE_LIBTRACEEVENT
- static bool is_tracepoint(const struct pyrf_event *pevent)
- {
--	return pevent->evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
-+	return pevent->sample.evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
+ #include "callchain.h"
+ #include "counts.h"
++#include "data.h"
+ #include "event.h"
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -2316,6 +2317,102 @@ static PyObject *pyrf__metrics(PyObject *self, PyObject *args)
+ 	return list;
  }
  
- static PyObject*
-@@ -343,7 +341,7 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
- static PyObject*
- get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
- {
--	struct evsel *evsel = pevent->evsel;
-+	struct evsel *evsel = pevent->sample.evsel;
- 	struct tep_event *tp_format = evsel__tp_format(evsel);
- 	struct tep_format_field *field;
- 
-@@ -509,7 +507,7 @@ static PyObject *pyrf_event__new(const union perf_event *event)
- 	pevent = PyObject_New(struct pyrf_event, ptype);
- 	if (pevent != NULL) {
- 		memcpy(&pevent->event, event, event->header.size);
--		pevent->evsel = NULL;
-+		perf_sample__init(&pevent->sample, /*all=*/false);
- 	}
- 	return (PyObject *)pevent;
- }
-@@ -1798,8 +1796,6 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 			return Py_None;
- 		}
- 
--		pevent->evsel = evsel__get(evsel);
--
- 		perf_mmap__consume(&md->core);
- 
- 		err = evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
-diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
-index cf73329326d7..7ec534dedc5c 100644
---- a/tools/perf/util/sample.c
-+++ b/tools/perf/util/sample.c
-@@ -1,18 +1,23 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include "sample.h"
++struct pyrf_data {
++	PyObject_HEAD
 +
-+#include <stdlib.h>
-+#include <string.h>
++	struct perf_data data;
++};
 +
-+#include <elf.h>
-+#include <linux/zalloc.h>
++static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyObject *kwargs)
++{
++	static char *kwlist[] = { "path", "fd", NULL };
++	char *path = NULL;
++	int fd = -1;
 +
- #include "debug.h"
-+#include "evsel.h"
- #include "thread.h"
--#include <elf.h>
-+#include "../../arch/x86/include/asm/insn.h"
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|si", kwlist, &path, &fd))
++		return -1;
 +
- #ifndef EM_CSKY
- #define EM_CSKY		252
- #endif
- #ifndef EM_LOONGARCH
- #define EM_LOONGARCH	258
- #endif
--#include <linux/zalloc.h>
--#include <stdlib.h>
--#include <string.h>
--#include "../../arch/x86/include/asm/insn.h"
++	if (pdata->data.open)
++		perf_data__close(&pdata->data);
++	free((char *)pdata->data.path);
++
++	if (!path)
++		path = "perf.data";
++
++	pdata->data.path = strdup(path);
++	if (!pdata->data.path) {
++		PyErr_NoMemory();
++		return -1;
++	}
++
++	if (fd != -1) {
++		struct stat st;
++
++		if (fstat(fd, &st) < 0 || !S_ISFIFO(st.st_mode)) {
++			PyErr_SetString(PyExc_ValueError,
++					"fd argument is only supported for pipes");
++			free((char *)pdata->data.path);
++			pdata->data.path = NULL;
++			return -1;
++		}
++	}
++
++	pdata->data.mode = PERF_DATA_MODE_READ;
++	pdata->data.file.fd = fd;
++	if (perf_data__open(&pdata->data) < 0) {
++		PyErr_Format(PyExc_IOError, "Failed to open perf data: %s",
++			     pdata->data.path ? pdata->data.path : "perf.data");
++		return -1;
++	}
++	return 0;
++}
++
++static void pyrf_data__delete(struct pyrf_data *pdata)
++{
++	perf_data__close(&pdata->data);
++	free((char *)pdata->data.path);
++	Py_TYPE(pdata)->tp_free((PyObject *)pdata);
++}
++
++static PyObject *pyrf_data__str(PyObject *self)
++{
++	const struct pyrf_data *pdata = (const struct pyrf_data *)self;
++
++	if (!pdata->data.path)
++		return PyUnicode_FromString("[uninitialized]");
++	return PyUnicode_FromString(pdata->data.path);
++}
++
++static PyObject *pyrf_data__new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
++{
++	struct pyrf_data *pdata;
++
++	pdata = (struct pyrf_data *)PyType_GenericNew(type, args, kwargs);
++	if (pdata)
++		memset(&pdata->data, 0, sizeof(pdata->data));
++	return (PyObject *)pdata;
++}
++
++static const char pyrf_data__doc[] = PyDoc_STR("perf data file object.");
++
++static PyTypeObject pyrf_data__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.data",
++	.tp_basicsize	= sizeof(struct pyrf_data),
++	.tp_dealloc	= (destructor)pyrf_data__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= pyrf_data__doc,
++	.tp_init	= (initproc)pyrf_data__init,
++	.tp_repr	= pyrf_data__str,
++	.tp_str		= pyrf_data__str,
++};
++
++static int pyrf_data__setup_types(void)
++{
++	pyrf_data__type.tp_new = pyrf_data__new;
++	return PyType_Ready(&pyrf_data__type);
++}
++
+ static PyMethodDef perf__methods[] = {
+ 	{
+ 		.ml_name  = "metrics",
+@@ -2378,7 +2475,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	    pyrf_cpu_map__setup_types() < 0 ||
+ 	    pyrf_pmu_iterator__setup_types() < 0 ||
+ 	    pyrf_pmu__setup_types() < 0 ||
+-	    pyrf_counts_values__setup_types() < 0)
++	    pyrf_counts_values__setup_types() < 0 ||
++	    pyrf_data__setup_types() < 0)
+ 		return module;
  
- void perf_sample__init(struct perf_sample *sample, bool all)
- {
-@@ -29,6 +34,8 @@ void perf_sample__init(struct perf_sample *sample, bool all)
+ 	/* The page_size is placed in util object. */
+@@ -2426,6 +2524,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	Py_INCREF(&pyrf_counts_values__type);
+ 	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
  
- void perf_sample__exit(struct perf_sample *sample)
- {
-+	evsel__put(sample->evsel);
-+	sample->evsel = NULL;
- 	zfree(&sample->user_regs);
- 	zfree(&sample->intr_regs);
- 	if (sample->merged_callchain) {
++	Py_INCREF(&pyrf_data__type);
++	PyModule_AddObject(module, "data", (PyObject *)&pyrf_data__type);
++
+ 	dict = PyModule_GetDict(module);
+ 	if (dict == NULL)
+ 		goto error;
 -- 
 2.54.0.545.g6539524ca2-goog
 
