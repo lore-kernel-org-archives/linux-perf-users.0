@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D5C36682A
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181F936682A
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140726; cv=none; b=rkzLsIRNw6UIIoP4FrvI1JUrdLN6pIdoDzwBt3n5OOUYMkKsq09ItHq++BoRWLXQJ0LpspQgMXhjZX2rJBZVTOXnxvO5CFD4pgqsZoZRYQhlQHIc/6avUKTpYjc9rKknJLHMYgNkH5OdKUAo2CmCq8aNd1TM+UI8uvgTcOkIROE=
+	t=1777140748; cv=none; b=VHm90GYjozwmVDBht8LpsPRJpEnQJ7Ks9dTwY0SHv3XdyJnzJ8ow78BzHA5BCntNBVr3mXb+c1AgJOLK0I7VRdEKGGPODnDqE5sZeuU279WzzzvPR2kaFyw3kaZD/3Pf8YjYRsHMxIle6t4iStXJhUhRirYJ3kII62VelrEoNuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777140726; c=relaxed/simple;
-	bh=itrT/+PCSljrYC1mS0a9BKegi3AzW9f11TONH01IZJI=;
+	s=arc-20240116; t=1777140748; c=relaxed/simple;
+	bh=r50LlRjMqWovKV0rrbn5hOkN3CViZ05sxVzK/pv/gJ0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e3b8/zzTFTbuGey6yWWe7k0X+6470s9ku+KgPsmHGPk6QRzEJ15h7Mr8N56oY9PgblBa5D+1A3S080H+9trWCJVBs6icBoq+Fw9Wiq40wiAiQRTLsrCXXf9Aq+4Pxfvg/iExprN4WSc+w0tJJeBGGQbEl9mKce/hmZkbukCpbx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrUdgXBb; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=NOpBilMhaq0NT3sgAvRneRWBMsPul/rL2a5qZwUK/NxJ/f/hefnxATwV2CwrUHyKcyAcsnpFZ7PYKMRUt6RAGtimzoL/ye+wEeCw4bSY0vtWo8Jus9YcTGx08W+OCfLD3oW1wchr5cgYZttkOZkwFjReyOd3YTPP+zHjvIyXhYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfGh0fnZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrUdgXBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A1EC2BCB0;
-	Sat, 25 Apr 2026 18:12:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfGh0fnZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF72C2BCB0;
+	Sat, 25 Apr 2026 18:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140726;
-	bh=itrT/+PCSljrYC1mS0a9BKegi3AzW9f11TONH01IZJI=;
+	s=k20201202; t=1777140747;
+	bh=r50LlRjMqWovKV0rrbn5hOkN3CViZ05sxVzK/pv/gJ0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=JrUdgXBbwTnW2U9G2VxWr42bVJS/mYkSEA+WkO0oQuu5kdu/ULnKTg4v3mXDbHXjC
-	 qCpNDngJWlGfiTd2tufWupAJcoVVj8gQdDVVf2zDcG6teuwPG9O5PorupBBiZ2Mafa
-	 GbMf934cXdeQtpYeOAaJol0KGd/RCS8b2E632deJkS7YThQ1UoGnnIkrG92XoH0T3l
-	 s+ik9sUfGh0Q2DYT854LiBt/1Rk9n1uiOoN7HyctdIUU5t156yiN5CP5EPcncuFnV2
-	 RC49vEo0s2QkHzqAytwRghvIkRY8D4CmiUVigzhxq3p0V9UdgU2BqkIJoG4+ATra4X
-	 HElFhZVwDNqwQ==
+	b=gfGh0fnZJ+Z5370XnXztvwvD7UvdovTuHtQ8ygNpQoTXNYQbWNomGD3h8Ud2UnsQE
+	 cEeTp1SzniKtn04yATjA6T6OYys1QQxs7CkwNkxdEwnGkouI4CtyGpgaFPTyYPOmdz
+	 uAGyAdw0wLJw276eX6yGYjFg6s7hFW0mJw/Pz6K27usU0qJ/DIBwrkxsfECA6rtnKT
+	 Tk7jV+5yDUDQRtlbKavkx4WDnBrhyadZX8tb/iRfG0eh+9LczKNHPqLn6i8E3Ja0Lh
+	 Kye/PW+iG8PSTnukhoPU0u12KxAtBTVQTzBtz3f8Z9kKLbtNkybUOQYw2OkBXm1KXN
+	 lemI0RZnZGuOg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 36/59] perf export-to-sqlite: Port export-to-sqlite
- to use python module
+Subject: Re: [PATCH v6 30/59] perf flamegraph: Port flamegraph to use python
+ module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-37-irogers@google.com>
-References: <20260425174858.3922152-37-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-31-irogers@google.com>
+References: <20260425174858.3922152-31-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:12:06 +0000
-Message-Id: <20260425181206.99A1EC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:12:26 +0000
+Message-Id: <20260425181227.7EF72C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,81 +45,102 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 4 potential issue(s):
-- [Critical] Runtime Crash / Integer Overflow on kernel addresses.
-- [High] Silent Data Loss / Incorrect Attribute Names for Sample Metrics.
-- [High] Silent Data Loss / Missing API Surface.
-- [High] Feature Regression / Hardcoded Data for Branch Stack.
+- [Medium] Python 3.9+ typing syntax will cause a TypeError on older Python=
+ versions.
+- [Medium] Template injection vulnerability due to sequential string replac=
+ements.
+- [Medium] Fallback symbol name resolution evaluates to None, breaking the =
+JavaScript UI.
+- [Low] Missing space in minimal HTML fallback warning message.
 --
 
-commit 0c8124c5cad0e09d1363bee787c58324149c0896
+commit 9130218bfb555360e9c6970e0bf2a82c681c5bc2
 Author: Ian Rogers <irogers@google.com>
 
-perf export-to-sqlite: Port export-to-sqlite to use python module
+perf flamegraph: Port flamegraph to use python module
 
-This commit ports the export-to-sqlite.py script to use the modern perf
-Python module and the standard library sqlite3 module. It drops the
-dependency on PySide2.QtSql.
+This commit adds a Python port of the flamegraph script that directly uses
+the perf module. It avoids intermediate dictionaries to improve performance.
 
-> diff --git a/tools/perf/python/export-to-sqlite.py b/tools/perf/python/ex=
-port-to-sqlite.py
+> diff --git a/tools/perf/python/flamegraph.py b/tools/perf/python/flamegra=
+ph.py
 > new file mode 100755
-> index 000000000000..736b56ff8d59
+> index 000000000000..b0eb5844b772
 > --- /dev/null
-> +++ b/tools/perf/python/export-to-sqlite.py
+> +++ b/tools/perf/python/flamegraph.py
+[ ... ]
+> +class Node:
+> +    """A node in the flame graph tree."""
+> +    def __init__(self, name: str, libtype: str):
+> +        self.name =3D name
+> +        self.libtype =3D libtype
+> +        self.value: int =3D 0
+> +        self.children: dict[str, Node] =3D {}
+
+Could this typing syntax introduce a regression on older Python versions?
+
+In Python versions prior to 3.9 (like Python 3.8), built-in types like dict
+are not subscriptable. Because there is no
+"from __future__ import annotations" directive, these type hints are
+evaluated at runtime during class definition, which might prevent the
+script from running entirely.
+
+> +
+> +    def to_json(self) -> Dict[str, Union[str, int, list[Dict]]]:
+
+Similarly, does using list[Dict] here cause a TypeError regression on older
+Python versions?
 
 [ ... ]
+> +        else:
+> +            # Fallback if no callchain
+> +            name =3D getattr(sample, "symbol", "[unknown]")
 
-> +        # Insert sample
-> +        self.con.execute("""
-> +            INSERT INTO samples VALUES (
-> +                NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,=
- ?, ?, ?, ?, ?, ?, ?
-> +            )
-> +        """, (
-> +            self.get_event_id(getattr(sample.evsel, 'name', str(sample.e=
-vsel))),
-> +            0, thread_id, comm_id,
-> +            dso_id, symbol_id, getattr(sample, 'sym_offset', 0),
+Is there a regression here where getattr returns None instead of "[unknown]"
+when the symbol is unresolved?
 
-Are sym_offset, transaction_, in_tx, and flags actually exposed by the perf
-python module? It looks like they might be missing from the
-pyrf_sample_event__members definition, which would cause getattr() to
-silently return 0.
+The symbol property on perf.sample_event (defined in
+pyrf_sample_event__getset) returns Py_RETURN_NONE when a symbol cannot be
+resolved. Since the property exists on the object, getattr() would
+successfully return None.
 
-> +            sample.sample_ip, sample.sample_time, sample.sample_cpu,
+This None value would be assigned to the Node and serialized by json.dumps
+as "n": null. The d3-flame-graph JavaScript library strictly expects the no=
+de
+name to be a string and throws a TypeError when rendering, which would break
+the flamegraph UI for unresolved symbols.
 
-SQLite enforces a 64-bit signed integer limit for its INTEGER type. Will th=
-is
-cause an OverflowError if sample.sample_ip contains a kernel address (which
-often has the high bit set, making it too large for a signed 64-bit integer=
-)?
+[ ... ]
+> +            if use_minimal:
+> +                print("Using internal minimal HTML that refers to d3's w=
+eb site. JavaScript " +
+> +                      "loaded this way from a local file may be blocked =
+unless your " +
+> +                      "browser has relaxed permissions. Run with '--allo=
+w-download' to fetch" +
+> +                      "the full D3 HTML template.", file=3Dsys.stderr)
 
-> +            0, 0, 0, 0,  # to_dso, to_symbol, to_sym_offset, to_ip
+This isn't a bug, but there's a missing space between "fetch" and "the" in
+the warning message above, resulting in "fetchthe".
 
-It looks like branch stack data is now completely hardcoded to 0. Does this
-code skip processing the sample.brstack property, dropping branch analysis
-data from the database?
+[ ... ]
+> +            assert output_str is not None
+> +            output_str =3D output_str.replace("/** @options_json **/", o=
+ptions_json)
+> +            output_str =3D output_str.replace("/** @flamegraph_json **/"=
+, stacks_json)
 
-> +            getattr(sample, 'sample_period', 0) or 0,
-> +            getattr(sample, 'sample_weight', 0) or 0,
-> +            getattr(sample, 'transaction_', 0),
-> +            getattr(sample, 'data_src', 0),
-> +            0,  # branch_type
-> +            getattr(sample, 'in_tx', 0),
-> +            call_path_id,
-> +            getattr(sample, 'insn_count', 0),
-> +            getattr(sample, 'cyc_count', 0),
+Could this sequential replacement introduce a template injection regression?
 
-Are the property names correct for data_src, insn_count, and cyc_count?
+The options_json string includes user-controlled fields, such as the --event
+argument or the perf report header. If a user inputs the exact string
+"/** @flamegraph_json **/" into these fields, the first replacement injects
+this placeholder into the JavaScript options array literal.
 
-Looking at tools/perf/util/python.c, it seems these should be prefixed with
-sample_ (e.g., sample_data_src, sample_insn_count, sample_cyc_count).
-
-Without the prefix, won't getattr() silently fall back to 0?
-
-> +            getattr(sample, 'flags', 0)
-> +        ))
+The second replacement would then substitute stacks_json (which contains
+unescaped double quotes) into this string literal, breaking the JavaScript
+syntax and preventing the flamegraph UI from rendering.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D36
+152-1-irogers@google.com?part=3D30
