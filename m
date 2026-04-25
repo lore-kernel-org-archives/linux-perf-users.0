@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6ADC38C2B0
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432D830BF6F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158767; cv=none; b=NwhCt35lGvCh1BCAWZdGCbz4647oMvH5rj2SGgN70QmUxvg32EcQjBjwZluW8XEWtblCElg9cRkYJEMOyXQipChoJHbLEj7bqgXObziBBVZ26diiEs48v5Xxw61lNSu14jduk5qN78UX8WS+L4Hyo2B0tpIIKrG1KXQ4chdEA4E=
+	t=1777158783; cv=none; b=kX8/eBfrmziVaD8VavBTerI7kTBUmDd5X8/skuMP9M0CVEZ4zuDdh61liY3G50uLPcZZq+eWZIl/VEGaFz2Aen2M5NUHzWVDn2nN6iXvxs0QEmCyF2BoXbZhIy06SaWkTRWoEejdUywQhbiAQJ0qae0W2sB8UtJnSuLKH8IsBgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158767; c=relaxed/simple;
-	bh=TTBIEXQRu4FXRjp/5hN479Hl42dIuu6CuvDBT286ClE=;
+	s=arc-20240116; t=1777158783; c=relaxed/simple;
+	bh=8zPxbqvnDt8r8nTAua2+MsItoA86POmXHfZ37Pblh6A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FqLVZbOK/i5O7sk3Zdy3FEKbIM9tUUBwPGymIvitvM2VfDuooq9xj5Zw9RphjKBb+2toaQbWngtzalPCenLgHRhfPPGpSBovZlooy7oAtBM/JuJJnkJjsjBFAjcrRWXDQ2xe73DqV32sG+OMHP6Vrg88n5No1sw5QxR1pkaFrao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyMEGsD2; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=N/+RHogHcLNHIujjWZ0oboM0GzGFQVNS4Ka+qhE0wVCTOLZqoXDNzpaFrX8sU7HW0yfrhlqUCEY9rIK3Cn2Lm+vpYRUvjux25PfPhIC9M8O3DxB4cHeEwWKkQTqjgbFwxXLlWGJOXyZ2jzlyseLxFOIpBCSrdh6qvLvzgDpa1sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH9f9WzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyMEGsD2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E4EC2BCB0;
-	Sat, 25 Apr 2026 23:12:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH9f9WzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0623BC2BCB0;
+	Sat, 25 Apr 2026 23:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158767;
-	bh=TTBIEXQRu4FXRjp/5hN479Hl42dIuu6CuvDBT286ClE=;
+	s=k20201202; t=1777158783;
+	bh=8zPxbqvnDt8r8nTAua2+MsItoA86POmXHfZ37Pblh6A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=AyMEGsD2kLV+B0+sFnAeJOzOFPrsTSg+0IYtpdaYWP6k01XvN6KkH8O9MawzDyqB+
-	 yLqM/54XIPBDGERhqAsv4iqq0yISzszw1bh1tX+y7jCLO6YnDEoXbzOSY/h/XFmMfY
-	 u74mqrcxHRhvd5Bgedtmty9oRiJuhDN44j1IYah9jc/6s3CjHHhaiyFGUM+XlR6cCI
-	 7Ai4QVikfr0OR8J2XDtdb6uiLKVkNjfA89yuVF+T4M9H/SdoLlZo15NdG1k8gDa1F8
-	 7ELQvNE7uahQv87HaqF4/TNQlheK7v8PvemOtXCnFF8mcf04e8+gk6tIolZ+56ZNhW
-	 iML21IdO/AEoA==
+	b=XH9f9WzNXUDjumH5JYrTx9iVKonoQ1Sjb9XDFKCg0yN2M9vGGfu3HKcnR3KmfUma1
+	 RMKMaPfXQeSz4IvCW7tPZvDqzN3B2HGDqWqso8LyiwIi+i2rGOWbb1hsH1NkvboiBA
+	 D8gp+2COAjHPii3rOpqsl37Uj//bSk5TWeM8bqQ5zooYeTCh0oF9r8cGLYwpiXdL9Z
+	 X4GaoeXVi+iCj38pZfGt/KDBOEGc0VpLGL4YOQiZDJ/uujOdGBdsZdbSkBsC8LlcBf
+	 NMzYMo2QwZ3kH497HDuFxv2u1YNv6WRKT5W+EEw053L3knYFcRdIKmjT2D5Pdqqj3y
+	 nQuurmvab0stg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 51/59] perf wakeup-latency: Port wakeup-latency to
- use python module
+Subject: Re: [PATCH v7 21/59] perf python: Expose brstack in sample event
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-52-irogers@google.com>
-References: <20260425224951.174663-52-irogers@google.com>
+In-Reply-To: <20260425224951.174663-22-irogers@google.com>
+References: <20260425224951.174663-22-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:12:46 +0000
-Message-Id: <20260425231247.44E4EC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:13:02 +0000
+Message-Id: <20260425231303.0623BC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,67 +44,108 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 1 potential issue(s):
-- [Medium] Incorrect initialization and reporting of min_wakeup_latency cau=
-ses misleading statistics.
+- [High] Unbreakable Python reference cycle causes a permanent memory leak =
+for every event with a branch stack.
 --
 
-commit 227f7367d2013dd9389e4f1721e12c0d7a7bed57
+commit 258ce9fbe4f8832b7edea1df3b558bac40529cda
 Author: Ian Rogers <irogers@google.com>
 
-perf wakeup-latency: Port wakeup-latency to use python module
+perf python: Expose brstack in sample event
 
-This commit ports the legacy Perl script wakeup-latency.pl to a Python scri=
-pt
-using the perf.session API. It leverages a class-based architecture to track
-timestamps between sched_wakeup and sched_switch events to measure latency.
+This commit implements pyrf_branch_entry and pyrf_branch_stack to allow
+iteration over branch stack entries in perf python scripts.
 
-> diff --git a/tools/perf/python/wakeup-latency.py b/tools/perf/python/wake=
-up-latency.py
-> new file mode 100755
-> index 000000000000..1b0db115abcf
-> --- /dev/null
-> +++ b/tools/perf/python/wakeup-latency.py
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 17d0ee15336f..256129fef4f8 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 
 [ ... ]
 
-> +class WakeupLatency:
-> +    """Tracks and displays wakeup latency statistics."""
-> +    def __init__(self) -> None:
-> +        self.last_wakeup: Dict[int, int] =3D defaultdict(int)
-> +        self.max_wakeup_latency =3D 0
-> +        self.min_wakeup_latency =3D 1000000000
-
-If all recorded wakeup latencies happen to be greater than 1 second
-(1,000,000,000 ns), will this hardcoded initialization cause the reported
-minimum to be incorrectly capped at 1 second instead of reflecting the actu=
-al
-minimum latency?=20
-
-Could this be initialized to float('inf') or the first observed latency
-instead?
+> +struct pyrf_branch_stack {
+> +	PyObject_HEAD
+> +	struct pyrf_event *pevent;
+> +	struct branch_entry *entries;
+> +	u64 nr;
+> +	u64 pos;
+> +};
 
 [ ... ]
 
-> +    def print_totals(self) -> None:
-> +        """Print summary statistics."""
-> +        print("wakeup_latency stats:\n")
-> +        print(f"total_wakeups: {self.total_wakeups}")
-> +        if self.total_wakeups:
-> +            avg =3D self.total_wakeup_latency // self.total_wakeups
-> +            print(f"avg_wakeup_latency (ns): {avg}")
-> +        else:
-> +            print("avg_wakeup_latency (ns): N/A")
-> +        print(f"min_wakeup_latency (ns): {self.min_wakeup_latency}")
-> +        print(f"max_wakeup_latency (ns): {self.max_wakeup_latency}")
+> +static PyObject *pyrf_branch_stack__next(struct pyrf_branch_stack *pstac=
+k)
+> +{
+> +	struct pyrf_branch_entry *pentry;
+> +
+> +	if (pstack->pos >=3D pstack->nr)
+> +		return NULL;
+> +
+> +	pentry =3D PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__t=
+ype);
+> +	if (!pentry)
+> +		return NULL;
+> +
+> +	pentry->from =3D pstack->entries[pstack->pos].from;
+> +	pentry->to =3D pstack->entries[pstack->pos].to;
+> +	pentry->flags =3D pstack->entries[pstack->pos].flags;
+> +
+> +	pstack->pos++;
+> +	return (PyObject *)pentry;
+> +}
 
-When no wakeups are recorded during the session (total_wakeups =3D=3D 0),
-does this code unconditionally print the initialized values for min and max?
+[ ... ]
 
-It appears this might result in "min_wakeup_latency (ns): 1000000000" and
-"max_wakeup_latency (ns): 0" being printed for an empty trace. Should these
-outputs also be moved inside the `if self.total_wakeups:` block or given an
-"N/A" fallback?
+> @@ -1307,6 +1462,27 @@ static PyObject *pyrf_event__new(const union perf_=
+event *event, struct evsel *ev
+>  			addr_location__exit(&al);
+>  		}
+>  	}
+> +	if (sample->branch_stack) {
+> +		struct branch_stack *bs =3D sample->branch_stack;
+> +		struct branch_entry *entries =3D perf_sample__branch_entries(sample);
+> +		struct pyrf_branch_stack *pstack;
+> +
+> +		pstack =3D PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__=
+type);
+> +		if (pstack) {
+> +			Py_INCREF(pevent);
+> +			pstack->pevent =3D pevent;
+
+Does this create an unbreakable Python reference cycle that leaks memory?
+
+The code assigns pstack to pevent->brstack below, and here it assigns pevent
+to pstack->pevent while taking a reference via Py_INCREF. Because neither
+pyrf_event nor pyrf_branch_stack implements Python's cyclic garbage
+collection protocol, the reference counts will never drop to zero.
+
+This means the event object, the pstack object, and the calloc'd
+pstack->entries array will be leaked for every sample processed.
+
+Unlike the callchain implementation which requires pevent for lazy resoluti=
+on,
+pyrf_branch_stack__next() iterates entirely over the pstack->entries array
+that is eagerly populated via memcpy() below.
+
+Since pstack->pevent appears to be unused during iteration, could we avoid
+the memory leak by entirely removing the Py_INCREF(pevent) and
+pstack->pevent back-reference?
+
+> +			pstack->pos =3D 0;
+> +			pstack->nr =3D bs->nr;
+> +			pstack->entries =3D calloc(bs->nr, sizeof(struct branch_entry));
+> +			if (pstack->entries) {
+> +				memcpy(pstack->entries, entries,
+> +				       bs->nr * sizeof(struct branch_entry));
+> +				pevent->brstack =3D (PyObject *)pstack;
+> +			} else {
+> +				Py_DECREF(pstack);
+> +			}
+> +		}
+> +	}
+>  	return (PyObject *)pevent;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D51
+63-1-irogers@google.com?part=3D21
