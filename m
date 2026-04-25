@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23FE1DD889
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 00:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702551A4F2F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 01:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777078666; cv=none; b=Z2e6c38NWY14qHEQpoPEEd53JtAfAXZNVCEzkhAFHo98gkOLsLrUJtTfBxvdsFxPnJC+zrGKUK8/jKcrOLUr3mOn99/CXkn+/d7WhGbvzQcMJo6yUuIe8HOqfrMz8T5bwPfAGrlmZx+zxfU0QMlZ/Zj8b/kqZoydydOCLMO4LrU=
+	t=1777081060; cv=none; b=oCkeidnnw675HjkCqAh/HcqejuUOWsU0+sCqaWTS1rbCRJE/P+hK9g6Ja+hG4yX+QlKE+9aQwpP+rwfg18h+Cvey7sna4ANVEEB/gmokDZWn2GrdaCeeP9FRhJ6gkd9E3889GSBb1MxqKsLCeewtbdCW1B8n6ujnRYrpJHBAxJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777078666; c=relaxed/simple;
-	bh=nV7ezGfF9vLrpYIoIoxn36J1xCyseURp1WMV5vN/vZw=;
+	s=arc-20240116; t=1777081060; c=relaxed/simple;
+	bh=qMABxmzldRYVZXalKZQasrwaoC6Pxf1SEAMDV9mQk4c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aTat/ugPEVdhWvAS+tkaxB0r2C0uf/PT4eELeg4SI6UdG2a9MiRyCMAs0DM0qrzZ0bR70CVkfrDlXG0ZQZkyVOdwgAihfdmQhIe4NUAFUcOlYuIO8C6tWT5wWdlu7Riyjzjm6wEcHzPrYTHiHZ7uAu1c3Hh0A+rAJZGBwMM8mrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZDKjzJW; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Q6/Vp2YvZFUi94elCnG6Qev3EcywPQoVjrltM50Nequn/Cu4x4Hph9ccySQYQBkIZnI9q5VbcDSdM+Td+SOQ36oo3zDBXW0AiGReHqlcyBymmIHyUzGLR6nSDtEmuxIdW+XzT38Z/w8HYWDBQ+GS41xcstlfhnUXiFPf2ewUSxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScIF1WMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZDKjzJW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BCEC19425;
-	Sat, 25 Apr 2026 00:57:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScIF1WMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4C4C19425;
+	Sat, 25 Apr 2026 01:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777078666;
-	bh=nV7ezGfF9vLrpYIoIoxn36J1xCyseURp1WMV5vN/vZw=;
+	s=k20201202; t=1777081060;
+	bh=qMABxmzldRYVZXalKZQasrwaoC6Pxf1SEAMDV9mQk4c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=dZDKjzJW1F1iSbPLkdNfFXRqIA4AxsiMG+kkrIPGA/CYYk80O+Hna3nupQe5DTZS3
-	 rThH8Q9blhIF2J5Vk2dW5k+Ybk5oNSK74EHUgTAHkKmQg+19Hc7VefTrmUEhABKxG7
-	 Is5mUJvGZz9ZBt5ZpfBkppJja2ZoamKVrhOmpyaRADPkF/IY4PrZbE8NlWjG3oZHav
-	 cBSTO5Db2UmoyWkVm16vryS/OldCIfoqY6AVJTyK5gf3KYcHYuCCF0prV+z4gSEKaJ
-	 lWG1WmlLmtZC06Fd9R/MTW2KinOFGdW6hcJkmYmMybEWaOLNGZk0o4ypHXs3AhET78
-	 4/03+fvKNTQ9g==
+	b=ScIF1WMmfNiVbuMis7nwyPlXpR/5rIEV7vT2VarDue2xyd7zn1LmIrJ6ecVZ3jDvS
+	 9h5U2Fa87EkMT6XSO1lm7rbMPV6gYN5xyJewtTCEZsXMWQgAEcwLEANrP3Vr8wAesn
+	 tEdmlQXhLVKAY3zfHca/fOO0a4SHZnz7QTuic1QKT5PeqxgWSJRXSvjTaFNudJ6KcU
+	 2LUIr9wx7dtsyQQCgjnzF9V6j/2SCS875slwNRN0pLalvU2+fDQsTxLqSlVq/HSOQW
+	 IJkTHlZe05zQfk9oZooKXNtRC4QZOKz8FH4YbKA3imlRDYvLPDsgPOEs8Cx+vVeSEV
+	 g2xWRwzbPSGaA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf test: probe_vfs_getname add do_getname() probing
- fallback
+Subject: Re: [PATCH 1/3] rtla: Add libsubcmd dependency
 Reply-To: sashiko@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
+To: "Tomas Glozar" <tglozar@redhat.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260416125515.3481495-1-tmricht@linux.ibm.com>
-References: <20260416125515.3481495-1-tmricht@linux.ibm.com>
+In-Reply-To: <20260320150651.51057-2-tglozar@redhat.com>
+References: <20260320150651.51057-2-tglozar@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 00:57:45 +0000
-Message-Id: <20260425005746.36BCEC19425@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 01:37:39 +0000
+Message-Id: <20260425013739.BF4C4C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,92 +44,80 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [Medium] Out-of-bounds kernel memory read in `do_getname` perf probe due =
-to unterminated string.
-- [Medium] Missing user-space pointer fallback logic reduces test robustnes=
-s.
+- [Low] The variable `LIBSUBCMD_INCLUDES` is incorrectly used as both a com=
+piler flag and a Make target, causing unnecessary sub-make executions.
+- [Low] The manual compilation rules for `string.o` and `str_error_r.o` byp=
+ass the standard `fixdep` dependency tracking mechanism.
 --
 
-commit 44caa018a80d8e3283b4eda7b6e0f0690afbe123
-Author: Thomas Richter <tmricht@linux.ibm.com>
+commit 61af24c97cebeb1e051afb96f7fccb2a5c359a72
+Author: Tomas Glozar <tglozar@redhat.com>
 
-perf test: probe_vfs_getname add do_getname() probing fallback
+rtla: Add libsubcmd dependency
 
-This commit extends the vfs_getname perf test logic to fall back to probing
-do_getname() if getname_flags() does not match. This reflects updated kernel
-code where the getname_flags() implementation was changed.
+This commit prepares RTLA to migrate to libsubcmd by building and linking
+the library alongside the RTLA build. It also links respective libraries
+from tools/lib and adds tools/include to the include path.
 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf=
-/tests/shell/lib/probe_vfs_getname.sh
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+> index 45690ee14544d..289e44c9664b2 100644
+> --- a/tools/tracing/rtla/Makefile
+> +++ b/tools/tracing/rtla/Makefile
+> @@ -27,6 +27,24 @@ endif
+>  RTLA		:=3D $(OUTPUT)rtla
+>  RTLA_IN		:=3D $(RTLA)-in.o
+> =20
+> +LIBSUBCMD_DIR =3D $(srctree)/tools/lib/subcmd/
+> +ifneq ($(OUTPUT),)
+> +  LIBSUBCMD_OUTPUT =3D $(abspath $(OUTPUT))/libsubcmd
+> +else
+> +  LIBSUBCMD_OUTPUT =3D $(CURDIR)/libsubcmd
+> +endif
+> +LIBSUBCMD =3D $(LIBSUBCMD_OUTPUT)/libsubcmd.a
+> +LIBSUBCMD_INCLUDES =3D -I$(LIBSUBCMD_OUTPUT)/include
+
 [ ... ]
-> @@ -28,12 +30,24 @@ add_probe_vfs_getname() {
->  			line=3D$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re=
-" | sed -r "s/$result_aname_re/\1/")
->  		fi
+
+> -$(RTLA_IN): fixdep FORCE src/timerlat.skel.h
+> +$(RTLA_IN): fixdep FORCE src/timerlat.skel.h $(LIBSUBCMD_INCLUDES)
+>  	make $(build)=3Drtla
 > =20
-> +		if [ -z "$line" ] ; then
-> +			do_getname=3D1
-> +			result_iname_re=3D"[[:space:]]+([[:digit:]]+)[[:space:]]+initname\(re=
-sult\);"
-> +			line=3D$(perf probe -L do_getname 2>&1 | grep -E "$result_iname_re" |=
- sed -r "s/$result_iname_re/\1/")
-> +		fi
+> -clean: doc_clean fixdep-clean
+> +$(LIBSUBCMD_OUTPUT):
+> +	$(Q)$(MKDIR) -p $@
 > +
->  		if [ -z "$line" ] ; then
->  			echo "Could not find probeable line"
->  			return 2
->  		fi
-> =20
-> -		perf probe -q       "vfs_getname=3Dgetname_flags:${line} pathname=3Dre=
-sult->name:string" || \
-> +		if [ "$do_getname" -eq 1 ]
-> +		then
-> +			param=3D"vfs_getname=3Ddo_getname:${line} pathname=3Dresult->iname:st=
-ring"
+> +$(LIBSUBCMD_INCLUDES): $(LIBSUBCMD_OUTPUT)
+> +	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
+> +		install_headers
 
-Does this probe cause an out-of-bounds kernel memory read when the path exc=
-eeds
-EMBEDDED_NAME_MAX?
+Does this unintentionally cause the install_headers sub-make to run on
+every build?
 
-If a user provides a long file path, strncpy_from_user() completely fills t=
-he
-fixed-size result->iname array without appending a NUL terminator, while the
-actual NUL-terminated path is dynamically allocated and pointed to by
-result->name.
+Since LIBSUBCMD_INCLUDES expands to the compiler flag string
+-I$(LIBSUBCMD_OUTPUT)/include, make interprets this literal string as a
+target. Because a file named "-I..." is never actually created by the
+install_headers step, make considers the target permanently out-of-date
+and executes this recipe unconditionally on every invocation.
 
-Because the probe explicitly instructs the kernel to read result->iname as a
-NUL-terminated string, could the kprobe fetcher read past the end of the in=
-ame
-array into adjacent slab memory? Should this use result->name:string instea=
-d?
+> +$(LIBSUBCMD): fixdep $(LIBSUBCMD_OUTPUT)
+> +	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
+> +		$@
+> +
+> +$(LIB_STR_ERROR_R): $(LIB_STR_ERROR_R_SRC)
+> +	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
+> +
+> +$(LIB_STRING): $(LIB_STRING_SRC)
+> +	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
 
-> +			perf probe -q "$param" || perf probe $add_probe_verbose "$param" || r=
-eturn 1
+Do these manual compilation rules bypass dependency tracking?
 
-Is the user-space pointer fallback missing here?
-
-The original probe logic for getname_flags robustly handles compiler
-optimizations by falling back to probing the user-space function argument
-directly (pathname=3Dfilename:ustring) if reading the kernel result struct =
-fails.
-
-This new block for do_getname instead retries the exact same probe string, =
-just
-adding a verbose flag. Since filename remains the first argument to
-do_getname(), would it be safer to include the filename:ustring fallback to
-prevent the test from failing on certain toolchains?
-
-> +			return 0
-> +		fi
-> +		perf probe -q "vfs_getname=3Dgetname_flags:${line} pathname=3Dresult->=
-name:string" || \
->  		perf probe $add_probe_verbose "vfs_getname=3Dgetname_flags:${line} pat=
-hname=3Dfilename:ustring" || return 1
->  	fi
->  }
+These targets invoke the compiler directly without using the standard
+tools/build/Makefile.build infrastructure. By omitting the necessary
+compiler flags to generate dependency files and skipping the fixdep
+post-processing, updates to any headers included by string.c or
+str_error_r.c will not automatically trigger a rebuild of these object
+files.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260416125515.3481=
-495-1-tmricht@linux.ibm.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260320150651.5105=
+7-1-tglozar@redhat.com?part=3D1
