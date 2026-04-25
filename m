@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDD336682A
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF2136C0CB
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140847; cv=none; b=FE7UPIos0oOitP9uS0mrQ4XMFxb1aAvvpiAC/T/b+79gahLEKWfmCCPhOy7yXVMH/8uc44ZoARi/NpyMZV7Ugp1nMD4ZnB68HUTI2BMWbqKhu3csVAzZ/sYOvF8nAB+WZGoxG9fqTvZo+0Omq/URUvcO8R4Iu8ZU7ZXAzCkMcV8=
+	t=1777140905; cv=none; b=r6/A2YTDN24hu6T71GH0VM58KtKOfgM/esBo9DBVTLprC/mtUQpLt8Nucs0ido3zoOgnrrUmvEvqg97HSaDakd0StP15h93aitZwpd7Nn1FBsJxTgaMMDbRQOTCnuUSmVI6rhJGb2WO1dJgv96056RvUCO8pPWowWQs/azASKVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777140847; c=relaxed/simple;
-	bh=tXTYmKyEpUuGgNVJbXvy83+ZiOi0zeSseoUNGLsmrNw=;
+	s=arc-20240116; t=1777140905; c=relaxed/simple;
+	bh=rRJt8rWiknA9qc4okw6vXtoKlrvONUe96CJajWhdFHY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FayJ4fLlWa2BcUUadWvaOLEfZIUKKNm1akzeeNsE9WcI+gvNR+XasCyAOC50xk4cXOspXWyDpyc3o1KRuvdwbnL6k9vsgsiFxRyefC2bL21UdCQmswZqXSVPV6VkibjIh/5QCKWnEkEFhFFj3WTctm9kxjkr8jHLHxH6BbiawjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWihdYWw; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=BFECHfSJhjaM5Vx1wp9GrHA0QAHw82coYBnh60HVS92IyGQ1WjV7L0RGwlH03cuw5xKpHExdSQSaflimfEuO6IzhP90UMF/85cPKHwpsrcReFlXXpGEI//vucItkGL8CzxyWyL+RWKdVGYqkAxo5ks5/qU+/YbMPLa+yIXwB9ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLoILf8Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWihdYWw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03F2C2BCB0;
-	Sat, 25 Apr 2026 18:14:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLoILf8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939FCC2BCB0;
+	Sat, 25 Apr 2026 18:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140846;
-	bh=tXTYmKyEpUuGgNVJbXvy83+ZiOi0zeSseoUNGLsmrNw=;
+	s=k20201202; t=1777140904;
+	bh=rRJt8rWiknA9qc4okw6vXtoKlrvONUe96CJajWhdFHY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=YWihdYWwWDDeKfTBHVUWeZSV8T8rGQtoGZfGKzFaI/ovDLXQcHg+HFwU60c5W3tVR
-	 PkzFrE5EqICl/iF37YLEmDSC71ktot0UIR+XvpFxu/6GcHzJRvq6ECp5CGTb7TvvPG
-	 C9qjTxIGE1JQvwO0cb0X/W4+F8sWnzTZ09iMJzc8Jk5YpKi80QQwxAmUVTi6w9fYaN
-	 SYT8l4GJP0QYN0qpYw6uARX3tSZoDQ+4Sxd2i4rjYCUdKNZLHHjAEpcR/5/IwmoVzA
-	 QWNx20KdOgtQL6lqvQjsvYaOeHRI8tifVnWHpzPWHohG6t3v49C0cgqYBGaY+5s7KN
-	 HTHwzEBdSylOw==
+	b=VLoILf8QFTk0dTCC9VOeoriFhwHwe1qv9+oTicEyimkhbFpZx7wmOS+yteAWyPp/H
+	 8HgUedgsB/9O94Z/vlKxHqM3fVfPl+ZuED85xQdf8EAU6Jo6A2b0h8nK33g+ZAowR2
+	 zXhwnX4RpLTo+pveHZUgaaUkzbNvlmkw7a8S3bCx3KD9pJ5rTVdWVxqHM4EPz9Jx0D
+	 dfJLFG9hTsMRDntNZHnn4je/zv/aGcfnaTYJlUrHwVKkAGFBjBekRJMTFXUGg7EDra
+	 Lu6Hoy0Bgfqz45yvjRQbV1Rm8o6AFZlOu1ANdGuIeu5B51VGD09AU8d71LMnap8MFt
+	 BYJoqciBLR6rg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 52/59] perf test: Migrate Intel PT virtual LBR test
- to use Python API
+Subject: Re: [PATCH v6 16/59] perf python: Add syscall name/id to convert
+ syscall number and name
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-53-irogers@google.com>
-References: <20260425174858.3922152-53-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-17-irogers@google.com>
+References: <20260425174858.3922152-17-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:14:06 +0000
-Message-Id: <20260425181406.B03F2C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:15:04 +0000
+Message-Id: <20260425181504.939FCC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,89 +45,69 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [Medium] The test incorrectly fails instead of skipping when `perf` is co=
-mpiled without Python scripting support.
-- [Medium] Hardcoded relative path in the Python script breaks out-of-tree =
-builds (O=3D...).
+- [High] Missing libtraceevent guard around syscalltbl logic causes build f=
+ailure when NO_LIBTRACEEVENT=3D1.
+- [High] Declaring `kwlist` as `static char * const kwlist[]` triggers a co=
+mpiler warning that breaks the build under `-Werror` on standard Python ver=
+sions.
 --
 
-commit 0468e87feb947646888210ed3df346abde440b42
+commit 05b34dee99e34de49f07ffff286551ecc3713de8
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Migrate Intel PT virtual LBR test to use Python API
+perf python: Add syscall name/id to convert syscall number and name
 
-This commit migrates the Intel PT virtual LBR test to use the newly
-added brstack iterator API in the perf Python module instead of generating
-an ad-hoc Python script.
+This commit introduces functionality to use perf's syscalltbl support
+to convert syscall numbers to names and vice versa within the python
+extension. This helps avoid the need for python libaudit support in
+certain scripts.
 
-> diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/=
-tests/shell/lib/perf_brstack_max.py
-> new file mode 100644
-> index 000000000000..c826e14160d6
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
-> @@ -0,0 +1,43 @@
-> +#!/usr/bin/python
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Determine the maximum size of branch stacks in a perf.data file.
-> +
-> +import argparse
-> +import sys
-> +
-> +import os
-> +
-> +script_dir =3D os.path.dirname(os.path.abspath(__file__))
-> +python_dir =3D os.path.abspath(os.path.join(script_dir, "../../../python=
-"))
-> +sys.path.insert(0, python_dir)
-
-Does this hardcoded relative path cause regressions for out-of-tree builds?
-
-If built with make O=3D/tmp/build, the compiled perf C extension is placed =
-in
-the build output directory rather than the source tree. It looks like runni=
-ng
-this script in such an environment will fail to find the module and crash
-with a ModuleNotFoundError.
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index d10359abd1ea..a10c4a292756 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 
 [ ... ]
 
-> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/s=
-hell/test_intel_pt.sh
-> index 8ee761f03c38..d711ecdf5be0 100755
-> --- a/tools/perf/tests/shell/test_intel_pt.sh
-> +++ b/tools/perf/tests/shell/test_intel_pt.sh
-> @@ -539,34 +538,20 @@ test_kernel_trace()
->  test_virtual_lbr()
->  {
->  	echo "--- Test virtual LBR ---"
-> -	# Check if python script is supported
-> -	libpython=3D$(perf version --build-options | grep python | grep -cv OFF)
-> -	if [ "${libpython}" !=3D "1" ] ; then
-> -		echo "SKIP: python scripting is not supported"
-> +	# shellcheck source=3Dlib/setup_python.sh
-> +	. "$(dirname "$0")"/lib/setup_python.sh
+> @@ -2635,6 +2637,40 @@ static int pyrf_session__setup_types(void)
+>  	return PyType_Ready(&pyrf_session__type);
+>  }
+> =20
+> +static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyOb=
+ject *kwargs)
+> +{
+> +	const char *name;
+> +	int id;
+> +	int elf_machine =3D EM_HOST;
+> +	static char * const kwlist[] =3D { "id", "elf_machine", NULL };
+
+Can this trigger a compiler warning that breaks the build under -Werror
+on systems with Python 3.12 or older?
+
+Prior to Python 3.13, PyArg_ParseTupleAndKeywords() expects a char ** for
+its keywords argument. Passing a char * const * discards the const
+qualifier, which might generate a -Wincompatible-pointer-types warning.
+
 > +
-> +	if [ -z "$PYTHON" ] ; then
-> +		echo "SKIP: Python not found"
->  		return 2
->  	fi
+> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &el=
+f_machine))
+> +		return NULL;
+> +
+> +	name =3D syscalltbl__name(elf_machine, id);
 
-Could removing the explicit feature check cause false test failures when pe=
-rf
-is built without Python support?
+Does this cause a build failure when perf is built with NO_LIBTRACEEVENT=3D=
+1?
 
-The original code checked perf version --build-options to ensure perf itself
-had Python scripting support. The new setup_python.sh only verifies the
-presence of a Python interpreter on the host system.
+The syscalltbl.o object is only compiled if CONFIG_TRACE is set, which is
+enabled only if NO_LIBTRACEEVENT is not set.=20
 
-If a user tests a build lacking Python support, setup_python.sh passes, but
-the subsequent execution of perf_brstack_max.py crashes when attempting to
-import perf. This leaves stdout empty, making times_val evaluate to 0 and
-failing the test instead of appropriately skipping it.
+Because python.c calls syscalltbl__name() and syscalltbl__id() unconditiona=
+lly
+without checking if libtraceevent is available, linking the python extension
+might fail with an undefined reference when libtraceevent is omitted.
 
 [ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D52
+152-1-irogers@google.com?part=3D16
