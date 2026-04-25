@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63F3921D0
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E28392C21
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777157118; cv=none; b=ShSzmmNxlU/iM+xZDyJjt+MPrvYQtS0BB63fOsJhpQZTfuxb/1OWiEQ2elAFST7kSEq60B531cX34mQIwbWXDykHm32AIhCV0GSCKygDeZ/t6FahbaCtq4Wn5kgb3ZBOukgML+HIB/7uU8uTKXI8I44EKaDRl29DUQQICphrzpc=
+	t=1777157120; cv=none; b=JbRRp2lgfgwnT+sYczJwZJIJTx4iIIblEVV3ccjHHaMIyhso+xVcvzSjn+bt2dXQ3LDn6WQRTCwW8xPzMyLhGkgN4rlWXNZH9BVC3S9HytNspZBsydeFAFKZOze7cvzTqGv0rlaz6q1aKNH02PogcSGIeK6HLYalTXpo02MGupk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777157118; c=relaxed/simple;
-	bh=HIj/4KwQviJzAdb5/BAWEjqXZ2sYv3oOaIee/0kObPI=;
+	s=arc-20240116; t=1777157120; c=relaxed/simple;
+	bh=j+1DPJ7hHqMkCRtiNL7ZTTuDpfoCTqlYLmFWD1lm5jM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bbzXcjbF7ZtNNO9UW3PpkHmOGqjyvXi4CAmxfEkyPRuzPICbc9yoiy8dV0W1qw5WvyWLtKdA+rrAyxsLdHTV9dB4yzg65LwGV7s9jSjguFUaNZ8nfzg5M7g2GAsuuF7UcML9Zx5+GyVgvxhhoDlEwbH16q/oURGvCNp6cFBR8MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qxj770s6; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=mDKQSMuZqmzYAnr9oYARuopzAHJZlDh2NRT/R1YsuHWUgYWC76jVRAwn3dW7vwxsmokqF+13mmbFpsHr1IYSPeqhnLNwynRk+VbrkxKw2A6uVAoN6R+tBJPFSnrOvFzLo+XwarYeXuvnKd3+1pEE3vUTuOro2Jy4zt9hhuWSS7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaEcY6Sf; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qxj770s6"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2cc75e79b97so24541210eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:45:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaEcY6Sf"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2d93379001eso20013667eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777157116; x=1777761916; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777157118; x=1777761918; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=22aR7BdMkfc4F5hxQy/Qmu6pnO70TcMwJUmCFfE13QY=;
-        b=Qxj770s6P80ofGNki5HBfdeL1fCWHT+s2S3ZHOCSQl17S/E8RoX3q5sKLFc+nQUD3N
-         sfTCJWCgmAk/kXRt5NmsttcpOxBBDvRgBPZI+OB+QnzKj0N4iBiUgIx9TFEVJYYC1uER
-         R49QNiDSLsi+uRBJWL+TNkH0RxEaFB0L8orTbkcIbmJ+kt1pndrGcwaE/qawaVlcVcyu
-         dwEBax3JAwJKZPGsL4XlshvmmYEu1yuAlInPbz+gFYAsZRAvw1ltKCTMUYFNsPuSlC2x
-         ahX76yz6AJFTvnHxC9eG88qdaUkgV3KQSDmV2Exj9XpBGitB7QK4HD4p1/whVsZ/d3uh
-         WyHQ==
+        bh=Z8uDU0iX99Tgv3o+fYqZ9yp1w2za7K0HbBrM8LxB5IA=;
+        b=oaEcY6Sf1fOjW2wcWjhGBC5uILQInmvN724GbAZ4egnB//y9S4QTVbGSz5EsZS1znr
+         mwPizBSHzJpG3cEMonbn8yr40Bm76KpT3zwNhZE+02yYbbd+r0RjH1nwQLvjCRqm755K
+         2XPtuCe9QeE0GtibA6jADsnOLyqBRz9oV2WbkyBI92eUwq6HfIbYBxHocUkVNCKQyyt/
+         +4y3BMrzvgHibmMhMiXvkCoA7XOCvJTLH5xXI5zX/R8CyuonWoMRF0FTshjO/yjX7GI0
+         dKkesp44rFngw7nMIm+H/2ohhXwgthe7aeMsOkT5QkzVAlD6TGbgBv1eESy2S8Dqg52G
+         8g/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777157116; x=1777761916;
+        d=1e100.net; s=20251104; t=1777157118; x=1777761918;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=22aR7BdMkfc4F5hxQy/Qmu6pnO70TcMwJUmCFfE13QY=;
-        b=VyQ1lKGTKbN2cw3pJbVUD8MK/zsEJTgB7KVPBmFR/yZ6nA83U4jeq5Q7ZcXiDc4ITl
-         Fmi1oR6L+xzwcK+aNIzFlGUTb8v7si58grIJ20X5T7lR51GG8fZ8mpK9q8TPjo5Qw0fy
-         XY4hrXDX15GhGioyqKuzDa+7dmfDa46e4LXiAuwX2iJmj/MDDnc8JsRuFF4vBTCMo3eA
-         SqERQXITIwSK4Vj2g7OVcYxMFGz9Qc3YIoEdFpo6spplqJ0T1LR6+KMQTkBLEt4XGEnx
-         CVb3YJ5wTDSSqPUZsMNpq3TgXElkUSt78nTJ4mOtJZ50IyXTcm392HA6f4jKdBdZ3kRv
-         B+pw==
-X-Forwarded-Encrypted: i=1; AFNElJ8V29F5H19svDDLU6I/SamWFz8rUZ0HfwPPGGfQU8SXDQKaP4G0VrzFkhI7qacDz+06Lwufmxa/ktAG0ZmBT1tH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiTEawgPk5xmCMZlZ5cIu74UPwxiIbbTiD1ehPJuPhssc7v+Mb
-	fp3ZeYpvPFK4nCIsyFz044fF4wDvZvswbqKnxhJwwlRT0TbvYGf/HrGl/67UD55CULcwnfMbgJo
-	0GZGsctbarQ==
-X-Received: from dyhd3.prod.google.com ([2002:a05:7300:8283:b0:2e2:b79e:ed06])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f193:b0:2da:1874:f39c
- with SMTP id 5a478bee46e88-2e4657728eamr20326591eec.12.1777157116025; Sat, 25
- Apr 2026 15:45:16 -0700 (PDT)
-Date: Sat, 25 Apr 2026 15:44:51 -0700
+        bh=Z8uDU0iX99Tgv3o+fYqZ9yp1w2za7K0HbBrM8LxB5IA=;
+        b=UdEFQkjTCZELt8EA0LT2K74iXB9BEL4ZVcSgAlwvj6AoHg5dF+jedYXX4RgiFqrmcL
+         tgVAe9Jl7sZJ9N9390USejbBmhJBuKJ1/NgU2nJk6wzalCJw/Q9+5YnZFcMjdYOuG+Eh
+         baTtnnQ16ttmMlAZaLgctmOiAtViUtVx8pLvlR6xIHralJuf/9sbeJpN2euVkZW1pWv6
+         TOyYLwLrB2wH65/5/Amt+/IukN+dZhykoSCNTOaioNe7o6HhfV1ZDrM2GGAh1RThDPp5
+         gG0CCBizfNftKCkXLRB5ey9SuWoq9FAe/FHp8RCqOiVYLNTukNzuTyRJeNhHbJmJF88S
+         NK7g==
+X-Forwarded-Encrypted: i=1; AFNElJ/2vxj+gCEZxw7Kal7sWuihLVVT9gH06j48bWcadSwIV03ZHLysbKy1B9hfyHS22OnDdtgPbqfvS1tuTmk9+4yM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ8/14TlTgRvvdjGLYoTc4LOMwNtY12bzi+jm74/my4DLTI93h
+	+p13sTewh8DjVOEUMFcTsDyQWYVcA/WB1OLmZhAm01y07HCOijNMlifLsS/dYvhADCkn6DCMTPj
+	Pb8URrPF+ow==
+X-Received: from dybss20.prod.google.com ([2002:a05:7301:7214:b0:2e5:ce71:32c4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:2327:b0:2d8:97d6:6ac8
+ with SMTP id 5a478bee46e88-2e478c1ff0cmr23453474eec.21.1777157117979; Sat, 25
+ Apr 2026 15:45:17 -0700 (PDT)
+Date: Sat, 25 Apr 2026 15:44:52 -0700
 In-Reply-To: <20260425224503.170337-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425174858.3922152-1-irogers@google.com> <20260425224503.170337-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425224503.170337-5-irogers@google.com>
-Subject: [PATCH v7 47/59] perf failed-syscalls: Port failed-syscalls to use
- python module
+Message-ID: <20260425224503.170337-6-irogers@google.com>
+Subject: [PATCH v7 48/59] perf rw-by-file: Port rw-by-file to use python module
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	leo.yan@linux.dev, namhyung@kernel.org, tmricht@linux.ibm.com
@@ -70,67 +69,76 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Port the legacy Perl script failed-syscalls.pl to a python script
-using the perf module in tools/perf/python.
+Port the legacy Perl script rw-by-file.pl to a python script using the
+perf module in tools/perf/python.
 
 The new script uses a class-based architecture and leverages the
-perf.session API for event processing, making it a standalone script
-that reads perf.data files.
+perf.session API for event processing.
 
-It filters for sys_exit events, checks for failed syscalls (where
-return value ret < 0), and aggregates counts per command name.
+It tracks read and write activity by file descriptor for a given
+program name, aggregating bytes requested/written and total counts.
 
 Complications:
-- The script is designed for file-based processing using perf.session.
+- Had to split long lines in __init__ to satisfy pylint.
 - pylint warns about the module name not being snake_case, but it is
   kept for consistency with the original script name.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/failed-syscalls.py | 78 ++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100755 tools/perf/python/failed-syscalls.py
+v2:
 
-diff --git a/tools/perf/python/failed-syscalls.py b/tools/perf/python/failed-syscalls.py
+ - Fixed Substring Matching: Replaced if "sys_enter_read" in
+   event_name: with an exact match against syscalls:sys_enter_read and
+   raw_syscalls:sys_enter_read using sample.evsel.name . This prevents
+   variants like readv or readlink from incorrectly triggering the
+   read logic. Similar fixes were applied for write events.
+
+ - Fixed Silent Error Dropping: Instead of silently returning when
+   expected fields are missing (causing AttributeError ), the script
+   now increments the self.unhandled counter for that event. This
+   ensures that missing data or unexpected event variants are reported
+   to the user instead of quietly skewing the results.
+
+v6:
+- Fixed `AttributeError` by using `str(sample.evsel)` to get event name.
+---
+ tools/perf/python/rw-by-file.py | 103 ++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100755 tools/perf/python/rw-by-file.py
+
+diff --git a/tools/perf/python/rw-by-file.py b/tools/perf/python/rw-by-file.py
 new file mode 100755
-index 000000000000..c3b58664eb57
+index 000000000000..2103ac0412bb
 --- /dev/null
-+++ b/tools/perf/python/failed-syscalls.py
-@@ -0,0 +1,78 @@
++++ b/tools/perf/python/rw-by-file.py
+@@ -0,0 +1,103 @@
 +#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+"""Failed system call counts."""
++# SPDX-License-Identifier: GPL-2.0-only
++"""Display r/w activity for files read/written to for a given program."""
 +
 +import argparse
 +from collections import defaultdict
 +import sys
-+from typing import Optional
++from typing import Optional, Dict
 +import perf
 +
-+class FailedSyscalls:
-+    """Tracks and displays failed system call totals."""
-+    def __init__(self, comm: Optional[str] = None) -> None:
-+        self.failed_syscalls: dict[str, int] = defaultdict(int)
++class RwByFile:
++    """Tracks and displays read/write activity by file descriptor."""
++    def __init__(self, comm: str) -> None:
 +        self.for_comm = comm
++        self.reads: Dict[int, Dict[str, int]] = defaultdict(
++            lambda: {"bytes_requested": 0, "total_reads": 0}
++        )
++        self.writes: Dict[int, Dict[str, int]] = defaultdict(
++            lambda: {"bytes_written": 0, "total_writes": 0}
++        )
++        self.unhandled: Dict[str, int] = defaultdict(int)
 +        self.session: Optional[perf.session] = None
-+        self.unhandled: dict[str, int] = defaultdict(int)
 +
 +    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process sys_exit events."""
-+        event_name = str(sample.evsel)
-+        if not event_name.startswith("evsel(syscalls:sys_exit_") and \
-+           not event_name.startswith("evsel(raw_syscalls:sys_exit_"):
-+            return
-+
-+        try:
-+            ret = sample.ret
-+        except AttributeError:
-+            self.unhandled[event_name] += 1
-+            return
-+
-+        if ret >= 0:
-+            return
++        """Process events."""
++        event_name = str(sample.evsel)[6:-1]
 +
 +        pid = sample.sample_pid
 +        assert self.session is not None
@@ -139,20 +147,52 @@ index 000000000000..c3b58664eb57
 +        except Exception: # pylint: disable=broad-except
 +            comm = "unknown"
 +
-+        if self.for_comm and comm != self.for_comm:
++        if comm != self.for_comm:
 +            return
 +
-+        self.failed_syscalls[comm] += 1
++        if event_name in ("syscalls:sys_enter_read", "raw_syscalls:sys_enter_read"):
++            try:
++                fd = sample.fd
++                count = sample.count
++                self.reads[fd]["bytes_requested"] += count
++                self.reads[fd]["total_reads"] += 1
++            except AttributeError:
++                self.unhandled[event_name] += 1
++        elif event_name in ("syscalls:sys_enter_write", "raw_syscalls:sys_enter_write"):
++            try:
++                fd = sample.fd
++                count = sample.count
++                self.writes[fd]["bytes_written"] += count
++                self.writes[fd]["total_writes"] += 1
++            except AttributeError:
++                self.unhandled[event_name] += 1
++        else:
++            self.unhandled[event_name] += 1
 +
 +    def print_totals(self) -> None:
-+        """Print summary table."""
-+        print("\nfailed syscalls by comm:\n")
-+        print(f"{'comm':<20s}  {'# errors':>10s}")
-+        print(f"{'-'*20}  {'-'*10}")
++        """Print summary tables."""
++        print(f"file read counts for {self.for_comm}:\n")
++        print(f"{'fd':>6s}  {'# reads':>10s}  {'bytes_requested':>15s}")
++        print(f"{'-'*6}  {'-'*10}  {'-'*15}")
 +
-+        for comm, val in sorted(self.failed_syscalls.items(),
-+                                key=lambda kv: (kv[1], kv[0]), reverse=True):
-+            print(f"{comm:<20s}  {val:10d}")
++        for fd, data in sorted(self.reads.items(),
++                               key=lambda kv: kv[1]["bytes_requested"], reverse=True):
++            print(f"{fd:6d}  {data['total_reads']:10d}  {data['bytes_requested']:15d}")
++
++        print(f"\nfile write counts for {self.for_comm}:\n")
++        print(f"{'fd':>6s}  {'# writes':>10s}  {'bytes_written':>15s}")
++        print(f"{'-'*6}  {'-'*10}  {'-'*15}")
++
++        for fd, data in sorted(self.writes.items(),
++                               key=lambda kv: kv[1]["bytes_written"], reverse=True):
++            print(f"{fd:6d}  {data['total_writes']:10d}  {data['bytes_written']:15d}")
++
++        if self.unhandled:
++            print("\nunhandled events:\n")
++            print(f"{'event':<40s}  {'count':>10s}")
++            print(f"{'-'*40}  {'-'*10}")
++            for event_name, count in self.unhandled.items():
++                print(f"{event_name:<40s}  {count:10d}")
 +
 +    def run(self, input_file: str) -> None:
 +        """Run the session."""
@@ -162,12 +202,12 @@ index 000000000000..c3b58664eb57
 +
 +def main() -> None:
 +    """Main function."""
-+    parser = argparse.ArgumentParser(description="Trace failed syscalls")
-+    parser.add_argument("comm", nargs="?", help="Filter by command name")
++    parser = argparse.ArgumentParser(description="Trace r/w activity by file")
++    parser.add_argument("comm", help="Filter by command name")
 +    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
 +    args = parser.parse_args()
 +
-+    analyzer = FailedSyscalls(args.comm)
++    analyzer = RwByFile(args.comm)
 +    try:
 +        analyzer.run(args.input)
 +    except IOError as e:
