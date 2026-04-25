@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4106B39903E
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEDB39B96F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 22:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777156960; cv=none; b=rLcbnFLRsPnEW+EkZl1pm8Kb/JEtU6zTPjoY7vC7Fpfwb6UET6wfeNOpAdTM3i/lFG7pFwfFSd/OF5EpEbLTFK3IViNGV/3+EbWcjIuHKyq64P6kenFKja1++d61ngtHvcWjlvrD8PHhf8YtoX6dD8pjFT01EHuKC0gUVA6+up0=
+	t=1777156963; cv=none; b=FbX3579N91qG4raB8s7V+Wlq1KyKih2nBSZbk6/KBSFGjSKo1IVIEUdmfOupJnUsO8qtsiSioVfs1W7TEUjAxPYsiewjMzdngA5w7D5zpnX10bWtaaab4eg9945+Y9NQQuVD0S+GBWCg3NjmOAL2p4km/LqW6JK3BcWm2xd8rnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777156960; c=relaxed/simple;
-	bh=hDYhFYuDoPCefdlf2OIwEe6ysT4MEKgdLebygFtbti8=;
+	s=arc-20240116; t=1777156963; c=relaxed/simple;
+	bh=IJUCBgPg9wYDYawtxHW5XNHuYjUrl13nxcH5QuDBI54=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fHx7wWFZbZ9mElwjRCCdr8LsP/RqDoW9Qd8sbZNlcU25aUo+RQ3KyE6VX6JTssP2grooELENytxm/i/yZtO9cfRK5DPHu/7ERUWrX0OBgSFeEhj7Zw2vaK5GWWKOpGAssZ2i++EYWHFmmuxVp5+NbIzu3fxf6miSjlRRbuyj7u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qqW1O0DV; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=axqllz5q06nr5bipaJ2S2OaY9rYj3rTgkYuX0TzyBXPknnYfvtVmYQrmhMZhyzvFDkpZNocPzz21MzAPgsHs//7mXN2A+mXHTVDIVUpCF7Y2Rf2zZ2iDjlFrTkT9TbfB2CX6wdp2vB9NKwWfs13SfIGeia4neyR7vr/8W5zycWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCJo7Hax; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qqW1O0DV"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ddd8ef5343so8844229eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:42:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCJo7Hax"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2da19227bc1so20911599eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 15:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777156958; x=1777761758; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777156961; x=1777761761; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ERRU3KdUiox4uEsWs/CeTXwwWIrylXGw9vYnzrPC1Tw=;
-        b=qqW1O0DVM0ww+eNDCjEapdThKBfjtKg+BPOi8c4Bo6uj4GP1hQvByLiFqDMRioGBPR
-         jFf01sGssf6u2FCEu7RhXXQcTcOHmjMf/ol1gnzr9PtUgmxgmuMNK/HK7zPfV1uYE+Ae
-         RsTExx7A+BFu2iYvbVUa6UvTFpKjvwRg5rlFSiLr5G26KmqeCt4nQ0DxTgrKhT22k1Ln
-         BQ9uglzJsXOpojH82uF6+7o3+ctnkbJlCjHoY0FnR0UzOsCcF7wwNEqbceo28hwe3q9X
-         sSu0GJqzsnxdqCQtU70W9U3dCvG0VLGJPu1zDmpbCcFK5WcMmMc8M4sjb130WCZUh8qn
-         DEQA==
+        bh=yfBwBqR2Z+Zk1dnV7MbJ1NLKT+aSgQqUxonuLHmwfTg=;
+        b=SCJo7HaxWY6Y5sTrQBbX+V/I8UjCixtUB4POJkD1J+O1u19BdNM+wE8Km6bdHiVxAV
+         NMf6olbsV1yQQLQWIe5A/2BeGQgPAn4tx+aO2qqO4cibTj7+nCpDa02DMVmSOK1CnOE2
+         533fwo5Fge31o32Md1fswvSpESbhClqvLtnmiMDRe8dqTCyl6s4V5wsDkPCj7xRImM5N
+         X/r0hWhLAtmoS6hLMabiZfzX7hchTUBSQXkj2gB3BG2fnMARUW6uvzYyYVkHpp9COldb
+         Hqt7gZ0docXg79PWA1Ru7Fo9Egf1FctIu/JJShUc3P88U+jOdhgxLfRhCzzzfqRsX4Q/
+         cBKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777156958; x=1777761758;
+        d=1e100.net; s=20251104; t=1777156961; x=1777761761;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ERRU3KdUiox4uEsWs/CeTXwwWIrylXGw9vYnzrPC1Tw=;
-        b=hS5qvABAdnJ4KPqTAAVSUxC4m8i/wjxXIhb32VJlNp/St9H21K17E69qFoCsM1K8fI
-         YhsOBi2dxmUPGa6rhqEMnm4LYDBFuLbx4XtmaMpdoOTGry4X7jKRKBgccOYQ2Cv6ttV4
-         H9iTMs8NS7+xoPW4ek3VSpwk999ERvfWBeZFcX81BiNOBUu/x/C2vZC7eZr7WkPJYCGd
-         dAEcXiPDBiYT/9o0LVW7Du1YhK+zowdyTbbIxS8Po7OnJLjN7BDGFbqVM2jp2Au1c9D+
-         N7TP04uWBtcP/3UTyQR7Mtb2CUumaVOqsFvrvX8tvClx/LXu8klhBnpSQigIqswMiQRp
-         y7Zw==
-X-Forwarded-Encrypted: i=1; AFNElJ/wkMVhGyvvIv+LTRdJc6GDLxwDNaxjJCh2oeiK1gZHzArAoqDR2hGjPzKAyn3TXfhlynns670HlLq5ZpKjtX9h@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzbIXH2kU0PwcFUe18c36orP7dAbYbG3+1VBPU3vvj9WnLNTSh
-	n9dnLR+v5W/hviK0oRLcw2kUlW8ua/OglzNzdIvsguC56wI0fkaQ/RF+YRIPT89H5a+ILXfxVRr
-	dc0VuPA5o6Q==
-X-Received: from dycoy3.prod.google.com ([2002:a05:7301:fc03:b0:2e0:fe68:96c7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd09:b0:2da:d4b4:c85a
- with SMTP id 5a478bee46e88-2e464dad10cmr17824799eec.11.1777156958365; Sat, 25
- Apr 2026 15:42:38 -0700 (PDT)
-Date: Sat, 25 Apr 2026 15:40:58 -0700
+        bh=yfBwBqR2Z+Zk1dnV7MbJ1NLKT+aSgQqUxonuLHmwfTg=;
+        b=a8+07Mwl4AuCGNkbeGAOiaKruxJWNlIYKP1sB3jPM3MUQv16yfycJ4/1oCnI6z3Z//
+         Oh3k7Kj0pEDkjzOZGlK8sft5Udi2KcDZ5TNJoLQg4FVyLwj6YXs13rMzqzMP85t6vAeQ
+         ENp/JZYCWWEiSJaNQdCDB6tnOIjRezwRtxQHnXfTB8kWsIH9KXhyuZsUAX4u+PUuss/i
+         nUCGg1l4hLajs0z8hHq1BXdXTQD89Bg3rcljW3KH+x4GAypOF4yYLfCQa0s2V+Lnl+x+
+         XMakzBi3kuzUEC+8HwfBv3frLr/lfSZIT9SwjmeYN5UJOLJbIP3jTERO8YXPCmIZL21f
+         R7eA==
+X-Forwarded-Encrypted: i=1; AFNElJ9v+WiABJXXUMsJjwchpkT3WsS6Ri5pZVNcZh6252F7E9r7kc9ziqpL7Se/qb1pYmpp7zfiNpvHB6JAG0Zo403X@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYOrlhSLIwGza8F1O+csyWmO5vocgOjHERvh3ObkIdawZFqe7w
+	NhQZH/h4F/XT5mT0kT1FS5JsItu9zJfsUFU3qnhw7Lnhw43ICnxKpoxTiW1BghMZKJUTlLBP2tc
+	Rnj0ajRxKBA==
+X-Received: from dlan19-n2.prod.google.com ([2002:a05:7022:eb53:20b0:128:d185:c6ff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ff45:b0:128:d2a5:709c
+ with SMTP id a92af1059eb24-12c73fb3381mr22154370c88.33.1777156960731; Sat, 25
+ Apr 2026 15:42:40 -0700 (PDT)
+Date: Sat, 25 Apr 2026 15:40:59 -0700
 In-Reply-To: <20260425224125.160890-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425174858.3922152-1-irogers@google.com> <20260425224125.160890-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260425224125.160890-34-irogers@google.com>
-Subject: [PATCH v7 33/59] perf check-perf-trace: Port check-perf-trace to use
+Message-ID: <20260425224125.160890-35-irogers@google.com>
+Subject: [PATCH v7 34/59] perf compaction-times: Port compaction-times to use
  python module
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
@@ -70,7 +70,7 @@ Cc: alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a port of the check-perf-trace script that uses the perf python
+Add a port of the compaction-times script that uses the perf python
 module directly. This approach is significantly faster than using perf
 script callbacks as it avoids creating intermediate dictionaries for
 all event fields.
@@ -78,139 +78,344 @@ all event fields.
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v2:
-1. String Match Accuracy: Replaced the substring check for `irq:softirq_entry`
-   events with a robust exact string match.
-
-v3:
-1. Safe Thread Resolution: Swapped out sample.sample_pid with
-   sample.sample_tid and safeguarded the session process lookup with
-   a try-except block.
-
-v4:
-1. Git Fixup Cleanup: Squashed the lingering fixup commit from the previous
-   session into its proper patch.
+v2: Fixed Closure Call: Changed cls.fobj.filter(pid, comm) to
+    cls.fobj(pid, comm) . Since fobj is a function (closure) and not a
+    class instance, calling .filter() on it would raise an
+    AttributeError .
 ---
- tools/perf/python/check-perf-trace.py | 113 ++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100755 tools/perf/python/check-perf-trace.py
+ tools/perf/python/compaction-times.py | 326 ++++++++++++++++++++++++++
+ 1 file changed, 326 insertions(+)
+ create mode 100755 tools/perf/python/compaction-times.py
 
-diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/check-perf-trace.py
+diff --git a/tools/perf/python/compaction-times.py b/tools/perf/python/compaction-times.py
 new file mode 100755
-index 000000000000..7c1c7632a091
+index 000000000000..7f17c251ded7
 --- /dev/null
-+++ b/tools/perf/python/check-perf-trace.py
-@@ -0,0 +1,113 @@
++++ b/tools/perf/python/compaction-times.py
+@@ -0,0 +1,326 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+Basic test of Python scripting support for perf.
-+Ported from tools/perf/scripts/python/check-perf-trace.py
++Report time spent in memory compaction.
++
++Memory compaction is a feature in the Linux kernel that defragments memory
++by moving used pages to create larger contiguous blocks of free memory. This
++is particularly useful for allocating huge pages.
++
++This script processes trace events related to memory compaction and reports:
++- Total time spent in compaction (stall time).
++- Statistics for page migration (moved vs. failed).
++- Statistics for the free scanner (scanned vs. isolated pages).
++- Statistics for the migration scanner (scanned vs. isolated pages).
++
++Definitions:
++- **Compaction**: Defragmenting memory by moving allocated pages.
++- **Migration**: Moving pages from their current location to free pages found by the free scanner.
++- **Free Scanner**: Scans memory (typically from the end of a zone) to find free pages.
++- **Migration Scanner**: Scans memory (typically from the beginning of a zone)
++  to find pages to move.
++- **Isolated Pages**: Pages that have been temporarily removed from the buddy
++  system for migration or as migration targets.
++
++Ported from tools/perf/scripts/python/compaction-times.py to the modern perf Python module.
 +"""
 +
 +import argparse
-+import collections
++import enum
++import re
++import sys
++from typing import Callable, Dict, List, Optional, Any
 +import perf
 +
-+unhandled: collections.defaultdict[str, int] = collections.defaultdict(int)
++class Popt(enum.IntEnum):
++    """Process display options."""
++    DISP_DFL = 0
++    DISP_PROC = 1
++    DISP_PROC_VERBOSE = 2
++
++class Topt(enum.IntFlag):
++    """Trace display options."""
++    DISP_TIME = 0
++    DISP_MIG = 1
++    DISP_ISOLFREE = 2
++    DISP_ISOLMIG = 4
++    DISP_ALL = DISP_MIG | DISP_ISOLFREE | DISP_ISOLMIG
++
++# Globals to satisfy pylint when accessed in functions before assignment in main.
++OPT_NS = True
++opt_disp = Topt.DISP_ALL
++opt_proc = Popt.DISP_DFL
 +session = None
 +
-+softirq_vecs = {
-+    0: "HI_SOFTIRQ",
-+    1: "TIMER_SOFTIRQ",
-+    2: "NET_TX_SOFTIRQ",
-+    3: "NET_RX_SOFTIRQ",
-+    4: "BLOCK_SOFTIRQ",
-+    5: "IRQ_POLL_SOFTIRQ",
-+    6: "TASKLET_SOFTIRQ",
-+    7: "SCHED_SOFTIRQ",
-+    8: "HRTIMER_SOFTIRQ",
-+    9: "RCU_SOFTIRQ",
-+}
++def get_comm_filter(regex: re.Pattern) -> Callable[[int, str], bool]:
++    """Returns a filter function based on command regex."""
++    def filter_func(_pid: int, comm: str) -> bool:
++        regex_match = regex.search(comm)
++        return regex_match is None or regex_match.group() == ""
++    return filter_func
 +
-+def trace_begin() -> None:
-+    """Called at the start of trace processing."""
-+    print("trace_begin")
++def get_pid_filter(low_str: str, high_str: str) -> Callable[[int, str], bool]:
++    """Returns a filter function based on PID range."""
++    low = 0 if low_str == "" else int(low_str)
++    high = 0 if high_str == "" else int(high_str)
++
++    def filter_func(pid: int, _comm: str) -> bool:
++        return not (pid >= low and (high == 0 or pid <= high))
++    return filter_func
++
++def ns_to_time(ns: int) -> str:
++    """Format nanoseconds to string based on options."""
++    return f"{ns}ns" if OPT_NS else f"{round(ns, -3) // 1000}us"
++
++class Pair:
++    """Represents a pair of related counters (e.g., scanned vs isolated, moved vs failed)."""
++    def __init__(self, aval: int, bval: int,
++                 alabel: Optional[str] = None, blabel: Optional[str] = None):
++        self.alabel = alabel
++        self.blabel = blabel
++        self.aval = aval
++        self.bval = bval
++
++    def __add__(self, rhs: 'Pair') -> 'Pair':
++        self.aval += rhs.aval
++        self.bval += rhs.bval
++        return self
++
++    def __str__(self) -> str:
++        return f"{self.alabel}={self.aval} {self.blabel}={self.bval}"
++
++class Cnode:
++    """Holds statistics for a single compaction event or an aggregated set of events."""
++    def __init__(self, ns: int):
++        self.ns = ns
++        self.migrated = Pair(0, 0, "moved", "failed")
++        self.fscan = Pair(0, 0, "scanned", "isolated")
++        self.mscan = Pair(0, 0, "scanned", "isolated")
++
++    def __add__(self, rhs: 'Cnode') -> 'Cnode':
++        self.ns += rhs.ns
++        self.migrated += rhs.migrated
++        self.fscan += rhs.fscan
++        self.mscan += rhs.mscan
++        return self
++
++    def __str__(self) -> str:
++        prev = False
++        s = f"{ns_to_time(self.ns)} "
++        if opt_disp & Topt.DISP_MIG:
++            s += f"migration: {self.migrated}"
++            prev = True
++        if opt_disp & Topt.DISP_ISOLFREE:
++            s += f"{' ' if prev else ''}free_scanner: {self.fscan}"
++            prev = True
++        if opt_disp & Topt.DISP_ISOLMIG:
++            s += f"{' ' if prev else ''}migration_scanner: {self.mscan}"
++        return s
++
++    def complete(self, secs: int, nsecs: int) -> None:
++        """Complete the node with duration."""
++        self.ns = (secs * 1000000000 + nsecs) - self.ns
++
++    def increment(self, migrated: Optional[Pair], fscan: Optional[Pair],
++                  mscan: Optional[Pair]) -> None:
++        """Increment statistics."""
++        if migrated is not None:
++            self.migrated += migrated
++        if fscan is not None:
++            self.fscan += fscan
++        if mscan is not None:
++            self.mscan += mscan
++
++class Chead:
++    """Aggregates compaction statistics per process (PID) and maintains total statistics."""
++    heads: Dict[int, 'Chead'] = {}
++    val = Cnode(0)
++    fobj: Optional[Any] = None
++
++    @classmethod
++    def add_filter(cls, fobj: Any) -> None:
++        """Add a filter object."""
++        cls.fobj = fobj
++
++    @classmethod
++    def create_pending(cls, pid: int, comm: str, start_secs: int, start_nsecs: int) -> None:
++        """Create a pending node for a process."""
++        filtered = False
++        try:
++            head = cls.heads[pid]
++            filtered = head.is_filtered()
++        except KeyError:
++            if cls.fobj is not None:
++                filtered = cls.fobj(pid, comm)
++            head = cls.heads[pid] = Chead(comm, pid, filtered)
++
++        if not filtered:
++            head.mark_pending(start_secs, start_nsecs)
++
++    @classmethod
++    def increment_pending(cls, pid: int, migrated: Optional[Pair],
++                          fscan: Optional[Pair], mscan: Optional[Pair]) -> None:
++        """Increment pending stats for a process."""
++        if pid not in cls.heads:
++            return
++        head = cls.heads[pid]
++        if not head.is_filtered():
++            if head.is_pending():
++                head.do_increment(migrated, fscan, mscan)
++            else:
++                sys.stderr.write(f"missing start compaction event for pid {pid}\n")
++
++    @classmethod
++    def complete_pending(cls, pid: int, secs: int, nsecs: int) -> None:
++        """Complete pending stats for a process."""
++        if pid not in cls.heads:
++            return
++        head = cls.heads[pid]
++        if not head.is_filtered():
++            if head.is_pending():
++                head.make_complete(secs, nsecs)
++            else:
++                sys.stderr.write(f"missing start compaction event for pid {pid}\n")
++
++    @classmethod
++    def gen(cls):
++        """Generate heads for display."""
++        if opt_proc != Popt.DISP_DFL:
++            yield from cls.heads.values()
++
++    @classmethod
++    def get_total(cls) -> Cnode:
++        """Get total statistics."""
++        return cls.val
++
++    def __init__(self, comm: str, pid: int, filtered: bool):
++        self.comm = comm
++        self.pid = pid
++        self.val = Cnode(0)
++        self.pending: Optional[Cnode] = None
++        self.filtered = filtered
++        self.list: List[Cnode] = []
++
++    def mark_pending(self, secs: int, nsecs: int) -> None:
++        """Mark node as pending."""
++        self.pending = Cnode(secs * 1000000000 + nsecs)
++
++    def do_increment(self, migrated: Optional[Pair], fscan: Optional[Pair],
++                     mscan: Optional[Pair]) -> None:
++        """Increment pending stats."""
++        if self.pending is not None:
++            self.pending.increment(migrated, fscan, mscan)
++
++    def make_complete(self, secs: int, nsecs: int) -> None:
++        """Make pending stats complete."""
++        if self.pending is not None:
++            self.pending.complete(secs, nsecs)
++            Chead.val += self.pending
++
++            if opt_proc != Popt.DISP_DFL:
++                self.val += self.pending
++
++                if opt_proc == Popt.DISP_PROC_VERBOSE:
++                    self.list.append(self.pending)
++            self.pending = None
++
++    def enumerate(self) -> None:
++        """Enumerate verbose stats."""
++        if opt_proc == Popt.DISP_PROC_VERBOSE and not self.is_filtered():
++            for i, pelem in enumerate(self.list):
++                sys.stdout.write(f"{self.pid}[{self.comm}].{i+1}: {pelem}\n")
++
++    def is_pending(self) -> bool:
++        """Check if node is pending."""
++        return self.pending is not None
++
++    def is_filtered(self) -> bool:
++        """Check if node is filtered."""
++        return self.filtered
++
++    def display(self) -> None:
++        """Display stats."""
++        if not self.is_filtered():
++            sys.stdout.write(f"{self.pid}[{self.comm}]: {self.val}\n")
 +
 +def trace_end() -> None:
 +    """Called at the end of trace processing."""
-+    print_unhandled()
-+
-+def symbol_str(event_name: str, field_name: str, value: int) -> str:
-+    """Resolves symbol values to strings."""
-+    if event_name == "irq__softirq_entry" and field_name == "vec":
-+        return softirq_vecs.get(value, str(value))
-+    return str(value)
-+
-+def flag_str(event_name: str, field_name: str, value: int) -> str:
-+    """Resolves flag values to strings."""
-+    if event_name == "kmem__kmalloc" and field_name == "gfp_flags":
-+        return f"0x{value:x}"
-+    return str(value)
-+
-+def print_header(event_name: str, sample: perf.sample_event) -> None:
-+    """Prints common header for events."""
-+    secs = sample.sample_time // 1000000000
-+    nsecs = sample.sample_time % 1000000000
-+    comm = session.find_thread(sample.sample_pid).comm() if session else "[unknown]"
-+    print(f"{event_name:<20} {sample.sample_cpu:5} {secs:05}.{nsecs:09} "
-+          f"{sample.sample_pid:8} {comm:<20} ", end=' ')
-+
-+def print_uncommon(sample: perf.sample_event) -> None:
-+    """Prints uncommon fields for tracepoints."""
-+    # Fallback to 0 if field not found (e.g. on older kernels or if not tracepoint)
-+    pc = getattr(sample, "common_preempt_count", 0)
-+    flags = getattr(sample, "common_flags", 0)
-+    lock_depth = getattr(sample, "common_lock_depth", 0)
-+
-+    print(f"common_preempt_count={pc}, common_flags={flags}, "
-+          f"common_lock_depth={lock_depth}, ")
-+
-+def irq__softirq_entry(sample: perf.sample_event) -> None:
-+    """Handles irq:softirq_entry events."""
-+    print_header("irq__softirq_entry", sample)
-+    print_uncommon(sample)
-+    print(f"vec={symbol_str('irq__softirq_entry', 'vec', sample.vec)}")
-+
-+def kmem__kmalloc(sample: perf.sample_event) -> None:
-+    """Handles kmem:kmalloc events."""
-+    print_header("kmem__kmalloc", sample)
-+    print_uncommon(sample)
-+
-+    print(f"call_site={sample.call_site:d}, ptr={sample.ptr:d}, "
-+          f"bytes_req={sample.bytes_req:d}, bytes_alloc={sample.bytes_alloc:d}, "
-+          f"gfp_flags={flag_str('kmem__kmalloc', 'gfp_flags', sample.gfp_flags)}")
-+
-+def trace_unhandled(event_name: str) -> None:
-+    """Tracks unhandled events."""
-+    unhandled[event_name] += 1
-+
-+def print_unhandled() -> None:
-+    """Prints summary of unhandled events."""
-+    if not unhandled:
-+        return
-+    print("\nunhandled events:\n")
-+    print(f"{'event':<40} {'count':>10}")
-+    print("---------------------------------------- -----------")
-+    for event_name, count in unhandled.items():
-+        print(f"{event_name:<40} {count:10}")
++    sys.stdout.write(f"total: {Chead.get_total()}\n")
++    for i in Chead.gen():
++        i.display()
++        i.enumerate()
 +
 +def process_event(sample: perf.sample_event) -> None:
 +    """Callback for processing events."""
 +    event_name = str(sample.evsel)
-+    if event_name == "evsel(irq:softirq_entry)":
-+        irq__softirq_entry(sample)
-+    elif "evsel(kmem:kmalloc)" in event_name:
-+        kmem__kmalloc(sample)
-+    else:
-+        trace_unhandled(event_name)
++    pid = sample.sample_pid
++    comm = session.find_thread(pid).comm() if session else "[unknown]"
++    secs = sample.sample_time // 1000000000
++    nsecs = sample.sample_time % 1000000000
++
++    if "evsel(compaction:mm_compaction_begin)" in event_name:
++        Chead.create_pending(pid, comm, secs, nsecs)
++    elif "evsel(compaction:mm_compaction_end)" in event_name:
++        Chead.complete_pending(pid, secs, nsecs)
++    elif "evsel(compaction:mm_compaction_migratepages)" in event_name:
++        Chead.increment_pending(pid, Pair(sample.nr_migrated, sample.nr_failed), None, None)
++    elif "evsel(compaction:mm_compaction_isolate_freepages)" in event_name:
++        Chead.increment_pending(pid, None, Pair(sample.nr_scanned, sample.nr_taken), None)
++    elif "evsel(compaction:mm_compaction_isolate_migratepages)" in event_name:
++        Chead.increment_pending(pid, None, None, Pair(sample.nr_scanned, sample.nr_taken))
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser()
++    ap = argparse.ArgumentParser(description="Report time spent in compaction")
++    ap.add_argument("-p", action="store_true", help="display by process")
++    ap.add_argument("-pv", action="store_true", help="display by process (verbose)")
++    ap.add_argument("-u", action="store_true", help="display results in microseconds")
++    ap.add_argument("-t", action="store_true", help="display stall times only")
++    ap.add_argument("-m", action="store_true", help="display stats for migration")
++    ap.add_argument("-fs", action="store_true", help="display stats for free scanner")
++    ap.add_argument("-ms", action="store_true", help="display stats for migration scanner")
++    ap.add_argument("filter", nargs="?", help="pid|pid-range|comm-regex")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
 +    args = ap.parse_args()
 +
-+    trace_begin()
++    opt_proc = Popt.DISP_DFL
++    if args.pv:
++        opt_proc = Popt.DISP_PROC_VERBOSE
++    elif args.p:
++        opt_proc = Popt.DISP_PROC
++
++    OPT_NS = not args.u
++
++    opt_disp = Topt.DISP_ALL
++    if args.t or args.m or args.fs or args.ms:
++        opt_disp = Topt(0)
++        if args.t:
++            opt_disp |= Topt.DISP_TIME
++        if args.m:
++            opt_disp |= Topt.DISP_MIG
++        if args.fs:
++            opt_disp |= Topt.DISP_ISOLFREE
++        if args.ms:
++            opt_disp |= Topt.DISP_ISOLMIG
++
++    if args.filter:
++        PID_PATTERN = r"^(\d*)-(\d*)$|^(\d*)$"
++        pid_re = re.compile(PID_PATTERN)
++        match = pid_re.search(args.filter)
++        filter_obj: Any = None
++        if match is not None and match.group() != "":
++            if match.group(3) is not None:
++                filter_obj = get_pid_filter(match.group(3), match.group(3))
++            else:
++                filter_obj = get_pid_filter(match.group(1), match.group(2))
++        else:
++            try:
++                comm_re = re.compile(args.filter)
++            except re.error:
++                sys.stderr.write(f"invalid regex '{args.filter}'\n")
++                sys.exit(1)
++            filter_obj = get_comm_filter(comm_re)
++        Chead.add_filter(filter_obj)
++
 +    session = perf.session(perf.data(args.input), sample=process_event)
 +    session.process_events()
 +    trace_end()
