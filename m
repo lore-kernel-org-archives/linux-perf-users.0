@@ -1,113 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF2136C0CB
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64567126F3B
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140905; cv=none; b=r6/A2YTDN24hu6T71GH0VM58KtKOfgM/esBo9DBVTLprC/mtUQpLt8Nucs0ido3zoOgnrrUmvEvqg97HSaDakd0StP15h93aitZwpd7Nn1FBsJxTgaMMDbRQOTCnuUSmVI6rhJGb2WO1dJgv96056RvUCO8pPWowWQs/azASKVo=
+	t=1777140936; cv=none; b=rc/uiG675L609j3piSdFtb6XXDKaoNxb/RJ309/fJl+DNeQkD1EcGOse2hJ+j+Ja+R6ZRu58txnqJVz/TQtOYdGZ2h9sP+aRS5KivDnXFqGTD18Salj/hkbDSnERxOrbFcQtFIn7zsoHWmjB3XcgirkaZvuRLkJy1hktggA/hpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777140905; c=relaxed/simple;
-	bh=rRJt8rWiknA9qc4okw6vXtoKlrvONUe96CJajWhdFHY=;
+	s=arc-20240116; t=1777140936; c=relaxed/simple;
+	bh=dh7bu5swxFBbYrsdgi8+iXfu3fz0K+NEEMYtfZI2iqM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BFECHfSJhjaM5Vx1wp9GrHA0QAHw82coYBnh60HVS92IyGQ1WjV7L0RGwlH03cuw5xKpHExdSQSaflimfEuO6IzhP90UMF/85cPKHwpsrcReFlXXpGEI//vucItkGL8CzxyWyL+RWKdVGYqkAxo5ks5/qU+/YbMPLa+yIXwB9ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLoILf8Q; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=iT2cC6tKfszQU+jqZzDU2cD9aBzcj5PEhHxpnkgS6oxlV65NmhtjAy7Kov8bSBYtA1Pbq8Qhsg6KvNY5KfjM11U8uGXJfAbXO98R2TruoHEA6f0FKOKbSwPu2njzbGeAIEvJ60XGqGRWOHdwMXbVgsbgeowYN8kK7X+RE6PWFIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VizUFIf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLoILf8Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939FCC2BCB0;
-	Sat, 25 Apr 2026 18:15:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VizUFIf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE534C2BCB0;
+	Sat, 25 Apr 2026 18:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140904;
-	bh=rRJt8rWiknA9qc4okw6vXtoKlrvONUe96CJajWhdFHY=;
+	s=k20201202; t=1777140936;
+	bh=dh7bu5swxFBbYrsdgi8+iXfu3fz0K+NEEMYtfZI2iqM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=VLoILf8QFTk0dTCC9VOeoriFhwHwe1qv9+oTicEyimkhbFpZx7wmOS+yteAWyPp/H
-	 8HgUedgsB/9O94Z/vlKxHqM3fVfPl+ZuED85xQdf8EAU6Jo6A2b0h8nK33g+ZAowR2
-	 zXhwnX4RpLTo+pveHZUgaaUkzbNvlmkw7a8S3bCx3KD9pJ5rTVdWVxqHM4EPz9Jx0D
-	 dfJLFG9hTsMRDntNZHnn4je/zv/aGcfnaTYJlUrHwVKkAGFBjBekRJMTFXUGg7EDra
-	 Lu6Hoy0Bgfqz45yvjRQbV1Rm8o6AFZlOu1ANdGuIeu5B51VGD09AU8d71LMnap8MFt
-	 BYJoqciBLR6rg==
+	b=VizUFIf7sAbwBPYAQd7h8PM6sVZgm5cLCNJ9GYvwXaGJIJ3iOK+oILDkIgcQ2gD+F
+	 Twj3dmrRHCpv3ZwhVtOYdmDor9jyl+n3Swnb0b1BOpjJq6rWNkpPWpC0hLj520SyYi
+	 /6G1gHyxcWC89aJNSmZVIKxBnwxspRqgAkCszZiQaja3zV3gYiYUbOR4LEmAv6kRmE
+	 oFN0AYY339zZOoeNMEvXY4fxb2iDHPrT/OxE2sC14XbHwj+atXsnVmRQ3GEid2XVJr
+	 xDEeUOpJTqGc9gnx0Orq06lvH9dyv8lRrEwysHeps1vRDMXMkMlHa95nLl2FQPyzop
+	 ZmAl9I9Ol9slA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 16/59] perf python: Add syscall name/id to convert
- syscall number and name
+Subject: Re: [PATCH v6 18/59] perf python: Add callchain support
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-17-irogers@google.com>
-References: <20260425174858.3922152-17-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-19-irogers@google.com>
+References: <20260425174858.3922152-19-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:15:04 +0000
-Message-Id: <20260425181504.939FCC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:15:35 +0000
+Message-Id: <20260425181535.EE534C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Missing libtraceevent guard around syscalltbl logic causes build f=
-ailure when NO_LIBTRACEEVENT=3D1.
-- [High] Declaring `kwlist` as `static char * const kwlist[]` triggers a co=
-mpiler warning that breaks the build under `-Werror` on standard Python ver=
-sions.
+Sashiko AI review found 3 potential issue(s):
+- [High] Uncollectable reference cycle between pyrf_event and pyrf_callchai=
+n causes a massive memory leak.
+- [High] API Contract Violation: Returning a valid object while a Python ex=
+ception is pending causes a SystemError.
+- [Medium] Dead code and massive performance overhead due to unconditional =
+eager callchain resolution.
 --
 
-commit 05b34dee99e34de49f07ffff286551ecc3713de8
+commit 7bc74d913363ad9f3cdd6b5c806d339f33ec75b9
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add syscall name/id to convert syscall number and name
-
-This commit introduces functionality to use perf's syscalltbl support
-to convert syscall numbers to names and vice versa within the python
-extension. This helps avoid the need for python libaudit support in
-certain scripts.
+perf python: Add callchain support
+   =20
+Implement pyrf_callchain_node and pyrf_callchain types for lazy
+iteration over callchain frames. Add callchain property to
+sample_event.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index d10359abd1ea..a10c4a292756 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
 
 [ ... ]
 
-> @@ -2635,6 +2637,40 @@ static int pyrf_session__setup_types(void)
->  	return PyType_Ready(&pyrf_session__type);
->  }
+> @@ -822,10 +1012,12 @@ static PyTypeObject *pyrf_event__type[] =3D {
+>  };
 > =20
-> +static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyOb=
-ject *kwargs)
-> +{
-> +	const char *name;
-> +	int id;
-> +	int elf_machine =3D EM_HOST;
-> +	static char * const kwlist[] =3D { "id", "elf_machine", NULL };
-
-Can this trigger a compiler warning that breaks the build under -Werror
-on systems with Python 3.12 or older?
-
-Prior to Python 3.13, PyArg_ParseTupleAndKeywords() expects a char ** for
-its keywords argument. Passing a char * const * discards the const
-qualifier, which might generate a -Wincompatible-pointer-types warning.
-
-> +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &el=
-f_machine))
-> +		return NULL;
-> +
-> +	name =3D syscalltbl__name(elf_machine, id);
-
-Does this cause a build failure when perf is built with NO_LIBTRACEEVENT=3D=
-1?
-
-The syscalltbl.o object is only compiled if CONFIG_TRACE is set, which is
-enabled only if NO_LIBTRACEEVENT is not set.=20
-
-Because python.c calls syscalltbl__name() and syscalltbl__id() unconditiona=
-lly
-without checking if libtraceevent is available, linking the python extension
-might fail with an undefined reference when libtraceevent is omitted.
+>  static PyObject *pyrf_event__new(const union perf_event *event, struct e=
+vsel *evsel,
+> -				 struct perf_session *session __maybe_unused)
+> +				 struct perf_session *session)
+>  {
 
 [ ... ]
 
+> +	sample =3D &pevent->sample;
+> +	if (machine && sample->callchain) {
+> +		struct addr_location al;
+> +		struct callchain_cursor *cursor;
+> +		u64 i;
+> +		struct pyrf_callchain *pchain;
+> +
+> +		addr_location__init(&al);
+> +		if (machine__resolve(machine, &al, sample) >=3D 0) {
+> +			cursor =3D get_tls_callchain_cursor();
+> +			if (thread__resolve_callchain(al.thread, cursor, evsel, sample,
+> +						      NULL, NULL, PERF_MAX_STACK_DEPTH) =3D=3D 0) {
+> +				callchain_cursor_commit(cursor);
+
+The commit message mentions lazy iteration over callchain frames, but this
+appears to eagerly call machine__resolve() and thread__resolve_callchain()
+for every sample event with a callchain.
+
+Does this make the lazy evaluation logic in pyrf_callchain__next() dead
+code, since pchain->resolved is always set to true here?
+
+Also, could this impose a large performance overhead for scripts that
+do not access the callchain property?
+
+> +
+> +				pchain =3D PyObject_New(struct pyrf_callchain, &pyrf_callchain__type=
+);
+> +				if (pchain) {
+
+If PyObject_New() fails and returns NULL, the Python C API automatically
+sets a MemoryError exception.
+
+Since the code falls through the if block and returns the valid pevent
+pointer at the end of the function, does returning a valid object pointer
+while an exception indicator is set cause the interpreter to crash with a
+SystemError?
+
+Should PyErr_Clear() be called if the intent is to gracefully degrade witho=
+ut
+a callchain on allocation failure?
+
+> +					pchain->pevent =3D pevent;
+> +					Py_INCREF(pevent);
+> +					pchain->nr_frames =3D cursor->nr;
+> +					pchain->pos =3D 0;
+> +					pchain->resolved =3D true;
+> +					pchain->frames =3D calloc(pchain->nr_frames,
+> +								sizeof(*pchain->frames));
+> +					if (pchain->frames) {
+> +						struct callchain_cursor_node *node;
+> +
+> +						for (i =3D 0; i < pchain->nr_frames; i++) {
+> +							node =3D callchain_cursor_current(cursor);
+> +							pchain->frames[i].ip =3D node->ip;
+> +							pchain->frames[i].map =3D
+> +								map__get(node->ms.map);
+> +							pchain->frames[i].sym =3D node->ms.sym;
+> +							callchain_cursor_advance(cursor);
+> +						}
+> +						pevent->callchain =3D (PyObject *)pchain;
+
+Since pchain holds a strong reference to pevent, and pevent holds a strong
+reference to pchain, does this create an uncollectable reference cycle?
+
+Neither of these Python extension types appears to implement Python's
+cycle-breaking garbage collector (via Py_TPFLAGS_HAVE_GC, tp_traverse,
+and tp_clear).
+
+Will this permanently leak the event, the callchain, the frames array,
+and the associated map objects when the Python script discards the event?
+
+> +					} else {
+> +						Py_DECREF(pchain);
+> +					}
+> +				}
+> +			}
+> +			addr_location__exit(&al);
+> +		}
+> +	}
+>  	return (PyObject *)pevent;
+>  }
+
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D16
+152-1-irogers@google.com?part=3D18
