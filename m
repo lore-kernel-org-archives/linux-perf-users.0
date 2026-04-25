@@ -1,154 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C81A39185E
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1B639185E
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777159556; cv=none; b=PvhWOjBcZQ2czg9OOeWo3wHO1/JQKrmm7PzBR0IG0atsNRO3g4ZF9I+v5d0AP5WD94ogmkIBH5laoWnFTRZW7xNiKBGtsv2WsYWPTP0styTD3ACLU2S36WY79bQxMfiIeIiNL4slX38aii/fGE9Wq6tMYM+gB54MXsyoxO2cOn0=
+	t=1777159714; cv=none; b=l6teZJqDIcm6gQIl74qTgPUVt/+IX0R84ktrGv49l4YIN/4CDZ2iflNXNhQ3lgRSISip/Awu+H9asuY8QhShRB2D+p+XfcjPnuKKcbtJQKZy0MevYxr20kXgjdWoRSOuC383An2KQliZlxqKaAeg//6J27usnbMCS+0/p+MjE1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777159556; c=relaxed/simple;
-	bh=kMjzHe6r0VacKNhrVG/4TeRFZwYBHFhLQWMde16MV+Y=;
+	s=arc-20240116; t=1777159714; c=relaxed/simple;
+	bh=jPEqzct1fmblYQxSianthjMu3SijLAGw6L7E6RTGHCo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sru9D63B6uM+Rscpk8ztIgcDRxUfJpYy+T81KwhzlULrsHZEhXf+zS5KbmxFyAmXPDJ2LmgvpnYZOcq8Z+97E0Am5eSRfGVw+m3gz9/RmCG0F14qTSR6/6mH0saFXuoBbfmTgOHrqhvGqwQ95DUSb7UOSeLG44DVBlli4dC/XCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8VYBtR0; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=B2rFmM0JDiXDvsWFTizt1X6piIZc/nn1bvLDI4GLbx/HzRrS/4MbS8GdenrAVMOjwM8xbAzvg6rb1FrXcp+LNqEEWMVC3A3jvhminHeyjEq4nlMwTSuMNRD7zX7TwCM9EdP7k9aP16YPf1AsqajtZnT5mu9vgEERf/Y6uwSbMYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdHZxvsl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8VYBtR0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92529C2BCB0;
-	Sat, 25 Apr 2026 23:25:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdHZxvsl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505D3C2BCB0;
+	Sat, 25 Apr 2026 23:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777159555;
-	bh=kMjzHe6r0VacKNhrVG/4TeRFZwYBHFhLQWMde16MV+Y=;
+	s=k20201202; t=1777159714;
+	bh=jPEqzct1fmblYQxSianthjMu3SijLAGw6L7E6RTGHCo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=W8VYBtR03QGtnwXe3s8wXVraTxHg4EoTGDiwmDfLhkVrwAYnIPa6nzTRYFppgF23B
-	 ynx132bM+ZP5a1ETpxPRQxcGBRhSBBm0us2jE9gyJSEwpnISeeKiCljsDqoQRdGjXy
-	 uQRshOXUkhGT+a1BY6hJSkiK91AR5G+1WcsVzJMhyW0NJvN3dGVWZbtXgctNnXlC9N
-	 nhdK40i6UOQnbsZYj6oivsSw9b2cY22PDw9fuwNG4x43k//tx96n2FK0PCq7akY0kh
-	 qCLQikrXTRa1QMth3bB1KuIgSzaUvL0Hk8AFPLJZRC5InWaQ1GgEOkBIm2QmuiUAvt
-	 HayAzBRmUOSFQ==
+	b=cdHZxvslObu6SZLF2k96DOZE+IxSQD0SvVJ9i++p53CaQrjQ+KfUWk2daMwOYx1ne
+	 EPDovBjKenQx6YF9rPK94OZlVa6tSyoxP9zXtD5d84xlzIpim2hicdTU4KAeC4GQYh
+	 /T9sCyWCxuqUvcGW7X4xvMFsxe7oGEywTTjTK9LZELx33wEZw0+NvcJj5u7F2JvgpB
+	 OL8P95XV+K5zNojSjVjJPwpPZg7mlrVFOeZHS6SxSXsozQyw7P/LAJ10U6s0CbUIe5
+	 SHrJbCvHpqS6BOrSvF2J1XCD7ryNEX4CzQPEEsMghQzDRDsG9ieKG8278kMvUTx7Gp
+	 rFHAPvvBugX3Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 32/59] perf arm-cs-trace-disasm: Port
- arm-cs-trace-disasm to use python module
+Subject: Re: [PATCH v7 12/59] perf evlist: Add reference count checking
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-33-irogers@google.com>
-References: <20260425224951.174663-33-irogers@google.com>
+In-Reply-To: <20260425224951.174663-13-irogers@google.com>
+References: <20260425224951.174663-13-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:25:55 +0000
-Message-Id: <20260425232555.92529C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:28:33 +0000
+Message-Id: <20260425232834.505D3C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [High] Event filtering logic drops all samples due to incorrect stringifi=
-cation of evsel.
-- [High] Relative 'vmlinux' path fallback allows arbitrary code execution f=
-rom untrusted directories.
+Sashiko AI review found 3 potential issue(s):
+- [High] TOCTOU race in `evlist__put()` cyclic reference detection causes a=
+ double free.
+- [High] Missing `evsel__put()` on `sample->evsel` causes massive memory le=
+aks for synthesized and deferred events.
+- [Low] Missing NULL pointer check after `evsel__new()` allocation in sampl=
+e parsing test.
 --
 
-commit bfb5fa4502593496d0bc26784e43f473bbcc607c
+commit 9e6c20d0f9fcd0a7529fc6e3ee8e9feb3216bce3
 Author: Ian Rogers <irogers@google.com>
 
-perf arm-cs-trace-disasm: Port arm-cs-trace-disasm to use python module
+perf evlist: Add reference count checking
 
-This commit ports the arm-cs-trace-disasm script to use the perf python
-module directly. This avoids creating intermediate dictionaries for all
-event fields, improving performance. The testing script is also updated
-to use the ported script.
+Now the evlist is reference counted, add reference count checking so
+that gets and puts are paired and easy to debug.
 
-> diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python=
-/arm-cs-trace-disasm.py
-> new file mode 100755
-> index 000000000000..92c97cca6f66
-> --- /dev/null
-> +++ b/tools/perf/python/arm-cs-trace-disasm.py
-> @@ -0,0 +1,338 @@
+> diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-=
+parsing.c
+> index 55f0b73ca20e..6db717e562d5 100644
+> --- a/tools/perf/tests/sample-parsing.c
+> +++ b/tools/perf/tests/sample-parsing.c
 [ ... ]
-> +KVER =3D platform.release()
-> +VMLINUX_PATHS =3D [
-> +    f"/usr/lib/debug/boot/vmlinux-{KVER}.debug",
-> +    f"/usr/lib/debug/lib/modules/{KVER}/vmlinux",
-> +    f"/lib/modules/{KVER}/build/vmlinux",
-> +    f"/usr/lib/debug/boot/vmlinux-{KVER}",
-> +    f"/boot/vmlinux-{KVER}",
-> +    "/boot/vmlinux",
-> +    "vmlinux"
-> +]
+> @@ -287,16 +283,17 @@ static int do_test(u64 sample_type, u64 sample_regs=
+, u64 read_format)
+>  	size_t i, sz, bufsz;
+>  	int err, ret =3D -1;
+> =20
+> +	evsel =3D evsel__new(&attr);
+>  	perf_sample__init(&sample_out, /*all=3D*/false);
+>  	perf_sample__init(&sample_out_endian, /*all=3D*/false);
+>  	if (sample_type & PERF_SAMPLE_REGS_USER)
+> -		evsel.core.attr.sample_regs_user =3D sample_regs;
+> +		evsel->core.attr.sample_regs_user =3D sample_regs;
 
-Is there a risk that checking for "vmlinux" as a relative path could load an
-untrusted binary?
+Could this dereference a NULL pointer if evsel__new() fails?
 
-If this script is executed from a world-writable directory like /tmp, it
-might find and use an attacker-controlled vmlinux file placed there.
-
-Because this binary is subsequently passed to objdump via
-subprocess.check_output(), parsing a maliciously crafted binary could
-trigger vulnerabilities and lead to arbitrary code execution.
-
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index a362f338f104..29588af735e5 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
 [ ... ]
-> +    def process_event(self, sample: perf.sample_event) -> None:
+> @@ -220,13 +227,33 @@ static void evlist__exit(struct evlist *evlist)
+> =20
+>  void evlist__put(struct evlist *evlist)
+>  {
+> +	struct evsel *evsel;
+> +	unsigned int count;
+> +
+>  	if (evlist =3D=3D NULL)
+>  		return;
+> =20
+> -	if (!refcount_dec_and_test(&evlist->refcnt))
+> -		return;
+> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
+> +		goto out_delete;
+> =20
+> +	count =3D refcount_read(evlist__refcnt(evlist));
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count)
+> +			count--;
+> +	}
+> +	if (count !=3D 0) {
+> +		/*
+> +		 * Not the last reference except for back references from
+> +		 * evsels.
+> +		 */
+> +		RC_CHK_PUT(evlist);
+> +		return;
+> +	}
+> +out_delete:
+
+Is there a race condition here if two threads concurrently call evlist__put=
+()
+and drop the final two external references?
+
+If they both execute refcount_dec_and_test() and it evaluates to false, both
+threads could read the updated refcount that matches the back-references, a=
+nd
+both would jump to out_delete, causing a double free.
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index deb5b9dfe44c..f9fafbb80a9d 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
 [ ... ]
-> +        ev_name =3D str(sample.evsel)
-> +        if self.options.verbose:
-> +            print(f"Event type: {ev_name}")
-> +            print_sample(sample)
-> +
-> +        dso =3D sample.dso or '[unknown]'
-> +        symbol =3D sample.symbol or '[unknown]'
-> +        dso_bid =3D sample.dso_bid or '[unknown]'
-> +        dso_start =3D sample.map_start
-> +        dso_end =3D sample.map_end
-> +        map_pgoff =3D sample.map_pgoff or 0
-> +
-> +        comm =3D "[unknown]"
-> +        try:
-> +            if self.session:
-> +                thread_info =3D self.session.find_thread(sample.sample_t=
-id)
-> +                if thread_info:
-> +                    comm =3D thread_info.comm()
-> +        except (TypeError, AttributeError):
-> +            pass
-> +
-> +        cpu =3D sample.sample_cpu
-> +        addr =3D sample.sample_addr
-> +
-> +        if CPU_DATA.get(str(cpu) + 'addr') is None:
-> +            CPU_DATA[str(cpu) + 'addr'] =3D addr
-> +            return
-> +
-> +        if dso =3D=3D '[unknown]':
-> +            return
-> +
-> +        if dso_start is None or dso_end is None:
-> +            print(f"Failed to find valid dso map for dso {dso}")
-> +            return
-> +
-> +        if ev_name.startswith("instructions"):
+> @@ -1464,22 +1470,24 @@ static int machines__deliver_event(struct machine=
+s *machines,
+> =20
+>  	dump_event(evlist, event, file_offset, sample, file_path);
+> =20
+> -	if (!sample->evsel)
+> +	if (!sample->evsel) {
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+> -	else
+> +		if (sample->evsel)
+> +			sample->evsel =3D evsel__get(sample->evsel);
+> +	} else {
+>  		assert(sample->evsel =3D=3D evlist__id2evsel(evlist, sample->id));
 
-Could this startswith check unconditionally fail?
+Will this leak the evsel reference?
 
-The __str__ method for perf.evsel objects returns a formatted string like
-"evsel(instructions)", not the raw event name "instructions".
-
-Because of this formatting, the filters ev_name.startswith("instructions")
-and ev_name.startswith("branches") will evaluate to false for all events,
-causing them to be silently dropped without processing.
-
-> +            print_srccode(comm, sample, symbol, dso)
-> +            return
-> +
-> +        if not ev_name.startswith("branches"):
-> +            return
-> +
-> +        self._process_branch(sample, comm, symbol, dso, dso_bid, dso_sta=
-rt, dso_end, map_pgoff)
+We acquire a strong reference to the evsel here using evsel__get(), but it
+doesn't appear that perf_sample__exit() or other paths in the lifecycle of
+the sample object are updated to release it via evsel__put().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D32
+63-1-irogers@google.com?part=3D12
