@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92562309B2
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B645035BDB8
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777141553; cv=none; b=adLfanMFEtrFaFAyCQ3HeUpzVj/n1I1TgRbpumypyRR+elumgGYPe+w+WnHuFAEyvJyrdbGZGyclGHqV3abrUgKwrV6uYKHrIqBz+6X/fEgJnW9m3TVQiy/W5AU8DWHDuGz1SPC4R5FcdAjBSjieB8YEsUgVylbHDMeXRohURno=
+	t=1777141569; cv=none; b=IGyRruiKzeGHyhN8FWv9m4Qhzp3E5x4XAEIk4YOXgZzunqnG69RivnAPCGo3hr3ScUcgH8oWnpW9j4omNZyMGInOGaOmgF9yPQmgAN9LoKiXyu5wa7h03Lgmz0SfZ6XNNMf2ijp3/VHVr2brDLoFheJJSZJGBznpzw5XfJL44c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777141553; c=relaxed/simple;
-	bh=Y9qkdELqmxCTBy0Ws6twnMYEaFvldtmPCBNj+zvYSi8=;
+	s=arc-20240116; t=1777141569; c=relaxed/simple;
+	bh=AEe7tZpsyOd3gAtBuAFuKtYUsvUbw4FAROBDcLqD6yg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mxo0M5ptLVRIWCEeggVHQd6voRU8ev6qm8d57oNKj+OtQFevLe9hzu8DKcH/cs4ifQC4aEzZR3iPj10C+uo2tcP0ALxxIJxVvqIm5DRtQiTo+V3fT91/qemz64kDBBCMKDpWOCWYLgU5wQ3L5sFnW1c639tVGMV314BzkOuZEy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On2aJGRB; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Xb4uE1eNLLUq37P0ZFvKUDYQ9nVxTfuPW7Dt/ACQ1mCNDEvFjbqtNNtgJn3K7EFvwo5oMmUMFJUOKs0sXUrPW4FcEI90SvCH4aQ3JXnn2wKQiRvt7eK1U30eYyGIiO/SrlfA7GBl60C/BRG8wF07nnZTV+lZHwdRRZMAcRSlxrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DA/1kLLn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On2aJGRB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7821FC2BCB0;
-	Sat, 25 Apr 2026 18:25:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DA/1kLLn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5A9C2BCB3;
+	Sat, 25 Apr 2026 18:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777141553;
-	bh=Y9qkdELqmxCTBy0Ws6twnMYEaFvldtmPCBNj+zvYSi8=;
+	s=k20201202; t=1777141569;
+	bh=AEe7tZpsyOd3gAtBuAFuKtYUsvUbw4FAROBDcLqD6yg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=On2aJGRBdfjWtRlFL2M1Q/xoUwW7o5puqv9TFT6eU3erRpBbcPiWKFscXhRroFKQ6
-	 dq6HxaDChajlI6CIRMiwpMB3BqJsZ6PpJYSV/1R/KHt75qO59XjQUEoU6LTVjpNhxR
-	 cCRbIRVKpkJ8xfGdDA0O9XpJ6nlF7Rct9eXdJABvBkdwKVDHarEwKAsYOLqTYyJ2R0
-	 ehWlRXqfofJoGuXcuMr42BFB6Haa9+Bu7wsoYDnF/oavmpDA0kVGMwUSp8yVhqaltT
-	 Uoh7BjYpU0aV8SlvPa4a3SFA7Jy7Aaa09w6Hj2WEsyueaokiep54P3sjxZ64ZFyIkd
-	 j9sDwj2eEdTYQ==
+	b=DA/1kLLnYgmgmT0Un+KDWGT1qwziO2Tz/c6nhZP+OS6rnW5Piee74UjWBbXHb/qBD
+	 LRwSt2vwDEHZgWi/iGF7/WvIksKcUfugDcsYbuHcX4AAFV4VdNvPWjhFaaNEIkkFiQ
+	 +iVASI+OSxKeuC4jpgk4976LKvaQGTJKBgVKe6gIi153yRM99uKXjUt9bI7xvyYIma
+	 hvGMWSaZeASZ2bO0YUPM/krP+9uZIN0PQI7zp1nHYgQdM9TWli60u8qJ/pi98GdqIb
+	 Zgo42HX0MwhOl6mCbXGzWv60sk8fFWZ8ZzS7k6jgw77RaOua0BsHWVRPM2OS8gdQtn
+	 3ydc9ZBKVG3bQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 59/59] perf sched stats: Fix segmentation faults in
- diff mode
+Subject: Re: [PATCH v6 55/59] perf Makefile: Update Python script
+ installation path
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-60-irogers@google.com>
-References: <20260425174858.3922152-60-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-56-irogers@google.com>
+References: <20260425174858.3922152-56-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:25:52 +0000
-Message-Id: <20260425182553.7821FC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:26:08 +0000
+Message-Id: <20260425182609.3A5A9C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,128 +45,110 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Sashiko AI review found 2 potential issue(s):
-- [High] Stale `cs2` and `ds2` pointers lead to incorrect diff computation =
-and spurious failures when iterating lists of unequal lengths.
-- [High] Missing bounds check on untrusted domain indices leads to out-of-b=
-ounds array reads.
+- [Medium] Python scripts will silently disappear from the 'perf report' in=
+teractive script browser.
+- [Medium] The `make_no_scripts` and `make_minimal` test targets in `tools/=
+perf/tests/make` are silently broken, neutering build test coverage.
 --
 
-commit 81cf4f4c4c1266ce2e1faa604bb84ef9cfc8657f
+commit 097e9f6a5c8c0be76822e797df41c8183e50dce1
 Author: Ian Rogers <irogers@google.com>
 
-perf sched stats: Fix segmentation faults in diff mode
+perf Makefile: Update Python script installation path
 
-This commit addresses several segmentation fault vectors in perf sched stats
-diff mode. It adds NULL checks for CPU domain maps, uses list_is_last to
-prevent list iteration wraparound, and adds bounds checks for CPU IDs to
-handle files with varying CPU configurations.
+This commit replaces the libpython feature test with a python-module feature
+test and updates the associated build configuration. It also changes the
+installation directory for Python scripts from the legacy scripts/python pa=
+th
+to a direct python directory under libexec.
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index d3fa9c70790f..f6c7d100729a 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
 [ ... ]
-
-> @@ -4269,12 +4286,31 @@ static int show_schedstat_data(struct list_head *=
-head1, struct cpu_domain_map **
->  		struct cpu_domain_map *cd_info1 =3D NULL, *cd_info2 =3D NULL;
+> @@ -1099,10 +1097,10 @@ endif
+>  	$(call QUIET_INSTALL, perf-iostat) \
+>  		$(INSTALL) $(OUTPUT)perf-iostat -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ=
+)'
 > =20
->  		cs1 =3D cptr1->cpu_data;
-> +		if (cs1->cpu >=3D (u32)nr1) {
-> +			pr_err("Error: CPU %d exceeds domain map size %d\n", cs1->cpu, nr1);
-> +			return -1;
-> +		}
->  		cd_info1 =3D cd_map1[cs1->cpu];
-> +		if (!cd_info1) {
-> +			pr_err("Error: CPU %d domain info is missing in map 1.\n", cs1->cpu);
-> +			return -1;
-> +		}
->  		if (cptr2) {
->  			cs2 =3D cptr2->cpu_data;
-> +			if (cs2->cpu >=3D (u32)nr2) {
-> +				pr_err("Error: CPU %d exceeds domain map size %d\n", cs2->cpu, nr2);
-> +				return -1;
-> +			}
->  			cd_info2 =3D cd_map2[cs2->cpu];
-> -			dptr2 =3D list_first_entry(&cptr2->domain_head, struct schedstat_doma=
-in,
-> -						 domain_list);
-> +			if (!cd_info2) {
-> +				pr_err("Error: CPU %d domain info is missing in map 2.\n", cs2->cpu);
-> +				return -1;
-> +			}
-> +			if (!list_empty(&cptr2->domain_head))
-> +				dptr2 =3D list_first_entry(&cptr2->domain_head, struct schedstat_dom=
-ain,
-> +							 domain_list);
-> +			else
-> +				dptr2 =3D NULL;
->  		}
-> =20
->  		if (cs2 && cs1->cpu !=3D cs2->cpu) {
+> -ifndef NO_LIBPYTHON
+> +ifndef NO_PYTHON_MODULE
+>  	$(call QUIET_INSTALL, python-scripts) \
+> -		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/pyth=
+on'; \
+> -		$(INSTALL) python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/=
+scripts/python'
+> +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/python'; \
+> +		$(INSTALL) python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/=
+python'
+>  endif
 
-When cptr2 becomes NULL because the second list is shorter, cs2 is not
-reset to NULL at the start of the loop.
+Does this regression silently drop Python scripts from the perf report
+interactive script browser?=20
 
-Could this cause the check here to spuriously fail and abort the diff
-because cs2 retains the pointer from the previous iteration?
+Looking at tools/perf/ui/browsers/scripts.c, find_scripts() still hardcodes
+its search path to scripts/. Because the scripts are now installed directly
+under python/, the readdir loop will fail to discover them.
 
+Additionally, the same browser code contains:
+
+tools/perf/ui/browsers/scripts.c:find_scripts() {
+    ...
+#ifndef HAVE_LIBPYTHON_SUPPORT
+        if (strstr(lang_dirent->d_name, "python"))
+                continue;
+#endif
+    ...
+}
+
+Since the libpython feature name was removed and HAVE_LIBPYTHON_SUPPORT
+is no longer generated, won't this check always trigger, causing the browser
+to unconditionally ignore Python scripts even if the directory search path
+were updated?
+
+> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> --- a/tools/perf/tests/make
+> +++ b/tools/perf/tests/make
 [ ... ]
-
-> @@ -4303,9 +4339,17 @@ static int show_schedstat_data(struct list_head *h=
-ead1, struct cpu_domain_map **
+> @@ -75,8 +75,6 @@ make_jevents_all    :=3D JEVENTS_ARCH=3Dall
+>  make_no_bpf_skel    :=3D BUILD_BPF_SKEL=3D0
+>  make_gen_vmlinux_h  :=3D GEN_VMLINUX_H=3D1
 > =20
->  			ds1 =3D dptr1->domain_data;
->  			dinfo1 =3D cd_info1->domains[ds1->domain];
-
-This patch adds bounds checking for the CPU IDs, but ds1->domain is read
-from the data file and used directly as an array index here.
-
-Should we also add bounds checking against cd_info1->nr_domains to prevent
-out-of-bounds reads if the domain index is invalid?
-
-> +			if (!dinfo1) {
-> +				pr_err("Error: Domain %d info is missing for CPU %d in map 1.\n", ds=
-1->domain, cs1->cpu);
-> +				return -1;
-> +			}
->  			if (dptr2) {
->  				ds2 =3D dptr2->domain_data;
->  				dinfo2 =3D cd_info2->domains[ds2->domain];
-> +				if (!dinfo2) {
-> +					pr_err("Error: Domain %d info is missing for CPU %d in map 2.\n", d=
-s2->domain, cs2->cpu);
-> +					return -1;
-> +				}
->  			}
+> -make_no_libpython   :=3D NO_LIBPYTHON=3D1
+> -make_no_scripts     :=3D NO_LIBPYTHON=3D1
+>  make_no_slang       :=3D NO_SLANG=3D1
+>  make_no_gtk2        :=3D NO_GTK2=3D1
+>  make_no_ui          :=3D NO_SLANG=3D1 NO_GTK2=3D1
+> @@ -118,7 +116,7 @@ make_install_prefix_slash :=3D install prefix=3D/tmp/=
+krava/
+>  make_static         :=3D LDFLAGS=3D-static NO_PERF_READ_VDSO32=3D1 NO_PE=
+RF_READ_VDSOX32=3D1 NO_JVMTI=3D1 NO_LIBTRACEEVENT=3D1 NO_LIBELF=3D1
 > =20
->  			if (dinfo2 && dinfo1->domain !=3D dinfo2->domain) {
-
-[ ... ]
-
-> @@ -4334,14 +4378,22 @@ static int show_schedstat_data(struct list_head *=
-head1, struct cpu_domain_map **
->  			print_domain_stats(ds1, ds2, jiffies1, jiffies2);
-
-Similarly, if dptr2 becomes NULL because the second file has fewer domains,
-ds2 is not reset to NULL inside the domain iteration loop.
-
-Does this result in print_domain_stats() computing diffs using stale ds2
-data from the previous domain instead of handling the domain as missing?
-
->  			print_separator2(SEP_LEN, "", 0);
+>  # all the NO_* variable combined
+> -make_minimal        :=3D NO_LIBPYTHON=3D1 NO_GTK2=3D1
+> +make_minimal        :=3D NO_GTK2=3D1
+>  make_minimal        +=3D NO_DEMANGLE=3D1 NO_LIBELF=3D1 NO_BACKTRACE=3D1
+>  make_minimal        +=3D NO_LIBNUMA=3D1 NO_LIBBIONIC=3D1 NO_LIBDW=3D1
+>  make_minimal        +=3D NO_LIBBPF=3D1
+> @@ -150,7 +148,6 @@ run +=3D make_jevents_all
+>  run +=3D make_no_bpf_skel
+>  run +=3D make_gen_vmlinux_h
 > =20
-> -			if (dptr2)
-> -				dptr2 =3D list_next_entry(dptr2, domain_list);
-> +			if (dptr2) {
-> +				if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
-> +					dptr2 =3D NULL;
-> +				else
-> +					dptr2 =3D list_next_entry(dptr2, domain_list);
-> +			}
->  		}
+> -run +=3D make_no_libpython
+>  run +=3D make_no_scripts
+
+Because the definition for make_no_scripts was removed, run +=3D make_no_sc=
+ripts
+will evaluate to an empty target. Does this regression cause the test
+harness to silently run a default build without passing NO_PYTHON_MODULE=3D=
+1?
+
+Similarly, should make_minimal have been updated to include NO_PYTHON_MODUL=
+E=3D1
+instead of just dropping NO_LIBPYTHON=3D1? Without it, the test suite no
+longer explicitly verifies that perf builds successfully without Python sup=
+port.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D59
+152-1-irogers@google.com?part=3D55
