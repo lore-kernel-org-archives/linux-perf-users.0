@@ -1,308 +1,243 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959F0314D26
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE83C3845B7
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158804; cv=none; b=Uul3UNOA3uIY8tmOHDC6ao3n1NNTFcgt1dAD0Bi9qJwBN3VNz0tgfLCrokVlo5J4BqHCsjeCCQAyjy44NHBt6P5BvlySLGRJdadfubWOoSockjAvC/sdC2EOxnoyZeX13qkpKJ+KLHtyoi/qtkNk7B0z8dA70+7nloA4H1FMeF4=
+	t=1777158865; cv=none; b=giet0ljTdM9Vk9vGxo14IEoE+4ARZDPx012gOHXGqOqFycCKer2R3mZyOkcqo/YF6ZXl2LRIo5mp2u7YHv3nPnhTj51a8Mk59qIfkr8YVYPjT408RYejku2MbyWoiUElsH4yPzyQVjtaSEUnAHJv/9Glaw2ztUpjpQDA/7uxmtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158804; c=relaxed/simple;
-	bh=x6HjfdQNtnHjl1onvRUhG4u59qkwrkDgKYrnafecGBw=;
+	s=arc-20240116; t=1777158865; c=relaxed/simple;
+	bh=2SpUNzAP1qViN0J+8u24UQ2Rcj9Xl/oxL7YyJRVEsjk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=otTl+DmzblkRfq7dQoBGIvtDOtHw8KRPYBMtOST+sknkkLVef28zJPGHnQ4v8uyz1eIXt1uNVLbANRj1yVZWCbhKgraLMwgwTkoAv1hNdA3hRCni8sS4EUadKVp6p3sj7yNuvfLJvti2s7NwYYtK2VS+fSvl+1SamWZSlfURwZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvEOImzc; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=pTi5dKlYx2D0rl8Yu1G08C7A1Of3m+Por630pviCt1FjItCy4R6NqzC6pDD0yk8Xt9DaaqwGjNI2bN5o3ycKi2qrbhenbXGfM/bCIPynYwbVy0efvbOBNQC+/ZkBzL6K59iB0OU2b03dCPZ/5WxtBSBo9M6VkhVb2Ioy/W8gQlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4wmzV0p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvEOImzc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6443BC2BCB0;
-	Sat, 25 Apr 2026 23:13:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4wmzV0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83774C2BCB0;
+	Sat, 25 Apr 2026 23:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158804;
-	bh=x6HjfdQNtnHjl1onvRUhG4u59qkwrkDgKYrnafecGBw=;
+	s=k20201202; t=1777158865;
+	bh=2SpUNzAP1qViN0J+8u24UQ2Rcj9Xl/oxL7YyJRVEsjk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=UvEOImzcoN+X/HkogWZzL1M9oOfoKMkbu8+JYRJEzAMW+PydyljrGne3suy76+Aiq
-	 YgfcXVyCr4RrjQn2drVHzOr3uiRSsfz5NOsk8V6bLHtvr9NSzBMJDu5Tqz4S4dw+v8
-	 8lY71nWPhR6PhYrehyCg1OJiQ5bNc481Uwl0vBWr4l+HUXNcx/N1M9Yl7fpg3b6Llc
-	 Y0haC95O/xCGvoir5+Ub4dA/Pf29E5edZizcrItMsVGm6u80cQBefWAc+hlE1ighbO
-	 SC9xA4WqGY3oDas0xUao/M8VP7a0GuAFKyvppsydRXc/BchUm7uuveDOD2SHPL8D8C
-	 98GuhfWRbDlHg==
+	b=k4wmzV0pcXeUjlAVVJYeJKDKSgK0mAcYwhnBlbIeZCnEdY6PsR/K0wMxdJ+8Oe0je
+	 9+i86jat/+C0xgHFeJ7hpG/DQJyKpalV4K4+0RS7Vn6vmCelLND47xf80W3nNgbws4
+	 4XRc2MBsrN86eKFyphO/gXTfArs9wL8IgxTFRG1GWziPSMvJnOftUHA0D8JBx8jkRi
+	 5blxctaTbzkHaxjwW0aCvfICwWUEYNgUxAKdMfkKuOXTOnbeWJgMlcYciyUrTW5C3X
+	 ksBpTHw+t4yeHTO1r3loxCtDW2AcV70+4gQ9WL1yo/HEtyOs1vpA9JRwuzWCPbJUO4
+	 sofuhWRDxbu3A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 37/59] perf export-to-postgresql: Port
- export-to-postgresql to use python module
+Subject: Re: [PATCH v7 36/59] perf export-to-sqlite: Port export-to-sqlite
+ to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-38-irogers@google.com>
-References: <20260425224951.174663-38-irogers@google.com>
+In-Reply-To: <20260425224951.174663-37-irogers@google.com>
+References: <20260425224951.174663-37-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:13:23 +0000
-Message-Id: <20260425231324.6443BC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:14:24 +0000
+Message-Id: <20260425231425.83774C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 9 potential issue(s):
-- [High] The script silently exports 0 for many critical sample fields due =
-to incorrect attribute names and ignoring branch stacks.
-- [High] The call path tree constructed for PostgreSQL is structurally inve=
-rted, placing leaf functions at the root.
-- [High] The script silently ignores the final result status of the Postgre=
-SQL COPY FROM STDIN command, leading to silent data loss.
-- [High] Using the 'q' (signed 64-bit integer) format character in struct.p=
-ack for 64-bit memory addresses crashes the exporter on kernel samples.
-- [High] The script completely drops the logic for exporting synthetic Inte=
-l PT events and context switches, despite advertising Intel PT support.
-- [Medium] String values are packed dynamically without length validation, =
-leading to brittle behavior and database import failures.
-- [Medium] The ported script drops all database foreign key constraints tha=
-t were present in the original implementation.
-- [Medium] The `comm_threads_view` view is documented in the file header bu=
-t is never created.
-- [Low] Exceptions in setup_db() bypass cleanup logic, leaving temporary di=
-rectories on disk.
+Sashiko AI review found 6 potential issue(s):
+- [High] The `comms` and `dsos` caches use overly broad keys, erroneously m=
+erging independent entities and breaking database relationships.
+- [High] The call path hierarchy is constructed upside down in the database=
+, breaking downstream analysis tools.
+- [High] The script silently drops critical tables and views for Intel PT e=
+vents, context switches, and calls, severely degrading functionality.
+- [High] Branch target information is hardcoded to 0 for all samples, destr=
+oying branch profiling capabilities.
+- [High] `get_thread_id` inserts the OS-level pid into the `process_id` col=
+umn, corrupting the foreign key relationship to the threads table.
+- [High] The script uses incorrect Python attribute names for instruction/c=
+ycle counts and data sources, causing them to always record as 0.
 --
 
-commit 6da42dc06630d58ef6cdd8bf94f7bec7384e8f74
+commit 138bb15600adb0810965d6d12fdc0d8dab81d4e5
 Author: Ian Rogers <irogers@google.com>
 
-perf export-to-postgresql: Port export-to-postgresql to use python module
-   =20
-Ported from tools/perf/scripts/python/export-to-postgresql.py to use
-the perf Python module API.
+perf export-to-sqlite: Port export-to-sqlite to use python module
 
-> diff --git a/tools/perf/python/export-to-postgresql.py b/tools/perf/pytho=
-n/export-to-postgresql.py
+This commit ports the export-to-sqlite.py script to use the modern perf
+Python module and the standard library sqlite3 module. It drops the
+dependency on PySide2.QtSql.
+
+> diff --git a/tools/perf/python/export-to-sqlite.py b/tools/perf/python/ex=
+port-to-sqlite.py
 > new file mode 100755
-> index 000000000000..0118dc348b1e
+> index 000000000000..736b56ff8d59
 > --- /dev/null
-> +++ b/tools/perf/python/export-to-postgresql.py
-> @@ -0,0 +1,701 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +r"""
-> +Export perf data to a postgresql database.
+> +++ b/tools/perf/python/export-to-sqlite.py
+> @@ -0,0 +1,372 @@
+[ ... ]
+> +    def create_tables(self) -> None:
+> +        """Create database tables."""
+> +        self.con.execute("""
+> +            CREATE TABLE IF NOT EXISTS selected_events (
+> +                    id      INTEGER         NOT NULL        PRIMARY KEY,
+> +                    name    VARCHAR(80))
+> +        """)
 
 [ ... ]
 
-> +An example of using this script with Intel PT:
+> +        self.con.execute("""
+> +            CREATE VIEW IF NOT EXISTS samples_view AS
+> +            SELECT s.id, e.name as event, t.pid, t.tid, c.comm,
+> +                   d.short_name as dso, sym.name as symbol, s.sym_offset,
+> +                   s.ip, s.time, s.cpu
+> +            FROM samples s
+> +            JOIN selected_events e ON s.evsel_id =3D e.id
+> +            JOIN threads t ON s.thread_id =3D t.id
+> +            JOIN comms c ON s.comm_id =3D c.id
+> +            JOIN dsos d ON s.dso_id =3D d.id
+> +            JOIN symbols sym ON s.symbol_id =3D sym.id;
+> +        """)
+
+Are we missing the database tables and views required for Intel PT profilin=
+g?
+
+The commit message advertises Intel PT support and points users to
+exported-sql-viewer.py, but this script appears to omit all database views
+except samples_view (such as comm_threads_view or context_switches_view).
+
+It also drops tables for context switches, the calls table, and Intel PT
+synthetic events (like ptwrite, mwait, pwre, exstop) which were present
+in the original script. Won't this break features in downstream viewers
+and remove the advertised Intel PT profiling capabilities?
+
+[ ... ]
+
+> +    def get_thread_id(self, pid: int, tid: int) -> int:
+> +        """Get or create thread ID."""
+> +        key =3D (pid, tid)
+> +        if key in self.caches['threads']:
+> +            return self.caches['threads'][key]
+> +        thread_id =3D self.next_id['thread']
+> +        self.con.execute("INSERT INTO threads VALUES (?, ?, ?, ?, ?)",
+> +                         (thread_id, 0, pid, pid, tid))
+
+Does inserting the operating system pid into the process_id column break the
+foreign key relationship?
+
+In the standard perf sqlite export schema, the process_id column is a forei=
+gn
+key representing the database primary key (id) of the main thread. Because
+the raw operating system pid (e.g., 1234) does not match the script's inter=
+nal
+auto-incrementing database id, won't downstream joins fail and break thread
+groupings?
+
+> +        self.caches['threads'][key] =3D thread_id
+> +        self.next_id['thread'] +=3D 1
+> +        return thread_id
 > +
-> +	$ perf record -e intel_pt//u ls
-> +	$ python tools/perf/python/export-to-postgresql.py -i perf.data -o pt_e=
-xample
+> +    def get_comm_id(self, comm: str, thread_id: int) -> int:
+> +        """Get or create comm ID."""
+> +        if comm in self.caches['comms']:
+> +            return self.caches['comms'][comm]
 
-Does this script still support exporting synthetic Intel PT events and cont=
-ext
-switches? The docstring advertises an example with Intel PT, but the logic
-and table schemas for ptwrite, cbr, mwait, pwre, exstop, pwrx, and
-context_switches appear to be missing.
+Does caching solely by the string comm break the database relationship?
 
-[ ... ]
+If multiple distinct threads use the same command name (e.g., python), won't
+the second thread hit the cache, receive the exact same comm_id, and bypass
+the database insertion that links its thread_id to that comm_id in the
+comm_threads table? Should the cache key include the thread_id?
 
-> +Views:
+> +        comm_id =3D self.next_id['comm']
+> +        self.con.execute("INSERT INTO comms VALUES (?, ?, ?, ?, ?)",
+> +                         (comm_id, comm, thread_id, 0, 0))
+> +        self.con.execute("INSERT INTO comm_threads VALUES (?, ?, ?)",
+> +                         (comm_id, comm_id, thread_id))
+> +        self.caches['comms'][comm] =3D comm_id
+> +        self.next_id['comm'] +=3D 1
+> +        return comm_id
 > +
-> +	Most of the tables have views for more friendly display. The views are:
-> +
-> +		comm_threads_view
+> +    def get_dso_id(self, short_name: str, long_name: str,
+> +                   build_id: str) -> int:
+> +        """Get or create DSO ID."""
+> +        if short_name in self.caches['dsos']:
+> +            return self.caches['dsos'][short_name]
 
-This isn't a bug, but comm_threads_view is listed in the views documentation
-here, but doesn't seem to be created in finalize().
+Similar to the comms cache, will caching solely by short_name cause issues?
 
-[ ... ]
-
-> +    def copy_output_file(self, path_name: str, table_name: str):
-> +        """Copy intermediate file to database."""
-> +        sql =3D f"COPY {table_name} FROM STDIN (FORMAT 'binary')"
-> +        res =3D PQexec(self.conn, toserverstr(sql))
-
-[ ... ]
-
-> +        res =3D PQgetResult(self.conn)
-> +        while res:
-> +            PQclear(res)
-> +            res =3D PQgetResult(self.conn)
-
-Does this loop silently ignore the final result status of the PostgreSQL CO=
-PY
-command?
-
-If PostgreSQL rejects the data due to a constraint violation, PQgetResult()
-yields PGRES_FATAL_ERROR, but this loop clears the result without inspecting
-PQresultStatus(), potentially masking silent data loss.
+If two different libraries share the same short name but have different long
+names or build IDs, it looks like they will be incorrectly merged into a si=
+ngle
+DSO database record. Should the cache key also include the long_name and
+build_id?
 
 [ ... ]
 
-> +    def write_comm(self, comm_id: int, comm_str: str, thread_id: int,
-> +                   time: int, exec_flag: int) -> None:
-> +        """Write comm to binary file."""
-> +        comm_bytes =3D toserverstr(comm_str)
-> +        n =3D len(comm_bytes)
-> +        fmt =3D "!hiqi" + str(n) + "s" + "iqiqiB"
-> +        value =3D struct.pack(fmt, 5, 8, comm_id, n, comm_bytes, 8,
-> +                            thread_id, 8, time, 1, exec_flag)
-> +        self.files['comm'].write(value)
-
-Are the dynamically packed strings validated against the database schema
-limits?
-
-The comms table defines comm as varchar(16), but unbounded strings are pack=
-ed
-here. If a string exceeds the limit, will PostgreSQL abort the COPY FROM ST=
-DIN
-command?
-
-[ ... ]
-
-> +    def write_symbol(self, symbol_id: int, dso_id: int, sym_start: int,
-> +                      sym_end: int, binding: int, symbol_name: str) -> N=
-one:
-> +        """Write symbol to binary file."""
-> +        name_bytes =3D toserverstr(symbol_name)
-> +        n =3D len(name_bytes)
-> +        fmt =3D "!hiqiqiqiqiii" + str(n) + "s"
-> +        value =3D struct.pack(fmt, 6, 8, symbol_id, 8, dso_id, 8,
-> +                            sym_start, 8, sym_end, 4, binding, n, name_b=
-ytes)
-> +        self.files['symbol'].write(value)
-
-Will using the 'q' (signed 64-bit integer) format character in struct.pack
-crash the exporter when processing kernel-space instruction pointers?
-
-Since kernel addresses can exceed the maximum positive value of a signed
-64-bit integer, should the 'Q' (unsigned 64-bit) specifier be used instead?
-
-[ ... ]
-
-> +    def write_sample(self, sample_id: int, evsel_id: int, thread_id: int,
-> +                      comm_id: int, dso_id: int, symbol_id: int,
-> +                      sample: perf.sample_event, call_path_id: int) -> N=
-one:
-> +        """Write sample to binary file."""
-> +        value =3D struct.pack(
-> +            "!hiqiqiqiqiqiqiqiqiqiqiiiqiqiqiqiqiqiqiqiiiBiqiqiqii",
-> +            25, 8, sample_id, 8, evsel_id, 8, 0, 8, thread_id, 8, comm_i=
-d,
-> +            8, dso_id, 8, symbol_id, 8, getattr(sample, 'sym_offset', 0),
-> +            8, sample.sample_ip, 8, sample.sample_time, 4, sample.sample=
-_cpu,
-> +            8, 0, 8, 0, 8, 0, 8, 0,
-> +            8, getattr(sample, 'sample_period', 0) or 0,
-> +            8, getattr(sample, 'sample_weight', 0) or 0,
-> +            8, getattr(sample, 'transaction_', 0) or 0,
-> +            8, getattr(sample, 'data_src', 0) or 0,
-> +            4, 0,
-> +            1, getattr(sample, 'in_tx', 0) or 0,
-> +            8, call_path_id,
-> +            8, getattr(sample, 'insn_count', 0) or 0,
-> +            8, getattr(sample, 'cyc_count', 0) or 0,
-> +            4, getattr(sample, 'flags', 0) or 0
-> +        )
-> +        self.files['sample'].write(value)
-
-Are the attribute names for the sample fields correct, and are branch targe=
-ts
-being handled?
-
-The fields data_src, insn_count, and cyc_count differ from the actual
-sample_data_src, sample_insn_count, and sample_cyc_count names. Additionall=
-y,
-the branch target fields (to_ip, to_dso_id, to_symbol_id, to_sym_offset) are
-hardcoded to 0 instead of being extracted from sample.brstack.
-
-Will this result in missing sample fields being silently exported as zeroes?
-
-[ ... ]
-
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Callback for processing events."""
-
-[ ... ]
-
+> +        # Handle callchain
 > +        call_path_id =3D 0
 > +        if hasattr(sample, 'callchain') and sample.callchain:
 > +            parent_id =3D 0
 > +            for node in sample.callchain:
-> +                node_dso =3D getattr(node, 'dso', None) or getattr(node,=
- 'map', None)
-> +                node_symbol =3D getattr(node, 'symbol', None) or getattr=
-(node, 'sym', None)
-> +
-> +                dso_name =3D "Unknown_dso"
-> +                if node_dso:
-> +                    dso_name =3D getattr(node_dso, 'name', "Unknown_dso"=
-) or "Unknown_dso"
-> +
-> +                symbol_name =3D "Unknown_symbol"
-> +                if node_symbol:
-> +                    symbol_name =3D getattr(node_symbol, 'name', "Unknow=
-n_symbol") or "Unknown_symbol"
-> +
-> +                node_dso_id =3D self.get_dso_id(dso_name, dso_name, "")
-> +                node_symbol_id =3D self.get_symbol_id(node_dso_id, symbo=
-l_name, 0, 0)
-> +
-> +                parent_id =3D self.get_call_path_id(parent_id, node_symb=
-ol_id, node.ip)
-> +            call_path_id =3D parent_id
 
-Is the call path tree constructed upside-down here?
+Are we building the call path hierarchy upside down?
 
-By iterating sequentially over sample.callchain (from index 0 upwards) and
-using the newly generated ID as the parent_id for the next frame, the caller
-becomes a child of the callee. Should this be iterating in reverse to
-properly build parent-child aggregation?
+In perf database exports, call_path trees are conventionally structured from
+root to leaf, where the main function (caller) is the root (parent_id =3D 0=
+).
+
+Since the Python binding for sample.callchain returns frames in the default
+order (innermost frame first), iterating without reversing the chain assigns
+parent_id =3D 0 to the callee and sets it as the parent of its caller. Will=
+ this
+flip the callgraph upside down when visualized in tools like
+exported-sql-viewer.py?
 
 [ ... ]
 
-> +    def finalize(self) -> None:
-> +        """Copy files to database and add keys/views."""
+> +        # Insert sample
+> +        self.con.execute("""
+> +            INSERT INTO samples VALUES (
+> +                NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,=
+ ?, ?, ?, ?, ?, ?, ?
+> +            )
+> +        """, (
+> +            self.get_event_id(getattr(sample.evsel, 'name', str(sample.e=
+vsel))),
+> +            0, thread_id, comm_id,
+> +            dso_id, symbol_id, getattr(sample, 'sym_offset', 0),
+> +            sample.sample_ip, sample.sample_time, sample.sample_cpu,
+> +            0, 0, 0, 0,  # to_dso, to_symbol, to_sym_offset, to_ip
 
-[ ... ]
+Will hardcoding these branch target columns to 0 prevent branch profiling?
 
-> +        print("Adding primary keys")
-> +        self.do_query("ALTER TABLE selected_events ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE machines        ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE threads         ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE comms           ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE comm_threads    ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE dsos            ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE symbols         ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE branch_types    ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE samples         ADD PRIMARY KEY (id)")
-> +        self.do_query("ALTER TABLE call_paths      ADD PRIMARY KEY (id)")
+The samples table schema includes branch target columns which are used
+for tracing control flow. Shouldn't we extract these target addresses from
+sample.brstack or other properties instead of dropping them?
 
-This isn't a bug, but were the foreign key constraints from the original
-implementation intentionally dropped?
+> +            getattr(sample, 'sample_period', 0) or 0,
+> +            getattr(sample, 'sample_weight', 0) or 0,
+> +            getattr(sample, 'transaction_', 0),
+> +            getattr(sample, 'data_src', 0),
+> +            0,  # branch_type
+> +            getattr(sample, 'in_tx', 0),
+> +            call_path_id,
+> +            getattr(sample, 'insn_count', 0),
+> +            getattr(sample, 'cyc_count', 0),
 
-The previous script enforced relational integrity by adding foreign keys at
-the end of the export, which seem to be missing here.
+Are we using the correct Python attribute names for the hardware counters?
 
-[ ... ]
+As defined in tools/perf/util/python.c, the Python perf.sample_event
+object exposes these properties with a sample_ prefix (e.g.,
+sample_insn_count, sample_cyc_count, sample_data_src).
 
-> +if __name__ =3D=3D "__main__":
-> +    ap =3D argparse.ArgumentParser(
-> +        description=3D"Export perf data to a postgresql database")
-> +    ap.add_argument("-i", "--input", default=3D"perf.data",
-> +                    help=3D"Input file name")
-> +    ap.add_argument("-o", "--output", required=3DTrue,
-> +                    help=3D"Output database name")
-> +    args =3D ap.parse_args()
-> +
-> +    exporter =3D PostgresExporter(args.output)
-> +    exporter.setup_db()
-> +
-> +    session =3D None
-> +    error_occurred =3D False
-> +    try:
+Because the requested attributes (insn_count, cyc_count, data_src) do
+not exist without the prefix, won't getattr silently fall back to 0 and
+break instructions per cycle calculation and memory profiling?
 
-Could exceptions in setup_db() bypass the cleanup logic?
-
-If setup_db() fails, the script will terminate immediately without executing
-the finally block, which might leave orphaned temporary directories on the
-filesystem.
+> +            getattr(sample, 'flags', 0)
+> +        ))
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D37
+63-1-irogers@google.com?part=3D36
