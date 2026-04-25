@@ -1,227 +1,196 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FB839185E
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DEC391E74
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777159771; cv=none; b=UBV+ulP5L17u1Ta4/PoCK0G/B8vvMadGok+BXp0UjtKUt9Rp+v5jBrbZ3tQ9gFnjkZ/5F+CzHUtSXejVaMXqr8UkunHT0TJErd4NdHXK16Gfgwz3P3PZf5czxUSV/4wSz1OOC2Z/CAKPGQprOLojhyjqjmSashzObYxarL+zbB0=
+	t=1777159777; cv=none; b=Eus2CPL+0ZxUufNV1dRHxptzlvg6lRJBz5OFmpzPBZpHxr/aFmOWD7jK/97mx29vbqS/EXzv2Fg+bOJmvP8ETFZ0NkNfOUV37PY6kcVOHD88DKsHHVBUq6+jtzHexnmcez9USQxveejkYoFI4ArrEAXv8S9mVNmQvlmL/7UPfNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777159771; c=relaxed/simple;
-	bh=rKvNDvFUxWTsQ3aIpTBLWXOhL3UiZWxaWG8qvoQ969c=;
+	s=arc-20240116; t=1777159777; c=relaxed/simple;
+	bh=xvmk8fVo7Xu4BEqbN0BVSmhJI9530gdSSyrpMnsHLGE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DVsoP7vgIjukVhYJIJyC6hCCuOAjdPyu72H3k2Lb+79rUtnXatgyALBSby8VLCeW+sF/e5rshFTtzppYX12yE7AtlQi4LtbOU3jfXMMwUaQZ79N+I5+QIjZ9Zu/f7+JqhARJXexfp6WcmtoMuZoXBTOe5chNC2wfeuLn/nFefgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdwFvJw+; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=fsusvZYf8kAqUEZQ0Rjd9XldkJOR/14l8kMXC8FEfV5mYiBdtfvnvR0msraxjmYhcturNSj/mLIzQ0/imqy8CZd4iiJ5e/pfNtf2YN9wLzqh1NJs2U+tablWbFnjyCaYsOPpV+x00/O19qBEfLhslr3DJpObVrU12yuOKzpb8CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4QhVwN5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdwFvJw+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778C0C2BCB0;
-	Sat, 25 Apr 2026 23:29:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4QhVwN5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E97CC2BCB0;
+	Sat, 25 Apr 2026 23:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777159771;
-	bh=rKvNDvFUxWTsQ3aIpTBLWXOhL3UiZWxaWG8qvoQ969c=;
+	s=k20201202; t=1777159777;
+	bh=xvmk8fVo7Xu4BEqbN0BVSmhJI9530gdSSyrpMnsHLGE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=KdwFvJw+8pcKb9KK4AoTOSeZB9TAarROiXs6B0P1H/Z8v9IN7qWFWiBJIvvHH44fE
-	 p/LbkdXpEol4wuW1IoqlKYulUIFAVwGKgPZjLIlIMgBjjAD5T4jGH5mViikFFfYjxg
-	 3UH6PKMCv2BsaTYa8cDLGrHDLsvGKOIS2j7xz88ZhzUyizLd+trRms2efFBhaMtFDU
-	 cm34Y+m9LREgW4629U/kzKU/JNIiPSsfe2sEAvEPizzwjG8XBsOxpI+NdcFWBKoBqv
-	 6pybT/2jOCIlS9hFJpwvWWM73jtYwqARkXU8h6uVFtS65/iw5/b/tcMd6cVdXGHERl
-	 V0eGTpmbwzBxQ==
+	b=N4QhVwN52AAipmjY59CSdq2YzlSALQDpmXAzQhjNuV+9Af0zDy0NJX8RSE9a3d792
+	 Osybnj9wAAUEQ4Vea7zrsje1Zhu5c/Rt9LSXmiRy/klG75g4mfdYLkchYVBrai90ye
+	 Ze1kGxWCFESqEOuSr0LoniCvKGHQI4rlOx0X/DRKPgXjsCOya1eYBahfEIqgLe+qlV
+	 8/7vamGuUgYTeFQksJZcRv/6smQEiVmgZeMMsVbe1LeLFG/UwI0ERbjinyrH5kJlJN
+	 /207qgOD47+I7OTfYT0RfUUhY+Ba80WhiT/cJB0bpaV21Z4q+lh5K74hPEDMBeSJnP
+	 mjMV4E8muRBKg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 15/59] perf python: Add python session abstraction
- wrapping perf's session
+Subject: Re: [PATCH v7 01/59] perf inject: Fix itrace branch stack synthesis
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-16-irogers@google.com>
-References: <20260425224951.174663-16-irogers@google.com>
+In-Reply-To: <20260425224951.174663-2-irogers@google.com>
+References: <20260425224951.174663-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:29:30 +0000
-Message-Id: <20260425232931.778C0C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:29:36 +0000
+Message-Id: <20260425232937.3E97CC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 5 potential issue(s):
-- [High] Calling Py_XDECREF(psession->pdata) before perf_session__delete(ps=
-ession->session) causes a use-after-free.
-- [High] Improper Python C API exception handling causes uncatchable System=
-Error or silently swallowed exceptions.
-- [High] Zeroing out pevent->sample.user_regs and intr_regs causes a memory=
- leak per sample.
-- [Medium] Re-initializing a perf.session object via __init__ leaks Python =
-references and the internal perf_session C structure.
-- [Medium] Calling methods on an uninitialized perf.session object causes a=
- NULL pointer dereference.
+Sashiko AI review found 4 potential issue(s):
+- [High] Uninitialized `header.misc` field in synthesized branch stack samp=
+les corrupts CPU mode metadata.
+- [High] Pipeline stream corruption in pipe mode due to missing ATTR header=
+ updates.
+- [High] Hardcoded `branch_sample_type=3D0` in auxtrace decoders omits `hw_=
+idx` for PEBS samples, breaking alignment.
+- [High] `last_branch` injection bypasses AUX data stripping, causing a mis=
+match between the payload and the file header.
 --
 
-commit 9762b5f02b844066c2ef3adf7767df3f2ed547e3
+commit f5581930b39cbe639866b1a06c082d518b3d6c69
 Author: Ian Rogers <irogers@google.com>
-Date:   Sat Apr 25 22:49:07 2026 +0000
 
-    perf python: Add python session abstraction wrapping perf's session
-   =20
-    Sessions are necessary to be able to use perf.data files within a
-    tool. Add a wrapper python type that incorporates the tool. Allow a
-    sample callback to be passed when creating the session.
+perf inject: Fix itrace branch stack synthesis
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index aa63c7ffe822..1af53480661f 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -2413,6 +2419,256 @@ static int pyrf_data__setup_types(void)
->  	return PyType_Ready(&pyrf_data__type);
->  }
+When using "perf inject --itrace=3DL" to synthesize branch stacks from aux =
+data,
+failures occurred due to incorrect sample_type and unhandled hardware indic=
+es.
+This commit fixes sample_type flags during synthesis and explicitly passes
+branch_sample_type to properly write the nr and hw_idx fields.
+
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index f174bc69cec4..88c0ef4f5ff1 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -375,7 +375,59 @@ static int perf_event__repipe_sample(const struct pe=
+rf_tool *tool,
 > =20
+>  	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
+> =20
+> -	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
+> +	if (inject->itrace_synth_opts.set &&
+> +	    (inject->itrace_synth_opts.last_branch ||
+> +	     inject->itrace_synth_opts.add_last_branch)) {
+> +		union perf_event *event_copy =3D (void *)inject->event_copy;
+> +		struct branch_stack dummy_bs =3D { .nr =3D 0 };
+> +		int err;
+> +		size_t sz;
+> +		u64 orig_type =3D evsel->core.attr.sample_type;
+> +		u64 orig_branch_type =3D evsel->core.attr.branch_sample_type;
+> +
+> +		if (event_copy =3D=3D NULL) {
+> +			inject->event_copy =3D malloc(PERF_SAMPLE_MAX_SIZE);
+> +			if (!inject->event_copy)
+> +				return -ENOMEM;
+> +
+> +			event_copy =3D (void *)inject->event_copy;
+> +		}
+
+Since event_copy is allocated with malloc(), is it possible that
+event_copy->header.misc is left uninitialized?
+
+event_copy->header.type and event_copy->header.size are populated below, but
+header.misc seems to be skipped. Could this result in garbage data being
+passed for CPU mode and other flags, corrupting downstream symbol resolutio=
+n?
+
+> +
+> +		if (!sample->branch_stack)
+> +			sample->branch_stack =3D &dummy_bs;
+> +
+> +		if (inject->itrace_synth_opts.add_last_branch) {
+> +			/* Temporarily add in type bits for synthesis. */
+> +			evsel->core.attr.sample_type |=3D PERF_SAMPLE_BRANCH_STACK;
+> +			evsel->core.attr.branch_sample_type |=3D PERF_SAMPLE_BRANCH_HW_INDEX;
+> +			evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_AUX;
+> +		}
+
+If perf inject is run with --itrace=3DL, last_branch is true but
+add_last_branch is false, so PERF_SAMPLE_AUX is not stripped here.
+
+Since __cmd_inject() unconditionally strips PERF_SAMPLE_AUX from the output
+session header, could this lead to samples being synthesized and written wi=
+th
+their aux data intact, causing a mismatch between the declared header
+attributes and the actual sample payload?
+
 [ ... ]
-> +static int pyrf_session_tool__sample(const struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample,
-> +				     struct evsel *evsel,
-> +				     struct machine *machine __maybe_unused)
-> +{
-> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> +	PyObject *pyevent =3D pyrf_event__new(event);
-> +	struct pyrf_event *pevent =3D (struct pyrf_event *)pyevent;
-> +	PyObject *ret;
+> @@ -2434,12 +2488,25 @@ static int __cmd_inject(struct perf_inject *injec=
+t)
+>  		 * synthesized hardware events, so clear the feature flag.
+>  		 */
+>  		if (inject->itrace_synth_opts.set) {
+> +			struct evsel *evsel;
 > +
-> +	if (pyevent =3D=3D NULL)
-> +		return -ENOMEM;
-
-If pyrf_event__new() returns NULL and sets a Python exception, returning
--ENOMEM here propagates the error back to pyrf_session__find_thread_events(=
-),
-which then returns PyLong_FromLong(err).
-
-Does returning a valid PyObject while the Python exception indicator is sti=
-ll
-set cause the interpreter to raise an uncatchable SystemError?
-
-> +	memcpy(&pevent->event, event, event->header.size);
-> +	if (evsel__parse_sample(evsel, &pevent->event, &pevent->sample) < 0) {
-> +		Py_DECREF(pyevent);
-> +		return -1;
-> +	}
-> +	/* Avoid shallow copy pointing to lazily allocated memory that would be=
- double freed. */
-> +	pevent->sample.user_regs =3D NULL;
-> +	pevent->sample.intr_regs =3D NULL;
-
-Since evsel__parse_sample() dynamically allocates memory for user_regs and
-intr_regs using zalloc(), does explicitly setting these pointers to NULL
-orphan the allocations?
-
-When the Python event object is destroyed, it looks like perf_sample__exit()
-will skip freeing the NULL pointers, causing a memory leak for every
-processed sample containing register data.
-
-I see this regression is fixed later in the patch series in commit
-5565efd8694262de670594ae38d7f95f563e85d1 ("perf python: Refactor and
-add accessors to sample event").
-
-> +	if (pevent->sample.merged_callchain)
-> +		pevent->sample.callchain =3D NULL;
+>  			perf_header__clear_feat(&session->header,
+>  						HEADER_AUXTRACE);
+> -			if (inject->itrace_synth_opts.last_branch ||
+> -			    inject->itrace_synth_opts.add_last_branch)
 > +
-> +	ret =3D PyObject_CallFunction(psession->sample, "O", pyevent);
-> +	if (!ret) {
-> +		PyErr_Print();
-> +		Py_DECREF(pyevent);
-> +		return -1;
-> +	}
-
-If the user's Python callback fails, PyErr_Print() prints the traceback
-and clears the exception indicator.=20
-
-Since this returns -1, does the Python caller receive an error without any
-exception being raised, silently swallowing the callback failure?
-
-> +	Py_DECREF(ret);
-> +	Py_DECREF(pyevent);
-> +	return 0;
-> +}
+> +			evlist__for_each_entry(session->evlist, evsel) {
+> +				evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_AUX;
+> +			}
 > +
-> +static PyObject *pyrf_session__find_thread(struct pyrf_session *psession=
-, PyObject *args)
-> +{
-> +	struct machine *machine;
-> +	struct thread *thread =3D NULL;
-> +	PyObject *result;
-> +	int pid;
+> +			if (inject->itrace_synth_opts.add_last_branch) {
+>  				perf_header__set_feat(&session->header,
+>  						      HEADER_BRANCH_STACK);
 > +
-> +	if (!PyArg_ParseTuple(args, "i", &pid))
-> +		return NULL;
-> +
-> +	machine =3D &psession->session->machines.host;
+> +				evlist__for_each_entry(session->evlist, evsel) {
+> +					evsel->core.attr.sample_type |=3D PERF_SAMPLE_BRANCH_STACK;
+> +					evsel->core.attr.branch_sample_type |=3D
+> +						PERF_SAMPLE_BRANCH_HW_INDEX;
+> +				}
+> +			}
+>  		}
 
-Because perf.session is created using PyType_GenericNew(), its C structure
-is initially zeroed out.=20
+This block updates the attributes to reflect the new sample payload, but
+it is inside an if (!inject->output.is_pipe && !inject->in_place_update)
+check.
 
-If a user instantiates the object directly without calling __init__, or if
-__init__ fails and leaves psession->session set to NULL, does dereferencing
-it here cause a NULL pointer dereference?
+When pipe mode is used, attributes are emitted inline at the start of the
+stream. If the payload is modified in perf_event__repipe_sample() without
+the corresponding attribute updates in pipe mode, will downstream pipe
+consumers receive initial attributes that do not match the modified payload=
+s?
 
-> +	thread =3D machine__find_thread(machine, pid, pid);
 [ ... ]
-> +static int pyrf_session__init(struct pyrf_session *psession, PyObject *a=
-rgs, PyObject *kwargs)
-> +{
-> +	struct pyrf_data *pdata;
-> +	PyObject *sample =3D NULL;
-> +	static char *kwlist[] =3D { "data", "sample", NULL };
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index fc9eec8b54b8..2dce6106c038 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -1731,8 +1731,12 @@ static void intel_pt_prep_b_sample(struct intel_pt=
+ *pt,
+>  static int intel_pt_inject_event(union perf_event *event,
+>  				 struct perf_sample *sample, u64 type)
+>  {
+> -	event->header.size =3D perf_event__sample_event_size(sample, type, 0);
+> -	return perf_event__synthesize_sample(event, type, 0, sample);
+> +	event->header.type =3D PERF_RECORD_SAMPLE;
+> +	event->header.size =3D perf_event__sample_event_size(sample, type, /*re=
+ad_format=3D*/0,
+> +							   /*branch_sample_type=3D*/0);
 > +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!|O", kwlist, &pyrf_da=
-ta__type, &pdata,
-> +					 &sample))
-> +		return -1;
-> +
-> +	Py_INCREF(pdata);
-> +	psession->pdata =3D pdata;
+> +	return perf_event__synthesize_sample(event, type, /*read_format=3D*/0,
+> +					     /*branch_sample_type=3D*/0, sample);
+>  }
 
-In Python, __init__ can be called multiple times on an already instantiated
-object. If this happens, do psession->pdata, psession->sample, and
-psession->session get overwritten without calling Py_XDECREF() or
-perf_session__delete() on the old resources?
+Passing 0 for branch_sample_type here hardcodes the synthesis to omit the
+hw_idx field.
 
-Could this permanently leak the old C session structure and its Python
-references?
-
-> +	perf_tool__init(&psession->tool, /*ordered_events=3D*/true);
-[ ... ]
-> +static void pyrf_session__delete(struct pyrf_session *psession)
-> +{
-> +	Py_XDECREF(psession->pdata);
-> +	Py_XDECREF(psession->sample);
-> +	perf_session__delete(psession->session);
-
-If Py_XDECREF(psession->pdata) drops the last reference to the perf.data
-object, the memory holding the embedded struct perf_data inside
-struct pyrf_data is freed.
-
-Immediately after, perf_session__delete() accesses session->data
-(which points to the now-freed pdata->data) to call perf_data__close().
-
-Could this destruction order result in a use-after-free? Should the C
-session be destroyed before releasing the Python data object?
-
-> +	Py_TYPE(psession)->tp_free((PyObject *)psession);
-> +}
-> +
-> +static PyObject *pyrf_session__find_thread_events(struct pyrf_session *p=
-session)
-> +{
-> +	int err =3D perf_session__process_events(psession->session);
-
-Similar to pyrf_session__find_thread(), if psession->session is NULL,
-will perf_session__process_events() crash?
-
-> +
-> +	return PyLong_FromLong(err);
-> +}
+Since intel_pt_inject_event() is used for synthesizing pebs samples which
+inherit the original evsel configuration, what happens if the original pebs
+evsel had PERF_SAMPLE_BRANCH_HW_INDEX enabled? Will this cause the payload
+to omit hw_idx while the attributes still expect it, misaligning all
+subsequent payload reads?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D15
+63-1-irogers@google.com?part=3D1
