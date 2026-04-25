@@ -1,100 +1,211 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6845C367F5B
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9336682A
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 18:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777140637; cv=none; b=CSZy8pfqipjeIfuB4jE6dMWk0T+jID/Q897Fl3Y+C4gPozLAlvBDxQkGICP6ZprARFWh4LTqB4DJIlnpjqRY9F17VBgVNx5H4R+LyITdCVZxAIJQ6Whn+QnUZsVD0N9MVl2R3A/MclghHNcWwBMBv9ncryDxzbffINRdIq2Un/Y=
+	t=1777140674; cv=none; b=Q70a63KbrYWySKfednMekFZfEJCptOjsqNoNunPHkb36KpjSP/5bWwnQmmDWcN2owejsokvf79JW6eyAdEA5egDIuK0/3vniBBXK1m33JGY6iAaOIS/eJrhx8nVT+IvadPWVXuFWB9j5wlB1nS6PbPv1VPMmFRnypTfyNrS0Tx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777140637; c=relaxed/simple;
-	bh=yBW3MXlW/i8B251tB+76tEfsBwX+ecFpsLIJP9d0UDE=;
+	s=arc-20240116; t=1777140674; c=relaxed/simple;
+	bh=41lwSmqKDZ5ZftZ13wB1Q6xd4ZBzzDv47huG6eZk8tI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j1pRALdSdGdK6AzgKBFXCD4LQl+9PSNLQv5EkOdlFHDBtFK5+d7aSTg2JuJ0clUciE8IuzDcD16mpyTka5iNEL6Ow4kKPHgrgjhQnsudd1dmLfhDcrGwf4Nt31P9Cn52sGLL+AtbPfHJLp2q4wtUvy0yoPV9qVK8/AxHNjLp7P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyBqf12c; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=sc+T7AWB38tV7xPaeAl3ezmLG+i9gdFHxECMEsvzwbPMQJlMKkYlJ6rjcvchGiu081me0iva9TWmeATbyFJgAclgtEACLTDfAFYpXv+KIpcq2P0+BqUe1utDR584pDC5E1cRATwOhH4o68rWZ7H0Ifk4cxuE1A9VC/nFVZjp8dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yp6DCSpU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyBqf12c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0581AC2BCB0;
-	Sat, 25 Apr 2026 18:10:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yp6DCSpU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44BF1C2BCB0;
+	Sat, 25 Apr 2026 18:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777140637;
-	bh=yBW3MXlW/i8B251tB+76tEfsBwX+ecFpsLIJP9d0UDE=;
+	s=k20201202; t=1777140674;
+	bh=41lwSmqKDZ5ZftZ13wB1Q6xd4ZBzzDv47huG6eZk8tI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=eyBqf12ccM0pR40DGL0axZxSLdMjDY3fm3zOyr5wyk+UYB2TcVyEKClk8riYFMe/e
-	 o4OOObGobXfu/KUYtBlrdFoIZ+fA1xvLyx8YMkRHGaUnl1h5KhctApu+zeyrMx6Ece
-	 jGAV1dB6QYKNj6X39KD4qMiegCQKfHl4YmMytj8mf0Y6QDP8uFDUi7/6iEzxFrgfQc
-	 bIT1z0S8dFomz9NI0m/HzP1hiCJjUuBj92L0dZBzno/pMHxKqLTZpBJIaLPCxdJ7Dg
-	 ygtS1fBQ+4BPPQkfdqHMUW07dnKz8nrSPK35Hs57/v6j98DazGlDVF2iZicRbgvceu
-	 C8zBHgcvPGzeg==
+	b=Yp6DCSpUrqSwMJQRBx6uufnhOSoiysA8WOfKu6sXjllRceAy0U0sPYyBfygODzCty
+	 lGVvBZSb0lG+Sewff+5XtHuANgfdmHGpnk02P8G3FpaA0QkOIW0skS89iB711e6FFO
+	 tsQaUoZPK5hM+/c6wf4x20eo29M5vGbZh680Z+zgIKGm3iFJ4QOWadYe9Uf+rH4Gub
+	 YJOQlM1rhKWyIOzLPPKPqJHIkaZ9gsPYLhAoiOnaPoqkLGQt1EDqTxzdW4f5Hb9g8a
+	 ud29zMEtb7KrDrDsFFnTSR5X2IOlFrQWIn45+CqZTurS51HiCZZI3WYWOc8W2+cAy5
+	 p2pv3pSgn559Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 34/59] perf compaction-times: Port compaction-times
- to use python module
+Subject: Re: [PATCH v6 22/59] perf python: Add perf.pyi stubs file
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425174858.3922152-35-irogers@google.com>
-References: <20260425174858.3922152-35-irogers@google.com>
+In-Reply-To: <20260425174858.3922152-23-irogers@google.com>
+References: <20260425174858.3922152-23-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 18:10:36 +0000
-Message-Id: <20260425181037.0581AC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 18:11:13 +0000
+Message-Id: <20260425181114.44BF1C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Medium] The script crashes with a TypeError when encountering an untrack=
-ed thread.
-- [Medium] The script improperly aggregates by Process ID (TGID) instead of=
- Thread ID (TID), changing behavior and exacerbating thread lookup failures.
+Sashiko AI review found 4 potential issue(s):
+- [Medium] Missing module-level functions and classes in perf.pyi
+- [Medium] Incomplete and missing attributes in perf event classes
+- [Medium] Missing properties and incorrect attribute names in auxiliary pe=
+rf classes
+- [Medium] Incorrect method signatures and missing sequence methods
 --
 
-commit 3eb71aa9450a61af82498b54d33b431a8675a0ee
+commit f33c2c37edfd124bfa12f399b8b5cebd12f0c459
 Author: Ian Rogers <irogers@google.com>
 
-perf compaction-times: Port compaction-times to use python module
+perf python: Add perf.pyi stubs file
 
-This commit adds a Python port of the compaction-times script that directly
-uses the perf python module. This approach is intended to be faster by
-avoiding the creation of intermediate dictionaries for all event fields.
+Add Python type stubs for the perf module to improve IDE support and
+static analysis. Includes docstrings for classes, methods, and
+constants derived from C source and JSON definitions.
 
-> diff --git a/tools/perf/python/compaction-times.py b/tools/perf/python/co=
-mpaction-times.py
-> new file mode 100755
+> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+> new file mode 100644
+> index 000000000000..91e19704e595
 > --- /dev/null
-> +++ b/tools/perf/python/compaction-times.py
+> +++ b/tools/perf/python/perf.pyi
+> @@ -0,0 +1,581 @@
+> +"""Type stubs for the perf Python module."""
+> +from typing import Callable, Dict, List, Optional, Any, Iterator
+> +
 
 [ ... ]
 
-> +def process_event(sample: perf.sample_event) -> None:
-> +    """Callback for processing events."""
-> +    event_name =3D str(sample.evsel)
-> +    pid =3D sample.sample_pid
+> +def parse_metrics(metrics_string: str) -> 'evlist':
+> +    """Parse a string of metrics or metric groups and return an evlist."=
+""
+> +    ...
+> +
 
-Does using sample.sample_pid instead of sample.sample_tid change the
-script's aggregation behavior from per-thread to per-process? The
-original script used common_pid, which typically corresponds to the
-thread ID.
+Could the tracepoint() function exported by perf__methods in
+tools/perf/util/python.c be missing from this stub?
 
-> +    comm =3D session.find_thread(pid).comm() if session else "[unknown]"
+> +def pmus() -> Iterator[Any]:
+> +    """Returns a sequence of pmus."""
+> +    ...
+> +
 
-Could this crash the script if it encounters an untracked or short-lived
-thread?
+Would pmus() be more accurately typed as returning an iterator over pmu
+objects rather than Iterator[Any]?
 
-When session.find_thread() fails to locate a thread in the machine's
-thread map, it explicitly throws a TypeError. Because this exception is
-not caught here, a missing thread could cause a fatal Python exception,
-halting the entire trace processing.
+Are the pmu class and its methods like events() and name() missing?
 
-Additionally, passing the TGID from sample_pid instead of the TID might
-exacerbate this issue if a child thread triggers the event and the main
-thread's metadata is absent.
+> +class data:
 
-> +    secs =3D sample.sample_time // 1000000000
-> +    nsecs =3D sample.sample_time % 1000000000
+[ ... ]
+
+> +class counts_values:
+> +    """Raw counter values."""
+> +    val: int
+> +    ena: int
+> +    run: int
+> +
+
+Are the id and lost fields, as well as the values property, missing from
+this class?
+
+[ ... ]
+
+> +class evsel:
+> +    """Event selector, represents a single event being monitored."""
+> +    def __init__(
+> +        self,
+
+[ ... ]
+
+> +        idx: int =3D ...,
+> +    ) -> None: ...
+> +    def __str__(self) -> str:
+> +        """Return string representation of the event."""
+> +        ...
+> +    def open(self) -> None:
+
+Could open() be missing optional arguments like cpus, threads, group, and
+inherit?
+
+Should properties like tracking, config, read_format, sample_period,
+sample_type, size, type, and wakeup_events be included in the evsel class?
+
+> +        """Open the event selector file descriptor table."""
+> +        ...
+> +    def read(self, cpu: int, thread: int) -> counts_values:
+
+[ ... ]
+
+> +class sample_event:
+> +    """Represents a sample event from perf."""
+> +    evsel: evsel
+> +    sample_cpu: int
+> +    sample_time: int
+> +    sample_pid: int
+> +    type: int
+> +    brstack: Optional['branch_stack']
+> +    callchain: Optional['callchain']
+
+Is this class missing specialized methods like srccode() and insn()?
+
+Also, shouldn't sample_members properties like sample_tid, sample_id,
+sample_stream_id, and sample_period be present here and across other
+event classes?
+
+> +    def __getattr__(self, name: str) -> Any: ...
+> +
+
+[ ... ]
+
+> +class switch_event:
+> +    """Represents a SWITCH or SWITCH_CPU_WIDE record."""
+> +    type: int
+> +
+
+Could the next_prev_pid and next_prev_tid properties be missing from this
+class?
+
+[ ... ]
+
+> +class callchain_node:
+> +    """Represents a frame in the callchain."""
+> +    ip: int
+> +    sym: Optional[Any]
+> +    map: Optional[Any]
+
+The C extension exposes these properties as symbol and dso via
+pyrf_callchain_node__getset.
+
+Will the use of sym and map cause code that passes static analysis to fail
+with AttributeError at runtime?
+
+> +
+> +class callchain:
+
+[ ... ]
+
+> +class evlist:
+
+Since the evlist class functions as a Python sequence in C, should __len__
+and __getitem__ be defined here?
+
+> +    def __init__(self, cpus: cpu_map, threads: thread_map) -> None: ...
+> +    def open(self) -> None:
+> +        """Open the events in the list."""
+> +        ...
+> +    def close(self) -> None:
+> +        """Close the events in the list."""
+> +        ...
+> +    def mmap(self) -> None:
+
+Are optional arguments like pages and overwrite missing from mmap()?
+
+> +        """Memory map the event buffers."""
+> +        ...
+> +    def poll(self, timeout: int) -> int:
+
+Is timeout incorrectly marked as required here? It appears to be optional
+and defaults to -1 in the C implementation.
+
+> +        """Poll for events.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425174858.3922=
-152-1-irogers@google.com?part=3D34
+152-1-irogers@google.com?part=3D22
