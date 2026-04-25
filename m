@@ -1,99 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A7D38C2B3
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C72FFDCB
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158325; cv=none; b=RlE/3oGlDFAv4pomI32apnklZRrK8oxSLhz6J52Vq+fFxoSLYxpSNwwXkgFjpEhKsuaYRLjdZKru/WIse1IMS/sQiQTneXdjYOm6wUDRa2DZJh863JkDlgleJ4Qv3tKGffj6YNJh1fq0XaSFvhuW1QYcnr81CknFEqNFYI4PW80=
+	t=1777158346; cv=none; b=Cq1zAmZbu30izucj9j/r1HH/soPdYG8QY86B4qh/7voYk4O4nHsiZqynHYW5hugJyv4mma6Cfc0ij2QMYD4LW2hAmIwpnTHwVOVQUZXpJASwMMjVYzbaTTACxztrqjEhIunhPqBqGaWuhitckPyVS4oFv7E/7rKe7X15EZ00v+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158325; c=relaxed/simple;
-	bh=Aukyi9CNkV/M3PA0lOGsOQQkoUgNx9jg+4XUePmgNzA=;
+	s=arc-20240116; t=1777158346; c=relaxed/simple;
+	bh=LdU3NCTbYRjhhaSeZZTbBCDcIAkptfed6tX4pQjo9KI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YVmQ1+lrE1j3n3PqOWAg6qYXEceULtHMuV65wATyJCVhmf9/wFMyHu0BMeTxZz9V7Z9HN+equRUh5JxAijrW+iW5xDTOqhvK5E9rUU3BZVetuNrYggjhldFxYuW7dr4GEm+dJaEe/JW3tYd6pI3nq0WJWDhaIjroG9MYUfQjcIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSXLnGaY; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=FFF3bdsoNSfPhpoKWiv1Va2VObq87+ajqtfqY6Jq5rKS7nJeA4iyiSYK4QJsO+U6xmvPL2XR2qw28IqG5ZJ2ycsaMU/GsIGePgwF6a1d5bk+QGxHVjP9MtICST+wzAXzLNbwTInywQlDIkvlkCzp0NOt+Lbz7ZRLoranZP/1h3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWzmFOoe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSXLnGaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E4BBC2BCB0;
-	Sat, 25 Apr 2026 23:05:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWzmFOoe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C72BC2BCB0;
+	Sat, 25 Apr 2026 23:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158325;
-	bh=Aukyi9CNkV/M3PA0lOGsOQQkoUgNx9jg+4XUePmgNzA=;
+	s=k20201202; t=1777158346;
+	bh=LdU3NCTbYRjhhaSeZZTbBCDcIAkptfed6tX4pQjo9KI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=gSXLnGaYyJthsFLjOswNS97aWY8QGC3LYZ3gg+P+X5BmK9X+dTZDFqMNtzIaq2ab/
-	 b4ObSylYqnUqmTY3PtmajT1si7TJ4F1bl/lPhbx/R9EHaxry81P4FMiUZSMDhbz3Qh
-	 TsLYaXGVQktdfkNG3WlF/oZA0qAxgTNYQpk0FT6d54sOrbEyUDEEXrzB98i2qL3Q6u
-	 yN68LQq2+TNg65MUHtfxuZjHQHkZ31sR4IPLe4GfZzNGhiixqB29LGC89fdfrMa/Jj
-	 0uuE3rtvaf1H4GgH+sJb9B0yNXpqxSI+KjTMKv+/PjceqfIiE6ig2A9keeJhn18A35
-	 1Wu9jPxqQZIlg==
+	b=kWzmFOoeqQGzJ5fyI9lATDap+mUFWOHNV9MPLQOd/AqGwmpnfdZXk47aDtTo7rfd+
+	 iXSlhUQ51vcH28TkJhtwj8MD0sj7DwswgXX8lcxYsJ2F4v1RUH3cSlza7SmZds205J
+	 O7Q1OVa7I52mzAarjGfUXfj6OQtgmu1hw2RTXQSRzGTrm3BkCn32s7+WiFzvtf96nA
+	 6L6AKfoou5fx73Ng8aKW+C675jfKTp/gpTUoIq+MQR5Gbb3qWndq0C3CxzO3CQirmo
+	 2QJ/7L35I56DPVX66sqDqWxSYmZrnP9UAjp6mETdvVq/OCA+ZSm88LTf020XuYN5fe
+	 nCkj8psWZoWOg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 02/59] perf arch arm: Sort includes and add missed
- explicit dependencies
+Subject: Re: [PATCH v7 28/59] perf syscall-counts-by-pid: Port
+ syscall-counts-by-pid to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-3-irogers@google.com>
-References: <20260425224951.174663-3-irogers@google.com>
+In-Reply-To: <20260425224951.174663-29-irogers@google.com>
+References: <20260425224951.174663-29-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:05:24 +0000
-Message-Id: <20260425230525.6E4BBC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:05:45 +0000
+Message-Id: <20260425230546.6C72BC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Low] Incorrect primary header identification during include sorting. The=
- patch moves `../../../util/cs-etm.h` to the top block and pushes the actua=
-l local primary header `"cs-etm.h"` to the very bottom.
+Sashiko AI review found 2 potential issue(s):
+- [Medium] The new script sorts the syscall output numerically by syscall I=
+D instead of descending by frequency, contradicting the commit message.
+- [Medium] Filtering by PID 0 fails and incorrectly aggregates all processe=
+s, bypassing the filter entirely.
 --
 
-commit febaa4aba550b6cb11c26a233479adf942c73a27
+commit c3142c05615edbdf9215f073db18a13c7a7e116c
 Author: Ian Rogers <irogers@google.com>
 
-perf arch arm: Sort includes and add missed explicit dependencies
+perf syscall-counts-by-pid: Port syscall-counts-by-pid to use python module
 
-This commit adds missing includes found while cleaning evsel/evlist header
-files and sorts the remaining headers in cs-etm.c for consistency.
+This commit rewrites the tools/perf/scripts/python/syscall-counts-by-pid.py
+script to use the new perf Python module. By bypassing the perf script
+execution overhead, it improves performance significantly while displaying
+system call totals broken down by syscall and optionally filtered by comm or
+PID.
 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util=
-/cs-etm.c
-> index b7a839de8707..cdf8e3e60606 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -3,10 +3,13 @@
->   * Copyright(C) 2015 Linaro Limited. All rights reserved.
->   * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
->   */
-> +#include "../../../util/cs-etm.h"
-
-This isn't a bug, but did the sorting logic mistakenly identify
-../../../util/cs-etm.h as the primary header for this file?
-
-A source file normally includes its own corresponding header file first
-to verify that the header is self-contained. Since this cs-etm.c implements
-functions declared in the local "cs-etm.h", that local header would
-typically be the primary one.
-
+> diff --git a/tools/perf/python/syscall-counts-by-pid.py b/tools/perf/pyth=
+on/syscall-counts-by-pid.py
+> new file mode 100755
+> index 000000000000..ff962334a143
+> --- /dev/null
+> +++ b/tools/perf/python/syscall-counts-by-pid.py
+> @@ -0,0 +1,88 @@
 [ ... ]
+> +def print_syscall_totals():
+[ ... ]
+> +    print(f"{'comm [pid]/syscalls':<40} {'count':>10}")
+> +    print("---------------------------------------- -----------")
+> +
+> +    sorted_keys =3D sorted(syscalls.keys(), key=3Dlambda k: (k[0], k[1],=
+ k[2]))
 
->  #include "../../../util/session.h"
-> -
-> -#include <errno.h>
-> -#include <stdlib.h>
-> -#include <sys/stat.h>
-> +#include "cs-etm.h"
+Does this sort order match the expected output?
 
-Should "cs-etm.h" be placed at the top block instead of being sorted to the
-very bottom of the include list?
+The commit message demonstrates the syscall output being sorted descending =
+by
+frequency count (e.g., 538989, 32, 17, 2, 1).
 
-Leaving the true primary header at the bottom bypasses its self-containedne=
-ss
-check, as the compiler has already parsed all the other system and utility
-headers by the time it reaches this one.
+By sorting on the keys, it looks like the syscalls are printed in ascending
+order of their syscall ID instead.
+
+> +    current_comm_pid =3D None
+> +    for comm, pid, sc_id in sorted_keys:
+[ ... ]
+> +def process_event(sample):
+[ ... ]
+> +    pid =3D sample.sample_pid
+> +
+> +    if for_pid and pid !=3D for_pid:
+
+If a user filters by PID 0 (the idle task), will this logic bypass the
+filter?
+
+Since for_pid evaluates to False in Python when it is 0, it seems the script
+would incorrectly accumulate events for all PIDs instead of restricting them
+to PID 0.
+
+> +        return
+> +
+> +    comm =3D "unknown"
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D2
+63-1-irogers@google.com?part=3D28
