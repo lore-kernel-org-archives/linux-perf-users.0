@@ -1,160 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482F339185E
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFE939185E
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777159364; cv=none; b=T2IIwyGLvhHYbE1gA55LJuuoZqEi/Tdb2sT+QK8/cIzwFGlHp/kW+ubdzQTOZ1ZdGZug6wR+Ik+gk55kR1duyfAEwcSnRFNjpznv5MOaKuEpP5jmb+tt/3dXw0P7n9nNbFF7UyxMHm7QenoX79Ip/ULUcGp2E4SZGCvir7JKvw0=
+	t=1777159420; cv=none; b=NglGOiAv2U1/cLh0wTMvRTIFi7cBwgoL4ld/iUazClI5wBqAbgWhq/PvkeI70v3OnOHJhLezjzRoTz+jZDf5/oNYJlUt23MstA0Qz9w7FbTRlAkTMLFaHVVRxCBS5qEt/s70Ugk/4rdyYNSGASTvsq033M5e0OmclJaf2WO4HT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777159364; c=relaxed/simple;
-	bh=82Lq3GBt6VAh823+0J0inqkExiNjnS6roQBe5hQJMko=;
+	s=arc-20240116; t=1777159420; c=relaxed/simple;
+	bh=itGtRQvymH3HBXXso02OIYpztkUukSGgoagUKzofgbI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gVPfKJY3676ySuLUok8v7+XtpzjaZFUonxYr+7l20V9n9xL8tj1obBOWWjGnUexbcdH0KtqQ0n0iIWLzSu1ioeaKW7j4gVo0+1pG+oL64+EGesY+WmmDs0KNRXML6TnhtfZR0SAVbmUw3uNnwI6XiN9q1ntlbYXo+WlJCEjbltQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3mIhg24; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=FNXVox3rw+u4bmxtN3Khu72VSkR7mjoChdIaDTrdyv67dO6eawu7pLc2KnUBPOdfwj6JykAgFiqShi6iUjiQktDuI/Se1AhRNcv6cCx6DJpymg/EGkptk6vAYlkajouDUwE9/FIeeusCgCqClKtghYYkadA8iqD+3goTEIc7HGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWgB+nHH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3mIhg24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF59CC2BCB0;
-	Sat, 25 Apr 2026 23:22:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWgB+nHH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF28C2BCB0;
+	Sat, 25 Apr 2026 23:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777159363;
-	bh=82Lq3GBt6VAh823+0J0inqkExiNjnS6roQBe5hQJMko=;
+	s=k20201202; t=1777159419;
+	bh=itGtRQvymH3HBXXso02OIYpztkUukSGgoagUKzofgbI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=a3mIhg24dnnMrD+IXzGr+D8VkL9vwQzAQxzx8ZfF4fAMLrBaSrlsgOtKl4puEc8ci
-	 K8Y7a9O/uCZzQD5DBZCWMJfxihEQSuY+9WAR3nI4q8VJt2hKmJdRbbnutE0cby93Lf
-	 8oE7lgfTomBJF7/+3gmnOPDTYY+lzMUPJkLc75WTVbu2bAr0cTL639btb0IsCbxpc3
-	 onibsGWPRrKw6ryBzht/sMSp85JN6ncUoQmsIkeVAjmjzpFXK0dUJfgyZBGZyj4piF
-	 QzplL1AobukVgYtB/ky/tfhKiTgoUdhSao0M6OAr7I5FTxq6w9MvADx06Pl7pNnWix
-	 UngBuV94ce2Rw==
+	b=sWgB+nHHbIaKt6iQy6Lx0eyberJHG07+xtoXES1KIzxcJa4UDtgIQEimVfqbH3u4f
+	 89jCTyRocLndpTUHoyHnQgvnX4UPbkp26rgxh28CebAxoHlNFFl/qk0wBbpubM4AmY
+	 S/gMXyNhNxF9bITh4LFPq1DYdWXmrRkBUcLvWaaxoap7uBuU6UaLjldvSLcQoFXAi/
+	 D45gYmpJtwSrRRoL+M2zC/O8AFYEtw7fH0a7zWGCrPcQUyM3Hu8MRY8QWIRHAJpRlx
+	 d1Q1/YdmPD4T232DlE2wkUaR8OYJNEEy9jSzOYQj9gLu77Juo/vMbF9xEuyiGdBo+V
+	 hIIGfgxTtWiGQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 14/59] perf python: Add wrapper for perf_data file
- abstraction
+Subject: Re: [PATCH v7 56/59] perf script: Refactor to support standalone
+ scripts and remove legacy features
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-15-irogers@google.com>
-References: <20260425224951.174663-15-irogers@google.com>
+In-Reply-To: <20260425224951.174663-57-irogers@google.com>
+References: <20260425224951.174663-57-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:22:43 +0000
-Message-Id: <20260425232243.BF59CC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:23:39 +0000
+Message-Id: <20260425232339.8CF28C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [High] The `fd` argument in `perf.data()` is silently ignored and overwri=
-tten, breaking pipe functionality and causing the wrapper to read from the =
-wrong source.
+Sashiko AI review found 3 potential issue(s):
+- [High] Unhandled `waitpid()` failure causes unintended execution of the n=
+ative `perf script` data processing loop.
+- [Low] Overwriting `desc->half_liner` without freeing the previous allocat=
+ion causes a memory leak.
+- [Low] The script `args` formatting is preserved in `list_available_script=
+s` but the population logic is removed, leaving dead code.
 --
 
-commit ae4873a7e62ee38caf1c5c6d10e64f1a258b1d62
+commit 28566cda6894feea81082103f438305b884d5d12
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add wrapper for perf_data file abstraction
-   =20
-The perf_data struct is needed for session supported.
+perf script: Refactor to support standalone scripts and remove legacy featu=
+res
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 2ba3556c4f16..aa63c7ffe822 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+This commit refactors perf script to support standalone Python scripts, rem=
+oving
+legacy scripting options. It updates script path resolution and adds the ab=
+ility
+to launch scripts directly via fork and execvp.
+
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+
 [ ... ]
-> @@ -2316,6 +2317,102 @@ static PyObject *pyrf__metrics(PyObject *self, Py=
-Object *args)
->  	return list;
->  }
+
+> @@ -3630,13 +3723,15 @@ static int read_script_info(struct script_desc *d=
+esc, const char *filename)
+>  		if (!strncmp(p, "description:", strlen("description:"))) {
+>  			p +=3D strlen("description:");
+>  			desc->half_liner =3D strdup(skip_spaces(p));
+> -			continue;
+> +			found_description =3D true;
+> +			break;
+>  		}
 > =20
-> +struct pyrf_data {
-> +	PyObject_HEAD
-> +
-> +	struct perf_data data;
-> +};
-> +
-> +static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyOb=
-ject *kwargs)
-> +{
-> +	static char *kwlist[] =3D { "path", "fd", NULL };
-> +	char *path =3D NULL;
-> +	int fd =3D -1;
-> +
-> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|si", kwlist, &path, &f=
-d))
-> +		return -1;
-> +
-> +	if (pdata->data.open)
-> +		perf_data__close(&pdata->data);
-> +	free((char *)pdata->data.path);
-> +
-> +	if (!path)
-> +		path =3D "perf.data";
-> +
-> +	pdata->data.path =3D strdup(path);
-> +	if (!pdata->data.path) {
-> +		PyErr_NoMemory();
-> +		return -1;
-> +	}
-> +
-> +	if (fd !=3D -1) {
-> +		struct stat st;
-> +
-> +		if (fstat(fd, &st) < 0 || !S_ISFIFO(st.st_mode)) {
-> +			PyErr_SetString(PyExc_ValueError,
-> +					"fd argument is only supported for pipes");
-> +			free((char *)pdata->data.path);
-> +			pdata->data.path =3D NULL;
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	pdata->data.mode =3D PERF_DATA_MODE_READ;
-> +	pdata->data.file.fd =3D fd;
-> +	if (perf_data__open(&pdata->data) < 0) {
+> -		if (!strncmp(p, "args:", strlen("args:"))) {
+> -			p +=3D strlen("args:");
+> -			desc->args =3D strdup(skip_spaces(p));
+> -			continue;
+> +		if (!found_description && strlen(p) > 0 &&
+> +		    strncmp(p, "SPDX-License-Identifier", 23)) {
+> +			desc->half_liner =3D strdup(p);
+> +			found_description =3D true;
+> +			// Don't break, maybe we find a better "description:" later!
+>  		}
+>  	}
 
-Does this silently ignore the passed fd and leak it?
+Is there a memory leak here if we find a better description later?
 
-Looking at perf_data__open(), it delegates to check_pipe(). If path is
-not explicitly provided, it defaults to "perf.data" instead of being NULL
-or "-". check_pipe() requires path to be "-" to handle pipes:
+If desc->half_liner is assigned from the SPDX-License-Identifier line,
+and the loop continues, finding the actual description: tag will overwrite
+desc->half_liner with a new strdup() without freeing the initial allocation.
 
-tools/perf/util/data.c:check_pipe() {
-    ...
-	if (!data->path) {
-		if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
-			is_pipe =3D true;
-	} else {
-		if (!strcmp(data->path, "-"))
-			is_pipe =3D true;
-	}
-    ...
-}
+Also, since the args: parsing was removed here, should the corresponding
+printing logic in list_available_scripts() be removed as well?
 
-Since path defaults to "perf.data", check_pipe() returns false.
+[ ... ]
 
-perf_data__open() will then call open_file(), which does a regular
-filesystem open() of "perf.data", and overwrites data->file.fd:
+> @@ -3695,26 +3789,24 @@ static int list_available_scripts(const struct op=
+tion *opt __maybe_unused,
+>  		exit(-1);
+>  	}
+> =20
+[ ... ]
+> -	fprintf(stdout, "List of available trace scripts:\n");
+> +	fprintf(stdout, "List of available scripts:\n");
+>  	list_for_each_entry(desc, &script_descs, node) {
+>  		sprintf(first_half, "%s %s", desc->name,
+>  			desc->args ? desc->args : "");
 
-tools/perf/util/data.c:open_file() {
-    ...
-	fd =3D perf_data__is_read(data) ?
-	     open_file_read(data) : open_file_write(data);
-    ...
-	data->file.fd =3D fd;
-    ...
-}
+This isn't a bug, but this logic still checks and prints desc->args. Since
+the parsing for it was removed above, desc->args will always be NULL.
 
-Should the wrapper set path to "-" or NULL if a custom pipe fd is
-provided so perf_data__open() correctly uses it?
+[ ... ]
 
-> +		PyErr_Format(PyExc_IOError, "Failed to open perf data: %s",
-> +			     pdata->data.path ? pdata->data.path : "perf.data");
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
+> @@ -4253,149 +4235,54 @@ int cmd_script(int argc, const char **argv)
+>  	/* make sure PERF_EXEC_PATH is set for scripts */
+>  	set_argv_exec_path(get_argv_exec_path());
+> =20
+[ ... ]
+> +	if (script_name) {
+> +		pid_t pid =3D fork();
+>  		if (pid < 0) {
+> -			perror("failed to fork");
+> -			return -1;
+> +			pr_err("failed to fork\n");
+> +			return -errno;
+>  		}
+> -
+> -		if (!pid) {
+> +		if (pid =3D=3D 0) { /* child */
+[ ... ]
+> +			execvp(script_name, (char **)__argv);
+> +			pr_err("failed to execute script '%s': %s\n", script_name, strerror(e=
+rrno));
+> +			exit(-errno);
+> +		} else { /* parent */
+> +			int status =3D 0;
+> +
+> +			if (waitpid(pid, &status, 0) =3D=3D pid) {
+> +				if (WIFEXITED(status))
+> +					return WEXITSTATUS(status);
+> +				else
+> +					return -1;
+>  			}
+>  		}
+> -
+[ ... ]
+>  	}
+> =20
+>  	if (dlfilter_file) {
+
+If waitpid() is interrupted by a signal and returns -1 (with errno =3D=3D E=
+INTR),
+or fails for another reason, the condition waitpid(pid, &status, 0) =3D=3D =
+pid
+evaluates to false.
+
+Since there is no else clause or return statement on the failure path,
+execution will fall through the if (script_name) block and proceed to the r=
+est
+of cmd_script(). This could unintentionally initialize a perf session and d=
+ump
+perf.data to stdout instead of terminating.
+
+Should waitpid() be wrapped in a retry loop for EINTR, and return an error =
+if
+it ultimately fails?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D14
+63-1-irogers@google.com?part=3D56
