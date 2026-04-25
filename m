@@ -1,117 +1,213 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8BF282F3D
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101F38F62A
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158578; cv=none; b=nLLMcIBG8IRgtuNCUl5yLoxzEBdPHIUKjdl4Uguc9tp3kpa9pJi1ml+At7C96jtpcRILFP0mZxqU7Mgm5xsZ3W+AcaEnyLoapKG1jY/xjj5WnVpdt+cZ2c82bJrdq74mItjNE4vcz2c0KVfYgB/i7gDmuVTkpLF9oNsdEj6Dhik=
+	t=1777158693; cv=none; b=n91QbBPZBraSN5BLlxsVoz9ilAV20mlb+bLsRNOegCmZqrHGgkzPrSq3raUEOxkC/Va5kBFnD3PJ2T8UNCh2PydXWNi3Yez6Fs+kmaI/rVmNMBIoXUkONh+ff3pXctASgIiiSxP/vu5QDd2TBfv7LmkgYXyZhq/51TepM7aS3/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158578; c=relaxed/simple;
-	bh=6Z7p0+K7mqEjuPWPUWAZmdJa8kqOvBhuOBV/byYTwY4=;
+	s=arc-20240116; t=1777158693; c=relaxed/simple;
+	bh=rpeeLYsRxaU1RKa8SNy2RiY9dVujNM2DA1WZLs+0WO0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=vFbdWOWHmVczXAInk1TvZtbsFkZaxg5r35cpU8w/kPxrmK/iNqKSERQIaFCoYTqASS20HXysEq64cJqxAHmQk8MohYUjokVTv7FITda/NAnJz44D2eDcJBpX9YkUQh+vC0ru0/2ATsNJPYfnbdklEH8jykp3KtoYaz8jDiKBnMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqxlvGck; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=IPx/bzNpgFUE8wrtAfBAtq5K0rMEpK6RZB6YfmsTqwEBCZNXqVKFDOGqCv1UprhCZWcT3r33k4z0+7PPVM2oZ+KXKkLtYDAeAHXMS6Hl98Wy5KkcgJZzs6ddp7Ao3U9MiVOlDoPD3/RUEVqnb+PZjUOBDaq5eME1FzGqgZl2a3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THk3VxLM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqxlvGck"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26979C2BCB0;
-	Sat, 25 Apr 2026 23:09:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THk3VxLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC44C2BCB0;
+	Sat, 25 Apr 2026 23:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158578;
-	bh=6Z7p0+K7mqEjuPWPUWAZmdJa8kqOvBhuOBV/byYTwY4=;
+	s=k20201202; t=1777158692;
+	bh=rpeeLYsRxaU1RKa8SNy2RiY9dVujNM2DA1WZLs+0WO0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=pqxlvGckGE6y/RNRbboYipM7x5cod5YWhPS0z2cSpKHPArLyPhhibdilBjPJrGs4W
-	 QB3umo7xbGI0PfxfIZNk8A5W8f9+ZaSCA2IUIccxQj5+m5uz7VoeXq5XT1TECMXFH/
-	 cD1CVykfmd/bMs8G5f7xg9YZHqmhMKt2DD/7nAdsSmX2HtaLdmq9JgBciOnExZZcwS
-	 WpBiod0SuyTXAqDt1/8GAUacxRoFfM8fLfmiHp+sGc4xQm0IuKBVlNjMec0cEMZroi
-	 r+veIUcxeynQhtMEVLmfmWpoCftKpFDMI8s2F6ABmo69w2rxY9kGMS1Ttcr4r0bp9w
-	 FjkiEZ0G4Ed5g==
+	b=THk3VxLM1Lax2WUI+9aMjwMR/FJZIFTUucYqFQ1yXPAEqidIlq6vGJOUabUzcDLjr
+	 P5M2xqMZ5fHCZs4ThHUFMgAPB8Hxt4ULUC6hXnUUQ4kXeiduFwyqHAHcbVUQmKEvJG
+	 5ua1L8lvcp+pVy2Dun9z5Aoq5dHjQlomWDhyuqhyiyX5SsKb1yvcgkxWegDpgEnWT5
+	 curUJ7NE2xS2An7ga1TaEd8XBgiWyakOfRvMniN/SviHc0NENzwJfyE7rMXn2p7hG6
+	 HwnryECaSyrNeShjqSMVaS1jCW9T9KBElmE9kM+p5sZIyHyEUht90woLVginjU1KX/
+	 djt3HzKzO5LMw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 48/59] perf rw-by-file: Port rw-by-file to use python
- module
+Subject: Re: [PATCH v7 46/59] perf task-analyzer: Port task-analyzer to use
+ python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-49-irogers@google.com>
-References: <20260425224951.174663-49-irogers@google.com>
+In-Reply-To: <20260425224951.174663-47-irogers@google.com>
+References: <20260425224951.174663-47-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:09:37 +0000
-Message-Id: <20260425230938.26979C2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:11:32 +0000
+Message-Id: <20260425231132.BDC44C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [Medium] The script attempts to handle raw_syscalls by checking for non-e=
-xistent tracepoints 'raw_syscalls:sys_enter_read' and 'raw_syscalls:sys_ent=
-er_write'.
+Sashiko AI review found 8 potential issue(s):
+- [High] Silent failure masking all functionality: 'sample_cpu' raises Attr=
+ibuteError, dropping all events.
+- [High] Crash on '.pid' attribute access on 'perf.thread' object.
+- [High] Uncaught TypeError when thread is not found.
+- [Medium] Argument parsing crash on '--time-limit' without a colon.
+- [Medium] Using '--csv-summary' incorrectly alters standard trace output f=
+ormatting.
+- [Medium] Incomplete implementation of '--summary' feature.
+- [Medium] Memory leak in live mode for long-running sessions.
+- [Low] CSV output format breakage.
 --
 
-commit 6ba947a0e950d21d736be641eba61cb05dfe1d4d
+commit d15ac90af17406fb7c1e541648eac0f9cca7e087
 Author: Ian Rogers <irogers@google.com>
 
-perf rw-by-file: Port rw-by-file to use python module
+perf task-analyzer: Port task-analyzer to use python module
 
-This patch ports the legacy Perl script rw-by-file.pl to a python script
-using the perf module. It tracks read and write activity by file descriptor
-for a given program name, aggregating bytes requested/written and total cou=
-nts.
+This commit ports task-analyzer.py to tools/perf/python, transitioning
+it to a class-based architecture. It adds support for both file mode
+and live mode.
 
-> diff --git a/tools/perf/python/rw-by-file.py b/tools/perf/python/rw-by-fi=
-le.py
+> diff --git a/tools/perf/python/task-analyzer.py b/tools/perf/python/task-=
+analyzer.py
 > new file mode 100755
-> index 000000000000..2103ac0412bb
+> index 000000000000..08e44946fe6a
 > --- /dev/null
-> +++ b/tools/perf/python/rw-by-file.py
+> +++ b/tools/perf/python/task-analyzer.py
+
+[ ... ]
+
+> +    def _prepare_fmt_sep(self) -> tuple[str, int]:
+> +        if self.args.csv or self.args.csv_summary:
+> +            return ",", 0
+> +        return " ", 1
+
+If a user requests a CSV summary via --csv-summary but wants standard trace
+output on stdout, will this cause the primary trace output to unintentional=
+ly
+use a comma separator as well?
+
+[ ... ]
+
+> +    def _record_by_tid(self, task: Task) -> None:
+> +        tid =3D task.tid
+> +        if tid not in self.db["tid"]:
+> +            self.db["tid"][tid] =3D []
+> +        self.db["tid"][tid].append(task)
+> +        self.db["tid"][tid] =3D self._record_cleanup(self.db["tid"][tid])
+
+While _record_cleanup() bounds the list length per TID, it doesn't appear
+to evict old TIDs from self.db["tid"] when threads terminate. In a continuo=
+us
+live trace, could this dictionary grow linearly over time and cause unbound=
+ed
+memory usage?
+
+[ ... ]
+
+> +    def _is_within_timelimit(self, time_ns: int) -> bool:
+> +        if not self.args.time_limit:
+> +            return True
+> +        time_s =3D decimal.Decimal(time_ns) / decimal.Decimal(1e9)
+> +        lower_bound, upper_bound =3D self.args.time_limit.split(":")
+
+If a user provides a single-value string without a colon (e.g.,
+--time-limit 12345), won't split(":") return a single-element list and
+trigger a ValueError?
 
 [ ... ]
 
 > +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Process events."""
-> +        event_name =3D str(sample.evsel)[6:-1]
-
-[ ... ]
-
-> +        if comm !=3D self.for_comm:
+> +        """Process sched:sched_switch events."""
+> +        if "sched:sched_switch" not in str(sample.evsel):
 > +            return
 > +
-> +        if event_name in ("syscalls:sys_enter_read", "raw_syscalls:sys_e=
-nter_read"):
+> +        time_ns =3D sample.sample_time
+> +        if not self._is_within_timelimit(time_ns):
+> +            return
+> +
+> +        # Access tracepoint fields directly from sample object
+> +        try:
+> +            prev_pid =3D sample.prev_pid
+> +            next_pid =3D sample.next_pid
+> +            next_comm =3D sample.next_comm
+> +            common_cpu =3D sample.sample_cpu
+> +        except AttributeError:
+> +            # Fallback or ignore if fields are not available
+> +            return
 
-Are raw_syscalls:sys_enter_read and raw_syscalls:sys_enter_write actual
-tracepoints? The raw_syscalls subsystem typically only defines sys_enter
-and sys_exit.
+Since the C extension defines this field as sample.cpu rather than
+sample.sample_cpu, won't accessing sample.sample_cpu unconditionally
+raise an AttributeError?
 
-If the intent was to monitor raw_syscalls:sys_enter, wouldn't this require
-intercepting raw_syscalls:sys_enter, checking the syscall number in the id
-field, and parsing the arguments array?
+If so, the generic except AttributeError block will silently ignore the
+error and return, causing the script to drop all events.
 
-> +            try:
-> +                fd =3D sample.fd
-> +                count =3D sample.count
+> +
+> +        next_comm =3D self._filter_non_printable(next_comm)
+> +
+> +        # Task finish for previous task
+> +        if self.session:
+> +            prev_tgid =3D self.session.find_thread(prev_pid).pid  # type=
+: ignore
 
-It appears that raw_syscalls samples do not natively expose named properties
-like sample.fd or sample.count.=20
+Does the perf.thread C extension object expose a .pid attribute? Looking at
+pyrf_thread__type in python.c, it seems to only define a .comm() method,
+which would cause an AttributeError here.
 
-Does this mean the script could simply check for syscalls:sys_enter_read and
-syscalls:sys_enter_write instead?
+Additionally, if self.session.find_thread() cannot find the thread, it
+raises a TypeError. Because there is no try/except TypeError block here,
+could tracing untracked PIDs crash the script?
 
-> +                self.reads[fd]["bytes_requested"] +=3D count
-> +                self.reads[fd]["total_reads"] +=3D 1
-> +            except AttributeError:
-> +                self.unhandled[event_name] +=3D 1
-> +        elif event_name in ("syscalls:sys_enter_write", "raw_syscalls:sy=
-s_enter_write"):
-> +            try:
-> +                fd =3D sample.fd
-> +                count =3D sample.count
-> +                self.writes[fd]["bytes_written"] +=3D count
+> +        else:
+> +            prev_tgid =3D prev_pid # Fallback
+> +        self._handle_task_finish(prev_pid, common_cpu, time_ns, prev_tgi=
+d)
+> +        # Task start for next task
+> +        self._handle_task_start(next_pid, common_cpu, next_comm, time_ns)
+> +
+> +    def print_summary(self) -> None:
+> +        """Calculate and print summary."""
+> +        need_summary =3D (self.args.summary or self.args.summary_extende=
+d or
+> +                        self.args.summary_only or self.args.csv_summary)
+> +        if not need_summary:
+> +            return
+> +
+> +        # Simplified summary logic for brevity, full logic can be ported=
+ if needed
+> +        print("\nSummary (Simplified)", file=3Dself.fd_sum)
+> +        if self.args.summary_extended:
+> +            print("Inter Task Times", file=3Dself.fd_sum)
+> +        # ... port full Summary class logic here ...
+
+It looks like the original comprehensive statistics logic was replaced
+with a stub. Are there plans to port the full summary logic, as the
+comment suggests?
 
 [ ... ]
+
+> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/te=
+sts/shell/test_task_analyzer.sh
+> index 0314412e63b4..7465298d0384 100755
+> --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+
+[ ... ]
+
+>  test_csv() {
+> -	perf script report task-analyzer --csv "${csv}" > /dev/null
+> -	check_exec_0 "perf script report task-analyzer --csv ${csv}"
+> -	find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
+> +	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --csv "${csv}=
+" > /dev/null
+> +	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} -=
+-csv ${csv}"
+> +	find_str_or_fail "Comm," "${csv}" "${FUNCNAME[0]}"
+>  }
+
+This isn't a bug, but the CSV delimiter was changed from a semicolon to a
+comma. Could this break external parsers that rely on the previous
+separator format?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D48
+63-1-irogers@google.com?part=3D46
