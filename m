@@ -1,151 +1,183 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432D830BF6F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D55830BF6F
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 23:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777158783; cv=none; b=kX8/eBfrmziVaD8VavBTerI7kTBUmDd5X8/skuMP9M0CVEZ4zuDdh61liY3G50uLPcZZq+eWZIl/VEGaFz2Aen2M5NUHzWVDn2nN6iXvxs0QEmCyF2BoXbZhIy06SaWkTRWoEejdUywQhbiAQJ0qae0W2sB8UtJnSuLKH8IsBgI=
+	t=1777158794; cv=none; b=PmH0JbfvVcLiFkOt2/XQ1l854izQpfJJDMN0BBFtnid0DpGsljITQvik2KJ+j4Sz9aTUv+1ya00YegSqCgeXYYYGpCqPok+FUE/l4PDYiu3cWPbRNtDoGVXABBn0XAnEWmtY+8wZjznb+vA3olQahsmGL/tBuljFsL0SPiW18wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777158783; c=relaxed/simple;
-	bh=8zPxbqvnDt8r8nTAua2+MsItoA86POmXHfZ37Pblh6A=;
+	s=arc-20240116; t=1777158794; c=relaxed/simple;
+	bh=uSHTvunt7+yupitw9E7Nerb08d0QtJDApFcDl0OxBD8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N/+RHogHcLNHIujjWZ0oboM0GzGFQVNS4Ka+qhE0wVCTOLZqoXDNzpaFrX8sU7HW0yfrhlqUCEY9rIK3Cn2Lm+vpYRUvjux25PfPhIC9M8O3DxB4cHeEwWKkQTqjgbFwxXLlWGJOXyZ2jzlyseLxFOIpBCSrdh6qvLvzgDpa1sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH9f9WzN; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=AD6EKcdi58gPXiQdFrK+UcYqoReLKz6Tlxbp6gunculkBtqpybR8TB7AkHR3jMflKggTj8PoJoWNnq+ed243O7izoy+A9BrRtWeKdTI/Trh7/2WXsBSiOfoJTMCSbSjr1s5DkllxQ1xBVDip2yMahl/r3O8yvFvaN50JYoYCaaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ac4FVvFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH9f9WzN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0623BC2BCB0;
-	Sat, 25 Apr 2026 23:13:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ac4FVvFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4E5C2BCB0;
+	Sat, 25 Apr 2026 23:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777158783;
-	bh=8zPxbqvnDt8r8nTAua2+MsItoA86POmXHfZ37Pblh6A=;
+	s=k20201202; t=1777158793;
+	bh=uSHTvunt7+yupitw9E7Nerb08d0QtJDApFcDl0OxBD8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=XH9f9WzNXUDjumH5JYrTx9iVKonoQ1Sjb9XDFKCg0yN2M9vGGfu3HKcnR3KmfUma1
-	 RMKMaPfXQeSz4IvCW7tPZvDqzN3B2HGDqWqso8LyiwIi+i2rGOWbb1hsH1NkvboiBA
-	 D8gp+2COAjHPii3rOpqsl37Uj//bSk5TWeM8bqQ5zooYeTCh0oF9r8cGLYwpiXdL9Z
-	 X4GaoeXVi+iCj38pZfGt/KDBOEGc0VpLGL4YOQiZDJ/uujOdGBdsZdbSkBsC8LlcBf
-	 NMzYMo2QwZ3kH497HDuFxv2u1YNv6WRKT5W+EEw053L3knYFcRdIKmjT2D5Pdqqj3y
-	 nQuurmvab0stg==
+	b=Ac4FVvFhqmuZC8gpu9YyKMaIpxllGPiq37i+6V2nOTl4kKezTM0a+AKRtJMw+3vrf
+	 tnJBEpKDzNT2Msazim9114kovk1yjSfHoQuAnqQevCKaM67vRzED7yUrqZ4s1SpQAQ
+	 YwYyPeFLYF90G/apw/bVyJdtIZnNevtoFm2tAcOnmlPCF+ZyECWLMeqcrCeq2BohGs
+	 yKYoipPcaRQpa9luVJmOnZX9KBA4PBLh2Vyys5Yx1r1Msurj+uaGPbkcMIYP0jKzWb
+	 BOCyXqZgP6B+71j+Q6Fau2i+ij4+8h+FyLaO9wYkPYn59ffJqZuRj58z9rVmy3PnP7
+	 sZffidBQ82jNw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 21/59] perf python: Expose brstack in sample event
+Subject: Re: [PATCH v7 39/59] perf intel-pt-events: Port
+ intel-pt-events/libxed to use python module
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260425224951.174663-22-irogers@google.com>
-References: <20260425224951.174663-22-irogers@google.com>
+In-Reply-To: <20260425224951.174663-40-irogers@google.com>
+References: <20260425224951.174663-40-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 23:13:02 +0000
-Message-Id: <20260425231303.0623BC2BCB0@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 23:13:13 +0000
+Message-Id: <20260425231313.AF4E5C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Unbreakable Python reference cycle causes a permanent memory leak =
-for every event with a branch stack.
+Sashiko AI review found 4 potential issue(s):
+- [High] Renaming methods in `libxed.py` breaks `exported-sql-viewer.py`.
+- [High] Invalid format specifiers in f-strings cause immediate runtime cra=
+shes.
+- [High] Unhandled `struct.error` exceptions due to missing `raw_buf` bound=
+s checks.
+- [High] Context switch feature regression and dead code.
 --
 
-commit 258ce9fbe4f8832b7edea1df3b558bac40529cda
+commit 287f3427909d144b37c8690735624ae6bca74489
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Expose brstack in sample event
+perf intel-pt-events: Port intel-pt-events/libxed to use python module
 
-This commit implements pyrf_branch_entry and pyrf_branch_stack to allow
-iteration over branch stack entries in perf python scripts.
+This commit refactors intel-pt-events.py to use a class structure and
+removes Python 2 compatibility checks. It also renames methods in libxed.py
+to snake_case to comply with pylint.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 17d0ee15336f..256129fef4f8 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+> - Renamed methods in libxed.py to snake_case (Instruction ->
+>   instruction, SetMode -> set_mode, DisassembleOne -> disassemble_one)
+>   to comply with pylint.
 
-[ ... ]
+Does this renaming break tools/perf/python/exported-sql-viewer.py?
 
-> +struct pyrf_branch_stack {
-> +	PyObject_HEAD
-> +	struct pyrf_event *pevent;
-> +	struct branch_entry *entries;
-> +	u64 nr;
-> +	u64 pos;
-> +};
+It appears that script also imports LibXED and might still be calling
+the old CamelCase methods (Instruction, SetMode, DisassembleOne), which
+could result in an AttributeError when disassembly is enabled.
 
 [ ... ]
 
-> +static PyObject *pyrf_branch_stack__next(struct pyrf_branch_stack *pstac=
-k)
-> +{
-> +	struct pyrf_branch_entry *pentry;
-> +
-> +	if (pstack->pos >=3D pstack->nr)
-> +		return NULL;
-> +
-> +	pentry =3D PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__t=
-ype);
-> +	if (!pentry)
-> +		return NULL;
-> +
-> +	pentry->from =3D pstack->entries[pstack->pos].from;
-> +	pentry->to =3D pstack->entries[pstack->pos].to;
-> +	pentry->flags =3D pstack->entries[pstack->pos].flags;
-> +
-> +	pstack->pos++;
-> +	return (PyObject *)pentry;
-> +}
+> diff --git a/tools/perf/python/intel-pt-events.py b/tools/perf/python/int=
+el-pt-events.py
+> new file mode 100755
+> index 000000000000..19a0faec8f5f
+> --- /dev/null
+> +++ b/tools/perf/python/intel-pt-events.py
+> @@ -0,0 +1,435 @@
 
 [ ... ]
 
-> @@ -1307,6 +1462,27 @@ static PyObject *pyrf_event__new(const union perf_=
-event *event, struct evsel *ev
->  			addr_location__exit(&al);
->  		}
->  	}
-> +	if (sample->branch_stack) {
-> +		struct branch_stack *bs =3D sample->branch_stack;
-> +		struct branch_entry *entries =3D perf_sample__branch_entries(sample);
-> +		struct pyrf_branch_stack *pstack;
-> +
-> +		pstack =3D PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__=
-type);
-> +		if (pstack) {
-> +			Py_INCREF(pevent);
-> +			pstack->pevent =3D pevent;
+> +    def print_ptwrite(self, raw_buf: bytes) -> None:
+> +        """Print PTWRITE data."""
+> +        data =3D struct.unpack_from("<IQ", raw_buf)
 
-Does this create an unbreakable Python reference cycle that leaks memory?
+If raw_buf is empty or undersized, will struct.unpack_from raise a
+struct.error here?
 
-The code assigns pstack to pevent->brstack below, and here it assigns pevent
-to pstack->pevent while taking a reference via Py_INCREF. Because neither
-pyrf_event nor pyrf_branch_stack implements Python's cyclic garbage
-collection protocol, the reference counts will never drop to zero.
+Since the callbacks are called in do_process_event() where a missing raw_buf
+is explicitly handled by setting raw_buf =3D b"", the exceptions wouldn't be
+caught and might propagate up, aborting the trace analysis.
 
-This means the event object, the pstack object, and the calloc'd
-pstack->entries array will be leaked for every sample processed.
+[ ... ]
 
-Unlike the callchain implementation which requires pevent for lazy resoluti=
-on,
-pyrf_branch_stack__next() iterates entirely over the pstack->entries array
-that is eagerly populated via memcpy() below.
+> +    def print_cbr(self, raw_buf: bytes) -> None:
+> +        """Print CBR data."""
+> +        if len(raw_buf) < 12:
+> +            return
+> +        data =3D struct.unpack_from("<BBBBII", raw_buf)
+> +        cbr =3D data[0]
+> +        f =3D (data[4] + 500) // 1000
+> +        if data[2] =3D=3D 0:
+> +            return
+> +        p =3D ((cbr * 1000 // data[2]) + 5) // 10
+> +        print(f"{cbr:3u}  freq: {f:4u} MHz  ({p:3u}%)", end=3D' ')
 
-Since pstack->pevent appears to be unused during iteration, could we avoid
-the memory leak by entirely removing the Py_INCREF(pevent) and
-pstack->pevent back-reference?
+Are these format codes valid in Python 3 f-strings?
 
-> +			pstack->pos =3D 0;
-> +			pstack->nr =3D bs->nr;
-> +			pstack->entries =3D calloc(bs->nr, sizeof(struct branch_entry));
-> +			if (pstack->entries) {
-> +				memcpy(pstack->entries, entries,
-> +				       bs->nr * sizeof(struct branch_entry));
-> +				pevent->brstack =3D (PyObject *)pstack;
-> +			} else {
-> +				Py_DECREF(pstack);
-> +			}
-> +		}
-> +	}
->  	return (PyObject *)pevent;
->  }
+It looks like the 'u' format code is not supported for integers. Evaluating
+these might raise a ValueError and cause a runtime crash.
+
+[ ... ]
+
+> +    def common_start_str(self, comm: str, sample: perf.sample_event) -> =
+str:
+> +        """Return common start string for display."""
+> +        ts =3D sample.sample_time
+> +        cpu =3D sample.sample_cpu
+> +        pid =3D sample.sample_pid
+> +        tid =3D sample.tid
+> +        machine_pid =3D getattr(sample, "machine_pid", 0)
+> +        if machine_pid:
+> +            vcpu =3D getattr(sample, "vcpu", -1)
+> +            return (f"VM:{machine_pid:5d} VCPU:{vcpu:03d} {comm:>16s} {p=
+id:5u}/{tid:<5u} "
+> +                    f"[{cpu:03u}] {ts // 1000000000:9u}.{ts % 1000000000=
+:09u}  ")
+> +        return (f"{comm:>16s} {pid:5u}/{tid:<5u} [{cpu:03u}] "
+> +                f"{ts // 1000000000:9u}.{ts % 1000000000:09u}  ")
+
+This also appears to use the unsupported 'u' format code for integers
+in {pid:5u}, {tid:<5u}, and {cpu:03u}.
+
+[ ... ]
+
+> +    def print_common_ip(self, sample: perf.sample_event, symbol: str, ds=
+o: str) -> None:
+
+[ ... ]
+
+> +            if insn:
+> +                cnt, text =3D self.disassem(insn, ip)
+> +                byte_str =3D (f"{ip:x}").rjust(16)
+> +                for k in range(cnt):
+> +                    byte_str +=3D f" {insn[k]:02x}"
+> +                print(f"{byte_str:-40s}  {text:-30s}", end=3D' ')
+
+Is the '-' character allowed for string alignment in f-strings?
+
+It looks like the standard f-string format specification doesn't support
+the '-' sign for string alignment, which might raise a ValueError when
+evaluated.
+
+[ ... ]
+
+> +    def do_process_event(self, sample: perf.sample_event) -> None:
+> +        """Process event and print info."""
+> +        comm =3D "Unknown"
+
+[ ... ]
+
+> +        cpu =3D sample.sample_cpu
+> +        if cpu in self.switch_str:
+> +            print(self.switch_str[cpu])
+> +            del self.switch_str[cpu]
+
+Could this be a regression of the context switch feature?
+
+It looks like self.switch_str is initialized and consumed here, but never
+populated. Additionally, the underlying perf.session API doesn't seem to
+expose a context_switch event callback to Python, leaving this as
+unreachable code.
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260425224951.1746=
-63-1-irogers@google.com?part=3D21
+63-1-irogers@google.com?part=3D39
