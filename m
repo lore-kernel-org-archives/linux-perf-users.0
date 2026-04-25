@@ -1,123 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702551A4F2F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 01:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E879E14F70
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Apr 2026 02:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777081060; cv=none; b=oCkeidnnw675HjkCqAh/HcqejuUOWsU0+sCqaWTS1rbCRJE/P+hK9g6Ja+hG4yX+QlKE+9aQwpP+rwfg18h+Cvey7sna4ANVEEB/gmokDZWn2GrdaCeeP9FRhJ6gkd9E3889GSBb1MxqKsLCeewtbdCW1B8n6ujnRYrpJHBAxJw=
+	t=1777082490; cv=none; b=b1ijg7bVBGJiae/AWN0iJNeE1VLCc7/u40qW6GJmhFdn5FlQ8Uh/S2Nz8sYSbQtFZEllUM7ip/vAWpQ3NXlRt20vZMvk3lPXNYNON48D0QOsLLvgRnFUWhX1CBWyzQTU5dauHXY9N1v/QXtclXWydVOcaZKc8sdOBs8z7iExPJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777081060; c=relaxed/simple;
-	bh=qMABxmzldRYVZXalKZQasrwaoC6Pxf1SEAMDV9mQk4c=;
+	s=arc-20240116; t=1777082490; c=relaxed/simple;
+	bh=1viSUqJwCsSjfLzVmCk8mQjAAMKbP72k2v0bT6B2EJA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Q6/Vp2YvZFUi94elCnG6Qev3EcywPQoVjrltM50Nequn/Cu4x4Hph9ccySQYQBkIZnI9q5VbcDSdM+Td+SOQ36oo3zDBXW0AiGReHqlcyBymmIHyUzGLR6nSDtEmuxIdW+XzT38Z/w8HYWDBQ+GS41xcstlfhnUXiFPf2ewUSxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScIF1WMm; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=gM/WVdYEnyL+hexAp8FS9bHsEUVEP34TwNxAJcLfwm7FIL2PKvVSfQuyLQYS+4hwyMT+3qVXX8YyycJGAqll3e1KmdbCvGgKu4gFvkhbTeCE5N8HQZzhl+u+XKZMSLESja9NjOvuApWnvhfKwh4ouoV8gZrob0oFaOAUmiwpDso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvqtVL/b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScIF1WMm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4C4C19425;
-	Sat, 25 Apr 2026 01:37:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvqtVL/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77518C19425;
+	Sat, 25 Apr 2026 02:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777081060;
-	bh=qMABxmzldRYVZXalKZQasrwaoC6Pxf1SEAMDV9mQk4c=;
+	s=k20201202; t=1777082489;
+	bh=1viSUqJwCsSjfLzVmCk8mQjAAMKbP72k2v0bT6B2EJA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=ScIF1WMmfNiVbuMis7nwyPlXpR/5rIEV7vT2VarDue2xyd7zn1LmIrJ6ecVZ3jDvS
-	 9h5U2Fa87EkMT6XSO1lm7rbMPV6gYN5xyJewtTCEZsXMWQgAEcwLEANrP3Vr8wAesn
-	 tEdmlQXhLVKAY3zfHca/fOO0a4SHZnz7QTuic1QKT5PeqxgWSJRXSvjTaFNudJ6KcU
-	 2LUIr9wx7dtsyQQCgjnzF9V6j/2SCS875slwNRN0pLalvU2+fDQsTxLqSlVq/HSOQW
-	 IJkTHlZe05zQfk9oZooKXNtRC4QZOKz8FH4YbKA3imlRDYvLPDsgPOEs8Cx+vVeSEV
-	 g2xWRwzbPSGaA==
+	b=NvqtVL/bPIrnmxOfnj9TCs/2v5Paz3Xj+bZHdMVdNcR920dVoiu9e1x6dW5guXTDA
+	 Gz/wPZQDijy35Qi9MyrHR0YvQvTUqMtTaKvFmIesu2228dQqO7cIYWAQoK34yyvr3n
+	 nOlcWOV04QFghoVYIIQs/shxe9ct2VFqSCDbNeBA/zFsfNae2Frn4UhrDf5p1CT3Ut
+	 Db9S6nhgeNOtnbPooJ5cpXlq5oH7/5GXmRlTCRb2MHjp5+0WyukFytTbkiM4/7tO05
+	 /0ap9Ug5YsDLBk/MJ9vInMo6dsPWZXrKSyT/t9u8RQAvmonlQ4m0T6FRboYWfQz8Me
+	 VHE2yIJT5lY7A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] rtla: Add libsubcmd dependency
+Subject: Re: [Patch v7 21/24] perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS
+ capability
 Reply-To: sashiko@lists.linux.dev
-To: "Tomas Glozar" <tglozar@redhat.com>
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260320150651.51057-2-tglozar@redhat.com>
-References: <20260320150651.51057-2-tglozar@redhat.com>
+In-Reply-To: <20260324004118.3772171-22-dapeng1.mi@linux.intel.com>
+References: <20260324004118.3772171-22-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Apr 2026 01:37:39 +0000
-Message-Id: <20260425013739.BF4C4C19425@smtp.kernel.org>
+Date: Sat, 25 Apr 2026 02:01:28 +0000
+Message-Id: <20260425020129.77518C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Sashiko AI review found 2 potential issue(s):
-- [Low] The variable `LIBSUBCMD_INCLUDES` is incorrectly used as both a com=
-piler flag and a Make target, causing unnecessary sub-make executions.
-- [Low] The manual compilation rules for `string.o` and `str_error_r.o` byp=
-ass the standard `fixdep` dependency tracking mechanism.
+Sashiko AI review found 1 potential issue(s):
+- [Medium] When sample_simd_regs_enabled is true, large PEBS incorrectly re=
+mains enabled if unsupported legacy standard registers (such as segment reg=
+isters) are requested.
 --
 
-commit 61af24c97cebeb1e051afb96f7fccb2a5c359a72
-Author: Tomas Glozar <tglozar@redhat.com>
+commit add2d25bc2536ced31489740914a43c7ed8e02eb
+Author: Kan Liang <kan.liang@linux.intel.com>
 
-rtla: Add libsubcmd dependency
+perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
 
-This commit prepares RTLA to migrate to libsubcmd by building and linking
-the library alongside the RTLA build. It also links respective libraries
-from tools/lib and adds tools/include to the include path.
+This commit enables the PERF_PMU_CAP_SIMD_REGS capability when XSAVES
+support is available. It also temporarily disables large PEBS sampling
+for these new registers until arch-PEBS sampling support is added.
 
-> diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-> index 45690ee14544d..289e44c9664b2 100644
-> --- a/tools/tracing/rtla/Makefile
-> +++ b/tools/tracing/rtla/Makefile
-> @@ -27,6 +27,24 @@ endif
->  RTLA		:=3D $(OUTPUT)rtla
->  RTLA_IN		:=3D $(RTLA)-in.o
-> =20
-> +LIBSUBCMD_DIR =3D $(srctree)/tools/lib/subcmd/
-> +ifneq ($(OUTPUT),)
-> +  LIBSUBCMD_OUTPUT =3D $(abspath $(OUTPUT))/libsubcmd
-> +else
-> +  LIBSUBCMD_OUTPUT =3D $(CURDIR)/libsubcmd
-> +endif
-> +LIBSUBCMD =3D $(LIBSUBCMD_OUTPUT)/libsubcmd.a
-> +LIBSUBCMD_INCLUDES =3D -I$(LIBSUBCMD_OUTPUT)/include
-
-[ ... ]
-
-> -$(RTLA_IN): fixdep FORCE src/timerlat.skel.h
-> +$(RTLA_IN): fixdep FORCE src/timerlat.skel.h $(LIBSUBCMD_INCLUDES)
->  	make $(build)=3Drtla
-> =20
-> -clean: doc_clean fixdep-clean
-> +$(LIBSUBCMD_OUTPUT):
-> +	$(Q)$(MKDIR) -p $@
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4424,11 +4424,33 @@ static unsigned long intel_pmu_large_pebs_flags(s=
+truct perf_event *event)
+>  		flags &=3D ~PERF_SAMPLE_TIME;
+>  	if (!event->attr.exclude_kernel)
+>  		flags &=3D ~PERF_SAMPLE_REGS_USER;
+> -	if (event->attr.sample_regs_user & ~PEBS_GP_REGS)
+> -		flags &=3D ~PERF_SAMPLE_REGS_USER;
+> -	if (event->attr.sample_regs_intr &
+> -	    ~(PEBS_GP_REGS | PERF_REG_EXTENDED_MASK))
+> -		flags &=3D ~PERF_SAMPLE_REGS_INTR;
+> +	if (event->attr.sample_simd_regs_enabled) {
+> +		u64 nolarge =3D PERF_X86_EGPRS_MASK | BIT_ULL(PERF_REG_X86_SSP);
 > +
-> +$(LIBSUBCMD_INCLUDES): $(LIBSUBCMD_OUTPUT)
-> +	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
-> +		install_headers
-
-Does this unintentionally cause the install_headers sub-make to run on
-every build?
-
-Since LIBSUBCMD_INCLUDES expands to the compiler flag string
--I$(LIBSUBCMD_OUTPUT)/include, make interprets this literal string as a
-target. Because a file named "-I..." is never actually created by the
-install_headers step, make considers the target permanently out-of-date
-and executes this recipe unconditionally on every invocation.
-
-> +$(LIBSUBCMD): fixdep $(LIBSUBCMD_OUTPUT)
-> +	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
-> +		$@
+> +		/*
+> +		 * PEBS HW can only collect the XMM0-XMM15 for now.
+> +		 * Disable large PEBS for other vector registers, predicate
+> +		 * registers, eGPRs, and SSP.
+> +		 */
+> +		if (event->attr.sample_regs_user & nolarge ||
+> +		    fls64(event->attr.sample_simd_vec_reg_user) > PERF_X86_H16ZMM_BASE=
+ ||
+> +		    event->attr.sample_simd_pred_reg_user)
+> +			flags &=3D ~PERF_SAMPLE_REGS_USER;
 > +
-> +$(LIB_STR_ERROR_R): $(LIB_STR_ERROR_R_SRC)
-> +	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
-> +
-> +$(LIB_STRING): $(LIB_STRING_SRC)
-> +	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
+> +		if (event->attr.sample_regs_intr & nolarge ||
+> +		    fls64(event->attr.sample_simd_vec_reg_intr) > PERF_X86_H16ZMM_BASE=
+ ||
+> +		    event->attr.sample_simd_pred_reg_intr)
+> +			flags &=3D ~PERF_SAMPLE_REGS_INTR;
 
-Do these manual compilation rules bypass dependency tracking?
+When sample_simd_regs_enabled is true, nolarge is used to disable large PEBS
+if eGPRs or SSP are requested. However, it looks like the pre-existing
+~PEBS_GP_REGS check was dropped in this branch.
 
-These targets invoke the compiler directly without using the standard
-tools/build/Makefile.build infrastructure. By omitting the necessary
-compiler flags to generate dependency files and skipping the fixdep
-post-processing, updates to any headers included by string.c or
-str_error_r.c will not automatically trigger a rebuild of these object
-files.
+If unsupported legacy registers like segment registers (e.g. PERF_REG_X86_C=
+S)
+are requested alongside SIMD sampling, will this bypass the check and
+incorrectly leave PERF_SAMPLE_REGS_USER or PERF_SAMPLE_REGS_INTR enabled?
+
+Since PEBS hardware batches samples and does not natively capture segment
+registers, wouldn't the delayed PMI overflow populate these missing segment
+registers using the interrupt context?
+
+Could this result in stale or delayed segment register values being provided
+for the entire batch instead of precise per-sample values?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260320150651.5105=
-7-1-tglozar@redhat.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260324004118.3772=
+171-1-dapeng1.mi@linux.intel.com?part=3D21
