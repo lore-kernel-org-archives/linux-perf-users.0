@@ -1,183 +1,290 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A15C8EB
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 09:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777196397; cv=none; b=UtQUTja5jSynjOdYS+u7hZiA+Bw9yzgDotARqA02B3yCya7R3L7A/ncBjB1jxmavw+tQwJ0III74r7MaBLHtkQdYQ+VQ851P2/7xKzYvN5uraaeFBDMdrNweNzWslkZ7/zrDWnnaJP68QSe0+NYyc3HdOwqFws0ZJHGfLH/fCtg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777196397; c=relaxed/simple;
-	bh=8K7z4AzhxSFpWah4GDyKABUC7SGWzhiQZ6zlevRegqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CNUQ6gdVBgP5TVSKF8+FahmBEObYOLWlOn1S6+PtEvFZw6xRn6E/6HKC59mSrUpEGFzCXQAgrUOR0Cpz4f/kYZSR75W8+esJ/GKY06t+QysmDKNvHo8pQ8vYshXutVSG/egBx+pEu/+DV1UgRcM6puweF2jpniRwbs6unTTsNag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cTmad9Aa; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F629AAFA
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 18:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777228112; cv=pass; b=jrCUsxISFSkY8ZyUWxjqXs9WjQfOj+K6yfNELZ5wG45uI5KMr07aFzsT8Ic27q0J7C2rAQwtGA0hnMQ3iZbSc2xDRrxvL17nISiU4B3ZUGJfcrSmufjDCEDm7WcXwYFmu82z/hxR5DmcEYgJWyNnJQIpRrhtG0HMofU0f7QBABE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777228112; c=relaxed/simple;
+	bh=bZxa5rYplJEHw4K1VezKxprhBb/qoyZ5XgwwH46y188=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=eLy0YUYj/lF5OvIbtaJEG+ModHBBfJGpASu059Y4J6BeblHLD0pXnGmoODgN6cYgb6M4ErdIlLDmYb4p8gOtKxKUWEbs3CtZvQoSH59n9UuPJDt2kFNkBvZ/sZzUwgTJy9jeGdK4Pu/2LEbMWL9UUCDre+F8BMDUMlkcRqY1RH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r+WadnQS; arc=pass smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cTmad9Aa"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63Q4A79U1150119;
-	Sun, 26 Apr 2026 09:39:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=Rzji9qKGrPdQU8n/vuCu/SOzBClb11q0e3ag7y2Rt
-	6I=; b=cTmad9Aaa7IMs3MVuHomJCNXcJ316XXbhjwdtepMyJ/dSN7QKm3ByGw4p
-	7ALzdNDQPaxhjK50J68fog1W72G6mmWXp8gE0P3qOJmch3lBPBCLAAhLcswK7nM7
-	8S8Xml2D1VLCp4f/n5pOnIoGHMeMOPf8smBuFbg8seM5vQLzHj7CmUbMdPxoNqAY
-	IkMM4sV3TjxiJM//TBvJ+ZNusK994HrJhB/GGsPBoI+aP8eLA+9/TlKXk6TWDBwM
-	lFd/Y/LB5Lf4aytmVDnofq62RNa+FmCBM/4e+rkZfhxlTM1h/af8+yASRSOkAZqC
-	11aMZs7dL2ldSYqXRL3qZ6N2iyZiQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drk1jbw0s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 26 Apr 2026 09:39:44 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63Q9O5jg029691;
-	Sun, 26 Apr 2026 09:39:43 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ds8avh4n6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 26 Apr 2026 09:39:43 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63Q9ddmw51315160
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 26 Apr 2026 09:39:39 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BA6952004D;
-	Sun, 26 Apr 2026 09:39:39 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8018820040;
-	Sun, 26 Apr 2026 09:39:34 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.219.109])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 26 Apr 2026 09:39:34 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-Subject: [PATCH] tools/perf/sched: Update process names of processes in zombie state for both -s and -S options
-Date: Sun, 26 Apr 2026 15:09:30 +0530
-Message-Id: <20260426093930.47809-1-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+WadnQS"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-505a1789a27so46855601cf.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 11:28:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777228110; cv=none;
+        d=google.com; s=arc-20240605;
+        b=iWCrBvMoVzAhCtvs41KlAWBhA4ce0ME0+DZJS1/yo5kdW3YAy3sDDfNjqFWL/HB3cE
+         2gCRrsaabfYIOzSjfYDvPeKqWfqDGdVEYdbq5blpG7kEzETebbk3wD1o82DdLgyGpsBo
+         I18YKc3SdbnU6byG2hisNsygfeZXkV2SIgTBOgkFE+Q9UbTCbrAh/ZpG3b/eX2z3S7Cv
+         UwyOjGdXxgdH9xZcN6m2LP0MLweuLRre0c2NjD4lCCFahvmxcPTbMqcgvTiA2h5Nv3NK
+         fzMl+rFJ4nwdmaLXcgFE0si+sVO2pPy8+5KmGHaHGeDI9O6bWEZrN9eGxrNjBnGEMzN+
+         /gzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=+H1DGKeH8lW96puZlUUqlUfBLwewfnuo31EhIuV813U=;
+        fh=C1j0UlX0SvZQJnFQuzuN6HwLhD/OI/kg3EnSvQbQea8=;
+        b=VUeJLPwI8YP6ZUf/+4wQj6UdyVYJ+VxLMMQAE3fPC0ISqp8qzx+IFTwgiTsSgRvllL
+         P3BU+EPpCQmsICmVfptkBwY9zJdtdUGjyQc2a+N4Bvj+LTX1pfezsUZH7ocbb5QDj/d+
+         42jqgrErze3LWro45lfG47ux9RfyDaTFUxvObeND+n5di1ikF5fNWLEwsjYHJiqVhUzt
+         G2m8Za+CnRgiInAwPk+Z5I0m5dswh6DiIIzOL0yj+Ahlw4Xl4L/zpVDHeo6bFkomEwap
+         rtn/6h+Z2oLKWEQ49h2Q8Ot39Ln4lAyisZBw11JwfbhMRwq/9iTqFkenAtN5ilWS0qr+
+         kU4w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777228110; x=1777832910; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+H1DGKeH8lW96puZlUUqlUfBLwewfnuo31EhIuV813U=;
+        b=r+WadnQSdhV8USIYUymSGYlKTZ0waraYEMp8lmuNTGACDrx8Tm3jFbWnGyw0jpVMet
+         mzYV5bE9+38PqRCIxEWHa0+NQQODp1rQR460cTxUORP+17lalFGAf00rVuTWo0o7JQOg
+         ld44qYKAWUHgfXWW49tN0pPqGb5FinaJNKWzlJqV7O2YXZHWo4o5jlpvo1/6eb1SztYq
+         vcTXYixwc2g5q1KB6XCExKamX0mrFmNY+6L2DWwS9/n8Ant0qNJeYZpskrWb6CoEOo+E
+         FSlPod+TqWB4yx6RTTSFo/3TklniFpisrvrckMD4aqia3NzV4Ugg7KddWgMn1k58u7KF
+         BnZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777228110; x=1777832910;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+H1DGKeH8lW96puZlUUqlUfBLwewfnuo31EhIuV813U=;
+        b=Sd1h/Meu8f7F6s9x9LLh5mv6SHMjSMtjr1kxMPZr2sxcO3qR8KYGILnqC5VN17LDBo
+         ybCO3Y+4TuEh5bRdCF6zWt02StJCWTgCYgGd5iptM/a8O5QWLVAxNZ2VCp9BGbtzrM9z
+         J7wihfFilqlqWTaxDmJyyNcXf6/HtioCorEdHRyC5iw5n7xMM8Np6xCl9l+tmytuqNAe
+         5GljbugwzikP9vjLGNtEzATxKFg/9jz99JK0Ftb7Q+oWglH4qCxmspJjdcF+xBndRSU+
+         XwYiSIsCa9NMA1L7X3P16L3M+FKogwG9WmHPduXF/eTflwupbXhby+UxFX4DjwurMWON
+         XGyQ==
+X-Gm-Message-State: AOJu0YyOyBEzvuwhb10aV5Tczwvto6TcnsHDbTlvR1zqzVb88cjoWTn0
+	Jr2FftknHCrLrVxbuTA7nAnJZYDU8dpuxkdB5IexAXuJ//MVOQBAgVyI2qGNhHiTw3NbcELH95s
+	99gQiX/oFGjOS/0P/vkh5DQxLZKCbCm2quCaqF7PBVA==
+X-Gm-Gg: AeBDietcW/0Tu2Kj2VlNOzXzDLwoTUihMInANfZGxdCb2WVC3LbMyr/VsgvBS+SQF6n
+	E8KS60w4UrUCuRkMEwFUHMCbzYEwy4hgZYYINeS1auwOBFyNFcyoCnjTDTOZoL6lXbvI8CfWcEP
+	UFjaqy0kfEU9rl7HUFnMgc+SlaJRbXZ7uk7FUXrBpoeK855K2tMbKaTOPcI6FFfaC+jPbssNYGU
+	Zu2h3zCRyTE9y00smsFmUUDgVqS8CPx39OmEb/i50OAIyy+FmsBvR9Wth6fTykKrGcpFqAFtkWa
+	sL9r6ZvtuHnXBGNcmFUPeBpbZpoTknUwKOPbg5yVQj/7m60W48EdJoC/7ornsAlmpxMpr3hSIZa
+	/Rg7bd7K1c+bXH1WlwyAVsPSLSDa4vdTB2IWja5C5ZvbnZ4quN6AInIYAswx0LMZ1W04=
+X-Received: by 2002:ac8:594c:0:b0:50d:9f02:86c7 with SMTP id
+ d75a77b69052e-50e3682ee36mr605333871cf.13.1777228109679; Sun, 26 Apr 2026
+ 11:28:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI2MDA5OSBTYWx0ZWRfX/8+LjuHDFXki
- dtU7ns7jpK1cb6Fdv94IFoUfNQcOg9pizjsRxGvYpafg53EHU9oYZh7P3+It2oIKofk7w6Ni3vT
- ls9+KMP5obKOyl4We5AYNUbrWHP39gQm3TK4xAFUbXzWvDrn8jB6Bu2d2HpqS9OsEaE4VEaMj+b
- 3bzsamCVHtvUupwB3ApzR/MPPYmSH4Q10SRRe+jCGCV7Unagbc3FqBi8IMwrukIBEs+3INkBnsD
- vkvwNOWBX7CnqehtTFgsj9zDXMyYA6FmkqHNNBCYiBzPVDyu90Dt66FclhSDFdwjMLLrwErq47+
- 5t0FbKrNHySDFl/hGHtSc6CshloSUKR7H82YvbDFVWkuXNx6lG55pavOAiPR2TIF6mO5dp+pQ6H
- Brtkv27nkcy1qfZ2xUliLzgQ3O3ICtOPKyWBBcm43s0PmztKwBn6Xh3JCoPqB5VEYmYb2GTF+Hh
- 1YZdXp2QAsh+7ATgu7w==
-X-Proofpoint-GUID: VA2OYQ8NSMqxzS-t4DUpBhtFlq7NHEgQ
-X-Proofpoint-ORIG-GUID: 1qfgpkasp8_3e0-KPL2UHD0bI7UgIUOs
-X-Authority-Analysis: v=2.4 cv=MohiLWae c=1 sm=1 tr=0 ts=69eddd60 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=x5QCPqNzQhPJdF4W:21 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
- a=Fhc_E1mSigePmb3TSNAA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-26_03,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2604260099
+From: Malcom Gilbert <malcomgilbert@gmail.com>
+Date: Sun, 26 Apr 2026 13:28:18 -0500
+X-Gm-Features: AQROBzDDy5YxLmbGvHKT7On3n4h5TNO028j-V4Da_rCLuvSzxmqvNslAOlOnHoE
+Message-ID: <CAJ_TQUzM+JXDy4xo4TgeWBL7f6QA0muLxQ8kEv_0hRw6NqrmZQ@mail.gmail.com>
+Subject: [PATCH] perf: add timerfd timeout exit-code handling
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In redhat perftool testsuite, observed fail for this test:
-    -- [ FAIL ] -- perf_sched :: test_timehist :: --with-summary (output regexp parsing)
-
-This led to analysis of "perf sched timehist" summary options.
-
-  # perf sched record -a -o ./perf.data -- sleep 0.1
-   This will record using perf sched record
-
-perf sched timeliest has two options "-s" and "-S"
-  # perf sched -i ./perf.data timehist -S
- -S : Captures summary also at the end
-
-  # perf sched -i ./perf.data timehist -s
- -s : Captures only summary
-
-The test saves -s result which has only summary and compares with
-summary which comes at the end from -S . Since there is a difference
-in these two, test fails.
-
-Checking the behaviour change in -S and -s results, difference is:
-
-                  rcu_sched[16]       2          4        0.013      0.001       0.003       0.006   33.23       0
-               migration/11[73]       2          1        0.006      0.006       0.006       0.006    0.00       0
-                migration/3[33]       2          1        0.006      0.006       0.006       0.006    0.00       0
- -               :216753[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
- +                 sleep[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
-                migration/8[58]       2          1        0.005      0.005       0.005       0.005    0.00       0
-            NetworkManager[811]       1          2        0.089      0.028       0.044       0.060   36.06       0
-               migration/13[83]       2          1        0.005      0.005       0.005       0.005    0.00       0
-
-Here 216753 is pid for sleep which is a zombie process. This is
-happening in latest kernel due to an update in "-S" result.
-In -S, the process name appears in the results "sleep[216753]",
-where as in the -s, only pid is present in the summary result
-":216753[216753]".
-
-After commit 39f473f6d0b2 ("perf sched timehist: decode process names
-of processes in zombie state")
-for -S option, if process name is using pid, it uses different way to
-set it. So that we get the process name and not just Pid.
-
-This change went in only for timehist_print_sample() function.
-Add this improvement in generic place so that even -s option (which
-captures summary) also will have meaningful information.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+Assisted-by: OpenAI:gpt-5.3-codex-spark
+Signed-off-by: Malcom Gilbert <malcomgilbert@gmail.com>
 ---
- tools/perf/builtin-sched.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  4 +
+ tools/perf/builtin-record.c              | 94 ++++++++++++++++++++++++
+ tools/perf/util/record.h                 |  1 +
+ 3 files changed, 99 insertions(+)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 555247568e7a..ee1b89a6af50 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2197,11 +2197,6 @@ static void timehist_print_sample(struct perf_sched *sched,
- 		printf(" ");
- 	}
- 
--	if (!thread__comm_set(thread)) {
--                const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
--                thread__set_comm(thread, prev_comm, sample->time);
--        }
--
- 	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
- 
- 	if (sched->show_prio)
-@@ -2890,6 +2885,15 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 			itr->last_thread = NULL;
- 		}
- 
-+		/*
-+		 * If the process name is not set for the thread, use "prev_comm"
-+		 * to set it. Otherwise the sched summary will have just pid information
-+		 */
-+		if (!thread__comm_set(thread)) {
-+			const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
-+			thread__set_comm(thread, prev_comm, sample->time);
-+		}
+diff --git a/tools/perf/Documentation/perf-record.txt
+b/tools/perf/Documentation/perf-record.txt
+index 178f483140ed..ea48f96fe11a 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -554,6 +554,10 @@ When processing pre-existing threads
+/proc/XXX/mmap, it may take a long time,
+ because the file may be huge. A time out is needed in such cases.
+ This option sets the time out limit. The default value is 500 ms.
+
++--timeout=<seconds>::
++Stop recording after the given number of seconds.
++If `perf record` stops from timeout, it exits with status 124.
 +
- 		if (!sched->summary_only)
- 			timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
- 	}
--- 
-2.47.3
+ --switch-events::
+ Record context switch events i.e. events of type PERF_RECORD_SWITCH or
+ PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT, CoreSight
+or Arm SPE)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 4a5eba498c02..e666d1d475a4 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -71,6 +71,9 @@
+ #ifdef HAVE_EVENTFD_SUPPORT
+ #include <sys/eventfd.h>
+ #endif
++#ifdef HAVE_TIMERFD_SUPPORT
++#include <sys/timerfd.h>
++#endif
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+ #include <sys/types.h>
+@@ -154,6 +157,9 @@ struct pollfd_index_map {
+ struct record {
+  struct perf_tool tool;
+  struct record_opts opts;
++ int timeout_fd;
++ int timeout_pos;
++ bool timed_out;
+  u64 bytes_written;
+  u64 thread_bytes_written;
+  struct perf_data data;
+@@ -721,6 +727,77 @@ static void sigsegv_handler(int sig)
+  sighandler_dump_stack(sig);
+ }
 
++static int record__setup_timeout(struct record *rec)
++{
++#ifndef HAVE_TIMERFD_SUPPORT
++ pr_err("perf record --timeout is not supported on this platform\n");
++ return -1;
++#else
++ struct itimerspec new_value = {};
++ int fd;
++ int pos;
++
++ if (!rec->opts.timeout)
++ return 0;
++
++ fd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK);
++ if (fd < 0) {
++ pr_err("Failed to create timeout timerfd, error: %m\n");
++ return -1;
++ }
++
++ new_value.it_value.tv_sec = rec->opts.timeout;
++
++ if (timerfd_settime(fd, 0, &new_value, NULL) != 0) {
++ pr_err("Failed to start timeout timer, error: %m\n");
++ close(fd);
++ return -1;
++ }
++
++ /* Recv all timer expirations in one-shot mode. */
++ pos = fdarray__add(&thread->pollfd, fd, POLLIN, fdarray_flag__nonfilterable);
++ if (pos < 0) {
++ pr_err("Failed to add timeout timerfd to poll list\n");
++ close(fd);
++ return pos;
++ }
++
++ rec->timeout_fd = fd;
++ rec->timeout_pos = pos;
++
++ return 0;
++#endif
++}
++
++static int record__process_timeout_event(struct record *rec)
++{
++ uint64_t expirations;
++ int pos = rec->timeout_pos;
++ struct pollfd *timeout_pollfd;
++
++ if (!thread || !thread->pollfd.entries || pos < 0)
++ return 0;
++ if (pos >= thread->pollfd.nr)
++ return 0;
++
++ timeout_pollfd = &thread->pollfd.entries[pos];
++ if (!(timeout_pollfd->revents & POLLIN))
++ return 0;
++
++ if (read(rec->timeout_fd, &expirations, sizeof(expirations)) < 0) {
++ if (errno == EAGAIN)
++ return 0;
++ pr_err("failed to read timeout timerfd, error: %m\n");
++ return -1;
++ }
++ (void)expirations;
++
++ rec->timed_out = true;
++ done = 1;
++
++ return 0;
++}
++
+ static void record__sig_exit(void)
+ {
+  if (signr == -1)
+@@ -2438,6 +2515,9 @@ static int __cmd_record(struct record *rec, int
+argc, const char **argv)
+  float ratio = 0;
+  enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+  struct perf_env *env;
++ rec->timeout_fd = -1;
++ rec->timeout_pos = -1;
++ rec->timed_out = false;
+
+  atexit(record__sig_exit);
+  signal(SIGCHLD, sig_handler);
+@@ -2647,6 +2727,10 @@ static int __cmd_record(struct record *rec, int
+argc, const char **argv)
+  if (rec->off_cpu)
+  evlist__enable_evsel(rec->evlist, (char *)OFFCPU_EVENT);
+
++ err = record__setup_timeout(rec);
++ if (err)
++ goto out_child;
++
+  /*
+  * Let the child rip
+  */
+@@ -2814,6 +2898,10 @@ static int __cmd_record(struct record *rec, int
+argc, const char **argv)
+  err = record__update_evlist_pollfd_from_thread(rec, rec->evlist, thread);
+  if (err)
+  goto out_child;
++
++ err = record__process_timeout_event(rec);
++ if (err)
++ goto out_child;
+  }
+
+  if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
+@@ -2919,6 +3007,10 @@ static int __cmd_record(struct record *rec, int
+argc, const char **argv)
+
+  if (rec->off_cpu)
+  rec->bytes_written += off_cpu_write(rec->session);
++ if (rec->timed_out) {
++ signr = -1;
++ status = 124;
++ }
+
+  record__read_lost_samples(rec);
+  /* this will be recalculated during process_buildids() */
+@@ -3639,6 +3731,8 @@ static struct option __record_options[] = {
+      "\t\t\t  Optionally send control command completion ('ack\\n')
+to ack-fd descriptor.\n"
+      "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and
+used as ctl-fd / ack-fd.",
+       parse_control_option),
++ OPT_UINTEGER(0, "timeout", &record.opts.timeout,
++     "Stop recording after the given number of seconds"),
+  OPT_CALLBACK(0, "synth", &record.opts, "no|all|task|mmap|cgroup",
+      "Fine-tune event synthesis: default=all", parse_record_synth_option),
+  OPT_STRING_OPTARG_SET(0, "debuginfod", &record.debuginfod.urls,
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 93627c9a7338..576513ed3b60 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -80,6 +80,7 @@ struct record_opts {
+  int      ctl_fd_ack;
+  bool      ctl_fd_close;
+  int      synth;
++ unsigned int  timeout;
+  int      threads_spec;
+  const char    *threads_user_spec;
+  u64      off_cpu_thresh_ns;
+--
+2.43.0
+
+
+Malcom
