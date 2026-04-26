@@ -1,114 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247FB311C11
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 08:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A15C8EB
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 09:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777191451; cv=none; b=illNh+SW4jOLICBzMx9CCqGSByf4K2HXOfUHi2uF9249L2M4UXlD2heqrsDXJO2XmUD6gsbObAuXdr+xKeIbPEKm/rVjFqNtdQLQx0O9IM/05TGOWNQ61aPB4BOylWXPukInJr+Xg1aZJvnWfVi7f4kerehpnjQxs8L8G9I3IlM=
+	t=1777196397; cv=none; b=UtQUTja5jSynjOdYS+u7hZiA+Bw9yzgDotARqA02B3yCya7R3L7A/ncBjB1jxmavw+tQwJ0III74r7MaBLHtkQdYQ+VQ851P2/7xKzYvN5uraaeFBDMdrNweNzWslkZ7/zrDWnnaJP68QSe0+NYyc3HdOwqFws0ZJHGfLH/fCtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777191451; c=relaxed/simple;
-	bh=GI1Nf+TS5gbPbzNOlJB5bH7dnD+w3QhdN/NJpVefci8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UHdDrLzfS0krQbBo4ICOJR7eyPXWxtMT9l05domkf97FLy9Z5RfcsKHfxZFmXqLx2X5a2Sd2heYhA39XtJTZSr33xtJh6L1qryFOe/EmUt1tNbDnjCojn/cJZE7ubSYNU+9B5xQpTmz8yfDpqo64p2Y6xVWD62I3D4ImGchCVws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NL+T99ZC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777196397; c=relaxed/simple;
+	bh=8K7z4AzhxSFpWah4GDyKABUC7SGWzhiQZ6zlevRegqI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CNUQ6gdVBgP5TVSKF8+FahmBEObYOLWlOn1S6+PtEvFZw6xRn6E/6HKC59mSrUpEGFzCXQAgrUOR0Cpz4f/kYZSR75W8+esJ/GKY06t+QysmDKNvHo8pQ8vYshXutVSG/egBx+pEu/+DV1UgRcM6puweF2jpniRwbs6unTTsNag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cTmad9Aa; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NL+T99ZC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2D5C2BCB4;
-	Sun, 26 Apr 2026 08:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777191450;
-	bh=GI1Nf+TS5gbPbzNOlJB5bH7dnD+w3QhdN/NJpVefci8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NL+T99ZCARL38BbUtpyQaLftmRNKNpoMPeaipxws3tGBzZpDXavReVa+SegM/tOtS
-	 vZfLtxyEfqyGkHsve6I/R7jKVaAvHMmZXWl/4MOgSL475avpz1knzkEgVd7/Tftm/u
-	 i4hB5Du++/eGuHdepNhKtfszwdj7GBlmEiVowU/5XUGq/7F4enSQ+G8kjpwK6hZHaX
-	 KDfhd/yO3BKEGs7zIh0d5Tb3CmgW0d4OLEworaPhfP+hO6DaQmZqhgcgCezyWJiJ3X
-	 1t0tFPRZzWanO0ZbMyYWT5nVN6UhWBPAzJ/VwkUhr7zVNSL3jvpgEuNpF4Vxzx4s2M
-	 cMtZU9WJvzhXA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3] tools/perf: Fix the check for parameterized field in
- event term
-Reply-To: sashiko@lists.linux.dev
-To: "Athira Rajeev" <atrajeev@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260426080056.16558-1-atrajeev@linux.ibm.com>
-References: <20260426080056.16558-1-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Apr 2026 08:17:30 +0000
-Message-Id: <20260426081730.CA2D5C2BCB4@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cTmad9Aa"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63Q4A79U1150119;
+	Sun, 26 Apr 2026 09:39:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Rzji9qKGrPdQU8n/vuCu/SOzBClb11q0e3ag7y2Rt
+	6I=; b=cTmad9Aaa7IMs3MVuHomJCNXcJ316XXbhjwdtepMyJ/dSN7QKm3ByGw4p
+	7ALzdNDQPaxhjK50J68fog1W72G6mmWXp8gE0P3qOJmch3lBPBCLAAhLcswK7nM7
+	8S8Xml2D1VLCp4f/n5pOnIoGHMeMOPf8smBuFbg8seM5vQLzHj7CmUbMdPxoNqAY
+	IkMM4sV3TjxiJM//TBvJ+ZNusK994HrJhB/GGsPBoI+aP8eLA+9/TlKXk6TWDBwM
+	lFd/Y/LB5Lf4aytmVDnofq62RNa+FmCBM/4e+rkZfhxlTM1h/af8+yASRSOkAZqC
+	11aMZs7dL2ldSYqXRL3qZ6N2iyZiQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drk1jbw0s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 26 Apr 2026 09:39:44 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63Q9O5jg029691;
+	Sun, 26 Apr 2026 09:39:43 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ds8avh4n6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 26 Apr 2026 09:39:43 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63Q9ddmw51315160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 26 Apr 2026 09:39:39 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA6952004D;
+	Sun, 26 Apr 2026 09:39:39 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8018820040;
+	Sun, 26 Apr 2026 09:39:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.219.109])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 26 Apr 2026 09:39:34 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: [PATCH] tools/perf/sched: Update process names of processes in zombie state for both -s and -S options
+Date: Sun, 26 Apr 2026 15:09:30 +0530
+Message-Id: <20260426093930.47809-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI2MDA5OSBTYWx0ZWRfX/8+LjuHDFXki
+ dtU7ns7jpK1cb6Fdv94IFoUfNQcOg9pizjsRxGvYpafg53EHU9oYZh7P3+It2oIKofk7w6Ni3vT
+ ls9+KMP5obKOyl4We5AYNUbrWHP39gQm3TK4xAFUbXzWvDrn8jB6Bu2d2HpqS9OsEaE4VEaMj+b
+ 3bzsamCVHtvUupwB3ApzR/MPPYmSH4Q10SRRe+jCGCV7Unagbc3FqBi8IMwrukIBEs+3INkBnsD
+ vkvwNOWBX7CnqehtTFgsj9zDXMyYA6FmkqHNNBCYiBzPVDyu90Dt66FclhSDFdwjMLLrwErq47+
+ 5t0FbKrNHySDFl/hGHtSc6CshloSUKR7H82YvbDFVWkuXNx6lG55pavOAiPR2TIF6mO5dp+pQ6H
+ Brtkv27nkcy1qfZ2xUliLzgQ3O3ICtOPKyWBBcm43s0PmztKwBn6Xh3JCoPqB5VEYmYb2GTF+Hh
+ 1YZdXp2QAsh+7ATgu7w==
+X-Proofpoint-GUID: VA2OYQ8NSMqxzS-t4DUpBhtFlq7NHEgQ
+X-Proofpoint-ORIG-GUID: 1qfgpkasp8_3e0-KPL2UHD0bI7UgIUOs
+X-Authority-Analysis: v=2.4 cv=MohiLWae c=1 sm=1 tr=0 ts=69eddd60 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=x5QCPqNzQhPJdF4W:21 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=Fhc_E1mSigePmb3TSNAA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-26_03,2026-04-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604260099
 
-Sashiko AI review found 1 potential issue(s):
-- [High] Unconditional increment of `buf_used` causes unsigned integer unde=
-rflow leading to a stack buffer overflow.
---
+In redhat perftool testsuite, observed fail for this test:
+    -- [ FAIL ] -- perf_sched :: test_timehist :: --with-summary (output regexp parsing)
 
-commit 105f365626ee620dbee6f08aafbe58eaca32755c
-Author: Athira Rajeev <atrajeev@linux.ibm.com>
+This led to analysis of "perf sched timehist" summary options.
 
-tools/perf: Fix the check for parameterized field in event term
+  # perf sched record -a -o ./perf.data -- sleep 0.1
+   This will record using perf sched record
 
-This commit fixes the event term checking by changing strstr(alias->terms, =
-"=3D?");
-to !strstr(alias->terms, "=3D?"). It also replaces some snprintf calls with
-scnprintf in buffer offset calculations to prevent out-of-bounds counting.
+perf sched timeliest has two options "-s" and "-S"
+  # perf sched -i ./perf.data timehist -S
+ -S : Captures summary also at the end
 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 23337d2fa281..ca0ceb0623ca 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
+  # perf sched -i ./perf.data timehist -s
+ -s : Captures only summary
 
-[ ... ]
+The test saves -s result which has only summary and compares with
+summary which comes at the end from -S . Since there is a difference
+in these two, test fails.
 
-> @@ -2237,13 +2241,13 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu=
-, bool skip_duplicate_pmus,
->  		info.scale_unit =3D NULL;
->  		if (strlen(event->unit) || event->scale !=3D 1.0) {
->  			info.scale_unit =3D buf + buf_used;
-> -			buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-> +			buf_used +=3D scnprintf(buf + buf_used, sizeof(buf) - buf_used,
->  					"%G%s", event->scale, event->unit) + 1;
->  		}
+Checking the behaviour change in -S and -s results, difference is:
 
-Can this unconditional + 1 addition to buf_used cause a regression by
-triggering a stack buffer overflow in the subsequent scnprintf call?
+                  rcu_sched[16]       2          4        0.013      0.001       0.003       0.006   33.23       0
+               migration/11[73]       2          1        0.006      0.006       0.006       0.006    0.00       0
+                migration/3[33]       2          1        0.006      0.006       0.006       0.006    0.00       0
+ -               :216753[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
+ +                 sleep[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
+                migration/8[58]       2          1        0.005      0.005       0.005       0.005    0.00       0
+            NetworkManager[811]       1          2        0.089      0.028       0.044       0.060   36.06       0
+               migration/13[83]       2          1        0.005      0.005       0.005       0.005    0.00       0
 
-buf is a local 1024-byte stack array, and buf_used tracks the offset as an
-unsigned size_t. If format_alias() fills buf to its limit, strlen(buf) will
-be 1023, causing buf_used to be initialized to 1024.
+Here 216753 is pid for sleep which is a zombie process. This is
+happening in latest kernel due to an update in "-S" result.
+In -S, the process name appears in the results "sleep[216753]",
+where as in the -s, only pid is present in the summary result
+":216753[216753]".
 
-If the event has a scale or unit, the size parameter to scnprintf becomes
-sizeof(buf) - buf_used, which evaluates to 1024 - 1024 =3D 0. scnprintf saf=
-ely
-writes nothing and returns 0.
+After commit 39f473f6d0b2 ("perf sched timehist: decode process names
+of processes in zombie state")
+for -S option, if process name is using pid, it uses different way to
+set it. So that we get the process name and not just Pid.
 
-However, buf_used +=3D 0 + 1 unconditionally increments buf_used to 1025.
+This change went in only for timehist_print_sample() function.
+Add this improvement in generic place so that even -s option (which
+captures summary) also will have meaningful information.
 
->  		info.desc =3D event->desc;
->  		info.long_desc =3D event->long_desc;
->  		info.encoding_desc =3D buf + buf_used;
-> -		buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-> +		buf_used +=3D scnprintf(buf + buf_used, sizeof(buf) - buf_used,
->  				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, event->terms) + 1;
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+ tools/perf/builtin-sched.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Does the size calculation sizeof(buf) - buf_used underflow here?
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 555247568e7a..ee1b89a6af50 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2197,11 +2197,6 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 		printf(" ");
+ 	}
+ 
+-	if (!thread__comm_set(thread)) {
+-                const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
+-                thread__set_comm(thread, prev_comm, sample->time);
+-        }
+-
+ 	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
+ 
+ 	if (sched->show_prio)
+@@ -2890,6 +2885,15 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
+ 			itr->last_thread = NULL;
+ 		}
+ 
++		/*
++		 * If the process name is not set for the thread, use "prev_comm"
++		 * to set it. Otherwise the sched summary will have just pid information
++		 */
++		if (!thread__comm_set(thread)) {
++			const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
++			thread__set_comm(thread, prev_comm, sample->time);
++		}
++
+ 		if (!sched->summary_only)
+ 			timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
+ 	}
+-- 
+2.47.3
 
-Since buf_used is now 1025, 1024 - 1025 underflows the size_t type to
-SIZE_MAX. scnprintf would then be invoked with an effectively unbounded size
-and an out-of-bounds pointer (buf + 1025), which could overwrite adjacent
-memory on the stack.
-
-Would it be better to bound the remaining space calculation and only increm=
-ent
-the offset if space actually existed, perhaps using sub_non_neg() like the
-patch does earlier in format_alias()?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260426080056.1655=
-8-1-atrajeev@linux.ibm.com?part=3D1
