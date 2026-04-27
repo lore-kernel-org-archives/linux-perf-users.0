@@ -1,91 +1,94 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8794C3B27EF;
-	Mon, 27 Apr 2026 09:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE8D35C184
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Apr 2026 09:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777282708; cv=none; b=DpUBAsiHgArm9K5MpXaSMwbt4mJHl0NYTgzr4ywg863uUwBSQjP36e2sooLrJcaNsFMSrcbg7Q6R7z3bWqs6cviXw7pNOjPqPbcsvQRma0G4NIXPNWkNl14ZBIBYWN3yZK0IEZQQUR3vpDg6cHjPgyF8QE4aMcDZOddZJ7jnWSo=
+	t=1777283380; cv=none; b=JwWcOzIbGnAzczUkqs/tBlrSiPnRMGFfMkRNUwo23sd1JwqHC0WYtolyclyUVu5aT1DBY8yR0rgasAZUJOCTXwa5C7wP/0L7pAFv9fRjbJH3tLuciUNWQKtnW4GNwtnhKuLwWmV1WKMcZpkdZQNYAbAi6eMVzzWEsSeOJNK5JPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777282708; c=relaxed/simple;
-	bh=tf9YPH2r8X9YQTzXi6q2vwF2yny9h95Q4y6ed6Pq9Z0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRU1YOdJ4RDrHZxrpH1hsdqhh5vSAbsX40DUwEme9+u67bb69fgsH5DOb5yIHazlFxMUeyWhSM1x1QV+jXj9rtTNpkH4OFTfdY4L+5dMc9pmkcQOjQ2xRE+1Ku+s5i3KzTh3DwCV8lNpke2jCLp5IledemU8x4j77BvN1zD4LZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-208-105-007.092.208.pools.vodafone-ip.de ([92.208.105.7] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wHHrY-00000000jJc-0IYs;
-	Mon, 27 Apr 2026 11:02:44 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 3/3] perf test: fix "trace summary" test for musl-based systems
-Date: Mon, 27 Apr 2026 11:01:43 +0200
-Message-ID: <20260427090225.794482-4-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260427090225.794482-1-martin@kaiser.cx>
-References: <20260427090225.794482-1-martin@kaiser.cx>
+	s=arc-20240116; t=1777283380; c=relaxed/simple;
+	bh=Pvb+YaOjS8e2+GhtzSZvxsYrnzrQiI+OVShp5ll4xT4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=in8wJ6Ohn1ADomWej/dfqmitbjiMX7XdvsrvVLFFsYSr0ZofdnndgBuU4P33CRkR9gou6MHzjeXMtq3sAI806YRu40Bux/7IVA3wOjgFsZUxpnMdUVTS01FvcUnDWy+29eUiUIG4BJf+eH0hV7VK73H917DJDedVmMZDJhbIvT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iN191FK5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iN191FK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB8EC19425;
+	Mon, 27 Apr 2026 09:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777283379;
+	bh=Pvb+YaOjS8e2+GhtzSZvxsYrnzrQiI+OVShp5ll4xT4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=iN191FK5apd/L2fcK+0RH3lHytWPpXeYi+4WIQnOHuPqbFP78bVb7nnmLOsrHmI1D
+	 s+ZPG+kmZTywjjY6yaZtdJthDltSVwwttI2Xus8x5iATeL+HKZi9vwdfKRpD2Xeh9H
+	 B/3azYENFh5ljfgmVhbnJ9b7SJT2lLRJfSCcs3qZ0ow/czdP3Hpu0uSFvwGOoYc5pz
+	 +VqqE+ti6hMI5gpx9bskTAWOY/d3QsTPlIXGW5fqGsFDzURJiG76cTJOtQGCHfaV0h
+	 DL7vYVODjjtdT12bNnw89EPHoioDW5Tr6oi6B2MFS24swNn1T+1+5PpVipXAKuOD55
+	 nYKwMN2FA338A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/3] perf test: fix sys_enter_openat event test for musl
+Reply-To: sashiko@lists.linux.dev
+To: "Martin Kaiser" <martin@kaiser.cx>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260427090225.794482-3-martin@kaiser.cx>
+References: <20260427090225.794482-3-martin@kaiser.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 27 Apr 2026 09:49:37 +0000
+Message-Id: <20260427094939.4FB8EC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The trace summary test calls /bin/true and filters for open, read and
-close events. These events are coming from shared library loads.
+Sashiko AI review found 1 potential issue(s):
+- [Medium] The updated bitwise check `(tp_flags & flags) !=3D flags` fails =
+to verify the `O_RDONLY` access mode and permits arbitrary unrelated flags,=
+ severely weakening the test.
+--
 
-On a musl system, the loader and libc may point to the same file. true
-needs only libc, no further shared libraries are loaded at startup. The
-test fails since no open, read and close events are captured.
+commit 0700122c98ba7f263a329cd8f9fbeef95b67603e
+Author: Martin Kaiser <martin@kaiser.cx>
 
-root@host:~# ldd /bin/true
-	/lib/ld-musl-riscv64.so.1 (0x3fb8882000)
-	libc.so => /lib/ld-musl-riscv64.so.1 (0x3fb8882000)
+perf test: fix sys_enter_openat event test for musl
 
-root@host:~# file /lib/ld-musl-riscv64.so.1
-/lib/ld-musl-riscv64.so.1: symbolic link to /usr/lib/libc.so
+This commit updates the sys_enter_openat test to allow additional flags in =
+the
+captured event. It replaces the strict equality check with a bitwise mask c=
+heck
+to accommodate the O_LARGEFILE flag implicitly added by musl libc.
 
-root@host:~# strace -f /bin/true
-execve("/bin/true", ["/bin/true", ...], ... /* 18 vars */) = 1
-set_tid_address(0x3fa1f7bf70)           = 330
-mprotect(0x2ad6b8e000, 12288, PROT_READ) = 0
-exit_group(0)                           = ?
-+++ exited with 0 +++
+> diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tes=
+ts/openat-syscall-tp-fields.c
+> --- a/tools/perf/tests/openat-syscall-tp-fields.c
+> +++ b/tools/perf/tests/openat-syscall-tp-fields.c
 
-Run "ps --help" instead of "true". ps needs at least libprocps and we'll
-get the events that are needed for the test.
+[ ... ]
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- tools/perf/tests/shell/trace_summary.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -120,7 +120,8 @@ static int test__syscall_openat_tp_fields(struct test=
+_suite *test __maybe_unused
+> =20
+>  				tp_flags =3D evsel__intval(evsel, &sample, "flags");
+>  				perf_sample__exit(&sample);
+> -				if (flags !=3D tp_flags) {
+> +				/* C library wrapper may set additional flags */
+> +				if ((tp_flags & flags) !=3D flags) {
 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index 22e2651d5919..03be213bb7bf 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -14,7 +14,7 @@ OUTPUT=$(mktemp /tmp/perf_trace_test.XXXXX)
- 
- test_perf_trace() {
-     args=$1
--    workload="true"
-+    workload="ps --help"
-     search="^\s*(open|read|close).*[0-9]+%$"
- 
-     echo "testing: perf trace ${args} -- ${workload}"
--- 
-2.43.7
+Does this check still verify the O_RDONLY access mode?
 
+Since O_RDONLY is defined as 0, the flags variable evaluates to exactly
+O_DIRECTORY. This means the condition functionally becomes
+(tp_flags & O_DIRECTORY) !=3D O_DIRECTORY.
+
+Does this unintentionally permit other access modes like O_WRONLY or O_RDWR,
+and ignore other unrelated flags as long as O_DIRECTORY is set?
+
+>  					pr_debug("%s: Expected flags=3D%#x, got %#x\n",
+>  						 __func__, flags, tp_flags);
+>  					goto out_delete_evlist;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260427090225.7944=
+82-1-martin@kaiser.cx?part=3D2
