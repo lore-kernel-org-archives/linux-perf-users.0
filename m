@@ -1,318 +1,188 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4032A2BEFE8
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 18:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777229914; cv=pass; b=iHFVmbqL+cnMpnrlYyO2N8k7eqvPWTHQyBEvrBT+ZnGYJ7A8hMXEfPujoxNtvYag/VxKnydSYTJPkP2qRox3dmnWg+DGGcqpuaTTtUBoUr1ImCuEj/f54nqxAanVgu0OjtDzRjPzoyYHdqxntSl2kp8CzbmlrunDdAUckZq3ghs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777229914; c=relaxed/simple;
-	bh=RsCKdb0/QTCp8pyLZfK6dtHY+3oj61bUiBP3rqHjxkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrEhkhPiQ3aLAo66uyMv+ogVPDvk/wKPbFYnxP8si8JFB1DP79dcBdVmm1Hh742VZ8s+mbAJ0TurBvUqxVBSnD6rf4ip8xrP3if7TwiDZ5pKOD7MiHv/SKk1EhgI80YhDPBWn5YfhTIgEdPs6emysUEC/Rwye6Pf7rufyV2/ogU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AQrZXtyg; arc=pass smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5C62DF701;
+	Mon, 27 Apr 2026 02:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777255837; cv=none; b=X0II83NFpRqXLPLNcmACluA+tsf4TBpWfE+SK5MJo6fjZ9ZkOfbuK9So36Fo+5LBXB3EdVrIt3qmFomKQPhuUBwzOkUz4w/3TpWY5SCIz4cdllfRZxeQr8DgGlpMPVfjM08qzn0ZeFrnrck8uyz2kDKipM8TK1LuawTvBMe4UjA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777255837; c=relaxed/simple;
+	bh=DR5pMDkSCapO1aeFcDbRHkg8YcDCImWpoJpxEP0aM7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aEGlesabV6FJBGtaaSkwX7yzVZHmMuH+8fhT3eQxdgiecgZy1hw0u1lwHqz94BCXxGLlWdZHXub+g3Szu8w3b+r207u0cjQ77AjeAChowMyPt5wfOeh7qLDaMCd7Fv3vlEqOo4pR9bUS+ZEDlX6RG2jHk2m81XkuD9wTJfMS5r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlJ4/1Uj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AQrZXtyg"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b46da8c48eso339725ad.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 26 Apr 2026 11:58:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777229909; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TiGDhIg62dJBLiksZzWurAx9aHg6qMd5+KskZunIUSfnWzADSAuNNkMwcw7UYmyMsG
-         qVUFPMkKllDb0MnMc1kj+ITfKN6y+SjY2g8d8norg9ZKeTKgrF1YbR71HNn7vc1gWRko
-         y66O4kzY8VhwFsK96iiBe3/AtxNZjtm/TDG+iaTXVf8X+m21crmTB9saSD4OZSWiRuSh
-         f2GpTm9cDR9lkcmYb1kshlyOyUE/6J+ML/BYHk3cyWDBRp3/gHNyJsG12/gygUPLfCQf
-         wVqdWZZgnKW5hkDfy0D5QhMWF0JufQEYJWp0GWif8EY7F76aA7m1wmYCU0YvGhwONFlq
-         ZfYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=KOHk4MZN+p2/Lw+p/j9vzga1pJNa+P5rHjLi3wslAIU=;
-        fh=QtIFrt+lA5i2C+Yiv6uSkaiLjIG5stB1z6OP9CULTpY=;
-        b=KWLnL3PjJm1WHW4yAJhfZpkUeIVxXRC8ayubt4u16c9hu9yu/XaiOlDLOlOPSnQFUY
-         ouUxTyt5LtXNjH6ADq2cTi6vVunKHtgzw2CARy2uGGzf6byw+iuTB2G8DHnEaxwnS1Wa
-         DbPXjy51b74MbDJ1CVS/gLCZu+XzZx0rY2/Ffi0We28HDAOtm/Og9VZPrcXARrhYcpm6
-         iSlrGMywT5eafsPUraXEHwm7VrhQy3kCpN3C7Q2zxRlrHgoWwXy62hDViCMSvz0g0EM/
-         Zl7zTpDnwoJUhKS7TsM8CXrlCpNrYc7I9qIELJSnQUGyoX1zKX9tNg7bTNQ9kUFC4dRc
-         qHIQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777229909; x=1777834709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KOHk4MZN+p2/Lw+p/j9vzga1pJNa+P5rHjLi3wslAIU=;
-        b=AQrZXtyg71d8zB6B/WaTR0yPV3Zkd4sojubpHCXsELLEH6FFdAqDzcrVYZ/lMdce9C
-         GAa6F19ivftQWQFokODKA5xL0Ma+UMl/hGhLDGRgFMdLf8nJaGqgkQsqKhSvv68oAtYs
-         epndcYLIAVYvi9qt84skCTgg1itPLr5nUhvGTXQQJoKxiOuyO2OwDb3aNU4SBfh/HAXB
-         HkZe9ns7KGlU3d62qydex4VycX3FXymmc6nPhVFkZdONSLloh295bAaA4nKuTKM3HOGK
-         aagAOBRpNGn3GxGr/Ta4Iux9Abny0oa1xcgqfKHkE8fwuMlWCdLwOdA+2ik+pRnlztsO
-         /H4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777229909; x=1777834709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KOHk4MZN+p2/Lw+p/j9vzga1pJNa+P5rHjLi3wslAIU=;
-        b=rSIeZCC5mnnqDPyANr0ndtqd8V7rQyxoCwv9Sx/wWSYiQjEp2TaHjhjcMs59TuIQ92
-         RTjC8a1Isdme5ge7+SEdcaeVGkY25lkwyK0ffQz8gEXpJ84hFVVwSe3Ib3CmY1g5jqLP
-         mfttFOQgNYABB8jp/YGMy7+NPaM9FK6aHdXJnM16m0NUZKaDTkNzzaOsTyU5Lcb8YPCN
-         8LvQa2NhlGyziNj4loNlcK84OkLxtkGMaJTowk4kJADYBwOBUZ5LCIxuPdYjoZnBeDP1
-         PTzdfSAjX4OEzsjfMfPy+8j3V1otb0bSrJR/YviBZTR8E6AjX97fLomVaRGx5M91nXuS
-         nVKg==
-X-Forwarded-Encrypted: i=1; AFNElJ+fXjnwPfLDOqQcCUF9DTqff4ZuPF3xy1Qn3ZNEYbE4aqmP093ZVqa6tQ9fs9fUPPvM6anfqNG0rRKzfmmfOILt@vger.kernel.org
-X-Gm-Message-State: AOJu0YysDBB+MnbdGuW84zNUu6TC58TnFVSt3RhQGb2VQZ/jUQzy7fT9
-	gAXCvMVoibsL3sF/ktBb9iXL+iscdiOTGSQWxnrHjB+Lbkqyxzl5Jf5NzCzE1rdUkE9HrGyEljx
-	MHITtuhzLbU+WHPIxH7R1HCIUA/4a0DiTRKdHmq5z
-X-Gm-Gg: AeBDieucpivK/GUrH3Ml7ELJ3zyzntye3qE1GkFfwcrYYUGqX9HN63kPVfw8VfbtTzB
-	XCXB7vv/Wkc+uI2fiqGfgTDa3bWIpNv5ej718maUqkn5C2OG3Hk1RkDlxfvRmkHLA3pvoWXqnpl
-	s8IzGIKKwix57fpv/vgzuYIfu7U1359ZIX0j4YJKm1X0yqGcutzftIBno6jyGLl9M0uY+GldJpJ
-	hn5Z4OpZT6qwlIvEkUFIw03gMr8+hxEjD7wuLeeSetmrmrUfSAA6RmjCIghz1UgNmiZMx9xuMdg
-	w0dvG0ZbcKj7aIDYmE81GL1gJ64M3Q==
-X-Received: by 2002:a17:902:f08d:b0:2ae:575f:3755 with SMTP id
- d9443c01a7336-2b60307dd17mr17895915ad.20.1777229908828; Sun, 26 Apr 2026
- 11:58:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlJ4/1Uj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777255835; x=1808791835;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DR5pMDkSCapO1aeFcDbRHkg8YcDCImWpoJpxEP0aM7k=;
+  b=BlJ4/1UjRoxvlteUmzjFIkMT/cLBB9iSy51leLQo1zmPRsVdhe8B6n9a
+   keBqYuGTNV7CAQJWKBReD97eGrKT792AUH0aFEUCtox8ehLOg6XI0TOXN
+   FhPxcvA3zARI414hOQ1+PxHGcwPAeqA8NLSzcPqUcezM9o91QL2rysWaz
+   y+CBlK7fInY7SbWfDucL0vMk7K1NvVIFHsc1zAaSWe6Kj8WgdAQkV3QUU
+   kB6iYDjNtTd/jq4axHl2COOfRNt4ZTKP5TlUV1SmYYfS6OdOnKwdcGngC
+   xcxfv1XnT2fdXrJbcWkXAZfPcE+rcEsxMZyu3J5yvhTE+WcGz5WYAaKnS
+   Q==;
+X-CSE-ConnectionGUID: 6vKmCvRZQG+YObZ44uOuGw==
+X-CSE-MsgGUID: umuY/mTcRXO85T26ThKz6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="78011937"
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="78011937"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 19:10:34 -0700
+X-CSE-ConnectionGUID: ZN7Gr5/8T5eZXJHZdxsJYA==
+X-CSE-MsgGUID: TcyEp+m0SISUS4aJcLrZYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="237822438"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 19:10:30 -0700
+Message-ID: <435241c3-20a7-4214-9f54-5ca82678dc3d@linux.intel.com>
+Date: Mon, 27 Apr 2026 10:10:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ_TQUz0kNV-pUzrcNM7ou3xjPdOU73z+qBAWmP7GUW2BRvpHA@mail.gmail.com>
-In-Reply-To: <CAJ_TQUz0kNV-pUzrcNM7ou3xjPdOU73z+qBAWmP7GUW2BRvpHA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 26 Apr 2026 11:58:17 -0700
-X-Gm-Features: AQROBzA4NjLz8v0pGDTTu4XKXvLZhH-WP9l3MEleEZsK2lNArCdYJyCBTOEtkqM
-Message-ID: <CAP-5=fVGWsQKrzSjOddzEqDamH1jzcUZfX4BRPsaDLyHzdhbug@mail.gmail.com>
-Subject: Re: [PATCH] perf: add timerfd timeout exit-code handling
-To: Malcom Gilbert <malcomgilbert@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] perf/x86/intel: Don't write PEBS_ENABLED on
+ host<=>guest xfers if CPU has isolation
+To: Jim Mattson <jmattson@google.com>, Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, Mingwei Zhang <mizhang@google.com>,
+ Stephane Eranian <eranian@google.com>
+References: <20260423150340.463896-1-seanjc@google.com>
+ <20260423150340.463896-2-seanjc@google.com>
+ <CALMp9eSivf0oDdbgfLSY0zcvtMAV__da8ENCJk=QpEkEeUC1PQ@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CALMp9eSivf0oDdbgfLSY0zcvtMAV__da8ENCJk=QpEkEeUC1PQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 26, 2026 at 11:21=E2=80=AFAM Malcom Gilbert <malcomgilbert@gmai=
-l.com> wrote:
->
-> Assisted-by: OpenAI:gpt-5.3-codex-spark
-> Signed-off-by: Malcom Gilbert <malcomgilbert@gmail.com>
 
-Thanks Malcolm, the commit message is empty, do you want to describe
-what you are trying to achieve here? When recording system-wide, it is
-common to use "perf record -a sleep 10" which limits perf to 10
-seconds of data.
+On 4/24/2026 1:59 AM, Jim Mattson wrote:
+> On Thu, Apr 23, 2026 at 8:03 AM Sean Christopherson <seanjc@google.com> wrote:
+>> When filling the list of MSRs to be loaded by KVM on VM-Enter and VM-Exit,
+>> *never* insert an entry for PEBS_ENABLED if the CPU properly isolates PEBS
+>> events, in which case disabling counters via PERF_GLOBAL_CTRL is sufficient
+>> to prevent unwanted PEBS events in the guest (or host).  Because perf loads
+>> PEBS_ENABLE with the unfiltered cpu_hw_events.pebs_enabled, i.e. with both
+>> host and guest masks, there is no need to load different values for the
+>> guest versus host, perf+KVM can and should simply control which counters
+>> are enabled/disabled via PERF_GLOBAL_CTRL.
+>>
+>> Avoiding touching PEBS_ENABLED fixes a theorized bug where PEBS_ENABLED can
+>> end up with "stuck" bits if a PEBS event is throttled better generating the
+>> list and actually entering the guest (Intel CPUs can't arbtitrarily block
+>> NMIs). And stating the obvious, leaving PEBS_ENABLED as-is avoids three MSR
+>> writes on every VMX transition: one each on entry/exit, and one more
+>> explicit WRMSR to zero PEBS_ENABLED before VM-Entry (KVM assumes the only
+>> reason PEBS_ENABLED is in the load list is if the CPU lacks isolation and
+>> thus needs a quiescent period).
+>>
+>> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+>> Cc: Jim Mattson <jmattson@google.com>
+>> Cc: Mingwei Zhang <mizhang@google.com>
+>> Cc: Stephane Eranian <eranian@google.com>
+>> Signed-off-by: Sean Christopherson <seanjc@google.com>
+>> ---
+>>  arch/x86/events/intel/core.c | 42 ++++++++++++++++++++----------------
+>>  1 file changed, 23 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 793335c3ce78..002d809f82ef 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4999,12 +4999,15 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>>         struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
+>>         u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
+>>         u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+>> -       int global_ctrl, pebs_enable;
+>> +       u64 guest_pebs_mask = pebs_mask & ~cpuc->intel_ctrl_host_mask;
+>> +       int global_ctrl;
+> Is it worth noting somewhere that pebs_ept is not supported on any
+> CPUs with PMU version < 5, where a single event can set two
+> PEBS_ENABLE bits (cf. intel_pmu_pebs_enable)?
+>
+>>         /*
+>>          * In addition to obeying exclude_guest/exclude_host, remove bits being
+>>          * used for PEBS when running a guest, because PEBS writes to virtual
+>> -        * addresses (not physical addresses).
+>> +        * addresses (not physical addresses).  If the guest wants to utilize
+>> +        * PEBS, and PEBS can safely enabled in the guest, bits for the guest's
+>> +        * PEBS-enabled counters will be OR'd back in as appropriate.
+>>          */
+>>         *nr = 0;
+>>         global_ctrl = (*nr)++;
+>> @@ -5051,24 +5054,25 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>>                 };
+>>         }
+>>
+>> -       pebs_enable = (*nr)++;
+>> -       arr[pebs_enable] = (struct perf_guest_switch_msr){
+>> -               .msr = MSR_IA32_PEBS_ENABLE,
+>> -               .host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+>> -               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+>> -       };
+>> -
+>> -       if (arr[pebs_enable].host) {
+>> -               /* Disable guest PEBS if host PEBS is enabled. */
+>> -               arr[pebs_enable].guest = 0;
+>> -       } else {
+>> -               /* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+>> -               arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+>> -               arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+>> -               /* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+>> -               arr[global_ctrl].guest |= arr[pebs_enable].guest;
+>> -       }
+>> +       /*
+>> +        * Disable counters where the guest PMC is different than the host PMC
+>> +        * being used on behalf of the guest, as the PEBS record includes
+>> +        * PERF_GLOBAL_STATUS, i.e. the guest will see overflow status for the
+>> +        * wrong counter(s).  Similarly, disallow PEBS in the guest if the host
+>> +        * is using PEBS, to avoid bleeding host state into PEBS records.
+>> +        */
+>> +       guest_pebs_mask &= kvm_pmu->pebs_enable & ~kvm_pmu->host_cross_mapped_mask;
+>> +       if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
+>> +               guest_pebs_mask = 0;
+> I don't understand this clause. IIUC, it says that if we don't have
+> any exclude-host PEBS events, then clear PEBS_ENABLE for the guest.
 
-Thanks,
-Ian
+I suppose it says all guest PEBS events need to be disabled if there is any
+event using PEBS on host side, and it's clearing GLOBAL_CTRL instead of
+PEBS_ENABLE to disable guest PEBS events. 
 
-> ---
->  tools/perf/Documentation/perf-record.txt |  4 +
->  tools/perf/builtin-record.c              | 94 ++++++++++++++++++++++++
->  tools/perf/util/record.h                 |  1 +
->  3 files changed, 99 insertions(+)
+
 >
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Docume=
-ntation/perf-record.txt
-> index 178f483140ed..ea48f96fe11a 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -554,6 +554,10 @@ When processing pre-existing threads /proc/XXX/mmap,=
- it may take a long time,
->  because the file may be huge. A time out is needed in such cases.
->  This option sets the time out limit. The default value is 500 ms.
+> Yes, any guest-programmed PEBS event should be exclude-host, but if
+> there is an inconsistency, shouldn't we apply a mask? What if there is
+> only one exclude-host PEBS event, but there are two bits set in
+> guest_pebs_mask?
 >
-> +--timeout=3D<seconds>::
-> +Stop recording after the given number of seconds.
-> +If `perf record` stops from timeout, it exits with status 124.
-> +
->  --switch-events::
->  Record context switch events i.e. events of type PERF_RECORD_SWITCH or
->  PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT, CoreSight or =
-Arm SPE)
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 4a5eba498c02..e666d1d475a4 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -71,6 +71,9 @@
->  #ifdef HAVE_EVENTFD_SUPPORT
->  #include <sys/eventfd.h>
->  #endif
-> +#ifdef HAVE_TIMERFD_SUPPORT
-> +#include <sys/timerfd.h>
-> +#endif
->  #include <sys/mman.h>
->  #include <sys/wait.h>
->  #include <sys/types.h>
-> @@ -154,6 +157,9 @@ struct pollfd_index_map {
->  struct record {
->   struct perf_tool tool;
->   struct record_opts opts;
-> + int timeout_fd;
-> + int timeout_pos;
-> + bool timed_out;
->   u64 bytes_written;
->   u64 thread_bytes_written;
->   struct perf_data data;
-> @@ -721,6 +727,77 @@ static void sigsegv_handler(int sig)
->   sighandler_dump_stack(sig);
->  }
->
-> +static int record__setup_timeout(struct record *rec)
-> +{
-> +#ifndef HAVE_TIMERFD_SUPPORT
-> + pr_err("perf record --timeout is not supported on this platform\n");
-> + return -1;
-> +#else
-> + struct itimerspec new_value =3D {};
-> + int fd;
-> + int pos;
-> +
-> + if (!rec->opts.timeout)
-> + return 0;
-> +
-> + fd =3D timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK);
-> + if (fd < 0) {
-> + pr_err("Failed to create timeout timerfd, error: %m\n");
-> + return -1;
-> + }
-> +
-> + new_value.it_value.tv_sec =3D rec->opts.timeout;
-> +
-> + if (timerfd_settime(fd, 0, &new_value, NULL) !=3D 0) {
-> + pr_err("Failed to start timeout timer, error: %m\n");
-> + close(fd);
-> + return -1;
-> + }
-> +
-> + /* Recv all timer expirations in one-shot mode. */
-> + pos =3D fdarray__add(&thread->pollfd, fd, POLLIN, fdarray_flag__nonfilt=
-erable);
-> + if (pos < 0) {
-> + pr_err("Failed to add timeout timerfd to poll list\n");
-> + close(fd);
-> + return pos;
-> + }
-> +
-> + rec->timeout_fd =3D fd;
-> + rec->timeout_pos =3D pos;
-> +
-> + return 0;
-> +#endif
-> +}
-> +
-> +static int record__process_timeout_event(struct record *rec)
-> +{
-> + uint64_t expirations;
-> + int pos =3D rec->timeout_pos;
-> + struct pollfd *timeout_pollfd;
-> +
-> + if (!thread || !thread->pollfd.entries || pos < 0)
-> + return 0;
-> + if (pos >=3D thread->pollfd.nr)
-> + return 0;
-> +
-> + timeout_pollfd =3D &thread->pollfd.entries[pos];
-> + if (!(timeout_pollfd->revents & POLLIN))
-> + return 0;
-> +
-> + if (read(rec->timeout_fd, &expirations, sizeof(expirations)) < 0) {
-> + if (errno =3D=3D EAGAIN)
-> + return 0;
-> + pr_err("failed to read timeout timerfd, error: %m\n");
-> + return -1;
-> + }
-> + (void)expirations;
-> +
-> + rec->timed_out =3D true;
-> + done =3D 1;
-> +
-> + return 0;
-> +}
-> +
->  static void record__sig_exit(void)
->  {
->   if (signr =3D=3D -1)
-> @@ -2438,6 +2515,9 @@ static int __cmd_record(struct record *rec, int arg=
-c, const char **argv)
->   float ratio =3D 0;
->   enum evlist_ctl_cmd cmd =3D EVLIST_CTL_CMD_UNSUPPORTED;
->   struct perf_env *env;
-> + rec->timeout_fd =3D -1;
-> + rec->timeout_pos =3D -1;
-> + rec->timed_out =3D false;
->
->   atexit(record__sig_exit);
->   signal(SIGCHLD, sig_handler);
-> @@ -2647,6 +2727,10 @@ static int __cmd_record(struct record *rec, int ar=
-gc, const char **argv)
->   if (rec->off_cpu)
->   evlist__enable_evsel(rec->evlist, (char *)OFFCPU_EVENT);
->
-> + err =3D record__setup_timeout(rec);
-> + if (err)
-> + goto out_child;
-> +
->   /*
->   * Let the child rip
->   */
-> @@ -2814,6 +2898,10 @@ static int __cmd_record(struct record *rec, int ar=
-gc, const char **argv)
->   err =3D record__update_evlist_pollfd_from_thread(rec, rec->evlist, thre=
-ad);
->   if (err)
->   goto out_child;
-> +
-> + err =3D record__process_timeout_event(rec);
-> + if (err)
-> + goto out_child;
->   }
->
->   if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
-> @@ -2919,6 +3007,10 @@ static int __cmd_record(struct record *rec, int ar=
-gc, const char **argv)
->
->   if (rec->off_cpu)
->   rec->bytes_written +=3D off_cpu_write(rec->session);
-> + if (rec->timed_out) {
-> + signr =3D -1;
-> + status =3D 124;
-> + }
->
->   record__read_lost_samples(rec);
->   /* this will be recalculated during process_buildids() */
-> @@ -3639,6 +3731,8 @@ static struct option __record_options[] =3D {
->       "\t\t\t  Optionally send control command completion ('ack\\n') to a=
-ck-fd descriptor.\n"
->       "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used=
- as ctl-fd / ack-fd.",
->        parse_control_option),
-> + OPT_UINTEGER(0, "timeout", &record.opts.timeout,
-> +     "Stop recording after the given number of seconds"),
->   OPT_CALLBACK(0, "synth", &record.opts, "no|all|task|mmap|cgroup",
->       "Fine-tune event synthesis: default=3Dall", parse_record_synth_opti=
-on),
->   OPT_STRING_OPTARG_SET(0, "debuginfod", &record.debuginfod.urls,
-> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-> index 93627c9a7338..576513ed3b60 100644
-> --- a/tools/perf/util/record.h
-> +++ b/tools/perf/util/record.h
-> @@ -80,6 +80,7 @@ struct record_opts {
->   int      ctl_fd_ack;
->   bool      ctl_fd_close;
->   int      synth;
-> + unsigned int  timeout;
->   int      threads_spec;
->   const char    *threads_user_spec;
->   u64      off_cpu_thresh_ns;
-> --
-> 2.43.0
->
->
->
->
-> Malcom
+>> +       /*
+>> +        * Do NOT mess with PEBS_ENABLED.  As above, disabling counters via
+>> +        * PERF_GLOBAL_CTRL is sufficient, and loading a stale PEBS_ENABLED,
+>> +        * e.g. on VM-Exit, can put the system in a bad state.  Simply enable
+>> +        * counters in PERF_GLOBAL_CTRL, as perf load PEBS_ENABLED with the
+>> +        * full value, i.e. perf *also* relies on PERF_GLOBAL_CTRL.
+>> +        */
+>> +       arr[global_ctrl].guest |= guest_pebs_mask;
+>>         return arr;
+>>  }
+>>
+>> --
+>> 2.54.0.545.g6539524ca2-goog
+>>
