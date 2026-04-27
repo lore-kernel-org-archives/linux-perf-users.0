@@ -1,44 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C37223708
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Apr 2026 05:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074542147E6;
+	Mon, 27 Apr 2026 05:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777268605; cv=none; b=U7LHy4dL9LK0n0QabtzB6qlza6v71wK8k2g1s8rX9mbIBkC/DIDmtM8LfjiZE4BCezPz4qHB/W8h9lPqyrEl0xAOjmIq1qJtcrRH1NmVPi7DkebMTFDZ4tgpcFfVYrTC12hs6wYbZmuS8FjRF7WilhBsSVUXkfSskChkqtjsj2Q=
+	t=1777268894; cv=none; b=RQlHdBe24E8pnfRosfD1htC4vfnUW0ZhO4bWGQbdF2wZYVh95MxrnR8wkSWa4FGImZULp2Cgoott2rYhnVorOHbkUcvH0VjXcn7s7HRZRJNzduRad6vpVVxZNQ4PHHZVZwSPCfzo8hrwoang7l+8p4vcpec2qKSA5iHhQN7tQb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777268605; c=relaxed/simple;
-	bh=obypYOrhKWdkyuMYPEbMk0GcWvupxXNCqCmfQ4rsGRU=;
+	s=arc-20240116; t=1777268894; c=relaxed/simple;
+	bh=WqUt5YpS6S47Q95DPQQD2MZAy33tQOPfGZBmXGRZNMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEmZyrp25n20LJM/orbsIDDhyl7t9FTugzgAH+mNHfKYwGxb3C6HYvOaP+3nRXrlnG99E67qlRk5CsHnF4KOFMPxOfO278ik2ThLa1uSl+wGQke0yAqgOXujTrh0Ae5+DBrBzqsNYv6NE+BKPq89188QLTjOI7DmyDMkmIrm7PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNIymlgd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CibovhhWXxwbH4Zz7n057J5JRVOfxf0QJRmiTSK1xQWHWXQwx/xpa5YZ+C1pNSpKx/8QdbJ9/8BEqcSHoViFqqT5+9XwDSpvjoFPnRXzcGhkEX3jeK+ASd/bs3iyTl/cAZpd/awqrbi7cbELC9TwZjjT22NgFJ5KNyzPP+N/lEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZi92SET; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNIymlgd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2A2C19425;
-	Mon, 27 Apr 2026 05:43:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZi92SET"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F8BC19425;
+	Mon, 27 Apr 2026 05:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777268605;
-	bh=obypYOrhKWdkyuMYPEbMk0GcWvupxXNCqCmfQ4rsGRU=;
+	s=k20201202; t=1777268893;
+	bh=WqUt5YpS6S47Q95DPQQD2MZAy33tQOPfGZBmXGRZNMY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LNIymlgdo0oTA3eNJtxUlaMLmLsWJ5k2PxW1BocXrWDQU/fGnZwd7XyiKIKDHP6/S
-	 3W+LkC0Wm7Yf2bOM6g45mUO/k0bxqheNDEw12cW0uEAFV6mRjVTSKvhSuI+3tFPfWh
-	 z77yIlKB8CcG1ClkoZPQBWKPi/qKNPnMJrU4XeGOzYJi7a/eXI1lB8z+yKLDO3FZsI
-	 jYO6HwLV4I1W7sP8sRkkmtBmEDH1att1jnS7nm3XgTVS+llnClS8tnMbjc6Elq73ah
-	 2y5bonhep+xtECwts7P7cZJa/DKCBZy88riEG1lV1xwRSr5l7i1DEQIF4TIW6XzkXe
-	 MwW+WQGwc+owQ==
-Date: Sun, 26 Apr 2026 22:43:21 -0700
+	b=MZi92SETZA+BIfXW2gvY1rWgcBDVxzp0co/GWB0S7ulfNU60v5RHbMcN5Ndn5X6TX
+	 3L725eJvl492XN/eHiTSXOpl1E15db0A7cxGi4SEUJjw22JkhbpC+m7iAHSLqzRpbP
+	 ZvPQ2eyJvkeTQCk2hpl7eeq1C2hwV2Tt+4xF7V3gUEgNrXlVBDe3M4xVuHIJY5n4r3
+	 pB+gIl6DPC2grS8UqquGXTut1otOygF/FMyaPYcbo+t6lNN+9JBUUuhRJO/lh3l3mk
+	 JWArDtAq5F9UTi4SkzwfYNczJRyaddRMnuCXgv4S+JlvNzA8yvS2CZMP9/+qRjda5z
+	 Eyx+HKaAZzO/Q==
+Date: Sun, 26 Apr 2026 22:48:09 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com,
-	Shivani.Nittor@ibm.com
-Subject: Re: [PATCH] powerpc tools perf: Initialize error code in
- auxtrace_record_init function
-Message-ID: <ae73ebdFs8hN98u9@google.com>
-References: <20260426064301.90614-1-atrajeev@linux.ibm.com>
+To: Malcom Gilbert <malcomgilbert@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: add timerfd timeout exit-code handling
+Message-ID: <ae74mZg8HDYGJThA@google.com>
+References: <CAJ_TQUzM+JXDy4xo4TgeWBL7f6QA0muLxQ8kEv_0hRw6NqrmZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,94 +41,218 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260426064301.90614-1-atrajeev@linux.ibm.com>
+In-Reply-To: <CAJ_TQUzM+JXDy4xo4TgeWBL7f6QA0muLxQ8kEv_0hRw6NqrmZQ@mail.gmail.com>
 
 Hello,
 
-On Sun, Apr 26, 2026 at 12:13:01PM +0530, Athira Rajeev wrote:
-> perf trace record fails some cases in powerpc
-> 
->  # ./perf test "perf trace record and replay"
->  128: perf trace record and replay                                    : FAILED!
-> 
->  # ./perf trace record sleep 1
->  # echo $?
->    32
-> 
-> This is happening because of non-zero err value from
-> auxtrace_record__init() function.
-> 
->  static int record__auxtrace_init(struct record *rec)
->  {
->         int err;
-> 
->         if ((rec->opts.auxtrace_snapshot_opts || rec->opts.auxtrace_sample_opts)
->             && record__threads_enabled(rec)) {
->                 pr_err("AUX area tracing options are not available in parallel streaming mode.\n");
->                 return -EINVAL;
->         }
-> 
->         if (!rec->itr) {
->                 rec->itr = auxtrace_record__init(rec->evlist, &err);
->                 if (err)
->                         return err;
->         }
-> 
-> Here "int err" is not initialised. The code expects "err" to be set
-> from auxtrace_record__init() function.
-> 
-> Update auxtrace_record__init() in arch/powerpc/util/auxtrace.c to clear
-> err value in the beginning.
-> 
-> - Clear err value in beginning of function. Any fail later will
-> set appropriate return code to err.
-> - Even if we haven't found any event for auxtrace, perf record
-> should continue for other events. NULL return
-> will indicate that there is no auxtrace record initialized.
-> - Not having "err" set here will affect monitoring of other events
-> also because perf record will fail seeing random value in err.
-> 
-> With the fix,
-> 
->  # ./perf trace record sleep 1
->  [ perf record: Woken up 2 times to write data ]
->  [ perf record: Captured and wrote 0.033 MB perf.data (228 samples) ]
+On Sun, Apr 26, 2026 at 01:28:18PM -0500, Malcom Gilbert wrote:
+> Assisted-by: OpenAI:gpt-5.3-codex-spark
+> Signed-off-by: Malcom Gilbert <malcomgilbert@gmail.com>
 
-Sounds like you need a Fixes tag.
+Looks like this patch or your system has a problem with indentation.
+Please fix.
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 > ---
->  tools/perf/arch/powerpc/util/auxtrace.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  tools/perf/Documentation/perf-record.txt |  4 +
+>  tools/perf/builtin-record.c              | 94 ++++++++++++++++++++++++
+>  tools/perf/util/record.h                 |  1 +
+>  3 files changed, 99 insertions(+)
 > 
-> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
-> index e39deff6c857..fe1ea4e222f3 100644
-> --- a/tools/perf/arch/powerpc/util/auxtrace.c
-> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
-> @@ -71,6 +71,19 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
->  	struct evsel *pos;
->  	int found = 0;
->  
-> +	/*
-> +	 * Assign err value to zero here. Any fail later
-> +	 * will set appropriate return code to err.
-> +	 * Even if we haven't found any event for auxtrace, perf
-> +	 * record should continue for other events. NULL return
-> +	 * will indicate that there is no auxtrace record initialized.
-> +	 *
-> +	 * Not having "err" set here will affect monitoring
-> +	 * of other events also because perf record will fail seeing
-> +	 * random value in err.
-> +	 */
-> +	*err = 0;
+> diff --git a/tools/perf/Documentation/perf-record.txt
+> b/tools/perf/Documentation/perf-record.txt
+> index 178f483140ed..ea48f96fe11a 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -554,6 +554,10 @@ When processing pre-existing threads
+> /proc/XXX/mmap, it may take a long time,
+>  because the file may be huge. A time out is needed in such cases.
+>  This option sets the time out limit. The default value is 500 ms.
+> 
+> +--timeout=<seconds>::
+> +Stop recording after the given number of seconds.
+> +If `perf record` stops from timeout, it exits with status 124.
 > +
->  	evlist__for_each_entry(evlist, pos) {
->  		if (strstarts(pos->name, "vpa_dtl")) {
->  			found = 1;
-> -- 
-> 2.47.3
+>  --switch-events::
+>  Record context switch events i.e. events of type PERF_RECORD_SWITCH or
+>  PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT, CoreSight
+> or Arm SPE)
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 4a5eba498c02..e666d1d475a4 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -71,6 +71,9 @@
+>  #ifdef HAVE_EVENTFD_SUPPORT
+>  #include <sys/eventfd.h>
+>  #endif
+> +#ifdef HAVE_TIMERFD_SUPPORT
+> +#include <sys/timerfd.h>
+> +#endif
+>  #include <sys/mman.h>
+>  #include <sys/wait.h>
+>  #include <sys/types.h>
+> @@ -154,6 +157,9 @@ struct pollfd_index_map {
+>  struct record {
+>   struct perf_tool tool;
+>   struct record_opts opts;
+> + int timeout_fd;
+> + int timeout_pos;
+> + bool timed_out;
+>   u64 bytes_written;
+>   u64 thread_bytes_written;
+>   struct perf_data data;
+> @@ -721,6 +727,77 @@ static void sigsegv_handler(int sig)
+>   sighandler_dump_stack(sig);
+>  }
 > 
+> +static int record__setup_timeout(struct record *rec)
+> +{
+> +#ifndef HAVE_TIMERFD_SUPPORT
+> + pr_err("perf record --timeout is not supported on this platform\n");
+> + return -1;
+> +#else
+> + struct itimerspec new_value = {};
+> + int fd;
+> + int pos;
+> +
+> + if (!rec->opts.timeout)
+> + return 0;
+> +
+> + fd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK);
+> + if (fd < 0) {
+> + pr_err("Failed to create timeout timerfd, error: %m\n");
+> + return -1;
+> + }
+> +
+> + new_value.it_value.tv_sec = rec->opts.timeout;
+> +
+> + if (timerfd_settime(fd, 0, &new_value, NULL) != 0) {
+> + pr_err("Failed to start timeout timer, error: %m\n");
+> + close(fd);
+> + return -1;
+> + }
+> +
+> + /* Recv all timer expirations in one-shot mode. */
+> + pos = fdarray__add(&thread->pollfd, fd, POLLIN, fdarray_flag__nonfilterable);
+> + if (pos < 0) {
+> + pr_err("Failed to add timeout timerfd to poll list\n");
+> + close(fd);
+> + return pos;
+> + }
+> +
+> + rec->timeout_fd = fd;
+> + rec->timeout_pos = pos;
+> +
+> + return 0;
+> +#endif
+> +}
+> +
+> +static int record__process_timeout_event(struct record *rec)
+> +{
+> + uint64_t expirations;
+> + int pos = rec->timeout_pos;
+> + struct pollfd *timeout_pollfd;
+> +
+> + if (!thread || !thread->pollfd.entries || pos < 0)
+> + return 0;
+> + if (pos >= thread->pollfd.nr)
+> + return 0;
+> +
+> + timeout_pollfd = &thread->pollfd.entries[pos];
+> + if (!(timeout_pollfd->revents & POLLIN))
+> + return 0;
+> +
+> + if (read(rec->timeout_fd, &expirations, sizeof(expirations)) < 0) {
+> + if (errno == EAGAIN)
+> + return 0;
+> + pr_err("failed to read timeout timerfd, error: %m\n");
+> + return -1;
+> + }
+> + (void)expirations;
+> +
+> + rec->timed_out = true;
+> + done = 1;
+> +
+> + return 0;
+> +}
+> +
+>  static void record__sig_exit(void)
+>  {
+>   if (signr == -1)
+> @@ -2438,6 +2515,9 @@ static int __cmd_record(struct record *rec, int
+> argc, const char **argv)
+>   float ratio = 0;
+>   enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+>   struct perf_env *env;
+> + rec->timeout_fd = -1;
+> + rec->timeout_pos = -1;
+> + rec->timed_out = false;
+> 
+>   atexit(record__sig_exit);
+>   signal(SIGCHLD, sig_handler);
+> @@ -2647,6 +2727,10 @@ static int __cmd_record(struct record *rec, int
+> argc, const char **argv)
+>   if (rec->off_cpu)
+>   evlist__enable_evsel(rec->evlist, (char *)OFFCPU_EVENT);
+> 
+> + err = record__setup_timeout(rec);
+> + if (err)
+> + goto out_child;
+> +
+>   /*
+>   * Let the child rip
+>   */
+> @@ -2814,6 +2898,10 @@ static int __cmd_record(struct record *rec, int
+> argc, const char **argv)
+>   err = record__update_evlist_pollfd_from_thread(rec, rec->evlist, thread);
+>   if (err)
+>   goto out_child;
+> +
+> + err = record__process_timeout_event(rec);
+> + if (err)
+> + goto out_child;
+>   }
+> 
+>   if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
+> @@ -2919,6 +3007,10 @@ static int __cmd_record(struct record *rec, int
+> argc, const char **argv)
+> 
+>   if (rec->off_cpu)
+>   rec->bytes_written += off_cpu_write(rec->session);
+> + if (rec->timed_out) {
+> + signr = -1;
+> + status = 124;
+> + }
+> 
+>   record__read_lost_samples(rec);
+>   /* this will be recalculated during process_buildids() */
+> @@ -3639,6 +3731,8 @@ static struct option __record_options[] = {
+>       "\t\t\t  Optionally send control command completion ('ack\\n')
+> to ack-fd descriptor.\n"
+>       "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and
+> used as ctl-fd / ack-fd.",
+>        parse_control_option),
+> + OPT_UINTEGER(0, "timeout", &record.opts.timeout,
+> +     "Stop recording after the given number of seconds"),
+>   OPT_CALLBACK(0, "synth", &record.opts, "no|all|task|mmap|cgroup",
+>       "Fine-tune event synthesis: default=all", parse_record_synth_option),
+>   OPT_STRING_OPTARG_SET(0, "debuginfod", &record.debuginfod.urls,
+> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+> index 93627c9a7338..576513ed3b60 100644
+> --- a/tools/perf/util/record.h
+> +++ b/tools/perf/util/record.h
+> @@ -80,6 +80,7 @@ struct record_opts {
+>   int      ctl_fd_ack;
+>   bool      ctl_fd_close;
+>   int      synth;
+> + unsigned int  timeout;
+>   int      threads_spec;
+>   const char    *threads_user_spec;
+>   u64      off_cpu_thresh_ns;
+> --
+> 2.43.0
+> 
+> 
+> Malcom
