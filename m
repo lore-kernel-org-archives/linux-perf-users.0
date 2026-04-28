@@ -1,158 +1,116 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B23ED24169D
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 03:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCD133A014
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 06:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777348263; cv=none; b=W4EZu+tM7mTVYq9F/14t1ADWFU6SPUZO5MyWdTvB5Z4bvFCv8QXdii6RCtp7tcqg10VuFB4CxbBkplftQCLhv2GtQTv8nWY82Cr/XM/hCpn90TF85wHZ8ektCazmnb4D2IFKtpNd9NPlnJBmIA+/IXPzUYEJke8YdSGVfvFbkZ4=
+	t=1777359278; cv=none; b=UHfqrUh+q6OT9lFPl+CBFyVtB06N1vJMoo8+Zj5/MtKHSmHRQQySQj1YDBBCx1tKt/H+0aYCG/02yTs+63jWDwr/V1MoRbiLYnuoMvmc89T6P2TnYPPTKyJ/OD6gEflZyfQ9BK8UD4dlwyTw4WoQ2ocDFk9R9qZYGjF5ovK+/Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777348263; c=relaxed/simple;
-	bh=G1a1o/nTQ48p1txPounVZt/V7RsVWpfUvP9iThXsVDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n5BLmMce/ITYnX5XlszqSdeX+EUl+/kxg6vDJIurBsE9aEb3v0heONtg1uwGz+pRmOCBJ3sRRQSDwujD2jCoKxxA6LgtnCYGhQ4REH6xC0qC8nEKiBqQlEmRgIBd75ChsSZ/zt5u3UTPLC4ZG35GWHNTMXiEKiCMIfx3Lvk1VRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.128.169])
-	by gateway (Coremail) with SMTP id _____8AxX+ueLvBpSZ8EAA--.15582S3;
-	Tue, 28 Apr 2026 11:50:55 +0800 (CST)
-Received: from mail-yw1-f169.google.com (unknown [209.85.128.169])
-	by front1 (Coremail) with SMTP id qMiowJBxZcCdLvBpEkh2AA--.43359S2;
-	Tue, 28 Apr 2026 11:50:54 +0800 (CST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-793fdbb8d3aso115541937b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Apr 2026 20:50:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9unKXCnnVSVYi55FSbaKQY0mY4cde8XXZUwClwETkd6fwWIrRxjTmHLXL6NHabsWQUE5/LR1Zs/UyQzEd4IzT0@vger.kernel.org
-X-Gm-Message-State: AOJu0YyItjF/F+ZVADdnILSqU588kRh1IGwVXbVxBUaDZxbG325QKfy5
-	/iCUJ24zNig35kJZnmEZtWNDitsElrJpWc4JkDy1wOiFKF8wH7NKOAs/jYZZ6nJbdHXc7wVg/h/
-	t0fxIYCIIme5P9ZfBLk2yBqRo/zAFcacPMxjbMPbcsQ==
-X-Received: by 2002:a05:690e:441c:b0:654:6ccc:69e9 with SMTP id
- 956f58d0204a3-65beee9b8b9mr824243d50.51.1777348251997; Mon, 27 Apr 2026
- 20:50:51 -0700 (PDT)
+	s=arc-20240116; t=1777359278; c=relaxed/simple;
+	bh=IM9ESi6nZ2GNqGO23/dFzs6wZwAg2FXQqPWBRXVgMic=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GN208KqFtnd+eHVinjh9nBSkeb7R8jmkz1uFN95W/bwsQqog4wgM6XfxgW12l78U1qpOa//3P4xRW3dWDyPKj/R9BRkiVHlk6r/L6F6qwk5VaOGPUTtRL+0X+83M9yJ0hXpR24AFwvHpc2kI8H0Oat9P17LphqI6glJtvpcEwuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k2gd9TjA; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k2gd9TjA"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c87ba0890so39466979c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Apr 2026 23:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777359277; x=1777964077; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zio41ZFzhjPT5cI6wrI5OFkLmqAK3oJn4tmFEmpUdG4=;
+        b=k2gd9TjAdsV603Xc9cbpVWKDGBlSE4rRf3h56WAMb3JRD5G6SEIr/f9BdGxY7eNsK2
+         oqgAUw+p5721Ftjt9Zn/B3+6P7jMdqZfRxZGeIfMxhZ8HfmFAccFX6J5nbGk+zjl5LEb
+         xJuQqMr1LqUCXL202XP/8ZeMRsNXbJcenFtvbEM0xrF29LcLF/AYxZdolE6f37HoXHLa
+         6TpH6re+e4LaBSf3RCU9hCTbTszRFTdNkFvBZkTK5ykz4uf37XKapgj/7YZ8JhoN9e/E
+         WJVSlJuZcHfTOxd3Ir/8mLBypVKdRru0I1y2O21EUguMtwsQtt6vU9M99ubDnTU1OMX6
+         lzpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777359277; x=1777964077;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zio41ZFzhjPT5cI6wrI5OFkLmqAK3oJn4tmFEmpUdG4=;
+        b=Pqo24ybO9iwxAUS2zyplu7kvyPl3iaSfdpu3h3nB31Nb26bAdVl63ey9Z1w7sO1yA4
+         ZSiFmo41IDZrYon9jzNqRPXmrg4ZGeBpTvUot8tMIsQJA3VrEOa1SEDR3wE4hHSZ28Ca
+         Iw0iQiSZ4kKtZUAlzeYQKT3UeKatoFU9TNHUhDg44hhiNdK9joPcEnRTVkbyzLqAnUTc
+         788tlgCHzOABEpZ1YYlc4CS5iMkLEWtOYffaKV18FPPpnxjhIb8K9t30Yi4qxRGaxbvK
+         GNtluVAZwlmrB2QbJVAgwWM8IO91biOqpPbgtN7L2TltUjqfj5JHh/zlxUA2Z8odtLyO
+         xSAg==
+X-Forwarded-Encrypted: i=1; AFNElJ/jAekCrfdEeGmgRFSTYdE3UDDPwx4HZOcJkJuH6JizFq5kWQeMftx6+tL79PdtJkccS3gGyg/IvAULlnAhj/rh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/S3qaPAZpTn7R4BE4PxuCegCL5cYCRnOI711bOvzzLNIDEq1q
+	9Vgg/eLk0365Eg+g0U3CWLCcpMgsEQGZVyX0Kgx1R3TlSD6EV8EP+tDSF9jf55OOv7y+e6SKTli
+	GL8PhebyiAA==
+X-Received: from dlbto5.prod.google.com ([2002:a05:7022:3b05:b0:12c:1f83:7b4c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e28:b0:128:c9fa:4c32
+ with SMTP id a92af1059eb24-12ddd9dd721mr881046c88.28.1777359276536; Mon, 27
+ Apr 2026 23:54:36 -0700 (PDT)
+Date: Mon, 27 Apr 2026 23:54:32 -0700
+In-Reply-To: <20260407165551.3075684-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260423103530.3938202-1-frankljpliu@gmail.com>
-In-Reply-To: <20260423103530.3938202-1-frankljpliu@gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Tue, 28 Apr 2026 11:50:41 +0800
-X-Gmail-Original-Message-ID: <CAHirt9hJ5tTnWhYFZM6TvaTyDxGcRa=zeta8iv0DqqxgfKUQFA@mail.gmail.com>
-X-Gm-Features: AVHnY4LNskmyUjODjQsEi38Q3wSyroi5G5f_R-KINhizv72UeIcou8FjuJ5rz2w
-Message-ID: <CAHirt9hJ5tTnWhYFZM6TvaTyDxGcRa=zeta8iv0DqqxgfKUQFA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf annotate: Fix NULL pointer dereference in loongarch_call__parse
-To: Jianping Liu <frankljpliu@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, wangming01@loongson.cn, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jianping Liu <frankjpliu@tencent.com>
+Mime-Version: 1.0
+References: <20260407165551.3075684-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260428065432.1877423-1-irogers@google.com>
+Subject: [PATCH v2] perf clang-format: Add a perf clang-format that overrides
+ some kernel behaviors
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: akpm@linux-foundation.org, joe@perches.com, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, morbo@google.com, 
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qMiowJBxZcCdLvBpEkh2AA--.43359S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAw4ktry5tFW7trWxJFyfKrX_yoW5Cw48p3
-	4DC34UKr43GrWFka9xtFWrXr15Kr43WayxK3WSywn09Fs3ZF13JF97Kay2kF4DAFs5Gw1U
-	ZFsYvrWUJFW5GacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-On Thu, Apr 23, 2026 at 6:35=E2=80=AFPM Jianping Liu <frankljpliu@gmail.com=
-> wrote:
->
-> From: Jianping Liu <frankjpliu@tencent.com>
->
-> loongarch_call__parse() dereferences the return value of strchr()
-> without NULL check:
->
->   name =3D strchr(endptr, '<');
->   name++;
->
-> When objdump output for a 'bl' (branch-and-link) instruction does not
-> contain a symbol name delimited by '<' and '>' (e.g., when the call
-> target has no associated symbol), strchr() returns NULL, and the
-> subsequent name++ produces a wild pointer (0x1). This leads to a
-> segmentation fault when strchr() is later called with this invalid
-> pointer:
->
->   #0  __strchr_lasx () from /lib64/libc.so.6
->   #1  loongarch_call__parse () at arch/loongarch/annotate/instructions.c:=
-29
->   #2  disasm_line__init_ins () at util/annotate.c:1205
->   ...
->
-> The objdump line triggering the crash looks like:
->
->   bl              98824   # 0x9000000000641ea0
->
-> Note the absence of "<function_name>" after the address.
->
-> Rather than aborting parse with -1 (which would clear dl->ins.ops and
-> lose the is_call attribute, preventing the TUI from drawing branch
-> arrows and navigating the call), follow the same pattern as the generic
-> call__parse() in util/disasm.c: when the symbol name is absent, jump to
-> the address-based symbol lookup so that ops->target.sym can still be
-> resolved via maps__find_ams() using the already-parsed target address.
-> This preserves is_call semantics and keeps TUI navigation working.
->
-> ---
-> Changes from v1:
-> - Instead of returning -1 when the '<sym>' token is absent jump to the
->   address-based symbol lookup so that maps__find_ams() can still resolve
->   ops->target.sym from the already parsed target address.
->
-> - Link to v1: https://lore.kernel.org/all/20260423053102.3717015-1-frankl=
-jpliu@gmail.com/
-> ---
->
-> Fixes: 4ca0d340ce20 ("perf annotate: Fix instruction association and pars=
-ing for LoongArch")
-> Signed-off-by: Jianping Liu <frankjpliu@tencent.com>
-> Reviewed-by: Ming Wang <wangming01@loongson.cn>
+In particular, header file ordering is an issue in the tools/perf
+directory given the larger number of depended upon libraries.
 
-Tested-by: WANG Rui <wangrui@loongson.cn>
+The order of header file includes was proposed in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fUitzKwJONTngiW17XkS7kVr2cDS4cDL_HccJKcnR2EgQ@mail.gmail.com/
 
-Thanks,
-Rui
+Sorting headers is desirable to avoid issues like duplicate includes.
 
-> ---
->  tools/perf/util/annotate-arch/annotate-loongarch.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/p=
-erf/util/annotate-arch/annotate-loongarch.c
-> index c2addca77320..a949b4392dd4 100644
-> --- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-> +++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-> @@ -29,6 +29,9 @@ static int loongarch_call__parse(const struct arch *arc=
-h, struct ins_operands *o
->         ops->target.addr =3D strtoull(c, &endptr, 16);
->
->         name =3D strchr(endptr, '<');
-> +       if (name =3D=3D NULL)
-> +               goto find_target;
-> +
->         name++;
->
->         if (arch->objdump.skip_functions_char &&
-> @@ -46,6 +49,7 @@ static int loongarch_call__parse(const struct arch *arc=
-h, struct ins_operands *o
->         if (ops->target.name =3D=3D NULL)
->                 return -1;
->
-> +find_target:
->         target =3D (struct addr_map_symbol) {
->                 .ms =3D { .map =3D map__get(map), },
->                 .addr =3D map__objdump_2mem(map, ops->target.addr),
-> --
-> 2.43.7
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2: Move the .clang-format file under tools/perf rather than tools/.
+---
+ tools/perf/.clang-format | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 tools/perf/.clang-format
+
+diff --git a/tools/perf/.clang-format b/tools/perf/.clang-format
+new file mode 100644
+index 000000000000..902b2f7456f6
+--- /dev/null
++++ b/tools/perf/.clang-format
+@@ -0,0 +1,20 @@
++BasedOnStyle: InheritParentConfig
++SortIncludes: true
++IncludeBlocks: Regroup
++IncludeCategories:
++  # Implicitly the corresponding header for the C file has Priority 0
++  # C Standard Library Headers
++  - Regex:           '^<(assert|complex|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|stdalign|stdarg|stdatomic|stdbool|stddef|stdint|stdio|stdlib|stdnoreturn|string|tgmath|threads|time|uchar|wchar|wctype)\.h>'
++    Priority:        1
++  # OS/System-Specific Headers (directories)
++  - Regex:           '^<(sys|linux|asm|arpa|net|netinet|x86_64|machine)/.*>'
++    Priority:        2
++  # OS/System-Specific Headers (POSIX/System flat headers)
++  - Regex:           '^<(unistd|pthread|fcntl|dirent|dlfcn|poll|sched|semaphore|spawn|syslog|termios|pwd|grp|netdb|sysexits|err|paths|pty|utmp|resolv|ifaddrs|elf|libelf|gelf)\.h>'
++    Priority:        2
++  # Third-Party Library Headers
++  - Regex:           '^<.*>'
++    Priority:        3
++  # Your Project's Other Headers
++  - Regex:           '^".*"'
++    Priority:        4
+-- 
+2.54.0.545.g6539524ca2-goog
 
