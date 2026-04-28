@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA653E639A
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38123EC2F4
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360826; cv=none; b=NBbSXJIUKApOTPp+M/C+mzNdI4Tsl9f9v0HLREn6J1xueSujwRGEGn8SCUsw2Fm5gh+llYAjnCzYj5IfdjCGBoZ9+RTM8KLg7CViZB6ORfb+OIONRA7SZcw+bTHd2eyhWaaNLN0NZVbbhDSw+BfPF1KFEdFEluDB2DvDnE2OkAk=
+	t=1777360828; cv=none; b=VoR++d5GngrkroiageOVwVF6pLliPL+K47F/IH/EBZjoRMwCOW7eX3FbnyMy6DJUvihfK+8WBltTWJBWiMBoaMasIl5YjOyNahAyu65cnve50QdN1kzdQ26/mM/Dx8QggLmY9sJKKhZzj7UnlWGhqUUba0t70O6/LQCfIn6392I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360826; c=relaxed/simple;
-	bh=Dx6aV6TOcBI9JljvDcqAD6tIti/RsokwGQRZjZyKZlc=;
+	s=arc-20240116; t=1777360828; c=relaxed/simple;
+	bh=mBMBYkMBlLDWvbY6LNmW//JVcjR4jVeKSUbnOQaL0o8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cDweCsCYk/ckExv8mFjWvbp2ygIVLm2xFAW/0SeolMNtUcPr974XcAkdwKOObYSyllMu1/Lwm+7aBJJ/eBWOp0DNttpjIW/Wd1en5vIbyRtEyT8LhPL2Tt+WAIK7YeD/sipEhEnZsfVUADdE5RklMHgDom6h/MCxByshfSyQpKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=udqGivyI; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=Tr2LgtM3ZRLAF1VAnEsnbzDHvGQpzUF4agqkf6HFgk/6r5JTsL77nyhx+EW/nBUujhujMymzMvVYQP9h1A5Fc1ngoP6X2A2ZU3b8xCUd7iya9wUrqRAgI/6Mhx+q2X8F/G0N/iGLpJ9v6Bsiy8RSenuHjoVg7iACYlXMX97sXbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ne3h4hEw; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="udqGivyI"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c66fdd4aeso16633200c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:20:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ne3h4hEw"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2bdf75bc88fso14245976eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777360823; x=1777965623; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777360826; x=1777965626; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1h0u+Q7t0ehFHkhc+FxAXyfK2dxEK0zdWoALVmapMog=;
-        b=udqGivyI02+v3cuMpY26JTyVLqMhR7DxGbfy1j2ge7Vqs3gLI8CGvPFnBD03T4j1Yl
-         oFqrCx9dVP6J1z5mdqAUTOh9XLBRj0uULW6pU1y/OWK7dvv0ZSfNFFWmjIL14M7WFoZM
-         TYYha9i6Ey6Bv/3NVt83QzBCJD+931vyZrF89aeIlShHGNc62nt9nZWdtmUgcQxcN/q2
-         QimOcObMkywOKY7qMiN3R98xf5Ovy3jSo2TZfeoCxKGgFvBLEslnW9WI2fggFZGbiIaX
-         a9Ig82o8rKZtpOPBeJZGrpCFa0Z9vtzSrpAZppyU7fUVYioC9VuoEH8gzdxMsKrv/6VH
-         HbyA==
+        bh=lupTwS5/K/xdMFN4T0R1lWQWxBJkMX0Mah0jUIak+cQ=;
+        b=Ne3h4hEw6Buf3ZlHAEtIDdwsWg3ppttRXa7s+bRx+6/nPA041cwolFYB+sVb9QNGLq
+         pz9zwNssgS2SiapAiPl2IdJ0H2/SzQ3vP9xz0AfpB0Mj2Kg6U2CgFoVyoACq53H2OOYW
+         macwDtKPFPDjVutbbJRr6HJlIXOZgNKcNeIdb3Uo0vHjt6tAoeSpDubze0f4/3UrhRH6
+         vb0XN+Naig79sVJ/lXSqSd7LOSLglVsZHmg6afanKvAd1pmHSoV97p5C42iIUR+rYUVa
+         SdaCO/OWPY2ncIb8SQ6fRIRlE/wa3WnmKMS82QPctJDpDCZOcioWyNctxGoc08nQLjkc
+         YdPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777360823; x=1777965623;
+        d=1e100.net; s=20251104; t=1777360826; x=1777965626;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1h0u+Q7t0ehFHkhc+FxAXyfK2dxEK0zdWoALVmapMog=;
-        b=kiuWLleZ+q3M5RJbLQydoxyAQIDm4bOgl1SQfgZoqm0a2sOc+L9HLiiYTsf487ctBy
-         443/ZFWRuk/q1uFMkbDK8tON26mpatm64u2cD5Fgf53nmjKDlB9EYL0T0kS12DAftK/Z
-         OOIoJs2t74W20x/Se69gFCtxmuJRUqXXKiP/csTlKb5H+2U/VtytpCyZPCfbiRw3Gvgo
-         zbhyWF/6/3OVxS9Ob7uKpJYDp3gPfo0dxnI8wKC4hH8/0/QPUPxlz6WCCyKP4a3ljfby
-         Xa1q95GUN3NAJqphQ1TeeBQQdRajtoiQ8zuVEZtoQ+7pqQTIO+rVmyZerC0mJ2OVRVoG
-         hyDw==
-X-Forwarded-Encrypted: i=1; AFNElJ8raZnajG3JAZelC0trjZRdl1nbzvx7Au+ZBqfQFCjygUld+Fv0dVcVjcnckO0TDMnaPAKRlu7sMyvmmXxOv6mk@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoExx4ianWkKZlzG0XPMdY28xZRdQ0l9I5jPHmBaIkGRO0TsgB
-	SFuQQSZMPAP/GtSbf/296u7PSTYs6RquUUB4J7qel5Jjrv8bXWDvBIGgB4T6S1sfjXEfWfDhI/t
-	r7PXNmnEhxA==
-X-Received: from dyb19.prod.google.com ([2002:a05:693c:6313:b0:2d9:db60:7492])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:698b:b0:12d:d27f:d817
- with SMTP id a92af1059eb24-12ddd9d1ca1mr772612c88.19.1777360823151; Tue, 28
- Apr 2026 00:20:23 -0700 (PDT)
-Date: Tue, 28 Apr 2026 00:18:37 -0700
+        bh=lupTwS5/K/xdMFN4T0R1lWQWxBJkMX0Mah0jUIak+cQ=;
+        b=peYJepYuW5bZ0zHS0VX0dgR2N62NfKvr3SrfyhwUEL3GopLpo/UqIRKxXnDMA5IDa+
+         ITTw50iDj0qZbgrTzUYlXEQZYwD3++TDIEGSTmxlncWmE3w3IW193/y5+Jn2ri0B1rPo
+         gtcyzsnnUZpKKwbfTtI2aJaG6217e7Cai5DYFXxdTwJX69zciwiPolcMQn4ZC05tG87F
+         b9213XQv8beYxNZ8KxXI9Wym59TZUXfZZlR3YjZwa1sJuUB9+yZfLGOop5NbWtQR13qt
+         PgnJ9+et0ecEiS98LmAM+v4ifbo+DXP3Mrz16L4YEW7DjkyAwoPHxw2IzJVU5LIG6Hnc
+         ug+w==
+X-Forwarded-Encrypted: i=1; AFNElJ99s61C6lQPIev/q4Xo8xwjQ/btpdbqU+qYuqu0I1KMatQJPMFQy3ZBYii1vJf69HcL1DBZyHlhL7f+7YV5XYRJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU7r+mKgerN5mVXA1NLfDnxg9EWImBf/co9fntwjLx3smP3/mF
+	lSaor+0+bSwiGKNWkzKq0rdXn9QLt7tufNW5eJ2D3nfJXi70i6CTRIIFWXG2GRUQpu5rF5Njlpn
+	/g5krsYKcHw==
+X-Received: from dybnj5.prod.google.com ([2002:a05:7300:d085:b0:2dd:4573:2897])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd0d:b0:2ea:d965:a4b9
+ with SMTP id 5a478bee46e88-2ed0a03466amr992245eec.7.1777360825780; Tue, 28
+ Apr 2026 00:20:25 -0700 (PDT)
+Date: Tue, 28 Apr 2026 00:18:38 -0700
 In-Reply-To: <20260428071903.1886173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425224951.174663-1-irogers@google.com> <20260428071903.1886173-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260428071903.1886173-33-irogers@google.com>
-Subject: [PATCH v8 32/58] perf arm-cs-trace-disasm: Port arm-cs-trace-disasm
- to use python module
+Message-ID: <20260428071903.1886173-34-irogers@google.com>
+Subject: [PATCH v8 33/58] perf check-perf-trace: Port check-perf-trace to use
+ python module
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -70,420 +70,161 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	tmricht@linux.ibm.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a port of the arm-cs-trace-disasm script that uses the perf python
+Add a port of the check-perf-trace script that uses the perf python
 module directly. This approach is significantly faster than using perf
 script callbacks as it avoids creating intermediate dictionaries for
-all event fields. Update the testing to use the ported script.
+all event fields.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v2:
+1. String Match Accuracy: Replaced the substring check for `irq:softirq_entry`
+   events with a robust exact string match.
 
-1. Added Missing Import: Added import perf at the top of
-   arm-cs-trace-disasm.py .
+v3:
+1. Safe Thread Resolution: Swapped out sample.sample_pid with
+   sample.sample_tid and safeguarded the session process lookup with
+   a try-except block.
 
-2. Fixed Unpacking Error: Updated the call to sample.srccode() to
-   expect a 3-tuple instead of a 4-tuple, matching the return type in
-   the C extension.
-
-3. Fixed Termination Logic: Replaced return with sys.exit(0) when the
-  stop_time or stop_sample limits are reached to properly terminate
-  the processing loop.
-
-4. Fixed Test Path: Updated script_path in
-   test_arm_coresight_disasm.sh to point to
-   ../../python/arm-cs-trace-disasm.py instead of the old legacy path.
+v4:
+1. Git Fixup Cleanup: Squashed the lingering fixup commit from the previous
+   session into its proper patch.
 
 v8:
-- Fix event name match.
+- Wrapped session.find_thread in a try-except block to prevent
+  crashing on untracked PIDs.
 ---
- tools/perf/python/arm-cs-trace-disasm.py      | 338 ++++++++++++++++++
- .../tests/shell/test_arm_coresight_disasm.sh  |  12 +-
- 2 files changed, 345 insertions(+), 5 deletions(-)
- create mode 100755 tools/perf/python/arm-cs-trace-disasm.py
+ tools/perf/python/check-perf-trace.py | 120 ++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
+ create mode 100755 tools/perf/python/check-perf-trace.py
 
-diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python/arm-cs-trace-disasm.py
+diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/check-perf-trace.py
 new file mode 100755
-index 000000000000..ed2291a634e8
+index 000000000000..bbcd0c520745
 --- /dev/null
-+++ b/tools/perf/python/arm-cs-trace-disasm.py
-@@ -0,0 +1,338 @@
++++ b/tools/perf/python/check-perf-trace.py
+@@ -0,0 +1,120 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+arm-cs-trace-disasm.py: ARM CoreSight Trace Dump With Disassember using perf python module
++Basic test of Python scripting support for perf.
++Ported from tools/perf/scripts/python/check-perf-trace.py
 +"""
 +
-+import os
-+from os import path
-+import re
-+from subprocess import check_output
 +import argparse
-+import platform
-+import sys
-+from typing import Dict, List, Optional
-+
++import collections
 +import perf
 +
-+# Initialize global dicts and regular expression
-+DISASM_CACHE: Dict[str, List[str]] = {}
-+CPU_DATA: Dict[str, int] = {}
-+DISASM_RE = re.compile(r"^\s*([0-9a-fA-F]+):")
-+DISASM_FUNC_RE = re.compile(r"^\s*([0-9a-fA-F]+)\s.*:")
-+CACHE_SIZE = 64*1024
-+SAMPLE_IDX = -1
++unhandled: collections.defaultdict[str, int] = collections.defaultdict(int)
++session = None
 +
-+GLB_SOURCE_FILE_NAME: Optional[str] = None
-+GLB_LINE_NUMBER: Optional[int] = None
-+GLB_DSO: Optional[str] = None
++softirq_vecs = {
++    0: "HI_SOFTIRQ",
++    1: "TIMER_SOFTIRQ",
++    2: "NET_TX_SOFTIRQ",
++    3: "NET_RX_SOFTIRQ",
++    4: "BLOCK_SOFTIRQ",
++    5: "IRQ_POLL_SOFTIRQ",
++    6: "TASKLET_SOFTIRQ",
++    7: "SCHED_SOFTIRQ",
++    8: "HRTIMER_SOFTIRQ",
++    9: "RCU_SOFTIRQ",
++}
 +
-+KVER = platform.release()
-+VMLINUX_PATHS = [
-+    f"/usr/lib/debug/boot/vmlinux-{KVER}.debug",
-+    f"/usr/lib/debug/lib/modules/{KVER}/vmlinux",
-+    f"/lib/modules/{KVER}/build/vmlinux",
-+    f"/usr/lib/debug/boot/vmlinux-{KVER}",
-+    f"/boot/vmlinux-{KVER}",
-+    "/boot/vmlinux",
-+    "vmlinux"
-+]
++def trace_begin() -> None:
++    """Called at the start of trace processing."""
++    print("trace_begin")
 +
-+def default_objdump() -> str:
-+    """Return the default objdump path from perf config or 'objdump'."""
++def trace_end() -> None:
++    """Called at the end of trace processing."""
++    print_unhandled()
++
++def symbol_str(event_name: str, field_name: str, value: int) -> str:
++    """Resolves symbol values to strings."""
++    if event_name == "irq__softirq_entry" and field_name == "vec":
++        return softirq_vecs.get(value, str(value))
++    return str(value)
++
++def flag_str(event_name: str, field_name: str, value: int) -> str:
++    """Resolves flag values to strings."""
++    if event_name == "kmem__kmalloc" and field_name == "gfp_flags":
++        return f"0x{value:x}"
++    return str(value)
++
++def print_header(event_name: str, sample: perf.sample_event) -> None:
++    """Prints common header for events."""
++    secs = sample.sample_time // 1000000000
++    nsecs = sample.sample_time % 1000000000
++    comm = "[unknown]"
 +    try:
-+        config = perf.config_get("annotate.objdump")
-+        return str(config) if config else "objdump"
-+    except (AttributeError, TypeError):
-+        return "objdump"
++        if session:
++            thread = session.find_thread(sample.sample_pid)
++            if thread:
++                comm = thread.comm()
++    except (TypeError, AttributeError):
++        pass
++    print(f"{event_name:<20} {sample.sample_cpu:5} {secs:05}.{nsecs:09} "
++          f"{sample.sample_pid:8} {comm:<20} ", end=' ')
 +
-+def find_vmlinux() -> Optional[str]:
-+    """Find the vmlinux file in standard paths."""
-+    if hasattr(find_vmlinux, "path"):
-+        return getattr(find_vmlinux, "path")
++def print_uncommon(sample: perf.sample_event) -> None:
++    """Prints uncommon fields for tracepoints."""
++    # Fallback to 0 if field not found (e.g. on older kernels or if not tracepoint)
++    pc = getattr(sample, "common_preempt_count", 0)
++    flags = getattr(sample, "common_flags", 0)
++    lock_depth = getattr(sample, "common_lock_depth", 0)
 +
-+    for v in VMLINUX_PATHS:
-+        if os.access(v, os.R_OK):
-+            setattr(find_vmlinux, "path", v)
-+            return v
-+    setattr(find_vmlinux, "path", None)
-+    return None
++    print(f"common_preempt_count={pc}, common_flags={flags}, "
++          f"common_lock_depth={lock_depth}, ")
 +
-+def get_dso_file_path(dso_name: str, dso_build_id: str, vmlinux: Optional[str]) -> str:
-+    """Return the path to the DSO file."""
-+    if dso_name in ("[kernel.kallsyms]", "vmlinux"):
-+        if vmlinux:
-+            return vmlinux
-+        return find_vmlinux() or dso_name
++def irq__softirq_entry(sample: perf.sample_event) -> None:
++    """Handles irq:softirq_entry events."""
++    print_header("irq__softirq_entry", sample)
++    print_uncommon(sample)
++    print(f"vec={symbol_str('irq__softirq_entry', 'vec', sample.vec)}")
 +
-+    if dso_name == "[vdso]":
-+        append = "/vdso"
++def kmem__kmalloc(sample: perf.sample_event) -> None:
++    """Handles kmem:kmalloc events."""
++    print_header("kmem__kmalloc", sample)
++    print_uncommon(sample)
++
++    print(f"call_site={sample.call_site:d}, ptr={sample.ptr:d}, "
++          f"bytes_req={sample.bytes_req:d}, bytes_alloc={sample.bytes_alloc:d}, "
++          f"gfp_flags={flag_str('kmem__kmalloc', 'gfp_flags', sample.gfp_flags)}")
++
++def trace_unhandled(event_name: str) -> None:
++    """Tracks unhandled events."""
++    unhandled[event_name] += 1
++
++def print_unhandled() -> None:
++    """Prints summary of unhandled events."""
++    if not unhandled:
++        return
++    print("\nunhandled events:\n")
++    print(f"{'event':<40} {'count':>10}")
++    print("---------------------------------------- -----------")
++    for event_name, count in unhandled.items():
++        print(f"{event_name:<40} {count:10}")
++
++def process_event(sample: perf.sample_event) -> None:
++    """Callback for processing events."""
++    event_name = str(sample.evsel)
++    if event_name == "evsel(irq:softirq_entry)":
++        irq__softirq_entry(sample)
++    elif "evsel(kmem:kmalloc)" in event_name:
++        kmem__kmalloc(sample)
 +    else:
-+        append = "/elf"
-+
-+    buildid_dir = os.environ.get('PERF_BUILDID_DIR')
-+    if not buildid_dir:
-+        buildid_dir = os.path.join(os.environ.get('HOME', ''), '.debug')
-+
-+    dso_path = buildid_dir + "/" + dso_name + "/" + dso_build_id + append
-+    # Replace duplicate slash chars to single slash char
-+    dso_path = dso_path.replace('//', '/', 1)
-+    return dso_path
-+
-+def read_disam(dso_fname: str, dso_start: int, start_addr: int,
-+               stop_addr: int, objdump: str) -> List[str]:
-+    """Read disassembly from a DSO file using objdump."""
-+    addr_range = f"{start_addr}:{stop_addr}:{dso_fname}"
-+
-+    # Don't let the cache get too big, clear it when it hits max size
-+    if len(DISASM_CACHE) > CACHE_SIZE:
-+        DISASM_CACHE.clear()
-+
-+    if addr_range in DISASM_CACHE:
-+        disasm_output = DISASM_CACHE[addr_range]
-+    else:
-+        start_addr = start_addr - dso_start
-+        stop_addr = stop_addr - dso_start
-+        disasm = [objdump, "-d", "-z",
-+                  f"--start-address={start_addr:#x}",
-+                  f"--stop-address={stop_addr:#x}"]
-+        disasm += [dso_fname]
-+        disasm_output = check_output(disasm).decode('utf-8').split('\n')
-+        DISASM_CACHE[addr_range] = disasm_output
-+
-+    return disasm_output
-+
-+def print_disam(dso_fname: str, dso_start: int, start_addr: int,
-+                stop_addr: int, objdump: str) -> None:
-+    """Print disassembly for a given address range."""
-+    for line in read_disam(dso_fname, dso_start, start_addr, stop_addr, objdump):
-+        m = DISASM_FUNC_RE.search(line)
-+        if m is None:
-+            m = DISASM_RE.search(line)
-+            if m is None:
-+                continue
-+        print(f"\t{line}")
-+
-+def print_sample(sample: perf.sample_event) -> None:
-+    """Print sample details."""
-+    print(f"Sample = {{ cpu: {sample.sample_cpu:04d} addr: {sample.sample_addr:016x} "
-+          f"phys_addr: {sample.sample_phys_addr:016x} ip: {sample.sample_ip:016x} "
-+          f"pid: {sample.sample_pid} tid: {sample.sample_tid} period: {sample.sample_period} "
-+          f"time: {sample.sample_time} index: {SAMPLE_IDX}}}")
-+
-+def common_start_str(comm: str, sample: perf.sample_event) -> str:
-+    """Return common start string for sample output."""
-+    sec = int(sample.sample_time / 1000000000)
-+    ns = sample.sample_time % 1000000000
-+    cpu = sample.sample_cpu
-+    pid = sample.sample_pid
-+    tid = sample.sample_tid
-+    return f"{comm:>16s} {pid:5u}/{tid:<5u} [{cpu:04d}] {sec:9d}.{ns:09d}  "
-+
-+def print_srccode(comm: str, sample: perf.sample_event, symbol: str, dso: str) -> None:
-+    """Print source code and symbols for a sample."""
-+    ip = sample.sample_ip
-+    if symbol == "[unknown]":
-+        start_str = common_start_str(comm, sample) + f"{ip:x}".rjust(16).ljust(40)
-+    else:
-+        symoff = 0
-+        sym_start = sample.sym_start
-+        if sym_start is not None:
-+            symoff = ip - sym_start
-+        offs = f"+{symoff:#x}" if symoff != 0 else ""
-+        start_str = common_start_str(comm, sample) + (symbol + offs).ljust(40)
-+
-+    global GLB_SOURCE_FILE_NAME, GLB_LINE_NUMBER, GLB_DSO
-+
-+    source_file_name, line_number, source_line = sample.srccode()
-+    if source_file_name:
-+        if GLB_LINE_NUMBER == line_number and GLB_SOURCE_FILE_NAME == source_file_name:
-+            src_str = ""
-+        else:
-+            if len(source_file_name) > 40:
-+                src_file = f"...{source_file_name[-37:]} "
-+            else:
-+                src_file = source_file_name.ljust(41)
-+
-+            if source_line is None:
-+                src_str = f"{src_file}{line_number:>4d} <source not found>"
-+            else:
-+                src_str = f"{src_file}{line_number:>4d} {source_line}"
-+        GLB_DSO = None
-+    elif dso == GLB_DSO:
-+        src_str = ""
-+    else:
-+        src_str = dso
-+        GLB_DSO = dso
-+
-+    GLB_LINE_NUMBER = line_number
-+    GLB_SOURCE_FILE_NAME = source_file_name
-+
-+    print(start_str, src_str)
-+
-+class TraceDisasm:
-+    """Class to handle trace disassembly."""
-+    def __init__(self, cli_options: argparse.Namespace):
-+        self.options = cli_options
-+        self.sample_idx = -1
-+        self.session: Optional[perf.session] = None
-+
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process a single perf event."""
-+        self.sample_idx += 1
-+        global SAMPLE_IDX
-+        SAMPLE_IDX = self.sample_idx
-+
-+        if self.options.start_time and sample.sample_time < self.options.start_time:
-+            return
-+        if self.options.stop_time and sample.sample_time > self.options.stop_time:
-+            sys.exit(0)
-+        if self.options.start_sample and self.sample_idx < self.options.start_sample:
-+            return
-+        if self.options.stop_sample and self.sample_idx > self.options.stop_sample:
-+            sys.exit(0)
-+
-+        ev_name = str(sample.evsel)
-+        if self.options.verbose:
-+            print(f"Event type: {ev_name}")
-+            print_sample(sample)
-+
-+        dso = sample.dso or '[unknown]'
-+        symbol = sample.symbol or '[unknown]'
-+        dso_bid = sample.dso_bid or '[unknown]'
-+        dso_start = sample.map_start
-+        dso_end = sample.map_end
-+        map_pgoff = sample.map_pgoff or 0
-+
-+        comm = "[unknown]"
-+        try:
-+            if self.session:
-+                thread_info = self.session.find_thread(sample.sample_tid)
-+                if thread_info:
-+                    comm = thread_info.comm()
-+        except (TypeError, AttributeError):
-+            pass
-+
-+        cpu = sample.sample_cpu
-+        addr = sample.sample_addr
-+
-+        if CPU_DATA.get(str(cpu) + 'addr') is None:
-+            CPU_DATA[str(cpu) + 'addr'] = addr
-+            return
-+
-+        if dso == '[unknown]':
-+            return
-+
-+        if dso_start is None or dso_end is None:
-+            print(f"Failed to find valid dso map for dso {dso}")
-+            return
-+
-+        if "instructions" in ev_name:
-+            print_srccode(comm, sample, symbol, dso)
-+            return
-+
-+        if "branches" not in ev_name:
-+            return
-+
-+        self._process_branch(sample, comm, symbol, dso, dso_bid, dso_start, dso_end, map_pgoff)
-+
-+    def _process_branch(self, sample: perf.sample_event, comm: str, symbol: str, dso: str,
-+                        dso_bid: str, dso_start: int, dso_end: int, map_pgoff: int) -> None:
-+        """Helper to process branch events."""
-+        cpu = sample.sample_cpu
-+        ip = sample.sample_ip
-+        addr = sample.sample_addr
-+
-+        start_addr = CPU_DATA[str(cpu) + 'addr']
-+        stop_addr  = ip + 4
-+
-+        # Record for previous sample packet
-+        CPU_DATA[str(cpu) + 'addr'] = addr
-+
-+        # Filter out zero start_address. Optionally identify CS_ETM_TRACE_ON packet
-+        if start_addr == 0:
-+            if stop_addr == 4 and self.options.verbose:
-+                print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
-+            return
-+
-+        if start_addr < dso_start or start_addr > dso_end:
-+            print(f"Start address {start_addr:#x} is out of range [ {dso_start:#x} .. "
-+                  f"{dso_end:#x} ] for dso {dso}")
-+            return
-+
-+        if stop_addr < dso_start or stop_addr > dso_end:
-+            print(f"Stop address {stop_addr:#x} is out of range [ {dso_start:#x} .. "
-+                  f"{dso_end:#x} ] for dso {dso}")
-+            return
-+
-+        if self.options.objdump is not None:
-+            if dso == "[kernel.kallsyms]" or dso_start == 0x400000:
-+                dso_vm_start = 0
-+                map_pgoff_local = 0
-+            else:
-+                dso_vm_start = dso_start
-+                map_pgoff_local = map_pgoff
-+
-+            dso_fname = get_dso_file_path(dso, dso_bid, self.options.vmlinux)
-+            if path.exists(dso_fname):
-+                print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff_local,
-+                            stop_addr + map_pgoff_local, self.options.objdump)
-+            else:
-+                print(f"Failed to find dso {dso} for address range [ "
-+                      f"{start_addr + map_pgoff_local:#x} .. {stop_addr + map_pgoff_local:#x} ]")
-+
-+        print_srccode(comm, sample, symbol, dso)
-+
-+    def run(self) -> None:
-+        """Run the trace disassembly session."""
-+        input_file = self.options.input or "perf.data"
-+        if not os.path.exists(input_file):
-+            print(f"Error: {input_file} not found.", file=sys.stderr)
-+            sys.exit(1)
-+
-+        print('ARM CoreSight Trace Data Assembler Dump')
-+        try:
-+            self.session = perf.session(perf.data(input_file), sample=self.process_event)
-+        except Exception as e:
-+            print(f"Error opening session: {e}", file=sys.stderr)
-+            sys.exit(1)
-+
-+        self.session.process_events()
-+        print('End')
++        trace_unhandled(event_name)
 +
 +if __name__ == "__main__":
-+    def int_arg(v: str) -> int:
-+        """Helper for integer command line arguments."""
-+        val = int(v)
-+        if val < 0:
-+            raise argparse.ArgumentTypeError("Argument must be a positive integer")
-+        return val
++    ap = argparse.ArgumentParser()
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    args = ap.parse_args()
 +
-+    arg_parser = argparse.ArgumentParser(description="ARM CoreSight Trace Dump With Disassembler")
-+    arg_parser.add_argument("-i", "--input", help="input perf.data file")
-+    arg_parser.add_argument("-k", "--vmlinux",
-+                            help="Set path to vmlinux file. Omit to autodetect")
-+    arg_parser.add_argument("-d", "--objdump", nargs="?", const=default_objdump(),
-+                            help="Show disassembly. Can also be used to change the objdump path")
-+    arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable debugging log")
-+    arg_parser.add_argument("--start-time", type=int_arg,
-+                            help="Monotonic clock time of sample to start from.")
-+    arg_parser.add_argument("--stop-time", type=int_arg,
-+                            help="Monotonic clock time of sample to stop at.")
-+    arg_parser.add_argument("--start-sample", type=int_arg,
-+                            help="Index of sample to start from.")
-+    arg_parser.add_argument("--stop-sample", type=int_arg,
-+                            help="Index of sample to stop at.")
-+
-+    parsed_options = arg_parser.parse_args()
-+    if (parsed_options.start_time and parsed_options.stop_time and \
-+       parsed_options.start_time >= parsed_options.stop_time):
-+        print("--start-time must less than --stop-time")
-+        sys.exit(2)
-+    if (parsed_options.start_sample and parsed_options.stop_sample and \
-+       parsed_options.start_sample >= parsed_options.stop_sample):
-+        print("--start-sample must less than --stop-sample")
-+        sys.exit(2)
-+
-+    td = TraceDisasm(parsed_options)
-+    td.run()
-diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-index 0dfb4fadf531..c15cd60e1c24 100755
---- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-@@ -24,7 +24,7 @@ perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
- perfdata=${perfdata_dir}/perf.data
- file=$(mktemp /tmp/temporary_file.XXXXX)
- # Relative path works whether it's installed or running from repo
--script_path=$(dirname "$0")/../../scripts/python/arm-cs-trace-disasm.py
-+script_path=$(dirname "$0")/../../python/arm-cs-trace-disasm.py
- 
- cleanup_files()
- {
-@@ -45,8 +45,9 @@ branch_search="\sbl${sep}b${sep}b.ne${sep}b.eq${sep}cbz\s"
- if [ -e /proc/kcore ]; then
- 	echo "Testing kernel disassembly"
- 	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/null 2>&1
--	perf script -i ${perfdata} -s python:${script_path} -- \
--		-d --stop-sample=30 2> /dev/null > ${file}
-+	# shellcheck source=lib/setup_python.sh
-+	. "$(dirname "$0")"/lib/setup_python.sh
-+	$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=30 2> /dev/null > ${file}
- 	grep -q -e ${branch_search} ${file}
- 	echo "Found kernel branches"
- else
-@@ -57,8 +58,9 @@ fi
- ## Test user ##
- echo "Testing userspace disassembly"
- perf record -o ${perfdata} -e cs_etm//u -- touch $file > /dev/null 2>&1
--perf script -i ${perfdata} -s python:${script_path} -- \
--	-d --stop-sample=30 2> /dev/null > ${file}
-+# shellcheck source=lib/setup_python.sh
-+. "$(dirname "$0")"/lib/setup_python.sh
-+$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=30 2> /dev/null > ${file}
- grep -q -e ${branch_search} ${file}
- echo "Found userspace branches"
- 
++    trace_begin()
++    session = perf.session(perf.data(args.input), sample=process_event)
++    session.process_events()
++    trace_end()
 -- 
 2.54.0.545.g6539524ca2-goog
 
