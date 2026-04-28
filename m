@@ -1,83 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F16A4266AE
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 10:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3094A3F0A86
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 11:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777372989; cv=none; b=WHLAdUP4w6VZAoa3JByYKF7Lxuk5OQHAkk4XnNSA8KkYWyTe6gJV44KtD2hJ/UVAFvVvWH+872qo4S9E1Xnop+N6fnU/BQR3KlnXYeptPMGdsg6RGLyf0otSjrYvorg13RYjVbCZGgwIUAuz3Plha+ReeHMRZAiuHVrow/u7zW0=
+	t=1777377379; cv=none; b=tuG3H8JcEJz07+mCDVSAIakN4FhO40SKSdTmelTOxfYuZscKYEiM/AFjWl5d4cW5NjP0Gpooa2+uE9a8LMeccvlIItZFR3XWnRFkv1Rc8wO4pOt0LjV7BGxDt9eqwgY5UwnURbD0ufOyHztvArpb7594iH0crijZ/Gb/3EPGA4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777372989; c=relaxed/simple;
-	bh=WByTLPqc9b271QTzPgHdHQnJ14RNCgIfFszRx+wkw4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nc8iI+IN7L1Vi/xSRkxBCA5B41kTM1VnJumCWN95l+3sG8KyHqOkij4X9hYjkJGfI/0/Rg5ZiJVCNePhA6UPlcC9ld6AB1/Nrgbazvl1qQ009MdWaRTu1d2cDh1t0sxoOAJxZC4TQcaUvepL0E/qb5x1C7H2vaMMiRMqMErZ3rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=uf/TbnW9; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=uf/TbnW9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1777377379; c=relaxed/simple;
+	bh=rHQ8ZpVpFxKPefGis7kEbhp+wGT64dVGc+IOm8Lf2v4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GC9dMKAK6ugepS/bwA7DaFxrPLNMpTcrgvicuUsxBPs6uMcktnwr4KzTcV+1/fKurOD90aq2k2kEPkjjng6niMAQL2AvhfU+Ck46gza0QE6D/UMcu/rdPExB3Kec3yU5j7ntXVDYrBeT3aE7cgJUWbeTRyJNuzCPekaE6cNzrK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iRTTJ2aM; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="uf/TbnW9";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="uf/TbnW9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 912476A823;
-	Tue, 28 Apr 2026 10:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1777372985; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QAJgwAvsmLE1WxhQCdFr1BDK13BpJhKkMZaeH5miMEQ=;
-	b=uf/TbnW9yP2kASzFViPAzVdDh1dUW0BoZhTg2DV/8P6NoT7xme4zZEUDj5VoFxs8E5B7wH
-	MLEptOTuKQ2YQLRm7Oft3ktVetu+/cqJQtE7Z+xjIHPd8ANSUAVTSfX66tFRSeUS1+jSTu
-	UXu/HyxbBTbaHwDRxoVUCsmjN2FIl8g=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b="uf/TbnW9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1777372985; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QAJgwAvsmLE1WxhQCdFr1BDK13BpJhKkMZaeH5miMEQ=;
-	b=uf/TbnW9yP2kASzFViPAzVdDh1dUW0BoZhTg2DV/8P6NoT7xme4zZEUDj5VoFxs8E5B7wH
-	MLEptOTuKQ2YQLRm7Oft3ktVetu+/cqJQtE7Z+xjIHPd8ANSUAVTSfX66tFRSeUS1+jSTu
-	UXu/HyxbBTbaHwDRxoVUCsmjN2FIl8g=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 31F39593B0;
-	Tue, 28 Apr 2026 10:43:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id e2McCzmP8Gm6PgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 28 Apr 2026 10:43:05 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRTTJ2aM"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2b2589c26e3so104777035ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 04:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777377377; x=1777982177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJ0xOXWM5wm0K/iDyOfvIQKw+eIHSiLahJt/RRhEhD4=;
+        b=iRTTJ2aMhq8npMuzTgSuW+J3+nb3fAtJYt6UKNotrVAO9zwbzUSzmgWV8RQTwh0GUd
+         bA0O6y0VtA1JIILE2SBBKD+Um582So/+Twi0piKYyKH/CPlT6frFUDvIdc8QVj2G6vIJ
+         Vczz2QadJH85nts7LHPPa1XQE7+SIT8s+6pbUFQO2Xy95ieG4aZOApHf2hObxQzlH1WI
+         VNTD7kZir5nYVrR4ncr3zeX7O57XRgOpLqm52Ilnt366mUZeER4UEsN5waYHP6pEu2AN
+         wABuvYOs38izAxFY3AhLceBo0cWKH3vbP6B9f2aZ36BiQUyRGuRd1l3I8I1sHzs3yvwn
+         RMPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777377377; x=1777982177;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nJ0xOXWM5wm0K/iDyOfvIQKw+eIHSiLahJt/RRhEhD4=;
+        b=RnU2A2u6NkLp1MpAMTWrsRXOeXnNxPf8cnGYBE1cEV12K9f66GdrGd797wbBVCA2kK
+         WBq0MG6y7oM+1cUxpaFIwpExPzQnPF8Maf2JOgf6IhVuGTGeBdorULZa4UbKgeiLSKw7
+         we4ID6kJWMv4f5D1DbiUGy/EFzbq8CHacNBWb9jcNVFaKsaffQwQSVP4GZWsG+514IDy
+         vR40mLBFdsOI9SZTwXC85dzfSgYdj3WfT4+8MwxC+DZvHVF1oZAfwXTynXql6GFOw3jI
+         gwh6MqaFQFKvQySq4F56IacWQdgeIrViBmVOPAGznRfFtJ6fNzkTs/Do5rdI1PW9CrtN
+         0LZA==
+X-Forwarded-Encrypted: i=1; AFNElJ9kD9WJijnbDTSyV4MKiF6sTFPPoclPlNmlXkj4FLwe2IhX0vxi57maSLPHbTDAKKDKYMHAQXou7kDRkAEZDTwH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx63gFfbjTIQLxBy7mSQZ8uDVHRx2u5ESwCJTDzT5qWAbmDLtp1
+	0Y5f2DGaBSRUJSeUxcQUXVP9AsH6Us4ojuz6eHJan/kfilQFsB13lbtgfLST5tI/
+X-Gm-Gg: AeBDiev5nrD92Cl3s8kYthNO5WJWaw5qOnWx9YqCJKxwb7jsWEg1beGEJg5iIPpTI/+
+	P+FnMAfwq3IzK0preOg640SW8rEf9dVuRLms6yjarS+WgwG7hVufaPGwkUiNkttD9Z2HcTtWtC8
+	h1ByzFDntB7qI2txhH6D739hIvxJO9kwL+AcPdyVYcXPn6RcKOJOuWJbs/vBOwhS4jDbePznjWk
+	mv02zMha9O9vQJwHdsExHCPYO8GtT3SDZ6BgKBA1tCltJzkORxKR3S7vi5O92g1GvRKtqst6CEB
+	9+Belj6TWCEW7R8RQdLPJqcC3MorVA9Zt0Qz2eycNxkrq4H4N3U6dfHCTK0njobJJYJgUmsoNsZ
+	6jRadOehSG528auW5l1vvwD6Bsrna6seINHCLbRXsiIRWELhCg37mWjkn1DJAWWkLRjPwOoeqOc
+	oEpypE7uhkSM85i7e+5y+v7k9j0UbZVml6ZdSg+PMR/KLoCg==
+X-Received: by 2002:a17:902:e9d2:b0:2b7:a3bf:b2a0 with SMTP id d9443c01a7336-2b97c3d1265mr22391915ad.5.1777377377463;
+        Tue, 28 Apr 2026 04:56:17 -0700 (PDT)
+Received: from localhost.localdomain ([165.132.143.163])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b97aa93a92sm25761535ad.22.2026.04.28.04.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2026 04:56:17 -0700 (PDT)
+From: Minwoo Ahn <mwahn402@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH RFC 10/11] x86/events: Switch core parts to use 64-bit rdmsr/wrmsr() variants
-Date: Tue, 28 Apr 2026 12:42:04 +0200
-Message-ID: <20260428104205.916924-11-jgross@suse.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260428104205.916924-1-jgross@suse.com>
-References: <20260428104205.916924-1-jgross@suse.com>
+	Jinkyu Jeong <jinkyu@yonsei.ac.kr>,
+	Minwoo Ahn <mwahn402@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/core: Fix sampling period inconsistency across CPU migration
+Date: Tue, 28 Apr 2026 11:53:17 +0000
+Message-ID: <20260428115317.22839-1-mwahn402@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -85,321 +82,263 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.com:mid,suse.com:email]
-X-Rspamd-Queue-Id: 912476A823
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
 
-Switch the core parts of the x86 events subsystem to use the new
-64-bit forms of rdmsr(), rdmasr_safe(), wrmsr() and wrmsr_safe().
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
+When per-task software events are sampled, period_left is not
+managed consistently when task migration happens. The perf_event
+may observe a different hw_perf_event::period_left on the new CPU,
+breaking the sampling periodicity. Even if a task was near its
+sampling point, it would use a stale period_left after migration.
+
+Introduce struct perf_task_context as a per-task container to
+preserve period_left across CPU migrations. A separate structure
+is used rather than adding fields to hw_perf_event, because
+hw_perf_event is a general-purpose structure shared by all event
+types (hardware, software, tracepoint, breakpoint, etc.) and
+embedding per-task sampling state there would bloat it for the
+majority of events that do not need it. perf_task_context is only
+allocated for per-task software sampling events.
+
+Multiple per-CPU perf_event instances originating from the same
+perf_event_open caller share a single perf_task_context via
+refcounting. The perf_event owner field is used to distinguish events
+from different perf_event_open callers, preventing unrelated sampling
+sessions from interfering with each other. For inherited events
+(where owner is NULL), the inherit flag relaxes the owner check
+so that child events properly share perf_task_context. The
+allocation condition also accounts for inherited events whose
+attr.type has been remapped from PERF_TYPE_SOFTWARE to a dynamic
+PMU type during initialization.
+
+perf_task_context serves purely as a transport for period_left
+across CPU migrations. On event removal (swevent_del for non-clock
+events, cancel_hrtimer for clock events), hw_perf_event::period_left
+is backed up to perf_task_context::period_left. On event addition
+(swevent_add for non-clock events, start_hrtimer for clock events),
+perf_task_context::period_left is restored to hw_perf_event::period_left.
+During normal operation between migrations, hw_perf_event::period_left
+remains the sole working copy, keeping existing code paths unaffected.
+
+To reproduce, force CPU migration during task-clock sampling:
+
+  $ sysbench cpu --threads=1 --time=60 run &
+  $ sleep 0.1
+  $ TID=$(ls /proc/$!/task/ | grep -v "^$!$")
+  $ perf record -e task-clock -c 1000000000 -t $TID &
+
+  # Force migration across CPUs every 1.2 seconds
+  $ while kill -0 $TID 2>/dev/null; do
+        taskset -p -c 0 $TID; sleep 1.2
+        taskset -p -c 1 $TID; sleep 1.2
+        taskset -p -c 2 $TID; sleep 1.2
+    done
+
+  # Check sample intervals (expected: ~1.000s each)
+  $ perf script -F time | \
+        awk 'NR==1 {prev=$1; next} {print $1-prev; prev=$1}'
+
+Without this patch, sample intervals show significant deviation
+from the expected 1-second period after each migration. With this
+patch, intervals remain consistent.
+
+Co-developed-by: Jinkyu Jeong <jinkyu@yonsei.ac.kr>
+Signed-off-by: Jinkyu Jeong <jinkyu@yonsei.ac.kr>
+Signed-off-by: Minwoo Ahn <mwahn402@gmail.com>
 ---
- arch/x86/events/core.c       | 42 ++++++++++++++++++------------------
- arch/x86/events/msr.c        |  2 +-
- arch/x86/events/perf_event.h | 26 +++++++++++-----------
- arch/x86/events/probe.c      |  2 +-
- arch/x86/events/rapl.c       |  8 +++----
- 5 files changed, 40 insertions(+), 40 deletions(-)
+ include/linux/perf_event.h | 18 +++++++++++
+ kernel/events/core.c       | 75 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 810ab21ffd99..dc75b9537ab5 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -279,7 +279,7 @@ bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
- 	 */
- 	for_each_set_bit(i, cntr_mask, X86_PMC_IDX_MAX) {
- 		reg = x86_pmu_config_addr(i);
--		ret = rdmsrq_safe(reg, &val);
-+		ret = rdmsr_safe(reg, &val);
- 		if (ret)
- 			goto msr_fail;
- 		if (val & ARCH_PERFMON_EVENTSEL_ENABLE) {
-@@ -293,7 +293,7 @@ bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 48d851fbd8ea..84827f81cc9c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -829,6 +829,9 @@ struct perf_event {
+ 	u16				read_size;
+ 	struct hw_perf_event		hw;
  
- 	if (*(u64 *)fixed_cntr_mask) {
- 		reg = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
--		ret = rdmsrq_safe(reg, &val);
-+		ret = rdmsr_safe(reg, &val);
- 		if (ret)
- 			goto msr_fail;
- 		for_each_set_bit(i, fixed_cntr_mask, X86_PMC_IDX_MAX) {
-@@ -324,11 +324,11 @@ bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
- 	 * (qemu/kvm) that don't trap on the MSR access and always return 0s.
- 	 */
- 	reg = x86_pmu_event_addr(reg_safe);
--	if (rdmsrq_safe(reg, &val))
-+	if (rdmsr_safe(reg, &val))
- 		goto msr_fail;
- 	val ^= 0xffffUL;
--	ret = wrmsrq_safe(reg, val);
--	ret |= rdmsrq_safe(reg, &val_new);
-+	ret = wrmsr_safe(reg, val);
-+	ret |= rdmsr_safe(reg, &val_new);
- 	if (ret || val != val_new)
- 		goto msr_fail;
++	/* Per-task sampling state for sw events, survives CPU migration */
++	struct perf_task_context	*perf_task_ctxp;
++
+ 	struct perf_event_context	*ctx;
+ 	/*
+ 	 * event->pmu_ctx points to perf_event_pmu_context in which the event
+@@ -1148,6 +1151,21 @@ struct perf_cpu_context {
+ 	struct perf_event		*heap_default[2];
+ };
  
-@@ -713,13 +713,13 @@ void x86_pmu_disable_all(void)
++#define perf_event_equal_task_ctx(a1, a2)	\
++	((a1)->config == (a2)->config &&	\
++	 (a1)->sample_period == (a2)->sample_period)
++
++/**
++ * struct perf_task_context - per-task software event context
++ *
++ * Shared across per-CPU perf_event instances of the same task to
++ * preserve period_left across CPU migrations.
++ */
++struct perf_task_context {
++	refcount_t			refcount;
++	local64_t			period_left;
++};
++
+ struct perf_output_handle {
+ 	struct perf_event		*event;
+ 	struct perf_buffer		*rb;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6d1f8bad7e1c..bd106e0b854a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5740,6 +5740,13 @@ static bool exclusive_event_installable(struct perf_event *event,
  
- 		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
--		rdmsrq(x86_pmu_config_addr(idx), val);
-+		val = rdmsr(x86_pmu_config_addr(idx));
- 		if (!(val & ARCH_PERFMON_EVENTSEL_ENABLE))
- 			continue;
- 		val &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
--		wrmsrq(x86_pmu_config_addr(idx), val);
-+		wrmsr(x86_pmu_config_addr(idx), val);
- 		if (is_counter_pair(hwc))
--			wrmsrq(x86_pmu_config_addr(idx + 1), 0);
-+			wrmsr(x86_pmu_config_addr(idx + 1), 0);
- 	}
+ static void perf_free_addr_filters(struct perf_event *event);
+ 
++static void perf_put_task_ctxp(struct perf_event *event)
++{
++	if (event->perf_task_ctxp &&
++	    refcount_dec_and_test(&event->perf_task_ctxp->refcount))
++		kfree(event->perf_task_ctxp);
++}
++
+ /* vs perf_event_alloc() error */
+ static void __free_event(struct perf_event *event)
+ {
+@@ -5761,6 +5768,9 @@ static void __free_event(struct perf_event *event)
+ 	if (event->attach_state & PERF_ATTACH_TASK_DATA)
+ 		detach_perf_ctx_data(event);
+ 
++	if (event->perf_task_ctxp)
++		perf_put_task_ctxp(event);
++
+ 	if (event->destroy)
+ 		event->destroy(event);
+ 
+@@ -11054,9 +11064,14 @@ static void perf_swevent_read(struct perf_event *event)
+ static int perf_swevent_add(struct perf_event *event, int flags)
+ {
+ 	struct swevent_htable *swhash = this_cpu_ptr(&swevent_htable);
++	struct perf_task_context *ctxp = event->perf_task_ctxp;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	struct hlist_head *head;
+ 
++	if (ctxp)
++		local64_set(&hwc->period_left,
++			    local64_read(&ctxp->period_left));
++
+ 	if (is_sampling_event(event)) {
+ 		hwc->last_period = hwc->sample_period;
+ 		perf_swevent_set_period(event);
+@@ -11076,7 +11091,13 @@ static int perf_swevent_add(struct perf_event *event, int flags)
+ 
+ static void perf_swevent_del(struct perf_event *event, int flags)
+ {
++	struct perf_task_context *ctxp = event->perf_task_ctxp;
++
+ 	hlist_del_rcu(&event->hlist_entry);
++
++	if (ctxp)
++		local64_set(&ctxp->period_left,
++			    local64_read(&event->hw.period_left));
  }
  
-@@ -1446,14 +1446,14 @@ int x86_perf_event_set_period(struct perf_event *event)
- 	 */
- 	local64_set(&hwc->prev_count, (u64)-left);
+ static void perf_swevent_start(struct perf_event *event, int flags)
+@@ -12203,12 +12224,17 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
  
--	wrmsrq(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-+	wrmsr(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
+ static void perf_swevent_start_hrtimer(struct perf_event *event)
+ {
++	struct perf_task_context *ctxp = event->perf_task_ctxp;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	s64 period;
  
- 	/*
- 	 * Sign extend the Merge event counter's upper 16 bits since
- 	 * we currently declare a 48-bit counter width
- 	 */
- 	if (is_counter_pair(hwc))
--		wrmsrq(x86_pmu_event_addr(idx + 1), 0xffff);
-+		wrmsr(x86_pmu_event_addr(idx + 1), 0xffff);
- 
- 	perf_event_update_userpage(event);
- 
-@@ -1575,10 +1575,10 @@ void perf_event_print_debug(void)
+ 	if (!is_sampling_event(event))
  		return;
  
- 	if (x86_pmu.version >= 2) {
--		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
--		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
--		rdmsrq(MSR_CORE_PERF_GLOBAL_OVF_CTRL, overflow);
--		rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
-+		ctrl = rdmsr(MSR_CORE_PERF_GLOBAL_CTRL);
-+		status = rdmsr(MSR_CORE_PERF_GLOBAL_STATUS);
-+		overflow = rdmsr(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
-+		fixed = rdmsr(MSR_ARCH_PERFMON_FIXED_CTR_CTRL);
++	if (ctxp)
++		local64_set(&hwc->period_left,
++			    local64_read(&ctxp->period_left));
++
+ 	period = local64_read(&hwc->period_left);
+ 	if (period) {
+ 		if (period < 0)
+@@ -12224,6 +12250,7 @@ static void perf_swevent_start_hrtimer(struct perf_event *event)
  
- 		pr_info("\n");
- 		pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
-@@ -1586,19 +1586,19 @@ void perf_event_print_debug(void)
- 		pr_info("CPU#%d: overflow:   %016llx\n", cpu, overflow);
- 		pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
- 		if (pebs_constraints) {
--			rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
-+			pebs = rdmsr(MSR_IA32_PEBS_ENABLE);
- 			pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
- 		}
- 		if (x86_pmu.lbr_nr) {
--			rdmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
-+			debugctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
- 			pr_info("CPU#%d: debugctl:   %016llx\n", cpu, debugctl);
- 		}
- 	}
- 	pr_info("CPU#%d: active:     %016llx\n", cpu, *(u64 *)cpuc->active_mask);
- 
- 	for_each_set_bit(idx, cntr_mask, X86_PMC_IDX_MAX) {
--		rdmsrq(x86_pmu_config_addr(idx), pmc_ctrl);
--		rdmsrq(x86_pmu_event_addr(idx), pmc_count);
-+		pmc_ctrl = rdmsr(x86_pmu_config_addr(idx));
-+		pmc_count = rdmsr(x86_pmu_event_addr(idx));
- 
- 		prev_left = per_cpu(pmc_prev_left[idx], cpu);
- 
-@@ -1612,7 +1612,7 @@ void perf_event_print_debug(void)
- 	for_each_set_bit(idx, fixed_cntr_mask, X86_PMC_IDX_MAX) {
- 		if (fixed_counter_disabled(idx, cpuc->pmu))
- 			continue;
--		rdmsrq(x86_pmu_fixed_ctr_addr(idx), pmc_count);
-+		pmc_count = rdmsr(x86_pmu_fixed_ctr_addr(idx));
- 
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
- 			cpu, idx, pmc_count);
-@@ -2560,9 +2560,9 @@ void perf_clear_dirty_counters(void)
- 			if (!test_bit(i - INTEL_PMC_IDX_FIXED, hybrid(cpuc->pmu, fixed_cntr_mask)))
- 				continue;
- 
--			wrmsrq(x86_pmu_fixed_ctr_addr(i - INTEL_PMC_IDX_FIXED), 0);
-+			wrmsr(x86_pmu_fixed_ctr_addr(i - INTEL_PMC_IDX_FIXED), 0);
- 		} else {
--			wrmsrq(x86_pmu_event_addr(i), 0);
-+			wrmsr(x86_pmu_event_addr(i), 0);
- 		}
- 	}
- 
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 76d6418c5055..476069924e6b 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -158,7 +158,7 @@ static inline u64 msr_read_counter(struct perf_event *event)
- 	u64 now;
- 
- 	if (event->hw.event_base)
--		rdmsrq(event->hw.event_base, now);
-+		now = rdmsr(event->hw.event_base);
- 	else
- 		now = rdtsc_ordered();
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fad87d3c8b2c..e5f189c91f82 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1271,16 +1271,16 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
- 	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
- 
- 	if (hwc->extra_reg.reg)
--		wrmsrq(hwc->extra_reg.reg, hwc->extra_reg.config);
-+		wrmsr(hwc->extra_reg.reg, hwc->extra_reg.config);
- 
- 	/*
- 	 * Add enabled Merge event on next counter
- 	 * if large increment event being enabled on this counter
- 	 */
- 	if (is_counter_pair(hwc))
--		wrmsrq(x86_pmu_config_addr(hwc->idx + 1), x86_pmu.perf_ctr_pair_en);
-+		wrmsr(x86_pmu_config_addr(hwc->idx + 1), x86_pmu.perf_ctr_pair_en);
- 
--	wrmsrq(hwc->config_base, (hwc->config | enable_mask) & ~disable_mask);
-+	wrmsr(hwc->config_base, (hwc->config | enable_mask) & ~disable_mask);
- }
- 
- void x86_pmu_enable_all(int added);
-@@ -1296,10 +1296,10 @@ static inline void x86_pmu_disable_event(struct perf_event *event)
- 	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ {
++	struct perf_task_context *ctxp = event->perf_task_ctxp;
  	struct hw_perf_event *hwc = &event->hw;
  
--	wrmsrq(hwc->config_base, hwc->config & ~disable_mask);
-+	wrmsr(hwc->config_base, hwc->config & ~disable_mask);
+ 	/*
+@@ -12238,8 +12265,13 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ 	 */
+ 	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
++
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
  
- 	if (is_counter_pair(hwc))
--		wrmsrq(x86_pmu_config_addr(hwc->idx + 1), 0);
-+		wrmsr(x86_pmu_config_addr(hwc->idx + 1), 0);
- }
- 
- void x86_pmu_enable_event(struct perf_event *event);
-@@ -1473,12 +1473,12 @@ static __always_inline void __amd_pmu_lbr_disable(void)
- {
- 	u64 dbg_ctl, dbg_extn_cfg;
- 
--	rdmsrq(MSR_AMD_DBG_EXTN_CFG, dbg_extn_cfg);
--	wrmsrq(MSR_AMD_DBG_EXTN_CFG, dbg_extn_cfg & ~DBG_EXTN_CFG_LBRV2EN);
-+	dbg_extn_cfg = rdmsr(MSR_AMD_DBG_EXTN_CFG);
-+	wrmsr(MSR_AMD_DBG_EXTN_CFG, dbg_extn_cfg & ~DBG_EXTN_CFG_LBRV2EN);
- 
- 	if (cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE)) {
--		rdmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
--		wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl & ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI);
-+		dbg_ctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
-+		wrmsr(MSR_IA32_DEBUGCTLMSR, dbg_ctl & ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI);
++		if (ctxp)
++			local64_set(&ctxp->period_left,
++				    ktime_to_ns(remaining));
++
+ 		hrtimer_try_to_cancel(&hwc->hrtimer);
  	}
  }
- 
-@@ -1619,21 +1619,21 @@ static inline bool intel_pmu_has_bts(struct perf_event *event)
- 
- static __always_inline void __intel_pmu_pebs_disable_all(void)
- {
--	wrmsrq(MSR_IA32_PEBS_ENABLE, 0);
-+	wrmsr(MSR_IA32_PEBS_ENABLE, 0);
+@@ -13259,6 +13291,40 @@ static void account_event(struct perf_event *event)
+ 	account_pmu_sb_event(event);
  }
  
- static __always_inline void __intel_pmu_arch_lbr_disable(void)
- {
--	wrmsrq(MSR_ARCH_LBR_CTL, 0);
-+	wrmsr(MSR_ARCH_LBR_CTL, 0);
- }
++static struct perf_task_context *
++perf_get_task_ctxp(struct perf_event *event, struct task_struct *task,
++		   bool inherit)
++{
++	struct perf_task_context *ctxp = NULL;
++	struct perf_event_context *ctx = task->perf_event_ctxp;
++	struct perf_event *iter;
++
++	if (ctx) {
++		raw_spin_lock(&ctx->lock);
++		list_for_each_entry(iter, &ctx->event_list, event_entry) {
++			if (iter->perf_task_ctxp &&
++			    (iter->owner == current ||
++			     (inherit && !iter->owner)) &&
++			    perf_event_equal_task_ctx(&iter->attr,
++						     &event->attr)) {
++				ctxp = iter->perf_task_ctxp;
++				refcount_inc(&ctxp->refcount);
++				break;
++			}
++		}
++		raw_spin_unlock(&ctx->lock);
++	}
++
++	if (!ctxp) {
++		ctxp = kzalloc_obj(struct perf_task_context);
++		if (!ctxp)
++			return NULL;
++		refcount_set(&ctxp->refcount, 1);
++	}
++
++	return ctxp;
++}
++
+ /*
+  * Allocate and initialize an event structure
+  */
+@@ -13344,6 +13410,15 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		 * pmu before we get a ctx.
+ 		 */
+ 		event->hw.target = get_task_struct(task);
++
++		if (attr->sample_period &&
++		    attr->config < PERF_COUNT_SW_MAX &&
++		    (attr->type == PERF_TYPE_SOFTWARE || parent_event)) {
++			event->perf_task_ctxp = perf_get_task_ctxp(event, task,
++							!!parent_event);
++			if (!event->perf_task_ctxp)
++				return ERR_PTR(-ENOMEM);
++		}
+ 	}
  
- static __always_inline void __intel_pmu_lbr_disable(void)
- {
- 	u64 debugctl;
- 
--	rdmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
-+	debugctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
- 	debugctl &= ~(DEBUGCTLMSR_LBR | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI);
--	wrmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
-+	wrmsr(MSR_IA32_DEBUGCTLMSR, debugctl);
- }
- 
- int intel_pmu_save_and_restart(struct perf_event *event);
-diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
-index bb719d0d3f0b..ac53bb5ba869 100644
---- a/arch/x86/events/probe.c
-+++ b/arch/x86/events/probe.c
-@@ -45,7 +45,7 @@ perf_msr_probe(struct perf_msr *msr, int cnt, bool zero, void *data)
- 			if (msr[bit].test && !msr[bit].test(bit, data))
- 				continue;
- 			/* Virt sucks; you cannot tell if a R/O MSR is present :/ */
--			if (rdmsrq_safe(msr[bit].msr, &val))
-+			if (rdmsr_safe(msr[bit].msr, &val))
- 				continue;
- 
- 			mask = msr[bit].mask;
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 8ed03c32f560..4ac91ed65fde 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -193,7 +193,7 @@ static inline unsigned int get_rapl_pmu_idx(int cpu, int scope)
- static inline u64 rapl_read_counter(struct perf_event *event)
- {
- 	u64 raw;
--	rdmsrq(event->hw.event_base, raw);
-+	raw = rdmsr(event->hw.event_base);
- 	return raw;
- }
- 
-@@ -222,7 +222,7 @@ static u64 rapl_event_update(struct perf_event *event)
- 
- 	prev_raw_count = local64_read(&hwc->prev_count);
- 	do {
--		rdmsrq(event->hw.event_base, new_raw_count);
-+		new_raw_count = rdmsr(event->hw.event_base);
- 	} while (!local64_try_cmpxchg(&hwc->prev_count,
- 				      &prev_raw_count, new_raw_count));
- 
-@@ -611,8 +611,8 @@ static int rapl_check_hw_unit(void)
- 	u64 msr_rapl_power_unit_bits;
- 	int i;
- 
--	/* protect rdmsrq() to handle virtualization */
--	if (rdmsrq_safe(rapl_model->msr_power_unit, &msr_rapl_power_unit_bits))
-+	/* protect rdmsr() to handle virtualization */
-+	if (rdmsr_safe(rapl_model->msr_power_unit, &msr_rapl_power_unit_bits))
- 		return -1;
- 	for (i = 0; i < NR_RAPL_PKG_DOMAINS; i++)
- 		rapl_pkg_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+ 	event->clock = &local_clock;
 -- 
-2.53.0
+2.49.0
 
