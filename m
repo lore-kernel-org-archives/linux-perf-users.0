@@ -1,53 +1,53 @@
 Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013000.outbound.protection.outlook.com [52.101.72.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611AC36403C;
-	Tue, 28 Apr 2026 20:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998D437CD34;
+	Tue, 28 Apr 2026 20:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.0
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777409374; cv=fail; b=KEgMUyIGnE2SiQeMJPjzQZvpmQWyXLY4382iVEw4mwp5Nxaog7LZ7aZ13Cdh66ucNs7HAmc+WQY5L2fAUCo8iTbYmVInnu5hpNrWffXrEIZiIFXlYPsV16FkHGI8jRMyazc4C1lfe0LuhfQiEzTR9mUECaPq4WvOtnAg7oiWcUg=
+	t=1777409376; cv=fail; b=ka/FjeHOxlLESRrA8FVBU1N7NI4GY4HKlwa3B3oUP4MC67CiY3+3FrdDsEImhtKkF6uV3ZNnbzHKrUgd3EzU7WKtDJOZQ7+vJpy4h/gaJItdDnqTOrk2S3LJ4XaUVDavEzwV4nNkytrr5G68wt6ruLeh/1d/M8hTpEOF71XMutE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777409374; c=relaxed/simple;
-	bh=ZbkqlPIm4a8Jf8JYfrB3XmMwUE6RdzhrdFih1KCd910=;
+	s=arc-20240116; t=1777409376; c=relaxed/simple;
+	bh=bI5QOtRFiMWeOTWPQToC4ruxZUof4xo1g6fCO8Xz8gA=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=FVJ12sQoLEDzOMrFjUDxoQNh0NSUUEd4XIedEYy9sV0MtKf2OtFNbccj/3zPjvQsNuGjs9CxC4hd3RBiUBPoP3XmnnLovlp87JfTp6va8tmK1WWpvM25feu4NEkGcC/+xYpPuy+CnZedxGk7r55wI1gW/AQJ78dB/90Z83lY0vU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=shzqaP3M; arc=fail smtp.client-ip=52.101.72.0
+	 To:Cc:MIME-Version; b=L+vwGjK1an+pJ1ib20V4XXYgDY1ZblPDZm9CHY55c69VEOD9vSKsQejwOYFm4f1RtkgcXwGySE6uk+pd6iQH1r7NjXSc6KxJqbIeZlD3Htrea8kmhf8IM9QNaTA7vJ60R6lzATrtMpYSEDQaUXsvc/Axp/myRsLqtPxDbRd7RwA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=aGl+JmBk; arc=fail smtp.client-ip=52.101.72.0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="shzqaP3M"
+	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="aGl+JmBk"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NakGt2f/hzBWhyLOQg3s/Y3Ts4wYJeHSNiN/UTf9iiKp2QKS6ATnbAst3V/W2u/xksTjRrJTrpNUEGbixJiOSp4dq4iQSiP+lSCHggmK6DjUsram8t/0Nb3OnC///Fz0IOZ8EqgdINL5tG9VXzpkupKu5mEIZYQJSAs3SyZGOdgMSw9CbarZ5te2eFZRrsfacV9PqPzh2xyhKNyjbEobDjN4r18iivA+WCiUikQ5FGRj0WWJOC9Sz1vE/bMv/F3nK2m0yFInC2ZlAt3yvVGpLlr+pzicRpMCUwSEZrDz8kS8CljIqikfSmn8MYgcYU8NwGHnASb6r5YJVuyTteulQQ==
+ b=YjFN2Il/cU7TDda4kWZ+Ro522gH7mwrd/8qi9bdO3b16KkDJbEu56RrMt1Vr1vnlzb9lEv1GeZihV3MLZC/uyCgevEt/vmhCkSjWmRfOWlmsPYXhM+d/PFgiHuXhFJiVl3HHI65aA9dY1iZ01m9Put7oARNF+oEXoqfbuxZBNcVhivqYiMTS46hxtwbchQqip8rrij2ssulqWhl/UJz6+Wxt1e4z6sBXBYMo/Cv/mp72Zr9hPehmk446pwiO0Cjr1guUt7IPAoM4YRL/4LgBhxRPBDllHY2sY6+itqLal57MriORjqGIrFPtnBa5xoTDaj2L4cAThQDZsW4c4ROwgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U8xdRKCXnOKwYSwCHs2zizaGyKeS9Ihk+Dk2be6W6Vs=;
- b=jMgwjPPVzaxZW70Fmo01k07XssCbe11vE1h8Ej6L0CWqTCNsSkHCVFobIWOsPuDQpzlNhsUZ6pgoSC77OYuqq8TmG370HU9xP/X5EziMBQnqiGWqGWU5bgWeynRZHw2CurxHV09+4NHiVa5yfOes8/cFnqoApURnDbbmp2tu5XXTV5ux9ok056J4Hh0zfkHNhbDUIOnK0oGb+QDQ0gFy/BMz27gZlXRbZsBcdYpo/OJlBaCHP/kAnqLxQJv+YWF20EW8ptE2KSQzC2KAQGuyD0CM3dmm3Lv3mPWJIt/RdDcojvizF4vVzzzlfE2iFdYNrGsfzTAvX22OIrT5cMBqlg==
+ bh=1K8JHXM0+GK2t5s5m9e6C5FJ3+4682IxGlj+WBnNsaM=;
+ b=v+VC8esjBBn1bA+hF6KPYh5lwEkwRPz3r8TNvipADnrCmrSNoEwvaqFYOIB2/QX4Usy4sfK9QULxOU+lvw5Jm5YYVK1uzEcAf7qYbvsXVymn4P5ykSar7ldXbzg7xjrWfMJr2bBXoBTvEny3LtVy2ZGvFlubKrwe3lQTzF7v9NtKnNu3u6GSZMOY3+tfRIOOsTZRspi2LFrdTqc3oVQSqt3x1/s4wCoEFlKYpMzaLiDmt9pFToetEPSSZDcQGhHKneLNIk5X4RF5zaQU4YOqPfinK9zAYRip7zT507jiV8ZpRQJOaNBN2ZQ0gGCow9CKPIBkpoEASzQkhgnEui+O3A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
  dkim=pass header.d=est.tech; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U8xdRKCXnOKwYSwCHs2zizaGyKeS9Ihk+Dk2be6W6Vs=;
- b=shzqaP3MYD5RfSN/1jQj5UgAjOGTI0cFvfGip72nazE57JRIMpUH6ZfXK2goReJYpiiBrqVjrH5nLxqEidur9/UeUh7UqkYstkMi/ZMxBSkHc/JMz/Dd2VOkXpffQq+EFQzbkZvj1UgdEJi1I3d0QyWl5FAJfRCiGvml2L4vOOG0kmttaV9fajZ515wDzETNkBp06aPOoqVWdL9X536eDDTgVdlSt2E4w8geHcw0lZGXS5Otbi+9LTzU9nFsKJE2Pqal8I+NiRSz7RVVXkrHsRNq9TDnl0gQih8Gjv889r6N+8665vJrwM6wOvdZLVWbFy+mXfjtwEIUPKunME9Kow==
+ bh=1K8JHXM0+GK2t5s5m9e6C5FJ3+4682IxGlj+WBnNsaM=;
+ b=aGl+JmBknJ2J1RnkXos0zspKUFD6ZPpgOIPr6RIX8WEdwt5rBd8sHvQP0jdtJH2vJjOJTReRyRcqOo3SLYU1+GpCKIL3/Hj9toR+USKMste1jJGaqQelp9no2Gtb5DHXC2ivktMUoRDVxRMQDVMD/5gvGcZCpB7ZkWYzwy9wvBW2/An7IfcNP72H6t/EqcMVFn0XDDbxn4U9XgmcxZDTmBBe6JU/Uengpml3j6SRoDB3eNpR3uik/uMILHTlWLRFY29ba+YHhXVKqkVBjCdVogE+DFyqVoNQqagR7aN9XKz426Ov5M0KIkAti5tFwfjTfqeFsbYU3BzxdmoTyVynjw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=est.tech;
 Received: from PAWP189MB2611.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:336::8)
  by AS4P189MB1894.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:4b5::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.18; Tue, 28 Apr
- 2026 20:49:27 +0000
+ 2026 20:49:28 +0000
 Received: from PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  ([fe80::b400:cf4f:b2e1:d884]) by PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  ([fe80::b400:cf4f:b2e1:d884%6]) with mapi id 15.20.9846.025; Tue, 28 Apr 2026
- 20:49:27 +0000
+ 20:49:28 +0000
 From: Fredrik Markstrom <fredrik.markstrom@est.tech>
-Date: Tue, 28 Apr 2026 22:48:58 +0200
-Subject: [PATCH 1/3] arm64: perf: Skip device memory during user callchain
- unwinding
+Date: Tue, 28 Apr 2026 22:48:59 +0200
+Subject: [PATCH 2/3] DO NOT MERGE: arm64: perf: Add skip_vmio parameter to
+ control device memory callchain guard
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-master-with-pfix-v3-v1-1-c384d3e53092@est.tech>
+Message-Id: <20260428-master-with-pfix-v3-v1-2-c384d3e53092@est.tech>
 References: <20260428-master-with-pfix-v3-v1-0-c384d3e53092@est.tech>
 In-Reply-To: <20260428-master-with-pfix-v3-v1-0-c384d3e53092@est.tech>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -68,15 +68,15 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Ivar Holmqvist <ivar.holmqvist@est.tech>, 
  Malin Jonsson <malin.jonsson@est.tech>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777409361; l=7346;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777409361; l=2371;
  i=fredrik.markstrom@est.tech; h=from:subject:message-id;
- bh=ZbkqlPIm4a8Jf8JYfrB3XmMwUE6RdzhrdFih1KCd910=;
- b=/0IjSmpalakOWO/cgogmLgI7Ien+Vp806mNDiL9if6tnRCDHaLL8qse91m+/fiNzBKVkcqpnl
- /hNC/PDZbdfBmHgHUWkx90S/d8meSXPvdI2AJ5YKrzBJ6tjgrIawswe
+ bh=bI5QOtRFiMWeOTWPQToC4ruxZUof4xo1g6fCO8Xz8gA=;
+ b=YceM1Jv58tT59cLFHBbFsGX+DaYw01ix7P00wAJFrYalAHsBxWjTbbX26lhSAbaN3TTO9E1DR
+ rOpx2iuKo98AGGZ4Bw2kdbmtiYCpErJu6FksDmMleCNuw7+6mVD24b2
 X-Developer-Key: i=fredrik.markstrom@est.tech; a=ed25519;
  pk=0a8IXHEgAX55JPS8VZfTf1sDp7q/oAOf459tDQd40Eg=
-X-ClientProxiedBy: GV3PEPF0001DC47.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:158:400::2f2) To PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
+X-ClientProxiedBy: GVZP280CA0037.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:26f::15) To PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  (2603:10a6:102:336::8)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -86,286 +86,132 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAWP189MB2611:EE_|AS4P189MB1894:EE_
-X-MS-Office365-Filtering-Correlation-Id: 719de2b3-11a4-406b-13f9-08dea567a301
+X-MS-Office365-Filtering-Correlation-Id: cd13b5d6-8028-404a-5ca1-08dea567a424
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020|56012099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	Gbwe9Da0TRs/7YEfQ2WGLIYrHVEmgYiqMYDSBFszeGFFe7AKudm+b51Vztmq0fsvJVxaKjOTUiz1MPcmGAn2UJOKvMwkw0qpoIlawndc/DAGpim7EGySSACPhTedNxCzHF6UuIVMFuuk74S9GKPiGS8F26b9f6OlHmvSMIOEUouPfOBJ+QSEqCmiC7JN2MpyfrxyOYELoWp8r3+T6fMhAxKQsnN3pWVW14tUUmRJe8rT8qsDNkRTGRJd8in3d7q88jqRgf1LPpoTE0sHbJjDv9jEzT2HkGcIEKQYceqGL4/iUe/vRUi0SG1cSZh4mSICa9uKJpDU45q04F36I/upQmZ4ehOpYK9NS/MPLZKshbQ5JdURGtV+hXpurvzS2iwbbLAMN7y3n+YO0PtUGlr+v7twj28bT+fosX7CKeB0RZ43feYMO21J8fRcI2uVUawuFeSJyI1NXhPJk8DbpLBPezosDmiCuJTNXMdtVXdXMMosQtRQrAojXTu8dsekWhC10qA/A2Mqd/L6wZLTKEzSSVNEcUY9enBCrsSrqClpZFIiObyyLepecmGyW0XiC/Z1XuPzrFMl6cB4OlaiQB/eHqDWguIMp18uu0uwqZEXzDea2mJjuqu0d6oxDKrFAHmfjr1ZIHf4oNIdicFdFFKIdlxx9WQ+ywKeDN1idWNXUD4UxCF9/3IsHLyWgqqYfhxFA7gSIiywoPfEv0lKWHJUassuDxzIyjJrSdFAszUP54YXwz8vsFfrlqdNFvkLKrfV2Vq1GzVo8Jiy26dSy2VNdg==
+	YviL8IaT5/9k8bJkfwsZrRprB05ypbGIFcFiaajVGbckqyB5958N+IFh54V0J6hvC3H744/JRNgcOqQRUDb1A2qLUq4aqt4pRjsh4oS2IRXnt+2VrnyNIgy+OZNgPUvW4iPD8n44ltQdb5V5jj6ZawmSHOv9/o2SGfJ7i/tWZIKJ4v0qYyAZIdxIIPIY2PI8K2YBUUdvxdwV4jN5akJKT8Nd4m9mzldqVNnky3YrlM4EW1f2tqAlMoTLbJyG/gjAuj7+nuxwxU5aNzalTpQkaod8Iheqq6IP0b7ORxnUMm22X0jc+mWP3VveLcsMJJwty6jMzXi6Pc0GB5/YwHSMCZ30FmZyw2IBgWwY3cn3502LOIzYNZfD8J4pFsm7OOBE6rM0tkMQ9Spkpq9HwNKTN3szALXtSYU6qaH+xnVoGiNwWJ2BsDdOWF3ibGe72nzKTqF5HPtp0AjOodI/MwzKYz+uRl6udF6qjO/CBeFZfhxXVH0Eggs80tVkMzrn/YQYpfLug6cCJ4JvB4NXm9JmSA0aA46+X3ydckwGxDcmujqnUKzX39PWdd7Nvy9OLvMW+XDzIuhgysCgKGwhpY+DT1XpxyUnq6jkJnduL0i8txWBRgO6x5DEEkxX5mN+BGGI3J9YhCAo/UkQ4zwc3uTtb9rO0ElEZvGztHRRkuebFWkxyI1mMCIZPQeQEXjjpWsOCn3KL+CK/66MtXd6H8F8PKdb3bwJd+uRgmlJIC2zz0FxH2D8vzUktmFXukdLVOgbtXGWaqbnpG3Cb8zdJZdz/A==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWP189MB2611.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dlczclpIQ2tYdUFnajFVRFlFckVxM0d1N3pDWnNRWEFQZ2xhVnRkYm9UMDV2?=
- =?utf-8?B?ZzlzbWhEODd4ZS9GY3Z4ZmwwYys2L0pFSkZsMjF4Z0hmdXpoMys1TlJWQjIw?=
- =?utf-8?B?bWN5M1VpNUM4b0RyOG9BbFg3dUZkNjN1NVN0bzg1cTMzTjZXMFc4WmdKMHQz?=
- =?utf-8?B?ZlB3RWdqTzgxdnA1U2VaR3creHl3V2NkS0p6YXlRU0o1QVRMSFlmYVE4VjJ5?=
- =?utf-8?B?WDN4aXpTNjVqaGJZRWF0MHhra0o2SDZndHdLSExyQjAwMEVyd3pERUpONmcr?=
- =?utf-8?B?WnZTYkI4bnNzNkRWWVRETHRBTmR1THl1bzVscWhuYmUraHdvK3Awem9oakZm?=
- =?utf-8?B?aUI0TEx5c0NUcVVOSFJWRE1ROEFWTjNYcDZObkdCVVdoNmVNSHoyYnlHQWMy?=
- =?utf-8?B?TGprTHE0N25wVzV0ZzZsWnVONERWM1ZGR29rRW5TaERodWY1blVXcVIxeFFT?=
- =?utf-8?B?TGZuQmQzOWo0R3pxMmNwamJNZnVzRWlHUXdOQnc4QTBhN241Y29ydEZxZUZG?=
- =?utf-8?B?L1o2eUhxRVJVSGNad0ZHdmJ6WlR0RDkzN3Rla1FJUnVrZjZtcEpJTm1kZ2o4?=
- =?utf-8?B?aEtuT05YMzFhSGdFMjNvam15dUw4VkhkeU0zQm53MWJBQ2taS3dURkZVcld0?=
- =?utf-8?B?Wi8rbjFKU3lVcnZlSldhdUZZeEMraC9ocVFjNWM1eXVKZ2IrV3M1NUo0YW1P?=
- =?utf-8?B?ZVdQQnhFMnlZVllGMTlSc1FyVWlubERWcTM0YmtIWGtidHdRRnB1QTB6aEgy?=
- =?utf-8?B?cWR6eHo4cXRJQ3ZwRllMUHRURTJOSkpJRzVpRXE0UU5SL2tsTHdScUJHRmNN?=
- =?utf-8?B?T1NCWlVnVlozNk5NT1N4Y1JUZ2hPVkhDNng1ZEJhZzBwZzdFSUgrNk11Y3Vt?=
- =?utf-8?B?eS9iOFlvZkZsaHhOaFR3VDN2d0JGTXRqc0hsY3BzR1U0bUVOc2IxS21FdmNK?=
- =?utf-8?B?V253MTZXZjJwckp1bFlZZ3NJNmR3U05IWGJ4Y1Q2WWJNaHlRQjYxV2xacUFJ?=
- =?utf-8?B?dUhSeVdaemNDNTIva1htcWJoWVQrb2lMTjBuanR4RmUwRnIwcXpIdnBRZEFv?=
- =?utf-8?B?dW16ZXVxeklFZHFuRnJCU1B0N1pUNm9yaENBVEFUd0U2eVFyOEhCTnRVOW9X?=
- =?utf-8?B?VHlVZ0lQK3g1TWVtVGVwVVFiVWt3MWhlYlYyQ2FXbi9KL0RxM3IyUWF6blBw?=
- =?utf-8?B?Znk2c0dXR2E5Y0M2QU9nQytLSGlxS083OStMUUZQR2tEb3BJYlovQm1CdDV6?=
- =?utf-8?B?aERMVEQ2aXRIVU5Wa1hLMkxBRk5wMGQyeG0xNWkyWlRkdUJPSWFRRWpsK2kz?=
- =?utf-8?B?b0RkNjNKY2RhM2Fma250blBkSG1tWVNrMDNYWmc3cm84MGh5a0JpdCtnSHkw?=
- =?utf-8?B?K2N5ajMrNWd0cjJQbnpEUE81RXl5eHdCTmM3M2xWalVZNmkxeVk2T3U0R2NZ?=
- =?utf-8?B?WDZvc0RIaTVlUk1ucGZVM2Nud1hsUTl6ekNNb1ZST3RMYjhyaW1xeUdENG5a?=
- =?utf-8?B?L0o5MFF6Mk53emMrVGFyemUvci9SN29VNjVRTEIzZTMweGhNRzBNOURQdmVI?=
- =?utf-8?B?WGlhWFZiT0FncXo5TW0xaFdlY0YzUGtucWkwNG9vM2xHWlU3WVBuVDY0cHo0?=
- =?utf-8?B?anFuMkJGVXlOUUg5MjVsOVhtdTc2L2h6aXVoS2FycENTN3dBamRtNFhNV2t3?=
- =?utf-8?B?NW1wcElLc2xoSEpkMDBsTzVhR01aRkp2aG5ONG5kYm5kbGl2MW1HYjlvVDMy?=
- =?utf-8?B?WUhQUDAwVVd2SndtdjNuQkg0YVoyeG5BQk0vamlPcS9JRGFOS2RmNDFWYlFZ?=
- =?utf-8?B?dUViWkxlTU9lek5wSVpMMkgvMU5BU2dlOG1XNkpkd2ttb2NCV1laZ01EOW5S?=
- =?utf-8?B?M1BUdi92WHdRa0FKU3VoaDQraW9xMzhza2trVTM0WDV6YzE2SXkrcDhLeTNH?=
- =?utf-8?B?L3RLZHRNcDlQMEkrSUo3TlVmZmtHV1dmV2x0amZJbjRtSVBkSWgwZXVickZV?=
- =?utf-8?B?cXNRVVR2TTBPOEJ3NnpVZk0zTXZoN3A0TVVRUXRDQUpSL1BBN2lPZHZiUmpL?=
- =?utf-8?B?aHpMRVlrSHBGaERJL01nSEQ0aXpqSjEvUFVpTGFKWHRvSW8rU0s4WnVmdUcz?=
- =?utf-8?B?V1JsRVVYUXIvL0JwdzMyM3ZONUhCb1E1U3NzR1V1eGJZd0FrU0lXbndGUjFU?=
- =?utf-8?B?bzZ3S1dleE84U1hES0tEVFQrYmNBMGt4eDNpN2lLS3ZMNWF0T3Y0SWE0SzFn?=
- =?utf-8?B?aGc1NWdoQ1I0U2EvbmdIRFplSXJZVXk2OXk5WlJpMGE1cW5YSG03ejVlMUFq?=
- =?utf-8?B?cEhyYVA4YjF6SkJQekVqY2JiUFdneHQ4MFZwK2J5V0t0WGI5akhmRVJIOWNm?=
- =?utf-8?Q?5E92RdmrveFjr45U=3D?=
+	=?utf-8?B?SWJXbVZNSUNVSXU5ditTVnlrZG9henZnVC9semFrOXpXekx2dkRKVW5pbnEr?=
+ =?utf-8?B?Qk53aXlCaXVUTkpXNXVtakNvZFFwWW52S0tYYmhMR1VnNVk2K1N2UFdDT3lV?=
+ =?utf-8?B?ZEtlcklhSmttZktLZXRMWXhxOU5TaDgyVnM3L0Z6Z09TbTV6WmpEcmNmMzZJ?=
+ =?utf-8?B?bXdGNEpBZTV0S0drZnZJWFA2aUhDM0wzdUIzRjFkY1p6ckJ0RU9SWFZGSDQ5?=
+ =?utf-8?B?eUdpOHg5bThka2lDS0oydVF6bkh5RFc3ZU9lL3h4NGIrd0RVcE5ERHNrTGtF?=
+ =?utf-8?B?QzBSRUhYRDJLYW1CWDJwRFVwWXZkVVRoOFpMdWdtNTNrbDE4dm83N1VSNlQx?=
+ =?utf-8?B?bW0rKzBmalV4N05nWnVHVmZEandsVndyRkRTMFgvTkFNTktuTDJ3SVIyRWJo?=
+ =?utf-8?B?VDFueERVUkFkVG5YR3Q0NmRJTXlqWjEvbzBFNmJVdmdyb3Y5Sk54d0FVMXp2?=
+ =?utf-8?B?L3N1aWNDVFlNUVcweXl1NkI0RnFGTGxpMVltWWlQMkJtdjVVTkkrUWFJdnZ4?=
+ =?utf-8?B?UGpTK2JBdDdKWldQQVpGSHBCMWdaYnU4OURsZXZ2QTdWNVJFRUJxVHhNQTBI?=
+ =?utf-8?B?ejdscUhQRzJwQmJaYnJVK2IzM2F2aC8wUDMwcWVtNFU3VzltcmhVSjZPd3JS?=
+ =?utf-8?B?TzJraXFEN3hPTkIxejMzR24zZHNvbWM5cjM4U0IrcTY3eUFUVEQxZUUxZWtY?=
+ =?utf-8?B?SXBPaEd0VWwzRXZNQUJIL3BMb3FNaXM5V2FpaEVWSi9YKzB5SEorcnFtc3Ra?=
+ =?utf-8?B?alFTakxUcVhIU3Q3cHZ5Q0dDWWRCM1lOa2EwQ1lSYnpQa3ZlcWtEMk55Ulhq?=
+ =?utf-8?B?QmIrWWdYZTdWSGxpUjVMaEV4M2piVWJKYnVBKzRPenhYK1ZKMmdVVmNtRVd0?=
+ =?utf-8?B?K0thQTY1QlNpTXo1ZU11R1Jhc1Y0bkV2djYvMWJjd0NibXN2cUozM1g2bGdp?=
+ =?utf-8?B?OC83MEM5akdjanpvY3hJYVArcGhJTFlwejJocVpUMnJSKy9xMmUxc0dZMmcr?=
+ =?utf-8?B?M1RHVW5zM1FsUmxZMkp2Ykw5b09NU1I2WDNGRjhoenNOYm1wOUhLSHZyNXhL?=
+ =?utf-8?B?RnB6dFlYdUlCUUJHMk54Rmtkc1FUcTJCRER3dVh1dU1ZTmVMRVd5eVc4WmdG?=
+ =?utf-8?B?MDBOUkdSK1UvdkZHRWdYRUROdmZsYTBWZHV6Wi9ka1hFelBuR2JXdHNUUHZt?=
+ =?utf-8?B?eHh1aEFSZGEvdkY2cStTWkxtQlpaRHRCRkMwQzZncm1sbW90eXdQc2pzU0pO?=
+ =?utf-8?B?bG90aGU0UklGNUdKS29jWU5tSUZMazVzaEtxZjF5aDlKbXVaNm1DMkovbzBJ?=
+ =?utf-8?B?YmZ2aEE0UjZpUXY2bWJwTFl6eUdrS0d3Rk40Skc4ZFEyRTJxYXV0eWIrNDF6?=
+ =?utf-8?B?c3gxR2dzYVRxSWVjS2RlSnBDaDZacTZLWHVOK3VuVWl2TVB0L3BiZVZPUFpX?=
+ =?utf-8?B?RldKNDQvUzlVdGVReEszY3lSajFoZ1RWWnNEbFY3M21uMXFpUEFFalJkTldi?=
+ =?utf-8?B?MjB5V1lMRlFrQ1RMaG1xaDlkTFNJaDZpVzFkYkI3ak96Q2cwS1BvZzhnK3Fs?=
+ =?utf-8?B?SjNuK2d5OXIrM29Da1B2Sm1CektBYkdjVEVVWlNPL0xDWmlYanpTUGJXQ0lH?=
+ =?utf-8?B?SGZWTDE2RzUwZjBBallVVHlTNHdpSDR6ZWNQT0hZOXFFNUNnUW5kN1ZtTUp4?=
+ =?utf-8?B?VUJsYUM1THppQXJOaGNuemdsSkdTQS90dHhTV1ZQRTc2UTZjNmQyOW5oMkZi?=
+ =?utf-8?B?WjRmcTlFYzJ0WU55dkF4RlQ4bFZYNWlSeGxIYXlIaXBtdHFLWmpYZjJidmRL?=
+ =?utf-8?B?TEpsbERwMEdwaWNHSEhVTldleGpJVy9Kd05lem5SL2RCYU1sdFA3bEljbEE0?=
+ =?utf-8?B?YVJobHhqVmlnSS84Q3djczFOY3VoMUpKalBzNWJkbFJkVzdnYWlLMTJaMDY0?=
+ =?utf-8?B?SkJzcjN6eklDREE4bmRnd3cxcWtzWkJDZHhuK0h4bGJyZ2tMcVQzampVZVRs?=
+ =?utf-8?B?U1JRV0IyYTZZcDNYUzlLdG8vK3E0YW10aGhKNkVnT3V3WSthSTMzUUJzaDBW?=
+ =?utf-8?B?UlNKN0prVlJ4WDdrUlhTaUJjTGtIY1I5ejVNNmxPZ2tPN0RyeldyUUJmMkZv?=
+ =?utf-8?B?RFhuMGhUNDI1UHBjdjhSYzVBa3NYVWs1cElBd2lYc3AwYUlWK2xuYnlmeURa?=
+ =?utf-8?B?K0xDV05xVUJranowbWZ0NkxRZmRHeThWbVdNRmdNU2lWaDlIYi9mc1R4S05K?=
+ =?utf-8?B?SFEzWW5YWHFqRndBdVo1RTZ1WFNBcmdZS0VDSG9QUzVFN09jbk5LdUJEMFJa?=
+ =?utf-8?B?ODlTWTdTbXJjdTIxMHJXcEk1b3h5Q2FpNlNuNTV3dTNoeVNnUkhtQWQrcXp5?=
+ =?utf-8?Q?hKm4Lf7NMTYQS724=3D?=
 X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: 719de2b3-11a4-406b-13f9-08dea567a301
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd13b5d6-8028-404a-5ca1-08dea567a424
 X-MS-Exchange-CrossTenant-AuthSource: PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 20:49:26.9315
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 20:49:28.8261
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wWcqIF6EuSD2bgIQGNctCkbvcLXx6BwLgd1KOKlv9fM+hqJWWQOxJIb5Ic5aGJw9KPQVtHHDu8SlIDdYhTqNDUOAxZbvboWU7AZLH0eZ9Hw=
+X-MS-Exchange-CrossTenant-UserPrincipalName: pyhBfuNku2Q4EhUANBftoJ5J76Qdyjaf4BfLE0fkmpXE55Eu0YLqJvRx7wEarFV6PahBcFm+XevaC2+7BBIVyhEQQxRLQ68mNa01s5bDlGQ=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4P189MB1894
 
-Perf callchain unwinding follows userspace frame pointers via
-copy_from_user. A corrupted frame pointer can point into device
-I/O memory mapped into the process (e.g. via UIO), causing the
-kernel to read from MMIO regions. Reads from device memory can
-have side effects, trigger bus errors, or produce faults that
-crash the kernel.
+Reproducing the synchronous external abort that the device memory
+guard prevents requires disabling the guard at runtime. Without
+this, there is no way to verify the guard is actually needed or
+to regression-test the crash path.
 
-Add a lockless page table walk that inspects the MAIR attribute
-index in the leaf PTE before reading. If the PTE indicates
-device memory (MT_DEVICE_nGnRnE or MT_DEVICE_nGnRE), the frame
-is skipped. The walk uses the same lockless accessors as
-perf_get_pgtable_size() with local_irq_save/restore to ensure
-page table pages are not freed during the walk, as
-arch_stack_walk_user() can also be reached from process
-context via ftrace (stack_trace_save_user).
+Add a module parameter (skip_vmio, default true) that controls
+whether the guard is active. Set to 0 to disable it:
+  Boot:    stacktrace.skip_vmio=0
+  Runtime: echo 0 > /sys/module/stacktrace/parameters/skip_vmio
 
-The walk is guarded by #ifdef CONFIG_HAVE_GUP_FAST to match
-perf_get_pgtable_size(), though the lockless helpers all have
-generic fallbacks and the guard may not be strictly necessary.
-
-Without this guard the kernel panics:
-
-    Internal error: synchronous external abort: 0000000096000010 [#1]  SMP
-    CPU: 1 UID: 0 PID: 33 Comm: test_perf_vmio Tainted: G   M                7.0.0+ #37 PREEMPTLAZY
-    Tainted: [M]=MACHINE_CHECK
-    Hardware name: linux,dummy-virt (DT)
-    pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-    pc : __arch_copy_from_user+0xb8/0x23c
-    lr : arch_stack_walk_user+0x218/0x258
-    sp : ffff800080433ba0
-    x29: ffff800080433ba0 x28: ffff00000097ed40 x27: 0000000000000000
-    x26: 000000000000001f x25: ffffffffffffffff x24: ffff00000097ed40
-    x23: 000ffffffffffff0 x22: ffff800080433c78 x21: ffff800080022db8
-    x20: ffff80008032bc60 x19: 0000ffff9e575000 x18: 0000000000000000
-    x17: ffff7fffbfac5000 x16: ffff800080430000 x15: 0000ffff9e575000
-    x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-    x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-    x8 : 0000000000000001 x7 : 000000000000007f x6 : ffff800080433c10
-    x5 : ffff800080433c20 x4 : 0000000000000000 x3 : 0000000000000010
-    x2 : 0000000000000010 x1 : 0000ffff9e575000 x0 : ffff800080433c10
-    Call trace:
-     __arch_copy_from_user+0xb8/0x23c (P)
-     perf_callchain_user+0x1c/0x24
-     get_perf_callchain+0x130/0x138
-     perf_callchain+0xac/0xc4
-     perf_prepare_sample+0xac/0x5d8
-     perf_event_output_forward+0x44/0xa0
-     __perf_event_overflow+0x190/0x230
-     perf_event_overflow+0x18/0x20
-     armv8pmu_handle_irq+0x154/0x194
-     armpmu_dispatch_irq+0x28/0x54
-     handle_percpu_devid_irq+0xf0/0x11c
-     handle_irq_desc+0x3c/0x50
-     generic_handle_domain_irq+0x14/0x1c
-     gic_handle_irq+0x80/0x98
-     call_on_irq_stack+0x30/0x4c
-     do_interrupt_handler+0x5c/0x84
-     el0_interrupt+0x58/0x8c
-     __el0_irq_handler_common+0x14/0x1c
-     el0t_64_irq_handler+0xc/0x14
-     el0t_64_irq+0x154/0x158
-    Code: f8400827 f8408828 91004021 a88120c7 (f8400827)
-    ---[ end trace 0000000000000000 ]---
-    Kernel panic - not syncing: synchronous external abort: Fatal exception in interrupt
-    SMP: stopping secondary CPUs
-    Kernel Offset: disabled
-    CPU features: 0x0000000,000d0000,00040000,0400400b
-    Memory Limit: none
+When disabled, perf follows frame pointers into device memory
+regions, triggering a synchronous external abort and kernel panic
+on arm64.
 
 Assisted-by: Kiro:claude-opus-4.6 [kiro-cli]
-Fixes: 030896885ade ("arm64: Performance counters support")
 Signed-off-by: Fredrik Markstrom <fredrik.markstrom@est.tech>
 Reviewed-by: Ivar Holmqvist <ivar.holmqvist@est.tech>
 Reviewed-by: Malin Jonsson <malin.jonsson@est.tech>
 ---
- arch/arm64/kernel/stacktrace.c | 98 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ arch/arm64/kernel/stacktrace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 3ebcf8c53fb04050488ffc110ff2059028b6772d..6426a307b8f86ae756ea444247ae329591a89b4b 100644
+index 6426a307b8f86ae756ea444247ae329591a89b4b..ebe909012e4edee7bb1ddbebac2d3c49bdb91665 100644
 --- a/arch/arm64/kernel/stacktrace.c
 +++ b/arch/arm64/kernel/stacktrace.c
-@@ -4,12 +4,14 @@
-  *
-  * Copyright (C) 2012 ARM Ltd.
-  */
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/efi.h>
- #include <linux/export.h>
+@@ -11,6 +11,7 @@
  #include <linux/filter.h>
  #include <linux/ftrace.h>
  #include <linux/kprobes.h>
-+#include <linux/pgtable.h>
++#include <linux/moduleparam.h>
+ #include <linux/pgtable.h>
  #include <linux/sched.h>
  #include <linux/sched/debug.h>
- #include <linux/sched/task_stack.h>
-@@ -17,9 +19,99 @@
+@@ -112,6 +113,10 @@ static bool addr_is_device_mem(unsigned long addr)
+ #endif
+ }
  
- #include <asm/efi.h>
- #include <asm/irq.h>
-+#include <asm/memory.h>
- #include <asm/stack_pointer.h>
- #include <asm/stacktrace.h>
- 
-+/*
-+ * addr_is_device_mem - check if a userspace address maps device memory
-+ *
-+ * Walks the current task's page tables without taking the mmap lock,
-+ * using the same lockless pattern as perf_get_pgtable_size() in
-+ * kernel/events/core.c.  Inspects the MAIR attribute index in the
-+ * leaf PTE to detect device memory types.
-+ *
-+ * Returns true for device memory (MT_DEVICE_nGnRnE, MT_DEVICE_nGnRE)
-+ * or if the mapping cannot be determined.  Safe to call from IRQ/NMI
-+ * context.
-+ */
-+static bool addr_is_device_mem(unsigned long addr)
-+{
-+#ifdef CONFIG_HAVE_GUP_FAST
-+	struct mm_struct *mm = current->mm;
-+	pgd_t *pgdp, pgd;
-+	p4d_t *p4dp, p4d;
-+	pud_t *pudp, pud;
-+	pmd_t *pmdp, pmd;
-+	pte_t *ptep, pte;
-+	unsigned long flags;
-+	unsigned int idx;
-+	bool is_dev;
-+
-+	if (!mm)
-+		return true;
-+
-+	local_irq_save(flags);
-+
-+	pgdp = pgd_offset(mm, addr);
-+	pgd = pgdp_get(pgdp);
-+	if (pgd_none(pgd))
-+		goto err;
-+
-+	p4dp = p4d_offset_lockless(pgdp, pgd, addr);
-+	p4d = p4dp_get(p4dp);
-+	if (!p4d_present(p4d))
-+		goto err;
-+
-+	pudp = pud_offset_lockless(p4dp, p4d, addr);
-+	pud = pudp_get(pudp);
-+	if (!pud_present(pud))
-+		goto err;
-+
-+	if (pud_leaf(pud)) {
-+		pte = pud_pte(pud);
-+		goto check;
-+	}
-+
-+	pmdp = pmd_offset_lockless(pudp, pud, addr);
-+again:
-+	pmd = pmdp_get_lockless(pmdp);
-+	if (!pmd_present(pmd))
-+		goto err;
-+
-+	if (pmd_leaf(pmd)) {
-+		pte = pmd_pte(pmd);
-+		goto check;
-+	}
-+
-+	ptep = pte_offset_map(&pmd, addr);
-+	if (!ptep)
-+		goto again;
-+
-+	pte = ptep_get_lockless(ptep);
-+	pte_unmap(ptep);
-+
-+	if (!pte_present(pte))
-+		goto err;
-+check:
-+	idx = FIELD_GET(PTE_ATTRINDX_MASK, pte_val(pte));
-+	is_dev = idx == MT_DEVICE_nGnRnE || idx == MT_DEVICE_nGnRE;
-+	local_irq_restore(flags);
-+	return is_dev;
-+err:
-+	local_irq_restore(flags);
-+	return true;
-+#else
-+	/*
-+	 * Without GUP-fast lockless page table helpers we cannot
-+	 * inspect the PTE.  Preserve the existing behavior (no
-+	 * device memory check) rather than unconditionally blocking
-+	 * all unwinding.
-+	 */
-+	return false;
-+#endif
-+}
++static bool skip_vmio = true;
++module_param(skip_vmio, bool, 0644);
++MODULE_PARM_DESC(skip_vmio, "Skip device memory during user callchain unwinding");
 +
  enum kunwind_source {
  	KUNWIND_SOURCE_UNKNOWN,
  	KUNWIND_SOURCE_FRAME,
-@@ -524,6 +616,9 @@ unwind_user_frame(struct frame_tail __user *tail, void *cookie,
+@@ -616,7 +621,7 @@ unwind_user_frame(struct frame_tail __user *tail, void *cookie,
  	if (!access_ok(tail, sizeof(buftail)))
  		return NULL;
  
-+	if (addr_is_device_mem((unsigned long)tail))
-+		return NULL;
-+
+-	if (addr_is_device_mem((unsigned long)tail))
++	if (READ_ONCE(skip_vmio) && addr_is_device_mem((unsigned long)tail))
+ 		return NULL;
+ 
  	pagefault_disable();
- 	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
- 	pagefault_enable();
-@@ -572,6 +667,9 @@ unwind_compat_user_frame(struct compat_frame_tail __user *tail, void *cookie,
+@@ -667,7 +672,7 @@ unwind_compat_user_frame(struct compat_frame_tail __user *tail, void *cookie,
  	if (!access_ok(tail, sizeof(buftail)))
  		return NULL;
  
-+	if (addr_is_device_mem((unsigned long)tail))
-+		return NULL;
-+
+-	if (addr_is_device_mem((unsigned long)tail))
++	if (READ_ONCE(skip_vmio) && addr_is_device_mem((unsigned long)tail))
+ 		return NULL;
+ 
  	pagefault_disable();
- 	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
- 	pagefault_enable();
 
 -- 
 2.51.0
