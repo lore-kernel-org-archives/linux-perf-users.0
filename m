@@ -1,16 +1,16 @@
 Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFF940FDAD;
-	Tue, 28 Apr 2026 14:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FBE3FD123;
+	Tue, 28 Apr 2026 14:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777387198; cv=none; b=MwNCUdp2tc6F4a38USvFIsGi+PZIX6lwPn35Iav2PbvjSAr3sLaZVqzuIQmTXxKhucfX+d/0xhdPrQI4Im7tBJPLNzAamCUYpryM3OnhfSlYSAXviw2rvBV65BMP/fUaubplU6gAbBx8BJRX1y7SaipFEhC6p7NTOqjU3dzyZQw=
+	t=1777387199; cv=none; b=Yl8HtEWRQN53Wpz9ZXy7gOuSfV/3C8O0d03hyBz+44v409UMwCPka0K4im9u96B4LtTY+eULQUDIu5futQr6vavvuibZ44UoLfDA0MGznz8VyUI4fodK2d4HaRrdmyeJZihU7YoDmVCOOFkA9bxEWGXIPGxBdxw6AJoQFwSgvX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777387198; c=relaxed/simple;
-	bh=R2Y9reQb/KcVnC/L/Hwk1juFmLerAODaIPvz6mqQ4Yk=;
+	s=arc-20240116; t=1777387199; c=relaxed/simple;
+	bh=s3VQ/EEBMRgw8u1CpLJ/wyJmX55jlz3z0F8yw4zAbYg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bSt7++Lb6jMh/LXEspL2q/VtWAjsN7TZQdi8jqEbnzqABEXk2lR0T4oBxnUa5qTGvztqdO5wGA/HbMu6OZqXEK8eEMcr5sUHfqUQEQVOCg8nwerscgLv8ww71iJNRhfLYB6w1cWswPM1lwK5yt7UNaQT/3/WXTbRp76uFMt18dg=
+	 MIME-Version; b=PDbZOGbyg8BLm7T5pM1KI7DXGucDD1bjMC9mP9mhA2KgFiYgn++KNLRtB8ydYr+/2vzE2fVzrP7JY1mNN+zs9hZfuqswoPqQfqLXek7/Ynt+9oCv5T4TL5XI/11k32Z4NjPgnvTSNKljCKDwsebUc7n2NlpI5IPfoKT3tWIM2q4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
@@ -18,8 +18,8 @@ Received: from ipservice-092-208-105-007.092.208.pools.vodafone-ip.de ([92.208.1
 	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <martin@kaiser.cx>)
-	id 1wHjbE-00000000sA9-1ZRU;
-	Tue, 28 Apr 2026 16:39:44 +0200
+	id 1wHjbF-00000000sA9-2uNQ;
+	Tue, 28 Apr 2026 16:39:45 +0200
 From: Martin Kaiser <martin@kaiser.cx>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -30,9 +30,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2 2/3] perf test: fix sys_enter_openat event test for musl
-Date: Tue, 28 Apr 2026 16:38:47 +0200
-Message-ID: <20260428143920.2466185-3-martin@kaiser.cx>
+Subject: [PATCH v2 3/3] perf test: fix "trace summary" test for musl-based systems
+Date: Tue, 28 Apr 2026 16:38:48 +0200
+Message-ID: <20260428143920.2466185-4-martin@kaiser.cx>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260428143920.2466185-1-martin@kaiser.cx>
 References: <20260428143920.2466185-1-martin@kaiser.cx>
@@ -44,41 +44,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The "syscalls:sys_enter_openat event fields" test calls
+The trace summary test calls /bin/true and filters for open, read and
+close events. These events are coming from shared library loads.
 
-openat(AT_FDCWD, "/etc/passwd", O_RDONLY | O_DIRECTORY)
+On a musl system, the loader and libc may point to the same file. true
+needs only libc, no further shared libraries are loaded at startup. The
+test fails since no open, read and close events are captured.
 
-and verifies that the flags of the captured event are matching.
-This fails for musl, where the openat syscall wrapper always adds
-O_LARGEFILE.
+root@host:~# ldd /bin/true
+	/lib/ld-musl-riscv64.so.1 (0x3fb8882000)
+	libc.so => /lib/ld-musl-riscv64.so.1 (0x3fb8882000)
 
-Update the check to allow for additional flags, the access mode flags
-must be unchanged.
+root@host:~# file /lib/ld-musl-riscv64.so.1
+/lib/ld-musl-riscv64.so.1: symbolic link to /usr/lib/libc.so
+
+root@host:~# strace -f /bin/true
+execve("/bin/true", ["/bin/true", ...], ... /* 18 vars */) = 1
+set_tid_address(0x3fa1f7bf70)           = 330
+mprotect(0x2ad6b8e000, 12288, PROT_READ) = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+
+Run "cat /dev/null" instead of "true". This creates the required events
+regardless of the C library and it works for cat from busybox or from
+coreutils.
 
 Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
 v2:
-- check that access mode is unchanged
+- use cat /dev/null, this works for busybox and coreutils
 
- tools/perf/tests/openat-syscall-tp-fields.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/trace_summary.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index 2a139d2781a8..5523cf4e9321 100644
---- a/tools/perf/tests/openat-syscall-tp-fields.c
-+++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -120,7 +120,10 @@ static int test__syscall_openat_tp_fields(struct test_suite *test __maybe_unused
+diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+index 22e2651d5919..b80dea77cec6 100755
+--- a/tools/perf/tests/shell/trace_summary.sh
++++ b/tools/perf/tests/shell/trace_summary.sh
+@@ -14,7 +14,7 @@ OUTPUT=$(mktemp /tmp/perf_trace_test.XXXXX)
  
- 				tp_flags = evsel__intval(evsel, &sample, "flags");
- 				perf_sample__exit(&sample);
--				if (flags != tp_flags) {
-+				/* C library wrapper may set additional flags,
-+				   access mode must be unchanged */
-+				if ((tp_flags & O_ACCMODE) != (flags & O_ACCMODE) ||
-+				    (tp_flags & flags) != flags) {
- 					pr_debug("%s: Expected flags=%#x, got %#x\n",
- 						 __func__, flags, tp_flags);
- 					goto out_delete_evlist;
+ test_perf_trace() {
+     args=$1
+-    workload="true"
++    workload="cat /dev/null"
+     search="^\s*(open|read|close).*[0-9]+%$"
+ 
+     echo "testing: perf trace ${args} -- ${workload}"
 -- 
 2.43.7
 
