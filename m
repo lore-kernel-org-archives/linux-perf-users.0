@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395603CEB9B
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF763D0939
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360767; cv=none; b=Xr6GKtevV1M9muiFG+Dx/NaKcjfRXKvYP44ZyNDA5TD6zBTr0Pjsljgry9AoztGdHMzpPz7/g51meqhQAuE7+8kUzTXrwPXw/E6mbnNqhPsMXo9XSSBBtt+oHoh2OW4aJHCeyY0Qn8Dbs6gvgY6bwn6fAuXFaLMlT8tYbgT8US0=
+	t=1777360769; cv=none; b=P1hXIhHIK2SaZ0APx9ET5Ieeu71WQWc4usaCrS3EZyoMN4IaJDsiDrAW1L++cqeQnWn+0pkW887pFFAtpudL3T36e/KwwONpUrOO64gTT4rOzzr2iauedFZrFjcTHxLe01H/vfCZ/KKZTLfE6wO2kt03lRzhDRZ09HdLtR/LiAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360767; c=relaxed/simple;
-	bh=/h8ESLHe5S0bbxRN9MN7l0JrDETJedf6AiFuXhBylRE=;
+	s=arc-20240116; t=1777360769; c=relaxed/simple;
+	bh=QHTZx5MPgaaZQHiX00rro2INAj+zmier+jw6hcgWdKU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QPn4bn3w71EXt1jp0n5yysfTdWsvDdIgN9EfYF+gARUfQ9WSaRWgIlLqwsx3azpVPg2N7w1vaLHjw64uC03du/CoT+8e4Ebh4Kzg5dZMnkWk9WGUTDS748j6dmK8MIFkZawGjUSj5ULrxpX5cZnvzpc9hD6e18R+B/SZosHj1vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZDprcp0p; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=Sg6BIoIZIgqcHP28GNFLaklsub31csE7cVcZ6cdhxuYyTlNN3Ma7teiQKKwMW56BayTvXphLHxfnbUXBQ8yJ5Ov27Es44pXfGSwcmi5iBBoao4op2OrQcMXiN2WdnY4L5NbVazxIAYPX7FHx28sCzLY6FHx0PFiEvtVFohdNUes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VRpkS+hN; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDprcp0p"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2dd6fb4c867so22497354eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:19:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VRpkS+hN"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-358f058973fso13242266a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:19:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777360765; x=1777965565; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777360767; x=1777965567; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqXJIn8r4IA9Gva4etcbzr/XlHSVW6Lm8pY9GKRmyzg=;
-        b=ZDprcp0ph4SYhZ5m/tq9maBAtr+/QWwQIb8v0vbtU2RiGOKnMTFtzmYkvXSu0WdOb3
-         PEJBV6VM/4214oQX40yUMTuyMPX/KS42zpsoLJbtsiLiDUoJlsJD2c8XuVGOmkbjL/Ig
-         Hfi+GHmLA/vTXTD48nDBoQkTdC3sz4mnu2cAwZXeXAyzoKlmAs9L+Ken0vuv10Wm1h4Z
-         hld//aAY4x27ioDXUlB2kQZ2ZwgYnn3O5NkKj7JdEe88xyYtSkRKDTTzfV8JwQgftDtN
-         tdAOHl92KYj2evJQ5ZNE8kmbpOTpVr52tV2z1ZZTfQ0bK0vjWuvsn++HHj++ril6yywj
-         fYCA==
+        bh=PdL5J++jQFS0WI1Hq1Y43G2dZXRWh1hnOIKdQUKwLiY=;
+        b=VRpkS+hNHa80YUWY4FYklC5rOUf6FEvNSzQyApdyPZBY4brkKgGIOnKMrIb4KdIOdf
+         5H70m1fEPlbPieJNSEwPZtuShRTTV6LxRVT+2k796dd+32VHFNhy6m1riIKWBSsFmJxX
+         Ha9J8MDLVDrGp6uQeTfaekAc3J3w8LIPIQ7csXs23syeIgb+3vUjyufUms9vXHlhXAfl
+         BxzBv8jhYEA5qsBAbr2bMSEoxIBxfmimWsV0pupHG1R9g0Uoka7XVl6RP3g+5OLXqQEW
+         rYe5h8aJsYBo73rdmXG+//Mvfh6ovx5YyAyfrFVENLUKrxYoqxoDsyCkvPY3PegZMbTo
+         t1Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777360765; x=1777965565;
+        d=1e100.net; s=20251104; t=1777360767; x=1777965567;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqXJIn8r4IA9Gva4etcbzr/XlHSVW6Lm8pY9GKRmyzg=;
-        b=RYrJae+vXTAypaNOyzrv1PKQon7w4yjbXRIsux0DAB/DA+PduJ9Q6ZN2zGVdHcCWzv
-         cBpTp/T4MjSZIT8vr5UMsMjfRzjaY9z9gsgif/rC47jHxY39FNJ9zG3Mn7rMwSGqEOVU
-         9unyTbpnMxc1ShmSF8yqisHX1MuiTBHLf0U6EAe8C3C2jj+P2PGICM2oczFWMF+rP9na
-         4SLRX8Yx1Kr4jkVXCcczsfnX2f3Ih9eSkCLSfeSnvCG/2OY//A5MWOvJqI+tCMcaDFw7
-         CI0KRXWkM16l44HVCllopkjHmPO+3JKcuBdFvRSSi8taVubRqisOWgMVM+fnGrL98Nbi
-         MjxA==
-X-Forwarded-Encrypted: i=1; AFNElJ8itjw1YgvKKarplGAYKaC06yJEkXCK8J8vmN3CNPQvAJU4Iv4AyofBDs0RMI9tU6//v7umF2Pt9KBznPrnhOWt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgosxvsXqLVD+2kTxvRaluMtfPF6KCHs0Pmwat7rfql+mh6OJb
-	yjG1Jif4eAYwnjwJ7W+0yVymDq7i46Ipnn8EyafQZ4FRM8+BYsu2JjfQWXqp8lA4zTKuPNF/GS2
-	zMM6yL39Pcg==
-X-Received: from dycnm7.prod.google.com ([2002:a05:7300:d187:b0:2d8:fc66:cd7b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:678b:b0:2e2:3381:2fba
- with SMTP id 5a478bee46e88-2ed0a003e77mr1018917eec.3.1777360765045; Tue, 28
- Apr 2026 00:19:25 -0700 (PDT)
-Date: Tue, 28 Apr 2026 00:18:08 -0700
+        bh=PdL5J++jQFS0WI1Hq1Y43G2dZXRWh1hnOIKdQUKwLiY=;
+        b=bREnZ0pxNVOa3Xo+gsP/o1744fz49SNhpROxsx9rgvj+lAnru0QPmdv+xw3QTTylai
+         Eg8vLcxcDFfmg52WGo2vH5vnbveyJtliCyiRS6qxjkP/w4Dnvyms0N3OG4m65gxkOiw3
+         IaABlZcPB86Eze42D34Z2w61UV6a8BxuZwCebs0HvrDMv+UVahl3khJDRP/jBmB94vIM
+         +6Nf4bey7Jxc5LISa7mQ6qahLvPsr5RRUR7ylR1t3Z8bBlhhiEnNWp7ZFZ/tZ2EHOiYE
+         WzSAzysyJBQolp4dvD7qQqXfHuLvk7ogGHEMSFyq/xNoF9eR8aj6XG42pSj12ccw6I6+
+         ac3g==
+X-Forwarded-Encrypted: i=1; AFNElJ8xbD15rNmTnz+sp+IduB5L7YXsv858741IPJ6+uKG+qINEyuxzGi/JyJ21amTEJjrkQiV1iREwHVuwtPFqqYGd@vger.kernel.org
+X-Gm-Message-State: AOJu0YytDCZvN1f/N+KSHOfqDrBZ0g669D3gn6BJx1KBKa6EabuTfnWz
+	t5KS6tjAdbip9k9Cu4HdSuojm6x7kNmMybuSwHBFE9C1lKX7VMZCqqbkvrUwnf+4skLxkZdn6MN
+	fUOrqATG1iQ==
+X-Received: from pgjf17.prod.google.com ([2002:a63:dc51:0:b0:c76:651e:6d72])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7351:b0:3a2:cc5f:2187
+ with SMTP id adf61e73a8af0-3a39c24c919mr2365748637.28.1777360767081; Tue, 28
+ Apr 2026 00:19:27 -0700 (PDT)
+Date: Tue, 28 Apr 2026 00:18:09 -0700
 In-Reply-To: <20260428071903.1886173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425224951.174663-1-irogers@google.com> <20260428071903.1886173-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260428071903.1886173-4-irogers@google.com>
-Subject: [PATCH v8 03/58] perf tests: Sort includes and add missed explicit dependencies
+Message-ID: <20260428071903.1886173-5-irogers@google.com>
+Subject: [PATCH v8 04/58] perf script: Sort includes and add missed explicit dependencies
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -69,86 +69,172 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	tmricht@linux.ibm.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Fix missing #includes found while cleaning the evsel/evlist header
-files. Sort the remaining header files for consistency with the rest
-of the code.
+Fix missing #include of pmu.h found while cleaning the evsel/evlist
+header files. Sort the remaining header files for consistency with the
+rest of the code. Doing this exposed a missing forward declaration of
+addr_location in print_insn.h, add this and sort the forward
+declarations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/hwmon_pmu.c  | 14 +++++++++-----
- tools/perf/tests/mmap-basic.c | 18 +++++++++++-------
- 2 files changed, 20 insertions(+), 12 deletions(-)
+ tools/perf/builtin-script.c  | 111 ++++++++++++++++++-----------------
+ tools/perf/util/print_insn.h |   5 +-
+ 2 files changed, 60 insertions(+), 56 deletions(-)
 
-diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
-index 4aa4aac94f09..ada6e445c4c4 100644
---- a/tools/perf/tests/hwmon_pmu.c
-+++ b/tools/perf/tests/hwmon_pmu.c
-@@ -1,15 +1,19 @@
- // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
--#include "debug.h"
--#include "evlist.h"
- #include "hwmon_pmu.h"
--#include "parse-events.h"
--#include "tests.h"
-+
- #include <errno.h>
-+
- #include <fcntl.h>
--#include <sys/stat.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <sys/stat.h>
-+
-+#include "debug.h"
-+#include "evlist.h"
-+#include "parse-events.h"
-+#include "pmus.h"
-+#include "tests.h"
- 
- static const struct test_event {
- 	const char *name;
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 3313c236104e..8d04f6edb004 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -1,25 +1,29 @@
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c8ac9f01a36b..853b141a0d50 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1,74 +1,77 @@
  // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
--#include <fcntl.h>
- #include <inttypes.h>
- #include <stdlib.h>
+-#include "builtin.h"
++#include <errno.h>
++#include <inttypes.h>
++#include <signal.h>
++#include <stdio.h>
 +
++#include <dirent.h>
 +#include <fcntl.h>
++#include <linux/bitmap.h>
++#include <linux/compiler.h>
++#include <linux/ctype.h>
 +#include <linux/err.h>
 +#include <linux/kernel.h>
-+#include <linux/string.h>
-+
- #include <perf/cpumap.h>
++#include <linux/stringify.h>
++#include <linux/time64.h>
++#include <linux/unaligned.h>
++#include <linux/zalloc.h>
++#include <sys/param.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <sys/utsname.h>
++#include <unistd.h>
+ 
 +#include <perf/evlist.h>
-+#include <perf/mmap.h>
- 
- #include "cpumap.h"
- #include "debug.h"
- #include "event.h"
- #include "evlist.h"
- #include "evsel.h"
--#include "thread_map.h"
-+#include "pmu.h"
-+#include "pmus.h"
- #include "tests.h"
-+#include "thread_map.h"
- #include "util/affinity.h"
- #include "util/mmap.h"
- #include "util/sample.h"
--#include <linux/err.h>
++#include <subcmd/exec-cmd.h>
++#include <subcmd/pager.h>
++#include <subcmd/parse-options.h>
++
++#include "asm/bug.h"
++#include "builtin.h"
++#include "perf.h"
++#include "print_binary.h"
++#include "print_insn.h"
++#include "ui/ui.h"
++#include "util/annotate.h"
++#include "util/auxtrace.h"
++#include "util/cgroup.h"
++#include "util/color.h"
+ #include "util/counts.h"
++#include "util/cpumap.h"
++#include "util/data.h"
+ #include "util/debug.h"
++#include "util/dlfilter.h"
+ #include "util/dso.h"
+-#include <subcmd/exec-cmd.h>
+-#include "util/header.h"
+-#include <subcmd/parse-options.h>
+-#include "util/perf_regs.h"
+-#include "util/session.h"
+-#include "util/tool.h"
+-#include "util/map.h"
+-#include "util/srcline.h"
+-#include "util/symbol.h"
+-#include "util/thread.h"
+-#include "util/trace-event.h"
++#include "util/dump-insn.h"
+ #include "util/env.h"
++#include "util/event.h"
+ #include "util/evlist.h"
+ #include "util/evsel.h"
+ #include "util/evsel_fprintf.h"
+ #include "util/evswitch.h"
++#include "util/header.h"
++#include "util/map.h"
++#include "util/mem-events.h"
++#include "util/mem-info.h"
++#include "util/metricgroup.h"
++#include "util/path.h"
++#include "util/perf_regs.h"
++#include "util/pmu.h"
++#include "util/record.h"
++#include "util/session.h"
+ #include "util/sort.h"
+-#include "util/data.h"
+-#include "util/auxtrace.h"
+-#include "util/cpumap.h"
+-#include "util/thread_map.h"
++#include "util/srcline.h"
+ #include "util/stat.h"
+-#include "util/color.h"
+ #include "util/string2.h"
++#include "util/symbol.h"
+ #include "util/thread-stack.h"
++#include "util/thread.h"
++#include "util/thread_map.h"
+ #include "util/time-utils.h"
+-#include "util/path.h"
+-#include "util/event.h"
+-#include "util/mem-info.h"
+-#include "util/metricgroup.h"
+-#include "ui/ui.h"
+-#include "print_binary.h"
+-#include "print_insn.h"
+-#include <linux/bitmap.h>
+-#include <linux/compiler.h>
 -#include <linux/kernel.h>
--#include <linux/string.h>
+-#include <linux/stringify.h>
+-#include <linux/time64.h>
+-#include <linux/zalloc.h>
+-#include <linux/unaligned.h>
+-#include <sys/utsname.h>
+-#include "asm/bug.h"
+-#include "util/mem-events.h"
+-#include "util/dump-insn.h"
+-#include <dirent.h>
+-#include <errno.h>
+-#include <inttypes.h>
+-#include <signal.h>
+-#include <stdio.h>
+-#include <sys/param.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <unistd.h>
+-#include <subcmd/pager.h>
 -#include <perf/evlist.h>
--#include <perf/mmap.h>
+-#include <linux/err.h>
+-#include "util/dlfilter.h"
+-#include "util/record.h"
++#include "util/tool.h"
++#include "util/trace-event.h"
+ #include "util/util.h"
+-#include "util/cgroup.h"
+-#include "util/annotate.h"
+-#include "perf.h"
  
- /*
-  * This test will generate random numbers of calls to some getpid syscalls,
+-#include <linux/ctype.h>
+ #ifdef HAVE_LIBTRACEEVENT
+ #include <event-parse.h>
+ #endif
+diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+index 07d11af3fc1c..a54f7e858e49 100644
+--- a/tools/perf/util/print_insn.h
++++ b/tools/perf/util/print_insn.h
+@@ -5,10 +5,11 @@
+ #include <stddef.h>
+ #include <stdio.h>
+ 
+-struct perf_sample;
+-struct thread;
++struct addr_location;
+ struct machine;
+ struct perf_insn;
++struct perf_sample;
++struct thread;
+ 
+ #define PRINT_INSN_IMM_HEX		(1<<0)
+ 
 -- 
 2.54.0.545.g6539524ca2-goog
 
