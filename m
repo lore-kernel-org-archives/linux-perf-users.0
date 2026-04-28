@@ -1,54 +1,54 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91BA4218B1
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C577F4219FA
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360863; cv=none; b=DHW6LUC0u/ffH1D9Y0GIpPrD37sdQb2fIAJbi/oQ/8Z7ging9WHxPaQ/d28cVUWCm+sbfWTu46sG9V/s/7I5wWW6xhWSCWeMStILkhfNL3z06KGZoQHbciWnRZqYpl8ZUgSoxm/julPOlIMB/HNjBavjR0jhRukwIHLaRiC/R20=
+	t=1777360865; cv=none; b=aUNH5ZLkr0s05YIdlBiyN0a7G80SDb0vXGStMdi7UZlE2eCPkgdnLxs7/nPxP7hJ2coS0ume/y/njW3Znj8EP6WulWvOwnmwFYt7kiGnh+PhtflC6MS98H4oWB/B66EVJ0OXp1Eiq4k1nxmwO8/SFD91ywDCMER0KO4UCATZNow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360863; c=relaxed/simple;
-	bh=jeR4Y5tYrqM+VRciyZ38jmj8C+EvBF6bkN0wvPo/M1Y=;
+	s=arc-20240116; t=1777360865; c=relaxed/simple;
+	bh=ZrJ2nullNFdPahYP4cmzB/NIEZ9UukgcFFOHNvNmBo4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RoPNiHXn/5gQ284oZ96EnouPUytab1pBi6WBvE7OXTfGnkwufttBHI5R/Ce6WVOjaHdFigavPbS6CmBw+QVxOI6HlaImOFFeB31klDjuSF8XSkNCvqjM/WdG4mrp+BI4t1LyvMVzagz1QsLl7Y2oYvtz/e4bUpmlZERcrvbVh9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rzokUCui; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=ipeOrkynI7vpFGNyqbQ7k+q5u1Ve4FRzcIHJ4yQEj7SWrE8hp6Gxg4S3PZTwbFjDxyuK5hqGoqIqDJZkTXkEGJDSZ8iggZ/nSL84xBMk9ntbrz0OYn/hixN/5V+tHQI235Pq06NNwRvnV5lALVO6fVLLCXSxDdIfl2Es4xXOmAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KnlrWj/X; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rzokUCui"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c7985752be1so4374501a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:21:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnlrWj/X"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so13393755eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:21:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777360861; x=1777965661; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777360863; x=1777965663; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4vO51mkUv8czx4QMNQNbvlHwQFmUDbpKAVfeUaPjKEk=;
-        b=rzokUCuiqMJgbvkCpnXAYIlw55LZlCDtruVim2u2Ux0ipms0vmyAeIrFxNnVhN8bWL
-         H1F+nmOzO0kjPtNMTI1A2wFca6/IL2XhRfucPe76BiKGOs96rLxr/4GpJktVF/wX0i6G
-         QKyOmHAMqNpHQTYxTr30qxtdfnVYPFA9i48G9xX9X88k89PWqOP2FqDPJp0QuZDWDft2
-         71D8G03sadat261S9zmB9bhVdewNuYIRCiM6LIThp+MsPscanSFhlJwhG3mx927Essx6
-         NEBFXESklI3iRH9/dOdYzFFioigkbHRv3TAIwy1eW5ljPMyfjAwfvQyZ/bCfOKuRIj6a
-         nBTw==
+        bh=a4cIRIqFZJ5y1BubPplg9oWe019B443zoI45B5rxaHA=;
+        b=KnlrWj/XoFanqxBMV4BJ11W//ACFEFytgNca1A/toHKNhelUGySn5u+WhAUVXzJw0q
+         /YNQX8Wfo0b4SIfbFBYInDPet2Wo5SS++9mm9LeF5S3abH5XsxlmxF4CHtPzf7kzuWkt
+         OsjFXacZ7jgD6U1gywKy/4ePAkWWeQY37wdtvRqjbD4E5lx9iZkQa1Az6blvzh6jCrM8
+         ZbuPvXx7HiObCYWHEd/KCfzMaWNZ7jAvZa+voqeXPu9y0E3Q0ipgHcmF1uBKvWYvudmc
+         +s6CCyDS9cW5hC0eKJnWK9cI5Hh8Ek/T2FBH6+0WZ85JWZkmc837OG9TB1qK2CWlpIZ2
+         ybLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777360861; x=1777965661;
+        d=1e100.net; s=20251104; t=1777360863; x=1777965663;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4vO51mkUv8czx4QMNQNbvlHwQFmUDbpKAVfeUaPjKEk=;
-        b=kUmtbC6b9jI5Ah8eDsxMaPoo8i8++vLUkJ8nQxGU96F7vst4S91+MMbiDyE9ZXLbo9
-         tNsNG/KzH7c6A/KgQarHRnTi6eWjusXSO1e22iyVz/PK89ISQMCobwoKIfw8ojusDB2O
-         E1+hvc4dehmTkhMRoYqpu5NbtHKEihbk48H4LWFM6xgsut4CEunt99VHThpOTPO0nEP9
-         JFCh4MHSVz5wkM3tEgVskz7GwaYcC0k4BHi2XSlJL31LjeHPC3RXvpwSiQyXD2md7NHN
-         xnys803U3UFOn9aCPWd0gT8YGRST4D/t8sO+A7xUraHUTBKUPWwk852HGOn9P/aaZOQ4
-         jpmA==
-X-Forwarded-Encrypted: i=1; AFNElJ9EL0ogiOvCuVyF1CKYlPhb97bEEbAKKD0mP3eVO6peDe+hXg5Cmc/mJBR5puXOQ+P4rrXNBj1dME4ot9kmFea4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ExQ5yRXynxorpiDB0LUOCl21pJUvyCNRGj4xda3tEp1CKpCN
-	8Bl5mRBuZ+ff2P7vtODpQxOesv+OLIW4GvJq8WKz5ml8Bak+VcNbN+J5v3pkAGR3PgXzYqS4W7i
-	vycdkwcu66A==
-X-Received: from pgac11.prod.google.com ([2002:a05:6a02:294b:b0:c76:a6b1:ed23])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a120:b0:3a2:f14a:4290
- with SMTP id adf61e73a8af0-3a39c27ff64mr2278598637.38.1777360860923; Tue, 28
- Apr 2026 00:21:00 -0700 (PDT)
-Date: Tue, 28 Apr 2026 00:18:56 -0700
+        bh=a4cIRIqFZJ5y1BubPplg9oWe019B443zoI45B5rxaHA=;
+        b=HeeUCSG7r8TQGatzadBmfA6oYIKau2Zw/ESESS52FNSZ8geEmMP8SObNSvLBSCCdTH
+         +yRJI15Y3QlFlpA2V4TSVm8R/XEByHYSROIV7FkhAVUERgWsExrMc2XdGNAISkFqgp6v
+         gNUoCoBshb9OY8aLaETn1yt3GZm6qu5i44TGlKXqXb2NtIt3D+EgONxYoRxbOi0BbY6Z
+         /Vho2KfHbV+Miqy9V8VVITadMqoJWym+1c5abs0fnsW+fqaUZ/oXjbumI40snvzOYFIf
+         ahzhPwci8URGIr8xjQAdaG1MtaCKQruq9hKjSU75KMeHibNCdSmv7FljzgjWDd0PXuVb
+         +1FQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8kAIgojuOHcLaK7L8UJgsfxMITxfjBO3wobajEw10XhW7Pfj6qU09UNy/l9fE+dIWRaxDtoyANvqgMrZ9d1kJQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjHv8rz+ZyMidISuIFaqfQJ23dSSJIy69HfEAKcYd5x3ZcRXLg
+	9tIEvG9ygSShtm/RvklBEfWeJcNXwDHL60pjVyzTNW2Ub/hfteSi0krBoToE10E1AUXNeGP71Ou
+	E4XJbNHJbTw==
+X-Received: from dycnh13.prod.google.com ([2002:a05:7300:ce8d:b0:2dd:3fe1:f5b2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2b06:b0:2ea:ed70:3ea8
+ with SMTP id 5a478bee46e88-2ed0a2680a3mr1095594eec.29.1777360862799; Tue, 28
+ Apr 2026 00:21:02 -0700 (PDT)
+Date: Tue, 28 Apr 2026 00:18:57 -0700
 In-Reply-To: <20260428071903.1886173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425224951.174663-1-irogers@google.com> <20260428071903.1886173-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260428071903.1886173-52-irogers@google.com>
-Subject: [PATCH v8 51/58] perf wakeup-latency: Port wakeup-latency to use
- python module
+Message-ID: <20260428071903.1886173-53-irogers@google.com>
+Subject: [PATCH v8 52/58] perf test: Migrate Intel PT virtual LBR test to use
+ Python API
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -70,139 +70,129 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	tmricht@linux.ibm.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Port the legacy Perl script wakeup-latency.pl to a python script using
-the perf module in tools/perf/python.
-
-The new script uses a class-based architecture and leverages the
-perf.session API for event processing.
-
-It measures wakeup latency by tracking timestamps of
-sched:sched_wakeup and sched:sched_switch events.
-
-Complications:
-- Used min() and max() built-in functions instead of if blocks to
-  satisfy pylint recommendations.
-- pylint warns about the module name not being snake_case, but it is
-  kept for consistency with the original script name.
+The Intel PT virtual LBR test used an ad-hoc Python script written on
+the fly to parse branch stacks. This change migrates it to use the
+newly added `brstack` iterator API in the `perf` Python module.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
+
 ---
-v2:
-
- - Fixed Wakeup Latency Logic: Modified the script to track wakeup
-   timestamps per task (using sample.pid as the key) instead of per
-   CPU.  This ensures that context switches are correctly paired with
-   the specific task that was woken up, even if multiple tasks are
-   woken up on the same CPU or if a task is migrated to a different
-   CPU before running.
-
- - Prevented Memory Growth: Added del self.last_wakeup[next_pid] after
-   successful latency calculation to prevent the dictionary from
-   growing unbounded over time.
-
- - Added Error Tracking: Added try-except blocks around tracepoint
-   field access in process_event() and tracked missing fields in self.
-   unhandled instead of ignoring them.
+v7:
+- Fixed permanent iterator exhaustion on brstack by converting it
+  to a list.
 ---
- tools/perf/python/wakeup-latency.py | 88 +++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100755 tools/perf/python/wakeup-latency.py
+ .../perf/tests/shell/lib/perf_brstack_max.py  | 43 +++++++++++++++++++
+ tools/perf/tests/shell/test_intel_pt.sh       | 35 +++++----------
+ 2 files changed, 53 insertions(+), 25 deletions(-)
+ create mode 100644 tools/perf/tests/shell/lib/perf_brstack_max.py
 
-diff --git a/tools/perf/python/wakeup-latency.py b/tools/perf/python/wakeup-latency.py
-new file mode 100755
-index 000000000000..1b0db115abcf
+diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/tests/shell/lib/perf_brstack_max.py
+new file mode 100644
+index 000000000000..bd1cdb463f28
 --- /dev/null
-+++ b/tools/perf/python/wakeup-latency.py
-@@ -0,0 +1,88 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-only
-+"""Display avg/min/max wakeup latency."""
++++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
+@@ -0,0 +1,43 @@
++#!/usr/bin/python
++# SPDX-License-Identifier: GPL-2.0
++# Determine the maximum size of branch stacks in a perf.data file.
 +
 +import argparse
-+from collections import defaultdict
 +import sys
-+from typing import Optional, Dict
++
++import os
++
++script_dir = os.path.dirname(os.path.abspath(__file__))
++python_dir = os.path.abspath(os.path.join(script_dir, "../../../python"))
++sys.path.insert(0, python_dir)
++
 +import perf
 +
-+class WakeupLatency:
-+    """Tracks and displays wakeup latency statistics."""
-+    def __init__(self) -> None:
-+        self.last_wakeup: Dict[int, int] = defaultdict(int)
-+        self.max_wakeup_latency = 0
-+        self.min_wakeup_latency = 1000000000
-+        self.total_wakeup_latency = 0
-+        self.total_wakeups = 0
-+        self.unhandled: Dict[str, int] = defaultdict(int)
-+        self.session: Optional[perf.session] = None
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    args = ap.parse_args()
 +
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process events."""
-+        event_name = str(sample.evsel)
-+        sample_time = sample.sample_time
++    bmax = 0
 +
-+        if "sched:sched_wakeup" in event_name:
-+            try:
-+                pid = sample.pid
-+                self.last_wakeup[pid] = sample_time
-+            except AttributeError:
-+                self.unhandled[event_name] += 1
-+        elif "sched:sched_switch" in event_name:
-+            try:
-+                next_pid = sample.next_pid
-+                wakeup_ts = self.last_wakeup.get(next_pid, 0)
-+                if wakeup_ts:
-+                    latency = sample_time - wakeup_ts
-+                    self.max_wakeup_latency = max(self.max_wakeup_latency, latency)
-+                    self.min_wakeup_latency = min(self.min_wakeup_latency, latency)
-+                    self.total_wakeup_latency += latency
-+                    self.total_wakeups += 1
-+                    del self.last_wakeup[next_pid]
-+            except AttributeError:
-+                self.unhandled[event_name] += 1
-+        else:
-+            self.unhandled[event_name] += 1
++    def process_event(sample):
++        nonlocal bmax
++        try:
++            brstack = sample.brstack
++            if brstack:
++                n = len(list(brstack))
++                if n > bmax:
++                    bmax = n
++        except AttributeError:
++            pass
 +
-+    def print_totals(self) -> None:
-+        """Print summary statistics."""
-+        print("wakeup_latency stats:\n")
-+        print(f"total_wakeups: {self.total_wakeups}")
-+        if self.total_wakeups:
-+            avg = self.total_wakeup_latency // self.total_wakeups
-+            print(f"avg_wakeup_latency (ns): {avg}")
-+        else:
-+            print("avg_wakeup_latency (ns): N/A")
-+        print(f"min_wakeup_latency (ns): {self.min_wakeup_latency}")
-+        print(f"max_wakeup_latency (ns): {self.max_wakeup_latency}")
-+
-+        if self.unhandled:
-+            print("\nunhandled events:\n")
-+            print(f"{'event':<40s}  {'count':>10s}")
-+            print(f"{'-'*40}  {'-'*10}")
-+            for event_name, count in self.unhandled.items():
-+                print(f"{event_name:<40s}  {count:10d}")
-+
-+    def run(self, input_file: str) -> None:
-+        """Run the session."""
-+        self.session = perf.session(perf.data(input_file), sample=self.process_event)
-+        self.session.process_events()
-+        self.print_totals()
-+
-+def main() -> None:
-+    """Main function."""
-+    parser = argparse.ArgumentParser(description="Trace wakeup latency")
-+    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
-+    args = parser.parse_args()
-+
-+    analyzer = WakeupLatency()
 +    try:
-+        analyzer.run(args.input)
-+    except IOError as e:
-+        print(e, file=sys.stderr)
++        session = perf.session(perf.data(args.input), sample=process_event)
++        session.process_events()
++        print("max brstack", bmax)
++    except Exception as e:
++        print(f"Error processing events: {e}", file=sys.stderr)
 +        sys.exit(1)
 +
 +if __name__ == "__main__":
 +    main()
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 8ee761f03c38..d711ecdf5be0 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -24,7 +24,6 @@ errfile="${temp_dir}/test-err.txt"
+ workload="${temp_dir}/workload"
+ awkscript="${temp_dir}/awkscript"
+ jitdump_workload="${temp_dir}/jitdump_workload"
+-maxbrstack="${temp_dir}/maxbrstack.py"
+ 
+ cleanup()
+ {
+@@ -539,34 +538,20 @@ test_kernel_trace()
+ test_virtual_lbr()
+ {
+ 	echo "--- Test virtual LBR ---"
+-	# Check if python script is supported
+-	libpython=$(perf version --build-options | grep python | grep -cv OFF)
+-	if [ "${libpython}" != "1" ] ; then
+-		echo "SKIP: python scripting is not supported"
++	# shellcheck source=lib/setup_python.sh
++	. "$(dirname "$0")"/lib/setup_python.sh
++
++	if [ -z "$PYTHON" ] ; then
++		echo "SKIP: Python not found"
+ 		return 2
+ 	fi
+ 
+-	# Python script to determine the maximum size of branch stacks
+-	cat << "_end_of_file_" > "${maxbrstack}"
+-from __future__ import print_function
+-
+-bmax = 0
+-
+-def process_event(param_dict):
+-	if "brstack" in param_dict:
+-		brstack = param_dict["brstack"]
+-		n = len(brstack)
+-		global bmax
+-		if n > bmax:
+-			bmax = n
+-
+-def trace_end():
+-	print("max brstack", bmax)
+-_end_of_file_
+-
+ 	# Check if virtual lbr is working
+-	perf_record_no_bpf -o "${perfdatafile}" --aux-sample -e '{intel_pt//,cycles}:u' uname
+-	times_val=$(perf script -i "${perfdatafile}" --itrace=L -s "${maxbrstack}" 2>/dev/null | grep "max brstack " | cut -d " " -f 3)
++	perf_record_no_bpf -o "${tmpfile}" --aux-sample -e '{intel_pt//,cycles}:u' perf test -w brstack
++	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}"
++	output=$($PYTHON "$(dirname "$0")"/lib/perf_brstack_max.py -i "${perfdatafile}")
++	echo "Debug: perf_brstack_max.py output: $output"
++	times_val=$(echo "$output" | grep "max brstack " | cut -d " " -f 3)
+ 	case "${times_val}" in
+ 		[0-9]*)	;;
+ 		*)	times_val=0;;
 -- 
 2.54.0.545.g6539524ca2-goog
 
