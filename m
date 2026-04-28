@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A31B3C7E0B
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395603CEB9B
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 07:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360766; cv=none; b=eiVgxmNrCvoD8EjfzTDlKK6bB2CPsAsb0yCUJmbfi8ZtA5CkEWNjq/VtwoZpLa9zpHMtPmLwfSsAF+0m50RYcyGG2b9JiFy/JxZotQw0VrlKGoQAJPk57IGU4d0rWe+KWHYNzhOfboohrHvA4R4kyKclxV9aL2Q1ZOP7lXU8JmI=
+	t=1777360767; cv=none; b=Xr6GKtevV1M9muiFG+Dx/NaKcjfRXKvYP44ZyNDA5TD6zBTr0Pjsljgry9AoztGdHMzpPz7/g51meqhQAuE7+8kUzTXrwPXw/E6mbnNqhPsMXo9XSSBBtt+oHoh2OW4aJHCeyY0Qn8Dbs6gvgY6bwn6fAuXFaLMlT8tYbgT8US0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360766; c=relaxed/simple;
-	bh=IzGtiew6lV3UoAkWJeECtCMku/bwu3+F3qCjyvwzJ3A=;
+	s=arc-20240116; t=1777360767; c=relaxed/simple;
+	bh=/h8ESLHe5S0bbxRN9MN7l0JrDETJedf6AiFuXhBylRE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nnfC3HvtIqiPC7ayRpLvtAT8PIdwLNdDOdiCO68g9RHgj6A6wsft456kGOs1UDes4lAk3ocL2EiKItin09E0bcxLdW8iiFsJMekAUGnZqwdpOGSBh3UYjJlo+dpGxxGcTpWMZP7Q947OBaHUtbq1ZYAKpR31Rgy1EIqUDSZCWzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YXl67G0i; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=QPn4bn3w71EXt1jp0n5yysfTdWsvDdIgN9EfYF+gARUfQ9WSaRWgIlLqwsx3azpVPg2N7w1vaLHjw64uC03du/CoT+8e4Ebh4Kzg5dZMnkWk9WGUTDS748j6dmK8MIFkZawGjUSj5ULrxpX5cZnvzpc9hD6e18R+B/SZosHj1vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZDprcp0p; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXl67G0i"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so14537638eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDprcp0p"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2dd6fb4c867so22497354eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Apr 2026 00:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777360763; x=1777965563; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777360765; x=1777965565; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RL6gbA3yHwRjF7ykSQ2dEvMc7Axg6yuH3FzRoVTsCT0=;
-        b=YXl67G0iPVbIeSj5dFIuiT3zaQ4EgF9r38uZncBIowaVBL5biygbUDJFj2UW53HTvo
-         9mKsGr5hrkeYFKy82g0limkNzMQz6NJCgaMLmljYBCLsHAgYDk+vsACAbcC1DFmm1wG5
-         dpe+BBTYNBTvtOCVsG2Xr72UoZTpRrwLwVRrMLPVHc2FDYq/5p7eO+mrNwV3aLgacYsD
-         z7FjXm2jCdnDniT9CfWDamHTYjk+ghWaxBwpzSLjujnqzo64/MRgj9NLA9dzU3sZYJAk
-         32mc2w3xqdFkzyaN4cgqpSqONpvPUE5JuonJcvI2vU3MAlOitJD1BKwsHvaM7dhv73LY
-         BCOQ==
+        bh=mqXJIn8r4IA9Gva4etcbzr/XlHSVW6Lm8pY9GKRmyzg=;
+        b=ZDprcp0ph4SYhZ5m/tq9maBAtr+/QWwQIb8v0vbtU2RiGOKnMTFtzmYkvXSu0WdOb3
+         PEJBV6VM/4214oQX40yUMTuyMPX/KS42zpsoLJbtsiLiDUoJlsJD2c8XuVGOmkbjL/Ig
+         Hfi+GHmLA/vTXTD48nDBoQkTdC3sz4mnu2cAwZXeXAyzoKlmAs9L+Ken0vuv10Wm1h4Z
+         hld//aAY4x27ioDXUlB2kQZ2ZwgYnn3O5NkKj7JdEe88xyYtSkRKDTTzfV8JwQgftDtN
+         tdAOHl92KYj2evJQ5ZNE8kmbpOTpVr52tV2z1ZZTfQ0bK0vjWuvsn++HHj++ril6yywj
+         fYCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777360763; x=1777965563;
+        d=1e100.net; s=20251104; t=1777360765; x=1777965565;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RL6gbA3yHwRjF7ykSQ2dEvMc7Axg6yuH3FzRoVTsCT0=;
-        b=gTEQb1NvhyFCiB/TYXC0pvC4E+1579gesOZE2lFWiZ1piDPICElsncJLb+Yn9yQ9/5
-         GTFKqWKYo1OjK+kXufJEcfI2pOxruopfsEwlnGm9M/idDxo5+5ZtqnoWmRMWIIfTNXJz
-         kmBLhLzsywXcg217wLHV4PLI6W9t4J/fpFnUFPy+qwRHvU/6DtNLpbc3LSCbPyYdcppS
-         0RLa4I/4MB2sNeI8rD3MNYPWcLTr7IOrD0YkgJNHgGYkd18FgNUy/0EaKZzrhrdWgYhj
-         DhZN5csGxec/+LekE60oUQrWOk9FdwwGT0cynDpj2cQkMWFKTjvwZv41EWlX3TmaHRvu
-         q1xw==
-X-Forwarded-Encrypted: i=1; AFNElJ+FE1GFR08Y0+Y2EMOsAmzkokEGW0ik1rdQYJRZTMGI0USKo3TjYi/YVH4AQftySszqIq0m8oj4dkqGkEcT/AcZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX/PO+5lIyYJYlCZBztBqGgnZ7F8pWH4vFU2+fl2NHW92+4pNq
-	a7egfvdOLOSeFcnRB0OJsZloHwjrW8HGFRidZIq+2XU5177W+zOESjxpyPgGRbqGTMKqQHfNX/Y
-	pYkoOTz1oqw==
-X-Received: from dycnr11-n1.prod.google.com ([2002:a05:7300:e9cb:10b0:2e5:fa99:f6e4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:fa10:b0:2da:2ec2:64e5
- with SMTP id 5a478bee46e88-2ed0a084a58mr1036731eec.18.1777360763065; Tue, 28
- Apr 2026 00:19:23 -0700 (PDT)
-Date: Tue, 28 Apr 2026 00:18:07 -0700
+        bh=mqXJIn8r4IA9Gva4etcbzr/XlHSVW6Lm8pY9GKRmyzg=;
+        b=RYrJae+vXTAypaNOyzrv1PKQon7w4yjbXRIsux0DAB/DA+PduJ9Q6ZN2zGVdHcCWzv
+         cBpTp/T4MjSZIT8vr5UMsMjfRzjaY9z9gsgif/rC47jHxY39FNJ9zG3Mn7rMwSGqEOVU
+         9unyTbpnMxc1ShmSF8yqisHX1MuiTBHLf0U6EAe8C3C2jj+P2PGICM2oczFWMF+rP9na
+         4SLRX8Yx1Kr4jkVXCcczsfnX2f3Ih9eSkCLSfeSnvCG/2OY//A5MWOvJqI+tCMcaDFw7
+         CI0KRXWkM16l44HVCllopkjHmPO+3JKcuBdFvRSSi8taVubRqisOWgMVM+fnGrL98Nbi
+         MjxA==
+X-Forwarded-Encrypted: i=1; AFNElJ8itjw1YgvKKarplGAYKaC06yJEkXCK8J8vmN3CNPQvAJU4Iv4AyofBDs0RMI9tU6//v7umF2Pt9KBznPrnhOWt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgosxvsXqLVD+2kTxvRaluMtfPF6KCHs0Pmwat7rfql+mh6OJb
+	yjG1Jif4eAYwnjwJ7W+0yVymDq7i46Ipnn8EyafQZ4FRM8+BYsu2JjfQWXqp8lA4zTKuPNF/GS2
+	zMM6yL39Pcg==
+X-Received: from dycnm7.prod.google.com ([2002:a05:7300:d187:b0:2d8:fc66:cd7b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:678b:b0:2e2:3381:2fba
+ with SMTP id 5a478bee46e88-2ed0a003e77mr1018917eec.3.1777360765045; Tue, 28
+ Apr 2026 00:19:25 -0700 (PDT)
+Date: Tue, 28 Apr 2026 00:18:08 -0700
 In-Reply-To: <20260428071903.1886173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260425224951.174663-1-irogers@google.com> <20260428071903.1886173-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260428071903.1886173-3-irogers@google.com>
-Subject: [PATCH v8 02/58] perf arch x86: Sort includes and add missed explicit dependencies
+Message-ID: <20260428071903.1886173-4-irogers@google.com>
+Subject: [PATCH v8 03/58] perf tests: Sort includes and add missed explicit dependencies
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -75,110 +75,80 @@ of the code.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/intel-bts.c | 20 +++++++++++--------
- tools/perf/arch/x86/util/intel-pt.c  | 29 +++++++++++++++-------------
- 2 files changed, 28 insertions(+), 21 deletions(-)
+ tools/perf/tests/hwmon_pmu.c  | 14 +++++++++-----
+ tools/perf/tests/mmap-basic.c | 18 +++++++++++-------
+ 2 files changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index 85c8186300c8..100a23d27998 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -4,26 +4,30 @@
-  * Copyright (c) 2013-2015, Intel Corporation.
-  */
- 
-+#include "../../../util/intel-bts.h"
+diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+index 4aa4aac94f09..ada6e445c4c4 100644
+--- a/tools/perf/tests/hwmon_pmu.c
++++ b/tools/perf/tests/hwmon_pmu.c
+@@ -1,15 +1,19 @@
+ // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+-#include "debug.h"
+-#include "evlist.h"
+ #include "hwmon_pmu.h"
+-#include "parse-events.h"
+-#include "tests.h"
 +
  #include <errno.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
 +
- #include <linux/bitops.h>
-+#include <linux/kernel.h>
- #include <linux/log2.h>
-+#include <linux/types.h>
- #include <linux/zalloc.h>
- 
-+#include <internal/lib.h> // page_size
+ #include <fcntl.h>
+-#include <sys/stat.h>
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
++#include <sys/stat.h>
 +
-+#include "../../../util/auxtrace.h"
- #include "../../../util/cpumap.h"
-+#include "../../../util/debug.h"
- #include "../../../util/event.h"
--#include "../../../util/evsel.h"
- #include "../../../util/evlist.h"
-+#include "../../../util/evsel.h"
- #include "../../../util/mmap.h"
--#include "../../../util/session.h"
-+#include "../../../util/pmu.h"
- #include "../../../util/pmus.h"
--#include "../../../util/debug.h"
- #include "../../../util/record.h"
-+#include "../../../util/session.h"
- #include "../../../util/tsc.h"
--#include "../../../util/auxtrace.h"
--#include "../../../util/intel-bts.h"
--#include <internal/lib.h> // page_size
++#include "debug.h"
++#include "evlist.h"
++#include "parse-events.h"
++#include "pmus.h"
++#include "tests.h"
  
- #define KiB(x) ((x) * 1024)
- #define MiB(x) ((x) * 1024 * 1024)
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index c131a727774f..0307ff15d9fc 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -3,36 +3,39 @@
-  * intel_pt.c: Intel Processor Trace support
-  * Copyright (c) 2013-2015, Intel Corporation.
-  */
-+#include "../../../util/intel-pt.h"
- 
+ static const struct test_event {
+ 	const char *name;
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 3313c236104e..8d04f6edb004 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -1,25 +1,29 @@
+ // SPDX-License-Identifier: GPL-2.0
  #include <errno.h>
- #include <stdbool.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
+-#include <fcntl.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
 +
- #include <linux/bitops.h>
++#include <fcntl.h>
 +#include <linux/err.h>
 +#include <linux/kernel.h>
- #include <linux/log2.h>
-+#include <linux/types.h>
- #include <linux/zalloc.h>
--#include <linux/err.h>
- 
--#include "../../../util/session.h"
-+#include <api/fs/fs.h>
-+#include <internal/lib.h> // page_size
-+#include <subcmd/parse-options.h>
++#include <linux/string.h>
 +
-+#include "../../../util/auxtrace.h"
-+#include "../../../util/config.h"
-+#include "../../../util/cpumap.h"
-+#include "../../../util/debug.h"
- #include "../../../util/event.h"
- #include "../../../util/evlist.h"
- #include "../../../util/evsel.h"
- #include "../../../util/evsel_config.h"
--#include "../../../util/config.h"
--#include "../../../util/cpumap.h"
- #include "../../../util/mmap.h"
--#include <subcmd/parse-options.h>
- #include "../../../util/parse-events.h"
--#include "../../../util/pmus.h"
--#include "../../../util/debug.h"
--#include "../../../util/auxtrace.h"
- #include "../../../util/perf_api_probe.h"
-+#include "../../../util/pmu.h"
-+#include "../../../util/pmus.h"
- #include "../../../util/record.h"
-+#include "../../../util/session.h"
- #include "../../../util/target.h"
- #include "../../../util/tsc.h"
--#include <internal/lib.h> // page_size
--#include "../../../util/intel-pt.h"
--#include <api/fs/fs.h>
- #include "cpuid.h"
+ #include <perf/cpumap.h>
++#include <perf/evlist.h>
++#include <perf/mmap.h>
  
- #define KiB(x) ((x) * 1024)
+ #include "cpumap.h"
+ #include "debug.h"
+ #include "event.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include "thread_map.h"
++#include "pmu.h"
++#include "pmus.h"
+ #include "tests.h"
++#include "thread_map.h"
+ #include "util/affinity.h"
+ #include "util/mmap.h"
+ #include "util/sample.h"
+-#include <linux/err.h>
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <perf/evlist.h>
+-#include <perf/mmap.h>
+ 
+ /*
+  * This test will generate random numbers of calls to some getpid syscalls,
 -- 
 2.54.0.545.g6539524ca2-goog
 
