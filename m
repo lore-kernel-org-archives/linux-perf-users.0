@@ -1,144 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4003439E194
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 20:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC1B2FE58C
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 20:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777495139; cv=none; b=rojdFPT5s8NYIOge9jrDId6o7ysWquPisl6Kafuy7WBDT9/vu1kOcPWPYTIagR3Lb13pIdnlnV0W7FAXZzSoQ1+EFEkZlCbARrGuPHY/84IoTX1OvPTlFzm0RUVV0GdXrgoePBumaLbDbQWC/3D5uHEog78Al2z/tIRwlg/oDfM=
+	t=1777495896; cv=none; b=OJ3UJhXYJoGZlaqzullXzE9SyMLVvJ3LzKFC/aUPbsJs4LMaZ0RrimDEPNnfgnWH7Jd2Jveq50LID03F5Pi8PmGKKx8PK/4YajjBIVTPSPrc1ndmdCJxXc5712pUuu9Re/g9nnxL+XH53QTqhmSxA0wt4BDH64mEAQbh58cw3kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777495139; c=relaxed/simple;
-	bh=J+b5eLwRLP2N4kEg+fP1XVjfLEEe35IxpDfdqseLmNw=;
+	s=arc-20240116; t=1777495896; c=relaxed/simple;
+	bh=c8JcYvUrLnJr9ppSMKpYoWvk4JLFYELR1Cku/8uf70o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IH/xO7zIm4Qry5NmrSFeIT+C4tS+6ZTQRRJLfqV7eqRdPPTpt8dbA2+giFnFpfgbfGTdZMLzL+3O5HapUTmtmgjzslEYXJJwuJ7uRLDj/NdgIZ0eWBqJMrP12wnZMlgzcz8hox/zuHwobNGknl/vQbKCsIX3zpMFDnNz/v7ly6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otGtQ6Uo; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=WMXQYD+wMY/cKUraJrNFom5bV4zvLW0I/ytE+OoWZJM8S1LP+AHXfgePEvSWgmQIc9ZJTbj9h/KVUwXOqOqmPswBeqSzyZM6Mfq/3dk8C05NxRbfnuODUcAiBwflMzPxoiRDNZtATeQ0nwn8Ei00ELB7esenBFguTJ57TsUYMB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPWzX9U/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otGtQ6Uo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1ACC19425;
-	Wed, 29 Apr 2026 20:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPWzX9U/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13279C19425;
+	Wed, 29 Apr 2026 20:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777495138;
-	bh=J+b5eLwRLP2N4kEg+fP1XVjfLEEe35IxpDfdqseLmNw=;
+	s=k20201202; t=1777495896;
+	bh=c8JcYvUrLnJr9ppSMKpYoWvk4JLFYELR1Cku/8uf70o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=otGtQ6UoUXH/2ugcytT7C9qzPton+KeFeqA3r8FG0BWxBWZ1MU3V0osGhGWe0GIzh
-	 v84xmRNSZ41hnmsTG1pFELVG9YMopf0SvOTCmuP47HEx/vmbXnRGOah4+ExaK5ffYU
-	 2tVsK+jbfmvq/RsWignhEi8MyakGJoCyXfiRxzXBngRhiUppJHwvi07r7+GOgQ1tuJ
-	 VeuArXZAjwm/VD02bpe62EcT2SEzQU2fvp0z9rlKUw6Yra7XreyEV7QoNOLhvx5rMg
-	 P/+BZgIuMySaO3upKS/EgSX6mQHlqAeIQ677v2f4cE1ageYt11n2htgkhsC/TdXy19
-	 3tp1earhTsTfg==
+	b=VPWzX9U/c7OgABVXrcr/oIX2xdaIdSoRadYkE0eWAldzBcO3h6Y6YfBB6bFWXXFAF
+	 C1qBEfGQ7elS0+ho8WV6rg2R455POKBaq9WRMB3MaRH5zbkumVJ5G8mSYamBl61mXw
+	 7QNm7rF+elWO7evkxDJqTIqXZLW2Ss0ChGLhPK0hFWA1sAOlxCLDzsnGx3nhhtI3ai
+	 vZkGaWGhW4DLiJbfCoxZ3NedcptLl4i2uUu4SPO6Wjf0Zw3X+cPY3ta/yFad72B0Pr
+	 QdXW3wPCANHZ20I5iysviqkct/X3b0aNQjnnoAAUAB3p77MS605d80c+OgItCGoPsu
+	 pm8U75zC5BbqA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] perf: Don't throttle based on NMI watchdog
- events
+Subject: Re: [PATCH v2 1/2] perf event: Fix size of synthesized sample with
+ branch stacks
 Reply-To: sashiko@lists.linux.dev
-To: "Calvin Owens" <calvin@wbinvd.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
-References: <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
+In-Reply-To: <20260429181136.2712655-2-irogers@google.com>
+References: <20260429181136.2712655-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Apr 2026 20:38:57 +0000
-Message-Id: <20260429203858.CA1ACC19425@smtp.kernel.org>
+Date: Wed, 29 Apr 2026 20:51:34 +0000
+Message-Id: <20260429205136.13279C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Non-atomic 64-bit cmpxchg in NMI context on 32-bit architectures c=
-auses torn writes and breaks nesting protection.
-- [High] Logic error in time gap calculation incorrectly includes the curre=
-nt NMI's duration, contradicting the comment and incorrectly bypassing thro=
-ttling.
-- [High] Hardcoded 1-second bypass fundamentally defeats the `perf_cpu_time=
-_max_percent` sysctl limit for low-frequency, long-running PMU events.
+- [High] Synthesized branch stack samples in hardware tracers (arm-spe, cs-=
+etm, intel-pt) omit the hw_idx field despite the event attribute claiming i=
+ts presence, causing parsers to read misaligned data.
+- [High] In perf_event__convert_sample_callchain(), passing the unmasked ev=
+sel->core.attr.sample_type causes the generated payload to serialize stack =
+and register data out of sync with the reduced header.size, leading to data=
+ stream corruption.
 --
 
-commit 657f1aa01c3c8a25116ffd10c6d50891dd498e3f
-Author: Calvin Owens <calvin@wbinvd.org>
+commit eb27565513c2df3df4959ab5f50b38abd090fa86
+Author: Ian Rogers <irogers@google.com>
 
-perf: Don't throttle based on NMI watchdog events
+perf event: Fix size of synthesized sample with branch stacks
 
-This commit modifies perf_sample_event_took() to skip throttling for
-infrequent NMIs by checking if the previous NMI occurred more than one
-second ago. It uses a per-CPU timestamp updated via cmpxchg to track
-the last throttle time.
+This commit updates sample event synthesis to correctly size and write the
+nr and hw_idx values for branch stacks by explicitly checking the
+PERF_SAMPLE_BRANCH_HW_INDEX flag.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 5b5cb620499e..6f367da17ff5 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -596,6 +596,7 @@ core_initcall(init_events_core_sysctls);
->   */
->  #define NR_ACCUMULATED_SAMPLES 128
->  static DEFINE_PER_CPU(u64, running_sample_length);
-> +static DEFINE_PER_CPU(u64, last_throttle_clock);
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+[ ... ]
+> @@ -463,8 +463,13 @@ static int perf_event__convert_sample_callchain(cons=
+t struct perf_tool *tool,
+>  	/* remove sample_type {STACK,REGS}_USER for synthesize */
+>  	sample_type &=3D ~(PERF_SAMPLE_STACK_USER | PERF_SAMPLE_REGS_USER);
+> =20
+> -	perf_event__synthesize_sample(event_copy, sample_type,
+> -				      evsel->core.attr.read_format, sample);
+> +	ret =3D perf_event__synthesize_sample(event_copy, evsel->core.attr.samp=
+le_type,
+> +					    evsel->core.attr.read_format,
+> +					    evsel->core.attr.branch_sample_type, sample);
+
+I noticed this is fixed later in the patch series by commit "perf inject:
+Fix itrace branch stack synthesis".
+
+Does passing the unmasked evsel->core.attr.sample_type here instead of the
+local masked sample_type variable cause the generated payload to serialize
+stack and register data out of sync with the reduced header size?
 
 [ ... ]
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+[ ... ]
+>  static int arm_spe__inject_event(union perf_event *event, struct perf_sa=
+mple *sample, u64 type)
+>  {
+> -	event->header.size =3D perf_event__sample_event_size(sample, type, 0);
+> -	return perf_event__synthesize_sample(event, type, 0, sample);
+> +	event->header.type =3D PERF_RECORD_SAMPLE;
+> +	event->header.size =3D perf_event__sample_event_size(sample, type, /*re=
+ad_format=3D*/0,
+> +							   /*branch_sample_type=3D*/0);
+> +	return perf_event__synthesize_sample(event, type, /*read_format=3D*/0,
+> +					     /*branch_sample_type=3D*/0, sample);
+>  }
 
-> @@ -636,6 +639,19 @@ void perf_sample_event_took(u64 sample_len_ns)
->  	if (avg_len <=3D max_len)
->  		return;
-> =20
-> +	/*
-> +	 * Very infrequent events like the perf counter hard watchdog
-> +	 * can trigger spurious throttling: skip throttling if the prior
-> +	 * NMI got here more than one second before this NMI began. But
-> +	 * never skip throttling if NMIs are nesting, or if any NMI runs
-> +	 * for longer than one second.
-> +	 */
-> +	now =3D local_clock();
-> +	last =3D __this_cpu_read(last_throttle_clock);
-> +	if (__this_cpu_cmpxchg(last_throttle_clock, last, now) =3D=3D last &&
+I see this is fixed for intel-pt.c later in the series by commit
+"perf inject: Fix itrace branch stack synthesis", but it appears it remains
+unfixed for arm-spe.c and cs-etm.c.
 
-On 32-bit architectures, is it safe to use __this_cpu_cmpxchg() on a 64-bit
-value in NMI context?
+If branch_sample_type is hardcoded to 0 here, will it omit the hw_idx field
+even if the synthesized event attribute claims it is present?
 
-For architectures like 32-bit x86, the generic fallback implementation
-achieves atomicity by disabling interrupts, which does not mask NMIs. If a
-nested NMI interrupts the sequence halfway through reading or writing the
-32-bit halves of the u64, could this result in a torn read or write?
+If so, will parsers reading the payload misinterpret the first 8 bytes of
+the branch entries as the hw_idx field, shifting subsequent sample fields?
 
-A corrupted timestamp could cause a massive wrap-around in the time gap
-calculation, perpetually satisfying the > NSEC_PER_SEC bypass condition and
-silently disabling PMU throttling for all events on that CPU.
+[ ... ]
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+[ ... ]
+>  static int cs_etm__inject_event(union perf_event *event,
+>  			       struct perf_sample *sample, u64 type)
+>  {
+> -	event->header.size =3D perf_event__sample_event_size(sample, type, 0);
+> -	return perf_event__synthesize_sample(event, type, 0, sample);
+> +	event->header.size =3D perf_event__sample_event_size(sample, type, /*re=
+ad_format=3D*/0,
+> +							   /*branch_sample_type=3D*/0);
+> +	return perf_event__synthesize_sample(event, type, /*read_format=3D*/0,
+> +					     /*branch_sample_type=3D*/0, sample);
+>  }
 
-> +	    now - last > NSEC_PER_SEC && sample_len_ns < NSEC_PER_SEC)
-
-The comment indicates the intent is to skip throttling if the prior NMI
-occurred more than one second before this NMI began.
-
-However, local_clock() is sampled at the end of the current NMI, so now
-includes the current NMI's duration.
-
-If an NMI takes a very long time (e.g., 900ms) but started only 200ms after
-the previous NMI ended, the true gap before it began is 200ms. Because now
-includes the 900ms duration, now - last evaluates to 1100ms, which bypasses
-the throttling.
-
-Could this artificially inflate the time gap for long-running NMIs,
-directly defeating the throttling mechanism?
-
-Additionally, is it possible for user-defined PMU events with expensive
-overhead (like heavy eBPF programs attached to slow tracepoints) to exploit
-this hardcoded frequency bypass?
-
-If an event triggers slower than 1Hz but takes a very long time to execute
-(e.g., 999ms), both now - last > NSEC_PER_SEC and sample_len_ns <
-NSEC_PER_SEC will be true.
-
-Such an event would bypass the moving average calculation and never be
-throttled, allowing it to consume nearly 100% of the CPU while it runs and
-violating the default 25% CPU time limit set by
-sysctl_perf_cpu_time_max_percent.
-
-> +		return;
-> +
->  	__report_avg =3D avg_len;
->  	__report_allowed =3D max_len;
->
+Does this function suffer from the same issue, where hardcoding
+branch_sample_type to 0 omits the hw_idx field and causes misaligned reads
+during parsing?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1777483573.gi=
-t.calvin@wbinvd.org?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260429181136.2712=
+655-1-irogers@google.com?part=3D1
