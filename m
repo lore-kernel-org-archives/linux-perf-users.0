@@ -1,326 +1,421 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from alln-iport-3.cisco.com (alln-iport-3.cisco.com [173.37.142.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB003EB7FB
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 12:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCAD349B0D;
+	Wed, 29 Apr 2026 13:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.142.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777465829; cv=none; b=ibSnobzMew3Jz93O/61dZBv/rIEYmSSg9+htwUXsA3fniPPifXmxiGtVNuJzZkWQhXkAOxbrq95ymYy0toI1Vp50CK1AjgNQ4tbKbIqQ2QXHnfK2azAbp6dXhs2FNYwB/vyM5meRt6R3/kuS5yAiI8DAgjLrqTsIt3WOwW5Hwlg=
+	t=1777468534; cv=none; b=jqAHcJepVlceluODgbVYVR8YFilvfqS/GKpxuo7V/a85PE42Ozm55xUV9U5OBfBhj6kOv70lMSsKtF8rgSvK5eE7+DHggVHD6HjyLHeehrV55W2JPOg5KGpYooLGxSq/j/BWuAwzIbP0hHAUaPcYiFIMe+aBrCy76t/zVqbIsxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777465829; c=relaxed/simple;
-	bh=O4m6FSF/8p5h9iCaDgDcj9lLKd7Ha9hfbYIrLe7i0+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=bGDkzZ+KZ0/VuT7Gz/QFCfalNiCWLJRMb/++9B9ok38L07hGzKSO04quzBcKsdhfhqxnGIJPDfDJyKHlRjhyppagVyyF1ThvurPNuJ8p2nG9swWZ6YzwN9C6tWXLpIdUUbmusnqn63xutk7b1YMym2twjzAxV2QOTDQSnPbSrq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZAXzVG9t; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1777468534; c=relaxed/simple;
+	bh=Bi7LmTfnoHs99Duo9lntohMqvUC3QrQn7aDgwWapd1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NQlMT9qVzbR2eZbAS/e4YQgK8P4eeQhe64Mn9rYqt0w/Gj9JrNpuvArG6dNlMNXA2EQuDyDZV77fBswWVisrF/ZNUKbTcTbX9LdZeY3KJOHjvp4vhTfOVXMPmCqlkIb+/Ol6aH/jUj1vzrg24kFCaBQ6g7P6N0EV9ygV7hzIALU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=djThsu4N; arc=none smtp.client-ip=173.37.142.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAXzVG9t"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so152371135e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 05:30:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="djThsu4N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1777465826; x=1778070626; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gKXXMcr2mUfen7GgFOumyh5l6FhwVlBnIzCbTzoH5BM=;
-        b=ZAXzVG9t+pUMf7JHVdkYQgxE2JUFlP8KlhRTNVtTH9h+CEoYZHoWmQMG2eM/rp3XaJ
-         24z6xMO1ap5LXeF74iFhPtpOypqiYXKFkc3TasELdJVVyMx9bFGwev6lVs7UHPtsWZ9T
-         U8/kejTynrOu3OeaALyu7sM3VDqOy8hLmcGUpAn8tg4RNyfeIHjw7hi+tx1AhsZjsBv3
-         qFhOuQCoVvOi9A3dpStb1GkaiD8qgyNHiWRLeZhO/rNNnFLXGR7iYTQERFTzAduXJCRX
-         SHw3Ivm62ShzE0n6ffd1X0LbnTNYa86CtaSKRl2ZWUNONH4S5HxtUJiYTIp/k/fEP12O
-         QW8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777465826; x=1778070626;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gKXXMcr2mUfen7GgFOumyh5l6FhwVlBnIzCbTzoH5BM=;
-        b=p4ISjbtvWgINsYNzm7bqkq2rVtFFwbgXeDOop6J714zGE2et2QVmU5xRQxaMWyQoNS
-         Nox/ZrPsEiRT2yqa7z53OFyR2REi0qFo5DRmaiEzNclLgsEsmBzVEliDt+EhMgp8ckOv
-         s7pnO+5nW3ZA6IC+Q3gC9NOS4Nkxp8MzQ02k+3CoDm6ZAkP/QJeyBT3+npZXIfmRnqQ4
-         g9ZF+UKqh6GYcuKDO5Kmaq/OCnpYiQK791r2XGPB+zqDyGPXg850rXD9Yfumm7v2uJYz
-         pr2Lw+jkrUb8SGUsXQwhBoHn/GKx1vrdqjPQrG0+XyNEYC6I3QegPyATlNRbtvDFb4KQ
-         8eWQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/+6yLKwkBL2pLsVcfuantJhqA1jz4iFnf764uQN+xPsCmQrOrD2zw3pgucZ0z8PfslXTfaWWTv9nsB6xAwOLet@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd849dyKOxB8JhxNs0ileWF41peoWhayW34nQkabujy6S7nozr
-	sSWDQ1pZ5JJ7Nl1BNAnazCAll5ZhzHu2acbSBhiWSRw24t76byCvHDpX6dsRir7FQno=
-X-Gm-Gg: AeBDietzi29tvAc+MFkM2UabpxYKClPmq46bxVT1+t5TQ5E26hlrnRNcH5PtmUlqWod
-	fwW0V6eLoXynAQ+9JVmNXtpUq6Fgt5uc4YOIIRmE1meuZPkzBbgHL9tmWqROOoMxOYz9ImF/RXN
-	mWZAFDeXDaJ+TdVrJld5LGuO4fdFmMhLsSWoGxg4oL2X9FTWV+KaOblEilUYC/W39M5iyTFZMPl
-	+VEgrZv5ZOqvxE0Z6w5RYscGK0CtY7UNUJTz1HrIAk0/SF/vdHI7XXIgebb7/jCSYNRfg+d95OF
-	/WWqoGk7KD7h78RygFAwmcwWqoonKTACqFKX0C0fiBD3KJ2gK9ppEAw7cN0Bg6Rm5GTT5QiQnwR
-	qxgSCdhpQ6Po/9XXPYH3ggDOfOrrC4ApT+57v/YK5wQyUv+BHvbmMakRL2mko81KhLEWPyBP4ph
-	k+N+VOnfXv0cghvrQpzaGWhv17UfYKXkOapM1mdqE=
-X-Received: by 2002:a05:600c:8b04:b0:48a:53ea:13eb with SMTP id 5b1f17b1804b1-48a77ad5a7emr115002295e9.5.1777465824930;
-        Wed, 29 Apr 2026 05:30:24 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7bc12bc0sm58236865e9.2.2026.04.29.05.30.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2026 05:30:24 -0700 (PDT)
-Message-ID: <0f0145da-b4f7-42d3-a4ad-cf18a0bed062@linaro.org>
-Date: Wed, 29 Apr 2026 13:30:23 +0100
+  d=cisco.com; i=@cisco.com; l=10963; q=dns/txt;
+  s=iport01; t=1777468532; x=1778678132;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MzqT9uZB946TR2CRO0Exvqdeomed2JY37QjyuIWHr4w=;
+  b=djThsu4NHagcMAGxxsCLrzWhZMiEDl6Atr7VP1hTa2fLvU7TnRFcYwFO
+   FWj8iBaM7F/CR6j5JxjBz/kD/A6cUUvKV3mS8VKoHMz3CZjeHP+2LoIzD
+   lvro5bImmYZ1MvjpUv6IIxiVJB0sZDjRFxlOcD3SRR/AGU3yyfjAUXCI5
+   6QfNp2HpngeojJIswXJMtbcYxbJEf3ab2qMvX1pBY++h+gvs+vPNXNxEm
+   gxZRz62jpXDMurp/Qnqx41mKv4Ls+V9YA5w7/6F8w8L6UK3T+IFFQlQOy
+   gcOIC5c4SYadYl7wXzx/XtzdaeucEQ+y9y3kJl7+9slfVDn6CdZOtFzsq
+   g==;
+X-CSE-ConnectionGUID: 8RcsoiOKRiiF8CeWlcfmxg==
+X-CSE-MsgGUID: YIC/ySI+TDqfkeya0FKoag==
+X-IPAS-Result: =?us-ascii?q?A0BKCAC4A/Jp/5X/Ja1aHgEBCxIMgWsQDwuCU4FLBENJl?=
+ =?us-ascii?q?kugHA8BAQEPUQQBAYISgnSNMwImNwYOAQIEAQEBAQMCAwEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QoBAQUBAQECAQcFgQ4ThlyGXSsLAUYpgRQBEoMCgnQDsmyBeTOBAbgigWQBC?=
+ =?us-ascii?q?xQBgTiNW4VuJxuBSUSEB3aLBwSCIoEOhBOKcEiBHgNZLAFVEw0KCwcFgTMzA?=
+ =?us-ascii?q?yAKCxISGBUCFBwBEg8EFjIdcAwnEiwXgQwbBwWBS4MQbRRWgQaEXngjLANMA?=
+ =?us-ascii?q?wsYDUgRLDcGDhsEPm4HijkeD4E9LEYBPBYoEwGBMBMILGARC5J1JgGzSoQmo?=
+ =?us-ascii?q?VgaM4QElBWSUQEumFgiqR+BfiaBWTMaCBsVgyJTGQ+OLRaTHQG2ZEQyPQIHA?=
+ =?us-ascii?q?gcNAwuTZQEB?=
+IronPort-Data: A9a23:2GmUpqraeSMP00ANvpiVg6shnDFeBmKSZRIvgKrLsJaIsI4StFCzt
+ garIBnUM/iIZzOke410PI+18kNU78WEzIJlHQJk/39kHyoRoOPIVI+TRqvS04x+DSFioGZPt
+ Zh2hgzodZhsJpPkjk7zdOWn9T8ghf/gqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
+ T/Ji5OZYgTNNwJcaDpOtfrf8kI34JwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
+ 86rIGaRpz6xE78FU7tJo56jGqE4aue60Tum1hK6b5Ofbi1q/UTe5EqU2M00Mi+7gx3R9zx4J
+ U4kWZaYEW/FNYWU8AgRvoUx/yxWZcV7FLH7zXeX4faY1ErHVFjWwvRAXGo7AokT9ONnDjQbn
+ RAYAGhlghGrnem6xve/D+JrnMlmdZOtN4IEsXYmxjbcZRokacmcGOORupkCgWp235wfdRrdT
+ 5JxhT5HYAjHZhxJM1w/A5Mll+DujX76G9FdgA3J+/JsvDCDkGSd1pDcEfGSa+erBvl5h0ibq
+ 3PPp0raBRgVYYn3JT2ttyjEavX0tSbyQoFUDqCk8vdsjHWa3GlVAxoTPXO6u/62h1Slc91YL
+ EMQ92wlqq1a3E6iSN/9dxK/p3GAs1gXXN84O/U39AyX2ILV5QiDD2QJRzIHb8Yp3Oc/SSYr3
+ 1nPn87vGTF1mLyTVX+ZsLyTqFuaMCMQIEcBaDUCQA9D5MPsyKk/hwzOQv5gHbSzg9mzHiv/q
+ xiIqywljp0QgNQN2qH9+krI6xqopIPhTQMv4AjTGGW/4WtRYY6kfYWt4ETz7vtaKoudCF6bs
+ xAsncGb7PETC56llyGXRugJWraz6J6tLjfVi11mN5os7TKg/zikZ484yDV/Ilp5d8MBUTz3a
+ UTQ/wRL6/d7PnKvYLQxaIa4EccCyanmHM7iEPfOYbJma5tpcSeD/SdzdQue2H3rnEEwkKY5f
+ 5CBfq6EBHIXGa1hwDesAfwd0KQrxSE47WfSQ43riRWhzbeaInWSTN8tFFqHa6YZ67yArRnJ2
+ 9FFPsCOxlNUV+iWSizW94EUBUoHIXgyGdb9rMk/XumHLwVOAmwtC/bNh7gmfuRNm6VTi/eN/
+ XynXEJc4ETwiGeBKgiQbH1nLrT1Uv5XqXM9IDxpJVuy1T0+eou1948BeJYtO7oq7upuybhzV
+ fZtU8GBBOlfDyjd8j8QKJrwtopvcDy1ig+UeSmoej4ye9hnXQOhxzP/VhHk+C9LCm+8stEz5
+ uT6kAjaWpEEAQ9lCa46dc6S8r94hlBF8MoaYqcCCoA7lJnEmGSyFxHMsw==
+IronPort-HdrOrdr: A9a23:tc1+4KPlWvlwrcBcTvWjsMiBIKoaSvp037Dk7SxMoHtuA66lfq
+ +V8sjzuSWftN9zYgBCpTn/Asi9qBrnnPYf3WB7B9iftWfd1VdAVLsD0aLShxv9Bib56ulRkY
+ 1kc6R4FZnMKGISt7ee3OF9eOxQp+VuN8uT9IPj80s=
+X-Talos-CUID: =?us-ascii?q?9a23=3A481b4mkEt6YZIYe4zVGTE9R3havXOS3nx2zXImi?=
+ =?us-ascii?q?bM2doZu2+RGCU861hg8U7zg=3D=3D?=
+X-Talos-MUID: =?us-ascii?q?9a23=3AVI0kXw7J5ByHvjePaYysSCCUxoxZwo/pGXss0qk?=
+ =?us-ascii?q?qoseHOD15Yxm+iz24F9o=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.23,206,1770595200"; 
+   d="scan'208";a="746037084"
+Received: from rcdn-l-core-12.cisco.com ([173.37.255.149])
+  by alln-iport-3.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 29 Apr 2026 13:15:25 +0000
+Received: from sjc-ads-9313.cisco.com (sjc-ads-9313.cisco.com [10.30.212.77])
+	by rcdn-l-core-12.cisco.com (Postfix) with ESMTP id D97ED180001CA;
+	Wed, 29 Apr 2026 13:15:23 +0000 (GMT)
+From: Darko Tominac <dtominac@cisco.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Jann Horn <jannh@google.com>
+Cc: xe-linux-external@cisco.com,
+	danielwa@cisco.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH] mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
+Date: Wed, 29 Apr 2026 15:15:18 +0200
+Message-Id: <20260429131522.4049054-1-dtominac@cisco.com>
+X-Mailer: git-send-email 2.35.6
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf sched stats: Fix segmentation faults in diff mode
-To: Ian Rogers <irogers@google.com>
-References: <20260428070811.1883202-1-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Athira Rajeev <atrajeev@linux.ibm.com>, Venkat <venkat88@linux.ibm.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260428070811.1883202-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Outbound-Client-TLS: NONE;sjc-ads-9313.cisco.com [10.30.212.77]
+X-Outbound-SMTP-Client: 10.30.212.77, sjc-ads-9313.cisco.com
+X-Outbound-Node: rcdn-l-core-12.cisco.com
 
+When uprobes are active, MADV_DONTNEED can discard file-backed pages
+that contain uprobe software breakpoint instructions.  Because the
+uprobe infrastructure does not re-instrument pages on individual page
+faults (uprobe_mmap() is only called during VMA creation, not on
+page-in), the breakpoints are silently lost once the discarded pages are
+re-read from the backing file.  The probes stop firing with no error
+indication, and the only recovery is to unregister and re-register the
+affected uprobes.
 
+Note that MADV_FREE is not affected: it only operates on anonymous VMAs
+(madvise_free_single_vma() rejects non-anonymous VMAs with -EINVAL),
+while uprobes only instrument file-backed mappings, so the two can never
+overlap.
 
-On 28/04/2026 8:08 am, Ian Rogers wrote:
-> Address several segmentation fault vectors in `perf sched stats diff`:
-> 
-> 1. When processing invalid or empty data files, the CPU domain maps may
->     be NULL. Added NULL checks for `cd_map1` and `cd_map2` in
->     `show_schedstat_data()` to fail gracefully.
-> 
-> 2. When files contain a different number of CPUs or domains, the parallel
->     list iteration in `show_schedstat_data()` could wrap around the list
->     heads and dereference invalid memory. Added `list_is_last` checks
->     to safely terminate iteration at the end of each list.
-> 
-> 3. When summarizing CPU statistics in `get_all_cpu_stats()`, parallel list
->     iteration over domains could similarly wrap around if a CPU has more
->     domains than the first CPU. Added `list_is_last` check to prevent this.
-> 
-> 4. Added bounds checks for `cs1->cpu` and `cs2->cpu` against `nr1` and
->     `nr2` (passed from `env->nr_cpus_avail`) to prevent out-of-bounds
->     reads from `cd_map1` and `cd_map2` when processing data from machines
->     with different CPU configurations.
-> 
-> 5. Added NULL checks for `cd_info1` and `cd_info2` in `show_schedstat_data()`
->     to prevent crashes when a CPU has samples in the data file but no
->     corresponding domain info in the header (which leaves the map entry NULL).
-> 
-> 6. Added NULL checks for `dinfo1` and `dinfo2` in `show_schedstat_data()`
->     to prevent crashes when a domain is present in the list but has no
->     corresponding info in the CPU domain map (which leaves the entry NULL).
-> 
-> 7. Zero-initialized the `perf_data` array in `perf_sched__schedstat_diff()`
->     to prevent stack garbage from causing `perf_data_file__fd()` to attempt
->     to use a NULL `fptr` when `use_stdio` happened to be non-zero.
-> 
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Previously this patch was part of a large perf script refactor:
-> https://lore.kernel.org/lkml/20260425224951.174663-1-irogers@google.com/
-> ---
->   tools/perf/builtin-sched.c | 95 +++++++++++++++++++++++++++++++-------
->   1 file changed, 79 insertions(+), 16 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 555247568e7a..9ecda631b3ab 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -4212,12 +4212,20 @@ static int get_all_cpu_stats(struct list_head *head)
->   
->   		cnt++;
->   		summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
-> -		tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
-> -					 domain_list);
-> +		if (!list_empty(&summary_head->domain_head))
-> +			tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
-> +						 domain_list);
-> +		else
-> +			tdptr = NULL;
->   
->   		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> -			summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
-> -			tdptr = list_next_entry(tdptr, domain_list);
-> +			if (tdptr) {
+A concrete example is a userspace memory reclamation subsystem that
+periodically calls madvise(MADV_DONTNEED) on file-backed text pages to
+release memory.  This silently clears uprobe breakpoints placed by
+eBPF-based security and tracing tools that use uprobes to attach eBPF
+programs to user-space functions, causing those tools to stop
+functioning within seconds of the first reclamation pass.
 
-Minor nit, but would it be better to check "if (tdptr)" before 
-list_for_each_entry() and not do the loop at all if tdptr is NULL? It 
-implies that there is some useful side effect of list_for_each_entry() 
-even if the body is a nop, but I can't see any.
+Add a check in madvise_dontneed_free(), which handles MADV_DONTNEED,
+MADV_DONTNEED_LOCKED and MADV_FREE, that when CONFIG_UPROBES is enabled
+detects whether the target range contains active uprobes:
 
-> +				summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
-> +				if (list_is_last(&tdptr->domain_list, &summary_head->domain_head))
-> +					tdptr = NULL;
-> +				else
-> +					tdptr = list_next_entry(tdptr, domain_list);
-> +			}
->   		}
->   	}
->   
-> @@ -4225,8 +4233,8 @@ static int get_all_cpu_stats(struct list_head *head)
->   	return ret;
->   }
->   
-> -static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1,
-> -			       struct list_head *head2, struct cpu_domain_map **cd_map2,
-> +static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1, int nr1,
-> +			       struct list_head *head2, struct cpu_domain_map **cd_map2, int nr2,
->   			       bool summary_only)
->   {
->   	struct schedstat_cpu *cptr1 = list_first_entry(head1, struct schedstat_cpu, cpu_list);
-> @@ -4238,6 +4246,15 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
->   	bool is_summary = true;
->   	int ret = 0;
->   
-> +	if (!cd_map1) {
-> +		pr_err("Error: CPU domain map 1 is missing.\n");
-> +		return -1;
-> +	}
-> +	if (head2 && !cd_map2) {
-> +		pr_err("Error: CPU domain map 2 is missing.\n");
-> +		return -1;
-> +	}
-> +
->   	printf("Description\n");
->   	print_separator2(SEP_LEN, "", 0);
->   	printf("%-30s-> %s\n", "DESC", "Description of the field");
-> @@ -4269,12 +4286,33 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
->   		struct cpu_domain_map *cd_info1 = NULL, *cd_info2 = NULL;
->   
->   		cs1 = cptr1->cpu_data;
-> +		cs2 = NULL;
+  - Fast path: if no uprobes are registered system-wide, or the VMA is
+    not file-backed (uprobes only instrument file-backed mappings, so
+    anonymous VMAs -- including MADV_FREE targets -- can never contain
+    breakpoints), or no uprobes are present in the VMA range, proceed
+    with the discard as before.
+  - Slow path: when uprobes are detected in the range, use
+    vma_first_uprobe_addr() to jump directly to each uprobe page via
+    the rbtree, zapping the clean ranges between them.  This is
+    O(M * log N) where M is the number of uprobes in the range and
+    N is the total uprobe count, rather than O(pages).  madvise()
+    still returns success, consistent with the advisory nature of
+    MADV_DONTNEED.
 
-cs1 and cs2 are only used inside this loop, probably makes sense to 
-define them and initialize them both here.
+When CONFIG_UPROBES is not configured, the original behaviour is
+preserved with no overhead.
 
-> +		dptr2 = NULL;
-> +		if (cs1->cpu >= (u32)nr1) {
-> +			pr_err("Error: CPU %d exceeds domain map size %d\n", cs1->cpu, nr1);
-> +			return -1;
-> +		}
->   		cd_info1 = cd_map1[cs1->cpu];
-> +		if (!cd_info1) {
-> +			pr_err("Error: CPU %d domain info is missing in map 1.\n", cs1->cpu);
-> +			return -1;
-> +		}
->   		if (cptr2) {
->   			cs2 = cptr2->cpu_data;
-> +			if (cs2->cpu >= (u32)nr2) {
-> +				pr_err("Error: CPU %d exceeds domain map size %d\n", cs2->cpu, nr2);
-> +				return -1;
-> +			}
->   			cd_info2 = cd_map2[cs2->cpu];
-> -			dptr2 = list_first_entry(&cptr2->domain_head, struct schedstat_domain,
-> -						 domain_list);
-> +			if (!cd_info2) {
-> +				pr_err("Error: CPU %d domain info is missing in map 2.\n", cs2->cpu);
-> +				return -1;
-> +			}
-> +			if (!list_empty(&cptr2->domain_head))
-> +				dptr2 = list_first_entry(&cptr2->domain_head, struct schedstat_domain,
-> +							 domain_list);
-> +			else
-> +				dptr2 = NULL;
+To support the above, export vma_has_uprobes() and add new helpers
+any_uprobes_registered() and vma_first_uprobe_addr() in the uprobes
+subsystem.  vma_first_uprobe_addr() returns the page-aligned virtual
+address of the lowest-offset uprobe in a given VMA range by leveraging
+the (inode, offset)-sorted global rbtree.
 
-dptr2 is already NULL initialized, and not that far away from here so 
-this is probably a bit too defensive.
+Cc: xe-linux-external@cisco.com
+Cc: danielwa@cisco.com
+Signed-off-by: Darko Tominac <dtominac@cisco.com>
+---
+ include/linux/uprobes.h | 21 +++++++++++
+ kernel/events/uprobes.c | 79 +++++++++++++++++++++++++++++++++++++++--
+ mm/madvise.c            | 73 +++++++++++++++++++++++++++++++++----
+ 3 files changed, 164 insertions(+), 9 deletions(-)
 
->   		}
->   
->   		if (cs2 && cs1->cpu != cs2->cpu) {
-> @@ -4302,10 +4340,26 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
->   			struct domain_info *dinfo1 = NULL, *dinfo2 = NULL;
->   
->   			ds1 = dptr1->domain_data;
-> +			if (ds1->domain >= cd_info1->nr_domains) {
-> +				pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map 1.\n", ds1->domain, cd_info1->nr_domains, cs1->cpu);
-> +				return -1;
-> +			}
->   			dinfo1 = cd_info1->domains[ds1->domain];
-> +			if (!dinfo1) {
-> +				pr_err("Error: Domain %d info is missing for CPU %d in map 1.\n", ds1->domain, cs1->cpu);
-> +				return -1;
-> +			}
->   			if (dptr2) {
->   				ds2 = dptr2->domain_data;
-> +				if (ds2->domain >= cd_info2->nr_domains) {
-> +					pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map 2.\n", ds2->domain, cd_info2->nr_domains, cs2->cpu);
-> +					return -1;
-> +				}
->   				dinfo2 = cd_info2->domains[ds2->domain];
-> +				if (!dinfo2) {
-> +					pr_err("Error: Domain %d info is missing for CPU %d in map 2.\n", ds2->domain, cs2->cpu);
-> +					return -1;
-> +				}
->   			}
->   
->   			if (dinfo2 && dinfo1->domain != dinfo2->domain) {
-> @@ -4334,14 +4388,22 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
->   			print_domain_stats(ds1, ds2, jiffies1, jiffies2);
->   			print_separator2(SEP_LEN, "", 0);
->   
-> -			if (dptr2)
-> -				dptr2 = list_next_entry(dptr2, domain_list);
-> +			if (dptr2) {
-> +				if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
-> +					dptr2 = NULL;
-> +				else
-> +					dptr2 = list_next_entry(dptr2, domain_list);
-> +			}
->   		}
->   		if (summary_only)
->   			break;
->   
-> -		if (cptr2)
-> -			cptr2 = list_next_entry(cptr2, cpu_list);
-> +		if (cptr2) {
-> +			if (list_is_last(&cptr2->cpu_list, head2))
-> +				cptr2 = NULL;
-> +			else
-> +				cptr2 = list_next_entry(cptr2, cpu_list);
-> +		}
->   
->   		is_summary = false;
->   	}
-> @@ -4523,7 +4585,7 @@ static int perf_sched__schedstat_report(struct perf_sched *sched)
->   		}
->   
->   		cd_map = session->header.env.cpu_domain;
-> -		err = show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
-> +		err = show_schedstat_data(&cpu_head, cd_map, session->header.env.nr_cpus_avail, NULL, NULL, 0, false);
->   	}
->   
->   out:
-> @@ -4538,7 +4600,7 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
->   	struct cpu_domain_map **cd_map0 = NULL, **cd_map1 = NULL;
->   	struct list_head cpu_head_ses0, cpu_head_ses1;
->   	struct perf_session *session[2];
-> -	struct perf_data data[2];
-> +	struct perf_data data[2] = {0};
->   	int ret = 0, err = 0;
->   	static const char *defaults[] = {
->   		"perf.data.old",
-> @@ -4610,7 +4672,8 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
->   		goto out_delete_ses0;
->   	}
->   
-> -	show_schedstat_data(&cpu_head_ses0, cd_map0, &cpu_head_ses1, cd_map1, true);
-> +	show_schedstat_data(&cpu_head_ses0, cd_map0, session[0]->header.env.nr_cpus_avail,
-> +			    &cpu_head_ses1, cd_map1, session[1]->header.env.nr_cpus_avail, true);
->   
->   out_delete_ses1:
->   	free_schedstat(&cpu_head_ses1);
-> @@ -4720,7 +4783,7 @@ static int perf_sched__schedstat_live(struct perf_sched *sched,
->   		goto out;
->   	}
->   
-> -	show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
-> +	show_schedstat_data(&cpu_head, cd_map, nr, NULL, NULL, 0, false);
->   	free_cpu_domain_info(cd_map, sv, nr);
->   out:
->   	free_schedstat(&cpu_head);
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index f548fea2adec..9ce5c46fd2e9 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -212,6 +212,11 @@ extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consum
+ extern void uprobe_unregister_sync(void);
+ extern int uprobe_mmap(struct vm_area_struct *vma);
+ extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
++extern bool vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end);
++extern unsigned long vma_first_uprobe_addr(struct vm_area_struct *vma,
++					   unsigned long start,
++					   unsigned long end);
++extern bool any_uprobes_registered(void);
+ extern void uprobe_start_dup_mmap(void);
+ extern void uprobe_end_dup_mmap(void);
+ extern void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm);
+@@ -278,6 +283,22 @@ static inline void
+ uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end)
+ {
+ }
++static inline bool
++vma_has_uprobes(struct vm_area_struct *vma, unsigned long start,
++		unsigned long end)
++{
++	return false;
++}
++static inline unsigned long
++vma_first_uprobe_addr(struct vm_area_struct *vma, unsigned long start,
++		      unsigned long end)
++{
++	return 0;
++}
++static inline bool any_uprobes_registered(void)
++{
++	return false;
++}
+ static inline void uprobe_start_dup_mmap(void)
+ {
+ }
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4084e926e284..0f8aea99b96f 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -152,6 +152,19 @@ static loff_t vaddr_to_offset(struct vm_area_struct *vma, unsigned long vaddr)
+ 	return ((loff_t)vma->vm_pgoff << PAGE_SHIFT) + (vaddr - vma->vm_start);
+ }
+ 
++/**
++ * any_uprobes_registered - check if any uprobes are currently registered
++ *
++ * Check whether the global uprobe rbtree has any entries, indicating
++ * that at least one uprobe is currently active in the system.
++ *
++ * Return: true if one or more uprobes are registered, false otherwise.
++ */
++bool any_uprobes_registered(void)
++{
++	return !no_uprobe_events();
++}
++
+ /**
+  * is_swbp_insn - check if instruction is breakpoint instruction.
+  * @insn: instruction to be checked.
+@@ -1635,8 +1648,16 @@ int uprobe_mmap(struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
+-static bool
+-vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end)
++/**
++ * vma_has_uprobes - check whether a vma range contains any uprobes.
++ * @vma: the vma to search.
++ * @start: start address of the range (inclusive).
++ * @end: end address of the range (exclusive).
++ *
++ * Return: true if at least one uprobe is registered in [@start, @end),
++ * false otherwise.
++ */
++bool vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end)
+ {
+ 	loff_t min, max;
+ 	struct inode *inode;
+@@ -1654,6 +1675,60 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+ 	return !!n;
+ }
+ 
++/**
++ * vma_first_uprobe_addr - find first uprobe in a vma range.
++ * @vma: the vma to search.
++ * @start: start address of the range (inclusive).
++ * @end: end address of the range (exclusive).
++ *
++ * Used by madvise to skip directly to uprobe pages.
++ *
++ * Return: the page-aligned virtual address of the first uprobe in
++ * [@start, @end), or 0 if none exists.
++ */
++unsigned long vma_first_uprobe_addr(struct vm_area_struct *vma,
++				    unsigned long start, unsigned long end)
++{
++	loff_t min, max, first_offset;
++	struct inode *inode;
++	struct rb_node *n, *t;
++	struct uprobe *u;
++
++	/* No uprobes possible on anonymous mappings */
++	if (!vma->vm_file)
++		return 0;
++
++	/* Empty range -- nothing to search */
++	if (start >= end)
++		return 0;
++
++	inode = file_inode(vma->vm_file);
++
++	min = vaddr_to_offset(vma, start);
++	max = min + (end - start) - 1;
++
++	read_lock(&uprobes_treelock);
++	n = find_node_in_range(inode, min, max);
++	if (!n) {
++		read_unlock(&uprobes_treelock);
++		return 0;
++	}
++
++	/* Walk left to find the lowest offset in range */
++	u = rb_entry(n, struct uprobe, rb_node);
++	first_offset = u->offset;
++	for (t = rb_prev(n); t; t = rb_prev(t)) {
++		u = rb_entry(t, struct uprobe, rb_node);
++		if (u->inode != inode || u->offset < min)
++			break;
++		first_offset = u->offset;
++	}
++	read_unlock(&uprobes_treelock);
++
++	/* Return page-aligned vaddr containing this uprobe */
++	return PAGE_ALIGN_DOWN(offset_to_vaddr(vma, first_offset));
++}
++
+ /*
+  * Called in context of a munmap of a vma.
+  */
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 69708e953cf5..c73f1131224b 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -32,6 +32,7 @@
+ #include <linux/leafops.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/mmu_notifier.h>
++#include <linux/uprobes.h>
+ 
+ #include <asm/tlb.h>
+ 
+@@ -862,6 +863,30 @@ static long madvise_dontneed_single_vma(struct madvise_behavior *madv_behavior)
+ 	return 0;
+ }
+ 
++static long madvise_dontneed_free_range(struct madvise_behavior *madv_behavior,
++					unsigned long start, unsigned long end)
++{
++	struct madvise_behavior_range *range = &madv_behavior->range;
++	unsigned long saved_start = range->start;
++	unsigned long saved_end = range->end;
++	int behavior = madv_behavior->behavior;
++	long ret;
++
++	range->start = start;
++	range->end = end;
++
++	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED)
++		ret = madvise_dontneed_single_vma(madv_behavior);
++	else if (behavior == MADV_FREE)
++		ret = madvise_free_single_vma(madv_behavior);
++	else
++		ret = -EINVAL;
++
++	range->start = saved_start;
++	range->end = saved_end;
++	return ret;
++}
++
+ static
+ bool madvise_dontneed_free_valid_vma(struct madvise_behavior *madv_behavior)
+ {
+@@ -898,7 +923,7 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
+ {
+ 	struct mm_struct *mm = madv_behavior->mm;
+ 	struct madvise_behavior_range *range = &madv_behavior->range;
+-	int behavior = madv_behavior->behavior;
++	unsigned long cur, end, uprobe_addr;
+ 
+ 	if (!madvise_dontneed_free_valid_vma(madv_behavior))
+ 		return -EINVAL;
+@@ -947,12 +972,46 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
+ 		VM_WARN_ON(range->start > range->end);
+ 	}
+ 
+-	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED)
+-		return madvise_dontneed_single_vma(madv_behavior);
+-	else if (behavior == MADV_FREE)
+-		return madvise_free_single_vma(madv_behavior);
+-	else
+-		return -EINVAL;
++	/*
++	 * Preserve uprobes: if any uprobes are active in this VMA range,
++	 * avoid discarding pages that contain active breakpoints.
++	 *
++	 * Fast path: if no uprobes are registered system-wide, or the VMA
++	 * is not file-backed (uprobes only instrument file-backed mappings,
++	 * so anonymous VMAs can never contain breakpoints), or no uprobes
++	 * are present in this VMA range, proceed with the full operation.
++	 */
++	if (likely(!any_uprobes_registered()) ||
++	    !madv_behavior->vma->vm_file ||
++	    !vma_has_uprobes(madv_behavior->vma, range->start, range->end))
++		return madvise_dontneed_free_range(madv_behavior,
++						   range->start, range->end);
++
++	/*
++	 * Slow path: jump from uprobe to uprobe via rbtree lookup, zapping
++	 * the clean range before each uprobe page. This is O(M * log N)
++	 * where M is the number of uprobes in the range and N is the total
++	 * uprobe count, versus O(pages) for a page-by-page scan. 'cur'
++	 * tracks the beginning of the current clean range.
++	 */
++	cur = range->start;
++	end = range->end;
++	while (cur < end) {
++		uprobe_addr = vma_first_uprobe_addr(madv_behavior->vma,
++						    cur, end);
++		if (!uprobe_addr) {
++			/* No more uprobes - zap the rest */
++			madvise_dontneed_free_range(madv_behavior, cur, end);
++			break;
++		}
++		/* Zap the clean range before the uprobe page */
++		if (cur < uprobe_addr)
++			madvise_dontneed_free_range(madv_behavior, cur,
++						    uprobe_addr);
++		/* Skip past the uprobe page */
++		cur = uprobe_addr + PAGE_SIZE;
++	}
++	return 0;
+ }
+ 
+ static long madvise_populate(struct madvise_behavior *madv_behavior)
+-- 
+2.35.6
 
