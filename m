@@ -1,58 +1,58 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349463FD15F
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 13:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610EA3F54AB;
+	Wed, 29 Apr 2026 14:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777469532; cv=none; b=BlH2kDT3KMEteGQNic1uax9EZ9bGqikIBCaD6Tfo4+uiyWMIK9nNesbdfnHveIWfYwzEf2Qkg6M6E7ifBzuhzhc2Off1zNZwm35DidSDq1TAlT87F9EStDkZTdnFBmT2l3h02a16qPc8Xmk0/sVN+MiIbhrbEGGjrTfcdcRuMi0=
+	t=1777471331; cv=none; b=VHvq4j1caDSo7UEK3QPc9lrQU4KGmM/LjOQXWTKReVPikccCk0/UeF9v/WZzglwBfGLjr63Gb2eB8YP7bbSTfZ0v6CeRrnTUs48IAG1CvytyaL1xz36E0EYjop2IQW2B1mw8tRvt6ir1fpmIA65dQXC/q7cZMa+DojimD4EDYe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777469532; c=relaxed/simple;
-	bh=pkqcTR8Dqs5ugJnRg5xydBqXIu/rn0A12lFWrbwyTZE=;
+	s=arc-20240116; t=1777471331; c=relaxed/simple;
+	bh=5b6xQ5QIRg32+U58seUM5hyPDH3QUyYKygKCA85v8VI=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=t37jqCixaMUIns7qGD/Pj7EfMbqNsc04Esgry19EFrgQENFU/kKf/cmOwymcFJ2E4cTuJVo6mNUMEY7T8T75VJEy+NIdDtqoIe0qPcBPh4itOBSgZCsX9ztli5vNGqEcgcxvGGcuZG4QtJOP88uZ7P1lXgFAomqxra/Lt6CWhck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H/cvXZJk; arc=none smtp.client-ip=148.163.158.5
+	 Message-Id:References:To; b=KUcpeoUU0yi6tcFD/i4jnCwFm96qpjuFPrib5ygOan5rGsiAswPOhAieEMDYSRxBQfDtN+2eOzWT7t0qBMFD93loZDB3NXwgEyWJi4vt5xDhTrNRUUNfDctiyA+MGpGezKAr6GAeN6ztpDMjDr7ljNrMC5ZSXUdXCWSeXz1Ijmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UordvJ5C; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H/cvXZJk"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63T0hU7d1237052;
-	Wed, 29 Apr 2026 13:31:58 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UordvJ5C"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63TCrlUh2932084;
+	Wed, 29 Apr 2026 14:01:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0HUzGX
-	YwTVmu1huJte4qcBoFL8x0sfH9R4BGJWDYLIk=; b=H/cvXZJk8+GBvy6G+Ln382
-	yCzadgtAV8jcwQHZ67c5kXwSCoS72kKzJn5dxJAwZAZkWkjw8VVTh7T+RcteGB4w
-	TCXJtXJeFgH/WJ9RAOZpMA19syt0zgZBFihrXaN0bos24DjOplB/iVDinYTVCZgE
-	Dsewe8ncsviCGRyypmIGVNIWj03iakfQf9G2Ua3JYt8vrz9OVwlrl5EmtZsqtNzN
-	J+AewAiHz0zQci8BuqBFOj53GASOlAMA1Plf7DveQgdXPU2j0CAPfDinbjZ8jN7P
-	jxnVmzca3xmb/5cxOAdQflC6GqTfBw5/nhsx/0pDGPdWTliAaGKuXQTt3+kn1t4w
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NGBK9X
+	R5itoVRN3BJlRIlUkLbPxNjCcnLZ9BJ3gPKf4=; b=UordvJ5Cv5W4NgoxtNnfQy
+	xatsTsqNQfMA15rE3PuwCVFclGMxUpkDghWgFWxRYtYbdJLXTh4ov446Esb3HXaR
+	hmUpwLxmlnWkAHpKpjNOX9d7/y7hCHtYauyOwCWvv9ulUliF2Z4xCvdrGM6KBO3x
+	kZooSTw14iZZbuKkLv2qI1uXJR7WUfMClSFrD1Ojgy5qnIkdHp95EuNFC1BpPre/
+	wf7iDrzPCtMKzbUVsAJNPLppIfVo2uQV3r4L4pBkBxtVKEg4Bfjkf6wtNii6aGST
+	IlnQZ5qDUGqTAr9n36IqZjoI5UZD+x3sPrR40xG1m1OQNs4qxrQHSq5YG8eyTigw
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drm1e19gw-1
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drn9rat8c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Apr 2026 13:31:57 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63TD8iDV021560;
-	Wed, 29 Apr 2026 13:31:56 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dsamye7fa-1
+	Wed, 29 Apr 2026 14:01:52 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63TDrixe014822;
+	Wed, 29 Apr 2026 14:01:51 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ds8avxmkc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Apr 2026 13:31:56 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63TDVr6W20120186
+	Wed, 29 Apr 2026 14:01:51 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63TE1n1131261082
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Apr 2026 13:31:53 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E1035804E;
-	Wed, 29 Apr 2026 13:31:53 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADD655803F;
-	Wed, 29 Apr 2026 13:31:48 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.252.188])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 29 Apr 2026 13:31:48 +0000 (GMT)
+	Wed, 29 Apr 2026 14:01:49 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A715F20040;
+	Wed, 29 Apr 2026 14:01:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C2792004B;
+	Wed, 29 Apr 2026 14:01:46 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.18.91])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 29 Apr 2026 14:01:46 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -61,427 +61,395 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V3] tools/perf/tests: Update test_adding_kernel.sh to
- handle proper debuginfo check
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <20260424172435.91725-1-atrajeev@linux.ibm.com>
-Date: Wed, 29 Apr 2026 19:01:35 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: Re: [PATCH v1] perf sched stats: Fix segmentation faults in diff mode
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <20260428070811.1883202-1-irogers@google.com>
+Date: Wed, 29 Apr 2026 19:31:32 +0530
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Venkat <venkat88@linux.ibm.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <AEEE2C46-8D1E-442E-B5A9-7B53E681E69B@linux.ibm.com>
-References: <20260424172435.91725-1-atrajeev@linux.ibm.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
+Message-Id: <2238F7E3-D50A-449A-B295-C3C996162FBD@linux.ibm.com>
+References: <20260428070811.1883202-1-irogers@google.com>
+To: Ian Rogers <irogers@google.com>
 X-Mailer: Apple Mail (2.3864.300.41.1.7)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: zLsSls42wFjC9WDIwTT9cWqUeHnBlF3r
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI5MDEzNSBTYWx0ZWRfX9vmPq4SdbArl
- QMA1gPbK/0Mqzx0FmogiWP7hG+jnTt43CfL5TbKQiaYeadcuo3R/T9Jr6KcJoDBnPh3QQP3mRw1
- 9FS/5y3bxTuNOJ78ObEytsFDxnfOQvS+tyGA2bGHOhedM4n8qB0XhcPzOlRal5wdHUxMTzKc4gx
- uZIzzF0E3chIY7VlG/dGyxg81HNqZPNLZKtN26K3IuQwn8un3BidDoGzGYssA2Utg4Nr857Qsi5
- rmOrITPAY6l0wzOngqdqPs+l8Hyp3lMou5c2k3aMeHP9EOHZmBy1u3wdLvzxXTBdQ7RUdZhAntM
- bxZrA7d8EflPJhB5CESZAZbDkRPgEK3aznzXbsuYhS6b0Da7lQib/S55OH/s8Iu5owAngfYdSI7
- wx6i1BEqZb82PkjXuvc0wY5OqtwEQfMeKHhhV2xq0WwQ1w71Jry6iJtVvCcdJe8HLd4Z7Ca+DXw
- UOznlM54vmsrza9BJIg==
-X-Authority-Analysis: v=2.4 cv=VZLH+lp9 c=1 sm=1 tr=0 ts=69f2084d cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-GUID: Eso-JqtrBF4q8y5pLgXPgK2lmEDpxKj7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI5MDE0MCBTYWx0ZWRfX4L9wki5SCFf1
+ 86KAc0PuFNb8OE3mqWvfw6Ya5z6wMXnQfi/UaifdFAREZ1OaAq6ps8kexQN1H5V0PuNMXt2eM0+
+ JDYQxDHrNWVSBHCc7pMNpLI3JVVvweQp+cbsawXQxwwJPCils7pQg5J6WbubZuVY6tZrS5TcWgx
+ jTEawseJy5eS0mn9afvKywgcHjRoVtu6ogh5QkbQvBtp2+MNo3stnFB3Ncgne4TDCsVmfRiBRCt
+ 6nhfvxh2K3Mtwf20fJFbcr4OcoMLeZFCavYaCqi6KgUbKK7QysRAZcqAagCZ+t6va415NPmxaCI
+ +F9RIPVGEZGJzYZ3mQueIyoTgselBPmfgWadefNFAKW9Yvu6eWaSCKEBgTfK/B8KIqKmKJozOAJ
+ e0imrVDeFNa+LH5Cad/gf5Qr1YUugzZRQSUhzVHuugSnA73+o6poSULbeS/HtHayOUkc8o2WegB
+ OLnyiIYK5BUw++nfUqQ==
+X-Authority-Analysis: v=2.4 cv=Kc7idwYD c=1 sm=1 tr=0 ts=69f20f51 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
- a=1XWaLZrsAAAA:8 a=olRvLK4VMm_lXU6j1U4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: q1KC86vN5K_ix-0aMAjl95qVDjTBOVwp
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=MeaIXWbqiAQ5k8bWzGYA:9 a=lqcHg5cX4UMA:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: AJocXycCp0itUqltg68pewUhZVIRYgGo
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-28_05,2026-04-28_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- spamscore=0 malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604290135
+ clxscore=1015 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
+ malwarescore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604290140
 
 
 
-> On 24 Apr 2026, at 10:54=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
+> On 28 Apr 2026, at 12:38=E2=80=AFPM, Ian Rogers <irogers@google.com> =
+wrote:
 >=20
-> Perf test perftool-testsuite_probe fails as below:
+> Address several segmentation fault vectors in `perf sched stats diff`:
 >=20
-> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe =
-:: perf probe -l (output regexp parsing)
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
-probes
-> Regexp not found: "probe:vfs_mknod"
-> Regexp not found: "probe:vfs_create"
-> Regexp not found: "probe:vfs_rmdir"
-> Regexp not found: "probe:vfs_link"
-> Regexp not found: "probe:vfs_write"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
-> Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
-> Regexp not found: "in this function|at this address"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing =
-variable (output regexp parsing)
-> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures =
-found
+> 1. When processing invalid or empty data files, the CPU domain maps =
+may
+>   be NULL. Added NULL checks for `cd_map1` and `cd_map2` in
+>   `show_schedstat_data()` to fail gracefully.
 >=20
-> Further analysing, the failed testcase is for "test_adding_kernel".
-> If the kernel debuginfo is missing, perf probe fails as below:
+> 2. When files contain a different number of CPUs or domains, the =
+parallel
+>   list iteration in `show_schedstat_data()` could wrap around the list
+>   heads and dereference invalid memory. Added `list_is_last` checks
+>   to safely terminate iteration at the end of each list.
 >=20
-> perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
-> Failed to find the path for the kernel: No such file or directory
->  Error: Failed to add events.
+> 3. When summarizing CPU statistics in `get_all_cpu_stats()`, parallel =
+list
+>   iteration over domains could similarly wrap around if a CPU has more
+>   domains than the first CPU. Added `list_is_last` check to prevent =
+this.
 >=20
-> skip_if_no_debuginfo has check to handle whether debuginfo is present
-> and the testcase checks for debuginfo since this :
-> commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
-> testcases fail when kernel debuginfo is not present")
+> 4. Added bounds checks for `cs1->cpu` and `cs2->cpu` against `nr1` and
+>   `nr2` (passed from `env->nr_cpus_avail`) to prevent out-of-bounds
+>   reads from `cd_map1` and `cd_map2` when processing data from =
+machines
+>   with different CPU configurations.
 >=20
-> Recently a change got added in "tests/shell/lib/probe_vfs_getname.sh"
-> via this another fix:
-> commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
-> line detected")
-> Since this commit, first add_probe_vfs_getname is used to prevent =
-false
-> failures. And based on return code of add_probe_vfs_getname, =
-skip_if_no_debuginfo
-> is used to skip testcase if debuginfo is present. And this modified =
-other
-> testcases to call add_probe_vfs_getname first and invoke
-> skip_if_no_debuginfo based on return value.
+> 5. Added NULL checks for `cd_info1` and `cd_info2` in =
+`show_schedstat_data()`
+>   to prevent crashes when a CPU has samples in the data file but no
+>   corresponding domain info in the header (which leaves the map entry =
+NULL).
 >=20
-> The tests in test_adding_kernel.sh which depends on presence of
-> debuginfo are:
-> 1. probe add for inode_permission
-> 2. probe max-probes option using 'vfs_* $params'
-> 3. non-existing variable probing
+> 6. Added NULL checks for `dinfo1` and `dinfo2` in =
+`show_schedstat_data()`
+>   to prevent crashes when a domain is present in the list but has no
+>   corresponding info in the CPU domain map (which leaves the entry =
+NULL).
 >=20
-> For these tests, probe check for specific line is not required.
-> So call skip_if_no_debuginfo with argument to say if line check is
-> needed. This is to convey to skip_if_no_debuginfo() function
-> that test only needs to check for debuginfo, and not specifically
-> line number. Update skip_if_no_debuginfo to use simple "perf probe"
-> check if test only needs to check for debuginfo. And for other
-> tests which rely on line number, use add_probe_vfs_getname()
-> Update other places which uses skip_if_no_debuginfo to use argument
-> as zero.
+> 7. Zero-initialized the `perf_data` array in =
+`perf_sched__schedstat_diff()`
+>   to prevent stack garbage from causing `perf_data_file__fd()` to =
+attempt
+>   to use a NULL `fptr` when `use_stdio` happened to be non-zero.
 >=20
-> With the change, verified that only three which required debuginfo =
-only
-> is skipped and others ran successfully. Also tested with debuginfo
-> to make sure tests are not skipped.
->=20
-> Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
+> Previously this patch was part of a large perf script refactor:
+> =
+https://lore.kernel.org/lkml/20260425224951.174663-1-irogers@google.com/
+> ---
+> tools/perf/builtin-sched.c | 95 +++++++++++++++++++++++++++++++-------
+> 1 file changed, 79 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 555247568e7a..9ecda631b3ab 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4212,12 +4212,20 @@ static int get_all_cpu_stats(struct list_head =
+*head)
+>=20
+> cnt++;
+> summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
+> - tdptr =3D list_first_entry(&summary_head->domain_head, struct =
+schedstat_domain,
+> - domain_list);
+> + if (!list_empty(&summary_head->domain_head))
+> + tdptr =3D list_first_entry(&summary_head->domain_head, struct =
+schedstat_domain,
+> + domain_list);
+> + else
+> + tdptr =3D NULL;
+>=20
+> list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+> - summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
+> - tdptr =3D list_next_entry(tdptr, domain_list);
+> + if (tdptr) {
+> + summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
+> + if (list_is_last(&tdptr->domain_list, &summary_head->domain_head))
+> + tdptr =3D NULL;
+> + else
+> + tdptr =3D list_next_entry(tdptr, domain_list);
+> + }
+> }
+> }
+>=20
+> @@ -4225,8 +4233,8 @@ static int get_all_cpu_stats(struct list_head =
+*head)
+> return ret;
+> }
+>=20
+> -static int show_schedstat_data(struct list_head *head1, struct =
+cpu_domain_map **cd_map1,
+> -       struct list_head *head2, struct cpu_domain_map **cd_map2,
+> +static int show_schedstat_data(struct list_head *head1, struct =
+cpu_domain_map **cd_map1, int nr1,
+> +       struct list_head *head2, struct cpu_domain_map **cd_map2, int =
+nr2,
+>       bool summary_only)
+> {
+> struct schedstat_cpu *cptr1 =3D list_first_entry(head1, struct =
+schedstat_cpu, cpu_list);
+> @@ -4238,6 +4246,15 @@ static int show_schedstat_data(struct list_head =
+*head1, struct cpu_domain_map **
+> bool is_summary =3D true;
+> int ret =3D 0;
+>=20
+> + if (!cd_map1) {
+> + pr_err("Error: CPU domain map 1 is missing.\n");
+> + return -1;
+> + }
+> + if (head2 && !cd_map2) {
+> + pr_err("Error: CPU domain map 2 is missing.\n");
+> + return -1;
+> + }
+> +
+> printf("Description\n");
+> print_separator2(SEP_LEN, "", 0);
+> printf("%-30s-> %s\n", "DESC", "Description of the field");
+> @@ -4269,12 +4286,33 @@ static int show_schedstat_data(struct =
+list_head *head1, struct cpu_domain_map **
+> struct cpu_domain_map *cd_info1 =3D NULL, *cd_info2 =3D NULL;
+>=20
+> cs1 =3D cptr1->cpu_data;
+> + cs2 =3D NULL;
+> + dptr2 =3D NULL;
+> + if (cs1->cpu >=3D (u32)nr1) {
+> + pr_err("Error: CPU %d exceeds domain map size %d\n", cs1->cpu, nr1);
+> + return -1;
+> + }
+> cd_info1 =3D cd_map1[cs1->cpu];
+> + if (!cd_info1) {
+> + pr_err("Error: CPU %d domain info is missing in map 1.\n", =
+cs1->cpu);
+> + return -1;
+> + }
+> if (cptr2) {
+> cs2 =3D cptr2->cpu_data;
+> + if (cs2->cpu >=3D (u32)nr2) {
+> + pr_err("Error: CPU %d exceeds domain map size %d\n", cs2->cpu, nr2);
+> + return -1;
+> + }
+> cd_info2 =3D cd_map2[cs2->cpu];
+> - dptr2 =3D list_first_entry(&cptr2->domain_head, struct =
+schedstat_domain,
+> - domain_list);
+> + if (!cd_info2) {
+> + pr_err("Error: CPU %d domain info is missing in map 2.\n", =
+cs2->cpu);
+> + return -1;
+> + }
+> + if (!list_empty(&cptr2->domain_head))
+> + dptr2 =3D list_first_entry(&cptr2->domain_head, struct =
+schedstat_domain,
+> + domain_list);
+> + else
+> + dptr2 =3D NULL;
+> }
+>=20
+> if (cs2 && cs1->cpu !=3D cs2->cpu) {
+> @@ -4302,10 +4340,26 @@ static int show_schedstat_data(struct =
+list_head *head1, struct cpu_domain_map **
+> struct domain_info *dinfo1 =3D NULL, *dinfo2 =3D NULL;
+>=20
+> ds1 =3D dptr1->domain_data;
+> + if (ds1->domain >=3D cd_info1->nr_domains) {
+> + pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map =
+1.\n", ds1->domain, cd_info1->nr_domains, cs1->cpu);
+> + return -1;
+> + }
+> dinfo1 =3D cd_info1->domains[ds1->domain];
+> + if (!dinfo1) {
+> + pr_err("Error: Domain %d info is missing for CPU %d in map 1.\n", =
+ds1->domain, cs1->cpu);
+> + return -1;
+> + }
+> if (dptr2) {
+> ds2 =3D dptr2->domain_data;
+> + if (ds2->domain >=3D cd_info2->nr_domains) {
+> + pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map =
+2.\n", ds2->domain, cd_info2->nr_domains, cs2->cpu);
+> + return -1;
+> + }
+> dinfo2 =3D cd_info2->domains[ds2->domain];
+> + if (!dinfo2) {
+> + pr_err("Error: Domain %d info is missing for CPU %d in map 2.\n", =
+ds2->domain, cs2->cpu);
+> + return -1;
+> + }
+> }
+>=20
+> if (dinfo2 && dinfo1->domain !=3D dinfo2->domain) {
+> @@ -4334,14 +4388,22 @@ static int show_schedstat_data(struct =
+list_head *head1, struct cpu_domain_map **
+> print_domain_stats(ds1, ds2, jiffies1, jiffies2);
+> print_separator2(SEP_LEN, "", 0);
+>=20
+> - if (dptr2)
+> - dptr2 =3D list_next_entry(dptr2, domain_list);
+> + if (dptr2) {
+> + if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
+> + dptr2 =3D NULL;
+> + else
+> + dptr2 =3D list_next_entry(dptr2, domain_list);
+> + }
+> }
+> if (summary_only)
+> break;
+>=20
+> - if (cptr2)
+> - cptr2 =3D list_next_entry(cptr2, cpu_list);
+> + if (cptr2) {
+> + if (list_is_last(&cptr2->cpu_list, head2))
+> + cptr2 =3D NULL;
+> + else
+> + cptr2 =3D list_next_entry(cptr2, cpu_list);
+> + }
+>=20
+> is_summary =3D false;
+> }
+> @@ -4523,7 +4585,7 @@ static int perf_sched__schedstat_report(struct =
+perf_sched *sched)
+> }
+>=20
+> cd_map =3D session->header.env.cpu_domain;
+> - err =3D show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
+> + err =3D show_schedstat_data(&cpu_head, cd_map, =
+session->header.env.nr_cpus_avail, NULL, NULL, 0, false);
+> }
+>=20
+> out:
+> @@ -4538,7 +4600,7 @@ static int perf_sched__schedstat_diff(struct =
+perf_sched *sched,
+> struct cpu_domain_map **cd_map0 =3D NULL, **cd_map1 =3D NULL;
+> struct list_head cpu_head_ses0, cpu_head_ses1;
+> struct perf_session *session[2];
+> - struct perf_data data[2];
+> + struct perf_data data[2] =3D {0};
 
-Tested this patch, by applying on top of mainline, and it fixes the =
-reported issue.
+Hi Ian
 
-Without this patch:
+Thanks for these fixes.
 
-# ./perf test -v perftool-testsuite_probe
---- start ---
-test child forked, pid 15772
-Probing start_text
--- [ PASS ] -- perf_probe :: test_adding_blacklisted :: adding =
-blacklisted function start_text
--- [ PASS ] -- perf_probe :: test_adding_blacklisted :: listing =
-blacklisted probe (should NOT be listed)
-## [ PASS ] ## perf_probe :: test_adding_blacklisted SUMMARY
--- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission ::
--- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: -a
--- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: --add
--- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe =
-:: perf list
-Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
--- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe =
-:: perf probe -l (output regexp parsing)
--- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
--- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
--- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe =
-(should NOT be listed)
--- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding =
-probe
--- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
-:: first probe adding
--- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
-:: second probe adding (without force)
--- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
-:: second probe adding (with force)
--- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
--- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
-probes
-Regexp not found: "probe:vfs_mknod"
-Regexp not found: "probe:vfs_create"
-Regexp not found: "probe:vfs_rmdir"
-Regexp not found: "probe:vfs_link"
-Regexp not found: "probe:vfs_write"
--- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
-Regexp not found: "Failed to find"
-Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
-Regexp not found: "in this function|at this address"
-Line did not match any pattern: "The =
-/lib/modules/7.1.0-rc1+/build/vmlinux file has no debug information."
-Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, or =
-install an appropriate debuginfo package."
--- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable =
-(output regexp parsing)
--- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval =
-:: add
--- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval =
-:: record
--- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument =
-probing :: script
-## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures =
-found
--- [ SKIP ] -- perf_probe :: test_basic :: help message :: testcase =
-skipped
--- [ PASS ] -- perf_probe :: test_basic :: usage message
--- [ PASS ] -- perf_probe :: test_basic :: quiet switch
-## [ PASS ] ## perf_probe :: test_basic SUMMARY
--- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -a
--- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -d
--- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -L
--- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -V
--- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
-argument for -F
--- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
-argument for -l
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -a xxx -d xxx
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -a xxx -L foo
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -a xxx -V foo
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -a xxx -l
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -a xxx -F
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -d xxx -L foo
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -d xxx -V foo
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -d xxx -l
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -d xxx -F
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -L foo -V bar
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -L foo -l
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -L foo -F
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -V foo -l
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -V foo -F
--- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
-options :: -l -F
-## [ PASS ] ## perf_probe :: test_invalid_options SUMMARY
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:10
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:0-10
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:2+10
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func@source.c
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func@source.c:1
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1+1
--- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1-10
--- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:foo
--- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:1-foo
--- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:1+foo
--- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func;lazy\*pattern
-## [ PASS ] ## perf_probe :: test_line_semantics SUMMARY
----- end(-1) ----
-137: perftool-testsuite_probe                                        : =
+I had sent a fix for only above change ( perf_data initialization ) : =
+https://lore.kernel.org/linux-perf-users/20260422173545.73144-1-atrajeev@l=
+inux.ibm.com/
+Since that change is already covered in this patch. Tested with this =
+patch and verified it covers the fix
+
+Before the patch:
+
+# for i in {0..20}; do ./perf test "perf sched stats tests"; done
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+FAILED!
+ 92: perf sched stats tests                                          : =
+FAILED!
+ 92: perf sched stats tests                                          : =
 FAILED!
 
-With This patch:
 
-# ./perf test -v perftool-testsuite_probe
-137: perftool-testsuite_probe                                        : =
+After this fix
+
+# for i in {0..20}; do ./perf test "perf sched stats tests"; done
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
+Ok
+ 92: perf sched stats tests                                          : =
 Ok
 
-Please add below tag.
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Tested-by : Athira Rajeev <atrajeev@linux.ibm.com =
+<mailto:atrajeev@linux.ibm.com>>
 
-Regards,
-Venkat.
-
-> Changelog:
-> v2 -> v3:
-> - Update other callsites to use "skip_if_no_debuginfo 0"
-> - Use "perf probe -vn --add inode_permission $params"
->=20
-> v1 -> v2:
-> - First version used "perf probe -v -L getname_flags" for debuginfo
->  check. This will not catch fail string "Debuginfo-analysis is not
-> supported" which is used in cases when perf is built without dwarf.
-> So use "perf probe -vn add inode_permission" to capture cases when
-> tools built with NO_LIBDWARF=3D1. This will capture debuginfo missing =
-as
-> well as tool built without dwarf case.
->=20
-> .../tests/shell/base_probe/test_adding_kernel.sh  | 15 ++++++++++++++-
-> tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
-> tools/perf/tests/shell/probe_vfs_getname.sh       |  7 ++++++-
-> .../shell/record+script_probe_vfs_getname.sh      |  7 ++++++-
-> tools/perf/tests/shell/trace+probe_vfs_getname.sh |  7 ++++++-
-> 5 files changed, 44 insertions(+), 5 deletions(-)
->=20
-> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
-b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> index 555a825d55f2..f3db125c8669 100755
-> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> @@ -23,10 +23,23 @@ TEST_RESULT=3D0
-> . "$DIR_PATH/../lib/probe_vfs_getname.sh"
->=20
-> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
-> +PROBE_NO_LINE_CHECK=3D1
->=20
-> # set NO_DEBUGINFO to skip testcase if debuginfo is not present
-> # skip_if_no_debuginfo returns 2 if debuginfo is not present
-> -skip_if_no_debuginfo
-> +#
-> +# The perf probe checks which depends on presence of debuginfo and
-> +# used in this testcase are:
-> +# 1. probe add for inode_permission
-> +# 2. probe max-probes option using 'vfs_* $params'
-> +# 3. non-existing variable probing
-> +#
-> +# For these tests, probe check for specific line is not
-> +# required ( add_probe_vfs_getname does that ). So call
-> +# skip_if_no_debuginfo with argument as 1. This is to convey
-> +# that test only needs to check for debuginfo, and not specifically
-> +# line number
-> +skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
-> if [ $? -eq 2 ]; then
-> NO_DEBUGINFO=3D1
-> fi
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh =
-b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 88cd0e26d5f6..2c5252a38ea1 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -39,7 +39,18 @@ add_probe_vfs_getname() {
+Thanks
+Athira
+> int ret =3D 0, err =3D 0;
+> static const char *defaults[] =3D {
+> "perf.data.old",
+> @@ -4610,7 +4672,8 @@ static int perf_sched__schedstat_diff(struct =
+perf_sched *sched,
+> goto out_delete_ses0;
 > }
 >=20
-> skip_if_no_debuginfo() {
-> - add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the =
-path for the kernel|Debuginfo-analysis is not supported)|(file has no =
-debug information)" && return 2
-> + no_line_check=3D$1
-> + debug_str=3D"^(Failed to find the path for the =
-kernel|Debuginfo-analysis is not supported)|(file has no debug =
-information)"
-> +
-> + # search for debug_str using simple perf probe if the
-> + # test only needs to check for debuginfo, and not specifically
-> + # line number.
-> + if [ $no_line_check -eq 1 ]; then
-> + perf probe -vn --add 'inode_permission $params' 2>&1 | grep -E -q =
-"$debug_str" && return 2
-> + else
-> + add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return 2
-> + fi
-> +
-> return 1
+> - show_schedstat_data(&cpu_head_ses0, cd_map0, &cpu_head_ses1, =
+cd_map1, true);
+> + show_schedstat_data(&cpu_head_ses0, cd_map0, =
+session[0]->header.env.nr_cpus_avail,
+> +    &cpu_head_ses1, cd_map1, session[1]->header.env.nr_cpus_avail, =
+true);
+>=20
+> out_delete_ses1:
+> free_schedstat(&cpu_head_ses1);
+> @@ -4720,7 +4783,7 @@ static int perf_sched__schedstat_live(struct =
+perf_sched *sched,
+> goto out;
 > }
 >=20
-> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh =
-b/tools/perf/tests/shell/probe_vfs_getname.sh
-> index 5fe5682c28ce..b0878f571449 100755
-> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-> @@ -16,8 +16,13 @@ skip_if_no_perf_probe || exit 2
-> add_probe_vfs_getname
-> err=3D$?
->=20
-> +# Invoke skip_if_no_debuginfo with argument as 0,
-> +# since the test needs suitable line number for getname
-> +# along with debuginfo check.
-> +# Argument "1" is used when to convey that test only needs to
-> +# check for debuginfo, and not specifically line number.
-> if [ $err -eq 1 ] ; then
-> - skip_if_no_debuginfo
-> + skip_if_no_debuginfo 0
-> err=3D$?
-> fi
->=20
-> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh =
-b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> index 002f7037f182..48063fc2b221 100755
-> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> @@ -38,8 +38,13 @@ perf_script_filenames() {
-> add_probe_vfs_getname
-> err=3D$?
->=20
-> +# Invoke skip_if_no_debuginfo with argument as 0,
-> +# since the test needs suitable line number for getname
-> +# along with debuginfo check.
-> +# Argument "1" is used when to convey that test only needs to
-> +# check for debuginfo, and not specifically line number.
-> if [ $err -eq 1 ] ; then
-> -        skip_if_no_debuginfo
-> +        skip_if_no_debuginfo 0
->         err=3D$?
-> fi
->=20
-> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh =
-b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> index 7a0b1145d0cd..6833fba12086 100755
-> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> @@ -28,8 +28,13 @@ trace_open_vfs_getname() {
-> add_probe_vfs_getname
-> err=3D$?
->=20
-> +# Invoke skip_if_no_debuginfo with argument as 0,
-> +# since the test needs suitable line number for getname
-> +# along with debuginfo check.
-> +# Argument "1" is used when to convey that test only needs to
-> +# check for debuginfo, and not specifically line number.
-> if [ $err -eq 1 ] ; then
-> -        skip_if_no_debuginfo
-> +        skip_if_no_debuginfo 0
->         err=3D$?
-> fi
->=20
+> - show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
+> + show_schedstat_data(&cpu_head, cd_map, nr, NULL, NULL, 0, false);
+> free_cpu_domain_info(cd_map, sv, nr);
+> out:
+> free_schedstat(&cpu_head);
 > --=20
-> 2.47.3
+> 2.54.0.545.g6539524ca2-goog
 >=20
 
