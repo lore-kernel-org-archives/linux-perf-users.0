@@ -1,150 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FD828CF4A;
-	Wed, 29 Apr 2026 19:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED5C38BF96
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 19:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777490962; cv=none; b=GrehU/bi/pyIQ1U6jwGW8+SHFsE/imf+xNZ5ofuamG66XDlQWtWVCgblcygyqCjJnbMsZYIz2jDECOAC/Ak+u9jiiVERlUKV5T72G+Tl0gif9N3s1iTwEO9xGJa/4yG+KZi2EpkZnknC7SkUuQ+ZhJiHezCu33JL0/FXZ3mk0Qc=
+	t=1777492720; cv=none; b=c8vILJe82rauBZcNN+D65/izv+iVKb2hn6UqrPgRtfPi43l6xdxyY0nBf8Zj1JRkvlER64ltawdYtkxk6xQPZCkysSffQgqUNtkZ29H6acKyGYPavSUPYAHgkCBw2lkEm+PwbhPnXt1xyOqeViez+qFpnuDLUdIw0uYG6q1sy64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777490962; c=relaxed/simple;
-	bh=xzGYn9yMy0wBlr+VQuKnXblpIAZvJTgc99Tv5tkEerQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SynDVlwp495yhznv79p3UFrMAPxN4HiNO48pJlHNCeuKSqWHZBqCENtVuv6nrj02I7FL53HvwYSVNxRhDGuy+vwmJU9nFMdjDgunzkCjGx1RVKFGoy3mHQbPP4yOwronXpUepL/XnF7AjlxQ2sBMpj3+7/7d1PjA4i2pLfjShGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPDMHOU1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777492720; c=relaxed/simple;
+	bh=Anh05KaOJVevxih8Th2T642fEHWvVGa6j/QImBU+3xc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=GROvsjBcorkvIxQMJbCJYZcRFK9vdtyxn8kAh6kLxu0KeP5sQLAPpGAER1h9b2hC1JX6mOzOmbUgJaiv0zxVM4Yisw/FsdUMG3OKBqRTc2AQvkBzatTVcLHyAc6qu3eq9VHcvVM32xLJVY9AyTLZ9up5MXCASHBsVEOlIau1+uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwGDqRcB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPDMHOU1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F9DBC19425;
-	Wed, 29 Apr 2026 19:29:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwGDqRcB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BF7C19425;
+	Wed, 29 Apr 2026 19:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777490962;
-	bh=xzGYn9yMy0wBlr+VQuKnXblpIAZvJTgc99Tv5tkEerQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nPDMHOU1x+9iKyaVo/LXj7IHH7Yy9qpqGZQqHjj894OlXWCcpLkizu3Ke8116cDx3
-	 lmlVH3874Sv3dpa/vT/5LSKoQFd3GV7cMwRRtkCbbFHMukPSHC82U/gbsf9eaEqMl9
-	 CUYRQuZoO6R4Wk3791UFaEpaljt8X+2ZNJBPyK0IX3ggsiRGrPCEmyV/ZJr5Vl4pRh
-	 sWhd86D8Pv0jrSbq+V9lMn1/3leo1UKWTscfZbacSR9KkyDifDLmieTAeiloAoNpXu
-	 sdnAnXwjebptONqHv4O1Uc9v0PI38fdaXkDfyky4MJf89qCZRfxu2eh7XX9zRa7zCQ
-	 p8z3UNuu+vr4A==
-Date: Wed, 29 Apr 2026 13:29:18 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] perf/x86: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <afJcDg1I5ZU5ZkXf@kspp>
+	s=k20201202; t=1777492719;
+	bh=Anh05KaOJVevxih8Th2T642fEHWvVGa6j/QImBU+3xc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=RwGDqRcBSJhbEOg4a6eWmZxZ/GqlwBFRtanH7VyZF0An3aWI2jnwH9nGh+BUuK7Op
+	 ahN8QQEmQuY9D3p86tSmgs4TeTcAQUL2dWsE/pc6rVb4lMvTslKgWKLwPgIBf6Aq1k
+	 ku/FAqTLhJTxPUXd9HrI9lAwx/doCFtYcHXh6bj2Uj974IFfgDh+GrjchA4rq7hpQf
+	 hIHJcoXguP1T4irH2Myc2EMreCBwrKAizvRM701ekwbJCwCWg/JXTVUfjq03j9ic9d
+	 SpW6lYDSqZZT0KU21wWM3cVt+DKIXM4CFcR3A9Q4RrhypdUNzv6f8sQUZ+cFpf0j4P
+	 riluOFt6aOfGQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2 v2] perf script: Fix missing '+' indicator when
+ branch counter reaches upper limit
+Reply-To: sashiko@lists.linux.dev
+To: "Thomas Falcon" <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260429152917.178803-2-thomas.falcon@intel.com>
+References: <20260429152917.178803-2-thomas.falcon@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Apr 2026 19:58:37 +0000
+Message-Id: <20260429195839.29BF7C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The patch incorrectly prints the saturation indicator '+' when b=
+ranch counter width is 0.
+--
 
-Use the TRAILING_OVERLAP() helper to fix the following warnings:
+commit 7ec212bf30c80539ef5e37c2e9ff148610e094d5
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-14 arch/x86/events/intel/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-6 arch/x86/events/amd/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-3 arch/x86/events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 arch/x86/xen/../events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 arch/x86/events/zhaoxin/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 ./arch/x86/include/generated/../../events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+perf script: Fix missing '+' indicator when branch counter reaches upper li=
+mit
 
-This helper creates a union between a flexible-array member (FAM)
-and a set of members that would otherwise follow it. This overlays
-the trailing members onto the FAM while preserving the original
-memory layout.
+This commit restores the missing "+" suffix indicator in perf script which
+represents that branch counter events may have been lost due to saturation.
 
-Lastly, the static_assert() ensures the alignment between the FAM
-and struct perf_branch_entry lbr_entries[MAX_LBR_ENTRIES]; is not
-inadvertently changed, and it's intentionally placed inmediately
-after the related structure (that is, no blank line in between).
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index c8ac9f01a36b..f865c8b2f95f 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1287,8 +1287,12 @@ static int ip__fprintf_jump(uint64_t ip, struct br=
+anch_entry *en,
+>  			if (!verbose) {
+>  				for (j =3D 0; j < num; j++)
+>  					printed +=3D fprintf(fp, "%s", pos->abbr_name);
+> -			} else
+> -				printed +=3D fprintf(fp, "%s %d ", pos->name, num);
+> +				if (num =3D=3D mask)
 
-It's also worth mentioning that the entire Intel LBR bits block
-is moved just to avoid splitting it.
+Could this incorrectly print the saturation indicator if the branch counter
+width is 0?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- arch/x86/events/perf_event.h | 41 ++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 18 deletions(-)
+Since mask is derived via (1L << width) - 1 earlier in the function:
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fad87d3c8b2c..9641b888cbee 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -318,24 +318,6 @@ struct cpu_hw_events {
- 	/* Cached CFG_C values */
- 	u64			cfg_c_val[X86_PMC_IDX_MAX];
- 
--	/*
--	 * Intel LBR bits
--	 */
--	int				lbr_users;
--	int				lbr_pebs_users;
--	struct perf_branch_stack	lbr_stack;
--	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
--	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
--	union {
--		struct er_account		*lbr_sel;
--		struct er_account		*lbr_ctl;
--	};
--	u64				br_sel;
--	void				*last_task_ctx;
--	int				last_log_id;
--	int				lbr_select;
--	void				*lbr_xsave;
--
- 	/*
- 	 * Intel host/guest exclude bits
- 	 */
-@@ -384,7 +366,30 @@ struct cpu_hw_events {
- 	void				*kfree_on_online[X86_PERF_KFREE_MAX];
- 
- 	struct pmu			*pmu;
-+
-+	/*
-+	 * Intel LBR bits
-+	 */
-+	int				lbr_users;
-+	int				lbr_pebs_users;
-+	union {
-+		struct er_account		*lbr_sel;
-+		struct er_account		*lbr_ctl;
-+	};
-+	u64				br_sel;
-+	void				*last_task_ctx;
-+	int				last_log_id;
-+	int				lbr_select;
-+	void				*lbr_xsave;
-+
-+	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
-+		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
-+		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
-+	);
- };
-+static_assert(offsetof(struct cpu_hw_events, lbr_stack.entries) ==
-+	      offsetof(struct cpu_hw_events, lbr_entries));
- 
- #define __EVENT_CONSTRAINT_RANGE(c, e, n, m, w, o, f) {	\
- 	{ .idxmsk64 = (n) },		\
--- 
-2.51.0
+    perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
+    mask =3D (1L << width) - 1;
 
+A width of 0 results in a mask of 0. In this scenario, num will also evalua=
+te
+to 0, making the condition num =3D=3D mask evaluate to true.
+
+Would it be better to verify that mask > 0 before checking for saturation?
+
+> +					printed +=3D fprintf(fp, "+");
+> +			} else {
+> +				printed +=3D fprintf(fp, "%s %d%s", pos->name,
+> +						   num, num =3D=3D mask ? "+ " : " ");
+
+Is a similar check needed here to prevent the same false positive in
+verbose mode?
+
+> +			}
+>  		}
+>  		if (numprinted =3D=3D 0 && !verbose)
+>  			printed +=3D fprintf(fp, "-");
+
+In non-verbose mode, a false positive on the mask check introduces a
+regression where the output becomes +- since the numprinted =3D=3D 0 condit=
+ion
+above will also append a "-", contradicting the intention that "-" means no
+event occurred.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260429152917.1788=
+03-1-thomas.falcon@intel.com?part=3D1
