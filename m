@@ -1,145 +1,487 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040E3C8731;
-	Wed, 29 Apr 2026 13:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349463FD15F
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 13:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777469497; cv=none; b=luPsXEV9cp5f+wrxhKkZahnNN92pXFMRhxIjAkX+SVTMmIKNVf1v/36cQFIeuOkZ4BR3jb/Kz30nIlFi85WJOm+NAEtrGMxbpI69PdSD+dMFD+mw9jMo/W9uFsFjoA2HCntw5G2PJH9yTDXIma+UYNz4BUbFH9OCWCt/bPP+IYk=
+	t=1777469532; cv=none; b=BlH2kDT3KMEteGQNic1uax9EZ9bGqikIBCaD6Tfo4+uiyWMIK9nNesbdfnHveIWfYwzEf2Qkg6M6E7ifBzuhzhc2Off1zNZwm35DidSDq1TAlT87F9EStDkZTdnFBmT2l3h02a16qPc8Xmk0/sVN+MiIbhrbEGGjrTfcdcRuMi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777469497; c=relaxed/simple;
-	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q9KGhYyjrflyZu6SHEGIOQgDoSIT289GdeuhlzKT6E5BeFV/d0PqtEBSDdstMrcNfleke8qU7YuxTJCJvu9K5KtmtF4TZnZvMGV0VwFuClNjasRmtaTCWv7r2zpFUFl5x7sDINADuLQ1KIVbVMh5gbXmaYK/4x15XEhqskxx/qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZyWwFsx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777469532; c=relaxed/simple;
+	bh=pkqcTR8Dqs5ugJnRg5xydBqXIu/rn0A12lFWrbwyTZE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=t37jqCixaMUIns7qGD/Pj7EfMbqNsc04Esgry19EFrgQENFU/kKf/cmOwymcFJ2E4cTuJVo6mNUMEY7T8T75VJEy+NIdDtqoIe0qPcBPh4itOBSgZCsX9ztli5vNGqEcgcxvGGcuZG4QtJOP88uZ7P1lXgFAomqxra/Lt6CWhck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H/cvXZJk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZyWwFsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82326C19425;
-	Wed, 29 Apr 2026 13:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777469496;
-	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gZyWwFsxbl9VO4ExQ7RswjDD98S4DYNllnrro2IpwpXiDJhyehCp3w1quVs6/vnj7
-	 BuicI92tEkOUJXDM0IGjZ2HKg1hUEdgGEOlH0JaJIKvKUINYb9omTyuI6mHU54X8kB
-	 YKeexiahHyt07jEM1tBa5j4kj9e45kU0AT5bl/6zZpHUxuotbiyZdtxZ9jA48Px9no
-	 mUK67MPxfltdVdqxioaOh2P1m4c2+FFmwtuim7WkcoG87/gNl3XHHVNqvuXl4Tkbxy
-	 39b2pcO3eCv/HQ0Ou5l/SvQ8Hm5QlOKCDIORxAdGzHIofWoOzz3AJPoyw8zmcgMry1
-	 UClQ96VFlf7Ww==
-Message-ID: <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
-Date: Wed, 29 Apr 2026 15:31:30 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H/cvXZJk"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63T0hU7d1237052;
+	Wed, 29 Apr 2026 13:31:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0HUzGX
+	YwTVmu1huJte4qcBoFL8x0sfH9R4BGJWDYLIk=; b=H/cvXZJk8+GBvy6G+Ln382
+	yCzadgtAV8jcwQHZ67c5kXwSCoS72kKzJn5dxJAwZAZkWkjw8VVTh7T+RcteGB4w
+	TCXJtXJeFgH/WJ9RAOZpMA19syt0zgZBFihrXaN0bos24DjOplB/iVDinYTVCZgE
+	Dsewe8ncsviCGRyypmIGVNIWj03iakfQf9G2Ua3JYt8vrz9OVwlrl5EmtZsqtNzN
+	J+AewAiHz0zQci8BuqBFOj53GASOlAMA1Plf7DveQgdXPU2j0CAPfDinbjZ8jN7P
+	jxnVmzca3xmb/5cxOAdQflC6GqTfBw5/nhsx/0pDGPdWTliAaGKuXQTt3+kn1t4w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drm1e19gw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Apr 2026 13:31:57 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63TD8iDV021560;
+	Wed, 29 Apr 2026 13:31:56 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dsamye7fa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Apr 2026 13:31:56 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63TDVr6W20120186
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Apr 2026 13:31:53 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E1035804E;
+	Wed, 29 Apr 2026 13:31:53 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ADD655803F;
+	Wed, 29 Apr 2026 13:31:48 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.252.188])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 29 Apr 2026 13:31:48 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
- MADV_DONTNEED
-To: Darko Tominac <dtominac@cisco.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- Jann Horn <jannh@google.com>
-Cc: xe-linux-external@cisco.com, danielwa@cisco.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org
-References: <20260429131522.4049054-1-dtominac@cisco.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260429131522.4049054-1-dtominac@cisco.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V3] tools/perf/tests: Update test_adding_kernel.sh to
+ handle proper debuginfo check
+From: Venkat <venkat88@linux.ibm.com>
+In-Reply-To: <20260424172435.91725-1-atrajeev@linux.ibm.com>
+Date: Wed, 29 Apr 2026 19:01:35 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AEEE2C46-8D1E-442E-B5A9-7B53E681E69B@linux.ibm.com>
+References: <20260424172435.91725-1-atrajeev@linux.ibm.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: zLsSls42wFjC9WDIwTT9cWqUeHnBlF3r
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI5MDEzNSBTYWx0ZWRfX9vmPq4SdbArl
+ QMA1gPbK/0Mqzx0FmogiWP7hG+jnTt43CfL5TbKQiaYeadcuo3R/T9Jr6KcJoDBnPh3QQP3mRw1
+ 9FS/5y3bxTuNOJ78ObEytsFDxnfOQvS+tyGA2bGHOhedM4n8qB0XhcPzOlRal5wdHUxMTzKc4gx
+ uZIzzF0E3chIY7VlG/dGyxg81HNqZPNLZKtN26K3IuQwn8un3BidDoGzGYssA2Utg4Nr857Qsi5
+ rmOrITPAY6l0wzOngqdqPs+l8Hyp3lMou5c2k3aMeHP9EOHZmBy1u3wdLvzxXTBdQ7RUdZhAntM
+ bxZrA7d8EflPJhB5CESZAZbDkRPgEK3aznzXbsuYhS6b0Da7lQib/S55OH/s8Iu5owAngfYdSI7
+ wx6i1BEqZb82PkjXuvc0wY5OqtwEQfMeKHhhV2xq0WwQ1w71Jry6iJtVvCcdJe8HLd4Z7Ca+DXw
+ UOznlM54vmsrza9BJIg==
+X-Authority-Analysis: v=2.4 cv=VZLH+lp9 c=1 sm=1 tr=0 ts=69f2084d cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=1XWaLZrsAAAA:8 a=olRvLK4VMm_lXU6j1U4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: q1KC86vN5K_ix-0aMAjl95qVDjTBOVwp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-28_05,2026-04-28_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604290135
 
-On 4/29/26 15:15, Darko Tominac wrote:
-> When uprobes are active, MADV_DONTNEED can discard file-backed pages
-> that contain uprobe software breakpoint instructions.  Because the
 
-If my memory serves me right, uprobes can only be installed in MAP_PRIVATE fil
-mappings. Installing a uprobe breaks CoW by installing an anonymous page.
 
-Not a file-backed page.
+> On 24 Apr 2026, at 10:54=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>=20
+> Perf test perftool-testsuite_probe fails as below:
+>=20
+> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
+inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe =
+:: perf probe -l (output regexp parsing)
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
+probes
+> Regexp not found: "probe:vfs_mknod"
+> Regexp not found: "probe:vfs_create"
+> Regexp not found: "probe:vfs_rmdir"
+> Regexp not found: "probe:vfs_link"
+> Regexp not found: "probe:vfs_write"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
+support (command exitcode + output regexp parsing)
+> Regexp not found: =
+"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+> Regexp not found: "in this function|at this address"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing =
+variable (output regexp parsing)
+> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures =
+found
+>=20
+> Further analysing, the failed testcase is for "test_adding_kernel".
+> If the kernel debuginfo is missing, perf probe fails as below:
+>=20
+> perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
+> Failed to find the path for the kernel: No such file or directory
+>  Error: Failed to add events.
+>=20
+> skip_if_no_debuginfo has check to handle whether debuginfo is present
+> and the testcase checks for debuginfo since this :
+> commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
+> testcases fail when kernel debuginfo is not present")
+>=20
+> Recently a change got added in "tests/shell/lib/probe_vfs_getname.sh"
+> via this another fix:
+> commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
+> line detected")
+> Since this commit, first add_probe_vfs_getname is used to prevent =
+false
+> failures. And based on return code of add_probe_vfs_getname, =
+skip_if_no_debuginfo
+> is used to skip testcase if debuginfo is present. And this modified =
+other
+> testcases to call add_probe_vfs_getname first and invoke
+> skip_if_no_debuginfo based on return value.
+>=20
+> The tests in test_adding_kernel.sh which depends on presence of
+> debuginfo are:
+> 1. probe add for inode_permission
+> 2. probe max-probes option using 'vfs_* $params'
+> 3. non-existing variable probing
+>=20
+> For these tests, probe check for specific line is not required.
+> So call skip_if_no_debuginfo with argument to say if line check is
+> needed. This is to convey to skip_if_no_debuginfo() function
+> that test only needs to check for debuginfo, and not specifically
+> line number. Update skip_if_no_debuginfo to use simple "perf probe"
+> check if test only needs to check for debuginfo. And for other
+> tests which rely on line number, use add_probe_vfs_getname()
+> Update other places which uses skip_if_no_debuginfo to use argument
+> as zero.
+>=20
+> With the change, verified that only three which required debuginfo =
+only
+> is skipped and others ran successfully. Also tested with debuginfo
+> to make sure tests are not skipped.
+>=20
+> Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
 
-> uprobe infrastructure does not re-instrument pages on individual page
-> faults (uprobe_mmap() is only called during VMA creation, not on
-> page-in), the breakpoints are silently lost once the discarded pages are
-> re-read from the backing file.  The probes stop firing with no error
-> indication, and the only recovery is to unregister and re-register the
-> affected uprobes.
+Tested this patch, by applying on top of mainline, and it fixes the =
+reported issue.
 
-Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
-MADV_DONTNEED debugger breakpoints/set data etc. :)
+Without this patch:
 
-> 
-> Note that MADV_FREE is not affected: it only operates on anonymous VMAs
-> (madvise_free_single_vma() rejects non-anonymous VMAs with -EINVAL),
-> while uprobes only instrument file-backed mappings, so the two can never
-> overlap.
-> 
-> A concrete example is a userspace memory reclamation subsystem that
-> periodically calls madvise(MADV_DONTNEED) on file-backed text pages to
-> release memory. 
+# ./perf test -v perftool-testsuite_probe
+--- start ---
+test child forked, pid 15772
+Probing start_text
+-- [ PASS ] -- perf_probe :: test_adding_blacklisted :: adding =
+blacklisted function start_text
+-- [ PASS ] -- perf_probe :: test_adding_blacklisted :: listing =
+blacklisted probe (should NOT be listed)
+## [ PASS ] ## perf_probe :: test_adding_blacklisted SUMMARY
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission ::
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission :: -a
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission :: --add
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe =
+:: perf list
+Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
+inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe =
+:: perf probe -l (output regexp parsing)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe =
+(should NOT be listed)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding =
+probe
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
+:: first probe adding
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
+:: second probe adding (without force)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes =
+:: second probe adding (with force)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
+probes
+Regexp not found: "probe:vfs_mknod"
+Regexp not found: "probe:vfs_create"
+Regexp not found: "probe:vfs_rmdir"
+Regexp not found: "probe:vfs_link"
+Regexp not found: "probe:vfs_write"
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
+support (command exitcode + output regexp parsing)
+Regexp not found: "Failed to find"
+Regexp not found: =
+"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+Regexp not found: "in this function|at this address"
+Line did not match any pattern: "The =
+/lib/modules/7.1.0-rc1+/build/vmlinux file has no debug information."
+Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, or =
+install an appropriate debuginfo package."
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable =
+(output regexp parsing)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval =
+:: add
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval =
+:: record
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument =
+probing :: script
+## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures =
+found
+-- [ SKIP ] -- perf_probe :: test_basic :: help message :: testcase =
+skipped
+-- [ PASS ] -- perf_probe :: test_basic :: usage message
+-- [ PASS ] -- perf_probe :: test_basic :: quiet switch
+## [ PASS ] ## perf_probe :: test_basic SUMMARY
+-- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
+for -a
+-- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
+for -d
+-- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
+for -L
+-- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
+for -V
+-- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
+argument for -F
+-- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
+argument for -l
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -a xxx -d xxx
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -a xxx -L foo
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -a xxx -V foo
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -a xxx -l
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -a xxx -F
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -d xxx -L foo
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -d xxx -V foo
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -d xxx -l
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -d xxx -F
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -L foo -V bar
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -L foo -l
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -L foo -F
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -V foo -l
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -V foo -F
+-- [ PASS ] -- perf_probe :: test_invalid_options :: mutually exclusive =
+options :: -l -F
+## [ PASS ] ## perf_probe :: test_invalid_options SUMMARY
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func:10
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func:0-10
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func:2+10
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func@source.c
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: func@source.c:1
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: source.c:1
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: source.c:1+1
+-- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
+descriptions :: source.c:1-10
+-- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
+descriptions :: func:foo
+-- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
+descriptions :: func:1-foo
+-- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
+descriptions :: func:1+foo
+-- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
+descriptions :: func;lazy\*pattern
+## [ PASS ] ## perf_probe :: test_line_semantics SUMMARY
+---- end(-1) ----
+137: perftool-testsuite_probe                                        : =
+FAILED!
 
-It shouldn't do that on a MAP_PRIVATE file-backed VMA. It breaks the programn,
-including uprobes and anything else that breaks CoW in there.
+With This patch:
 
-If it's using MADV_DONTNEED, it is damaging the application.
+# ./perf test -v perftool-testsuite_probe
+137: perftool-testsuite_probe                                        : =
+Ok
 
-MADV_DONTNEED is not for memory reclaim.
+Please add below tag.
 
--- 
-Cheers,
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-David
+Regards,
+Venkat.
+
+> Changelog:
+> v2 -> v3:
+> - Update other callsites to use "skip_if_no_debuginfo 0"
+> - Use "perf probe -vn --add inode_permission $params"
+>=20
+> v1 -> v2:
+> - First version used "perf probe -v -L getname_flags" for debuginfo
+>  check. This will not catch fail string "Debuginfo-analysis is not
+> supported" which is used in cases when perf is built without dwarf.
+> So use "perf probe -vn add inode_permission" to capture cases when
+> tools built with NO_LIBDWARF=3D1. This will capture debuginfo missing =
+as
+> well as tool built without dwarf case.
+>=20
+> .../tests/shell/base_probe/test_adding_kernel.sh  | 15 ++++++++++++++-
+> tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
+> tools/perf/tests/shell/probe_vfs_getname.sh       |  7 ++++++-
+> .../shell/record+script_probe_vfs_getname.sh      |  7 ++++++-
+> tools/perf/tests/shell/trace+probe_vfs_getname.sh |  7 ++++++-
+> 5 files changed, 44 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
+b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> index 555a825d55f2..f3db125c8669 100755
+> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> @@ -23,10 +23,23 @@ TEST_RESULT=3D0
+> . "$DIR_PATH/../lib/probe_vfs_getname.sh"
+>=20
+> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
+> +PROBE_NO_LINE_CHECK=3D1
+>=20
+> # set NO_DEBUGINFO to skip testcase if debuginfo is not present
+> # skip_if_no_debuginfo returns 2 if debuginfo is not present
+> -skip_if_no_debuginfo
+> +#
+> +# The perf probe checks which depends on presence of debuginfo and
+> +# used in this testcase are:
+> +# 1. probe add for inode_permission
+> +# 2. probe max-probes option using 'vfs_* $params'
+> +# 3. non-existing variable probing
+> +#
+> +# For these tests, probe check for specific line is not
+> +# required ( add_probe_vfs_getname does that ). So call
+> +# skip_if_no_debuginfo with argument as 1. This is to convey
+> +# that test only needs to check for debuginfo, and not specifically
+> +# line number
+> +skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
+> if [ $? -eq 2 ]; then
+> NO_DEBUGINFO=3D1
+> fi
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh =
+b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 88cd0e26d5f6..2c5252a38ea1 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -39,7 +39,18 @@ add_probe_vfs_getname() {
+> }
+>=20
+> skip_if_no_debuginfo() {
+> - add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the =
+path for the kernel|Debuginfo-analysis is not supported)|(file has no =
+debug information)" && return 2
+> + no_line_check=3D$1
+> + debug_str=3D"^(Failed to find the path for the =
+kernel|Debuginfo-analysis is not supported)|(file has no debug =
+information)"
+> +
+> + # search for debug_str using simple perf probe if the
+> + # test only needs to check for debuginfo, and not specifically
+> + # line number.
+> + if [ $no_line_check -eq 1 ]; then
+> + perf probe -vn --add 'inode_permission $params' 2>&1 | grep -E -q =
+"$debug_str" && return 2
+> + else
+> + add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return 2
+> + fi
+> +
+> return 1
+> }
+>=20
+> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh =
+b/tools/perf/tests/shell/probe_vfs_getname.sh
+> index 5fe5682c28ce..b0878f571449 100755
+> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+> @@ -16,8 +16,13 @@ skip_if_no_perf_probe || exit 2
+> add_probe_vfs_getname
+> err=3D$?
+>=20
+> +# Invoke skip_if_no_debuginfo with argument as 0,
+> +# since the test needs suitable line number for getname
+> +# along with debuginfo check.
+> +# Argument "1" is used when to convey that test only needs to
+> +# check for debuginfo, and not specifically line number.
+> if [ $err -eq 1 ] ; then
+> - skip_if_no_debuginfo
+> + skip_if_no_debuginfo 0
+> err=3D$?
+> fi
+>=20
+> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh =
+b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> index 002f7037f182..48063fc2b221 100755
+> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> @@ -38,8 +38,13 @@ perf_script_filenames() {
+> add_probe_vfs_getname
+> err=3D$?
+>=20
+> +# Invoke skip_if_no_debuginfo with argument as 0,
+> +# since the test needs suitable line number for getname
+> +# along with debuginfo check.
+> +# Argument "1" is used when to convey that test only needs to
+> +# check for debuginfo, and not specifically line number.
+> if [ $err -eq 1 ] ; then
+> -        skip_if_no_debuginfo
+> +        skip_if_no_debuginfo 0
+>         err=3D$?
+> fi
+>=20
+> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh =
+b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> index 7a0b1145d0cd..6833fba12086 100755
+> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> @@ -28,8 +28,13 @@ trace_open_vfs_getname() {
+> add_probe_vfs_getname
+> err=3D$?
+>=20
+> +# Invoke skip_if_no_debuginfo with argument as 0,
+> +# since the test needs suitable line number for getname
+> +# along with debuginfo check.
+> +# Argument "1" is used when to convey that test only needs to
+> +# check for debuginfo, and not specifically line number.
+> if [ $err -eq 1 ] ; then
+> -        skip_if_no_debuginfo
+> +        skip_if_no_debuginfo 0
+>         err=3D$?
+> fi
+>=20
+> --=20
+> 2.47.3
+>=20
+
