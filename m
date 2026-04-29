@@ -1,224 +1,179 @@
-Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EB5429833
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 22:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5743CED3
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 22:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777500930; cv=pass; b=qrIg7hDsU/5XrcxrGcKd+sR2nPygSRQdJ2qpnbpwn81GsfuvkJ5ACv8bgET4kRCLHXHDmdvDlesR5ymHZHhscgdN1oiNcLhRFOuBV5Ijh/bRZMWYhtCiFKtVZvytJqLCwA0btKXQ9GZTE0ytk3ACol2qYLxLAVfcT4MKf3l0NU4=
+	t=1777501450; cv=pass; b=SrgN3T3spZOHaaKVdYv4LLmKuEhtbtC5sF9CF3TuO5zLYA7aZXVx5i8Hi+/P247zMEX3XZew9AFYJ2/uyFQPMMTpC4EhQgxUmWTjEQp8e3daCQenxKqp2Vw/8HElGXdwSV6hrzxKoPh7gaPIt65dGR2TDdiCeHN2SCFYMufsN50=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777500930; c=relaxed/simple;
-	bh=m83IizEOwwGKM+aHir3tx/yvJGN31WrRGDPv56uM4tc=;
+	s=arc-20240116; t=1777501450; c=relaxed/simple;
+	bh=v3cZtuli/IkFLtuAwsS4sr/0dZpRBwB0bHBS46rntHM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e2nzCnyOU/9mx6cWSt2zIfoUcgNvvBY5p13eRUGppfNqX86hj8ZoZ1zjSsgl+vVyjgjZU7AZe8WmZdgOa9tbVuyrHHBD1MRnd38velN3aPOB/w/BC4Z17/JmH08M/gI3l01kNOj2XC5I8JbHY9BLdiTFRW6O5BDf67G+9NgyuFI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s0nF05aS; arc=pass smtp.client-ip=74.125.82.47
+	 To:Cc:Content-Type; b=UPZS7HInxHWqT2C70JQFGpJufnQLB+MC6LK5vaSPN1yZdHeoIriRKabaNQ+2PqM1cbAnegx0wsMEcsEr26jZRiXoC6MvHHfccY4M15HjbipjUlBsrzyuOQ1n7QhH6g8XB38NUL0thrfK4FxbgNMc4WjGOJfwrHph4JyDYoyV1B0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NDua7GV0; arc=pass smtp.client-ip=74.125.82.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s0nF05aS"
-Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-126ea4e9697so2300c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 15:15:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777500928; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDua7GV0"
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12c8d0945b3so5096c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 15:24:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777501445; cv=none;
         d=google.com; s=arc-20240605;
-        b=lGf00SwF67UdJJBg4M0o9TWbB3bXC0vB32TZtQ0EANj/iShxqY9Yxf/FhyW8dVM0B4
-         sXdHJ11AZBAqXTfnM+Mzl+xQRWAKvBozvvZELzemQ2elUw9zQ9Tkt8gN8HXGLUeAOvRb
-         /3lSR9Zd7G1Q8d1o/XxtDq3HHI2pPKcjla1ZsmnYyJgIlub08hiw4dV8zUL4h+WZnoV4
-         dunePkgd9rm1xZ9X3EDOT4Odg59P/1v+rS3Zk/MwUCf9TMiaAbfrvlrzf2wiTouq19bl
-         DZTZYJuHxeg2GB88aSjCCzRBYK2u0/5zJqiQPuIpF1SJmazkAwnbGAcKwu40wdq3UM4l
-         SAUw==
+        b=KIwuaUJr6q9UvEU+0Ylf+OOTHkWHZ8WHtQ206iUAlLUzeh1ISMg6kHR2/tReuEj4G8
+         UJZXZSgH/Klf+JaQQ32NCsDlr23PCTEfsJJPib44HS+PIjjKk/RSmiIFk5SWnVUhvNF5
+         /tVfJERNNc+ODDtbLMDrTI3+bFTK7Dxae/YCZdJhQBybGW+Rr0/wYbTgOrBeKD0ONyOM
+         4+YX3ZpWg3yLK2KtDuhRBRST0We0hP+xZyj6arlgXlN6rKS7h5ehJaxekDran36EIj+v
+         20ojv0bXSiGROLORvTUY1joBTCdfo07ZPOrTLfvxAx86R4NeX7cmJ2OzdzLKPs1l2Teq
+         nCbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=HRbTbvakHZziSVVZIYW/VVFsigOa7O79j5hW663J3fM=;
-        fh=/iBR1TStOI1RFYA/FagE2qBiAjP+9v8xD82O1DL1Jcc=;
-        b=FPq2OkUDakfsjhCX3OzIkr1ce8pABDYlkbP3OOIlDO9jWe1RqR8Ytr1P+ZkvqbrvZ9
-         n4ZHG/shQBuKopdm43pbNOjamsFhHa6Gsab+FGOzpKsSyOxL0aAXiyxeiH5xc/BVz1YM
-         nPGJ7VCOmq3WPow0iMvhtD9eMfxUEkNcfchpttQtJhU8ngOhQy4Qzci870HkR+X9kHUW
-         WXK7UmBgWmJctkk5RJwh7FvPGGdz3BVKMa8sTycoTCXlVsKFLXL3sSAkOE7+ZgN5/oZm
-         E5izEplCQtLtIsssBI2fpySOM2r8mYO7er0tihpL6TvaV7eK7cagHCJ8INRD5l6bepC9
-         LtkA==;
+        bh=1AO15Q+woWKMT6khRU7blgcDAFE7/nQooeNgGMR7yxQ=;
+        fh=MjabDo9EnC0l/9ESpPcDAQLtR4wmfMBTUtgJD0VcaGc=;
+        b=Alh9Py2Lh6jkSUHJRObXJEi2FJ+JK8MzGGupOujxoFuIxi48uu7XcJxu9u3xm5mAOv
+         CKirpcDcGxyVbMJlWNux2/stQJXBqLg/qHv3VVhbp2g/MJ7jUP12BypXIS5NsdQ1TIj7
+         Dc7a2Bc/cJbnRq4QSBKvAlKluT+p2nBcxYXfwBgMMmfeREsiOyJheQC6fRlkTU0ndK/K
+         iLL2QySrQb5F4wh99Thjc6tIjRgINWwUIlxELlsFDeualiFxnSm/pqrh1veNRcQBxqq5
+         tuYyF012Ur1RFOCMuptKkA9Yb1pjH9/s2FSuYY0QWsCxAZRFR24YEYU72JbWzSnQeFIF
+         37hA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777500928; x=1778105728; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777501445; x=1778106245; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HRbTbvakHZziSVVZIYW/VVFsigOa7O79j5hW663J3fM=;
-        b=s0nF05aSCQmzmtONKFitDVWk9BWPV67z/+wyk1mMH5rTyrGOBkxTs6DRztaVIdpOgp
-         Asezh8UuARtTwh7mu16wgflCpOQp/dXFs5EzqQyzNpXwZByxGMTxtz+7Sii0pD0lYRRV
-         V1RflCY046+6uKDnI6Q/4+6om2T2GIT3wk0PuwZtgJDuPKJ2WxsPQQGt/ik5xGEdTj20
-         ynNAJLRnKQurJKzzzFGP/D02Ab1KjPCgfPhYHm0LpfQXZaFTYzp9neJvROmGiPt0Nuly
-         mPeYAUw4yFwdH0ExIr9DDq82NI5KeYY8YtaByivKg/LgMv6yYCeIGxmb91/ojICkR0I7
-         +ZOg==
+        bh=1AO15Q+woWKMT6khRU7blgcDAFE7/nQooeNgGMR7yxQ=;
+        b=NDua7GV0lUgSjOJZeq9QBY8zE/BXpb6yCwIy791zPTb/5pkbEDmFrkh0MSynRtb318
+         1bV2qjfZ2+O/EHXQGQxHEoPVVCKrL0Is3s/YnP8A8yvZZ8zpAWXFGB7noo4CTSBHKAjQ
+         /3RvmyTK1oTdv3z9/ffkqrazGqQbGrlYHCDeXi1hYl0XADkxNDkH2HwO1RiIwSortNpi
+         9Afy9TrCuYRB8rqYYbATlDsdwrNcPGnu9kkd31TjwRjtl8gDDFpWzL+9exvI/mj3+an1
+         KGeEIN8qRReUUrTyYjoSA1uetCUJmJtLuR2cAL6LwQ6rIfDR+fbFdLRpyU+NTOzPz8fH
+         HtRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777500928; x=1778105728;
+        d=1e100.net; s=20251104; t=1777501445; x=1778106245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=HRbTbvakHZziSVVZIYW/VVFsigOa7O79j5hW663J3fM=;
-        b=j6kgNxplr439Oe905gZMnV+4n/YtqYOfKdJGfnKpnVCHnEQtD5eWY87kZcfCqnJhp/
-         Tw0LppsHy/uTYSyeyx2ePorCEhEt4CubapyCltfuHN7puhUBFmPHzpvpScszbviir21Y
-         22ipv+cJ9GtBFBB5pPdzQ8GLeAsy7fQdEhI0JsVLVzKaKUHTg12pzJgYo7RsHrEgyru7
-         r1RXD7t1keK8UUGVy4pOnyHMBSN//FvM709CZ1cw9Fefu8ELqYROFXHCilK+7E/6LSbD
-         ezoTp6HZygErUoCIdBFb3iRHdGWbGJJJ5/yyqbBYrlIXUMaRRntGzLzUZFkr9PX3neT4
-         iSMA==
-X-Forwarded-Encrypted: i=1; AFNElJ+H+HMm4k2HmvITcV1bqhH1k77fumbuJ4Q95nPmh9DVFaFU4ths6pDZIA7XoV/kiMSDFik19Z6xL+1hH5LpKgMC@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCuIea+beZ8JcremNK4NWkB6QyCcsXXLZoeZjNLomEu4KkUZbY
-	7/wAYhd80Jg/9TNOhXj1ChSMSPyoJdxc7xqPar0FCdWc4T8RhkJuzi0+L8ze0ZXxwbcKfsYEzAX
-	jWMQRYzoYc3+SMiFc+XoQkdCfQ+dkYAawjskKkZkL
-X-Gm-Gg: AeBDietwynxHl7Q6b3qcCukPo0PQ8Ghpif1uYvubhQeXn9CxGLUSIihujTh0b3TNK0t
-	8paVQ/MND6+Dly0l3ZdT23sIkxBR6Veg8f0j/l8VbsnO0NW+UvAGxhKqZrE7HCGm8BY2nICLSay
-	U8Gzft4lCJAPFxxItcZF3V35olpHVzAKvJqSF+YGxFY0kQe1p7S3Pfkf/GUEXQfzetuwkdPA+q3
-	x1HrTK0Ft3HsImlyVd1J+D4a7zu+2siMSP5/30Dd1CxaqaFRYRkd0k/2HW1nkBExLONWKMYxqqx
-	KY8lzVhIOrqo5r+0EPE3WY4zgkzRsSh2IdFPs2jNF9pAnoPzVqCGUBUNijg=
-X-Received: by 2002:a05:7022:497:b0:12c:8f55:cd0d with SMTP id
- a92af1059eb24-12de9e25c39mr124783c88.8.1777500927567; Wed, 29 Apr 2026
- 15:15:27 -0700 (PDT)
+        bh=1AO15Q+woWKMT6khRU7blgcDAFE7/nQooeNgGMR7yxQ=;
+        b=mOblrbCwZib32aCi0o7ItwRtqjDINabLc8ZBaOcADiWYWMLiEBCHZTxEovNK+N/vlt
+         nMLZUdJ6I9vTVQmtyv9zUfALdrOhnSuhoQT67qcGSZSD3kfarkJyibSMFvSAckPrqYc+
+         34n7wPQPBEYU5lJgaUdTR1+0SRXdZQtpRR/x8ECan7y8arm6oP99cAD0lDA6UimsIGZf
+         DPX/yaJQ/lmOw1ovk6R2ATPUEUVHFxnVJnEtQ8XV4bkkrRBs5woPSB/dJbw5X0mA203G
+         blZiOXVbjpGa7NeNP8c+Jlg3AZhJsdv9LrBGDrIKsOneAWlsS7BJDQcaSntJ274/1MJf
+         IHFA==
+X-Forwarded-Encrypted: i=1; AFNElJ+cTPfQ8FxkNOhilEoq17pWnuXEr//cUFqsRMqLBQ2xC4ETZMdj8ZBAwHaKXRy5DLG24NwnVhCmg7EI5SwnH+3S@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxsFMJnPjpFIX5w4dEhbMbCXagUaHaXxdhDONcB47n2ecagT5S
+	boXPW+4OIhzgXia8sQKL+QWUzOiwB4t7qc7CJLmmK2rYu7d1ZLnG8A0VK4tjqPH/onmgTxrA/f0
+	ts0tEXznM1oo0jGznMt0Da1hPWXYogqNtx15cR05k
+X-Gm-Gg: AeBDiesFvy1GObEuiGSwmei2Nk5bVNqetGy6SxY1JEjTYD2Myb+K5ZDixzb+LmtLLpy
+	dEVcbabTdRmH9iitZJz9sstKrXz/QxPr5KVOCqm6PGikE5ByksAMFLQvO/TP3gYvwyYD3NI2EqT
+	iuG4YMn3Qlj9IUzJ51gXK8Opa72AzYCu8TUDMw6z7wgEuUkJUS5eGD70kijaSCySFsz7KoImYjv
+	He6XFx4+vIEp/SsP8w3zGm+GFHO8Lb+YRIIRz+xGH6kIp+iPskrN9rd6HOP+9xum0KBcNFSpEnH
+	+MyBfpt+T4+t5DjYFqAt/U4Gk0VQOFf2DqumdRYORZu4OtsAJkvY4jrMLDoGUF0sjIj3HA==
+X-Received: by 2002:a05:7022:6290:b0:12c:4673:7faa with SMTP id
+ a92af1059eb24-12de9e34e10mr102894c88.6.1777501444779; Wed, 29 Apr 2026
+ 15:24:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1777483573.git.calvin@wbinvd.org> <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
- <afKBd87b4AKbCYuL@mozart.vkv.me>
-In-Reply-To: <afKBd87b4AKbCYuL@mozart.vkv.me>
+References: <20260411191710.524998-1-irogers@google.com> <20260412020833.641177-1-irogers@google.com>
+ <adv8Ka16pvgVkm8R@google.com> <CAP-5=fVc-Ac09cnXYPUVcNwzHOqFod0v=-YjjDf_oVHvM7cHDw@mail.gmail.com>
+ <ad0cfz-gUKea5bI8@google.com> <CAP-5=fVs9vhofGdgE6MjAY6QND=VvfEmj1j8jz5ytC5ehAwYog@mail.gmail.com>
+ <ad1P8ebyCyfKwXH6@google.com> <CAP-5=fWC7JT4mn-JwBpZ6YvUm4qBFp=wOb+bOj8AM79gxHK0_w@mail.gmail.com>
+ <ad3VxtQSL8ClGiEQ@google.com>
+In-Reply-To: <ad3VxtQSL8ClGiEQ@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Apr 2026 15:15:15 -0700
-X-Gm-Features: AVHnY4LD4U3hnJzUV5c516BO-hUn9YxzrhObIrDeXmzI_7me3FVhC2OFhEf_PGk
-Message-ID: <CAP-5=fU14AN8XA5CMWGpi0=9wDV7Ev3AA=ouO2DhA5AHH2wU2g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf: Don't throttle based on NMI watchdog events
-To: Calvin Owens <calvin@wbinvd.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andi Kleen <ak@linux.intel.com>
+Date: Wed, 29 Apr 2026 15:23:52 -0700
+X-Gm-Features: AVHnY4JqNNUCdmwnnfoRsBKc4JxUfT3hiquCVcZSiQzP68caCpYoAyzUf_FwsyY
+Message-ID: <CAP-5=fXgkKwAOChOY026AEcmqr3Pdk1hhAgR6UoBLZN8mkXV7g@mail.gmail.com>
+Subject: Re: [PATCH v10 00/29] perf tool: Add evsel to perf_sample
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	ak@linux.intel.com, alex@ghiti.fr, alexander.shishkin@linux.intel.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, 
+	blakejones@google.com, ctshao@google.com, dapeng1.mi@linux.intel.com, 
+	derek.foreman@collabora.com, dvyukov@google.com, howardchu95@gmail.com, 
+	hrishikesh123s@gmail.com, james.clark@linaro.org, jolsa@kernel.org, 
+	krzysztof.m.lopatowski@gmail.com, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux@treblig.org, mingo@redhat.com, nichen@iscas.ac.cn, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com, tanze@kylinos.cn, thomas.falcon@intel.com, 
+	tianyou.li@intel.com, yujie.liu@intel.com, zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 29, 2026 at 3:09=E2=80=AFPM Calvin Owens <calvin@wbinvd.org> wr=
-ote:
+On Mon, Apr 13, 2026 at 10:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> On Wednesday 04/29 at 20:38 +0000, sashiko-bot@kernel.org wrote:
-> > > @@ -636,6 +639,19 @@ void perf_sample_event_took(u64 sample_len_ns)
-> > >     if (avg_len <=3D max_len)
-> > >             return;
+> On Mon, Apr 13, 2026 at 01:55:39PM -0700, Ian Rogers wrote:
+> > On Mon, Apr 13, 2026 at 1:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
 > > >
-> > > +   /*
-> > > +    * Very infrequent events like the perf counter hard watchdog
-> > > +    * can trigger spurious throttling: skip throttling if the prior
-> > > +    * NMI got here more than one second before this NMI began. But
-> > > +    * never skip throttling if NMIs are nesting, or if any NMI runs
-> > > +    * for longer than one second.
-> > > +    */
-> > > +   now =3D local_clock();
-> > > +   last =3D __this_cpu_read(last_throttle_clock);
-> > > +   if (__this_cpu_cmpxchg(last_throttle_clock, last, now) =3D=3D las=
-t &&
+> > > On Mon, Apr 13, 2026 at 09:57:02AM -0700, Ian Rogers wrote:
+> > > > On Mon, Apr 13, 2026 at 9:40=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Sun, Apr 12, 2026 at 05:52:57PM -0700, Ian Rogers wrote:
+> > > > > > On Sun, Apr 12, 2026 at 1:10=E2=80=AFPM Namhyung Kim <namhyung@=
+kernel.org> wrote:
+> > > [SNIP]
+> > > > > > > I've picked the first 23 patches to tmp.perf-tools-next as th=
+e rest
+> > > > > > > still has some issues.  Also I've touched some commits to eit=
+her remove
+> > > > > > > some parts or split them into separate commits.
+> > > > > > >
+> > > > > > > Please take a look.
+> > > > > >
+> > > > > > Hi Namhyung,
+> > > > > >
+> > > > > > thanks for doing this but I've done a similar clean up. To tota=
+lly
+> > > > > > separate the evsel refactoring from the rest of the changes, to=
+ fix
+> > > > > > the address sanitizer issues with kwork, etc. I'll incorporate =
+your
+> > > > > > changes and then resend the series.
+> > > > >
+> > > > > Thanks, I'd like to merge what's in the tmp.perf-tools-next unles=
+s
+> > > > > there's a serious mistake.  You can rebase the rest changes on to=
+p.
+> > > >
+> > > > I'd drop what's in tmp.perf-tools-next. Otherwise we're putting fix=
+es
+> > > > on top of fixes. Looking at v12 the sashiko issues are all minor an=
+d
+> > > > the progression of the patches is more granular and natural.
+> > >
+> > > The goal is to reduce the amount of work (including review) during th=
+e
+> > > merge window.  Also I don't think there are many fixes in the tmp
+> > > branch (have you looked at it?).  I think it's ok to add fixes on top
+> > > in this case but I can drop non-conversion patches if you want.
 > >
-> > On 32-bit architectures, is it safe to use __this_cpu_cmpxchg() on a 64=
--bit
-> > value in NMI context?
-> >
-> > For architectures like 32-bit x86, the generic fallback implementation
-> > achieves atomicity by disabling interrupts, which does not mask NMIs. I=
-f a
-> > nested NMI interrupts the sequence halfway through reading or writing t=
-he
-> > 32-bit halves of the u64, could this result in a torn read or write?
-> >
-> > A corrupted timestamp could cause a massive wrap-around in the time gap
-> > calculation, perpetually satisfying the > NSEC_PER_SEC bypass condition=
- and
-> > silently disabling PMU throttling for all events on that CPU.
-> >
-> > > +       now - last > NSEC_PER_SEC && sample_len_ns < NSEC_PER_SEC)
+> > While I'm glad the patches are landing, since the changes depending on
+> > the refactor haven't been posted and won't make the 7.1 merge window,
+> > I don't think there's a huge rush to land this series. That said, I
+> > think v12 is in a good place regarding both the shape of the patches
+> > and Sashiko happiness.
 >
-> If this is a problem, isn't it also a problem for the 64-bit store after
-> updating the EWMA just above this?
->
-> I guess last_throttle_clock could be a u32 and use the low clock bits,
-> that's sufficient with the one second limit... but I would appreciate a
-> real human opinion :)
->
-> > The comment indicates the intent is to skip throttling if the prior NMI
-> > occurred more than one second before this NMI began.
->
-> My comment is not very clear, I suppose. It should say:
->
->     "...skip throttling if the prior attempt to throttle occurred more
->     than one second ago, and the current NMI runtime was less than one
->     second. But never skip throttling if NMIs are nesting."
->
-> > However, local_clock() is sampled at the end of the current NMI, so now
-> > includes the current NMI's duration.
-> >
-> > If an NMI takes a very long time (e.g., 900ms) but started only 200ms a=
-fter
-> > the previous NMI ended, the true gap before it began is 200ms. Because =
-now
-> > includes the 900ms duration, now - last evaluates to 1100ms, which bypa=
-sses
-> > the throttling.
-> >
-> > Could this artificially inflate the time gap for long-running NMIs,
-> > directly defeating the throttling mechanism?
->
-> I think it's just saying "the code doesn't do what the comment says",
-> which is true. But what it is describing is sort of addressed below too.
->
-> > Additionally, is it possible for user-defined PMU events with expensive
-> > overhead (like heavy eBPF programs attached to slow tracepoints) to exp=
-loit
-> > this hardcoded frequency bypass?
->
-> No, I don't think ebpf programs run in NMI context?
+> Ok, then I'll drop the whole patches in the tmp.perf-tools-next except
+> for the first one for a typo fix.  The v12 will aim to the 7.2 cycle.
 
-Unfortunately Sashiko isn't currently reading replied emails, but you
-could copy-paste this feedback into an AI.
-
-BPF programs can run in the NMI context, which means they can
-introduce delays. I'm not familiar with all the side-effects of and
-restrictions on this.
+Should I repost this series for perf-tools-next targeting 7.2? A merge
+conflict will occur with the Python and perf script changes that are
+out for review, the conflict is limited only to the Python API.
 
 Thanks,
 Ian
 
-> > If an event triggers slower than 1Hz but takes a very long time to exec=
-ute
-> > (e.g., 999ms), both now - last > NSEC_PER_SEC and sample_len_ns <
-> > NSEC_PER_SEC will be true.
-> >
-> > Such an event would bypass the moving average calculation and never be
-> > throttled, allowing it to consume nearly 100% of the CPU while it runs =
-and
-> > violating the default 25% CPU time limit set by
-> > sysctl_perf_cpu_time_max_percent.
->
-> No matter where the limit is defined, NMIs firing at just under that
-> limit will skip throttling. But I guess it could be something like:
->
->     now - last > NSEC_PER_SEC && sample_len_ns < NSEC_PER_MSEC
->
-> ...to sort of costrain the worst case.
->
-> But this all feels really arbitrary. I thought about using the watchdog
-> interval sysctl minus some padding as the upper bound, but that seemed
-> unnecessarily complicated.
->
-> Maybe this second patch is just more trouble than its worth...
-> especially if, as Andi noted earlier, the PMU watchdog is not long for
-> this world...
->
 > Thanks,
-> Calvin
+> Namhyung
 >
-> > --
-> > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.177748357=
-3.git.calvin@wbinvd.org?part=3D2
