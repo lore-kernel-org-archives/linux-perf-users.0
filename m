@@ -1,421 +1,145 @@
-Received: from alln-iport-3.cisco.com (alln-iport-3.cisco.com [173.37.142.90])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCAD349B0D;
-	Wed, 29 Apr 2026 13:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.142.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040E3C8731;
+	Wed, 29 Apr 2026 13:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777468534; cv=none; b=jqAHcJepVlceluODgbVYVR8YFilvfqS/GKpxuo7V/a85PE42Ozm55xUV9U5OBfBhj6kOv70lMSsKtF8rgSvK5eE7+DHggVHD6HjyLHeehrV55W2JPOg5KGpYooLGxSq/j/BWuAwzIbP0hHAUaPcYiFIMe+aBrCy76t/zVqbIsxs=
+	t=1777469497; cv=none; b=luPsXEV9cp5f+wrxhKkZahnNN92pXFMRhxIjAkX+SVTMmIKNVf1v/36cQFIeuOkZ4BR3jb/Kz30nIlFi85WJOm+NAEtrGMxbpI69PdSD+dMFD+mw9jMo/W9uFsFjoA2HCntw5G2PJH9yTDXIma+UYNz4BUbFH9OCWCt/bPP+IYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777468534; c=relaxed/simple;
-	bh=Bi7LmTfnoHs99Duo9lntohMqvUC3QrQn7aDgwWapd1E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NQlMT9qVzbR2eZbAS/e4YQgK8P4eeQhe64Mn9rYqt0w/Gj9JrNpuvArG6dNlMNXA2EQuDyDZV77fBswWVisrF/ZNUKbTcTbX9LdZeY3KJOHjvp4vhTfOVXMPmCqlkIb+/Ol6aH/jUj1vzrg24kFCaBQ6g7P6N0EV9ygV7hzIALU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=djThsu4N; arc=none smtp.client-ip=173.37.142.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1777469497; c=relaxed/simple;
+	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q9KGhYyjrflyZu6SHEGIOQgDoSIT289GdeuhlzKT6E5BeFV/d0PqtEBSDdstMrcNfleke8qU7YuxTJCJvu9K5KtmtF4TZnZvMGV0VwFuClNjasRmtaTCWv7r2zpFUFl5x7sDINADuLQ1KIVbVMh5gbXmaYK/4x15XEhqskxx/qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZyWwFsx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="djThsu4N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=10963; q=dns/txt;
-  s=iport01; t=1777468532; x=1778678132;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MzqT9uZB946TR2CRO0Exvqdeomed2JY37QjyuIWHr4w=;
-  b=djThsu4NHagcMAGxxsCLrzWhZMiEDl6Atr7VP1hTa2fLvU7TnRFcYwFO
-   FWj8iBaM7F/CR6j5JxjBz/kD/A6cUUvKV3mS8VKoHMz3CZjeHP+2LoIzD
-   lvro5bImmYZ1MvjpUv6IIxiVJB0sZDjRFxlOcD3SRR/AGU3yyfjAUXCI5
-   6QfNp2HpngeojJIswXJMtbcYxbJEf3ab2qMvX1pBY++h+gvs+vPNXNxEm
-   gxZRz62jpXDMurp/Qnqx41mKv4Ls+V9YA5w7/6F8w8L6UK3T+IFFQlQOy
-   gcOIC5c4SYadYl7wXzx/XtzdaeucEQ+y9y3kJl7+9slfVDn6CdZOtFzsq
-   g==;
-X-CSE-ConnectionGUID: 8RcsoiOKRiiF8CeWlcfmxg==
-X-CSE-MsgGUID: YIC/ySI+TDqfkeya0FKoag==
-X-IPAS-Result: =?us-ascii?q?A0BKCAC4A/Jp/5X/Ja1aHgEBCxIMgWsQDwuCU4FLBENJl?=
- =?us-ascii?q?kugHA8BAQEPUQQBAYISgnSNMwImNwYOAQIEAQEBAQMCAwEBAQEBAQEBAQEBA?=
- =?us-ascii?q?QoBAQUBAQECAQcFgQ4ThlyGXSsLAUYpgRQBEoMCgnQDsmyBeTOBAbgigWQBC?=
- =?us-ascii?q?xQBgTiNW4VuJxuBSUSEB3aLBwSCIoEOhBOKcEiBHgNZLAFVEw0KCwcFgTMzA?=
- =?us-ascii?q?yAKCxISGBUCFBwBEg8EFjIdcAwnEiwXgQwbBwWBS4MQbRRWgQaEXngjLANMA?=
- =?us-ascii?q?wsYDUgRLDcGDhsEPm4HijkeD4E9LEYBPBYoEwGBMBMILGARC5J1JgGzSoQmo?=
- =?us-ascii?q?VgaM4QElBWSUQEumFgiqR+BfiaBWTMaCBsVgyJTGQ+OLRaTHQG2ZEQyPQIHA?=
- =?us-ascii?q?gcNAwuTZQEB?=
-IronPort-Data: A9a23:2GmUpqraeSMP00ANvpiVg6shnDFeBmKSZRIvgKrLsJaIsI4StFCzt
- garIBnUM/iIZzOke410PI+18kNU78WEzIJlHQJk/39kHyoRoOPIVI+TRqvS04x+DSFioGZPt
- Zh2hgzodZhsJpPkjk7zdOWn9T8ghf/gqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
- T/Ji5OZYgTNNwJcaDpOtfrf8kI34JwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
- 86rIGaRpz6xE78FU7tJo56jGqE4aue60Tum1hK6b5Ofbi1q/UTe5EqU2M00Mi+7gx3R9zx4J
- U4kWZaYEW/FNYWU8AgRvoUx/yxWZcV7FLH7zXeX4faY1ErHVFjWwvRAXGo7AokT9ONnDjQbn
- RAYAGhlghGrnem6xve/D+JrnMlmdZOtN4IEsXYmxjbcZRokacmcGOORupkCgWp235wfdRrdT
- 5JxhT5HYAjHZhxJM1w/A5Mll+DujX76G9FdgA3J+/JsvDCDkGSd1pDcEfGSa+erBvl5h0ibq
- 3PPp0raBRgVYYn3JT2ttyjEavX0tSbyQoFUDqCk8vdsjHWa3GlVAxoTPXO6u/62h1Slc91YL
- EMQ92wlqq1a3E6iSN/9dxK/p3GAs1gXXN84O/U39AyX2ILV5QiDD2QJRzIHb8Yp3Oc/SSYr3
- 1nPn87vGTF1mLyTVX+ZsLyTqFuaMCMQIEcBaDUCQA9D5MPsyKk/hwzOQv5gHbSzg9mzHiv/q
- xiIqywljp0QgNQN2qH9+krI6xqopIPhTQMv4AjTGGW/4WtRYY6kfYWt4ETz7vtaKoudCF6bs
- xAsncGb7PETC56llyGXRugJWraz6J6tLjfVi11mN5os7TKg/zikZ484yDV/Ilp5d8MBUTz3a
- UTQ/wRL6/d7PnKvYLQxaIa4EccCyanmHM7iEPfOYbJma5tpcSeD/SdzdQue2H3rnEEwkKY5f
- 5CBfq6EBHIXGa1hwDesAfwd0KQrxSE47WfSQ43riRWhzbeaInWSTN8tFFqHa6YZ67yArRnJ2
- 9FFPsCOxlNUV+iWSizW94EUBUoHIXgyGdb9rMk/XumHLwVOAmwtC/bNh7gmfuRNm6VTi/eN/
- XynXEJc4ETwiGeBKgiQbH1nLrT1Uv5XqXM9IDxpJVuy1T0+eou1948BeJYtO7oq7upuybhzV
- fZtU8GBBOlfDyjd8j8QKJrwtopvcDy1ig+UeSmoej4ye9hnXQOhxzP/VhHk+C9LCm+8stEz5
- uT6kAjaWpEEAQ9lCa46dc6S8r94hlBF8MoaYqcCCoA7lJnEmGSyFxHMsw==
-IronPort-HdrOrdr: A9a23:tc1+4KPlWvlwrcBcTvWjsMiBIKoaSvp037Dk7SxMoHtuA66lfq
- +V8sjzuSWftN9zYgBCpTn/Asi9qBrnnPYf3WB7B9iftWfd1VdAVLsD0aLShxv9Bib56ulRkY
- 1kc6R4FZnMKGISt7ee3OF9eOxQp+VuN8uT9IPj80s=
-X-Talos-CUID: =?us-ascii?q?9a23=3A481b4mkEt6YZIYe4zVGTE9R3havXOS3nx2zXImi?=
- =?us-ascii?q?bM2doZu2+RGCU861hg8U7zg=3D=3D?=
-X-Talos-MUID: =?us-ascii?q?9a23=3AVI0kXw7J5ByHvjePaYysSCCUxoxZwo/pGXss0qk?=
- =?us-ascii?q?qoseHOD15Yxm+iz24F9o=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.23,206,1770595200"; 
-   d="scan'208";a="746037084"
-Received: from rcdn-l-core-12.cisco.com ([173.37.255.149])
-  by alln-iport-3.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 29 Apr 2026 13:15:25 +0000
-Received: from sjc-ads-9313.cisco.com (sjc-ads-9313.cisco.com [10.30.212.77])
-	by rcdn-l-core-12.cisco.com (Postfix) with ESMTP id D97ED180001CA;
-	Wed, 29 Apr 2026 13:15:23 +0000 (GMT)
-From: Darko Tominac <dtominac@cisco.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Jann Horn <jannh@google.com>
-Cc: xe-linux-external@cisco.com,
-	danielwa@cisco.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH] mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
-Date: Wed, 29 Apr 2026 15:15:18 +0200
-Message-Id: <20260429131522.4049054-1-dtominac@cisco.com>
-X-Mailer: git-send-email 2.35.6
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZyWwFsx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82326C19425;
+	Wed, 29 Apr 2026 13:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777469496;
+	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gZyWwFsxbl9VO4ExQ7RswjDD98S4DYNllnrro2IpwpXiDJhyehCp3w1quVs6/vnj7
+	 BuicI92tEkOUJXDM0IGjZ2HKg1hUEdgGEOlH0JaJIKvKUINYb9omTyuI6mHU54X8kB
+	 YKeexiahHyt07jEM1tBa5j4kj9e45kU0AT5bl/6zZpHUxuotbiyZdtxZ9jA48Px9no
+	 mUK67MPxfltdVdqxioaOh2P1m4c2+FFmwtuim7WkcoG87/gNl3XHHVNqvuXl4Tkbxy
+	 39b2pcO3eCv/HQ0Ou5l/SvQ8Hm5QlOKCDIORxAdGzHIofWoOzz3AJPoyw8zmcgMry1
+	 UClQ96VFlf7Ww==
+Message-ID: <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
+Date: Wed, 29 Apr 2026 15:31:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Outbound-Client-TLS: NONE;sjc-ads-9313.cisco.com [10.30.212.77]
-X-Outbound-SMTP-Client: 10.30.212.77, sjc-ads-9313.cisco.com
-X-Outbound-Node: rcdn-l-core-12.cisco.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
+ MADV_DONTNEED
+To: Darko Tominac <dtominac@cisco.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
+ <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Jann Horn <jannh@google.com>
+Cc: xe-linux-external@cisco.com, danielwa@cisco.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mm@kvack.org
+References: <20260429131522.4049054-1-dtominac@cisco.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260429131522.4049054-1-dtominac@cisco.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When uprobes are active, MADV_DONTNEED can discard file-backed pages
-that contain uprobe software breakpoint instructions.  Because the
-uprobe infrastructure does not re-instrument pages on individual page
-faults (uprobe_mmap() is only called during VMA creation, not on
-page-in), the breakpoints are silently lost once the discarded pages are
-re-read from the backing file.  The probes stop firing with no error
-indication, and the only recovery is to unregister and re-register the
-affected uprobes.
+On 4/29/26 15:15, Darko Tominac wrote:
+> When uprobes are active, MADV_DONTNEED can discard file-backed pages
+> that contain uprobe software breakpoint instructions.  Because the
 
-Note that MADV_FREE is not affected: it only operates on anonymous VMAs
-(madvise_free_single_vma() rejects non-anonymous VMAs with -EINVAL),
-while uprobes only instrument file-backed mappings, so the two can never
-overlap.
+If my memory serves me right, uprobes can only be installed in MAP_PRIVATE fil
+mappings. Installing a uprobe breaks CoW by installing an anonymous page.
 
-A concrete example is a userspace memory reclamation subsystem that
-periodically calls madvise(MADV_DONTNEED) on file-backed text pages to
-release memory.  This silently clears uprobe breakpoints placed by
-eBPF-based security and tracing tools that use uprobes to attach eBPF
-programs to user-space functions, causing those tools to stop
-functioning within seconds of the first reclamation pass.
+Not a file-backed page.
 
-Add a check in madvise_dontneed_free(), which handles MADV_DONTNEED,
-MADV_DONTNEED_LOCKED and MADV_FREE, that when CONFIG_UPROBES is enabled
-detects whether the target range contains active uprobes:
+> uprobe infrastructure does not re-instrument pages on individual page
+> faults (uprobe_mmap() is only called during VMA creation, not on
+> page-in), the breakpoints are silently lost once the discarded pages are
+> re-read from the backing file.  The probes stop firing with no error
+> indication, and the only recovery is to unregister and re-register the
+> affected uprobes.
 
-  - Fast path: if no uprobes are registered system-wide, or the VMA is
-    not file-backed (uprobes only instrument file-backed mappings, so
-    anonymous VMAs -- including MADV_FREE targets -- can never contain
-    breakpoints), or no uprobes are present in the VMA range, proceed
-    with the discard as before.
-  - Slow path: when uprobes are detected in the range, use
-    vma_first_uprobe_addr() to jump directly to each uprobe page via
-    the rbtree, zapping the clean ranges between them.  This is
-    O(M * log N) where M is the number of uprobes in the range and
-    N is the total uprobe count, rather than O(pages).  madvise()
-    still returns success, consistent with the advisory nature of
-    MADV_DONTNEED.
+Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
+MADV_DONTNEED debugger breakpoints/set data etc. :)
 
-When CONFIG_UPROBES is not configured, the original behaviour is
-preserved with no overhead.
+> 
+> Note that MADV_FREE is not affected: it only operates on anonymous VMAs
+> (madvise_free_single_vma() rejects non-anonymous VMAs with -EINVAL),
+> while uprobes only instrument file-backed mappings, so the two can never
+> overlap.
+> 
+> A concrete example is a userspace memory reclamation subsystem that
+> periodically calls madvise(MADV_DONTNEED) on file-backed text pages to
+> release memory. 
 
-To support the above, export vma_has_uprobes() and add new helpers
-any_uprobes_registered() and vma_first_uprobe_addr() in the uprobes
-subsystem.  vma_first_uprobe_addr() returns the page-aligned virtual
-address of the lowest-offset uprobe in a given VMA range by leveraging
-the (inode, offset)-sorted global rbtree.
+It shouldn't do that on a MAP_PRIVATE file-backed VMA. It breaks the programn,
+including uprobes and anything else that breaks CoW in there.
 
-Cc: xe-linux-external@cisco.com
-Cc: danielwa@cisco.com
-Signed-off-by: Darko Tominac <dtominac@cisco.com>
----
- include/linux/uprobes.h | 21 +++++++++++
- kernel/events/uprobes.c | 79 +++++++++++++++++++++++++++++++++++++++--
- mm/madvise.c            | 73 +++++++++++++++++++++++++++++++++----
- 3 files changed, 164 insertions(+), 9 deletions(-)
+If it's using MADV_DONTNEED, it is damaging the application.
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f548fea2adec..9ce5c46fd2e9 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -212,6 +212,11 @@ extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consum
- extern void uprobe_unregister_sync(void);
- extern int uprobe_mmap(struct vm_area_struct *vma);
- extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
-+extern bool vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end);
-+extern unsigned long vma_first_uprobe_addr(struct vm_area_struct *vma,
-+					   unsigned long start,
-+					   unsigned long end);
-+extern bool any_uprobes_registered(void);
- extern void uprobe_start_dup_mmap(void);
- extern void uprobe_end_dup_mmap(void);
- extern void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm);
-@@ -278,6 +283,22 @@ static inline void
- uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end)
- {
- }
-+static inline bool
-+vma_has_uprobes(struct vm_area_struct *vma, unsigned long start,
-+		unsigned long end)
-+{
-+	return false;
-+}
-+static inline unsigned long
-+vma_first_uprobe_addr(struct vm_area_struct *vma, unsigned long start,
-+		      unsigned long end)
-+{
-+	return 0;
-+}
-+static inline bool any_uprobes_registered(void)
-+{
-+	return false;
-+}
- static inline void uprobe_start_dup_mmap(void)
- {
- }
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4084e926e284..0f8aea99b96f 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -152,6 +152,19 @@ static loff_t vaddr_to_offset(struct vm_area_struct *vma, unsigned long vaddr)
- 	return ((loff_t)vma->vm_pgoff << PAGE_SHIFT) + (vaddr - vma->vm_start);
- }
- 
-+/**
-+ * any_uprobes_registered - check if any uprobes are currently registered
-+ *
-+ * Check whether the global uprobe rbtree has any entries, indicating
-+ * that at least one uprobe is currently active in the system.
-+ *
-+ * Return: true if one or more uprobes are registered, false otherwise.
-+ */
-+bool any_uprobes_registered(void)
-+{
-+	return !no_uprobe_events();
-+}
-+
- /**
-  * is_swbp_insn - check if instruction is breakpoint instruction.
-  * @insn: instruction to be checked.
-@@ -1635,8 +1648,16 @@ int uprobe_mmap(struct vm_area_struct *vma)
- 	return 0;
- }
- 
--static bool
--vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end)
-+/**
-+ * vma_has_uprobes - check whether a vma range contains any uprobes.
-+ * @vma: the vma to search.
-+ * @start: start address of the range (inclusive).
-+ * @end: end address of the range (exclusive).
-+ *
-+ * Return: true if at least one uprobe is registered in [@start, @end),
-+ * false otherwise.
-+ */
-+bool vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long end)
- {
- 	loff_t min, max;
- 	struct inode *inode;
-@@ -1654,6 +1675,60 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- 	return !!n;
- }
- 
-+/**
-+ * vma_first_uprobe_addr - find first uprobe in a vma range.
-+ * @vma: the vma to search.
-+ * @start: start address of the range (inclusive).
-+ * @end: end address of the range (exclusive).
-+ *
-+ * Used by madvise to skip directly to uprobe pages.
-+ *
-+ * Return: the page-aligned virtual address of the first uprobe in
-+ * [@start, @end), or 0 if none exists.
-+ */
-+unsigned long vma_first_uprobe_addr(struct vm_area_struct *vma,
-+				    unsigned long start, unsigned long end)
-+{
-+	loff_t min, max, first_offset;
-+	struct inode *inode;
-+	struct rb_node *n, *t;
-+	struct uprobe *u;
-+
-+	/* No uprobes possible on anonymous mappings */
-+	if (!vma->vm_file)
-+		return 0;
-+
-+	/* Empty range -- nothing to search */
-+	if (start >= end)
-+		return 0;
-+
-+	inode = file_inode(vma->vm_file);
-+
-+	min = vaddr_to_offset(vma, start);
-+	max = min + (end - start) - 1;
-+
-+	read_lock(&uprobes_treelock);
-+	n = find_node_in_range(inode, min, max);
-+	if (!n) {
-+		read_unlock(&uprobes_treelock);
-+		return 0;
-+	}
-+
-+	/* Walk left to find the lowest offset in range */
-+	u = rb_entry(n, struct uprobe, rb_node);
-+	first_offset = u->offset;
-+	for (t = rb_prev(n); t; t = rb_prev(t)) {
-+		u = rb_entry(t, struct uprobe, rb_node);
-+		if (u->inode != inode || u->offset < min)
-+			break;
-+		first_offset = u->offset;
-+	}
-+	read_unlock(&uprobes_treelock);
-+
-+	/* Return page-aligned vaddr containing this uprobe */
-+	return PAGE_ALIGN_DOWN(offset_to_vaddr(vma, first_offset));
-+}
-+
- /*
-  * Called in context of a munmap of a vma.
-  */
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 69708e953cf5..c73f1131224b 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -32,6 +32,7 @@
- #include <linux/leafops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
-+#include <linux/uprobes.h>
- 
- #include <asm/tlb.h>
- 
-@@ -862,6 +863,30 @@ static long madvise_dontneed_single_vma(struct madvise_behavior *madv_behavior)
- 	return 0;
- }
- 
-+static long madvise_dontneed_free_range(struct madvise_behavior *madv_behavior,
-+					unsigned long start, unsigned long end)
-+{
-+	struct madvise_behavior_range *range = &madv_behavior->range;
-+	unsigned long saved_start = range->start;
-+	unsigned long saved_end = range->end;
-+	int behavior = madv_behavior->behavior;
-+	long ret;
-+
-+	range->start = start;
-+	range->end = end;
-+
-+	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED)
-+		ret = madvise_dontneed_single_vma(madv_behavior);
-+	else if (behavior == MADV_FREE)
-+		ret = madvise_free_single_vma(madv_behavior);
-+	else
-+		ret = -EINVAL;
-+
-+	range->start = saved_start;
-+	range->end = saved_end;
-+	return ret;
-+}
-+
- static
- bool madvise_dontneed_free_valid_vma(struct madvise_behavior *madv_behavior)
- {
-@@ -898,7 +923,7 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
- {
- 	struct mm_struct *mm = madv_behavior->mm;
- 	struct madvise_behavior_range *range = &madv_behavior->range;
--	int behavior = madv_behavior->behavior;
-+	unsigned long cur, end, uprobe_addr;
- 
- 	if (!madvise_dontneed_free_valid_vma(madv_behavior))
- 		return -EINVAL;
-@@ -947,12 +972,46 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
- 		VM_WARN_ON(range->start > range->end);
- 	}
- 
--	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED)
--		return madvise_dontneed_single_vma(madv_behavior);
--	else if (behavior == MADV_FREE)
--		return madvise_free_single_vma(madv_behavior);
--	else
--		return -EINVAL;
-+	/*
-+	 * Preserve uprobes: if any uprobes are active in this VMA range,
-+	 * avoid discarding pages that contain active breakpoints.
-+	 *
-+	 * Fast path: if no uprobes are registered system-wide, or the VMA
-+	 * is not file-backed (uprobes only instrument file-backed mappings,
-+	 * so anonymous VMAs can never contain breakpoints), or no uprobes
-+	 * are present in this VMA range, proceed with the full operation.
-+	 */
-+	if (likely(!any_uprobes_registered()) ||
-+	    !madv_behavior->vma->vm_file ||
-+	    !vma_has_uprobes(madv_behavior->vma, range->start, range->end))
-+		return madvise_dontneed_free_range(madv_behavior,
-+						   range->start, range->end);
-+
-+	/*
-+	 * Slow path: jump from uprobe to uprobe via rbtree lookup, zapping
-+	 * the clean range before each uprobe page. This is O(M * log N)
-+	 * where M is the number of uprobes in the range and N is the total
-+	 * uprobe count, versus O(pages) for a page-by-page scan. 'cur'
-+	 * tracks the beginning of the current clean range.
-+	 */
-+	cur = range->start;
-+	end = range->end;
-+	while (cur < end) {
-+		uprobe_addr = vma_first_uprobe_addr(madv_behavior->vma,
-+						    cur, end);
-+		if (!uprobe_addr) {
-+			/* No more uprobes - zap the rest */
-+			madvise_dontneed_free_range(madv_behavior, cur, end);
-+			break;
-+		}
-+		/* Zap the clean range before the uprobe page */
-+		if (cur < uprobe_addr)
-+			madvise_dontneed_free_range(madv_behavior, cur,
-+						    uprobe_addr);
-+		/* Skip past the uprobe page */
-+		cur = uprobe_addr + PAGE_SIZE;
-+	}
-+	return 0;
- }
- 
- static long madvise_populate(struct madvise_behavior *madv_behavior)
+MADV_DONTNEED is not for memory reclaim.
+
 -- 
-2.35.6
+Cheers,
 
+David
