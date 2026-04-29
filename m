@@ -1,171 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57938379EFF
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 20:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4003439E194
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 20:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777493907; cv=none; b=KjSKfPGYf2VHvyfayYolqOV/5THaDrcfjnHno7xESPyK3AvPJ2Qs8h0ChES88XyHsdrwh+6mT+Hl/zGZVh9+egDWugLyj2EdFxZA59YmSLmTjharfKU1ysRNzknA0HEwt40AwdWToH3eQg6Qstw8e2FFLr+MMErMUUVstOuY9U4=
+	t=1777495139; cv=none; b=rojdFPT5s8NYIOge9jrDId6o7ysWquPisl6Kafuy7WBDT9/vu1kOcPWPYTIagR3Lb13pIdnlnV0W7FAXZzSoQ1+EFEkZlCbARrGuPHY/84IoTX1OvPTlFzm0RUVV0GdXrgoePBumaLbDbQWC/3D5uHEog78Al2z/tIRwlg/oDfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777493907; c=relaxed/simple;
-	bh=vYqJC0UIt1+/d2skc1HngU7tWlrB0sLEKc9lVxBqZY8=;
+	s=arc-20240116; t=1777495139; c=relaxed/simple;
+	bh=J+b5eLwRLP2N4kEg+fP1XVjfLEEe35IxpDfdqseLmNw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tHHsdc2pVUhfGXgv6XES7Zkxzz8V6NV5TfxB3YC9P+EFVeIEA1wu/LZA74Swed9v353sedHkCzMF4wkDEitN4VknR1/6Oes3bteIF8mW4ra8UEXIVrb6JbsGEQx4mRAsY+Wghax0/ohVb1pF+BKt54UbAOrI6o2/y/ID7p15/Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yy4tYJTC; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=IH/xO7zIm4Qry5NmrSFeIT+C4tS+6ZTQRRJLfqV7eqRdPPTpt8dbA2+giFnFpfgbfGTdZMLzL+3O5HapUTmtmgjzslEYXJJwuJ7uRLDj/NdgIZ0eWBqJMrP12wnZMlgzcz8hox/zuHwobNGknl/vQbKCsIX3zpMFDnNz/v7ly6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otGtQ6Uo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yy4tYJTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4AC5C19425;
-	Wed, 29 Apr 2026 20:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otGtQ6Uo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1ACC19425;
+	Wed, 29 Apr 2026 20:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777493907;
-	bh=vYqJC0UIt1+/d2skc1HngU7tWlrB0sLEKc9lVxBqZY8=;
+	s=k20201202; t=1777495138;
+	bh=J+b5eLwRLP2N4kEg+fP1XVjfLEEe35IxpDfdqseLmNw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Yy4tYJTCscJ6tlbSvCTzYwiPKwJl5AMg8lXTZ9amvouRkcgIJfSP3UzDMQnIJBSIA
-	 zmYLyHc/0wSKeLX244gTr0L/xkHaNFbhXQAAcb5m85kPEoxTIQdn+hyRSWbcz3RAyi
-	 Zktjr5m+zSYYpZIrYXuDRgxZ0umT7rYET2bw7RkrW61V3NVlZ5RLQ+QvZUmrdwuaPh
-	 UTdwT+e8ZkWvDcOtmddLwowqA546gmiQgVux51kpXDfGdB5zraULKrHo5etDDEyxuj
-	 Zj7O6y1v/FbI/ZQLxkJtpdeZPHI83gB7QC7vNaaMoPakSag7Hf6ReamBzSB0KM9zt3
-	 Qi+G19GPMKKXg==
+	b=otGtQ6UoUXH/2ugcytT7C9qzPton+KeFeqA3r8FG0BWxBWZ1MU3V0osGhGWe0GIzh
+	 v84xmRNSZ41hnmsTG1pFELVG9YMopf0SvOTCmuP47HEx/vmbXnRGOah4+ExaK5ffYU
+	 2tVsK+jbfmvq/RsWignhEi8MyakGJoCyXfiRxzXBngRhiUppJHwvi07r7+GOgQ1tuJ
+	 VeuArXZAjwm/VD02bpe62EcT2SEzQU2fvp0z9rlKUw6Yra7XreyEV7QoNOLhvx5rMg
+	 P/+BZgIuMySaO3upKS/EgSX6mQHlqAeIQ677v2f4cE1ageYt11n2htgkhsC/TdXy19
+	 3tp1earhTsTfg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf sched stats: Fix segmentation faults in diff
- mode
+Subject: Re: [PATCH v2 2/2] perf: Don't throttle based on NMI watchdog
+ events
 Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Calvin Owens" <calvin@wbinvd.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260429173931.2700115-1-irogers@google.com>
-References: <20260429173931.2700115-1-irogers@google.com>
+In-Reply-To: <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
+References: <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Apr 2026 20:18:25 +0000
-Message-Id: <20260429201826.E4AC5C19425@smtp.kernel.org>
+Date: Wed, 29 Apr 2026 20:38:57 +0000
+Message-Id: <20260429203858.CA1ACC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Stale `ds2` pointer leads to invalid domain diff comparisons.
-- [High] Missing NULL check for `summary_head->cpu_data` allocation leads t=
-o a segmentation fault.
-- [High] Memory leaks on error paths in `get_all_cpu_stats()`.
-- [High] Failure of `get_all_cpu_stats()` is silently ignored, leading to d=
-ata corruption.
-- [Medium] Commit message falsely claims fixing an uninitialized variable.
+- [High] Non-atomic 64-bit cmpxchg in NMI context on 32-bit architectures c=
+auses torn writes and breaks nesting protection.
+- [High] Logic error in time gap calculation incorrectly includes the curre=
+nt NMI's duration, contradicting the comment and incorrectly bypassing thro=
+ttling.
+- [High] Hardcoded 1-second bypass fundamentally defeats the `perf_cpu_time=
+_max_percent` sysctl limit for low-frequency, long-running PMU events.
 --
 
-commit 9defc7ef4fdb95729f7675ddb4788cb55728c905
-Author: Ian Rogers <irogers@google.com>
-Subject: perf sched stats: Fix segmentation faults in diff mode
+commit 657f1aa01c3c8a25116ffd10c6d50891dd498e3f
+Author: Calvin Owens <calvin@wbinvd.org>
 
-The patch addresses multiple segmentation fault vectors and out-of-bounds
-reads in perf sched stats diff by adding bounds checks, NULL checks, list
-termination checks, and zero-initialization.
+perf: Don't throttle based on NMI watchdog events
 
-> 1. In get_all_cpu_stats(), added assert(!list_empty(head)) to prevent
->    unsafe list_first_entry() calls on empty lists, fixed uninitialized
->    variable ret, and added list_is_last check when iterating domains to
+This commit modifies perf_sample_event_took() to skip throttling for
+infrequent NMIs by checking if the previous NMI occurred more than one
+second ago. It uses a per-CPU timestamp updated via cmpxchg to track
+the last throttle time.
 
-This isn't a bug, but the commit message mentions fixing an uninitialized
-variable ret. Looking at the original code, ret was explicitly initialized
-to zero (int ret =3D 0;).
-
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 555247568e7a..e67241415255 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-
-[ ... ]
-
-> @@ -4170,40 +4170,40 @@ static void summarize_schedstat_domain(struct sch=
-edstat_domain *summary_domain,
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 5b5cb620499e..6f367da17ff5 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -596,6 +596,7 @@ core_initcall(init_events_core_sysctls);
 >   */
->  static int get_all_cpu_stats(struct list_head *head)
->  {
+>  #define NR_ACCUMULATED_SAMPLES 128
+>  static DEFINE_PER_CPU(u64, running_sample_length);
+> +static DEFINE_PER_CPU(u64, last_throttle_clock);
+
 [ ... ]
-> -	if (cptr) {
-> -		summary_head =3D zalloc(sizeof(*summary_head));
-> -		if (!summary_head)
-> -			return -ENOMEM;
-> +	summary_head =3D zalloc(sizeof(*summary_head));
-> +	if (!summary_head)
-> +		return -ENOMEM;
-> =20
-> -		summary_head->cpu_data =3D zalloc(sizeof(*cs));
-> -		memcpy(summary_head->cpu_data, cptr->cpu_data, sizeof(*cs));
-> +	summary_head->cpu_data =3D zalloc(sizeof(*summary_head->cpu_data));
-> +	memcpy(summary_head->cpu_data, cptr->cpu_data, sizeof(*summary_head->cp=
-u_data));
 
-If zalloc() for summary_head->cpu_data fails and returns NULL, could this
-memcpy() dereference the NULL pointer and cause a crash?
+> @@ -636,6 +639,19 @@ void perf_sample_event_took(u64 sample_len_ns)
+>  	if (avg_len <=3D max_len)
+>  		return;
+> =20
+> +	/*
+> +	 * Very infrequent events like the perf counter hard watchdog
+> +	 * can trigger spurious throttling: skip throttling if the prior
+> +	 * NMI got here more than one second before this NMI began. But
+> +	 * never skip throttling if NMIs are nesting, or if any NMI runs
+> +	 * for longer than one second.
+> +	 */
+> +	now =3D local_clock();
+> +	last =3D __this_cpu_read(last_throttle_clock);
+> +	if (__this_cpu_cmpxchg(last_throttle_clock, last, now) =3D=3D last &&
 
-> =20
-> -		INIT_LIST_HEAD(&summary_head->domain_head);
-> +	INIT_LIST_HEAD(&summary_head->domain_head);
-> =20
-> -		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> -			tdptr =3D zalloc(sizeof(*tdptr));
-> -			if (!tdptr)
-> -				return -ENOMEM;
-> +	list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
-> +		struct schedstat_domain *tdptr =3D zalloc(sizeof(*tdptr));
-> =20
-> -			tdptr->domain_data =3D zalloc(sizeof(*ds));
-> -			if (!tdptr->domain_data)
-> -				return -ENOMEM;
-> +		if (!tdptr)
-> +			return -ENOMEM;
+On 32-bit architectures, is it safe to use __this_cpu_cmpxchg() on a 64-bit
+value in NMI context?
+
+For architectures like 32-bit x86, the generic fallback implementation
+achieves atomicity by disabling interrupts, which does not mask NMIs. If a
+nested NMI interrupts the sequence halfway through reading or writing the
+32-bit halves of the u64, could this result in a torn read or write?
+
+A corrupted timestamp could cause a massive wrap-around in the time gap
+calculation, perpetually satisfying the > NSEC_PER_SEC bypass condition and
+silently disabling PMU throttling for all events on that CPU.
+
+> +	    now - last > NSEC_PER_SEC && sample_len_ns < NSEC_PER_SEC)
+
+The comment indicates the intent is to skip throttling if the prior NMI
+occurred more than one second before this NMI began.
+
+However, local_clock() is sampled at the end of the current NMI, so now
+includes the current NMI's duration.
+
+If an NMI takes a very long time (e.g., 900ms) but started only 200ms after
+the previous NMI ended, the true gap before it began is 200ms. Because now
+includes the 900ms duration, now - last evaluates to 1100ms, which bypasses
+the throttling.
+
+Could this artificially inflate the time gap for long-running NMIs,
+directly defeating the throttling mechanism?
+
+Additionally, is it possible for user-defined PMU events with expensive
+overhead (like heavy eBPF programs attached to slow tracepoints) to exploit
+this hardcoded frequency bypass?
+
+If an event triggers slower than 1Hz but takes a very long time to execute
+(e.g., 999ms), both now - last > NSEC_PER_SEC and sample_len_ns <
+NSEC_PER_SEC will be true.
+
+Such an event would bypass the moving average calculation and never be
+throttled, allowing it to consume nearly 100% of the CPU while it runs and
+violating the default 25% CPU time limit set by
+sysctl_perf_cpu_time_max_percent.
+
+> +		return;
 > +
-> +		tdptr->domain_data =3D zalloc(sizeof(*tdptr->domain_data));
-> +		if (!tdptr->domain_data)
-> +			return -ENOMEM;
-
-If either of these zalloc() calls fails and the function returns -ENOMEM,
-what happens to the memory previously allocated for summary_head and
-summary_head->cpu_data? It seems they might leak since they haven't been
-attached to the list yet.
-
-Additionally, does the caller of get_all_cpu_stats() properly handle an
--ENOMEM return value? In show_schedstat_data(), if this error is ignored,
-the summary node won't be prepended, which might cause the subsequent loop
-to treat the first CPU's actual data as the summary.
-
-[ ... ]
-
-> @@ -4302,10 +4339,30 @@ static int show_schedstat_data(struct list_head *=
-head1, struct cpu_domain_map **
->  			struct domain_info *dinfo1 =3D NULL, *dinfo2 =3D NULL;
-> =20
->  			ds1 =3D dptr1->domain_data;
-[ ... ]
->  			if (dptr2) {
->  				ds2 =3D dptr2->domain_data;
-[ ... ]
-> @@ -4334,14 +4391,22 @@ static int show_schedstat_data(struct list_head *=
-head1, struct cpu_domain_map **
->  			print_domain_stats(ds1, ds2, jiffies1, jiffies2);
->  			print_separator2(SEP_LEN, "", 0);
-> =20
-> -			if (dptr2)
-> -				dptr2 =3D list_next_entry(dptr2, domain_list);
-> +			if (dptr2) {
-> +				if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
-> +					dptr2 =3D NULL;
-> +				else
-> +					dptr2 =3D list_next_entry(dptr2, domain_list);
-> +			}
-
-When dptr2 is explicitly set to NULL at the end of the second file's domain
-list, the next iteration of the loop will skip the ds2 =3D dptr2->domain_da=
-ta
-assignment.
-
-Does this leave ds2 holding the pointer from the previous iteration, causing
-print_domain_stats() to perform a diff comparison against a stale, unrelated
-domain?
+>  	__report_avg =3D avg_len;
+>  	__report_allowed =3D max_len;
+>
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260429173931.2700=
-115-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1777483573.gi=
+t.calvin@wbinvd.org?part=3D2
