@@ -1,114 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E6B37C93F;
-	Wed, 29 Apr 2026 15:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777476568; cv=none; b=VS0dxY2o7FyEa63T4KUV6KDa4TbPbk1wGRctNlt+UCZbrGSjcmFtgpwCPhMP74HpVhywcZIQcGrqqwQ+1ppIYjqq7MHj+l4gEET8b0Zs3nzScFfIMRhyAoyNktReapCohM/c4KgBUEkEFMzIUgGyjB8VqavNgXml75/XiFt42bs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777476568; c=relaxed/simple;
-	bh=rbY7XNFUi9oFN8eybd6jhNDwJvQYonWeWVw8mn92lzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EzhDg9NOKg7ZKnnwZ/4QpiPBaIDy9h2t1ewaHQRRTRbJL9OWdR+lOKufePEbOzCeHM+HAvKtyDXK9amKZ41OpwuORC7bgWtpN2DAXB5RvqtsDL676alwFU4NEdeFyCoLVl2zqcA0fD4U9u7t4a+Q+u/uR8epNuSKR9nB8xJ230U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHZ2n16R; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F44406270
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 16:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777479446; cv=pass; b=TiYwf5GcUR3wkxrCvkrnm0uF47DJmqULWwDFSoplgK5arXVWg0T3JnxdsEuQXaI9ASsbFjqi7Mmo3nDghDfKTfeXKM0k7hPcpkzz5N6oqeyzDR/YpCX6+7uzk7WPLaKyf0wOxyXWevJN6qI2jyz91FTQhE6e5QdV/xAZiZyzGxU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777479446; c=relaxed/simple;
+	bh=UHtXGVb1LYNhm/1CYil82b9vZfxR7lKRnarL/bAjIRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eMy/TFDb+bDmp9aWoKlQfOKEYJK0QM5HgaSwtDZDIk8uIZBT/LI0RkaFJpRxyuRK3vFylRMdLqPYSiclceIp0TfGewkds2v8P3g4DOxbNH/oAw5s25lbCyZPKnIOEjjJ5S5XasUEs2btOTKa2ST/8jIihNlkskVj9ix5RS4lurc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wIS6eA5Q; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHZ2n16R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777476567; x=1809012567;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rbY7XNFUi9oFN8eybd6jhNDwJvQYonWeWVw8mn92lzw=;
-  b=QHZ2n16Rp+gN/WeNdw9k7LPdNfZpKGDvIw2YR3RxXamxeehS2f54kvjE
-   q9aqw32KM4fVrMF5YhMuQMaXox5XY++Ea6LVENdtSeucM+Q5pV8FVPXyP
-   7MOc3FlwXOPo8Pynej/ulKcBjKENUCYdEChdojy8u3cl+MaJGuOkksw05
-   4HnC6FLRO2CUkSFhI2cupAgCDQ0PEi+VjERc9itKZILlFJ53CkiBFD0vr
-   qEYsueRwl7Sggwdkpo8wBfE6gxba1564bOMKGvKELDfPM4Yef5GBv4wv+
-   JT7h2h7urABJua/ASki0oo+seickpjaousGqn+QpvxZwFNmYImoLTmQuH
-   A==;
-X-CSE-ConnectionGUID: XjUI8CO4RDq5tBkAa2czaA==
-X-CSE-MsgGUID: 0UVwlpx1TgqspPeW+CnAyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="65937607"
-X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="65937607"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 08:29:25 -0700
-X-CSE-ConnectionGUID: cqxRvDu7S1+fg+q/w0ZQWg==
-X-CSE-MsgGUID: JtedEalDS/uq3ea7914+Og==
-X-ExtLoop1: 1
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.221.251])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 08:29:24 -0700
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 2/2 v2] perf annotate: Fix missing branch counter column in TUI mode
-Date: Wed, 29 Apr 2026 10:29:17 -0500
-Message-ID: <20260429152917.178803-3-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260429152917.178803-1-thomas.falcon@intel.com>
-References: <20260429152917.178803-1-thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wIS6eA5Q"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso105735ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 09:17:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777479443; cv=none;
+        d=google.com; s=arc-20240605;
+        b=A+Jjj3hoaDj1rJX1nzP6rSJ7jlxaiBfA7+v5I0+5pQO2/YGbTSQDvRWUAhnc7NWyvk
+         42MfHPyBEaSYh4gI9OYcskYAB0awk9Lqfwmf/4IIsgfQY6Ofi3vuMSgnUlQ71mz+L4oL
+         /acakoaFoSRafI8qPjWdese8Vqld1XTqnjI/ic9Q3dAD+nhR4u04CWsdFhqPORLjVfPJ
+         TMJX0A62R9La96mZ0KfFMgcLI47nFOy8FZwKpiGHkJ7+SuIEDbMOfc6SVxgcVvJJh9Q0
+         n4sKyEnQhPcC1A+mZraLE0RGMBgELU4yF5RsErxKJ55AHiOqf5fsfKUP7hhg75HqIMeg
+         Fu0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=fqvRechJO7wAMrY3N92JJRHYmvgDCMeHhLdJTb1GR0c=;
+        fh=5xc+RJc3C43+W8mhCQkPDhnG+JBEx4z/qEv4HCovpp4=;
+        b=hZGWKU9HZzr2WCPGMvwvIznogjKbifjwznlbJrFfXycu83aL4bg1HXd/HXPGK+QYl1
+         IBmu/Z4Obfp5TIsftlg8jB+pSSMFmE3fgDCOaDgb5BVBApNIvTdaGReIpuxQ/Xuqs7DU
+         5m3cH/aHnEQBjeMFnkmv8A66K5Iz/VmpwQmorcg9iMvnELkz+tv5t5dtPdJ6dsHGbBQK
+         Gstvpbh9gGbs3didKxqhCBcyJkmHCIy+DDm0RUqNT1QUR00IdxRHdevf9OOMOm1tvvmV
+         1RwPb9WVKExQVXKuEI2zEeT2Uxut+hvL6Xa1YicgCjTOXdTPcY5SDgKBoZC0Y3njOkIN
+         W1KA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777479443; x=1778084243; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fqvRechJO7wAMrY3N92JJRHYmvgDCMeHhLdJTb1GR0c=;
+        b=wIS6eA5QY9ex9quNgfSCnor1X5H6UWgCCZEv717ZhVBVuJror5HYNrdFdEHuYDzQ5S
+         yjkYKQBqH4PX4jibLXZUenhtH9f3G6BYAJJq3Wb+6qUDE0paz/l6r0ZsHRiWRHzyKuS+
+         07r7PMjQX7nG4MFoAKGudetshDxzipaQC2p8frRKtHdiM/9bLs+sxsLFaRw4gwzzhW8K
+         8Id4cv8FDd4NCVjRipm3obWGsrshTg/xUQ6mA+mYa9uGAj5qjW3AnZmifhSWFZkrRQJ3
+         z8+YizOYcc5skb0ZhcS9jfOXFzs0fEIQZ3wMqKpmPQ+43nMtlBEwtA+BqJw6hRjalO+r
+         0Y8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777479443; x=1778084243;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fqvRechJO7wAMrY3N92JJRHYmvgDCMeHhLdJTb1GR0c=;
+        b=lUuP0bH/AkjXlrJSgV3dLQXbboV4ycY5s0QYBWoY+6c4Mo9Qnl3kSDXDFC/Lrc5wcf
+         NmzGg0PxeJQh8XrHojje3I7SJvctXi6Fqc7jD3pWKEGZEC+RMgOIlWMx7UV023w1V4qV
+         U5PMgAnDfOZvhrjb3HaUUlSVjdg21URP/AFftwnIVa9d+ga0HtBy+UBCjK4WEOV9V+bt
+         x4Hb5cI9a6y6CAglf3VPuPhaSMjr9vCvViYegk8T2K+TdrBNHubQfsKiqGyLucN55etL
+         SlAxGmHMMOCu1Hxsq3ZnqGEcPNFdqSXWxSYZQxqHgiVjDfaYgkkvk/avUyXklg7/nfNv
+         FNmg==
+X-Forwarded-Encrypted: i=1; AFNElJ9UrjbDw51IussxnDu3bdqixzOtW/p4ti23HU47oa4mcFOn9CpG+0JMEPRMcyqgL9G5xR04ezM/sOz3/cHp/AVM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRBaTd9NLk7omkTff9UhesE5jzZl2lO/b1PaAyUL8f3I52kN9J
+	trf1JwqHrWM30FR0RoK5t5w0qXT3xquXTBsJy+ZhZcwSGIo6lzCzUiB15MXDDzW+/fN7VYCi8+7
+	4gfTXof3Iq5RoRK2KyKfPwQe7ZJFSzdM2cWBTDkhS
+X-Gm-Gg: AeBDiesmvWZOT8OGxZ5UEDafMgq/Am5mkH2H3khLYk4B3neDo35xqIpCGZxl2GdPSpP
+	1FvUUs02YD/dIGon9LTlE2q52D1hpTCwPu8fJa2uJvYUylXS/yM+9PCPW/v2YsHCdFPPWxw+HgJ
+	+2O7FvbNAshzlu3S9XG59t/zvvOCFBz9GFWMYgDxHwtuyJNEUaiWA28KZX70yZMApk4cjKkLoC6
+	e62zChKa8Yw7KHiKBqRScOATe1pocjE7XHcnUo9pKgfrzdOXcTeuqmB1tW99iPUIJqz9fDauirb
+	85KU6RhOYbKic3KtdMNBUVBuBCDxpS5VvocIMEywcj7y2i3zhMy37CDjwBJ7wu7l95nIwA==
+X-Received: by 2002:a17:902:f805:b0:2a7:6c4e:5914 with SMTP id
+ d9443c01a7336-2b987cec51emr3278725ad.6.1777479442468; Wed, 29 Apr 2026
+ 09:17:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260425224951.174663-1-irogers@google.com> <20260428071903.1886173-1-irogers@google.com>
+ <20260428071903.1886173-10-irogers@google.com> <afGyYi01XSNIS-A2@z2>
+In-Reply-To: <afGyYi01XSNIS-A2@z2>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Apr 2026 09:17:11 -0700
+X-Gm-Features: AVHnY4IXBUWE5UukN8KzmjnfIpnAFj-ObYvMRfPl-5kwE68RdMoDEeELQc51_O4
+Message-ID: <CAP-5=fWBccMoChGX62hVoCbHZSaFJhcPOBYvutbha9RybkNZGQ@mail.gmail.com>
+Subject: Re: [PATCH v8 09/58] perf evlist: Add reference count
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-perf annotate checks that evlist->nr_br_cntr has been incremented
-to determine whether to show branch counter information. However,
-this data is not populated until after the check when events are
-processed. Therefore, this counter will always be less than zero
-and the Branch Count column is never shown. Do this check after
-events have been processed and branch counter data is updated.
+On Wed, Apr 29, 2026 at 12:25=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Tue, Apr 28, 2026 at 12:18:14AM -0700, Ian Rogers wrote:
+> > This a no-op for most of the perf tool. The reference count is set to
+> > 1 at allocation, the put will see the 1, decrement it and perform the
+> > delete. The purpose for adding the reference count is for the python
+> > code. Prior to this change the python code would clone evlists, but
+> > this has issues if events are opened, etc. This change adds a
+> > reference count for the evlists and a later change will add it to
+> > evsels. The combination is needed for the python code to operate
+> > correctly (not hit asserts in the evsel clone), but the changes are
+> > broken apart for the sake of smaller patches.
+>
+> Can we keep the existing evlist__delete() code?  IIUC most parts of the
+> code don't need to worry about python.  Then do we really need to
+> convert them all?  Maybe we can convert only the relevant codes.
 
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
- tools/perf/builtin-annotate.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Are you thinking of evlist__delete being something like:
+```
+void evlist__delete(struct evlist *evlist)
+{
+   assert(refcount_read(evlist__refcnt(evlist)) =3D=3D 1);
+   evlist__put(evlist);
+}
+```
+This would allow the existing delete cases to remain and minimize
+churn, but it creates an opportunity for a runtime assertion failure.
+I'm not sure what the codebase gains long-term from this as having
+both `put` and `delete` feels like an unnecessary choice for the user.
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 5e57b78548f4..7bddbaee1cde 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -563,6 +563,10 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 	if (ret)
- 		goto out;
- 
-+	if ((use_browser == 1 || ann->use_stdio2) && ann->has_br_stack)
-+		if (session->evlist->nr_br_cntr > 0)
-+			annotate_opts.show_br_cntr = true;
-+
- 	if (dump_trace) {
- 		perf_session__fprintf_nr_events(session, stdout);
- 		evlist__fprintf_nr_events(session->evlist, stdout);
-@@ -926,11 +930,8 @@ int cmd_annotate(int argc, const char **argv)
- 	 * branch counters, if the corresponding branch info is available
- 	 * in the perf data in the TUI mode.
- 	 */
--	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack) {
-+	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack)
- 		sort__mode = SORT_MODE__BRANCH;
--		if (annotate.session->evlist->nr_br_cntr > 0)
--			annotate_opts.show_br_cntr = true;
--	}
- 
- 	if (setup_sorting(/*evlist=*/NULL, perf_session__env(annotate.session)) < 0)
- 		usage_with_options(annotate_usage, options);
--- 
-2.43.0
+> Also I think it's better to split evlist__put() conversion and python
+> code changes.
 
+So the existing Python code embeds an evlist inside a Python object. I
+don't see a way to add the reference count and keep the embedding
+without inventing a 3rd way of handling Python evlists, which would be
+as complex as just using the reference counts. We could remove the
+embedded evlist and use evlist__new/delete, but the code wouldn't be
+functional.
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+> >
+> > Assisted-by: Gemini:gemini-3.1-pro-preview
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > v2: Added evlist__put to pyrf_evlist__init in case init is called more
+> >     than once.
+> >
+> >     I double-checked trace__replay() and confirmed that trace->evlist
+> >     is not assigned to session->evlist in that function.
+> >     trace__replay creates a new session and uses its own evlist for
+> >     processing file events, leaving trace->evlist pointing to the
+> >     empty list created at startup. Therefore, the
+> >     evlist__put(trace->evlist) call in trace__exit() is safe and
+> >     correct to avoid leaking that empty list.
+> >
+> > v7:
+> > - Added pyrf_evlist__new to zero-initialize pevlist->evlist to fix
+> >   crash on re-initialization.
