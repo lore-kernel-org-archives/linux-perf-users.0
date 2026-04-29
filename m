@@ -1,202 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA06219EB
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 17:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926103FE65F
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 17:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777483986; cv=none; b=GiMkuLQMzsyzSivSeiRzXFQBCXyW+BZNr3nxlG5r0+QFY20qQn2dTRGMyiSYekJeSC3AVYRYgN4gjOLXcWuNHVUtXntDIMlz+LsDSPlAiciGF9YaCI0vVoXcfOy+qTA0J5wId1v8Uf0zu0g+94T2z8vEdrreaG/k0z0B/cIRMWQ=
+	t=1777484188; cv=none; b=rq22MlJudRa8/flABoEAh45MwtnTb0ffn+VztsivGw0AWOiV/AGnf5ng9IxW8Xl+hxHkijXwLzcf2KGx+HOFQ3XXBXNh/Hf2x6c0+WdN1VC4UBv1O9RL6MN4X5vF0vT+OHmp/vzd3uiqnEInOhyLABRuiOY/zLcYLAresCPCPC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777483986; c=relaxed/simple;
-	bh=6SV3yBiPr4Clmo2K3FrR73YH9iC3jv5cimPK1hB1Lk8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=L5Q4No/Bq5EZEBrNd6R+kGVb1Ww+IvTadKeoUo0bwyZDwXOZ+NoRez7WerXWE0KLzSi6sawHT9Eo7xmgUL7zioUbT8IDMDvmNCbK60NmqxTA+VZFV4NlVn3A1k4VGVkz0iVZyX9frTWgKZTBQOdJI5akmsa0JWxRydM9bN1cI/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffHq1L3m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777484188; c=relaxed/simple;
+	bh=rbsBVPTHVp24qvxU2IVJVxWmUYIL1gdsUjJFJuBiVks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K2Sz+b9tH/S0gMo77H3T+TJCQN5XwY3VJQF+RDHw1WKo5hseaR8Fvbw0hdJarT7mNmNeZ3+j90iZMaB8VFSThsaUBGItNXW51OB4wJ8fScSEbV4p2ZQvPeCv0Z8K1m3/mEfmVJzEqVtD2nq1uI9fkDVSIhhbjy0PAper5xqArrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=bMjw4+6M; arc=none smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffHq1L3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9421EC19425;
-	Wed, 29 Apr 2026 17:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777483985;
-	bh=6SV3yBiPr4Clmo2K3FrR73YH9iC3jv5cimPK1hB1Lk8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=ffHq1L3mCtvfzHrDzM1IL9vGALkt0/2ky/C4Ji3+WucvSjhOqJnOADg1hr8+ayhxd
-	 DVJbHGcmwFeclerDlH77VdUiMsvPIuEXnbK4GxjXVxF7QmH+BZbdX3yyuuNmJuyexJ
-	 tdbwJTfs1zo657G7ihc5y12unWlPWgtEVM3Xgp3MrzDAHPKM0G/NB/TFh1MzF9S3FD
-	 qO/QjIrHyYTjd4Xuq+TLFbuszoGWHlGIr7ZCPrAolWUvHQXP7GTkTC68mboFba/gAQ
-	 pKQpnJ+8p3Afsy0tcogg6jgtzTxw40Oa1BtK5vGvOlEwbKFwAGhqMRrXpTwqj/yvCs
-	 bXjl83+NhWtnw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
- MADV_DONTNEED
-Reply-To: sashiko@lists.linux.dev
-To: "Darko Tominac" <dtominac@cisco.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260429131522.4049054-1-dtominac@cisco.com>
-References: <20260429131522.4049054-1-dtominac@cisco.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Apr 2026 17:33:04 +0000
-Message-Id: <20260429173305.9421EC19425@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="bMjw4+6M"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2de831d2b20so137039eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 10:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wbinvd.org; s=wbinvd; t=1777484187; x=1778088987; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l8cx787r0/c1DcR0zTQ9mKZp9CswPwIysu4DNnG68zM=;
+        b=bMjw4+6MOZjCCHAfBSgbozR70YjvMWlFIu3WckGb8yNn07XkY0aBnW27TJRia6ekvg
+         yYS3I6nwXEscfhUNmCyBOVaIBe4Ky681zlLz/d/pBuZJSoz3/K0sXWLzomqQNcWkv7St
+         ODAebS687VwVcetxOMsCo5Ue4SoyzfAazM95nSknKOKAu0R6UlRka9CDwWRJJxUN/uLz
+         LTz18p8fPedFA6Xi+8rIP4r+WiRtbtt7l+nf4dMOiwNcvcqLjTxC/oy8F29HsYWLdaNg
+         TtklzBGMAhOJqrB/rVJLWgfe/cABpF8llBKrPztzxSt5ygOcsld8XyE4RQBcLe1PNgEK
+         0jKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777484187; x=1778088987;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l8cx787r0/c1DcR0zTQ9mKZp9CswPwIysu4DNnG68zM=;
+        b=XBXyXiPIWE8yTawkjYUOeZnxGj8AcKC20yuYR5ZILHYmVxvEiLzZtpMzyQ3Beq1hd7
+         58aKprck7t8luxLHHZPR1RSSlcK93/a/UPTzv6vK4YFCKmEOTAyyQZTYa7DjvwdPfNn5
+         xEmKhnyw14rWxQzjtYOBtC+BThBBfMYdM78r0FSu0wy1bLWz+tdmdUA1OTLmlHkB4tpc
+         tvLz6QeRzg3mMiGVQRtJdNwMhRrCI35ag76TIkX2VYXdPdwieZbFWCd7YUf5IBVKSGvw
+         6D8qVwQC+SMeWDFBN0DRALyhBinsHWU4FSb1yWmWHe0iOBOTD8X8pxFQk4832RMOi6T7
+         4A7Q==
+X-Gm-Message-State: AOJu0YyfCwKydb1+ACa8v6QUttRzLA81vAOf77kSktOCDLnjrlhJbiWZ
+	FrBvubBcDztipqKFT/02Bc65Ktcrx9g6vsDssdimZDpMMeaOOe6G5qObATCMHuORrvk=
+X-Gm-Gg: AeBDies/b1O9fSGU+oSsjYoPeQAgVNNpGhwdQ7L96e4OCF+RvnkQZxPmWboC4HuksrG
+	VJM/0aHH05aPJDoXvTXNTNXFiMNKIMcblx3cBOyRx77WkqSbfRZw7zG7SOU7KMSqNMgWRmV8Rnm
+	5xDu0gcKfjGmjMk7xFJ0i554cKHBFos+pbocB+8csCr7+U8+5ACbZv/+CFtsYcsaTsmYVEu0AKl
+	0MTuVk28V2eM8gTK7e9OgcBRlK0QgHdjw3tzqXqAhgFYsH7hEvsLuUgkiEDYYC/oSnSkzdRpODV
+	4SRq5AjB2WmGbqf1O8ik42wONmneSaspcSC19B5jKVY8afwlB72xgr5DLFJH0yIyVQstYth0e+7
+	r0O3VlVYQAZ4z6WgcdbZXDEJ7LCjM/7M0gIQiLOIqdqToZRS4PVveVYIacUC7bge0+KR6SP6IIq
+	EyE9oNGZGHZjYF6/zQbLOYMArw5LS4sx/3/17JMeLrl29Epxg=
+X-Received: by 2002:a05:7300:8628:b0:2e6:e7da:7c30 with SMTP id 5a478bee46e88-2ed0a0f1139mr4447996eec.17.1777484186634;
+        Wed, 29 Apr 2026 10:36:26 -0700 (PDT)
+Received: from mozart.vkv.me ([2001:5a8:468b:d015:eadf:43ff:5bad:d931])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ed1c09c6e3sm2899087eec.25.2026.04.29.10.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 10:36:26 -0700 (PDT)
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v2 0/2] Two semi-related perf throttling fixes
+Date: Wed, 29 Apr 2026 10:36:09 -0700
+Message-ID: <cover.1777483573.git.calvin@wbinvd.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Incorrect VMA classification using vma->vm_file instead of vma_is_=
-anonymous()
-- [High] VMA addresses used as boolean flags (0 used as 'not found' sentine=
-l)
-- [High] Ignored return value in the slow path of madvise_dontneed_free() s=
-ilently swallows errors
---
+Hi all,
 
-commit 0e33540d810d6a2eadc17b982d88ac4970eca760
-Author: Darko Tominac <dtominac@cisco.com>
+This is a refresh of this little series:
+https://lore.kernel.org/lkml/cover.1774969692.git.calvin@wbinvd.org/
 
-mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
+Patch [1/2] is the same, patch [2/2] has two minor fixes described in
+the patch itself. The remainder of this cover is the same as in v1.
 
-This patch modifies MADV_DONTNEED and MADV_FREE behavior to prevent discard=
-ing
-file-backed pages that contain active uprobe software breakpoints. It adds
-checks to identify if a VMA contains uprobes and handles them via a slow pa=
-th
-that skips zapping the specific pages containing breakpoints.
+Cheers,
+Calvin
 
-Cc: xe-linux-external@cisco.com
-Cc: danielwa@cisco.com
-Signed-off-by: Darko Tominac <dtominac@cisco.com>
+---
 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4084e926e284..0f8aea99b96f 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-[ ... ]
-> @@ -1654,6 +1675,60 @@ vma_has_uprobes(struct vm_area_struct *vma, unsign=
-ed long start, unsigned long e
->  	return !!n;
->  }
-> =20
-> +/**
-> + * vma_first_uprobe_addr - find first uprobe in a vma range.
-> + * @vma: the vma to search.
-> + * @start: start address of the range (inclusive).
-> + * @end: end address of the range (exclusive).
-> + *
-> + * Used by madvise to skip directly to uprobe pages.
-> + *
-> + * Return: the page-aligned virtual address of the first uprobe in
-> + * [@start, @end), or 0 if none exists.
-> + */
-> +unsigned long vma_first_uprobe_addr(struct vm_area_struct *vma,
-> +				    unsigned long start, unsigned long end)
-> +{
-> +	loff_t min, max, first_offset;
-> +	struct inode *inode;
-> +	struct rb_node *n, *t;
-> +	struct uprobe *u;
-> +
-> +	/* No uprobes possible on anonymous mappings */
-> +	if (!vma->vm_file)
-> +		return 0;
+In the course of investigating [1], I set out to understand why this
+sequence of messages is printed every boot, even when nobody is using
+perf at all:
 
-Should this use !vma_is_anonymous(vma) instead of checking vma->vm_file?
+    perf: interrupt took too long (2516 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+    perf: interrupt took too long (3156 > 3145), lowering kernel.perf_event_max_sample_rate to 63000
+    perf: interrupt took too long (4014 > 3945), lowering kernel.perf_event_max_sample_rate to 49000
+    perf: interrupt took too long (5035 > 5017), lowering kernel.perf_event_max_sample_rate to 39000
+    perf: interrupt took too long (6302 > 6293), lowering kernel.perf_event_max_sample_rate to 31000
+    perf: interrupt took too long (7879 > 7877), lowering kernel.perf_event_max_sample_rate to 25000
+    perf: interrupt took too long (9852 > 9848), lowering kernel.perf_event_max_sample_rate to 20000
 
-Since private anonymous mappings of /dev/zero have vm_file !=3D NULL but are
-otherwise treated as anonymous, won't this incorrectly classify them as
-file-backed and unnecessarily proceed with uprobe checks?
+It turns out this happens because of how the dynamic sample rate
+throttling interacts with the perf hardware watchdog. Patch [2/2] is my
+attempt to prevent the dynamic throttling logic from acting solely based
+on the latency of the watchdog NMI.
 
-Also, since valid virtual addresses (like vm_start) can legitimately be zer=
-o,
-is it safe to use 0 as a sentinel value for not found? If a uprobe is
-installed at virtual address 0, it seems this would incorrectly signal that
-no uprobe was found.
+Intel CPUs were happy with that. But AMD CPUs still printed the messages!
 
-[ ... ]
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index ce238dd96f15..c9d3c26efd74 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-[ ... ]
-> @@ -947,12 +972,46 @@ static long madvise_dontneed_free(struct madvise_be=
-havior *madv_behavior)
->  		VM_WARN_ON(range->start > range->end);
->  	}
-> =20
-> -	if (behavior =3D=3D MADV_DONTNEED || behavior =3D=3D MADV_DONTNEED_LOCK=
-ED)
-> -		return madvise_dontneed_single_vma(madv_behavior);
-> -	else if (behavior =3D=3D MADV_FREE)
-> -		return madvise_free_single_vma(madv_behavior);
-> -	else
-> -		return -EINVAL;
-> +	/*
-> +	 * Preserve uprobes: if any uprobes are active in this VMA range,
-> +	 * avoid discarding pages that contain active breakpoints.
-> +	 *
-> +	 * Fast path: if no uprobes are registered system-wide, or the VMA
-> +	 * is not file-backed (uprobes only instrument file-backed mappings,
-> +	 * so anonymous VMAs can never contain breakpoints), or no uprobes
-> +	 * are present in this VMA range, proceed with the full operation.
-> +	 */
-> +	if (likely(!any_uprobes_registered()) ||
-> +	    !madv_behavior->vma->vm_file ||
+That happens because AMD CPUs have a second PMU facility with its own
+NMI handler, and both NMI handlers average in their latency, even when
+they don't actually handle the NMI.
 
-Similar to the question above, should this use vma_is_anonymous() instead
-of checking vm_file, to avoid erroneously taking the slow path for private
-/dev/zero mappings?
+Patch [1/2] fixes that, which is a correctness issue entirely
+independent of patch [2/2]. But it also happens to be required for patch
+[2/2] to achieve its goal on AMD CPUs, so I sent them together.
 
-> +	    !vma_has_uprobes(madv_behavior->vma, range->start, range->end))
-> +		return madvise_dontneed_free_range(madv_behavior,
-> +						   range->start, range->end);
-> +
-> +	/*
-> +	 * Slow path: jump from uprobe to uprobe via rbtree lookup, zapping
-> +	 * the clean range before each uprobe page. This is O(M * log N)
-> +	 * where M is the number of uprobes in the range and N is the total
-> +	 * uprobe count, versus O(pages) for a page-by-page scan. 'cur'
-> +	 * tracks the beginning of the current clean range.
-> +	 */
-> +	cur =3D range->start;
-> +	end =3D range->end;
-> +	while (cur < end) {
-> +		uprobe_addr =3D vma_first_uprobe_addr(madv_behavior->vma,
-> +						    cur, end);
-> +		if (!uprobe_addr) {
+Thanks,
+Calvin
 
-If uprobe_addr is 0 (a potentially valid virtual address), does this loop
-terminate early and incorrectly zap the uprobe at address 0?
+[1] https://lore.kernel.org/all/acMe-QZUel-bBYUh@mozart.vkv.me/
 
-> +			/* No more uprobes - zap the rest */
-> +			madvise_dontneed_free_range(madv_behavior, cur, end);
+Calvin Owens (2):
+  perf/x86: Avoid double accounting of PMU NMI latencies
+  perf: Don't throttle based on NMI watchdog events
 
-Does this code need to check the return value of madvise_dontneed_free_rang=
-e()?
+ arch/x86/events/amd/ibs.c |  6 +++---
+ arch/x86/events/core.c    |  3 ++-
+ kernel/events/core.c      | 16 ++++++++++++++++
+ 3 files changed, 21 insertions(+), 4 deletions(-)
 
-If madvise(MADV_FREE) is called on a file-backed VMA with uprobes, the fast
-path would return -EINVAL. However, because the return value here is ignore=
-d,
-won't the slow path unconditionally return 0 and silently swallow the error?
+-- 
+2.47.3
 
-> +			break;
-> +		}
-> +		/* Zap the clean range before the uprobe page */
-> +		if (cur < uprobe_addr)
-> +			madvise_dontneed_free_range(madv_behavior, cur,
-> +						    uprobe_addr);
-
-Does this call also need its return value checked to prevent swallowing err=
-ors?
-
-> +		/* Skip past the uprobe page */
-> +		cur =3D uprobe_addr + PAGE_SIZE;
-> +	}
-> +	return 0;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260429131522.4049=
-054-1-dtominac@cisco.com?part=3D1
