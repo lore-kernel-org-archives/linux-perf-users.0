@@ -1,227 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312B03A7589;
-	Wed, 29 Apr 2026 08:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FDB1397
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 09:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777449652; cv=none; b=KqcNNVyUUf2PNQIPEYSgNpDJUiYGAS6OgKX/0Xblm4kQdA+aJqqC1F53ZHWMryIdW3zxks0Nq2XF7eUN7tscNmZ/eulhtxBhOg9A+0XEEsm4tpqPsgSp3MNrutR1LzNXgFTkqdXHMhh76sy/TzM+S25ettpY1VpA6IS+m3e+vBo=
+	t=1777453566; cv=none; b=V3nXL5Qn2MiVKaYsBiWelAB9aTgt8TuIV+BxUulgI5VZaUVohy1VwH2o/Ca2fCX4kuuBySGPMq5oi/J3XsZMs07y5ugTccGYaVDpaxFC4GcyfmkL33lOzGOnQLINx78mKM1cv5onp8QL0pWIX4bcvgRVpxSkZd1l6h5q2zHEdFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777449652; c=relaxed/simple;
-	bh=wGqI5lwhbVgS0EHJvqVvbyIsSIKfumQFIlGxt5gv5ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJ1aY+JaXguOtjmYOrmWIvUVr0yhKTbJGyAjyQnQcdJhM8o928EdLVAy37yVmrPlrkPW61cBhe8A7hrfSEd4FyheLEK06T4ihjkXSxmAwxzuieePkJ93Lz0CKm4V2oVsmguJfEb+ORt4JUBQ5hb0BboVp3WRX8iD37TrCsgG9dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIOJ+xwC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777453566; c=relaxed/simple;
+	bh=zqlHpOWJU4OiU8Lo2eWiu7R9w5ZkaHVS+w6GAuaAYSQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=qVeg18v3tI2+kwVzPkn6RF2BbDC3RJhg3mPou0DvQAaFyY52mEY7JuzVbkBdRdizbVY3eNun9UbFF3Ocin6jk++ypIYrjwr0aBjVggwKJfC2BYOo+0JRgkqefSyHKCR5oMjfVSgUMxM3IWtjEcmtnDH3LdfvEpM1H7DlMweWgc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cdez5Bum; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIOJ+xwC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D571C19425;
-	Wed, 29 Apr 2026 08:00:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cdez5Bum"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C51EC19425;
+	Wed, 29 Apr 2026 09:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777449651;
-	bh=wGqI5lwhbVgS0EHJvqVvbyIsSIKfumQFIlGxt5gv5ko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HIOJ+xwCDMRcMYaHTLMVjvLv/kUNOsvkFsVOmlHE+o4yynxfOFRU8YJ55DfFcax77
-	 zQpZWBTAHEXPXUWiy5jtKBjDNaCUp8y/tuwzduLlmyBIlDJZNl98Q7I1IwS4C7edhB
-	 31kY4oUJQ9sj7ot/bzwG4J5gkCUKhGhiZT8l1/jkYo6OL78+WUP/gDp4gJX+duYF0z
-	 W24us/qWUI2qalmtPv9Q2REDF79ZZYwZsihCI7fYlxJaUbX192YG8EJ+PYEc6ABTVJ
-	 fGgY9NfvKt2bTM0vac3ugEGcCIV74d0dRmfWFml2cePNe7u44twZCNS4A2/VsFBz0X
-	 uey44tAzltHYQ==
-Date: Wed, 29 Apr 2026 01:00:50 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>, damon@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/4] mm/damon: introduce perf event based access
- check
-Message-ID: <afG6sg3juuJrDEbO@z2>
-References: <CAC5umyiikHr4doYKW5Gy4uv6M0_HbBZUSd9kM+L+kCrKYKEuXw@mail.gmail.com>
- <20260424233136.6716-1-sj@kernel.org>
- <CAC5umyjcFm-iw31kgYP0Z61z7N=vMzkZKsvGZpYmNwNw3R_gHw@mail.gmail.com>
+	s=k20201202; t=1777453566;
+	bh=zqlHpOWJU4OiU8Lo2eWiu7R9w5ZkaHVS+w6GAuaAYSQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Cdez5BumVogZLC3+5sAc95LgrbPTqODiv5f0tXBHH0Qe8x5Nrd3FNOZW8wLBft/d4
+	 A8Kl63r9rOUXhu0QDXUO3rTVgNfvqF2P42Aq+iOgRW7XgzJ8tevzuVKj7IGPPJGpqv
+	 hvbzZSVuTcE3fMga5UpwwdLVN3nV30ilgZ95mGDgFRsHAg50J0VTGjgzBsw0v42k3a
+	 uInuJdYFC/taaKIwQ1ivl3B02kmdDtOamLbotR/ZCRA3y0aeWkkRiNqgRpOayIkZCB
+	 FMsdBCxijbGTDFiUbZfZ2z/MepzJ2mbLmwuzh9dmK/3UlUfziNA34Xivaq6yosMsy6
+	 /37BMXHYLxH4Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3] perf/core: Fix sampling period inconsistency across
+ CPU migration
+Reply-To: sashiko@lists.linux.dev
+To: "Minwoo Ahn" <mwahn402@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260429074328.41991-1-mwahn402@gmail.com>
+References: <20260429074328.41991-1-mwahn402@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Apr 2026 09:06:04 +0000
+Message-Id: <20260429090606.1C51EC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyjcFm-iw31kgYP0Z61z7N=vMzkZKsvGZpYmNwNw3R_gHw@mail.gmail.com>
 
-Hello,
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Missing put_ctx() in perf_get_task_ctxp() causes a permanent refer=
+ence leak of perf_event_context and task_struct.
+- [High] Erroneous perf_task_ctxp sharing clobbers states of independent pr=
+ofiling sessions.
+--
 
-On Sat, Apr 25, 2026 at 09:33:07PM +0900, Akinobu Mita wrote:
-> 2026年4月25日(土) 8:31 SeongJae Park <sj@kernel.org>:
-> >
-> > On Fri, 24 Apr 2026 12:27:07 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
-> >
-> > > Hello SeongJae,
-> > >
-> > > 2026年4月23日(木) 13:34 SeongJae Park <sj@kernel.org>:
-> > > >
-> > > > Hello Akinobu,
-> > > >
-> > > > On Thu, 23 Apr 2026 09:42:06 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
-> > > >
-> > > > > DAMON currently only provides PTE accessed-bit based access check, this
-> > > > > patch series adds a new perf event based access check.
-> > > > >
-> > > > > Since perf event-based access checks do not require modifying the PTE
-> > > > > accessed-bit for pages representing each damon region, it reduces the
-> > > > > overhead of monitoring at a fixed granularity of the page size.
-> > > >
-> > > > As I also commented to the previous version, the high level idea makes sense to
-> > > > me.  I think this can be useful.
-> > > >
-> > > > Also as I commented to the previous version, I understand the page level
-> > > > monitoring overhead reduction is the main purpose of this patch, and it makes
-> > > > sense to me.  Nonetheless, I like this mainly because the perf event could
-> > > > provide more detailed information including from which CPU/thread the access is
-> > > > made, and whether the access is for read/write, to my understanding.  Please
-> > > > let me know if my understanding is wrong.
-> > >
-> > > That's correct.
-> > > Once the integration into your new monitoring infrastructure is
-> > > complete, those things will become possible.
-> >
-> > Thank you for confirming!
-> >
-> > >
-> > > > >
-> > > > > Here is a method and its results for comparing access checks using
-> > > > > existing access bits and new perf events.
-> > > > [...]
-> > > > > Using accessed bit, prepare_access_checks takes 7 seconds and
-> > > > > check_accesses takes 5 seconds.
-> > > > [...]
-> > > > > Using perf event, prepare_access_checks takes 0.01 seconds and
-> > > > > check_accesses takes 2.6 seconds.
-> > > >
-> > > > Thank you so much for sharing these great test results with the detailed setup
-> > > > description!
-> > > >
-> > > > > ```
-> > > > > $ sudo $HOME/damo/damo stop
-> > > > > $ sudo $HOME/damo/damo start --ops vaddr \
-> > > > >       --perf_event 5000 0 0x4 0x1cd 0x1f 0 \
-> > > > >       --monitoring_intervals 5s 60s 300s \
-> > > > >       --monitoring_nr_regions_range 1000000000 1000000000 \
-> > > > >       --target_pid $(cat /tmp/memcached.pid)
-> > > > [...]
-> > > > > Note: damo's --perf_event option
-> > > > >
-> > > > > Using these features also requires modifications to damo, but these
-> > > > > are not included in this patch series and are currently under
-> > > > > development in the following branch:
-> > > > >
-> > > > > * https://github.com/mita/damo/tree/damo-perf-for-v3.2.2
-> > > >
-> > > > Thank you for sharing this, too!
-> > > >
-> > > > >
-> > > > > The option newly added to damo for perf event-based access check has the
-> > > > > following format:
-> > > > >
-> > > > > `--perf_event <sample freq> <sample phys addr> <type> <config> <config1> <config2>`
-> > > >
-> > > > I think we may need to discuss more for final interface.  But I think that
-> > > > could be done later, after the kerenl ABI is fixed.
-> > >
-> > > My current patch introduces a set of kernel ABIs (.../perf_events/<P>/*),
-> > > and if I want to control another field in the perf_event_attr,
-> > > I would have to add a new ABI. This would be a significant
-> > > maintenance cost.
-> > >
-> > > Instead, I would like to provide a single bin file where the
-> > > perf_event_attr I want to set is written as binary.
-> >
-> > I'd prefer having single file per parameter, as sysfs is designed for.  It
-> > allows keeping the input format simple and therefore easy to maintain and
-> > extend.  Of course, we should carefult at adding new parameters, though.
-> 
-> Another idea from Namhyung Kim [1] is to fix the events
-> specified by the CPU architecture being executed.
-> 
-> Of course, we would want to control a limited number of
-> parameters, such as sample_freq.
-> 
-> [1] https://lore.kernel.org/damon/aZwLDAxf9eP0lPdD@z2/
-> 
-> > >
-> > > > >
-> > > > > - `sample freq`: A higher frequency improves access accuracy, but also
-> > > > >   increases overhead.
-> > > > > - `sample phys addr`: specify 0 for vaddr and 1 for paddr.
-> > > > > - The remaining type, config, config1, and config2 settings can be found
-> > > > >   as follows:
-> > > >
-> > > > The values look bit human-unfriendly.  I wonder if we could use more
-> > > > human-friendly values, e.g., 'cpu' for type,
-> > > > 'mem_trans_retired.load_latency_gt_1024' for config, etc.  Not necessarily we
-> > > > need to fix this right now.  Let's keep discussing.
-> > >
-> > > I'd like to do it that way. These processes can be handled better
-> > > from user space than from within the kernel, so I'd like to achieve
-> > > this from damo with the help of the perf tool and library.
-> >
-> > Does existing perf event ABI also take that approach?  If so, I think that is
-> > fine.
-> 
-> On Intel CPUs, you can read the mem-loads and/or mem-stores
-> files as follows to find the value that should be set to
-> perf_event_attr:
-> 
-> $ cat /sys/bus/event_source/devices/cpu/events/mem-loads
-> event=0xcd,umask=0x1,ldlat=3
-> 
-> You can find out which bit field of which member of
-> perf_event_attr should be used to set these values from the
-> corresponding files in the format directory.
-> 
-> $ cat /sys/bus/event_source/devices/cpu/format/{event,umask,ldlat}
-> config:0-7
-> config:8-15
-> config1:0-15
-> 
-> This conversion from symbolic event name to values that should
-> be set in perf_event_attr can be done, for example, as shown below,
-> so I think it should be implemented using perf in some way.
-> 
-> import perf
-> 
-> if __name__ == '__main__':
->     evlist = perf.parse_events("mem-loads")
->     for evsel in evlist:
->         print(f"{evsel}: type={evsel.type} config={evsel.config}")
+commit 8823a0e265a5483fceb1f344697e122c9270c810
+Author: Minwoo Ahn <mwahn402@gmail.com>
 
-It'd be great if we could have something like this.  Currently we have
-libperf (in C) in tools/lib/perf but it doesn't have the parser yet.
+perf/core: Fix sampling period inconsistency across CPU migration
 
-Anyway there are vendor-contributed event/metric description in JSON
-under tools/perf/pmu-events/arch directory.  You may extract the event
-encoding from the JSON and convert it using the sysfs format info.
+This commit introduces struct perf_task_context to preserve period_left acr=
+oss
+CPU migrations for per-task software sampling events. It adds allocation and
+refcounting logic to share this context among related events on the same ta=
+sk.
 
-On Alderlake, the 'mem_trans_retired.load_latency_gt_1024' is defined
-like below:
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 6d1f8bad7e1c..f5cb1a273fbf 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+[ ... ]
+> @@ -13259,6 +13291,41 @@ static void account_event(struct perf_event *eve=
+nt)
+>  	account_pmu_sb_event(event);
+>  }
+> =20
+> +static struct perf_task_context *
+> +perf_get_task_ctxp(struct perf_event *event, struct task_struct *task,
+> +		   bool inherit)
+> +{
+> +	struct perf_task_context *ctxp =3D NULL;
+> +	struct perf_event_context *ctx;
+> +	struct perf_event *iter;
+> +	unsigned long flags;
+> +
+> +	ctx =3D perf_lock_task_context(task, &flags);
+> +	if (ctx) {
+> +		list_for_each_entry(iter, &ctx->event_list, event_entry) {
+> +			if (iter->perf_task_ctxp &&
+> +			    (iter->owner =3D=3D current ||
+> +			     (inherit && !iter->owner)) &&
 
-tools/perf/pmu-events/arch/x86/alderlake/memory.json +128
+For inherited child events, both iter->owner and event->owner will be NULL.
+If a parent task is being profiled by two separate and independent perf
+sessions, will this (inherit && !iter->owner) condition inadvertently merge
+both child events into a single perf_task_context?
 
-    {
-        "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 1024 cycles.",
-        "Counter": "1,2,3,4,5,6,7",
-        "Data_LA": "1",
-        "EventCode": "0xcd",
-        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_1024",
-        "MSRIndex": "0x3F6",
-        "MSRValue": "0x400",
-        "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 1024 cycles.  Reported latency may be longer than just the memory latency.",
-        "SampleAfterValue": "53",
-        "UMask": "0x1",
-        "Unit": "cpu_core"
-    },
+Would it be safer to verify parent lineage, for example by checking if
+iter->parent->perf_task_ctxp equals event->parent->perf_task_ctxp, to
+ensure the inherited events actually belong to the same profiling session?
 
-I think MSRValue is for attr.config1.
+> +			    perf_event_equal_task_ctx(&iter->attr,
+> +						     &event->attr)) {
 
-Thanks,
-Namhyung
+Could this logic mistakenly merge the sampling states of completely
+independent perf events in the same task?
 
+If a process opens multiple distinct sampling events for the same task with
+identical configurations and sample periods, they appear to pass this
+equality check. Since they share the same perf_task_context, won't they
+corrupt each other's period_left states when the task schedules out?
+
+> +				ctxp =3D iter->perf_task_ctxp;
+> +				refcount_inc(&ctxp->refcount);
+> +				break;
+> +			}
+> +		}
+> +		raw_spin_unlock_irqrestore(&ctx->lock, flags);
+
+The perf_lock_task_context() helper takes a reference on the returned ctx
+using refcount_inc_not_zero().
+
+Does this path leak the perf_event_context (and consequently the pinned
+task_struct) by returning without calling put_ctx(ctx) to drop that
+reference?
+
+> +	}
+> +
+> +	if (!ctxp) {
+> +		ctxp =3D kzalloc_obj(struct perf_task_context);
+> +		if (!ctxp)
+> +			return NULL;
+> +		refcount_set(&ctxp->refcount, 1);
+> +	}
+> +
+> +	return ctxp;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260429074328.4199=
+1-1-mwahn402@gmail.com?part=3D1
