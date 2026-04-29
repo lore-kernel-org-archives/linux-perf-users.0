@@ -1,174 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DD029D288
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 02:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D065633263E
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 05:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777431238; cv=none; b=S6AXO2+7gTgMPDLmjUUqT/XclB2yXEXOKwDv+/hGAccQWkZaWwhljcs3InOZKSMVZIGthMqL8AKnTDH7QjWOTo6M9vCzFq0UbfIjTOv2iIoqOqznt02HwpiMCBlNK9b9i/m1SU/3TNXaIvMGjgs7WutffoSQKsf5jLBpPdYLwh0=
+	t=1777440356; cv=none; b=ojN3WFjGiz8BZ0cE0iVrFm41cZDPG7xLPQFgzOCrWmlSG+Fv2ljoAQejYoPd6vac9R8INH2p94EQaR4B7LVSHccGWHR0YELMTYVy5Yx4sLYsbw8HdR3ZEYy7/Y1NPA+LxVmznCsml2piVqzXdQRxVM5F6HZC7h5fDKoRhKQkvLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777431238; c=relaxed/simple;
-	bh=eppZvw1tuSmy0l88KVAWH8BrfK+20wGzJOEBMKCH5qk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jJX67Bkb+EZyjdHvj3yj29ZdydRx0HS6z52KovFdrlE79gVV5rSyikEOq0CjlvOEfQsYvK0GMXvv8VRzYF8ezAjSX5aS8YDa3JZNX0oTbAm+7vlY4xxqX8Rm8SkdwoU74hgKJQOVxOZYLuUzS6pB0ScvcU7cAR4fCHVdZ1qjyXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJzX9jxm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777440356; c=relaxed/simple;
+	bh=1o0JwCg3VlQuXtNmwiWKwyGa2eX851s/FY4QRp8UnUo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HCgGtN6pTsCPxoIFZh8sL72cjcBEQiylxeBhS+7SHzspEdF+/YFyQusqIKG73FXNr1qE4Meftol9RTyoF7CDeHOQQvDfxWkWTSBfUuUMS9obtq2j0oDhD3ROYzrZaFDmyPFgRnEzBexVpKImAIqqmNzNoRiRZ2anLc6dZn3/xVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cm1j3Wi7; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJzX9jxm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD2B2C2BCB7;
-	Wed, 29 Apr 2026 02:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777431237;
-	bh=eppZvw1tuSmy0l88KVAWH8BrfK+20wGzJOEBMKCH5qk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=tJzX9jxm1jZwm1GgR4es5bB7jZmwMZo1EWfV90nAgW5RGRZcCZ4kFCLy9uEnYN7jb
-	 5kTxMPVuO8DKQXqLf0NBZi+dhEtYan73d/TW+hdk4k9xsfluKl0CBDxkEexhRsQj7X
-	 tBFHv6AdpD3p0AiDKjIdCeaoPsIut+TUg3BkUSNIOn3c8ro7HD20EGGz5QuyKK9I6l
-	 SDehfbsCQpQ9T3Wnj1a4iv+5yCoWihE3u1L9pLKoO5b77WSiWpWwzQnSXFceZUe8AK
-	 LtGX471eLe398xZizn/P8ZGMcy2TJX2LvuUvrhL3dtezyqvKRCWHQYdPChT0g5xA+b
-	 Q3VOlhRa0w0uw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] DO NOT MERGE: selftests: perf_events: Add device
- memory callchain unwinding test
-Reply-To: sashiko@lists.linux.dev
-To: "Fredrik Markstrom" <fredrik.markstrom@est.tech>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260428-master-with-pfix-v3-v1-3-c384d3e53092@est.tech>
-References: <20260428-master-with-pfix-v3-v1-3-c384d3e53092@est.tech>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Apr 2026 02:53:57 +0000
-Message-Id: <20260429025357.BD2B2C2BCB7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cm1j3Wi7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777440353; x=1808976353;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1o0JwCg3VlQuXtNmwiWKwyGa2eX851s/FY4QRp8UnUo=;
+  b=cm1j3Wi7ya71OojgYjmfuer51/BucceSoVgnNawwRIQPrOzmdcxfGB2X
+   eP4UlBgquTxo38Oi85/cIUlKtsyh4AqD4RzrMpJQUtRWDYWtPvuWUkCqU
+   +wos+QcyNLXfl6AwnBw4vrr15/oacKUVmj7tb2ktghppUd1TrX3Xx5/xD
+   7PUeHPDWbZ215iOzaM8rXnojFsAA4J6w+4q1sjeVEdUZUTiPx+lP+ShWJ
+   R9hJJMvsdFpUvNznMmnTyx5S5FyHbL1nxwxRmwW5NN/bXrUFjCJ6C5peq
+   XKeOTEqSygFoGOSu5EBOl2S4JVFElUu1TBagQcg70Qyz2swlcroxBVqcw
+   w==;
+X-CSE-ConnectionGUID: Qok02G05SY+lCF+NqYwIUA==
+X-CSE-MsgGUID: QK10zla7Tcm3SHEYIF/NmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="78239290"
+X-IronPort-AV: E=Sophos;i="6.23,205,1770624000"; 
+   d="scan'208";a="78239290"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 22:25:52 -0700
+X-CSE-ConnectionGUID: WdT/NmQqQke5Vrj2T2ClxQ==
+X-CSE-MsgGUID: dbNWl7TuTpi9QI3+CoFn0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,205,1770624000"; 
+   d="scan'208";a="229566202"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 22:25:52 -0700
+Message-ID: <50ba62b0-8c43-43d9-940c-ca4ac3f40fbe@linux.intel.com>
+Date: Wed, 29 Apr 2026 13:25:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v7 21/24] perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS
+ capability
+To: sashiko@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260324004118.3772171-22-dapeng1.mi@linux.intel.com>
+ <20260425020129.77518C19425@smtp.kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260425020129.77518C19425@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [High] Insecure temporary file usage in /tmp creates a privilege escalati=
-on or file overwrite vector
-- [Medium] Test silently reports a false positive on initialization or perf=
- execution failures
-- [Medium] Hardcoded 4KB page alignment breaks on arm64 systems with 16KB o=
-r 64KB pages
-- [Low] Uninitialized wait status variable `pst` can lead to undefined beha=
-vior
-- [Low] File descriptor for `/dev/mem` is leaked to the `perf` child process
---
 
-commit 72f5293ddcb8999284919045e0f80f532368b0f1
-Author: Fredrik Markstrom <fredrik.markstrom@est.tech>
-DO NOT MERGE: selftests: perf_events: Add device memory callchain unwinding=
- test
+On 4/25/2026 10:01 AM, sashiko-bot@kernel.org wrote:
+> Sashiko AI review found 1 potential issue(s):
+> - [Medium] When sample_simd_regs_enabled is true, large PEBS incorrectly remains enabled if unsupported legacy standard registers (such as segment registers) are requested.
+> --
+>
+> commit add2d25bc2536ced31489740914a43c7ed8e02eb
+> Author: Kan Liang <kan.liang@linux.intel.com>
+>
+> perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
+>
+> This commit enables the PERF_PMU_CAP_SIMD_REGS capability when XSAVES
+> support is available. It also temporarily disables large PEBS sampling
+> for these new registers until arch-PEBS sampling support is added.
+>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4424,11 +4424,33 @@ static unsigned long intel_pmu_large_pebs_flags(struct perf_event *event)
+>>  		flags &= ~PERF_SAMPLE_TIME;
+>>  	if (!event->attr.exclude_kernel)
+>>  		flags &= ~PERF_SAMPLE_REGS_USER;
+>> -	if (event->attr.sample_regs_user & ~PEBS_GP_REGS)
+>> -		flags &= ~PERF_SAMPLE_REGS_USER;
+>> -	if (event->attr.sample_regs_intr &
+>> -	    ~(PEBS_GP_REGS | PERF_REG_EXTENDED_MASK))
+>> -		flags &= ~PERF_SAMPLE_REGS_INTR;
+>> +	if (event->attr.sample_simd_regs_enabled) {
+>> +		u64 nolarge = PERF_X86_EGPRS_MASK | BIT_ULL(PERF_REG_X86_SSP);
+>> +
+>> +		/*
+>> +		 * PEBS HW can only collect the XMM0-XMM15 for now.
+>> +		 * Disable large PEBS for other vector registers, predicate
+>> +		 * registers, eGPRs, and SSP.
+>> +		 */
+>> +		if (event->attr.sample_regs_user & nolarge ||
+>> +		    fls64(event->attr.sample_simd_vec_reg_user) > PERF_X86_H16ZMM_BASE ||
+>> +		    event->attr.sample_simd_pred_reg_user)
+>> +			flags &= ~PERF_SAMPLE_REGS_USER;
+>> +
+>> +		if (event->attr.sample_regs_intr & nolarge ||
+>> +		    fls64(event->attr.sample_simd_vec_reg_intr) > PERF_X86_H16ZMM_BASE ||
+>> +		    event->attr.sample_simd_pred_reg_intr)
+>> +			flags &= ~PERF_SAMPLE_REGS_INTR;
+> When sample_simd_regs_enabled is true, nolarge is used to disable large PEBS
+> if eGPRs or SSP are requested. However, it looks like the pre-existing
+> ~PEBS_GP_REGS check was dropped in this branch.
+>
+> If unsupported legacy registers like segment registers (e.g. PERF_REG_X86_CS)
+> are requested alongside SIMD sampling, will this bypass the check and
+> incorrectly leave PERF_SAMPLE_REGS_USER or PERF_SAMPLE_REGS_INTR enabled?
+>
+> Since PEBS hardware batches samples and does not natively capture segment
+> registers, wouldn't the delayed PMI overflow populate these missing segment
+> registers using the interrupt context?
+>
+> Could this result in stale or delayed segment register values being provided
+> for the entire batch instead of precise per-sample values?
 
-This commit adds a regression test for device memory callchain unwinding by
-mapping an MMIO address via /dev/mem and sampling the process with perf.
+That's right. We needs to check the bitmask of all supported registers
+including eGPRs when sample_simd_regs_enabled is set. 
 
-diff --git a/tools/testing/selftests/perf_events/test_perf_vmio.c b/tools/t=
-esting/selftests/perf_events/test_perf_vmio.c
-new file mode 100644
-index 000000000000..780c5800dd6b
---- /dev/null
-+++ b/tools/testing/selftests/perf_events/test_perf_vmio.c
+Besides, I would swap this patch with the next patch, then we don't need to
+introduce the code and then delete them.
 
-[ ... ]
+Thanks.
 
-> +	env =3D getenv("MMIO_ADDR");
-> +	if (env)
-> +		pa =3D strtoul(env, NULL, 16);
-> +
-> +	page =3D pa & ~0xFFFUL;
-> +	off =3D pa - page;
 
-Is it possible for this to break on arm64 systems configured with 16KB or
-64KB pages? The bitwise mask assumes a 4KB page size. Could this be changed
-to use sysconf(_SC_PAGESIZE) instead?
-
-> +
-> +	fd =3D open("/dev/mem", O_RDWR | O_SYNC);
-
-Does this leak the file descriptor to the perf child process? It is opened
-without O_CLOEXEC, so the fd remains open across the execvp() call for perf.
-
-> +	if (fd < 0)
-> +		SKIP(return, "cannot open /dev/mem");
-> +
-> +	/* Fork a spinner child with FP pointing into device memory */
-> +	spin_pid =3D fork();
-> +	ASSERT_GE(spin_pid, 0);
-> +	if (spin_pid =3D=3D 0) {
-> +		/*
-> +		 * mmap /dev/mem in the child so remap_pfn_range populates
-> +		 * PTEs directly. fork() does not copy PTEs for VM_PFNMAP
-> +		 * regions, so mapping before fork leaves the child with
-> +		 * empty page tables =E2=80=94 the unwinder would get a translation
-> +		 * fault instead of a synchronous external abort.
-> +		 */
-> +		m =3D mmap(NULL, off + 4096, PROT_READ | PROT_WRITE,
-> +			 MAP_SHARED, fd, page);
-> +		if (m =3D=3D MAP_FAILED)
-> +			_exit(1);
-
-If the child process fails to mmap /dev/mem here (for instance, due to
-CONFIG_STRICT_DEVMEM or an unaligned offset), it immediately exits.=20
-
-Because the parent does not verify the child's status before running perf,
-perf will attempt to attach to a dead process and fail with a status other
-than 1. The test then incorrectly passes. Can we verify the child process
-is alive before running perf, or check its exit status?
-
-[ ... ]
-
-> +	if (perf_pid =3D=3D 0) {
-> +		char *const perf_argv[] =3D {
-> +			"perf", "record", "-g", "--call-graph", "fp",
-> +			"-p", pid_str, "--", "sleep", "3", NULL
-> +		};
-> +
-> +		if (chdir("/tmp"))
-> +			_exit(1);
-> +		execvp(perf_argv[0], perf_argv);
-
-Could this overwrite unintended files by running a root-privileged perf
-record in the world-writable /tmp directory without specifying an output
-file?
-
-perf record defaults to writing to perf.data in the current directory.
-An unprivileged user could pre-create a symlink at /tmp/perf.data pointing
-to a sensitive file.
-
-Could the test use mkdtemp() to create a secure directory, or pipe the
-output instead?
-
-> +		_exit(1);
-> +	}
-> +
-> +	waitpid(perf_pid, &pst, 0);
-
-Could pst be left uninitialized if waitpid() fails and returns an error
-(such as -1 from being interrupted by a signal)?=20
-
-This would cause the subsequent WIFEXITED(pst) and WEXITSTATUS(pst) macros
-to read uninitialized memory. Can we initialize pst to 0 or check the
-waitpid() return value?
-
-> +
-> +	kill(spin_pid, SIGKILL);
-> +	waitpid(spin_pid, NULL, 0);
-> +	close(fd);
-> +
-> +	if (WIFEXITED(pst) && WEXITSTATUS(pst) =3D=3D 1)
-> +		SKIP(return, "perf not available");
-> +
-> +	/*
-> +	 * The real test is that the kernel survived. If we got here
-> +	 * without a synchronous external abort, the guard worked.
-> +	 */
-> +	TH_LOG("kernel survived perf sampling with FP in device memory");
-> +#endif /* __aarch64__ */
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260428-master-wit=
-h-pfix-v3-v1-0-c384d3e53092@est.tech?part=3D3
+>
