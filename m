@@ -1,100 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7641636827E
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 09:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9763A3828;
+	Thu, 30 Apr 2026 09:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777540640; cv=none; b=EqF83Kl7R7645huKvEw3VGpFZ2RMMmPDWuVKUZ0I8gSE+WzohWqitP2Yp4yXS0xx4/Uy07lbSvabIANl00QMgbQF26cUFsvYw1AbMHwRSy6nsu/FLjPEAsQn9KBMfLF6+cdRXRUgaNpj0sAS/v6GXDs7p4OOJaUH0idAWMRiOtg=
+	t=1777542029; cv=none; b=d9F2bj/k9dm+KumTppnnNPCgNmEMakBJVCmv69KHgBdAlKB2upHgq3gOeWPZluDhWEs8eZYj9OYJD0cCmpqpZeTqTS/PC4zGpvTz5kPvD8ugr379A2p38rgGseOzMXouMJKLETyxh6RuTAAF2tdZxte2nWAD0EPvIqb09yuqHzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777540640; c=relaxed/simple;
-	bh=zASkZpDnp0HKO3Di+BYa06DeuxEaSIIb9mLPGirXHSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jj9khZHWd2JeorpHiokdOBPR3SfhBrnj8HkYbV/2wTSf/vB2GPSjbyK+xBMgAMuLbGgEpYdkyyu/EDg5DSHqVD9eqKqBvuNnPVGDbTePgYxwIN2aKnOXJqTq2MspEP8bUEdHl45/CKCIzrjzA0zCdGE267ERsd60HPJqkChdkEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZWdhAQVE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777542029; c=relaxed/simple;
+	bh=viMJdaQKnJpPSLVttk1P5mppEN4n7BVIiNF65MS4KBQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EfPDR3Jra1qTOkrbGRI+6NtjYehkt8CZwl4sU+H5xmecjhx92122V7Dz7u0f7kjqW4DDf54mGfDg5FJBoxrHqL5Z2PeHa3VBXI14l3tTi7LDfLD8VsI/rCrKmnYmCWBEY3my7drex6ubTIeJSeHxea6Fl1M6+baSAU3nsM729S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=AAx9dq4/; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZWdhAQVE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777540628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zASkZpDnp0HKO3Di+BYa06DeuxEaSIIb9mLPGirXHSA=;
-	b=ZWdhAQVEA/zLOk7Zv9+ds0/N9mAqYQv2aiQb8gjyekjmuYMBWoNgd4zn1HJ0PlHqp5BFrw
-	VSbjkrpqssWJqOqxFtYYcxOT4Ne00k0NVyNAUSkXwhT9CTlALPAEPUgp29AMAAVlbcXnU4
-	zo4jGMqGnI84r2r77bTUYbF5LmUJDLM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-486-jvU-4sD1M2-nzrBsuwhr_w-1; Thu,
- 30 Apr 2026 05:17:04 -0400
-X-MC-Unique: jvU-4sD1M2-nzrBsuwhr_w-1
-X-Mimecast-MFC-AGG-ID: jvU-4sD1M2-nzrBsuwhr_w_1777540621
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E4C01800358;
-	Thu, 30 Apr 2026 09:17:00 +0000 (UTC)
-Received: from fedora (unknown [10.44.48.22])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 48D911800480;
-	Thu, 30 Apr 2026 09:16:51 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 30 Apr 2026 11:17:00 +0200 (CEST)
-Date: Thu, 30 Apr 2026 11:16:50 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Daniel Walker (danielwa)" <danielwa@cisco.com>,
-	"David Hildenbrand (Arm)" <david@kernel.org>
-Cc: "Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)" <dtominac@cisco.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
-	"xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
- MADV_DONTNEED
-Message-ID: <afMeAs6upm8kLCYb@redhat.com>
-References: <20260429131522.4049054-1-dtominac@cisco.com>
- <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
- <afIiqR5CqYRId0N0@redhat.com>
- <afJz3l6435DHLorn@goliath>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="AAx9dq4/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=Gyc9RYbLfZX65HhctB5vMYt8uQboQJxO3yiTxtN7nVc=; b=AAx9dq4/SZQziuBwrwOmmdJbxp
+	WRPQfpFQ8PYiuEV8Bn/0WGFbaOxsUv7Jb2PYlLCdSKmnEWBDE4S6X+LTGj2AEobcwFnbQvcMC2Ubi
+	AeIXU/AzRwvxchEbVhh3Yaje9kLuVsunHvK6/xe4IqzGE678nbEnMmHfL58OU3P0h/HABQZSZY89w
+	Y7k6WdurgpGDWQv56SrlBPhW+Ob+6aDAbDIBxeLeommwRAENi8GHQAIpUe9rY1I7mZ6qUsmNyGlsx
+	LgMU+s6iRXzMxqsRNuUsRDZN4VYBhEtA/n+NyARJ0LCAsVIgAty4pgU2ItjXMmvHsLep/vqD5/4nw
+	2g3pRPfQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wINsd-007hPV-0T;
+	Thu, 30 Apr 2026 09:40:23 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 30 Apr 2026 02:40:10 -0700
+Subject: [PATCH] arm64/hw_breakpoint: reject unaligned watchpoints that
+ would truncate BAS
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <afJz3l6435DHLorn@goliath>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org>
+X-B4-Tracking: v=1; b=H4sIAHkj82kC/yXMTQqDMBAG0KsM39pAmkhSchURiTptR/CHjC0F8
+ e6l7fJt3gHlIqxIdKDwS1TWBYkuFWF45OXORkYkgrMu2Npbk8sc6q7PamJkH8ert84FVISt8E3
+ ev6tp/9ZnP/GwfwOc5weJ7VNNbQAAAA==
+X-Change-ID: 20260430-arm64_bas-77e37d830226
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Pratyush Anand <panand@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, clm@meta.com, leo.bras@arm.com, 
+ kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-453a6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2943; i=leitao@debian.org;
+ h=from:subject:message-id; bh=viMJdaQKnJpPSLVttk1P5mppEN4n7BVIiNF65MS4KBQ=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBp8yODgMluI4SVJ+b0hRU85ToWOMb60uHOcdbRX
+ mV0f24qDOWJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCafMjgwAKCRA1o5Of/Hh3
+ bQUWEACUa+h8kB1BCjISTYNwwF38x0gwdjSbanCGawZOBdilCnSz6qkBw4weQTOBJh0HlnLdAFc
+ ZXshD7npAibp9z1LWgBGN9kqwQ7IfNIW2cchqb+zKih+0Slhv86R1QlrzYOS5C16lrCqmDdQG+H
+ 4BqE0dty04wnagUBY3zVLP8LFmxHpaE7256D/Xj6zHsiOvlzqjcu/aZOY5BEf0pbqqY9r6LUles
+ UvWnLzNHYoSJrXoaBoKVI+z9v0vpWZXEfW3ZqvzqZQD0Ls8dbcDnSJ0XUxUcIiIHAsBVGiOxvfD
+ 3APyM7dmpdICI59nv0G7KaS92/ZcNSjZxmFysWi3Yrm7O1ra+haqVWNtJ5NIjquScWRDcju525r
+ foXlAzDsgkZQ2DuIpeI1XRQE6NtUw2wvuFAcy3UvK2T6HzEvZf2BoKP/agglDCI2o6kAeXPKckK
+ ETONskEo5jPFIglrDSwcYrRvRt+NgMC3IwjrC19uhA7h7CZjZngb61CDYLl5QfLOw/7IZIDNYhs
+ 1i/ckKZcAdg4OrG4NhXsQGxeNwS/3MIb3pYbmuWn4Xxp9G5R89rR3ovODH7eoN0+Z/gEq6+mRVp
+ nDv8GSpshl9+f3zn0448E6UogyCzNasLj2b8W6YxmJk7Y4ouLPuD7dPNyWlSvqDmGr+8RUO+dOd
+ neKV8W3Jv0RQGYw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On 04/29, Daniel Walker (danielwa) wrote:
->
-> Shouldn't there be some sort of compensation or notification for this, or is each person that
-> hits this suppose to just scratch their head and send a patch that's rejected?
+hw_breakpoint_arch_parse() positions the BAS bit pattern in
+hw->ctrl.len with
 
-Not sure... uprobes assumes that it owns the modified page and nobody
-can modify/unmap it, including the probed application or debugger.
+	offset = hw->address & alignment_mask;	/* 0..7 */
+	hw->ctrl.len <<= offset;
 
-But may be MADV_DONTNEED should not set zap_details.even_cows == true
-by default ?
+ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
+u32 :8), so the shift silently drops any bits past bit 7.  For
+non-compat AArch64 watchpoints the offset is unbounded relative to
+ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
+HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
+ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
+WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
+requested [1..8] -- the eighth byte is silently dropped.  The
+syscall still returns success, leaving userspace to discover the
+gap by empirical probing.
 
-Oleg.
+The same class affects HW_BREAKPOINT_LEN_{2,4} when offset pushes the
+high BAS bit past bit 7 (e.g. LEN_4 with offset=5 yields 0xe0
+instead of 0x1e0).  No memory-safety impact -- the value is masked
+into 8 bits before encoding -- but debuggers and perf users observe
+missed events on bytes they thought they were watching.
+
+The AArch32 branch immediately above already rejects unrepresentable
+(offset, len) combinations via an explicit switch.  Mirror that for
+the non-compat branch by checking that the shifted pattern fits in
+the BAS field, returning -EINVAL when it does not.
+
+Reproducer:
+
+  struct perf_event_attr a = {
+      .type = PERF_TYPE_BREAKPOINT, .size = sizeof(a),
+      .bp_type = HW_BREAKPOINT_W,
+      .bp_addr = (uintptr_t)(buf + 1),
+      .bp_len = HW_BREAKPOINT_LEN_8,
+      .exclude_kernel = 1, .exclude_hv = 1,
+  };
+  int fd = perf_event_open(&a, 0, -1, -1, 0);
+  /* before this fix: succeeds, watches 7 bytes (buf+1..buf+7)   */
+  /* after  this fix: fails with EINVAL                          */
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Fixes: b08fb180bb88 ("arm64: Allow hw watchpoint at varied offset from base address")
+---
+ arch/arm64/kernel/hw_breakpoint.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+index ab76b36dce820..b8a1402119f3a 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 		else
+ 			alignment_mask = 0x7;
+ 		offset = hw->address & alignment_mask;
++
++		/*
++		 * BAS is an 8-bit field in WCR/BCR; the shift below would
++		 * silently drop the high bits of ctrl.len when offset + len
++		 * exceeds 8, programming hardware to watch fewer bytes than
++		 * the user requested.
++		 */
++		if (((u32)hw->ctrl.len << offset) > 0xff)
++			return -EINVAL;
+ 	}
+ 
+ 	hw->address &= ~alignment_mask;
+
+---
+base-commit: 0787c45ea08a13b5482e701fabc741877cf681f6
+change-id: 20260430-arm64_bas-77e37d830226
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
