@@ -1,133 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0459D27FD43
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 03:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31C2365A17;
+	Thu, 30 Apr 2026 03:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777518151; cv=none; b=tpey3jDmojK/Ucf6HvCuOx9jnLb804tlCNpBDL4pFtf5LMKWMArvVufIvjk395YVqBDrDZYLvktUDqkYI0ekf7UBVMyYDJe8g11NLrx1zBJfbOkB0KLIQjDoMTpYyKKfgHgkMpcXrmx3Vml/ztj+IfdrvZsc8tCAK4t5JYD3voY=
+	t=1777519562; cv=none; b=f2/YD3tV3szmGxdiKZ4ExIZs3XA0YgZ0DJmqoJ8HCv/xGj8e7sA3+CLYC4VWWuQ4nQkRgCU/3eeJdtiS/+IGYhIWddI19c0feJH+0HkVQk91aptVpASCTVIiu2pXEa6BOuUxFjAAx5BN+AASbwIft01q7v6rd0RDAT36j1tLUT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777518151; c=relaxed/simple;
-	bh=BYmwJD7zo2NtQ1WyZhGzr4eG9Y110Jdrf/bIfOutAIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t/ecLd3J3B3oxum22Smg7X6GONCbMQBRAdhc9eMxuyiBvoP3lh+WIOPE/oAgv4x6Ocub4G/3oWQSRgsaUfzGY6xXxiU91TuxP14nhw9NCJ0/i6rX6FX7KzDvubGvprTuCPetDrll7hReViqc4XlG80tlMZteM8seKOM64HDpOO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ubq8cul4; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1777519562; c=relaxed/simple;
+	bh=S8ESDWn2FV212MQ0O36a6N64V74CpKEgoDR0Cwb1eYo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=fNsbJXlU3243pmZBd2iBGql3vQ7Enw+DO2r35YjNj1wR66kFqcbAcYW4g7aM4fsYxI84v153/NL1M0FX+CS/aqsY7mEfOpfizRmFiWDA8XIH1JPQJ09FCpabOps3OgCEm148DC9K8ZdExvxjkOPnuYjbbRwawx6FCDCJZO+6KqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtcaGla8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ubq8cul4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777518149; x=1809054149;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BYmwJD7zo2NtQ1WyZhGzr4eG9Y110Jdrf/bIfOutAIM=;
-  b=Ubq8cul4qBmdnCMJrRH29ackCjvMCsNO1TlYvXyU/JLeuCeDurpxuEGq
-   GLrQrn6whB/69378XP1Ym0y5pAaoW7rPgvo6j1hj44m54DYJSnxcu4O3N
-   RW8NtOwVzXvfTbZNj+MX+9PqWXwFZZUADidjmi1ZeK4WykB8ZQsMcG/xe
-   q5OWP8eZo89zNFKnIhO5xn3OtPno/13r3JdURwiUD4GK9grhlmZX5xUHc
-   YUjMbPW7tfrwUB3ieamFKfvtewWNysWF2S4xcH+Xt8RVKN4ZjwA8+rkil
-   L3WFG9vVI5d9FF6D2NUYXMJcpRLjMgOXXbjcEP1WgNCHuqvULHHfi6iBI
-   w==;
-X-CSE-ConnectionGUID: H3HBTomdRGO6tpuUhsfPTA==
-X-CSE-MsgGUID: fObfWTvQQXO1ZI22qGrqfA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="103914526"
-X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="103914526"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 20:02:28 -0700
-X-CSE-ConnectionGUID: QTooCQFPTb65As+qb6ZO4Q==
-X-CSE-MsgGUID: 3bogxQt6QwamZjLpaQyDnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="264831302"
-Received: from unknown (HELO [10.238.2.250]) ([10.238.2.250])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 20:02:27 -0700
-Message-ID: <b97fb2be-fa3a-42d9-9aa6-e87afc85a6a9@linux.intel.com>
-Date: Thu, 30 Apr 2026 11:02:24 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtcaGla8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA1C6C2BCB8;
+	Thu, 30 Apr 2026 03:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777519561;
+	bh=S8ESDWn2FV212MQ0O36a6N64V74CpKEgoDR0Cwb1eYo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RtcaGla8SJMvzp565cZWG4JA/pd6x2rokqKWLW76DsXVVSBMWfvO7M+j3tfPr4WiS
+	 iYIi3LmvsvftG5YY+oM7g4PvJ9jMSl95DFA2LT7Ri+Y57wvJYObh7grdN4/wFxy9Bp
+	 3dNPBrE0VUHIF5qHqtQDM1L3bZLqpe75efGu9RIosM9YKInDL4ti/opEBCchGSV7Ed
+	 NJ0t/2yQEWiWU4UX0J1SMMnzWayyrY3pGrDTZxRSaZcqhSakDi4GgjEzwKf7uPPJCg
+	 fYiHoJFVnaikAgVqNlokz3BThqsRnYRJYWEnZONwh0eeFUJrF4d3CMi6aMhGsxyQjO
+	 srXFfj2h9HOug==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02F1A3809A07;
+	Thu, 30 Apr 2026 03:25:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 2/5] perf/x86/intel: Always reprogram ACR events to
- prevent stale masks
-To: sashiko@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260430002558.712334-3-dapeng1.mi@linux.intel.com>
- <20260430020402.60C32C19425@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260430020402.60C32C19425@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH RESEND v10 0/8] ACPI: Unify CPU UID interface and fix
+ ARM64
+ TPH steer-tag issue
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <177751951654.2274119.17258357457134506240.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:16 +0000
+References: <20260401081640.26875-1-fengchengwen@huawei.com>
+In-Reply-To: <20260401081640.26875-1-fengchengwen@huawei.com>
+To: Chengwen Feng <fengchengwen@huawei.com>
+Cc: linux-riscv@lists.infradead.org, bhelgaas@google.com,
+ catalin.marinas@arm.com, will@kernel.org, rafael@kernel.org,
+ mark.rutland@arm.com, x86@kernel.org, liuyonglong@huawei.com,
+ anshuman.khandual@arm.com, linux-doc@vger.kernel.org, kees@kernel.org,
+ linux-pci@vger.kernel.org, dave.hansen@linux.intel.com,
+ Eric.VanTassell@amd.com, somnath.kotur@broadcom.com, kai.huang@intel.com,
+ kevinloughlin@google.com, punit.agrawal@oss.qualcomm.com, hpa@zytor.com,
+ ilkka@os.amperecomputing.com, kernel@xen0n.name, thorsten.blum@linux.dev,
+ linux-acpi@vger.kernel.org, corbet@lwn.net, masahiroy@kernel.org,
+ si.yanteng@linux.dev, peterz@infradead.org,
+ pawan.kumar.gupta@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+ xen-devel@lists.xenproject.org, szy0127@sjtu.edu.cn, lenb@kernel.org,
+ thomas.lendacky@amd.com, thuth@redhat.com, ryan.roberts@arm.com,
+ darwi@linutronix.de, make24@iscas.ac.cn, suzuki.poulose@arm.com,
+ james.clark@linaro.org, wei.huang2@amd.com, bwicaksono@nvidia.com,
+ loongarch@lists.linux.dev, jonathan.cameron@huawei.com,
+ sohil.mehta@intel.com, boris.ostrovsky@oracle.com, xin@zytor.com,
+ andrew.gospodarek@broadcom.com, wanghuiqiang@huawei.com, jgross@suse.com,
+ wangyuquan1236@phytium.com.cn, seanjc@google.com, guohanjun@huawei.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, wangzhou1@hisilicon.com, tglx@kernel.org,
+ heinrich.schuchardt@canonical.com, chenl311@chinatelecom.cn,
+ robin.murphy@arm.com
+
+Hello:
+
+This series was applied to riscv/linux.git (fixes)
+by Rafael J. Wysocki <rafael.j.wysocki@intel.com>:
+
+On Wed, 1 Apr 2026 16:16:32 +0800 you wrote:
+> This patchset unifies ACPI Processor UID retrieval across
+> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
+> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
+> 
+> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
+>      respective users)
+> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+> 6: Clean up perf/arm_cspmu
+> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
+> 8: Pass ACPI Processor UID to Cache Locality _DSM
+> 
+> [...]
+
+Here is the summary with links:
+  - [RESEND,v10,1/8] arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+    https://git.kernel.org/riscv/c/7cd5f5659ac8
+  - [RESEND,v10,2/8] LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+    https://git.kernel.org/riscv/c/d78ef9d2e1f2
+  - [RESEND,v10,3/8] RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+    https://git.kernel.org/riscv/c/0c8231994e43
+  - [RESEND,v10,4/8] x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+    https://git.kernel.org/riscv/c/3cfe889f8965
+  - [RESEND,v10,5/8] ACPI: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+    https://git.kernel.org/riscv/c/f652d0a4e13c
+  - [RESEND,v10,6/8] perf: arm_cspmu: Switch to acpi_get_cpu_uid() from get_acpi_id_for_cpu()
+    https://git.kernel.org/riscv/c/1ab03189793f
+  - [RESEND,v10,7/8] ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
+    https://git.kernel.org/riscv/c/a7034e9e4491
+  - [RESEND,v10,8/8] PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+    https://git.kernel.org/riscv/c/abdd2a86535b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-On 4/30/2026 10:04 AM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Unconditional hardware MSR reprogramming for ACR events introduces performance regression and increases measurement blind spots.
-> --
->
-> commit a8f30026401c4d7de00c3f1a7543204056d7235c
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> perf/x86/intel: Always reprogram ACR events to prevent stale masks
->
-> This commit modifies PMU event scheduling to force reprogramming of all ACR
-> events during rescheduling. It does this by making match_prev_assignment()
-> always return false for ACR events.
->
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 810ab21ffd99..4b9e105309c6 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -1294,13 +1294,16 @@ int x86_perf_rdpmc_index(struct perf_event *event)
->>  	return event->hw.event_base_rdpmc;
->>  }
->>  
->> -static inline int match_prev_assignment(struct hw_perf_event *hwc,
->> +static inline int match_prev_assignment(struct perf_event *event,
->>  					struct cpu_hw_events *cpuc,
->>  					int i)
->>  {
->> +	struct hw_perf_event *hwc = &event->hw;
->> +
->>  	return hwc->idx == cpuc->assign[i] &&
->> -		hwc->last_cpu == smp_processor_id() &&
->> -		hwc->last_tag == cpuc->tags[i];
->> +	       hwc->last_cpu == smp_processor_id() &&
->> +	       hwc->last_tag == cpuc->tags[i] &&
->> +	       !is_acr_event_group(event);
->>  }
-> Does this unconditional hardware MSR reprogramming for ACR events introduce a
-> performance regression and increase measurement blind spots?
->
-> By unconditionally returning false for all ACR events, every active ACR event
-> will undergo a full x86_pmu_stop() and x86_pmu_start() cycle during PMU
-> re-enablement (e.g., in x86_pmu_enable() when cpuc->n_added > 0).
->
-> These full stop/start cycles invoke multiple wrmsr and rdpmc instructions,
-> adding significant cycle overhead to the hot scheduling path. Since this
-> occurs while the PMU is globally disabled, the added latency extends the
-> global PMU off-time, unnecessarily increasing the measurement blind spot
-> where events are not counted across the CPU.
->
-> Could this overhead be avoided by checking if the mask actually changed?
->
-> x86_pmu_late_setup() calculates the new physical mask and stores it in
-> event->hw.config1 before match_prev_assignment() is evaluated. Would it be
-> better to compare event->hw.config1 against the previously programmed mask
-> stored in cpuc->acr_cfg_b[hwc->idx] and only force a reprogram when they
-> differ?
-
-Nice idea. This can be further optimized. I'm not sure if it's worth to
-post a new patchset for this single optimization.  If not, I would post a
-single optimization patch for this.
-
-Thanks.
-
-
->
-> [ ... ]
->
