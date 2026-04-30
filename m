@@ -1,168 +1,393 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9AE3FFADC
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 12:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD65423A8C
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 13:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777550922; cv=none; b=cZSSuzQ6W0CWor1IDxHvSz0hZgP8jaKAaVIeXRlkXC3rfpLGrU8GnbnOoO/VKQzhicraODqNY3qEGfNmErqHVronRGodpxIxKCusF7s9EQMr7pc5luQjsDUIhaFKc8bHGPLmvdixR2kvi4a/E98o7+sTIdISkh8oaCc/YZvyAfo=
+	t=1777555751; cv=none; b=MBUvxW6u17uDZH5HrAELrgi05KFxMKSpjI0CM0RmAD3us4wU0F7y+fJUM4xbD5s80LDaV5PSQdjgwpzsDDtBCHD8+I8kD3mo2TXwWxV3q9E8zOnQYR87BjTOVgdNXDd0tTN+vBTJdyiJJAfoWwLtna3FNvm1T06uWPBg/BKn+io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777550922; c=relaxed/simple;
-	bh=waXEBtjIIx9Dr8EQEIEm9MtnogZDsCxd3bv+UbtcalE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ec0jAq/sPIREfAWUxXoDAk+/hBwHjhLscrrZtJTHAEJVJqADs9nxKPHQg9AhtROFrqSDI6azfgAb2LH1EfwE1Uz0fNJB4ttS9gcwCe61AmpBB7ISiidviuGje1wLpBSKQlqelk13YTMohVmYUGtdpKNMmFLd0V9krfvw0WgLzMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvIPtGJm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777555751; c=relaxed/simple;
+	bh=1GrE2EZbKR57Tv45qiWf+69h6SLWjPDUSg9KJ+Fl864=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t98/09gaeJRKXTZkVa+iNB+LA2CiLJoxqaAzoxqG0qjcF6cjXVfAH6GtvXXJ05CXL8E9eK6duOadZMTfKLlYycMDyMbwVR967zkzNGLvw5HxAJcqkNsIRGwDtAtvZPBpbSWmcbTPvTgA7zBE3rIEin0u5orfaQgX0F8QSg4thfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RWSmLqrp; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvIPtGJm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2DD6C2BCB3;
-	Thu, 30 Apr 2026 12:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777550921;
-	bh=waXEBtjIIx9Dr8EQEIEm9MtnogZDsCxd3bv+UbtcalE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=BvIPtGJmYJc8J+JA9myvuObMx2ZY86SYNMmDzw2Yvoz9n3heCXcVvp/PmBkC/zGdP
-	 3wsmDVYy0W3tff5y0WUHKZu6SHSPVslACbsoIm6f4pgtHFFTRdI4Mw+KegtmSotvZh
-	 LJWmvcbCgKZ9LKB5ejRrGgCD2WPzTstAhSLnysTy7nG3I7/ebLqgQgOjPh9XJthfCP
-	 gvC1DX0eToki2wT2dP14j6gf06orDmydb6eYEBUREOmd/3qQU2IZcN5dyQts+a0eWH
-	 o8atHdypzpzNnfDELjBryuC79atCqIjpQQcMEmzl/RfsCrnefwJOpMJDuBusqJxkwJ
-	 2Hu6RuqWRLE/w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] DO NOT MERGE: selftests: perf_events: Add device
- memory callchain unwinding test
-Reply-To: sashiko@lists.linux.dev
-To: "Fredrik Markstrom" <fredrik.markstrom@est.tech>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260430-master-with-pfix-v3-v2-3-bd526ec04a75@est.tech>
-References: <20260430-master-with-pfix-v3-v2-3-bd526ec04a75@est.tech>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Apr 2026 12:08:40 +0000
-Message-Id: <20260430120841.A2DD6C2BCB3@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RWSmLqrp"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488ad135063so8321545e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 06:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1777555748; x=1778160548; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vlv8vl000xsTt6CNTENIuzRhsg+T/VV8g5T/0Ti4QQM=;
+        b=RWSmLqrpT5F5aqt2JaQSCeEKdhcu1PlXmC9xXHT/zG4OzIPWfsen+8geFiui7hNbqG
+         OAsbNsmUUrkALFfLVNbQpxQ2tJ7zYqFkXG0aBQEyzwukdZgC651InbMlZ3WCu+YVRQcf
+         0xr3ZU3TLxfs6hn3atakj/pADgIUUMrhrIP+GUpZMjATrzG+JtWEXTYbQh+wsLLwYUH4
+         eII/cPCVsbe5nJTwiWEJ7RM5nGmNAzXr4pEjQ3ejFYBT2llr1a10kjD0NR8OX1LXvoYC
+         hT8Nk5ARRiqDyPhKAvQXSeuyH7Uvn0v1ugWSETYu5p+j22FtPzRhL5WHCuYC+mOuXL7z
+         F2YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777555748; x=1778160548;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vlv8vl000xsTt6CNTENIuzRhsg+T/VV8g5T/0Ti4QQM=;
+        b=NuQh598e4fJ10szBz6o2ZLVXm80gE/LHLD/vv2Y/eC6YfRbCS+sG15K1Xeq1XiEw4o
+         23df+eCEdPKgu0g03V/wtpG0hE/meGcSXhQIcBz+s2E3lJS/bzZJbtjZHZ328fAMJ/bD
+         NJIxsfOMEvt8hqJ8HRj955Wf0y9cOjTygmf289HI1I0wfpfaKMLocx+h6aA/TGVePO+1
+         dOH5v9lzuPS4yefxGvWLqYEG5RLJ/t9H/6PfHjPksHlpNIs8ZrwSCc1i3as+/kGF2vOD
+         RcmEVeHXNX0CeRAde1hyZCihTsaBrxLD/Z3Uln2Rlachwg92g47szStsySQooyhlR/Ci
+         gTkA==
+X-Forwarded-Encrypted: i=1; AFNElJ8ThtKxzSLeZ03YTX9MnHtPhDbtX9mNgMo1KY6+yNaW6uuCZTu0tP9RyDrbbVRxzWqYo52BL3SZTKJ4SV07oUCL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDEHLryJ7h+eq43YGW9K8DxWepNqxTr6FwdzLWuQZedacnYRtO
+	3Bkc6kjPzW5jzBxzsONnlGK4okHQtr3SRsjg7vXcZ8FJm/gW8E2+mjoTTbbKOzfDZAM=
+X-Gm-Gg: AeBDietazF3prKcMNQ5JL+9wryC6PV5Eoi6/3bqzL1xR1NGW4X2al/TxT5oM8WNVrw4
+	TReKLXsO+e5AUzbVbOO6PamBTmwmPhboYTT39PAaAeuVKqFIByJJ9bcvdiOt/M86efRuPl5KKoe
+	okc03FGeyCHRbflwSs5vEDeJoLrQCO8ilHNix8t9OX2ZkYN814HESeC1BbQIRN6ZVU6JFNCn4/a
+	aXO4q4lJayidiYlgcPlUqOvyo01egoT/XkHd7xcjVLoAnNA0y/7UciFuj2gXBPgKJjxHFtRQzpl
+	BGaLNWgbGxFLeD5mi/AAIBGK5vTQz6gY3JChlveXi6tsP4yS66jBju0oppj5gVFsHE15Dt71CCm
+	SktOYAHxCIiQ1FyF7oZ2FNLMcj6H0d1KOa42/jvVlqEDHXU0xZkJjPDdrheHIJitsnHf/36lDDO
+	dbf7PuV8iBca/CGpIiGexuCDR1xDKk+f0AeeF4q1U=
+X-Received: by 2002:a05:600c:4f0b:b0:488:d376:42cd with SMTP id 5b1f17b1804b1-48a8445e86amr43361105e9.22.1777555747849;
+        Thu, 30 Apr 2026 06:29:07 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a822d4b57sm169415235e9.15.2026.04.30.06.29.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2026 06:29:06 -0700 (PDT)
+Message-ID: <21f4284f-9d73-4e58-9b18-d62c02539aae@linaro.org>
+Date: Thu, 30 Apr 2026 14:29:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf sched stats: Fix segmentation faults in diff mode
+To: Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+ venkat88@linux.ibm.com, acme@kernel.org, atrajeev@linux.ibm.com,
+ namhyung@kernel.org
+References: <20260428070811.1883202-1-irogers@google.com>
+ <20260429173931.2700115-1-irogers@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260429173931.2700115-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Medium] The test silently passes if `/dev/mem` mmap fails or `perf recor=
-d` encounters an error.
-- [Medium] Race condition due to missing synchronization between child proc=
-ess initialization and `perf record`.
-- [Medium] The temporary directory and `perf.data` file are permanently lea=
-ked on every test run.
-- [Medium] The child process can become a runaway process consuming 100% CP=
-U if the parent is terminated.
---
 
-commit c99f3e3dd4b06157e6d6eea6478e0ee3ffe3951a
-Author: Fredrik Markstrom <fredrik.markstrom@est.tech>
-DO NOT MERGE: selftests: perf_events: Add device memory callchain unwinding=
- test
 
-This commit adds a kselftest that uses perf record to sample a process
-that has its frame pointer pointing into a device memory mapping created
-via /dev/mem. The test is designed to verify that the kernel survives
-without crashing due to synchronous external aborts.
+On 29/04/2026 6:39 pm, Ian Rogers wrote:
+> Address several segmentation fault vectors in `perf sched stats diff`:
+> 
+> 1. In `get_all_cpu_stats()`, added `assert(!list_empty(head))` to prevent
+>     unsafe `list_first_entry()` calls on empty lists, fixed uninitialized
+>     variable `ret`, and added `list_is_last` check when iterating domains to
+>     prevent out-of-bounds reads during parallel list traversal.
+> 
+> 2. In `show_schedstat_data()`, added NULL checks for `cd_map1` and `cd_map2`
+>     to gracefully handle invalid or empty data files.
+> 
+> 3. Added parallel iteration termination checks using `list_is_last()` in
+>     `show_schedstat_data()` for both domain and CPU lists to safely terminate
+>     at the end of each list when files contain a different number of CPUs
+>     or domains.
+> 
+> 4. Added CPU bounds checks (`cs1->cpu >= nr1` and `cs2->cpu >= nr2`) in
+>     `show_schedstat_data()` to prevent out-of-bounds reads from `cd_map1` and
+>     `cd_map2` when comparing files from machines with different CPU counts.
+> 
+> 5. Added NULL checks for `cd_info1` and `cd_info2` to prevent crashes when
+>     a CPU has data samples but no corresponding domain info in the header.
+> 
+> 6. Added domain bounds checks (`ds1->domain >= cd_info1->nr_domains` and
+>     `ds2->domain >= cd_info2->nr_domains`) to prevent out-of-bounds array
+>     accesses in the domains array.
+> 
+> 7. Added NULL checks for `dinfo1` and `dinfo2` in `show_schedstat_data()`
+>     to prevent crashes when a domain has no corresponding domain info.
+> 
+> 8. Zero-initialized the `perf_data` array in `perf_sched__schedstat_diff()`
+>     to prevent stack garbage from causing `perf_data_file__fd()` to attempt
+>     to use a NULL `fptr` when `use_stdio` happened to be non-zero.
+> 
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Reduce indentation and variable scopes. Hopefully address feedback
+>      from James Clark.
+> 
+> Previously this patch was part of a large perf script refactor:
+> https://lore.kernel.org/lkml/20260425224951.174663-1-irogers@google.com/
+> ---
+>   tools/perf/builtin-sched.c | 144 +++++++++++++++++++++++++++----------
+>   1 file changed, 106 insertions(+), 38 deletions(-)
+> 
 
-> diff --git a/tools/testing/selftests/perf_events/test_perf_vmio.c b/tools=
-/testing/selftests/perf_events/test_perf_vmio.c
-> new file mode 100644
-> index 0000000000000..c9ceee3f15927
-> --- /dev/null
-> +++ b/tools/testing/selftests/perf_events/test_perf_vmio.c
-[ ... ]
-> +	/* Fork a spinner child with FP pointing into device memory */
-> +	spin_pid =3D fork();
-> +	if (spin_pid < 0) {
-> +		close(fd);
-> +		rmdir(tmpdir);
-> +		ASSERT_GE(spin_pid, 0);
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 555247568e7a..e67241415255 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4170,40 +4170,40 @@ static void summarize_schedstat_domain(struct schedstat_domain *summary_domain,
+>    */
+>   static int get_all_cpu_stats(struct list_head *head)
+>   {
+> -	struct schedstat_cpu *cptr = list_first_entry(head, struct schedstat_cpu, cpu_list);
+> -	struct schedstat_cpu *summary_head = NULL;
+> -	struct perf_record_schedstat_domain *ds;
+> -	struct perf_record_schedstat_cpu *cs;
+> -	struct schedstat_domain *dptr, *tdptr;
+> +	struct schedstat_cpu *cptr, *summary_head;
+> +	struct schedstat_domain *dptr;
+>   	bool is_last = false;
+>   	int cnt = 1;
+> -	int ret = 0;
+>   
+> -	if (cptr) {
+> -		summary_head = zalloc(sizeof(*summary_head));
+> -		if (!summary_head)
+> -			return -ENOMEM;
+> +	assert(!list_empty(head));
+> +	cptr = list_first_entry(head, struct schedstat_cpu, cpu_list);
+>   
+> -		summary_head->cpu_data = zalloc(sizeof(*cs));
+> -		memcpy(summary_head->cpu_data, cptr->cpu_data, sizeof(*cs));
+> +	summary_head = zalloc(sizeof(*summary_head));
+> +	if (!summary_head)
+> +		return -ENOMEM;
+>   
+> -		INIT_LIST_HEAD(&summary_head->domain_head);
+> +	summary_head->cpu_data = zalloc(sizeof(*summary_head->cpu_data));
+> +	memcpy(summary_head->cpu_data, cptr->cpu_data, sizeof(*summary_head->cpu_data));
+>   
+> -		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+> -			tdptr = zalloc(sizeof(*tdptr));
+> -			if (!tdptr)
+> -				return -ENOMEM;
+> +	INIT_LIST_HEAD(&summary_head->domain_head);
+>   
+> -			tdptr->domain_data = zalloc(sizeof(*ds));
+> -			if (!tdptr->domain_data)
+> -				return -ENOMEM;
+> +	list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+> +		struct schedstat_domain *tdptr = zalloc(sizeof(*tdptr));
+>   
+> -			memcpy(tdptr->domain_data, dptr->domain_data, sizeof(*ds));
+> -			list_add_tail(&tdptr->domain_list, &summary_head->domain_head);
+> -		}
+> +		if (!tdptr)
+> +			return -ENOMEM;
+> +
+> +		tdptr->domain_data = zalloc(sizeof(*tdptr->domain_data));
+> +		if (!tdptr->domain_data)
+> +			return -ENOMEM;
+> +
+> +		memcpy(tdptr->domain_data, dptr->domain_data, sizeof(*tdptr->domain_data));
+> +		list_add_tail(&tdptr->domain_list, &summary_head->domain_head);
+>   	}
+>   
+>   	list_for_each_entry(cptr, head, cpu_list) {
+> +		struct schedstat_domain *tdptr;
+> +
+>   		if (list_is_first(&cptr->cpu_list, head))
+>   			continue;
+>   
+> @@ -4212,32 +4212,47 @@ static int get_all_cpu_stats(struct list_head *head)
+>   
+>   		cnt++;
+>   		summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
+> +		if (list_empty(&summary_head->domain_head))
+> +			continue;
+> +
+>   		tdptr = list_first_entry(&summary_head->domain_head, struct schedstat_domain,
+>   					 domain_list);
+>   
+>   		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+>   			summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
+> +			if (list_is_last(&tdptr->domain_list, &summary_head->domain_head)) {
+> +				tdptr = NULL;
+> +				break;
+> +			}
+>   			tdptr = list_next_entry(tdptr, domain_list);
+>   		}
+>   	}
+>   
+>   	list_add(&summary_head->cpu_list, head);
+> -	return ret;
+> +	return 0;
+>   }
+>   
+> -static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1,
+> -			       struct list_head *head2, struct cpu_domain_map **cd_map2,
+> +static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **cd_map1, int nr1,
+> +			       struct list_head *head2, struct cpu_domain_map **cd_map2, int nr2,
+>   			       bool summary_only)
+>   {
+>   	struct schedstat_cpu *cptr1 = list_first_entry(head1, struct schedstat_cpu, cpu_list);
+>   	struct perf_record_schedstat_domain *ds1 = NULL, *ds2 = NULL;
+> -	struct perf_record_schedstat_cpu *cs1 = NULL, *cs2 = NULL;
+>   	struct schedstat_domain *dptr1 = NULL, *dptr2 = NULL;
+>   	struct schedstat_cpu *cptr2 = NULL;
+>   	__u64 jiffies1 = 0, jiffies2 = 0;
+>   	bool is_summary = true;
+>   	int ret = 0;
+>   
+> +	if (!cd_map1) {
+> +		pr_err("Error: CPU domain map 1 is missing.\n");
+> +		return -1;
 > +	}
-> +	if (spin_pid =3D=3D 0) {
-
-If the parent test process crashes or is killed by a test runner timeout
-before executing kill(spin_pid, SIGKILL), will the child process be orphaned
-and run indefinitely in the busy-wait loop?
-
-Could prctl(PR_SET_PDEATHSIG, SIGKILL) be used here to ensure the child is
-automatically killed if the parent dies?
-
-> +		/*
-> +		 * mmap /dev/mem in the child so remap_pfn_range populates
-> +		 * PTEs directly. fork() does not copy PTEs for VM_PFNMAP
-[ ... ]
-> +		 */
-> +		m =3D mmap(NULL, off + page_size, PROT_READ | PROT_WRITE,
-> +			 MAP_SHARED, fd, page);
-> +		if (m =3D=3D MAP_FAILED)
-> +			_exit(2);
-
-If this mmap() fails (for example, due to CONFIG_STRICT_DEVMEM), the child
-exits immediately. Since the parent ignores the child's exit status, does
-this cause the test to silently pass without ever exercising the
-vulnerability?
-
-> +		fp =3D (char *)m + off;
-> +		__asm__ volatile(
-> +			"mov x29, %0\n"
-> +			"1: b 1b\n"
-> +			: : "r"(fp) : "x29", "memory");
-> +		_exit(0);
+> +	if (head2 && !cd_map2) {
+> +		pr_err("Error: CPU domain map 2 is missing.\n");
+> +		return -1;
 > +	}
 > +
-> +	/* Launch perf to sample the spinner */
-> +	snprintf(pid_str, sizeof(pid_str), "%d", spin_pid);
-> +
-> +	perf_pid =3D fork();
+>   	printf("Description\n");
+>   	print_separator2(SEP_LEN, "", 0);
+>   	printf("%-30s-> %s\n", "DESC", "Description of the field");
+> @@ -4267,14 +4282,36 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+>   
+>   	list_for_each_entry(cptr1, head1, cpu_list) {
+>   		struct cpu_domain_map *cd_info1 = NULL, *cd_info2 = NULL;
+> +		struct perf_record_schedstat_cpu *cs1 = cptr1->cpu_data;
+> +		struct perf_record_schedstat_cpu *cs2 = NULL;
+>   
+> -		cs1 = cptr1->cpu_data;
+> +		dptr2 = NULL;
+> +		if (cs1->cpu >= (u32)nr1) {
+> +			pr_err("Error: CPU %d exceeds domain map size %d\n", cs1->cpu, nr1);
+> +			return -1;
+> +		}
+>   		cd_info1 = cd_map1[cs1->cpu];
+> +		if (!cd_info1) {
+> +			pr_err("Error: CPU %d domain info is missing in map 1.\n",
+> +			       cs1->cpu);
+> +			return -1;
+> +		}
+>   		if (cptr2) {
+>   			cs2 = cptr2->cpu_data;
+> +			if (cs2->cpu >= (u32)nr2) {
+> +				pr_err("Error: CPU %d exceeds domain map size %d\n", cs2->cpu, nr2);
+> +				return -1;
+> +			}
+>   			cd_info2 = cd_map2[cs2->cpu];
+> -			dptr2 = list_first_entry(&cptr2->domain_head, struct schedstat_domain,
+> -						 domain_list);
+> +			if (!cd_info2) {
+> +				pr_err("Error: CPU %d domain info is missing in map 2.\n",
+> +				       cs2->cpu);
+> +				return -1;
+> +			}
+> +			if (!list_empty(&cptr2->domain_head))
+> +				dptr2 = list_first_entry(&cptr2->domain_head,
+> +							 struct schedstat_domain,
+> +							 domain_list);
+>   		}
+>   
+>   		if (cs2 && cs1->cpu != cs2->cpu) {
+> @@ -4302,10 +4339,30 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+>   			struct domain_info *dinfo1 = NULL, *dinfo2 = NULL;
+>   
+>   			ds1 = dptr1->domain_data;
+> +			if (ds1->domain >= cd_info1->nr_domains) {
+> +				pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map 1.\n",
+> +				       ds1->domain, cd_info1->nr_domains, cs1->cpu);
+> +				return -1;
+> +			}
+>   			dinfo1 = cd_info1->domains[ds1->domain];
+> +			if (!dinfo1) {
+> +				pr_err("Error: Domain %d info is missing for CPU %d in map 1.\n",
+> +				       ds1->domain, cs1->cpu);
+> +				return -1;
+> +			}
+>   			if (dptr2) {
+>   				ds2 = dptr2->domain_data;
+> +				if (ds2->domain >= cd_info2->nr_domains) {
+> +					pr_err("Error: Domain %d exceeds max domains %d for CPU %d in map 2.\n",
+> +					       ds2->domain, cd_info2->nr_domains, cs2->cpu);
+> +					return -1;
+> +				}
+>   				dinfo2 = cd_info2->domains[ds2->domain];
+> +				if (!dinfo2) {
+> +					pr_err("Error: Domain %d info is missing for CPU %d in map 2.\n",
+> +					       ds2->domain, cs2->cpu);
+> +					return -1;
+> +				}
+>   			}
+>   
+>   			if (dinfo2 && dinfo1->domain != dinfo2->domain) {
+> @@ -4334,14 +4391,22 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
+>   			print_domain_stats(ds1, ds2, jiffies1, jiffies2);
+>   			print_separator2(SEP_LEN, "", 0);
+>   
+> -			if (dptr2)
+> -				dptr2 = list_next_entry(dptr2, domain_list);
+> +			if (dptr2) {
+> +				if (list_is_last(&dptr2->domain_list, &cptr2->domain_head))
+> +					dptr2 = NULL;
+> +				else
+> +					dptr2 = list_next_entry(dptr2, domain_list);
+> +			}
+>   		}
+>   		if (summary_only)
+>   			break;
+>   
+> -		if (cptr2)
+> -			cptr2 = list_next_entry(cptr2, cpu_list);
+> +		if (cptr2) {
+> +			if (list_is_last(&cptr2->cpu_list, head2))
+> +				cptr2 = NULL;
+> +			else
+> +				cptr2 = list_next_entry(cptr2, cpu_list);
+> +		}
+>   
+>   		is_summary = false;
+>   	}
+> @@ -4523,7 +4588,9 @@ static int perf_sched__schedstat_report(struct perf_sched *sched)
+>   		}
+>   
+>   		cd_map = session->header.env.cpu_domain;
+> -		err = show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
+> +		err = show_schedstat_data(&cpu_head, cd_map,
+> +					  session->header.env.nr_cpus_avail,
+> +					  NULL, NULL, 0, false);
+>   	}
+>   
+>   out:
+> @@ -4538,7 +4605,7 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
+>   	struct cpu_domain_map **cd_map0 = NULL, **cd_map1 = NULL;
+>   	struct list_head cpu_head_ses0, cpu_head_ses1;
+>   	struct perf_session *session[2];
+> -	struct perf_data data[2];
+> +	struct perf_data data[2] = {0};
+>   	int ret = 0, err = 0;
+>   	static const char *defaults[] = {
+>   		"perf.data.old",
+> @@ -4610,7 +4677,8 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
+>   		goto out_delete_ses0;
+>   	}
+>   
+> -	show_schedstat_data(&cpu_head_ses0, cd_map0, &cpu_head_ses1, cd_map1, true);
+> +	show_schedstat_data(&cpu_head_ses0, cd_map0, session[0]->header.env.nr_cpus_avail,
+> +			    &cpu_head_ses1, cd_map1, session[1]->header.env.nr_cpus_avail, true);
+>   
+>   out_delete_ses1:
+>   	free_schedstat(&cpu_head_ses1);
+> @@ -4720,7 +4788,7 @@ static int perf_sched__schedstat_live(struct perf_sched *sched,
+>   		goto out;
+>   	}
+>   
+> -	show_schedstat_data(&cpu_head, cd_map, NULL, NULL, false);
+> +	show_schedstat_data(&cpu_head, cd_map, nr, NULL, NULL, 0, false);
+>   	free_cpu_domain_info(cd_map, sv, nr);
+>   out:
+>   	free_schedstat(&cpu_head);
 
-Is there a race condition here between the child process initialization and
-perf record?
-
-If the system is heavily loaded, perf record might finish its 3-second
-sleep before the child process completes the mmap() and reaches the
-assembly loop.
-
-Could we add synchronization, such as a pipe or file lock, to ensure the
-child is ready before perf starts sampling?
-
-[ ... ]
-> +	waitpid(perf_pid, &pst, 0);
-> +
-> +	kill(spin_pid, SIGKILL);
-> +	waitpid(spin_pid, NULL, 0);
-> +	close(fd);
-> +
-> +	/* Clean up perf output */
-> +	rmdir(tmpdir);
-
-Does rmdir() fail with ENOTEMPTY because perf record generated a perf.data
-file inside the directory?
-
-Since unlink() is not called on the perf.data file, do the directory and
-file leak on the file system after every test run?
-
-> +
-> +	if (!WIFEXITED(pst))
-> +		SKIP(return, "perf terminated abnormally");
-> +	if (WEXITSTATUS(pst) =3D=3D 1)
-> +		SKIP(return, "perf not available");
-> +
-> +	/*
-> +	 * The real test is that the kernel survived. If we got here
-> +	 * without a synchronous external abort, the guard worked.
-> +	 */
-> +	TH_LOG("kernel survived perf sampling with FP in device memory");
-
-If the child exited early because mmap() failed, perf record will fail to
-attach to the zombie process and might exit with a code other than 1 (such
-as 255).
-
-Because the check here only looks for WEXITSTATUS(pst) =3D=3D 1, does this
-allow other perf failures to bypass the check and incorrectly log that the
-test passed?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260430-master-wit=
-h-pfix-v3-v2-0-bd526ec04a75@est.tech?part=3D3
