@@ -1,198 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BD9258CE7;
-	Thu, 30 Apr 2026 01:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C6AEACD
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 02:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777512137; cv=none; b=SHCmAMT1mdnw+MhfXi2s+XalofbdbWHTUdL2eKJv4Fow/LHw5bLO/GwhcHycXO/T6Y1TEz6FwHBPn3V5f/g3H4hNpkCTIXOALatRadHMIp7XTPDfCXuBrMsBn7zikoFaXgP5gpsd9HkDhYarWtoivrDgiLSk4E8ZQJkdinGyUPE=
+	t=1777514643; cv=none; b=Dj7kVvs4No1rbyOZRXHwtiWlPWu4s4wt6Fy9vDYLlStsN0WRr4AyZzx3f+EIhoR1+1tJ1TZ7yoHAGXoeg+IVGDha8pslFzyG7A9OFDS988IFmET6AeDXD2wtozfpW/rUIXtiZRZAlQ3W9+N/KRtM1wX0Yost3aA1t8AFBxR7AbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777512137; c=relaxed/simple;
-	bh=tHUc23y70EGrdqKcDG61yYGuDR+LZYbjpPzuz8uFSyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X9getnZEMaKaCw+fQonnbQwZLs4Ny+uUByHmCGe6FnatdIMdRzHjsbNFzb5qH6a7JK4GSCwwHq7+dsmcR9uJSQ1ZnJ0thQQ3YT+apg5F0RwQnbT6yw/1yRYnznAn+HqJRZlmtJEj/lvOJJMMA641TQUH3DzRdxKlKDAJZRtiX5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTDvD+xS; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1777514643; c=relaxed/simple;
+	bh=jWtOdivSqHnHOpPve/AZPpRvji4bw+P24hzIBMQsaIM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PxtooYPDuPIFXstRnjqZ0AaQuDdbJ2utY4h1fcjraY070wpBh/DHDAzcdD4Tz3KvDX6wFBn597sY/nzaQJvSKuN7WTyE0pCNQJxKjAJkqF5dqbEoQZLQxbs5WsfmUHQ+J8xEIa+ND7ngsjYd03SXwAjFLlihDLtpVHs6Es4xKxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CChm73An; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTDvD+xS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777512136; x=1809048136;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tHUc23y70EGrdqKcDG61yYGuDR+LZYbjpPzuz8uFSyk=;
-  b=hTDvD+xSbkiDdh5Am3EuCuCDrksomEJxDl8gwxOYfyXf2z5GuXZjiaGF
-   Shf7/k8MGn9egbPw5cm2jM0e2DzQ8ixjXO9Ujw4gFmEex+QuEjta3aXIA
-   QFETZx1Gkd2gDPqfEqIECabLSzz53/Vdl1T3TEGDZ0zMtll2xAwDV+XLA
-   U5aOcNGolmKd6EyLnduN15tcFWvYCtEE5vOrt7knlm8Stgr2x3BM/McBS
-   ldq/7H9qvg6mib6k/9e8bq2I57c+HN0e4K4BcDGcsIY85OYUJbTJ4/zp3
-   8nvYQl092FHdm1xL06Yi0QVISC7gMhd1FKNxMVsbYYZLoYbugMYkTLQ5f
-   A==;
-X-CSE-ConnectionGUID: R2rBUkVfT6ixVkuT9KYsTg==
-X-CSE-MsgGUID: Z7UCZZZHRXeKMaHdB1IkyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="89828077"
-X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="89828077"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 18:22:15 -0700
-X-CSE-ConnectionGUID: fRhvcAWlReegYwsoCGaR4Q==
-X-CSE-MsgGUID: 8oSvWKdHQWKFd8SWZ/poWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="238405857"
-Received: from unknown (HELO [10.238.2.250]) ([10.238.2.250])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 18:22:11 -0700
-Message-ID: <605f3965-798b-42d2-ad00-de5a6466a292@linux.intel.com>
-Date: Thu, 30 Apr 2026 09:22:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CChm73An"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C32C19425;
+	Thu, 30 Apr 2026 02:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777514642;
+	bh=jWtOdivSqHnHOpPve/AZPpRvji4bw+P24hzIBMQsaIM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=CChm73An5VSJqfUTODQOLPZKibskXdr+nZCaF/HZ+4igXljqQ7uRK+0/NX7I06Rs/
+	 B2eb3Wfo8dBnyAftp6aVUw+pe4wrbJWPboDTNXbVSneT18SnBn7HE13NemrFccZiBu
+	 KzdIyen38YhqaRNW9CNovuogxi/agp3V/PTyNd6HprKkZSYoaxD34hUGewNW4rWewy
+	 FvbE+NeLylvA4lwPiWkkU9AqkbcGeT+5I7NUFp1fgeWC0N67etnTckNrEuHno6jikE
+	 Qb26LDdaq5/aptnBDXlOQR/RlMSKXpCEpmtmyRp/FpMzHdeC55WZnW/if/d7sEYmEm
+	 KzcNBvGfXH62g==
+From: sashiko-bot@kernel.org
+Subject: Re: [Patch v4 2/5] perf/x86/intel: Always reprogram ACR events to
+ prevent stale masks
+Reply-To: sashiko@lists.linux.dev
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260430002558.712334-3-dapeng1.mi@linux.intel.com>
+References: <20260430002558.712334-3-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 30 Apr 2026 02:04:00 +0000
+Message-Id: <20260430020402.60C32C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86/intel: Fix kernel address leakages in LBR
- stack
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-References: <20260414021440.928068-1-dapeng1.mi@linux.intel.com>
- <20260414021440.928068-2-dapeng1.mi@linux.intel.com>
- <3fbb8451-62a3-49c3-bf76-ceb2ca4794cb@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <3fbb8451-62a3-49c3-bf76-ceb2ca4794cb@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Unconditional hardware MSR reprogramming for ACR events introduc=
+es performance regression and increases measurement blind spots.
+--
 
-On 4/30/2026 4:57 AM, Chen, Zide wrote:
->
-> On 4/13/2026 7:14 PM, Dapeng Mi wrote:
->> Prior to the arch-LBR which supports CPL filtering, the kernel address
->> could be leaked to user space even PERF_SAMPLE_BRANCH_USER is required.
-> This sounds correct to catch these branches, since only the target CPL
-> counts. The software filtering is implemented to match the HW behavior:
->
-> Legacy LBR.
-> CPL_EQ_0: When set, do not capture branches ending in ring 0
-> CPL_NEQ_0: When set, do not capture branches ending in ring >0
->
-> Arch LBR:
-> For operations which change the CPL, the operation is recorded in LBRs
-> only if the CPL at the end of the operation is enabled for LBR
-> recording. In cases where the CPL transitions from a value that is
-> filtered out to a value that is enabled for LBR
-> recording, the FROM_IP address for the recorded CPL transition branch or
-> event will be 0FFFFFFFFFFFFFFFFH.
+commit a8f30026401c4d7de00c3f1a7543204056d7235c
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+perf/x86/intel: Always reprogram ACR events to prevent stale masks
 
-Yes, this is exactly what HW does.
+This commit modifies PMU event scheduling to force reprogramming of all ACR
+events during rescheduling. It does this by making match_prev_assignment()
+always return false for ACR events.
 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 810ab21ffd99..4b9e105309c6 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1294,13 +1294,16 @@ int x86_perf_rdpmc_index(struct perf_event *event)
+>  	return event->hw.event_base_rdpmc;
+>  }
+> =20
+> -static inline int match_prev_assignment(struct hw_perf_event *hwc,
+> +static inline int match_prev_assignment(struct perf_event *event,
+>  					struct cpu_hw_events *cpuc,
+>  					int i)
+>  {
+> +	struct hw_perf_event *hwc =3D &event->hw;
+> +
+>  	return hwc->idx =3D=3D cpuc->assign[i] &&
+> -		hwc->last_cpu =3D=3D smp_processor_id() &&
+> -		hwc->last_tag =3D=3D cpuc->tags[i];
+> +	       hwc->last_cpu =3D=3D smp_processor_id() &&
+> +	       hwc->last_tag =3D=3D cpuc->tags[i] &&
+> +	       !is_acr_event_group(event);
+>  }
 
->
->> e.g., run below command on Intel Tigerlake platform,
->>
->> ```
->> $./perf record -e cycles:p -o - --branch-filter any,save_type,u -- \
->>  	./perf bench syscall basic --loop 1000 | \
->> 	./perf script -i - --fields brstack|tr ' ' '\n'| \
->> 	grep -E '0x[89a-f][0-9a-f]{15}'
->>
->>     Total time: 0.000 [sec]
->>
->>       0.219000 usecs/op
->>      4,566,210 ops/sec
->> [ perf record: Woken up 1 times to write data ]
->> [ perf record: Captured and wrote 0.551 MB - ]
->> 0xffffffff93c001c8/0x7f12a2b1d647/P/-/-/16959/SYSRET/-
->> 0xffffffff93c001c8/0x7f12a2b1d5c2/P/-/-/17535/SYSRET/-
->> 0xffffffff93c01928/0x7f12a2861000/P/-/-/6719/ERET/-
->> 0xffffffff93c01928/0x7f12a297a000/P/-/-/8575/ERET/-
->> ```
-> Thus, filtering with USR=1, it's correct that ERET/SYSRET show up in the
-> above command running on TG because the target CPL is 3. However, the
-> from address should be hidden with 0xFFFFFFFFFFFFFFFF.
+Does this unconditional hardware MSR reprogramming for ACR events introduce=
+ a
+performance regression and increase measurement blind spots?
 
-Hmm, in theory forcing the "from" IP to 0xFFFFFFFFFFFFFFFF seems a better
-idea, don't lose SYSRET/ERET trace and no kernel address leakage as well.
+By unconditionally returning false for all ACR events, every active ACR eve=
+nt
+will undergo a full x86_pmu_stop() and x86_pmu_start() cycle during PMU
+re-enablement (e.g., in x86_pmu_enable() when cpuc->n_added > 0).
 
-It works for legacy LBR, but arch-LBR HW already forces the "from" IP to
-0xFFFFFFFFFFFFFFFF , SW has no way to figure out the real branch type, so
-the branch type has to be converted X86_BR_NONE which leads to this entry
-is dropped.
+These full stop/start cycles invoke multiple wrmsr and rdpmc instructions,
+adding significant cycle overhead to the hot scheduling path. Since this
+occurs while the PMU is globally disabled, the added latency extends the
+global PMU off-time, unnecessarily increasing the measurement blind spot
+where events are not counted across the CPU.
 
-Beside, I'm not sure if this would break current test case. @Ian, how's
-your idea on this?
+Could this overhead be avoided by checking if the mask actually changed?
 
+x86_pmu_late_setup() calculates the new physical mask and stores it in
+event->hw.config1 before match_prev_assignment() is evaluated. Would it be
+better to compare event->hw.config1 against the previously programmed mask
+stored in cpuc->acr_cfg_b[hwc->idx] and only force a reprogram when they
+differ?
 
->
-> Instead, this appears a bug on platforms with CPL filtering (SPR, etc.)
-> that filters out these branches. This is because for ERET/SYSRET, the
-> br_type is 8 (OTHER_BRANCH), so even on arch LBR, it gets the type from
-> branch_type() which incorrectly translates type 8 to 0 (X86_BR_NONE).
+[ ... ]
 
-As above explained, this doesn't work for arch-LBR.
-
-Thanks.
-
-
->
-> Therefore, something needs to be done in get_branch_type() to handle
-> OTHER_BRANCH.
->
->> The SYSRET/ERET branch calls are found the in the LBR stack, whose "from"
->> addresses are obviously kernel address.
->>
->> Currently intel_pmu_lbr_filter() only filters out the LBR entries whose
->> "to" address is a kernel address but doesn't check the "from" address.
->>
->> To fix the issue, extend the software filtering to both "from" and "to"
->> addresses.
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: Ian Rogers <irogers@google.com>
->> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/lbr.c | 13 ++++++++++---
->>  1 file changed, 10 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 16977e4c6f8a..deef81c16571 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -1212,7 +1212,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  {
->>  	u64 from, to;
->>  	int br_sel = cpuc->br_sel;
->> -	int i, j, type, to_plm;
->> +	int i, j, type, to_plm, from_plm;
->>  	bool compress = false;
->>  
->>  	/* if sampling all branches, then nothing to filter */
->> @@ -1244,8 +1244,15 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  				type |= X86_BR_NO_TX;
->>  		}
->>  
->> -		/* if type does not correspond, then discard */
->> -		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
->> +		from_plm = kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
->> +		/*
->> +		 * If type does not correspond, then discard.
->> +		 * Especially filter out the entries whose from or to address
->> +		 * is a kernel address while only X86_BR_USER is set. This prevents
->> +		 * kernel address from being leaked into a user-space-only LBR stack.
->> +		 */
->> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type ||
->> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
->>  			cpuc->lbr_entries[i].from = 0;
->>  			compress = true;
->>  		}
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260430002558.7123=
+34-1-dapeng1.mi@linux.intel.com?part=3D2
