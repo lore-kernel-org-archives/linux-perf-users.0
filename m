@@ -1,45 +1,46 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012006.outbound.protection.outlook.com [52.101.43.6])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011059.outbound.protection.outlook.com [52.101.52.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094EC26A08F;
-	Thu, 30 Apr 2026 06:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE4374737;
+	Thu, 30 Apr 2026 06:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777529502; cv=fail; b=qZOXCsVAhXfgadggv9smOCF5cfr5gwzHbc4pcO4Qw659lDmdWaqy8Oqq5iMpXc6Avn2xkH8LLBGXxSSk6jY7u01O7Q2j6dMJa9zh4GBhpQOBzttWJ8FoCpc3YPRP3MH49Yd1vgsP/RXUKpNRjy9a/43edk9uEXDQZbh1GJAPPk4=
+	t=1777529508; cv=fail; b=U2TyC1tnBpX2mTwfAf2RFIF0wCoXHgTaUlYWxb5+31f/1MqhsMKw5QXgWAfDem1FCjTBuCp7V+o8+eRJ1/962hJb75ky4DVb5U/lqRiG4OMgAnr6fJD6Gh3g7OoTxWZXTf0fVCLUPEGEcEYjEMmaQXsZeaX0DfUjN09UGWyoTRA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777529502; c=relaxed/simple;
-	bh=tgBuxfU4dVZz3lyTU4a4aGZxnNr57ZNJ55jXP9tL+6Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CXcU2QDHIRCucEOrRHyfp+p2dS73NZH+wKSHL8za+BLX2rItMfPwpt5HKEjOAybALAaEaUgq34r7ioHvQz0c+9vb8HvBiumUoDOaqBBLXC+jHMwVpSR0fd3ibU6Hsb1ysWBYbCQylXkq7Oh+DFQkqTRS0pbFNcdktrmh8VlScdU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jHajLQuu; arc=fail smtp.client-ip=52.101.43.6
+	s=arc-20240116; t=1777529508; c=relaxed/simple;
+	bh=7zXAJ4yn6KrmshMAL2TLnr1rwAvlIeQjfgYhRQGwVOM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R2RnWuv+0kdpcGVJu4FLeyTb102+0mCZgojudbHd3fj2XsuMVbD1veA2yDIPMIBE3sr0U5ftqIuWcK018iO3PQcx1sH+mYxVlChT0sYQkeorDFG6ne8bxBhkSgQspyJY2hm6dAnqTxZR1QnHnmwaCU8N7AuEX5IEOwVOchlH9ak=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vKEyRmNJ; arc=fail smtp.client-ip=52.101.52.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jHajLQuu"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vKEyRmNJ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OMMyTyqf2fC8USoQX2ixZFUfkx4Eev/sZCBTxXZQ1wp4CV/+SCS1YPXXL0ElevbaIZHFBq00LFij6zT7eZ45b62DGBFiuRiPJen5ImkbDK2mKgY8Qr75GZtKHTVLKplkoPntjKYEdLjK88ZgrWhVHWqjy7jo/2TxXAFPE7vMD63JZHxKsM8p/BinpNdJBPpBdrTLuXloB9vwXIT4EZy3io0wmc7zkVbc0TBJIs9Aa3xI9i8t5fuctBm7yqyt63j8nhtg9cHpEDhtiED9kRHUgqQFeJHxoQwvnPnDOyi4B39Y1+j5X2mDn4eaMG+E6+hQWJyJmMxPWo/LwR4YHBg2wQ==
+ b=uid0f1XwMhQSJ0YBs7vX9lqMKHo5A4hqraL1P146sAKw8Fg6xDqkzw7TgtqrZt8kdiMzCAnV7eHf4rPQuzG1XgB85YLA5sLDbs67rWjmd3jUQ5sD2oeShA40f7i2fF57VEHLKOuXAhMRf1B8KEhXJQkfzXvJJqveyYmJ1Df0h1S43Cwv7fHVyshZMOvzSpHtQ2yGkInJKbvaKxl+qWeu26d2iEZNtc95tgOTiFMVPKgxxPX0CWHhNiBST922rohTL0CTgjR+Rz9BhiIrq3twpx/6GbW56nmf+HUnHF6R8bhcFKnc/YR4YVmJpWqSmxnrVOXPicIe14XIDyN4SdkAIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HJa6Drze5NeyJ/JUcWZq8wrljOAyKBmziEC1F+SAX8w=;
- b=eJATzYFMA+MX8pgzqD9aeo57tWImVg45ZKg5afsUprcRk5YU8k8rEI2wdY27QXseRrpev6t55pR6sUJ0K7H2x4T3AWjeComJeBD9aXclTdBJfOk5QOsxJq6XDU+FniV7u6DNfF2UVhXY2qDCDBr1kN19FA37BiureOedecok+KPiixWc90Fs5BwFPLaJskOhnhZOJ8vAkK9nQ5wyzh+8OEpCttX8uWltM5Qq0FfCvfhAT+wntPsi620rzuE3cK+2onqgXT3TXlSS2sV50qNmQClLraJ1IKe0kVbo7RkADNCwCJue5hI/4BgUOb00fZJXoUtywE+A8+164VEaPma5Bg==
+ bh=Sl8FXe6pRqmEWIwlwc9yNDjG9gVaKpV0+YVl7Tgq3oE=;
+ b=GrFno9Nol2/FeLHmzHtAkmDJS+T7OWX1f1upvqSiAiHj7Lv5lxM6tc7XoxelyXCaRdgMKlGhQc4zOvkHSvkutil5Uzq9Ky7pRBkvXY/Z4nXykJpOOObtObPDE1zARMKFXDgJMUeCojBWWp3Nr0dpGspIDG1GItLZ/6hHap5Ec8yoq8f8IdxUyAtaUSlHwX+EoSagaE1RRwqTqbkkb4oaho2tsJOfuaOzL3vxboyxeFfOXTxQ2pM2hmyRntPSEHmNaDsbydEhvsGNUL4rxWSgSTiTaZH7SNi/lBzYkYj0g9Jol85/1iKvjDNeYK6e/tXv3BjKvSCaB7Y9wC4fk8jVPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HJa6Drze5NeyJ/JUcWZq8wrljOAyKBmziEC1F+SAX8w=;
- b=jHajLQuuqyClenlVGr7tYMKkCvhGqtByzVuK0XMjyFLnNSJaFZKTe4Gssa9umgWQCcBemKcVbVok1vU4HS4VEcZmBruBmT8lXPrqjuyg1vPsJxJYTpHg3K9oKsWC6S8+vfXSAhDY9WtOjRddTByMkpgxkCqMcW85n8wwvrt/G0U=
-Received: from PH7P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:32a::35)
- by PH0PR12MB7011.namprd12.prod.outlook.com (2603:10b6:510:21c::15) with
+ bh=Sl8FXe6pRqmEWIwlwc9yNDjG9gVaKpV0+YVl7Tgq3oE=;
+ b=vKEyRmNJwInifkhhMVgx0xg0QEIIaCBUR3FSXfRkKvZuPEIdDImSFl/TuVZh5Q3mnPm2b91iWRUwjAADIGI+HM05GJ/nVyw55AbsFFMu7LaO5K7zkSvcLvjJafQCLzE4GCsOQT4ZWlI7cpd3tIZGNqa7nUvRDzRRUinUFkFmx6E=
+Received: from CY5PR19CA0054.namprd19.prod.outlook.com (2603:10b6:930:1a::15)
+ by LV2PR12MB5847.namprd12.prod.outlook.com (2603:10b6:408:174::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.20; Thu, 30 Apr
- 2026 06:11:37 +0000
-Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
- (2603:10b6:510:32a:cafe::91) by PH7P221CA0030.outlook.office365.com
- (2603:10b6:510:32a::35) with Microsoft SMTP Server (version=TLS1_3,
+ 2026 06:11:41 +0000
+Received: from CY4PEPF0000FCBF.namprd03.prod.outlook.com
+ (2603:10b6:930:1a:cafe::52) by CY5PR19CA0054.outlook.office365.com
+ (2603:10b6:930:1a::15) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.30 via Frontend Transport; Thu,
- 30 Apr 2026 06:11:37 +0000
+ 30 Apr 2026 06:11:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
+ CY4PEPF0000FCBF.mail.protection.outlook.com (10.167.242.101) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Thu, 30 Apr 2026 06:11:37 +0000
+ 15.20.9846.18 via Frontend Transport; Thu, 30 Apr 2026 06:11:41 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 30 Apr
- 2026 01:11:32 -0500
+ 2026 01:11:36 -0500
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
 	<namhyung@kernel.org>, Ian Rogers <irogers@google.com>
@@ -64,10 +65,12 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Peter Zijlstra
 	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
 	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
 	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2 0/8] perf tools amd ibs: Fixes + Zen6 enhancements
-Date: Thu, 30 Apr 2026 06:11:07 +0000
-Message-ID: <20260430061115.10266-1-ravi.bangoria@amd.com>
+Subject: [PATCH v2 1/8] perf test amd ibs: Fix incorrect kernel version check
+Date: Thu, 30 Apr 2026 06:11:08 +0000
+Message-ID: <20260430061115.10266-2-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260430061115.10266-1-ravi.bangoria@amd.com>
+References: <20260430061115.10266-1-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,71 +83,53 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|PH0PR12MB7011:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7dcac0a3-7307-4e93-9b70-08dea67f564b
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBF:EE_|LV2PR12MB5847:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b4fd095-ab28-4349-4b2d-08dea67f58be
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|7416014|376014|13003099007|18002099003|56012099003;
+	BCL:0;ARA:13230040|7416014|376014|36860700016|82310400026|1800799024|18002099003|56012099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	kj3FuRdlFiC2aJoCIFLy+xUWjIfWfp36/Q5ffVGyDJP1TcKLLjyxEZb5BK1F4NHyI88t/0F4d0tdZ33bzB3t0IdVNMAsoS2jy7sWYMUdSpk/4gSTtghHfyUq0T2QkoalBSfGbqPK88T0NGbDnZvDs9bdGKINT+3KppbGox/S4Pz2YFHs+1AWMJI6A8t9Dq70yVb1lujykaCWqV6kCaWU92RXRp5RbxV3T2UgHg71hCI7cxCHJXmzVFz4G6cmOTZhRxfYybjqa8jmJZItkrB1bTxKDgVMF/hCbzgIldUrqwQqFU2N7TQrm74I/kxINakVsw49yZ0+/WkGVgBPIm8F5TZxO5Ht8g7JUuFl4/B8jMhAF7erQ60xjsIuf6sZhcqgQQx82/rIWRk9ofbtlBLdxYRFZWItf77k49gB3rkS+s3F/EuNt4vh/TMnh2I9Xo0guEGsRlFmO+hj9c24Mnkb25mmET/za8Yu05BJCAqpXLqYLH6xqnso/TIoSH2wnDoWLufu+U55rLfkogTQOKLHT5CPcBHXdcnJtKzlYpTQreBebM1MVlPCSkc9BY0d1Bkg041S+0UA+fSxThcJNa1x29DSvc/2ccz8O/4E40OSro01zM2dozdgOrxdZ61QtDf34Hl7MmO/e1J7iBwtzAGq/DIZlW1GQmmcsqkZnGiLAY3NI+w7IKyhZSsb86PYk85NzAo0hmj7gGjA0ygkI+F25ZP6YHBY3qKXCHBlccLnZq4=
+	ogSOmwLckV/wffgmZ5koGH651Z4ibTz3TIjVjbAr4S7KCHNEeqBRAb6oHWt0mIU6AM9aIbyvbCNjajuMIaaa//xcuxxZVBsyAN/PH1PkwtINDUp1277mbi0RR+SXr9TSp7AK9qNilMBvU/K/pjuqWerhqS90F70FxcIDUypWPvyKiqmXjS9GY+s30Ti3A8w15wTUXOtKgmyt7Gt1GChxaYuxIkVPA5Rv8Z3C/UA7F9MXu5g00J6HlO+juCZvvTxEYvZo8rEHbhSdb/qM5NkMTBFhtgtW/RYTnnbwwur/NdJctAU74sNtcnqcNTu8WfMJ627RvFu3SCZH+Ghm5tGRDCgPs6yElfTgn8bkdmI+Ea9HWeTjYohngC3kqxJwTDi5zDmSmcV1RdcVkk7Mq9vbsWxd7o8ZUCDazE+JPRXX3/XJnNckwyHnuhzZZopcQhxw9eP+PME/EqOhLSel6IZozWh/mI9tdJOiwAe3WsQXqwARJpxpkizAQTKSgwraawlgrYocVmYB/OUrVznEWt8D3nzZkdqvDyYMGu/mDAhxy63ZDBYRtoDjL0hXFIOoSw2C3VJ4Toc17cfD9BSqypzsdfcT2/zHIkO9xno6ayPljrTXlz84A6yQaxsY6SRtFmgHcvjnSw3SNUFT705zYUdgZ0gZDOSjj9KP/WdDbMutY9jv0H4PGSkBvBk46y6Qs/wi2eyNGLGQUxrQNI6ZwUuVrRr0Um5gum4hDVhNQMskN08RNHJ3dxSZNbL681NNTWh3mFKjwNqBtdbOk+u1qdIABQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(7416014)(376014)(13003099007)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700016)(82310400026)(1800799024)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Lhm842RZ0EiFYCVvH9L5MIa8WvOfqWtftdpoTPZfzIbEF5dCJ202DfIYIASaZTVh7NA7LeTyeQLidJfgWUnAL1ELqN8eR7wE9/A6KUzmQjGeMFembByydudHPXVo/9rfSN9QuZyr89Iw4n/ELmm2zI6l2GxFyWYgx+JDQ8KOQmW0PpWJfRrocnPvis+5cxP0m0SSbdMLWRcZ6qPH2l4Y/H6zB4CoQZlu92ikPiiJvo3/zUQ8d+v3A9hK89JBgdtUlnn+JagS1noQiHRdQHnzE5SPpOLJKfHDMLHzevDg/2ITl0PzQuicptWir9y/7TpRE2QhgsmHjTC45wBXje7omFZbMOuutgJ1A6l6Q6Ut7I9TxzEovUv9Gxot4bxFQowvwvsRdnK1/3n0xei+jGGWZdhbTWvQjP75nrfpMyzrxdKjotpW7rVARp6mr1XqmWyU
+	LOgLT4sK82GsGgy+naqCJeU+NfVFCw0TyT69qyoKLQbKN+qzHASkBmeAqkWMiiFrsGoQ7dTDoYlR1yWzBzLOzYwnUat12RwVzYbinQAkXF5WH7TDimnsUXBvoir6jApKab7s2gBym1OwlqYqwWoAFwTEkoewidRNMHmHBw6OmbwzK+v7j6wY+jyBaH8bPAGdDOzUF9lg6oGkIQGsR/GML+EVcUTQLEqY9VJeqswTIlp+fDzUgAkjKgeWW7Neo4RgyJ8Clh2szBWfH+pTRvZUnm5sLc9+4bHXOPYtoBLth7gnJnZR5IqLrpuVgh9lkvj8ZZV1luoCs+5exNEe00Zat5IsNICzfk8qs74EgjyOKc8pwrbCb7WprgYhLe75MBy+X4SLeb3+OXVTCJNom5vhiJwff4NXr8gZsOAhz9+ZiuaMqu+bHXoP0urxtMeM4+z3
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 06:11:37.1165
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 06:11:41.2227
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dcac0a3-7307-4e93-9b70-08dea67f564b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b4fd095-ab28-4349-4b2d-08dea67f58be
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC1.namprd03.prod.outlook.com
+	CY4PEPF0000FCBF.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7011
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5847
 
-o Fix kernel version check in perf IBS unit test.
-o Drop perf unit test that assumes IBS don't have hardware-assisted
-  privilege filter. This is now supported.
-o Starting with Zen4, the validity of several IBS fields changes. Add
-  the required dependency checks when decoding IBS MSRs.
-o Zen6 and future platforms extends IBS OP with Streaming-Store and
-  Remote-Socket indicators for load/store instructions. Add decoding
-  support for these new bits.
-o Document new IBS features in perf-amd-ibs man page 
+"AMD IBS sample period" unit test is getting skipped on kernel v7.x. Fix
+the kernel version >= v6.15 check.
 
-IBS Zen6 enhancements doc:
-  AMD64 Zen6 Instruction Based Sampling (IBS) Extensions and Features,
-  Pub. 69205 Rev. 1.00 March 2026 
-  https://bugzilla.kernel.org/attachment.cgi?id=310002
+Fixes: 21fb366b2f457 ("perf test amd: Skip amd-ibs-period test on kernel < v6.15")
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ tools/perf/arch/x86/tests/amd-ibs-period.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patches are prepared on perf-tools-next/perf-tools-next (841dbf4871c5).
-
-v1: https://lore.kernel.org/r/20260119024328.897-1-ravi.bangoria@amd.com 
-v1->v2:
- - Patch #1 (kernel version check) and #8 (perf doc update) are new.
- - Rebased the series on latest perf-tools-next/perf-tools-next.
-
-Ravi Bangoria (8):
-  perf test amd ibs: Fix incorrect kernel version check
-  perf tool ibs: Sync AMD IBS header file
-  perf test ibs: Remove obsolete privilege test
-  perf amd ibs: Suppress bogus TlbRefillLat and DCPhysAd on Zen4+
-  perf amd ibs: Make Fetch status bits dependent on PhyAddrValid for
-    newer platforms
-  perf amd ibs: Decode Remote-Socket flag in IBS OP raw dump
-  perf amd ibs: Decode Streaming-store flag in IBS OP raw dump
-  perf doc: Document new IBS capabilities in man page
-
- tools/arch/x86/include/asm/amd/ibs.h       |  4 +-
- tools/perf/Documentation/perf-amd-ibs.txt  | 39 ++++++++++
- tools/perf/arch/x86/tests/amd-ibs-period.c |  2 +-
- tools/perf/tests/shell/amd-ibs-swfilt.sh   |  7 --
- tools/perf/util/amd-sample-raw.c           | 87 ++++++++++++++++++++--
- 5 files changed, 123 insertions(+), 16 deletions(-)
-
+diff --git a/tools/perf/arch/x86/tests/amd-ibs-period.c b/tools/perf/arch/x86/tests/amd-ibs-period.c
+index cee9e11c05e0..6a92b3a23ed7 100644
+--- a/tools/perf/arch/x86/tests/amd-ibs-period.c
++++ b/tools/perf/arch/x86/tests/amd-ibs-period.c
+@@ -932,7 +932,7 @@ static bool kernel_v6_15_or_newer(void)
+ 	endptr++;
+ 	minor = strtol(endptr, NULL, 10);
+ 
+-	return major >= 6 && minor >= 15;
++	return major > 6 || (major == 6 && minor >= 15);
+ }
+ 
+ int test__amd_ibs_period(struct test_suite *test __maybe_unused,
 -- 
 2.43.0
 
