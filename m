@@ -1,154 +1,156 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2067F2EA732
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 16:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93F03382FC;
+	Thu, 30 Apr 2026 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777565852; cv=none; b=jQF8fqHh4v0comqqjwCWiXJljiwc2JilghOlIwdiuyc6ClCSqHI+bqgL8PPyUgj0lBBpHdpcwBG/VqWWZGcTsY+XcS6PBrODhRMFMOobb3Yu4oJF2+ult64Kw393bChmizjQL0rwplkJ8Xtt+CYMFxBrFzS1ayXfkUD6d5foDp8=
+	t=1777566125; cv=none; b=cmfuUu0qAj6PTSI6SrpLM5oAxJ//xIGMe5mVPaxhjkTlrOkPe2T2KYl8Hojkk9KB+LP3+yUEBaTl098pcPBc6BmA5Z+OTqCBFMgSQjE0RRztCG1xnm1urb2DCSckGiA0BPpHvAYoDFMcX/CphPYf3Ch3N54LZEJ+eyaxfFlGhfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777565852; c=relaxed/simple;
-	bh=FECS60I14FzPxzfBio8wxiQhJhKRWX4DQjBg+/uQd/E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=meYMASdCVQT1d+seyTnRBeLH1FoFHfgf2zkNBDmupU1p932k5N3nt8/EX/gdyE5CWrzTPPTcJmdz6/URkK4rhxeC4R3/7wLBft7ZrTeqWsRtHKHHM/dA7r5LYTvVkwrrhsKUxlyUgDSvEI/QZ5Kdpmpb2npjqRSTFIlNL7ziTpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DuuMvOBa; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1777566125; c=relaxed/simple;
+	bh=LiphD7LGq1XKCCBl4PKS2iC1W6FacpY6EjNllAzXuvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJQ8/85o5YNVswbMGxML4Dqpl4h6OpRW6qmUWiAY42iIlw2VGO2Y7yfGobza+rf7Z4rBxcwcriva7Lf4nvvl2b4KomWSjRhZdooOQKOQ8H2vIC7iIDkdNEEbyhniw7jZIA66F/qjavI/xH6JCXKUzV+3iad5mBYG1jtfWFqmbb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nt+7ZIbg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DuuMvOBa"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d889997495so4092958eec.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 09:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777565850; x=1778170650; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zi8WkznLM4wGdOWXURG1G8s/KXvLgw6m/NoSGKTn09Q=;
-        b=DuuMvOBaYqpe75VTzOxlmvrlCQLJyjnHt63DYRgj8VsVGz+Kj+fpS+2+vQbTH+Gg9i
-         EPdus5yZ4IsC7iWIqphDVLg6n3PprN1zadXmsnln/kolBXuxCUtpgpSZ1ELkY7M5eZuO
-         OOsOxDeBZTJm2RPRO7Mv3OR9FRvTl/xGuNxbrZGX+k5BaK1A59T05vh0/Wgzqb2Ku5th
-         RzbYF7dfxUUEnWmdSQMMmQPLAfVs+BiMjZMTOYRbcmjik1VW2jCdDomTQG19IVm7xXXb
-         c+QiKaE3U3mSQF8sCvgo3cL/u8QTLZWRoE9SMCJ16uaLHv5GiKyWnaspx24EjmvwAPTt
-         9flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777565850; x=1778170650;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zi8WkznLM4wGdOWXURG1G8s/KXvLgw6m/NoSGKTn09Q=;
-        b=Oq6KbEFHpB5Ly1wv/MEnuJ3GbYZrtLF1gLhBHNMOVwiNiCPyBoX6A70IB18+ZB+5Bb
-         PyE2ykwOj3LE569YxbOC/mIMgYOt3C1sGRMZBJ9zv0xYf2SQbkuuN/nKN83oO7QDWqqa
-         4CUuLSmCd96rCj2iLjFWFIxyPvjCW2Hz9E7lV67bc7PXNJq6CVoNJ9vVtpvQRnbBpi80
-         PtKyjc2n5ZniYp3e9U6Sv01fh0Kzut5xNQ+0iCpk7EiIgDKSxyyQ5/1/8HO6R6yGRQF/
-         1W9iV6DyEZCQ6qkvz9PvxjgbW0lElMvBET289Cwp3CIJOE1K6vDMw4pjSpg2Uea4ELdh
-         jsXg==
-X-Forwarded-Encrypted: i=1; AFNElJ8ZGeci1qI7Xof244UEdVVobCYxB4ZrEAvaj1gEplmNLT07YREF4RF3kUp4fkmA7QhRBtv9wmMEDSC1o5RIQhc+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu//bQe/rMHWfzltZyVLkwrqml7ONyGgAIpc3YqPWTl1cgcVDu
-	5ZC5DAnt5ijFu1NrrGT1WrjbZOI1ue8B0HagdDKKDzXuok4kCqpR7jF7qCegd1f/BmS0k1dzazH
-	U+h+GposhSA==
-X-Received: from dycaq9.prod.google.com ([2002:a05:7301:7e09:b0:2ea:c1bb:3a9c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd03:b0:2d2:ff9e:c07d
- with SMTP id 5a478bee46e88-2ed3e4849fcmr1832031eec.24.1777565850066; Thu, 30
- Apr 2026 09:17:30 -0700 (PDT)
-Date: Thu, 30 Apr 2026 09:17:25 -0700
-In-Reply-To: <acyWR2GAWIY7TKyD@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nt+7ZIbg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777566124; x=1809102124;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LiphD7LGq1XKCCBl4PKS2iC1W6FacpY6EjNllAzXuvE=;
+  b=nt+7ZIbgbYT+0EfiAnF+9UUQhnJ9kDeFuR3UVAwDJ24kXS74soXWMatv
+   yGpnYj3Z0hBunt/MVCECqsLtlGLHhSalNmAwrd9wX0Es+vR739pSp1OhV
+   nUPvgK60T4RjKRdqH7GwS4xxJMX71qsq7FbDKlv7L2fvL45/foIgMFYEB
+   u+yMhNpxw5WqOxUDWHUsqlqCFPmEaQqhqZkTaLkNxiUNKz8VpLBHkKg2+
+   AkPo4OqAAMj4xUiVVxu8TWqbvg++JNhSPwuLrVuPq/YTe+kClhBlxNXpb
+   Mic30JEyVWsx1KLinjTrp4FDB1OhuoqAas5ldml1/qhfi+AEIVkPPdlW1
+   A==;
+X-CSE-ConnectionGUID: PPivg11GR8y77UQzHkvqWw==
+X-CSE-MsgGUID: NYm2+WCgRYq22JbPAMzOMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="81101403"
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="81101403"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:22:03 -0700
+X-CSE-ConnectionGUID: OzQVO5fcQWK6fezr0bi2KQ==
+X-CSE-MsgGUID: cCZGBM9lT1WrzqZqyzUHhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="239637032"
+Received: from unknown (HELO [10.241.241.75]) ([10.241.241.75])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:22:03 -0700
+Message-ID: <b75f8b75-6052-4da3-b1ee-dfa8f5dfd5a6@intel.com>
+Date: Thu, 30 Apr 2026 09:22:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <acyWR2GAWIY7TKyD@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260430161725.3131665-1-irogers@google.com>
-Subject: [PATCH v2] perf metricgroup: Avoid scanning unnecessary PMUs for
- identifier match
-From: Ian Rogers <irogers@google.com>
-To: namhyung@kernel.org, acme@kernel.org, james.clark@linaro.org
-Cc: adrian.hunter@intel.com, irogers@google.com, leo.yan@arm.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, thomas.falcon@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 1/2] perf/x86: Introduce is_x86_pmu() helper
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260316050838.3624051-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260316050838.3624051-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Only uncore PMUs can have an identifier, so add an optimized
-perf_pmus__scan routine for that case to avoid all PMU types being
-created.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 11 +++--------
- tools/perf/util/pmus.c        | 18 +++++++++++++++++-
- tools/perf/util/pmus.h        |  1 +
- 3 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 4db9578efd81..5a489e97c413 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -415,14 +415,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
- 	if (!pm->metric_expr || !pm->compat)
- 		return 0;
- 
--	while ((pmu = perf_pmus__scan(pmu))) {
--
--		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
--			continue;
--
--		return d->fn(pm, table, d->data);
--	}
--	return 0;
-+	/* Only process with the iterator if there is a a PMU that matches the ID. */
-+	pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat);
-+	return pmu ? d->fn(pm, table, d->data) : 0;
- }
- 
- int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 9a2023ceeefd..5e3f571450fe 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
- 	if (!pmu) {
- 		/*
- 		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
--		 * aren't wother optimizing for.
-+		 * aren't worth optimizing for.
- 		 */
- 		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
- 			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-@@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 	return NULL;
- }
- 
-+struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
-+{
-+	if (!pmu) {
-+		/* Only uncore PMUs can have identifiers. */
-+		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
-+
-+		pmu_read_sysfs(to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+	}
-+	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
-+			return pmu;
-+	}
-+	return NULL;
-+}
-+
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- {
- 	struct perf_pmu *pmu = NULL;
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 7cb36863711a..0d55edb3f2fc 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
- struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
-+struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
- 
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
--- 
-2.54.0.545.g6539524ca2-goog
+On 3/15/2026 10:08 PM, Dapeng Mi wrote:
+> From: Ian Rogers <irogers@google.com>
+> 
+> To facilitate the detection of x86 PMU structures in upcoming patches,
+> the is_x86_pmu() helper is introduced. Additionally, the is_x86_event()
+> helper has been refactored to utilize is_x86_pmu().
+> 
+> No function changes intended.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+
+Reviewed-by: Zide Chen <zide.chen@intel.com>
+
+
+
+> v2: new patch.
+> 
+>  arch/x86/events/core.c       | 16 ----------------
+>  arch/x86/events/perf_event.h | 18 +++++++++++++++++-
+>  2 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 810ab21ffd99..66b1a873c395 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -774,22 +774,6 @@ void x86_pmu_enable_all(int added)
+>  	}
+>  }
+>  
+> -int is_x86_event(struct perf_event *event)
+> -{
+> -	/*
+> -	 * For a non-hybrid platforms, the type of X86 pmu is
+> -	 * always PERF_TYPE_RAW.
+> -	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
+> -	 * is a unique capability for the X86 PMU.
+> -	 * Use them to detect a X86 event.
+> -	 */
+> -	if (event->pmu->type == PERF_TYPE_RAW ||
+> -	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
+> -		return true;
+> -
+> -	return false;
+> -}
+> -
+>  struct pmu *x86_get_pmu(unsigned int cpu)
+>  {
+>  	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index fad87d3c8b2c..025f67726ecc 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -115,7 +115,23 @@ static inline bool is_topdown_event(struct perf_event *event)
+>  	return is_metric_event(event) || is_slots_event(event);
+>  }
+>  
+> -int is_x86_event(struct perf_event *event);
+> +static inline bool is_x86_pmu(struct pmu *pmu)
+> +{
+> +	/*
+> +	 * For a non-hybrid platforms, the type of X86 pmu is
+> +	 * always PERF_TYPE_RAW.
+> +	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
+> +	 * is a unique capability for the X86 PMU.
+> +	 * Use them to detect a X86 event.
+> +	 */
+> +	return pmu->type == PERF_TYPE_RAW ||
+> +	       pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE;
+> +}
+> +
+> +static inline bool is_x86_event(struct perf_event *event)
+> +{
+> +	return is_x86_pmu(event->pmu);
+> +}
+>  
+>  static inline bool check_leader_group(struct perf_event *leader, int flags)
+>  {
+> 
+> base-commit: becb26c89be3a6448dcd92522894427544d5b091
 
