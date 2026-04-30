@@ -1,143 +1,154 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85642D9ECD
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 15:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777562578; cv=pass; b=e4ihqsROskTNLw3NC/tQDSE8VSrCKBnzhQSBbq9XLYap/3WYSlZVdyGUX+ZiA8h2J8hla4da4cM+4y3ri/es4iNmZEKIOuC5mns4BqaWaWMqhKPxieimdF/bWNj8pNZ3IYnifk0weIF6HAZ8TRmA8i/QAIVwnqOejPVnjVE/PR4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777562578; c=relaxed/simple;
-	bh=VttgwoB85cht3PKYb8QZ8qtGm3rDTnCCBtygb68d2o4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i3LtNDPigsdTeDtskEf1iunH97BFiXcGsVRccdR7GXXMweSor/m1Eolu35cl0OgonIgrggd2kKEVjTDTa8DjCuQdHzws7iPTAmfUAqSCYztk6pwPTxqtT9MI661GJuJYA99ntY3puPAdY28px1dqHJ61D700K4i9BgoLuQ66D2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cmXKmukP; arc=pass smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2067F2EA732
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 16:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777565852; cv=none; b=jQF8fqHh4v0comqqjwCWiXJljiwc2JilghOlIwdiuyc6ClCSqHI+bqgL8PPyUgj0lBBpHdpcwBG/VqWWZGcTsY+XcS6PBrODhRMFMOobb3Yu4oJF2+ult64Kw393bChmizjQL0rwplkJ8Xtt+CYMFxBrFzS1ayXfkUD6d5foDp8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777565852; c=relaxed/simple;
+	bh=FECS60I14FzPxzfBio8wxiQhJhKRWX4DQjBg+/uQd/E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=meYMASdCVQT1d+seyTnRBeLH1FoFHfgf2zkNBDmupU1p932k5N3nt8/EX/gdyE5CWrzTPPTcJmdz6/URkK4rhxeC4R3/7wLBft7ZrTeqWsRtHKHHM/dA7r5LYTvVkwrrhsKUxlyUgDSvEI/QZ5Kdpmpb2npjqRSTFIlNL7ziTpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DuuMvOBa; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmXKmukP"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-671588ab0cfso10525a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 08:22:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777562575; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HS6q3v5AmhtICsUbA28mSk7+Z2VvcWXyLM22ZEmPZnWpkJxLPX8sE+6SP3Qa54jigA
-         SPyLpOHH0FskVHefj6m2mvSG624r9Jh/40ko6lL/6GV3tbo8ixJDTn9iFtS6rkXp5ND6
-         QQ8LBq72cp5JhTUcJouM1Gygp7MF4WMyAWt3irH9+B3ieFXf0+SJK3HFdbh5q4IeQmix
-         19tQtaZAOJe3dAKuktyqVuz+KjPPYvTZwrR13NVNYJXhRaB6Xd47csHAq4zWp9tqyuco
-         P4Gk6diFnKozDiFgR6rLOt/lT4YJv9h6BdqR4DY7MaeKHZPgbycVfxv4OO8uOD1Jcx8B
-         BLZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        fh=+hxdVEQACzvKWZuPM2Z2uqDSUm8KCZuWKNPCykB0DH8=;
-        b=gkaskv4k4UDKvreFJ5idv4kjSvlXz4Q2mZsvCcJzLFM0s5Gq7pvQcM9BIRTnL+dr+4
-         pvQtownwxoSgZnoVaQfRawkvuXSeqgf4slcHhQddBPWLTlu9UcvB27JPRxHTdHwQYi0I
-         DYsyQ3yr2m5OF3NUzcDRSxzTAN5ypg1jnCDzB+2Jbot3VbzRV1GOs6HPB/PkbEX+tnah
-         ZJU6/sPxrEMcpDjJgXN0gM9YmYgaDk78rb4K+1C/8R2GY2Ki0TGHG8Crxa2soPbKuq7S
-         Nsakr0Z/1ciRM+XJr7OfjcWJhG1e+0tXUju1yhB0rGxec03sEbkpZNjBay0IXUdcopvU
-         N11g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DuuMvOBa"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2d889997495so4092958eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 09:17:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777562575; x=1778167375; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        b=cmXKmukPDZsqP4ixXpetZ4lqign+9o9o0cdBRlAmOQWZZlx3bhzMzI+APPksDnmMEw
-         /+HcmsTiUEUFLkYhuHNIHDs4ZfJUmbxvtWyUaYdW5PCLppfLVO+HFOVPs6ACDYeLgOl7
-         DxW9UsRXfw4+GzALguJa55pQdLaEwR1rN75/hvyQzHfv/3Q/eQUtGcdB7oOEwKCR6hjX
-         PoOzjfN5sbkBlJ4342XtIyPcun2G3OaV877bWPsqwkWQRN5nsNGy60NG+0Cy4c4w6aeu
-         QrkUk3myPpWfOS4NOeu2ZbzlEpHRQBrRO4q0gUZNCAdWhRr15CbZ2nr550EX/6FQNFuW
-         4iUQ==
+        d=google.com; s=20251104; t=1777565850; x=1778170650; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zi8WkznLM4wGdOWXURG1G8s/KXvLgw6m/NoSGKTn09Q=;
+        b=DuuMvOBaYqpe75VTzOxlmvrlCQLJyjnHt63DYRgj8VsVGz+Kj+fpS+2+vQbTH+Gg9i
+         EPdus5yZ4IsC7iWIqphDVLg6n3PprN1zadXmsnln/kolBXuxCUtpgpSZ1ELkY7M5eZuO
+         OOsOxDeBZTJm2RPRO7Mv3OR9FRvTl/xGuNxbrZGX+k5BaK1A59T05vh0/Wgzqb2Ku5th
+         RzbYF7dfxUUEnWmdSQMMmQPLAfVs+BiMjZMTOYRbcmjik1VW2jCdDomTQG19IVm7xXXb
+         c+QiKaE3U3mSQF8sCvgo3cL/u8QTLZWRoE9SMCJ16uaLHv5GiKyWnaspx24EjmvwAPTt
+         9flw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777562575; x=1778167375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        b=LsCSmKW8TFADJuvxZ87a+4za5BJSbwMV3/Gs0ctFGyTxubXRbmqWAdqnPN2pADDwnm
-         EYATbztBaDnob18CdM07RR4QbyL5yIIyS0cJE3AsXusfsQr5SwcG2snxoNw8f+FR6PMe
-         I04kyDco1vVdHqIHdypIjVfSNDPprWBbDmKZsGsY7em2rPwhxS+oLZrxOhQvNs3XunZq
-         cyBKzcfH8PQyyl5lBGvB26nR2g+JxCEVbn+Od0W/Lh+N8ydfG8fO/8aMXi48hl6YUweO
-         LhdtTwlJrhG0PpkzqxBYE90sbzJNxpstePT11QSBmIvA2Qario1Hp71zq7HD3hNDaE1D
-         QRbg==
-X-Forwarded-Encrypted: i=1; AFNElJ83e0p+XWAOTCmanvXDAPsR4R/IHW5pe48T1cxPTLRQTcdhrkTSnbYgQ0ojbRn3M2shGoM3AgvvM3gd/2O6bYIu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztfxgq/xsDPgS89pggxoeTmOZvKbgVYRJEbuCliI8hwMC9nh1q
-	heVe0bmBwXQCCVeew1MDtYuMS1ez9fumemiI3vZ7uCFFHiaEel/4ZsOsgnTMo1hqfM9ceeLI5wY
-	3ph/wiJxFYRfsjAMZQClf3xhpcL7cf9GRy13AujMi
-X-Gm-Gg: AeBDievg20D8CvIcLkxHKJt61uzjg/R4Nyu2/HAYfEY6eV9a4BIqQIbXKP6AbFKLrbA
-	3Ynzzmti1WZllGxj3CZT6QSBuVMTSO2yjHgOxttgHCqE1uWPNAsPsKnd9Va/zfFaxdDmY6G4VwY
-	eZZtDP9x8VjhwnK/JGQ1fAA6d/WD1ptqQ6gGauZi4S7RNYn0QOKT7LUgNYrLXkEhXY4+cpIhe5W
-	/zmeC4sBQnjCOpUzj7DumdTYIPuGP0H+9ki7rgRnoGzbpioPs6jYywf+PX35hSFh0Tdp16NoSMZ
-	fvkbU/jzItWRG3FK5f+aUngOdbAFelgHG1G2EEgAWE/nIJCHPfH5p8dbtg==
-X-Received: by 2002:a05:6402:3241:b0:671:fff6:f82c with SMTP id
- 4fb4d7f45d1cf-67b4e8ea06cmr58179a12.2.1777562574533; Thu, 30 Apr 2026
- 08:22:54 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777565850; x=1778170650;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zi8WkznLM4wGdOWXURG1G8s/KXvLgw6m/NoSGKTn09Q=;
+        b=Oq6KbEFHpB5Ly1wv/MEnuJ3GbYZrtLF1gLhBHNMOVwiNiCPyBoX6A70IB18+ZB+5Bb
+         PyE2ykwOj3LE569YxbOC/mIMgYOt3C1sGRMZBJ9zv0xYf2SQbkuuN/nKN83oO7QDWqqa
+         4CUuLSmCd96rCj2iLjFWFIxyPvjCW2Hz9E7lV67bc7PXNJq6CVoNJ9vVtpvQRnbBpi80
+         PtKyjc2n5ZniYp3e9U6Sv01fh0Kzut5xNQ+0iCpk7EiIgDKSxyyQ5/1/8HO6R6yGRQF/
+         1W9iV6DyEZCQ6qkvz9PvxjgbW0lElMvBET289Cwp3CIJOE1K6vDMw4pjSpg2Uea4ELdh
+         jsXg==
+X-Forwarded-Encrypted: i=1; AFNElJ8ZGeci1qI7Xof244UEdVVobCYxB4ZrEAvaj1gEplmNLT07YREF4RF3kUp4fkmA7QhRBtv9wmMEDSC1o5RIQhc+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu//bQe/rMHWfzltZyVLkwrqml7ONyGgAIpc3YqPWTl1cgcVDu
+	5ZC5DAnt5ijFu1NrrGT1WrjbZOI1ue8B0HagdDKKDzXuok4kCqpR7jF7qCegd1f/BmS0k1dzazH
+	U+h+GposhSA==
+X-Received: from dycaq9.prod.google.com ([2002:a05:7301:7e09:b0:2ea:c1bb:3a9c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd03:b0:2d2:ff9e:c07d
+ with SMTP id 5a478bee46e88-2ed3e4849fcmr1832031eec.24.1777565850066; Thu, 30
+ Apr 2026 09:17:30 -0700 (PDT)
+Date: Thu, 30 Apr 2026 09:17:25 -0700
+In-Reply-To: <acyWR2GAWIY7TKyD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260429131522.4049054-1-dtominac@cisco.com> <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
- <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
-In-Reply-To: <afJz3l6435DHLorn@goliath>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 30 Apr 2026 17:22:18 +0200
-X-Gm-Features: AVHnY4IXFcsVkK3lFxWPc3mkzosN0e9A_ZuO_cu-riyBEoDL1P4-BpVJGbycfsQ
-Message-ID: <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
-To: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, "David Hildenbrand (Arm)" <david@kernel.org>, 
-	"Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)" <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, 
-	"xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Mime-Version: 1.0
+References: <acyWR2GAWIY7TKyD@google.com>
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260430161725.3131665-1-irogers@google.com>
+Subject: [PATCH v2] perf metricgroup: Avoid scanning unnecessary PMUs for
+ identifier match
+From: Ian Rogers <irogers@google.com>
+To: namhyung@kernel.org, acme@kernel.org, james.clark@linaro.org
+Cc: adrian.hunter@intel.com, irogers@google.com, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, thomas.falcon@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 29, 2026 at 11:11=E2=80=AFPM Daniel Walker (danielwa)
-<danielwa@cisco.com> wrote:
-> On Wed, Apr 29, 2026 at 05:24:25PM +0200, Oleg Nesterov wrote:
-> > On 04/29, David Hildenbrand (Arm) wrote:
-> > >
-> > > On 4/29/26 15:15, Darko Tominac wrote:
-> > >
-> > > > uprobe infrastructure does not re-instrument pages on individual pa=
-ge
-> > > > faults (uprobe_mmap() is only called during VMA creation, not on
-> > > > page-in), the breakpoints are silently lost once the discarded page=
-s are
-> > > > re-read from the backing file.  The probes stop firing with no erro=
-r
-> > > > indication, and the only recovery is to unregister and re-register =
-the
-> > > > affected uprobes.
-> > >
-> > > Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
-> > > MADV_DONTNEED debugger breakpoints/set data etc. :)
-> >
-> > Agreed, thanks.
->
->
-> Shouldn't there be some sort of compensation or notification for this, or=
- is each person that
-> hits this suppose to just scratch their head and send a patch that's reje=
-cted?
+Only uncore PMUs can have an identifier, so add an optimized
+perf_pmus__scan routine for that case to avoid all PMU types being
+created.
 
-I guess we could add a pr_warn_once() that warns when
-madvise(MADV_DONTNEED) is called on a read+execute file mapping,
-and/or (as David said) add an explicit note in the madvise() manpage
-about how that can interfere with software breakpoints and uprobes?
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/metricgroup.c | 11 +++--------
+ tools/perf/util/pmus.c        | 18 +++++++++++++++++-
+ tools/perf/util/pmus.h        |  1 +
+ 3 files changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 4db9578efd81..5a489e97c413 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -415,14 +415,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+ 	if (!pm->metric_expr || !pm->compat)
+ 		return 0;
+ 
+-	while ((pmu = perf_pmus__scan(pmu))) {
+-
+-		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
+-			continue;
+-
+-		return d->fn(pm, table, d->data);
+-	}
+-	return 0;
++	/* Only process with the iterator if there is a a PMU that matches the ID. */
++	pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat);
++	return pmu ? d->fn(pm, table, d->data) : 0;
+ }
+ 
+ int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 9a2023ceeefd..5e3f571450fe 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
+ 	if (!pmu) {
+ 		/*
+ 		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
+-		 * aren't wother optimizing for.
++		 * aren't worth optimizing for.
+ 		 */
+ 		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+ 			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
+@@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+ 	return NULL;
+ }
+ 
++struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
++{
++	if (!pmu) {
++		/* Only uncore PMUs can have identifiers. */
++		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
++
++		pmu_read_sysfs(to_read_pmus);
++		pmu = list_prepare_entry(pmu, &other_pmus, list);
++	}
++	list_for_each_entry_continue(pmu, &other_pmus, list) {
++		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
++			return pmu;
++	}
++	return NULL;
++}
++
+ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+ {
+ 	struct perf_pmu *pmu = NULL;
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 7cb36863711a..0d55edb3f2fc 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+ struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
+ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
++struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
+ 
+ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+ 
+-- 
+2.54.0.545.g6539524ca2-goog
+
