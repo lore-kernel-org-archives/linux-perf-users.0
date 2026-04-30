@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C72224D6;
-	Thu, 30 Apr 2026 00:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B7119DF62;
+	Thu, 30 Apr 2026 00:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777509051; cv=none; b=OaawdtGP7g6o0spXVtB+sCwoEBQQl+KNmns5SoSA9ViXIU2Ncs/1UsaLXT9/44SE8v4TM7rGukRROfqaBkGSNSrHk4HMF8JVSW+6czww7zpHRSWsxDJliqY/l0aFqXud6yj8B5IX+YE8gRmT9hkD47I0TnK7IlILChtKHtccCr4=
+	t=1777509054; cv=none; b=kniuxv6KWqE/Kro51jaLln5jORPrvexMqZNk/czxHkGaJwcYwSR4LeX6oR/2pEBPK0GGJhFAOhDIVDF5uC56FQsWMu8XSSy6oOpxJFSex21yGpaM1YfDoYh+KEvlj7P7UYeoH+DvVjAeEuo67/P1kM959KJJPBMmYoa3zD+TLxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777509051; c=relaxed/simple;
-	bh=3mf9kvSPXBbLW1PAKSwdr8Zcy59whm7qzw8bmy9nH88=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kxqoFnGguiv2YV+Kkt14XFSdiyo+k6XAafMsRIoTZxEp00EAfDMAj66pQQgtgDAOz8tTgCio9Ad/e9rnfwfgD+rQ/su4DWmIXoEAPV+XaKRuMMkizmQfPdrU6lVkhyYz9ypK/LK8f2DDfwNJ1woi9KRjrC6ilJg+M64cffxUfTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QdnNOzbh; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1777509054; c=relaxed/simple;
+	bh=BB4qWrczuxBdpRMQvOH7NHT8ySrVHIlxNOcUm8gwJN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kesbsRgrme94jYGsh1V2ndWnAhyzP5Bwgq2tITrqHDkz05hA3DU+R8baYfrEdYAYJ8QOJ1HAmkdPA8kn2jly1wWpOW/w24pehTHNPe8c6Dda4dVuJJmpQgv2WvdlNU6gpY3sg7vYFoB8z35LDfvZoNNKgWxIybURS0hRNo7AIrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kq7ITEHo; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QdnNOzbh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kq7ITEHo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777509050; x=1809045050;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3mf9kvSPXBbLW1PAKSwdr8Zcy59whm7qzw8bmy9nH88=;
-  b=QdnNOzbhzf6UhkgJOdhP8VZatzyEhxofSkX38Dk7eiGmCxQHdFDQznaJ
-   hFFK8IGkOCtJNW+d5NjbbiaeBgOZ/7kOvX5tIbadpnZED1pv6M07l/ITK
-   8wr0saFzIt4NOt8eZHkTaGWb8NbO7MNLTt7hxlORGt61F8Sfz1JrvF554
-   S2QHTXk6lWVCoOgnNPNhwZE1Vh/tBIK16iekxReCp8H0fbuNYtq/+wshr
-   MeAoo2pCkPMnqrACnEROg921uicPtUBWEtyDqCOP5KfJ/rtBCWC3bZKgo
-   7lARG3InB6w6mRjEGtSJSjN3iJ8WBpWA88GdiO8C8MV3OGW1ShjQF+2gZ
-   w==;
-X-CSE-ConnectionGUID: 8kyzrJ2gQbOsVpMNae/n8Q==
-X-CSE-MsgGUID: UQPLIlTBTty6E8YjD+GCaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="95873635"
+  t=1777509053; x=1809045053;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BB4qWrczuxBdpRMQvOH7NHT8ySrVHIlxNOcUm8gwJN8=;
+  b=kq7ITEHoI6u8sHC6fMRPl0hqcdPTEI+D46PlLMuY/ywjJkHHT7K/NQ6o
+   UGcmXgMkP6DBP2KZlSfCF2BXBbit20BMjw3oBt4ymLFFJhlnrwAdVsenU
+   urew1TEtvLGejIUKjLnHeQoqo4ZjDKOHfHHm3q9Hz1WwA0diu3maKWL5O
+   NsvPVYkn/Uv0tNxIW5HdE6erqwKipowKFQC6s9q5kyT81rtFCGV46FiiP
+   rwO6mk8IchYURXjfufFBKWOU6r9RppQ46i3Cy3lf78tKx4cSzuxhyDCRz
+   RUr3SUd5XEeECr09c0393yhEHeg2EkqxvsfyVjTxLS/s4IWdZywKD6ncn
+   g==;
+X-CSE-ConnectionGUID: M7meXerLT0eaMcibHrhQXQ==
+X-CSE-MsgGUID: COWp+PRgTY6+xumqi6CMTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="95873641"
 X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="95873635"
+   d="scan'208";a="95873641"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 17:30:49 -0700
-X-CSE-ConnectionGUID: BQHWhjV8Q+yXvaYU6Wgjuw==
-X-CSE-MsgGUID: XGZyjYKtT5yQsJqYHmKsKw==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 17:30:53 -0700
+X-CSE-ConnectionGUID: qbM9CZcNQzy0726/hU4Gtg==
+X-CSE-MsgGUID: 1pS2YygjRoC0UK/v6P4kcA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
-   d="scan'208";a="234455195"
+   d="scan'208";a="234455199"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 29 Apr 2026 17:30:46 -0700
+  by orviesa009.jf.intel.com with ESMTP; 29 Apr 2026 17:30:50 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,84 +59,111 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v4 0/5] perf/x86/intel: Fix bugs of auto counter reload sampling
-Date: Thu, 30 Apr 2026 08:25:53 +0800
-Message-Id: <20260430002558.712334-1-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [Patch v4 1/5] perf/x86/intel: Improve validation and configuration of ACR masks
+Date: Thu, 30 Apr 2026 08:25:54 +0800
+Message-Id: <20260430002558.712334-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260430002558.712334-1-dapeng1.mi@linux.intel.com>
+References: <20260430002558.712334-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Changes:
-v3 -> v4:
-- Simplify ACR group indices valiation (Sashiko, patch 1/5)
-- Fix the issue that new acr_mask may not be updated into HW if
-  match_prev_assignment() returns true. (Sashiko, patch 2/5)
+Currently there are several issues on the user space ACR mask validation
+and configuration.
+- The validation for user space ACR mask (attr.config2) is incomplete,
+  e.g., the ACR mask could include the index which belongs to another
+  ACR events group, but it's not validated.
+- An early return on an invalid ACR mask caused all subsequent ACR groups
+  to be skipped.
+- The stale hardware ACR mask (hw.config1) is not cleared before setting
+  new hardware ACR mask.
 
-v2 -> v3:
-- Fix the issue that user-space ACR-mask is not properly validated.
-  (Sashiko, patch 1/4)
+The following changes address all of the above issues.
+- Figure out the event index group of an ACR group. Any bits in the
+  user-space mask not present in the index group are now dropped.
+- Instead of an early return on invalid bits, drop only the invalid
+  portions and continue iterating through all ACR events to ensure full
+  configuration.
+- Explicitly clear the stale hardware ACR mask for each event prior to
+  writing the new configuration.
 
-v1 -> v2:
-- Clear stale mask for all events (Sashiko, Patch 1/4)
-- Enable auto counter reload for DMR. (Patch 3/4)
-- Remove duplicated CFG_C MSR value tracking. (Patch 4/4)
+Besides, a non-leader event member of ACR group could be disabled in
+theory. This could cause bit-shifting errors in the acr_mask of remaining
+group members. But since ACR sampling requires all events to be active,
+this should not be a big concern in real use case. Add a "FIXME" comment
+to notice this risk.
 
-This small patch-set fixes several issues in auto counter reload support.
-- The stale ACR mask is not properly validated before setting a new one.
-  Patch 1/4 fixes this issue.
-- PMI is enabled by default for self-reloaded ACR events which causes
-  suspicious NMI warning. Patch 2/4 fixes this issue.
-- ACR sampling is not really enabled on DMR. Patch 3/4 fixes the issue.
-- Two variables are used to trace CFG_C MSR value independently for ACR
-  and arch-PEBS. It's error-prone and fragile. Patch 4/4 fixes this
-  issue.
+Cc: stable@vger.kernel.org
+Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
 
-Besides an ACR unit test is added into perf tests which would be posted
-in a separate session.
+V4: 1) Simplify ACR group indices validation. 2) Add FIXME to notify the
+bit-shifting risk of ACR mask if event numbers of ACR group are diabled.
 
-Tests:
+ arch/x86/events/intel/core.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-Run below ACR sampling commands on CWF, DMR, PTL and NVL (hybrid
-platforms), no issues are found.
-
-1. Non-PEBS ACR sampling
-perf record -e '{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}' ~/test
-
-2. PEBS ACR sampling
-
-perf record -e '{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}' ~/test
-
-3. Perf-tools ACR sampling test
-
-The patch (https://lore.kernel.org/all/20260420024528.2130065-1-dapeng1.mi@linux.intel.com/)
-adds ACR sampling test case in perf tools record test.
-
-perf test 148
-
-History:
-v1: https://lore.kernel.org/all/20260413010157.535990-1-dapeng1.mi@linux.intel.com/
-v2: https://lore.kernel.org/all/20260420024528.2130065-1-dapeng1.mi@linux.intel.com/
-v3: https://lore.kernel.org/all/20260427085513.3728672-1-dapeng1.mi@linux.intel.com/
-
-Dapeng Mi (5):
-  perf/x86/intel: Improve validation and configuration of ACR masks
-  perf/x86/intel: Always reprogram ACR events to prevent stale masks
-  perf/x86/intel: Disable PMI for self-reloaded ACR events
-  perf/x86/intel: Enable auto counter reload for DMR
-  perf/x86/intel: Consolidate MSR_IA32_PERF_CFG_C tracking
-
- arch/x86/events/core.c       | 13 +++++---
- arch/x86/events/intel/core.c | 63 ++++++++++++++++++++++++++----------
- arch/x86/events/perf_event.h | 14 ++++++--
- 3 files changed, 65 insertions(+), 25 deletions(-)
-
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4768236c054b..ca910e6bfc77 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3332,23 +3332,41 @@ static void intel_pmu_enable_event(struct perf_event *event)
+ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+ {
+ 	struct perf_event *event, *leader;
+-	int i, j, idx;
++	int i, j, k, bit, idx;
+ 
++	/*
++	 * FIXME: ACR mask parsing relies on cpuc->event_list[] (active events only).
++	 * Disabling an ACR event causes bit-shifting errors in the acr_mask of
++	 * remaining group members. As ACR sampling requires all events to be active,
++	 * this limitation is acceptable for now. Revisit if independent event toggling
++	 * is required.
++	 */
+ 	for (i = 0; i < cpuc->n_events; i++) {
+ 		leader = cpuc->event_list[i];
+ 		if (!is_acr_event_group(leader))
+ 			continue;
+ 
+-		/* The ACR events must be contiguous. */
++		/* Find the last event of the ACR group. */
+ 		for (j = i; j < cpuc->n_events; j++) {
+ 			event = cpuc->event_list[j];
+ 			if (event->group_leader != leader->group_leader)
+ 				break;
+-			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
+-				if (i + idx >= cpuc->n_events ||
+-				    !is_acr_event_group(cpuc->event_list[i + idx]))
+-					return;
+-				__set_bit(cpuc->assign[i + idx], (unsigned long *)&event->hw.config1);
++		}
++
++		/*
++		 * Translate the user-space ACR mask (attr.config2) into the physical
++		 * counter bitmask (hw.config1) for each ACR event in the group.
++		 * NOTE: ACR event contiguity is guaranteed by intel_pmu_hw_config().
++		 */
++		for (k = i; k < j; k++) {
++			event = cpuc->event_list[k];
++			event->hw.config1 = 0;
++			for_each_set_bit(bit, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
++				idx = i + bit;
++				/* Event index of ACR group must locate in [i, j). */
++				if (idx >= j || !is_acr_event_group(cpuc->event_list[idx]))
++					continue;
++				__set_bit(cpuc->assign[idx], (unsigned long *)&event->hw.config1);
+ 			}
+ 		}
+ 		i = j - 1;
 -- 
 2.34.1
 
