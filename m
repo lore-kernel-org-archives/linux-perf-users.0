@@ -1,124 +1,141 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAB53FFAA3
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 22:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C72224D6;
+	Thu, 30 Apr 2026 00:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777502470; cv=none; b=WYHGcVL46PEF0yBraxuDbjem/HQ4/f7+PuoTPPprm6nbWcLpUbzZ86ub7OZaSQJ+VG1zC8BK7gYNOc4eVs+i2HekcuBLTMK/C9egp12H33nD5YmBPH34nAuoedq2mtTgAoE2l+WV5LJbgrHSGS9SpsQ040VCeQ9UIEPSSiBiwbc=
+	t=1777509051; cv=none; b=OaawdtGP7g6o0spXVtB+sCwoEBQQl+KNmns5SoSA9ViXIU2Ncs/1UsaLXT9/44SE8v4TM7rGukRROfqaBkGSNSrHk4HMF8JVSW+6czww7zpHRSWsxDJliqY/l0aFqXud6yj8B5IX+YE8gRmT9hkD47I0TnK7IlILChtKHtccCr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777502470; c=relaxed/simple;
-	bh=mjUGtz3RQ1FKasUue9EZj4wEEmsaMFd8EmS7brNXlDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKa1E/g+EkUf/stZVwmeXv7WlgiDNVRROgT5QXX6j3V+e0+wW3hIDn18O0WuAtoZoRRz7+dMvPKIgysCSMI6JRzig4icH1Pa7JRR76mrfyMUuEuUJbxPuyPEnGWr4un4RHtPm5j85roJRK1MWVxH0pe83SgmnD3LYu2gqQpOiz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=P1puJC4O; arc=none smtp.client-ip=74.125.82.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	s=arc-20240116; t=1777509051; c=relaxed/simple;
+	bh=3mf9kvSPXBbLW1PAKSwdr8Zcy59whm7qzw8bmy9nH88=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kxqoFnGguiv2YV+Kkt14XFSdiyo+k6XAafMsRIoTZxEp00EAfDMAj66pQQgtgDAOz8tTgCio9Ad/e9rnfwfgD+rQ/su4DWmIXoEAPV+XaKRuMMkizmQfPdrU6lVkhyYz9ypK/LK8f2DDfwNJ1woi9KRjrC6ilJg+M64cffxUfTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QdnNOzbh; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="P1puJC4O"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2d868d014a5so355340eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Apr 2026 15:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1777502468; x=1778107268; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mjUGtz3RQ1FKasUue9EZj4wEEmsaMFd8EmS7brNXlDk=;
-        b=P1puJC4OiOCp1eMdqcdOkMIRvYcbtya+efbaHtv9FCd7sidrqIh6Zu8wcQzfF4a1w+
-         6Z9lNkCzeHXco11J38upMt6iU4YvVjs4VQ2Bb0x+WH2DcE5/eMJn9HjaDZrdigwbmcLD
-         iJ4jFrKQrt4WCAwTXLEhuZsoLB34EZnEkyB84WFSFS+bR5JBMJpYyMFkTQH1raPibbL3
-         BAP3ElemzXA65UMivfcdZpdqbevoSsENLRIeic9QTxU+9YUn0oJshOYRUviIGwDj/nTF
-         Byc9PBgSOC9ku0XWRg//Cn11kZ/Lb69ZNCTWX3ht8HC5byESGu9s3dPKMbAy9WVZdvuN
-         XoEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777502468; x=1778107268;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjUGtz3RQ1FKasUue9EZj4wEEmsaMFd8EmS7brNXlDk=;
-        b=kYSElnCAXG/WVf3Uw5iGfay4sV9ECcihYO3dE9CNcHfYrue/p4hQQYO27mVX8Nz/Pr
-         bVmRkhFCqAMGLJ69XlHte7c6PIo/tcIGaVA4z7egWoTLyrgArHMNUKMQzx8HmN9MNfd+
-         HArps+JqF976XtLd7l2sUWsHb2JtEmmQydnP+xng9wRUVg9kpbKB018T/JH3oejNwRqI
-         IAzBh7yzQMwZiAhf+ss790Grq8Xjgn9ou/9xHwmHFt3ClYPXx8yblEBd9BAgr51WXiFH
-         T3dgP1/QCRbOP0bLBXQNKFJwj/08kql8VKxlMrbJCwSMH9Tro3Ip21K+6vu/KpzVR6G/
-         jEmg==
-X-Forwarded-Encrypted: i=1; AFNElJ/oyFjOeC9VsXpdNlcitO5pFsPRsNQIoTu7BH+G0zNsEpcejLoOXONyIiOdHgsj8AJl5czta6JUO9P+hY0RHKTR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkt3f8dZ5ZgjyeOuSpyGOQrjAl6nIUcaWL2tqmpKI2x7kXVvUw
-	fEbKqACLWZwmviP4rcdZNGOQ0nRJX1071DeITXSDVPC+H5HOzUorxlrX8iasb6qqo5E=
-X-Gm-Gg: AeBDieseOG5222Ciw6CMj3MdeSgqDAdigwy8Uo8n5i3KKX2wA/O1HhYnVTx7BrChHtx
-	Tpj5Ck1JTC4SXmnFAkhOaeB5eOK/45oMbXHoJQInSX69aoX24SiptpXKUVQrP5OOmHNpYSeSssw
-	s/g0XAFSU6Q+JZxjJ5tFj7p1iZaRbG3GiyTzFfG6DCKOeUpE6JK0f6UZsVSAZ8DDDS5RHDAJMsE
-	aKyt9EKNqiRJd6EtU29ky8qLzuiMlNz95uvO/SNtCSITK5M6y7rsGwoU7Yxd88DX0MSPZau5IjX
-	CGR8MLBaX2yF6nvEQOTbTsVayhhx4rwvAt2+yuMh5qmXuepk5QOwlitaE4eZjZiaHpVM3R4KVI7
-	cnhEIUJZpdTb5GLLxbreYp6cYW1y0A9RdSk/79JzJvGywCG4YbO7DpYOeeHsSN/y0KJFlz2jyKV
-	NpXG6LJrG+MzgIn3aBOVe5IcwcP3FkkEG/t4iF
-X-Received: by 2002:a05:7301:5809:b0:2d2:129a:1694 with SMTP id 5a478bee46e88-2ed3e486e38mr100596eec.18.1777502467521;
-        Wed, 29 Apr 2026 15:41:07 -0700 (PDT)
-Received: from mozart.vkv.me ([2001:5a8:468b:d015:e0e9:7085:c58e:926d])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ed1c0d218dsm4085360eec.27.2026.04.29.15.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 15:41:07 -0700 (PDT)
-Date: Wed, 29 Apr 2026 15:41:04 -0700
-From: Calvin Owens <calvin@wbinvd.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QdnNOzbh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777509050; x=1809045050;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3mf9kvSPXBbLW1PAKSwdr8Zcy59whm7qzw8bmy9nH88=;
+  b=QdnNOzbhzf6UhkgJOdhP8VZatzyEhxofSkX38Dk7eiGmCxQHdFDQznaJ
+   hFFK8IGkOCtJNW+d5NjbbiaeBgOZ/7kOvX5tIbadpnZED1pv6M07l/ITK
+   8wr0saFzIt4NOt8eZHkTaGWb8NbO7MNLTt7hxlORGt61F8Sfz1JrvF554
+   S2QHTXk6lWVCoOgnNPNhwZE1Vh/tBIK16iekxReCp8H0fbuNYtq/+wshr
+   MeAoo2pCkPMnqrACnEROg921uicPtUBWEtyDqCOP5KfJ/rtBCWC3bZKgo
+   7lARG3InB6w6mRjEGtSJSjN3iJ8WBpWA88GdiO8C8MV3OGW1ShjQF+2gZ
+   w==;
+X-CSE-ConnectionGUID: 8kyzrJ2gQbOsVpMNae/n8Q==
+X-CSE-MsgGUID: UQPLIlTBTty6E8YjD+GCaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="95873635"
+X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
+   d="scan'208";a="95873635"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 17:30:49 -0700
+X-CSE-ConnectionGUID: BQHWhjV8Q+yXvaYU6Wgjuw==
+X-CSE-MsgGUID: XGZyjYKtT5yQsJqYHmKsKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
+   d="scan'208";a="234455195"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa009.jf.intel.com with ESMTP; 29 Apr 2026 17:30:46 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] perf: Don't throttle based on NMI watchdog events
-Message-ID: <afKJAJpbEFFyhgnQ@mozart.vkv.me>
-References: <cover.1777483573.git.calvin@wbinvd.org>
- <33d87384aa5f96af76949d1399476779dd4f4fce.1777483573.git.calvin@wbinvd.org>
- <afKBd87b4AKbCYuL@mozart.vkv.me>
- <CAP-5=fU14AN8XA5CMWGpi0=9wDV7Ev3AA=ouO2DhA5AHH2wU2g@mail.gmail.com>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v4 0/5] perf/x86/intel: Fix bugs of auto counter reload sampling
+Date: Thu, 30 Apr 2026 08:25:53 +0800
+Message-Id: <20260430002558.712334-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU14AN8XA5CMWGpi0=9wDV7Ev3AA=ouO2DhA5AHH2wU2g@mail.gmail.com>
 
-On Wednesday 04/29 at 15:15 -0700, Ian Rogers wrote:
-> On Wed, Apr 29, 2026 at 3:09 PM Calvin Owens <calvin@wbinvd.org> wrote:
-> > On Wednesday 04/29 at 20:38 +0000, sashiko-bot@kernel.org wrote:
-> > > Additionally, is it possible for user-defined PMU events with expensive
-> > > overhead (like heavy eBPF programs attached to slow tracepoints) to exploit
-> > > this hardcoded frequency bypass?
-> >
-> > No, I don't think ebpf programs run in NMI context?
->
-> Unfortunately Sashiko isn't currently reading replied emails, but you
-> could copy-paste this feedback into an AI.
+Changes:
+v3 -> v4:
+- Simplify ACR group indices valiation (Sashiko, patch 1/5)
+- Fix the issue that new acr_mask may not be updated into HW if
+  match_prev_assignment() returns true. (Sashiko, patch 2/5)
 
-I know it doesn't reply. I was hoping for input from somebody who knew,
-more automated guessing from more LLMs is not really helpful at all :)
+v2 -> v3:
+- Fix the issue that user-space ACR-mask is not properly validated.
+  (Sashiko, patch 1/4)
 
-> BPF programs can run in the NMI context, which means they can
-> introduce delays. I'm not familiar with all the side-effects of and
-> restrictions on this.
+v1 -> v2:
+- Clear stale mask for all events (Sashiko, Patch 1/4)
+- Enable auto counter reload for DMR. (Patch 3/4)
+- Remove duplicated CFG_C MSR value tracking. (Patch 4/4)
 
-Thanks for the clarification.
+This small patch-set fixes several issues in auto counter reload support.
+- The stale ACR mask is not properly validated before setting a new one.
+  Patch 1/4 fixes this issue.
+- PMI is enabled by default for self-reloaded ACR events which causes
+  suspicious NMI warning. Patch 2/4 fixes this issue.
+- ACR sampling is not really enabled on DMR. Patch 3/4 fixes the issue.
+- Two variables are used to trace CFG_C MSR value independently for ACR
+  and arch-PEBS. It's error-prone and fragile. Patch 4/4 fixes this
+  issue.
 
-Thinking about it more: it seems to me that if they run from NMIs and
-their runtime is unbounded, this is just a consequence of that and not a
-new problem. If they are somehow bounded, then this must be bounded in
-the same way.
+Besides an ACR unit test is added into perf tests which would be posted
+in a separate session.
 
-Either way, I don't think it's a real problem as far as this patch goes.
-But maybe I'm not being imaginative enough.
+Tests:
 
-Thanks,
-Calvin
+Run below ACR sampling commands on CWF, DMR, PTL and NVL (hybrid
+platforms), no issues are found.
+
+1. Non-PEBS ACR sampling
+perf record -e '{instructions/period=20000,acr_mask=0x2/u,cycles/period=40000,acr_mask=0x3/u}' ~/test
+
+2. PEBS ACR sampling
+
+perf record -e '{instructions/period=20000,acr_mask=0x2/pu,cycles/period=40000,acr_mask=0x3/u}' ~/test
+
+3. Perf-tools ACR sampling test
+
+The patch (https://lore.kernel.org/all/20260420024528.2130065-1-dapeng1.mi@linux.intel.com/)
+adds ACR sampling test case in perf tools record test.
+
+perf test 148
+
+History:
+v1: https://lore.kernel.org/all/20260413010157.535990-1-dapeng1.mi@linux.intel.com/
+v2: https://lore.kernel.org/all/20260420024528.2130065-1-dapeng1.mi@linux.intel.com/
+v3: https://lore.kernel.org/all/20260427085513.3728672-1-dapeng1.mi@linux.intel.com/
+
+Dapeng Mi (5):
+  perf/x86/intel: Improve validation and configuration of ACR masks
+  perf/x86/intel: Always reprogram ACR events to prevent stale masks
+  perf/x86/intel: Disable PMI for self-reloaded ACR events
+  perf/x86/intel: Enable auto counter reload for DMR
+  perf/x86/intel: Consolidate MSR_IA32_PERF_CFG_C tracking
+
+ arch/x86/events/core.c       | 13 +++++---
+ arch/x86/events/intel/core.c | 63 ++++++++++++++++++++++++++----------
+ arch/x86/events/perf_event.h | 14 ++++++--
+ 3 files changed, 65 insertions(+), 25 deletions(-)
+
+-- 
+2.34.1
+
