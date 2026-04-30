@@ -1,53 +1,53 @@
 Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013052.outbound.protection.outlook.com [52.101.72.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300943C3426;
-	Thu, 30 Apr 2026 10:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135793BED70;
+	Thu, 30 Apr 2026 10:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777546538; cv=fail; b=N4r1uRI757FOEN0BuJ7qAVSJFHU+NbtFTz8u46ElCOx1MMdpe/apxb6/X/YD+Em665mwFJeGrowVD2Ehgk3SgeTMQCzMYfHs6WeX081jXOMeRUuNnU8ACrIxYYwsjYA5lZttvWwHF7YMDFPERpYrI2pam3mmuldvT81DLaUucMg=
+	t=1777546541; cv=fail; b=MhYSXOKKZjgjr3NlnGQokKGYrrPRIRJqZCIaMh5QL035blGDFFnYqLIsub8SYX0Ee6QnqZi8FyZouNU/rysis43qC7xsGMuESxMd8Xz8q8/gndPUjWb1rF28ULji36XKZ8m0EL3AkYZNUOspExBY7tE+Ma95eIpv/9WVhIgitXI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777546538; c=relaxed/simple;
-	bh=yQ0Fq5dukHz0bpo48wg3pmP44EimYkNohO5/v0uEoPw=;
+	s=arc-20240116; t=1777546541; c=relaxed/simple;
+	bh=RP9SD6OW+R3UzyIfJtIbgHt9+O+k4MJRzsi9YyE5F5s=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=JxT6q+gPbM9FEpKfsX5w8wQCNGvwQAjhMZ3DHXeIKtIsPj0kJ4yEJJ6Y+xFZG+Jwb++P9KuG39PR2NZEHmvoTVQczezeEkAYE26LKTCLza2wYFOTAUeS6OP9IOmW964S6V/X8+MuVKNjpkAhYNqWOlYgLs9VfBvgX7gMi8ejl+0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=T4RN+lnD; arc=fail smtp.client-ip=52.101.72.52
+	 To:Cc:MIME-Version; b=baGgv/XF5ZsMj59lCoNS7FGn1aCZ+yendaHE9sDhtNMS9HY4j3h9dqOy8ro3F7ijGPtPnfcAg+CeSpBG99NRgXtMUl5gh+9xGmpj8btuwFiMBTR6P5SVKehDtBPElMwjtkonLXUozd4EE1fbtGacLGPnpDIJCLHS18NBpHeKCTQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=JOUGzd61; arc=fail smtp.client-ip=52.101.72.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="T4RN+lnD"
+	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="JOUGzd61"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e2vl4JxExuHRoIm/WBFQhbJQAPfIyYQBG5Uv4HOqyjoeGV+k7cpI+MwFOc/OHVlIIf9LTy7BFQV+PaKcs5asTkC8FJACrpkSIlDLoleCpuj7+topoAl9juG3QQUkmpatK2pXr+vSsSL+KHPseFw9CtWcwUJQr0GQ4MwjFK/nMlOm3wRsDJcZi1bLvSVx0AKOPsTw9SFbpRo5z7lnMlZD6B249sNDgMAKrHgLRnOGKI1oI7PNCCSDTM6/5KMJ0CV0i4nhOn8xonv/1x4omAtA8fv99BzH1cRY77pZSUznd8Pz4isROPq024cpiyPUHFo6MM/YzJ3aspqXUUHUtfeXIg==
+ b=y4WbkigktiIvcGLCVq5hxl4gEXqxJw20ixBPqN1kCdn3kHIw/xyPZkH+MU220wvgSxjFmsgEjAX6fEnFPLAQYvgGShUzI6sRmYvKIjtfxDednJd+eUgBamV4n7I1JLFbltNdhN9s/u+NQlE2B0QRpXo8JXRqpTSEoLqLqDMcTmslky077jen1Gd1sG43Khs1B2DacFFdDJ8M71MNUNmYru6YreFMrxTlQiSTpb9R0vc/MCxmwpkONkomNtZ+KW79MpTQhd9ymCDGsYm07rNqUBiRoi2bIwcXlWOxEs3zuEbKmwxo7aPpT+CnYa/XFhWO+B7N8a9CL3gcukyCTTipog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eLIumcBjdZ4/2ojapoQziXN0mBW27zcNw69zGs8Owc4=;
- b=M5X5TdWU1gMGpK2X9yZLa7Suy30+x4J+O8znXDAksqNM+OkMS6VW7l8/izaPwJixDRiMO3+V3bVY1253fKoTrcsThulS+R9bnRa4vVcZazgYQ4YAtjJngo+px5KGsC0zZYgtaKdkxMZx9i2K1MbSc209qZZ738gCRdaCvZp/b7wdb0NHcqYZWwlRvFkZB3EUAw+/ENE9klWGR5pziFSta2mseaEUIrIBjzsFMduR9J8P/7wb6kpmuf20ylM5C5Ye8G3/U960kuMG9pZainBOukYCH33puneCQoqr0V1rISX6W0o5CEjpVymBp+jfYtLzAlUFwFGFEbx9kx1vcS5Iaw==
+ bh=I18cS2GCA2ZTbrUJZMuRxK5qLAhwQ94e0IJv26AnbIg=;
+ b=Ne0pAGVJlmsWKQcfJvWrhWBXAsX+huAnwTEo2KiO0RMzwWp+HhWuUrSEcFCGb4uh2ZAWc90gYP76T3JSPSaKe6s0slEPnL+bewAtYtfeP3WI7HE2OzJwAiyHiZlg2ImmZl3PRS/Miuo0XtX0tX1gvdTt3buwCqWKMXxLsGKVVsHZg2Oa97z09zKOMrKUTKPNq51Wxii3AXcB/caKBLbjSRGcXARFVzCZ1rmNU8z9MitIZXOOOryOAM/9KHhHjwBpQGCuJ9PdVofpNN5KvuLqUf1iEr0V/xQjC2/eZ1U+uc1OIf96kEeeZv0lSceMHBrpwHtoZcEwQaFAAYThLxSyKw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
  dkim=pass header.d=est.tech; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eLIumcBjdZ4/2ojapoQziXN0mBW27zcNw69zGs8Owc4=;
- b=T4RN+lnD79ZHrN2mKgp/sY6THtYDwed9fIQa0erv/dRhQ+I7KurmysBuXMxILF1VSIK6V/A6d6fLB2vFILLUrASq+BHGPBkWpnMAz2bOqLNeOUIOqTiqXiCprRDlpv9S4TP1h/FlKbKLhrxx2dpHcCbq1LCCvGrO15Y7WHTeTToCKsrf5aOriuScvk4m7lh7hTaj7h4R0j99UKywlG7X+EmSCFfpEmROC26EnzJZVZLVv+Bv8vmZF3Irt3ytSrhsXvS6QQnvYKa+esGKHOYbh7SoafxDJ/fK6GhLmJNTNbciodZoPGu2dxGrxytHn2Axy3uakzWq3gn6x67J2rmksQ==
+ bh=I18cS2GCA2ZTbrUJZMuRxK5qLAhwQ94e0IJv26AnbIg=;
+ b=JOUGzd61QhXWCPcEyvXQdRR9TJksvvAEdt44tzdzjxcDm37Y+zGjxO/JH6vaGdJOqd48gs+2ZeAr9nFQPnbdW0ht08H3bqlBQrB6y6RVsOF/P9zZLqEPKr+ykn9E7FhV4vXKbsgcmVLJIRQekeeH1xVu5I2nPajlkCKtvFGThkQ1dlVPnzDxeRDZ/mkgj/edBwkYMr/hwjjDfVmU0Y+rBoV7kFD8wpFZGFQTb0I4fzt+NgdBUmdXpQZ8gBuQOV+RNFDqvZuQI79j2hbxJKj2x0If1uL8pE2h8H7XzqBYGzEES00cZM7zmhnjRtTadMxwEeo102SHTQ5h73V50bwGrw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=est.tech;
 Received: from PAWP189MB2611.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:336::8)
  by DB4P189MB3117.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:5dc::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.18; Thu, 30 Apr
- 2026 10:55:32 +0000
+ 2026 10:55:34 +0000
 Received: from PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  ([fe80::b400:cf4f:b2e1:d884]) by PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  ([fe80::b400:cf4f:b2e1:d884%6]) with mapi id 15.20.9870.020; Thu, 30 Apr 2026
- 10:55:32 +0000
+ 10:55:34 +0000
 From: Fredrik Markstrom <fredrik.markstrom@est.tech>
-Date: Thu, 30 Apr 2026 12:55:13 +0200
-Subject: [PATCH v2 1/3] arm64: perf: Skip device memory during user
- callchain unwinding
+Date: Thu, 30 Apr 2026 12:55:14 +0200
+Subject: [PATCH v2 2/3] DO NOT MERGE: arm64: perf: Add skip_vmio parameter
+ to control device memory callchain guard
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260430-master-with-pfix-v3-v2-1-bd526ec04a75@est.tech>
+Message-Id: <20260430-master-with-pfix-v3-v2-2-bd526ec04a75@est.tech>
 References: <20260430-master-with-pfix-v3-v2-0-bd526ec04a75@est.tech>
 In-Reply-To: <20260430-master-with-pfix-v3-v2-0-bd526ec04a75@est.tech>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -68,15 +68,15 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Ivar Holmqvist <ivar.holmqvist@est.tech>, 
  Malin Jonsson <malin.jonsson@est.tech>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777546525; l=7911;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777546525; l=2497;
  i=fredrik.markstrom@est.tech; h=from:subject:message-id;
- bh=yQ0Fq5dukHz0bpo48wg3pmP44EimYkNohO5/v0uEoPw=;
- b=ikXtLmcnu8H2EL3Uba+jHXn1iKel3o8bmfW+UlGxDWcn5TfWUTdvT/8UzCBYRUfaxYaQO1IM9
- 2KFwwOiAF6jDY0JvDu7Cpl1hOC2KWJN8t6OeDnBvGKGZ16u5IRG5MIO
+ bh=RP9SD6OW+R3UzyIfJtIbgHt9+O+k4MJRzsi9YyE5F5s=;
+ b=roX8WpkSV9v0oQZ80uSGj7SX2JMUq4/DWjnxDBHLv1rVu7Tlmhs2tyex7MIELV7Sge5bvN/wk
+ 6Gv458GcTpMAnZZxX9sFlwP61l81ocXTvglyfQjZGYDNDrcBenogNcO
 X-Developer-Key: i=fredrik.markstrom@est.tech; a=ed25519;
  pk=0a8IXHEgAX55JPS8VZfTf1sDp7q/oAOf459tDQd40Eg=
-X-ClientProxiedBy: GVZP280CA0026.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:276::17) To PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
+X-ClientProxiedBy: GV3PEPF0001DBF6.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:400::306) To PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
  (2603:10a6:102:336::8)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -86,303 +86,135 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAWP189MB2611:EE_|DB4P189MB3117:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc060908-d539-4d96-642f-08dea6a6ffd7
+X-MS-Office365-Filtering-Correlation-Id: 0f41ad77-5b11-45a7-69c7-08dea6a70161
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|376014|1800799024|10070799003|366016|18002099003|22082099003|56012099003|921020;
 X-Microsoft-Antispam-Message-Info:
-	w9QS4WtI1js9jFJz/AWaMoAk6jNLQ4YCSScHOvldnZiY75ZftE1Pqwe8Q0vgLENEtFivvxhuYzd9aRGtirdaDQaqnAqJam1eYaS7cyOJo3RFTuOAnbawp6O36QD+gTlEe332LfIr6JupUR8CZOq6ayHIPiJkNhRRMWUxjmnRE9Z4yByeNgvEuAHN0ClTBjwNOKGPPfQs779O3bEYIZAXH7B7GwZy4fcDCcuv9WUgo1UbrsFxYzGZ+60giASqhnH9U4x/dWKyCbR15eOW0h0bCpmfsdb2V0zDYseJG7dBTIDBiHZodF47Pi7JzSPspwCwhBy5r9T1Nn0OkNokceYMzL+4exwHMA40L5nihm6x2GzygjaOn5nRCwWarMwe0+7ZgD47Eg5SP0gzxa8y4oHgpu+wrB8fjpPHRZwTHuvai/WX6ioVhRrZtjlqGmSw899sxpU0PcUKgtuQOwmDvKR6ZFv3OohFLWr9ZdahAYoZJR6BJj1DIgy3x5HHbhFenvC81Yrc3v3msvmcT80ha8+zeSUHDuxZm9QvIFd/I/ISPXnwNx0xnRpOrzVTPMpW2H83KnJjws3HW7dWX3r44gPt/veTfKaD/9dY3//8U5EdxqtxPfeE4ED1TBEDyD8NtxUSjF1Sy7QNx+Vir8joYVge3lcPtwAKoQYZhdCRp6wVZkQWOOBoyCkpz4DS6GslBbSlFSpNuBFoyhjO90K1hzkO9+TSnRjLw+bOv82vYUo2WZu9DM5orL0TQA3em++hPca6OtdaRlbAzU6WsLW63wD26w==
+	/DWH6d8IKhuUq2r4acoCZQYVmM2pJ8OXfddsKde2jr3UAVd8SEvT0wPRfJDQN0g9MkGf2wHDsYOT1uQDaojobCzAIlENqIKFSvwa5wF4uNKDpBytytAAvlo1+j9hJXFhknUtVHgaO4OchlC2rdRrVMxNz2OoU9Jvm4gRdJDfm1DD0xR/Auj/9Sd3qfyUs+n3+HtuA86H3q+hrSVHBpuhUP7L98PQyHn0Qm/H8q9oyrytnfJpMgGYeCM7kFU827Ah/gUp6vzRdo2zFXGZKloKGe8nob+76qgHSOVXpvqUJaDUwbXgJAyZYvKk7Hjp8aU4z9lGAXy8EHhj3Tgv+BLRL3Q2unRorPodv/ZTvbTNYHogUGNQSMzUwcl3bs76FeWTOsC7JQ3LFjPyanDeLh8lIiHCWfo5rz9ao5ZA7Tc5JKEdkAIqXKZjh/g1xmeiyjfsCiEa+bkImhAR9ko+/YCddWzZMtR43nqFHbacdfLb2TyGiJFWgssXN9R3zU32L8PPMTbzMvd8q+rj1FaGw/Z/HiLhVLWZAk+xH8qt4L2ZhjFEhXlAmCoJiTXECqSZUhzy7VEZGZJWss2/eizx0+ERKVyuo9yS8V4/YLVEGuHT4ue2TASyizTRKkPcgP/0AV5FTNqlBEge+bKQCgqTKcQoWMRGGWfMPcfvVrDppwz1yykAA3/hdFnI58/VYDW6e8LCoxg4ufkV/uVd8rYVefRgq0g5OHFTOF7ywQn6Qy+0Z4SzBA82zZORrgru5wIPErfJVoctb/6hw5OjHhYtiKtUyA==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWP189MB2611.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(10070799003)(366016)(18002099003)(22082099003)(56012099003)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ymt2MmJqbld0K2M3TTZaTGxVTEtmbjlHYTZvd25yRktnS0VYcGw1dGZkK2w5?=
- =?utf-8?B?SXZ4MTl5RHdoOVpoSmd5eHZDeGpVamNhYUxtcGxxbzJmWFpXY1UwUnlxaHJO?=
- =?utf-8?B?ZzRpYXdhemhKVlNGWXdVeXE5T2p6eWhmNTI1d3VsUUJSSWNxekFzK21uWDVl?=
- =?utf-8?B?UElPbkhEQ2VMbENHV3dpdS84ekx3RWZ2RnhPYS85MnhJN2FQMFk2eWdVbEJE?=
- =?utf-8?B?a0hHclRIMGcvek5FcXR5ZnlXS3Bxd29GOXd2NjQ4V1VWYmhmQTVpSm9kcFQ1?=
- =?utf-8?B?UndyRVZ0SmhSOW9TYUE0UmVvc1pFZzIrRWhodHVQcElJU2JtWHhkUkNOUlBu?=
- =?utf-8?B?dW9xVUFUT3dQNnFtQWViK3NVenBMenVsbHR2b2o5dHVhY1RxQ0FQa3ptTnlG?=
- =?utf-8?B?bUJzZXpORXRUYmRqa29sN1p0aVBIY1lRUEtNTXFpdHhuRHVGSHQxMStZNHhO?=
- =?utf-8?B?bE1WYU1XQmpSbnVhRWJBYS9HNW43dnpZbGIrVVdTUnA1SWtHNDZXVU94d1dw?=
- =?utf-8?B?aXhrZU1MaHNDUGNaVFpSZzNpNGF6YVhMQW5Gd1NaRzlwTitKWTZTUjdqUWNM?=
- =?utf-8?B?R21RamNLam95bUlzYVVrVTZnY3JkSHl2eDk3VUthZE5YdFJhdk5VVmhoR3V5?=
- =?utf-8?B?RExzNHBaN0xsN0RuZU9OMjBQb1B5QVBNMGFxM2VIakRNbVl3Y0JzZ1VWNnhZ?=
- =?utf-8?B?aFpVbWNVNVhuMWx6dG9YeUpIYTlnYTQySmduSmhwYW9WNlRKRGhPZGhRMjVC?=
- =?utf-8?B?WGFERy9uZVlLbUwxelpVRjdKMy9tLy90V1NrWnZvNFhGZU82YXh3cUxYenJR?=
- =?utf-8?B?R283Vnp4Z1AxazgwelNSdGNDT3ovK0xzcDBCbmFxR3VtUTlTWkZaV0NhMWQ0?=
- =?utf-8?B?T0M1Y2trSFZEVVNVVUpmRmUwL2tocGI1MGV4SkF2T1dQdU10bGRzaUZhcW85?=
- =?utf-8?B?TlRvUDYyQlA0WmtPalpqS0xOMWRNMitrODBjQk9kb2tiRTBuVUdLU0JTTnZT?=
- =?utf-8?B?TjBHRFBhWlNyQXg2bnRJa2RqeUowSFI5ZUJ0djlvd2F5Q0g1ajYwYWkyQ1lv?=
- =?utf-8?B?NEk4MTJqcW1sd2xNWVJQRno3MFZIdHRCZENLRFU1L3FjSU5SMVNGVVB2Z1Bt?=
- =?utf-8?B?M3JHYU1BWnN3YWsxa2dIamhlSGx4RVVLZWJaeHIzMWYzbWNKZDJTVFdya3dh?=
- =?utf-8?B?SGs5S1hRbDNzSEFFYkhvTDZZcHdub08yakNEdUZ3QjZrK1FjZkRjZUdkRXg3?=
- =?utf-8?B?QW9QaWVKK3JIQ055UWJEdVJpL20zQnRacFo0WngydmYrQVZHZGRJUWRURncw?=
- =?utf-8?B?VnJ1bU1JTFROUHZKZFUrbWtuQVZqUUZGYW1QeWlTZFM2ekFza3ptYTFYYTBN?=
- =?utf-8?B?ZDZ1Tk05SVo1YjMyeFRlVHprbmVoNnpsWURWK2l1ZWFDOFR4SGVwdXFDZVls?=
- =?utf-8?B?WmN3bXYzVElSTHcxajQ5WDdOOERZYmRiU3JocTB4UDg1VzFsQnR2UjB5WHp1?=
- =?utf-8?B?R0IyWXE1b0thUDVOd0w5WDJhMmhuY3ljL1l6S2c2dFZTVVllV09PcysxMGoz?=
- =?utf-8?B?Q0JpaE9oWTlvUnVoMnp2RS9QcXdZMWNYSXU3cW9yWlFqUGhwK2poU1Zaekxa?=
- =?utf-8?B?dk01SW81OFpRQmhLVldCbVJBeGMzUlR3c29wMkx4eHJXN2JGeW1oVlhFNVRW?=
- =?utf-8?B?NkpkbGluOG5OZ3VTdFRXUHhGSTViTzJkTm42UGk3SXk0NWRZTGZxSmdmSml5?=
- =?utf-8?B?VkRQNG9XblZRS0VWcWc1ZDNaTGExUmViTGMvMGpiNmsxYTRiYzIyOTczdlhN?=
- =?utf-8?B?U1doTnhyOWpZRjF2ams5RlRhR0JGMStBQkIzQkFUT05JUFU5Wkxtc2hEZTQy?=
- =?utf-8?B?Z3BsYWtTZE8xSHg5b0FneXN2d0ZzSXl0Y3BaaGRZcHN4Y0hrTjJ2VWliQ2xu?=
- =?utf-8?B?QUlsRFBBN2QyUkg5RHN4c25TTzlKRWdNNUZ2clJRQjhOVFpoR1k2Q1pSemtB?=
- =?utf-8?B?ajZwS3RFMWhNajNaWXhxbk1kdVVpbWljSmNHcGlNYktDNFlxOGVYdjhuQ1ZW?=
- =?utf-8?B?d2tPVGxJR0ZBRFJvTDdEL21uc0RhMzRoRkYzc0NOSVZQZldwZ0lsWk9kZjRD?=
- =?utf-8?B?dEFGUHRPQms2WGdSUHZ4WUhadmkzNXdxaE9DTVhUSVR2aS9UZU9tUVRFck80?=
- =?utf-8?B?NUVWbDJBcTIxOG9VMGg4YTExTjBPR1BBNW44Rmlsb3Y4d1VsOGtxZE96bllX?=
- =?utf-8?B?U3k1cGxHbE45TDR4WENIczFVTDhEUzQwVEhkei85MFJXVHh0ODk4Ty8zNm1M?=
- =?utf-8?B?by9rQUI1RlBkT1R3amF2MkdvWGd4b3U3dENGdVpCa1Jvd1RIUDJCM1diQnVl?=
- =?utf-8?Q?IBWeCl+oXtdpWDcvarcied2Kkxgb/mxLJfmGLVSEuGoR9?=
-X-MS-Exchange-AntiSpam-MessageData-1: R6j1vgMdPDJsZORfUlKjN8ax2b9odvwot4E=
+	=?utf-8?B?VEo5RlFNQU53cWs1dFF4WVNvOEVMNDN2cnoyTmNPSVlTK0RxNmhEeG1wVzVh?=
+ =?utf-8?B?aDk4RFo0RXhVZjE4Mjk2Ym1yaWVZYmVsQkswVG1McWhueFF4L3FkQ1ZXVXVj?=
+ =?utf-8?B?WFVRUjMrKytUdW8zejZ2RnNKOUZrQnZwaHZNNlpuN1lDZTl1TDl1ZE90Wkt6?=
+ =?utf-8?B?bXY0bVduKy8zUWxubnArUDJhaFRzeUUvZ045dXhzck9xMy9iMnNtVC9vcVgw?=
+ =?utf-8?B?czFwRGJlUEZBdGxndG4rVHpxeU94bDBUVVh3TGpLL25OUi9UU0hsL21rZ1cy?=
+ =?utf-8?B?ZmZOU1pDNzNXaWlqcThvNmlDYlFrY3orU3BqZTYyVVorNS9xd1NsblpPZnAv?=
+ =?utf-8?B?ZDdpRVlqbkR1OG80TUVXN1ZkNjhTU1dVVDcrUW9odDdpTmtwbHVBcWc3K2tz?=
+ =?utf-8?B?eXFHYit3SjgwclJpdkZlTFFWRTF0VGp0TnpYN1poWjVoT3JUMXVvSk4veEtC?=
+ =?utf-8?B?RmEzbEFqUHdQQXo1cGhNOHd2bEQwaXU1bVJxOUhDSVlNVXB4TDkyeS9wOW52?=
+ =?utf-8?B?UU1ZaTNCazN2QnVUN2RVVW84R1BMeVJ3R1dURXRKNUxwT0xKOWdKb0tUQzI2?=
+ =?utf-8?B?TTM5RVNVZHpKR1o5WVhIKzl0a3RFWjNvN29Ddzh1ZVJmSVhDTGdFZjBmZDhW?=
+ =?utf-8?B?RUdRMFdUU0syWnVXQzdyNmN3MlBDTnV4WUMyNTBQcVpwNWEzUFRMbEgzaVJB?=
+ =?utf-8?B?a0Z5djhrdGxNcHlSUzBZZkp1Q1dlNFpFYUVoa0RSMWx0MWs2YkY3b091M1ow?=
+ =?utf-8?B?L0p1OTJLVUFpTUViL2tySk5DSHpDa1RGNU5GeHdtWjh2aEk5NU5FcHZFN1JM?=
+ =?utf-8?B?RVdheksyaGJoVjJ1eTZsRlJzTVY2VC9jS1RzZnByWG9oNmpQdjNJNWdKcUJv?=
+ =?utf-8?B?NTlHY0ViZUE4TWZGTGJUWTVxY2taOC9HMXNwSUV2dGlieVY3SnREcERrbEpm?=
+ =?utf-8?B?eTBHY0lycmlYK2xlVlByZE1nWFE5eEUrb0krVmtYRXFUVVdqd1B6S3d0dWx5?=
+ =?utf-8?B?Y25rb20xYUVCeWRDY3VHVUNGQ1hjOXBkaEZBSDU1U0xGbVg1cWllWlFFWHhH?=
+ =?utf-8?B?SVBOQWZvRzg5dmtFeDY4aG44ZnRWNHNjRGxUeFYyY3VtV0VXOVVsWXdpQXA2?=
+ =?utf-8?B?SEFQbThYTDlDdUI5cEIrM3VtekR5bzlvS3pnMXp2NWYxTU83Tml1M2JrbzVt?=
+ =?utf-8?B?U2pEeTBTUXBaSzFyVVBmWEZuaFlDYkQ5eHdYVk8xR0E2N3FtODhzL0I5bS9W?=
+ =?utf-8?B?aWtGMWxYc0lkTy85YjBEcXhONFVDR2VMN1BhTGVIa3JzcXVtUzRjWHlIY0RX?=
+ =?utf-8?B?TGp3VkplNG96b0MwaHF1WDZKRG1ONHRsa1FPajFSRm04ZVNaUEF4QTJsNDVU?=
+ =?utf-8?B?aW15eU82L2RteXkvUFJ6b2lET1RBdU1UWE9jUkpleDUrVXJuenFCNngyWFJa?=
+ =?utf-8?B?MmpqMmc5cVVPZldUTmlOQjRZV09XM2NFYlpGRFBvZFJSRFZaV3crNXA1WU9D?=
+ =?utf-8?B?TjBNT0xpVkZDaGRsckV6WkxySktJZkhiTzFMeDVSS2NQT3hzRFFxNmpjNThw?=
+ =?utf-8?B?bGM4cXd2Z1FBVEx2bTRTVEI2cld4cVlJWTBpL05BRkhGRTZWbXNVamo5MWtF?=
+ =?utf-8?B?WHkrcjdBNE40MFhReTA3VVA0OWI3VERPMWVJQk10V2hKa0NKOHZJUXpuYkFo?=
+ =?utf-8?B?bHBpMmNUSU9PQ0FxYzR5RTkvdThsRDhOSlBDNk9jZEFiMjdteEFxUS93RHdT?=
+ =?utf-8?B?SU8ycnVuTk5NNEdkVTRtbGxuOFA4N3Z4ajZqTG1CbkJCcmdkNkRBVi80QzBQ?=
+ =?utf-8?B?NVEyME0wTFFzc3c2K05KMjhlRDFnWVRuNmR1bGZpT0ZMQzVYQ25nVjhLcjBa?=
+ =?utf-8?B?cGpqZzhmSlRxUHl0WUg2aTlObDlZR29uL1BOK05LYjdUTFdvUUQyYmkrQjgw?=
+ =?utf-8?B?cjdzcnNZSzFTUkYwZGlRR3dHSkhVZVZmZWh4azBMTjIxVXBtUnVGZWhZL25n?=
+ =?utf-8?B?T1VqL1d5dk9GK2R3NXZkS0FNa3kyRytSdmRwUUtGYkF1RFhTOERnTDZQVVZa?=
+ =?utf-8?B?RWRzMEIvN1ZlNUkwZ0tsS2M5UTJ2cWtsWnJ0NS82M3NSMndrUlNaUExyVUY5?=
+ =?utf-8?B?eUsyNG51WS83Mm83RnZKTHN6NWVkNDZhVjk1Vm1kdWhtcDhoT3V1d21XL1FP?=
+ =?utf-8?B?MFpMQXFYdEF1cFVCK3V2U2FnQkVUTm45K3Q5LzdwRlM2UzdPQnBBeVJoTC9w?=
+ =?utf-8?B?RkNYM254Si9sSkRNZitSdFNqVGtQenV1d1FLbXBHUjRGMWhmVklBRk9WcEdq?=
+ =?utf-8?B?RjNzTnJjVWhHcVEwa2xqNXA2dW9PZTk4RUlKakNFZWQvSml4YjBJbEcxc0gv?=
+ =?utf-8?Q?Tbq9I2bdlU3CyhP26MbHQc0ec3oseDxiGOwxToiSEgTKc?=
+X-MS-Exchange-AntiSpam-MessageData-1: /hc50Ez3klqOmWeG5OLO1KQX3FvjOuqhhnc=
 X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc060908-d539-4d96-642f-08dea6a6ffd7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f41ad77-5b11-45a7-69c7-08dea6a70161
 X-MS-Exchange-CrossTenant-AuthSource: PAWP189MB2611.EURP189.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 10:55:32.1225
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 10:55:34.7663
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y0x3L9l+lbvFCWUsnoOZ/XUhKDEYShNeJBkeUGlweyWjXQsEqBhs/Ae1lfhHQJsnhsUyfSxmRcniTV1p7N1tvlftLFDZRgFqaCZTpQLs4S4=
+X-MS-Exchange-CrossTenant-UserPrincipalName: iVacin3gH3B7OXiCiYcgxe+9BcrUke/XFKMl5CdOcQzl8RSn3oTldk0iGx1G6AC9QvXAAudeIooUIxJXoHwvpJWw0Rvx4lBOpcEJLMxO3Ho=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4P189MB3117
 
-Perf callchain unwinding follows userspace frame pointers via
-copy_from_user. A corrupted frame pointer can point into device
-I/O memory mapped into the process (e.g. via UIO), causing the
-kernel to read from MMIO regions. Reads from device memory can
-have side effects, trigger bus errors, or produce faults that
-crash the kernel.
+Reproducing the synchronous external abort that the device memory
+guard prevents requires disabling the guard at runtime. Without
+this, there is no way to verify the guard is actually needed or
+to regression-test the crash path.
 
-Add a lockless page table walk that inspects the MAIR attribute
-index in the leaf PTE before reading. If the PTE indicates
-device memory (MT_DEVICE_nGnRnE or MT_DEVICE_nGnRE), the frame
-is skipped. The walk uses the same lockless accessors as
-perf_get_pgtable_size() with local_irq_save/restore to ensure
-page table pages are not freed during the walk, as
-arch_stack_walk_user() can also be reached from process
-context via ftrace (stack_trace_save_user).
+Add a module parameter (skip_vmio, default true) that controls
+whether the guard is active. Set to 0 to disable it:
+  Boot:    stacktrace.skip_vmio=0
+  Runtime: echo 0 > /sys/module/stacktrace/parameters/skip_vmio
 
-The walk is guarded by #ifdef CONFIG_HAVE_GUP_FAST to match
-perf_get_pgtable_size(), though the lockless helpers all have
-generic fallbacks and the guard may not be strictly necessary.
-
-A TOCTOU race exists: another thread in the same process could
-mmap device memory at the target address between the page table
-walk and the copy_from_user read. Preventing that would require
-mm-level VM_IO tracking (e.g. an atomic counter on the mm).
-
-Without this guard the kernel panics:
-
-    Internal error: synchronous external abort: 0000000096000010 [#1]  SMP
-    CPU: 1 UID: 0 PID: 33 Comm: test_perf_vmio Tainted: G   M                7.0.0+ #37 PREEMPTLAZY
-    Tainted: [M]=MACHINE_CHECK
-    Hardware name: linux,dummy-virt (DT)
-    pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-    pc : __arch_copy_from_user+0xb8/0x23c
-    lr : arch_stack_walk_user+0x218/0x258
-    sp : ffff800080433ba0
-    x29: ffff800080433ba0 x28: ffff00000097ed40 x27: 0000000000000000
-    x26: 000000000000001f x25: ffffffffffffffff x24: ffff00000097ed40
-    x23: 000ffffffffffff0 x22: ffff800080433c78 x21: ffff800080022db8
-    x20: ffff80008032bc60 x19: 0000ffff9e575000 x18: 0000000000000000
-    x17: ffff7fffbfac5000 x16: ffff800080430000 x15: 0000ffff9e575000
-    x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-    x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-    x8 : 0000000000000001 x7 : 000000000000007f x6 : ffff800080433c10
-    x5 : ffff800080433c20 x4 : 0000000000000000 x3 : 0000000000000010
-    x2 : 0000000000000010 x1 : 0000ffff9e575000 x0 : ffff800080433c10
-    Call trace:
-     __arch_copy_from_user+0xb8/0x23c (P)
-     perf_callchain_user+0x1c/0x24
-     get_perf_callchain+0x130/0x138
-     perf_callchain+0xac/0xc4
-     perf_prepare_sample+0xac/0x5d8
-     perf_event_output_forward+0x44/0xa0
-     __perf_event_overflow+0x190/0x230
-     perf_event_overflow+0x18/0x20
-     armv8pmu_handle_irq+0x154/0x194
-     armpmu_dispatch_irq+0x28/0x54
-     handle_percpu_devid_irq+0xf0/0x11c
-     handle_irq_desc+0x3c/0x50
-     generic_handle_domain_irq+0x14/0x1c
-     gic_handle_irq+0x80/0x98
-     call_on_irq_stack+0x30/0x4c
-     do_interrupt_handler+0x5c/0x84
-     el0_interrupt+0x58/0x8c
-     __el0_irq_handler_common+0x14/0x1c
-     el0t_64_irq_handler+0xc/0x14
-     el0t_64_irq+0x154/0x158
-    Code: f8400827 f8408828 91004021 a88120c7 (f8400827)
-    ---[ end trace 0000000000000000 ]---
-    Kernel panic - not syncing: synchronous external abort: Fatal exception in interrupt
-    SMP: stopping secondary CPUs
-    Kernel Offset: disabled
-    CPU features: 0x0000000,000d0000,00040000,0400400b
-    Memory Limit: none
+When disabled, perf follows frame pointers into device memory
+regions, triggering a synchronous external abort and kernel panic
+on arm64.
 
 Assisted-by: Kiro:claude-opus-4.6 [kiro-cli]
-Fixes: 030896885ade ("arm64: Performance counters support")
 Signed-off-by: Fredrik Markstrom <fredrik.markstrom@est.tech>
 Reviewed-by: Ivar Holmqvist <ivar.holmqvist@est.tech>
 Reviewed-by: Malin Jonsson <malin.jonsson@est.tech>
 ---
- arch/arm64/kernel/stacktrace.c | 109 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+ arch/arm64/kernel/stacktrace.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 3ebcf8c53fb04050488ffc110ff2059028b6772d..4a28df9bbe763ea7e88f02c1797bf0d4f1bbac2d 100644
+index 4a28df9bbe763ea7e88f02c1797bf0d4f1bbac2d..19b5251f214f2f6e083e55894ebaed84a3a4f585 100644
 --- a/arch/arm64/kernel/stacktrace.c
 +++ b/arch/arm64/kernel/stacktrace.c
-@@ -4,12 +4,14 @@
-  *
-  * Copyright (C) 2012 ARM Ltd.
-  */
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/efi.h>
- #include <linux/export.h>
+@@ -11,6 +11,7 @@
  #include <linux/filter.h>
  #include <linux/ftrace.h>
  #include <linux/kprobes.h>
-+#include <linux/pgtable.h>
++#include <linux/moduleparam.h>
+ #include <linux/pgtable.h>
  #include <linux/sched.h>
  #include <linux/sched/debug.h>
- #include <linux/sched/task_stack.h>
-@@ -17,9 +19,110 @@
+@@ -123,6 +124,10 @@ static bool range_is_device_mem(unsigned long start, unsigned long size)
+ 	return false;
+ }
  
- #include <asm/efi.h>
- #include <asm/irq.h>
-+#include <asm/memory.h>
- #include <asm/stack_pointer.h>
- #include <asm/stacktrace.h>
- 
-+/*
-+ * addr_is_device_mem - check if a userspace address maps device memory
-+ *
-+ * Walks the current task's page tables without taking the mmap lock,
-+ * using the same lockless pattern as perf_get_pgtable_size() in
-+ * kernel/events/core.c.  Inspects the MAIR attribute index in the
-+ * leaf PTE to detect device memory types.
-+ *
-+ * Returns true for device memory (MT_DEVICE_nGnRnE, MT_DEVICE_nGnRE)
-+ * or if the mapping cannot be determined.  Safe to call from IRQ/NMI
-+ * context.
-+ */
-+static bool addr_is_device_mem(unsigned long addr)
-+{
-+#ifdef CONFIG_HAVE_GUP_FAST
-+	struct mm_struct *mm = current->mm;
-+	pgd_t *pgdp, pgd;
-+	p4d_t *p4dp, p4d;
-+	pud_t *pudp, pud;
-+	pmd_t *pmdp, pmd;
-+	pte_t *ptep, pte;
-+	unsigned long flags;
-+	unsigned int idx;
-+	bool is_dev;
-+
-+	if (!mm)
-+		return true;
-+
-+	local_irq_save(flags);
-+
-+	pgdp = pgd_offset(mm, addr);
-+	pgd = pgdp_get(pgdp);
-+	if (pgd_none(pgd))
-+		goto err;
-+
-+	p4dp = p4d_offset_lockless(pgdp, pgd, addr);
-+	p4d = p4dp_get(p4dp);
-+	if (!p4d_present(p4d))
-+		goto err;
-+
-+	pudp = pud_offset_lockless(p4dp, p4d, addr);
-+	pud = pudp_get(pudp);
-+	if (!pud_present(pud))
-+		goto err;
-+
-+	if (pud_leaf(pud)) {
-+		pte = pud_pte(pud);
-+		goto check;
-+	}
-+
-+	pmdp = pmd_offset_lockless(pudp, pud, addr);
-+again:
-+	pmd = pmdp_get_lockless(pmdp);
-+	if (!pmd_present(pmd))
-+		goto err;
-+
-+	if (pmd_leaf(pmd)) {
-+		pte = pmd_pte(pmd);
-+		goto check;
-+	}
-+
-+	ptep = pte_offset_map(&pmd, addr);
-+	if (!ptep)
-+		goto again;
-+
-+	pte = ptep_get_lockless(ptep);
-+	pte_unmap(ptep);
-+
-+	if (!pte_present(pte))
-+		goto err;
-+check:
-+	idx = FIELD_GET(PTE_ATTRINDX_MASK, pte_val(pte));
-+	is_dev = idx == MT_DEVICE_nGnRnE || idx == MT_DEVICE_nGnRE;
-+	local_irq_restore(flags);
-+	return is_dev;
-+err:
-+	local_irq_restore(flags);
-+	return true;
-+#else
-+	/*
-+	 * Without GUP-fast lockless page table helpers we cannot
-+	 * inspect the PTE.  Preserve the existing behavior (no
-+	 * device memory check) rather than unconditionally blocking
-+	 * all unwinding.
-+	 */
-+	return false;
-+#endif
-+}
-+
-+static bool range_is_device_mem(unsigned long start, unsigned long size)
-+{
-+	unsigned long end = start + size - 1;
-+
-+	if (addr_is_device_mem(start))
-+		return true;
-+	if ((start ^ end) >> PAGE_SHIFT)
-+		return addr_is_device_mem(end);
-+	return false;
-+}
++static bool skip_vmio = true;
++module_param_unsafe(skip_vmio, bool, 0600);
++MODULE_PARM_DESC(skip_vmio, "Skip device memory during user callchain unwinding");
 +
  enum kunwind_source {
  	KUNWIND_SOURCE_UNKNOWN,
  	KUNWIND_SOURCE_FRAME,
-@@ -524,6 +627,9 @@ unwind_user_frame(struct frame_tail __user *tail, void *cookie,
+@@ -627,7 +632,8 @@ unwind_user_frame(struct frame_tail __user *tail, void *cookie,
  	if (!access_ok(tail, sizeof(buftail)))
  		return NULL;
  
-+	if (range_is_device_mem((unsigned long)tail, sizeof(buftail)))
-+		return NULL;
-+
+-	if (range_is_device_mem((unsigned long)tail, sizeof(buftail)))
++	if (READ_ONCE(skip_vmio) &&
++	    range_is_device_mem((unsigned long)tail, sizeof(buftail)))
+ 		return NULL;
+ 
  	pagefault_disable();
- 	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
- 	pagefault_enable();
-@@ -572,6 +678,9 @@ unwind_compat_user_frame(struct compat_frame_tail __user *tail, void *cookie,
+@@ -678,7 +684,8 @@ unwind_compat_user_frame(struct compat_frame_tail __user *tail, void *cookie,
  	if (!access_ok(tail, sizeof(buftail)))
  		return NULL;
  
-+	if (range_is_device_mem((unsigned long)tail, sizeof(buftail)))
-+		return NULL;
-+
+-	if (range_is_device_mem((unsigned long)tail, sizeof(buftail)))
++	if (READ_ONCE(skip_vmio) &&
++	    range_is_device_mem((unsigned long)tail, sizeof(buftail)))
+ 		return NULL;
+ 
  	pagefault_disable();
- 	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
- 	pagefault_enable();
 
 -- 
 2.51.0
