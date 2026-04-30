@@ -1,109 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B489B2C029D
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2026 02:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAB3335064;
+	Thu, 30 Apr 2026 02:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777516597; cv=none; b=gHt2qPftVDj8Z3N5Jcl9ubzd3tBLH4CHxnT4TroH/T39nZJA5kH+bY/Eh/w9oLhgmLGHiHebki2oMS5ZiebSf6E1II5S1V+dIclzXr4xOh2nruLk6aPAW5Sco8hWRg5T/RCF4ky45MixoN39tJl70NCafq/3r+Qv1mcyjkG9pJ0=
+	t=1777517852; cv=none; b=speiBgss83+Myg0xGqON3WdWkhEfbldpSgu10R4XSQIIToSByJU4hXrhlZsCUu6Ti56paHh3pfovCxGTQ1UAIA8+YCvNXZIBSyj0eH6Lo6oW6+Ie64OMSFQeCA0XYm9xIFLNX+3PzaEqF5SP4bAtVhKlXJaT0ETQNQ3j+9iLdX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777516597; c=relaxed/simple;
-	bh=h3OEVb5/UDhp9TVqt3eZ3Mdi9J1cmSz24Tr4E/JZajE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mnyktTZN0bktUqBTPhXzvzKJxVHHNk2kD86nm9Kv2Q5t14E8a61eaT7ohb7X3uh8XsMOyhtqZ0Vbze7xdRlrjRtIXE7KsNlxsNMQccLtikjANEz8k4+4waVYOv5/g29r/Gb2VnRUt6Lk55F1uMA8+vmNZotGuI8C3Xcp044dsfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hso6EX6A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777517852; c=relaxed/simple;
+	bh=WWDHuN6KlX23gWiFtx2Nh0bUKaZPUis/C4/D7ggZTz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2q33KPM8nW3ghjOvOWIu+AFzRbI5jDvB0mhsuWiKomzlS+9M4lla5TLG9xa+iK4Vsk2C31ZcUXyz2vMcfeDJ5XtDVTAcgG4EpIWllorNGgXDGWjrUmypAPOVZaQj9XQC6oeii20yab7FUFLTNXZ3ZPCV+hEHneP6kJs1/JFlEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1ZbOrwX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hso6EX6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B6AC19425;
-	Thu, 30 Apr 2026 02:36:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1ZbOrwX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386F6C2BCB8;
+	Thu, 30 Apr 2026 02:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777516597;
-	bh=h3OEVb5/UDhp9TVqt3eZ3Mdi9J1cmSz24Tr4E/JZajE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=hso6EX6AUY4F+6n5WhGZYB7kmK6dHj88jpV31lUXaYQUDKCTzCznqwN3njGdNF982
-	 56bt1zqWGlfUrLl6nqLC3n7fgSeOIohz/Lb5/YkGxGzhWgIceUx8vVD4YcohNjLK+1
-	 pgsUz8HNtqKFtftkm8m5jXpBsjBM4j5RLTiNtWj/IfFAkU3F7zaxC6lskEnUgnlZRx
-	 WEV6bAXiN7kjZZPrK3b6rvq7/7FP139lVjAcQtJf5Y4wdaljRuYCX+jCpyyaHt2wPP
-	 u42Vm/A8NG2twQO0MvFJdGk+Qjc7vEJ/SwAqQCb7UgW3hhUGvN0wvvxhL3IJIzJuXm
-	 VVSaeDw/Jy9JA==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v4 3/5] perf/x86/intel: Disable PMI for self-reloaded
- ACR events
-Reply-To: sashiko@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260430002558.712334-4-dapeng1.mi@linux.intel.com>
-References: <20260430002558.712334-4-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Apr 2026 02:36:35 +0000
-Message-Id: <20260430023637.37B6AC19425@smtp.kernel.org>
+	s=k20201202; t=1777517851;
+	bh=WWDHuN6KlX23gWiFtx2Nh0bUKaZPUis/C4/D7ggZTz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k1ZbOrwXjutciMx5tEkdM1wGxG3q36SBK/oeKeAfkTr7yKSuL37sp4kOhWaoVRcVA
+	 hpfg5oCfqWdVBy/bkTiJBvPcNle/a0MAGN9zoNYaMgAZnsWxQnyTvkx+sYlIS+bCZO
+	 bhrBFaY6UTO7kdeIOizCh7lxo2RVFfIBjGnq9I+Ne0wJT8GdEcKQKYHHrK6pZ+uRSx
+	 K2Nu9ZBslhxYMisQhkC99HxSt5ktF4JhwdK4EGVX6Xfeq8plCqtjk/82o+G8CgIK6G
+	 TaWoEVaq83EexbsLEeyZwSNZza4MTbEnvVSk+rRGvu2WxaYKn2CE8mGpjyQpZ1D3AV
+	 WtXoYRwj1Wjhw==
+Date: Wed, 29 Apr 2026 19:57:29 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH] perf callchain: Handle multiple address spaces
+Message-ID: <afLFGZcaEY2sW0ci@google.com>
+References: <20260414124241.490185-1-tmricht@linux.ibm.com>
+ <aeemNo-8_RByiwvP@google.com>
+ <5b3c3edd-4661-4e1e-8971-16eacc230f5c@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b3c3edd-4661-4e1e-8971-16eacc230f5c@linux.ibm.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Event PMIs can be permanently disabled due to a stale `hw.config1`=
- state when an ACR group is broken up.
---
+On Wed, Apr 29, 2026 at 09:14:38AM +0200, Thomas Richter wrote:
+> On 4/21/26 18:30, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Tue, Apr 14, 2026 at 02:42:41PM +0200, Thomas Richter wrote:
+> >> perf test 'perf inject to convert DWARF callchains to regular ones'
+> >> fails on s390. It was introduced with
+> >> commit 92ea788d2af4 ("perf inject: Add --convert-callchain option")
+> >>
+> >> The failure comes the difference in output. Without the inject script to
+> >> convert DWARF the callchains is:
+> >>  # ./perf record -F 999 --call-graph dwarf -- perf test -w noploop
+> >>  # ./perf report -i perf.data --stdio --no-children -q \
+> >> 					 --percent-limit=1 > /tmp/111
+> >>  # cat /tmp/111
+> >>     99.30%  perf-noploop  perf               [.] noploop
+> >>             |
+> >>             ---noploop
+> >>                run_workload (inlined)
+> >>                cmd_test
+> >>                run_builtin (inlined)
+> >>                handle_internal_command
+> >>                run_argv (inlined)
+> >>                main
+> >>                __libc_start_call_main
+> >>                __libc_start_main_impl (inlined)
+> >>                _start
+> >>  #
+> >>
+> >> With the inject script step the output is:
+> >>  # ./perf inject -i perf.data --convert-callchain -o /tmp/perf-inject-1.out
+> >>  # ./perf report -i /tmp/perf-inject-1.out --stdio --no-children -q \
+> >> 		--percent-limit=1 > /tmp/222
+> >>  # cat /tmp/222
+> >>     99.40%  perf-noploop  perf               [.] noploop
+> >>             |
+> >>             ---noploop
+> >>                run_workload (inlined)
+> >>                cmd_test
+> >>                run_builtin (inlined)
+> >>                handle_internal_command
+> >>                run_argv (inlined)
+> >>                main
+> >>                _start
+> >>  # diff /tmp/111 /tmp/222
+> >>  1c1
+> >>  <     99.30%  perf-noploop  perf               [.] noploop
+> >>  ---
+> >>  >     99.40%  perf-noploop  perf               [.] noploop
+> >>  10,11d9
+> >>  <                __libc_start_call_main
+> >>  <                __libc_start_main_impl (inlined)
+> >>  #
+> >>
+> >> The difference are the symbols __libc_start_call_main and
+> >> __libc_start_main_impl.
+> >>
+> >> On x86_64, kernel and user space share a single virtual address space,
+> >> with the kernel mapped to the upper end of memory. The instruction
+> >> pointer value alone is sufficient to distinguish between user space
+> >> and kernel space addresses. This is not true for s390, which uses
+> >> separate address spaces for user and kernel. The same virtual address
+> >> can be valid in both address spaces, so the instruction pointer value
+> >> alone cannot determine whether an address belongs to the kernel or
+> >> user space. Instead, perf must rely on the cpumode metadata derived
+> >> from the processor status word (PSW) at sample time.
+> >>
+> >> In function perf_event__convert_sample_callchain() the first part
+> >> copies a kernel callchain and context entries, if any.
+> >> It then appends additional entries ignoring the address space
+> >> architecture. Taking that into account, the symbols at addresses
+> >>
+> >>    0x3ff970348cb __libc_start_call_main
+> >>    0x3ff970349c5 __libc_start_main_impl
+> >>
+> >> (located after the kernel address space on s390) are now included.
+> >>
+> >> Output before:
+> >>  # ./perf test 83
+> >>  83: perf inject to convert DWARF callchains to regular ones : FAILED!
+> >>
+> >> Output after:
+> >>  # ./perf test 83
+> >>  83: perf inject to convert DWARF callchains to regular ones : Ok
+> >>
+> >> Question to Namhyung:
+> >> In function perf_event__convert_sample_callchain() just before the
+> >> for() loop this patch modifies, the kernel callchain is copied,
+> >> see this comment and the next 5 lines:
+> >>    /* copy kernel callchain and context entries */ 
+> >> Then why is machine__kernel_ip() needed in the for() loop, when
+> >> the kernel entries have been copied just before the loop?
+> > 
+> > IIRC I wanted to make sure to have PERF_CONTEXT_* part in the raw
+> > callchains.
+> > 
+> >>
+> >> Note: This patch was tested on x86_64 virtual machine and succeeded.
+> >>
+> >> Fixes: 92ea788d2af4 ("perf inject: Add --convert-callchain option")
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >>
+> >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > 
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> 
+> Hi Namhyung,
+> 
+> is there something which needs to be done on my side to get this patch picked?
+> It still fails on s390.
+> 
+> Please adviseon how to proceed.
 
-commit cfc30b699ff51679e8ae587b226916cfd6fbe7bc
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Arnaldo will take care of 7.2 development cycle.
 
-perf/x86/intel: Disable PMI for self-reloaded ACR events
+Thanks,
+Namhyung
 
-This commit disables Performance Monitoring Interrupts (PMI) for all events
-configured with Auto Counter Reload (ACR) self-reload to prevent spurious
-"unknown reason" NMI warnings.
-
-[ ... ]
-
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index fad87d3c8b2c..524668dcf4cc 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -137,6 +137,16 @@ static inline bool is_acr_event_group(struct perf_ev=
-ent *event)
->  	return check_leader_group(event->group_leader, PERF_X86_EVENT_ACR);
->  }
-> =20
-> +static inline bool is_acr_self_reload_event(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +
-> +	if (hwc->idx < 0)
-> +		return false;
-> +
-> +	return test_bit(hwc->idx, (unsigned long *)&hwc->config1);
-> +}
-
-Can this cause PMIs to be permanently disabled if an ACR group is broken up?
-
-If the original group leader is closed, perf_group_detach() promotes the
-siblings to standalone events, making them their own leaders. These new
-standalone events no longer have the PERF_X86_EVENT_ACR flag (as it was only
-set on the original leader).
-
-Because they lack the flag, intel_pmu_acr_late_setup() skips them, and
-their hw.config1 field retains the stale physical counter bitmask from when
-they were in the ACR group.
-
-Since is_acr_self_reload_event() checks hw.config1 without validating if the
-event is still in an ACR group via is_acr_event_group(), could a detached
-event that gets assigned to a counter matching the stale bitmask incorrectly
-return true here?
-
-This would cause intel_pmu_enable_event() to incorrectly clear the
-ARCH_PERFMON_EVENTSEL_INT bit, breaking PMI generation and sampling for a
-now-normal event.
-
->  struct amd_nb {
->  	int nb_id;  /* NorthBridge id */
->  	int refcnt; /* reference count */
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260430002558.7123=
-34-1-dapeng1.mi@linux.intel.com?part=3D3
+> 
+> While at looking at my backlog, what about this patch
+> [PATCH] perf test: probe_vfs_getname add do_getname() probing fallback 
+> 
+> Thanks a lot for your help
+> 
+> -- 
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+> --
+> IBM Deutschland Research & Development GmbH
+> 
+> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+> 
+> Geschäftsführung: David Faller
+> 
+> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
