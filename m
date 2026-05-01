@@ -1,193 +1,137 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B5A2DAFD7
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 18:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777659520; cv=pass; b=T40U9LnJ5jZdTHFXa0HarRbomSIJk0Ojycr7YymaPJSkSizBDgiJOD4WcOyav/MeNr2ifjhwXRdOAAcmtv1KJIlA1+I3IHCA0ZXd4+WHh8zT4h98TPUtEjK+ENpI54zFQ9Jf/QapfZwOplYV5oXNa68Yn1ZbXrJwdB9jPCk6sIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777659520; c=relaxed/simple;
-	bh=otcerN75AZSL31zIS6eCDG+YjBFptzGBhku9/e9Nu4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bQGxJhk+Zo6d2qvJWypmfmzE5dPhotBRNqu4wbLwkG7BP9U2IozIa5NfAr+vCDraYLM8q4jhz4QfxB7SuIaU1zqXid/jLJ2GEQLwrF/9g2EYp1SP0CgW3nh64u+JPzm6czd3ntUAliiPd+vEhHBKSrPK3k8WRhWI/c4PtMXofGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ei4cMowV; arc=pass smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB7740F8D6
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 18:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777659629; cv=none; b=HSUrCkdvY5hUWg2iVt8GRgCH67vQRiLVEhmDUl6sFPbKFStoEC9HqGsVJMwtm4+hwSsWqvTjxluNsEjKKLijInRXdNE/xL+H1Sd3X/74jUXcxeSSWbMvcUHYIbsINreimPy3MhyC+ohVw2JhyW6QA9llm/7ueZSNPB+O82CB2Oo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777659629; c=relaxed/simple;
+	bh=GRIc5DWIBKNP2dUCIS6c88b3pNLwafPvLlzYk9vd5p0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rmhStnfDWgOYbHxe6os6evBuREjIHviCbHw16+hZ7iHvfXcl5bFba7NsMaA5jxcNLxIoZGr3c4kJnWYZfTV8UK39FDzp8f/9gn7fdB/+aITbR2CzIHIB+c/9fftny6SeekePh3+5o5h61vRC0nskQz/1cmKKHZLf7MOZI6Fx65c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nz3p95ta; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ei4cMowV"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12c8cc7a77eso2354460c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 11:18:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777659518; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TOklLlGCvFU8iGQqP7CyBvbb7BSBh/xYqouh8x9lsXZv45veiLdPmPTE+NjFLHbNxW
-         ST7KBse/A/6htUbl00ywBVklZCMqy/kDbCo5alnSjevwSWX5Gt337oKa6bS9GQLUkGPE
-         hNxD85IgZHc+/7RPoCuG9J8ppiye62zmv5iegqA7oUYg3URM0W/i7coIdrttnjLLpld+
-         ctKJWTBRK78RwCSa2azOQU8AZmAROqX6pySg+sicjCES2N0XhHQRVqPoQoCOclB4Rl7C
-         NN+ZprOQGK3fYCe6caHKSH+rWPOwxrmQIvi0iXJfbt9L/CBoxncpk2gawf+zm5TGKqr/
-         cwkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=cMzDnbJ5LokBfUy62Owj7gNisOlIbdu38S2Z0nuYGhQ=;
-        fh=ecEyErCoczAVeRt+pJcFSbx/Yu8OK/+YhBOECT17vnc=;
-        b=QN2utD7Qk6WX3tAT0KWuhJqXIUU2Cd521bflG050dK3EbNsUCit0PItDgiHUFIPCrA
-         VDj0yXU/FAKCjRNc2jyJOU9vouEdKJORrt39zo3NGrw5M8jvgWyMq2GGA1EXA1RLqAD4
-         Wf6Deh/h3zU0XSO6sAbjirIhlE1SV7GeWd7GfXl7jfIqywLea+7ri2jq2bVybWSULCCh
-         N5EDSZKCzTh3P4pre7Ze6nLo5sARTxDgZyLSq/1W0S1GpkDKX8b4dauoxtyaNALUo54h
-         TOis5hdWN0t2kJJXPJNkNAfjPWSlkDiExTBRkyqU4gxEzxxZQZqN4NL9gNfhhy9cWr0v
-         mFlw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nz3p95ta"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c21dbc9c1so67427c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 11:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777659518; x=1778264318; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cMzDnbJ5LokBfUy62Owj7gNisOlIbdu38S2Z0nuYGhQ=;
-        b=Ei4cMowV4BBuuiU/+X2onNjTA6YISsapud3XWvgB+58MJ3HVOTQ8c1w8I1lBlYkVFh
-         rKNCS6qEAc610g9V30vAhJdz4HQnA8sUWqQekuqZBuYmLbeXrwLzzlTvMxjjvAyZD1Df
-         +mAK2OFhaFQkhkhb3xK5hp3NYox9P/ImvZtOzjjJGT+vnyAqb6tknd+W1JWyucbDNtNi
-         0D86HEUb7LvFUy4f/ffz131MmARrkwSgdfvTngHgWxhiWjKjVi1j/awTizHUpkzLNGBj
-         4/6sJGWL6IWTFvXDHAz6xEb5+JV2cRA/TsmQPSlw4bxfRR80PfkN1Kv+ER5ZgAKboBMw
-         jlMw==
+        d=google.com; s=20251104; t=1777659627; x=1778264427; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Csf7jU5ksl6iUa+guEmov8KI+GuuZCpIFE4ID3YpAMQ=;
+        b=Nz3p95tayjNpaAeIG1DoPoGVFuUcL/ooG7DlMPPSUdIBFKYWhLOtjXg04KEr3YoJl+
+         79ipzpjYCXv+X48/c0+LHBHaH4qD1OB3MMVdMcD2GK86fJTxCBZOJTuvKTuSds6NQlvI
+         mURzWrr7cAQuczH9Y6FKYHDEzslZx4KlGmd5tN/D+FyDoXRtEFIt0QQrUq88oO7MpG5/
+         sAyLJK2cyknRa9t9zcRks9ZPolFz2JkYyorhaVfM9xLl2vO9N4sbNDk9+XxQx61rQ/E2
+         /A/r1hF4eOr2xKuGm2d37O8RNR1CChDvL+L9GDsIgu/87FX3pMPiZPNxiqXpz1PoPp2Z
+         HmxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777659518; x=1778264318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cMzDnbJ5LokBfUy62Owj7gNisOlIbdu38S2Z0nuYGhQ=;
-        b=SNYgJfgbrZtWhxVFqXemVJmtn1i6V0bCuxLjZtJvdIEiGbVR2DL7GYhCEqMXSzFRv6
-         GSnC/xmyZAyvoDU287MsclObcXeeutnQIRNrlqPeng9PEwdv9wVmxz4SCXgW7t54jEBn
-         6emj8ZF3+ZXdVRbiGEMC8Tya6mVQkHPe/ZvpMy1Y6zU78L6zxFzfbYio5hR1i8CpxE6A
-         dmE4Srz4ferNwj/7ae2gEe/gdnZTzs3712IsSVr8H+BMDgJgUMwYnhTc9iWmWM5dtzTB
-         D2vyOWxF6uOi/Rz+H7868geVj/DjFRTi9WrI8G3M0GYYgn6XJOtSLUO0BA+D7tt+7F6P
-         KaFg==
-X-Forwarded-Encrypted: i=1; AFNElJ+1XfutviyX+Fp5IplSI1LVrMlbuTePcKCQ5RITqOP/hVWAFH2p9YoS+aBY5ZcbaLhA7ZIZFJLWDLQZCgwrGoo2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0ev6RGRdUvNTeiNf+71HS2RWlj/vSJ7AlozUzt3NbA7X8fh2F
-	lFFKtHC33GIPVYrl0XtURihHEkwuz7A5UR06upne2iiSlFeWp3rDGuOxuuw+7o2XMbyI4Y6kfjh
-	TjcWXnYSSqd4iW7HY5cNA+iRS2Vi5rj1kk/xzVgzU
-X-Gm-Gg: AeBDiesYIJUmN17lrvQlbBFsrm+ehhqL1Ln1hxHphIurpnHpUr4TNCwxQTdIveSTM/f
-	1cmdy29vcVEy2LDT/yBwMs4GwR2I+IhsEAsHMlfVbWtndqV7KBwk1hCHBsPYU0wu5FOKkx9ib1K
-	NA+0zOviuk4C+bLa24v+FLnqwjBJfXGYQ/4lRKSxAskdJadiV1KTnqGZGVObflOfy9ltqogvPeQ
-	BsQEXpdUkA4kQEjUHiiPXtdPsghz75ugANf7lZbV8peYdsu+CGZFRSsRxdt7zYOxYpleuhHCWDC
-	MWsxTUMD+rL3iyalhGionbg6u7I=
-X-Received: by 2002:a05:7022:e1e:b0:12d:31cb:b806 with SMTP id
- a92af1059eb24-12decf3d924mr3663574c88.26.1777659517471; Fri, 01 May 2026
- 11:18:37 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777659627; x=1778264427;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Csf7jU5ksl6iUa+guEmov8KI+GuuZCpIFE4ID3YpAMQ=;
+        b=ffuEfBfgSf2+DiCPDq/ppugwuUjDTx0qtMT5Jy4hzSxgSGF4Q4WegU1ul3GoVV8LjJ
+         zOfeW/st8ITY8/l7qns/QmTtKTv+QvafXdh5w8Tm1gCeuhT4SyyVa+Qzjy69OdAxD2oC
+         fRnPgMtxXfyGgrleq7g99jNZTaiXThqbC1PovGrilKi65I5b87cSt6aj6duGNFBK+a9g
+         +SsN1XxW5Q7gJzNPzUfd8hVgKdyf2sOJODb/OdepuOXsjtf5owdz/izuan1A8Vdsserd
+         PXUSh3kDgGzpDG51basmPyaHa1/66LAbGf/7AmrwUH4yQy2svVoqVTArbCLatrlvOK0H
+         d6Tw==
+X-Forwarded-Encrypted: i=1; AFNElJ/QUBndmmu/lpONzMRsRK2ZC2XARKQTkEkZ04vS3zyyYMb2l3sTrWoFdDEOvmf4A22Msw+nrf6FfPnugBe6O4hC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7ywiTsRI+oOiR6DXELkZVSARnjAIdPw9MsnOe/SDyE+TmU7D3
+	Ke+0l0GQq1wAawZmdd6/MepAUNcA68zSfvL3ucLHNDX9KJGhDuUyI2PgRo8OkAQODYzWAGtWatb
+	oXuaDGfLL2A==
+X-Received: from dlrr17.prod.google.com ([2002:a05:701a:c951:b0:12d:b6de:8dbe])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701a:c94e:b0:119:e56b:c75b
+ with SMTP id a92af1059eb24-12dfd85eb0dmr136171c88.32.1777659626742; Fri, 01
+ May 2026 11:20:26 -0700 (PDT)
+Date: Fri,  1 May 2026 11:20:17 -0700
+In-Reply-To: <20260409230620.4176210-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260416204828.1303734-1-ctshao@google.com> <CAP-5=fUa9btU_FqtTUH02+CRmVgkudbQ+SA-J=pmNhf0zgq8Rw@mail.gmail.com>
- <CAJpZYjUXkfCNwKdXR_z3PTz8UFwG2DJK+1Bq0X93sMtcU+tZEQ@mail.gmail.com>
-In-Reply-To: <CAJpZYjUXkfCNwKdXR_z3PTz8UFwG2DJK+1Bq0X93sMtcU+tZEQ@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Fri, 1 May 2026 11:18:26 -0700
-X-Gm-Features: AVHnY4JP8wAT6Ga4WM2M9nWwyerYRjycWjyDdB_4EgV3RBMfwVltYWgWSZv8ffs
-Message-ID: <CAJpZYjVNv6WQz9tU-PemjEfomJxWFfRUFyYX7nM=1BMw6brzuQ@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Merge CPU maps when merging uncore aliases
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, thomas.falcon@intel.com, 
-	linux-perf-users@vger.kernel.org
+Mime-Version: 1.0
+References: <20260409230620.4176210-2-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260501182021.3651851-1-irogers@google.com>
+Subject: [PATCH v7 0/4] perf symbol/env: ELF machine clean up and lazy idle computation
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
+	tmricht@linux.ibm.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
+	jameshongleiwang@126.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-My fault, what I mean was "tweak should_skip_zero_counter"
+Add a helper to perf_env to compute the e_machine if it is
+EM_NONE. Derive the value from the arch string if available. Similarly
+derive the arch string from the ELF machine if available, for
+consistency. This means perf's arch (machine type) is no longer
+determined by uname but set to match that of the perf ELF executable.
+  
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+perf top. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation is machine and
+kernel version dependent.
+  
+To avoid concurrent update issues with bitfields sharing a byte in
+struct symbol due to the lazy computation, introduce a global lock for
+updates to these fields and use setter functions. The reads remain
+lockless.
+  
+v7:
+ - Address better handling of strdup failures with arch in the header/env.
+ - Address concurrent update issues in  struct symbol  bitfields by
+   introducing a global lock for writes.
+  
+v6: Ensure arch is canonical by going to e_machine and back (Sashiko)
+https://lore.kernel.org/linux-perf-users/20260409230620.4176210-1-irogers@google.com/
 
-On Fri, May 1, 2026 at 11:17=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> Instead, I submitted another fix to tweak `Merge CPU maps when merging
-> uncore aliases`. Please take a look
-> lore.kernel.org/20260501181129.938256-1-ctshao@google.com
->
-> Thanks,
-> CT
->
->
-> On Thu, Apr 16, 2026 at 2:05=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Thu, Apr 16, 2026 at 1:48=E2=80=AFPM Chun-Tse Shao <ctshao@google.co=
-m> wrote:
-> > >
-> > > Sockets with event zero counts are hidden in `perf stat --per-socket`
-> > > because alias merging aggregates counts but not CPU maps. This causes
-> > > the display logic to incorrectly skip sockets not present in the lead=
-er
-> > > instance's map.
-> > >
-> > > For example, with AMD_UMC:
-> > >   $ cat /sys/bus/event_source/devices/amd_umc*/cpumask
-> > >   0
-> > >   ...
-> > >   128
-> > >   ...
-> > >
-> > >   $ perf stat -e amd_umc/config=3D0xff/ --per-socket -a -- sleep 1
-> > >
-> > >    Performance counter stats for 'system wide':
-> > >
-> > >   S0       12                  0      amd_umc/config=3D0xff/
-> > >
-> > >          1.000777829 seconds time elapsed
-> > >
-> > > Merge CPU maps in `evsel__merge_aggr_counters` to ensure the aggregat=
-ed
-> > > event correctly reflects all underlying PMU instances.
-> > >
-> > > After fix:
-> > >   $ perf stat -e amd_umc/config=3D0xff/ --per-socket -a -- sleep 1
-> > >
-> > >    Performance counter stats for 'system wide':
-> > >
-> > >   S0       12                  0      amd_umc/config=3D0xff/
-> > >   S1       12                  0      amd_umc/config=3D0xff/
-> > >
-> > >          1.000666681 seconds time elapsed
-> > >
-> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > ---
-> > >  tools/perf/util/stat.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > index 14d169e22e8f..d696d217f98d 100644
-> > > --- a/tools/perf/util/stat.c
-> > > +++ b/tools/perf/util/stat.c
-> > > @@ -535,6 +535,12 @@ static int evsel__merge_aggr_counters(struct evs=
-el *evsel, struct evsel *alias)
-> > >                 aggr_counts_a->run +=3D aggr_counts_b->run;
-> > >         }
-> > >
-> > > +       /*
-> > > +        * Merge the CPU maps so that the display logic (e.g. should_=
-skip_zero_counter)
-> > > +        * knows this merged event covers all CPUs from both aliases.
-> > > +        */
-> > > +       perf_cpu_map__merge(&evsel->core.cpus, alias->core.cpus);
-> > > +
-> >
-> > Once we have counts, mutating the cpumaps seems wrong; it could impact
-> > other things such as the evlist copies of unioned together cpumaps.
-> > I'm confused by the bug, we should have two aggregate ids one for each
-> > socket. In should_skip_zero_counter it should only skip the zero count
-> > if the counter is not applicable for the counter currently trying to
-> > be printed. Does the display code fail to iterate through all the
-> > counters?
-> >
-> > Thanks,
-> > Ian
-> >
-> > >         return 0;
-> > >  }
-> > >
-> > > --
-> > > 2.54.0.rc1.555.g9c883467ad-goog
-> > >
+v5: Add perf_env os_release helper (Namhyung/Sashiko)
+https://lore.kernel.org/lkml/20260406170905.2614260-1-irogers@google.com/
+  
+v4: Fix Sashiko issues where an array element wasn't sorted properly,
+    the e_flags weren't returned properly, the idle type is change to
+    a u8 rather than an enum value and the s390 version check for
+    psw_idle is slightly reordered and tweaked.
+https://lore.kernel.org/lkml/20260327045025.2276517-1-irogers@google.com/
+  
+v3: Properly set up the e_machine coming from the perf_env as reported
+    by Honglei Wang.
+https://lore.kernel.org/lkml/20260326174521.1829203-1-irogers@google.com/
+  
+v2: Some minor white space clean up:
+https://lore.kernel.org/lkml/20260325161836.1029457-1-irogers@google.com/
+  
+v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
+
+Ian Rogers (4):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf env: Add helper to lazily compute the os_release
+  perf symbol: Add setters for bitfields sharing a byte to avoid
+    concurrent update issues
+  perf symbol: Lazily compute idle and use a global lock for updates
+
+ tools/perf/builtin-kwork.c        |   2 +-
+ tools/perf/builtin-sched.c        |   2 +-
+ tools/perf/util/annotate.c        |   2 +-
+ tools/perf/util/data-convert-bt.c |   2 +-
+ tools/perf/util/env.c             | 218 +++++++++++++++++++++++++-----
+ tools/perf/util/env.h             |   2 +
+ tools/perf/util/header.c          |  63 +++++++--
+ tools/perf/util/session.c         |  25 ++--
+ tools/perf/util/symbol-elf.c      |   2 +-
+ tools/perf/util/symbol.c          | 134 ++++++++++++------
+ tools/perf/util/symbol.h          |  17 ++-
+ 11 files changed, 357 insertions(+), 112 deletions(-)
+
+-- 
+2.54.0.545.g6539524ca2-goog
+
