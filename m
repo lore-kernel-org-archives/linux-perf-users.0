@@ -1,222 +1,205 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C3534A77D
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 21:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EA137756B
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 22:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777671723; cv=pass; b=eiFyajnAzHnzOrGT7HWhYx2UjUpl2SnweaQh0AWzpZPpOiphZogLA7SXidXxyeg3Cb3TPCnWvFJkXmn4oTkY4DIOmCAVBiYROrt4BkQGmttOoUji1fwFyeDQHsHYAEMTcVZQfYQrMjN3j5WFMIB/o+L3XcERldo6lzC1d5GXAKc=
+	t=1777673881; cv=pass; b=Vqxpxepihn0n3qW5bxgy0tGa3qYdfdS2ZNsxlhOF6pxbHzdQCsy3GyPPqH0XDRosRe8puCb/jpZzmNLF4NkfaWbk7aKiZ2Y9lPyDQ2Pnqs/EridY5hXo602R7gOLF25Y4TBH/4ehzIutk7kswbK/f1Int4hhaeAdSCmcJ/sZboE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777671723; c=relaxed/simple;
-	bh=1qAG/nk6deHwofvFFjxfcESFD4G+gTvnv5hI9A0s9Vk=;
+	s=arc-20240116; t=1777673881; c=relaxed/simple;
+	bh=SyQTueKS1s92WEIPgKe7uGVmk+RyfqQtSZZ3LZy45vQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=naoEYuvVw/+Nx9ffEkpwhOtY2o/FHb28iisvNPNx/4pQ9nI4snR/8+UUD6TRphZTLjnDsqf41ZTAUaAGC9WMQOms9QA+BFtBgqm0doVYEshiqIn7Xgjva7hBfuv7ELgABtR0GoYb8LPWMdmX8A9mqPIzUY9K/UIbwIRBHqSujxo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=koctjjke; arc=pass smtp.client-ip=74.125.82.51
+	 To:Cc:Content-Type; b=Sk+glqnIk59neXy6Fb4Wr9OxBYafRmRL2cidHX1J9E1Wir+pki5zXBcCQnaewxcNjlAVs7vjrWeGWjG2y6+xoQ/6YDTr7GthhiJymqKaUwTfVrGAyrliYRN1tXaZ5IJ62bGa1v0BwxA22tZtQ+RyjDbnX6hYpvoyog7SNSyDFVc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VYeRd6M5; arc=pass smtp.client-ip=74.125.82.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koctjjke"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-12ddbe104ccso2449843c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 14:42:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777671721; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VYeRd6M5"
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12de530cbf1so3929789c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 15:17:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777673879; cv=none;
         d=google.com; s=arc-20240605;
-        b=EUANIXGMKMW6KajOieK8m/eVBaUB7SuqCP8teaXiUVxvz872EaFI+dIB8KTK49F8SA
-         Nxrso2qIcFuZDwQEpfU+khQSu8iK7kLib9MpBNeF4vLfzR/yCTXuxYXVHXTpQNgVJ3yy
-         qo3c7sKnrb2JO7Ljkb0J/VX39g80tcWL0AbwfZdWpZuc+2ScfWEH6fZRCCJ9fSs75zV7
-         Up9LeF2SH80xAv5c/Q95j9G1+zjNorcHbalukac5Qn5RrBcW/n4SxqjU5NVuPKu/cEik
-         J5WKtYT5yCOykLBErbVBHkYJbo0/LQYsv1b0frh73CNA4haUjdbI4l2A14CP9DJhQmLY
-         pixA==
+        b=XmWsk0r08B6c1AuvgXtwOr7PeYK2pO1StoJwcipmlKJ0E/Y2iJuOmsMdugvYPxBcFY
+         /y+lIQq8f3hPWNFEthPEZD5m+ywUcluwayTCIP1TbNm5SPd/rruWzsutalN6fT3T/Q41
+         eUcjBFOcZF9Aiu9paKjvDJ+j5RvhXMz8Fuk1jHtNUUw0SDLdggCkwPSeWYwN4OcZlw6h
+         fR5Jd3jh7Dnp6X2KiVxPXzrJ/34UrBYY58IciZKV0gr6wlWin/lTMq9RkCI9TgNQXyXI
+         R+bgFA0K4SqaGfv8pWL7tN3z3NKmx2ll+qG64PvGzSu7SmNV+n1zw/eD+tgMLq3f2YWD
+         zjYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=gW3JTZ5EZ29Pr8GxkYxhgn3JQ6pGNT2MYeBfA13uCww=;
-        fh=HlIomrtvFJFx21dmJB1xxIToUkQgGEf3iLtEvIRJ81o=;
-        b=NvTeM8/pKrD6B1KBmG3vrOZYsVjOd5CuvH9QS+39/Jib62UtBr0J1cfSbXxkct19Zv
-         tOQXEuehM8D9ac3XUWQM25OsJfC74LhlPxKN7i13cDMVYh8ZRY/Ezk4g0HdZ+BIutY0u
-         j0s6eiGz2xrFDXoK3cPJ5LriqZ5EJGKGl9sH7wvEh6H9W9Ww6QbYj7f21w+ISSlLZWR0
-         FpWGhMZpLPLnzL1cIYPklGDNGG4lz3JanB0wIlLYqG5kC18C41AAR7jaQfawBMNC57eS
-         r96f7GBJyjkO4NA5b6eTFv00AUulha14VEIVU3Cih8F2i2VYoCgFR01I2TqGkF/YNCV/
-         /Bng==;
+        bh=CNjpxeMt6tlz2f2bjEaIXAlTN1cc+Tg2rM0LIJtBj/g=;
+        fh=KMsIvAN49Q5YIOg5/ji9KAOUv0xJRB/298qtw4ac02E=;
+        b=g1KBnr/DsSarm7kYSK7C0sNaGay4wlsnRL51AUAazqqbNH4CGysRcauOqQcpshih6I
+         7rLEAONXLyDQq5jDFrsM7g7MuBlkzfSao24yta0GobtrjU3o/GweoQBP2rZUxqZLmXzL
+         4yKvTTfLuOfAtrzWfKQv4GfFkgYFiFyq5+HVm00IqqMWZ3x9EQpb/x31SaSeXOyOxUi2
+         WprIkqMkXykTyh1phmYVnn+Wf0h51mduvjAlrrWRkkIgL97riznW/DIqKZ7rXHf9CEPL
+         F1QjE/oZx9xerfeCD6wdwcE3rqrjCVZVtuFGriEiuKC4zhj+wO+Oqi4uDf6CzTyA+1Xx
+         n3Ig==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777671721; x=1778276521; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777673879; x=1778278679; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gW3JTZ5EZ29Pr8GxkYxhgn3JQ6pGNT2MYeBfA13uCww=;
-        b=koctjjkerNABzWdjEav0p0AgVxRu93N5pjexbgcrR//g5kUjgE5A+uZINCUV2xVMuA
-         F+kAYtxsvN1BRTnF9T2kVhecd9GRn5mNnZfztjnCllsja0JZRniqS3kwmE2tYQBgviHp
-         serqmgyvgTiAIfbiX/KedEnMDRIR3v6qq+wbcXVejG+Rw8wso20OBZFwRJgGazJydmKE
-         HiHtrBd/akDig71mn4dXEYmyMcc1anGPUsyqxT+7cQPLVbqwLlOtKHbHyf8ODyJTpAzp
-         qlO5JsgTj0Tqpllg5g6dbe+DhJa64a8HfisbOqBSm+O+NO47tADoMHm9+CNFKyzlwrAO
-         GMtA==
+        bh=CNjpxeMt6tlz2f2bjEaIXAlTN1cc+Tg2rM0LIJtBj/g=;
+        b=VYeRd6M56G6UceqzRJA0/rcPOFjuLB7tL7ZmNQyNwvDS/xEtagkD9ODocB8LMKj7Sr
+         HPua2xM7kpIJx35UngEbDXcRF1Cl2HLWMxZEeSmk3SyFedYLpE9Vs3shCGjhGh2jA3ey
+         HQ6L5ZQl3TVc9X03RyOUvXnP2v4iN6kSsQQCUFzYOB3/n0QF0nmFBKifu2fxkOn3hTZt
+         LVLCHaBHQKMXg9uZFcqkTvwVhXm6QcxpI4WLtPFH2vPzsZkZU003ojrgvHI8LRzfFKrR
+         l05hOdBg42U+Zq0D2B2efJX5bP49JSRPfbhv2CnOvzLE7xY98gABOaLFpncRhY6LkqRN
+         fhMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777671721; x=1778276521;
+        d=1e100.net; s=20251104; t=1777673879; x=1778278679;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gW3JTZ5EZ29Pr8GxkYxhgn3JQ6pGNT2MYeBfA13uCww=;
-        b=MNTisi+WHA6v4EkxUIFtWKIRekjgtcwiQV8jnDAE1ENtJUPSz0o4JCsg7E8UifiQCZ
-         0Ra1WNLdgfLsxDOqGl7ZnCJLYTMNnKVgfCej6msRA+8axRQJ77sUOXZUGCCPlwTva+I+
-         MVyEYVxD1R1tH26RjO8fC9W+Pty4JreEW8NG5VVJGW1xjcBHNejMrKcBoTykAX/STYqD
-         lVuoekU6/KNNj3PQNjCW4DquXBiGgKstLl9V1YoA04dfPs3mr0lWOES0kb5skvaiqob4
-         tb/RLmy15mURuSZaLPfuWnUKOVHIQTP1Cuw2innQEvE9Qj9J8USgzLCxw1qpeFhZdyQL
-         N1Ig==
-X-Forwarded-Encrypted: i=1; AFNElJ9tZwhzk+Pp2dPKYWIffOd1axrM0a0t8b60sR87kUwcgE1gxUJtnboTmyKKgEqxwYm1p5ZhV0OVXrh30eeeQDMo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJLdSo36XB5XnVZecidqwkXjTV+KO0xBUyvX1QAhCfnJkM1E8u
-	Of87TzM7nXHC/0O2JPDbwsgXzi2114XJF3Xp1pPqtOw8KTHi71pQH+y9EQmuolou7mFC7s6VbPK
-	tjHMRVZEL0BFeVys2SCTr5Scct0ti6xPco7eLY0tY
-X-Gm-Gg: AeBDietE+j7h/IRjt/FF/+00aGkEivkyALO6tDn+PzPQU7alj+L9CmhAUYz+spsgS+R
-	wDCoqYRrZiRTg15vmJuBYTfFEGSF5BTR7a2v+3gPTYDz+vlvLj0hr9yMtc+3TfQFRq27sqMFZlC
-	b3VWFw9TjpPEqlckwY+flgiNc2xT1mLVkpM0SEikv8NIgKohtDTR1NLxKB1kY9fbAyHBoIS/4cz
-	2oRmkcglgiAAY0sLbp5WDEwjvwGYzSJofICTfs3MjTmSpGEQuS0rWvfn8pYrVY4H/9HmLf86MB1
-	bBEqlyq7RenAyT1aIF+CUKEtgvc=
-X-Received: by 2002:a05:7022:41a3:b0:12d:de3f:d850 with SMTP id
- a92af1059eb24-12dfd83bca5mr375870c88.41.1777671720706; Fri, 01 May 2026
- 14:42:00 -0700 (PDT)
+        bh=CNjpxeMt6tlz2f2bjEaIXAlTN1cc+Tg2rM0LIJtBj/g=;
+        b=RhvOXqqQtV+hm7/f+tbodx4DNGLFYZPQx3mB4aUIBJ5MK1GRpejSuSXYxNgSmBmHCc
+         wXrioIgp6yovmoE8tyDGqTvnhK7uh12YEOpHUbWcIzHINLNY65Nh4P+DlzFjBNzkjIz7
+         a+K+Ju1+oNzcj/Bj3qoOBBSG5osbWxqQHLqoUiGuieY2kUkgdg8HY9Ot5+U+mswQ/RKI
+         Fpnt3Xus+u3hB/jipxI9ntZ30uzGhm8C1C89dhRrTNMzouwLb5eT/9qtAY7h4o3UiEzj
+         fzuDOoPRui7yHTDwTrZShF7badb/9wx4N//XPX6wboY0fDTXEwO5CyVVz3b1Ft8ZfYt6
+         2Cmw==
+X-Forwarded-Encrypted: i=1; AFNElJ8DNT+VGWEMiONs9yOUDYN2vGUDZX/V6yegs6H7KLNhyuukLDFw6kj6J9ofYffmGYy9cVdErP+XKYnzdvxYZwj+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym3nM71I4BlpgPiEgQ00ArpYKo/akFyEcr7zkAn+M6muukWiPb
+	DiYMPnG3kfAEO7Gp8TD5fAqlwlWshWAuM7cC6+B39zSAshu5VdHDEpcUkHm5M5unhEdG1bSdkBK
+	DWFknHcC+hofzJWOr9Rq3Kxk1dRA0NQy8qy3Co7nv
+X-Gm-Gg: AeBDieucjHpNwBptjTSMa6IxiV9qxnQFIDIT+vHhrYYqtHllXlOsJafaphNe1GoLjiQ
+	Bs8gGoZRbe9PtQLt4hY456gORKTj/+Arzgo0lit5eynhBegb92UaUvEBR7VukuELnDuJl7ENQ9X
+	CVL1Nm9GrxiT3nje5zrj0E0AKdthWWHqnCvvui/NtbV2WutHQ/LOFDEbym7ZFPz1FU0fEFehbc/
+	RJ1Q3cKpmVL+RPItiuPwhwLAwf6Ye1V0iVYuPKjS7DxL2aWeo6JuvF1lz5WuZn0u+b7vbhlN3ps
+	yKKO2ntS7tl/u6YFpKVzyYA9/Ks=
+X-Received: by 2002:a05:7022:78f:b0:128:dedf:f56d with SMTP id
+ a92af1059eb24-12dfd81a853mr464357c88.24.1777673878399; Fri, 01 May 2026
+ 15:17:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260501181129.938256-1-ctshao@google.com> <CAP-5=fXbvOWgwWs_TD4rfWpN70YAuoxfbFUTEwtpEJv6btoXuw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXbvOWgwWs_TD4rfWpN70YAuoxfbFUTEwtpEJv6btoXuw@mail.gmail.com>
+References: <20260501043532.790711-1-ctshao@google.com> <afUZ2K-C4hMxcl7g@google.com>
+In-Reply-To: <afUZ2K-C4hMxcl7g@google.com>
 From: Chun-Tse Shao <ctshao@google.com>
-Date: Fri, 1 May 2026 14:41:49 -0700
-X-Gm-Features: AVHnY4Io-QnfhcDMKyMJKM6x5HNWJBfB278tRL5aSEk6xwqv2VScaEkn6wzdgYc
-Message-ID: <CAJpZYjXXNqeS1WbmjgU+uezxx19gyYEOdVtmiJ26gCS9C1hegg@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Check aliases in should_skip_zero_counter
-To: Ian Rogers <irogers@google.com>
+Date: Fri, 1 May 2026 15:17:46 -0700
+X-Gm-Features: AVHnY4I1frfrPm2IVlxQAIopzH9aV3e1Vcc7r3UTcvBZCBhqmy0AuxafsASXRdo
+Message-ID: <CAJpZYjVKxBkO8zYtiLWooq-qrryPY7LOy0hqPdQ-Xhiv0_mjBA@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Ensure event leader stays at head of evlist
+ after sorting
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, kan.liang@linux.intel.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, thomas.falcon@intel.com, tmricht@linux.ibm.com, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian, thanks for your review.
+Hi Namhyung,
 
-On Fri, May 1, 2026 at 12:12=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Fri, May 1, 2026 at 2:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> On Fri, May 1, 2026 at 11:11=E2=80=AFAM Chun-Tse Shao <ctshao@google.com>=
- wrote:
+> On Thu, Apr 30, 2026 at 09:35:10PM -0700, Chun-Tse Shao wrote:
+> > From: Ian Rogers <irogers@google.com>
 > >
-> > Aggregation IDs (e.g. sockets, caches) with event zero counts are hidde=
-n
-> > in aggregated modes (like `--per-socket`) because alias merging
-> > aggregates counts but not CPU maps. This causes display logic to skip
-> > aggregation IDs not present in the leader's map.
+> > For evlist of a certain event/metric, the HEAD should be the event
+> > leader. In some scenarios where uncore_xxx_0 does not exist, the event
+> > leader is not the first element after sorting. For example, on my test
+> > machine uncore_iio_0 does not exist, the event leader is uncore_iio_2.
 > >
-> > Instead of mutating CPU maps in `evsel__merge_aggr_counters` (which
-> > could have side effects on shared CPU maps), check aliases in
-> > `should_skip_zero_counter` to ensure all applicable aggregation IDs are
-> > displayed.
+> > However, in `evlist__cmp`, it was reordered based on the PMU name, whic=
+h
+> > makes uncore_iio_1 the HEAD of evlist, breaking the following merge
+> > logic in `evsel__merge_aliases`.
 > >
-> > Before the fix:
-> >   $ perf stat -e amd_umc/config=3D0xff/ --per-socket -a -- sleep 1
+> > The patch adds a loop at the end of
+> > `parse_events__sort_events_and_fix_groups` to make sure the first
+> > wildcard match is the earliest entry in the list, updating pointers
+> > accordingly without breaking reordering detection.
 > >
-> >    Performance counter stats for 'system wide':
-> >
-> >   S0       12                  0      amd_umc/config=3D0xff/
-> >
-> >          1.000721604 seconds time elapsed
-> >
-> > After the fix:
-> >   $ perf stat -e amd_umc/config=3D0xff/ --per-socket -a -- sleep 1
-> >
-> >    Performance counter stats for 'system wide':
-> >
-> >   S0       12                  0      amd_umc/config=3D0xff/
-> >   S1       12                  0      amd_umc/config=3D0xff/
-> >
-> >          1.000879376 seconds time elapsed
+> > Tested on DUT lacks uncore_iio_0, and `perf test` looks good.
 >
-> Does this change the behavior without --per-socket when the uncore
-> PMUs have different cpumasks?
+> DUT?
 
-Nope, the behavior is unchanged for `-a`, since counts aggregate to
-the leader's `aggr[0]` and all CPUs's `aggr_id` is 0 in AGGR_GLOBAL
-mode.
-
+Device under test, it seems like not a good fit in that sentence..
 >
-> > `perf test` looks good too.
 > >
-> > Assisted-by: Gemini:gemini-3.1-pro-preview
 > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+>
+> If this commit is from Ian, there should be Ian's sign-off before yours.
+
+Can maintainer help me to do this while merge in or I should submit a new p=
+atch?
+>
 > > ---
-> >  tools/perf/util/stat-display.c | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
+> >  tools/perf/util/parse-events.c | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
 > >
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
-lay.c
-> > index 993f4c4b8f44..c12a3405118a 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -945,6 +945,27 @@ static bool should_skip_zero_counter(struct perf_s=
-tat_config *config,
-> >                 if (aggr_cpu_id__equal(id, &own_id))
-> >                         return false;
-> >         }
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 1497e1f2a08c..be825617321d 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -2251,6 +2251,33 @@ static int parse_events__sort_events_and_fix_gro=
+ups(struct list_head *list)
+> >               }
+> >               last_event_was_forced_leader =3D (force_grouped_leader =
+=3D=3D pos);
+> >       }
 > > +
-> > +       /*
-> > +        * If the counter is a leader in alias merging, check if the ag=
-gr id
-> > +        * matches any of its aliases.
+> > +     /*
+> > +      * Make sure the first wildcard match is the earliest entry in th=
+e list.
+> > +      * Since list_sort might have reordered the aliases, the original=
+ leader
+> > +      * might not be at the head of the list anymore. We find the firs=
+t
+> > +      * alias in the sorted list and make it the new leader, and redir=
+ect
+> > +      * all other aliases to it.
+> > +      */
+> > +     list_for_each_entry(pos, list, core.node) {
+> > +             struct evsel *l =3D pos->first_wildcard_match;
 >
-> Could you expand why in this case we want the zero count?
+> Why 'l'?  It's not conventional and can be confusing with capital 'I'.
+> Can it be just 'evsel', 'first' or 'leader'?
 
-We don't want to hide counts if it is not in leader's cpumask even
-though it is 0. It would cause confusion to users/parsers.
-In my scenario, I tested an event that was all zeros on S1 and was
-hidden by perf. Initially, I thought perf wasn't collecting the event
-on S1, then realized collecting was working but hidden.
->
-> > +        */
-> > +       if (config->aggr_mode !=3D AGGR_NONE && counter->first_wildcard=
-_match =3D=3D NULL) {
-> > +               struct evsel *alias;
-> > +
-> > +               evlist__for_each_entry(counter->evlist, alias) {
-> > +                       if (alias->first_wildcard_match =3D=3D counter)=
- {
->
-> Could this also have a "&& !perf_cpu_map__equal(counter->core.cpu,
-> alias->core.cpus)" ? ie if the alias' cpumask matches that of the
-> counter, then the loop above covers it. Perhaps the cpumaps of each
-> alias could be merged and the test only run if their intersection is
-> not empty.
-
-Thanks for the suggestion, I will add it in the next patch.
->
-> > +                               perf_cpu_map__for_each_cpu(cpu, idx, al=
-ias->core.cpus) {
-> > +                                       struct aggr_cpu_id own_id =3D
-> > +                                               config->aggr_get_id(con=
-fig, cpu);
->
-> Could this fit on one line?
-
-Then it will make the line 101 characters long...
+That makes sense, I will submit a new patch.
 >
 > Thanks,
-> Ian
+> Namhyung
 >
 > > +
-> > +                                       if (aggr_cpu_id__equal(id, &own=
-_id))
-> > +                                               return false;
-> > +                               }
-> > +                       }
-> > +               }
-> > +       }
+> > +             if (!l)
+> > +                     continue;
 > > +
-> >         return true;
-> >  }
+> > +             if (l->first_wildcard_match) {
+> > +                     /* Original leader was redirected to a new leader=
+ */
+> > +                     pos->first_wildcard_match =3D l->first_wildcard_m=
+atch;
+> > +             } else if (pos->core.idx < l->core.idx) {
+> > +                     /*
+> > +                      * We are earlier than the original leader in sor=
+ted order,
+> > +                      * and no earlier alias has claimed leadership ye=
+t.
+> > +                      */
+> > +                     l->first_wildcard_match =3D pos;
+> > +                     pos->first_wildcard_match =3D NULL;
+> > +             }
+> > +     }
+> > +
+> >       list_for_each_entry(pos, list, core.node) {
+> >               struct evsel *pos_leader =3D evsel__leader(pos);
 > >
 > > --
 > > 2.54.0.545.g6539524ca2-goog
 > >
+
+Thanks,
+CT
