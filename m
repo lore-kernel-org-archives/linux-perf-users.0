@@ -1,123 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D3F41C2FD
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 19:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CE33CF032;
+	Fri,  1 May 2026 19:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777663230; cv=none; b=lRxGke3jSopFM6Vi0HHW7KC5MfpEOGod7cqkw7/PlKDrBRU/kaJyH20GaEpkuBAAF/iw0fZxY6sFgPZ2KQYU+GeX6Ad3RnvZiCGQrbxSS/LLBqWAXekf7QMXXx0V9Vg9Y0KNb/xQ8HrSkrM5Dd0JhsSE7XkSID6yCF3Rn21Rlk8=
+	t=1777663530; cv=none; b=rYwGq+D9Dyx/4wa+0yqMl/bB/Lbr/2U6DX4r6emD0RrZMDGoEBy0X/IoaNvS6mEK7cw+oeMIXmYSViwyyKKl+HX2xL1VhoZDBTCD//y6pe/JlMjthA3oIfYHWTwaHnz5Fhk264vhUsHsvF9GK9LdeHSAlvTJgPRVz4voQ5yhsqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777663230; c=relaxed/simple;
-	bh=AmtMNrXVCbXMSMeVgp5I35+YMqH7VKOmCFgLV/wXlSU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MxTxwwRo7hTpIKs7iTbb/lt9SGDVNcN08ISE8hXNI7zgPCp+2mNKnSZdHoAhJbtuo5xjxnLHhhhBw7WiUMHJWsWK3j5vUa6wMJmzi3WoajJs6+zEidj0Vs+scaAQvzdX4KsbUpcTp9K31qPhXn8CcZzz1UnDd4PHF2lMWQV7hBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTbgb8Ze; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777663530; c=relaxed/simple;
+	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lObc6owSLQyAn9ft63AXSfB3i+mqNt4WyfxGn+YC/DnHHfJqVtpA7+pZzXq7XR+tyFbxywgX3OPhnUvSf6ye68GqXS2REaLFEQR/9j6xZ688OzCc9cdou6k+pI+jKmYXRvbm7CM8/pTTKAwsvEmP+7APwi2ZDdw/gIf5cQYwXD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGLAmB26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTbgb8Ze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACA3C2BCB4;
-	Fri,  1 May 2026 19:20:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGLAmB26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1817CC2BCB4;
+	Fri,  1 May 2026 19:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777663230;
-	bh=AmtMNrXVCbXMSMeVgp5I35+YMqH7VKOmCFgLV/wXlSU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=FTbgb8ZeYRI5C92UNrC0f9tkJ6oTbGpZWVm7JFxSWwBNC62pE68J0mi6DaXgfe8Bc
-	 jTFBCB5P4jl7DmwbGo2j+xpRIDggKmfJcAISixuFGDcZElBgC6AZ7nHlhu3m6T/ldS
-	 NAo7P9TZPAnu0k/9q3hFv1USh05IM7C9pTeGCs+Z6gzdCkPTPKCo1nIkPSl+iExzDT
-	 wEWoMJqz4v6a6yLUV/fVyHWtks+zZ/J0HeUlkkcloT4P0aBQx/Jg3Wmd9bUCeVf5O8
-	 D1wHUFiOQXw4LJLxZs2eDg2EdSm2wi9XmYJvmH//Kv/YOqtFgb2V8bjuD3SxBQIpYK
-	 GwwEsG0AZqElw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 2/4] perf env: Add helper to lazily compute the
- os_release
-Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260501182021.3651851-3-irogers@google.com>
-References: <20260501182021.3651851-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 01 May 2026 19:20:29 +0000
-Message-Id: <20260501192030.4ACA3C2BCB4@smtp.kernel.org>
+	s=k20201202; t=1777663530;
+	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WGLAmB26o3fkD3UOKmk2RR8qmgItfkFPy1kHaO3qqCKRyNhbHBRjPY/M3rxUkmGoF
+	 CSzBPLXr49HvAq46Lw62Lu3z9ZpsnQLKya4MHlujisZlHUwA3VL09uWa7Wad1hJ+fp
+	 +Mcr3f7NxB58K1b0ECc9dxtmMicWQtWCHfgj+Vi21gMCGnQjQUUKcHSgI/tUskKA+p
+	 idRV9QaSo9D/uCTVKcTdnlOPZsgTXI/htqPkqm74UmUSwL9H7slRCbEflKhJu9mprL
+	 /TIPS7TiJ0TC4Qt2j/DtQHMsFYoeokm+b1zIXKxVMTrVzAo9duhyIA3fRhxSNyXINo
+	 XVTMKpufHSYJA==
+Message-ID: <dd6da3c4-96a7-46ff-bcb2-b46d276d9a45@kernel.org>
+Date: Fri, 1 May 2026 21:25:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
+ MADV_DONTNEED
+To: "Daniel Walker (danielwa)" <danielwa@cisco.com>,
+ Jann Horn <jannh@google.com>
+Cc: Oleg Nesterov <oleg@redhat.com>,
+ "Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)"
+ <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
+ <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
+ "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20260429131522.4049054-1-dtominac@cisco.com>
+ <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
+ <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
+ <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
+ <afOsxsC6MKhkuqKD@goliath>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <afOsxsC6MKhkuqKD@goliath>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] The `perf_env__os_release()` helper corrupts offline trace metadat=
-a by incorrectly assuming an uninitialized `os_release` implies 'live mode'=
-, lazily populating it with the analysis host's kernel version.
-- [Medium] Using `perf_version_string` as a fallback for the OS release is =
-semantically incorrect and pollutes trace headers.
---
+On 4/30/26 21:25, Daniel Walker (danielwa) wrote:
+> On Thu, Apr 30, 2026 at 05:22:18PM +0200, Jann Horn wrote:
+>> On Wed, Apr 29, 2026 at 11:11 PM Daniel Walker (danielwa)
+>> <danielwa@cisco.com> wrote:
+>>>
+>>>
+>>> Shouldn't there be some sort of compensation or notification for this, or is each person that
+>>> hits this suppose to just scratch their head and send a patch that's rejected?
+>>
+>> I guess we could add a pr_warn_once() that warns when
+>> madvise(MADV_DONTNEED) is called on a read+execute file mapping,
 
-commit 9cca0f2ccb3995708fd2106d23dda3d1c07d1fd9
-Author: Ian Rogers <irogers@google.com>
+Private mapping, yes. MADV_DONTNEED indeed interacts poorly here.
 
-perf env: Add helper to lazily compute the os_release
+uprobe registration indeed fails if VM_WRITE is set (valid_vma), but nothing
+stops the VMA from getting mprotect'ed later I guess, to allow for write access.
 
-In live mode the os_release isn't being initialized, make a lazy
-initialization helper that assumes when the os_release isn't
-initialized this is live mode.
+We could try marking a VMA that has uprobes, to then pr_warn_once() of
+MADV_DONTNEED is done on such a VMA. It wouldn't sort out ptrace access.
 
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 1671769d44411..c3e464c6de2f1 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
+>> and/or (as David said) add an explicit note in the madvise() manpage
+>> about how that can interfere with software breakpoints and uprobes?
 
-[ ... ]
+I guess not just software breakpoints, but any modifications done by a debugger.
 
-> @@ -330,6 +330,27 @@ int perf_env__kernel_is_64_bit(struct perf_env *env)
->  	return env->kernel_is_64_bit;
->  }
-> =20
-> +const char *perf_env__os_release(struct perf_env *env)
-> +{
-> +	struct utsname uts;
-> +	int ret;
-> +
-> +	if (!env)
-> +		return perf_version_string;
-> +
-> +	if (env->os_release)
-> +		return env->os_release;
-> +
-> +	/*
-> +	 * The os_release is being accessed but wasn't initialized from a data
-> +	 * file, assume this is 'live' mode and use the release from uname. If
-> +	 * uname or strdup fails then use the current perf tool version.
-> +	 */
-> +	ret =3D uname(&uts);
+I guess for read+execute file mapping we would expect these to be software
+breakpoints.
 
-If we are doing offline analysis of a perf.data file that lacks the OS
-release feature header, env->os_release will be NULL.
+> 
+> It does feel like it's the debuggers problem. The application doesn't know it's
+> getting debugged. So the application does whatever it does. If GDB is debugging
+> an application it should assume there's a problematic madvise() call which will
+> hurt/stop the debugging from happening. It should endeavor to prevent that
+> from happening. There are options in userspace to prevent it from happening. I'm
+> sure madvise() is not the only thing GDB has to worry about w.r.t. screwing up
+> the debugging.
+> 
+> Noting it in the man page seems reasonable.
 
-Does this helper incorrectly assume we are in live mode, and lazily
-populate env->os_release with the analysis host's kernel version?
+I assume the bigger problem here is that MADV_DONTNEED was used for memory
+reclaim, when in fact, it shouldn't be used for that.
 
-If so, it appears this causes tools to use the wrong vmlinux path for the
-target profile in vmlinux_path__init() and potentially break symbol
-resolution.
+For shared mappings, the man page even documents: "MADV_DONTNEED might not lead
+to immediate freeing of the pages in the range.  The kernel is free to delay
+freeing the pages until an appropriate moment.".
 
-It also looks like this causes ctf_writer__setup_env() to export the host
-kernel version into the CTF trace instead of safely skipping the missing
-field as it did previously.
+MADV_PAGEOUT is better for reclaim, but it has its limitations when it comes to
+pages shared with other processes.
 
-> +	env->os_release =3D strdup(ret < 0 ? perf_version_string : uts.release);
-> +	return env->os_release ?: perf_version_string;
-> +}
+-- 
+Cheers,
 
-Is it appropriate to use the perf tool version (perf_version_string) as a
-fallback for the OS release if uname() or strdup() fails?
-
-This string could end up permanently written into the perf.data file's OS
-release section, or cause bogus filesystem lookups in vmlinux_path__init()
-since the tool version format differs from the kernel release.
-
-Would it be safer to return NULL or a generic unknown string here instead?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260501182021.3651=
-851-1-irogers@google.com?part=3D2
+David
