@@ -1,186 +1,146 @@
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5247D3B47DA
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 13:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777643058; cv=pass; b=e9uyswuPvRZ4hH/XLLtNugBq76jpY8CgkeHRKMXLLXZGPoCsi3npvPzrYNgb0FSvTeHC1burQHjxDbNwatlOhokGQtojLZblGqYvj6+XSylBsPOMJixnKMg4dJBoqs9Z5XgpnBLW4+qOxYKp8y2Hq+iNKbheJktK/2eoTXb40lc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777643058; c=relaxed/simple;
-	bh=NmLWNg8pYE0nrqRfjLPX317p1dU1WFEtC4miG0Bzw2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cS8TXKd60hAgjPS9fVTxkAr0ZTrfNAaqhX/tJBEqOSWoKn1I6YO56ZvN6V21Ab93WAkzz0zfRQq3bm52dLmmm0kIxqOfBhAKP4Y/5Hx3lyeBEYcyGNmJZPUxhj7fqEjWTwA4g2PA6TuEV5TZfVJrAR+JjcE8nOW4MZPK3QOqgFE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PIu5uOS0; arc=pass smtp.client-ip=74.125.82.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536F63CD8C5
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 May 2026 14:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777647306; cv=none; b=Fj3wbk0ceRaaIF2qq2Mjzn4zyTO6nFU9SNRiRHItCkeDlomdP1hEhN8/nFEJECb2NpskCemIZ+iBjMJBWz6AYC2SzsMjUKCxv9iCqNRpIHt+i2YQO5PCcuPRjkTb/bBumfsEasshagj+cEDDs7cXY3eQc90FjkDZhtPCgiPRpR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777647306; c=relaxed/simple;
+	bh=cbWI4yWMdIwQovFS6uc22bH/wBFozfzyOJ8OD9zOvPo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qCT9OiT/lJpPdxrTrfn515js1wVrQDXU/JG1j8YfUuRf65VJaq1XOQDMwp2Si/d0tXrEcsAQShKmSRNEd5WkyiRM2cidET/F+sFHM5No+8Y+rKGZWq8ST8OthVCND/a0I7jl6EyNrSTosfjOB78KSTsHX9URGWL+FzH08BS+Nf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WKMJSrPM; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PIu5uOS0"
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1270fc2bdf2so7795c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 06:44:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777643056; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bZxi6crSvP+QNH0PdDvbOylGMVfQ4xuez71HPeuzE0Fgg4JnO2hyGs/V2g29xc54iw
-         xQgQnU/V9pVmgzik9gB2VVeH6BPXzScvXd8u1BVpNxEbqwXBlNhD9ZV2FZdMRgkRtYTf
-         EPb5b8fouyc2um4Ow7YTTqoJ3OjW1RijW+bLrZ+hL0Efn9IcyKy4XlPRAla7/wMMkJJF
-         XTihLApELqIfLScNkT2MiQf6yY12Q/kwBLbFdnasDUEgLhE0MR6XQy9hwwnjaTSgRbWj
-         CeptHPJhOaGe+63YJ5V/GISxFIokL0RPXdQdV2CF69SxtVYZIglHzLhBO45rDGWWrxe6
-         B0uQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=671Se349esvkT76WjN1gqvD6meNw0o0/gv7gPNf6EW4=;
-        fh=pJaC+2h9KvpTjs3Phs7zojqY3KxCRu9JG3ZTxJzD+ws=;
-        b=K2LWr5xNA/b/n06C3CyCgsl0mQb8KnfoL1cfqLB+V4EW+rRwLkPkUxK415w8TuJzFA
-         DPkDwnh0IiA1Pi6WiVzan4Li97mAEnSWkDjY2YUCVYTTUDuzBlzJ8tNWA7G2UZbAmi15
-         oQMsIvINhJEJQGpcpnpD3oplX2WXdAlBXoFiAQWDVcLurkCvrspG/HhnOGgECLt1olOM
-         tCpbXoaMJDzCCDysDS8i6j7fTr0nl6rVwAgqFm8myin3wDol4jTDSNVroVpdKLgkr/3R
-         J24DDNLS2x3i8RAyYTnSIMMVH2+0DwFNOP+byFVHi6/YaWpisxoAmTcZttuhZg2UoSSC
-         4fjg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777643056; x=1778247856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=671Se349esvkT76WjN1gqvD6meNw0o0/gv7gPNf6EW4=;
-        b=PIu5uOS0UsLDP24FSqern4SjXu/HEI7fPKPHtn9IK7nNyZD8HyhNqPFzcTQJsuFYCl
-         zBnXNxnRXKPMrShu5Tkl3BZBN8rDeEMp/RIcQvUDmUjWIfi29Z0MiH0TamL4xWF4YKM5
-         NQuIbhDwAxWbQtZhmYKOYcTHvxSqFD0pfnq7ljPf1yLxwwPsPrd2mJ2bIxgWo2mEfKKE
-         W3r5yW9mifX9O+8nIVvf+Mcu5W71FWYmuiZiKqyKykaVoIxFlz3UQBVlcQFZlRegAW7B
-         k9wdvlrBj0SjiJccwQiTj04fMr4lStteTo1cvees5dMx5bh5bgL/YUJhPdWXnJK2TG17
-         XSXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777643056; x=1778247856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=671Se349esvkT76WjN1gqvD6meNw0o0/gv7gPNf6EW4=;
-        b=rgK0Q6LkQXpAbQ14P6sdXxxcJ3GiWYtRmZD4COG7hjCRKRI82vO0EuteuwbdMQ+pEC
-         7PzeyFu39izqFCEaC5RGZI0xC9axAoZmZNCaHJatek0fis4AobS3jlSFYf5gI8FnxUn9
-         LR93YYgWFsPwW033UypLsin6gVApq2GOwtSSD18G7f4jeAs6RoBLKa+AKMMJjMCrUbKF
-         LWI6CCxVIeL/Je5tGBGYoZV0Yxrj/JBsiHuc922YfVtvY3Q/tji7xvRXjmWAcHFTm9Eu
-         csbbosVWyRSWmI0vbSb3sOMvGim1PMuI65uQQPunrfVbo2t29Gvsi7pcWZwFnyK2RhZo
-         cFUw==
-X-Forwarded-Encrypted: i=1; AFNElJ8MIRmoYmmNx1v7lXmNYElnlikzeQITgNAuRNy0S2joQ0r+yf0+qysYsO1qT3uHfY5biIvu/0KzAZ5HQ/Q5VQ+G@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2WRfvbQdN/mcniW8uVh5gRedG14zp3bQ1WB6ec2aJf6GV8vfD
-	oafUl/ihq8i4PtA7OrRcg1eRIgqD+MQgHB7VIn8t2HQTEDX+OjjZwwwrtk9KbWjgu4KPPoPLorR
-	PQeae02O2XjAeythBcKTiCbOkeO0B2tGHrhdGti7D
-X-Gm-Gg: AeBDietUdDpnJcAvYdzpGzZWsZ5GFGIZ8oDzJqgaYaBAf42xwOFDvRjXbBkpHofiDxQ
-	1u7GJC/N6qC3c++O826w5aSyicl974+L7n5msGYIYznD8vyFUs6fIMfd56tw0WzRPeHmnL8oqL7
-	NKb6lr4/rxFnwquCCG8j6Lj24gu+fx33VqP8oJgBWx4YUXY6Y6fkw1txDHRuk53ZDVj2jEuR+hI
-	bVf5aCNLUKP/j1f3ZgL468JYFCkwtRo2bNUIFX9/oOpROuc1dauVXNWWzVgiSwWgCXeQAH0hIoq
-	h84HH9Jw9LYCxtct965YeUpRwAQdyGAV66VOGYfw
-X-Received: by 2002:a05:7022:ec07:b0:12c:33ba:e837 with SMTP id
- a92af1059eb24-12df84e691dmr85590c88.21.1777643055815; Fri, 01 May 2026
- 06:44:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WKMJSrPM"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6418Iuh61694171;
+	Fri, 1 May 2026 14:54:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=PaUPb61T35gRamkyq
+	o/ocyRJdv5JEcgJkkvFNjCMw6E=; b=WKMJSrPMUAoerRxCUtinTc1qyfNtfgsSI
+	azTITfG6aNQpczF4jgTOZma9VisUCvVrFmjzB9y1Yz82MfR5MqH5AUiW5lpW1ALE
+	MSJpTK8aJRlbCFUcmTVIHJqIKvTG3DOmQkxEA0/MGo8TIl0j9vKIHQjASnrnVHyH
+	fpQvPK0fu/sOsM7tVtxt3aZ/R4+v7jFl5jN8YOpaiHaJKsvMCQxbb/KGiX9Tkp4j
+	047AyPutVEbDq1kJADY3luIN0hK5ZTtN9nwkBmnWlp2jnTrtUgPSY9HWEHUgb6gv
+	25rfwFBJlziuXx9cGd4KA7T2zC4rMHxw/V9kNvnbtIfR9Ar0CIZVQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drnb5n25c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 May 2026 14:54:57 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 641ErpE3015302;
+	Fri, 1 May 2026 14:54:56 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ds7xqr05j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 May 2026 14:54:56 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 641EsrLq24052036
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 May 2026 14:54:53 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F172E20043;
+	Fri,  1 May 2026 14:54:52 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A902720040;
+	Fri,  1 May 2026 14:54:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.39.19.167])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  1 May 2026 14:54:46 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
+Subject: [PATCH V2 2/2] tools/perf: Add kernel-doc comment to auxtrace_record__init() function
+Date: Fri,  1 May 2026 20:24:36 +0530
+Message-Id: <20260501145436.1327-2-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260501145436.1327-1-atrajeev@linux.ibm.com>
+References: <20260501145436.1327-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260501043532.790711-1-ctshao@google.com>
-In-Reply-To: <20260501043532.790711-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 1 May 2026 06:44:02 -0700
-X-Gm-Features: AVHnY4IJuvRZ7o8yrpC2kPu11vgxjOouUdXj52sKDbzaB8cwpvhaFen1tvnDM10
-Message-ID: <CAP-5=fVJPDyW4bUUm9yNU+qwfjJ9Gb-Ssxx4KHdsFz_0J8KMmQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Ensure event leader stays at head of evlist
- after sorting
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, thomas.falcon@intel.com, tmricht@linux.ibm.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=AqDeGu9P c=1 sm=1 tr=0 ts=69f4bec1 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=rIN8eMsy0-pcsuMf_RkA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTAxMDE0NCBTYWx0ZWRfX4RGGXf5sQWQs
+ zgJnySMOQGmDKdYDndPklFEHkx1mTXRDccYqId4LbfHkIkjmXKnH7Yx5vRAZiYEqYt7TnKVn3Ll
+ eJs2JwjqmskkC1zN91x4SdBAkSFjcqjYnnvEY18VusAtFAk38MLmxJSlzR137hAjtVuMZ3g27wz
+ 5M6HLKf+SJ+b1o9jq9BxdZj0vETXIsjsb/yQ8GT4MASg66Inf7RHNRrOL4ztxCMptpaInGBicP1
+ 1K8TsYIploU/XTAMC+g/LOAMr3mhalrU/OmEWaPo67hNliLbD3h3KiqpIjklGhRNQ4Ny2PQMs75
+ 3TtDkdyRni/hRObvwLR6MoePbVMU625fuOZy+nRqLhLGTQlSQPvWRmyQA36K27eTMn7UE5Jf7Jn
+ +fT1FByviRWOfjbasUjNslQGU/PHVOXUBJo+i1qNGFHS/u7Y+RGoSHttQ07dUTExyZjonHvM3Jc
+ WZn+N0eccW/LAEcOk3A==
+X-Proofpoint-GUID: j7-9lroufTt8fT8PR_LhIWeGphBGGj0m
+X-Proofpoint-ORIG-GUID: pseR7_Cu_uKjSUU7-m2QyVgNJ7bh7rTu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-01_04,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605010144
 
-On Thu, Apr 30, 2026 at 9:35=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> From: Ian Rogers <irogers@google.com>
->
-> For evlist of a certain event/metric, the HEAD should be the event
-> leader. In some scenarios where uncore_xxx_0 does not exist, the event
-> leader is not the first element after sorting. For example, on my test
-> machine uncore_iio_0 does not exist, the event leader is uncore_iio_2.
->
-> However, in `evlist__cmp`, it was reordered based on the PMU name, which
-> makes uncore_iio_1 the HEAD of evlist, breaking the following merge
-> logic in `evsel__merge_aliases`.
->
-> The patch adds a loop at the end of
-> `parse_events__sort_events_and_fix_groups` to make sure the first
-> wildcard match is the earliest entry in the list, updating pointers
-> accordingly without breaking reordering detection.
->
-> Tested on DUT lacks uncore_iio_0, and `perf test` looks good.
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Add documentation comment describing the parameters
+and return code for auxtrace_record__init() in util/auxtrace.c
 
-Fixes: 347c2f0a0988 ("perf parse-events: Sort and group parsed events")
+Using "struct evlist *evlist __maybe_unused", gives below
+warning with "scripts/kernel-doc".
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+ # ./scripts/kernel-doc -none tools/perf/util/auxtrace.c
+ Warning: tools/perf/util/auxtrace.c:912 function parameter '__maybe_unused' not described in 'auxtrace_record__init'
+ Warning: tools/perf/util/auxtrace.c:912 function parameter '__maybe_unused' not described in 'auxtrace_record__init'
 
-Thanks!
-Ian
+Updated  parameter as "struct evlist __maybe_unused *evlist"
+With the change, there is no erros/warnings with kernel-doc
 
-> ---
->  tools/perf/util/parse-events.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 1497e1f2a08c..be825617321d 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2251,6 +2251,33 @@ static int parse_events__sort_events_and_fix_group=
-s(struct list_head *list)
->                 }
->                 last_event_was_forced_leader =3D (force_grouped_leader =
-=3D=3D pos);
->         }
-> +
-> +       /*
-> +        * Make sure the first wildcard match is the earliest entry in th=
-e list.
-> +        * Since list_sort might have reordered the aliases, the original=
- leader
-> +        * might not be at the head of the list anymore. We find the firs=
-t
-> +        * alias in the sorted list and make it the new leader, and redir=
-ect
-> +        * all other aliases to it.
-> +        */
-> +       list_for_each_entry(pos, list, core.node) {
-> +               struct evsel *l =3D pos->first_wildcard_match;
-> +
-> +               if (!l)
-> +                       continue;
-> +
-> +               if (l->first_wildcard_match) {
-> +                       /* Original leader was redirected to a new leader=
- */
-> +                       pos->first_wildcard_match =3D l->first_wildcard_m=
-atch;
-> +               } else if (pos->core.idx < l->core.idx) {
-> +                       /*
-> +                        * We are earlier than the original leader in sor=
-ted order,
-> +                        * and no earlier alias has claimed leadership ye=
-t.
-> +                        */
-> +                       l->first_wildcard_match =3D pos;
-> +                       pos->first_wildcard_match =3D NULL;
-> +               }
-> +       }
-> +
->         list_for_each_entry(pos, list, core.node) {
->                 struct evsel *pos_leader =3D evsel__leader(pos);
->
-> --
-> 2.54.0.545.g6539524ca2-goog
->
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+ tools/perf/util/auxtrace.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index a224687ffbc1..8c0447c54003 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -896,8 +896,20 @@ int auxtrace_parse_aux_action(struct evlist *evlist)
+ 	return 0;
+ }
+ 
++/**
++ * auxtrace_record__init - Initialize an AUX area tracing record.
++ * @evlist: The list of events to check for AUX area tracing event.
++ * @err: Pointer to an integer to store return code.
++ *
++ * This function looks through the @evlist to determine which AUX area
++ * tracing hardware is being used and initializes the auxtrace_record
++ * structure.
++ *
++ * Return: A pointer to the struct auxtrace_record on success, or NULL on
++ * failure (@err needs to be set).
++ */
+ struct auxtrace_record *__weak
+-auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
++auxtrace_record__init(struct evlist __maybe_unused *evlist, int *err)
+ {
+ 	*err = 0;
+ 	return NULL;
+-- 
+2.47.3
+
