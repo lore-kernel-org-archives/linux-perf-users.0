@@ -1,65 +1,65 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA6C2F290B
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 06:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BB42FD1A5
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 06:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777705194; cv=none; b=VoAe8PIixLYqL4QkHfvbZrv51MXqZ1xOdL3phAs92D/khE0RGCTL48JHBLj3a2yL68LGrxLEFOzgg0eRj4EWV4UNaug66Je/kAp3N1B906RuPRKoOFv8UMVwHxqSPZ8pMNim7q1Q00D9oSd43eIqYYRhRdGWxDzvR0zZxO6yfdU=
+	t=1777705198; cv=none; b=Jy3ZwAjNB5oCC4rH0jGkoSfp1w+poIraJCx9+PgOEs5mKWCWIXM3ECrFfwqSqlJnQpIGetHAprGCrZ5qvIMu4xH7QEy5o8Uyzj13kpGGq/8MO/2ZQTY/1pkeCQLuN3Pb1rhnXfTr/HNlePkURPRsci1qo8V7bOqws1by7HVInd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777705194; c=relaxed/simple;
-	bh=GLBpfLkC56j41lYw7vpP3gbQ2zPxV/utnINLOeOltYI=;
+	s=arc-20240116; t=1777705198; c=relaxed/simple;
+	bh=dePQroO1x6u4W4p4OjprVA1y6YkSFx4TAjmbutXcF6o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G8I4UgBlIMBCrdph1OeLme5bz+w8zHRSvSeQnnlccKSVgonSKt1OYlR8xD8n8VeIGEfAnrauvRvLtKnh843z87jBS2Tx3SQxQ5gaJpN7G44jYMrED/WIXn+Bf0a4aCaQ8iKySJzzBACthxdVZoxaWcbhiSyrSZJzmyqj2EbglM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C6l1v85s; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=VTDGsj4HMsbeu5vLXaQDQu/RYqeQqUi5WlnhONoIU83pXUetBKlWrKYQbTjZx7rcqIeY7iDkxecZOJHPmr36VK4KeYZlpii6VjOMDRvW4Ut4h5bTq9aOeEfOQD13X2t26dDBHNaXuIoI3POW28IenMtqRc9nd6k0pecYdnlaKVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ThjHX8Xc; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C6l1v85s"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c35f2c09dso3491831c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 23:59:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ThjHX8Xc"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c8ccc7593so1694915c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2026 23:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777705192; x=1778309992; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777705196; x=1778309996; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+joWV5lYUoK2hhGJu98qysVptkOu8cs8aXkN9dw07ro=;
-        b=C6l1v85szwMKdLff6iRj/nyzZ6q85lN1ZNecjbIUIC7pv5QqDVQ8UAWUc16h4A+BPo
-         zZ8iokI413D5CBBl7ZK/d9WMGL31hLO1og+B01wqMcC3O3QNWF9InF1zQIWByUPcPs44
-         Ip9oBZHcr0DlIbdeNGe2BLpoHC+Sp0y/+/LxQmLE9RJamBLF2wiUa+ghbounfA8lzUCL
-         ystkwVYODFHoPN3WJDZ5v68klGUQWr7Slsl0hsJKWaOlgyovBDeSTY8aye4aTqqyBs8R
-         53V5d7HYkAq1Mtui3nZD/zWQsjJ3wJYTlLbsDnojqOHcvBzdPmzDPzuzFYxMWdQ08sGk
-         PSgQ==
+        bh=M+bU3LlfHduMRXriJM/lVN2ewJoBx+eB8b+i1D8BIsU=;
+        b=ThjHX8XcL/ZOdnFE9kKFgK219G5okeqhE2DKv5DJyPNrf01543xtqu/WOYsTRi0BQP
+         UX6ThB5Xdr2Ki00rYsBuX/E0K/ap+O/O2TX//CsPxZLiLW26dKsAt95TaQ1c76t0vCXd
+         osugVWI4/ElyfBYVjr3XBgPNzeuOvU48gnziNDmki8HbYko4HdYcXiygK/IvicJmt5tt
+         YMd7/oSt3daP9d8mXRsRbNmFH0xAi5CJI0yMpSaokNTIonsPBmsVc2cDpetZzM+Dx0Sn
+         IiJLtcvfLyW/j1ruGYuEenpnqV54goutDRnQWqhYqgBrRmOO8A+LmOCH0hSWX5MNmF0E
+         1BmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777705192; x=1778309992;
+        d=1e100.net; s=20251104; t=1777705196; x=1778309996;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+joWV5lYUoK2hhGJu98qysVptkOu8cs8aXkN9dw07ro=;
-        b=Bq73OKCM1AyuMV6wfPXdKpbsXeNY36fabNUwbXQPz5VXCinz8q4TJsTtXNELDeezdL
-         Qk7ipgUFsZi+0ur9kAccc6mAece++7dXLhDwLRhgivz8Um8cIvKcyWZB7AkhSsG84ium
-         O6yvv8h2NbW8gcutY40b65Uh9/SKEwyq8bK3NE/Ez/tfCj6VfCCgY8ij/jv7q/Cs/736
-         E+Ej2AEgt0bSKmPb27jZIzFPhHMQRDIM7yOHGSMRydJiXJWCUez4YX3zDRkMKez42xtR
-         8wmsZEOVGACUWvXopm7+cPP5gvpX4O/NFq/62J03yVrHAGaUebKNgkdGdMGXC7nQ59eC
-         OUQw==
-X-Forwarded-Encrypted: i=1; AFNElJ++Q7FoPadmkUX62iadd2UozI+fwyUQC61jwx+eG7JnHdDrW2qF4r0n2vUMTz/hSXUCGvW68Sj0b6ybULwoW3HT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5/Q7F54QoCwr5w9uDtsjqdas+5BtA7CxclfyESG8JNx+q0H+x
-	zyabMxALKkeROTJF75Mxhtvtv3hLz7hsiEFp4BUNJq1fsG8sTKvOiY8EvzL+jDDMhbSxIZPBSWQ
-	LbWiPDx+ovg==
-X-Received: from dyctz24.prod.google.com ([2002:a05:7301:9f18:b0:2e6:f22b:f849])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2514:b0:12d:de3e:86b4
- with SMTP id a92af1059eb24-12dfd8419e8mr745879c88.36.1777705192124; Fri, 01
- May 2026 23:59:52 -0700 (PDT)
-Date: Fri,  1 May 2026 23:59:18 -0700
-In-Reply-To: <20260409230620.4176210-2-irogers@google.com>
+        bh=M+bU3LlfHduMRXriJM/lVN2ewJoBx+eB8b+i1D8BIsU=;
+        b=QsiJ0hVf549DyWiEclnGnEng9pQzvFUqNFsW//F1lrEEmlKYo5i/UVAGnz5w4jxD0l
+         ZGEk5xSFIrDvOTzpeD2ILNeJis434wsrgBFsRlv63m2ni3MzXrMtBv3KV000R8dd14Eo
+         86mEhsCASq1le1RZqdhGA4a8itwDmmsBzHN7aXgPNpWi8up0LMFE0Haovhq3chWnAhy5
+         scJDJsFri/yZJ/29PZsykT72eh1414iV59fIsLlL8X2/sfmDLBQr0Q5a1fPJ+YtX5ckC
+         BRlEnmZpNzI/8RdaLrK2D9SAm2MnRE6gZSOp5RiV8W2YlGAJCp8Szo9hXZVxr3zSP/A0
+         8t4A==
+X-Forwarded-Encrypted: i=1; AFNElJ8lZHhEb0KN5nrQ8NhCnW+FCvV+6ASBMmuzmJ+5Khrj1MWklvQaRMK4CsRBAt+PdRwJYCPBznqs+JrBz9sJ/Rdw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpXlgholGbdJ/GYX7WNIygOh7o+RS6hJIbPyws7Z+K0ERJYugy
+	W6VW//oFRhMXWPKaOv6k/Lq02zcKWWtBQk2kfhlZGbaHUeZwXPbtW92l+Gm+mfcHZaPtUILU9K7
+	I3b9i56eJQw==
+X-Received: from dlea17-n2.prod.google.com ([2002:a05:701b:4211:20b0:12d:b7d3:3e31])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:102:b0:12d:de3f:f3e0
+ with SMTP id a92af1059eb24-12dfd858799mr978909c88.42.1777705195974; Fri, 01
+ May 2026 23:59:55 -0700 (PDT)
+Date: Fri,  1 May 2026 23:59:20 -0700
+In-Reply-To: <20260502065935.291960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260409230620.4176210-2-irogers@google.com>
+References: <20260409230620.4176210-2-irogers@google.com> <20260502065935.291960-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502065935.291960-1-irogers@google.com>
-Subject: [PATCH v8 00/17] perf symbol/env: ELF machine clean up and lazy idle computation
+Message-ID: <20260502065935.291960-3-irogers@google.com>
+Subject: [PATCH v8 02/17] perf tests topology: Switch env->arch use to env->e_machine
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -69,111 +69,55 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add a helper to perf_env to compute the e_machine if it is EM_NONE.
-Derive the value from the arch string if available. Similarly derive
-the arch string from the ELF machine if available, for
-consistency. This means perf's arch (machine type) is no longer
-determined by uname but set to match that of the perf ELF executable.
-  
-Switch the idle computation to the point of use and lazily compute it,
-rather than computing it for every symbol. The current only user is
-`perf top`. At the point of use the perf_env is available and this can
-be used to make sure the idle function computation is machine and
-kernel version dependent.
-  
-To avoid concurrent update issues with bitfields sharing a byte in
-`struct symbol` due to the lazy computation, introduce a global lock
-for updates to these fields and use setter functions. The reads remain
-lockless.
-  
-v8:
- - Address Sashiko AI review feedback for Patch 1:
-   - Switch all code dependent on the arch string to use `e_machine`
-     instead (e.g., in `perf c2c`, `perf lock-contention`, `perf
-     header`, `perf arch common`, `tests/topology.c`,
-     `perf_env__init_kernel_mode`).
-   - Update `machine__is` and `machine__normalized_is` to take
-     `e_machine` integers instead of strings.
-   - Refactor `arch_syscalls__strerrno_function` (generated via
-     `arch_errno_names.sh`) to take an `e_machine` instead of an arch
-     string.
-   - Avoid premature caching of the host architecture in
-     `perf_session__e_machine` by using a non-caching helper when
-     threads are not yet available.
-  
-v7:
- - Address better handling of strdup failures with arch in the
-   header/env.
- - Address concurrent update issues in `struct symbol` bitfields by
-   introducing a global lock for writes.
-https://lore.kernel.org/linux-perf-users/20260501182021.3651851-1-irogers@google.com/
+Some arch string comparisons weren't normalized. Avoid potential
+issues with normalized names vs uname values by swtiching to using the
+e_machine.
 
-v6: Ensure arch is canonical by going to e_machine and back (Sashiko)
-https://lore.kernel.org/linux-perf-users/20260409230620.4176210-1-irogers@google.com/
-  
-v5: Add perf_env os_release helper (Namhyung/Sashiko)
-https://lore.kernel.org/lkml/20260406170905.2614260-1-irogers@google.com/
-  
-v4: Fix Sashiko issues where an array element wasn't sorted properly,
-    the e_flags weren't returned properly, the idle type is change to
-    a u8 rather than an enum value and the s390 version check for
-    psw_idle is slightly reordered and tweaked.
-https://lore.kernel.org/lkml/20260327045025.2276517-1-irogers@google.com/
-  
-v3: Properly set up the e_machine coming from the perf_env as reported
-    by Honglei Wang.
-https://lore.kernel.org/lkml/20260326174521.1829203-1-irogers@google.com/
-  
-v2: Some minor white space clean up:
-https://lore.kernel.org/lkml/20260325161836.1029457-1-irogers@google.com/
-  
-v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/topology.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Ian Rogers (17):
-  perf env: Add perf_env__e_machine helper and use in perf_env__arch
-  perf tests topology: Switch env->arch use to env->e_machine
-  perf capstone: Determine architecture from e_machine
-  perf print_insn: Use e_machine for fallback IP length check
-  perf machine: Use perf_env e_machine rather than arch
-  perf sample-raw: Use perf_env e_machine rather than arch
-  perf sort: Use perf_env e_machine rather than arch
-  perf symbol: Avoid use of machine__is
-  perf arch common: Use perf_env e_machine rather than arch
-  perf header: In print_pmu_caps use perf_env e_machine
-  perf c2c: Use perf_env e_machine rather than arch
-  perf lock-contention: Use perf_env e_machine rather than arch
-  perf env: Refactor perf_env__arch_strerrno
-  perf env: Remove unused perf_env__raw_arch
-  perf env: Add helper to lazily compute the os_release
-  perf symbol: Add setters for bitfields sharing a byte to avoid
-    concurrent update issues
-  perf symbol: Lazily compute idle and use a global lock for updates
-
- tools/perf/arch/common.c                    |  55 ++--
- tools/perf/builtin-c2c.c                    |   2 +-
- tools/perf/builtin-kwork.c                  |   2 +-
- tools/perf/builtin-sched.c                  |   2 +-
- tools/perf/builtin-trace.c                  |   5 +-
- tools/perf/tests/topology.c                 |   8 +-
- tools/perf/trace/beauty/arch_errno_names.sh |  40 ++-
- tools/perf/util/annotate.c                  |   2 +-
- tools/perf/util/capstone.c                  | 115 +++++---
- tools/perf/util/data-convert-bt.c           |   2 +-
- tools/perf/util/env.c                       | 283 +++++++++++++++-----
- tools/perf/util/env.h                       |  11 +-
- tools/perf/util/header.c                    |  70 +++--
- tools/perf/util/lock-contention.c           |   6 +-
- tools/perf/util/machine.c                   |  25 +-
- tools/perf/util/machine.h                   |   2 -
- tools/perf/util/print_insn.c                |   8 +-
- tools/perf/util/sample-raw.c                |  18 +-
- tools/perf/util/session.c                   |  26 +-
- tools/perf/util/sort.c                      |  12 +-
- tools/perf/util/symbol-elf.c                |   2 +-
- tools/perf/util/symbol.c                    | 163 +++++++----
- tools/perf/util/symbol.h                    |  17 +-
- 23 files changed, 612 insertions(+), 264 deletions(-)
-
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index f54502ebef4b..d4c5c330c679 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -11,6 +11,7 @@
+ #include "pmus.h"
+ #include "target.h"
+ #include <linux/err.h>
++#include <elf.h>
+ 
+ #define TEMPL "/tmp/perf-test-XXXXXX"
+ #define DATA_SIZE	10
+@@ -74,6 +75,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	struct aggr_cpu_id id;
+ 	struct perf_cpu cpu;
+ 	struct perf_env *env;
++	uint16_t e_machine;
+ 
+ 	session = perf_session__new(&data, NULL);
+ 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
+@@ -101,7 +103,9 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	 *  condition is true (see do_core_id_test in header.c). So always
+ 	 *  run this test on those platforms.
+ 	 */
+-	if (!env->cpu && strncmp(env->arch, "s390", 4) && strncmp(env->arch, "aarch64", 7))
++	e_machine = perf_env__e_machine(env, NULL);
++
++	if (!env->cpu && e_machine != EM_S390 && e_machine != EM_AARCH64)
+ 		return TEST_SKIP;
+ 
+ 	/*
+@@ -110,7 +114,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	 * physical_package_id will be set to -1. Hence skip this
+ 	 * test if physical_package_id returns -1 for cpu from perf_cpu_map.
+ 	 */
+-	if (!strncmp(env->arch, "ppc64le", 7)) {
++	if (e_machine == EM_PPC64) {
+ 		if (cpu__get_socket_id(perf_cpu_map__cpu(map, 0)) == -1)
+ 			return TEST_SKIP;
+ 	}
 -- 
 2.54.0.545.g6539524ca2-goog
 
