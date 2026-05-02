@@ -1,88 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21A22DCF57
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7754C2F6596
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777707880; cv=none; b=lLd/SfwfLflE9EZAfEHXsMD7G2mJ3A75mj43qTlUblEfJ8I0rYTIxVjD7duNbLVS5iM95S4bZPr3JNvwTJgv/10um8W2JLzF/9Z01Bhpu8jDSKgvhinf1qXtDHhFYqRR9PHWtMNWchrvbCxsAfS3DmqnvfY70mi0ESkANK6ZV6o=
+	t=1777708411; cv=none; b=H4lTS+OuwwYhKqryuAY8kQzC1MpC00G0a8KQAmk+QYLv6ym1e6K3VGE0b30hB/oMXxh6Fz2MiGMxqMwDK561BP+vsPBeUvJPvCtGVBb/VOmILLoiEa/VlM2hNjcy1Hbuaka2lF+YKJ65jx5sYiC6ABwrsUhmnx61AVGSlZGlHjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777707880; c=relaxed/simple;
-	bh=yZy6xcQMxEOcfapBJZCRey0ddeDL1JhEvtc2wBeBw58=;
+	s=arc-20240116; t=1777708411; c=relaxed/simple;
+	bh=xcMZZzFJoqrCub1O3rouN9biIvDKQwMYLo5J8yiw9P0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k0J+71m7V17Qfs81kzbQ7qXHI/jtjX8bWdxN2WbaiKT88uI+72jxt28m3o09akrYoDX2tfP0ozh9Zv4PlzMtrxA9JERPuZMd9tx6cFiOzsVRNTGS1siqt3rzzUaXXuVUdUpEeFOlK33V2zI4dNwcxioOgaUnMnNuN5TqoY5UiXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9UZ8tA/; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=fSvAJs9OzMsjeSKoXmLaS0RvSBtgEZ4H5zUhtrurDqwcfVik0IgUpg7eIlbaj0KU2PG2dVKrnF1Oatg0G8+NnL0vdVwYXH7en2qPKVEgM01jN9T/Fh+iysmjo9gLqnjbReH8khcNtrreH6+LwqNLct76NDMnzQz4b0ZBmh6cu9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sP+8SLLG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9UZ8tA/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580A4C19425;
-	Sat,  2 May 2026 07:44:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sP+8SLLG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD1EC19425;
+	Sat,  2 May 2026 07:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777707880;
-	bh=yZy6xcQMxEOcfapBJZCRey0ddeDL1JhEvtc2wBeBw58=;
+	s=k20201202; t=1777708411;
+	bh=xcMZZzFJoqrCub1O3rouN9biIvDKQwMYLo5J8yiw9P0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=I9UZ8tA/3cBs5gGBoPgq0c/ElEMsS85V2HY1HiRbIpeNdj6FcefEPfwKvj0nrv3f5
-	 eOr/dfNDXegcj0m0V4xvuY6AV/bdMvQLm8ATnwhwKTTnJvFla4TUmOcLfW8FYfOU94
-	 PkyV+p7kq/BHOrJ4PbSY0lemTDmzXWj4/jqtGoSOgalSdg5+pvLfCG/7LGxSjki3IZ
-	 oFoq7XmNnJ1RNO6Q3Vl5mJcjV75BBLo0bt+QlpOGpdB6TtSXveLwtbSGMen/XPU3B/
-	 espQ6PVWATFTfPXJWdB3iphJqMxOqMmShj2K4YPq8r/aWvbOndT4EvPBR9FJYpcpOU
-	 9BpPIOGJxJM4Q==
+	b=sP+8SLLGJ4xFjmIeo4guiAcnaWWvb6mVW+NhMM8MAcXfsqctgsMQn3zV5I72mNMSw
+	 brDGcE+I0K3lcmljov7q/rfxzyug2ECRFnXnzYHKi+eJmZCuWj0Io7HvyamqXe+iF+
+	 wccS9SaVgpWVnvn5V59d/nlTgCPerx0BSe1t6UbwF3V5IhgcypUMkLmOuqjlftffSd
+	 g8e+pdPYh+HSXKgSX/IVGtyZIe4z4Rr0/bqD8QYpqaXEoNRNlCXgIch1LZ5M9VK8hP
+	 EfW4tPd57/rH7LtsHq0p0M0DnwT9u9yDkZqa67SzCgvN1prdQLtaLM5ULFw23RPwjC
+	 kdpbz6lXX0c7g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 11/17] perf c2c: Use perf_env e_machine rather than
- arch
+Subject: Re: [PATCH v8 15/17] perf env: Add helper to lazily compute the
+ os_release
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260502065935.291960-12-irogers@google.com>
-References: <20260502065935.291960-12-irogers@google.com>
+In-Reply-To: <20260502065935.291960-16-irogers@google.com>
+References: <20260502065935.291960-16-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 02 May 2026 07:44:39 +0000
-Message-Id: <20260502074440.580A4C19425@smtp.kernel.org>
+Date: Sat, 02 May 2026 07:53:30 +0000
+Message-Id: <20260502075331.0AD1EC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] Build failure on older toolchains due to missing fallback definitio=
-n for `EM_AARCH64`.
+- [Medium] Incomplete refactoring: The JSON data converter was missed and d=
+oes not use the new lazy initialization helper.
+- [Medium] Context leak: Assuming uninitialized `os_release` always implies=
+ live mode incorrectly pollutes offline trace conversions with the host's k=
+ernel version.
 --
 
-commit 5745fb586646dd63f1bc0598424b6a0b707af964
+commit a08c8b8c77a407cf0d562bc6f755d7e0c00f4156
 Author: Ian Rogers <irogers@google.com>
 
-perf c2c: Use perf_env e_machine rather than arch
-   =20
-This commit updates perf c2c to use the e_machine value from the perf_env
-environment instead of performing string matching on the architecture name
-for AARCH64 detection.
+    perf env: Add helper to lazily compute the os_release
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 72a7802775ee..09c8352a922c 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3202,7 +3202,7 @@ static int perf_c2c__report(int argc, const char **=
-argv)
->  	 * default display type.
->  	 */
->  	if (!display) {
-> -		if (!strcmp(perf_env__arch(env), "arm64"))
-> +		if (perf_env__e_machine(env, /*e_flags=3D*/NULL) =3D=3D EM_AARCH64)
+This commit introduces a helper function, perf_env__os_release(), to lazily
+initialize the OS release string when it is not populated. It updates the C=
+TF
+data converter and other sites to use this helper. The helper assumes that =
+if
+os_release isn't initialized, perf is running in live mode and uses uname()
+as a fallback.
 
-Will this cause a build failure on older toolchains where the system <elf.h>
-does not yet define EM_AARCH64?
+> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-con=
+vert-bt.c
+> index 3b8f2df823a9..2c88420fe33e 100644
+> --- a/tools/perf/util/data-convert-bt.c
+> +++ b/tools/perf/util/data-convert-bt.c
+> @@ -1414,7 +1414,7 @@ do {									\
+> =20
+>  	ADD("host",    env->hostname);
+>  	ADD("sysname", "Linux");
+> -	ADD("release", env->os_release);
+> +	ADD("release", perf_env__os_release(env));
 
-On older systems (for example, those with glibc earlier than 2.17),
-EM_AARCH64 might not be declared. Other files in the perf codebase provide
-a manual fallback definition for it, but builtin-c2c.c does not appear to
-include one.
+Was the JSON data converter missed in this refactoring?
 
->  			display =3D "peer";
->  		else
->  			display =3D "tot";
+The CTF converter was updated to use the new helper, but the JSON converter
+in tools/perf/util/data-convert-json.c still accesses the field directly:
+
+tools/perf/util/data-convert-json.c:
+    ...
+    output_json_key_string(out, true, 2, "hostname", env->hostname);
+    output_json_key_string(out, true, 2, "os-release", env->os_release);
+    output_json_key_string(out, true, 2, "arch", env->arch);
+    ...
+
+This leads to inconsistent behavior where the JSON converter outputs an emp=
+ty
+string or null if os_release is uninitialized, while the CTF converter
+outputs the host's release string.
+
+>  	ADD("version", env->version);
+>  	ADD("machine", env->arch);
+>  	ADD("domain", "kernel");
+
+[ ... ]
+
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 5944acd28996..1090aaa2985f 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -339,6 +339,27 @@ int perf_env__kernel_is_64_bit(struct perf_env *env)
+>  	return env->kernel_is_64_bit;
+>  }
+> =20
+> +const char *perf_env__os_release(struct perf_env *env)
+> +{
+> +	struct utsname uts;
+> +	int ret;
+> +
+> +	if (!env)
+> +		return perf_version_string;
+> +
+> +	if (env->os_release)
+> +		return env->os_release;
+> +
+> +	/*
+> +	 * The os_release is being accessed but wasn't initialized from a data
+> +	 * file, assume this is 'live' mode and use the release from uname. If
+> +	 * uname or strdup fails then use the current perf tool version.
+> +	 */
+> +	ret =3D uname(&uts);
+> +	env->os_release =3D strdup(ret < 0 ? perf_version_string : uts.release);
+> +	return env->os_release ?: perf_version_string;
+> +}
+
+Does this fallback to uname() incorrectly pollute offline trace conversions
+with the host's kernel version?
+
+If a perf.data file was recorded without the HEADER_OSRELEASE feature,
+env->os_release will be NULL.
+
+When running perf data convert --to-ctf on such a file, this helper will
+execute uname() and write the host machine's OS release into the trace
+environment.
+
+Prior to this patch, a NULL os_release was safely omitted from the CTF
+export.
+
+Injecting the converter's host kernel version into offline trace metadata
+falsifies the environment in which the trace was originally recorded.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260502065935.2919=
-60-1-irogers@google.com?part=3D11
+60-1-irogers@google.com?part=3D15
