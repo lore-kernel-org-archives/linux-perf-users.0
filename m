@@ -1,118 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987B51A6808
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4A313C9C4
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 08:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777708777; cv=none; b=Yzj0fpKrUtrnfAXcdKbuURAgNA84I2iBQfDtK/r4wTrrRxzuJT8pnH9xY9RY2PR5RJZL2K/ZKm80hK8JjswUjrHN+UYC9Lm9QPZOGrtHrCWhaxMznDlSf/KjStaHHpbaajhMvLNTjXvP7m+X8o08VyG6T7t8dolhtErmVUyvM5Q=
+	t=1777709456; cv=none; b=usmDaNTGhEstcg4yH2w2VazRbLIOMZlTA9bW1pWEghJt72060XGAbBwigGm2M7eJp5X9uxCWgf8bNFVjlMSSmO8TXXs3kXXRKamt0Q4PG5i3iSYRZTcTnPLBZOFdj1jRyZSrelTF5g2RQUWssdRLdv4/tob8/G8moFaZX9s7YLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777708777; c=relaxed/simple;
-	bh=41/NWyjsC0aU8zoxvUQMwzBE3JZsoMXEHCfjHU4W+48=;
+	s=arc-20240116; t=1777709456; c=relaxed/simple;
+	bh=DubL74XQGyE6kG/giVdWq9KdXfPwU+4wVmV3MCqiTpM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sixmYxVgmnVb8eXSiHCHfrnDAGk48vW9Jywls0uxk5wFMY0tYREW0Flr7E5HvYc4TFUryk1/+hLkFqF5oJS5mlt3qy1YhjklVt7154GtjOZeEUTUMXkI9jh79HqfHMbpgbFPIauLq2ksaK7BQGVcm4duYzpCHj4iQgVlRW6D6/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPFGVqLe; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=uq+Ypc/cpat9ml6GnZ3uMUyupwbGYvQozx7GL1d59wiDwzq4UOBNlAmz+d3A/qT6+/nAjIINoToHdAvL4Yg6GAcy2MdtnU1Vl5wbXBba+CwFUaxMDMmGWcL+12DFPGpH8GiwSrLFMvVPhzIm0hnO9VRZb7bqnTg/2T9299JcqJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAe+wWx+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPFGVqLe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27896C19425;
-	Sat,  2 May 2026 07:59:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAe+wWx+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D980C19425;
+	Sat,  2 May 2026 08:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777708777;
-	bh=41/NWyjsC0aU8zoxvUQMwzBE3JZsoMXEHCfjHU4W+48=;
+	s=k20201202; t=1777709455;
+	bh=DubL74XQGyE6kG/giVdWq9KdXfPwU+4wVmV3MCqiTpM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=iPFGVqLe4//VohePpgzwhzKnAKG/0X3fney2HKBOm48H/BRql8BddKYU0vwcRAU6h
-	 vlozyhSwub/WdTS2JiVHThZMVgLDDmIyNQlJZ9szoIhiBItlZ4FGn6iBsW/44BJV+X
-	 AZeydUC0DXzd04LGI5ZfvoRLRA9iZVA+dTrcaRFuMbHdn301LdehFAtorxmLBrC0Wq
-	 UX+utpslJKB+JPTZ4Fm+DFnbkqVGjqeQ+Nq+DhAaLpZJFIx2yyq29bPuSb9V1e81jB
-	 S0Kh8LZwjRlOESB+TVSo9xq5sZBC92GMKdzedMFzgXOrhBsk9pNqg4U3Gjvyz10uPG
-	 u1GL/xVoI8Ohg==
+	b=ZAe+wWx+RYIi8IlQg7NqlaDP412MlUo7zZweYpz3o4/VxwQWEy6xfkhimCms0KYZP
+	 KdJxBUpJ288MWC6zIwiv7ubLFmhg9P+RsJg5y/MeSO2XyD2b+j2WG4Or2BgpkoDQvA
+	 GbO0uDWXLWrc6qFS+FB8xmv+w5hn8u5zLU4W3nqH33pP+7oD6iDobx4PeBAlXzb+mY
+	 LHS1hDkl7t+Mr/K2s+wc1q7pJ6PhW8W6hnCqBOVWEyCCFtnbmZWOMA6JDpU8H+4qAb
+	 RtC8GG5PECvTui6wQMfAqveFg0+oUbnlAWF42HB7r1nutC7xg7pNVEUZ9AeqfD5R0n
+	 o0cePX/O6Mq2Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 09/17] perf arch common: Use perf_env e_machine
- rather than arch
+Subject: Re: [PATCH V3 2/2] tools/perf: Add kernel-doc comment to
+ auxtrace_record__init() function
 Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260502065935.291960-10-irogers@google.com>
-References: <20260502065935.291960-10-irogers@google.com>
+In-Reply-To: <20260502073924.99965-2-atrajeev@linux.ibm.com>
+References: <20260502073924.99965-2-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 02 May 2026 07:59:36 +0000
-Message-Id: <20260502075937.27896C19425@smtp.kernel.org>
+Date: Sat, 02 May 2026 08:10:54 +0000
+Message-Id: <20260502081055.8D980C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Logic inversion in `perf_env__single_address_space` breaks kerne=
-l/user address space resolution.
-- [Medium] Exact `EM_HOST` check breaks native binutils fallback for 32-bit=
- profiling data on 64-bit hosts.
+- [Low] Documentation mismatch: `auxtrace_record__init()` can return positi=
+ve error codes.
 --
 
-commit e2d5820d159463d4dd20c88669d8e471fefbb4c5
-Author: Ian Rogers <irogers@google.com>
+commit a2b68fba99416692edd38910a4c62adfdf1b490d
+Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-perf arch common: Use perf_env e_machine rather than arch
+tools/perf: Add kernel-doc comment to auxtrace_record__init() function
 
-This patch replaces architecture string matching with ELF machine
-constants in the perf architecture common code. It updates the
-binutils path lookup and single address space checks to use
-the e_machine values from the perf environment.
+This commit adds a kernel-doc comment describing the parameters and return =
+code
+for auxtrace_record__init(). It also moves the __maybe_unused attribute to =
+fix
+warnings generated by scripts/kernel-doc.
 
-> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-> index 21836f70f231..e9b5b61feffe 100644
-> --- a/tools/perf/arch/common.c
-> +++ b/tools/perf/arch/common.c
-
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index a224687ffbc1..6aeccedc7f2d 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
 [ ... ]
+> @@ -896,8 +896,23 @@ int auxtrace_parse_aux_action(struct evlist *evlist)
+>  	return 0;
+>  }
+> =20
+> +/**
+> + * auxtrace_record__init - Initialize an AUX area tracing record.
+> + * @evlist: The list of events to check for AUX area tracing event.
+> + * @err: Pointer to an integer to store return code.
+> + *
+> + * This function looks through the @evlist to determine which AUX area
+> + * tracing hardware is being used and initializes the auxtrace_record
+> + * structure.
+> + *
+> + * Return:
+> + * a) A pointer to the struct auxtrace_record on success.
+> + * b) NULL with @err =3D 0 if no AUX area tracing event is found/support=
+ed
+> + *    (not considered an error).
+> + * c) NULL with @err < 0 on actual auxtrace_record__init failure.
+> + */
 
-> @@ -145,7 +147,8 @@ static int perf_env__lookup_binutils_path(struct perf=
-_env *env,
->  					  const char *name, char **path)
+Is this description for case 'c' completely accurate?
+
+Looking at the architecture-specific implementations, such as the one in
+tools/perf/arch/x86/util/auxtrace.c, it appears the function can return
+positive error codes. For instance, the x86 implementation calls get_cpuid(=
+),
+which returns ENOBUFS (a positive integer) on failure. This positive value
+is then assigned to *err before returning NULL.
+
+Could this comment be updated to reflect that *err can be any non-zero
+value on failure, rather than strictly less than zero?
+
+>  struct auxtrace_record *__weak
+> -auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
+> +auxtrace_record__init(struct evlist __maybe_unused *evlist, int *err)
 >  {
-
-[ ... ]
-
->  	/*
->  	 * We don't need to try to find objdump path for native system.
->  	 * Just use default binutils path (e.g.: "objdump").
->  	 */
-> -	if (!strcmp(perf_env__arch(NULL), arch))
-> +	if (e_machine =3D=3D EM_HOST)
->  		goto out;
-
-The previous check used perf_env__arch() which normalized both 32-bit and
-64-bit variants to a single string like "x86". With the exact EM_HOST
-comparison, if we are analyzing a 32-bit trace (EM_386) on a 64-bit host
-(EM_X86_64), will this evaluate to false and skip the native fallback?
-
-Could this regression cause the tool to wrongly search for a cross-compiler
-prefix instead of successfully using the native multi-arch objdump?
-
-[ ... ]
-
-> @@ -237,5 +252,5 @@ int perf_env__lookup_objdump(struct perf_env *env, ch=
-ar **path)
->   */
->  bool perf_env__single_address_space(struct perf_env *env)
->  {
-> -	return strcmp(perf_env__arch(env), "sparc");
-> +	return perf_env__e_machine(env, /*e_flags=3D*/NULL) =3D=3D EM_SPARC;
+>  	*err =3D 0;
+>  	return NULL;
 >  }
 
-Does this introduce a logic inversion regression?
-
-The original implementation using strcmp() evaluated to non-zero (true)
-for non-SPARC architectures and zero (false) for SPARC. The new
-implementation returns true only for SPARC and false for everything else.
-
-Also, should this check include EM_SPARCV9 to properly handle 64-bit SPARC
-traces, since the previous strcmp() against "sparc" would have matched the
-normalized string for both?
-
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260502065935.2919=
-60-1-irogers@google.com?part=3D9
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260502073924.9996=
+5-1-atrajeev@linux.ibm.com?part=3D2
