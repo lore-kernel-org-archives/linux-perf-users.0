@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6464C3859D2
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 15:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6650C38655A
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 15:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777737449; cv=none; b=FGHaS9YYVZkxfeIpdNnn3+4IkVSBahQ+zOHeAwCkSc5B8TjB8ezzK+heKB0sx/m4VjY9DTDgSRuVs2rScOCBdQSOpbnonTja2tYVVYYcjn3EwI3zqAuJ7IrKYG2w5cEfxwhtRFMIBtD3zMXJwUvTiFxziaMJx9A59G2WYNsnugk=
+	t=1777737452; cv=none; b=RthI9qHsGDwxRzOp5ODNjaYLlehKQ6VTh3ZbSlAYPutOg1R10Oj5vqqp6fh3dn5txilBJNB+8UT5aX46hM4Uv4IYicmM655h1AlXJSkHg8B9lAtsrgz7+mXp66knshmbPnw2QNFvDEARkoZu3RxKISvunAeFvZfY3bEiMFaYBPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777737449; c=relaxed/simple;
-	bh=vKFHrCjlKGhKq21Pd2ks1LeyB99UP6QRapSzP1imIIo=;
+	s=arc-20240116; t=1777737452; c=relaxed/simple;
+	bh=Qs82aQblWtjLLgeF3M5ilDmR1IJTXAu5AzapLrf9cY0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qTb2iBIYZOGLsoaMLsg2GZ63JC8Nz22qgTKHsqaK5VA19g2ReQ8VefY1PG/yb88kMh/pVPhDpOXMEaRAa9r2JIIqY5xtewXDPc6xLA1GyMyIMSXjWYXLwdKOWpmbpcF7AuZqGa1vdV0XyzXI9QmMqOycMfhfAR22+GhDun58eGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UpdintwA; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=cQPWvATKUA80Tzvd++qB72tLX1tOCZ9mCC+pDhbJy7jWqXQjiD/Ab7cAhZsb8spgmVRFt+ucSnkp9hu9hmik+mNcPQ3V14GexmI5PqSHbslNeWM28D2Nkd4NR/5lXG0LadmTZ2HcAozF94LUV49+NUb3bpwCwv6pbad/IRtZn4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Etww/siu; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpdintwA"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so4547749eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 08:57:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Etww/siu"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1275c6fc58aso5582495c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 08:57:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777737447; x=1778342247; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777737449; x=1778342249; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbPVPyvaI7+J7NjdbYB4bFnyac0UwqZDPlHHgX6Sb0k=;
-        b=UpdintwAAEwELjWYGa15h/CrBm/hT01wVe0O+LZIIyrwIlOa3pcN5BJVqIqEjpv5H8
-         nge7VGLmWAVOtpc/g0FA1xp7LZ4/Pa3MJeggh3latZxVcb302TeWP21bB30SP4oylZDa
-         UL6RDMbhIPTR+bjGQvsgDH3q4hwXQgHGD8cTT8RXFQ8XedN8yISLEssAjJ7pR3nI0LF5
-         TMM6XS9ndTv/5QcctPk5v3uHAmv6CIea0mIkZMQ0+iqKdByfEgiyDY2GRPTeWLvXcJbS
-         ZGQ5XD96vqTL2V4H6RaSlHsRHdkvCA0YytXHhg0kusP75lJSqE189kI+3hPi3n6gzY1z
-         phBg==
+        bh=Tt7TK3JC4x6/Ps79h7tGqZ56cFuxWDFNGGhg/Dvi8W4=;
+        b=Etww/siu4pTyjG8dgraUTSsRH+k1VfqNDcBpSvOoLhumt5/oQ+gTOLCaeUD8rDRPjy
+         vxxUSkz7BI7M9VIpVYfijiyd2TsjGnFpx8t3p/MMOTiVNjODtx2i2ietHkPYeC3I6L1P
+         8enzbMMj8pxtOI74BgNwEgDK8RZeULBRkEj5mCgHYbfsP5gNaBq66IdHRKEG+V6tK7E/
+         90nbv8PZX9frkhj+0Vt+buDGerAswIM4wgpJT/iTc1UPpFWggFupmKJ25zO8KF+Vvp2V
+         aPoioWH/YeuMnj0ct0xsCRbP6CRHOK6K4B2SbWoxJ459+0HdjEFmIkZF668evPsLzkvd
+         monw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777737447; x=1778342247;
+        d=1e100.net; s=20251104; t=1777737449; x=1778342249;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbPVPyvaI7+J7NjdbYB4bFnyac0UwqZDPlHHgX6Sb0k=;
-        b=mafHEc6jBtDMCicboU+fvpiitgg06+YmoDiL4IDVwb6IqbQ73k3UBXQD/+LkNep4r7
-         yP7/iztpKJn7y8cLzjC0ymt1RaaGE+ff4LA9aGRQoXGvjBZQlEUAWCDiaKDQ2LsQBZyt
-         N3Fz8VG5afAkvsvhUd4AE+SIh/AG6eWnIzsxuk01s71n2DQl4ynqsT9jpQKyyZi8KumP
-         FmS6QRu8QfvQByaMxTBQPBSSKWIn/+M0gQwy6jHbGM2gsH8scbNqcTJmA71e4WDqjahI
-         yqAI/HKnLs+I1P9V5bNV9/AKPt8XVf+cvGwGHhmgJfrnc+C+4XHxB6dd9ePupI1SsYBA
-         wd7A==
-X-Forwarded-Encrypted: i=1; AFNElJ8AktmXJb4IcM8mhkOlhr30FZ2/JQ4t5OfWOn5rA/oy40rGaPLDRJLinPNSJUWFfHFDb6Dyy1ijzR++bMiuV32e@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp9obgmOBgf8+7Ltu89KcTt2XiqeUIhKyhlUIJ23iSezDTmkf7
-	I5eCa4dBAevrdhlCT3XL9ZzCsgUn0bf/EiKCn5S+b+uNPv8IeYlzFhJtxRxjJMbmg1Z0TlwZOsz
-	dDnZAeK4yuQ==
-X-Received: from dlbeb4.prod.google.com ([2002:a05:7022:d44:b0:12d:bc1d:8783])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2391:b0:12d:de3e:be8d
- with SMTP id a92af1059eb24-12dfd856e08mr1606645c88.41.1777737447314; Sat, 02
- May 2026 08:57:27 -0700 (PDT)
-Date: Sat,  2 May 2026 08:56:54 -0700
+        bh=Tt7TK3JC4x6/Ps79h7tGqZ56cFuxWDFNGGhg/Dvi8W4=;
+        b=FhGOPRvrhQCaytbctPX4GmFkp6ScjyuczjxUW/rfXQXy3yZhYFh6363fET3OVtQ8Fd
+         CN75LlDuiv5Ql+rNUgazGSdQV4REGVF3y67cxwcSgX35NDSjim6ZqZWxhpBonaxac/Bl
+         i0LP1/RcOmYncXeftt3caQXaMjGSKsQYmTdKONLMkSIjCL3/yh4vXw1Qq76MJimRKlIT
+         3to2XqFWL4x+GJ1iBsaV5IoI6wsZp9i+OLdMMpy6j7tgIoPqgxvd70YRPshF4cfEfYuI
+         Tcup5J+vcfDxMB8uCkAjrryMcQxiKDSlov3PaRekhoJt6/nHyvs9CvTWwU1BHHVPMtmp
+         /TlA==
+X-Forwarded-Encrypted: i=1; AFNElJ/DH9LIExffCtJoa+xcWj04TGlRFkOwOrFi2+MuPVwqXES/nuR2r1NKBdgb/9IYZAPGOoBfqroF0T1XMA7vlnkr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyarBQLkr80os9OYG+alZa7tjdIwKTeldeoP0soy9twaWXo83lq
+	JsWQ2tcZI46wBne1h7h/kNPHyXbhkpfx67mo6WrMAgUw1psQH6AxR1caTLBd6VAwc/ECaHhnoFt
+	dd7sPiIHwlg==
+X-Received: from dlbph19.prod.google.com ([2002:a05:7022:3713:b0:12d:d0a4:2ed9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a:b0:128:d967:4678
+ with SMTP id a92af1059eb24-12dfd80734emr1533128c88.23.1777737449277; Sat, 02
+ May 2026 08:57:29 -0700 (PDT)
+Date: Sat,  2 May 2026 08:56:55 -0700
 In-Reply-To: <20260502155656.478642-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260502064839.282422-1-irogers@google.com> <20260502155656.478642-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502155656.478642-5-irogers@google.com>
-Subject: [PATCH v2 4/6] perf probe-finder: Fix libdw API contract violations
+Message-ID: <20260502155656.478642-6-irogers@google.com>
+Subject: [PATCH v2 5/6] perf annotate-data: Fix libdw API contract violations
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,224 +69,68 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Check return values of `dwarf_formsdata`, `dwarf_entrypc`,
-`dwarf_highpc`, `dwarf_bytesize`, `dwarf_attr`, `dwarf_decl_line`,
-`dwarf_getfuncs`, and `dwarf_formref_die`. Validate `dwarf_diename` and
-`dwarf_diecu` results to prevent potential crashes. Fix C90 mixed
-declarations.
+Check return values of `dwarf_aggregate_size` and `dwarf_formudata`.
+Validate `dwarf_diename` before `strdup` to prevent potential crashes.
 
-Fixes: 66f69b219716 ("perf probe: Support DW_AT_const_value constant value")
-Fixes: 3d918a12a1b3 ("perf probe: Find fentry mcount fuzzed parameter location")
-Fixes: bcfc082150c6 ("perf probe: Remove redundant dwarf functions")
-Fixes: 221d061182b8 ("perf probe: Fix to search local variables in appropriate scope")
-Fixes: b55a87ade383 ("perf probe: Remove die() from probe-finder code")
-Fixes: 4c859351226c ("perf probe: Support glob wildcards for function name")
+Fixes: 2bc3cf575a16 ("perf annotate-data: Improve debug message with location info")
+Fixes: 4a111cadac85 ("perf annotate-data: Add member field in the data type")
+Fixes: 8b1042c425f6 ("perf annotate-data: Set bitfield member offset and size properly")
+Fixes: fc044c53b99f ("perf annotate-data: Add dso->data_types tree")
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/probe-finder.c | 84 ++++++++++++++++++++++------------
- 1 file changed, 56 insertions(+), 28 deletions(-)
+ tools/perf/util/annotate-data.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 64328abeef8b..069f0d83d0b7 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -93,7 +93,8 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 		if (!tvar)
- 			return 0;
- 
--		dwarf_formsdata(&attr, &snum);
-+		if (dwarf_formsdata(&attr, &snum) != 0)
-+			return -ENOENT;
- 		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
- 
- 		return ret < 0 ? -ENOMEM : 0;
-@@ -103,8 +104,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 	if (dwarf_attr(vr_die, DW_AT_location, &attr) == NULL)
- 		return -EINVAL;	/* Broken DIE ? */
- 	if (dwarf_getlocation_addr(&attr, addr, &op, &nops, 1) <= 0) {
--		ret = dwarf_entrypc(sp_die, &tmp);
--		if (ret)
-+		if (dwarf_entrypc(sp_die, &tmp) != 0)
- 			return -ENOENT;
- 
- 		if (probe_conf.show_location_range &&
-@@ -115,8 +115,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 			return -ENOENT;
- 		}
- 
--		ret = dwarf_highpc(sp_die, &tmp);
--		if (ret)
-+		if (dwarf_highpc(sp_die, &tmp) != 0)
- 			return -ENOENT;
- 		/*
- 		 * This is fuzzed by fentry mcount. We try to find the
-@@ -138,15 +137,21 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- static_var:
- 		if (!tvar)
- 			return ret2;
--		/* Static variables on memory (not stack), make @varname */
--		ret = strlen(dwarf_diename(vr_die));
--		tvar->value = zalloc(ret + 2);
--		if (tvar->value == NULL)
--			return -ENOMEM;
--		snprintf(tvar->value, ret + 2, "@%s", dwarf_diename(vr_die));
--		tvar->ref = alloc_trace_arg_ref((long)offs);
--		if (tvar->ref == NULL)
--			return -ENOMEM;
-+		{
-+			/* Static variables on memory (not stack), make @varname */
-+			const char *name = dwarf_diename(vr_die);
-+
-+			if (!name)
-+				return -ENOENT;
-+			ret = strlen(name);
-+			tvar->value = zalloc(ret + 2);
-+			if (tvar->value == NULL)
-+				return -ENOMEM;
-+			snprintf(tvar->value, ret + 2, "@%s", name);
-+			tvar->ref = alloc_trace_arg_ref((long)offs);
-+			if (tvar->ref == NULL)
-+				return -ENOMEM;
-+		}
- 		return ret2;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 1eff0a27237d..e881a40a4885 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -74,7 +74,8 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ 		break;
  	}
  
-@@ -234,8 +239,9 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	}
+-	dwarf_aggregate_size(die, &size);
++	if (dwarf_aggregate_size(die, &size) != 0)
++		size = 0;
  
- 	if (die_get_real_type(vr_die, &type) == NULL) {
-+		const char *name = dwarf_diename(vr_die);
- 		pr_warning("Failed to get a type information of %s.\n",
--			   dwarf_diename(vr_die));
-+			   name ? name : "<unknown>");
- 		return -ENOENT;
- 	}
+ 	strbuf_init(&sb, 32);
+ 	die_get_typename_from_type(die, &sb);
+@@ -250,9 +251,10 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 		size = 0;
  
-@@ -291,7 +297,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 			 probe_type_is_available(PROBE_TYPE_X) ? 'x' : 'u';
- 
- 	ret = dwarf_bytesize(&type);
--	if (ret <= 0)
-+	if (ret < 0)
- 		/* No size ... try to use default type */
- 		return 0;
- 	ret = BYTES_TO_BITS(ret);
-@@ -357,7 +363,13 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 			else
- 				*ref_ptr = ref;
- 		}
--		ref->offset += dwarf_bytesize(&type) * field->index;
-+		{
-+			int bsize = dwarf_bytesize(&type);
-+
-+			if (bsize < 0)
-+				return -EINVAL;
-+			ref->offset += bsize * field->index;
-+		}
- 		ref->user_access = user_access;
- 		goto next;
- 	} else if (tag == DW_TAG_pointer_type) {
-@@ -611,10 +623,16 @@ static int call_probe_finder(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		memcpy(&pf->sp_die, sc_die, sizeof(Dwarf_Die));
- 
- 	/* Get the frame base attribute/ops from subprogram */
--	dwarf_attr(&pf->sp_die, DW_AT_frame_base, &fb_attr);
--	ret = dwarf_getlocation_addr(&fb_attr, pf->addr, &pf->fb_ops, &nops, 1);
--	if (ret <= 0 || nops == 0) {
-+	if (dwarf_attr(&pf->sp_die, DW_AT_frame_base, &fb_attr) == NULL) {
- 		pf->fb_ops = NULL;
+-	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
+-		dwarf_formudata(&attr, &loc);
+-	else {
++	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
++		if (dwarf_formudata(&attr, &loc) != 0)
++			loc = 0;
 +	} else {
-+		ret = dwarf_getlocation_addr(&fb_attr, pf->addr, &pf->fb_ops, &nops, 1);
-+		if (ret <= 0 || nops == 0)
-+			pf->fb_ops = NULL;
-+	}
+ 		/* bitfield member */
+ 		if (dwarf_attr_integrate(die, DW_AT_data_bit_offset, &attr) &&
+ 		    dwarf_formudata(&attr, &loc) == 0)
+@@ -273,7 +275,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 				     dwarf_diename(die), (long)bit_size) < 0)
+ 				member->var_name = NULL;
+ 		} else {
+-			member->var_name = strdup(dwarf_diename(die));
++			const char *name = dwarf_diename(die);
 +
-+	if (pf->fb_ops == NULL) {
-+		/* Not supported */
- 	} else if (nops == 1 && pf->fb_ops[0].atom == DW_OP_call_frame_cfa &&
- 		   (pf->cfi_eh != NULL || pf->cfi_dbg != NULL)) {
- 		if ((dwarf_cfi_addrframe(pf->cfi_eh, pf->addr, &frame) != 0 &&
-@@ -667,8 +685,8 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
++			member->var_name = strdup(name ?: "unknown");
  		}
- 	} else {
- 		/* With the line number, find the nearest declared DIE */
--		dwarf_decl_line(fn_die, &lno);
--		if (lno < fsp->line && fsp->diff > fsp->line - lno) {
-+		if (dwarf_decl_line(fn_die, &lno) == 0 &&
-+		    lno < fsp->line && fsp->diff > fsp->line - lno) {
- 			/* Keep a candidate and continue */
- 			fsp->diff = fsp->line - lno;
- 			memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
-@@ -1018,7 +1036,8 @@ static int find_probe_point_by_func(struct probe_finder *pf)
- {
- 	struct dwarf_callback_param _param = {.data = (void *)pf,
- 					      .retval = 0};
--	dwarf_getfuncs(&pf->cu_die, probe_point_search_cb, &_param, 0);
-+	if (dwarf_getfuncs(&pf->cu_die, probe_point_search_cb, &_param, 0) < 0)
-+		return -ENOENT;
- 	return _param.retval;
- }
  
-@@ -1207,7 +1226,8 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
- 		 * points to correct die.
- 		 */
- 		if (dwarf_attr(die_mem, DW_AT_abstract_origin, &attr)) {
--			dwarf_formref_die(&attr, &var_die);
-+			if (dwarf_formref_die(&attr, &var_die) == NULL)
-+				goto out;
- 			if (pf->abstrace_dieoffset != dwarf_dieoffset(&var_die))
- 				goto out;
- 		}
-@@ -1270,6 +1290,8 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	struct probe_trace_event *tev;
- 	struct perf_probe_arg *args = NULL;
- 	int ret, i;
-+	const char *realname;
-+	Dwarf_Die cu_die_mem;
+ 		if (member->var_name == NULL) {
+@@ -370,7 +374,8 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+ 	if (dwarf_tag(type_die) == DW_TAG_typedef)
+ 		die_get_real_type(type_die, type_die);
  
- 	/*
- 	 * For some reason (e.g. different column assigned to same address)
-@@ -1293,13 +1315,17 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	if (ret < 0)
- 		goto end;
+-	dwarf_aggregate_size(type_die, &size);
++	if (dwarf_aggregate_size(type_die, &size) != 0)
++		size = 0;
  
--	tev->point.realname = strdup(dwarf_diename(sc_die));
-+	realname = dwarf_diename(sc_die);
-+	tev->point.realname = strdup(realname ?: "unknown");
- 	if (!tev->point.realname) {
- 		ret = -ENOMEM;
- 		goto end;
- 	}
- 
--	tev->lang = dwarf_srclang(dwarf_diecu(sc_die, &pf->cu_die, NULL, NULL));
-+	if (dwarf_diecu(sc_die, &cu_die_mem, NULL, NULL) != NULL)
-+		tev->lang = dwarf_srclang(&cu_die_mem);
-+	else
-+		tev->lang = DW_LANG_C; // Fallback
- 
- 	pr_debug("Probe point found: %s+%lu\n", tev->point.symbol,
- 		 tev->point.offset);
-@@ -1794,7 +1820,8 @@ static int line_range_search_cb(Dwarf_Die *sp_die, void *data)
- 
- 	if (die_match_name(sp_die, lr->function) && die_is_func_def(sp_die)) {
- 		lf->fname = die_get_decl_file(sp_die);
--		dwarf_decl_line(sp_die, &lr->offset);
-+		if (dwarf_decl_line(sp_die, &lr->offset) != 0)
-+			return DWARF_CB_OK; // Skip if no line info
- 		pr_debug("fname: %s, lineno:%d\n", lf->fname, lr->offset);
- 		lf->lno_s = lr->offset + lr->start;
- 		if (lf->lno_s < 0)	/* Overflow */
-@@ -1818,7 +1845,8 @@ static int line_range_search_cb(Dwarf_Die *sp_die, void *data)
- static int find_line_range_by_func(struct line_finder *lf)
- {
- 	struct dwarf_callback_param param = {.data = (void *)lf, .retval = 0};
--	dwarf_getfuncs(&lf->cu_die, line_range_search_cb, &param, 0);
-+	if (dwarf_getfuncs(&lf->cu_die, line_range_search_cb, &param, 0) < 0)
-+		return -ENOENT;
- 	return param.retval;
- }
- 
+ 	/* Check existing nodes in dso->data_types tree */
+ 	key.self.type_name = type_name;
 -- 
 2.54.0.545.g6539524ca2-goog
 
