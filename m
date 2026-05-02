@@ -1,156 +1,88 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A63B299927
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21A22DCF57
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777707594; cv=none; b=H0IcEeLkdXpFBS9kePPkWEi4S3TUb18lddd1kygxG3oMNAC7cVaQFxWiojDJHPV1p/edq4oXUzynJaqZ7SfHlbLQ7QOAC5z6YPXOVYn1b1G0zEXULf0ilGU1rCceU8+jtdYsO9bNY0d+QVkqLP76Hfsjf6ZY2vGf234X1MOdN+w=
+	t=1777707880; cv=none; b=lLd/SfwfLflE9EZAfEHXsMD7G2mJ3A75mj43qTlUblEfJ8I0rYTIxVjD7duNbLVS5iM95S4bZPr3JNvwTJgv/10um8W2JLzF/9Z01Bhpu8jDSKgvhinf1qXtDHhFYqRR9PHWtMNWchrvbCxsAfS3DmqnvfY70mi0ESkANK6ZV6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777707594; c=relaxed/simple;
-	bh=gboTleMngBeL+US1SgdYekyaHa9uV2A1cT6x6RT9ZDY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W4MLq6x6KaXVKicXAsI0PZcMurX4qiGA3WU3EfwlaBKwKp4kaNhKV/NcKOVTHfTr/2fJsSFSe8HffmGZXPir4bnWVmihvjnVWmdmljv0hpM8RN3M4ygOil+YrQPg3jIQXxr1eWHEimI5qot0sGguPzJbztyBWOWSy57HUIxMiV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pQVlS8gF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1777707880; c=relaxed/simple;
+	bh=yZy6xcQMxEOcfapBJZCRey0ddeDL1JhEvtc2wBeBw58=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=k0J+71m7V17Qfs81kzbQ7qXHI/jtjX8bWdxN2WbaiKT88uI+72jxt28m3o09akrYoDX2tfP0ozh9Zv4PlzMtrxA9JERPuZMd9tx6cFiOzsVRNTGS1siqt3rzzUaXXuVUdUpEeFOlK33V2zI4dNwcxioOgaUnMnNuN5TqoY5UiXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9UZ8tA/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pQVlS8gF"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64245iLU1991207;
-	Sat, 2 May 2026 07:39:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Xnbge8CoMk91fCFY+
-	7ORptdU/ah1OI5WNPSruc3SwOA=; b=pQVlS8gF0RtEtSZWj/lLb4zqEst4TSGdS
-	kBtFmcef31lq8eSQRxc/Za9PPYn/bcb9urtebL145TBCy6mapr+sxPEwyKARO9lw
-	f4UaYhJAIpTVjhhXnOS5Ua4vDvFQg56pb6/uSFK7isjQAfE9B8ggRyQrSrKt9pvz
-	V+Msk82/jO7UAABjctnBsDQd7U9Js6Saimn8zVD8GimKHraapACsBM6d+5ygbp9o
-	jOLZfDl5/xwIFExhN7s89RPdT8eEJNl2AcLw7dPSxIKp8GJWi9E2vHc0qkABcFyn
-	KBAAX+i3Oe3bmXhLBtx8syib2c7GUsnyll+lE6EXIVD+4RIWa9+pw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9x48cyn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 02 May 2026 07:39:46 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6427OWdY018472;
-	Sat, 2 May 2026 07:39:45 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dw9gvghgp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 02 May 2026 07:39:45 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6427dfdm62325010
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 2 May 2026 07:39:41 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A508A2004D;
-	Sat,  2 May 2026 07:39:41 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 360CD2004B;
-	Sat,  2 May 2026 07:39:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.223.37])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat,  2 May 2026 07:39:35 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
-Subject: [PATCH V3 2/2] tools/perf: Add kernel-doc comment to auxtrace_record__init() function
-Date: Sat,  2 May 2026 13:09:24 +0530
-Message-Id: <20260502073924.99965-2-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260502073924.99965-1-atrajeev@linux.ibm.com>
-References: <20260502073924.99965-1-atrajeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9UZ8tA/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580A4C19425;
+	Sat,  2 May 2026 07:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777707880;
+	bh=yZy6xcQMxEOcfapBJZCRey0ddeDL1JhEvtc2wBeBw58=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=I9UZ8tA/3cBs5gGBoPgq0c/ElEMsS85V2HY1HiRbIpeNdj6FcefEPfwKvj0nrv3f5
+	 eOr/dfNDXegcj0m0V4xvuY6AV/bdMvQLm8ATnwhwKTTnJvFla4TUmOcLfW8FYfOU94
+	 PkyV+p7kq/BHOrJ4PbSY0lemTDmzXWj4/jqtGoSOgalSdg5+pvLfCG/7LGxSjki3IZ
+	 oFoq7XmNnJ1RNO6Q3Vl5mJcjV75BBLo0bt+QlpOGpdB6TtSXveLwtbSGMen/XPU3B/
+	 espQ6PVWATFTfPXJWdB3iphJqMxOqMmShj2K4YPq8r/aWvbOndT4EvPBR9FJYpcpOU
+	 9BpPIOGJxJM4Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 11/17] perf c2c: Use perf_env e_machine rather than
+ arch
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260502065935.291960-12-irogers@google.com>
+References: <20260502065935.291960-12-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 02 May 2026 07:44:39 +0000
+Message-Id: <20260502074440.580A4C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTAyMDA3MyBTYWx0ZWRfX+wH46C5zpQqO
- Wn3Ga1v/a7pGVy6A6q9mFHKpm7B0pE6S/sShqC2ejeYuDiyjr9b47tOiieUOtRLZtesM83qMUGA
- wHAbq098C8tkuFqGHSX+SVm0Nv+OCA6lnAlFbJ63kxm3BCZ/yGmLpl2iYbSN21g2hcuwFKxDHm2
- enXLiTzP+BBbT4MtPVDebs7RD9CR1L+AiZRmAiNlHgU+ZQka3UjtbWg/15NHaSTctwNB9KSJIIk
- 1BS7Gs0vnhH17VZsHBWw0jYfWPhlaIYf3CG1RuaIpbMkX4Cubl7vC3DxMzibIAPcSn7RHFRmixF
- ZDVE4K/gy1+Em86UJj2pC+TvYHPc7qRyJ3TIFU+2yr0Mg8blbuStlSmRqUR/ZqT1tDUPfDDdKhx
- P5H0AOsR9NzAedq4AsMpwQlYQnIVMFperW872rrkbqreMKO3EOcyb0d4c9CbmUNGVOkEX4V0ybN
- IwAWqtg3gypYxdjMimg==
-X-Proofpoint-ORIG-GUID: u5c1YBMnXLrbHmRniOJgDvlWHoWX-Rdd
-X-Proofpoint-GUID: yK053_OTjNwlPlZPqNKECOGiKeJtBxs4
-X-Authority-Analysis: v=2.4 cv=W7UIkxWk c=1 sm=1 tr=0 ts=69f5aa42 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=V_ROcSP5cVqbivJN_SYA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-02_02,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2605020073
 
-Add documentation comment describing the parameters
-and return code for auxtrace_record__init() in util/auxtrace.c
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Build failure on older toolchains due to missing fallback definitio=
+n for `EM_AARCH64`.
+--
 
-Using "struct evlist *evlist __maybe_unused", gives below
-warning with "scripts/kernel-doc".
+commit 5745fb586646dd63f1bc0598424b6a0b707af964
+Author: Ian Rogers <irogers@google.com>
 
- # ./scripts/kernel-doc -none tools/perf/util/auxtrace.c
- Warning: tools/perf/util/auxtrace.c:912 function parameter '__maybe_unused' not described in 'auxtrace_record__init'
- Warning: tools/perf/util/auxtrace.c:912 function parameter '__maybe_unused' not described in 'auxtrace_record__init'
+perf c2c: Use perf_env e_machine rather than arch
+   =20
+This commit updates perf c2c to use the e_machine value from the perf_env
+environment instead of performing string matching on the architecture name
+for AARCH64 detection.
 
-Updated  parameter as "struct evlist __maybe_unused *evlist"
-With the change, there is no erros/warnings with kernel-doc
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 72a7802775ee..09c8352a922c 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -3202,7 +3202,7 @@ static int perf_c2c__report(int argc, const char **=
+argv)
+>  	 * default display type.
+>  	 */
+>  	if (!display) {
+> -		if (!strcmp(perf_env__arch(env), "arm64"))
+> +		if (perf_env__e_machine(env, /*e_flags=3D*/NULL) =3D=3D EM_AARCH64)
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changelog:
-v2 -> v3:
-Addressed review comment from Sashiko:
-Update return value expectation for success and fail
-correctly.
+Will this cause a build failure on older toolchains where the system <elf.h>
+does not yet define EM_AARCH64?
 
- tools/perf/util/auxtrace.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+On older systems (for example, those with glibc earlier than 2.17),
+EM_AARCH64 might not be declared. Other files in the perf codebase provide
+a manual fallback definition for it, but builtin-c2c.c does not appear to
+include one.
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a224687ffbc1..6aeccedc7f2d 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -896,8 +896,23 @@ int auxtrace_parse_aux_action(struct evlist *evlist)
- 	return 0;
- }
- 
-+/**
-+ * auxtrace_record__init - Initialize an AUX area tracing record.
-+ * @evlist: The list of events to check for AUX area tracing event.
-+ * @err: Pointer to an integer to store return code.
-+ *
-+ * This function looks through the @evlist to determine which AUX area
-+ * tracing hardware is being used and initializes the auxtrace_record
-+ * structure.
-+ *
-+ * Return:
-+ * a) A pointer to the struct auxtrace_record on success.
-+ * b) NULL with @err = 0 if no AUX area tracing event is found/supported
-+ *    (not considered an error).
-+ * c) NULL with @err < 0 on actual auxtrace_record__init failure.
-+ */
- struct auxtrace_record *__weak
--auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
-+auxtrace_record__init(struct evlist __maybe_unused *evlist, int *err)
- {
- 	*err = 0;
- 	return NULL;
--- 
-2.47.3
+>  			display =3D "peer";
+>  		else
+>  			display =3D "tot";
 
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260502065935.2919=
+60-1-irogers@google.com?part=3D11
