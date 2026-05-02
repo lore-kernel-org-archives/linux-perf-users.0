@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEB2308F1D
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56820318EE4
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 07:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777705221; cv=none; b=T2Cdkpvsfg4VhlaD2qCjifftiUp/MKHZCPoHW5Lz95yt1QC8XCGWNJISuDti5C2na3acY9V99JBF1iPjokWXSh9tZMaF4xrSfr5fudlKsX8JYI2nkTtRuf8/4ch0/UsfIKvhrQpAygIO5AUs4hXURAhIuNg8pwI+pZs6tp9syMM=
+	t=1777705223; cv=none; b=Jo2FrzaeeRFMyVb8T2iUdvhwhfvbhm5rq79qKUpRLY0yuxHZSC78lxu9nWRdU9OhNBV2zFfZh+++0NgBDhqSUhKDcuzQG/UXnMJgSLSl8VPfxzS9XXsocdwychyxLpW2Fo/i6RiiGDX4uH2ho0O898cO0K9xu2OdjBf3PudffdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777705221; c=relaxed/simple;
-	bh=+Cl1G/nddw26s0e/jdTjYJbJetplE+ZRQZhfLxtQ3pY=;
+	s=arc-20240116; t=1777705223; c=relaxed/simple;
+	bh=c4FiPhwMPGjOldhXx4uHpCVyzOAjd9KqZ+0a05dC6CQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qFU0cs95udKh78M6bi68B5zsRfBUg91Mk3biO+XQCanXX7jfbAiHau2m8D9ky+60XdRh6q/9lYxwDlDopZwYPmvBjzAC2Tqs9Ofl3O2jCerdG5yl/c9WtpaPxVON8Kl30LRgyMbAk2e4bgZNbBNO3xaAw1nouUnjC7qleZUxowE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ef3Q57NW; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=JXwGPfEl4D+RpxZV5sxbC9gdFBhPHX39pnNy7Q9myNU48vZCOHuRc8aa3mzJ1oUCZRRtPqxGm5G0dY3V8VpQeT0YGRX+h8a36bgMoaoITPT0YxyDzqal4DOAw7yKwmv5N5SHi/foFbLyAnGc7niI2dFy/OKW8239utc2v3Voekk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TiWcYNau; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ef3Q57NW"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12c726f4019so3651113c88.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 00:00:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TiWcYNau"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so4142963eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 00:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777705219; x=1778310019; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777705221; x=1778310021; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvI9UJNOPT800HWIPIx+1jvWqW+QsHZl+3ObCWjaf40=;
-        b=Ef3Q57NWaUnlzkVBGA9fMWTDlQa1lTpinrYZhQyJeiq3uLnEeXN5V2uA8BZOkZYkMT
-         viH2FXb3AJDxm67Cr3AWI3HghYtbnxikrv/1S+nXSC2v0M8x8l67g4RG2VCw/22eXxpN
-         pEWGmx2HmL7YFj0OHm3pHlnfKTKxSFFQwTQJOMC1YggXq9odjWMbhru6b2+RcxFTT0pJ
-         W4NN7+qrtMQvR0w4kj0JhfdRUtD2USTj2qkjhxwh899mpfQt0pt9Xmq38hngnAdM+qXr
-         a+xyvgVuQ6WHVaiCB07S/DcuJbWyL4w7/4TBml9X1hVad47SRgf6gCgK67+/7h3iJ1JA
-         aMwg==
+        bh=NWG6WVYKqonosS/UYZznxYSjLbNNh2VpTpdvGbEDeek=;
+        b=TiWcYNauAR8lclOwkz40/HL/Zd9KGhgQLInFOcBid1KY4q+nEAaUd4d0lGFJDv9saD
+         7AF0YExkR9DO1Kj1FxBt27OOr0tl2/sdlK72GC/fnx6/Clq0HbeACcoHVRdElXEAGM6v
+         YVjOTWVXAVJeTz7zYVy/KzL1jQ5qao7mrdbNmx6EtUaGsFIECJb5qwTPNcGcABl0tYd+
+         tJvP0pU41Deyn+d1fS6eOPCK5acnVaW3vkudQQzBaZxDx+9Qcdo39pVGzesmNRFMhKrc
+         gs/8EPp7h9WJoPzFlmJxdlsKvyEKP6oMlKthPJ6H9/SXI4MJ/AThBhdM5bCANkE3ERx4
+         KI3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777705219; x=1778310019;
+        d=1e100.net; s=20251104; t=1777705221; x=1778310021;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvI9UJNOPT800HWIPIx+1jvWqW+QsHZl+3ObCWjaf40=;
-        b=iOrYE8IHf4Pwd7PVa9OhACrs4S4v+JoN2pNr/F7tD0QgsSaMVK/AHq0ORiuqWDSQZX
-         KWh/gSswU58Cfxym4e1yAFg402pV286J7Ub7xFjOQNbcRnEPzt2iKTHpFoUTR68GeU+1
-         wxz+S2YMxpe7eSWQ9zrEMHvxsjflsfEr57bCgpOk4T63Lf8LEvJtSA8hbq1gRSZ5ZUKq
-         UrfWR71FrZs4DeJC4rupRrxfPmnIbC/6VXI+XYCTdMpXRmAM/ALnUbK08sDMEBiDR1fI
-         fNeauJ4yHl0tm3/4BJpFJmLrvP2q43p42PsEV/rznAj+2tmRnyfMCtghVR5NcWwEgTRx
-         FXFQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9GHXd6ZMW7XuIIVQcxieWE5Euj+yJsIZXMLSwKiSk3gCveeP5YyQY+cy6QzyG8z8C819IPEmNYoV2PPdtBsVGM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgjaegTFSWxADu1lp/bc4od4EoxoTav7WHEMUUvznBJ/boh7XV
-	Qls7SPAlHujxcdybvM9WI8mIPMdgahiOEAkZ89rz/02LKrTT2RkOBF/j6vbimGhaf4Aphd+sw+E
-	pI2yrdEBFqw==
-X-Received: from dlbcm1.prod.google.com ([2002:a05:7022:6881:b0:12c:177a:ac1d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a:b0:128:bf8d:44d2
- with SMTP id a92af1059eb24-12dfd7ae6eemr947303c88.2.1777705219127; Sat, 02
- May 2026 00:00:19 -0700 (PDT)
-Date: Fri,  1 May 2026 23:59:31 -0700
+        bh=NWG6WVYKqonosS/UYZznxYSjLbNNh2VpTpdvGbEDeek=;
+        b=SXc5RO/kqOCJt14qbVlr87sjEOyFfFpbpiP9zJfY6rlT/dKqcOgmnT01iEnLIip20w
+         nFJK+uWbiPkVzuK9P4xfgHweB19WGlICPf+cdhu888xQIaQHVtiMG9dvzVxGfJWllhBE
+         MyP1C8/Lw5UgFOwKiU1kPar8qRVAAuEO8ctizw13go4oEKM9upZRwM1kvB9iotnp1eVP
+         p8OiMzksNpLVEzkxFH+E3UbeGFwdg9MQ1DkF7FupL7vgVamtzkIy0q6Kz0D4AVYAqc+T
+         H1ax3K71GNzzROPpcztuVg7WtNlZSbzIrysZfusBAh0rmDL2y4A/z//OUzfamk1ulQW2
+         EeGw==
+X-Forwarded-Encrypted: i=1; AFNElJ+MKoPYL8VMiDZ+YguhnCZKRRwZKtdYlRiaFdLrhQjGDp2qIq7jpkNk34ZY37HSjnEGWCbij/nk8wfPEcXngxJu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWozsydg1FyG7Q2XdEN6VHusFpI51kVtzaa3ih5yB6LnEBrUVk
+	WWl2MFeq05G8ANmmz94v3BH+msmkW62UgdGZmAmkbtoSPv6IFr5tllqHcuiLKtmtnycYzHJ44iQ
+	6UlryMA5Atg==
+X-Received: from dlaj8.prod.google.com ([2002:a05:701b:2808:b0:12a:ad8d:be18])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:699d:b0:12d:ea4f:99dd
+ with SMTP id a92af1059eb24-12dfd83a00amr1001470c88.34.1777705220946; Sat, 02
+ May 2026 00:00:20 -0700 (PDT)
+Date: Fri,  1 May 2026 23:59:32 -0700
 In-Reply-To: <20260502065935.291960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260409230620.4176210-2-irogers@google.com> <20260502065935.291960-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502065935.291960-14-irogers@google.com>
-Subject: [PATCH v8 13/17] perf env: Refactor perf_env__arch_strerrno
+Message-ID: <20260502065935.291960-15-irogers@google.com>
+Subject: [PATCH v8 14/17] perf env: Remove unused perf_env__raw_arch
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -69,180 +69,63 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-perf_env__arch_strerrno is only available with libtraceevent so hide
-the declaration if no libtraceevent.
-
-The previous approach maps an architecture string to a function
-pointer to a function that takes an int errno values and returns a
-string. The new approach takes an e_machine and an errno value and
-returns a string.
-
-As the only call site is in builtin-trace.c, the e_machine is already
-present and potentially more specific than the perf_env arch string
-that is a single global value.
-
-The major complication in this approach is having the shell script
-that generates the C code map a linux directory name to the matching
-ELF machine constants.
+The switch to using e_machine has made the perf_env__raw_arch function
+unused so remove it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c                  |  5 ++-
- tools/perf/trace/beauty/arch_errno_names.sh | 40 ++++++++++++++++++---
- tools/perf/util/env.c                       | 13 +++----
- tools/perf/util/env.h                       |  7 ++--
- 4 files changed, 44 insertions(+), 21 deletions(-)
+ tools/perf/util/env.c | 18 ------------------
+ tools/perf/util/env.h |  1 -
+ 2 files changed, 19 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e58c49d047a2..d1f21b5e7c98 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3008,9 +3008,8 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
- 	} else if (ret < 0) {
- errno_print: {
- 		char bf[STRERR_BUFSIZE];
--		struct perf_env *env = evsel__env(evsel) ?: &trace->host_env;
- 		const char *emsg = str_error_r(-ret, bf, sizeof(bf));
--		const char *e = perf_env__arch_strerrno(env, err);
-+		const char *e = perf_env__arch_strerrno(e_machine, err);
- 
- 		fprintf(trace->output, "-1 %s (%s)", e, emsg);
- 	}
-@@ -4890,7 +4889,7 @@ static size_t syscall__dump_stats(struct trace *trace, int e_machine, FILE *fp,
- 
- 				for (e = 0; e < stats->max_errno; ++e) {
- 					if (stats->errnos[e] != 0)
--						fprintf(fp, "\t\t\t\t%s: %d\n", perf_env__arch_strerrno(trace->host->env, e + 1), stats->errnos[e]);
-+						fprintf(fp, "\t\t\t\t%s: %d\n", perf_env__arch_strerrno(e_machine, e + 1), stats->errnos[e]);
- 				}
- 			}
- 			lines++;
-diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
-index b22890b8d272..89b742927168 100755
---- a/tools/perf/trace/beauty/arch_errno_names.sh
-+++ b/tools/perf/trace/beauty/arch_errno_names.sh
-@@ -52,21 +52,49 @@ process_arch()
- 		|IFS=, create_errno_lookup_func "$arch"
- }
- 
-+arch_to_e_machine()
-+{
-+	case "$1" in
-+	alpha)      printf '\tcase EM_ALPHA:\n' ;;
-+	arc)        printf '\tcase EM_ARC:\n' ;;
-+	arm)        printf '\tcase EM_ARM:\n' ;;
-+	arm64)      printf '\tcase EM_AARCH64:\n' ;;
-+	csky)       printf '\tcase EM_CSKY:\n' ;;
-+	hexagon)    printf '\tcase EM_HEXAGON:\n' ;;
-+	loongarch)  printf '\tcase EM_LOONGARCH:\n' ;;
-+	microblaze) printf '\tcase EM_MICROBLAZE:\n' ;;
-+	mips)       printf '\tcase EM_MIPS:\n' ;;
-+	parisc)     printf '\tcase EM_PARISC:\n' ;;
-+	powerpc)    printf '\tcase EM_PPC:\n\tcase EM_PPC64:\n' ;;
-+	riscv)      printf '\tcase EM_RISCV:\n' ;;
-+	s390)       printf '\tcase EM_S390:\n' ;;
-+	sh)         printf '\tcase EM_SH:\n' ;;
-+	sparc)      printf '\tcase EM_SPARC:\n\tcase EM_SPARCV9:\n' ;;
-+	x86)        printf '\tcase EM_386:\n\tcase EM_X86_64:\n' ;;
-+	xtensa)     printf '\tcase EM_XTENSA:\n' ;;
-+	esac
-+}
-+
- create_arch_errno_table_func()
- {
- 	archlist="$1"
- 	default="$2"
- 
--	printf 'static arch_syscalls__strerrno_t *\n'
--	printf 'arch_syscalls__strerrno_function(const char *arch)\n'
-+	printf 'static const char *\n'
-+	printf 'arch_syscalls__strerrno(uint16_t e_machine, int err)\n'
- 	printf '{\n'
-+	printf '\tswitch (e_machine) {\n'
- 	for arch in $archlist; do
- 		arch_str=$(arch_string "$arch")
--		printf '\tif (!strcmp(arch, "%s"))\n' "$arch_str"
--		printf '\t\treturn errno_to_name__%s;\n' "$arch_str"
-+		ems=$(arch_to_e_machine "$arch_str")
-+		if [ -n "$ems" ]; then
-+			printf '%s\n' "$ems"
-+			printf '\t\treturn errno_to_name__%s(err);\n' "$arch_str"
-+		fi
- 	done
- 	arch_str=$(arch_string "$default")
--	printf '\treturn errno_to_name__%s;\n' "$arch_str"
-+	printf '\tdefault:\n\t\treturn errno_to_name__%s(err);\n' "$arch_str"
-+	printf '\t}\n'
- 	printf '}\n'
- }
- 
-@@ -74,6 +102,8 @@ cat <<EoHEADER
- /* SPDX-License-Identifier: GPL-2.0 */
- 
- #include <string.h>
-+#include <stdint.h>
-+#include <elf.h>
- 
- EoHEADER
- 
 diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 4ff4caab3b32..97f4aa1131a1 100644
+index 97f4aa1131a1..5944acd28996 100644
 --- a/tools/perf/util/env.c
 +++ b/tools/perf/util/env.c
-@@ -786,17 +786,12 @@ const char *perf_env__arch(struct perf_env *env)
- #include "trace/beauty/arch_errno_names.c"
- #endif
- 
--const char *perf_env__arch_strerrno(struct perf_env *env __maybe_unused, int err __maybe_unused)
--{
- #if defined(HAVE_LIBTRACEEVENT)
--	if (env->arch_strerrno == NULL)
--		env->arch_strerrno = arch_syscalls__strerrno_function(perf_env__arch(env));
--
--	return env->arch_strerrno ? env->arch_strerrno(err) : "no arch specific strerrno function";
--#else
--	return "!HAVE_LIBTRACEEVENT";
--#endif
-+const char *perf_env__arch_strerrno(uint16_t e_machine, int err)
-+{
-+	return arch_syscalls__strerrno(e_machine, err);
+@@ -451,19 +451,6 @@ int perf_env__read_cpuid(struct perf_env *env)
+ 	return 0;
  }
-+#endif
  
- const char *perf_env__cpuid(struct perf_env *env)
+-static int perf_env__read_arch(struct perf_env *env)
+-{
+-	struct utsname uts;
+-
+-	if (env->arch)
+-		return 0;
+-
+-	if (!uname(&uts))
+-		env->arch = strdup(uts.machine);
+-
+-	return env->arch ? 0 : -ENOMEM;
+-}
+-
+ static int perf_env__read_nr_cpus_avail(struct perf_env *env)
  {
+ 	if (env->nr_cpus_avail == 0)
+@@ -582,11 +569,6 @@ int perf_env__read_core_pmu_caps(struct perf_env *env)
+ 	return ret;
+ }
+ 
+-const char *perf_env__raw_arch(struct perf_env *env)
+-{
+-	return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+-}
+-
+ int perf_env__nr_cpus_avail(struct perf_env *env)
+ {
+ 	return env && !perf_env__read_nr_cpus_avail(env) ? env->nr_cpus_avail : 0;
 diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 7151a9138e3f..68dead1b36a6 100644
+index 68dead1b36a6..a95fd7eb3524 100644
 --- a/tools/perf/util/env.h
 +++ b/tools/perf/util/env.h
-@@ -67,8 +67,6 @@ struct cpu_domain_map {
- 	struct domain_info	**domains;
- };
- 
--typedef const char *(arch_syscalls__strerrno_t)(int err);
--
- struct perf_env {
- 	char			*hostname;
- 	char			*os_release;
-@@ -158,7 +156,6 @@ struct perf_env {
- 		 */
- 		bool	enabled;
- 	} clock;
--	arch_syscalls__strerrno_t *arch_strerrno;
- };
- 
- enum perf_compress_type {
-@@ -190,7 +187,9 @@ void cpu_cache_level__free(struct cpu_cache_level *cache);
- uint16_t perf_env__e_machine_nocache(struct perf_env *env, uint32_t *e_flags);
- uint16_t perf_env__e_machine(struct perf_env *env, uint32_t *e_flags);
- const char *perf_env__arch(struct perf_env *env);
--const char *perf_env__arch_strerrno(struct perf_env *env, int err);
-+#if defined(HAVE_LIBTRACEEVENT)
-+const char *perf_env__arch_strerrno(uint16_t e_machine, int err);
-+#endif
+@@ -191,7 +191,6 @@ const char *perf_env__arch(struct perf_env *env);
+ const char *perf_env__arch_strerrno(uint16_t e_machine, int err);
+ #endif
  const char *perf_env__cpuid(struct perf_env *env);
- const char *perf_env__raw_arch(struct perf_env *env);
+-const char *perf_env__raw_arch(struct perf_env *env);
  int perf_env__nr_cpus_avail(struct perf_env *env);
+ 
+ void perf_env__init(struct perf_env *env);
 -- 
 2.54.0.545.g6539524ca2-goog
 
