@@ -1,65 +1,65 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BC337FF6F
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 15:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9E3382F10
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 15:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777737441; cv=none; b=a+8WZd8puxZAjDASL7K+aA+0cTJ9sfiYadfwuizrkpQ/Lph1X7Rb97hvjH8gdG93JlODNuMaIwlm79ftzgjXQcwEZkrpgWmrn1GbuxEB/rpcEcZPLRGK5A7t/JyjnqjelTgacUUSk/dHPC1TMQKptk9EZpp1cZfeichGLkdkgzc=
+	t=1777737444; cv=none; b=QllG7BeDafp+IMM8+ueWrmJyp6Obpo+TROUAuby7MMEcvodbxQUmqiaODhp309kGLbhSTGw5LkBgMjR4r7EK7e+mBGgOxjPKP+8yLx8zfGLVaGgEKjsjjgNeQtP988mJTsvbQ02rhUXuWHkMYTD2+qvCwPYCusFQNh3TsAQXN2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777737441; c=relaxed/simple;
-	bh=93ecjXkBy1vYbm6ooKh+//upj1elq+MRQvphDDnqr1o=;
+	s=arc-20240116; t=1777737444; c=relaxed/simple;
+	bh=ds1Oe0e0nvO55IkZQO1U/MiR+jF6HIuo5Gz4q8JrD1o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KrnybBqDxwex3Kbs9Iy1GsZgBetW9G/NKCbQEipnoffRol7DNw6pRwOcpcKuw2nEOM6MTzMjZutxLNLTqOF3/cwr7D5lQnJWZSMQEPNAwh34vZKoBKCesOpRgXi04fEqVJ7nGm3WIbqBYofZZRKec9RNdIKToFogcF3cRY/7EZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DnkOu+Eh; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=lLZ7Vpc5+jvKc7YLsNRP9k6+LHaCAqKTMfpZqgGz0E0/p9hBpIFCVJRwZHdpBzdawMfaNqvcJektfv3gckSlkVarH4l2dHUJDZAOuNyKriiH9FXPiiihW+kleWjmS6WfmvgqMfp7a5y7ZWEbZIjuE+342LkutPO2qXjQIhXnpUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ji+XLLX8; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DnkOu+Eh"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b24a00d12cso30687465ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 08:57:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ji+XLLX8"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1275c6fc58aso5582388c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 08:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777737440; x=1778342240; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777737442; x=1778342242; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yssubBeeNHZhm6vpt8GtVdB0ZLvQj6TWW02S/Y3qd0=;
-        b=DnkOu+Eh+1SSZgja7bHs4hr8ibzqLABKp6hHVN7R7g2JmL+LmHtvhRKeoFa4yE6iMR
-         1RGkvGHfu8igWWeuSht1b0bvWYsLpNFNg2LrOqu/WF5iqB2l1Yuvuxj6AGJOSkRxB1cU
-         yMdXfo2XM66Q6QFnF+JZbtLJDwfxo9OgAXvSeaNyxWmbb07WhbLVQATqaukU2vF2LTKY
-         8dWHl9T62DMq6Rx6ClflzF/EDJpUjuhYuTmbTduSZU3/SEZBgWLMbR84hammTeoz88ME
-         hH7J4k4aBYgzy/skc6WopBDUyca18vzkn5quSp1BzPGj1TUXTLHbCuTfWpzch28Sol79
-         gmJg==
+        bh=Gp66yLPVBQoGa/v+8cqVP0kxyXDV2z8u4Se4Pcb+AKo=;
+        b=Ji+XLLX8A8aG/m4/caTzxVlUDRkVF4trrMjzpEX0E7lxVyMddpWmNPKOVZeKytDpoC
+         /N37W+OnYSdo4kPlWKazLN8gDOr/4PQMxbdVXZLmTsfMbnGhvtF+9nwiLZevf3iI6Rgq
+         k+gMuY+hMPieuCUMgxIIEkRs8V159aQhP2R6anng8OlulOsgOLfxGLKg5WieigIABkSF
+         VGh9Qdiq2ej4vg6QyBgUF1ZxIghQu3R6iaGBIvGuzUxBzZDcMpXna3/xAB4OnwLttrX5
+         t4fdTJcKF93eNGIq3WJ4L54IAkxdfS4rTWH+zgio9RfkhCGQM8MSrsTFhJ/4uP0U2D4H
+         BsTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777737440; x=1778342240;
+        d=1e100.net; s=20251104; t=1777737442; x=1778342242;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yssubBeeNHZhm6vpt8GtVdB0ZLvQj6TWW02S/Y3qd0=;
-        b=CMXYcv9MHzcjrSH1mpiMkRmt/bOKtuXQUSUT0tJtkk/Q21/iJ2XY7EAKvdPmLaYm9y
-         vhIWQ4+s8okYRVFqMpLxcknzXX20xlmEbXaliBUhAhXgmIc1sYoolLbKDSLuoLuDaoOk
-         QqwS9WQM1AkyxUEY4Cq2brjfFEU4s7ADVDCkH3SBUZ+DstUNNWcXN+USNQ7o8SYn3hWL
-         tvh+CrN8c/EtUyNdbJmYpTG+KvB+qdg3+s2f4HOkXsHHzg/PcHh+XIzatd/ttzpH07ZI
-         ViqEo4BmKZjxN8HggyIaVfNmNXMjpXPm7A3WC4iANvz08XJP89wocmMDbhWo+YZvVFGd
-         ngrA==
-X-Forwarded-Encrypted: i=1; AFNElJ8ahmB6Cwc8KJ2dtIk1YWITjXwa+0osKTKQgO/Xqerpnn86tqtQHAq/omsPG/aQ2V6/aVkZ8ocPCJEYCVXmuCvv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUlkUjNIkL15zHcFXuJVHb42IOCzXD6dGhVlrJtLPNQOQBDa6I
-	wogiQCVCTIF7jeSNy8RpZ4FVSLFrDcX5XH6PriT/iom0/HHKcGzGWf/hUBgOLZ5VOqDGyn97V7L
-	eZWeK06wTwQ==
-X-Received: from pgea6.prod.google.com ([2002:a05:6a02:5386:b0:c79:76be:ec04])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:914d:b0:3a2:fbf9:d823
- with SMTP id adf61e73a8af0-3a7f1a1e008mr3695300637.8.1777737439785; Sat, 02
- May 2026 08:57:19 -0700 (PDT)
-Date: Sat,  2 May 2026 08:56:50 -0700
-In-Reply-To: <20260502064839.282422-1-irogers@google.com>
+        bh=Gp66yLPVBQoGa/v+8cqVP0kxyXDV2z8u4Se4Pcb+AKo=;
+        b=NapsT5QfHbbaSe+EcCCxp37lBJ292cPHGOyietnVySQTuiiPYTo5ehJtiVR/0kfly3
+         VNnKNvdAUA/cEs9iVfE80fITKnHg0E2LOoG2e6DePzF9YiPCn6kG3xh94gDvnK7NrP0x
+         RnvmNglOYFw5UAQo9Ro3PoXr1niUDw3KWJIW4UpLchbnxz4OE/8x5mkzKPd0ZxelV0/B
+         pcZL9UasxCcdgsNoRPXmf6I8f77wg/XPXXKGgiFBOOZq3IfAj0YBDkA3wSFur3vrmdvm
+         Qj4Zy0x2PFlZwgJK61akUp6s9PVEJadUKiUkkvnpCTIplud7nad7z8jUPAr1yBhqShb9
+         vlrg==
+X-Forwarded-Encrypted: i=1; AFNElJ+ClZKYo+55BB6HfhsxrMsVv301OmN0yU3RSlG7iIkdfG4+phNY9cT30IMf4DMaNu4UioDpuKeM2sPMwZj+AaY6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyONxn52rhOyx7EWnI0GTqVLUFkpSO5aVUKWk41pVxgf7MfvEwa
+	44GL2KbIlGdsAwb1zb/YEPURJ6KEc9VekQlPSPKwBUci4Z4Nhd8qTMQW1541d1ktRr6/T7w6TxV
+	Ev7WGd0vr6g==
+X-Received: from dll26.prod.google.com ([2002:a05:7022:21a:b0:12d:b48e:8597])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:395:b0:127:3b1e:7e0e
+ with SMTP id a92af1059eb24-12dfd807253mr1396621c88.20.1777737441668; Sat, 02
+ May 2026 08:57:21 -0700 (PDT)
+Date: Sat,  2 May 2026 08:56:51 -0700
+In-Reply-To: <20260502155656.478642-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260502064839.282422-1-irogers@google.com>
+References: <20260502064839.282422-1-irogers@google.com> <20260502155656.478642-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502155656.478642-1-irogers@google.com>
-Subject: [PATCH v2 0/6] perf DWARF: Fix libdw API contract violations and crashes
+Message-ID: <20260502155656.478642-2-irogers@google.com>
+Subject: [PATCH v2 1/6] perf dwarf-aux: Fix libdw segmentation fault in cu_walk_functions_at
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,41 +69,82 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series addresses a number of issues related to improper or
-incomplete error handling when interacting with the `libdw` and
-`libdwfl` APIs in the `perf` DWARF processing code.
-                                                                                                 
-The first patch fixes a real segmentation fault observed in `perf
-kmem` (via `dwarf_child` and `dwarf_diename`) caused by
-`dwarf_getfuncs` returning `-1` on error, which was not caught by the
-previous `if (!dwarf_getfuncs(...))` check. This allowed uninitialized
-stack memory to be returned and later dereferenced.
-  
-Following this discovery, a comprehensive audit of `libdw` API usage
-was performed across `tools/perf/`. The remaining patches proactively
-fix 28 additional instances of ignored return values or unchecked
-pointers that could lead to similar uninitialized memory propagation,
-crashes (e.g., via `strdup(NULL)` or `strcmp(NULL)`), or silent logic
-failures.
+A segmentation fault was observed in `libdw` when running `perf kmem`
+with `--page stat` on some workloads. The crash occurred deep inside
+`libdw` (specifically in `dwarf_child` and `dwarf_diename`) when
+processing DWARF information.
 
-v1:
-https://lore.kernel.org/linux-perf-users/20260502064839.282422-1-irogers@google.com/
+The root cause was improper error handling of `dwarf_getfuncs` in
+`die_find_realfunc` and `die_find_tailfunc`.
 
-Ian Rogers (6):
-  perf dwarf-aux: Fix libdw segmentation fault in cu_walk_functions_at
-  perf dwarf-aux: Fix libdw API contract violations
-  perf libdw: Fix libdw API contract violations
-  perf probe-finder: Fix libdw API contract violations
-  perf annotate-data: Fix libdw API contract violations
-  perf debuginfo: Fix libdw API contract violations
+`dwarf_getfuncs` returns:
+ - `0` on success (when all functions have been processed).
+ - A positive offset if the callback aborts early (e.g., via
+   `DWARF_CB_ABORT` when a match is found).
+ - `-1` on error.
 
- tools/perf/util/annotate-data.c | 17 ++++---
- tools/perf/util/debuginfo.c     |  5 +-
- tools/perf/util/dwarf-aux.c     | 41 ++++++++++------
- tools/perf/util/libdw.c         | 24 +++++++---
- tools/perf/util/probe-finder.c  | 84 ++++++++++++++++++++++-----------
- 5 files changed, 113 insertions(+), 58 deletions(-)
+The original code used `if (!dwarf_getfuncs(...)) return NULL;`. On
+error (`-1`), `!-1` evaluates to `0` (false), bypassing the error
+check. Execution then proceeded as if a match was found, returning
+uninitialized stack memory (`die_mem`) to the caller
+(`cu_walk_functions_at`). When `cu_walk_functions_at` passed this
+uninitialized memory to `libdw` via `dwarf_diename`, it caused a
+segmentation fault.
 
+Fix this by correcting the error check to `if (dwarf_getfuncs(...) <= 0)`.
+
+Fixes: e0d153c69040 ("perf-probe: Move dwarf library routines to dwarf-aux.{c, h}")
+Fixes: d4c537e6bf86 ("perf probe: Ignore tail calls to probed functions")
+Assisted-by: Gemini-CLI:Google Gemini 3
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/dwarf-aux.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 92db2fccc788..6752adca8ee8 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -171,7 +171,6 @@ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 	}
+ 
+ 	return ret;
+-
+ }
+ 
+ /**
+@@ -620,12 +619,13 @@ Dwarf_Die *die_find_tailfunc(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 	ad.addr = addr;
+ 	ad.die_mem = die_mem;
+ 	/* dwarf_getscopes can't find subprogram. */
+-	if (!dwarf_getfuncs(cu_die, __die_search_func_tail_cb, &ad, 0))
++	if (dwarf_getfuncs(cu_die, __die_search_func_tail_cb, &ad, 0) <= 0)
+ 		return NULL;
+ 	else
+ 		return die_mem;
+ }
+ 
++
+ /* die_find callback for non-inlined function search */
+ static int __die_search_func_cb(Dwarf_Die *fn_die, void *data)
+ {
+@@ -647,6 +647,7 @@ static int __die_search_func_cb(Dwarf_Die *fn_die, void *data)
+  * die_find_realfunc - Search a non-inlined function at given address
+  * @cu_die: a CU DIE which including @addr
+  * @addr: target address
++ * @dbg: Dwarf session
+  * @die_mem: a buffer for result DIE
+  *
+  * Search a non-inlined function DIE which includes @addr. Stores the
+@@ -659,7 +660,7 @@ Dwarf_Die *die_find_realfunc(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ 	ad.addr = addr;
+ 	ad.die_mem = die_mem;
+ 	/* dwarf_getscopes can't find subprogram. */
+-	if (!dwarf_getfuncs(cu_die, __die_search_func_cb, &ad, 0))
++	if (dwarf_getfuncs(cu_die, __die_search_func_cb, &ad, 0) <= 0)
+ 		return NULL;
+ 	else
+ 		return die_mem;
 -- 
 2.54.0.545.g6539524ca2-goog
 
