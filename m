@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122DA29AB1A;
-	Sun,  3 May 2026 23:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E1739D6CE;
+	Sun,  3 May 2026 23:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777852439; cv=none; b=s8vfKbbRB2bVn+LkOhnjUlgxDltGv2ZY38Co5oTureTi/OxFbTJiMgGC2zRHDS0dPVExKuB6mrxEJa5W9PNZTvpPdjpZ7VCOp1qE/bpXEUUcXlmtTr/yUYzbjWuPOYKxDO9foQsocAWLxwL/+DlI5Txi+e723CL0MUUIU9fJBG0=
+	t=1777852491; cv=none; b=szO5EGYqYXUmP01BGS6dFd9+OUlYedyxEy0rmcNNSynpKwcs+ccnb0mSnTW4QmdqO6UU7o/KsyUoozk16j2wBvNQX06b6i0s6SudKixH9/U43bcDoO01kiCBK44nyhNxvEtEGajS4IxXdYLPaQ+Wjjbrri4daRZKuegaK2EnX8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777852439; c=relaxed/simple;
-	bh=rEFi151vOXN0oR6hSnac9cwr3nnupvnjPypyEmOZan8=;
+	s=arc-20240116; t=1777852491; c=relaxed/simple;
+	bh=VQDC0d/dSEhD7rZ/x3Z2DNiIZh4nDMuhsqsjHVuTU5s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZB4WLMTugsEmL0E4PCrxi7NjsR61duLdzTwX8LA6GhTjANdk7OqWBTPQw/oHM9y6OK98tvm9RS0LPFvj7Vuu/i2AaXWiH42kBFyi2Y4QZewqhXUtTXkKwPZgxyusdhU8fg7T5hnLtkFV2sBwSsqC7783EGtnCfpmHQQhrxctMp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkuaHrMy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBHAQuLJhNKbU4dRxrKtMswci+8/lMEMjndg6usDiTVeB2mRarRgH5xIQrfLCHE20y1U4ouzus0wy+b/khLV3pZWKg7cB9OgeiXbRonC1lAsuqFTOq6MTLD084mxoFISEQFXw5yFDnYsyEv8E8hS6eJXFKrwr1QNKjmNvC9pbY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTKdb7oS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkuaHrMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 299F3C2BCB4;
-	Sun,  3 May 2026 23:53:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTKdb7oS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF48CC2BCB4;
+	Sun,  3 May 2026 23:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777852438;
-	bh=rEFi151vOXN0oR6hSnac9cwr3nnupvnjPypyEmOZan8=;
+	s=k20201202; t=1777852491;
+	bh=VQDC0d/dSEhD7rZ/x3Z2DNiIZh4nDMuhsqsjHVuTU5s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RkuaHrMyrv1cRfifn2FWemM+c/C63gVyay9vdRGLfh0HSXly+22NcoLdu1sQTcutc
-	 QPMzdIljcXpvoW/svZoJg04pkNX7v/LQcFu7ymghQCIFMzFTyWpQqkLJXc3UEKI0JO
-	 KqENnoiSM7FQEwgHGLciBi1+IiVMLjl8PpCGumfCgpPp7174azmNSFcSrnLLh+nI+K
-	 xy90nUWH7hV9Jn5c0025S8V2IBKFED0g8wbaNs7fb2pCGr0HSkTIatsVL5ySj6DfvL
-	 VHsvrm5zZ7WwnJwwAd1urGLrhHmAsDbOQwdSkckfjo3GjVDhIErCzCywzU9d1wfhiV
-	 QX19uuHltIphQ==
-Date: Sun, 3 May 2026 16:53:56 -0700
+	b=kTKdb7oS+SBlAl1jovmfUIIeVfp5HpOjjaSbVHhSXNIIxjkD0kCGysi94E1RoZ01a
+	 UUJ6PMZ6iTcPwVcG39/Bt3Y3/7dQpdBLzLf6yU0HNJMYDZJK1XxS9vpMFpy3tHLUM5
+	 1mWs6fVVGYB+ZWJPDUkvJecOeDOvhVhOJgtXwzG7wVO5qPjhYQlWiodTLQAEbct6d/
+	 l+9dBbGkQ7b+gpbObVJNTqE/JHQvtd/j7C8yxmk1gQdFnQfMwor4I8irLfDtTt+odA
+	 KPR8pnHzCm66JlZwlvYxjyeRg7CfjQ3PJCbO31FyamXlSBC35DcCjbj0EHWzJ/Th3x
+	 cGC2ooxK/D55A==
+Date: Sun, 3 May 2026 16:54:49 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,12 +36,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	James Clark <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
 	Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] perf annotate-data: Fix libdw API contract
- violations
-Message-ID: <affgFLhoLVT31zzW@z2>
+Subject: Re: [PATCH v4 6/6] perf debuginfo: Fix libdw API contract violations
+Message-ID: <affgSUgoSjPZmYGF@z2>
 References: <20260503003552.1063540-1-irogers@google.com>
  <20260503171032.1559338-1-irogers@google.com>
- <20260503171032.1559338-6-irogers@google.com>
+ <20260503171032.1559338-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,121 +49,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260503171032.1559338-6-irogers@google.com>
+In-Reply-To: <20260503171032.1559338-7-irogers@google.com>
 
-On Sun, May 03, 2026 at 10:10:31AM -0700, Ian Rogers wrote:
-> Check return values of `dwarf_aggregate_size` and `dwarf_formudata`.
+On Sun, May 03, 2026 at 10:10:32AM -0700, Ian Rogers wrote:
+> Check return value of `dwfl_report_end` during offline initialization.
+> Validate `dwfl_module_relocation_info` result before passing to `strcmp`
+> to avoid potential segmentation faults.
 > 
 > Additionally:
->  - Avoid `vfprintf` undefined behavior with `NULL` strings by using
->    the `die_name()` helper for `dwarf_diename()` in `pr_*` calls.
->  - Use `die_get_data_member_location()` (updated to use
->    `dwarf_attr_integrate`) to correctly parse location expressions
->    for inherited member locations in the fallback path when
->    `dwarf_formudata()` fails.
+>  - Fix a file descriptor leak in `debuginfo__init_offline_dwarf()` when
+>    `dwfl_report_offline()` or subsequent setup calls fail.
 > 
-> Fixes: 2bc3cf575a16 ("perf annotate-data: Improve debug message with location info")
-> Fixes: 4a111cadac85 ("perf annotate-data: Add member field in the data type")
-> Fixes: 8b1042c425f6 ("perf annotate-data: Set bitfield member offset and size properly")
-> Fixes: fc044c53b99f ("perf annotate-data: Add dso->data_types tree")
+> Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
 > Assisted-by: Gemini-CLI:Google Gemini 3
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> v4:
->  - Safe DWARF name printing in annotate-data.
->  - Fix fallback location expression parsing for inherited data members.
-> ---
->  tools/perf/util/annotate-data.c | 27 +++++++++++++++++----------
->  1 file changed, 17 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 1eff0a27237d..2eacbba51f32 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -74,7 +74,8 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
->  		break;
->  	}
->  
-> -	dwarf_aggregate_size(die, &size);
-> +	if (dwarf_aggregate_size(die, &size) != 0)
-> +		size = 0;
->  
->  	strbuf_init(&sb, 32);
->  	die_get_typename_from_type(die, &sb);
-> @@ -146,9 +147,9 @@ static void pr_debug_scope(Dwarf_Die *scope_die)
->  
->  	tag = dwarf_tag(scope_die);
->  	if (tag == DW_TAG_subprogram)
-> -		pr_info("[function] %s\n", dwarf_diename(scope_die));
-> +		pr_info("[function] %s\n", die_name(scope_die));
->  	else if (tag == DW_TAG_inlined_subroutine)
-> -		pr_info("[inlined] %s\n", dwarf_diename(scope_die));
-> +		pr_info("[inlined] %s\n", die_name(scope_die));
->  	else if (tag == DW_TAG_lexical_block)
->  		pr_info("[block]\n");
->  	else
-> @@ -250,9 +251,12 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
->  	if (dwarf_aggregate_size(&die_mem, &size) < 0)
->  		size = 0;
->  
-> -	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
-> -		dwarf_formudata(&attr, &loc);
-> -	else {
-> +	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
-> +		if (dwarf_formudata(&attr, &loc) != 0) {
-> +			if (die_get_data_member_location(die, &loc) != 0)
-> +				loc = 0;
-> +		}
-> +	} else {
->  		/* bitfield member */
->  		if (dwarf_attr_integrate(die, DW_AT_data_bit_offset, &attr) &&
->  		    dwarf_formudata(&attr, &loc) == 0)
-> @@ -273,7 +277,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
->  				     dwarf_diename(die), (long)bit_size) < 0)
->  				member->var_name = NULL;
->  		} else {
-> -			member->var_name = strdup(dwarf_diename(die));
-> +			const char *name = dwarf_diename(die);
-> +
-> +			member->var_name = strdup(name);
 
-This can be:		member->var_name = name ? strdup(name) : NULL;
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
->  		}
+> ---
+> v4:
+>  - Fix file descriptor leaks in debuginfo init paths.
+> ---
+>  tools/perf/util/debuginfo.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+> index 0e35c13abd04..84a78b30ceac 100644
+> --- a/tools/perf/util/debuginfo.c
+> +++ b/tools/perf/util/debuginfo.c
+> @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
+>  {
+>  	GElf_Addr dummy;
+>  	int fd;
+> +	bool fd_consumed = false;
 >  
->  		if (member->var_name == NULL) {
-> @@ -370,7 +376,8 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
->  	if (dwarf_tag(type_die) == DW_TAG_typedef)
->  		die_get_real_type(type_die, type_die);
+>  	fd = open(path, O_RDONLY);
+>  	if (fd < 0)
+> @@ -55,6 +56,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
+>  	dbg->mod = dwfl_report_offline(dbg->dwfl, "", "", fd);
+>  	if (!dbg->mod)
+>  		goto error;
+> +	fd_consumed = true;
 >  
-> -	dwarf_aggregate_size(type_die, &size);
-> +	if (dwarf_aggregate_size(type_die, &size) != 0)
-> +		size = 0;
+>  	dbg->dbg = dwfl_module_getdwarf(dbg->mod, &dbg->bias);
+>  	if (!dbg->dbg)
+> @@ -62,13 +64,14 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
 >  
->  	/* Check existing nodes in dso->data_types tree */
->  	key.self.type_name = type_name;
-> @@ -1569,7 +1576,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->  	offset = loc->offset;
+>  	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
 >  
->  	pr_debug_dtp("CU for %s (die:%#lx)\n",
-> -		     dwarf_diename(&cu_die), (long)dwarf_dieoffset(&cu_die));
-> +		     die_name(&cu_die), (long)dwarf_dieoffset(&cu_die));
+> -	dwfl_report_end(dbg->dwfl, NULL, NULL);
+> +	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
+> +		goto error;
 >  
->  	if (reg == DWARF_REG_PC) {
->  		if (get_global_var_type(&cu_die, dloc, dloc->ip, dloc->var_addr,
-> @@ -1636,7 +1643,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->  		}
+>  	return 0;
+>  error:
+>  	if (dbg->dwfl)
+>  		dwfl_end(dbg->dwfl);
+> -	else
+> +	if (!fd_consumed)
+>  		close(fd);
+>  	memset(dbg, 0, sizeof(*dbg));
 >  
->  		pr_debug_dtp("found \"%s\" (die: %#lx) in scope=%d/%d (die: %#lx) ",
-> -			     dwarf_diename(&var_die), (long)dwarf_dieoffset(&var_die),
-> +			     die_name(&var_die), (long)dwarf_dieoffset(&var_die),
->  			     i+1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
->  
->  		if (reg == DWARF_REG_PC) {
+> @@ -167,7 +170,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
+>  	/* Search the relocation related .text section */
+>  	for (i = 0; i < n; i++) {
+>  		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
+> -		if (strcmp(p, ".text") == 0) {
+> +		if (p && strcmp(p, ".text") == 0) {
+>  			/* OK, get the section header */
+>  			scn = elf_getscn(elf, shndx);
+>  			if (!scn)
 > -- 
 > 2.54.0.545.g6539524ca2-goog
 > 
