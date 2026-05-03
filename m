@@ -1,138 +1,107 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA2B3D3312
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 17:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906531E1024
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 17:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777828257; cv=none; b=IOTg3LctFa25mEkSQ8J7b/anGq7OCVVFh21Ur0Xv2BVEjbIV7gfPiddrJu39KoyAmtsAvAM7rkdtTLr5hRI8g30EjwPdaXRMECSvcnqMp8sC0pX/+Um6+CkIvVsowsojGk6ROmQkTP2g3UWtwyA+QCGPM0vkIZcw6sYBB1Ca9Ic=
+	t=1777830042; cv=none; b=VeDR7fDbhf0Z1Stm7cMNJqQ3FqBWoDfjujnVneSt1Hjvq/IAdEVpsVU48zFaqHP0XhgRkYCXF1/dpuD9i/yTfEeaqB9eG0vavH0ZeeszPuX6S4Eh2lhMUuwds2cMVo9YrSSqmXoB2oZ2FFp2EPPA9PB1qHBhd2o006VpElOFqTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777828257; c=relaxed/simple;
-	bh=TVHo9dnFcw/tGdRrYrVbasoITISy+2trrO5Bo/2ExRE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=co/bztEQO42MUIW+rEnLpmGUA6QHWamvByXRVtfjW13zOeKix/K5Pftm4/qmXHXfDMW4haVzxdUJZlUZKx1hAueYiuElislegi6/YV/WPly8mqejyOfDy4ww/XKPWr+T9j8ohFSdYge6D7w+Gm+PJWnnfuw5nZ2Y5yTMVuSnNOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P9dKItcx; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1777830042; c=relaxed/simple;
+	bh=kFfF5848dhTO9M352Sa3fp1ywfHuYy3YvVh4/1ACt6A=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NyEFn9xZSObJU//bsxx3loqoJ6Jcb6HPEILMJ3xGjDPaNduWltqy/DrB/xk7LtiR6onstvWNkTe0rbI0gwWs3coC0hpwfLIgUnezgVhTnYimwSHh2HrP0HSsQ5SxIRuX22JPw6JFPa0/HF3Qbc1pK+TP+fh2m2jRAn+AlWdTFAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d58sRvBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P9dKItcx"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c726f4055so5590233c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 03 May 2026 10:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777828255; x=1778433055; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N0tW0FxSBXoHGLy8UAyiIK3CDK7lkkw9WSavrtAU+9E=;
-        b=P9dKItcxpVCMY5cMFHC0kQllnKMtIcU+8XCizQQjjJbcNKoIZRuCFU8KDlh/Vkt1Lm
-         ZxBQh+s92fQVa3vS+8Ky1d2aaqcgAG2CLbcw8YHkh0+84FdtVQLklV7WPAmbKRX58leS
-         W71cht323Y3W+2EiA//UTcCnSoRUX/ChSC2CBMA0rLKTC2GTdF0bGNMXCfHUA5xIFYXi
-         do2UkOhyp6I8pNsugq4vfexkEMkKRv04wwhgW9JZ6tHWfODdXOheKa2WSLI562QJ/dEs
-         qpWK1TETgv023IdxeOf+yVegl7Sfetps9EpbaNFWu7+R2SfehOTt4VgVb93IXkCIlQ8b
-         JwzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777828255; x=1778433055;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N0tW0FxSBXoHGLy8UAyiIK3CDK7lkkw9WSavrtAU+9E=;
-        b=pVaO7pBNPYEV0MDpB5mIil7zLQf/ytMiNge6bntiulSgbK6/MwMZqMgQDNam1kthsT
-         +PeYv5xj6ZYqldGgU1MY4JScRvoCNcHBvP1P5pYJNkDfladr1GSepjGwZwLYT16L5bei
-         uxz6RJb5VZRGfbpzUu9GjAX/dZmTeM71rWx2/m5reqUPjl6vbsUT06ffGIAsRYZLkuKg
-         XIlVqkzhRtxr6FjnaMH2HhgHmlbLzaIiHbUtftLYMXeQuj6h6WK7XY2MbDha/jbyno9C
-         lsGVFlRkgcoPEEdcz6bkeX3EY91H/GDhrJv1+4zzNOIF+7apxmjG0yPL63pPJNdGv5eR
-         7vTA==
-X-Forwarded-Encrypted: i=1; AFNElJ8I/EW5wjciS1MSoTFIpQRXII1wcnUdITpWjol6Q4CouysJGFM2lx6w2ikydmiQ8hRHJL6a0TV/efC7XcrxLsU1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxai81a641yU2TZMjskQB/oTiryxA421xbGlWYZqxB+EQsM9jU0
-	qqJ67qRRQPiXa2jr2kA05yYnVO3ALnxXDCGF1vO28JuuCvPkjs4GP5GktbSKWDyRNgNWSGSVi92
-	h3qmWB1eHCA==
-X-Received: from dlbuu10.prod.google.com ([2002:a05:7022:7e8a:b0:12c:87ba:191d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1a85:b0:127:380e:ff5a
- with SMTP id a92af1059eb24-12dfd7f994bmr3060618c88.17.1777828255093; Sun, 03
- May 2026 10:10:55 -0700 (PDT)
-Date: Sun,  3 May 2026 10:10:32 -0700
-In-Reply-To: <20260503171032.1559338-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d58sRvBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5A1C2BCB4;
+	Sun,  3 May 2026 17:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777830042;
+	bh=kFfF5848dhTO9M352Sa3fp1ywfHuYy3YvVh4/1ACt6A=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=d58sRvBjTtyr+xMKBL2GRIHNQo8dbfLysjRqHqPBzuIQN87Cp8H09rXmYFkG6ek1E
+	 JjrPYa/xhxQ5tZxhAw6L6/vYY4ChuNnjsOIUmwZDCgfmNJi/J0vFfxkoPTmS/ygPvN
+	 n7EWXJV5mRQ/nkFsrHPZeum6bccv7nLO8UBhjs8ypEO+0952Ufe1SWe5VbkFOyFwnu
+	 xUkS1SBehzUGbBjlZL8RGItaaZ3D/xs+D/TMP1ky6tZDSmfG952fUt3teWxSkQ7p7O
+	 Z07t/5uX8IDjYy0C/pwDSWW93j6I2cVKxEtQdhR+HbMiPhH/RPl5xfoMYCuT9KaWYH
+	 EQ6Tzu2sFjaTQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 2/6] perf dwarf-aux: Fix libdw API contract
+ violations
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260503171032.1559338-3-irogers@google.com>
+References: <20260503171032.1559338-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 03 May 2026 17:40:41 +0000
+Message-Id: <20260503174042.1D5A1C2BCB4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260503003552.1063540-1-irogers@google.com> <20260503171032.1559338-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260503171032.1559338-7-irogers@google.com>
-Subject: [PATCH v4 6/6] perf debuginfo: Fix libdw API contract violations
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Zecheng Li <zli94@ncsu.edu>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Check return value of `dwfl_report_end` during offline initialization.
-Validate `dwfl_module_relocation_info` result before passing to `strcmp`
-to avoid potential segmentation faults.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The fix for uninitialized stack variables in `die_walk_lines` un=
+conditionally filters out inline functions that lack a declaration line, br=
+eaking line walking for such functions.
+--
 
-Additionally:
- - Fix a file descriptor leak in `debuginfo__init_offline_dwarf()` when
-   `dwfl_report_offline()` or subsequent setup calls fail.
+commit d271d4f48f3254386be3ea2c703448a90d59f608
+Author: Ian Rogers <irogers@google.com>
 
-Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v4:
- - Fix file descriptor leaks in debuginfo init paths.
----
- tools/perf/util/debuginfo.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+perf dwarf-aux: Fix libdw API contract violations
 
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 0e35c13abd04..84a78b30ceac 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
- {
- 	GElf_Addr dummy;
- 	int fd;
-+	bool fd_consumed = false;
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd < 0)
-@@ -55,6 +56,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
- 	dbg->mod = dwfl_report_offline(dbg->dwfl, "", "", fd);
- 	if (!dbg->mod)
- 		goto error;
-+	fd_consumed = true;
- 
- 	dbg->dbg = dwfl_module_getdwarf(dbg->mod, &dbg->bias);
- 	if (!dbg->dbg)
-@@ -62,13 +64,14 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
- 
- 	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
- 
--	dwfl_report_end(dbg->dwfl, NULL, NULL);
-+	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
-+		goto error;
- 
- 	return 0;
- error:
- 	if (dbg->dwfl)
- 		dwfl_end(dbg->dwfl);
--	else
-+	if (!fd_consumed)
- 		close(fd);
- 	memset(dbg, 0, sizeof(*dbg));
- 
-@@ -167,7 +170,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
- 	/* Search the relocation related .text section */
- 	for (i = 0; i < n; i++) {
- 		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
--		if (strcmp(p, ".text") == 0) {
-+		if (p && strcmp(p, ".text") == 0) {
- 			/* OK, get the section header */
- 			scn = elf_getscn(elf, shndx);
- 			if (!scn)
--- 
-2.54.0.545.g6539524ca2-goog
+This commit adds return value checks for several libdw API functions like
+dwarf_decl_line(), dwarf_getfuncs(), and dwarf_lineaddr() to prevent using
+uninitialized stack variables. It gracefully handles optional dwarf_decl_li=
+ne()
+calls for the root DIE, adds NULL pointer protection for strcmp(), and uses
+dwarf_attr_integrate() for member locations.
 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 109a166a6d19..a8ab1c30d0ac 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+
+[ ... ]
+
+> @@ -998,12 +993,11 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_cal=
+lback_t callback, void *data)
+>  			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
+>  				/* Call-site check */
+>  				inf =3D die_get_call_file(&die_mem);
+> -				if ((inf && !strcmp(inf, decf)) &&
+> +				if ((inf =3D=3D decf || (inf && decf && !strcmp(inf, decf))) &&
+>  				    die_get_call_lineno(&die_mem) =3D=3D lineno)
+>  					goto found;
+> =20
+> -				dwarf_decl_line(&die_mem, &inl);
+> -				if (inl !=3D decl ||
+> +				if (dwarf_decl_line(&die_mem, &inl) !=3D 0 || inl !=3D decl ||
+>  				    decf !=3D die_get_decl_file(&die_mem))
+>  					continue;
+>  			}
+
+If the root function lacks a declaration line, could this strict check caus=
+e us
+to skip valid matching lines from inline instances?
+
+The commit message notes that dwarf_decl_line() is optional for the root DIE
+and its failures are handled gracefully. This leaves decl =3D 0 if the
+declaration line is missing.
+
+However, if the root function lacks a declaration line, its inline instances
+will also lack one. When dwarf_decl_line(&die_mem, &inl) fails here, it now
+evaluates to non-zero and forcefully continues the loop.
+
+Should inl be safely defaulted to 0 on failure here to match the graceful
+handling of the root DIE, rather than aborting the match entirely?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503171032.1559=
+338-1-irogers@google.com?part=3D2
