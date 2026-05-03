@@ -1,108 +1,217 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8739E387363
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 May 2026 15:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C322097
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777737453; cv=none; b=pSkHo4NrIWsNe1GSOAg/UB4rFBaYBF2UEu3S+U2qYiwlp8xNNQ9eS47Y4BCqJ8qoZQbS2cBj+j6DrldL9xzN6+K+Ly2fi2c1a2xoaW/WrI7Q1JjVqXf2YsPnnQsJfJddSMvB0PZHLiQHtaqQCc4AylkbwJngIxYeaSa1XULPYkg=
+	t=1777767775; cv=none; b=CMShdS25PEsoSsG7aggz+hNS+kuQudymh8U+jhUEoMb0ZehovbAfPi5AZdXax0d/WKct+H5Hy6V/9oxA6zrBRTScOO2uh/V57CfjGkwYhWy0T2BDeUeZOwYrppSjnE2vVkC12VjSmff/MGY+q66X3ShrCSmLkkykXd6IZqPaa/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777737453; c=relaxed/simple;
-	bh=aejM4DU7JRkliTqft/Llsk1zUeLQIbJRjWsEykxh2ys=;
+	s=arc-20240116; t=1777767775; c=relaxed/simple;
+	bh=gjSiK8CTGyxUV4ue2SLELJVXUbKrLqDBdkQPHJ0QUsA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T1FUwA9onPbQptKPQb7cY9B6zYaagd8jg7xYqjlqp3JekrAhqO9XvLdGW2fmwgdMd9mIKfcFt0QeI9TSMahuPdiL43Vnx/AyMVOb6gdoDWbwbPYnFwl5PLfwdq9v+OCGyRzPocrVqvglMyGZlwOY1rGZTX8QNcvfSkRNIbj3YKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTLixmli; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=CdM9Gw7NvS9WpW4CtigTj0FCndXcSc/5FJNvOCKFEXNM2/cI/DWmzVV2wVf+hryfM3HW7o2pWu51OucXZRYsc9IxQSKNV8x5WyQwChGwOgSpvHXWme63oyED0opfH3o0zOXEkFJ1UPA11ANeT9KY5bIs9Mfin8jxdcdt1Yy9+Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pbFs+D4g; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTLixmli"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba9a744f7dso5114229eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 08:57:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbFs+D4g"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ee34588671so2551290eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777737452; x=1778342252; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777767773; x=1778372573; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQmVm0Mk8S8yIw6NN5Lf29gNVzq8HKFVdhFBj2+c9Uw=;
-        b=eTLixmliEyuBkQWOJAZLMP4GBad6asQ75oGhS9/9b0qx4BG/gigdAEiD7B0DDhiXzG
-         MVehFt+x643i3Y5YzQOqy4Jw+aJwsfvXu7i3XuUO5YBcsksUM+lnXpks04/jW1r66IUl
-         Q8CG0hR0has6SyncZ2hHClo2fWOv1oWYoBWFMA45IrFOT6sn1Rb1Cp/2nnrgwCb6eqfW
-         Mt0jbHkWSEG+hzxuDYdMqH4T5qbrkOLXFxu1Q0fJ64FxhHsxdV1oQ3gvmOmTst+3w7Rf
-         MTMbZICMhPfndS6cMDMoJbokHtOcvZVv3V3Jlksh7/DaBU1rZpHjdbzJQcAJD+kDpwFd
-         PBhA==
+        bh=updh4+8aajDrOCKk474Il/JqAI8pe3IBOIC1ocTfFvc=;
+        b=pbFs+D4g2OVKwnk4HPjWPT36fxHSrlY351m1NGtIR8SA919xwLKvP1YEs1zFrNcFpb
+         ZWGUZosSzHBPyyiKfjkeZrYPf8ws+e28LR625ZeyYyl0fUmwvjYWYt9c4ZV/LeOlnG2t
+         k09C1s98RUtmR3u13PtdT+ErBMbx618uk9P7oKgwRmZKhVbllh3x3m4fd9WIXTT2vuWI
+         kedsl+sTbW75teus8YLA3yWhXOXjqOKv0CM8Dwu82pTiB+ZaL+erH8O1Q4/63rmmowl4
+         a7hygFd8a4UEvnsKqWJsbGTpOaLmi6tlM6ZSmmU0oOa945GglFMUc3xul6OQyl3zdbH1
+         zEUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777737452; x=1778342252;
+        d=1e100.net; s=20251104; t=1777767773; x=1778372573;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQmVm0Mk8S8yIw6NN5Lf29gNVzq8HKFVdhFBj2+c9Uw=;
-        b=RSoyz8MOaYBo7JkLGv7yl80zoQn0Cq38Dhne6yGKxlVSt8xRiF2/yVbI/2SlULNmny
-         rkY3NdpkPtya5EhjzFmXkrhIkV9jj2XVU1w00UedtLGe19mofh0aotbq0Di926eRwfAF
-         RuGw1WHAySH8u1ncml+AC1EssLpLnAi5R7Psz+18CEYeUWOPj3mGhmx93ed45578IkGV
-         sSKsrnF6sNfUyN+I9i7xurPWkkIZSG0BZRTwEjlfIfwT3gEoGzFAYgRCFVUaBC45sEyE
-         jyn/yvuJwnUbCoHQWfzLbhKzle9GMul7q5d1TZktZHPHmae0pdI0PgMx4wukdpDT2bsD
-         RuVQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8UR5AgshEpMEUcwT5lv7dYd0zlZUxOtejH1Sa/X87A9Qw0SyzcYjDhGj4Mt6TobW1E41Y110FARnTWOQA2AkZR@vger.kernel.org
-X-Gm-Message-State: AOJu0YziYxb/aaGT4/3zLcZUz9Ohr9XG5IrtxQbndf/gAgZtcB0Vx7dl
-	la5pzfFaovLj2+CxZWdPiDBt0we7bCQuVlRbijiQyTPVpO4qvcHV41OvhqrnJYWaJtD23BF89s4
-	rbJjxScrULg==
-X-Received: from dlad7.prod.google.com ([2002:a05:701b:2207:b0:128:cfd6:a3c6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2412:b0:12f:1f67:e744
- with SMTP id a92af1059eb24-12f1f67e7f4mr258370c88.44.1777737451549; Sat, 02
- May 2026 08:57:31 -0700 (PDT)
-Date: Sat,  2 May 2026 08:56:56 -0700
-In-Reply-To: <20260502155656.478642-1-irogers@google.com>
+        bh=updh4+8aajDrOCKk474Il/JqAI8pe3IBOIC1ocTfFvc=;
+        b=RQ7Vh4Mg6mjU5W86xo44nTOVs1UMmllUQAMuvvd2g9fDw7VtLFJTd1d2lRCwJLRhGA
+         W6WCJ4aPBC486/VXHs/FN243ch3rFj3LmQU1rpNQHarVB+zJFZUIhFAETo14E3EBpmXF
+         JHoAuwSSQeeDkffN/B04qSkWpc1SGlLronPGRqvBrVwekuxVVTqhAp0ePb1JbGvnn2A4
+         hkigkpLkn1QDCe8wgv2Y8fKVQEsTD3xG14rDV5YmwqyzLCylC0J7a0ruDJiyv6hWeQZo
+         lq5JG/Kv7ensemb/nkxzTdUowDGJwHpqVLM1UeT/U9n4uQh46l53qz4oYQ3XmUP02deg
+         wncA==
+X-Forwarded-Encrypted: i=1; AFNElJ/qU4tR0o4mhY1I4Lu6UzkffM5nczwjb6AiJi2synYHitPeeAVC6Cr1T9Utv4U6OvLvwpUvwMG5nWVeJ7ULNX92@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs45VJhu+ELtRdFyT+ynZgXP+gw6TPIcTAUDDnoAo+VjGYiEFa
+	pbDMijTB1v3ZGu3s0j08RqdnOREyekwYOwXURLUxGAZoQFmlXkVkFdYFtpxfFRdEp6a4gQ5/UsZ
+	kp+Mik2kZiA==
+X-Received: from dybcr21.prod.google.com ([2002:a05:7300:ac95:b0:2e2:2088:dca7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7c0b:b0:2ed:e14:42e8
+ with SMTP id 5a478bee46e88-2efba7a98f3mr1797851eec.33.1777767772533; Sat, 02
+ May 2026 17:22:52 -0700 (PDT)
+Date: Sat,  2 May 2026 17:22:30 -0700
+In-Reply-To: <20260502065935.291960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260502064839.282422-1-irogers@google.com> <20260502155656.478642-1-irogers@google.com>
+References: <20260502065935.291960-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502155656.478642-7-irogers@google.com>
-Subject: [PATCH v2 6/6] perf debuginfo: Fix libdw API contract violations
+Message-ID: <20260503002248.1040791-1-irogers@google.com>
+Subject: [PATCH v9 00/18] perf symbol/env: ELF machine clean up and lazy idle computation
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Zecheng Li <zli94@ncsu.edu>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
+	tmricht@linux.ibm.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
+	jameshongleiwang@126.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Check return value of `dwfl_report_end` during offline initialization.
-Validate `dwfl_module_relocation_info` result before passing to `strcmp`
-to avoid potential segmentation faults.
+Add a helper to perf_env to compute the e_machine if it is EM_NONE.
+Derive the value from the arch string if available. Similarly derive
+the arch string from the ELF machine if available, for
+consistency. This means perf's arch (machine type) is no longer
+determined by uname but set to match that of the perf ELF executable.
 
-Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/debuginfo.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Migrate code away from strcmp on env->arch to using the e_machine
+comparisons that are more accurate and not prone to uname and other
+naming differences. While cleaning this up, also clean up the capstone
+initialization code to cover more architectures and to set the big
+endian flag based on ELF header information.
 
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 0e35c13abd04..49cb7f9b715d 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -62,7 +62,8 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
- 
- 	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
- 
--	dwfl_report_end(dbg->dwfl, NULL, NULL);
-+	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
-+		goto error;
- 
- 	return 0;
- error:
-@@ -167,7 +168,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
- 	/* Search the relocation related .text section */
- 	for (i = 0; i < n; i++) {
- 		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
--		if (strcmp(p, ".text") == 0) {
-+		if (p && strcmp(p, ".text") == 0) {
- 			/* OK, get the section header */
- 			scn = elf_getscn(elf, shndx);
- 			if (!scn)
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+`perf top`. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation is machine and
+kernel version dependent.
+
+To avoid concurrent update issues with bitfields sharing a byte in
+`struct symbol` switch to using C11 atomics.
+
+v9:
+ - Key changes in v9:
+   - **C11 Atomics for `struct symbol`**: Dropped the global
+     `symbol_bits_lock` introduced in v7/v8. Replaced unsafe bitfields
+     with a thread-safe `_Atomic uint16_t flags` and lockless atomic
+     helpers (e.g., `symbol__type()`, `symbol__set_inlined()`).
+   - **Bi-endianness Support**: Added `*_endian` variants for `dso` and
+     `thread` helpers to ensure Capstone correctly disassembles cross-endian
+     binaries.
+   - **Architecture Hardening**:
+     - Fixed inverted SPARC logic in `perf_env__single_address_space()`.
+     - Prioritized DSO architecture over global environment in
+       `machine_or_dso_e_machine()`.
+     - Fixed an uninitialized memory leak in `perf_env__e_machine()`.
+     - Removed lossy `normalize_arch()` canonicalization in `process_arch()`.
+
+ - Review Feedback Status:
+   - **Addressed**: C11 atomics migration, bi-endianness, SPARC logic,
+     DSO prioritization, and uninitialized memory fixes.
+   - **Not Addressed / Dropped**:
+     - Patch 15 OS Release: The concern regarding the `uname()` fallback
+       during offline analysis was determined to be incorrect for these
+       uninitialized states; the original lazy assumption is retained.
+     - Patch 04/11: The `EM_AARCH64` fallbacks were dropped as the
+       definition should come from dwarf-regs.h when necessary.
+
+v8:
+ - Address Sashiko AI review feedback for Patch 1:
+   - Switch all code dependent on the arch string to use `e_machine`
+     instead.
+   - Update `machine__is` and `machine__normalized_is` to take
+     `e_machine` integers instead of strings.
+   - Refactor `arch_syscalls__strerrno_function` to take an `e_machine`.
+   - Avoid premature caching of the host architecture in
+     `perf_session__e_machine`.
+
+v7:
+ - Address better handling of strdup failures with arch in the
+   header/env.
+ - Address concurrent update issues in `struct symbol` bitfields by
+   introducing a global lock for writes.
+
+v6: Ensure arch is canonical by going to e_machine and back (Sashiko)
+v5: Add perf_env os_release helper (Namhyung/Sashiko)
+v4: Fix Sashiko issues where an array element wasn't sorted properly,
+    the e_flags weren't returned properly, the idle type is change to
+    a u8 rather than an enum value and the s390 version check for
+    psw_idle is slightly reordered and tweaked.
+v3: Properly set up the e_machine coming from the perf_env as reported
+    by Honglei Wang.
+v2: Some minor white space clean up.
+v1: Initial release.
+
+Ian Rogers (18):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf tests topology: Switch env->arch use to env->e_machine
+  perf env, dso, thread: Add _endian variants for e_machine helpers
+  perf capstone: Determine architecture from e_machine
+  perf print_insn: Use e_machine for fallback IP length check
+  perf symbol: Avoid use of machine__is
+  perf machine: Use perf_env e_machine rather than arch
+  perf sample-raw: Use perf_env e_machine rather than arch
+  perf sort: Use perf_env e_machine rather than arch
+  perf arch common: Use perf_env e_machine rather than arch
+  perf header: In print_pmu_caps use perf_env e_machine
+  perf c2c: Use perf_env e_machine rather than arch
+  perf lock-contention: Use perf_env e_machine rather than arch
+  perf env: Refactor perf_env__arch_strerrno
+  perf env: Remove unused perf_env__raw_arch
+  perf env: Add helper to lazily compute the os_release
+  perf symbol: Add setters for bitfields sharing a byte to avoid
+    concurrent update issues
+  perf symbol: Lazily compute idle
+
+ tools/perf/arch/common.c                      |  62 ++--
+ tools/perf/builtin-c2c.c                      |  40 +--
+ tools/perf/builtin-inject.c                   |   6 +-
+ tools/perf/builtin-kwork.c                    |   2 +-
+ tools/perf/builtin-report.c                   |   2 +-
+ tools/perf/builtin-sched.c                    |   4 +-
+ tools/perf/builtin-top.c                      |   7 +-
+ tools/perf/builtin-trace.c                    |   7 +-
+ tools/perf/tests/symbols.c                    |   2 +-
+ tools/perf/tests/topology.c                   |   8 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |   2 +-
+ tools/perf/trace/beauty/arch_errno_names.sh   |  40 ++-
+ tools/perf/ui/browsers/annotate.c             |   2 +-
+ tools/perf/ui/browsers/map.c                  |   4 +-
+ tools/perf/util/annotate.c                    |   5 +-
+ tools/perf/util/auxtrace.c                    |   6 +-
+ tools/perf/util/callchain.c                   |   4 +-
+ tools/perf/util/capstone.c                    | 129 +++++---
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/dlfilter.c                    |   2 +-
+ tools/perf/util/dso.c                         |  19 +-
+ tools/perf/util/dso.h                         |  14 +-
+ tools/perf/util/env.c                         | 295 ++++++++++++++----
+ tools/perf/util/env.h                         |  12 +-
+ tools/perf/util/evsel_fprintf.c               |   6 +-
+ tools/perf/util/header.c                      |  58 ++--
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/lock-contention.c             |   6 +-
+ tools/perf/util/machine.c                     |  27 +-
+ tools/perf/util/machine.h                     |   2 -
+ tools/perf/util/print_insn.c                  |  23 +-
+ tools/perf/util/print_insn.h                  |   3 +
+ tools/perf/util/probe-event.c                 |   4 +-
+ tools/perf/util/sample-raw.c                  |  21 +-
+ tools/perf/util/sample-raw.h                  |   6 +-
+ .../util/scripting-engines/trace-event-perl.c |   2 +-
+ .../scripting-engines/trace-event-python.c    |   4 +-
+ tools/perf/util/session.c                     |  26 +-
+ tools/perf/util/sort.c                        |  66 ++--
+ tools/perf/util/srcline.c                     |  10 +-
+ tools/perf/util/symbol-elf.c                  |   5 +-
+ tools/perf/util/symbol.c                      | 208 ++++++++----
+ tools/perf/util/symbol.h                      |  74 ++++-
+ tools/perf/util/symbol_fprintf.c              |   4 +-
+ tools/perf/util/thread.c                      |  22 +-
+ tools/perf/util/thread.h                      |   8 +-
+ 46 files changed, 860 insertions(+), 403 deletions(-)
+
 -- 
 2.54.0.545.g6539524ca2-goog
 
