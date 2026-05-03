@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774081EFF93
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1D01FE47B
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777768563; cv=none; b=j7S6xNRnDw69HnwZReqZyUpSg/zcEZ1bAX2WSes9WLNPDTk25lqvPTgyT6eOfFTe6T7HvoTJ/XTlK3QhZG12zUT+g/Gd6/qz3H0eNYTqqF/BEWL5py0QP2es2S+qLjZw3YdmYJYYx3jWptsQ+2iUpRHx1PvJnIdQHx+oSsu7j2s=
+	t=1777768564; cv=none; b=GKWLmf3lu6ipRTkgkGKmzNzjq0XcpZY9JYhLXPqeR5vPMDNxGT43ZNeKFLSnA92LrSSDVyWSiWPp/qVeWmVz8He5xu+LfodgwOkAsCejz8xgeXxubZ0n5djWDFC4A5olii9KPoaTHaxKy7pwsDB8KbywczFV9qHdu9gopZQf3eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777768563; c=relaxed/simple;
-	bh=B8lPhPkyBYn75j/w6V4mHVjbmAKvn0FEGtiJld/K6SA=;
+	s=arc-20240116; t=1777768564; c=relaxed/simple;
+	bh=bcwWM4oAyHctxhNnyNPL9T001VW9Tcv3kAMmr4OqRsE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G8GM6mU1GWCmKeliF2DAG3amNVS1/+Wj3moQYXBDfx+fSOwsyMJU3o2P2EZzaU3gTG5uvgjVBB5FH4SLJSmurG4fE+i6DETTaAtuNLNGOd2eRhrU780tHxHSuXGbDN2d4OUkMD3zMP1Hn813pk1deohLkqRdHESZXKVLpM6H2Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GVYhx4Sm; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=CmN7EuCd/4+RhPQoSwk1BYOG8Dx1qgZlbf9jIqe03P0jgmUVmgzH05eXSqimOk0GTovHVe9gXm4NhLM6XOFXSUfe1bhrqtZG2b7740kqByTowABhjgRoqVYp6OL12dptRH2Z9X2Ss7Gc1533loxqATqAh2b1n8WgOcKF9QbJchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FqIRcv7W; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVYhx4Sm"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1275c6fc58aso5970220c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:36:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqIRcv7W"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35d9e67f6dcso7377954a91.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:36:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777768560; x=1778373360; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777768563; x=1778373363; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/SLKmbcBWBxQ61L1rVy9BETcPORnn/ju3DpB5LsLCNU=;
-        b=GVYhx4SmCkUahUyYkxySVLJW4tU5XiGoZQ+155l38fwY9CSlIA7Z5ey3UQG/RhkiVd
-         l5O3yH9l/yaiOM8reTPnrRpDV5Tj3uLRGQePKHPIrtrdJtUVpeTKntNhC//yHn/BTutT
-         S+4mPvgJj6FvjNsui1fZvwSs7R6F9+o8PSmhcA1CwLpsFMD9N0BUV8uw0CUs+dcGur+7
-         KFpDRAC0/MRaKNEd6+GLX4f3yZ94aawgpWwfnryKyAw0Rpu9wbnA0t0d6whFGsXsN/DJ
-         uH1LUki1UyjgFKNFqMDvZriaCV6InSLALPIlDPz3595d15Dq9QyrEVVZYtpVrAp4tdld
-         10iQ==
+        bh=YPd2uZcGUUWJNN1IIJhqH/dm1zq9pHxS4EWiNfzZKto=;
+        b=FqIRcv7WIPWZycqhFFYuT1fMtC5whLTqkdIQOov++yIgNM1ru8r3T7+GD4j0xukD05
+         alYccCk2b77XMElBNrfeF05PP0yzLOsgCvZKXl4PN5I9zD6SszqX1W1p5XDQhfBB5xjX
+         XrWbtVj5SlfkxBRA0fbQX4qend+eC140srrcN0ecFKbzqlFZfjpi9in53BUmm0O9h7jw
+         JpAW9gi8YSOxZD2FplDB9QxD+YhnP3vG6MklLPRiB3PZfAVe9xZpnUFvVLTqzQkwLv+M
+         qBgCdP6mJ1nyJjoIf89pYuKl23cmcxGBB4Xg4upZfrQndZmengc6fYR5w/B1JQZL5U9c
+         Op/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777768561; x=1778373361;
+        d=1e100.net; s=20251104; t=1777768563; x=1778373363;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/SLKmbcBWBxQ61L1rVy9BETcPORnn/ju3DpB5LsLCNU=;
-        b=NDrWLMTTSkrk1PuiWMR1z3ZlzfOwZw06eSrjs5p28mQbhzxBVuKGi6DAte97sBm4PE
-         nYu64Nc0svN1WUQS+vKWq9+4uCxMaO0PSBVnmSqQUNGHjR9iVOgewwYjy5jmdd4/Ugq+
-         MFDcHrcytOGq5jeD/cE22shEZnDDovjr0wfLXEN+cLwZQmLcycqKjR2vPj1KsHkBtH69
-         7K6X5/OAYVlBV/TfnBmm0PktWoNEtCImmJIKIcQeAcfIeaoDlSS7JPfL9GrUpQkqMIAn
-         vcKZPhsA6SGcLeC6BHLo1MQKQyfYZRTtXWFUP5UBgBZ9ZojhH56m8exWDprvkzdwobnO
-         WLgg==
-X-Forwarded-Encrypted: i=1; AFNElJ+78vb8AyV06b6r+VfOaNCaS/PUrJO9nK5+s1JSlR+75iNWFRHrYpGPaCQh6XM2qIlkqYu1HCu4X4ab54e0fbC+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKm7+5Z28nvFQkzNlcwsFwA2ZjSPDv44NK65QfQCJtMeB+6uli
-	F8s/aQOD1ec47eJ66joie7lIiZqCP3WGNXIChfEW4eBrq+ZprperRalQJovmHqU9QRo4NTM7ISf
-	OFath6avyfg==
-X-Received: from dlii2.prod.google.com ([2002:a05:7022:4182:b0:12a:7dc7:7b04])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6b81:b0:12d:ca31:f1b6
- with SMTP id a92af1059eb24-12dfd7be0a3mr2120634c88.18.1777768560323; Sat, 02
- May 2026 17:36:00 -0700 (PDT)
-Date: Sat,  2 May 2026 17:35:48 -0700
+        bh=YPd2uZcGUUWJNN1IIJhqH/dm1zq9pHxS4EWiNfzZKto=;
+        b=CxiU4d5mrbPj9J4+irU+TtyCDw0AWUqzgg/bHwckqp3EZK6BSryALT0tm1UtUvvN2O
+         f+GPlBPKLR7/9/r96lP4WahhVPtR75epJjFBeyHTCd+lyzFTdMI7HJ3cPLXpHGGDU7DA
+         N0I4T6PBq/pa6yWsmZY/XEtvXJX4Jcwr8E2ATMuBqnAC7JyIyrf8S74C9U8L+vd0oQ0i
+         OhYKdhW8Beum1HN7AW92gWVgvSEbXohE7Ugk4EhZBhg7uNOCBtciLUarZ5dGI8kAJdYa
+         IpGqSprcHM8orDq+FQkrvJVOJeE+YjppLiwFDCJK8is+/2J97hNIQG4vaOVU9TRFaJWt
+         lCJg==
+X-Forwarded-Encrypted: i=1; AFNElJ+2FMKjimXHFr7g2hwAXlJIBxcpSWbsgcqlo0EQeh9+RDkuQ3m22E9KSs4szoHkJCCAwbZrer7Wfz2aY85oLiTV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKpjLQXnn8O8pq92t7f89poAaiNoc68Hk3vz+13mEMbz7N2+hb
+	wYIuM1RgyvQXHp3hK1BqZOFlz+YRrLoCvX7EOcudhI+Quu82NgXPSBVGkrTdU40+xobxClAH12V
+	djp0I5S3hXQ==
+X-Received: from pghp4.prod.google.com ([2002:a63:fe04:0:b0:c74:390e:55b3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:158b:b0:398:4a1f:8a54
+ with SMTP id adf61e73a8af0-3a7f1c24b44mr4804121637.2.1777768562487; Sat, 02
+ May 2026 17:36:02 -0700 (PDT)
+Date: Sat,  2 May 2026 17:35:49 -0700
 In-Reply-To: <20260503003552.1063540-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260503003552.1063540-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260503003552.1063540-3-irogers@google.com>
-Subject: [PATCH v3 2/6] perf dwarf-aux: Fix libdw API contract violations
+Message-ID: <20260503003552.1063540-4-irogers@google.com>
+Subject: [PATCH v3 3/6] perf libdw: Fix libdw API contract violations
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,98 +69,79 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Check return values of `dwarf_decl_line`, `dwarf_getfuncs`, and
-`dwarf_lineaddr` to prevent using uninitialized stack variables or
-incorrectly reporting success on failure.
+Check return values of `dwfl_report_end` and `dwfl_module_addrdie`.
+Validate `dwarf_diename` result before passing to `new_inline_sym` (avoid
+potential `strdup(NULL)` crash) and check `die_get_call_lineno` for
+errors.
 
-Fixes: 57f95bf5f882 ("perf probe: Show correct statement line number by perf probe -l")
-Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
-Fixes: 75186a9b09e4 ("perf probe: Fix to show lines of sys_ functions correctly")
-Fixes: e0d153c69040 ("perf-probe: Move dwarf library routines to dwarf-aux.{c, h}")
-Fixes: 6243b9dc4c99 ("perf probe: Move dwarf specific functions to dwarf-aux.c")
+Fixes: b7a2b011e962 ("perf powerpc: Unify the skip-callchain-idx libdw with that for addr2line")
+Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dwarf-aux.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ tools/perf/util/libdw.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 8e83cb2d565e..1168e69a9292 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -125,7 +125,8 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
- 	    && die_entrypc(&die_mem, &faddr) == 0 &&
- 	    faddr == addr) {
- 		*fname = die_get_decl_file(&die_mem);
--		dwarf_decl_line(&die_mem, lineno);
-+		if (dwarf_decl_line(&die_mem, lineno) != 0)
-+			return -ENOENT;
- 		goto out;
+diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+index 216977884103..e37f3b22699d 100644
+--- a/tools/perf/util/libdw.c
++++ b/tools/perf/util/libdw.c
+@@ -60,7 +60,11 @@ struct Dwfl *dso__libdw_dwfl(struct dso *dso)
+ 		return NULL;
  	}
  
-@@ -796,8 +797,7 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+-	dwfl_report_end(dwfl, /*removed=*/NULL, /*arg=*/NULL);
++	if (dwfl_report_end(dwfl, NULL, NULL) != 0) {
++		dwfl_end(dwfl);
++		return NULL;
++	}
++
+ 	dso__set_libdw(dso, dwfl);
  
- 	/* Ignore redundant instances */
- 	if (dwarf_tag(inst) == DW_TAG_inlined_subroutine) {
--		dwarf_decl_line(origin, &tmp);
--		if (die_get_call_lineno(inst) == tmp) {
-+		if (dwarf_decl_line(origin, &tmp) == 0 && die_get_call_lineno(inst) == tmp) {
- 			tmp = die_get_decl_fileno(origin);
- 			if (die_get_call_fileno(inst) == tmp)
- 				return DIE_FIND_CB_CONTINUE;
-@@ -949,7 +949,11 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	/* Get the CU die */
- 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
- 		cu_die = dwarf_diecu(rt_die, &die_mem, NULL, NULL);
--		dwarf_decl_line(rt_die, &decl);
-+		if (dwarf_decl_line(rt_die, &decl) != 0) {
-+			pr_debug2("Failed to get the declared line number of %s\n",
-+				  dwarf_diename(rt_die));
-+			return -EINVAL;
-+		}
- 		decf = die_get_decl_file(rt_die);
- 		if (!decf) {
- 			pr_debug2("Failed to get the declared file name of %s\n",
-@@ -1003,8 +1007,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 				    die_get_call_lineno(&die_mem) == lineno)
- 					goto found;
+ 	return dwfl;
+@@ -72,22 +76,27 @@ struct libdw_a2l_cb_args {
+ 	struct inline_node *node;
+ 	char *leaf_srcline;
+ 	bool leaf_srcline_used;
++	int err;
+ };
  
--				dwarf_decl_line(&die_mem, &inl);
--				if (inl != decl ||
-+				if (dwarf_decl_line(&die_mem, &inl) != 0 || inl != decl ||
- 				    decf != die_get_decl_file(&die_mem))
- 					continue;
- 			}
-@@ -1035,8 +1038,10 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 			.data = data,
- 			.retval = 0,
- 		};
--		dwarf_getfuncs(cu_die, __die_walk_culines_cb, &param, 0);
--		ret = param.retval;
-+		if (dwarf_getfuncs(cu_die, __die_walk_culines_cb, &param, 0) < 0)
-+			ret = -EINVAL;
-+		else
-+			ret = param.retval;
- 	}
+ static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
+ {
+ 	struct libdw_a2l_cb_args *args  = _args;
+-	struct symbol *inline_sym = new_inline_sym(args->dso, args->sym, dwarf_diename(die));
++	const char *name = dwarf_diename(die);
++	struct symbol *inline_sym = new_inline_sym(args->dso, args->sym, name ?: "unknown");
+ 	const char *call_fname = die_get_call_file(die);
++	int call_lineno = die_get_call_lineno(die);
+ 	char *call_srcline = srcline__unknown;
+ 	struct inline_list *ilist;
  
- 	return ret;
-@@ -1940,10 +1945,12 @@ static bool die_get_postprologue_addr(unsigned long entrypc_idx,
- 			break;
- 	}
- 
--	dwarf_lineaddr(line, postprologue_addr);
--	if (*postprologue_addr >= highpc)
--		dwarf_lineaddr(dwarf_onesrcline(lines, i - 1),
--			       postprologue_addr);
-+	if (dwarf_lineaddr(line, postprologue_addr) != 0)
-+		return false;
-+	if (*postprologue_addr >= highpc) {
-+		if (dwarf_lineaddr(dwarf_onesrcline(lines, i - 1), postprologue_addr) != 0)
-+			return false;
+-	if (!inline_sym)
+-		return -ENOMEM;
++	if (!inline_sym) {
++		args->err = -ENOMEM;
++		return DWARF_CB_ABORT;
 +	}
  
- 	return true;
- }
+ 	/* Assign caller information to the parent. */
+-	if (call_fname)
+-		call_srcline = srcline_from_fileline(call_fname, die_get_call_lineno(die));
++	if (call_fname && call_lineno > 0)
++		call_srcline = srcline_from_fileline(call_fname, call_lineno);
+ 
+ 	list_for_each_entry(ilist, &args->node->val, list) {
+ 		if (args->leaf_srcline == ilist->srcline)
+@@ -163,7 +172,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+ 		};
+ 
+ 		/* Walk from the parent down to the leaf. */
+-		cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
++		if (cudie)
++			cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+ 
+ 		if (!args.leaf_srcline_used)
+ 			free(args.leaf_srcline);
 -- 
 2.54.0.545.g6539524ca2-goog
 
