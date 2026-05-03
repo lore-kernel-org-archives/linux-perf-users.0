@@ -1,108 +1,119 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF251FF7C8
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B804742A80
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777768570; cv=none; b=sNmtHZ5FteOghOxE/VMz4N8DShQT7r4r0Q35AI/CYXYQFBKIMRUCsjLqwif3zZ+RWkHRIfOihwnEGtaGGzUomZRy4gu8RV0UOJbCsH5JsKKlvWRHepi2zdyhX3tOqJFkFUbNKTSFt7HB1csQJw1U4gpaZ7NQi36F1ydRD/5G9EA=
+	t=1777768717; cv=none; b=XjpupY2dI6kgY5TtN37cnhnpYF5QQ0wWWwJbTJXAe4lHQBLzITFw5HUwVn1jBxkr6bDT12B/1KMml01AoYOiQaMinJZuhKkpox+RW9mZVKnrFK25Xn1ygw2wcsunqQ5uvrTvvUz+GR9LbE3LLPKUJziYNZIQCz+MESEeDdO60Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777768570; c=relaxed/simple;
-	bh=aejM4DU7JRkliTqft/Llsk1zUeLQIbJRjWsEykxh2ys=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sL1WgJZOdH3cDqHemig4hNt+5QJ3eYu0+FQEW+dlr3tnDsBdbIjs7s49l8y+sphRpPtp9i4/b97eUSJQiCNwc1fxeqdP/hxDplYjYL/CI1mGVJwxejGdcxoghoCvUMxHWpg7qivmZq1xWBqd2tsuvXw9GCQUffe+02CZw/9Kj6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ikZbg2jP; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1777768717; c=relaxed/simple;
+	bh=VFWMrDxD3spnRZQSkytC27dAhVxbpwsASccd1O8I3iI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=BcV00ZERCUrCl+adZQIud2CfwKWjXwqDQyZzx6ua92h8NdoTxYlbSeH5LElsr/FJQbx9lkDQ2EJXk02PdXC/rFbcGlLnX1UElPaVdJewbrCRaILnFQMCi8cbWVhVow7BzHrh/RQlXxViv+qQC7S/dVWKhk4CjOwtjJOPf1rSOs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7ldnzPk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ikZbg2jP"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-126e8ee6227so4914089c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777768568; x=1778373368; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQmVm0Mk8S8yIw6NN5Lf29gNVzq8HKFVdhFBj2+c9Uw=;
-        b=ikZbg2jPz4ColB+ubHRp7G4XwDH7MV9R/1EIIW0I31G9ec2zjnxyKmBI0IDEvxOjZ+
-         sbPXMnK8QqjcPdvjsAI/GDHIi4jFiRdJvtnoNko39DCodxAlXb+9t1uKxoCGq7TBUO7c
-         hjRw9Ytf/nMVfZNW10D4IyO4a9vnFkNKWEjSs9gmeejuyShShxnUVAnh2U5pS/3le4DU
-         lXKJForSUW3G5ycykMDrGRVzfl8UqJLkQbHx11LcwKnPNg3QSXPc8Ytc5LOMzY1Ik954
-         NxYWrBQqnPdLt2zTjdwv8lFKjco5eOVIRqlwRiLQHvVDFbt76HikD5Zb9kjyM2jBIcQH
-         b/eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777768568; x=1778373368;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQmVm0Mk8S8yIw6NN5Lf29gNVzq8HKFVdhFBj2+c9Uw=;
-        b=NCvNpL5GWMzfydjNnKz06bYCoo5xBaOFE8C+ta3tPM5YZ6xCtTgsay9syxg8ctraNq
-         uc/a3eoeqx1SM7BNzNtcCXum8P+W0wN0baxtjM9dTBSnrhat3YHOiqz1aDOblCHsYg+k
-         tSE5p5UKayD2TLDJ0gDHmKoqgQpGZrbq8+FXoNsd+7FT+Q4MCDUonn4qvPq9xVK/telO
-         icancAjO7T+e+8x6DjAHU3OkDFXUkzU0moVnTEIeJviJt1u34teNh15jjXTIxIF3nwNd
-         nfY8/L3yMA8yL7OlSRr+3etsYaLYyUMvNcsrJeYmFiEXJBua5hiS71ITwjkg1yLeO3Wg
-         z4Wg==
-X-Forwarded-Encrypted: i=1; AFNElJ9IS7358SC+kCFQUOKT/cxPpNQ9dYplyOA1emGxbKLJCaUMA2vbU+L3tRqzRODui8ZvK/W3zHXlPofFK/8z3jPn@vger.kernel.org
-X-Gm-Message-State: AOJu0YwulEANPHsD8NbPpIEV2E6EK/ytbzd8i0Vk3o/y5gMQYNBU9oVD
-	4n6tO3yctgsW1y5gPb28OmxQINrLF2rUmaOu/1B3s7jT7tpOeB0PeNXwSjgqxHlr7iFlfyHkLg3
-	hv11frzJBKQ==
-X-Received: from dlbpt10.prod.google.com ([2002:a05:7022:e80a:b0:12d:bf5c:266])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:69a9:b0:12d:c3fb:14ac
- with SMTP id a92af1059eb24-12dfd7fd8d4mr1828491c88.19.1777768568329; Sat, 02
- May 2026 17:36:08 -0700 (PDT)
-Date: Sat,  2 May 2026 17:35:52 -0700
-In-Reply-To: <20260503003552.1063540-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7ldnzPk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EEE0C19425;
+	Sun,  3 May 2026 00:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777768717;
+	bh=VFWMrDxD3spnRZQSkytC27dAhVxbpwsASccd1O8I3iI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=G7ldnzPkZ8oZk+N0EYxrDa591dZ476s0A09btsglPThwdvPC/fNOR8plo7f4KxZI+
+	 WwFTwbxItwfN9VR5Pk9z6Gv4n2r4fwUyk/sVnEYq+EIFYZFK6dcedhPZsNJ7dAX0Ws
+	 3PTFtuu38NEBFocHKOVNoZ50/Eykt9wdEBFn0+xSC/taxUVSmLhg7OlryFoRN/vrjD
+	 9doipMDMveohxsNmDQQ9VxavT67jzLlNBaUpX10FEoHoCTk/DAE8pIFfstEsLAuKMz
+	 dz6BEKBuS8nra773vJgluRRgedxy04bS8QC14CyRHjLGPs0tFaN+VMoTlR/rd0GM7C
+	 n/8jCfHkqI5VA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 10/18] perf arch common: Use perf_env e_machine
+ rather than arch
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260503002248.1040791-11-irogers@google.com>
+References: <20260503002248.1040791-11-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 03 May 2026 00:38:36 +0000
+Message-Id: <20260503003837.2EEE0C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260503003552.1063540-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260503003552.1063540-7-irogers@google.com>
-Subject: [PATCH v3 6/6] perf debuginfo: Fix libdw API contract violations
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Zecheng Li <zli94@ncsu.edu>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Check return value of `dwfl_report_end` during offline initialization.
-Validate `dwfl_module_relocation_info` result before passing to `strcmp`
-to avoid potential segmentation faults.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] Native objdump fallback breaks for cross-bitness profiling (e.g.=
+, analyzing a 32-bit profile on a 64-bit host).
+- [Medium] Unintended address space handling change for 32-bit SPARC.
+--
 
-Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/debuginfo.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+commit ba683ab91ed0ab22877903f737b0057971f914b1
+Author: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 0e35c13abd04..49cb7f9b715d 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -62,7 +62,8 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
- 
- 	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
- 
--	dwfl_report_end(dbg->dwfl, NULL, NULL);
-+	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
-+		goto error;
- 
- 	return 0;
- error:
-@@ -167,7 +168,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
- 	/* Search the relocation related .text section */
- 	for (i = 0; i < n; i++) {
- 		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
--		if (strcmp(p, ".text") == 0) {
-+		if (p && strcmp(p, ".text") == 0) {
- 			/* OK, get the section header */
- 			scn = elf_getscn(elf, shndx);
- 			if (!scn)
--- 
-2.54.0.545.g6539524ca2-goog
+perf arch common: Use perf_env e_machine rather than arch
 
+This commit updates the perf architecture matching logic to use e_machine
+values instead of architecture strings.
+
+> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> index 21836f70f231..1d8aff9b32d6 100644
+> --- a/tools/perf/arch/common.c
+> +++ b/tools/perf/arch/common.c
+[ ... ]
+> @@ -145,7 +150,8 @@ static int perf_env__lookup_binutils_path(struct perf=
+_env *env,
+[ ... ]
+>  	/*
+>  	 * We don't need to try to find objdump path for native system.
+>  	 * Just use default binutils path (e.g.: "objdump").
+>  	 */
+> -	if (!strcmp(perf_env__arch(NULL), arch))
+> +	if (e_machine =3D=3D EM_HOST)
+>  		goto out;
+
+Does this change break cross-bitness profiling on the same architecture
+family?
+
+Previously, perf_env__arch() normalized both 32-bit (EM_386) and 64-bit
+(EM_X86_64) ELF machine types into a single family string like x86. This
+allowed a 64-bit host to fall back to the native objdump when analyzing a
+32-bit profile.
+
+With the new check, EM_386 is not equal to EM_X86_64 for a 32-bit profile
+on a 64-bit host, causing the check to fail. The code then attempts a tripl=
+et
+lookup, such as i686-pc-linux-gnu-objdump.=20
+
+If these specific prefixed symlinks are not installed, will this trigger a
+fatal ui__error and abort perf annotate, even though the native objdump
+inherently supports multilib and 32-bit binaries?
+
+[ ... ]
+> @@ -237,5 +255,5 @@ int perf_env__lookup_objdump(struct perf_env *env, ch=
+ar **path)
+>   */
+>  bool perf_env__single_address_space(struct perf_env *env)
+>  {
+> -	return strcmp(perf_env__arch(env), "sparc");
+> +	return perf_env__e_machine(env, /*e_flags=3D*/NULL) !=3D EM_SPARCV9;
+>  }
+
+Is this an intended logic change for 32-bit SPARC?
+
+Before this patch, perf_env__arch() mapped both 32-bit (EM_SPARC) and
+64-bit (EM_SPARCV9) to sparc, so the strcmp returned 0 (false) for both
+variants.=20
+
+Now, the function evaluates to false for 64-bit SPARC (EM_SPARCV9) but
+evaluates to true for 32-bit SPARC (EM_SPARC).
+
+Could this unexpectedly alter address space separation for 32-bit SPARC
+profiles?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503002248.1040=
+791-1-irogers@google.com?part=3D10
