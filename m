@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52F81A680B
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28091F7569
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777767799; cv=none; b=BiVnmuSIZ56osYjmKOnqhFW4bqcLPxXLPlIbOBtb0LcVqkXJPGK/j/ItwZhRk0jQ/bShmU8ii0Mf3RmxIYT82fEFkNqNOcDmB6owQuOuS65IpbcSx9Ig7tKv3vcGdADvXjicyV0yqY2RVg7hjx83oR+koSzCekGeaC5ts6l7ffU=
+	t=1777767801; cv=none; b=hd9u0ZwtO34nijZ3If0i6J/AA5KBtS/l6Poodlpr0J1yZf9mhuewsQjuWXBuJ0HTPGd7cTIpfO4AhWstAXQq1XG/Me0iZm/6Rj2twgrLB1VorM0PvIvqdI9WdxhGis7NWOqIn28C6fX+c+8bojxl3i48tWQGvUxTFhM1TAXMzVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777767799; c=relaxed/simple;
-	bh=eqeOWxhFyM7dwpKHN7IomuaifDbDMcmVmoxsj1Wk+h4=;
+	s=arc-20240116; t=1777767801; c=relaxed/simple;
+	bh=uvhPGJ8aFyrj8sz3RY0F7uCaw7UwOHqluJDNG48CN5w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hSh9nxcRnv4d4GJifAoE4OCPgJO/Xwgm9fAoYMqj4rxVHsMB9figykGjvNle8zLbnjJWW74LffKqTMHWE0Z/CH+Ay/Sr+k9SdYoExCDLIGln3ljFsvnuLLtvVfWQnTSLw6ntiRpAXFyHCD347igHlzg+C19e37Ggdxa21y1Rd+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MnQwJBGM; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=ssfCM1YLTc0wNzsioz3oChrstSa3WAvSoNZ4CMxt42AP3lwhZHDJsV1SRJrLxrfZX+CdsMl2CM8HRVY1uk6sN5n7/dm5FZ5aonyTcXKfUA1bhScLLM4Yh0J/QpRSdEL/Hh3DnBiuh8C+UFZGIvjDekNC9FhpM3R8Vm0fUHYZFQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ir6JcRfn; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MnQwJBGM"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35fb969a4c0so3537310a91.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:23:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ir6JcRfn"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c8ccc7593so2441585c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777767793; x=1778372593; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777767799; x=1778372599; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1UEnrZj6LrH1rbpoINuKLPntj2HeRkp2Oo3eKcuhyg=;
-        b=MnQwJBGMQvLqOqZAAAcfIYDJzayjknxvLK9qFRqRLKqAOOxTsrDUio9iQ+Adf94QDX
-         zrSL8BWOWFGW+SdtDyOeuCETL+la2t81drwRCNKP+YI2TpuopIO81gC59HbH8qgP4st1
-         E0A+yAz4utkeeL+6mLepZkpl9LRhKPBJ6ESn1BoOuJhxSQvFkYowclCldTvRr9sykBTf
-         GhNwNRR2/JihhEoDztcxeVIBcDUQc4vZ6CAudiTTmE3RgkRBEuFyQtVqg9fUUVneb7cT
-         99WCVpoCv01WgBLho1WQ3eRa4fQdKBnzs6XBux348ynARRn2xTfbib7wlGEQMeUU5YRh
-         s8aQ==
+        bh=D5+XfQfSgM6vL4wGV0II5aik5OsLQWVkexovkX+K6RU=;
+        b=ir6JcRfn+fI3ai2inAHCgum7TT4eeyhx3PV980fZlANonfV14RihGMmFt8cCq5A+b7
+         aWB62sLS5UTdPl/M6RmEC7kRX8iwey9m/MkS2AHo+pwX985O5YUPUhHURsx4MbBctIXF
+         PDuGtuzPRD4S38WP9edMgoXrV89OrAJIvzpixdkuK90L8Nxl4MB+NhbKSl7NWOSzm9iW
+         PkowJUfQPINZY4G3die4va3o5pFo0SADrg015kJDlyZask3S1DsnTgW9gLXlwhUJgwBt
+         5PDInkh0ASkkovqBaGQoMU8A1Yo4DZc2J3rudSCsRx22NEyy4RO4sxkhUW8fs7dEu3tH
+         /3HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777767793; x=1778372593;
+        d=1e100.net; s=20251104; t=1777767799; x=1778372599;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1UEnrZj6LrH1rbpoINuKLPntj2HeRkp2Oo3eKcuhyg=;
-        b=iIl+wbthWBhg3j3C1lcW2GBIN+SgvTFoYPKgZjlXgVSna92IrFOdpILX4A3izTWk6Z
-         MgPJQAi7ibFLzjb9ginhgTcEHIKka6Id2IFkG/JwcamDrvgbk52pcKo3EEMOSEyaaCuT
-         Wv0jQKtdhHZjZRnIykxKh4d0aOWGyUnHemvpoFGyYeGldHfuD9zZi0pmGrfDXT638lpj
-         TUGgXPJblqe6T6GMvNGpwogtXxmG7GJ7C+JCKiq8b5iwPH8Iis8qTQ0uCjZuE9g2cg1Q
-         PXJ4yCU/6WTMExhl7YbCC8+aimJlSOCrU0RUlc4sXKGvmrxjaqRLJA4U3isEPjsKRx19
-         lFCw==
-X-Forwarded-Encrypted: i=1; AFNElJ9+yBsFa0U5SyKFsrVLUXvSEi/Y784uffmZ7ssSwPDaPx4e1jg18WLvXLrbRuk4C/W3mPBdiDR/AIW9qOuTNMZP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd3qAOk8NXIQJEeLJykoo8zWj2XmjTeTlx+mIZ9/O5XrBKyjyG
-	bdcUvqJn0rlEiSI0N2HlU5CeAouJBtrwK+91ayQNCL/ACsvwngnDIqey8k/BxaitGyi6mOrzcTp
-	Sd1VRO8DagA==
-X-Received: from pjbmg18.prod.google.com ([2002:a17:90b:3712:b0:362:ba47:7b37])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b0e:b0:35f:bd51:cf60
- with SMTP id 98e67ed59e1d1-3650cd7115fmr4357446a91.1.1777767792718; Sat, 02
- May 2026 17:23:12 -0700 (PDT)
-Date: Sat,  2 May 2026 17:22:40 -0700
+        bh=D5+XfQfSgM6vL4wGV0II5aik5OsLQWVkexovkX+K6RU=;
+        b=VXqi4NgDaYUdMUsLovSu7gzxijlrOYUSSJsRVcjIi82ZKd1octhUDiyJ2iNtYv67I1
+         Qe0VNP/wZ8ZHzM4MprAcQODZg+kiTVXtdMJtVffewzg39/jPq+cNpznEGAaB7nIMsMWW
+         G1QlCQ+3+DHsyTvRyf7lFbwGUxtAec3cySWFKH3wscmtWrNh4n8l1GhHEoqh6ZgBNQrg
+         jiGSMKzOL1uibz7m3ETTXUMwQ44Agrp1ajwoo9GYSUfdpKqsUI8q7O3sypaIyremoiHz
+         LWUckzrKeGwInO/0K/kElcndjmu9RA9bYE1WiLoJ5GEOw+kELO+GKTN2JGXPklFxh5JH
+         d+Sg==
+X-Forwarded-Encrypted: i=1; AFNElJ/KOuyhpfvk5jRPyDObQ+WQCb6aa6Hhi6D7uUzA2MuqdQmGCQdMXyOWGe7bt3SCg6ctDLJK85lJwCONad+wYpd/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHSWsZ03gO0s//3CNt56P8JCxfvyvhU7+wxd6+vGYguDQQxNcu
+	E56rxa/IT7wb5F3GeSmwrT275pZae5IGwj7/ee41E28c9KlG85fvK5xR95z9Ik25A3Wn1RkMo9H
+	KO+MK19gSjA==
+X-Received: from dlbbo32.prod.google.com ([2002:a05:7022:43a0:b0:12d:b396:eadf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61e:b0:12a:6e97:c21f
+ with SMTP id a92af1059eb24-12dfd71099dmr2240616c88.0.1777767798592; Sat, 02
+ May 2026 17:23:18 -0700 (PDT)
+Date: Sat,  2 May 2026 17:22:43 -0700
 In-Reply-To: <20260503002248.1040791-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260502065935.291960-1-irogers@google.com> <20260503002248.1040791-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260503002248.1040791-11-irogers@google.com>
-Subject: [PATCH v9 10/18] perf arch common: Use perf_env e_machine rather than arch
+Message-ID: <20260503002248.1040791-14-irogers@google.com>
+Subject: [PATCH v9 13/18] perf lock-contention: Use perf_env e_machine rather
+ than arch
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -69,132 +70,37 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use the e_machine rather than arch string matching.
+Use the e_machine rather than arch string matching for powerpc.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/common.c | 62 ++++++++++++++++++++++++++--------------
- 1 file changed, 40 insertions(+), 22 deletions(-)
+ tools/perf/util/lock-contention.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 21836f70f231..1d8aff9b32d6 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -1,13 +1,18 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "common.h"
-+
- #include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+
-+#include <linux/zalloc.h>
- #include <unistd.h>
--#include "common.h"
--#include "../util/env.h"
-+
-+#include <dwarf-regs.h>
-+
- #include "../util/debug.h"
--#include <linux/zalloc.h>
-+#include "../util/env.h"
+diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-contention.c
+index 92e7b7b572a2..119a7206f3cd 100644
+--- a/tools/perf/util/lock-contention.c
++++ b/tools/perf/util/lock-contention.c
+@@ -104,7 +104,8 @@ bool match_callstack_filter(struct machine *machine, u64 *callstack, int max_sta
+ 	struct map *kmap;
+ 	struct symbol *sym;
+ 	u64 ip;
+-	const char *arch = perf_env__arch(machine->env);
++	uint16_t e_machine = perf_env__e_machine(machine->env, /*e_flags=*/NULL);
++	bool is_powerpc = e_machine == EM_PPC64 || e_machine == EM_PPC;
  
- static const char *const arc_triplets[] = {
- 	"arc-linux-",
-@@ -145,7 +150,8 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 					  const char *name, char **path)
- {
- 	int idx;
--	const char *arch = perf_env__arch(env), *cross_env;
-+	uint16_t e_machine = perf_env__e_machine(env, /*e_flags=*/NULL);
-+	const char *cross_env;
- 	const char *const *path_list;
- 	char *buf = NULL;
+ 	if (list_empty(&callstack_filters))
+ 		return true;
+@@ -125,8 +126,7 @@ bool match_callstack_filter(struct machine *machine, u64 *callstack, int max_sta
+ 		 * incase first or second callstack index entry has 0
+ 		 * address for powerpc.
+ 		 */
+-		if (!callstack || (!callstack[i] && (strcmp(arch, "powerpc") ||
+-						(i != 1 && i != 2))))
++		if (!callstack || (!callstack[i] && (!is_powerpc || (i != 1 && i != 2))))
+ 			break;
  
-@@ -153,7 +159,7 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 	 * We don't need to try to find objdump path for native system.
- 	 * Just use default binutils path (e.g.: "objdump").
- 	 */
--	if (!strcmp(perf_env__arch(NULL), arch))
-+	if (e_machine == EM_HOST)
- 		goto out;
- 
- 	cross_env = getenv("CROSS_COMPILE");
-@@ -170,30 +176,42 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 		zfree(&buf);
- 	}
- 
--	if (!strcmp(arch, "arc"))
-+	switch (e_machine) {
-+	case EM_ARC:
- 		path_list = arc_triplets;
--	else if (!strcmp(arch, "arm"))
-+		break;
-+	case EM_ARM:
- 		path_list = arm_triplets;
--	else if (!strcmp(arch, "arm64"))
-+		break;
-+	case EM_AARCH64:
- 		path_list = arm64_triplets;
--	else if (!strcmp(arch, "powerpc"))
-+		break;
-+	case EM_PPC:
-+	case EM_PPC64:
- 		path_list = powerpc_triplets;
--	else if (!strcmp(arch, "riscv32"))
--		path_list = riscv32_triplets;
--	else if (!strcmp(arch, "riscv64"))
--		path_list = riscv64_triplets;
--	else if (!strcmp(arch, "sh"))
-+		break;
-+	case EM_RISCV:
-+		path_list = perf_env__kernel_is_64_bit(env) ? riscv64_triplets : riscv32_triplets;
-+		break;
-+	case EM_SH:
- 		path_list = sh_triplets;
--	else if (!strcmp(arch, "s390"))
-+		break;
-+	case EM_S390:
- 		path_list = s390_triplets;
--	else if (!strcmp(arch, "sparc"))
-+		break;
-+	case EM_SPARC:
-+	case EM_SPARCV9:
- 		path_list = sparc_triplets;
--	else if (!strcmp(arch, "x86"))
-+		break;
-+	case EM_X86_64:
-+	case EM_386:
- 		path_list = x86_triplets;
--	else if (!strcmp(arch, "mips"))
-+		break;
-+	case EM_MIPS:
- 		path_list = mips_triplets;
--	else {
--		ui__error("binutils for %s not supported.\n", arch);
-+		break;
-+	default:
-+		ui__error("binutils for %s not supported.\n", perf_env__arch(env));
- 		goto out_error;
- 	}
- 
-@@ -202,7 +220,7 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 		ui__error("Please install %s for %s.\n"
- 			  "You can add it to PATH, set CROSS_COMPILE or "
- 			  "override the default using --%s.\n",
--			  name, arch, name);
-+			  name, perf_env__arch(env), name);
- 		goto out_error;
- 	}
- 
-@@ -237,5 +255,5 @@ int perf_env__lookup_objdump(struct perf_env *env, char **path)
-  */
- bool perf_env__single_address_space(struct perf_env *env)
- {
--	return strcmp(perf_env__arch(env), "sparc");
-+	return perf_env__e_machine(env, /*e_flags=*/NULL) != EM_SPARCV9;
- }
+ 		ip = callstack[i];
 -- 
 2.54.0.545.g6539524ca2-goog
 
