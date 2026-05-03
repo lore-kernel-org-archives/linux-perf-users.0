@@ -1,138 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7BE2E3FE
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 01:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A33A1D7E41
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 01:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777770713; cv=none; b=ZkFSCH9c8S8lMoF8a0J3l2hYTP+SQXUoczFTSxbWkBFQ5zMXD1/0pvID3xmMLvXAmivhxmDg1NPSjkS8UPd4VnC4zLi2b6W+FvQ90ELJ6VPOfiGZ9VR0miz/WzeXIeMf0+tKJvXp2hKH2qa4tgEIkRofH95dc47MbUx4F9hN75A=
+	t=1777771115; cv=none; b=AkWUoAAywyURNNFOSpZ9MNbGa18XK1GrPQ4/VNz7tDaXTKdpoqAdSm3HDdwLz6eyAGRYxQZBqagQboozamnOQAX9RhxGaOzY5jodaDIX3bFQF/ehxlbBxDaIc6EkVwdsw44PzJ0eTT6GR1N+MeRu2okYklIXtaxj1tK+XMND4sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777770713; c=relaxed/simple;
-	bh=r6c1jbZoKf0pvZ11wsVgrVwJU08CxX7PNyNo8MugPss=;
+	s=arc-20240116; t=1777771115; c=relaxed/simple;
+	bh=JkP3Pl2fTHmrHT6M3bk+5KfgH8io+u/nb3hGyhDSIi0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JRQIl2haEEl5PQJmpcGlD+HxKFkRroqOaEpSvuqDlLu6BWpUz112ejW/ff1kJqSZEdTOcyjmWrIY58ftDFze7J9ceLcBUvFX2BJYnPD3R7wVcWhC7Zm1aRKzkMFeFf8jOooyokj+6liJJGJXCeyhvkwCbJGGoGG9bsXv+xBKAbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPy+aBb2; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=o6Tei9qhpFKpnUa38Wg3r2duIJBC32auv1G3fM+rZbdXfwxYDWhKvVY4/jvnzLOLnteDjwenktOHokXxkD20ugukmOQ03A2x8hUCZtMpVScnOIuk372d3NC3PsSswshDQWtanL+FgUv9jWA/ARqtRoptGImzLRsB5yws1OeYk88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNe5ezOJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPy+aBb2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C5F6C2BCB8;
-	Sun,  3 May 2026 01:11:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNe5ezOJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0082C19425;
+	Sun,  3 May 2026 01:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777770713;
-	bh=r6c1jbZoKf0pvZ11wsVgrVwJU08CxX7PNyNo8MugPss=;
+	s=k20201202; t=1777771114;
+	bh=JkP3Pl2fTHmrHT6M3bk+5KfgH8io+u/nb3hGyhDSIi0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=sPy+aBb29bwRR3wzH26Rv4LvH3xSOkTRH4QpN1Vbg8OujXQMFesZ9On9iHTJwaKoN
-	 25weUXl2VqIZCfi1ZNRGModt47RDJslecsOBTr8JaZOyE4oA1IEFTZZLFFFkSAXZD3
-	 NS3o+tH4bGAf9B7LfajWbLyuQQeWdQo1iVjzmBeKY338aGQ/oJeCcZXZ7H36n0kuCW
-	 xlKqdKnVjv0QKbmIRnebGEzx/QFwowd6+9hoPrH+BTFLJB2yFK4OA+cTS7qSSRSQBq
-	 G3yyXEikZdxNMGEGcZHceoW0UBS8kjm157TWGBmJ2i/Y5S506FbGK7T8mBiiA3wHMF
-	 ufOKL7DFmjB2Q==
+	b=JNe5ezOJzplM4VKt3bmoeaql8ZjU1ESnl6uVqICvVwux84GIUJQXX5FmLBJCwhMrB
+	 IIBLMn7m0imY/OZ7+ndhiMVQRfl7l6YatkApp7q+/KT4aAUKyjThKRJ8nik1cUIjC6
+	 FsDJ8MeQvPqjLQynp3xvWz1Tc6pa3qxIOuM2eDld+W5K/RIVusfGXHfAkx8Hpekhd3
+	 72XDjB8qQVBrdkNRbWQkMy6Og1rYM5BmEaQC55GiAJeq4QdpE8PYB6TcWvwM+AvUp2
+	 KL+0N3D1yxXn5h6Zc7+10CLW4dgDn0mFQwtFTtBxu+K/z9Q1TUd8nvMGnOdvFBwvaG
+	 gxn1EwqC9lBKg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 18/18] perf symbol: Lazily compute idle
+Subject: Re: [PATCH v3 3/6] perf libdw: Fix libdw API contract violations
 Reply-To: sashiko@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260503002248.1040791-19-irogers@google.com>
-References: <20260503002248.1040791-19-irogers@google.com>
+In-Reply-To: <20260503003552.1063540-4-irogers@google.com>
+References: <20260503003552.1063540-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 03 May 2026 01:11:52 +0000
-Message-Id: <20260503011153.4C5F6C2BCB8@smtp.kernel.org>
+Date: Sun, 03 May 2026 01:18:34 +0000
+Message-Id: <20260503011834.B0082C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Unnecessary out-of-line function call `perf_env__e_machine` befo=
-re the fast-path cache check in `symbol__is_idle` introduces measurable ove=
-rhead on the `perf top` hot path.
+- [Medium] Incomplete error handling makes the newly added `args.err` field=
+ entirely dead code, silently swallowing inline unwinding memory errors.
+- [Medium] The new bounds check `call_lineno > 0` incorrectly discards vali=
+d DWARF line `0` references, leading to lost caller filenames.
+- [Medium] The commit message falsely claims the patch prevents a `strdup(N=
+ULL)` crash in `new_inline_sym`, justifying the change on an incorrect prem=
+ise.
 --
 
-commit 786c2d40f855657d57b68d17dcb788ab5ff93929
+commit 5e576062601ce3a0337e76030c663f3ce42bdf61
 Author: Ian Rogers <irogers@google.com>
 
-perf symbol: Lazily compute idle
+perf libdw: Fix libdw API contract violations
 
-This commit switches from an idle boolean to a helper function,
-symbol__is_idle, to lazily compute whether a symbol is an idle function.
-The computation now takes the machine's architecture and kernel version into
-consideration.
+This commit adds return value checks for several libdw API calls. It also
+introduces an error field to propagate inline unwinding failures and
+filters caller line numbers to avoid negative DWARF error codes.
 
-Link: https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ib=
-m.com/
-Link: https://lore.kernel.org/lkml/20260323085255.98173-1-jameshongleiwang@=
-126.com/
+> Check return values of dwfl_report_end and dwfl_module_addrdie.
+> Validate dwarf_diename result before passing to new_inline_sym (avoid
+> potential strdup(NULL) crash) and check die_get_call_lineno for
+> errors.
+
+This isn't a bug, but is the description of the crash risk accurate?
+Looking at new_inline_sym(), it already guards against NULL pointers
+by defaulting to a placeholder string:
+
+static struct symbol *new_inline_sym(struct dso *dso,
+                                     struct symbol *base_sym,
+                                     const char *funcname)
+{
+        ...
+        if (!funcname)
+                funcname =3D "??";
+
+It appears the patch changes the fallback string from "??" to "unknown"
+but wouldn't actually prevent a crash since NULL is already handled nativel=
+y.
+
+> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+> index 216977884103..e37f3b22699d 100644
+> --- a/tools/perf/util/libdw.c
+> +++ b/tools/perf/util/libdw.c
 
 [ ... ]
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 4702b8989354..2caa6b8b8609 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-
-[ ... ]
-
-> @@ -760,55 +747,90 @@ int modules__parse(const char *filename, void *arg,
->  	return err;
->  }
-> =20
-> -bool symbol__is_idle(const struct symbol *sym)
-> -{
-> -	uint16_t flags =3D atomic_load(&sym->flags);
-> -	uint16_t idle_val =3D (flags & SYMBOL_FLAG_IDLE_MASK) >> SYMBOL_FLAG_ID=
-LE_SHIFT;
-> -
-> -	return idle_val =3D=3D SYMBOL_IDLE__IDLE;
-> -}
-> -
->  /*
->   * These are symbols in the kernel image, so make sure that
->   * sym is from a kernel DSO.
->   */
-> -static bool symbol__compute_is_idle(const char *name)
-> +static int sym_name_cmp(const void *a, const void *b)
-> +{
-> +	const char *name =3D a;
-> +	const char *const *sym =3D b;
-> +
-> +	return strcmp(name, *sym);
-> +}
-> +
-> +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, struct p=
-erf_env *env)
+> @@ -72,22 +76,27 @@ struct libdw_a2l_cb_args {
+>  static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
 >  {
+>  	struct libdw_a2l_cb_args *args  =3D _args;
+> -	struct symbol *inline_sym =3D new_inline_sym(args->dso, args->sym, dwar=
+f_diename(die));
+> +	const char *name =3D dwarf_diename(die);
+> +	struct symbol *inline_sym =3D new_inline_sym(args->dso, args->sym, name=
+ ?: "unknown");
+>  	const char *call_fname =3D die_get_call_file(die);
+> +	int call_lineno =3D die_get_call_lineno(die);
+>  	char *call_srcline =3D srcline__unknown;
+>  	struct inline_list *ilist;
+> =20
+> -	if (!inline_sym)
+> -		return -ENOMEM;
+> +	if (!inline_sym) {
+> +		args->err =3D -ENOMEM;
+> +		return DWARF_CB_ABORT;
+> +	}
+> =20
+>  	/* Assign caller information to the parent. */
+> -	if (call_fname)
+> -		call_srcline =3D srcline_from_fileline(call_fname, die_get_call_lineno=
+(die));
+> +	if (call_fname && call_lineno > 0)
+
+Does this condition inadvertently drop valid DWARF line 0 references?
+
+In the DWARF standard, line 0 is a valid identifier used for
+compiler-generated code that lacks a specific source line, but the
+associated file name remains valid. By requiring the line number to
+be strictly greater than 0, it seems we might discard successfully
+retrieved caller filenames for these entries.
+
+> +		call_srcline =3D srcline_from_fileline(call_fname, call_lineno);
+> =20
+>  	list_for_each_entry(ilist, &args->node->val, list) {
+>  		if (args->leaf_srcline =3D=3D ilist->srcline)
 
 [ ... ]
 
-> +	const char *name =3D sym->name;
-> +	uint16_t e_machine =3D perf_env__e_machine(env, /*e_flags=3D*/NULL);
+> @@ -163,7 +172,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned =
+int *line_nr,
+>  		};
+> =20
+>  		/* Walk from the parent down to the leaf. */
+> -		cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+> +		if (cudie)
+> +			cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+> =20
+>  		if (!args.leaf_srcline_used)
+>  			free(args.leaf_srcline);
 
-Does calling perf_env__e_machine() before checking the cached idle_val
-introduce unnecessary overhead on the perf top hot path?
+Is there a missing check for args.err after this walk?
 
-Delaying the e_machine initialization until after the cache check below
-might help avoid this out-of-line function call when the idle state is
-already known.
+The callback libdw_a2l_cb() was updated to set args.err =3D -ENOMEM and
+return DWARF_CB_ABORT on allocation failure. However,
+cu_walk_functions_at() is called here without inspecting its return
+value or args.err, and libdw__addr2line() eventually returns 1
+(success) regardless.
 
-> +
-> +	{
-> +		uint16_t flags =3D atomic_load(&sym->flags);
-> +		uint16_t idle_val =3D (flags & SYMBOL_FLAG_IDLE_MASK) >> SYMBOL_FLAG_I=
-DLE_SHIFT;
-> +
-> +		if (idle_val !=3D SYMBOL_IDLE__UNKNOWN)
-> +			return idle_val =3D=3D SYMBOL_IDLE__IDLE;
-> +	}
-> +
-> +	if (!dso || dso__kernel(dso) =3D=3D DSO_SPACE__USER) {
-> +		symbol__set_idle(sym, /*idle=3D*/false);
-> +		return false;
-> +	}
-
-[ ... ]
+This appears to leave args.err as dead code and silently swallows the
+memory allocation error, returning a truncated inline callchain to
+the caller.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503002248.1040=
-791-1-irogers@google.com?part=3D18
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503003552.1063=
+540-1-irogers@google.com?part=3D3
