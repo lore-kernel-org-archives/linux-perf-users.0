@@ -1,54 +1,54 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A276C1F2B8D
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B042236F0
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 00:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777767803; cv=none; b=SH70SAk3XJJd0oAilhtS1+ZhG57DA3Lm+iBR0tHfjcasgMChzvY8c41KaUpqXHVy+cf7X0aqziouJ680KgT3MCdaXDMWwFg6n+E1lUnWxJ56N4Dg7g+lkOk1AUb9scKP23MWHufGrcDJ/QsUjmHBdU3yhoUHhk9mJxv7WctFY7M=
+	t=1777767805; cv=none; b=p4Aiw1NO90wfYUX3R2QD5+XLXue+aoTZYHWA6SEwBrXlj1JsBfHbxVXTG5gDrmdiEWO+fmviUCKQdMtvpg3V9g9hIVXVdmPkXrlqyVu5X71O74CwRJKcnMHanxuoqkK/zlJ2Tu0/v0DhOgQve3KweTaq+FtRQ7BKJawNc+5af80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777767803; c=relaxed/simple;
-	bh=d95RN7/rMJzrpe1UoXLER23VbQTmBzaPGsXRYVYoWgg=;
+	s=arc-20240116; t=1777767805; c=relaxed/simple;
+	bh=oPhtIYTZ3hsEu6jjU4s7MOVLcdebH8MFtbow08cDcec=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XbxIUzakiTcpjCvX01I6wvpw6l9GgXM9h+MJ581CXJpF2yC0hn3trVT/O7xBEIz5lw8/K40LGJWQKhQLogYy2h83vyok5v9QqgGRVjGqHYvhXqfPm1wjJfIr4aezBfOY+9juUuSUIosrBk7oZDhDERaoH26HBwGHe3gfYvewSt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LTe7jf/1; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=hghQ7kdHv6nhxOD7LFFKUlqkK4RJk7fGO5yQxqKBN8s4uBP2wkavmKiVkcRHtQSE+JLj3OeMX1Sgu7v2Ni2TaSuYGYn3b8+6TA8L0Tk2UpjUQkppniMoZwYjdBHSGm7iNN8PyF5V+3fQREi2A8JsFMc0gIwMXPSt4YNYFplPa/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=seTRxAm+; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LTe7jf/1"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12df9e440d3so2899965c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:23:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="seTRxAm+"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c726f4055so4949696c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 May 2026 17:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777767797; x=1778372597; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777767802; x=1778372602; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=22j8DoF2fXHm+jGHFBjOBjrvQEypyYf+IRlyHBjQD5I=;
-        b=LTe7jf/1QwwTcq36henFTWK9JftSDZjimq6F8m7MIncX1q3HEUR70vzMv5CVFzqMMU
-         KBx2XUBi+ooEB7mCnWbG0697ntMEDAmrnyVMFSlQRAuGMN+Zb7gcB31bPHVm2lDdANDk
-         OZQsrUbFI+SJUXco1EW35iKy/iOThveGvvuP1VinxIxigTyHm0pRdsGq812TvrBKb7HL
-         m1Ye1H+6bK8KWVHkOxnEQWJYQZ4b0fJDsMam1paea6b2EtnL8Y8j5pEdAQtvSynqWvXL
-         GCHt4T01oC9DfJ5ISfs6nyyo2RO+J/UJX6FcMGwq7NFq9X+2agHZXq0YvRhymsYy4Yqu
-         ttWQ==
+        bh=sNEOtAMR5QCvXyZplIv0gRH0b0eemE/yfoOhcH4gY8c=;
+        b=seTRxAm+PXXk57IHi0xp6FUtTD8iXSUWiuDHAdwVSIApNRPBNXFjZuKPW2Q1pTwPv8
+         5OJ8BlWYHEMXYb8K4ibOdmHrr7fs89WVt5qTAG3biPwTrZi9UBAYR+VLTyut1QVbaPET
+         HDecS/pjCSPhpRwJWtF6KC8eeORE+e0zI1dGNYLd1NpwoDSVB8+meodRedvwizgz4l93
+         akRRsms41myoNnvN82Qa9rzjg82JvDUnJaYBPIy0uDHAePA2JWcVgWiRN68EWRY8aS8O
+         n3x4GWcel+DD4AR4s3473ichokk5h0T2LMHlnVT9WLPCOXfvCv3xKZe+EdkT9rs6sIU/
+         L1NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777767797; x=1778372597;
+        d=1e100.net; s=20251104; t=1777767802; x=1778372602;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=22j8DoF2fXHm+jGHFBjOBjrvQEypyYf+IRlyHBjQD5I=;
-        b=dAgQOwqcDyD3w/517Vb80tsl6hSrO9+DA4wjk7d0IzGwVPyMK4pk9HPDKYEZsrOpTt
-         atpImRk3GUmKi03d+dUXHOThpmeUg8t9PlcFhQVc/eFYVlgwW5gi4nUDtp79s2h8GvG8
-         juXfQRff6ad22hEY8HXtn3tAF03m3+S3x1Bj8sRXy61W8JAYQlTXC0NNiWA/vdR91FaE
-         8tVA1IYVD2bwAoDr0fGds/f5GEZ/Y59xf5m5FMi2kDpaQcvCdE5SXcnnl8PGcXyWfBFs
-         uFgoNmGP80bu2hmhXAzo1+KnPHu+zDhtr4TSgeWmIHEcQNyq8Ya5qv/L9cWfQKeKmEIk
-         f7yA==
-X-Forwarded-Encrypted: i=1; AFNElJ8rYz1V6FTmUJw3dQo3jrGVpgq2/chV7aYiIfGnwy+/msQLPCUFL3f4UuW+bdaUpeV/E5coJ7vT3nvt/wQTyK6q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBEV67z+G+6C/ay34pQBAr2OPDhyHT/QetLuqC6P6ShKdE8Rlq
-	xlWYIvaxcFCqLUpyd0qtWcEorl2xOatCknVxmtqtZnmsrkJhX9JcEgzd+FMo4B99SEo22N2Aj0j
-	kzV2Hep0JgA==
-X-Received: from dll26.prod.google.com ([2002:a05:7022:21a:b0:12d:b48e:8597])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:68a1:b0:128:dcbd:e27c
- with SMTP id a92af1059eb24-12dfd823241mr2253597c88.20.1777767796555; Sat, 02
- May 2026 17:23:16 -0700 (PDT)
-Date: Sat,  2 May 2026 17:22:42 -0700
+        bh=sNEOtAMR5QCvXyZplIv0gRH0b0eemE/yfoOhcH4gY8c=;
+        b=Z5bGrsaChiji85VttKv1XboR8gR7xcGjDp1PyIU+6dXc9iiu2sqZAyRrD8kPNaaPSA
+         6h041+vMQJXqCGjyYXlG5RiTrAepq8oStT0jgewHWE/Pdv/m2OyMCxY0GD/UPOHP5LpI
+         XlOw8bx9rriN1EucBVeaG36+Mg6i7YLRrd9CUyICcuSves2MkxhzSwKOliY6T5S0Ttkh
+         Xz/hj3wJzYLGMjp+qtBxTF1zYVZ7MAZ2WxTs/sSGk00cI9kToJ/6JCFb9T1Ee/a8xvwb
+         RgdjjOWwkJDxdZmsNac3IB3SRfg5XE7vdL8Db321epHwvPolsC4x7XIVaDcLZQ3C+JC+
+         L7Zw==
+X-Forwarded-Encrypted: i=1; AFNElJ9zRqAg9uv+tZ/27UnQHNePlppTGdYKKCIXO/GQhuHidESLwTV0s17F9rV6eWOsQcaLwsaDw7dqUUSYnxSGdgjc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIdWox7NdkHAL5YQNcz8Bs0DesXifYV4g7JMxA8W4uvB9GJgis
+	2COCWDxl05qsD8JlZpGAFhpK/x8RYxEX5eWrUETJz0ClVIMSRaZb4SxbSVIRpCbdOb0wbJWwcSN
+	ncKNFfGQD6g==
+X-Received: from dlbtx10.prod.google.com ([2002:a05:7022:fc0a:b0:12d:4be7:8b60])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:78f:b0:12d:ca32:59f
+ with SMTP id a92af1059eb24-12dfd7e5bdbmr2156723c88.11.1777767802181; Sat, 02
+ May 2026 17:23:22 -0700 (PDT)
+Date: Sat,  2 May 2026 17:22:45 -0700
 In-Reply-To: <20260503002248.1040791-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260502065935.291960-1-irogers@google.com> <20260503002248.1040791-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260503002248.1040791-13-irogers@google.com>
-Subject: [PATCH v9 12/18] perf c2c: Use perf_env e_machine rather than arch
+Message-ID: <20260503002248.1040791-16-irogers@google.com>
+Subject: [PATCH v9 15/18] perf env: Remove unused perf_env__raw_arch
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -69,92 +69,63 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use the e_machine rather than arch string matching for AARCH64.
-
-Add include of dwarf-regs.h in case the EM_AARCH64 isn't defined, sort
-the headers given this include.
+The switch to using e_machine has made the perf_env__raw_arch function
+unused so remove it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-c2c.c | 40 ++++++++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 18 deletions(-)
+ tools/perf/util/env.c | 18 ------------------
+ tools/perf/util/env.h |  1 -
+ 2 files changed, 19 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 72a7802775ee..c55cab53531b 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -12,41 +12,45 @@
-  */
- #include <errno.h>
- #include <inttypes.h>
-+
-+#include <asm/bug.h>
- #include <linux/compiler.h>
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/zalloc.h>
--#include <asm/bug.h>
- #include <sys/param.h>
--#include "debug.h"
--#include "builtin.h"
-+
-+#include <dwarf-regs.h>
- #include <perf/cpumap.h>
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
--#include "map_symbol.h"
--#include "mem-events.h"
--#include "session.h"
--#include "hist.h"
--#include "sort.h"
--#include "tool.h"
-+
-+#include "builtin.h"
- #include "cacheline.h"
- #include "data.h"
-+#include "debug.h"
- #include "event.h"
- #include "evlist.h"
- #include "evsel.h"
--#include "ui/browsers/hists.h"
--#include "thread.h"
--#include "mem2node.h"
-+#include "hist.h"
-+#include "map_symbol.h"
-+#include "mem-events.h"
- #include "mem-info.h"
--#include "symbol.h"
--#include "ui/ui.h"
--#include "ui/progress.h"
-+#include "mem2node.h"
- #include "pmus.h"
-+#include "session.h"
-+#include "sort.h"
- #include "string2.h"
--#include "util/util.h"
--#include "util/symbol.h"
-+#include "symbol.h"
-+#include "thread.h"
-+#include "tool.h"
-+#include "ui/browsers/hists.h"
-+#include "ui/progress.h"
-+#include "ui/ui.h"
- #include "util/annotate.h"
-+#include "util/symbol.h"
-+#include "util/util.h"
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 8ac7aff0b27c..29d5fe37528b 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -463,19 +463,6 @@ int perf_env__read_cpuid(struct perf_env *env)
+ 	return 0;
+ }
  
- struct c2c_hists {
- 	struct hists		hists;
-@@ -3202,7 +3206,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 	 * default display type.
- 	 */
- 	if (!display) {
--		if (!strcmp(perf_env__arch(env), "arm64"))
-+		if (perf_env__e_machine(env, /*e_flags=*/NULL) == EM_AARCH64)
- 			display = "peer";
- 		else
- 			display = "tot";
+-static int perf_env__read_arch(struct perf_env *env)
+-{
+-	struct utsname uts;
+-
+-	if (env->arch)
+-		return 0;
+-
+-	if (!uname(&uts))
+-		env->arch = strdup(uts.machine);
+-
+-	return env->arch ? 0 : -ENOMEM;
+-}
+-
+ static int perf_env__read_nr_cpus_avail(struct perf_env *env)
+ {
+ 	if (env->nr_cpus_avail == 0)
+@@ -594,11 +581,6 @@ int perf_env__read_core_pmu_caps(struct perf_env *env)
+ 	return ret;
+ }
+ 
+-const char *perf_env__raw_arch(struct perf_env *env)
+-{
+-	return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+-}
+-
+ int perf_env__nr_cpus_avail(struct perf_env *env)
+ {
+ 	return env && !perf_env__read_nr_cpus_avail(env) ? env->nr_cpus_avail : 0;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index ba51b871c401..bc4801d8399b 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -192,7 +192,6 @@ const char *perf_env__arch(struct perf_env *env);
+ const char *perf_env__arch_strerrno(uint16_t e_machine, int err);
+ #endif
+ const char *perf_env__cpuid(struct perf_env *env);
+-const char *perf_env__raw_arch(struct perf_env *env);
+ int perf_env__nr_cpus_avail(struct perf_env *env);
+ 
+ void perf_env__init(struct perf_env *env);
 -- 
 2.54.0.545.g6539524ca2-goog
 
