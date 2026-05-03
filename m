@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0CD283FCF;
-	Sun,  3 May 2026 23:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B3A3CBE70;
+	Sun,  3 May 2026 23:44:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777851370; cv=none; b=MvD/6spvwIMaEEZ+lI0P6VAhAN2lFy4tvC37u49s3MV0aZoqeJHd2DKzXsQl5z9CH0RVxhh6m9Q9gPNdozmy3q3Xz3ufwtoeWl6s7pXeXLcApp2AinFOiuhpDAt5SXLWNtEHbK7nJmL4slNli9SeBfBCl6Kh2ZdZ7TrpWt7F2DU=
+	t=1777851849; cv=none; b=bTZ+bhq149uoReSCjbE62BVH5Q8Nc/Ft69J2sWWMNrqPZD6NBtZ+trgRUt/jpmokPMEy4vadAl2v4P+7dSpR/H1WimrvPBQqqUoPUvt5za4sgQGEocCRR2tSzb0rjF9xXhYi22D78a9XL8YBNthA25u6y7wge8gXWJoRZeL9NgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777851370; c=relaxed/simple;
-	bh=I9lNgx+QP3h44dz9qnDTI9JpGrYkiuizDKXtgLSqXtU=;
+	s=arc-20240116; t=1777851849; c=relaxed/simple;
+	bh=IiHSQpCGO+AVcgIbWusoBbZTulXZqvNrlh4BcbGbaDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ba5+VeK+AcpAyLJU1edIyvcr51xP/H54m1Jwpv+hvzIfKqypfu8O8xAIivXYFlXil+ihKcHTqCUeWvdxVEawgTYwU0fHVr/5yzRi90lqYxeHwxbInFTHh9ByT0gcZjlNh5yMJ9MZ9NRJwHs3O3mptJ+OyQdcru5l07Q3y+M39fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW5TFrhS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uL3LiCXoF09JnhNXZFdQYNGffBRbZPN3+hiL6YKMV6Q1YMif+7DH3Nswzsy3ocg1ZsqG/67aKU/K/OWkjmKZ7CQNrnSY5D/mksZGmZXtVHEEnet1lNd3u1W2aw4xefLIt3pQ7vI2oVgeN9yQ6f+m6m1YCGXJ2mM7wqU82OzSmDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgSGMGSN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW5TFrhS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6220C2BCB4;
-	Sun,  3 May 2026 23:36:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgSGMGSN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 160A0C2BCB4;
+	Sun,  3 May 2026 23:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777851370;
-	bh=I9lNgx+QP3h44dz9qnDTI9JpGrYkiuizDKXtgLSqXtU=;
+	s=k20201202; t=1777851848;
+	bh=IiHSQpCGO+AVcgIbWusoBbZTulXZqvNrlh4BcbGbaDg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dW5TFrhS1P8r/6KrJPDgxwKCwIIakVl8weWZGhPGu82rV+suEGdNCBTS8beiqXCmE
-	 sGmThR+U5eBv+zTcJ8JFedIjljcNqS6On0IISNPctTWsJ9MX7VOMcpAHezh0nP9i2r
-	 da+F89MvCoRBnx5EFZydwpv3Luld7nvuaM/ucfdNPWCGJkvB8fHRcS9aT7t1O6mbjo
-	 Tycjl42OSBUm6/Y83ZMy/Ogm2v9jCN34NN2OIS/mF6oWbbygSzeBucO1CDDIsgkFiP
-	 u7DpF4mBRXfp/ocrC4IXxW73txhpPuYrqXqpLGfhF8Jx6TkuQxHi7wHajbLtq8xvb0
-	 mHIiktvupOTuA==
-Date: Sun, 3 May 2026 16:36:08 -0700
+	b=qgSGMGSNB1s4PQQuhLiRWWIwREX8RzTwJ9vaJrJmBjpBRrUFdYt4IhIvW378HrS6w
+	 C6G5rQiKmpn1yqITFZycnmISiRyDFbJiVlHbOko3vCpyV1ufiF4JhVK7v49hsPETn4
+	 FOr6H9a22nW8aWt+BI1EUFjHtWBA4YCip9qa9+GTiVOILSj4Ci0cGw7VUjMKE0Ewl/
+	 5Dd7V5iHMHR6rJvKLKl6XljOflRSe9CDSHP3GqiJSWBwasW1kfse6yl/Sx0j22Pt6P
+	 MoORvvHuAkLlSNabLykJCpcv49C6g7Oos1Q5fBnJJFHheuVKHzrbSeca7Jp9SNjxtY
+	 L8uYy2Eat831g==
+Date: Sun, 3 May 2026 16:44:06 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,11 +36,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	James Clark <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
 	Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] perf dwarf-aux: Fix libdw API contract violations
-Message-ID: <affb6OqJdrhRbBgT@z2>
+Subject: Re: [PATCH v4 3/6] perf libdw: Fix libdw API contract violations
+Message-ID: <affdxrFU0Wt0-sD5@z2>
 References: <20260503003552.1063540-1-irogers@google.com>
  <20260503171032.1559338-1-irogers@google.com>
- <20260503171032.1559338-3-irogers@google.com>
+ <20260503171032.1559338-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,157 +49,244 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260503171032.1559338-3-irogers@google.com>
+In-Reply-To: <20260503171032.1559338-4-irogers@google.com>
 
-On Sun, May 03, 2026 at 10:10:28AM -0700, Ian Rogers wrote:
-> Check return values of `dwarf_decl_line` (where non-optional),
-> `dwarf_getfuncs`, and `dwarf_lineaddr` to prevent using uninitialized
-> stack variables or incorrectly reporting success on failure.
-> 
-> For the root DIE in `die_walk_lines()`, `dwarf_decl_line` and
-> `die_get_decl_file` are optional and their failures are handled
-> gracefully to avoid breaking line walking on valid functions.
+On Sun, May 03, 2026 at 10:10:29AM -0700, Ian Rogers wrote:
+> Check return values of `dwfl_report_end` and `dwfl_module_addrdie`.
+> Check `die_get_call_lineno` for errors.
 > 
 > Additionally:
->  - Add NULL pointer protection for `strcmp()` in `die_walk_lines()`
->    when `inf` or `decf` are NULL to prevent crashes on generated
->    code.
->  - Use `dwarf_attr_integrate` in `die_get_data_member_location` to
->    correctly resolve inherited member locations (e.g. via abstract
->    origin or specification).
+>  - Introduce `inline_node__clear_frames()` to clean up partial
+>    allocations.
+
+Sounds like it should be a separate commit.
+
+
+>  - Ensure `*file` is freed and inline frames are cleared on error in
+>    `libdw__addr2line()` to prevent memory leaks and duplicated
+>    callchains when falling back to other unwinders.
+>  - Allow DWARF line 0 in `libdw_a2l_cb()`, as it is a valid
+>    reference for compiler-generated code.
+>  - Fix the parent srcline lookup in `libdw_a2l_cb()` to target the
+>    correct parent node depending on the callchain order
+>    (ORDER_CALLER/ORDER_CALLEE).
+
+Also it looks like an independent fix.  While you could put other fixes
+into separate commits (up to you), we can merge simple things.
+
 > 
-> Fixes: 57f95bf5f882 ("perf probe: Show correct statement line number by perf probe -l")
-> Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
-> Fixes: 75186a9b09e4 ("perf probe: Fix to show lines of sys_ functions correctly")
-> Fixes: e0d153c69040 ("perf-probe: Move dwarf library routines to dwarf-aux.{c, h}")
-> Fixes: 6243b9dc4c99 ("perf probe: Move dwarf specific functions to dwarf-aux.c")
+> Fixes: b7a2b011e962 ("perf powerpc: Unify the skip-callchain-idx libdw with that for addr2line")
+> Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
 > Assisted-by: Gemini-CLI:Google Gemini 3
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
 > v4:
->  - Fix strcmp(NULL) risk and inherited member location fallbacks in dwarf-aux.c.
+>  - Fix memory leaks and duplicated callchains on unwinding errors.
+>  - Support DWARF line 0 in inline list.
+>  - Fix callchain parent update in ORDER_CALLER mode.
 > ---
->  tools/perf/util/dwarf-aux.c | 34 ++++++++++++++++------------------
->  tools/perf/util/dwarf-aux.h |  5 +++++
->  2 files changed, 21 insertions(+), 18 deletions(-)
+>  tools/perf/util/libdw.c   | 84 +++++++++++++++++++++++++++++++--------
+>  tools/perf/util/srcline.c |  9 ++++-
+>  tools/perf/util/srcline.h |  1 +
+>  3 files changed, 77 insertions(+), 17 deletions(-)
 > 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 109a166a6d19..a8ab1c30d0ac 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -125,7 +125,8 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
->  	    && die_entrypc(&die_mem, &faddr) == 0 &&
->  	    faddr == addr) {
->  		*fname = die_get_decl_file(&die_mem);
-> -		dwarf_decl_line(&die_mem, lineno);
-> +		if (dwarf_decl_line(&die_mem, lineno) != 0)
-> +			return -ENOENT;
->  		goto out;
+> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+> index 216977884103..e69ff4cea856 100644
+> --- a/tools/perf/util/libdw.c
+> +++ b/tools/perf/util/libdw.c
+> @@ -4,6 +4,7 @@
+>  #include "srcline.h"
+>  #include "symbol.h"
+>  #include "dwarf-aux.h"
+> +#include "callchain.h"
+>  #include <fcntl.h>
+>  #include <unistd.h>
+>  #include <elfutils/libdwfl.h>
+> @@ -60,7 +61,11 @@ struct Dwfl *dso__libdw_dwfl(struct dso *dso)
+>  		return NULL;
 >  	}
 >  
-> @@ -459,7 +460,7 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
->  	size_t nexpr;
->  	int ret;
->  
-> -	if (dwarf_attr(mb_die, DW_AT_data_member_location, &attr) == NULL)
-> +	if (dwarf_attr_integrate(mb_die, DW_AT_data_member_location, &attr) == NULL)
->  		return -ENOENT;
->  
->  	if (dwarf_formudata(&attr, offs) != 0) {
-> @@ -795,8 +796,7 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
->  
->  	/* Ignore redundant instances */
->  	if (dwarf_tag(inst) == DW_TAG_inlined_subroutine) {
-> -		dwarf_decl_line(origin, &tmp);
-> -		if (die_get_call_lineno(inst) == tmp) {
-> +		if (dwarf_decl_line(origin, &tmp) == 0 && die_get_call_lineno(inst) == tmp) {
->  			tmp = die_get_decl_fileno(origin);
->  			if (die_get_call_fileno(inst) == tmp)
->  				return DIE_FIND_CB_CONTINUE;
-> @@ -950,11 +950,6 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
->  		cu_die = dwarf_diecu(rt_die, &die_mem, NULL, NULL);
->  		dwarf_decl_line(rt_die, &decl);
->  		decf = die_get_decl_file(rt_die);
-> -		if (!decf) {
-> -			pr_debug2("Failed to get the declared file name of %s\n",
-> -				  dwarf_diename(rt_die));
-> -			return -EINVAL;
-> -		}
+> -	dwfl_report_end(dwfl, /*removed=*/NULL, /*arg=*/NULL);
+> +	if (dwfl_report_end(dwfl, NULL, NULL) != 0) {
 
-Why is this part removed?
+Better to keep the comments?
 
 
->  	} else
->  		cu_die = rt_die;
->  	if (!cu_die) {
-> @@ -998,12 +993,11 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
->  			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
->  				/* Call-site check */
->  				inf = die_get_call_file(&die_mem);
-> -				if ((inf && !strcmp(inf, decf)) &&
-> +				if ((inf == decf || (inf && decf && !strcmp(inf, decf))) &&
->  				    die_get_call_lineno(&die_mem) == lineno)
->  					goto found;
+> +		dwfl_end(dwfl);
+> +		return NULL;
+> +	}
+> +
+>  	dso__set_libdw(dso, dwfl);
 >  
-> -				dwarf_decl_line(&die_mem, &inl);
-> -				if (inl != decl ||
-> +				if (dwarf_decl_line(&die_mem, &inl) != 0 || inl != decl ||
->  				    decf != die_get_decl_file(&die_mem))
->  					continue;
->  			}
-> @@ -1034,8 +1028,10 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
->  			.data = data,
->  			.retval = 0,
->  		};
-> -		dwarf_getfuncs(cu_die, __die_walk_culines_cb, &param, 0);
-> -		ret = param.retval;
-> +		if (dwarf_getfuncs(cu_die, __die_walk_culines_cb, &param, 0) < 0)
-> +			ret = -EINVAL;
-> +		else
-> +			ret = param.retval;
->  	}
+>  	return dwfl;
+> @@ -72,41 +77,70 @@ struct libdw_a2l_cb_args {
+>  	struct inline_node *node;
+>  	char *leaf_srcline;
+>  	bool leaf_srcline_used;
+> +	int err;
+>  };
 >  
->  	return ret;
-> @@ -1939,10 +1935,12 @@ static bool die_get_postprologue_addr(unsigned long entrypc_idx,
->  			break;
->  	}
+>  static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
+>  {
+>  	struct libdw_a2l_cb_args *args  = _args;
+> -	struct symbol *inline_sym = new_inline_sym(args->dso, args->sym, dwarf_diename(die));
+> +	const char *name = dwarf_diename(die);
+> +	struct symbol *inline_sym = new_inline_sym(args->dso, args->sym, name ?: "unknown");
+
+Use die_getname() here?
+
+
+>  	const char *call_fname = die_get_call_file(die);
+> +	int call_lineno = die_get_call_lineno(die);
+>  	char *call_srcline = srcline__unknown;
+> -	struct inline_list *ilist;
 >  
-> -	dwarf_lineaddr(line, postprologue_addr);
-> -	if (*postprologue_addr >= highpc)
-> -		dwarf_lineaddr(dwarf_onesrcline(lines, i - 1),
-> -			       postprologue_addr);
-> +	if (dwarf_lineaddr(line, postprologue_addr) != 0)
-> +		return false;
-> +	if (*postprologue_addr >= highpc) {
-> +		if (dwarf_lineaddr(dwarf_onesrcline(lines, i - 1), postprologue_addr) != 0)
-> +			return false;
+> -	if (!inline_sym)
+> -		return -ENOMEM;
+> +	if (!inline_sym) {
+> +		args->err = -ENOMEM;
+> +		return DWARF_CB_ABORT;
 > +	}
 >  
->  	return true;
->  }
-> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index a79968a2e573..161f0bf980b6 100644
-> --- a/tools/perf/util/dwarf-aux.h
-> +++ b/tools/perf/util/dwarf-aux.h
-> @@ -10,6 +10,11 @@
->  #include <elfutils/libdwfl.h>
->  #include <elfutils/version.h>
+>  	/* Assign caller information to the parent. */
+> -	if (call_fname)
+> -		call_srcline = srcline_from_fileline(call_fname, die_get_call_lineno(die));
+> +	if (call_fname && call_lineno >= 0)
+> +		call_srcline = srcline_from_fileline(call_fname, call_lineno);
 >  
-> +static inline const char *die_name(Dwarf_Die *die)
-> +{
-> +	return dwarf_diename(die) ?: "<unknown>";
-> +}
+> -	list_for_each_entry(ilist, &args->node->val, list) {
+> -		if (args->leaf_srcline == ilist->srcline)
+> +	if (!list_empty(&args->node->val)) {
+> +		struct inline_list *parent;
 > +
-
-Please move it where it's used.
-
-Thanks,
-Namhyung
-
-
->  struct strbuf;
+> +		if (callchain_param.order == ORDER_CALLEE)
+> +			parent = list_first_entry(&args->node->val, struct inline_list, list);
+> +		else
+> +			parent = list_last_entry(&args->node->val, struct inline_list, list);
+> +
+> +		if (args->leaf_srcline == parent->srcline)
+>  			args->leaf_srcline_used = false;
+> -		else if (ilist->srcline != srcline__unknown)
+> -			free(ilist->srcline);
+> -		ilist->srcline =  call_srcline;
+> +		else if (parent->srcline != srcline__unknown)
+> +			free(parent->srcline);
+> +		parent->srcline = call_srcline;
+>  		call_srcline = NULL;
+> -		break;
+>  	}
+>  	if (call_srcline && call_srcline != srcline__unknown)
+>  		free(call_srcline);
 >  
->  /* Find the realpath of the target file */
+>  	/* Add this symbol to the chain as the leaf. */
+>  	if (!args->leaf_srcline_used) {
+> -		inline_list__append_tail(inline_sym, args->leaf_srcline, args->node);
+> +		if (inline_list__append_tail(inline_sym, args->leaf_srcline, args->node) != 0) {
+> +			args->err = -ENOMEM;
+> +			if (inline_sym->inlined)
+> +				symbol__delete(inline_sym);
+> +			return DWARF_CB_ABORT;
+> +		}
+>  		args->leaf_srcline_used = true;
+>  	} else {
+> -		inline_list__append_tail(inline_sym, strdup(args->leaf_srcline), args->node);
+> +		char *srcline = strdup(args->leaf_srcline);
+> +
+> +		if (!srcline) {
+> +			args->err = -ENOMEM;
+> +			if (inline_sym->inlined)
+> +				symbol__delete(inline_sym);
+> +			return DWARF_CB_ABORT;
+> +		}
+> +		if (inline_list__append_tail(inline_sym, srcline, args->node) != 0) {
+> +			free(srcline);
+> +			args->err = -ENOMEM;
+> +			if (inline_sym->inlined)
+> +				symbol__delete(inline_sym);
+> +			return DWARF_CB_ABORT;
+
+Looks like the pattern is repeated.  My rule is to factor it out when
+it repeats more than twice. :)
+
+
+> +		}
+>  	}
+>  	return 0;
+>  }
+> @@ -162,11 +196,29 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  			.leaf_srcline = srcline_from_fileline(src ?: "<unknown>", lineno),
+>  		};
+>  
+> +		if (!args.leaf_srcline) {
+> +			if (file && *file) {
+> +				free(*file);
+> +				*file = NULL;
+> +			}
+> +			return 0;
+> +		}
+> +
+>  		/* Walk from the parent down to the leaf. */
+> -		cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+> +		if (cudie)
+> +			cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+>  
+>  		if (!args.leaf_srcline_used)
+>  			free(args.leaf_srcline);
+> +
+> +		if (args.err) {
+> +			if (file && *file) {
+> +				free(*file);
+> +				*file = NULL;
+> +			}
+> +			inline_node__clear_frames(node);
+> +			return 0;
+> +		}
+>  	}
+>  	return 1;
+>  }
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index db164d258163..62884428fb5a 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -429,10 +429,13 @@ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
+>  	return addr2inlines(dso_name, addr, dso, sym);
+>  }
+>  
+> -void inline_node__delete(struct inline_node *node)
+> +void inline_node__clear_frames(struct inline_node *node)
+>  {
+>  	struct inline_list *ilist, *tmp;
+>  
+> +	if (node == NULL)
+> +		return;
+> +
+>  	list_for_each_entry_safe(ilist, tmp, &node->val, list) {
+>  		list_del_init(&ilist->list);
+>  		zfree_srcline(&ilist->srcline);
+> @@ -441,7 +444,11 @@ void inline_node__delete(struct inline_node *node)
+>  			symbol__delete(ilist->symbol);
+>  		free(ilist);
+>  	}
+> +}
+>  
+> +void inline_node__delete(struct inline_node *node)
+> +{
+> +	inline_node__clear_frames(node);
+>  	free(node);
+>  }
+>  
+> diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
+> index 7c37b3bf9ce7..1018cbc886d6 100644
+> --- a/tools/perf/util/srcline.h
+> +++ b/tools/perf/util/srcline.h
+> @@ -47,6 +47,7 @@ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
+>  					    struct symbol *sym);
+>  /* free resources associated to the inline node list */
+>  void inline_node__delete(struct inline_node *node);
+> +void inline_node__clear_frames(struct inline_node *node);
+>  
+>  /* insert the inline node list into the DSO, which will take ownership */
+>  void inlines__tree_insert(struct rb_root_cached *tree,
 > -- 
 > 2.54.0.545.g6539524ca2-goog
 > 
