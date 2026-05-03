@@ -1,177 +1,108 @@
-Received: from pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com [34.218.115.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B6837D108;
-	Sun,  3 May 2026 15:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.218.115.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676E928725F
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 16:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777823486; cv=none; b=PKCC4x766dCjtfMddeLnn68+M0+H/RyCWkX54/jo6Omw5YrP8JU+ldLrOIaZAx+syygV8KPhStnan1+RKdw/KLsaTIMeLRLIRvyQffONf/BtXwerIpDslcxf++7UQ7wJjWybGrRXDOZ2t4ImU5UnQuMYdmlku7Gaz1Gsf+PHxUA=
+	t=1777825240; cv=none; b=OCeuAhFvFe1zcswykVOcpPXY+L7crt3sPYOU/JZtf6PvcfQJPw1DXM/fOaXO5U0W/jrNkYbM3rSZMHAQ/YBVQTlObTP0TyQHUrzV1SwzgSF4PKF1cH39yujWhGhsbueMr0GkLnDIkmMuv+SauHJrCI7f0k1K5Foe4S+H+33kSts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777823486; c=relaxed/simple;
-	bh=pS76ZkZ9Bly89nkb5ej1x/6GyNi/bcPjv1fXxUb+xxU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WfOT2dqXb8cGRYDkg+Xtu2/xadr7dGI74gablvyuUYjsCmP6imQWq6vJxN3Jeb6bU1b7DcvkFcG+Nfv9SBjYUyQFPJsTFEd4h2yQQ7MuWT8qMBoEz4u61Lm+kAIjCVgw5RQuA0ZZe1o+8fPndwjmVwLuyCOOSJwrhYnv4f6N+GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=VpWxR2TU; arc=none smtp.client-ip=34.218.115.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1777825240; c=relaxed/simple;
+	bh=N1++fl+5ofrTB3M1SuzqwIYRB+VT1GvZqDBQDig8BCo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ei59SkwjcODFO9GiW0tD/h6jJ44Tcn8M3SIB2maCZQbDXBWT1RUC/12+skYoIwtU1oVZ3VD521iRd+V0+nbgfepteojQ/Z0Qe5MbsBg4pRNIigDKq1BbuuxCki0TKt2GlHtQ6v3SVmvGWBCldrt25EJHnWNQa0Yi14EUbIuP2jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5Yssrav; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="VpWxR2TU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1777823485; x=1809359485;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wlNemilBuw39SThyFRPcSL8dn9W2ob2b25XcfmRbzNo=;
-  b=VpWxR2TUDlormpr71cWCJdLCyWjMoH8vkV8CuhuETVwFzTjzc1b2QQyJ
-   6FmWjC5iIp8TzkHDtEoEeyeiHL5GsPBqAvN/0vSdqOKPP8k70LJX+NyST
-   ioQx+8gEfQCTifBS7/HnQ+ie31D64We4Tf3KMut1ER6eaF+5Po51Xx8qS
-   ZpF5cqM7BDdCWqUfyZ8LS2NJzGZ8PTBOuV0z55JCO/jh9GYbyAlMTWmWR
-   q/SZ0//qXabON1+9eIOh0N0mFb0lWwThTF6mCwK3KWBA+j/MZPX6oISY6
-   U8tsjhNI699FtoSk3XP5VSFNPmWd2IE4lIdk976Ked8DjarDDq6Y5XdG5
-   w==;
-X-CSE-ConnectionGUID: 1C1iU2exQciPINPU8IOI/Q==
-X-CSE-MsgGUID: NLApcGvNT6aePF+J5pBjJw==
-X-IronPort-AV: E=Sophos;i="6.23,213,1770595200"; 
-   d="scan'208";a="18543697"
-Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
-  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2026 15:51:22 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.51:1245]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.2:2525] with esmtp (Farcaster)
- id 7c33e460-31d7-4c8f-835e-d3e23c625257; Sun, 3 May 2026 15:51:22 +0000 (UTC)
-X-Farcaster-Flow-ID: 7c33e460-31d7-4c8f-835e-d3e23c625257
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Sun, 3 May 2026 15:51:22 +0000
-Received: from dev-dsk-avivb-1b-e28f450e.eu-west-1.amazon.com (10.15.33.9) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Sun, 3 May 2026 15:51:20 +0000
-From: Aviv Bakal <avivb@amazon.com>
-To: <robin.murphy@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>
-CC: <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<avivb@amazon.com>, <zeev@amazon.com>, <blakgeof@amazon.com>
-Subject: [PATCH] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
-Date: Sun, 3 May 2026 18:51:18 +0300
-Message-ID: <20260503155118.16191-1-avivb@amazon.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5Yssrav"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E185EC2BCB4;
+	Sun,  3 May 2026 16:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777825240;
+	bh=N1++fl+5ofrTB3M1SuzqwIYRB+VT1GvZqDBQDig8BCo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Z5YssravhbIADzHKfIxnc/QrlZXAh2cxAo/wbZa5FzZxtoVPhIN0i0yU/9aVXJohp
+	 /aRLdOf2J2x8MkjGysq8C8Fh2D3UeQsCZsjVv8GrWRYDYK6L0ORYX3XShWHMzzgfPB
+	 X4au7Cv14eqD073HzSPp8HBwtHpVGbxlAp13yPVBXKrUEorpT7JOCH9yv+tNu0tnM2
+	 cRH42lPuYuo1Lif7e/ijq0ClH0irq6W2chjDP+U5UtFNiQYWoxaWa9BFH6+N3LRDrF
+	 JxbBPaihNdJdyjUiWFmAiEJga8R1HUm1dYQgC51RO1b+OJ4TWUtjpm/FEcGal+43Dn
+	 XxePSH9T4Y5AA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+Reply-To: sashiko@lists.linux.dev
+To: "Aviv Bakal" <avivb@amazon.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260503155118.16191-1-avivb@amazon.com>
+References: <20260503155118.16191-1-avivb@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 03 May 2026 16:20:39 +0000
+Message-Id: <20260503162039.E185EC2BCB4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWA001.ant.amazon.com (10.13.139.88) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Graviton5 uses a customised CMN-S3 implementation where certain
-discovery registers report zeroed fields. Add the following workarounds:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Incorrect DTC logical ID assignment cross-wires DTC domains.
+--
 
- - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
- - Derive the DTC domain from the XP node ID, since the unit info
-   register reports it as zero.
- - Set the DTC logical ID from the XP's logical ID, since the node info
-   register's logical ID field is also zeroed.
+commit 621fea5b4bb35e497f17f2f20187c68b18f49751
+Author: Aviv Bakal <avivb@amazon.com>
 
-Signed-off-by: Aviv Bakal <avivb@amazon.com>
----
- drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index f5305c8fdca4..368fe1a86bfb 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -31,7 +31,8 @@
- #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
- #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
- 
--#define CMN_MAX_DIMENSION		12
-+/* Some implementations use a mesh larger than the architectural max of 12 */
-+#define CMN_MAX_DIMENSION		14
- #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
- #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
- 
-@@ -214,6 +215,8 @@ enum cmn_part {
- 	PART_CMN700 = 0x43c,
- 	PART_CI700 = 0x43a,
- 	PART_CMN_S3 = 0x43e,
-+	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
-+	PART_GRAVITON5 = 0xa5,
- };
- 
- /* CMN-600 r0px shouldn't exist in silicon, thankfully */
-@@ -2221,6 +2224,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
- 	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
- }
- 
-+static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-+{
-+	unsigned int x = (xp_id >> 7) & 0xf;
-+	unsigned int y = (xp_id >> 3) & 0xf;
-+
-+	/*
-+	 * The unit info register reads as zero; derive the DTC domain from
-+	 * the XP's mesh coordinates over the 10x14 mesh.
-+	 */
-+	return (x / 5) + (y / 7) * 2;
-+}
-+
- static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
- {
- 	int level;
-@@ -2266,6 +2281,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	u64 reg;
- 	int i, j;
- 	size_t sz;
-+	bool graviton5_workaround = false;
- 
- 	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
- 	if (cfg.type != CMN_TYPE_CFG)
-@@ -2276,6 +2292,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
- 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
- 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
-+
-+	/* Graviton5 has a customised CMN-S3 which needs some fixups */
-+	if (cmn->part == PART_GRAVITON5) {
-+		cmn->part = PART_CMN_S3;
-+		graviton5_workaround = true;
-+	}
-+
- 	/* 600AE is close enough that it's not really worth more complexity */
- 	if (part == PART_CMN600AE)
- 		part = PART_CMN600;
-@@ -2365,6 +2388,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 
- 		if (cmn->part == PART_CMN600)
- 			xp->dtc = -1;
-+		else if (graviton5_workaround)
-+			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
- 		else
- 			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
- 
-@@ -2443,6 +2468,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 
- 			switch (dn->type) {
- 			case CMN_TYPE_DTC:
-+				if (graviton5_workaround) {
-+					/* Node info logical ID is zeroed; use the XP's */
-+					dn->logid = xp->logid;
-+				}
- 				cmn->num_dtcs++;
- 				dn++;
- 				break;
-@@ -2658,6 +2687,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
- 	{ "ARMHC650" },
- 	{ "ARMHC700" },
- 	{ "ARMHC003" },
-+	{ "AMZN0070", PART_GRAVITON5 },
- 	{}
- };
- MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
--- 
-2.47.3
+This commit introduces workarounds for a customised CMN-S3 implementation on
+Graviton5, where certain discovery registers report zeroed fields. It adds a
+dedicated ACPI HID, derives the DTC domain from the XP node ID, and sets the
+DTC logical ID from the XP's logical ID.
 
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index f5305c8fdca4..368fe1a86bfb 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+
+[ ... ]
+
+> @@ -2443,6 +2468,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
+nsigned int rgn_offset)
+> =20
+>  			switch (dn->type) {
+>  			case CMN_TYPE_DTC:
+> +				if (graviton5_workaround) {
+> +					/* Node info logical ID is zeroed; use the XP's */
+> +					dn->logid =3D xp->logid;
+
+Will this cross-wire the DTC domains?
+
+In arm_cmn_init_dtcs(), the cmn->dns array is sorted by logid, and the
+cmn->dtc array is populated sequentially based on this sorted order.
+
+During PMU event programming, the driver uses the domain ID (dn->dtc) as an
+index into the cmn->dtc array.
+
+If the physical layout of the DTC XPs causes their xp->logid values (typica=
+lly
+y * mesh_x + x) to sort differently than their computed domain IDs, wouldn't
+the cmn->dtc array be misaligned?
+
+For example, a Domain 1 DTC at (5,0) has a smaller logid (5) than a Domain 0
+DTC at (0,6) (60), meaning Domain 1 would incorrectly occupy cmn->dtc[0]. T=
+his
+cross-wiring could cause PMU events to program the wrong physical DTC hardw=
+are
+and map IRQs to the wrong domains, resulting in incorrect performance
+statistics and unhandled interrupts.
+
+Would it be better to assign the computed domain ID to the logical ID here
+using dn->logid =3D xp->dtc?
+
+> +				}
+>  				cmn->num_dtcs++;
+>  				dn++;
+>  				break;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503155118.1619=
+1-1-avivb@amazon.com?part=3D1
