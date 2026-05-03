@@ -1,108 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676E928725F
-	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 16:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B2922F74A
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 May 2026 17:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777825240; cv=none; b=OCeuAhFvFe1zcswykVOcpPXY+L7crt3sPYOU/JZtf6PvcfQJPw1DXM/fOaXO5U0W/jrNkYbM3rSZMHAQ/YBVQTlObTP0TyQHUrzV1SwzgSF4PKF1cH39yujWhGhsbueMr0GkLnDIkmMuv+SauHJrCI7f0k1K5Foe4S+H+33kSts=
+	t=1777828245; cv=none; b=OdcpCZyWiaghB7VxzBByrhdy0qZXJdIKTyHd5k7Oz+fSkGswtBoy3jI6UBERz7IhcYS9QavaJCE3PlC+Fk3eN0kuqgY8hDmIXv7TMwfeHk5uA62RjmF2/28CTTh/oZ7zWRh1fTP49CY59Pf7uUaUinHvtg3nmO/Kcso25shaEgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777825240; c=relaxed/simple;
-	bh=N1++fl+5ofrTB3M1SuzqwIYRB+VT1GvZqDBQDig8BCo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ei59SkwjcODFO9GiW0tD/h6jJ44Tcn8M3SIB2maCZQbDXBWT1RUC/12+skYoIwtU1oVZ3VD521iRd+V0+nbgfepteojQ/Z0Qe5MbsBg4pRNIigDKq1BbuuxCki0TKt2GlHtQ6v3SVmvGWBCldrt25EJHnWNQa0Yi14EUbIuP2jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5Yssrav; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777828245; c=relaxed/simple;
+	bh=+y+XoSJ2H50k21P/clhLk2ZQ4f0vhD5k5M3eLocD7qY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HIlqDnYADq+0MnjYrpKJVxpp2i/+fdl2gm2Ozs6Ukc79NSW22n06HoottDrzF5KG7mDX8Cqb3KKbJlyhid9j4DpRwB27yqCaurUKnlS5LPyvzuORzX+8tHxClmt80Bk4vOOUOGG1Om9tfj9Va+UAIT/fzxylMqmGJu5njCqouy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RFLdWRKz; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5Yssrav"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E185EC2BCB4;
-	Sun,  3 May 2026 16:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777825240;
-	bh=N1++fl+5ofrTB3M1SuzqwIYRB+VT1GvZqDBQDig8BCo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Z5YssravhbIADzHKfIxnc/QrlZXAh2cxAo/wbZa5FzZxtoVPhIN0i0yU/9aVXJohp
-	 /aRLdOf2J2x8MkjGysq8C8Fh2D3UeQsCZsjVv8GrWRYDYK6L0ORYX3XShWHMzzgfPB
-	 X4au7Cv14eqD073HzSPp8HBwtHpVGbxlAp13yPVBXKrUEorpT7JOCH9yv+tNu0tnM2
-	 cRH42lPuYuo1Lif7e/ijq0ClH0irq6W2chjDP+U5UtFNiQYWoxaWa9BFH6+N3LRDrF
-	 JxbBPaihNdJdyjUiWFmAiEJga8R1HUm1dYQgC51RO1b+OJ4TWUtjpm/FEcGal+43Dn
-	 XxePSH9T4Y5AA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
-Reply-To: sashiko@lists.linux.dev
-To: "Aviv Bakal" <avivb@amazon.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260503155118.16191-1-avivb@amazon.com>
-References: <20260503155118.16191-1-avivb@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 03 May 2026 16:20:39 +0000
-Message-Id: <20260503162039.E185EC2BCB4@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFLdWRKz"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12dc3d81736so2023763c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 03 May 2026 10:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777828244; x=1778433044; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZpnAeDqj38/YOqlUFsicrMJq8jdvEN081sZMPxMOo0=;
+        b=RFLdWRKzTsOqtq2ParNWUlgg5psXZ8oveVo0UNM8dC7j5A7dT/HUVLCnpAMkKsQzL9
+         h7KwPu3bhfvDWl8j7gUiWDe5NvGOJUa8owNchWkK6OT6+ImRBZhe8UMz8acO/4JXFkmY
+         +CGwtRfxvRcjxvHKjaq9N1EYTOx+kC598iWmUilpJbyyYa15OX6RXy+0wsRZnxZv881+
+         WGuR3erLQjKbbCYuIB39vgw0yjRn4ee6nKLP7k+F8/y7YKfXpAoTUEeQmRaUdoZyucfe
+         rtNzFqCdNOtqiF35W/Ysry3H+DKjodYwDrxhwIVd26Es2Gk66jOrcOMuRRVwsIRCkWyV
+         yyMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777828244; x=1778433044;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZpnAeDqj38/YOqlUFsicrMJq8jdvEN081sZMPxMOo0=;
+        b=TrHRIGKr02INJCdZrj0PzIbrGgdhKMfZngCmz6agnrLHPvSYcmTBso66Ry09lDPfSp
+         NouhgmgPGQGK74xN17uaLFCUarstIT4J/vMeU1ulHpeIJhqsk8/20FdCZy/+xrv9Vn1m
+         BfgN6BKMusBG9hxlvOu1tIxJtVeSJgieFNpYxB8g1+UhcsuDiOB2HCNlJowX4634zWCe
+         Gagi9WyZ3axeD7gcT5IIgB2Nbg0IoX8VenN6feTj87IFMadGsY1TpXpt3T4roNYfqDAS
+         0y/hBIP2xRUaXrGPilgBvHRAJ+WqOkFokamoOBbhIdVD6Z1CcDbvffNRVBE9WUWproxJ
+         3FSg==
+X-Forwarded-Encrypted: i=1; AFNElJ8+a2mmsV/f0Pr4RoxNGYhz7W+DZXy6Gc3LIjhdyv9UrDToSpZOxspDgacK10VDUv8jL8X/lT2TRMOvTbHofrTQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDfCzvJpk2mCo9fqjSNNM7W2SQB4P7Ye+NiAVXzU8NBelsk7uu
+	ffciv/WtgyQnHiRn5sS/exYks8xuBR441dkU1Qx5jFcUCAUbBDe7qN+2s2iEsFyF3RYdQfOLG6u
+	u9cXWlUT1Nw==
+X-Received: from dlbur22-n1.prod.google.com ([2002:a05:7022:ea56:10b0:12a:c265:1a7c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1b0e:b0:12a:72af:83d2
+ with SMTP id a92af1059eb24-12dfd7c3c48mr2612525c88.14.1777828243425; Sun, 03
+ May 2026 10:10:43 -0700 (PDT)
+Date: Sun,  3 May 2026 10:10:26 -0700
+In-Reply-To: <20260503003552.1063540-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260503003552.1063540-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260503171032.1559338-1-irogers@google.com>
+Subject: [PATCH v4 0/6] perf DWARF: Fix libdw API contract violations and crashes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Zecheng Li <zli94@ncsu.edu>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Incorrect DTC logical ID assignment cross-wires DTC domains.
---
+This patch series addresses a number of DWARF/libdw error-handling
+bugs and contract violations, preventing several real Userspace
+segmentation faults and memory/FD leaks.
 
-commit 621fea5b4bb35e497f17f2f20187c68b18f49751
-Author: Aviv Bakal <avivb@amazon.com>
+In v4, the series has been thoroughly hardened based on review
+feedback for v3, fixing latent bugs and improving unwinding/search
+robustness:
 
-perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+ - **Memory/FD Leak Fixes**: Fixed file descriptor leaks in
+     `debuginfo` offline init paths, and memory leaks when `strdup` or
+     inlined list appends fail during callback walks.
+ 
+ - **Callchain Robustness**: Fixed `ORDER_CALLER` update bugs to
+     prevent inline callchain corruption when nest depth >
+     2. Re-implemented `die_get_data_member_location` helper with
+     `dwarf_attr_integrate` to safely parse location expression
+     offsets for inherited properties (specifications/origins).
+ 
+ - **Search Robustness**: Relaxed strict `dwarf_getfuncs` error aborts
+     in `probe-finder` and `line-range` loops to allow skipping
+     individual corrupted CUs instead of prematurely stopping searches
+     entirely. Added DWARF line 0 reference support.
+ 
+ - **Safe DWARF Printing**: Switched to the `die_name()` safe printing
+     helper globally to prevent `vfprintf(NULL)` undefined
+     behavior/crashes when DWARF entities (like anonymous structs or
+     tail calls) lack names.
 
-This commit introduces workarounds for a customised CMN-S3 implementation on
-Graviton5, where certain discovery registers report zeroed fields. It adds a
-dedicated ACPI HID, derives the DTC domain from the XP node ID, and sets the
-DTC logical ID from the XP's logical ID.
+v4:
+ - Localized and squashed robust error handling, memory/FD cleanup
+   paths, and safe DWARF printing.
 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f5305c8fdca4..368fe1a86bfb 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
+v3:
+ - Minor formatting fixes.
+https://lore.kernel.org/linux-perf-users/20260503003552.1063540-1-irogers@google.com/
 
-[ ... ]
+v2:
+https://lore.kernel.org/lkml/20260502155656.478642-1-irogers@google.com/
 
-> @@ -2443,6 +2468,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
-nsigned int rgn_offset)
-> =20
->  			switch (dn->type) {
->  			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid =3D xp->logid;
+v1:
+https://lore.kernel.org/linux-perf-users/20260502064839.282422-1-irogers@google.com/
 
-Will this cross-wire the DTC domains?
+Ian Rogers (6):
+  perf dwarf-aux: Fix libdw segmentation fault in cu_walk_functions_at
+  perf dwarf-aux: Fix libdw API contract violations
+  perf libdw: Fix libdw API contract violations
+  perf probe-finder: Fix libdw API contract violations
+  perf annotate-data: Fix libdw API contract violations
+  perf debuginfo: Fix libdw API contract violations
 
-In arm_cmn_init_dtcs(), the cmn->dns array is sorted by logid, and the
-cmn->dtc array is populated sequentially based on this sorted order.
+ tools/perf/util/annotate-data.c |  27 +++++---
+ tools/perf/util/debuginfo.c     |   9 ++-
+ tools/perf/util/dwarf-aux.c     |  39 ++++++------
+ tools/perf/util/dwarf-aux.h     |   5 ++
+ tools/perf/util/libdw.c         |  84 ++++++++++++++++++++-----
+ tools/perf/util/probe-finder.c  | 105 +++++++++++++++++++++-----------
+ tools/perf/util/srcline.c       |   9 ++-
+ tools/perf/util/srcline.h       |   1 +
+ 8 files changed, 191 insertions(+), 88 deletions(-)
 
-During PMU event programming, the driver uses the domain ID (dn->dtc) as an
-index into the cmn->dtc array.
+-- 
+2.54.0.545.g6539524ca2-goog
 
-If the physical layout of the DTC XPs causes their xp->logid values (typica=
-lly
-y * mesh_x + x) to sort differently than their computed domain IDs, wouldn't
-the cmn->dtc array be misaligned?
-
-For example, a Domain 1 DTC at (5,0) has a smaller logid (5) than a Domain 0
-DTC at (0,6) (60), meaning Domain 1 would incorrectly occupy cmn->dtc[0]. T=
-his
-cross-wiring could cause PMU events to program the wrong physical DTC hardw=
-are
-and map IRQs to the wrong domains, resulting in incorrect performance
-statistics and unhandled interrupts.
-
-Would it be better to assign the computed domain ID to the logical ID here
-using dn->logid =3D xp->dtc?
-
-> +				}
->  				cmn->num_dtcs++;
->  				dn++;
->  				break;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503155118.1619=
-1-1-avivb@amazon.com?part=3D1
