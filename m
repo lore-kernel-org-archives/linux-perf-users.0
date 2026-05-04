@@ -1,141 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8191F5825
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 06:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4105E28C009;
+	Mon,  4 May 2026 06:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777876064; cv=none; b=SpcZ8c7jR/fClNy/IHRHCDL5qupLOQ96FaCkGBYeJALbrcqF/PhVHamiYH3mgN1cs/zyL7Cn8a2Cfoppd+vOi9Z+xFOq8FLErctmq7wgbRd2ssKhCVI7asK9deL/k8BJnWKxV2wcs6BiTygt/BxLwyeaDouuzUQm6M2Q1xJG4G0=
+	t=1777876089; cv=none; b=fmTLafJ2t7Lbznb5wFf5ghQodRW3PUYkFwO66h2yI6vMtaJ4ochiMue8iFKqLVHLVo1h+9x+ELkEgRMkpAtPGrNw5z869nfoZPGUu2jQrk0f7vcWeZTEVLpYO6EQmNIStzPxE4eD4wWmZAHXFzPY9LnVB9mvaG5e2ELY65jpD0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777876064; c=relaxed/simple;
-	bh=RDz7+7/4MCo5MYCX1Nogfjhhl1MhgBng/luqFhvxDqo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VA91qbxtfS7+enh/HqC0LdC6Mge52SBy9SJ0TKT7SKYK6b68GYwFdsSbc89fkGNvre3vCteQmtxnpLXjpNd+unb1Y44z2O4myBqrBrePJp8LCV8lGMNZh/9QFDFiPUv6DSpXN9Q0Ot3Z0GpFg9xFugdP5sJjEAsSrDU33zbB+Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH9TqmK/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777876089; c=relaxed/simple;
+	bh=SagCNADX4hw2Ho0e1b35RZD+4ryErLG0Q67sc2BGO7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yh0zGnfMTVPScxrnNEvdDrZjwv8HOmXcu12dWOyu/tT752PpEi7GARQAzHOES9Q6XQI93UwL+UYUtCiFQVDIF5CbTQ3zE6ZgbjF1JNdKWOasA3azECe6zu1TUA+12ID6Nw9g6pVOtimn50q+vxVMVBe2ZrhvEz2wljdYhbOAb4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHjjZ+gB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH9TqmK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE73C2BCB8;
-	Mon,  4 May 2026 06:27:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHjjZ+gB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05F0C2BCB8;
+	Mon,  4 May 2026 06:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777876064;
-	bh=RDz7+7/4MCo5MYCX1Nogfjhhl1MhgBng/luqFhvxDqo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=BH9TqmK/9y1Dh8gC88I1CFKj0nJDhTZ0Pbn6xbfLiZPxxVb/NPca1sjet21ivao9q
-	 ArdaeWtrb1YM3uKQqhxrR0dCwIkPiZePd1w/n4SZaPwi3ixsDZVpLEDqHKyv84LDoD
-	 CWZeHPHUntw8suVD9tygARHgYAbK+ymplDa39SYesI6Sf70RU28aglNazfqcWoBXID
-	 u4XpLsvy70TTSXnl4c29NdQuISTSH74zLo2gHnvvgAkKf148964S1+4G1GhCDRkbv2
-	 l40metFrKePOzpGpGJ4riyUYCVsHs2AMwVBf6YBof5CvFsbocdysT83LaaFByVf3ka
-	 sUwxAiKjKBEKA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf lock contention: Allow 'mmap_lock' in
- -L/--lock-filter
-Reply-To: sashiko@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504060859.84987-1-namhyung@kernel.org>
-References: <20260504060859.84987-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 06:27:43 +0000
-Message-Id: <20260504062743.CCE73C2BCB8@smtp.kernel.org>
+	s=k20201202; t=1777876089;
+	bh=SagCNADX4hw2Ho0e1b35RZD+4ryErLG0Q67sc2BGO7o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EHjjZ+gBMU1FUAq/maL0OynqOEG5KvC85LF7xR1+fXnAoLRZ2vFOn5RqySt/G7O70
+	 SuBepJKLpob48SjCQpOAyvoBYYIHfhA7On+Cfqlaqk4znxMDFFd3jIye5B6+Z34ZUi
+	 HIs6z8kcuEcqxkUypDeZ89uNl1hk30W1VzWfpf41LGalAGDti2mQsD4k8z+Dxia+JX
+	 6/1COJWLvna0qVTnqgAJ5kYTTRypDMEUYhg7UuK/KuqhKdZO9CxcsHVO+hPLHC9N9F
+	 4oYpW32+hoLeSUmo2RyYk8LeB1DN7L1VHc8RuC+fHtDd3/v/XVgrpZTUtqzJuTIgLM
+	 Jp4V4CEolOHUw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 1/3] perf build: Update error message for BUILD_NONDISTRO=1
+Date: Sun,  3 May 2026 23:27:56 -0700
+Message-ID: <20260504062758.92001-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Combining `mmap_lock` with other lock names in the `-L/--lock-filt=
-er` option drops all events.
-- [High] Specifying only an unknown lock symbol in `-L/--lock-filter` silen=
-tly traces all locks in the system instead of aborting.
---
+It should say binutils-dev(el) instead of plain binutils package as it's
+mostly installed already and can confuse people like me. :)
 
-commit ba21190eae512a9060154fb29ca23ce62c636cc2
-Author: Namhyung Kim <namhyung@kernel.org>
-Subject: perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This commit adds support for filtering lock contention events specifically =
-for
-the 'mmap_lock' using the -L/--lock-filter option. It introduces a special
-flag to bypass the usual address-based filtering for mmap_lock.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 333ddd0e4bd814e9..06d7a3f9990ce522 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -923,7 +923,7 @@ ifdef BUILD_NONDISTRO
+   $(call feature_check,libbfd-liberty-z)
+ 
+   ifneq ($(feature-libbfd-threadsafe), 1)
+-    $(error binutils 2.42 or later is required for non-distro builds)
++    $(error binutils-dev(el) 2.42 or later is required for non-distro builds)
+   endif
+ 
+   # we may be on a system that requires -liberty and (maybe) -lz
+-- 
+2.53.0
 
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index cbd7435579fe..cd7ee5d1d1dd 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-
-[ ... ]
-
-> @@ -264,7 +270,10 @@ int lock_contention_prepare(struct lock_contention *=
-con)
->  			con->filters->addrs =3D addrs;
->  		}
->  		naddrs =3D con->filters->nr_addrs;
-> -		skel->rodata->has_addr =3D 1;
-> +		if (naddrs > 0)
-> +			skel->rodata->has_addr =3D 1;
-> +		else
-> +			naddrs =3D 1;
->  	}
-
-Prior to this patch, providing an unknown symbol (e.g., -L non_existent)
-resulted in naddrs =3D 0 and has_addr =3D 1, which correctly caused libbpf =
-to
-fail creating the map with 0 entries, gracefully aborting the process.
-
-With this change, if naddrs is 0, has_addr remains 0 but naddrs is
-artificially set to 1. The BPF map creation succeeds, but since has_addr
-and has_mmap_lock are both 0, the BPF program skips the address filter
-entirely.
-
-Does this unintentionally trace all locks in the system instead of graceful=
-ly
-aborting when an unknown lock name is provided?
-
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index 96e7d853b9ed..45ec2fb73984 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-
-[ ... ]
-
-> @@ -295,6 +298,14 @@ static inline int can_record(u64 *ctx)
->  			return 0;
->  	}
-> =20
-> +	if (has_mmap_lock) {
-> +		__u64 lock =3D ctx[0];
-> +		__u32 flag =3D ctx[1];
-> +
-> +		if (check_lock_type(lock, flag) !=3D LCD_F_MMAP_LOCK)
-> +			return 0;
-> +	}
-> +
->  	return 1;
->  }
-
-The -L option allows filtering by multiple lock names, but can_record()
-evaluates active filters sequentially. If a user specifies
--L mmap_lock,other_lock, both has_mmap_lock =3D 1 and has_addr =3D 1 will be
-set in the BPF rodata.
-
-In this scenario:
-
-1. An other_lock event passes the has_addr check but then reaches the
-has_mmap_lock check. Since its type is not LCD_F_MMAP_LOCK, the function
-returns 0.
-
-2. An mmap_lock event is evaluated against the has_addr check first.
-Because its dynamic address isn't in addr_filter, the lookup fails, and the
-function returns 0 before even reaching the has_mmap_lock check.
-
-Will this cause all valid events to be silently dropped when combining
-mmap_lock with other lock names?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504060859.8498=
-7-1-namhyung@kernel.org?part=3D1
