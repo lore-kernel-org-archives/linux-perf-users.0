@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B122BB17
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 01:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0932B2BB17;
+	Mon,  4 May 2026 01:50:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777859368; cv=none; b=HnWV6IvL8FPoYKIWvgyWIdqTt/0gW4XMmkXEfwqcV0LujybeUNEKib70G4NMLnPgj/qgcwqqLXdB4fI1nijuMVcsQrTd+hUxS00A2eELO1fxXF98Youd/usPItH8NlRCWdOjsuCW2FOPWgS0hCm1wZP028Jyqn6Q/zgcOerde+8=
+	t=1777859460; cv=none; b=h+qiiA6QsosKFsKXorJ10FeALsZlRUP3BnggRjD3jlh4vrvHjPgcodtKMZtm2n0lLvP1XiY9CAcOdoMp9bZ6gNqs3aZ9vvyuNn73KYALzm0h2nPD1fQ9BwJBA8Xpe5civS0GjwB33WY20v//9bvMnyU1ZYd/80eEyGpmjPN79+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777859368; c=relaxed/simple;
-	bh=UxNq48/xbu0OvKDwkGIsg6liRabxxjbEHw+/9JiWl3o=;
+	s=arc-20240116; t=1777859460; c=relaxed/simple;
+	bh=6CC4nMw+eFBWttuG92yIe4RTs76dOvLDXon2itPasV0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HYcrrYVSckNZSpu6ai1sgyl+OKMTPkXIvD9bRXfOZBNw+z0pzKuwEpACof7OUa3gkaI4cduwD3uskMnqDTcE2eg+qdb9QREqHbqt6bI9UyneFvGmp4/l3OmcJdS3ELNcku9LdBeFCNtLUGYzMG1UZmPI/RwnDax744ZnXILDp8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJncZUcT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JRP9Uplb+3BP0nJlWgykek2UTnI+u+dtYC4vEscYIjPfsfnqDgtGqguNX27sIVG4YowojBWu0Pp5ZS7UywUAkaDYfawgIQCFRIs5U5OfqFpz6/ntkRMr3ph+T4QRJ8FfCnR1XmflxPQaPptVg+F9yf9aa9juxd8i4yqg2QQyEAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCJcj53y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJncZUcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D21C2BCB4;
-	Mon,  4 May 2026 01:49:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCJcj53y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34053C2BCB4;
+	Mon,  4 May 2026 01:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777859368;
-	bh=UxNq48/xbu0OvKDwkGIsg6liRabxxjbEHw+/9JiWl3o=;
+	s=k20201202; t=1777859459;
+	bh=6CC4nMw+eFBWttuG92yIe4RTs76dOvLDXon2itPasV0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJncZUcTdPQY5pjU3vl2D7/Zzm4ANjgyl8Al7X26x4TXYHwAMNXdBCIICyb7s/L9G
-	 YP6X2CicFiinb14LdH2JW+195aOaA0Rj0GgYkFde83r3MfvVj7qIWN5UY5cljgs0AB
-	 l0rORGmOOxg1dhL/99CC+QJWgNTQSBwedNi1JMflEnl1gVN7Emc1LEZ+8IEH73l5Xv
-	 Yod4f/aH7Joak6kKk7VGnWN2EZmQIQMfeImh6gcnE6K4tY4oOSFkMsbxZ+0sKoNGSm
-	 PPMP1gLMsSqAtgG0aD2iQkdD91dPeJAyWzeXPFXYUW57tEx5Xh6FKgRIcXbhhVLnVM
-	 uHVT54pRnBsdw==
-Date: Sun, 3 May 2026 18:49:26 -0700
+	b=iCJcj53yET7ftW6jy17XAmTr8rfh1Y83WHCVla7iiNXEG8lNB0TodPpmT511zAPWL
+	 seWWu17Z+IZVNxMIZhxpVmKI1i8IX2wPz6EuMQecxOK8OW8/tlTeWqAejzieqMD/hU
+	 PDmEMAZ2Gvs6VjzkznUjaRYKlXN4eK5bHdHl0BWyw/9beKyWzNXYsQ9yfZtD646JaU
+	 n0z4u3gRi8S08ofU7LaRzAPggbvZZmKjTGlznU23vXc8+QRgmIU7lI00LwEKRqPFGj
+	 hQN53q5S9ti6PWDCxoEEGhWHBW6bUEDBHDr3WOkZKxMWHOMeZqM8NW6oHAtRZFrwrs
+	 nbStKpqDBLBBw==
+Date: Sun, 3 May 2026 18:50:57 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com,
-	shivani@linux.ibm.com
-Subject: Re: [PATCH V3 1/2] tools/perf: Fix the check for parameterized field
- in event term
-Message-ID: <aff7JnNuWpj4Mvss@z2>
-References: <20260502141258.17128-1-atrajeev@linux.ibm.com>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
+	thomas.falcon@intel.com, tmricht@linux.ibm.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf tools: Ensure event leader stays at head of
+ evlist after sorting
+Message-ID: <aff7gc4dJGMRnoi5@z2>
+References: <20260501223413.1001483-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,62 +47,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260502141258.17128-1-atrajeev@linux.ibm.com>
+In-Reply-To: <20260501223413.1001483-1-ctshao@google.com>
 
-On Sat, May 02, 2026 at 07:42:57PM +0530, Athira Rajeev wrote:
-> The format_alias() function in util/pmu.c has a check to
-> detect whether the event has parameterized field ( =? ).
-> The string alias->terms contains the event and if the event
-> has user configurable parameter, there will be presence of
-> sub string "=?" in the alias->terms.
+On Fri, May 01, 2026 at 03:33:47PM -0700, Chun-Tse Shao wrote:
+> From: Ian Rogers <irogers@google.com>
 > 
-> Snippet of code:
+> For evlist of a certain event/metric, the HEAD should be the event
+> leader. In some scenarios where uncore_xxx_0 does not exist, the event
+> leader is not the first element after sorting. For example, on my test
+> machine uncore_iio_0 does not exist, the event leader is uncore_iio_2.
 > 
->  /* Paramemterized events have the parameters shown. */
->        if (strstr(alias->terms, "=?")) {
->                /* No parameters. */
->                snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
+> However, in `evlist__cmp`, it was reordered based on the PMU name, which
+> makes uncore_iio_1 the HEAD of evlist, breaking the following merge
+> logic in `evsel__merge_aliases`.
 > 
-> if "strstr" contains the substring, it returns a pointer
-> and hence enters the above check which is not the expected
-> check. And hence "perf list" doesn't have the parameterized
-> fields in the result.
+> The patch adds a loop at the end of
+> `parse_events__sort_events_and_fix_groups` to make sure the first
+> wildcard match is the earliest entry in the list, updating pointers
+> accordingly without breaking reordering detection.
 > 
-> Fix this check to use:
+> Tested on device lacks uncore_iio_0, and `perf test` looks good.
 > 
-> if (!strstr(alias->terms, "=?")) {
-> 
-> With this change, perf list shows the events correctly with
-> the strings showing parameters.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+> v2:
+>   Adding missing Signed-off-by from Ian Rogers.
+>   Renaming variable `l` to `orig_leader`.
 
-Any real examples?
+I can't see this.
 
 Thanks,
 Namhyung
 
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> ---
-> Changelog:
-> v2 -> v3:
-> Split the strstr correction in a single patch
+> v1: lore.kernel.org/20260501043532.790711-1-ctshao@google.com
 > 
->  tools/perf/util/pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/parse-events.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 23337d2fa281..0b8d58543f17 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
->  						   skip_duplicate_pmus);
->  
->  	/* Paramemterized events have the parameters shown. */
-> -	if (strstr(alias->terms, "=?")) {
-> +	if (!strstr(alias->terms, "=?")) {
->  		/* No parameters. */
->  		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
->  		return buf;
-> -- 
-> 2.47.3
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 1497e1f2a08c..be825617321d 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2251,6 +2251,33 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  		}
+>  		last_event_was_forced_leader = (force_grouped_leader == pos);
+>  	}
+> +
+> +	/*
+> +	 * Make sure the first wildcard match is the earliest entry in the list.
+> +	 * Since list_sort might have reordered the aliases, the original leader
+> +	 * might not be at the head of the list anymore. We find the first
+> +	 * alias in the sorted list and make it the new leader, and redirect
+> +	 * all other aliases to it.
+> +	 */
+> +	list_for_each_entry(pos, list, core.node) {
+> +		struct evsel *l = pos->first_wildcard_match;
+> +
+> +		if (!l)
+> +			continue;
+> +
+> +		if (l->first_wildcard_match) {
+> +			/* Original leader was redirected to a new leader */
+> +			pos->first_wildcard_match = l->first_wildcard_match;
+> +		} else if (pos->core.idx < l->core.idx) {
+> +			/*
+> +			 * We are earlier than the original leader in sorted order,
+> +			 * and no earlier alias has claimed leadership yet.
+> +			 */
+> +			l->first_wildcard_match = pos;
+> +			pos->first_wildcard_match = NULL;
+> +		}
+> +	}
+> +
+>  	list_for_each_entry(pos, list, core.node) {
+>  		struct evsel *pos_leader = evsel__leader(pos);
+> 
+> --
+> 2.54.0.545.g6539524ca2-goog
 > 
