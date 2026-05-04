@@ -1,54 +1,54 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A2831F98E
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 08:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA6A31F98E
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 08:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777882370; cv=none; b=V8lCbgxVfLBFyTIDhuP2y3oVwhjqtFO+Hn1Rpukz8gK0/xX2ByLzOxvHkuJvzj71JTcTd5CGIaHhhHmhAhT3yPOiV4rv+Ea4Z+zH6NYY/PUb6kax5Cwq0oReN9bYtP5G7djF5hxxvUY0h9Mpvxt9M2LMR5PAUtEUjaefH5XD/Lk=
+	t=1777882372; cv=none; b=Q2iba4WuEJIW3tSwe5WpN4ZuHBG//XNcMsM8n8sXI0bQwS/nLk4fVC7KJ+hraZVTCIpeQ5fnsJv/+zqnp6PshOZ2b2zBXQJEB81VQtbCnGtc+z6QCIFH7Ob81xwEmtUqGrvZiKfd2Z0vzCI8butKzt/CSnBFfibdqLMT9ydlo30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777882370; c=relaxed/simple;
-	bh=fagq5Pyf6RSPqzFK13KNcLSeUW6HQRUiBptJVsrfrGs=;
+	s=arc-20240116; t=1777882372; c=relaxed/simple;
+	bh=86Fi8XgRbKLUoxAcrNtQ/NCYtxcmPhDpKOGB2wMyx9M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=phN3zwexRd1SbfG1tyNQDDlnY8Hr2UYo7vMQW1Bdr2SzFq9WPUZzBZj8kbhzfVzu86smgu/qEkcLPpZwVo7bCOOFeMm1TxtErOKz/aH8S3YN8p5AVmYJSkAdjE6jeLUwRPTI7xXyh0MlFADvjaMIciNK+xWJpXxjgOPzgfl8blo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b2qSs4M0; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=ky00csEpmT9/i4RcS1L24C0rnKMy9+sUGGk6BBZRu8pVs10e25AKYpJd4JMRtFz8ONFSbEFtDSdDViplN6armjMLT81jS0zIg3OStYLFFQWmz9WyDJIC2dhv+47+QU1dl98dBGwEg12swpqZ8/g+00jkb8RtWt+6LJHowlcA8AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MUZuLnAA; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b2qSs4M0"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c726f4019so5272218c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 01:12:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MUZuLnAA"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12dba1e866dso3831106c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 01:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777882368; x=1778487168; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777882370; x=1778487170; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SicvtagepMuI70fWYyc1s4K5eI0fAPBxQSJZnUvBoVQ=;
-        b=b2qSs4M0K+HUHZ4cGmylNCH8ZY221CqfM8d92hzq1HHO66Bi3MzLbhv5CA7uXRX9hC
-         53T71h6L+FyAOlNcMrqBD+ap21Ho8jr9ja8lN7voFp0gBS3cseNi3vdfwyAEZyAdKoIs
-         ru4IK6zBdFLYHS4jYd+GIn45BzyYr52O220oXz8jHBiksc1mP9ZHQTLWPw4mItCrBzNu
-         tcObtVkSeHW2D1vmE7bnZhbWijkyKmmqwfNJ+2DMrXbMQ4wa/ChqLRHcJwFO4KVbaVKb
-         TRmeqKLbd0q5aDNS8rR3EqTyfUOesU/PWx49fG93Lm+wzvGX0IRBFTjEW9XHGURhlFaY
-         d8FA==
+        bh=ws2FlyxY3Py6KisW5mWMui419nDHfCw03Zt9ciWQIP4=;
+        b=MUZuLnAAu/oOYxIZ1TQ/OUgzKDqIOirC+4mN1mJMyx6OQdWwYTPcHtyHWzfUYKlO15
+         78YWRDU5xyKye5g5BJhF+qG0pXCN/Yr5NgxFCGqgASBCZ5pF07IOmGQ7YpqcmF/QnQjb
+         V5LrYmRboRJLDTFQGJmtTXGJ+S5ISndT1Z7QqjKXS7EjfXNZGToO4rbO06MHQcmW+wck
+         NjLfWOKSYf3LMHNwf+VCwAXWa/SG7W9p10J3u7Xp7vJlQDA8Suk4WZd50SMLWF7lAqj6
+         +2xyDQuu6RpiiscBND9QhGd5DhcoolSpTt5p9GqyKBhhhkiHqWfOB0xsTUG1SNe4tA9J
+         E4AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777882368; x=1778487168;
+        d=1e100.net; s=20251104; t=1777882370; x=1778487170;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SicvtagepMuI70fWYyc1s4K5eI0fAPBxQSJZnUvBoVQ=;
-        b=p/eVk4uRitK0Le/2QvnD3xEa+1rjfNAg5o1TAPvWE6RY11dp4mGtYyu+VEXnwJPQix
-         RQLYztlarp8uCPz9wwAJC9ecOlBvPlTd5sVaAhwF4AQJfxedDaxpq0v9dlLBpykLsi25
-         Fr4g8FMFJhmIMAYybmwuAl/DZGn3KvhCkQhHUP4nZXFZi36tfA9tVe8c9TT6I4cDP2SR
-         B4bx1Kgv5iNz+MAJ9vEE3ggcZsNxAyguDkYV3x3EkC4a0QC3njaRNzDduICM1W1BvK54
-         Lj6cchqX6zscrU81hlkOMZef7ygSLzCsJq7wj3WxB8XpkXNiEVaQc5axGEBZaICj1kk+
-         4HIA==
-X-Forwarded-Encrypted: i=1; AFNElJ/4utNR5Rw9nF/6N6ugA6+PGc/9VuBKvJc0rFKs0yjUsVsAe5rjgB+j2+th/mstYRmPMwQnFOdhNz2ccbiT++h9@vger.kernel.org
-X-Gm-Message-State: AOJu0YweVoQHVdpBzEaV3RYx1k0/zWbpKLv+deza2n3pCY3M9rOXXBk2
-	oC0Jid77icYk3yAbcwjikSbhzdTIs1XMxp5y6m/dr5tn2ceCkiOquSSuAmaTxQ0WAlSvHx6CKjn
-	45bg8qpEn9A==
-X-Received: from dlbps8.prod.google.com ([2002:a05:7023:888:b0:12d:b2ba:b551])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e98d:b0:11b:9b98:aa4b
- with SMTP id a92af1059eb24-12dfd7ae4ffmr3815325c88.6.1777882368044; Mon, 04
- May 2026 01:12:48 -0700 (PDT)
-Date: Mon,  4 May 2026 01:12:26 -0700
+        bh=ws2FlyxY3Py6KisW5mWMui419nDHfCw03Zt9ciWQIP4=;
+        b=o/9798UIvC4CDWrV5m3Jr+E+5xi/SbDezDatBRmSyq6LG4q2o+GOyfelzsMhJiMJ9D
+         7RjEMeEG1SHcdORa0ikjXsJqxoolbws8rs9AL2j0ZyokXHBsbNoFQYrTRv1Vu2KlK8RM
+         UPDVbvwFCyGWmyMUSw08iLykcWtvlAdXNLZe0pwbqEtNVEmMuQeB+iKupKBpYVVU5UoW
+         i+YOmSJWxyytX0ShOTrYoJnZ6ewTVNcPlE8WSE3mQMVbatsy4twupdQBbf/6CCHq2peJ
+         jlIYfvbT3RHnYhccnilEcLLnT5g4G9xAgTmbkOjmZgvtzX6fl01ftDqJXdALWNKjMR9c
+         am+A==
+X-Forwarded-Encrypted: i=1; AFNElJ/OFzqXvyT/F4ghx8ewzANDJDKwXn8f+uZNNvDhXaQaauh0b9s5kc5/jslwnPoTwXyxxgOHnHCRfoYGS5RdNxoz@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHkeT2uTaq4yt++n5eNJJBx9jcAF0G8qO1f4UiocKYxM4zIdH1
+	uF5CRPv0k+EfVqfBHDRjNNOxseh0ysMyPvUpYPiEnl9ZY1Z9i4OlZxoZupJIXH8ZypD5N9ZojHC
+	NDlbAiECxnQ==
+X-Received: from dlbps10.prod.google.com ([2002:a05:7023:88a:b0:12d:d43c:4120])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:68a9:b0:12c:aae:7b43
+ with SMTP id a92af1059eb24-12dece4285bmr6819531c88.24.1777882370014; Mon, 04
+ May 2026 01:12:50 -0700 (PDT)
+Date: Mon,  4 May 2026 01:12:27 -0700
 In-Reply-To: <20260504081227.2203848-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260503171032.1559338-1-irogers@google.com> <20260504081227.2203848-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260504081227.2203848-9-irogers@google.com>
-Subject: [PATCH v5 8/9] perf annotate-data: Fix libdw API contract violations
+Message-ID: <20260504081227.2203848-10-irogers@google.com>
+Subject: [PATCH v5 9/9] perf debuginfo: Fix libdw API contract violations
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,113 +69,73 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Check return values of `dwarf_aggregate_size` and `dwarf_formudata`.
+Check return value of `dwfl_report_end` during offline initialization.
+Validate `dwfl_module_relocation_info` result before passing to `strcmp`
+to avoid potential segmentation faults.
 
 Additionally:
- - Avoid `vfprintf` undefined behavior with `NULL` strings by using
-   the `die_name()` helper for `dwarf_diename()` in `pr_*` calls.
- - Use `die_get_data_member_location()` (updated to use
-   `dwarf_attr_integrate`) to correctly parse location expressions
-   for inherited member locations in the fallback path when
-   `dwarf_formudata()` fails.
+ - Fix a file descriptor leak in `debuginfo__init_offline_dwarf()` when
+   `dwfl_report_offline()` or subsequent setup calls fail.
 
-Fixes: 2bc3cf575a16 ("perf annotate-data: Improve debug message with location info")
-Fixes: 4a111cadac85 ("perf annotate-data: Add member field in the data type")
-Fixes: 8b1042c425f6 ("perf annotate-data: Set bitfield member offset and size properly")
-Fixes: fc044c53b99f ("perf annotate-data: Add dso->data_types tree")
+Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
 Assisted-by: Gemini-CLI:Google Gemini 3
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v5:
- - Safe string duplication for member variable names.
+ - Added Acked-by tag.
 v4:
- - Safe DWARF name printing in annotate-data.
- - Fix fallback location expression parsing for inherited data members.
+ - Fix file descriptor leaks in debuginfo init paths.
 ---
- tools/perf/util/annotate-data.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ tools/perf/util/debuginfo.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 1eff0a27237d..63e3c54fab42 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -74,7 +74,8 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
- 		break;
- 	}
+diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+index 0e35c13abd04..84a78b30ceac 100644
+--- a/tools/perf/util/debuginfo.c
++++ b/tools/perf/util/debuginfo.c
+@@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
+ {
+ 	GElf_Addr dummy;
+ 	int fd;
++	bool fd_consumed = false;
  
--	dwarf_aggregate_size(die, &size);
-+	if (dwarf_aggregate_size(die, &size) != 0)
-+		size = 0;
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0)
+@@ -55,6 +56,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
+ 	dbg->mod = dwfl_report_offline(dbg->dwfl, "", "", fd);
+ 	if (!dbg->mod)
+ 		goto error;
++	fd_consumed = true;
  
- 	strbuf_init(&sb, 32);
- 	die_get_typename_from_type(die, &sb);
-@@ -146,9 +147,9 @@ static void pr_debug_scope(Dwarf_Die *scope_die)
+ 	dbg->dbg = dwfl_module_getdwarf(dbg->mod, &dbg->bias);
+ 	if (!dbg->dbg)
+@@ -62,13 +64,14 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
  
- 	tag = dwarf_tag(scope_die);
- 	if (tag == DW_TAG_subprogram)
--		pr_info("[function] %s\n", dwarf_diename(scope_die));
-+		pr_info("[function] %s\n", die_name(scope_die));
- 	else if (tag == DW_TAG_inlined_subroutine)
--		pr_info("[inlined] %s\n", dwarf_diename(scope_die));
-+		pr_info("[inlined] %s\n", die_name(scope_die));
- 	else if (tag == DW_TAG_lexical_block)
- 		pr_info("[block]\n");
- 	else
-@@ -250,9 +251,12 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
- 		size = 0;
+ 	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
  
--	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
--		dwarf_formudata(&attr, &loc);
--	else {
-+	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
-+		if (dwarf_formudata(&attr, &loc) != 0) {
-+			if (die_get_data_member_location(die, &loc) != 0)
-+				loc = 0;
-+		}
-+	} else {
- 		/* bitfield member */
- 		if (dwarf_attr_integrate(die, DW_AT_data_bit_offset, &attr) &&
- 		    dwarf_formudata(&attr, &loc) == 0)
-@@ -273,7 +277,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 				     dwarf_diename(die), (long)bit_size) < 0)
- 				member->var_name = NULL;
- 		} else {
--			member->var_name = strdup(dwarf_diename(die));
-+			const char *name = dwarf_diename(die);
-+
-+			member->var_name = name ? strdup(name) : NULL;
- 		}
+-	dwfl_report_end(dbg->dwfl, NULL, NULL);
++	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
++		goto error;
  
- 		if (member->var_name == NULL) {
-@@ -370,7 +376,8 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
- 	if (dwarf_tag(type_die) == DW_TAG_typedef)
- 		die_get_real_type(type_die, type_die);
+ 	return 0;
+ error:
+ 	if (dbg->dwfl)
+ 		dwfl_end(dbg->dwfl);
+-	else
++	if (!fd_consumed)
+ 		close(fd);
+ 	memset(dbg, 0, sizeof(*dbg));
  
--	dwarf_aggregate_size(type_die, &size);
-+	if (dwarf_aggregate_size(type_die, &size) != 0)
-+		size = 0;
- 
- 	/* Check existing nodes in dso->data_types tree */
- 	key.self.type_name = type_name;
-@@ -1569,7 +1576,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 	offset = loc->offset;
- 
- 	pr_debug_dtp("CU for %s (die:%#lx)\n",
--		     dwarf_diename(&cu_die), (long)dwarf_dieoffset(&cu_die));
-+		     die_name(&cu_die), (long)dwarf_dieoffset(&cu_die));
- 
- 	if (reg == DWARF_REG_PC) {
- 		if (get_global_var_type(&cu_die, dloc, dloc->ip, dloc->var_addr,
-@@ -1636,7 +1643,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 		}
- 
- 		pr_debug_dtp("found \"%s\" (die: %#lx) in scope=%d/%d (die: %#lx) ",
--			     dwarf_diename(&var_die), (long)dwarf_dieoffset(&var_die),
-+			     die_name(&var_die), (long)dwarf_dieoffset(&var_die),
- 			     i+1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
- 
- 		if (reg == DWARF_REG_PC) {
+@@ -167,7 +170,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
+ 	/* Search the relocation related .text section */
+ 	for (i = 0; i < n; i++) {
+ 		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
+-		if (strcmp(p, ".text") == 0) {
++		if (p && strcmp(p, ".text") == 0) {
+ 			/* OK, get the section header */
+ 			scn = elf_getscn(elf, shndx);
+ 			if (!scn)
 -- 
 2.54.0.545.g6539524ca2-goog
 
