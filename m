@@ -1,84 +1,67 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F963DA7D7
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 13:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967633B28D
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 15:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777902821; cv=none; b=Obzq2sbZJO4o7VZSGWITr1lDMvEjPrWH5CvHwD6n+pU0vsDJ5nC9j+ErZsqdryE8GmzhSUTC5rqTdtG9YuzLM3KE2FhUK1NbOyJ60sla/gvdpWeg07HV7q1SjcMYng+b2WhhkmBiSWQYS01QR6UBKG8RWOcW+u0WGm7sEkm+v5g=
+	t=1777907627; cv=none; b=WBdBJWmTNB0UjuDB0fEse9ALVNd2uSIVgndhrYkq8CIswO4ToKzkTgV68w24H5bTQBWXCjhIA8TQycmlwP7cGRZB+aJfaxcxoNFrWl0LkjygGoeE1c3Gd01bKzhZUkqpMryK9Yn+Sl7nc/fS0v9Rejhp/DFW6kZ2NcnyBDASuGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777902821; c=relaxed/simple;
-	bh=OWWKk1O4PQhifhYuVB8Ox6BqabB7mC37ee79/FkVmm8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uSH9c3kMksnodZgciAoR8vfQ0b6tic41SF3xP6z+ATG46Ki20CQLv0QN1m4BP9vUjkmL141O/Icmve+DvwwQJFsiO9exP4IB4gN3v3RiQ/GfAAQjmEgFDqKn8NW8xaTvaH+ov+BvGST5KI4DV8hAXPF2w//kGtOOaaSZN9DTtjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sW+wUzfX; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777907627; c=relaxed/simple;
+	bh=VDD9Q7HWZRic42wnUL6nYAHjyJ0PXakUkz9d4flOifw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QT5Tv1TGhUaSv6bH66ZqSrJMaQDFSl+XuPDAvWXwss+TRXnKn59b9iwWQbd0wIZFOSRatl247z1yK52qaGjJgA0xdhOQa2zybDl+zrQOiLL7lBL0B/T6/sNilf7LkilEII+y0d1PlX3N66/N4PMHzTs/eWls/qHkw4wQFwpuZKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B++gdd0A; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sW+wUzfX"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-837b39eb078so624681b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 06:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777902820; x=1778507620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qZvLVM8KmFpscXyNlpgqnG6u/pzaOvu4z7PrNxvBuMs=;
-        b=sW+wUzfXHahsAR0CVCxlXSLsonHiSnPMt2NHXHQ9PYyGenKurZO3JkymEZ2hSmS8vc
-         Gu5xUEZFHTp8zfcaHLcaAVE+Lz5ZPsfIL7pwXi8ZD0ldyPwO5v6ELU4zR7h0zJD6Ld9Z
-         VVz/GcXyk2uzz/rtc6elFLzw5EjXhQpWJgC6K9eReJlPA08E3qlOHVHVf8Y5VnGW428G
-         ePm8dxWQlX7o85QY9kkDuVHE9gNYKfoL4owD6Ccx1pAp0I60GuU8+z3+o79yul8cCTI2
-         wKHaFXfkrjZ5aW/OMMcdo7HUQdOBrJiagtHY4kegK8JUSkmL0BYFhGWJS+6yJnTypAJm
-         6ntQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777902820; x=1778507620;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qZvLVM8KmFpscXyNlpgqnG6u/pzaOvu4z7PrNxvBuMs=;
-        b=oOkuRppu/EyFHmDVXilxrf9dDXSApVqitZ7Rdqj1ewLrWEW0d0gH1JVj1uEOryhuhG
-         4ns3rXbsIo5lQWL5+JkJndJF5Y43jWXVgp1Ae4n6OKgEoPTgSWvtEuvwh5ebDwxFcThE
-         cPouoiYGLAazi263gRLwhu3Zvs3LmC5sqUD/9E3VZkzkFOVbZDy2zBjqiM7RQQV/hI/O
-         MtOxoONZoFOKPP+h2XlS+M3pvRx/R6OaTzJsn1i+U3+Tb+sP95Iaqf9feShNoUr1EH7/
-         jL6GN4ZnIWuQBtXJrd8D/zaart9Ps71eDvF2ch/7XFPVgzmTioTzGVtYFbCPjlOMJ5y5
-         dq1w==
-X-Forwarded-Encrypted: i=1; AFNElJ8Z9e9kpvfXXcpIaP20PUV/uUE9FA/pGK7YqG00Lp9Ua/uJHhd+w3SUxlb+TcdIaOEiy9JXPOdvn3/48GZrZipb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUHuq8F3GnU76ttlCQO+Drx8xTu9OulrM9gQiTLft+G5gBw9DQ
-	loarK05tj3cY5VuuOB/+c5wzqeG1whQr9lXvDD+8Imu/YlI5o2jzlxdJ
-X-Gm-Gg: AeBDietx6+d/5V9UDP02ATL7bK7R0Ef9kWmxxc61KWw/4O8OlpQay2+xWhuJY0FCieA
-	IMeIt1/QK54eV6o1cLwalHw1e+1gOQGqOZpBmXl3uaQmDpT3MnyJKajP88jcRLBvciVwVGSKX2I
-	uBuXQfT46ES2Wji0JIGZycOxXA2aRFG75XqXDDpnyYSExjBY1JLcBseZoD5zaw7EjQv8kLB9nNT
-	QSNuyNVnfUtq4wc8EI4Tc+05FGrBiyORccXZKRXEYq1VsDLWxR+5e05bbCc+P+2cGvWsJ5l+mlj
-	LuCvIx5lx9Qy2xEubTzfuSFcc6DuIREU+rA82igTKD8bJdftJeSMQROOAEM2cTArKljvHCaYb07
-	gCFN22amCjyyY2X5iyOLkTjQa8xFTJOOBdCZO5jsTAvr6T2xwVQJ5xpytctlnfexpaSwD33JlHV
-	dQJ/l9DlLxX3M9vLSDhDsVL3vyLlrd0+DNshuoiewJJiE5AQQ=
-X-Received: by 2002:a05:6a00:4fc7:b0:827:3d52:5d1a with SMTP id d2e1a72fcca58-8352cdd625bmr9607272b3a.0.1777902819562;
-        Mon, 04 May 2026 06:53:39 -0700 (PDT)
-Received: from localhost.localdomain ([165.132.143.163])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83515893f14sm12641246b3a.17.2026.05.04.06.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2026 06:53:38 -0700 (PDT)
-From: Minwoo Ahn <mwahn402@gmail.com>
-To: peterz@infradead.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jinkyu@yonsei.ac.kr,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	mwahn402@gmail.com,
-	namhyung@kernel.org
-Subject: Re: [PATCH v4] perf/core: Fix sampling period inconsistency across CPU migration
-Date: Mon,  4 May 2026 13:52:53 +0000
-Message-ID: <20260504135253.1649829-1-mwahn402@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260504080832.GO3126523@noisy.programming.kicks-ass.net>
-References: <20260504080832.GO3126523@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B++gdd0A"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 644EoSYB2607845;
+	Mon, 4 May 2026 15:13:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=gXgbgzfQRi7AGx3+dyd8Lfq9Z/7JkNqsY55X/jMKO
+	5k=; b=B++gdd0A9EcXy9FL+Al2frStPz6G9DmrrOFlMbUm2sd8Dqxq6xddoe2YF
+	9Nl4tiSWFEg1PDm+vLVv/QRhm6PzDMeSH2yHJvfF+B7DMuR4kaFdJJjzbsodXxWS
+	gWSPkWBeR2NkAnnzzy1Glhqc4mE8+llhwOVpaJ9tHmmtD4YYhIcpKFlgklsRibTi
+	DUxY35nUdMsZw+JHKtphzePl2mvPEo06x0AnRYz0Faf+g7jRZfYDqZkg3+5u/k6s
+	ih6z6orAoibBsTd+WChH2kGGPH0j+f4a9RT4BhKCUQ5syMa8AQQXYh3deCmQBbEc
+	uiBWKUOElmeOUoS0DBlOUyu3adPfg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9y17mxa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 15:13:35 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 644EsSeJ017439;
+	Mon, 4 May 2026 15:13:34 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dwukq5tsh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 15:13:34 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 644FDVwI38601176
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 May 2026 15:13:31 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EED9C2004B;
+	Mon,  4 May 2026 15:13:30 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1013920049;
+	Mon,  4 May 2026 15:13:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.208.70])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 May 2026 15:13:25 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
+Subject: [PATCH V5 1/2] powerpc tools perf: Initialize error code in auxtrace_record_init function
+Date: Mon,  4 May 2026 20:43:20 +0530
+Message-Id: <20260504151321.12346-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -86,68 +69,132 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: iLo4FBlXZTFexpenr-Z1FOO_JKBSAAdf
+X-Proofpoint-GUID: LgL2sFeULV6Dx3LSwXtiP8dXqu0polC6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA0MDE1NCBTYWx0ZWRfX+VQA66onVwNg
+ 6BVDVExLZLMUz2Cu32Cc+oXgLx87ZibEnDK67MPnZ/228mtisSmZVUh5xRhAkiyS242ZOUr05tu
+ cH+rc81IZPD1KeVShyMrLesjuCDiNtCgfMHdMjtGmfRGKLdhpCUc7h2v+xlB0guWUzKtEE5lIvc
+ 3HWGtyWQjdpQ26h9x2KMlJuszTl/CE8uT1Wjxjf91iT7ydv6J/kzw0Qy/dx5ZwrNwo56BUzqLK4
+ 7IHHnzwSRRJz+D2O75toc+lO+CHUfO8CWVhXSE6G08LOwWnqHzic0AR7mOG2oV7PC2/gzcLOT94
+ bUqBPEWOgfEtDmsAkmNxzQi8VPohwOgLwSrnitI+ZwN9fRSV3zg5CIqEqLbWWcRPxgN+2GDmmuW
+ a1PxiNywgdaKbcsA5Mwzii9+TaVERwK/mHRUc07PX+GJ0EbmyFk+pp67TKkfpreKz4rFEiHBY3n
+ NXXHbW4GA64KWAxhM5Q==
+X-Authority-Analysis: v=2.4 cv=UbFhjqSN c=1 sm=1 tr=0 ts=69f8b79f cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
+ a=UYfmDeaf6v5XVjAx5qsA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-04_05,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605040154
 
-On Mon, May 04, 2026 at 10:08:32AM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 29, 2026 at 09:51:34AM +0000, Minwoo Ahn wrote:
-> > 
-> > When per-task software events are sampled, period_left is not
-> > managed consistently when task migration happens. The perf_event
-> > may observe a different hw_perf_event::period_left on the new CPU,
-> > breaking the sampling periodicity. Even if a task was near its
-> > sampling point, it would use a stale period_left after migration.
-> 
-> How? This is just vague words, not actually saying anything of
-> substance.
-> 
-> > Introduce struct perf_task_context as a per-task container to
-> 
-> How can you propose a solution to a non-defined problem?
+perf trace record fails some cases in powerpc
 
-Let me describe the problem more concretely.
+ # ./perf test "perf trace record and replay"
+ 128: perf trace record and replay                                    : FAILED!
 
-A common per-task sampling invocation such as
-`perf record -e task-clock -c 1000000 ./a.out` or
-`perf record -t TID` opens, unless the user constrains it with `-C`,
-one perf_event for each online CPU on the system. So a single target
-task ends up with N distinct perf_event objects, each carrying its own
-hw_perf_event::period_left that only counts down while the task is
-running on the CPU that object is bound to.
+ # ./perf trace record sleep 1
+ # echo $?
+   32
 
-When the task migrates from CPU_X to CPU_Y, the event on CPU_X is
-scheduled out and the event on CPU_Y is scheduled in. They are
-distinct objects, so the partial period accumulated on CPU_X stays in
-that object and is dropped, and CPU_Y's event resumes from whatever
-period_left it last held -- typically a full sample_period left over
-from when its hrtimer was last armed.
+This is happening because of non-zero err value from
+auxtrace_record__init() function.
 
-Timeline (sample_period = 1.0s, migrate at t=0.6s):
+ static int record__auxtrace_init(struct record *rec)
+ {
+        int err;
 
-  t=0.0s   on CPU0; event_CPU0->period_left = 1.0s
-  t=0.6s   migrate CPU0 -> CPU1
-           event_CPU0 sched_out, period_left = 0.4s
-           event_CPU1 sched_in,  period_left = 1.0s   (never decremented)
-  t=1.6s   first sample fires on CPU1   (task expected one at t=1.0s)
+        if ((rec->opts.auxtrace_snapshot_opts || rec->opts.auxtrace_sample_opts)
+            && record__threads_enabled(rec)) {
+                pr_err("AUX area tracing options are not available in parallel streaming mode.\n");
+                return -EINVAL;
+        }
 
-So sample intervals seen by the task no longer correspond to
-sample_period.
+        if (!rec->itr) {
+                rec->itr = auxtrace_record__init(rec->evlist, &err);
+                if (err)
+                        return err;
+        }
 
-The example above uses task-clock for clarity (sample_period is in
-nanoseconds and period_left counts down with on-CPU time), but the
-same mechanism applies to any per-task software sampling event: each
-per-CPU object holds its own period_left and the partial progress on
-the source CPU is not transferred to the destination CPU on migration.
-What is dropped on migration is the unit each event counts in
-(occurrences for non-clock sw events, time for clock events).
+Here "int err" is not initialised. The code expects "err" to be set
+from auxtrace_record__init() function.
 
-`perf record --per-thread` avoids this by opening a single
-perf_event with cpu=-1, but it also disables inheritance, so it
-cannot sample threads spawned after the run starts. The default
-per-CPU mode is the one that supports inheritance, and it is the
-mode where the inconsistency above is observed.
+Update auxtrace_record__init() in arch/powerpc/util/auxtrace.c to clear
+err value in the beginning.
 
-The per-task period_left should remain consistent from the task's
-point of view across migrations, and that is the motivation behind
-this patch.
+- Clear err value in beginning of function. Any fail later will
+set appropriate return code to err.
+- Even if we haven't found any event for auxtrace, perf record
+should continue for other events. NULL return
+will indicate that there is no auxtrace record initialized.
+- Not having "err" set here will affect monitoring of other events
+also because perf record will fail seeing random value in err.
 
-Thanks,
-Minwoo
+Set err to -EINVAL before invoking auxtrace_record__init() in
+builtin-record.c
+
+With the fix,
+
+ # ./perf trace record sleep 1
+ [ perf record: Woken up 2 times to write data ]
+ [ perf record: Captured and wrote 0.033 MB perf.data (228 samples) ]
+
+Fixes: 1dbfaf94cf66 ("perf powerpc: Add basic CONFIG_AUXTRACE support for VPA pmu on powerpc")
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changelog:
+v4:
+Added Reviewed-by from Adrian
+
+v1 -> v2
+Addressed review comment from Adrian:
+- Set err to -EINVAL before invoking auxtrace_record__init() in
+  builtin-record.c
+- Added kernel-doc to auxtrace_record__init() in tools/perf/util/auxtrace.c
+Addressed review comment from Namhyung:
+- Added fixes tag
+
+ tools/perf/arch/powerpc/util/auxtrace.c | 6 ++++++
+ tools/perf/builtin-record.c             | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
+index e39deff6c857..4600a1661b4f 100644
+--- a/tools/perf/arch/powerpc/util/auxtrace.c
++++ b/tools/perf/arch/powerpc/util/auxtrace.c
+@@ -71,6 +71,12 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ 	struct evsel *pos;
+ 	int found = 0;
+ 
++	/*
++	 * Set err value to zero here. Any fail later
++	 * will set appropriate return code to err.
++	 */
++	*err = 0;
++
+ 	evlist__for_each_entry(evlist, pos) {
+ 		if (strstarts(pos->name, "vpa_dtl")) {
+ 			found = 1;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 4a5eba498c02..708825747af5 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -865,6 +865,7 @@ static int record__auxtrace_init(struct record *rec)
+ 	}
+ 
+ 	if (!rec->itr) {
++		err = -EINVAL;
+ 		rec->itr = auxtrace_record__init(rec->evlist, &err);
+ 		if (err)
+ 			return err;
+-- 
+2.47.3
+
