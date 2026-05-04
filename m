@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4105E28C009;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53872BDC26;
 	Mon,  4 May 2026 06:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777876089; cv=none; b=fmTLafJ2t7Lbznb5wFf5ghQodRW3PUYkFwO66h2yI6vMtaJ4ochiMue8iFKqLVHLVo1h+9x+ELkEgRMkpAtPGrNw5z869nfoZPGUu2jQrk0f7vcWeZTEVLpYO6EQmNIStzPxE4eD4wWmZAHXFzPY9LnVB9mvaG5e2ELY65jpD0s=
+	t=1777876090; cv=none; b=IPqO0+QBayVyvW1u4aAfINLR3dPjK7SjFMs7Ol6TOw4xmUiE5ExEnug7B7zg8/wv/3TY76MRK6mRAHtph9tU1CxQ09193nw/lzWwxc9/BbMBz5r/imlEIMebPhY3sgv95HvQ2MjKNS2X/27AqJTZ1e24bOgN6xbQBarT4K5QO2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777876089; c=relaxed/simple;
-	bh=SagCNADX4hw2Ho0e1b35RZD+4ryErLG0Q67sc2BGO7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yh0zGnfMTVPScxrnNEvdDrZjwv8HOmXcu12dWOyu/tT752PpEi7GARQAzHOES9Q6XQI93UwL+UYUtCiFQVDIF5CbTQ3zE6ZgbjF1JNdKWOasA3azECe6zu1TUA+12ID6Nw9g6pVOtimn50q+vxVMVBe2ZrhvEz2wljdYhbOAb4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHjjZ+gB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777876090; c=relaxed/simple;
+	bh=qIT8FxWnOR2qaYY/hOXxZD3u9KGZymYUm3k2NcPFvpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d1IB3p2DUdrcP2y9eyphwUG93dbX7/+E7YTCcqq+HUOtG08Iye31cm8w+taz3lozdnIfED+n0ULHvcG8CqKfWW9qWVowmj62Wu/M8Dx/gprsb9r8tByZv/sJRz20T5CrWF2x5Ali5klPbNcFfAGJkBbIE0EqagD+b07RdFMKMB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwmAd4zG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHjjZ+gB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05F0C2BCB8;
-	Mon,  4 May 2026 06:28:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwmAd4zG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB04C2BCF4;
+	Mon,  4 May 2026 06:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1777876089;
-	bh=SagCNADX4hw2Ho0e1b35RZD+4ryErLG0Q67sc2BGO7o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EHjjZ+gBMU1FUAq/maL0OynqOEG5KvC85LF7xR1+fXnAoLRZ2vFOn5RqySt/G7O70
-	 SuBepJKLpob48SjCQpOAyvoBYYIHfhA7On+Cfqlaqk4znxMDFFd3jIye5B6+Z34ZUi
-	 HIs6z8kcuEcqxkUypDeZ89uNl1hk30W1VzWfpf41LGalAGDti2mQsD4k8z+Dxia+JX
-	 6/1COJWLvna0qVTnqgAJ5kYTTRypDMEUYhg7UuK/KuqhKdZO9CxcsHVO+hPLHC9N9F
-	 4oYpW32+hoLeSUmo2RyYk8LeB1DN7L1VHc8RuC+fHtDd3/v/XVgrpZTUtqzJuTIgLM
-	 Jp4V4CEolOHUw==
+	bh=qIT8FxWnOR2qaYY/hOXxZD3u9KGZymYUm3k2NcPFvpU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gwmAd4zGCnXm4vWfyAlKNfzKYeBjePxxo0QJofx/wWkVW1hegBSjBlnTmUmbDzJuc
+	 xJUtKkvSFIJDiMCi2skNk+QUcnH78cr8xAn/yMaHSsuWXV1Ei53Dv20xDYuDpwU2UK
+	 XH6cZx5HHpjE6bI1QkXd0c4S9QV/lCd8/9JPjn63kMvsPvHVDzPoiraKVTs0G+68X1
+	 kcwMqDdPRgtDOHkLiRdiDN63/vrijPCp5JJEAUIRKoIzttDKXrJRiiLGCdIR7MEKd5
+	 DhpsI1SbMvcdDDjMQWxBINtAcOQkwZnLcI4/A6UuNBz0fnfstREIp5ZcZUCaRO2J6L
+	 7NlA/3GKiVmIg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -34,11 +35,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/3] perf build: Update error message for BUILD_NONDISTRO=1
-Date: Sun,  3 May 2026 23:27:56 -0700
-Message-ID: <20260504062758.92001-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v2 2/3] perf build: Add -fms-extensions for GEN_VMLINUX_H=1
+Date: Sun,  3 May 2026 23:27:57 -0700
+Message-ID: <20260504062758.92001-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260504062758.92001-1-namhyung@kernel.org>
+References: <20260504062758.92001-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,28 +51,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It should say binutils-dev(el) instead of plain binutils package as it's
-mostly installed already and can confuse people like me. :)
+On my system, `make GEN_VMLINUX_H=1` fails with a lot of error messages
+like below:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+  ./util/bpf_skel/vmlinux.h:134488:4: error: declaration does not declare anything [-Werror,-Wmissing-declarations]
+   134488 |                         struct freelist_counters;
+          |                         ^~~~~~~~~~~~~~~~~~~~~~~~
+  make[2]: *** [Makefile.perf:1249: linux/tools/perf/util/bpf_skel/.tmp/lock_contention.bpf.o] Error 1
+
+I saw commit 835a50753579a ("selftests/bpf: Add -fms-extensions to bpf
+build flags") also added the same flags to bpf programs.
+
+Cc: bpf@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2) use -fms-extensions and -Wno-microsoft-anon-tag  (Sashiko)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 333ddd0e4bd814e9..06d7a3f9990ce522 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -923,7 +923,7 @@ ifdef BUILD_NONDISTRO
-   $(call feature_check,libbfd-liberty-z)
+ tools/perf/Makefile.perf | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index cee19c923c0607d2..0aba14f22a06f7a6 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1249,6 +1249,7 @@ $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
+ 	$(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
+ 	  $(CLANG_OPTIONS) $(EXTRA_BPF_FLAGS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
+ 	  -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
++	  -fms-extensions -Wno-microsoft-anon-tag \
+ 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
  
-   ifneq ($(feature-libbfd-threadsafe), 1)
--    $(error binutils 2.42 or later is required for non-distro builds)
-+    $(error binutils-dev(el) 2.42 or later is required for non-distro builds)
-   endif
- 
-   # we may be on a system that requires -liberty and (maybe) -lz
+ $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
 -- 
 2.53.0
 
