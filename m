@@ -1,137 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA1437B402
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4693732E692;
+	Mon,  4 May 2026 23:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777933899; cv=none; b=coAEFJeSG6qT0kq/gB/+9b0P8tVhC3RwLwTSpnKHKZIvgIfI9f6H+xh8pm13itcM/ew+bpvvHBajDkBF9Uos3PY74LbURRaR0SrM1C0jA8TjgHXZEl9avdGvGn7syFJtolAFjOM7vkvvBxQYVcpX4pbkt4v/g96zXNHpPujNYR0=
+	t=1777937462; cv=none; b=meB8fSJ4KtNqDY4ElL512cobE/+7XLWraBrQkzhNjFYQ59Z0d8wASXqAeXwpac/pkzDx32dzreK71hWfcDtVcGSlQ230rK/SmoCH2WAm0oZntvEsQ2D6XQ8QWhRAw6L9emy8H1qUSbK7XhT96/pp/oookTMcxLmzzhzehX5xFpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777933899; c=relaxed/simple;
-	bh=vFuZ/xTr6LIpgS+o6RxomPypU7mXbWkNLeOagdQRpv0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k1R89p/WiFcMiTGiaY+ihQlhiq+5ebWYFgTN00dDrA4nWLNtQXUG/BuWeMsF3LmkekeZCM9kSUjquX+06twxLzGMT7Zi4k+nsBSHwsGjgoEp2Jg+65+fsotqZxIAz7uaEXF4TWlT8lawNhvLAeKRd6QoXj8Q/Y5IBQTH8zU+oN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrbHhIcN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777937462; c=relaxed/simple;
+	bh=Z5wfnZWhOyKOpMCNFKwDJKTeMfCEgackwehE3ieS3ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dD+lPU+i7pywXaBzrYFJ1T9V5pslPQfaVgcIhGPC3whUpIdAWopVMgfjRC7fNMdCziNMODtTQ0jJD0sqLPO8FvcXOibfiotA2M0xcRS7+UE/ulRiiR+rCyxQPfj4VC19RSAbMsNFU/k3O60Ff/ggYHgamdjNs53qJifXIMCWzz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCMiZ3qR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrbHhIcN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD88C2BCB9;
-	Mon,  4 May 2026 22:31:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCMiZ3qR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEDDDC2BCB8;
+	Mon,  4 May 2026 23:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777933898;
-	bh=vFuZ/xTr6LIpgS+o6RxomPypU7mXbWkNLeOagdQRpv0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=PrbHhIcNgvUrs7hV/OdJen7CalQmsIZX18n4gPVMmsp3UJd3VpvKY8uP1/vDKpn6b
-	 dDDro1lkheWQaezh1UF1nLV6XJ289Dw2wkCu/JIG233ubXFdJer0oFKR4Cr2Pfs2SG
-	 r59cN0689YgVRXP/z990tX9GYI3mMvmaggKh83BDFSCg2zwF+XOXMb86OHCtnAFlEo
-	 4VO+nAet+xGcwgB6GmadpD3i7BVAtUeqn84C2Q1+YB62cwqPE9RUZkqkn17Z/U4pry
-	 IACiiSMff1CDsn70RZxErakMR+kRHeRUADV6an8DnVMG+nc1eoAwOcIDqwmeX+ilpb
-	 pxslnOKKe2KhA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 11/20] KVM: arm64: Enforce PMU event filter at
- vcpu_load()
-Reply-To: sashiko@lists.linux.dev
-To: "Colton Lewis" <coltonlewis@google.com>
+	s=k20201202; t=1777937462;
+	bh=Z5wfnZWhOyKOpMCNFKwDJKTeMfCEgackwehE3ieS3ng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PCMiZ3qRRCnhjVHlOB4x7N5+eHDmFkwLVo+qtdFTyyBq3T8/AR1LfV8bFmrcQDGRT
+	 +irxyY49Lciyk5DT7X2Ldn9xc4I9psW4/wosOaX3isA7ZDRZ/5Fixt4wJa0Xz8ZYrP
+	 IMFGM9E+C6sTH/iaBdILAdCXPycPnD95wHBJ4BWXOQ/9ILiU1aK0xbltTIOIKjBRNJ
+	 6c5BxCViFZO81vgtvnsCCjOtTQqhmLkxUkxCRm5mq8M16Hw1l/9EkOq+nS/jJPB5Ue
+	 KNr1HwrXszdqLZxTrZajZblQVToOmLlIBFKTC3y8C3FdMeEStMH3ZmJHPC//7ydicy
+	 x1x91gpBzi8+A==
+Date: Mon, 4 May 2026 16:30:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504211813.1804997-12-coltonlewis@google.com>
-References: <20260504211813.1804997-12-coltonlewis@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 22:31:38 +0000
-Message-Id: <20260504223138.AAD88C2BCB9@smtp.kernel.org>
+Subject: Re: [PATCH] perf lock contention: Allow 'mmap_lock' in
+ -L/--lock-filter
+Message-ID: <afksMvncKxnSA2Nj@google.com>
+References: <20260504060859.84987-1-namhyung@kernel.org>
+ <20260504062743.CCE73C2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260504062743.CCE73C2BCB8@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] kvm_pmu_apply_event_filter() incorrectly writes the cycle counter'=
-s event filter configuration to the cycle counter value register (pmccntr_e=
-l0) instead of the filter register (pmccfiltr_el0).
-- [High] Hardware event filters are only updated on VCPU context switches, =
-leaving hardware state stale when the guest dynamically reconfigures events.
-- [High] When running a guest in nested EL2 context, kvm_pmu_apply_event_fi=
-lter() fails to disable hardware EL1 counting if the guest did not request =
-counting in EL2.
---
+On Mon, May 04, 2026 at 06:27:43AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] Combining `mmap_lock` with other lock names in the `-L/--lock-filter` option drops all events.
+> - [High] Specifying only an unknown lock symbol in `-L/--lock-filter` silently traces all locks in the system instead of aborting.
+> --
+> 
+> commit ba21190eae512a9060154fb29ca23ce62c636cc2
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Subject: perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
+> 
+> This commit adds support for filtering lock contention events specifically for
+> the 'mmap_lock' using the -L/--lock-filter option. It introduces a special
+> flag to bypass the usual address-based filtering for mmap_lock.
+> 
+> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> > index cbd7435579fe..cd7ee5d1d1dd 100644
+> > --- a/tools/perf/util/bpf_lock_contention.c
+> > +++ b/tools/perf/util/bpf_lock_contention.c
+> 
+> [ ... ]
+> 
+> > @@ -264,7 +270,10 @@ int lock_contention_prepare(struct lock_contention *con)
+> >  			con->filters->addrs = addrs;
+> >  		}
+> >  		naddrs = con->filters->nr_addrs;
+> > -		skel->rodata->has_addr = 1;
+> > +		if (naddrs > 0)
+> > +			skel->rodata->has_addr = 1;
+> > +		else
+> > +			naddrs = 1;
+> >  	}
+> 
+> Prior to this patch, providing an unknown symbol (e.g., -L non_existent)
+> resulted in naddrs = 0 and has_addr = 1, which correctly caused libbpf to
+> fail creating the map with 0 entries, gracefully aborting the process.
+> 
+> With this change, if naddrs is 0, has_addr remains 0 but naddrs is
+> artificially set to 1. The BPF map creation succeeds, but since has_addr
+> and has_mmap_lock are both 0, the BPF program skips the address filter
+> entirely.
+> 
+> Does this unintentionally trace all locks in the system instead of gracefully
+> aborting when an unknown lock name is provided?
 
-commit 63c3532220965281cfb17a041907d38b581dd90c
-Author: Colton Lewis <coltonlewis@google.com>
+Ok, I think this is a valid concern.  Will update in v2.
 
-KVM: arm64: Enforce PMU event filter at vcpu_load()
+> 
+> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > index 96e7d853b9ed..45ec2fb73984 100644
+> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> 
+> [ ... ]
+> 
+> > @@ -295,6 +298,14 @@ static inline int can_record(u64 *ctx)
+> >  			return 0;
+> >  	}
+> >  
+> > +	if (has_mmap_lock) {
+> > +		__u64 lock = ctx[0];
+> > +		__u32 flag = ctx[1];
+> > +
+> > +		if (check_lock_type(lock, flag) != LCD_F_MMAP_LOCK)
+> > +			return 0;
+> > +	}
+> > +
+> >  	return 1;
+> >  }
+> 
+> The -L option allows filtering by multiple lock names, but can_record()
+> evaluates active filters sequentially. If a user specifies
+> -L mmap_lock,other_lock, both has_mmap_lock = 1 and has_addr = 1 will be
+> set in the BPF rodata.
+> 
+> In this scenario:
+> 
+> 1. An other_lock event passes the has_addr check but then reaches the
+> has_mmap_lock check. Since its type is not LCD_F_MMAP_LOCK, the function
+> returns 0.
+> 
+> 2. An mmap_lock event is evaluated against the has_addr check first.
+> Because its dynamic address isn't in addr_filter, the lookup fails, and the
+> function returns 0 before even reaching the has_mmap_lock check.
+> 
+> Will this cause all valid events to be silently dropped when combining
+> mmap_lock with other lock names?
 
-The KVM API for event filtering says that counters do not count when
-blocked by the event filter. To enforce that, the event filter must be
-rechecked on every load since it might have changed since the last
-time the guest wrote a value. If the event is filtered, exclude
-counting at all exception levels before writing the hardware.
+Good point, I'll handle the case mmap_lock and another lock are used
+together.
 
-> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 360d022d918d5..2252d3b905db9 100644
-> --- a/arch/arm64/kvm/pmu-direct.c
-> +++ b/arch/arm64/kvm/pmu-direct.c
-
-[ ... ]
-
-> +		guest_include_el2 =3D (val & ARMV8_PMU_INCLUDE_EL2);
-> +		val &=3D ~evtyper_clr;
-> +
-> +		if (unlikely(is_hyp_ctxt(vcpu)) && guest_include_el2)
-> +			val &=3D ~ARMV8_PMU_EXCLUDE_EL1;
-
-When the guest is running in nested EL2 context (which executes in hardware
-EL1), what happens if the guest configured the counter to count in guest EL1
-but not in guest EL2?
-
-If guest_include_el2 is false, do we need to explicitly set
-ARMV8_PMU_EXCLUDE_EL1 in the hardware register here to ensure the counter
-pauses when the guest enters EL2?
-
-> +
-> +		if (vcpu->kvm->arch.pmu_filter &&
-> +		    !test_bit(evsel, vcpu->kvm->arch.pmu_filter))
-> +			val |=3D evtyper_set;
-> +
-> +		if (i =3D=3D ARMV8_PMU_CYCLE_IDX) {
-> +			write_sysreg(val, pmccntr_el0);
-
-Does this write the filter configuration into the cycle counter value regis=
-ter
-instead of the filter register?
-
-If we use pmccfiltr_el0 here instead, will it correctly apply the exclusion
-mask?
-
-> +		} else {
-> +			write_sysreg(i, pmselr_el0);
-> +			write_sysreg(val, pmxevtyper_el0);
-> +		}
-> +	}
-> +}
-> +
->  /**
->   * kvm_pmu_load() - Load untrapped PMU registers
->   * @vcpu: Pointer to struct kvm_vcpu
-> @@ -165,6 +218,7 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
-> =20
->  	pmu =3D vcpu->kvm->arch.arm_pmu;
->  	guest_counters =3D kvm_pmu_guest_counter_mask(pmu);
-> +	kvm_pmu_apply_event_filter(vcpu);
-
-If the guest dynamically reconfigures events by writing to PMEVTYPERn_EL0 or
-PMCCFILTR_EL0, does the physical hardware PMU continue counting the old eve=
-nt
-until the VCPU happens to be scheduled out and back in?
-
-Is there another place where we push the new value to the physical hardware
-during a standard sysreg trap return to avoid leaving the hardware state st=
-ale?
-
-> =20
->  	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
->  		val =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504211813.1804=
-997-1-coltonlewis@google.com?part=3D11
+Thanks,
+Namhyung
