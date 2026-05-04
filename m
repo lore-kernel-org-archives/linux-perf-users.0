@@ -1,186 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDEB29BD8C
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA1437B402
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777933425; cv=none; b=D3drArHSjevxcg0lTdpLy1ug1q6vYwyIbhfKF2Zf/2JGLgTxTeNRhuG3nX1+TXhs1kFyeuQVChrnmTzz7OINgsOFcB67btWIc/+UgREwFdjyy7AhuQ7+DDkqsOyGi7kKza8vS1RhZfT1cRwOxArRFCxRKw6vgTYX0kZdKCvejNA=
+	t=1777933899; cv=none; b=coAEFJeSG6qT0kq/gB/+9b0P8tVhC3RwLwTSpnKHKZIvgIfI9f6H+xh8pm13itcM/ew+bpvvHBajDkBF9Uos3PY74LbURRaR0SrM1C0jA8TjgHXZEl9avdGvGn7syFJtolAFjOM7vkvvBxQYVcpX4pbkt4v/g96zXNHpPujNYR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777933425; c=relaxed/simple;
-	bh=1Kgi+bPxW0SjLDOZFAxvHK7jZ4cNmGvBNsD8v4fr8JM=;
+	s=arc-20240116; t=1777933899; c=relaxed/simple;
+	bh=vFuZ/xTr6LIpgS+o6RxomPypU7mXbWkNLeOagdQRpv0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=np3HSfQFZx75kSavnuTIerspFR18m76ReHv5zdtzRGPENa6yFfEyhIMpFo5FRyvIbnT0pV7Tsfu9WoZrXyl4yG5DBmcg01mOJxMk98snr0hitwf0ooFg2CqPIgU28cxkvy8/Lr5zvbPBFxBEw6nFc6ga2Bi1kjFYnEmF+dLke+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJHiy2n4; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=k1R89p/WiFcMiTGiaY+ihQlhiq+5ebWYFgTN00dDrA4nWLNtQXUG/BuWeMsF3LmkekeZCM9kSUjquX+06twxLzGMT7Zi4k+nsBSHwsGjgoEp2Jg+65+fsotqZxIAz7uaEXF4TWlT8lawNhvLAeKRd6QoXj8Q/Y5IBQTH8zU+oN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrbHhIcN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJHiy2n4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F12C2BCB8;
-	Mon,  4 May 2026 22:23:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrbHhIcN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD88C2BCB9;
+	Mon,  4 May 2026 22:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777933425;
-	bh=1Kgi+bPxW0SjLDOZFAxvHK7jZ4cNmGvBNsD8v4fr8JM=;
+	s=k20201202; t=1777933898;
+	bh=vFuZ/xTr6LIpgS+o6RxomPypU7mXbWkNLeOagdQRpv0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=nJHiy2n4szfVfRtGc2oNQZXsaCgP7Rqm+RtFsJLi8SazLwZXolj8erBuvgln3+aKZ
-	 6qT+Od7qpNpJnK/k1ATsGRtb9BDQ3pQzZApEcq0wiXDGqg9sLmjdQbOSGvg4PGJ7C2
-	 BSI2NC7BTfa46CT1FooAMjKHrk2GV2nzpQNMCirGZjLU3oBzEJrFGSkFuS7TDGuTLG
-	 fg6tlniN/xeNzReiKv93GgBqsTzYGQ95haZPg216oi/fjcYLK4p6ajwWxA4Pk2yG6B
-	 8boNMzx9X5cOsvTrHGgCMsSlIdhq6pRcBXfxuWTrnIHdlMEgqoNoimyyIAAtw1MaqG
-	 xJrAtJDZiuPaw==
+	b=PrbHhIcNgvUrs7hV/OdJen7CalQmsIZX18n4gPVMmsp3UJd3VpvKY8uP1/vDKpn6b
+	 dDDro1lkheWQaezh1UF1nLV6XJ289Dw2wkCu/JIG233ubXFdJer0oFKR4Cr2Pfs2SG
+	 r59cN0689YgVRXP/z990tX9GYI3mMvmaggKh83BDFSCg2zwF+XOXMb86OHCtnAFlEo
+	 4VO+nAet+xGcwgB6GmadpD3i7BVAtUeqn84C2Q1+YB62cwqPE9RUZkqkn17Z/U4pry
+	 IACiiSMff1CDsn70RZxErakMR+kRHeRUADV6an8DnVMG+nc1eoAwOcIDqwmeX+ilpb
+	 pxslnOKKe2KhA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 17/20] KVM: arm64: Add vCPU device attr to partition
- the PMU
+Subject: Re: [PATCH v7 11/20] KVM: arm64: Enforce PMU event filter at
+ vcpu_load()
 Reply-To: sashiko@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504211813.1804997-18-coltonlewis@google.com>
-References: <20260504211813.1804997-18-coltonlewis@google.com>
+In-Reply-To: <20260504211813.1804997-12-coltonlewis@google.com>
+References: <20260504211813.1804997-12-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 22:23:44 +0000
-Message-Id: <20260504222344.C8F12C2BCB8@smtp.kernel.org>
+Date: Mon, 04 May 2026 22:31:38 +0000
+Message-Id: <20260504223138.AAD88C2BCB9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION modifies VM-wide state withou=
-t checking if the VM has already run, allowing state corruption.
-- [High] get_user() reads a 32-bit unsigned int directly into a 1-byte bool=
-, leading to truncation bugs and failing to enforce strict UAPI input valid=
-ation.
-- [Medium] kvm_arm_pmu_v3_has_attr() unconditionally advertises support for=
- the KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION attribute even when the host hard=
-ware does not support it.
-- [Low] Mismatched kernel-doc comments for kvm_vcpu_pmu_is_partitioned() an=
-d kvm_pmu_partition_enable().
+- [High] kvm_pmu_apply_event_filter() incorrectly writes the cycle counter'=
+s event filter configuration to the cycle counter value register (pmccntr_e=
+l0) instead of the filter register (pmccfiltr_el0).
+- [High] Hardware event filters are only updated on VCPU context switches, =
+leaving hardware state stale when the guest dynamically reconfigures events.
+- [High] When running a guest in nested EL2 context, kvm_pmu_apply_event_fi=
+lter() fails to disable hardware EL1 counting if the guest did not request =
+counting in EL2.
 --
 
-commit d9172235a5a8d816682a8078c38e635415737a2b
+commit 63c3532220965281cfb17a041907d38b581dd90c
 Author: Colton Lewis <coltonlewis@google.com>
 
-KVM: arm64: Add vCPU device attr to partition the PMU
+KVM: arm64: Enforce PMU event filter at vcpu_load()
 
-This commit introduces a new PMU device attribute to enable partitioned
-PMU support for a VM. The capability can be configured before the vCPU star=
-ts,
-provided PMUv3 and VHE are supported and the host driver has reserved
-counters.
+The KVM API for event filtering says that counters do not count when
+blocked by the event filter. To enforce that, the event filter must be
+rechecked on every load since it might have changed since the last
+time the guest wrote a value. If the event is filtered, exclude
+counting at all exception levels before writing the hardware.
 
 > diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 9693d9eb69daa..47fd143cf4ac7 100644
+> index 360d022d918d5..2252d3b905db9 100644
 > --- a/arch/arm64/kvm/pmu-direct.c
 > +++ b/arch/arm64/kvm/pmu-direct.c
-> @@ -44,8 +44,8 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
->  }
-> =20
->  /**
-> - * kvm_vcpu_pmu_is_partitioned() - Determine if given VCPU has a partiti=
-oned PMU
-> - * @vcpu: Pointer to kvm_vcpu struct
-> + * kvm_pmu_is_partitioned() - Determine if given VCPU has a partitioned =
-PMU
-> + * @kvm: Pointer to kvm_vcpu struct
->   *
->   * Determine if given VCPU has a partitioned PMU by extracting that
->   * field and passing it to :c:func:`kvm_pmu_is_partitioned`
-
-This isn't a bug, but the function name and parameter in the kernel-doc
-block don't match the actual function signature below:
-
-> @@ -55,7 +55,36 @@ bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
->  bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu)
 
 [ ... ]
 
-> +/**
-> + * kvm_pmu_partition_enable() - Enable/disable partition flag
-> + * @kvm: Pointer to vcpu
-> + * @enable: Whether to enable or disable
-> + *
-> + * If we want to enable the partition, the guest is free to grab
-> + * hardware by accessing PMU registers. Otherwise, the host maintains
-> + * control.
-> + */
-> +void kvm_pmu_partition_enable(struct kvm *kvm, bool enable)
-
-This isn't a bug, but the comment describes @kvm as a pointer to a vcpu,
-while the function takes a pointer to struct kvm.
-
-> diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-> index f1c66ce678840..add5e7da830b2 100644
-> --- a/arch/arm64/kvm/pmu.c
-> +++ b/arch/arm64/kvm/pmu.c
-[ ... ]
-> @@ -759,6 +759,19 @@ int kvm_arm_pmu_v3_set_attr(struct kvm_vcpu *vcpu, s=
-truct kvm_device_attr *attr)
-> =20
->  		return kvm_arm_pmu_v3_set_nr_counters(vcpu, n);
->  	}
-> +	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION: {
-> +		unsigned int __user *uaddr =3D (unsigned int __user *)(long)attr->addr;
-> +		bool enable;
+> +		guest_include_el2 =3D (val & ARMV8_PMU_INCLUDE_EL2);
+> +		val &=3D ~evtyper_clr;
 > +
-> +		if (get_user(enable, uaddr))
-> +			return -EFAULT;
+> +		if (unlikely(is_hyp_ctxt(vcpu)) && guest_include_el2)
+> +			val &=3D ~ARMV8_PMU_EXCLUDE_EL1;
 
-Is it possible for the get_user() call to truncate the value being read?
+When the guest is running in nested EL2 context (which executes in hardware
+EL1), what happens if the guest configured the counter to count in guest EL1
+but not in guest EL2?
 
-Since uaddr is cast to unsigned int __user *, the inline assembly inside
-get_user() will load a 32-bit value from userspace. However, the output
-variable enable is a 1-byte bool. If userspace passes a value like 256
-(0x100), the lowest byte is 0, which could incorrectly result in false.
-
-Additionally, should we explicitly check that the input value is exactly
-0 or 1? Accepting any arbitrary value here burns the upper 31 bits and
-prevents repurposing them for future flags without breaking backward
-compatibility.
+If guest_include_el2 is false, do we need to explicitly set
+ARMV8_PMU_EXCLUDE_EL1 in the hardware register here to ensure the counter
+pauses when the guest enters EL2?
 
 > +
-> +		if (!has_kvm_pmu_partition_support())
-> +			return -EPERM;
+> +		if (vcpu->kvm->arch.pmu_filter &&
+> +		    !test_bit(evsel, vcpu->kvm->arch.pmu_filter))
+> +			val |=3D evtyper_set;
 > +
-> +		kvm_pmu_partition_enable(kvm, enable);
-> +		return 0;
+> +		if (i =3D=3D ARMV8_PMU_CYCLE_IDX) {
+> +			write_sysreg(val, pmccntr_el0);
+
+Does this write the filter configuration into the cycle counter value regis=
+ter
+instead of the filter register?
+
+If we use pmccfiltr_el0 here instead, will it correctly apply the exclusion
+mask?
+
+> +		} else {
+> +			write_sysreg(i, pmselr_el0);
+> +			write_sysreg(val, pmxevtyper_el0);
+> +		}
 > +	}
+> +}
+> +
+>  /**
+>   * kvm_pmu_load() - Load untrapped PMU registers
+>   * @vcpu: Pointer to struct kvm_vcpu
+> @@ -165,6 +218,7 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
+> =20
+>  	pmu =3D vcpu->kvm->arch.arm_pmu;
+>  	guest_counters =3D kvm_pmu_guest_counter_mask(pmu);
+> +	kvm_pmu_apply_event_filter(vcpu);
 
-Could this sequence result in concurrent state modification?
+If the guest dynamically reconfigures events by writing to PMEVTYPERn_EL0 or
+PMCCFILTR_EL0, does the physical hardware PMU continue counting the old eve=
+nt
+until the VCPU happens to be scheduled out and back in?
 
-In a multi-vCPU VM, if userspace initializes and starts running vCPU 0, it
-could subsequently invoke this ioctl on an uninitialized vCPU 1. Since
-kvm_arm_pmu_v3_set_attr() only checks if the individual vCPU is initialized:
+Is there another place where we push the new value to the physical hardware
+during a standard sysreg trap return to avoid leaving the hardware state st=
+ale?
 
-	if (vcpu->arch.pmu.created)
-		return -EBUSY;
-
-and KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION modifies VM-wide state without
-calling kvm_vm_has_ran_once(kvm), the PMU partition mode could be altered
-while vCPU 0 is already running.
-
-[ ... ]
-
-> @@ -798,6 +811,7 @@ int kvm_arm_pmu_v3_has_attr(struct kvm_vcpu *vcpu, st=
-ruct kvm_device_attr *attr)
->  	case KVM_ARM_VCPU_PMU_V3_FILTER:
->  	case KVM_ARM_VCPU_PMU_V3_SET_PMU:
->  	case KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS:
-> +	case KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION:
->  		if (kvm_vcpu_has_pmu(vcpu))
->  			return 0;
->  	}
-
-Will this advertise the partition capability even when the host hardware
-does not support it?
-
-The has_attr handler returns 0 based solely on kvm_vcpu_has_pmu(vcpu), but
-the set_attr handler requires has_kvm_pmu_partition_support() to be true. If
-userspace relies on KVM_HAS_DEVICE_ATTR to probe capabilities, it might
-incorrectly attempt to configure the feature and receive an unexpected -EPE=
-RM.
-Should this return -ENXIO if has_kvm_pmu_partition_support() is false?
+> =20
+>  	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
+>  		val =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504211813.1804=
-997-1-coltonlewis@google.com?part=3D17
+997-1-coltonlewis@google.com?part=3D11
