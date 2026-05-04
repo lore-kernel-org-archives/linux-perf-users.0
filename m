@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBFA218EB1
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 10:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBA23AEF4B
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 11:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777891981; cv=none; b=iX3yTCN76ULuDcZGLn/6Xqk41+jIK53l/3cANHTOZrCn5nQbTe02wmAFKUhIdOSdTih3PymYjLVr0LlKEcyt4Xhdhia058S01JMrW1nCExv1SjhYtM4o4vfcjdsn+N+gS7yH/y1JEDJV4Y4en/v4IKlj+koKtFtEQ/qYvOhiIL4=
+	t=1777895244; cv=none; b=Cu98bbTMtZcMqYZ1DU8c7OKTLYc4zhQIP6O2dLGy48jb+IOiD5UE4cR69Se8df67TJcRsf3zyPZm7zqO2sdce2aoet011rJVobJQjPxhk39oytogsG7mQKSefNTgJwjjmqfP1TdObOLQAARSnIXvhagJy9MYD9spvewVehz3pKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777891981; c=relaxed/simple;
-	bh=zLs1Al8g1yiVctExHCknkfkOvKbEebj5WO8MsE1+cHs=;
+	s=arc-20240116; t=1777895244; c=relaxed/simple;
+	bh=VMvCuFYuM2RAXh0K++OI9qt7BgLa6PX0gQ58DlDkkj8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DX0aQMkxoJPR+u0HOzSfCV3tay2Mwtd9cIaEXjH6Y/nL07r5ogSO8qZkyiVROq1JOUlfPs1LBDa+iZMI/n6DyyxoISxANv9VZFwpNvxgRA+k/oi82/D5A2v6g3SK985jPfx6oMvHIwQkVRZVieBxwc2clLBemKk6aqvurzIX5Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pq4nXuGa; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=GzSWXNk2w2COaPjwHXN1d8gnjjJIYd/GLw+m5Si0jQgz/aqvH2re88Ha47ZSIxmw2uUzSEGe60//unR2lc8j0xCDzJt6yFu/m6IHX1O271LLQLJKWn0vc78C6HD5qTv4AiVBkjB7cYKX+mcw2lMWxnG3wLi/jd+zgoMgRS88x9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9QLtX4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pq4nXuGa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29676C2BCB8;
-	Mon,  4 May 2026 10:53:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9QLtX4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B0EC2BCB8;
+	Mon,  4 May 2026 11:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777891981;
-	bh=zLs1Al8g1yiVctExHCknkfkOvKbEebj5WO8MsE1+cHs=;
+	s=k20201202; t=1777895244;
+	bh=VMvCuFYuM2RAXh0K++OI9qt7BgLa6PX0gQ58DlDkkj8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Pq4nXuGaHWgxIlOcbKoJE/mi6cGswqrD/4+uydvHNPBPNubGeW2hQOYu3/OE9/mv6
-	 YQ7hpghHF0EoSiypFvz4MwzBUescOKbg0OoOed9NQcGPnH12V4+NOOfttqPVPg9MjZ
-	 yqdViel3xr50KbAgT8AnJXcikx94Ii1IY1U+l9ZO1n+Di1mZ0adhefBxeMqX/Mj5LF
-	 f1+9SXQLRZW2Mo99aKBBOqS10vGDa/AQLDA/hdV6bcyZdnbWmtLfbYLREldcmjsEcN
-	 hTOy8bHO4lQBXTf2fi8sbiTXmR2LEpQzMhr5CZ5eEX1yAaAKRqGN2XI/ShgFLY2f3c
-	 IB2P9IeZB1JVw==
+	b=m9QLtX4m5ZjkgKFREetn9x5OziypgdORoz9Wmxn9Jea5V7jjUZ0LgnMZzKltBIwfH
+	 NpEiGNUlcTi2owVJt++5dCnh3dHjxTzAtKNMwvB4qTKEC24h69gUYs0/QsaGdmhEr4
+	 OxjrGczSAJOwJkJAIyJMh4NxEdPKFD5faQIXAREaO9GT926C5rjvISe+EJuRJ+JSfG
+	 dIZ1vRNig62qDY/KF9iTmc3UQ8NedzjFU63Or/wf8e75GFbg8oOf8o8qo2i+ijx132
+	 KHIPk8xU18rPx0LwSuZMw+zSS7C5J2aG51a0OQ7UTouLfqJYFOBYQd5OIZZ8DDiB9T
+	 Do2Mxez/Wlveg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 9/9] perf debuginfo: Fix libdw API contract
- violations
+Subject: Re: [PATCH 4/5] perf: arm: pmu: fix reference leak on failed device
+ registration
 Reply-To: sashiko@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: Vastargazing <vebohr@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504081227.2203848-10-irogers@google.com>
-References: <20260504081227.2203848-10-irogers@google.com>
+In-Reply-To: <243cb3737b41fae32a09117c17809a210395e69f.1777889235.git.vebohr@gmail.com>
+References: <243cb3737b41fae32a09117c17809a210395e69f.1777889235.git.vebohr@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 10:53:00 +0000
-Message-Id: <20260504105301.29676C2BCB8@smtp.kernel.org>
+Date: Mon, 04 May 2026 11:47:23 +0000
+Message-Id: <20260504114723.D4B0EC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,44 +46,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] This problem wasn't introduced by this patch, but the open() c=
-all in debuginfo__init_offline_dwarf() lacks the O_NONBLOCK flag, exposing =
-a local Denial of Service (DoS) vulnerability.
+- [High] Calling `platform_device_put()` on statically allocated platform d=
+evices triggers a kernel WARNING.
 --
 
-commit a6e339ae66465b909762a437f958cdaed424b666
-Author: Ian Rogers <irogers@google.com>
+commit 3c982eab6d069fa3cf3109dda88a31b66ceb0afd
+Author: Vastargazing <vebohr@gmail.com>
 
-perf debuginfo: Fix libdw API contract violations
+perf: arm: pmu: fix reference leak on failed device registration
 
-This commit adds return value checks for dwfl_report_end and
-dwfl_module_relocation_info to prevent potential segmentation faults. It al=
-so
-fixes a file descriptor leak in the error path of
-debuginfo__init_offline_dwarf() when offline initialization fails.
+When platform_device_register() fails in arm_acpi_register_pmu_device(),
+this commit adds a call to platform_device_put() in the error branch to
+prevent a reference leak.
 
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index 0e35c13abd04..84a78b30ceac 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
-> @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debugin=
-fo *dbg,
->  {
->  	GElf_Addr dummy;
->  	int fd;
-> +	bool fd_consumed =3D false;
+> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+> index e80f76d95e68..c2defbc32ad9 100644
+> --- a/drivers/perf/arm_pmu_acpi.c
+> +++ b/drivers/perf/arm_pmu_acpi.c
+> @@ -119,8 +119,10 @@ arm_acpi_register_pmu_device(struct platform_device =
+*pdev, u8 len,
 > =20
->  	fd =3D open(path, O_RDONLY);
+>  	pdev->resource[0].start =3D irq;
+>  	ret =3D platform_device_register(pdev);
+> -	if (ret)
+> +	if (ret) {
+> +		platform_device_put(pdev);
 
-While this wasn't introduced by this patch, could this open() call cause a
-regression by hanging on a FIFO?
+Because the devices passed to this function (spe_dev and trbe_dev) are
+statically allocated and do not provide a .dev.release callback, will calli=
+ng
+platform_device_put() trigger a kernel warning?
 
-If the path originates from user-controlled sources, opening it without
-O_NONBLOCK can cause the perf record session to hang indefinitely. Using
-O_RDONLY | O_NONBLOCK would prevent this.
+When the reference count drops to 0, device_release() is invoked.
+Since no release function is defined for these static objects, it triggers
+the driver core warning about lacking a release() function, which could pan=
+ic
+the system if panic_on_warn is configured.
 
-[ ... ]
+The kernel documentation's advice to use platform_device_put() applies
+to dynamically allocated devices, not statically allocated global variables.
+
+>  		acpi_unregister_gsi(gsi);
+> +	}
+> =20
+>  	return ret;
+>  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504081227.2203=
-848-1-irogers@google.com?part=3D9
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1777889235.gi=
+t.vebohr@gmail.com?part=3D4
