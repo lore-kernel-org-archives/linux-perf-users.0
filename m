@@ -1,182 +1,211 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412C737C0FA
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7950B3290C8
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777932713; cv=none; b=jx5TFmYYJlJ9daTg33wmzjwpzIgHDz/e6SsBkmIH2xEeTeKzpICFW4Zox3Rg9ZBhN5KWuprMoUszj+J0T1V4dc39oFAIDiAkxp4xHEg3l/wwXrpCTGJCLbs483NhQF/lkKYEWeTKgtQFtQ7hji+MHMGwVV68vV43ZuICnUSCUZE=
+	t=1777932782; cv=none; b=czQK53csb3zW/9288FbJ1N7+j7MtBECzbjAw993weZ+ITNySkPW1uKA/pdj96jQba7uzWBdp8DzWJuCYRl7hOfO7Srwq2Kcp+qkROd1HIS8zJZ5xtw/MuV6Jm2ez6fOYjiDRCuTKiKS6+avdABNzYVzOQXcJ4jKxT4NQNWssSbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777932713; c=relaxed/simple;
-	bh=ghn7Qk+WDSYWbANls3cxopBUMENWA25fVvCiSSvjDyc=;
+	s=arc-20240116; t=1777932782; c=relaxed/simple;
+	bh=ZZOBbXd7fMyOAjKeyBwJlFe6PKHKy6W0RIYJxswWOm8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cfHGhGt0fAb9ArANN87/2mBUM86YxM/L1+aYjiDibFS+8JEt3PmD55332VP4irceTldgjJMvjKX03ZOZCuYtS7v/pNR8C8pRL7DrISyQJ07amSmpBDLe5oWZHJ7/wT7OtSBQUpbeDcZV7Dgk6MC1dwbNgL5kt5Mgka7xslR3kso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMdJ9oF8; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=isrZStfTr81CKD3oNVws46bDjUI4xbDwRauyPZZ60fGyYOvLGqxlqMEljtKuvl9lcwm8Lw3T90wlQq9r3AZZZzrq5eGwxVzY94mWJxX/Sue5b3arlGnyb0TYA6CwXe+pSn+VvcbS+1LS7tmF3RaCMjvlbEp0G+/MWpSsGQFPHm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKoIcsWz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMdJ9oF8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8BEC2BCB8;
-	Mon,  4 May 2026 22:11:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKoIcsWz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25B4C2BCB8;
+	Mon,  4 May 2026 22:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777932713;
-	bh=ghn7Qk+WDSYWbANls3cxopBUMENWA25fVvCiSSvjDyc=;
+	s=k20201202; t=1777932782;
+	bh=ZZOBbXd7fMyOAjKeyBwJlFe6PKHKy6W0RIYJxswWOm8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=bMdJ9oF8lkwQFF8qWYRdHOt9QtTssDQ8nP6HfNfN+5rMLzkWXOGTbrGRxjoOv+u/C
-	 hJ+mZwiT6f8YogAL6xROpBFNnR7s9Vmn5RiwmdlkDRGkIpVnIZ3K0rm7hTzBezdhYE
-	 /Kt23uY2EO5KW6Kj1paE0mf4tTpVUny5wkzcd/PSlQL0LN2kxgq0Ff9giZ6GrdJVTK
-	 2vNdmPC/XpSbz1l3RHbwwaCeLkteScnIOmZebeSH/T/LSd9G22abZj5fkiKcNEa8jp
-	 Di/7WNWItChsD0ckXWx1WGkhtAJfb/QnSU40nSBBswAnU5PzIC9/1TCNB8MSxKfOyT
-	 7tcO+FlQowCaw==
+	b=bKoIcsWzbwFghgadKK5IHoNIU/F9PSgOkWgWJ8ZVRM2n/6SusLs6A+v88NgzR2cZc
+	 tVaVuKA6RkoC+BTbe+Pc2YL9mru0qRG3Z8+Dkiz46IR+wkG8oOZs/EDAfNNaZPc2qc
+	 UdmiWnGki6T8QSK0RFu5Pf25iDdMLIau5gtNK3C1jass1Tag14YG/wgVirhVg+Bg5q
+	 pRwHtqgRAPv5DRtJ3Tnks44OjfEcqJ0/F75sh3iDffpguBj7HK60EOYXUnsvI9I4Sp
+	 n8ZIr/CRs9txZcnz8+O0Gqlv91lb85yfdenyNA+oZrnSdTnobSNwyh7D1s8S83H4PE
+	 cl3+K0csmBYPQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 13/20] KVM: arm64: Apply dynamic guest counter
- reservations
+Subject: Re: [PATCH v7 14/20] KVM: arm64: Implement lazy PMU context swaps
 Reply-To: sashiko@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504211813.1804997-14-coltonlewis@google.com>
-References: <20260504211813.1804997-14-coltonlewis@google.com>
+In-Reply-To: <20260504211813.1804997-15-coltonlewis@google.com>
+References: <20260504211813.1804997-15-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 22:11:52 +0000
-Message-Id: <20260504221152.EC8BEC2BCB8@smtp.kernel.org>
+Date: Mon, 04 May 2026 22:13:00 +0000
+Message-Id: <20260504221301.A25B4C2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [High] Hard lockup / Deadlock due to acquiring `perf_ctx_lock` with hardw=
-are interrupts enabled.
-- [High] Data race and cross-CPU isolation breach due to dynamic modificati=
-on of the global PMU counter mask (`cntr_mask`).
-- [High] NULL pointer dereference risk due to lockless, unprotected access =
-to the per-CPU perf events array.
-- [Medium] Pending host perf events remain permanently inactive due to skip=
-ped PMU reschedule updates.
+- [Critical] Transitioning the PMU to GUEST_OWNED fails to load the guest's=
+ virtual PMU state into the hardware registers, leading to an information l=
+eak and state corruption.
+- [High] PMU read accessors directly read from hardware registers when the =
+PMU is in the FREE state, leaking host PMU state to the guest.
+- [High] Restoring PMU registers via userspace during live migration fails =
+to transition the vCPU to GUEST_OWNED, leaving restored counters inert.
+- [High] `pmu_write_evtyper` fails to update the physical hardware register=
+, causing guest event configurations to be ignored.
+- [High] Direct hardware register manipulation in `pmu_write_evcntr` and `p=
+mu_read_evcntr` lacks preemption protection, interacting with a bug in `kvm=
+_pmu_put` to cause state corruption.
 --
 
-commit ad275b1ce5aad3594e39d36f37c39f73178b1c0b
+commit 62dcf0081f7f3437442e2756f69cc3188de056f1
 Author: Colton Lewis <coltonlewis@google.com>
 
-KVM: arm64: Apply dynamic guest counter reservations
+KVM: arm64: Implement lazy PMU context swaps
 
-Apply dynamic guest counter reservations by checking if the requested
-guest mask collides with any events the host has scheduled and calling
-pmu_perf_resched_update() with a hook that updates the mask of
-available counters in between schedule out and schedule in.
+This commit implements a simple state machine for PMU register access to=20
+avoid the cost of context swapping for guests that never touch the PMU. The=
+=20
+PMU starts as free and transitions to guest-owned only when a guest accesse=
+s=20
+the PMU registers.
+
+> diff --git a/arch/arm64/include/asm/kvm_types.h b/arch/arm64/include/asm/=
+kvm_types.h
+> index 9a126b9e2d7c9..4e39cbc80aa0b 100644
+> --- a/arch/arm64/include/asm/kvm_types.h
+> +++ b/arch/arm64/include/asm/kvm_types.h
+> @@ -4,5 +4,9 @@
+> =20
+>  #define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE 40
+> =20
+> -#endif /* _ASM_ARM64_KVM_TYPES_H */
+> +enum vcpu_pmu_register_access {
+> +	VCPU_PMU_ACCESS_FREE,
+> +	VCPU_PMU_ACCESS_GUEST_OWNED,
+> +};
+
+How does this state machine handle PMU registers being restored via userspa=
+ce
+during live migration?
+
+If userspace restores PMU registers via KVM_SET_ONE_REG, the sysreg setters
+update the in-memory vCPU state but do not appear to call
+kvm_pmu_set_guest_owned() or transition the state away from
+VCPU_PMU_ACCESS_FREE.
+
+When the migrated VM resumes execution, kvm_pmu_load() might ignore the PMU
+context, leaving any previously running counters inert until the guest
+explicitly performs a new PMU write.
 
 > diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 2252d3b905db9..14cc419dbafad 100644
+> index 14cc419dbafad..881cea5117515 100644
 > --- a/arch/arm64/kvm/pmu-direct.c
 > +++ b/arch/arm64/kvm/pmu-direct.c
+[ ... ]
+> @@ -278,7 +297,8 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
+>  	 * If we aren't guest-owned then we know the guest isn't using
+>  	 * the PMU anyway, so no need to bother with the swap.
+>  	 */
+> -	if (!kvm_vcpu_pmu_is_partitioned(vcpu))
+> +	if (!kvm_vcpu_pmu_is_partitioned(vcpu) ||
+> +	    vcpu->arch.pmu.access !=3D VCPU_PMU_ACCESS_GUEST_OWNED)
+>  		return;
+> =20
+>  	preempt_disable();
+
+If the PMU is in the VCPU_PMU_ACCESS_FREE state, do the PMU read accessors
+directly read from hardware registers?
+
+If a guest reads a PMU register before performing any writes, the state
+remains free. Because this check skips loading the guest context, could the
+read accessors execute read_sysreg() on the physical hardware and return the
+host's PMU state to the guest?
+
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index cc3d1804ab200..e4840d93a769f 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1035,6 +1035,7 @@ static bool pmu_access_event_counter_el0_disabled(s=
+truct kvm_vcpu *vcpu)
+>  static void pmu_write_pmcr(struct kvm_vcpu *vcpu, u64 val)
+>  {
+>  	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+> +		kvm_pmu_set_guest_owned(vcpu);
+>  		write_sysreg(val, pmcr_el0);
+>  		return;
+>  	}
+
+Does transitioning the PMU to VCPU_PMU_ACCESS_GUEST_OWNED here also require
+loading the guest's virtual PMU state into the hardware registers?
+
+When kvm_pmu_set_guest_owned() is called, it configures mdcr_el2 to allow
+direct guest access but fails to invoke kvm_pmu_load(). Since the initial
+vCPU entry skipped loading the PMU, the physical registers might still
+contain the host's PMU state.
+
+Could this allow the guest to read uninitialized hardware registers? Also,
+upon preemption, kvm_pmu_put() might read these host values and overwrite t=
+he
+guest's saved memory context.
 
 [ ... ]
-
-> @@ -100,6 +100,73 @@ u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
-> +static void kvm_pmu_set_guest_counters(struct arm_pmu *cpu_pmu, u64 gues=
-t_mask)
-> +{
-> +	struct pmu_hw_events *cpuc =3D this_cpu_ptr(cpu_pmu->hw_events);
-> +	DECLARE_BITMAP(guest_bitmap, ARMPMU_MAX_HWEVENTS);
-> +	DECLARE_BITMAP(new_mask, ARMPMU_MAX_HWEVENTS);
-> +	bool need_resched =3D false;
+> @@ -1193,6 +1195,8 @@ static void pmu_write_evcntr(struct kvm_vcpu *vcpu,=
+ u64 val, u64 idx)
+>  		return;
+>  	}
+> =20
+> +	kvm_pmu_set_guest_owned(vcpu);
 > +
-> +	bitmap_from_arr64(guest_bitmap, &guest_mask, ARMPMU_MAX_HWEVENTS);
-> +	bitmap_copy(new_mask, cpu_pmu->hw_cntr_mask, ARMPMU_MAX_HWEVENTS);
-> +
-> +	if (guest_mask) {
-> +		/* Subtract guest counters from available host mask */
-> +		bitmap_andnot(new_mask, new_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS);
-> +
-> +		/* Did we collide with an active host event? */
-> +		if (bitmap_intersects(cpuc->used_mask, guest_bitmap, ARMPMU_MAX_HWEVEN=
-TS)) {
-> +			int idx;
-> +
-> +			need_resched =3D true;
-> +			cpuc->host_squeezed =3D true;
-> +
-> +			/* Look for pinned events that are about to be preempted */
-> +			for_each_set_bit(idx, guest_bitmap, ARMPMU_MAX_HWEVENTS) {
-> +				if (test_bit(idx, cpuc->used_mask) && cpuc->events[idx] &&
-> +				    cpuc->events[idx]->attr.pinned) {
+>  	if (idx =3D=3D ARMV8_PMU_CYCLE_IDX) {
+>  		write_sysreg(val, pmccntr_el0);
+>  		return;
 
-Is there a risk of a NULL pointer dereference here?
+Is there a preemption issue when manipulating hardware registers directly
+here? This problem wasn't introduced by this patch, but it significantly
+impacts the PMU logic.
 
-The per-CPU events array is accessed without locks and with hardware interr=
-upts
-enabled. If an interrupt occurs (like an IPI triggering an event removal)
-between the evaluation of cpuc->events[idx] and reading ->attr.pinned, and
-the compiler issues separate memory reads due to a lack of READ_ONCE(), cou=
-ld
-the second read observe a NULL pointer?
+In pmu_write_evcntr(), the code modifies pmselr_el0 to select a counter ind=
+ex
+before writing to pmxevcntr_el0. Since KVM sysreg handlers run with preempt=
+ion
+enabled, if preemption occurs mid-sequence, kvm_pmu_put() iterates over gue=
+st
+counters, using and clobbering pmselr_el0.
 
-> +					pr_warn_ratelimited("perf: Pinned host event squeezed out by KVM gu=
-est PMU partition\n");
-> +					break;
-> +				}
-> +			}
-> +		}
-> +	} else {
-> +		/*
-> +		 * Restoring to hw_cntr_mask.
-> +		 * Only resched if we previously squeezed an event.
-> +		 */
-> +		if (cpuc->host_squeezed) {
-> +			need_resched =3D true;
-> +			cpuc->host_squeezed =3D false;
-> +		}
-> +	}
+It appears kvm_pmu_put() fails to read and save the original pmselr_el0 bef=
+ore
+its loop, instead saving the highest guest counter index at the end. When t=
+he
+task resumes, kvm_pmu_load() restores this highest index to pmselr_el0.
+Execution resumes in pmu_write_evcntr(), which might then write to
+pmxevcntr_el0, inadvertently mutating the highest guest counter instead of
+the intended idx.
 
-What happens to host perf events created while the guest is actively runnin=
-g?
+[ ... ]
+> @@ -1281,6 +1285,7 @@ static void pmu_write_evtyper(struct kvm_vcpu *vcpu=
+, u64 val, u64 idx)
+>  	u64 mask;
+> =20
+>  	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+> +		kvm_pmu_set_guest_owned(vcpu);
+>  		mask =3D kvm_pmu_evtyper_mask(vcpu->kvm);
+>  		__vcpu_assign_sys_reg(vcpu, PMEVTYPER0_EL0 + idx, val & mask);
+>  		return;
+>  	}
 
-It looks like cpuc->host_squeezed is only set if a host event collided when
-the guest was loaded. If a new host event is created while the guest is
-running, it will fail to allocate a counter due to the restricted mask.
+Does this sequence fail to update the physical hardware register?
 
-When the guest unloads, cpuc->host_squeezed is false, so no reschedule is
-requested. Will the perf subsystem be notified that counters have been free=
-d,
-or will the host event remain permanently inactive?
+The code updates the guest's event configuration in the memory array using
+__vcpu_assign_sys_reg(), but omits writing the value to the physical
+pmxevtyper_el0 register.
 
-> +
-> +	if (need_resched) {
-> +		/* Collision: run full perf reschedule */
-> +		perf_pmu_resched_update(&cpu_pmu->pmu, kvm_pmu_update_mask, new_mask);
-
-Could this cause a deadlock if a Performance Monitor Interrupt (PMI) or
-perf IPI fires?
-
-kvm_pmu_load() calls this with preemption disabled but leaves hardware
-interrupts enabled. perf_pmu_resched_update() unconditionally calls
-perf_ctx_lock(), which acquires the context lock without disabling local IR=
-Qs.
-
-If an interrupt fires on the same CPU while this lock is held, and the
-handler attempts to acquire ctx->lock via raw_spin_lock_irqsave(), will
-it spin indefinitely?
-
-> +	} else {
-> +		/* Host was never using guest counters anyway */
-> +		bitmap_copy(cpu_pmu->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
-
-Does modifying cpu_pmu->cntr_mask here introduce a data race?
-
-struct arm_pmu represents PMU hardware capabilities shared across multiple =
-CPUs
-in a domain. If this per-CPU load/put path dynamically mutates cntr_mask
-without global synchronization, could reserving guest counters on one CPU
-incorrectly prevent host perf events from running on another CPU?
-
-Also, when a vCPU unloads, it appears to unconditionally restore cntr_mask =
-to
-hw_cntr_mask, which might wipe out active reservations from other vCPUs.
-
-> +	}
-> +}
+Since KVM does not invoke kvm_pmu_load() after returning from a sysreg trap,
+could the active hardware counter continue counting its previous event inst=
+ead
+of the newly configured one?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504211813.1804=
-997-1-coltonlewis@google.com?part=3D13
+997-1-coltonlewis@google.com?part=3D14
