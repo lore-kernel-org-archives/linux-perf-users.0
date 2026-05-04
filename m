@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E1739D6CE;
-	Sun,  3 May 2026 23:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B169463;
+	Mon,  4 May 2026 01:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777852491; cv=none; b=szO5EGYqYXUmP01BGS6dFd9+OUlYedyxEy0rmcNNSynpKwcs+ccnb0mSnTW4QmdqO6UU7o/KsyUoozk16j2wBvNQX06b6i0s6SudKixH9/U43bcDoO01kiCBK44nyhNxvEtEGajS4IxXdYLPaQ+Wjjbrri4daRZKuegaK2EnX8s=
+	t=1777858557; cv=none; b=NnS6xES9G5Ky5SZbWEimyLLG/l424ktb6fLadqMDkoMSnrWKAQJVFLl0lheCYatpYUpxHBYaBjvr15zkYo+B5ZgZiDTRNau4TdHmW8iWyaLU5+brRyYapdUybrYHnoN01ScATBBmFEDNlIWVzZdRebfXKUGpD7A9T/1velXrCjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777852491; c=relaxed/simple;
-	bh=VQDC0d/dSEhD7rZ/x3Z2DNiIZh4nDMuhsqsjHVuTU5s=;
+	s=arc-20240116; t=1777858557; c=relaxed/simple;
+	bh=J57fHkcb2sTUOlg5JZBSV2Xsnk+sg+ZgcJ4agOn9+NM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qBHAQuLJhNKbU4dRxrKtMswci+8/lMEMjndg6usDiTVeB2mRarRgH5xIQrfLCHE20y1U4ouzus0wy+b/khLV3pZWKg7cB9OgeiXbRonC1lAsuqFTOq6MTLD084mxoFISEQFXw5yFDnYsyEv8E8hS6eJXFKrwr1QNKjmNvC9pbY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTKdb7oS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XM9rSXzZ9sptF7F/I56tXusFqGKOJtMWST9E8W62ADVIguEirz43G/CzEunv5BTmbT9U+GRy2/0Lss9TlLyslGtZeK6T07bqxqAUfvTIDatXWmBQZcCUpNB7xvoYdRABUjqmuxnSN/+5fKxjunoDxvputY3woQyTjlCrTrWdYxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0t+UqOJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTKdb7oS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF48CC2BCB4;
-	Sun,  3 May 2026 23:54:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0t+UqOJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CF3C2BCB4;
+	Mon,  4 May 2026 01:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777852491;
-	bh=VQDC0d/dSEhD7rZ/x3Z2DNiIZh4nDMuhsqsjHVuTU5s=;
+	s=k20201202; t=1777858557;
+	bh=J57fHkcb2sTUOlg5JZBSV2Xsnk+sg+ZgcJ4agOn9+NM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kTKdb7oS+SBlAl1jovmfUIIeVfp5HpOjjaSbVHhSXNIIxjkD0kCGysi94E1RoZ01a
-	 UUJ6PMZ6iTcPwVcG39/Bt3Y3/7dQpdBLzLf6yU0HNJMYDZJK1XxS9vpMFpy3tHLUM5
-	 1mWs6fVVGYB+ZWJPDUkvJecOeDOvhVhOJgtXwzG7wVO5qPjhYQlWiodTLQAEbct6d/
-	 l+9dBbGkQ7b+gpbObVJNTqE/JHQvtd/j7C8yxmk1gQdFnQfMwor4I8irLfDtTt+odA
-	 KPR8pnHzCm66JlZwlvYxjyeRg7CfjQ3PJCbO31FyamXlSBC35DcCjbj0EHWzJ/Th3x
-	 cGC2ooxK/D55A==
-Date: Sun, 3 May 2026 16:54:49 -0700
+	b=F0t+UqOJk9sHUhivwwdzGhTJ4hN/dRVo8eudMiLIGTZwEFwzdm6RiIwUkoNu4Ypbv
+	 b6AapNh/60taYLm1VumX95nIlTV3zXQeXOCwW7Zb15n63C0mVgbUNNeaOQUv70f6fT
+	 1gC8wS15dxQAQWeOPvWZf+XpRWPkzuuvpjUDJcNL3QBakFvbtbiunYfzaa0p+GI/Cl
+	 5juOSbhzhEc4elKga+GhrvUisG8n0tvg7ROmkgp48cdeQLMopIU3GJr/NnT6ZoMBeP
+	 prPNWBiNtijzht4XYQIxTd1hCB1iHZjQ74sZ8dttm6+69C3/xVbLjwKcVBE0QHNDzM
+	 gauEFWm3K1wTQ==
+Date: Sun, 3 May 2026 18:35:55 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
-	Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] perf debuginfo: Fix libdw API contract violations
-Message-ID: <affgSUgoSjPZmYGF@z2>
-References: <20260503003552.1063540-1-irogers@google.com>
- <20260503171032.1559338-1-irogers@google.com>
- <20260503171032.1559338-7-irogers@google.com>
+Cc: acme@kernel.org, tmricht@linux.ibm.com, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, hca@linux.ibm.com, jameshongleiwang@126.com,
+	japo@linux.ibm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
+	sumanthk@linux.ibm.com
+Subject: Re: [PATCH v9 01/18] perf env: Add perf_env__e_machine helper and
+ use in perf_env__arch
+Message-ID: <aff3-2H-zvRKULwl@z2>
+References: <20260502065935.291960-1-irogers@google.com>
+ <20260503002248.1040791-1-irogers@google.com>
+ <20260503002248.1040791-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,79 +48,142 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260503171032.1559338-7-irogers@google.com>
+In-Reply-To: <20260503002248.1040791-2-irogers@google.com>
 
-On Sun, May 03, 2026 at 10:10:32AM -0700, Ian Rogers wrote:
-> Check return value of `dwfl_report_end` during offline initialization.
-> Validate `dwfl_module_relocation_info` result before passing to `strcmp`
-> to avoid potential segmentation faults.
+On Sat, May 02, 2026 at 05:22:31PM -0700, Ian Rogers wrote:
+> Add a helper that lazily computes the e_machine and falls back to
+> EM_HOST. Use the perf_env's arch to compute the e_machine if
+> available. Use a binary search for some efficiency in this, but handle
+> somewhat complex duplicate rules. Switch perf_env__arch to be derived
+> the e_machine for consistency. This switches arch from being uname
+> derived to matching that of the perf binary (via EM_HOST). Update
+> session to use the helper, which may mean using EM_HOST when no
+> threads are available. This also updates the perf data file header
+> that gets the e_machine/e_flags from the session.
 > 
-> Additionally:
->  - Fix a file descriptor leak in `debuginfo__init_offline_dwarf()` when
->    `dwfl_report_offline()` or subsequent setup calls fail.
-> 
-> Fixes: 6f1b6291cf73 ("perf tools: Add util/debuginfo.[ch] files")
-> Assisted-by: Gemini-CLI:Google Gemini 3
 > Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+[SNIP]
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index f30e48eb3fc3..f1ae61392cce 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -379,21 +379,28 @@ static int write_osrelease(struct feat_fd *ff,
+>  	return do_write_string(ff, uts.release);
+>  }
+>  
+> -static int write_arch(struct feat_fd *ff,
+> -		      struct evlist *evlist __maybe_unused)
+> +static int write_arch(struct feat_fd *ff, struct evlist *evlist)
+>  {
+>  	struct utsname uts;
+> -	int ret;
+> +	const char *arch = NULL;
+>  
+> -	ret = uname(&uts);
+> -	if (ret < 0)
+> -		return -1;
+> +	if (evlist->session) {
+> +		/* Force the computation in the perf_env of the e_machine of the threads. */
+> +		perf_session__e_machine(evlist->session, /*e_flags=*/NULL);
+> +		arch = perf_env__arch(perf_session__env(evlist->session));
+> +	}
+>  
+> -	return do_write_string(ff, uts.machine);
+> +	if (!arch) {
+> +		int ret = uname(&uts);
+> +
+> +		if (ret < 0)
+> +			return -1;
+> +		arch = uts.machine;
+> +	}
+> +	return do_write_string(ff, arch);
+>  }
+>  
+> -static int write_e_machine(struct feat_fd *ff,
+> -			   struct evlist *evlist __maybe_unused)
+> +static int write_e_machine(struct feat_fd *ff, struct evlist *evlist)
+>  {
+>  	/* e_machine expanded from 16 to 32-bits for alignment. */
+>  	uint32_t e_flags;
+> @@ -2684,10 +2691,18 @@ static int process_##__feat(struct feat_fd *ff, void *data __maybe_unused) \
+>  FEAT_PROCESS_STR_FUN(hostname, hostname);
+>  FEAT_PROCESS_STR_FUN(osrelease, os_release);
+>  FEAT_PROCESS_STR_FUN(version, version);
+> -FEAT_PROCESS_STR_FUN(arch, arch);
+>  FEAT_PROCESS_STR_FUN(cpudesc, cpu_desc);
+>  FEAT_PROCESS_STR_FUN(cpuid, cpuid);
+>  
+> +static int process_arch(struct feat_fd *ff, void *data __maybe_unused)
+> +{
+> +	free(ff->ph->env.arch);
+> +	ff->ph->env.arch = do_read_string(ff);
+> +	if (!ff->ph->env.arch)
+> +		return -ENOMEM;
+> +	return 0;
+> +}
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Isn't it same as FEAT_PROCESS_STR_FUN()?
+
+
+> +
+>  static int process_e_machine(struct feat_fd *ff, void *data __maybe_unused)
+>  {
+>  	int ret;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index fe0de2a0277f..3e64db2d27c2 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -3023,14 +3023,19 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
+>  		return EM_HOST;
+>  	}
+>  
+> +	/*
+> +	 * Is the env caching an e_machine? If not we want to compute from the
+> +	 * more accurate threads.
+> +	 */
+>  	env = perf_session__env(session);
+> -	if (env && env->e_machine != EM_NONE) {
+> -		if (e_flags)
+> -			*e_flags = env->e_flags;
+> -
+> -		return env->e_machine;
+> -	}
+> +	if (env && env->e_machine != EM_NONE)
+> +		return perf_env__e_machine(env, e_flags);
+>  
+> +	/*
+> +	 * Compute from threads, note this is more accurate than
+> +	 * perf_env__e_machine that falls back on EM_HOST and doesn't consider
+> +	 * mixed 32-bit and 64-bit threads.
+> +	 */
+
+I'm curious if it's always better.  If EM_HOST is 64-bit and the first
+thread in a session happens to be 32-bit.  Then resulting e_machine
+would be 32- bit, right?  Is that what we want?
 
 Thanks,
 Namhyung
 
-> ---
-> v4:
->  - Fix file descriptor leaks in debuginfo init paths.
-> ---
->  tools/perf/util/debuginfo.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index 0e35c13abd04..84a78b30ceac 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
-> @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
->  {
->  	GElf_Addr dummy;
->  	int fd;
-> +	bool fd_consumed = false;
+
+>  	machines__for_each_thread(&session->machines,
+>  				  perf_session__e_machine_cb,
+>  				  &args);
+> @@ -3048,10 +3053,9 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
 >  
->  	fd = open(path, O_RDONLY);
->  	if (fd < 0)
-> @@ -55,6 +56,7 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
->  	dbg->mod = dwfl_report_offline(dbg->dwfl, "", "", fd);
->  	if (!dbg->mod)
->  		goto error;
-> +	fd_consumed = true;
->  
->  	dbg->dbg = dwfl_module_getdwarf(dbg->mod, &dbg->bias);
->  	if (!dbg->dbg)
-> @@ -62,13 +64,14 @@ static int debuginfo__init_offline_dwarf(struct debuginfo *dbg,
->  
->  	dwfl_module_build_id(dbg->mod, &dbg->build_id, &dummy);
->  
-> -	dwfl_report_end(dbg->dwfl, NULL, NULL);
-> +	if (dwfl_report_end(dbg->dwfl, NULL, NULL) != 0)
-> +		goto error;
->  
->  	return 0;
->  error:
->  	if (dbg->dwfl)
->  		dwfl_end(dbg->dwfl);
-> -	else
-> +	if (!fd_consumed)
->  		close(fd);
->  	memset(dbg, 0, sizeof(*dbg));
->  
-> @@ -167,7 +170,7 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
->  	/* Search the relocation related .text section */
->  	for (i = 0; i < n; i++) {
->  		p = dwfl_module_relocation_info(dbg->mod, i, &shndx);
-> -		if (strcmp(p, ".text") == 0) {
-> +		if (p && strcmp(p, ".text") == 0) {
->  			/* OK, get the section header */
->  			scn = elf_getscn(elf, shndx);
->  			if (!scn)
+>  	/*
+>  	 * Couldn't determine from the perf_env or current set of
+> -	 * threads. Default to the host.
+> +	 * threads. Potentially use logic that uses the arch string otherwise
+> +	 * default to the host. Don't cache in the perf_env in case later
+> +	 * threads indicate a better ELF machine type.
+>  	 */
+> -	if (e_flags)
+> -		*e_flags = EF_HOST;
+> -
+> -	return EM_HOST;
+> +	return perf_env__e_machine_nocache(env, e_flags);
+>  }
 > -- 
 > 2.54.0.545.g6539524ca2-goog
 > 
