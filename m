@@ -1,536 +1,203 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436C11EE7D5
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 03:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B69F7E0E4
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 04:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777866706; cv=none; b=eudXSSoKqDJLHD5yTHsJZ3gRg+LCS8YaBayyIwTlx9cd+aeEy8ocGnVG168BBkIv1PIaxR07wj8VabU8bXms/fiOqjV1ozPTFJ4taykgZ1CiqrH+M/tSENJgRQdnxfM8kBD0fSyESQTUD4tRs4LRibwdr4c3W0gpJi4N7QnWgzM=
+	t=1777868230; cv=none; b=BSNQETuDdYn7bwnkK6vwJweqM9zgkB5XAjKYxpLTbkaSPerhyQWGoGq66lhTPG9lbBIjgtgGBSVpt3Q9izpiZ0E+zWFv9jg4znBO9JhKFu4ozOgQGsCH/XDV3GvqXauKnTdWx9sikTCv51c2TRzzOpofSjQCL2CS0GJ40csW3CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777866706; c=relaxed/simple;
-	bh=QyFcM88uFzx8pRnt6O+TUgQvIHrG2uCDRqN+BLtSVwo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bzSvvKrv3efHGKKIH0lxhrymp6BLvrir9l8rGqy47tPpcj1xcFbbqcY3U31NV+sKmNkNEDm8M26WwJAa1PIGIb0keYszXiJNdb6GnjmXtxlfWnFCLiag5xUo2Hbmna9c0QPccMeV+lEDnz0X69n2/C9WtwXrHjRbx4zQRCZDaR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y8d3CpkG; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1777868230; c=relaxed/simple;
+	bh=4SQmGh+2z3H67UJe7vYt2jltgmf1YA1gyVNsdpJ5e3g=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=JOpWRvI1aazTvUGCb1dl0J7mteSzg31VsXcYrG7wh5bJe5zceD0BB1KurnK1D6aOSn9QWXh01GymoCtp9wSJmO+5bCustSW+nBw4T+mg71rRz6d8g0SUJ4EiRJDLx217qog6mJhRKIrdVuB3DXl/q9MZzp8gHKwTM82bLKw2bzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Pe8p2gG1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y8d3CpkG"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c726f4055so6101418c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 03 May 2026 20:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777866703; x=1778471503; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o4zjjwnheQuipa7JdIuX+je4jCogvp4p9A3GIGkvi3M=;
-        b=Y8d3CpkGoqiLd17VWmJSOmKIBj/eS3B24kRu7m7nr78YlvutC6LSc8jNf/jU4a7TIG
-         nUl2qOg8fbLncAsHRaG5daxUwcT/9U05uYlmQ8Hzh6KlSHbNYM0WvunfpnJXJwB1oTHx
-         6dphrMpAZLaSrYEtWN1VQh+TaA6Geh/X/j3lkq63dNrABzabag7QKrNwhtSM5KXMkgoZ
-         nyfpXVrfE3TC5F3brOktzMQSILZa+bh88oVnZPl1wxDn7rOhIdeES9+vvIwk313k6N6y
-         GNnN5FBKUM0b5P4rPi2Of5/rEiLKyjcu7YwKDsA3DHcz1tGTtMPeaO5Op7AyzVXWEpwC
-         X6NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777866703; x=1778471503;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o4zjjwnheQuipa7JdIuX+je4jCogvp4p9A3GIGkvi3M=;
-        b=ocNGQcORYlep0x6uExJD/YLP13uFThoQYQo3pCmbr+a1YTAdyqE6+OKcTKEJn0XXEz
-         SkxBlTv6IBFYZ8yhjz13iDqnGBBRoDq/6gKAWg+XX42+XUb+v84m0gLIbWeMpzR/0XBB
-         FlDge+21fequWb7LBSONMHWAaHrQXrHZ2aDzqHlP/TeOXNaILhbJURmbI2asR8zOfQ6I
-         Vhqni5FWhurJtbYqzA2DgEIw4TCWeDTQouxYKdA4nIAD40Sfmjctgwx4Oo96rBFtgWJq
-         lP/qwBQaMlZF1PA2yxffP26SiPL7YovahLEzsnB5/A0j+b3Xnps1nBrU/LY/YFupNk8/
-         epeg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Ou9g5CWPkevKTzjfRVKwGwsowtyl0xiMtxgB8ITxI+K/ZsjLQmWZWGZx9ih/4ui2q4CnVj7tg9eTwwRFZrETA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv9toYSj/6H48waCzdqkknNw0q5SCDHfxJiBZS4jAxlZ+zRrCf
-	lmfWzbkLmtMBKk8XbFqXlC4f5Z/Z/EGdIBq6rTR/0Dsw36UMBzIhbmm0rQTiBNOjZm9Xlpgc5XK
-	gUXvlgi4mMQ==
-X-Received: from dlae25.prod.google.com ([2002:a05:701b:2319:b0:12d:c516:f51])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a:b0:12d:ce34:3fa0
- with SMTP id a92af1059eb24-12dfd856b43mr3648296c88.32.1777866703246; Sun, 03
- May 2026 20:51:43 -0700 (PDT)
-Date: Sun,  3 May 2026 20:51:25 -0700
-In-Reply-To: <20260504035125.1851720-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Pe8p2gG1"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6433TV40855288;
+	Mon, 4 May 2026 04:17:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+LuKhD
+	3yYhMAI47caqKiKblQEr4RtiQBIb2L/CFhkNg=; b=Pe8p2gG104pWLvs1gLx7w4
+	kcEMGCbopaEW/tgti3tdSsgGlb2xdxK7lsc2RIKCvMb8dd6Eo30omp6jfTvCcVmO
+	3bYUg9Bq+iDpR+mBhzrAlU1M398rFMKjoAMrWcrPvnQ5YQ8MUBR9XQjlakGU9d0u
+	hFbHp64YrkOiX2RppaXzx6nPo08pJy/ZXT8vK01SNhmko8seegDlc6Inp5DUi3ZL
+	73ObM5HbAuSo5+GJR5GUKSw3oF6q28nbbrDPsW7hEImvlhTf1tSutoGddRmMid6D
+	IY2sz0Tr7rLgBj228YA37RKNFT8cY/dyvWICIAoqLzVqGIPu3xzqAwkXwHH2fbQg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9v75eyk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 04:17:00 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6443uY7H014222;
+	Mon, 4 May 2026 04:16:59 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dww3guj14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 04:16:59 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6444GtvD48103688
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 May 2026 04:16:56 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CEB6820043;
+	Mon,  4 May 2026 04:16:55 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B233620040;
+	Mon,  4 May 2026 04:16:51 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.20.162])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  4 May 2026 04:16:51 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260425020529.3246331-1-irogers@google.com> <20260504035125.1851720-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260504035125.1851720-5-irogers@google.com>
-Subject: [PATCH v3 4/4] perf test: Add inject ASLR test
-From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org, gmx@google.com, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V4 2/2] tools/perf: Add kernel-doc comment to
+ auxtrace_record__init() function
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <aff6kjIr-KL3Onuw@z2>
+Date: Mon, 4 May 2026 09:46:38 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8D38B0F5-0E9C-425D-87E5-5885B18981BD@linux.ibm.com>
+References: <20260502143237.23456-1-atrajeev@linux.ibm.com>
+ <20260502143237.23456-2-atrajeev@linux.ibm.com> <aff6kjIr-KL3Onuw@z2>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA0MDA0MSBTYWx0ZWRfX1Y7d5lU5KmG6
+ p6uNLbcFh61wktFgDM6cfrREK607Ennybqvn+vi/TR32syNBSXlr9n0nG3/3DfNDqJcExJ2WsG/
+ pywaUcnWXrBJCVcruV19/q3GSXMCIIV4NaeZ3HWMF5GqPlptEIcY1LrR+2LfAZo+/7qt6eKyDMN
+ s/m+5OKSB6f6MEEa7NJaLQ1GWfIG32plCXYo6bnXZ69KZfRRCZwTWR9SdMQxd3ot/BEPLRm1Ogn
+ QC07bK02u1aMR2frPLyDeFawTdXJhbEMsJlcNAKI51Z3lgCOP6rPPItBmueQaKg8nby/4Prqoa0
+ IVtGhVtBw+F5ZUzUmS/rx+F1GV6BG1pA2xm4VtykKDHHfog0cn9xMI3WAKCxF6SWos63AiPCWTf
+ 1r8Kx8Z2PjvQ433J+CHiqxqWY7RTM0CJRVWQKTlB/zr2CZt/cGywcNSJmhr579eV33NbfSNCH1U
+ k0Pr8J3XxQRlm+akPTw==
+X-Proofpoint-GUID: OdQOp-fq0pV5DJtyzHTedW-f52gjXFm_
+X-Proofpoint-ORIG-GUID: aYHtiTrpMX4Lid_9H5EWISRr1ZhLAsBy
+X-Authority-Analysis: v=2.4 cv=eu/vCIpX c=1 sm=1 tr=0 ts=69f81dbd cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=WYBppRGt9Tx3A1cNM9MA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-04_02,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 malwarescore=0 bulkscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605040041
 
-Add a new shell test `inject_aslr.sh` to verify the `perf inject --aslr`
-feature. The test covers:
-- Basic address remapping for user space samples.
-- Pipe mode coverage for `perf record` piped into `perf inject --aslr`.
-- Callchain address remapping.
-- Consistency of `perf report` output before and after injection.
-- Pipe mode report consistency.
-- Dropping of samples that leak ASLR info (physical addresses).
-- Kernel address remapping (skipping gracefully if permissions restrict
-  recording the kernel map).
-- Kernel report consistency with address normalization.
 
-The test suite is hardened with:
-- Global 'set -o pipefail' pipeline checks to catch failures in perf script.
-- Safe awk processing loop closures that consume whole streams to avoid SIGPIPE
-  signal aborts.
-- False success assertions to verify callchain data isn't dynamically dropped.
-- Graceful error paths on empty sample records.
-- Multi-arch support (32-bit and 64-bit address normalizations).
 
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v3: Harden script with pipefail, SIGPIPE awk pipeline fixes, callchain empty
-    data asserts, baseline sample verification, and grep report abort
-    protections. Ensure grep report filters have || true suffixes. Reorder
-    set -e/pipefail to prevent stack leaks in mktemp failures.
-v2: Add sum comparison for kernel overhead and 32-bit math corrections. Add
-    awk with gsub for trailing dots and brackets normalizations. Trap EXIT,
-    prevent race conditions and avoid hardcoded perf binary.
----
- tools/perf/tests/shell/inject_aslr.sh | 423 ++++++++++++++++++++++++++
- 1 file changed, 423 insertions(+)
- create mode 100755 tools/perf/tests/shell/inject_aslr.sh
+> On 4 May 2026, at 7:16=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>=20
+> Hello,
+>=20
+> On Sat, May 02, 2026 at 08:02:37PM +0530, Athira Rajeev wrote:
+>> Add documentation comment describing the parameters
+>> and return code for auxtrace_record__init() in util/auxtrace.c
+>>=20
+>> Using "struct evlist *evlist __maybe_unused", gives below
+>> warning with "scripts/kernel-doc".
+>>=20
+>> # ./scripts/kernel-doc -none tools/perf/util/auxtrace.c
+>> Warning: tools/perf/util/auxtrace.c:912 function parameter =
+'__maybe_unused' not described in 'auxtrace_record__init'
+>> Warning: tools/perf/util/auxtrace.c:912 function parameter =
+'__maybe_unused' not described in 'auxtrace_record__init'
+>>=20
+>> Updated  parameter as "struct evlist __maybe_unused *evlist"
+>> With the change, there is no erros/warnings with kernel-doc
+>=20
+> Hmm.. this is not what we used to have.  I'm not sure if we want to
+> update them all.  Maybe better to leave it for now.
 
-diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
-new file mode 100755
-index 000000000000..fa7dd3b4c411
---- /dev/null
-+++ b/tools/perf/tests/shell/inject_aslr.sh
-@@ -0,0 +1,423 @@
-+#!/bin/bash
-+# perf inject --aslr test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+set -o pipefail
-+
-+shelldir=$(dirname "$0")
-+# shellcheck source=lib/perf_has_symbol.sh
-+. "${shelldir}"/lib/perf_has_symbol.sh
-+
-+sym="noploop"
-+
-+skip_test_missing_symbol ${sym}
-+
-+# Create global temp directory
-+temp_dir=$(mktemp -d /tmp/perf-test-aslr.XXXXXXXXXX)
-+data="${temp_dir}/perf.data"
-+data2="${temp_dir}/perf.data2"
-+
-+prog="perf test -w noploop"
-+[ "$(uname -m)" = "s390x" ] && prog="$prog 3"
-+err=0
-+
-+
-+
-+cleanup() {
-+  # Check if temp_dir is set and looks sane before removing
-+  if [[ "${temp_dir}" =~ ^/tmp/perf-test-aslr\. ]]; then
-+    rm -rf "${temp_dir}"
-+  fi
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+
-+trap cleanup EXIT
-+trap trap_cleanup TERM INT
-+
-+get_noploop_addr() {
-+  local file=$1
-+  perf script -i "$file" | awk '
-+    BEGIN { found=0 }
-+    {
-+      for (i=1; i<=NF; i++) {
-+        if ($i ~ /noploop\+/) {
-+          if (!found) {
-+            print $(i-1)
-+            found=1
-+          }
-+        }
-+      }
-+    }'
-+}
-+
-+test_basic_aslr() {
-+  echo "Test basic ASLR remapping"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.basic.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.basic.XXXXXX")
-+
-+  perf record -e task-clock:u -o "${data}" ${prog}
-+  perf inject -v --aslr -i "${data}" -o "${data2}"
-+
-+  orig_addr=$(get_noploop_addr "${data}")
-+  new_addr=$(get_noploop_addr "${data2}")
-+
-+  echo "Basic ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-+
-+  if [ -z "$orig_addr" ]; then
-+    echo "Basic ASLR test [Failed - no noploop samples in original file]"
-+    err=1
-+  elif [ -z "$new_addr" ]; then
-+    echo "Basic ASLR test [Failed - could not find remapped address]"
-+    err=1
-+  elif [ "$orig_addr" = "$new_addr" ]; then
-+    echo "Basic ASLR test [Failed - addresses are not remapped]"
-+    err=1
-+  else
-+    echo "Basic ASLR test [Success]"
-+  fi
-+}
-+
-+test_pipe_aslr() {
-+  echo "Test pipe mode ASLR remapping"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.pipe.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.pipe.XXXXXX")
-+
-+  # Use tee to save the original pipe data for comparison
-+  perf record -e task-clock:u -o - ${prog} | tee "${data}" | perf inject --aslr -o "${data2}"
-+
-+  orig_addr=$(get_noploop_addr "${data}")
-+  new_addr=$(get_noploop_addr "${data2}")
-+
-+  echo "Pipe ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-+
-+  if [ -z "$orig_addr" ]; then
-+    echo "Pipe ASLR test [Failed - no noploop samples in original file]"
-+    err=1
-+  elif [ -z "$new_addr" ]; then
-+    echo "Pipe ASLR test [Failed - could not find remapped address]"
-+    err=1
-+  elif [ "$orig_addr" = "$new_addr" ]; then
-+    echo "Pipe ASLR test [Failed - addresses are not remapped]"
-+    err=1
-+  else
-+    echo "Pipe ASLR test [Success]"
-+  fi
-+}
-+
-+test_callchain_aslr() {
-+  echo "Test Callchain ASLR remapping"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.callchain.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.callchain.XXXXXX")
-+
-+  perf record -g -e task-clock:u -o "${data}" ${prog}
-+  perf inject --aslr -i "${data}" -o "${data2}"
-+
-+  orig_addr=$(get_noploop_addr "${data}")
-+  new_addr=$(get_noploop_addr "${data2}")
-+
-+  echo "Callchain ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-+
-+  if [ -z "$orig_addr" ]; then
-+    echo "Callchain ASLR test [Failed - no noploop samples in original file]"
-+    err=1
-+  elif [ -z "$new_addr" ]; then
-+    echo "Callchain ASLR test [Failed - could not find remapped address]"
-+    err=1
-+  elif [ "$orig_addr" = "$new_addr" ]; then
-+    echo "Callchain ASLR test [Failed - addresses are not remapped]"
-+    err=1
-+  else
-+    # Extract callchain addresses (indented lines starting with hex addresses)
-+    orig_callchain=$(perf script -i "${data}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
-+    new_callchain=$(perf script -i "${data2}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
-+
-+    if [ -z "$orig_callchain" ]; then
-+      echo "Callchain ASLR test [Failed - no callchain samples in original file]"
-+      err=1
-+    elif [ -z "$new_callchain" ]; then
-+      echo "Callchain ASLR test [Failed - callchain data was dropped]"
-+      err=1
-+    elif [ "$orig_callchain" = "$new_callchain" ]; then
-+      echo "Callchain ASLR test [Failed - callchain addresses were not remapped]"
-+      err=1
-+    else
-+      echo "Callchain ASLR test [Success]"
-+    fi
-+  fi
-+}
-+
-+test_report_aslr() {
-+  echo "Test perf report consistency"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.report.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.report.XXXXXX")
-+  local data_clean
-+  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-+
-+  perf record -e task-clock:u -o "${data}" ${prog}
-+  # Use -b to inject build-ids and force ordered events processing in both
-+  perf inject -b -i "${data}" -o "${data_clean}"
-+  perf inject -v -b --aslr -i "${data}" -o "${data2}"
-+
-+  local report1="${temp_dir}/report1"
-+  local report2="${temp_dir}/report2"
-+  local report1_clean="${temp_dir}/report1.clean"
-+  local report2_clean="${temp_dir}/report2.clean"
-+  local diff_file="${temp_dir}/diff"
-+
-+  perf report -i "${data_clean}" --stdio > "${report1}"
-+  perf report -i "${data2}" --stdio > "${report2}"
-+
-+  # Strip headers and compare lines with percentages
-+  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
-+  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
-+
-+  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-+
-+  if [ ! -s "${report1_clean}" ]; then
-+    echo "Report ASLR test [Failed - no samples captured]"
-+    err=1
-+  elif [ -s "${diff_file}" ]; then
-+    echo "Report ASLR test [Failed - reports differ]"
-+    echo "Showing first 20 lines of diff:"
-+    head -n 20 "${diff_file}"
-+    err=1
-+  else
-+    echo "Report ASLR test [Success]"
-+  fi
-+}
-+
-+test_pipe_report_aslr() {
-+  echo "Test pipe mode perf report consistency"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.pipe_report.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.pipe_report.XXXXXX")
-+  local data_clean
-+  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-+
-+  # Use tee to save the original pipe data, then process it with inject -b
-+  perf record -e task-clock:u -o - ${prog} | \
-+    tee "${data}" | \
-+    perf inject -b --aslr -o "${data2}"
-+  perf inject -b -i "${data}" -o "${data_clean}"
-+
-+  local report1="${temp_dir}/report1"
-+  local report2="${temp_dir}/report2"
-+  local report1_clean="${temp_dir}/report1.clean"
-+  local report2_clean="${temp_dir}/report2.clean"
-+  local diff_file="${temp_dir}/diff"
-+
-+  perf report -i "${data_clean}" --stdio > "${report1}"
-+  perf report -i "${data2}" --stdio > "${report2}"
-+
-+  # Strip headers and compare lines with percentages
-+  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
-+  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
-+
-+  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-+
-+  if [ ! -s "${report1_clean}" ]; then
-+    echo "Pipe Report ASLR test [Failed - no samples captured]"
-+    err=1
-+  elif [ -s "${diff_file}" ]; then
-+    echo "Pipe Report ASLR test [Failed - reports differ]"
-+    echo "Showing first 20 lines of diff:"
-+    head -n 20 "${diff_file}"
-+    err=1
-+  else
-+    echo "Pipe Report ASLR test [Success]"
-+  fi
-+}
-+
-+test_dropped_samples() {
-+  echo "Test dropped samples (phys-data)"
-+  local data
-+  data=$(mktemp "${temp_dir}/perf.data.dropped.XXXXXX")
-+  local data2
-+  data2=$(mktemp "${temp_dir}/perf.data2.dropped.XXXXXX")
-+
-+  # Check if --phys-data is supported by recording a short run
-+  if ! perf record -e task-clock:u --phys-data -o "${data}" -- sleep 0.1 > /dev/null 2>&1; then
-+    echo "Skipping dropped samples test as --phys-data is not supported"
-+    return
-+  fi
-+
-+  perf record -e task-clock:u --phys-data -o "${data}" ${prog}
-+  perf inject --aslr -i "${data}" -o "${data2}"
-+
-+  # Verify that the original file actually contained samples!
-+  orig_samples=$(perf script -i "${data}" | wc -l)
-+  if [ "$orig_samples" -eq 0 ]; then
-+    echo "Dropped samples test [Failed - no samples in original file]"
-+    err=1
-+  else
-+    # Verify that samples are dropped.
-+    samples_count=$(perf script -i "${data2}" | wc -l)
-+
-+    if [ "$samples_count" -gt 0 ]; then
-+      echo "Dropped samples test [Failed - samples were not dropped]"
-+      err=1
-+    else
-+      echo "Dropped samples test [Success]"
-+    fi
-+  fi
-+}
-+
-+test_kernel_aslr() {
-+  echo "Test kernel ASLR remapping"
-+  local kdata
-+  kdata=$(mktemp "${temp_dir}/perf.data.kernel.XXXXXX")
-+  local kdata2
-+  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel.XXXXXX")
-+  local log_file
-+  log_file=$(mktemp "${temp_dir}/kernel_record.log.XXXXXX")
-+
-+  # Try to record kernel samples
-+  if ! perf record -e task-clock:k -o "${kdata}" ${prog} > "${log_file}" 2>&1; then
-+    echo "Skipping kernel ASLR test as recording failed (maybe no permissions)"
-+    return
-+  fi
-+
-+  # Check for warning about kernel map restriction
-+  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
-+    echo "Skipping kernel ASLR test as kernel map could not be recorded (permissions restricted)"
-+    return
-+  fi
-+
-+  perf inject -v --aslr -i "${kdata}" -o "${kdata2}"
-+
-+  # Check if kernel addresses are remapped.
-+  # Find the field that ends with :k: (the event name) and take the next field!
-+  orig_addr=$(perf script -i "${kdata}" | awk '
-+    BEGIN { found=0 }
-+    {
-+      for (i=1; i<NF; i++) {
-+        if ($i ~ /:[k]+:?$/) {
-+          if (!found) {
-+            print $(i+1)
-+            found=1
-+          }
-+        }
-+      }
-+    }')
-+  new_addr=$(perf script -i "${kdata2}" | awk '
-+    BEGIN { found=0 }
-+    {
-+      for (i=1; i<NF; i++) {
-+        if ($i ~ /:[k]+:?$/) {
-+          if (!found) {
-+            print $(i+1)
-+            found=1
-+          }
-+        }
-+      }
-+    }')
-+
-+  echo "Kernel ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-+
-+  if [ -z "$orig_addr" ]; then
-+    echo "Kernel ASLR test [Failed - no kernel samples in original file]"
-+    err=1
-+  elif [ -z "$new_addr" ]; then
-+    echo "Kernel ASLR test [Failed - could not find remapped address]"
-+    err=1
-+  elif [ "$orig_addr" = "$new_addr" ]; then
-+    echo "Kernel ASLR test [Failed - addresses are not remapped]"
-+    err=1
-+  else
-+    echo "Kernel ASLR test [Success]"
-+  fi
-+}
-+
-+test_kernel_report_aslr() {
-+  echo "Test kernel perf report consistency"
-+  local kdata
-+  kdata=$(mktemp "${temp_dir}/perf.data.kernel_report.XXXXXX")
-+  local kdata2
-+  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel_report.XXXXXX")
-+  local data_clean
-+  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-+  local log_file
-+  log_file=$(mktemp "${temp_dir}/kernel_report_record.log.XXXXXX")
-+
-+  # Try to record kernel samples
-+  if ! perf record -e task-clock:k -o "${kdata}" ${prog} > "${log_file}" 2>&1; then
-+    echo "Skipping kernel report test as recording failed (maybe no permissions)"
-+    return
-+  fi
-+
-+  # Check for warning about kernel map restriction
-+  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
-+    echo "Skipping kernel report test as kernel map could not be recorded (permissions restricted)"
-+    return
-+  fi
-+
-+  # Use -b to inject build-ids and force ordered events processing in both
-+  perf inject -b -i "${kdata}" -o "${data_clean}"
-+  perf inject -v -b --aslr -i "${kdata}" -o "${kdata2}"
-+
-+  local report1="${temp_dir}/report_kernel1"
-+  local report2="${temp_dir}/report_kernel2"
-+  local report1_clean="${temp_dir}/report_kernel1.clean"
-+  local report2_clean="${temp_dir}/report_kernel2.clean"
-+
-+  perf report -i "${data_clean}" --stdio > "${report1}"
-+  perf report -i "${kdata2}" --stdio > "${report2}"
-+
-+  # Strip headers and compare lines with percentages
-+  grep '%' "${report1}" | grep -v '^#' > "${report1_clean}" || true
-+  grep '%' "${report2}" | grep -v '^#' > "${report2_clean}" || true
-+
-+  # Normalize kernel DSOs and addresses in clean reports
-+  # This allows kernel modules to be either a module or kernel.kallsyms
-+  local report1_norm="${temp_dir}/report_kernel1.norm"
-+  local report2_norm="${temp_dir}/report_kernel2.norm"
-+
-+  awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); \
-+        print}' "${report1_clean}" > "${report1_norm}"
-+  awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); \
-+        print}' "${report2_clean}" > "${report2_norm}"
-+
-+  # Calculate sum of percentages for [kernel] samples
-+  sum1=$(awk '/\[kernel\]/ {sum += $1} END {print sum}' "${report1_norm}")
-+  sum2=$(awk '/\[kernel\]/ {sum += $1} END {print sum}' "${report2_norm}")
-+
-+  echo "Kernel report sums: sum1=$sum1, sum2=$sum2"
-+
-+  # Compare sums with tolerance
-+  if [ -z "$sum1" ] || [ -z "$sum2" ]; then
-+    echo "Kernel Report ASLR test [Failed - no kernel data]"
-+    err=1
-+  elif awk -v s1="$sum1" -v s2="$sum2" \
-+    'BEGIN {diff = s1 - s2; if (diff < 0) diff = -diff; if (diff < 0.05) exit 0; else exit 1}'; then
-+    echo "Kernel Report ASLR test [Success]"
-+  else
-+    echo "Kernel Report ASLR test [Failed - sums differ too much]"
-+    err=1
-+  fi
-+}
-+
-+test_basic_aslr
-+test_pipe_aslr
-+test_callchain_aslr
-+test_report_aslr
-+test_pipe_report_aslr
-+test_dropped_samples
-+test_kernel_aslr
-+test_kernel_report_aslr
-+
-+cleanup
-+exit $err
--- 
-2.54.0.545.g6539524ca2-goog
+Sure, I will keep it as original version.
+
+>=20
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>> ---
+>> Changelog:
+>> v3 -> v4:
+>> Addressed review comment from Sashiko:
+>> Update return value expectation for fail as
+>> non zero return err code.
+>>=20
+>> v2 -> v3:
+>> Addressed review comment from Sashiko:
+>> Update return value expectation for success and fail
+>> correctly.
+>>=20
+>> tools/perf/util/auxtrace.c | 17 ++++++++++++++++-
+>> 1 file changed, 16 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+>> index a224687ffbc1..9e11cf4299b8 100644
+>> --- a/tools/perf/util/auxtrace.c
+>> +++ b/tools/perf/util/auxtrace.c
+>> @@ -896,8 +896,23 @@ int auxtrace_parse_aux_action(struct evlist =
+*evlist)
+>> return 0;
+>> }
+>>=20
+>> +/**
+>> + * auxtrace_record__init - Initialize an AUX area tracing record.
+>> + * @evlist: The list of events to check for AUX area tracing event.
+>> + * @err: Pointer to an integer to store return code.
+>> + *
+>> + * This function looks through the @evlist to determine which AUX =
+area
+>> + * tracing hardware is being used and initializes the =
+auxtrace_record
+>> + * structure.
+>> + *
+>> + * Return:
+>> + * a) A pointer to the struct auxtrace_record on success.
+>=20
+> I think you should mention that the this function should set *err to
+> zero on success.
+Sure, I will update this=20
+
+Thanks
+Athira
+>=20
+> Thanks,
+> Namhyung
+>=20
+>=20
+>> + * b) NULL with @err =3D 0 if no AUX area tracing event is =
+found/supported
+>> + *    (not considered an error).
+>> + * c) NULL with non-zero @err on actual auxtrace_record__init =
+failure.
+>> + */
+>> struct auxtrace_record *__weak
+>> -auxtrace_record__init(struct evlist *evlist __maybe_unused, int =
+*err)
+>> +auxtrace_record__init(struct evlist __maybe_unused *evlist, int =
+*err)
+>> {
+>> *err =3D 0;
+>> return NULL;
+>> --=20
+>> 2.47.3
+
 
