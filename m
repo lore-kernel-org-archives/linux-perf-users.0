@@ -1,54 +1,54 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C544218B2
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 21:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D67401A2D
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 21:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777929542; cv=none; b=POoYxG6jUVJpmOs03Jd2Ocuja3ktoGDuyk1E44fR9URCJGtoXKceTu/ZL3MvY6dMpmW2/udROS7XVfeAMJkHjdPrcWESpvTXVasmqIBfHE/NmFODHppBNDwgcH+kAJRwBlwJ/lSO0yP4hbByl0oUfZR/JEIyYm3mtAhYjJj8Sto=
+	t=1777929542; cv=none; b=U2WU3tWkxOhHMJQi/CdLz/w8BjOAVk5BJu7TqIYiCndjETodEX7QtHtHM/4Y01S9fNXnUHKcroFB+RhfCd/cogFErVJbLQTump3yGhZhfS9U1XoTncVw3Qi/XrRHMdEo0ntfMSKIhEy5OmDfxd4482vu+/h/WrttyxBkhT/W/Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777929542; c=relaxed/simple;
-	bh=z22FJ/RoHsM+jeuWzpMU9byGN80HsM7C3iFbEeU0P2Q=;
+	bh=/Xt6rnYnGFBq52V4bBzNz6QqRctwemMB97jkZH74ots=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tzD9ITpLeIu0yU0ldLX2CpykxFvp4N8GzLFup65FmxBIy7O3KSYJyRW5u7OCXXHV66lhD3J9M5YeuQrjwBIoHMoNlFVWHcgD8d2rZEYTGJyFxCEvgK1hRxIIYEpuu2kVIxIirCYeGmR4K/aliftJoxwU1XUg6vYmPxahAwXDSzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cLtfez+A; arc=none smtp.client-ip=209.85.160.74
+	 To:Cc:Content-Type; b=lTUSUj0mGGboh6HUCBySaWC9kfXKRQOevdANt2MZ1xY4d4Iw2bYccY0tTGlTar17huHfB6/FKcWM4K+VYXqV/6LtkQQv8bkNVw+CEVEgc0Bwj2Zj+azANW938TibAIEHmiB/NxoKea+qEHnUA41oD9o4B5xplWr39VduTUUmSgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GAA6nA7x; arc=none smtp.client-ip=209.85.161.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cLtfez+A"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-42c07b2f12aso5353267fac.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 14:18:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GAA6nA7x"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-6948d83a5c0so12665991eaf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 14:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777929535; x=1778534335; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777929532; x=1778534332; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BjlPgXNwXeFHjDTHfAecQAjmNwOoUuZdzNZWTJemW0E=;
-        b=cLtfez+AcMC+GjbVP/sLegG4Ev2Kqp0rj95GdVnSM5UIqNdYQvFaVWnpV1f4Mhou0u
-         mMc6kkuCa+4rH95H0nkPzlN4l48xKX93DikxuGC7iGOb3SozrInCm7ZkhzGVi0IxJaac
-         8vx1n3G7n5CuTEgzf9mk3f//CLemcxPL3xrr5tvRZAbWlKABI90N6jGyUZ9MxogyS0dy
-         sJ72O2Bqomq8dvG89WMxlwRPToslhwLOEM7iCUzTnduOAdy834MG1XsLqoBWzxA+tC0U
-         46AmUcRv43DKxqnqykvU9+XcVAVDu4vD04754WPXRphv9PC2Nnz2dj6z/tr5J1E3qQWY
-         3obg==
+        bh=59TeqgAKhZvxIms330HaGI06DkqMrz/YA7lL8opNhPQ=;
+        b=GAA6nA7xd+hXrpdjcybtVknsF0NI8V4ehjMD8DFQ6IOV0BprIcDwQ7/Pve2krzXgDJ
+         k8W7ng9N72p6QUJysxBEiK6mBgZEZC3S4SWueXIKTT/j2UOFG3zbdrG3Tli8RSJpDkZu
+         27Z3+aUmi4Frzg09wlDzQDrWw7cLDH7LIgi+s+L+UHSYJAO8gtafX7ENT83uaz5+uAKp
+         Um8w+5H07mziO1vDOlU2WlsYGdE3sCSGbhh4/sqfkFG3pZ7B/HZ36Oy/XwNoIk3mCiuz
+         67fpBa2FWsRM7eUuZQtennVqoZQ1bKOZsTN8s1/m5GyKOMc2uPoMzkqn+cfRgAzuJNWg
+         aQHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777929535; x=1778534335;
+        d=1e100.net; s=20251104; t=1777929532; x=1778534332;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BjlPgXNwXeFHjDTHfAecQAjmNwOoUuZdzNZWTJemW0E=;
-        b=NLF3hFObgPEG0hQ26Lo8k1Q61iUZd5l2TVdC1dNJl1eLWcZKAy7uhLscaT1KqIiy2v
-         qA0BzmjgHsOMs9likAaEWccR0toQ+1IGlWUjQa7cWHgWdAS6zVmf1A6H8nskIKqVTx3z
-         8yygfKxweJca2iEVHfscsdVDkHxgxf8sP7tkYTMAihiRrnpGIMPKEmltbV/kOwy/D8ww
-         r5VZWH+I4YVpnOEzS6A78DG3PHdu1v2LbBDOhUgnVRCHIa8QEqNw67exotnG1z6WIfhf
-         B/ohlcAU6w4uoo3MRWBYCEVzxwDeyPHot1GIgTJL7wvI3/hWA2W4RxarI6tBUUjet4EI
-         zTig==
-X-Forwarded-Encrypted: i=1; AFNElJ+MUdcmv/tT0BGzK4K+AQILU5WDigeyPL0zb4I8S2ZVwzowCtUDtlfjSXs3KJugD6MCXJdmjkNs/heg+p6S9NAO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeO81fWi9PDPDv4ELyAmXGgXy51o3cdCx1LXlGoCWq2rJNT75E
-	GFJL4ze/ldgC12lkN8Dja6aUJBUTwcJ2qfo04BlzwXquFnZYC/iK2p1827BYeP11dtw2cL2pqsO
-	R/FbhrscNScePdiJhWGzmfIIB1A==
-X-Received: from ilqt1.prod.google.com ([2002:a92:cc41:0:b0:4fd:69a2:6072])
+        bh=59TeqgAKhZvxIms330HaGI06DkqMrz/YA7lL8opNhPQ=;
+        b=VSdo4vuvxeeMx/hzI1QHSI8kkxno4jItwiyf5rXgde3RTz5vrD1Jq3wUdfj7jCTLjc
+         sgDESiOgu8o1s5ZbjbRBQkmEnssdPcKIjGyT5zU73qteBG+okTHjADJ/rFklD/8HjuMx
+         KmCJZ47cQa7soTX8JN6hexxq9F/ZekKLHO1k5f3qYrV/lnyTE5BXwroXIOaLtRxIoFag
+         f4Smi8LGWA2dfTx2X4tqKhj5Hii6ubGi8lMCCqtUP70jtWo4Ezds6aAn6wwP0G+mLDQ8
+         4LPO4sUPxKyZSXpEFOb/Bjg63bVv4Bg7K2H0FyFtYLFK8HjuiGzdl5cSOlQ9yJTCKTMC
+         6rkQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9NIlZFsOXg2oYfhmjVLOmd+krDK4h44fflyFJt4O+Sgk/+wtzqlFo8GcZFvWtTL62SvhOzigeOQWFyTvqv00wf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNjb3pbDLHP1t1HZCAWeDAthP5tuNfvfOUc6U9DM/CGb2J2U5M
+	LVigOLBa8Y9hJ+M4z0/qpBHv5QVpPUy0xjQWQSWrZmE3v/RsfwO8kPm4ynVe7+KidlzpXYK6jhH
+	u71pbW42EQy/FVY9aqKil4G7v8g==
+X-Received: from ildm3.prod.google.com ([2002:a92:8703:0:b0:4fa:5514:a367])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:81c6:b0:694:8fb2:2c35 with SMTP id 006d021491bc7-6998a59a043mr161048eaf.2.1777929534601;
- Mon, 04 May 2026 14:18:54 -0700 (PDT)
-Date: Mon,  4 May 2026 21:18:13 +0000
+ 2002:a05:6820:629:b0:696:757d:1942 with SMTP id 006d021491bc7-69697c60c82mr5023525eaf.32.1777929531976;
+ Mon, 04 May 2026 14:18:51 -0700 (PDT)
+Date: Mon,  4 May 2026 21:18:11 +0000
 In-Reply-To: <20260504211813.1804997-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260504211813.1804997-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260504211813.1804997-21-coltonlewis@google.com>
-Subject: [PATCH v7 20/20] KVM: arm64: selftests: Relax testing for exceptions
- when partitioned
+Message-ID: <20260504211813.1804997-19-coltonlewis@google.com>
+Subject: [PATCH v7 18/20] KVM: selftests: Add find_bit to KVM library
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Alexandru Elisei <alexandru.elisei@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -76,84 +75,36 @@ Cc: Alexandru Elisei <alexandru.elisei@arm.com>, Paolo Bonzini <pbonzini@redhat.
 	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Because the Partitioned PMU must lean heavily on underlying hardware
-support, it can't guarantee an exception occurs when accessing an
-invalid pmc index.
-
-The ARM manual specifies that accessing PMEVCNTR<n>_EL0 where n is
-greater than the number of counters on the system is constrained
-unpredictable when FEAT_FGT is not implemented, and it is desired the
-Partitioned PMU still work without FEAT_FGT.
-
-Though KVM could enforce exceptions here since all PMU accesses
-without FEAT_FGT are trapped, that creates further difficulties. For
-one example, the manual also says that after writing a value to
-PMSELR_EL0 greater than the number of counters on a system, direct
-reads will return an unknown value, meaning KVM could not rely on the
-hardware register to hold the correct value.
+Some selftests have a dependency on find_bit and weren't compiling
+separately without it, so I've added it to the KVM library here using
+the same method as files like rbtree.c.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- .../selftests/kvm/arm64/vpmu_counter_access.c | 20 ++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ tools/testing/selftests/kvm/Makefile.kvm   | 1 +
+ tools/testing/selftests/kvm/lib/find_bit.c | 1 +
+ 2 files changed, 2 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/lib/find_bit.c
 
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index 9702f1d43b832..27b7d7b2a059a 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -38,10 +38,14 @@ const char *pmu_impl_str[] = {
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-+};
-+
-+struct guest_context {
- 	bool pmu_partitioned;
- };
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index 6471fa214a9f9..79a45807865b5 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -5,6 +5,7 @@ all:
  
- static struct vpmu_vm vpmu_vm;
-+static struct guest_context guest_context;
- 
- struct pmreg_sets {
- 	uint64_t set_reg_id;
-@@ -342,11 +346,16 @@ static void test_access_invalid_pmc_regs(struct pmc_accessor *acc, int pmc_idx)
- 	/*
- 	 * Reading/writing the event count/type registers should cause
- 	 * an UNDEFINED exception.
-+	 *
-+	 * If the pmu is partitioned, we can't guarantee it because
-+	 * hardware doesn't.
- 	 */
--	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_cntr(pmc_idx));
--	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_cntr(pmc_idx, 0));
--	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_typer(pmc_idx));
--	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_typer(pmc_idx, 0));
-+	if (!guest_context.pmu_partitioned) {
-+		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_cntr(pmc_idx));
-+		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_cntr(pmc_idx, 0));
-+		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_typer(pmc_idx));
-+		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_typer(pmc_idx, 0));
-+	}
- 	/*
- 	 * The bit corresponding to the (unimplemented) counter in
- 	 * {PMCNTEN,PMINTEN,PMOVS}{SET,CLR} registers should be RAZ.
-@@ -459,7 +468,7 @@ static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
- 		vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL, KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION);
- 	if (!ret) {
- 		vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &part_attr);
--		vpmu_vm.pmu_partitioned = partition;
-+		guest_context.pmu_partitioned = partition;
- 		pr_debug("Set PMU partitioning: %d\n", partition);
- 	}
- 
-@@ -511,6 +520,7 @@ static void test_create_vpmu_vm_with_nr_counters(
- 		TEST_ASSERT(!ret, KVM_IOCTL_ERROR(KVM_SET_DEVICE_ATTR, ret));
- 
- 	vcpu_device_attr_set(vcpu, KVM_ARM_VCPU_PMU_V3_CTRL, KVM_ARM_VCPU_PMU_V3_INIT, NULL);
-+	sync_global_to_guest(vpmu_vm.vm, guest_context);
- }
- 
- /*
+ LIBKVM += lib/assert.c
+ LIBKVM += lib/elf.c
++LIBKVM += lib/find_bit.c
+ LIBKVM += lib/guest_modes.c
+ LIBKVM += lib/io.c
+ LIBKVM += lib/kvm_util.c
+diff --git a/tools/testing/selftests/kvm/lib/find_bit.c b/tools/testing/selftests/kvm/lib/find_bit.c
+new file mode 100644
+index 0000000000000..67d9d9cbca85c
+--- /dev/null
++++ b/tools/testing/selftests/kvm/lib/find_bit.c
+@@ -0,0 +1 @@
++#include "../../../../lib/find_bit.c"
 -- 
 2.54.0.545.g6539524ca2-goog
 
