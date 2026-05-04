@@ -1,160 +1,161 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125B53DFC77
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 15:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777908409; cv=pass; b=leOFW9u04D9SPjzf8sSvpOCnjyH+vp5TCFVlrWtzqrRnTy6RGigDv3HctTolve+9XViOvaa1HVZQjfeAUA+yxFIWKEaYhQQaBd8nGRaX9vlZjjVpLRGWVG0xcorR5DRtRLz0QgziKCo50lroxF36RLwc593903+lauJpQZX3tkk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777908409; c=relaxed/simple;
-	bh=9kuhRo2FzyDeDB/f2HIMKjEN00Oze4XF5EsTLm2QQXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=acCsNd0P/ZioVLwGT7752+c5nIytGmiGW8uqsFPVy+ii+pwXBIA/Yu7J66Zh22QPFKqMHBfcUi0CIEwhdNwTJ1+qV3VzEJrPRued15VJTow1sV0Q4uauKB/dU2tBZvw+s07Pmj1ZHBqHECtfZS9nP2fjoZlQUU2hnOLzrXNzDPA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+N0VFfN; arc=pass smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF483E0251
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 15:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777909349; cv=none; b=GuuM+Bn2dVmJvDle1CF45zZjJFMuhQ/u8kDQ/Hn/5J64eNREneWdXH/P1y24yEBmu6gZve4CNSm5xlEJOKyySpfScaabK+x0U2lD2uJ0PD4ywCZIe7zmbcyTJFsabMu/9YOOnnONZ5a6CviCHk+hAJBL0fV5w3emzYGngnyr1Gc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777909349; c=relaxed/simple;
+	bh=krleK5WseqMFOPy0HoB2dIy0cLGVuj8p6ukdLOPHsds=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qqHDGynLKHa2eggXFK8Wc+vPWXGS2g7Yp+bEQ/RK201y9wFSXSTQN9mAknzURhs79CeY6FrjVPA50IKb293d4mDcFAmhKpBIqw8x1d1bGRajBhW4bDKCUZupfAtNMZaPXrK8WWQe4Fni8ycurgiNXEuoLVuArs8pGIhlVc5AYJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fwtRl8ql; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+N0VFfN"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso141045ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 08:26:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777908407; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UuhnKB3X+9mLoHRQp8y7mQsyXzCfK/106uUfXZKgxNTT1OZnh+qZBiaC9dkjpVWCDw
-         LxQhfI1jagksULi57agxCX66xBO0Fceqn7k9o1ANFO8YN9uj+2qovzy+rtl9NkvIWj2D
-         Dz//nZOAXEfVTdodfLOq3qbg4SO04/ZoazX342+pr9jnsAJgYTxBksf2cm1Co3svLJxB
-         /W4rrPmSKERP9jZACpHi92VCtRbrxd36KocQCDRie6ueJPpHZsFcjTaYVzyAYHt5y1nP
-         h0xCAxF/QY5JA87I/edy5EC7MyPBUM89HescO5GyTjIQOOcxCiMCCcXKcRfob7Isg7n8
-         LKuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
-        fh=RAx4EYoAEHQX8CREJ/n5iCXuFT3ssl6UaSz9YrEw66M=;
-        b=gDHkctcnP9Ne1oe7qgW6KAi7xa0mKDEeYq1RdLb/a2fhgShxUNLraKsVwkiyrl4Qi1
-         bjj4K594u3N9babNHgveeDnKT/PLrxgOFEhgkB/C8ha9edhpC02oaptLD31z9REvS1/e
-         4rof2PTnkJa8iB4ZDjkzyJGq8MM1db8mwduyYNKY56iE9HAs97i+qdkvqHz0FEdvuwlk
-         OPfV0J1pnnSG8Xm2ZqZUFLIZevVQgVxOOJqSQpNY5dgMSnPQimYOmg3NzDlHt8gGxEPb
-         roIAyJJNuO+fMfnPp8yFdLqg5aEP2Zmr36pNnV12HvtXfevpf8ReZ8Ala2rIq8jqPPd9
-         aqLg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777908407; x=1778513207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
-        b=f+N0VFfNPibq0Qy3LGCmZGm3gW1jZB6cNAegS+E7OXqanRh3b8tjH41FzLB8cQoW8M
-         dUL0S0QOwoouNHCHwJLh1St1s8+DH/rg2kbXxQeNt/VLGNQJA1xPYLT2/hZWbpBIF/b/
-         jZEwPcEOxGdDzKc3Yu1ZAtLvSC9JaOR3f0QMZ8safRQhkvGmGIYnoFubKZltkrar3Aou
-         /A8tsneXCDTNAXZBbsYLKDbkWf2BGjIizi5WVnp97StF8w3JxrJhwwR1aObM5+xraeTq
-         1d0t4tZxYDJwNVsjKt10VwGRI8VuFjJLYH3voWSyK6R7HJxeXUiE8co954seqC35Vzwe
-         ZbFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777908407; x=1778513207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
-        b=HrwMMywttm4ngXOS+XzdKIe/b5H2/fLFYQGYt5Zboq/BVTjM3XBNk6vnwIpYriiWun
-         ZV9f+AESVrVwAf26csCLie9wz93TcP4Hdvojb8G5ZT8W5/4Z/T2v+yFwoamqBVXV0A/j
-         HUYr34rSp/medbsFPJ7Uc6Cp0vK7OLw0ZSgbfbEvoUXXgJXaObg41PMqNp9mfyvVweKf
-         mtXhuu8XZNyTLWsoUZXcW/VC6jakOb0HOfS8x0hZs73KhdB8EGBpjuUYEaFl2sStrEY1
-         e8LVZYy8KcssTb8aR9oTbGRGEW0M9M0VPvyXB2iBq04LK2C8FJ9f1OxbK83Don/HhKBd
-         7OAw==
-X-Gm-Message-State: AOJu0Yz4XRtMl3vr9a8FkNeVMWal+FHdNKgVQsOT6ixRMXZB9BqIPdYC
-	7tJqFHvEWgRqqH3ePyPiYP7oka3IyH28/SVaLjTSfEzQ2DQaxRV49n+KjFih6okKO2QUBSBKr7w
-	R3mm/2aAuFay35tIuW2JzVaGNhalVAO2oiL5vTBs1lT45DhD4k/8kPwHJ6sg=
-X-Gm-Gg: AeBDiesYvEkyPFYJNIVi2hDMttWpaBokVMlfDbfZRmOYMYKClShpxBq7DTNtk2xlZ0R
-	veyGb3CAhzbkqtgMc7YbpG+YwU+QnewYs0IMW5ZVD3ev6YJF2U4aYAilDWWgX6qpOwuNm7qJCOT
-	2fwvUR6vVYgrfXlANNWMULxsu0Wp8izNTPiyX/p3Y1lMlowXArtvQ1iZQke0FEfjfOLptlWP/TY
-	k21XcZJrvkPsn3iJjNzpwzFKUPsL7vuMG99TuS5czg3JIT8q7ppsrNfkc8dIqFFErhtp2nKWzsa
-	wRbyRAr+gqa8Z3G2wUz+PRxaLM8M6g==
-X-Received: by 2002:a17:903:1a86:b0:2a7:87c2:fcde with SMTP id
- d9443c01a7336-2b9f5892686mr4609735ad.15.1777908406371; Mon, 04 May 2026
- 08:26:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fwtRl8ql"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 644Eklfk3011871;
+	Mon, 4 May 2026 15:42:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=iU+kuad77WgAER0Xt0/0sHxheaJL/nbFKFSiMXKtY
+	nY=; b=fwtRl8qlT+oReezR5b2x0NLGODYDBrryqhojpNE+IHGEoekz4RIndOkaA
+	ejSt72pW89MZMXsyY2CFYBT1fMcvzv9Kny1RK78ViztI9lDE43dGSYTTikdPkzxe
+	+cIvuE5EnxDPLQ6qUEGDYRfQ8GnB+g3rmoJucAA8M+8N1rNAkYqX6gXx7/K2QB2T
+	9G4KInwIWb55OOdqUMnNndMBwgQAaoaL32GSCWknYVc/TJTyJLbWpCH7QxJjwL5r
+	7fttYoGoM31wXq9kUgMH1XBcxwGVfsgMBJ4juzj+oArieqPJUnfYZPsNJqs2ns90
+	AQtK6pqczb4JuL2AuxVaVzOdcKBZg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9w67k87-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 15:42:18 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 644EsSIK016761;
+	Mon, 4 May 2026 15:42:18 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dwvkjnrmb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 May 2026 15:42:17 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 644FgDHC44106170
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 May 2026 15:42:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DCBFE2004B;
+	Mon,  4 May 2026 15:42:13 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2683220040;
+	Mon,  4 May 2026 15:42:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.208.70])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 May 2026 15:42:07 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
+Subject: [PATCH V4 1/2] tools/perf: Fix the check for parameterized field in event term
+Date: Mon,  4 May 2026 21:12:04 +0530
+Message-Id: <20260504154205.21394-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260504081227.2203848-10-irogers@google.com> <20260504105301.29676C2BCB8@smtp.kernel.org>
-In-Reply-To: <20260504105301.29676C2BCB8@smtp.kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 May 2026 08:26:34 -0700
-X-Gm-Features: AVHnY4IHluG7YJn6wbIzJuthvTjQOKDjQwRxZDYKQywpOY6yeP3FnIHR8raHaq8
-Message-ID: <CAP-5=fUuqcGCgpZApHbqpP8hxs2Y+FYU2W=h1T0D4qgdhOfdBw@mail.gmail.com>
-Subject: Re: [PATCH v5 9/9] perf debuginfo: Fix libdw API contract violations
-To: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: sashiko@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=XPQAjwhE c=1 sm=1 tr=0 ts=69f8be5a cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=KlCRr-_lrQmZq1rU:21 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=g2m9RzfYH6J901Z4KtUA:9
+X-Proofpoint-ORIG-GUID: nexF7THWWWeXZv-unOZSwrOuqnh5ojho
+X-Proofpoint-GUID: Z74undJVeWR371vXreh52SxflY17yq4-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA0MDE1MiBTYWx0ZWRfX5tfB1+DguB4H
+ uC+j6R5uZb71wmilrBx21DgF3KlGJSc7uohgDc+J5uaCy+J423PVqOnAkxHklWoYO+7SCRtUM/v
+ dT3tTf4zSyRo+uFdVmeY/Mi2T3b+18kqx4TBNBCMFyR8B4P4a8+dUzBj+ss0wXhg5o0As/erp2m
+ FyqESk4c0GkGMNidlvnd18H3AWNAhUc0xo2+2/D53gHsefBlbA3GyfjZOLjzPpp8/ooazkz1ij8
+ 7HR1GzkT88VAm5RBnx1ZpD5Nr+z2EOI/8XZnE4fRWQUkT7esC7W/MClcsJ2nqwtqbZNJLSMmPcM
+ ewYw+T5V+hmcGl0T/mgGIbG7zjvx+ZkFTKhzlw55IhIa2L+gS0vui1h9eNkMPGUcoIJwZ0+qAUE
+ SIfM89tgLkLAgWsD3J/MCC45gM7BzyezGLQW33HuSDVfArkkBOrcFlxRbDSzKpDoCa1S0hwDw75
+ MdU8Ko/Cu3vmW0xUZGA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-04_05,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605040152
 
-On Mon, May 4, 2026 at 3:53=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Critical] This problem wasn't introduced by this patch, but the open()=
- call in debuginfo__init_offline_dwarf() lacks the O_NONBLOCK flag, exposin=
-g a local Denial of Service (DoS) vulnerability.
-> --
->
-> commit a6e339ae66465b909762a437f958cdaed424b666
-> Author: Ian Rogers <irogers@google.com>
->
-> perf debuginfo: Fix libdw API contract violations
->
-> This commit adds return value checks for dwfl_report_end and
-> dwfl_module_relocation_info to prevent potential segmentation faults. It =
-also
-> fixes a file descriptor leak in the error path of
-> debuginfo__init_offline_dwarf() when offline initialization fails.
->
-> > diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> > index 0e35c13abd04..84a78b30ceac 100644
-> > --- a/tools/perf/util/debuginfo.c
-> > +++ b/tools/perf/util/debuginfo.c
-> > @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debug=
-info *dbg,
-> >  {
-> >       GElf_Addr dummy;
-> >       int fd;
-> > +     bool fd_consumed =3D false;
-> >
-> >       fd =3D open(path, O_RDONLY);
->
-> While this wasn't introduced by this patch, could this open() call cause =
-a
-> regression by hanging on a FIFO?
->
-> If the path originates from user-controlled sources, opening it without
-> O_NONBLOCK can cause the perf record session to hang indefinitely. Using
-> O_RDONLY | O_NONBLOCK would prevent this.
+The format_alias() function in util/pmu.c has a check to
+detect whether the event has parameterized field ( =? ).
+The string alias->terms contains the event and if the event
+has user configurable parameter, there will be presence of
+sub string "=?" in the alias->terms.
 
-So this review is bad and based on this prompt:
-https://github.com/masoncl/review-prompts/blob/main/kernel/subsystem/perf.m=
-d#file-io-safety-on-untrusted-paths
+Snippet of code:
 
-I'm trying to get the bad prompt removed. The prompt was automatically
-generated from fixes commits when we added O_NONBLOCK to address build
-ID reading hangs, particularly for data mmaps during perf record
-synthesis. We now avoid those hangs by checking for a "regular" file
-with stat. Therefore, the advice regarding O_NONBLOCK and EINTR from
-the prompts is incorrect and does not reflect what the code base does.
+ /* Paramemterized events have the parameters shown. */
+       if (strstr(alias->terms, "=?")) {
+               /* No parameters. */
+               snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
 
-Side note: this is the only Sashiko feedback on this series:
-https://sashiko.dev/#/patchset/20260504081227.2203848-1-irogers%40google.co=
-m
+if "strstr" contains the substring, it returns a pointer
+and hence enters the above check which is not the expected
+check. And hence "perf list" doesn't have the parameterized
+fields in the result.
 
-Thanks,
-Ian
+Fix this check to use:
 
+if (!strstr(alias->terms, "=?")) {
 
-> [ ... ]
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504081227.22=
-03848-1-irogers@google.com?part=3D9
+With this change, perf list shows the events correctly with
+the strings showing parameters.
+
+Before the fix:
+
+ # ./perf list|grep -w PM_PAU_CYC
+  hv_24x7/PM_PAU_CYC/                                [Kernel PMU event]
+
+With this fix:
+
+ # ./perf list|grep -w PM_PAU_CYC
+  hv_24x7/PM_PAU_CYC,chip=?/                         [Kernel PMU event]
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changelog:
+v3 -> v4:
+Updated commit message to show real example
+addressing review comment from Namhyung.
+
+v2 -> v3:
+Split the strstr correction in a single patch
+
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 23337d2fa281..0b8d58543f17 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
+ 						   skip_duplicate_pmus);
+ 
+ 	/* Paramemterized events have the parameters shown. */
+-	if (strstr(alias->terms, "=?")) {
++	if (!strstr(alias->terms, "=?")) {
+ 		/* No parameters. */
+ 		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
+ 		return buf;
+-- 
+2.47.3
+
