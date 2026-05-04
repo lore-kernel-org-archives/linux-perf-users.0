@@ -1,133 +1,89 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EDC2E040D
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 10:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBFA218EB1
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 10:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777889341; cv=none; b=NojunYd3/PiLneRjocY3QEx0tPLhmsXWaf4RXn8fIimsuGZbZOdveXbvpkp9qNrYkYXoJLIj755Wb7ouzcWXuWuACs6BbDVRGJcctcnO6I6s7VLl5nFSRww76iVejqrCm/pmSJK15a/hCGAnLjZLqM4p1jw5GRz/AYCeygGMz2w=
+	t=1777891981; cv=none; b=iX3yTCN76ULuDcZGLn/6Xqk41+jIK53l/3cANHTOZrCn5nQbTe02wmAFKUhIdOSdTih3PymYjLVr0LlKEcyt4Xhdhia058S01JMrW1nCExv1SjhYtM4o4vfcjdsn+N+gS7yH/y1JEDJV4Y4en/v4IKlj+koKtFtEQ/qYvOhiIL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777889341; c=relaxed/simple;
-	bh=pcbrlB3qHsPLc/y90rnx1LrG5b7iFx58tWFuf97lMZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JsNSPdaw30ZwmzCVH11f2Lzl51VHMQoSQbnkGJxlHt4s9jQSKcH3DL5h5qUd3GFAS5DGwNq84pjvPMQB5dH5qHqMPHRfHFxB6Ar5Oe38iWZQM6bq4KKTRC6SybEmBB+bsdxjgWboZnPxyARqo+WGKcQ8ZOExCUurujuOalNPka4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKW7JyjX; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777891981; c=relaxed/simple;
+	bh=zLs1Al8g1yiVctExHCknkfkOvKbEebj5WO8MsE1+cHs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DX0aQMkxoJPR+u0HOzSfCV3tay2Mwtd9cIaEXjH6Y/nL07r5ogSO8qZkyiVROq1JOUlfPs1LBDa+iZMI/n6DyyxoISxANv9VZFwpNvxgRA+k/oi82/D5A2v6g3SK985jPfx6oMvHIwQkVRZVieBxwc2clLBemKk6aqvurzIX5Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pq4nXuGa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKW7JyjX"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5a3fcb2c718so3489901e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 03:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777889335; x=1778494135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fUsuLRSeuIGkFfh6WNuAvk/R1MMvm5m1C1zWcRocwNE=;
-        b=cKW7JyjXHGgh6mBa2l2a8jd40EAX5sw0SGAXxqQFYZFMqJLhudJJTojaBfnSJUqbOj
-         w5BjRfybVM9L6dC7Jn/+Fkr4jsvL2/n2vqEB2P7MnRuuvnPtdWQzhptnWBVXuNYPbuap
-         QOJY22o9bjxeYQ/k7Ftl21S5SQ1yv2kvkR9XDaWmQ+OhGLe/1p1jd9Cvc76vGcZa4TVq
-         ZXdrTu0iXq7rlQK6IXjslucJviAi+WgrTlB31XjBOeAUXeJmsfXDuilGkZhliM4+ZHmW
-         a/LNpYwKlfvwxDEX4MWlQRzxFzDLQPJ6R5LzP0Vjdc6prrrAnhzAaLdwOo1bmt5U1+0P
-         STxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777889335; x=1778494135;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fUsuLRSeuIGkFfh6WNuAvk/R1MMvm5m1C1zWcRocwNE=;
-        b=nXwD+sUXFeh/xwCL4EOVHjfPSJzbyaUl4HFw0bn6xlt3+6m0Y9iX92m/vF/k8l7S5c
-         qIdfBvYuuE45j0eWhGy/YdYbhruTJdkGbjFETY8PgXnr9aN0vZQfVOqwVEC+ZALP1UwA
-         BvrICs/ILDrO49XKddCCqmvzvIQuMzQT+D3ZaUEQvYVMQDmmuNdE9th0Q1Fn+ko7eOEr
-         EyJbXtYczQ3srUbCB4chYeqMePLIg7bL+h4BVbqndq4+92ryErHIsWCrzdT5sAvIEjaD
-         QclvCV7G/9c2L/jfQDdQSsv73DsY/6HecXGjpzj+KHNwuIcegl6ruF4+pWUKUyeuB+j2
-         qrJA==
-X-Forwarded-Encrypted: i=1; AFNElJ9QvS9Bx6uRrzovHiIt0ghWJJhjlc66ojl6lnbGO20GSDs8f+mZ8PwGXb51D7xR1tlinkI0iw+0wgZ+lIXD3lvd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwbWsmnDbGYE6pODr2a0UO4uzllsAFjNaSkNd/1T/lbAxsN+rs
-	LtqJyO8tRPrya+Fahp9sOnboGtFaRKAQawiAp0CCuYBglNJmrcJj/oFs
-X-Gm-Gg: AeBDievvVfNWlN6cUd2MLTFPkGEEKmqP8Etzp7VN1q+Pu8pVMdWGpn7/aavRVzxYnMO
-	Oq2flHhBmzZuEZHClAYyvCfyAeXvTZ/nYeTMyYDHPMfukcH3cnrFr+ufIzDdQnTaoLguR/SiZvj
-	QDR3JcijA1CiLPJaBN4gUTye5k4NUxGtsUfg2f2UUDTekTVb/ZkP7M2gFh/bBxsCD7HTwJzrgNg
-	S1SYK0wgBTHAH5jUY1MIPgOF7tOY5/t7d/aADjMEx7qJLfdy5ftKzWkrOpXzRcwmpFNsYaIgaE/
-	2zH+QT/p954wEJB9Bi/z8T8bmzCng6Cxe8p0Li2z/EIqpW1nLn+cGpxBHx0SiSbJy9q/0HMCXV6
-	ERqY/JBxfmWEcdJvMRvlpSmw/I1k9XZxWym8YQq9X/ynNSJcEWlptggNgdFHBt+klYIjtVedAt8
-	MDDcg8OoVN3+7tAdVGe8jX83OCorGfAVxChmVDgbppQxdQJC91Us7dVsjIYtDQ/NfileWTuzg=
-X-Received: by 2002:a05:6512:3c8a:b0:5a8:6ba2:225a with SMTP id 2adb3069b0e04-5a86ba22265mr1869874e87.39.1777889335210;
-        Mon, 04 May 2026 03:08:55 -0700 (PDT)
-Received: from va-HP-Pavilion-Desktop-595-p0xxx.mshome.net ([193.0.150.248])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a86645ae7csm1979099e87.79.2026.05.04.03.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2026 03:08:54 -0700 (PDT)
-From: Vastargazing <vebohr@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Vastargazing <vebohr@gmail.com>,
-	stable@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/5] perf: arm: pmu: fix reference leak on failed device registration
-Date: Mon,  4 May 2026 13:08:46 +0300
-Message-ID: <243cb3737b41fae32a09117c17809a210395e69f.1777889235.git.vebohr@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1777889235.git.vebohr@gmail.com>
-References: <cover.1777889235.git.vebohr@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pq4nXuGa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29676C2BCB8;
+	Mon,  4 May 2026 10:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777891981;
+	bh=zLs1Al8g1yiVctExHCknkfkOvKbEebj5WO8MsE1+cHs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Pq4nXuGaHWgxIlOcbKoJE/mi6cGswqrD/4+uydvHNPBPNubGeW2hQOYu3/OE9/mv6
+	 YQ7hpghHF0EoSiypFvz4MwzBUescOKbg0OoOed9NQcGPnH12V4+NOOfttqPVPg9MjZ
+	 yqdViel3xr50KbAgT8AnJXcikx94Ii1IY1U+l9ZO1n+Di1mZ0adhefBxeMqX/Mj5LF
+	 f1+9SXQLRZW2Mo99aKBBOqS10vGDa/AQLDA/hdV6bcyZdnbWmtLfbYLREldcmjsEcN
+	 hTOy8bHO4lQBXTf2fi8sbiTXmR2LEpQzMhr5CZ5eEX1yAaAKRqGN2XI/ShgFLY2f3c
+	 IB2P9IeZB1JVw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 9/9] perf debuginfo: Fix libdw API contract
+ violations
+Reply-To: sashiko@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260504081227.2203848-10-irogers@google.com>
+References: <20260504081227.2203848-10-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 04 May 2026 10:53:00 +0000
+Message-Id: <20260504105301.29676C2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When platform_device_register() fails in arm_acpi_register_pmu_device(),
-the embedded struct device has already been initialized by
-device_initialize() inside platform_device_register(). The error path
-unregisters the GSI interrupt but returns without dropping the device
-reference:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Critical] This problem wasn't introduced by this patch, but the open() c=
+all in debuginfo__init_offline_dwarf() lacks the O_NONBLOCK flag, exposing =
+a local Denial of Service (DoS) vulnerability.
+--
 
-  arm_acpi_register_pmu_device()
-    -> platform_device_register(pdev)
-       -> device_initialize(&pdev->dev)   /* kref = 1 */
-       -> platform_device_add(pdev)       /* fails */
-    <- acpi_unregister_gsi() called, but kref still 1
+commit a6e339ae66465b909762a437f958cdaed424b666
+Author: Ian Rogers <irogers@google.com>
 
-Per platform_device_register() kernel-doc:
+perf debuginfo: Fix libdw API contract violations
 
-  NOTE: _Never_ directly free @pdev after calling this function, even if
-  it returned an error! Always use platform_device_put() to give up the
-  reference initialised in this function instead.
+This commit adds return value checks for dwfl_report_end and
+dwfl_module_relocation_info to prevent potential segmentation faults. It al=
+so
+fixes a file descriptor leak in the error path of
+debuginfo__init_offline_dwarf() when offline initialization fails.
 
-Fix this by calling platform_device_put() in the error branch before
-unregistering the GSI.
+> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+> index 0e35c13abd04..84a78b30ceac 100644
+> --- a/tools/perf/util/debuginfo.c
+> +++ b/tools/perf/util/debuginfo.c
+> @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debugin=
+fo *dbg,
+>  {
+>  	GElf_Addr dummy;
+>  	int fd;
+> +	bool fd_consumed =3D false;
+> =20
+>  	fd =3D open(path, O_RDONLY);
 
-Fixes: d24a0c7099b3 ("arm_pmu: acpi: spe: Add initial MADT/SPE probing")
-Cc: stable@vger.kernel.org
-Assisted-by: GitHub Copilot (Claude Sonnet 4.5)
-Signed-off-by: Vastargazing <vebohr@gmail.com>
----
- drivers/perf/arm_pmu_acpi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+While this wasn't introduced by this patch, could this open() call cause a
+regression by hanging on a FIFO?
 
-diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-index e80f76d95e68..c2defbc32ad9 100644
---- a/drivers/perf/arm_pmu_acpi.c
-+++ b/drivers/perf/arm_pmu_acpi.c
-@@ -119,8 +119,10 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
- 
- 	pdev->resource[0].start = irq;
- 	ret = platform_device_register(pdev);
--	if (ret)
-+	if (ret) {
-+		platform_device_put(pdev);
- 		acpi_unregister_gsi(gsi);
-+	}
- 
- 	return ret;
- }
--- 
-2.51.0
+If the path originates from user-controlled sources, opening it without
+O_NONBLOCK can cause the perf record session to hang indefinitely. Using
+O_RDONLY | O_NONBLOCK would prevent this.
 
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504081227.2203=
+848-1-irogers@google.com?part=3D9
