@@ -1,153 +1,160 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFE3B28D
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777907633; cv=none; b=XQl8F6LtrTh69eND4VHVyPxSab012e14+7wUSSy5JnMhRbW9Fad6ZxXBlc1BZi4ZDt1jctXoiN8H/3xnfH03DnfXThXoiJsEXDODIlXbsy0RtUFx2HWRMdOelE0T+8O5m+J5GzOPvXPJCG5yNV2THk7guOg+vJg6+NnEuuZDMLw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777907633; c=relaxed/simple;
-	bh=KT1Renl0/lhCgUxiN4ImFB9BP+GuOGTNNQpanSzq8RE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HvF0fKm9opU9cn87HqdrnkhhXsYHXqG+R12jtFR1cqE7UZXr65/SYArkZjniGph7y0fQIZZ8aTUN6IWNFQoAGnpAg7Z4tEDz1AJoV73dotbhnOwRj7ZgsT7Zb7G0SDrzzoCypJrA6GvSGr+Qm72rdwWZJ40GS8GBHuYNRB6CpjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NkGx5jZj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125B53DFC77
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 15:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777908409; cv=pass; b=leOFW9u04D9SPjzf8sSvpOCnjyH+vp5TCFVlrWtzqrRnTy6RGigDv3HctTolve+9XViOvaa1HVZQjfeAUA+yxFIWKEaYhQQaBd8nGRaX9vlZjjVpLRGWVG0xcorR5DRtRLz0QgziKCo50lroxF36RLwc593903+lauJpQZX3tkk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777908409; c=relaxed/simple;
+	bh=9kuhRo2FzyDeDB/f2HIMKjEN00Oze4XF5EsTLm2QQXo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=acCsNd0P/ZioVLwGT7752+c5nIytGmiGW8uqsFPVy+ii+pwXBIA/Yu7J66Zh22QPFKqMHBfcUi0CIEwhdNwTJ1+qV3VzEJrPRued15VJTow1sV0Q4uauKB/dU2tBZvw+s07Pmj1ZHBqHECtfZS9nP2fjoZlQUU2hnOLzrXNzDPA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+N0VFfN; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NkGx5jZj"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 644EgnAZ3104130;
-	Mon, 4 May 2026 15:13:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ydgkvSL5z+MYv6RNh
-	r7y2GSysjQVXtkJqmjVLG7BJOo=; b=NkGx5jZjjSPyUl4iKVIKNPtzbiuPEb7Mn
-	+ueUr8XmmnxBQ+1hU4yD4ji+fW53a/G4dfld0ZvdNIFmlf0BU0zOXL3e3JP5ijGv
-	t4zsD7ZItzzq17VC76/u+vK4Wvc7JB+Al+r74aM1syABH8VcFWl2QqgQYE6fVV/Y
-	AD0u3XNSALSgC7abnscKw8c6DpfMcLgnglXsyic6R8Jmgnya6LpMW2LRG0EthWIw
-	szkLePAb2FgKgpxWTehFP9gI+wTBAJlmYOPxxJ5AT3j6CfzRBiHbkldOxB3aBzDx
-	qFOw/0AtLnNme7WjvGxkbcPISZADkYTXgRMzrz2n7/X7+hHHLHisw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9w67f2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 May 2026 15:13:40 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 644EsTXA008937;
-	Mon, 4 May 2026 15:13:40 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dwuyvws9d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 May 2026 15:13:40 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 644FDaLp61866326
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 4 May 2026 15:13:36 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4C4BF2004E;
-	Mon,  4 May 2026 15:13:36 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7F94220049;
-	Mon,  4 May 2026 15:13:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.208.70])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  4 May 2026 15:13:31 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
-Subject: [PATCH V5 2/2] tools/perf: Add kernel-doc comment to auxtrace_record__init() function
-Date: Mon,  4 May 2026 20:43:21 +0530
-Message-Id: <20260504151321.12346-2-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260504151321.12346-1-atrajeev@linux.ibm.com>
-References: <20260504151321.12346-1-atrajeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+N0VFfN"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso141045ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 May 2026 08:26:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777908407; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UuhnKB3X+9mLoHRQp8y7mQsyXzCfK/106uUfXZKgxNTT1OZnh+qZBiaC9dkjpVWCDw
+         LxQhfI1jagksULi57agxCX66xBO0Fceqn7k9o1ANFO8YN9uj+2qovzy+rtl9NkvIWj2D
+         Dz//nZOAXEfVTdodfLOq3qbg4SO04/ZoazX342+pr9jnsAJgYTxBksf2cm1Co3svLJxB
+         /W4rrPmSKERP9jZACpHi92VCtRbrxd36KocQCDRie6ueJPpHZsFcjTaYVzyAYHt5y1nP
+         h0xCAxF/QY5JA87I/edy5EC7MyPBUM89HescO5GyTjIQOOcxCiMCCcXKcRfob7Isg7n8
+         LKuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
+        fh=RAx4EYoAEHQX8CREJ/n5iCXuFT3ssl6UaSz9YrEw66M=;
+        b=gDHkctcnP9Ne1oe7qgW6KAi7xa0mKDEeYq1RdLb/a2fhgShxUNLraKsVwkiyrl4Qi1
+         bjj4K594u3N9babNHgveeDnKT/PLrxgOFEhgkB/C8ha9edhpC02oaptLD31z9REvS1/e
+         4rof2PTnkJa8iB4ZDjkzyJGq8MM1db8mwduyYNKY56iE9HAs97i+qdkvqHz0FEdvuwlk
+         OPfV0J1pnnSG8Xm2ZqZUFLIZevVQgVxOOJqSQpNY5dgMSnPQimYOmg3NzDlHt8gGxEPb
+         roIAyJJNuO+fMfnPp8yFdLqg5aEP2Zmr36pNnV12HvtXfevpf8ReZ8Ala2rIq8jqPPd9
+         aqLg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777908407; x=1778513207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
+        b=f+N0VFfNPibq0Qy3LGCmZGm3gW1jZB6cNAegS+E7OXqanRh3b8tjH41FzLB8cQoW8M
+         dUL0S0QOwoouNHCHwJLh1St1s8+DH/rg2kbXxQeNt/VLGNQJA1xPYLT2/hZWbpBIF/b/
+         jZEwPcEOxGdDzKc3Yu1ZAtLvSC9JaOR3f0QMZ8safRQhkvGmGIYnoFubKZltkrar3Aou
+         /A8tsneXCDTNAXZBbsYLKDbkWf2BGjIizi5WVnp97StF8w3JxrJhwwR1aObM5+xraeTq
+         1d0t4tZxYDJwNVsjKt10VwGRI8VuFjJLYH3voWSyK6R7HJxeXUiE8co954seqC35Vzwe
+         ZbFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777908407; x=1778513207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MVNGYuyQwowloAjO2LdpR0sLjaPkeXfjsZQ2ODRZb7Q=;
+        b=HrwMMywttm4ngXOS+XzdKIe/b5H2/fLFYQGYt5Zboq/BVTjM3XBNk6vnwIpYriiWun
+         ZV9f+AESVrVwAf26csCLie9wz93TcP4Hdvojb8G5ZT8W5/4Z/T2v+yFwoamqBVXV0A/j
+         HUYr34rSp/medbsFPJ7Uc6Cp0vK7OLw0ZSgbfbEvoUXXgJXaObg41PMqNp9mfyvVweKf
+         mtXhuu8XZNyTLWsoUZXcW/VC6jakOb0HOfS8x0hZs73KhdB8EGBpjuUYEaFl2sStrEY1
+         e8LVZYy8KcssTb8aR9oTbGRGEW0M9M0VPvyXB2iBq04LK2C8FJ9f1OxbK83Don/HhKBd
+         7OAw==
+X-Gm-Message-State: AOJu0Yz4XRtMl3vr9a8FkNeVMWal+FHdNKgVQsOT6ixRMXZB9BqIPdYC
+	7tJqFHvEWgRqqH3ePyPiYP7oka3IyH28/SVaLjTSfEzQ2DQaxRV49n+KjFih6okKO2QUBSBKr7w
+	R3mm/2aAuFay35tIuW2JzVaGNhalVAO2oiL5vTBs1lT45DhD4k/8kPwHJ6sg=
+X-Gm-Gg: AeBDiesYvEkyPFYJNIVi2hDMttWpaBokVMlfDbfZRmOYMYKClShpxBq7DTNtk2xlZ0R
+	veyGb3CAhzbkqtgMc7YbpG+YwU+QnewYs0IMW5ZVD3ev6YJF2U4aYAilDWWgX6qpOwuNm7qJCOT
+	2fwvUR6vVYgrfXlANNWMULxsu0Wp8izNTPiyX/p3Y1lMlowXArtvQ1iZQke0FEfjfOLptlWP/TY
+	k21XcZJrvkPsn3iJjNzpwzFKUPsL7vuMG99TuS5czg3JIT8q7ppsrNfkc8dIqFFErhtp2nKWzsa
+	wRbyRAr+gqa8Z3G2wUz+PRxaLM8M6g==
+X-Received: by 2002:a17:903:1a86:b0:2a7:87c2:fcde with SMTP id
+ d9443c01a7336-2b9f5892686mr4609735ad.15.1777908406371; Mon, 04 May 2026
+ 08:26:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=XPQAjwhE c=1 sm=1 tr=0 ts=69f8b7a5 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=rIN8eMsy0-pcsuMf_RkA:9
-X-Proofpoint-ORIG-GUID: SSjChCb329VBE86ySS1fYvSvtBT_FHn5
-X-Proofpoint-GUID: b4nYdZbbxEfrWQBz3b_8rVLRxXHhVSkJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA0MDE1MiBTYWx0ZWRfX5GR+DpXxmVJJ
- lVNMg7ipRCOLUVGyiEuu+bVCXFVZ06LGVnWs+SbJGP/cjqQxIYrNlW+n0JcvSHRN/4+MjiM2HAg
- E62VJcGL0OE0rScBTCj8c4ko4Th0dp8gSA63sY0TdIakS77dynS4bAlYFVTHZulCVuWcXCGUecs
- 7sEoaUOTlNnDbQnitgQyY+uAreTr6ZCzVNBXksaQhsL3Jel+dGICyQ1oN6FCxjYX+2NRtCgQw8a
- UQe/XUv+SJ1DpXMfCcQ/e4IcLDihJ8xQ7ew1MG9wKLXZiIFDqzU3xL7B+r9i0Q8CE4yt8o7vv56
- 6AIUFlU5HWyi+1R7+QFmoMQWTJp4DPAroojvUdBWesu/+liv+2dfmEHfSeo5v0G+3K/YOdX8DJ9
- s3JPEH60LeoffT74GoF3kcbq0KInBTSlS0Wb0TPhJFohPeKknXwwVHYzvevMnI14U1DXIhcnv4L
- j3P1VUIehnNMKJyNacA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-04_05,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605040152
+References: <20260504081227.2203848-10-irogers@google.com> <20260504105301.29676C2BCB8@smtp.kernel.org>
+In-Reply-To: <20260504105301.29676C2BCB8@smtp.kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 4 May 2026 08:26:34 -0700
+X-Gm-Features: AVHnY4IHluG7YJn6wbIzJuthvTjQOKDjQwRxZDYKQywpOY6yeP3FnIHR8raHaq8
+Message-ID: <CAP-5=fUuqcGCgpZApHbqpP8hxs2Y+FYU2W=h1T0D4qgdhOfdBw@mail.gmail.com>
+Subject: Re: [PATCH v5 9/9] perf debuginfo: Fix libdw API contract violations
+To: linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: sashiko@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation comment describing the parameters
-and return code for auxtrace_record__init() in util/auxtrace.c
+On Mon, May 4, 2026 at 3:53=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
+>
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Critical] This problem wasn't introduced by this patch, but the open()=
+ call in debuginfo__init_offline_dwarf() lacks the O_NONBLOCK flag, exposin=
+g a local Denial of Service (DoS) vulnerability.
+> --
+>
+> commit a6e339ae66465b909762a437f958cdaed424b666
+> Author: Ian Rogers <irogers@google.com>
+>
+> perf debuginfo: Fix libdw API contract violations
+>
+> This commit adds return value checks for dwfl_report_end and
+> dwfl_module_relocation_info to prevent potential segmentation faults. It =
+also
+> fixes a file descriptor leak in the error path of
+> debuginfo__init_offline_dwarf() when offline initialization fails.
+>
+> > diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+> > index 0e35c13abd04..84a78b30ceac 100644
+> > --- a/tools/perf/util/debuginfo.c
+> > +++ b/tools/perf/util/debuginfo.c
+> > @@ -42,6 +42,7 @@ static int debuginfo__init_offline_dwarf(struct debug=
+info *dbg,
+> >  {
+> >       GElf_Addr dummy;
+> >       int fd;
+> > +     bool fd_consumed =3D false;
+> >
+> >       fd =3D open(path, O_RDONLY);
+>
+> While this wasn't introduced by this patch, could this open() call cause =
+a
+> regression by hanging on a FIFO?
+>
+> If the path originates from user-controlled sources, opening it without
+> O_NONBLOCK can cause the perf record session to hang indefinitely. Using
+> O_RDONLY | O_NONBLOCK would prevent this.
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changelog:
-v4 > v5:
-Addressed review comment from Namhyung:
-- Used original placement for __maybe_unused as
-"struct evlist *evlist __maybe_unused"
-- Added return code expectation on success case
+So this review is bad and based on this prompt:
+https://github.com/masoncl/review-prompts/blob/main/kernel/subsystem/perf.m=
+d#file-io-safety-on-untrusted-paths
 
-v3 -> v4:
-Addressed review comment from Sashiko:
-Update return value expectation for fail as
-non zero return err code.
+I'm trying to get the bad prompt removed. The prompt was automatically
+generated from fixes commits when we added O_NONBLOCK to address build
+ID reading hangs, particularly for data mmaps during perf record
+synthesis. We now avoid those hangs by checking for a "regular" file
+with stat. Therefore, the advice regarding O_NONBLOCK and EINTR from
+the prompts is incorrect and does not reflect what the code base does.
 
-v2 -> v3:
-Addressed review comment from Sashiko:
-Update return value expectation for success and fail
-correctly.
+Side note: this is the only Sashiko feedback on this series:
+https://sashiko.dev/#/patchset/20260504081227.2203848-1-irogers%40google.co=
+m
 
- tools/perf/util/auxtrace.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a224687ffbc1..a9f007d47c0b 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -896,6 +896,21 @@ int auxtrace_parse_aux_action(struct evlist *evlist)
- 	return 0;
- }
- 
-+/**
-+ * auxtrace_record__init - Initialize an AUX area tracing record.
-+ * @evlist: The list of events to check for AUX area tracing event.
-+ * @err: Pointer to an integer to store return code.
-+ *
-+ * This function looks through the @evlist to determine which AUX area
-+ * tracing hardware is being used and initializes the auxtrace_record
-+ * structure.
-+ *
-+ * Return:
-+ * a) A pointer to the struct auxtrace_record with @err = 0 on success.
-+ * b) NULL with @err = 0 if no AUX area tracing event is found/supported
-+ *    (not considered an error).
-+ * c) NULL with non-zero @err on actual auxtrace_record__init failure.
-+ */
- struct auxtrace_record *__weak
- auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
- {
--- 
-2.47.3
 
+> [ ... ]
+>
+> --
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504081227.22=
+03848-1-irogers@google.com?part=3D9
