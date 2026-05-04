@@ -1,178 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD70437BE8C
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412C737C0FA
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 22:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777932590; cv=none; b=Ni9umH5d8QcDlBMpQVgBgnpN1bMYO+lt1u0FAdHuX0T48r7G41OICpUPAaRTP1K554UuDKvo0T9nxtA1TR7jC2xg0dFeVHWgOQYYWank9xJua5uGOSxfNZrzi0IF3/hjZaAHYLSH6zcvQwZeJ0oCLfBAoyHFD51XUf1mODeYCJ4=
+	t=1777932713; cv=none; b=jx5TFmYYJlJ9daTg33wmzjwpzIgHDz/e6SsBkmIH2xEeTeKzpICFW4Zox3Rg9ZBhN5KWuprMoUszj+J0T1V4dc39oFAIDiAkxp4xHEg3l/wwXrpCTGJCLbs483NhQF/lkKYEWeTKgtQFtQ7hji+MHMGwVV68vV43ZuICnUSCUZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777932590; c=relaxed/simple;
-	bh=yHx3iMe42mKhKT6QSQthCW5ZmeFF5OGHsbaqp9BZBW0=;
+	s=arc-20240116; t=1777932713; c=relaxed/simple;
+	bh=ghn7Qk+WDSYWbANls3cxopBUMENWA25fVvCiSSvjDyc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SUI0JqoyldESy27MJaOjzh19icDEuz3IOeZT/phrOTZbb9qhYPQ6FWf+33Zoq8Q6LcgSYQ9s/W+MLtMsBQleP2cIoPKyn4lAqrPe+I5WkHM8t4cdF6fpTPjvGXksdrj1uNUIelrYUVbZjBlZgzeRh5zJ3/Wct0RgJo8OJV80GTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJWD8lBK; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=cfHGhGt0fAb9ArANN87/2mBUM86YxM/L1+aYjiDibFS+8JEt3PmD55332VP4irceTldgjJMvjKX03ZOZCuYtS7v/pNR8C8pRL7DrISyQJ07amSmpBDLe5oWZHJ7/wT7OtSBQUpbeDcZV7Dgk6MC1dwbNgL5kt5Mgka7xslR3kso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMdJ9oF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJWD8lBK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD74C2BCB8;
-	Mon,  4 May 2026 22:09:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMdJ9oF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8BEC2BCB8;
+	Mon,  4 May 2026 22:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777932590;
-	bh=yHx3iMe42mKhKT6QSQthCW5ZmeFF5OGHsbaqp9BZBW0=;
+	s=k20201202; t=1777932713;
+	bh=ghn7Qk+WDSYWbANls3cxopBUMENWA25fVvCiSSvjDyc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=tJWD8lBKPfOY0t924CKsYASNaLDEjKYo/lG9W7N3jpJs5MC43uyEomchQBH5KZ8py
-	 TzwhxdF56fZB+f4fDYBMS1R471l50DnWTKC4rwbSrx3BQuisz/kwlQBuU8+dpmdEUm
-	 WblQvTNpmzwXFF/3Kcl7Vfy1Q9VnWoYHZkIRW27nzv78bT97Mz0CafSHaL7VMjN75o
-	 PSr145RA0oz/+TEvieFBpB1ftWY59YTuptxWonwCibPpYr8uKJvc/L8SyUsZNllnig
-	 YYHX7ys2+yN7aACjblPYXfuXpAudl65vSnVJViqloxbjbF6Ot3CNifQifJ5Y0a09rU
-	 YiCs7r/u1Uz8w==
+	b=bMdJ9oF8lkwQFF8qWYRdHOt9QtTssDQ8nP6HfNfN+5rMLzkWXOGTbrGRxjoOv+u/C
+	 hJ+mZwiT6f8YogAL6xROpBFNnR7s9Vmn5RiwmdlkDRGkIpVnIZ3K0rm7hTzBezdhYE
+	 /Kt23uY2EO5KW6Kj1paE0mf4tTpVUny5wkzcd/PSlQL0LN2kxgq0Ff9giZ6GrdJVTK
+	 2vNdmPC/XpSbz1l3RHbwwaCeLkteScnIOmZebeSH/T/LSd9G22abZj5fkiKcNEa8jp
+	 Di/7WNWItChsD0ckXWx1WGkhtAJfb/QnSU40nSBBswAnU5PzIC9/1TCNB8MSxKfOyT
+	 7tcO+FlQowCaw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 07/20] KVM: arm64: Set up FGT for Partitioned PMU
+Subject: Re: [PATCH v7 13/20] KVM: arm64: Apply dynamic guest counter
+ reservations
 Reply-To: sashiko@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260504211813.1804997-8-coltonlewis@google.com>
-References: <20260504211813.1804997-8-coltonlewis@google.com>
+In-Reply-To: <20260504211813.1804997-14-coltonlewis@google.com>
+References: <20260504211813.1804997-14-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 22:09:49 +0000
-Message-Id: <20260504220950.4DD74C2BCB8@smtp.kernel.org>
+Date: Mon, 04 May 2026 22:11:52 +0000
+Message-Id: <20260504221152.EC8BEC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Critical] Untrapping PMSELR_EL0 causes KVM's trap handlers to use a stal=
-e selector index, breaking PMU emulation and event filtering.
-- [High] Untrapping PMCR_EL0 reads exposes the physical counter limit (N) t=
-o the guest, leading to UNDEF crashes during PMU probing.
-- [High] `kvm_pmu_is_partitioned()` uses `host_data_ptr(nr_event_counters)`=
- to read the current CPU's capacity, causing preemption safety and correctn=
-ess issues.
-- [High] Conflicting definitions and missing forward declarations for `kvm_=
-pmu_is_partitioned` break the build when KVM is disabled.
-- [Low] Typo in commit message system register names.
+- [High] Hard lockup / Deadlock due to acquiring `perf_ctx_lock` with hardw=
+are interrupts enabled.
+- [High] Data race and cross-CPU isolation breach due to dynamic modificati=
+on of the global PMU counter mask (`cntr_mask`).
+- [High] NULL pointer dereference risk due to lockless, unprotected access =
+to the per-CPU perf events array.
+- [Medium] Pending host perf events remain permanently inactive due to skip=
+ped PMU reschedule updates.
 --
 
-commit c59f16e72b7efa37d6a241d40b8efb2151b0a1ca
+commit ad275b1ce5aad3594e39d36f37c39f73178b1c0b
 Author: Colton Lewis <coltonlewis@google.com>
 
-KVM: arm64: Set up FGT for Partitioned PMU
+KVM: arm64: Apply dynamic guest counter reservations
 
-This commit sets up fine grain traps (FGT) to avoid trapping common PMU
-register accesses by the guest. It untraps several registers while keeping
-others trapped for overflow tracking and event filtering.
-
-> Untrapped:
-> * PMCR_EL0
-> * PMUSERENR_EL0
-> * PMSELR_EL0
-
-If PMCR_EL0 reads are untrapped, won't the guest see the host's physical
-number of counters (N) instead of the restricted limit? If the guest OS
-PMU driver discovers the physical N and attempts to configure counters
-greater than or equal to HPMN, won't KVM's emulation inject an UNDEFINED
-exception and crash the guest?
-
-Additionally, since PMSELR_EL0 is untrapped, the guest can modify the
-hardware register directly without KVM's knowledge. When KVM handles
-traps for aliases like PMXEVTYPER_EL0, will it read a stale selector
-index from the memory backing of PMSELR_EL0? Could this allow a guest
-to bypass KVM's event filtering by desynchronizing the hardware selector
-from KVM's memory backing?
-
-[ ... ]
-
-> PMICNTR and PMIFILTR remain trapped because KVM is not handling them
-> yet.
->=20
-> PMEVTYPERn remains trapped so KVM can limit which events guests can
-> count, such as disallowing counting at EL2. PMCCFILTR and PMCIFILTR
-> are special cases of the same.
-
-This isn't a bug, but are PMIFILTR and PMCIFILTR typos in the commit
-message? Should these be PMICFILTR and PMCCFILTR respectively?
-
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_=
-pmuv3.h
-> index 154503f054886..42d62aa48d0a6 100644
-> --- a/arch/arm/include/asm/arm_pmuv3.h
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -231,6 +231,10 @@ static inline bool kvm_set_pmuserenr(u64 val)
->  }
-> =20
->  static inline void kvm_vcpu_pmu_resync_el0(void) {}
-> +static inline bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
-> +{
-> +	return false;
-> +}
-
-Since struct arm_pmu is not forward-declared before its use here, could
-this cause build warnings or errors in certain configurations?
-
-[ ... ]
+Apply dynamic guest counter reservations by checking if the requested
+guest mask collides with any events the host has scheduled and calling
+pmu_perf_resched_update() with a hook that updates the mask of
+available counters in between schedule out and schedule in.
 
 > diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 74e40e4915416..2148bc46079c4 100644
+> index 2252d3b905db9..14cc419dbafad 100644
 > --- a/arch/arm64/kvm/pmu-direct.c
 > +++ b/arch/arm64/kvm/pmu-direct.c
 
 [ ... ]
 
-> +/**
-> + * kvm_pmu_is_partitioned() - Determine if given PMU is partitioned
-> + * @pmu: Pointer to arm_pmu struct
-> + *
-> + * Determine if given PMU is partitioned by looking at hpmn field. The
-> + * PMU is partitioned if this field is less than the number of
-> + * counters in the system.
-> + *
-> + * Return: True if the PMU is partitioned, false otherwise
-> + */
-> +bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
+> @@ -100,6 +100,73 @@ u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
+> +static void kvm_pmu_set_guest_counters(struct arm_pmu *cpu_pmu, u64 gues=
+t_mask)
 > +{
-> +	if (!pmu)
-> +		return false;
+> +	struct pmu_hw_events *cpuc =3D this_cpu_ptr(cpu_pmu->hw_events);
+> +	DECLARE_BITMAP(guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +	DECLARE_BITMAP(new_mask, ARMPMU_MAX_HWEVENTS);
+> +	bool need_resched =3D false;
 > +
-> +	return pmu->max_guest_counters >=3D 0 &&
-> +		pmu->max_guest_counters <=3D *host_data_ptr(nr_event_counters);
+> +	bitmap_from_arr64(guest_bitmap, &guest_mask, ARMPMU_MAX_HWEVENTS);
+> +	bitmap_copy(new_mask, cpu_pmu->hw_cntr_mask, ARMPMU_MAX_HWEVENTS);
+> +
+> +	if (guest_mask) {
+> +		/* Subtract guest counters from available host mask */
+> +		bitmap_andnot(new_mask, new_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +
+> +		/* Did we collide with an active host event? */
+> +		if (bitmap_intersects(cpuc->used_mask, guest_bitmap, ARMPMU_MAX_HWEVEN=
+TS)) {
+> +			int idx;
+> +
+> +			need_resched =3D true;
+> +			cpuc->host_squeezed =3D true;
+> +
+> +			/* Look for pinned events that are about to be preempted */
+> +			for_each_set_bit(idx, guest_bitmap, ARMPMU_MAX_HWEVENTS) {
+> +				if (test_bit(idx, cpuc->used_mask) && cpuc->events[idx] &&
+> +				    cpuc->events[idx]->attr.pinned) {
+
+Is there a risk of a NULL pointer dereference here?
+
+The per-CPU events array is accessed without locks and with hardware interr=
+upts
+enabled. If an interrupt occurs (like an IPI triggering an event removal)
+between the evaluation of cpuc->events[idx] and reading ->attr.pinned, and
+the compiler issues separate memory reads due to a lack of READ_ONCE(), cou=
+ld
+the second read observe a NULL pointer?
+
+> +					pr_warn_ratelimited("perf: Pinned host event squeezed out by KVM gu=
+est PMU partition\n");
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	} else {
+> +		/*
+> +		 * Restoring to hw_cntr_mask.
+> +		 * Only resched if we previously squeezed an event.
+> +		 */
+> +		if (cpuc->host_squeezed) {
+> +			need_resched =3D true;
+> +			cpuc->host_squeezed =3D false;
+> +		}
+> +	}
+
+What happens to host perf events created while the guest is actively runnin=
+g?
+
+It looks like cpuc->host_squeezed is only set if a host event collided when
+the guest was loaded. If a new host event is created while the guest is
+running, it will fail to allocate a counter due to the restricted mask.
+
+When the guest unloads, cpuc->host_squeezed is false, so no reschedule is
+requested. Will the perf subsystem be notified that counters have been free=
+d,
+or will the host event remain permanently inactive?
+
+> +
+> +	if (need_resched) {
+> +		/* Collision: run full perf reschedule */
+> +		perf_pmu_resched_update(&cpu_pmu->pmu, kvm_pmu_update_mask, new_mask);
+
+Could this cause a deadlock if a Performance Monitor Interrupt (PMI) or
+perf IPI fires?
+
+kvm_pmu_load() calls this with preemption disabled but leaves hardware
+interrupts enabled. perf_pmu_resched_update() unconditionally calls
+perf_ctx_lock(), which acquires the context lock without disabling local IR=
+Qs.
+
+If an interrupt fires on the same CPU while this lock is held, and the
+handler attempts to acquire ctx->lock via raw_spin_lock_irqsave(), will
+it spin indefinitely?
+
+> +	} else {
+> +		/* Host was never using guest counters anyway */
+> +		bitmap_copy(cpu_pmu->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
+
+Does modifying cpu_pmu->cntr_mask here introduce a data race?
+
+struct arm_pmu represents PMU hardware capabilities shared across multiple =
+CPUs
+in a domain. If this per-CPU load/put path dynamically mutates cntr_mask
+without global synchronization, could reserving guest counters on one CPU
+incorrectly prevent host perf events from running on another CPU?
+
+Also, when a vCPU unloads, it appears to unconditionally restore cntr_mask =
+to
+hw_cntr_mask, which might wipe out active reservations from other vCPUs.
+
+> +	}
 > +}
-
-Because host_data_ptr() uses this_cpu_ptr_hyp_sym() and this_cpu_ptr(),
-will this trigger a preemption warning if called from a preemptible
-context?
-
-Also, on big.LITTLE systems, does this compare the specific PMU's limit
-against the currently executing CPU's capacity rather than the correct
-capacity for that PMU?
-
-[ ... ]
-
-> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-> index 95f404cdcb2df..c3987e0c01775 100644
-> --- a/include/kvm/arm_pmu.h
-> +++ b/include/kvm/arm_pmu.h
-
-[ ... ]
-
-> @@ -228,6 +253,11 @@ static inline bool kvm_pmu_counter_is_hyp(struct kvm=
-_vcpu *vcpu, unsigned int id
-> =20
->  static inline void kvm_pmu_nested_transition(struct kvm_vcpu *vcpu) {}
-> =20
-> +static inline bool kvm_pmu_is_partitioned(void *pmu)
-> +{
-> +	return false;
-> +}
-
-Does this fallback definition using void *pmu conflict with the one added
-to arch/arm/include/asm/arm_pmuv3.h that uses struct arm_pmu *pmu? If KVM
-is disabled and a driver includes both headers, could this result in a
-fatal conflicting types compiler error?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260504211813.1804=
-997-1-coltonlewis@google.com?part=3D7
+997-1-coltonlewis@google.com?part=3D13
