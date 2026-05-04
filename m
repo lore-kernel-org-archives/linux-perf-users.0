@@ -1,101 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03CC3FADF6
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 19:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102871F3BA2
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2026 19:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777923215; cv=none; b=KKfqaKK4SiVCrS5Y4j9nrTwgia4frzasohHeUR6rUOjTR+HzzXQnCUbhK6ENe2WGKOF6bCorWTNHaNi7v4bjlps4832C5hmrsTMbyxn7mS+pcvZ3PF+bF0Y2R36tssa+HEgf6uc9oPCHvgRtvrTDKZsHjvF3HbSinoSK7Fdwb7s=
+	t=1777923216; cv=none; b=H0aYha/ha3XlWvVcZNEyLZa/YIgu9rCn74ozgoexdJgJe6EFWSX6cOaOsLuV/MAiTUjVACC9RRp+ak4iOjxSROspwp5HV/zh0OPJGA8QJh5JmqZ09ku5704kGdfAZ5sQD/UDfAvTkGDM0mNoqkrGIJmLjp9JNRCzRpQauXeIQUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777923215; c=relaxed/simple;
-	bh=iOZAHTLua9pTqz3VisUx4BFrbT8gl/cw7U/SwfKSevE=;
+	s=arc-20240116; t=1777923216; c=relaxed/simple;
+	bh=cW+2SaOhK6BEo+RWanwaCexV36ofDriiP2uR+bEyFq8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=h6idRFwKNr1ngfXjwbAGdwngpIUCnLxvz4LULaATidbbdYoEFUhJNLkxYhJE/z8o4yoedVoPhfG8KMji5gkxcKv4HpgPda61cz7cNYnYSETNS/Dby0S7+ueviN5VLjKxgJqJ5v2O3zDwDBviiuHtLhFTXuCzPDitV9H7YB9TAlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFScb9qt; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=UqyWj2mlDDbJ/cT4Ng3JUI1S5KRRNe7l03+GRvVhXpHsAA8CnCwCkdlwlbfkDCDIQg24BPTmw+DQyGOpUUMe1UCximRZ/YlmM7cEB62tDYvu6OVGc3gXhbQn/Rg2Q7v5R9HRLCmx3XBsag2lFeH+Xq9M8bSx6lfRxriwRH623DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwzZQHjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFScb9qt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F978C2BCB8;
-	Mon,  4 May 2026 19:33:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwzZQHjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81BD0C2BCB8;
+	Mon,  4 May 2026 19:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777923214;
-	bh=iOZAHTLua9pTqz3VisUx4BFrbT8gl/cw7U/SwfKSevE=;
+	s=k20201202; t=1777923215;
+	bh=cW+2SaOhK6BEo+RWanwaCexV36ofDriiP2uR+bEyFq8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=kFScb9qtXbzVSHFVSLgDGzwqC+ol9x/tGxYlyZo/Uy7fCXUO0DVHq4I5lzP6GWqgd
-	 2oeOZawiGHlY7mYcmvMvDZSmWbASnrfRGeC5YzHGtPBjXvqN0R4r9w5067rRqffer9
-	 S3YdO00FaUKWTkxZP7uAxo/zEYx8ScH1QBQoznweTSPZ1RZgK3uwDB3yWEbfMnAQoa
-	 3RejA/yWZjR9XDPe3oWVB1iVhg5RQlIngBpeW0E0Gr0hG2bow9TLG8jiqLl/Lh+56y
-	 e+P0sckaWTqDmoRwd3EXhkm/ITHjIyDc98inMuuHGRYB+zuw8Jsorx5NmZD25vQGxe
-	 0pa/QJCV/lt7g==
+	b=gwzZQHjYSCZTAOdiuPQzCvCDWfo1XqsmpvS9jAvSc3KTi5EZUBc0YpziQvLyb2UZA
+	 OFSSvUjYHztW+3ACpaa5NfNizN3h9vmIGMPft7/asEJKUmnrrwRqZQbZJFRoTMR4BJ
+	 rbPtKYq2PHz/J9+4gjNpXpjHhlfQBrf0J6LRmRqtrnMNbg+2zYSfWfz8XOdnxzPBnz
+	 jTW8ER3UUsCB9VX3XcjNRQ3E5JkK5fgXI8oiEnliWTfknrykoDPlxvCXK51nDuk6Wq
+	 /30/2m5wqN9V4OBgy4+ZV+XdSu5Y8mYjj34J651i0pgUUOh/TM1ujzEqPTIEa6viZv
+	 VFdnrL8ZBgC2Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/5] perf trace: Sync uapi/linux/sched.h with the kernel
- source
+Subject: Re: [PATCH 5/5] perf build: Add make check-headers target
 Reply-To: sashiko@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260503193137.27465-5-namhyung@kernel.org>
-References: <20260503193137.27465-5-namhyung@kernel.org>
+In-Reply-To: <20260503193137.27465-6-namhyung@kernel.org>
+References: <20260503193137.27465-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 04 May 2026 19:33:32 +0000
-Message-Id: <20260504193334.9F978C2BCB8@smtp.kernel.org>
+Date: Mon, 04 May 2026 19:33:34 +0000
+Message-Id: <20260504193335.81BD0C2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The `clone.sh` beautification script fails to parse the new `(1U=
-LL << X)` format for `CLONE_` macros, resulting in missing syscall argument=
- translations in `perf trace`.
+- [Medium] The `tools/include/uapi/README` documentation was not updated to=
+ reflect the removal of the automated header synchronization check.
+- [Low] The new `check-headers` target in `tools/perf/Makefile` is missing =
+a `.PHONY` declaration.
 --
 
-commit 21b4f549d315112f3b383339c5af0152f585767e
+commit dd1cd2c298920f9790f61d618060d62047bed876
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf trace: Sync uapi/linux/sched.h with the kernel source
+perf build: Add make check-headers target
 
-This commit synchronizes the tools/perf uapi sched.h with the kernel source
-to pick up new clone flags for beautifying scheduler syscall arguments.
+This commit removes the automated check-headers.sh script execution from
+the default perf build and adds a dedicated check-headers Make target to
+be called manually instead.
 
-> diff --git a/tools/perf/trace/beauty/include/uapi/linux/sched.h b/tools/p=
-erf/trace/beauty/include/uapi/linux/sched.h
-> index 359a14cc76a4..33a4624285cd 100644
-> --- a/tools/perf/trace/beauty/include/uapi/linux/sched.h
-> +++ b/tools/perf/trace/beauty/include/uapi/linux/sched.h
-> @@ -34,8 +34,12 @@
->  #define CLONE_IO		0x80000000	/* Clone io context */
+> As it's to improve perf trace beautifier to catch up new changes mostly
+> in UAPIs, we can make it a separate build target and call it
+> occasionally.
+
+Does this change require an update to tools/include/uapi/README?
+
+The README currently documents a "software-enforced copy-on-write mechanism"
+that is "driven by non-fatal warnings on the tooling side build."=20
+
+Since this is no longer automated during routine builds, developers might m=
+iss
+UAPI changes if they rely on the currently documented behavior.
+
+> diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+> --- a/tools/perf/Makefile
+> +++ b/tools/perf/Makefile
+
+[ ... ]
+
+> @@ -111,6 +111,9 @@ build-test:
+>  build-test-tarball:
+>  	@$(MAKE) -f tests/make REUSE_FEATURES_DUMP=3D1 MK=3DMakefile SET_PARALL=
+EL=3D1 --no-print-directory out
 > =20
->  /* Flags for the clone3() syscall. */
-> -#define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler a=
-nd reset to SIG_DFL. */
-> -#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup=
- given the right permissions. */
-> +#define CLONE_CLEAR_SIGHAND	(1ULL << 32) /* Clear any signal handler and=
- reset to SIG_DFL. */
-> +#define CLONE_INTO_CGROUP	(1ULL << 33) /* Clone into a specific cgroup g=
-iven the right permissions. */
-> +#define CLONE_AUTOREAP		(1ULL << 34) /* Auto-reap child on exit. */
-> +#define CLONE_NNP		(1ULL << 35) /* Set no_new_privs on child. */
-> +#define CLONE_PIDFD_AUTOKILL	(1ULL << 36) /* Kill child when clone pidfd=
- closes. */
-> +#define CLONE_EMPTY_MNTNS	(1ULL << 37) /* Create an empty mount namespac=
-e. */
+> +check-headers:
+> +	@./check-headers.sh
+> +
 
-Will this format change cause a regression in the clone flags beautifier?
+Should check-headers be added to the .PHONY declarations?
 
-Looking at tools/perf/trace/beauty/clone.sh, it uses a regular expression
-expecting hexadecimal values to extract the flags: (0x[[:xdigit:]]+).
-
-Because these updated macros now use a bitwise shift format instead of hex
-values, they might be silently ignored by the script during parsing. This
-would result in perf trace failing to translate these flags, printing raw
-numeric values instead.
-
-Does the regex in clone.sh also need to be updated to handle the new
-format?
+Since check-headers is a command target and does not produce an artifact by
+that name, if a file or directory named check-headers is ever created in
+tools/perf/, Make will consider the target up to date and silently skip
+executing the script.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260503193137.2746=
-5-1-namhyung@kernel.org?part=3D4
+5-1-namhyung@kernel.org?part=3D5
