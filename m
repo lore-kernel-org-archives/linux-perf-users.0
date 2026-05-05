@@ -1,228 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E06F23D7DC;
-	Tue,  5 May 2026 23:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526F617AE11
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 May 2026 23:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778022697; cv=none; b=MymQP0cSWqRuXuBPF37f1GY4y/vrJzBzsp1edN3WcCqjrf7ho6tHgv9l991A7CLcK2OiDtClE2oI5o4RC/sb8KruC8AaK64UD5tVEnW1yK+u6c7lllx0WXkfQxHukGpL2Z9X9ukhJZGSyoz5VwmDhjyv+BBNBR8ZcPX0RaSnWEU=
+	t=1778023953; cv=none; b=FCS/WFjMzn1FYTGou/yJ2kWO5X28yc61GJZE5MkxzWXjL1mqyo0ybeDgz5mQvbsQplrf2O+7ISbdxs3E8vz6DN4F2uORJPlH53xYdWHWv9G0l2CWQnHa9JvB+5CDJJiWulLRhRuKzHNdIkQhlGlZa8HormESWSpRjwRgl9svBQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778022697; c=relaxed/simple;
-	bh=0Bk5Tatr2mSLMqOEPOPN2GzjISZZ36/Iwr/OVM5M5oA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=COMLuRaLnfjNuDcNvU41SsS7QR9fzhL1eI7RJ/VZl43bn/yoTnXVaEnmI8wlWnzs7WOrEgT1WxUe8EXD1DK6bfwyeZbDtjMgu3ELUvusJti6qujO3E7HSwmskwzhVxvcLdRB9ITfvUqDhFLWeQ/wbBTZ4Iz2ZSs4Oi9JD7LmYhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HokjvtOy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778023953; c=relaxed/simple;
+	bh=TUqTDWIgIW5jwdAtXVOxPBnxEZmDG5Tb3tlC3gkiaaA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iCZ1/j5ucmg5H6/f7/Iy3GQLgBOoM2f2Ww41bwsHnrW3sAuFc6u0PioCDjq7m7O44eboeYBbATUjQiiKqNis0hRhuIKNUYxYFQ8EDdIpo8pteSgA8XFTKekEmYpT7vMeaPUM8zb8Atay/yIL4Y3XQY2d8fraBPID7/QoJQrpe68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uz9gfY6p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HokjvtOy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD2AEC2BCB4;
-	Tue,  5 May 2026 23:11:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uz9gfY6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76673C2BCB4;
+	Tue,  5 May 2026 23:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778022697;
-	bh=0Bk5Tatr2mSLMqOEPOPN2GzjISZZ36/Iwr/OVM5M5oA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HokjvtOySbXojkNcLiNPd3yyAFKtZn0YgRwr/EqgqzBSoTQJG+mmoMOf1G1L4OdgQ
-	 UEXy0vq56bWrrZTqV8mOsSPtjIVKEWrHmMZdnAUg/lh0QiQNbZcu7VUMVUbGy0AGWe
-	 R00/WGMg5sxaND82luaFgzc6Dihi7AuTkPWHyUkfRMHmxOwwOjmK0mFUFLvzUgNPpD
-	 UZZ4MMFRjbLFVHHyRN6gIlhWjnZfNqaQhRKzBYrj25WLP2o9DZzFvwA4m55gSxEX7S
-	 Qd6LGQM68geeTXL154PL5Du8vUUEyXgoiMKBFUmDQ5ZEVzZSNFAqIIp75vrgNs8clO
-	 eOJ1HkwZU6/TA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Chun-Tse Shao <ctshao@google.com>,
-	Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Subject: [PATCH v2] perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
-Date: Tue,  5 May 2026 16:11:35 -0700
-Message-ID: <20260505231136.691907-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+	s=k20201202; t=1778023952;
+	bh=TUqTDWIgIW5jwdAtXVOxPBnxEZmDG5Tb3tlC3gkiaaA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=uz9gfY6pH5qcMwYYwBeRIr+eT9jwCKFnMUh+HeClCNpRfWCdiCHLi4JlNeAM3o9oH
+	 o9A7Ewz1DNL9dqOzfDb0fvS2FYcJvfldCWICVHc25jBD+hSe6Dz3eXT18hIkO3ecmQ
+	 YIsHF0ArtzQ2EvhBsV0+sGTcUw/6t9J0iftB59vk9HQeHxCrlKMVUbME5iUA5pM1MK
+	 GaLZutJqHVr0PxmBKKJgh/J0+jex1aGItXXqT9MwxazrYZlO95i1rhUJbIIJjFf5RB
+	 gEMdTnJ3b2sXw79IQatj94SJaNh0C0t1RAYT6JopLsKrmq1fCCLuvOhnxd9tqSK+ai
+	 IZkuLREcKVY5w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf lock contention: Allow 'mmap_lock' in
+ -L/--lock-filter
+Reply-To: sashiko@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260505231136.691907-1-namhyung@kernel.org>
+References: <20260505231136.691907-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 05 May 2026 23:32:31 +0000
+Message-Id: <20260505233232.76673C2BCB4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The -L/--lock-filter option is to specify target locks by name or
-address.  It's basically for global locks where name or address is known
-and fixed.  But 'mmap_lock' is a per-process lock so it cannot be used
-for the -L option.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Combining a slab cache filter with the 'mmap_lock' filter silent=
+ly drops all valid slab lock events.
+--
 
-  $ sudo perf lock con -ab -L mmap_lock
-  ignore unknown symbol: mmap_lock
-  libbpf: map 'addr_filter': failed to create: -EINVAL
-  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -EINVAL
-  Failed to load lock-contention BPF skeleton
-  lock contention BPF setup failed
+commit b47198e2987a248476bc916b47bb7722966773ea
+Author: Namhyung Kim <namhyung@kernel.org>
 
-However, it's still a common source of contention especially in a large
-process so we want to use it for the -L/--lock-filter option.  As there
-is check_lock_type() to check mmap_lock at runtime, let's used it to
-filter mmap_locks as a special case.
+perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
 
-Of course, this only works with -b/--use-bpf option.
+This commit allows filtering for the per-process mmap_lock using the
+-L/--lock-filter option in perf lock contention by adding a special case
+to check the lock type via BPF.
 
-  $ sudo perf lock con -b -L mmap_lock -- perf bench mem mmap -f demand -t 2
-  # Running 'mem/mmap' benchmark:
-  # function 'demand' (Demand loaded mmap())
-  # Copying 1MB bytes ...
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
+util/bpf_skel/lock_contention.bpf.c
+> index 96e7d853b9edf..8b1aa64deb6e4 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+[ ... ]
+> @@ -291,7 +302,15 @@ static inline int can_record(u64 *ctx)
+> =20
+>  		kmem_cache_addr =3D (long)bpf_get_kmem_cache(addr);
+>  		ok =3D bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
+> -		if (!ok)
+> +		if (!ok && !has_mmap_lock)
+> +			return 0;
+> +	}
+> +
+> +	if (has_mmap_lock) {
+> +		__u64 lock =3D ctx[0];
+> +		__u32 flag =3D ctx[1];
+> +
+> +		if (check_lock_type(lock, flag) !=3D LCD_F_MMAP_LOCK)
+>  			return 0;
+>  	}
 
-         2.679184 GB/sec/thread	( +-   1.78% )
-   contended   total wait     max wait     avg wait         type   caller
+If a user specifies both a slab cache filter and the mmap_lock filter,
+will valid slab lock events be silently dropped here?
 
-           1     15.22 us     15.22 us     15.22 us      rwsem:W   __vm_munmap+0x7e
-           1      7.72 us      7.72 us      7.72 us      rwsem:R   lock_mm_and_find_vma+0x97
+When a lock event successfully matches the slab_filter, ok is non-null.
+However, there is no early return like there is for is_addr_ok above.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2)
- * handle a bad lock name for -L option  (Sashiko)
- * handle mmap_lock and other lock together  (Sashiko)
+Execution falls through to the has_mmap_lock block. Since a slab lock
+is not an mmap_lock, check_lock_type() will not equal LCD_F_MMAP_LOCK,
+and the function returns 0, filtering out the valid slab event.
 
- tools/perf/tests/shell/lock_contention.sh     | 11 +++++++++
- tools/perf/util/bpf_lock_contention.c         |  9 +++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 23 +++++++++++++++++--
- 3 files changed, 40 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 6dd90519f45cec1d..52e8b9db9fbd8844 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -208,6 +208,17 @@ test_lock_filter()
- 		err=1
- 		exit
- 	fi
-+
-+	perf lock con -b -L mmap_lock -q -- perf bench mem mmap -t 2 -l 10 > /dev/null 2> ${result}
-+
-+	# find out the type of mmap_lock
-+	test_lock_filter_type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-+
-+	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
-+		echo "[Fail] BPF result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
-+		err=1
-+		exit
-+	fi
- }
- 
- test_stack_filter()
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index cbd7435579feaf8e..eb8e29b8064b7348 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -186,6 +186,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1, nslabs = 1;
- 	struct evlist *evlist = con->evlist;
- 	struct target *target = con->target;
-+	bool has_mmap_lock = false;
- 
- 	/* make sure it loads the kernel map before lookup */
- 	map__load(machine__kernel_map(con->machine));
-@@ -244,6 +245,11 @@ int lock_contention_prepare(struct lock_contention *con)
- 		unsigned long *addrs;
- 
- 		for (i = 0; i < con->filters->nr_syms; i++) {
-+			if (!strcmp(con->filters->syms[i], "mmap_lock")) {
-+				has_mmap_lock = true;
-+				continue;
-+			}
-+
- 			sym = machine__find_kernel_symbol_by_name(con->machine,
- 								  con->filters->syms[i],
- 								  &kmap);
-@@ -263,7 +269,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 			addrs[con->filters->nr_addrs++] = map__unmap_ip(kmap, sym->start);
- 			con->filters->addrs = addrs;
- 		}
--		naddrs = con->filters->nr_addrs;
-+		naddrs = con->filters->nr_addrs ?: has_mmap_lock;
- 		skel->rodata->has_addr = 1;
- 	}
- 
-@@ -298,6 +304,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	skel->rodata->aggr_mode = con->aggr_mode;
- 	skel->rodata->needs_callstack = con->save_callstack;
- 	skel->rodata->lock_owner = con->owner;
-+	skel->rodata->has_mmap_lock = has_mmap_lock;
- 
- 	if (con->aggr_mode == LOCK_AGGR_CGROUP || con->filters->nr_cgrps) {
- 		if (cgroup_is_v2("perf_event"))
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 96e7d853b9edf3b5..8b1aa64deb6e4141 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -184,6 +184,7 @@ const volatile int has_type;
- const volatile int has_addr;
- const volatile int has_cgroup;
- const volatile int has_slab;
-+const volatile int has_mmap_lock;
- const volatile int needs_callstack;
- const volatile int stack_skip;
- const volatile int lock_owner;
-@@ -214,6 +215,8 @@ int data_map_full;
- struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
- void bpf_task_release(struct task_struct *p) __ksym __weak;
- 
-+static inline __u32 check_lock_type(__u64 lock, __u32 flags);
-+
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -239,6 +242,8 @@ static inline __u64 get_current_cgroup_id(void)
- 
- static inline int can_record(u64 *ctx)
- {
-+	bool is_addr_ok = false;
-+
- 	if (has_cpu) {
- 		__u32 cpu = bpf_get_smp_processor_id();
- 		__u8 *ok;
-@@ -271,8 +276,10 @@ static inline int can_record(u64 *ctx)
- 		__u64 addr = ctx[0];
- 
- 		ok = bpf_map_lookup_elem(&addr_filter, &addr);
--		if (!ok && !has_slab)
-+		if (!ok && !has_slab && !has_mmap_lock)
- 			return 0;
-+
-+		is_addr_ok = !!ok;
- 	}
- 
- 	if (has_cgroup) {
-@@ -284,6 +291,10 @@ static inline int can_record(u64 *ctx)
- 			return 0;
- 	}
- 
-+	if (is_addr_ok)
-+		return 1;
-+
-+	/* slab and mmap_lock are part of the addr_filter */
- 	if (has_slab && bpf_get_kmem_cache) {
- 		__u8 *ok;
- 		__u64 addr = ctx[0];
-@@ -291,7 +302,15 @@ static inline int can_record(u64 *ctx)
- 
- 		kmem_cache_addr = (long)bpf_get_kmem_cache(addr);
- 		ok = bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
--		if (!ok)
-+		if (!ok && !has_mmap_lock)
-+			return 0;
-+	}
-+
-+	if (has_mmap_lock) {
-+		__u64 lock = ctx[0];
-+		__u32 flag = ctx[1];
-+
-+		if (check_lock_type(lock, flag) != LCD_F_MMAP_LOCK)
- 			return 0;
- 	}
- 
--- 
-2.54.0.545.g6539524ca2-goog
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260505231136.6919=
+07-1-namhyung@kernel.org?part=3D1
