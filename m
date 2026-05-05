@@ -1,208 +1,159 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D8E25DB1A
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 May 2026 21:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891BD3CB2D7
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 May 2026 21:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778016265; cv=pass; b=VSzkNs3dOVwH+p8YL6rKgyFIvImp+PdIVVgFTv5HVqJJqxJR2AGQHrn6Tsg8WPVJ7Se3aEr6sik3Shh+w6Byf/9O4Rb+kBkloPfS2abBeHk6grKg5O9Jl8C8HOFekfJXdUwVVc+b5MhxzT44LdBebu4dgBzdSDCV8UKake4KjUU=
+	t=1778018176; cv=pass; b=nAAj84an2C3SmPHt0XLRoecxcMxBBt25XDBSCDcA4YDjUA2ZQ/RnboYwnxlFI5A0ezWwFuGgnuujJ7YWBP0tNYjnr2uSiVmLztGOElCKPVaMLTmkuIEpcncsdFBkukqlFwp2HAcSaixU5Ce/RGSiYepYcSjbFVN2oRDFhO2b3jo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778016265; c=relaxed/simple;
-	bh=qwrevQuKW7SU82cOtABfTLrl2B9eclHLAka9VuSvJ1A=;
+	s=arc-20240116; t=1778018176; c=relaxed/simple;
+	bh=IYr5sgxlNbQccaI2qNEe8FWZ+RpMlTFVZKhdk0cW7Ww=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=loBWVZjs0BqhTb/yoBKVTmwSax0DVMyLMUE7RjnL5Zwtq3v9GoV6/3QDptMmwGr60ARVgOB6ztMpBjy0KcWvcbNTJ0pJM+Ku6LN00CQLtvJsxKD3U821jHn92n1OVmq2fUuPckZgg9zCq7uXy7thXg5jZ8adNVbKTHt6sWa2IWE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S+16yXQa; arc=pass smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=pSG7a6chQVbKZ1IzUhlmi/B2+Pd4BbboPm33AgC3Ha4X41QX8WVlQJZy4PSZ7G7CqEWJpprqCuteYnwb50QDm15T8ztZ3Eyi1/1Z/0LQPH80EpcUoPpY/VsxJRXVReG7QqTrat1aqo4wX1KOBMXbnFJGkxz1zOMFiSZfr2e5j2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ceGrjKVG; arc=pass smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+16yXQa"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so13355ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 May 2026 14:24:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778016264; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ceGrjKVG"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ba180a022dso15295ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 May 2026 14:56:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778018175; cv=none;
         d=google.com; s=arc-20240605;
-        b=ch1VUG/3+ZeS11VPWl6J1rkRKlAoYh8peokIgNvg5MBHvZP1K52WbD4FtsLPL5/Dsz
-         EDWPY1V5srHPrsFL1EzJOO5+2wKopcz4wmUHp1m0ibRK4eNhN79AS1KKL2PQkhzCHN/d
-         NWRKX3mexD3dT90ETAXsyx2giS9h9pbV/jlZBSSUYBFECEmaWM0TNASSiyClQL2RL7X2
-         ljVCaMbmpTwvdC6mvFv1bW4XjS38pMOGoD3YMWraSmPhdYhSbuNSL9J8xqlVVWPTzxvT
-         ELjkqQZ8IGoyvL3F5CIJjgN3C2B80pjN3+Lq7IVit5sW9cUU+igsilrJF8jr/zv7JM1J
-         6yZw==
+        b=lSTySjhzwSA+ZHMRy6vUNEVMQmGbjCwsT7uFjAPXMS+MlrjuYQVxEJbl0Jl+1eGOl6
+         G84Q/AF6/qsNv14jXMYFKp7Hz+tuxR6SaxI/ltSuX6V+4jWokBzc7G8frbCg8gPaq6tc
+         Z4uqI9Zy/v/KA4xk7qGirsamRxhKr0/DVRh4Vt4Q9LAPaGh0qX6qpSqXGCb+J/0x6nUw
+         TOFoTgyREhfKhHFv2HPA4G4DcAiZi0aEFzMRCqHAuVGkWpCoVwgLCdb07mGYuBgK1Ow3
+         9/ZGQCHEu/sz+rTpyfu83xC1xEqa+qEGONMek47a1GKcxJ2zCm2kavOPd5udYXjvM8KZ
+         TX3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=LX5hmYdSGq+Tl89zMS1RsgzIQfBbZy0yGuyvPD6gODU=;
-        fh=WFkPsRDpuMZHyURrhwDBmEpbvhUrMXDUBI0QfMqAfv0=;
-        b=Z6U3ZTBsyN1VUwgXRx7HZQCvJmP+KqvLunedVfNKRl28O7oo+TQeycuiWuDbHKHOpG
-         gcF5O4ZK6QOcnY751n1ZWyZ1xvAnPp0iBEvhR4WH0E4QYN3jos1K4gWB2QbbLB2mPrN7
-         QlgtR+tpFQKeA11LMi455CJNRH8J5HBG6IuG0VJR6b3kkXyWRJVzGMuwEUN6nb7567Zi
-         XgdnyKE1ufTJuLFnZz6Fpst7uWi4HRMzbGsZeT5zeyvTvBxxcW2V+diXLFQCyvj0bL4x
-         J0M7OUx+PYKi2rX8AKFSoQWOKFVZPtnXkJEFCaE5e44Ah+rFBFTORk6MdCtREmHRqQdL
-         nPnA==;
+        bh=WvKA/G3luKR/3/bcAFBL+Uo03nyYp1P/5vlNBTqgnCw=;
+        fh=cSGVwn10QLXRp3kGTXnKihni6Cg6QS3PuYOJdNrSTv0=;
+        b=XjLC5PzKjMp3YhId/Wb54SWSmsH8+NhrUp0UERhXKS6jOOEIEzj8rrbUz+eLfIYqEy
+         6SvPKBj/MRldo2fYsrbj2YK6QMc9+qRA+Q05w8P/pnyWCFeYYnDBNS7KavMfTcGA+EsR
+         +5gkm3brZVxUYS3EOU8yj1fjF94hVBUHpzq7lppR2tMR2isAHKIQnEmbEvNCCeCMJy1I
+         ZrC4CRg7u2ADSczWDpY34f+54CM7t+6WrTkgc8DuWEK8Iu8Zjg448dem2yIAXuXbxAFB
+         57ABIhq7zhpI2BmcwRVXma9/2WJrCHJRx14chr/rVcNFY2erZka1NfvGugANs6Lxt2qe
+         QFCw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778016264; x=1778621064; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778018175; x=1778622975; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LX5hmYdSGq+Tl89zMS1RsgzIQfBbZy0yGuyvPD6gODU=;
-        b=S+16yXQagvGzex40EZnSYzll3XtKPoNcioRMF8IveStVylcLQvcJjqGD7exE2N4oXT
-         CndI4luYyQtaDPlI3eP1DLuAJkLqE17XKfMl7nsRDujDkaIvr7hNbeqLCEXEct/zR8NF
-         c0CoZO9A8eb9tMay2p5XEIogOGsdIx3yObKst8boFUmvS94xejTD+DDnTj4mjPmPETk8
-         nljLOAzWbwPzdvzgpJC6wLkl/34X5FLpIO6MBxJjEvHHWPYVXS8eS+8SggWiQJvScgrX
-         QL8gqnw1nVE3Whfj9/hQJmAZ8D/6XgUDu8OHta8/MkhVaEf/dcCs+mXMvjbxjR8MwQN3
-         Lluw==
+        bh=WvKA/G3luKR/3/bcAFBL+Uo03nyYp1P/5vlNBTqgnCw=;
+        b=ceGrjKVGXZxZF/iaOdREfPE3QSRy2eDrt5cgRMDqRKP+iHpPgErOawn+FKPo93IuFE
+         8ZXjvI/rQy3H2wUJkw3W5vr1klZ031+Z12vY9BC9OsqWg84YOH6O5uy9s7yz6b/yDaTP
+         by1qr1n8aXu7zng0djJ8/sCl9AxV2KoH6pfMwfXYmM5Mj58CJOJCtmYPn1D519u79qzS
+         D2FSDgFcwT38AkD3Jt8vaKLwoUOPUY0ng/mRUPE4X/XVJ+2aoLNRmuNDoU6ogrQIwgOJ
+         6UC81wp6rV4wLsaDLAMZ5776pYto07b6U26+PiujfFGRMIfII/JR8MlLDTcjmHRCwWDL
+         yDCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778016264; x=1778621064;
+        d=1e100.net; s=20251104; t=1778018175; x=1778622975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=LX5hmYdSGq+Tl89zMS1RsgzIQfBbZy0yGuyvPD6gODU=;
-        b=U7LL5mNm2tqFCTjuEWwTJXz+eKaXFBfPfjHYsnBgTNsKBMWVgoHbnTV3Wv3Kb6J5hi
-         plf0uExli2chq8jK/+9w+aLS2zKa1MVrTLegEQXq2d1UJeDzdHSE/H/wW4WQ2JoupQkW
-         Wl15bQcGAPZkmelegaeZ3TqgspzW+X1q/U4tg3HhAKhIjjDitZjbU8zqTtXKuIuyq+tC
-         OFn6J+w0nL5C7BqYdVKP/ck1yvYOddIxegjyxn4Ft8atPTPnMQG0k1kzb1n8h0srGFBt
-         b4cHxRpi9yrA2E7Ku5uFuinEqmvSrXUGA88sJbVodsvwu5qegV3RkyDJSsWqUj//kOz+
-         JQbg==
-X-Forwarded-Encrypted: i=1; AFNElJ+e+WzvRj5zKIU4hOlJmWpeV1sqremHHD7QSkug7LZ2PRBas/6ds2ip0YXtcIZaLEGmsm7xB7zOWbhzvIrE5dx3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOo5mWbvRkAAwkxkW8uUZbqZMXYViUBaomnrT2f6HxZvtSpFsv
-	k/PSaGHCjfBeXc7HiBR67mpfaelInn0o3BXSV0t+zin1yI7xf8v3C9nji9RXOXCj4j225KtZFj5
-	SC5B+1oOfCp5eu1skAvoiFaol1l9o1F/+y/PVGDte
-X-Gm-Gg: AeBDies1EMA6ELRNHVUxU/62WX4mp/VVpY1t29cBgtHc3EBHKJOyz/zCp/BrMnooUGY
-	wVeB/kLYbSXu12kE772P0L8T8hgMW2hDDj31UBkJGF3Oln6COYZBtnZCikR0IZrt4TWmaBAHy54
-	TQOY+XiFC8/o2m3VvKcN8ro928p+8N4mb3+6LOicaZqtoHXqsut6/snzPbZv/7ON/q/Jdr+EExc
-	sYttWt4nHzLtDNfnkhJNmrn058wRs8kdiXloN5ohE2lMqmqnvdHF2IfpksYIxsj24Xa0UP903+E
-	oO+AILJ6QTterb/JCeY+fnU8hU2UKw==
-X-Received: by 2002:a17:903:1b48:b0:2b4:641a:6b7c with SMTP id
- d9443c01a7336-2ba7cef9053mr368105ad.13.1778016263248; Tue, 05 May 2026
- 14:24:23 -0700 (PDT)
+        bh=WvKA/G3luKR/3/bcAFBL+Uo03nyYp1P/5vlNBTqgnCw=;
+        b=gRTBe/zObj2R5CaV2kmvBqp2xXbeIPnMgoI7jITK4aXw9aPrr8kdGVlogxbF8WNX5G
+         MXot8wmuXlFR3YhPnP0P6LvSa5baWaqRZspB5VFsG3uAFDdgfb+jdVwti5eBU+zIlkgS
+         17DglUABEgbz3vqtYZJ64ta88PWumypHRdBkDrZXgWKeaUqzulW0yiRY0yzgeQAdmDrV
+         dQmt60tHSVjAKijELgq8h0BG8UK6TSdanCssbsPlNgwVZ64YBrlx6J7zzCbbToAVsCM1
+         IqS62lXauYkqZqeZbYQylV1OPgZW0lpNi97HEiGhUVp2Wdad7DBPielG+IoL0fPXYslL
+         ctmw==
+X-Forwarded-Encrypted: i=1; AFNElJ8ctuPTAgLdXt3fVhz+zMayzM0pDR3rjDrpLtGkfxbcHJ52KF8C+t1Rw/zb737EY0zCAWqtfu0k1B659CnC0EmR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOP9MPNSW2aq6hj8iwj4A+BCYbAFa2fpuVIX6YXcZztriSPiWN
+	YkQM2D0C2jPkCn5O6z5Q5bBmSUijCgkp1uB8WCjKVxQPt0Boy160DzZrjo0Bi0KvFZr6R8HI7r8
+	Nv91V+kn8Ubdlb9GkCNnywEoEhj33xSprHo8hW5xH
+X-Gm-Gg: AeBDieshu1UeIpvqEDjdPicfm74UAMofwlBqol4Wmei5/9TfrpqUimKz2eAzIcO61b5
+	pf/v5pwUmjlvIz7b1+Gy/lokMnWIzwlR3aqXneLU8854O2ftAG1IF4E2HxbzU0d9e0cOcvXqCP+
+	tBoo2vLKzPpW3TyIbs3d9H1qd39sx1DQlouIlbSC59Rm/3NY3mgbyY7++6Ec5Oyvs+fnNE8XilT
+	xliLd+uFaSZjbQ3slBk33Uzk5JHHH4JqRVOuK+CM+KVxafdFf2TT4dZKgXZRpBcCDhzWkOXxG0u
+	AULZzbstp1XPh9rcb1eClWOmzunx3g==
+X-Received: by 2002:a17:903:46cf:b0:2ae:575b:2345 with SMTP id
+ d9443c01a7336-2ba7cee15e2mr575165ad.9.1778018174219; Tue, 05 May 2026
+ 14:56:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <acyWR2GAWIY7TKyD@google.com> <20260430161725.3131665-1-irogers@google.com>
-In-Reply-To: <20260430161725.3131665-1-irogers@google.com>
+References: <20260321061448.810525-1-irogers@google.com> <acW_IHQVZnxIETdd@google.com>
+ <CAP-5=fWh66OwPC0K4ZyedAWqwyXez0ya9Dz6hzbgY0AhoqMfdg@mail.gmail.com>
+ <ac8pEDUKjuMxXUS6@google.com> <CAP-5=fXeBje03BM8D9q-0KsXg2KmyRa81CuphtSQfHp0isFc_w@mail.gmail.com>
+ <adPzEmwDaHq4SsZw@google.com>
+In-Reply-To: <adPzEmwDaHq4SsZw@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 5 May 2026 14:24:11 -0700
-X-Gm-Features: AVHnY4KT74T-6jD_3Vt4mmwC7DOrPEUJ8X1JHf5fGBNz3Y8EJ0nJcXa98IisLQM
-Message-ID: <CAP-5=fU8H=aApHk8vS-scEKXR9t=oSiJ19UiiOr_M27MtCyv1w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf metricgroup: Avoid scanning unnecessary PMUs for
- identifier match
-To: namhyung@kernel.org, acme@kernel.org, james.clark@linaro.org
-Cc: adrian.hunter@intel.com, leo.yan@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	thomas.falcon@intel.com
+Date: Tue, 5 May 2026 14:56:02 -0700
+X-Gm-Features: AVHnY4LII5jgRRc27QRyhGFkP8ME7OPHLC8sU-Q3XpYlIzyqYOg69wCYmjBV1Uc
+Message-ID: <CAP-5=fW-H-ri3MdVv4Vh4xiyB-qpDqnO3gqXR+XyfMK+kXpHQA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf sched: Avoid segv if tp_handler not set
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 30, 2026 at 9:17=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Mon, Apr 6, 2026 at 10:53=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Only uncore PMUs can have an identifier, so add an optimized
-> perf_pmus__scan routine for that case to avoid all PMU types being
-> created.
+> On Fri, Apr 03, 2026 at 08:29:25AM -0700, Ian Rogers wrote:
+> > On Thu, Apr 2, 2026 at 7:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > On Tue, Mar 31, 2026 at 10:59:52PM -0700, Ian Rogers wrote:
+> > > > On Thu, Mar 26, 2026 at 4:20=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Fri, Mar 20, 2026 at 11:14:47PM -0700, Ian Rogers wrote:
+> > > > > > Doing a `perf sched record` then `perf sched stats report` cras=
+hes as
+> > > > > > the tp_handler isn't set. Add extra checks that tp_handler is s=
+et
+> > > > > > before accessing through it.
+> > > > >
+> > > > > Oh.. unintended use case. :)  Probably better to add a dummy hand=
+ler
+> > > > > for `perf sched stats report`.
+> > > >
+> > > > Perhaps. I'd prefer to land the simpler change as-is.
+> > >
+> > > Well.. I guess the dummy handler approach would be simpler and perfor=
+m
+> > > better. :)
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > >
+> > > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > > index d083e2bb770303a4..9fb5447f9014d026 100644
+> > > --- a/tools/perf/builtin-sched.c
+> > > +++ b/tools/perf/builtin-sched.c
+> > > @@ -4955,6 +4955,7 @@ int cmd_sched(int argc, const char **argv)
+> > >                 .switch_event       =3D replay_switch_event,
+> > >                 .fork_event         =3D replay_fork_event,
+> > >         };
+> > > +       struct trace_sched_handler stats_ops  =3D {};
+> >
+> > Oh, because there's an existing null test on the function pointer we
+> > don't need dummy functions, which is what I thought you were asking
+> > for. I'm still not convinced this is very intention revealing, but if
+> > it works for you then you can have my reviewed-by tag.
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Applied this and the patch 2 to perf-tools-next, thanks!
 
-This passes Sashiko review (green). I didn't copy James Clark's
-reviewed-by tag given the metricgroup code rewrite to avoid the loop,
-but I think this is ready to land.
+Thanks Namhyung. Did this get accidentally dropped? I'm not seeing it
+in perf-tools-next.
 
-Thanks,
 Ian
 
-> ---
->  tools/perf/util/metricgroup.c | 11 +++--------
->  tools/perf/util/pmus.c        | 18 +++++++++++++++++-
->  tools/perf/util/pmus.h        |  1 +
->  3 files changed, 21 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 4db9578efd81..5a489e97c413 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -415,14 +415,9 @@ static int metricgroup__sys_event_iter(const struct =
-pmu_metric *pm,
->         if (!pm->metric_expr || !pm->compat)
->                 return 0;
->
-> -       while ((pmu =3D perf_pmus__scan(pmu))) {
-> -
-> -               if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, =
-pmu->id))
-> -                       continue;
-> -
-> -               return d->fn(pm, table, d->data);
-> -       }
-> -       return 0;
-> +       /* Only process with the iterator if there is a a PMU that matche=
-s the ID. */
-> +       pmu =3D perf_pmus__scan_for_uncore_id(pmu, pm->compat);
-> +       return pmu ? d->fn(pm, table, d->data) : 0;
->  }
->
->  int metricgroup__for_each_metric(const struct pmu_metrics_table *table, =
-pmu_metric_iter_fn fn,
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 9a2023ceeefd..5e3f571450fe 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(st=
-ruct perf_pmu *pmu, const c
->         if (!pmu) {
->                 /*
->                  * Core PMUs, other sysfs PMUs and tool PMU can have any =
-name or
-> -                * aren't wother optimizing for.
-> +                * aren't worth optimizing for.
->                  */
->                 unsigned int to_read_pmus =3D  PERF_TOOL_PMU_TYPE_PE_CORE=
-_MASK |
->                         PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-> @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplica=
-tes(struct perf_pmu *pmu)
->         return NULL;
->  }
->
-> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, con=
-st char *compat)
-> +{
-> +       if (!pmu) {
-> +               /* Only uncore PMUs can have identifiers. */
-> +               unsigned int to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_OTHER=
-_MASK;
-> +
-> +               pmu_read_sysfs(to_read_pmus);
-> +               pmu =3D list_prepare_entry(pmu, &other_pmus, list);
-> +       }
-> +       list_for_each_entry_continue(pmu, &other_pmus, list) {
-> +               if (pmu->id && pmu_uncore_identifier_match(compat, pmu->i=
-d))
-> +                       return pmu;
-> +       }
-> +       return NULL;
-> +}
-> +
->  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
->  {
->         struct perf_pmu *pmu =3D NULL;
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index 7cb36863711a..0d55edb3f2fc 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
->  struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
->  struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const c=
-har *event);
->  struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu,=
- const char *wildcard);
-> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, con=
-st char *compat);
->
->  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
->
-> --
-> 2.54.0.545.g6539524ca2-goog
+> Best regards,
+> Namhyung
 >
