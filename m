@@ -1,171 +1,132 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8315A3E51E4
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 09:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E013F7888
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 10:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778058726; cv=none; b=GWEjMzBNYzmq5VJKmfU+J1Jm8a3lLxtr0neeuyoiG6OpH9SLBzMIbSA4+/jT+BfyqlbwPBPuMhbPEx7JsVw8/HfUXpFBfvQxfRmYdITizeyAtGvsbS8FCQfcRohWLEi60lji6T419XtNG+Aud/OLPAsTH/stblWNbELiZY66MhQ=
+	t=1778064186; cv=none; b=QGZ0Ky/Fl+oWcgbYdq9gJt46aS4xja/k1dXgpoR29YnMlYhT1le5YzR/r0siNdn/LfLVe1tNpmR+ROQ6ctyPlX7M35+x/LjwLT7Ds+gfe2J2oSFMM0E9Z4UfmwBp0cmPAKwj3SzJXWjIfNY49g9JIBgLv0CIOYd7kGWW000piXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778058726; c=relaxed/simple;
-	bh=S6CyaflhVu+7b07zQv386pkZjsmEYcwyz/yevIup+Rs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T8dL7xhiYICZs/wKxVyCBirQym0VxAwmJFkiKisPl/XAoGmEZxLKHcrZ1XyWuiDZ2o6RK77LVFg33tVNiULHyW4dSl1WwzNBzKGTTxXXlItYVEKViz8W4VVAN/AltF7npqn2SOX1RHzD6MClTwiVwkWILf/lh7Zuu7DhK99YUpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zBOBOz7X; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778064186; c=relaxed/simple;
+	bh=ShCLg5t291+uhQQKA+r9zPDdtb4zC6gKHL6Br5Gf6/o=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Cg0reFCC1BMdAcg/WQHALXBUShxc3TlzYxWp4lgIvB5W+LOqiHrnz5ODJfK8ZT/c1T+cFEsJVeT3BClZQGxtkYjZNIa0nnuv4Y2hQ9F6Kz9MmEOZnXCRDly2FdzxfL6VU1esaGUpl1pMtRvHEJ7wqcHKtwV/s4ekOqEqzNlWonc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exReD/og; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zBOBOz7X"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-488ab2db91aso72743745e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 May 2026 02:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778058723; x=1778663523; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ILI/pwZTzIpkG8gF/uYw57HiIJriPB+qcuONqdjgJMk=;
-        b=zBOBOz7XAbF9gl8SQ9gjp5Sxi3DhRDG1lh4SSGspby/gJRXhHPeZPVw+L7FLp4IZbz
-         /rsh6RqCD98nXtrvQQDIakimvZODQjzejlThaMXCkClUs1ZzQSKSgxl1hHhRUOfp6lDd
-         1E1cUoiCsQXRbadtUTN0wJCxQv/Zp6SsKibP6I3xeeOSp475qFXjgHZZY4kJ1tPPJA3r
-         veRxF4g8YA3Oeey6SAdVlrclLpNnpk/dYRfpDwqLlesaPmDYJuGJBcelO/bxmUzWlqXg
-         WmxG7sNXXXExtYfSQ8pBs/DC7EonDbN6PmOTlCbmUqRe5swjA4s0MOM6c/9hi9TyGqs9
-         jZTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778058723; x=1778663523;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ILI/pwZTzIpkG8gF/uYw57HiIJriPB+qcuONqdjgJMk=;
-        b=OprmMoRSQMqQiOHgomK3xSRyQCyRmziuCaH999SMqZQogl5LSWgaOyclFRFJIBzLmi
-         koeP1HGAbezlyrXZ7Zy8MqE9/eVlQjBTZGmjcxPSGWZtGOkwqBdVclqTMhdbaQlHIq9V
-         fV7afFtChy19mSRJk9lguZAsyfcGttdtmvtPRCaL+4ivMRC3LmULXVKNRhpSrxBhz7J4
-         ZSCnM3nvTfNUXCG1pufRbA1j+HF8FEE5i9Rf4drBWpUhDQU89kC4TR+OWZEBiPPExUjx
-         YmeEChDBfQFs8ttJ5BdxqDksaYJc3N59RqaG4OoPeDS7txavk2VihtTC9SvZRyVd5poG
-         Cdbw==
-X-Forwarded-Encrypted: i=1; AFNElJ8RhzBvrxk6yAHdn0KwhLWcM4IBrpokbXV3j+OFegI0sLLIk0F5xCQbflue0fJGwP4W1hYCC9rdwisP7Cjgx7lM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbXA69m3BR4M9o5DKh9T/feDUPEnHCTpRHXPGQBvrKuwXB4W0S
-	CqO+AtG8hSQOVsGGwJxZzUAGTwKqKilqfLaNgD5W5uPlJ1jbs2XnEe2WP1uFpVXvASw=
-X-Gm-Gg: AeBDietT3MtZ6nsckuxr0KyBoR9yIlt8LLslLy5VIx1YBszpggVBqk2p03eQ3NqFLbT
-	4F2U1xnVqSn5uAAIDRdbYsdKJz31/BOsqSoXWsRqonKaCrn2sAeXiNrA9JOO8jNTLjPS6VUkfY+
-	SVYs9ZMB86oIPqAbTFZhoxHnsdhTRikyeKRL+7zLpbE1DI+YTvDr2KzjFH6vTWowyI7EfvDd1UR
-	qfwcrt7UuBmEBuBBjCaI8Zlc5zaAwUk9oZbPTin06N+pyw06FcOj0KvdheArqYmsEgyna1HFYN3
-	PiOKDjD5ViOAa4vQnX8ca2gVsGBTwEJMfPw1qKxXd0pLvVG0nBplBEIrBdFwLc8jvYEYVH0gXHR
-	YTeCzUyPaynLXUNl3tMUKhi2rNu/zPaVtTH6ivtzm0v9OJLMMRRtEtgCLj0O72/Rc9KrsBC/DsW
-	lUnq8+lykqp5ZZDRoqRQp4JpJk3NoX28kVXiV1Qaxq5hLP+CbC6g==
-X-Received: by 2002:a05:600c:a305:b0:48a:5970:2005 with SMTP id 5b1f17b1804b1-48e51e08362mr29787585e9.2.1778058722965;
-        Wed, 06 May 2026 02:12:02 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5382a327sm61200995e9.0.2026.05.06.02.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2026 02:12:02 -0700 (PDT)
-Message-ID: <8c5343a3-a110-420b-9b61-3e4dd0e3c902@linaro.org>
-Date: Wed, 6 May 2026 10:12:01 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exReD/og"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D54DC2BCB8;
+	Wed,  6 May 2026 10:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778064186;
+	bh=ShCLg5t291+uhQQKA+r9zPDdtb4zC6gKHL6Br5Gf6/o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=exReD/ogrbrOhzfjJ85mUqHmXFBWJc7hK5PH7pxOGHiIvSfj4XgSTGEoApzezsXs4
+	 x+fkrO9vlGMPLdV1ybBkVW/yRriqCGg74y+JhaZQiv5j1snZXxhjujbCFNpoXv5WDJ
+	 XZZfxDJdqO0qLhzs67bwqeSzt4dsgsXSlvh06U4bTj2YgiFKW+K6jZjgDMqg2kiFwt
+	 3/6LZd9aY0k+rBokAdvVIkCORDd/yBDcdMhbTY0AuHGSnly1Ba1Z1VE3ORSYZjEfGy
+	 0wlTWGJExfbuxgoQDsvQO1DTmL9Mv6DvvvNmmBFxhTgfHuOV0/U1U+BMT0r2tFp4qd
+	 MjCVtW9GH91VA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf: Extract is_mapping_symbol() helper for kernel
+ mapping symbol filtering
+Reply-To: sashiko@lists.linux.dev
+To: "Rui Qi" <qirui.001@bytedance.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260506073820.2419087-1-qirui.001@bytedance.com>
+References: <20260506073820.2419087-1-qirui.001@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 06 May 2026 10:43:04 +0000
+Message-Id: <20260506104305.2D54DC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf metricgroup: Avoid scanning unnecessary PMUs for
- identifier match
-To: Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, leo.yan@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
- thomas.falcon@intel.com, namhyung@kernel.org, acme@kernel.org
-References: <acyWR2GAWIY7TKyD@google.com>
- <20260430161725.3131665-1-irogers@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260430161725.3131665-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Asymmetric mapping symbol filtering leads to map/symbol deletion d=
+uring ksymbol unregistration.
+- [Medium] Incomplete refactoring leaves ELF mapping symbol logic fragile a=
+nd inconsistent.
+--
 
+commit f27956b5bf680b8ef41ba119f6dc5cedae4567f5
+Author: Rui Qi <qirui.001@bytedance.com>
 
-On 30/04/2026 5:17 pm, Ian Rogers wrote:
-> Only uncore PMUs can have an identifier, so add an optimized
-> perf_pmus__scan routine for that case to avoid all PMU types being
-> created.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/metricgroup.c | 11 +++--------
->   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
->   tools/perf/util/pmus.h        |  1 +
->   3 files changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 4db9578efd81..5a489e97c413 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -415,14 +415,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
->   	if (!pm->metric_expr || !pm->compat)
->   		return 0;
->   
-> -	while ((pmu = perf_pmus__scan(pmu))) {
-> -
-> -		if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
-> -			continue;
-> -
-> -		return d->fn(pm, table, d->data);
-> -	}
-> -	return 0;
-> +	/* Only process with the iterator if there is a a PMU that matches the ID. */
-> +	pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat);
-> +	return pmu ? d->fn(pm, table, d->data) : 0;
->   }
->   
->   int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 9a2023ceeefd..5e3f571450fe 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
->   	if (!pmu) {
->   		/*
->   		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
-> -		 * aren't wother optimizing for.
-> +		 * aren't worth optimizing for.
->   		 */
->   		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
->   			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
-> @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
->   	return NULL;
->   }
->   
-> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
-> +{
-> +	if (!pmu) {
-> +		/* Only uncore PMUs can have identifiers. */
-> +		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
-> +
-> +		pmu_read_sysfs(to_read_pmus);
-> +		pmu = list_prepare_entry(pmu, &other_pmus, list);
-> +	}
-> +	list_for_each_entry_continue(pmu, &other_pmus, list) {
-> +		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
-> +			return pmu;
-> +	}
-> +	return NULL;
-> +}
-> +
->   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
->   {
->   	struct perf_pmu *pmu = NULL;
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index 7cb36863711a..0d55edb3f2fc 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
->   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
->   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
->   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
-> +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
->   
->   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
->   
+perf: Extract is_mapping_symbol() helper for kernel mapping symbol filtering
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+This patch introduces an is_mapping_symbol() inline helper to consolidate
+logic for filtering out ELF mapping symbols across architectures. It also
+adds the helper to machine__process_ksymbol_register() and
+map__process_kallsym_symbol().
 
+> The perf tool currently has ad-hoc logic to filter out ELF mapping
+> symbols scattered across multiple files and architectures.  ARM,
+> AArch64 and RISC-V each have their own inline checks in
+> dso__load_sym_internal(), and kallsym processing in map__process_kallsym_=
+symbol()
+> has yet another check for ARM module symbols.
+>=20
+> This is fragile: adding support for a new architecture or adjusting
+> which prefixes are considered mapping symbols requires touching
+> multiple places, and it is easy for the checks to diverge.  It also
+> does not match the kernel's own is_mapping_symbol() logic, which
+> additionally covers x86 local symbols ('.L*' and 'L0*').
+
+This commit message claims to convert dso__load_sym_internal() to use the
+new helper. However, this patch does not modify dso__load_sym_internal()
+in tools/perf/util/symbol-elf.c at all, leaving the scattered inline checks
+untouched.
+
+Because x86 local symbols (.L*) were added to the new helper, does this
+omission introduce a new inconsistency where kallsyms parsing will correctly
+filter x86 .L* symbols, but kernel module parsing via ELF (.ko) will not?
+
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index e76f8c86e62a6..e0dcf8bfb896e 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -729,9 +729,15 @@ static int machine__process_ksymbol_register(struct =
+machine *machine,
+>  {
+>  	struct symbol *sym;
+>  	struct dso *dso =3D NULL;
+> -	struct map *map =3D maps__find(machine__kernel_maps(machine), event->ks=
+ymbol.addr);
+> +	struct map *map;
+>  	int err =3D 0;
+> =20
+> +	/* Ignore mapping symbols in ksymbol events - check early before any st=
+ate mutation */
+> +	if (is_mapping_symbol(event->ksymbol.name))
+> +		return 0;
+
+If a PERF_RECORD_KSYMBOL event arrives with the UNREGISTER flag,
+machine__process_ksymbol() routes it to machine__process_ksymbol_unregister=
+().
+
+Because machine__process_ksymbol_unregister() does not have the same
+is_mapping_symbol() filter, could maps__find() return the enclosing map
+(such as the BPF JIT map or a loaded kernel module's map) that covers the
+mapping symbol's address?
+
+tools/perf/util/machine.c:machine__process_ksymbol_unregister() {
+...
+	map =3D maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+	if (!map)
+		return 0;
+
+	if (!RC_CHK_EQUAL(map, machine->vmlinux_map))
+		maps__remove(machine__kernel_maps(machine), map);
+...
+}
+
+If so, will the unregister path incorrectly call maps__remove() on that
+parent map, prematurely destroying legitimate tracking state and breaking
+symbol resolution for subsequent samples in that memory region?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260506073820.2419=
+087-1-qirui.001@bytedance.com?part=3D1
