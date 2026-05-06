@@ -1,66 +1,65 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5DB17A31E
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 00:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A1921A434
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 00:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778028359; cv=none; b=DvhQV81Qsywakf+vlwojYxMRuPg2H4HYfFHAaALcvSp4cqCy9k03jC19yRgED6VgHC9fDRmDNsgp+X3f9Y6B6lOXwCFnfOkYl4sRLsUgUvjQuURzN3SmxqZ1YU7GjbEEL4nP+6Zrv/WvXIMKJGO8ZJlV6NAwtonWBr8YhKfIhKE=
+	t=1778028360; cv=none; b=SjPw1qJrcccqQ2ww2rFPlt3MAVmlLdgGnzNTzkJjewgClxy7TTdbz1jtZwYmUL8Lx17gVXGAS0Yg35auHYVwaBVSeGtYLWcqi2jIJI2Z899QJLDXXR/YXEJUmbUIqeDS/2462vOhweQVS9uLMVtSiz4HXZMFXVVEGocgB4jbVSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778028359; c=relaxed/simple;
-	bh=0KPI4hvXbu1xEMK7ccRV58LtQ26TzpwBKLo0sG6R1ss=;
+	s=arc-20240116; t=1778028360; c=relaxed/simple;
+	bh=c9ejlYjPiFjsPhz/yehQpWJw1IyWFFw1CL0F74SsqP4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gyhjQGQc7kibJePC+dHYovTQsSsnvihy4L0oQ3csCogwVgFap4vzXu2Fc/c+rhIDjRyrTQIuUJ0r1CSAyT5rzb3KXFAQTBfz/TO7HrwoadCKRwdRlgSt1W8AiR12zRTICp2x5dnIOpMMJLw/jdoDpioas1fOwaqOu8mYJ9Q8uko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MHGYTsSH; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=QII23IvDQz0gycJK6OxIpeI+1L1+VD1ZqTDzIezCOzj9f4tGITapkW7eTmQCc5pQh1WkgJ7TVrH3EfVIhA4h7tp7kHjHUGCs0FCR8BAHYseM897mDUhv5b1imqLbuD/61zJa71DieTXqdYuRNP1f78NcIRMb73nzrDVqU3hhpOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b28r90HH; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MHGYTsSH"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-131371497a1so3745430c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 May 2026 17:45:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b28r90HH"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12dece274b1so7992653c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 May 2026 17:45:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778028357; x=1778633157; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778028359; x=1778633159; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JErR3lDOrpASLTyYbfw63GCeu20aTZI/VsDc1Aajn6E=;
-        b=MHGYTsSHa/MyGAFmLfj61z3RCyzwQh2Im9j2BRJULPahIqarmZqH1i29gw5QTcD2lb
-         bJEtvhKeo2pTHIxzSTqJMVd0jt67P/PjmZbgUjim/HW+80dMEybJspQAXM/E6TuGGolW
-         Ui/bGz0irsUupTjomaNTaAShbPqLMHqNqkPNxAnhDPYSLMxEjFh6bYevhZEvN21gzF4l
-         cwLxFJJnkzikKiLYXdsYiVv39drfXrGjrOl6u9rGFku601WoRcTusmJydKvcAAIdVSzh
-         PFjwTJOTdVgbgkhSNbBOAh5hPVAdAXnwK3Q281RPsQySXC9rk83LAdJnE3wVG405xSTb
-         keXQ==
+        bh=Vkt4oU+hEVEUN5xjbaGhASHDDjx1y3R0jVDB1yo0F0U=;
+        b=b28r90HHVBPJVxhM9ShzY05Z0qsNsFCFehWaCgnNHn7SdcqZBSj59A65HZgukQNSnR
+         VG40RACZxVwYXt9C4958cCU0xdsfy2nl+sxnuX9e7133RqSOYseExyrZ4u4qV2EAgrtN
+         zng99nHfIFk4DjZq6bFr8IxBe8w1QiJJXYP+u5P2aDGQxCyDdH0/xFbyAnQZfFAyarcC
+         +vLJpNjK4auTs0ZRV3KhBS/QU1R4x3XRPaOZLLjPAMncxQdpqX4D6ZvZeq1nWOZNYyMA
+         x4KrF9qmfm/CxSzxU+KhvjrEtYXbp5oSpN+BBk2R/35dmMqM197+GNZRd/Q+Sf0nmIXz
+         npog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778028357; x=1778633157;
+        d=1e100.net; s=20251104; t=1778028359; x=1778633159;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JErR3lDOrpASLTyYbfw63GCeu20aTZI/VsDc1Aajn6E=;
-        b=fxJy5pDTTMuhApW71/P8lVOETLJ15przjsoJFPH/j+ePQ2KGXq6OKWrdIPUHFGWVGb
-         Cb1UPJGWhxbVoecUCys+uKZ+HRKphiszM5FETk4o4HQpXRDbFWGrYYXray1uMAlwFjn6
-         87asD0lE2VDJZv+bX86Jbj6Opn9rxQrhWEy8363zbEwLqN3gLqnrKrWNR+MNqu0SF/ot
-         lVXZIPLY9L3uzDyyPW0Y2kQevt6JGPIavrEqZqVQdcvk0WvCGVhOJwhZs8PQhozBPHtH
-         YInUP+gFACwGk4w1bYUH0ofQo3kHIdKkH8x/EYWvM9hM5p7d2kTirDri8+O5n6eFmlx9
-         oQUQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9pVBtaMV1l5GJ1melqdeY+hRC95oLwxEtQCdkR3VCORXzucD5DVrSMOOthCLXWNqqyHct9fhcngcdg+5cE0gwR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMejRjp2XYS0ROcL+LS77PXEiEZoRg/dcxyVnVPmL9WuLD8fC/
-	nkuaUiiXRDmhKnUycrlzPeRnpvv/gMLApDO4wcPbqBj8goSbrb995f5Fstkrbe65E8X7IKA7+w0
-	fXJCcDww45g==
-X-Received: from dlbep12.prod.google.com ([2002:a05:7022:108c:b0:12d:c585:f600])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3d05:b0:11b:ec5f:1c37
- with SMTP id a92af1059eb24-1318e914d3dmr803839c88.18.1778028356454; Tue, 05
- May 2026 17:45:56 -0700 (PDT)
-Date: Tue,  5 May 2026 17:45:41 -0700
-In-Reply-To: <20260504072937.2103453-1-irogers@google.com>
+        bh=Vkt4oU+hEVEUN5xjbaGhASHDDjx1y3R0jVDB1yo0F0U=;
+        b=YJzyQWaD0m+4KQmfzl4150HI3CY3ZYaCgs3G4SEkj7ImX7enKKWhQ0xctfyHpkWU/R
+         6q6xn15uAGCd7uw8ADeDLjRuoptRa9zEt5aHDOWDJekhlJF1fEvVG/VYYXJWwCyPQWji
+         idQavzNOPoCDPupWi/eyBtdgZqiAG2wTloUusQbMnZTH5ZCXAz9khwb95JwqzeJKfEzD
+         +vVDo04com23gJGUMa8VTgXW5769iFgRrUQul+eiikJLH3EERduH7T0oAef7YlyvN+kv
+         7CZXIatm6kOcQD3NfGsQxh292MQVLamaaAsEa1VJ9WtlRdtiYHNEzAyS/9Ys+y+f51Iy
+         3FpQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8L4UvkPG/cvqSCZr/MQz1xC8nXGRdQhLeS6EOIbi3EqRMUagCjhfhN107GbTh5W76poxa9FVv03ZKje1A0peD0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuhV4hDVVm27HtFiItxz8y2N/wJ4hwn2+dbfmG+EhGN2kBZ60d
+	4LymhRZBGphWl7mO/7W/7iQoLV4HGk2IqjJ/LM8M2JxvsfgyFZ0pJDt/a1pfi1j9nLvpYK5gsUc
+	m0f+6cYboDw==
+X-Received: from dlbrs9.prod.google.com ([2002:a05:7022:f689:b0:12b:fba9:5eb0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f005:b0:128:d967:4678
+ with SMTP id a92af1059eb24-1318e812013mr719263c88.23.1778028358417; Tue, 05
+ May 2026 17:45:58 -0700 (PDT)
+Date: Tue,  5 May 2026 17:45:42 -0700
+In-Reply-To: <20260506004546.3140141-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260504072937.2103453-1-irogers@google.com>
+References: <20260504072937.2103453-1-irogers@google.com> <20260506004546.3140141-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260506004546.3140141-1-irogers@google.com>
-Subject: [PATCH v5 0/5] perf tools: Add inject --aslr feature and prerequisite
- robustness fixes
+Message-ID: <20260506004546.3140141-2-irogers@google.com>
+Subject: [PATCH v5 1/5] perf sched: Add missing mmap2 handler in timehist
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, gmx@google.com, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -68,99 +67,38 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series introduces the new 'perf inject --aslr' feature to remap
-virtual memory addresses or drop physical memory event leaks when profile
-record data is shared between machines. Bundled with this feature are three
-independent, critical bug fixes inside core event dispatching and map tracking
-tools that harden perf session analysis against dynamic crashes and callchain
-mapping failures.
+perf_sched__timehist() registers event handlers for options using the
+sched->tool struct. It registers handlers for MMAP, COMM, EXIT, FORK, etc.
+but completely omits registering a handler for MMAP2 events.
 
-Core Feature: 'perf inject --aslr' (Patches 4 and 5)
+Failing to register both MMAP and MMAP2 handlers causes modern systems
+(which primarily output MMAP2 records) to silently drop VMA map mappings.
+This results in uninitialized machine/thread mapping structures, making it
+impossible to resolve shared library instruction pointers (IPs) to dynamic
+symbols/DSOs during timehist callchain analysis.
 
-Transferring perf.data files across environments introduces a potential leak
-of virtual address footprints, weakening Address Space Layout Randomization
-(ASLR) on the originating machine. To mitigate this, we introduce the --aslr
-flag into perf inject. Unknown or unhandled events are dropped conservatively,
-while handled samples and branch loops undergo systematic virtual memory offset
-obfuscation.
+Fix this by correctly registering perf_event__process_mmap2 in
+sched->tool inside perf_sched__timehist().
 
-The ASLR tracking tool virtualizes process and machine namespaces using
-'struct machines' to safely isolate host mappings from unprivileged KVM guest
-address spaces. Memory space layouts are tracked globally per process context to
-ensure linear, continuous space allocations across successive mapping runs.
+Assisted-by: Gemini-CLI:Google Gemini 3
+Fixes: 5bbfec0ad93c ("perf sched: Implement timehist option")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-To remain strictly conservative and guarantee security, the tool scrubs
-breakpoint addresses (bp_addr) from all synthesized stream headers, and drops
-unsupported complex payloads (such as user register stacks, raw tracepoints,
-and hardware AUX tracing frames) to completely eliminate accidental address
-leakage vectors.
-
-Verification is reinforced in Patch 5 with a comprehensive POSIX shell
-suite ('inject_aslr.sh'), hardened against SIGPIPE signal exits with stream
-consuming awk loops and robust 'set -o pipefail' assertions. The suite includes
-a dedicated scenario validating raw 'perf inject -o -' pipe stdout generation
-attribute stability.
-
-Prerequisite Bug Fixes (Patches 1, 2, and 3)
-
-During development, three core event delegation and map indexing issues were
-identified and resolved to prevent crashes and data-loss during analysis:
-
-1. perf sched: 'timehist' registers standard MMAP, COMM, EXIT, and FORK stubs,
-   but completely omitted registering MMAP2 callbacks. Because modern environments
-   output maps primarily via MMAP2 frames, this caused timehist sessions to silently
-   drop shared library mappings, causing dynamic callchain symbol resolutions to
-   fail. Patch 1 corrects this by properly registering perf_event__process_mmap2.
-
-2. perf tool: Patch 2 fixes missing copies of schedstat callbacks inside delegated
-   wrapper tools (which caused segfaults on NULL stubs) and properly initializes/copies
-   the 'dont_split_sample_group' grouping parameters to prevent stack garbage from 
-   triggering silent non-leader events drops during split deliver streams.
-
-3. perf symbols: Patch 3 resolves a deep structural map tracking desynchronization bug
-   inside symbol-elf.c by re-engineering the map removal sequence order to run
-   strictly BEFORE in-place virtual address mutations, preventing absolute binary
-   searches (bsearch) from failing on misaligned cache array slots.
-
-Changes since v4:
-- Core Bug Fix: Introduce a new prerequisite standalone fix patch (Patch 3) that
-  re-engineers map tracking removal sequence order inside symbol-elf.c to prevent
-  corrupting binary search index arrays during in-place address mutations.
-- Feature Core: Refactor aslr_tool__delete to cleanly clear host/guest maps and
-  structures via machines__destroy_kernel_maps() to cure all destructor leaks.
-- Feature Core: Integrate the 'first_kernel_mapping' state guard to protect
-  kernel module file offsets (pgoff) from corruption, preventing dynamic
-  symbolization resolutions dropouts.
-- Feature Integration: Move breakpoint address (bp_addr) cleaning to the core
-  session memory initialization startup level, natively securing both files and
-  pipes while completely stripping away redundant runtime wrapper layers.
-- Validation Suite: Harden grep-v filters with || true operators to protect pipelines
-  from crashing under set -o pipefail on empty inputs.
-- Style: Prune out and streamline commit log text clutter into concise high-level
-  architectural summary overviews.
-
-Ian Rogers (5):
-  perf sched: Add missing mmap2 handler in timehist
-  perf tool: Fix missing schedstat delegates and dont_split_sample_group
-    in delegate_tool
-  perf symbols: Fix map removal sequence inside
-    dso__process_kernel_symbol()
-  perf inject/aslr: Add aslr tool to remap/obfuscate virtual addresses
-  perf test: Add inject ASLR test
-
- tools/perf/builtin-inject.c           |   31 +-
- tools/perf/builtin-sched.c            |    1 +
- tools/perf/tests/shell/inject_aslr.sh |  459 ++++++++++
- tools/perf/util/Build                 |    1 +
- tools/perf/util/aslr.c                | 1220 +++++++++++++++++++++++++
- tools/perf/util/aslr.h                |   10 +
- tools/perf/util/symbol-elf.c          |   21 +-
- tools/perf/util/tool.c                |    6 +
- 8 files changed, 1743 insertions(+), 6 deletions(-)
- create mode 100755 tools/perf/tests/shell/inject_aslr.sh
- create mode 100644 tools/perf/util/aslr.c
- create mode 100644 tools/perf/util/aslr.h
-
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 555247568e7a..241c2f808f7b 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3299,6 +3299,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	 */
+ 	sched->tool.sample	 = perf_timehist__process_sample;
+ 	sched->tool.mmap	 = perf_event__process_mmap;
++	sched->tool.mmap2	 = perf_event__process_mmap2;
+ 	sched->tool.comm	 = perf_event__process_comm;
+ 	sched->tool.exit	 = perf_event__process_exit;
+ 	sched->tool.fork	 = perf_event__process_fork;
 -- 
 2.54.0.545.g6539524ca2-goog
 
