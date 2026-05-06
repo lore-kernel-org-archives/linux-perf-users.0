@@ -1,168 +1,1504 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70464BC018
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 17:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778087556; cv=pass; b=TKQ20W+7nHel+BdGO6rHSfe6rRqIVbYMhWnusUHVmCjJZAo28OXGErLHDiBRGpSMcUjuKpBzdkoZH67EZ7Tm+EzSROF7dfHajaxkaVk+SVHQUznOcNWKu9exN4Dc9CYchRARVJjo/P55913YInWcricvmnbBH+g3yn/Im6TQIKA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778087556; c=relaxed/simple;
-	bh=17IZaLORx4Vx9au5q6osCbPBFXBcBs4/XURatHyIo7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S8GXO49NZOI7ZmeHknMe6KKlQym8d6pkRKPCicWkdYj+PsfrfGBDGmyhHBwbQ3k7YjRL3hLbD0/X8vREOsNnVrLyI69zrvc2lW3SZFhj7rJNPd7EoOrb8eg/vGwYg6YCNPyBxl2x+428VrCYQkaa2LmRW2ItJhrMstSC0MA6Ig4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pT2IRC2e; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724154B8DC8;
+	Wed,  6 May 2026 18:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778093535; cv=none; b=jNNQ7OpQkJ561cVm9par2DGvLVhU7WuoRP3keRZuzT0jdS7t8WCSL6GWafzPUvC8jJeBWk+Yo5qbYZZHuKJSCb4jDEQA2nnrEFTLJQpNI3qm5e6Mod0kqNm7G5lZB8vsl3GsOEWrMU1yW8d7aMDYIbJ4NzjJ/3DRW+ZjyuEYHSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778093535; c=relaxed/simple;
+	bh=+3zxsig4ToWjZihIlGFmY/JD2Ei8ajpw9xxTcN5otIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WAYQGwxgDA9rfSw+vjMUTRnSBmKIrf0b+9i/bXsDKNxLgl9IIEx8uDUnx0w+4cLYwu6tkEWKFQpcWFw4Mc5A3+/tY3lKudiOVi50PafjiNJm5NOK0H2eUHhL0TDJs88b4F2lAzCwUkjyceXb+jHucyKgIaZCtcXsMnqHrcWk42c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhoAr9ys; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pT2IRC2e"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ba180a022dso124975ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 May 2026 10:12:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778087540; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eEdoK3jOEuBQLsF+UiWYC3LfzPTVgdzLLttCeWI7Ms0enGBS3n/WNldXXKr0Zo0K8K
-         9WBgHyQFoREa2ta6pgCUC4Yn/aAh0yHb2qfmC9HBjvcyZTndECrEixSDqqOMqBTxh6Xn
-         ICOUolXn/dGBbUKBO439dCNnlqo+nAIKhq06USPXN16NUKaLU9tAxFYuc4hBr8kO+b+8
-         L5eTay8MelhaxPNIgjLEvkE/Ozwp1ARSGXadsg4N6gZ3Sve6WwAlg6QBzok+whXH+dst
-         ov4ukMVaBSI6w1Qs53KeLF6MY4sNlXijo8VWMxm+ElXDlFJkixkwvZ7UIwwwx4reCIMr
-         Q/cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
-        fh=kXUt0O1iu1bXFrGzJOJq+kDx+GjqiOLX16IwRRUWkos=;
-        b=hXcFLmBtspVsicnWSFcuWzbfSrkrufJyYIf3qUoBlEGHf3RpX8waZj6Kj9L9+pVYGu
-         0OhSegRwGEKZ2OaMNROQmmBCM1Pzsjr6k6CdgiucvkuBdMpB2T/l+oAntOZMG8arFCGu
-         STPIyqz1FQGxIoMVjzeXErNj+ahDKnyVgv7d3KckXQDeH8RyO78sBt2goEbvctCyPhLF
-         5p8KYwvojtpcoG2/8FlXPS18HIlzTD9z61qPr+OW9obw6laComYnKoO6Cxys9foqGOhu
-         snqdT2ni5+1sMQlUsJt6xa8SdkfaD6zFq2kmjI97UXAc+l2FY9IhiNgyPZnFw/wDjCeJ
-         M8bA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778087540; x=1778692340; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
-        b=pT2IRC2edN5mixihI8CHMSUB6CfWyd8hRzSeP/uzakExz3hnZJmQxC2lQX7p8vgi75
-         QuNFAbLTly8R+KqoNvHLRpcpx9zNULtKtVWgPIU1tr91B3Q3dKFJ2Qk2yutlMTsjL/yA
-         rWpGPQkj905kYOH0ZN7lflK9BEalyK2lyKYJ1q7cD8wf4iGLXgcTTlYES4wawxRrM0wj
-         pKGMK88KjC8ePqqVgHGXMoFOYAx7SAdNyHXfmv130howK6RYub7A42xQrpzC/7kBB4BA
-         xGIXHeZps48hh2RdYmmTfSj8KflcTYlMbz0XMZDdtn4YFuFUt5rrVXut+n6osxtb7oYC
-         bf7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778087540; x=1778692340;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
-        b=TgH0PdQmSMrtKNnoA59xSHmSzDBEvcgDjbgTsDdJYvynSW3qDIIaogOLXknSmBed5u
-         /oLlOZqWG/z+i/PP2S5K4TKG/ayX50AnWYv2UBvmyKANot3k1k9TedqbGGgqWEjkBO5F
-         Akfol9D6amkSr+TsoPeQTc5oKph6NZQkfiPk3xBuJwU+v0152a3rQMGjevrROxM5jcUr
-         TuRH28aa8Hm6L19Blk/E7Gc7mdfhQRDwX5wp8c6aMv245J4FaVRnDlUpTspNyyW6QZL3
-         UCeGJmci5eM05Jr7cGh0dtz5OT14CpSztkEHDvkba3gn2CcVqAq+FIP03WzU8u7IcIOd
-         G1ow==
-X-Forwarded-Encrypted: i=1; AFNElJ8BAmIsCgnm1gDdSKg74Q9wlTSUWSeCBSBzi/M6oCUZ8ZzccJdGEBGo/JcLwiIwWBNqDihAX7Vnjjkk4V5rk1hz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9PmI5k6eX9doWY3yUsnwgYlHlE9Nau+LW2wrdiB3wLcV7Y5Ow
-	wBEFW6FYqPCjN+4gJFpQDlPQ3NedYO4+QkPtjBI7+pw+XRNuhafMkLiBUzFF8HR1mv/8HP6D701
-	HmjHzja0TAl6kekYP39egzyb4n7ABCqdX8Tm1XpRV
-X-Gm-Gg: AeBDiev7wZt46opc8FtyvSal+vs3FJ9okqZHFgtSkr2knV7Jh4gdIPrQTJaElG8NVcy
-	LryZc0D35Qkix6JPMgy/bqEuV4fPdt3Rm0e2bYXbE+bG0EFa5+nQCu4gaSR655WwtfCJqkErXbs
-	GfuDbWA5TB63eDLxv0iU/tg4+Rv4sPbDBe9D140Le7G2v8BCqVZ/nPzAkYtVnwkR+X3NFhcZI4W
-	rbc+t5TmowmZV30HVmlhL//eKGvoC7+jRiK2yHmOnrrSz7YUccHU89dGIcr++6v6QZH2EjYFgCO
-	lPO/LSMMMghFzD5cUCTSvNe/TZ3QOAIjRkacR39h/yepkkZwkB3wWHtxKgI=
-X-Received: by 2002:a17:903:124b:b0:2b9:a39a:e5db with SMTP id
- d9443c01a7336-2bab63fdaeemr38015ad.7.1778087539764; Wed, 06 May 2026 10:12:19
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhoAr9ys"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C5DC2BCB8;
+	Wed,  6 May 2026 18:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778093535;
+	bh=+3zxsig4ToWjZihIlGFmY/JD2Ei8ajpw9xxTcN5otIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RhoAr9ysSPjyhPka0AAqtQHhIKAGDzpwihzohkpJHmT4FU4sI/byfdlpTKViATh9/
+	 f+On78ZldW6xC+u3UAH67yPXef1KwyUwJXyngb6TXi8VNk9F1iYFnZ30K5pRGOws5b
+	 Js2SMWI8+nal4qRnJGu+NRnDqe8hb9qD9B9qdp8Q4UNrc8xxlJNZG6yFwJgBFu6DQ0
+	 rhw7dT5MqLbYCe/6XlVbpSd79w4RUB/9FONMHtt4Pybo+LwS4IpFTGW4UFgyWXk7Ay
+	 tJ3VMPyFNPQKMk3k3Nh774K7JRM8YdDPeaq8cluZUPrX3sQc/rey1AJWyc+j6KVEK2
+	 Mfj7kVgorgH5Q==
+Date: Wed, 6 May 2026 11:52:13 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, gmx@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v5 4/5] perf inject/aslr: Add aslr tool to
+ remap/obfuscate virtual addresses
+Message-ID: <afuN3cN2EFR0S28o@google.com>
+References: <20260504072937.2103453-1-irogers@google.com>
+ <20260506004546.3140141-1-irogers@google.com>
+ <20260506004546.3140141-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260321061448.810525-1-irogers@google.com> <acW_IHQVZnxIETdd@google.com>
- <CAP-5=fWh66OwPC0K4ZyedAWqwyXez0ya9Dz6hzbgY0AhoqMfdg@mail.gmail.com>
- <ac8pEDUKjuMxXUS6@google.com> <CAP-5=fXeBje03BM8D9q-0KsXg2KmyRa81CuphtSQfHp0isFc_w@mail.gmail.com>
- <adPzEmwDaHq4SsZw@google.com> <CAP-5=fW-H-ri3MdVv4Vh4xiyB-qpDqnO3gqXR+XyfMK+kXpHQA@mail.gmail.com>
- <afs9tx6hpi9CiEzN@x1> <aftpmFmahaykG7Rg@google.com>
-In-Reply-To: <aftpmFmahaykG7Rg@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 May 2026 10:12:05 -0700
-X-Gm-Features: AVHnY4JZ7-urFSmGnOWKaanXHlPtrHLlMOwgmkcusVivLUN54g7Xy5M5z6J1KhE
-Message-ID: <CAP-5=fUuF4LpSMy30AuLoz-wKy9O8ZLkh+UWBrDJTwNV-D=eqw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf sched: Avoid segv if tp_handler not set
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260506004546.3140141-5-irogers@google.com>
 
-On Wed, May 6, 2026 at 9:17=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Wed, May 06, 2026 at 10:10:15AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, May 05, 2026 at 02:56:02PM -0700, Ian Rogers wrote:
-> > > On Mon, Apr 6, 2026 at 10:53=E2=80=AFAM Namhyung Kim <namhyung@kernel=
-.org> wrote:
-> > > > On Fri, Apr 03, 2026 at 08:29:25AM -0700, Ian Rogers wrote:
-> > > > > On Thu, Apr 2, 2026 at 7:42=E2=80=AFPM Namhyung Kim <namhyung@ker=
-nel.org> wrote:
-> > > > > > On Tue, Mar 31, 2026 at 10:59:52PM -0700, Ian Rogers wrote:
-> > > > > > > On Thu, Mar 26, 2026 at 4:20=E2=80=AFPM Namhyung Kim <namhyun=
-g@kernel.org> wrote:
-> > > > > > > > On Fri, Mar 20, 2026 at 11:14:47PM -0700, Ian Rogers wrote:
-> > > > > > > > > Doing a `perf sched record` then `perf sched stats report=
-` crashes as
-> > > > > > > > > the tp_handler isn't set. Add extra checks that tp_handle=
-r is set
-> > > > > > > > > before accessing through it.
-> >
-> > > > > > > > Oh.. unintended use case. :)  Probably better to add a dumm=
-y handler
-> > > > > > > > for `perf sched stats report`.
-> >
-> > > > > > > Perhaps. I'd prefer to land the simpler change as-is.
-> >
-> > > > > > Well.. I guess the dummy handler approach would be simpler and =
-perform
-> > > > > > better. :)
-> >
-> > > > > > +++ b/tools/perf/builtin-sched.c
-> > > > > > @@ -4955,6 +4955,7 @@ int cmd_sched(int argc, const char **argv=
-)
-> > > > > >                 .switch_event       =3D replay_switch_event,
-> > > > > >                 .fork_event         =3D replay_fork_event,
-> > > > > >         };
-> > > > > > +       struct trace_sched_handler stats_ops  =3D {};
-> > > > >
-> > > > > Oh, because there's an existing null test on the function pointer=
- we
-> > > > > don't need dummy functions, which is what I thought you were aski=
-ng
-> > > > > for. I'm still not convinced this is very intention revealing, bu=
-t if
-> > > > > it works for you then you can have my reviewed-by tag.
-> >
-> > > > Applied this and the patch 2 to perf-tools-next, thanks!
-> >
-> > > Thanks Namhyung. Did this get accidentally dropped? I'm not seeing it
-> > > in perf-tools-next.
->
-> I think I've applied my approach and test fix.
+On Tue, May 05, 2026 at 05:45:45PM -0700, Ian Rogers wrote:
+> If perf.data files are taken from one machine to another they may
+> leak virtual addresses and so weaken ASLR on the machine they are
+> coming from. Add an aslr option for perf inject that remaps all
+> virtual addresses, or drops data/events, so that the virtual address
+> information isn't leaked.
+> 
+> When events are not known/handled by the tool they are dropped. This
+> makes the tool conservative and it should never leak ASLR information,
+> but it means virtual address remapping is needed for cases like
+> auxtrace.
+> 
+> The ASLR tracking tool virtualizes process and machine namespaces using
+> 'struct machines' to safely isolate host mappings from unprivileged KVM guest
+> address spaces. Memory layouts are tracked globally per process context to
+> ensure linear, continuous space allocations across successive mapping runs.
+> 
+> To remain strictly conservative and guarantee security, the tool scrubs
+> breakpoint addresses (bp_addr) from all synthesized stream headers, and drops
+> unsupported complex payloads (such as user register stacks, raw tracepoints,
+> and hardware AUX tracing frames) to completely eliminate accidental address
+> leakage vectors.
+> 
+> Assisted-by: Gemini-CLI:Google Gemini 3
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Co-developed-by: Gabriel Marin <gmx@google.com>
+> Signed-off-by: Gabriel Marin <gmx@google.com>
+> ---
+> v5: Fix memory leaks inside aslr_tool__delete destructor by calling standard
+>     machines__destroy_kernel_maps() to cleanly free host/guest maps and guest
+>     machine structures. Introduce the precise 'first_kernel_mapping' tracking
+>     guard inside aslr.c to rewrite the core kernel pgoff virtual address while
+>     safely protecting module file offsets from corruption. Harden skipn()
+>     pipe I/O stream reader loops against EINTR interruption errors. Clean up
+>     breakpoint address (bp_addr) memory scrubbing by executing the scrubbing loop
+>     directly at core session initialization startup level, natively securing both
+>     file headers and streaming pipe channels while removing redundant runtime
+>     tool wrapper interception hooks layers.
+> v4: Scrub bp_addr from headers/pipe synthesis attributes. Remove kernel
+>     mmap pgoff mathematical delta adjustment leaks to maintain secure
+>     base obfuscation bounds. Harden guest space contexts mapping loops,
+>     correct ksymbol map base invariants tracking, and plug tail-word
+>     padding heap leakage vectors in user stacks and AUX payloads.
+> v3: Combine split-map fixes, guest namespaces, bounds checks, OOM rollbacks,
+>     hot path optimization, safe dso references, and I/O stream error handling
+>     from v3/v4 development. Drop raw auxtrace events. Fix thread reference leaks
+>     in event handlers. Fix 32-bit truncation bug in hashmaps using u64* values.
+>     Prevent leaking uninitialized heap memory by zeroing copy buffer. Correct
+>     bitmask checks for branch stack flags. Avoid PMU configuration corruption.
+> v2: First review feedback adjustments.
+> ---
+>  tools/perf/builtin-inject.c |   31 +-
+>  tools/perf/util/Build       |    1 +
+>  tools/perf/util/aslr.c      | 1220 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/aslr.h      |   10 +
+>  4 files changed, 1261 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/util/aslr.c
+>  create mode 100644 tools/perf/util/aslr.h
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index f174bc69cec4..8fe479cb4152 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -8,6 +8,7 @@
+>   */
+>  #include "builtin.h"
+>  
+> +#include "util/aslr.h"
+>  #include "util/color.h"
+>  #include "util/dso.h"
+>  #include "util/vdso.h"
+> @@ -123,6 +124,7 @@ struct perf_inject {
+>  	bool			in_place_update_dry_run;
+>  	bool			copy_kcore_dir;
+>  	bool			convert_callchain;
+> +	bool			aslr;
+>  	const char		*input_name;
+>  	struct perf_data	output;
+>  	u64			bytes_written;
+> @@ -304,6 +306,8 @@ static int perf_event__repipe(const struct perf_tool *tool,
+>  	return perf_event__repipe_synth(tool, event);
+>  }
+>  
+> +
+> +
+>  static int perf_event__drop(const struct perf_tool *tool __maybe_unused,
+>  			    union perf_event *event __maybe_unused,
+>  			    struct perf_sample *sample __maybe_unused,
+> @@ -2458,6 +2462,8 @@ static int __cmd_inject(struct perf_inject *inject)
+>  			}
+>  		}
+>  
+> +
+> +
 
-Ok, that wasn't clear. I think it is good to post such changes to the
-list. For example, just sync-ing the header files prompted sashiko to
-point out a bug in our beauty scripts:
-https://lore.kernel.org/linux-perf-users/20260504193334.9F978C2BCB8@smtp.ke=
-rnel.org/
+Unnessary whitespace changes here and the above.
+
+
+>  		session->header.data_offset = output_data_offset;
+>  		session->header.data_size = inject->bytes_written;
+>  		perf_session__inject_header(session, session->evlist, fd, &inj_fc.fc,
+> @@ -2564,6 +2570,8 @@ int cmd_inject(int argc, const char **argv)
+>  			   " instance has a subdir"),
+>  		OPT_BOOLEAN(0, "convert-callchain", &inject.convert_callchain,
+>  			    "Generate callchains using DWARF and drop register/stack data"),
+> +		OPT_BOOLEAN(0, "aslr", &inject.aslr,
+> +			    "Remap virtual memory addresses similar to ASLR"),
+>  		OPT_END()
+>  	};
+>  	const char * const inject_usage[] = {
+> @@ -2571,6 +2579,7 @@ int cmd_inject(int argc, const char **argv)
+>  		NULL
+>  	};
+>  	bool ordered_events;
+> +	struct perf_tool *tool = &inject.tool;
+>  
+>  	if (!inject.itrace_synth_opts.set) {
+>  		/* Disable eager loading of kernel symbols that adds overhead to perf inject. */
+> @@ -2684,18 +2693,36 @@ int cmd_inject(int argc, const char **argv)
+>  	inject.tool.schedstat_domain	= perf_event__repipe_op2_synth;
+>  	inject.tool.dont_split_sample_group = true;
+>  	inject.tool.merge_deferred_callchains = false;
+> -	inject.session = __perf_session__new(&data, &inject.tool,
+> +	if (inject.aslr) {
+> +		tool = aslr_tool__new(&inject.tool);
+> +		if (!tool) {
+> +			ret = -ENOMEM;
+> +			goto out_close_output;
+> +		}
+> +	}
+> +	inject.session = __perf_session__new(&data, tool,
+>  					     /*trace_event_repipe=*/inject.output.is_pipe,
+>  					     /*host_env=*/NULL);
+>  
+>  	if (IS_ERR(inject.session)) {
+>  		ret = PTR_ERR(inject.session);
+> +		if (inject.aslr)
+> +			aslr_tool__delete(tool);
+>  		goto out_close_output;
+>  	}
+>  
+>  	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
+>  		pr_warning("Decompression initialization failed.\n");
+>  
+> +	if (inject.aslr) {
+> +		struct evsel *evsel;
+> +
+> +		evlist__for_each_entry(inject.session->evlist, evsel) {
+> +			if (evsel->core.attr.type == PERF_TYPE_BREAKPOINT)
+> +				evsel->core.attr.bp_addr = 0;
+> +		}
+> +	}
+> +
+>  	/* Save original section info before feature bits change */
+>  	ret = save_section_info(&inject);
+>  	if (ret)
+> @@ -2789,6 +2816,8 @@ int cmd_inject(int argc, const char **argv)
+>  	strlist__delete(inject.known_build_ids);
+>  	zstd_fini(&(inject.session->zstd_data));
+>  	perf_session__delete(inject.session);
+> +	if (inject.aslr)
+> +		aslr_tool__delete(tool);
+>  out_close_output:
+>  	if (!inject.in_place_update)
+>  		perf_data__close(&inject.output);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 70cc91d00804..65b96f3b87e2 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -6,6 +6,7 @@ perf-util-y += arm64-frame-pointer-unwind-support.o
+>  perf-util-y += addr2line.o
+>  perf-util-y += addr_location.o
+>  perf-util-y += annotate.o
+> +perf-util-y += aslr.o
+>  perf-util-y += blake2s.o
+>  perf-util-y += block-info.o
+>  perf-util-y += block-range.o
+> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+> new file mode 100644
+> index 000000000000..effdcbec0db0
+> --- /dev/null
+> +++ b/tools/perf/util/aslr.c
+> @@ -0,0 +1,1220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "aslr.h"
+> +
+> +#include "addr_location.h"
+> +#include "debug.h"
+> +#include "event.h"
+> +#include "evsel.h"
+> +#include "machine.h"
+> +#include "map.h"
+> +#include "thread.h"
+> +#include "tool.h"
+> +#include "session.h"
+> +#include "data.h"
+> +#include "dso.h"
+> +
+> +#include <internal/lib.h>  /* page_size */
+> +#include <linux/compiler.h>
+> +#include <linux/zalloc.h>
+> +#include <errno.h>
+> +#include <inttypes.h>
+> +#include <unistd.h>
+> +
+> +static int skipn(int fd, u64 n)
+> +{
+> +	char buf[4096];
+> +	ssize_t ret;
+> +
+> +	while (n > 0) {
+> +		ret = read(fd, buf, (n < (u64)sizeof(buf) ? n : (u64)sizeof(buf)));
+> +		if (ret < 0) {
+> +			if (errno == EINTR)
+> +				continue;
+> +			return ret;
+> +		}
+> +		if (ret == 0)
+> +			return 0;
+> +		n -= ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * struct remap_addresses_key - Key for mapping original addresses to remapped ones.
+> + * @dso: Pointer to the DSO (Dynamic Shared Object) associated with the mapping.
+> + * @invariant: Unique offset invariant within the VMA (Virtual Memory Area).
+> + *             Calculated as `start - pgoff`. This value remains constant when
+> + *             perf's internal `maps__fixup_overlap_and_insert` splits a map into
+> + *             fragmented VMA pieces due to overlapping events, allowing us to
+> + *             resolve split maps consistently back to the original VMA.
+
+I'm curious if it's guaranteed to be unique within a process.
+
+
+> + * @pid: Process ID associated with the mapping.
+> + */
+> +struct remap_addresses_key {
+> +	struct dso *dso;
+> +	u64 invariant;
+> +	pid_t pid;
+> +};
+> +
+> +struct aslr_mapping {
+> +	struct list_head node;
+> +	u64 orig_start;
+> +	u64 len;
+> +	u64 remap_start;
+> +};
+> +
+> +struct aslr_tool {
+> +	/** @tool: The tool implemented here and a pointer to a delegate to process the data. */
+> +	struct delegate_tool tool;
+> +	/** @machines: The machines with the input, not remapped, virtual address layout. */
+> +	struct machines machines;
+> +	/** @event_copy: Buffer used to create an event to pass to the delegate. */
+> +	char event_copy[PERF_SAMPLE_MAX_SIZE];
+> +	/** @remap_addresses: mapping from remap_addresses_key to remapped address. */
+> +	struct hashmap remap_addresses;
+> +	/** @top_addresses: mapping from process to max remapped address. */
+> +	struct hashmap top_addresses;
+> +	/** @first_kernel_mapping: flag indicating if we are still to process any kernel mapping. */
+> +	bool first_kernel_mapping;
+> +};
+> +
+> +static const pid_t kernel_pid = -1;
+> +
+> +/* Start remapping user processes from a small non-zero offset. */
+> +static const u64 user_space_start = 0x200000;
+> +static const u64 kernel_space_start = 0xffff800010000000;
+> +
+> +static size_t remap_addresses__hash(long _key, void *ctx __maybe_unused)
+> +{
+> +	struct remap_addresses_key *key = (struct remap_addresses_key *)_key;
+> +
+> +	return (size_t)key->dso ^ key->invariant ^ key->pid;
+> +}
+> +
+> +static bool remap_addresses__equal(long _key1, long _key2, void *ctx __maybe_unused)
+> +{
+> +	struct remap_addresses_key *key1 = (struct remap_addresses_key *)_key1;
+> +	struct remap_addresses_key *key2 = (struct remap_addresses_key *)_key2;
+> +
+> +	return RC_CHK_EQUAL(key1->dso, key2->dso) &&
+> +	       key1->invariant == key2->invariant &&
+> +	       key1->pid == key2->pid;
+> +}
+> +
+> +static size_t top_addresses__hash(long key, void *ctx __maybe_unused)
+> +{
+> +	return key;
+> +}
+> +
+> +static bool top_addresses__equal(long key1, long key2, void *ctx __maybe_unused)
+> +{
+> +	return key1 == key2;
+> +}
+> +
+> +static u64 round_up_to_page_size(u64 addr)
+> +{
+> +	return (addr + page_size - 1) & ~((u64)page_size - 1);
+> +}
+> +
+> +static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
+> +				    struct thread *aslr_thread,
+> +				    u8 cpumode,
+> +				    u64 addr)
+> +{
+> +	struct addr_location al;
+> +	struct remap_addresses_key key;
+> +	u64 *remapped_invariant_ptr = NULL;
+> +	u64 remap_addr = 0;
+> +	u8 effective_cpumode = cpumode;
+> +
+> +	if (!aslr_thread)
+> +		return 0; /* No thread. */
+> +
+> +	addr_location__init(&al);
+> +	if (!thread__find_map(aslr_thread, cpumode, addr, &al)) {
+> +		/*
+> +		 * If lookup fails with specified cpumode, try fallback to the other space
+> +		 * to be robust against bad cpumode in samples.
+> +		 */
+> +		if (cpumode == PERF_RECORD_MISC_KERNEL)
+> +			effective_cpumode = PERF_RECORD_MISC_USER;
+> +		else if (cpumode == PERF_RECORD_MISC_USER)
+> +			effective_cpumode = PERF_RECORD_MISC_KERNEL;
+> +		else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL)
+> +			effective_cpumode = PERF_RECORD_MISC_GUEST_USER;
+> +		else if (cpumode == PERF_RECORD_MISC_GUEST_USER)
+> +			effective_cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
+> +
+> +		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
+> +			addr_location__exit(&al);
+> +			return 0; /* No mmap. */
+> +		}
+> +	}
+> +
+> +	key.dso = map__dso(al.map);
+> +	key.invariant = map__start(al.map) - map__pgoff(al.map);
+> +	key.pid = effective_cpumode == PERF_RECORD_MISC_KERNEL ? kernel_pid : aslr_thread->pid_;
+> +
+> +	if (hashmap__find(&aslr->remap_addresses, &key, &remapped_invariant_ptr)) {
+> +		remap_addr = *remapped_invariant_ptr + map__pgoff(al.map) +
+> +			     (addr - map__start(al.map));
+> +	} else {
+> +		if (effective_cpumode == PERF_RECORD_MISC_KERNEL) {
+> +			struct hashmap_entry *cur;
+> +			size_t bkt;
+> +
+> +			hashmap__for_each_entry(&aslr->remap_addresses, cur, bkt) {
+> +				struct remap_addresses_key *k;
+> +				u64 *v;
+> +
+> +				k = (struct remap_addresses_key *)cur->pkey;
+> +				if (k->pid == kernel_pid &&
+> +				    k->invariant == key.invariant) {
+> +					v = (u64 *)cur->pvalue;
+> +					remap_addr = *v + map__pgoff(al.map) +
+> +						     (addr - map__start(al.map));
+> +					break;
+> +				}
+> +			}
+> +		}
+> +		if (remap_addr == 0) {
+> +			pr_debug("Cannot find a remapped entry for address %lx in mapping %lx(%lx) for pid=%d\n",
+> +				 addr, map__start(al.map), map__size(al.map), key.pid);
+> +		}
+> +	}
+> +
+> +	addr_location__exit(&al);
+> +	return remap_addr;
+> +}
+> +
+> +static u64 aslr_tool__remap_mapping(struct aslr_tool *aslr,
+> +				    struct thread *aslr_thread,
+> +				    u8 cpumode,
+> +				    u64 start, u64 len, u64 pgoff)
+> +{
+> +	struct addr_location al;
+> +	struct addr_location prev_al;
+> +	struct remap_addresses_key key;
+> +	struct remap_addresses_key *new_key = NULL;
+> +	struct remap_addresses_key *old_key = NULL;
+> +	u64 remap_addr = 0;
+> +	u64 *remapped_invariant_ptr = NULL;
+> +	u64 *max_addr_ptr = NULL;
+> +	u64 *new_val = NULL;
+> +	u64 *new_max = NULL;
+> +	u64 *old_val = NULL;
+> +	u64 *old_val_remap = NULL;
+> +	bool is_contiguous = false;
+> +	bool first_mapping = false;
+> +	bool key_found = false;
+> +	int err;
+> +
+> +	if (!aslr_thread)
+> +		return 0; /* No thread. */
+> +
+> +	addr_location__init(&al);
+> +	if (thread__find_map(aslr_thread, cpumode, start, &al)) {
+> +		key.dso = map__dso(al.map);
+> +		key.invariant = map__start(al.map) - map__pgoff(al.map);
+> +	} else {
+> +		key.dso = NULL;
+> +		key.invariant = start - pgoff;
+> +	}
+> +	key.pid = cpumode == PERF_RECORD_MISC_KERNEL ? kernel_pid : aslr_thread->pid_;
+> +
+> +	if (hashmap__find(&aslr->remap_addresses, &key, &remapped_invariant_ptr)) {
+> +		remap_addr = *remapped_invariant_ptr + (al.map ? map__pgoff(al.map) : pgoff);
+> +		key_found = true;
+> +	} else {
+> +		addr_location__init(&prev_al);
+> +		if (thread__find_map(aslr_thread, cpumode, start - 1, &prev_al)) {
+> +			if (map__start(prev_al.map) + map__size(prev_al.map) == start) {
+> +				is_contiguous = true;
+> +			} else {
+> +				pr_debug("Previous mmap [%lx, %lx] overlaps current map [%lx, %lx]\n",
+> +					 map__start(prev_al.map),
+> +					 map__start(prev_al.map) + map__size(prev_al.map),
+> +					 start, start+len);
+> +			}
+> +		}
+> +		addr_location__exit(&prev_al);
+> +
+> +		if (!hashmap__find(&aslr->top_addresses, key.pid, &max_addr_ptr)) {
+> +			first_mapping = true;
+> +			remap_addr = (cpumode == PERF_RECORD_MISC_KERNEL ?
+> +				      kernel_space_start : user_space_start);
+> +		} else {
+> +			remap_addr = *max_addr_ptr;
+> +		}
+> +
+> +		remap_addr = round_up_to_page_size(remap_addr);
+> +		if (!is_contiguous && !first_mapping)
+> +			remap_addr += page_size;
+> +
+> +		new_key = malloc(sizeof(*new_key));
+> +		new_val = malloc(sizeof(u64));
+
+I think the value of hashmap can be passed as value if it's u64.. well
+on 64-bit systems.
+
+
+> +
+> +		if (!new_key || !new_val) {
+> +			free(new_key);
+> +			free(new_val);
+> +			addr_location__exit(&al);
+> +			return 0;
+> +		}
+> +		*new_key = key;
+> +		new_key->dso = dso__get(key.dso);
+> +		*new_val = remap_addr - (al.map ? map__pgoff(al.map) : pgoff);
+> +
+> +		if (hashmap__add(&aslr->remap_addresses, new_key, new_val) != 0) {
+> +			dso__put(new_key->dso);
+> +			free(new_key);
+> +			free(new_val);
+> +			addr_location__exit(&al);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	/* Update top_addresses */
+> +	new_max = malloc(sizeof(u64));
+> +	old_val = NULL;
+> +
+> +	if (!new_max) {
+> +		old_key = NULL;
+> +		old_val_remap = NULL;
+> +
+> +		if (!key_found) {
+> +			hashmap__delete(&aslr->remap_addresses, &key,
+> +					&old_key, &old_val_remap);
+> +			if (old_key)
+> +				dso__put(old_key->dso);
+> +			free(old_key);
+> +			free(old_val_remap);
+> +		}
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +	*new_max = remap_addr + len;
+> +
+> +	if (hashmap__find(&aslr->top_addresses, key.pid, &max_addr_ptr)) {
+> +		if (*max_addr_ptr > *new_max)
+> +			*new_max = *max_addr_ptr;
+> +	}
+> +
+> +	err = hashmap__insert(&aslr->top_addresses, key.pid, new_max,
+> +				  (first_mapping && !key_found) ?
+> +					HASHMAP_ADD : HASHMAP_UPDATE,
+> +				  NULL, &old_val);
+> +	if (err) {
+> +		old_key = NULL;
+> +		old_val_remap = NULL;
+> +
+> +		free(new_max);
+> +		if (!key_found) {
+> +			hashmap__delete(&aslr->remap_addresses, &key,
+> +					&old_key, &old_val_remap);
+> +			if (old_key)
+> +				dso__put(old_key->dso);
+> +			free(old_key);
+> +			free(old_val_remap);
+> +		}
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +	free(old_val);
+> +
+> +	addr_location__exit(&al);
+> +	return remap_addr;
+> +}
+> +
+> +static u64 aslr_tool__remap_ksymbol(struct aslr_tool *aslr,
+> +				    struct thread *aslr_thread,
+> +				    u64 addr, u32 len)
+
+Any chance you can share the code with the above function?
+
+
+> +{
+> +	struct addr_location al;
+> +	struct remap_addresses_key key;
+> +	struct hashmap_entry *cur;
+> +	struct remap_addresses_key *new_key = NULL;
+> +	struct remap_addresses_key *old_key = NULL;
+> +	struct remap_addresses_key *k;
+> +	size_t bkt;
+> +	u64 remap_addr = 0;
+> +	u64 *remapped_invariant_ptr = NULL;
+> +	u64 *max_addr_ptr = NULL;
+> +	u64 *new_val = NULL;
+> +	u64 *new_max = NULL;
+> +	u64 *old_val = NULL;
+> +	u64 *old_val_remap = NULL;
+> +	u64 *v;
+> +	bool first_mapping = false;
+> +	int err;
+> +
+> +	if (!aslr_thread)
+> +		return 0; /* No thread. */
+> +
+> +	addr_location__init(&al);
+> +	if (thread__find_map(aslr_thread, PERF_RECORD_MISC_KERNEL, addr, &al)) {
+> +		key.dso = map__dso(al.map);
+> +		key.invariant = map__start(al.map) - map__pgoff(al.map);
+> +	} else {
+> +		key.dso = NULL;
+> +		key.invariant = addr; /* pgoff is 0 for ksymbols */
+> +	}
+> +	key.pid = aslr_thread->pid_;
+> +
+> +	if (hashmap__find(&aslr->remap_addresses, &key, &remapped_invariant_ptr)) {
+> +		if (al.map)
+> +			remap_addr = *remapped_invariant_ptr + map__pgoff(al.map) +
+> +				     (addr - map__start(al.map));
+> +		else
+> +			remap_addr = *remapped_invariant_ptr;
+> +		addr_location__exit(&al);
+> +		return remap_addr;
+> +	}
+> +
+> +	hashmap__for_each_entry(&aslr->remap_addresses, cur, bkt) {
+> +		k = (struct remap_addresses_key *)cur->pkey;
+> +		if (k->pid == kernel_pid && k->invariant == key.invariant) {
+> +			v = (u64 *)cur->pvalue;
+> +
+> +			if (al.map)
+> +				remap_addr = *v + map__pgoff(al.map) +
+> +					     (addr - map__start(al.map));
+> +			else
+> +				remap_addr = *v;
+> +			addr_location__exit(&al);
+> +			return remap_addr;
+> +		}
+> +	}
+> +
+> +	if (!hashmap__find(&aslr->top_addresses, key.pid, &max_addr_ptr)) {
+> +		first_mapping = true;
+> +		remap_addr = kernel_space_start;
+> +	} else {
+> +		remap_addr = *max_addr_ptr;
+> +	}
+> +
+> +	remap_addr = round_up_to_page_size(remap_addr) + page_size;
+> +
+> +	new_key = malloc(sizeof(*new_key));
+> +	new_val = malloc(sizeof(u64));
+> +
+> +	if (!new_key || !new_val) {
+> +		free(new_key);
+> +		free(new_val);
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +	*new_key = key;
+> +	new_key->dso = dso__get(key.dso);
+> +	if (al.map)
+> +		*new_val = remap_addr - (addr - map__start(al.map)) - map__pgoff(al.map);
+> +	else
+> +		*new_val = remap_addr;
+> +
+> +	if (hashmap__add(&aslr->remap_addresses, new_key, new_val) < 0) {
+> +		dso__put(new_key->dso);
+> +		free(new_key);
+> +		free(new_val);
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +
+> +	new_max = malloc(sizeof(u64));
+> +	old_val = NULL;
+> +
+> +	if (!new_max) {
+> +		old_key = NULL;
+> +		old_val_remap = NULL;
+> +
+> +		hashmap__delete(&aslr->remap_addresses, &key, &old_key, &old_val_remap);
+> +		if (old_key)
+> +			dso__put(old_key->dso);
+> +		free(old_key);
+> +		free(old_val_remap);
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +	*new_max = remap_addr + len;
+> +
+> +	if (hashmap__find(&aslr->top_addresses, key.pid, &max_addr_ptr)) {
+> +		if (*max_addr_ptr > *new_max)
+> +			*new_max = *max_addr_ptr;
+> +	}
+> +
+> +	err = hashmap__insert(&aslr->top_addresses, key.pid, new_max,
+> +				  first_mapping ?
+> +					HASHMAP_ADD : HASHMAP_UPDATE,
+> +				  NULL, &old_val);
+> +	if (err) {
+> +		old_key = NULL;
+> +		old_val_remap = NULL;
+> +
+> +		free(new_max);
+> +		hashmap__delete(&aslr->remap_addresses, &key, &old_key, &old_val_remap);
+> +		if (old_key)
+> +			dso__put(old_key->dso);
+> +		free(old_key);
+> +		free(old_val_remap);
+> +		addr_location__exit(&al);
+> +		return 0;
+> +	}
+> +	free(old_val);
+> +
+> +	addr_location__exit(&al);
+> +	return remap_addr;
+> +}
+> +
+> +
+> +static int aslr_tool__process_mmap(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	union perf_event *new_event;
+> +	u8 cpumode;
+> +	struct thread *thread;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +	cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	/* Create the thread, map, etc. in the ASLR before virtual address space. */
+> +	err = perf_event__process_mmap(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	thread = machine__findnew_thread(aslr_machine, event->mmap.pid, event->mmap.tid);
+> +	if (!thread)
+> +		return -ENOMEM;
+> +	memcpy(&new_event->mmap, &event->mmap, event->mmap.header.size);
+> +	/* Remaps the mmap.start. */
+> +	new_event->mmap.start = aslr_tool__remap_mapping(aslr, thread, cpumode,
+> +							   event->mmap.start,
+> +							   event->mmap.len,
+> +							   event->mmap.pgoff);
+> +	if (aslr->first_kernel_mapping && cpumode == PERF_RECORD_MISC_KERNEL) {
+> +		new_event->mmap.pgoff = new_event->mmap.start;
+> +		aslr->first_kernel_mapping = false;
+> +	}
+> +	err = delegate->mmap(delegate, new_event, sample, machine);
+> +	thread__put(thread);
+> +	return err;
+> +}
+> +
+> +static int aslr_tool__process_mmap2(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	union perf_event *new_event;
+> +	u8 cpumode;
+> +	struct thread *thread;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +	cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	/* Create the thread, map, etc. in the ASLR before virtual address space. */
+> +	err = perf_event__process_mmap2(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	thread = machine__findnew_thread(aslr_machine, event->mmap2.pid, event->mmap2.tid);
+> +	if (!thread)
+> +		return -ENOMEM;
+> +	memcpy(&new_event->mmap2, &event->mmap2, event->mmap2.header.size);
+> +	/* Remaps the mmap.start. */
+> +	new_event->mmap2.start = aslr_tool__remap_mapping(aslr, thread, cpumode,
+> +							   event->mmap2.start,
+> +							   event->mmap2.len,
+> +							   event->mmap2.pgoff);
+> +	if (aslr->first_kernel_mapping && cpumode == PERF_RECORD_MISC_KERNEL) {
+> +		new_event->mmap2.pgoff = new_event->mmap2.start;
+> +		aslr->first_kernel_mapping = false;
+> +	}
+> +	err = delegate->mmap2(delegate, new_event, sample, machine);
+> +	thread__put(thread);
+> +	return err;
+> +}
+> +
+> +static int aslr_tool__process_comm(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	/* Create the thread, map, etc. in the ASLR before virtual address space. */
+> +	err = perf_event__process_comm(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	return delegate->comm(delegate, event, sample, machine);
+> +}
+> +
+> +static int aslr_tool__process_fork(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	/* Create the thread, map, etc. in the ASLR before virtual address space. */
+> +	err = perf_event__process_fork(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	return delegate->fork(delegate, event, sample, machine);
+> +}
+> +
+> +static int aslr_tool__process_exit(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	/* Create the thread, map, etc. in the ASLR before virtual address space. */
+> +	err = perf_event__process_exit(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	return delegate->exit(delegate, event, sample, machine);
+> +}
+> +
+> +static int aslr_tool__process_text_poke(const struct perf_tool *tool,
+> +					union perf_event *event,
+> +					struct perf_sample *sample,
+> +					struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	union perf_event *new_event;
+> +	u8 cpumode;
+> +	struct thread *thread;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +	cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	thread = machine__findnew_thread(aslr_machine, sample->pid, sample->tid);
+> +	if (!thread)
+> +		return -ENOMEM;
+> +	memcpy(&new_event->text_poke, &event->text_poke, event->text_poke.header.size);
+> +	new_event->text_poke.addr = aslr_tool__remap_address(aslr, thread, cpumode,
+> +							     event->text_poke.addr);
+> +
+> +	err = delegate->text_poke(delegate, new_event, sample, machine);
+> +
+> +	thread__put(thread);
+> +	return err;
+> +}
+> +
+> +static int aslr_tool__process_ksymbol(const struct perf_tool *tool,
+> +				union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	union perf_event *new_event;
+> +	struct thread *thread;
+> +	struct machine *aslr_machine;
+> +	int err;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	err = perf_event__process_ksymbol(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	thread = machine__findnew_thread(aslr_machine, kernel_pid, 0);
+> +	if (!thread)
+> +		return -ENOMEM;
+> +	memcpy(&new_event->ksymbol, &event->ksymbol, event->ksymbol.header.size);
+> +	/* Remaps the ksymbol.start */
+> +	new_event->ksymbol.addr = aslr_tool__remap_ksymbol(aslr, thread,
+> +							   event->ksymbol.addr, event->ksymbol.len);
+> +
+> +	err = delegate->ksymbol(delegate, new_event, sample, machine);
+> +	thread__put(thread);
+> +	return err;
+> +}
+> +
+> +static int aslr_tool__process_sample(const struct perf_tool *tool, union perf_event *event,
+> +				struct perf_sample *sample,
+> +				struct evsel *evsel, struct machine *machine)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	int ret;
+> +	u64 sample_type;
+> +	struct thread *thread;
+> +	struct machine *aslr_machine;
+> +	__u64 max_i;
+> +	__u64 max_j;
+> +	union perf_event *new_event;
+> +	struct perf_sample new_sample;
+> +	__u64 *in_array, *out_array;
+> +	u8 cpumode;
+> +	u64 addr;
+> +	size_t i;
+> +	size_t j;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	ret = -EFAULT;
+> +	sample_type = evsel->core.attr.sample_type;
+> +	max_i = (event->header.size - sizeof(struct perf_event_header)) / sizeof(__u64);
+> +	max_j = (PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_event_header)) / sizeof(__u64);
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +	cpumode = sample->cpumode;
+> +	i = 0;
+> +	j = 0;
+> +
+> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
+> +	if (!aslr_machine)
+> +		return -ENOMEM;
+> +
+> +	thread = machine__findnew_thread(aslr_machine, sample->pid, sample->tid);
+> +
+> +	if (!thread)
+> +		return -ENOMEM;
+> +
+> +	if (max_i > PERF_SAMPLE_MAX_SIZE / sizeof(u64))
+> +		goto out_put;
+> +
+> +
+> +
+
+Excessive blank lines.
+
+
+> +	new_event->sample.header = event->sample.header;
+> +
+> +	in_array = &event->sample.array[0];
+> +	out_array = &new_event->sample.array[0];
+> +
+> +#define CHECK_BOUNDS(required_i, required_j) \
+> +	do { \
+> +		if (i + (required_i) > max_i || j + (required_j) > max_j) { \
+> +			ret = -EFAULT; \
+> +			goto out_put; \
+> +		} \
+> +	} while (0)
+> +
+> +#define COPY_U64() \
+> +	do { \
+> +		CHECK_BOUNDS(1, 1); \
+> +		out_array[j++] = in_array[i++]; \
+> +	} while (0)
+> +
+> +#define REMAP_U64(addr_field) \
+> +	do { \
+> +		CHECK_BOUNDS(1, 1); \
+> +		out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode, addr_field); \
+> +		i++; \
+> +	} while (0)
+> +
+> +	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+> +		COPY_U64(); /* id */
+> +	if (sample_type & PERF_SAMPLE_IP)
+> +		REMAP_U64(sample->ip);
+> +	if (sample_type & PERF_SAMPLE_TID)
+> +		COPY_U64(); /* pid, tid */
+> +	if (sample_type & PERF_SAMPLE_TIME)
+> +		COPY_U64(); /* time */
+> +	if (sample_type & PERF_SAMPLE_ADDR)
+> +		REMAP_U64(sample->addr);
+> +	if (sample_type & PERF_SAMPLE_ID)
+> +		COPY_U64(); /* id */
+> +	if (sample_type & PERF_SAMPLE_STREAM_ID)
+> +		COPY_U64(); /* stream_id */
+> +	if (sample_type & PERF_SAMPLE_CPU)
+> +		COPY_U64(); /* cpu, res */
+> +	if (sample_type & PERF_SAMPLE_PERIOD)
+> +		COPY_U64(); /* period */
+> +	if (sample_type & PERF_SAMPLE_READ) {
+> +		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
+> +			COPY_U64(); /* value */
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> +				COPY_U64(); /* time_enabled */
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+> +				COPY_U64(); /* time_running */
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
+> +				COPY_U64(); /* id */
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
+> +				COPY_U64(); /* lost */
+> +		} else {
+> +			u64 nr;
+> +
+> +			CHECK_BOUNDS(1, 1);
+> +			nr = out_array[j++] = in_array[i++];
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> +				COPY_U64(); /* time_enabled */
+> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+> +				COPY_U64(); /* time_running */
+> +			for (u64 cntr = 0; cntr < nr; cntr++) {
+> +				COPY_U64(); /* value */
+> +				if (evsel->core.attr.read_format & PERF_FORMAT_ID)
+> +					COPY_U64(); /* id */
+> +				if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
+> +					COPY_U64(); /* lost */
+> +			}
+> +		}
+> +	}
+> +	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+> +		u64 nr;
+> +
+> +		CHECK_BOUNDS(1, 1);
+> +		nr = out_array[j++] = in_array[i++];
+> +
+> +		for (u64 cntr = 0; cntr < nr; cntr++) {
+> +			CHECK_BOUNDS(1, 1);
+> +			addr = in_array[i++];
+> +			if (addr >= PERF_CONTEXT_MAX) {
+> +				out_array[j++] = addr;
+> +				switch (addr) {
+> +				case PERF_CONTEXT_HV:
+> +					cpumode = PERF_RECORD_MISC_HYPERVISOR;
+> +					break;
+> +				case PERF_CONTEXT_KERNEL:
+> +					cpumode = PERF_RECORD_MISC_KERNEL;
+> +					break;
+> +				case PERF_CONTEXT_USER:
+> +					cpumode = PERF_RECORD_MISC_USER;
+> +					break;
+> +				case PERF_CONTEXT_GUEST:
+> +					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
+> +					break;
+> +				case PERF_CONTEXT_GUEST_KERNEL:
+> +					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
+> +					break;
+> +				case PERF_CONTEXT_GUEST_USER:
+> +					cpumode = PERF_RECORD_MISC_GUEST_USER;
+> +					break;
+> +				case PERF_CONTEXT_USER_DEFERRED:
+> +					/*
+> +					 * Immediately followed by a 64-bit
+> +					 * stitching cookie. Skip/Copy it!
+> +					 */
+> +					CHECK_BOUNDS(1, 1);
+> +					out_array[j++] = in_array[i++];
+> +					cntr++;
+> +					break;
+> +				default:
+> +					pr_debug("invalid callchain context: %"PRIx64"\n", addr);
+> +					ret = 0;
+> +					goto out_put;
+> +				}
+> +				continue;
+> +			}
+> +			out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode, addr);
+> +		}
+> +	}
+> +	if (sample_type & PERF_SAMPLE_RAW) {
+> +		size_t bytes = sizeof(u32) + sample->raw_size;
+> +		size_t u64_words = (bytes + 7) / 8;
+> +
+> +		if (i + u64_words > max_i || j + u64_words > max_j) {
+> +			ret = -EFAULT;
+> +			goto out_put;
+> +		}
+> +		memcpy(&out_array[j], &in_array[i], bytes);
+> +		i += u64_words;
+> +		j += u64_words;
+> +		/*
+> +		 * TODO: certain raw samples can be remapped, such as
+> +		 * tracepoints by examining their fields.
+> +		 */
+> +		pr_debug("Dropping raw samples as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+> +		u64 nr;
+> +
+> +		CHECK_BOUNDS(1, 1);
+> +		nr = out_array[j++] = in_array[i++];
+> +
+> +		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)
+> +			COPY_U64(); /* hw_idx */
+> +
+> +		if (nr > (ULLONG_MAX / 3)) {
+> +			ret = -EFAULT;
+> +			goto out_put;
+> +		}
+> +		if (nr * 3 > max_i - i || nr * 3 > max_j - j) {
+> +			ret = -EFAULT;
+> +			goto out_put;
+> +		}
+> +		for (u64 cntr = 0; cntr < nr; cntr++) {
+> +			out_array[j++] = aslr_tool__remap_address(aslr, thread,
+> +								  sample->cpumode,
+> +								  in_array[i++]); /* from */
+> +			out_array[j++] = aslr_tool__remap_address(aslr, thread,
+> +								  sample->cpumode,
+> +								  in_array[i++]); /* to */
+> +			out_array[j++] = in_array[i++]; /* flags */
+> +		}
+> +		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
+> +			if (nr > max_i - i || nr > max_j - j) {
+> +				ret = -EFAULT;
+> +				goto out_put;
+> +			}
+> +			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
+> +			i += nr;
+> +			j += nr;
+> +			/* TODO: confirm branch counters don't leak ASLR information. */
+> +			pr_debug("Dropping sample branch counters as possible ASLR leak\n");
+> +			ret = 0;
+> +			goto out_put;
+> +		}
+> +	}
+> +	if (sample_type & PERF_SAMPLE_REGS_USER) {
+> +		u64 abi;
+> +
+> +		COPY_U64(); /* abi */
+> +		abi = out_array[j-1];
+> +		if (abi != PERF_SAMPLE_REGS_ABI_NONE) {
+> +			u64 nr = hweight64(evsel->core.attr.sample_regs_user);
+> +
+> +			if (nr > max_i - i || nr > max_j - j) {
+> +				ret = -EFAULT;
+> +				goto out_put;
+> +			}
+> +			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
+> +			i += nr;
+> +			j += nr;
+> +		}
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping regs user sample as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+
+Is this mean you drop samples if it contains registers?
+
+
+> +	}
+> +	if (sample_type & PERF_SAMPLE_STACK_USER) {
+> +		u64 size;
+> +
+> +		CHECK_BOUNDS(1, 1);
+> +		size = out_array[j++] = in_array[i++];
+> +		if (size > 0) {
+> +			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
+> +
+> +			if (u64_words > max_i - i || u64_words > max_j - j) {
+> +				ret = -EFAULT;
+> +				goto out_put;
+> +			}
+> +			memcpy(&out_array[j], &in_array[i], size);
+> +			if (size % 8) {
+> +				size_t pad = 8 - (size % 8);
+> +
+> +				memset(((char *)&out_array[j]) + size, 0, pad);
+> +			}
+> +			i += u64_words;
+> +			j += u64_words;
+> +
+> +			COPY_U64(); /* dyn_size */
+> +		}
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping stack user sample as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+> +	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE)
+> +		COPY_U64(); /* perf_sample_weight */
+> +	if (sample_type & PERF_SAMPLE_DATA_SRC)
+> +		COPY_U64(); /* data_src */
+> +	if (sample_type & PERF_SAMPLE_TRANSACTION)
+> +		COPY_U64(); /* transaction */
+> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
+> +		u64 abi;
+> +
+> +		COPY_U64(); /* abi */
+> +		abi = out_array[j-1];
+> +		if (abi != PERF_SAMPLE_REGS_ABI_NONE) {
+> +			u64 nr = hweight64(evsel->core.attr.sample_regs_intr);
+> +
+> +			if (nr > max_i - i || nr > max_j - j) {
+> +				ret = -EFAULT;
+> +				goto out_put;
+> +			}
+> +			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
+> +			i += nr;
+> +			j += nr;
+> +		}
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping interrupt register sample as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+> +	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
+> +		COPY_U64(); /* phys_addr */
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping physical address sample as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+> +	if (sample_type & PERF_SAMPLE_CGROUP)
+> +		COPY_U64(); /* cgroup */
+> +	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
+> +		COPY_U64(); /* data_page_size */
+> +	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
+> +		COPY_U64(); /* code_page_size */
+> +
+> +	if (sample_type & PERF_SAMPLE_AUX) {
+> +		u64 size;
+> +
+> +		CHECK_BOUNDS(1, 1);
+> +		size = out_array[j++] = in_array[i++];
+> +		if (size > 0) {
+> +			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
+> +
+> +			if (u64_words > max_i - i || u64_words > max_j - j) {
+> +				ret = -EFAULT;
+> +				goto out_put;
+> +			}
+> +			memcpy(&out_array[j], &in_array[i], size);
+> +			if (size % 8) {
+> +				size_t pad = 8 - (size % 8);
+> +
+> +				memset(((char *)&out_array[j]) + size, 0, pad);
+> +			}
+> +			i += u64_words;
+> +			j += u64_words;
+> +		}
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping aux sample as possible ASLR leak\n");
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+
+Can you use perf_event__synthesize_sample()?
+
+
+> +
+> +	if (evsel__is_offcpu_event(evsel)) {
+> +		/* TODO: can this be less conservative? */
+> +		pr_debug("Dropping off-CPU sample as possible ASLR leak\n");
+
+Why not remap the address?
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Namhyung
->
+> +		ret = 0;
+> +		goto out_put;
+> +	}
+> +
+> +	new_event->sample.header.size = sizeof(struct perf_event_header) + j * sizeof(u64);
+> +
+> +	perf_sample__init(&new_sample, /*all=*/ true);
+> +	ret = evsel__parse_sample(evsel, new_event, &new_sample);
+> +	if (ret) {
+> +		perf_sample__exit(&new_sample);
+> +		goto out_put;
+> +	}
+> +
+> +	ret = delegate->sample(delegate, new_event, &new_sample, evsel, machine);
+> +	perf_sample__exit(&new_sample);
+> +
+> +out_put:
+> +	thread__put(thread);
+> +	return ret;
+> +}
+> +
+> +#undef CHECK_BOUNDS
+> +#undef COPY_U64
+> +#undef REMAP_U64
+> +
+> +
+> +static int aslr_tool__process_attr(const struct perf_tool *tool,
+> +				   union perf_event *event,
+> +				   struct evlist **pevlist)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct perf_tool *delegate;
+> +	union perf_event *new_event;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +	delegate = aslr->tool.delegate;
+> +	new_event = (union perf_event *)aslr->event_copy;
+> +
+> +	memcpy(&new_event->attr, &event->attr, event->attr.header.size);
+> +	if (new_event->attr.attr.type == PERF_TYPE_BREAKPOINT)
+> +		new_event->attr.attr.bp_addr = 0;  /* Conservatively remove addresses. */
+> +
+> +	return delegate->attr(delegate, new_event, pevlist);
+> +}
+> +
+> +static s64 aslr_tool__process_auxtrace(const struct perf_tool *tool __maybe_unused,
+> +				       struct perf_session *session,
+> +				       union perf_event *event)
+> +{
+> +	if (perf_data__is_pipe(session->data)) {
+> +		int err = skipn(perf_data__fd(session->data), event->auxtrace.size);
+> +
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +	return event->auxtrace.size;
+> +}
+> +
+> +static int aslr_tool__process_auxtrace_info(const struct perf_tool *tool __maybe_unused,
+> +					    struct perf_session *session __maybe_unused,
+> +					    union perf_event *event __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int aslr_tool__process_auxtrace_error(const struct perf_tool *tool __maybe_unused,
+> +					     struct perf_session *session __maybe_unused,
+> +					     union perf_event *event __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void aslr_tool__init(struct aslr_tool *aslr, struct perf_tool *delegate)
+> +{
+> +	delegate_tool__init(&aslr->tool, delegate);
+> +	aslr->tool.tool.ordered_events = true;
+> +
+> +	machines__init(&aslr->machines);
+> +
+> +	hashmap__init(&aslr->remap_addresses,
+> +		      remap_addresses__hash, remap_addresses__equal,
+> +		      /*ctx=*/NULL);
+> +	hashmap__init(&aslr->top_addresses,
+> +		      top_addresses__hash, top_addresses__equal,
+> +		      /*ctx=*/NULL);
+> +	aslr->first_kernel_mapping = true;
+> +
+> +	aslr->tool.tool.sample	= aslr_tool__process_sample;
+> +	/* read - reads a counter, okay to delegate. */
+> +	aslr->tool.tool.mmap	= aslr_tool__process_mmap;
+> +	aslr->tool.tool.mmap2	= aslr_tool__process_mmap2;
+> +	aslr->tool.tool.comm	= aslr_tool__process_comm;
+> +	aslr->tool.tool.fork	= aslr_tool__process_fork;
+> +	aslr->tool.tool.exit	= aslr_tool__process_exit;
+> +	/* namesspaces, cgroup, lost, lost_sample, aux, */
+> +	/* itrace_start, aux_output_hw_id, context_switch, throttle, unthrottle */
+> +	/* - no virtual addresses. */
+> +	aslr->tool.tool.ksymbol	= aslr_tool__process_ksymbol;
+> +	/* bpf - no virtual address. */
+> +	aslr->tool.tool.text_poke = aslr_tool__process_text_poke;
+> +	aslr->tool.tool.attr = aslr_tool__process_attr;
+> +	/* event_update, tracing_data, finished_round, build_id, id_index, */
+> +	/* event_update, tracing_data, finished_round, build_id, id_index, */
+> +	/* auxtrace_info, auxtrace_error, time_conv, thread_map, cpu_map, */
+> +	/* stat_config, stat, feature, finished_init, bpf_metadata, compressed, */
+> +	/* auxtrace - no virtual addresses. */
+> +	aslr->tool.tool.auxtrace = aslr_tool__process_auxtrace;
+> +	aslr->tool.tool.auxtrace_info = aslr_tool__process_auxtrace_info;
+> +	aslr->tool.tool.auxtrace_error = aslr_tool__process_auxtrace_error;
+> +}
+> +
+> +struct perf_tool *aslr_tool__new(struct perf_tool *delegate)
+> +{
+> +	struct aslr_tool *aslr = zalloc(sizeof(*aslr));
+> +
+> +	if (!aslr)
+> +		return NULL;
+> +
+> +	aslr_tool__init(aslr, delegate);
+> +	return &aslr->tool.tool;
+> +}
+> +
+> +void aslr_tool__delete(struct perf_tool *tool)
+> +{
+> +	struct delegate_tool *del_tool;
+> +	struct aslr_tool *aslr;
+> +	struct hashmap_entry *cur;
+> +	size_t bkt;
+> +
+> +	if (!tool)
+> +		return;
+> +
+> +	del_tool = container_of(tool, struct delegate_tool, tool);
+> +	aslr = container_of(del_tool, struct aslr_tool, tool);
+> +
+> +	hashmap__for_each_entry(&aslr->remap_addresses, cur, bkt) {
+> +		struct remap_addresses_key *key = (struct remap_addresses_key *)cur->pkey;
+> +
+> +		if (key)
+> +			dso__put(key->dso);
+> +		zfree(&cur->pkey);
+> +		zfree(&cur->pvalue);
+> +	}
+> +	hashmap__for_each_entry(&aslr->top_addresses, cur, bkt) {
+> +		zfree(&cur->pvalue);
+> +	}
+> +
+> +	hashmap__clear(&aslr->remap_addresses);
+> +	hashmap__clear(&aslr->top_addresses);
+> +	machines__destroy_kernel_maps(&aslr->machines);
+> +	machines__exit(&aslr->machines);
+> +	free(aslr);
+> +}
+> diff --git a/tools/perf/util/aslr.h b/tools/perf/util/aslr.h
+> new file mode 100644
+> index 000000000000..ea984d82681f
+> --- /dev/null
+> +++ b/tools/perf/util/aslr.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_ASLR_H
+> +#define __PERF_ASLR_H
+> +
+> +struct perf_tool;
+> +
+> +struct perf_tool *aslr_tool__new(struct perf_tool *delegate);
+> +void aslr_tool__delete(struct perf_tool *aslr);
+> +
+> +#endif /* __PERF_ASLR_H */
+> -- 
+> 2.54.0.545.g6539524ca2-goog
+> 
