@@ -1,233 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ECF3F7A87;
-	Wed,  6 May 2026 16:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778084363; cv=none; b=Ao/a0avvmsXeztvW6pEe/mWyq4h2ErUSIMG6uH/TfwBq3HkIYum1S7TFJpU7V5N8tXQtrHUe3jQ2VDbLzJTLHQasqnyXYN82VzB/9Mr+agOIQHuOF2OXVNbR+FFZmOwfZyou94oZ+Is5Wj2Vbpdm9uqXYKLbFvcGO176RnNvR8o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778084363; c=relaxed/simple;
-	bh=YtenYyYf4eU6QaxdhpspM1g6S8AfcMv6mmfd4urqtU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJZ0DpyluCFkwFrBv5/18xyjjMTjk8w3f8GJhXKnjZbxnRk0NMDY0H3ctYo2EZbjvsBGdPT/HmcAnZ+pCI3fz5ss1nxQchCSU9CL55uAFtVb3mhmOEhuT4edYXtX4uAwJ0AqsAF0xFgnGRgvELynofZSBxaiPhWxeE+NH5YHzE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxeOVIde; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70464BC018
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 May 2026 17:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778087556; cv=pass; b=TKQ20W+7nHel+BdGO6rHSfe6rRqIVbYMhWnusUHVmCjJZAo28OXGErLHDiBRGpSMcUjuKpBzdkoZH67EZ7Tm+EzSROF7dfHajaxkaVk+SVHQUznOcNWKu9exN4Dc9CYchRARVJjo/P55913YInWcricvmnbBH+g3yn/Im6TQIKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778087556; c=relaxed/simple;
+	bh=17IZaLORx4Vx9au5q6osCbPBFXBcBs4/XURatHyIo7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S8GXO49NZOI7ZmeHknMe6KKlQym8d6pkRKPCicWkdYj+PsfrfGBDGmyhHBwbQ3k7YjRL3hLbD0/X8vREOsNnVrLyI69zrvc2lW3SZFhj7rJNPd7EoOrb8eg/vGwYg6YCNPyBxl2x+428VrCYQkaa2LmRW2ItJhrMstSC0MA6Ig4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pT2IRC2e; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxeOVIde"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FB5C2BCB0;
-	Wed,  6 May 2026 16:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778084362;
-	bh=YtenYyYf4eU6QaxdhpspM1g6S8AfcMv6mmfd4urqtU0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jxeOVIdecLBb/xhz1SOIcAJhUWS4kfu2f6pCmtOVsd/PrvcVOktGAEKc34huD25CC
-	 roFrUXd9J7qjqErCE8/eiw18P4dBNFIVBCzZFfSExxljquBN3zoBNAXFuNva6vYMV6
-	 5JuICu2dEP/hrwE8XDrAeCFzkoCSIcXbhqEskByRnzE1QRHgmUdkZ6ClxIYciixeZ9
-	 JrQuiaTfszFyeDl+Pddra8Wl6uKMoMA2egavHLNxXHaA21UvwrcFVl8dzH/UjchD38
-	 ojzHHg6v+lGuxluo/m539+FQx5a/kN91CMNSkopwhf7nkFP1LAELWr9qfjB7Dqujdj
-	 9H9kI/SSVu0/w==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Chun-Tse Shao <ctshao@google.com>,
-	Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Subject: [PATCH v3] perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
-Date: Wed,  6 May 2026 09:19:19 -0700
-Message-ID: <20260506161920.847604-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pT2IRC2e"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ba180a022dso124975ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 May 2026 10:12:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778087540; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eEdoK3jOEuBQLsF+UiWYC3LfzPTVgdzLLttCeWI7Ms0enGBS3n/WNldXXKr0Zo0K8K
+         9WBgHyQFoREa2ta6pgCUC4Yn/aAh0yHb2qfmC9HBjvcyZTndECrEixSDqqOMqBTxh6Xn
+         ICOUolXn/dGBbUKBO439dCNnlqo+nAIKhq06USPXN16NUKaLU9tAxFYuc4hBr8kO+b+8
+         L5eTay8MelhaxPNIgjLEvkE/Ozwp1ARSGXadsg4N6gZ3Sve6WwAlg6QBzok+whXH+dst
+         ov4ukMVaBSI6w1Qs53KeLF6MY4sNlXijo8VWMxm+ElXDlFJkixkwvZ7UIwwwx4reCIMr
+         Q/cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
+        fh=kXUt0O1iu1bXFrGzJOJq+kDx+GjqiOLX16IwRRUWkos=;
+        b=hXcFLmBtspVsicnWSFcuWzbfSrkrufJyYIf3qUoBlEGHf3RpX8waZj6Kj9L9+pVYGu
+         0OhSegRwGEKZ2OaMNROQmmBCM1Pzsjr6k6CdgiucvkuBdMpB2T/l+oAntOZMG8arFCGu
+         STPIyqz1FQGxIoMVjzeXErNj+ahDKnyVgv7d3KckXQDeH8RyO78sBt2goEbvctCyPhLF
+         5p8KYwvojtpcoG2/8FlXPS18HIlzTD9z61qPr+OW9obw6laComYnKoO6Cxys9foqGOhu
+         snqdT2ni5+1sMQlUsJt6xa8SdkfaD6zFq2kmjI97UXAc+l2FY9IhiNgyPZnFw/wDjCeJ
+         M8bA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778087540; x=1778692340; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
+        b=pT2IRC2edN5mixihI8CHMSUB6CfWyd8hRzSeP/uzakExz3hnZJmQxC2lQX7p8vgi75
+         QuNFAbLTly8R+KqoNvHLRpcpx9zNULtKtVWgPIU1tr91B3Q3dKFJ2Qk2yutlMTsjL/yA
+         rWpGPQkj905kYOH0ZN7lflK9BEalyK2lyKYJ1q7cD8wf4iGLXgcTTlYES4wawxRrM0wj
+         pKGMK88KjC8ePqqVgHGXMoFOYAx7SAdNyHXfmv130howK6RYub7A42xQrpzC/7kBB4BA
+         xGIXHeZps48hh2RdYmmTfSj8KflcTYlMbz0XMZDdtn4YFuFUt5rrVXut+n6osxtb7oYC
+         bf7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778087540; x=1778692340;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gdLoyAXbTHg5MUYYwlWwe/g+DURTsJ0015s5KHfP6M8=;
+        b=TgH0PdQmSMrtKNnoA59xSHmSzDBEvcgDjbgTsDdJYvynSW3qDIIaogOLXknSmBed5u
+         /oLlOZqWG/z+i/PP2S5K4TKG/ayX50AnWYv2UBvmyKANot3k1k9TedqbGGgqWEjkBO5F
+         Akfol9D6amkSr+TsoPeQTc5oKph6NZQkfiPk3xBuJwU+v0152a3rQMGjevrROxM5jcUr
+         TuRH28aa8Hm6L19Blk/E7Gc7mdfhQRDwX5wp8c6aMv245J4FaVRnDlUpTspNyyW6QZL3
+         UCeGJmci5eM05Jr7cGh0dtz5OT14CpSztkEHDvkba3gn2CcVqAq+FIP03WzU8u7IcIOd
+         G1ow==
+X-Forwarded-Encrypted: i=1; AFNElJ8BAmIsCgnm1gDdSKg74Q9wlTSUWSeCBSBzi/M6oCUZ8ZzccJdGEBGo/JcLwiIwWBNqDihAX7Vnjjkk4V5rk1hz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9PmI5k6eX9doWY3yUsnwgYlHlE9Nau+LW2wrdiB3wLcV7Y5Ow
+	wBEFW6FYqPCjN+4gJFpQDlPQ3NedYO4+QkPtjBI7+pw+XRNuhafMkLiBUzFF8HR1mv/8HP6D701
+	HmjHzja0TAl6kekYP39egzyb4n7ABCqdX8Tm1XpRV
+X-Gm-Gg: AeBDiev7wZt46opc8FtyvSal+vs3FJ9okqZHFgtSkr2knV7Jh4gdIPrQTJaElG8NVcy
+	LryZc0D35Qkix6JPMgy/bqEuV4fPdt3Rm0e2bYXbE+bG0EFa5+nQCu4gaSR655WwtfCJqkErXbs
+	GfuDbWA5TB63eDLxv0iU/tg4+Rv4sPbDBe9D140Le7G2v8BCqVZ/nPzAkYtVnwkR+X3NFhcZI4W
+	rbc+t5TmowmZV30HVmlhL//eKGvoC7+jRiK2yHmOnrrSz7YUccHU89dGIcr++6v6QZH2EjYFgCO
+	lPO/LSMMMghFzD5cUCTSvNe/TZ3QOAIjRkacR39h/yepkkZwkB3wWHtxKgI=
+X-Received: by 2002:a17:903:124b:b0:2b9:a39a:e5db with SMTP id
+ d9443c01a7336-2bab63fdaeemr38015ad.7.1778087539764; Wed, 06 May 2026 10:12:19
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260321061448.810525-1-irogers@google.com> <acW_IHQVZnxIETdd@google.com>
+ <CAP-5=fWh66OwPC0K4ZyedAWqwyXez0ya9Dz6hzbgY0AhoqMfdg@mail.gmail.com>
+ <ac8pEDUKjuMxXUS6@google.com> <CAP-5=fXeBje03BM8D9q-0KsXg2KmyRa81CuphtSQfHp0isFc_w@mail.gmail.com>
+ <adPzEmwDaHq4SsZw@google.com> <CAP-5=fW-H-ri3MdVv4Vh4xiyB-qpDqnO3gqXR+XyfMK+kXpHQA@mail.gmail.com>
+ <afs9tx6hpi9CiEzN@x1> <aftpmFmahaykG7Rg@google.com>
+In-Reply-To: <aftpmFmahaykG7Rg@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 6 May 2026 10:12:05 -0700
+X-Gm-Features: AVHnY4JZ7-urFSmGnOWKaanXHlPtrHLlMOwgmkcusVivLUN54g7Xy5M5z6J1KhE
+Message-ID: <CAP-5=fUuF4LpSMy30AuLoz-wKy9O8ZLkh+UWBrDJTwNV-D=eqw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf sched: Avoid segv if tp_handler not set
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The -L/--lock-filter option is to specify target locks by name or
-address.  It's basically for global locks where name or address is known
-and fixed.  But 'mmap_lock' is a per-process lock so it cannot be used
-for the -L option.
+On Wed, May 6, 2026 at 9:17=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Wed, May 06, 2026 at 10:10:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, May 05, 2026 at 02:56:02PM -0700, Ian Rogers wrote:
+> > > On Mon, Apr 6, 2026 at 10:53=E2=80=AFAM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > > On Fri, Apr 03, 2026 at 08:29:25AM -0700, Ian Rogers wrote:
+> > > > > On Thu, Apr 2, 2026 at 7:42=E2=80=AFPM Namhyung Kim <namhyung@ker=
+nel.org> wrote:
+> > > > > > On Tue, Mar 31, 2026 at 10:59:52PM -0700, Ian Rogers wrote:
+> > > > > > > On Thu, Mar 26, 2026 at 4:20=E2=80=AFPM Namhyung Kim <namhyun=
+g@kernel.org> wrote:
+> > > > > > > > On Fri, Mar 20, 2026 at 11:14:47PM -0700, Ian Rogers wrote:
+> > > > > > > > > Doing a `perf sched record` then `perf sched stats report=
+` crashes as
+> > > > > > > > > the tp_handler isn't set. Add extra checks that tp_handle=
+r is set
+> > > > > > > > > before accessing through it.
+> >
+> > > > > > > > Oh.. unintended use case. :)  Probably better to add a dumm=
+y handler
+> > > > > > > > for `perf sched stats report`.
+> >
+> > > > > > > Perhaps. I'd prefer to land the simpler change as-is.
+> >
+> > > > > > Well.. I guess the dummy handler approach would be simpler and =
+perform
+> > > > > > better. :)
+> >
+> > > > > > +++ b/tools/perf/builtin-sched.c
+> > > > > > @@ -4955,6 +4955,7 @@ int cmd_sched(int argc, const char **argv=
+)
+> > > > > >                 .switch_event       =3D replay_switch_event,
+> > > > > >                 .fork_event         =3D replay_fork_event,
+> > > > > >         };
+> > > > > > +       struct trace_sched_handler stats_ops  =3D {};
+> > > > >
+> > > > > Oh, because there's an existing null test on the function pointer=
+ we
+> > > > > don't need dummy functions, which is what I thought you were aski=
+ng
+> > > > > for. I'm still not convinced this is very intention revealing, bu=
+t if
+> > > > > it works for you then you can have my reviewed-by tag.
+> >
+> > > > Applied this and the patch 2 to perf-tools-next, thanks!
+> >
+> > > Thanks Namhyung. Did this get accidentally dropped? I'm not seeing it
+> > > in perf-tools-next.
+>
+> I think I've applied my approach and test fix.
 
-  $ sudo perf lock con -ab -L mmap_lock
-  ignore unknown symbol: mmap_lock
-  libbpf: map 'addr_filter': failed to create: -EINVAL
-  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -EINVAL
-  Failed to load lock-contention BPF skeleton
-  lock contention BPF setup failed
+Ok, that wasn't clear. I think it is good to post such changes to the
+list. For example, just sync-ing the header files prompted sashiko to
+point out a bug in our beauty scripts:
+https://lore.kernel.org/linux-perf-users/20260504193334.9F978C2BCB8@smtp.ke=
+rnel.org/
 
-However, it's still a common source of contention especially in a large
-process so we want to use it for the -L/--lock-filter option.  As there
-is check_lock_type() to check mmap_lock at runtime, let's used it to
-filter mmap_locks as a special case.
+Thanks,
+Ian
 
-Of course, this only works with -b/--use-bpf option.
-
-  $ sudo perf lock con -b -L mmap_lock -- perf bench mem mmap -f demand -t 2
-  # Running 'mem/mmap' benchmark:
-  # function 'demand' (Demand loaded mmap())
-  # Copying 1MB bytes ...
-
-         2.679184 GB/sec/thread	( +-   1.78% )
-   contended   total wait     max wait     avg wait         type   caller
-
-           1     15.22 us     15.22 us     15.22 us      rwsem:W   __vm_munmap+0x7e
-           1      7.72 us      7.72 us      7.72 us      rwsem:R   lock_mm_and_find_vma+0x97
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v3) 
- * handle mmap_lock and slab lock together  (Sashiko)
-
-v2)
- * handle a bad lock name for -L option  (Sashiko)
- * handle mmap_lock and other lock together  (Sashiko)
-
- tools/perf/tests/shell/lock_contention.sh     | 11 ++++++++
- tools/perf/util/bpf_lock_contention.c         |  9 ++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 25 +++++++++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 6dd90519f45cec1d..52e8b9db9fbd8844 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -208,6 +208,17 @@ test_lock_filter()
- 		err=1
- 		exit
- 	fi
-+
-+	perf lock con -b -L mmap_lock -q -- perf bench mem mmap -t 2 -l 10 > /dev/null 2> ${result}
-+
-+	# find out the type of mmap_lock
-+	test_lock_filter_type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-+
-+	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
-+		echo "[Fail] BPF result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
-+		err=1
-+		exit
-+	fi
- }
- 
- test_stack_filter()
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index cbd7435579feaf8e..eb8e29b8064b7348 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -186,6 +186,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1, nslabs = 1;
- 	struct evlist *evlist = con->evlist;
- 	struct target *target = con->target;
-+	bool has_mmap_lock = false;
- 
- 	/* make sure it loads the kernel map before lookup */
- 	map__load(machine__kernel_map(con->machine));
-@@ -244,6 +245,11 @@ int lock_contention_prepare(struct lock_contention *con)
- 		unsigned long *addrs;
- 
- 		for (i = 0; i < con->filters->nr_syms; i++) {
-+			if (!strcmp(con->filters->syms[i], "mmap_lock")) {
-+				has_mmap_lock = true;
-+				continue;
-+			}
-+
- 			sym = machine__find_kernel_symbol_by_name(con->machine,
- 								  con->filters->syms[i],
- 								  &kmap);
-@@ -263,7 +269,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 			addrs[con->filters->nr_addrs++] = map__unmap_ip(kmap, sym->start);
- 			con->filters->addrs = addrs;
- 		}
--		naddrs = con->filters->nr_addrs;
-+		naddrs = con->filters->nr_addrs ?: has_mmap_lock;
- 		skel->rodata->has_addr = 1;
- 	}
- 
-@@ -298,6 +304,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	skel->rodata->aggr_mode = con->aggr_mode;
- 	skel->rodata->needs_callstack = con->save_callstack;
- 	skel->rodata->lock_owner = con->owner;
-+	skel->rodata->has_mmap_lock = has_mmap_lock;
- 
- 	if (con->aggr_mode == LOCK_AGGR_CGROUP || con->filters->nr_cgrps) {
- 		if (cgroup_is_v2("perf_event"))
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 96e7d853b9edf3b5..13c451d4cc870c43 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -184,6 +184,7 @@ const volatile int has_type;
- const volatile int has_addr;
- const volatile int has_cgroup;
- const volatile int has_slab;
-+const volatile int has_mmap_lock;
- const volatile int needs_callstack;
- const volatile int stack_skip;
- const volatile int lock_owner;
-@@ -214,6 +215,8 @@ int data_map_full;
- struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
- void bpf_task_release(struct task_struct *p) __ksym __weak;
- 
-+static inline __u32 check_lock_type(__u64 lock, __u32 flags);
-+
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -239,6 +242,8 @@ static inline __u64 get_current_cgroup_id(void)
- 
- static inline int can_record(u64 *ctx)
- {
-+	bool is_addr_ok = false;
-+
- 	if (has_cpu) {
- 		__u32 cpu = bpf_get_smp_processor_id();
- 		__u8 *ok;
-@@ -271,8 +276,10 @@ static inline int can_record(u64 *ctx)
- 		__u64 addr = ctx[0];
- 
- 		ok = bpf_map_lookup_elem(&addr_filter, &addr);
--		if (!ok && !has_slab)
-+		if (!ok && !has_slab && !has_mmap_lock)
- 			return 0;
-+
-+		is_addr_ok = !!ok;
- 	}
- 
- 	if (has_cgroup) {
-@@ -284,6 +291,10 @@ static inline int can_record(u64 *ctx)
- 			return 0;
- 	}
- 
-+	if (is_addr_ok)
-+		return 1;
-+
-+	/* slab and mmap_lock are part of the addr_filter */
- 	if (has_slab && bpf_get_kmem_cache) {
- 		__u8 *ok;
- 		__u64 addr = ctx[0];
-@@ -291,7 +302,17 @@ static inline int can_record(u64 *ctx)
- 
- 		kmem_cache_addr = (long)bpf_get_kmem_cache(addr);
- 		ok = bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
--		if (!ok)
-+		if (ok)
-+			return 1;
-+		else if (!has_mmap_lock)
-+			return 0;
-+	}
-+
-+	if (has_mmap_lock) {
-+		__u64 lock = ctx[0];
-+		__u32 flag = ctx[1];
-+
-+		if (check_lock_type(lock, flag) != LCD_F_MMAP_LOCK)
- 			return 0;
- 	}
- 
--- 
-2.54.0.545.g6539524ca2-goog
-
+> Thanks,
+> Namhyung
+>
