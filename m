@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1394935E92B;
-	Thu,  7 May 2026 07:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C34E36D500;
+	Thu,  7 May 2026 07:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778138802; cv=none; b=I4TlwXVbI1y+BJGOgZiNKab//TkJ7ivOj/1kAXcwMRyMVJA6vk8cUzG/679+fQXmGi8OWPxEuf6oX/47612jKPQj+uZuu1PUT5vwZHOZIlcP2Tlqr7fAFYPR/iNWO11YprpKnX9EK534QKizA8G1+BFn//E1hpM0HIX67w/YGyw=
+	t=1778138802; cv=none; b=FlK9Bh+a1l1r0k1DJk0kNhxM0fo8QqvxHKOuofdsgMThbeDe1nr1fIL23ql1qWKfaciJx4i4Dv6x7dt4vUe0jKqPNzrwH/VmuyYttGWr+ASoMVtA7OL24rcY305t4GBDjQEPhqMqdAMeE2SXhmtVmPFRxpiEdy21RFqqh2KXgC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778138802; c=relaxed/simple;
-	bh=+uNzf2qgr4C3sW8Ogf+nC1N8Nw6K51IIbYOW1sv3qkI=;
+	bh=GV3Fx7ZQMA338Q0paG9OPf46qNRFaHQ/XB0rX7K28MM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=twNVYb8nE7+4HSHy2u0C2K0kKGuirp5cviO6n506c7968ySLv9y3dHCsLpd7/Q+Zut/Bn5Uftkk5y4G+Ep6NicWdY6/uaPoGvR5PkelqR9suZMs3gSQbiEmzjE9VHWE4UE0i6f3uHMWRLVrLK0ZTT20NwL+r03NVS1mZvaAQY5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ii4my3vI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oP8nseYsRZSTF/6tL96pIpXqgEeezjhheS0vuLZCPwRI7CwSlkUdnJ4xg6aT2TuhRZ8riqlws4qbcpuShtjhHsrNH8bJ7kVePX9poozDBuv1F3blG2KOYALOa1+zEyiMpwzP7QPY8gzJ6yV/vu1gND2LVZU0sG25ll0GRwivjg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JV1Vz157; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ii4my3vI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72741C2BCF6;
-	Thu,  7 May 2026 07:26:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JV1Vz157"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B396C2BCC7;
+	Thu,  7 May 2026 07:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778138801;
-	bh=+uNzf2qgr4C3sW8Ogf+nC1N8Nw6K51IIbYOW1sv3qkI=;
+	s=k20201202; t=1778138802;
+	bh=GV3Fx7ZQMA338Q0paG9OPf46qNRFaHQ/XB0rX7K28MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ii4my3vI1eG/o8WNVZOjHZhTl2EOCatEiro3XWBt942cGXhQax6q8CDzh51YVFM3r
-	 hQ4weiUfWo971dBW5jL7CWPyORKMKsiRNYADeYv2iu9lKaXMpOfOMDgZ3SX0DEKGlg
-	 jQj1bRqDG+bDArowdKLe7uhWbzQtcoZoqCEOzj6kK62vT3Fvbex2jHdhAmCyZC7rbx
-	 6mlnbrRsWRX/qm+3Kh+rS5yLksPUo63L/wifDOi5CRrzSpGhvEaLoDWkFre18IBRvY
-	 VRNozQj8nX7NrnNYLwswVG/qP+zA8+/lI6mQYSOS0Iry6+u9wOW95y7TZTMwjlez53
-	 a6E26d9sfZzqA==
+	b=JV1Vz157YFdAPn3kKBFClbUQuXs+dykUwe9KeFIboUEBWDpXnXWIt4wlZWT0EQ9Ay
+	 43jde5SJeVo2FS1Bc9UHXosRm/cZBIXFm5XUhGteYjW648imvgKo1IzTOm3J+bnuxJ
+	 0GLN2Zjtag8+fpLkEzqiUg2O4uVc4PZidlaIM099unfYApNGN3QrG0cysQnm7Gq2Hl
+	 Ito5IkLRVW0mONhDbWyRvMoKRASaASoBCvGOfdF4n328cakoJCfPb6LXPPE6+cUERz
+	 zvND4lQBzhk6q8rxUyySPp39TXMVNeqWW3MBnpSV9i7xAZo8GRV7DYg34Wkj7Irxcf
+	 p1DwTAyx8uYlA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,11 +36,10 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 3/7] perf trace: Sync uapi/linux/mount.h with the kernel source
-Date: Thu,  7 May 2026 00:26:28 -0700
-Message-ID: <20260507072632.37152-4-namhyung@kernel.org>
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH v2 4/7] perf trace: Sync uapi/linux/sched.h with the kernel source
+Date: Thu,  7 May 2026 00:26:29 -0700
+Message-ID: <20260507072632.37152-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260507072632.37152-1-namhyung@kernel.org>
 References: <20260507072632.37152-1-namhyung@kernel.org>
@@ -54,31 +53,62 @@ Content-Transfer-Encoding: 8bit
 
 To pick up changes from:
 
- 5e8969bd19271241 ("mount: add FSMOUNT_NAMESPACE")
+ 9d4e752a24f740b3 ("namespace: allow creating empty mount namespaces")
+ c8134b5f13ae959d ("pidfd: add CLONE_PIDFD_AUTOKILL")
+ 24baca56fafc33d4 ("clone: add CLONE_NNP")
+ 12ae2c81b21cfaa1 ("clone: add CLONE_AUTOREAP")
+ 2e7af192697ef2a7 ("sched/deadline: Add reporting of runtime left & ...")
 
-This would be used to beautify mount syscall arguments and not to
+This would be used to beautify scheduler syscall arguments and not to
 affect builds of other tools (e.g. objtool).
 
 Please see tools/include/uapi/README.
 
-Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/trace/beauty/include/uapi/linux/mount.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../trace/beauty/include/uapi/linux/sched.h     | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/mount.h b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-index d9d86598d100cb32..2204708dbf7a583a 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/mount.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-@@ -110,6 +110,7 @@ enum fsconfig_command {
-  * fsmount() flags.
-  */
- #define FSMOUNT_CLOEXEC		0x00000001
-+#define FSMOUNT_NAMESPACE	0x00000002	/* Create the mount in a new mount namespace */
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/sched.h b/tools/perf/trace/beauty/include/uapi/linux/sched.h
+index 359a14cc76a4038a..33a4624285cd4179 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/sched.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/sched.h
+@@ -34,8 +34,12 @@
+ #define CLONE_IO		0x80000000	/* Clone io context */
+ 
+ /* Flags for the clone3() syscall. */
+-#define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
+-#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given the right permissions. */
++#define CLONE_CLEAR_SIGHAND	(1ULL << 32) /* Clear any signal handler and reset to SIG_DFL. */
++#define CLONE_INTO_CGROUP	(1ULL << 33) /* Clone into a specific cgroup given the right permissions. */
++#define CLONE_AUTOREAP		(1ULL << 34) /* Auto-reap child on exit. */
++#define CLONE_NNP		(1ULL << 35) /* Set no_new_privs on child. */
++#define CLONE_PIDFD_AUTOKILL	(1ULL << 36) /* Kill child when clone pidfd closes. */
++#define CLONE_EMPTY_MNTNS	(1ULL << 37) /* Create an empty mount namespace. */
  
  /*
-  * Mount attributes.
+  * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
+@@ -43,6 +47,12 @@
+  */
+ #define CLONE_NEWTIME	0x00000080	/* New time namespace */
+ 
++/*
++ * unshare flags share the bit space with clone flags but only apply to the
++ * unshare syscall:
++ */
++#define UNSHARE_EMPTY_MNTNS 0x00100000 /* Unshare an empty mount namespace. */
++
+ #ifndef __ASSEMBLY__
+ /**
+  * struct clone_args - arguments for the clone3 syscall
+@@ -146,4 +156,7 @@ struct clone_args {
+ 			 SCHED_FLAG_KEEP_ALL		| \
+ 			 SCHED_FLAG_UTIL_CLAMP)
+ 
++/* Only for sched_getattr() own flag param, if task is SCHED_DEADLINE */
++#define SCHED_GETATTR_FLAG_DL_DYNAMIC	0x01
++
+ #endif /* _UAPI_LINUX_SCHED_H */
 -- 
 2.53.0
 
