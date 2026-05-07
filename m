@@ -1,290 +1,175 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517BF3E8688
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 15:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9E62DAFBD
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 15:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778167448; cv=pass; b=mtuLrqqB/+fJ6rvmL2bMSibP4k4/Jdl6/rwQlWdiqFz0TYRTVCl2zzNONhgI3PWqH9DHX4xkORaaTrQjeJPJPqFQC9ORFjEPOC7jbUYo1WrX2K8VhALF8afxUIcfyIWzrulvufZNRiQXh9yzFbEp8LblOjQpy7QJcmKzl4E8AdY=
+	t=1778167852; cv=pass; b=BCzCHZaT6DcQHX35zH5fAN1JNiABb6utnhyc1MNsZd4ASkr4l5S6q/q9NhAgTUfsi5jO3oT0j16jZfRC3OFdk0Pw5nTgea9Q/g/0YB9ooPp+MFDx1MdFnSyW4Lmv7Em1tTCqeJdUwiAkz1r5m3oL/q4J7gcDDjE+lMf6f9qpIbY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778167448; c=relaxed/simple;
-	bh=58vPxYyjWPMZ8bJoAkm3P6Hd7NG7RdKdlJzAYFrheCc=;
+	s=arc-20240116; t=1778167852; c=relaxed/simple;
+	bh=kNrxkxYRW7kagplXpuPKE6qKbTiz92vOI0XvAuUSKT8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=heSeKp55FNXCoeRqI2/9Ba2p7hjUYRmXBSVJ0LRg/cuIdmEQ2WuGaAQd6GSm6T/d+smHJYFgSmrB1w0ei68+j9N61WgDmydo2hsZln2EkkMkiTMJiu4AbFsCOJ9ZrToVU8TtNsc6Wc6lD0HLHsbh+5PVMH9TLMgI5LqN3X4iCsY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RaF9M7Qr; arc=pass smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=KiiS+yS11pa4jgoQ0nmDFCck0Ry1mJ4WWXLIVAWwAlvUHbIp5re1ZHfhJFdNJGep8/gb/MpbFpvWhlIltbSXCultT8EZBmNGlSecF6WGd3dWxwO9bszs9MnnD7vM1J+pM7H84KvFsxQ0yMDoSR0TnjkDo41C+/YwLCXz8fbKC04=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jZyFql3V; arc=pass smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RaF9M7Qr"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ba180a022dso97245ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 May 2026 08:24:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778167447; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZyFql3V"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b46da8c48eso95545ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 May 2026 08:30:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778167850; cv=none;
         d=google.com; s=arc-20240605;
-        b=XZpWJjnQtcBbuD3g4qcB1BKFvnYeFSfcVij/uS4eH6VzSF+kHhFN2rLAC+XnQGLQPz
-         Z6IZ48klCksJLWrsp5vtgHzR7BAIlmhz1L4ybHfvsWc1J+JAWYl7flyW4oWiPpK7ErG3
-         1d+YoNHL2A0E8FKabltnb5RYtKtFmRMMIByGztWRzjv/9NoKEIj1bIj4v1gAIyDT91fc
-         9gL3xgl+bcqoYFSTWO59jHBVeqM50RiNzFbkNnDRPWRBE4Hq3LTViZEGv++WVJIAT5ph
-         Z1iU6hSlN1ZS3SOIslX/tpMcYb9g6upEcLQdUTON7zgSkyV9pKdLyfOz0cN/9S0hcjyB
-         dBXA==
+        b=gd0sugdHRGgzb7QvyiWypBKrePurQ2VxguoeUsdpdb/RGpRmNqHVoWH3cXdbyIV2xj
+         djnRQ+VXhfrRYehkm5u7dhjKf6+nx5DE/tnjdIeFQUkTbwPvQQewvVnWZSpUNYu7V/kr
+         cjxabmo29w63+uxzPgLE+b9QjOHfPt/caQvVm2Oi1OUt1Uiuqg8JIyzs7OnXVGvNlBLz
+         oqes+qoL974kPm+Cw0g57KHzCIa74BYa0GKirkQEaWD9GnoCo5AQ39o58CQpZF8ZbuRa
+         0/rv2GQENr8g2rsxtf3N0rA7PkGFFP3ZH2vkhtK4QfG/bGF25gBiJPCMLuuPNCgXw5on
+         YnnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=487MgLVCOIdDWtSwIc0mi+AVxJKUWh5HF5BYi3zarm0=;
-        fh=Ts89fJTM3zjTBKWisvVCVTW4t4OqzBffybPKU1OKLp8=;
-        b=b8/pfMmi0CuS3wA3IyOZefJUPWSGY+pwhZuPdOLl1BgXkAwjoWtUBwBhYEfbQ72Ixq
-         quhNNJ+jOL/W+hKoEGQm42LgS0OGbLDB7eaxyLRXi2rRGVH6ms3FF9d8Sj7LqHGNTH2A
-         zDHQPM4D3C2rpFNHGJhij2DVvmU0ta3gztQoMotdyzg3+5H3DFZ93UXGSR0Dvuyqxi30
-         GAqEAXx8rR7Ra+XnyBhXkd+9PP+YupqU8kLvANFaBF5Lf+G/9w5nAtv2LCRhMQDOPLTS
-         wATIDflpfL91Sh3xUMW2Hk3ZB+b15EEaZ24YwzZWaTvPf0KWkXDdafQnzI/Z6NCuTPWH
-         UbPQ==;
+        bh=vJRPPZKaWZPC+g2g3YyNOX1Fvmg1nX5oE76KRCNN+u8=;
+        fh=WD6DziX+CFj8e/cJsEBYBLpg/lTH7SjD7zdbyqYkeyk=;
+        b=Ihgsh+sDJnfXKthLV2Puq9iGFPBXPOD6L2+8DiiO4c8g4cmNvb0gDoGSMGvUKvVF4p
+         0l99i7M8pj43cAaLbv7ar6oxzHmVu1lDGWchkLi+u7l+0PFs6VKORPS5gaT0ZtWMNGEc
+         Ymewf8wTbDMA+7jUdI2pVhOvXi7g6ZZCKKNAARkMpDvwFzY5DL96VnVgX1zlgOgG2N5P
+         OZ+YXuHUJni+/nBtXzyybbakzQHDUQ55T5TKAQ2vWNTGXmtoQ8XCb/8SVyCkUFUlitiO
+         ojv3/Fa1Q9DCkwzu6nJGuvjXCUqBqt8xvqwGQoOY4ExrZOSMnmRTMid0GT3lLxt7K5ds
+         7lNw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778167447; x=1778772247; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778167850; x=1778772650; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=487MgLVCOIdDWtSwIc0mi+AVxJKUWh5HF5BYi3zarm0=;
-        b=RaF9M7Qrj+2T38o0+/t1ZO/JKVooxvq5hDxhoPBqsdqDzc6NVK8vYoNg9DQWLbXQtW
-         gkK566SxotNpoXGW9I6FaIQaHJKddD1tLGc8Drn1pHGJNCo9VLbcZfOHTTzdTMH1Got9
-         qdWsuRoMuqr5DFNPcPyOea53QDt3wSzl5a6lC+Q1K+0hmzT1SrpeyNcrP0XWi9sPEwsf
-         513IHM9Ls4xtZwfOHBHwFZfTzWp7Lddqn+bj+U16cVHVE0+MkKo06m0MzCro7G8fp9J+
-         Crgf3M7eW8Fw1TBncawrTEQXBY+WhXzlrpUClrlhe/xCBH+pAdo8RTiid7nHuFJfrlKp
-         lCWQ==
+        bh=vJRPPZKaWZPC+g2g3YyNOX1Fvmg1nX5oE76KRCNN+u8=;
+        b=jZyFql3VkcKND0tQgnrqhv2j6ZwZzCl6jczWADJLfzkGe8E8VtXx8Fn9DsN9dMODdC
+         G/pV6cNzGYw3X5ovNbv0bKtlcUYDhtVZxqdOi25+G6EBAQuJbR35FCAGbJN4oP2UHZ87
+         NpNW/eGWoqio32nOqLl44orRz7iLQASEyHBic4DilYjH3ZA7fFWieM2eZ/4SIjQPeu3A
+         BBqW/QMZnIzUF9stYGly1CzeeYHzRYE85e60qF9YpzVQIW1c+rqiYi3XzONXXMjlkb+p
+         KSfvEyt0BEjQv08mEYMqZ7dKfMaVpT45ZeLUNn7tTbr8BSCoxI7bS6ikqo/Og+cpdjF5
+         wuQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778167447; x=1778772247;
+        d=1e100.net; s=20251104; t=1778167850; x=1778772650;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=487MgLVCOIdDWtSwIc0mi+AVxJKUWh5HF5BYi3zarm0=;
-        b=DzmKGJ5kA0aSThtyq09mzLxNIwsdzIfk6FmRCGUEAnfsgoiCfSQS4zpUjlOuudljLi
-         w5SKuskKiuaGO4VJlK6QjMkDeDCX652gxVc9+S6Gd5wdTEzH8Z9NFQZBkU0EX8A0yah3
-         OV8OVB4nLpB26lnRT1j1MD6q8zXcUb0R2T9SGMV0WE/rRxsKGbtI/eGw7N/voH+jlrLc
-         W51sZI7fPMfA9J0vHMdYQ2C2POZyru8aR7NgyNtss6oV8JnJj9QVDFJso2v68yxvzLX4
-         CgJW69bIOcWABsf5Tf1mPPLfcGXYDwyzU9yYNy6I1zTZgVK51iNTKaeQ1ErGFV7SNYh5
-         WrsQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/6xjVgUz0Oa7xcH+/zb1aLq7DHXjh26wuCvjaluADx/S6vB1QnDIqNRIksLZXKc9U8tBVGCe7FyUaptKUar368@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJtMxHkecyr+T/X3LwCO3YLM6ksk8WHIENam0PPet8w5liD488
-	ndoqD1QWu2ee05IOOAYkXdTE8Ue9QRxDhdd2EANOa5BfC80UQ1QlDHtLDmXTCci+ylZ7zeSofUa
-	ORzNO9OYZepyvYoOva5BrQmvxoJ1WkpslDD3P4B8Q
-X-Gm-Gg: AeBDietK8Qm9mUIQslJxd1mkQz1TiGRuhh5WDjIvXaUcEQb1m7rsiHrWsjnWyjEVZgy
-	23HnByw0zgCoT2GTtL72IwNsO6loEGhwhXJ8VYmDrNbEgzle8b7gIp6QjIC6mRaSwW374KdsheH
-	1cpTGOtFsw8jc6JWkuxk1+r0U1WeTt2z+FxucG32PfhYky7T/k3YwPPa746NTg5dREDMsH901jT
-	iExnchRZWgfd5XVLmn8WFbHYYugCuECXpd5uv9hV7A4G0j3PueNrGUZIv+ngoPpxfVMPrtPHLoH
-	vOjqviRt4QTpDGJzYGZKLg/tgHVX1KJiEqR3RFxn3bBom5MMrq/12bpXe+o=
-X-Received: by 2002:a17:903:1b63:b0:2a7:6c4e:5914 with SMTP id
- d9443c01a7336-2bab602610emr4091145ad.6.1778167445826; Thu, 07 May 2026
- 08:24:05 -0700 (PDT)
+        bh=vJRPPZKaWZPC+g2g3YyNOX1Fvmg1nX5oE76KRCNN+u8=;
+        b=ST1L2Fesox1V1vkhM2MFS6LC3XW72dF8bFRyM8QnJ/9gFfZXKPYfm7haijFtScBR27
+         PyckTs/cWlKLqy6T9AFFOMM4dOXgbDgueJSW+BHE5k+rl1zQZ0SCDBr4i2YVzeoJxUbI
+         ZGiaagm4NHXoQj7wWFEa9GlbFNQLLpfYwtrjbfPTidoXyCpUhurzoGKf+LAe9eq4bMrd
+         k8y1WPsyEHC6wOpmgrxwdskrtcGpTX5jNlWnjiGU8b/PE2bNqzLdHNg3elRbPy7UA0eS
+         +uZNBTAuBZ5hmKiCiZNKlDq95yDGy8l4achQBvN4feC0o1nuzbYzMDe7u6RXH/g+BYmR
+         QpiQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9WLr9vVz4kfnyqT/pz15iL36P7Fr5xprBjK0IT6n6beHYvsG2mjaYD/vET7XFQdQWMDFEXrQA+WFpprAGG3P3z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJQ7+aIoNbYhmxM9X157yjzbqufVsJqWz5N3z8spYy6ooWLOnt
+	S1jeDYVlWki2qdYVvCDwrM9iGB9TRhZ/Aj4Yka98mIvZ95jnYmldL9SAL+TB836VZho6JcxcS52
+	PIvcD0sbpeqTu25HZuBa3tch9zI3Bq0bU+Krp0AtQ
+X-Gm-Gg: Acq92OGbTyyRiNGar/ReZGUAqaqWNyZiCm6yLt9i/oMaE7Vw6bR42ZEHOPtOftcId06
+	svVFWqE+HSK/TF5plJzMjv/2Sres0KdFkGjBJTQzlhn5OwOvDEivJ21OrOCCaLfGCZtF/kyL56P
+	LWKpTxP16jb0CabAeOycxBYcUKibU8q4QlapQCLCVVrDRvrC66mnUS6SNIkDNovjhj/VWeQyvhd
+	H1lGCYlbi/YIMMGt3doJwb7kFYS5gbJ37/FnJ1jkMQo795YxbAkFJ+y2frfmRpVvSRpXCasoRbt
+	IeqE7KNWtudo7qFjXF42gA7NRDvwFssxF2RrznHx0LyMwYnU3sheHHj6ey8=
+X-Received: by 2002:a17:903:2656:b0:2b8:e82d:ff7c with SMTP id
+ d9443c01a7336-2bae59d0059mr292905ad.9.1778167849553; Thu, 07 May 2026
+ 08:30:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260506073820.2419087-1-qirui.001@bytedance.com> <20260507071103.2772577-1-qirui.001@bytedance.com>
-In-Reply-To: <20260507071103.2772577-1-qirui.001@bytedance.com>
+References: <20260507063737.3542950-1-wangyushan12@huawei.com> <20260507063737.3542950-3-wangyushan12@huawei.com>
+In-Reply-To: <20260507063737.3542950-3-wangyushan12@huawei.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 7 May 2026 08:23:52 -0700
-X-Gm-Features: AVHnY4K3tC-rEBta7eS_earBfKMxuaWW1IAAIlwBFtNFO-GOmQNetxBt4Q5Og44
-Message-ID: <CAP-5=fVsEVn6AkMEuL8oGW-1uqKL-8TtjgF0_aniwjVCxymv4g@mail.gmail.com>
-Subject: Re: [PATCH v3] perf: Add is_mapping_symbol() helper for kernel
- mapping symbol filtering
-To: Rui Qi <qirui.001@bytedance.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 7 May 2026 08:30:38 -0700
+X-Gm-Features: AVHnY4I4QvxZzqwfpnvEbeIlSMNnhQaDf0SBrzeqp55KmSJ1VSkv32i2lPyqqXA
+Message-ID: <CAP-5=fWkRD17T2iMTAPF8kjkkpW+BaeyxA3EzxXatRc1vN4QCQ@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 2/7] perf stat: Save unnecessary print_metric() call
+To: Yushan Wang <wangyushan12@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@arm.com, 
+	john.g.garry@oracle.com, will@kernel.org, mike.leach@arm.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, jic23@kernel.org, leo.yan@linux.dev, 
+	robin.murphy@arm.com, linuxarm@huawei.com, hejunhao3@huawei.com, 
+	prime.zeng@hisilicon.com, fanghao11@huawei.com, wangzhou1@hisilicon.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 7, 2026 at 12:11=E2=80=AFAM Rui Qi <qirui.001@bytedance.com> wr=
-ote:
+On Wed, May 6, 2026 at 11:37=E2=80=AFPM Yushan Wang <wangyushan12@huawei.co=
+m> wrote:
 >
-> The perf tool currently has ad-hoc logic to filter out ELF mapping
-> symbols scattered across multiple files. ARM, AArch64 and RISC-V each
-> have their own inline checks in dso__load_sym_internal(), and kallsym
-> processing has yet another check for ARM module symbols.
+> The patch listed under Fixes removed the other branch of iostat_run, and
+> changed num to 0 since it is the default behavior of it. But during
+> iostat_run, default value 1 of num is required to avoid print_metric()
+> call later.
 >
-> This is fragile: adding support for a new architecture or adjusting
-> which prefixes are considered mapping symbols requires touching
-> multiple places, and it is easy for the checks to diverge. It also
-> does not match the kernel's own is_mapping_symbol() logic, which
-> additionally covers x86 local symbols (".L*" and "L0*").
+> Set num as 1 to avoid redundant print_metric() call that causes
+> unaligned blank printed.
 >
-> Introduce a single is_mapping_symbol() inline helper in symbol.h and
-> convert all kernel symbol handling to use it. The helper covers the
-> existing "$" prefix used by ARM, AArch64 and RISC-V, and also adds
-> the x86 local symbol prefixes so that perf stays consistent with
-> the kernel.
+> Before this patch:
 >
-> Signed-off-by: Rui Qi <qirui.001@bytedance.com>
-> ---
-> Changes in v3:
->   - Add is_mapping_symbol() check for kernel modules in dso__load_sym_int=
-ernal()
->   - Add is_mapping_symbol() check in machine__process_ksymbol_unregister(=
-)
+> root@localhost$ ./perf stat --iostat=3D0000:20:0f.0 --timeout 100
 >
-> Link (v2): https://lore.kernel.org/all/20260506073820.2419087-1-qirui.001=
-@bytedance.com/
+>  Performance counter stats for 'system wide':
 >
-> Changes in v2:
->   - Only apply is_mapping_symbol() filtering to kernel symbols (kallsyms
->     and ksymbol events), not to user-space symbols from ELF files,
->     BFD libraries, or perf map files.  This avoids incorrectly
->     discarding valid user-space function names that start with '$',
->     which is a legal character in identifiers for many languages
->     (e.g., Java, Scala) and compilers (GCC).
->   - Move the mapping symbol check in machine__process_ksymbol_register()
->     to the beginning of the function, before any map/dso allocation
->     or insertion, to avoid leaving empty maps in the kernel map tree.
+>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound C=
+PL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+> 0000:20:0f.0                 0.00                                      0.=
+00                                      0.00                               =
+       0.00                                      0.00
+>                             0.01
 >
-> Link (v1): https://lore.kernel.org/all/20260504090609.1801880-1-qirui.001=
-@bytedance.com/
-> ---
->  tools/perf/util/machine.c    | 12 +++++++++++-
->  tools/perf/util/symbol-elf.c |  8 ++++++++
->  tools/perf/util/symbol.c     |  4 ++--
->  tools/perf/util/symbol.h     | 15 +++++++++++++++
->  4 files changed, 36 insertions(+), 3 deletions(-)
+>        0.100138030 seconds time elapsed
 >
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index e76f8c86e62a..4e33ba06111d 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -729,9 +729,15 @@ static int machine__process_ksymbol_register(struct =
-machine *machine,
->  {
->         struct symbol *sym;
->         struct dso *dso =3D NULL;
-> -       struct map *map =3D maps__find(machine__kernel_maps(machine), eve=
-nt->ksymbol.addr);
-> +       struct map *map;
->         int err =3D 0;
+> After this patch:
 >
-> +       /* Ignore mapping symbols in ksymbol events - check early before =
-any state mutation */
-> +       if (is_mapping_symbol(event->ksymbol.name))
-> +               return 0;
-> +
-> +       map =3D maps__find(machine__kernel_maps(machine), event->ksymbol.=
-addr);
-> +
->         if (!map) {
->                 dso =3D dso__new(event->ksymbol.name);
+> root@localhost$ ./perf stat --iostat=3D0000:20:0f.0 --timeout 100
 >
-> @@ -790,6 +796,10 @@ static int machine__process_ksymbol_unregister(struc=
-t machine *machine,
->         struct symbol *sym;
->         struct map *map;
+>  Performance counter stats for 'system wide':
 >
-> +       /* Ignore mapping symbols in ksymbol events */
-> +       if (is_mapping_symbol(event->ksymbol.name))
-> +               return 0;
-> +
->         map =3D maps__find(machine__kernel_maps(machine), event->ksymbol.=
-addr);
->         if (!map)
->                 return 0;
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 7afa8a117139..6b12508ea58d 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1607,6 +1607,14 @@ dso__load_sym_internal(struct dso *dso, struct map=
- *map, struct symsrc *syms_ss,
->                                 continue;
->                 }
+>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound C=
+PL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+> 0000:20:0f.0                 0.00                 0.00                 0.=
+00                 0.00                 0.00                 0.01
 >
-> +               /*
-> +                * For kernel modules, also reject x86 local symbols (.L*=
- and L0*)
-> +                * to match the kernel's is_mapping_symbol() logic and ka=
-llsyms
-> +                * parsing behavior.
-> +                */
-> +               if (kmodule && is_mapping_symbol(elf_name))
-> +                       continue;
-> +
->                 if (runtime_ss->opdsec && sym.st_shndx =3D=3D runtime_ss-=
->opdidx) {
->                         u32 offset =3D sym.st_value - syms_ss->opdshdr.sh=
-_addr;
->                         u64 *opd =3D opddata->d_buf + offset;
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index fcaeeddbbb6b..af03b16c17c6 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -770,8 +770,8 @@ static int map__process_kallsym_symbol(void *arg, con=
-st char *name,
->         if (!symbol_type__filter(type))
->                 return 0;
+>        0.100127590 seconds time elapsed
 >
-> -       /* Ignore local symbols for ARM modules */
-> -       if (name[0] =3D=3D '$')
-> +       /* Ignore mapping symbols in kallsyms */
-> +       if (is_mapping_symbol(name))
->                 return 0;
->
->         /*
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index bd6eb90c8668..27fa1b43e6f1 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -28,6 +28,21 @@ struct maps;
->  struct option;
->  struct build_id;
->
-> +/*
-> + * Ignore kernel mapping symbols, matching kernel is_mapping_symbol() lo=
-gic.
-> + * This checks for '$' prefix (used by ARM, AArch64, RISC-V) and
-> + * x86 local symbol prefixes (.L* and L0*).
-> + * Only use this for kernel symbols (kallsyms, ksymbol events).
-> + */
-> +static inline bool is_mapping_symbol(const char *str)
+> Fixes: b71f46a6a708 ("perf stat: Remove hard coded shadow metrics")
+> Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
 
-Is there a good reference for what is meant by "mapping symbol" ?
-Would "local symbol" be more appropriate for x86? On ARM it seems the
-term is well defined:
-https://developer.arm.com/documentation/dui0803/a/Accessing-and-managing-sy=
-mbols-with-armlink/About-mapping-symbols
-I'm wondering if we can make this more intention-revealing. I'm
-wondering also if we should make the check dependent on the e_machine,
-so perhaps:
-```
-static inline is_ignored_kernel_symbol(const char *name, uint16_t e_machine=
-)
-{
-  if (e_machine =3D=3D EM_386 || e_machine =3D=3D EM_X86_64) {
-    /* Local symbols on x86 may start .L or L0. */
-   return(str[0] =3D=3D '.' && str[1] =3D=3D 'L')  || (str[0] =3D=3D 'L' &&=
- str[1] =3D=3D '0';
-  }
-  /* All other machine types. Assume symbols starting $ are mapping
-symbols used to denote transitions between different sections of data
-and code. */
-  return str[0] =3D=3D '$';
-}
-```
-I think you can use something like `dso__e_machine` at all call sites
-to get the ELF machine type for the binary or kernel, but maybe this
-is overkill.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +{
-> +       if (str[0] =3D=3D '.' && str[1] =3D=3D 'L')
-> +               return true;
-> +       if (str[0] =3D=3D 'L' && str[1] =3D=3D '0')
-> +               return true;
-> +       return str[0] =3D=3D '$';
-> +}
-> +
->  /*
->   * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
->   * for newer versions we can use mmap to reduce memory usage:
+> ---
+>  tools/perf/util/stat-shadow.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
+c
+> index bc2d44df7baf..0056444523d6 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -326,8 +326,10 @@ void perf_stat__print_shadow_stats(struct perf_stat_=
+config *config,
+>         void *ctxp =3D out->ctx;
+>         int num =3D 0;
+>
+> -       if (config->iostat_run)
+> +       if (config->iostat_run) {
+>                 iostat_print_metric(config, evsel, out);
+> +               num =3D 1;
+> +       }
+>
+>         perf_stat__print_shadow_stats_metricgroup(config, evsel, aggr_idx=
+,
+>                                                   &num, NULL, out);
 > --
-> 2.20.1
+> 2.33.0
+>
