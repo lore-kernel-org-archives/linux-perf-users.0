@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DBF34FF5D;
-	Thu,  7 May 2026 07:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED9935F18B;
+	Thu,  7 May 2026 07:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778138799; cv=none; b=GzqHT0R9B1YuoZ+BR6S95I9/jkGAoSjpVBcVVwExC2qNBi04WBb77/fLNHUrHfXW0O11n9+Nu5kQ7KdKrkBcM1W6a+RqlJEMra16riOnTs6dT/5GpMGsA18FvU8SFSerFDg7Er/uvHkdLuuPD1J9e45ZZUCkcanuoiUtvukmJ5c=
+	t=1778138801; cv=none; b=g+7GrkjRdekcMfvML5B8piqvrYwLKZpLfbI3EqWY5VS4opzgClTftiFuv6IBzCXCu0de0xHesLO2yFrd8C16xZMPcuq1lkhUc2id7zMkXggxszxXTfEs0ycM4S7n6ps+Y9ujlOZ80ccWqhAqqfhKjflK9jPG0Wxuer4xXIvSxQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778138799; c=relaxed/simple;
-	bh=PZEMnK6gk+VG3Ru3GVW2lGV2wZUcn0yXtzqhqftadHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D+wi5nTrZypP+Rkrodz1ihkZ5KaTEXaUpuNSHrakNHdoo+/SaAgYLHsjACfCih0+hgJf0ilGqMFNi2NvuCapgIZ9x5c28PL1sa+qk1lFguyRP9qAO3kObqrHg26CVr6jChVe5xNifQmc9U5LmDzbsBCBQ+LyOh33CuVHRg3yZrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKS9qFwq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778138801; c=relaxed/simple;
+	bh=vZqA9cAhuBFLO+64bSaU4f5yvGMLGVVYFVQOut7Yf/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jdMTyL9GelMJiQTu9ltuklpcBIKENzCXaVkoFWLEQ4oGUuX73WKzdIyzQSHNT3OfXotJGAToBgyK4nkgnCfAdRJG6in6m5Qe1Pf321N1QOglG294swlmwZPAfiu5EfNf3X4lY1VMdIiGQUqtK/Y7bcct2AJSyyEfZsRiksmUudw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIga6+gd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKS9qFwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DD0C2BCB8;
-	Thu,  7 May 2026 07:26:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIga6+gd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D306C2BCC7;
+	Thu,  7 May 2026 07:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778138798;
-	bh=PZEMnK6gk+VG3Ru3GVW2lGV2wZUcn0yXtzqhqftadHI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aKS9qFwqy1Loqu3EZv9lJXrdQrVxvKTlJ/1LVHLqprpoBLP9AP3ECqZNo6I0hz/t1
-	 i8m7E0awkwroLM8zzun8T1jXccOTSfM+Bv2IKKEpmOPzUJli2k3sXc3TZ5wIsngc7n
-	 TxxwXZ4qE2pNFkEIPAblZMmtBI/bnYvYcFnYlOglHIILIvzq38MPfQWuBmNTycDGBG
-	 yLc+lDIoyv5P5xPsSGC7dxfPUMvJT3EVk44TlAXq+F8tqJ3ZcyzGqcC6wVHjtOsqrt
-	 q4z691bv7kA2rMYoDemmVRMG8Sxip5WkelVjAbM+9XSRs8UOtCsydZ7pvX8nsWjKNd
-	 vdHa+WACQrzoQ==
+	s=k20201202; t=1778138800;
+	bh=vZqA9cAhuBFLO+64bSaU4f5yvGMLGVVYFVQOut7Yf/U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lIga6+gdxI3lM8vCdW2AJb3vy9NPTAE7sKaZ7Z71nv7DFTM6u0czCAg7dX2eyfwQn
+	 yrDw+Hn6Q9LoY152NnDDftG+pg8nsyQXE1HBTgzNweuEN+GDXBhAId5g4oRCBjS1Ts
+	 q5N+uOIw9FIgiT6t+g68ouegxloTUcFTo9HgWp94+tQe/aMtolAhBN21ut+BQdXWmx
+	 ZZJ4yTaadu+6P8x9zaII0Ou40TbePDJiciHOQT1xff52sRFV97bmHLk/umbYsZhKr+
+	 JJeWc1wuAVZTWKyW4fjDe/DGF6ri+bUzV16oWrFz0iP+Zawmuq8x4EFdV3G0R32dmy
+	 U4+/0rmE7oXmA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,11 +36,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH v2 0/7] perf build: Update kernel headers
-Date: Thu,  7 May 2026 00:26:25 -0700
-Message-ID: <20260507072632.37152-1-namhyung@kernel.org>
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	netdev@vger.kernel.org
+Subject: [PATCH v2 1/7] perf trace: Sync linux/socket.h with the kernel source
+Date: Thu,  7 May 2026 00:26:26 -0700
+Message-ID: <20260507072632.37152-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260507072632.37152-1-namhyung@kernel.org>
+References: <20260507072632.37152-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,51 +52,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+To pick up changes from:
 
-This is to update copy of kernel headers for v7.1.  I've updated ones
-in the tools/perf/trace/beauty/ and left others which seem not to
-affect perf syscall beautifiers.  This is suggested by Linus to avoid
-unnecessary builds of objtool and the kernel.
+ c66e0f453d1afa82 ("net: use ktime_t in struct scm_timestamping_internal")
 
-There are AMD IBS changes that are directly related to perf, but I
-think Ravi is working on it with other Zen6 changes.  So I didn't
-include it here.
+This would be used to beautify networking syscall arguments and not to
+affect builds of other tools (e.g. objtool).
 
-Due to the header file changes, some beautifier scripts for perf trace
-are updated too.  This was detected by Sashiko.
+Please see tools/include/uapi/README.
 
-Also I removed the header difference output in the default perf build
-and added a new make target to check it explicitly.
+Cc: netdev@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/trace/beauty/include/linux/socket.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Namhyung
-
-
-Namhyung Kim (7):
-  perf trace: Sync linux/socket.h with the kernel source
-  perf trace: Sync uapi/linux/fs.h with the kernel source
-  perf trace: Sync uapi/linux/mount.h with the kernel source
-  perf trace: Sync uapi/linux/sched.h with the kernel source
-  perf build: Add make check-headers target
-  perf trace: Add beautifier script for fsmount flags
-  perf trace: Update beautifier script for clone flags
-
- tools/perf/Makefile                           |  5 ++++-
- tools/perf/Makefile.perf                      |  8 ++++++-
- tools/perf/builtin-trace.c                    |  7 +-----
- tools/perf/trace/beauty/beauty.h              |  3 +++
- tools/perf/trace/beauty/clone.sh              |  4 ++--
- tools/perf/trace/beauty/fsmount.c             | 18 ++++++++++++++-
- tools/perf/trace/beauty/fsmount.sh            | 11 +++-------
- tools/perf/trace/beauty/fsmount_attr.sh       | 22 +++++++++++++++++++
- .../perf/trace/beauty/include/linux/socket.h  |  2 +-
- .../perf/trace/beauty/include/uapi/linux/fs.h | 12 ++++++++++
- .../trace/beauty/include/uapi/linux/mount.h   |  1 +
- .../trace/beauty/include/uapi/linux/sched.h   | 17 ++++++++++++--
- 12 files changed, 88 insertions(+), 22 deletions(-)
- create mode 100644 tools/perf/trace/beauty/fsmount_attr.sh
-
+diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
+index ec715ad4bf25f5f7..ec4a0a0257939a53 100644
+--- a/tools/perf/trace/beauty/include/linux/socket.h
++++ b/tools/perf/trace/beauty/include/linux/socket.h
+@@ -415,7 +415,7 @@ struct __kernel_timespec;
+ struct old_timespec32;
+ 
+ struct scm_timestamping_internal {
+-	struct timespec64 ts[3];
++	ktime_t ts[3];
+ };
+ 
+ extern void put_cmsg_scm_timestamping64(struct msghdr *msg, struct scm_timestamping_internal *tss);
 -- 
 2.53.0
 
