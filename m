@@ -1,178 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED043793CC;
-	Thu,  7 May 2026 08:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CCC3806AF;
+	Thu,  7 May 2026 08:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778142057; cv=none; b=I+n5AzWLjDeYmADDgAg7MQw5a/5fF/cVTJwvIGHaaIAjTIOPsDMvpj1x1iscU+oWf9OZwC+0BWR98Q6UIb07CDT8JyROzzyIkOKw8BMDhXKzwCa5d+C7xRJIqvqvjZgrv3HyEbO1qDqAfSecekBdeV6vbfw4eKIPEs1r4ZEEMtI=
+	t=1778143590; cv=none; b=Cs40hz94UqWxzN8sO/E6Y7tj0klm3noODtL2AWFSVgvYzd1ruhWcHYcQoojDfzNfaM2EVo9PaB3s4Hry5LEwohp/pSOc6wKLdmxkgFihpZ3amY9I8LNDHGy2plLDibuLeWXyeSCATvlD76orRaeGEzpVlAlqv2ii2bJJR4lYy7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778142057; c=relaxed/simple;
-	bh=lFb1+oPNnbKA8NN4mjXNojOTIr5Kusi2WlwiI9M4fvo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ijRtP+0U/fO8jEfeoYe5hYNy1+h8fTurrHTr8Fx0A9UMbJYavK8+GkRcfGVl7AnTqhNyTxbVdCf8XzfaF9qc0Ux3ISH8ME9Vp84irR5hlDXD0RZa60wL4lxjedY8r3TpSE7gqFQnxSAlLLQD7HYKNTFxBxKrBdBqHKrP+z2s9ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szz0Bmlz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778143590; c=relaxed/simple;
+	bh=xN6s8qTCagkaRUEyuSIWh9m+rNdxQUEhlkayhoY6VAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hi7LClkZHgpWRwO0Vg9MJ8e2JG1lDdBC6jbZmCohSA74yiDo4vwwyg0U5W/sUDnBR2i/s2+Lwk2DndXGJm/DzzClOZ8B9E6cYf6OH7Poxc2fVZQe+uxjGGPZHaopnAsE+L30qC2JKqkVHV+uqMdtCxe2Mgkdjq73bpllzo4jZ+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mEGUx7lK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szz0Bmlz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93E0C2BCB2;
-	Thu,  7 May 2026 08:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778142057;
-	bh=lFb1+oPNnbKA8NN4mjXNojOTIr5Kusi2WlwiI9M4fvo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=szz0Bmlz2Durkdh1JjIMvadm5zpVWw5ri9Kaki8PiMiToBpO8s9qcdBrdIFtbgHqT
-	 E1fdH9gkTxGEPOWPJVUJsqA93tw93kqbGA2AqN6vca3ucH+L4GLe4yIQyrSMhagcDQ
-	 0wquHjdlwep5tkT2+ePowrbtxzDUXQoH0HqqF8pN00d7RPd62QlkJ+F7jJPG71vmnD
-	 1o1jSfGCgtzvzIYM0sYeVJs12pw9bhi0EpCc6Ee4zGUOjCNflenNi4ErNXmJELoSwC
-	 NuZc8uuop3JkE2RRientbPme7SywEIWdXT0juqQJE6/6ZDiqdzJ0C3RxOT3KQk1DGV
-	 VkwIe9+Pu67Kg==
-Date: Thu, 7 May 2026 17:20:54 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
- <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zecheng Li
- <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] [PATCH v5 0/9] perf DWARF: Fix libdw API
- contract violations and crashes
-Message-Id: <20260507172054.ee574b81492bdad1e18993e1@kernel.org>
-In-Reply-To: <CAP-5=fWq1YWg09kaGovUtPaJh9udz5J6rdxL8_tf6N=hA+ewVQ@mail.gmail.com>
-References: <20260503171032.1559338-1-irogers@google.com>
-	<20260504081227.2203848-1-irogers@google.com>
-	<afkw4MARqVAYOB2p@google.com>
-	<CAP-5=fWq1YWg09kaGovUtPaJh9udz5J6rdxL8_tf6N=hA+ewVQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mEGUx7lK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lRnM4fFKPPMoEdkTS+bDMQuR7pEpTZgpnipU4NMWWWo=; b=mEGUx7lKjwMMXn1aZgT5RnbhKM
+	jFceouLYIULOyIUk68GqwF2iEmy4ROYD14iCPqjZmRvAHsl1LjAUEUHFbVBdvilnUSnnGgBHYFdMg
+	dWw/l8A7YCdY420WsF0qXoHwj+z+gzP7bwJ/TXQf4zjsqcQB/ojfMWFQ2kt0Q50+9Tz599g1m71vx
+	g4LDyjD0+FNJ4G45sv2xukjTiN1AMB83KqFF81nSue35F9GrbKkfKb7KaDe+umzhn1BpjBro5mfFZ
+	1ajrJtYQC1IXPSiTPLvPcYU2su3qJCSaKkU51B/hpVVCloPGyPGF2gzYoc+D0oFGsrbaLAy/J47tD
+	GBtnqkZg==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wKuN5-00000002xQR-2bSx;
+	Thu, 07 May 2026 08:46:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3F13E3008D6; Thu, 07 May 2026 10:46:15 +0200 (CEST)
+Date: Thu, 7 May 2026 10:46:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] perf/x86: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20260507084615.GP1026330@noisy.programming.kicks-ass.net>
+References: <afJcDg1I5ZU5ZkXf@kspp>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afJcDg1I5ZU5ZkXf@kspp>
 
-Thanks Ian!
+On Wed, Apr 29, 2026 at 01:29:18PM -0600, Gustavo A. R. Silva wrote:
 
-On Tue, 5 May 2026 09:29:13 -0700
-Ian Rogers <irogers@google.com> wrote:
+> +	/*
+> +	 * Intel LBR bits
+> +	 */
+> +	int				lbr_users;
+> +	int				lbr_pebs_users;
+> +	union {
+> +		struct er_account		*lbr_sel;
+> +		struct er_account		*lbr_ctl;
+> +	};
+> +	u64				br_sel;
+> +	void				*last_task_ctx;
+> +	int				last_log_id;
+> +	int				lbr_select;
+> +	void				*lbr_xsave;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
+> +		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+> +		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+> +	);
 
-> On Mon, May 4, 2026 at 4:50 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > Just updated Masami's email address.  Please use it for later.
-> 
-> Thanks Namhyung, I'll make sure in the future. For Masami's benefit
-> here are the LKML posts:
-> https://lore.kernel.org/linux-perf-users/afkw4MARqVAYOB2p@google.com/T/#mb887c8aadf50c0371c4cb9273b9a7777591ad99e
-> 
-> The sashiko reviews (the 1 "critical" issue isn't an issue as
-> mentioned in a separate thread [1]):
-> https://sashiko.dev/#/patchset/20260504081227.2203848-1-irogers%40google.com
-> 
-> I think the series is ready to land and given that it fixes crashes we
-> may want to cherry-pick it for 7.1.
-> 
-> Thanks,
-> Ian
-> 
-> [1] https://lore.kernel.org/linux-perf-users/afkw4MARqVAYOB2p@google.com/T/#mc177f9ef695805b013fce3fecbea7d84dfa937fd
-> 
+FWIW, this thing is horrible crap. Per construction this thing does not
+need to be last at all, you can have multiple such constructs in a
+single structure and things would be perfectly fine.
 
-Yeah, the series looks good to me and agreed that the "critical"
-issue is not a real problem.
+Also, your TRAILING_OVERLAP() thing should probably have
+__no_randomize_layout in ATTRS, rather than empty (and I'm assuming
+__packed implies __no_randomized_layout, otherwise 'fun' things can
+happen).
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-for this series.
-
-
-Thanks,
-
-> > Thanks,
-> > Namhyung
-> >
-> > On Mon, May 04, 2026 at 01:12:18AM -0700, Ian Rogers wrote:
-> > > This patch series addresses a number of DWARF/libdw error-handling
-> > > bugs and contract violations, preventing several real Userspace
-> > > segmentation faults and memory/FD leaks.
-> > >
-> > > In v5, the series has been extensively restructured and polished based on
-> > > comprehensive review feedback on v4, focusing on history granularity,
-> > > bisectability, and defensive styling:
-> > >
-> > >  - **Commit Splitting for Review Granularity**: Split the previously large
-> > >      libdw contract fix patch into 4 granular commits to cleanly isolate
-> > >      independent improvements: introducing clear_frames refactoring, fixing
-> > >      ORDER_CALLER parent update corruption, adding line 0 support, and
-> > >      consolidating core contract/leak cleanups.
-> > >
-> > >  - **Bisectability & Correctness Hardening**:
-> > >      - Fixed an unused variable compilation failure (-Werror) in the split
-> > >        history to guarantee perfect git bisectability.
-> > >      - Fixed a line 0 fallback regression to ensure that if an optional call
-> > >        line is missing but the call file is valid, we fallback to line 0
-> > >        to preserve the filename rather than discarding the caller info entirely.
-> > >
-> > >  - **Style & Robustness Polish**:
-> > >      - Standardized all newly introduced C++ style (//) comments to
-> > >        preferred C style (/* ... */) comments.
-> > >      - Implemented explicit safe string duplication style fix in annotate-data.
-> > >      - Corrected CU DIE propagation context inside probe-finder.
-> > >      - Enhanced the Patch 2 commit message to explicitly detail the removal
-> > >        of strict optional attribute aborts (decf) to clarify review queries.
-> > >
-> > >  - **Tags Collected**: Integrated Acked-by tags from Namhyung Kim for Patch 1
-> > >      and Patch 9.
-> > >
-> > > v5:
-> > >  - Restructured series from 6 to 9 patches by splitting the libdw commit.
-> > >  - Fixed compilation bisectability and DWARF line 0 filename preservation regressions.
-> > >  - Standardized comment styles and applied safe duplication formatting fixes.
-> > >  - Updated commit messages with detailed optional attribute justifications.
-> > >
-> > > v4:
-> > >  - Localized and squashed robust error handling, memory/FD cleanup
-> > >    paths, and safe DWARF printing.
-> > > https://lore.kernel.org/linux-perf-users/20260503171032.1559338-1-irogers@google.com/
-> > >
-> > > v3:
-> > >  - Minor formatting fixes.
-> > > https://lore.kernel.org/linux-perf-users/20260503003552.1063540-1-irogers@google.com/
-> > >
-> > > v2:
-> > > https://lore.kernel.org/lkml/20260502155656.478642-1-irogers@google.com/
-> > >
-> > > v1:
-> > > https://lore.kernel.org/linux-perf-users/20260502064839.282422-1-irogers@google.com/
-> > >
-> > > Ian Rogers (9):
-> > >   perf dwarf-aux: Fix libdw segmentation fault in cu_walk_functions_at
-> > >   perf dwarf-aux: Fix libdw API contract violations
-> > >   perf srcline: Introduce inline_node__clear_frames()
-> > >   perf libdw: Fix callchain parent update in ORDER_CALLER mode
-> > >   perf libdw: Support DWARF line 0 in inline list
-> > >   perf libdw: Fix libdw API contract violations and memory leaks
-> > >   perf probe-finder: Fix libdw API contract violations
-> > >   perf annotate-data: Fix libdw API contract violations
-> > >   perf debuginfo: Fix libdw API contract violations
-> > >
-> > >  tools/perf/util/annotate-data.c |  27 +++++----
-> > >  tools/perf/util/debuginfo.c     |   9 ++-
-> > >  tools/perf/util/dwarf-aux.c     |  39 ++++++------
-> > >  tools/perf/util/dwarf-aux.h     |   5 ++
-> > >  tools/perf/util/libdw.c         |  72 +++++++++++++++++-----
-> > >  tools/perf/util/probe-finder.c  | 102 ++++++++++++++++++++------------
-> > >  tools/perf/util/srcline.c       |   9 ++-
-> > >  tools/perf/util/srcline.h       |   1 +
-> > >  8 files changed, 179 insertions(+), 85 deletions(-)
-> > >
-> > > --
-> > > 2.54.0.545.g6539524ca2-goog
-> > >
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>  };
