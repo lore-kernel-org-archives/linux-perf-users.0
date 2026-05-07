@@ -1,223 +1,117 @@
-Received: from sg-3-111.ptr.tlmpb.com (sg-3-111.ptr.tlmpb.com [101.45.255.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F102DAFAF
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 06:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C480B33CEBB;
+	Thu,  7 May 2026 06:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778135288; cv=none; b=T04Z2LaJxdk1wi8FgcakCAYXozxgZtdN9/0GeiLgDMx0MwWSYY2ejHNvpPPHhHldLCCqwSdgr5X60t8mnYgv78T/e8oQMn+9S3nTcy70689hL2NgnPUB0j5uo039Mgg/KVXQgI9k6LF0phYsKjpeCsvGL4xe7d+0/lHIQxad7ik=
+	t=1778135864; cv=none; b=gpZX788+MiwmpFW0Pdoug911W+uE9ZFiLtR1rOfql9T30YI6nJZ2ohD3YPlu0q75XoZHmAMN3IYQXa2/zr4fnurkI8d1uh+uwFeIg1QftJh+ZLmNRflmRFEU0b/TJdyCSWDXxV7Wg6uUztCA1m5Al59xcEmh91H7j10WPjifcAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778135288; c=relaxed/simple;
-	bh=sSp6MLhOmqeIWT+3O5gbxuH5SSeKOnrzo9PcEx5V1NY=;
-	h=Subject:From:Date:To:In-Reply-To:Content-Type:References:Cc:
-	 Message-Id:Mime-Version; b=oghatNLcTr6d53ZXI1bAvC0QQxhjVPG7AzdXowfW1YUms47aQkaQzJNWCg4rLcxCXvW2Oca2IokJlpS/5SF9rNuSOPCJDltKij3ec7br8EYvJrbeUJdehlmuzzxeN4rDXd94eI41wMyIPrZ/Pddz0JEDDfRdJsAxJRofHQEw4u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=C55p5K/P; arc=none smtp.client-ip=101.45.255.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1778135864; c=relaxed/simple;
+	bh=nfa03i+Qj4pJ1N+xjnYP3nk1MAeudgQ/KvyaeooiSvs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NwBEMAEJCSwJ9JiK4gpQZNirIrzmVsbyNu3Z5WKaSnKqUajjsQwdpsLPnsel2hXtJRWI3M0LXSdIz0t/Ecw/U0WyNzJOy5Nf8LgQxmVth6qVIaZ7gGerG+cZQHplomDceUr6+PCT+EwMBnDCL1RIPJpsgMPFQIdePefJhQFYNyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=QAaXfvgf; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="C55p5K/P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1778135240; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=Id3HhSqMsuj007ocMTNoBu3NERhhoE7fW9r8EVCTOTY=;
- b=C55p5K/PmZ/L5nLJ9Vlo4A7MUvV47ZPEqN6nG3appxKG1FIS180WrHAuUGnwjCco/1dvKt
- hHzU54MVt7uGcjIo3Ri+EtYj8lv9CTYYVOh3/BF781Rc3tnMbvXz6b/Sb8Jxsnmtq9ymlz
- KBS8ocwc3NK4GP77Q2MCrpzBap4LSlQWvU4etj0/tHGaCvN9cwoROxXjj5aZlQlFPzBezq
- FSMNujSWGQadJhBMuZC1esg5iCaMELykBZL3Ozc0Xiv6ZC3SOWwIrXjWsUqxariAcnujDH
- 0IJX+xHteL3ruSLLUWv+9MOr/WgXOJ4/h4QjVVi61T49sjBCdlmZwh9O/4xKjQ==
-Subject: Re: [PATCH v2] perf: Extract is_mapping_symbol() helper for kernel mapping symbol filtering
-From: "Rui Qi" <qirui.001@bytedance.com>
-Date: Thu, 7 May 2026 14:27:06 +0800
-User-Agent: Mozilla Thunderbird
-To: <sashiko@lists.linux.dev>
-In-Reply-To: <20260506104305.2D54DC2BCB8@smtp.kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=UTF-8
-References: <20260506073820.2419087-1-qirui.001@bytedance.com> <20260506104305.2D54DC2BCB8@smtp.kernel.org>
-Cc: <linux-perf-users@vger.kernel.org>
-Message-Id: <1022995d-b4d2-4352-9b22-c665174e87e6@bytedance.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="QAaXfvgf"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=tavSIncRGrNJHQl5vLDBA/vQ3CjL1RwZuizxVlTGWb4=;
+	b=QAaXfvgfLZBcV5BuOemObCVuRQ+f+oq8VPQg5mps2gajMvSf9mdtLduIsVnJfz+o4v/Nr1phE
+	AUWDc1lq1tm8/oggeKyIt97d0NaMkNg9NlRQsqwuswGsrdWXu2kCj5/gkZjoB+3gE9yelqv/2rZ
+	vdelzoC3s8JiXrWP6eVM0JM=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gB2SS3HJYzpT04;
+	Thu,  7 May 2026 14:30:48 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 310A020226;
+	Thu,  7 May 2026 14:37:39 +0800 (CST)
+Received: from kwepemn100008.china.huawei.com (7.202.194.111) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 7 May 2026 14:37:38 +0800
+Received: from localhost.huawei.com (10.90.31.46) by
+ kwepemn100008.china.huawei.com (7.202.194.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Thu, 7 May 2026 14:37:38 +0800
+From: Yushan Wang <wangyushan12@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@arm.com>,
+	<john.g.garry@oracle.com>, <will@kernel.org>, <mike.leach@arm.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+CC: <jic23@kernel.org>, <leo.yan@linux.dev>, <robin.murphy@arm.com>,
+	<linuxarm@huawei.com>, <hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>,
+	<fanghao11@huawei.com>, <wangzhou1@hisilicon.com>, <wangyushan12@huawei.com>
+Subject: [RFT PATCH v2 1/7] perf stat: Check color's length instead of the pointer
+Date: Thu, 7 May 2026 14:37:31 +0800
+Message-ID: <20260507063737.3542950-2-wangyushan12@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20260507063737.3542950-1-wangyushan12@huawei.com>
+References: <20260507063737.3542950-1-wangyushan12@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Lms-Return-Path: <lba+269fc30c5+f9f150+vger.kernel.org+qirui.001@bytedance.com>
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemn100008.china.huawei.com (7.202.194.111)
 
-On 5/6/26 6:43 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Asymmetric mapping symbol filtering leads to map/symbol deletion during ksymbol unregistration.
-> - [Medium] Incomplete refactoring leaves ELF mapping symbol logic fragile and inconsistent.
-> --
-> 
-> commit f27956b5bf680b8ef41ba119f6dc5cedae4567f5
-> Author: Rui Qi <qirui.001@bytedance.com>
-> 
-> perf: Extract is_mapping_symbol() helper for kernel mapping symbol filtering
-> 
-> This patch introduces an is_mapping_symbol() inline helper to consolidate
-> logic for filtering out ELF mapping symbols across architectures. It also
-> adds the helper to machine__process_ksymbol_register() and
-> map__process_kallsym_symbol().
-> 
->> The perf tool currently has ad-hoc logic to filter out ELF mapping
->> symbols scattered across multiple files and architectures.  ARM,
->> AArch64 and RISC-V each have their own inline checks in
->> dso__load_sym_internal(), and kallsym processing in map__process_kallsym_symbol()
->> has yet another check for ARM module symbols.
->>
->> This is fragile: adding support for a new architecture or adjusting
->> which prefixes are considered mapping symbols requires touching
->> multiple places, and it is easy for the checks to diverge.  It also
->> does not match the kernel's own is_mapping_symbol() logic, which
->> additionally covers x86 local symbols ('.L*' and 'L0*').
-> 
-> This commit message claims to convert dso__load_sym_internal() to use the
-> new helper. However, this patch does not modify dso__load_sym_internal()
-> in tools/perf/util/symbol-elf.c at all, leaving the scattered inline checks
-> untouched.
-> 
-> Because x86 local symbols (.L*) were added to the new helper, does this
-> omission introduce a new inconsistency where kallsyms parsing will correctly
-> filter x86 .L* symbols, but kernel module parsing via ELF (.ko) will not?
-> 
+Color string returned by metric_threshold_classify__color() is never
+NULL, check the presence of *color will always return true.
 
-I believe this is not a bug. The is_mapping_symbol() helper is
-explicitly
-documented as kernel-only:
+Fix this by change the checks against length of *color.
 
+Fixes: 37b77ae95416 ("perf stat: Change color to threshold in print_metric")
+Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
+---
+ tools/perf/builtin-script.c    | 2 +-
+ tools/perf/util/stat-display.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c8ac9f01a36b..58cd5cd377a6 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2111,7 +2111,7 @@ static void script_print_metric(struct perf_stat_config *config __maybe_unused,
+ 	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
+ 				   PERF_RECORD_SAMPLE, mctx->fp);
+ 	fputs("\tmetric: ", mctx->fp);
+-	if (color)
++	if (strlen(color))
+ 		color_fprintf(mctx->fp, color, fmt, val);
+ 	else
+ 		printf(fmt, val);
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 993f4c4b8f44..74cba80c24b0 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -474,7 +474,7 @@ static void print_metric_std(struct perf_stat_config *config,
+ 		do_new_line_std(config, os);
+ 
+ 	n = fprintf(out, " # ");
+-	if (color)
++	if (strlen(color))
+ 		n += color_fprintf(out, color, fmt, val);
+ 	else
+ 		n += fprintf(out, fmt, val);
+@@ -607,7 +607,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 	if (mlen < strlen(unit))
+ 		mlen = strlen(unit) + 1;
+ 
+-	if (color)
++	if (strlen(color))
+ 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+ 
+ 	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+-- 
+2.33.0
 
-  /*
-
-   * Ignore kernel mapping symbols, matching kernel is_mapping_symbol()
-logic.
-   * ...
-
-   * Only use this for kernel symbols (kallsyms, ksymbol events).
-
-   */
-
-
-
-The dso__load_sym_internal() function handles both kernel and userspace
-
-symbols. Applying is_mapping_symbol() there would incorrectly filter out
-
-userspace .L* and L0* symbols.
-
-
-
-However, I noticed that kernel modules could also benefit from filtering
-x86 .L* symbols. I've added the following in dso__load_sym_internal() to
-handle this case:
-
-
-
-  /*
-
-   * For kernel modules, also reject x86 local symbols (.L* and L0*)
-
-   * to match the kernel's is_mapping_symbol() logic and kallsyms
-
-   * parsing behavior.
-
-   */
-
-  if (kmodule && is_mapping_symbol(elf_name))
-
-      continue;
-
-
-
-This ensures:
-
-
-
-1. Only kernel modules are filtered (kmodule == true)
-
-2. Userspace symbols are not affected
-
-3. The existing is_mapping_symbol() helper is reused
-
-
->> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->> index e76f8c86e62a6..e0dcf8bfb896e 100644
->> --- a/tools/perf/util/machine.c
->> +++ b/tools/perf/util/machine.c
->> @@ -729,9 +729,15 @@ static int machine__process_ksymbol_register(struct machine *machine,
->>  {
->>  	struct symbol *sym;
->>  	struct dso *dso = NULL;
->> -	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
->> +	struct map *map;
->>  	int err = 0;
->>  
->> +	/* Ignore mapping symbols in ksymbol events - check early before any state mutation */
->> +	if (is_mapping_symbol(event->ksymbol.name))
->> +		return 0;
-> 
-> If a PERF_RECORD_KSYMBOL event arrives with the UNREGISTER flag,
-> machine__process_ksymbol() routes it to machine__process_ksymbol_unregister().
-> 
-> Because machine__process_ksymbol_unregister() does not have the same
-> is_mapping_symbol() filter, could maps__find() return the enclosing map
-> (such as the BPF JIT map or a loaded kernel module's map) that covers the
-> mapping symbol's address?
-> 
-> tools/perf/util/machine.c:machine__process_ksymbol_unregister() {
-> ...
-> 	map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
-> 	if (!map)
-> 		return 0;
-> 
-> 	if (!RC_CHK_EQUAL(map, machine->vmlinux_map))
-> 		maps__remove(machine__kernel_maps(machine), map);
-> ...
-> }
-> 
-> If so, will the unregister path incorrectly call maps__remove() on that
-> parent map, prematurely destroying legitimate tracking state and breaking
-> symbol resolution for subsequent samples in that memory region?
-> 
-
-You are absolutely right. The is_mapping_symbol() check is missing in
-
-machine__process_ksymbol_unregister(). This could indeed cause the
-unregister path to incorrectly remove a parent map when a mapping symbol
-address falls within an existing map range.
-
-
-
-I will fix this by adding the same filter to
-machine__process_ksymbol_unregister():
-
-
-
-static int machine__process_ksymbol_unregister(struct machine *machine,
-union perf_event *event,struct perf_sample *sample __maybe_unused)
-{
-
-      struct symbol *sym;
-
-      struct map *map;
-
-
-      /* Ignore mapping symbols in ksymbol events */
-      if (is_mapping_symbol(event->ksymbol.name))
-          return 0;
-
-      map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
-      ...
-}
-
-
-I will send a v3 with these fixes.
-
-
-
-Thanks,
-
-Rui Qi
