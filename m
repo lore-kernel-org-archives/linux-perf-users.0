@@ -1,163 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-3-111.ptr.tlmpb.com (sg-3-111.ptr.tlmpb.com [101.45.255.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBF625A655
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 06:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F102DAFAF
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 06:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778134425; cv=none; b=RFTD1EWCtx+nBgHG/upjwHyQKP9R1JtPSSAKV/TsexsE1kAV33HHnHqOq5gTG9TR78opCiF2rYsNLQDqexjiQNHcPjwM7YwLVatBOLHk+MAdRjGJcioKoPHXwSJUqFIKkJYFOpnAtPr8rFf9U4M+Y6F//i/kcqJPS2ybM+jCtE4=
+	t=1778135288; cv=none; b=T04Z2LaJxdk1wi8FgcakCAYXozxgZtdN9/0GeiLgDMx0MwWSYY2ejHNvpPPHhHldLCCqwSdgr5X60t8mnYgv78T/e8oQMn+9S3nTcy70689hL2NgnPUB0j5uo039Mgg/KVXQgI9k6LF0phYsKjpeCsvGL4xe7d+0/lHIQxad7ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778134425; c=relaxed/simple;
-	bh=/fOGlmO82MYiNksLou9+DYkXXjNNOJOZwge6qWlpEOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=coh96cQfNzwQKamXbYtIS304z04N024N6ycgf/8QlCyN/1cigsuLyK5fbcoku8FDfSHVupIzbjA19r6vcD4k6Krml1HoME0XdTbHUstxfV1KU9j3BKyRWBZ2/7FdXTV054l4O4b407SYH1Hu1104mPSUGDe3cgptJOMie2+XS1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1SL7zhc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778135288; c=relaxed/simple;
+	bh=sSp6MLhOmqeIWT+3O5gbxuH5SSeKOnrzo9PcEx5V1NY=;
+	h=Subject:From:Date:To:In-Reply-To:Content-Type:References:Cc:
+	 Message-Id:Mime-Version; b=oghatNLcTr6d53ZXI1bAvC0QQxhjVPG7AzdXowfW1YUms47aQkaQzJNWCg4rLcxCXvW2Oca2IokJlpS/5SF9rNuSOPCJDltKij3ec7br8EYvJrbeUJdehlmuzzxeN4rDXd94eI41wMyIPrZ/Pddz0JEDDfRdJsAxJRofHQEw4u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=C55p5K/P; arc=none smtp.client-ip=101.45.255.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1SL7zhc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC05FC2BCB8;
-	Thu,  7 May 2026 06:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778134425;
-	bh=/fOGlmO82MYiNksLou9+DYkXXjNNOJOZwge6qWlpEOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1SL7zhcohHCqXKMWZaPdXcpgQgH1z7X+h9hV9UYekMxS+z1I7N0h0S6dNL17ETII
-	 pU1/MD4NxjxqlqdmtcDQYIWp2Uxj1ppSZpVZzwJIsPEZDVzheL42ggqSC3q/MOg9Fr
-	 2t4ghNTIksaiIb1OG4X/x7EzvYDPRZWg2xOl5YfYGdmK8BPbnrcVdcFazrHsLGIExv
-	 hZeWhlVnqv87dqwf+ycQ71pa0zI5yaerTfmMoteWPpm+u6z9Nf/XSn0mUC5fKo5hsF
-	 9hgbLhVGUspGMJjz4KNalpYCB4+SL7yUGnHYrLwr82EaugvtGv48TGeZ4C9EvB1AJh
-	 7BjDjivXaZJbA==
-Date: Wed, 6 May 2026 23:13:43 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com,
-	shivani@linux.ibm.com
-Subject: Re: [PATCH V5 1/2] powerpc tools perf: Initialize error code in
- auxtrace_record_init function
-Message-ID: <afwtl1zodrSUpK7n@z2>
-References: <20260504151321.12346-1-atrajeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="C55p5K/P"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1778135240; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=Id3HhSqMsuj007ocMTNoBu3NERhhoE7fW9r8EVCTOTY=;
+ b=C55p5K/PmZ/L5nLJ9Vlo4A7MUvV47ZPEqN6nG3appxKG1FIS180WrHAuUGnwjCco/1dvKt
+ hHzU54MVt7uGcjIo3Ri+EtYj8lv9CTYYVOh3/BF781Rc3tnMbvXz6b/Sb8Jxsnmtq9ymlz
+ KBS8ocwc3NK4GP77Q2MCrpzBap4LSlQWvU4etj0/tHGaCvN9cwoROxXjj5aZlQlFPzBezq
+ FSMNujSWGQadJhBMuZC1esg5iCaMELykBZL3Ozc0Xiv6ZC3SOWwIrXjWsUqxariAcnujDH
+ 0IJX+xHteL3ruSLLUWv+9MOr/WgXOJ4/h4QjVVi61T49sjBCdlmZwh9O/4xKjQ==
+Subject: Re: [PATCH v2] perf: Extract is_mapping_symbol() helper for kernel mapping symbol filtering
+From: "Rui Qi" <qirui.001@bytedance.com>
+Date: Thu, 7 May 2026 14:27:06 +0800
+User-Agent: Mozilla Thunderbird
+To: <sashiko@lists.linux.dev>
+In-Reply-To: <20260506104305.2D54DC2BCB8@smtp.kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+References: <20260506073820.2419087-1-qirui.001@bytedance.com> <20260506104305.2D54DC2BCB8@smtp.kernel.org>
+Cc: <linux-perf-users@vger.kernel.org>
+Message-Id: <1022995d-b4d2-4352-9b22-c665174e87e6@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260504151321.12346-1-atrajeev@linux.ibm.com>
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+269fc30c5+f9f150+vger.kernel.org+qirui.001@bytedance.com>
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
 
-On Mon, May 04, 2026 at 08:43:20PM +0530, Athira Rajeev wrote:
-> perf trace record fails some cases in powerpc
+On 5/6/26 6:43 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] Asymmetric mapping symbol filtering leads to map/symbol deletion during ksymbol unregistration.
+> - [Medium] Incomplete refactoring leaves ELF mapping symbol logic fragile and inconsistent.
+> --
 > 
->  # ./perf test "perf trace record and replay"
->  128: perf trace record and replay                                    : FAILED!
+> commit f27956b5bf680b8ef41ba119f6dc5cedae4567f5
+> Author: Rui Qi <qirui.001@bytedance.com>
 > 
->  # ./perf trace record sleep 1
->  # echo $?
->    32
+> perf: Extract is_mapping_symbol() helper for kernel mapping symbol filtering
 > 
-> This is happening because of non-zero err value from
-> auxtrace_record__init() function.
+> This patch introduces an is_mapping_symbol() inline helper to consolidate
+> logic for filtering out ELF mapping symbols across architectures. It also
+> adds the helper to machine__process_ksymbol_register() and
+> map__process_kallsym_symbol().
 > 
->  static int record__auxtrace_init(struct record *rec)
->  {
->         int err;
+>> The perf tool currently has ad-hoc logic to filter out ELF mapping
+>> symbols scattered across multiple files and architectures.  ARM,
+>> AArch64 and RISC-V each have their own inline checks in
+>> dso__load_sym_internal(), and kallsym processing in map__process_kallsym_symbol()
+>> has yet another check for ARM module symbols.
+>>
+>> This is fragile: adding support for a new architecture or adjusting
+>> which prefixes are considered mapping symbols requires touching
+>> multiple places, and it is easy for the checks to diverge.  It also
+>> does not match the kernel's own is_mapping_symbol() logic, which
+>> additionally covers x86 local symbols ('.L*' and 'L0*').
 > 
->         if ((rec->opts.auxtrace_snapshot_opts || rec->opts.auxtrace_sample_opts)
->             && record__threads_enabled(rec)) {
->                 pr_err("AUX area tracing options are not available in parallel streaming mode.\n");
->                 return -EINVAL;
->         }
+> This commit message claims to convert dso__load_sym_internal() to use the
+> new helper. However, this patch does not modify dso__load_sym_internal()
+> in tools/perf/util/symbol-elf.c at all, leaving the scattered inline checks
+> untouched.
 > 
->         if (!rec->itr) {
->                 rec->itr = auxtrace_record__init(rec->evlist, &err);
->                 if (err)
->                         return err;
->         }
+> Because x86 local symbols (.L*) were added to the new helper, does this
+> omission introduce a new inconsistency where kallsyms parsing will correctly
+> filter x86 .L* symbols, but kernel module parsing via ELF (.ko) will not?
 > 
-> Here "int err" is not initialised. The code expects "err" to be set
-> from auxtrace_record__init() function.
-> 
-> Update auxtrace_record__init() in arch/powerpc/util/auxtrace.c to clear
-> err value in the beginning.
-> 
-> - Clear err value in beginning of function. Any fail later will
-> set appropriate return code to err.
-> - Even if we haven't found any event for auxtrace, perf record
-> should continue for other events. NULL return
-> will indicate that there is no auxtrace record initialized.
-> - Not having "err" set here will affect monitoring of other events
-> also because perf record will fail seeing random value in err.
-> 
-> Set err to -EINVAL before invoking auxtrace_record__init() in
-> builtin-record.c
-> 
-> With the fix,
-> 
->  # ./perf trace record sleep 1
->  [ perf record: Woken up 2 times to write data ]
->  [ perf record: Captured and wrote 0.033 MB perf.data (228 samples) ]
-> 
-> Fixes: 1dbfaf94cf66 ("perf powerpc: Add basic CONFIG_AUXTRACE support for VPA pmu on powerpc")
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-For both patches,
+I believe this is not a bug. The is_mapping_symbol() helper is
+explicitly
+documented as kernel-only:
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+
+  /*
+
+   * Ignore kernel mapping symbols, matching kernel is_mapping_symbol()
+logic.
+   * ...
+
+   * Only use this for kernel symbols (kallsyms, ksymbol events).
+
+   */
+
+
+
+The dso__load_sym_internal() function handles both kernel and userspace
+
+symbols. Applying is_mapping_symbol() there would incorrectly filter out
+
+userspace .L* and L0* symbols.
+
+
+
+However, I noticed that kernel modules could also benefit from filtering
+x86 .L* symbols. I've added the following in dso__load_sym_internal() to
+handle this case:
+
+
+
+  /*
+
+   * For kernel modules, also reject x86 local symbols (.L* and L0*)
+
+   * to match the kernel's is_mapping_symbol() logic and kallsyms
+
+   * parsing behavior.
+
+   */
+
+  if (kmodule && is_mapping_symbol(elf_name))
+
+      continue;
+
+
+
+This ensures:
+
+
+
+1. Only kernel modules are filtered (kmodule == true)
+
+2. Userspace symbols are not affected
+
+3. The existing is_mapping_symbol() helper is reused
+
+
+>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>> index e76f8c86e62a6..e0dcf8bfb896e 100644
+>> --- a/tools/perf/util/machine.c
+>> +++ b/tools/perf/util/machine.c
+>> @@ -729,9 +729,15 @@ static int machine__process_ksymbol_register(struct machine *machine,
+>>  {
+>>  	struct symbol *sym;
+>>  	struct dso *dso = NULL;
+>> -	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+>> +	struct map *map;
+>>  	int err = 0;
+>>  
+>> +	/* Ignore mapping symbols in ksymbol events - check early before any state mutation */
+>> +	if (is_mapping_symbol(event->ksymbol.name))
+>> +		return 0;
+> 
+> If a PERF_RECORD_KSYMBOL event arrives with the UNREGISTER flag,
+> machine__process_ksymbol() routes it to machine__process_ksymbol_unregister().
+> 
+> Because machine__process_ksymbol_unregister() does not have the same
+> is_mapping_symbol() filter, could maps__find() return the enclosing map
+> (such as the BPF JIT map or a loaded kernel module's map) that covers the
+> mapping symbol's address?
+> 
+> tools/perf/util/machine.c:machine__process_ksymbol_unregister() {
+> ...
+> 	map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+> 	if (!map)
+> 		return 0;
+> 
+> 	if (!RC_CHK_EQUAL(map, machine->vmlinux_map))
+> 		maps__remove(machine__kernel_maps(machine), map);
+> ...
+> }
+> 
+> If so, will the unregister path incorrectly call maps__remove() on that
+> parent map, prematurely destroying legitimate tracking state and breaking
+> symbol resolution for subsequent samples in that memory region?
+> 
+
+You are absolutely right. The is_mapping_symbol() check is missing in
+
+machine__process_ksymbol_unregister(). This could indeed cause the
+unregister path to incorrectly remove a parent map when a mapping symbol
+address falls within an existing map range.
+
+
+
+I will fix this by adding the same filter to
+machine__process_ksymbol_unregister():
+
+
+
+static int machine__process_ksymbol_unregister(struct machine *machine,
+union perf_event *event,struct perf_sample *sample __maybe_unused)
+{
+
+      struct symbol *sym;
+
+      struct map *map;
+
+
+      /* Ignore mapping symbols in ksymbol events */
+      if (is_mapping_symbol(event->ksymbol.name))
+          return 0;
+
+      map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+      ...
+}
+
+
+I will send a v3 with these fixes.
+
+
 
 Thanks,
-Namhyung
 
-> ---
-> Changelog:
-> v4:
-> Added Reviewed-by from Adrian
-> 
-> v1 -> v2
-> Addressed review comment from Adrian:
-> - Set err to -EINVAL before invoking auxtrace_record__init() in
->   builtin-record.c
-> - Added kernel-doc to auxtrace_record__init() in tools/perf/util/auxtrace.c
-> Addressed review comment from Namhyung:
-> - Added fixes tag
-> 
->  tools/perf/arch/powerpc/util/auxtrace.c | 6 ++++++
->  tools/perf/builtin-record.c             | 1 +
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
-> index e39deff6c857..4600a1661b4f 100644
-> --- a/tools/perf/arch/powerpc/util/auxtrace.c
-> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
-> @@ -71,6 +71,12 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
->  	struct evsel *pos;
->  	int found = 0;
->  
-> +	/*
-> +	 * Set err value to zero here. Any fail later
-> +	 * will set appropriate return code to err.
-> +	 */
-> +	*err = 0;
-> +
->  	evlist__for_each_entry(evlist, pos) {
->  		if (strstarts(pos->name, "vpa_dtl")) {
->  			found = 1;
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 4a5eba498c02..708825747af5 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -865,6 +865,7 @@ static int record__auxtrace_init(struct record *rec)
->  	}
->  
->  	if (!rec->itr) {
-> +		err = -EINVAL;
->  		rec->itr = auxtrace_record__init(rec->evlist, &err);
->  		if (err)
->  			return err;
-> -- 
-> 2.47.3
-> 
+Rui Qi
