@@ -1,137 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4173203B6
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 20:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F331F23AB87
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 21:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778186288; cv=none; b=X5NYtf9uzAYD8zYXiSF7QVZLGufik5PXDYvmuOMjzjhPkb+S2KEdr7E8ksTmXjyDTxSFQxzn0NUuuKEtUnKYiIjKuLYBJu6dbaTIvIQTZ4Mv6WwqbecyMNH9K4DfC2rYy5TnspMpZPddCnazrdsgdTF5XvaqIjqTUI4wDacjeFQ=
+	t=1778187613; cv=none; b=tuOlfgMa73pgfJmwtFM0B4LXSIE4XV8h9zOD5PX16wSeReID9cKYGmh0EyKGFfcbdhL+uBfh3x7nuZ1NB3biDN8dEQ1pQRWNZ2XbnYujxDpCTBuMx7AHitKky93RMuczc76LhJJoEHLvCY4Ovuq1QMSMqbpdsRldpu0iRss4+Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778186288; c=relaxed/simple;
-	bh=wgHCtaQDBIC6SCAoTkekgnGfn+KtPd8rMddzfMmgoX8=;
+	s=arc-20240116; t=1778187613; c=relaxed/simple;
+	bh=LtxaPIFzx58AE9CjfOC3VYhHyn7r14GPlRvfOkvm1/w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dQw+BOPmXR11qL7/fCg/FYjkd66mQ2bztb/eg0F3dDDTsE15+0YOhZddJh9FKFadX5C/DagoZldfiICTsOwalbjZ1XK/nDjDcJ9TVCpJeblX783Is7q4igJ8/M/761wmWm2S95RbSScvBb+5UFCNDJMuTDLmwi34+YvffRMPEUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdI6Yyb6; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=MraLWFvESnPQFiiLfyLfNuIJw0/fIM/ZuQSjDx5OBwc/jxjmLJl9gyR/+mheY9l6bLQz85hqZ1FcbCOEaP3R1rpvPhNW6VP7x85FseqXOdxgVi2dvQFdWW81useo17w8huMekt1PHrYzjodtU1f6wUrxUD9UEq9aF9Al9skvjqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkDhnL9g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdI6Yyb6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A76C2BCB2;
-	Thu,  7 May 2026 20:38:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkDhnL9g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B726C2BCB2;
+	Thu,  7 May 2026 21:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778186287;
-	bh=wgHCtaQDBIC6SCAoTkekgnGfn+KtPd8rMddzfMmgoX8=;
+	s=k20201202; t=1778187612;
+	bh=LtxaPIFzx58AE9CjfOC3VYhHyn7r14GPlRvfOkvm1/w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=jdI6Yyb6bEcM6GZSbmZwVyKCeOrcikdlAY/iasYDbM3SjLbeJBUB19MwRYqJ2OCZl
-	 qQYdqYMoqO2TvNz2HUUZjiBPQhL5cIG1NMcRumuKO5vzxDwZk0K26siDJwxhq7JpEZ
-	 cQW9vyW10oQp1VWDs8FTwMo+i2jbBOnhalfOVI1dHkIgbAXa1x+/jxN661ORMTEbW2
-	 sF8EthCz3ezFlRCqPM4B8dB3K9O+n01VEkC9CSGvwpHmoeV9eCCZt1RfVLv0HFp74z
-	 5sBET8BbmtLd9op/3K0CxKtmLepu4uMut8V23JUoI4uqCd+Kk5K1Mo1t7MeuvvFisG
-	 d7Gk8WJLd2pgA==
+	b=SkDhnL9gEkEvv2pHI2LdzdbwVnD2RiMCV8JcvITE3kP7PIPoWE4klYH5p7bTlXadd
+	 C4vYgbgXXVVZekAwUwWD39KjX9tmg6Hl6ECIqEzXUyGViuvjMDIWPe7510Pa/b0kXM
+	 ZAveVK+YoHvr6s1ktxfImrjhlGQZCUIbCbbxwNK6ckuLh2zQs3BFOAm7rj47Nty3qn
+	 +U2uUwL/iAsoHhsntIwqykwtdmC+h9NF49Xr5cIXd13+FEOPMv6aWp70Sfly9MP3V/
+	 kY/kM8e4YY+yzQwgP4RkQ3SkwSzLp8dP+JULm2MZ/U8x8eKhbSSCgkHo22VpXnlJKl
+	 B2dXSMhG5IaYw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] perf: Add is_mapping_symbol() helper for kernel
- mapping symbol filtering
+Subject: Re: [RFT PATCH v2 3/7] perf-x86: iostat: Move iostat arch-specific
+ implementation to util
 Reply-To: sashiko@lists.linux.dev
-To: "Rui Qi" <qirui.001@bytedance.com>
+To: "Yushan Wang" <wangyushan12@huawei.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260507071103.2772577-1-qirui.001@bytedance.com>
-References: <20260507071103.2772577-1-qirui.001@bytedance.com>
+In-Reply-To: <20260507063737.3542950-4-wangyushan12@huawei.com>
+References: <20260507063737.3542950-4-wangyushan12@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 07 May 2026 20:38:07 +0000
-Message-Id: <20260507203807.A1A76C2BCB2@smtp.kernel.org>
+Date: Thu, 07 May 2026 21:00:11 +0000
+Message-Id: <20260507210012.5B726C2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] The commit message claims to replace ad-hoc mapping symbol filte=
-ring in `dso__load_sym_internal()` with a single helper, but the existing a=
-rchitecture-specific checks were not removed, resulting in redundant code a=
-nd a code/commit message mismatch.
-- [Medium] The new mapping symbol filter in `dso__load_sym_internal()` is s=
-trictly gated behind `kmodule`, which incorrectly allows mapping symbols fr=
-om the main kernel image (`vmlinux`) to bypass the filter.
+- [High] `iostat_prepare()` contains a Use-After-Free vulnerability if the =
+caller's evlist already contains events.
+- [High] The cross-platform iostat reporting feature is fundamentally broke=
+n and causes a NULL pointer dereference crash during `perf stat report`.
+- [High] `iostat_print_metric()` uses the `die` ID as an index into `evsel-=
+>counts`, leading to an out-of-bounds read and write.
 --
 
-commit b0c39fbcfd41cb96be112e1c6d3979a91d527b75
-Author: Rui Qi <qirui.001@bytedance.com>
+commit 71baa44353cfb70e43c580f7cf17077a33f1197a
+Author: Yushan Wang <wangyushan12@huawei.com>
 
-perf: Add is_mapping_symbol() helper for kernel mapping symbol filtering
+perf-x86: iostat: Move iostat arch-specific implementation to util
 
-This commit introduces a unified is_mapping_symbol() inline helper to
-consolidate and replace ad-hoc mapping symbol filtering for ARM, AArch64,
-and RISC-V across the perf tool, while adding x86 local symbol filtering.
+This commit renames the x86-specific iostat implementation and updates the
+build configurations. The goal is to move the architecture-specific iostat
+implementation to the utility directory to support cross-platform
+recording and reporting.
 
-> perf: Add is_mapping_symbol() helper for kernel mapping symbol filtering
->
-> The perf tool currently has ad-hoc logic to filter out ELF mapping
-> symbols scattered across multiple files. ARM, AArch64 and RISC-V each
-> have their own inline checks in dso__load_sym_internal(), and kallsym
-> processing has yet another check for ARM module symbols.
->=20
-> This is fragile: adding support for a new architecture or adjusting
-> which prefixes are considered mapping symbols requires touching
-> multiple places, and it is easy for the checks to diverge. It also
-> does not match the kernel's own is_mapping_symbol() logic, which
-> additionally covers x86 local symbols (".L*" and "L0*").
->=20
-> Introduce a single is_mapping_symbol() inline helper in symbol.h and
-> convert all kernel symbol handling to use it.
+> To support cross-platform iostat capabilities, like record/report on
+> different platforms, architecture-specific implementation of iostat
+> should be moved out of arch directory to get built. Build scripts are
+> changed accordingly.
 
-The commit message states we are replacing the inline checks in
-dso__load_sym_internal() and converting all kernel symbol handling to use
-the new helper.
+Is this cross-platform reporting capability functioning as intended?
 
-However, looking at the resulting code in dso__load_sym_internal(), the old
-checks are still present:
+If a user runs perf stat --iostat report, it appears iostat_prepare()
+is never invoked since cmd_stat() calls __cmd_report() and returns
+early. This leaves evsel->priv unpopulated.
 
-		if (ehdr.e_machine =3D=3D EM_ARM || ehdr.e_machine =3D=3D EM_AARCH64) {
-			if (elf_name[0] =3D=3D '$' && strchr("adtx", elf_name[1])
-			    && (elf_name[2] =3D=3D '\0' || elf_name[2] =3D=3D '.'))
-				continue;
-		}
+When __cmd_report() later processes events, iostat_print_metric()
+unconditionally executes:
 
-		if (ehdr.e_machine =3D=3D EM_RISCV) {
-			if (elf_name[0] =3D=3D '$' && strchr("dx", elf_name[1]))
-				continue;
-		}
+u8 die =3D ((struct iio_root_port *)evsel->priv)->die;
 
-Should these existing ARM, AArch64, and RISC-V inline checks have been
-removed to avoid redundant filtering, or was the intention to only apply
-the new helper to kernel modules while leaving the old checks for user-space
-binaries?
+Could dereferencing this unpopulated pointer cause a crash during reporting?
 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 7afa8a1171396..6b12508ea58dc 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
+Additionally, it looks like the implementation still strictly depends on
+reading the local host's sysfs topology. Does this prevent the
+cross-platform capabilities from working?
+
 [ ... ]
-> @@ -1607,6 +1607,14 @@ dso__load_sym_internal(struct dso *dso, struct map=
- *map, struct symsrc *syms_ss,
->  				continue;
->  		}
-> =20
-> +		/*
-> +		 * For kernel modules, also reject x86 local symbols (.L* and L0*)
-> +		 * to match the kernel's is_mapping_symbol() logic and kallsyms
-> +		 * parsing behavior.
-> +		 */
-> +		if (kmodule && is_mapping_symbol(elf_name))
-> +			continue;
-> +
 
-When perf loads the main kernel image via dso__load_vmlinux(), it calls
-dso__load_sym() with kmodule =3D 0.
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/util/x86-iost=
+at.c
+> similarity index 100%
+> rename from tools/perf/arch/x86/util/iostat.c
+> rename to tools/perf/util/x86-iostat.c
 
-Does gating this check behind kmodule inadvertently bypass the new mapping
-symbol logic for vmlinux?
+This isn't a bug introduced by this patch, but could there be a
+use-after-free in iostat_prepare() if the caller's evlist already
+contains events?
 
-If so, x86 local symbols might leak into the symbol tables for the main
-kernel image. Would using dso__kernel(dso) instead of kmodule correctly
-cover both vmlinux and kernel modules?
+If evlist->core.nr_entries > 0, it calls evlist__delete(evlist) and
+reassigns the local argument parameter. Because the pointer is passed by
+value, this reassignment is invisible to the caller.
+
+Does the caller then continue to use a freed pointer, potentially causing
+a crash in subsequent functions like iostat_list()?
+
+This also isn't a bug introduced by this patch, but does
+iostat_print_metric() read and write out of bounds?
+
+It retrieves the die ID from the root port mapping, which can be greater
+than 0 on multi-die systems, and passes it directly into the
+perf_counts() macro as the index.
+
+Since uncore events typically monitor exactly one CPU per die/PMU,
+evsel->counts->values is allocated with a size of 1. If die is greater
+than 0, does this index out of bounds when reading the value and updating
+prev_count->val?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260507071103.2772=
-577-1-qirui.001@bytedance.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260507063737.3542=
+950-1-wangyushan12@huawei.com?part=3D3
