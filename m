@@ -1,93 +1,94 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B191A316E
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 15:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879773C942B
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 May 2026 15:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778167999; cv=pass; b=l3C0Du4lGIVOBrlYtx4Dp2zKW5bj/RFCYXsMiIG48v76KdQ+1VTrRFZD+T82Xk37NEisZ4IPXP041Aqee8LnZ56SGkzLgjpF1So2G5fvbZ4SIykfGVvIo5gnbP+o5MaBNxROGLyez9W+MUr2KBzPqTBXSNgffWclf+PRoJyGnBI=
+	t=1778168147; cv=pass; b=gqbtiDNPG+ViN7IeGeZ3UqymY+GaZShjZ48dwHoWMoTM7TwAwNJBedjvwREtnSB3/2nISFLUW66eplKt5aITsKHoRas+H6uvq/mKNnivHcy2O7clcA/X+AlZMlYVv8RyF6LI8JOi+4IsU/mTayCXitMphZLe1Qd6F1Rpq8ETxWA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778167999; c=relaxed/simple;
-	bh=pshTnlDrmcYE7qADh159gUFIAi/AtDvz28IECp4HnS4=;
+	s=arc-20240116; t=1778168147; c=relaxed/simple;
+	bh=lZjP7RmcrvxIsNJkkCNEwskG2ICrFcj24keHPNhI87Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gYJ5OYpcNfHdScGfRRXsuwx4h/yvSfSTZu35xbQ/oxRRFjnaSQQW9I0G3GCX5LnpnZzi89c6YOoo3U6YHL5x9NVUSxD4EXUAFr1cMNAopJRiHKElKD/+BzpTbT+aahXdeygP1rqeLn4CDkt/NUv3OBl/d+ijLI1ci4Y4UnqG8eQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SxU3ULZp; arc=pass smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=Dr0xbu+NJLcNPl+8pP1t9SwkVIgg5loK9fdOpxGpLy/cVHDGBcMYJn72ddUsc1tKzqpn2LchOHqxTkHl8F3dSLEeYZB44uLBBbPSGE1uClKdU4XuT+yTblX7Gd3tcOXxDASMaiTaaBd1dfJOkB9HncmPGqyTmI+Pf+JFbAlKO0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nRExFOVN; arc=pass smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SxU3ULZp"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ba180a022dso98695ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 May 2026 08:33:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778167998; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nRExFOVN"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so97745ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 May 2026 08:35:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778168144; cv=none;
         d=google.com; s=arc-20240605;
-        b=ccwlZxw7WyeKHemzkrGmvy14WvGKMJgzXQdMa+ztI2eiwoSneEnQuDATAnFueeNLU3
-         dlTshbeoPDvP3CXuyCZpZjtUk5W32snI0OLfAvyj4j67aZUR3+TQnXHL6cHHMxiq+bUc
-         WDObVeGgVi/RNIN+7wJlQQUQ/XEv9sKjfjh5Zo5lKwB8ktbPiYL8/6M7yxuu6q70OCEX
-         8l6B6+KNKnzDeFR88MK1GF6ggnZIcn6AEP6xRrb2ZNxqSPRrFta49mZoxI04TvC0OFVy
-         9nXNwZZV1nkFZRVF6hbkU1DLt/yW1vZ54w06hEOpkidejvtx0JLuDJJ1Z6w9ZTftQbDe
-         YFMA==
+        b=JGjb0kjJuyxfCfg6CvtBChdfO2RCJ/fYiMeCSZQwpbfQonsjZCwAPEGW1hcuk1hzGf
+         xBj2n9LdRzCp45C8qSGN+Uz2jPTfg6w7E3H1D/1jx9Mb2c6MA2cbAZxVX0qgl7nZcZKZ
+         XmS8ypIdkaGcp0DmRfNZJJ4bnn32pJUsIZEvC1vEpFPg/QMhjSQgoUCBiOAZ/MZ4egz4
+         RIdeO7YRjoekTku4IXQfpUEG9r745pGNQPkan5tliCgvmV/C0ACw4jv7I41PvqoVFdd3
+         KaVlhqV7kzyxelNNsWxpF3qgXczNIBBZcj15R1x87HiSZHPT7oK4eH8Xkx5duHMwsU35
+         SKKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=7VqyUqV5RyIPeVejA62ttbxcIeN0YeIM9mFOL0GF+tM=;
-        fh=uBTe8rcySMF2dvYyijTzbI/yUVBtDX/p14wFoqewQPs=;
-        b=VuzRDG+fzNBnB7XAoZLkz63oNmX8Ij9d8YsILg1LS/xqB7UCrK2TIfXwIxTnEEqHa0
-         Q2xL3J078uJvKe/du84vtR735nK1TA2pE/mjS2a6Ft2MpWAHghrEtJ9Fv+ktpaH5fyXu
-         eaYzjsj/3RLa2jU/KBbgkOQYS1njqaT+9Ak0/SU/dVl3balG5ShExze4W4EzhbM+aRJW
-         Ft4bITSeoczkV3UOfcqjsb7FUkMQcuSPQzP4hFg3sUp9zwv1llK8AUsVJvCBPCBt3o+S
-         JJrY/rSSZoytl9fAqNQ6ET4I2qNGk2G/7r3UII/Qb1soGeNYFApdjSrVXjLZ8cJm1Lin
-         Rmcw==;
+        bh=hl3OPaa+HqsVW3wENlJ/AzITxIxhv+o3/IRQF7Ihs4o=;
+        fh=Hoj5HtZTJSF+iiTU3Auq8u5khz8Xdwrnh8ePdpiUkOM=;
+        b=V8rYWjgKXTXmdBDi/9W6Qn8D79lKmByg/BTivVeyu0KdeL8mPsUI9pOP4JE6HCmlBz
+         0AUI01+iOmRNJbjkQny1Ci7hGD6Ogf/OrblzjwZG+C38ILrDk8lUYqNSkCaqk72gRp2H
+         Yj7PcArtN2j1OSmOwWI2vzRDUDFKOVP4gTJ4lT8qO72G2akyEC5mvxHnF39tTkAAXaxD
+         J4h4rIo9IOrt9fhr2dVtgpIXOZBexZKdpgmpMtUguVuPBqoQRJLamfnIWcQUsjzSaK7h
+         iqLYZ9/I8uLFulF68XlkOtzr4+K3nhBPSe4EanB1YqHJB4EF6otdvlWBOsh3fGGlzimr
+         ebkw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778167998; x=1778772798; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778168144; x=1778772944; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7VqyUqV5RyIPeVejA62ttbxcIeN0YeIM9mFOL0GF+tM=;
-        b=SxU3ULZpRemw1xSvnzDTx8j8isfbI9KKCMfYV4B+R0qAkTSXvYaxBUdzFLJMtBw0aV
-         Lnrmm7gcAF/xLE4eWY9MhJoZOlJhwaCkafkPQ/NrUFmci4rp8ZDXI/97FbBMZA6x2bKf
-         3eRU3cNyAQmGVtpiyOkutQ1CHpCsgzVzKPJ0ga0z8U0HEX4kgjG4JsAzw+pPhpzrTMZe
-         gHqCUehPmzY163L7NGgMm4UAZzU/EPwSCmrnrpv32NRiIplP/nWd48stfMnhdg4knqYL
-         gjau8S6lIeZe6hLKQQ/mbcX6Pis7jMiNwSCSKjEmgpS3TdKWsc0KYfQaANF3r6KJRroh
-         IOpg==
+        bh=hl3OPaa+HqsVW3wENlJ/AzITxIxhv+o3/IRQF7Ihs4o=;
+        b=nRExFOVNy1m+zmQmPb+c2nNyvMsPmUyeg74dzUopYAFBM8iM1d/u9h1780kGmu0uK1
+         KEINwhMYyutgUlE1JElECsqKWu2Y6uSFJYdHHildwqHDiCeHWOAgJrgrUQwKx2NiXtbl
+         PwB/ouw8kGlqYBEdkOTxGaLnRbxR7yW/GRb6xOnM+Qyr2Ax2kNmpRfeORyCjqEs9gJzm
+         pLKxlz+T2IMBFYQa48b0GLQ7G9Ftlui04jy579DTjgOjgwxYI8Yxrw0arTvwueBY6nZP
+         drtsyOgI+TnD4+L7enIDIBGogoI0KefBkbT2KY+yvu674ON1gXSwQUiVRGzdZ2pAN+GW
+         uTkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778167998; x=1778772798;
+        d=1e100.net; s=20251104; t=1778168144; x=1778772944;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=7VqyUqV5RyIPeVejA62ttbxcIeN0YeIM9mFOL0GF+tM=;
-        b=FkJHu4Yulz2cZxqkadpildQnNdTkt4bA/fwHCHIpVRDPfVB3buLqCpfn/pK6046+u7
-         WjST1LkmE++Cu0tV1DmeawUDpMnIoFEdMio5nb+cAhqkyjLeKhgyL5hgHcdhr2izEwTV
-         OlEHB+gpAt7Yrmpg1BWJ6pyaS8/Qr1LvxJc4fuaFC7dU+aRj0FEy5QHAqLFeSvyHHHU1
-         9zGUibwDyr4RMhDgslhyD/mYN6dU+aBsABGCZqRgm7zjqrAD50k62NiQgTevOigPhCjP
-         XHsCI9NnCHXFxT+kkE+r/oPCq4fpWHs7hYhEsUcsaVIEBRqWzachW+Ykf2beISFk1qPK
-         bVRA==
-X-Forwarded-Encrypted: i=1; AFNElJ9MCf4J4KNDTXv/bmMq+6cQOkiSroN5ByKLs4SP2EOH1czOQJKfdObxXdtbgfPqbMfPV7L+20S73vKUoVaZ/zKj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoYEO51fNPVcVD5NbmGHFBpciUnttX3Mm/pymZFKzifzqVbqt7
-	Zl3YjVI4r9VPNjqcidHeQXWbtBahErzO1OztAoC8TQJ9BX0SKp2bUfC9X2GuGkM+JMv/3O4Z/Jw
-	/jPs5ebTyQt/ggsY6YB0crw5MaH4GNOSjhyWOgjwo
-X-Gm-Gg: AeBDies5cmO8sFFdMAPmMr4ixBM1dExiH+ELUzndcWafmPH+/4kjgxvxxxXvoK2JOc7
-	pCUbhsuFKPi4jW8/sOfbd9OpsliGXUwZqKE9RriCD2FEbBe0A+txD/UbBLgpDg81rxTQWCpEngY
-	qfrRkfIqtOU7R6rHHXnjYEr2UGmynFApKKrKKM22qA03jlSAGlez4fQGZPffJvJuaHutD/5NZko
-	aWSeVNoAVQnJe5A4ZlpBCS9hGTPb3tdjKySF7TeadOXiI/4BfLpz4HEc1xgIghcWMYWRr+AKwrN
-	KNXv090F+LHhWik2WT6oKgu8usV7N/aHmyqKkRiOGU5/dQiTkOje4F2ds4o=
-X-Received: by 2002:a17:902:ea12:b0:2b9:e831:5e5c with SMTP id
- d9443c01a7336-2bab6022d34mr4546695ad.4.1778167997540; Thu, 07 May 2026
- 08:33:17 -0700 (PDT)
+        bh=hl3OPaa+HqsVW3wENlJ/AzITxIxhv+o3/IRQF7Ihs4o=;
+        b=gN8DJIpWXOOvC2fciJEZjDgT45bk+DHfa9lSXVsIx695zWuCwZywZtXj37LMBzJZOd
+         Fy8N8yqhWZpsq9oVdKz3ldXmXBleFM67G6jOxQyAzoa7+Hg82T/6NtQ5J0bhinOc70Yk
+         AXvmWb2dQydHy+FhrBQsW+5Yo1yP+yQ1jzVXYEjypM9aq53s5T/d+frVU4DFw1+LtZPH
+         +GWLoqHDILcRC1NuKnTneiUlOQdd7yMdPQcwYrlzf5EG1K3zfksF4r0i4qPmaC1iWBOU
+         +fuCzLLNuu//tRaqgPOQgG2h1JrtQrI/JebH+N6SpLn21wORTN6CKnWaK8TBlTIoyk9k
+         0dUw==
+X-Forwarded-Encrypted: i=1; AFNElJ9EP+bFteGZkIiKI1q9rKYfyJ/8K/u22MjyIp5I5cP/qewADZH9DMmLtgp7OgqGml+FW2PB824TVK8j5ZRdbhlw@vger.kernel.org
+X-Gm-Message-State: AOJu0YylLJ3ndBERC4Dw48ddxzNndWwbRstY9SQQQKuA/Unru4VHzqlt
+	yPM50hbvVfgMPiPtkGjN/YNstaCW8ZyI/8pKl6xy/yjwIqOb6MCajNu5fU28ugrXEVEDE7pQVFJ
+	VgnHnrAvEXzVOm3TDQe3MqDbKxMQkbp1kqaAnT8h1
+X-Gm-Gg: Acq92OHSG1PW/eNMMAO9/haG9KOkiCmL5Fh/+DtdKbG4n4+FmEXuBv2n8W4F6x3k+5B
+	CHJNthPVYqKe/WyVwE0M96yuZ7wxPgNWe3jnzZdsudVaKqt91Dwg1f5hGYFU5L0ENr5wN9AgJTs
+	q4hc6lmcu0sF0ipbhm2g0CUcr4qUe9tfUb90X9+40dp4jxkfnm6PBHv3x9LMEupn2FK01H0OuuS
+	kYEx+g9YVHS41yNl7i2jfI9J8WH3pLvql6mnXbS0Zk3fQz+gPt6wHAs5sDUFY94ah6GW21M1rD3
+	raQJMWice2+3gQBU8H/oKTApOa2cR3OiRQKGnyGyZVVBQHclzIRGOE+mOGPjh8aYDlFMbg==
+X-Received: by 2002:a17:903:f84:b0:2b0:b458:2dc3 with SMTP id
+ d9443c01a7336-2bae5b14ae2mr373815ad.21.1778168143999; Thu, 07 May 2026
+ 08:35:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260507063737.3542950-1-wangyushan12@huawei.com> <20260507063737.3542950-2-wangyushan12@huawei.com>
-In-Reply-To: <20260507063737.3542950-2-wangyushan12@huawei.com>
+References: <20260507063737.3542950-1-wangyushan12@huawei.com> <20260507063737.3542950-4-wangyushan12@huawei.com>
+In-Reply-To: <20260507063737.3542950-4-wangyushan12@huawei.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 7 May 2026 08:33:06 -0700
-X-Gm-Features: AVHnY4LPRYfAZmmxOjJIPz65xmkiiY5Sw9xtkiO-Uu115ZZfiJQbu-TOgh7Te5I
-Message-ID: <CAP-5=fXb6-Q2EJmoLyCmp2kmRG5x-pSt8-YAHNToZjn6jid33g@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 1/7] perf stat: Check color's length instead of the pointer
+Date: Thu, 7 May 2026 08:35:31 -0700
+X-Gm-Features: AVHnY4I9DKnPTVL3K0VhIs7W11tZTlL6bzHpAZiuhFaMk_dPdRFxYtcZFku_Z1A
+Message-ID: <CAP-5=fV5WiyB3mghvns1ZW6ewS0=CP4nx+f_ggLgECkqv7VWww@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 3/7] perf-x86: iostat: Move iostat arch-specific
+ implementation to util
 To: Yushan Wang <wangyushan12@huawei.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
 	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
@@ -103,65 +104,56 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, May 6, 2026 at 11:37=E2=80=AFPM Yushan Wang <wangyushan12@huawei.co=
 m> wrote:
 >
-> Color string returned by metric_threshold_classify__color() is never
-> NULL, check the presence of *color will always return true.
+> To support cross-platform iostat capabilities, like record/report on
+> different platforms, architecture-specific implementation of iostat
+> should be moved out of arch directory to get built. Build scripts are
+> changed accordingly.
 >
-> Fix this by change the checks against length of *color.
->
-> Fixes: 37b77ae95416 ("perf stat: Change color to threshold in print_metri=
-c")
 > Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
+> ---
+>  tools/perf/arch/x86/util/Build                           | 1 -
+>  tools/perf/util/Build                                    | 1 +
+>  tools/perf/{arch/x86/util/iostat.c =3D> util/x86-iostat.c} | 0
+>  3 files changed, 1 insertion(+), 1 deletion(-)
+>  rename tools/perf/{arch/x86/util/iostat.c =3D> util/x86-iostat.c} (100%)
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+To avoid cluttering up tools/perf/util, would it make sense to create
+a "tools/perf/util/iostat-arch" directory similar to  annotate-arch,
+dwarf-regs-arch, kvm-stat-arch and perf-regs-arch?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-script.c    | 2 +-
->  tools/perf/util/stat-display.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Bu=
+ild
+> index b94c91984c66..358541beaa0f 100644
+> --- a/tools/perf/arch/x86/util/Build
+> +++ b/tools/perf/arch/x86/util/Build
+> @@ -7,7 +7,6 @@ perf-util-y +=3D event.o
+>  perf-util-y +=3D evlist.o
+>  perf-util-y +=3D mem-events.o
+>  perf-util-y +=3D evsel.o
+> -perf-util-y +=3D iostat.o
 >
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c8ac9f01a36b..58cd5cd377a6 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2111,7 +2111,7 @@ static void script_print_metric(struct perf_stat_co=
-nfig *config __maybe_unused,
->         perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx=
-->evsel,
->                                    PERF_RECORD_SAMPLE, mctx->fp);
->         fputs("\tmetric: ", mctx->fp);
-> -       if (color)
-> +       if (strlen(color))
->                 color_fprintf(mctx->fp, color, fmt, val);
->         else
->                 printf(fmt, val);
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 993f4c4b8f44..74cba80c24b0 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -474,7 +474,7 @@ static void print_metric_std(struct perf_stat_config =
-*config,
->                 do_new_line_std(config, os);
+>  perf-util-$(CONFIG_LOCAL_LIBUNWIND)    +=3D unwind-libunwind.o
 >
->         n =3D fprintf(out, " # ");
-> -       if (color)
-> +       if (strlen(color))
->                 n +=3D color_fprintf(out, color, fmt, val);
->         else
->                 n +=3D fprintf(out, fmt, val);
-> @@ -607,7 +607,7 @@ static void print_metric_only(struct perf_stat_config=
- *config,
->         if (mlen < strlen(unit))
->                 mlen =3D strlen(unit) + 1;
->
-> -       if (color)
-> +       if (strlen(color))
->                 mlen +=3D strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
->
->         color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 70cc91d00804..c7e5ada3800d 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -127,6 +127,7 @@ perf-util-y +=3D thread-stack.o
+>  perf-util-y +=3D spark.o
+>  perf-util-y +=3D topdown.o
+>  perf-util-y +=3D iostat.o
+> +perf-util-y +=3D x86-iostat.o
+>  perf-util-y +=3D stream.o
+>  perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
+>  perf-util-y +=3D kvm-stat-arch/
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/util/x86-iost=
+at.c
+> similarity index 100%
+> rename from tools/perf/arch/x86/util/iostat.c
+> rename to tools/perf/util/x86-iostat.c
 > --
 > 2.33.0
 >
