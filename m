@@ -1,254 +1,179 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0EB3859EB
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 08:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07C72FFDE1
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 10:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778228877; cv=none; b=nejD8jpGDto1zpBDbZFMUPGTdWrs+nqD5G7AfKOp3mOFnlwBxt9gAfgDd9+i9kIh5j2dZ/QOdPuy4QhX97HP3ahflglXAcDO4gIhuYT3s/nf0lG1+lp/K3XmsGOc8LvfPKxRcIdk88RcvQDrNk8VXj4Pfetf5WhpYJxoMCDhJVU=
+	t=1778236432; cv=none; b=hh0fSk97PreVCmWMwWPxNIF4406vCrKOSyYDQ2/PhQUK1by9MqS8uQ4nHhtkK3VlAm409xS95tE0IYAEuP2tp9QZhL8/SbCxs68apJbT0z/8X6pLrJQn14bEHFczV0bN/e/7uru6o0LTDdt3pyx6Et5WTdqb5igkN2Vtdu4aZgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778228877; c=relaxed/simple;
-	bh=YV+jQTzr5U8wqJiMkFv23YvtpmRbZfl0p0/Y4dsUoP0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dlnGVedNtks3c1+rBOvAzJ0qlJKitzBnqp8R+tVmYwpwAjs5eGZKamhc1wPj4Hg72SilFoJsq0GJ5KAiE9xByokwqsvqtSUI+kvp5iWEgzzkUIz5k7PQ5vZe2LQoKZ7AAALuXBDKHV8XcQR/EwIiGXHo+OXQ6Rctd8qJjjDRDF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y8tU9AL2; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1778236432; c=relaxed/simple;
+	bh=Ux+3kgTkIIgPsw6UVLLH50fXpp6ZfvYFKK4jNtQqzaM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KjvldGVbG7BNhGyji2LaSt1EZ2ttsPbY7QxpM09YbIi3OXLf539yuo6mDlR75pAJUQRfqLyojKenOZmW8N+BZDHJjKiLbX0upmCufH/yI9Dge4Iq60tuHMdcUZbKWTDpR2LcnAY1b7sGhjsbAPTHi93x74BDgafYBV9QwJJa8X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fy49egWv; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y8tU9AL2"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ef37c3f773so2054320eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 May 2026 01:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fy49egWv"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-44ce78ab5feso1620086f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 May 2026 03:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778228864; x=1778833664; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TaCzln3oP7GCJBDx8P3UztqbyaF0B2xh0/jsYh7hZZo=;
-        b=Y8tU9AL2IqY4y8PuLr3kL8/t6uBLCJ3M1BqbodF4WUfjP72Xpp95CJDU/j/Rw4ab2q
-         XLTpzm8EDI8P1B3cyr5b2Ef1Wm5Cpq0X5gJj7mU3fovEupaNpF9iFTEYL8Lh6AjIQqsq
-         +/IOyGtjqNUFK/lCCJcY1JeAmcRy0F1HkpR7JgDpaGrQVB6893NVOxDiHDwmxrDjxki6
-         BB0gIqYPzPSQmfMcsO0a4cfz6oY73ex//8c/bbkGWmK2/8bnq4AaqjR0B3Kq13ZJzasr
-         IV80Gx6/Fh6vQfHAjqwNa9YClKDbQwUapqzT7pjTNHSauo/mtPaqQ225ZCSN/t6og+kC
-         UoLw==
+        d=linaro.org; s=google; t=1778236429; x=1778841229; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8xHZ9vH0OOXv8/65iQxAO1DN2jmxRH2008U7T+k0WE=;
+        b=Fy49egWvS1fJ6URBchClKF3TcR14XvS/tOfYXWThCuKzvXqmUZT+8k8J8L6ZMx4gX5
+         zac8U3Kxfla4oY1qr4GvwSVdeaCG0L61vtmO/bMdCVbFO8fhwzSvprBO71HaviIHHMxM
+         ylccwlAx0DuRUvSIALwv6pRj2azB/gUqv5DKFTbObLFAHE8vhjDanF2ECp1FN4YtvBUz
+         e93w9azrWd2QfcFvx+Z30RAzJYU1WQ9vSEglOOCJLJPWzY7lzDFVf0svMPf/Kjr//7PV
+         YcJw3HWakz84Vtrn35TzdjAjCIOI7/kF3RF3r2lKjkugEvdOTEMYDRAr1Yqf9V0FrrDW
+         n0PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778228864; x=1778833664;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TaCzln3oP7GCJBDx8P3UztqbyaF0B2xh0/jsYh7hZZo=;
-        b=nDTrUvtSjUXCWvU2IJqIzU7okk4Z4YGgAJ2PHp3o4kkYNoNIAyprm2o/twRRJoJDTg
-         9aj3O5F4M+YBzEbAfRRYrIDNf+KW9l0+9s3JO5uzZR1ng/YI+KkubSDMUq2SROsuTXzK
-         kNkfzOdcjGHUbuOm632BMYBl2NIe1EPdh6ntilaI8xbsyBzg9GlNXkT7QZvlUOLkNRot
-         SgzbYlluyKO2yTfj7HvUDymJfFJJsmFlHnL4YNO3OcPqjNiEyfOQLMsMPVxc1ZA63e+c
-         ViYYLcCupb14Pu4cwj3RxIz1r44I9715go52ewdZIJUVIRxm05001IFlZGq0+YHAYf37
-         rF0Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9Te7P0rvpGaq7wXHtsMzPjS2BF4LntXkQcvfQk/KQq9CsTWMzmb/sUjjH+18IHipjts8HBmPLjABiaF97ch9VV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgA6s5BGEa4IBCDwikunekSeWA+N2NpAmQGlf82BhT5bJMymyF
-	vGkkIvKrPKwDwhd3C9fAMCltgBbtlFn9drpAsphuunoUCtwnYR53y+s9ixffp1AQHk+vDKNZ6Xa
-	SAcrU8Wkr8w==
-X-Received: from dybml13.prod.google.com ([2002:a05:7301:150d:b0:2d9:8c75:b19e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6d03:b0:2de:3022:a459
- with SMTP id 5a478bee46e88-2f549f7c266mr5651619eec.21.1778228863854; Fri, 08
- May 2026 01:27:43 -0700 (PDT)
-Date: Fri,  8 May 2026 01:27:26 -0700
-In-Reply-To: <20260508082726.2795191-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1778236429; x=1778841229;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U8xHZ9vH0OOXv8/65iQxAO1DN2jmxRH2008U7T+k0WE=;
+        b=C/57QQjXaW1AzilJmTvYY8oKQo6bqNrRAQZ8B9Ie3e8vPgVBcLUctg8ywfh2+6Gc7Q
+         xx3wa14pJlHngq6nzJS56dchtk02tBsSxVD7P3oBtlPI5YXOUwL6xd5BxkPMngnVSc7E
+         0jxnD7mUQ/K2EPtfEKD3MljuZBqzxbllEFXSkjCaXIzCdXmWBG+455mrD9uxf+3agpBz
+         rtl3JPrEoDDg81sqaAPEJwTYDEOBfZmRpYIMVMexvrvB/5EqwvpW8JI5r2UIhe0VG92c
+         zBwtH0EZ8kSURU8axKYyUuUxPb6ufyhJgQHDTSycHSaAOtTaMS9Adg63kez2z6aNrtqc
+         2C+w==
+X-Gm-Message-State: AOJu0YymZfzVkF4+Z4GIefCTiGcCOiAm+L4uO+8nVKKNM2bzkDKYwgIx
+	YxaH7KXoylXOS2PYqbk1A2WVtLWzFJa6qURYmTyUeqnG2uchRL0XScVPQZ2qzRyn0+c=
+X-Gm-Gg: Acq92OEBFWKgcmDGuk1tES8ZQn//EXDoFeUwZC8dNRSqrOTXe3ewid5sE5ls56K7d1V
+	o3zmXBIFnUB6Uef+YcREuSc8RHh2nAogxWcufTGILd8xftVumHZNU3PWUOjXSPr1iIS02lsiJBc
+	Kaxd7A/Wbcb44dmE6zf0lI7GW83hS9Hu2E/bQj0ZkPdHaP7vHUszuqUhZJkdBbYoGW4ODXTSiqp
+	rgkgRXiQcUSHhbkZc8mUSzmQ6qKgDfUWJjYWfgE9k0IIRu411T5Qr35ZZV3fpzWWP4XsEA3XXug
+	469mjNhVq2fApeyj3bp7X/mJyKRyrmu0z4d5k1f5rOkAuduhTlf35f8Nr/1O48jTnF8DBkdRPS8
+	XLk2RKJvoNQQdVavRUbor7KsABwRe7zNwJZ1AtvCCUG2XAbc/BEwUdi5K+XDcR+yeSI0OuYr8ZY
+	Du1yQ/ddqewxU+AnOlgDLdz2vuW4192wsM
+X-Received: by 2002:a5d:64e3:0:b0:449:cfea:ca91 with SMTP id ffacd0b85a97d-4515da96254mr17777880f8f.37.1778236429088;
+        Fri, 08 May 2026 03:33:49 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45491f8d4c3sm3225842f8f.34.2026.05.08.03.33.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2026 03:33:48 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Fri, 08 May 2026 11:33:36 +0100
+Subject: [PATCH] perf test: Make leafloop workload immune to compiler
+ options
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260506004546.3140141-1-irogers@google.com> <20260508082726.2795191-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260508082726.2795191-7-irogers@google.com>
-Subject: [PATCH v6 6/6] perf aslr: Strip sample registers
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, gmx@google.com, 
-	james.clark@linaro.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAP+7/WkC/x3MQQrCMBBG4auUWTswHbCIVxEXIflTR2sTMiJC6
+ d0NXX6L9zZyNIPTddio4WtuZe0YTwPFR1hnsKVuUtFJznLhZ3jDuaJlXhDyUkpl/4T44qg6TiJ
+ IKSv1vjZk+x3v233f//i7qyVrAAAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-When the ASLR tracking tool encounters sample events containing user
-or interrupt register dumps (PERF_SAMPLE_REGS_USER /
-PERF_SAMPLE_REGS_INTR), it previously dropped the entire sample event
-conservatively to prevent absolute virtual memory pointers leakage
-embedded inside raw register frames. If a trace session was recorded
-with register collection flags enabled, this resulted in 100% sample
-drop rates, and this happened by default for ARM64.
+Since the leafloop test program was moved into the main Perf binary as a
+workload, it inherited the same compiler options as Perf. In this case
+the -fstack-protector option broke the assumption that simple leaf
+frames don't have a stack frame on Arm. This causes
+test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
+the link register, making the test useless.
 
-Refactor the ASLR tool to strip out obly the register dump payload
-words from PERF_RECORD_SAMPLE event streams, automatically shrinking
-the output sample header size. Incoming PERF_RECORD_ATTR events are
-scrubbed up front to clear the register dump bit selection flags and
-masks, and output sample ABI words are safely overwritten to
-PERF_SAMPLE_REGS_ABI_NONE.  This keeps downstream evsel parsers
-perfectly synchronized while retaining full, comprehensive sample
-profiles completely clear of secret register data frames.
+Fix it by rewriting the leaf function in assembly seeing as it's so
+simple. Adding -fno-stack-protector would also work, but wouldn't be
+robust against other future compiler option additions.
 
-Verification parity is established inside inject_aslr.sh via a
-dedicated sorted report diff comparison validation case proving zero
-starvation and absolute secrecy.
+The local variables and 'a' variable were never needed so remove them to
+simplify.
 
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: GitHub-Copilot:GPT-5.5
+Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/builtin-inject.c           | 11 ++++++
- tools/perf/tests/shell/inject_aslr.sh | 51 +++++++++++++++++++++++++++
- tools/perf/util/aslr.c                | 27 +++++++-------
- 3 files changed, 75 insertions(+), 14 deletions(-)
+ tools/perf/tests/workloads/leafloop.c | 36 +++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 51dcf248b653..7a17ce019657 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2463,6 +2463,17 @@ static int __cmd_inject(struct perf_inject *inject)
- 			}
- 		}
+diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
+index f7561767e32c..58367fd1daec 100644
+--- a/tools/perf/tests/workloads/leafloop.c
++++ b/tools/perf/tests/workloads/leafloop.c
+@@ -6,10 +6,9 @@
+ #include "../tests.h"
  
-+		if (inject->aslr) {
-+			struct evsel *evsel;
-+
-+			evlist__for_each_entry(session->evlist, evsel) {
-+				evsel__reset_sample_bit(evsel, REGS_USER);
-+				evsel__reset_sample_bit(evsel, REGS_INTR);
-+				evsel->core.attr.sample_regs_user = 0;
-+				evsel->core.attr.sample_regs_intr = 0;
-+			}
-+		}
-+
+ /* We want to check these symbols in perf script */
+-noinline void leaf(volatile int b);
+-noinline void parent(volatile int b);
++noinline void leaf(void);
++noinline void parent(void);
  
+-static volatile int a;
+ static volatile sig_atomic_t done;
  
- 		session->header.data_offset = output_data_offset;
-diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
-index 6363a0f69d2b..323782c3802d 100755
---- a/tools/perf/tests/shell/inject_aslr.sh
-+++ b/tools/perf/tests/shell/inject_aslr.sh
-@@ -446,6 +446,56 @@ test_kernel_report_aslr() {
-   fi
+ static void sighandler(int sig __maybe_unused)
+@@ -17,15 +16,36 @@ static void sighandler(int sig __maybe_unused)
+ 	done = 1;
  }
  
-+test_regs_stripping() {
-+  echo "Test user register stripping"
-+  local rdata="${temp_dir}/perf.data.regs"
-+  local rdata2="${temp_dir}/perf.data.regs.injected"
-+  local rdata_clean="${temp_dir}/perf.data.regs.clean"
+-noinline void leaf(volatile int b)
++#if defined(__aarch64__)
++/*
++ * Write leaf() in assembly so it stays as a minimal leaf function with no
++ * stack frame and won't get silently broken in the future by any Perf wide
++ * compilation options like -fstack-protector-all.
++ */
++asm(
++	".text\n"
++	".global leaf\n"
++	".type leaf, %function\n"
++	"leaf:\n"
++	"	adrp	x1, done\n"
++	"	ldr	w2, [x1, #:lo12:done]\n"
++	"	cbz	w2, leaf\n"
++	"	ret\n"
++);
 +
-+  if ! perf record --user-regs -o "${rdata}" ${prog} > /dev/null 2>&1; then
-+    echo "Skipping user registers test as recording failed (unsupported flag/platform)"
-+    return
-+  fi
++#else
 +
-+  perf inject -b -i "${rdata}" -o "${rdata_clean}"
-+  perf inject -v -b --aslr -i "${rdata}" -o "${rdata2}"
-+
-+  local report1="${temp_dir}/report_regs1"
-+  local report2="${temp_dir}/report_regs2"
-+  local report1_clean="${temp_dir}/report_regs1.clean"
-+  local report2_clean="${temp_dir}/report_regs2.clean"
-+  local diff_file="${temp_dir}/diff_regs"
-+
-+  perf report -i "${rdata_clean}" --stdio > "${report1}" 2>/dev/null || true
-+  perf report -i "${rdata2}" --stdio > "${report2}" 2>/dev/null || true
-+
-+  grep '%' "${report1}" | grep -v '^#' | grep -v -E '0x[0-9a-f]{8,}|0000000000000000' | sort > "${report1_clean}" || true
-+  grep '%' "${report2}" | grep -v '^#' | grep -v -E '0x[0-9a-f]{8,}|0000000000000000' | sort > "${report2_clean}" || true
-+
-+  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-+
-+  if [ ! -s "${report1_clean}" ]; then
-+    echo "User registers stripping test [Failed - profile trace starved/empty]"
-+    err=1
-+    return
-+  elif [ -s "${diff_file}" ]; then
-+    echo "User registers stripping test [Failed - report parsing differs]"
-+    echo "Showing first 20 lines of diff:"
-+    head -n 20 "${diff_file}"
-+    err=1
-+    return
-+  fi
-+
-+  local script_dump="${temp_dir}/script_regs_dump"
-+  perf script -D -i "${rdata2}" > "${script_dump}" 2>/dev/null || true
-+  if grep -q "PERF_SAMPLE_REGS_USER" "${script_dump}"; then
-+    echo "User registers stripping test [Failed - register dumps still present]"
-+    err=1
-+  else
-+    echo "User registers stripping test [Success]"
-+  fi
-+}
-+
- test_basic_aslr
- test_pipe_aslr
- test_callchain_aslr
-@@ -455,6 +505,7 @@ test_pipe_out_report_aslr
- test_dropped_samples
- test_kernel_aslr
- test_kernel_report_aslr
-+test_regs_stripping
- 
- cleanup
- exit $err
-diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-index 09b7f2f8fb85..e5369589a733 100644
---- a/tools/perf/util/aslr.c
-+++ b/tools/perf/util/aslr.c
-@@ -751,18 +751,13 @@ static int aslr_tool__process_sample(const struct perf_tool *tool, union perf_ev
- 		if (abi != PERF_SAMPLE_REGS_ABI_NONE) {
- 			u64 nr = hweight64(evsel->core.attr.sample_regs_user);
- 
--			if (nr > max_i - i || nr > max_j - j) {
-+			if (nr > max_i - i) {
- 				ret = -EFAULT;
- 				goto out_put;
- 			}
--			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
- 			i += nr;
--			j += nr;
-+			out_array[j-1] = PERF_SAMPLE_REGS_ABI_NONE;
- 		}
--		/* TODO: can this be less conservative? */
--		pr_debug("Dropping regs user sample as possible ASLR leak\n");
--		ret = 0;
--		goto out_put;
- 	}
- 	if (sample_type & PERF_SAMPLE_STACK_USER) {
- 		u64 size;
-@@ -806,18 +801,13 @@ static int aslr_tool__process_sample(const struct perf_tool *tool, union perf_ev
- 		if (abi != PERF_SAMPLE_REGS_ABI_NONE) {
- 			u64 nr = hweight64(evsel->core.attr.sample_regs_intr);
- 
--			if (nr > max_i - i || nr > max_j - j) {
-+			if (nr > max_i - i) {
- 				ret = -EFAULT;
- 				goto out_put;
- 			}
--			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
- 			i += nr;
--			j += nr;
-+			out_array[j-1] = PERF_SAMPLE_REGS_ABI_NONE;
- 		}
--		/* TODO: can this be less conservative? */
--		pr_debug("Dropping interrupt register sample as possible ASLR leak\n");
--		ret = 0;
--		goto out_put;
- 	}
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
- 		COPY_U64(); /* phys_addr */
-@@ -907,6 +897,15 @@ static int aslr_tool__process_attr(const struct perf_tool *tool,
- 	if (new_event->attr.attr.type == PERF_TYPE_BREAKPOINT)
- 		new_event->attr.attr.bp_addr = 0;  /* Conservatively remove addresses. */
- 
-+	if (new_event->attr.attr.sample_type & PERF_SAMPLE_REGS_USER) {
-+		new_event->attr.attr.sample_type &= ~PERF_SAMPLE_REGS_USER;
-+		new_event->attr.attr.sample_regs_user = 0;
-+	}
-+	if (new_event->attr.attr.sample_type & PERF_SAMPLE_REGS_INTR) {
-+		new_event->attr.attr.sample_type &= ~PERF_SAMPLE_REGS_INTR;
-+		new_event->attr.attr.sample_regs_intr = 0;
-+	}
-+
- 	return delegate->attr(delegate, new_event, pevlist);
++noinline void leaf(void)
+ {
+ 	while (!done)
+-		a += b;
++		;
  }
  
+-noinline void parent(volatile int b)
++#endif
++
++noinline void parent(void)
+ {
+-	leaf(b);
++	leaf();
+ }
+ 
+ static int leafloop(int argc, const char **argv)
+@@ -39,7 +59,7 @@ static int leafloop(int argc, const char **argv)
+ 	signal(SIGALRM, sighandler);
+ 	alarm(sec);
+ 
+-	parent(sec);
++	parent();
+ 	return 0;
+ }
+ 
+
+---
+base-commit: 8c8f2093614373ea8179b562320212a25cf937c0
+change-id: 20260508-james-perf-leafloop-stack-c221600eddf2
+
+Best regards,
 -- 
-2.54.0.563.g4f69b47b94-goog
+James Clark <james.clark@linaro.org>
 
