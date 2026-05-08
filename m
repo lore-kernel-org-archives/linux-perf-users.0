@@ -1,44 +1,44 @@
-Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC73C457F;
-	Fri,  8 May 2026 10:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55173D0901;
+	Fri,  8 May 2026 10:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778236576; cv=none; b=o6Z+dlnEamk3sRFg7u1LBQ9+DokBJVaDTb6mQ286sNbLnQR5iu9dJ+soIONmdh71bfZwwATHHoLsJMg3FToXB1EIOBF94sN+QMlPQJ7McT1jTEBUW7SLcovPQhLSw4L3DcP7pKrrCxkzrG8jtFGEGdpKPmSlP6L3aA+thTOOUUI=
+	t=1778236593; cv=none; b=MjT7crWYkxqOJEKJ7Ug+yEnRmqMDjIiFZDMZb2PvQZ1kknna1Izvg2bXx4d3rs1Hza5PqV7S4czIMDe3QTu9U8yTbwJQV6LWZVlBDuXKHl5laY6clcMcHq4Tahcilbu8pAcPliDYc9fftXtv64m4ci8+bTiYxKIEoB0GEWZ3YhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778236576; c=relaxed/simple;
-	bh=JFRmJMq03VS3SgNxxQwHz5y0HJTqeQOU3DUVE68uXK8=;
+	s=arc-20240116; t=1778236593; c=relaxed/simple;
+	bh=xlsoaH6+s33yDtojmUKNfhTfqJon+lLn5/GAmxf7QuI=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=st6M7MDZvCw1Oki8AIwfFddrKS7WmtF0nh1j+xBaR5yk7Wyjb47d0gxAuS8802UNVjzx9MRDWCiSPYjXRpHFjqxqejiiee7cpOUMLNbYYLaAe3iCghAu3IXGmicPAbKZjhKvEEdjaEDNS23wOK4gwbbpEmpI7sbCxnfH1WMPV1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4eIXFaO2; arc=none smtp.client-ip=113.46.200.217
+	 In-Reply-To:Content-Type; b=ZPWy/6zQQvbOwm9ctSPP7iPxjxNjQstc2ZZTHc3Z0P4qyfqLwXO3sF+qBg/jL0dPgt9sFen68SOXnd/vvXC2YV/HNLUWhtWaq/HsRJPZIcQG5hMzPcsEg0wRBAhnJygJBYhzGg3nshDmZBbDWUQGrwApTosImTRiYsIqLftNdok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=H+aBSlKO; arc=none smtp.client-ip=113.46.200.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4eIXFaO2"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="H+aBSlKO"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=JFRmJMq03VS3SgNxxQwHz5y0HJTqeQOU3DUVE68uXK8=;
-	b=4eIXFaO2etyh2TEThCnYd0jP/eQK0tGc2YxMIy54WJMty5J7Fde7RpQR9L/VjMvbGQEIyWVFb
-	ieStq3os3ZmeSlINoX20fMelCAnz+DZyP/9kq31ZdLB5lyJYrxXhjtYXFrPOQ1XlavcOp3FkMyB
-	K1ese5PrpOfT/Noog0s6zzA=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4gBlhp4bYKzcb3j;
-	Fri,  8 May 2026 18:28:58 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id DBEF640561;
-	Fri,  8 May 2026 18:36:10 +0800 (CST)
+	bh=xlsoaH6+s33yDtojmUKNfhTfqJon+lLn5/GAmxf7QuI=;
+	b=H+aBSlKOqOQlrWGMkYZ3TZ3CsT+bQE1WIQSvMGnuTwiMEA0zp3pNRtpOlRG97Qfy8cnvQL1M1
+	jeQBSsf+lPNuqOMKiks66wnvuDZh2wktwFvRQtNifhNRbeel+zAurXGllsB8Xqbp/dyWRPGUiVH
+	DUYrwr5CirMVXHILmgGCGgw=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gBlhj4kzTz1T4M2;
+	Fri,  8 May 2026 18:28:53 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 08B3A40569;
+	Fri,  8 May 2026 18:36:28 +0800 (CST)
 Received: from kwepemn100008.china.huawei.com (7.202.194.111) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 8 May 2026 18:36:10 +0800
+ 15.2.1544.11; Fri, 8 May 2026 18:36:27 +0800
 Received: from [10.67.120.139] (10.67.120.139) by
  kwepemn100008.china.huawei.com (7.202.194.111) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Fri, 8 May 2026 18:36:09 +0800
-Message-ID: <55be95ff-2aaf-4223-8d6f-20426ef3525e@huawei.com>
-Date: Fri, 8 May 2026 18:36:08 +0800
+ 15.2.1544.36; Fri, 8 May 2026 18:36:26 +0800
+Message-ID: <6d4a668d-b659-460b-89f9-c9ae39120646@huawei.com>
+Date: Fri, 8 May 2026 18:36:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,8 +47,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Yushan Wang <wangyushan12@huawei.com>
-Subject: Re: [RFT PATCH v2 5/7] perf-iostat: Extend iostat interface to
- support different iostat PMUs
+Subject: Re: [RFT PATCH v2 6/7] perf-iostat: Make x86 iostat compatible with
+ new iostat framework
 To: Ian Rogers <irogers@google.com>
 CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <mark.rutland@arm.com>,
@@ -60,155 +60,137 @@ CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<linuxarm@huawei.com>, <hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>,
 	<fanghao11@huawei.com>, <wangzhou1@hisilicon.com>
 References: <20260507063737.3542950-1-wangyushan12@huawei.com>
- <20260507063737.3542950-6-wangyushan12@huawei.com>
- <CAP-5=fW592tmsKW8WqMPodWzq2JKO5G4nHDy7LKo8PCD2RMZ1Q@mail.gmail.com>
+ <20260507063737.3542950-7-wangyushan12@huawei.com>
+ <CAP-5=fX1ECS9ECh0WYXDr6DHSwSvqwZBKkAETxQGtwAWcpphfg@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <CAP-5=fW592tmsKW8WqMPodWzq2JKO5G4nHDy7LKo8PCD2RMZ1Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fX1ECS9ECh0WYXDr6DHSwSvqwZBKkAETxQGtwAWcpphfg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemn100008.china.huawei.com (7.202.194.111)
 
-On 5/7/2026 11:47 PM, Ian Rogers wrote:
+On 5/8/2026 12:17 AM, Ian Rogers wrote:
 > On Wed, May 6, 2026 at 11:37 PM Yushan Wang <wangyushan12@huawei.com> wrote:
 >>
 >> From: Shiju Jose <shiju.jose@huawei.com>
 >>
->> Currently, platform-specific iostat code for PMUs is implemented as a
->> common iostat callback interface and linked during build. This approach
->> limits support for iostat across different implementations of PMU of the
->> same architecture.
+>> Change the original x86 iio iostat supporter to be compatible with the
+>> set of iostat frameworks.
 >>
->> To address this, extend common iostat interface to provide support for
->> different PMUs by allowing each PMU to register itself and receive
->> callbacks to its PMU-specific functions through the unified iostat
->> framework.
+>> The matching function of x86 iio may not be correct.
 >>
 >> Signed-off-by: Shiju Jose  <shiju.jose@huawei.com>
 >> Co-developed-by: Yushan Wang <wangyushan12@huawei.com>
 >> Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
 >> ---
->>  tools/perf/util/iostat.c | 88 ++++++++++++++++++++++++++++++----------
->>  tools/perf/util/iostat.h | 38 ++++++++++++++++-
->>  2 files changed, 102 insertions(+), 24 deletions(-)
+>>  tools/perf/util/iostat.c     | 26 +++++++--------
+>>  tools/perf/util/x86-iostat.c | 62 ++++++++++++++++++++++++++----------
+>>  2 files changed, 59 insertions(+), 29 deletions(-)
 >>
->> diff --git a/tools/perf/util/iostat.c b/tools/perf/util/iostat.c
->> index a68ab100780d..90607d1cf3fa 100644
->> --- a/tools/perf/util/iostat.c
->> +++ b/tools/perf/util/iostat.c
->> @@ -1,47 +1,91 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include "util/iostat.h"
->> -#include "util/debug.h"
->> +
->> +/*
->> + * Below iostat_* function calls are scattered through out perf stat process,
->> + * allowing multiple iostat PMUs and iterated them in following functions may
->> + * violate calling conventions or cause incorrect display.
->> + *
->> + * Default to register the first PMU device that matches any of the specified
->> + * iostat pmu name wildcards.
->> + */
->> +static struct iostat_pmu *iostat_pmu;
->
-> Could there be more than set of printing functions?
-
-At the second thought, to support cross-platform iostat, multiple printing
-function should be supported, otherwise interpreting dumped perf.data from
-another architecture may just not work.
-
-This may require some more changes to the embedded iostat function calls, I can
-try to add that support in the next version, thanks for pointing out!
-
->
->>  enum iostat_mode_t iostat_mode = IOSTAT_NONE;
+>> diff --git a/tools/perf/util/x86-iostat.c b/tools/perf/util/x86-iostat.c
+>> index f8d4c9718594..778655cbc2a0 100644
+>> --- a/tools/perf/util/x86-iostat.c
+>> +++ b/tools/perf/util/x86-iostat.c
+>> @@ -332,9 +332,9 @@ static int iostat_event_group(struct evlist *evl,
+>>         return ret;
+>>  }
 >>
->> -__weak int iostat_prepare(struct evlist *evlist __maybe_unused,
->> -                         struct perf_stat_config *config __maybe_unused)
->> +__weak int iostat_prepare(struct evlist *evlist, struct perf_stat_config *config)
->
-> Eww.. weak.
-
-These __weak symbols are added to avoid confliction with existing x86 iostat
-implementations, and are removed in patch 6.
-
->
 
 [...]
 
->>
->> -__weak void iostat_print_counters(struct evlist *evlist __maybe_unused,
->> -                                 struct perf_stat_config *config __maybe_unused,
->> -                                 struct timespec *ts __maybe_unused,
->> -                                 char *prefix __maybe_unused,
->> -                                 iostat_print_counter_t print_cnt_cb __maybe_unused,
->> -                                 void *arg __maybe_unused)
->> +__attribute__((destructor))
->
-> I don't believe using this attribute is standard in either perf or the kernel.
-
-Sorry, I will fix that with explict calls to constructors and destructors.
-
->
->> +static void iostat_exit(void)
->>  {
->> +       unregister_iostat_pmu();
->>  }
->> diff --git a/tools/perf/util/iostat.h b/tools/perf/util/iostat.h
->> index 820930a096d9..5cc8963c6122 100644
->> --- a/tools/perf/util/iostat.h
->> +++ b/tools/perf/util/iostat.h
->> @@ -10,6 +10,7 @@
->>  #ifndef _IOSTAT_H
->>  #define _IOSTAT_H
->>
->> +#include <stdbool.h>
->>  #include <subcmd/parse-options.h>
->>  #include "util/stat.h"
->>  #include "util/parse-events.h"
->> @@ -31,8 +32,7 @@ extern enum iostat_mode_t iostat_mode;
->>  typedef void (*iostat_print_counter_t)(struct perf_stat_config *, struct evsel *, void *);
->>
->>  int iostat_prepare(struct evlist *evlist, struct perf_stat_config *config);
->> -int iostat_parse(const struct option *opt, const char *str,
->> -                int unset __maybe_unused);
->> +int iostat_parse(const struct option *opt, const char *str, int unset);
->>  void iostat_list(struct evlist *evlist, struct perf_stat_config *config);
->>  void iostat_release(struct evlist *evlist);
->>  void iostat_print_header_prefix(struct perf_stat_config *config);
->> @@ -42,4 +42,38 @@ void iostat_print_counters(struct evlist *evlist,
->>                            struct perf_stat_config *config, struct timespec *ts,
->>                            char *prefix, iostat_print_counter_t print_cnt_cb, void *arg);
->>
->> +/**
->> + * struct iostat_pmu - Callbacks for an iostat-capable PMU backend.
->> + * @pmu_name_wildcard: Glob pattern to identify the PMU (e.g. "uncore_iio*").
->> + * @match: Detect whether matching PMUs exist on this system.
->> + * @prepare: Set up events and config for iostat collection.
->> + * @parse: Parse the --iostat option argument.
->> + * @list: Display available iostat PMU instances.
->> + * @print_header_prefix: Print the column header prefix.
->> + * @print_metric: Format and print one metric value.
->> + * @print_counters:  Iterate over counters and print per-port results.
->> + * @release: Clean up PMU-specific resources.
+>> +
+>> +/*
+>> + * FIXME: pmu name prefix match might not work for x86 iio.
 >> + */
->> +struct iostat_pmu {
+>> +static bool iio_iostat_probe(struct iostat_pmu *iostat_pmu)
+>> +{
+>> +       return perf_pmus__scan_matching_wildcard(NULL, iostat_pmu->pmu_name_wildcard);
 >
-> I wonder if iostat_pmu is the best name here, perhaps
-> iostat_callbacks? It would be nice not to overload the term PMU in the
-> code with regular PMUs and the iostat PMUs.
+> It feels more readable to me as:
+> ```
+>   return perf_pmus__scan_matching_wildcard(NULL, "uncore_iio") != NULL;
+> ```
 
-Yes. iostat_backend or iostat_handlers may be more specific. I'll change that in
-the next version
+Yes, I can do that refactor.
 
 >
-> Thanks,
-> Ian
+>
+>> +}
+>> +
+>> +static struct iostat_pmu x86_iio_iostat_pmu_list[]  = {
+>> +       {
+>> +               .pmu_name_wildcard = "uncore_iio*",
+>> +               .match = iio_iostat_probe,
+>> +               .prepare = iio_iostat_prepare,
+>> +               .parse = iio_iostat_parse,
+>> +               .list = iio_iostat_list,
+>> +               .print_header_prefix = iio_iostat_print_header_prefix,
+>> +               .print_metric = iio_iostat_print_metric,
+>
+> Is there scope to push the metric printing into json? For example, you
+> can have PMUs with json:
+> tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> ```
+>     {
+>        "BriefDescription": "Uncore frequency per die [GHZ]",
+>        "MetricExpr": "tma_info_system_socket_clks / #num_dies /
+> duration_time / 1e9",
+>        "MetricGroup": "SoC",
+>        "MetricName": "UNCORE_FREQ",
+>        "Unit": "cpu_core"
+>    },
+> ```
+> and do uncore type things:
+> tools/perf/pmu-events/arch/x86/amdzen6/recommended.json
+> ```
+>   {
+>    "MetricName": "umc_activate_cmd_rate",
+>    "BriefDescription": "Memory controller ACTIVATE command rate.",
+>    "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
+>    "MetricGroup": "memory_controller",
+>    "PerPkg": "1",
+>    "ScaleUnit": "1per_memclk"
+>  },
+> ```
 
-Thank you for review!
+Currently it's a bit far to reach json configurable PMU iostat structural
+display, since the PMUs are vendor specific and may have different meaningful
+combinations of events, and they may be hard to be handled with generalized
+handler.
+
+Taking currently availble uncore_iio* and hisi_pcie* pmu as example, they have
+different sets of events to display, different ways of calculation, and
+different PMU to PCIe root port mapping topology, which requires dedicated
+handler.
+
+But admittedly there are a lot of redundant code that can be optimized, I can
+see if those iostat_* callbacks can be merged or generalized so that variated
+functions can be minimized.
+
+Thanks,
 Yushan
 
 >
-
-[...]
+>> +               .print_counters = iio_iostat_print_counters,
+>> +               .release = iio_iostat_release,
+>> +       },
+>> +};
+>> +
+>> +static void __attribute__((constructor)) x86_iio_iostat_pmu_init(void)
+>
+> I don't believe these attributes are what we normally do.
+>
+> Thanks,
+> Ian
+>
+>
+>> +{
+>> +       unsigned int i;
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(x86_iio_iostat_pmu_list); i++)
+>> +               register_iostat_pmu(&x86_iio_iostat_pmu_list[i]);
+>> +}
+>> --
+>> 2.33.0
+>>
 
