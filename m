@@ -1,179 +1,103 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07C72FFDE1
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 10:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7526837F00C;
+	Fri,  8 May 2026 10:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778236432; cv=none; b=hh0fSk97PreVCmWMwWPxNIF4406vCrKOSyYDQ2/PhQUK1by9MqS8uQ4nHhtkK3VlAm409xS95tE0IYAEuP2tp9QZhL8/SbCxs68apJbT0z/8X6pLrJQn14bEHFczV0bN/e/7uru6o0LTDdt3pyx6Et5WTdqb5igkN2Vtdu4aZgk=
+	t=1778236452; cv=none; b=hVrm6ONpiGyf3MXVM8KFF0eZ09hCtZg5A9OM7bpa6yDDnqqYsjdDW/G4WRU+1nPDQnWIzfDcr8GHz9LandVFK996KRpiY7AemjfT/zPDNAi2bHM/I3RaE/FS56Mx56BjncOZuMQ0pAiqAmizgueHnrnvtoN/DgR1G5+TkVssSd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778236432; c=relaxed/simple;
-	bh=Ux+3kgTkIIgPsw6UVLLH50fXpp6ZfvYFKK4jNtQqzaM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KjvldGVbG7BNhGyji2LaSt1EZ2ttsPbY7QxpM09YbIi3OXLf539yuo6mDlR75pAJUQRfqLyojKenOZmW8N+BZDHJjKiLbX0upmCufH/yI9Dge4Iq60tuHMdcUZbKWTDpR2LcnAY1b7sGhjsbAPTHi93x74BDgafYBV9QwJJa8X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fy49egWv; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778236452; c=relaxed/simple;
+	bh=7JdWRHx/+mjb4lk/bEZQh+lQq/Mn7dxl20NhPE4u0a8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=idjI/NieNDCZ5kK9DwfWOniKQ82LkQoZ3lf8DGm/fTqr7Hh5xzDjpxyDMnVygvEWydlvRgcOlwr5EiorVA4YijJR5jh5O4RWgKsRJ4CRhvYBIKS3iCrxIU3Ib65X4bI1HSrphH4TSlLWFKr2kREok0Ytr5codQBf1LXgb4W0dN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=yL728+Gj; arc=none smtp.client-ip=113.46.200.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fy49egWv"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-44ce78ab5feso1620086f8f.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 May 2026 03:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778236429; x=1778841229; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8xHZ9vH0OOXv8/65iQxAO1DN2jmxRH2008U7T+k0WE=;
-        b=Fy49egWvS1fJ6URBchClKF3TcR14XvS/tOfYXWThCuKzvXqmUZT+8k8J8L6ZMx4gX5
-         zac8U3Kxfla4oY1qr4GvwSVdeaCG0L61vtmO/bMdCVbFO8fhwzSvprBO71HaviIHHMxM
-         ylccwlAx0DuRUvSIALwv6pRj2azB/gUqv5DKFTbObLFAHE8vhjDanF2ECp1FN4YtvBUz
-         e93w9azrWd2QfcFvx+Z30RAzJYU1WQ9vSEglOOCJLJPWzY7lzDFVf0svMPf/Kjr//7PV
-         YcJw3HWakz84Vtrn35TzdjAjCIOI7/kF3RF3r2lKjkugEvdOTEMYDRAr1Yqf9V0FrrDW
-         n0PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778236429; x=1778841229;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U8xHZ9vH0OOXv8/65iQxAO1DN2jmxRH2008U7T+k0WE=;
-        b=C/57QQjXaW1AzilJmTvYY8oKQo6bqNrRAQZ8B9Ie3e8vPgVBcLUctg8ywfh2+6Gc7Q
-         xx3wa14pJlHngq6nzJS56dchtk02tBsSxVD7P3oBtlPI5YXOUwL6xd5BxkPMngnVSc7E
-         0jxnD7mUQ/K2EPtfEKD3MljuZBqzxbllEFXSkjCaXIzCdXmWBG+455mrD9uxf+3agpBz
-         rtl3JPrEoDDg81sqaAPEJwTYDEOBfZmRpYIMVMexvrvB/5EqwvpW8JI5r2UIhe0VG92c
-         zBwtH0EZ8kSURU8axKYyUuUxPb6ufyhJgQHDTSycHSaAOtTaMS9Adg63kez2z6aNrtqc
-         2C+w==
-X-Gm-Message-State: AOJu0YymZfzVkF4+Z4GIefCTiGcCOiAm+L4uO+8nVKKNM2bzkDKYwgIx
-	YxaH7KXoylXOS2PYqbk1A2WVtLWzFJa6qURYmTyUeqnG2uchRL0XScVPQZ2qzRyn0+c=
-X-Gm-Gg: Acq92OEBFWKgcmDGuk1tES8ZQn//EXDoFeUwZC8dNRSqrOTXe3ewid5sE5ls56K7d1V
-	o3zmXBIFnUB6Uef+YcREuSc8RHh2nAogxWcufTGILd8xftVumHZNU3PWUOjXSPr1iIS02lsiJBc
-	Kaxd7A/Wbcb44dmE6zf0lI7GW83hS9Hu2E/bQj0ZkPdHaP7vHUszuqUhZJkdBbYoGW4ODXTSiqp
-	rgkgRXiQcUSHhbkZc8mUSzmQ6qKgDfUWJjYWfgE9k0IIRu411T5Qr35ZZV3fpzWWP4XsEA3XXug
-	469mjNhVq2fApeyj3bp7X/mJyKRyrmu0z4d5k1f5rOkAuduhTlf35f8Nr/1O48jTnF8DBkdRPS8
-	XLk2RKJvoNQQdVavRUbor7KsABwRe7zNwJZ1AtvCCUG2XAbc/BEwUdi5K+XDcR+yeSI0OuYr8ZY
-	Du1yQ/ddqewxU+AnOlgDLdz2vuW4192wsM
-X-Received: by 2002:a5d:64e3:0:b0:449:cfea:ca91 with SMTP id ffacd0b85a97d-4515da96254mr17777880f8f.37.1778236429088;
-        Fri, 08 May 2026 03:33:49 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45491f8d4c3sm3225842f8f.34.2026.05.08.03.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2026 03:33:48 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 08 May 2026 11:33:36 +0100
-Subject: [PATCH] perf test: Make leafloop workload immune to compiler
- options
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="yL728+Gj"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=7JdWRHx/+mjb4lk/bEZQh+lQq/Mn7dxl20NhPE4u0a8=;
+	b=yL728+GjveI/7wInsJjt/gcfZQk2qXvQqxMjMWoY+uOU8Y9XpIuypecPeH6DdVnEsq9gXyEby
+	NuYxevfHDp+EciXq6PeegBkkJ6U8RFwG+M1u4miK2SlSOWAy44HFaSb9agtEv6AtCBVbURVLVba
+	LUwwnGgBUuTX3Ne5Lhvu5Iw=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gBlf04XNVzLlX9;
+	Fri,  8 May 2026 18:26:32 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3A53940562;
+	Fri,  8 May 2026 18:34:06 +0800 (CST)
+Received: from kwepemn100008.china.huawei.com (7.202.194.111) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 8 May 2026 18:34:06 +0800
+Received: from [10.67.120.139] (10.67.120.139) by
+ kwepemn100008.china.huawei.com (7.202.194.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Fri, 8 May 2026 18:34:04 +0800
+Message-ID: <4d7b9ce3-15e4-414b-87cf-85a6338b69ab@huawei.com>
+Date: Fri, 8 May 2026 18:34:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAP+7/WkC/x3MQQrCMBBG4auUWTswHbCIVxEXIflTR2sTMiJC6
- d0NXX6L9zZyNIPTddio4WtuZe0YTwPFR1hnsKVuUtFJznLhZ3jDuaJlXhDyUkpl/4T44qg6TiJ
- IKSv1vjZk+x3v233f//i7qyVrAAAA
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+User-Agent: Mozilla Thunderbird
+From: Yushan Wang <wangyushan12@huawei.com>
+Subject: Re: [RFT PATCH v2 3/7] perf-x86: iostat: Move iostat arch-specific
+ implementation to util
+To: Ian Rogers <irogers@google.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<adrian.hunter@intel.com>, <james.clark@arm.com>, <john.g.garry@oracle.com>,
+	<will@kernel.org>, <mike.leach@arm.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<jic23@kernel.org>, <leo.yan@linux.dev>, <robin.murphy@arm.com>,
+	<linuxarm@huawei.com>, <hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>,
+	<fanghao11@huawei.com>, <wangzhou1@hisilicon.com>
+References: <20260507063737.3542950-1-wangyushan12@huawei.com>
+ <20260507063737.3542950-4-wangyushan12@huawei.com>
+ <CAP-5=fV5WiyB3mghvns1ZW6ewS0=CP4nx+f_ggLgECkqv7VWww@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAP-5=fV5WiyB3mghvns1ZW6ewS0=CP4nx+f_ggLgECkqv7VWww@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemn100008.china.huawei.com (7.202.194.111)
 
-Since the leafloop test program was moved into the main Perf binary as a
-workload, it inherited the same compiler options as Perf. In this case
-the -fstack-protector option broke the assumption that simple leaf
-frames don't have a stack frame on Arm. This causes
-test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
-the link register, making the test useless.
+ On 5/7/2026 11:35 PM, Ian Rogers wrote:
+> On Wed, May 6, 2026 at 11:37 PM Yushan Wang <wangyushan12@huawei.com> wrote:
+>>
+>> To support cross-platform iostat capabilities, like record/report on
+>> different platforms, architecture-specific implementation of iostat
+>> should be moved out of arch directory to get built. Build scripts are
+>> changed accordingly.
+>>
+>> Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
+>> ---
+>>  tools/perf/arch/x86/util/Build                           | 1 -
+>>  tools/perf/util/Build                                    | 1 +
+>>  tools/perf/{arch/x86/util/iostat.c => util/x86-iostat.c} | 0
+>>  3 files changed, 1 insertion(+), 1 deletion(-)
+>>  rename tools/perf/{arch/x86/util/iostat.c => util/x86-iostat.c} (100%)
+>
+> To avoid cluttering up tools/perf/util, would it make sense to create
+> a "tools/perf/util/iostat-arch" directory similar to  annotate-arch,
+> dwarf-regs-arch, kvm-stat-arch and perf-regs-arch?
+>
+> Thanks,
+> Ian
 
-Fix it by rewriting the leaf function in assembly seeing as it's so
-simple. Adding -fno-stack-protector would also work, but wouldn't be
-robust against other future compiler option additions.
+Yes, I can do that in the next version.
 
-The local variables and 'a' variable were never needed so remove them to
-simplify.
+In fact, as what latter comments addressed, I think merging these iostat
+handlers into one source file to avoid redundancy may be better.
 
-Assisted-by: GitHub-Copilot:GPT-5.5
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/tests/workloads/leafloop.c | 36 +++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+Thanks,
+Yushan
 
-diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
-index f7561767e32c..58367fd1daec 100644
---- a/tools/perf/tests/workloads/leafloop.c
-+++ b/tools/perf/tests/workloads/leafloop.c
-@@ -6,10 +6,9 @@
- #include "../tests.h"
- 
- /* We want to check these symbols in perf script */
--noinline void leaf(volatile int b);
--noinline void parent(volatile int b);
-+noinline void leaf(void);
-+noinline void parent(void);
- 
--static volatile int a;
- static volatile sig_atomic_t done;
- 
- static void sighandler(int sig __maybe_unused)
-@@ -17,15 +16,36 @@ static void sighandler(int sig __maybe_unused)
- 	done = 1;
- }
- 
--noinline void leaf(volatile int b)
-+#if defined(__aarch64__)
-+/*
-+ * Write leaf() in assembly so it stays as a minimal leaf function with no
-+ * stack frame and won't get silently broken in the future by any Perf wide
-+ * compilation options like -fstack-protector-all.
-+ */
-+asm(
-+	".text\n"
-+	".global leaf\n"
-+	".type leaf, %function\n"
-+	"leaf:\n"
-+	"	adrp	x1, done\n"
-+	"	ldr	w2, [x1, #:lo12:done]\n"
-+	"	cbz	w2, leaf\n"
-+	"	ret\n"
-+);
-+
-+#else
-+
-+noinline void leaf(void)
- {
- 	while (!done)
--		a += b;
-+		;
- }
- 
--noinline void parent(volatile int b)
-+#endif
-+
-+noinline void parent(void)
- {
--	leaf(b);
-+	leaf();
- }
- 
- static int leafloop(int argc, const char **argv)
-@@ -39,7 +59,7 @@ static int leafloop(int argc, const char **argv)
- 	signal(SIGALRM, sighandler);
- 	alarm(sec);
- 
--	parent(sec);
-+	parent();
- 	return 0;
- }
- 
-
----
-base-commit: 8c8f2093614373ea8179b562320212a25cf937c0
-change-id: 20260508-james-perf-leafloop-stack-c221600eddf2
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
-
+>
