@@ -1,203 +1,133 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012025.outbound.protection.outlook.com [40.107.200.25])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012034.outbound.protection.outlook.com [40.107.209.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CEA2DA775;
-	Fri,  8 May 2026 06:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E38236164B;
+	Fri,  8 May 2026 06:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.34
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778220082; cv=fail; b=fOjqePG2HxK59FA+I2hFpWFl4R70I+7oS7fib/M8WmvvOD+QwFqpdTsfxYorwqTg4TWG0Dff0OuMsD8gJEQgJR5qohaP0WowAnQkAx1ZIQJHsU6liCuq2XpvlFFRUP3SgLm1jbFzAkrSkJh2BILxw8pgKAoKi+b/wB5emnhaZl4=
+	t=1778220350; cv=fail; b=IjjszNrd7oM7gpzNILGI0Krp6m13lYugQZI/HfVfOMcqhPpmZk2xwXyhe4SMfbI0lzSqwRpK7EsjXenF8zHidgGTq1fgQY37qrELSDSmw3TdKtuvJKahsMwH3+X36azxkCbG0C5RQjtfOx3SV4QrKdk9/GuAKmJgkv1rwZ0NSgE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778220082; c=relaxed/simple;
-	bh=2I/7dNmvqfvLszuMBUvcS1yadoiZUAoSrRw0qa+Zwhs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rlf2cfoSVplaNotibrt6K+ivZRLobCwA3GhqCp7VeJFeLF1XyNO/OCWImtvzoS5R42l5tlEfuywtoDu4b7yIuXWpkyC3DTiEMU93fEwhNGgBIVTJxm3gyXrFAbZSSl6SrIMHVVwHbpDOaYopTYSjc+zexzeEAfxmgoSTf1gOkY0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fyyJALkO; arc=fail smtp.client-ip=40.107.200.25
+	s=arc-20240116; t=1778220350; c=relaxed/simple;
+	bh=ASgnUCTY8aKod8IbQ8s+vwaumlS+u0NhOyFdeZOSk7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GlHzrXQd61gTNPL+H/uosdyC8EJEmr5RXWho09eDavGbwVuwEX4UGxBiTQLNdy29OUefQATvIPPCsxGoJrsEPgHBv2aZrMbBhq3/4F3u8Kca5ocyj3Pks6uytUqp+mYWww2Y7RrRZBzwISZ8tAjEQo1hBmXGl8lqe5lazEWJEfw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NElWFNxO; arc=fail smtp.client-ip=40.107.209.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fyyJALkO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NElWFNxO"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NhKRpZihCk3Beusj0DitkFDhhcEFqw32SLNf2RT9yEXu8ajzKrmgegnYgpWlir6vIAp86k9Vtilaa3Al0VokaKaSjttrfzSLq8dV2iKaKGHylql/uhRN6biJ3Fo9Thl5p3UQJnkebb2kJitxiaa7LiK0LPrHqojvyUuRt/FrNI3EVF01hePx5SyiTKQ8bjPMGIXSqtimtv3OH6ya0G6zESsIyeE648GJ7oAfhWSbhZZ9bl6upzVTZrP6PwNrjypiIujRZc6nKAbLLsdR7GkebWFWxg8I18RlWbGOyXX6hmVsh7WKKsYI3vqL1B/9xHGENOxnZieqGUY/PRQDF9QgFQ==
+ b=u2GcBiMBZ6aUcaGghKgVEkZr+cO0hIz+6rfo3Ic2XL+pThFc9uQ/YDbJcAYFMb9tIwqzwxhkcLFpTluhuhcVv8pAmV+FGIlw859UZo2Buo7yI1pHKA5x00QuU0od4fWOXjAA//2QiAxDBjJq9mVIx0pf5VpUHY8zSj+8l7KVc3zVR4xZ/YbQ8wZHdaFEQS23dHaffJSxfuUSIF6n44sjGNVlimW3CzT7pjGWeX/EEMEJD4Y7PuN8g1wzqMmMpYBOrYMShlaD4xm5i+HTpla9de0Uh0Cq6CS5jGyTa0herT/WYAybfko1tNHbNzi8M2J95zDm5IvLctDwYOlbZV2hkw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YfP3sE+We9xDC8s+n6Ny2N2/ClCb3HLTFPaTOIaHaIw=;
- b=v/btFsD8PV0MgYzTuy2m/P2BYcg09PGquxBZkTIhbt20NIHIcWiPFgvMwRKyC6U2eHxQKuCRGt0O7Ky4OWBn+CP3vB7KVvHhzYfOLg4LtKdGasb3ygSBttfqzqqBXTGHqx4K0uSnnK6XJeb+GtJXW6Yks7gUpXyBqvI/GMCYRLxDo6iJ5f7l8eW6+ad4tfV3Bafu5V014vt65QO1a8ZcFB6vLguIz9g+80TFyDNPmV1prI/LJLTpXoaDHb4QhA1lIgBOegNU6gAJ58LGnyNK2k+rGkoDCQufiuUAbOyVeZKPztLXZzt6juDfDc4Q1CPyc8pHOsWGFV6KvjxiWiLCnQ==
+ bh=lHJQHuSCV9o8y1wXs2mY3p2CUS6Zbv4+CrxLIQyJ208=;
+ b=is79BCRcylOo5n7zV/EE5I6YlVEnEn7f7qf8KT458dqKkYiDJnZT63S8LXO4tqlaWtVfaPpRi1SNBFdsobL0gnT1DVNJW5F9E1TgWYclNEx9ug9yaSXahuOPy9m5cZssKIaR0gojdTV/oH2bd6/IpRpyqQMOHBqlbAxoMrIk4pTzjXzyMFYQ2Bg8RGbwk3rMw18dDYBb+vFnXELv+kZiVAyVHGRhmFNo1tc7OvAC33kReoNlU5V5k/TkZbCN14eh9UW1q0NkhM/uOk9/YjPut9yHcpIhW43z9+z7ZsJXSI+7vF9rbUzXhQ0V9Vl8IMfNukKEGrOGchX02sbLfn9GVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfP3sE+We9xDC8s+n6Ny2N2/ClCb3HLTFPaTOIaHaIw=;
- b=fyyJALkOM4zTja48vOk/2ruplwKjV30I6cTMv1gC8h90tUCgPaJAzUGuwPucTzOctFlb5i84TrtMVAin1fHp9bl6k6V1LnLSKdT8s73xQXkmAyKaBy5Ry4KkfzTc60JEYXaV19UYZaC58sFI3t3VYbsQZelg4GmUYhXckqflC/4=
-Received: from SJ0PR13CA0150.namprd13.prod.outlook.com (2603:10b6:a03:2c6::35)
- by BN5PR12MB9512.namprd12.prod.outlook.com (2603:10b6:408:2ab::14) with
+ bh=lHJQHuSCV9o8y1wXs2mY3p2CUS6Zbv4+CrxLIQyJ208=;
+ b=NElWFNxO4WdrMpntCCpQB3AHfxpZsYTE0yAxkKkFNsomR5VWXiQ/Z8MMSg2mWIGPzy4IWgAQVUSMlV/H0Ggb0Jf2Z2YZowq6x8wXdFOA2Hu+22XZ4IUauZAMekMrttqRZZN2ZqHVnaJ3FGQamBdP9Bjm6tuO1loLcYXsGT7XmW0=
+Received: from CH5P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1ef::21)
+ by BL3PR12MB6572.namprd12.prod.outlook.com (2603:10b6:208:38f::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.27; Fri, 8 May
- 2026 06:00:57 +0000
-Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
- (2603:10b6:a03:2c6:cafe::cd) by SJ0PR13CA0150.outlook.office365.com
- (2603:10b6:a03:2c6::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.25.11 via Frontend Transport; Fri, 8
- May 2026 06:00:57 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.18; Fri, 8 May
+ 2026 06:05:32 +0000
+Received: from CH1PEPF0000AD7F.namprd04.prod.outlook.com
+ (2603:10b6:610:1ef:cafe::c) by CH5P220CA0003.outlook.office365.com
+ (2603:10b6:610:1ef::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.19 via Frontend Transport; Fri,
+ 8 May 2026 06:05:32 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH1PEPF0000AD7F.mail.protection.outlook.com (10.167.244.88) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Fri, 8 May 2026 06:00:56 +0000
-Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 8 May
- 2026 01:00:52 -0500
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-CC: Ravi Bangoria <ravi.bangoria@amd.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Dapeng Mi
-	<dapeng1.mi@linux.intel.com>, James Clark <james.clark@linaro.org>,
-	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Manali Shukla <manali.shukla@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan
-	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v3 8/8] perf doc: Document new IBS capabilities in man page
-Date: Fri, 8 May 2026 06:00:04 +0000
-Message-ID: <20260508060004.2575-9-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260508060004.2575-1-ravi.bangoria@amd.com>
-References: <20260508060004.2575-1-ravi.bangoria@amd.com>
+ 15.20.9891.9 via Frontend Transport; Fri, 8 May 2026 06:05:32 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Fri, 8 May
+ 2026 01:05:32 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 8 May
+ 2026 01:05:32 -0500
+Received: from [10.136.38.58] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Fri, 8 May 2026 01:05:28 -0500
+Message-ID: <43179782-f1bc-4590-a4ed-0ce189e08ce9@amd.com>
+Date: Fri, 8 May 2026 11:35:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] perf test ibs: Remove obsolete privilege test
+To: Namhyung Kim <namhyung@kernel.org>
+CC: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
+	<irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+	<mingo@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, James Clark
+	<james.clark@linaro.org>, <x86@kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Manali
+ Shukla" <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20260430061115.10266-1-ravi.bangoria@amd.com>
+ <20260430061115.10266-4-ravi.bangoria@amd.com> <af0tTxZNLdtohH8A@google.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <af0tTxZNLdtohH8A@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB03.amd.com: ravi.bangoria@amd.com does not
+ designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|BN5PR12MB9512:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b029be2-a5d1-4d43-97d9-08deacc72c09
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7F:EE_|BL3PR12MB6572:EE_
+X-MS-Office365-Filtering-Correlation-Id: 661554e9-2dd0-4704-2a03-08deacc7d06f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700016|3023799003|18002099003|56012099003|22082099003;
+	BCL:0;ARA:13230040|7416014|376014|36860700016|82310400026|1800799024|22082099003|56012099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	amC9rb0kjR5XzZ5Wo5oSd475zpyv4myH2+CfPhzkcQsH0fmv/BNSH1ULKOySRt0xxfoCLpp/TS4PNP7r/ZNGP4UQMTG4Gtuye6GtMEd90GH4j4OH4bmeePqqzxwnv+QyJ0OS1jNzlDXe1rgqr9fbPz+8aQYgTlztGkg5adJKfJvttagRgxPGZqsKd30fIOBaVRBLoFqjVubx7SeBo5WAQtyyXOEul70vrHah3CkSkDLXs/v+TPx90G1seidvA359zv9Ip804zAn/+677qR52h3yrJSWTexI8hEGST//VWQMCcvV09W5ul64jMI3Dd/aqQw5wn99YqtjJ7xT3nbwJRjq4Vt+Sfsx7PATBYWDMPxjNgpCS8G93UqI0PFN5izmKy3Mqg/5nxdpLcBdcdIWdtzfXxNWiEI5btkZGa+SEm7XWQM8uO0iThJ26rdBUnGJkncTfJywOY1gi8b49sxV3hcJc6gmQIonNO56o10npWvJmNpy46gB0vV3G+H2qutueG4XS88OfJOzXTp6HEsE+ooQN6K67XmfaFJNLfpp9GXTR0nye3uaa/NRailgap6L6zH5tJQ4iniOrIi/Om4sjheatGhwrN/rhV+WRRbm0FSKDgFESTAzJJI1FiGoqDB/WsXuD1jlG4XWNXFzuBd87zY80DufTlhbWBjDjNLPlffCrxBSbJn+PJCpCgWCXJdR3cLo0OeHIJEBjr3md0KwE5K8HhtYlvWe9g21YuGaw1Ac=
+	kcwLIfdvzSwT5CZd8+ggiC0R/QamHvXqmghraWp6dY2kZUqWUU14qJOd0c8J1dEOF1Wc6ajX6iiu1q7S+lTVJ+RjwGanR4EMwbRM3HIrViF91pfjDFjkh/THpDdaum8zjHqeC56maIY06vmOiML94tFrG1DQmRvZYBEHp6cxCbY3H3LQkJKUfznTA8/jfif0oc8BtRRR2Xu4pZj9c0sN465ekSk1fqNFDE0d1Gu3nUhTTQT28p6tcFpYa0rF7pqviKTHtmu3B0M4EVVylICAD9jsEquTXo3WK4nDVnc7WQJTgvz7+/QRRkofWmfPYdN47OaAXupVpcMFGNwADrlPNqC27gKaOcoOuxwPweewCfu9s+i1AbxbHHM6FqlDyuKDxEPycTo8WnNgpD1s3cz4tt7e0RR0Y3v89WFsga+Apbcw5+24ycDTsY4MDLbU5gzXHI2kRCqAmSwBybo9ZGWJT/S63OyY1NTJfTsZPWAblRDoLvHrHWpa8VgFA4yMIcn+SJlMsqwrVyQGc4IOabDcmJpTAG4c/5uS0cJu+P3iqWB5hWeHh9N2BTgzmyeDJZ945pXIBzmI+h5Dhj7M0G9CJA+ADo8RYRMfvPron+XKXW+3PZN0tlMI/On3R8UDQPQwArNLVKYe07UoihZk6Z/+PbrwiZ3c7MYXNhq7OVOsn376G6Q1M+WSpODnB62KluC9bpJSwKaU+UC58CTKKXvDd1XHt5ahoumDa67DfNp/NxQ=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700016)(3023799003)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700016)(82310400026)(1800799024)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	OuiWCIjLbRN4noPvxnxVfIt2nRxwCcpLnxHrFwqbOByr6ilF86jLMG76Hj2ZM3CVKKHD/BN+WMcu1cwWy+uiEtjgECZm56WFCqhui7aUjUsnkh6ugUZZzPHJHtW4RR9Z1LE8Xn1e09YV/p9TIOKfs1nFe0xrJziaOJAA2OUJqGXae/sWCex2DXMTjmpGNUkv4LjzHZsFxTkIyoCfB0GRuZQqJAuro5Ze6Ha/XW2kk40AMr+Qhhe3vk0Huhlrh+5gfWUIKkx+JUWjFzmPXjSqjlANszAXgjaX73bLRQ8lhzocx0iFXcHEIJfdz5nd5WfoF9dVs1iVZemfN5oODJLklddkJf+KB4RIosxcyvfDiOSltMzirQGp+r4JQW8m6AzAieckk07ESoomqotK2VQG//Hb1Ic2Mz0E9a1sQufEBtaZNdzAAfRNI6W/e3qtqvTc
+	hot/P23kxlkDyiKxipuBD0uTqd6x47pO8fPlqqSam8MXfdCq4hW4hPQLfKgo/p6mfslDayYBlpYT1iMU0l/J+oQ1xueTukFPxh6yIVJ3avuGCfdqXy9ElDp2v6E1qlqi5YkkXW+ylM241KHboIJnAfW8nqICN50GUJAowCUV+j26VI7diIWlLFYF3wbzPq2wJSRUAFnfB6gW/7jpQ/LWxphFiX22YvpeIdZDyTRwGUOQq25nTkrv8zH7kl+FZ7TA2r+3Q/abH3AnoGEBYe/o1+O7V8YbpDIinBVQqfwf7aMYZZ/wJVR9jzxFz23FY42E0oo4pkM+HkV5P4P5U+uDE8hMD2HjOuHZqwFh8A3eEoRD22TwPDnuve9nFk2lmub5fJTAItPb9vOyxGUbKpznwDZuN44Hx4lEQdw2i76SoKuNTZVbMwMWJ6C5QgpIoOvG
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2026 06:00:56.9320
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2026 06:05:32.8210
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b029be2-a5d1-4d43-97d9-08deacc72c09
+X-MS-Exchange-CrossTenant-Network-Message-Id: 661554e9-2dd0-4704-2a03-08deacc7d06f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE1.namprd05.prod.outlook.com
+	CH1PEPF0000AD7F.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9512
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6572
 
-Include examples of
-o Privilege filter with Fetch and Op PMUs, including swfilt approach on
-  Zen5 and older platforms and hardware assisted filter on Zen6 and newer
-  platforms
-o Streaming store filter with Op PMU
-o Fetch latency filter with Fetch PMU
+>> Older IBS implementations lacked a hardware privilege filter, so the
+>> kernel enabled swfilt=1. Newer AMD CPUs will provide privilege filtering
+>> via the RIP[63] bit, making swfilt redundant. Remove the perf unit test
+>> that assumes IBS has no hardware-assisted privilege filter.
+> 
+> Can you add a check for CPU model or capability for this?
+> Probably we want to keep this test for older models..
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/Documentation/perf-amd-ibs.txt | 39 +++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Fixed and posted v3:
+https://lore.kernel.org/r/20260508060004.2575-1-ravi.bangoria@amd.com
 
-diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-index 548549935760..253a7375c88a 100644
---- a/tools/perf/Documentation/perf-amd-ibs.txt
-+++ b/tools/perf/Documentation/perf-amd-ibs.txt
-@@ -69,6 +69,14 @@ Per-cpu profile (cpu10), cycles event, sampling period: 100000
- 
- 	# perf record -e ibs_op// -c 100000 -C 10
- 
-+Userspace only, per-cpu profile (cpu10), cycles event, sampling period: 100000
-+
-+	Zen6 onward (See NOTES):
-+	# perf record -e ibs_op//u -c 100000 -C 10
-+
-+	Until Zen5:
-+	# perf record -e ibs_op/swfilt=1/u -c 100000 -C 10
-+
- Per-cpu profile (cpu10), cycles event, sampling freq: 1000
- 
- 	# perf record -e ibs_op// -F 1000 -C 10
-@@ -94,6 +102,11 @@ onward)
- 	Latency value which is a multiple of 128 incurs a little less profiling
- 	overhead compared to other values.
- 
-+System-wide profile, cycles event, sampling period: 100000, streaming store
-+filter (Zen6 onward)
-+
-+	# perf record -e ibs_op/strmst=1/ -c 100000 -a
-+
- Per process(upstream v6.2 onward), uOps event, sampling period: 100000
- 
- 	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -p 1234
-@@ -150,6 +163,14 @@ System-wide profile, fetch ops event, sampling period: 100000
- 
- 	# perf record -e ibs_fetch// -c 100000 -a
- 
-+Userspace only, system-wide profile, fetch ops event, sampling period: 100000
-+
-+	Zen6 onward (See NOTES):
-+	# perf record -e ibs_fetch//u -c 100000 -a
-+
-+	Until Zen5:
-+	# perf record -e ibs_fetch/swfilt=1/u -c 100000 -a
-+
- System-wide profile, fetch ops event, sampling period: 100000, Random enable
- 
- 	# perf record -e ibs_fetch/rand_en=1/ -c 100000 -a
-@@ -158,6 +179,15 @@ System-wide profile, fetch ops event, sampling period: 100000, Random enable
- 	helps in cases like long running loops where PMU is tagging the same
- 	instruction over and over because of fixed sample period.
- 
-+System-wide profile, fetch ops event, sampling period: 10000, fetch latency
-+filter (Zen6 onward)
-+
-+	# perf record -e ibs_fetch/fetchlat=128/ -c 10000 -a
-+
-+	Supported fetch latency threshold values are 128 to 1920 (both inclusive).
-+	Latency value which is a multiple of 128 incurs a little less profiling
-+	overhead compared to other values.
-+
- etc.
- 
- PERF MEM AND PERF C2C
-@@ -216,6 +246,15 @@ sort keys.  For example:
- 
- Please refer to their man page for more detail.
- 
-+NOTES
-+-----
-+Hardware privilege filtering uses bit 63 to distinguish between kernel
-+and userspace addresses. Hardware privilege filtering is not supported
-+on 32-bit systems. Also, the bit 63 convention is not universal and can
-+fail in specific environments, such as, using 64-bit host IBS to profile
-+a 32-bit guest, using 64-bit host IBS to profile non-Linux 64-bit guests
-+that do not adhere to the bit 63 privilege standard etc.
-+
- SEE ALSO
- --------
- 
--- 
-2.43.0
+Thanks Namhyung.
 
+Ravi
