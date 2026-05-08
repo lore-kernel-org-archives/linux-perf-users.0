@@ -1,131 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C14382F08
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 20:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B823CCFA8
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 20:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778271646; cv=none; b=DQLUnJIYxmL1n2yJVqGghWOUO8ppM0/f3MqqZK2yAdbvjubDaAUWmAvlTewk877ljXnbuNCb2hCOLoOmWOpU4yKU1dAtr8z3edseXyTgZG5uo52xw8/6nfkG2c0VJGcv9XggVGjDJtpx6BsotKEavsCfZ6bP5gJ8rt4sWI0gMKQ=
+	t=1778272650; cv=none; b=cYP4pPUjF2C3bpQTPuME0sxpM/XKEa/rLkH2hUOxHaUmG9g7Q56C1z95yULH5kCByP8bpKpTvo4bqZ8Y0bJ8fx5Aes/K/aA5UebECHY47D+zLU9ZKzx2ogbU8nuw9jNlt83Q/Wk2hQa0au6VZ1FKC/bdRBrlVgtRO5AJHTpukpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778271646; c=relaxed/simple;
-	bh=jAdWm0pBCB0ZjFurtR+CkMA3HY16p2xvIUZ3aen7oyA=;
+	s=arc-20240116; t=1778272650; c=relaxed/simple;
+	bh=nNzugf9samZjpR+W1dPwBg68E6UpDhdw8DjdI4G5GO8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ky+Vk0KTJxqIuYiYqTDrmT6ah1ATj0XYwP4DaU0lHHTaCkO15/XvNCBj3ZArKIr01K1BFb76ZpX/M6ID6MJsKvH5OSn70vSNluzLozqm3Yl/i5hdrgIFkTDeK9aTMQM+nRqzxz1mS7aSlZNxAUuyBNah2Dkqsz6tzheXExPemNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQYz+pUn; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=qR8AI/kCcNZ8dGC1bAiRBPwPCOjdOrDjh8uk25m+0gk2iNjJB17WcB3jxwgCAzcIrfPqkzshozvt3u/AxrkB1t31BiMdz+lrnP4m/ff9akS3bhDcIIokV+LjHef+OIbCiNvvA+ptcl15q4iXf6V6yZ0AmmKjCJ4dy6qBiqCvnW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gE+d8IT6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQYz+pUn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 759CCC2BCB0;
-	Fri,  8 May 2026 20:20:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gE+d8IT6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FBEC2BCB0;
+	Fri,  8 May 2026 20:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778271645;
-	bh=jAdWm0pBCB0ZjFurtR+CkMA3HY16p2xvIUZ3aen7oyA=;
+	s=k20201202; t=1778272650;
+	bh=nNzugf9samZjpR+W1dPwBg68E6UpDhdw8DjdI4G5GO8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=uQYz+pUnMxKDmw0vA5lwnUwljkYa1GsR1LZdhrRflxgWOXG9g3yC2GthfN2WZVmCC
-	 +l8t8SCTbp+RApK9vecy55Ls0lnbXJ0bhVjtBgzt3hgVZX3PjteivocTwC3iPXq58i
-	 KYE+2iyZWPzv3muI+QUO+ULqIpySnxQ25U8ESqBvklkZOqoKj2ar0YspUffvtW4Iu4
-	 M4f1uuz39n3klYo8kSgvEj8s7+NvkScvMKoPd3HxkU6COqRB+3hYtyEhYSYeiQkHs2
-	 w3n1LGMZQKD/p+mBUXpZ5Is96lp5c6rs+shPzJH9Gi6rYrKu1+VtA2RM+YuVvXwYK6
-	 i0QucO9wNFW4Q==
+	b=gE+d8IT6QyQs/Z4MEvrXbAQ0XneR2g0zuKkZIAypz1MmHCpD+sq4kxrbiUVJOvnj4
+	 GU9PGYWPb8vzp2e0mockPRD4Lw/XczDh/ID7khVjxD7PZflabjo/OEYIHRJtKbCf0j
+	 vJlrUwQEOw7Y8yf5RGCvwuozz+bkPcowJ2oj7jzCTFkAHtiC47QArpeWnKst9S0T+O
+	 A5FrHXOmnoK6PShLQM4BAD6jINUdaD7rM2NOvvW9SR9SBaWM9hZ3oxaZX/DiA1lmeE
+	 9x0ktQnQfwjXkdJ6DjygLa9jLwa2WrTOFpxBWDosDnveRrNGi6PWCziOT+q13KCg3X
+	 J4OHhoCTKTYMQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf test: Make leafloop workload immune to compiler
- options
+Subject: Re: [PATCH v6 3/6] perf maps: Add maps__mutate_mapping
 Reply-To: sashiko@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org>
-References: <20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org>
+In-Reply-To: <20260508082726.2795191-4-irogers@google.com>
+References: <20260508082726.2795191-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 May 2026 20:20:44 +0000
-Message-Id: <20260508202045.759CCC2BCB0@smtp.kernel.org>
+Date: Fri, 08 May 2026 20:37:29 +0000
+Message-Id: <20260508203730.07FBEC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] LTO build failure due to hardcoded static variable name in inline a=
-ssembly.
-- [Low] Missing ELF `.size` directive for inline assembly function.
-- [Low] Fragile section management in top-level assembly.
+- [Medium] Self-deadlock in the kallsyms symbol loading path.
 --
 
-commit 57b4e20838dd06862703b6049b087e60606a2dd4
-Author: James Clark <james.clark@linaro.org>
+commit 1340dc1c4b3b633e8a032536f0c7948f87b17ce3
+Author: Ian Rogers <irogers@google.com>
 
-perf test: Make leafloop workload immune to compiler options
+perf maps: Add maps__mutate_mapping
 
-This commit replaces the C implementation of the leaf function with an
-inline assembly version for AArch64. This ensures compiler options like
--fstack-protector don't inadvertently add a stack frame, which would make
-the test_arm_callgraph_fp test pass incorrectly.
+This commit introduces maps__mutate_mapping to safely update map boundaries
+by acquiring a write lock on the maps collection. It applies this new
+synchronization to kernel ELF parsing, kallsyms image loading, and dynamic
+memory map updates to close concurrent lookup races.
 
-> diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/wor=
-kloads/leafloop.c
-> index f7561767e32cd..58367fd1daece 100644
-> --- a/tools/perf/tests/workloads/leafloop.c
-> +++ b/tools/perf/tests/workloads/leafloop.c
-> @@ -6,10 +6,9 @@
->  #include "../tests.h"
-> =20
->  /* We want to check these symbols in perf script */
-> -noinline void leaf(volatile int b);
-> -noinline void parent(volatile int b);
-> +noinline void leaf(void);
-> +noinline void parent(void);
-> =20
-> -static volatile int a;
->  static volatile sig_atomic_t done;
+> There is a potential for self deadlock if maps__mutate_mapping is called
+> with the lock held, such as with maps__for_each_map but this problem also
+> existed with the previous remove and insert approaches.
 
+Is this commit message accurate for all modified paths? Prior to this patch,
+dso__load_kernel_sym and dso__load_guest_kernel_sym used map__fixup_start a=
+nd
+map__fixup_end directly without locking.
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index fcaeeddbbb6b9..09b93e844887d 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
 [ ... ]
+> @@ -2121,10 +2128,11 @@ static int dso__load_kernel_sym(struct dso *dso, =
+struct map *map)
+>  	free(kallsyms_allocated_filename);
+> =20
+>  	if (err > 0 && !dso__is_kcore(dso)) {
+> +		struct maps *kmaps =3D map__kmaps(map);
+> +
+>  		dso__set_binary_type(dso, DSO_BINARY_TYPE__KALLSYMS);
+>  		dso__set_long_name(dso, DSO__NAME_KALLSYMS, false);
+> -		map__fixup_start(map);
+> -		map__fixup_end(map);
+> +		maps__mutate_mapping(kmaps, map, map_fixup_cb, NULL);
 
-> -noinline void leaf(volatile int b)
-> +#if defined(__aarch64__)
-> +/*
-> + * Write leaf() in assembly so it stays as a minimal leaf function with =
-no
-> + * stack frame and won't get silently broken in the future by any Perf w=
-ide
-> + * compilation options like -fstack-protector-all.
-> + */
-> +asm(
-> +	".text\n"
+Can this cause a self-deadlock when resolving kernel symbols by name?
 
-Could using .text here instead of .pushsection .text and .popsection
-interfere with the compiler's section tracking?
+If a tool resolves a symbol upon first load, the call chain appears to hold=
+ a
+read lock while attempting to acquire a write lock on the exact same maps
+collection:
 
-If the compiler assumes the previous section remains active after the asm
-block, it might place subsequent data or code in the wrong section under
-certain compilation flags.
+maps__find_symbol_by_name()
+  maps__for_each_map()                  <-- acquires read lock
+    maps__find_symbol_by_name_cb()
+      map__load()
+        dso__load_kernel_sym()
+          maps__mutate_mapping()        <-- attempts to acquire write lock
 
-> +	".global leaf\n"
-> +	".type leaf, %function\n"
-> +	"leaf:\n"
-> +	"	adrp	x1, done\n"
+Since rw_semaphore cannot be upgraded from read to write without releasing =
+the
+read lock first, won't this immediately deadlock on the kmaps lock?
 
-Since done is declared as a static variable at the top of the file, if perf
-is compiled with link-time optimization (LTO=3D1), the compiler might
-partition and rename the C variable to avoid collisions across translation
-units (e.g., done.lto_priv.0).
+>  	}
+> =20
+>  	return err;
+[ ... ]
+> @@ -2164,10 +2172,11 @@ static int dso__load_guest_kernel_sym(struct dso =
+*dso, struct map *map)
+>  	if (err > 0)
+>  		pr_debug("Using %s for symbols\n", kallsyms_filename);
+>  	if (err > 0 && !dso__is_kcore(dso)) {
+> +		struct maps *kmaps =3D map__kmaps(map);
+> +
+>  		dso__set_binary_type(dso, DSO_BINARY_TYPE__GUEST_KALLSYMS);
+>  		dso__set_long_name(dso, machine->mmap_name, false);
+> -		map__fixup_start(map);
+> -		map__fixup_end(map);
+> +		maps__mutate_mapping(kmaps, map, map_fixup_cb, NULL);
 
-Will the hardcoded string "done" in this inline assembly cause an undefined
-reference linker error under LTO builds?
+Does this guest kernel symbol loading path suffer from the exact same
+self-deadlock sequence?
 
-> +	"	ldr	w2, [x1, #:lo12:done]\n"
-> +	"	cbz	w2, leaf\n"
-> +	"	ret\n"
-
-This isn't a bug, but there doesn't appear to be a size directive
-(.size leaf, . - leaf) at the end of the function.
-
-While perf might handle 0-sized symbols internally, could omitting the size
-cause issues with external ELF tools, debuggers, or profilers trying to
-resolve the symbol bounds?
-
-> +);
+>  	}
+> =20
+>  	return err;
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260508-james-perf=
--leafloop-stack-v1-1-637c260b2da8@linaro.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260508082726.2795=
+191-1-irogers@google.com?part=3D3
