@@ -1,96 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9BA2E5B2D
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 May 2026 23:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7A118A92F
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 May 2026 13:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778283619; cv=none; b=Z/KkuOLKvEvFSv8/YNYhk0GOhr3QlW4Ty9NlSNbEwwBkhhhMTtCMqtc6lZutiugQl8NN91EvHwbMUKgzOoebKGquJtBxFVogN+SZLfj0ORJcdM8V07AQU3P9G0bchpcOwYpWj3FWPRr40PiRd5V7/II5l9P8O7TKgKlplVSNQ00=
+	t=1778332219; cv=none; b=Nk/T5qepL+LtwxlN77WtBFvr/cb8zjF9jnPWM9GBwKt2q8uDM+2Nh1BPGmBbrp03V31aHlFXsdb480CDFyo2VjAYzk7S4BNmwlk2LV7qi7iGGLd1Glwvumhh4It8Wqs57ids3UerFkW+0HV0oKnHcaFxOtH2NHecuJPw4Nv+QG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778283619; c=relaxed/simple;
-	bh=XnQGXoYnCM6BOA0H+DTO0lhVplmp6oFUSHEIvLX/QKE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BtePT2+8mhJiLxGw7FDZ17SQMQR0Y5ekLm6GO1u0S4IxcKY9t/iJ/sd8NPI/xweAmPLHW2i2m9nf5im7zcmnkkP0CdtuE8T7/mfUOX2aCAHFGd8LnfhCqrv8lGAT8xQjJXH5JUBxW3vW+QVUBjt2KQKmGAXF/Nc/7k4IbyceeOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWYEbs9l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778332219; c=relaxed/simple;
+	bh=UM1YTVWKCXjwkowt3WjEd184ybys8RxDPu1C31uIsnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fy6QeQSXN5HKiku92N/zmbD3HOTt2uejNqdVccPr+2cZAimzoQTcKfgu8hzY5Bx1SaTpek73mhLi71No8S0/lxzCNTDoLxp1yhdIKyviADsXMmgmyYzw9Vt6BgStzQ2dYvY92uw5WSqWWh2KhDcbsrgcTQmTu0Ke4D7aCCa9uNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dfWW4Is3; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWYEbs9l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06AEC2BCB0;
-	Fri,  8 May 2026 23:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778283619;
-	bh=XnQGXoYnCM6BOA0H+DTO0lhVplmp6oFUSHEIvLX/QKE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=MWYEbs9lgwWjGVE5mRdNtBp0AqAvzNjFeO1z/RXqpwxL+WmghPL+nkE0iYEcxbecL
-	 S5Lz402iYbJhc3C+eE1x3EujNc/zbwm/D+RFBaia5PJZc8ezSjabRnL6BukZsqCpt5
-	 rPTw/Vw/JhttNJ/KLOfyyg8WSCu5/2OVp7OVQF86U0NTm86yITHcp0B4kcUuXVSX7E
-	 K+AAj6NZ8/L4CV8vktAfw33nj/wAm/I7HRNwnbcyhD8y3jITsLnX6BJNxIOGEQmny1
-	 A3joOTsbOFjCh/t8Sb4fwMDn/jnAECZySON1iM8Ya6iscuZZcLeMAwFBt2xXcRXqp1
-	 1rCiK+XV39Yvw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/9] perf/x86/intel: Ensure guest PEBS path doesn't
- set unwanted PERF_GLOBAL_CTRL bits
-Reply-To: sashiko@lists.linux.dev
-To: "Sean Christopherson" <seanjc@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260508231353.406465-2-seanjc@google.com>
-References: <20260508231353.406465-2-seanjc@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 May 2026 23:40:18 +0000
-Message-Id: <20260508234018.F06AEC2BCB0@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dfWW4Is3"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82fa8d6425bso1439292b3a.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 09 May 2026 06:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1778332215; x=1778937015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A3NyDBs4ghD74Azq1zzFPGUm5QlcBDwy4o68+WiOzU4=;
+        b=dfWW4Is3N28283+If5USHbp2VAQF9w7mBCsSBT2Umff6F2aCHFvxGTDkSrZN1Pz+0M
+         +tkOG0Ap86At5w3aAKNYPPCM9BqSkQEcQY9HYx3U1JfF/wFltcyztP/nq81r0kVWoeM6
+         DRACsP1SUD95x1z7/YbmVn+a8eOPtQbuLUYy4NtNelFZ9LmakqKmFdLOKZuclayRpeRj
+         99O+pFvwomt6JZcMfciVJiPVxuGq1GzX/Nlxz4zbI94/R92B7PHTk7HQN1SLnbjyQz1q
+         mHLuWKL41I6AQ05XsA7SLX4Tf3hYNeNvFTk9TdBUh1cwo/3juSBeEAtUdye071nfOeww
+         XfRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778332215; x=1778937015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A3NyDBs4ghD74Azq1zzFPGUm5QlcBDwy4o68+WiOzU4=;
+        b=AXwR1vv5MATznlw9ijE8etSh2LyA5QQQShPkgVDz6j5pxV+TxdP2Os/gvtK0Em5M7/
+         aKHW/WAtz1NLEnG7uoFjZxqgqHhV9OG8rFFNrPr/xmNRsJaS8sOvADxReqsIS3XWzlFa
+         2MHrfdyKW5wglkFrCMe2MNd8Frsm1iux50ayepVmHZa7ROd3cP02njXoB1EtdKZTZNpq
+         fNrfWBQvSZzE8MDD+XFGW9fuRhPB5bA1xiSsm1yJ4lyoWtaDfnEBGt3xuJZQhiESqjWD
+         syuDSxtynHIhAkTMHPE3wV4khK+szkeDtaty6lHANE0Pm8V7XIP8Z06SQoe3x5zuICni
+         RJxQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8OojSI1fW6qBn57XIVOt3yE+hTjoHhCwxf7D+IHYK1WHK0X51j6Za1YdK7PCWChNxA3g1BpxIJCpEtupGCTPFI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY5KVxjNTvP+lL9sA7diBfdeP+c2PAOc7K3hK/bJ4hTElAhp7X
+	HXZFhPJLzkPtK5QdKP55toZd+8txEJT8/HtH9CgWzgdtYZyrYPm68yaXCKrXoq6+Qe8=
+X-Gm-Gg: Acq92OFnz0MoRUOh+2yMpRpFnsK5t7XEDJIUGjXj2IcOKvm5GRueJzqqq4Zn3GIVyTl
+	FUsFAbG6L5P2hGYYv+4/9VGs8FxfVQQbtYMHXPTbneZFS4HkVfUAyQf+RKrIF1H+JW6ffHIwFuG
+	oX0FarnWeVO/OJhh5O3r5rPS/C7hNpvQV+WTLoGDDVza0QJUN1fITGKDkJuM1RGI0Vzvw0vKkRl
+	rKNNqIvcgAh3j88WhS9OwrPavROXcwm5u1Eqlg3fpiS2b8C93tkXSKkORO5SVS6BTNMyORe0M5Q
+	8Zfm/g6NlEaHL+HBJXoU0Bylh0NX9sB5h16ho7Qs+ia/iZ/qchr1kqVQWrYOS+oD4/+IwP9I6Ex
+	c0Ck9rK0UuMrbhkQoOL1jZDL9uuxZrvdD/rF2PVD6sD3Mup+skTUWUebev5hLu+xWo0d3y48uDJ
+	CkBHx70Y90lw//kBRg0hQ50H2dwuHAUgMAFoFveYJcXsei5HNqZQASkQQpSuaEs5EmOsQ=
+X-Received: by 2002:a05:6a00:2d0c:b0:82f:4f67:1ff6 with SMTP id d2e1a72fcca58-83a5b6c460fmr15827882b3a.4.1778332215217;
+        Sat, 09 May 2026 06:10:15 -0700 (PDT)
+Received: from FJ7FR2JRQ3.bytedance.net ([155.117.34.6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839679c86b3sm18552855b3a.28.2026.05.09.06.10.07
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 09 May 2026 06:10:14 -0700 (PDT)
+From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+To: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Conor Dooley <conor@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Himanshu Chauhan <himanshu@thechauhan.dev>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Anup Patel <anup@brainfault.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Zhu Yuan <yuanzhu@bytedance.com>,
+	Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+Subject: [PATCH v9 0/5] riscv: add SBI Supervisor Software Events support
+Date: Sat,  9 May 2026 21:09:57 +0800
+Message-ID: <cover.1778331862.git.zhangzhanpeng.jasper@bytedance.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] The host PEBS collision check fails to mask non-counter bits, inco=
-rrectly disabling guest PEBS for events like Store Latency.
---
 
-Note: The format of this report has been altered due to recitation
-restrictions. The original patch code is not quoted directly, and findings =
-are
-provided as a free-form summary.
+This series continues Clément's SBI Supervisor Software Events (SSE)
+Linux support. Most of the framework is still Clément's work; many
+thanks to him for bringing the series this far. Clément reached out and
+suggested that I could continue the upstream work, so I am picking up
+the series from here.
 
-commit 39adc53b360e88595a3be6fc59b18b048d9e9921
-Author: Sean Christopherson <seanjc@google.com>
+SSE gives the SBI a firmware-to-S/HS-mode event delivery path that does
+not depend on ordinary S-mode interrupt delivery. This is useful for
+NMI-style platform events and for PMU overflow delivery through firmware.
 
-perf/x86/intel: Ensure guest PEBS path doesn't set unwanted PERF_GLOBAL_CTR=
-L bits
+This respin mainly fixes two issues:
 
-This commit masks the pebs counter values being reinstated into the global
-control msr for a guest with perf's desired value. This is done to ensure t=
-he
-hypervisor doesn't unintentionally enable counters.
+  - KVM Context Corruption
 
-In intel_guest_get_msrs(), the host pebs collision check evaluates the host
-field of the pebs_enable array entry to determine if the host is actively
-using pebs. If it is, guest pebs is disabled.
+    An SSE can interrupt HS-mode code around guest execution, run a
+    synthetic SSE handler, and then complete back through firmware.  The
+    handler episode must be transparent to Linux-owned trap and
+    virtualization state.  This version folds the stvec and hstatus
+    preservation into the Linux SSE entry wrapper, rather than relying on
+    OpenSBI to keep extra hidden resume state. This follows the earlier
+    discussion [1].
 
-Is it possible for this check to falsely detect a host collision due to
-non-counter bits being set?
+  - SSE Handler's SSTATUS Leakage
 
-When a guest configures a store latency pebs event, a backing perf event is
-created. In intel_pmu_pebs_enable(), this sets both the counter index bit
-and bit 63 in cpuc->pebs_enabled.
+    With CONFIG_RISCV_PMU_SBI_SSE, perf can use the local PMU overflow
+    SSE event instead of the ordinary PMU interrupt. This makes the PMU
+    overflow handler a real hot path for SSE: workloads such as
+    "perf top" can enter the SSE handler and completion paths at a high
+    rate. The previous code did not preserve the interrupted
+    sstatus.SIE/SPIE/SPP state separately from the synthetic handler
+    trap-return state, so high-frequency PMU-SSE delivery could quickly
+    expose the leakage. One observed failure mode was an "environment
+    call from U-mode" panic. This series addresses that by making the
+    SSE entry wrapper preserve the live sstatus state around the handler
+    before completing the event.
 
-Because the host field is calculated as cpuc->pebs_enabled masked against
-the inverse of cpuc->intel_ctrl_guest_mask, and the guest mask exclusively
-tracks valid counter indices (never including bit 63), bit 63 remains set in
-the host field.
+The selftest has also been extended to cover the high-frequency PMU-SSE
+patterns that exposed these bugs.  The new stress modes exercise repeated
+handler entry and completion, SBI calls from a handler, PMU stop/start
+activity, and re-injection.
 
-Consequently, the check for whether the host is actively using pebs will
-evaluate to true even when only the guest is using pebs. This introduces a
-regression where guest pebs is completely disabled, silently breaking guest
-store latency events.
+How to test:
 
-Should the host pebs usage evaluation also be masked by intel_ctrl to preve=
-nt
-non-counter bits from triggering a false collision?
+  Build a kernel with at least:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260508231353.4064=
-65-1-seanjc@google.com?part=3D1
+    CONFIG_RISCV_SBI_SSE=y
+    CONFIG_RISCV_PMU_SBI=y
+    CONFIG_RISCV_PMU_SBI_SSE=y
+
+  Build the selftest module against that kernel and run the smoke test:
+
+    ./run_sse_test.sh
+
+  Then run the stress layers.  Use stress=1 to run them after the smoke
+  test, or stress=2 to run only the stress layers:
+
+    ./run_sse_test.sh stress={0,1,2}
+
+Known limitations and follow-up work:
+
+SSE is a relatively large extension which builds synthetic supervisor
+contexts and then resumes the interrupted context through firmware. This
+series fixes the issues found so far in that entry/completion path, but I
+think it still needs more testing and review. There may still be corner
+cases in the constructed handler context or in the state restored after
+completion that this series does not cover yet.
+
+The next planned area is virtualization support. Follow-up work is
+expected to distinguish host and guest PMU-SSE samples, and to support
+delivering SSE events to guests, i.e. the KVM-SSE work from earlier
+revisions.
+
+[1] https://lore.kernel.org/r/9290f53d-3545-4299-9781-c1c558f71158@rivosinc.com
+
+---
+
+Changes in v9:
+  - Picked up Clément's v8 series and rebased it onto the current RISC-V
+    for-next branch.
+  - Fixed KVM Context Corruption by keeping stvec and hstatus stable across
+    the synthetic SSE handler episode.
+  - Fixed SSE Handler's SSTATUS Leakage, where interrupted
+    sstatus.SIE/SPIE/SPP state could be confused with the handler
+    trap-return state under high-frequency PMU-SSE delivery.
+  - Extended the SSE selftest with stress={0,1,2} modes that cover repeated
+    handler entry, SBI calls, PMU activity and re-injection, and fixed event
+    registration and attribute-buffer lifetime corner cases.
+  - Updated MAINTAINERS for the RISC-V SSE driver.
+
+Previous versions:
+  v8:
+    https://lore.kernel.org/r/20251105082639.342973-1-cleger@rivosinc.com
+
+Clément Léger (5):
+  riscv: add SBI SSE extension definitions
+  riscv: add support for SBI Supervisor Software Events extension
+  drivers: firmware: add riscv SSE support
+  perf: RISC-V: add support for SSE event
+  selftests/riscv: add SSE test module
+
+ MAINTAINERS                                   |  17 +
+ arch/riscv/include/asm/asm.h                  |  14 +-
+ arch/riscv/include/asm/sbi.h                  |  61 ++
+ arch/riscv/include/asm/scs.h                  |   7 +
+ arch/riscv/include/asm/sse.h                  |  47 ++
+ arch/riscv/include/asm/switch_to.h            |  14 +
+ arch/riscv/include/asm/thread_info.h          |   1 +
+ arch/riscv/kernel/Makefile                    |   1 +
+ arch/riscv/kernel/asm-offsets.c               |  14 +
+ arch/riscv/kernel/sbi_sse.c                   | 162 ++++
+ arch/riscv/kernel/sbi_sse_entry.S             | 187 +++++
+ drivers/firmware/Kconfig                      |   1 +
+ drivers/firmware/Makefile                     |   1 +
+ drivers/firmware/riscv/Kconfig                |  15 +
+ drivers/firmware/riscv/Makefile               |   3 +
+ drivers/firmware/riscv/riscv_sbi_sse.c        | 694 ++++++++++++++++
+ drivers/perf/Kconfig                          |  10 +
+ drivers/perf/riscv_pmu.c                      |  23 +
+ drivers/perf/riscv_pmu_sbi.c                  |  71 +-
+ include/linux/perf/riscv_pmu.h                |   5 +
+ include/linux/riscv_sbi_sse.h                 |  57 ++
+ tools/testing/selftests/riscv/Makefile        |   2 +-
+ tools/testing/selftests/riscv/sse/Makefile    |   5 +
+ .../selftests/riscv/sse/module/Makefile       |  16 +
+ .../riscv/sse/module/riscv_sse_test.c         | 769 ++++++++++++++++++
+ .../selftests/riscv/sse/run_sse_test.sh       |  48 ++
+ 26 files changed, 2231 insertions(+), 14 deletions(-)
+ create mode 100644 arch/riscv/include/asm/sse.h
+ create mode 100644 arch/riscv/kernel/sbi_sse.c
+ create mode 100644 arch/riscv/kernel/sbi_sse_entry.S
+ create mode 100644 drivers/firmware/riscv/Kconfig
+ create mode 100644 drivers/firmware/riscv/Makefile
+ create mode 100644 drivers/firmware/riscv/riscv_sbi_sse.c
+ create mode 100644 include/linux/riscv_sbi_sse.h
+ create mode 100644 tools/testing/selftests/riscv/sse/Makefile
+ create mode 100644 tools/testing/selftests/riscv/sse/module/Makefile
+ create mode 100644 tools/testing/selftests/riscv/sse/module/riscv_sse_test.c
+ create mode 100644 tools/testing/selftests/riscv/sse/run_sse_test.sh
+
+-- 
+2.50.1 (Apple Git-155)
