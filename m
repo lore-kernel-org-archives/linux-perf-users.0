@@ -1,237 +1,388 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71F133F59B
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 May 2026 13:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2690F36606E
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 May 2026 14:38:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778334798; cv=none; b=kYfdCIhJjFVkDf6/9UPTtwVCafU4eHeVQ+tEbrKAofyMlGl21qRbOVR+HjpmWhPB3YtvRyhMBuusZiVtYi1TUrOWMcTHdFjjnBdzLPlNDIXYYMmPqdVW/aKAhmeNu0IR3y5BAjC7gS/hzIwOvaV+mglPwOoeHjK+Yqhatv9cON0=
+	t=1778337499; cv=none; b=uiXKRSz73iBJ1Ls9orelPHkC+0kYraf+Or/yaOTTIEHEfF/Cw9DVaTQ6TsHQNt8WnsUAO2Bj4t8ItiPa8430gaVWi7ioCdWhZHOBmUC8jHocZUW1oIy3QVTixZhShGrObO5q6/108/e3Rvg1WUF+xAm7CfJCd8iD74M7RevwTeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778334798; c=relaxed/simple;
-	bh=AupdPsMxyFJmEDxXQnNzUARxbICHIQvTsuD6QC4mcQg=;
+	s=arc-20240116; t=1778337499; c=relaxed/simple;
+	bh=GhdWvbsAhQYajww50i4obo3O4xeZ/HFwV/XFOGXza6w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=txshDTd7+XE8E2rF0Wfi5va7BHjDQUVMEv5Dtpjr4c3rv7jqIp1CkuRvtzDELuYyP2UHIDvLfg72qDMQEL+rx/g/Op+DMBf/bwr+O0IJ/6tKiUnBKSjp2cGxpJXop3f3+u+inh7/Ycinr24oK2yHq5oyiOxkWC2x9nd+GQhikGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTsIGKXi; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=JzrHSrbONb1hmWKZmh8Ohfdzx9pmjcvlliGP+IvQw+Rk7pJ6QPpiCMtkPNQuffb9tJymp6U2A6tgGS/a1AAd5rLq009bhS7ssgaScG3ClY/s/S3k8JRmISV2L91wQJLmQkxVp/G3n55ZTKm3AiHe7fWB2ZD1Ym13vywy4cd7KmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTKY4q+7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTsIGKXi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6F9C2BCB2;
-	Sat,  9 May 2026 13:53:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTKY4q+7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B170EC2BCB2;
+	Sat,  9 May 2026 14:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778334798;
-	bh=AupdPsMxyFJmEDxXQnNzUARxbICHIQvTsuD6QC4mcQg=;
+	s=k20201202; t=1778337498;
+	bh=GhdWvbsAhQYajww50i4obo3O4xeZ/HFwV/XFOGXza6w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=sTsIGKXixghYcoyP7DXZ1L/CwF/H/Ehc8iz2joWd4msn7HPhPDvSDNJmDousXxz3e
-	 PzvHzuG1KPQXNsOjRWMe21gnK9jSZaYMOukw1MLQ+pxtXhmZSbOSOLabPq3fFjLM76
-	 /QjDMyewAR15HwPZQG2oMPc+36OVYbCGSRT2UyaXCwbENYuE0CifPMVLTfDPF126iT
-	 pDFgac0Xz59kZRcXRSIEFiZCt781c1qD9NEZxKoEZ7TszvQ6GjGQVTF7LxpFIVUWFr
-	 YNzKasCVLBqY8a1pTyNWEqn4Bj/PKx7m2HreFXedpSTuOhsOEoBrJGx+jz6AILQRu0
-	 tGL+/oB90RvOQ==
+	b=JTKY4q+7UBWu87T52pByzsyXkuHJJ+Ojy1Z8godSsBcRRhDxxfcBC/1LSjzJu0FMp
+	 uv+uDjYGWBrtdRhmtBB7IyAbAc4HaTGLTpiEQAQInGingolbEdCUB6198GFdpcNqMi
+	 bkeCirTLGkTw5IPiL8tTUARixsaP0HkecE1CoZx7f4SFJK95g3C/p5uPPHUhTtMF3u
+	 KgKXYAzOOHW0UWpNpHz4Qt//N/kOzCnc7527O/vV0zHnVcDv4ismWf/PUM2VSXIPsN
+	 2RvDt3cCCp2ITzMxgpgLou4/62ZltMARmJWaESFeNodMKxgqjELlkL6Q1hmGdaAtrA
+	 Vi5zYogC+hK6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 2/5] riscv: add support for SBI Supervisor Software
- Events extension
+Subject: Re: [PATCH v9 3/5] drivers: firmware: add riscv SSE support
 Reply-To: sashiko@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <45918ddc68df98ec25ac93c0bbab7da90a4ecbf9.1778331862.2.git.zhangzhanpeng.jasper@bytedance.com>
-References: <45918ddc68df98ec25ac93c0bbab7da90a4ecbf9.1778331862.2.git.zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <7d86cbd47688700fbdfc27e530e824a6bec0548c.1778331862.3.git.zhangzhanpeng.jasper@bytedance.com>
+References: <7d86cbd47688700fbdfc27e530e824a6bec0548c.1778331862.3.git.zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 09 May 2026 13:53:17 +0000
-Message-Id: <20260509135318.4A6F9C2BCB2@smtp.kernel.org>
+Date: Sat, 09 May 2026 14:38:15 +0000
+Message-Id: <20260509143818.B170EC2BCB2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 8 potential issue(=
-s) to consider:
-- [Critical] Uninitialized loop counter `t3` in the slow path causes out-of=
--bounds memory access and incorrect context tracking.
-- [Critical] `__sbi_sse_entry_task` is uninitialized for the boot CPU, lead=
-ing to a NULL pointer dereference.
-- [High] `stack_pointer_to_alloc()` performs blind pointer arithmetic on `N=
-ULL`, causing a kernel crash during error cleanup.
-- [High] Missing signal delivery interrupt simulation described in the comm=
-it message.
-- [High] Data truncation of `interrupted_phys` corrupts physical memory on =
-32-bit systems with 64-bit physical addresses.
-- [High] Missing TLB flush for vmap-backed Shadow Call Stack risks vmalloc =
-faults in NMI context.
-- [High] Kernel silently drops modifications to `a6` and `a7` registers, br=
-eaking kernel ABIs.
-- [Medium] Truncation of `hart_id` to 32 bits and sign extension breaks the=
- fast path for large hart IDs.
+Thank you for your contribution! Sashiko AI review found 12 potential issue=
+(s) to consider:
+- [Critical] Missing braces around `scoped_guard(cpus_read_lock)` in `sse_e=
+vent_unregister` releases lock prematurely, leading to a race condition and=
+ use-after-free.
+- [High] Event registration rollback uses the wrong revert function, leakin=
+g firmware registrations and causing use-after-free.
+- [High] Missing validation of `riscv_hartid_to_cpuid` return value leads t=
+o out-of-bounds array access.
+- [High] `sse_cpu_teardown` causes out-of-bounds array access on single-CPU=
+ teardown and fails to unregister global events across reboots.
+- [High] 64-bit physical addresses are silently truncated to 32 bits on RV3=
+2.
+- [High] CPU hotplug unconditionally enables local events, ignoring driver-=
+defined disabled states.
+- [High] Early release of `cpus_read_lock` in `sse_event_register` causes m=
+issed event registration on hotplugged CPUs.
+- [High] `sse_event_alloc_global` calls `smp_processor_id()` in a preemptib=
+le context.
+- [High] Missing synchronization in `sse_event_unregister()` leads to use-a=
+fter-free with concurrently executing hardware event handlers.
+- [Medium] `sse_event_set_target_cpu_nolock` silently ignores attribute wri=
+te failures.
+- [Medium] Mixing `goto` error handling with `guard()` and `scoped_guard()`=
+ declarations violates subsystem cleanup guidelines.
+- [Medium] The commit message claims clients can 'complete SSE events', but=
+ no such API exists.
 --
 
-commit 984b54245d1919f79774c39971ea6d6896737561
+commit 1f43f4083e7681521e63a564e1ff80519c1569f5
 Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-Subject: riscv: add support for SBI Supervisor Software Events extension
+Subject: drivers: firmware: add riscv SSE support
 
-This commit introduces support for the SBI Supervisor Software Events (SSE)
-extension on RISC-V. It allows the supervisor software to handle non-maskab=
-le
-events dispatched by the SBI, tracking context via an additional per-cpu
-array to safely handle interruptions.
+This commit adds a driver-level interface for RISC-V SSE support, allowing
+Linux clients to register handlers and manage SSE events. It supports both
+local and global events and handles CPU hotplug and PM transitions.
 
-The commit message states:
-"simulate an interrupt exception by setting IE_SIE in CSR_IP to allow
-delivery of signals to user task."
+>     Add a driver-level interface for RISC-V SSE support.  The interface l=
+ets
+>     Linux clients register handlers and enable, disable and complete SSE
+>     events.  It will be used by PMU and GHES drivers.
 
-Looking at do_sse() and handle_sse(), there doesn't appear to be any logic
-that checks if interrupts were enabled or writes to CSR_IP/CSR_SIP. Because
-handle_sse() completes via an SBI call and returns directly to the
-interrupted context, will signals queued during the handler (such as a
-SIGBUS) fail to be delivered until an unrelated hardware interrupt occurs?
+The commit message states the interface lets clients complete SSE events.
+However, there does not appear to be any API provided to complete an event.
 
-> diff --git a/arch/riscv/include/asm/sse.h b/arch/riscv/include/asm/sse.h
-> index 0000000000000..d3ce8c2b52212
+Could the commit message be updated to reflect the actual implementation?
+
+> diff --git a/drivers/firmware/riscv/riscv_sbi_sse.c b/drivers/firmware/ri=
+scv/riscv_sbi_sse.c
+> new file mode 100644
+> index 0000000000000..830011ddd33f7
 > --- /dev/null
-> +++ b/arch/riscv/include/asm/sse.h
+> +++ b/drivers/firmware/riscv/riscv_sbi_sse.c
+> @@ -0,0 +1,694 @@
 [ ... ]
-> +struct sse_event_arch_data {
-> +	void *stack;
-> +	void *shadow_stack;
-> +	unsigned long tmp;
-> +	struct sse_event_interrupted_state interrupted;
-> +	unsigned long interrupted_phys;
+> +static int sse_event_attr_get_no_lock(struct sse_registered_event *reg_e=
+vt,
+> +				      unsigned long attr_id, unsigned long *val)
+> +{
+> +	struct sbiret sret;
+> +	u32 evt =3D reg_evt->event->evt_id;
+> +	unsigned long phys;
+> +
+> +	phys =3D sse_event_get_attr_phys(reg_evt);
 
-On 32-bit systems with 64-bit physical addresses (Sv32), virt_to_phys()
-returns a 64-bit phys_addr_t. Does assigning it to an unsigned long truncate
-the upper 32 bits, causing the SBI firmware to read the interrupted state
-from the wrong physical address when passed to sbi_ecall() in do_sse()?
+Can this physical address be truncated on RV32 systems?
 
-> +	u32 evt_id;
-> +	unsigned int hart_id;
+When CONFIG_ARCH_PHYS_ADDR_T_64BIT is enabled, physical addresses are 64 bi=
+ts,
+but unsigned long is 32 bits. Will the firmware receive a corrupted 32-bit
+physical address since the ABI expects 64-bit values to be passed in two
+registers on RV32?
 
-Since RISC-V hart IDs are 64-bit (unsigned long), will storing this as a
-32-bit unsigned int cause issues?
-
-In sbi_sse_entry.S, this is loaded using lw which sign-extends the value. If
-a hart ID has bit 31 set, it will become a negative 64-bit value and never
-match the true 64-bit hart ID passed by SBI in a6, unnecessarily forcing the
-slow path.
-
-> +	unsigned int cpu_id;
-> +};
 [ ... ]
-> diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
-> index 0000000000000..f30ae9ff77c97
-> --- /dev/null
-> +++ b/arch/riscv/kernel/sbi_sse.c
+> +static int sse_event_attr_set_nolock(struct sse_registered_event *reg_ev=
+t,
+> +				     unsigned long attr_id, unsigned long val)
+> +{
+> +	struct sbiret sret;
+> +	u32 evt =3D reg_evt->event->evt_id;
+> +	unsigned long phys;
+> +
+> +	reg_evt->attr =3D val;
+> +	phys =3D sse_event_get_attr_phys(reg_evt);
+
+Is this subject to the same RV32 physical address truncation mentioned abov=
+e?
+
 [ ... ]
-> +DEFINE_PER_CPU(struct task_struct *, __sbi_sse_entry_task);
-
-Is it possible for an unmaskable SSE event to fire before the first context
-switch? Since __sbi_sse_entry_task defaults to NULL and is only updated
-during a context switch, the boot CPU or secondary idle tasks might not have
-this initialized. Could this lead to a NULL pointer dereference when NMI
-context attempts to access current via tp?
-
-> +
-> +void __weak sse_handle_event(struct sse_event_arch_data *arch_evt, struc=
-t pt_regs *regs)
+> +static int sse_event_set_target_cpu_nolock(struct sse_event *event,
+> +					   unsigned int cpu)
 > +{
-> +}
+> +	unsigned long hart_id =3D cpuid_to_hartid_map(cpu);
+> +	struct sse_registered_event *reg_evt =3D event->global;
+> +	u32 evt =3D event->evt_id;
+> +	bool was_enabled;
+> +	int ret;
 > +
-> +void do_sse(struct sse_event_arch_data *arch_evt, struct pt_regs *regs)
-> +{
-> +	nmi_enter();
+> +	if (!sse_event_is_global(evt))
+> +		return -EINVAL;
 > +
-> +	/* Retrieve missing GPRs from SBI */
-> +	sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_READ, arch_evt->evt_id,
-> +		  SBI_SSE_ATTR_INTERRUPTED_A6,
-> +		  (SBI_SSE_ATTR_INTERRUPTED_A7 - SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
-> +		  arch_evt->interrupted_phys, 0, 0);
+> +	was_enabled =3D reg_evt->is_enabled;
+> +	if (was_enabled)
+> +		sse_event_disable_local(event);
 > +
-> +	memcpy(&regs->a6, &arch_evt->interrupted, sizeof(arch_evt->interrupted)=
-);
+> +	ret =3D sse_event_attr_set_nolock(reg_evt, SBI_SSE_ATTR_PREFERRED_HART,
+> +					hart_id);
+> +	if (ret =3D=3D 0)
+> +		sse_global_event_update_cpu(event, cpu);
 > +
-> +	sse_handle_event(arch_evt, regs);
-
-If a kernel subsystem like ptrace or a signal handler modifies regs->a6
-or regs->a7 during sse_handle_event(), are those changes lost?
-
-The SBI firmware restores the interrupted context's a6 and a7 from its
-internal state, but it looks like we only read these attributes here and
-never execute SBI_SSE_EVENT_ATTR_WRITE to sync any modifications back.
-
+> +	if (was_enabled)
+> +		sse_event_enable_local(event);
 > +
-> +	nmi_exit();
-> +}
-> +
-> +static void *alloc_to_stack_pointer(void *alloc)
-> +{
-> +	return alloc ? alloc + SSE_STACK_SIZE : NULL;
-> +}
-> +
-> +static void *stack_pointer_to_alloc(void *stack)
-> +{
-> +	return stack - SSE_STACK_SIZE;
-
-If arch_sse_free_event() is called to clean up after a partial initializati=
-on
-failure, arch_evt->stack could be NULL. Does subtracting SSE_STACK_SIZE
-from NULL create an invalid pointer that could cause a crash when passed
-to vfree() or kfree()?
-
-> +}
-[ ... ]
-> +static void arch_sse_stack_cpu_sync(struct sse_event_arch_data *arch_evt)
-> +{
-> +	void *p_stack =3D arch_evt->stack;
-> +	unsigned long stack =3D (unsigned long)stack_pointer_to_alloc(p_stack);
-> +	unsigned long stack_end =3D stack + SSE_STACK_SIZE;
-> +
-> +	/*
-> +	 * Flush the tlb to avoid taking any exception when accessing the
-> +	 * vmapped stack inside the SSE handler
-> +	 */
-> +	if (sse_event_is_global(arch_evt->evt_id))
-> +		flush_tlb_kernel_range(stack, stack_end);
-> +	else
-> +		local_flush_tlb_kernel_range(stack, stack_end);
+> +	return 0;
 > +}
 
-This function flushes the TLB for the vmap-backed arch_evt->stack to avoid
-taking a vmalloc exception inside the non-reentrant SSE handler.
+Should this function return the error code instead of unconditionally retur=
+ning 0?
 
-However, when Shadow Call Stack is enabled, scs_alloc() also allocates a
-vmap-backed stack. Does arch_evt->shadow_stack need a similar TLB flush to
-prevent vmalloc faults when pushing return addresses?
+If the SBI call to set the preferred hart fails, the error is masked from t=
+he
+caller, leaving the kernel thinking the migration succeeded while the firmw=
+are
+state is out of sync.
 
 [ ... ]
-> diff --git a/arch/riscv/kernel/sbi_sse_entry.S b/arch/riscv/kernel/sbi_ss=
-e_entry.S
-> index 0000000000000..59ec62607adcb
-> --- /dev/null
-> +++ b/arch/riscv/kernel/sbi_sse_entry.S
+> +static int sse_event_alloc_global(struct sse_event *event)
+> +{
+> +	int err;
+> +	struct sse_registered_event *reg_evt;
+> +
+> +	reg_evt =3D kzalloc_obj(*reg_evt, GFP_KERNEL);
+> +	if (!reg_evt)
+> +		return -ENOMEM;
+> +
+> +	event->global =3D reg_evt;
+> +	err =3D sse_event_init_registered(smp_processor_id(), reg_evt, event);
+
+Is it safe to call smp_processor_id() here?
+
+sse_event_alloc_global() is invoked from sse_event_register(), which only
+holds a mutex and runs with preemption enabled. Could this trigger a warning
+if CONFIG_DEBUG_PREEMPT is enabled, or allow the thread to migrate
+immediately after, yielding an invalid CPU ID?
+
 [ ... ]
-> +#ifdef CONFIG_SMP
-> +.Lfind_hart_id_slowpath:
+> +struct sse_event *sse_event_register(u32 evt, u32 priority,
+> +				     sse_event_handler_fn *handler, void *arg)
+> +{
+> +	struct sse_event *event;
+> +	int cpu;
+> +	int ret =3D 0;
 > +
-> +	/* Restore current task struct from __sbi_sse_entry_task */
-> +	li t1, ASM_NR_CPUS
-> +	/* Slowpath to find the CPU id associated to the hart id */
-> +	la t0, __cpuid_to_hartid_map
+> +	if (!sse_available)
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +
+> +	guard(mutex)(&sse_mutex);
 
-Should t3 be initialized to 0 here before the loop begins?
+This isn't a bug, but is it intended to mix goto-based error handling with
+scope-based guard declarations in the same function?
 
-If the fastpath check fails earlier, t3 retains its previous value from
-arch_evt->cpu_id. When a match is found at index N during the loop, the
-calculated CPU ID would be arch_evt->cpu_id + N instead of N. Could this
-incorrect index lead to an out-of-bounds pointer being loaded into tp?
+The cleanup subsystem documentation recommends against this pattern as it c=
+an
+create confusing ownership semantics.
+
+> +	if (sse_event_get(evt))
+> +		return ERR_PTR(-EEXIST);
+> +
+> +	event =3D sse_event_alloc(evt, priority, handler, arg);
+> +	if (IS_ERR(event))
+> +		return event;
+> +
+> +	scoped_guard(cpus_read_lock) {
+> +		if (sse_event_is_global(evt)) {
+> +			unsigned long preferred_hart;
+> +
+> +			ret =3D sse_event_attr_get_no_lock(event->global,
+> +							 SBI_SSE_ATTR_PREFERRED_HART,
+> +							 &preferred_hart);
+> +			if (ret)
+> +				goto err_event_free;
+> +
+> +			cpu =3D riscv_hartid_to_cpuid(preferred_hart);
+
+Can riscv_hartid_to_cpuid() return -ENOENT here?
+
+If the firmware returns an unknown or unmapped hart ID, it appears the
+negative value is passed to sse_global_event_update_cpu(), which uses it to
+index the logical hart array via cpuid_to_hartid_map(), potentially causing
+an out-of-bounds memory read.
+
+> +			sse_global_event_update_cpu(event, cpu);
+> +
+> +			ret =3D sse_sbi_register_event(event, event->global);
+> +			if (ret)
+> +				goto err_event_free;
+> +
+> +		} else {
+> +			ret =3D sse_on_each_cpu(event, SBI_SSE_EVENT_REGISTER,
+> +					      SBI_SSE_EVENT_DISABLE);
+
+Should the revert function be SBI_SSE_EVENT_UNREGISTER instead of
+SBI_SSE_EVENT_DISABLE?
+
+Disabling an event merely masks it without unregistering it from the firmwa=
+re.
+If registration fails on any CPU, does this leave the firmware holding an
+active registration pointing to freed memory after the error path frees the
+event structures?
+
+> +			if (ret)
+> +				goto err_event_free;
+> +		}
+> +	}
+> +
+> +	scoped_guard(spinlock, &events_list_lock)
+> +		list_add(&event->list, &events);
+
+Because the cpus_read_lock is released before acquiring events_list_lock to
+add the event to the global list, could a CPU hotplug operation occur in
+this window?
+
+If so, sse_cpu_online() would iterate over the list and miss the new event,
+resulting in the event not being registered on the new CPU.
 
 > +
-> +.Lhart_id_loop:
-> +	REG_L t2, 0(t0)
-> +	beq t2, a6, .Lcpu_id_found
+> +	return event;
 > +
-> +	/* Increment pointer and CPU number */
-> +	addi t3, t3, 1
-> +	addi t0, t0, RISCV_SZPTR
-> +	bltu t3, t1, .Lhart_id_loop
+> +err_event_free:
+> +	sse_event_free(event);
+> +
+> +	return ERR_PTR(ret);
+> +}
+[ ... ]
+> +void sse_event_unregister(struct sse_event *event)
+> +{
+> +	scoped_guard(mutex, &sse_mutex) {
+> +		scoped_guard(cpus_read_lock)
+> +			sse_event_unregister_nolock(event);
+
+Is there a missing compound block around the cpus_read_lock guard?
+
+Without braces, the lock is dropped before acquiring events_list_lock. Coul=
+d a
+concurrent CPU hotplug operation acquire the list lock, find the partially
+unregistered event still in the list, and erroneously register and enable
+it in the firmware for the new CPU?
+
+> +
+> +		scoped_guard(spinlock, &events_list_lock)
+> +			list_del(&event->list);
+> +
+> +		sse_event_free(event);
+
+Since SBI events are delivered as NMI-like notifications, could an event ha=
+ve
+just fired and its handler be actively executing on another CPU?
+
+Without synchronization like waiting for active handlers or RCU grace perio=
+ds,
+it seems sse_handle_event() might dereference evt->handler and
+evt->handler_arg after the memory has been freed.
+
+> +	}
+> +}
+[ ... ]
+> +static int sse_cpu_online(unsigned int cpu)
+> +{
+> +	struct sse_event *event;
+> +
+> +	scoped_guard(spinlock, &events_list_lock) {
+> +		list_for_each_entry(event, &events, list) {
+> +			if (sse_event_is_global(event->evt_id))
+> +				continue;
+> +
+> +			sse_event_register_local(event);
+> +			if (sse_get_reg_evt(event))
+> +				sse_event_enable_local(event);
+
+Should this check reg_evt->is_enabled before unconditionally enabling the e=
+vent?
+
+If a driver registers an event but intentionally leaves it disabled, it loo=
+ks
+like it will unexpectedly become enabled on the newly hotplugged CPU.
+
+> +		}
+> +	}
+> +
+> +	/* Ready to handle events. Unmask SSE. */
+> +	return sse_events_unmask();
+> +}
+> +
+> +static int sse_cpu_teardown(unsigned int cpu)
+> +{
+> +	int ret =3D 0;
+> +	unsigned int next_cpu;
+> +	struct sse_event *event;
+> +	struct sse_registered_event *reg_evt;
+> +
+> +	/* Mask the sse events */
+> +	ret =3D sse_events_mask();
+> +	if (ret)
+> +		return ret;
+> +
+> +	scoped_guard(spinlock, &events_list_lock) {
+> +		list_for_each_entry(event, &events, list) {
+> +			/* Disable local event on current cpu */
+> +			if (!sse_event_is_global(event->evt_id)) {
+> +				reg_evt =3D sse_get_reg_evt(event);
+> +				if (reg_evt->is_enabled)
+> +					sse_event_disable_local(event);
+> +
+> +				sse_sbi_unregister_event(event);
+> +				continue;
+> +			}
+> +
+> +			if (event->cpu !=3D smp_processor_id())
+> +				continue;
+> +
+> +			/* Update destination hart for global event */
+> +			next_cpu =3D cpumask_any_but(cpu_online_mask, cpu);
+> +			ret =3D sse_event_set_target_cpu_nolock(event, next_cpu);
+
+What happens if there are no other CPUs online during teardown?
+
+If cpumask_any_but() returns a value greater than or equal to nr_cpu_ids,
+passing it to sse_event_set_target_cpu_nolock() might result in an
+out-of-bounds array read in cpuid_to_hartid_map().
+
+Furthermore, by migrating rather than unregistering global events on reboot,
+does this break kexec by leaving the event actively registered for the next
+kernel?
+
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1778331862.gi=
-t.zhangzhanpeng.jasper@bytedance.com?part=3D2
+t.zhangzhanpeng.jasper@bytedance.com?part=3D3
