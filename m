@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A42722425B;
-	Sun, 10 May 2026 03:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FAD19CD0A;
+	Sun, 10 May 2026 03:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778384146; cv=none; b=X6QUBMhO6luDBqTprLYnDoSwHd1E0cSt8H8H8wbboY4dZm+sSoYmFbJqBju63SDiz1A83cf4oVp/TWcpQhRB27H0+7cukaZcK3njXVu/XIYJEJBQxCrVDuymrhnA9HhUa8tbW5VTTHcjPRHWwMYRsjDylnAjqV0reEEBxs+Ktj0=
+	t=1778384152; cv=none; b=SJHNmW9VYBb2QhAaln3MNwELoYZ7rPZHi/UtTxPvE2DNmhi2BXDipIqZHCpVuQhoNGbS/9+Js7alUNKDJhkiSHo9PeRr2uORz50rILkN8wL5l/YxnxG1Ao8CTHQQTAaJVBLyXknlRtz5TpT8supPWHw/vJd3Uou1ZQFTSsj2otw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778384146; c=relaxed/simple;
-	bh=QhY5buQsBzI9eMOfij+AhFf8dCNo+p4JPuYN1WMv8gk=;
+	s=arc-20240116; t=1778384152; c=relaxed/simple;
+	bh=t02wNdgSfNbf5loBv1JRfR4V7UwPBFip15dJG7QRtUQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZD28O9hxJ7194QK1whig6M0/EpSvzAADsluGyOd0K1NWjNhAHlSvTulv5iR+KC94oqXgQqm18XQ62pLDtP5UwXxZklrtH6y3zVF1gXWyvME4z6skfiAqSNCYLcBSmyD8F03UPtG0LhFsuF90K026uyecBWwIfu2PY6NjQzm9PCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aICeyhUE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=sYCSquVtnZHSRlj7d9VmJ2iKqUTTRG3UPXyn6jKKWMlvZYbf+oSPfpymiMVRoabLjE88lB5ue9hUpZXsVjeP9QDwO1uPEbBDYb0398rAJ3kgyug0wrrlJiiipihJGHq5tOh/U8+upcyFlMDtPub9qE4iBz8X/KiOf5XBLQuvV0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXcSSEAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aICeyhUE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4510C2BCF6;
-	Sun, 10 May 2026 03:35:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXcSSEAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDACFC2BCFB;
+	Sun, 10 May 2026 03:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778384146;
-	bh=QhY5buQsBzI9eMOfij+AhFf8dCNo+p4JPuYN1WMv8gk=;
+	s=k20201202; t=1778384152;
+	bh=t02wNdgSfNbf5loBv1JRfR4V7UwPBFip15dJG7QRtUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aICeyhUEo1Gilv7F8DRX5qMIy2njzEQOr+h6TGx7nbeJpXe3v7emzUdcod18dr1bU
-	 tGy/42+bauqsUWdwHqhRIud751vaLKxXPD/UoxvLHltULXeaxYzPTHmnf/NzlV5Ysb
-	 gNgFZXrQTGHuW3xAUg8o3Ra3FjXnsfdjshNraW7hQ6gSP8R9BKmuV+vcwQjZP0IZ5Q
-	 FGm4O89jxbkf5HA1ZYR7JkrgA7piynEYEoOcwyKkwv2ePNt6sJNtFxVQF+MDDzi+/2
-	 6wYx8vPaONiJWP91ldv/QravwpLbAfQiZDtbM2wfz5wSBrRs17V1bN8gGMxRJ0G0Q5
-	 rW0E546tCC9wQ==
+	b=XXcSSEAVcmaaAsfuA1O9XMbc2uzoxQ2wWweOkOdLV3Aah07QQexEBO1wSl+OyVhQm
+	 EEvvThEtYErvBDH7BWMauOdTeTXP8d9IWXHiOWKNdBlVF5hMKtscP3qNj2+FMGra+V
+	 0u4y7WExEgiJjuHWNi1G2fHCzWjUKn+UrXW4aWlJ0Gn/9cZGTOtKRQ7X63BOQW1axW
+	 mvBMrUyI5Rpc4IdLER9RlNqlWROKLZe7JYaHS6lM43E5A3WDZ3sE/1I6bJ6AR1+sqc
+	 J271q+JailLCn3SKL3oC18V/eT3dQTTBu9sWMdLYdHsoi3oDDFAp95W2PZnM0TTBxq
+	 MoUCgt78a0Ypg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,10 +40,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
+	Blake Jones <blakejones@google.com>,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 13/28] perf auxtrace: Harden auxtrace_error event handling
-Date: Sun, 10 May 2026 00:34:04 -0300
-Message-ID: <20260510033424.255812-14-acme@kernel.org>
+Subject: [PATCH 14/28] perf session: Add byte-swap and bounds check for PERF_RECORD_BPF_METADATA events
+Date: Sun, 10 May 2026 00:34:05 -0300
+Message-ID: <20260510033424.255812-15-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510033424.255812-1-acme@kernel.org>
 References: <20260510033424.255812-1-acme@kernel.org>
@@ -58,178 +59,143 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fix four issues in PERF_RECORD_AUXTRACE_ERROR handling:
+PERF_RECORD_BPF_METADATA has no entry in perf_event__swap_ops[],
+so its nr_entries field is never byte-swapped when reading a
+cross-endian perf.data file.  Downstream processing in
+perf_event__fprintf_bpf_metadata() loops over nr_entries, so a
+foreign-endian value causes out-of-bounds reads.
 
-1. auxtrace_error_name() takes a signed int parameter, but e->type
-   is __u32.  A crafted value like 0xFFFFFFFF converts to -1, passes
-   the bounds check, and causes a negative array index.  Fix by
-   changing the parameter to unsigned int.
+Add a swap handler that byte-swaps nr_entries after validating
+that header.size is large enough.  The entries[] array contains
+only char arrays (key/value strings), so no per-entry swap is
+needed — but ensure NUL-termination on the writable cross-endian
+path.
 
-2. The msg field is printed via %s without a length bound.  The
-   min_size table only guarantees fields up to msg (offset 48), so
-   a truncated event has zero msg bytes within the event boundary.
-   Compute the available msg length from header.size, cap at
-   sizeof(e->msg), and use %.*s.
+Validate header.size, nr_entries, and string NUL-termination in
+the common event delivery path so that native-endian files with
+malicious values are also rejected.
 
-3. fmt >= 2 adds machine_pid and vcpu fields after msg[64].  Older
-   files may have fmt >= 2 but an event size that doesn't include
-   these fields.  Add a size check in the swap handler to downgrade
-   fmt before the conditional field access, and a matching size
-   guard in the fprintf path for native-endian events (which are
-   mmap'd read-only and can't be modified in place).
-
-4. python_process_auxtrace_error() had the same issues: msg was
-   passed to tuple_set_string() unbounded, and machine_pid/vcpu
-   were accessed unconditionally without checking fmt or event
-   size.  Apply the same bounds checks.
-
+Fixes: ab38e84ba9a8 ("perf record: collect BPF metadata from existing BPF programs")
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Blake Jones <blakejones@google.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.c                    | 24 +++++++++++++---
- .../scripting-engines/trace-event-python.c    | 28 +++++++++++++++++--
- tools/perf/util/session.c                     | 18 ++++++++++--
- 3 files changed, 61 insertions(+), 9 deletions(-)
+ tools/perf/util/session.c | 83 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a224687ffbc1b5be..d9770e1d2f959fc4 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1759,7 +1759,7 @@ static const char * const auxtrace_error_type_name[] = {
- 	[PERF_AUXTRACE_ERROR_ITRACE] = "instruction trace",
- };
- 
--static const char *auxtrace_error_name(int type)
-+static const char *auxtrace_error_name(unsigned int type)
- {
- 	const char *error_type_name = NULL;
- 
-@@ -1775,6 +1775,7 @@ size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp)
- 	struct perf_record_auxtrace_error *e = &event->auxtrace_error;
- 	unsigned long long nsecs = e->time;
- 	const char *msg = e->msg;
-+	int msg_max;
- 	int ret;
- 
- 	ret = fprintf(fp, " %s error type %u",
-@@ -1792,11 +1793,26 @@ size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp)
- 	if (!e->fmt)
- 		msg = (const char *)&e->time;
- 
--	if (e->fmt >= 2 && e->machine_pid)
-+	/* Bound msg to the bytes actually within the event, capped at the array size */
-+	msg_max = (int)((void *)event + event->header.size - (void *)msg);
-+	if (msg_max < 0)
-+		msg_max = 0;
-+	if (msg_max > (int)sizeof(e->msg))
-+		msg_max = sizeof(e->msg);
-+
-+	/*
-+	 * Unlike the swap path which downgrades fmt in place,
-+	 * native-endian events are mmap'd read-only — check size
-+	 * instead to avoid accessing machine_pid/vcpu OOB.
-+	 */
-+	if (e->fmt >= 2 &&
-+	    event->header.size >= offsetof(typeof(event->auxtrace_error), vcpu) +
-+				  sizeof(event->auxtrace_error.vcpu) &&
-+	    e->machine_pid)
- 		ret += fprintf(fp, " machine_pid %d vcpu %d", e->machine_pid, e->vcpu);
- 
--	ret += fprintf(fp, " cpu %d pid %d tid %d ip %#"PRI_lx64" code %u: %s\n",
--		       e->cpu, e->pid, e->tid, e->ip, e->code, msg);
-+	ret += fprintf(fp, " cpu %d pid %d tid %d ip %#"PRI_lx64" code %u: %.*s\n",
-+		       e->cpu, e->pid, e->tid, e->ip, e->code, msg_max, msg);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5a30caaec73ef06b..5b8f629fd54cbe49 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1614,6 +1614,9 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
- 	const char *handler_name = "auxtrace_error";
- 	unsigned long long tm = e->time;
- 	const char *msg = e->msg;
-+	s32 machine_pid = 0, vcpu = 0;
-+	char msg_buf[MAX_AUXTRACE_ERROR_MSG + 1];
-+	int msg_max;
- 	PyObject *handler, *t;
- 
- 	handler = get_handler(handler_name);
-@@ -1625,6 +1628,25 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
- 		msg = (const char *)&e->time;
- 	}
- 
-+	/* Bound msg to the bytes within the event, ensure NUL-termination */
-+	msg_max = (int)((void *)event + event->header.size - (void *)msg);
-+	if (msg_max <= 0) {
-+		msg_buf[0] = '\0';
-+	} else {
-+		if (msg_max > (int)sizeof(msg_buf) - 1)
-+			msg_max = sizeof(msg_buf) - 1;
-+		memcpy(msg_buf, msg, msg_max);
-+		msg_buf[msg_max] = '\0';
-+	}
-+
-+	/* Only access fmt >= 2 fields if the event is large enough */
-+	if (e->fmt >= 2 &&
-+	    event->header.size >= offsetof(typeof(event->auxtrace_error), vcpu) +
-+				  sizeof(event->auxtrace_error.vcpu)) {
-+		machine_pid = e->machine_pid;
-+		vcpu = e->vcpu;
-+	}
-+
- 	t = tuple_new(11);
- 
- 	tuple_set_u32(t, 0, e->type);
-@@ -1634,10 +1656,10 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
- 	tuple_set_s32(t, 4, e->tid);
- 	tuple_set_u64(t, 5, e->ip);
- 	tuple_set_u64(t, 6, tm);
--	tuple_set_string(t, 7, msg);
-+	tuple_set_string(t, 7, msg_buf);
- 	tuple_set_u32(t, 8, cpumode);
--	tuple_set_s32(t, 9, e->machine_pid);
--	tuple_set_s32(t, 10, e->vcpu);
-+	tuple_set_s32(t, 9, machine_pid);
-+	tuple_set_s32(t, 10, vcpu);
- 
- 	call_object(handler, t, handler_name);
- 
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index c23899c42ef7af34..a2dba77c6a2b9d2f 100644
+index a2dba77c6a2b9d2f..876e20c4ba8a7808 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -747,8 +747,22 @@ static int perf_event__auxtrace_error_swap(union perf_event *event,
- 	if (event->auxtrace_error.fmt)
- 		event->auxtrace_error.time = bswap_64(event->auxtrace_error.time);
- 	if (event->auxtrace_error.fmt >= 2) {
--		event->auxtrace_error.machine_pid = bswap_32(event->auxtrace_error.machine_pid);
--		event->auxtrace_error.vcpu = bswap_32(event->auxtrace_error.vcpu);
-+		/*
-+		 * fmt >= 2 adds machine_pid and vcpu after msg[64].
-+		 * Older files may have fmt >= 2 but an event size
-+		 * that doesn't include these fields — downgrade to
-+		 * avoid swapping out of bounds.
-+		 */
-+		if (event->header.size < offsetof(typeof(event->auxtrace_error), vcpu) +
-+					 sizeof(event->auxtrace_error.vcpu)) {
-+			pr_warning("WARNING: PERF_RECORD_AUXTRACE_ERROR: fmt %u but event too small for machine_pid/vcpu (%u bytes), downgrading fmt\n",
-+				   event->auxtrace_error.fmt,
-+				   event->header.size);
-+			event->auxtrace_error.fmt = 1;
-+		} else {
-+			event->auxtrace_error.machine_pid = bswap_32(event->auxtrace_error.machine_pid);
-+			event->auxtrace_error.vcpu = bswap_32(event->auxtrace_error.vcpu);
-+		}
- 	}
+@@ -942,6 +942,45 @@ static int perf_event__time_conv_swap(union perf_event *event,
  	return 0;
  }
+ 
++static int perf_event__bpf_metadata_swap(union perf_event *event,
++					 bool sample_id_all __maybe_unused)
++{
++	u64 i, nr, max_nr;
++
++	/* Fixed header must fit before accessing nr_entries or prog_name */
++	if (event->header.size < sizeof(event->bpf_metadata))
++		return -1;
++
++	event->bpf_metadata.nr_entries = bswap_64(event->bpf_metadata.nr_entries);
++
++	/*
++	 * Ensure NUL-termination on the cross-endian path where the
++	 * mapping is writable (MAP_PRIVATE + PROT_WRITE).  Fixing
++	 * the string in place is preferred over rejecting because it
++	 * preserves the event for downstream processing — only the
++	 * last byte is lost.
++	 *
++	 * The native-endian path (MAP_SHARED + PROT_READ) cannot
++	 * write, so it validates and skips unterminated events in
++	 * perf_session__process_user_event() instead.  The two
++	 * strategies produce different outcomes for the same
++	 * malformed input (fix vs skip), which is inherent in the
++	 * writable-vs-read-only mapping model.
++	 */
++	event->bpf_metadata.prog_name[BPF_PROG_NAME_LEN - 1] = '\0';
++
++	nr = event->bpf_metadata.nr_entries;
++	max_nr = (event->header.size - sizeof(event->bpf_metadata)) /
++		 sizeof(event->bpf_metadata.entries[0]);
++	if (nr > max_nr)
++		nr = max_nr;
++
++	for (i = 0; i < nr; i++) {
++		event->bpf_metadata.entries[i].key[BPF_METADATA_KEY_LEN - 1] = '\0';
++		event->bpf_metadata.entries[i].value[BPF_METADATA_VALUE_LEN - 1] = '\0';
++	}
++	return 0;
++}
+ static int
+ perf_event__schedstat_cpu_swap(union perf_event *event __maybe_unused,
+ 			       bool sample_id_all __maybe_unused)
+@@ -1041,6 +1080,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_STAT_ROUND]	  = perf_event__stat_round_swap,
+ 	[PERF_RECORD_EVENT_UPDATE]	  = perf_event__event_update_swap,
+ 	[PERF_RECORD_TIME_CONV]		  = perf_event__time_conv_swap,
++	[PERF_RECORD_BPF_METADATA]	  = perf_event__bpf_metadata_swap,
+ 	[PERF_RECORD_SCHEDSTAT_CPU]	  = perf_event__schedstat_cpu_swap,
+ 	[PERF_RECORD_SCHEDSTAT_DOMAIN]	  = perf_event__schedstat_domain_swap,
+ 	[PERF_RECORD_HEADER_MAX]	  = NULL,
+@@ -2181,9 +2221,50 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	case PERF_RECORD_FINISHED_INIT:
+ 		err = tool->finished_init(tool, session, event);
+ 		break;
+-	case PERF_RECORD_BPF_METADATA:
++	case PERF_RECORD_BPF_METADATA: {
++		u64 max_entries;
++
++		if (event->header.size < sizeof(event->bpf_metadata)) {
++			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: header.size (%u) too small, skipping\n",
++				   event->header.size);
++			err = 0;
++			break;
++		}
++
++		/*
++		 * Native-endian files are mmap'd read-only — validate
++		 * NUL-termination instead of writing.
++		 */
++		if (strnlen(event->bpf_metadata.prog_name,
++			    BPF_PROG_NAME_LEN) == BPF_PROG_NAME_LEN) {
++			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: prog_name not null-terminated, skipping\n");
++			err = 0;
++			break;
++		}
++
++		max_entries = (event->header.size - sizeof(event->bpf_metadata)) /
++			      sizeof(event->bpf_metadata.entries[0]);
++		if (event->bpf_metadata.nr_entries > max_entries) {
++			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: nr_entries %" PRIu64 " exceeds max %" PRIu64 ", skipping\n",
++				   (u64)event->bpf_metadata.nr_entries, max_entries);
++			err = 0;
++			break;
++		}
++
++		for (u64 i = 0; i < event->bpf_metadata.nr_entries; i++) {
++			if (strnlen(event->bpf_metadata.entries[i].key,
++				    BPF_METADATA_KEY_LEN) == BPF_METADATA_KEY_LEN ||
++			    strnlen(event->bpf_metadata.entries[i].value,
++				    BPF_METADATA_VALUE_LEN) == BPF_METADATA_VALUE_LEN) {
++				pr_warning("WARNING: PERF_RECORD_BPF_METADATA: entry %" PRIu64 " key/value not null-terminated, skipping\n", i);
++				err = 0;
++				goto out;
++			}
++		}
++
+ 		err = tool->bpf_metadata(tool, session, event);
+ 		break;
++	}
+ 	case PERF_RECORD_SCHEDSTAT_CPU:
+ 		err = tool->schedstat_cpu(tool, session, event);
+ 		break;
 -- 
 2.54.0
 
