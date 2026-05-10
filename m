@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8DB2628D;
-	Sun, 10 May 2026 06:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BACDDCD;
+	Sun, 10 May 2026 06:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778395285; cv=none; b=hylbMNxmLyFl03GihvKb/kmj1nQvnYmq+Jffojt91nieUKAXowX4I6bgYVV563ZzlEWs46/xKZX/eeMrC0/zVf7g+EyDLx/0Cl0rTeLPCbYEiN6GbMYUfaoZdY/4MYw2w11ClgG9Z6tuAL/oWBDjzfJQz7OZAJQDfl7KvM/8d6I=
+	t=1778395667; cv=none; b=Wk8c3I2YArIgqK1FNf2LqoD3HEcoxXQxWozqwig1s2cHk6IgQfyzeNeK7aN4WqoG2pHZxfbpCqFch4lqG7wSTkvMzHYA2Cw6xzLT7K/Zdaic3mr+uIvosmob6SW6GAeD4q6vN794jK1kLhIzGYwXSuP1QrMNOUIBNGKTuHpHe94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778395285; c=relaxed/simple;
-	bh=ni3zQhrq/IY/QjaqPRXeXkY2u7FoqHsiu/VUpL0mIG0=;
+	s=arc-20240116; t=1778395667; c=relaxed/simple;
+	bh=KNZIrYpGwNRftJiQ9A0g2ltDh6kfdL2YCDTt9NO0NkA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AI23kAGly6rAz+bzayF4sglD4lFNqI8Gl2Y2vKFSAlLX8UHTSC5wRKMydfXdKHDhLG2bwgvDpsUS/+I2GIukxAnYAnkifs6KyWJ+QxXifsqLVjXGBodHU98qRzuZ52g/dGIFnrT1399Tiq5XgmrOJ7isLNVXZGjWn9nTx42bCRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmoSZKLt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6Q+I2a6Qri4q1oCk8iHA7prMRH151AjkpoMh2qvOLPpcNiigRwbS1jw6C+XNSfkWEU3YvXxkn9p0vmnuHsyhy6M5rDFkHDrbuk/KqC9lEOMiFNhJfX2OIR8gVTxkecfylqsbCGHWkI/JOqSoQqAAw8LKTrLl6bc9p3p9fZ4DQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBdwCGyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmoSZKLt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8C9C2BCB8;
-	Sun, 10 May 2026 06:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBdwCGyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E833C2BCB8;
+	Sun, 10 May 2026 06:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778395285;
-	bh=ni3zQhrq/IY/QjaqPRXeXkY2u7FoqHsiu/VUpL0mIG0=;
+	s=k20201202; t=1778395666;
+	bh=KNZIrYpGwNRftJiQ9A0g2ltDh6kfdL2YCDTt9NO0NkA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dmoSZKLtPjBcZQTRvA0HA6xlId6O25vdq6o0W+syXjgdf/yeiIi7q2oWpeFYFDTIQ
-	 JmTrVkVN6acMw/8dHG9vWBsyGJvOJ7Kjo3YwebCTGoVe2q+AfOkmIS3KCKAMsbZS/0
-	 NX9Niu1RdDiaaL5Wln0dCKlpJ6KR/THc4Y6qlxqRa5k67npCsiLwXMFWqpGl3fKYzz
-	 yDebLp2Pd5JbmEpDk7XlxCvQmGVH60jfkIRYB7MYsNDnVahcqicXZ8FrfPSfO1SysR
-	 jYjThM9XsWDVLtEzNkEh0hOE1vDX9InDI5oxthNZo7idfKQnZiAm3Z07mOfzjzy08z
-	 PHiLVqry2AbzA==
-Date: Sat, 9 May 2026 23:41:23 -0700
+	b=pBdwCGyTToNBAcUx8TOBNk1kRZa9YCtGzMaRydwswIehU4y5RhSokEZgQ4q2rBNo/
+	 CdSqVExPzI7+Cf7pOcNnPM+RoEJLcAz1g5siBr1PBqk1WkOEF9r+2Pe7P+nedKeDVV
+	 A2IDTRsfpzCuJQN3DsvM9qXljVPqrQ9ZBEdTAg3DrHrN/RUuWhttW2WRaZudpLWRZH
+	 ZgWxrpgke488/qhDwM0DP1KiR6rOym2KL7MJRu5q9Fd5bYUeJNo0V4lenzlGtk/UQw
+	 KF7drDERX97sxkZq2wxLENMmPpgbWqH2omT4JVmu1Y30W5OqeBPkDF/5n6UdgeL6z2
+	 U6mzhlqwD1Y1Q==
+Date: Sat, 9 May 2026 23:47:45 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manali Shukla <manali.shukla@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v3 0/8] perf tools amd ibs: Fixes + Zen6 enhancements
-Message-ID: <agAok_vgqBrZzMhA@google.com>
-References: <20260508060004.2575-1-ravi.bangoria@amd.com>
+To: acme@kernel.org
+Cc: Suchit Karunakaran <suchitkarunakaran@gmail.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf build: compile BPF skeletons with -mcpu=v3
+Message-ID: <agAqESWvLdIJBErN@google.com>
+References: <20260507184238.65280-2-suchitkarunakaran@gmail.com>
+ <20260507234959.EEC5BC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,58 +43,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260508060004.2575-1-ravi.bangoria@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260507234959.EEC5BC2BCB8@smtp.kernel.org>
 
-Hello,
+Hi Arnaldo,
 
-On Fri, May 08, 2026 at 05:59:56AM +0000, Ravi Bangoria wrote:
-> o Fix kernel version check in perf IBS unit test.
-> o On Zen6 and newer platforms, skip perf unit test that assumes IBS don't
->   have hardware-assisted privilege filter.
-> o Starting with Zen4, the validity of several IBS fields changes. Add
->   the required dependency checks when decoding IBS MSRs.
-> o Zen6 and future platforms extends IBS OP with Streaming-Store and
->   Remote-Socket indicators for load/store instructions. Add decoding
->   support for these new bits.
-> o Document new IBS features in perf-amd-ibs man page 
+On Thu, May 07, 2026 at 11:49:59PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] Adding `-mcpu=v3` to `CLANG_OPTIONS` forces all BPF skeletons to use the BPF v3 ISA, breaking backward compatibility for perf tools designed to run on older kernels.
+> --
 > 
-> IBS Zen6 enhancements doc:
->   AMD64 Zen6 Instruction Based Sampling (IBS) Extensions and Features,
->   Pub. 69205 Rev. 1.00 March 2026 
->   https://bugzilla.kernel.org/attachment.cgi?id=310002
+> commit 2e8791aeccf694e1ae9ed9fda46e3a6f73332838
+> Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
 > 
-> Patches are prepared on perf-tools-next/perf-tools-next (53bc03289278).
+> perf build: compile BPF skeletons with -mcpu=v3
 > 
-> v2: https://lore.kernel.org/r/20260430061115.10266-1-ravi.bangoria@amd.com  
-> v2->v3:
->  - Instead of removing the priv modifier unit test completely, skip
->    it on platforms that supports hardware privilege filtering. (Namhyung)
->  - Rebased the series on latest perf-tools-next/perf-tools-next.
+> This commit adds -mcpu=v3 to CLANG_OPTIONS to support the atomic
+> cmpxchg instruction required by the lock_contention BPF program.
+> This forces Clang to emit BPF ISA v3 instructions during skeleton
+> compilation.
 > 
-> Ravi Bangoria (8):
->   perf test amd ibs: Fix incorrect kernel version check
->   perf tool ibs: Sync AMD IBS header file
->   perf test ibs: Skip privilege test on Zen6 and newer platforms
->   perf amd ibs: Suppress bogus TlbRefillLat and DCPhysAd on Zen4+
->   perf amd ibs: Make Fetch status bits dependent on PhyAddrValid for
->     newer platforms
->   perf amd ibs: Decode Remote-Socket flag in IBS OP raw dump
->   perf amd ibs: Decode Streaming-store flag in IBS OP raw dump
->   perf doc: Document new IBS capabilities in man page
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index cee19c923c060..a9a8c84b6b006 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> 
+> [ ... ]
+> 
+> > @@ -1195,7 +1195,7 @@ ifneq ($(CROSS_COMPILE),)
+> >  CLANG_TARGET_ARCH = --target=$(notdir $(CROSS_COMPILE:%-=%))
+> >  endif
+> >  
+> > -CLANG_OPTIONS = -Wall
+> > +CLANG_OPTIONS = -Wall -mcpu=v3
+> 
+> Does this change break backward compatibility for other perf tools running
+> on older kernels?
+> 
+> Since CLANG_OPTIONS is used in the pattern rule for compiling all BPF
+> skeletons, this forces every BPF program in perf (such as
+> augmented_raw_syscalls.bpf.c and off_cpu.bpf.c) to target the BPF ISA v3.
+> 
+> Kernels older than 5.1 do not support v3 instructions and will reject
+> these programs during the verifier load phase.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think it's old enough and we can move on to ensure v3 instructions.
 
 Thanks,
 Namhyung
 
 > 
->  tools/arch/x86/include/asm/amd/ibs.h       |  4 +-
->  tools/perf/Documentation/perf-amd-ibs.txt  | 39 ++++++++++
->  tools/perf/arch/x86/tests/amd-ibs-period.c |  2 +-
->  tools/perf/tests/shell/amd-ibs-swfilt.sh   | 37 ++++++++-
->  tools/perf/util/amd-sample-raw.c           | 87 ++++++++++++++++++++--
->  5 files changed, 156 insertions(+), 13 deletions(-)
+> Should the -mcpu=v3 flag be restricted exclusively to the target that
+> needs it, perhaps using a target-specific append for lock_contention.bpf.o?
 > 
 > -- 
-> 2.43.0
-> 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260507184238.65280-1-suchitkarunakaran@gmail.com?part=2
