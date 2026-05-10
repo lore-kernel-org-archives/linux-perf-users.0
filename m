@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E12279DC3;
-	Sun, 10 May 2026 03:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B74A22425B;
+	Sun, 10 May 2026 03:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778384178; cv=none; b=mgcBCRRwDx/IDfOTMccjHxo2evXuOa46X4TM7VBEqipGbB1cnEj9IYyiq+tV/jiOyajJRNuqhCXRLokHkI3RW+a9/NVErMTofHwMSkhEQgwsnDSt4kVKAidennVQsK7cZQKHVHKf1G8aeWqUPGH3MwCtzeL4K9lvgzbrUHvs/Lw=
+	t=1778384184; cv=none; b=tjWFSNN6vn7/KOvBESJUkXFL9zDGoBIL4i7Q9t/tMw9pxGXbdwXwLN5f8pFZzom14yW64LtoX/mGvlq/AKAG4DuTiq8Z3H2QOHV1BAN9ysLIB9Qmm+S2jZs0FWA8/3Cf28sM314vfEaC661S8iAPT2iXAqNxTHXkoKm7Age+yHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778384178; c=relaxed/simple;
-	bh=tH3tmp78z7itj/qw5X2HyXxSWIjyUOUgDP8ZA33W1H4=;
+	s=arc-20240116; t=1778384184; c=relaxed/simple;
+	bh=52B0C7dWKgMh9o+uce9gU6WCrJG1z3a6g0/2jvqnA9A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LBbKTyLY4NNB07r29nBgfKer5+L3H9/GBJ6Y1mYGa+WfjM9SpEgFtH4Bqtu72cIMEIV4QRn2dZLpY/yDc6tI6iig9sNjz2qif3z2FI0sJfJwl8sSuZld/C2CCMj6MD+A5WgNgD29oM6ySk2ncTLMAKuxmA8NNadmetn3mdnXucs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxS3EbCE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Gi6MY1+jLFPJn+TxwjjhqNXwrs6aL+r/NhxGBil1FcByNzf9YCAEVoOXeL7y56Qn2VDJ1+r9imyfeWyd9uPe9xoXBIyLQnpDEyJP2S9YhhQtoHKd8Vvinp5WBTb4vy14lDqI9JCbJffg3w7/5WjjVfcJMZ4RRc571VU3sPE3vYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+bS2Jb8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxS3EbCE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB847C2BCF6;
-	Sun, 10 May 2026 03:36:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+bS2Jb8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB59C2BCF6;
+	Sun, 10 May 2026 03:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778384178;
-	bh=tH3tmp78z7itj/qw5X2HyXxSWIjyUOUgDP8ZA33W1H4=;
+	s=k20201202; t=1778384183;
+	bh=52B0C7dWKgMh9o+uce9gU6WCrJG1z3a6g0/2jvqnA9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gxS3EbCE1ME3B/y+XfdMbNfJxOx9MZTR9xcyYcP4ieS6zsJShW6rdEvXd4UiReNQv
-	 kLaK3PIFk6h9fMhWpBKwLLRBbHmkxnWYzZt1QKFW5CI77yAKtt0i4cSte+5gMHMUMP
-	 DI8sskHVKersMrLkLt7bBsNmQgDRvySr0KyttgO9TqrOkJct4T9w0XHP+t6lUk3x1f
-	 dZ9YRELoy8aXekfJH42NtGVRpoqZNwI5BsSu5AfcL0iBYuzfwlOBBoQ7NGu4DwZI9V
-	 PXjsOnduqwyHFc44MN/oUiozPwICNOUMAeqTHbt+2QM0YUzCSD5QzLHy+lRGrHO6ht
-	 Wa6tMFh9zstow==
+	b=u+bS2Jb8CkEpnmYtiXhBK2aLV25AGXfjkG7jl4lghHK/y5/HGqBJXc2Qly5oVeDAF
+	 7NM6aU234KZ4pXHwudvfO/EKC8tTMSAz508pvXgIlfmib5rRZCbmPYr1HtYEpb8qQv
+	 Kx9R8ybGqV6yv2RJUuFErEYWPjePQl5VHMv7t0pZso6hf31p31kD7GAPY1wvQsvKNv
+	 j/HItzU/zuA0iK3P+C/GoKfIGzJSkvesv6hUF0I1FlPR/RJMtjEg7JTffrmMczGKrm
+	 JbqaQXHFdNwnakmKwwAc0jS097k67MYRztMW+r2a+UpuFclrKMIiH2Ywk79uh+A9DK
+	 4VN3ITwTZ6aYw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,10 +40,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
+	David Carrillo-Cisneros <davidcc@google.com>,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 18/28] perf header: Validate f_attr.ids section before use in perf_session__read_header()
-Date: Sun, 10 May 2026 00:34:09 -0300
-Message-ID: <20260510033424.255812-19-acme@kernel.org>
+Subject: [PATCH 19/28] perf header: Validate feature section size and add read path bounds checking
+Date: Sun, 10 May 2026 00:34:10 -0300
+Message-ID: <20260510033424.255812-20-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510033424.255812-1-acme@kernel.org>
 References: <20260510033424.255812-1-acme@kernel.org>
@@ -58,179 +59,188 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_session__read_header() reads f_attr.ids.size from the perf.data
-file and divides it by sizeof(u64) to compute nr_ids, which is
-declared as int.  No validation is performed on the value before it
-is used to allocate arrays and drive a read loop.
+Harden feature section parsing against crafted perf.data files:
 
-On 32-bit architectures, a crafted f_attr.ids.size of 0x100000000
-(4 GB) produces nr_ids = 0x20000000, but the allocation size
-1 * 0x20000000 * 8 overflows size_t to 0, so zalloc(0) returns a
-valid pointer.  The subsequent loop writes 0x20000000 IDs into that
-zero-length buffer, corrupting the heap.
+1. perf_header__process_sections() reads the feature section table
+   and passes each section's offset and size directly to the
+   processing callbacks without validating them against the actual
+   file size.  A crafted section size would make all downstream
+   bounds checks against ff->size ineffective since they compare
+   against the untrusted, inflated bound.  Add an fstat() check
+   with S_ISREG() guard and verify that each section's offset +
+   size does not extend past EOF.
 
-On 64-bit, the u64-to-int truncation silently drops high bits,
-processing fewer IDs than the file claims.  While not exploitable,
-this is a data integrity issue.
+2. __do_read_buf() validates reads against ff->size (section size),
+   but __do_read_fd() had no such check, so a malformed perf.data
+   with an understated section size could cause reads past the end
+   of the current section into the next section's data.  Add the
+   bounds check in __do_read(), the common caller of both helpers,
+   so it is enforced uniformly for both the fd and buf paths.
+   Track the section-relative offset in __do_read_fd() so the
+   check works for the fd path.  Reject negative sizes which on
+   32-bit can occur when a u32 >= 0x80000000 is passed as ssize_t.
 
-Add validation before using f_attr.ids:
+3. do_read_string() relied on file data being null-padded.  Add
+   explicit null-termination (buf[len-1] = '\0') after reading
+   and validate length (>= 1, fits within section) before
+   allocating, so callers like process_cpu_topology() never
+   receive an unterminated string.
 
-- Cap nr_attrs (attrs.size / attr_size) to MAX_NR_ATTRS (1 << 16)
-  with overflow-safe u64 comparison before assigning to int
-- Reject ids.size not aligned to sizeof(u64)
-- Cap ids.size / sizeof(u64) to MAX_IDS_PER_ATTR (1 << 24) to
-  prevent int truncation and size_t overflow on 32-bit
-- Reject ids sections that extend past the end of the file,
-  guarded by S_ISREG() so non-regular files (block devices,
-  pipes) are not falsely rejected
+4. Initialize feat_fd.offset to 0 (section-relative) instead of
+   section->offset (file-absolute) so the bounds tracking is
+   consistent with __do_read()'s section-relative comparison.
+   Adjust process_build_id() to use lseek() for its file-absolute
+   offset needs since it cannot rely on ff->offset for that.
 
-Also fix perf_header__getbuffer64() to set errno = EIO when
-readn() returns 0 (EOF).  Without this, the out_errno path in
-perf_session__read_header() returns -errno which is 0 (success)
-on truncated files, causing downstream NULL dereferences.
+5. Propagate ff->size to perf_file_section__fprintf_info() so its
+   reads are also bounded.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
 Cc: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 78 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ tools/perf/util/header.c | 62 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 53 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 5cbeda0335f1140c..f4008878bd7eda04 100644
+index f4008878bd7eda04..a8655a784eaa5ba9 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -64,6 +64,25 @@
- #include <event-parse.h>
- #endif
+@@ -233,23 +233,32 @@ static int __do_read_fd(struct feat_fd *ff, void *addr, ssize_t size)
  
-+/*
-+ * nr_ids * sizeof(struct perf_sample_id) must not overflow
-+ * size_t on 32-bit; the struct is ~104 bytes (32-bit) or
-+ * ~184 bytes (64-bit), so 1<<24 (16M) keeps the product
-+ * under 2 GB on 32-bit.
-+ *
-+ * This is a per-attribute cap only — the total across all
-+ * attributes is not capped because legitimate high-core-count
-+ * workloads (e.g. 5000 tracepoints × 4096 CPUs) can exceed
-+ * a single-attribute limit.
-+ */
-+#define MAX_IDS_PER_ATTR	(1 << 24)
-+/*
-+ * Cap nr_attrs to prevent resource exhaustion from crafted
-+ * files.  65536 is well beyond any real workload (perf stat
-+ * typically uses < 100 events) but prevents u64-to-int
-+ * truncation on the attr count.
-+ */
-+#define MAX_NR_ATTRS		(1 << 16)
- #define MAX_BPF_DATA_LEN	(256 * 1024 * 1024)
- #define MAX_BPF_PROGS		131072
- #define MAX_CACHE_ENTRIES	32768
-@@ -4468,8 +4487,13 @@ int perf_session__inject_header(struct perf_session *session,
- static int perf_header__getbuffer64(struct perf_header *header,
- 				    int fd, void *buf, size_t size)
+ 	if (ret != size)
+ 		return ret < 0 ? (int)ret : -1;
++	ff->offset += size;
+ 	return 0;
+ }
+ 
+ static int __do_read_buf(struct feat_fd *ff, void *addr, ssize_t size)
  {
--	if (readn(fd, buf, size) <= 0)
-+	ssize_t n = readn(fd, buf, size);
+-	if (size > (ssize_t)ff->size - ff->offset)
+-		return -1;
+-
+ 	memcpy(addr, ff->buf + ff->offset, size);
+ 	ff->offset += size;
+ 
+ 	return 0;
+-
+ }
+ 
+ static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
+ {
++	/*
++	 * Reject negative sizes, which on 32-bit can occur when a
++	 * u32 >= 0x80000000 is passed as ssize_t.  The cast to
++	 * ssize_t is safe because perf_header__process_sections()
++	 * validates that each section fits within the file size
++	 * before any feature callback reaches here, and only
++	 * feature sections (metadata like build IDs, topology, etc.)
++	 * use this path — these cannot legitimately approach 2GB.
++	 */
++	if (size < 0 || size > (ssize_t)ff->size - ff->offset)
++		return -1;
 +
-+	if (n <= 0) {
-+		if (n == 0)
-+			errno = EIO;
- 		return -1;
-+	}
+ 	if (!ff->buf)
+ 		return __do_read_fd(ff, addr, size);
+ 	return __do_read_buf(ff, addr, size);
+@@ -289,16 +298,22 @@ static char *do_read_string(struct feat_fd *ff)
+ 	if (do_read_u32(ff, &len))
+ 		return NULL;
  
- 	if (header->needs_swap)
- 		mem_bswap_64(buf, size);
-@@ -4803,6 +4827,8 @@ static int read_attr(int fd, struct perf_header *ph,
- 	if (ret <= 0) {
- 		pr_debug("cannot read %d bytes of header attr\n",
- 			 PERF_ATTR_SIZE_VER0);
-+		if (ret == 0)
-+			errno = EIO;
- 		return -1;
- 	}
- 
-@@ -4903,6 +4929,7 @@ int perf_session__read_header(struct perf_session *session)
- 	struct perf_file_header	f_header;
- 	struct perf_file_attr	f_attr;
- 	u64			f_id;
-+	struct stat		input_stat;
- 	int nr_attrs, nr_ids, i, j, err = -ENOMEM;
- 	int fd = perf_data__fd(data);
- 
-@@ -4952,6 +4979,15 @@ int perf_session__read_header(struct perf_session *session)
- 		return -EINVAL;
- 	}
- 
-+	if (fstat(fd, &input_stat) < 0)
-+		return -errno;
++	/* At least the null terminator. */
++	if (len < 1 || len > ff->size - ff->offset)
++		return NULL;
 +
-+	/* Check before assigning to int to avoid u64-to-int truncation */
-+	if (f_header.attrs.size / f_header.attr_size > MAX_NR_ATTRS) {
-+		pr_err("Too many attributes: %" PRIu64 " (max %d)\n",
-+		       f_header.attrs.size / f_header.attr_size, MAX_NR_ATTRS);
-+		return -EINVAL;
-+	}
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
+ 	buf = malloc(len);
+ 	if (!buf)
+ 		return NULL;
  
-@@ -4968,6 +5004,45 @@ int perf_session__read_header(struct perf_session *session)
- 			perf_event__attr_swap(&f_attr.attr);
- 		}
- 
-+		/*
-+		 * Validate ids section: must be aligned to u64, and
-+		 * the count must fit in an int to avoid truncation in
-+		 * nr_ids and size_t overflow in perf_evsel__alloc_id()
-+		 * on 32-bit architectures.
-+		 */
-+		if (f_attr.ids.size % sizeof(u64)) {
-+			pr_err("Invalid ids section size %" PRIu64 " for attr %d, not aligned to u64\n",
-+			       f_attr.ids.size, i);
-+			err = -EINVAL;
-+			goto out_delete_evlist;
-+		}
-+
-+		/*
-+		 * Cap the ID count to avoid int truncation of nr_ids
-+		 * on 64-bit and size_t overflow in the allocation
-+		 * paths (nr_ids * sizeof(u64), nr_ids *
-+		 * sizeof(struct perf_sample_id)) on 32-bit.
-+		 */
-+		if (f_attr.ids.size / sizeof(u64) > MAX_IDS_PER_ATTR) {
-+			pr_err("Invalid ids section size %" PRIu64 " for attr %d, too many IDs\n",
-+			       f_attr.ids.size, i);
-+			err = -EINVAL;
-+			goto out_delete_evlist;
-+		}
-+
-+		/*
-+		 * FIXME: see perf_header__process_sections() — block
-+		 * devices bypass this check because st_size is 0.
-+		 */
-+		if (S_ISREG(input_stat.st_mode) &&
-+		    (f_attr.ids.offset > (u64)input_stat.st_size ||
-+		     f_attr.ids.size > (u64)input_stat.st_size - f_attr.ids.offset)) {
-+			pr_err("Invalid ids section for attr %d: offset=%" PRIu64 " size=%" PRIu64 " exceeds file size %" PRIu64 "\n",
-+			       i, f_attr.ids.offset, f_attr.ids.size, (u64)input_stat.st_size);
-+			err = -EINVAL;
-+			goto out_delete_evlist;
-+		}
-+
- 		tmp = lseek(fd, 0, SEEK_CUR);
- 		evsel = evsel__new(&f_attr.attr);
- 
-@@ -4982,6 +5057,7 @@ int perf_session__read_header(struct perf_session *session)
- 		evlist__add(session->evlist, evsel);
- 
- 		nr_ids = f_attr.ids.size / sizeof(u64);
-+
+ 	if (!__do_read(ff, buf, len)) {
  		/*
- 		 * We don't have the cpu and thread maps on the header, so
- 		 * for allocating the perf_sample_id table we fake 1 cpu and
+-		 * strings are padded by zeroes
+-		 * thus the actual strlen of buf
+-		 * may be less than len
++		 * do_write_string() writes len including the null
++		 * terminator, padded to NAME_ALIGN.  Ensure the
++		 * string is always null-terminated even if the file
++		 * data has been tampered with.
+ 		 */
++		buf[len - 1] = '\0';
+ 		return buf;
+ 	}
+ 
+@@ -2775,7 +2790,12 @@ static int process_tracing_data(struct feat_fd *ff __maybe_unused, void *data __
+ 
+ static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
+ {
+-	if (perf_header__read_build_ids(ff->ph, ff->fd, ff->offset, ff->size))
++	off_t offset = lseek(ff->fd, 0, SEEK_CUR);
++
++	if (offset == (off_t)-1)
++		return -1;
++
++	if (perf_header__read_build_ids(ff->ph, ff->fd, offset, ff->size))
+ 		pr_debug("Failed to read buildids, continuing...\n");
+ 	return 0;
+ }
+@@ -4152,6 +4172,7 @@ static int perf_file_section__fprintf_info(struct perf_file_section *section,
+ 	ff = (struct  feat_fd) {
+ 		.fd = fd,
+ 		.ph = ph,
++		.size = section->size,
+ 	};
+ 
+ 	if (!feat_ops[feat].full_only || hd->full)
+@@ -4512,6 +4533,7 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+ 	int sec_size;
+ 	int feat;
+ 	int err;
++	struct stat st;
+ 
+ 	nr_sections = bitmap_weight(header->adds_features, HEADER_FEAT_BITS);
+ 	if (!nr_sections)
+@@ -4529,7 +4551,29 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+ 	if (err < 0)
+ 		goto out_free;
+ 
++	if (fstat(fd, &st) < 0) {
++		pr_err("Failed to stat the perf data file\n");
++		err = -1;
++		goto out_free;
++	}
++
+ 	for_each_set_bit(feat, header->adds_features, header->last_feat) {
++		/*
++		 * FIXME: block devices have st_size == 0, so we skip
++		 * bounds checking entirely.  Historically perf never
++		 * prevented using a block device as input, but it
++		 * probably should — there's no valid use case for it
++		 * and it bypasses all file-size validation.
++		 */
++		if (S_ISREG(st.st_mode) &&
++		    (sec->offset > (u64)st.st_size ||
++		     sec->size > (u64)st.st_size - sec->offset)) {
++			pr_err("Feature %s (%d) section extends past EOF (offset=%" PRIu64 ", size=%" PRIu64 ", file=%" PRIu64 ")\n",
++			       header_feat__name(feat), feat,
++			       sec->offset, sec->size, (u64)st.st_size);
++			err = -1;
++			goto out_free;
++		}
+ 		err = process(sec++, header, feat, fd, data);
+ 		if (err < 0)
+ 			goto out_free;
+@@ -4756,7 +4800,7 @@ static int perf_file_section__process(struct perf_file_section *section,
+ 		.fd	= fd,
+ 		.ph	= ph,
+ 		.size	= section->size,
+-		.offset	= section->offset,
++		.offset	= 0,
+ 	};
+ 
+ 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
 -- 
 2.54.0
 
