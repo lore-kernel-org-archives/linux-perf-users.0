@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D8230BD9;
-	Sun, 10 May 2026 03:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8865919CD0A;
+	Sun, 10 May 2026 03:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778384158; cv=none; b=u+VMB4yQ9gLhWSu8m3mYIm+gfp7jQnEppl/Gia1YNdneCGFNf9iY9S5+pNuK6+Bb52sveqV35S4G1Uixh0ScOacjciZnZjNkT+iFG/FHRXLcTRhf+U/xBMsrgGZyyN/yijmsuA+uiWNfycv4JO4TtOygt1xej4+B9xY1uusw0uI=
+	t=1778384164; cv=none; b=joJqj5xb4mNFwKsjBO+OTV7Cr6bwfoDhgJNSVyoIwd62vTK+AsyqUHAR+VJXOjdGAAopUat4u4Ic9B+IP4e4Of0EdchzQy88rA1YIs9RXZaW4of9zLwuWhX3/pSHf35nK2rU4scbzRKQQatAHeFA/7O9eQZgEbaA8HA60scahe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778384158; c=relaxed/simple;
-	bh=41hfN6ZL0GLeujTX0ORGr+PiJjnsi9CiVLFNqJwl7Fg=;
+	s=arc-20240116; t=1778384164; c=relaxed/simple;
+	bh=g0Y25AePfaVvlT1z13iptFD+upIDn5gxEGiOiVznDWA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fPaJEiCZlvWfNSyt679+KJ6KsW9qtDjDrSJwOXWaW4muATCa6qWnJsrRV+8php+G46rSoIX+wOr+NvbgYnIIoLcr7F+icpmhy+8/bHGhomNvSLdgw/f2/Hq684a6HTnTBi/4XvzYGw5X5NLA4VhfA32I925lW7SBebg25obnl5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyCN3bDx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DpqlXRkHAeaoeB+tLp6hWDLnmzfCCA9HYFV7GT1PAVwFMSS11ykLCmalXodm6tCgxT5mTsjkEZt3/wTkDCC0UiZdECQgBkXmukhQmDO0m8wEmf5oy1tdGY1YJlPAz6YT3pg22uJsYNJAr2eyRjBMHUtekGCMQdePOX1viBgjLIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPwQdI/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyCN3bDx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62904C2BCB8;
-	Sun, 10 May 2026 03:35:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPwQdI/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4994C2BCB8;
+	Sun, 10 May 2026 03:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778384158;
-	bh=41hfN6ZL0GLeujTX0ORGr+PiJjnsi9CiVLFNqJwl7Fg=;
+	s=k20201202; t=1778384164;
+	bh=g0Y25AePfaVvlT1z13iptFD+upIDn5gxEGiOiVznDWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZyCN3bDxM2QRdGyPxoCfWH5Cv6xUbEr4r8oRlMQ/rTi+CpWNFKL+ccDY91SPHTN4K
-	 Mzh59T6itMLi7oYdfsYF5hImS+Icu3jsE6iwg4CK74cs9VhqvGuB92aFYJPRaEY7Mf
-	 O9QQtVqKetde7VRkSRSAoCPk6vGl3sdOmzfQDDm2lbFNoSBVk0pY9j+mFVYSsFLvd5
-	 dmUrDLyecW93XlcR1HBJeTvNAGvCbASST4mYoGylx6BT2GaMvILA2hSqN/MMCHgTnF
-	 s8ziu598pC54FuOq0ZTYkiY0Y8wVUoTkqQ+uXqlJvkCk0tXlELkDOklF/yl8fieUIg
-	 5IIsS/VZ7fxMg==
+	b=iPwQdI/CGnjxJrJVrb6loE/cemNQ1CFXB3lJa7ZOFxsLiWuTx7o/iMy2DW5F4t7B3
+	 HFhPuNuo4nQdUVuSoKF+kigez49AugN2hUssCm+TuuW+EFQ7H/FFZaEx/krw2MutGd
+	 dg6HsSJ8xriWUuSI4Y3nEQGOALSYX6k5Sur18sxvjKI2dFlFRnShd18IMqSYUj2Rv+
+	 lKRWfYM2U2mrrJJ+p+FlZuNvM82DajjWaKbKBGaRmr5utzrBhDZ8sTIoZ3yFsnsca0
+	 vtk1/CvFO0AY1a8py9IcOmuU0pNwInQ9rIh+35GkpJdATqX3Kn+bdi4kACAgaUdcvM
+	 oHYjCFL8ueP3w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 15/28] perf header: Validate null-termination in PERF_RECORD_EVENT_UPDATE string fields
-Date: Sun, 10 May 2026 00:34:06 -0300
-Message-ID: <20260510033424.255812-16-acme@kernel.org>
+Subject: [PATCH 16/28] perf tools: Bounds check perf_event_attr fields against attr.size before printing
+Date: Sun, 10 May 2026 00:34:07 -0300
+Message-ID: <20260510033424.255812-17-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510033424.255812-1-acme@kernel.org>
 References: <20260510033424.255812-1-acme@kernel.org>
@@ -53,319 +53,244 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-strdup(ev->unit) and strdup(ev->name) read until '\0' with no
-guarantee the string is null-terminated within event->header.size.
-The dump_trace fprintf path has the same problem with %s.
+perf_event_attr__fprintf() accessed all struct fields unconditionally,
+but attrs from older perf.data files or BPF-captured syscall payloads
+may have a smaller size than the current struct.  Fields beyond the
+recorded size contain uninitialized or zero-filled data.
 
-Validate before either path runs — same class of bug fixed for
-MMAP/MMAP2/COMM/CGROUP by perf_event__check_nul().
+Add size-guarded macros (PRINT_ATTRn, PRINT_ATTRn_bf) that compare
+each field's offset against attr->size before accessing it.
 
-Also harden the event_update swap handler to:
-- Validate SCALE event size before swapping the double at
-  offset 24, which exceeds the 24-byte min_size.
-- Validate CPUS event size before accessing the cpu_map
-  type/nr/long_size fields, which also start at the min_size
-  boundary.
-- Swap CPUS variant fields (type, nr, long_size) so the
-  processing path sees native byte order.
+Guard the bitfield block (disabled, inherit, ... defer_output) with
+attr_size >= 48.  These bitfields share a single __u64 at offset 40,
+which is within PERF_ATTR_SIZE_VER0 for validated perf.data attrs,
+but BPF-captured attrs from perf trace can have a smaller size when
+the tracee passes a minimal struct to sys_perf_event_open.
 
-Add validation in perf_event__process_event_update() for all
-event update variants (UNIT, NAME, SCALE, CPUS) before
-dump_trace or processing.
-
-Fix a missing break before the default case in the CPUS
-switch path.
+Also fix the BPF trace path: when perf trace intercepts
+sys_perf_event_open via BPF, the program copies PERF_ATTR_SIZE_VER0
+bytes when the tracee passes size=0, but leaves the size field as 0.
+Set attr->size to PERF_ATTR_SIZE_VER0 in the augmented syscall
+handler so the bounds checks match the actual copied size.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c  | 126 +++++++++++++++++++++++++++++++++++---
- tools/perf/util/session.c |  99 +++++++++++++++++++++++++++++-
- 2 files changed, 216 insertions(+), 9 deletions(-)
+ tools/perf/trace/beauty/perf_event_open.c |  19 ++-
+ tools/perf/util/perf_event_attr_fprintf.c | 140 ++++++++++++++--------
+ 2 files changed, 109 insertions(+), 50 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f2198ab0defd5804..d253063b581f21e9 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -5117,24 +5117,65 @@ size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
+diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace/beauty/perf_event_open.c
+index 9f1ed989c7751ec5..fa4578e8389664e9 100644
+--- a/tools/perf/trace/beauty/perf_event_open.c
++++ b/tools/perf/trace/beauty/perf_event_open.c
+@@ -76,7 +76,24 @@ static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, char *bf
  
- 	switch (ev->type) {
- 	case PERF_EVENT_UPDATE__SCALE:
-+		if (event->header.size < offsetof(struct perf_record_event_update, scale) +
-+					 sizeof(ev->scale)) {
-+			ret += fprintf(fp, "... scale: (truncated)\n");
-+			break;
-+		}
- 		ret += fprintf(fp, "... scale: %f\n", ev->scale.scale);
- 		break;
- 	case PERF_EVENT_UPDATE__UNIT:
--		ret += fprintf(fp, "... unit:  %s\n", ev->unit);
--		break;
--	case PERF_EVENT_UPDATE__NAME:
--		ret += fprintf(fp, "... name:  %s\n", ev->name);
-+	case PERF_EVENT_UPDATE__NAME: {
-+		size_t str_off = offsetof(struct perf_record_event_update, unit);
-+		size_t max_len = event->header.size > str_off ?
-+				 event->header.size - str_off : 0;
-+
-+		if (max_len == 0 || strnlen(ev->unit, max_len) == max_len) {
-+			ret += fprintf(fp, "... %s: (unterminated)\n",
-+				       ev->type == PERF_EVENT_UPDATE__UNIT ? "unit" : "name");
-+			break;
-+		}
-+		ret += fprintf(fp, "... %s:  %s\n",
-+			       ev->type == PERF_EVENT_UPDATE__UNIT ? "unit" : "name",
-+			       ev->unit);
- 		break;
--	case PERF_EVENT_UPDATE__CPUS:
-+	}
-+	case PERF_EVENT_UPDATE__CPUS: {
-+		size_t cpus_off = offsetof(struct perf_record_event_update, cpus);
-+		u32 cpus_payload;
-+
-+		if (event->header.size < cpus_off + sizeof(__u16) +
-+					 sizeof(struct perf_record_range_cpu_map)) {
-+			ret += fprintf(fp, "... cpus: (truncated)\n");
-+			break;
-+		}
-+
-+		/*
-+		 * Validate nr against payload — this function may be
-+		 * called from the stub handler (dump_trace path) which
-+		 * bypasses perf_event__process_event_update() validation.
-+		 */
-+		cpus_payload = event->header.size - cpus_off;
-+		if (ev->cpus.cpus.type == PERF_CPU_MAP__CPUS &&
-+		    ev->cpus.cpus.cpus_data.nr >
-+		    (cpus_payload - offsetof(struct perf_record_cpu_map_data, cpus_data.cpu)) /
-+		    sizeof(ev->cpus.cpus.cpus_data.cpu[0])) {
-+			ret += fprintf(fp, "... cpus: nr %u exceeds payload\n",
-+				       ev->cpus.cpus.cpus_data.nr);
-+			break;
-+		}
-+
- 		ret += fprintf(fp, "... ");
- 
- 		map = cpu_map__new_data(&ev->cpus.cpus);
- 		if (map) {
- 			ret += cpu_map__fprintf(map, fp);
- 			perf_cpu_map__put(map);
--		} else
-+		} else {
- 			ret += fprintf(fp, "failed to get cpus\n");
-+		}
- 		break;
-+	}
- 	default:
- 		ret += fprintf(fp, "... unknown type\n");
- 		break;
-@@ -5267,6 +5308,75 @@ int perf_event__process_event_update(const struct perf_tool *tool __maybe_unused
- 	struct evsel *evsel;
- 	struct perf_cpu_map *map;
- 
-+	/*
-+	 * Validate payload before dump_trace or processing — both
-+	 * paths access variant-specific fields without further checks.
-+	 */
-+	if (ev->type == PERF_EVENT_UPDATE__UNIT ||
-+	    ev->type == PERF_EVENT_UPDATE__NAME) {
-+		size_t str_off = offsetof(struct perf_record_event_update, unit);
-+		size_t max_len = event->header.size - str_off;
-+
-+		if (max_len == 0 || strnlen(ev->unit, max_len) == max_len) {
-+			pr_warning("WARNING: PERF_RECORD_EVENT_UPDATE: %s not null-terminated, skipping\n",
-+				   ev->type == PERF_EVENT_UPDATE__UNIT ? "unit" : "name");
-+			return 0;
-+		}
-+	} else if (ev->type == PERF_EVENT_UPDATE__SCALE) {
-+		if (event->header.size < offsetof(struct perf_record_event_update, scale) +
-+					 sizeof(ev->scale)) {
-+			pr_warning("WARNING: PERF_RECORD_EVENT_UPDATE: SCALE payload too small, skipping\n");
-+			return 0;
-+		}
-+	} else if (ev->type == PERF_EVENT_UPDATE__CPUS) {
-+		size_t cpus_off = offsetof(struct perf_record_event_update, cpus);
-+		size_t min_cpus = sizeof(__u16) +
-+				  sizeof(struct perf_record_range_cpu_map);
-+		u32 cpus_payload;
-+
-+		if (event->header.size < cpus_off + min_cpus) {
-+			pr_warning("WARNING: PERF_RECORD_EVENT_UPDATE: CPUS payload too small, skipping\n");
-+			return 0;
-+		}
-+
-+		/*
-+		 * Validate per-variant nr against the remaining
-+		 * payload on the native path — the swap path clamps
-+		 * nr in perf_event__event_update_swap(), but native
-+		 * events are read-only and cannot be clamped in place.
-+		 * cpu_map__new_data() trusts nr for allocation and
-+		 * iteration, so unchecked values cause OOB reads.
-+		 */
-+		cpus_payload = event->header.size - cpus_off;
-+		switch (ev->cpus.cpus.type) {
-+		case PERF_CPU_MAP__CPUS:
-+			if (ev->cpus.cpus.cpus_data.nr >
-+			    (cpus_payload - offsetof(struct perf_record_cpu_map_data, cpus_data.cpu)) /
-+			    sizeof(ev->cpus.cpus.cpus_data.cpu[0])) {
-+				pr_warning("WARNING: EVENT_UPDATE CPUS: nr %u exceeds payload, skipping\n",
-+					   ev->cpus.cpus.cpus_data.nr);
-+				return 0;
-+			}
-+			break;
-+		case PERF_CPU_MAP__MASK:
-+			if (ev->cpus.cpus.mask32_data.long_size == 4) {
-+				if (ev->cpus.cpus.mask32_data.nr >
-+				    (cpus_payload - offsetof(struct perf_record_cpu_map_data, mask32_data.mask)) /
-+				    sizeof(ev->cpus.cpus.mask32_data.mask[0]))
-+					return 0;
-+			} else if (ev->cpus.cpus.mask64_data.long_size == 8) {
-+				if (cpus_payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask) ||
-+				    ev->cpus.cpus.mask64_data.nr >
-+				    (cpus_payload - offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) /
-+				    sizeof(ev->cpus.cpus.mask64_data.mask[0]))
-+					return 0;
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
- 	if (dump_trace)
- 		perf_event__fprintf_event_update(event, stdout);
- 
-@@ -5296,8 +5406,10 @@ int perf_event__process_event_update(const struct perf_tool *tool __maybe_unused
- 		if (map) {
- 			perf_cpu_map__put(evsel->core.pmu_cpus);
- 			evsel->core.pmu_cpus = map;
--		} else
-+		} else {
- 			pr_err("failed to get event_update cpus\n");
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 876e20c4ba8a7808..85591ccdc2e8ada3 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -687,8 +687,103 @@ static int perf_event__build_id_swap(union perf_event *event,
- static int perf_event__event_update_swap(union perf_event *event,
- 					 bool sample_id_all __maybe_unused)
+ static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_arg *arg, char *bf, size_t size)
  {
--	event->event_update.type = bswap_64(event->event_update.type);
--	event->event_update.id   = bswap_64(event->event_update.id);
-+	struct perf_record_event_update *ev = &event->event_update;
-+
-+	ev->type = bswap_64(ev->type);
-+	ev->id   = bswap_64(ev->id);
+-	return perf_event_attr___scnprintf((void *)arg->augmented.args->value, bf, size, arg->trace->show_zeros);
++	struct perf_event_attr *attr = (void *)arg->augmented.args->value;
++	struct perf_event_attr local_attr;
 +
 +	/*
-+	 * Swap variant-specific fields so the processing path
-+	 * sees native byte order.
++	 * The BPF program copies PERF_ATTR_SIZE_VER0 bytes when the
++	 * tracee passes size=0, but leaves the size field as 0.
++	 * Copy to a local so we can fix up size without writing to
++	 * the potentially read-only augmented args buffer.
 +	 */
-+	if (ev->type == PERF_EVENT_UPDATE__SCALE) {
-+		if (event->header.size < offsetof(struct perf_record_event_update, scale) +
-+					 sizeof(ev->scale))
-+			return -1;
-+		mem_bswap_64(&ev->scale.scale, sizeof(ev->scale.scale));
-+	} else if (ev->type == PERF_EVENT_UPDATE__CPUS) {
-+		u32 cpus_payload;
-+		struct perf_record_cpu_map_data *data = &ev->cpus.cpus;
-+
-+		/* CPUS fields start at the same offset as scale (union) */
-+		if (event->header.size < offsetof(struct perf_record_event_update, cpus) +
-+					 sizeof(__u16) + sizeof(struct perf_record_range_cpu_map))
-+			return -1;
-+		cpus_payload = event->header.size - offsetof(struct perf_record_event_update, cpus);
-+		data->type = bswap_16(data->type);
-+		/*
-+		 * Full swap including array elements — same logic as
-+		 * perf_event__cpu_map_swap() but scoped to the
-+		 * embedded cpu_map_data within EVENT_UPDATE.
-+		 */
-+		switch (data->type) {
-+		case PERF_CPU_MAP__CPUS: {
-+			u16 nr, max_nr;
-+
-+			data->cpus_data.nr = bswap_16(data->cpus_data.nr);
-+			nr = data->cpus_data.nr;
-+			max_nr = (cpus_payload - offsetof(struct perf_record_cpu_map_data,
-+							  cpus_data.cpu)) /
-+				 sizeof(data->cpus_data.cpu[0]);
-+			if (nr > max_nr) {
-+				nr = max_nr;
-+				data->cpus_data.nr = nr;
-+			}
-+			for (unsigned int i = 0; i < nr; i++)
-+				data->cpus_data.cpu[i] = bswap_16(data->cpus_data.cpu[i]);
-+			break;
-+		}
-+		case PERF_CPU_MAP__MASK:
-+			data->mask32_data.long_size = bswap_16(data->mask32_data.long_size);
-+			switch (data->mask32_data.long_size) {
-+			case 4: {
-+				u16 nr, max_nr;
-+
-+				data->mask32_data.nr = bswap_16(data->mask32_data.nr);
-+				nr = data->mask32_data.nr;
-+				max_nr = (cpus_payload - offsetof(struct perf_record_cpu_map_data,
-+								  mask32_data.mask)) /
-+					 sizeof(data->mask32_data.mask[0]);
-+				if (nr > max_nr) {
-+					nr = max_nr;
-+					data->mask32_data.nr = nr;
-+				}
-+				for (unsigned int i = 0; i < nr; i++)
-+					data->mask32_data.mask[i] = bswap_32(data->mask32_data.mask[i]);
-+				break;
-+			}
-+			case 8: {
-+				u16 nr, max_nr;
-+
-+				data->mask64_data.nr = bswap_16(data->mask64_data.nr);
-+				nr = data->mask64_data.nr;
-+				if (cpus_payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) {
-+					data->mask64_data.nr = 0;
-+					break;
-+				}
-+				max_nr = (cpus_payload - offsetof(struct perf_record_cpu_map_data,
-+								  mask64_data.mask)) /
-+					 sizeof(data->mask64_data.mask[0]);
-+				if (nr > max_nr) {
-+					nr = max_nr;
-+					data->mask64_data.nr = nr;
-+				}
-+				for (unsigned int i = 0; i < nr; i++)
-+					data->mask64_data.mask[i] = bswap_64(data->mask64_data.mask[i]);
-+				break;
-+			}
-+			default:
-+				break;
-+			}
-+			break;
-+		case PERF_CPU_MAP__RANGE_CPUS:
-+			data->range_cpu_data.start_cpu = bswap_16(data->range_cpu_data.start_cpu);
-+			data->range_cpu_data.end_cpu = bswap_16(data->range_cpu_data.end_cpu);
-+			break;
-+		default:
-+			break;
-+		}
++	if (!attr->size) {
++		memcpy(&local_attr, attr, PERF_ATTR_SIZE_VER0);
++		memset((void *)&local_attr + PERF_ATTR_SIZE_VER0, 0,
++		       sizeof(local_attr) - PERF_ATTR_SIZE_VER0);
++		local_attr.size = PERF_ATTR_SIZE_VER0;
++		attr = &local_attr;
 +	}
- 	return 0;
++
++	return perf_event_attr___scnprintf(attr, bf, size, arg->trace->show_zeros);
  }
  
+ static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, struct syscall_arg *arg)
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 741c3d657a8b6ae7..e7ee87685d635dd7 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -275,24 +275,55 @@ static void __p_config_id(struct perf_pmu *pmu, char *buf, size_t size, u32 type
+ #define p_type_id(val)		__p_type_id(buf, BUF_SIZE, pmu, val)
+ #define p_config_id(val)	__p_config_id(pmu, buf, BUF_SIZE, attr->type, val)
+ 
+-#define PRINT_ATTRn(_n, _f, _p, _a)			\
+-do {							\
+-	if (_a || attr->_f) {				\
+-		_p(attr->_f);				\
+-		ret += attr__fprintf(fp, _n, buf, priv);\
+-	}						\
++#define PRINT_ATTRn(_n, _f, _p, _a)					\
++do {									\
++	if (attr_size >= offsetof(struct perf_event_attr, _f) +		\
++			 sizeof(attr->_f) &&				\
++	    (_a || attr->_f)) {						\
++		_p(attr->_f);						\
++		ret += attr__fprintf(fp, _n, buf, priv);		\
++	}								\
++} while (0)
++
++/* bitfield members share an offset; most are within PERF_ATTR_SIZE_VER0 */
++#define PRINT_ATTRn_bf(_n, _f, _p, _a)					\
++do {									\
++	if (_a || attr->_f) {						\
++		_p(attr->_f);						\
++		ret += attr__fprintf(fp, _n, buf, priv);		\
++	}								\
+ } while (0)
+ 
+ #define PRINT_ATTRf(_f, _p)	PRINT_ATTRn(#_f, _f, _p, false)
++#define PRINT_ATTRf_bf(_f, _p)	PRINT_ATTRn_bf(#_f, _f, _p, false)
+ 
+ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 			     attr__fprintf_f attr__fprintf, void *priv)
+ {
+ 	struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
++	/*
++	 * size == 0 means the caller didn't set it; a full struct
++	 * is always in memory here.  Attrs from perf.data already
++	 * had size validated (>= PERF_ATTR_SIZE_VER0), so they
++	 * never arrive with size == 0.
++	 */
++	u32 attr_size = attr->size ?: sizeof(*attr);
+ 	char buf[BUF_SIZE];
+ 	int ret = 0;
+ 
+-	if (!pmu && (attr->type == PERF_TYPE_HARDWARE || attr->type == PERF_TYPE_HW_CACHE)) {
++	/*
++	 * Cap to what we understand: all callers store the attr in a
++	 * buffer of sizeof(*attr) bytes (perf.data read path copies
++	 * min(attr.size, sizeof), BPF augmented path copies into a
++	 * fixed-size value[] array).  A spoofed attr->size larger
++	 * than sizeof would cause PRINT_ATTRn to read past the
++	 * actual buffer.
++	 */
++	if (attr_size > sizeof(*attr))
++		attr_size = sizeof(*attr);
++
++	if (!pmu && attr_size >= offsetof(struct perf_event_attr, config) + sizeof(attr->config) &&
++	    (attr->type == PERF_TYPE_HARDWARE || attr->type == PERF_TYPE_HW_CACHE)) {
+ 		u32 extended_type = attr->config >> PERF_PMU_TYPE_SHIFT;
+ 
+ 		if (extended_type)
+@@ -306,45 +337,53 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(sample_type, p_sample_type);
+ 	PRINT_ATTRf(read_format, p_read_format);
+ 
+-	PRINT_ATTRf(disabled, p_unsigned);
+-	PRINT_ATTRf(inherit, p_unsigned);
+-	PRINT_ATTRf(pinned, p_unsigned);
+-	PRINT_ATTRf(exclusive, p_unsigned);
+-	PRINT_ATTRf(exclude_user, p_unsigned);
+-	PRINT_ATTRf(exclude_kernel, p_unsigned);
+-	PRINT_ATTRf(exclude_hv, p_unsigned);
+-	PRINT_ATTRf(exclude_idle, p_unsigned);
+-	PRINT_ATTRf(mmap, p_unsigned);
+-	PRINT_ATTRf(comm, p_unsigned);
+-	PRINT_ATTRf(freq, p_unsigned);
+-	PRINT_ATTRf(inherit_stat, p_unsigned);
+-	PRINT_ATTRf(enable_on_exec, p_unsigned);
+-	PRINT_ATTRf(task, p_unsigned);
+-	PRINT_ATTRf(watermark, p_unsigned);
+-	PRINT_ATTRf(precise_ip, p_unsigned);
+-	PRINT_ATTRf(mmap_data, p_unsigned);
+-	PRINT_ATTRf(sample_id_all, p_unsigned);
+-	PRINT_ATTRf(exclude_host, p_unsigned);
+-	PRINT_ATTRf(exclude_guest, p_unsigned);
+-	PRINT_ATTRf(exclude_callchain_kernel, p_unsigned);
+-	PRINT_ATTRf(exclude_callchain_user, p_unsigned);
+-	PRINT_ATTRf(mmap2, p_unsigned);
+-	PRINT_ATTRf(comm_exec, p_unsigned);
+-	PRINT_ATTRf(use_clockid, p_unsigned);
+-	PRINT_ATTRf(context_switch, p_unsigned);
+-	PRINT_ATTRf(write_backward, p_unsigned);
+-	PRINT_ATTRf(namespaces, p_unsigned);
+-	PRINT_ATTRf(ksymbol, p_unsigned);
+-	PRINT_ATTRf(bpf_event, p_unsigned);
+-	PRINT_ATTRf(aux_output, p_unsigned);
+-	PRINT_ATTRf(cgroup, p_unsigned);
+-	PRINT_ATTRf(text_poke, p_unsigned);
+-	PRINT_ATTRf(build_id, p_unsigned);
+-	PRINT_ATTRf(inherit_thread, p_unsigned);
+-	PRINT_ATTRf(remove_on_exec, p_unsigned);
+-	PRINT_ATTRf(sigtrap, p_unsigned);
+-	PRINT_ATTRf(defer_callchain, p_unsigned);
+-	PRINT_ATTRf(defer_output, p_unsigned);
++	/*
++	 * All bitfields share a single __u64 right after read_format.
++	 * BPF-captured attrs from perf trace may have a small size
++	 * when the tracee passes a minimal struct, so skip the
++	 * entire block when it's not covered.
++	 */
++	if (attr_size >= offsetof(struct perf_event_attr, wakeup_events)) {
++		PRINT_ATTRf_bf(disabled, p_unsigned);
++		PRINT_ATTRf_bf(inherit, p_unsigned);
++		PRINT_ATTRf_bf(pinned, p_unsigned);
++		PRINT_ATTRf_bf(exclusive, p_unsigned);
++		PRINT_ATTRf_bf(exclude_user, p_unsigned);
++		PRINT_ATTRf_bf(exclude_kernel, p_unsigned);
++		PRINT_ATTRf_bf(exclude_hv, p_unsigned);
++		PRINT_ATTRf_bf(exclude_idle, p_unsigned);
++		PRINT_ATTRf_bf(mmap, p_unsigned);
++		PRINT_ATTRf_bf(comm, p_unsigned);
++		PRINT_ATTRf_bf(freq, p_unsigned);
++		PRINT_ATTRf_bf(inherit_stat, p_unsigned);
++		PRINT_ATTRf_bf(enable_on_exec, p_unsigned);
++		PRINT_ATTRf_bf(task, p_unsigned);
++		PRINT_ATTRf_bf(watermark, p_unsigned);
++		PRINT_ATTRf_bf(precise_ip, p_unsigned);
++		PRINT_ATTRf_bf(mmap_data, p_unsigned);
++		PRINT_ATTRf_bf(sample_id_all, p_unsigned);
++		PRINT_ATTRf_bf(exclude_host, p_unsigned);
++		PRINT_ATTRf_bf(exclude_guest, p_unsigned);
++		PRINT_ATTRf_bf(exclude_callchain_kernel, p_unsigned);
++		PRINT_ATTRf_bf(exclude_callchain_user, p_unsigned);
++		PRINT_ATTRf_bf(mmap2, p_unsigned);
++		PRINT_ATTRf_bf(comm_exec, p_unsigned);
++		PRINT_ATTRf_bf(use_clockid, p_unsigned);
++		PRINT_ATTRf_bf(context_switch, p_unsigned);
++		PRINT_ATTRf_bf(write_backward, p_unsigned);
++		PRINT_ATTRf_bf(namespaces, p_unsigned);
++		PRINT_ATTRf_bf(ksymbol, p_unsigned);
++		PRINT_ATTRf_bf(bpf_event, p_unsigned);
++		PRINT_ATTRf_bf(aux_output, p_unsigned);
++		PRINT_ATTRf_bf(cgroup, p_unsigned);
++		PRINT_ATTRf_bf(text_poke, p_unsigned);
++		PRINT_ATTRf_bf(build_id, p_unsigned);
++		PRINT_ATTRf_bf(inherit_thread, p_unsigned);
++		PRINT_ATTRf_bf(remove_on_exec, p_unsigned);
++		PRINT_ATTRf_bf(sigtrap, p_unsigned);
++		PRINT_ATTRf_bf(defer_callchain, p_unsigned);
++		PRINT_ATTRf_bf(defer_output, p_unsigned);
++	}
+ 
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
+@@ -359,9 +398,12 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(sample_max_stack, p_unsigned);
+ 	PRINT_ATTRf(aux_sample_size, p_unsigned);
+ 	PRINT_ATTRf(sig_data, p_unsigned);
+-	PRINT_ATTRf(aux_start_paused, p_unsigned);
+-	PRINT_ATTRf(aux_pause, p_unsigned);
+-	PRINT_ATTRf(aux_resume, p_unsigned);
++	/* aux_{start_paused,pause,resume} are at byte 116, past VER0 */
++	if (attr_size >= offsetof(struct perf_event_attr, sig_data)) {
++		PRINT_ATTRf_bf(aux_start_paused, p_unsigned);
++		PRINT_ATTRf_bf(aux_pause, p_unsigned);
++		PRINT_ATTRf_bf(aux_resume, p_unsigned);
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.54.0
 
