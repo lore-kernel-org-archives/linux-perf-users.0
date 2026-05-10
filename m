@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBA72727F3;
-	Sun, 10 May 2026 03:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6886DDC5;
+	Sun, 10 May 2026 03:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778384091; cv=none; b=ZrPoW20E0rSE65Vbk7tzHW80am5ztOcWVCVXiB0djioHV5HHKg9BMC5tMrMXqj6Zz+UJ1+H2XgBgyKwTfX66vXyVLbNeDxhdYm9oaPnD3ZJ1HTkErbv+4AvS+0G5JsJOGXDoGfgNuIlkWI5aPk87KUgaKAs+T4KyPEaZzg+LTbI=
+	t=1778384095; cv=none; b=Gq5CXZuIGhxJKPOciFSP3EJw1bVmZ1ZioYkibyCAm4Z7YC0jEhd3LajLNzoTH+JCcWb05f8iud8h/dV0p2zriruiUwh2YnBbma6HwJIL8jT3pM3cxtj7PlugFfoCD/BlQh7B+Uy/6qLDkzxsIhd0lgfaPuOHNipWX+pEhTVkx3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778384091; c=relaxed/simple;
-	bh=drpqOMoHiMEkjNluijjknlVXT5VXSJxN/q8XhxC6Zzk=;
+	s=arc-20240116; t=1778384095; c=relaxed/simple;
+	bh=d9DVuMkw2hxA1ZIVbwDnE4Xvxc7Ogkae7qqqjfx3sRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i3dmciLJOrId3AzJhD7Xg4W2pK5kePz0oLOkb3+PqYZ4kt/VA15pSrDuEhLjvPpIhRR7Bv+7Vtx1GywqSJIHKxG7qfPey0LwekyAkL/G0tlDc5PwKhXgogZlvK0dKeAFZzS3jzTyzJnV5IhL3YlzZAkw1GofvJ7D2n1EaE8ulpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSBhSmgT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KJgp+D3FWY9SPq3SyKNgHJZGDWZpYPNKkzEdlU4MIKYNvOi14gebQabvOvUeGE1hK7U6Vh0wKWgz/kmJAOBcu0Lzpbnffou1tU8aJCuIyQvdvLrtFRmMtIekYY9Hf39GviqBx/jIzUS0GPn+vuA+cmjRf2Vb+R0rAL3oOe1M80o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfV2ayvO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSBhSmgT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F3E1C2BCB8;
-	Sun, 10 May 2026 03:34:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfV2ayvO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA07FC2BCB8;
+	Sun, 10 May 2026 03:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778384091;
-	bh=drpqOMoHiMEkjNluijjknlVXT5VXSJxN/q8XhxC6Zzk=;
+	s=k20201202; t=1778384095;
+	bh=d9DVuMkw2hxA1ZIVbwDnE4Xvxc7Ogkae7qqqjfx3sRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QSBhSmgTuhXPQzanHqUdKPtT0jZ3MaPw2+geXl36ASM/yY2G2sxg/gJwsBo4X0l3K
-	 K0SL/jO0FHCVmeXBMQnd2IoaGzMBHsrK8qEKHQHEpkQg26Z1InaMioKV3dBd4aTVVL
-	 YZUO9g0z48XPXgrEtpj0WMkssILqsC7J6f46+as6uR9rZ2OFilNiPPtfQRZacpWMbe
-	 av/531eq4jrRFQSnom3bNGcEicCEbXl2Y1TcHxDRCbvVVAL+INyhketTSKJfj11JKf
-	 WwJEwgP8hw9jpi1hmHZuvWjzlhMbQJKsKaGscnHYW7Az+xyUiwPcTjwXjNQ8A3W/6q
-	 ua9RyHXm0CP1w==
+	b=lfV2ayvOPqleAp61Ghu6YwTZvGKIc1BlJw2iTl2YoP6RLrhb+L66e92XnEt6qtBgJ
+	 oIPEya/GYw6TPjY45TrMayrjpJZaZOZC5LxCVpZJnePrVEQ1proYVYslzFWfVabxpY
+	 yEkOfOxhXggDzameqyFytjbQ11c33WdPBacOp1RtelXJAISrwK4a+2M5aAfKmxmxUI
+	 ckGcr2aaup3xc/lxwCtJ9R8Rw/zpfvBgX5qoPxTGbOYuu91c8jcxrZX5kLPBxLJ1o/
+	 aFVRrxniC3CWQ3OOQpbokSKKqxAinicwfjCM2HARVP6QS9c1UvUUzm+lS8gzaev+yI
+	 R/7LhR8h4y7Qw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 03/28] perf zstd: Fix compression error path in zstd_compress_stream_to_records()
-Date: Sun, 10 May 2026 00:33:54 -0300
-Message-ID: <20260510033424.255812-4-acme@kernel.org>
+Subject: [PATCH 04/28] perf zstd: Fix multi-iteration decompression and error handling
+Date: Sun, 10 May 2026 00:33:55 -0300
+Message-ID: <20260510033424.255812-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510033424.255812-1-acme@kernel.org>
 References: <20260510033424.255812-1-acme@kernel.org>
@@ -58,37 +58,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The error fallback does memcpy(dst, src, src_size) intending to store
-uncompressed data when compression fails, but this has three bugs:
+zstd_decompress_stream() has two bugs in its multi-iteration loop:
 
-1. dst has been advanced past the record header (and potentially
-   past earlier compressed records), so the copy writes to the
-   wrong offset in the output buffer.
+1. After each ZSTD_decompressStream() call, the code advances
+   output.dst by output.pos but doesn't reset output.pos to 0.
+   ZSTD interprets output.pos relative to output.dst, so the
+   next iteration writes at (dst + pos) + pos = dst + 2*pos,
+   skipping a gap and potentially writing out of bounds.
 
-2. src still points to the start of the input, not to the
-   remaining uncompressed data at src + input.pos.  On a second
-   or later iteration, previously compressed data would be
-   duplicated.
+2. On ZSTD_decompressStream() error, the loop executes break
+   and returns output.pos (which is > 0 if some bytes were
+   decompressed before the error).  The caller checks
+   !decomp_size and skips the error, silently accepting
+   truncated or corrupted data.
 
-3. No check that dst_size >= src_size — if the remaining output
-   space is smaller, this is an out-of-bounds write.
+Fix both by removing the output buffer adjustment — ZSTD
+correctly accumulates output.pos across calls without it.
+Return 0 on decompression error so the caller detects it.
+Add a no-progress guard to prevent infinite loops if the
+output buffer fills before all input is consumed.
 
-Replace with return -1 after resetting the ZSTD compression
-context via ZSTD_initCStream(), so the context is usable for
-the flush retry in __cmd_record's out_child cleanup.  The -1
-propagates through zstd_compress() → record__pushfn() →
-perf_mmap__push() to the recording loop, which breaks out and
-runs the out_child flush with the reset context.
-
-Also fix two pre-existing issues in the same function:
-
-- Add a dst_size guard before subtracting the record header
-  size: if the output buffer is nearly full, the unsigned
-  dst_size -= size underflows to a huge value, causing
-  ZSTD_compressStream to write past the buffer boundary.
-
-- Check the ZSTD_initCStream() return value and log an error
-  if the context reset itself fails.
+Note: the compressed event data_size is validated against
+header.size by a subsequent patch in this series
+("perf tools: Harden compressed event processing").
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
@@ -97,42 +89,44 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/zstd.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/util/zstd.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 57027e0ac7b658a8..fde9907cf4768eff 100644
+index fde9907cf4768eff..377be0505e50a493 100644
 --- a/tools/perf/util/zstd.c
 +++ b/tools/perf/util/zstd.c
-@@ -55,6 +55,9 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 	while (input.pos < input.size) {
- 		record = dst;
- 		size = process_header(record, 0);
-+		/* Output buffer full — cannot fit even the record header */
-+		if (size > dst_size)
-+			return -1;
- 		compressed += size;
- 		dst += size;
- 		dst_size -= size;
-@@ -65,8 +68,16 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 		if (ZSTD_isError(ret)) {
- 			pr_err("failed to compress %ld bytes: %s\n",
- 				(long)src_size, ZSTD_getErrorName(ret));
--			memcpy(dst, src, src_size);
--			return src_size;
-+			/*
-+			 * Reset so the context is usable for the flush
-+			 * retry in __cmd_record's out_child cleanup.
-+			 */
-+			ret = ZSTD_initCStream(data->cstream, data->comp_level);
-+			if (ZSTD_isError(ret)) {
-+				pr_err("failed to reset compression context: %s\n",
-+					ZSTD_getErrorName(ret));
-+			}
-+			return -1;
+@@ -111,14 +111,26 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
  		}
- 		size = output.pos;
- 		size = process_header(record, size);
+ 	}
+ 	while (input.pos < input.size) {
++		size_t prev_in = input.pos;
++		size_t prev_out = output.pos;
++
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+ 			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
+-			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+-			break;
++			       src_size, output.pos, dst_size, ZSTD_getErrorName(ret));
++			return 0;
+ 		}
+-		output.dst  = dst + output.pos;
+-		output.size = dst_size - output.pos;
++		/*
++		 * Neither stream advanced — decompression is stuck.
++		 * Return 0 (error) rather than partial output: perf
++		 * uses ZSTD_flushStream (not ZSTD_endStream), so the
++		 * stream is continuous across compressed events.
++		 * Discarding unconsumed input would desynchronize the
++		 * decompressor, causing the next call to produce
++		 * garbage that could be misinterpreted as valid events.
++		 */
++		if (input.pos == prev_in && output.pos == prev_out)
++			return 0;
+ 	}
+ 
+ 	return output.pos;
 -- 
 2.54.0
 
