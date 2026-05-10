@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FDF33F597;
-	Sun, 10 May 2026 20:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2CB340A6F;
+	Sun, 10 May 2026 20:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778444636; cv=none; b=Wpptu+ls91m5oUfxVqVRIxzgJJMNfo0+um0PUNcRRm2iyyYxshLvA1ysNcN9LsWwb0PtVqquEeMsH2ngZcuYOfowBadWuOlur9OBVve2v6Fz2Z72DEdRUZDYu0mZMr8jf/7B0RWdBLwHlDzvPZT1dm3lBGzbqbyRuBb6nNuqZhc=
+	t=1778444637; cv=none; b=PuvoomPvk8rc5V4v+YIb6++DXzL9Xmp5U2lhnaFw33JmY/hOYFNblNrnTytuKcQwLJfjh4RUI8z4mfeBChYjLW16098Qr/6pTBMvNwxJRQDpG5HpYoBUpXlmhuyKtGfOkSuknLmJjcE83UqqioBgMx4CgkbThSJi+oYRMmqnllA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778444636; c=relaxed/simple;
-	bh=7U7Sa8RXkBuqtZzyl4O0KvHvcBdgBsln7oeWWoKC49A=;
+	s=arc-20240116; t=1778444637; c=relaxed/simple;
+	bh=oJhIRoQKpQESRRveVO+5Sy8jZ1r3vmYzGKIUy1xXZf8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CHabep58i7J9aaaTrElFFSpgkVRWVt0u/qi3sRe83Zt1NjiBFg8DdOKzZEQxF4s249VSRVU32f8aadbrr6zZ2jImFUm3sV74Ds1jjNp0fvCnaJD3jLm0KLBNWdMGhgj7MwgALDQ/USx3wHSZxfkDfNdgUy4t4BJrxxLwol31xgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SD4zNfyp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O3gMJ5ynjn94z1yh/2pKvtF7+Hsh2qe/K2hQxIoZalcJ5Qfm22poXBxeuXN0dNbGLF2und22wGu+kdYWzO94PeR9NXcvGuilpNmcx3gYoflqYzBEEV+oTGgO6sR2MGZPX3UphecbwkbWF4GEpakj9NQSES0zFr+kywwLoWFNuvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV4LIFgy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SD4zNfyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF51C2BCF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV4LIFgy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78ECC2BCC7;
 	Sun, 10 May 2026 20:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778444636;
-	bh=7U7Sa8RXkBuqtZzyl4O0KvHvcBdgBsln7oeWWoKC49A=;
+	s=k20201202; t=1778444637;
+	bh=oJhIRoQKpQESRRveVO+5Sy8jZ1r3vmYzGKIUy1xXZf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SD4zNfypQ8lTe7J8hymnTGJUUdWpg9b+iXajMRWzheCPyFx4MWFMyaHlGAlDx7atM
-	 d+Vx3fKyG3cBru0ILZqoPEOKzQV3J161U+O/ZO3CQuNClgKMeKqzgbfWqrC/U4SXpe
-	 oO//CFuf2oPSS+j/DwyE6u3U/KSLfNfDBaVSbVG3ZrxtVYvtUjc/xfRdrURxypQiEm
-	 4Iwvu2UmARSVx5mvxaMfcwINaVzd/mcxI8zhTHw5XO6mR89FfRzDAT9Fw4dRGgnXuC
-	 +7je7b/ydaiQwaGjINJDKimseJZfbd3+EYFy2+rohI3m7acgfJCl+5moxlTR3dHJSL
-	 10sesowK1cEVw==
+	b=iV4LIFgyJApq9e4sz6xLC3vPKhlV+62yLjrc/U/vdp77C1wwJJXbjDB+rUF2/Tros
+	 Jikk9z/d88PAIsyjayqVRw9cY9+98A2P3GlQQ4lg/DxcmFXjUDaWTqvkf5NgP6nSQz
+	 hQDAXHB+H/K1a94ydEVMyAeEXw1uEPeyCjxavhBL7NMcR2zrHamNl+8BIoIuwCOOX8
+	 8bxQUDg+/Yx0qS1kXbyPeTXWWAlU7ZVGVr7ghP2x9sC+//f/wqHxF9Dp/vCzzPjzAS
+	 ZmVq9Hk+PXiWduxD9COI6cslpHG2r89j6bW25gu9PUDkZEJpQceLBrrbxcSUk9+UZx
+	 fGnIVzPap49Dw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH v3 4/7] perf trace: Sync uapi/linux/sched.h with the kernel source
-Date: Sun, 10 May 2026 13:23:43 -0700
-Message-ID: <20260510202346.49853-5-namhyung@kernel.org>
+Subject: [PATCH v3 5/7] perf build: Add make check-headers target
+Date: Sun, 10 May 2026 13:23:44 -0700
+Message-ID: <20260510202346.49853-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510202346.49853-1-namhyung@kernel.org>
 References: <20260510202346.49853-1-namhyung@kernel.org>
@@ -52,64 +52,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To pick up changes from:
+Don't print header differences during the perf build as it's noisy.
+Mostly people won't care and find it annoying.
 
- 9d4e752a24f740b3 ("namespace: allow creating empty mount namespaces")
- c8134b5f13ae959d ("pidfd: add CLONE_PIDFD_AUTOKILL")
- 24baca56fafc33d4 ("clone: add CLONE_NNP")
- 12ae2c81b21cfaa1 ("clone: add CLONE_AUTOREAP")
- 2e7af192697ef2a7 ("sched/deadline: Add reporting of runtime left & ...")
-
-This would be used to beautify scheduler syscall arguments and not to
-affect builds of other tools (e.g. objtool).
-
-Please see tools/include/uapi/README.
+As it's to improve perf trace beautifier to catch up new changes mostly
+in UAPIs, we can make it a separate build target and call it
+occasionally.  Make it and build-test related targets phony.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- .../trace/beauty/include/uapi/linux/sched.h     | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/Makefile      | 5 ++++-
+ tools/perf/Makefile.perf | 1 -
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/sched.h b/tools/perf/trace/beauty/include/uapi/linux/sched.h
-index 359a14cc76a4038a..33a4624285cd4179 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/sched.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/sched.h
-@@ -34,8 +34,12 @@
- #define CLONE_IO		0x80000000	/* Clone io context */
+diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+index 816d5d84816b3d53..5b713837eede7d52 100644
+--- a/tools/perf/Makefile
++++ b/tools/perf/Makefile
+@@ -111,6 +111,9 @@ endif # MAKECMDGOALS
+ build-test-tarball:
+ 	@$(MAKE) -f tests/make REUSE_FEATURES_DUMP=1 MK=Makefile SET_PARALLEL=1 --no-print-directory out
  
- /* Flags for the clone3() syscall. */
--#define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
--#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given the right permissions. */
-+#define CLONE_CLEAR_SIGHAND	(1ULL << 32) /* Clear any signal handler and reset to SIG_DFL. */
-+#define CLONE_INTO_CGROUP	(1ULL << 33) /* Clone into a specific cgroup given the right permissions. */
-+#define CLONE_AUTOREAP		(1ULL << 34) /* Auto-reap child on exit. */
-+#define CLONE_NNP		(1ULL << 35) /* Set no_new_privs on child. */
-+#define CLONE_PIDFD_AUTOKILL	(1ULL << 36) /* Kill child when clone pidfd closes. */
-+#define CLONE_EMPTY_MNTNS	(1ULL << 37) /* Create an empty mount namespace. */
- 
- /*
-  * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
-@@ -43,6 +47,12 @@
-  */
- #define CLONE_NEWTIME	0x00000080	/* New time namespace */
- 
-+/*
-+ * unshare flags share the bit space with clone flags but only apply to the
-+ * unshare syscall:
-+ */
-+#define UNSHARE_EMPTY_MNTNS 0x00100000 /* Unshare an empty mount namespace. */
++check-headers:
++	@./check-headers.sh
 +
- #ifndef __ASSEMBLY__
- /**
-  * struct clone_args - arguments for the clone3 syscall
-@@ -146,4 +156,7 @@ struct clone_args {
- 			 SCHED_FLAG_KEEP_ALL		| \
- 			 SCHED_FLAG_UTIL_CLAMP)
+ #
+ # All other targets get passed through:
+ #
+@@ -118,4 +121,4 @@ endif # MAKECMDGOALS
+ 	$(print_msg)
+ 	$(make)
  
-+/* Only for sched_getattr() own flag param, if task is SCHED_DEADLINE */
-+#define SCHED_GETATTR_FLAG_DL_DYNAMIC	0x01
-+
- #endif /* _UAPI_LINUX_SCHED_H */
+-.PHONY: tags TAGS FORCE Makefile
++.PHONY: tags TAGS FORCE Makefile build-test build-test-tarball check-headers
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index cee19c923c0607d2..585637fc934fe6ec 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -285,7 +285,6 @@ goals := $(filter-out all sub-make, $(MAKECMDGOALS))
+ $(goals) all: sub-make
+ 
+ sub-make: fixdep
+-	@./check-headers.sh
+ 	$(Q)$(MAKE) FIXDEP_BUILT=1 -f Makefile.perf $(goals)
+ 
+ else # force_fixdep
 -- 
 2.54.0
 
