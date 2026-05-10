@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BACDDCD;
-	Sun, 10 May 2026 06:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040D434F24A;
+	Sun, 10 May 2026 06:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778395667; cv=none; b=Wk8c3I2YArIgqK1FNf2LqoD3HEcoxXQxWozqwig1s2cHk6IgQfyzeNeK7aN4WqoG2pHZxfbpCqFch4lqG7wSTkvMzHYA2Cw6xzLT7K/Zdaic3mr+uIvosmob6SW6GAeD4q6vN794jK1kLhIzGYwXSuP1QrMNOUIBNGKTuHpHe94=
+	t=1778395967; cv=none; b=oJ2gnQ2x4VH/CRnsJGZN/QN5pxS1/bfNFyck9e8jiY5CMyxxZLKOzIj9/nRb2L26eB6qwrKN2GmZ5zUO0fJcl7kseLFSmNFssW9G1t76Fn3Cr/+tMciJadlFoQkfSMZriw0YM6zYWJUIK1f33sJZH3uEgQi54Ev3DjuPcDQpFKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778395667; c=relaxed/simple;
-	bh=KNZIrYpGwNRftJiQ9A0g2ltDh6kfdL2YCDTt9NO0NkA=;
+	s=arc-20240116; t=1778395967; c=relaxed/simple;
+	bh=dwErTHAqrNhla9wg2z1syY+cJGnGwHtFPeDrswcofsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b6Q+I2a6Qri4q1oCk8iHA7prMRH151AjkpoMh2qvOLPpcNiigRwbS1jw6C+XNSfkWEU3YvXxkn9p0vmnuHsyhy6M5rDFkHDrbuk/KqC9lEOMiFNhJfX2OIR8gVTxkecfylqsbCGHWkI/JOqSoQqAAw8LKTrLl6bc9p3p9fZ4DQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBdwCGyT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsb36KsvvMvCVBAJgzBPdvwBqdn/MXJlqpYfqLQjBqIfOBZLzaFGUdGTgkGEg7ne+PitA6j/XTMbRtikh5/+5YAG6oo1WXp4y9rtYbgQiTqufNpjwioOL3GHBJ9ANKd/ceLz5vwSuxbHqgjOVwSYb204QNcFwfmM+l6l+odFmWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2t3ejyE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBdwCGyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E833C2BCB8;
-	Sun, 10 May 2026 06:47:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2t3ejyE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11252C2BCB8;
+	Sun, 10 May 2026 06:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778395666;
-	bh=KNZIrYpGwNRftJiQ9A0g2ltDh6kfdL2YCDTt9NO0NkA=;
+	s=k20201202; t=1778395966;
+	bh=dwErTHAqrNhla9wg2z1syY+cJGnGwHtFPeDrswcofsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pBdwCGyTToNBAcUx8TOBNk1kRZa9YCtGzMaRydwswIehU4y5RhSokEZgQ4q2rBNo/
-	 CdSqVExPzI7+Cf7pOcNnPM+RoEJLcAz1g5siBr1PBqk1WkOEF9r+2Pe7P+nedKeDVV
-	 A2IDTRsfpzCuJQN3DsvM9qXljVPqrQ9ZBEdTAg3DrHrN/RUuWhttW2WRaZudpLWRZH
-	 ZgWxrpgke488/qhDwM0DP1KiR6rOym2KL7MJRu5q9Fd5bYUeJNo0V4lenzlGtk/UQw
-	 KF7drDERX97sxkZq2wxLENMmPpgbWqH2omT4JVmu1Y30W5OqeBPkDF/5n6UdgeL6z2
-	 U6mzhlqwD1Y1Q==
-Date: Sat, 9 May 2026 23:47:45 -0700
+	b=A2t3ejyEzmmdC+EVRzRxiiw5WBHGdEVZwIRRnyXvWwNnV1YAhq/VwhTLhrscd+yIY
+	 cRbx+dRO+0RXHZmk2F7WxS78nMssSJsQC26QxRGbSXjx3KblZ1PytRp8nQ8aCT4HKJ
+	 Gs7881Ix6L9UYSfImeCIxYYGTevS1FQIwzUHMzYydGwxjq9bcF2XmewuI3NJHsEait
+	 IJBVANLDr6OPGLji+mULNEGrp8t5t1Dq5oaEackeBqDOE4K4q0Egb4f+wQa8gWrP4s
+	 ggqX41U5rAyIk1SE4BFxxJcSwdmvAf2lyxFArGRAOB5kkLG+e186cYHH/RCbomxclw
+	 IHPPE3CHZtzGw==
+Date: Sat, 9 May 2026 23:52:44 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org
-Cc: Suchit Karunakaran <suchitkarunakaran@gmail.com>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf build: compile BPF skeletons with -mcpu=v3
-Message-ID: <agAqESWvLdIJBErN@google.com>
-References: <20260507184238.65280-2-suchitkarunakaran@gmail.com>
- <20260507234959.EEC5BC2BCB8@smtp.kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
+	thomas.falcon@intel.com, tmricht@linux.ibm.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RESEND PATCH v2] perf tools: Ensure event leader stays at head
+ of evlist after sorting
+Message-ID: <agArPG7T5rACOOcv@google.com>
+References: <20260505211924.1961056-2-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,58 +47,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260507234959.EEC5BC2BCB8@smtp.kernel.org>
+In-Reply-To: <20260505211924.1961056-2-ctshao@google.com>
 
-Hi Arnaldo,
+Hello,
 
-On Thu, May 07, 2026 at 11:49:59PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Adding `-mcpu=v3` to `CLANG_OPTIONS` forces all BPF skeletons to use the BPF v3 ISA, breaking backward compatibility for perf tools designed to run on older kernels.
-> --
+On Tue, May 05, 2026 at 02:19:00PM -0700, Chun-Tse Shao wrote:
+> From: Ian Rogers <irogers@google.com>
 > 
-> commit 2e8791aeccf694e1ae9ed9fda46e3a6f73332838
-> Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> For evlist of a certain event/metric, the HEAD should be the event
+> leader. In some scenarios where uncore_xxx_0 does not exist, the event
+> leader is not the first element after sorting. For example, on my test
+> machine uncore_iio_0 does not exist, the event leader is uncore_iio_2.
 > 
-> perf build: compile BPF skeletons with -mcpu=v3
+> However, in `evlist__cmp`, it was reordered based on the PMU name, which
+> makes uncore_iio_1 the HEAD of evlist, breaking the following merge
+> logic in `evsel__merge_aliases`.
 > 
-> This commit adds -mcpu=v3 to CLANG_OPTIONS to support the atomic
-> cmpxchg instruction required by the lock_contention BPF program.
-> This forces Clang to emit BPF ISA v3 instructions during skeleton
-> compilation.
+> The patch adds a loop at the end of
+> `parse_events__sort_events_and_fix_groups` to make sure the first
+> wildcard match is the earliest entry in the list, updating pointers
+> accordingly without breaking reordering detection.
 > 
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index cee19c923c060..a9a8c84b6b006 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
+> Tested on device lacks uncore_iio_0, and `perf test` looks good.
 > 
-> [ ... ]
-> 
-> > @@ -1195,7 +1195,7 @@ ifneq ($(CROSS_COMPILE),)
-> >  CLANG_TARGET_ARCH = --target=$(notdir $(CROSS_COMPILE:%-=%))
-> >  endif
-> >  
-> > -CLANG_OPTIONS = -Wall
-> > +CLANG_OPTIONS = -Wall -mcpu=v3
-> 
-> Does this change break backward compatibility for other perf tools running
-> on older kernels?
-> 
-> Since CLANG_OPTIONS is used in the pattern rule for compiling all BPF
-> skeletons, this forces every BPF program in perf (such as
-> augmented_raw_syscalls.bpf.c and off_cpu.bpf.c) to target the BPF ISA v3.
-> 
-> Kernels older than 5.1 do not support v3 instructions and will reject
-> these programs during the verifier load phase.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
-I think it's old enough and we can move on to ensure v3 instructions.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+> ---
+> v2:
+>   Adding missing Signed-off-by from Ian Rogers.
+>   Renaming variable `l` to `orig_leader`.
 > 
-> Should the -mcpu=v3 flag be restricted exclusively to the target that
-> needs it, perhaps using a target-specific append for lock_contention.bpf.o?
+> v1: lore.kernel.org/20260501043532.790711-1-ctshao@google.com
 > 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260507184238.65280-1-suchitkarunakaran@gmail.com?part=2
+>  tools/perf/util/parse-events.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 1497e1f2a08c..943569e82b82 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2251,6 +2251,33 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  		}
+>  		last_event_was_forced_leader = (force_grouped_leader == pos);
+>  	}
+> +
+> +	/*
+> +	 * Make sure the first wildcard match is the earliest entry in the list.
+> +	 * Since list_sort might have reordered the aliases, the original leader
+> +	 * might not be at the head of the list anymore. We find the first
+> +	 * alias in the sorted list and make it the new leader, and redirect
+> +	 * all other aliases to it.
+> +	 */
+> +	list_for_each_entry(pos, list, core.node) {
+> +		struct evsel *orig_leader = pos->first_wildcard_match;
+> +
+> +		if (!orig_leader)
+> +			continue;
+> +
+> +		if (orig_leader->first_wildcard_match) {
+> +			/* Original leader was redirected to a new leader */
+> +			pos->first_wildcard_match = orig_leader->first_wildcard_match;
+> +		} else if (pos->core.idx < orig_leader->core.idx) {
+> +			/*
+> +			 * We are earlier than the original leader in sorted order,
+> +			 * and no earlier alias has claimed leadership yet.
+> +			 */
+> +			orig_leader->first_wildcard_match = pos;
+> +			pos->first_wildcard_match = NULL;
+> +		}
+> +	}
+> +
+>  	list_for_each_entry(pos, list, core.node) {
+>  		struct evsel *pos_leader = evsel__leader(pos);
+> 
+> --
+> 2.54.0.545.g6539524ca2-goog
+> 
