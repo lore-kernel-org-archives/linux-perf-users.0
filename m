@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5B224677F;
-	Sun, 10 May 2026 03:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A42722425B;
+	Sun, 10 May 2026 03:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778384140; cv=none; b=StDpwT/yhcCNYwXXGx14P1Pg72LgGSWy5C8Qd0UuJFp71//+SpQohf/CcjSwmZ6Q1YatIl7Xx8WyJjk6V/lc3BqylZsR+WyYx2LvvDageISV8eWljz6xguNfiL0SXvxIdhfa1yvfcqyjWx7lHRXlDhAYsH477iweVPr9VyuCzMU=
+	t=1778384146; cv=none; b=X6QUBMhO6luDBqTprLYnDoSwHd1E0cSt8H8H8wbboY4dZm+sSoYmFbJqBju63SDiz1A83cf4oVp/TWcpQhRB27H0+7cukaZcK3njXVu/XIYJEJBQxCrVDuymrhnA9HhUa8tbW5VTTHcjPRHWwMYRsjDylnAjqV0reEEBxs+Ktj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778384140; c=relaxed/simple;
-	bh=CqFwPdskAmw+P1xkh14kA1xCrBzke1eMXGS0ToHyLos=;
+	s=arc-20240116; t=1778384146; c=relaxed/simple;
+	bh=QhY5buQsBzI9eMOfij+AhFf8dCNo+p4JPuYN1WMv8gk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T+qDenfus9o1qaUIHQ5zWLCaHzjK7/yRx0M4MjfV8F4qXWZ0f0ZptJ+0QapUvMLqYVZJogqiOCBcee0DaTyHRSonf5qL7PX87epaq6fiRIausD02hfXos//hBN0YPZjP0CCOg8+WJZVtwfbU9EHVZZaA8uiFi4sjd/0dEKrmnZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StAnZMfF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZD28O9hxJ7194QK1whig6M0/EpSvzAADsluGyOd0K1NWjNhAHlSvTulv5iR+KC94oqXgQqm18XQ62pLDtP5UwXxZklrtH6y3zVF1gXWyvME4z6skfiAqSNCYLcBSmyD8F03UPtG0LhFsuF90K026uyecBWwIfu2PY6NjQzm9PCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aICeyhUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StAnZMfF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC0EC2BCB8;
-	Sun, 10 May 2026 03:35:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aICeyhUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4510C2BCF6;
+	Sun, 10 May 2026 03:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778384140;
-	bh=CqFwPdskAmw+P1xkh14kA1xCrBzke1eMXGS0ToHyLos=;
+	s=k20201202; t=1778384146;
+	bh=QhY5buQsBzI9eMOfij+AhFf8dCNo+p4JPuYN1WMv8gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=StAnZMfF/TcbifprWZbBPHEAcKNN+lecb+uSgufnqXKF2uRPbrapVW063HYjF7Idp
-	 2Nrl/wCRXxCw+IQxwk30OjjBGOY2ARe7kqXzKHVs6qp8XGobmpQzo4dg90sf7qx/tS
-	 yZJ6M1zTbP241cYLC7Qwv35fv6tnvByUo643Mgdj7jQJ1YkIDh0Ns7Nkgov9W+cNrI
-	 +7Maj8KbmSZ6Dl0Jd8IeQhrEMOuMKtDeLTAmdUC2l7wvFb4xQGTWB+KVEoMXEnqZox
-	 ZJRuBXXarXM65ChJt2DgIcqGYWlDhxjf4brmFuaNRmgdQ2Kx5FDSc9jb6qP6OhERst
-	 V0dYgGnPaPSbw==
+	b=aICeyhUEo1Gilv7F8DRX5qMIy2njzEQOr+h6TGx7nbeJpXe3v7emzUdcod18dr1bU
+	 tGy/42+bauqsUWdwHqhRIud751vaLKxXPD/UoxvLHltULXeaxYzPTHmnf/NzlV5Ysb
+	 gNgFZXrQTGHuW3xAUg8o3Ra3FjXnsfdjshNraW7hQ6gSP8R9BKmuV+vcwQjZP0IZ5Q
+	 FGm4O89jxbkf5HA1ZYR7JkrgA7piynEYEoOcwyKkwv2ePNt6sJNtFxVQF+MDDzi+/2
+	 6wYx8vPaONiJWP91ldv/QravwpLbAfQiZDtbM2wfz5wSBrRs17V1bN8gGMxRJ0G0Q5
+	 rW0E546tCC9wQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 12/28] perf cpumap: Reject RANGE_CPUS with start_cpu > end_cpu
-Date: Sun, 10 May 2026 00:34:03 -0300
-Message-ID: <20260510033424.255812-13-acme@kernel.org>
+Subject: [PATCH 13/28] perf auxtrace: Harden auxtrace_error event handling
+Date: Sun, 10 May 2026 00:34:04 -0300
+Message-ID: <20260510033424.255812-14-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260510033424.255812-1-acme@kernel.org>
 References: <20260510033424.255812-1-acme@kernel.org>
@@ -58,84 +58,178 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cpu_map__from_range() computes nr_cpus as end_cpu - start_cpu + 1.
-When a crafted perf.data has start_cpu > end_cpu, this wraps to a
-huge value, causing perf_cpu_map__empty_new() to attempt a massive
-allocation.
+Fix four issues in PERF_RECORD_AUXTRACE_ERROR handling:
 
-Return NULL when the range is inverted.
+1. auxtrace_error_name() takes a signed int parameter, but e->type
+   is __u32.  A crafted value like 0xFFFFFFFF converts to -1, passes
+   the bounds check, and causes a negative array index.  Fix by
+   changing the parameter to unsigned int.
 
-Also clamp any_cpu to boolean (0 or 1) since it is added to the
-allocation count — a crafted value > 1 would inflate the map size.
+2. The msg field is printed via %s without a length bound.  The
+   min_size table only guarantees fields up to msg (offset 48), so
+   a truncated event has zero msg bytes within the event boundary.
+   Compute the available msg length from header.size, cap at
+   sizeof(e->msg), and use %.*s.
 
-Harden cpu_map__from_mask() to reject unsupported long_size values
-(anything other than 4 or 8), preventing misinterpretation of the
-mask data layout.
+3. fmt >= 2 adds machine_pid and vcpu fields after msg[64].  Older
+   files may have fmt >= 2 but an event size that doesn't include
+   these fields.  Add a size check in the swap handler to downgrade
+   fmt before the conditional field access, and a matching size
+   guard in the fprintf path for native-endian events (which are
+   mmap'd read-only and can't be modified in place).
+
+4. python_process_auxtrace_error() had the same issues: msg was
+   passed to tuple_set_string() unbounded, and machine_pid/vcpu
+   were accessed unconditionally without checking fmt or event
+   size.  Apply the same bounds checks.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cpumap.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ tools/perf/util/auxtrace.c                    | 24 +++++++++++++---
+ .../scripting-engines/trace-event-python.c    | 28 +++++++++++++++++--
+ tools/perf/util/session.c                     | 18 ++++++++++--
+ 3 files changed, 61 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 11922e1ded844a03..c32db7b307d7d959 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -93,9 +93,18 @@ static struct perf_cpu_map *cpu_map__from_entries(const struct perf_record_cpu_m
- static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_data *data)
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index a224687ffbc1b5be..d9770e1d2f959fc4 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1759,7 +1759,7 @@ static const char * const auxtrace_error_type_name[] = {
+ 	[PERF_AUXTRACE_ERROR_ITRACE] = "instruction trace",
+ };
+ 
+-static const char *auxtrace_error_name(int type)
++static const char *auxtrace_error_name(unsigned int type)
  {
- 	DECLARE_BITMAP(local_copy, 64);
--	int weight = 0, mask_nr = data->mask32_data.nr;
-+	int weight = 0, mask_nr;
-+	/* Cache validated long_size — data is mmap'd and could change */
-+	u16 long_size;
- 	struct perf_cpu_map *map;
+ 	const char *error_type_name = NULL;
  
-+	/* long_size must be 4 or 8; other values overflow cpus_per_i below */
-+	if (data->mask32_data.long_size != 4 && data->mask32_data.long_size != 8)
-+		return NULL;
+@@ -1775,6 +1775,7 @@ size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp)
+ 	struct perf_record_auxtrace_error *e = &event->auxtrace_error;
+ 	unsigned long long nsecs = e->time;
+ 	const char *msg = e->msg;
++	int msg_max;
+ 	int ret;
+ 
+ 	ret = fprintf(fp, " %s error type %u",
+@@ -1792,11 +1793,26 @@ size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp)
+ 	if (!e->fmt)
+ 		msg = (const char *)&e->time;
+ 
+-	if (e->fmt >= 2 && e->machine_pid)
++	/* Bound msg to the bytes actually within the event, capped at the array size */
++	msg_max = (int)((void *)event + event->header.size - (void *)msg);
++	if (msg_max < 0)
++		msg_max = 0;
++	if (msg_max > (int)sizeof(e->msg))
++		msg_max = sizeof(e->msg);
 +
-+	long_size = data->mask32_data.long_size;
-+	mask_nr = data->mask32_data.nr;
++	/*
++	 * Unlike the swap path which downgrades fmt in place,
++	 * native-endian events are mmap'd read-only — check size
++	 * instead to avoid accessing machine_pid/vcpu OOB.
++	 */
++	if (e->fmt >= 2 &&
++	    event->header.size >= offsetof(typeof(event->auxtrace_error), vcpu) +
++				  sizeof(event->auxtrace_error.vcpu) &&
++	    e->machine_pid)
+ 		ret += fprintf(fp, " machine_pid %d vcpu %d", e->machine_pid, e->vcpu);
+ 
+-	ret += fprintf(fp, " cpu %d pid %d tid %d ip %#"PRI_lx64" code %u: %s\n",
+-		       e->cpu, e->pid, e->tid, e->ip, e->code, msg);
++	ret += fprintf(fp, " cpu %d pid %d tid %d ip %#"PRI_lx64" code %u: %.*s\n",
++		       e->cpu, e->pid, e->tid, e->ip, e->code, msg_max, msg);
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 5a30caaec73ef06b..5b8f629fd54cbe49 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1614,6 +1614,9 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
+ 	const char *handler_name = "auxtrace_error";
+ 	unsigned long long tm = e->time;
+ 	const char *msg = e->msg;
++	s32 machine_pid = 0, vcpu = 0;
++	char msg_buf[MAX_AUXTRACE_ERROR_MSG + 1];
++	int msg_max;
+ 	PyObject *handler, *t;
+ 
+ 	handler = get_handler(handler_name);
+@@ -1625,6 +1628,25 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
+ 		msg = (const char *)&e->time;
+ 	}
+ 
++	/* Bound msg to the bytes within the event, ensure NUL-termination */
++	msg_max = (int)((void *)event + event->header.size - (void *)msg);
++	if (msg_max <= 0) {
++		msg_buf[0] = '\0';
++	} else {
++		if (msg_max > (int)sizeof(msg_buf) - 1)
++			msg_max = sizeof(msg_buf) - 1;
++		memcpy(msg_buf, msg, msg_max);
++		msg_buf[msg_max] = '\0';
++	}
 +
- 	for (int i = 0; i < mask_nr; i++) {
- 		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
- 		weight += bitmap_weight(local_copy, 64);
-@@ -106,11 +115,14 @@ static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_
- 		return NULL;
- 
- 	for (int i = 0, j = 0; i < mask_nr; i++) {
--		int cpus_per_i = (i * data->mask32_data.long_size  * BITS_PER_BYTE);
-+		int cpus_per_i = (i * long_size * BITS_PER_BYTE);
- 		int cpu;
- 
- 		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
- 		for_each_set_bit(cpu, local_copy, 64) {
-+			/* Guard against more set bits than the first pass counted */
-+			if (j >= weight)
-+				break;
- 			if (cpu + cpus_per_i < INT16_MAX) {
- 				RC_CHK_ACCESS(map)->map[j++].cpu = cpu + cpus_per_i;
- 			} else {
-@@ -129,8 +141,12 @@ static struct perf_cpu_map *cpu_map__from_range(const struct perf_record_cpu_map
- 	struct perf_cpu_map *map;
- 	unsigned int i = 0;
- 
-+	if (data->range_cpu_data.end_cpu < data->range_cpu_data.start_cpu)
-+		return NULL;
++	/* Only access fmt >= 2 fields if the event is large enough */
++	if (e->fmt >= 2 &&
++	    event->header.size >= offsetof(typeof(event->auxtrace_error), vcpu) +
++				  sizeof(event->auxtrace_error.vcpu)) {
++		machine_pid = e->machine_pid;
++		vcpu = e->vcpu;
++	}
 +
-+	/* any_cpu is boolean (0 or 1), not a count — clamp to avoid inflated nr */
- 	map = perf_cpu_map__empty_new(data->range_cpu_data.end_cpu -
--				data->range_cpu_data.start_cpu + 1 + data->range_cpu_data.any_cpu);
-+				data->range_cpu_data.start_cpu + 1 + !!data->range_cpu_data.any_cpu);
- 	if (!map)
- 		return NULL;
+ 	t = tuple_new(11);
  
+ 	tuple_set_u32(t, 0, e->type);
+@@ -1634,10 +1656,10 @@ static void python_process_auxtrace_error(struct perf_session *session __maybe_u
+ 	tuple_set_s32(t, 4, e->tid);
+ 	tuple_set_u64(t, 5, e->ip);
+ 	tuple_set_u64(t, 6, tm);
+-	tuple_set_string(t, 7, msg);
++	tuple_set_string(t, 7, msg_buf);
+ 	tuple_set_u32(t, 8, cpumode);
+-	tuple_set_s32(t, 9, e->machine_pid);
+-	tuple_set_s32(t, 10, e->vcpu);
++	tuple_set_s32(t, 9, machine_pid);
++	tuple_set_s32(t, 10, vcpu);
+ 
+ 	call_object(handler, t, handler_name);
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index c23899c42ef7af34..a2dba77c6a2b9d2f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -747,8 +747,22 @@ static int perf_event__auxtrace_error_swap(union perf_event *event,
+ 	if (event->auxtrace_error.fmt)
+ 		event->auxtrace_error.time = bswap_64(event->auxtrace_error.time);
+ 	if (event->auxtrace_error.fmt >= 2) {
+-		event->auxtrace_error.machine_pid = bswap_32(event->auxtrace_error.machine_pid);
+-		event->auxtrace_error.vcpu = bswap_32(event->auxtrace_error.vcpu);
++		/*
++		 * fmt >= 2 adds machine_pid and vcpu after msg[64].
++		 * Older files may have fmt >= 2 but an event size
++		 * that doesn't include these fields — downgrade to
++		 * avoid swapping out of bounds.
++		 */
++		if (event->header.size < offsetof(typeof(event->auxtrace_error), vcpu) +
++					 sizeof(event->auxtrace_error.vcpu)) {
++			pr_warning("WARNING: PERF_RECORD_AUXTRACE_ERROR: fmt %u but event too small for machine_pid/vcpu (%u bytes), downgrading fmt\n",
++				   event->auxtrace_error.fmt,
++				   event->header.size);
++			event->auxtrace_error.fmt = 1;
++		} else {
++			event->auxtrace_error.machine_pid = bswap_32(event->auxtrace_error.machine_pid);
++			event->auxtrace_error.vcpu = bswap_32(event->auxtrace_error.vcpu);
++		}
+ 	}
+ 	return 0;
+ }
 -- 
 2.54.0
 
