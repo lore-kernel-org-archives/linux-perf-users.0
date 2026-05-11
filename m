@@ -1,238 +1,157 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B347E401A33
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 14:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778511438; cv=none; b=DRWorMC0BEBgVsZqGT0D4TAtvAB5/0+DGpB+wXQpxwcEr9kRVqGfrZg3t0vaRiEsQX/eAI6flEnqo5snbG4kNq92QXss+ufQsIX37P+sLIBqfKOFWzmKkBLEhL4wAxFXv2ZpptkI0V+49pPVHRyzYsHYt3fAkSwGMvpGGa+URjk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778511438; c=relaxed/simple;
-	bh=c0RkyRD1+LsDGq+lgiZuLPBDy9Zez13veFxZm7K1y9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OWpUpE8yconPuP9AGhTSHDAP4xIRAKEglwxG/jxzJ8Bq1b417zj1M4HdtE9Nl36LlocStRxewMN9Jc5wsR+8R+xVm4qEGhXXU+azH5MYCqcN3UYyMaYeplqEIBIn4KXS5DB9WM8VugSxEilXQGmRv13oKJPamE86x44yy25DZ2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sg1IZZ6P; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CEC3A453F
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 15:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778513314; cv=pass; b=hdnFX4R9GdJlBLw6J/384BvBpp5PCcrJ7LRwm4TppwOcchYbpZq7DZPUf2CMLAsgMWWld0OKe0qh46Z/h0yiaCBN112sAfSyhvDbg9pWO3RpKXrXvoGD0vytvkh3a29sjcFvItT2040oRsdcy0t4ykxP9ruC4p3c8EctZE+1TYQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778513314; c=relaxed/simple;
+	bh=BXduN/BYnHvSIca+chTMm8KKfn8pMqAMnzQR1MaogWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jw6qTtxUOx2ItmFy8KSqj2FCRL+0zq65jgpMCv/LslLKry/HlXHEfr7KVMzKyl813KbRHT1o0ehFWPAuRPaQrywIjG8tqYFB/4+XbdBOgewJNfRqgyIZNmWFxk1zADcsCl4PPmxqoMzmABjP3uEMyCU7d+nSKghV7koJyN070qo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fropvtvt; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sg1IZZ6P"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-45562c41ec7so1495928f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 07:57:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fropvtvt"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ba180a022dso265ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 08:28:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778513313; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ug0W0owYMNv352kWdJh1NBA59uTPQKfoAkPNAqhklmqRF89+aprIcsdiGqnhQzA+K/
+         WB9imCU3WQfjWZciC/tkZNMmFe28vkShCfC3Dw6fAC5KSySEwbZ0mGJs04zTxNHNOuaN
+         7RPXIhZUtzKHhhb0MXnNkaHUBjonZAvWZDYKvtHzJ3ferWxY+74H+nLQFQSiq5eGiiGG
+         L1cJvVW3AJZai9tFayEWxQtpjfxZktzqxz1xfV0vN5eGvaHtc+3UgFaOoRL42jIpE+/x
+         TDrUZ6aVnUIaFZKKJYHCS58dBJvLiL2h/U+4RWFYESno8vdkhf0Yk23wq0WgD1SQLgef
+         CCMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=p8REcFcYNRw5/dDIm8v37mlEB1OcP3CL0ecT+JMfoR0=;
+        fh=tbJVvj8VT5boZhbN+0fjIoJU9GYiQ1Za63Cy310TPsw=;
+        b=deA+BCtfKIPcYi20wWODeQ6ocDgaTUwxh4XjzGzO9lrvsXwJy4P3lOHzpRSzcbmI/t
+         W5qN8aIt0x/T/8MUz5XXoi/u7dHx1W4hhtk95ClC3RQTbBILp2ZU8vqhArB18lYbK19z
+         C2D86kEWNjyxLdMFt7c6+uxkyDp5aC6QqKXkJYQTpeuLLLzfwUkVz7jX5iiatGmbtqi/
+         KnbyfsNZUemB88wb6k19tT+4uiySjtEtH9C9oRqQr1kf2xtD3KmoL9CLmDydrsNSpq8i
+         5Ww0kvKy9WFppZqgIzK/EL07+yTXAckEJMXg/6nVeKHrdR1/V8Zq1ofwjvyOD6bhr9Ia
+         Yimg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778511435; x=1779116235; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QyL9i2Ps9ihe0zv6AT1n4AgSwB0/Wr45TQsgHUUycf0=;
-        b=sg1IZZ6PXi6pcPOTM5qx3w57DRFG5bm/bSxvlk5sx0X3+XfvjsCelO5RC5jHf/2gDL
-         bTQ3YRIsPFS7YiQUxtrG2iuKOOSg3o4IdO4cBbXPm40HWz0FcuwIs+GQGLQ1wOIja7ni
-         yxCf4uoa+t2zCl9QUhZPWPWb7ECWb7xk7kbBIYDgGrr6ADJ9lQsV4ykaRDvIsLAYZWv6
-         Q7q3K4gIOiRI8ZWVT5hElTheqqfCYtiy1m24d5MqYJW2uJTBGl4kQyf2Q7wiQJWfrkg/
-         LDG52X8nrLAV1LaCV6LnN4ARFSPEZjyjdj42gNxAV/PntELAwJLRoomLMiEMrTAicBVc
-         jn7Q==
+        d=google.com; s=20251104; t=1778513313; x=1779118113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p8REcFcYNRw5/dDIm8v37mlEB1OcP3CL0ecT+JMfoR0=;
+        b=fropvtvtvh9+HoSgbfo3ds5HH8koOmBCGsWXKaQon888NB6cGUCEU9DmkgkM7ofogj
+         wVz8HyZi/G1MsNgJKMJprf4cTVq8GS+8TWVCrEKwf/N5uGGAvy23ashy5er2cSE+fOOQ
+         /0gsqx3dhNi252s8zAPNOJGoNXOP+kJ/s3Ovlirfcxwu433dsoeOdZPf7r0ci5Ze6GF0
+         hrHhAZ+LCV9HC4yVJm77mhXmzX5DKtfLiGa5KU1jpPPgpznXHcMLcL7DbCr+hIFlEw18
+         Hk0UcscEAkWX0XOAxSgnWZwS8O/q9/xPdGb/L/e1FQGspa6YyyyR+SYNswM1AbVFtaFG
+         8NRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778511435; x=1779116235;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QyL9i2Ps9ihe0zv6AT1n4AgSwB0/Wr45TQsgHUUycf0=;
-        b=UYbkBYR7l8LZCv5/CwBGlMX3LBX8CJScD1k4Hjsm8mwK8IrwKo8+SHtnk856BkRh4e
-         m/R5Zo8aLHOEfLO+CQTzIe/Lldj/TI0052Zh2oj/gSxeJ8xccFunNzka1RBo/8AZYHZ1
-         kCXVagyAgKNG+zz1MYl/3drrJOg8tqeDaJjtaezJz1v3tm8pGKO4gw6blEmYdJOX9mOQ
-         22mro3Tz7sR1M38LSMhXn/ZCI29yEDHXZ3KgIwWNSFh8/pvrIrc7WVbwPuVhPVq2gx+g
-         2+4kL9aQOr156SUUHPyuOgo/Eh/1z7sgYSaWhJ1nuoBGBcoFDkaZpDlxp2Q5LScWVb3F
-         q+8A==
-X-Forwarded-Encrypted: i=1; AFNElJ/CWTfSMiuZPYBYRVNuSkyojdJdOF8q3/AgxnKnTw66R12EKWyL/ZGn0Pv4Bao3CQ1AAQCtNcZkmfqQxAXfpoCU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy93Y+McjrDRhXxhnrxuRZl4GW5EVnDQh4v1ViQK23HkRgjleb6
-	9TTYsFc8p/m+lEKs+Je/v1vfDaXGEeoAkRvuvfFbPTQYjEQED0SqoD2UwIeso+zBmjo=
-X-Gm-Gg: Acq92OHn8wM18D5bCEhn6dUKSF8PIAM38GTi4m6wphjyjVjrbMv2PXu5wwhF9/ps2TA
-	CydlOe5D688c2K22C+gKAiHvdLNnCyc4MldRTd+6mjsPhLX537A2LwmUjo3ezRvg2KPsaKaZat4
-	y2vJoH4lrmiQXN5oEbIpcpKieMf2Qt9ER50hW+WfvgKcAXyaIoLH4tqry7Gc/2UCPahmsvG9ohM
-	L/qYrcgk/A4cM2qDCfRWT8q5i83ziiN/UtOTDGmbUJMNuXd49FkR2YLxO+ejGFOtRHvOSvriRUS
-	cxuAAFFsJ+TbuuAb695PPo1+V0yIfUSjGdCzl/DqXILfNikAEkE/eGgY+Tw2QG+5kRkdkZv9t66
-	IArYYvo/upjYL0AWBL5LHNy7SSUV5OAEI/QqnR2ididIsv4eiRBRlABMFUHg9aRK00u3GaL8Cxy
-	3zxwpskgXQ0AdiioaizUKxjvvSbOnEU36ofdpMUGo=
-X-Received: by 2002:a5d:64e8:0:b0:449:9aee:4573 with SMTP id ffacd0b85a97d-4515ad768e3mr41131274f8f.18.1778511435091;
-        Mon, 11 May 2026 07:57:15 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45491f8d4c3sm25577709f8f.34.2026.05.11.07.57.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2026 07:57:14 -0700 (PDT)
-Message-ID: <18d747ea-660a-4ae6-b8b8-365d745352ce@linaro.org>
-Date: Mon, 11 May 2026 15:57:13 +0100
+        d=1e100.net; s=20251104; t=1778513313; x=1779118113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=p8REcFcYNRw5/dDIm8v37mlEB1OcP3CL0ecT+JMfoR0=;
+        b=jjrS6p204miBoVT+1KVSA1NJEPOKhaESqwsZpU8dDOkpRb1ITRGuV9u6qCO0iF/SH2
+         xqKAsc9p625DFGiKqM0MryjTqE6hZXeuN7nWmEh/CRbDMFegXGG/Y13dshWXOnR+JPJ1
+         XZrTLIm3v5P5Usk+Th61213JHEFlQtUjcGKU8jVJZujrYfYGgoAIuv9ilh/axC4gl3Tv
+         62Hi4FxfCgk/ypSPoU82k4tdFJoyOdL1irs82fvLX+vO6NUlqPelX+geb6lFMhoEpg/d
+         DPzHgx81SE6Mt0q2e3dbHvpcjt96SD8OO//R2jwEnrXHddVcekkyGszvc1KYzou704hu
+         Q4Kg==
+X-Forwarded-Encrypted: i=1; AFNElJ+igA27hknabWuCHiA9eSlE6MHqqzUPh/0YNUUAC6WNmSlQXVIS+axuKjf/Vwj2t++G5bfPLeSLqoc4qpRPTaKs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz968J0+Kqgk8rojyw0DO4igDFRA2wtbZKv3LV8SaO1RV6mC0QP
+	vt4bs+83fdBRXtKG4+1VE67OeJkDFA86h6Uj+KZMHwbIvLNoAuHtpgk7ert1FU/EjEMAc6kqUTs
+	HLAsd6YzoAwvgxVfNjKka67TVdiyF2cDCa5sNcbfs
+X-Gm-Gg: Acq92OESJdLJLjJDyVV65EQJx2L3UgwJAqegXO4FbU+mUXpHfvoMXbfkuEDWRDpjujW
+	wjksbWiAMrfyb/Hms98IVq4VftTXLcLVixD/YL/17ODhtz9vx7q15C/sdZ0A5HNYQINfqYzpk9i
+	8uiQizd93xGDEBQMXjZMckRIE1o12ikWxKGbBG38TZZnfTF7FDP67X0ui00/0t6ZEmUEiH2FQso
+	SlVNvWRN3JKWzqJGUKYutuGLJmI1WWcj0RIRrEZuHt+zIfLbBCnnxo0qiYo2PtV7y+TEBytMkB2
+	p4q+3q5NMiGPICloiVWK+eDC3KkR/w3QCvEnTR/qiHvBoGGP
+X-Received: by 2002:a17:902:f651:b0:2b7:b03d:9dce with SMTP id
+ d9443c01a7336-2bc747e01d5mr5578935ad.18.1778513312304; Mon, 11 May 2026
+ 08:28:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/20] ARM64 PMU Partitioning
-To: Colton Lewis <coltonlewis@google.com>
-Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuah Khan <shuah@kernel.org>,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260504211813.1804997-1-coltonlewis@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260504211813.1804997-1-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <agHHR56pFGeDJOxE@x1>
+In-Reply-To: <agHHR56pFGeDJOxE@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 11 May 2026 08:28:20 -0700
+X-Gm-Features: AVHnY4LVXsjTmJws9xHjTo8zOrDngttSrU1-r40chJ3upAS6nph1rQ2EZpyU7YE
+Message-ID: <CAP-5=fWnEevjKwhQth5bZDsq0pBqV1=1M1OYOqR2YPNw0OL4LQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf tests data_validation: Fixup test header
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 11, 2026 at 5:10=E2=80=AFAM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> We made a mistake by having the SPDX comment in the second line, where
+> 'perf test' shell support expects the test title, fix it.
+>
+> Now we can specify a substring and have that test selected:
+>
+>   root@number:~# perf test truncat
+>    84: Test that perf report handles truncated perf.data gracefully (no c=
+rash, no segfault =E2=80=94 clean error exit).: Ok
+>   root@number:~# perf test -vv truncat
+>    84: Test that perf report handles truncated perf.data gracefully (no c=
+rash, no segfault =E2=80=94 clean error exit).:
+>   --- start ---
+>   test child forked, pid 62890
+>   ---- end(0) ----
+>    84: Test that perf report handles truncated perf.data gracefully (no c=
+rash, no segfault =E2=80=94 clean error exit).: Ok
+>   root@number:~#
+>
+> Fixes: 24be50a54cb38cb4 ("perf test: Add truncated perf.data robustness t=
+est")
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-On 04/05/2026 10:17 pm, Colton Lewis wrote:
-> This series creates a new PMU scheme on ARM, a partitioned PMU that
-> allows reserving a subset of counters for more direct guest access,
-> significantly reducing overhead. More details, including performance
-> benchmarks, can be read in the v1 cover letter linked below.
-> 
-> An overview of what this series accomplishes was presented at KVM
-> Forum 2025. Slides [1] and video [2] are linked below.
-> 
-> After a few false starts, meeting with Will Deacon and Mark Rutland to
-> discuss implementation ideas, and a few more false starts, I finally
-> have an implementation of dynamic counter reservation that works
-> without disrupting host perf too much. Now the host only loses access
-> to the guest counters when a vCPU resides on the CPU.
-> 
-> The key was creating perf_pmu_resched_update, which behaves exactly
-> like perf_pmu_resched except it takes a callback to call in between
-> when the perf events are scheduled out and when they are scheduled
-> back in. That allows us to update the PMU's available counters when we
-> know they are not currently in use without needing to expose private
-> perf core functions and triple check they are not being called in a
-> way that violates existing assumptions.
-> 
-> Because this introduces a possibility of perf reschedule during vCPU
-> load, I've optimized to only do that operation if there are host
-> events occupying the intended guest counters at the time of the load.
-> 
-> The kernel command line parameter for the driver still exists, but now
-> only defines an upper limit of counters the guest might use rather
-> than taking those counters from the host permanently.
-> 
-> v7:
-> 
-> * Implement dynamic counter reservation as described above. One side
->    effect is the PMUv3 driver now needs much fewer changes to enforce
->    the boundary.
-> 
-> * Move register accesses out of fast path for non-FGT hardware. The
->    performance impact was negligible and this moves bloat out of the
->    fast path and allows a more reliable design with more code sharing.
-> 
-> * Make PMCCNTR a special case in the context swap again because trying
->    to access it with PMXEVCNTR is undefined.
-> 
-> * Fix a bug where kvm_pmu_guest_counter_mask was using & instead of |.
-> 
-> * Re-expose the dedicated instruction counter to the host since it was
->    decided the guest will not own it.
-> 
-> * Change the global armv8pmu_reserved_host_counters to
->    armv8pmu_is_partitoned because it was only used in boolean checks.
-> 
-> * Fix typo in vcpu attribute commit so the spelling of the flag in the
->    commit message matches the code.
-> 
-> * Rebase to v7.0-rc7
-> 
-> v6:
-> https://lore.kernel.org/kvmarm/20260209221414.2169465-1-coltonlewis@google.com/
-> 
-> v5:
-> https://lore.kernel.org/kvmarm/20251209205121.1871534-1-coltonlewis@google.com/
-> 
-> v4:
-> https://lore.kernel.org/kvmarm/20250714225917.1396543-1-coltonlewis@google.com/
-> 
-> v3:
-> https://lore.kernel.org/kvm/20250626200459.1153955-1-coltonlewis@google.com/
-> 
-> v2:
-> https://lore.kernel.org/kvm/20250620221326.1261128-1-coltonlewis@google.com/
-> 
-> v1:
-> https://lore.kernel.org/kvm/20250602192702.2125115-1-coltonlewis@google.com/
-> 
-> [1] https://gitlab.com/qemu-project/kvm-forum/-/raw/main/_attachments/2025/Optimizing__itvHkhc.pdf
-> [2] https://www.youtube.com/watch?v=YRzZ8jMIA6M&list=PLW3ep1uCIRfxwmllXTOA2txfDWN6vUOHp&index=9
-> 
-> Colton Lewis (19):
->    arm64: cpufeature: Add cpucap for HPMN0
->    KVM: arm64: Reorganize PMU functions
->    perf: arm_pmuv3: Generalize counter bitmasks
->    perf: arm_pmuv3: Check cntr_mask before using pmccntr
->    perf: arm_pmuv3: Add method to partition the PMU
->    KVM: arm64: Set up FGT for Partitioned PMU
->    KVM: arm64: Add Partitioned PMU register trap handlers
->    KVM: arm64: Set up MDCR_EL2 to handle a Partitioned PMU
->    KVM: arm64: Context swap Partitioned PMU guest registers
->    KVM: arm64: Enforce PMU event filter at vcpu_load()
->    perf: Add perf_pmu_resched_update()
->    KVM: arm64: Apply dynamic guest counter reservations
->    KVM: arm64: Implement lazy PMU context swaps
->    perf: arm_pmuv3: Handle IRQs for Partitioned PMU guest counters
->    KVM: arm64: Detect overflows for the Partitioned PMU
->    KVM: arm64: Add vCPU device attr to partition the PMU
->    KVM: selftests: Add find_bit to KVM library
->    KVM: arm64: selftests: Add test case for Partitioned PMU
->    KVM: arm64: selftests: Relax testing for exceptions when partitioned
-> 
-> Marc Zyngier (1):
->    KVM: arm64: Reorganize PMU includes
-> 
->   arch/arm/include/asm/arm_pmuv3.h              |  18 +
->   arch/arm64/include/asm/arm_pmuv3.h            |  12 +-
->   arch/arm64/include/asm/kvm_host.h             |  17 +-
->   arch/arm64/include/asm/kvm_types.h            |   6 +-
->   arch/arm64/include/uapi/asm/kvm.h             |   2 +
->   arch/arm64/kernel/cpufeature.c                |   8 +
->   arch/arm64/kvm/Makefile                       |   2 +-
->   arch/arm64/kvm/arm.c                          |   2 +
->   arch/arm64/kvm/config.c                       |  41 +-
->   arch/arm64/kvm/debug.c                        |  31 +-
->   arch/arm64/kvm/pmu-direct.c                   | 494 ++++++++++++
->   arch/arm64/kvm/pmu-emul.c                     | 674 +----------------
->   arch/arm64/kvm/pmu.c                          | 701 ++++++++++++++++++
->   arch/arm64/kvm/sys_regs.c                     | 250 ++++++-
->   arch/arm64/tools/cpucaps                      |   1 +
->   arch/arm64/tools/sysreg                       |   6 +-
->   drivers/perf/arm_pmuv3.c                      | 111 ++-
->   include/kvm/arm_pmu.h                         | 110 +++
->   include/linux/perf/arm_pmu.h                  |   3 +
->   include/linux/perf/arm_pmuv3.h                |  14 +-
->   include/linux/perf_event.h                    |   3 +
->   kernel/events/core.c                          |  28 +-
->   tools/testing/selftests/kvm/Makefile.kvm      |   1 +
->   .../selftests/kvm/arm64/vpmu_counter_access.c | 112 ++-
->   tools/testing/selftests/kvm/lib/find_bit.c    |   1 +
->   25 files changed, 1861 insertions(+), 787 deletions(-)
->   create mode 100644 arch/arm64/kvm/pmu-direct.c
->   create mode 100644 tools/testing/selftests/kvm/lib/find_bit.c
-> 
-> 
-> base-commit: 591cd656a1bf5ea94a222af5ef2ee76df029c1d2
+I plan to send a patch to improve how the test name is read from a
+script. It is either that or continuing to spend time teaching my LLM
+not to make checkpatch.pl happy and thereby break this. It seems
+better that we just teach the code to skip lines containing SPDX.
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/tests/shell/data_validation.sh | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests=
+/shell/data_validation.sh
+> index 649f71b6cdb93202..f8fcc4c0448b0c51 100755
+> --- a/tools/perf/tests/shell/data_validation.sh
+> +++ b/tools/perf/tests/shell/data_validation.sh
+> @@ -1,7 +1,6 @@
+>  #!/bin/bash
+> +# Test that perf report handles truncated perf.data gracefully (no crash=
+, no segfault =E2=80=94 clean error exit).
+>  # SPDX-License-Identifier: GPL-2.0
+> -# Test that perf report handles truncated perf.data gracefully
+> -# (no crash, no segfault =E2=80=94 clean error exit).
+>  #
+>  # Exercises the bounds checking and minimum-size validation added
+>  # by the perf-data-validation hardening series.
 > --
-> 2.54.0.545.g6539524ca2-goog
-
-I tested it a bit and ran the kselftests and it all seems to be working 
-ok. Some of the critical sashiko comments look like they are worth 
-looking into though: 
-https://sashiko.dev/#/patchset/20260504211813.1804997-1-coltonlewis%40google.com
-
-For example writing to PMCR_EL0.P from EL2 resets the host's counters, 
-even if it's KVM doing it after trapping a write from the guest.
-
+> 2.54.0
+>
