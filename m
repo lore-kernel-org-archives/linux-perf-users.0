@@ -1,578 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6760E324B16;
-	Mon, 11 May 2026 07:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35DA3B27D0
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 09:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778484893; cv=none; b=DAdMjAfSWtltaaJLAK9C0+6Yc0EmR12FGgSaTXbkn3MjqApeNL87b5jeUpUM419ln/a8jYZ/E4jJHBP/XQxucHehtMU1Tkrzgh7Re+lMF8x90LQk6x5TBziDOY643m6fGetG8/F7cCvtZYQXpfg0PmldqmN3Bw/kpgB8trqqhEw=
+	t=1778491197; cv=none; b=jvR0VMBSKJERBUKFWF94R6CAdhMvFW0yMovqd5n1pt6UrCRrdi6MCEw8Y0sKbwkmZXIznU9NqTm8jqTg/lmviLagi9gypUw0u3Sys5D4di2xWIW9a2QrpPkyQHss5qXk8pyBeibXLtZSVLnxCBjtowV52GtQGIJ+xCr9Qj72b94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778484893; c=relaxed/simple;
-	bh=jKWt/oveFInx1RhNyuqZ5Jpen/iEvJU8SFD0dXtmcw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YipLbP5IvTicgocM1iNYR28CWm33IREuib5+HagjEHVGNDRIh/CLX7Gd8WApC3o8ePKxU2BUMgVm1krSytn+3nUWOc5+xAd8zk+7m79WU2IAHaYU/Da7MQBsOFSEpSf4Qk1jPPIqMR3jZMIHk7nSeRnC/I4XrZi0FANR1y9KzGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+oGopmB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778491197; c=relaxed/simple;
+	bh=CrbWv/+o15mvy9673dGVtso71ofEsxWnWpMd4FvQ1eA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KQBdLnLqZtAbR/OI+v+1FWL6w05ZEv0/H3w4A680AdRu+42vN7nm9ZJDZFMc+yomfQXwyUbgTqoslFYJeBaAyS1gHZn4p1N4B3kpZ/9sz0G2wtlQKvL6kXSpAFxCGrGlz459F9AfFRh19oFDuIDwZVTNNEyQV7//pm24xrJ6RWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I1tK/1aw; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+oGopmB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A521DC2BCB0;
-	Mon, 11 May 2026 07:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778484893;
-	bh=jKWt/oveFInx1RhNyuqZ5Jpen/iEvJU8SFD0dXtmcw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K+oGopmBiefViapXQY+YYTIfW6YwtwOp99BuoeETKPsvERcCjU4BSh79hJmWLOAuL
-	 +KtBCvR6TtR8NmB6tWFQ0WDh0rMn4C4Y7/IfHkcOBLuADrl7vaRZxCDs/Z/BX0hb/q
-	 +toP6f7uZBSRfA/cjlMk8YWh41GA/+RTOfzlUQS8onmZ3HMAMNAZnZBNzLtbtHSGUO
-	 AsMUBcZFTe0jyFbha8als9DDtcHtTYpfKo4ZjEGaH7X2y2ZyqqujsguF5qM3QkbMnv
-	 gjGyv18m+OTNNhmLWmXeUcq4FdIGjhfnYe6XKL9PD0s/zuxEI6or8zCkJZ6dA7C2Xb
-	 hvK203++VpBCQ==
-Date: Mon, 11 May 2026 00:34:51 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, gmx@google.com, james.clark@linaro.org,
-	adrian.hunter@intel.com, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v6 5/6] perf test: Add inject ASLR test
-Message-ID: <agGGm-QVsBb_apge@z2>
-References: <20260506004546.3140141-1-irogers@google.com>
- <20260508082726.2795191-1-irogers@google.com>
- <20260508082726.2795191-6-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1tK/1aw"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43d73422431so3140218f8f.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 02:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1778491194; x=1779095994; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M2qwjeFR+f82S2J46kJab8g15mwoOiMqUIGcgspw2vs=;
+        b=I1tK/1aw6pSqVBrghLFy2ok5i331/PTnRU2STRZ0Zk40dumrukrxO4VXzdxYRYsJXE
+         EwqXDk63aPoFic5fqhosk6j17wMzRy7KGI38dYeX+HYURbUxfMTUCOzYOj42kxBMLOFh
+         PlPWkY2qcvnokilVMAYZtlxNNMpvXf1Hkbp0HWOF13kkRuknu97pmZW7ZVHZsaB6STEs
+         k6TENuoumEa+pj3gDOalu60ULXiEq5ltUbzuLr+G8SUl59g6cwWgnHOQnOy/uDbwHWyh
+         qCaVgk+92gXgb8I6i27vdSoPPkk/FO4ZeMyFxQs0YmDpprQrjhmh718mQu/tl4zh6trL
+         +Cdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778491194; x=1779095994;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M2qwjeFR+f82S2J46kJab8g15mwoOiMqUIGcgspw2vs=;
+        b=UbDfAR6Obv2xYWu/Nznr/3Sx/39QphflvHaWHLE+cKPL9Tuv+ju1+lCCJWW/3iuNal
+         Xq23VGkKbdS/f6rPkjm0pFYZd9xr6pT5YuxbaZcpf3Wev0MFOLoYtfKfefsjSMEMJ3k/
+         Zx6YHjJ40WeVxfOpFqjZq3c89WxWfiXdr672ds/iUJV28Eauuvmf33xx7TIs3FLH878h
+         iInZ9Kziiv/WyVCnCRf2Sgkep5M4biBB98lZTYxC3Xr5kACX6qeRCYDDgFaj7Lbsf2ke
+         Qe1syEAk/HQ2VJhSnnbVzuQ0YTDiprhYZCWFu/AIUvZSnpXak6p9TC4lLN4BCelVYR56
+         gGhA==
+X-Gm-Message-State: AOJu0YycadMPCF0o5DCiRfpsK9x0hn9qYc6BSNTr6iQGiZt285GtpHU7
+	cgb4WDvq1sE+wjOSJpNENl3bXHW7x2d8CQuJy2PALkgXcKn+w5H7aKf6ffOKBepibzM=
+X-Gm-Gg: Acq92OG/0sR7W4/9p5R0ZtlRSB0mp8wtUJRmQOaE5WE4pz4YieXO25x2LbjaZT6oXZx
+	0QtYjcbmq5Ld8rZOYWWB9kX+JIyjqNC3JrAETkj49POSdbxqLI+D95FLsxh8aROh5/FhL1zq+pt
+	n/w6NHConsbmThQHcT6sUogDO+o06Fh2fsGuee0YJFgEigtw0YFVdQOyqcOcw1TluzmZmQubGQg
+	mDb/i+Qj/1jRYPgMwh8yT0Dql+HlkQNbS8rNCiYJj+FC253WhAD0R4jKeiS12n34N0o4a7Lj2uM
+	JmOvxWPnDHO2OAqct4EtTX3ckOzpsEXRcdzRVe6JdvMJysbbBCDUTi8Jaw/VysYU5n/lkDTzvpj
+	xyPK5Ew9P58i4j4+iSvnWZsz1nqrf57dt8bqVuoud6R74NQQpM9oCWIr1YG9Mon13Dqpjn+0lrX
+	zpFzhuORYJJdqXw6ra57e/+066gxopsaFW
+X-Received: by 2002:adf:e604:0:b0:452:c246:ab69 with SMTP id ffacd0b85a97d-452c246ac50mr22531878f8f.13.1778491194013;
+        Mon, 11 May 2026 02:19:54 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-454917d57aesm24679319f8f.26.2026.05.11.02.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2026 02:19:53 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Mon, 11 May 2026 10:19:35 +0100
+Subject: [PATCH v2] perf test: Make leafloop workload immune to compiler
+ options
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260508082726.2795191-6-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260511-james-perf-leafloop-stack-v2-1-79f7383f545e@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACafAWoC/42NQQ6CMBBFr2Jm7Zh2jEhceQ/DorZTGEVKpoRoC
+ He3cgKX7+f/9xfIrMIZLrsFlGfJkoYCtN+B79zQMkooDGSoMidT48O9OOPIGrFnF/uURsyT80/
+ 0RLYyhkOIBGU/Kkd5b+5bU7iTPCX9bFez/aX/WGeLFqvj2ZfmnYKrr70MTtMhaQvNuq5fJqmVn
+ 8MAAAA=
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-On Fri, May 08, 2026 at 01:27:25AM -0700, Ian Rogers wrote:
-> Add a new shell test `inject_aslr.sh` to verify the `perf inject --aslr`
-> feature. The test covers:
-> - Basic address remapping for user space samples.
-> - Pipe mode coverage for `perf record` piped into `perf inject --aslr`.
-> - Callchain address remapping.
-> - Consistency of `perf report` output before and after injection.
-> - Pipe mode report consistency.
-> - Dropping of samples that leak ASLR info (physical addresses).
-> - Kernel address remapping (utilizing a dedicated kernel-intensive VFS dd workload
->   to guarantee continuous timer interrupts sampling flow inside kernel privilege states).
-> - Kernel report consistency with address normalization.
-> 
-> The test suite is hardened with global 'set -o pipefail' assertions to catch
-> pipeline failures, stream-consuming awk processors to handle SIGPIPE signals,
-> and a dedicated pipe output scenario validating raw 'perf inject -o -' stdout
-> streams.
-> 
-> Assisted-by: Gemini-CLI:Google Gemini 3
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> v6: Refactor kernel-space sampling test cases to utilize a dedicated
->     system-call intensive VFS dd workload (kprog) instead of purely
->     userspace-bound tight loops, guaranteeing high-density kernel
->     privilege state sampling streams and eliminating intermittent
->     execution flakiness dropouts.
-> 
-> v5: Harden test suite verification pipelines by upgrading report
->     checks to strict sorted line-by-line diff comparisons to
->     accommodate remapped pointer shifts. Append || true fallback
->     operators to grep-v filtering pipelines to prevent the shell test
->     from spuriously aborting under set -o pipefail on empty inputs,
->     ensuring graceful failure checks trigger correctly.
-> 
-> v4: Reorder set -e/pipefail to prevent temp file leakage in root
->     directory on unprivileged record failures when run as root. Ensure
->     grep report filters have || true suffixes to avoid aborts under
->     pipefail. Add comprehensive pipe stdout injection attributes
->     validation case.
-> 
-> v3: Harden script with pipefail, SIGPIPE awk pipeline fixes, callchain
->     empty data asserts, baseline sample verification, and grep report
->     abort protections. Reorder set -e/pipefail to prevent stack leaks
->     in mktemp failures.
-> 
-> v2: Add sum comparison for kernel overhead and 32-bit math corrections. Add
->     awk with gsub for trailing dots and brackets normalizations. Trap EXIT,
->     prevent race conditions and avoid hardcoded perf binary.
-> ---
->  tools/perf/tests/shell/inject_aslr.sh | 460 ++++++++++++++++++++++++++
->  1 file changed, 460 insertions(+)
->  create mode 100755 tools/perf/tests/shell/inject_aslr.sh
-> 
-> diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
-> new file mode 100755
-> index 000000000000..6363a0f69d2b
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/inject_aslr.sh
-> @@ -0,0 +1,460 @@
-> +#!/bin/bash
-> +# perf inject --aslr test
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +set -o pipefail
-> +
-> +shelldir=$(dirname "$0")
-> +# shellcheck source=lib/perf_has_symbol.sh
-> +. "${shelldir}"/lib/perf_has_symbol.sh
-> +
-> +sym="noploop"
-> +
-> +skip_test_missing_symbol ${sym}
-> +
-> +# Create global temp directory
-> +temp_dir=$(mktemp -d /tmp/perf-test-aslr.XXXXXXXXXX)
-> +data="${temp_dir}/perf.data"
-> +data2="${temp_dir}/perf.data2"
-> +
-> +prog="perf test -w noploop"
-> +[ "$(uname -m)" = "s390x" ] && prog="$prog 3"
-> +err=0
-> +kprog="dd if=/dev/zero of=/dev/null bs=1M count=500"
-> +
-> +cleanup() {
-> +  # Check if temp_dir is set and looks sane before removing
-> +  if [[ "${temp_dir}" =~ ^/tmp/perf-test-aslr\. ]]; then
-> +    rm -rf "${temp_dir}"
-> +  fi
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +
-> +trap cleanup EXIT
-> +trap trap_cleanup TERM INT
-> +
-> +get_noploop_addr() {
-> +  local file=$1
-> +  perf script -i "$file" | awk '
-> +    BEGIN { found=0 }
-> +    {
-> +      for (i=1; i<=NF; i++) {
-> +        if ($i ~ /noploop\+/) {
-> +          if (!found) {
-> +            print $(i-1)
-> +            found=1
-> +          }
-> +        }
-> +      }
-> +    }'
-> +}
-> +
-> +test_basic_aslr() {
-> +  echo "Test basic ASLR remapping"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.basic.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.basic.XXXXXX")
+Since the leafloop test program was moved into the main Perf binary as a
+workload, it inherited the same compiler options as Perf. In this case
+the -fstack-protector option broke the assumption that simple leaf
+frames don't have a stack frame on Arm. This causes
+test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
+the link register, making the test useless.
 
-Why not use the globally defined data and data2 here and below?
+Fix it by rewriting the leaf function in assembly seeing as it's so
+simple. Adding -fno-stack-protector would also work, but wouldn't be
+robust against other future compiler option additions.
 
-Thanks,
-Namhyung
+The local variables and 'a' variable were never needed so remove them to
+simplify.
 
-> +
-> +  perf record -e task-clock:u -o "${data}" ${prog}
-> +  perf inject -v --aslr -i "${data}" -o "${data2}"
-> +
-> +  orig_addr=$(get_noploop_addr "${data}")
-> +  new_addr=$(get_noploop_addr "${data2}")
-> +
-> +  echo "Basic ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-> +
-> +  if [ -z "$orig_addr" ]; then
-> +    echo "Basic ASLR test [Failed - no noploop samples in original file]"
-> +    err=1
-> +  elif [ -z "$new_addr" ]; then
-> +    echo "Basic ASLR test [Failed - could not find remapped address]"
-> +    err=1
-> +  elif [ "$orig_addr" = "$new_addr" ]; then
-> +    echo "Basic ASLR test [Failed - addresses are not remapped]"
-> +    err=1
-> +  else
-> +    echo "Basic ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_pipe_aslr() {
-> +  echo "Test pipe mode ASLR remapping"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.pipe.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.pipe.XXXXXX")
-> +
-> +  # Use tee to save the original pipe data for comparison
-> +  perf record -e task-clock:u -o - ${prog} | tee "${data}" | perf inject --aslr -o "${data2}"
-> +
-> +  orig_addr=$(get_noploop_addr "${data}")
-> +  new_addr=$(get_noploop_addr "${data2}")
-> +
-> +  echo "Pipe ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-> +
-> +  if [ -z "$orig_addr" ]; then
-> +    echo "Pipe ASLR test [Failed - no noploop samples in original file]"
-> +    err=1
-> +  elif [ -z "$new_addr" ]; then
-> +    echo "Pipe ASLR test [Failed - could not find remapped address]"
-> +    err=1
-> +  elif [ "$orig_addr" = "$new_addr" ]; then
-> +    echo "Pipe ASLR test [Failed - addresses are not remapped]"
-> +    err=1
-> +  else
-> +    echo "Pipe ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_callchain_aslr() {
-> +  echo "Test Callchain ASLR remapping"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.callchain.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.callchain.XXXXXX")
-> +
-> +  perf record -g -e task-clock:u -o "${data}" ${prog}
-> +  perf inject --aslr -i "${data}" -o "${data2}"
-> +
-> +  orig_addr=$(get_noploop_addr "${data}")
-> +  new_addr=$(get_noploop_addr "${data2}")
-> +
-> +  echo "Callchain ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-> +
-> +  if [ -z "$orig_addr" ]; then
-> +    echo "Callchain ASLR test [Failed - no noploop samples in original file]"
-> +    err=1
-> +  elif [ -z "$new_addr" ]; then
-> +    echo "Callchain ASLR test [Failed - could not find remapped address]"
-> +    err=1
-> +  elif [ "$orig_addr" = "$new_addr" ]; then
-> +    echo "Callchain ASLR test [Failed - addresses are not remapped]"
-> +    err=1
-> +  else
-> +    # Extract callchain addresses (indented lines starting with hex addresses)
-> +    orig_callchain=$(perf script -i "${data}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
-> +    new_callchain=$(perf script -i "${data2}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
-> +
-> +    if [ -z "$orig_callchain" ]; then
-> +      echo "Callchain ASLR test [Failed - no callchain samples in original file]"
-> +      err=1
-> +    elif [ -z "$new_callchain" ]; then
-> +      echo "Callchain ASLR test [Failed - callchain data was dropped]"
-> +      err=1
-> +    elif [ "$orig_callchain" = "$new_callchain" ]; then
-> +      echo "Callchain ASLR test [Failed - callchain addresses were not remapped]"
-> +      err=1
-> +    else
-> +      echo "Callchain ASLR test [Success]"
-> +    fi
-> +  fi
-> +}
-> +
-> +test_report_aslr() {
-> +  echo "Test perf report consistency"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.report.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.report.XXXXXX")
-> +  local data_clean
-> +  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-> +
-> +  perf record -e task-clock:u -o "${data}" ${prog}
-> +  # Use -b to inject build-ids and force ordered events processing in both
-> +  perf inject -b -i "${data}" -o "${data_clean}"
-> +  perf inject -v -b --aslr -i "${data}" -o "${data2}"
-> +
-> +  local report1="${temp_dir}/report1"
-> +  local report2="${temp_dir}/report2"
-> +  local report1_clean="${temp_dir}/report1.clean"
-> +  local report2_clean="${temp_dir}/report2.clean"
-> +  local diff_file="${temp_dir}/diff"
-> +
-> +  perf report -i "${data_clean}" --stdio > "${report1}"
-> +  perf report -i "${data2}" --stdio > "${report2}"
-> +
-> +  # Strip headers and compare lines with percentages
-> +  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
-> +  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
-> +
-> +  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-> +
-> +  if [ ! -s "${report1_clean}" ]; then
-> +    echo "Report ASLR test [Failed - no samples captured]"
-> +    err=1
-> +  elif [ -s "${diff_file}" ]; then
-> +    echo "Report ASLR test [Failed - reports differ]"
-> +    echo "Showing first 20 lines of diff:"
-> +    head -n 20 "${diff_file}"
-> +    err=1
-> +  else
-> +    echo "Report ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_pipe_report_aslr() {
-> +  echo "Test pipe mode perf report consistency"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.pipe_report.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.pipe_report.XXXXXX")
-> +  local data_clean
-> +  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-> +
-> +  # Use tee to save the original pipe data, then process it with inject -b
-> +  perf record -e task-clock:u -o - ${prog} | \
-> +    tee "${data}" | \
-> +    perf inject -b --aslr -o "${data2}"
-> +  perf inject -b -i "${data}" -o "${data_clean}"
-> +
-> +  local report1="${temp_dir}/report1"
-> +  local report2="${temp_dir}/report2"
-> +  local report1_clean="${temp_dir}/report1.clean"
-> +  local report2_clean="${temp_dir}/report2.clean"
-> +  local diff_file="${temp_dir}/diff"
-> +
-> +  perf report -i "${data_clean}" --stdio > "${report1}"
-> +  perf report -i "${data2}" --stdio > "${report2}"
-> +
-> +  # Strip headers and compare lines with percentages
-> +  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
-> +  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
-> +
-> +  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-> +
-> +  if [ ! -s "${report1_clean}" ]; then
-> +    echo "Pipe Report ASLR test [Failed - no samples captured]"
-> +    err=1
-> +  elif [ -s "${diff_file}" ]; then
-> +    echo "Pipe Report ASLR test [Failed - reports differ]"
-> +    echo "Showing first 20 lines of diff:"
-> +    head -n 20 "${diff_file}"
-> +    err=1
-> +  else
-> +    echo "Pipe Report ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_pipe_out_report_aslr() {
-> +  echo "Test pipe output mode perf report consistency"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.pipe_out_report.XXXXXX")
-> +  local data_clean
-> +  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-> +
-> +  perf record -e task-clock:u -o "${data}" ${prog}
-> +  perf inject -b -i "${data}" -o "${data_clean}"
-> +
-> +  local report1="${temp_dir}/report1"
-> +  local report2="${temp_dir}/report2"
-> +  local report1_clean="${temp_dir}/report1.clean"
-> +  local report2_clean="${temp_dir}/report2.clean"
-> +  local diff_file="${temp_dir}/diff"
-> +
-> +  perf report -i "${data_clean}" --stdio > "${report1}"
-> +  perf inject -b --aslr -i "${data}" -o - | perf report -i - --stdio > "${report2}"
-> +
-> +  # Strip headers and compare lines with percentages
-> +  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
-> +  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
-> +
-> +  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
-> +
-> +  if [ ! -s "${report1_clean}" ]; then
-> +    echo "Pipe Output Report ASLR test [Failed - no samples captured]"
-> +    err=1
-> +  elif [ -s "${diff_file}" ]; then
-> +    echo "Pipe Output Report ASLR test [Failed - reports differ]"
-> +    echo "Showing first 20 lines of diff:"
-> +    head -n 20 "${diff_file}"
-> +    err=1
-> +  else
-> +    echo "Pipe Output Report ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_dropped_samples() {
-> +  echo "Test dropped samples (phys-data)"
-> +  local data
-> +  data=$(mktemp "${temp_dir}/perf.data.dropped.XXXXXX")
-> +  local data2
-> +  data2=$(mktemp "${temp_dir}/perf.data2.dropped.XXXXXX")
-> +
-> +  # Check if --phys-data is supported by recording a short run
-> +  if ! perf record -e task-clock:u --phys-data -o "${data}" -- sleep 0.1 > /dev/null 2>&1; then
-> +    echo "Skipping dropped samples test as --phys-data is not supported"
-> +    return
-> +  fi
-> +
-> +  perf record -e task-clock:u --phys-data -o "${data}" ${prog}
-> +  perf inject --aslr -i "${data}" -o "${data2}"
-> +
-> +  # Verify that the original file actually contained samples!
-> +  orig_samples=$(perf script -i "${data}" | wc -l)
-> +  if [ "$orig_samples" -eq 0 ]; then
-> +    echo "Dropped samples test [Failed - no samples in original file]"
-> +    err=1
-> +  else
-> +    # Verify that samples are dropped.
-> +    samples_count=$(perf script -i "${data2}" | wc -l)
-> +
-> +    if [ "$samples_count" -gt 0 ]; then
-> +      echo "Dropped samples test [Failed - samples were not dropped]"
-> +      err=1
-> +    else
-> +      echo "Dropped samples test [Success]"
-> +    fi
-> +  fi
-> +}
-> +
-> +test_kernel_aslr() {
-> +  echo "Test kernel ASLR remapping"
-> +  local kdata
-> +  kdata=$(mktemp "${temp_dir}/perf.data.kernel.XXXXXX")
-> +  local kdata2
-> +  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel.XXXXXX")
-> +  local log_file
-> +  log_file=$(mktemp "${temp_dir}/kernel_record.log.XXXXXX")
-> +
-> +  # Try to record kernel samples
-> +  if ! perf record -e task-clock:k -o "${kdata}" ${kprog} > "${log_file}" 2>&1; then
-> +    echo "Skipping kernel ASLR test as recording failed (maybe no permissions)"
-> +    return
-> +  fi
-> +
-> +  # Check for warning about kernel map restriction
-> +  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
-> +    echo "Skipping kernel ASLR test as kernel map could not be recorded (permissions restricted)"
-> +    return
-> +  fi
-> +
-> +  perf inject -v --aslr -i "${kdata}" -o "${kdata2}"
-> +
-> +  # Check if kernel addresses are remapped.
-> +  # Find the field that ends with :k: (the event name) and take the next field!
-> +  orig_addr=$(perf script -i "${kdata}" | awk '
-> +    BEGIN { found=0 }
-> +    {
-> +      for (i=1; i<NF; i++) {
-> +        if ($i ~ /:[k]+:?$/) {
-> +          if (!found) {
-> +            print $(i+1)
-> +            found=1
-> +          }
-> +        }
-> +      }
-> +    }')
-> +  new_addr=$(perf script -i "${kdata2}" | awk '
-> +    BEGIN { found=0 }
-> +    {
-> +      for (i=1; i<NF; i++) {
-> +        if ($i ~ /:[k]+:?$/) {
-> +          if (!found) {
-> +            print $(i+1)
-> +            found=1
-> +          }
-> +        }
-> +      }
-> +    }')
-> +
-> +  echo "Kernel ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
-> +
-> +  if [ -z "$orig_addr" ]; then
-> +    echo "Kernel ASLR test [Failed - no kernel samples in original file]"
-> +    err=1
-> +  elif [ -z "$new_addr" ]; then
-> +    echo "Kernel ASLR test [Failed - could not find remapped address]"
-> +    err=1
-> +  elif [ "$orig_addr" = "$new_addr" ]; then
-> +    echo "Kernel ASLR test [Failed - addresses are not remapped]"
-> +    err=1
-> +  else
-> +    echo "Kernel ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_kernel_report_aslr() {
-> +  echo "Test kernel perf report consistency"
-> +  local kdata
-> +  kdata=$(mktemp "${temp_dir}/perf.data.kernel_report.XXXXXX")
-> +  local kdata2
-> +  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel_report.XXXXXX")
-> +  local data_clean
-> +  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
-> +  local log_file
-> +  log_file=$(mktemp "${temp_dir}/kernel_report_record.log.XXXXXX")
-> +
-> +  # Try to record kernel samples
-> +  if ! perf record -e task-clock:k -o "${kdata}" ${kprog} > "${log_file}" 2>&1; then
-> +    echo "Skipping kernel report test as recording failed (maybe no permissions)"
-> +    return
-> +  fi
-> +
-> +  # Check for warning about kernel map restriction
-> +  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
-> +    echo "Skipping kernel report test as kernel map could not be recorded (permissions restricted)"
-> +    return
-> +  fi
-> +
-> +  # Use -b to inject build-ids and force ordered events processing in both
-> +  perf inject -b -i "${kdata}" -o "${data_clean}"
-> +  perf inject -v -b --aslr -i "${kdata}" -o "${kdata2}"
-> +
-> +  local report1="${temp_dir}/report_kernel1"
-> +  local report2="${temp_dir}/report_kernel2"
-> +  local report1_clean="${temp_dir}/report_kernel1.clean"
-> +  local report2_clean="${temp_dir}/report_kernel2.clean"
-> +
-> +  perf report -i "${data_clean}" --stdio > "${report1}"
-> +  perf report -i "${kdata2}" --stdio > "${report2}"
-> +
-> +  # Strip headers and compare lines with percentages
-> +  grep '%' "${report1}" | grep -v '^#' > "${report1_clean}" || true
-> +  grep '%' "${report2}" | grep -v '^#' > "${report2_clean}" || true
-> +
-> +  # Normalize kernel DSOs and addresses in clean reports
-> +  # This allows kernel modules to be either a module or kernel.kallsyms
-> +  local report1_norm="${temp_dir}/report_kernel1.norm"
-> +  local report2_norm="${temp_dir}/report_kernel2.norm"
-> +  local diff_file="${temp_dir}/diff_kernel"
-> +
-> +  grep -v -E '0x[0-9a-f]{8,}|0000000000000000' "${report1_clean}" | \
-> +    awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); print}' | \
-> +    sort > "${report1_norm}" || true
-> +  grep -v -E '0x[0-9a-f]{8,}|0000000000000000' "${report2_clean}" | \
-> +    awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); print}' | \
-> +    sort > "${report2_norm}" || true
-> +
-> +  diff -u -w "${report1_norm}" "${report2_norm}" > "${diff_file}" || true
-> +
-> +  if [ ! -s "${report1_norm}" ]; then
-> +    echo "Kernel Report ASLR test [Failed - no samples captured]"
-> +    err=1
-> +  elif [ -s "${diff_file}" ]; then
-> +    echo "Kernel Report ASLR test [Failed - reports differ]"
-> +    echo "Showing first 20 lines of diff:"
-> +    head -n 20 "${diff_file}"
-> +    err=1
-> +  else
-> +    echo "Kernel Report ASLR test [Success]"
-> +  fi
-> +}
-> +
-> +test_basic_aslr
-> +test_pipe_aslr
-> +test_callchain_aslr
-> +test_report_aslr
-> +test_pipe_report_aslr
-> +test_pipe_out_report_aslr
-> +test_dropped_samples
-> +test_kernel_aslr
-> +test_kernel_report_aslr
-> +
-> +cleanup
-> +exit $err
-> -- 
-> 2.54.0.563.g4f69b47b94-goog
-> 
+Assisted-by: GitHub-Copilot:GPT-5.5
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+Changes in v2:
+- Push and pop asm sections - (Sashiko)
+- Add .size directive - (Sashiko)
+- Add asm label for done and test with LTO enabled - (Sashiko)
+- Link to v1: https://lore.kernel.org/r/20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org
+---
+ tools/perf/tests/workloads/leafloop.c | 40 +++++++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
+index f7561767e32c..c20c75f7ba49 100644
+--- a/tools/perf/tests/workloads/leafloop.c
++++ b/tools/perf/tests/workloads/leafloop.c
+@@ -6,26 +6,48 @@
+ #include "../tests.h"
+ 
+ /* We want to check these symbols in perf script */
+-noinline void leaf(volatile int b);
+-noinline void parent(volatile int b);
++noinline void leaf(void);
++noinline void parent(void);
+ 
+-static volatile int a;
+-static volatile sig_atomic_t done;
++static volatile sig_atomic_t done asm("leafloop_done");
+ 
+ static void sighandler(int sig __maybe_unused)
+ {
+ 	done = 1;
+ }
+ 
+-noinline void leaf(volatile int b)
++#if defined(__aarch64__)
++/*
++ * Write leaf() in assembly so it stays as a minimal leaf function with no
++ * stack frame and won't get silently broken in the future by any Perf wide
++ * compilation options like -fstack-protector-all.
++ */
++asm(
++	".pushsection .text,\"ax\",%progbits\n"
++	".global leaf\n"
++	".type leaf, %function\n"
++	"leaf:\n"
++	"	adrp	x1, leafloop_done\n"
++	"	ldr	w2, [x1, #:lo12:leafloop_done]\n"
++	"	cbz	w2, leaf\n"
++	"	ret\n"
++	".size leaf, .-leaf\n"
++	".popsection\n"
++);
++
++#else
++
++noinline void leaf(void)
+ {
+ 	while (!done)
+-		a += b;
++		;
+ }
+ 
+-noinline void parent(volatile int b)
++#endif
++
++noinline void parent(void)
+ {
+-	leaf(b);
++	leaf();
+ }
+ 
+ static int leafloop(int argc, const char **argv)
+@@ -39,7 +61,7 @@ static int leafloop(int argc, const char **argv)
+ 	signal(SIGALRM, sighandler);
+ 	alarm(sec);
+ 
+-	parent(sec);
++	parent();
+ 	return 0;
+ }
+ 
+
+---
+base-commit: 8c8f2093614373ea8179b562320212a25cf937c0
+change-id: 20260508-james-perf-leafloop-stack-c221600eddf2
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
+
