@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E43361666;
-	Mon, 11 May 2026 23:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB338363C75;
+	Mon, 11 May 2026 23:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778541249; cv=none; b=V6vI+GUKcuEPPvdQWscqOB4vYdwBmOROy8JVGrhxoBktPoaEii9q11blEpAcfV8gpQtxP5zLMd9ffg24svLRp19zLZtHZo/jkmdU7ZHaGJ52DDS3rA7A2kt94NjYAtieHDExarV03/lbT1a7eNIsl/QhrZ0JnnYYG7TernVpSYU=
+	t=1778541250; cv=none; b=ZxqQnBcoRPgovl1qUqmeZvfMW3oip3BhTAiUS+QK46gyjzeGdLTbr6HP+m4o6l3JRvKL6hW3JFVKdrC7xY9W7WnIBK66S2MLFekbMWg1X1wJT38Fr8iy0eCNyr5YoWm12s2m91M+rtseeNxZvBdaMdVGPsAa/Qo/nLB2Yb9tgsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778541249; c=relaxed/simple;
-	bh=3YV9pWT6asdFxPtJrrdjyfIqtS68Lcr5T0xnqC6tVcY=;
+	s=arc-20240116; t=1778541250; c=relaxed/simple;
+	bh=5hdUA15pe9AEEcSV8J+fCzVj+CyYv9dP59tNauQEx1Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J/6IessGqwrjy9FIR3hME4nmwf1/4zqNOCJRpQ6BGjy/Rrw6+kerwojKW3GsOGepxcBSwJgJGWl1M3SdSR9cMS7MP3fIqEqe0FpYZ7Pd///JLkM4RJwbEMvNoTE0Xfh0kK98PXuJqMOGORszBTaD14bO49Xen9XXaQyH2vtenFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVn5vUK2; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=scRG3jR8MU6jM8AEMhCfvIqICzzm3GUHmdzgGcE5lfs3cnJVy6Gk+PXyGCQmRaPOta66GtGkB8J5wrwteZZ/w3GxiY8cohUdGbtn80Eib19K+Eh9V5C5/+mvVBOAhJG/B9IqcbNu0oscQCJpIZPQZFkhyqyDU0u6KT4mSETwXr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bi76/KDm; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVn5vUK2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bi76/KDm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1778541248; x=1810077248;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3YV9pWT6asdFxPtJrrdjyfIqtS68Lcr5T0xnqC6tVcY=;
-  b=jVn5vUK2zDONSOx3otDtgK5Ht+ckXkRZweYD4++U6JM0eqqpYZb1GLr/
-   ti0cfNcTpMeoNWFk80nc8XOWm0fSt8kdsGK6lDEp5ZgGrFZ1FWHzxXShK
-   y/ntKSowQJWy111mNI1Fdjzf34mg2DLIdX2rRj/dxKUkyp+YOohGGJRI4
-   bawS4NiHWaX/sdPZa0b/Q/q47whuY/zmViborTO77z87RVcQtck4eIN9l
-   bBq/VYEy9e/mZfE20dS8snMCRlMe6dBlvLtyFleN6rnT0lpShdSE8hyDR
-   KJLR/z3D81V/NuSqUfcvqTYfsnPoxfipyP5gtdikqSLH6///rOw4uUYIr
-   Q==;
-X-CSE-ConnectionGUID: Kwwamb6hTdyMOMgPS7BgZQ==
-X-CSE-MsgGUID: vAXud9rsQHSZeUYMSpHLag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="83058115"
+  bh=5hdUA15pe9AEEcSV8J+fCzVj+CyYv9dP59tNauQEx1Y=;
+  b=Bi76/KDmDBu+Q7Zqd+Ng0qa+oUfGNCdGC68UOShRveLQwB2SXS4VSNoM
+   u2NaMmu1LxOaY2ovr6UEx4Dyp5pOEUyEWx4CYgEMxM971TfrHNModwvXZ
+   6ZAO0q5O7sVWVykrHGxk6yzfzcnxWz8A8Hgij+9FZ6gd2R/eFjKM3zxHf
+   7fmiV7s9LXmgfPZnA2lUreIuCGcBwhf91EqR3nH4zGwJAvwSTYqHZYRZj
+   unG8t7ftlxlyawvxnzpCH8SpsUKJ6ibYobD7cay4M6YBZfx+hByoojDs7
+   uwd8rXumKSKlorkNWg0Uc84ugjnozFBgVZuGZX3wB14Fr3neZ5ztb8SBg
+   A==;
+X-CSE-ConnectionGUID: B6Hs0ra+R9+S+kQAt68Qeg==
+X-CSE-MsgGUID: B7loGFF7T/qGNvu1VyI5OA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="83058123"
 X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="83058115"
+   d="scan'208";a="83058123"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 16:14:06 -0700
-X-CSE-ConnectionGUID: lOv5iiMxTQ2cSy++dfIevw==
-X-CSE-MsgGUID: LwJGZv64ScGyzVsptQWSfA==
+X-CSE-ConnectionGUID: eMQ0kMprTTaVLjopNlyEOw==
+X-CSE-MsgGUID: DuB6Oyo7QVOlxHVM+RTYrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="267944465"
+   d="scan'208";a="267944468"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 16:14:06 -0700
 From: Zide Chen <zide.chen@intel.com>
@@ -57,9 +57,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH 4/6] perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
-Date: Mon, 11 May 2026 16:05:25 -0700
-Message-ID: <20260511230527.26096-5-zide.chen@intel.com>
+Subject: [PATCH 5/6] perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
+Date: Mon, 11 May 2026 16:05:26 -0700
+Message-ID: <20260511230527.26096-6-zide.chen@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260511230527.26096-1-zide.chen@intel.com>
 References: <20260511230527.26096-1-zide.chen@intel.com>
@@ -71,99 +71,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move die_to_cpu() into uncore.c so it can be reused by the MSR
-initialization path, preparing for the introduction of an MSR global
-initialization callback.
+If the die is offline when uncore_die_to_cpu() is called, it silently
+returns 0, which is misleading.  Return -1 in this case to indicate
+that all CPUs on the die are offline and the caller can take care of
+it accordingly.
 
-Add the uncore_ prefix for consistency with other uncore APIs.
-
-No functional change intended.
+Opportunistically, replace -EPERM with -ENODEV, as -ENODEV is
+the appropriate error when no CPUs are online across all dies.
 
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
- arch/x86/events/intel/uncore.c       | 19 +++++++++++++++++++
- arch/x86/events/intel/uncore.h       |  1 +
- arch/x86/events/intel/uncore_snbep.c | 21 +--------------------
- 3 files changed, 21 insertions(+), 20 deletions(-)
+ arch/x86/events/intel/uncore.c       | 2 +-
+ arch/x86/events/intel/uncore_snbep.c | 9 +++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index e9cc1ba921c5..2bbe4cc1df3e 100644
+index 2bbe4cc1df3e..19056514b081 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -83,6 +83,25 @@ int uncore_device_to_die(struct pci_dev *dev)
- 	return -1;
- }
+@@ -85,7 +85,7 @@ int uncore_device_to_die(struct pci_dev *dev)
  
-+int uncore_die_to_cpu(int die)
-+{
-+	int res = 0, cpu;
-+
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		if (topology_logical_die_id(cpu) == die) {
-+			res = cpu;
-+			break;
-+		}
-+	}
-+	cpus_read_unlock();
-+	return res;
-+}
-+
- static void uncore_free_pcibus_map(void)
+ int uncore_die_to_cpu(int die)
  {
- 	struct pci2phy_map *map, *tmp;
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index c35918c01afa..94c68e3417b6 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -235,6 +235,7 @@ struct pci2phy_map *__find_pci2phy_map(int segment);
- int uncore_pcibus_to_dieid(struct pci_bus *bus);
- int uncore_die_to_segment(int die);
- int uncore_device_to_die(struct pci_dev *dev);
-+int uncore_die_to_cpu(int die);
+-	int res = 0, cpu;
++	int res = -1, cpu;
  
- ssize_t uncore_event_show(struct device *dev,
- 			  struct device_attribute *attr, char *buf);
+ 	/*
+ 	 * Using cpus_read_lock() to ensure cpu is not going down between
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index c9ce206fcbb6..30c6a9306c54 100644
+index 30c6a9306c54..251c7bdbe30b 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3704,25 +3704,6 @@ static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
- 	return 0;
- }
- 
--static int die_to_cpu(int die)
--{
--	int res = 0, cpu, current_die;
--	/*
--	 * Using cpus_read_lock() to ensure cpu is not going down between
--	 * looking at cpu_online_mask.
--	 */
--	cpus_read_lock();
--	for_each_online_cpu(cpu) {
--		current_die = topology_logical_die_id(cpu);
--		if (current_die == die) {
--			res = cpu;
--			break;
--		}
--	}
--	cpus_read_unlock();
--	return res;
--}
--
- enum {
- 	IIO_TOPOLOGY_TYPE,
- 	UPI_TOPOLOGY_TYPE,
-@@ -3795,7 +3776,7 @@ static int skx_pmu_get_topology(struct intel_uncore_type *type,
+@@ -3772,11 +3772,16 @@ static void pmu_free_topology(struct intel_uncore_type *type)
+ static int skx_pmu_get_topology(struct intel_uncore_type *type,
+ 				 int (*topology_cb)(struct intel_uncore_type*, int, int, u64))
+ {
+-	int die, ret = -EPERM;
++	int die, ret = -ENODEV;
  	u64 cpu_bus_msr;
++	int cpu;
  
  	for (die = 0; die < uncore_max_dies(); die++) {
--		ret = skx_msr_cpu_bus_read(die_to_cpu(die), &cpu_bus_msr);
-+		ret = skx_msr_cpu_bus_read(uncore_die_to_cpu(die), &cpu_bus_msr);
+-		ret = skx_msr_cpu_bus_read(uncore_die_to_cpu(die), &cpu_bus_msr);
++		cpu = uncore_die_to_cpu(die);
++		if (cpu == -1)
++			continue;
++
++		ret = skx_msr_cpu_bus_read(cpu, &cpu_bus_msr);
  		if (ret)
  			break;
  
