@@ -1,63 +1,63 @@
-Received: from pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.1.125])
+Received: from pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.245.243.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9134C040D;
-	Mon, 11 May 2026 21:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.246.1.125
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13179386557;
+	Mon, 11 May 2026 21:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.245.243.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778533729; cv=none; b=V2Nx/tLlcZsFKXYIXH0pLMWBrlN0E1DwpIxoJeudlyFfwwFq7Lk+ZQZrCDwQ+Ix8i/h3dQSXWwVh1pDHg1lJk7MJprAuaoLwuu7xv/j34Qe9gr/4W45BA3DU69qOH4dtIFWTIpAxLAbqw56qKrugGfybd/YJBeE2gwZuhQfG/bk=
+	t=1778533763; cv=none; b=G1AUe6cn1lVyqvyXvzm0teVOGGM7gYuE2fyJtGmFFnHq3EkbWG54gHD2tJOf/nJb4YPtQD0Y/lFwou5bL7mY3G/cU5NNqx6e4S1bRW/LwRkvzbs3y6sx+WNIdC5763ocfV95ldliodR195wbanuQ2HZV4rIzQkhjlmCh7Ep90qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778533729; c=relaxed/simple;
-	bh=Ryidmgfi5UibYzSzCfY1nuZuGSpsz7iWemtK0KgeSTs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sP7hODQ9X4I0SO9wIbMkUKPdDIxL6qlnBB7QasIvIOadKr/kSgOIMp77r6GRptSbvZBzDUQWCn3QA5uMSynPGwMShq4bHSwFw68DvMx7yIeYZqa3gTQOw63gf7mJj7OoDmmVnYRlo61dRlnpPABx9CpGXYn43JHURVZ2lgpgCRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=RDvQ0SGI; arc=none smtp.client-ip=44.246.1.125
+	s=arc-20240116; t=1778533763; c=relaxed/simple;
+	bh=v5MvYDkeO68us6SvucH+i6b4uW8WAGgftEUcPM9JZ3E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H/7ocv9aKuLnqJoYX+hMKeGiw5JYf6Ja+tGGNFYgfjnnVDJt7aFCUm+RlXhWuT8vgvX33D9q4Do1yWJozu1Ji+3Ztuomw6uMeP0UF87L1VzHsILL2piUBn191G9JjMKKsRrDuRixVAHJRlK5zb2Lukiz82aCnFPNfR9NjgSx1BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=O4fZ4Etr; arc=none smtp.client-ip=44.245.243.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="RDvQ0SGI"
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="O4fZ4Etr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1778533727; x=1810069727;
+  t=1778533762; x=1810069762;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=eNzCvmyPoJHv7GjfeNnSCdb6x1DDoviVPDF8/asFCi4=;
-  b=RDvQ0SGIkCF1/ZYUFWJjoHTux/Rp1oP5Bwon9rP3y78MZ5cntuanxJ5X
-   VwlNKC9XVhBTBJnpE9hlUgvZo3u561SZFNdrNt9yBHd4H4Gw6ZnT/k4c7
-   0iuAT8reMgFQkh3ALtc6OT3H6z6bb7ygesQ6IlcZK9eaudqHmiIDPqSES
-   AyAzrnzL74brxj+NSqlWL0LVE1dnNpSqDnjfqk3q1xVq/fOIvff/6ee7I
-   qE5/osSDqy1l8oHib48G3VkJRZxYyPlr8ZFn4fGF88Yq8zO+hFMg22Omf
-   ufhvVj695V2EVoqc5T70JmFx5uKZKWTyLdxGpBiSTFujE8GUeWysWSO2c
-   Q==;
-X-CSE-ConnectionGUID: w5o6Vl3FS+mX35RUhfE9Bg==
-X-CSE-MsgGUID: 0Lt6xtzUS0q3P1iXi/JjmA==
+  bh=gmBNcFXL4SEZ0SStYLpRW1m4H7oxUGUfa1bhU/oNHVk=;
+  b=O4fZ4EtrZBqK6OLQDBDJjnknriBuUgcCD1XL+hqRLWyaeApRM0f8vISQ
+   x4WfPE24B4R8k7KOdJT4bNtMwlOUbi4eDm2m69MAdg7W6f4dUszCNS81D
+   zNAw6RJZ2PolOYTpK5yLlkPrz9Gqt8/luvp5dccHtkggP7IaXMNGXR97K
+   qJhwNkn+0eQLKmfYMdLTUioFZo9XjiD/IpNCX7x/kOMx+/rPkHdaOWq8C
+   Cxmi86oKjj2Q10mH1gY2EIMsnFb3vd5r/Hm6/VvbmFccNimH8EuF1wlnO
+   S1g0dGIKscNT9OXOgly6pLPh7ttsvISP3FtACJ7V11WTWcnmJzhMm7eGM
+   w==;
+X-CSE-ConnectionGUID: 0zVo/EuXTmWAseOu5UCThQ==
+X-CSE-MsgGUID: 8gfJTadJQ9OgyYyQ9whUCw==
 X-IronPort-AV: E=Sophos;i="6.23,229,1770595200"; 
-   d="scan'208";a="19392228"
+   d="scan'208";a="18904877"
 Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:08:45 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:1579]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.77:2525] with esmtp (Farcaster)
- id 33f22dde-e65e-459e-9e71-62964a26cef7; Mon, 11 May 2026 21:08:44 +0000 (UTC)
-X-Farcaster-Flow-ID: 33f22dde-e65e-459e-9e71-62964a26cef7
+  by internal-pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:09:19 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:19334]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.175:2525] with esmtp (Farcaster)
+ id 57478e7e-fe0b-4b36-a475-490afc8c63da; Mon, 11 May 2026 21:09:19 +0000 (UTC)
+X-Farcaster-Flow-ID: 57478e7e-fe0b-4b36-a475-490afc8c63da
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Mon, 11 May 2026 21:08:43 +0000
+ Mon, 11 May 2026 21:09:19 +0000
 Received: from dev-dsk-sauravsc-1a-8777b848.eu-west-1.amazon.com
  (172.19.118.34) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37; Mon, 11 May 2026
- 21:08:41 +0000
+ 21:09:17 +0000
 From: Saurav Sachidanand <sauravsc@amazon.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Will Deacon <will@kernel.org>, Besar Wicaksono <bwicaksono@nvidia.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, Leo Yan
-	<leo.yan@linux.dev>, <linux-perf-users@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<aghayev@amazon.com>, <juew@amazon.com>, Saurav Sachidanand
-	<sauravsc@amazon.com>
-Subject: [PATCH 1/3] perf vendor events arm64: fix swapped MetricGroup for Tegra410 L1 prefetcher metrics
-Date: Mon, 11 May 2026 21:08:32 +0000
-Message-ID: <20260511210832.91408-1-sauravsc@amazon.com>
+To: Will Deacon <will@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Besar Wicaksono
+	<bwicaksono@nvidia.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <aghayev@amazon.com>, <juew@amazon.com>,
+	Saurav Sachidanand <sauravsc@amazon.com>
+Subject: [PATCH 2/3] perf/arm_cspmu: nvidia: handle empty resource list in PCIE-TGT init
+Date: Mon, 11 May 2026 21:09:04 +0000
+Message-ID: <20260511210905.91917-1-sauravsc@amazon.com>
 X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -67,143 +67,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D036UWB004.ant.amazon.com (10.13.139.170) To
+X-ClientProxiedBy: EX19D043UWC004.ant.amazon.com (10.13.139.206) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-The L1D prefetcher metrics (l1d_cache_rw_miss_ratio, l1d_demand_accesses,
-etc.) were incorrectly assigned to MetricGroup "L1I_Prefetcher_Effectiveness"
-and vice versa. This causes 'perf stat --metric-group L1D_Prefetcher_Effectiveness'
-to display L1I metrics, which is misleading.
+When acpi_dev_get_memory_resources() returns success but the resource
+list is empty (rentry is NULL), addr_filter_reg remains NULL from
+devm_kzalloc. Since IS_ERR(NULL) is false, the function proceeds
+without error and later dereferences the NULL pointer in
+pcie_tgt_pmu_config_addr_filter().
 
-Swap the MetricGroup assignments so L1D metrics are in the L1D group and
-L1I metrics are in the L1I group.
+Set addr_filter_reg to ERR_PTR(-ENODEV) when the resource list is
+empty so the existing IS_ERR check catches it.
 
-Fixes: 86ff690f45cc ("perf vendor events arm64: Add Tegra410 Olympus PMU events")
+Fixes: 3dd73022306b ("perf/arm_cspmu: nvidia: Add Tegra410 PCIE-TGT PMU")
 Signed-off-by: Saurav Sachidanand <sauravsc@amazon.com>
 ---
- .../arch/arm64/nvidia/t410/metrics.json       | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/perf/arm_cspmu/nvidia_cspmu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
-index b825ede03f544..59474ccb7417f 100644
---- a/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/metrics.json
-@@ -346,42 +346,42 @@
-         "MetricExpr": "l1d_demand_misses / l1d_demand_accesses",
-         "BriefDescription": "This metric measures the ratio of L1 D-cache Read accesses missed to the total number of L1 D-cache accesses. This gives an indication of the effectiveness of the L1 D-cache for demand Load or Store traffic.",
-         "ScaleUnit": "1per cache access",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_demand_accesses",
-         "MetricExpr": "L1D_CACHE_RW",
-         "BriefDescription": "This metric measures the count of L1 D-cache accesses incurred on Load or Store by the instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_demand_misses",
-         "MetricExpr": "L1D_CACHE_REFILL_RW",
-         "BriefDescription": "This metric measures the count of L1 D-cache misses incurred on a Load or Store by the instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_prf_accuracy",
-         "MetricExpr": "100 * (l1d_useful_prf / l1d_refilled_prf)",
-         "BriefDescription": "This metric measures the fraction of prefetched memory addresses that are used by the instruction stream.",
-         "ScaleUnit": "1percent of prefetch",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_prf_coverage",
-         "MetricExpr": "100 * (l1d_useful_prf / (l1d_demand_misses + l1d_refilled_prf))",
-         "BriefDescription": "This metric measures the baseline demand cache misses which the prefetcher brings into the cache.",
-         "ScaleUnit": "1percent of cache access",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_refilled_prf",
-         "MetricExpr": "L1D_CACHE_REFILL_HWPRF + L1D_CACHE_REFILL_PRFM + L1D_LFB_HIT_RW_FHWPRF + L1D_LFB_HIT_RW_FPRFM",
-         "BriefDescription": "This metric measures the count of cache lines refilled by L1 data prefetcher (hardware prefetches or software preload) into L1 D-cache.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1d_tlb_miss_ratio",
-@@ -402,7 +402,7 @@
-         "MetricExpr": "L1D_CACHE_HIT_RW_FPRF + L1D_LFB_HIT_RW_FHWPRF + L1D_LFB_HIT_RW_FPRFM",
-         "BriefDescription": "This metric measures the count of cache lines refilled by L1 data prefetcher (hardware prefetches or software preload) into L1 D-cache which are further used by Load or Store from the instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_cache_miss_ratio",
-@@ -423,42 +423,42 @@
-         "MetricExpr": "l1i_demand_misses / l1i_demand_accesses",
-         "BriefDescription": "This metric measures the ratio of L1 I-cache Read accesses missed to the total number of L1 I-cache accesses. This gives an indication of the effectiveness of the L1 I-cache for demand instruction fetch traffic. Note that cache accesses in this cache are demand instruction fetch.",
-         "ScaleUnit": "1per cache access",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_demand_accesses",
-         "MetricExpr": "L1I_CACHE_RD",
-         "BriefDescription": "This metric measures the count of L1 I-cache accesses caused by an instruction fetch by the instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_demand_misses",
-         "MetricExpr": "L1I_CACHE_REFILL_RD",
-         "BriefDescription": "This metric measures the count of L1 I-cache misses caused by an instruction fetch by the instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_prf_accuracy",
-         "MetricExpr": "100 * (l1i_useful_prf / l1i_refilled_prf)",
-         "BriefDescription": "This metric measures the fraction of prefetched memory addresses that are used by the instruction stream.",
-         "ScaleUnit": "1percent of prefetch",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_prf_coverage",
-         "MetricExpr": "100 * (l1i_useful_prf / (l1i_demand_misses + l1i_refilled_prf))",
-         "BriefDescription": "This metric measures the baseline demand cache misses which the prefetcher brings into the cache.",
-         "ScaleUnit": "1percent of cache access",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_refilled_prf",
-         "MetricExpr": "L1I_CACHE_REFILL_HWPRF + L1I_CACHE_REFILL_PRFM",
-         "BriefDescription": "This metric measures the count of cache lines refilled by L1 instruction prefetcher (hardware prefetches or software preload) into L1 I-cache.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l1i_tlb_miss_ratio",
-@@ -479,7 +479,7 @@
-         "MetricExpr": "L1I_CACHE_HIT_RD_FPRF",
-         "BriefDescription": "This metric measures the count of cache lines refilled by L1 instruction prefetcher (hardware prefetches or software preload) into L1 I-cache which are further used by instruction stream of the program.",
-         "ScaleUnit": "1count",
--        "MetricGroup": "L1D_Prefetcher_Effectiveness"
-+        "MetricGroup": "L1I_Prefetcher_Effectiveness"
-     },
-     {
-         "MetricName": "l2_cache_miss_ratio",
+diff --git a/drivers/perf/arm_cspmu/nvidia_cspmu.c b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+index bac83e424d6dc..bae722e263e91 100644
+--- a/drivers/perf/arm_cspmu/nvidia_cspmu.c
++++ b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+@@ -555,14 +555,16 @@ static int pcie_tgt_init_data(struct arm_cspmu *cspmu)
+ 
+ 	rentry = list_first_entry_or_null(
+ 		&resource_list, struct resource_entry, node);
+-	if (rentry) {
++	if (rentry)
+ 		data->addr_filter_reg = devm_ioremap_resource(dev, rentry->res);
+-		ret = 0;
+-	}
++	else
++		data->addr_filter_reg = ERR_PTR(-ENODEV);
+ 
+ 	if (IS_ERR(data->addr_filter_reg)) {
+ 		dev_err(dev, "failed to get address filter resource\n");
+ 		ret = PTR_ERR(data->addr_filter_reg);
++	} else {
++		ret = 0;
+ 	}
+ 
+ 	acpi_dev_free_resource_list(&resource_list);
 -- 
 2.47.3
 
