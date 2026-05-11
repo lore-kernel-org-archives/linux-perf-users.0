@@ -1,225 +1,183 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ACF425CCB
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 16:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778516266; cv=none; b=PqEtDLyfVSlheojs0UaUi71GNuaBRhvCROVrG3obgQEcG26Dy/tkJXu0WWFkPKGHklzcUTuiTHoUokeznAo/L9RkHhWwajAkZW4XprTtfgUDGy4G43br6SiK2xKoLe18yDySjRGN6EYely3HNRFvvrV6UAnRedD0VbVhdhNddoc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778516266; c=relaxed/simple;
-	bh=0ara9K7QdBKThaPril0a4YvO62DrR2+YYX2Gg4rGizw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nu/jmE5insL7EO8Tg6sKR3Xsg07E34SLE/2NHHdWxc/tXQhFtqTWq1WkxJTswtPwoj7zdxz8oNK8wbRBy9ytH8/IDHwEKm1QNa8SeA3r5E9aj/ZWCxRgsQn3zKE/qzc9Ntyuu4ipwa7hjA3iH1IRv2RKac17aM+GiV+I/uFwz/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h+SEGZuG; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D0E4266AE
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 16:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778516455; cv=pass; b=G8+GP+DAQQ3nSxOOBSgt+LrOiVw5JQwgc4DDBVq7HdJfywUsaZtX1r6GO1UV3M1dOqM3ma7EZz3FeuIOo8719bBvdTsXimgWR3XtvRQCadMim07LVyIHKlf9KYttCvC4qO5DVTEN8DapbQDYsillp0ngONPZ/7NJETCoktRYCbI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778516455; c=relaxed/simple;
+	bh=fq2Ai4WcxbGwkTN7PXC8BGmDjaKXz46Ccz1irxh3nJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k/ULOWgd71iTLNvyyhgcHlcLII3X8qnXs1gRPJvEZ43RkorXtYLqsXJOx8KAuDLV6IOak+kMBicT0vLzK5+CghKKDvjO22YTiL8GZxukOlcl9gjXoGWcHFBChwAUeVPukqMKMo6LXVjKYeXWUfsdFu20hrJzDFqUUEhBZYR7nNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sYwEkZIT; arc=pass smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+SEGZuG"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488af96f6b2so53701875e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 09:17:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sYwEkZIT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso875ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 09:20:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778516454; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GK4OvXCfUMmVAFv3EPX+rcdOrBCxFLf6p40XVATQdxxPsuNW63HK02kkz1jhgy2oAy
+         GPqvIKjb2u3h6I61WuQDWDTanTfUNgjWKa+F//z2rID3bZgPn6fv5FiYLzuP/AFgjxJg
+         vdXEqS051G2Y5mck4SOBoEyLEsZiL8Kaz/N+0IZA+IruTt8NlWLmCPERqZ75vA/buVWX
+         i4cBYGf/cxj9cswy8ubUvlztw1BGz+QGRpgRqeNe8WuQ9K2tZWyx7DPepfsavjA5rCX9
+         pKrI4tAuAfQx0Ie10fOQGuIkOdHz0MmWmc+QShiURjuPTIGTgFbg070rU3KxvG+5MxrJ
+         iwXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PvEvtdFY5ghOdqCADYDX8FFT4I10hTRam2EHdeelhm4=;
+        fh=aAPgaO97fZ+ZN+zsIAOZVr/rk0MlaXq3B0GOMoIrfqM=;
+        b=hURBplnXMoVBVmOcs9FbJ5K9j4n74/l7iYCuB2i6t9xeIZqJ3sn/hUwam4+x7xH/sL
+         h5WB0gT+j4fsvRByDGzvH2cGd7GAjzZnPu8gO8RqcZg8YDwCEoX9/c4FuKyUbWj3Hedo
+         wzBV9LNfw54am1AB33OQViYdF6p3gn++RNH/sH79gs9C+mDosYI6OpccH6qo5xjYHagZ
+         5q9ZYwsR0NnbmE5Lzh+o5MnKVWqXc3s2S7lKQNFJ4l5KLgU60O277C175V4hQDdtFs/I
+         4pZMk0tDj+JGoYnIYr+XBem0Jp0rYDaq4f4psB7FVtgZQ5DQ/0h+d4z8fTYrYD9YLs+o
+         lfrw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778516263; x=1779121063; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Bv+QO3gNHsfEC1WrzTCG9lEyRXfEmVBCtTyB0LNuW38=;
-        b=h+SEGZuGPnT4f6kuY4LsnDaF8v7K7kR2bho0rinTzKRCdldzjHkg+ZAQssrZBFOFf8
-         GFq48hXRqpYmQlrLBeE8I2UBFJFTwGu0dQpJ8D/RwxM3/o4hSGQLR/cZcMImAQGfx3Qn
-         cPSEh1HOjCyt6wjdQgouuKni2iIau5yQAaBHhWjzdj3pWgBWoJ9fA1A0TsWi1CdJhPWm
-         Xl6m4ij7MYNJyaCcFLoJDn7DP98b7Qx+CyR5ipYY+yqWRxQ2hxx25QM0/zLHaIvipqvI
-         M08Y9jBILwBlLFPXrfMlc8pCitJBu0XhUXxz6b3AAmy8uGcV7oa1Bde0G1auq1irHMbT
-         k6CQ==
+        d=google.com; s=20251104; t=1778516454; x=1779121254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PvEvtdFY5ghOdqCADYDX8FFT4I10hTRam2EHdeelhm4=;
+        b=sYwEkZITug6/eq5ned1YRgtjfMxiqbbVkUh3yNS0RVj9k5UYcBBHeyFe9ixjDaZnq8
+         N/xUjkJxY4OGZ4n4NKo8Q+DgQ0JH3DTO+TEO45fq3PkBP4h5PHuIOVj6X8t60ih5vRSn
+         k3gEcD6eFWKIZdcgBsKQp0qjWwicrqgbnwVaXiTtAyWpFVKlnfbnFDGNePV4aYa5FdPZ
+         zfEB/WxW+ehqd5fwyZ8YJBMq9qFwtYb4TaUvPc7F2cNoGV3e0XQUf+wcFWPJP0maK7Rv
+         PiAwLLvGYHLUoxXftxHdR0FQTmplFa+ZbCnDj2Avk/OJDKFfvrMrNbQYI73PhdCQ/0bk
+         xxBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778516263; x=1779121063;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Bv+QO3gNHsfEC1WrzTCG9lEyRXfEmVBCtTyB0LNuW38=;
-        b=lVmKka7ER7n7WSHs1FQ80XCKdYepVzfOjnegRFfWw8ZUtUlbwLHGaL+3tbtcgbSIf2
-         YpBiASFk5Fm/7/MYuDdN3qTTL9Mx6A1ofC81NWlkd1+Y2QyG5/A/Cx7TFEC2IcInUyhW
-         cwJ7mvHcveq92EHBcEbSgBOrX9UaAviSdRLeGa91DdPXJDLt42LMCLJuPcSlqaqdw5l0
-         iN51kOekn0Ozf17WUkxX9P1JRRracZz542THFtG1rJLZAnJ35J0JGxT+gccerNyDW05r
-         jr94vEZK2WZY9wGnbAiNR9bGIvyG6LEJZ6v0Zyz7vO4+6cqNG0OgudBohncpY30rjpF7
-         HV4w==
-X-Forwarded-Encrypted: i=1; AFNElJ+fVXi+udsFcGt5BknKZ5ZLWXSg9X9rVchC/VaJU1XkNmS5qRNjr+c0XEYGJCp0C7vnwPEAwsa2XRuQcAkJMFwR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFz+RH+HFFt5QgbnvU6qpsW9ga467qREFurmu9qyjUzhFNhsJq
-	lUTlzJMpGOa0gTaLmtctQq3uTCyhWHx1SLUjo9DRueaK3Z28sIgmO9TTDzpm6x+4Koc=
-X-Gm-Gg: Acq92OFq3D6y1vD8mJ7BGOj+zNk5ud+QIVZTudAMA2/kYjMotzTn1gwEpO1NMiqfapF
-	MeymqtIGuPqKlN1wRxUo7gN3XFlMSn/I1z3b/zzH3jp9NWHVb9si0qztswY9o8FP1lvz321O7Co
-	Inu/or8PYx72klONPuUAkb6w44qf/OsdO+V1qhr4WagYRLXStT30i7Qri5rTQfveYfwvXPjw8wp
-	KeX4+Qnb47mBZ9/WT2cXYm/VZjAxtI5O8rMWRcTfnEtLwu3i3F5O3lx/Wtch8e+UnRwILPs3qv1
-	endH5jCmzR8oIce4Q+gMckx1cS6Mh5QowG5DL9gotneqk3ZImctX+96aztb2AQGFBuYkCQeSsW/
-	RAd3gSuxAU2cfzlTbTxdo/FJ1ZWGu/ppTN3gZBCl402+lARGcJaj3ovodw3S0aDKoZ68vOToR8/
-	Zib3/sjmFfdyQt2WQ7lRUzn3KaOXsveHko8WXVImc=
-X-Received: by 2002:a05:600c:35d6:b0:489:1ff1:74d3 with SMTP id 5b1f17b1804b1-48e707033f0mr174096475e9.20.1778516263522;
-        Mon, 11 May 2026 09:17:43 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e8e566cf7sm475125e9.0.2026.05.11.09.17.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2026 09:17:43 -0700 (PDT)
-Message-ID: <970c4dd6-a2e6-4be7-afb3-63858d4d1f69@linaro.org>
-Date: Mon, 11 May 2026 17:17:42 +0100
+        d=1e100.net; s=20251104; t=1778516454; x=1779121254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PvEvtdFY5ghOdqCADYDX8FFT4I10hTRam2EHdeelhm4=;
+        b=X0scKjIHbJxwZ8bstSOu3INGravnIt+IcEAaMd/O6vM38Fi50rQn67c2nYad/K/CEb
+         TxIA6Sq/LH6D3BE1VQKWQi7QY0AJasUnykagWBjwvs9u1XZVQUqjHFg6NTH3ISChA+GG
+         0HxIZ01GAVlkPoKiB6rWXxMadF1KLmOscOF3mmRtZLC3PffuL98q4G02PKxI+3jTH78F
+         Jkx5SyA2PsdqE9NI86de98tVm4WBgm1ptpG6ZggvwP2KQKscNfi35s2D8AbkmBoNRndi
+         FI2DCeDEzVUW8lL3hLZviYFxo/rU1Y4z+p/4KQemBJIV41ikJutvNk2W5oq0JzWWwl89
+         FWUg==
+X-Forwarded-Encrypted: i=1; AFNElJ9kWKTjlnT3o0Wr1QUOKFNdiwwsD5uu4KKC9Ch5toDXFdF9ZXIRqBiHCAK4ZycpstBaju1cLe9/FONmOXfa2U1I@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUpubyy7mPhu5VWaSiBK8k/NqpQaWMrsn9JurWjv1tJpaz5RCf
+	dWXHrAR7/mRhv2tfEJnFv3y5Dtfn87tpQ1D/aTnJtrvKZ3AYhIEa9mJ6kKHR/x+lzTJ/UruDVni
+	6kuz9keLgFoHenjvCqtlIy/LWkeHUxeRbkD2cEsoz
+X-Gm-Gg: Acq92OELKjjE0hwZ/b6OsPr5VZLo/BReieCzG3S6r7eU6HoEdMLkrItOG/QV3h18KXS
+	V/MZArk7Vqk+OQ37nyp4zw4xfUK2+MdXLSKFCBA+ccznAWhTigol5KYzycYdd5hvCJAdLeDdRcj
+	vCuaSWm4rXfhOMidEpXMASofsgqASyvhrYDEz5Ig/r8izQAZQLbvLGucnfK7IEDgW66qpD0zBZp
+	wg9HuJk+fLquWY+5+Vx/JKTf3d5LnvmtVj5uNwwPoOWbcdKeQWoajafQw2QPxiHkEYBiDP1wi9Y
+	e3nduYk6dGO+6cdEy7ywBzuSpVBvO9uwSBq0bPtzjC4NgnJF
+X-Received: by 2002:a17:903:94b:b0:2b0:b0c9:96e2 with SMTP id
+ d9443c01a7336-2bc786ac4d5mr5000195ad.21.1778516453217; Mon, 11 May 2026
+ 09:20:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf test: Make leafloop workload immune to compiler
- options
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260511-james-perf-leafloop-stack-v2-1-79f7383f545e@linaro.org>
- <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260506000018.3113599-1-irogers@google.com> <20260506041004.3196084-1-irogers@google.com>
+ <CAP-5=fUPdg3vu1orm_k9ZTQVgvs+vQa2Q-+gc-TkLPnqEjH7DQ@mail.gmail.com> <afs8FC96SNDD4DcM@x1>
+In-Reply-To: <afs8FC96SNDD4DcM@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 11 May 2026 09:20:39 -0700
+X-Gm-Features: AVHnY4J63GgtKgF53HXGYzUkKwTY-87ynT9KAu1D6Xjz27VLdQR6fzMM2c01lnY
+Message-ID: <CAP-5=fXVM=ZsPVX1rZJX=5an2QhQaT1Jnmum9U6=XeRXk6G3zw@mail.gmail.com>
+Subject: Re: [PATCH v4] perf sched stats: Fix segmentation faults, memory
+ leaks, and stale pointers in diff mode
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: atrajeev@linux.ibm.com, james.clark@linaro.org, namhyung@kernel.org, 
+	adrian.hunter@intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	venkat88@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 6, 2026 at 6:03=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, May 05, 2026 at 11:45:56PM -0700, Ian Rogers wrote:
+> > On Tue, May 5, 2026 at 9:10=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > The patch addresses multiple segmentation fault vectors, out-of-bound=
+s
+> > > reads, and memory leaks in perf sched stats by adding bounds checks,
+> > > NULL checks, proper error propagation, and robust memory cleanup.
+> > >
+> > > 1. In get_all_cpu_stats(), added assert(!list_empty(head)) to prevent
+> > >    unsafe list_first_entry() calls on empty lists, added a missing NU=
+LL
+> > >    check for summary_head->cpu_data allocation, and implemented a cle=
+anup
+> > >    ladder using a temporary list to prevent memory leaks on error pat=
+hs.
+> > > 2. In free_schedstat(), fixed memory leaks by ensuring internal domai=
+n_data
+> > >    and cpu_data pointers are freed.
+> > > 3. In show_schedstat_data(), fixed a stale pointer issue where ds2 re=
+tained
+> > >    its value from a previous iteration when dptr2 became NULL, and ad=
+ded
+> > >    proper propagation of errors from get_all_cpu_stats().
+> > > 4. Propagated show_schedstat_data() errors up to perf_sched__schedsta=
+t_diff()
+> > >    and perf_sched__schedstat_live() to prevent output corruption on f=
+ailure.
+> > > 5. In show_schedstat_data(), added NULL checks for cd_map1 and cd_map=
+2
+> > >    to gracefully handle invalid or empty data files.
+> > > 6. Added parallel iteration termination checks using list_is_last() i=
+n
+> > >    show_schedstat_data() for both domain and CPU lists to safely term=
+inate
+> > >    at the end of each list when files contain a different number of C=
+PUs
+> > >    or domains.
+> > > 7. Added CPU bounds checks (cs1->cpu >=3D nr1 and cs2->cpu >=3D nr2) =
+in
+> > >    show_schedstat_data() to prevent out-of-bounds reads from cd_map1 =
+and
+> > >    cd_map2 when comparing files from machines with different CPU coun=
+ts.
+> > > 8. Added NULL checks for cd_info1 and cd_info2 to prevent crashes whe=
+n
+> > >    a CPU has data samples but no corresponding domain info in the hea=
+der.
+> > > 9. Added domain bounds checks (ds1->domain >=3D cd_info1->nr_domains =
+and
+> > >    ds2->domain >=3D cd_info2->nr_domains) to prevent out-of-bounds ar=
+ray
+> > >    accesses in the domains array.
+> > > 10. Added NULL checks for dinfo1 and dinfo2 in show_schedstat_data()
+> > >     to prevent crashes when a domain has no corresponding domain info=
+.
+> > > 11. Zero-initialized the perf_data array in perf_sched__schedstat_dif=
+f()
+> > >     to prevent stack garbage from causing perf_data_file__fd() to att=
+empt
+> > >     to use a NULL fptr when use_stdio happened to be non-zero.
+> > >
+> > > Assisted-by: Gemini:gemini-3.1-pro-preview
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > This version passes sashiko's scrutiny:
+> > https://sashiko.dev/#/patchset/20260506041004.3196084-1-irogers%40googl=
+e.com
+>
+> Thanks, applied to perf-tools-next, for v7.2.
 
+Thanks Arnaldo! I don't see this in:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/log/?h=3Dperf-tools-next
+just wanted to make sure it didn't accidentally get lost.
 
-On 11/05/2026 4:38 pm, Ian Rogers wrote:
-> On Mon, May 11, 2026 at 2:19 AM James Clark <james.clark@linaro.org> wrote:
->>
->> Since the leafloop test program was moved into the main Perf binary as a
->> workload, it inherited the same compiler options as Perf. In this case
->> the -fstack-protector option broke the assumption that simple leaf
->> frames don't have a stack frame on Arm. This causes
->> test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
->> the link register, making the test useless.
->>
->> Fix it by rewriting the leaf function in assembly seeing as it's so
->> simple. Adding -fno-stack-protector would also work, but wouldn't be
->> robust against other future compiler option additions.
->>
->> The local variables and 'a' variable were never needed so remove them to
->> simplify.
->>
->> Assisted-by: GitHub-Copilot:GPT-5.5
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->> Changes in v2:
->> - Push and pop asm sections - (Sashiko)
->> - Add .size directive - (Sashiko)
->> - Add asm label for done and test with LTO enabled - (Sashiko)
->> - Link to v1: https://lore.kernel.org/r/20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org
->> ---
->>   tools/perf/tests/workloads/leafloop.c | 40 +++++++++++++++++++++++++++--------
->>   1 file changed, 31 insertions(+), 9 deletions(-)
->>
->> diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
->> index f7561767e32c..c20c75f7ba49 100644
->> --- a/tools/perf/tests/workloads/leafloop.c
->> +++ b/tools/perf/tests/workloads/leafloop.c
->> @@ -6,26 +6,48 @@
->>   #include "../tests.h"
->>
->>   /* We want to check these symbols in perf script */
->> -noinline void leaf(volatile int b);
->> -noinline void parent(volatile int b);
->> +noinline void leaf(void);
->> +noinline void parent(void);
->>
->> -static volatile int a;
->> -static volatile sig_atomic_t done;
->> +static volatile sig_atomic_t done asm("leafloop_done");
->>
->>   static void sighandler(int sig __maybe_unused)
->>   {
->>          done = 1;
->>   }
->>
->> -noinline void leaf(volatile int b)
->> +#if defined(__aarch64__)
->> +/*
->> + * Write leaf() in assembly so it stays as a minimal leaf function with no
->> + * stack frame and won't get silently broken in the future by any Perf wide
->> + * compilation options like -fstack-protector-all.
->> + */
->> +asm(
->> +       ".pushsection .text,\"ax\",%progbits\n"
->> +       ".global leaf\n"
->> +       ".type leaf, %function\n"
->> +       "leaf:\n"
->> +       "       adrp    x1, leafloop_done\n"
->> +       "       ldr     w2, [x1, #:lo12:leafloop_done]\n"
->> +       "       cbz     w2, leaf\n"
->> +       "       ret\n"
->> +       ".size leaf, .-leaf\n"
->> +       ".popsection\n"
->> +);
-> 
-> On reading this I thought, why can't we just use an asm block in a
-> function, but I get it, you want specific function entry/exit to test
-> the leaf unwinding feature.
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Fwiw, looking at the test the command line is somewhat unusual:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_arm_callgraph_fp.sh?h=perf-tools-next#n32
-> ```
-> perf record -o "$PERF_DATA" --call-graph fp -e cycles//u
-> --user-callchains -- $TEST_PROGRAM
-> ```
-> cycles//u rather than cycles:u and why the extra --user-callchains?
-> 
-> Thanks,
-> Ian
-> 
+Thanks,
+Ian
 
---user-callchains looks like it was to make the grep in the test easier 
-so it didn't have to ignore the kernel part. But it might be redundant 
-now after a later change I made.
-
-cycles//u has always been there so there's no explanation. I thought 
-that was a valid way to open an event? Is it weird because // is for 
-options in perf record and not stat?
-
->> +
->> +#else
->> +
->> +noinline void leaf(void)
->>   {
->>          while (!done)
->> -               a += b;
->> +               ;
->>   }
->>
->> -noinline void parent(volatile int b)
->> +#endif
->> +
->> +noinline void parent(void)
->>   {
->> -       leaf(b);
->> +       leaf();
->>   }
->>
->>   static int leafloop(int argc, const char **argv)
->> @@ -39,7 +61,7 @@ static int leafloop(int argc, const char **argv)
->>          signal(SIGALRM, sighandler);
->>          alarm(sec);
->>
->> -       parent(sec);
->> +       parent();
->>          return 0;
->>   }
->>
->>
->> ---
->> base-commit: 8c8f2093614373ea8179b562320212a25cf937c0
->> change-id: 20260508-james-perf-leafloop-stack-c221600eddf2
->>
->> Best regards,
->> --
->> James Clark <james.clark@linaro.org>
->>
-
+> - Arnaldo
