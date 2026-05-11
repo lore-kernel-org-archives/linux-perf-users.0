@@ -1,158 +1,371 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5150847B42C
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 18:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ABC4C9549
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 19:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778523748; cv=pass; b=QPndRY+FEZUtfGtdmqs2CSe8TVTOuPliZDbLEtRXYSG5+K0K433L8yt4lERkASg9tmfIGqtcNsk5tXly+J1z5tNG657JsKRyC+mIolMGNCAsWoT0PFzHDST6z/pew9NRwQgeLAZBmJvnsnEzp3uSXr74JCFgfiju79SeqGAdCvo=
+	t=1778526116; cv=pass; b=ccXvK4aYk4z0ZH+u17KFMal5BfXNdYr3GL2E7Vjq2tIhWFPrQbpEV69qjTrQEzSrXtcFeJKnMiXdtQKZ1MKoXEvC+MXoK+t2oSuGkmOEA1niUHD6DIB2tmy0efCxb3bRMe3pjVZ9ZD+HH65RkYOAcUixTS/w2e44Ysqd75lK8eI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778523748; c=relaxed/simple;
-	bh=wYVAlFQtmiFz2qH7X3ZJjrwKGWkW1EPsk3fHd01+JvI=;
+	s=arc-20240116; t=1778526116; c=relaxed/simple;
+	bh=4i5DjxxvA9Vr+ZZwT1kklAl7IFDfzRJVv9doKQh7Cgw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWMU1dkanNIwJUy+SbBY/XdrMS1XJeK3BO9yEvMxD8/PJl3+e9VFLYNQQjJZMnXFf5hHKygNuYx5Ac3RxvXaRP/OFuDAIyPN5nB8BH0YMpQTsHVO2qOOltekHl0trhF5muP/kN2umgnbc6x4m8qpsLjAx5nlvm01R2a0WKGye8A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QZ6asChP; arc=pass smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=NLo2a2F3bgplKOZx0VXBlmlP8QDJfnXp07D3I6RgIaNQoNuqh6ByQ+V7vTPnFovtJktk5pQJgxuEsVtmqQ6mO5gzFvGqP+GH7D4r6AqRpn67JW2b0T5NrzGwWyneBQzJkhAp1lTIUwThzP142vKvXfJBYSzqCoQvMNL8Ou2RGUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1t37Os8; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZ6asChP"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2b46da8c48eso3185ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 11:22:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778523747; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1t37Os8"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso13015ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 12:01:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778526113; cv=none;
         d=google.com; s=arc-20240605;
-        b=XWhzZviOXAv+FS/qbnJ6fzs9odNlqmDR1riyQGu0Q2NlqS1mG0QW6r3iJUa4hU+gyW
-         fHBt5ne7cSTvDkbBXuCQb/6XaFTwR3PS+DFa/nuXOQrv801TCToPKyVB4lFUHmAjvEPW
-         GRwq1DBP5a/FBsGpWXJ7XWr1UxqJBDKFozUceCrk/S4cOe56JrAarJmhwY5LzIewcA62
-         BbofUdEqp9xyolalm5mIoMD3IsvKmFM3U8NRtwcb4k3uBOqpnt403oh1TACZj3jyuUDm
-         O8GLIbs6R8sDYftQ3uHerUnUTB+CQ7z8hbXqaWcsyZ0TZ61t99uRpPBm+cJJPLNPj4yw
-         xeSA==
+        b=bO+z8A3B3rhC5336M8nH2rvwmSYT1WGVj2AzsqalFRtKI2ZsyxBJq3ATmh4xgXSrMo
+         z1AENiGeJYqfVtKxeqYxeR7NmpFmkMyes34xX4uW70zzm8pxs8NvSnqn6aOR3CE0NMcN
+         Bxwp5ZigaL+WbvMlOWhZf2A7tIgvF2vSdQGnLAGNZNoyIlWFlwvDtlpJOamuFpFMXXbt
+         exnVUuMy9TQbd/zcD6/aNHUVio23XZCmVtjx1U5bX5dCaQKZmo+eG5UEFM+t+OPt1vqJ
+         MUSJTUhYX/UMWp6/2r8g1gsj6Wrla/zlflRThJB99NjG7tdmiBIf9ZDi6ySKFBb+mCco
+         oA+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZLIRz0NwHR3NnqATUTMjZdPNjAg8JVum3ByMqOI0yC0=;
-        fh=yS+4oLO6K6kGXZW1tLNIdUigWCD3c+xPTqyx0Yy9ivo=;
-        b=CiLo2HqYEEhRq4NybDosqjBlyS17Vlj7kk9cRLtfwKNVgrescdV7qxHlyrPmW/EbK9
-         ggFz5pm4uouGBmYEy9NSVHrmrDc077NOHefRy/5iZvnXXINNvXEbXOekRCMpgmSUv1Zs
-         msPSdVjTVLvIGUSPjLOsvNH8RjkJMS8m2LPlqMZWUgBDZnnlTQhScvSWbgbThz8p8XHf
-         vhahaENbNWeIwEm/qhuSpKh1Toqs/LZ9DaLUFkGfpt0iFWMuWww4PTnj2BTwc17p4MuN
-         52SBpSiXImqHfIcEiEqtBoonTkeACFQh6plH1jJZ/5AWdYlACoI8D00awhCUuI3Xgw9Y
-         LYzg==;
+        bh=UAUCERFRJQbrrjJg8R7ZKKRRZ2G9Qt+fFPInl7iUIq4=;
+        fh=3BDwUrqsVuFkKMXRjLtWq8B7ORY1y+IhlITENPC+KSk=;
+        b=BY4PE2dCwY8nYmcWQ+dTsrZBjTsKzXJtTjQ24xp16aHr0pMpH4H2gqhFiyN9V07AbS
+         TqPxy/tzSiqM8ZTXX3znPYvVNW2ovwlKBs73ET1p1Lq9Qs4awW3BG8LKU14VoAqKD0eO
+         jCvZ1CIeUj+Ox1dQWLzZ0JCgGTY2AMTB7S0viCm48JDOxRHkfu0uzGZmKbSoOkpRDplL
+         Ru+b5UCTei6YT/UykiwLyLaw8iyJ/adaeXlDCgmGDLOYBaEz1z9hZfFv90yN2zs57P7i
+         J7xrZVTBMgqfAoTtqjmr7vT9ZyFSa+82C+EAS+YYcbs7hl/D6CTk5sUvlC4jvmxUpHgh
+         QWhw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778523747; x=1779128547; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778526113; x=1779130913; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZLIRz0NwHR3NnqATUTMjZdPNjAg8JVum3ByMqOI0yC0=;
-        b=QZ6asChP1pwudlP852zB/3QKw1GQdWIAfU1Dsm2KmB7tKif4MlbYfMBZACz9tygVnL
-         dBoQ18WviOmKZIZDKBKBwKOqjrqlG49FutHgtgh7KQUlHsYPEuLCwg+BHQRVUwsjN/34
-         vBPe/HOsaErsv/Bfua4X7ybXmec39w5WBNKCQW5WxGoa3FNRm3xxERhWunfnpEM1jqmd
-         8bPqvUDSZenQlHfoU8qIS8C8VDuVZwlDAd+OytUaLRyyDP/lpvCrULFcin2GDu2wxkUV
-         XiY9OfElZDmL3eIp18MBDQ+JJsU4NmhqCZKuJbLCjDeAVYj5U82q32HKtwuR1FQG6l1P
-         Jjiw==
+        bh=UAUCERFRJQbrrjJg8R7ZKKRRZ2G9Qt+fFPInl7iUIq4=;
+        b=S1t37Os8SC9euSYo1c8wFrOl1PxY+S2SRwHAXLOCfTO3CzX0yVVh8MA62Vvo6c5ar4
+         jDUZceuKvRtjM3G2Ra4OjWipzLVxEXpB6b6QHu+atzPAP57vJCXXRy6zs+KzVrChPnMp
+         ErW4uKjxEOhzaBn7Fmx51/+XMrvnO/oE3lQQJ7L43zSBtIUgurx5cYNbsEivW+9odyvY
+         sabhAK80r5F124WH2hspNB49YySmP1kwAH734kHrzjpQjH6HspbMFcRF7jA29OAx0HH5
+         8Hi47TalQX0U10NN+nupzrrL+lOmxUIGy/G15wqea0MCbeRF+CpMGmPtEqTB1d+EXR3J
+         /XcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778523747; x=1779128547;
+        d=1e100.net; s=20251104; t=1778526113; x=1779130913;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZLIRz0NwHR3NnqATUTMjZdPNjAg8JVum3ByMqOI0yC0=;
-        b=hp0o30NZu+3eaSCCxoAOsyN5ophz9ReY2Vyo83Jtm7NT0WHsZLKHRWvOYGZM20TpjG
-         HT8mJZWMq2+KqEOGCIj0G14BBdxLepsT7qhzstg+cJCBD6BE2aitVaQF6csM6KqIIALa
-         n26jDDejzuxErgzC1R78p0NHr5jQme5ChYTDZACraEXQV8ijtB8IvHDmJg9w6sPOVyvL
-         IUDRU3ORTnJuo7WMOiFMijzyFkTWOzA358HudHjSidJfjsFx36QGc6wh45alFmhsngAJ
-         obEv7/CSXnxTOh/usy09qHgW/MgwkGMBf7WK9nlWSwct11scf1AOHroDEcr69fRJPDLU
-         Uxxg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Y9xzorq9hPLp5ZO/FuWAioTHFtCg3i+wPsDa3VSSAjpPo3SlZH6ObHmDAEaPJk2u0OebpX2l1emdVJ8t7PmUY@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt05YPFpeBej3eMCv9u83nv5uYgw1MQoToj0CZ/aiK/DrNqcoD
-	pf6A6iK+pYe24n2+tSZUCAY0rynDCDPjNWJjTa0rH7FcLtXYNYhcXZk7shOpPyjnY3nUURRZd5w
-	qPDzdB/Nmzka3JZOzQxcAsznslaG1cJNoUt2AM7+8
-X-Gm-Gg: Acq92OGeODuORlYKehg0FUbgzMBBqxebj/Yb43m032KceD6u3IDsDNfcTjCU9rVVGUG
-	yCcDES2EpAYNHUknxJw9gp49kCaSnbeC5b3Mr/TVz0Xb70o0LJbQuQhsuP4y7xvtgbmoefyGHkk
-	eSiXaBV1TxqIibmK2LsZgqLPt2sKlNigLq7A/C+Belmr2KsFf87yez0qWeuDeByxbmDlUvr7LHn
-	8Ts7u0ab8Uqv7wNB5EUl64SdDBbdhtIxpJ9jLoWAOQDvkT4/wpNSCEGggnUtxHJ41VEi8nt4miU
-	CeZBNWk7UEJGXQfJ32IvGdeshqhqNQNM1RoGZbg52RAb8qpeD+3niZOW9/g=
-X-Received: by 2002:a17:902:fc84:b0:2b0:be7d:a25e with SMTP id
- d9443c01a7336-2bcfeafb836mr502945ad.18.1778523746071; Mon, 11 May 2026
- 11:22:26 -0700 (PDT)
+        bh=UAUCERFRJQbrrjJg8R7ZKKRRZ2G9Qt+fFPInl7iUIq4=;
+        b=oHAf/w76CPMChteJJJqpmQ2KsNRVp/vc0cMx6yB8hu3Vr9/Uohajd3ewsX7tm4a9TQ
+         xfittLslHATFouByOqw6yJWrwUECK2WUaJ1+vXSRv/LMjNDLY5k7kvGTCgoGqfQX/Kz7
+         FjnoUYgMHfoe7UDl354+1I8aK9ZjNzZRZVY4Yo/xOYZQzvot5ErHM8qbJtgkl0rIMNup
+         XTO5NY9V7Qpy89JyXMwPsre3IzdEv2fxqt1/Hrbpds82IhM+PLK2ZapXt4WI8BGPlLH5
+         6iZ2lzdMXpvW+vgSN1XeiwuA4gBF6eQXw/of35yy4Lko7LyaCcSe9RZKs/yWoSNYw9CP
+         Xoeg==
+X-Forwarded-Encrypted: i=1; AFNElJ+064+hVrLnfhOJ4T3O8EJNDz6saEoYwTKqmSEBcBNibKrquMDyyWL8iV+fdOTdY8cElHHQaIUNhixvbf+TUfam@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3mEkmhw3WXi5m9qbarhLQ8XxS9Z9vhMSUlem7k2Togci6wzXd
+	KYP0SVf/EixhLJyF1qzO7zn2U4chby6QdeaiWoPq/pRMV1gIRKAhNEV11KwgN9RU12k97IQ0rzt
+	Z7rXudyp1drxkQMZa6ZilfqZYf+FaTqoGphoFuP5W
+X-Gm-Gg: Acq92OGVo2hbL1cHIglS3CeHOgjj6cenH0C26LaRjp7y/YjVYs/zTVyKQNWSGSKQtsl
+	QxEY/lqoH4tTdgJpQFWoDBn/AxN4W3oOgxdxCZn+qGQSkzpc2eSdGf6PTZ2pzKpmEw813d5Wv2I
+	hgAZylOv/KbCJfG9MpEV74PLos3hvv6Vreu7EvZDEVX/MJe0w6i1mnQtuM9ysfoQi0N5+avB3ef
+	7AUPPQUmsngFT5BqPw2wxJX2E0QA9lAPTUBaGWGSUEHuaNublGZf5KPtphL1tOo/Oil4h/FmzcC
+	PXI9oym2GzLNP5b10gxkTdxax4nNFTSmJTsxgsuMhCrAI80WdNsU8Woyfoo=
+X-Received: by 2002:a17:903:3890:b0:2ba:4749:c9a2 with SMTP id
+ d9443c01a7336-2bcfe66d032mr931545ad.2.1778526112621; Mon, 11 May 2026
+ 12:01:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260510202346.49853-1-namhyung@kernel.org>
-In-Reply-To: <20260510202346.49853-1-namhyung@kernel.org>
+References: <20260510033424.255812-1-acme@kernel.org> <20260510033424.255812-2-acme@kernel.org>
+In-Reply-To: <20260510033424.255812-2-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 May 2026 11:22:13 -0700
-X-Gm-Features: AVHnY4Kpg8_PzF6GO7RgKmRuYXncioUyp10BuszlgAbdMvABbYiCw2dHdSJvmL4
-Message-ID: <CAP-5=fV7QanW0cu8KBOR5LmCuAEa+eZdSOussQx=dZMkeGb=9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] perf build: Update kernel headers
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+Date: Mon, 11 May 2026 12:01:41 -0700
+X-Gm-Features: AVHnY4KmCsWsP4tZ4nzLdRuM9PwJ6zB4j7rK5mdszDm-HLHMDtXu6amZ08dLT38
+Message-ID: <CAP-5=fVEYO4QHeeKjvzqVU8f5U8Pp0kE4HU2dsMqep5pvjR4iw@mail.gmail.com>
+Subject: Re: [PATCH 01/28] perf session: Add minimum event size validation table
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, sashiko-bot@kernel.org, 
+	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 10, 2026 at 1:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Sat, May 9, 2026 at 8:34=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> Hello,
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> This is to update copy of kernel headers for v7.1.  I've updated ones
-> in the tools/perf/trace/beauty/ and left others which seem not to
-> affect perf syscall beautifiers.  This is suggested by Linus to avoid
-> unnecessary builds of objtool and the kernel.
+> Add a per-type minimum size table (perf_event__min_size[]) and
+> enforce it before swap and processing, so that both cross-endian
+> and native-endian paths are protected from accessing fields past
+> the event boundary.
 >
-> There are AMD IBS changes that are directly related to perf, but I
-> think Ravi is working on it with other Zen6 changes.  So I didn't
-> include it here.
+> The table uses offsetof() for types with trailing variable-length
+> fields (filenames, strings, msg arrays) and sizeof() for
+> fixed-size types.  Zero entries mean no minimum beyond the 8-byte
+> header already enforced by the reader.
 >
-> Due to the header file changes, some beautifier scripts for perf trace
-> are updated too.  This was detected by Sashiko.
+> Undersized events are skipped with a warning in process_event
+> and rejected in peek_event =E2=80=94 both checked before the swap
+> handler runs, preventing OOB access on crafted event fields.
 >
-> Also I removed the header difference output in the default perf build
-> and added a new make target to check it explicitly.
+> Also guard event_swap() against crafted event types >=3D
+> PERF_RECORD_HEADER_MAX to prevent OOB reads on the
+> perf_event__swap_ops[] array.
 >
-> Thanks,
-> Namhyung
+> Reported-by: sashiko-bot@kernel.org # Running on a local machine
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/session.c | 121 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index fe0de2a0277f09f9..aae0651fb6f025a1 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1759,10 +1759,88 @@ int perf_session__deliver_synth_attr_event(struct=
+ perf_session *session,
+>         return perf_session__deliver_synth_event(session, &ev.ev, NULL);
+>  }
+>
+> +/*
+> + * Minimum event sizes indexed by type.  Checked before swap and
+> + * processing so that both cross-endian and native-endian paths
+> + * are protected from accessing fields past the event boundary.
+> + * Zero means no minimum beyond the 8-byte header (already
+> + * enforced by the reader).
+> + */
+> +static const u32 perf_event__min_size[PERF_RECORD_HEADER_MAX] =3D {
+> +       /*
+> +        * offsetof() for types with a trailing variable-length string
+> +        * (filename, comm, path, name, msg): sizeof() includes a
+> +        * PATH_MAX or fixed-size array, but valid events only need
+> +        * the fixed fields.  Null-termination is checked separately.
+> +        *
+> +        * PERF_RECORD_SAMPLE is omitted: all64_swap is bounded by
+> +        * header.size, and the internal layout varies by sample_type
+> +        * so a fixed minimum is not meaningful.
+> +        */
+> +       [PERF_RECORD_MMAP]                =3D offsetof(struct perf_record=
+_mmap, filename),
+> +       [PERF_RECORD_LOST]                =3D sizeof(struct perf_record_l=
+ost),
+> +       [PERF_RECORD_COMM]                =3D offsetof(struct perf_record=
+_comm, comm),
+> +       [PERF_RECORD_EXIT]                =3D sizeof(struct perf_record_f=
+ork),
+> +       [PERF_RECORD_THROTTLE]            =3D sizeof(struct perf_record_t=
+hrottle),
+> +       [PERF_RECORD_UNTHROTTLE]          =3D sizeof(struct perf_record_t=
+hrottle),
+> +       [PERF_RECORD_FORK]                =3D sizeof(struct perf_record_f=
+ork),
+> +       /*
+> +        * The kernel dynamically sizes PERF_RECORD_READ based on
+> +        * attr.read_format =E2=80=94 the minimum has just pid + tid + va=
+lue.
+> +        */
+> +       [PERF_RECORD_READ]                =3D offsetof(struct perf_record=
+_read, time_enabled),
+> +       [PERF_RECORD_MMAP2]               =3D offsetof(struct perf_record=
+_mmap2, filename),
 
-There were some issues with sashiko and the reviews are still pending:
-https://sashiko.dev/#/patchset/20260510202346.49853-1-namhyung%40kernel.org
+Should this be +1 as the '\0' given the path is a string? Arguably for
+just a mmap2 with build ID we don't need the path.
 
-Manually looking through the changes they all LGTM so for the series:
+> +       [PERF_RECORD_LOST_SAMPLES]        =3D sizeof(struct perf_record_l=
+ost_samples),
+> +       [PERF_RECORD_AUX]                 =3D sizeof(struct perf_record_a=
+ux),
+> +       [PERF_RECORD_ITRACE_START]        =3D sizeof(struct perf_record_i=
+trace_start),
+> +       [PERF_RECORD_SWITCH]              =3D sizeof(struct perf_event_he=
+ader),
+> +       [PERF_RECORD_SWITCH_CPU_WIDE]     =3D sizeof(struct perf_record_s=
+witch),
+> +       [PERF_RECORD_NAMESPACES]          =3D sizeof(struct perf_record_n=
+amespaces),
+> +       [PERF_RECORD_CGROUP]              =3D offsetof(struct perf_record=
+_cgroup, path),
+> +       [PERF_RECORD_TEXT_POKE]           =3D sizeof(struct perf_record_t=
+ext_poke_event),
+> +       [PERF_RECORD_KSYMBOL]             =3D offsetof(struct perf_record=
+_ksymbol, name),
+> +       [PERF_RECORD_BPF_EVENT]           =3D sizeof(struct perf_record_b=
+pf_event),
+> +       [PERF_RECORD_HEADER_ATTR]         =3D sizeof(struct perf_event_he=
+ader) + PERF_ATTR_SIZE_VER0,
+> +       [PERF_RECORD_HEADER_EVENT_TYPE]   =3D sizeof(struct perf_record_h=
+eader_event_type),
+> +       [PERF_RECORD_HEADER_TRACING_DATA] =3D sizeof(struct perf_record_h=
+eader_tracing_data),
+> +       [PERF_RECORD_AUX_OUTPUT_HW_ID]    =3D sizeof(struct perf_record_a=
+ux_output_hw_id),
+> +       [PERF_RECORD_AUXTRACE_INFO]       =3D sizeof(struct perf_record_a=
+uxtrace_info),
+> +       [PERF_RECORD_AUXTRACE]            =3D sizeof(struct perf_record_a=
+uxtrace),
+> +       [PERF_RECORD_AUXTRACE_ERROR]      =3D offsetof(struct perf_record=
+_auxtrace_error, msg),
+> +       [PERF_RECORD_THREAD_MAP]          =3D sizeof(struct perf_record_t=
+hread_map),
+> +       /* Smallest valid variant is RANGE_CPUS: header(8) + type(2) + ra=
+nge(6) */
+> +       [PERF_RECORD_CPU_MAP]             =3D sizeof(struct perf_event_he=
+ader) +
+> +                                           sizeof(__u16) +
+> +                                           sizeof(struct perf_record_ran=
+ge_cpu_map),
+> +       [PERF_RECORD_STAT_CONFIG]         =3D sizeof(struct perf_record_s=
+tat_config),
+> +       [PERF_RECORD_STAT]                =3D sizeof(struct perf_record_s=
+tat),
+> +       [PERF_RECORD_STAT_ROUND]          =3D sizeof(struct perf_record_s=
+tat_round),
+> +       /* Union inflates sizeof; use fixed header fields as minimum */
+> +       [PERF_RECORD_EVENT_UPDATE]        =3D offsetof(struct perf_record=
+_event_update, scale),
+> +       [PERF_RECORD_TIME_CONV]           =3D offsetof(struct perf_record=
+_time_conv, time_cycles),
+> +       [PERF_RECORD_ID_INDEX]            =3D sizeof(struct perf_record_i=
+d_index),
+> +       [PERF_RECORD_HEADER_BUILD_ID]     =3D sizeof(struct perf_record_h=
+eader_build_id),
+> +       [PERF_RECORD_HEADER_FEATURE]      =3D sizeof(struct perf_record_h=
+eader_feature),
+> +       [PERF_RECORD_COMPRESSED2]         =3D sizeof(struct perf_record_c=
+ompressed2),
+> +       [PERF_RECORD_BPF_METADATA]        =3D sizeof(struct perf_record_b=
+pf_metadata),
+> +       [PERF_RECORD_CALLCHAIN_DEFERRED]  =3D sizeof(struct perf_event_he=
+ader) + sizeof(__u64),
+> +       /*
+> +        * SCHEDSTAT events have a version-dependent union after the
+> +        * fixed header fields; the minimum is the base (pre-union)
+> +        * portion so old and new versions both pass.
+> +        */
+> +       [PERF_RECORD_SCHEDSTAT_CPU]       =3D offsetof(struct perf_record=
+_schedstat_cpu, v15),
+> +       [PERF_RECORD_SCHEDSTAT_DOMAIN]    =3D offsetof(struct perf_record=
+_schedstat_domain, v15),
+> +};
+> +
+>  static void event_swap(union perf_event *event, bool sample_id_all)
+>  {
+>         perf_event__swap_op swap;
+>
+> +       /* Prevent OOB read on perf_event__swap_ops[] from crafted type *=
+/
+> +       if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
+> +               return;
+> +
+>         swap =3D perf_event__swap_ops[event->header.type];
+>         if (swap)
+>                 swap(event, sample_id_all);
+> @@ -1780,6 +1858,20 @@ int perf_session__peek_event(struct perf_session *=
+session, off_t file_offset,
+>         if (session->one_mmap && !session->header.needs_swap) {
+>                 event =3D file_offset - session->one_mmap_offset +
+>                         session->one_mmap_addr;
+> +
+> +               /* Every event must at least contain its own header */
+> +               if (event->header.size < sizeof(struct perf_event_header)=
+)
+> +                       return -1;
+> +
+> +               /* Reject undersized events on the native-endian fast pat=
+h */
+> +               if (event->header.type < PERF_RECORD_HEADER_MAX) {
+> +                       u32 min_sz =3D perf_event__min_size[event->header=
+.type];
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Using an array means we always need to bounds check the accesses which
+is pretty repetetive. For `perf_event__sample_event_size`, we already
+have a function. Would using a function here keep the code more
+concise? A function could also be passed attr.sample_id_all and
+sample_type so that the event size minimum can take these into
+account.
+
+Note, this has come up in some of my posted patches I think because
+the LLMs are keen on bounds checking. Minimum size variable for python
+event processing:
+https://lore.kernel.org/lkml/20260428071903.1886173-16-irogers@google.com/
+Branch stack sample event size fix:
+https://lore.kernel.org/lkml/20260429181136.2712655-2-irogers@google.com/
 
 Thanks,
 Ian
 
-> Namhyung Kim (7):
->   perf trace: Sync linux/socket.h with the kernel source
->   perf trace: Sync uapi/linux/fs.h with the kernel source
->   perf trace: Sync uapi/linux/mount.h with the kernel source
->   perf trace: Sync uapi/linux/sched.h with the kernel source
->   perf build: Add make check-headers target
->   perf trace: Add beautifier script for fsmount flags
->   perf trace: Update beautifier script for clone flags
+> +
+> +                       if (min_sz && event->header.size < min_sz) {
+> +                               *event_ptr =3D event;
+> +                               return -1;
+> +                       }
+> +               }
+>                 goto out_parse_sample;
+>         }
 >
->  tools/perf/Makefile                           |  5 ++++-
->  tools/perf/Makefile.perf                      |  9 +++++++-
->  tools/perf/builtin-trace.c                    |  9 +++-----
->  tools/perf/trace/beauty/beauty.h              |  3 +++
->  tools/perf/trace/beauty/clone.sh              |  4 ++++
->  tools/perf/trace/beauty/fsmount.c             | 18 ++++++++++++++-
->  tools/perf/trace/beauty/fsmount.sh            | 11 +++-------
->  tools/perf/trace/beauty/fsmount_attr.sh       | 22 +++++++++++++++++++
->  .../perf/trace/beauty/include/linux/socket.h  |  2 +-
->  .../perf/trace/beauty/include/uapi/linux/fs.h | 12 ++++++++++
->  .../trace/beauty/include/uapi/linux/mount.h   |  1 +
->  .../trace/beauty/include/uapi/linux/sched.h   | 17 ++++++++++++--
->  12 files changed, 93 insertions(+), 20 deletions(-)
->  create mode 100644 tools/perf/trace/beauty/fsmount_attr.sh
+> @@ -1810,6 +1902,20 @@ int perf_session__peek_event(struct perf_session *=
+session, off_t file_offset,
+>         if (readn(fd, buf, rest) !=3D (ssize_t)rest)
+>                 return -1;
+>
+> +       /* Reject undersized events before swapping */
+> +       if (event->header.type < PERF_RECORD_HEADER_MAX) {
+> +               u32 min_sz =3D perf_event__min_size[event->header.type];
+> +
+> +               if (min_sz && event->header.size < min_sz) {
+> +                       pr_warning("WARNING: peek_event: %s event size %u=
+ too small (min %u)\n",
+> +                                  perf_event__name(event->header.type),
+> +                                  event->header.size, min_sz);
+> +                       /* Expose so peek_events can advance past it */
+> +                       *event_ptr =3D event;
+> +                       return -1;
+> +               }
+> +       }
+> +
+>         if (session->header.needs_swap)
+>                 event_swap(event, evlist__sample_id_all(session->evlist))=
+;
+>
+> @@ -1860,6 +1966,21 @@ static s64 perf_session__process_event(struct perf=
+_session *session,
+>         const struct perf_tool *tool =3D session->tool;
+>         int ret;
+>
+> +       if (event->header.type < PERF_RECORD_HEADER_MAX) {
+> +               u32 min_sz =3D perf_event__min_size[event->header.type];
+> +
+> +               /*
+> +                * Skip rather than abort: a crafted file may have
+> +                * isolated bad events among otherwise valid data.
+> +                */
+> +               if (min_sz && event->header.size < min_sz) {
+> +                       pr_warning("WARNING: %s event size %u too small (=
+min %u), skipping\n",
+> +                                  perf_event__name(event->header.type),
+> +                                  event->header.size, min_sz);
+> +                       return 0;
+> +               }
+> +       }
+> +
+>         if (session->header.needs_swap)
+>                 event_swap(event, evlist__sample_id_all(evlist));
 >
 > --
 > 2.54.0
