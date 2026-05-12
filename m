@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895C33A5E77
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 22:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCA33A6EEE
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 22:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778625052; cv=none; b=heFcsKkaKIdTZCHeN4NDDwQenYQl3+T6twRJVWbU9gjug0sq9RZEEY4p0zhes9qOYv0Ef6skYix2nHEIOfZ4NflIWsVZYXOE/XXy8rtAwbs8i4zYmXeDdkRgUm5mb9T0unajq2+gkfiUROQmOAOZjo6+GhAjQ1o0zTPnhtdjFec=
+	t=1778625056; cv=none; b=XiYWyWDKJegbff4Yo1xIilAImodNkcf4h5iZcyOoRR5oLG80tFLkOmNQ6K66q3mHvlLgGydA3lHXtVDrWHuCCka3cjSLdQCYq2q5jkKRb3MRG9z8kplR2p+OR2Y9BpAMUhq7DITxjpNNpVURvid/Na+pmxfI9xSMA7AwfckLkeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778625052; c=relaxed/simple;
-	bh=RqTGg2hpZTUcqnaOis4TLFydEmcm9F6FoW7/5+VA4lo=;
+	s=arc-20240116; t=1778625056; c=relaxed/simple;
+	bh=MfY/onNjl1tSIcuZbK5KiatbH5Z/+E3Yfo34GMlgkJk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MC0bpacRn0HyB+V2gWMGzUsdd94amEgrdiWt+v6yHnjcu3FRQMveRP02qMA8rNNgrUYqNZfxZbYUTEk6uC5MzwbDFBNH4iYzzkzoZO2h8qRWHTuLE3QqOpsKgYVltSgyuybrmjnlCd3sDSamWw5kb/0Hn3hICMDxyjfWT30paUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lnehcfG8; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=fYHIcksNaHxCRzIiRA0OlY4vYzAe3+VAQnrq0Qa2FC68+CMmftMygzpoBTFnWmYSY+Q+tG5PnM6Do+WShb6UuhOgRzrNXzHRwcCE0qvXK0xnyiFgekcUGxppK2Z8nRYE5HxuvueqAMgxYesTJgwmAvmPNJVTV3nbMzzrKZOw1Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tW8K1xUX; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lnehcfG8"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-132a99125f8so7320115c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 15:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tW8K1xUX"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1329791f18fso8314287c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 15:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778625048; x=1779229848; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778625053; x=1779229853; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4B6hs/yd/bRt+dldLE6wupPscTXnqnGwGQ2guRwieII=;
-        b=lnehcfG8IZ0TicMkybz3PAQFG3FHR1FUAQVmGTmXfFAKDC/EnuMuGtH3I8Etev34Fx
-         A7CnamxzZ4nBm3XY39Xz1KjblMRmwzd3n9KMcccMwPvUqYhrlMXub7tJVlReBDnascqS
-         bfjLnrYKulhf6s0IG2KxhJNIDXSukSecq9t67g249GRfoOyOnQia2zJQRM4T0Cl09KeB
-         ufYe8XCTiPNMBLG0rIxxKJ81WEO9/rQFdwYT7fd+5i84Pf1V/qoyYtLtP1HxOIA8d8Wz
-         ftlFqdURxOY6xWq99DQ9vkt3wwYZAcXuioJjP9BjuevfGjL4iE38ExQLe8nCsIq4jjnZ
-         umqg==
+        bh=UaZyrublob4RDNOma+H2J4lbD5yz3OYGXpG7o6nWlNE=;
+        b=tW8K1xUXNJUd+P9+63P3diC2jpi6KcoX47EU263y5GsPw/g8OIatD50/nRcGqDh1A6
+         FL1Wb1XXqhXSn61NBZx6K4tRU6ZitFejwixT42o928IvtCRLglyMuwLC8ykOk8hLFezg
+         vq0vx03jn8qa0WL6cZS4klgn5S6T/+iAkPfetkZvm2UZfmKBmnr0J0gGAZW4LfUg2xGj
+         GNxoonrtlPJM6ndEXgD6a1317pDtJHuORhY90fm0acHag0x2lMppyBJRwCk9vgQgt62a
+         UnhKrV6+/436zHD8wJUwUngq6B7obyRx1Wi4EgC40wKaOU7/n6/H6yv1W5vPhUYow4Nc
+         ujFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778625048; x=1779229848;
+        d=1e100.net; s=20251104; t=1778625053; x=1779229853;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4B6hs/yd/bRt+dldLE6wupPscTXnqnGwGQ2guRwieII=;
-        b=L2CyspR89Z501ogNawP5CJyLIhnZ0CBKKfHzzA5bGf9um6Z/PEZScsWG4uo392+1TV
-         B9njmyBX9PfAv+hCyKvv6Pcdv3wloFGXa9UyNwAmuyCoVoaEtr6CoTyviw1rPL6mlmlV
-         lYb6v0vRf8gaqeQN141xkqLMerDq7FPT45V4r+DWF4zr0Wzxwk7XYI60KwpF9vCMrknX
-         0XHC76Q69Q9v4z1G7De4+W79ohoAShyKF8UducINnBC2l/vvhCfNTLZmiYeeIjF9/5dt
-         6yd+OzYASjxKlhMjlsDFkDiiirDHp9EFDur+nI9s3nbINK0x6o280VT71C8wp1Udjryi
-         mLHg==
-X-Forwarded-Encrypted: i=1; AFNElJ/9HMAH2wnR8iZQdZyrnEnmCH6f1zGr9kAlIFP5b6CShez92cGngdh0Erd3l5/CFIYv4NX2/47nT4v6E6wijdzW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy04jBxecQSACfMxPdW1KDnP+6nd19ghwBOcU8ewfVZlYLXrzlV
-	IoEFsiRrwaUkRZfUic5fkr0+p7/TGmLHv2q+Q79Agq8Bfw1CLyfN0szD41t41dwcZKJmyNQvsg2
-	QqA5pEI7vdw==
-X-Received: from dlbbz24.prod.google.com ([2002:a05:7022:2398:b0:12d:d227:fad5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:459b:b0:132:1de0:1295
- with SMTP id a92af1059eb24-13436682d42mr530361c88.17.1778625047279; Tue, 12
- May 2026 15:30:47 -0700 (PDT)
-Date: Tue, 12 May 2026 15:29:41 -0700
+        bh=UaZyrublob4RDNOma+H2J4lbD5yz3OYGXpG7o6nWlNE=;
+        b=eqaZHsbZXtomoZG+1EhPtkjXdRZ1OJDK7l+IAjxCnSqS7yBnhuMxmA7Oy5J4c8Y4b7
+         ZePc5Wq9Aam9HTx7W+JmdjLsacEypVq/C4bq58oQQICyKdeWDPNLVJjOZjh6NApFYKWl
+         Q+dbZ7wybuc91kDpOjUdGlQrCYEP9sK2hB0A6rBe3646FGfgmHUSvLA5Oq/6U0kR+gBQ
+         dGxsVK0vQGGBrSw6WZUKij2Qmac0w8WjRy9s6F7m3MksQpR6OqIDnVdFGjqfTIng4y6w
+         5Yzbv8FUXJudn501sOJVyW9TDrC1NFmj48yuMCPAvBnIict9xKk9GuEK95SbtCYqi2Cn
+         jozg==
+X-Forwarded-Encrypted: i=1; AFNElJ+IOLh3l1SKBgN+jvEHnIpSsabx8IlJsPFk7IBVoaYHjjMNLdn7l6+3deFSUKIGMFeK79fd5nM0G8qVoAPNB/Wn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4myNrCc7dk3LQxbLXCD3Tb/yTHioPnibSf5vlblmtjlPNEIIT
+	c0qbt4DgYBWNM2HYc03jVc/0O3e722dZy2mW6RnOCPhy8ddsNSupKLz6KETuGe5xLmwVI7+vwcA
+	DVWjUvsYVZA==
+X-Received: from dlec15-n1.prod.google.com ([2002:a05:701b:428f:10b0:12a:7dc7:7b04])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6290:b0:128:cf5c:5356
+ with SMTP id a92af1059eb24-1349a70361dmr210098c88.5.1778625052623; Tue, 12
+ May 2026 15:30:52 -0700 (PDT)
+Date: Tue, 12 May 2026 15:29:43 -0700
 In-Reply-To: <20260512223001.2952848-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260413041143.1736055-1-irogers@google.com> <20260512223001.2952848-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512223001.2952848-13-irogers@google.com>
-Subject: [PATCH v13 12/32] perf inject: Don't pass evsel with sample
+Message-ID: <20260512223001.2952848-15-irogers@google.com>
+Subject: [PATCH v13 14/32] perf kwork: Don't pass evsel with sample
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -77,346 +77,444 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 The sample contains the evsel and so it is unnecessary to pass the
-evsel as well. Clean up handling of sample and mmap_evsel when
-synthesizing build id events and mmap2 events with build ids. For
-callchain walking and things that expect the evsel to match sample,
-the sample->evsel shouldn't change. The mmap_evsel should be used when
-making mmap2 events. Some minor tweaks to synthetic events to be
-robust to evsel being NULL and to remove an unnecessary branch (as the
-id sample will be empty) on the evsel.
+evsel as well. Remove the evsel from struct kwork_class.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c        | 52 ++++++++++++++++--------------
- tools/perf/util/synthetic-events.c | 30 ++++++++---------
- tools/perf/util/synthetic-events.h |  2 --
- 3 files changed, 40 insertions(+), 44 deletions(-)
+ tools/perf/builtin-kwork.c | 74 +++++++++++++-------------------------
+ tools/perf/util/kwork.h    |  9 +++--
+ 2 files changed, 28 insertions(+), 55 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index f43c165c3a13..593d3ed5ac47 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -146,14 +146,12 @@ struct event_entry {
- static int tool__inject_build_id(const struct perf_tool *tool,
- 				 struct perf_sample *sample,
- 				 struct machine *machine,
--				 const struct evsel *evsel,
- 				 __u16 misc,
- 				 const char *filename,
- 				 struct dso *dso, u32 flags);
- static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 				      struct perf_sample *sample,
- 				      struct machine *machine,
--				      const struct evsel *evsel,
- 				      __u16 misc,
- 				      __u32 pid, __u32 tid,
- 				      __u64 start, __u64 len, __u64 pgoff,
-@@ -356,7 +354,6 @@ perf_inject__cut_auxtrace_sample(struct perf_inject *inject,
- typedef int (*inject_handler)(const struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 4b312afed830..59a54d11f7fa 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -448,7 +448,6 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+ 			  enum kwork_trace_type src_type,
+ 			  enum kwork_trace_type dst_type,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine,
+ 			  struct kwork_work **ret_work,
+@@ -458,7 +457,7 @@ static int work_push_atom(struct perf_kwork *kwork,
+ 	struct kwork_work *work, key;
+ 
+ 	BUG_ON(class->work_init == NULL);
+-	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
++	class->work_init(kwork, class, &key, src_type, sample, machine);
+ 
+ 	atom = atom_new(kwork, sample);
+ 	if (atom == NULL)
+@@ -507,7 +506,6 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 					struct kwork_class *class,
+ 					enum kwork_trace_type src_type,
+ 					enum kwork_trace_type dst_type,
+-					struct evsel *evsel,
+ 					struct perf_sample *sample,
+ 					struct machine *machine,
+ 					struct kwork_work **ret_work)
+@@ -516,7 +514,7 @@ static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
+ 	struct kwork_work *work, key;
+ 
+ 	BUG_ON(class->work_init == NULL);
+-	class->work_init(kwork, class, &key, src_type, evsel, sample, machine);
++	class->work_init(kwork, class, &key, src_type, sample, machine);
+ 
+ 	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
+ 	if (ret_work != NULL)
+@@ -599,18 +597,16 @@ static void report_update_exit_event(struct kwork_work *work,
+ 
+ static int report_entry_event(struct perf_kwork *kwork,
+ 			      struct kwork_class *class,
 -			      struct evsel *evsel,
- 			      struct machine *machine);
- 
- static int perf_event__repipe_sample(const struct perf_tool *tool,
-@@ -369,7 +366,7 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
- 
- 	if (evsel && evsel->handler) {
- 		inject_handler f = evsel->handler;
--		return f(tool, event, sample, evsel, machine);
-+		return f(tool, event, sample, machine);
- 	}
- 
- 	build_id__mark_dso_hit(tool, event, sample, machine);
-@@ -583,11 +580,12 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
- 		}
- 
- 		if (dso && !dso__hit(dso)) {
--			struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
-+			if (!sample->evsel)
-+				sample->evsel = evlist__event2evsel(inject->session->evlist, event);
- 
--			if (evsel) {
-+			if (sample->evsel) {
- 				dso__set_hit(dso);
--				tool__inject_build_id(tool, sample, machine, evsel,
-+				tool__inject_build_id(tool, sample, machine,
- 						      /*misc=*/sample->cpumode,
- 						      filename, dso, flags);
- 			}
-@@ -614,23 +612,26 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
- 	}
- 	if ((inject->build_id_style == BID_RWS__MMAP2_BUILDID_ALL) &&
- 	    !(event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)) {
--		struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
-+		struct evsel *saved_evsel = sample->evsel;
- 
--		if (evsel && !dso_sought) {
-+		sample->evsel = evlist__event2evsel(inject->session->evlist, event);
-+		if (sample->evsel && !dso_sought) {
- 			dso = findnew_dso(pid, tid, filename, dso_id, machine);
- 			dso_sought = true;
- 		}
--		if (evsel && dso &&
--		    !tool__inject_mmap2_build_id(tool, sample, machine, evsel,
-+		if (sample->evsel && dso &&
-+		    !tool__inject_mmap2_build_id(tool, sample, machine,
- 						 sample->cpumode | PERF_RECORD_MISC_MMAP_BUILD_ID,
- 						 pid, tid, start, len, pgoff,
- 						 dso,
- 						 prot, flags,
- 						 filename)) {
- 			/* Injected mmap2 so no need to repipe. */
-+			sample->evsel = saved_evsel;
- 			dso__put(dso);
- 			return 0;
- 		}
-+		sample->evsel = saved_evsel;
- 	}
- 	dso__put(dso);
- 	if (inject->build_id_style == BID_RWS__MMAP2_BUILDID_LAZY)
-@@ -835,7 +836,6 @@ static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
- static int tool__inject_build_id(const struct perf_tool *tool,
- 				 struct perf_sample *sample,
- 				 struct machine *machine,
--				 const struct evsel *evsel,
- 				 __u16 misc,
- 				 const char *filename,
- 				 struct dso *dso, u32 flags)
-@@ -859,7 +859,7 @@ static int tool__inject_build_id(const struct perf_tool *tool,
- 
- 	err = perf_event__synthesize_build_id(tool, sample, machine,
- 					      perf_event__repipe,
--					      evsel, misc, dso__bid(dso),
-+					      misc, dso__bid(dso),
- 					      filename);
- 	if (err) {
- 		pr_err("Can't synthesize build_id event for %s\n", filename);
-@@ -872,7 +872,6 @@ static int tool__inject_build_id(const struct perf_tool *tool,
- static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 				       struct perf_sample *sample,
- 				       struct machine *machine,
--				       const struct evsel *evsel,
- 				       __u16 misc,
- 				       __u32 pid, __u32 tid,
- 				       __u64 start, __u64 len, __u64 pgoff,
-@@ -895,7 +894,6 @@ static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 
- 	err = perf_event__synthesize_mmap2_build_id(tool, sample, machine,
- 						    perf_event__repipe,
--						    evsel,
- 						    misc, pid, tid,
- 						    start, len, pgoff,
- 						    dso__bid(dso),
-@@ -912,7 +910,7 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 			const struct perf_tool *tool,
- 			struct perf_sample *sample,
- 			struct machine *machine,
--			const struct evsel *mmap_evsel,
-+			struct evsel *mmap_evsel,
- 			struct map *map, bool sample_in_dso)
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
  {
- 	struct dso *dso;
-@@ -940,9 +938,13 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 	dso = map__dso(map);
- 	if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
- 		if (dso && !dso__hit(dso)) {
-+			/*
-+			 * The sample is just read for identifiers which we want
-+			 * to match the for the event of the sample.
-+			 */
- 			dso__set_hit(dso);
- 			tool__inject_build_id(tool, sample, machine,
--					     mmap_evsel, misc, dso__long_name(dso), dso,
-+					     misc, dso__long_name(dso), dso,
- 					     map__flags(map));
- 		}
- 	} else if (inject->build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
-@@ -950,11 +952,13 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 			const struct build_id null_bid = { .size = 0 };
- 			const struct build_id *bid = dso ? dso__bid(dso) : &null_bid;
- 			const char *filename = dso ? dso__long_name(dso) : "";
-+			struct evsel *saved_evsel = sample->evsel;
+ 	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
  
- 			map__set_hit(map);
-+			/* Creating a new mmap2 event which has an evsel for the mmap event. */
-+			sample->evsel = mmap_evsel;
- 			perf_event__synthesize_mmap2_build_id(tool, sample, machine,
- 								perf_event__repipe,
--								mmap_evsel,
- 								misc,
- 								sample->pid, sample->tid,
- 								map__start(map),
-@@ -964,6 +968,7 @@ static int mark_dso_hit(const struct perf_inject *inject,
- 								map__prot(map),
- 								map__flags(map),
- 								filename);
-+			sample->evsel = saved_evsel;
- 		}
+ static int report_exit_event(struct perf_kwork *kwork,
+ 			     struct kwork_class *class,
+-			     struct evsel *evsel,
+ 			     struct perf_sample *sample,
+ 			     struct machine *machine)
+ {
+@@ -618,7 +614,7 @@ static int report_exit_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (work == NULL)
+ 		return -1;
+@@ -654,18 +650,16 @@ static void latency_update_entry_event(struct kwork_work *work,
+ 
+ static int latency_raise_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int latency_entry_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+@@ -673,7 +667,7 @@ static int latency_entry_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			     KWORK_TRACE_RAISE, evsel, sample,
++			     KWORK_TRACE_RAISE, sample,
+ 			     machine, &work);
+ 	if (work == NULL)
+ 		return -1;
+@@ -812,18 +806,16 @@ static void timehist_print_event(struct perf_kwork *kwork,
+ 
+ static int timehist_raise_event(struct perf_kwork *kwork,
+ 				struct kwork_class *class,
+-				struct evsel *evsel,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int timehist_entry_event(struct perf_kwork *kwork,
+ 				struct kwork_class *class,
+-				struct evsel *evsel,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+@@ -831,7 +823,7 @@ static int timehist_entry_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work = NULL;
+ 
+ 	ret = work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			     KWORK_TRACE_RAISE, evsel, sample,
++			     KWORK_TRACE_RAISE, sample,
+ 			     machine, &work, true);
+ 	if (ret)
+ 		return ret;
+@@ -844,7 +836,6 @@ static int timehist_entry_event(struct perf_kwork *kwork,
+ 
+ static int timehist_exit_event(struct perf_kwork *kwork,
+ 			       struct kwork_class *class,
+-			       struct evsel *evsel,
+ 			       struct perf_sample *sample,
+ 			       struct machine *machine)
+ {
+@@ -861,7 +852,7 @@ static int timehist_exit_event(struct perf_kwork *kwork,
  	}
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (work == NULL) {
+ 		ret = -1;
+@@ -895,18 +886,16 @@ static void top_update_runtime(struct kwork_work *work,
+ 
+ static int top_entry_event(struct perf_kwork *kwork,
+ 			   struct kwork_class *class,
+-			   struct evsel *evsel,
+ 			   struct perf_sample *sample,
+ 			   struct machine *machine)
+ {
+ 	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
+-			      KWORK_TRACE_MAX, evsel, sample,
++			      KWORK_TRACE_MAX, sample,
+ 			      machine, NULL, true);
+ }
+ 
+ static int top_exit_event(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine)
+ {
+@@ -915,7 +904,7 @@ static int top_exit_event(struct perf_kwork *kwork,
+ 	struct kwork_atom *atom;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (!work)
+ 		return -1;
+@@ -936,7 +925,6 @@ static int top_exit_event(struct perf_kwork *kwork,
+ 
+ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 				  struct kwork_class *class,
+-				  struct evsel *evsel,
+ 				  struct perf_sample *sample,
+ 				  struct machine *machine)
+ {
+@@ -944,7 +932,7 @@ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 	struct kwork_work *work;
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+-			     KWORK_TRACE_ENTRY, evsel, sample,
++			     KWORK_TRACE_ENTRY, sample,
+ 			     machine, &work);
+ 	if (!work)
+ 		return -1;
+@@ -954,12 +942,11 @@ static int top_sched_switch_event(struct perf_kwork *kwork,
+ 		atom_del(atom);
+ 	}
+ 
+-	return top_entry_event(kwork, class, evsel, sample, machine);
++	return top_entry_event(kwork, class, sample, machine);
+ }
+ 
+ static struct kwork_class kwork_irq;
+ static int process_irq_handler_entry_event(const struct perf_tool *tool,
+-					   struct evsel *evsel,
+ 					   struct perf_sample *sample,
+ 					   struct machine *machine)
+ {
+@@ -967,12 +954,11 @@ static int process_irq_handler_entry_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_irq,
+-						      evsel, sample, machine);
++						      sample, machine);
  	return 0;
-@@ -974,7 +979,7 @@ struct mark_dso_hit_args {
- 	const struct perf_tool *tool;
- 	struct perf_sample *sample;
- 	struct machine *machine;
--	const struct evsel *mmap_evsel;
-+	struct evsel *mmap_evsel;
+ }
+ 
+ static int process_irq_handler_exit_event(const struct perf_tool *tool,
+-					  struct evsel *evsel,
+ 					  struct perf_sample *sample,
+ 					  struct machine *machine)
+ {
+@@ -980,7 +966,7 @@ static int process_irq_handler_exit_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_irq,
+-						     evsel, sample, machine);
++						     sample, machine);
+ 	return 0;
+ }
+ 
+@@ -1005,7 +991,6 @@ static void irq_work_init(struct perf_kwork *kwork,
+ 			  struct kwork_class *class,
+ 			  struct kwork_work *work,
+ 			  enum kwork_trace_type src_type __maybe_unused,
+-			  struct evsel *evsel __maybe_unused,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine __maybe_unused)
+ {
+@@ -1038,7 +1023,6 @@ static struct kwork_class kwork_irq = {
+ 
+ static struct kwork_class kwork_softirq;
+ static int process_softirq_raise_event(const struct perf_tool *tool,
+-				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       struct machine *machine)
+ {
+@@ -1046,13 +1030,12 @@ static int process_softirq_raise_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->raise_event)
+ 		return kwork->tp_handler->raise_event(kwork, &kwork_softirq,
+-						      evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_softirq_entry_event(const struct perf_tool *tool,
+-				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       struct machine *machine)
+ {
+@@ -1060,13 +1043,12 @@ static int process_softirq_entry_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_softirq,
+-						      evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_softirq_exit_event(const struct perf_tool *tool,
+-				      struct evsel *evsel,
+ 				      struct perf_sample *sample,
+ 				      struct machine *machine)
+ {
+@@ -1074,7 +1056,7 @@ static int process_softirq_exit_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_softirq,
+-						     evsel, sample, machine);
++						     sample, machine);
+ 
+ 	return 0;
+ }
+@@ -1133,7 +1115,6 @@ static void softirq_work_init(struct perf_kwork *kwork,
+ 			      struct kwork_class *class,
+ 			      struct kwork_work *work,
+ 			      enum kwork_trace_type src_type __maybe_unused,
+-			      struct evsel *evsel,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine __maybe_unused)
+ {
+@@ -1148,7 +1129,7 @@ static void softirq_work_init(struct perf_kwork *kwork,
+ 	} else {
+ 		num = perf_sample__intval(sample, "vec");
+ 		work->id = num;
+-		work->name = evsel__softirq_name(evsel, num);
++		work->name = evsel__softirq_name(sample->evsel, num);
+ 	}
+ }
+ 
+@@ -1169,7 +1150,6 @@ static struct kwork_class kwork_softirq = {
+ 
+ static struct kwork_class kwork_workqueue;
+ static int process_workqueue_activate_work_event(const struct perf_tool *tool,
+-						 struct evsel *evsel,
+ 						 struct perf_sample *sample,
+ 						 struct machine *machine)
+ {
+@@ -1177,13 +1157,12 @@ static int process_workqueue_activate_work_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->raise_event)
+ 		return kwork->tp_handler->raise_event(kwork, &kwork_workqueue,
+-						    evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_workqueue_execute_start_event(const struct perf_tool *tool,
+-						 struct evsel *evsel,
+ 						 struct perf_sample *sample,
+ 						 struct machine *machine)
+ {
+@@ -1191,13 +1170,12 @@ static int process_workqueue_execute_start_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->entry_event)
+ 		return kwork->tp_handler->entry_event(kwork, &kwork_workqueue,
+-						    evsel, sample, machine);
++						      sample, machine);
+ 
+ 	return 0;
+ }
+ 
+ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
+-					       struct evsel *evsel,
+ 					       struct perf_sample *sample,
+ 					       struct machine *machine)
+ {
+@@ -1205,7 +1183,7 @@ static int process_workqueue_execute_end_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->exit_event)
+ 		return kwork->tp_handler->exit_event(kwork, &kwork_workqueue,
+-						   evsel, sample, machine);
++						     sample, machine);
+ 
+ 	return 0;
+ }
+@@ -1233,7 +1211,6 @@ static void workqueue_work_init(struct perf_kwork *kwork __maybe_unused,
+ 				struct kwork_class *class,
+ 				struct kwork_work *work,
+ 				enum kwork_trace_type src_type __maybe_unused,
+-				struct evsel *evsel __maybe_unused,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+@@ -1267,7 +1244,6 @@ static struct kwork_class kwork_workqueue = {
+ 
+ static struct kwork_class kwork_sched;
+ static int process_sched_switch_event(const struct perf_tool *tool,
+-				      struct evsel *evsel,
+ 				      struct perf_sample *sample,
+ 				      struct machine *machine)
+ {
+@@ -1275,7 +1251,7 @@ static int process_sched_switch_event(const struct perf_tool *tool,
+ 
+ 	if (kwork->tp_handler->sched_switch_event)
+ 		return kwork->tp_handler->sched_switch_event(kwork, &kwork_sched,
+-							     evsel, sample, machine);
++							     sample, machine);
+ 	return 0;
+ }
+ 
+@@ -1300,7 +1276,6 @@ static void sched_work_init(struct perf_kwork *kwork __maybe_unused,
+ 			    struct kwork_class *class,
+ 			    struct kwork_work *work,
+ 			    enum kwork_trace_type src_type,
+-			    struct evsel *evsel __maybe_unused,
+ 			    struct perf_sample *sample,
+ 			    struct machine *machine __maybe_unused)
+ {
+@@ -1946,7 +1921,6 @@ static int perf_kwork__report(struct perf_kwork *kwork)
+ }
+ 
+ typedef int (*tracepoint_handler)(const struct perf_tool *tool,
+-				  struct evsel *evsel,
+ 				  struct perf_sample *sample,
+ 				  struct machine *machine);
+ 
+@@ -1961,7 +1935,7 @@ static int perf_kwork__process_tracepoint_sample(const struct perf_tool *tool,
+ 	if (evsel->handler != NULL) {
+ 		tracepoint_handler f = evsel->handler;
+ 
+-		err = f(tool, evsel, sample, machine);
++		err = f(tool, sample, machine);
+ 	}
+ 
+ 	return err;
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index db00269b73f2..abf637d44794 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -157,7 +157,6 @@ struct kwork_class {
+ 			  struct kwork_class *class,
+ 			  struct kwork_work *work,
+ 			  enum kwork_trace_type src_type,
+-			  struct evsel *evsel,
+ 			  struct perf_sample *sample,
+ 			  struct machine *machine);
+ 
+@@ -167,19 +166,19 @@ struct kwork_class {
+ 
+ struct trace_kwork_handler {
+ 	int (*raise_event)(struct perf_kwork *kwork,
+-			   struct kwork_class *class, struct evsel *evsel,
++			   struct kwork_class *class,
+ 			   struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*entry_event)(struct perf_kwork *kwork,
+-			   struct kwork_class *class, struct evsel *evsel,
++			   struct kwork_class *class,
+ 			   struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*exit_event)(struct perf_kwork *kwork,
+-			  struct kwork_class *class, struct evsel *evsel,
++			  struct kwork_class *class,
+ 			  struct perf_sample *sample, struct machine *machine);
+ 
+ 	int (*sched_switch_event)(struct perf_kwork *kwork,
+-				  struct kwork_class *class, struct evsel *evsel,
++				  struct kwork_class *class,
+ 				  struct perf_sample *sample, struct machine *machine);
  };
  
- static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
-@@ -1029,7 +1034,6 @@ static int perf_event__inject_buildid(const struct perf_tool *tool, union perf_e
- static int perf_inject__sched_process_exit(const struct perf_tool *tool,
- 					   union perf_event *event __maybe_unused,
- 					   struct perf_sample *sample,
--					   struct evsel *evsel __maybe_unused,
- 					   struct machine *machine __maybe_unused)
- {
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-@@ -1049,13 +1053,12 @@ static int perf_inject__sched_process_exit(const struct perf_tool *tool,
- static int perf_inject__sched_switch(const struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample,
--				     struct evsel *evsel,
- 				     struct machine *machine)
- {
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	struct event_entry *ent;
- 
--	perf_inject__sched_process_exit(tool, event, sample, evsel, machine);
-+	perf_inject__sched_process_exit(tool, event, sample, machine);
- 
- 	ent = malloc(event->header.size + sizeof(struct event_entry));
- 	if (ent == NULL) {
-@@ -1074,13 +1077,13 @@ static int perf_inject__sched_switch(const struct perf_tool *tool,
- static int perf_inject__sched_stat(const struct perf_tool *tool,
- 				   union perf_event *event __maybe_unused,
- 				   struct perf_sample *sample,
--				   struct evsel *evsel,
- 				   struct machine *machine)
- {
- 	struct event_entry *ent;
- 	union perf_event *event_sw;
- 	struct perf_sample sample_sw;
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-+	struct evsel *evsel = sample->evsel;
- 	u32 pid = perf_sample__intval(sample, "pid");
- 	int ret;
- 
-@@ -1445,7 +1448,7 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
- 	dso__set_hit(dso);
- 
- 	return perf_event__synthesize_build_id(&inject->tool, &synth_sample, machine,
--					       process_build_id, inject__mmap_evsel(inject),
-+					       process_build_id,
- 					       /*misc=*/synth_sample.cpumode,
- 					       dso__bid(dso), dso__long_name(dso));
- }
-@@ -2007,7 +2010,6 @@ static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *
- static int drop_sample(const struct perf_tool *tool __maybe_unused,
- 		       union perf_event *event __maybe_unused,
- 		       struct perf_sample *sample __maybe_unused,
--		       struct evsel *evsel __maybe_unused,
- 		       struct machine *machine __maybe_unused)
- {
- 	return 0;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 85bee747f4cd..de812a2befbc 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2252,13 +2252,15 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine,
- 				    perf_event__handler_t process,
--				    const struct evsel *evsel,
- 				    __u16 misc,
- 				    const struct build_id *bid,
- 				    const char *filename)
- {
- 	union perf_event ev;
- 	size_t len;
-+	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
-+	void *array = &ev;
-+	int ret;
- 
- 	len = sizeof(ev.build_id) + strlen(filename) + 1;
- 	len = PERF_ALIGN(len, sizeof(u64));
-@@ -2275,23 +2277,17 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 	ev.build_id.header.size = len;
- 	strcpy(ev.build_id.filename, filename);
- 
--	if (evsel) {
--		void *array = &ev;
--		int ret;
--
--		array += ev.header.size;
--		ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
--		if (ret < 0)
--			return ret;
--
--		if (ret & 7) {
--			pr_err("Bad id sample size %d\n", ret);
--			return -EINVAL;
--		}
-+	array += ev.header.size;
-+	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
-+	if (ret < 0)
-+		return ret;
- 
--		ev.header.size += ret;
-+	if (ret & 7) {
-+		pr_err("Bad id sample size %d\n", ret);
-+		return -EINVAL;
- 	}
- 
-+	ev.header.size += ret;
- 	return process(tool, &ev, sample, machine);
- }
- 
-@@ -2299,7 +2295,6 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 					  struct perf_sample *sample,
- 					  struct machine *machine,
- 					  perf_event__handler_t process,
--					  const struct evsel *evsel,
- 					  __u16 misc,
- 					  __u32 pid, __u32 tid,
- 					  __u64 start, __u64 len, __u64 pgoff,
-@@ -2309,6 +2304,7 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- {
- 	union perf_event ev;
- 	size_t ev_len;
-+	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
- 	void *array;
- 	int ret;
- 
-@@ -2339,7 +2335,7 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 
- 	array = &ev;
- 	array += ev.header.size;
--	ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
-+	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index b0edad0c3100..473a43a78993 100644
---- a/tools/perf/util/synthetic-events.h
-+++ b/tools/perf/util/synthetic-events.h
-@@ -50,7 +50,6 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine,
- 				    perf_event__handler_t process,
--				    const struct evsel *evsel,
- 				    __u16 misc,
- 				    const struct build_id *bid,
- 				    const char *filename);
-@@ -58,7 +57,6 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 					  struct perf_sample *sample,
- 					  struct machine *machine,
- 					  perf_event__handler_t process,
--					  const struct evsel *evsel,
- 					  __u16 misc,
- 					  __u32 pid, __u32 tid,
- 					  __u64 start, __u64 len, __u64 pgoff,
 -- 
 2.54.0.563.g4f69b47b94-goog
 
