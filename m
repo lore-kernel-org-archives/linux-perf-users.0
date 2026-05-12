@@ -1,116 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15CD3EDE47;
-	Tue, 12 May 2026 19:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9502C37DEA4
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 21:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778615308; cv=none; b=HTj04GPjWq7K8CX0aXsD8fgWMQPtsd9QCKP3xyeXBoPYgHMpWAK6BNSG3TLpcqD73EMgGF+IU2BPl3CSPyTRs+oBxJ+PzdvX6ZjeTo54WxmrvjWBLfX8Say6MJMY/15hRnxofsdiXVrn6TBOe6UjaGdfPnBNkoh3I5B3SLWQgsU=
+	t=1778621845; cv=none; b=SJX8XeHPAROhyNDhl1DNuEq83+cjonrFyhEdsOy6ACqDSWJyTIpchhJv+p1ukGn+1pS6swHxzzEPa4/q+ZqXrgyyft6YTjglNEbdrH/5vQ/bK0gzzayqlj4znShRx6ZSRXDiJyoGgPwGSfP6Er0QnfxUCEbHU4WvlSZDfRqRZIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778615308; c=relaxed/simple;
-	bh=E11TyrzVW6l2YhurNvs+33OH++tyq2ULcTLn67nq5kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhKaLOCEUgVag690D375KCSTS3LpmpRcyeSxdDbtg3nVxGKGPIfFtqk5oLV9yJko+qD7p/IQpfSGnvhz77XXGYdGR+VWu911IUGhjh6JPaDYT+sxdb+0l60wcYLETMaRSI0JpG7DSp9iLtPgGkaTZDFDcisQZJf/RyAVHo7yybY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RL/BSP3A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778621845; c=relaxed/simple;
+	bh=cj6qSkyfzqy5tIZVwI/UgDX2dz+xA4Kv8AgUd4VsMCw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DzP0SuKEVVEKWWh9PlfdHIClPi4K77Aydk7M/INkWfxPlWCrRh/jGfj378UbV1bcN+7SdqJcyRu9SKOFm/Nsma5rBEkM/9Yn23+j8iYCyXH+YpKa9pgIgpzuJH1ypGiADfuAAppg5w4eaAsCBuqW9HKvb0QmbC4sd5CVucPZaBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i57J9t1O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RL/BSP3A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DD6C2BCB0;
-	Tue, 12 May 2026 19:48:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i57J9t1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D22CC2BCB0;
+	Tue, 12 May 2026 21:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778615308;
-	bh=E11TyrzVW6l2YhurNvs+33OH++tyq2ULcTLn67nq5kw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RL/BSP3ARvXTSbwrNERPW374RPDnAIq1Sb2sCJoy+Jlsx/kVuDQPbsDXUXJQ8fbDD
-	 FqNWL5hOWu63ZNK97KtgY+6FZv2jHhlGsG8V3z46i4NZ6Ql7B48nY5kVNAy10u5K0Y
-	 acWzg6ujBzOcQt4Xy6R2ST2DlS/Fwe6HM+Wz8BxsrP2AB0+XOCPcNvDIh62waUmWQk
-	 IBzaSZHm+/GUPS5kZxwft+/aSQ8sdCl0Oj09QuhEAJjhR9lJncn0K1jvFwKFSY9/2C
-	 BHmxOonHF8M19d7Z0W+455Y1Izx5F3WacALgUJGlDpadSe0pNUstDso6IPp3LsaFvH
-	 +rElP4c61EKIw==
-Date: Tue, 12 May 2026 16:48:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, sashiko-bot@kernel.org,
-	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: Re: [PATCH 26/28] perf timechart: Bounds check cpu_id and fix
- topology_map allocation
-Message-ID: <agOECAaMwN_mQekU@x1>
-References: <20260510033424.255812-1-acme@kernel.org>
- <20260510033424.255812-27-acme@kernel.org>
- <CAP-5=fU11BRywA+YaRV5X6iLw0zfm5ju2B9PuZ6yJn8aAtv4XQ@mail.gmail.com>
+	s=k20201202; t=1778621845;
+	bh=cj6qSkyfzqy5tIZVwI/UgDX2dz+xA4Kv8AgUd4VsMCw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=i57J9t1O2qXrNCMNZGiwCzCWw2CpClSLn6eEkRYsEgHJQq8HamJp+dUzqC/wmvow1
+	 v1bT1AgNCIvmKbnFt6eYyBy70gDhYjJoCUmWhbKrAP8avb7GIeNAA4Jvjb4VBSb5ih
+	 gk1fTpbTZ09Cvfjpr1p/jjNVbYAWizO2C1aNDz7WbOY1d2OXgl4klbF/dL7BuAIaUk
+	 5RKzAtsiTwwif8CiTqwwAEgMOZb4dOpTxQ1iEoMS6mktI7zFDTRdeRNgN9huyRkYiQ
+	 5gq0jO9cGz1t0z2hUmKxPII5UCITaU970//aqS49OPqH4h3/egn9w5ajHBXgcU4JQS
+	 UfZ/RIk3iuDWw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 12/28] perf cpumap: Reject RANGE_CPUS with start_cpu >
+ end_cpu
+Reply-To: sashiko@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260510033424.255812-13-acme@kernel.org>
+References: <20260510033424.255812-13-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 12 May 2026 21:37:24 +0000
+Message-Id: <20260512213725.1D22CC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU11BRywA+YaRV5X6iLw0zfm5ju2B9PuZ6yJn8aAtv4XQ@mail.gmail.com>
 
-On Tue, May 12, 2026 at 11:32:48AM -0700, Ian Rogers wrote:
-> On Sat, May 9, 2026 at 8:37 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > The cpu_idle, cpu_frequency, power_start, and power_frequency
-> > tracepoint handlers extract cpu_id from the event payload via
-> > evsel__intval() and use it directly as an array index into
-> > cpus_cstate_start_times[] and cpus_pstate_start_times[], which
-> > are allocated with MAX_CPUS (4096) entries.
-> >
-> > Unlike sample->cpu which is validated in perf_session__deliver_event(),
-> > cpu_id comes from the tracepoint data and is never bounds checked.
-> > A crafted perf.data with a malicious cpu_id in a tracepoint event
-> > causes out-of-bounds array accesses.
-> >
-> > Validate cpu_id against tchart->numcpus (nr_cpus_avail from the
-> > file header) and reject the event with an error if it is out of
-> > range, as this indicates a corrupted or crafted file.
-> >
-> > The power_end handler uses sample->cpu (not a tracepoint cpu_id
-> > field).  Add a bounds check there too since a crafted file could
-> > omit PERF_SAMPLE_CPU, leaving sample->cpu as the (u32)-1 sentinel
-> > which would cause out-of-bounds access in c_state_end().
-> >
-> > Also validate sample->cpu in sched_switch and sched_wakeup
-> > handlers, which store it in cpu_sample structs later used as
-> > array indices into topology_map[] during SVG generation.
-> >
-> > Fix svg_build_topology_map() to allocate topology_map using
-> > nr_cpus_avail instead of nr_cpus_online.  When offline CPUs exist,
-> > nr_cpus_online < nr_cpus_avail, and a valid cpu_id that passes
-> > the numcpus check could still exceed the topology_map allocation,
-> > causing a heap out-of-bounds read in cpu2y().  Reject negative CPU
-> > values in str_to_bitmap() to prevent perf_cpu_map__new("") on an
-> > empty topology string from passing -1 to __set_bit(), which would
-> > write at offset ULONG_MAX/BITS_PER_LONG.
-> >
-> > Fix the pre-existing backtrace memory leak: change the
-> > tracepoint_handler typedef to pass const char **backtrace
-> > (pointer-to-pointer).  Handlers that consume the string
-> > (sched_switch, sched_wakeup) set *backtrace = NULL to claim
-> > ownership.  The caller always calls free() after the handler
-> > returns — if ownership was taken the pointer is NULL and
-> > free(NULL) is a no-op.  Skip cat_backtrace() entirely when
-> > tchart->with_backtrace is not set.
-> >
-> > Cap tchart->numcpus at MAX_CPUS in the HEADER_NRCPUS callback
-> > so the bounds check cannot exceed the array allocation size.
-> 
-> So there are some overlaps with the changes in:
-> https://lore.kernel.org/lkml/20260413041143.1736055-18-irogers@google.com/
-> I'll repost the series that Namhyung started merging. It would be good
-> to rebase these changes on that.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Time-of-Check to Time-of-Use (TOCTOU) Heap Buffer Overflow and Out=
+-of-Bounds Read in cpumap parsing.
+- [High] Pre-existing Out-of-Bounds Read in `perf_event__process_event_upda=
+te` due to missing nested payload bounds checks.
+--
 
-Please rebase and resubmit, I can adjust before sending v2 for the perf
-data validation series.
+commit fe3ac4a4fbae6a151523bf3561bfcf888589a6b9
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-- Arnaldo
+perf cpumap: Reject RANGE_CPUS with start_cpu > end_cpu
+
+cpu_map__from_range() computes nr_cpus as end_cpu - start_cpu + 1.
+When a crafted perf.data has start_cpu > end_cpu, this wraps to a huge valu=
+e,
+causing a massive allocation attempt. This commit returns NULL when the ran=
+ge
+is inverted, clamps any_cpu to a boolean, and hardens cpu_map__from_mask()
+to reject unsupported long_size values.
+
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 11922e1ded844..c32db7b307d7d 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -93,9 +93,18 @@ static struct perf_cpu_map *cpu_map__from_entries(cons=
+t struct perf_record_cpu_m
+>  static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_=
+cpu_map_data *data)
+>  {
+>  	DECLARE_BITMAP(local_copy, 64);
+> -	int weight =3D 0, mask_nr =3D data->mask32_data.nr;
+> +	int weight =3D 0, mask_nr;
+> +	/* Cache validated long_size =E2=80=94 data is mmap'd and could change =
+*/
+> +	u16 long_size;
+>  	struct perf_cpu_map *map;
+> =20
+> +	/* long_size must be 4 or 8; other values overflow cpus_per_i below */
+> +	if (data->mask32_data.long_size !=3D 4 && data->mask32_data.long_size !=
+=3D 8)
+> +		return NULL;
+> +
+> +	long_size =3D data->mask32_data.long_size;
+
+Can this validation check be bypassed if the file is modified concurrently?
+
+Because perf.data files are mapped using MAP_SHARED by default, concurrent
+modifications to the file are immediately visible to the perf process.
+
+If valid data is supplied initially, could data->mask32_data.long_size be
+concurrently modified after the if statement but before it is assigned to
+long_size, defeating this check entirely?
+
+[ ... ]
+
+> @@ -129,8 +141,12 @@ static struct perf_cpu_map *cpu_map__from_range(cons=
+t struct perf_record_cpu_map
+>  	struct perf_cpu_map *map;
+>  	unsigned int i =3D 0;
+> =20
+> +	if (data->range_cpu_data.end_cpu < data->range_cpu_data.start_cpu)
+> +		return NULL;
+> +
+> +	/* any_cpu is boolean (0 or 1), not a count =E2=80=94 clamp to avoid in=
+flated nr */
+>  	map =3D perf_cpu_map__empty_new(data->range_cpu_data.end_cpu -
+> -				data->range_cpu_data.start_cpu + 1 + data->range_cpu_data.any_cpu);
+> +				data->range_cpu_data.start_cpu + 1 + !!data->range_cpu_data.any_cpu);
+>  	if (!map)
+>  		return NULL;
+> =20
+
+Does this section allow an out-of-bounds read or write during parsing?
+
+Since perf_cpu_map__empty_new() relies on perf_cpu_map__alloc() defined in
+another translation unit, the allocation acts as a compiler memory barrier.
+This forces the compiler to reload the boundary fields from the memory-mapp=
+ed
+data pointer.
+
+Could valid bounds be supplied to pass the initial checks, and then
+concurrently expanded in the file before the initialization loop:
+
+	for (int cpu =3D data->range_cpu_data.start_cpu; cpu <=3D data->range_cpu_=
+data.end_cpu;
+	     i++, cpu++) {
+
+causing the loop to read and write significantly past the bounds of the
+allocated heap buffer?
+
+Is there a similar out-of-bounds read vulnerability when processing nested =
+CPU
+maps?
+
+While session.c explicitly enforces payload boundary checks for standalone
+PERF_RECORD_CPU_MAP events to ensure embedded size fields like nr do not
+exceed the event's overall header.size, it seems this validation is missing
+for nested CPU maps.
+
+When processing PERF_RECORD_EVENT_UPDATE events of type
+PERF_EVENT_UPDATE__CPUS, perf_event__process_event_update() passes the nest=
+ed
+cpus payload directly to cpu_map__new_data().
+
+cpu_map__new_data() trusts the embedded size fields without verifying them
+against the parent event's size.  Could a malformed perf.data file with a
+minimal event header.size but a massive embedded nr value in the nested
+payload force the parsing loops to read extensively past the end of the
+memory-mapped file?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260510033424.2558=
+12-1-acme@kernel.org?part=3D12
