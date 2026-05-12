@@ -1,215 +1,234 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3473D6CA6
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 05:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0935E336EC0;
+	Tue, 12 May 2026 08:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778564519; cv=none; b=WKuvrHA638+9KP6faYAprj48JM1Ffxmd8+WpMOw04OwUfn8CkCcniKoCbS09926yerG57BKAGf3HnSZE14gd+tdlfxZx5YIjafwNTecEBVU03MB3et+BJXiXYRQTcetOiVCAzTJsCMbSAoZ74ceo5USGNyxYEwu2Lzn+HXVK9n8=
+	t=1778575652; cv=none; b=WedT4zbT5bDJuQGqG8pGy+SuzSf8+wPT2veea32X82LM4qkRjVrxa/P2yILAGEqcxd178DUUzZl8OGHxOHSdANPnVTgQELoymdZsxiveV+9rdWqwqu9bKTD6OCNG0muqJCPFQFPd8kXTeTcO94+nqW30Bx8WDxQD7IpOgAcK/hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778564519; c=relaxed/simple;
-	bh=AhkIDHkSUw/Ww9+e8WRxd2D5oAlbbwkSgqtw2fo2L2o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GbNv8roNDHrYH9yVQ4W/GsWvuoxQ1ksc0pGn3X7Kl7UWez7JR0bHkOHxWkBwI93U4w40EJDUtoW6WCyio6CvijZgTXBKEy8UstrlHC0209pxr8OMZ3KeqObMAMmp2lSGwNePCRSN5ePwujrcAXDk1PsG+m9ud4osXT6KlUM3iiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SRsVQn5R; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1778575652; c=relaxed/simple;
+	bh=aMrDErOCwNTLBFzmkNqHyrvc6BQwh7EiF5qMiHMkDsA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PCePCG/8WyIPavnNEKkft24nQ6cmqAiFYdoURNRRNyyutsdKPTUIvhOgzL/hENOiTMnU4VAnU5E2JIKlYLUwGA7leyHRaycF3nnycPMj3UktbI/60A14LtxTZy1lmcyt0Be/swNNVUG77sT01cr3Vqs08ZY5ysT2e6qwtiDoqP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k6nUW4lS; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SRsVQn5R"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2f5943ca81aso6184520eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 22:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778564504; x=1779169304; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vkhmEf7l/p3H+evY3e6sZCpcHnKb11tYhtK4qTF0OHU=;
-        b=SRsVQn5RDGNPO48McY01WPh7gvZkj+6/jbzdGg49UOGMrKNC1lH5HRj94JK5ZSQskD
-         dJWBMps1XY8qED+lH3wG16vDx/iSWpwNaJUJhB4x7MM//R/IHXjRzviu6f1qzJiKCsPq
-         IeTUOkLHNXlym+WCgRIlcgF0cjAM2ttztClREOkkviIFwB4+zy73pUpbxB8tMiojwoMb
-         wwT1bkcZGyIHXu1FawBN0VPNSCxGDhZVNDMpfEEHMpS/x5T4uasieWfeCh22Y6QDKF+f
-         J0HWQLOAz3hot87YwkTpi7zxfgwPgE7qygI87lV7OHl+wx5OZdIrAqEcUlnFWSm3K8eN
-         fyRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778564504; x=1779169304;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vkhmEf7l/p3H+evY3e6sZCpcHnKb11tYhtK4qTF0OHU=;
-        b=jMy0UrRupg7LhrxQlxHzer1+P7ISvXFeWscBapIJo2OOrzs2ZwdOI1D5Qa8iqPdhRc
-         5l2ZGgc6Fa3Z89vFPdsQCn8CtuJSQSTmi0aI7/BqWhpMwEW0vAkJF+27nFnRtBufOOH/
-         NSlfhl7V52AE31j49T4qyH+xKf5crqUTWm1+zr6o8yWcr1WLEnwSHCmZkl80tzy/9sA/
-         jNpSJytlDnEoThx0UQls0yqYZdvlD0EhPyOBhUAz6JQkpJOJaXzKYhoenRcmHZ2RrqM5
-         HEYSLvLW73ssCorcG5V4yG2xCicU/aLv3wWsYklCwQJeJcs3Oz4E0zH/FBrnSmP3KSsi
-         cBDw==
-X-Forwarded-Encrypted: i=1; AFNElJ9SeGNtnqv/5HTrjM6sbHbq3xfILrNaBEt9h32sbY7UL9hB4IK+oRdqxA6NOQb4vuoaLTG2XVZ2Bq6JPRDaYEU2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk1BdxFNCyt97cRtRMTMbVXgefTnZ6M5g7C5Nu4tio9Dk0jogv
-	hv8m2fflis+JmCcyjMZt6ns+PhQg+aWg0FsBMtsgPhbJwd7RLjvJ4H1MplVrMQP7wwuu3Tpgarn
-	uxWasgZEdhg==
-X-Received: from dlbbt1.prod.google.com ([2002:a05:7022:981:b0:12d:c585:f600])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec07:b0:130:9b78:b17b
- with SMTP id a92af1059eb24-132a83ed506mr6504466c88.38.1778564503592; Mon, 11
- May 2026 22:41:43 -0700 (PDT)
-Date: Mon, 11 May 2026 22:41:40 -0700
-In-Reply-To: <20260507170622.611933-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k6nUW4lS"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64BK7MRA2611630;
+	Tue, 12 May 2026 08:47:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=H+8//gvY5YDYvlSqS92b8ddYK8Ff04LnjBLCk2hUj
+	M0=; b=k6nUW4lSRwAYP0Doa93RrNuXLznN5GOiWpfcAqnQ/zskNv0VgZoYmV42A
+	xa/58nfthhH4trOkcAEaqbt9FmlbZPUPE//NkJvxHx1SBXpYzDaIMskJ6/g/yIY6
+	cCQqaim82T5F3vmhbdkiUJTm4RBruNK0FdPJNMGsIc1g4YihjvVBvJ68ZEmUV3Ju
+	SNUj/P31XUeu0pWNf+yJb3h304nCGfJJfBg55z4t4z58a+Bu4Zva96pckPysvC7A
+	dlcQ1gypNz3M65t01qLUAS9ItkzdV1Ai/OuCD46Ib1yqOaM/biYGWNAIk/Hk819P
+	Uo4Qf/MP1HMKzQKppTfu1+7qGK6Kg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e3nvdt790-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 May 2026 08:47:05 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64C8ORNn016490;
+	Tue, 12 May 2026 08:47:04 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e3nfgjbn3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 May 2026 08:47:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64C8l0Vf60424628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 May 2026 08:47:00 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D3DD2005A;
+	Tue, 12 May 2026 08:47:00 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68B9520040;
+	Tue, 12 May 2026 08:46:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.72.48])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 May 2026 08:46:57 +0000 (GMT)
+From: Gautam Menghani <Gautam.Menghani@ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+        atrajeev@linux.ibm.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf script powerpc: Update the hcall list with new hcalls
+Date: Tue, 12 May 2026 14:16:51 +0530
+Message-ID: <20260512084654.57729-1-Gautam.Menghani@ibm.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260507170622.611933-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512054140.3427725-1-irogers@google.com>
-Subject: [PATCH v2] perf record: Refactor ARM64 leaf caller setup out of arch
-From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org, james.clark@linaro.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	dapeng1.mi@linux.intel.com, john.g.garry@oracle.com, jolsa@kernel.org, 
-	leo.yan@linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mike.leach@arm.com, mingo@redhat.com, 
-	peterz@infradead.org, shimin.guo@skydio.com, will@kernel.org, 
-	Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=Y/XIdBeN c=1 sm=1 tr=0 ts=6a02e90a cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=dQQfcrzLAAAA:20 a=VnNF1IyMAAAA:8
+ a=ftAGlh2v0gGDii-5wccA:9 a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-GUID: _BvFowMn33zxF-CBdjQOaLyHowRvRzcK
+X-Proofpoint-ORIG-GUID: bAAr_YA-alRKDYvpn0Jlmbe1YR4TwpxI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEyMDA4NiBTYWx0ZWRfX794P8/bu83J2
+ MmB5WsaYcsGX4bR65QzWL+nkEJFqNwezbSYGqDJG/KQurJyJJRWYsSDNF9YanNttdseBYsXdo+t
+ PqaZ0plHDXe8VhZ2dEUBBbemRoEa7jtWPKM3P/cPca3LAndrHQhrsjSvqYCb/+pH9dEiBTLDkkk
+ 2Fol6EEf4bOgZJj5CECLbLK1PwDSXHV2WjgBOpz368EGVAdHvuTmC1+fYs7ERdswGz4Ih4WxFNs
+ tE1ZD/RfwK8m/qAs3kD9TGLWGTTsmOSQr68HGHpHDg85CibynxuqeYpmMZL9xXaNwDSu19V8ciS
+ ngBlMp2tCjgYTELaAiP8/cHyy5BgrnuXI+dLSYdQpVM56tutjxYqEiPbCqReiGYz051fuLR9g21
+ Zk33RT1VKjpaCKLCiDI1M0gCcEVl5JXcDqMRjdTmC4yvWS82B0ZZRa32FjBHTloBMXQbnszjqeQ
+ vaTcGFOYjVTzykJT3Jw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-11_05,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 spamscore=0 adultscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605050000
+ definitions=main-2605120086
 
-Code in tools/perf/arch causes portability issues/opaqueness and LTO
-issues due to the use of weak symbols. Move the adding of LR to the
-sample_user_regs into arm64-frame-pointer-unwind-support.c conditional
-on EM_HOST == EM_AARCH64 (false on all non-ARM64 builds). This also
-better encapsulates the use of the sampled registers by
-get_leaf_frame_caller_aarch64 and the set up by the new
-add_leaf_frame_caller_opts_aarch64, exposing opportunities for
-possibly sampling PC and SP to help the unwinder.
+From: Gautam Menghani <gautam@linux.ibm.com>
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
+Update the hcall list with the hcalls in bcc's ppchcalls script [1].
+
+[1] : https://github.com/iovisor/bcc/blob/master/tools/ppchcalls.py
+
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 ---
- tools/perf/arch/arm64/util/Build                     |  1 -
- tools/perf/arch/arm64/util/machine.c                 | 12 ------------
- tools/perf/builtin-record.c                          | 11 +++++------
- tools/perf/util/arm64-frame-pointer-unwind-support.c |  6 ++++++
- tools/perf/util/arm64-frame-pointer-unwind-support.h |  2 ++
- tools/perf/util/callchain.h                          |  2 --
- 6 files changed, 13 insertions(+), 21 deletions(-)
- delete mode 100644 tools/perf/arch/arm64/util/machine.c
+ tools/perf/scripts/python/powerpc-hcalls.py | 86 ++++++++++++++++++++-
+ 1 file changed, 85 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 4e06a08d281a..638aa6948ab5 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -5,7 +5,6 @@ perf-util-y += ../../arm/util/pmu.o
- perf-util-y += arm-spe.o
- perf-util-y += header.o
- perf-util-y += hisi-ptt.o
--perf-util-y += machine.o
- perf-util-y += mem-events.o
- perf-util-y += pmu.o
- perf-util-y += tsc.o
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-deleted file mode 100644
-index 80fb13c958d9..000000000000
---- a/tools/perf/arch/arm64/util/machine.c
-+++ /dev/null
-@@ -1,12 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include "callchain.h" // prototype of arch__add_leaf_frame_record_opts
--#include "perf_regs.h"
--#include "record.h"
--
--#define SMPL_REG_MASK(b) (1ULL << (b))
--
--void arch__add_leaf_frame_record_opts(struct record_opts *opts)
--{
--	opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
--}
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4a5eba498c02..272bba7f4b9e 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -14,6 +14,7 @@
- #include "util/parse-events.h"
- #include "util/config.h"
- 
-+#include "util/arm64-frame-pointer-unwind-support.h"
- #include "util/callchain.h"
- #include "util/cgroup.h"
- #include "util/header.h"
-@@ -3230,10 +3231,6 @@ static int record__parse_off_cpu_thresh(const struct option *opt,
- 	return 0;
+diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
+index 8b78dc790adb..f69a1d229526 100644
+--- a/tools/perf/scripts/python/powerpc-hcalls.py
++++ b/tools/perf/scripts/python/powerpc-hcalls.py
+@@ -112,11 +112,12 @@ hcall_table = {
+ 	420: 'H_CREATE_RPT',
+ 	424: 'H_REMOVE_RPT',
+ 	428: 'H_REGISTER_RPAGES',
+-	432: 'H_DISABLE_AND_GETC',
++	432: 'H_DISABLE_AND_GET',
+ 	436: 'H_ERROR_DATA',
+ 	440: 'H_GET_HCA_INFO',
+ 	444: 'H_GET_PERF_COUNT',
+ 	448: 'H_MANAGE_TRACE',
++	456: 'H_GET_CPU_CHARACTERISTICS',
+ 	468: 'H_FREE_LOGICAL_LAN_BUFFER',
+ 	472: 'H_POLL_PENDING',
+ 	484: 'H_QUERY_INT_STATE',
+@@ -135,11 +136,17 @@ hcall_table = {
+ 	644: 'H_ADD_CONN',
+ 	648: 'H_DEL_CONN',
+ 	664: 'H_JOIN',
++	672: 'H_VASI_SIGNAL',
+ 	676: 'H_VASI_STATE',
++	680: 'H_VIOCTL',
+ 	688: 'H_ENABLE_CRQ',
+ 	696: 'H_GET_EM_PARMS',
+ 	720: 'H_SET_MPP',
+ 	724: 'H_GET_MPP',
++	732: 'H_REG_SUB_CRQ',
++	736: 'H_FREE_SUB_CRQ',
++	740: 'H_SEND_SUB_CRQ',
++	744: 'H_SEND_SUB_CRQ_INDIRECT',
+ 	748: 'H_HOME_NODE_ASSOCIATIVITY',
+ 	756: 'H_BEST_ENERGY',
+ 	764: 'H_XIRR_X',
+@@ -147,7 +154,84 @@ hcall_table = {
+ 	772: 'H_COP',
+ 	788: 'H_GET_MPP_X',
+ 	796: 'H_SET_MODE',
++	808: 'H_BLOCK_REMOVE',
++	856: 'H_CLEAR_HPT',
++	864: 'H_REQUEST_VMC',
++	876: 'H_RESIZE_HPT_PREPARE',
++	880: 'H_RESIZE_HPT_COMMIT',
++	892: 'H_REGISTER_PROC_TBL',
++	896: 'H_SIGNAL_SYS_RESET',
++	904: 'H_ALLOCATE_VAS_WINDOW',
++	908: 'H_MODIFY_VAS_WINDOW',
++	912: 'H_DEALLOCATE_VAS_WINDOW',
++	916: 'H_QUERY_VAS_WINDOW',
++	920: 'H_QUERY_VAS_CAPABILITIES',
++	924: 'H_QUERY_NX_CAPABILITIES',
++	928: 'H_GET_NX_FAULT',
++	936: 'H_INT_GET_SOURCE_INFO',
++	940: 'H_INT_SET_SOURCE_CONFIG',
++	944: 'H_INT_GET_SOURCE_CONFIG',
++	948: 'H_INT_GET_QUEUE_INFO',
++	952: 'H_INT_SET_QUEUE_CONFIG',
++	956: 'H_INT_GET_QUEUE_CONFIG',
++	960: 'H_INT_SET_OS_REPORTING_LINE',
++	964: 'H_INT_GET_OS_REPORTING_LINE',
++	968: 'H_INT_ESB',
++	972: 'H_INT_SYNC',
++	976: 'H_INT_RESET',
++	996: 'H_SCM_READ_METADATA',
++	1000: 'H_SCM_WRITE_METADATA',
++	1004: 'H_SCM_BIND_MEM',
++	1008: 'H_SCM_UNBIND_MEM',
++	1012: 'H_SCM_QUERY_BLOCK_MEM_BINDING',
++	1016: 'H_SCM_QUERY_LOGICAL_MEM_BINDING',
++	1020: 'H_SCM_UNBIND_ALL',
++	1024: 'H_SCM_HEALTH',
++	1048: 'H_SCM_PERFORMANCE_STATS',
++	1052: 'H_PKS_GET_CONFIG',
++	1056: 'H_PKS_SET_PASSWORD',
++	1060: 'H_PKS_GEN_PASSWORD',
++	1068: 'H_PKS_WRITE_OBJECT',
++	1072: 'H_PKS_GEN_KEY',
++	1076: 'H_PKS_READ_OBJECT',
++	1080: 'H_PKS_REMOVE_OBJECT',
++	1084: 'H_PKS_CONFIRM_OBJECT_FLUSHED',
++	1096: 'H_RPT_INVALIDATE',
++	1100: 'H_SCM_FLUSH',
++	1104: 'H_GET_ENERGY_SCALE_INFO',
++	1108: 'H_PKS_SIGNED_UPDATE',
++	1116: 'H_WATCHDOG',
++	# Platform specific hcalls used by KVM on PowerVM
++	1120: 'H_GUEST_GET_CAPABILITIES',
++	1124: 'H_GUEST_SET_CAPABILITIES',
++	1136: 'H_GUEST_CREATE',
++	1140: 'H_GUEST_CREATE_VCPU',
++	1144: 'H_GUEST_GET_STATE',
++	1148: 'H_GUEST_SET_STATE',
++	1152: 'H_GUEST_RUN_VCPU',
++	1156: 'H_GUEST_COPY_MEMORY',
++	1160: 'H_GUEST_DELETE',
++	# Platform-specific hcalls used by the Ultravisor
++	61184: 'H_SVM_PAGE_IN',
++	61188: 'H_SVM_PAGE_OUT',
++	61192: 'H_SVM_INIT_START',
++	61196: 'H_SVM_INIT_DONE',
++	61204: 'H_SVM_INIT_ABORT',
++	# Platform specific hcalls used by KVM
+ 	61440: 'H_RTAS',
++	# Platform specific hcalls used by QEMU/SLOF
++	61441: 'H_LOGICAL_MEMOP',
++	61442: 'H_CAS',
++	61443: 'H_UPDATE_DT',
++	# Platform specific hcalls provided by PHYP
++	61560: 'H_GET_24X7_CATALOG_PAGE',
++	61564: 'H_GET_24X7_DATA',
++	61568: 'H_GET_PERF_COUNTER_INFO',
++	# Platform-specific hcalls used for nested HV KVM
++	63488: 'H_SET_PARTITION_TABLE',
++	63492: 'H_ENTER_NESTED',
++	63496: 'H_TLB_INVALIDATE',
++	63500: 'H_COPY_TOFROM_GUEST',
  }
  
--void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
--{
--}
--
- static int parse_control_option(const struct option *opt,
- 				const char *str,
- 				int unset __maybe_unused)
-@@ -4319,8 +4316,10 @@ int cmd_record(int argc, const char **argv)
- 
- 	evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
- 
--	if (callchain_param.enabled && callchain_param.record_mode == CALLCHAIN_FP)
--		arch__add_leaf_frame_record_opts(&rec->opts);
-+	if (callchain_param.enabled && callchain_param.record_mode == CALLCHAIN_FP) {
-+		if (EM_HOST == EM_AARCH64)
-+			add_leaf_frame_caller_opts_aarch64(&rec->opts);
-+	}
- 
- 	err = -ENOMEM;
- 	if (evlist__create_maps(rec->evlist, &rec->opts.target) < 0) {
-diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-index 858ce2b01812..3af8c7a466e0 100644
---- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
-+++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-@@ -2,6 +2,7 @@
- #include "arm64-frame-pointer-unwind-support.h"
- #include "callchain.h"
- #include "event.h"
-+#include "record.h"
- #include "unwind.h"
- #include <string.h>
- 
-@@ -16,6 +17,11 @@ struct entries {
- 
- #define SMPL_REG_MASK(b) (1ULL << (b))
- 
-+void add_leaf_frame_caller_opts_aarch64(struct record_opts *opts)
-+{
-+	opts->sample_user_regs |= SMPL_REG_MASK(PERF_REG_ARM64_LR);
-+}
-+
- static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
- {
- 	struct regs_dump *regs;
-diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.h b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-index 42d3a45490f5..ba35b295bfcd 100644
---- a/tools/perf/util/arm64-frame-pointer-unwind-support.h
-+++ b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-@@ -5,8 +5,10 @@
- #include <linux/types.h>
- 
- struct perf_sample;
-+struct record_opts;
- struct thread;
- 
-+void add_leaf_frame_caller_opts_aarch64(struct record_opts *opts);
- u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int user_idx);
- 
- #endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 06d463ccc7a0..b7702d65ad60 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -277,8 +277,6 @@ static inline int arch_skip_callchain_idx(struct thread *thread __maybe_unused,
- }
- #endif
- 
--void arch__add_leaf_frame_record_opts(struct record_opts *opts);
--
- char *callchain_list__sym_name(struct callchain_list *cl,
- 			       char *bf, size_t bfsize, bool show_dso);
- char *callchain_node__scnprintf_value(struct callchain_node *node,
+ def hcall_table_lookup(opcode):
 -- 
-2.54.0.563.g4f69b47b94-goog
+2.53.0
 
