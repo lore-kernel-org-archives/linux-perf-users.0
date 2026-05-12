@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56B23002C8;
-	Tue, 12 May 2026 04:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CE27081A;
+	Tue, 12 May 2026 04:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778561651; cv=none; b=msVD4x3IPI7QaUIvjX67+0uCPkqQ0nUh4jUOmP0vza4pTW17z8OSKjC8IN+hAwWoCxtUH46PaCmEDFw/cVZWdwG/k1JYHNQSo4e/JtPuKbwZm6y4Jd9qdvfy0hgNWslrZHgA/kXBLI22GvCAhebUrhWBCOJzUrGO7oosTOq+/VE=
+	t=1778561897; cv=none; b=nVTRH3Tzq1ShYj64lucmTZ4ZW+vjccjt3B4ddXvYGfSCGZkygp16IKF1Us8mUkxehaQA3nfFGOBCJcpORnot9CjcYtmWVXVCl8Uk+7Iy33bM6WUzb+2TUwuhJd8mZ4CW9nEo0niJAEYkMoXwdjWyZm8OMP7VWepdVahwOvajlAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778561651; c=relaxed/simple;
-	bh=IiA4yCbpBKdzJxqa6tfSx7AHcN/CioONlv19L2rOz1Q=;
+	s=arc-20240116; t=1778561897; c=relaxed/simple;
+	bh=Rq3A9TpzV4PfaUjtKb6pd+c7T9xiNyXzG4S0qXGPM+8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cwe43/v7Vp1I5bWrxvm2NokyfDUWpex9dQ5sKDgV4J/+5rQyJSNRi2LA2v+YbLnGwbjhbNI9beEmKTnEkhCwxJSJLVZSRJPMW5K7zSJCWEtZKiA8Ys4EvoT8APu/hAg9qvlR5T9ekdIrLO5N3iNgW1Tr6nt7iNMAiEZ0tzaMxco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bdCB4Ys5; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=pXGoUj7/FQNiKRPlsyytIVNOFAwqqsihDXb7vQX4LbS3JwBu63Zd7IlwAing7KHUHVoDJbNmPDZUlLSnMJpfhwWzwCZSOt6R8n836bofug60SZNZD9lVUVMP6AylIdyyv2JAxJZp9p5OW2zcyOzkjz8qz/EHI4qHovBjMAxSo04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dV8xaSlz; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bdCB4Ys5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dV8xaSlz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778561649; x=1810097649;
+  t=1778561897; x=1810097897;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=IiA4yCbpBKdzJxqa6tfSx7AHcN/CioONlv19L2rOz1Q=;
-  b=bdCB4Ys5ktZD62HKwVp9Ed+mPyRqvlAV7hL0GEkM95jCMsAHRI6dVOTg
-   CRhJPAjgShHIsxBCdYqItZ7S/Hmnk28o4KDTDkvtwZOAG7l8zYDVnvrIf
-   0CWjq41+UFs2Cs7gZHhwjpgCtoA3n7R3w0ikoYKPtayOD2LBTD1tQTEuB
-   CBt0zznmILyzgwRvxXrwkF7ixnlqgi/PdqSnf2pyMxSebksZ1LdbAY1kK
-   QjcxvDjESvv09MTH0sSE4V8mPPbXvD3b1evZEFxTKZ7SNh+z4z4UT0a5g
-   Hxhf0opmL6hTLdiV7GOyE8H+ViAuEGKDE81fCQvE3HrLSJ9a64WCXs5su
-   w==;
-X-CSE-ConnectionGUID: rQhswqsMR4KZqrJWwxTyCA==
-X-CSE-MsgGUID: XVZO+2fGTuSIlMgvsF8MUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="90159605"
+  bh=Rq3A9TpzV4PfaUjtKb6pd+c7T9xiNyXzG4S0qXGPM+8=;
+  b=dV8xaSlzM4WNpzVzjRR7zOWpHcxCnMB+mUwYB51o5lvMnYTjAkkmjmWC
+   vGDsM2p5u5jQaqAyGNvuV5gZJLmO5jXOQvmUH+2RhhA/VvED2tne+CYHB
+   wU+cBGCJhZbJeroN4PLb7/8609xKFlQSi3JTmxRJMRzVyEqAiouxSXkQ5
+   VVXoLwsGrs4AkXHSCCXPRZ3aDyjsuWrGLDwSTfd3Yj2//NrFNGl3oBH2v
+   rr1ufiLmO728sxZATfE5ufMqqRlXGrdb6FXxCvwb0+0E/zWATi939/IEO
+   6+CNGsAVKFx9UaiCuooS+f3cq0KB2jqKEtO31uu/7Uy0DCPpT4X8o438w
+   A==;
+X-CSE-ConnectionGUID: 4iHGATx+QIW0FZ/exM/5NA==
+X-CSE-MsgGUID: CiFXx6fRT5ivT/aHjfRGOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="79484122"
 X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
-   d="scan'208";a="90159605"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:53:56 -0700
-X-CSE-ConnectionGUID: UF6S4lL1RuW/gARWJFmRhg==
-X-CSE-MsgGUID: PpyYLNcFTdyQFxrOHWDLgw==
+   d="scan'208";a="79484122"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:58:16 -0700
+X-CSE-ConnectionGUID: +TrmWw19S72nTd2Gp0SdXQ==
+X-CSE-MsgGUID: gqOwbWe6RwyGo7byWtraPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
-   d="scan'208";a="231254272"
+   d="scan'208";a="234994028"
 Received: from unknown (HELO [10.238.3.169]) ([10.238.3.169])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:53:52 -0700
-Message-ID: <0a3535cb-b519-4225-9c09-733d47adfe5e@linux.intel.com>
-Date: Tue, 12 May 2026 12:53:50 +0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 21:58:11 -0700
+Message-ID: <0fbd4abc-a767-4dfe-91e4-f40a17ab707d@linux.intel.com>
+Date: Tue, 12 May 2026 12:58:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] perf/x86/intel: Don't write PEBS_ENABLED on
- host<=>guest xfers if CPU has isolation
+Subject: Re: [PATCH v3 5/9] perf/x86/intel: Invert names of
+ intel_ctrl_{guest,host}_mask
 To: Sean Christopherson <seanjc@google.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -67,136 +67,142 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
  Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>,
  Stephane Eranian <eranian@google.com>
 References: <20260508231353.406465-1-seanjc@google.com>
- <20260508231353.406465-3-seanjc@google.com>
+ <20260508231353.406465-6-seanjc@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260508231353.406465-3-seanjc@google.com>
+In-Reply-To: <20260508231353.406465-6-seanjc@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 On 5/9/2026 7:13 AM, Sean Christopherson wrote:
-> When filling the list of MSRs to be loaded by KVM on VM-Enter and VM-Exit,
-> *never* insert an entry for PEBS_ENABLED if the CPU properly isolates PEBS
-> events, in which case disabling counters via PERF_GLOBAL_CTRL is sufficient
-> to prevent unwanted PEBS events in the guest (or host).  Because perf loads
-> PEBS_ENABLE with the unfiltered cpu_hw_events.pebs_enabled, i.e. with both
-> host and guest masks, there is no need to load different values for the
-> guest versus host, perf+KVM can and should simply control which counters
-> are enabled/disabled via PERF_GLOBAL_CTRL.
+> Rename intel_ctrl_{guest,host}_mask to intel_ctrl_exclude_{host,guest}_mask
+> to more accurately capture what they actually track.  Specifically, an
+> event that is excluded from the guest is NOT guaranteed to count in the
+> host, and vice versa, as it legal (albeit bizarre) to configure an event to
+> exclude both the host and the guest, i.e. to not count at all.
 >
-> Avoiding touching PEBS_ENABLED "fixes" a bug where PEBS_ENABLED can end up
-> with "stuck" bits if a PEBS event is throttled between generating the list
-> and actually entering the guest (Intel CPUs can't arbtitrarily block NMIs).
-> Fixes in quotes because leaving PEBS_ENABLED as-is doesn't fix the
-> underlying problem of perf (via PMIs) being able to modify state after the
-> perf<=>KVM handoff.
+> Subjectively (though anyone who disagrees is wrong), aligning with
+> perf_event_attr.exclude_{guest,host} also makes all related code much
+> easier to follow.
 >
-> But not writing PEBS_ENABLED is desirable no matter what, as stating the
-> obvious, leaving PEBS_ENABLED as-is avoids three MSR writes on every VMX
-> transition: one each on entry/exit, and one more explicit WRMSR to zero
-> PEBS_ENABLED before VM-Entry (KVM assumes the only reason PEBS_ENABLED is
-> in the load list is if the CPU lacks isolation and thus needs a quiescent
-> period).
+> No functional change intended.
 >
-> Opportunistically add comments to (better) explain the rules for generating
-> the set of PEBS counters that will be active while the guest is running,
-> along with a FIXME for the suspected hack-a-fix where perf disables guest
-> PEBS if _any_ PEBS event is configured to count in the host (commit
-> 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily in two rare
-> situations") doesn't explain the motivation, at all).
->
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Mingwei Zhang <mizhang@google.com>
-> Cc: Stephane Eranian <eranian@google.com>
+> Suggested-by: Jim Mattson <jmattson@google.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->  arch/x86/events/intel/core.c | 55 ++++++++++++++++++++++++------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
+>  arch/x86/events/intel/core.c | 22 +++++++++++-----------
+>  arch/x86/events/intel/lbr.c  |  2 +-
+>  arch/x86/events/perf_event.h |  4 ++--
+>  3 files changed, 14 insertions(+), 14 deletions(-)
 >
 > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index b70dc35fcceb..13cd12d3eeee 100644
+> index e9f5a6143e71..7f7c7927b70b 100644
 > --- a/arch/x86/events/intel/core.c
 > +++ b/arch/x86/events/intel/core.c
-> @@ -4999,12 +4999,15 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  	struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
->  	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
->  	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-> -	int global_ctrl, pebs_enable;
-> +	u64 guest_pebs_mask;
-> +	int global_ctrl;
->  
->  	/*
->  	 * In addition to obeying exclude_guest/exclude_host, remove bits being
->  	 * used for PEBS when running a guest, because PEBS writes to virtual
-> -	 * addresses (not physical addresses).
-> +	 * addresses (not physical addresses).  If the guest wants to utilize
-> +	 * PEBS, and PEBS can safely enabled in the guest, bits for the guest's
-> +	 * PEBS-enabled counters will be OR'd back in as appropriate.
->  	 */
->  	*nr = 0;
->  	global_ctrl = (*nr)++;
-> @@ -5051,24 +5054,40 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  		};
+> @@ -2535,7 +2535,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
 >  	}
 >  
-> -	pebs_enable = (*nr)++;
-> -	arr[pebs_enable] = (struct perf_guest_switch_msr){
-> -		.msr = MSR_IA32_PEBS_ENABLE,
-> -		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
-> -		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
-> -	};
-> +	/*
-> +	 * Restrict guest PEBS events to counters that (a) perf supports, (b)
-> +	 * the guest wants to use for PEBS, (c) are not excluded from counting
-> +	 * in the guest, and (d) _are_ excluded from counting in the host.
-> +	 */
-> +	guest_pebs_mask = pebs_mask & intel_ctrl & kvm_pmu->pebs_enable &
-> +			  ~cpuc->intel_ctrl_host_mask &
-> +			  cpuc->intel_ctrl_guest_mask;
+>  	wrmsrq(MSR_CORE_PERF_GLOBAL_CTRL,
+> -	       intel_ctrl & ~cpuc->intel_ctrl_guest_mask);
+> +	       intel_ctrl & ~cpuc->intel_ctrl_exclude_host_mask);
 >  
-> -	if (arr[pebs_enable].host) {
-> -		/* Disable guest PEBS if host PEBS is enabled. */
-> -		arr[pebs_enable].guest = 0;
-> -	} else {
-> -		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
-> -		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
-> -		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
-> -		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
-> -		arr[global_ctrl].guest |= intel_ctrl & arr[pebs_enable].guest;
-> -	}
-> +	/*
-> +	 * Disable counters where the guest PMC is different than the host PMC
-> +	 * being used on behalf of the guest, as the PEBS record includes
-> +	 * PERF_GLOBAL_STATUS, i.e. the guest will see overflow status for the
-> +	 * wrong counter(s).
-> +	 */
-> +	guest_pebs_mask &= ~kvm_pmu->host_cross_mapped_mask;
+>  	if (test_bit(INTEL_PMC_IDX_FIXED_BTS, cpuc->active_mask)) {
+>  		struct perf_event *event =
+> @@ -2733,9 +2733,9 @@ static inline void intel_set_masks(struct perf_event *event, int idx)
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
 >  
-> +	/*
-> +	 * FIXME: Allow guest and host usage of PEBS events to co-exist instead
-> +	 *        of disabling guest PEBS entirely if the host is using PEBS.
-> +	 *        What exactly goes wrong if guest and host are using PEBS is
-> +	 *        unknown.
-> +	 */
-> +	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
-> +		guest_pebs_mask = 0;
-> +
-> +	/*
-> +	 * Do NOT mess with PEBS_ENABLED.  As above, disabling counters via
-> +	 * PERF_GLOBAL_CTRL is sufficient, and loading a stale PEBS_ENABLED,
-> +	 * e.g. on VM-Exit, can put the system in a bad state.  Simply enable
-> +	 * counters in PERF_GLOBAL_CTRL, as perf load PEBS_ENABLED with the
-> +	 * full value, i.e. perf *also* relies on PERF_GLOBAL_CTRL.
-> +	 */
-> +	arr[global_ctrl].guest |= guest_pebs_mask;
->  	return arr;
+>  	if (event->attr.exclude_host)
+> -		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
+> +		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
+>  	if (event->attr.exclude_guest)
+> -		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
+> +		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_guest_mask);
+>  	if (event_is_checkpointed(event))
+>  		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
 >  }
+> @@ -2744,8 +2744,8 @@ static inline void intel_clear_masks(struct perf_event *event, int idx)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  
+> -	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
+> -	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
+> +	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
+> +	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_guest_mask);
+>  	__clear_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
+>  }
+>  
+> @@ -3473,7 +3473,7 @@ static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
+>  				      struct perf_sample_data *data)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> -	u64 guest_pebs_idxs = cpuc->pebs_enabled & ~cpuc->intel_ctrl_host_mask;
+> +	u64 guest_pebs_idxs = cpuc->pebs_enabled & ~cpuc->intel_ctrl_exclude_guest_mask;
+>  	struct perf_event *event = NULL;
+>  	int bit;
+>  
+> @@ -5013,8 +5013,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	global_ctrl = (*nr)++;
+>  	arr[global_ctrl] = (struct perf_guest_switch_msr){
+>  		.msr = MSR_CORE_PERF_GLOBAL_CTRL,
+> -		.host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> -		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+> +		.host = intel_ctrl & ~cpuc->intel_ctrl_exclude_host_mask,
+> +		.guest = intel_ctrl & ~cpuc->intel_ctrl_exclude_guest_mask & ~pebs_mask,
+>  	};
+>  
+>  	if (!x86_pmu.ds_pebs)
+> @@ -5051,8 +5051,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	 * in the guest, and (d) _are_ excluded from counting in the host.
+>  	 */
+>  	guest_pebs_mask = pebs_mask & intel_ctrl & kvm_pmu->pebs_enable &
+> -			  ~cpuc->intel_ctrl_host_mask &
+> -			  cpuc->intel_ctrl_guest_mask;
+> +			  ~cpuc->intel_ctrl_exclude_guest_mask &
+> +			  cpuc->intel_ctrl_exclude_host_mask;
+>  
+>  	/*
+>  	 * Disable counters where the guest PMC is different than the host PMC
+> @@ -5068,7 +5068,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	 *        What exactly goes wrong if guest and host are using PEBS is
+>  	 *        unknown.
+>  	 */
+> -	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
+> +	if (pebs_mask & ~cpuc->intel_ctrl_exclude_host_mask)
+>  		guest_pebs_mask = 0;
+>  
+>  	/*
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index 72f2adcda7c6..1298049246d7 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -713,7 +713,7 @@ static inline bool vlbr_exclude_host(void)
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  
+>  	return test_bit(INTEL_PMC_IDX_FIXED_VLBR,
+> -		(unsigned long *)&cpuc->intel_ctrl_guest_mask);
+> +		(unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
+>  }
+>  
+>  void intel_pmu_lbr_enable_all(bool pmi)
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index fad87d3c8b2c..cc0aeeb34eb5 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -339,8 +339,8 @@ struct cpu_hw_events {
+>  	/*
+>  	 * Intel host/guest exclude bits
+>  	 */
+> -	u64				intel_ctrl_guest_mask;
+> -	u64				intel_ctrl_host_mask;
+> +	u64				intel_ctrl_exclude_host_mask;
+> +	u64				intel_ctrl_exclude_guest_mask;
 
-LGTM.
+This looks much straightforward. 
 
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 
+>  	struct perf_guest_switch_msr	guest_switch_msrs[X86_PMC_IDX_MAX];
 >  
+>  	/*
