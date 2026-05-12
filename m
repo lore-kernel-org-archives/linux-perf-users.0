@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB854D98E3
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E2F3E171E
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778608019; cv=none; b=kewp6oVUmI0RhRmRrkTtJBSyoT/Hd7soHzJ7cWTniU3pgdLb8h9yxL0BROrrkjpiOINildMvieIQbzHLeDaR6084RyGnyBrkXeTPL2ruybbyZuSOddqUbtMGGXxtwPO6bzGKzpv7c9pBVFhnVhmrjeCKrPBM1I2KepJ248TDXUU=
+	t=1778608021; cv=none; b=mvVoLheGpoLIuVXmSNXlYZvZVfuFQzzs+GXRA1vvRgiNlDnIN5xpx1d8LwKaRNbeU1RMfIKP1tzMtFIcETp/C0IP5EuxyCE4agBj6mSaVm+qwvn6tC42XPacrxMHP+PKOA3N/G6fdwEawO0866TAsvzDqhWAkvbQ7WPy6ofBclI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778608019; c=relaxed/simple;
-	bh=3q0g8O0ztwV+78aFp8RPw4sh9x5Uyk5RGK7knh3apw8=;
+	s=arc-20240116; t=1778608021; c=relaxed/simple;
+	bh=AKSQH2siP4utMQ9xhh4jNh7yTLC8UkZ/sL2vSdtCUcw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lsDzSIv0PRd7eFBIAJ4vCZ0vF3lRSq+mGSfhh4Ns39p9SdXhAwThQFLq1m6uvpTK9dNL6ZAY4Ki4YDhBkQ0MtO06xBkTI+pN3EKkIn4mUAUfwJvbnjgmIFcWn92IzW6YqLp9JiPOXzAkE0QwBfJThPaBIu9d5+IOGdqP0xCjI1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wb21vXsI; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=ksvUrQEWBHBx01LDnKdb+IU7YgyS+udkhi4BPVf4UO3CWUhyu+/EXPTVh2wIlQahJKtvV4S+f6KRixMYsZIii19I8a4vG9GzfMF1AeVegn2fT0ZNXPGpfyqmzrbCswB0oJ/lz93+WCtGe6BvAC7Ks1t1hZYltEhNNZZq+o+13JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AKS0up2I; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wb21vXsI"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2f3ec2e8d07so10448164eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 10:46:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AKS0up2I"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2fe1cf409a1so4219891eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 10:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778608017; x=1779212817; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778608019; x=1779212819; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nTNOVWRvce3lC7h3emxjjZvlJvb7j/kAaYdkg8DKpPI=;
-        b=wb21vXsIja4rjwH3QC2n5QDhNuEyNTz4mESpAiOQx87m+H6XdrdX8zQZQz03jF852L
-         zcqOviopaJ7e87dnycBkLlLZTsXEQuPSkK6sNcLdwD+Mh1csiD6lgyF95iZCfmBgE936
-         i4LDhQK9xto+yggWkkql9vuFbtje68krKniUDdaXkzlJNyDkliNoc5LQXaEZQJiAP2AC
-         1LqeeNHrjBZ/Gg1hWfAHt0BXbISB/tEv0d8sxElzVGrBL6l2JMJMOc/9fLWhvb6khCFi
-         EA9MBAzV+MNVsMHul132jA087gk81PXzplz/GUm9U8NJ7qiFs73NXrK8A2+9LH5apkat
-         ooJA==
+        bh=1yVcJX3ToKV+Wqq27E1R2W87lkjzMpr5Ak2bcYR9g3Q=;
+        b=AKS0up2Iw1nRWbPfURNvXx46HojS8Vpbvnfz2nOZsoc451WEzeTcs5BZcHVVU5SZW3
+         BbhFzZDd+Ok7aFLIxiZyOaf6e5YVxPKCyZVeh93aIif3gCP6iS4WL0Q7p1bB5Vx0IylB
+         cmLa5eAXEBUg/lYcMzNAiX5YdL3RN5mIyrAyQJ1oMcdqJHNawsiBlC5P84TCscyQtHpw
+         vhNANhO7JMZvPA1KsYpWOXHXGcvrYuFQhy1tFG/WfF0jV7zaPRMQ2Rpd2mrr1qL7JQDO
+         CqoCKT9RqV0oEy245ELkNePa7bN5tJkxqFh2LPMUTifA5g7g3ROrCGll8Pej6mANYNHN
+         4uHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778608017; x=1779212817;
+        d=1e100.net; s=20251104; t=1778608019; x=1779212819;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nTNOVWRvce3lC7h3emxjjZvlJvb7j/kAaYdkg8DKpPI=;
-        b=eRelB4f/1rRuZ6mijuPv0zPeL0w0/Xf0bFp0oC3sQddSaHXxyFjV0a+U4ol3G1Ndxa
-         urXrg80I/FZN8tQZFlU7+bf3tjfMu2/19ekE1eOR8AxehDlRTbf2e4aHco2Xu2Mpt2I5
-         MIFGL8C5SOXsE7hPJDSpXSq+DtqtiaB4RjUPS7zXhe8u2NyuowE8ope7j5zA054Faqoq
-         VfNpqjs5zyt6+xHDqkgNa7Oy4bpESujFxMk6Mtf7OV3HVnMjhQoE6Ed6KfRUG1mwdXqH
-         yZCO2wJhqFGVs2eUIOjezZSg8UitC3gMWnjPB04M1ZmhAXDs5bjYEbQjcxKtmTGmDI0h
-         fOXg==
-X-Forwarded-Encrypted: i=1; AFNElJ8w36f6mx5LQBFWdNtgVdXIyU70JqkJXSSpfBIJgLcBRyYXRTeyyrfAU9Hr3Bv8M3cB0xEqGXc2W1NUfVkmsSOl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzonpu/+1JeIXTGFKRGaIZgh+k7l0YUmrJDvGDOVLC+d3HLTB/K
-	/aAztD5H0qw8RoPmZmsBBAH1Oi5G1DgXf5tiCpb+Y00ugkibQLAlvhsZeaM80Q1d416eVmyczyd
-	KQ9BwUgmmqg==
-X-Received: from dydr14.prod.google.com ([2002:a05:7300:50ee:b0:2ca:9b08:e7c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e105:b0:2f2:6dde:df67
- with SMTP id 5a478bee46e88-30118e9ff09mr51836eec.22.1778608016683; Tue, 12
- May 2026 10:46:56 -0700 (PDT)
-Date: Tue, 12 May 2026 10:46:23 -0700
+        bh=1yVcJX3ToKV+Wqq27E1R2W87lkjzMpr5Ak2bcYR9g3Q=;
+        b=MSX9g/06gay97iSUN6IGP8uucBq79RLfWIqs3FI3a2rV+XteO62En4V2HxMMERxcCR
+         QKtlq8ehKMmzgvZfMk40N2gxkMOzFej0aNVxN+3LnZxrLyZK9+VdzePcoQs1IYiDKhIn
+         nxp1viBfIVNDkBkTkKjq4ZiH1VoYUMY7XAU6bPyCQ22e419FVUFkXRKDZpgoxZhH8JkU
+         oqO1dVTRIaJoS+B6DcdRDZrSk5X7yPmDgFYJxXM3ivNCld23ZG7u6/XjBa88Fw2cVzf7
+         CkwBSCI+7pwScwJn15l8v8+CNPnXOv2SRotVZC9Dw6XsoVZw4sE3wH7xR7Er0i52V8GP
+         qJbA==
+X-Forwarded-Encrypted: i=1; AFNElJ++3FmeGLUXBHtqOG8s7v9RGgI5UIbTovvcljKvKhCbPch2XH2q1VWrpXwliI6jplrt9Nv1R3WyqN6ByUSEZK1a@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkDCphyxnr997GVRRhHR+bab1Q2eMG8Vcv3B53eQ4FuF2Yqe5x
+	uzGyDHgeBV3J/bG7s5G+nwX9a9k4XGcAz7oSFIaFwc4mlJxOBnM/EMG4MKKFG4GeALhiZdNMeLG
+	fROGd+uNtag==
+X-Received: from dlbvv13.prod.google.com ([2002:a05:7022:5f0d:b0:128:cfd6:a3c6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e1f:b0:130:6978:c96
+ with SMTP id a92af1059eb24-13344d7dc23mr2588285c88.19.1778608018800; Tue, 12
+ May 2026 10:46:58 -0700 (PDT)
+Date: Tue, 12 May 2026 10:46:24 -0700
 In-Reply-To: <20260512174638.120445-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512053539.3410189-15-irogers@google.com> <20260512174638.120445-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512174638.120445-4-irogers@google.com>
-Subject: [PATCH v2 03/18] tools build: Fix test-clang-bpf-co-re.bin to
- generate target file
+Message-ID: <20260512174638.120445-5-irogers@google.com>
+Subject: [PATCH v2 04/18] tools scripts: Short-circuit CC_NO_CLANG compiler
+ probe in Makefile.include
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
 	namhyung@kernel.org
@@ -77,39 +77,38 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-In tools/build/feature/Makefile, the test-clang-bpf-co-re.bin feature check
-compiled test-clang-bpf-co-re.c assembly on stdout and piped it to grep,
-but never redirected the matched output to create the target binary ()
-on disk.
+In Makefile.include, CC_NO_CLANG unconditionally executed a GCC/Clang
+compiler inspection fork (gcc -dM -E ...) during Makefile parse time.
+Because Makefile.include is included across more than 40 sub-makes and
+component directories throughout the Kbuild tree, Make continuously
+re-executed this compiler probe dozens of times during incremental builds.
 
-Because the target file was never created, Kbuild could never cache the
-result of the check. Consequently, Make treated the prerequisite as missing
-and continuously re-executed the Clang BPF backend compilation check on
-every single sub-make evaluation during build startup.
-
-Redirect grep output to  to guarantee the file is created on disk upon
-success, allowing Kbuild to perfectly cache the detection result and avoid
-redundant sub-make forks.
+Wrap CC_NO_CLANG with a conditional check and export the variable to
+sub-makes. This guarantees Kbuild evaluates the compiler backend exactly
+once during top-level Make invocation, eliminating 40+ redundant shell forks
+across the build tree.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/feature/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/scripts/Makefile.include | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index dc828523b50a..f43f85738b5d 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -385,7 +385,7 @@ $(OUTPUT)test-libzstd.bin:
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 41971a68972d..3c7803122ae2 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -74,7 +74,10 @@ $(call allow-override,CXX,$(CROSS_COMPILE)g++)
+ $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
+ endif
  
- $(OUTPUT)test-clang-bpf-co-re.bin:
- 	$(CLANG) -S -g --target=bpf -o - $(patsubst %.bin,%.c,$(@F)) |	\
--		grep BTF_KIND_VAR
-+		grep BTF_KIND_VAR > $@
++ifeq ($(CC_NO_CLANG),)
+ CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
++endif
++export CC_NO_CLANG
  
- $(OUTPUT)test-file-handle.bin:
- 	$(BUILD)
+ ifneq ($(LLVM),)
+ HOSTAR  ?= $(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX)
 -- 
 2.54.0.563.g4f69b47b94-goog
 
