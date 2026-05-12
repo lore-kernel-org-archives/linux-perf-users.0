@@ -1,143 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7784347C7
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 00:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E00C23C4F2;
+	Tue, 12 May 2026 00:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778544822; cv=none; b=JDc/gINCnogmJc0E62lSR/iuTdAAtTLnTJhgZvP2h9MwV+3gTswT8sRA1gmPyYWUzfN4hhVibCfmi5kA8YyIY3Grv8duS4oaBaLvrJuo9y1N12ayL3wEpeJBNQM6C/QHPPtV4gYyceKv6aMyZjU4lyeomM3D+m2vlN+xYhONSr8=
+	t=1778546919; cv=none; b=uY0HzUE022rn/bYyvUSYKUmwhUKWOpy9mn5HYyN0phk1zwjHGEWdjXD1zLFzXirH35dNyUIPo4DJB2LU7q0+btWNYSFcGakHXr7xqr1Kzo+wGvBV38eJPTDaWL0tmCox6m4vFNuHz4l3Uk1JE3S83oE/7gXY9MT96Q0xNk72bYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778544822; c=relaxed/simple;
-	bh=E/y1ZxzF3CtqKS6qnnbuEnS2SZMX04ado+eCOxzN2EA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=X+G1802Kng0zPO3w373bMhMEByX00rXnS4c/eMRCuxMaCr9muGb2p0ey6CGf5WlOkXC1uE68PYex3pJeRtd9zqvCuw4mx6M1KgkEvWv1v+knJWQbOqM0m7k9uRkhFbBDm056Z5/5m2Jxq/CuxzYUWMHyhX1JzFf4AWu0wmtfrGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9j1N65Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778546919; c=relaxed/simple;
+	bh=eMXySDvhjew9UrtBOZ2OWg9MoRIgp8KXUfPbp1kcPQQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lFihTjo1AI2rc+tQy3c5QKfbEowHGxNx0s/o3/bnp9f75j6AJygIlf7FQAJRKcM7JtcyqQHg++JYRN41m7UsI/4tY07QBnoShDNc9qP0wu+RqbWYFDxDqASZlszOK15ts/TYAopq4C3dH5K+pwv3tIj1lKx/tAdOXWKnNKJSaHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+06pYYn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9j1N65Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7783FC2BCB0;
-	Tue, 12 May 2026 00:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+06pYYn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F351C2BCB0;
+	Tue, 12 May 2026 00:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778544821;
-	bh=E/y1ZxzF3CtqKS6qnnbuEnS2SZMX04ado+eCOxzN2EA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=b9j1N65QYqGfaHJiR4hIwB3Q4iXlvypsrnbBAHecdt97Z+vSYuZY998zWxOtRbWNM
-	 DWeUeD48PumHk64B1r3/EgJu0J9PY6OQOASsnCttFcGO/w6KZyKd4FkwrNt52XplGP
-	 YLpih/MVL7EftEHKZMtihNRDvie0b2L+Jy3/saaZmNlnBEN+/aOWGV0ivtlccvMQ2r
-	 PlLKu/7iSOcwsKMTVimFpQykPabLT4yDl+m4VMUqTVEJfSpqV8k+BafvZ10jeeUNwL
-	 /cwZ4YR8HCARfCkObBanshLpvTvUs+pQ22l2rH2JW2qzp7wWM4zqQNKXElyd4BEPHb
-	 imfkO6U3ZCMGQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/28] perf zstd: Fix compression error path in
- zstd_compress_stream_to_records()
-Reply-To: sashiko@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260510033424.255812-4-acme@kernel.org>
-References: <20260510033424.255812-4-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 12 May 2026 00:13:40 +0000
-Message-Id: <20260512001341.7783FC2BCB0@smtp.kernel.org>
+	s=k20201202; t=1778546919;
+	bh=eMXySDvhjew9UrtBOZ2OWg9MoRIgp8KXUfPbp1kcPQQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j+06pYYnu4yyp6FgUpL1Q2SakdTyjGv7vJnVDPntrp94mAqfXByEagGSwTo8PXsvX
+	 Lg1/8y1HLs8GjJL2LHMocNTprQ+UD+hrRRBQETgub7qMHkwzY55wXRAtU6Px1N+gGW
+	 JjNKcDevhve+Br95FGo4KBj3r1/GLRHYab4IDA4IWEbnJ5WVBaBPWySyFqLoaxpvfi
+	 c3XbZZraui6yc2y0y08M1ug03qpSfrvfeP895gQ5hx/jGMUzs2XMY2EaMkjeQaGH89
+	 p9IHcT6GagtP5s+kO0bTUmzsZ91EQjpV5xmFUlWTCglOrnC0bp/0V3gLag1V/RM2sU
+	 dkWPiC/nyEIAg==
+Date: Tue, 12 May 2026 09:48:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+ linux-trace-kernel@vger.kernel.org (open list:UPROBES)
+Subject: Re: [PATCHv2] uprobes: Use flexible array for xol_area bitmap
+Message-Id: <20260512094832.8ffe6fe2787ed5d22261d20f@kernel.org>
+In-Reply-To: <20260511225648.27886-1-rosenp@gmail.com>
+References: <20260511225648.27886-1-rosenp@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-- [High] Out-of-bounds write occurs before the newly added buffer size guard
-- [High] Unsigned integer underflow and memory leak when compression yields=
- 0 bytes
-- [High] Missing context reset on buffer-full error path causes state corru=
-ption
-- [High] Error propagation causes deterministic failure for incompressible =
-data
-- [High] Returning -1 on compression failure causes duplicated events
-- [Medium] Ignored ZSTD_flushStream return value masks compression errors
---
+On Mon, 11 May 2026 15:56:48 -0700
+Rosen Penev <rosenp@gmail.com> wrote:
 
-commit 6e057a82790023201cbd71817c336d831f984f7f
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> The XOL slot bitmap has the same lifetime as struct xol_area, but it
+> is currently allocated separately.  That adds another allocation
+> failure path and a matching cleanup branch without buying any extra
+> flexibility.
+> 
+> Store the bitmap as a flexible array member and allocate it together
+> with the xol_area using kzalloc_flex().  The bitmap remains
+> zero-initialized, while the allocation and error handling become
+> simpler.
+> 
+> Assisted-by: Codex:GPT-5.5
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-perf zstd: Fix compression error path in zstd_compress_stream_to_records()
+OK, this looks good to me.
 
-This commit changes the error handling in zstd_compress_stream_to_records()
-from falling back to uncompressed data to returning -1 and resetting the
-compression stream. It also adds a bounds check to prevent dst_size underfl=
-ows.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> --- a/tools/perf/util/zstd.c
-> +++ b/tools/perf/util/zstd.c
-> @@ -55,6 +55,9 @@ ssize_t zstd_compress_stream_to_records(struct zstd_dat=
-a *data, void *dst, size_
->  	while (input.pos < input.size) {
->  		record =3D dst;
->  		size =3D process_header(record, 0);
+Thanks,
 
-The process_header callback writes the event header to the record pointer
-unconditionally. Since this happens before the newly added dst_size check,
-can this cause an out-of-bounds write if the remaining dst_size is smaller
-than the header size?
+> ---
+>  v2: add missing kfree
+>  kernel/events/uprobes.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4084e926e284..eba71700667e 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
+>   */
+>  struct xol_area {
+>  	wait_queue_head_t		wq;		/* if all slots are busy */
+> -	unsigned long			*bitmap;	/* 0 = free slot */
+>  
+>  	struct page			*page;
+>  	/*
+> @@ -117,6 +116,7 @@ struct xol_area {
+>  	 * the vma go away, and we must handle that reasonably gracefully.
+>  	 */
+>  	unsigned long			vaddr;		/* Page(s) of instruction slots */
+> +	unsigned long			bitmap[];	/* 0 = free slot */
+>  };
+>  
+>  static void uprobe_warn(struct task_struct *t, const char *msg)
+> @@ -1755,18 +1755,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  	struct xol_area *area;
+>  	void *insns;
+>  
+> -	area = kzalloc_obj(*area);
+> +	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
+>  	if (unlikely(!area))
+>  		goto out;
+>  
+> -	area->bitmap = kcalloc(BITS_TO_LONGS(UINSNS_PER_PAGE), sizeof(long),
+> -			       GFP_KERNEL);
+> -	if (!area->bitmap)
+> -		goto free_area;
+> -
+>  	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+>  	if (!area->page)
+> -		goto free_bitmap;
+> +		goto free_area;
+>  
+>  	area->vaddr = vaddr;
+>  	init_waitqueue_head(&area->wq);
+> @@ -1779,8 +1774,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  		return area;
+>  
+>  	__free_page(area->page);
+> - free_bitmap:
+> -	kfree(area->bitmap);
+>   free_area:
+>  	kfree(area);
+>   out:
+> @@ -1831,7 +1824,6 @@ void uprobe_clear_state(struct mm_struct *mm)
+>  		return;
+>  
+>  	put_page(area->page);
+> -	kfree(area->bitmap);
+>  	kfree(area);
+>  }
+>  
+> -- 
+> 2.54.0
+> 
 
-> +		/* Output buffer full =E2=80=94 cannot fit even the record header */
-> +		if (size > dst_size)
-> +			return -1;
 
-The patch adds a context reset for ZSTD errors so the stream is usable
-for flush retries. However, this early return for a full buffer exits
-without resetting the context. Will the caller retry flushing with a
-partially compressed internal state, producing corrupted output?
-
-Replacing the uncompressed fallback with returning -1 propagates the error
-to perf_mmap__push.
-
-If a ring buffer wrap occurs and the second half returns -1, will
-perf_mmap__push abort and skip perf_mmap__consume, leaving the
-kernel buffer tail pointer unmodified and duplicating the first half on
-the next read cycle?
-
-Additionally, if a chunk is incompressible and its size exceeds the static
-destination buffer size, will the out_child retry loop overflow again and
-permanently block?
-
-[ ... ]
-
-> @@ -65,8 +68,16 @@ ssize_t zstd_compress_stream_to_records(struct zstd_da=
-ta *data, void *dst, size_
->  		ret =3D ZSTD_compressStream(data->cstream, &output, &input);
->  		ZSTD_flushStream(data->cstream, &output);
-
-This isn't a bug introduced by this patch, but the return value of
-ZSTD_flushStream is not captured in ret. Does the subsequent
-if (ZSTD_isError(ret)) check silently discard flush errors, leading to
-truncated records?
-
->  		if (ZSTD_isError(ret)) {
-
-[ ... ]
-
->  		}
->  		size =3D output.pos;
->  		size =3D process_header(record, size);
-
-This isn't a bug introduced by this patch, but if ZSTD_compressStream and
-ZSTD_flushStream produce 0 bytes, output.pos and size will be 0.
-
-Since process_header(record, 0) acts as an initialization command and
-returns the header size again, will this code subtract the header size
-from dst_size a second time?
-
-Could this cause dst_size to underflow, completely defeating bounds
-checks on the next iteration and leaking uninitialized memory into the
-output?
-
->  		compressed +=3D size;
->  		dst +=3D size;
->  		dst_size -=3D size;
->  	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260510033424.2558=
-12-1-acme@kernel.org?part=3D3
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
