@@ -1,181 +1,148 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F1F39449C
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 08:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D7B2E62A9;
+	Tue, 12 May 2026 09:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778575997; cv=none; b=mQu/VsnA7juHA4e1LpBO63lcTnwFiZ2zDxf6f5EkUjGmzrrIy1PogbD7WrZg09X0+vNjy1A97pdqLTySasHf1quwXZfBnNWU9wfXhB1qsOg+ZMnHYvdd6KS6JyKlLm7i1erqEtfVsxv2i++L0n07J8fdm23gvzAO9Oqd87gV3aQ=
+	t=1778578080; cv=none; b=Go6P/kMXSssEKxIQDU4Ax86VekdqSfcu3wFyMENTI1w0rn8NRg03C1mQcPZpCz9Qn5+mOYcjOh9HRdtvn8socZWmKe2acufo1FZH8BY44NPt0qfHBfA9SxLej6ShWG0SLt3FMft+WwscKgZOoz82Se2mL8CLylO+8MjzUb874tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778575997; c=relaxed/simple;
-	bh=sMh/hkO7bJWyLZ6VErb+MuLHZ2R/dLoSoDLRlFYTP2A=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=k1wJvBtXCZLdznJ9hOsZmMtJikxqEf7jyGeC4z7FLkGSm4jeAxwLDBNG3q9pN2C5nePFiePJpd4DmCnMZ7ir7NqY/KKJCXIWlszVtu4U+5jPxwxGCsaGJQwjK9As62acywAsb37Oph1EvvbV+XP7n74Os7eOHj2qKRLyD5/wMx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hJYvFx9Y; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1778578080; c=relaxed/simple;
+	bh=g19CLWxVZUL0awtylS4oLS1iR71+SGr78b8tU+V4ZxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UcuvSH+52fj+tOgtBwQR85EdndzPXNnQhSXys3qBh254ba/YRkIA/DIe0kkcq1x9suz0tzXyOU29CAWeF1jmQ0umpSlaV3F8b0aEdPH7JJbxzbV+fLlwbcdXWsBYw+pLoVLLxi8yarg0VVJcfRCIbUXvYe/P/INr+mm8JSJ/Ask=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBoMtH2R; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hJYvFx9Y"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64BK6qhd2607277;
-	Tue, 12 May 2026 08:53:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=eZc3uN
-	oEL/uKtPTMromxFjx6kMpuZDZaR5NkP8zxJqo=; b=hJYvFx9Yf8Gk5MKHv6kjgG
-	u0XS2AtjGLCfT1zx+cn0jFT71pk1Thric49nkFZjWzugMIUdvEYwwdxn1xWPGEXO
-	Gwz2CVQNZh6LxoKQNDsHcd+kxn4BeYJQ/vYbcrBaLdr7DExTXV3sV7pk0DVLjrm/
-	CEMvyPrrinHJMw13k442f/uKHI1IPT7gS7YvgCM9rj6AMirqLKoLM4dt7tD0yoe4
-	QlJJv/nddgw8UygWTf7y7R7t9XXlCUhGdrLIJ3asTg6K4rNMTjROaBIhJcjK51wC
-	FvaZ5yg6SLuHZRMZoiPEbgwkC6MQden2MzEGKWH5SeFq0ktcSShGWL1edKM+qeYA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e3nv527r9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 May 2026 08:53:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64C8dNEq012190;
-	Tue, 12 May 2026 08:53:00 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e3nfgjcuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 May 2026 08:53:00 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64C8qwqO34669246
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 May 2026 08:52:58 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2EE645804E;
-	Tue, 12 May 2026 08:52:58 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 147BE5803F;
-	Tue, 12 May 2026 08:52:53 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.123.10.165])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 12 May 2026 08:52:52 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBoMtH2R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778578078; x=1810114078;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=g19CLWxVZUL0awtylS4oLS1iR71+SGr78b8tU+V4ZxY=;
+  b=KBoMtH2RSha3JKmoEeqttAmTiRSVXY9y1H8o4aOkekUAemluhQQxhcIx
+   MdSc4Armj+aatpuPBJCGTi3Dh7To6tv5MpIMVnbn2auOX9TTpX107+ps3
+   9dLRqtxYn4/TDllr8IelQSJC6dML13RGbbiB2gHIiW3r9SNsDeyGkEG7T
+   lwdKbUyFDiODSprNbpU4ai8tlt1gmo3iK/nwMHoEh97Nv6S36vgDYgii5
+   zBWqa5xpbheAg6VFuT27EcladMq5WIZA94vZx4aJ6BP6hQ/Zq+AKIRLGE
+   CydXA1dETUPDD8cZEDXHI7NKsTeUuBW/Za3A0RzCSN4/hXtHPZwZuCfQx
+   Q==;
+X-CSE-ConnectionGUID: PmTtTzIAQrCTMGtklQ0M/g==
+X-CSE-MsgGUID: 1KqMLNjCQ1mHt37hi5s3sA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="90582861"
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="90582861"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 02:27:57 -0700
+X-CSE-ConnectionGUID: 9iK9FoneR0GIy84efwVupA==
+X-CSE-MsgGUID: KT3wgPJZSLqS1LkvTRlJew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="233238518"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 02:27:54 -0700
+Message-ID: <7c3aed41-c68c-4cd4-862f-66039b87c7e8@linux.intel.com>
+Date: Tue, 12 May 2026 17:27:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V4 1/2] tools/perf: Fix the check for parameterized field
- in event term
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <20260504154205.21394-1-atrajeev@linux.ibm.com>
-Date: Tue, 12 May 2026 14:22:40 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, shivani@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0FE86BD2-554C-402C-80A2-C8F86FC2F685@linux.ibm.com>
-References: <20260504154205.21394-1-atrajeev@linux.ibm.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEyMDA4NiBTYWx0ZWRfXxM/GFRstIpsX
- 1oPyVQIg85G1wuAmr7P7UaH/LxOSXyahbAWBkmVbi8D7O5Xenlyu+xuxWnItYX1NgXcUj3ll9+a
- NcpzhwKLCkHvjwuQeURYt1QLmNEXfBY06AhTA/Og0ilnNO2lUpQUZC7vPYm61vNudeMGsSN7vdF
- h0oQ7NgBdQI5fkh7sP59oFffeXjxWkT0BUhX/tL4PHkXVOIf/eMuGdbNnHAqiCS6GICeylyJfcP
- EEvyZ/Mv6wh6nrc3yqM/QhODWbkcO0BxbmyyS9qrF8cx7ZKVCWM0E1VJOnMNIcGEQZrYiZJQc3L
- vuc72mS5trnP6ZubrUn2m/5ZmQ4jYNCGzVDFONcNUxkjeJcYD4caQqu14VSZqdWyjLciOPPa3v9
- Su+P8i4xJn+KAfpudLfdIEGK2/qFWPTQc+O2Ocj/Ta54oThpyk7vRcGQujpCEcxsh8UTO/ohKvv
- 0Y1adfz48GS5Y2i75VA==
-X-Proofpoint-ORIG-GUID: 41Sw65vucVvWl5GoTvZorxwU4QtZb83L
-X-Authority-Analysis: v=2.4 cv=Jc6Ma0KV c=1 sm=1 tr=0 ts=6a02ea6e cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22
- a=VnNF1IyMAAAA:8 a=gn8oeiLMC-0IUWM35G8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: bwJvMwdIKraFPcjoz76QfOEeY-Kyyo96
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-11_05,2026-05-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015
- phishscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605050000 definitions=main-2605120086
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] perf/x86/intel/uncore: Fix PCI device refcount leak
+ in UPI discovery
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260511230527.26096-1-zide.chen@intel.com>
+ <20260511230527.26096-3-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260511230527.26096-3-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-
-> On 4 May 2026, at 9:12=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->=20
-> The format_alias() function in util/pmu.c has a check to
-> detect whether the event has parameterized field ( =3D? ).
-> The string alias->terms contains the event and if the event
-> has user configurable parameter, there will be presence of
-> sub string "=3D?" in the alias->terms.
->=20
-> Snippet of code:
->=20
-> /* Paramemterized events have the parameters shown. */
->       if (strstr(alias->terms, "=3D?")) {
->               /* No parameters. */
->               snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
-pmu->name, alias->name);
->=20
-> if "strstr" contains the substring, it returns a pointer
-> and hence enters the above check which is not the expected
-> check. And hence "perf list" doesn't have the parameterized
-> fields in the result.
->=20
-> Fix this check to use:
->=20
-> if (!strstr(alias->terms, "=3D?")) {
->=20
-> With this change, perf list shows the events correctly with
-> the strings showing parameters.
->=20
-> Before the fix:
->=20
-> # ./perf list|grep -w PM_PAU_CYC
->  hv_24x7/PM_PAU_CYC/                                [Kernel PMU event]
->=20
-> With this fix:
->=20
-> # ./perf list|grep -w PM_PAU_CYC
->  hv_24x7/PM_PAU_CYC,chip=3D?/                         [Kernel PMU =
-event]
->=20
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+On 5/12/2026 7:05 AM, Zide Chen wrote:
+> pci_get_domain_bus_and_slot() increments the reference count of the
+> returned PCI device and therefore requires a matching pci_dev_put().
+>
+> In skx_upi_topology_cb() and discover_upi_topology(), the lookup is
+> performed inside a loop, but pci_dev_put() is only called once after
+> the loop. As a result, references from all previous iterations are
+> leaked.
+>
+> Move pci_dev_put(dev) into the if (dev) block immediately after
+> upi_fill_topology() returns.
+>
+> Opportunistically, fix uninitialized variable in skx_upi_topology_cb().
+>
+> Fixes: 4cfce57fa42d ("perf/x86/intel/uncore: Enable UPI topology discovery for Skylake Server")
+> Fixes: f680b6e6062e ("perf/x86/intel/uncore: Enable UPI topology discovery for Icelake Server")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
-> Changelog:
-> v3 -> v4:
-> Updated commit message to show real example
-> addressing review comment from Namhyung.
->=20
-> v2 -> v3:
-> Split the strstr correction in a single patch
->=20
-> tools/perf/util/pmu.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 23337d2fa281..0b8d58543f17 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, =
-const struct perf_pmu *pmu,
->   skip_duplicate_pmus);
->=20
-> /* Paramemterized events have the parameters shown. */
-> - if (strstr(alias->terms, "=3D?")) {
-> + if (!strstr(alias->terms, "=3D?")) {
-> /* No parameters. */
-> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
-alias->name);
-> return buf;
-> --=20
-> 2.47.3
->=20
+>  arch/x86/events/intel/uncore_snbep.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index 215d33e260ed..c9ce206fcbb6 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -4261,7 +4261,7 @@ static int upi_fill_topology(struct pci_dev *dev, struct intel_uncore_topology *
+>  static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
+>  				int die, u64 cpu_bus_msr)
+>  {
+> -	int idx, ret;
+> +	int idx, ret = 0;
+>  	struct intel_uncore_topology *upi;
+>  	unsigned int devfn;
+>  	struct pci_dev *dev = NULL;
+> @@ -4274,12 +4274,12 @@ static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
+>  		dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
+>  		if (dev) {
+>  			ret = upi_fill_topology(dev, upi, idx);
+> +			pci_dev_put(dev);
+>  			if (ret)
+>  				break;
+>  		}
+>  	}
+>  
+> -	pci_dev_put(dev);
+>  	return ret;
+>  }
+>  
+> @@ -5499,6 +5499,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
+>  							  devfn);
+>  			if (dev) {
+>  				ret = upi_fill_topology(dev, upi, idx);
+> +				pci_dev_put(dev);
+>  				if (ret)
+>  					goto err;
+>  			}
+> @@ -5506,7 +5507,6 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
+>  	}
+>  err:
+>  	pci_dev_put(ubox);
+> -	pci_dev_put(dev);
 
+Should we move the "pci_dev_put(ubox)" into the while loop as well? In
+theory, the ubox device could be found multiple times.
+
+Besides, could you please search "pci_get_device()" in uncore code, it
+seems some functions don't call pci_dev_put() or only calls it once, like
+the funciton spr_update_device_location() ...
+
+Thanks.
+
+
+
+>  	return ret;
+>  }
+>  
