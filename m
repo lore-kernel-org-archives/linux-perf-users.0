@@ -1,234 +1,135 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013000.outbound.protection.outlook.com [40.93.196.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0935E336EC0;
-	Tue, 12 May 2026 08:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778575652; cv=none; b=WedT4zbT5bDJuQGqG8pGy+SuzSf8+wPT2veea32X82LM4qkRjVrxa/P2yILAGEqcxd178DUUzZl8OGHxOHSdANPnVTgQELoymdZsxiveV+9rdWqwqu9bKTD6OCNG0muqJCPFQFPd8kXTeTcO94+nqW30Bx8WDxQD7IpOgAcK/hw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778575652; c=relaxed/simple;
-	bh=aMrDErOCwNTLBFzmkNqHyrvc6BQwh7EiF5qMiHMkDsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PCePCG/8WyIPavnNEKkft24nQ6cmqAiFYdoURNRRNyyutsdKPTUIvhOgzL/hENOiTMnU4VAnU5E2JIKlYLUwGA7leyHRaycF3nnycPMj3UktbI/60A14LtxTZy1lmcyt0Be/swNNVUG77sT01cr3Vqs08ZY5ysT2e6qwtiDoqP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k6nUW4lS; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DCA38B7B4
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 08:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778575768; cv=fail; b=E4eVKAXKeTU6NwzqZUTljNOJ2QIqwfcnwruOjqYSPxii0RkB4o5Z2t1O2MczdSc0a1JY0gS8PE65Jfl1235fSAnvAEHb19gJfRVJ+krEzHngc2HyYYvwuPPDmOq41ykuSofSLLaQ/JgBKnomZe0IX3CxR7Pq5F+lQp8RcoHOryo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778575768; c=relaxed/simple;
+	bh=wNnDvc6JgKrAK82LDjHyeXPOZJhLXcwHX9tIxhpjVFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TeaUFdHRykjWPFruGy+exjFR1lxjuPExCYeRoDFdnenRs2Su9qhgj1T+5kNvl9zq7ehHDfzjCZenh4+scwFj+/MaNpcaB4mABSvpcHHFGUFa7LvSLTevfSGD7ia1x/ixypbSLVXX773BPni/XeTy8Fi5a5eZJ6hroZhlcETuodQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1oJzmaUE; arc=fail smtp.client-ip=40.93.196.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k6nUW4lS"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64BK7MRA2611630;
-	Tue, 12 May 2026 08:47:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=H+8//gvY5YDYvlSqS92b8ddYK8Ff04LnjBLCk2hUj
-	M0=; b=k6nUW4lSRwAYP0Doa93RrNuXLznN5GOiWpfcAqnQ/zskNv0VgZoYmV42A
-	xa/58nfthhH4trOkcAEaqbt9FmlbZPUPE//NkJvxHx1SBXpYzDaIMskJ6/g/yIY6
-	cCQqaim82T5F3vmhbdkiUJTm4RBruNK0FdPJNMGsIc1g4YihjvVBvJ68ZEmUV3Ju
-	SNUj/P31XUeu0pWNf+yJb3h304nCGfJJfBg55z4t4z58a+Bu4Zva96pckPysvC7A
-	dlcQ1gypNz3M65t01qLUAS9ItkzdV1Ai/OuCD46Ib1yqOaM/biYGWNAIk/Hk819P
-	Uo4Qf/MP1HMKzQKppTfu1+7qGK6Kg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e3nvdt790-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 May 2026 08:47:05 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64C8ORNn016490;
-	Tue, 12 May 2026 08:47:04 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e3nfgjbn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 May 2026 08:47:04 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64C8l0Vf60424628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 May 2026 08:47:00 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D3DD2005A;
-	Tue, 12 May 2026 08:47:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 68B9520040;
-	Tue, 12 May 2026 08:46:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.72.48])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 12 May 2026 08:46:57 +0000 (GMT)
-From: Gautam Menghani <Gautam.Menghani@ibm.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
-        atrajeev@linux.ibm.com
-Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf script powerpc: Update the hcall list with new hcalls
-Date: Tue, 12 May 2026 14:16:51 +0530
-Message-ID: <20260512084654.57729-1-Gautam.Menghani@ibm.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1oJzmaUE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hoN/LBqiSIxYEl7/YmIpKRwxrOJcQiPmVptKp9Qcsm2h9qM43OWsqzbVr5M5l8oUBUqefo3GNAxnLto7Q0ycp2ertpdp9tQEpcWcAgamebnPJRkEKcBLNz7qdiFMP4tLVeA0ToG1F1PUmJ5ycL9CB15pLUEaGM6EKL+HxpbVmbHqIOFvZ/UM2dKhqu1mo06vt8ibYkObho+YEjoJo4UETFrmQ/Mt+OSTdu9ZEKtX6WwxH7AyZ4CKmXYmAfHiWJk0THofWy4yRep0ts0Ch58+IVD3vE/Cw86tHJrfsM54PAEvtxJVb9SvzSRoRz6Jm8pEBsmwrM7V7gBdbz8nuDGp9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ut7px7khvzGVg7jd85JrV4BJvH9VWwCre6LvFmju3As=;
+ b=BrO/yWu3f6H4xeCs9fV+B2DhgOxabJp3sB8cygGQ3NIIOif60R/iqJ6PN6sj1vcNUKQEXIdSS9NdQpSgdMwqt7n/uftmlS2CWN89VuWeoxIYZzyQhu8evkWjieIdde2tIxgJlpgSaVdo2Ronavnx3mkkerMzTluYLYGxzelkbyApCEc5or66Yzm8FziR9PH4LNoz+oy3T4AqM8MNyPoTuWDqqOE6CaEbmvTR1NcrlQEQnFGWFLKlBJk2PNB5GyIWwyYlvF4IDE/4N1azVUxJmBdT9N7crMDpcv0ojcTJiqS26xZLxQEmlbZo6AgPwzNHXsDi6DuEaTxsW+ja2RscuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ut7px7khvzGVg7jd85JrV4BJvH9VWwCre6LvFmju3As=;
+ b=1oJzmaUEQXqu6MMssUcS+1nkCsoZzSM9G1gp1LeDLnTRvP6ZVhxhPxzKISBKO7bjk8beBwbuRfEJbYpNW6xRTqkQrsod3Pl+mQqy6i2IPwL3kQSvcSXcEm1AbrrshHiV3IX7TWXdm9a5LV3vfaAkABEzDsxMTHV8bUxevikg0r0=
+Received: from BYAPR02CA0060.namprd02.prod.outlook.com (2603:10b6:a03:54::37)
+ by BL3PR12MB6403.namprd12.prod.outlook.com (2603:10b6:208:3b3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Tue, 12 May
+ 2026 08:49:12 +0000
+Received: from SJ1PEPF000023D6.namprd21.prod.outlook.com
+ (2603:10b6:a03:54:cafe::8c) by BYAPR02CA0060.outlook.office365.com
+ (2603:10b6:a03:54::37) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9913.11 via Frontend Transport; Tue,
+ 12 May 2026 08:49:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ1PEPF000023D6.mail.protection.outlook.com (10.167.244.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.3 via Frontend Transport; Tue, 12 May 2026 08:49:11 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 12 May
+ 2026 03:49:10 -0500
+Received: from [10.136.40.102] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Tue, 12 May 2026 03:49:10 -0500
+Message-ID: <6e7b96a8-f053-4f2c-b15e-0e798a3514cf@amd.com>
+Date: Tue, 12 May 2026 14:19:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=Y/XIdBeN c=1 sm=1 tr=0 ts=6a02e90a cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=dQQfcrzLAAAA:20 a=VnNF1IyMAAAA:8
- a=ftAGlh2v0gGDii-5wccA:9 a=bA3UWDv6hWIuX7UZL3qL:22
-X-Proofpoint-GUID: _BvFowMn33zxF-CBdjQOaLyHowRvRzcK
-X-Proofpoint-ORIG-GUID: bAAr_YA-alRKDYvpn0Jlmbe1YR4TwpxI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEyMDA4NiBTYWx0ZWRfX794P8/bu83J2
- MmB5WsaYcsGX4bR65QzWL+nkEJFqNwezbSYGqDJG/KQurJyJJRWYsSDNF9YanNttdseBYsXdo+t
- PqaZ0plHDXe8VhZ2dEUBBbemRoEa7jtWPKM3P/cPca3LAndrHQhrsjSvqYCb/+pH9dEiBTLDkkk
- 2Fol6EEf4bOgZJj5CECLbLK1PwDSXHV2WjgBOpz368EGVAdHvuTmC1+fYs7ERdswGz4Ih4WxFNs
- tE1ZD/RfwK8m/qAs3kD9TGLWGTTsmOSQr68HGHpHDg85CibynxuqeYpmMZL9xXaNwDSu19V8ciS
- ngBlMp2tCjgYTELaAiP8/cHyy5BgrnuXI+dLSYdQpVM56tutjxYqEiPbCqReiGYz051fuLR9g21
- Zk33RT1VKjpaCKLCiDI1M0gCcEVl5JXcDqMRjdTmC4yvWS82B0ZZRa32FjBHTloBMXQbnszjqeQ
- vaTcGFOYjVTzykJT3Jw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-11_05,2026-05-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 lowpriorityscore=0 phishscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 spamscore=0 adultscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605050000
- definitions=main-2605120086
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] perf amd ibs: Suppress bogus TlbRefillLat and
+ DCPhysAd on Zen4+
+To: <sashiko@lists.linux.dev>, <linux-perf-users@vger.kernel.org>
+References: <20260508060004.2575-5-ravi.bangoria@amd.com>
+ <20260508182027.F2DF1C2BCC7@smtp.kernel.org>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20260508182027.F2DF1C2BCC7@smtp.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D6:EE_|BL3PR12MB6403:EE_
+X-MS-Office365-Filtering-Correlation-Id: 347ce0ea-b97b-4933-d542-08deb0035661
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700016|1800799024|82310400026|22082099003|56012099003|18002099003|11063799003;
+X-Microsoft-Antispam-Message-Info:
+	ORmCFj25AUJdzmlgCC4EQxTnKgidKGKIwe6oRfmA0IWfNJaxDfB8PCVt7TBkgdC5AeoOirGSXKnXu2sqBUOEu/Jy4uC+GUmlcPn8FYqLwdlQr0StNZMj1OYPw16DSvGLMhEQZLJReayp79e9/+G9ud62cjjkRT/LmPhIiyvEgmqheUrxK9xseNCc9v0ueLdLu6lmsM+IKYM4oxD9/XYfStKyW9ONSaUsSlSRREdyDIZat4O15tuj/SyPMrM9+gt/HHJe8i6mpatFVP/kwPm8bn9zRdr4FOD81+spQoWz58n2x4NnCAdmVnXwSE0uoaic/YAnQ+79VJYxcbtorno8oD399T969GHFLExqi12Ij6MMIosV1rRX8k/6slPvLdr7YuyCVO9hh1uxsYteXFhkL+noGEYioKabm1z+iWjIvi8tyO7UHkyu5++KHAZ6aaUaN0QD+Nvo2Dcoj93RI+20/0EW6Euo+7Ffn/iyK/HogM2FcVi4eev1Jw1U7NIuwTp4cz3Z1Zf/cZlacbCUDMs/ACNSt/NMc3AwKKRYFmYqGSn3K5C7tEuhpQsGMC233A7d68duFAHLmeccTnpaXotGCbSXhZsCZwLAUxla4WOb4AaozbsOXI1mRxZ9gVrMywOMNV6zZbZY4TQYiZluUVvv1OHbFPsG7TsfQW1ILbEZbPwmebJ9wO7LqNaY4hnXmeRoqC2zDiB+wAddXHRA7+v8rt179IfBMm41vIeCFVlxDwI=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(1800799024)(82310400026)(22082099003)(56012099003)(18002099003)(11063799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	QPAhmYgJ6wuEE81/oJ9g5GjWXz2y09bjfGs8pLkCw/X6PcdE+8YZ8RsJIP2us6TsddUn+yZXilGhQaBPz039JXsbkp6+Pxt/TeDQ+9KCUEUHr9JWL1XrOmzohxQWGpdUI9CxyleUpIHEhggln/fk7SQ7COi5QUkcXbbOz6T2DI6+l4MiabVtbnAZ0WFY+RpawQkWmoJJrh6fszAXXtNoUnyUpCycETfgBKSZg/3DTxIvmk+DzoIVpsG9gp0fmcON0sDorF/wL2fHFa0XL7uYzUcOHmsjFdG7Y/Dv2sZyIHhElUAPUfLcLZJlCpjqC+Vc0gIzZA8qEfJsPFxtXeDp4A1bczdZPTxlkkoapSnTjTBfhOg8q6/SxU/x1sRQ2VQsT92B6BwnyaxXt26QiOgmWo5KVy8aEevBTioMTqYe36lc6M2BPDqpp3iR0kq2fDPV
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2026 08:49:11.3041
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 347ce0ea-b97b-4933-d542-08deb0035661
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023D6.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6403
 
-From: Gautam Menghani <gautam@linux.ibm.com>
+>> @@ -253,8 +260,12 @@ static void amd_dump_ibs_op(struct perf_sample *sample)
+>>       pr_ibs_op_data3(*op_data3);
+>>       if (op_data3->dc_lin_addr_valid)
+>>               printf("IbsDCLinAd:\t%016llx\n", *(rip + 4));
+>> -     if (op_data3->dc_phy_addr_valid)
+>> +
+>> +     /* Use !zen4_ibs_extensions as a proxy for Zen3 and earlier */
+>> +     if (op_data3->dc_phy_addr_valid && *(rip + 5) &&
+>> +         (!zen4_ibs_extensions || op_data3->dc_lin_addr_valid)) {
+>>               printf("IbsDCPhysAd:\t%016llx\n", *(rip + 5));
+>> +     }
+> 
+> Does checking *(rip + 5) here suppress valid memory accesses to physical
+> address 0x0?
+> 
+> While this successfully hides kernel-zeroed addresses for unprivileged users,
+> it seems like it cannot distinguish between software-zeroed values and actual
+> 0x0 addresses. Could this silently discard valid diagnostic data during
+> privileged profiling sessions if an actual hardware access to physical page 0
+> occurs?
 
-Update the hcall list with the hcalls in bcc's ppchcalls script [1].
+This doesn't seem like a genuine concern. The first physical page is reserved
+on x86 systems, so normal workload should never access it.
 
-[1] : https://github.com/iovisor/bcc/blob/master/tools/ppchcalls.py
+  $ head -1 /proc/iomem
+  00000000-00000fff : Reserved
 
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
- tools/perf/scripts/python/powerpc-hcalls.py | 86 ++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
-index 8b78dc790adb..f69a1d229526 100644
---- a/tools/perf/scripts/python/powerpc-hcalls.py
-+++ b/tools/perf/scripts/python/powerpc-hcalls.py
-@@ -112,11 +112,12 @@ hcall_table = {
- 	420: 'H_CREATE_RPT',
- 	424: 'H_REMOVE_RPT',
- 	428: 'H_REGISTER_RPAGES',
--	432: 'H_DISABLE_AND_GETC',
-+	432: 'H_DISABLE_AND_GET',
- 	436: 'H_ERROR_DATA',
- 	440: 'H_GET_HCA_INFO',
- 	444: 'H_GET_PERF_COUNT',
- 	448: 'H_MANAGE_TRACE',
-+	456: 'H_GET_CPU_CHARACTERISTICS',
- 	468: 'H_FREE_LOGICAL_LAN_BUFFER',
- 	472: 'H_POLL_PENDING',
- 	484: 'H_QUERY_INT_STATE',
-@@ -135,11 +136,17 @@ hcall_table = {
- 	644: 'H_ADD_CONN',
- 	648: 'H_DEL_CONN',
- 	664: 'H_JOIN',
-+	672: 'H_VASI_SIGNAL',
- 	676: 'H_VASI_STATE',
-+	680: 'H_VIOCTL',
- 	688: 'H_ENABLE_CRQ',
- 	696: 'H_GET_EM_PARMS',
- 	720: 'H_SET_MPP',
- 	724: 'H_GET_MPP',
-+	732: 'H_REG_SUB_CRQ',
-+	736: 'H_FREE_SUB_CRQ',
-+	740: 'H_SEND_SUB_CRQ',
-+	744: 'H_SEND_SUB_CRQ_INDIRECT',
- 	748: 'H_HOME_NODE_ASSOCIATIVITY',
- 	756: 'H_BEST_ENERGY',
- 	764: 'H_XIRR_X',
-@@ -147,7 +154,84 @@ hcall_table = {
- 	772: 'H_COP',
- 	788: 'H_GET_MPP_X',
- 	796: 'H_SET_MODE',
-+	808: 'H_BLOCK_REMOVE',
-+	856: 'H_CLEAR_HPT',
-+	864: 'H_REQUEST_VMC',
-+	876: 'H_RESIZE_HPT_PREPARE',
-+	880: 'H_RESIZE_HPT_COMMIT',
-+	892: 'H_REGISTER_PROC_TBL',
-+	896: 'H_SIGNAL_SYS_RESET',
-+	904: 'H_ALLOCATE_VAS_WINDOW',
-+	908: 'H_MODIFY_VAS_WINDOW',
-+	912: 'H_DEALLOCATE_VAS_WINDOW',
-+	916: 'H_QUERY_VAS_WINDOW',
-+	920: 'H_QUERY_VAS_CAPABILITIES',
-+	924: 'H_QUERY_NX_CAPABILITIES',
-+	928: 'H_GET_NX_FAULT',
-+	936: 'H_INT_GET_SOURCE_INFO',
-+	940: 'H_INT_SET_SOURCE_CONFIG',
-+	944: 'H_INT_GET_SOURCE_CONFIG',
-+	948: 'H_INT_GET_QUEUE_INFO',
-+	952: 'H_INT_SET_QUEUE_CONFIG',
-+	956: 'H_INT_GET_QUEUE_CONFIG',
-+	960: 'H_INT_SET_OS_REPORTING_LINE',
-+	964: 'H_INT_GET_OS_REPORTING_LINE',
-+	968: 'H_INT_ESB',
-+	972: 'H_INT_SYNC',
-+	976: 'H_INT_RESET',
-+	996: 'H_SCM_READ_METADATA',
-+	1000: 'H_SCM_WRITE_METADATA',
-+	1004: 'H_SCM_BIND_MEM',
-+	1008: 'H_SCM_UNBIND_MEM',
-+	1012: 'H_SCM_QUERY_BLOCK_MEM_BINDING',
-+	1016: 'H_SCM_QUERY_LOGICAL_MEM_BINDING',
-+	1020: 'H_SCM_UNBIND_ALL',
-+	1024: 'H_SCM_HEALTH',
-+	1048: 'H_SCM_PERFORMANCE_STATS',
-+	1052: 'H_PKS_GET_CONFIG',
-+	1056: 'H_PKS_SET_PASSWORD',
-+	1060: 'H_PKS_GEN_PASSWORD',
-+	1068: 'H_PKS_WRITE_OBJECT',
-+	1072: 'H_PKS_GEN_KEY',
-+	1076: 'H_PKS_READ_OBJECT',
-+	1080: 'H_PKS_REMOVE_OBJECT',
-+	1084: 'H_PKS_CONFIRM_OBJECT_FLUSHED',
-+	1096: 'H_RPT_INVALIDATE',
-+	1100: 'H_SCM_FLUSH',
-+	1104: 'H_GET_ENERGY_SCALE_INFO',
-+	1108: 'H_PKS_SIGNED_UPDATE',
-+	1116: 'H_WATCHDOG',
-+	# Platform specific hcalls used by KVM on PowerVM
-+	1120: 'H_GUEST_GET_CAPABILITIES',
-+	1124: 'H_GUEST_SET_CAPABILITIES',
-+	1136: 'H_GUEST_CREATE',
-+	1140: 'H_GUEST_CREATE_VCPU',
-+	1144: 'H_GUEST_GET_STATE',
-+	1148: 'H_GUEST_SET_STATE',
-+	1152: 'H_GUEST_RUN_VCPU',
-+	1156: 'H_GUEST_COPY_MEMORY',
-+	1160: 'H_GUEST_DELETE',
-+	# Platform-specific hcalls used by the Ultravisor
-+	61184: 'H_SVM_PAGE_IN',
-+	61188: 'H_SVM_PAGE_OUT',
-+	61192: 'H_SVM_INIT_START',
-+	61196: 'H_SVM_INIT_DONE',
-+	61204: 'H_SVM_INIT_ABORT',
-+	# Platform specific hcalls used by KVM
- 	61440: 'H_RTAS',
-+	# Platform specific hcalls used by QEMU/SLOF
-+	61441: 'H_LOGICAL_MEMOP',
-+	61442: 'H_CAS',
-+	61443: 'H_UPDATE_DT',
-+	# Platform specific hcalls provided by PHYP
-+	61560: 'H_GET_24X7_CATALOG_PAGE',
-+	61564: 'H_GET_24X7_DATA',
-+	61568: 'H_GET_PERF_COUNTER_INFO',
-+	# Platform-specific hcalls used for nested HV KVM
-+	63488: 'H_SET_PARTITION_TABLE',
-+	63492: 'H_ENTER_NESTED',
-+	63496: 'H_TLB_INVALIDATE',
-+	63500: 'H_COPY_TOFROM_GUEST',
- }
- 
- def hcall_table_lookup(opcode):
--- 
-2.53.0
-
+Thanks,
+Ravi
