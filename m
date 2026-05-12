@@ -1,142 +1,112 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BF937E2FD
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 15:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778599522; cv=pass; b=u9C6u2/NVSMkcwD3DA8cD+BiiD1T/AOmXNUNz9tm3Et53yU1z9T9UIFaA9+G8qXCMubzg1XY8o2DPa40vdVSj9tIk4r4kNMxsXIiKKk+J9r38VIs7TlzwXGL5jMmlOrPTbHYS5AiQ80ib6l5hnQIk6DBKEZeHAYCMWsRaHhkT2c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778599522; c=relaxed/simple;
-	bh=uqQR5A+NApAFfcJB/0uAzfApelqazJ7yoMmqs7u1qKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JaQmmWrkUKdO4/obV2P4bDLvv2vy7KReMhs/5xjPc2648tIs3TK3V7WBcN1iy2JnqAIq6aNmkPz8qCrAbLFm8dFvCtl5jvdaOuf6g+0eYuPCUa7Flb3v8QO0fu9M57i6KpEn54ecaVwCTmEp9jrZQu9W0PBNMLjDRR1kaGTUZGk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pCy0abPU; arc=pass smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C49838888E
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 16:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778602684; cv=none; b=jYn95pZoXdO1GFWMfpj8icVq17WIF/vAA46fwsrR6Bv2LXvlf7rYCJMLXHzxnTI5ecCmxAW124zbxWMcwWRl1TNrBDqyodhhJIqvlpwTas+7coLPDTytgMP86Rt+cK/N4Lh6cRIRYgraqhnP94Bj/J6DFqETj+N13t64biYT4mA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778602684; c=relaxed/simple;
+	bh=m7z9Z4sYN0opQKuI3E1x7eWvBvgZZGHly/GpE05aOE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7cPzRPUPsiRocFT9LM+d1He8oQW6bauVz318EoePedDOZwYXlIiX9SuvgMjLd5dYcWu0vRDsgDTKK6EvfrGq9lEk+jKD82WcFN15A8XIADYx9ICINJ551jB2SHfeGym0IIoYf0xAZVoUb/ipJGJQmcgado9X2xuT487aqs2+7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VFV94re+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pCy0abPU"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so735ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 08:25:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778599520; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FXSgWlH8T7t2deaG+DfYvzbeMoYbUuVxQoo6J/+XheyqiqgjPP6NIuH1rDfeZm88ay
-         thFcn5DHcJIoobX48G4o5NoKzj2i9I8Z3nV9SD9GTu/DYVbdbs4QiJQsJhbhgALV2LQu
-         0FKMW7JJsPvw1Rcdq6K6nS4wXFwPKuivWXqD34YvZ/f8Q90vNfndjDWpzvnS4kVayfoX
-         +8CQcPCIiXjRV7tvUxU76fwN7i8Pwempyfh4N1ZYQC3+1e12Tva7MfruQXtI7JuqefWR
-         ExW+uOS/Fu1WU18C+pVg5rLmA5a9rWkIWbORHcHGzeJr02esxoSwqSNqEPgfoEZDD8Ch
-         +xHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pCF8EF9uhuCXnTADA0Lz5Q0Xn3rxqcJFaJu6fvaWxf8=;
-        fh=PEbx8RKpkibU8PTtV+g8A5OGNj+rmsNb4SsiunPsSmo=;
-        b=ekhf/aDc+PRHztJc3i/61KQ4bNsjGfZ6u3SHKLIN65EsUDE5qZCbpDOL+tv8cHSRdJ
-         FQBypD9h7OdKDJltGU7xOblg7kvbMJrQKuTCf6trKwCIPUVY1MWjg2Sp+v8EtrzNQ5qS
-         r+MdHURUv0p0Yo8ROHCxqeXp8RtxmTowj/ALuy4PDbAXwqCQhgsMslWQHfgE7GyOwP6z
-         NdAjViYyA0aBJ5LlQyXET+Hu987ux41Ua24ozbaOGVI/UfByygl03C3Xc6DlBpTtftWd
-         zgnEv4/OnyLppLT6q2BJ8XVrsX4MC+Kg9oocqqoTnL7RNDTuVfFo7ooeminOKss/x8Hc
-         ++uQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778599520; x=1779204320; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pCF8EF9uhuCXnTADA0Lz5Q0Xn3rxqcJFaJu6fvaWxf8=;
-        b=pCy0abPUUGjIi2+HFAV6vm+hGIvyydbtmEM4RbPPsG4HKvjTIaI/4CRo2OT9egLr1Z
-         tGGePN7kW7pZnTR3uzmpvXCHNAaLWn02A10nCXc+wE1hVwka/y/inbLXCh1uG2SpufzS
-         UlQ/KlKXrK56PzO7LaCbJnyDF4vitWdl8qvp1abZxKXdWJa5Xpt593cjck4JYBgC2R4U
-         Gb/7DYhToWXDnD9kvzuR/AUQQV9zYNz3uZEewB9iGj6ReXlKlRbvOLkbqS3DdKkzCCoQ
-         sLAg0oYGVP3VTM0Ba9gr7j5nrwaBLghMWi+a+0xjD/waCef5TKa4j95+dJY0MCAwbHPj
-         59BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778599520; x=1779204320;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pCF8EF9uhuCXnTADA0Lz5Q0Xn3rxqcJFaJu6fvaWxf8=;
-        b=n7b82Fj78WbPcbYkYeLaY9WkDN39FCWhtq2dJARdAXPzcDmsSijwA0ZGbpwupFFCqD
-         x1+Npx3WjWu0L1y7kMUWrARvrWbW9GI3L02ox37Fuc+d9ig2nXRtwnWhfslUQ1vn2uba
-         wSzLsd8g54YM/DjyVdVCuXmx03Tl16vf2Ug6DSzucExH7PVoEoAmfW5FZEExzd+82vke
-         VDvtWIMkaI4vIW1s098+FalO/2XK89elv2+r6KamDTz1R+swlLic/Y6qqZgq36HZhD/Z
-         6mTV9GUWleb2VMg5MWUdV1wpHHgivHp7stsgjVGfEmxe1MirR4jy5PfVMdIT5MHqNOfb
-         4NJA==
-X-Forwarded-Encrypted: i=1; AFNElJ9Ugkqs9DJH+CZpwVElOuj/lyZBFfBiFur/tjFMKgBj/sBT2pFtTDNGtfoAm3lxVL7ADLaeGa4JYOxkCiiYEN2H@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjuiN0vn0UMgk13kx2gdQgGeBI3QAug93ZY1ee31NulvfCm1UV
-	Zdjt1f4yRMuMnZSGyGi6bZarWAzy0Olwe5DRySb2jDR4qTU7krouojwWONHQNsiCAUI6M3uOTqm
-	hHk4OYsWRKrTHXIYNEhKmPqKgLEM5duV8mDIWLGLJ
-X-Gm-Gg: Acq92OEMWTiEtdnxB7ltiJhDxtqTTAgaEDB+beaCumMmWJ1iy8sfHIU4VakMWyYzrLl
-	uDD1r4jXQ36Wiw0WL37y/sAHdp67pebqRnzZsu5GFEqqK4Uup6E8D3vg4J4UlNggUVQ7CX+DhJz
-	Z8EA/wPm8R+AxlyDVf6VQ21SiTulG+6V8vUd5DxZWOqsMINx4rPE50nK/Lr+/omXjyOi6Ax+qD/
-	kJH8Cy9LJv1i4s7kjHc72cFXhjBPcufjliinMuOhrv5p+LCFy7Kq4S3sKYFDu9RW0IOAsBs4qQr
-	Y9BFGfqYRRqrfo+J9oBMogd6RUE9guoKf84LEFWWB7uVQZPu
-X-Received: by 2002:a17:902:d2c5:b0:2b2:70ba:305c with SMTP id
- d9443c01a7336-2bd02d427d7mr2646245ad.8.1778599519898; Tue, 12 May 2026
- 08:25:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFV94re+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778602682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nxcKNVqiUEb6JNi/jIVIymwa8BQUKmPeEdVzIc63rZk=;
+	b=VFV94re+qSaqAXX1S/IJHbwUriTXz2cWl4p6KbW3JpacejG9WbyO2yx03Ni9N7WExGbL3/
+	ZvS9y/7ej3xdjnk0Os2XWdGGrodmjE/G6c7Dr2Hndbgmi1Ur5aXPl1TB/9CODXbezk6Qz7
+	9C2HF9Y7JczipNf7fLC3cpkVhDXoaVg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-ftWU47PpMumNXoDqS6MSmA-1; Tue,
+ 12 May 2026 12:17:56 -0400
+X-MC-Unique: ftWU47PpMumNXoDqS6MSmA-1
+X-Mimecast-MFC-AGG-ID: ftWU47PpMumNXoDqS6MSmA_1778602674
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 645FF18005B8;
+	Tue, 12 May 2026 16:17:53 +0000 (UTC)
+Received: from fedora (unknown [10.44.48.223])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D932E1955D84;
+	Tue, 12 May 2026 16:17:47 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 12 May 2026 18:17:52 +0200 (CEST)
+Date: Tue, 12 May 2026 18:17:46 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Rosen Penev <rosenp@gmail.com>, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:UPROBES" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2] uprobes: Use flexible array for xol_area bitmap
+Message-ID: <agNSqoie5l0jdgNx@redhat.com>
+References: <20260511225648.27886-1-rosenp@gmail.com>
+ <agMPMAnsCH2ZRhf5@redhat.com>
+ <20260512234857.44e2b0fafa4961900fdb7246@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512120408.59332-1-gautam@linux.ibm.com>
-In-Reply-To: <20260512120408.59332-1-gautam@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 May 2026 08:25:08 -0700
-X-Gm-Features: AVHnY4KscqlZT4Uqne60gnuuNIQFVcY_1jsFyYGu2W1Zp30pR_YDSXLM1EVq4T4
-Message-ID: <CAP-5=fUzQRCpF4U_0dnPxrx5sa3U-XbpLzn=c=EbeRsCY2=dPw@mail.gmail.com>
-Subject: Re: [PATCH] perf kvm stat: Update the exit reason mappings
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260512234857.44e2b0fafa4961900fdb7246@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, May 12, 2026 at 5:04=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.c=
-om> wrote:
+On 05/12, Masami Hiramatsu wrote:
 >
-> Sync the exit reason mappings with the mappings in trace_book3s.h
+> On Tue, 12 May 2026 13:29:52 +0200
+> Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> > >
+> > > -	area = kzalloc_obj(*area);
+> > > +	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
+> >
+> > The downside is that kmalloc will use kmem_cache with ->object_size = PAGE_SIZE * 2,
+> > almost half of the allocated memory won't be used...
+>
+> Hmm, is the bitmap so big?
+>
+> #define UINSNS_PER_PAGE			(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)
+>
+> And even on arm64,
+>
+> #define UPROBE_XOL_SLOT_BYTES	AARCH64_INSN_SIZE
+>
+> So if PAGE_SIZE is 4k, UINSNS_PER_PAGE is 1k, its BITS_TO_LONGS will
+> be 1024/64 = 16. So 128 bytes. So the object is allocated from
+> object_size = 256 ?
 
-I see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arc=
-h/powerpc/kvm/trace_book3s.h
-Would it make sense to have a copy in perf and use the check headers
-code to keep them in sync?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/check-headers.sh
+Indeed you are right.
 
-Could you add the commits that add the H_VIRT and H_FAC_UNAVAIL
-definitions? I don't see them in Linus' tree yet.
+Sorry for the noise and thanks for correcting me! I can't even explain how can
+I came to conclusion that object_size can be greater than PAGE_SIZE with this
+change ;)
+
+So I think the patch from Rosen is fine.
 
 Thanks,
-Ian
 
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> ---
->  tools/perf/util/kvm-stat-arch/book3s_hv_exits.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h b/tools/perf=
-/util/kvm-stat-arch/book3s_hv_exits.h
-> index 2011376c7ab5..2688ca7d0399 100644
-> --- a/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h
-> +++ b/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h
-> @@ -26,8 +26,10 @@
->         {0xe00, "H_DATA_STORAGE"}, \
->         {0xe20, "H_INST_STORAGE"}, \
->         {0xe40, "H_EMUL_ASSIST"}, \
-> +       {0xea0, "H_VIRT"}, \
->         {0xf00, "PERFMON"}, \
->         {0xf20, "ALTIVEC"}, \
-> -       {0xf40, "VSX"}
-> +       {0xf40, "VSX"}, \
-> +       {0xf80, "H_FAC_UNAVAIL"}
->
->  #endif
-> --
-> 2.53.0
->
+Oleg.
+
