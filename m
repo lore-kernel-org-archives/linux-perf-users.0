@@ -1,109 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81C0346A04;
-	Tue, 12 May 2026 14:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C68396B8C;
+	Tue, 12 May 2026 15:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778597343; cv=none; b=ctwsI9n1+XuNiSIFmVx7IX/CLAv2e7Khy+ftKHixEInmQPC41JiUxtfsefcHhBLJ1sHVUb+M64sFDD3pEicjSME87XZd1mPuP/2lOHAy9BJkDd3l7rY/jkL+NBLiaRrMzvm4JcW5MQXSlo9Y9dReR273zNj1hoOrPpol77UkXc0=
+	t=1778598004; cv=none; b=cn7tYFEopnHMIKciRyLmV09K9Z7+/3uKNxn+r5RJW0//n6g4kgd+hRtRMYzAO36lbErwECTe7JqPzpE9ItbGHhtu0mmWat6Z8/HS8GKx+9rqUfyyDEKKVd2NyQJIUDHAa6MBc6VE3QafMOC8JroNJp9fEnlSlXSu0eTfLLu0BQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778597343; c=relaxed/simple;
-	bh=TS+7ENwIB8mkF7jAT+mbjKowWfXS5h3LHtn9effebdE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=k2EtL33kRxi2f0lg7n6LKRaLYWT17jR2NSnJZgvM0wBkB9gFGR7aJlCRY2rCUYMS8w6RjNpzjoNGjU6xcDpo2v4taZ2k1ilIfsjnn+dU0yQd1aPZ4t5zY1rPz6o3MNKpCkGe6FyPriQFDsdU0dQ+PCix5SHOKzSzRcy9VZoNcNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrvYMDNf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778598004; c=relaxed/simple;
+	bh=NWjULvnU8a6sPqFhYgaMooTgTXZAkxXdJyvFa0WZLl8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kaMmLB5pxsvs/tMUqUTGzDH2kmoX3pWpeGjsEyd8Nz2V6Ikyz/aluLmRf0wzrXCDiX3xp4ZIlVol1IBQNrtwXGoZbpT/47jIXevOcqhHTdbf3faLrVE4mDovmxA3b8B5gmb/BhzPn4xkI8j5wGyNuLE2o/r5JSKmliEBcygC/Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HOomwG/b; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrvYMDNf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE093C2BCF5;
-	Tue, 12 May 2026 14:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778597343;
-	bh=TS+7ENwIB8mkF7jAT+mbjKowWfXS5h3LHtn9effebdE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HrvYMDNfAQxcTIIV/PiAJq84nbXVXJd0XI/1e7Bd0kPHls+KsZCNSX+l3ILTcstWr
-	 UzjbpMsrxntnO37JTcPiwa/pi1Nsn8fVt43/NZUHQMuYcqJhK0/S3K8k1o27R0+nJ1
-	 qCL8hwAaz2KwLr4bxVKOc5RDxLehsxKbMnlf3FgG8V+9Q2giiMbrt+bYoylbdcErOq
-	 D8fI5u6jUOpGv5uScD6ywB0XDr/vutDelOC8g2S3AAKJbgtEcRgpSuHdVJDVGg6y2G
-	 hjqbgMyskjkFurSPysHcQpL7VdeNux0IMhs02Otqm1G3nRgcaYm3Vp0q15/MU6wya1
-	 cr2vNfkcyfHdw==
-Date: Tue, 12 May 2026 23:48:57 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Rosen Penev <rosenp@gmail.com>, linux-kernel@vger.kernel.org, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- "open list:PERFORMANCE EVENTS SUBSYSTEM"
- <linux-perf-users@vger.kernel.org>, "open list:UPROBES"
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] uprobes: Use flexible array for xol_area bitmap
-Message-Id: <20260512234857.44e2b0fafa4961900fdb7246@kernel.org>
-In-Reply-To: <agMPMAnsCH2ZRhf5@redhat.com>
-References: <20260511225648.27886-1-rosenp@gmail.com>
-	<agMPMAnsCH2ZRhf5@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="HOomwG/b"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4DAC1691;
+	Tue, 12 May 2026 07:59:56 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 912C53F836;
+	Tue, 12 May 2026 07:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778598001; bh=NWjULvnU8a6sPqFhYgaMooTgTXZAkxXdJyvFa0WZLl8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=HOomwG/bUKAYpgTw78IfkCu7zBjWwEAbV9Bcvp/HZugnd4vNfHZ5jmA/3WB/SzqYO
+	 BEFVbVOtvyqfhclkSij8jzCqoqxlegqIBTZRIM1zSQnIcxPLA7nrt5ed+Qbr988c5L
+	 HMH+LW7cU21EcZ5PoMsZf0YJYzqGVBe6b28UVs9I=
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 0/2] perf: Revert direct PMU stop for refresh limit
+Date: Tue, 12 May 2026 15:59:51 +0100
+Message-Id: <20260512-arm_cs_clean_perf_handle-v1-0-75ff373ecd22@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGdAA2oC/42NXQqDMBCEryL73BST+FN96j2KhLiudUETSYq0i
+ Hdv6gn6+A0z3+wQKTBFaLMdAm0c2bsE8pIBTtY9SfCQGFSuqrxQjbBhMRgNzmSdWSmMJtWGmUR
+ daUStG5RjCWm+Bhr5faofXeKJ48uHz/m0yV/6h3STQgrda9vURd7fSnVP1Sv6BbrjOL6Iw7nzv
+ gAAAA==
+X-Change-ID: 20260429-arm_cs_clean_perf_handle-763cc339c1f5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778597999; l=1638;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=NWjULvnU8a6sPqFhYgaMooTgTXZAkxXdJyvFa0WZLl8=;
+ b=UYUkogu4jL1N1ROTPW+iYNkV3eI+mCN0hp5ZiSITmtzAqPghr3sEKw1Tyv/5+yx1ruri6kr2C
+ JrA7oXHjKOgDPDLXnwsYfhfOisSaVqoUsY0W9vYHPjtC6rUEPZU8i8B
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Tue, 12 May 2026 13:29:52 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+Commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage") added a
+direct pmu->stop() call when the refresh limit reaches zero. The change
+was based on a test program [1] that reported missing POLL_HUP
+notifications.
 
-> On 05/11, Rosen Penev wrote:
-> >
-> >  struct xol_area {
-> >  	wait_queue_head_t		wq;		/* if all slots are busy */
-> > -	unsigned long			*bitmap;	/* 0 = free slot */
-> >
-> >  	struct page			*page;
-> >  	/*
-> > @@ -117,6 +116,7 @@ struct xol_area {
-> >  	 * the vma go away, and we must handle that reasonably gracefully.
-> >  	 */
-> >  	unsigned long			vaddr;		/* Page(s) of instruction slots */
-> > +	unsigned long			bitmap[];	/* 0 = free slot */
-> >  };
-> >
-> >  static void uprobe_warn(struct task_struct *t, const char *msg)
-> > @@ -1755,18 +1755,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
-> >  	struct xol_area *area;
-> >  	void *insns;
-> >
-> > -	area = kzalloc_obj(*area);
-> > +	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
-> 
-> The downside is that kmalloc will use kmem_cache with ->object_size = PAGE_SIZE * 2,
-> almost half of the allocated memory won't be used...
+However, the test program used SIGIO, which is a standard signal and can
+be coalesced. As a result, userspace may miss signal delivery even
+though the signal was generated by the kernel. This is expected
+behaviour for standard signals.
 
-Hmm, is the bitmap so big? 
+This series adds a selftest for the PERF_EVENT_IOC_REFRESH limit using a
+real-time signal, which guarantees queued signal delivery and confirms
+that POLL_HUP notifications are delivered reliably on arm64.
 
-#define UINSNS_PER_PAGE			(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)
+With that verified, the direct pmu->stop() call introduced by commit
+18dbcbfabfff can be reverted, since event disabling is already handled
+through perf_event_disable_inatomic().
 
-And even on arm64, 
+[1] https://lore.kernel.org/lkml/aICYAqM5EQUlTqtX@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com/
 
-#define UPROBE_XOL_SLOT_BYTES	AARCH64_INSN_SIZE
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Leo Yan (2):
+      selftests/perf_events: Add test for refresh limit signals
+      Revert "perf: Fix the POLL_HUP delivery breakage"
 
-So if PAGE_SIZE is 4k, UINSNS_PER_PAGE is 1k, its BITS_TO_LONGS will
-be 1024/64 = 16. So 128 bytes. So the object is allocated from
-object_size = 256 ?
+ kernel/events/core.c                               |   1 -
+ tools/testing/selftests/perf_events/.gitignore     |   1 +
+ tools/testing/selftests/perf_events/Makefile       |   3 +-
+ .../testing/selftests/perf_events/refresh_signal.c | 120 +++++++++++++++++++++
+ 4 files changed, 123 insertions(+), 2 deletions(-)
+---
+base-commit: 50897c955902c93ae71c38698abb910525ebdc89
+change-id: 20260429-arm_cs_clean_perf_handle-763cc339c1f5
 
-Thank you,
-
-> 
-> But technically the patch looks correct so I won't argue.
-> 
-> Oleg.
-> 
-> 
-
-
+Best regards,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Leo Yan <leo.yan@arm.com>
+
