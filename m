@@ -1,56 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011CF3CB2D9
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 05:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720B63CAE60
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 05:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778564179; cv=none; b=R7ETztqUcA6QEtCR3h0oV/PvBD/RvR7tAQ/eJoyGX3r7tJLygIkBOlk9lCWaj54FGdN/a7T4OE+0cqzxGGLKuvpbgXWGm9BOHtVhko1pJ+4KsGYBLAa8WvxjSI13LnMZ/ZNsh7v9VSRtDMnPDhLwvkzHSWCTAEH7AQAFqV4Rhtw=
+	t=1778564182; cv=none; b=rVMsFbCjT3WgDb65iX7IxzzzQrb1pn3Tnd59zekGxAhqTkmbBKD/vBhFIRSqdtpUfhz7n5M3HXxLyf4wfX7EjlCf7O4BvxwPZLZ8xZUAFbHK2xUOPs4qxuGCqT1XCHzN1VZl8IovqZ8HeGb+2+8Y1MgIo63FaaG3X83rR3x3KhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778564179; c=relaxed/simple;
-	bh=eSR/2YHL7yHY1u1oa1YvO1Hm3QqYx8d5R5pe2mgYJgo=;
+	s=arc-20240116; t=1778564182; c=relaxed/simple;
+	bh=DnEclBwpdzBTw5vTtiZjQ60kQ6Jorn8eTsd6baNkr6s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sYEw3jTS9N3Xp8I+c9HmsrNk8JbYwggX4MGx/wzX1DYcmY3hev5rDgaxrDHS0ErMYOb0ek8dXLTHRWJRzK1CWSqQgyGf0CVGIhniqsaKow80H0fs7GSTIJ8+eIbwfWrcDlDE3cg1blS3b85eOBojah4P4SqKKXlDtk/7T01t8iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S6uguPlD; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=dwh6s+D3soi60ZyiDB3PE+wqJmJFOSz9ywiIO7B3kFS/klcTyPaU3nSbfDHntiYwTm4w5CvQdlzOJy9evK6vV+jRtDzHxYEhjJrjm4JIToTDfXu6dwxEMLe+/WM5IaIZ22W5kM4eivOTa6D6wEB5+mC/v2XMseXpmcZfxGgCafg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IQmPDZW+; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S6uguPlD"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so8258886eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 22:36:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IQmPDZW+"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-132a9b34697so9292038c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2026 22:36:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778564172; x=1779168972; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J2I1HGOzLBMWUVYaBYmdtAHomd8EmMW7DSi+krXpfS4=;
-        b=S6uguPlDR3BDHRB6xsbyb+gyEFqAV/b9ExvvujKhDKWMRIhENp3QXuzayJlV22DBPp
-         I9TqnKFKW27WLEAcuE/hMjJoeKA8c05b9N6O0Q50f+S0arCp9q+eIc1fSjlvNIPncPD9
-         +LxilwMdEbVJtN4CihacDnGOYfRfvfhedQqPseC1Eb6K+xHdvN2LxIKUS4cViN0d/3AI
-         mTtmdRaWilrgpeV+Ot3cxYkiHO2QzYt9++4TnXYiH3lKSAcUnZC9QK34leX+DD7+nlZH
-         1gJJK+l7HSIMEaM09FaHJ0VIU5nzwGdAKbtFwtMc3pGIfPbbB6QJiJUOynZpUQ8D2plT
-         HlIQ==
+        d=google.com; s=20251104; t=1778564174; x=1779168974; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUvNwmxnbu0E2pCLD2DT2jtlgys704GwN1n3MsVULAU=;
+        b=IQmPDZW+D+uQhsEHUJfb4Fm6PJztVdXPimiPWmQ4XtbDcej8WtXxeAxuz10bovmmgW
+         TVhJ9VwnTdnbaDr7O/YovzO/ae3PMdoeZ3uIgupDswuP4kCIzNupkC+BVQSkRPiG753y
+         iChY71pby5SNCbRRUOdx1Muw356qdpDSH855A41umlsAv9hHnSKLepSGMvnrtyDhA8Na
+         jrkO43fktFAUP4E/fQVJkBi4Aho30r+YQFk+3NhvN93yTyNtdCbn2WzcCtFIH7FB8J03
+         VCGFiyWRlrB1K09nXeVHFdnNwJKUWUb7m+TBsQfRHcLY7xOyXI5uC7za1xOFAdO4RfKx
+         GY1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778564172; x=1779168972;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=J2I1HGOzLBMWUVYaBYmdtAHomd8EmMW7DSi+krXpfS4=;
-        b=Kzgzkq6IABl8bHMlaeCl4lVszSX2/UQGW1CdZ5sclOkRyf1e8EKxvzaZgcSySMh1f9
-         AUkN3e/vBltReEJxJjncUBAog16AQl0jPQRno7h3bNSoJILBC9CiZJRZWc2QexP9RBry
-         ApLBW5Iz3CYUKwHWdqZ8+5nc7JsqALCram+dEnFY8BKieAssFiTSkaApTaYd6X5EZO8F
-         UZyH1U4YqL9o/bDZFQG0MpKr8ev9WV3G9RQfK7blbaord4NnaJiW8hUAA69hVAIfv2BZ
-         Mc7yQiFAiRY9a7dmFKJAI3AH+LtwGmBMT5fL3NScMqQw72HGKzUA+RG0VTsg+C9xoFdT
-         GFjA==
-X-Forwarded-Encrypted: i=1; AFNElJ9LiY6qLuFir4dZ6jUgpPSxrz2K/iqfWB9hsbY+tffAwUVux3SPrhGuibr6psvirlOo0lLZj+opPdc5o1W7F8pK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyIKVbM5bXMx/jSdFi/8wTYSvIgsEkpNB6T2rP7bjYLUJ//8yV
-	McrQKpGEVgTsyvYi7iT5KvTuRvaVFBhWamJBChzqGtOcHlRWKYifggMSSwnelGdoKIFXkV8dKSb
-	u/j4ceG29rw==
-X-Received: from dybgn2.prod.google.com ([2002:a05:7301:2502:b0:2f9:af7:5043])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:df4b:b0:2d2:129a:1694
- with SMTP id 5a478bee46e88-2f54d79b993mr13180256eec.18.1778564171470; Mon, 11
- May 2026 22:36:11 -0700 (PDT)
-Date: Mon, 11 May 2026 22:35:36 -0700
+        d=1e100.net; s=20251104; t=1778564174; x=1779168974;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUvNwmxnbu0E2pCLD2DT2jtlgys704GwN1n3MsVULAU=;
+        b=QJ6toquyHYhgNiS2XgiaeWCfIpBy7xbsG7Byt9FZATfJhpAUlg25lGcUBzADHF+1aY
+         PO6322/JC7BY4ogbIf+mldant+2+j9fSZXEjRhfKsGF4IwqIL1U6WpRBa37+y2vMxTNK
+         Ke+U4nANMBUQr2vm05Squfa5jtA6qRR0MvbDIlOwHEohroNLT/W9kwE1yR1p8qcPlQ9J
+         xKODTdVZnbk66wh8261VZTvE2j4DIyUs3QzRzkgGnNOJ/J4PjpGkL+abj9G7NmqpzhM8
+         OMSvTMHXh9MIhJxZMszXR+0/Um5/jOpsURjC8+6ArEd+LYEsxOY11h5gO7PoK5qena4N
+         Zd9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+MxwgYdckuw/HAi9Qln38nvjMscCu2+jLJVDlCrDxCwSXJMvTlQLN1FSJuguODvn/FRwS++0m5pY0bDLagdt9M@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbbzCLs46JHxT37Xn7774uaj9khpWBCbc5RfqrZUq43dA9r2mW
+	nQp0TVfi2ItGmZMCHhEIhqcjPODoUdiM5xWPRVjp95dawKFtlmuXbJJDk0rPKQtUaIVmD29HZRI
+	PdkWlQtHd7g==
+X-Received: from dlbvv13.prod.google.com ([2002:a05:7022:5f0d:b0:128:cfd6:a3c6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6714:b0:128:ce44:be8f
+ with SMTP id a92af1059eb24-131965af197mr14924954c88.2.1778564173426; Mon, 11
+ May 2026 22:36:13 -0700 (PDT)
+Date: Mon, 11 May 2026 22:35:37 -0700
 In-Reply-To: <20260512053539.3410189-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512053539.3410189-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512053539.3410189-12-irogers@google.com>
-Subject: [PATCH v1 11/14] tools build: Integrate libdebuginfod into test-all
- fast path
+Message-ID: <20260512053539.3410189-13-irogers@google.com>
+Subject: [PATCH v1 12/14] perf pmu-events: Split big_c_string storage into
+ standalone compilation unit
 From: Ian Rogers <irogers@google.com>
 To: Quentin Monnet <qmo@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
@@ -84,109 +82,126 @@ To: Quentin Monnet <qmo@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
 	linux-perf-users@vger.kernel.org
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Bundling libdebuginfod into test-all.c allows Make to avoid an individual
-feature check sub-make fork during AST parsing. Short-circuit feature_check
-in Makefile.feature to instantly skip sub-make evaluations when a feature
-was already pre-detected by test-all.
+Currently, jevents.py emits both the massive 2.8 MB big_c_string literal
+and tens of thousands of compact_pmu_event struct arrays into a single
+pmu-events.c compilation unit. Compiling this giant file takes ~2.2 seconds
+on a single CPU core during Kbuild startup.
 
-Trade-offs:
-On some Linux distributions (e.g., Debian/Ubuntu), libdebuginfod-dev is
-packaged separately from libelf-dev and libdw-dev. If a user installs
-libdw-dev but omits libdebuginfod-dev, adding -ldebuginfod to BUILD_ALL
-causes test-all to fail, falling back to individual feature tests. However,
-on fully configured developer workstations, this successfully reclaims
-sequential startup latency.
+Refactor jevents.py to emit big_c_string into a dedicated
+pmu-events-string.c compilation unit. This allows Kbuild to compile
+pmu-events.o and pmu-events-string.o simultaneously in parallel across
+two separate CPU cores, preserving 100% string deduplication and zero
+dynamic ELF relocations while cutting C compilation latency in half.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature   | 6 ++++--
- tools/build/feature/Makefile   | 2 +-
- tools/build/feature/test-all.c | 5 +++++
- 3 files changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/Makefile.perf         |  4 ++--
+ tools/perf/pmu-events/Build      | 15 ++++++++++++++-
+ tools/perf/pmu-events/jevents.py | 20 ++++++++++++++++----
+ 3 files changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 2f192d3bf61b..d8febe5d5800 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -8,7 +8,9 @@ endif
-=20
- feature_check =3D $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(CC=
-)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" C=
-XXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$(L=
-DFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)=
-test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  ifeq ($(feature-$(1)),)
-+    feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
-CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
- CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
-(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
-S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  endif
- endef
-=20
- feature_set =3D $(eval $(feature_set_code))
-@@ -100,6 +102,7 @@ FEATURE_TESTS_BASIC :=3D                  \
-         disassembler-four-args		\
-         disassembler-init-styled	\
-         file-handle			\
-+        libdebuginfod			\
-         libopenssl
-=20
- # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
-@@ -125,7 +128,6 @@ FEATURE_TESTS_EXTRA :=3D                  \
-          clang                          \
-          libbpf                         \
-          libpfm4                        \
--         libdebuginfod			\
-          clang-bpf-co-re		\
-          bpftool-skeletons
-=20
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 704c687ed3ad..dc828523b50a 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -115,7 +115,7 @@ __BUILD =3D $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(p=
-atsubst %.bin,%.c,$(@F)) $(
-   BUILD_BFD =3D $(BUILD) -DPACKAGE=3D'"perf"' -lbfd -ldl
-   BUILD_ALL =3D $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=3D2 -=
-ldw -lelf -lnuma -lelf -lslang \
- 	      $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd \
--	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
-+	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null) -ldebugi=
-nfod
-=20
- __BUILDXX =3D $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,=
-%.cpp,$(@F)) $(LDFLAGS)
-   BUILDXX =3D $(__BUILDXX) > $(@:.bin=3D.make.output) 2>&1
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.=
-c
-index 1488bf6e6078..b6984236859f 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -146,6 +146,10 @@
- # include "test-libopenssl.c"
- #undef main
-=20
-+#define main main_test_libdebuginfod
-+# include "test-libdebuginfod.c"
-+#undef main
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d2e673d5e5be..98b6f9fda8d1 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -921,7 +921,7 @@ bpf-skel-clean:
+ pmu-events-clean:
+ ifeq ($(OUTPUT),)
+ 	$(call QUIET_CLEAN, pmu-events) $(RM) \
+-		pmu-events/pmu-events.c \
++		pmu-events/pmu-events*.c \
+ 		pmu-events/metric_test.log \
+ 		pmu-events/test-empty-pmu-events.c \
+ 		pmu-events/empty-pmu-events.log
+@@ -929,7 +929,7 @@ ifeq ($(OUTPUT),)
+ 		-name 'extra-metricgroups.json' -delete
+ else # When an OUTPUT directory is present, clean up the copied pmu-events/arch directory.
+ 	$(call QUIET_CLEAN, pmu-events) $(RM) -r $(OUTPUT)pmu-events/arch \
+-		$(OUTPUT)pmu-events/pmu-events.c \
++		$(OUTPUT)pmu-events/pmu-events*.c \
+ 		$(OUTPUT)pmu-events/metric_test.log \
+ 		$(OUTPUT)pmu-events/test-empty-pmu-events.c \
+ 		$(OUTPUT)pmu-events/empty-pmu-events.log
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index dc1df2d57ddc..f8f5ec7daa5f 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,7 +1,13 @@
+ EMPTY_PMU_EVENTS_C = pmu-events/empty-pmu-events.c
+ # pmu-events.c will be generated by jevents.py or copied from EMPTY_PMU_EVENTS_C
+ PMU_EVENTS_C	=  $(OUTPUT)pmu-events/pmu-events.c
++PMU_EVENTS_STRING_C = $(OUTPUT)pmu-events/pmu-events-string.c
 +
- int main(int argc, char *argv[])
- {
- 	main_test_libpython();
-@@ -178,6 +182,7 @@ int main(int argc, char *argv[])
- 	main_test_libzstd();
- 	main_test_libtraceevent();
- 	main_test_libopenssl();
-+	main_test_libdebuginfod();
-=20
- 	return 0;
- }
---=20
++ifeq ($(NO_JEVENTS),1)
+ pmu-events-y	+= pmu-events.o
++else
++pmu-events-y	+= pmu-events.o pmu-events-string.o
++endif
+ 
+ # pmu-events.c file is generated in the OUTPUT directory so it needs a
+ # separate rule to depend on it properly
+@@ -9,6 +15,10 @@ $(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+ 
++$(OUTPUT)pmu-events/pmu-events-string.o: $(PMU_EVENTS_STRING_C)
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
+ # Message for $(call echo-cmd,cp), possibly remove the src file from
+ # the destination to save space in the build log.
+ quiet_cmd_cp   = COPY    $(patsubst %$<,%,$@) <- $<
+@@ -224,6 +234,9 @@ endif
+ # and inputs are dependencies.
+ $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUT_DIR) $@
++	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUT_DIR) $@ $(PMU_EVENTS_STRING_C)
++
++$(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
++	@:
+ 
+ endif # ifeq ($(NO_JEVENTS),1)
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 3a1bcdcdc685..70a45e62f5d1 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -1422,6 +1422,8 @@ such as "arm/cortex-a34".''',
+   )
+   ap.add_argument(
+       'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
++  ap.add_argument(
++      'output_string_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=None)
+   _args = ap.parse_args()
+ 
+   _args.output_file.write(f"""
+@@ -1463,10 +1465,20 @@ struct pmu_table_entry {
+     ftw(arch_path, [], preprocess_one_file)
+ 
+   _bcs.compute()
+-  _args.output_file.write('static const char *const big_c_string =\n')
+-  for s in _bcs.big_string:
+-    _args.output_file.write(s)
+-  _args.output_file.write(';\n\n')
++  if not _args.output_string_file:
++    _args.output_file.write('static const char *const big_c_string =\n')
++    for s in _bcs.big_string:
++      _args.output_file.write(s)
++    _args.output_file.write(';\n\n')
++  else:
++    _args.output_string_file.write('/* SPDX-License-Identifier: GPL-2.0 */\n')
++    _args.output_string_file.write('/* Autogenerated by jevents.py */\n')
++    _args.output_string_file.write('const char big_c_string[] =\n')
++    for s in _bcs.big_string:
++      _args.output_string_file.write(s)
++    _args.output_string_file.write(';\n')
++    _args.output_string_file.close()
++    _args.output_file.write('extern const char big_c_string[];\n\n')
+   for arch in archs:
+     arch_path = f'{_args.starting_dir}/{arch}'
+     ftw(arch_path, [], process_one_file)
+-- 
 2.54.0.563.g4f69b47b94-goog
 
