@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E2F3E171E
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C73955E4
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778608021; cv=none; b=mvVoLheGpoLIuVXmSNXlYZvZVfuFQzzs+GXRA1vvRgiNlDnIN5xpx1d8LwKaRNbeU1RMfIKP1tzMtFIcETp/C0IP5EuxyCE4agBj6mSaVm+qwvn6tC42XPacrxMHP+PKOA3N/G6fdwEawO0866TAsvzDqhWAkvbQ7WPy6ofBclI=
+	t=1778608025; cv=none; b=DT+fVwOd0LsAAKJy+tHD0BFh0bAik9VPsebn7eTgAkG6a/YBaWj9kcCR2nuqQghiM3RF33kaLBu9xvTw2O/jXcUvGdrMjdXyEx59gP6bv2Gi7kvv3CO7AFZnVrlm/Sn0LyDd39RhY8XfewE06kqTo/zBBRUyl2wIhgRPrne3F/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778608021; c=relaxed/simple;
-	bh=AKSQH2siP4utMQ9xhh4jNh7yTLC8UkZ/sL2vSdtCUcw=;
+	s=arc-20240116; t=1778608025; c=relaxed/simple;
+	bh=/7TyOYbdEe9k68HYyv7dCCFzh+d6Q52A6z+ebAC5RwQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ksvUrQEWBHBx01LDnKdb+IU7YgyS+udkhi4BPVf4UO3CWUhyu+/EXPTVh2wIlQahJKtvV4S+f6KRixMYsZIii19I8a4vG9GzfMF1AeVegn2fT0ZNXPGpfyqmzrbCswB0oJ/lz93+WCtGe6BvAC7Ks1t1hZYltEhNNZZq+o+13JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AKS0up2I; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=OFkKj2wEccKtmYQkks1ey1MP0ccD5FTnJaz73rvP/l19DTdIhdcMAzlYa3PicipvJ/aeRE1NoSzQnof+wH4I9YaDcMZaYDIyOGZWkOgz5W35MflW4cDUf067jzsF9lYNndUgjWREDzhyn6VNeNjzxiEVPdYaVhznhGe6D0VT+KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wcBa1LXD; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AKS0up2I"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2fe1cf409a1so4219891eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 10:46:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wcBa1LXD"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1306c2f7037so5961956c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 10:47:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778608019; x=1779212819; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778608023; x=1779212823; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1yVcJX3ToKV+Wqq27E1R2W87lkjzMpr5Ak2bcYR9g3Q=;
-        b=AKS0up2Iw1nRWbPfURNvXx46HojS8Vpbvnfz2nOZsoc451WEzeTcs5BZcHVVU5SZW3
-         BbhFzZDd+Ok7aFLIxiZyOaf6e5YVxPKCyZVeh93aIif3gCP6iS4WL0Q7p1bB5Vx0IylB
-         cmLa5eAXEBUg/lYcMzNAiX5YdL3RN5mIyrAyQJ1oMcdqJHNawsiBlC5P84TCscyQtHpw
-         vhNANhO7JMZvPA1KsYpWOXHXGcvrYuFQhy1tFG/WfF0jV7zaPRMQ2Rpd2mrr1qL7JQDO
-         CqoCKT9RqV0oEy245ELkNePa7bN5tJkxqFh2LPMUTifA5g7g3ROrCGll8Pej6mANYNHN
-         4uHg==
+        bh=5GIfuekLiG6d1t2FIig7OwOH7cYz1r1KvcU67M955lU=;
+        b=wcBa1LXDhgVQogrQHnKAaUsIkGXSAHjefoQD/Te9sSIIhRgrSPoefsnSUAWTgr3Uvc
+         bmo4ETMjOwEo5+DPfU4daZLOdxlNgCracl6uMBduZFxaeorBZvy+WSZC0BqZlhZD+KUQ
+         FoI6zkcRvZeEV+yof3uXZR7rY6kOBJirPI0A9L4DFRpUaJw8HDOiGht1lMXAhipuKwgl
+         D7fsLBNUH/HmoQkOc8IY6EnJ0AFOW33eZKX5ael4MoVrw0yFN/eHQj/rIJp6q2i6DnEI
+         luizDsmqyHQJ36v/MNLtU5Kn7t3/NDA9S/QrJmLFYY4U7MoDSEI9KKl2BZkNRjakbbeB
+         Sozw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778608019; x=1779212819;
+        d=1e100.net; s=20251104; t=1778608023; x=1779212823;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1yVcJX3ToKV+Wqq27E1R2W87lkjzMpr5Ak2bcYR9g3Q=;
-        b=MSX9g/06gay97iSUN6IGP8uucBq79RLfWIqs3FI3a2rV+XteO62En4V2HxMMERxcCR
-         QKtlq8ehKMmzgvZfMk40N2gxkMOzFej0aNVxN+3LnZxrLyZK9+VdzePcoQs1IYiDKhIn
-         nxp1viBfIVNDkBkTkKjq4ZiH1VoYUMY7XAU6bPyCQ22e419FVUFkXRKDZpgoxZhH8JkU
-         oqO1dVTRIaJoS+B6DcdRDZrSk5X7yPmDgFYJxXM3ivNCld23ZG7u6/XjBa88Fw2cVzf7
-         CkwBSCI+7pwScwJn15l8v8+CNPnXOv2SRotVZC9Dw6XsoVZw4sE3wH7xR7Er0i52V8GP
-         qJbA==
-X-Forwarded-Encrypted: i=1; AFNElJ++3FmeGLUXBHtqOG8s7v9RGgI5UIbTovvcljKvKhCbPch2XH2q1VWrpXwliI6jplrt9Nv1R3WyqN6ByUSEZK1a@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkDCphyxnr997GVRRhHR+bab1Q2eMG8Vcv3B53eQ4FuF2Yqe5x
-	uzGyDHgeBV3J/bG7s5G+nwX9a9k4XGcAz7oSFIaFwc4mlJxOBnM/EMG4MKKFG4GeALhiZdNMeLG
-	fROGd+uNtag==
-X-Received: from dlbvv13.prod.google.com ([2002:a05:7022:5f0d:b0:128:cfd6:a3c6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e1f:b0:130:6978:c96
- with SMTP id a92af1059eb24-13344d7dc23mr2588285c88.19.1778608018800; Tue, 12
- May 2026 10:46:58 -0700 (PDT)
-Date: Tue, 12 May 2026 10:46:24 -0700
+        bh=5GIfuekLiG6d1t2FIig7OwOH7cYz1r1KvcU67M955lU=;
+        b=PqyldeDfGZZrMSFOMdOxEuak3UXepjBA96oFswes6RoGuB4XMh9X2aQTM6khgVBDXc
+         69jKzX2d03u1tv2t73U4vBgSPgIq6mAlzIS82oDBHrSyHEPZAKpV6lOC+PeQMJdMCpvM
+         aUGGQ3O5mQsLjL+Bo9/ZHuJU5RZ04tlVpozqGFCDv7Lv/MbCnaF6S91/2O+cFgXUeG9F
+         PzhiHbtHssisZWery4nIC9pp8hxhgimwAF7w39969dDOSQU6MJM9zchHEVgW1VpfOOrC
+         AWJZ9Fjf9UMrA4rPuIw3zarjQemFLEgPfXeirRP5xjtIO5JoV6bLB1cL998HlLG+G1qh
+         u0QA==
+X-Forwarded-Encrypted: i=1; AFNElJ8cqjKx+g131z6ffSKv0wnYKicC63eyPo1vd5/EnawZhdgDANurDy5v49jm5OpSCXCF8UcojVx3BaR75iqRQsJJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI/G68VXaDzp7PguhvG+CXL2h4hvleymg4HGJP34sk/7xOEFdD
+	rNnxuzdETXoSLpO6c2lwjpl+Kv1Q4eCq4Adij5mLp5kyEVYvs41PVcHHSovzQCA5G5pu8Y4zlZi
+	Eard5IOMqlg==
+X-Received: from dldz1-n2.prod.google.com ([2002:a05:701b:4181:20b0:12d:bafb:54f6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:23aa:b0:12a:6c4b:9cf0
+ with SMTP id a92af1059eb24-131967d5026mr15473065c88.3.1778608023142; Tue, 12
+ May 2026 10:47:03 -0700 (PDT)
+Date: Tue, 12 May 2026 10:46:26 -0700
 In-Reply-To: <20260512174638.120445-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512053539.3410189-15-irogers@google.com> <20260512174638.120445-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512174638.120445-5-irogers@google.com>
-Subject: [PATCH v2 04/18] tools scripts: Short-circuit CC_NO_CLANG compiler
- probe in Makefile.include
+Message-ID: <20260512174638.120445-7-irogers@google.com>
+Subject: [PATCH v2 06/18] perf build: Decouple pmu-events from prepare
+ umbrella target
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
 	namhyung@kernel.org
@@ -77,38 +77,52 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-In Makefile.include, CC_NO_CLANG unconditionally executed a GCC/Clang
-compiler inspection fork (gcc -dM -E ...) during Makefile parse time.
-Because Makefile.include is included across more than 40 sub-makes and
-component directories throughout the Kbuild tree, Make continuously
-re-executed this compiler probe dozens of times during incremental builds.
+Currently, the $(LIBPMU_EVENTS_IN) sub-make depends on the massive
+"prepare" umbrella target. Because "prepare" depends on external
+libraries (libapi, libperf, etc.) as well as dozens of generated
+headers, make completely serializes the launch of the pmu-events
+sub-make behind some of those unrelated prerequisites.
 
-Wrap CC_NO_CLANG with a conditional check and export the variable to
-sub-makes. This guarantees Kbuild evaluates the compiler backend exactly
-once during top-level Make invocation, eliminating 40+ redundant shell forks
-across the build tree.
+Since pmu-events is a large compilation unit, unblock its startup by
+binding it directly to only $(LIBPERF) instead of prepare. This allows
+background python generation scripts to overlap simultaneously with
+the rest of the build.
 
+Testing a parallel build (make -j28 clean all) shows improvements:
+  Before:
+    real    0m27.642s
+    user    2m32.356s
+    sys     0m26.683s
+
+  After:
+    real    0m22.254s
+    user    2m32.810s
+    sys     0m24.646s
+
+This reclaims over 5 full seconds of build latency (~19.5% overall
+reduction) by elevating average CPU concurrency from ~5.5 active cores
+up to ~8 active cores.
+
+Tested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/scripts/Makefile.include | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 41971a68972d..3c7803122ae2 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -74,7 +74,10 @@ $(call allow-override,CXX,$(CROSS_COMPILE)g++)
- $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
- endif
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index c81797ceec42..c66af4c825fd 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -550,7 +550,7 @@ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+ $(PERF_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=perf
  
-+ifeq ($(CC_NO_CLANG),)
- CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
-+endif
-+export CC_NO_CLANG
+-$(LIBPMU_EVENTS_IN): FORCE prepare
++$(LIBPMU_EVENTS_IN): FORCE $(LIBPERF)
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
  
- ifneq ($(LLVM),)
- HOSTAR  ?= $(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX)
+ $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
 -- 
 2.54.0.563.g4f69b47b94-goog
 
