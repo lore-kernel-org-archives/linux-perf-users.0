@@ -1,137 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0C38D016;
-	Wed, 13 May 2026 22:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE0938F630
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 22:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778710704; cv=none; b=TTBwuyM5RgdyoJZOPdNY8E/d9LQzIpCfh2IZyDJ9OmwZu84QW9COZPJrOb2UHURp6d7oGnHax8H46jGDspQtgyAiwR7O1/R8kx5SyXeh96QZgNMbzqCcn3oZilN9pYZwjUSAyDLH9N5MP3tgkieYA+UyQsevrLOtV6PS6/wZGm0=
+	t=1778712162; cv=none; b=Nf1Yfvrm2eFiyN5+OVxGIaWfm+ZW38Lu8FQBPspOFXBosuJbGdUzRYOPDt/1wBqUQ6C5s808s72HfWbpPeLaNOXYXW6yZf4lFNAb+BmJF6aM6FG3wIia4q75fy6lH5TcQFdKZbmNhz/3uBDmWiqiekPcpK/tEBaSGhWfEk2xFlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778710704; c=relaxed/simple;
-	bh=jAH5trAGjcAHUkecqgGL2PY7cPqAzuJcaRVc2i7ta4A=;
+	s=arc-20240116; t=1778712162; c=relaxed/simple;
+	bh=izNZ7qTCX/Ae0oOd8SKrfRCI3xDKHl5QPY/FJqq9aHM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ebPmewOwBbad2NQpo3FA9FSJEhuL6ac3SwJCQeloBvRaaBHLwsBOlY5+GqHbNpxDswUaqFj6QEmWW4iV8LtmWmq2gZH1ePHXjopcc4z1+nKFTYY5xS9WroOoXbuTBsZkZE2yKLaPpMASXU3fb/3+5Gsp/Lf1gUqTwbNWWdtaKUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeQP0DA4; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=JwdfG8Tf2/kp+ixyuZCsvv4bgqc9aUUhPjhD0Wptl6J3JNleanVs/z5qkq3h45fBsWIbySgV/1g4uiLniw0huWjciJao9MoK5m2uSIJPyQQkmQ+6LfSbhjz7yrXUQSldLWzpYfybvFkSPSr++fU2L6nxYZJl2V3gYkKqqhTLlFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hjpg12nW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeQP0DA4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0368C19425;
-	Wed, 13 May 2026 22:18:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hjpg12nW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC18C2BCB3;
+	Wed, 13 May 2026 22:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778710704;
-	bh=jAH5trAGjcAHUkecqgGL2PY7cPqAzuJcaRVc2i7ta4A=;
+	s=k20201202; t=1778712162;
+	bh=izNZ7qTCX/Ae0oOd8SKrfRCI3xDKHl5QPY/FJqq9aHM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=LeQP0DA4Qf4xFdsDddALL/Yyi1Pfhkdy9lBdYpJzTOTBHPKr6gAfDcedpi5UeN3gW
-	 rIbn7OGOO9Gmvc2xtikn7dxj7DymmvCll2xj5GVzpBM3a5DnFq/tQ9glilpStCk4JE
-	 4p2OPXYAZ9/nvfK0pVR6tNyfkp0LJsbaXnKD5AYiZGaqR/LcrS+XPtKb7Ms7I7nUz8
-	 vNZlRx3mufjL167LuI4pp3+qswzPtqmMxKqNU3Zg4jKNIkTB+z8aVVqu0Q/M77A8Di
-	 J80h7dj7rqXjjPVCeAs6p9XaLyVSlMS/Yl3lFx1U/ap9hlBj6+vZ40fvhcvwH9Sjvs
-	 HJYminJ50iIsA==
+	b=Hjpg12nW9fnDs19mt8iPq7JKO/IjE+aSMyPPd6oi+f/fSY8PjPnbbi1+xN87xpx+R
+	 3ArrXB69CVfPYjMSsLduyB4oq9wzt+eLnp1rWA/WLmpRIVWxV56G1N+1A3MotYBRkb
+	 KJtKrzMYfW1LGoMF/B5JK/cz43Thp52JtDgkR4RQKzsgRzEuoPwia010Jtp819Kgac
+	 5ZqN3ERTQuc8aZIhMJbWFkHB4SgDLMXBGGsGcoT6Z6GoPuRKURc7/Flh37Q+HZy7Hd
+	 ZP29HW2DDpBD8aRevpO4qUhdIcWEgtkwX75DkPnqYCIrKP3lm6kNe8tixB0VGFavJB
+	 kVP0ll3ur554Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 13/14] perf pmu-events: Parallelize JSON and metric
- pre-computation in jevents.py
+Subject: Re: [PATCH 1/2] selftests/perf_events: Add test for refresh limit
+ signals
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512053539.3410189-14-irogers@google.com>
-References: <20260512053539.3410189-14-irogers@google.com>
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512-arm_cs_clean_perf_handle-v1-1-75ff373ecd22@arm.com>
+References: <20260512-arm_cs_clean_perf_handle-v1-1-75ff373ecd22@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 22:18:23 +0000
-Message-Id: <20260513221823.D0368C19425@smtp.kernel.org>
+Date: Wed, 13 May 2026 22:42:41 +0000
+Message-Id: <20260513224242.7EC18C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The nested `_init_worker` function causes a fatal `PicklingError` =
-under `spawn` multiprocessing semantics.
-- [High] Parallelizing the JSON parsing breaks architecture isolation for s=
-tandard events, leading to state contamination across architectures.
-- [Medium] The depth filtering logic is missing from the `collect_json` cal=
-lback, causing redundant parallel parsing of deeply nested files.
+- [High] Using ASSERT_EQ inside FIXTURE_TEARDOWN leads to infinite recursio=
+n and masks test failures.
+- [Medium] The assertion EXPECT_GT(count.in, 0) will deterministically fail=
+ on architectures without fast irq_work support.
 --
 
-commit 90db323cf161fc6e18235c0d700851677b283082
-Author: Ian Rogers <irogers@google.com>
+commit b2c9c1a07e0f0b3e81140a87060db6e67e7d721a
+Author: Leo Yan <leo.yan@arm.com>
 
-perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py
+selftests/perf_events: Add test for refresh limit signals
 
-This commit refactors jevents.py to pre-populate its internal JSON AST cache
-in parallel using ProcessPoolExecutor. It aims to accelerate execution by
-parallelizing the parsing of JSON event and metric files across available
-cores.
+This commit adds a test to verify PERF_EVENT_IOC_REFRESH with a task-clock
+software event. Each iteration sets the refresh count to 5 and waits for a
+POLL_HUP notification after 5 task-clock overflows at a 1 microsecond inter=
+val.
+The sequence is repeated 100 times to verify exactly one POLL_HUP is delive=
+red
+per iteration.
 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 70a45e62f5d16..eb72c154f946e 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-
+> diff --git a/tools/testing/selftests/perf_events/refresh_signal.c b/tools=
+/testing/selftests/perf_events/refresh_signal.c
+> new file mode 100644
+> index 0000000000000..9bf05bcd88878
+> --- /dev/null
+> +++ b/tools/testing/selftests/perf_events/refresh_signal.c
 [ ... ]
+> +FIXTURE_TEARDOWN(refresh_signal)
+> +{
+> +	ASSERT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
 
-> @@ -1459,9 +1467,29 @@ struct pmu_table_entry {
->      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
-> =20
->    archs.sort()
-> +  import concurrent.futures
-> +  tasks =3D []
-> +  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
-> +    if len(parents) =3D=3D 0:
-> +      return
-> +    if item.is_file() and item.name.endswith('.json') and not item.name.=
-endswith('metricgroups.json'):
-> +      tasks.append((item.path, get_topic(item.name)))
+Will this lead to infinite recursion if the test fails during setup?
 
-Is the depth filtering logic missing from collect_json()?
+Under kselftest_harness.h, a failing ASSERT_* macro invokes __bail(), which
+calls the test's teardown function. If this ioctl fails (e.g., if self->fd =
+is
+invalid because perf_event_open failed during setup), the ASSERT_EQ will in=
+voke
+teardown again, causing an infinite recursion that crashes the test.
 
-The commit message mentions applying depth filtering to prevent redundant
-worker tasks. However, collect_json does not seem to limit the directory
-depth.
-
-This could cause the main thread to queue worker tasks for deeply nested
-files, which are fully parsed by the worker pool but subsequently ignored
-during the actual generation phase.
+Should EXPECT_EQ be used here instead to ensure cleanup continues and the
+original error is properly reported?
 
 > +
->    for arch in archs:
->      arch_path =3D f'{_args.starting_dir}/{arch}'
->      preprocess_arch_std_files(arch_path)
-> +    ftw(arch_path, [], collect_json)
+> +	close(self->fd);
+> +	sigaction(RT_SIG, &self->old_sa, NULL);
+> +}
+[ ... ]
+> +	/*
+> +	 * Events before EVENT_LIMIT are reported as POLL_IN. When the limit
+> +	 * is reached, the final event is reported as POLL_HUP. The total
+> +	 * number of events is scaled by the number of iterations.
+> +	 *
+> +	 * Events are delivered via irq_work. If timers expire too close to
+> +	 * each other, irq_work may not run before the next timer fires,
+> +	 * causing some POLL_IN events to be missed. Therefore, use a
+> +	 * less-or-equal comparison for POLL_IN.
+> +	 *
+> +	 * The last event stops the timer, so the POLL_HUP signal must be
+> +	 * observed once per iteration when the limit is reached.
+> +	 */
+> +	EXPECT_LE(count.in, (EVENT_LIMIT - 1) * ITERATIONS);
+> +	EXPECT_GT(count.in, 0);
 
-Does this loop break architecture isolation for standard events?
+Can this deterministically fail on architectures without fast irq_work supp=
+ort?
 
-By looping over all architectures to populate a single global _arch_std_eve=
-nts
-dictionary before parsing the JSON files, standard events with identical
-names from later architectures might overwrite definitions from earlier
-architectures.
+On architectures where arch_irq_work_has_interrupt() is false or self-IPI
+is not supported, irq_work is executed during the timer tick. Because this
+test uses a 1 microsecond hrtimer period, all 5 hrtimer callbacks could fire
+within the first ~5 microseconds of the iteration, before the next timer ti=
+ck.
 
-When the parallel worker processes evaluate the earlier architecture JSON
-files, they may use this polluted global dictionary and inherit fields from
-the later architectures, leading to incorrect PMU tables.
+The final callback would overwrite the pending signal to POLL_HUP before the
+irq_work has a chance to run. When the tick finally executes the irq_work,
+only the POLL_HUP signal is delivered. This would cause count.in to remain 0
+across all iterations, failing this assertion.
 
-> +
-> +  def _init_worker(std_events: dict) -> None:
-> +    global _arch_std_events
-> +    _arch_std_events =3D std_events
-> +
-> +  with concurrent.futures.ProcessPoolExecutor(initializer=3D_init_worker=
-, initargs=3D(_arch_std_events,)) as executor:
-
-Could defining _init_worker locally cause a pickling error under spawn
-multiprocessing semantics?
-
-_init_worker is defined as a local function inside main(). Under spawn
-multiprocessing semantics, Python uses pickle to serialize objects to child
-processes, but pickle cannot serialize local functions.
-
-This regression might result in an attribute error when initializing the
-executor, which seems to contradict the commit message's claim of supporting
-spawn semantics.
+> +	EXPECT_EQ(count.hup, ITERATIONS);
+> +}
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512053539.3410=
-189-1-irogers@google.com?part=3D13
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512-arm_cs_cle=
+an_perf_handle-v1-0-75ff373ecd22@arm.com?part=3D1
