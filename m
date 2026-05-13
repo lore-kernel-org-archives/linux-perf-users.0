@@ -1,128 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3616540FDBE
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 18:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E537D3A48E0;
+	Wed, 13 May 2026 18:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778695880; cv=none; b=o6fyLjwRZJWfZcP1I7QIlmkgMNh0WcOG4oAM4XlLgp4AxZs6tDd0GcBw/qbG8i5bs2nRnSVTEfznjeeCXg81TikldqMcKVH58Dx+SxHxkrrHFU+Ts4nRsaXMVW2uCY3YrE/VJ9FcFdsvIfiwU/8ECGld2uR3T0UjbOPCGgH61qs=
+	t=1778695940; cv=none; b=Ab9LGWk9fPCdu9H+9DOzE29ZU0jxXZZNxB09uCgZZqGMEO4fQu7kb3zBOOjYeh0PUgTLQKDpcCXCvIFGLSNK9FstZAnvVxiiMevuEixw2XsDBUKdbTcbSMSINb5eVtPXSI1N2Jk1UzjmzWNAwQiqoj5fsiPdH6TzmhLuuEU/AKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778695880; c=relaxed/simple;
-	bh=K1wZov1t/gkoA9v3IOyz5ZysXGAZxCDPHIjGItZ+ld8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y6WBLwkrC1DiNJmiMFg1LdcrvgGDjrPWD2TIYJIJzCdb8YWWxNdCwgvhp6YXY+IPHV1iOH/iqAqW/XJkTs/Bw2+kUw+c6iNabj9AcmGSgemnMiUbnCajpmYtN2m7Re//VACERVXPBgP/yCRWszivEA++F804oDKFM46cGptbs4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J9JDuyLF; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J9JDuyLF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778695879; x=1810231879;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K1wZov1t/gkoA9v3IOyz5ZysXGAZxCDPHIjGItZ+ld8=;
-  b=J9JDuyLFsU8TxjyJP7hvmmHKNSNkiZh21Sz7N+GhbBXCjeroWWqWwFws
-   wB9H5yrXAYiUxsbau0IBqA9D6FEdbCGg//6ygJmSgu0otCaOEg5AZwE0E
-   YXCkdrzEf3nIkQwUh41BFHulKzN7H7HZYDI9yUAWB/j9qJsnM9HIWPnKI
-   C8OnduZzjBpv7fQB2HSH3AnKafuIddlMglaxvzy++lQH+DSYFGWgmynkB
-   I2R8XDOAoRKs3puunaMGuDhrfisk37By1VcQoXo+1YxA/OJ6/eBN6BLEw
-   XOrjIHSLO66HIgQUjcItQDqIZiOx7A6GksJgDxb+HgZ0Tmyo1o6TzIpwf
-   w==;
-X-CSE-ConnectionGUID: b9r35TW5Q5myXsJ6WJx4DA==
-X-CSE-MsgGUID: H6w373fFRmeu8CguEF/c9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11785"; a="82199009"
-X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="82199009"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 11:11:18 -0700
-X-CSE-ConnectionGUID: ttVBAJfTTxipJ728fjRvPQ==
-X-CSE-MsgGUID: aO0DGt8FTnWDsurqlNoigw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="231757781"
-Received: from unknown (HELO [10.241.241.90]) ([10.241.241.90])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 11:11:18 -0700
-Message-ID: <aefcf357-e0d8-46af-841d-be3e7742374b@intel.com>
-Date: Wed, 13 May 2026 11:11:18 -0700
+	s=arc-20240116; t=1778695940; c=relaxed/simple;
+	bh=XuI23e3whQ+sQNNDN6zabV3npSgjjHmlPC7wVR7MWB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tOFf6FqhXuwEBbs2UJjqsZjKizI5qy7xOt6UVozVtCrfcpVqO7DvfMLUS8OefthXuF2BHZaBzP+lLC3vhcKjsHbw1gGmTZUNJxKdcPRnct173R05ExaFy0Ad/G1GhKvJZW3vFCAPgtVbBDrqIsiTTopB5I+OPCgA4VoLE2SPe5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from Lee.localdomain (unknown [39.152.152.253])
+	by APP-05 (Coremail) with SMTP id zQCowADXZQnwvgRqayEtEA--.28384S2;
+	Thu, 14 May 2026 02:12:01 +0800 (CST)
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+To: acme@kernel.org,
+	namhyung@kernel.org
+Cc: irogers@google.com,
+	adrian.hunter@intel.com,
+	palmer@dabbelt.com,
+	pjw@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH v2] perf riscv: Fix discarded const qualifier in _get_field()
+Date: Thu, 14 May 2026 02:07:21 +0800
+Message-ID: <20260513180721.1179904-1-guanli.oerv@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260513154851.1085334-3-guanli.oerv@isrc.iscas.ac.cn>
+References: <20260513154851.1085334-3-guanli.oerv@isrc.iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260511230527.26096-5-zide.chen@intel.com>
- <20260513025843.939F7C2BCB0@smtp.kernel.org>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260513025843.939F7C2BCB0@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowADXZQnwvgRqayEtEA--.28384S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyrtr4DtFW5Xw48Aw18Zrb_yoW8Xr18pr
+	Z7Crn0k345Wr1a9340vFWI9FWUurs3XayS9FsYy3y2vws8X34xtrWftan8C3W2qryUur1r
+	ur43urWkAF48AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: hjxd0znlorv2ny6l223fol2u1dvotugofq/
 
+The assignment of strrchr() return values to non-const char * variables
+triggers a -Werror=discarded-qualifiers warning when building with GCC 14.
+This happens because in newer glibc versions, strrchr() returns a
+const char * if the input string is const.
 
+Properly declare 'line2' and 'nl' as const char * to match the glibc
+function signature and ensure type safety. This avoids the need for
+explicit type casting and aligns with the design pattern of not
+modifying read-only memory in the perf tool.
 
-On 5/12/2026 7:58 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Recursive `cpus_read_lock()` acquisition leads to deadlock when used by the planned initialization callback.
-> --
-> 
-> commit d8b9d983f61a73e17f268ae570b5186a67f1a6ae
-> Author: Zide Chen <zide.chen@intel.com>
-> 
-> perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
-> 
-> This commit moves die_to_cpu() into uncore.c and renames it to
-> uncore_die_to_cpu(). This change prepares the function to be reused by a
-> planned MSR global initialization callback.
-> 
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index e9cc1ba921c5e..2bbe4cc1df3e2 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
-> [ ... ]
->> @@ -83,6 +83,25 @@ int uncore_device_to_die(struct pci_dev *dev)
->>  	return -1;
->>  }
->>  
->> +int uncore_die_to_cpu(int die)
->> +{
->> +	int res = 0, cpu;
->> +
->> +	/*
->> +	 * Using cpus_read_lock() to ensure cpu is not going down between
->> +	 * looking at cpu_online_mask.
->> +	 */
->> +	cpus_read_lock();
-> 
-> Will the planned MSR global initialization callback already hold
-> cpus_read_lock() when it calls this function?
-> 
-> If the initialization path (such as uncore_discovery_msr() calling into
-> __parse_discovery_table()) already holds the lock, does acquiring it a
-> second time here risk a lockdep warning or a deadlock?
-> 
-> Since cpus_read_lock() is backed by a percpu rwsem, a second read lock by
-> the same thread can block if a writer (like CPU hotplug) is pending. Does
-> this API need an unlocked variant for initialization paths, or should it
-> rely on the caller to manage the lock entirely?
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+v2:
+ - Drop the auxtrace decoupling and weak stub approach as they interfered 
+   with the cross-platform analysis intent, per Ian's feedback.
+ - Focus on a clean fix for the const qualifier issue in RISC-V header.c
+   by properly declaring local variables as const.
+ - Use Li Guan as the preferred name format for consistency.
+ - Verified that this fix is not yet present in acme/perf-tools-next.
 
-Yes, you are right. Seems the best option would be to remove the lock
-from uncore_die_to_cpu(), and rely on callers to manage the lock.
+ tools/perf/arch/riscv/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> 
->> +	for_each_online_cpu(cpu) {
->> +		if (topology_logical_die_id(cpu) == die) {
->> +			res = cpu;
->> +			break;
->> +		}
->> +	}
->> +	cpus_read_unlock();
->> +	return res;
->> +}
-> 
+diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
+index 4b839203d4..891984e909 100644
+--- a/tools/perf/arch/riscv/util/header.c
++++ b/tools/perf/arch/riscv/util/header.c
+@@ -19,7 +19,7 @@
+ 
+ static char *_get_field(const char *line)
+ {
+-	char *line2, *nl;
++	const char *line2, *nl;
+ 
+ 	line2 = strrchr(line, ' ');
+ 	if (!line2)
+-- 
+2.54.0
 
