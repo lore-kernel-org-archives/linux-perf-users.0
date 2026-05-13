@@ -1,55 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823C63C276F;
-	Wed, 13 May 2026 09:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC94357CF0;
+	Wed, 13 May 2026 10:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778663888; cv=none; b=KwDtgy9OB2Ta2EoxELBslMPeQ68ydh8wUgjp9sfZKgyeXKdViopXihL2zIlHBr37AOugQCAuKMbgH5XvTlIbJxfuUD5qpjYL2naSQ5PhRF00UWDUQj78CD/YvhG2xGO+AGsRQ2XOikOj16qH5Iq9ZAAjfluX0j9T3whO+4u9WlM=
+	t=1778667628; cv=none; b=SlOnnlLS5dZiZoIdItaOaY8uBPnMIL1uy1hK/ZHH0XuZMHJEI9PfKko/htsCkIk4DrjVKW28YN7MwipBcQYoYU+DuEF4I5mugjTDQqVM87oYzPMeZMtIlii9CEwCsDG0M9KfEt+h8VWtTCYiJfkvXvtsEVfLAPS4Pm9Kejcb9v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778663888; c=relaxed/simple;
-	bh=tK30HCaThkEdQqkifcwhGwd2vRsand6ahOgGAzNGZsk=;
+	s=arc-20240116; t=1778667628; c=relaxed/simple;
+	bh=kFvTrr5lJpNJvDr3fdaHSC+zFry1lWQIXZUKTBx3L1Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RW9q1p3l2eCMEy8nCBRfvgtu4pPCNFAevIPW+KdL5i2U1ucSP6+Ir6ApK+oPkM2OAc4RSMlpAxx7nIlUS7oj5R3enZ7Ln2SMIOb7qnLe7mmR1CC/2joFMt+V/JwODy/HmOEVTcI3BSP4VBGEMTJ7L01Y3ezE1gp1BOkNpqhsb+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E32QtEsJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IWVySbfDWzrfpTvktjFwPLqsa7Ctd3bCNEW2uhpldeh4LfknBTZC8ugyWM0G1BkOXb2TZPnR0ZIgrw6jC2Ryr6sCQ+LhbmjMslzLakByo41O1eWN8zNYft7esrkkXae7z21JMgEQmTiFprkHpyShjhgKkagPIE8kiyDiqt22z6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fNYAxVKz; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E32QtEsJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA97C2BCB7;
-	Wed, 13 May 2026 09:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778663888;
-	bh=tK30HCaThkEdQqkifcwhGwd2vRsand6ahOgGAzNGZsk=;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fNYAxVKz"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 644611650;
+	Wed, 13 May 2026 03:20:21 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C50C3F7B4;
+	Wed, 13 May 2026 03:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778667626; bh=kFvTrr5lJpNJvDr3fdaHSC+zFry1lWQIXZUKTBx3L1Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E32QtEsJ0lDRBSHnWJPUJHAeQ/WB4fwv2ObrZbpQs6suTi2LH2OvMZAvetLDjeT8Y
-	 uI+UqkwPnQlmCI51uG8zoJdreaUqda5hR2v6tMtUhlX8dPKF3+QmuMq5afa8vWScXv
-	 PHwrZ85CYCJTY363j7w5o5d4TPEqeLDs7YoLsoV0lwIiwS7TvuGo0r99p4iC8c2pH9
-	 c3s0xhCNDco03N7MGmRnY0/NpC0PXPtxfGjvDVE0qK2O6uNCsqBh+sO1x6OzT0IMTe
-	 y7kFrwgRKtDlOHW1w/s81n9+Ry8lLR2nmu8mc2PK1yEuogWAXtcQP79SgvnT1Q0Qel
-	 riO6VF9SH9ZUQ==
-Date: Wed, 13 May 2026 02:18:06 -0700
-From: Oliver Upton <oupton@kernel.org>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	James Clark <james.clark@linaro.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 10/20] KVM: arm64: Context swap Partitioned PMU guest
- registers
-Message-ID: <agRBzkVcR-qZZdx2@kernel.org>
-References: <20260504211813.1804997-1-coltonlewis@google.com>
- <20260504211813.1804997-11-coltonlewis@google.com>
+	b=fNYAxVKza3PQJhUpXaSnZ2e+T2igw4Q9GliYm71/gsnjf4PaRVCerBtdlH66+l+rk
+	 ynkUM/HOkTGS3UDX3FKRfdKrBrp1vR7GNMwF9ZYxzSaZCbMQ33Pazf5+KY/32tpgNg
+	 V64XoKhQhFZoP50NY5f/QUhffdPUQC6O51PZtEag=
+Date: Wed, 13 May 2026 11:20:24 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf arm-spe: Don't warn about the discard bit if it
+ doesn't exist
+Message-ID: <20260513102024.GE34802@e132581.arm.com>
+References: <20260410-james-spe-discard-warning-v1-1-985c02756ee4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,87 +53,26 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260504211813.1804997-11-coltonlewis@google.com>
+In-Reply-To: <20260410-james-spe-discard-warning-v1-1-985c02756ee4@linaro.org>
 
-On Mon, May 04, 2026 at 09:18:03PM +0000, Colton Lewis wrote:
-> +
-> +/**
-> + * kvm_pmu_host_counter_mask() - Compute bitmask of host-reserved counters
-> + * @pmu: Pointer to arm_pmu struct
-> + *
-> + * Compute the bitmask that selects the host-reserved counters in the
-> + * {PMCNTEN,PMINTEN,PMOVS}{SET,CLR} registers. These are the counters
-> + * in HPMN..N
-> + *
-> + * Return: Bitmask
-> + */
-> +u64 kvm_pmu_host_counter_mask(struct arm_pmu *pmu)
-> +{
-> +	u8 nr_counters = *host_data_ptr(nr_event_counters);
-> +
-> +	if (kvm_pmu_is_partitioned(pmu))
-> +		return GENMASK(nr_counters - 1, pmu->max_guest_counters);
-> +
-> +	return ARMV8_PMU_CNT_MASK_ALL;
-> +}
-> +
-> +/**
-> + * kvm_pmu_guest_counter_mask() - Compute bitmask of guest-reserved counters
-> + * @pmu: Pointer to arm_pmu struct
-> + *
-> + * Compute the bitmask that selects the guest-reserved counters in the
-> + * {PMCNTEN,PMINTEN,PMOVS}{SET,CLR} registers. These are the counters
-> + * in 0..HPMN and the cycle and instruction counters.
-> + *
-> + * Return: Bitmask
-> + */
-> +u64 kvm_pmu_guest_counter_mask(struct arm_pmu *pmu)
-> +{
-> +	if (kvm_pmu_is_partitioned(pmu))
-> +		return ARMV8_PMU_CNT_MASK_C | GENMASK(pmu->max_guest_counters - 1, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * kvm_pmu_load() - Load untrapped PMU registers
-> + * @vcpu: Pointer to struct kvm_vcpu
-> + *
-> + * Load all untrapped PMU registers from the VCPU into the PCPU. Mask
-> + * to only bits belonging to guest-reserved counters and leave
-> + * host-reserved counters alone in bitmask registers.
-> + */
-> +void kvm_pmu_load(struct kvm_vcpu *vcpu)
-> +{
-> +	struct arm_pmu *pmu;
-> +	unsigned long guest_counters;
-> +	u64 mask;
-> +	u8 i;
-> +	u64 val;
-> +
-> +	/*
-> +	 * If we aren't guest-owned then we know the guest isn't using
-> +	 * the PMU anyway, so no need to bother with the swap.
-> +	 */
-> +	if (!kvm_vcpu_pmu_is_partitioned(vcpu))
-> +		return;
-> +
-> +	preempt_disable();
-> +
-> +	pmu = vcpu->kvm->arch.arm_pmu;
-> +	guest_counters = kvm_pmu_guest_counter_mask(pmu);
-> +
-> +	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
-> +		val = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i);
-> +
-> +		if (i == ARMV8_PMU_CYCLE_IDX) {
-> +			write_sysreg(val, pmccntr_el0);
-> +		} else {
-> +			write_sysreg(i, pmselr_el0);
-> +			write_sysreg(val, pmxevcntr_el0);
+On Fri, Apr 10, 2026 at 12:05:12PM +0100, James Clark wrote:
+> Opening an SPE event shows a warning that doesn't concern the user:
+> 
+>   $ perf record -e arm_spe
+>   Unknown/empty format name: discard
+> 
+> Perf only wants to know if the discard bit is set for configuring the
+> event, not in response to anything the user has done. Fix it by adding
+> another helper that returns if a config bit exists without warning.
+> 
+> We should probably keep the warning in evsel__get_config_val() to avoid
+> having every caller having to do it, and most format bits should never
+> be missing.
+> 
+> Add a test for the new helper. Rename the parent test function to be
+> more generic rather than adding a new one as it requires a lot of
+> boilerplate.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-This is wrong, you would need an intervening ISB. It'd be better to
-avoid the ISB altogether and just use {read,write}_pmevcntrn().
-
-Thanks,
-Oliver
+Reviewed-by: Leo Yan <leo.yan@arm.com>
