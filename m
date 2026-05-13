@@ -1,104 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CB3385D99;
-	Wed, 13 May 2026 21:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2623BB699;
+	Wed, 13 May 2026 21:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778706671; cv=none; b=jIkg7SM97NGkDzU0Ji3phtkJgu6AZdk6yzhnrbZ/L24AfbmrpqWCXbDhmksg1CasrNtG/FfIZblz1gikD9BpZ9Guuc1QfxRVE/W6RgJItexMjqT8rufrrH7bfcvwYBp078Ze4NThkYW8XEDQ1eQAVWi3h2Q2mwlBJQNaV4MckNk=
+	t=1778708412; cv=none; b=iI5O3m5KMxX/UHjt+QBKQ3s3M0I7ANloWTuqmcnGE19BO+D5EK6RliLJzwSyYhWvE6CYa7u2RY0KqEIEuJ0zoLke4VVBZjyUo1C8O3YvDAruPcmr/TJ3fjVdE8NWNJpT2F3aifOwsZoEWDjo6aVrp/2Dqa57XHtUXuQaQ5vwd3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778706671; c=relaxed/simple;
-	bh=OWs2fmtdLI3RwhyRvJKm2yLrXrPHrWGXTxLbBkdmbts=;
+	s=arc-20240116; t=1778708412; c=relaxed/simple;
+	bh=cbfovNGF89sVDuNC/GhSlOseeN9bTKu0cefZn5InWWY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RXlzG14zOuCQjyTZPz8RsjhdklpoA94Tiai+Qw0ab/Ucr2V8BD0Fln2SVQFlOg7IrYuMxBLabBIQoRFJp5JR8szgrogWk4NNRdtC6enmAN3naTJOPe53gkBUyTrJOH965oqcU8TX2Q4te60DT++HYnDBu1pCqNFD+6qL7TrLpiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvCvyPOv; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Y9WyQ6pqe1DjTk7JDOqewoeG96dBvtMEoAUxAaHm5hOkZNaK8G52mEm+ysary8OmAgm3ocAaotDEjMdnLWB9FAWJztOspwo841P1hK5es0e6J36P6+mZOTi49eus/JPKRKShmXxdggKcdvhNzgDVsRxSF9PGcYpzt+H+VKfoJNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nO4Ml/xc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvCvyPOv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76438C19425;
-	Wed, 13 May 2026 21:11:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nO4Ml/xc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96DCC19425;
+	Wed, 13 May 2026 21:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778706670;
-	bh=OWs2fmtdLI3RwhyRvJKm2yLrXrPHrWGXTxLbBkdmbts=;
+	s=k20201202; t=1778708411;
+	bh=cbfovNGF89sVDuNC/GhSlOseeN9bTKu0cefZn5InWWY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=LvCvyPOvghg/6vKvJVtHeWEIprHpOZvdoAT0bOVTBus7J9Pv45rfqx1B/oVf1Ym8y
-	 DAOqouFnSdVSjOzQ49rwEfSdq1Zpy+lgpyIMQLIVwOwRGKUH6+scxvQq1CGI9jyplX
-	 sT8MBY4mwIOqa1hns3h7hQoVCuUdBl8ajubyVQUS5bvkFCa4RKze8CUkz3QRLCEkow
-	 aGPvmGYm18ftr0JHWNRfPPVM9v2yiQsEIzO2HTHoZU6yfDUL2I5sxNe9WEnBCSsxfr
-	 SfZc4Puj3/6RKtNC2hWutO4NZ+6uTBkyQowN6oYVkntl8N3GTM6pW5aMf3PFxGD60s
-	 0S+hmtLI4NhYw==
+	b=nO4Ml/xcxZkvvwPK/m19G0Lbxb/EJS0GEaJWNbYfDRu2w2+zKkjgfyO8qXxWTIvNk
+	 p86+j2l+IlbnvXPT6arEzJDpyrvB20rvgcUyK8uI6elL3LgjRtUhiOGJadRnwk4czp
+	 tIScmpiPh6Bo/fOOj9HjP1vVZbEKQ35QSAvkANc2WcjRo9psu6rRNDYZ7za932+3HP
+	 WxJ3ZHYHQWyBaVW5oqcf1WK+9DKHJFKj3Yeomb9O5YgfE4g1G1L9IX9jYm1pqgV/32
+	 z74O8PRdkKck1NR41m+eaWPYp2xtMvIKy1MF16APlA/eEHGiu6nT9iOMZ2SkiEPij6
+	 9K3LcVdHK1LSg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 09/14] perf build: Move libsymbol dependency out of
- prepare step
+Subject: Re: [PATCH v1 11/14] tools build: Integrate libdebuginfod into
+ test-all fast path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512053539.3410189-10-irogers@google.com>
-References: <20260512053539.3410189-10-irogers@google.com>
+In-Reply-To: <20260512053539.3410189-12-irogers@google.com>
+References: <20260512053539.3410189-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 21:11:09 +0000
-Message-Id: <20260513211110.76438C19425@smtp.kernel.org>
+Date: Wed, 13 May 2026 21:40:11 +0000
+Message-Id: <20260513214011.C96DCC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] Removing `$(LIBSYMBOL)` from the `prepare` umbrella target breaks t=
-he `make check` and partial object compilation rules (e.g., `make util/mach=
-ine.o`) on a clean repository.
+- [Medium] Short-circuiting `feature_check` prevents necessary re-evaluatio=
+n of features falsely assumed present by `test-all`, causing fatal build fa=
+ilures.
+- [Low] Unconditionally adding `-ldebuginfod` to `BUILD_ALL` breaks the `te=
+st-all` fast path even when explicitly disabled via `NO_LIBDEBUGINFOD=3D1`.
 --
 
-commit 807af289bc2dc2091029fa64ee06af014dcf927c
+commit 53a01ad9ae3a2bcd156b498b52efecdd21be5e21
 Author: Ian Rogers <irogers@google.com>
 
-perf build: Move libsymbol dependency out of prepare step
+tools build: Integrate libdebuginfod into test-all fast path
 
-The prepare step is a large serialization point before parallel sub-makes b=
-uild
-the perf tool. This commit moves the libsymbol dependency out of the prepare
-step and into the dependencies for the bench and util libraries to avoid
-serialization in the prepare step.
+This commit bundles libdebuginfod into test-all.c to avoid an individual
+feature check sub-make fork. It short-circuits feature_check in
+Makefile.feature to skip evaluations when a feature was pre-detected.
 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index df68d29ecab73..d2e673d5e5bea 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 2f192d3bf61b9..d8febe5d58005 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -8,7 +8,9 @@ endif
+> =20
+>  feature_check =3D $(eval $(feature_check_code))
+>  define feature_check_code
+> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
+CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
+ CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
+(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
+S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+> +  ifeq ($(feature-$(1)),)
+> +    feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"=
+$(CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1)=
+)" CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D=
+"$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATU=
+RES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+> +  endif
+>  endef
+
+Does this short-circuit prevent the necessary evaluation of features omitted
+from test-all?
+
+When test-all.bin successfully compiles, Makefile.feature sets all features=
+ in
+FEATURE_TESTS to 1. If features like libbfd or libcpupower are intentionally
+omitted from test-all.c, they are falsely assumed present.
+
+By skipping the evaluation when feature-$(1) is already set, the explicit
+correction is missed. Could this cause fatal linker errors on systems that
+lack these libraries?
 
 [ ... ]
 
-> @@ -637,8 +637,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE \
->  	bpf-skel-prepare \
->  	$(LIBAPI) \
->  	$(LIBPERF) \
-> -	$(LIBSUBCMD) \
-> -	$(LIBSYMBOL)
-> +	$(LIBSUBCMD)
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 704c687ed3ad1..dc828523b50ad 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -115,7 +115,7 @@ __BUILD =3D $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $=
+(patsubst %.bin,%.c,$(@F)) $(
+>    BUILD_BFD =3D $(BUILD) -DPACKAGE=3D'"perf"' -lbfd -ldl
+>    BUILD_ALL =3D $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=3D2=
+ -ldw -lelf -lnuma -lelf -lslang \
+>  	      $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd \
+> -	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
+> +	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null) -ldebu=
+ginfod
 > =20
->  $(OUTPUT)%.o: %.c prepare FORCE
->  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3D$(build-dir)=
- $@
+>  __BUILDXX =3D $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bi=
+n,%.cpp,$(@F)) $(LDFLAGS)
 
-Will removing $(LIBSYMBOL) from the prepare target break make check or part=
-ial
-object compilation (e.g., make util/machine.o) on a clean repository?
+Will adding -ldebuginfod unconditionally here break the test-all fast path
+even when NO_LIBDEBUGINFOD=3D1 is explicitly passed?
 
-Files such as tools/perf/util/machine.c directly include <symbol/kallsyms.h=
->,
-which is dynamically copied into the include directory by the install_heade=
-rs
-target triggered when $(LIBSYMBOL) is evaluated.
-
-Because both make check and partial single-target builds explicitly depend =
-on
-prepare as their synchronization point, and $(LIBSYMBOL) is no longer part =
-of
-prepare, does this cause sparse or gcc to fail to resolve <symbol/kallsyms.=
-h>
-during those builds?
+If a system lacks libdebuginfod-dev but the build is correctly configured to
+opt out, it appears BUILD_ALL will still attempt to link against -ldebuginf=
+od
+and fail, forcing a slow fallback to individual feature tests.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512053539.3410=
-189-1-irogers@google.com?part=3D9
+189-1-irogers@google.com?part=3D11
