@@ -1,106 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317993C9889
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 21:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0C38D016;
+	Wed, 13 May 2026 22:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778709402; cv=none; b=RIT7fk0GrxhBkHLhR2Hukdt4lWSmQZpiORf7S0nq0Vm37s4L4gxVpi3MQkj31pWuFkLhK0HLxLl8+dEYmhfaU6qIvgr3CEs8NR8xMRkCwforysfzFnaHvhEoW816ZgdO00Dt5VoQ4lgBaRgLYVmT+2iuBgoZbUn0creVddKmUEk=
+	t=1778710704; cv=none; b=TTBwuyM5RgdyoJZOPdNY8E/d9LQzIpCfh2IZyDJ9OmwZu84QW9COZPJrOb2UHURp6d7oGnHax8H46jGDspQtgyAiwR7O1/R8kx5SyXeh96QZgNMbzqCcn3oZilN9pYZwjUSAyDLH9N5MP3tgkieYA+UyQsevrLOtV6PS6/wZGm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778709402; c=relaxed/simple;
-	bh=bYRJCBdFVUHPKDp8Z/2p+X0KWnbLQpRONZ2RDRpnboM=;
+	s=arc-20240116; t=1778710704; c=relaxed/simple;
+	bh=jAH5trAGjcAHUkecqgGL2PY7cPqAzuJcaRVc2i7ta4A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ReUf67hUSG3UbccGb8C+NzsB/voHynZkKVuooe50vwUsg0PpM4smwQ92OyYcoAuBtknUJwDh3S/YK2JUF0UrXyc5cJ9i/C+0Wfnu02W/Eb2o69+pWWcZ+g0SaFhNHbo5fSajvlnb9kOtB8D3FnfaQFJgVPAYKuR1jjeDLKAe5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAF5t3QO; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=ebPmewOwBbad2NQpo3FA9FSJEhuL6ac3SwJCQeloBvRaaBHLwsBOlY5+GqHbNpxDswUaqFj6QEmWW4iV8LtmWmq2gZH1ePHXjopcc4z1+nKFTYY5xS9WroOoXbuTBsZkZE2yKLaPpMASXU3fb/3+5Gsp/Lf1gUqTwbNWWdtaKUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeQP0DA4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAF5t3QO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD509C19425;
-	Wed, 13 May 2026 21:56:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeQP0DA4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0368C19425;
+	Wed, 13 May 2026 22:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778709401;
-	bh=bYRJCBdFVUHPKDp8Z/2p+X0KWnbLQpRONZ2RDRpnboM=;
+	s=k20201202; t=1778710704;
+	bh=jAH5trAGjcAHUkecqgGL2PY7cPqAzuJcaRVc2i7ta4A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=tAF5t3QOMlvOblS2ff/wPMGCgur4fsD0EHWZnrH0qiePhWyhJs1tuGVkY1tmNAYUe
-	 36x/RyIN05E6QTxLSPiDUiZMGJxuuT5/LjW55z53K/9Fl8TAiA+IteuVMb0K7Gdxx7
-	 yz8gWvkQBN/ZdtFLu69MRhFWNAus5lZeo6PGNNxidos/I7iCpYs0MZN9XPSDT3eB7W
-	 mnQlz44xGOwCDsxv+VtLb/on4nWPNaFMEN3N12zkrs0nfrWlgQAJXImBuKLi3Q9KdI
-	 FyEryyMe2EOTlYRx04xaHVWYOfI/O7FiBnS8nRKtjnKw6+wxkcTVxh/1LiNy1lzHYI
-	 +MP/M+hAixDYg==
+	b=LeQP0DA4Qf4xFdsDddALL/Yyi1Pfhkdy9lBdYpJzTOTBHPKr6gAfDcedpi5UeN3gW
+	 rIbn7OGOO9Gmvc2xtikn7dxj7DymmvCll2xj5GVzpBM3a5DnFq/tQ9glilpStCk4JE
+	 4p2OPXYAZ9/nvfK0pVR6tNyfkp0LJsbaXnKD5AYiZGaqR/LcrS+XPtKb7Ms7I7nUz8
+	 vNZlRx3mufjL167LuI4pp3+qswzPtqmMxKqNU3Zg4jKNIkTB+z8aVVqu0Q/M77A8Di
+	 J80h7dj7rqXjjPVCeAs6p9XaLyVSlMS/Yl3lFx1U/ap9hlBj6+vZ40fvhcvwH9Sjvs
+	 HJYminJ50iIsA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 23/28] perf tools: Harden compressed event processing
+Subject: Re: [PATCH v1 13/14] perf pmu-events: Parallelize JSON and metric
+ pre-computation in jevents.py
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260510033424.255812-24-acme@kernel.org>
-References: <20260510033424.255812-24-acme@kernel.org>
+To: "Ian Rogers" <irogers@google.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512053539.3410189-14-irogers@google.com>
+References: <20260512053539.3410189-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 21:56:41 +0000
-Message-Id: <20260513215641.AD509C19425@smtp.kernel.org>
+Date: Wed, 13 May 2026 22:18:23 +0000
+Message-Id: <20260513221823.D0368C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Critical] Incomplete protection against `size_t` overflow in `decomp_len=
-` calculation allows a massive out-of-bounds write on 32-bit architectures.
+- [High] The nested `_init_worker` function causes a fatal `PicklingError` =
+under `spawn` multiprocessing semantics.
+- [High] Parallelizing the JSON parsing breaks architecture isolation for s=
+tandard events, leading to state contamination across architectures.
+- [Medium] The depth filtering logic is missing from the `collect_json` cal=
+lback, causing redundant parallel parsing of deeply nested files.
 --
 
-commit dc8938b0aa70e200085288b43495eb050468d7c8
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit 90db323cf161fc6e18235c0d700851677b283082
+Author: Ian Rogers <irogers@google.com>
 
-perf tools: Harden compressed event processing
+perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py
 
-This commit adds several checks to the compressed event decompression pipel=
-ine.
-It guards against decomp_last_rem underflows, validates comp_mmap_len size
-and alignment, and ensures compressed event headers are properly sized.
+This commit refactors jevents.py to pre-populate its internal JSON AST cache
+in parallel using ProcessPoolExecutor. It aims to accelerate execution by
+parallelizing the parsing of JSON event and metric files across available
+cores.
 
-> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-> index 013c7839e2cfd..0a5d17946032d 100644
-> --- a/tools/perf/util/tool.c
-> +++ b/tools/perf/util/tool.c
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 70a45e62f5d16..eb72c154f946e 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+
 [ ... ]
-> @@ -24,7 +24,15 @@ static int perf_session__process_compressed_event(cons=
-t struct perf_tool *tool _
->  	size_t mmap_len, decomp_len =3D perf_session__env(session)->comp_mmap_l=
-en;
->  	struct decomp *decomp, *decomp_last =3D session->active_decomp->decomp_=
-last;
+
+> @@ -1459,9 +1467,29 @@ struct pmu_table_entry {
+>      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
 > =20
-> +	if (!decomp_len) {
-> +		pr_err("Compressed events found but HEADER_COMPRESSED not set\n");
-> +		return -1;
-> +	}
+>    archs.sort()
+> +  import concurrent.futures
+> +  tasks =3D []
+> +  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
+> +    if len(parents) =3D=3D 0:
+> +      return
+> +    if item.is_file() and item.name.endswith('.json') and not item.name.=
+endswith('metricgroups.json'):
+> +      tasks.append((item.path, get_topic(item.name)))
+
+Is the depth filtering logic missing from collect_json()?
+
+The commit message mentions applying depth filtering to prevent redundant
+worker tasks. However, collect_json does not seem to limit the directory
+depth.
+
+This could cause the main thread to queue worker tasks for deeply nested
+files, which are fully parsed by the worker pool but subsequently ignored
+during the actual generation phase.
+
 > +
->  	if (decomp_last) {
-> +		/* Prevent u64 underflow in decomp_last_rem */
-> +		if (decomp_last->head > decomp_last->size)
-> +			return -1;
->  		decomp_last_rem =3D decomp_last->size - decomp_last->head;
->  		decomp_len +=3D decomp_last_rem;
+>    for arch in archs:
+>      arch_path =3D f'{_args.starting_dir}/{arch}'
+>      preprocess_arch_std_files(arch_path)
+> +    ftw(arch_path, [], collect_json)
 
-When decomp_len is calculated as comp_mmap_len + decomp_last_rem, could it
-overflow a 32-bit size_t and wrap around to an undersized value?
+Does this loop break architecture isolation for standard events?
 
-While the patch caps comp_mmap_len at ~2 GB to prevent immediate overflow,
-it seems a crafted perf.data file with nested or incomplete compressed
-events could prevent decomp_last->head from advancing. This would cause
-decomp_last_rem to accumulate and grow up to ~4 GB.
+By looping over all architectures to populate a single global _arch_std_eve=
+nts
+dictionary before parsing the JSON files, standard events with identical
+names from later architectures might overwrite definitions from earlier
+architectures.
 
-The mmap allocation would succeed with this smaller size, but the subsequent
-memcpy could use decomp_last_rem (which fits in 32 bits as ~4 GB) as the
-copy length, copying ~4 GB of data into a ~2 GB allocation and causing an
-out-of-bounds write.
+When the parallel worker processes evaluate the earlier architecture JSON
+files, they may use this polluted global dictionary and inherit fields from
+the later architectures, leading to incorrect PMU tables.
 
-This issue appears to be fixed later in the series by commit 7a68686c9f43c
-("perf session: Check for decompression buffer size overflow").
+> +
+> +  def _init_worker(std_events: dict) -> None:
+> +    global _arch_std_events
+> +    _arch_std_events =3D std_events
+> +
+> +  with concurrent.futures.ProcessPoolExecutor(initializer=3D_init_worker=
+, initargs=3D(_arch_std_events,)) as executor:
 
->  	}
+Could defining _init_worker locally cause a pickling error under spawn
+multiprocessing semantics?
+
+_init_worker is defined as a local function inside main(). Under spawn
+multiprocessing semantics, Python uses pickle to serialize objects to child
+processes, but pickle cannot serialize local functions.
+
+This regression might result in an attribute error when initializing the
+executor, which seems to contradict the commit message's claim of supporting
+spawn semantics.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260510033424.2558=
-12-1-acme@kernel.org?part=3D23
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512053539.3410=
+189-1-irogers@google.com?part=3D13
