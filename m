@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E49937BE63
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 01:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7307C35DA55
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 02:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778636960; cv=none; b=kBSgygerc5s3P9WRJce3NeVFlYz8rq9bZhe6leqNsOT7oEpuT/CsOKn276vWHT63qIxCSFr7B6/LDyldP6YUpGPz7xMy563Yw0QCE5iZyA+uZ+3i90/A/SpXWh1YK9HJCG2JqtOAyZL+62PHqKoS9S8RPVvMX8mY0qODSgBm5vI=
+	t=1778639626; cv=none; b=bwKt619P99MNliSexREZfkGtgv7nWPI/saxx+uobVId4wAjg4OjF9Hoy7BZVgWGgisF/UaClfED2NpClasUDTWQ4vbjj69RHeANv71Uc2U8uIstiUeEmOk0HIr9kGKBHO9izRuaVz36pfKe8VoaiPE4UtPNq9eUsyZiKgZZPQuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778636960; c=relaxed/simple;
-	bh=7+hgPTHxHmKAnn3m6DjfzYYhTBVDhPA92VxKR2rDaOw=;
+	s=arc-20240116; t=1778639626; c=relaxed/simple;
+	bh=Lq7ZeMWaeRPiE6NmeNaz/BvZJ1RPwMntIFtW7KexgKg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MBBIF0yX1CYod0k6wmY2DK5zXm+Dl96XjomJOmw1izz0UZEYRCBQm2wLZt5uAmK+AWUOb2ZtpjWsc9oFGnTcbdjkXZW1QUUmUEAZMFUI9XFXRYslhawCBd8yAZp5tVkwzUGeCylVfs6Ggl1Qx0+G3sUYQ0ZPqkaVO067SQRaoEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrM2WZ/0; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=YJV6pMthfaxKTzOXRTCnhUyl+7LfKoqJWuu5HktTQ5x/itIh0Gxbz89WNvImed0z9wvgOEbcp7jNGEbh4Boc80rPv/IzVYE7wbFj+r9lplUFAsfycZzqbKdebtlS7E5iWJB6AzwybNH11VfimbQyYce1d4/DBUpz4V45cXKZWNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNailBtB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrM2WZ/0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D66C2BCB0;
-	Wed, 13 May 2026 01:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNailBtB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED78AC2BCB0;
+	Wed, 13 May 2026 02:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778636959;
-	bh=7+hgPTHxHmKAnn3m6DjfzYYhTBVDhPA92VxKR2rDaOw=;
+	s=k20201202; t=1778639626;
+	bh=Lq7ZeMWaeRPiE6NmeNaz/BvZJ1RPwMntIFtW7KexgKg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=SrM2WZ/07QIc7rKD/4vR/0Qatfs+zyJXsZq07ZBfaySUWSiR+iQrrKM/qvvlFmMkW
-	 TWft3zUfckLLH/OkzGjClNIImVPfXbQmdGkKSHd18V8sd8P4e2FD+W6r+bY8yYZZl4
-	 vkA51I40nDPcW+moBis2E9Pz2Z71vFnIVJkge/JBKgNSbvEFR4vR37GqX852+XBvOd
-	 p6liV1nYeuIp8ZNVpuDPcLWDXPuofijehdgv8gdCIpM6oQZ02XRkjyXNXHV9Hy6xa7
-	 df8B5tqJ/pouZkEg30wA6/AE1M1zPcBbe6Aqf4znZvOEAowiaBmgYr7ivIr3yq3Ooh
-	 x5VRyJBl1i52Q==
+	b=QNailBtBumTuBRSz99OOSuG6s6i2J4wcbZvBhw3wqVyyTVGxPUWTtoL/QrcLCdrCW
+	 VMMIVyA7okiLSF0r3go6KiAtZmPYGVjyvwjMNiYA2oXLv+rQHiNdDd4ELIuR3dy5+J
+	 Ap8haHbUIZgT2jEh15Jjrn/YicM8f8/oqWXfPIYqtFTHxzj4yCNAg3hwDuvOuiUFBL
+	 WR6HmrLTZRcUZOMlXNIGCFJ7n4EPYB04qMsDARe1E3Nq2ZscQ625fvJ+tZ/1pxgIx5
+	 1miJDQq1j9mjVS/6WzyR256Lbenq6+PmxtXCuwQxCmEESrkaBDQaBpwmyyGKk0leYk
+	 spayFwHeVVFGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/6] perf/x86/intel/uncore: Fix discovery unit lookup
- for multi-die systems
+Subject: Re: [PATCH 3/6] perf/x86/intel/uncore: Defer ADL global PMON enable
+ to enable_box()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zide Chen" <zide.chen@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260511230527.26096-2-zide.chen@intel.com>
-References: <20260511230527.26096-2-zide.chen@intel.com>
+In-Reply-To: <20260511230527.26096-4-zide.chen@intel.com>
+References: <20260511230527.26096-4-zide.chen@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 01:49:18 +0000
-Message-Id: <20260513014918.E1D66C2BCB0@smtp.kernel.org>
+Date: Wed, 13 May 2026 02:33:45 +0000
+Message-Id: <20260513023345.ED78AC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,77 +46,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Unchecked return value causes a write to MSR 0x0 when a PMON disco=
-very unit is not found for the current die, leading to a #GP fault and kern=
-el panic.
+- [High] The deferred global PMON enablement permanently leaks the hardware=
+ power state after the first use, nullifying the intended power savings.
 --
 
-commit 618972be846a765ebeeda359a995bf217a4d825c
+commit ce0046bfd8b6ed5388332db6e76ea45581716939
 Author: Zide Chen <zide.chen@intel.com>
 
-perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
+perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
 
-This commit updates intel_generic_uncore_box_ctl() to look up discovery
-units using box->dieid instead of hardcoding -1. This ensures the
-correct node is selected on multi-die systems.
+This commit drops adl_uncore_msr_init_box() and defers programming the
+ADL_UNC_PERF_GLOBAL_CTL MSR to enable_box(). The goal is to save power by
+ensuring the global control register is only enabled when a box is actually
+used.
 
-> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/i=
-ntel/uncore_discovery.c
-> index 583cbd06b9b88..1d22d7c00ee06 100644
-> --- a/arch/x86/events/intel/uncore_discovery.c
-> +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -481,7 +481,7 @@ static u64 intel_generic_uncore_box_ctl(struct intel_=
-uncore_box *box)
->  	struct intel_uncore_discovery_unit *unit;
+> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/u=
+ncore_snb.c
+> index 3dbc6bacbd9de..edddd4f9ab5fc 100644
+> --- a/arch/x86/events/intel/uncore_snb.c
+> +++ b/arch/x86/events/intel/uncore_snb.c
+[ ... ]
+> -static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
+> -{
+> -	if (box->pmu->pmu_idx =3D=3D 0)
+> -		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+> -}
+> -
+>  static void adl_uncore_msr_enable_box(struct intel_uncore_box *box)
+>  {
+>  	wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+
+Does this unintentionally leave the hardware power state permanently enabled
+after the first use?
+
+The Linux perf core framework unconditionally calls perf_pmu_enable(), which
+maps to uncore_pmu_enable() and executes enable_box(), at the end of PMU
+transactions. This includes event removal sequences:
+
+perf_pmu_disable()
+   event->pmu->del()
+   perf_pmu_enable()
+
+Since adl_uncore_msr_enable_box() unconditionally writes
+SNB_UNC_GLOBAL_CTL_EN, it seems the global PMON control is immediately
+re-enabled and remains active even when zero events are in use, negating
+the intended power savings.
+
+Additionally, if a check like if (box->n_active) were added here, could
+that silently break concurrent perf sessions on other uncore boxes?
+
+Because disable_box() unconditionally clears the shared MSR during
+transactions if pmu_idx =3D=3D 0, failing to re-enable it would leave PMON
+globally disabled for the entire die. Safely managing dynamic power for this
+shared global MSR might require a package-level active reference count
+across all boxes.
+
+> @@ -587,7 +581,6 @@ static void adl_uncore_msr_exit_box(struct intel_unco=
+re_box *box)
+>  }
 > =20
->  	unit =3D intel_uncore_find_discovery_unit(box->pmu->type->boxes,
-> -						-1, box->pmu->pmu_idx);
-> +						box->dieid, box->pmu->pmu_idx);
->  	if (WARN_ON_ONCE(!unit))
->  		return 0;
-
-Could returning 0 here cause a regression during CPU hotplug if a die is
-brought online later?
-
-If a CPU die is offline during boot, uncore_discovery_msr() skips it,
-meaning no PMON units are added to the discovery RB-tree for that dieid.
-
-When the die is later brought online, uncore_event_cpu_online()
-allocates boxes based on the globally maximum number of discovered units
-and calls uncore_box_init().
-
-The initialization function unconditionally calls
-intel_generic_uncore_msr_init_box(), which writes to the returned address
-without checking if it is 0:
-
-arch/x86/events/intel/uncore_discovery.c:intel_generic_uncore_msr_init_box(=
-) {
-	wrmsrq(intel_generic_uncore_box_ctl(box), GENERIC_PMON_BOX_CTL_INT);
-}
-
-Because the lookup now strictly matches box->dieid instead of safely
-falling back with -1 to an identical unit on another die,
-intel_uncore_find_discovery_unit() will return NULL for this die.
-
-This results in intel_generic_uncore_box_ctl() returning 0. Calling
-wrmsrq(0, ...) writes directly to MSR 0x0 (IA32_P5_MC_ADDR), which will
-trigger a #GP fault and crash the system.
-
-Similar unvalidated accesses also occur in PCI configuration space
-via intel_generic_uncore_pci_init_box():
-
-arch/x86/events/intel/uncore_discovery.c:intel_generic_uncore_pci_init_box(=
-) {
-	struct pci_dev *pdev =3D box->pci_dev;
-	int box_ctl =3D intel_pci_uncore_box_ctl(box);
-
-	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-	pci_write_config_dword(pdev, box_ctl, GENERIC_PMON_BOX_CTL_INT);
-}
-
-Should the callers be updated to check the return value of
-intel_generic_uncore_box_ctl() before attempting hardware accesses?
+>  static struct intel_uncore_ops adl_uncore_msr_ops =3D {
+> -	.init_box	=3D adl_uncore_msr_init_box,
+>  	.enable_box	=3D adl_uncore_msr_enable_box,
+>  	.disable_box	=3D adl_uncore_msr_disable_box,
+>  	.exit_box	=3D adl_uncore_msr_exit_box,
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260511230527.2609=
-6-1-zide.chen@intel.com?part=3D1
+6-1-zide.chen@intel.com?part=3D3
