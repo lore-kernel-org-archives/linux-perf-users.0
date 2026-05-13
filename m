@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2533CB2D5
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 23:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E593CAA3B
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 23:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778713530; cv=none; b=fergQ6Q0U4qov6AIxITMJgKg4p3/JRfF+g30k0usQRr3iS/5QVpKgDVA5gfI4Dy2RUVfsu4asHSr+tGt7gXmTj6XXHWtC6+W6pdoUnQPfhLN9TWPG1Ns6XSbDiuB3SqqWm2F1Vf3y8eDoBBpCKcgPOh6RCk4fK/jupp9Q88YZIs=
+	t=1778713531; cv=none; b=fZn1JrnHemKxz7j17DiA7GzcPHk4UU1op3zh5D1WgrrBRAoN/mMqEzKPy/rhMCvOTNwv14goCOKP7t6/WZUiXL6SJ1tVFGfRMSGTHK6RAPE2yL834/B8NX2kIYj8U00w+TBLCt2gb6/scUey4gVL9IhDZKAdU33gxvqwH8kMrIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778713530; c=relaxed/simple;
-	bh=23svWQR1tGNJcfl+pZvIGZaBZNczvDUriioTn7aANN0=;
+	s=arc-20240116; t=1778713531; c=relaxed/simple;
+	bh=3JyidBKbyQaUU7z2Q3fUd5lyDc8xUkZ8FQlJisuH++I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u+yKJ6aDz7Xqha3GHQDekh8xecqXZDpPszF00F5Ft/tR0h9yl/60lDTOWzHntRpOwadlhTgVXAOIpBU+quqc3bJFjqdt5Hbm8pXTy+NQRXOtwTZCUzwumifFO5b3huKXlGrsxXl0ZWk/Xf9TJyC2C6Qi0RG4+mmZp9O6YHirQs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nO350r6R; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=HJxM9lsnMaY884azm19Womre1fx1Sj5aXA9k6hpUVedo7mtGdDUpc1hrs78bdkGFNx4f+55njufUGcywSeuEfTNWgVJRDLP0OPd9dcCJ363LckHM3myh3q36Q+rWAvhnMimGV2bxRL+BTVnhYfbYy5gIolVb7yHCHSxgzKSs1Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jpEOJIUu; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nO350r6R"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-132a99125f8so14097786c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 16:05:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jpEOJIUu"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-13367aca29aso1055301c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 16:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778713523; x=1779318323; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778713527; x=1779318327; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0MHviYuTRfGteEilTEQPYM3fR1esF0zt2OHpf3UUwpo=;
-        b=nO350r6RPojpHZ8razD0wTnz1eYQjzAgme24+yws6OfSf277poWEv4d5T3KKlNUPkJ
-         m+5odje1D8ACe4pZUHuzYrmdOAxs9U/ORYwRnyQR9KT3AtluWqVQGld4CndFi5oI+0jE
-         8+BbEP1L9LDvAhLpmwafZo5FvrnOYnDP/qNA+nEUvYg/D6kegSvMDi2HJCjsMrZCdDQG
-         +EQCfc19jhZseGF0EpwY8eXPJQmqBjO4nRz1/yvPLToduIO4ICw4SmaTcVOZc2ZLm3ak
-         T9M/SMYp1gRU0lu1hNLq9O3Do2EjRWEgCAEBVvnzkoPRushs4zOy61pMxM4PypuMGi2T
-         L4tA==
+        bh=pw58YhNiSJggKohMqKIsVOKLvq7okjwquhtgBlkzQs8=;
+        b=jpEOJIUu6y5vOaAZNfZzxMOi0L92TXsHe90D+gIKl8QYHCKJ4JM+nPyyd8fhtAcoI/
+         8qj4cZPo6bJWvgZpghK6OS3NxnQKsNLRTexzx0rj24HXfRRwb9+2LZValV8YiS1iY3ve
+         PeXAlQhp8cNjDPAFfjcUpOSeNBnVpkuKZIXwmD1n2l05DlWLo5bza0KTAdcYlSF2lpqe
+         /UZLPyAKO1zjjfOjug4GZW2W21HVMseWf5C14MDL0wk5u0JjGFM6qPVYUDUUq9hyqxta
+         i7dBDJ5nVEoYYSBHMwzPxr0prS6f0Ol58QOeE2QdnL8CIPrHlUQe8UQLLvsGIk+f43TX
+         mdyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778713523; x=1779318323;
+        d=1e100.net; s=20251104; t=1778713527; x=1779318327;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0MHviYuTRfGteEilTEQPYM3fR1esF0zt2OHpf3UUwpo=;
-        b=qT6ZQj991VCsG7gkbFVyNt1dBnciR19yoEs/piJHI35f8RPy2nmZ8fpnicdeJn8T6g
-         vuvSKa9lQK4qGKG+IjrWWmBDo+B0WFUNUWuA6HNv/nI+uaFmKXM0LRf/c2SK9vja0NRx
-         2EyNpsr/iU2wEu6Hx7KV4QfRHH+kD/7txWEm2Pj/VGBh/se9VhTfBOuBu/RGjqz4MOzn
-         7AogaP2pq05uDYAYcsFKFGLuRMia8h1+tIldNgo1rvfAJiOtF1w6VDXREPLE6Dv/bkK8
-         AHnD7h/AWKNtWw4umufZtpRlbLPtOxOqbRMB/H+3PaWeWCjgvFVutaAciZhmrAHySF7M
-         NrgA==
-X-Forwarded-Encrypted: i=1; AFNElJ82lkX0zTkyneAmknkuW3ssQZevlxpVa8Zbo8SokAYdZq0fj141cHe/7AdCMa04FjaWR2jLWAc/fUGfPucJncCR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+xmOh12qPT/FbaX7y9ptGhhIIluaEQyPl6M8h71UVQXp1qapD
-	ljEFenY/tE245jEQF/2sT5MtVXEN9fFitdeW/NDI3lJd72YbVPqZStsGz1fRaFrbjsMC9Mx/ZsG
-	4rJ3KUkqAOg==
-X-Received: from dlb13.prod.google.com ([2002:a05:7022:60d:b0:132:8d92:4d7a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:23a3:b0:133:39a6:2bd5
- with SMTP id a92af1059eb24-13439c5c93emr3162456c88.44.1778713522370; Wed, 13
- May 2026 16:05:22 -0700 (PDT)
-Date: Wed, 13 May 2026 16:04:45 -0700
+        bh=pw58YhNiSJggKohMqKIsVOKLvq7okjwquhtgBlkzQs8=;
+        b=ExSnYjox9FZqfPWa96yzDRjG2bcrbqrW+lrcZY7yohyax88R9g72fxDIiTvmG0qTgX
+         C5f3SzwFy9LyAE3mGzw9IFeJMKeuHDyhV41kkP3MeLEbDVNH5ehBPsr02RZKtl0J8lUD
+         j+EMuzJNgkV0FdfnrJfGc3bxdca3dvnmHen5lgtBSDiVVJl8q8hrTXeGdF8j39EdlVwU
+         sVqcx8ITV6i/3i/MgtZdShbrrRWF4zGigCsL0FWGSemVWEE5yziYYo1e3wyMnnMF/Ypj
+         dgADYfov6jick4Et5bJJyIt9iUu/d5J9xPPe/uLiSK/1ACWXLqwtYlscmqXgnYGXH4CW
+         IjJQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8C4coQrjoFON4kPINBtbYlGHswnWpn+MODkuIUhbuBV4t+MJYO6z9lidWWPJ/R1Lkv3MOJ7ShIhDAN7wPz9FKe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuhcHkyS2+ohHEOMWulazAIJOcG0XquYLlXuOmRy8+iWzd1O3c
+	w4vdfB/8UV6wSM2Qq6oqESeJ05cJHWbdiHhObkd9KHPwci9GvwdNaLhmObImEYn3Li15JNKrZVi
+	N0PsOa7AQ4Q==
+X-Received: from dlbvv17.prod.google.com ([2002:a05:7022:5f11:b0:132:8d92:4d6f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:128e:b0:133:3bb1:8d41
+ with SMTP id a92af1059eb24-1349ab4b325mr2928300c88.28.1778713526619; Wed, 13
+ May 2026 16:05:26 -0700 (PDT)
+Date: Wed, 13 May 2026 16:04:47 -0700
 In-Reply-To: <20260513230450.529380-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260513230450.529380-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260513230450.529380-10-irogers@google.com>
-Subject: [PATCH v1 09/14] perf test: Fix subtest status alignment for
- multi-digit indexes
+Message-ID: <20260513230450.529380-12-irogers@google.com>
+Subject: [PATCH v1 11/14] perf test: Split monolithic 'util' test suite into sub-tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,42 +69,54 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When running perf test, the status column (: Ok) became misaligned when
-subtest indexes reached 2 or 3 digits (e.g. 9.100 vs 9.9 vs 10.1). This
-occurred because the subtest description field width (subw) was statically
-fixed to width - 2, assuming all subtest index prefixes were exactly 7
-characters wide.
-
-Dynamically calculate subw based on the exact character length of the test
-suite and subtest index prefix. This ensures the status column is perfectly
-aligned vertically across all test outputs regardless of subtest index digit
-count.
+Refactor the monolithic 'util' test suite into distinct 'String
+replacement' and 'BLAKE2s hash' sub-tests using the struct test_case
+framework. This improves test reporting granularity and is used in a
+subsequent perf test for JUnit XML test result reporting.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/tests/util.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 193a7dec6d5f..765724817776 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -370,10 +370,11 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 			     int result, int width, int running)
+diff --git a/tools/perf/tests/util.c b/tools/perf/tests/util.c
+index bf2c5b133884..f9abd9911e6c 100644
+--- a/tools/perf/tests/util.c
++++ b/tools/perf/tests/util.c
+@@ -86,7 +86,12 @@ static int test_blake2s(void)
+ 	return 0;
+ }
+ 
+-static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
++static int test__blake2s_case(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
++{
++	return test_blake2s();
++}
++
++static int test__strreplace(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
  {
- 	if (test_suite__num_test_cases(t) > 1) {
--		int subw = width > 2 ? width - 2 : width;
-+		char prefix[32];
-+		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:", curr_suite + 1, curr_test_case + 1);
-+		int subw = len >= 4 ? width + 4 - len : width;
+ 	TEST_ASSERT_VAL("empty string", test_strreplace(' ', "", "123", ""));
+ 	TEST_ASSERT_VAL("no match", test_strreplace('5', "123", "4", "123"));
+@@ -95,7 +100,16 @@ static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	TEST_ASSERT_VAL("replace long", test_strreplace('a', "abcabc", "longlong",
+ 							"longlongbclonglongbc"));
  
--		pr_info("%3d.%1d: %-*s:", curr_suite + 1, curr_test_case + 1, subw,
--			test_description(t, curr_test_case));
-+		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
- 	} else
- 		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
+-	return test_blake2s();
++	return 0;
+ }
  
+-DEFINE_SUITE("util", util);
++static struct test_case tests__util[] = {
++	TEST_CASE("String replacement", strreplace),
++	TEST_CASE("BLAKE2s hash", blake2s_case),
++	{ .name = NULL, }
++};
++
++struct test_suite suite__util = {
++	.desc = "util",
++	.test_cases = tests__util,
++};
 -- 
 2.54.0.563.g4f69b47b94-goog
 
