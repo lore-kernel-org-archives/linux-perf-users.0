@@ -1,250 +1,185 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A3416A956
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 00:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E102D5412
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 00:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778632459; cv=pass; b=NOUOK9PbfwyPUTnjb8JUS+aSv0LJ0df8nPvUPIaYPsbmAGnFXP/35/4/tGb0KQtYOjFFP3hboBH53dixJ2cJiSDPGE3aBeBckrwvfvtuLD629O9AxGdImm/Jr0fTSGIjlti94W30WDVdLCbrbeVDqDaBkZ5e9F3ri2rR1Z4wT3U=
+	t=1778633896; cv=pass; b=UAA5jOAZCHR6wVKZchxB9dqzpD+iW1fJYRxHB85XUb2fUp0mBTAdU+c6QpWTvzKUuYaO7eqv4Aqr33LodM//dKaAlwnqjseImkYfn/A0yqxW9JLxZcUSJzm6JGH8XQRvG3iXoDdMDFaNgsVTOIWc0MprlAUOdOp2BEoAUx7zozo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778632459; c=relaxed/simple;
-	bh=f8jYM07JFQXDe1VgRziPT+sPdw659PU6+aBbrhCdsos=;
+	s=arc-20240116; t=1778633896; c=relaxed/simple;
+	bh=h347xw53MS7OJe5w8eVUSe4ajz+LZ/kY+csyPwTnKE8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P2kRCmXfBh5f9iPxmbBTuaxKjjsgx8uXpp7vzQiF+JhwaLHJJUSLr0pN7QcKQbXj/BdyKYajcC15vu58bFcJIbPNhauRrdEEQ9XAliJ3r7nEXb9ZDFcBHO91fO65ZajFw4ysmWx+L4zL5jaZ2g24Qxage+MSddJdp8JPqrjVTzw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aPr/rmxh; arc=pass smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=OTuI9yr2uOrScMcH/67LMDg7BcxhsdORbLipTjRUJAHllwrPySRXqUCA8OQRmSSwUoZdUPtMUxYKUvvfm3A2s9AZg2jT2Kwu1jLWnZVjFRNZATI8NioSmE7TiG0QBtw1/hHely0AkOUfaHhGZSF6SEYlaTtVqX+BcMpx0zo7ehc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cZdfi7/V; arc=pass smtp.client-ip=74.125.82.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aPr/rmxh"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so975ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:34:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778632457; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cZdfi7/V"
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1336742714fso99c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:58:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778633887; cv=none;
         d=google.com; s=arc-20240605;
-        b=Vvjnt12dml55f5bgZBxqP9uG+HSAF2yglyEbkkP5cmin4gV4smVOintEHjoyi+Y4Xz
-         UoxS10d8/Siwkkvtr5tf215tfRuv4O+FWVknOqW3zadus+In9lEEkt6kyZepVZkN/evf
-         fWplR2KgjhhmuYyqVnwbuU07lNnpi+1r+9IJiAD7KIBien4A9nvgotIwJ6az0KisArmA
-         PezQu3cq/SZQpfrBUOrwm0OQ08kvuh36xcGBu9QkY+4+b/ljKr2WTZ6N8zYHEl+A0hLm
-         89rRqhT7r2nth+dIPDhQGAcHSkHxxxGWjdw3bLUCLXPvI1C0PsVvF+TGcFWKzzIlK92Y
-         Xv7g==
+        b=B+pf8EEwdiCm+z80dxRgkXCuFM3esgJYF+LUzQSlP13gwbyTidGf9mvX5RUPo5YQ+X
+         TzQxd+rq5iYS3T+jfo8bdP3DDMqtdzhW5GvnIxftxLpJXTkxTw1sy6yI7lKGKF1Ifclr
+         l+RVv/gGiZBVWa3C2PhN4hWQ253+q1QrdU1zUhNb3BnGjkjXc647PQb9xX/SNp7OhN+y
+         p3TTc9vvUwMK3Rw79n1OEv9oedCarHa5gOeCBt8U2e2yDbDbANJ0tAK3c4fRRBtiH46C
+         hD7cRsh1QcwQu5cht7yqwBegrkuTeWy+OJyYeA/m5iLcIkYj+uI3XajLuuJreFzBaPZ8
+         j9/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=NGfRvL0rDh5Lm/bcKTRSUeVuSC1oquZBqXB3mow0l+I=;
-        fh=s9RX7G1bDunu6nBsuNKOHLr/pAM1wZ66YV9LQNNNAsM=;
-        b=GwJxuu5bqjH85QCkrXd9sSL3iSboPk5OlSeVe+ZB2i+AR2fYBq3L6qqnIiUAwE5Hu2
-         K7lFLoN1hRC2wSfpCBfleRi9iYc41cyLlABvLx76vLVbq4xi3t8iy4UePHlR5yGeqCIc
-         YV0FnEE3QZ4N0IUdaG7shRbSIhEp/rp0GI+leX+rVziHtddjwq+J5KdoOY761RomglFF
-         tPvinSUO7sPWLJLFE0TahZWu8fhOPih8s8NpUftxxa7dA2E4Q1tJOBgofQAIvtaBSrxq
-         29HIEvEwTESweLl9i3oKA1xZoKA55esC422vfiGaEqwqGB2U/0KohOF8TWJztCIAItPq
-         0bWw==;
+        bh=LRO2poXnMaPTIgvnZ9fKozT82zPK5BjJ+UF96zATU5U=;
+        fh=bDNWkoWQOZn0ylNCETXLWhaX6i9wntmTtduIsLQRd7k=;
+        b=POM69YZ45RWx8PrCLZm3uCphQxe1PBHOn+AUjISmt/8fDVWrXJ+mIxLWwvDM4i5uyo
+         Sy86y0Zu9aCGG3vDvocNTz8ilOiblc7DAgN4PCGoM7ZRbjx5fsR4MTzeuILta3W58owc
+         iQCCBemdJJtW0U6KNFOqL4mPOxcgMsn5tnYMo09O2zNe7s75k3PtVKYHDghP2LY6i3K0
+         vaZD60ydk4uDCmYPBwiqc5+KcXhRK9+aK5XNc/5b/oKgroEIVwZXWkpuOcgJuNTDeHX5
+         bAtlDDlNkD43XZiCN6QhqqSUP3OHc4Gmd6cFtghgfNQKHXFPjpZio3aHCJd90yjvRuMt
+         l2Kw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778632457; x=1779237257; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778633887; x=1779238687; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NGfRvL0rDh5Lm/bcKTRSUeVuSC1oquZBqXB3mow0l+I=;
-        b=aPr/rmxhvJ5IIIm967Q8iNwfRTgqSkQlLpvJXMhmfpQC0hv4BFJiy1hPv5JFGhHheD
-         rh23juWm5tHifRPxbH3bcvknll7kTbVSCo4XQEeBfid5C2pu+fap9Jmo3yd3hhSJVhdO
-         m0HEUtBSxoFD0bVDxVEoPoVlAK+rWWR5rcdP7f927ddjiXGe3L8gqLY4rOUvwy9H5x3Y
-         RcoH5nWbV1OJ553aOE8oj6fhY+kwCLLGGUPEJaA4Anlyj0rESSgpz4D4JYylopE3X1On
-         hKu7GufF1Uj2bLvvp+LOTCkqbgdOlDqcniZHeevNPPbfX7rZMQBA4S9PEyTwwVYwc9ZI
-         Wjqw==
+        bh=LRO2poXnMaPTIgvnZ9fKozT82zPK5BjJ+UF96zATU5U=;
+        b=cZdfi7/VLLcWWzaS0uqNu6lrOqH/XZiQyDjYb8mlrwJxecsiEJ/ElGVUqPcM+c7xdH
+         yskRhjYg3dyifE+nHkohztpvimW8HZiPOqaDZh+TSE2oQhpPIw9x9yZF4xJ74rCG+RTS
+         f/m7o3F7RySGVn/ax0oummuTAFOqCN/PxNG2GTGV1mZ+TInCfyYNN/n3WvAEwr9AG19A
+         ZRKvBBtwuCp5M3cAqJ1lOU8Ot09J3UqtmkkKaJV2RxuhdC3PTBmxefdOQUtVt5W1PVBt
+         d3aCatGHFE7KiMKnjKeAP9ZLXV4MvDuSZb1dqSlUPyNE/dgPuvPaQiX+TKERj+oaaJSJ
+         N84Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778632457; x=1779237257;
+        d=1e100.net; s=20251104; t=1778633887; x=1779238687;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=NGfRvL0rDh5Lm/bcKTRSUeVuSC1oquZBqXB3mow0l+I=;
-        b=pCWwrZcTqz0t+Iql5JP4rAJu/fb4paSXyuEARIDAvcrSVk9S/UepeGKcTc+P+Nl+4z
-         fic2GPzhNi8YmF7+s56k/ycJY+A4KqLJRA5DLSLnLpz+l3nW4aSqCGY9YffUeGdAkLhf
-         6TM2Atx6Kw6b3HwDmf2pb4OlLDC1THLwiKrCSLriVqcUIMHOCfX6eic8y6SkLb7WWRRT
-         utUMbB8OkRPMrZeckBNSaKp1kkUp/Btz6xmE0KWY1d8iJN6ooG9Jye1b8R9JrEflS3l1
-         yJuKNYthTRJfhD+dmR/Kybq07sKu5eJaFMlBt5s39vxy2B5zKOLN/sasuHvwBOHSkbcK
-         r/XQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/60b8rxNYl+iHZT7Tg/Sfh5vsiLY2LPk7igCl9WIfFIOgcnbS9O9+JvnsbKKvwNFh7KcJm1JENiKUtgVVzj4pW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwgcKNfDCVye8ORxTxXEZ7jF0crLuBYnU6V1kj0NmctR7ULV38
-	tcXsJwv1mjCCJ+GZgjNME+FzdHsjtyNvqscO5FFfX7ZFWc0W/bn/J00EwsiDOy5xn9HDS8w+WIf
-	WXCZygHJcvkANW3snI89Fh9w+wbtBz7kuvMkPEOvW
-X-Gm-Gg: Acq92OE7uPfjQLK+rDpkvRght00zgn37dxiwxTjuXtVOPFkKs5yrCzQArfWlbKJHV5r
-	fS2OplsAoZ+uIcTH/sm3z1sBJUdc/bo8+k4hdu4ooJfkHYVWRSfnKEQbff8gA1ICJG3e+J06Ugs
-	DiICvi9+8t3B6PrKegM82ru9PQP5qdZ5NCtULKM7E+7DE809KRw8X3vWuV6WVO2U/e09EdGwge9
-	9pnzyZwDfYejkFkEbTpd4VVONhor8dXEUfJ7ngH+JsqoML6zN4PmRf8zuBeKO1im+LbI5Yiuwvt
-	MSnHH91YRtWouEeJaoawuhCi9E1/ww==
-X-Received: by 2002:a17:902:f081:b0:2b0:b458:2dc3 with SMTP id
- d9443c01a7336-2bd2c1264a3mr465515ad.21.1778632456089; Tue, 12 May 2026
- 17:34:16 -0700 (PDT)
+        bh=LRO2poXnMaPTIgvnZ9fKozT82zPK5BjJ+UF96zATU5U=;
+        b=GqZmQufHP8jW8MZ//pPbXO+hGbP/snNvZr/s91a6T0f58wVXgRSjqfoiTk2JFNoEDL
+         hM3szmCNF//1K6da3LWvOADLx5YB4vA86x8K/OcYKXo0i6CsYW8ge08EV9/pyKLAYcIN
+         FRaIx5+fIakNhIszPYK8q/o3sarwWmETZ3LG5I2e3GW+g+DhOozmrogfgCpPWN96VL+8
+         t2QFhtGR9CddXu4HE2+bx9/UEwblfahhFe8KQbV5A4ox/oajk9RamvUCoL+h4WDfvghz
+         9UYHJdkqhuLOQg1oHQlcgNKsI3qNRlKXR6DDcCn0fFxyRK3Xice0EhHtBGJ5x8KPzwWa
+         x4ow==
+X-Forwarded-Encrypted: i=1; AFNElJ+6qZAnsn850diFSjExwcVvcmIja1yjP5QeN2hN7q9DxmIinVt7PrFBmKa1QSxJqovTGREHLDgOYjD6zs00qusk@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfKYfpM8eOW+8aY8Eq/s2d3t5BfewMO7ZnjLkGCIevQyru1ycP
+	jeHMZBJn2mC9Oi2nUJERdVNXEeQKjYySytc9SaPWF++QcOHD9DpE/jYYumgeEJzbA0WksfOo59/
+	dxhOcdLTo/d2d+f9XLft5k5y+JNivpiIDCQlH2SFu
+X-Gm-Gg: Acq92OF0vsKTx9PlXwZ9bYxRJeGuHt0XNF1UAJXzJPGyHPg/4cYE4MxFknejnKMAbCP
+	3Oan4dsCC9KG2u0SfDxkjnw4Ug2uOqPUWF6PA7YGiNI8fOI9pEdusG0P8cC5FhVk2pX7K0USpUF
+	a8QoTZs4AzOy8PLI7y7OyST5VeZHPfztNeChDcihURueArkOJWS//m6hb/PqeMCNHpvuYrYDhPB
+	EljzNPlC+4esh1rLKEt6qg3WD1l5A6P7EgRA+eT+fnIA8bqIKGNKTt+Uzwqu2ozMXp9O3VX93er
+	+z/H8g31QdSKYkUvYWA=
+X-Received: by 2002:a05:7022:6086:b0:130:5c2c:d255 with SMTP id
+ a92af1059eb24-13489daa204mr50475c88.21.1778633886492; Tue, 12 May 2026
+ 17:58:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512233048.9577-1-zide.chen@intel.com> <20260512233048.9577-8-zide.chen@intel.com>
-In-Reply-To: <20260512233048.9577-8-zide.chen@intel.com>
+References: <20260504154205.21394-1-atrajeev@linux.ibm.com> <0FE86BD2-554C-402C-80A2-C8F86FC2F685@linux.ibm.com>
+In-Reply-To: <0FE86BD2-554C-402C-80A2-C8F86FC2F685@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 May 2026 17:34:04 -0700
-X-Gm-Features: AVHnY4JZSczLhN2GFWv4RvnjGP4nakYR_JLrx1WB1ToxxXlFjj4i8poWm2s6hTg
-Message-ID: <CAP-5=fXri3mY5QZYraF0DMnNQzWsTttfEYiwQ74Mi=bQf=5qMA@mail.gmail.com>
-Subject: Re: [PATCH 7/7] perf/x86/intel/uncore: Implement lazy setup for
- MSR/MMIO PMU
-To: Zide Chen <zide.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Date: Tue, 12 May 2026 17:57:53 -0700
+X-Gm-Features: AVHnY4Iu_AOdMqdqvEdJ7IC4E2i6EdbXj_msN7yrwjVaC2EmP4ZJe5hojHarpTc
+Message-ID: <CAP-5=fXeZxvikfUf5--Zc7bNBDu7gs27sRj4WoGAyQPJ79mq=Q@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] tools/perf: Fix the check for parameterized field
+ in event term
+To: Venkat <venkat88@linux.ibm.com>
+Cc: Athira Rajeev <atrajeev@linux.ibm.com>, acme@kernel.org, jolsa@kernel.org, 
+	adrian.hunter@intel.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
+	maddy@linux.ibm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com, 
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 12, 2026 at 4:39=E2=80=AFPM Zide Chen <zide.chen@intel.com> wro=
+On Tue, May 12, 2026 at 1:53=E2=80=AFAM Venkat <venkat88@linux.ibm.com> wro=
 te:
 >
-> MSR and MMIO uncore PMUs are currently registered at module init time
-> and appear in sysfs even when no PMU boxes are functional.
 >
-> Apply the same lazy registration model used by PCI uncore PMUs: the
-> PMU is registered when the first box is successfully initialized, and
-> unregistered when the last box exits.  If a box fails to initialize on
-> a subsequent die, the PMU is marked broken but remains registered to
-> avoid disrupting any in-flight perf events.
 >
-> Box allocation and free remain at module init/exit time to avoid
-> repeated kfree/alloc cycles across CPU offline/online events.
+> > On 4 May 2026, at 9:12=E2=80=AFPM, Athira Rajeev <atrajeev@linux.ibm.co=
+m> wrote:
+> >
+> > The format_alias() function in util/pmu.c has a check to
+> > detect whether the event has parameterized field ( =3D? ).
+> > The string alias->terms contains the event and if the event
+> > has user configurable parameter, there will be presence of
+> > sub string "=3D?" in the alias->terms.
+> >
+> > Snippet of code:
+> >
+> > /* Paramemterized events have the parameters shown. */
+> >       if (strstr(alias->terms, "=3D?")) {
+> >               /* No parameters. */
+> >               snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->na=
+me, alias->name);
+> >
+> > if "strstr" contains the substring, it returns a pointer
+> > and hence enters the above check which is not the expected
+> > check. And hence "perf list" doesn't have the parameterized
+> > fields in the result.
+> >
+> > Fix this check to use:
+> >
+> > if (!strstr(alias->terms, "=3D?")) {
+> >
+> > With this change, perf list shows the events correctly with
+> > the strings showing parameters.
+> >
+> > Before the fix:
+> >
+> > # ./perf list|grep -w PM_PAU_CYC
+> >  hv_24x7/PM_PAU_CYC/                                [Kernel PMU event]
+> >
+> > With this fix:
+> >
+> > # ./perf list|grep -w PM_PAU_CYC
+> >  hv_24x7/PM_PAU_CYC,chip=3D?/                         [Kernel PMU event=
+]
+> >
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 >
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> ---
->  arch/x86/events/intel/uncore.c | 72 ++++++----------------------------
->  1 file changed, 12 insertions(+), 60 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
-e.c
-> index 399f434e1a7d..2aaac0b49bb6 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1564,8 +1564,11 @@ static void uncore_box_unref(struct intel_uncore_t=
-ype **types, int die)
->                 for (i =3D 0; i < type->num_boxes; i++, pmu++) {
->                         box =3D pmu->boxes[die];
->                         if (box && box->cpu >=3D 0 &&
-> -                           atomic_dec_return(&box->cpu_refcnt) =3D=3D 0)
-> +                           atomic_dec_return(&box->cpu_refcnt) =3D=3D 0)=
- {
-> +                               if (atomic_dec_return(&pmu->die_refcnt) =
-=3D=3D 0)
-> +                                       uncore_pmu_unregister(pmu);
->                                 uncore_box_exit(box);
-> +                       }
->                 }
->         }
->  }
-> @@ -1659,7 +1662,7 @@ static int uncore_box_ref(struct intel_uncore_type =
-**types,
->                         box =3D pmu->boxes[die];
->                         if (box && box->cpu >=3D 0 &&
->                             atomic_inc_return(&box->cpu_refcnt) =3D=3D 1)
-> -                               uncore_box_init(box);
-> +                               uncore_box_setup(pmu, box);
->                 }
->         }
->         return 0;
-> @@ -1690,67 +1693,16 @@ static int uncore_event_cpu_online(unsigned int c=
-pu)
->         return 0;
->  }
->
-> -static int __init type_pmu_register(struct intel_uncore_type *type)
-> +static int __init uncore_cpu_mmio_init(struct intel_uncore_type **types)
->  {
-> -       int i, ret;
-> -
-> -       for (i =3D 0; i < type->num_boxes; i++) {
-> -               ret =3D uncore_pmu_register(&type->pmus[i]);
-> -               if (ret)
-> -                       return ret;
-> -       }
-> -       return 0;
-> -}
-> -
-> -static int __init uncore_msr_pmus_register(void)
-> -{
-> -       struct intel_uncore_type **types =3D uncore_msr_uncores;
-> -       int ret;
-> -
-> -       for (; *types; types++) {
-> -               ret =3D type_pmu_register(*types);
-> -               if (ret)
-> -                       return ret;
-> -       }
-> -       return 0;
-> -}
-> -
-> -static int __init uncore_cpu_init(void)
-> -{
-> -       int ret;
-> -
-> -       ret =3D uncore_types_init(uncore_msr_uncores);
-> -       if (ret)
-> -               goto err;
-> -
-> -       ret =3D uncore_msr_pmus_register();
-> -       if (ret)
-> -               goto err;
-> -       return 0;
-> -err:
-> -       uncore_types_exit(uncore_msr_uncores);
-> -       uncore_msr_uncores =3D empty_uncore;
-> -       return ret;
-> -}
-> -
-> -static int __init uncore_mmio_init(void)
-> -{
-> -       struct intel_uncore_type **types =3D uncore_mmio_uncores;
->         int ret;
->
->         ret =3D uncore_types_init(types);
-> -       if (ret)
-> -               goto err;
-> +       if (!ret)
-> +               return 0;
->
-> -       for (; *types; types++) {
-> -               ret =3D type_pmu_register(*types);
-> -               if (ret)
-> -                       goto err;
-> -       }
-> -       return 0;
-> -err:
-> -       uncore_types_exit(uncore_mmio_uncores);
-> -       uncore_mmio_uncores =3D empty_uncore;
-> +       uncore_types_exit(types);
-> +       types =3D empty_uncore;
->         return ret;
->  }
->
-> @@ -2052,12 +2004,12 @@ static int __init intel_uncore_init(void)
->
->         if (uncore_init->cpu_init) {
->                 uncore_init->cpu_init();
-> -               cret =3D uncore_cpu_init();
-> +               cret =3D uncore_cpu_mmio_init(uncore_msr_uncores);
->         }
->
->         if (uncore_init->mmio_init) {
->                 uncore_init->mmio_init();
-> -               mret =3D uncore_mmio_init();
-> +               mret =3D uncore_cpu_mmio_init(uncore_mmio_uncores);
->         }
->
->         if (cret && pret && mret) {
-> --
-> 2.54.0
+> > ---
+> > Changelog:
+> > v3 -> v4:
+> > Updated commit message to show real example
+> > addressing review comment from Namhyung.
+> >
+> > v2 -> v3:
+> > Split the strstr correction in a single patch
+> >
+> > tools/perf/util/pmu.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 23337d2fa281..0b8d58543f17 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, con=
+st struct perf_pmu *pmu,
+> >   skip_duplicate_pmus);
+> >
+> > /* Paramemterized events have the parameters shown. */
+> > - if (strstr(alias->terms, "=3D?")) {
+> > + if (!strstr(alias->terms, "=3D?")) {
+> > /* No parameters. */
+> > snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->nam=
+e);
+> > return buf;
+> > --
+> > 2.47.3
+> >
 >
