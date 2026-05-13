@@ -1,39 +1,56 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70113F412E;
-	Wed, 13 May 2026 15:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5E2386C3E;
+	Wed, 13 May 2026 16:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778687426; cv=none; b=E4PveUM+Xm3UQoP2Qp8z8oxpYkXTiP6y2zmaGbLSrbrY9Hsticx+vV5WZxnj+P4neGG96uasqnbB74ecRTZUOT5IbSPpFY8xk/z9lQtd9GaJQhWC1P9jDcpewTkYZ8qPAF9xbVS3gWS+8Lx+qK2sxJ2Wp1w7RaFmv46vs+6byNc=
+	t=1778688329; cv=none; b=T9tLy2hMYQwZL6GjGiaRfIpgy1F3kbV+ffeD5s3DXRkgOCXCrK/jSuYE5qMurqqakgEKa+fZfCX0LS2qvGoXp7eBiVrGnFxyAFsbrZPqrynSWicVl8wD0zvWKXxC2NnghIEE3Op1Q8tZZ9absKjefu6cUuSMuLOBEURlWCf4jms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778687426; c=relaxed/simple;
-	bh=ziH4xLtifV0/DQOr7pUtbkcleeUszvi4D9h06AQrwuI=;
+	s=arc-20240116; t=1778688329; c=relaxed/simple;
+	bh=dwfbr8YxSpBWCb/v6RltyyenNV+L4ch/70b7Fk5poeA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oALgbd+IdPHTb4b745Glgl7gyEiFKl1Hm9+HnLwiiLHdMoLELewFaRGs7ZGu2Kd1c8moz6kb8PDQM8S37NFZPaqIAe1twXq4e70VHuWLeUzMmz2a8EO+IEqWpN7WIxfXtvUp74UJ8sfI8Lw3OFCplE3v+3C8tCaFoG0Ya+VCxWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from Lee.localdomain (unknown [39.152.152.253])
-	by APP-01 (Coremail) with SMTP id qwCowACHMm6MnQRqEXQgEA--.35827S3;
-	Wed, 13 May 2026 23:50:08 +0800 (CST)
-From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
-To: acme@kernel.org,
-	namhyung@kernel.org
-Cc: irogers@google.com,
-	adrian.hunter@intel.com,
-	palmer@dabbelt.com,
-	pjw@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Li Guan <guanli.oerv@isrc.iscas.ac.cn>
-Subject: [PATCH 1/3] perf build: Fix cross-arch build failures by isolating auxtrace objects
-Date: Wed, 13 May 2026 23:48:49 +0800
-Message-ID: <20260513154851.1085334-2-guanli.oerv@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260513154851.1085334-1-guanli.oerv@isrc.iscas.ac.cn>
-References: <20260513154851.1085334-1-guanli.oerv@isrc.iscas.ac.cn>
+	 MIME-Version; b=DYw5viOgR9Y+hENByUYCYyxq4qGb/STFqUL4et1w/0y7BZHSSP6dhT5Gt5PQcjYn1K8jISK3aBy8kPOS2ME8SlwYFRPBvIJJ0fqTzmWSXNQHpJ0C6oNidiEt4JAadlUm5NoQF9QqGZKo/BEHhCAPKas563tCaoZc//YOH4ePUKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Q91vDpCO; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Q91vDpCO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1778688323;
+	bh=7zooLJmj+mZUvVlCoHTF1D45jcZXXLvz2dbvpnf172Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q91vDpCOb0v2gyxCoxdwVNuJNipcsni2xut7ms82HKUmQkx6chQn7OJvpXnGJvxoT
+	 YoVDMk/q8s+R8KqAec/qR/M+YPGIA8aZWzKVmzeD8Zs7Dc1t9jYxMS78BmbdX26mh6
+	 uC6ZFXek3zScQzSRwrYe2D4D5huVFRVMlKbdLIGyxeQUngMjFmOuZR+GNC7ILMKIY4
+	 qyVAuI5E2+okdBGSkpd3R+sgST6pQxeH2cGp6JpjZCCxoxk5sy2y3iNAa7xqkqe+Ci
+	 UCaTJYY6m0zxqBJZ9+eb5cq94UdmGksy/TfIPHmsjlzYMUhkp1Z7mU638etWHHVIWJ
+	 qY5pUsVeaH2Ow==
+Received: from laptop-mjeanson.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4gFywg4Czzz4Br;
+	Wed, 13 May 2026 12:05:23 -0400 (EDT)
+From: Michael Jeanson <mjeanson@efficios.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	Michael Jeanson <mjeanson@efficios.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Derek Foreman <derek.foreman@collabora.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2] perf data ctf: replace libbabeltrace with babeltrace2-ctf-writer
+Date: Wed, 13 May 2026 12:05:10 -0400
+Message-ID: <20260513160513.236214-1-mjeanson@efficios.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260512194710.162215-1-mjeanson@efficios.com>
+References: <20260512194710.162215-1-mjeanson@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,227 +58,394 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACHMm6MnQRqEXQgEA--.35827S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF4Duw4ktF4UXr45Gr4rKrg_yoWxZFWkpw
-	4kur15Zw1rGa1ay3sxZFn0gFy3twn5KFWF9F1fKw15Zr4xArWFqF4xtr1qgry7Jw1kt3yY
-	9F4jgrWDur4FvFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQY14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbn2-7UUUUU==
-X-CM-SenderInfo: hjxd0znlorv2ny6l223fol2u1dvotugofq/
 
-Currently, tools/perf/util/Build hardcodes architecture-specific hardware
-tracing objects (e.g., intel-pt.o, arm-spe.o, cs-etm-base.o) into the
-generic perf-util-y list. When compiling on architectures that lack
-these features (such as RISC-V), the compiler skips generating these
-objects, causing the linker to fail with "No such file or directory"
-or undefined references.
+The 1.x branch of Babeltrace has been superseded by 2.x in 2020 and has
+been unmaintained since 2022, efforts have started to remove it from
+popular distributions.
 
-Fix this by decoupling the architecture-specific hardware tracing drivers
-from the generic build process:
-1. In Makefile.config, explicitly export CONFIG_PERF_XYZ feature flags
-   only for their corresponding target architectures.
-2. In util/Build, conditionally link these hardware tracing objects
-   based on the newly exported feature flags.
-3. In util/auxtrace.c, provide __weak stub functions returning -ENOSYS
-   for the arch-specific processing routines. This ensures successful
-   linking and graceful degradation when specific drivers are omitted.
+Babeltrace 2.x offers a very similar 'ctf-writer' library that can be used
+with minimal changes for the '--to-ctf' feature and has been packaged
+since Debian 11 and Fedora 32.
 
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+This patch add a 'babeltrace2-ctf-writer' build feature using pkgconfig
+detection with a fallback to 'libbabeltrace'. There's a minor change to
+the API that is handled with simple preprocessor defines.
+
+There is no changes to the output ctf traces, the ctf-writer API still
+implements version 1.8 of the CTF specification that can be read by
+either Babeltrace 1 / 2 or any CTF compliant reader.
+
+Also remove some ifdefs in the cli option parsing to allow printing the
+helpful error message with '--to-ctf' when built without babeltrace.
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Derek Foreman <derek.foreman@collabora.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+
 ---
- tools/perf/Makefile.config | 21 ++++++++++++
- tools/perf/util/Build      | 20 +++++------
- tools/perf/util/auxtrace.c | 70 ++++++++++++++++++++++++++++++++++++++
- tools/perf/util/auxtrace.h |  6 ++++
- 4 files changed, 107 insertions(+), 10 deletions(-)
+Changes since v1:
+* Keep babeltrace 1 support as fallback
+---
+ tools/build/Makefile.feature                  |  3 ++
+ tools/build/feature/Makefile                  |  4 ++
+ .../feature/test-babeltrace2-ctf-writer.c     |  9 ++++
+ tools/perf/Makefile.config                    | 24 +++++++---
+ tools/perf/builtin-check.c                    |  1 +
+ tools/perf/builtin-data.c                     | 20 +++-----
+ .../shell/test_perf_data_converter_ctf.sh     |  9 ++--
+ tools/perf/util/Build                         |  2 +-
+ tools/perf/util/data-convert-bt.c             | 48 ++++++++++++-------
+ tools/perf/util/data-convert.h                |  4 +-
+ 10 files changed, 80 insertions(+), 44 deletions(-)
+ create mode 100644 tools/build/feature/test-babeltrace2-ctf-writer.c
 
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 0b7a7c38cb88..ce0bbbfa5d6c 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -114,6 +114,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          gtk2-infobar                   \
+          hello                          \
+          libbabeltrace                  \
++         babeltrace2-ctf-writer         \
+          libcapstone                    \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
+@@ -162,6 +163,7 @@ FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
+ # Declare list of feature dependency packages that provide pkg-config files.
+ #
+ FEATURE_PKG_CONFIG ?=           \
++	 babeltrace2-ctf-writer \
+          libtraceevent          \
+          libtracefs
+ 
+@@ -209,6 +211,7 @@ ifeq ($(feature-all), 1)
+   $(call feature_check,compile-x32)
+   $(call feature_check,bionic)
+   $(call feature_check,libbabeltrace)
++  $(call feature_check,babeltrace2-ctf-writer)
+ else
+   $(foreach feat,$(FEATURE_TESTS),$(call feature_check,$(feat)))
+ endif
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 1fbcb3ce74d2..314ff4c6f14b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -49,6 +49,7 @@ FILES=                                          \
+          test-stackprotector-all.bin            \
+          test-timerfd.bin                       \
+          test-libbabeltrace.bin                 \
++         test-babeltrace2-ctf-writer.bin        \
+          test-libcapstone.bin			\
+          test-compile-32.bin                    \
+          test-compile-x32.bin                   \
+@@ -304,6 +305,9 @@ $(OUTPUT)test-timerfd.bin:
+ $(OUTPUT)test-libbabeltrace.bin:
+ 	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
+ 
++$(OUTPUT)test-babeltrace2-ctf-writer.bin:
++	$(BUILD) # -lbabeltrace2-ctf-writer provided by $(FEATURE_CHECK_LDFLAGS-babeltrace2-ctf-writer)
++
+ $(OUTPUT)test-libcapstone.bin:
+ 	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
+ 
+diff --git a/tools/build/feature/test-babeltrace2-ctf-writer.c b/tools/build/feature/test-babeltrace2-ctf-writer.c
+new file mode 100644
+index 000000000000..9c89082e9f88
+--- /dev/null
++++ b/tools/build/feature/test-babeltrace2-ctf-writer.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <babeltrace2-ctf-writer/writer.h>
++
++int main(void)
++{
++	bt_ctf_stream_class_get_packet_context_type((void *) 0);
++	return 0;
++}
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 06d7a3f999..13f4b98b2e 100644
+index 15fbba9f4ca8..e3d248bf2b46 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -107,6 +107,27 @@ ifeq ($(SRCARCH),loongarch)
+@@ -1059,14 +1059,24 @@ else
+ endif
+ 
+ ifndef NO_LIBBABELTRACE
+-  $(call feature_check,libbabeltrace)
+-  ifeq ($(feature-libbabeltrace), 1)
+-    CFLAGS += -DHAVE_LIBBABELTRACE_SUPPORT $(LIBBABELTRACE_CFLAGS)
+-    LDFLAGS += $(LIBBABELTRACE_LDFLAGS)
+-    EXTLIBS += -lbabeltrace-ctf
+-    $(call detected,CONFIG_LIBBABELTRACE)
++  # First check for babeltrace2-ctf-writer
++  $(call feature_check,babeltrace2-ctf-writer)
++  ifeq ($(feature-babeltrace2-ctf-writer), 1)
++    CFLAGS += -DHAVE_BABELTRACE2_CTF_WRITER_SUPPORT $(shell $(PKG_CONFIG) --cflags babeltrace2-ctf-writer)
++    LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L babeltrace2-ctf-writer)
++    EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l babeltrace2-ctf-writer)
++    $(call detected,CONFIG_BABELTRACE_CTF_WRITER)
+   else
+-    $(warning No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev)
++    # If we didn't find babeltrace2-ctf-writer, try for libbabeltrace1
++    $(call feature_check,libbabeltrace)
++    ifeq ($(feature-libbabeltrace), 1)
++      CFLAGS += -DHAVE_LIBBABELTRACE_SUPPORT $(LIBBABELTRACE_CFLAGS)
++      LDFLAGS += $(LIBBABELTRACE_LDFLAGS)
++      EXTLIBS += -lbabeltrace-ctf
++      $(call detected,CONFIG_BABELTRACE_CTF_WRITER)
++    else
++      $(warning No libbabeltrace or babeltrace2-ctf-writer found, disables 'perf data' CTF format support, please install libbabeltrace2-dev[el] or libbabeltrace-dev[el]/libbabeltrace-ctf-dev)
++    endif
    endif
  endif
  
-+ifndef NO_AUXTRACE
-+  ifeq ($(SRCARCH),x86)
-+    $(call detected,CONFIG_PERF_INTEL_PT)
-+    $(call detected,CONFIG_PERF_AMD_PT)
-+  endif
-+
-+  ifeq ($(SRCARCH),arm64)
-+    $(call detected,CONFIG_PERF_ARM_SPE)
-+    $(call detected,CONFIG_PERF_HISI_PTT)
-+    $(call detected,CONFIG_PERF_CS_ETM)
-+  endif
-+
-+  ifeq ($(SRCARCH),s390)
-+    $(call detected,CONFIG_PERF_S390_CPUMSF)
-+  endif
-+endif
-+
-+ifeq ($(SRCARCH),arm64)
-+  $(call detected,CONFIG_PERF_ARM64_UNWIND_SUPPORT)
-+endif
-+
- ifeq ($(ARCH),s390)
-   CFLAGS += -fPIC
- endif
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 3641d263b345..c0837513f9ed 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -44,6 +44,7 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
+ 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
+ 	FEATURE_STATUS("libbabeltrace", HAVE_LIBBABELTRACE_SUPPORT),
++	FEATURE_STATUS("babeltrace2-ctf-writer", HAVE_BABELTRACE2_CTF_WRITER_SUPPORT),
+ 	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
+ 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
+ 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
+diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+index 85f59886b5cf..9e8eacbaea74 100644
+--- a/tools/perf/builtin-data.c
++++ b/tools/perf/builtin-data.c
+@@ -40,10 +40,8 @@ const struct option data_options[] = {
+ 		OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+ 		OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 		OPT_STRING(0, "to-json", &to_json, NULL, "Convert to JSON format"),
+-#ifdef HAVE_LIBBABELTRACE_SUPPORT
+ 		OPT_STRING(0, "to-ctf", &to_ctf, NULL, "Convert to CTF format"),
+ 		OPT_BOOLEAN(0, "tod", &opts.tod, "Convert time to wall clock time"),
+-#endif
+ 		OPT_BOOLEAN('f', "force", &opts.force, "don't complain, do it"),
+ 		OPT_BOOLEAN(0, "all", &opts.all, "Convert all events"),
+ 		OPT_STRING(0, "time", &opts.time_str, "str",
+@@ -65,29 +63,23 @@ static int cmd_data_convert(int argc, const char **argv)
+ 		pr_err("You cannot specify both --to-ctf and --to-json.\n");
+ 		return -1;
+ 	}
+-#ifdef HAVE_LIBBABELTRACE_SUPPORT
+ 	if (!to_json && !to_ctf) {
+ 		pr_err("You must specify one of --to-ctf or --to-json.\n");
+ 		return -1;
+ 	}
+-#else
+-	if (!to_json) {
+-		pr_err("You must specify --to-json.\n");
+-	return -1;
+-}
+-#endif
+ 
+ 	if (to_json)
+ 		return bt_convert__perf2json(input_name, to_json, &opts);
+ 
+ 	if (to_ctf) {
+-#if defined(HAVE_LIBBABELTRACE_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
++#if (defined(HAVE_BABELTRACE2_CTF_WRITER_SUPPORT) || defined(HAVE_LIBBABELTRACE_SUPPORT)) \
++	&& defined(HAVE_LIBTRACEEVENT)
+ 		return bt_convert__perf2ctf(input_name, to_ctf, &opts);
+ #else
+-		pr_err("The libbabeltrace support is not compiled in. perf should be "
+-		       "compiled with environment variables LIBBABELTRACE=1 and "
+-		       "LIBBABELTRACE_DIR=/path/to/libbabeltrace/.\n"
+-		       "Check also if libbtraceevent devel files are available.\n");
++		pr_err("The babeltrace ctf support is not compiled in. Ensure you have either\n"
++		       "libbabeltrace2-dev[el] or libbabeltrace-dev[el] installed and also\n"
++		       "libtraceevent-dev[el] or set PKG_CONFIG_PATH to find a local\n"
++		       "installation of those libraries.\n");
+ 		return -1;
+ #endif
+ 	}
+diff --git a/tools/perf/tests/shell/test_perf_data_converter_ctf.sh b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
+index 334eebc9945e..1bcffbadf279 100755
+--- a/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
++++ b/tools/perf/tests/shell/test_perf_data_converter_ctf.sh
+@@ -26,10 +26,13 @@ trap trap_cleanup exit term int
+ 
+ check_babeltrace_support()
+ {
+-	if ! perf check feature libbabeltrace
++	if ! perf check feature babeltrace2-ctf-writer
+ 	then
+-		echo "perf not linked with libbabeltrace, skipping test"
+-		exit 2
++		if ! perf check feature libbabeltrace
++		then
++			echo "perf not linked with libbabeltrace2-ctf-writer or libbabeltrace, skipping test"
++			exit 2
++		fi
+ 	fi
+ }
+ 
 diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 70cc91d008..79ade6066d 100644
+index bcccad7487a9..ba222abbd3e3 100644
 --- a/tools/perf/util/Build
 +++ b/tools/perf/util/Build
-@@ -132,21 +132,21 @@ perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-util-y += kvm-stat-arch/
- perf-util-y += lock-contention.o
- perf-util-y += auxtrace.o
--perf-util-y += intel-pt-decoder/
--perf-util-y += intel-pt.o
--perf-util-y += intel-bts.o
--perf-util-y += arm-spe.o
--perf-util-y += arm-spe-decoder/
--perf-util-y += hisi-ptt.o
--perf-util-y += hisi-ptt-decoder/
--perf-util-y += s390-cpumsf.o
-+perf-util-$(CONFIG_PERF_INTEL_PT) += intel-pt-decoder/
-+perf-util-$(CONFIG_PERF_INTEL_PT) += intel-pt.o
-+perf-util-$(CONFIG_PERF_INTEL_PT) += intel-bts.o
-+perf-util-$(CONFIG_PERF_ARM_SPE) += arm-spe.o
-+perf-util-$(CONFIG_PERF_ARM_SPE) += arm-spe-decoder/
-+perf-util-$(CONFIG_PERF_HISI_PTT) += hisi-ptt.o
-+perf-util-$(CONFIG_PERF_HISI_PTT) += hisi-ptt-decoder/
-+perf-util-$(CONFIG_PERF_S390_CPUMSF) += s390-cpumsf.o
- perf-util-y += powerpc-vpadtl.o
+@@ -233,7 +233,7 @@ perf-util-$(CONFIG_LIBUNWIND_X86)      += libunwind/x86_32.o
+ perf-util-$(CONFIG_LIBUNWIND_AARCH64)  += libunwind/arm64.o
  
- ifdef CONFIG_LIBOPENCSD
- perf-util-y += cs-etm.o
- perf-util-y += cs-etm-decoder/
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+-  perf-util-$(CONFIG_LIBBABELTRACE) += data-convert-bt.o
++  perf-util-$(CONFIG_BABELTRACE_CTF_WRITER) += data-convert-bt.o
  endif
--perf-util-y += cs-etm-base.o
-+perf-util-$(CONFIG_PERF_CS_ETM) += cs-etm-base.o
  
- perf-util-y += parse-branch-options.o
- perf-util-y += parse-regs-options.o
-@@ -168,7 +168,7 @@ perf-util-y += clockid.o
- perf-util-y += list_sort.o
- perf-util-y += mutex.o
- perf-util-y += sharded_mutex.o
--perf-util-y += intel-tpebs.o
-+perf-util-$(CONFIG_PERF_INTEL_PT) += intel-tpebs.o
+ perf-util-y += data-convert-json.o
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index ba1c8e48d495..8f2060dca234 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -11,14 +11,6 @@
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+-#include <babeltrace/ctf-writer/writer.h>
+-#include <babeltrace/ctf-writer/clock.h>
+-#include <babeltrace/ctf-writer/stream.h>
+-#include <babeltrace/ctf-writer/event.h>
+-#include <babeltrace/ctf-writer/event-types.h>
+-#include <babeltrace/ctf-writer/event-fields.h>
+-#include <babeltrace/ctf-ir/utils.h>
+-#include <babeltrace/ctf/events.h>
+ #include "asm/bug.h"
+ #include "data-convert.h"
+ #include "session.h"
+@@ -37,6 +29,28 @@
+ #include "util/time-utils.h"
+ #include "header.h"
  
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a224687ffb..f6e426c3c5 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -51,6 +51,7 @@
- #include "cs-etm.h"
- #include "intel-pt.h"
- #include "intel-bts.h"
-+#include "intel-tpebs.h"
- #include "arm-spe.h"
- #include "hisi-ptt.h"
- #include "s390-cpumsf.h"
-@@ -2960,3 +2961,72 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
- 
- 	return session->auxtrace->evsel_is_auxtrace(session, evsel);
- }
++#ifdef HAVE_BABELTRACE2_CTF_WRITER_SUPPORT
++#include <babeltrace2-ctf-writer/writer.h>
++#include <babeltrace2-ctf-writer/clock.h>
++#include <babeltrace2-ctf-writer/stream.h>
++#include <babeltrace2-ctf-writer/event.h>
++#include <babeltrace2-ctf-writer/event-types.h>
++#include <babeltrace2-ctf-writer/event-fields.h>
++#include <babeltrace2-ctf-writer/utils.h>
++#elif defined(HAVE_LIBBABELTRACE_SUPPORT)
++#include <babeltrace/ctf-writer/writer.h>
++#include <babeltrace/ctf-writer/clock.h>
++#include <babeltrace/ctf-writer/stream.h>
++#include <babeltrace/ctf-writer/event.h>
++#include <babeltrace/ctf-writer/event-types.h>
++#include <babeltrace/ctf-writer/event-fields.h>
++#include <babeltrace/ctf-ir/utils.h>
++#include <babeltrace/ctf/events.h>
 +
-+/*
-+ * Stub functions for architecture-specific features to support cross-platform building.
-+ * These weak symbols are overridden by strong symbols when the corresponding
-+ * architecture-specific code is compiled in.
-+ */
-+#ifndef HAVE_ARCH_X86_64_SUPPORT
-+int __weak intel_pt_process_auxtrace_info(union perf_event *event __maybe_unused,
-+					  struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+int __weak intel_bts_process_auxtrace_info(union perf_event *event __maybe_unused,
-+					   struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+int __weak evsel__tpebs_open(struct evsel *evsel __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+void __weak evsel__tpebs_close(struct evsel *evsel __maybe_unused)
-+{
-+}
-+
-+int __weak evsel__tpebs_read(struct evsel *evsel __maybe_unused,
-+			     int cpu_map_idx __maybe_unused,
-+			     int thread __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+int __weak insn_decode(void *insn __maybe_unused, const void *kaddr __maybe_unused,
-+		       int len __maybe_unused, int mode __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
++#define bt_ctf_field_integer_signed_set_value bt_ctf_field_signed_integer_set_value
++#define bt_ctf_field_integer_unsigned_set_value bt_ctf_field_unsigned_integer_set_value
 +#endif
 +
-+#ifndef HAVE_ARCH_ARM64_SUPPORT
-+int __weak arm_spe_process_auxtrace_info(union perf_event *event __maybe_unused,
-+					 struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+int __weak hisi_ptt_process_auxtrace_info(union perf_event *event __maybe_unused,
-+					  struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+int __weak cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
-+					 struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
-+#ifndef HAVE_ARCH_S390_SUPPORT
-+int __weak s390_cpumsf_process_auxtrace_info(union perf_event *event __maybe_unused,
-+					     struct perf_session *session __maybe_unused)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 6947f3f284..474e9445b4 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -699,4 +699,10 @@ void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
- 	opts->range_num = 0;
- }
- 
-+/*
-+ * Prototypes for architecture-specific functions that require weak stubs
-+ * to support cross-platform builds on non-x86 architectures.
-+ */
-+int insn_decode(void *insn, const void *kaddr, int len, int mode);
-+
+ #ifdef HAVE_LIBTRACEEVENT
+ #include <event-parse.h>
  #endif
+@@ -121,13 +135,13 @@ static int value_set(struct bt_ctf_field_type *type,
+ 	}
+ 
+ 	if (sign) {
+-		ret = bt_ctf_field_signed_integer_set_value(field, val);
++		ret = bt_ctf_field_integer_signed_set_value(field, val);
+ 		if (ret) {
+ 			pr_err("failed to set field value %s\n", name);
+ 			goto err;
+ 		}
+ 	} else {
+-		ret = bt_ctf_field_unsigned_integer_set_value(field, val);
++		ret = bt_ctf_field_integer_unsigned_set_value(field, val);
+ 		if (ret) {
+ 			pr_err("failed to set field value %s\n", name);
+ 			goto err;
+@@ -374,10 +388,10 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
+ 					data + offset + i * len, len);
+ 
+ 			if (!(flags & TEP_FIELD_IS_SIGNED))
+-				ret = bt_ctf_field_unsigned_integer_set_value(
++				ret = bt_ctf_field_integer_unsigned_set_value(
+ 						field, value_int);
+ 			else
+-				ret = bt_ctf_field_signed_integer_set_value(
++				ret = bt_ctf_field_integer_signed_set_value(
+ 						field, adjust_signedness(value_int, len));
+ 		}
+ 
+@@ -471,7 +485,7 @@ add_bpf_output_values(struct bt_ctf_event_class *event_class,
+ 		goto put_len_type;
+ 	}
+ 
+-	ret = bt_ctf_field_unsigned_integer_set_value(len_field, nr_elements);
++	ret = bt_ctf_field_integer_unsigned_set_value(len_field, nr_elements);
+ 	if (ret) {
+ 		pr_err("failed to set field value for raw_len\n");
+ 		goto put_len_field;
+@@ -500,7 +514,7 @@ add_bpf_output_values(struct bt_ctf_event_class *event_class,
+ 		struct bt_ctf_field *elem_field =
+ 			bt_ctf_field_sequence_get_field(seq_field, i);
+ 
+-		ret = bt_ctf_field_unsigned_integer_set_value(elem_field,
++		ret = bt_ctf_field_integer_unsigned_set_value(elem_field,
+ 				((u32 *)(sample->raw_data))[i]);
+ 
+ 		bt_ctf_field_put(elem_field);
+@@ -545,7 +559,7 @@ add_callchain_output_values(struct bt_ctf_event_class *event_class,
+ 		goto put_len_type;
+ 	}
+ 
+-	ret = bt_ctf_field_unsigned_integer_set_value(len_field, nr_elements);
++	ret = bt_ctf_field_integer_unsigned_set_value(len_field, nr_elements);
+ 	if (ret) {
+ 		pr_err("failed to set field value for perf_callchain_size\n");
+ 		goto put_len_field;
+@@ -575,7 +589,7 @@ add_callchain_output_values(struct bt_ctf_event_class *event_class,
+ 		struct bt_ctf_field *elem_field =
+ 			bt_ctf_field_sequence_get_field(seq_field, i);
+ 
+-		ret = bt_ctf_field_unsigned_integer_set_value(elem_field,
++		ret = bt_ctf_field_integer_unsigned_set_value(elem_field,
+ 				((u64 *)(callchain->ips))[i]);
+ 
+ 		bt_ctf_field_put(elem_field);
+@@ -728,7 +742,7 @@ static struct ctf_stream *ctf_stream__create(struct ctf_writer *cw, int cpu)
+ 		goto out;
+ 	}
+ 
+-	ret = bt_ctf_field_unsigned_integer_set_value(cpu_field, (u32) cpu);
++	ret = bt_ctf_field_integer_unsigned_set_value(cpu_field, (u32) cpu);
+ 	if (ret) {
+ 		pr_err("Failed to update CPU number\n");
+ 		goto out;
+diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-convert.h
+index ee651fa680a1..febfc0b05268 100644
+--- a/tools/perf/util/data-convert.h
++++ b/tools/perf/util/data-convert.h
+@@ -11,10 +11,10 @@ struct perf_data_convert_opts {
+ 	const char *time_str;
+ };
+ 
+-#ifdef HAVE_LIBBABELTRACE_SUPPORT
++#if defined(HAVE_BABELTRACE2_CTF_WRITER_SUPPORT) || defined(HAVE_LIBBABELTRACE_SUPPORT)
+ int bt_convert__perf2ctf(const char *input_name, const char *to_ctf,
+ 			 struct perf_data_convert_opts *opts);
+-#endif /* HAVE_LIBBABELTRACE_SUPPORT */
++#endif
+ 
+ int bt_convert__perf2json(const char *input_name, const char *to_ctf,
+ 			 struct perf_data_convert_opts *opts);
 -- 
-2.54.0
+2.47.3
 
