@@ -1,164 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2828E3D7D7B;
-	Wed, 13 May 2026 07:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E63E9C10;
+	Wed, 13 May 2026 08:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778659065; cv=none; b=iM4CsKxinSt0kMKdlQG81yRxBgFUv3bqvsaWX6cxT3c+gqJe17tT1dlTMRDaOtIUhlpfBlZaJtSfkgNERDqr3Vh9ICV7DYZ7fdJykmcG6uB3HIRt3WCkw3R6Cr0aqp+9XjxBCZnKd7NAIFhUn4LMGmBMzS87/8tciXkoUT8PFzc=
+	t=1778662757; cv=none; b=qccWQ+uQoC3u+uXGXL/0LZo8x6FfoRk4pcgldJQVS6mrrM7zZ4Kr3JM1pqWjKKCZv7RpgXOLBiF27+WoLvZZx3k+XYQSeurkyYo7uunnzJvLQgnHdu4eKL2FZrNMPVUD9KB2znPOR05Pqg7rkVQ6/qpbvTryc8mq59pNV8fmaqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778659065; c=relaxed/simple;
-	bh=bR1i92frDxooM1/4hRznpgGK1PwGwO8I8wpOQKsxaig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+vO9UbNPwAuNHeJSv/JQeQEkiPE2+vn+z0IFFyspa20PJGigqnWkTOmn6Wkj8Gb2VP5f5gvT118Qb2apbGc1tgpaguu7eVJWYjOeVn0LJrYf1briCWYyJiW/Yo8VP8QCnOZXSywa8L0KqnmQaRzqaGCWDZzCaP/6TTVbeAm1lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orykS+qr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778662757; c=relaxed/simple;
+	bh=PEVTgJ+WEITKcKHlM3A2AERVxB7EIIeMbzNifZFMaIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d8LgXTAtWBnVpxRhbuxoLj1swDP2AOS/n2O5cjN1vPG4yVnsQ4wVzkiViag/EZPZuuqnh8nbI68aTs2lEFMbA3KEseBRwGWWL2L9TiTCfBr0g5nuOsANh2Gvng98IeYkBjQaSYgX/P7voogErXRdY9APegjixz3A0RUnJpI5mf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLzB0lXx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orykS+qr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D17CC2BCC7;
-	Wed, 13 May 2026 07:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778659064;
-	bh=bR1i92frDxooM1/4hRznpgGK1PwGwO8I8wpOQKsxaig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=orykS+qrrrRNFxk7x/UmKrWLdvYQkQowPXI0p076mIuKFeymoBdbMkuIrhPF7xc1o
-	 aVTVCBoGbkyvc48jQn598HmxZ9Ar+o/yssqekrG3bWfzyXG5A5A+Zfcswc7eY/pjMg
-	 fT6a2+VyuOvcLb/vM8Hn2wK5zFC4yN2BLQTLNgrE0mXArVrIS3qNlmuAZ7q70TFYxR
-	 bDEMt1EpMfDA/37IbfOnPT/dcluEhOvlwGEcl4ZArCPY1PaYqgmnCeAANHks7QtDBv
-	 uMAoPxGcaERtzu4+rI623u1q+YlsWgG/fXhqcgzfnXIHC9OXl9EUnAlQfY9oRRp6Dv
-	 19/arP+5NHgzw==
-Date: Wed, 13 May 2026 00:57:42 -0700
-From: Oliver Upton <oupton@kernel.org>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	James Clark <james.clark@linaro.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 09/20] KVM: arm64: Set up MDCR_EL2 to handle a
- Partitioned PMU
-Message-ID: <agQu9kLnbHjSni-C@kernel.org>
-References: <20260504211813.1804997-1-coltonlewis@google.com>
- <20260504211813.1804997-10-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLzB0lXx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778662755; x=1810198755;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PEVTgJ+WEITKcKHlM3A2AERVxB7EIIeMbzNifZFMaIk=;
+  b=CLzB0lXxWSrEjzzdvskiVAsL5yv0YptCZ59tvPh4wBiKYmiUIuvBAGqA
+   jYtuxwgJSiAN2XZUQWRvo0nynF5ovuGfYq6tkRevKSk582bsJVvb/yVCP
+   ISYrRawJmQpxefQNzNTS3ce1flce4k+aBP6qNIvVptrdkavHswB52jej/
+   SjAkYB4OyZID7tOTMhfGL3V1MZsHz7PDGt4RHHoe7HrZXU3UkTKSbFDhr
+   +aeOy07yiS+3X/fs9bEY7C7hU228ubviLnQ8mDVXatmlqbME14ZFvo3w9
+   cEd6IUI1Gxlo1AweHILBq3Dh1YZfubOQC1qYM5eaGjep6QLeZ7HBTDoOf
+   g==;
+X-CSE-ConnectionGUID: GuwcmZyKQ+y2N7uhMnElBg==
+X-CSE-MsgGUID: 5w+La3NuREqu7V/DNa89cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="97152172"
+X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
+   d="scan'208";a="97152172"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 01:59:15 -0700
+X-CSE-ConnectionGUID: oIGyYMHwTLW0UKD1/rEzrA==
+X-CSE-MsgGUID: 3RXCl4SaQqWZZ9hTG0lC4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
+   d="scan'208";a="234959915"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 01:59:12 -0700
+Message-ID: <f1bd7228-d809-4e62-88d4-a5c17ba44723@linux.intel.com>
+Date: Wed, 13 May 2026 16:59:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260504211813.1804997-10-coltonlewis@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] perf/x86/intel/uncore: Fix uncore_box ref/unref
+ ordering on CPU hotplug
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260512233048.9577-1-zide.chen@intel.com>
+ <20260512233048.9577-7-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260512233048.9577-7-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 04, 2026 at 09:18:02PM +0000, Colton Lewis wrote:
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 3ad6b7c6e4ba7..0ab89c91e19cb 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -36,20 +36,43 @@ static int cpu_has_spe(u64 dfr0)
->   */
->  static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+
+On 5/13/2026 7:30 AM, Zide Chen wrote:
+> In uncore_event_cpu_online(), uncore_box_ref() was called before
+> uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
+> but box->cpu is still -1 at that point because uncore_change_context()
+> has not run yet.  As a result, the box is never initialized on the
+> first CPU to come online in a die, leaving it permanently
+> uninitialized in the single-CPU-per-die case.
+>
+> Thus, cpu_refcnt is one count below the true value, and in the CPU
+> offline path, the box will be torn down on the second-to-last CPU.
+>
+> In uncore_event_cpu_offline(), uncore_box_unref() was called after
+> uncore_change_context(), so box->cpu is already -1 when the collector
+> CPU goes offline, which prevents it from tearing down the box.
+>
+> Fix by swapping the call order in both paths so that
+> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
+> the correct context.
+>
+> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+>  arch/x86/events/intel/uncore.c | 56 ++++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 922ba299533e..399f434e1a7d 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1574,9 +1574,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
 >  {
-> +	int hpmn = kvm_pmu_hpmn(vcpu);
+>  	int die, target;
+>  
+> +	/* Clear the references */
+> +	die = topology_logical_die_id(cpu);
+> +	uncore_box_unref(uncore_msr_uncores, die);
+> +	uncore_box_unref(uncore_mmio_uncores, die);
 > +
->  	preempt_disable();
+>  	/* Check if exiting cpu is used for collecting uncore events */
+>  	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
+> -		goto unref;
+> +		return 0;
+> +
+>  	/* Find a new cpu to collect uncore events */
+>  	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+>  
+> @@ -1589,20 +1595,14 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+>  	uncore_change_context(uncore_msr_uncores, cpu, target);
+>  	uncore_change_context(uncore_mmio_uncores, cpu, target);
+>  	uncore_change_context(uncore_pci_uncores, cpu, target);
+> -
+> -unref:
+> -	/* Clear the references */
+> -	die = topology_logical_die_id(cpu);
+> -	uncore_box_unref(uncore_msr_uncores, die);
+> -	uncore_box_unref(uncore_mmio_uncores, die);
+>  	return 0;
+>  }
+>  
+> -static int allocate_boxes(struct intel_uncore_type **types,
+> +static void allocate_boxes(struct intel_uncore_type **types,
+>  			 unsigned int die, unsigned int cpu)
+>  {
+>  	struct intel_uncore_box *box, *tmp;
+> -	struct intel_uncore_type *type;
+> +	struct intel_uncore_type *type, **start = types;
+>  	struct intel_uncore_pmu *pmu;
+>  	LIST_HEAD(allocated);
+>  	int i;
+> @@ -1627,14 +1627,21 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>  		list_del_init(&box->active_list);
+>  		box->pmu->boxes[die] = box;
+>  	}
+> -	return 0;
+> +	return;
+>  
+>  cleanup:
+>  	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
+>  		list_del_init(&box->active_list);
+>  		kfree(box);
+>  	}
+> -	return -ENOMEM;
+> +
+> +	/* mark the PMU broken to prevent future ussage. */
+> +	for (; *start; start++) {
+> +		type = *start;
+> +		pmu = type->pmus;
+> +		for (i = 0; i < type->num_boxes; i++, pmu++)
+> +			uncore_pmu_set_broken(pmu);
+> +	}
+
+It looks all PMUs of all types are set to be broken even the boxes
+allocation of some PMUs didn't fail. Could we set the only the failed and
+later PMUs to be broken?
+
+
+>  }
+>  
+>  static int uncore_box_ref(struct intel_uncore_type **types,
+> @@ -1643,11 +1650,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>  	struct intel_uncore_type *type;
+>  	struct intel_uncore_pmu *pmu;
+>  	struct intel_uncore_box *box;
+> -	int i, ret;
+> -
+> -	ret = allocate_boxes(types, die, cpu);
+> -	if (ret)
+> -		return ret;
+> +	int i;
+>  
+>  	for (; *types; types++) {
+>  		type = *types;
+> @@ -1664,27 +1667,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>  
+>  static int uncore_event_cpu_online(unsigned int cpu)
+>  {
+> -	int die, target, msr_ret, mmio_ret;
+> +	int die, target;
+>  
+>  	die = topology_logical_die_id(cpu);
+> -	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
+> -	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
+> +	allocate_boxes(uncore_msr_uncores, die, cpu);
+> +	allocate_boxes(uncore_mmio_uncores, die, cpu);
 >  
 >  	/*
->  	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
->  	 * to disable guest access to the profiling and trace buffers
+>  	 * Check if there is an online cpu in the package
+>  	 * which collects uncore events already.
 >  	 */
-> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
-> -					 *host_data_ptr(nr_event_counters));
+>  	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
+> -	if (target < nr_cpu_ids)
+> -		return 0;
+> -
+> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> -
+> -	if (!msr_ret)
+> +	if (target >= nr_cpu_ids) {
+> +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
+>  		uncore_change_context(uncore_msr_uncores, -1, cpu);
+> -	if (!mmio_ret)
+>  		uncore_change_context(uncore_mmio_uncores, -1, cpu);
+> -	uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +		uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +	}
 > +
-> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
->  	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
->  				MDCR_EL2_TPMS |
->  				MDCR_EL2_TTRF |
->  				MDCR_EL2_TPMCR |
->  				MDCR_EL2_TDRA |
-> -				MDCR_EL2_TDOSA);
-> +				MDCR_EL2_TDOSA |
-> +				MDCR_EL2_HPME);
-> +
-> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
-> +		/*
-> +		 * Filtering these should be redundant because we trap
-> +		 * all the TYPER and FILTR registers anyway and ensure
-> +		 * they filter EL2, but set the bits if they are here.
-> +		 */
-> +		if (is_pmuv3p1(read_pmuver()))
-> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HPMD;
-> +		if (is_pmuv3p5(read_pmuver()))
-> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HCCD;
-
-Neither of these controls are of any consequence on unsupported
-hardware (RES0). Set them unconditionally?
-
-> +		/*
-> +		 * Take out the coarse grain traps if we are using
-> +		 * fine grain traps.
-> +		 */
-> +		if (kvm_vcpu_pmu_use_fgt(vcpu))
-
-I think open coding the check here would actually improve readability.
-
-		if (cpus_have_final_cap(ARM64_HAS_FGT) &&
-		    (cpus_have_final_cap(ARM64_HAS_HPMN0) ||
-		     vcpu->kvm->arch.nr_pmu_counters != 0))
-			vcpu->arch.mdcr_el2 &= ~(MDCR_EL2_TPM | MDCR_EL2_TPMCR);
-> +
-> +/**
-> + * kvm_pmu_hpmn() - Calculate HPMN field value
-> + * @vcpu: Pointer to struct kvm_vcpu
-> + *
-> + * Calculate the appropriate value to set for MDCR_EL2.HPMN. If
-> + * partitioned, this is the number of counters set for the guest if
-> + * supported, falling back to max_guest_counters if needed. If we are not
-> + * partitioned or can't set the implied HPMN value, fall back to the
-> + * host value.
-> + *
-> + * Return: A valid HPMN value
-> + */
-> +u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
-> +{
-> +	u8 nr_guest_cntr = vcpu->kvm->arch.nr_pmu_counters;
-> +
-> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)
-> +	    && !vcpu_on_unsupported_cpu(vcpu)
-> +	    && (cpus_have_final_cap(ARM64_HAS_HPMN0) || nr_guest_cntr > 0))
-> +		return nr_guest_cntr;
-> +
-> +	return *host_data_ptr(nr_event_counters);
-> +}
-
-This helper isn't helpful. Just open code it in the place where we are
-computing MDCR_EL2.
-
-> @@ -542,6 +542,13 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->  	if (cpus_have_final_cap(ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS))
->  		return 1;
+> +	uncore_box_ref(uncore_msr_uncores, die, cpu);
+> +	uncore_box_ref(uncore_mmio_uncores, die, cpu);
+>  	return 0;
+>  }
 >  
-> +	/*
-> +	 * If partitioned then we are limited by the max counters in
-> +	 * the guest partition.
-> +	 */
-> +	if (kvm_pmu_is_partitioned(arm_pmu))
-> +		return arm_pmu->max_guest_counters;
-> +
-
-Ok, this is exactly what I was getting at earlier. What about a VM with
-an emulated PMU? It should use cntr_mask calculation, not the guest
-range.
-
-Thanks,
-Oliver
