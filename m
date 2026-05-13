@@ -1,128 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f99.google.com (mail-oa1-f99.google.com [209.85.160.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2623BB699;
-	Wed, 13 May 2026 21:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0153838AC7B
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 21:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778708412; cv=none; b=iI5O3m5KMxX/UHjt+QBKQ3s3M0I7ANloWTuqmcnGE19BO+D5EK6RliLJzwSyYhWvE6CYa7u2RY0KqEIEuJ0zoLke4VVBZjyUo1C8O3YvDAruPcmr/TJ3fjVdE8NWNJpT2F3aifOwsZoEWDjo6aVrp/2Dqa57XHtUXuQaQ5vwd3o=
+	t=1778709372; cv=none; b=u4tQibiURgQss4HxPg1EylZv/N/L36vCWrFgTGjZRPtkXY2xEg4h2gfy0TbrlFDJkZcu81fvsiNrrygFvbN7ys3vskeRFkPA4HvByPRRjqfko3HdvF6fLPFltIZeBQJ6UrpvAzVRsZGDLlnov7UtHsVphfBE0tij5NpTC+FsS54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778708412; c=relaxed/simple;
-	bh=cbfovNGF89sVDuNC/GhSlOseeN9bTKu0cefZn5InWWY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Y9WyQ6pqe1DjTk7JDOqewoeG96dBvtMEoAUxAaHm5hOkZNaK8G52mEm+ysary8OmAgm3ocAaotDEjMdnLWB9FAWJztOspwo841P1hK5es0e6J36P6+mZOTi49eus/JPKRKShmXxdggKcdvhNzgDVsRxSF9PGcYpzt+H+VKfoJNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nO4Ml/xc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778709372; c=relaxed/simple;
+	bh=1XimAraz+eaeRD/qV6rFBGluyxAhYcaEF1sf4L3qXFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z/AC3JStloUvggz9gDWl7HbyKnC/k+hQtJet4E6f1DPK3sfH1TU6hVS2kqZtTb1vw4sLw1NrcrsHbvK7g83elwGsmpdtA9raSmPv/kN/pEZGJJaTnewFpvzaBHKQkx6B4tsspzYQyj/Jwpe4A/Def5M0XkGr+Dx2/hrcVqspR6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JRlIib5/; arc=none smtp.client-ip=209.85.160.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nO4Ml/xc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96DCC19425;
-	Wed, 13 May 2026 21:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778708411;
-	bh=cbfovNGF89sVDuNC/GhSlOseeN9bTKu0cefZn5InWWY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=nO4Ml/xcxZkvvwPK/m19G0Lbxb/EJS0GEaJWNbYfDRu2w2+zKkjgfyO8qXxWTIvNk
-	 p86+j2l+IlbnvXPT6arEzJDpyrvB20rvgcUyK8uI6elL3LgjRtUhiOGJadRnwk4czp
-	 tIScmpiPh6Bo/fOOj9HjP1vVZbEKQ35QSAvkANc2WcjRo9psu6rRNDYZ7za932+3HP
-	 WxJ3ZHYHQWyBaVW5oqcf1WK+9DKHJFKj3Yeomb9O5YgfE4g1G1L9IX9jYm1pqgV/32
-	 z74O8PRdkKck1NR41m+eaWPYp2xtMvIKy1MF16APlA/eEHGiu6nT9iOMZ2SkiEPij6
-	 9K3LcVdHK1LSg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 11/14] tools build: Integrate libdebuginfod into
- test-all fast path
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512053539.3410189-12-irogers@google.com>
-References: <20260512053539.3410189-12-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 21:40:11 +0000
-Message-Id: <20260513214011.C96DCC19425@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JRlIib5/"
+Received: by mail-oa1-f99.google.com with SMTP id 586e51a60fabf-408778a8ec4so4063718fac.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 14:56:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778709370; x=1779314170;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rKpcuN8BMEhOGlG4OX0AkTmwlcIpeIXdS5Vx4rdG7g8=;
+        b=X7kJxSN7AVuJiGxu7Yp3wxs28iLS3xEhgeRmSAYlPXpWsOlt8dZrZAvm75zpLoaUmP
+         nMR/FQJqXEwjagmOuQF6b+C8WQRCCT6THuKDrDDsqAozzq0ZLtsXAa5XAmpCPDNAnlye
+         1cq2jnlnO51pflxRraAXhU1naZT0Hbq1Z2NsqYC2kCCgzLM0dEovv931BVKzqxYLbXFn
+         9Oy22SQEQ6h6CLJLBirBuIjA3FEAtdTypWPKcVefKv9chtXPqEJaRei7xBxqnX/Ry8Ig
+         scBJMlmR0ipzup2RflhJhjvoxap44aQ8MTBYqEMn2KBAbfmbkS2l5JtB36tqbxu91+ht
+         MG1w==
+X-Forwarded-Encrypted: i=1; AFNElJ+hIlOdeHNptdyh11B+kS/iMrN1jysDT0+CIm8eVsjiuj/dyqlhyYt04pakXnpv8fL2z0FULeoZX69NQNBolvwV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIfRtkcDkh89GaiDS6kjOC7U1KfXpsn/qzitNuC/ZTl0BU0pHe
+	digaX0B01oeSI0Ix+8x8xkk+pKdTSlfkz21Y5TJwxf9TuiZ6gNvs77PJTKYFKwDVphHRtTT3AxE
+	XY9aPWhE0c8UyMkRd9jiEOIZMdLRQ023HOFuUNuDVlnvCc9eZgqnKHpnrP1GyB8scWEuxbHVkf6
+	+N+62FqIjiTZtkFPXsIowMfoktE2Ar7wyoiZaxwX2DYVB/FrFvCwytI5EbtB/TwKtTUUG5E+W0a
+	9B5p5jJx2BxV87bleLQNIXcX4rNOA==
+X-Gm-Gg: Acq92OHK78MSxXrvDvymO71M/A7+UCdarG+OS/w3b8JFRElnP3B9aG2aPnvNwfBmyGQ
+	sOsc3fFaTPiGPn3Cz9V7z/qJCpepvstcWxnbBGRDvhQ3w1mRY4t3pBpg4T47D59eIcDY28qktSg
+	P/LMzAT4fjglzgnkg8Jl4A8SPX7UL6ZWn06caCk77cQCrCTzu7k6/BKO91cp+A7MQxRRN4HvvMD
+	67nhb0czjacStqI5vuixsx/Hd0Cdn8G0cWKLKP6jf2jMR02z2JYU1AhaOMnip78MJgSOalWePeF
+	tKA5B3UUJIzPpnNG8t5WCie+qQJ/ILdnx+Lnby2Ys2uWLEHTanEsMrV3MsxrM67vSfNfTV1KlYb
+	mjedeAvd666nyMFzKvqac4Pu6UFB4lAKwD5Oi6efHHF5NYq0r8AUJjTOiDWhS75X/KjWDkA1gVm
+	3IBDpnD9PUWyzuLC/ELcp4A4LWMKewvnjGYJ4gpZtIwkXil3evGn+mcoCrWDn2fvyoMOp+S4l44
+	gg=
+X-Received: by 2002:a05:6870:8a14:b0:41c:616:5317 with SMTP id 586e51a60fabf-439d31348a1mr2094513fac.39.1778709369836;
+        Wed, 13 May 2026 14:56:09 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-121.dlp.protect.broadcom.com. [144.49.247.121])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-439fc2a509esm56590fac.8.2026.05.13.14.56.09
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2026 14:56:09 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-132a8f93432so1455796c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 14:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1778709368; x=1779314168; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKpcuN8BMEhOGlG4OX0AkTmwlcIpeIXdS5Vx4rdG7g8=;
+        b=JRlIib5/XOwv3NhIrq3zZZmcxKXMDxmUE5h7yh7TzOH1fKxwAKNVipwylQQqJUzbzE
+         SIwCu7E+E4uGBlNrzL2jXZkC1TmUqj5RCzzqn6NZFQ4mFHBvER+t5UzlMibchof6rWXR
+         WCk3O0Lxi9YhF9dkAbWg9kyojA3G8iIQtumXc=
+X-Forwarded-Encrypted: i=1; AFNElJ+nBQOwD9Zb0XrAjC8PUId9MSsb22G0RKPOpnS/mWJ2pKcdifOcwQC0isA5yCZfiTHYCBGVClcfMm3xQOhic1Jh@vger.kernel.org
+X-Received: by 2002:a05:7022:68a6:b0:12d:b3f8:60e7 with SMTP id a92af1059eb24-1349ac71ce5mr3244194c88.34.1778709368436;
+        Wed, 13 May 2026 14:56:08 -0700 (PDT)
+X-Received: by 2002:a05:7022:68a6:b0:12d:b3f8:60e7 with SMTP id a92af1059eb24-1349ac71ce5mr3244168c88.34.1778709367869;
+        Wed, 13 May 2026 14:56:07 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cbed2232sm1184822c88.7.2026.05.13.14.56.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2026 14:56:07 -0700 (PDT)
+Message-ID: <f06b4732-33f4-4457-9e6b-58ede7590122@broadcom.com>
+Date: Wed, 13 May 2026 14:56:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf trace beauty fcntl: Fix build with older kernel
+ headers
+To: Ian Rogers <irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, mmayer@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>,
+ "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+References: <20260513192347.4007895-1-florian.fainelli@broadcom.com>
+ <CAP-5=fXfD5bkhoufpa3aYU5mO4YiJ3agjG+vyB6KUU=o4vGADw@mail.gmail.com>
+Content-Language: en-US, fr-FR
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CAP-5=fXfD5bkhoufpa3aYU5mO4YiJ3agjG+vyB6KUU=o4vGADw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Short-circuiting `feature_check` prevents necessary re-evaluatio=
-n of features falsely assumed present by `test-all`, causing fatal build fa=
-ilures.
-- [Low] Unconditionally adding `-ldebuginfod` to `BUILD_ALL` breaks the `te=
-st-all` fast path even when explicitly disabled via `NO_LIBDEBUGINFOD=3D1`.
---
+On 5/13/26 13:58, Ian Rogers wrote:
+> On Wed, May 13, 2026 at 12:23 PM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+>>
+>> Toolchains with older kernel headers that do not include upstream commit
+>> c75b1d9421f80f4143e389d2d50ddfc8a28c8c35 ("fs: add fcntl() interface for
+>> setting/getting write life time hints") will now fail to build perf due
+>> to missing definitions for
+>> F_GET_RW_HINT/F_SET_RW_HINT/F_GET_FILE_RW_HINT/F_SET_FILE_RW_HINT.
+>>
+>> Provide a fallback definition for these when they are not already
+>> defined.
+> 
+> This seems fine but the commit you mention was added to Linux 4.13. Is
+> there a reason you've run into this problem? The oldest active LTS
+> kernel is 4.19.
 
-commit 53a01ad9ae3a2bcd156b498b52efecdd21be5e21
-Author: Ian Rogers <irogers@google.com>
-
-tools build: Integrate libdebuginfod into test-all fast path
-
-This commit bundles libdebuginfod into test-all.c to avoid an individual
-feature check sub-make fork. It short-circuits feature_check in
-Makefile.feature to skip evaluations when a feature was pre-detected.
-
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 2f192d3bf61b9..d8febe5d58005 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -8,7 +8,9 @@ endif
-> =20
->  feature_check =3D $(eval $(feature_check_code))
->  define feature_check_code
-> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
-CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
- CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
-(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
-S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-> +  ifeq ($(feature-$(1)),)
-> +    feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"=
-$(CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1)=
-)" CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D=
-"$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATU=
-RES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-> +  endif
->  endef
-
-Does this short-circuit prevent the necessary evaluation of features omitted
-from test-all?
-
-When test-all.bin successfully compiles, Makefile.feature sets all features=
- in
-FEATURE_TESTS to 1. If features like libbfd or libcpupower are intentionally
-omitted from test-all.c, they are falsely assumed present.
-
-By skipping the evaluation when feature-$(1) is already set, the explicit
-correction is missed. Could this cause fatal linker errors on systems that
-lack these libraries?
-
-[ ... ]
-
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 704c687ed3ad1..dc828523b50ad 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -115,7 +115,7 @@ __BUILD =3D $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $=
-(patsubst %.bin,%.c,$(@F)) $(
->    BUILD_BFD =3D $(BUILD) -DPACKAGE=3D'"perf"' -lbfd -ldl
->    BUILD_ALL =3D $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=3D2=
- -ldw -lelf -lnuma -lelf -lslang \
->  	      $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd \
-> -	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
-> +	      $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null) -ldebu=
-ginfod
-> =20
->  __BUILDXX =3D $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bi=
-n,%.cpp,$(@F)) $(LDFLAGS)
-
-Will adding -ldebuginfod unconditionally here break the test-all fast path
-even when NO_LIBDEBUGINFOD=3D1 is explicitly passed?
-
-If a system lacks libdebuginfod-dev but the build is correctly configured to
-opt out, it appears BUILD_ALL will still attempt to link against -ldebuginf=
-od
-and fail, forcing a slow fallback to individual feature tests.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512053539.3410=
-189-1-irogers@google.com?part=3D11
+The toolchain I am using is still on kernel headers 4.9.x, I am 
+cognizant this is a very old set of kernel headers, this is specific and 
+unique to building for MIPS, our ARM/ARM64 targets are using more modern 
+components.
+-- 
+Florian
