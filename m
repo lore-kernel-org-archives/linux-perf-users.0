@@ -1,164 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1DB1DF26E;
-	Wed, 13 May 2026 00:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778632324; cv=none; b=Ipz1h+EL1A7Q945aCvWPDqO6GArBdtQCp5+TSl3b8+ju6GDZuxjR2PuHmQBmBwKdXI4Zh4TtsIfkG/D05LJuVVmKQJqqkmkmdnF4QTX1ck32eTYtwFJ4bgQJ9bg7ixQCf6FbqKaOvzh3uKsov/2RBbb1nNoiaBOiHGnWUa96hHs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778632324; c=relaxed/simple;
-	bh=t6YTowD2FgRkq/vrstt+TfIqPZvVngjl+19Lrd2Y7gg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p16RlLLJas8eEUwndq3HpIymzcSiU2K9Nrf5d2OJn14qhv0djJhB7fbU1Ew/TVHMO/WexoehHUlOaTq2ixvF5ls9/5XpyD02BAMFnYlnzUsfXIaDRmxQ/UMndtor3gPE1R435PN6+bUybxVjt4uc7BQewHMgXaLtJRXlAtBcKAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c7+q8bBL; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9E9181334
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 00:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778632390; cv=pass; b=DJIPtluKYhJJp1xTn/AwSGCKdCnI+GOwiH/vFBkgcU1CWdjgEjLvGYx6+h6BLQVZl6WmOtUQ3eGZTKv+4f55BRtqAyO5toz6npsNKNSSYJ386Yggv+EY0IAUV/JSOIcaT3Sr809vclPC9oN2ht6RObUch03iY9q9ftplwGHJP1k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778632390; c=relaxed/simple;
+	bh=Nxdn77Qik02CKXHSibHlxB3fZweBPlYDncBUd9tn+Zk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CB3PrWLKQwexNfSZlOvoEtvtkbKUnoAfAHAymcxjcZFdUrEpE0bnmo7d9TA6wt13E0g3LjfEf7w2/LisEz/EaRNe84pv5bWCBP2/6jfZ1K62wa9Ok2Ppi27lEZ033gaatVBBC9iPkAHEFUOX0bheAL3izLuaK1gJ9mxYt8eWjK0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nqaOeN2v; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c7+q8bBL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778632323; x=1810168323;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=t6YTowD2FgRkq/vrstt+TfIqPZvVngjl+19Lrd2Y7gg=;
-  b=c7+q8bBLnijBTk19nEB+qwqgCt46OymBam0OsQIBkSmfuDyH0Kj96BzN
-   Qsts4xoxaZE7IifFJzzy//Qd+43yrLryv15JMHsnHKLKSXF482E8O+nBB
-   vCgorWsBQQwwlEZmPMI7GLXeC7rBebREZKMPrSjny7gSwPECUJ7sUVjxm
-   zSyp5Y2AtqI2Yuq6psMaiXps9b8WgQm2wpL326gIC+jgHgI00v+d0ShPp
-   I36g7LzowX6o8Ss0pajo5XbjBt0tJdsuw3y1XWkXZpxF4hGPk0T1YAGgy
-   pXYQ/ci0CRvHK2J7UkPdBzmWPgiN0xP7FW/gxnfOAHAa66V/R330FDsCJ
-   g==;
-X-CSE-ConnectionGUID: Us/YU+ivRjaXiukibpA+JA==
-X-CSE-MsgGUID: QXwTg4x1T3mWqVPA0DGPxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="96981704"
-X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
-   d="scan'208";a="96981704"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 17:32:02 -0700
-X-CSE-ConnectionGUID: aDqO5vRwSvOgUy7wedFgUg==
-X-CSE-MsgGUID: 5X4MUzyvTEWkdru0YV98Mw==
-X-ExtLoop1: 1
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 17:31:59 -0700
-Message-ID: <9c838555-3fbf-4ea9-ae17-cfab5471638a@linux.intel.com>
-Date: Wed, 13 May 2026 08:31:56 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nqaOeN2v"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b46da8c48eso195ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 May 2026 17:33:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778632388; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Mf78+bY54Jn0YMTbMMy+aNqdbC4OIkz4fUI/xITd7XjO0JELusAGB+q58z1ZNch/xL
+         0N+4eg7t6dxo3GSW70NpQPMyNaC440ZSTPu/0ewqYRGhS/WERVcK8obLL0/BptzWeN2v
+         GnS6cAyq6/UMLMON1cGpdvvhvB8xCPwdDfwURGCE1UbWSxlcNU3qDZh1McznvUV+n+vN
+         zxJbmrM6dpr4dBbF1Z16Qf9306TXKaRiGRDkWRDo28IvztE68ZyhMYBZp/KZSfXG9jTK
+         smevOQqz2y/N4WU4u9V9oOuef7iPWLgJ0GZnhtN6j5Jl6iLkEjAKTSqcsqJciROjBIvH
+         Emvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=W55jeuHg08NmKlpnuBgbYu1bu29oVoYrUAME1/cjysU=;
+        fh=P3NULRPnZMnN6V6bjjgEfSgA+I8/0gBh/ONGMp1URVQ=;
+        b=Nz8HjECj9cIoZRjSvBch4ROx2VENJrRcWm3cDAwH3lh8AEm6ePVXseNctPd4lbIq7I
+         ZNur4xsqohBYPB9NEbqw4WfOvzt62CUPEQqY8s6oCicFzPW9pIUZ2QPiGXSWAFCmmvv7
+         yD9ZQUBB5muQhj2MLhrdD0DYHZ0Y5JJeiQgbfQt8Z9GNAshOMxTnnk7CR+7NPi+HZ5bR
+         TEY5aRVE601Ci3SB0RpzQJT0oCYOb6aQUZCY8nb6T/Ccx1WIhfUn+WaP7ZclU1/zmO16
+         /pWwqqr9wikfq1cz+//a6Cq6KZqz2+TPc+UeJzusaqqy69OmxcubD7MXppElOipsDEEL
+         kT8w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778632388; x=1779237188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W55jeuHg08NmKlpnuBgbYu1bu29oVoYrUAME1/cjysU=;
+        b=nqaOeN2vnqiEjt0cyegByzKD73eD63h9TvTFM5ndI0+fYdnxLcNz0o1XTq4wleB1Rp
+         ABb8MlbTs6IrbJ2Yx1GcEp50WeozfZsY8iu/R1lwYqRxZ3PScTTgbRJmEtDM9YVLGacW
+         CWZmGL9dyB/bnEpdE1g1NIvcS66yjcTwxsGJGv4cCaaLtMpmxSW3qIIt8sDFsK4X2auY
+         Rzk1aoqq9d+qWQxThzlpEwsXGZ8RoCjwIPK4bNzGDyBjKqJcXIh8Meh/SLp0VPNerK7m
+         8kFmVDAIb0yYa0gqTXKLftfa/FIO5CoK+3r+Y8u7Rx7YIVk7O7vo2zGHTkjrARiftyUQ
+         tfRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778632388; x=1779237188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=W55jeuHg08NmKlpnuBgbYu1bu29oVoYrUAME1/cjysU=;
+        b=QMEt/tghesHQxo5wB7QP3eUtPOpEgrveB68f9kXBDMMJEGlIK5B3UVxkHDYBC0FuvV
+         LgRqUDIl559g8j7zfAt+I4F2o/lhJ1SR2yx/Ge1fU6siiQeHYpCXfWWlAvoXBAoUsS54
+         hlsj/pykUmBuSoWyCXgLxR8zuuVGM6xzwMt/He9H2W/p31FbJ2WUlPiTw1XB1S+r+4bc
+         N0RW/v4btGB47pI9yEzh4591cvY9bInGlNtvtsh4PQ7FEDIrQp86xsDAbDrHF7NtLZf2
+         4jwS0aSqVqAd+yUkbyr7EKzH84A1nRyENG7/ZgEwzgkFzMfEDb67ZzNV4pbc0cIgXRfX
+         Hh5A==
+X-Forwarded-Encrypted: i=1; AFNElJ+bhWOLDxoNJZvKXf+LJrozdV3ZplHLgx1v8Z4iPYBQJQKn8TgWAtGYtAevsSzg8DGBw6FCrBJ/sYfPktgdOl4a@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOHAB5DABTUOTV8DnD23Q6ahwXbTtuOCu3poeNy2HNWlni4dRj
+	Iaxir9YYWkQSyUpf0KTYiocF4M6ct6gGsx4LGZCyobm8KRpRuY/3pOEMt9tGx5B4Uxmzn5Bs5w1
+	0agmAR17sf6tmmYTo2e3fEG3HX9OOIGf0HPgXKvBj
+X-Gm-Gg: Acq92OEvmc0PSn+zY7dqNwsr9rRJjVOk4VykFJVIQkIvP1R5sB5PK4d6AifCdN83jHE
+	lHp9mjUDIkePcgUpc5Tkn+pJSdXdlVyaVb+xd3qr1HRCDyeDBgC1umUEt/WVZopVn9Ia+JbQnoD
+	2TU/JdKJRdSMokVmnrqwkUjDnuMyGDEO03SBQG0sp5rqbHaHLYYT7S3LiU/x4Ke6aB7O7hM1EWi
+	hVKF8oTkn9s0bcrGurCO9jCz0Gq9AWWD17qIFDY58qKDcpQ7TmkxN6PwlcJ3WmcJTJ7eHNg1fE0
+	iteu/NlUKAuKcZVsmy4=
+X-Received: by 2002:a17:902:cf4b:b0:2b4:6153:e541 with SMTP id
+ d9443c01a7336-2bd2c0a2cabmr1020025ad.3.1778632387765; Tue, 12 May 2026
+ 17:33:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] perf/x86/intel/uncore: Fix PCI device refcount leak
- in UPI discovery
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260511230527.26096-1-zide.chen@intel.com>
- <20260511230527.26096-3-zide.chen@intel.com>
- <7c3aed41-c68c-4cd4-862f-66039b87c7e8@linux.intel.com>
- <6fbf3912-5422-4b6f-b8c6-4db55559f73e@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <6fbf3912-5422-4b6f-b8c6-4db55559f73e@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260512233048.9577-1-zide.chen@intel.com> <20260512233048.9577-7-zide.chen@intel.com>
+In-Reply-To: <20260512233048.9577-7-zide.chen@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 12 May 2026 17:32:55 -0700
+X-Gm-Features: AVHnY4JMV4PPoRraNqKtQyPhOqWs413voGL1CLYKgHsvcuFwDn3eroP0M7pizvE
+Message-ID: <CAP-5=fWuG4Q4TbnK+Y-tiet9o9=at4BVPf_RdXbWY_Vvd5zR4w@mail.gmail.com>
+Subject: Re: [PATCH 6/7] perf/x86/intel/uncore: Fix uncore_box ref/unref
+ ordering on CPU hotplug
+To: Zide Chen <zide.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 5/13/2026 1:35 AM, Chen, Zide wrote:
+On Tue, May 12, 2026 at 4:39=E2=80=AFPM Zide Chen <zide.chen@intel.com> wro=
+te:
 >
-> On 5/12/2026 2:27 AM, Mi, Dapeng wrote:
->> On 5/12/2026 7:05 AM, Zide Chen wrote:
->>> pci_get_domain_bus_and_slot() increments the reference count of the
->>> returned PCI device and therefore requires a matching pci_dev_put().
->>>
->>> In skx_upi_topology_cb() and discover_upi_topology(), the lookup is
->>> performed inside a loop, but pci_dev_put() is only called once after
->>> the loop. As a result, references from all previous iterations are
->>> leaked.
->>>
->>> Move pci_dev_put(dev) into the if (dev) block immediately after
->>> upi_fill_topology() returns.
->>>
->>> Opportunistically, fix uninitialized variable in skx_upi_topology_cb().
->>>
->>> Fixes: 4cfce57fa42d ("perf/x86/intel/uncore: Enable UPI topology discovery for Skylake Server")
->>> Fixes: f680b6e6062e ("perf/x86/intel/uncore: Enable UPI topology discovery for Icelake Server")
->>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>> ---
->>>  arch/x86/events/intel/uncore_snbep.c | 6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->>> index 215d33e260ed..c9ce206fcbb6 100644
->>> --- a/arch/x86/events/intel/uncore_snbep.c
->>> +++ b/arch/x86/events/intel/uncore_snbep.c
->>> @@ -4261,7 +4261,7 @@ static int upi_fill_topology(struct pci_dev *dev, struct intel_uncore_topology *
->>>  static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
->>>  				int die, u64 cpu_bus_msr)
->>>  {
->>> -	int idx, ret;
->>> +	int idx, ret = 0;
->>>  	struct intel_uncore_topology *upi;
->>>  	unsigned int devfn;
->>>  	struct pci_dev *dev = NULL;
->>> @@ -4274,12 +4274,12 @@ static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
->>>  		dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
->>>  		if (dev) {
->>>  			ret = upi_fill_topology(dev, upi, idx);
->>> +			pci_dev_put(dev);
->>>  			if (ret)
->>>  				break;
->>>  		}
->>>  	}
->>>  
->>> -	pci_dev_put(dev);
->>>  	return ret;
->>>  }
->>>  
->>> @@ -5499,6 +5499,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
->>>  							  devfn);
->>>  			if (dev) {
->>>  				ret = upi_fill_topology(dev, upi, idx);
->>> +				pci_dev_put(dev);
->>>  				if (ret)
->>>  					goto err;
->>>  			}
->>> @@ -5506,7 +5507,6 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
->>>  	}
->>>  err:
->>>  	pci_dev_put(ubox);
->>> -	pci_dev_put(dev);
->> Should we move the "pci_dev_put(ubox)" into the while loop as well? In
->> theory, the ubox device could be found multiple times.
-> As mentioned below, pci_dev_put(ubox) is needed for the two 'goto err"
-> breaks. Moving it into the main loop would require two pci_dev_put()
-> calls, which adds no benefit.
->  >
->> Besides, could you please search "pci_get_device()" in uncore code, it
->> seems some functions don't call pci_dev_put() or only calls it once, like
->> the funciton spr_update_device_location() ...
-> pci_get_device() calls pci_dev_put() internally on the previous device
-> before returning the next one, so if the "while (pci_get_device())" loop
-> runs to completion without a break, no extra pci_dev_put() is needed:
+> In uncore_event_cpu_online(), uncore_box_ref() was called before
+> uncore_change_context().  uncore_box_ref() gates on box->cpu >=3D 0,
+> but box->cpu is still -1 at that point because uncore_change_context()
+> has not run yet.  As a result, the box is never initialized on the
+> first CPU to come online in a die, leaving it permanently
+> uninitialized in the single-CPU-per-die case.
 >
-> https://elixir.bootlin.com/linux/v7.1-rc3/source/drivers/pci/search.c#L283
-
-I see. Thanks.
-
-
+> Thus, cpu_refcnt is one count below the true value, and in the CPU
+> offline path, the box will be torn down on the second-to-last CPU.
 >
+> In uncore_event_cpu_offline(), uncore_box_unref() was called after
+> uncore_change_context(), so box->cpu is already -1 when the collector
+> CPU goes offline, which prevents it from tearing down the box.
 >
->> Thanks.
->>
->>
->>
->>>  	return ret;
->>>  }
->>>  
+> Fix by swapping the call order in both paths so that
+> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
+> the correct context.
+>
+> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> ---
+>  arch/x86/events/intel/uncore.c | 56 ++++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
+e.c
+> index 922ba299533e..399f434e1a7d 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1574,9 +1574,15 @@ static int uncore_event_cpu_offline(unsigned int c=
+pu)
+>  {
+>         int die, target;
+>
+> +       /* Clear the references */
+> +       die =3D topology_logical_die_id(cpu);
+> +       uncore_box_unref(uncore_msr_uncores, die);
+> +       uncore_box_unref(uncore_mmio_uncores, die);
+> +
+>         /* Check if exiting cpu is used for collecting uncore events */
+>         if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
+> -               goto unref;
+> +               return 0;
+> +
+>         /* Find a new cpu to collect uncore events */
+>         target =3D cpumask_any_but(topology_die_cpumask(cpu), cpu);
+>
+> @@ -1589,20 +1595,14 @@ static int uncore_event_cpu_offline(unsigned int =
+cpu)
+>         uncore_change_context(uncore_msr_uncores, cpu, target);
+>         uncore_change_context(uncore_mmio_uncores, cpu, target);
+>         uncore_change_context(uncore_pci_uncores, cpu, target);
+> -
+> -unref:
+> -       /* Clear the references */
+> -       die =3D topology_logical_die_id(cpu);
+> -       uncore_box_unref(uncore_msr_uncores, die);
+> -       uncore_box_unref(uncore_mmio_uncores, die);
+>         return 0;
+>  }
+>
+> -static int allocate_boxes(struct intel_uncore_type **types,
+> +static void allocate_boxes(struct intel_uncore_type **types,
+>                          unsigned int die, unsigned int cpu)
+>  {
+>         struct intel_uncore_box *box, *tmp;
+> -       struct intel_uncore_type *type;
+> +       struct intel_uncore_type *type, **start =3D types;
+>         struct intel_uncore_pmu *pmu;
+>         LIST_HEAD(allocated);
+>         int i;
+> @@ -1627,14 +1627,21 @@ static int allocate_boxes(struct intel_uncore_typ=
+e **types,
+>                 list_del_init(&box->active_list);
+>                 box->pmu->boxes[die] =3D box;
+>         }
+> -       return 0;
+> +       return;
+>
+>  cleanup:
+>         list_for_each_entry_safe(box, tmp, &allocated, active_list) {
+>                 list_del_init(&box->active_list);
+>                 kfree(box);
+>         }
+> -       return -ENOMEM;
+> +
+> +       /* mark the PMU broken to prevent future ussage. */
+> +       for (; *start; start++) {
+> +               type =3D *start;
+> +               pmu =3D type->pmus;
+> +               for (i =3D 0; i < type->num_boxes; i++, pmu++)
+> +                       uncore_pmu_set_broken(pmu);
+> +       }
+>  }
+>
+>  static int uncore_box_ref(struct intel_uncore_type **types,
+> @@ -1643,11 +1650,7 @@ static int uncore_box_ref(struct intel_uncore_type=
+ **types,
+>         struct intel_uncore_type *type;
+>         struct intel_uncore_pmu *pmu;
+>         struct intel_uncore_box *box;
+> -       int i, ret;
+> -
+> -       ret =3D allocate_boxes(types, die, cpu);
+> -       if (ret)
+> -               return ret;
+> +       int i;
+>
+>         for (; *types; types++) {
+>                 type =3D *types;
+> @@ -1664,27 +1667,26 @@ static int uncore_box_ref(struct intel_uncore_typ=
+e **types,
+>
+>  static int uncore_event_cpu_online(unsigned int cpu)
+>  {
+> -       int die, target, msr_ret, mmio_ret;
+> +       int die, target;
+>
+>         die =3D topology_logical_die_id(cpu);
+> -       msr_ret =3D uncore_box_ref(uncore_msr_uncores, die, cpu);
+> -       mmio_ret =3D uncore_box_ref(uncore_mmio_uncores, die, cpu);
+> +       allocate_boxes(uncore_msr_uncores, die, cpu);
+> +       allocate_boxes(uncore_mmio_uncores, die, cpu);
+>
+>         /*
+>          * Check if there is an online cpu in the package
+>          * which collects uncore events already.
+>          */
+>         target =3D cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask=
+(cpu));
+> -       if (target < nr_cpu_ids)
+> -               return 0;
+> -
+> -       cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> -
+> -       if (!msr_ret)
+> +       if (target >=3D nr_cpu_ids) {
+> +               cpumask_set_cpu(cpu, &uncore_cpu_mask);
+>                 uncore_change_context(uncore_msr_uncores, -1, cpu);
+> -       if (!mmio_ret)
+>                 uncore_change_context(uncore_mmio_uncores, -1, cpu);
+> -       uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +               uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +       }
+> +
+> +       uncore_box_ref(uncore_msr_uncores, die, cpu);
+> +       uncore_box_ref(uncore_mmio_uncores, die, cpu);
+>         return 0;
+>  }
+>
+> --
+> 2.54.0
+>
