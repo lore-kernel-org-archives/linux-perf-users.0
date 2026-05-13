@@ -1,351 +1,337 @@
-Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC354B8DF3
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 16:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778688802; cv=none; b=HaFKwVGq3N81gnoa+5LSCC+krflz150sfcMbpvgORZhoAyn3n9yyIm55dMik074ftslMf2zAjc5z87RLhbd0eyT+pZacyg2BAsCbJ1m9geX3HDP9PkJlZRgVYnyUavAbxWjCnYvLM27SSIiMuFXDTrfSREg6VcdgsDbCbCIV2BA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778688802; c=relaxed/simple;
-	bh=DF/bygSl3cDDycJ2Ugws7VZCB4Iv+wUBlutvu8Rlldo=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=Qw/hLJdSA5iEUWnBq52BauHfxQtP+oOxE1KasH2VxRnoJvRb3msNwxIo3HC8IlIV6p2RTr47Dmx4uvG1JeocI7bpuDXoWFJUbEaoGJ6IfAbEXmSBMpYWQGKRUfl011KfYe6j6jIzw3qle54EEyNzQuJykhwwIIodET/6k0yuS4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kb4MwRlR; arc=none smtp.client-ip=209.85.210.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656FB38F934
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 16:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778688914; cv=pass; b=JIVwiwAMj1CuNpD08ZUX6KNPDplNuWVdoymHaBUHl7eo/xsY5rTmN4/fKvNcHc//o5lvqrTzhVoS1WAtXfiyix1u6P73r5DilIBtmlfmcxVOq7FiksT2DcUWsZ3OA34uMcSShGx/++EKuzLwt4SltjD3FX5p3ZrlpjcWFmE5gj8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778688914; c=relaxed/simple;
+	bh=CwFj9jjoZ/+7KkEN9OBigFXAkNT7/jQ0nP81AR1q1TU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aXa3uGFprGzgTA+QgzvoCVJIapVCE14UYL41ZMYV0FuuEnLL1Y/PVzNUNTavisdSb8rG1SV9BaJIyUGdttqyHLrm+mTHP5sV/4MN4T9eRUoYmgYpl1oinuczHci5Maa/6itRgDyeKQevH1TaVoF/FetUxOEXiYfjteXafD6atMg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UyJ4/jFP; arc=pass smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kb4MwRlR"
-Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-7dce1e67fccso9015538a34.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 09:13:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UyJ4/jFP"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2b46da8c48eso5765ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2026 09:15:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778688912; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QKzGzavhjIjLZ/t5mHHil7MN/I/XHgMDOHhdqv4iXiq/sIohpU59bAC2jrxszlP4N2
+         AV4dmIdH/77Qj6KjDYdJ61e8Z5Iw7QMysRTL/AwRL/BxcnYApwgInnvr+fp2zKznvfrr
+         Fd6M8pm2d/Chll2LHVQXHBFgFmQzT5xr+ePH1Prs+xMazYj7DPDOQCv+LJne6rmKx9So
+         VuphpfEIoGTWwfWNPoocvV81CPfBe79absLMNxD0F17x8Y7JqmDLGJeV4dBXd/guLNRP
+         5aPQwSKiiKwHYleg2OO3EsKQfSis5FCwSd4HojNzAA61+tQMMWGKI+0FlJGbcA0oGoI9
+         FjXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=txqVWm2VQ2fIiO9SGGiJnKn+35VJWI2B5CGmYNs/cEA=;
+        fh=0fz9nzhIXhpYGyjUYeISSUOKy2FVHXzxyhd34XneOxU=;
+        b=dvqWEWAmt2Cu1PLTsHAIrqaPtGu2t7y6hRD+TxvoBS5OkS7hnJTytVaz+XqT6ybqP6
+         9j9XJvlvc3scElkpbHZztXP/KQKT35ZM88/wA9YYPDalLLHCrEtYogSXwbvXVTrdKwr6
+         AjZtkOfRD3OEfB04CyDdKiibIL4MIoU+8Jxlm1pWziG01hzGpJBjb3lc9xUSCWFpriUn
+         LulFqqkHbprA2j+/lVuM5cepl0CHKarEhx5OyEXzVQQ5s110XpynXH38RywJSGKoEx/g
+         XUDiWZNd2VFVpEg5qZqCkvCfGi2ge+DDSPSVREbNFD36Px5dC/ux4MPRKRMdLocAESg7
+         R6Og==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778688800; x=1779293600; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mkKg2AH9OzqTbzmtz3KJKgeEvCZA8Yl8G/ANzbR9O64=;
-        b=kb4MwRlROc/OMo77duzI4vWqz63ibQ371lvB1hSk2ApfAgRAi9/3BOCRgheXCll4Wv
-         yNsh+1I41jAIB1/B+Ik4ngeDN5d2m4IIHg0vMCG6IZzy7wJ7BrX9VMNRB9FSLvKC9N5A
-         +NEEcLkWIH/67Za6/n5c+sGWvXI1Nmw245dtW8ZedA59fO4J5UFGydudWgh0Xg3C4Mvq
-         zjCfnSwRi3YFygr7v86v7FR9XhHevR2ZIvaFxxDnzoDNVKo3PD4/7UMy9MF99Bt2LeFj
-         t9246tuWSIi8GBF8yirSKHa2LlxoOYNUvRcK37WZepgIVgoxdszQ3fI3sPY1tm/WbJOc
-         bp0w==
+        d=google.com; s=20251104; t=1778688912; x=1779293712; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=txqVWm2VQ2fIiO9SGGiJnKn+35VJWI2B5CGmYNs/cEA=;
+        b=UyJ4/jFP+M3SmHhf7ib+M5PJUA5R8CXDcRxRUp9hRDOnxjbGj7kZ36Uluelw/uojy1
+         XQeh/wBtWBUYZQLLFHh2p27Nys9w8+Vxw1Zm5aJ5BRftUvjUdKTpUaklqlpeJbnj1k5u
+         dIYulem3LF5nKYdKD7Tvv3gqeoipz6z+YOeZKzZglW550CFmt4JRp8/WBGWwFL1VgrAB
+         eajw9BMb+7eiJmyKn8OUldZ+6GZoyLuGJ6aV8D2wtV02zJ9tJNBI/4LS5IoIyOGb+uWp
+         PmNuJRehh64aYwW+RG2mL0QKJBv0QbknHAC0FTLPtVFgvQPp8RGpPXe2zEsqTtTeP/xE
+         X4jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778688800; x=1779293600;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mkKg2AH9OzqTbzmtz3KJKgeEvCZA8Yl8G/ANzbR9O64=;
-        b=JfV/CvHF0+w76ijG0slRhMP/gBqD8n6TEiBF3oC96jGMhzLFnpBwT7xpNw1nLLrHdS
-         sR+Vb2+rEdRDtcIm6PdHEM12i2h2flvZPB3BAS9kFg9+hFUjjX/XumcFf9PZeJ/wzEwJ
-         IW/MrJ1HBg9Jpq0Eo8UJfxxtQceGkswwIo874to6MDYPM6ZNChMKW1OesI4kjyAwTUxB
-         83cIYPyZLCNbUCyL0o8okwx2Er5ZrdL6x79VTLd075J7yYkmVoWZZTmOrTgNn5Vfy0zQ
-         /h9bcGGyrtZ4l8aLimMDoPMMq+tFQ9BJNDSrVe271CvA+aCEb3cb3mCTWD565c0y/70B
-         H0pw==
-X-Forwarded-Encrypted: i=1; AFNElJ99se3AqC3HFICLMOrJ4VLwKau1PX0jYVu8rEqjTMRF1Pggtc+veKfAFxkqULRS2S+AZYQlUVHaYcfEsixOLvNa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNqOeKKHB/UMyTqwXjM1i/+KVuZ9f2fAhYaJ7VIfReSsAm6mFC
-	sQDqFiera+Oa7MXU/1u9UwnWtLo+++KRlboUNvgEkXlaLmiGQk+xVx4Qc6k8Y3eyZ2DMVNDVeSW
-	BtqkAaAo3YwGsOek/bT0/tYNO1Q==
-X-Received: from ioro2.prod.google.com ([2002:a05:6602:2982:b0:96b:5f81:a45f])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:1525:b0:696:17a7:498c with SMTP id 006d021491bc7-69b78dd26b8mr2142761eaf.30.1778688799667;
- Wed, 13 May 2026 09:13:19 -0700 (PDT)
-Date: Wed, 13 May 2026 16:13:18 +0000
-In-Reply-To: <485b8846-13d7-4d31-abf1-686d2516f772@linaro.org> (message from
- James Clark on Mon, 11 May 2026 15:51:39 +0100)
+        d=1e100.net; s=20251104; t=1778688912; x=1779293712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=txqVWm2VQ2fIiO9SGGiJnKn+35VJWI2B5CGmYNs/cEA=;
+        b=HbL4mTMUSQ7sxB2SSE3k2O3t39JT2AMnUqp9Uj4P0ONTme5HaXcEWdSwc/cSzCEE8l
+         YyJ/eZNkd/xDgHeRtn47OfemZen9DgOweKGeUNsjV3HdsBKzjVoTGzu3qUFJCFiwoPbz
+         eyYovNZLw0PyW76DrfIPGo09uBH/eWUX8IH+hqnRvrH+Z4df3Rz4eqmxlSYpbh3zFzWl
+         OFoB45QEV0kgfH9Kd4AaeBfbGLFdzDquIVBUVAHHt8nioU+PMIjRe5bwloUX7bHNPLMf
+         hyp24sp2eGiUce0SrFVatPFhmL4H4Yr9wLek6u6J+91+QOc/svV29eP706piQDAbc9mI
+         2XFg==
+X-Forwarded-Encrypted: i=1; AFNElJ+NJBFyuzNfDtp2iNmRAkYPBcwb70GCKqLGy1o5bxajxEnoqd32NXh2txHlSrdQz4J+33vkahFHn7ehzdfOe2fT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9M1Osl870h1Mu1N+1vSGff3GhlFQc7FPkLWV6loWyNTApflgz
+	bRQG54GztCVKQV69lDaBneDYY0Jf4leVid0W9YJim/ZZl3DdAmmZs0IM+hzcRIaE/uurQgy02IM
+	kKa+xXVSeEPHuU4TxVy91NqphEJMpSqxT3mFrP0x5
+X-Gm-Gg: Acq92OEtFC+jndDAS5VqdFT+kd3pjJevd6YBqmeYIjaXRxKhHGxtsEkc5cbZZY3mKzn
+	0vznRoyBIKBh0BE+KImvIiASE4jVs5Do3dflBUIl7rciCrke71hp00rjVE73zwsfL4a3jZFZihg
+	7UGeOPZPdvq+ncWiWM0E8Iy4S8atbWPHpWM//CKdI+Cgs+IbRmQUBsJnm1otOsbYet/V8A6Slvk
+	DuyYj7jnXRQFb6rNmDV6s2UfccyQ4py/oePGr3iqCHMcdvNPfyQEVj/EowJtlmriRgUX8+I3K5k
+	yJfZUZ3CK3s5LAzNZHa2FCBU0zvSPVFaeLvRTNGGNyBbIvTy
+X-Received: by 2002:a17:902:f542:b0:2b4:641a:6b7c with SMTP id
+ d9443c01a7336-2bd2c10220bmr2858455ad.13.1778688911626; Wed, 13 May 2026
+ 09:15:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsnt5x4rcmox.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v7 06/20] perf: arm_pmuv3: Add method to partition the PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: James Clark <james.clark@linaro.org>
-Cc: alexandru.elisei@arm.com, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+References: <20260513154851.1085334-1-guanli.oerv@isrc.iscas.ac.cn> <20260513154851.1085334-2-guanli.oerv@isrc.iscas.ac.cn>
+In-Reply-To: <20260513154851.1085334-2-guanli.oerv@isrc.iscas.ac.cn>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 13 May 2026 09:14:59 -0700
+X-Gm-Features: AVHnY4I1OqnGmt0DC5ttpBlGE6KNa_ZClt9g6cGux5HSErwT8cKe7d8vX97n7Bo
+Message-ID: <CAP-5=fXNPNCzHbvMFW+_2Ewn-D4NUorwFUYcFLDTUuPHpkXxaw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf build: Fix cross-arch build failures by
+ isolating auxtrace objects
+To: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com, 
+	palmer@dabbelt.com, pjw@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-James Clark <james.clark@linaro.org> writes:
+On Wed, May 13, 2026 at 8:50=E2=80=AFAM Li Guan <guanli.oerv@isrc.iscas.ac.=
+cn> wrote:
+>
+> Currently, tools/perf/util/Build hardcodes architecture-specific hardware
+> tracing objects (e.g., intel-pt.o, arm-spe.o, cs-etm-base.o) into the
+> generic perf-util-y list. When compiling on architectures that lack
+> these features (such as RISC-V), the compiler skips generating these
+> objects, causing the linker to fail with "No such file or directory"
+> or undefined references.
 
-> On 04/05/2026 10:17 pm, Colton Lewis wrote:
->> For PMUv3, the register field MDCR_EL2.HPMN partitiones the PMU
->> counters into two ranges where counters 0..HPMN-1 are accessible by
->> EL1 and, if allowed, EL0 while counters HPMN..N are only accessible by
->> EL2.
+So it is intentional to build these into the perf binary so that you
+may generate a perf.data file on an x86 or ARM machine and then
+analyze it on an RISC-V machine. I'm not sure how you've managed to
+break the build, you didn't provide a message, but the build expects
+these decoders for cross-platform support.
 
->> Create a module parameter reserved_host_counters to reserve a number
->> of counters for the host. Counters not reserved for the host may be
->> used by a guest VM when the PMU is partitioned.
+> Fix this by decoupling the architecture-specific hardware tracing drivers
+> from the generic build process:
+> 1. In Makefile.config, explicitly export CONFIG_PERF_XYZ feature flags
+>    only for their corresponding target architectures.
+> 2. In util/Build, conditionally link these hardware tracing objects
+>    based on the newly exported feature flags.
+> 3. In util/auxtrace.c, provide __weak stub functions returning -ENOSYS
+>    for the arch-specific processing routines. This ensures successful
+>    linking and graceful degradation when specific drivers are omitted.
 
->> Add the function armv8pmu_partition() to check the validity of the
->> reservation and record a partition has happened and the maximum
->> allowable value for HPMN.
+This is a complete misunderstanding of the code, please don't
+implement this. If anything, more code should move out of the
+tools/perf/arch directory and into tools/perf/util guarded by
+perf_env's arch or e_machine values for cross platform support.
 
->> Due to the difficulty this feature would create for the driver running
->> in nVHE mode, partitioning is only allowed in VHE mode. In order to
->> support a partitioning on nVHE we'd need to explicitly disable guest
->> counters on every exit and reset HPMN to place all counters in the
->> first range.
+Thanks,
+Ian
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>    arch/arm/include/asm/arm_pmuv3.h   |  4 ++
->>    arch/arm64/include/asm/arm_pmuv3.h |  5 ++
->>    arch/arm64/kvm/Makefile            |  2 +-
->>    arch/arm64/kvm/pmu-direct.c        | 22 +++++++++
->>    drivers/perf/arm_pmuv3.c           | 77 ++++++++++++++++++++++++++++--
->>    include/kvm/arm_pmu.h              |  8 ++++
->>    include/linux/perf/arm_pmu.h       |  2 +
->>    7 files changed, 115 insertions(+), 5 deletions(-)
->>    create mode 100644 arch/arm64/kvm/pmu-direct.c
-
->> diff --git a/arch/arm/include/asm/arm_pmuv3.h  
->> b/arch/arm/include/asm/arm_pmuv3.h
->> index 2ec0e5e83fc98..154503f054886 100644
->> --- a/arch/arm/include/asm/arm_pmuv3.h
->> +++ b/arch/arm/include/asm/arm_pmuv3.h
->> @@ -221,6 +221,10 @@ static inline bool kvm_pmu_counter_deferred(struct  
->> perf_event_attr *attr)
->>    	return false;
->>    }
-
->> +static inline bool has_host_pmu_partition_support(void)
->> +{
->> +	return false;
->> +}
->>    static inline bool kvm_set_pmuserenr(u64 val)
->>    {
->>    	return false;
->> diff --git a/arch/arm64/include/asm/arm_pmuv3.h  
->> b/arch/arm64/include/asm/arm_pmuv3.h
->> index cf2b2212e00a2..27c4d6d47da31 100644
->> --- a/arch/arm64/include/asm/arm_pmuv3.h
->> +++ b/arch/arm64/include/asm/arm_pmuv3.h
->> @@ -171,6 +171,11 @@ static inline bool pmuv3_implemented(int pmuver)
->>    		 pmuver == ID_AA64DFR0_EL1_PMUVer_NI);
->>    }
-
->> +static inline bool is_pmuv3p1(int pmuver)
->> +{
->> +	return pmuver >= ID_AA64DFR0_EL1_PMUVer_V3P1;
->> +}
->> +
->>    static inline bool is_pmuv3p4(int pmuver)
->>    {
->>    	return pmuver >= ID_AA64DFR0_EL1_PMUVer_V3P4;
->> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
->> index 3ebc0570345cc..baf0f296c0e53 100644
->> --- a/arch/arm64/kvm/Makefile
->> +++ b/arch/arm64/kvm/Makefile
->> @@ -26,7 +26,7 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o  
->> pvtime.o \
->>    	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
->>    	 vgic/vgic-v5.o
-
->> -kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
->> +kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu-direct.o pmu.o
->>    kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
->>    kvm-$(CONFIG_PTDUMP_STAGE2_DEBUGFS) += ptdump.o
-
->> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
->> new file mode 100644
->> index 0000000000000..74e40e4915416
->> --- /dev/null
->> +++ b/arch/arm64/kvm/pmu-direct.c
->> @@ -0,0 +1,22 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2025 Google LLC
->> + * Author: Colton Lewis <coltonlewis@google.com>
->> + */
->> +
->> +#include <linux/kvm_host.h>
->> +
->> +#include <asm/arm_pmuv3.h>
->> +
->> +/**
->> + * has_host_pmu_partition_support() - Determine if partitioning is  
->> possible
->> + *
->> + * Partitioning is only supported in VHE mode with PMUv3
->> + *
->> + * Return: True if partitioning is possible, false otherwise
->> + */
->> +bool has_host_pmu_partition_support(void)
->> +{
->> +	return has_vhe() &&
->> +		system_supports_pmuv3();
->> +}
->> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
->> index 7ff3139dda893..6e447227d801f 100644
->> --- a/drivers/perf/arm_pmuv3.c
->> +++ b/drivers/perf/arm_pmuv3.c
->> @@ -42,6 +42,13 @@
->>    #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
->>    #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
-
->> +static int reserved_host_counters __read_mostly = -1;
->> +bool armv8pmu_is_partitioned;
->> +
->> +module_param(reserved_host_counters, int, 0);
->> +MODULE_PARM_DESC(reserved_host_counters,
->> +		 "PMU Partition: -1 = No partition; +N = Reserve N counters for the  
->> host");
->> +
->>    /*
->>     * ARMv8 Architectural defined events, not all of these may
->>     * be supported on any given implementation. Unsupported events will
->> @@ -532,6 +539,11 @@ static void armv8pmu_pmcr_write(u64 val)
->>    	write_pmcr(val);
->>    }
-
->> +static u64 armv8pmu_pmcr_n_read(void)
->> +{
->> +	return FIELD_GET(ARMV8_PMU_PMCR_N, armv8pmu_pmcr_read());
->> +}
->> +
->>    static int armv8pmu_has_overflowed(u64 pmovsr)
->>    {
->>    	return !!(pmovsr & ARMV8_PMU_CNT_MASK_ALL);
->> @@ -1312,6 +1324,54 @@ struct armv8pmu_probe_info {
->>    	bool present;
->>    };
-
->> +/**
->> + * armv8pmu_reservation_is_valid() - Determine if reservation is allowed
->> + * @host_counters: Number of host counters to reserve
->> + *
->> + * Determine if the number of host counters in the argument is an
->> + * allowed reservation, 0 to NR_COUNTERS inclusive.
->> + *
->> + * Return: True if reservation allowed, false otherwise
->> + */
->> +static bool armv8pmu_reservation_is_valid(int host_counters)
->> +{
->> +	return host_counters >= 0 &&
->> +		host_counters <= armv8pmu_pmcr_n_read();
->> +}
->> +
->> +/**
->> + * armv8pmu_partition() - Partition the PMU
->> + * @pmu: Pointer to pmu being partitioned
->> + * @host_counters: Number of host counters to reserve
->> + *
->> + * Partition the given PMU by taking a number of host counters to
->> + * reserve and, if it is a valid reservation, recording the
->> + * corresponding HPMN value in the max_guest_counters field of the PMU  
->> and
->> + * clearing the guest-reserved counters from the counter mask.
->> + *
->> + * Return: 0 on success, -ERROR otherwise
->> + */
->> +static int armv8pmu_partition(struct arm_pmu *pmu, int host_counters)
->> +{
->> +	u8 nr_counters;
->> +	u8 hpmn;
->> +
->> +	if (!armv8pmu_reservation_is_valid(host_counters)) {
->> +		pr_err("PMU partition reservation of %d host counters is not valid",  
->> host_counters);
->> +		return -EINVAL;
->> +	}
->> +
->> +	nr_counters = armv8pmu_pmcr_n_read();
->> +	hpmn = nr_counters - host_counters;
->> +
->> +	pmu->max_guest_counters = hpmn;
->> +	armv8pmu_is_partitioned = true;
->> +
->> +	pr_info("Partitioned PMU with %d host counters -> %u guest counters",  
->> host_counters, hpmn);
->> +
->> +	return 0;
->> +}
->> +
->>    static void __armv8pmu_probe_pmu(void *info)
->>    {
->>    	struct armv8pmu_probe_info *probe = info;
->> @@ -1326,17 +1386,26 @@ static void __armv8pmu_probe_pmu(void *info)
-
->>    	cpu_pmu->pmuver = pmuver;
->>    	probe->present = true;
->> +	cpu_pmu->max_guest_counters = -1;
-
->>    	/* Read the nb of CNTx counters supported from PMNC */
->> -	bitmap_set(cpu_pmu->cntr_mask,
->> -		   0, FIELD_GET(ARMV8_PMU_PMCR_N, armv8pmu_pmcr_read()));
->> +	bitmap_set(cpu_pmu->hw_cntr_mask, 0, armv8pmu_pmcr_n_read());
-
->>    	/* Add the CPU cycles counter */
->> -	set_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->cntr_mask);
->> +	set_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->hw_cntr_mask);
-
->>    	/* Add the CPU instructions counter */
->>    	if (pmuv3_has_icntr())
->> -		set_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask);
->> +		set_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->hw_cntr_mask);
->> +
->> +	bitmap_copy(cpu_pmu->cntr_mask, cpu_pmu->hw_cntr_mask,  
->> ARMPMU_MAX_HWEVENTS);
->> +
->> +	if (reserved_host_counters >= 0) {
->> +		if (has_host_pmu_partition_support())
->> +			armv8pmu_partition(cpu_pmu, reserved_host_counters);
->> +		else
->> +			pr_err("PMU partition is not supported");
->> +	}
-
->>    	pmceid[0] = pmceid_raw[0] = read_pmceid0();
->>    	pmceid[1] = pmceid_raw[1] = read_pmceid1();
->> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
->> index 24a471cf59d56..95f404cdcb2df 100644
->> --- a/include/kvm/arm_pmu.h
->> +++ b/include/kvm/arm_pmu.h
->> @@ -47,7 +47,10 @@ struct arm_pmu_entry {
->>    	struct arm_pmu *arm_pmu;
->>    };
-
->> +extern bool armv8pmu_is_partitioned;
->> +
->>    bool kvm_supports_guest_pmuv3(void);
->> +bool has_host_pmu_partition_support(void);
->>    #define kvm_arm_pmu_irq_initialized(v)	((v)->arch.pmu.irq_num >=  
->> VGIC_NR_SGIS)
->>    u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx);
->>    void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx,  
->> u64 val);
->> @@ -117,6 +120,11 @@ static inline bool kvm_supports_guest_pmuv3(void)
->>    	return false;
->>    }
-
->> +static inline bool has_host_pmu_partition_support(void)
->> +{
->> +	return false;
->> +}
->> +
->>    #define kvm_arm_pmu_irq_initialized(v)	(false)
->>    static inline u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu,
->>    					    u64 select_idx)
->> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
->> index 52b37f7bdbf9e..f7b000bb3eca8 100644
->> --- a/include/linux/perf/arm_pmu.h
->> +++ b/include/linux/perf/arm_pmu.h
->> @@ -109,6 +109,7 @@ struct arm_pmu {
->>    	 */
->>    	int		(*map_pmuv3_event)(unsigned int eventsel);
->>    	DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
->> +	DECLARE_BITMAP(hw_cntr_mask, ARMPMU_MAX_HWEVENTS);
-
-> I think this needs a comment or a clearer name. Both cntr_mask and
-> hw_cntr_mask are used in KVM and the PMU driver and it's not immediately
-> obvious what the difference is.
-
-I will clarify this. The goal was for hw_cntr_mask to be the unmodified
-reference point to restore cntr_mask later.
+> Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+> ---
+>  tools/perf/Makefile.config | 21 ++++++++++++
+>  tools/perf/util/Build      | 20 +++++------
+>  tools/perf/util/auxtrace.c | 70 ++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/auxtrace.h |  6 ++++
+>  4 files changed, 107 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 06d7a3f999..13f4b98b2e 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -107,6 +107,27 @@ ifeq ($(SRCARCH),loongarch)
+>    endif
+>  endif
+>
+> +ifndef NO_AUXTRACE
+> +  ifeq ($(SRCARCH),x86)
+> +    $(call detected,CONFIG_PERF_INTEL_PT)
+> +    $(call detected,CONFIG_PERF_AMD_PT)
+> +  endif
+> +
+> +  ifeq ($(SRCARCH),arm64)
+> +    $(call detected,CONFIG_PERF_ARM_SPE)
+> +    $(call detected,CONFIG_PERF_HISI_PTT)
+> +    $(call detected,CONFIG_PERF_CS_ETM)
+> +  endif
+> +
+> +  ifeq ($(SRCARCH),s390)
+> +    $(call detected,CONFIG_PERF_S390_CPUMSF)
+> +  endif
+> +endif
+> +
+> +ifeq ($(SRCARCH),arm64)
+> +  $(call detected,CONFIG_PERF_ARM64_UNWIND_SUPPORT)
+> +endif
+> +
+>  ifeq ($(ARCH),s390)
+>    CFLAGS +=3D -fPIC
+>  endif
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 70cc91d008..79ade6066d 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -132,21 +132,21 @@ perf-util-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
+>  perf-util-y +=3D kvm-stat-arch/
+>  perf-util-y +=3D lock-contention.o
+>  perf-util-y +=3D auxtrace.o
+> -perf-util-y +=3D intel-pt-decoder/
+> -perf-util-y +=3D intel-pt.o
+> -perf-util-y +=3D intel-bts.o
+> -perf-util-y +=3D arm-spe.o
+> -perf-util-y +=3D arm-spe-decoder/
+> -perf-util-y +=3D hisi-ptt.o
+> -perf-util-y +=3D hisi-ptt-decoder/
+> -perf-util-y +=3D s390-cpumsf.o
+> +perf-util-$(CONFIG_PERF_INTEL_PT) +=3D intel-pt-decoder/
+> +perf-util-$(CONFIG_PERF_INTEL_PT) +=3D intel-pt.o
+> +perf-util-$(CONFIG_PERF_INTEL_PT) +=3D intel-bts.o
+> +perf-util-$(CONFIG_PERF_ARM_SPE) +=3D arm-spe.o
+> +perf-util-$(CONFIG_PERF_ARM_SPE) +=3D arm-spe-decoder/
+> +perf-util-$(CONFIG_PERF_HISI_PTT) +=3D hisi-ptt.o
+> +perf-util-$(CONFIG_PERF_HISI_PTT) +=3D hisi-ptt-decoder/
+> +perf-util-$(CONFIG_PERF_S390_CPUMSF) +=3D s390-cpumsf.o
+>  perf-util-y +=3D powerpc-vpadtl.o
+>
+>  ifdef CONFIG_LIBOPENCSD
+>  perf-util-y +=3D cs-etm.o
+>  perf-util-y +=3D cs-etm-decoder/
+>  endif
+> -perf-util-y +=3D cs-etm-base.o
+> +perf-util-$(CONFIG_PERF_CS_ETM) +=3D cs-etm-base.o
+>
+>  perf-util-y +=3D parse-branch-options.o
+>  perf-util-y +=3D parse-regs-options.o
+> @@ -168,7 +168,7 @@ perf-util-y +=3D clockid.o
+>  perf-util-y +=3D list_sort.o
+>  perf-util-y +=3D mutex.o
+>  perf-util-y +=3D sharded_mutex.o
+> -perf-util-y +=3D intel-tpebs.o
+> +perf-util-$(CONFIG_PERF_INTEL_PT) +=3D intel-tpebs.o
+>
+>  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf_counter.o
+>  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf_counter_cgroup.o
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index a224687ffb..f6e426c3c5 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -51,6 +51,7 @@
+>  #include "cs-etm.h"
+>  #include "intel-pt.h"
+>  #include "intel-bts.h"
+> +#include "intel-tpebs.h"
+>  #include "arm-spe.h"
+>  #include "hisi-ptt.h"
+>  #include "s390-cpumsf.h"
+> @@ -2960,3 +2961,72 @@ bool auxtrace__evsel_is_auxtrace(struct perf_sessi=
+on *session,
+>
+>         return session->auxtrace->evsel_is_auxtrace(session, evsel);
+>  }
+> +
+> +/*
+> + * Stub functions for architecture-specific features to support cross-pl=
+atform building.
+> + * These weak symbols are overridden by strong symbols when the correspo=
+nding
+> + * architecture-specific code is compiled in.
+> + */
+> +#ifndef HAVE_ARCH_X86_64_SUPPORT
+> +int __weak intel_pt_process_auxtrace_info(union perf_event *event __mayb=
+e_unused,
+> +                                         struct perf_session *session __=
+maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +int __weak intel_bts_process_auxtrace_info(union perf_event *event __may=
+be_unused,
+> +                                          struct perf_session *session _=
+_maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +int __weak evsel__tpebs_open(struct evsel *evsel __maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +void __weak evsel__tpebs_close(struct evsel *evsel __maybe_unused)
+> +{
+> +}
+> +
+> +int __weak evsel__tpebs_read(struct evsel *evsel __maybe_unused,
+> +                            int cpu_map_idx __maybe_unused,
+> +                            int thread __maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +int __weak insn_decode(void *insn __maybe_unused, const void *kaddr __ma=
+ybe_unused,
+> +                      int len __maybe_unused, int mode __maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+> +#ifndef HAVE_ARCH_ARM64_SUPPORT
+> +int __weak arm_spe_process_auxtrace_info(union perf_event *event __maybe=
+_unused,
+> +                                        struct perf_session *session __m=
+aybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +int __weak hisi_ptt_process_auxtrace_info(union perf_event *event __mayb=
+e_unused,
+> +                                         struct perf_session *session __=
+maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +int __weak cs_etm__process_auxtrace_info(union perf_event *event __maybe=
+_unused,
+> +                                        struct perf_session *session __m=
+aybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+> +#ifndef HAVE_ARCH_S390_SUPPORT
+> +int __weak s390_cpumsf_process_auxtrace_info(union perf_event *event __m=
+aybe_unused,
+> +                                            struct perf_session *session=
+ __maybe_unused)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +#endif
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 6947f3f284..474e9445b4 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -699,4 +699,10 @@ void itrace_synth_opts__clear_time_range(struct itra=
+ce_synth_opts *opts)
+>         opts->range_num =3D 0;
+>  }
+>
+> +/*
+> + * Prototypes for architecture-specific functions that require weak stub=
+s
+> + * to support cross-platform builds on non-x86 architectures.
+> + */
+> +int insn_decode(void *insn, const void *kaddr, int len, int mode);
+> +
+>  #endif
+> --
+> 2.54.0
+>
