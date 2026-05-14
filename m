@@ -1,188 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346682D836D
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 18:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC32A39BFEF
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 18:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778783289; cv=none; b=ZycAYQI9CX9T/hm5rv7K7U5qhHZJbEKnWnp/jR2Kij4f4o8H86Cb4FJh+G1GSSGupsJvSIwqluEWEsMwViOVeZYjV6ih2+vqBb/8CN+Gn9SPJ+AvX3LoxiiwtUjc+Ql3aogxWB/sNnhtASDSMX810U7L09F7Hq12i9ckLykUkbU=
+	t=1778784214; cv=none; b=m7y9T9D6HfelM/efhk+dNWOrE0NbjBc+77uRsKhnxphjmzTdA6rEb5+3cGNZPDcozA1xiF6nOhMbBK/YYnwhd2MBGtG/JuXXyqIiXVBAqHk70Xzbh9f14shwPhjRkpvlkCWPRK9BXgARMZhlUHMGbvn5C1bzenhZqaPEueh4Fmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778783289; c=relaxed/simple;
-	bh=IXUAFQxsjd7jrfq3fX/B6SxfJvVIvdVptvwpfQVzSEY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YPLp9MgE0OSr2KLTmQM76UR+68JbjUEko6fDNTzuKYXJ5uPcAaVCyiJzq8znk1x0mYJeZQrW0LYzUDF62qKweCP32G8hKDKU3r/8kgsmtIQWGdAWfwuMEAQGZ5J8QP/9obhb48ZpKKzmzFlT0w8B3440hBGa+9/0sOMS8vk5Yik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsLiUeew; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778784214; c=relaxed/simple;
+	bh=dPbNCzf9KCRMLpqX405TL92VnoYbLgcOy7+YnXmORW0=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=N8eIL6js/wIpY7Y/2PxUFaZqHDDT/yBZmBwoBd2esZZBEt7ItZirFJPPmhEoXBmiE0EaAvAHz75lgH3LZKu9fnIEXvTIGhTXN9zbvzEN+XhzoaLsB3zj+YtsJZKc/df1IDhZx365rv7p6dXo46gLu453sRnCq4gPmI9xq/3wv2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gHG8ygjN; arc=none smtp.client-ip=209.85.210.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsLiUeew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9847C2BCB3;
-	Thu, 14 May 2026 18:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778783288;
-	bh=IXUAFQxsjd7jrfq3fX/B6SxfJvVIvdVptvwpfQVzSEY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=UsLiUeewBi3sXoCuIz4WMiexAB06SgcCcoOmBsx7iTQjBO0EwxLg24J2+AxwXrcrs
-	 /g26lJLkUPDeTntHwiY9qoLVvSPz5gVxTkCNU/pB8NX7COUDXGUFY1mwBiCrpmETrn
-	 S01zEc6MteftV1SVaDI4sk8OevRfaCjWW0Hix7yw33JfdtSvM726icjS+TvwFC+3r/
-	 lnwisQW15wmvlqxdbpFQL6TSCbOpMYojNCFeSHnVn9KxsOTGVqjViMtQHVkOqnUoPY
-	 BOAq3xKbNlnPu8EMEJjMuZ1xNc4YC8H7TO42Rfq3pbXGhg3QxOACuA7g5/W4AhnBmb
-	 CSfHjU8st9L4A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 14/14] perf test: Remove /usr/bin/cc dependency from
- Intel PT shell test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260513230450.529380-15-irogers@google.com>
-References: <20260513230450.529380-15-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 18:28:02 +0000
-Message-Id: <20260514182802.D9847C2BCB3@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHG8ygjN"
+Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-7de75c9be06so18753906a34.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 11:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778784209; x=1779389009; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rKsaF96H0ao5LtAeB6Jowvi3N+dV7tElJWwhr8XO8PU=;
+        b=gHG8ygjN6KVe96b1O0qaH0wfffMLPwV9dRHqox23374jYMuOrPuyAD+Sk8Bx23L5bw
+         IQDvdHHWOytxyV6X0PdI3Gzrdse8Ku9EjQdsyCSyaCmIehozsFHt8HAzhacSC2nv1kzB
+         wUhHEsPFCUlGR/E5qiOgtcqHkTVkZTO4ITzn9RW/4CS/Gmc+HhEcE2g3NrmnOa7wGpZ1
+         VlOO3ihjbxvnATVDF81i+vKK5kbu6vLkcqXJr5rdelOSB8Rni7Acbd5xCELoyu3erXWu
+         sMAJz9e1xK1+FdjBrJg50/6qO+fRFDfEAMTeoEIYucdXltIvt2Z+KI+z8mrLONsp0gVE
+         WkyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778784209; x=1779389009;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKsaF96H0ao5LtAeB6Jowvi3N+dV7tElJWwhr8XO8PU=;
+        b=aJocaFkO/1i4I1/fzUTuX1y5hhyFnLw2fbiN6zbDUE57o2QHJcPmHxPK6epUr56xgz
+         YP41Wot0/wQyg8WSnI7O3kZN0V92XFxkdBP2Ns6dbptClJdm1HRs0nDQ+ec6lvXYtfv+
+         iEmgSARfyRmHzwDZIwSIaJw3IggPqdiDXFzpPX5E2kgkWfsie8N8hn+wV/lNjSzHoxM8
+         UepZ2kauF3wxXZDlIMY9MXD+abukQwfEjs1bPpiH7nXSIC54C7NLWVbsfx5Pdb/GtwXW
+         7ZK4lVKFTOnHFkUkROc4IIGxahzWWC88Vk60AEw5uMnTDSpz1xEA7XvTuK5gquaSsNKr
+         7y0g==
+X-Forwarded-Encrypted: i=1; AFNElJ8ANAQopuaMSHdKSJJGGZcoQGJ4EwTflazheEg1JC7f3YOx28tvuW9k6bSVovzoT3yYUNq+vwUiWZp0CdH5CDJE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhPvS1hM3gkhDmTbRgb6a7t/x7idtVH17KEqkvc6f6dE7Ul8Sv
+	Jm1i7er04K7bYPiLSxGov4vBltQtbJwedpk0ZSKNG0KdThlj4QKYx2n83bSFBLKe4pA017/xie2
+	92zvwprIap5WGgjCW6HNsl5hLWA==
+X-Received: from ioym2.prod.google.com ([2002:a05:6602:3142:b0:964:6792:360])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6820:1795:b0:694:9a67:edf6 with SMTP id 006d021491bc7-69c942ffd04mr447091eaf.17.1778784209181;
+ Thu, 14 May 2026 11:43:29 -0700 (PDT)
+Date: Thu, 14 May 2026 18:43:28 +0000
+In-Reply-To: <agQu9kLnbHjSni-C@kernel.org> (message from Oliver Upton on Wed,
+ 13 May 2026 00:57:42 -0700)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Message-ID: <gsntqzndbzn3.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v7 09/20] KVM: arm64: Set up MDCR_EL2 to handle a
+ Partitioned PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oupton@kernel.org>
+Cc: kvm@vger.kernel.org, alexandru.elisei@arm.com, pbonzini@redhat.com, 
+	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
+	james.clark@linaro.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [High] Missing instruction cache flush causes SIGILL on non-x86 architect=
-ures.
-- [Medium] Corrupted timestamps on non-x86 architectures due to incorrect J=
-IT dump flags.
-- [Medium] Failure to propagate `mmap` errors causes cryptic downstream tes=
-t failures.
-- [Low] Dead code: Fallback error message for unsupported architectures is =
-never reached.
-- [Low] Insecure file creation allows symlink attacks.
---
+Oliver Upton <oupton@kernel.org> writes:
 
-commit e93f510895eeeef8fa2a184cec0136d1c167c471
-Author: Ian Rogers <irogers@google.com>
+> On Mon, May 04, 2026 at 09:18:02PM +0000, Colton Lewis wrote:
+>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> index 3ad6b7c6e4ba7..0ab89c91e19cb 100644
+>> --- a/arch/arm64/kvm/debug.c
+>> +++ b/arch/arm64/kvm/debug.c
+>> @@ -36,20 +36,43 @@ static int cpu_has_spe(u64 dfr0)
+>>    */
+>>   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+>>   {
+>> +	int hpmn = kvm_pmu_hpmn(vcpu);
+>> +
+>>   	preempt_disable();
 
-perf test: Remove /usr/bin/cc dependency from Intel PT shell test
+>>   	/*
+>>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
+>>   	 * to disable guest access to the profiling and trace buffers
+>>   	 */
+>> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
+>> -					 *host_data_ptr(nr_event_counters));
+>> +
+>> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
+>>   	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+>>   				MDCR_EL2_TPMS |
+>>   				MDCR_EL2_TTRF |
+>>   				MDCR_EL2_TPMCR |
+>>   				MDCR_EL2_TDRA |
+>> -				MDCR_EL2_TDOSA);
+>> +				MDCR_EL2_TDOSA |
+>> +				MDCR_EL2_HPME);
+>> +
+>> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)) {
+>> +		/*
+>> +		 * Filtering these should be redundant because we trap
+>> +		 * all the TYPER and FILTR registers anyway and ensure
+>> +		 * they filter EL2, but set the bits if they are here.
+>> +		 */
+>> +		if (is_pmuv3p1(read_pmuver()))
+>> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HPMD;
+>> +		if (is_pmuv3p5(read_pmuver()))
+>> +			vcpu->arch.mdcr_el2 |= MDCR_EL2_HCCD;
 
-This commit replaces the runtime compilation of a thread loop and JIT
-workload in the Intel PT shell test with a built-in jitdump workload.
-It adds multi-architecture compatibility by dynamically encoding
-instructions into opcodes for various architectures.
+> Neither of these controls are of any consequence on unsupported
+> hardware (RES0). Set them unconditionally?
 
-> diff --git a/tools/perf/tests/workloads/jitdump.c b/tools/perf/tests/work=
-loads/jitdump.c
-> new file mode 100644
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/jitdump.c
-> @@ -0,0 +1,165 @@
-[ ... ]
-> +static FILE *open_jitdump(void)
-> +{
-> +	struct jitheader header =3D {
-> +		.magic =3D JITHEADER_MAGIC,
-> +		.version =3D JITHEADER_VERSION,
-> +		.total_size =3D sizeof(header),
-> +		.pid =3D getpid(),
-> +		.timestamp =3D get_timestamp(),
-> +		.flags =3D JITDUMP_FLAGS_ARCH_TIMESTAMP,
+Sure.
 
-Is it correct to unconditionally set JITDUMP_FLAGS_ARCH_TIMESTAMP here?
+>> +		/*
+>> +		 * Take out the coarse grain traps if we are using
+>> +		 * fine grain traps.
+>> +		 */
+>> +		if (kvm_vcpu_pmu_use_fgt(vcpu))
 
-On non-x86 architectures, get_timestamp() returns a monotonic timestamp from
-clock_gettime(CLOCK_MONOTONIC). If this flag tells perf inject --jit that t=
-he
-timestamps are raw hardware cycles requiring conversion, won't applying the
-hardware-time conversion to an already monotonic timestamp corrupt the
-injected event timestamps?
+> I think open coding the check here would actually improve readability.
 
-> +	};
-> +	char filename[256];
-> +	FILE *f;
-> +	void *m;
-> +
-> +	snprintf(filename, sizeof(filename), "jit-%d.dump", getpid());
-> +	f =3D fopen(filename, "w+");
+> 		if (cpus_have_final_cap(ARM64_HAS_FGT) &&
+> 		    (cpus_have_final_cap(ARM64_HAS_HPMN0) ||
+> 		     vcpu->kvm->arch.nr_pmu_counters != 0))
+> 			vcpu->arch.mdcr_el2 &= ~(MDCR_EL2_TPM | MDCR_EL2_TPMCR);
 
-Does this file creation pattern allow symlink attacks?
+I disagree but I'll do it.
 
-If a user manually executes 'perf test -w jitdump' in a shared directory
-like /tmp, an attacker could create a symlink with this predictable name
-(jit-<pid>.dump) to overwrite arbitrary files. Would using open() with
-O_CREAT | O_EXCL be safer here?
+>> +
+>> +/**
+>> + * kvm_pmu_hpmn() - Calculate HPMN field value
+>> + * @vcpu: Pointer to struct kvm_vcpu
+>> + *
+>> + * Calculate the appropriate value to set for MDCR_EL2.HPMN. If
+>> + * partitioned, this is the number of counters set for the guest if
+>> + * supported, falling back to max_guest_counters if needed. If we are  
+>> not
+>> + * partitioned or can't set the implied HPMN value, fall back to the
+>> + * host value.
+>> + *
+>> + * Return: A valid HPMN value
+>> + */
+>> +u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
+>> +{
+>> +	u8 nr_guest_cntr = vcpu->kvm->arch.nr_pmu_counters;
+>> +
+>> +	if (kvm_vcpu_pmu_is_partitioned(vcpu)
+>> +	    && !vcpu_on_unsupported_cpu(vcpu)
+>> +	    && (cpus_have_final_cap(ARM64_HAS_HPMN0) || nr_guest_cntr > 0))
+>> +		return nr_guest_cntr;
+>> +
+>> +	return *host_data_ptr(nr_event_counters);
+>> +}
 
-> +	if (!f) {
-> +		pr_err("Failed to open jitdump '%s'\n", filename);
-> +		return NULL;
-> +	}
-> +	/* Create an MMAP event for the jitdump file. That is how perf tool fin=
-ds it. */
-> +	m =3D mmap(0, page_size, PROT_READ | PROT_EXEC, MAP_PRIVATE, fileno(f),=
- 0);
-> +	if (m =3D=3D MAP_FAILED)
-> +		pr_err("Error creating jitdump MMAP event\n");
-> +	else
-> +		munmap(m, page_size);
+> This helper isn't helpful. Just open code it in the place where we are
+> computing MDCR_EL2.
 
-Should this mmap failure be fatal?
+I disagree but I'll do it.
 
-The code logs an error but proceeds to execute the workload and return
-success. Without the MMAP event, the perf tool cannot link the JIT dump,
-which seems like it might cause the test script to fail later with
-confusing errors.
+>> @@ -542,6 +542,13 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
+>>   	if (cpus_have_final_cap(ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS))
+>>   		return 1;
 
-[ ... ]
-> +static int write_jitdump(FILE *f, void *addr, const void *dat, size_t sz=
-, uint64_t *idx)
-> +{
-[ ... ]
-> +	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=
-=3D 1)
-> +		return -1;
-> +	return 0;
-> +}
-[ ... ]
-> +static int jitdump(int argc __maybe_unused, const char **argv __maybe_un=
-used)
-> +{
-[ ... ]
-> +	/* Copy executable code to executable memory page. */
-> +	memcpy(addr, dat, sizeof(dat));
+>> +	/*
+>> +	 * If partitioned then we are limited by the max counters in
+>> +	 * the guest partition.
+>> +	 */
+>> +	if (kvm_pmu_is_partitioned(arm_pmu))
+>> +		return arm_pmu->max_guest_counters;
+>> +
 
-Does this code need an explicit cache flush before execution on non-x86
-architectures?
+> Ok, this is exactly what I was getting at earlier. What about a VM with
+> an emulated PMU? It should use cntr_mask calculation, not the guest
+> range.
 
-Architectures like ARM, RISC-V, PowerPC, and MIPS have separate instruction
-and data caches without automatic coherence. Since memcpy() only updates the
-data cache, won't the instruction fetch unit read stale data from the I-cac=
-he
-and trigger an Illegal Instruction (SIGILL) exception?
+True. I should use something different here.
 
-Could we use __builtin___clear_cache() here?
 
-> +	/* Record it in the jitdump file */
-> +	if (write_jitdump(f, addr, dat, sizeof(dat), &idx) =3D=3D 0) {
-> +		if (sizeof(dat) > 0) {
-> +			int (*fn)(void) =3D addr;
-> +
-> +			/* Call the function. */
-> +			ret =3D fn() - CHK_BYTE;
-> +		} else {
-> +			pr_err("jitdump workload not supported on this architecture\n");
-> +			ret =3D 1;
-> +		}
-> +	}
-
-Is the fallback error message for unsupported architectures reachable?
-
-On unsupported architectures, the dat array has a size of 0. In
-write_jitdump(), when sz is 0, fwrite(dat, sz, 1, f) returns 0, causing
-write_jitdump() to return -1:
-
-	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=3D 1)
-		return -1;
-
-Since write_jitdump() returns -1, the outer if (write_jitdump(...) =3D=3D 0)
-check will fail, and the else branch intended to print 'jitdump workload not
-supported on this architecture' will be entirely skipped.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
-80-1-irogers@google.com?part=3D14
+> Thanks,
+> Oliver
