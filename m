@@ -1,137 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7A91A683C
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 00:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92732ED870;
+	Thu, 14 May 2026 00:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778719402; cv=none; b=IJoxhBALAO9sh9J/3Z1+8Wa+WdfBqA5fVJGMR1T/6sUb7HaJ8k5pG2PTRqkZxX58YG6jRtvfOoMWVuf/pb1xPIN06irVRrMqxC16tgYcjsFaAHUc9OG+2+yHFfvvzN8yJXJrFV78emOp1LpvsmiWiApX8VX/IA5F8E0b/KdkHwY=
+	t=1778719815; cv=none; b=ZggXRXZo6Hxt6yGJe/UZK0qh6hpJwVz71dqoeYGGTB+AgpHG7R7xSOK33CJFVSeENgRRpU8B6GcdTVKilGKRyqvskuDgYR0V2d1WhRcmE7CEmxoBtTr0ucF6HiOOD9g0rmvvqzTrDgoEF1U/EN0Rsx/DXjS6O38E01QedSX/uRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778719402; c=relaxed/simple;
-	bh=svMdPeeHgeXefb90ehm9/DK5sH9MehBhJ7NhKY0RpP0=;
+	s=arc-20240116; t=1778719815; c=relaxed/simple;
+	bh=c7fl85p+dHqJaJt4mkFQOqOPrf+QqNSoUyC8UhxH4XY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uJ8zx6BJSinnfDMPw2+eeeqm34RYin+vWqupgsjxrMMIyJ2uIrp+Gl6EsHyCHuv0Sfs/z/x7Yo1j7/uXerirsvspZGJFn5ofti+/0RwID2KEHNYESVMM2W/THAy2sMYXU41cm6+5XVnOlbWD9bSLM5nqAvoh+o/rEf2aagmMZGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sx1aM0xQ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=lKrlJOoHP1jCtoCJ8NBTOu4uygbO/Y4bnu41FaFo0VHQm3+bEB5gcKJ9x/boqEaeOTexdp2SL6UyJMVMBirEavVJ1rZLlvuAEGCST5mI1MSVtYDPvthYJlE2Ip6M2XgMFIhY7++/Xfii2yQDxy2VxmriQLqqUkDUVs4f5jZAuKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WveADRI1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sx1aM0xQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25019C19425;
-	Thu, 14 May 2026 00:43:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WveADRI1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF75C19425;
+	Thu, 14 May 2026 00:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778719402;
-	bh=svMdPeeHgeXefb90ehm9/DK5sH9MehBhJ7NhKY0RpP0=;
+	s=k20201202; t=1778719814;
+	bh=c7fl85p+dHqJaJt4mkFQOqOPrf+QqNSoUyC8UhxH4XY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Sx1aM0xQw0v/i3WhxTkJgnm866UjCDIOETrUjOlYh4ZxEdg+izJ4tmk0BieR48Brj
-	 3DXu6n3E3kGMhM1yaDB4xMBWB35kLZcv0TwGxb9uydJxRXKN+/zHpl83oo8YI/f3Nv
-	 iy/i+5U0UoKQTW3U5Ye+fs2eaMKYtdpVaftHfjGlBx+hoh2saCgyONa0b0zHEbOb7T
-	 g0NcqN+6xL1mbU5L5l1izKbVnS26G9njKA+OxKspnn+ZQ7ZGi7IXMskOznlqZp/Gxe
-	 ueGcOB3M27MgdtKxsRr486vhpmZiH5jFnPRRt7xpi2M4sUgQ4JfSDqfyqoImoKAyOz
-	 E2JniuqpYgKvQ==
+	b=WveADRI1lmgJuxJpInrK6XjCpofZFSAV9JTRYLS2bNn3BTtKFQdjhSHDnkSOO4T2P
+	 oskdNFmsYIDwxuqglSeHFlyhpcNynR79pMmZFO28U3yfkP1TfYY7qRJ2sQ+43lT1N7
+	 wA8s+M1ac6m8xHEwhOkd/YxtZAtjw7b5nDyIUgnJF4Mb8ks9jOIof1My0KdC+/OKOg
+	 POMLkCdROM1x3HaUxKc72qZwEnqWqfqzse2Qd0tkBGRjVmuclLoRQTyjLCG/dnuYXt
+	 dYadPMzxqUqOtE3fu467NDbZVzjP9iE0YxqjEk12EYWyxyMlKkATb+z5+ivRtBTGEZ
+	 17qPp6OGXIImw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf stat: Make metric only column line up with header
+Subject: Re: [PATCH v2 05/18] perf trace beauty: Make beauty generated C
+ code standalone .o files
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Andi Kleen" <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512234345.554166-1-ak@linux.intel.com>
-References: <20260512234345.554166-1-ak@linux.intel.com>
+To: "Ian Rogers" <irogers@google.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512174638.120445-6-irogers@google.com>
+References: <20260512174638.120445-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 00:43:21 +0000
-Message-Id: <20260514004322.25019C19425@smtp.kernel.org>
+Date: Thu, 14 May 2026 00:50:14 +0000
+Message-Id: <20260514005014.6EF75C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Corruption of default metricgroup alignment in standard (non-metri=
-c-only) output.
-- [High] Extraneous trailing space added to CSV output breaks machine reada=
-bility.
-- [Medium] Off-by-one column misalignment in metric-only standard output.
+- [Medium] The commit message claims to add `perf-util-$(CONFIG_TRACE) +=3D=
+ trace/beauty/`, but the actual patch uses `perf-util-y +=3D trace/beauty/`.
 --
 
-commit 29839374a38b0f40e2eb452aeaffa530277247ff
-Author: Andi Kleen <ak@linux.intel.com>
+commit 64f2b861c8affb434c0dc658c744d4faf0fb24fa
+Author: Ian Rogers <irogers@google.com>
 
-perf stat: Make metric only column line up with header
+perf trace beauty: Make beauty generated C code standalone .o files
 
-This commit attempts to fix column alignment in the --metric-only output
-mode. It simplifies the column width computation and adjusts string
-formatting for both standard and CSV outputs.
+This commit refactors the perf trace beauty framework to compile generated
+C code and formatting scripts as standalone object files, rather than
+embedding them directly. This encapsulation improves parallel build
+performance and cleans up Makefile dependencies.
 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 993f4c4b8f442..402611ecaf423 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -580,16 +580,13 @@ static void print_metricgroup_header_std(struct per=
-f_stat_config *config,
->  					 const char *metricgroup_name)
->  {
+> 2. Create fsconfig.c and flatten embedded beauty .c files to compile as
+>    independent standalone objects via trace/beauty/Build, exporting their
+>    formatting functions via beauty.h and env.h. Switch arch_errno_names.o
+>    and syscalltbl.o assignments directly to perf-util-y and add a top-lev=
+el
+>    recursive kbuild hook (perf-util-$(CONFIG_TRACE) +=3D trace/beauty/) to
+>    compile them into libperf-util.a, resolving remote linkage for standal=
+one
+>    python extensions.
+
+Is this description accurate regarding the recursive kbuild hook? The messa=
+ge
+states it adds perf-util-$(CONFIG_TRACE) +=3D trace/beauty/, but looking at=
+ the
+actual patch, it is added unconditionally:
+
+> diff --git a/tools/perf/Build b/tools/perf/Build
+> index b03cc59dabf81..e18c80a5c1bca 100644
+> --- a/tools/perf/Build
+> +++ b/tools/perf/Build
+> @@ -34,6 +34,8 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+>    perf-$(CONFIG_TRACE) +=3D trace/beauty/
+>  endif
+> =20
+> +perf-util-y +=3D trace/beauty/
+> +
+>  perf-$(CONFIG_LIBELF) +=3D builtin-probe.o
+
 [ ... ]
-> -	n =3D fprintf(config->output, " %*s", EVNAME_LEN, metricgroup_name);
-> -
-> -	fprintf(config->output, "%*s", MGROUP_LEN + config->unit_width + 2 - n,=
- "");
-> +	fprintf(config->output, " %*s", config->metric_only_len, metricgroup_na=
-me);
->  }
 
-Does this change break tabular alignment for default metricgroups in standa=
-rd
-non-metric-only mode?
+Functionally, using perf-util-y appears correct since arch_errno_names.o
+and syscalltbl.o are needed by util/env.c and util/bpf-trace-summary.c
+respectively, which are compiled into libperf-util.a regardless of whether
+CONFIG_TRACE is enabled.=20
 
-The commit message states that EVNAME_LEN and MGROUP_LEN are not useful in
-the metric only context. However, print_metricgroup_header_std() is
-completely bypassed in --metric-only mode.
-
-In standard mode, this function uses these lengths to pad the metricgroup
-name and align it with the preceding counter values. Replacing this padding
-with config->metric_only_len could shift all subsequent metrics to the left.
-
-> @@ -599,19 +596,20 @@ static void print_metric_only(struct perf_stat_conf=
-ig *config,
-[ ... ]
-> +	olen =3D snprintf(str, sizeof(str), fmt ?: "", val);
->  	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
-> -	fprintf(out, "%*s ", mlen, str);
-> +	fprintf(out, "%*s%s", max_t(int, mlen - olen, 1), "", str);
->  	os->first =3D false;
->  }
-
-Could this lead to an off-by-one misalignment in the data columns?
-
-This new formatting removes the trailing space and outputs exactly mlen
-visual characters. However, the header formatting in print_metric_header()
-was left unchanged and still outputs a trailing space:
-
-tools/perf/util/stat-display.c:print_metric_header() {
-    ...
-    fprintf(os->fh, "%*s ", config->metric_only_len, unit);
-    ...
-}
-
-Because each data column is exactly one character narrower than its header,
-will the data rows progressively drift to the left compared to the headers?
-
-> @@ -633,7 +631,7 @@ static void print_metric_only_csv(struct perf_stat_co=
-nfig *config __maybe_unused
->  	while (isdigit(*ends) || *ends =3D=3D '.')
->  		ends++;
->  	*ends =3D 0;
-> -	fprintf(out, "%s%s", vals, config->csv_sep);
-> +	fprintf(out, "%s%s ", vals, config->csv_sep);
->  	os->first =3D false;
->  }
-
-Does adding this trailing space after the CSV separator break machine
-readability for strict CSV parsers?
-
-The CSV header output does not appear to add this space, which might cause a
-format mismatch between the headers and the data rows.
+Could the commit message be updated to reflect the actual implementation?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512234345.5541=
-66-1-ak@linux.intel.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
+45-1-irogers@google.com?part=3D5
