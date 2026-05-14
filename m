@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A06C3AD538;
-	Thu, 14 May 2026 05:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20683BA222;
+	Thu, 14 May 2026 05:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778735287; cv=none; b=GxRvlO+Tkr+zdOR9qm8W/xK/h3qrgFSTs7UYQ6exML+Ohm/bFuxXn+Jn5YsrKKmpiaGO3qrh1TjUhvCPya98FVcbknSaLIQUsRrbSMvuuYpTFe3uvvbCP/8rw+L/cUUEOLjNi6TE2fopDa/Ni9uxP7SXia+FDyK7tqNx+Dlc8RM=
+	t=1778735306; cv=none; b=KlBVpWtRWCxMZdoRcJH4k+4AFxWWYIHq70muVZzjN8Wgx9bgQekeHevnBNxZ9VB3zJrygi2un0WulMqxxsD1wyki5OpYQBgoDBcUyGM7exH8vFv+vqAt15sU4VFc9pUDhUhD2P3rmYtj9Zi0UbpQ4qT6KrS0pJq5kDVIKfMk+0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778735287; c=relaxed/simple;
-	bh=i4bByhR3/GFn5EdsOuSs2aNtMnt37PAf+rz4tzgOO5w=;
+	s=arc-20240116; t=1778735306; c=relaxed/simple;
+	bh=pDv1PUPolI9yQCaKV1T3osAxs2BPPEuIIJYZ+6qnyXo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CUco6YYjgYweEiJlnKEKBzRQ6jIOun1TPUfC3kAEqUYiMECQ5bSc2t8ihAC9vnaI5+SU+MhViuKQpEnfXep6VTkEyIN6i8M4e5bsMe9EG6HCeP0WuN0cddJ0hoDQJEGbD8AfZuZ7Nd7U/HZltmJ+woMwBxqqUcQrx1pLJAER+Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cJgfkrqj; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=ueWbhY/Rr1GRwMbLA1c/HXpZiPzyXPFc7bAnQ2PK6oaqp+pPZwLrKahCNz5DVERbyRoZVcRCrVNR3z0JZ48zs+/GckvH4B9MRXjj0jYsvwi04jkgHFurNWLZSLdQ77Ei6oiaKVhyWTZjW+XKATMSgfil7s6eYmgTVSr+ew4F11k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=C0FOIuVq; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cJgfkrqj"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="C0FOIuVq"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CCA61655;
-	Wed, 13 May 2026 22:08:00 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E208C1655;
+	Wed, 13 May 2026 22:08:16 -0700 (PDT)
 Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E2E9F3F7B4;
-	Wed, 13 May 2026 22:07:50 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0871F3F7B4;
+	Wed, 13 May 2026 22:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1778735285; bh=i4bByhR3/GFn5EdsOuSs2aNtMnt37PAf+rz4tzgOO5w=;
+	t=1778735302; bh=pDv1PUPolI9yQCaKV1T3osAxs2BPPEuIIJYZ+6qnyXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cJgfkrqjF4tm9WRMUGgxzSWx/aIjRhFMv+ZZmwwkUccWMLOjzt+2qB/zt9dbgQKnT
-	 VFVuNrhwmSE2wQVt7y+3ZuYXRDIB5w+f3SKI5bKovaizZe7rdeyjGhvmf0WxlXiRVm
-	 U9BO0xWYArD/yhGbOFKPq0eNKZMHnjJbZ7Tn/0fM=
+	b=C0FOIuVqM3n4lVlgYpvHk8RRPKzDD5+SduOW3q83jwCz6q2il5Md6IfZb/iTGZ+os
+	 oKQNS84VmZM5y6W3KgNvgdeqB3HnAzkFR8cCydg4B+9Xw5pvpjyQwls0oktpX798tq
+	 tl5eo8RIyC5bwHKsuNhKjV/dYBNj9pKBlY3VZbvY=
 From: Jia He <justin.he@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	Petr Mladek <pmladek@suse.com>,
 	Kees Cook <kees@kernel.org>,
 	David Disseldorp <ddiss@suse.de>
-Subject: [PATCH 6/7] hw_breakpoint_test: fix test_many_cpus failure on large systems
-Date: Thu, 14 May 2026 05:04:54 +0000
-Message-Id: <20260514050455.2954509-7-justin.he@arm.com>
+Subject: [PATCH 7/7] lib/tests: test_ratelimit: fix stress test thread lifecycle and leak
+Date: Thu, 14 May 2026 05:04:55 +0000
+Message-Id: <20260514050455.2954509-8-justin.he@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260514050455.2954509-1-justin.he@arm.com>
 References: <20260514050455.2954509-1-justin.he@arm.com>
@@ -75,46 +75,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On systems with many CPUs (e.g. 128 cores x 4 HW breakpoint slots =
-512 = MAX_TEST_BREAKPOINTS), test_many_cpus() advances idx to
-MAX_TEST_BREAKPOINTS after the last fill_bp_slots(). The subsequent
-register_test_bp() call hits WARN_ON(idx >= MAX_TEST_BREAKPOINTS),
-returns NULL, and the -ENOSPC expectation fails.
+The kthread return value was checked against the wrong variable (sktp
+instead of sktp[i].tp), so WARN_ON_ONCE(!sktp->tp) fired at line 87.
 
-Bail out of the loop when idx reaches the limit. Earlier iterations
-already validate the NOSPC path on other CPUs.
+Replace kthread_run() with kthread_create()+wake_up_process() so the
+return value can be validated before assigning to sktp[i].tp. On
+creation failure, jump to a common cleanup path that signals doneflag,
+stops all already-started threads, and frees sktp. This avoids leaving
+orphan kthreads and leaked memory when a mid-loop failure occurs.
 
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Jiri Olsa <jolsa@kernel.org>
-To: Ian Rogers <irogers@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
+Also reset doneflag before spawning threads so back-to-back test
+invocations don't race on stale state.
+
+To: "Paul E. McKenney" <paulmck@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+To: Kees Cook <kees@kernel.org>
 
 Signed-off-by: Jia He <justin.he@arm.com>
 ---
- kernel/events/hw_breakpoint_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/tests/test_ratelimit.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
-index 2cfeeecf8de9..943d040d2224 100644
---- a/kernel/events/hw_breakpoint_test.c
-+++ b/kernel/events/hw_breakpoint_test.c
-@@ -137,6 +137,9 @@ static void test_many_cpus(struct kunit *test)
- 	for_each_online_cpu(cpu) {
- 		bool do_continue = fill_bp_slots(test, &idx, cpu, NULL, 0);
+diff --git a/lib/tests/test_ratelimit.c b/lib/tests/test_ratelimit.c
+index 33cea5f3d28b..64f26260c0d8 100644
+--- a/lib/tests/test_ratelimit.c
++++ b/lib/tests/test_ratelimit.c
+@@ -105,26 +105,44 @@ static void test_ratelimit_stress(struct kunit *test)
+ 	const int n_stress_kthread = cpumask_weight(cpu_online_mask);
+ 	struct stress_kthread skt = { 0 };
+ 	struct stress_kthread *sktp = kzalloc_objs(*sktp, n_stress_kthread);
++	int n_started = 0;
  
-+		if (idx >= MAX_TEST_BREAKPOINTS)
-+			break;
+-	KUNIT_EXPECT_NOT_NULL_MSG(test, sktp, "Memory allocation failure");
++	KUNIT_ASSERT_NOT_NULL_MSG(test, sktp, "Memory allocation failure");
++	WRITE_ONCE(doneflag, 0);
+ 	for (i = 0; i < n_stress_kthread; i++) {
+-		sktp[i].tp = kthread_run(test_ratelimit_stress_child, &sktp[i], "%s/%i",
+-					 "test_ratelimit_stress_child", i);
+-		KUNIT_EXPECT_NOT_NULL_MSG(test, sktp, "kthread creation failure");
++		struct task_struct *tp;
 +
- 		TEST_EXPECT_NOSPC(register_test_bp(cpu, NULL, idx));
- 		if (!do_continue)
- 			break;
++		tp = kthread_create(test_ratelimit_stress_child, &sktp[i],
++				    "%s/%i", "test_ratelimit_stress_child", i);
++		if (IS_ERR(tp)) {
++			KUNIT_FAIL(test, "kthread_create failed: %ld", PTR_ERR(tp));
++			goto out_stop;
++		}
++
++		sktp[i].tp = tp;
++		wake_up_process(tp);
++		n_started++;
+ 		pr_alert("Spawned test_ratelimit_stress_child %d\n", i);
+ 	}
+ 	schedule_timeout_idle(stress_duration);
++
++out_stop:
+ 	WRITE_ONCE(doneflag, 1);
+-	for (i = 0; i < n_stress_kthread; i++) {
++	for (i = 0; i < n_started; i++) {
+ 		kthread_stop(sktp[i].tp);
+ 		skt.nattempts += sktp[i].nattempts;
+ 		skt.nunlimited += sktp[i].nunlimited;
+ 		skt.nlimited += sktp[i].nlimited;
+ 		skt.nmissed += sktp[i].nmissed;
+ 	}
+-	KUNIT_ASSERT_EQ_MSG(test, skt.nunlimited + skt.nlimited, skt.nattempts,
+-			    "Outcomes not equal to attempts");
+-	KUNIT_ASSERT_EQ_MSG(test, skt.nlimited, skt.nmissed, "Misses not equal to limits");
++	if (n_started == n_stress_kthread) {
++		KUNIT_ASSERT_EQ_MSG(test, skt.nunlimited + skt.nlimited, skt.nattempts,
++				    "Outcomes not equal to attempts");
++		KUNIT_ASSERT_EQ_MSG(test, skt.nlimited, skt.nmissed,
++				    "Misses not equal to limits");
++	}
++
++	kfree(sktp);
+ }
+ 
+ static struct kunit_case ratelimit_test_cases[] = {
 -- 
 2.34.1
 
