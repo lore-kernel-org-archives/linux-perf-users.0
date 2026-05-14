@@ -1,131 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012040.outbound.protection.outlook.com [40.93.195.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDE630E828
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 15:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778773842; cv=none; b=q9ceMELlJ8NEVMmzvBfS8ySqIDXhvI9nbK/ZFghXXJlLtdicD733wwyRn21zFwTxb1zc9+FOLzTfQi3BTZB0Aj/ETFSm/h2r4wafhL6Wepr5kDxQynt7Z/5Y0E+qRM26BVA7FlB2PvBurBWJQIx1dtvkZ9dFxDMyMaFHhTXdREI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778773842; c=relaxed/simple;
-	bh=Uj5H/q4kq6fLaZRShIomXVzRksW6eUqyBjyGSCn1FdY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=l4zSu3IgrVOZDk2HcpYtXvEqjvUN8nlIBgz057yNqgzLBskLGegVYMFYaElJnkOa8UHfAIhAJab8jBk+rHkVTLhrl3AmBMy95epZh4k9Oh3F0XkHzVtBAMUZAcZXAo23UbgFQyG6F9qqUI814qsoY+bfd0/t9tQyUTKmT9RXrR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzEiKd7F; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7768316197;
+	Thu, 14 May 2026 15:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778773875; cv=fail; b=W29B5BbdgkMvq36SMsV+0ACIqAHNNuWRYpPdQ1YWU30LjXjIE8C+k6n/vzUJvompWiP3SI4mdteOa+OKJV3PzgK9kcTIJjDSQ2/gNfw3lZCJ1V7rcN6K+63ORVbd1KzelF7sYTO0Sjd0QTfAeyovWKeM6hg5m81qG8ZK0YEYRSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778773875; c=relaxed/simple;
+	bh=AhZtkIcL6lerYJUiUIZ28508NICQ8yRRLZEL1BMDfGY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rFLA8OvZZxZsuCbG5r0BfobHqMuYsSeJO7dgX3D3G6TsjKfVSaF4q0u/CLW8NLr0pEneWh2SZkSIKIBgiekOTZf6mMIJkq2PC5YOdjT90oK8QfnatYKtnJb/KEDAEPaSSkq7wdTu8Z5wMuf+DuX2GJ0LSavX7sQLHJBrTderBrI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=o2hpHcjG; arc=fail smtp.client-ip=40.93.195.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzEiKd7F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1529DC2BCB3;
-	Thu, 14 May 2026 15:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778773841;
-	bh=Uj5H/q4kq6fLaZRShIomXVzRksW6eUqyBjyGSCn1FdY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=gzEiKd7F4X2vJvdWITKT9ADdk8UJOVWdc55Gmw2OlaOuh62UXprVd8CC9maq/c5Lk
-	 +QwC5MDPXhEodTKYReFSMlcbNlY17A7h1E0Kh5qD8VfsznvT3Ppam0liuUvQBF5DY0
-	 XOsIOv+LaK0FCk9NIrZhkOu+aKcVHIrXDp3Ik8WA5TMleBTBOnNObi4q7pc1VSgwUn
-	 xxpbP9HTY2vX4iGE/zYby0ZZMd/Lf/Ql6revUWBly4mImkE6pzIHGbnDgUvcdg7O9K
-	 m9YaHMLrIqB+b6nOpDXc1uSdSsLanfJ5TLXmWWVj1an+R8sDkGF20rF+359l4HpKyq
-	 fQDNZGGhpZfyg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 07/14] perf test: Show snippet failure output for
- verbose=1
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260513230450.529380-8-irogers@google.com>
-References: <20260513230450.529380-8-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="o2hpHcjG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cyGo/lAPkEbxwX9NUxyPjR47TkQo/9xxLNI6VpGbp9KqVkbVsMRH22eHl0V16yoKGnUJBujH+XneEwL7Td3HHZtJJPyqhz2t+iq0fnUGyXjbxVszqj/mkhy8aHVjdq5FJlmmBraD1jgJ/2SHh0ezPxWoS5UV5IgdhoxKmd7Z5MBpo/b61/GWhOXe/13V9oIu+8MFAh0JY5xTxDWSI3PoIUNXyTbMZBdKfJVWjyr7GSFoVz+BiPew1MgHwnL6SLuQxfI8gSJb85j5wtdMAv38qrhtp8v9kTO3g2seHebL5t6kkW+hXAtK0S/ttCKO8lz/5926MYRDmi9CJSxPBKqNRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AhZtkIcL6lerYJUiUIZ28508NICQ8yRRLZEL1BMDfGY=;
+ b=diG+XaEvbpqZtGok33KU7Z435e3dgt/aMeiYlQjGPayTbC+Y7ClkuBu/BwshOsIYppSAO9fWVzRIqr8QCTWwn0cPWhf7/bvI7tO7ZTh86XXueFCg76MQz1hMPU4kahlQEqX2pH4Fdzx+MstojMCqsZXjpCgqKAvlXzomD4fmL49FyMpcyXSk52ZZB9sWfFt8GTFwOU1fQ/X9ld/uYsyNpOw6ucrj4nuv5EuiRYZ0GR4Ia7TAcLmKum9bDD8T/LMAg/K6Sb3X2ZsgCehdY4ECRS67v1KZR1B4gnEmww8ksmTuUcfV1aHOaKtPG7RxwPPvLIP4goFGE/QOz66Hf1hcVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AhZtkIcL6lerYJUiUIZ28508NICQ8yRRLZEL1BMDfGY=;
+ b=o2hpHcjGq4oy8hRZAkO73rJMspie0VxfSNKvFhvSmn3/u9XmK1T5lG0Hjp5UzgvgzvM8AdTnYrCvp+AhPhZv052/fC72nUuptsE3h8qMIwcfhug634Al+RQWTwcK6BIJAz6r6/EeVJlGYikqYB26c31Ei1VRzruc66Rf+4vRlUhUk0M1nX81S8VpegksLPzYyDc63ncd5s01M5H+khB0YarsCpvjff5OU6guxXLIefyolqURRBbwN/0ZEclK+w5cQQ9fSkd2vojBw6R9jIzE2xyiGSm/E5ChdSvPqTQooKaNTHUha71RtyB+dDOnrP9dAvc1UthjAY2EWew1rLZUwA==
+Received: from SN7PR12MB7226.namprd12.prod.outlook.com (2603:10b6:806:2a9::18)
+ by IA0PR12MB8838.namprd12.prod.outlook.com (2603:10b6:208:483::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.11; Thu, 14 May
+ 2026 15:51:02 +0000
+Received: from SN7PR12MB7226.namprd12.prod.outlook.com
+ ([fe80::c07d:130a:7def:6807]) by SN7PR12MB7226.namprd12.prod.outlook.com
+ ([fe80::c07d:130a:7def:6807%5]) with mapi id 15.20.9891.008; Thu, 14 May 2026
+ 15:51:02 +0000
+From: Besar Wicaksono <bwicaksono@nvidia.com>
+To: Saurav Sachidanand <sauravsc@amazon.com>, Arnaldo Carvalho de Melo
+	<acme@kernel.org>
+CC: Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, Namhyung
+ Kim <namhyung@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "aghayev@amazon.com" <aghayev@amazon.com>,
+	"juew@amazon.com" <juew@amazon.com>
+Subject: RE: [PATCH 1/3] perf vendor events arm64: fix swapped MetricGroup for
+ Tegra410 L1 prefetcher metrics
+Thread-Topic: [PATCH 1/3] perf vendor events arm64: fix swapped MetricGroup
+ for Tegra410 L1 prefetcher metrics
+Thread-Index: AQHc4Ypgo2n5oP93nEqgZU81AYCPObYNr1PA
+Date: Thu, 14 May 2026 15:51:02 +0000
+Message-ID:
+ <SN7PR12MB72268D49F120EA8124E238F9A0072@SN7PR12MB7226.namprd12.prod.outlook.com>
+References: <20260511210832.91408-1-sauravsc@amazon.com>
+In-Reply-To: <20260511210832.91408-1-sauravsc@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7226:EE_|IA0PR12MB8838:EE_
+x-ms-office365-filtering-correlation-id: acae1b5a-4d8f-47ca-7a90-08deb1d099d9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|1800799024|376014|366016|38070700021|18002099003|22082099003|56012099003|11063799003;
+x-microsoft-antispam-message-info:
+ XEBmGCro1xIDy9NjOfDC/4MP7BAa+8bTAgzG5UjECnApo5v4S0US2Zvft73yhIL90gjgiVSf4R4Pq6J4Dv/bz7SqUcoOvJvKZlgszGZG+1jSRFrNywpO60HjsNQ+fnRWAk2SO0E6rBSMKZNRaNM/J2uI6A75S04kG9LNh60UteqXd80b3VL7n5MigkKA/9Qenz/+LJYXhqrjdlTxZy9fOB2yR50oh6HxXBQ3NDZbxuGz/tkpi2eJ78csouRTxVJZLxL2QZlaCvOsPqqY97Id2T7npoGhXWyTvoSEhOhCfV2Ogy64ghkWah3uyM3G/lbu8G0zs5jlM0tf5o8ICHrW6F816x3i8ivx3MRqUMm8vQ5+/ATdea/JcRKgcR1nICHl7wh9kmvWk+0coexr9yTM8EVxqG6qQuPl85e6CGXLFrw+xxoFgNl+Nop1xTm3qQVPw2c3CQisXsJDFm/Z3EvxTzAt5NG7xo25WX9wmRwlkyl9Op06VlqcPURIAY6AikI2wZCGrFcq54/fSLdV1/r/5GXsNMS6gSpnptS/Kf4nhMp8BymESRb2Zdujs/Wz3gAKAArY+wtFQU4DPeokghxKaiRai/hjsKLohIPIbcQTHF5hwbaQmx5nxNh9Ra6mLWM/fmG00ZyjFJmEN4+iF1WQLvN09xbgDIzrgWbAnNsLrjcyZlx1uVm/A9rJ67q9PBmeXCn9UDoN/i1meQ0ci6Jv1NBKh86ENtNE45CImO2QO5XOhdI95pTSxmJIrzmTx4aE
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7226.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(38070700021)(18002099003)(22082099003)(56012099003)(11063799003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?XxIoZBbVPUxEb+oA9apeQSRPuTyQEbh5NhpTZVSQHCigr9d0rNkfitu5UuSE?=
+ =?us-ascii?Q?YPex3bMixcfDLC9k9UVfJ/qBwXR6Ky3Ed5dQ7rWKretySlcpXCYT2g4GN4js?=
+ =?us-ascii?Q?4GVxTpRPk+38VEQtj3U3x62f5sCoQdw+d2f4mseLBce8N58zb9yEsoGWCKcP?=
+ =?us-ascii?Q?2xU+l/nroHjTvtm7gaE9a+QaAfFFy7KvBKNffjxQ/Qs7By74mFQGuwwqoeUS?=
+ =?us-ascii?Q?Iesbr9Q+JfqSYn2+4gLu8axsFlRFrMC12tBfugbkeTAh23iVoaxn3J4aZBlv?=
+ =?us-ascii?Q?5Xmeo3If9NS0ZdbYhYAPNo6uhhEa8nBTx5xKQrJ1W5lxiOZIFwaEJOTfFjzP?=
+ =?us-ascii?Q?ZeK1sd/PBLfkxgUz4EN5kmq2jD6GJ3/a6rDeNyIiUEwHiYrXVqk29Qp1ocYm?=
+ =?us-ascii?Q?QkNnwR3tFzK3ZZR3+MDJ/p+YnETC3LM2IDnI3UWJl5ZNNwxqk/m9vJvIGTRG?=
+ =?us-ascii?Q?3cXSNQWtwhU0rmPf8rFL8k7NQYNIjWkmWJy5ei3HmvIn1KSqx8IAVsoAE8LJ?=
+ =?us-ascii?Q?hIhs9n7dpv0JyDeyf705CG6QLD86mKg58wZh4zFF6uwoFF17DZMMZWrY3cak?=
+ =?us-ascii?Q?nlZOEwdaqNONPhTKN3F6EDTJqva7YdW2Tsbze2OQECSzDzZEnTZ82kaPNQM8?=
+ =?us-ascii?Q?Q8g/UjdjTzp59arJF2Xsgg9zFavoLNwDN8NC7oID7AqHgQo0u7FQZfLvMPRd?=
+ =?us-ascii?Q?CUwLRGno478TbmjZ/G2zUT5XaNdWdmmCE9fpBEZeMZlAQ6Be79zSLhc0e1Q1?=
+ =?us-ascii?Q?AB1/Po08tBJihBPMMCpQIS9F81WySq98KEjSz6DwvYvRTL+NGp/YawJHkkS8?=
+ =?us-ascii?Q?Umn/HGPI1zNjdGM+AtBTS+ENUTB1TllZT4FWuEHL5PHUpzukh+Dl/w+zrmH2?=
+ =?us-ascii?Q?UnNUbOwLYbvo6F/mvDcprN2nweRCp6660ltLMJqeqDznxjwUNZ4t/ssDOGco?=
+ =?us-ascii?Q?kxQ99ydkqcmzwu5+a0tYaj+s2ozpCHipisJ7iuNTJhcRlpYiWXcU3JKi/Fc8?=
+ =?us-ascii?Q?FaLpdfKT57FPPs28fPS8HbJLKhx+OHZLFQPzs6VS2mUxmI3P/9rRjsqCYd6r?=
+ =?us-ascii?Q?glxs2L6uUJfVpG/Lm2IaFS20eXnY2OvBGKLAyTzpmbBINrND12SW6H3D46YU?=
+ =?us-ascii?Q?/+KGNchhdIkj+BaLu4ENa+mDzPOgbpYuWGCwydfQrtWR2vhg1+L8ouCEwBJ/?=
+ =?us-ascii?Q?FB2OG1LevZxoorS0NivtpAvISPMcvcQ9UNvGkL/Q6FMi/w5ZtEbFe28TUO72?=
+ =?us-ascii?Q?6+xcMzYLDuFDxiIHUev+bjIShBEwJd+QRBUlkSpG8EX5ftRVExsVXMbR4CRz?=
+ =?us-ascii?Q?EQioRVV1h4cmmeULXZESipDyJy/OgmwsvSE6+2ETT5RZ/dobiISWCYLfnLG4?=
+ =?us-ascii?Q?g/UJKQUoeiGMuZht6cvT/8l6nNlmwvjj1lOj3nILV8eXEHfOYI3SKHOTkLtK?=
+ =?us-ascii?Q?iLwWDl68qAp12Gqp5eUDzx5V6SrdnRIPVehvPmKHRwbypJxwMr73r5BiZjjx?=
+ =?us-ascii?Q?b0qDDxu2NLJvXchvinXRRAY4hpBaXpb9+ygVnXajyIZHGpOvcb3Lvvee1ip1?=
+ =?us-ascii?Q?dit7n7T9GWgO+Kqu2h+q6bmBzHuwFFHywuaVlhR2qv2sS1R72uerL1rfLXoD?=
+ =?us-ascii?Q?weldsGp10alL7bA0nvEitpGZtdXY48nMmkfrVFd37vpMehPRDXLuO+8E+PRG?=
+ =?us-ascii?Q?K4RiDxm8U6yFOgs4Mxf214SyvaIf/xPAvsaWuR+2pdyA6DF2ua4k1e74DOV+?=
+ =?us-ascii?Q?FdLLATE2Bg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 15:50:40 +0000
-Message-Id: <20260514155041.1529DC2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7226.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acae1b5a-4d8f-47ca-7a90-08deb1d099d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2026 15:51:02.5235
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NmAo36JkcHA44EhpeMjfU+2CEWaLoAIm/ZjKKFWoHJj/cyqbG5irxo7VD+JGl3aW0cvSYQyVxjlTGjaL9p5pzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8838
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Unbounded output and error context starvation in Pass 0
-- [Low] Undefined behavior when passing uncasted signed char to `tolower()`
---
 
-commit 957cea0e8173df2ef71d1dc7480195a00fb7a68a
-Author: Ian Rogers <irogers@google.com>
 
-perf test: Show snippet failure output for verbose=3D1
+> -----Original Message-----
+> From: Saurav Sachidanand <sauravsc@amazon.com>
+> Sent: Monday, May 11, 2026 4:09 PM
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Will Deacon <will@kernel.org>; Besar Wicaksono
+> <bwicaksono@nvidia.com>; Ian Rogers <irogers@google.com>; Namhyung
+> Kim <namhyung@kernel.org>; Leo Yan <leo.yan@linux.dev>; linux-perf-
+> users@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; aghayev@amazon.com; juew@amazon.com; Saurav
+> Sachidanand <sauravsc@amazon.com>
+> Subject: [PATCH 1/3] perf vendor events arm64: fix swapped MetricGroup fo=
+r
+> Tegra410 L1 prefetcher metrics
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> The L1D prefetcher metrics (l1d_cache_rw_miss_ratio, l1d_demand_accesses,
+> etc.) were incorrectly assigned to MetricGroup "L1I_Prefetcher_Effectiven=
+ess"
+> and vice versa. This causes 'perf stat --metric-group
+> L1D_Prefetcher_Effectiveness'
+> to display L1I metrics, which is misleading.
+>=20
+> Swap the MetricGroup assignments so L1D metrics are in the L1D group and
+> L1I metrics are in the L1I group.
+>=20
+> Fixes: 86ff690f45cc ("perf vendor events arm64: Add Tegra410 Olympus
+> PMU events")
+> Signed-off-by: Saurav Sachidanand <sauravsc@amazon.com>
+> ---
 
-This commit implements a bounded snippet processor for test failure outputs
-when running in verbose mode. It aims to extract important keywords like
-'error', 'fail', or 'segv' to isolate the root cause, rather than dumping
-the entire raw output buffer.
+Confirmed the L1I and L1D grouping was swapped by mistake.
+Thanks for fixing it Saurav.
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index ad1b941731ca1..45c1afb9ad333 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-[ ... ]
-> @@ -394,6 +396,210 @@ static int print_test_result(struct test_suite *t, =
-int curr_suite, int curr_test
-[ ... ]
-> +static const char *find_next_keyword(const char *str, size_t max_len, si=
-ze_t *kw_len)
-> +{
-> +	const char *best =3D NULL;
-> +	size_t best_len =3D 0;
-> +	int k;
-> +
-> +	for (k =3D 0; fail_keywords[k]; k++) {
-> +		const char *s =3D str;
-> +		size_t len =3D strlen(fail_keywords[k]);
-> +
-> +		while ((size_t)(s - str) + len <=3D max_len) {
-> +			size_t i;
-> +
-> +			for (i =3D 0; i < len; i++) {
-> +				if (tolower(s[i]) !=3D fail_keywords[k][i])
+Reviewed-by: Besar Wicaksono <bwicaksono@nvidia.com>
 
-Could this trigger undefined behavior? The output stream might contain
-arbitrary binary data or non-ASCII UTF-8 bytes.
-
-Since the argument to tolower() must be representable as an unsigned char
-or EOF, passing a negative value from a signed char can result in
-undefined behavior.
-
-Should s[i] be cast to an unsigned char here?
-
-> +					break;
-> +			}
-[ ... ]
-> +static void print_test_failure_snippet(FILE *fp, const char *buf)
-> +{
-[ ... ]
-> +	/* Pass 0: Unconditionally pick marker lines */
-> +	for (i =3D 0; i < num_lines; i++) {
-> +		if (line_contains(lines[i], line_lens[i], "----")) {
-> +			pick[i] =3D true;
-> +			if (picked_count < failure_snippet_lines)
-> +				picked_count++;
-> +		}
-> +	}
-
-Does this bypass the failure_snippet_lines limit if a test outputs many
-marker lines? Since pick[i] is set to true unconditionally, a test with
-hundreds of marker lines might cause an unbounded terminal dump.
-
-Additionally, if there are enough marker lines, picked_count will fully
-consume the quota before Pass 1 executes. As a result, Pass 1 will be
-skipped entirely:
-
-> +
-> +	/* Pass 1: Pick lines with failure keywords from start */
-> +	for (i =3D 0; i < num_lines && picked_count < failure_snippet_lines; i+=
-+) {
-
-Is it possible this starves the quota and prevents actual failure context
-from being picked up?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
-80-1-irogers@google.com?part=3D7
