@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B4C1F131A;
-	Thu, 14 May 2026 05:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1460B3AD538;
+	Thu, 14 May 2026 05:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778735243; cv=none; b=IpP2eyquLCC3StFXiIRXmQf/nnjwHX5lzgIxkTTOuZk3pb42u9e5/Y2d9+UwrjcQ910nWPcSJjvZWdZ1n3en/wb/1L2SfWCXhyF/QeAYHR44Wp5Emnk3ty1WlZALTeblP4FCKps1Hjn7IQSm0mKSZArjL2X2V78IiIKtLAIatOk=
+	t=1778735257; cv=none; b=eNJWVvRnFedErohL/PczgRefFyxULseBjRZUkWCWpRMXF0KctxnlCQX8C+FGANn/ML9jZ5U+YpzqGNMEJGXB8XvG+0u35aIo+e/bTjToWMRfpjoAA8HLz7d1cD/2+ML4hSjFLu76D6gx2epdW1KuUPRQH092bakoAc1PQoNl5QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778735243; c=relaxed/simple;
-	bh=m1VX1+Cs1y6NAynCJMAnljF2dh+IIFzjeI0LtRTOziM=;
+	s=arc-20240116; t=1778735257; c=relaxed/simple;
+	bh=czAmxYpsET1Yh9/oz4/+53pPQLCrLQvlifYICwLtv+c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qgrT7Q6jEIKbv1WXFzN4jWN4XjboXOm+IgYl2GPuYigRHQwv/wM0hDHymdMYavKpKMidlMMEMNdg+eT7baceNnFR6madekh43vMKbEpbx/TzE8gaty3kj1tSg/kZ/NcTkgqJjQeX6kU+MALtcLMLbpIuBpMumETNvHMaZZJgj/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=E/oh4tN/; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=kIvusrLqoJQch1yxgap8nQw1KoVK9YN2AiBfAhc9zztCayITnafUiDYArMWKU7xury5GViESiGzNS53Bx+ep75W7nQJ1PeAg1skOBR5HqTXqVkA4jdiev6Q3Lbx7GN3Tyw9n+fJkjNto6XZVX/TpvTYVNqMVswqHWGHXl4CmE5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=o0FHpsW6; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="E/oh4tN/"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="o0FHpsW6"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ADC51655;
-	Wed, 13 May 2026 22:07:15 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2CF51655;
+	Wed, 13 May 2026 22:07:29 -0700 (PDT)
 Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 951093F7B4;
-	Wed, 13 May 2026 22:07:05 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 725C53F7B4;
+	Wed, 13 May 2026 22:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1778735240; bh=m1VX1+Cs1y6NAynCJMAnljF2dh+IIFzjeI0LtRTOziM=;
+	t=1778735255; bh=czAmxYpsET1Yh9/oz4/+53pPQLCrLQvlifYICwLtv+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E/oh4tN/nyhRAFt0FylqFv26rxNYr0RLbwJycvUtCBR5EOuw4xnrNUwGQFUl8Fdnr
-	 aMaaYdqq9tcsYZ8Usbbj9Jd4MTN28+Kac6h6lxa7WKAFMWPWsLaVF2fDlTou0GExN0
-	 K25/GUzhMJfdsgdFVJlXBsG+2zTNhbDSt5LZ5Ziw=
+	b=o0FHpsW6gdbF86tmY2ETArYqOqWqOOY1GNI2kiRdvM0pm7oBhmWbI0Z0X6+EHPNZl
+	 qQBBP5fVos0FOErmjWVY5uBrA7RJCxa2iqP47kzzSkryHXE/vBAHPK+Hyo+H+t3yN/
+	 GRfD9Ykf4sHrnO+EeU80Z+AFYPlWekU7W7R3aPKc=
 From: Jia He <justin.he@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	Petr Mladek <pmladek@suse.com>,
 	Kees Cook <kees@kernel.org>,
 	David Disseldorp <ddiss@suse.de>
-Subject: [PATCH 3/7] lib/math/int_log: drop WARN_ON for value == 0
-Date: Thu, 14 May 2026 05:04:51 +0000
-Message-Id: <20260514050455.2954509-4-justin.he@arm.com>
+Subject: [PATCH 4/7] kunit: platform: catch duplicate (name, id) in kunit_platform_device_add()
+Date: Thu, 14 May 2026 05:04:52 +0000
+Message-Id: <20260514050455.2954509-5-justin.he@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260514050455.2954509-1-justin.he@arm.com>
 References: <20260514050455.2954509-1-justin.he@arm.com>
@@ -75,43 +75,82 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-intlog2(0) and intlog10(0) already return 0, and the math-int_log
-kunit suite passes {0, 0} as a valid input. The leftover WARN_ON(1) on
-that path produces a backtrace per test run. Just remove it.
+kunit_platform_device_add_twice_fails_test registers the same device
+twice and expects failure. Without an early check the second
+platform_device_add() reaches sysfs_create_dir_ns() and dumps a
+backtrace via sysfs_warn_dup() on every run.
+
+Walk the platform bus for a device with matching name and id and return
+-EEXIST. PLATFORM_DEVID_AUTO assigns its id inside add() and can't
+collide, so skip it.
+
+To: Brendan Higgins <brendan.higgins@linux.dev>
+To: David Gow <david@davidgow.net>
+To: Rae Moar <raemoar63@gmail.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
 
 Signed-off-by: Jia He <justin.he@arm.com>
 ---
- lib/math/int_log.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ lib/kunit/platform.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/lib/math/int_log.c b/lib/math/int_log.c
-index 8f9da3a2ad39..8585207cbe7f 100644
---- a/lib/math/int_log.c
-+++ b/lib/math/int_log.c
-@@ -59,10 +59,8 @@ unsigned int intlog2(u32 value)
- 	unsigned int significand;
- 	unsigned int interpolation;
+diff --git a/lib/kunit/platform.c b/lib/kunit/platform.c
+index 0b518de26065..515f7c859014 100644
+--- a/lib/kunit/platform.c
++++ b/lib/kunit/platform.c
+@@ -7,6 +7,7 @@
+ #include <linux/device/bus.h>
+ #include <linux/device/driver.h>
+ #include <linux/platform_device.h>
++#include <linux/string.h>
  
--	if (unlikely(value == 0)) {
--		WARN_ON(1);
-+	if (unlikely(value == 0))
- 		return 0;
--	}
+ #include <kunit/platform_device.h>
+ #include <kunit/resource.h>
+@@ -80,6 +81,20 @@ kunit_platform_device_alloc_match(struct kunit *test,
  
- 	/* first detect the msb (count begins at 0) */
- 	msb = fls(value) - 1;
-@@ -116,10 +114,8 @@ unsigned int intlog10(u32 value)
- 	 */
- 	u64 log;
+ KUNIT_DEFINE_ACTION_WRAPPER(platform_device_unregister_wrapper,
+ 			    platform_device_unregister, struct platform_device *);
++
++struct kunit_pdev_dup_match {
++	const char *name;
++	int id;
++};
++
++static int kunit_pdev_dup_match_fn(struct device *dev, void *data)
++{
++	struct kunit_pdev_dup_match *m = data;
++	struct platform_device *p = to_platform_device(dev);
++
++	return p->id == m->id && p->name && !strcmp(p->name, m->name);
++}
++
+ /**
+  * kunit_platform_device_add() - Register a KUnit test managed platform device
+  * @test: test context
+@@ -95,6 +110,22 @@ int kunit_platform_device_add(struct kunit *test, struct platform_device *pdev)
+ 	struct kunit_resource *res;
+ 	int ret;
  
--	if (unlikely(value == 0)) {
--		WARN_ON(1);
-+	if (unlikely(value == 0))
- 		return 0;
--	}
- 
- 	log = intlog2(value);
- 
++	/*
++	 * Detect duplicate (name, id) registrations early, before
++	 * platform_device_add() reaches sysfs_create_dir_ns() and
++	 * unconditionally dumps a stack trace via sysfs_warn_dup(). This keeps
++	 * tests that intentionally exercise the duplicate-add failure path
++	 * (e.g. kunit_platform_device_add_twice_fails_test) quiet without
++	 * losing the negative return value they assert on.
++	 */
++	if (pdev->name && pdev->id != PLATFORM_DEVID_AUTO) {
++		struct kunit_pdev_dup_match m = { pdev->name, pdev->id };
++
++		if (bus_for_each_dev(&platform_bus_type, NULL, &m,
++				     kunit_pdev_dup_match_fn))
++			return -EEXIST;
++	}
++
+ 	ret = platform_device_add(pdev);
+ 	if (ret)
+ 		return ret;
 -- 
 2.34.1
 
