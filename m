@@ -1,158 +1,170 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB41A19D07E
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 17:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778780918; cv=pass; b=L5+C/yo7BF0EtQdGyqOGVVQAd7IEyaSlqkEGTcX483/4b+rXWI7retQNiV8DpyEIJttx+uasFDTVF7y89WpvF2psWHkpMuPvyrBt9xCXEAsl6+zc0LHZWnTJGBhm3i/0kifDZxtKBgjuRc5YkdVrK98KiLvdJWoNZfUOAUQdAH4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778780918; c=relaxed/simple;
-	bh=0xSOdrXUtPCmWOkjcs1t9ql2rm2uWDReOae07gGFT1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cDME588pHBBgDSZl5+XhQOBpACc1QF0D43V/2zHe3NpHk/3xtp0Ts3iPYDkforo04uKl9DB97VgjqJky18qpgvgHJ6dADzy/zyJ9FB7OhEiLEmXclQRbt1/f1YncDAxBxvto5twExNPj1HKuZ+nRNNQwTOM2aAcIAyamygWTQvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S2a2EluS; arc=pass smtp.client-ip=74.125.82.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27A719D07E
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 17:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778780939; cv=none; b=ZCpuw45lUyZFxot3NOAp1OGVJWtA70d/nN2UPUoXC41kjleWmjUPTQcLFUcA7DzrjrV2T5BUxDSErXFSTEcec5IynD0DqmGzeZ1AuwTog/eXaGIZN2AaijwN8cewsTaT6ZvPy4pl0dm0xkYljsJYjW/rnXWd7r5vDGBnNMvqLRk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778780939; c=relaxed/simple;
+	bh=yUhmgSO/SEwckVlcFwSjFXc+j1Dz8DlxxoAbm2PPlVI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=fjq/C195kAM0XJyi4oJfjjkx/yME+yUtfS/KeNf8I9vFdv908VMc/lgpbTzZ5CZOckulRPnoR4+/l4qOj/Hy9qzy7R4RIvQjtahRXCWOjgHEj26wQXMMwuDFIjAkyOmNn0l3BasQ9UHPRKRBFqjclUcZvDCUtkjHlzVq6/VMzic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2o+9+oG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S2a2EluS"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-133362c30cfso223c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 10:48:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778780916; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jSSbBg0daxUCcKlUAkIuQnd/e1/R00v2KD4XNqkrSJcP16Q2P5lo1yNqB4pGqNNZjx
-         4bMrzRp+49Nnxh6BUpF5Y1+8AbIt9P088hZqczwtYBhcjrws/F4f1En8MDl96UOi3fZM
-         Z1JRwZDEjsYWtIeEU9zj7ARfygGgoLnqZdX/MbNMNDWmqzYoLtoYUxbBEybHjziVuL6y
-         9pDhWA4m+MffFk4Sy4DwoZGmmBYcojmksn74DHUFW1PwaX4e/Ok1QUM8mqjdveFsAUmj
-         MAYprWRW5ERDXXd92CTSv1SDwayvAz4dhu00IXLd4Pu0UMNVpAvFxY5+96ovBd7SmfcA
-         6PKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=P51y2SUZmYkTmBXt5UpXfBsLlNjMMFZVx/F0wH8/eLw=;
-        fh=V+Hkd32G+1fsoXLAC5XrTcHIqDk8QPQqR/gg2XctWdc=;
-        b=H37GQmreRt9hcfOX4rkbl8oJOnrB9JoSSJjBS7an1BmJNHQB9hFPHQNo33pmMKi2as
-         6QQNvVP8M1XOyXnmkbUkli9nkx7lFa8fyIQkcsqeDmbIGQ2j3xIhWqPQdnNioz8xeI01
-         P7wq449/kIkKCEk0zna0xc4KDRnso+o53qwYZHqdoE4/HIxUHVmULHltoaWJ6/LEiAdQ
-         8aGraosr/yNg045ZzP1JWTFTv6NtroVwZosH4BFYaw5P2sTZhCxu++zpMcC0drzAJaQI
-         vSUvRTAwnId4n8nTbux488LEda16bOZWyZcV/G/KzQqzdkX4ZXO5WLTOTytYDwi3wAPF
-         6lZA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778780916; x=1779385716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P51y2SUZmYkTmBXt5UpXfBsLlNjMMFZVx/F0wH8/eLw=;
-        b=S2a2EluS6iPWXyKno+5WNKW+znBf3wCIRieYhUhtESCpXv+dFE5FyxKpWboM1cHh5/
-         +TxPlyTjBKl6qiGIFe5bmYOvFEM3W0hKutE6F7V6TmPZKcVUJHOeinvhYSmQ+DUXkDBt
-         kD4US/DcZir6VYCHXVeRdJvUvJvao0VfcXSYoGvgy8UF3bNBYHzdYIx3q5YzInkfCkIT
-         HiFsvCAqe+vDNS4a0g8ffKxsCo3YwJONu7c+T6xM5cNKUHUs9ccVXQQzMW/QCqHe+x69
-         sAQiaoDuHsqOCHycwBj8UhVQwfCQAzC8oyrWttI9uoALXqqju5PZ/Gstl34TUmBPaZwX
-         u4Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778780916; x=1779385716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=P51y2SUZmYkTmBXt5UpXfBsLlNjMMFZVx/F0wH8/eLw=;
-        b=m8GEglozoFVPd+Wi2JR9vdA1zRTcvmIFQgsQhwehDp/RtFAE81LS0wswD0QfRHGRbJ
-         DoCiBNxMIlePyA9BRohMBEWUDFWYK/rgcd9hNNxnVsEpWJIkBhBu9yZ/sOp533dplzqX
-         zyW8Z1getsOEQ7vYj5cyzd7sqnTZqFXTZ+Z36tz3YpV0fnRojSj6O6LsEqxVNDYr9Uvm
-         Dtkei0xQWmsS1Z97Af4ELsAChOxNnHWwGLsGvuELajm75JQ4Ijhk8vBvaLm48LmF0MUA
-         40UcGunj1NU3Ecbbq8bHNRW2XfM3AQ+0Oiu6+TSP8HunnhGbSM0JHcxIM1hkTUILG3Q5
-         cYBw==
-X-Forwarded-Encrypted: i=1; AFNElJ+9fZjtqOtWw8u6WMn5hpQKNp9A5YII/MGb5nxRotv85KHcS6jk60mKFhINTZQJEMIU2qbctjuqMuowXvZ2uo3E@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzwBGMtKEt5ajTCmki6AurXtSQy8WSdSZHwCBdfyijo8yQuuUM
-	mYiTgdxsqGTzhpvD/mfRaHQg5m/2uJ8KvEnC0eeAbPJMp8baMrchCHv+q6hZJNTjQt9Kc7Og2ZV
-	AFgTu27kvP/5zYI+scSBxGjfokZid4raHRNK+l24T
-X-Gm-Gg: Acq92OFVDl4jrMfW2Ag1/xYcMkLpRfg6PGMGO1i58ZK+fFbMqzq+Df/dDGZMHfS6kld
-	g9st0t9n//kCPK0ICtvkoC+aXGSHTtKykLpsLQZ6Bx6wAtkVJWed1EA/N3nDebBXZesPULxyNMx
-	rjMKukn13Tis+mGTKx+1x5/6DF672A9e52CD/7SCl2fbLiCSftIHdSGqCSneFKL7aTKjfymDKLG
-	/rG8xNJ0SyyQ4CMTOkzYc8iKdnyxhCbrRe/Go7f4r0R3bI82xKOkHNrDbKpnJS11KOoSPvvOWRT
-	cvKc/VSjf4wYYMquWUZH+5fiAPHeYbRR4PB/+86ZP9QIAqw=
-X-Received: by 2002:a05:7022:2590:b0:134:f1e8:e596 with SMTP id
- a92af1059eb24-1350462828dmr8137c88.23.1778780915290; Thu, 14 May 2026
- 10:48:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2o+9+oG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9ECC2BCB3;
+	Thu, 14 May 2026 17:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778780939;
+	bh=yUhmgSO/SEwckVlcFwSjFXc+j1Dz8DlxxoAbm2PPlVI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=a2o+9+oGMd+zdelF8BC08yC8EPC8cy53PNE5VUyIjLoZTnKQCMS90AKe1YD7L2dSH
+	 bj8atkZigKUu3+DGOobnG3Ke9CaWKGuVXn1TXJzaijkh/34FX341xAR8UnQ3JiSIVM
+	 yCJ5UVF0E0oKWolKaLiAnqJLwGX+oS2Ca75N+dGfK9YPorsL6hBH+bAqu57kPz2o2f
+	 Utc/ZsqiRNStPaoy3HD+r5iEEN4I9EEqf8d21/wgZlqxzy8Nh9ECzkMVKtecGuqux+
+	 8Lon8/ABj4koIvzACK41KsNGM8xsbqOr7xBNq9OMrENPnUM2wr33i+9k2ihn6C9s8k
+	 jbZlNeoIuJAcw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 12/14] perf test: Add -j/--junit option for JUnit XML
+ test reports
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260513230450.529380-13-irogers@google.com>
+References: <20260513230450.529380-13-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 May 2026 17:48:58 +0000
+Message-Id: <20260514174859.5F9ECC2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260414175855.2089482-1-irogers@google.com> <a33a42ae-253b-41ce-8a2d-9d9ae58372d2@amd.com>
-In-Reply-To: <a33a42ae-253b-41ce-8a2d-9d9ae58372d2@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 14 May 2026 10:48:23 -0700
-X-Gm-Features: AVHnY4I3wUZCuYkJ8SLIe1bYm3J2yhFX1BEXc-DEBwlEwYP38r21rPdIMvK0j1o
-Message-ID: <CAP-5=fUMC-vWFvt3S0aNCqqSB=ka1FisUgRbJwBhoBKMYt_-nw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu-events AMD: Switch l2_itlb_misses to bp_l1_tlb_miss_l2_tlb_miss.all
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 14, 2026 at 11:03=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
-> wrote:
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Medium] `xml_escape` silently discards all non-ASCII/UTF-8 characters du=
+e to signed char comparison.
+- [Medium] Test suites skipped via the '--skip' command-line option are omi=
+tted from the JUnit XML, creating a structural mismatch.
+- [Medium] Unsafe file creation for the JUnit XML report is vulnerable to a=
+ symlink attack (Arbitrary File Overwrite).
+- [Low] The globally scoped `junit_xml_buf` buffer is leaked if the test ha=
+rness aborts on an error path.
+--
+
+commit f788260e3f8e93c92ba78c033616b340413eb066
+Author: Ian Rogers <irogers@google.com>
+
+perf test: Add -j/--junit option for JUnit XML test reports
+
+This commit adds a -j/--junit command line option to perf test to generate
+JUnit XML format test reports. The report captures execution latency, failu=
+res,
+and skip reasons.
+
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 765724817776e..99f5afba10822 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+[ ... ]
+> @@ -366,8 +372,34 @@ static unsigned int summary_tests_skipped;
+>  static unsigned int summary_tests_failed;
+>  static struct strbuf summary_failed_tests_buf =3D STRBUF_INIT;
+> =20
+> +static char *xml_escape(const char *str)
+> +{
+> +	struct strbuf buf =3D STRBUF_INIT;
+> +	const char *p;
+> +	char *res;
+> +
+> +	if (!str)
+> +		return strdup("");
+> +
+> +	for (p =3D str; *p; p++) {
+> +		if (*p =3D=3D '&')
+> +			strbuf_addstr(&buf, "&amp;");
+> +		else if (*p =3D=3D '<')
+> +			strbuf_addstr(&buf, "&lt;");
+> +		else if (*p =3D=3D '>')
+> +			strbuf_addstr(&buf, "&gt;");
+> +		else if (*p =3D=3D '"')
+> +			strbuf_addstr(&buf, "&quot;");
+> +		else if (*p >=3D 32 || *p =3D=3D '\n' || *p =3D=3D '\t')
+
+On architectures where char is signed, will *p >=3D 32 evaluate to false for
+non-ASCII characters (like UTF-8 sequences) since their most significant bit
+is set?
+
+Could this silently discard multi-byte characters from test logs, and should
+the pointer value be cast to unsigned char before comparison to avoid this?
+
+> +			strbuf_addch(&buf, *p);
+> +	}
+> +	res =3D strbuf_detach(&buf, NULL);
+> +	return res ? res : strdup("");
+> +}
+[ ... ]
+> @@ -999,6 +1078,29 @@ static void print_tests_summary(void)
+>  	} else {
+>  		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
+>  	}
+> +
+> +	if (junit_filename) {
+> +		FILE *fp;
+> +
+> +		fp =3D fopen(junit_filename, "w");
+
+If perf test -j is executed with elevated privileges in a shared directory =
+like
+/tmp, could fopen() with mode "w" be vulnerable to a symlink attack?
+
+Would it be safer to use open() with O_CREAT | O_TRUNC | O_WRONLY | O_NOFOL=
+LOW
+to prevent arbitrarily overwriting system files?
+
+> +		if (fp) {
+> +			unsigned int total =3D summary_tests_passed + summary_subtests_passed=
+ +
+> +					     summary_tests_skipped + summary_tests_failed;
+> +			fprintf(fp, "<?xml version=3D\"1.0\" encoding=3D\"utf-8\"?>\n");
+> +			fprintf(fp, "<testsuites>\n");
+> +			fprintf(fp, "  <testsuite name=3D\"perf-tests\" tests=3D\"%u\" failur=
+es=3D\"%u\" skipped=3D\"%u\">\n",
+> +				total, summary_tests_failed, summary_tests_skipped);
+
+If a test suite is skipped via the user override (-s/--skip), __cmd_test()
+increments summary_tests_skipped but skips calling print_test_result().
+
+Will this cause a structural mismatch in the XML report between the reported
+skipped count here and the actual number of <testcase> elements emitted?
+
+> +			fprintf(fp, "%s", junit_xml_buf.buf);
+> +			fprintf(fp, "  </testsuite>\n");
+> +			fprintf(fp, "</testsuites>\n");
+> +			fclose(fp);
+> +			pr_info("Wrote junit XML output to %s\n", junit_filename);
+> +		} else {
+> +			pr_err("Failed to open %s for writing junit XML output: %s\n",
+> +			       junit_filename, strerror(errno));
+> +		}
+> +	}
+> +	strbuf_release(&junit_xml_buf);
+
+If the test harness catches a signal (such as Ctrl-C) and jumps to the err_=
+out
+label in __cmd_test(), it bypasses print_tests_summary().
+
+Could this cause junit_xml_buf to leak and trigger LeakSanitizer failures?
+
+>  	strbuf_release(&summary_failed_tests_buf);
+>  }
 >
-> On 14-04-2026 23:28, Ian Rogers wrote:
-> > l2_itlb_misses is a valid legacy cache event name, hence allowing it
-> > in all_events in metric.py. l2_itlb_misses was also a json event for
-> > AMD zen1, zen2 and zen3. For zen4, zen5 and zen6 the checking that
-> > metric events are within the json was skipping l2_itlb_misses as it is
-> > a valid legacy event, however, the PMU driver lacks the event mapping
-> > causing it to be a bad event when used in the metric. Add
-> > bp_l1_tlb_miss_l2_tlb_miss.all as the l2 itlb miss event (bp =3D branch
-> > predictor, the AMD way to say itlb), so that is used in preference to
-> > l2_itlb_misses when the event exists. Remove l2_itlb_misses from
-> > metric.py as the legacy event isn't used by any metrics and having it
-> > is error prone for newer AMD zen models.
-> >
-> > Fixes: e596f329668e ("perf jevents: Add itlb metric group for AMD")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/pmu-events/amd_metrics.py | 2 +-
-> >  tools/perf/pmu-events/metric.py      | 1 -
-> >  2 files changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-even=
-ts/amd_metrics.py
-> > index 63e5098606c4..ee5381646a8d 100755
-> > --- a/tools/perf/pmu-events/amd_metrics.py
-> > +++ b/tools/perf/pmu-events/amd_metrics.py
-> > @@ -287,7 +287,7 @@ def AmdDtlb() -> Optional[MetricGroup]:
-> >  def AmdItlb():
-> >      global _zen_model
-> >      l2h =3D Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit"=
-)
-> > -    l2m =3D Event("l2_itlb_misses")
-> > +    l2m =3D Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
-> >      l2r =3D l2h + l2m
-> >
-> >      itlb_l1_mg =3D None
-> > diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/me=
-tric.py
-> > index 0c41a502cf21..c1931b2a5170 100644
-> > --- a/tools/perf/pmu-events/metric.py
-> > +++ b/tools/perf/pmu-events/metric.py
-> > @@ -25,7 +25,6 @@ def LoadEvents(directory: str) -> None:
-> >        "cycles",
-> >        "duration_time",
-> >        "instructions",
-> > -      "l2_itlb_misses",
-> >    }
-> >    for file in os.listdir(os.fsencode(directory)):
-> >      filename =3D os.fsdecode(file)
->
-> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
 
-Ping.
-
-Thanks,
-Ian
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
+80-1-irogers@google.com?part=3D12
