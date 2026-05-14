@@ -1,130 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654A43F4127;
-	Thu, 14 May 2026 04:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A33D1F131A;
+	Thu, 14 May 2026 05:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778733318; cv=none; b=iRh2rqPww6djEPm+KHFUMjklkAn9+JR71EDjzojE0cJS757vRVsau3646Ngi3fLUsZGVsHR6W7n6lpBwciAf2bFoIPhN8Xq3cxSq6hSetk9TDAm/L0sdQC66CToFbAfL1sVqAGJ0AfC+IqqvKS9NW+XVpeiFIHPwTrfYeQAt8nI=
+	t=1778735167; cv=none; b=XEwFGKGPx9zOstf+0mNY2p8epyDXMAqpug6SzM/QBIB4OOiCPiGCzsSUmlyZXgAtR/Idk0GVoL3M/5oHMYayg1duPFquvQybyeaRpjRwg7wtfiakpnEPTZNyTrNN0J69y5UDPZmVKzq+JAP/8i6e/4tikiFlfvYbl38H89GruDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778733318; c=relaxed/simple;
-	bh=1ssLU2f3czkBnxWmcWahoHkeXwL7OgSqF0DYp06kaEU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VX9H+gcKnmHa8AwbbkZec4P7Nnuf9Wh5z5lMmEG0GVLneZxeNBdDUCSrJBEZCZq+lFPLtw9NBpBlDd4XWYdEMUAMbqryLZEhBM+Ss3eVa/Qyd/DEtLQ+goXpIsn9lHhIxX3KJmjib7EVLw7lZxFlwPuMyXJwCFZZtyalJmZvhp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqB1ukED; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778735167; c=relaxed/simple;
+	bh=j2dsDIqac90jQ0WQlQWnsokHihGVSzF8CeUhj5mROUg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hb0Iee+hJx9hWzWAQq9nQFTKw6I/rejAWuOFswq5fbguRCjhmTb7z8b8fArlPOAcidjdz6S/7SzVIKhrgC7BcjMRnNNk4lJI9pUESvjFWXNcwKbYxouYugkoL0iWq+e2f+VvBzPJCWuwieAdPBhOlNMZHkC0RMuf4lpkrGM4z/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mZNhI7HC; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqB1ukED"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2016AC2BCB7;
-	Thu, 14 May 2026 04:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778733318;
-	bh=1ssLU2f3czkBnxWmcWahoHkeXwL7OgSqF0DYp06kaEU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=EqB1ukEDfPbR0fJD4tUyyoTgta8WCeK8GJl13RWOvJ13q0qA9WSuIZeAgTkZhtind
-	 AwaMkGjNhXI6IEYvbJ9Db8omzpajGaaJ+1akqF4LPLGhO+a1hz1MI6OcPlpbODA3UE
-	 RCFVU2JNsY4lGGp6UpYukNN9Q43Uj1hP+IOugPRz96BUV4q6Zx7VU8s2QpkfMxgrng
-	 yof735x78Ra/900GUpp9MU/jnYa+lzXF7HozRQ2Ux1xnhK/rnf38KZrBpg05DM41ur
-	 fqDAUilzQDMmJ4pFvO58OPHuFxdcnJpo1VNCF1Oea2ah5bDvrzdC1vpcVBlVXvM8H3
-	 FCYzVVybgWXNA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 14/18] perf pmu-events: Split big_c_string storage
- into standalone compilation unit
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512174638.120445-15-irogers@google.com>
-References: <20260512174638.120445-15-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 04:35:17 +0000
-Message-Id: <20260514043518.2016AC2BCB7@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mZNhI7HC"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FE4C1E5E;
+	Wed, 13 May 2026 22:05:56 -0700 (PDT)
+Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A2DE83F7B4;
+	Wed, 13 May 2026 22:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778735161; bh=j2dsDIqac90jQ0WQlQWnsokHihGVSzF8CeUhj5mROUg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mZNhI7HCYS4q2+SIi+N5C08riKoYsINO3A33S7yvhol/OO6dezE+5jjYX7RKwuofA
+	 bSBdYnLIFODZYDYgrxVxW8ydVuyjNLMKoL3Kx37X0fdSDRcmlIG+HBlNUH9+WbtRW3
+	 N5kqDBjyqieeEi9Tu6pku5vc1UX/m+B+9AVo/5eQ=
+From: Jia He <justin.he@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <david@davidgow.net>,
+	Rae Moar <raemoar63@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jia He <justin.he@arm.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	David Disseldorp <ddiss@suse.de>
+Subject: [PATCH 0/7] Silence spurious warnings and crashes from kunit test suites
+Date: Thu, 14 May 2026 05:04:48 +0000
+Message-Id: <20260514050455.2954509-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] The use of the `&:` grouped target syntax in the Makefile breaks c=
-ompatibility with GNU Make < 4.3 and causes race conditions during parallel=
- builds.
-- [Low] The newly generated `pmu-events-string.c` is not added to `tools/pe=
-rf/.gitignore`, resulting in an untracked file after an in-tree build.
---
+Running the full kunit suite on arm64 (128-core Neoverse N2) with 7.1-rc3+
+produces a handful of backtraces that are not real kernel bugs but
+rather test-infrastructure issues: races with boot-time code, missing
+bounds checks, resource leaks, and sysfs duplicate-name splats.
 
-commit e5e31a4f692737db305f31f8a7cee6c36037c141
-Author: Ian Rogers <irogers@google.com>
+This series fixes them one by one so that a clean kunit run no longer
+leaves noise in dmesg:
 
-perf pmu-events: Split big_c_string storage into standalone compilation unit
+ 1. init/initramfs_test races with the async rootfs unpacker; add
+    wait_for_initramfs() in suite .init.
+ 2. kfence kunit cases fail outright when the pool is unavailable;
+    skip them instead.
+ 3. intlog2(0) / intlog10(0) hit a WARN_ON that is harmless; remove it.
+ 4. kunit_platform_device_add() triggers sysfs_warn_dup() on the
+    duplicate-registration test; catch duplicates early in the kunit
+    helper (best-effort; final protection remains in driver core/sysfs).
+ 5. misc_register() likewise hits sysfs_warn_dup(); reject duplicate
+    names explicitly. misc->name is never NULL at this point since the
+    existing code already dereferences it unconditionally.
+ 6. hw_breakpoint test_many_cpus overflows its array on machines with
+    many cores; bail out at the limit.
+ 7. test_ratelimit stress test checks the wrong variable for kthread
+    creation, leaks memory, and races on doneflag. Use goto-based
+    cleanup to guarantee all started threads are stopped on failure.
 
-Currently, jevents.py emits both the massive 2.8 MB big_c_string literal
-and tens of thousands of compact_pmu_event struct arrays into a single
-pmu-events.c compilation unit. This commit refactors jevents.py to emit
-big_c_string into a dedicated pmu-events-string.c compilation unit. This
-allows Kbuild to compile them simultaneously in parallel, cutting C
-compilation latency.
+All patches are independent and can be applied/reviewed separately.
+Tested on arm64 Neoverse N2 (128-core arm64) with
+CONFIG_KUNIT=y and CONFIG_KUNIT_ALL_TESTS=y.
 
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index dc1df2d57ddc1..e957aa2fcb480 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -1,7 +1,12 @@
->  EMPTY_PMU_EVENTS_C =3D pmu-events/empty-pmu-events.c
->  # pmu-events.c will be generated by jevents.py or copied from EMPTY_PMU_=
-EVENTS_C
->  PMU_EVENTS_C	=3D  $(OUTPUT)pmu-events/pmu-events.c
-> +PMU_EVENTS_STRING_C =3D $(OUTPUT)pmu-events/pmu-events-string.c
-> +
+Jia He (7):
+  init/initramfs_test: wait_for_initramfs() before running
+  kfence: kunit: skip when no pool is available
+  lib/math/int_log: drop WARN_ON for value == 0
+  kunit: platform: catch duplicate (name, id) in kunit_platform_device_add()
+  misc: reject duplicate names in misc_register()
+  hw_breakpoint_test: fix test_many_cpus failure on large systems
+  lib/tests: test_ratelimit: fix stress test thread lifecycle and leak
 
-Does this new generated file need to be added to tools/perf/.gitignore?
-
-Looking at tools/perf/.gitignore, pmu-events/pmu-events.c is explicitly
-ignored, but the new string file is not:
-
-tools/perf/.gitignore:
-    ...
-    pmu-events/pmu-events.c
-    pmu-events/jevents
-    pmu-events/metric_test.log
-    ...
-
-Compiling perf in-tree might leave the working directory dirty with an
-untracked pmu-events-string.c file.
-
->  pmu-events-y	+=3D pmu-events.o
-> +ifneq ($(NO_JEVENTS),1)
-> +pmu-events-y	+=3D pmu-events-string.o
-> +endif
-> =20
->  # pmu-events.c file is generated in the OUTPUT directory so it needs a
->  # separate rule to depend on it properly
-
-[ ... ]
-
-> @@ -222,8 +232,9 @@ endif
-> =20
->  # Finally, the rule to build pmu-events.c using jevents.py. All test
->  # and inputs are dependencies.
-> -$(PMU_EVENTS_C): $(JEVENTS_DEPS)
-> +$(PMU_EVENTS_STRING_C) $(PMU_EVENTS_C) &: $(JEVENTS_DEPS)
->  	$(call rule_mkdir)
-
-Will this rule work correctly on systems using GNU Make older than 4.3?
-
-The top-level Makefile enforces a minimum requirement of GNU Make 4.0, but
-the &: grouped target feature was introduced in GNU Make 4.3.
-
-On older, supported versions of Make (like 4.2.1), the &: syntax is not
-recognized. Make parses & as a literal target and interprets the line as
-having three independent targets: $(PMU_EVENTS_STRING_C), $(PMU_EVENTS_C),
-and &.
-
-During a parallel build, could this result in multiple jevents.py
-processes spawning simultaneously? It seems they might write to pmu-events.c
-and pmu-events-string.c concurrently, potentially interleaving output and
-corrupting the generated C source files.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
-45-1-irogers@google.com?part=3D14
+ drivers/char/misc.c                |  22 ++++++++++++++++++
+ init/initramfs_test.c              |  17 +++++++++++++-
+ kernel/events/hw_breakpoint_test.c |  12 ++++++++++
+ lib/kunit/platform.c               |  36 +++++++++++++++++++++++++++++
+ lib/math/int_log.c                 |   8 ++-----
+ lib/tests/test_ratelimit.c         |  26 ++++++++++++++++-----
+ mm/kfence/kfence_test.c            |   6 +++--
+ 7 files changed, 115 insertions(+), 12 deletions(-)
