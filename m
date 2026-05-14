@@ -1,135 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09D71F131A;
-	Thu, 14 May 2026 05:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70BEE1F131A;
+	Thu, 14 May 2026 05:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778735203; cv=none; b=IJ9RuPCPi4njbvMLxIs8lu4t2IYhVY8AaX9RYyJWfemRUS4P8uGa0Sd4hwmKICNED5YXmjaHZiDUdq7VimfIk3RxrmGOruMsyHZgZj6rrCU8jvZxeciiDrYQOtY+vCRXCQ+snZQK7+jLPGEDXeCWU9yz0hk68z5XVSel3xLt/SQ=
+	t=1778735212; cv=none; b=GFo+I09kwUgBiCn3c4O6HG/cRQG69OtYeaS9JtejOMcXcoHOe8g6MEN3AG7LF/obzDGk2rNggy4PVaDswUOptzClbGy7Rtpzzoqgzuni+5DFjK+S6Qxtvt895o5JZ+3n+xeZCQTgdzdVM7ri30AlnzMULLZylAREqSyqtC1/BrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778735203; c=relaxed/simple;
-	bh=nbfoyL6310jyRp82OIgjTuMmgefMV5Yo78EH6KuGkrs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kF4SfO8kbkJUNzihDK6zE8isFht0y2KWtFAnAS3fZF8ggpt0VFHwINhed7jJMKGCUFWKL+KDvy2TsSXITVkZM4luPA97BoSet65aDla6wP8Px0IZAJf8fYu4jby0VCLYmu7qKSRzG106Y4z8Y+mFZnUcm5899xMH0vTLyfSZEPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNKM/g2Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778735212; c=relaxed/simple;
+	bh=bamNddKdXVgxZqutIBQo9gEmJk9kTncPd0EXZfEgTdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ggp3LJiLLCUhY3TZhftZywbBSJvvXN5FRP1EGvcqWCWVTcZHrU+E1bB1GetR3udHF3Qp4qacDx6OIDBUmmXcR8jkfAMmaxbaTciFQgC7kkY7LDQKChk3p8QBEhw0Dq8UNSMqblHqvo7dYOOTbEI5vU6OtanBStFVf9colNrbD9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=b673L7Bl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNKM/g2Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91265C2BCB7;
-	Thu, 14 May 2026 05:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778735202;
-	bh=nbfoyL6310jyRp82OIgjTuMmgefMV5Yo78EH6KuGkrs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=QNKM/g2Y12myS8hTpE2rWsXekU0vxrGVQpADRPFMQo469+5bEEu6NO0pZWs7hAPTW
-	 FVZpPPXjlai000ac3wNGvTvPsKsK9Uo4OCtxcjek8L9rBnDApnEtOaQuNBV+d7b/Mp
-	 Ct2Nwndq87Gwdxp3qmHJlu+bLb6qHfQHpgF33Vid0f3e8CVV5ZQFGSyQtRdpkC5Q8/
-	 /IocgZVowzthJdel+EtM9GEcawpZNxqWzHN4dSrQtbY6iJax64z/RWFo2JYP1tltsB
-	 tyji1iL0D7WXus2OuDdHaE/8pgl6PHWMGQOaDjk+UCU1ssIDm6GY3mC53SdNDB4gEJ
-	 1CDRHsXf9eC3g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 15/18] perf pmu-events: Parallelize JSON and metric
- pre-computation in jevents.py
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260512174638.120445-16-irogers@google.com>
-References: <20260512174638.120445-16-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 05:06:41 +0000
-Message-Id: <20260514050642.91265C2BCB7@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="b673L7Bl"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE14F34E9;
+	Wed, 13 May 2026 22:06:43 -0700 (PDT)
+Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BBDE73F7B4;
+	Wed, 13 May 2026 22:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778735208; bh=bamNddKdXVgxZqutIBQo9gEmJk9kTncPd0EXZfEgTdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=b673L7Blg3xg5L8WNcH7Zu5Qed2gjayMHfkv11+YttJp8eNSGYY+dy8l8+bWF+x3d
+	 GlV5mp0EmcKddlaO/ogQAMiO2Nji6JgHdJUq+fZ1MI3eFkgo3FhjlM0/0ipeiPA3gT
+	 pRAhQbybLcIUmVcUZ1v2H5Kk8WOLYxSe6HEv6GMA=
+From: Jia He <justin.he@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <david@davidgow.net>,
+	Rae Moar <raemoar63@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jia He <justin.he@arm.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	David Disseldorp <ddiss@suse.de>
+Subject: [PATCH 1/7] init/initramfs_test: wait_for_initramfs() before running
+Date: Thu, 14 May 2026 05:04:49 +0000
+Message-Id: <20260514050455.2954509-2-justin.he@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260514050455.2954509-1-justin.he@arm.com>
+References: <20260514050455.2954509-1-justin.he@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] The `_init_worker` function is defined as a local function, whic=
-h breaks the build under `spawn` multiprocessing semantics because it canno=
-t be pickled.
-- [Medium] Parallelizing the JSON parsing breaks architecture isolation, al=
-lowing standard events from later architectures to overwrite those of earli=
-er architectures.
-- [Low] The `collect_json` callback omits the directory depth filter, leadi=
-ng to redundant parsing of deeply nested JSON files.
---
+initramfs_test_extract() and friends call unpack_to_rootfs() from a
+kunit kthread while do_populate_rootfs() may still be running
+asynchronously from rootfs_initcall. unpack_to_rootfs() keeps its
+parser state in module-static variables (victim, byte_count, state,
+this_header, header_buf, name_buf, ...), so the two writers corrupt
+each other.
 
-commit a8c22dabeaaa676d9d6b5a7b1c0a3df0bfcd2345
-Author: Ian Rogers <irogers@google.com>
+On arm64 v7.0-rc5+ this oopses early in boot:
 
-perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py
+  Unable to handle kernel paging request at virtual address ffff80018f9f0ffc
+  pc : do_reset+0x3c/0x98
+  Call trace:
+   do_reset
+   initramfs_test_extract
+   kunit_try_run_case
+  Initramfs unpacking failed: junk within compressed archive
 
-This commit refactors jevents.py to pre-populate its internal JSON AST cache
-in parallel across all available CPU cores using ProcessPoolExecutor. It ai=
-ms
-to accelerate the execution time by reclaiming multi-core concurrency during
-the build generation phase.
+do_reset() faults because 'victim' was overwritten by the boot-time
+unpacker; the boot unpacker meanwhile logs the bogus "junk within
+compressed archive" on the real initrd because the test wrecked its
+state machine.
 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-[ ... ]
-> @@ -1459,9 +1467,29 @@ struct pmu_table_entry {
->      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
-> =20
->    archs.sort()
-> +  import concurrent.futures
-> +  tasks =3D []
-> +  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
-> +    if len(parents) =3D=3D 0:
-> +      return
-> +    if item.is_file() and item.name.endswith('.json') and not item.name.=
-endswith('metricgroups.json'):
+Add a suite .init that calls wait_for_initramfs() so the async unpack
+is quiescent before the first case runs.
 
-The commit message states the code will "apply depth filtering to prevent
-redundant worker tasks".
+To: Alexander Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+To: David Disseldorp <ddiss@suse.de>
+Cc: linux-fsdevel@vger.kernel.org
 
-Should there be a check on the depth of the directory structure here, to
-avoid redundantly parsing deeply nested JSON files?
+Fixes: 83c0b27266ec ("initramfs_test: kunit tests for initramfs unpacking")
+Signed-off-by: Jia He <justin.he@arm.com>
+---
+ init/initramfs_test.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-> +      tasks.append((item.path, get_topic(item.name)))
-> +
->    for arch in archs:
->      arch_path =3D f'{_args.starting_dir}/{arch}'
->      preprocess_arch_std_files(arch_path)
-> +    ftw(arch_path, [], collect_json)
+diff --git a/init/initramfs_test.c b/init/initramfs_test.c
+index 2ce38d9a8fd0..eb76f63f302e 100644
+--- a/init/initramfs_test.c
++++ b/init/initramfs_test.c
+@@ -3,7 +3,9 @@
+ #include <linux/fcntl.h>
+ #include <linux/file.h>
+ #include <linux/fs.h>
++#include <linux/init.h>
+ #include <linux/init_syscalls.h>
++#include <linux/initrd.h>
+ #include <linux/stringify.h>
+ #include <linux/timekeeping.h>
+ #include "initramfs_internal.h"
+@@ -510,8 +512,21 @@ static struct kunit_case __refdata initramfs_test_cases[] = {
+ 	{},
+ };
+ 
+-static struct kunit_suite initramfs_test_suite = {
++static int __init initramfs_test_init(struct kunit *test)
++{
++	/*
++	 * unpack_to_rootfs() uses module-static state (victim, byte_count,
++	 * state, ...). The boot-time async do_populate_rootfs() may still be
++	 * running, so wait for it to finish before we call unpack_to_rootfs()
++	 * from the test thread, otherwise the two writers race and crash.
++	 */
++	wait_for_initramfs();
++	return 0;
++}
++
++static struct kunit_suite __refdata initramfs_test_suite = {
+ 	.name = "initramfs",
++	.init = initramfs_test_init,
+ 	.test_cases = initramfs_test_cases,
+ };
+ kunit_test_init_section_suites(&initramfs_test_suite);
+-- 
+2.34.1
 
-By preprocessing all architecture standard files before the worker pool
-evaluates the tasks, does this break architecture isolation?
-
-Because archs.sort() evaluates architectures alphabetically, it appears that
-architectures processed later might overwrite overlapping standard event
-definitions of earlier architectures in the global _arch_std_events diction=
-ary.
-
-When the worker pool executes, will earlier architectures incorrectly resol=
-ve
-standard events against these overwritten definitions?
-
-> +
-> +  def _init_worker(std_events: dict) -> None:
-
-Is it possible to use a local function as an initializer for
-ProcessPoolExecutor when using the spawn multiprocessing start method?
-
-The commit message notes it guarantees inheritance under spawn semantics.
-However, Python's multiprocessing framework uses pickle to serialize the
-initializer function for child processes, and local/nested functions cannot=
- be
-pickled. Will this cause an AttributeError and crash the build?
-
-> +    global _arch_std_events
-> +    _arch_std_events =3D std_events
-> +
-> +  with concurrent.futures.ProcessPoolExecutor(initializer=3D_init_worker=
-, initargs=3D(_arch_std_events,)) as executor:
-> +    for path, topic, events in executor.map(_parallel_read_json_events, =
-tasks):
-> +      _json_cache[(path, topic)] =3D events
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
-45-1-irogers@google.com?part=3D15
