@@ -1,196 +1,164 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A68C190473
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 19:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0939FCB9
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 19:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778785552; cv=none; b=sfp8GONr9JH+3ZbTuaZqo8rrw43zNKfZPRB5G6Mvs4ZNVgBO2ZQ4kAwb2oQ1kv958jlOKbJs/QsGEzetYSvt+whiwhcbRBc+xE0Lag9iHol5BTg7RI6VOu510QBb8eJ3NZqFz9LvroywXVAWAAn5p9OPHZBGPe67ckw3jZNsNhE=
+	t=1778785584; cv=none; b=PqrbNbNHPl5RWbZoH75ri4RVeYhx0r+64ZePWEdkTLaOsD33thR69jHNbhFfA6viun7ZpyX/Dn7mmITd4r3zsoO1dSikySy1TXryjwOtgqROsiJFBzQa9p8aot8fCIWvHgDhHkUGmgyNPNkz2UGPSywHGkJWu0zffHxZ3BA7Q3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778785552; c=relaxed/simple;
-	bh=sQcHMqWClhWoLs/AGdSMEcZmnhEkmnp9dBbRrLle6qk=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=kRNACvq90SGjuM+TQT4gd1DJBxiWapn4qUpxXzd0e7Cl+thfeHXnPNbQy98myL6zcU7+gYMFQa8CanK+aAD+pGVu8F2F+A6WzQjcFdhS/wV6seKq5eDRYNL9ngsRj86Ic2ZCTd+ok03d0sDGKo/djuzjvK0fkIb/OPar+RivqTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dbWKkL7X; arc=none smtp.client-ip=209.85.160.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1778785584; c=relaxed/simple;
+	bh=qBcJ8vKNSneL/rpZZLxYZd6ePo2FHj+D372yqVvkKuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sZkUSRlcP1VFqYZ/gsxqxoaQy2RiLHajO3/ypZbn3tQ6oXHCCO9NpksPVl8yUCu785jvZR+QTqbjoEjVIlhHvP2QJhiULqx6y0NZr3OyGkPe8lEDBdFA7pcVKarr0NFzPQW1MLR8F8h0VNYaMtFU37dM3o0d/QXA3Lph4zutbkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QE4AgIKN; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dbWKkL7X"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-42fb0f12b10so9324810fac.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 12:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778785548; x=1779390348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sQcHMqWClhWoLs/AGdSMEcZmnhEkmnp9dBbRrLle6qk=;
-        b=dbWKkL7XSFJId5WJR9FQIW964W3jMi7frwBrtMepuaRE7xZuVOzdGXs8F0vBgbAW7F
-         yrhfcazon8YbL+xt1q1DdVgqZH9v9irdebmYByhx0AcHn91wHjzPylSGCOw3Pvu+o6aM
-         /PrNAtzMiNays3Hhqfy6KM7CRRnK7l1/o+J5yECw/Ij1Oig+mXZyW4yxLpxihkAR+fVV
-         45P0yGdmZUS+7PjNjq2Gf5MzPhDlPSPA34FQ0wC6XIpBKN9cHLHd31LvaFotMzztePcl
-         WXF865XEy8isskThsOxs/vQEEkRTH9+A+W3/NbOG5zYXwW8cMzRFP/obxt9qKmuOmyIS
-         bUsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778785548; x=1779390348;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sQcHMqWClhWoLs/AGdSMEcZmnhEkmnp9dBbRrLle6qk=;
-        b=AXWTsr5NvLqLqOuYUeEi0lBddMlNanXR3/A088FFNTenb1398alN63RGY1pyKv+5Uk
-         E2vGsBexfahKfEAI82jTpb72L/9zASK+pbAbey0WitYDMaxuq33Kp2o449MLv9ytWvwW
-         PuKjdAmp22SZt73g8FVROTSYrQiRJamgRxvvjyVlXw++shCVMl+TYOzD9sLfSaJvMBXE
-         XbrhKEtDsO9yk5u3aeKmVpSxPRI8kGxXQFbsZegyPQMmSOROUr/SpsRZcQNjYhnfnzsF
-         pEhnZ6xdhj8yuGxcBIxHal0BryNU3072BPhdt4DB9rnkGidl7LAn8FJHEDOYctm12tEK
-         9Imw==
-X-Forwarded-Encrypted: i=1; AFNElJ8zNUR5jnSst4GkZ278WddLX9PY+KMJFbv6ME1ahgExJRXupYTxAzFUjWGjacejgSmaULp4qkhidW3s+uy6k7zz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ2vHfFc349Gmep5POT9WQwHtiSYGMHiPgcXRkl+jfBOE3Q8Tm
-	Gnf1nMd0B0KWa5MSjjBwDCKi66mP4pgxQWnZi0K6ZocMtJ4z5Lhp/137DCcfzBnOOs4xtKuWNIT
-	15+vq7Kmn7c6UtbFsv07lRkZDIg==
-X-Received: from iohl17.prod.google.com ([2002:a6b:7511:0:b0:96b:8e45:e183])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:f023:b0:696:77e2:a78 with SMTP id 006d021491bc7-69c94301c1emr515355eaf.23.1778785547975;
- Thu, 14 May 2026 12:05:47 -0700 (PDT)
-Date: Thu, 14 May 2026 19:05:47 +0000
-In-Reply-To: <66797cb2-18f7-4782-9370-68d0c10c35f4@linaro.org> (message from
- James Clark on Thu, 14 May 2026 10:10:02 +0100)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QE4AgIKN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778785583; x=1810321583;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qBcJ8vKNSneL/rpZZLxYZd6ePo2FHj+D372yqVvkKuI=;
+  b=QE4AgIKNHgSvuBmG7keih0ixnRrlJt4gcu6neuqLMYDqB1FGFJXUg0q3
+   +wa2Ey/RPj1REQrbwCTxViBy+WyXtihWNlA/JS1D7DmvCt1EwrhnmINy5
+   uHhfG0rkN1NUoIlyI8SaA5o3dXgi3GB2Ue8eWX6eq+px6phyYv9k/bQsJ
+   HomjztiYl4q08F5OWsWjLRtQA0mxNMJr+MyduDAa3mqpx0c6av4XKEx1c
+   XY3S9Dk7fhXgbf1dEbr84PqQbwKHnkdRvMEZ1hgprFos9Pruym2lYGM3Y
+   a/1BYqHZTRBE5gTgwOuHgPZ1FZ1PJkNR+A+NyjOb2mYepWGA7UGAIYqdS
+   Q==;
+X-CSE-ConnectionGUID: GDnt/fiSQjaaldRvaI9c3w==
+X-CSE-MsgGUID: xRvfjycpRqGJOV8FLRz5FQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="91201572"
+X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
+   d="scan'208";a="91201572"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 12:06:23 -0700
+X-CSE-ConnectionGUID: N+VcM6DhSj+J/h8jcaskAg==
+X-CSE-MsgGUID: 69pllpBYRoqbYrYxRDatHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
+   d="scan'208";a="232075741"
+Received: from jaimerod-mobl.amr.corp.intel.com (HELO [10.125.32.83]) ([10.125.32.83])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 12:06:21 -0700
+Message-ID: <54179bc4-b895-4613-9d08-155fee7371da@intel.com>
+Date: Thu, 14 May 2026 12:06:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntlddlbylw.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v7 13/20] KVM: arm64: Apply dynamic guest counter reservations
-From: Colton Lewis <coltonlewis@google.com>
-To: James Clark <james.clark@linaro.org>
-Cc: alexandru.elisei@arm.com, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] perf/x86/intel/uncore: Rename refcount fields and
+ other cleanups
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260512233048.9577-2-zide.chen@intel.com>
+ <20260514005809.D4D0CC19425@smtp.kernel.org>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260514005809.D4D0CC19425@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SmFtZXMgQ2xhcmsgPGphbWVzLmNsYXJrQGxpbmFyby5vcmc+IHdyaXRlczoNCg0KPiBPbiAxMy8w
-NS8yMDI2IDU6NDUgcG0sIENvbHRvbiBMZXdpcyB3cm90ZToNCj4+IEphbWVzIENsYXJrIDxqYW1l
-cy5jbGFya0BsaW5hcm8ub3JnPiB3cml0ZXM6DQoNCj4+PiBPbiAwNC8wNS8yMDI2IDEwOjE4IHBt
-LCBDb2x0b24gTGV3aXMgd3JvdGU6DQo+Pj4+IEFwcGx5IGR5bmFtaWMgZ3Vlc3QgY291bnRlciBy
-ZXNlcnZhdGlvbnMgYnkgY2hlY2tpbmcgaWYgdGhlIHJlcXVlc3RlZA0KPj4+PiBndWVzdCBtYXNr
-IGNvbGxpZGVzIHdpdGggYW55IGV2ZW50cyB0aGUgaG9zdCBoYXMgc2NoZWR1bGVkIGFuZCBjYWxs
-aW5nDQo+Pj4+IHBtdV9wZXJmX3Jlc2NoZWRfdXBkYXRlKCkgd2l0aCBhIGhvb2sgdGhhdCB1cGRh
-dGVzIHRoZSBtYXNrIG9mDQo+Pj4+IGF2YWlsYWJsZSBjb3VudGVycyBpbiBiZXR3ZWVuIHNjaGVk
-dWxlIG91dCBhbmQgc2NoZWR1bGUgaW4uDQoNCj4+Pj4gU2lnbmVkLW9mZi1ieTogQ29sdG9uIExl
-d2lzIDxjb2x0b25sZXdpc0Bnb29nbGUuY29tPg0KPj4+PiAtLS0NCj4+Pj4gwqDCoCBhcmNoL2Fy
-bTY0L2t2bS9wbXUtZGlyZWN0LmPCoCB8IDY5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQo+Pj4+ICsrKysNCj4+Pj4gwqDCoCBpbmNsdWRlL2xpbnV4L3BlcmYvYXJtX3BtdS5oIHzC
-oCAxICsNCj4+Pj4gwqDCoCAyIGZpbGVzIGNoYW5nZWQsIDcwIGluc2VydGlvbnMoKykNCg0KPj4+
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rdm0vcG11LWRpcmVjdC5jIGIvYXJjaC9hcm02NC9r
-dm0vcG11LWRpcmVjdC5jDQo+Pj4+IGluZGV4IDIyNTJkM2I5MDVkYjkuLjE0Y2M0MTlkYmFmYWQg
-MTAwNjQ0DQo+Pj4+IC0tLSBhL2FyY2gvYXJtNjQva3ZtL3BtdS1kaXJlY3QuYw0KPj4+PiArKysg
-Yi9hcmNoL2FybTY0L2t2bS9wbXUtZGlyZWN0LmMNCj4+Pj4gQEAgLTEwMCw2ICsxMDAsNzMgQEAg
-dTgga3ZtX3BtdV9ocG1uKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkNCj4+Pj4gwqDCoMKgwqDCoMKg
-IHJldHVybiAqaG9zdF9kYXRhX3B0cihucl9ldmVudF9jb3VudGVycyk7DQo+Pj4+IMKgwqAgfQ0K
-DQo+Pj4+ICsvKiBDYWxsYmFjayB0byB1cGRhdGUgY291bnRlciBtYXNrIGJldHdlZW4gcGVyZiBz
-Y2hlZHVsaW5nICovDQo+Pj4+ICtzdGF0aWMgdm9pZCBrdm1fcG11X3VwZGF0ZV9tYXNrKHN0cnVj
-dCBwbXUgKnBtdSwgdm9pZCAqZGF0YSkNCj4+Pj4gK3sNCj4+Pj4gK8KgwqDCoCBzdHJ1Y3QgYXJt
-X3BtdSAqYXJtX3BtdSA9IHRvX2FybV9wbXUocG11KTsNCj4+Pj4gK8KgwqDCoCB1bnNpZ25lZCBs
-b25nICpuZXdfbWFzayA9IGRhdGE7DQo+Pj4+ICsNCj4+Pj4gK8KgwqDCoCBiaXRtYXBfY29weShh
-cm1fcG11LT5jbnRyX21hc2ssIG5ld19tYXNrLCBBUk1QTVVfTUFYX0hXRVZFTlRTKTsNCj4+Pj4g
-K30NCj4+Pj4gKw0KPj4+PiArLyoqDQo+Pj4+ICsgKiBrdm1fcG11X3NldF9ndWVzdF9jb3VudGVy
-cygpIC0gSGFuZGxlIGR5bmFtaWMgY291bnRlciByZXNlcnZhdGlvbnMNCj4+Pj4gKyAqIEBjcHVf
-cG11OiBzdHJ1Y3QgYXJtX3BtdSB0byBwb3RlbnRpYWxseSBtb2RpZnkNCj4+Pj4gKyAqIEBndWVz
-dF9tYXNrOiBuZXcgZ3Vlc3QgbWFzayBmb3IgdGhlIHBtdQ0KPj4+PiArICoNCj4+Pj4gKyAqIENo
-ZWNrIGlmIGd1ZXN0IGNvdW50ZXJzIHdpbGwgaW50ZXJmZXJlIHdpdGggY3VycmVudCBob3N0IGV2
-ZW50cyBhbmQNCj4+Pj4gKyAqIGNhbGwgaW50byBwZXJmX3BtdV9yZXNjaGVkX3VwZGF0ZSBpZiBh
-IHJlc2NoZWR1bGUgaXMgcmVxdWlyZWQuDQo+Pj4+ICsgKi8NCj4+Pj4gK3N0YXRpYyB2b2lkIGt2
-bV9wbXVfc2V0X2d1ZXN0X2NvdW50ZXJzKHN0cnVjdCBhcm1fcG11ICpjcHVfcG11LCB1NjQNCj4+
-Pj4gZ3Vlc3RfbWFzaykNCj4+Pj4gK3sNCj4+Pj4gK8KgwqDCoCBzdHJ1Y3QgcG11X2h3X2V2ZW50
-cyAqY3B1YyA9IHRoaXNfY3B1X3B0cihjcHVfcG11LT5od19ldmVudHMpOw0KPj4+PiArwqDCoMKg
-IERFQ0xBUkVfQklUTUFQKGd1ZXN0X2JpdG1hcCwgQVJNUE1VX01BWF9IV0VWRU5UUyk7DQo+Pj4+
-ICvCoMKgwqAgREVDTEFSRV9CSVRNQVAobmV3X21hc2ssIEFSTVBNVV9NQVhfSFdFVkVOVFMpOw0K
-Pj4+PiArwqDCoMKgIGJvb2wgbmVlZF9yZXNjaGVkID0gZmFsc2U7DQo+Pj4+ICsNCj4+Pj4gK8Kg
-wqDCoCBiaXRtYXBfZnJvbV9hcnI2NChndWVzdF9iaXRtYXAsICZndWVzdF9tYXNrLCBBUk1QTVVf
-TUFYX0hXRVZFTlRTKTsNCj4+Pj4gK8KgwqDCoCBiaXRtYXBfY29weShuZXdfbWFzaywgY3B1X3Bt
-dS0+aHdfY250cl9tYXNrLCBBUk1QTVVfTUFYX0hXRVZFTlRTKTsNCj4+Pj4gKw0KPj4+PiArwqDC
-oMKgIGlmIChndWVzdF9tYXNrKSB7DQo+Pj4+ICvCoMKgwqDCoMKgwqDCoCAvKiBTdWJ0cmFjdCBn
-dWVzdCBjb3VudGVycyBmcm9tIGF2YWlsYWJsZSBob3N0IG1hc2sgKi8NCj4+Pj4gK8KgwqDCoMKg
-wqDCoMKgIGJpdG1hcF9hbmRub3QobmV3X21hc2ssIG5ld19tYXNrLCBndWVzdF9iaXRtYXAsDQo+
-Pj4+IEFSTVBNVV9NQVhfSFdFVkVOVFMpOw0KPj4+PiArDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoCAv
-KiBEaWQgd2UgY29sbGlkZSB3aXRoIGFuIGFjdGl2ZSBob3N0IGV2ZW50PyAqLw0KPj4+PiArwqDC
-oMKgwqDCoMKgwqAgaWYgKGJpdG1hcF9pbnRlcnNlY3RzKGNwdWMtPnVzZWRfbWFzaywgZ3Vlc3Rf
-Yml0bWFwLA0KPj4+PiBBUk1QTVVfTUFYX0hXRVZFTlRTKSkgew0KPj4+PiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpbnQgaWR4Ow0KPj4+PiArDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IG5lZWRfcmVzY2hlZCA9IHRydWU7DQo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNwdWMt
-Pmhvc3Rfc3F1ZWV6ZWQgPSB0cnVlOw0KPj4+PiArDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIC8qIExvb2sgZm9yIHBpbm5lZCBldmVudHMgdGhhdCBhcmUgYWJvdXQgdG8gYmUgcHJlZW1w
-dGVkICANCj4+Pj4gKi8NCj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yX2VhY2hfc2V0
-X2JpdChpZHgsIGd1ZXN0X2JpdG1hcCwgQVJNUE1VX01BWF9IV0VWRU5UUykgew0KPj4+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICh0ZXN0X2JpdChpZHgsIGNwdWMtPnVzZWRf
-bWFzaykgJiYgY3B1Yy0NCj4+Pj4gPmV2ZW50c1tpZHhdICYmDQo+Pj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjcHVjLT5ldmVudHNbaWR4XS0+YXR0ci5waW5uZWQp
-IHsNCj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByX3dhcm5f
-cmF0ZWxpbWl0ZWQoInBlcmY6IFBpbm5lZCBob3N0IGV2ZW50DQo+Pj4+IHNxdWVlemVkIG91dCBi
-eSBLVk0gZ3Vlc3QgUE1VIHBhcnRpdGlvblxuIik7DQoNCj4+PiBIaSBDb2x0b24sDQoNCj4+PiBJ
-IGdldCAicGVyZjogUGlubmVkIGhvc3QgZXZlbnQgc3F1ZWV6ZWQgb3V0IGJ5IEtWTSBndWVzdCBQ
-TVUgcGFydGl0aW9uIg0KPj4+IGV2ZW4gd2l0aCBhcm1fcG11djMucmVzZXJ2ZWRfaG9zdF9jb3Vu
-dGVycz0zIGZvciBleGFtcGxlLiBJIHdvdWxkIGhhdmUNCj4+PiBleHBlY3RlZCBhbnkgbm9uIHpl
-cm8gdmFsdWUgdG8gc3RvcCB0aGUgd2FybmluZy4NCg0KPj4+IEkgdGhpbmsgYXJtdjhwbXVfZ2V0
-X3NpbmdsZV9pZHgoKSBuZWVkcyB0byBiZSBjaGFuZ2VkIHRvIGFsbG9jYXRlIGZyb20NCj4+PiB0
-aGUgaGlnaCBlbmQgaG9zdCBjb3VudGVycyBmaXJzdC4gQSBtb3JlIGNvbXBsaWNhdGVkIG9wdGlv
-biB3b3VsZCBiZQ0KPj4+IGNoZWNraW5nIHRvIHNlZSBpZiB0aGVyZSBhcmUgYW55IG5vbi1waW5u
-ZWQgY291bnRlcnMgaW4gdGhlIGhvc3QNCj4+PiByZXNlcnZlZCBoYWxmIHdoZW4gYSBuZXcgcGlu
-bmVkIGNvdW50ZXIgaXMgb3BlbmVkLCB0aGVuIHN3YXBwaW5nIHRoZQ0KPj4+IHBsYWNlcyBvZiB0
-aGUgbmV3IHBpbm5lZCBhbmQgZXhpc3Rpbmcgbm9uLXBpbm5lZCBjb3VudGVycyBzbyBwaW5uZWQN
-Cj4+PiBhbHdheXMgcHJlZmVyIGJlaW5nIHB1dCBpbnRvIHRoZSBob3N0IGhhbGYuIEJ1dCBpdCdz
-IHByb2JhYmx5IG5vdCB3b3J0aA0KPj4+IGRvaW5nIHRoYXQuDQoNCj4+PiBKYW1lcw0KDQoNCj4+
-IEkgYWdyZWUgaXQgbWFrZXMgdGhlIG1vc3Qgc2Vuc2UgdG8gYWxsb2NhdGUgZnJvbSB0aGUgdG9w
-LCBidXQgSSdtIGhhcHB5DQo+PiB0aGUgYmFzaWMgaWRlYSB3b3Jrcy4NCg0KDQo+IEFub3RoZXIg
-dGhpbmcgSSBmb3Jnb3QgdG8gbWVudGlvbiBpcyB0aGF0IGV2ZW4gd2l0aCB0aGUgcmF0ZWxpbWl0
-ZWQNCj4gd2FybmluZywgdGhpcyBzcGFtcyB0aGUgbG9ncyBhbnkgdGltZSB0aGUgaG9zdCBhbmQg
-Z3Vlc3QgYXJlIGJvdGggdXNpbmcNCj4gdGhlIFBNVSBhbmQgSSdtIG5vdCBzdXJlIGhvdyB1c2Vm
-dWwgdGhhdCBpcy4NCg0KSSdtIHN1cmUgaXQgZG9lcy4gSSdsbCBkZWxldGUgaXQuDQoNCj4+Pj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFrOw0KPj4+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0NCj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfQ0KPj4+PiArwqDCoMKgwqDCoMKgwqAgfQ0KPj4+PiArwqDCoMKgIH0gZWxzZSB7DQo+Pj4+
-ICvCoMKgwqDCoMKgwqDCoCAvKg0KPj4+PiArwqDCoMKgwqDCoMKgwqDCoCAqIFJlc3RvcmluZyB0
-byBod19jbnRyX21hc2suDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgICogT25seSByZXNjaGVkIGlm
-IHdlIHByZXZpb3VzbHkgc3F1ZWV6ZWQgYW4gZXZlbnQuDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKg
-ICovDQo+Pj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoY3B1Yy0+aG9zdF9zcXVlZXplZCkgew0KPj4+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZWVkX3Jlc2NoZWQgPSB0cnVlOw0KPj4+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBjcHVjLT5ob3N0X3NxdWVlemVkID0gZmFsc2U7DQo+Pj4+ICvC
-oMKgwqDCoMKgwqDCoCB9DQo+Pj4+ICvCoMKgwqAgfQ0KPj4+PiArDQo+Pj4+ICvCoMKgwqAgaWYg
-KG5lZWRfcmVzY2hlZCkgew0KPj4+PiArwqDCoMKgwqDCoMKgwqAgLyogQ29sbGlzaW9uOiBydW4g
-ZnVsbCBwZXJmIHJlc2NoZWR1bGUgKi8NCj4+Pj4gK8KgwqDCoMKgwqDCoMKgIHBlcmZfcG11X3Jl
-c2NoZWRfdXBkYXRlKCZjcHVfcG11LT5wbXUsIGt2bV9wbXVfdXBkYXRlX21hc2ssDQo+Pj4+IG5l
-d19tYXNrKTsNCj4+Pj4gK8KgwqDCoCB9IGVsc2Ugew0KPj4+PiArwqDCoMKgwqDCoMKgwqAgLyog
-SG9zdCB3YXMgbmV2ZXIgdXNpbmcgZ3Vlc3QgY291bnRlcnMgYW55d2F5ICovDQo+Pj4+ICvCoMKg
-wqDCoMKgwqDCoCBiaXRtYXBfY29weShjcHVfcG11LT5jbnRyX21hc2ssIG5ld19tYXNrLCAgDQo+
-Pj4+IEFSTVBNVV9NQVhfSFdFVkVOVFMpOw0KPj4+PiArwqDCoMKgIH0NCj4+Pj4gK30NCj4+Pj4g
-Kw0KPj4+PiDCoMKgIC8qKg0KPj4+PiDCoMKgwqAgKiBrdm1fcG11X2hvc3RfY291bnRlcl9tYXNr
-KCkgLSBDb21wdXRlIGJpdG1hc2sgb2YgaG9zdC1yZXNlcnZlZA0KPj4+PiBjb3VudGVycw0KPj4+
-PiDCoMKgwqAgKiBAcG11OiBQb2ludGVyIHRvIGFybV9wbXUgc3RydWN0DQo+Pj4+IEBAIC0yMTgs
-NiArMjg1LDcgQEAgdm9pZCBrdm1fcG11X2xvYWQoc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0KDQo+
-Pj4+IMKgwqDCoMKgwqDCoCBwbXUgPSB2Y3B1LT5rdm0tPmFyY2guYXJtX3BtdTsNCj4+Pj4gwqDC
-oMKgwqDCoMKgIGd1ZXN0X2NvdW50ZXJzID0ga3ZtX3BtdV9ndWVzdF9jb3VudGVyX21hc2socG11
-KTsNCj4+Pj4gK8KgwqDCoCBrdm1fcG11X3NldF9ndWVzdF9jb3VudGVycyhwbXUsIGd1ZXN0X2Nv
-dW50ZXJzKTsNCj4+Pj4gwqDCoMKgwqDCoMKgIGt2bV9wbXVfYXBwbHlfZXZlbnRfZmlsdGVyKHZj
-cHUpOw0KDQo+Pj4+IMKgwqDCoMKgwqDCoCBmb3JfZWFjaF9zZXRfYml0KGksICZndWVzdF9jb3Vu
-dGVycywgQVJNUE1VX01BWF9IV0VWRU5UUykgew0KPj4+PiBAQCAtMzE5LDUgKzM4Nyw2IEBAIHZv
-aWQga3ZtX3BtdV9wdXQoc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0KPj4+PiDCoMKgwqDCoMKgwqAg
-dmFsID0gcmVhZF9zeXNyZWcocG1pbnRlbnNldF9lbDEpOw0KPj4+PiDCoMKgwqDCoMKgwqAgX192
-Y3B1X2Fzc2lnbl9zeXNfcmVnKHZjcHUsIFBNSU5URU5TRVRfRUwxLCB2YWwgJiBtYXNrKTsNCg0K
-Pj4+PiArwqDCoMKgIGt2bV9wbXVfc2V0X2d1ZXN0X2NvdW50ZXJzKHBtdSwgMCk7DQo+Pj4+IMKg
-wqDCoMKgwqDCoCBwcmVlbXB0X2VuYWJsZSgpOw0KPj4+PiDCoMKgIH0NCj4+Pj4gZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvcGVyZi9hcm1fcG11LmggIA0KPj4+PiBiL2luY2x1ZGUvbGludXgv
-cGVyZi9hcm1fcG11LmgNCj4+Pj4gaW5kZXggZjdiMDAwYmIzZWNhOC4uNjNmODhmZWM1ZTgwZiAx
-MDA2NDQNCj4+Pj4gLS0tIGEvaW5jbHVkZS9saW51eC9wZXJmL2FybV9wbXUuaA0KPj4+PiArKysg
-Yi9pbmNsdWRlL2xpbnV4L3BlcmYvYXJtX3BtdS5oDQo+Pj4+IEBAIC03NSw2ICs3NSw3IEBAIHN0
-cnVjdCBwbXVfaHdfZXZlbnRzIHsNCg0KPj4+PiDCoMKgwqDCoMKgwqAgLyogQWN0aXZlIGV2ZW50
-cyByZXF1ZXN0aW5nIGJyYW5jaCByZWNvcmRzICovDQo+Pj4+IMKgwqDCoMKgwqDCoCB1bnNpZ25l
-ZCBpbnTCoMKgwqDCoMKgwqDCoCBicmFuY2hfdXNlcnM7DQo+Pj4+ICvCoMKgwqAgYm9vbCBob3N0
-X3NxdWVlemVkOw0KPj4+PiDCoMKgIH07DQoNCj4+Pj4gwqDCoCBlbnVtIGFybXBtdV9hdHRyX2dy
-b3VwcyB7DQo=
+
+
+On 5/13/2026 5:58 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] NULL Pointer Dereference in `uncore_pci_pmu_unregister()` when device registration fails.
+> - [High] NULL Pointer Dereference (previously reported as UAF) during perf event operations if a PCI device is removed while events are active.
+> --
+> 
+> commit 247a617f910d49e9f19af35d0216a5b938d9d034
+> Author: Zide Chen <zide.chen@intel.com>
+> 
+> perf/x86/intel/uncore: Rename refcount fields and other cleanups
+> 
+> This commit renames several fields and parameters in the intel uncore PMU
+> driver to clarify their purpose, such as activeboxes to die_refcnt and
+> box->refcnt to box->cpu_refcnt. It also fixes a typo and removes an
+> incorrect refcount increment.
+> 
+>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>> index e9cc1ba921c5e..e200f4744eb9b 100644
+>> --- a/arch/x86/events/intel/uncore.c
+>> +++ b/arch/x86/events/intel/uncore.c
+> 
+> [ ... ]
+> 
+>> @@ -1230,7 +1229,7 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
+>>  	struct intel_uncore_box *box = pmu->boxes[die];
+>>  
+>>  	pmu->boxes[die] = NULL;
+>> -	if (atomic_dec_return(&pmu->activeboxes) == 0)
+>> +	if (atomic_dec_return(&pmu->die_refcnt) == 0)
+>>  		uncore_pmu_unregister(pmu);
+>>  	uncore_box_exit(box);
+> 
+> While reviewing these unregistration changes, I noticed a pre-existing issue
+> here.
+> 
+> If PMU registration fails during PCI device probe, uncore_pci_pmu_register()
+> frees the box and sets pmu->boxes[die] = NULL.
+> 
+> Later, when the device is removed, the bus notifier calls
+> uncore_pci_pmu_unregister() which fetches the NULL box:
+> 
+>     struct intel_uncore_box *box = pmu->boxes[die];
+> 
+> and passes it to uncore_box_exit(box).
+> 
+> Since uncore_box_exit() does not check for NULL before testing box->flags:
+
+Yes, you are right, uncore_pci_pmu_unregister() should validate the box:
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 208901ea280c..edf608ba8e9a 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1285,8 +1285,11 @@ static void uncore_pci_pmu_unregister(struct
+intel_uncore_pmu *pmu, int die)
+        pmu->boxes[die] = NULL;
+        if (atomic_dec_return(&pmu->die_refcnt) == 0)
+                uncore_pmu_unregister(pmu);
+-       uncore_box_exit(box);
+-       kfree(box);
++
++       if (box) {
++               uncore_box_exit(box);
++               kfree(box);
++       }
+ }
+
+> 
+> static inline void uncore_box_exit(struct intel_uncore_box *box)
+> {
+>         if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
+> 
+> Does this sequence result in a NULL pointer dereference?
+> 
+> Additionally, if a PCI device is removed while perf events are still active
+> on its CPU, this function sets pmu->boxes[die] = NULL and frees the box.
+> > If other dies still have boxes present, die_refcnt will be greater
+than zero
+> and uncore_pmu_unregister(pmu) is bypassed.
+
+Yes, this series is mostly focusing on the MSR/MMIO uncore paths, not
+PCI hot plug/unplug handling yet.  I plan to address them in follow-up
+patches.
+
+
+> Could this leave active events scheduled in the perf subsystem?
+> 
+> If the perf subsystem later attempts to read or stop the event,
+> uncore_event_to_box() would return NULL. Would subsequent calls like
+> uncore_perf_event_update() or accesses to box->n_active then trigger a NULL
+> pointer dereference when operating on the missing box?
+> 
+>>  	kfree(box);
+>>  }
+> 
+
