@@ -1,129 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD48399CEE
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 05:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C38264619
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 05:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778737099; cv=none; b=TFnQQ42bagK+YPSp4d3ST4vGpzTQAFxAGDOEioRmdMiAXwyCrhEKeGKAuYQH2HaJuCJrgmnEjwuuAMnp4FRbiUvrQLUE+wsI1GKqHrQZBXlVngfufOoIhGvLuUW7yUK6tl+dg5xzoVlwqsjG1e0rexIKTnV0LHYr8AJRP7Ua+CQ=
+	t=1778738308; cv=none; b=cmSocFnAhFxXTzORYaKPjDFP2YlxgRxzKyTWHKxBBFHLQKvvdSWEB6ZQfVDyu1XHW7w1hoNq8lSvrVXQdKwT5A8BlHhTB691N01rWWoEnmJvO0ZaLgba1yYcI7OLFMyqcqHyzDj1aG+QjK8ifLirjlD2DNPc7orY8Ntt5A7Fw9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778737099; c=relaxed/simple;
-	bh=nle9qLdiPPUEYMkvTCoLeD6tYQUPEwNXfC4vvyrOHnk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eNKo+5ULbfozbvcGiU7hKmT/TFLOsWGgMuWoF9l+94CFwhbcXdBGYOxU/LG54zqvUTP9WAZR1h9PvrYqYOV8b2H0eqS6WzVEoNy4UhHPaNxscG5pD1xcFeR7wv3LpqJ9+YH0CjqtX1orzVE1eTg2GUD/HQaeHNmCkGkgcH9UCIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1R8p9/2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778738308; c=relaxed/simple;
+	bh=E2mp2ooawHWSeje8s6fi7PMoWNEy+KCCOmwZ3FV3Z/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EB/r/Y1xT14ZCKb0b0qCvhkk7M39qv4MeKoW8KcAww+vR3t80uw2HWywh+7ViOrYKDXBqPLvtKLY4gAAid90BT/p0rpti4Cu+CQVu8fOpaMqOvCj6b5qFyYcIqoCUCA16KgVMVTPfJN+dPJx6w9kmmXym5RwBq1WAg3X5tKhxxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i6HFG86H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OB0HZCAy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i6HFG86H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OB0HZCAy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1R8p9/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E82C2BCB7;
-	Thu, 14 May 2026 05:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778737099;
-	bh=nle9qLdiPPUEYMkvTCoLeD6tYQUPEwNXfC4vvyrOHnk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=M1R8p9/23R3iPurm9G7enebMgR9PWQeUICLS4xla4P8At9TtahzBK64G7W6gMadYc
-	 IEwaZg0KxvuTvvK315tTClkCOb1sCXIPjRu2U7r0Lrv87zmzt7DF9WiEKa3OkhNP1+
-	 81coepBlZeXPIcCW40i725AzrYzE3MLkhTbxkfIpVOvZvTRDfgKBRrYRA+oczHiWSR
-	 SQzEViTPDFDCvHiujPThOBd1qslzlijhyR5PjkeLdzejQQcuOnV8g9owTIEcTaGhnX
-	 /8fhLsXxR8PXFkQop8POkN+4orC+eFNW5521ib6Cfmh9jXgBCJ41s5tsQPfjBzMcnv
-	 ufC33Z2p9ABPQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] perf/x86/intel/uncore: Implement lazy setup for
- MSR/MMIO PMU
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zide Chen" <zide.chen@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512233048.9577-8-zide.chen@intel.com>
-References: <20260512233048.9577-8-zide.chen@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 05:38:18 +0000
-Message-Id: <20260514053819.14E82C2BCB7@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i6HFG86H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OB0HZCAy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i6HFG86H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OB0HZCAy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5C99A5CB3C;
+	Thu, 14 May 2026 05:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778738305; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOgWhDRcNjDz19mj/rWWcL4Q1L5v6fdJ+Xa8kqqczdo=;
+	b=i6HFG86Ho/jLEDkLruEGfg49LHBt/v3tY7G4R/HaVgxHR6EIPvlz/awbadbbpptERtNl6w
+	SWTK0Xs7fxEqB+J6shqMYArmM5VpJ/kmaRc0rKUiX2ZYZ/3MgqDUd/DgsoKn71M7F2Vn4M
+	8V2Ty09Ga3b9ALOVNwJ5RDGjB8VRxd8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778738305;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOgWhDRcNjDz19mj/rWWcL4Q1L5v6fdJ+Xa8kqqczdo=;
+	b=OB0HZCAys4Gycg9vUT+ugtZ9b1GVIIbBg8K2FOXC6sBb/tKvv1iXNTIj33ETVQdp14y+5e
+	KD19SrvIi+/lwLAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=i6HFG86H;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=OB0HZCAy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778738305; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOgWhDRcNjDz19mj/rWWcL4Q1L5v6fdJ+Xa8kqqczdo=;
+	b=i6HFG86Ho/jLEDkLruEGfg49LHBt/v3tY7G4R/HaVgxHR6EIPvlz/awbadbbpptERtNl6w
+	SWTK0Xs7fxEqB+J6shqMYArmM5VpJ/kmaRc0rKUiX2ZYZ/3MgqDUd/DgsoKn71M7F2Vn4M
+	8V2Ty09Ga3b9ALOVNwJ5RDGjB8VRxd8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778738305;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOgWhDRcNjDz19mj/rWWcL4Q1L5v6fdJ+Xa8kqqczdo=;
+	b=OB0HZCAys4Gycg9vUT+ugtZ9b1GVIIbBg8K2FOXC6sBb/tKvv1iXNTIj33ETVQdp14y+5e
+	KD19SrvIi+/lwLAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D61BE593A9;
+	Thu, 14 May 2026 05:58:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id L/gEInZkBWqRGAAAD6G6ig
+	(envelope-from <ddiss@suse.de>); Thu, 14 May 2026 05:58:14 +0000
+Date: Thu, 14 May 2026 15:58:04 +1000
+From: David Disseldorp <ddiss@suse.de>
+To: Jia He <justin.he@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, kasan-dev@googlegroups.com, linux-mm@kvack.org,
+ Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
+ Clark <james.clark@linaro.org>, Brendan Higgins
+ <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, Rae Moar
+ <raemoar63@gmail.com>, Alexander Potapenko <glider@google.com>, Marco Elver
+ <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Paul E. McKenney" <paulmck@kernel.org>, Petr
+ Mladek <pmladek@suse.com>, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH 1/7] init/initramfs_test: wait_for_initramfs() before
+ running
+Message-ID: <20260514155804.1fd13627.ddiss@suse.de>
+In-Reply-To: <20260514050455.2954509-2-justin.he@arm.com>
+References: <20260514050455.2954509-1-justin.he@arm.com>
+	<20260514050455.2954509-2-justin.he@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,googlegroups.com,kvack.org,arndb.de,linuxfoundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,redhat.com,arm.com,linux.intel.com,google.com,intel.com,linaro.org,linux.dev,davidgow.net,gmail.com,linux-foundation.org,suse.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLbwzjzhmci8e35wtwpcw4zc8n)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Queue-Id: 5C99A5CB3C
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Local parameter modification in uncore_cpu_mmio_init fails to clea=
-r global uncore arrays on error, leading to a guaranteed kernel crash (Use-=
-After-Free/NULL dereference) on partial initialization failure.
---
+On Thu, 14 May 2026 05:04:49 +0000, Jia He wrote:
+...
+> Add a suite .init that calls wait_for_initramfs() so the async unpack
+> is quiescent before the first case runs.
+> 
+> To: Alexander Viro <viro@zeniv.linux.org.uk>
+> To: Christian Brauner <brauner@kernel.org>
+> To: Jan Kara <jack@suse.cz>
+> To: David Disseldorp <ddiss@suse.de>
+> Cc: linux-fsdevel@vger.kernel.org
+> 
+> Fixes: 83c0b27266ec ("initramfs_test: kunit tests for initramfs unpacking")
+> Signed-off-by: Jia He <justin.he@arm.com>
 
-commit 27fb6ccf46a9e646f34ac7d3e4098f98a775ed6f
-Author: Zide Chen <zide.chen@intel.com>
-
-perf/x86/intel/uncore: Implement lazy setup for MSR/MMIO PMU
-
-This commit updates MSR and MMIO uncore PMUs to use a lazy registration
-model. The PMUs are registered when the first box is successfully
-initialized and unregistered when the last box exits. Box allocation and
-freeing remain at module init/exit time.
-
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
-e.c
-> index b9b901b789d15..c6fe7864a4977 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-
-[ ... ]
-
-> -static int __init uncore_cpu_init(void)
-> -{
-> -	int ret;
-> -
-> -	ret =3D uncore_types_init(uncore_msr_uncores);
-> -	if (ret)
-> -		goto err;
-> -
-> -	ret =3D uncore_msr_pmus_register();
-> -	if (ret)
-> -		goto err;
-> -	return 0;
-> -err:
-> -	uncore_types_exit(uncore_msr_uncores);
-> -	uncore_msr_uncores =3D empty_uncore;
-> -	return ret;
-> -}
-
-[ ... ]
-
-> +static int __init uncore_cpu_mmio_init(struct intel_uncore_type **types)
->  {
->  	int ret;
-> =20
->  	ret =3D uncore_types_init(types);
-> +	if (!ret)
-> +		return 0;
-> =20
-> +	uncore_types_exit(types);
-> +	types =3D empty_uncore;
-
-Does this error path effectively clear the global uncore arrays?
-
-Since types is passed by value, assigning types =3D empty_uncore only updat=
-es
-the local parameter. The global variables like uncore_msr_uncores or
-uncore_mmio_uncores are left pointing to structures that were just cleaned
-up by uncore_types_exit().
-
-If intel_uncore_init() experiences a partial failure, it can still proceed
-to register CPU hotplug callbacks. This synchronously triggers
-uncore_event_cpu_online() which iterates over the global arrays:
-
-intel_uncore_init()
-  uncore_cpu_mmio_init()
-  cpuhp_setup_state()
-    uncore_event_cpu_online()
-      allocate_boxes()
-
-Could this access freed structures and result in a use-after-free or NULL
-pointer dereference since the global array was not cleared?
-
->  	return ret;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512233048.9577=
--1-zide.chen@intel.com?part=3D7
+Good catch, thanks.
+Reviewed-by: David Disseldorp <ddiss@suse.de>
