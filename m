@@ -1,164 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0939FCB9
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 19:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468B738BF72
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 20:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778785584; cv=none; b=PqrbNbNHPl5RWbZoH75ri4RVeYhx0r+64ZePWEdkTLaOsD33thR69jHNbhFfA6viun7ZpyX/Dn7mmITd4r3zsoO1dSikySy1TXryjwOtgqROsiJFBzQa9p8aot8fCIWvHgDhHkUGmgyNPNkz2UGPSywHGkJWu0zffHxZ3BA7Q3E=
+	t=1778789169; cv=none; b=u7I7p0UIwlfqP7/fE+VZW4jr2wF0TwyM2OTC4bxOeTp2/97SRpy8AtHLSwDLJSnliWjb9faCuQMCncW0Qfo6fSo/nhp4fqJK+4+DBIPxpmv932srYftLmQ2CdTng3c72Oczk0u4E6iReKRvB+uxo40psDhOef/l0kOV0ZPkAaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778785584; c=relaxed/simple;
-	bh=qBcJ8vKNSneL/rpZZLxYZd6ePo2FHj+D372yqVvkKuI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sZkUSRlcP1VFqYZ/gsxqxoaQy2RiLHajO3/ypZbn3tQ6oXHCCO9NpksPVl8yUCu785jvZR+QTqbjoEjVIlhHvP2QJhiULqx6y0NZr3OyGkPe8lEDBdFA7pcVKarr0NFzPQW1MLR8F8h0VNYaMtFU37dM3o0d/QXA3Lph4zutbkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QE4AgIKN; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778789169; c=relaxed/simple;
+	bh=0zoyu0jALz+o2ga/t19ZoeRx1Zcnj2yMs53nZcR8v3M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lE24C/z1RbGJx2gc4eEvzsIJv4XgP417vvIcBUeCIxVXb7D1rSCxt1rBxRFCc+PQdduSn0N4xanjC5oNTXrKUXtRd44Zk7U9a4J4Q+39NeWZFKXns9M7fq1lRq5/AOgmgFupqmn+scZ7K7Z4hTI6wiNOhTb3C/FZTfXyVVz47CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGNsEeYr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QE4AgIKN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778785583; x=1810321583;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qBcJ8vKNSneL/rpZZLxYZd6ePo2FHj+D372yqVvkKuI=;
-  b=QE4AgIKNHgSvuBmG7keih0ixnRrlJt4gcu6neuqLMYDqB1FGFJXUg0q3
-   +wa2Ey/RPj1REQrbwCTxViBy+WyXtihWNlA/JS1D7DmvCt1EwrhnmINy5
-   uHhfG0rkN1NUoIlyI8SaA5o3dXgi3GB2Ue8eWX6eq+px6phyYv9k/bQsJ
-   HomjztiYl4q08F5OWsWjLRtQA0mxNMJr+MyduDAa3mqpx0c6av4XKEx1c
-   XY3S9Dk7fhXgbf1dEbr84PqQbwKHnkdRvMEZ1hgprFos9Pruym2lYGM3Y
-   a/1BYqHZTRBE5gTgwOuHgPZ1FZ1PJkNR+A+NyjOb2mYepWGA7UGAIYqdS
-   Q==;
-X-CSE-ConnectionGUID: GDnt/fiSQjaaldRvaI9c3w==
-X-CSE-MsgGUID: xRvfjycpRqGJOV8FLRz5FQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="91201572"
-X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
-   d="scan'208";a="91201572"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 12:06:23 -0700
-X-CSE-ConnectionGUID: N+VcM6DhSj+J/h8jcaskAg==
-X-CSE-MsgGUID: 69pllpBYRoqbYrYxRDatHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
-   d="scan'208";a="232075741"
-Received: from jaimerod-mobl.amr.corp.intel.com (HELO [10.125.32.83]) ([10.125.32.83])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 12:06:21 -0700
-Message-ID: <54179bc4-b895-4613-9d08-155fee7371da@intel.com>
-Date: Thu, 14 May 2026 12:06:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGNsEeYr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B176C2BCB3;
+	Thu, 14 May 2026 20:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778789169;
+	bh=0zoyu0jALz+o2ga/t19ZoeRx1Zcnj2yMs53nZcR8v3M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=UGNsEeYrY7mnQEo1n4ib+WwTswE3O3P8bwMQ3uGU/EqSKllxTElSPwM1Mg9grRJ+W
+	 E5rgV3OB9T50dMqLzr1z6TbazI/WyLyrVw50DfNP5xEhUspck7jpAn4hB4UsWRdIVu
+	 oLebG7vaP0m8IKBJokS/RMY6nOcByVYzmw5ZfC39+GOvmXhLmgM4Jlg7IesdBZHK1P
+	 oTPUCzXB4JScgx7+PZFtu0P047v7oneUSO7zurhOAXJG43oB1ePrv7XaG0vv12fBr4
+	 Lq8LZluh6xPMCmLOoFGxRpxWVlY37+jLIKN2lLtRjew+nIdYk4JmUqfV8NecK8nfr+
+	 cVnHq+japQNhg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] selftests/perf_events: Add test for refresh
+ limit signals
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260514-arm_cs_clean_perf_handle-v2-1-cbb29c3b3661@arm.com>
+References: <20260514-arm_cs_clean_perf_handle-v2-1-cbb29c3b3661@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 May 2026 20:06:07 +0000
+Message-Id: <20260514200609.0B176C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] perf/x86/intel/uncore: Rename refcount fields and
- other cleanups
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260512233048.9577-2-zide.chen@intel.com>
- <20260514005809.D4D0CC19425@smtp.kernel.org>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260514005809.D4D0CC19425@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [Low] Missing <sys/syscall.h> include for syscall() and __NR_perf_event_o=
+pen
+- [Low] FIXTURE_TEARDOWN unconditionally operates on potentially invalid fi=
+le descriptor
+- [Low] Using EXPECT_EQ for sigaction may cause an ungraceful test crash on=
+ setup failure
+--
 
+commit 3f198b4c551c8f0caf35b8f6bc25feee2904073b
+Author: Leo Yan <leo.yan@arm.com>
 
-On 5/13/2026 5:58 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] NULL Pointer Dereference in `uncore_pci_pmu_unregister()` when device registration fails.
-> - [High] NULL Pointer Dereference (previously reported as UAF) during perf event operations if a PCI device is removed while events are active.
-> --
-> 
-> commit 247a617f910d49e9f19af35d0216a5b938d9d034
-> Author: Zide Chen <zide.chen@intel.com>
-> 
-> perf/x86/intel/uncore: Rename refcount fields and other cleanups
-> 
-> This commit renames several fields and parameters in the intel uncore PMU
-> driver to clarify their purpose, such as activeboxes to die_refcnt and
-> box->refcnt to box->cpu_refcnt. It also fixes a typo and removes an
-> incorrect refcount increment.
-> 
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index e9cc1ba921c5e..e200f4744eb9b 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
-> 
-> [ ... ]
-> 
->> @@ -1230,7 +1229,7 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
->>  	struct intel_uncore_box *box = pmu->boxes[die];
->>  
->>  	pmu->boxes[die] = NULL;
->> -	if (atomic_dec_return(&pmu->activeboxes) == 0)
->> +	if (atomic_dec_return(&pmu->die_refcnt) == 0)
->>  		uncore_pmu_unregister(pmu);
->>  	uncore_box_exit(box);
-> 
-> While reviewing these unregistration changes, I noticed a pre-existing issue
-> here.
-> 
-> If PMU registration fails during PCI device probe, uncore_pci_pmu_register()
-> frees the box and sets pmu->boxes[die] = NULL.
-> 
-> Later, when the device is removed, the bus notifier calls
-> uncore_pci_pmu_unregister() which fetches the NULL box:
-> 
->     struct intel_uncore_box *box = pmu->boxes[die];
-> 
-> and passes it to uncore_box_exit(box).
-> 
-> Since uncore_box_exit() does not check for NULL before testing box->flags:
+selftests/perf_events: Add test for refresh limit signals
 
-Yes, you are right, uncore_pci_pmu_unregister() should validate the box:
+This commit adds a test to verify PERF_EVENT_IOC_REFRESH with a
+task-clock software event. It uses a real-time signal to queue
+notifications and verifies that exactly one POLL_HUP notification is
+delivered per iteration when the refresh count reaches zero.
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 208901ea280c..edf608ba8e9a 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1285,8 +1285,11 @@ static void uncore_pci_pmu_unregister(struct
-intel_uncore_pmu *pmu, int die)
-        pmu->boxes[die] = NULL;
-        if (atomic_dec_return(&pmu->die_refcnt) == 0)
-                uncore_pmu_unregister(pmu);
--       uncore_box_exit(box);
--       kfree(box);
-+
-+       if (box) {
-+               uncore_box_exit(box);
-+               kfree(box);
-+       }
- }
+> diff --git a/tools/testing/selftests/perf_events/refresh_signal.c b/tools=
+/testing/selftests/perf_events/refresh_signal.c
+> new file mode 100644
+> index 0000000000000..5519ea7b56f9d
+> --- /dev/null
+> +++ b/tools/testing/selftests/perf_events/refresh_signal.c
+> @@ -0,0 +1,120 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#define _GNU_SOURCE
+> +
+> +#include <fcntl.h>
+> +#include <linux/perf_event.h>
+> +#include <poll.h>
+> +#include <signal.h>
+> +#include <sys/ioctl.h>
+> +#include <time.h>
+> +
+> +#include "../kselftest_harness.h"
 
-> 
-> static inline void uncore_box_exit(struct intel_uncore_box *box)
-> {
->         if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
-> 
-> Does this sequence result in a NULL pointer dereference?
-> 
-> Additionally, if a PCI device is removed while perf events are still active
-> on its CPU, this function sets pmu->boxes[die] = NULL and frees the box.
-> > If other dies still have boxes present, die_refcnt will be greater
-than zero
-> and uncore_pmu_unregister(pmu) is bypassed.
+Is it necessary to explicitly include <sys/syscall.h> and <unistd.h>
+here?
 
-Yes, this series is mostly focusing on the MSR/MMIO uncore paths, not
-PCI hot plug/unplug handling yet.  I plan to address them in follow-up
-patches.
+The test uses syscall() and __NR_perf_event_open, and relying on
+implicit transitive includes from kselftest_harness.h might lead to
+compilation failures on some architectures or libc implementations.
 
+[ ... ]
 
-> Could this leave active events scheduled in the perf subsystem?
-> 
-> If the perf subsystem later attempts to read or stop the event,
-> uncore_event_to_box() would return NULL. Would subsequent calls like
-> uncore_perf_event_update() or accesses to box->n_active then trigger a NULL
-> pointer dereference when operating on the missing box?
-> 
->>  	kfree(box);
->>  }
-> 
+> +FIXTURE_SETUP(refresh_signal)
+> +{
+> +	struct sigaction sa =3D { 0 };
+> +	struct perf_event_attr attr =3D { 0 };
+> +
+> +	sa.sa_sigaction =3D sigio_handler;
+> +	sa.sa_flags =3D SA_SIGINFO;
+> +	sigemptyset(&sa.sa_mask);
+> +
+> +	/* Use a real-time signal so notifications are reliably queued */
+> +	EXPECT_EQ(sigaction(RT_SIG, &sa, &self->old_sa), 0);
 
+If sigaction() fails, EXPECT_EQ logs a failure but allows the setup to
+continue.
+
+When the perf event triggers the first RT_SIG, the process will lack a
+custom handler and the default action will terminate the test program.
+
+Would it be safer to use ASSERT_EQ here so the test aborts cleanly on
+setup failure?
+
+[ ... ]
+
+> +	self->fd =3D syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
+> +	ASSERT_NE(self->fd, -1);
+> +
+> +	/* Enable async notification */
+> +	ASSERT_EQ(fcntl(self->fd, F_SETFL, fcntl(self->fd, F_GETFL) | O_ASYNC),=
+ 0);
+> +
+> +	/* Receive the signal for current process */
+> +	ASSERT_EQ(fcntl(self->fd, F_SETOWN, getpid()), 0);
+> +
+> +	/* Use signo instead of the default SIGIO */
+> +	ASSERT_EQ(fcntl(self->fd, F_SETSIG, RT_SIG), 0);
+> +}
+> +
+> +FIXTURE_TEARDOWN(refresh_signal)
+> +{
+> +	EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
+> +
+> +	close(self->fd);
+> +	sigaction(RT_SIG, &self->old_sa, NULL);
+> +}
+
+If syscall(__NR_perf_event_open) fails during FIXTURE_SETUP, self->fd is
+assigned -1 and the setup aborts via ASSERT_NE.
+
+However, the kselftest framework still executes FIXTURE_TEARDOWN, which
+will unconditionally call ioctl() and close() on -1. Could this generate
+additional and confusing test failure logs?
+
+Should we verify if self->fd >=3D 0 before attempting to operate on it?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260514-arm_cs_cle=
+an_perf_handle-v2-0-cbb29c3b3661@arm.com?part=3D1
