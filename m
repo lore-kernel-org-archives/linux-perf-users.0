@@ -1,158 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20683BA222;
-	Thu, 14 May 2026 05:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E4C299929
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 05:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778735306; cv=none; b=KlBVpWtRWCxMZdoRcJH4k+4AFxWWYIHq70muVZzjN8Wgx9bgQekeHevnBNxZ9VB3zJrygi2un0WulMqxxsD1wyki5OpYQBgoDBcUyGM7exH8vFv+vqAt15sU4VFc9pUDhUhD2P3rmYtj9Zi0UbpQ4qT6KrS0pJq5kDVIKfMk+0A=
+	t=1778735529; cv=none; b=rtqmEY3ka7+l9pcMJCLfvShZLTzDQ/D6bPUePi33kQLKyioRPuN66AgxsSKTc8EgPwNRvij40c6GpQ6287rL/ZzpEnAoZ9ygJP9/yfygBFTBPJ36FfOIGaXdRtz6UHIM3RgTNIdPdthpyDKIhLmTBcZiqjpUt07xV4BLhokR+P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778735306; c=relaxed/simple;
-	bh=pDv1PUPolI9yQCaKV1T3osAxs2BPPEuIIJYZ+6qnyXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ueWbhY/Rr1GRwMbLA1c/HXpZiPzyXPFc7bAnQ2PK6oaqp+pPZwLrKahCNz5DVERbyRoZVcRCrVNR3z0JZ48zs+/GckvH4B9MRXjj0jYsvwi04jkgHFurNWLZSLdQ77Ei6oiaKVhyWTZjW+XKATMSgfil7s6eYmgTVSr+ew4F11k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=C0FOIuVq; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1778735529; c=relaxed/simple;
+	bh=N2hOzLJhPj7YZe6+GM52kP0ytRVzomLb6qq7ROjeUho=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=bK2MBN7Bck6CU3mVVxXf2LyNEG9ODqZtCEEFvM0sdz2EmWZxxzjErswoci05IThSfKUraIISKH01baXNy6ND4L6mkN/umK4FY3HcnhIZ75qwj8wu/kN0B9NFk9pjJgByBZirKsMtChVipUFZkMLbFo7RgfOaa9qcI/UO8ImBvUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IvLK27Rm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="C0FOIuVq"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E208C1655;
-	Wed, 13 May 2026 22:08:16 -0700 (PDT)
-Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0871F3F7B4;
-	Wed, 13 May 2026 22:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1778735302; bh=pDv1PUPolI9yQCaKV1T3osAxs2BPPEuIIJYZ+6qnyXo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C0FOIuVqM3n4lVlgYpvHk8RRPKzDD5+SduOW3q83jwCz6q2il5Md6IfZb/iTGZ+os
-	 oKQNS84VmZM5y6W3KgNvgdeqB3HnAzkFR8cCydg4B+9Xw5pvpjyQwls0oktpX798tq
-	 tl5eo8RIyC5bwHKsuNhKjV/dYBNj9pKBlY3VZbvY=
-From: Jia He <justin.he@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <david@davidgow.net>,
-	Rae Moar <raemoar63@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jia He <justin.he@arm.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	David Disseldorp <ddiss@suse.de>
-Subject: [PATCH 7/7] lib/tests: test_ratelimit: fix stress test thread lifecycle and leak
-Date: Thu, 14 May 2026 05:04:55 +0000
-Message-Id: <20260514050455.2954509-8-justin.he@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260514050455.2954509-1-justin.he@arm.com>
-References: <20260514050455.2954509-1-justin.he@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IvLK27Rm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9140BC2BCB7;
+	Thu, 14 May 2026 05:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778735528;
+	bh=N2hOzLJhPj7YZe6+GM52kP0ytRVzomLb6qq7ROjeUho=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=IvLK27RmxqS8q3qdP7ItV01ww+ZKinYoRptfi1081+F7cgWpoqhsyn4B18zVJEOS4
+	 LWwkOG0+Q8oG2uErBX+AtYsT60OKpv7/Bofwyf/4P8ACKfAFdK9KGrsfXpQuf2J08p
+	 XvMB0b8waEjXQv3ZCadEeR6GhtvMP2L0IspakwDSEkMyfsHC76cHbgIdsdR6MQs+ly
+	 +UuTrkIednELLJiqponRm5rpIJwuJZRJfT5ch17l00lMZYj2ksET4OqR+4+xm4bdJ3
+	 2Wu27kfV4w7P1WgNMPEhiuvlbBsnZOYbE00ZSmfwPZ81pOL6CB3n4ZWisgV3XnHgyW
+	 UWu6rY80sJKcA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 6/7] perf/x86/intel/uncore: Fix uncore_box ref/unref
+ ordering on CPU hotplug
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Zide Chen" <zide.chen@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512233048.9577-7-zide.chen@intel.com>
+References: <20260512233048.9577-7-zide.chen@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 May 2026 05:12:08 +0000
+Message-Id: <20260514051208.9140BC2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The kthread return value was checked against the wrong variable (sktp
-instead of sktp[i].tp), so WARN_ON_ONCE(!sktp->tp) fired at line 87.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Critical] Swapping the order of `uncore_box_unref()` and `uncore_change_=
+context()` unmaps MMIO memory while perf events are still active on the off=
+lining CPU, leading to a kernel panic.
+--
 
-Replace kthread_run() with kthread_create()+wake_up_process() so the
-return value can be validated before assigning to sktp[i].tp. On
-creation failure, jump to a common cleanup path that signals doneflag,
-stops all already-started threads, and frees sktp. This avoids leaving
-orphan kthreads and leaked memory when a mid-loop failure occurs.
+commit c3109355d1e7c9f59ae1464588987b4aa4135388
+Author: Zide Chen <zide.chen@intel.com>
 
-Also reset doneflag before spawning threads so back-to-back test
-invocations don't race on stale state.
+perf/x86/intel/uncore: Fix uncore_box ref/unref ordering on CPU hotplug
 
-To: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-To: Kees Cook <kees@kernel.org>
+This commit reorders the setup and teardown sequence in the uncore CPU
+hotplug callbacks. It swaps the order of uncore_box_ref/unref and
+uncore_change_context to ensure that the uncore box references the correct
+context.
 
-Signed-off-by: Jia He <justin.he@arm.com>
----
- lib/tests/test_ratelimit.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
+e.c
+> index 4d31dcaf5405b..b9b901b789d15 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1555,9 +1555,15 @@ static int uncore_event_cpu_offline(unsigned int c=
+pu)
+>  {
+>  	int die, target;
+> =20
+> +	/* Clear the references */
+> +	die =3D topology_logical_die_id(cpu);
+> +	uncore_box_unref(uncore_msr_uncores, die);
+> +	uncore_box_unref(uncore_mmio_uncores, die);
+> +
 
-diff --git a/lib/tests/test_ratelimit.c b/lib/tests/test_ratelimit.c
-index 33cea5f3d28b..64f26260c0d8 100644
---- a/lib/tests/test_ratelimit.c
-+++ b/lib/tests/test_ratelimit.c
-@@ -105,26 +105,44 @@ static void test_ratelimit_stress(struct kunit *test)
- 	const int n_stress_kthread = cpumask_weight(cpu_online_mask);
- 	struct stress_kthread skt = { 0 };
- 	struct stress_kthread *sktp = kzalloc_objs(*sktp, n_stress_kthread);
-+	int n_started = 0;
- 
--	KUNIT_EXPECT_NOT_NULL_MSG(test, sktp, "Memory allocation failure");
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, sktp, "Memory allocation failure");
-+	WRITE_ONCE(doneflag, 0);
- 	for (i = 0; i < n_stress_kthread; i++) {
--		sktp[i].tp = kthread_run(test_ratelimit_stress_child, &sktp[i], "%s/%i",
--					 "test_ratelimit_stress_child", i);
--		KUNIT_EXPECT_NOT_NULL_MSG(test, sktp, "kthread creation failure");
-+		struct task_struct *tp;
-+
-+		tp = kthread_create(test_ratelimit_stress_child, &sktp[i],
-+				    "%s/%i", "test_ratelimit_stress_child", i);
-+		if (IS_ERR(tp)) {
-+			KUNIT_FAIL(test, "kthread_create failed: %ld", PTR_ERR(tp));
-+			goto out_stop;
-+		}
-+
-+		sktp[i].tp = tp;
-+		wake_up_process(tp);
-+		n_started++;
- 		pr_alert("Spawned test_ratelimit_stress_child %d\n", i);
- 	}
- 	schedule_timeout_idle(stress_duration);
-+
-+out_stop:
- 	WRITE_ONCE(doneflag, 1);
--	for (i = 0; i < n_stress_kthread; i++) {
-+	for (i = 0; i < n_started; i++) {
- 		kthread_stop(sktp[i].tp);
- 		skt.nattempts += sktp[i].nattempts;
- 		skt.nunlimited += sktp[i].nunlimited;
- 		skt.nlimited += sktp[i].nlimited;
- 		skt.nmissed += sktp[i].nmissed;
- 	}
--	KUNIT_ASSERT_EQ_MSG(test, skt.nunlimited + skt.nlimited, skt.nattempts,
--			    "Outcomes not equal to attempts");
--	KUNIT_ASSERT_EQ_MSG(test, skt.nlimited, skt.nmissed, "Misses not equal to limits");
-+	if (n_started == n_stress_kthread) {
-+		KUNIT_ASSERT_EQ_MSG(test, skt.nunlimited + skt.nlimited, skt.nattempts,
-+				    "Outcomes not equal to attempts");
-+		KUNIT_ASSERT_EQ_MSG(test, skt.nlimited, skt.nmissed,
-+				    "Misses not equal to limits");
-+	}
-+
-+	kfree(sktp);
- }
- 
- static struct kunit_case ratelimit_test_cases[] = {
--- 
-2.34.1
+When uncore_box_unref() executes before uncore_change_context(), can this
+cause a page fault if there are active events?
 
+During CPU offline, the uncore teardown callback runs at state
+CPUHP_AP_PERF_X86_UNCORE_ONLINE, which executes before the generic perf core
+teardown at CPUHP_AP_PERF_ONLINE.
+
+If the offlining CPU is the last CPU in the die, cpu_refcnt reaches 0 and
+uncore_box_exit() is called immediately. For MMIO PMUs, this calls
+uncore_mmio_exit_box(), which executes iounmap(box->io_addr).
+
+Since uncore_change_context() is called later with target =3D -1, no event
+migration happens, and the active uncore perf events stay attached to the
+offlining CPU's context.
+
+When teardown reaches CPUHP_AP_PERF_ONLINE, perf_event_exit_cpu_context()
+runs to clean up remaining events on the dying CPU. It calls pmu->stop()
+to disable the events.
+
+Will uncore_pmu_event_stop() dereference the unmapped box->io_addr via
+uncore_perf_event_update() and disable_event(), leading to a kernel panic?
+
+Even if a later patch adds uncore_pmu_unregister() to uncore_box_unref(),
+this registration is only skipped if die_refcnt > 0. On a multi-die system,
+offlining all CPUs in a single die leaves die_refcnt > 0, so the PMU
+unregistration is skipped and the panic could still occur.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512233048.9577=
+-1-zide.chen@intel.com?part=3D6
