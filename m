@@ -1,109 +1,112 @@
-Received: from pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.12.53.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419D11C5F39;
-	Thu, 14 May 2026 01:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.12.53.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7CA824A3;
+	Thu, 14 May 2026 01:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778720884; cv=none; b=hqsdEA0we/r4c43YOtjIOFVYMkNpLKYDFqDvz0/HVAnbXWmMlE/3700+tm8OIhqJ0aEGX8eLhH+AN+54Zzw2AakeQztUggSY7apmIwzdMeSF7B9l2d23DirAHJ3yCy5WjpllPLyjtf1SYYEzmoQExOGeJ24gxm+3Fv5qox+Lo0g=
+	t=1778723709; cv=none; b=suy8R6183ePxV/bfSG5XQ1r3+FrOWSYkRQpp3zhym0jQm2yB7NKZjLVkP3ULUsvj3SeikUQGoaWjVL2bXN76T/rs85kalEoFaz3ixlLce5xWomUTM7PzoEhrZPJ3PzS77x3WgQ7Hj6K1jKt2esIBX9NFMIxTgfkxQ2RyXA3s1UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778720884; c=relaxed/simple;
-	bh=7QPPQtW5VqHd/lpoCaot16Z6mZXfn/BerdKUR1HdOio=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2nfX++FZfWndPfjhGSO3xyzkDrpBZWecSdRXE9Ck7cLfXMGFKrJ7VbHBEBnEMX9Ug8V7COD2RX9pJAJ8d5hFC/tK+M/v+QwyVHcpXhTPphlfnQ+/68NP5SSBkLGlzTLCbZtesX2nDc7v763VMa4nYcX52ONFq7ZJe3VUmKYjyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=nR7TXSAA; arc=none smtp.client-ip=52.12.53.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1778723709; c=relaxed/simple;
+	bh=LcNQ99OMkwCl+SeLj818sRc6L7Zfg4+AM0WSBv9W5ME=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=do7aDKk+UZIE7xyPSyAv4M8An1+d8WD8B3lFRbNeuyoAMgB31XgtWuCWoBmyuzCEZw2b30v2Gi/tV1iz6+qguiFai6RY104Oi0iiKYdotzbkPRHBpNJt2j2/l9X1/CzVMSCPN03cDUXV3fwfxnt+KbYTLZunGjus5/obkxsX0FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZ3LEoQP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="nR7TXSAA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1778720883; x=1810256883;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cW/OZQoqy4f/UkhCnx3pnnSjrSTqrJ/WVsrvI7KDwF0=;
-  b=nR7TXSAANox9vzsMwXD5dZuwqx0fYnjpxvI6fCtUpQteer+0nKwSsdCH
-   v0hQJJ0RYi6CyC+vPYKO9CzacMsJVUCETtt7kDZ70T2ZeTi4/tO7qMZhL
-   yjRCSe5iEQK7+joUvwoEmxIWUXjW4WCDg2EWvVI9CGmimZNI7MfmBYXUq
-   5H83klDz3ClypDuSVDVPP7Ve1KECjFm5XiHpuFSCJU4+/BPjPGsosUzI9
-   rG2tE0PMs++vochOJn1vgbMzHltKexzLYr6L6uhF8Exg4SNZaLsaTEUmR
-   D6xS15w7eIvupcRscqwvl/4aA2wH/gaq9kYDttWg9wekXFd7NzCYmCASO
-   A==;
-X-CSE-ConnectionGUID: MFGcm6D+QdSByVHlqNAcFg==
-X-CSE-MsgGUID: ODrRSGTpQ7i8BvTXcwWNlA==
-X-IronPort-AV: E=Sophos;i="6.23,233,1770595200"; 
-   d="scan'208";a="19469806"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 01:08:00 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:29459]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.21:2525] with esmtp (Farcaster)
- id ef6c1e45-134f-4e23-bfcc-be8e3fe3fcf7; Thu, 14 May 2026 01:07:59 +0000 (UTC)
-X-Farcaster-Flow-ID: ef6c1e45-134f-4e23-bfcc-be8e3fe3fcf7
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Thu, 14 May 2026 01:07:59 +0000
-Received: from dev-dsk-sauravsc-1a-8777b848.eu-west-1.amazon.com
- (172.19.118.34) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37; Thu, 14 May 2026
- 01:07:57 +0000
-From: Saurav Sachidanand <sauravsc@amazon.com>
-To: Will Deacon <will@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Besar Wicaksono
-	<bwicaksono@nvidia.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, "Andi
- Shyti" <andi.shyti@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<aghayev@amazon.com>, <juew@amazon.com>, Saurav Sachidanand
-	<sauravsc@amazon.com>
-Subject: [PATCH 4/4] perf: nvidia_t410_c2c: handle PERF_EF_UPDATE in stop
-Date: Thu, 14 May 2026 01:06:29 +0000
-Message-ID: <20260514010629.76558-4-sauravsc@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260514010629.76558-1-sauravsc@amazon.com>
-References: <20260514010629.76558-1-sauravsc@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZ3LEoQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E30C19425;
+	Thu, 14 May 2026 01:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778723709;
+	bh=LcNQ99OMkwCl+SeLj818sRc6L7Zfg4+AM0WSBv9W5ME=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=GZ3LEoQPMbBYTZKVG7l5Xlu6m+gbtGx/dnWqxJTE5aeJmos1INNv9b8QZ/rieAx3x
+	 /fNMC7+uNZEssIImKaNV+sp6OkJIOG0Neprs0Pxd9DQMmaYl9sGLeHoO+9FbIqRtvH
+	 1f3q9RCN8N34NDzX4BUOVoauLvXrilE2nYVuvFHAY08T7rb12SffXwxF1q3pPpc89Y
+	 MXkeimVMtruvtaxzvdyEB070D1w9kyUxA+O1ZfAMnddJ/GdthKTFu2pFrkMP7AYsuw
+	 xH3k7wYcwy/nhct81SjuR5OTyq+KXaROdh8mqDWfBG7ce+fU3JCfOx7P3Ljm5+xtAM
+	 arQyirGd9AdQg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 08/18] perf build: Move BPF skeleton generation out
+ of Makefile.perf
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512174638.120445-9-irogers@google.com>
+References: <20260512174638.120445-9-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 May 2026 01:55:08 +0000
+Message-Id: <20260514015508.E1E30C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWC001.ant.amazon.com (10.13.139.223) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-nv_c2c_pmu_stop() does not read the final counter value when called
-with PERF_EF_UPDATE. The last counter delta is lost when perf core
-removes the event.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Low] The `bpf-skel-clean` target does not clean intermediate `.bpf.o` fi=
+les generated for benchmark skeletons.
+- [Low] The `bpf_skel_deps` variable is defined but never utilized.
+--
 
-Add the standard PMU stop pattern: bail out if already stopped, call
-nv_c2c_pmu_event_update() when PERF_EF_UPDATE is requested, then mark
-the event stopped.
+commit 82e063c8cb877e030e9f5ae7b0984031f34bbb1e
+Author: Ian Rogers <irogers@google.com>
 
-Fixes: 2f89b7f78c50 ("perf: add NVIDIA Tegra410 C2C PMU")
-Signed-off-by: Saurav Sachidanand <sauravsc@amazon.com>
----
- drivers/perf/nvidia_t410_c2c_pmu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+perf build: Move BPF skeleton generation out of Makefile.perf
 
-diff --git a/drivers/perf/nvidia_t410_c2c_pmu.c b/drivers/perf/nvidia_t410_c2c_pmu.c
-index 662fa1bc833a5..39d0e661e4c5c 100644
---- a/drivers/perf/nvidia_t410_c2c_pmu.c
-+++ b/drivers/perf/nvidia_t410_c2c_pmu.c
-@@ -394,6 +394,12 @@ static void nv_c2c_pmu_start(struct perf_event *event, int pmu_flags)
- 
- static void nv_c2c_pmu_stop(struct perf_event *event, int pmu_flags)
- {
-+	if (event->hw.state & PERF_HES_STOPPED)
-+		return;
-+
-+	if (pmu_flags & PERF_EF_UPDATE)
-+		nv_c2c_pmu_event_update(event);
-+
- 	event->hw.state |= PERF_HES_STOPPED;
- }
- 
--- 
-2.47.3
+This refactors the BPF skeleton generation to better achieve directory
+isolation. It moves the generation infrastructure out of Makefile.perf into=
+ a
+shared bpf_skel.mak, and adjusts local prerequisites.
 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 24581941e912e..d4fc10f36781f 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+
+[ ... ]
+
+>  bpf-skel-clean:
+> -	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS) $(S=
+KEL_OUT)/vmlinux.h
+> +	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKEL_OUT)/*.sk=
+el.h $(SKEL_OUT)/vmlinux.h $(OUTPUT)bench/bpf_skel/*.skel.h
+
+Does the bpf-skel-clean target leave behind intermediate .bpf.o files
+for the benchmark skeletons?
+
+Since bench_uprobe.bpf.c compilation was moved out of util/bpf_skel/.tmp/
+and directly into bench/bpf_skel/.tmp/, it seems the updated clean target
+only removes $(SKEL_TMP_OUT) (which resolves to util/bpf_skel/.tmp) and
+the .skel.h files. It appears to miss the new .tmp directory in the bench/
+tree where Kbuild outputs the intermediate .bpf.o artifacts, which could
+leave files on disk after a clean.
+
+I noticed this was addressed in a later commit ("perf build: Encapsulate
+vmlinux.h and bpftool in bpf_skel.mak").
+
+[ ... ]
+
+> diff --git a/tools/perf/bpf_skel.mak b/tools/perf/bpf_skel.mak
+> new file mode 100644
+> index 0000000000000..bcb704d5af32f
+> --- /dev/null
+> +++ b/tools/perf/bpf_skel.mak
+
+[ ... ]
+
+> +ifeq ($(CONFIG_PERF_BPF_SKEL),y)
+> +BPFTOOL :=3D $(SKEL_TOOL_TMP_OUT)/bootstrap/bpftool
+> +VMLINUX_H :=3D $(SKEL_TOOL_OUT)/vmlinux.h
+> +bpf_skel_deps :=3D $(BPFTOOL) $(VMLINUX_H)
+
+Is bpf_skel_deps used anywhere after being defined?
+
+It looks like the pattern rules duplicate $(BPFTOOL) and $(VMLINUX_H) as
+explicit prerequisites instead, leaving bpf_skel_deps unused.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
+45-1-irogers@google.com?part=3D8
