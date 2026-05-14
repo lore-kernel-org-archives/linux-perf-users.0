@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2833314C5
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 02:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BA329408;
+	Thu, 14 May 2026 03:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778724865; cv=none; b=o1b1D7uaQx3lHjXY79yj2YtSI3KUi3goM+/4c3QZ8V0rlge9jr5yR6ETaBGlCwI1eOtlJOsQ0PWfHAWdKGfNkCvdpFEEFdiGLHYf3VCpfen4sfmT2UuxAB2837m99iwd3UMsfeOBnDCfzvtz15GaDtY/ia/NHw2IxdMwUnOXiWo=
+	t=1778727759; cv=none; b=t0Hws7gm2JpXXGKS8QvTwiAK3FezCdQC+SXqhIHkR63KPJSOQ3/NzxVF0o81jMH6idGUos4oZZ0KCEtxdZVU6Kazx3WYchU26QVUqfieyg8ncLzrwQuKkKlG0NrFpvojyrJyhJH/ISVdICQ4dUfk4kcxZ02RFnH/ofwpwYCXQh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778724865; c=relaxed/simple;
-	bh=VAjDINNf/lfjB+UrZjyvkAx0KjuK3gvqAskzwm/IKeg=;
+	s=arc-20240116; t=1778727759; c=relaxed/simple;
+	bh=ZgL/iWZQoWWxs/biX5CpF4YPd+WsObSPsy1MmddC6q0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gRVhTP+s1HvUcRZzq/XmBC0GlpuE4eadsZSCpmAxJXERXmiX+g/WnGgoWWPmxrLHmt5bzeZG6KmupyrV0tZDY2Y9SSVouDMGXIk+cypO7R9cfQlRR0TcQNoyPaIeW8H9/meMMU3f8VtSDa0iLNmrhIsR2bML5RNRZGy9TAmkQzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZswrKZGv; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=FVnNs0QH+bcC+m4F3Z7e+iqeRoqjtPAfa+pzA5UGzQtlKFOggiaZ0TfhWljqBlDjNx6XhcJy71sMzLTXJaJF1s8KT15ZJ0S8gxEVG7HEki1On7aUV+VgmPYF+fj+w390F3xie/ZsalR6JqqNEWCUdsqKW2c9uADtjWErm1lAoT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTCtQnU9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZswrKZGv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 821EEC19425;
-	Thu, 14 May 2026 02:14:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTCtQnU9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E2E8C19425;
+	Thu, 14 May 2026 03:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778724864;
-	bh=VAjDINNf/lfjB+UrZjyvkAx0KjuK3gvqAskzwm/IKeg=;
+	s=k20201202; t=1778727758;
+	bh=ZgL/iWZQoWWxs/biX5CpF4YPd+WsObSPsy1MmddC6q0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=ZswrKZGv8oC+UxvsvHs7KwjYGrxgt+FzFLx1E1dbLnRk4UmzkcGTlu6J5/J5PD660
-	 cUeNNcB+OBzswuIo9HqJGWqB21A5iP936VEGecuQr2I+hVNqjNEvHjfU1o0BeSFJFm
-	 SOecAHF8u0YEN2/vj/lZ0FGYc5jQSTRmVceoggObuVl/H8rrfzwuxWrvWQD3gFfXe/
-	 7PEuWOKdzvl49GbTv/8AgVxChg7OMdk7zd0KHreF6HyFIhazmKsZE2/3huIj1A1DWN
-	 4HjKb1xqucKew0Az1a6lZzlcSmzoOsgvWB2IPRY/i6QPfGk2wLNEJeCWG/zlwOGrVS
-	 YjLAcRXWiO7JA==
+	b=QTCtQnU9rPU0fvWme4gdDv5+E95t31tXihBgXQvcVpwh5uth3v3WdDJpPZiPl6YBu
+	 MsMPreIUEdCx36XoCMlXTvf2oCtejgl93p2VQEZyREIHD8n2EVJ2dCCnjFf9DaBcpi
+	 Ygwv+I7deAWu7/5q2QbERojuIFfi5MTb7lQcjoMAAlLWveLGoTLLcJ+Njy8s3OZ5dC
+	 i5lYN3blo1Jicu+Q/dBDKT7/Fk9bI0L7zbFBCjsSjbvd1xPU3UbjQQNfzaJsX5wrak
+	 UzUviKB+coMWnMUEOfJm52h7KAja5FZl0Hfn8ehV77k4axtcmzahuAtNyHJtA3AP3D
+	 PwqQfYthUY4Yw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/7] perf/x86/intel/uncore: Let init_box() callback
- report failures
+Subject: Re: [PATCH v2 10/18] perf build: Move static libbpf dependency out
+ of prepare step
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zide Chen" <zide.chen@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512233048.9577-3-zide.chen@intel.com>
-References: <20260512233048.9577-3-zide.chen@intel.com>
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260512174638.120445-11-irogers@google.com>
+References: <20260512174638.120445-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 02:14:24 +0000
-Message-Id: <20260514021424.821EEC19425@smtp.kernel.org>
+Date: Thu, 14 May 2026 03:02:38 +0000
+Message-Id: <20260514030238.8E2E8C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,61 +46,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The adl_uncore_msr_init_box callback was missed during the return =
-type conversion and still returns void, causing a build failure and a runti=
-me functional regression.
+- [Low] Missing $(LIBBPF) dependency in $(LIBPERF_TEST_IN) target causing p=
+arallel build race condition.
 --
 
-commit 9d842c01126a1db0940fbdd8cefa558fa67a3758
-Author: Zide Chen <zide.chen@intel.com>
+commit e65547c4ccfbe83e535bb280ee457abfc8a0629d
+Author: Ian Rogers <irogers@google.com>
 
-perf/x86/intel/uncore: Let init_box() callback report failures
+perf build: Move static libbpf dependency out of prepare step
 
-The init_box() callback currently returns void, so initialization
-failures are silently ignored and the box is still marked initialized.
-Change the callback to return int so platform code can report errors
-back to the common uncore layer.
+This commit removes the static libbpf dependency from the prepare step
+and moves it into specific targets like bench, util, and the main perf
+binary. This change aims to reduce serialization during the early build
+phases to improve parallel build performance.
 
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncor=
-e.h
-> index 2e41a66f00551..25a44d3de6e7d 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -129,7 +129,7 @@ struct intel_uncore_type {
->  #define events_group attr_groups[2]
+Tested-by: James Clark <james.clark@linaro.org>
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Signed-off-by: Ian Rogers <irogers@google.com>
+
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index ec0e91bedce12..5af767415c113 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+
+[ ... ]
+
+> @@ -636,10 +636,6 @@ prepare: $(OUTPUT)PERF-VERSION-FILE \
+>  	$(LIBSUBCMD) \
+>  	$(LIBSYMBOL)
 > =20
->  struct intel_uncore_ops {
-> -	void (*init_box)(struct intel_uncore_box *);
-> +	int (*init_box)(struct intel_uncore_box *);
+> -ifdef LIBBPF_STATIC
+> -prepare: $(LIBBPF)
+> -endif
+> -
 
-It appears the return type for the init_box callback was changed here, but
-adl_uncore_msr_init_box() in arch/x86/events/intel/uncore_snb.c was missed
-and still returns void:
+Looking at tools/perf/tests/sigtrap.c, it is built unconditionally and
+includes <bpf/btf.h> when HAVE_BPF_SKEL is defined.
 
-static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
-{
-	if (box->pmu->pmu_idx =3D=3D 0)
-		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
-}
+Because $(LIBBPF) is removed from the prepare step, there is no longer a
+guarantee that libbpf headers are installed before the tests compile unless
+explicitly specified.
 
-Could this cause a build warning or failure (e.g., incompatible pointer
-type)?
+Does $(LIBPERF_TEST_IN) also need an explicit dependency on $(LIBBPF)?
 
-Also, at runtime, uncore_box_init() expects an int return value. Would it
-end up reading an uninitialized return value from the eax register?
+Could a parallel build attempt to compile sigtrap.c before the concurrent
+$(LIBBPF) target finishes installing its headers into the include directory,
+causing an intermittent missing header regression during make -j builds?
 
-If the last operation in adl_uncore_msr_init_box() is wrmsrq(), which
-loads SNB_UNC_GLOBAL_CTL_EN into eax, could this residual non-zero value
-cause uncore_box_init() to incorrectly treat the initialization as a failur=
-e?
-
-If the initialization failure marks the PMU as broken, would this render the
-Alder Lake (ADL) MSR uncore PMU inaccessible to userspace?
-
->  	void (*exit_box)(struct intel_uncore_box *);
->  	void (*disable_box)(struct intel_uncore_box *);
->  	void (*enable_box)(struct intel_uncore_box *);
+>  $(OUTPUT)%.o: %.c prepare FORCE
+>  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3D$(build-dir)=
+ $@
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512233048.9577=
--1-zide.chen@intel.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
+45-1-irogers@google.com?part=3D10
