@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF6D63B95F0;
-	Thu, 14 May 2026 05:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B4C1F131A;
+	Thu, 14 May 2026 05:07:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778735229; cv=none; b=KuY7AfiqVHQKJQFmDJ7k7NAs9cV5sIVBVluZRxCrFNsHo5BHUNPYyjdxU4N3EQ5bml+wVq5sWFDOhQQQfBVnFf5hw9KvzUUvhny1qxTzL8+2x4P0mBg+0A7dWs60f8ZHHKjOoQawim8vmS5i5cVuuJPHRUhMdgZ19ZQ35Zgm28I=
+	t=1778735243; cv=none; b=IpP2eyquLCC3StFXiIRXmQf/nnjwHX5lzgIxkTTOuZk3pb42u9e5/Y2d9+UwrjcQ910nWPcSJjvZWdZ1n3en/wb/1L2SfWCXhyF/QeAYHR44Wp5Emnk3ty1WlZALTeblP4FCKps1Hjn7IQSm0mKSZArjL2X2V78IiIKtLAIatOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778735229; c=relaxed/simple;
-	bh=BANIRIqsq1p4Sc4QnkiivpJhCJpebYuZdrDjdfih8k8=;
+	s=arc-20240116; t=1778735243; c=relaxed/simple;
+	bh=m1VX1+Cs1y6NAynCJMAnljF2dh+IIFzjeI0LtRTOziM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jTZ6S8/8G9A6dR1OH/hAYV3C8IBYYAi9R5S4XCPRwbEtXJ97CMJPMNKFqfRd8taz06XwMAjJbYgLKkZ3yFsYu+ebBNue7CiJ+su6B3pcf5IYl6ZFEj2uF8JzqMwFz7LwLY7Tg72svLGonLtsTSH626Q5w/+FgUha+wvECM+BuFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=u6aPQJ7B; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=qgrT7Q6jEIKbv1WXFzN4jWN4XjboXOm+IgYl2GPuYigRHQwv/wM0hDHymdMYavKpKMidlMMEMNdg+eT7baceNnFR6madekh43vMKbEpbx/TzE8gaty3kj1tSg/kZ/NcTkgqJjQeX6kU+MALtcLMLbpIuBpMumETNvHMaZZJgj/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=E/oh4tN/; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="u6aPQJ7B"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="E/oh4tN/"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2A8634FE;
-	Wed, 13 May 2026 22:06:59 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ADC51655;
+	Wed, 13 May 2026 22:07:15 -0700 (PDT)
 Received: from entos-yitian-01.Arm.com (unknown [10.168.197.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A3BAE3F7B4;
-	Wed, 13 May 2026 22:06:49 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 951093F7B4;
+	Wed, 13 May 2026 22:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1778735224; bh=BANIRIqsq1p4Sc4QnkiivpJhCJpebYuZdrDjdfih8k8=;
+	t=1778735240; bh=m1VX1+Cs1y6NAynCJMAnljF2dh+IIFzjeI0LtRTOziM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u6aPQJ7BZumqfz7tiHCCZ5t+ueVed1AOrEwtNEyTCj+4NwgHp4vP4fA6JCwowBPef
-	 g040pef32i4nOIkeFUYUReBkJGPP7GNHe9Ep2/337vVuPkKKUbMnw/ebiHUnzEX17l
-	 UJMfvVR4OtpSKlNBiTseH8qZl1SU/yS+4JiOqAK4=
+	b=E/oh4tN/nyhRAFt0FylqFv26rxNYr0RLbwJycvUtCBR5EOuw4xnrNUwGQFUl8Fdnr
+	 aMaaYdqq9tcsYZ8Usbbj9Jd4MTN28+Kac6h6lxa7WKAFMWPWsLaVF2fDlTou0GExN0
+	 K25/GUzhMJfdsgdFVJlXBsG+2zTNhbDSt5LZ5Ziw=
 From: Jia He <justin.he@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	Petr Mladek <pmladek@suse.com>,
 	Kees Cook <kees@kernel.org>,
 	David Disseldorp <ddiss@suse.de>
-Subject: [PATCH 2/7] kfence: kunit: skip when no pool is available
-Date: Thu, 14 May 2026 05:04:50 +0000
-Message-Id: <20260514050455.2954509-3-justin.he@arm.com>
+Subject: [PATCH 3/7] lib/math/int_log: drop WARN_ON for value == 0
+Date: Thu, 14 May 2026 05:04:51 +0000
+Message-Id: <20260514050455.2954509-4-justin.he@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260514050455.2954509-1-justin.he@arm.com>
 References: <20260514050455.2954509-1-justin.he@arm.com>
@@ -75,41 +75,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When KFENCE is compiled in but disabled at boot (KFENCE_SAMPLE_INTERVAL=0)
-or __kfence_pool is not allocated, every kfence kunit case fails with
--EINVAL.
-
-Use kunit_skip() so they are reported as skipped instead.
-
-To: Alexander Potapenko <glider@google.com>
-To: Marco Elver <elver@google.com>
-To: Dmitry Vyukov <dvyukov@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-mm@kvack.org
+intlog2(0) and intlog10(0) already return 0, and the math-int_log
+kunit suite passes {0, 0} as a valid input. The leftover WARN_ON(1) on
+that path produces a backtrace per test run. Just remove it.
 
 Signed-off-by: Jia He <justin.he@arm.com>
 ---
- mm/kfence/kfence_test.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/math/int_log.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-index 5725a367246d..e376329dd621 100644
---- a/mm/kfence/kfence_test.c
-+++ b/mm/kfence/kfence_test.c
-@@ -822,8 +822,10 @@ static int test_init(struct kunit *test)
- 	unsigned long flags;
- 	int i;
+diff --git a/lib/math/int_log.c b/lib/math/int_log.c
+index 8f9da3a2ad39..8585207cbe7f 100644
+--- a/lib/math/int_log.c
++++ b/lib/math/int_log.c
+@@ -59,10 +59,8 @@ unsigned int intlog2(u32 value)
+ 	unsigned int significand;
+ 	unsigned int interpolation;
  
--	if (!__kfence_pool)
--		return -EINVAL;
-+	if (!__kfence_pool) {
-+		kunit_skip(test, "kfence pool not allocated or kfence not enabled");
-+		return 0;
-+	}
+-	if (unlikely(value == 0)) {
+-		WARN_ON(1);
++	if (unlikely(value == 0))
+ 		return 0;
+-	}
  
- 	spin_lock_irqsave(&observed.lock, flags);
- 	for (i = 0; i < ARRAY_SIZE(observed.lines); i++)
+ 	/* first detect the msb (count begins at 0) */
+ 	msb = fls(value) - 1;
+@@ -116,10 +114,8 @@ unsigned int intlog10(u32 value)
+ 	 */
+ 	u64 log;
+ 
+-	if (unlikely(value == 0)) {
+-		WARN_ON(1);
++	if (unlikely(value == 0))
+ 		return 0;
+-	}
+ 
+ 	log = intlog2(value);
+ 
 -- 
 2.34.1
 
