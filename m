@@ -1,143 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D9C38F925
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 17:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D11390992
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 17:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778779757; cv=none; b=e2MPYSemwVPxabBQWy46zmk1Lhi31yE6CufkWrjy38AOFasafq1+GCFvuY34WdYxi26cbzng2EZTe3v6ZAy371c/QoDcHDgABNbUF17LE1mQsrjd1FXRDWvCfXDuJ2ODGJxL7GhKijykcLMim+D31E7cTIREmizd/n1oo26tXzQ=
+	t=1778780074; cv=none; b=b/jI/xcxJ8enr5T0Ko0v7I3wXzLd+z2EeWB+toaqCcw6uM0R3BegIBsQm7BfYp2jggf67cQ0LysNizsUOFzNPsTBMYPGPTRO91CKS9IWRJhsSRIO3EkaKmDZeYhvutKTr8FIjgQ782yAU4iVeootb+spHCw3VfUBmT4EVA0OiUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778779757; c=relaxed/simple;
-	bh=seQA3Gv95WJ6nycxWNYSQccFSi3c3wuAv69Pw07/FtM=;
+	s=arc-20240116; t=1778780074; c=relaxed/simple;
+	bh=P19FMIXj7eBrKNpREZaHfKGmZCUMOFj+HQCMfclivL4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HRGmhrwglDWoUgLlPQHCICK/MbJw5mZRA1CJZZvsxSmrN+MLcEE2CLjJZ744PLICuebiQwOcdl14rM+hUF0yl/zTfJlDuxo0QEUbP/aBrWkC/HQBeg1kxylGq30cRjgrcR+gnQGgCFpvXQHgHPOshT2Lnfil7qVjr5luTxavMno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AF4mMZg1; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Zu1BcXMS+T6aR1jVEhUNV5Nqn4prrxFysUf9rON/FGEiFBsyEsnCVkuo/E19bz76l/2iTde7NfGJaFxZU3xu27n58EqpuCnBkb1URvPE5duioXTJBBjYnLYDMK7xfTP5YhlXAzf5L7v5aDVSXbk51/v9w5WNr3NDp4t+V6qDz68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YM3Cyc13; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AF4mMZg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07FAC2BCB7;
-	Thu, 14 May 2026 17:29:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YM3Cyc13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51DAC2BCB3;
+	Thu, 14 May 2026 17:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778779757;
-	bh=seQA3Gv95WJ6nycxWNYSQccFSi3c3wuAv69Pw07/FtM=;
+	s=k20201202; t=1778780073;
+	bh=P19FMIXj7eBrKNpREZaHfKGmZCUMOFj+HQCMfclivL4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=AF4mMZg1rEGAABD2Ad4C27jOh0+lZ6+F4gc8QTrQ35Ne4wdWwIwAcXnYwDwRSppu6
-	 g7Homf48e9cWEMQUgDT8LqaqEtR5nA9T3NJoGqbi9MELPAb21T95bhZwhdHhKFQGSm
-	 bmB4jinGWQZfAEJIZzI/HbXCiklVoa48htGSBBSb1QzmsAhVjkE+hZKN+DMoH8TV82
-	 mY9WoJlzyHNpK4SbAb31PZWw2agGtkB0Dsa7jlR+AfTteUP1EjqDsMzqU5ALabcg+p
-	 XBGn1LqqtoNlPEDOwRvxZoXvrTDd61Pv5sHOFK+8SqVJLTkRKnlBFgsziRf5JC6R68
-	 /UwZJDLirq/oQ==
+	b=YM3Cyc13UaYvPucrU9svYlD1BfqJgJFJLmni575cN9jpHP+O4iqzk55JpOLtPEmxk
+	 HNfjbAwMDEYoGvfkCubx0s4iYlfkKabPaJs/6hbGWHxVIchcBqTAsPIEm7RjZ2t9TK
+	 gwIDfPIFzu2trOIIxogtTme97nCJpe8zfk0slrq0LjJvN+lqnG1ThKZfmp1Gdr10qY
+	 PolEt1hqwDCsOKVQBPZYMElUufr15Izp9d4Dshu5eLEVmhi5O3+FvwbfLA3Nr6lcEb
+	 yIpoE4WbSaFkq1YuxDuT+0/s4d9T9C2EzJ/QlIV/STZbVpYi+MHLtqDo5WmnqwHMuL
+	 d6wz7YAiXTfkw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 12/32] perf inject: Don't pass evsel with sample
+Subject: Re: [PATCH 4/4] perf: nvidia_t410_c2c: handle PERF_EF_UPDATE in
+ stop
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Saurav Sachidanand" <sauravsc@amazon.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512223001.2952848-13-irogers@google.com>
-References: <20260512223001.2952848-13-irogers@google.com>
+In-Reply-To: <20260514010629.76558-4-sauravsc@amazon.com>
+References: <20260514010629.76558-4-sauravsc@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 17:29:16 +0000
-Message-Id: <20260514172916.E07FAC2BCB7@smtp.kernel.org>
+Date: Thu, 14 May 2026 17:34:32 +0000
+Message-Id: <20260514173433.B51DAC2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Critical] Stack buffer overflow when appending ID samples to synthetic e=
-vents containing long filenames.
+- [Critical] Calling nv_c2c_pmu_event_update() in nv_c2c_pmu_stop() causes =
+double-counting and massive counter wrap-around corruption.
+- [High] Logically stopping the event fails to exclude counts because the h=
+ardware counter continues running and start logic is unmodified.
+- [High] nv_c2c_pmu_stop() incorrectly uses an early return on PERF_HES_STO=
+PPED, permanently dropping final counter updates.
+- [Medium] nv_c2c_pmu_stop() fails to set PERF_HES_UPTODATE after updating =
+the event.
 --
 
-commit 9f534ae0f7b23daf64c88ff86d355ff80529a67b
-Author: Ian Rogers <irogers@google.com>
+commit 1d56e58b1d1592eb3b08b91d9c3d09bd821ef6ad
+Author: Saurav Sachidanand <sauravsc@amazon.com>
 
-perf inject: Don't pass evsel with sample
+perf: nvidia_t410_c2c: handle PERF_EF_UPDATE in stop
 
-This commit removes the redundant evsel parameter from injection paths since
-it is already present in the sample structure. It refactors the synthetic
-event functions to read the sample_type directly from sample->evsel.
+This commit updates nv_c2c_pmu_stop() to read the final counter value when
+called with PERF_EF_UPDATE, aiming to prevent lost counter deltas when the
+perf core removes the event.
 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 85bee747f4cd2..de812a2befbc7 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -2252,13 +2252,15 @@ int perf_event__synthesize_build_id(const struct =
-perf_tool *tool,
->  				    struct perf_sample *sample,
->  				    struct machine *machine,
->  				    perf_event__handler_t process,
-> -				    const struct evsel *evsel,
->  				    __u16 misc,
->  				    const struct build_id *bid,
->  				    const char *filename)
+> diff --git a/drivers/perf/nvidia_t410_c2c_pmu.c b/drivers/perf/nvidia_t41=
+0_c2c_pmu.c
+> index 662fa1bc833a5..39d0e661e4c5c 100644
+> --- a/drivers/perf/nvidia_t410_c2c_pmu.c
+> +++ b/drivers/perf/nvidia_t410_c2c_pmu.c
+> @@ -394,6 +394,12 @@ static void nv_c2c_pmu_start(struct perf_event *even=
+t, int pmu_flags)
+> =20
+>  static void nv_c2c_pmu_stop(struct perf_event *event, int pmu_flags)
 >  {
->  	union perf_event ev;
->  	size_t len;
-> +	u64 sample_type =3D sample->evsel ? sample->evsel->core.attr.sample_typ=
-e : 0;
-> +	void *array =3D &ev;
-> +	int ret;
-> =20
->  	len =3D sizeof(ev.build_id) + strlen(filename) + 1;
->  	len =3D PERF_ALIGN(len, sizeof(u64));
+> +	if (event->hw.state & PERF_HES_STOPPED)
+> +		return;
 
-[ ... ]
+Does this early return permanently drop final counter updates?
 
->  	ev.build_id.header.size =3D len;
->  	strcpy(ev.build_id.filename, filename);
-> =20
-> -	if (evsel) {
-> -		void *array =3D &ev;
-> -		int ret;
-> -
-> -		array +=3D ev.header.size;
-> -		ret =3D perf_event__synthesize_id_sample(array, evsel->core.attr.sampl=
-e_type, sample);
-> -		if (ret < 0)
-> -			return ret;
-> -
-> -		if (ret & 7) {
-> -			pr_err("Bad id sample size %d\n", ret);
-> -			return -EINVAL;
-> -		}
-> +	array +=3D ev.header.size;
-> +	ret =3D perf_event__synthesize_id_sample(array, sample_type, sample);
+If the core stops the event without requesting an update first (for example,
+via pmu->stop(event, 0) during event throttling), the event is marked
+PERF_HES_STOPPED.
 
-Does appending the ID sample here risk a stack buffer overflow if the
-filename is long?
+When the core later attempts to drain the final unread counts by calling
+pmu->stop(event, PERF_EF_UPDATE), the early return will trigger and the
+final update will be entirely skipped.
 
-The ev variable is allocated on the stack as a union perf_event. Its
-size is bounded by its largest member (which is struct perf_record_mmap2,
-totaling around 4168 bytes).
+> +
+> +	if (pmu_flags & PERF_EF_UPDATE)
+> +		nv_c2c_pmu_event_update(event);
 
-If the filename approaches PATH_MAX, ev.header.size will approach
-4168 bytes. Appending an ID sample via perf_event__synthesize_id_sample()
-writes up to 48 bytes to the array, which is positioned at the end of the
-event. Would this write past the end of the ev union and corrupt the
-stack?
+Can this cause double-counting and massive counter wrap-around?
 
-A similar situation seems to exist in
-perf_event__synthesize_mmap2_build_id() as well.
+The perf core wraps event teardowns within perf_pmu_disable() and
+perf_pmu_enable(). For this PMU, nv_c2c_pmu_disable() halts global
+counters, calls nv_c2c_pmu_event_update() to accumulate final counts,
+and then explicitly sets event->hw.prev_count to 0.
 
-There is a subsequent patch in the series titled "perf synthetic-events:
-Bound check when synthesizing mmap2 and build_id events" that appears to
-target this. Is this overflow what that patch is addressing?
+Subsequently, pmu->del() calls nv_c2c_pmu_stop() with PERF_EF_UPDATE, which
+redundantly calls nv_c2c_pmu_event_update() again. Because prev_count was
+just reset to 0 but the stopped hardware counter still retains its final
+value V, the second update computes V - 0 =3D V and erroneously adds the fu=
+ll
+lifetime count to event->count a second time.
 
-> +	if (ret < 0)
-> +		return ret;
-> =20
-> -		ev.header.size +=3D ret;
-> +	if (ret & 7) {
-> +		pr_err("Bad id sample size %d\n", ret);
-> +		return -EINVAL;
->  	}
-> =20
-> +	ev.header.size +=3D ret;
->  	return process(tool, &ev, sample, machine);
+Additionally, this second update overwrites prev_count with V. When the PMU
+restarts, the physical counters clear to 0. The next update will read a
+small new value W, calculate W - V, and cause a massive unsigned 64-bit
+integer underflow.
+
+Also, if the event is stopped logically without disabling the entire global
+PMU, the hardware counter continues incrementing. Since nv_c2c_pmu_start()
+is unmodified and does not synchronize prev_count to the new running
+value, won't all counts accumulated while the event was logically stopped
+still be incorrectly added to event->count upon the next update?
+
+> +
+>  	event->hw.state |=3D PERF_HES_STOPPED;
+
+Should this also set PERF_HES_UPTODATE?
+
+The standard PMU stop pattern usually sets PERF_HES_UPTODATE after an
+update so the core knows the software counter is synchronized with the
+hardware.
+
 >  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512223001.2952=
-848-1-irogers@google.com?part=3D12
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260514010629.7655=
+8-1-sauravsc@amazon.com?part=3D4
