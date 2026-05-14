@@ -1,100 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2C72D836D
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 18:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346682D836D
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 18:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778782700; cv=none; b=LVlU79K+RkK4qB9Hpxc3PqLyro4iDoxsRpb82DnAIqjZ7rInHjBqWd5q0xbECUJqFdZE00TCsH887cE4mFESW5Wqe1zbDb6AWqP2zNrxzIVJIyxXYx4zEkQCK6xhy5f8pAcbVRMM3Qy8/BdG9dMraUS+RuqEzh2eynYTTtpXKEI=
+	t=1778783289; cv=none; b=ZycAYQI9CX9T/hm5rv7K7U5qhHZJbEKnWnp/jR2Kij4f4o8H86Cb4FJh+G1GSSGupsJvSIwqluEWEsMwViOVeZYjV6ih2+vqBb/8CN+Gn9SPJ+AvX3LoxiiwtUjc+Ql3aogxWB/sNnhtASDSMX810U7L09F7Hq12i9ckLykUkbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778782700; c=relaxed/simple;
-	bh=046HVd/IJMN4MEDQEVXjx869rYGDyFMCiq8Ll7HV+oQ=;
+	s=arc-20240116; t=1778783289; c=relaxed/simple;
+	bh=IXUAFQxsjd7jrfq3fX/B6SxfJvVIvdVptvwpfQVzSEY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=En7koSjNAOfoLTu1Bh9fXCaR3bUOJkw9zbbN0ngseKMf6fluVvRAcjJTfesAOhI9V5xzeyKDJKMgEtT1+8tqPKCSRIpjFzhKEXzBhttwY8eHUQwJbIwaTDkwpoc2O5nEQAA+iTNVrTo1ychKB/mHWh4SwOCp9WX2KtKvIIUP+kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6wemSxj; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=YPLp9MgE0OSr2KLTmQM76UR+68JbjUEko6fDNTzuKYXJ5uPcAaVCyiJzq8znk1x0mYJeZQrW0LYzUDF62qKweCP32G8hKDKU3r/8kgsmtIQWGdAWfwuMEAQGZ5J8QP/9obhb48ZpKKzmzFlT0w8B3440hBGa+9/0sOMS8vk5Yik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsLiUeew; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6wemSxj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0713C2BCB3;
-	Thu, 14 May 2026 18:18:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsLiUeew"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9847C2BCB3;
+	Thu, 14 May 2026 18:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778782700;
-	bh=046HVd/IJMN4MEDQEVXjx869rYGDyFMCiq8Ll7HV+oQ=;
+	s=k20201202; t=1778783288;
+	bh=IXUAFQxsjd7jrfq3fX/B6SxfJvVIvdVptvwpfQVzSEY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=E6wemSxjsSDPRtdxdNn4YhTzDFHz6+07UAQWoP+4NFDwoii1qRN9dgBr4px8Py4l/
-	 gA91fGywkIstniZRlLE/mURaQFAUsHUDP/ug1Wokta6LkJcw5fHOR6jvly2AypLFBc
-	 qJWZA9zs4JAaLOA+wbcdEWgR8pB0Lqe80bGJ7XueVdx/lm5ACTgDm1OZ6J89ujek8v
-	 MJVJPY9nES56o7I4vUMQN+XstKbMohG5fcz5+Z3B7kyK/+CIv3VALJU7ssUX6r8fIW
-	 OI49pc+Z+zeEKbI9pf34QGRqIB4A7CEEwoOOQTkQmPXtHKzReoQgsjRI19YyHwBtqn
-	 MKbYbp23JTmNQ==
+	b=UsLiUeewBi3sXoCuIz4WMiexAB06SgcCcoOmBsx7iTQjBO0EwxLg24J2+AxwXrcrs
+	 /g26lJLkUPDeTntHwiY9qoLVvSPz5gVxTkCNU/pB8NX7COUDXGUFY1mwBiCrpmETrn
+	 S01zEc6MteftV1SVaDI4sk8OevRfaCjWW0Hix7yw33JfdtSvM726icjS+TvwFC+3r/
+	 lnwisQW15wmvlqxdbpFQL6TSCbOpMYojNCFeSHnVn9KxsOTGVqjViMtQHVkOqnUoPY
+	 BOAq3xKbNlnPu8EMEJjMuZ1xNc4YC8H7TO42Rfq3pbXGhg3QxOACuA7g5/W4AhnBmb
+	 CSfHjU8st9L4A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] lib/tests: test_ratelimit: fix stress test thread
- lifecycle and leak
+Subject: Re: [PATCH v1 14/14] perf test: Remove /usr/bin/cc dependency from
+ Intel PT shell test
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jia He" <justin.he@arm.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260514050455.2954509-8-justin.he@arm.com>
-References: <20260514050455.2954509-8-justin.he@arm.com>
+In-Reply-To: <20260513230450.529380-15-irogers@google.com>
+References: <20260513230450.529380-15-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 18:18:19 +0000
-Message-Id: <20260514181819.C0713C2BCB3@smtp.kernel.org>
+Date: Thu, 14 May 2026 18:28:02 +0000
+Message-Id: <20260514182802.D9847C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [High] Use-After-Free in kthread_stop() due to uncontrolled child thread =
-exit
+- [High] Missing instruction cache flush causes SIGILL on non-x86 architect=
+ures.
+- [Medium] Corrupted timestamps on non-x86 architectures due to incorrect J=
+IT dump flags.
+- [Medium] Failure to propagate `mmap` errors causes cryptic downstream tes=
+t failures.
+- [Low] Dead code: Fallback error message for unsupported architectures is =
+never reached.
+- [Low] Insecure file creation allows symlink attacks.
 --
 
-commit cb9c7c9c5b3cf7b61d434d8dc2e4e72ebc4cfd3a
-Author: Jia He <justin.he@arm.com>
+commit e93f510895eeeef8fa2a184cec0136d1c167c471
+Author: Ian Rogers <irogers@google.com>
 
-lib/tests: test_ratelimit: fix stress test thread lifecycle and leak
+perf test: Remove /usr/bin/cc dependency from Intel PT shell test
 
-This commit changes the stress test to use kthread_create() and
-wake_up_process() instead of kthread_run() to properly handle creation
-failures. It adds an out_stop label to clean up successfully started
-threads if a subsequent thread fails to start, and resets doneflag
-before spawning threads.
+This commit replaces the runtime compilation of a thread loop and JIT
+workload in the Intel PT shell test with a built-in jitdump workload.
+It adds multi-architecture compatibility by dynamically encoding
+instructions into opcodes for various architectures.
 
-> diff --git a/lib/tests/test_ratelimit.c b/lib/tests/test_ratelimit.c
-> index 33cea5f3d28b2..64f26260c0d85 100644
-> --- a/lib/tests/test_ratelimit.c
-> +++ b/lib/tests/test_ratelimit.c
+> diff --git a/tools/perf/tests/workloads/jitdump.c b/tools/perf/tests/work=
+loads/jitdump.c
+> new file mode 100644
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/jitdump.c
+> @@ -0,0 +1,165 @@
 [ ... ]
-> @@ -105,26 +105,44 @@ static void test_ratelimit_stress(struct kunit *tes=
-t)
-[ ... ]
->  	schedule_timeout_idle(stress_duration);
+> +static FILE *open_jitdump(void)
+> +{
+> +	struct jitheader header =3D {
+> +		.magic =3D JITHEADER_MAGIC,
+> +		.version =3D JITHEADER_VERSION,
+> +		.total_size =3D sizeof(header),
+> +		.pid =3D getpid(),
+> +		.timestamp =3D get_timestamp(),
+> +		.flags =3D JITDUMP_FLAGS_ARCH_TIMESTAMP,
+
+Is it correct to unconditionally set JITDUMP_FLAGS_ARCH_TIMESTAMP here?
+
+On non-x86 architectures, get_timestamp() returns a monotonic timestamp from
+clock_gettime(CLOCK_MONOTONIC). If this flag tells perf inject --jit that t=
+he
+timestamps are raw hardware cycles requiring conversion, won't applying the
+hardware-time conversion to an already monotonic timestamp corrupt the
+injected event timestamps?
+
+> +	};
+> +	char filename[256];
+> +	FILE *f;
+> +	void *m;
 > +
-> +out_stop:
->  	WRITE_ONCE(doneflag, 1);
-> -	for (i =3D 0; i < n_stress_kthread; i++) {
-> +	for (i =3D 0; i < n_started; i++) {
->  		kthread_stop(sktp[i].tp);
+> +	snprintf(filename, sizeof(filename), "jit-%d.dump", getpid());
+> +	f =3D fopen(filename, "w+");
 
-Could this trigger a use-after-free if the child threads exit before
-kthread_stop() is called?
+Does this file creation pattern allow symlink attacks?
 
-When WRITE_ONCE(doneflag, 1) is executed, the child threads running
-test_ratelimit_stress_child() observe the flag and return, which invokes
-do_exit() and drops the task_struct reference.
+If a user manually executes 'perf test -w jitdump' in a shared directory
+like /tmp, an attacker could create a symlink with this predictable name
+(jit-<pid>.dump) to overwrite arbitrary files. Would using open() with
+O_CREAT | O_EXCL be safer here?
 
-If a child thread exits completely before the parent loop reaches its
-kthread_stop() call, kthread_stop() will attempt to access a freed
-task_struct. This appears to affect both the new error path and the
-normal teardown path.
+> +	if (!f) {
+> +		pr_err("Failed to open jitdump '%s'\n", filename);
+> +		return NULL;
+> +	}
+> +	/* Create an MMAP event for the jitdump file. That is how perf tool fin=
+ds it. */
+> +	m =3D mmap(0, page_size, PROT_READ | PROT_EXEC, MAP_PRIVATE, fileno(f),=
+ 0);
+> +	if (m =3D=3D MAP_FAILED)
+> +		pr_err("Error creating jitdump MMAP event\n");
+> +	else
+> +		munmap(m, page_size);
 
-Would it be safer for the parent to take an explicit reference via
-get_task_struct() during creation and use kthread_stop_put(), or
-alternatively, have the children spin on kthread_should_stop() instead
-of exiting immediately on doneflag?
+Should this mmap failure be fatal?
+
+The code logs an error but proceeds to execute the workload and return
+success. Without the MMAP event, the perf tool cannot link the JIT dump,
+which seems like it might cause the test script to fail later with
+confusing errors.
+
 [ ... ]
+> +static int write_jitdump(FILE *f, void *addr, const void *dat, size_t sz=
+, uint64_t *idx)
+> +{
+[ ... ]
+> +	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=
+=3D 1)
+> +		return -1;
+> +	return 0;
+> +}
+[ ... ]
+> +static int jitdump(int argc __maybe_unused, const char **argv __maybe_un=
+used)
+> +{
+[ ... ]
+> +	/* Copy executable code to executable memory page. */
+> +	memcpy(addr, dat, sizeof(dat));
+
+Does this code need an explicit cache flush before execution on non-x86
+architectures?
+
+Architectures like ARM, RISC-V, PowerPC, and MIPS have separate instruction
+and data caches without automatic coherence. Since memcpy() only updates the
+data cache, won't the instruction fetch unit read stale data from the I-cac=
+he
+and trigger an Illegal Instruction (SIGILL) exception?
+
+Could we use __builtin___clear_cache() here?
+
+> +	/* Record it in the jitdump file */
+> +	if (write_jitdump(f, addr, dat, sizeof(dat), &idx) =3D=3D 0) {
+> +		if (sizeof(dat) > 0) {
+> +			int (*fn)(void) =3D addr;
+> +
+> +			/* Call the function. */
+> +			ret =3D fn() - CHK_BYTE;
+> +		} else {
+> +			pr_err("jitdump workload not supported on this architecture\n");
+> +			ret =3D 1;
+> +		}
+> +	}
+
+Is the fallback error message for unsupported architectures reachable?
+
+On unsupported architectures, the dat array has a size of 0. In
+write_jitdump(), when sz is 0, fwrite(dat, sz, 1, f) returns 0, causing
+write_jitdump() to return -1:
+
+	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=3D 1)
+		return -1;
+
+Since write_jitdump() returns -1, the outer if (write_jitdump(...) =3D=3D 0)
+check will fail, and the else branch intended to print 'jitdump workload not
+supported on this architecture' will be entirely skipped.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260514050455.2954=
-509-1-justin.he@arm.com?part=3D7
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
+80-1-irogers@google.com?part=3D14
