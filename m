@@ -1,174 +1,90 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F7D3AC0F1
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 09:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4562848BA;
+	Thu, 14 May 2026 10:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778751164; cv=none; b=nwNSqCgAf9bJ6lWcBkw+P+4OJbMLkSFueVoxYYxOPMU3xYBu6q688Z9kVa2+9KcDMCeZ7K3l+eztY6rrqqR361d4itrDPXGqEvjD0JYLhc1zyVXl8pFa5kO9F/ngXqWiqtxgKeK2aZ2Uc8cJzmsNjB71obWdtZgxym5fgT/PZ/4=
+	t=1778752953; cv=none; b=eXE1RDY5LD0A8vq0lohez2oYLzrttRnJpU0+VfVIKeWb1L4Fkvf5U8bOu6ZO8HyOVLTbVAwJzRqiKhznPCna8plC8d8Bg1Kna5FTeTuQpB39wdt3OZ7FX1Fy28OASFUZQRYQWNCgWdMBE7EIA6K7TwadT2Att45KIwkJ60jFNdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778751164; c=relaxed/simple;
-	bh=rZB6cVP+OB68GQ9mGdUKO+TcRKpuZdabKai7x8UMJI4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iZkBgejMzbcxjYDz+iI1kr1/2cVFoY3DM9N1gDhq/tzkhZwm0BpUa1Pg8ampn2B0cYDUqbZTI4yTKEUunOOXfoqMG931rKXTnrGM49l8kgUN3kdmrE1/UXwRWlR+4xUcQ3eez4lpmCtFDjAwAX91FeNER9s3dKf0z3DOxdkXAv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K06+my5v; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778752953; c=relaxed/simple;
+	bh=I5LGjB3LPZRTrFXwGMMedAZ0l8A/HmoWWktGrbcMPQQ=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=WswJb8dWi8SWS8/CL/Yz3/MhsNsSO82pb0+vQeaXNfsXVSx1Guzy6XsPbbhIzXoGNNmqFnp2YuDizyXwJ2zYUUky75cA9R4HeTrgZoz2Bw9pZDUnN4oudUpe2MKHRnQPnJqEIiyKcYxMy/s8p+5vegg9NuhDMINWu8mObX5kXtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvtV8Hg3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K06+my5v"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43fe3e22e33so4663813f8f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 02:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778751158; x=1779355958; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0xKmC3f9l+RG3PTmyEhaHWpzz2ePbx7CweTWHocme8c=;
-        b=K06+my5vcQEgaWNs9UVMQZyL3U0bos8Nvf/4lGC1tCTXoBNqCpqS6SGUgIZC0Gbwau
-         k0a5YhpXoOIFDn05fRAk4eOpz4FS6+iup+DN3mz4BTVNsDBtztfWf4VLG24lbcVdVLLM
-         0Fap84qn5CLkZ6sEFDn7Iq1WwlACp9AOHsL5uhCEv/jU7Fy1xCxdkgGA9MGh2Dmze2dj
-         ShifqMdb6dfUt9MBkTBEsX8EEEMgbBH46RN2dx8JTygxVpepSQN0CXiB7F0lvAfaPu67
-         2jYrtg2j+xOOacr0PFzwkD/GkKTT8mEwjTlcnMdMgrEayLzyzo0t+QlENFrJrdhGBKNb
-         1dIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778751158; x=1779355958;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0xKmC3f9l+RG3PTmyEhaHWpzz2ePbx7CweTWHocme8c=;
-        b=j3zUlkJ4M+CZJCnS02Hhf0HA0YY5kYtQZcH8AihSIQeLdkH7cNmCq9L8xVxBeR9C68
-         HMW9AsQ4RWUIvpm6Ozbla5vVPRO+ENtKoWC28x9UdqAm3Gw0yRK8BPE0AMXP6kkxRxKk
-         2bLbGe0TkWssT+4MEpyVFvuoAxpM0g/I8z/tDF9kZ8807BjL3NMO+41mWzHQyUF4FToI
-         DHjOm7D26aSwdEce6q2uHVn5E+DNYJ1oG6RFSHRC7D8b2eWJtGkmKzGzBlNYK+Ot06fQ
-         5PsEjDcN32TZI7ntgqCMCZC4qomTS0TpjQ4r54LMRjWYR4YPkpVJMgHdjMW93IurTLcL
-         H9Ow==
-X-Forwarded-Encrypted: i=1; AFNElJ/IsVd5jWGZvqiVlrLHGZIYGx3SQIx4iyXX3+HCnCIZ9Lk2gmZT1ItxxomJumvuzPDtOKMAVMHD7nlhJH1vhVBK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjIa3Yh2mFmqjkkhdu35uX7pgr+MH7FfjGHDq4oYYNugwqJrk+
-	v8z1nq3P1QPs1a1+jlJCg+1dXvDmBvqzC0z7Pp+HgTTgiANguQ45SKe+MqWZVZA3pbg=
-X-Gm-Gg: Acq92OGHGk8baFwuQb+RdNSeVpvOmb7S3odKI+nfTQlGDuv/EFp9U8mj9uKNhm/YazP
-	8n7kHjh+aWqFeB/qJ0XRfC959bAr3YatKgyinhL9Uq/frEybBpA3dIV7c9ytGPX4jPjk65+F8v1
-	X9+cSMH4hzsCcanEuc+jCJvbIf/ag+yIRG6XUpnn1dRGARYYmtkctS7TMZquaqx39wogiYIW7vu
-	rxgdyZN5eSxW8/EPkMGiRbrWGX7DBp7q609DrUAWh2CYtfh/VLIuuHjxmA3wM4Zxb3L6bEh7RcL
-	Hoxz+IjukmMiaoUObQwFgrjR1qdtTpPV0RWpgdI9e6c6aBzH54EnmCcZeRZs7z/EUq3shlJYy5c
-	fc3I791U1qshk2ddSXKEM364Iu8wmHBwix1VbUajGYx105e1nfmW750e1Yn2CoSMsHOhKkdoO2C
-	EHJHHVSPGGUFHFLdDCf5T48pLzY0v0f0pN
-X-Received: by 2002:a05:6000:40da:b0:450:e33b:23de with SMTP id ffacd0b85a97d-45c57dea159mr11278250f8f.2.1778751158215;
-        Thu, 14 May 2026 02:32:38 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da0fe0fecsm5097164f8f.26.2026.05.14.02.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2026 02:32:37 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Thu, 14 May 2026 10:32:12 +0100
-Subject: [PATCH 5/6] tools/build: selftests: Allow versioning LLVM lld
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvtV8Hg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4775C2BCB3;
+	Thu, 14 May 2026 10:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778752953;
+	bh=I5LGjB3LPZRTrFXwGMMedAZ0l8A/HmoWWktGrbcMPQQ=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=lvtV8Hg3FF3mFtVkv62s3NarExlrZoVzcRXoehYpgOkGqsDCqUEXqxx7S1nGlBBBP
+	 SN8kooxAyn6POwG1UC358iK7tGKo8vftXupi17b3eYiBQdMdxQt/IB/H6zQj3yAhQp
+	 /CNh2Jd/I61/ro72qJ8s2wiR6EKRDZzbMS0ApKyzF8skrtt2PJHYt4GPUMsfl3XeaY
+	 KU1cFvXTwPcujQGH7ZokG1KMhmObjxL1sBNdFvc5NFll7WCMWaEjdMV3iLvu/WNInR
+	 YrO/l95WiXD62goABfNC5Ca7kmTkYCVMfmGHBvHSG6LHQ/fjCebOCQudSlA10eGhOT
+	 EcF9dMlyuxxjQ==
+Content-Type: multipart/mixed; boundary="===============3028240220261879341=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Message-Id: <998802d0c3bb407e9bcc61e4fe6db2e3eed7ac06c7c6eca0ed0dd5409a8c2801@mail.kernel.org>
+In-Reply-To: <20260514-james-perf-llvm-version-v1-1-6cac1a9a4c8d@linaro.org>
+References: <20260514-james-perf-llvm-version-v1-1-6cac1a9a4c8d@linaro.org>
+Subject: Re: [PATCH 1/6] tools/build: Allow versioning of all LLVM tools defined in Makefile.include
+From: bot+bpf-ci@kernel.org
+To: james.clark@linaro.org,nathan@kernel.org,nick.desaulniers+lkml@gmail.com,morbo@google.com,justinstitt@google.com,jikos@kernel.org,bentiss@kernel.org,shuah@kernel.org,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,andrii@kernel.org,eddyz87@gmail.com,ast@kernel.org,daniel@iogearbox.net,martin.lau@linux.dev,memxor@gmail.com,song@kernel.org,yonghong.song@linux.dev
+Cc: linux-kernel@vger.kernel.org,llvm@lists.linux.dev,linux-input@vger.kernel.org,linux-kselftest@vger.kernel.org,bpf@vger.kernel.org,linux-perf-users@vger.kernel.org,james.clark@linaro.org,leo.yan@arm.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Thu, 14 May 2026 10:02:32 +0000 (UTC)
+
+--===============3028240220261879341==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260514-james-perf-llvm-version-v1-5-6cac1a9a4c8d@linaro.org>
-References: <20260514-james-perf-llvm-version-v1-0-6cac1a9a4c8d@linaro.org>
-In-Reply-To: <20260514-james-perf-llvm-version-v1-0-6cac1a9a4c8d@linaro.org>
-To: Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- James Clark <james.clark@linaro.org>, leo.yan@arm.com
-X-Mailer: b4 0.14.0
 
-Building with LLVM=... could result in a different version of lld being
-used than the main toolchain for liburandom_read.so because it's
-hardcoded to "lld" in this makefile.
+> tools/build: Allow versioning of all LLVM tools defined in Makefile.include
+>
+> The version of LLVM tools can be given on the build command with
+> LLVM=-15, but this isn't applied to all tools. For example $(CC) gets
+> versioned, but $(CLANG) doesn't. This causes a Perf build with LTO=1 to
+> fail with an error about mixed clang versions:
+>
+>  ld.lld: error: libperf/core.o: Unknown attribute kind (86)
+>    (Producer: 'LLVM18.1.8' Reader: 'LLVM 15.0.7')
+>
+> This file has two "ifneq ($(LLVM),)" blocks adjacent to each other, so
+> merge these blocks making it obvious that all tools should be versioned
+> consistently and there is nothing special about each block.
+>
+> This also reveals that ?= and "allow-override" are used inconsistently
+> between the blocks. "allow-override" is technically only required for
+> builtin variables, but isn't only used on them, and doesn't do any harm
+> if used on a non-builtin. Make them all "allow-override" for
+> consistency. The only functional difference this will cause is if there
+> is a file level definition of one of the variables followed by an
+> "#include of Makefile.include" which will now overwrite. But this isn't
+> done and in a later commit some of the duplicate definitions will be
+> removed for good measure.
+>
+> There are also some other LLVM tools that are not defined here and will
+> be moved in a later commit.
+>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Make it consistent with the rest of the LLVM toolchain by adding an LLD
-variable to Makefile.include. Keep the fallback for other architectures
-in tools/testing/selftests/bpf/Makefile as it seems like it's something
-specific to this make rule and shouldn't be global.
+This looks like a bug fix that corrects inconsistent LLVM tool versioning
+introduced in an earlier commit. Should this include:
 
-Clang accepts either a full path or "ld.lld-15" style inputs to
--fuse-ld= so this will work with LLD defined the same way as the other
-LLVM tools. However, for full paths, we need to use ".../ld.lld" instead
-of the generic driver "lld", but I don't think the original use of "lld"
-was significant as this is always a linux build.
+  Fixes: e9c281928c24 ("kbuild: Make $(LLVM) more flexible")
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+
 ---
- tools/scripts/Makefile.include       | 2 ++
- tools/testing/selftests/bpf/Makefile | 8 ++++----
- 2 files changed, 6 insertions(+), 4 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 380ad84ac51e..5c2d505cba62 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -67,6 +67,7 @@ ifneq ($(LLVM),)
-   $(call allow-override,HOSTAR,$(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX))
-   $(call allow-override,LD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
-   $(call allow-override,HOSTLD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
-+  $(call allow-override,LLD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
-   $(call allow-override,CXX,$(LLVM_PREFIX)clang++$(LLVM_SUFFIX))
-   $(call allow-override,STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
-   $(call allow-override,LLVM_STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
-@@ -91,6 +92,7 @@ else
-   # Some tools still require Clang, LLC and/or LLVM utils
-   $(call allow-override,CLANG,clang)
-   $(call allow-override,LLC,llc)
-+  $(call allow-override,LLD,ld.lld)
-   $(call allow-override,LLVM_CONFIG,llvm-config)
-   $(call allow-override,LLVM_OBJCOPY,llvm-objcopy)
-   $(call allow-override,LLVM_STRIP,llvm-strip)
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 6ef6872adbc3..44ba829e5d4d 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -245,9 +245,9 @@ $(OUTPUT)/%:%.c
- 
- # LLVM's ld.lld doesn't support all the architectures, so use it only on x86
- ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 riscv))
--LLD := lld
-+USE_LD := $(LLD)
- else
--LLD := $(shell command -v $(LD))
-+USE_LD := $(shell command -v $(LD))
- endif
- 
- # Filter out -static for liburandom_read.so and its dependent targets so that static builds
-@@ -258,7 +258,7 @@ $(OUTPUT)/liburandom_read.so: urandom_read_lib1.c urandom_read_lib2.c liburandom
- 		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) \
- 		     $(filter %.c,$^) $(filter-out -static,$(LDLIBS)) \
- 		     -Wno-unused-command-line-argument \
--		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
-+		     -fuse-ld=$(USE_LD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
- 		     -Wl,--version-script=liburandom_read.map \
- 		     -fPIC -shared -o $@
- 
-@@ -268,7 +268,7 @@ $(OUTPUT)/urandom_read: urandom_read.c urandom_read_aux.c $(OUTPUT)/liburandom_r
- 		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) $(filter %.c,$^) \
- 		     -Wno-unused-command-line-argument \
- 		     -lurandom_read $(filter-out -static,$(LDLIBS)) -L$(OUTPUT) \
--		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
-+		     -fuse-ld=$(USE_LD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
- 		     -Wl,-rpath=. -o $@
- 
- $(OUTPUT)/sign-file: ../../../../scripts/sign-file.c
-
--- 
-2.34.1
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/25853166705
+--===============3028240220261879341==--
