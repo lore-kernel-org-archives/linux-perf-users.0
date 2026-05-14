@@ -1,189 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C59402BAF
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 14:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8CED426EB6;
+	Thu, 14 May 2026 15:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778768862; cv=none; b=lqHPJ9sWHQSY0qOaEgu17MlbDHz7d1rGfqqBSUNfpA0yJeYtU1AJT5rQc4zvkdsb2vk/qyAi32JF1SxmE4EV+Bh/ObWsTpc3aLIKaOEtghIdCt9b506FWIRKX0eZW/yhyuGcsZIthDGUaUpGt6WIrPsiAylK71qTOPsMZJA4z5I=
+	t=1778771192; cv=none; b=s0KhnBUm5TpplHaCRaPHwJ8evjASHzbMS1JeMUj6UcmlbkE8FXIKWGENiGYS+J8Jv8k+GbHaEZW+GXoO36mSMmsD/QC/MszQk+f/7HbMQPw3IArcGlLkEtBM4pZpd0CuvV4yqYTL6UiDBfdpukWq0L+1k0cWIwcjOJlYHS++I8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778768862; c=relaxed/simple;
-	bh=eOSLD/WPloCoEPwKyeqSFV9zdb2ZQ812GBy82xn/3Q0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WRGwH9t65odyHnFTkfw1ff7nN5Sot6QTuG2bj569w1rajW2FKPiFhGh3sHWuobaTGTwJ8XxS5Wcb/le8TqVGuqE39JqJGJ6mXO3ahyzXAsx+9KbuMaYxNAVYFy6Fgt+AbnRvSDNRhNDhCCzoobchx2/qZcqkrNXG91oZve9by8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNl/ROHg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778771192; c=relaxed/simple;
+	bh=U3PUcZ2F6a5gcpr9CFqE75dt6gx0phPxqETwxBn1HBM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=js6J/sUaMEWDAVl53c5xt5fg1JW5T/k3tsUvOLEo0Q4f9HMGwrHgESYx3h/aNhyPHNefimy+7wGkqrogaNZNE1xuvE8IAozln5usxaFSCZEUjiAKEjSMeh3wJAqZg4XLD1BB1Pp8AjacrB6GT12LeAcBWottZW9p0h7v8xUo1cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=G959t9pC; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNl/ROHg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC2ECC2BCC9;
-	Thu, 14 May 2026 14:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778768862;
-	bh=eOSLD/WPloCoEPwKyeqSFV9zdb2ZQ812GBy82xn/3Q0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=eNl/ROHgo1SS6BybeVe+UjU4JHsOkloVdckKLVX4VbYLY0LHWP3RwSJSENv+1bO9I
-	 LaZN8S16+PvdSBc7tQGPvYjUJ+YC97Uqf0ap/t9TaBN2ISSA//4lqhikBcdvEG4PoP
-	 /20AY3n/Z9x8FRFvnvuKnCdybWoOJIinUoF1RSXZcc3G4izQonZUZtfQJbEeTdmCvn
-	 nVdedDGWJ/w9EcowL+2j/9TOhulVJvWtUK/ssxBmGxB6SEXedDJYDqpi1NH+Xwww+j
-	 0FyuxHr2C/+2APcQNvkzyJxg385/jj95r83HVlCSkfs+qmkJ+S2OcQ2kbHEhnr60ix
-	 jy/pqDaRHbGRQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/14] perf test: Refactor parallel poll loop to
- drain all pipes simultaneously
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260513230450.529380-7-irogers@google.com>
-References: <20260513230450.529380-7-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 14:27:41 +0000
-Message-Id: <20260514142741.EC2ECC2BCC9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="G959t9pC"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1099A1C00;
+	Thu, 14 May 2026 08:06:20 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9634C3F836;
+	Thu, 14 May 2026 08:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778771185; bh=U3PUcZ2F6a5gcpr9CFqE75dt6gx0phPxqETwxBn1HBM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=G959t9pCPw7KXHQuyiDAIWiks9+PllncCvEO5vwJPCFNOV6f+K9DYGa0xn2FANwY4
+	 28RzWin+q/17w+SpfOmEO59o5SKjj1IbMeSYmsISRkwcPCT93ewtz6pocsGZn8UoAa
+	 Se5P0noEKvsAGUcYpN840ed33bFORv1aIVw55tGY=
+From: Leo Yan <leo.yan@arm.com>
+Date: Thu, 14 May 2026 16:06:08 +0100
+Subject: [PATCH] perf/core: Use AUX pause/resume for throttling
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260514-aux-throttle-fix-v1-1-92bdc84f5922@arm.com>
+X-B4-Tracking: v=1; b=H4sIAN/kBWoC/x2MQQqAIBAAvxJ7bsHUCvpKdBBbayE01EKI/p50n
+ IGZBxJFpgRT80CkmxMHX6FrG7C78Rshr5VBCjmIvtNoroJ5jyHng9BxwV5ZS1o5RXKEmp2Rqv6
+ X8/K+H8CHP31iAAAA
+X-Change-ID: 20260514-aux-throttle-fix-53cce43f3e27
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778771182; l=4912;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=U3PUcZ2F6a5gcpr9CFqE75dt6gx0phPxqETwxBn1HBM=;
+ b=/PihVywh+oEe+jj64kuRztvKRIMNHShpZ46MZ74bQN/t0ZqqhYjvbCs+z76GziJVZrQ2Nikvp
+ WWMwiCGinAwARlrGqNAdzghkgaHCMCkyWfV8nh7A2foGjX4uwYFgE6k
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Medium] The parallel test harness enters a 100% CPU busy loop if a child=
- process closes its stderr pipe (reaching EOF) but continues executing.
-- [Medium] If the test harness hits the open file limit (RLIMIT_NOFILE), it=
- enters an infinite deadlock unable to reap finished children.
-- [Medium] The error and signal cleanup path in `__cmd_test` relies on the =
-legacy `finish_test()` function, causing memory leaks and false failure rep=
-orting.
-- [Low] The patch introduces a malformed function declaration that breaks c=
-ompilation (Syntax Error).
---
+Since commit 9734e25fbf5a ("perf: Fix the throttle logic for a group"),
+perf throttles events in a group with pmu->stop(event, 0) and
+unthrottles them with pmu->start(event, 0).
 
-commit 5bdeb841dfa855250491399c245c42f015b0d82b
-Author: Ian Rogers <irogers@google.com>
+That is suitable for ordinary counter PMUs, where the zero flags mean
+stop/start without updating the count. For AUX trace PMUs, however,
+these two callbacks also manage AUX output state. A throttle/unthrottle
+cycle can therefore stop tracing without ending AUX output, then try to
+begin AUX output again when unthrottling.
 
-perf test: Refactor parallel poll loop to drain all pipes simultaneously
+On Arm CoreSight this can trigger:
 
-This commit refactors the perf test harness to poll and drain output pipes
-from all running children simultaneously into per-child buffers. This preve=
-nts
-child processes from blocking indefinitely when their pipe buffers fill up.
+  perf record -a -e cs_etm/aux-action=start-paused/k \
+	-e cycles/aux-action=pause,period=3000/ \
+	-e cycles/aux-action=resume,period=1500/ -- sleep 10
 
-> diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-comman=
-d.c
-> index b7510f83209a0..60e7df3673169 100644
-> --- a/tools/lib/subcmd/run-command.c
-> +++ b/tools/lib/subcmd/run-command.c
-> @@ -241,8 +241,8 @@ int check_if_command_finished(struct child_process *c=
-md)
->  	sprintf(filename, "/proc/%u/status", cmd->pid);
->  	status_file =3D fopen(filename, "r");
->  	if (status_file =3D=3D NULL) {
-> -		/* Open failed assume finish_command was called. */
-> -		return true;
-> +		/* Open failed. Only assume finished if process no longer exists. */
-> +		return errno =3D=3D ENOENT ? 1 : 0;
->  	}
+  [  181.161897] ------------[ cut here ]------------
+  [  181.161906] WARNING: kernel/events/ring_buffer.c:415 at perf_aux_output_begin+0x1dc/0x1f0, CPU#0:2
+  [  181.234120] arm-scmi arm-scmi.1.auto: timed out in resp(caller: do_xfer+0x1a0/0x558)
+  [  181.234223] cpufreq: __target_index: Failed to change cpu frequency: -110
+  [  181.286675] Modules linked in: panfrost tda9950 hdlcd tda998x drm_shmem_helper drm_client_lib cect
+  [  181.314139] CPU: 0 UID: 0 PID: 352 Comm: perf Not tainted 7.1.0-rc1-00058-gdca922e019dd-dirty #11
+  [  181.323915] Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, B5
+  [  181.334732] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+  [  181.341721] pc : perf_aux_output_begin+0x1dc/0x1f0
+  [  181.346547] lr : perf_aux_output_begin+0x9c/0x1f0
+  [  181.351280] sp : ffff800080003be0
+  [  181.354606] x29: ffff800080003be0 x28: ffff0008023fc000 x27: ffff4b45d287f000
+  [  181.361789] x26: ffff0009764787a8 x25: 0000000000000000 x24: ffff00080dc99710
+  [  181.368970] x23: ffffb4c334553000 x22: 0000000000000001 x21: ffff00080dc99710
+  [  181.376151] x20: ffff0009764787a8 x19: ffff000801cc6000 x18: 00000000ffffffff
+  [  181.383332] x17: 0000000000000000 x16: ffffb4c3a118c998 x15: 0000000000000000
+  [  181.390512] x14: 00003d0900000000 x13: 00000001ffff006e x12: 696765625f747570
+  [  181.397692] x11: ffffb4c3a52758d8 x10: 0000000000000108 x9 : ffffb4c3a117f620
+  [  181.404873] x8 : ffff800080003a58 x7 : ffff000808de4000 x6 : 00000000000fffff
+  [  181.412053] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
+  [  181.419232] x2 : 0000000000000007 x1 : 0000000000000000 x0 : 0000000000000007
+  [  181.426411] Call trace:
+  [  181.428868]  perf_aux_output_begin+0x1dc/0x1f0 (P)
+  [  181.433692]  etm_event_start+0xdc/0x290 [coresight]
+  [  181.438665]  perf_event_unthrottle+0x70/0xa8
+  [  181.442964]  perf_event_unthrottle_group+0x40/0x170
+  [  181.447871]  perf_adjust_freq_unthr_events+0x178/0x1a8
+  [  181.453038]  perf_adjust_freq_unthr_context+0x74/0xf8
+  [  181.458120]  perf_event_task_tick+0xa8/0x290
+  [  181.462418]  sched_tick+0x144/0x2c8
+  [  181.465937]  update_process_times+0xc0/0x198
 
-If finish_tests_parallel() launches many tests concurrently and hits the op=
-en
-file limit (RLIMIT_NOFILE), fopen() will fail with EMFILE.
+Use perf_event_aux_pause() for throttling and unthrottling when the PMU
+has PERF_PMU_CAP_AUX_PAUSE capability. This uses the pause/resume path
+for fast AUX enable and disable, and uses the existing serialization
+against pause/resume recursion.
 
-Since this now returns 0, the test is assumed to still be running. Could th=
-is
-lead to an infinite loop where tests are never marked as finished, and no f=
-ile
-descriptors are ever freed to break the deadlock?
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ kernel/events/core.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index a350db071674a..ad1b941731ca1 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-[ ... ]
-> @@ -508,6 +511,187 @@ static void finish_test(struct child_test **child_t=
-ests, int running_test, int c
->  	zfree(&child_tests[running_test]);
->  }
-> =20
-> +static int finish_tests_parallel(struct child_test **child_tests, size_t=
- num_tests, int width)
-> +{
-> +	size_t next_to_print =3D 0;
-> +	struct pollfd *pfds;
-> +	size_t *pfd_indices;
-> +	size_t num_pfds =3D 0;
-> +static void drain_child_process_err(struct child_test *child)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7935d5663944ee1cbaf38cf8018c3347635e8d31..33d049b9cccfa32d4c6f5c8bd41b866c9ee33e65 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2756,6 +2756,7 @@ void perf_event_disable_inatomic(struct perf_event *event)
+ 
+ static void perf_log_throttle(struct perf_event *event, int enable);
+ static void perf_log_itrace_start(struct perf_event *event);
++static void perf_event_aux_pause(struct perf_event *event, bool pause);
+ 
+ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ {
+@@ -2763,8 +2764,14 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 		return;
+ 
+ 	event->hw.interrupts = 0;
+-	if (start)
+-		event->pmu->start(event, 0);
++
++	if (start) {
++		if (event->pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)
++			perf_event_aux_pause(event, false);
++		else
++			event->pmu->start(event, 0);
++	}
++
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 1);
+ }
+@@ -2775,7 +2782,12 @@ static void perf_event_throttle(struct perf_event *event)
+ 		return;
+ 
+ 	event->hw.interrupts = MAX_INTERRUPTS;
+-	event->pmu->stop(event, 0);
++
++	if (event->pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)
++		perf_event_aux_pause(event, true);
++	else
++		event->pmu->stop(event, 0);
++
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 0);
+ }
 
-This appears to be a duplicate partial declaration of finish_tests_parallel=
-()
-left over from a merge or refactor. Does this syntax error break the build?
+---
+base-commit: e1914add2799225a87502051415fc5c32aeb02ae
+change-id: 20260514-aux-throttle-fix-53cce43f3e27
 
-> +{
-> +	char buf[512];
-> +	ssize_t len;
-> +
-> +	while ((len =3D read(child->process.err, buf, sizeof(buf) - 1)) > 0) {
-> +		buf[len] =3D '\0';
-> +		strbuf_addstr(&child->err_output, buf);
-> +	}
-> +}
-[ ... ]
-> +		if (num_pfds =3D=3D 0) {
-> +			if (running_count > 0)
-> +				usleep(10 * 1000);
-> +		} else {
-> +			int pret =3D poll(pfds, num_pfds, 100);
-> +
-> +			if (pret > 0) {
-> +				for (p =3D 0; p < num_pfds; p++) {
-> +					if (pfds[p].revents) {
-> +						size_t idx =3D pfd_indices[p];
-> +						struct child_test *child =3D child_tests[idx];
-> +
-> +						drain_child_process_err(child);
-> +					}
-> +				}
-> +			}
-> +		}
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
-If a child process closes its stderr pipe (reaching EOF) but continues
-executing, poll() returns POLLHUP. drain_child_process_err() will read 0 by=
-tes,
-but it does not close child->process.err or set it to -1.
-
-Will the next iteration add this open file descriptor back to the poll() ar=
-ray,
-causing poll() to return immediately and create a tight busy loop until the
-child finally exits?
-
-[ ... ]
-> @@ -670,8 +854,9 @@ static int __cmd_test(struct test_suite **suites, int=
- argc, const char *argv[],
->  		}
->  		if (!sequential) {
->  			/* Parallel mode starts tests but doesn't finish them. Do that now. */
-> -			for (size_t x =3D 0; x < num_tests; x++)
-> -				finish_test(child_tests, x, num_tests, width);
-> +			err =3D finish_tests_parallel(child_tests, num_tests, width);
-> +			if (err)
-> +				goto err_out;
->  		}
->  	}
->  err_out:
-
-If finish_tests_parallel() encounters an error and jumps to err_out, the cl=
-eanup
-path loops over all children and calls the legacy finish_test() function.=20
-
-Because finish_test() uses a local string buffer, it does not release the
-dynamically allocated child->err_output populated by finish_tests_parallel(=
-).
-Does this leak memory?
-
-Additionally, finish_test() unconditionally calls finish_command(). If a ch=
-ild
-was already reaped in finish_tests_parallel() (where child->done is true),
-could this second call lead to ECHILD errors and corrupted test results?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
-80-1-irogers@google.com?part=3D6
