@@ -1,140 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53413ADB94
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 11:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41AB3AFAFF
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 11:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778758964; cv=none; b=lZxOjfr5yhknbF4pUjTRXLQXzv6w+j5gs1wbK5W1J9ODdXZsLiVZDzNuBPuSwQy74z0FKsMOQCRYhKWNPHS6Ow/QbOrTACP46M2kiqIJsXfK9TwP5zeZNrAjO+RUQOUV5dxjJpYbNvOGb0+0coNwqHznBGfW6rGqFpZbAOnIu5U=
+	t=1778759066; cv=none; b=BwKMKILStSbWeXojhe0anmO7KCFu+Fz83PF2hkLxaeSpUfwCBtCJCBg46kBJCobKV06y5cx/esCXocI1sxvE8IcpcXfjrFNp/wxw06xvJzAzBl9LslqSA5EkHEIL90K2yhOuk6KmsCwrf8uXDfuccU1EW7MbC0Yq+6x7xxZwwmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778758964; c=relaxed/simple;
-	bh=A0/SQIq+12U/t5WV1scy+LO7cRlMwhsHjt/1SOCVozk=;
+	s=arc-20240116; t=1778759066; c=relaxed/simple;
+	bh=QV42CCGdo48j5TZNTixvMSFQOS9+1QjWZOV/6PazU2E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BDvW33Uj8VPTySTVF+XSqom0i+0R0sJ/g3nldI3VznU+VJHF1zULHIF6JCktZR4C7pMMvbwlxrclqMG9ZJ7Ug9ZAKVvvYtlD/Ude/qOgpvVsCrLKDefZUG2fWPGtjbBe7pa8dFJz6cE6LHmDnVm76Nu/q1FP/xJKaau7kmHFN10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dls3asc5; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=rThDW5Kd2GpGB4Sr3cKK2sLLXEawdv5nD2MtPlPa/TFH8hB6elgBSa7mj23UMbKRsGw/Qa0eOlo/fX1m/YLcpcQklRSZrWyIp7pJMfPQOEUV0JK0V9fjRSos55YZ4v0kGpKg66uS0J6nB3lWulribVwx/dG0hhfDnT2vJi5x7xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTXhLFI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dls3asc5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4320FC2BCB8;
-	Thu, 14 May 2026 11:42:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTXhLFI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33919C2BCB3;
+	Thu, 14 May 2026 11:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778758964;
-	bh=A0/SQIq+12U/t5WV1scy+LO7cRlMwhsHjt/1SOCVozk=;
+	s=k20201202; t=1778759066;
+	bh=QV42CCGdo48j5TZNTixvMSFQOS9+1QjWZOV/6PazU2E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=dls3asc58dLTIMslmCfY1u3/F2yclhWs4w1KPcLl3t3AWS4TyFTESAjFx7vYICU6p
-	 Kb91SDMjylUVoVbnFAiDgLAU3uPmubWfyD//7/K18PGO+HVKCdGCNn05jXGiRckaCC
-	 hinQMgh+7JNny7CLlRXyO3NZI6oiLAaBuuOBxAnikxmqjneDctO78GgNY8b7quLLvx
-	 6CHiIMoDujA7ETllHFZNveE00uWXxDmHMWTqm8o4JddqA0fJtU7yOq0CFgdk7gV/na
-	 kYLfW/HfdAqx5/43UdFsavN6prI/lpdnP1so01FxSV3bvJeZVpC1oUFQknNhahNT9y
-	 GDXbk41UIB8Ug==
+	b=WTXhLFI+cnYKULgTB2K7Y0PGr+fc9VieOCaGpwRJntfZs1bkVoQKMmg4UCa2qblYF
+	 mph/xu51Kl81OTtNbt4k77U+vgtGABHEIJyKm7dJM59KeV7w7DdwnQ6dvJPR0/d/Dm
+	 jGh39wG/rvvHAV/bOW7gVDA4mwgtxOdxcb9N7Yunz9axjxyrQqsZOJva7quykXVF24
+	 /fdIy0Qu2QPqEO27wl4Y+VXZxeSpyMhjMdxo3M34mEtP+4gDoG8W3JlCQDi9d2yYnZ
+	 4G9MSg528GR7UzxWpi2eCoBPe9KEQpveYNenYcdSKCRLSPF9z5F+L0xm6InUTD/uvP
+	 0mD4nDcGr0UdA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 02/14] perf pmu-events: Add API to get metric table
- name and iterate tables
+Subject: Re: [PATCH stable 7.0] perf build: fix "argument list too long" in
+ second location
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Florian Fainelli" <florian.fainelli@broadcom.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260513230450.529380-3-irogers@google.com>
-References: <20260513230450.529380-3-irogers@google.com>
+In-Reply-To: <20260513234639.128528-1-florian.fainelli@broadcom.com>
+References: <20260513234639.128528-1-florian.fainelli@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 11:42:43 +0000
-Message-Id: <20260514114244.4320FC2BCB8@smtp.kernel.org>
+Date: Thu, 14 May 2026 11:44:25 +0000
+Message-Id: <20260514114426.33919C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The `.name` field in `pmu_metrics_table` is erroneously initiali=
-zed to the string literal "NULL" instead of a null pointer for CPUs without=
- metrics.
-- [Medium] The `pmu_metrics_table__for_each_table()` API yields duplicate m=
-etric tables when multiple CPU IDs share the same architecture.
+- [Low] The fix for the 'Argument list too long' build error is incomplete.=
+ It reduces the shell command length by removing the file list from the 'RM=
+' output, but still embeds the full file list via `echo "$^"` within the sh=
+ell command executed by Make. This means the build will still fail with the=
+ exact same E2BIG error if the number of files increases further or if the =
+build directory has a long absolute path.
 --
 
-commit d5de54c2353e5ad926b97d677ee122277c30d0b2
-Author: Ian Rogers <irogers@google.com>
+commit 3997e5cf292c966edf5b226f773ec398849158ff
+Author: Markus Mayer <mmayer@broadcom.com>
 
-perf pmu-events: Add API to get metric table name and iterate tables
+perf build: fix "argument list too long" in second location
 
-This commit adds a name field to struct pmu_metrics_table and populates it
-in generated tables. It introduces functions to retrieve the table name and
-to iterate over all known metric tables.
+This commit addresses an "argument list too long" build error by replacing
+the explicit file list in quiet_cmd_rm with a file count. It also moves a
+comment about xargs above the rule.
 
-> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-ev=
-ents/empty-pmu-events.c
-> index 322e6c2d58cb0..f51062ef25d3f 100644
-> --- a/tools/perf/pmu-events/empty-pmu-events.c
-> +++ b/tools/perf/pmu-events/empty-pmu-events.c
-
-[ ... ]
-
-> @@ -5992,6 +5995,35 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn,=
- void *data)
->  	return 0;
->  }
+> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> index dc5f94862a3bc..dc1df2d57ddc1 100644
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+> @@ -211,10 +211,10 @@ ifneq ($(strip $(ORPHAN_FILES)),)
 > =20
-> +const char *pmu_metrics_table__name(const struct pmu_metrics_table *tabl=
-e)
-> +{
-> +	return table ? table->name : NULL;
-> +}
-> +
-> +int pmu_metrics_table__for_each_table(
-> +	int (*fn)(const struct pmu_metrics_table *table, void *data),
-> +	void *data)
-> +{
-> +	size_t i;
-> +	int ret;
-> +
-> +	for (i =3D 0; pmu_events_map[i].cpuid; i++) {
-> +		if (!pmu_events_map[i].metric_table.pmus)
-> +			continue;
-> +		ret =3D fn(&pmu_events_map[i].metric_table, data);
+>  # Message for $(call echo-cmd,rm). Generally cleaning files isn't part
+>  # of a build step.
+> -quiet_cmd_rm  =3D RM      $^
+> +quiet_cmd_rm =3D RM      ...$(words $^) orphan file(s)...
+> =20
+> +# The list of files can be long. Use xargs to prevent issues.
+>  prune_orphans: $(ORPHAN_FILES)
+> -	# The list of files can be long. Use xargs to prevent issues.
+>  	$(Q)$(call echo-cmd,rm)echo "$^" | xargs rm -f
 
-Are duplicate metric tables yielded here when multiple CPU IDs share the sa=
-me
-architecture?
+Is the fix for the argument list too long error complete here?
 
-In architectures like ARM64 and x86, multiple CPU mappings can point to the
-exact same metric definitions. Because struct pmu_metrics_table is embedded
-directly into each element of the pmu_events_map array, each duplicate CPU
-mapping yields a unique memory address (&pmu_events_map[i].metric_table)
-while containing identical .pmus pointers.
+When Make executes a recipe containing shell operators (like |), it spawns
+/bin/sh -c "<recipe>". The entire recipe string is passed as argv[2] to
+the shell, which is subject to the Linux MAX_ARG_STRLEN limit.
 
-As this makes trivial pointer deduplication impossible for callers, consume=
-rs
-of this API could generate redundant operations for identical tables.
+By removing $^ from quiet_cmd_rm, this change reduces the size of the
+recipe string, which might temporarily drop it below the limit for the
+current number of files.
 
-[ ... ]
+However, echo "$^" | xargs rm -f still embeds the full file list directly
+into the shell argument. If the path lengths or file count grow further,
+couldn't this still exceed MAX_ARG_STRLEN and break the build?
 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 7d325604f04db..a74c5e828bd15 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-
-[ ... ]
-
-> @@ -796,6 +799,7 @@ static const struct pmu_events_map pmu_events_map[] =
-=3D {
->  		.num_pmus =3D {event_size}
->  	}},
->  	.metric_table =3D {{
-> +		.name =3D "{metric_tblname.replace('pmu_metrics__', '')}",
->  		.pmus =3D {metric_tblname},
->  		.num_pmus =3D {metric_size}
->  	}}
-
-If metric_tblname is the string 'NULL' for architectures that have mapped
-events but lack an associated metric table, will this evaluate to
-.name =3D "NULL"?
-
-This writes a 4-character string literal into the generated C code instead
-of a true null pointer. Callers attempting to perform null checks like
-if (table->name) would then erroneously evaluate to true.
+Would it be more robust to bypass the shell argument limits entirely, for
+instance by using Make's $(file ...) function to write the list directly
+to a file?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
-80-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513234639.1285=
+28-1-florian.fainelli@broadcom.com?part=3D1
