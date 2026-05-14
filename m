@@ -1,123 +1,170 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C7434A79E
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 16:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778776511; cv=none; b=lPj1bqjMT410hkbqAwD6IK8HRk7ToPYFRAh0JUadtz2TmdJRJuuXVxdlBfhzaLz7IxePsezXZr1//CxoM5fG4gw5MEMDrrld4qoYA41CL5suAGIuKkF1w0Q7TG0GI4Ml5uqywjyBoenLuI4tU2OFEm8fHLRfv9Z+oir3S7reMGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778776511; c=relaxed/simple;
-	bh=KgYhLbj+7JbYPwwwjNkDDjdOGe6Kx8xfZHNose5DOpk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s/F2Li1cC5mgWdU2iECvpjXVlmVfpd/osCQ0bdvHmk9lyBZlIEIokxoli5bFc9YFC+FfeXhYfeMLaEgjwIdtfUERGwZOaNj5cJhgpg1YuEwy4FFzuNW7wRtVjJ6yY8RyiN2cAXICIVMwHgbV2wav1nYrzRJIis3lfSAm+1RHYIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Iy8/iB00; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE4B336EE9
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 16:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778776670; cv=pass; b=PWCSbz/MjyXVPn3Tg6VvgGWzxSx5GZC0bwMyQtleu9lKWAyhuyCPDaBymzZZ1TGOaFk1UPb3Yxp6JFSHVkhHrUneaIhHGA3ybQ/g2rQNK2b4XkY2rjO/Gwcml8WFFjJDib92BcJ3hNUW8UqIWK56PW3YfT9ghVx7JNTfQZmZkeI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778776670; c=relaxed/simple;
+	bh=ON9stXw0Lg5Y6tyaAT4szKRGcCGwrprdC4U05lyqO2I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tX3UChF+EVORM1ZWkIiX11iu9tvemQ8BpvozpRGe1RzU4tPMnSk0oc55Fv594H+CDCYzx+rSC8Se3Uar6konkgqkjn/JA9zrLrK4Qsl1eXVObvABgrm5XWb2WSJPl7PPLzemv2XssioOj+X3J/z5MzQVxQiTZ6BNRr77fBVn23E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dkt3Rd2G; arc=pass smtp.client-ip=74.125.82.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iy8/iB00"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-132d5ad9c32so7980673c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 09:35:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dkt3Rd2G"
+Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-12c8d0945b3so50c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 09:37:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778776668; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XMXCwP5OB7Kd9P6kxK8wBC5DPRcCjKr2PtdvpXsMg4F9v7lCqjPQIqo2ZwCEKS7d3L
+         bJ4/XWJsusqmXhaXoMiCh9qiWZniIDn1sXqFIK49sVy5NP1WWkPS3gxNGLD2HUTx841G
+         HVkmkrMDUKUynSM7OjWqlperjiZLuvVZ2crIEgXWovV/YNLxrPoI6/TWo6YpQYpSYwxy
+         q+3FnFnKt9r2D7qG+Gac+B5SAz8+7zXkO3kS77yeQYgqqXTit9PCixeYixTkf7nNqHR3
+         vcjRcKDj3YqguEopKu/yopZWWF0NQZ6ByxlTdxugfOTyRcGw4FaoyPWh2Nb7vM1iEWoY
+         vbUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Ig7yBd9mVAEhaPLHSzdHx9IU65mp4w8wTO1kuXURqI4=;
+        fh=w894r0GZn2a9ndd0FALdTx39SRwZEVTFuPFkWkMbtmA=;
+        b=JRglLN77VOmhqql+NnUtDFaS2T9g5v2ekwFnoXI7gFW1tVqHK4LhjmTJ9ZSmN/IE+u
+         B2nwQRqMf175vPXJTcIzFL4WMtN9TLLr0qgu6aTz81KG30p7t8sWKO/1sG6nFzzcAh8S
+         cITT8J2mElZABWPyRc51A9Pgwmy9U7vaFF6OK9iYE8NuxJ8crbIoc1JOicZOsfP7WWGh
+         4Z1ko4xx9G5z0OtvLwKNWeUxCQzzXnC5hIIpNxvdaVgZH9LFL6Qlxnw7Ua8l2fFRGdkM
+         JgCzaURpN8lf60updqAxphZiy8A90iUH+j6LyHq+AYSqn9FZbhJybQxYUX0SHY3J/Ff6
+         h+qg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778776509; x=1779381309; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7UhuB240zbvecKzTnCZgue1l2Usf38vhdVC8tHlI64=;
-        b=Iy8/iB00YcEzrQbbGhsCvnccJsAW6kdybhMAJRzl3mpuw1mwOIqtk0C0Hkfd7IvTPY
-         /NIWqleNGHGt1QSQlJd4CIzPo7ZHqWP1hmR1Gh+ZnRATquoYRxRFcIpA2b16aHvVa6sR
-         otpB9+wTzVfQot1OnbRuxf/USrdKRAWGiVX0WEhrKKncirlzfTSvRAbqiZtl/KPYYRtL
-         cUTPmkHGwNtH5+hBcf7uS7Qlq05dA62k9Vh/c4FHK0DGXxWGi8o1g2gZJLTegSCpnKOD
-         LYx4fAQf3+Vth70itd6519CXmxFDnJG54H+q456v3DosBK3yuZr07vF66qyNO3LgXXTS
-         wd6g==
+        d=google.com; s=20251104; t=1778776668; x=1779381468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ig7yBd9mVAEhaPLHSzdHx9IU65mp4w8wTO1kuXURqI4=;
+        b=Dkt3Rd2GP2mDPo4ohtWE7E6ZNtMOPA2EkptGjz7ad6rFixIRSCl9hsRVNZ/LAfZvvn
+         diMVxmkQ2YoKjKoO6VK9OYFcSMVb0+3VVP/6t20AsGs2zndtOltuqgf9OeRDRch1Os0S
+         e8F8fJ4RlCZ7qy550Ol/rRGCLSpkikx1cGyh1coT7CJhZIiu5q530kJHTIY25YwmySoC
+         N+ykXy4cBb4XXslI9Yku8NX1XTXaOAF5Ievaet0m/5ootLiVq74j4PNSXZjRCOzFD719
+         aJmZi5VDtEPeG6AwwxaC3l+t7lDuhcY7lh7jD+2OSDw+rVo8+6rqLFOgO95LpL3shW75
+         8eYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778776509; x=1779381309;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7UhuB240zbvecKzTnCZgue1l2Usf38vhdVC8tHlI64=;
-        b=sj1LBzkuZdWoI+a7lKzCEXCx9k0rJ++trvKEYT2s+YaExBQ/ioLXRXZc2pot0c/P5o
-         tPLSgNJPORkkpVYwIGMEC4dNd+7uPjl1dtWZbwFEnkAfsAKU4+HsjsheZCbVrGk8c3S0
-         4od4qNAoCPFml9mFbXIl7GoeNM7ejP3WCKZHsMkRUwK6FgbtIVnZYYyVc3JjuwE6bgSC
-         BvC8GjuTxMaVnKDo55+JNLqLroltJHy++6q6iXHFCWoJrPvetnQ+zgnjg7pF1OMD7LZv
-         fE8VXj4qjLToBudfu6HLoYh8wPeo53jQF4bgTKgQpviAO9TCZ1gtuH0cISBzGIqzIXmV
-         z2qQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/XMLE2pFRIY1JNkSWaENbS8mqtZYHg3DHBbJFUlwJ71tgIKJgwVJiON1zmR7rQI6v9rLPEyyHFcez6hhENqgrT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmPxry4rkdQS0lWtcaeYE0TRBQvuZ9Lh36XmFUJayYAY9y/80w
-	0M74DSH8nsdEf/qyNvxmNWOp8+zsMFsBLiJAmhJI5Akh6hph/as86RCZIIoTPyO20ggm0oK78A1
-	oTXezeg8wyA==
-X-Received: from dlea2-n1.prod.google.com ([2002:a05:701b:4202:10b0:12a:77b3:9893])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:910:b0:12d:b6cb:bdc9
- with SMTP id a92af1059eb24-1342ee3a35cmr5414185c88.9.1778776509284; Thu, 14
- May 2026 09:35:09 -0700 (PDT)
-Date: Thu, 14 May 2026 09:34:09 -0700
-In-Reply-To: <20260514163409.927816-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1778776668; x=1779381468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ig7yBd9mVAEhaPLHSzdHx9IU65mp4w8wTO1kuXURqI4=;
+        b=PuwfqKPW8ImNPJDwW5HXUwAWkLlRi6TD/1xu9nI42mdiTfi4kPCfUUoZED8libp4DP
+         8ZtxvwDZ9AjoZAOZyPMo38gn2xTz44sC3yIgMX07SQ81aV9vLCOdzRQ2PHi2NAdi36/Z
+         AXbft0S4z5zxWR25ocbzQH7y0bCSQIc5RaWvY7/Cv5eOesx6q03LhzXJF3iRKnc/i50P
+         zQdWLnELZ/yE0LFFHVEYaZBd4pSEkiD3z1ZgaQshRuf17MNqbW76ZZ/lwp+i2s32bz+r
+         FaMGjoUoJt1Wn5r+6W8DDE9uq8hn0g526BU3NKQRXmkXsDx6kbOy4H6A1kjOyCKLYcck
+         YSgw==
+X-Forwarded-Encrypted: i=1; AFNElJ/rLGXZ7w2tYjPHW40b2c/Mz5iknxcNCrLRGR4V1dUrrLDxBejZoo84/qAe2EF1XZnNaCO/GDJPFubMi/uD3klJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwedUY+WCRQfhfNnHULCsXQNx53Nn3tx0SQAzciQ0d3aD2kqXMu
+	r5DSXBKYN49NLKeSGzwAsQ09ytV3PgfgQgX0fWw37kGSPOixhZssAb6MoDtjMIrj7y0oNHQvmEx
+	zfIDJ6r8BhoLv10PGNB7S4NiFwHdcmtvXnXC245k3
+X-Gm-Gg: Acq92OEeiPgAjyIh8y4bdOPEZmnuS4tL5y5m+xNB27QWmDcixW5bn+dzDNQ1Nbcd1Ej
+	eXykewYpuYrEGfXMUpAymJnY9dok6dZ9D4s62v1BCQZuyEh0SIvmYWgREv++ZnmRWP3MW1guWr6
+	IRUosBvL5UKHTTyuB7TaJW4Yiy9ZLshFX3qA5+3Siq395DOFkO+IahbNtXBVDPMQ0PwEAHa3idh
+	ZOFb0P50YzH1g59Ge/PYXuA4a1vsvDk4IXBVp8myqaT1Ee0vmGPIXZFBUVzwa9y8c7IGHdN2SCD
+	9ofZ+URY1gOp9n/CtpGOUb9B9cXy9fLI2rKCNpVqWCRKdKQ=
+X-Received: by 2002:a05:7022:f20c:b0:130:5c2c:d255 with SMTP id
+ a92af1059eb24-134d3115d4fmr116423c88.21.1778776667174; Thu, 14 May 2026
+ 09:37:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260512174638.120445-1-irogers@google.com> <20260514163409.927816-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260514163409.927816-18-irogers@google.com>
-Subject: [PATCH v3 17/17] perf build: Convert llvm-config shell queries to
- simply expanded variables
+MIME-Version: 1.0
+References: <20260513192347.4007895-1-florian.fainelli@broadcom.com> <agXwulXp_PqixUCg@google.com>
+In-Reply-To: <agXwulXp_PqixUCg@google.com>
 From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
-	namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
-	alexandre.chartre@oracle.com, andrii@kernel.org, ankur.a.arora@oracle.com, 
-	aou@eecs.berkeley.edu, bpf@vger.kernel.org, collin.funk1@gmail.com, 
-	costa.shul@redhat.com, daniel@iogearbox.net, dapeng1.mi@linux.intel.com, 
-	dsterba@suse.com, eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org, 
-	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, martin.lau@linux.dev, memxor@gmail.com, 
-	mingo@redhat.com, mmayer@broadcom.com, nathan@kernel.org, palmer@dabbelt.com, 
-	peterz@infradead.org, pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me, 
-	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com, tglozar@redhat.com, 
-	thomas.falcon@intel.com, yonghong.song@linux.dev
+Date: Thu, 14 May 2026 09:37:35 -0700
+X-Gm-Features: AVHnY4JjOKsA0PCCOcOqyT3rSrErA3I4VyaZomWax9zQOOV1u8d_ZJtEsgvxIxQ
+Message-ID: <CAP-5=fUJvVGEeA7+mk8KjracroD_5xhSi2pp7eQbEv9xGeq19g@mail.gmail.com>
+Subject: Re: [PATCH] perf trace beauty fcntl: Fix build with older kernel headers
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, linux-kernel@vger.kernel.org, 
+	mmayer@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In Makefile.config, CFLAGS, CXXFLAGS, LIBLLVM, and EXTLIBS were assigned
-using recursive expansion or appended with raw $(shell $(LLVM_CONFIG) ...)
-calls. Because these variables were expanded during dependency evaluation
-across every single object file compilation rule, Kbuild continuously
-re-executed llvm-config forks nearly 200 times during incremental builds.
+On Thu, May 14, 2026 at 8:56=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> On Wed, May 13, 2026 at 12:23:46PM -0700, Florian Fainelli wrote:
+> > Toolchains with older kernel headers that do not include upstream commi=
+t
+> > c75b1d9421f80f4143e389d2d50ddfc8a28c8c35 ("fs: add fcntl() interface fo=
+r
+> > setting/getting write life time hints") will now fail to build perf due
+> > to missing definitions for
+> > F_GET_RW_HINT/F_SET_RW_HINT/F_GET_FILE_RW_HINT/F_SET_FILE_RW_HINT.
+>
+> Can you share the error messages?
+>
+> I think this code should use a copy of the header in
+> trace/beauty/include/uapi/linux/fcntl.h which has the definitions.
 
-Convert llvm-config shell queries to simply expanded variables (:=) to
-ensure Make evaluates LLVM compiler flags and library paths exactly once
-when Makefile.config is parsed, eliminating ~185 redundant sub-processes
-during build startup.
+I don't think the beauty headers are in the include path.
 
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index fbe7fa83b0bb..7a61da082c0b 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -951,11 +951,14 @@ ifndef NO_LIBLLVM
-   $(call feature_check,llvm-perf)
-   ifeq ($(feature-llvm-perf), 1)
-     CFLAGS += -DHAVE_LIBLLVM_SUPPORT
--    CFLAGS += $(shell $(LLVM_CONFIG) --cflags)
--    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
--    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
--    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
--    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
-+    LLVM_CFLAGS := $(shell $(LLVM_CONFIG) --cflags 2>/dev/null)
-+    LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags 2>/dev/null)
-+    LLVM_LIBLLVM := $(shell $(LLVM_CONFIG) --libs all 2>/dev/null) $(shell $(LLVM_CONFIG) --system-libs 2>/dev/null)
-+    LLVM_LIBDIR := $(shell $(LLVM_CONFIG) --libdir 2>/dev/null)
-+    CFLAGS += $(LLVM_CFLAGS)
-+    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT $(LLVM_CXXFLAGS)
-+    LIBLLVM := $(LLVM_LIBLLVM)
-+    EXTLIBS += -L$(LLVM_LIBDIR) $(LIBLLVM)
-     EXTLIBS += -lstdc++
-     $(call detected,CONFIG_LIBLLVM)
-   else
--- 
-2.54.0.563.g4f69b47b94-goog
-
+> Thanks,
+> Namhyung
+>
+> >
+> > Provide a fallback definition for these when they are not already
+> > defined.
+> >
+> > Fixes: 9c47f6674838 ("perf trace beauty fcntl: Basic 'arg' beautifier")
+> > Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > ---
+> >  tools/perf/trace/beauty/fcntl.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/=
+fcntl.c
+> > index d075904dccce..e1b99b8f55eb 100644
+> > --- a/tools/perf/trace/beauty/fcntl.c
+> > +++ b/tools/perf/trace/beauty/fcntl.c
+> > @@ -9,6 +9,22 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/fcntl.h>
+> >
+> > +#ifndef F_GET_RW_HINT
+> > +#define F_GET_RW_HINT                (F_LINUX_SPECIFIC_BASE + 11)
+> > +#endif
+> > +
+> > +#ifndef F_SET_RW_HINT
+> > +#define F_SET_RW_HINT                (F_LINUX_SPECIFIC_BASE + 12)
+> > +#endif
+> > +
+> > +#ifndef F_GET_FILE_RW_HINT
+> > +#define F_GET_FILE_RW_HINT   (F_LINUX_SPECIFIC_BASE + 13)
+> > +#endif
+> > +
+> > +#ifndef F_SET_FILE_RW_HINT
+> > +#define F_SET_FILE_RW_HINT   (F_LINUX_SPECIFIC_BASE + 14)
+> > +#endif
+> > +
+> >  static size_t fcntl__scnprintf_getfd(unsigned long val, char *bf, size=
+_t size, bool show_prefix)
+> >  {
+> >       return val ? scnprintf(bf, size, "%s", "0") :
+> > --
+> > 2.34.1
+> >
