@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27022342530
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 16:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FCA343D64
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 16:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778776487; cv=none; b=Id5delZUu74gYiXonBEDsEM891VDtJnZJ931zsKgo4iyHt6gzW/6svXvm3zO3TOjVudvjRvY2VEVhapLN4mjhQ4RHcgPO8LS7wzDFmzEOkOET0KQaoeYmHpORpGZh7ZGuh18Rvl1myCQ4owBLl/+4Ca7Kad68Z0asoivIQFRC+I=
+	t=1778776493; cv=none; b=N2JeMHD/RU/W+f8T8B6y/hdmiABn3SgcDhTCZVn/Z/sQk0lXFJ/d4Unt19SxF7F7endxFmdJwIzZeCEE+ne0KeLGxmjVeO8wDkepHbKZfcDSDb37bZfUot59HHOIYqP/1i1WFJEZMJ237s8Ra+cjbdRMV/jDwl+Y0y9v4u5vveM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778776487; c=relaxed/simple;
-	bh=AJwnR+lAKW1np28RhLpF3ZsQLx/y1KNA7lXTPkvhHgQ=;
+	s=arc-20240116; t=1778776493; c=relaxed/simple;
+	bh=uB2iXn2WBt+EDR4kH5FxSuAwCprzLAHTXeIvfLbkm4I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hgK+8aEWrKKI+1ap/7DcjPMN+GtlTL7bO4oFXqLrb4I8pDrFK8w+CIjjFPsSvnl2kyGab5VyihIbK1pEq8HD8pHLBTlF2u4zhKw3TfIB7R0YOYOWWMBiUvJdELv3Ejpw3yADP9gkAMZqUA47CuP+IOPKxdlIGovrkOP2ip97e4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pi26ZQNV; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=EzXYELCGTt5bEvJzlTivi7q1fVkMtAs4NzzQ4cAy58TQnBljNpiiRZof4o1vgepfOyH5iENEJrnoJ7s8Zb8rzw2D/asbjxK9s0kOoQk357UeHpJsPnJsuPE0I/iCDYcDrMBNQAvcNhXH/V5Us82B8PBMfNiUGPaFBQK20cOQ3k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PP8LD1Zu; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pi26ZQNV"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-132d5ad9c32so7976444c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 09:34:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PP8LD1Zu"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-132c3280e03so1533707c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 09:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778776485; x=1779381285; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778776491; x=1779381291; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N38Q9ydqZGeVcFYSzFov0y5a5aAtSUelDrIknLwNZe4=;
-        b=pi26ZQNVhND17qzfWYKp/c7iediSrX2KQrufnZ1jdARUni3+WC7X8BKZA5g8NMRxNR
-         rgjmELQi1o7IKJhMn7pQagby58cdfCQp1EeoJFCHV5etPuXwDotjBNw80WFuGAqUtjf8
-         VCe9IglL9csmwPgQvBDAey5ivsR32umxSYepIPFcp39KfQzMa11gUpDecweWNtfLAIp1
-         c10kubNXKk0Wy1yXAsjyLuaj7Q+y6xcMd6HgjmRiJjp8MQLqPvXdtTc9aUWXGsKMVIYB
-         Vrv2jpM4jKtIFnNBFhWW3tmdlBzcjFzHmjw5JnflVEbSqgEBqSA6MaYyIrmq+ifsbroj
-         ymsQ==
+        bh=oPQGmeusY/cDiD2dEpt2Ws4BRT1lotcepITOMhHVtDs=;
+        b=PP8LD1ZuFevVMqhbUJjsuz0mJ9bX3zVd1tvhLh/RZFpO4cOtB/Px5iv12H1hY9YM7G
+         ufg7HT4ZmreUSrEBStUgwgB9Ed38vlvHf957Dy8Khatjhf2L4wPX0yNYioVfbi7crQN3
+         Q6DM8rascLGll280FJ9S/tE2Ca6Qs5602demGX8Txfklh3LDGYII6k7Kq3EKR8JQGe3u
+         sPwoQ+pUrIePW8nFI3m/DIdC1ftGlBRmsFHxHgHzuLqFplOyc/afmrjp5ygDt46cJAbN
+         l25cx72cVbSkagHwge60AX2uJefWk+Tpbp0YOn4ObWXmBSitJe9Ih/MVp51b09yPhze8
+         sbGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778776485; x=1779381285;
+        d=1e100.net; s=20251104; t=1778776491; x=1779381291;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N38Q9ydqZGeVcFYSzFov0y5a5aAtSUelDrIknLwNZe4=;
-        b=Nmj9kDoHVlqNsLIcrbr8zdYbZWA6nL3YiyoP0FJ3vqOsFTUfA6R4PUCh2mXl9pD+Xo
-         vQmAPEhaVVw5BDWlBV5ndx8rPYHAA9WNxHik5Ilgee0g+Bjq1LLSCHmqgn+Bq8ZzRpu5
-         Y19rz7IUApEgM5QCOWXfdEGOh2i8RJcmem3Aj+Ryx7aLAEmR5ZEGfVx6ZWfRD2oA0hqY
-         LzAPi7zh5mRjqrWlLNc/BBnntzRNN6RZR4jqS75uHdjlapme5rMUDiccrR/HT0h0WzLN
-         CHJCrt3C3GU9KPtjVM6wA6qAvZ2helvFMT6MGDNt4lHKrf2laqDgCPRMUlhetZ3GFSZx
-         BtMA==
-X-Forwarded-Encrypted: i=1; AFNElJ+mtkTD7GKm3zEmJpMojjDw8BaM6fr8jb6Zxfh0wFmhh6W5OIAPrcZ9T3N8fUTXnCAsVL8qDMGvVc7YjD4c/2RR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHcmZQuXU8fixTu1UwIfK5F9ZuKnjo4Hz4CojFtqMRcdIGLTH+
-	zmoVD58mFrmAfprEi05zgSnku4FxRE1E3S94RfzBqi3TX/1IsclEnW2TRTQ/9kZ3R/0xV8x5SeM
-	BEO1d9b12AQ==
-X-Received: from dlbuy7.prod.google.com ([2002:a05:7022:1e07:b0:12d:b319:ccc4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:322:b0:12d:de3e:86a8
- with SMTP id a92af1059eb24-13436bb194dmr4732714c88.38.1778776484933; Thu, 14
- May 2026 09:34:44 -0700 (PDT)
-Date: Thu, 14 May 2026 09:34:02 -0700
+        bh=oPQGmeusY/cDiD2dEpt2Ws4BRT1lotcepITOMhHVtDs=;
+        b=aVw1aUaPmewuXSUpQOu8DeDe0+JKHvR/1ZbipC3KT+4B8huWHgVsqiBunltd6lYRxt
+         Ezf6PspsUvTjh1gypw83/sq30NHRfTRtex5etghmHISgiFUuH8jxttzQ2z28jx+c4vzp
+         wMswaTrVZxsYIUkRS+Hw8woOnpJsgG5EkUVRN5x0ycY59MrjV2zRWdzQqr2RJOHo0Z9n
+         h1Aao8GjQpvnKSAFZ32BZixyP3zd1rXUjfN3LZEL+7DegdOn+7qQA4gYDc2v57d+mJ05
+         0lvSoJJ0TzscfYY710iTp+kp/XjVuK6LIQRp98r2KxeBtFaliZA5zDO/HQ2iGg4orvZA
+         SRBQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+ZmGVLI9eEjSi85Y7GM4ZSP5IgyqvaZIWbx9e/QWBGiDbNZvY+tFZmpdGTsmp1TGuvFl6MRaEjW6cCVmKZ9iyF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx60q9sbB71265EDnjUzjSJqI31cH26Fp/FEX3KezPaZMSXc4jO
+	GrzrotT//7ia8KIuGRSkFaA4St07oVCAOpO7AYfwHHCzvgvBrBQxGOt4hKaBoCr49AmRdoiksrx
+	/WhEQplBbOg==
+X-Received: from dlboy10.prod.google.com ([2002:a05:7022:128a:b0:134:feba:1ec8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1e04:b0:11b:9b98:aa4b
+ with SMTP id a92af1059eb24-1342ef3d106mr5357167c88.6.1778776490869; Thu, 14
+ May 2026 09:34:50 -0700 (PDT)
+Date: Thu, 14 May 2026 09:34:03 -0700
 In-Reply-To: <20260514163409.927816-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512174638.120445-1-irogers@google.com> <20260514163409.927816-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260514163409.927816-11-irogers@google.com>
-Subject: [PATCH v3 10/17] perf build: Pre-generate BPF skeleton tooling during
- umbrella prepare phase
+Message-ID: <20260514163409.927816-12-irogers@google.com>
+Subject: [PATCH v3 11/17] perf build: Move libsymbol dependency out of prepare step
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
 	namhyung@kernel.org
@@ -77,93 +76,51 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, BPF skeleton generation rules (bpf_skel.mak) are evaluated as
-part of util/Build. However, because LIBPERF_UTIL_IN explicitly depends
-on the top-level static libbpf archive, Make completely blocked the
-execution of bpftool bootstrap and skeleton generation until libbpf
-finished compiling midway through the build.
-
-Since bpftool bootstrap compiles its own independent copy of libbpf.a, it
-does not depend on the top-level libbpf target.
-
-Decouple early skeleton tooling generation by attaching bpf-skel-prepare
-to the umbrella prepare target, exporting CONFIG_PERF_BPF_SKEL to ensure
-accurate feature propagation. This allows Make to compile bpftool and
-dump vmlinux.h in the background at build startup, eliminating the initial
-sub-make startup bottleneck before BPF object compilation while keeping
-100% of tooling rules perfectly encapsulated in bpf_skel.mak. Provide an
-empty fallback target to ensure builds succeed when BPF skeletons are
-disabled.
+The prepare step is a large serialization point before parallel
+sub-makes build the perf tool. The libsymbol headers are used in the
+bench and util libraries. Move the libsymbol dependency out of the
+prepare step and into the dependencies for those targets to avoid it
+being a source of serialization in the prepare step.
 
 Tested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.perf | 8 ++++++--
- tools/perf/bpf_skel.mak  | 8 ++++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.perf | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 30114a31ca76..a0426e914253 100644
+index a0426e914253..01da32cd8988 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -275,7 +275,7 @@ ifeq ($(PYLINT),1)
- endif
+@@ -558,7 +558,7 @@ $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
  
- export srctree OUTPUT RM CC CXX RUSTC CLANG LD AR CFLAGS CXXFLAGS RUST_FLAGS V BISON FLEX AWK LIBBPF READELF
--export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
-+export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT CONFIG_PERF_BPF_SKEL
+ # The $(LIBPERF_UTIL) dependency is to ensure bpftool and vmlinux.h
+ # aren't racily built for bench/bpf_skel/bench_uprobe.bpf.c
+-$(LIBPERF_BENCH_IN): FORCE prepare $(LIBBPF) | $(LIBPERF_UTIL)
++$(LIBPERF_BENCH_IN): FORCE prepare $(LIBBPF) $(LIBSYMBOL) | $(LIBPERF_UTIL)
+ 	$(Q)$(MAKE) $(build)=perf-bench
  
- include $(srctree)/tools/build/Makefile.include
+ $(LIBPERF_BENCH): $(LIBPERF_BENCH_IN)
+@@ -576,7 +576,7 @@ $(LIBPERF_UI_IN): FORCE prepare
+ $(LIBPERF_UI): $(LIBPERF_UI_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
  
-@@ -629,8 +629,12 @@ endif
- __build-dir = $(subst $(OUTPUT),,$(dir $@))
- build-dir   = $(or $(__build-dir),.)
+-$(LIBPERF_UTIL_IN): FORCE prepare $(LIBBPF)
++$(LIBPERF_UTIL_IN): FORCE prepare $(LIBBPF) $(LIBSYMBOL)
+ 	$(Q)$(MAKE) $(build)=perf-util
  
-+bpf-skel-prepare:
-+	$(Q)$(MAKE) -f bpf_skel.mak bpf-skel-prepare
-+
- prepare: $(OUTPUT)PERF-VERSION-FILE \
- 	arm64-sysreg-defs \
-+	bpf-skel-prepare \
+ $(LIBPERF_UTIL): $(LIBPERF_UTIL_IN)
+@@ -637,8 +637,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE \
+ 	bpf-skel-prepare \
  	$(LIBAPI) \
  	$(LIBPERF) \
- 	$(LIBSUBCMD) \
-@@ -967,7 +971,7 @@ FORCE:
+-	$(LIBSUBCMD) \
+-	$(LIBSYMBOL)
++	$(LIBSUBCMD)
  
- .PHONY: all install clean config-clean strip install-gtk
- .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
--.PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
-+.PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare bpf-skel-prepare
- .PHONY: python_perf_target
- 
- endif # force_fixdep
-diff --git a/tools/perf/bpf_skel.mak b/tools/perf/bpf_skel.mak
-index 30924ad140c4..1fbd8dfefa5e 100644
---- a/tools/perf/bpf_skel.mak
-+++ b/tools/perf/bpf_skel.mak
-@@ -15,6 +15,10 @@ ifeq ($(CONFIG_PERF_BPF_SKEL),y)
- BPFTOOL := $(SKEL_TOOL_TMP_OUT)/bootstrap/bpftool
- VMLINUX_H := $(SKEL_TOOL_OUT)/vmlinux.h
- 
-+.PHONY: bpf-skel-prepare
-+bpf-skel-prepare: $(bpf_skel_deps)
-+	@:
-+
- define get_sys_includes
- $(shell $(1) $(2) -v -E - </dev/null 2>&1 \
-        | sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }') \
-@@ -93,6 +97,10 @@ $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o $(BPFTOOL)
- 
- .PRECIOUS: $(SKEL_TMP_OUT)/%.bpf.o
- 
-+else # CONFIG_PERF_BPF_SKEL
-+.PHONY: bpf-skel-prepare
-+bpf-skel-prepare:
-+	@:
- endif # CONFIG_PERF_BPF_SKEL
- 
- clean:
+ $(OUTPUT)%.o: %.c prepare FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
 -- 
 2.54.0.563.g4f69b47b94-goog
 
