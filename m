@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365639891C;
-	Thu, 14 May 2026 23:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE702192F9;
+	Thu, 14 May 2026 23:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778802915; cv=none; b=tgr7d3gYV47dNVTQghezf2nZkhVSRToJkStWCsKIm/u9cJsMuWG52nU+e+Dbg4RhDd7HzgF4yc78bAjWa1LJbHdmv+v2sO5b7Y/kpTbv9LefXmvmmKqhHJVV/wOD0Yt0O1OFIbcNH6u02+IWfRm0wYpwJqln6nO04E9zccSGBso=
+	t=1778803142; cv=none; b=ffGsaz/qMQNHu0qzQfv5S/YmJlL9EJvBC7qwuvAShFy5l5rOy4K3I60objzQ1F08dqroWyMLLxBcK1P5Lq/t9vQTQ4TQ/th3rBnLVRoo0aFDWNZwzj8rhHVEW3f2lMr2EKTiGqPyE8P+p+adjFcmzSJIw+Ycsvj61x3Rd9ZvwRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778802915; c=relaxed/simple;
-	bh=/M7Nn4exc7ZqqMS41ZPzksWkiF5DmBL+ydCNX/0zWGs=;
+	s=arc-20240116; t=1778803142; c=relaxed/simple;
+	bh=YxgXXw6NbjD061mthp+VeEbFfMoa0CP5ZqTLL/EqDow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iGUSgn+zJw1HRUqe5nrUpg5kBUlgOak0MBAGRJ7hX0kjyyCn3QBucPXNTqluw2qukdVFF7Q3k9vDGfKr0gSsqoHZDQt0XQFCQz1kdX+V8QcHTQDyrNt7eN65CtS2QNAtBBz3SlQtJpz2gAy67C8KDawl4/mKcZ6fBf4DHS0aBQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGkrchUV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4F6DI8HH4xXAjNmfz0Xop0xd6lUSfSxAlCGdJDW6lvOBf/peycZtbf/dR4lZubhgHZ58R+4OxAfzgHSAI0KX+I9sitQpIFReQvXVBo6dPo+GStZ2WrDHq5DWwrniOMB6FyUmDOuy7w0f9ap41Ly0lShYCpbW0yGw2rfCjVRnuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErQIS0nU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGkrchUV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9D7C2BCB3;
-	Thu, 14 May 2026 23:55:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErQIS0nU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024FDC2BCB3;
+	Thu, 14 May 2026 23:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778802914;
-	bh=/M7Nn4exc7ZqqMS41ZPzksWkiF5DmBL+ydCNX/0zWGs=;
+	s=k20201202; t=1778803141;
+	bh=YxgXXw6NbjD061mthp+VeEbFfMoa0CP5ZqTLL/EqDow=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fGkrchUVkd3kW97wsbNl+n1niXBNzup4WCt9VaJH1RdF9fjjUNGTJRBMPM7+Q4h1h
-	 mB0AyEgrB3uTYrko2BNc4MRwJHiWeVSN/TApICiAsBQ1E9Mg3QEW78GyxtIjkPrup4
-	 a2OKcB2Q50lMpHRri9HSTirRMlxvlOc8FMHaO5GfeMV37gcc57BSlbIXgmVPnOXlkd
-	 I/NfMOQUVklQovcqQNBsoMFlkm1C9LCw7O3MI+mD/0dBp67bCFp9d3X0MjKfXKs6qT
-	 mTVSV6XYilPR438yK9QSeVNtDjhLJlmq9tVt+Ji/Z2MZdk+T3X3SedEobC2jN15a6u
-	 QqkR+yxtaDXwQ==
-Date: Thu, 14 May 2026 20:55:11 -0300
+	b=ErQIS0nUNSLFBuLTBqgTi45RHPZRvoXibTaEVpV4jcHtCbFUyZkmQqApSDRLA2aKI
+	 WRckKskOzNnn5NzhguL/o30ckheA21rvlhfKVOEUA8kyp/QMNtuSrWeVSxEfFcr9Qr
+	 GtesW9iHZjuz2m4N0w1+5HxDP7RfJLgX5E8iSISVpj7iE3wMPnojVPllt3C3FayMHX
+	 bMEDSiRVfnwsctQEE7N6ZlkKp6BEZRRrApJK9/aVcnP+2qYXcf4Iqcd0cSdLT/1HSn
+	 OW4zFAF36qSluepXdIsJ8F6YBpNw27IrEX/b3Egxnw+f/6aLCBMjWgVoe6ORE4fMSj
+	 VpNQcyledrdOQ==
+Date: Thu, 14 May 2026 20:58:58 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Sandipan Das <sandipan.das@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf pmu-events AMD: Switch l2_itlb_misses to
- bp_l1_tlb_miss_l2_tlb_miss.all
-Message-ID: <agZg3xXkkpK089T5@x1>
-References: <20260414175855.2089482-1-irogers@google.com>
- <a33a42ae-253b-41ce-8a2d-9d9ae58372d2@amd.com>
- <CAP-5=fUMC-vWFvt3S0aNCqqSB=ka1FisUgRbJwBhoBKMYt_-nw@mail.gmail.com>
+Cc: James Clark <james.clark@linaro.org>, namhyung@kernel.org,
+	adrian.hunter@intel.com, leo.yan@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org, thomas.falcon@intel.com
+Subject: Re: [PATCH v2] perf metricgroup: Avoid scanning unnecessary PMUs for
+ identifier match
+Message-ID: <agZhwrpP3pG5zBWh@x1>
+References: <acyWR2GAWIY7TKyD@google.com>
+ <20260430161725.3131665-1-irogers@google.com>
+ <8c5343a3-a110-420b-9b61-3e4dd0e3c902@linaro.org>
+ <CAP-5=fXRjQKaHQWvNXiDyNZmDvtC=uYujgFsz7wmC5AJVK9d-w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,58 +49,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUMC-vWFvt3S0aNCqqSB=ka1FisUgRbJwBhoBKMYt_-nw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXRjQKaHQWvNXiDyNZmDvtC=uYujgFsz7wmC5AJVK9d-w@mail.gmail.com>
 
-On Thu, May 14, 2026 at 10:48:23AM -0700, Ian Rogers wrote:
-> On Tue, Apr 14, 2026 at 11:03 PM Sandipan Das <sandipan.das@amd.com> wrote:
-> >
-> > On 14-04-2026 23:28, Ian Rogers wrote:
-> > > l2_itlb_misses is a valid legacy cache event name, hence allowing it
-> > > in all_events in metric.py. l2_itlb_misses was also a json event for
-> > > AMD zen1, zen2 and zen3. For zen4, zen5 and zen6 the checking that
-> > > metric events are within the json was skipping l2_itlb_misses as it is
-> > > a valid legacy event, however, the PMU driver lacks the event mapping
-> > > causing it to be a bad event when used in the metric. Add
-> > > bp_l1_tlb_miss_l2_tlb_miss.all as the l2 itlb miss event (bp = branch
-> > > predictor, the AMD way to say itlb), so that is used in preference to
-> > > l2_itlb_misses when the event exists. Remove l2_itlb_misses from
-> > > metric.py as the legacy event isn't used by any metrics and having it
-> > > is error prone for newer AMD zen models.
+On Thu, May 14, 2026 at 10:39:08AM -0700, Ian Rogers wrote:
+> On Wed, May 6, 2026 at 2:12 AM James Clark <james.clark@linaro.org> wrote:
+> > On 30/04/2026 5:17 pm, Ian Rogers wrote:
+> > > Only uncore PMUs can have an identifier, so add an optimized
+> > > perf_pmus__scan routine for that case to avoid all PMU types being
+> > > created.
 > > >
-> > > Fixes: e596f329668e ("perf jevents: Add itlb metric group for AMD")
 > > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > > ---
-> > >  tools/perf/pmu-events/amd_metrics.py | 2 +-
-> > >  tools/perf/pmu-events/metric.py      | 1 -
-> > >  2 files changed, 1 insertion(+), 2 deletions(-)
+> > >   tools/perf/util/metricgroup.c | 11 +++--------
+> > >   tools/perf/util/pmus.c        | 18 +++++++++++++++++-
+> > >   tools/perf/util/pmus.h        |  1 +
+> > >   3 files changed, 21 insertions(+), 9 deletions(-)
 > > >
-> > > diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-> > > index 63e5098606c4..ee5381646a8d 100755
-> > > --- a/tools/perf/pmu-events/amd_metrics.py
-> > > +++ b/tools/perf/pmu-events/amd_metrics.py
-> > > @@ -287,7 +287,7 @@ def AmdDtlb() -> Optional[MetricGroup]:
-> > >  def AmdItlb():
-> > >      global _zen_model
-> > >      l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
-> > > -    l2m = Event("l2_itlb_misses")
-> > > +    l2m = Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
-> > >      l2r = l2h + l2m
+> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > > index 4db9578efd81..5a489e97c413 100644
+> > > --- a/tools/perf/util/metricgroup.c
+> > > +++ b/tools/perf/util/metricgroup.c
+> > > @@ -415,14 +415,9 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
+> > >       if (!pm->metric_expr || !pm->compat)
+> > >               return 0;
 > > >
-> > >      itlb_l1_mg = None
-> > > diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-> > > index 0c41a502cf21..c1931b2a5170 100644
-> > > --- a/tools/perf/pmu-events/metric.py
-> > > +++ b/tools/perf/pmu-events/metric.py
-> > > @@ -25,7 +25,6 @@ def LoadEvents(directory: str) -> None:
-> > >        "cycles",
-> > >        "duration_time",
-> > >        "instructions",
-> > > -      "l2_itlb_misses",
-> > >    }
-> > >    for file in os.listdir(os.fsencode(directory)):
-> > >      filename = os.fsdecode(file)
+> > > -     while ((pmu = perf_pmus__scan(pmu))) {
+> > > -
+> > > -             if (!pmu->id || !pmu_uncore_identifier_match(pm->compat, pmu->id))
+> > > -                     continue;
+> > > -
+> > > -             return d->fn(pm, table, d->data);
+> > > -     }
+> > > -     return 0;
+> > > +     /* Only process with the iterator if there is a a PMU that matches the ID. */
+> > > +     pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat);
+> > > +     return pmu ? d->fn(pm, table, d->data) : 0;
+> > >   }
+> > >
+> > >   int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
+> > > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > > index 9a2023ceeefd..5e3f571450fe 100644
+> > > --- a/tools/perf/util/pmus.c
+> > > +++ b/tools/perf/util/pmus.c
+> > > @@ -409,7 +409,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
+> > >       if (!pmu) {
+> > >               /*
+> > >                * Core PMUs, other sysfs PMUs and tool PMU can have any name or
+> > > -              * aren't wother optimizing for.
+> > > +              * aren't worth optimizing for.
+> > >                */
+> > >               unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+> > >                       PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
+> > > @@ -486,6 +486,22 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+> > >       return NULL;
+> > >   }
+> > >
+> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
+> > > +{
+> > > +     if (!pmu) {
+> > > +             /* Only uncore PMUs can have identifiers. */
+> > > +             unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> > > +
+> > > +             pmu_read_sysfs(to_read_pmus);
+> > > +             pmu = list_prepare_entry(pmu, &other_pmus, list);
+> > > +     }
+> > > +     list_for_each_entry_continue(pmu, &other_pmus, list) {
+> > > +             if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
+> > > +                     return pmu;
+> > > +     }
+> > > +     return NULL;
+> > > +}
+> > > +
+> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
+> > >   {
+> > >       struct perf_pmu *pmu = NULL;
+> > > diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> > > index 7cb36863711a..0d55edb3f2fc 100644
+> > > --- a/tools/perf/util/pmus.h
+> > > +++ b/tools/perf/util/pmus.h
+> > > @@ -23,6 +23,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+> > >   struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+> > >   struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
+> > >   struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
+> > > +struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
+> > >
+> > >   const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+> > >
 > >
-> > Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> > Reviewed-by: James Clark <james.clark@linaro.org>
 > 
 > Ping.
 
