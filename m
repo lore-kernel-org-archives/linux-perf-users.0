@@ -1,140 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DA931B837
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 16:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A2531A56C;
+	Thu, 14 May 2026 16:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778775010; cv=none; b=RxQDGk0/c064hFdAPecV/IaO62dN8Q4SOGlB7IY20Yv+Z6SGgmeDAH3MQMaAK/kBSvYHd6QxM0mEM/HNgL16D1AnZTVqH3J/ClmdVdW3vZP9FjuP+ZLIzxsOUeMAHj4qfiScIzwQ8TXXGwGIY3kKCB+jB/R8axIdVM5678WZZ/4=
+	t=1778775700; cv=none; b=PgPpXXyPV1UlDRyyID3ppSYm9IrGjJ6UQWlDTjU8GPK5oZ4YkmlU9vOIGKEf2w1RBPzN0o0n+d/q2WuWyKFLlF2FlY9I4IaWFI4zQp5Sbc4JvOZsAe0ix5dQOvJjZUbOW4p8Cz4bIDWwXsYJOJj0iHd+onqXCYKRtHVop6nFAiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778775010; c=relaxed/simple;
-	bh=WLYFGOImniX0YyDO1tXAcZB2rym7cag1MUhTG59babg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dKL3nwyYQEpfXkRNgi+b7Oy5bzLfkbmN9Ri4kidROjR6UuIrzas/5yreCb9WyK5pPZrPiqDEvf5FW+aiwCALwUrXE+k5WJXPcInDoq7V/7c1ITqQjN81mciTXIPtde1IfxOQpYKybWL0kbM7Cs2jzclFmgZV6bzUpCkrp738nHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T88GOFby; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778775700; c=relaxed/simple;
+	bh=LsQsJ/EIJPt7FY3mXN8jMzUaXSyiTsmkWcJOpGnE2jE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GkbTOxqwXXlXPHvYb5xTfPVLyL3zMiMNnDGVKlsFNaXYgV29zdt2yO9dY7k7VkqFXSYGSFDfJGWs+WWVxUgzL9DTqXB1ob19BS586Kp3L4sG2g5NSRQktVurQdYqL4UzXsT/w4gliTGFUE1jrtnC1bEt3o6z7GLBbCOpzjY4UVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Nj42+w90; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T88GOFby"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD743C2BCB7;
-	Thu, 14 May 2026 16:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778775010;
-	bh=WLYFGOImniX0YyDO1tXAcZB2rym7cag1MUhTG59babg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=T88GOFbyzKzzErnI5qlXNqkQH6xBidUgTadRiinbapPgQY+2MyOE8bx4wunMl8EQR
-	 CACchVX0mAsVX8OFJPH4iC/X3kn4Cldi3AbDVjp4FymT5sRzg0oZKOZpP7h8q/IzRu
-	 Qri1jBZ69Nxi3sOfjCqv3tGfkkK4hWvldYzPgIoO+LRMPvLXrLFfnFrngLwcFvSKfp
-	 OB47Ju/biWsaEYzz3L93rmfLSubUA1Jsj3NFzys0A3J8klIHXdWotbeWneuBrBoxIP
-	 mRUxiXv26jWKBmJZ6Arbd2d2yINu1FQpUO2xPTuU26ETCf2S9/gYpcvpmtsZqjmiz/
-	 1L7NzDzdPNq0w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 08/14] perf test: Add summary reporting
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260513230450.529380-9-irogers@google.com>
-References: <20260513230450.529380-9-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 16:10:09 +0000
-Message-Id: <20260514161009.CD743C2BCB7@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Nj42+w90"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 072061C00;
+	Thu, 14 May 2026 09:21:27 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14D23F7B4;
+	Thu, 14 May 2026 09:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1778775692; bh=LsQsJ/EIJPt7FY3mXN8jMzUaXSyiTsmkWcJOpGnE2jE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Nj42+w90Gv/mZ2EZW7D4BGV2plN+C43bkbm2vdIARnboyv/tRIs2MgWRvWt1aGomX
+	 q0bhS91sXh4sC0fXDt4opqe+zRr6envXlM9FUhY7fRLeV3+Q7iE9/c/KRffEFT1bLZ
+	 kCbGzK7xs8wDrdQoMWAkFhNUm4vJFx2lpjl8sYqg=
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/2] perf: Improve refresh limit in overflow handler
+Date: Thu, 14 May 2026 17:21:18 +0100
+Message-Id: <20260514-arm_cs_clean_perf_handle-v2-0-cbb29c3b3661@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH72BWoC/42Nyw6CMBREf4V0bU0flIor/8OQplxupQkU0hqiI
+ fy7hY074/JM5sysJGH0mMi1WEnExSc/hQziVBDobXgg9V1mIpioWClqauNoIBkY0AYzY3Qm17o
+ Bqa4kgJQ1cKdI1ueIzr+O6XuTuffpOcX38bTwPf1jdOGUU9lKW+uStRclbrl6hmncHw5dcfFTZ
+ 1Qr56SWCJ346s22bR8ts3Qn/QAAAA==
+X-Change-ID: 20260429-arm_cs_clean_perf_handle-763cc339c1f5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778775688; l=1909;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=LsQsJ/EIJPt7FY3mXN8jMzUaXSyiTsmkWcJOpGnE2jE=;
+ b=B45+evgH66eG83X0urrgbmODxywo+FX5TCK1EFKKWilLExQc+ai184j+gXen28WZ7DYAuLn4Z
+ PpytBsAHvxkBbjxFOfqI/OHO9YTWptXs1gdYg111sZu5GMJZf3NC7Kc
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] Test summary is bypassed on error paths, leaking memory and cont=
-radicting the commit message.
-- [Medium] User-overridden skipped tests are double-counted in the summary =
-statistics.
-- [Medium] Async-signal-safety deadlock due to `strbuf_addf` allocations in=
- signal-interrupted paths.
---
+Commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage") added a
+direct pmu->stop() call when the refresh limit reaches zero. The change
+was based on a test program [1] that reported missing POLL_HUP
+notifications.
 
-commit 6ba5c5902b4731354e1e3209d7b4d55a0a3bc650
-Author: Ian Rogers <irogers@google.com>
+However, the test program used SIGIO, which is a standard signal and can
+be coalesced. As a result, userspace may miss signal delivery even
+though the signal was generated by the kernel. This is expected
+behaviour for standard signals.
 
-perf test: Add summary reporting
+This series adds a selftest for the PERF_EVENT_IOC_REFRESH limit using a
+real-time signal, which guarantees queued signal delivery and confirms
+that POLL_HUP notifications are delivered reliably on arm64.
 
-This commit introduces a global execution summary for perf tests, tracking
-pass, skip, and fail counts and printing them at the end of the run. It also
-records failed test descriptions into a buffer for easy cross-referencing.
+The second patch replaces the direct PMU stop with an explicit
+pending-disable guard, this can avoid redundant stop for most cases and
+logic is easier to understand.
 
-> 4. Invoke the summary printer right before freeing the test array at the
->    absolute tail of __cmd_test(), guaranteeing that the summary is
->    successfully printed even if an internal emergency signal cleanup occu=
-rs
->    or if the user interrupts the run early.
+[1] https://lore.kernel.org/lkml/aICYAqM5EQUlTqtX@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com/
 
-Is this description accurate? Looking at __cmd_test(), print_tests_summary()
-is placed inside an else block that is bypassed if err is set.
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v2:
+- Replaced ASSERT_EQ() with EXPECT_EQ() in test tear down (Sashiko).
+- Handled a race case for high frequency overflow before disable irq_work (Sashiko).
+- Link to v1: https://lore.kernel.org/r/20260512-arm_cs_clean_perf_handle-v1-0-75ff373ecd22@arm.com
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index 45c1afb9ad333..193a7dec6d5f3 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -389,6 +400,15 @@ static int print_test_result(struct test_suite *t, i=
-nt curr_suite, int curr_test
->  		break;
->  	case TEST_FAIL:
->  	default:
-> +		summary_tests_failed++;
-> +		if (test_suite__num_test_cases(t) > 1)
-> +			strbuf_addf(&summary_failed_tests_buf, "  %3d.%1d: %s\n",
-> +				    curr_suite + 1, curr_test_case + 1,
-> +				    test_description(t, curr_test_case));
-> +		else
-> +			strbuf_addf(&summary_failed_tests_buf, "  %3d: %s\n",
-> +				    curr_suite + 1,
-> +				    test_description(t, curr_test_case));
->  		color_fprintf(stderr, PERF_COLOR_RED, " FAILED!\n");
+---
+Leo Yan (2):
+      selftests/perf_events: Add test for refresh limit signals
+      perf/core: Ignore overflows while disable is pending
 
-If a signal interrupts the main thread while it holds the libc heap lock,
-could this lead to a deadlock? The cleanup path triggered by the signal
-handler calls:
+ kernel/events/core.c                               |   8 +-
+ tools/testing/selftests/perf_events/.gitignore     |   1 +
+ tools/testing/selftests/perf_events/Makefile       |   3 +-
+ .../testing/selftests/perf_events/refresh_signal.c | 120 +++++++++++++++++++++
+ 4 files changed, 130 insertions(+), 2 deletions(-)
+---
+base-commit: e1914add2799225a87502051415fc5c32aeb02ae
+change-id: 20260429-arm_cs_clean_perf_handle-763cc339c1f5
 
-cmd_test_sig_handler() -> siglongjmp() -> finish_test() ->
-print_test_result() -> strbuf_addf()
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
-which can invoke realloc() while the heap lock is already held.
-
-[ ... ]
-
-> @@ -1045,6 +1081,7 @@ static int __cmd_test(struct test_suite **suites, i=
-nt argc, const char *argv[],
->  				pr_info("%3d: %-*s:", curr_suite + 1, width,
->  					test_description(*t, -1));
->  				color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
-> +				summary_tests_skipped++;
->  				continue;
->  			}
-
-Since this code runs inside the for (int pass =3D 1; pass <=3D 2; pass++) l=
-oop,
-will this increment summary_tests_skipped twice for each user-skipped
-test suite?
-
-[ ... ]
-
-> @@ -1076,6 +1113,8 @@ static int __cmd_test(struct test_suite **suites, i=
-nt argc, const char *argv[],
->  		pr_err("Internal test harness failure. Completing any started tests:\n=
-:");
->  		for (size_t x =3D 0; x < num_tests; x++)
->  			finish_test(child_tests, x, num_tests, width);
-> +	} else {
-> +		print_tests_summary();
->  	}
->  	free(child_tests);
->  	return err;
-
-Since print_tests_summary() is only called in the else branch, does this
-leak summary_failed_tests_buf when err is non-zero (for instance, when
-handling an internal emergency signal cleanup)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
-80-1-irogers@google.com?part=3D8
