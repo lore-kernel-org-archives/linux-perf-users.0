@@ -1,144 +1,140 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029453A383B
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 10:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53413ADB94
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 11:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778753629; cv=none; b=k1kVaJM7LtAJWZWHb+fnQCImUOza2jz6akndUJAe4AIN4ZXSKHwKIB7XhgvTXTEopQUoMQTam9ETzpPDTunPCSbjJcbjYXC5gf1/ZQab8GzGXHqL7S50KEmTAAKuxoqRJ/MTujK7niQ24Pt+eQrAook/37cAJpo3JTf+6tI5oao=
+	t=1778758964; cv=none; b=lZxOjfr5yhknbF4pUjTRXLQXzv6w+j5gs1wbK5W1J9ODdXZsLiVZDzNuBPuSwQy74z0FKsMOQCRYhKWNPHS6Ow/QbOrTACP46M2kiqIJsXfK9TwP5zeZNrAjO+RUQOUV5dxjJpYbNvOGb0+0coNwqHznBGfW6rGqFpZbAOnIu5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778753629; c=relaxed/simple;
-	bh=S63hhfRsG+j7Ng7WAsaWPKCUXZm8OcvpotlPU06841E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D4pt9yGwue4ewyXLUW8ZwWFhZGdECBUyJX2BDTcMjHc4mpsxuo4o9YssFQM1qPY3Gd6RiOwvXMQLQJs9QA1Hgn00ERlg9lrkHLuTgvy2EgoTfrg3UqsVSgXQxt7g9S/FrIOF0cawLSVd/tbEMeEj++aAdYlPB7Vk7gusge8lGbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kXk84CXV; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778758964; c=relaxed/simple;
+	bh=A0/SQIq+12U/t5WV1scy+LO7cRlMwhsHjt/1SOCVozk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=BDvW33Uj8VPTySTVF+XSqom0i+0R0sJ/g3nldI3VznU+VJHF1zULHIF6JCktZR4C7pMMvbwlxrclqMG9ZJ7Ug9ZAKVvvYtlD/Ude/qOgpvVsCrLKDefZUG2fWPGtjbBe7pa8dFJz6cE6LHmDnVm76Nu/q1FP/xJKaau7kmHFN10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dls3asc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kXk84CXV"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-48fde648a71so2636615e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 03:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778753626; x=1779358426; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fTuf5ZCIu9Za2DpjjkJh2zWkoI+wGsi6ZskT4v9wl4s=;
-        b=kXk84CXVoS0j6+VXmfY3VQFCK7GZbs9ylgjLfQDU6R7JQ41uHZy3ffNotVPPyA0/nK
-         AbYiURa/ZpsZ9nQGSd81+UpvEumtN0lbK8ykKrGac54BWD9z9GgT4IyiG1a2oY7UJZsH
-         104h3HC14vYrjqdHlqdvEoSxN10KXmWKaoflq3Sg4bFTZ+giIpefVI8uMfptitYOYVn9
-         iTylrU23Lr3Valt7CF/PXJa/6Ki15lONjL2usE9EGLlJCzZ3+B/1am0U6nWasuM/AXsN
-         m/cCzZSLZ9ePM3oT3Hz9g5dPNROSYLZWGoOC1AOtIyrJE7JOLSoQOMoTB+uvtSg/NtrZ
-         DiSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778753626; x=1779358426;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fTuf5ZCIu9Za2DpjjkJh2zWkoI+wGsi6ZskT4v9wl4s=;
-        b=BtqmwYaJtEl4Yp5f6VFH0fPpKE/5iA5unyRBkQF95zgRMXbPnrZaeo0KQbwf4xTGGS
-         ilGSmDZZV3VgVaRw27rF2b6lTnkRwOPAlm+xPUn6tMMHTmlX4kWpMEWTu/6Eoo4lrBhz
-         iToV4mBx/YTe6kKmabUnwMRkEeFJwuBiBeDmLSd1FFhGHwcfMlYf6unm8uBhmPsHXZIj
-         lBWayOb1ZifvVYbvx5f5iv0W4Hq8LIZyFpv0ua7YTYu0ArwaR/XVJFigbv3/f1lckPNr
-         IkTlWXaEyuEpBol51cSNc4YpIGOHz4IDlCJfHyj1K5ILc+7cHb/sf+kbBYbUQwR2w4uF
-         4U/w==
-X-Forwarded-Encrypted: i=1; AFNElJ9+e8aOReC04Oi5cNcEvlMYPOSyXTT/wiymWDTIwgt8JxshWWH10qwT9BBWKaDbziida3qeISRzYBSgYm/W4gUl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9G5ggjGKnDnUz07qagRWRZjNCsNwhixufKDzc335r0nBNAMqD
-	gKiEdH3tKDujNN9TBJFg+gRz90jtHma69EjDeKAg2cyhDvpg0f5jE2N+uws4jpHlKWU=
-X-Gm-Gg: Acq92OE7Gxz8dQFOxZLkDpZk4526x50oMKUrHUBtv6VBBmYbvGdTt6+Qfy+6rL1YKn/
-	7cq0F2ClrODHdwH/K60PDsggOi3Gw2TCWODvd0DAyYhrMPbRkCH+8ZxqxQ4w3/b4hUkDDdWgKyU
-	bcUGaBYDYNRaeg7xn9fpfXicWQONT0GRGCMWnSjkGk0c1itie5M7PlY23rAJ6JtsVsI4cemb0QL
-	QSTbdON0xfBDTXZbyOJ1JgY1S+C1CqJCtdi9UNh3pLoDbgFtc/54dPcRM45LXwz+sQqYYFupf/B
-	bnx2cJnnV+AHH4E2Ff5TmjxOKFgZ+bIQvQ8ich9eJmp8gssxhmy1V6byaVLLesugHMMtvGimKSf
-	HepiKBSVRODoBuHgczuL9V3ermYjNy0cz0UJS13yRDkAGpV7lvfkbhYcR5em9BCV+WSfC1UzfLO
-	rBnn3kNwV86hhl+HWPcDd5/IrcNNQo
-X-Received: by 2002:a05:600c:19c7:b0:48f:e044:927d with SMTP id 5b1f17b1804b1-48fe24879f6mr3970735e9.10.1778753626408;
-        Thu, 14 May 2026 03:13:46 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fd648a7e5sm55592095e9.3.2026.05.14.03.13.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2026 03:13:45 -0700 (PDT)
-Message-ID: <628c0904-08b2-4b93-a90e-456a073ecf73@linaro.org>
-Date: Thu, 14 May 2026 11:13:43 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dls3asc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4320FC2BCB8;
+	Thu, 14 May 2026 11:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778758964;
+	bh=A0/SQIq+12U/t5WV1scy+LO7cRlMwhsHjt/1SOCVozk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=dls3asc58dLTIMslmCfY1u3/F2yclhWs4w1KPcLl3t3AWS4TyFTESAjFx7vYICU6p
+	 Kb91SDMjylUVoVbnFAiDgLAU3uPmubWfyD//7/K18PGO+HVKCdGCNn05jXGiRckaCC
+	 hinQMgh+7JNny7CLlRXyO3NZI6oiLAaBuuOBxAnikxmqjneDctO78GgNY8b7quLLvx
+	 6CHiIMoDujA7ETllHFZNveE00uWXxDmHMWTqm8o4JddqA0fJtU7yOq0CFgdk7gV/na
+	 kYLfW/HfdAqx5/43UdFsavN6prI/lpdnP1so01FxSV3bvJeZVpC1oUFQknNhahNT9y
+	 GDXbk41UIB8Ug==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 02/14] perf pmu-events: Add API to get metric table
+ name and iterate tables
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260513230450.529380-3-irogers@google.com>
+References: <20260513230450.529380-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 May 2026 11:42:43 +0000
+Message-Id: <20260514114244.4320FC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] tools/build: Allow versioning of all LLVM tools
- defined in Makefile.include
-To: bot+bpf-ci@kernel.org
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, leo.yan@arm.com,
- martin.lau@kernel.org, clm@meta.com, ihor.solodrai@linux.dev,
- nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
- justinstitt@google.com, jikos@kernel.org, bentiss@kernel.org,
- shuah@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, andrii@kernel.org, eddyz87@gmail.com,
- ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
- memxor@gmail.com, song@kernel.org, yonghong.song@linux.dev
-References: <20260514-james-perf-llvm-version-v1-1-6cac1a9a4c8d@linaro.org>
- <998802d0c3bb407e9bcc61e4fe6db2e3eed7ac06c7c6eca0ed0dd5409a8c2801@mail.kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <998802d0c3bb407e9bcc61e4fe6db2e3eed7ac06c7c6eca0ed0dd5409a8c2801@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] The `.name` field in `pmu_metrics_table` is erroneously initiali=
+zed to the string literal "NULL" instead of a null pointer for CPUs without=
+ metrics.
+- [Medium] The `pmu_metrics_table__for_each_table()` API yields duplicate m=
+etric tables when multiple CPU IDs share the same architecture.
+--
 
+commit d5de54c2353e5ad926b97d677ee122277c30d0b2
+Author: Ian Rogers <irogers@google.com>
 
-On 14/05/2026 11:02 am, bot+bpf-ci@kernel.org wrote:
->> tools/build: Allow versioning of all LLVM tools defined in Makefile.include
->>
->> The version of LLVM tools can be given on the build command with
->> LLVM=-15, but this isn't applied to all tools. For example $(CC) gets
->> versioned, but $(CLANG) doesn't. This causes a Perf build with LTO=1 to
->> fail with an error about mixed clang versions:
->>
->>   ld.lld: error: libperf/core.o: Unknown attribute kind (86)
->>     (Producer: 'LLVM18.1.8' Reader: 'LLVM 15.0.7')
->>
->> This file has two "ifneq ($(LLVM),)" blocks adjacent to each other, so
->> merge these blocks making it obvious that all tools should be versioned
->> consistently and there is nothing special about each block.
->>
->> This also reveals that ?= and "allow-override" are used inconsistently
->> between the blocks. "allow-override" is technically only required for
->> builtin variables, but isn't only used on them, and doesn't do any harm
->> if used on a non-builtin. Make them all "allow-override" for
->> consistency. The only functional difference this will cause is if there
->> is a file level definition of one of the variables followed by an
->> "#include of Makefile.include" which will now overwrite. But this isn't
->> done and in a later commit some of the duplicate definitions will be
->> removed for good measure.
->>
->> There are also some other LLVM tools that are not defined here and will
->> be moved in a later commit.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
-> 
-> This looks like a bug fix that corrects inconsistent LLVM tool versioning
-> introduced in an earlier commit. Should this include:
-> 
->    Fixes: e9c281928c24 ("kbuild: Make $(LLVM) more flexible")
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/25853166705
+perf pmu-events: Add API to get metric table name and iterate tables
 
-I did consider a fixes tag, but the only real bug is with Perf and 
-LTO=1, and building it in this way has obviously never worked, so you 
-could also argue this is new behavior.
+This commit adds a name field to struct pmu_metrics_table and populates it
+in generated tables. It introduces functions to retrieve the table name and
+to iterate over all known metric tables.
 
-I think it's quite and edge case and has some risk to break other tools 
-if backported so I left the tag off.
+> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-ev=
+ents/empty-pmu-events.c
+> index 322e6c2d58cb0..f51062ef25d3f 100644
+> --- a/tools/perf/pmu-events/empty-pmu-events.c
+> +++ b/tools/perf/pmu-events/empty-pmu-events.c
 
+[ ... ]
+
+> @@ -5992,6 +5995,35 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn,=
+ void *data)
+>  	return 0;
+>  }
+> =20
+> +const char *pmu_metrics_table__name(const struct pmu_metrics_table *tabl=
+e)
+> +{
+> +	return table ? table->name : NULL;
+> +}
+> +
+> +int pmu_metrics_table__for_each_table(
+> +	int (*fn)(const struct pmu_metrics_table *table, void *data),
+> +	void *data)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i =3D 0; pmu_events_map[i].cpuid; i++) {
+> +		if (!pmu_events_map[i].metric_table.pmus)
+> +			continue;
+> +		ret =3D fn(&pmu_events_map[i].metric_table, data);
+
+Are duplicate metric tables yielded here when multiple CPU IDs share the sa=
+me
+architecture?
+
+In architectures like ARM64 and x86, multiple CPU mappings can point to the
+exact same metric definitions. Because struct pmu_metrics_table is embedded
+directly into each element of the pmu_events_map array, each duplicate CPU
+mapping yields a unique memory address (&pmu_events_map[i].metric_table)
+while containing identical .pmus pointers.
+
+As this makes trivial pointer deduplication impossible for callers, consume=
+rs
+of this API could generate redundant operations for identical tables.
+
+[ ... ]
+
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 7d325604f04db..a74c5e828bd15 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+
+[ ... ]
+
+> @@ -796,6 +799,7 @@ static const struct pmu_events_map pmu_events_map[] =
+=3D {
+>  		.num_pmus =3D {event_size}
+>  	}},
+>  	.metric_table =3D {{
+> +		.name =3D "{metric_tblname.replace('pmu_metrics__', '')}",
+>  		.pmus =3D {metric_tblname},
+>  		.num_pmus =3D {metric_size}
+>  	}}
+
+If metric_tblname is the string 'NULL' for architectures that have mapped
+events but lack an associated metric table, will this evaluate to
+.name =3D "NULL"?
+
+This writes a 4-character string literal into the generated C code instead
+of a true null pointer. Callers attempting to perform null checks like
+if (table->name) would then erroneously evaluate to true.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513230450.5293=
+80-1-irogers@google.com?part=3D2
