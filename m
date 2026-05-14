@@ -1,102 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92732ED870;
-	Thu, 14 May 2026 00:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6811531C8
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 May 2026 00:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778719815; cv=none; b=ZggXRXZo6Hxt6yGJe/UZK0qh6hpJwVz71dqoeYGGTB+AgpHG7R7xSOK33CJFVSeENgRRpU8B6GcdTVKilGKRyqvskuDgYR0V2d1WhRcmE7CEmxoBtTr0ucF6HiOOD9g0rmvvqzTrDgoEF1U/EN0Rsx/DXjS6O38E01QedSX/uRo=
+	t=1778720290; cv=none; b=lcxa4pI43iJvvUflfn25yRalV4cwOV3J1wBHfeCrVCbK7Y0avcc4Kbe7LFl79y57rQUqJT3vQOnm4JQt8J7sG9wDP+XZids1XD6QkJaHTVMb7UPiyBB/hc4QgBWcF1GGEPypGH4UvDUxBkJ7ou0uESIQ9INw4aIijA2yb/rrfk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778719815; c=relaxed/simple;
-	bh=c7fl85p+dHqJaJt4mkFQOqOPrf+QqNSoUyC8UhxH4XY=;
+	s=arc-20240116; t=1778720290; c=relaxed/simple;
+	bh=Rw1ZYh2s5YV7uTtWUn+PIMnfiHPfdexI5oxA9GbXFNE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lKrlJOoHP1jCtoCJ8NBTOu4uygbO/Y4bnu41FaFo0VHQm3+bEB5gcKJ9x/boqEaeOTexdp2SL6UyJMVMBirEavVJ1rZLlvuAEGCST5mI1MSVtYDPvthYJlE2Ip6M2XgMFIhY7++/Xfii2yQDxy2VxmriQLqqUkDUVs4f5jZAuKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WveADRI1; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=IbTiisIgIdAtMR9ltHUkEvwygxQBZ8JVYBuhUSPb7fMFB+o7Ay2O9NZvOzWEcxFa/7Dyrtn1zyzOGLTde6xYovtEepuEuqgwFfFINroAUrxKa/hOl9zr39Y7CG1eYVCrwgVvGKQf4WnGJU7+NXBSH5Xx0j7ELCJOEwd12SPOVTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OU180hws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WveADRI1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF75C19425;
-	Thu, 14 May 2026 00:50:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OU180hws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D0CC19425;
+	Thu, 14 May 2026 00:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778719814;
-	bh=c7fl85p+dHqJaJt4mkFQOqOPrf+QqNSoUyC8UhxH4XY=;
+	s=k20201202; t=1778720290;
+	bh=Rw1ZYh2s5YV7uTtWUn+PIMnfiHPfdexI5oxA9GbXFNE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=WveADRI1lmgJuxJpInrK6XjCpofZFSAV9JTRYLS2bNn3BTtKFQdjhSHDnkSOO4T2P
-	 oskdNFmsYIDwxuqglSeHFlyhpcNynR79pMmZFO28U3yfkP1TfYY7qRJ2sQ+43lT1N7
-	 wA8s+M1ac6m8xHEwhOkd/YxtZAtjw7b5nDyIUgnJF4Mb8ks9jOIof1My0KdC+/OKOg
-	 POMLkCdROM1x3HaUxKc72qZwEnqWqfqzse2Qd0tkBGRjVmuclLoRQTyjLCG/dnuYXt
-	 dYadPMzxqUqOtE3fu467NDbZVzjP9iE0YxqjEk12EYWyxyMlKkATb+z5+ivRtBTGEZ
-	 17qPp6OGXIImw==
+	b=OU180hwsB/92ji/Q3mp4XXekkrMpyU0C/Ifzcn9k458QdjDI3TxMBRpL2R2njKdx7
+	 9/MLXGzTg1daqzM47Sl3Mpq26DcChywPyNFxSqYrhE/ft6INBiRcKhmxJpq6ypaqOT
+	 Y7HJqfI2JGMcq7OPLIIPeEu+nGdNYyww+newea0dWzn9OtGcan527KfGOcWn0SvcAB
+	 Ls7TMLRxLdXBTHi+rdS0AJwJ6LM82onqqVanlSo38YbX0beK4pXMougCkAzcMHFUwD
+	 zUEnxmZNnbRvd5UGEkez5KaZVsATYq+UrbQ8ZAY7v6MUdCrMc+BZONAFloRw/cYDKu
+	 Y4j899NaFbEEQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 05/18] perf trace beauty: Make beauty generated C
- code standalone .o files
+Subject: Re: [PATCH 1/7] perf/x86/intel/uncore: Rename refcount fields and
+ other cleanups
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260512174638.120445-6-irogers@google.com>
-References: <20260512174638.120445-6-irogers@google.com>
+To: "Zide Chen" <zide.chen@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260512233048.9577-2-zide.chen@intel.com>
+References: <20260512233048.9577-2-zide.chen@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 00:50:14 +0000
-Message-Id: <20260514005014.6EF75C19425@smtp.kernel.org>
+Date: Thu, 14 May 2026 00:58:09 +0000
+Message-Id: <20260514005809.D4D0CC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The commit message claims to add `perf-util-$(CONFIG_TRACE) +=3D=
- trace/beauty/`, but the actual patch uses `perf-util-y +=3D trace/beauty/`.
+- [High] NULL Pointer Dereference in `uncore_pci_pmu_unregister()` when dev=
+ice registration fails.
+- [High] NULL Pointer Dereference (previously reported as UAF) during perf =
+event operations if a PCI device is removed while events are active.
 --
 
-commit 64f2b861c8affb434c0dc658c744d4faf0fb24fa
-Author: Ian Rogers <irogers@google.com>
+commit 247a617f910d49e9f19af35d0216a5b938d9d034
+Author: Zide Chen <zide.chen@intel.com>
 
-perf trace beauty: Make beauty generated C code standalone .o files
+perf/x86/intel/uncore: Rename refcount fields and other cleanups
 
-This commit refactors the perf trace beauty framework to compile generated
-C code and formatting scripts as standalone object files, rather than
-embedding them directly. This encapsulation improves parallel build
-performance and cleans up Makefile dependencies.
+This commit renames several fields and parameters in the intel uncore PMU
+driver to clarify their purpose, such as activeboxes to die_refcnt and
+box->refcnt to box->cpu_refcnt. It also fixes a typo and removes an
+incorrect refcount increment.
 
-> 2. Create fsconfig.c and flatten embedded beauty .c files to compile as
->    independent standalone objects via trace/beauty/Build, exporting their
->    formatting functions via beauty.h and env.h. Switch arch_errno_names.o
->    and syscalltbl.o assignments directly to perf-util-y and add a top-lev=
-el
->    recursive kbuild hook (perf-util-$(CONFIG_TRACE) +=3D trace/beauty/) to
->    compile them into libperf-util.a, resolving remote linkage for standal=
-one
->    python extensions.
-
-Is this description accurate regarding the recursive kbuild hook? The messa=
-ge
-states it adds perf-util-$(CONFIG_TRACE) +=3D trace/beauty/, but looking at=
- the
-actual patch, it is added unconditionally:
-
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index b03cc59dabf81..e18c80a5c1bca 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -34,6 +34,8 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
->    perf-$(CONFIG_TRACE) +=3D trace/beauty/
->  endif
-> =20
-> +perf-util-y +=3D trace/beauty/
-> +
->  perf-$(CONFIG_LIBELF) +=3D builtin-probe.o
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
+e.c
+> index e9cc1ba921c5e..e200f4744eb9b 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
 
 [ ... ]
 
-Functionally, using perf-util-y appears correct since arch_errno_names.o
-and syscalltbl.o are needed by util/env.c and util/bpf-trace-summary.c
-respectively, which are compiled into libperf-util.a regardless of whether
-CONFIG_TRACE is enabled.=20
+> @@ -1230,7 +1229,7 @@ static void uncore_pci_pmu_unregister(struct intel_=
+uncore_pmu *pmu, int die)
+>  	struct intel_uncore_box *box =3D pmu->boxes[die];
+> =20
+>  	pmu->boxes[die] =3D NULL;
+> -	if (atomic_dec_return(&pmu->activeboxes) =3D=3D 0)
+> +	if (atomic_dec_return(&pmu->die_refcnt) =3D=3D 0)
+>  		uncore_pmu_unregister(pmu);
+>  	uncore_box_exit(box);
 
-Could the commit message be updated to reflect the actual implementation?
+While reviewing these unregistration changes, I noticed a pre-existing issue
+here.
+
+If PMU registration fails during PCI device probe, uncore_pci_pmu_register()
+frees the box and sets pmu->boxes[die] =3D NULL.
+
+Later, when the device is removed, the bus notifier calls
+uncore_pci_pmu_unregister() which fetches the NULL box:
+
+    struct intel_uncore_box *box =3D pmu->boxes[die];
+
+and passes it to uncore_box_exit(box).
+
+Since uncore_box_exit() does not check for NULL before testing box->flags:
+
+static inline void uncore_box_exit(struct intel_uncore_box *box)
+{
+        if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
+
+Does this sequence result in a NULL pointer dereference?
+
+Additionally, if a PCI device is removed while perf events are still active
+on its CPU, this function sets pmu->boxes[die] =3D NULL and frees the box.
+
+If other dies still have boxes present, die_refcnt will be greater than zero
+and uncore_pmu_unregister(pmu) is bypassed.
+
+Could this leave active events scheduled in the perf subsystem?
+
+If the perf subsystem later attempts to read or stop the event,
+uncore_event_to_box() would return NULL. Would subsequent calls like
+uncore_perf_event_update() or accesses to box->n_active then trigger a NULL
+pointer dereference when operating on the missing box?
+
+>  	kfree(box);
+>  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512174638.1204=
-45-1-irogers@google.com?part=3D5
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512233048.9577=
+-1-zide.chen@intel.com?part=3D1
