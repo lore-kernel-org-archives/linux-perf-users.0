@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA537F8A9;
-	Fri, 15 May 2026 06:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8473803E3;
+	Fri, 15 May 2026 06:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778825823; cv=none; b=b961KweN1IjjNTMjgbRhB6v9zoDUjYP1ChlViHexfjti8cK3HrI9ciJ2hy3KzksrXfFMMoSPAQz6KssFh3u0ESZnWShNdrE0TJSdGhNxopQ5pOfuoWbi3brAdg8a+2fMFIZLBOAaQ7cxnEVrH4yEoZW31tivpReWi3nJUsin+8k=
+	t=1778825826; cv=none; b=dy024fauAgVsCEOR9LkCgEPTjRnbORe+dPwHglbfiWVCLZ7BqJCbiljVq9B6TD/w8U5ocXVyJhrBEbg3FlMCWpHZ9ruIMaD0o16rIuNhgx9RQfkxgiJZeQj90Vig/jOf9dlNQV5aBIXVdSKMjfzJdKfRECioMbpf39tAA0OWDwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778825823; c=relaxed/simple;
-	bh=OrnBJs2YcP4mlJZFXIBiK26Z6ULAaXjYoU44Abo17YI=;
+	s=arc-20240116; t=1778825826; c=relaxed/simple;
+	bh=hHap+wM1eQRzzULDKb2nkg5lBd4s0v+6fxdjT5lPSW8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qT+vG5KXWG3h3WXJhvwBEKERmZlHL3hELAadaagE+oVlbLL1ZLrBwll8tMmnJ4DdL7vhTme4aIOA4+Ay1sen9GngFenD34x0oVKC/IyZ3JNz8IoMuydRB55hJK3KCzDIGEvnetLkqtZvUO8o+whtX/a0FZcQNAqNv3EZ1kXdMDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X9bQ2o2L; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=EjMVcQSDSF0NbGfD9jnzqAb1bN/Dz7HgvSNHI44DqLAxjJpG+pyFn+qdI1EcqRTBkl9kDNQxvriUGscQC7Ir5dUqlDzQr0bWSS3gWGInY3clwcxrpZi27F/sqPpByBRiugcBdtZf+hJMAVrOYXAktgx+PHwdyp70sDdMx+j9KqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GoI/ekhL; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X9bQ2o2L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GoI/ekhL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778825822; x=1810361822;
+  t=1778825826; x=1810361826;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OrnBJs2YcP4mlJZFXIBiK26Z6ULAaXjYoU44Abo17YI=;
-  b=X9bQ2o2L7Ltb2A1/owyqZPNmLOGgE6ooX0F+uCJYLf3UjnZnAyrF3WuD
-   d/YnbXoMdfb+weFjCKJfbwV2aQBkEBXICM2Yx0iildY4Q4qubc7qxYddz
-   7t9dQofyPoIHEXR7bnaZMir/vB5ejJ6N0wS0jJvcr1OMi0bUnQvh9ucpg
-   XPVKd5sjEljbj2yScdpiB/Dj81jR+OAI1UCCUQo5Ktm1FJs+fJO4SMhf0
-   8wF/mLxq93SMQ6KkjjqY6GEW5fA8IFGgeH12G58bOjXlqnbpZaDYEsI1X
-   7jbKhZe8/ygfr4pkKey/DZlgONcwiDUhxec+IsHmcomXAZ1cVTM6KGa3B
-   g==;
-X-CSE-ConnectionGUID: Axq5X6qIRp61yEoS2D/iOg==
-X-CSE-MsgGUID: 6na8WCmGQAGQEEp99HFF7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="79635939"
+  bh=hHap+wM1eQRzzULDKb2nkg5lBd4s0v+6fxdjT5lPSW8=;
+  b=GoI/ekhLbhV+OpSO/BvhgK18I1NWdXzqC5tOfFb6ELfpGDaKW61BO4F2
+   oERAc57I4IfN49nlIxqztQrV+aiyUVDhCW6QlDsolswIJCDBLhaZqwZde
+   a0ht8+/ozx6EEHFO/r5CEbqXm17rnoxp2B8ZP1H4V8HtCREFQ1vTX+6qm
+   aYxf/AUyHTVjyGQvOnimsnNkOj5YrYfvzETCQodYdmyklWRe2/JRUzQQH
+   L9ZOA6b+dArulb1eMabbzB4TTttYy+XmUMQB6J7xHLDvFNC4tCynh8Tip
+   //j/uLeqO7Cd7/TrSOBEZ6qX9uoSJUsaVaj4XMh7CKr1G5h+TTQMSfgew
+   w==;
+X-CSE-ConnectionGUID: bcO/3CYhS4C8vsiXBE7ufQ==
+X-CSE-MsgGUID: 7YJeu+jTQxGdCwxXlX1dmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="79635945"
 X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
-   d="scan'208";a="79635939"
+   d="scan'208";a="79635945"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 23:17:02 -0700
-X-CSE-ConnectionGUID: yLuzW40zRECeTX0OL4Y8zQ==
-X-CSE-MsgGUID: Puf86xozSMyiB68ve6W6xg==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 23:17:05 -0700
+X-CSE-ConnectionGUID: AJ1vfvCwR1+uDUkYPlnN2Q==
+X-CSE-MsgGUID: QW0QTeN0TXWWk8m4dZGTkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
-   d="scan'208";a="235968450"
+   d="scan'208";a="235968456"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by fmviesa008.fm.intel.com with ESMTP; 14 May 2026 23:16:58 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 14 May 2026 23:17:02 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 06/11] perf/x86/intel: Update event constraints and cache_extra_regs[] for LNL
-Date: Fri, 15 May 2026 14:11:38 +0800
-Message-Id: <20260515061143.338553-7-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 07/11] perf/x86/intel: Update event constraints and cache_extra_regs[] for ARL
+Date: Fri, 15 May 2026 14:11:39 +0800
+Message-Id: <20260515061143.338553-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260515061143.338553-1-dapeng1.mi@linux.intel.com>
 References: <20260515061143.338553-1-dapeng1.mi@linux.intel.com>
@@ -75,93 +75,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Update perf hard-coded event constraints and cache_extra_regs[] for
-Lunarlake according to the latest LNL perfmon events (V1.22).
+Arrowlake according to the latest ARL perfmon events (V1.17).
 
-LNL introduces new extra register values for the OCR L3 cache events,
-so introduce lnc_hw_cache_extra_regs[] and skt_hw_cache_extra_regs[] to
-reflect the changes.
+ARL shares almost same event constraints and extra MSR configuration
+with LNL except 2 differences.
+- ARL P-core has different extra MSR value for OCR.DEMAND_DATA_RD.L3_MISS
+  and OCR.DEMAND_RFO.L3_MISS. So introduce arl_lnc_hw_cache_extra_regs[]
+  to reflect the difference.
+- ARL-H has extra LPE cores which use crestmont architectures. Add
+  crestmont specific event constraints and hw_cache_extra_regs[] for LPE
+  cores.
 
-LNL perfmon events:
-https://github.com/intel/perfmon/blob/main/LNL/events/lunarlake_lioncove_core.json
-https://github.com/intel/perfmon/blob/main/LNL/events/lunarlake_skymont_core.json
+ARL perfmon events:
+https://github.com/intel/perfmon/blob/main/ARL/events/arrowlake_lioncove_core.json
+https://github.com/intel/perfmon/blob/main/ARL/events/arrowlake_skymont_core.json
+https://github.com/intel/perfmon/blob/main/ARL/events/arrowlake_crestmont_core.json
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 62 +++++++++++++++++++++++++++++-------
- arch/x86/events/intel/ds.c   |  8 +++++
- 2 files changed, 59 insertions(+), 11 deletions(-)
+ arch/x86/events/intel/core.c | 56 ++++++++++++++++++++++++++++++------
+ 1 file changed, 48 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 5d99cfd7e701..d9e421d4b3ed 100644
+index d9e421d4b3ed..dc5ab18888ea 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -225,12 +225,17 @@ static struct event_constraint intel_grt_event_constraints[] __read_mostly = {
- 
- static struct event_constraint intel_skt_event_constraints[] __read_mostly = {
- 	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* INST_RETIRED.ANY */
-+	FIXED_EVENT_CONSTRAINT(0x0100, 0), /* pseudo INST_RETIRED.ANY */
- 	FIXED_EVENT_CONSTRAINT(0x003c, 1), /* CPU_CLK_UNHALTED.CORE */
--	FIXED_EVENT_CONSTRAINT(0x0300, 2), /* pseudo CPU_CLK_UNHALTED.REF */
-+	FIXED_EVENT_CONSTRAINT(0x0200, 1), /* pseudo CPU_CLK_UNHALTED.THREAD */
-+	FIXED_EVENT_CONSTRAINT(0x0300, 2), /* pseudo CPU_CLK_UNHALTED.REF_TSC */
- 	FIXED_EVENT_CONSTRAINT(0x013c, 2), /* CPU_CLK_UNHALTED.REF_TSC_P */
- 	FIXED_EVENT_CONSTRAINT(0x0073, 4), /* TOPDOWN_BAD_SPECULATION.ALL */
-+	FIXED_EVENT_CONSTRAINT(0x0500, 4), /* pseudo TOPDOWN_BAD_SPECULATION.ALL */
- 	FIXED_EVENT_CONSTRAINT(0x019c, 5), /* TOPDOWN_FE_BOUND.ALL */
-+	FIXED_EVENT_CONSTRAINT(0x0600, 5), /* pseudo TOPDOWN_FE_BOUND.ALL */
- 	FIXED_EVENT_CONSTRAINT(0x02c2, 6), /* TOPDOWN_RETIRING.ALL */
-+	FIXED_EVENT_CONSTRAINT(0x0700, 6), /* pseudo TOPDOWN_RETIRING.ALL */
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -415,11 +420,12 @@ static struct extra_reg intel_rwc_extra_regs[] __read_mostly = {
- 
- static struct event_constraint intel_lnc_event_constraints[] = {
- 	FIXED_EVENT_CONSTRAINT(0x00c0, 0),	/* INST_RETIRED.ANY */
--	FIXED_EVENT_CONSTRAINT(0x0100, 0),	/* INST_RETIRED.PREC_DIST */
-+	FIXED_EVENT_CONSTRAINT(0x0100, 0),	/* pseudo INST_RETIRED.ANY */
- 	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
--	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* CPU_CLK_UNHALTED.REF */
-+	FIXED_EVENT_CONSTRAINT(0x0200, 1),	/* pseudo CPU_CLK_UNHALTED.THREAD */
-+	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* pseudo CPU_CLK_UNHALTED.REF_TSC */
- 	FIXED_EVENT_CONSTRAINT(0x013c, 2),	/* CPU_CLK_UNHALTED.REF_TSC_P */
--	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
-+	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* pseudo TOPDOWN.SLOTS */
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_RETIRING, 0),
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BAD_SPEC, 1),
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FE_BOUND, 2),
-@@ -431,8 +437,6 @@ static struct event_constraint intel_lnc_event_constraints[] = {
- 
- 	INTEL_EVENT_CONSTRAINT(0x20, 0xf),
- 
--	INTEL_UEVENT_CONSTRAINT(0x012a, 0xf),
--	INTEL_UEVENT_CONSTRAINT(0x012b, 0xf),
- 	INTEL_UEVENT_CONSTRAINT(0x0148, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x0175, 0x4),
- 
-@@ -443,15 +447,14 @@ static struct event_constraint intel_lnc_event_constraints[] = {
- 	INTEL_UEVENT_CONSTRAINT(0x0ca3, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x04a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x08a4, 0x1),
--	INTEL_UEVENT_CONSTRAINT(0x10a4, 0x1),
-+	INTEL_UEVENT_CONSTRAINT(0x10a4, 0x8),
- 	INTEL_UEVENT_CONSTRAINT(0x01b1, 0x8),
- 	INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc),
- 	INTEL_UEVENT_CONSTRAINT(0x02cd, 0x3),
- 
-+	INTEL_UEVENT_CONSTRAINT(0x87d0, 0x3ff),
- 	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xdf, 0xf),
- 
--	INTEL_UEVENT_CONSTRAINT(0x00e0, 0xf),
--
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -830,6 +833,23 @@ static __initconst const u64 adl_glc_hw_cache_extra_regs
+@@ -850,6 +850,24 @@ static __initconst const u64 lnc_hw_cache_extra_regs
   },
  };
  
-+static __initconst const u64 lnc_hw_cache_extra_regs
++/* ARL specific lioncove hw_cache_extra_regs[] variant. */
++static __initconst const u64 arl_lnc_hw_cache_extra_regs
 +				[PERF_COUNT_HW_CACHE_MAX]
 +				[PERF_COUNT_HW_CACHE_OP_MAX]
 +				[PERF_COUNT_HW_CACHE_RESULT_MAX] =
@@ -169,11 +113,11 @@ index 5d99cfd7e701..d9e421d4b3ed 100644
 + [ C(LL  ) ] = {
 +	[ C(OP_READ) ] = {
 +		[ C(RESULT_ACCESS) ] = 0x10001,		/* OCR.DEMAND_DATA_RD.ANY_RESPONSE */
-+		[ C(RESULT_MISS)   ] = 0x9E7FA000001,	/* OCR.DEMAND_DATA_RD.L3_MISS */
++		[ C(RESULT_MISS)   ] = 0xFE7F8000001,	/* OCR.DEMAND_DATA_RD.L3_MISS */
 +	},
 +	[ C(OP_WRITE) ] = {
 +		[ C(RESULT_ACCESS) ] = 0x10002,		/* OCR.DEMAND_RFO.ANY_RESPONSE */
-+		[ C(RESULT_MISS)   ] = 0x9E7FA000002,	/* OCR.DEMAND_RFO.L3_MISS */
++		[ C(RESULT_MISS)   ] = 0xFE7F8000002,	/* OCR.DEMAND_RFO.L3_MISS */
 +	},
 + },
 +};
@@ -181,78 +125,80 @@ index 5d99cfd7e701..d9e421d4b3ed 100644
  static __initconst const u64 pnc_hw_cache_event_ids
  				[PERF_COUNT_HW_CACHE_MAX]
  				[PERF_COUNT_HW_CACHE_OP_MAX]
-@@ -2510,6 +2530,22 @@ static __initconst const u64 cmt_hw_cache_extra_regs
- 	},
- };
- 
-+static __initconst const u64 skt_hw_cache_extra_regs
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+	[C(LL)] = {
-+		[C(OP_READ)] = {
-+			[C(RESULT_ACCESS)]	= 0x10001,		/* OCR.DEMAND_DATA_RD.ANY_RESPONSE */
-+			[C(RESULT_MISS)]	= 0x13FBFC00001,	/* OCR.DEMAND_DATA_RD.L3_MISS */
-+		},
-+		[C(OP_WRITE)] = {
-+			[C(RESULT_ACCESS)]	= 0x10002,		/* OCR.DEMAND_RFO.ANY_RESPONSE */
-+			[C(RESULT_MISS)]	= 0x13FBFC00002,	/* OCR.DEMAND_RFO.L3_MISS */
-+		},
-+	},
-+};
+@@ -8529,16 +8547,41 @@ __init int intel_pmu_init(void)
+ 	case INTEL_WILDCATLAKE_L:
+ 		pr_cont("Pantherlake Hybrid events, ");
+ 		name = "pantherlake_hybrid";
 +
- static __initconst const u64 arw_hw_cache_extra_regs
- 				[PERF_COUNT_HW_CACHE_MAX]
- 				[PERF_COUNT_HW_CACHE_OP_MAX]
-@@ -7673,6 +7709,9 @@ static __always_inline void intel_pmu_init_lnc(struct pmu *pmu)
- 	hybrid(pmu, event_constraints) = intel_lnc_event_constraints;
- 	hybrid(pmu, pebs_constraints) = intel_lnc_pebs_event_constraints;
- 	hybrid(pmu, extra_regs) = intel_lnc_extra_regs;
++		intel_pmu_init_hybrid(hybrid_big_small);
 +
-+	memcpy(hybrid_var(pmu, hw_cache_event_ids), adl_glc_hw_cache_event_ids, sizeof(hw_cache_event_ids));
-+	memcpy(hybrid_var(pmu, hw_cache_extra_regs), lnc_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
- }
- 
- static __always_inline void intel_pmu_init_pnc(struct pmu *pmu)
-@@ -7691,9 +7730,10 @@ static __always_inline void intel_pmu_init_pnc(struct pmu *pmu)
- 
- static __always_inline void intel_pmu_init_skt(struct pmu *pmu)
- {
--	intel_pmu_init_grt(pmu);
-+	intel_pmu_init_cmt(pmu);
- 	hybrid(pmu, event_constraints) = intel_skt_event_constraints;
--	hybrid(pmu, extra_regs) = intel_cmt_extra_regs;
-+	memcpy(hybrid_var(pmu, hw_cache_extra_regs),
-+	       skt_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
- 	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
- }
- 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 75b7f6f6d8bc..ce23b50f449a 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1507,6 +1507,13 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
- 
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012a, 0x1),		/* OCR.* events */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012b, 0x1),		/* OCR.* events */
++		/* Initialize big core specific PerfMon capabilities.*/
++		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
++		intel_pmu_init_lnc(&pmu->pmu);
 +
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x04a4, 0x1),		/* TOPDOWN.BAD_SPEC_SLOTS */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x08a4, 0x1),		/* TOPDOWN.BR_MISPREDICT_SLOTS */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x10a4, 0x8),		/* TOPDOWN.MEMORY_BOUND_SLOTS */
+ 		goto lnl_common;
+ 
+-	case INTEL_LUNARLAKE_M:
+ 	case INTEL_ARROWLAKE:
++		pr_cont("Arrowlake Hybrid events, ");
++		name = "arrowlake_hybrid";
 +
- 	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3fc),
- 	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
-@@ -1516,6 +1523,7 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x42d0, 0xf),	/* MEM_INST_RETIRED.SPLIT_STORES */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x81d0, 0xf),	/* MEM_INST_RETIRED.ALL_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x82d0, 0xf),	/* MEM_INST_RETIRED.ALL_STORES */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x87d0, 0x3ff),		/* MEM_INST_RETIRED.ANY */
++		intel_pmu_init_hybrid(hybrid_big_small);
++
++		/* Initialize big core specific PerfMon capabilities.*/
++		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
++		intel_pmu_init_lnc(&pmu->pmu);
++		memcpy(hybrid_var(&pmu->pmu, hw_cache_extra_regs),
++		       arl_lnc_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
++
++		goto lnl_common;
++
++	case INTEL_LUNARLAKE_M:
+ 		pr_cont("Lunarlake Hybrid events, ");
+ 		name = "lunarlake_hybrid";
  
- 	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf),
+-	lnl_common:
+ 		intel_pmu_init_hybrid(hybrid_big_small);
  
++		/* Initialize big core specific PerfMon capabilities.*/
++		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
++		intel_pmu_init_lnc(&pmu->pmu);
++
++	lnl_common:
++
+ 		x86_pmu.pebs_latency_data = lnl_latency_data;
+ 		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+ 		x86_pmu.hw_config = adl_hw_config;
+@@ -8549,10 +8592,6 @@ __init int intel_pmu_init(void)
+ 		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
+ 			mtl_hybrid_extra_attr_rtm : mtl_hybrid_extra_attr;
+ 
+-		/* Initialize big core specific PerfMon capabilities.*/
+-		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+-		intel_pmu_init_lnc(&pmu->pmu);
+-
+ 		/* Initialize Atom core specific PerfMon capabilities.*/
+ 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_ATOM_IDX];
+ 		intel_pmu_init_skt(&pmu->pmu);
+@@ -8576,6 +8615,8 @@ __init int intel_pmu_init(void)
+ 		/* Initialize big core specific PerfMon capabilities. */
+ 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+ 		intel_pmu_init_lnc(&pmu->pmu);
++		memcpy(hybrid_var(&pmu->pmu, hw_cache_extra_regs),
++		       arl_lnc_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
+ 
+ 		/* Initialize Atom core specific PerfMon capabilities. */
+ 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_ATOM_IDX];
+@@ -8583,8 +8624,7 @@ __init int intel_pmu_init(void)
+ 
+ 		/* Initialize Lower Power Atom specific PerfMon capabilities. */
+ 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_TINY_IDX];
+-		intel_pmu_init_grt(&pmu->pmu);
+-		pmu->extra_regs = intel_cmt_extra_regs;
++		intel_pmu_init_cmt(&pmu->pmu);
+ 
+ 		intel_pmu_pebs_data_source_arl_h();
+ 		pr_cont("ArrowLake-H Hybrid events, ");
 -- 
 2.34.1
 
