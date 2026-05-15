@@ -1,117 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95630388E62;
-	Fri, 15 May 2026 19:48:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10F133FE0A;
+	Fri, 15 May 2026 19:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874495; cv=none; b=YWAy+zDsAE3w+rZFphPSVZ4MLVOjpsynfgLa5ptfz4wYkVNt11r4NhF/HBKneQxSrI03Im0SzW4USvOt14g4UYui8zT78T+fCgPkrMpULtB9pQIZwJYi76cyz6DRhLrSczjbnC04lsvmnnV9WqA1b527tuNUUe02zn5UA37huuA=
+	t=1778874783; cv=none; b=DaED3RY6WQTsmO+kNoZVO13i1lIiFG0DxU77lXckpzdbNd4v2WU2i7+BWii1p34/wwzJ2TCggUhtps2b6rCODGpwjxh61i+JLTSxxu0mBT6utUB3FeA1N1lgSp7aX7WJKiEOAzlLxLG78cy30CRsaPdFY/ZY+2iQJ86pAI8+XW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874495; c=relaxed/simple;
-	bh=2IEyOw6Z8HJDTQVQ25UoBE85/dz6zn8voxPel+zo1l8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rFSdozXilS+2Ku/qUMhikV8jFfutDQz75aFTBkhU9ImvPIzCSi7/onRWfG2zxaaGVpIbIHP1a+AbI9N7g1B254cIGp8nE6X5hkuPlzk93IgzHqVwCHclHNLeUX6INaIITbkbfJ6gk8IqolYlHfxOxCK9PFeRY8z75A9pF3Iuub4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PomqFIK1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778874783; c=relaxed/simple;
+	bh=EWJtPOGLqzf/IAtmaPmrI+ZNjVDc7cgB37dvTFS1AlA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=SFxK/EIa4Us4+nCOs8O84hB1PYTFSGRhLECOmoUTEvUx3EvPRaLg0L0eEFjS6NBUTxAv1UlKCrnAevVeGoAJO7ZAhtsmIOoE+WNhxPyp2h8D1AjJyPdGn72q/zwyWX/4LvB65GOscrxzqb4ZqosAr0ug5u+yGnWOJQboSVEVKiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bykl5A1B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PomqFIK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8038BC4AF09;
-	Fri, 15 May 2026 19:48:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bykl5A1B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AD5C2BCB0;
+	Fri, 15 May 2026 19:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778874492;
-	bh=2IEyOw6Z8HJDTQVQ25UoBE85/dz6zn8voxPel+zo1l8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PomqFIK1bhI4K3qLhPE97EcIH0XGqk/HKaoduQUAY4JdvtJUv0x9EWF38d+sCywu7
-	 N8KGTe+YYo9aFrouqdUmHyKh5XOV2ktJZ43Bhj6SaJ704HwxzlULdzqlelCX6kiMMd
-	 vD72CZAgFuf+Ic5zAi/HpQT8R20B8Y3rUn7rbPXp8UPaMd+D2vbvgWSYvy3gjsG1Sp
-	 fxFyb/ZMvLCk9j2F5YZZrPi+KV+EvQaYoe8RaZluMpMX6i869PQZiF9Mhm3XiSrL8P
-	 wsfWPo88YTUOPl+p4P639jniztvT80BMmF6RWrBIOWaRxpZgkrD8QmHP89GozFCWpV
-	 5HdROghXGDEbg==
-Date: Fri, 15 May 2026 12:48:10 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, james.clark@linaro.org, 9erthalion6@gmail.com,
-	adrian.hunter@intel.com, alex@ghiti.fr,
-	alexandre.chartre@oracle.com, andrii@kernel.org,
-	ankur.a.arora@oracle.com, aou@eecs.berkeley.edu,
-	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com,
-	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com,
-	eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org,
-	leo.yan@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, martin.lau@linux.dev,
-	memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com,
-	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org,
-	pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me,
-	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com,
-	tglozar@redhat.com, thomas.falcon@intel.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v4 12/14] perf build: Prefix SCRIPTS with output
- directory to fix continuous rebuilds
-Message-ID: <agd4ehtRHi1VbvQ7@google.com>
-References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
- <20260515173852.1378571-1-irogers@google.com>
- <20260515173852.1378571-13-irogers@google.com>
+	s=k20201202; t=1778874783;
+	bh=EWJtPOGLqzf/IAtmaPmrI+ZNjVDc7cgB37dvTFS1AlA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Bykl5A1BWVJeq2TeHd9xOn+MfJMe+JG7rBEcYDvHXvMwjNTnNa4aKhWOKcfUBtsyJ
+	 ck6tS4AFMhLJdErq73+GD8AVnmo0GRjd+wfjVkCKczOuO09qv8adzduUvlMOGFg2k9
+	 KFQPt95DHRE/scZKNJMI9WKSaP4PZgDDNy4EiUHHhBUary0V5GV47ffAirGO9iYAMI
+	 g6KIhv/rObxZft5X+rrJCzepMHQx0lyEnCJzg+cHaaGHkfZl2+8Jadpo28Nxje70Vd
+	 Y3NJUgN0NlDgVUCRaYIOSPHs3WE3iGmT4as4PM0tLbT9cLak86Ru/Icqua4p2YgtYt
+	 xnHfiNOKAUx6A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 08/14] perf build: Move libsymbol dependency out of
+ prepare step
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260515193314.1593560-9-irogers@google.com>
+References: <20260515193314.1593560-9-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 15 May 2026 19:53:00 +0000
+Message-Id: <20260515195302.B0AD5C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260515173852.1378571-13-irogers@google.com>
 
-On Fri, May 15, 2026 at 10:38:49AM -0700, Ian Rogers wrote:
-> In Makefile.perf, ALL_PROGRAMS includes SCRIPTS (perf-archive,
-> perf-iostat). However, unlike PROGRAMS and DLFILTERS, SCRIPTS was not
-> prefixed with $(OUTPUT).
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Removing `$(LIBSYMBOL)` from the `prepare` step breaks the `make ch=
+eck` target and manual object file compilation (e.g., `make util/symbol.o`).
+--
 
-Looks like a bug.
+commit 6df47358116c567d6b28b1ca848835d2f69dc679
+Author: Ian Rogers <irogers@google.com>
 
-Thanks,
-Namhyung
+perf build: Move libsymbol dependency out of prepare step
 
-> 
-> During out-of-tree builds (or when O= is specified), Make checked for the
-> unprefixed target 'tools/perf/perf-archive'. Since the actual script was
-> installed into $(OUTPUT)perf-archive, Make concluded the target was
-> missing and continuously re-executed the script installation rule on every
-> single incremental build.
-> 
-> Prefix SCRIPTS with $(OUTPUT) and update the static pattern rule to ensure
-> Kbuild correctly tracks generated script prerequisites during incremental
-> builds.
-> 
-> Tested-by: James Clark <james.clark@linaro.org>
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.perf | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+This commit moves the libsymbol dependency out of the prepare step and into
+the dependencies for the bench and util libraries to reduce serialization
+during the build.
+
 > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index b8a81c9749a8..fc92d6ceac5b 100644
+> index 876065a02de6f..96a68723109fc 100644
 > --- a/tools/perf/Makefile.perf
 > +++ b/tools/perf/Makefile.perf
-> @@ -405,7 +405,7 @@ python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT
->  # Use the detected configuration
->  -include $(OUTPUT).config-detected
->  
-> -SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
-> +SCRIPTS = $(addprefix $(OUTPUT),$(patsubst %.sh,%,$(SCRIPT_SH)))
->  
->  PROGRAMS += $(OUTPUT)perf
->  
-> @@ -592,8 +592,8 @@ $(GTK_IN): FORCE prepare
->  $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
->  	$(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_LIBS)
->  
-> -$(SCRIPTS) : % : %.sh
-> -	$(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
-> +$(SCRIPTS) : $(OUTPUT)% : %.sh
-> +	$(QUIET_GEN)$(INSTALL) '$<' '$@'
->  
->  $(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
->  	$(Q)$(SHELL_PATH) util/PERF-VERSION-GEN $(OUTPUT)
-> -- 
-> 2.54.0.563.g4f69b47b94-goog
-> 
+
+[ ... ]
+
+> @@ -637,8 +637,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE \
+>  	bpf-skel-prepare \
+>  	$(LIBAPI) \
+>  	$(LIBPERF) \
+> -	$(LIBSUBCMD) \
+> -	$(LIBSYMBOL)
+> +	$(LIBSUBCMD)
+
+Could removing $(LIBSYMBOL) from the prepare step introduce a regression for
+the make check target and manual object file compilation?
+
+Both the make check target and the generic object fallback rules, such as
+make util/symbol.o, depend exclusively on the prepare target:
+
+check: prepare
+	if sparse; \
+...
+
+$(OUTPUT)%.o: %.c prepare FORCE
+	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3D$(build-dir) $@
+
+Previously, prepare triggered the $(LIBSYMBOL) target, which installed
+required libsymbol headers like <symbol/kallsyms.h>.
+
+By removing this dependency, are we no longer guaranteed to have the
+necessary headers installed when running make check or manually building
+object files from a clean tree?
+
+It appears this could cause them to fail with a 'No such file or directory'
+error when processing files that include libsymbol headers.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515193314.1593=
+560-1-irogers@google.com?part=3D8
