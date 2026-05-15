@@ -1,204 +1,135 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C812F3F9A0D
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 18:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847373F9A18;
+	Fri, 15 May 2026 18:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778868510; cv=none; b=AoL2hRVhGgHWAH5jvacYJ2kO3UugnkzLCusWmMXT7XgEX5hzCGvXRfmTQrhqWxoB4+2oWrn8XH87s+s4OqKnYAapplkBYwuJue9UjYHmWDBoVD/2BMTw9H73aU57r0qLXvrIGGXSKizSlf5Ktg9ceiIk4D6Erpzt63MM7ZKNoTM=
+	t=1778868546; cv=none; b=iqXa9zRIk3z+FGbNE0YZcxWoyYY7T+Orhh5MU7m6pY/I+n7fxRKs6GG/xnrVb7fP+e+XaN9jA3GaoRueS67lMl6llVHhBkSvSkzT20uKZ5fLmMJ61J1Aus8Hee6skIJnE8JcA/0JcAWgReRFrA9ZA/vgAFV1H4pykjHC/sB1pcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778868510; c=relaxed/simple;
-	bh=uZ7ygsnr96oe6CK9wJ9zGBwa1AUV6F/q7+OBvaywCn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WNgePW5Ia/ITkWBhZzBPwvW9OD4GnuoAmOmSN2jlxY94QOgDXcwFiTqQC3/wIFhV6jjx5N3xkAHiZxsjkf5Hmplqwi1cHq54rSDAauKDPjGLpYKTqBQcMLvvHJTTtkDLDLkd8Todhw2o77ZrZoON6sjH0cwZlP0avvXoESXkuKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U0iYix8s; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778868546; c=relaxed/simple;
+	bh=tsOSeZ8nXV1cEulyggrhOrxLareLerjjc6os2g3jyRo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=jq8CRd5r6nTqkY+nN9ujIwMIQMxfxg21TqlhH3cQDOoaci/J7csVnRVWKIM6vpgtbTZ8g8oCptTeXsYMOD4f7mthYvU7I+OkaaIxCcaQGMK032jcsDNtBojUXTVqD4bDRk9sqpf4lILdIjIWHqbnGi2Dx5MHYw0+aXCDwgcfLWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghwzTZy5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0iYix8s"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b936331786dso3963866b.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 11:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778868507; x=1779473307; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=la+O/bFtpnyaY0c5pxjy6SLIjk1Ilk22rZ0fIeKn2mA=;
-        b=U0iYix8s4BlXPNZghhnrG2fXfB2g4UqzAjTJFPYT82FOcQ5WbjPVrMPQKmb1L9SjrK
-         EO4omDBZ9OdpRa+vNTJfqWl1UXepKYlPSxTOJxeswmSu732E/5yzPGWzEfk2frDFmHVk
-         p+C15GIfwSJcNevKfX+lUcUUzZkGWcQbfsfUeNNag0mom4c80kxLIIob/O5/twwQArpj
-         J2ez2w9Kqh5PqYhcP22X0A9YX9+pWAK2gbat9rrFdbGgGqFR2gH9fyd7LNqBxwEix36H
-         vnGo7CiMYVfgwKcOdWnJLxvxs4Gwg8UQRX6Ic06KonTylMPsFMpHf3T0vqJAD42DMMeA
-         V2iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778868507; x=1779473307;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=la+O/bFtpnyaY0c5pxjy6SLIjk1Ilk22rZ0fIeKn2mA=;
-        b=Xn5OBQ9LxRJ4TLnq9MEEI/Zi6UsUQT9vTCsum7lY9dgEe+I45+EMe1Ic7yZOdSSp3Y
-         GBcBH5mQ5iX2+rJJTgvrwNlaEkDtq/SHYEAZiEHvjAuBukCqP8BVgATY41MuOSnAWwJA
-         YlRV7bhAgNtKY+/XD9ZpUeagL8HKEzsxDt1w+MlumW35bzpoaTMX0ajTJ5zeWxzpDsH4
-         iQYdGMUfVwzqcWYBin2wYXvt3IfQvaD32qWj967HeWL8ErIbPkLz5QJMeY1RPnKXooiu
-         LlqLkL28oU0zVHTnrzzc8ZWafV+4gVxNHbY8sV/Ueu8eBbBcJryoA50rWsHenws+QwEO
-         38tA==
-X-Forwarded-Encrypted: i=1; AFNElJ/FAkb6tK2uOCBYIoMrrfnYMEDN//m9Qr3+E+RGGXYu6yc9iIm1DKdex/ioL+kHpmyYoPUsxqQ4Hk5cUlQzbgk5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDQqUUM46+Ihqt03WyxtO2TX0gv9Y11QmG2qHCkghoWQuM9bfF
-	M5I/zFJwt+JSUsAU8VdpNFYCNsiKbiRMmRljpXFX8IM28oc9eTjbc6Uodgc5cOe5Jj4=
-X-Gm-Gg: Acq92OHvIaSyOz5mQRKJarzrN6Zu5Tnb5vUqnIcEfNwvDfGc1WwCeAWgk55vChhKu44
-	KobvAcbOR4IymubXoUq9UF3vh3iR7a4ZJEd/Rnwdh4vOVZ5RZAOfpRwLy3K+ZTQbI5SoUpQ0XN6
-	JIhxjgXcpsc8dDjMu17bihkKAMTrlDYOTa7CAbPgrqXDFcz/OJBPIgAhvqyl9nFuRssuwhD91V4
-	w/hmvmtVEDRRD28CP6BqG1ew0KjCEurddRGab8enLNw2vxpLP3ed+OTfTs4NNNIZFKLAPJ0jBhE
-	U9vwWVByoukIuYmShL9yAGyETcW78RRK3Flve/I6fsvLPbUQLJtJ7qJ+a4T1mlDK5j8abGLEfbE
-	A3a4Cc30zr96wQ+wq93D9Dtyjh4xIpAauEqcrI10wq1JblZIxXjXZyT7Ww+tdLRZlyzBPMFtQ8E
-	VNu1VVPWNucpG1FBmWSh9CtQB1Wob+BnCx
-X-Received: by 2002:a17:906:6185:b0:bd0:6dbe:22b1 with SMTP id a640c23a62f3a-bd5177ec5dfmr278321866b.12.1778868506983;
-        Fri, 15 May 2026 11:08:26 -0700 (PDT)
-Received: from pc-oliwiera ([2a02:2a40:4bf0:bd00:6130:de6:bb7:addf])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd4f4bd1bc9sm263471566b.9.2026.05.15.11.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 11:08:26 -0700 (PDT)
-From: Oli R <sigmatwojastara@gmail.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	linux-arm-msm@vger.kernel.org (open list:DRM DRIVER for Qualcomm display hardware),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVER for Qualcomm display hardware),
-	freedreno@lists.freedesktop.org (open list:DRM DRIVER for Qualcomm display hardware),
-	linux-kernel@vger.kernel.org (open list),
-	linux-crypto@vger.kernel.org (open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER - DB...),
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-Cc: Oli R <sigmatwojastara@gmail.com>
-Subject: [PATCH] treewide: replace /usr/bin/python3 shebangs with env python3
-Date: Fri, 15 May 2026 20:07:59 +0200
-Message-ID: <20260515180806.246914-1-sigmatwojastara@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghwzTZy5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8EEC2BCB0;
+	Fri, 15 May 2026 18:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778868546;
+	bh=tsOSeZ8nXV1cEulyggrhOrxLareLerjjc6os2g3jyRo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=ghwzTZy5uF3kK1V4KFMzhkc3stmJUD148ELjpPldcmOlshFk2rond2kQsBLKEpvqR
+	 i/Q2Y/ipNBx6yEPf5FMNLpcXywirxCszNASMPfWhECwg2ykaDDED5naEJaQDnoBoj4
+	 V5w1KpRp3IibyOJxIEW9BnljdLjhGZvyK4F9daGBz0LEbKnGz+LviPFw1Y9iyRsbtJ
+	 qUr+WDkJd0+r374Mj7BqPlmKKPLNV7jGp7ag0Jqvqdb1C8r+grif1qIYitrTg2Yoz4
+	 PW4ZHe7WAgqdEit31dC/M2FZ82DbTzr2n+A8iUocGEtGZU2+bppVVnvelNb/jcNcmp
+	 L30O03NsMPVUg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 10/14] perf pmu-events: Split big_c_string storage
+ into standalone compilation unit
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260515173852.1378571-11-irogers@google.com>
+References: <20260515173852.1378571-11-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 15 May 2026 18:09:05 +0000
+Message-Id: <20260515180905.DA8EEC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Use /usr/bin/env python3 instead of hardcoded interpreter paths
-to improve portability across environments where python3 is not
-installed in /usr/bin.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [Medium] Race condition in parallel builds causing non-deterministic 'No =
+such file or directory' errors.
+- [Medium] Meaningful code and commit message mismatch regarding dependency=
+ chaining.
+- [Low] NO_JEVENTS=3D1 fallback and default jevents.py mode fail to compile=
+ due to big_c_string linkage conflict.
+--
 
-No functional changes intended.
+commit b03f8034531e9c582fd4777daf59f93349bcf916
+Author: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Oli R <sigmatwojastara@gmail.com>
----
- drivers/gpu/drm/msm/registers/gen_header.py                     | 2 +-
- scripts/macro_checker.py                                        | 2 +-
- tools/crypto/ccp/dbc.py                                         | 2 +-
- tools/crypto/ccp/dbc_cli.py                                     | 2 +-
- tools/crypto/ccp/test_dbc.py                                    | 2 +-
- tools/perf/tests/shell/lib/perf_json_output_lint.py             | 2 +-
- .../selftests/devices/probe/test_discoverable_devices.py        | 2 +-
- tools/testing/selftests/rseq/rseq-slice-hist.py                 | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+perf pmu-events: Split big_c_string storage into standalone compilation unit
 
-diff --git a/drivers/gpu/drm/msm/registers/gen_header.py b/drivers/gpu/drm/msm/registers/gen_header.py
-index 2acad951f1e2..10316f517a7d 100644
---- a/drivers/gpu/drm/msm/registers/gen_header.py
-+++ b/drivers/gpu/drm/msm/registers/gen_header.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- #
- # Copyright © 2019-2024 Google, Inc.
- #
-diff --git a/scripts/macro_checker.py b/scripts/macro_checker.py
-index ba550982e98f..7dbb114a57d5 100755
---- a/scripts/macro_checker.py
-+++ b/scripts/macro_checker.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- # Author: Julian Sun <sunjunchao2870@gmail.com>
- 
-diff --git a/tools/crypto/ccp/dbc.py b/tools/crypto/ccp/dbc.py
-index 2b91415b1940..cd56a63aa8ce 100644
---- a/tools/crypto/ccp/dbc.py
-+++ b/tools/crypto/ccp/dbc.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- 
- import ctypes
-diff --git a/tools/crypto/ccp/dbc_cli.py b/tools/crypto/ccp/dbc_cli.py
-index bf52233fd038..bfe34f01e619 100755
---- a/tools/crypto/ccp/dbc_cli.py
-+++ b/tools/crypto/ccp/dbc_cli.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- import argparse
- import binascii
-diff --git a/tools/crypto/ccp/test_dbc.py b/tools/crypto/ccp/test_dbc.py
-index bb0e671be96d..0ee3da6c6be7 100755
---- a/tools/crypto/ccp/test_dbc.py
-+++ b/tools/crypto/ccp/test_dbc.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- import unittest
- import os
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index dafbde56cc76..dccafd507bb7 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- # Basic sanity check of perf JSON output as specified in the man page.
- 
-diff --git a/tools/testing/selftests/devices/probe/test_discoverable_devices.py b/tools/testing/selftests/devices/probe/test_discoverable_devices.py
-index d7a2bb91c807..72a94bbfbc7b 100755
---- a/tools/testing/selftests/devices/probe/test_discoverable_devices.py
-+++ b/tools/testing/selftests/devices/probe/test_discoverable_devices.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- #
- # Copyright (c) 2023 Collabora Ltd
-diff --git a/tools/testing/selftests/rseq/rseq-slice-hist.py b/tools/testing/selftests/rseq/rseq-slice-hist.py
-index b7933eeaefb9..2c43b2e2bf0d 100644
---- a/tools/testing/selftests/rseq/rseq-slice-hist.py
-+++ b/tools/testing/selftests/rseq/rseq-slice-hist.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/python3
-+#!/usr/bin/env python3
- 
- #
- # trace-cmd record -e hrtimer_start -e hrtimer_cancel -e hrtimer_expire_entry -- $cmd
--- 
-2.54.0
+This commit splits the generation of big_c_string into a dedicated
+compilation unit to speed up Kbuild. It modifies jevents.py to
+optionally generate this file, adds it to the build system, and
+updates the pmu-events.h header.
 
+>     To guarantee 100% backward compatibility with GNU Make 4.0+ (avoiding=
+ the
+>     Make 4.3+ grouped target &: syntax which causes older Make versions l=
+ike
+>     4.2.1 to spawn multiple concurrent jevents.py processes during parall=
+el
+>     builds), implement a robust dependency chaining pattern:
+>       $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+>       $(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
+>               @:
+
+The commit message states that a no-op recipe (@:) is used for dependency
+chaining, but the actual code implements a file-recovery shell script
+instead. Could the commit message be updated to match the code?
+
+> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> index dc1df2d57ddc1..00ae173cdb5c8 100644
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+
+[ ... ]
+
+> @@ -224,6 +234,10 @@ endif
+>  # and inputs are dependencies.
+>  $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVEN=
+TS_MODEL) $(OUT_DIR) $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVEN=
+TS_MODEL) \
+> +            $(OUT_DIR) $(PMU_EVENTS_C) $(PMU_EVENTS_STRING_C)
+> +
+> +$(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
+> +	$(Q)test -f $@ || { rm -f $<; $(MAKE) -f $(srctree)/tools/build/Makefil=
+e.build dir=3Dpmu-events obj=3Dpmu-events; }
+
+Does this introduce a race condition during parallel builds?
+
+If pmu-events-string.c is missing but pmu-events.c is up-to-date, a
+parallel build could execute this recipe concurrently with the compilation
+of pmu-events.o. The rm -f $< would remove pmu-events.c while the C compiler
+is trying to read it, leading to a "No such file or directory" error.
+
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
+mu-events.h
+> index d3b24014c6ff1..fb4eb5b7ec163 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -141,4 +141,6 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, vo=
+id *data);
+> =20
+>  const char *describe_metricgroup(const char *group);
+> =20
+> +extern const char big_c_string[];
+
+Will this cause a compilation error when building with NO_JEVENTS=3D1?
+
+The build uses empty-pmu-events.c which still defines big_c_string as:
+
+static const char *const big_c_string =3D ...;
+
+Including this header will result in a conflicting type and linkage error
+between const char[] and const char *const, and between extern and static.
+The same conflict appears to happen when invoking jevents.py without the
+output_string_file argument.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515173852.1378=
+571-1-irogers@google.com?part=3D10
