@@ -1,145 +1,168 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165B5413D78
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 19:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874035; cv=pass; b=I4Z8z8CbflQfDGBjsOPd1/rIgEUyXxT5Bgoj9CKcAAPKSt+kdldZzJoc4Qi7+ZVG8Pa7cU0E/LH+DtCksgyQh4u8PC2+kuZmfn8pvOGLdgO4sMhH7/AkqyI+DI4YDwAz9jlaIZQcnOQu43GN+IO+z9gKVQkgboPdNhFBbQG+AkM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874035; c=relaxed/simple;
-	bh=YKwe6jSULfstrnXD5pmaH7VOhInZQUPQ48ryfkK9oy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lgw18UTRxGCSoICQX5VdzSeQ2/FMuUoIJTUeocPwD7HJ+hsSE5utB8AOXf4/dD7Nt7WmSNRfUee1lhjRaDk/jTzp338Ud9cnr5RrU8hKRRjdu+f8Ek5TVOwnzUVaazBMEZSqySdx7VF4JjLqcSB19xCtCOEK0Avnu97r6ndZv5s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Km2ZCvYI; arc=pass smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B676376BEC;
+	Fri, 15 May 2026 19:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778874107; cv=none; b=M60CFGkcl2y1g8Xt9JCt+3ZZ5dPm6ovyGg0LWCuStwuLdSg44XxbCg2WFA8gWS+fCi4ZnMRw4fptYu5KNeUyPqufDN70gq/yBbhnWunw1SylmDsO5/9LiI5ellU1ti6M6gMGmxo/0yrJYA7wqd7rW0EIFHqbrLO9ArS0Nnv4+vY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778874107; c=relaxed/simple;
+	bh=1yXhHqfMG9ohZvPpaTmXOpNtz2MyNmvkQA5IXlkA9fk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=em2WnvVSBwGgzmYVKOvwILfugBNNqM5ra5fiBx17KjQr9RSsVlskk8TxGugUKWdOw4q1eYaWtuH7BFRlaaBiqy84ndHym+VQe0AlelcvdFOoojKuNei8EHSm+l4pyOzTTMF3t7Xbi1OnWLXld8gwfKAESY3zZcE1FYGBpDLq8aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oByE9J/L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Km2ZCvYI"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so1265ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 12:40:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778874033; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HtZVDf+yaz/hCF7iSHYkVmoqlMuy/a8ZLX1XE5TDIS3eZlSPE6buf1G9/FrP7SIdyh
-         wXsKDVYejNSbB3VjGafBp3pF60PYcplu8XLVNB0QotMglgSJ0zvHg5b7fWuHShFek+d7
-         1XhTnB7G2FItfMF8rOxDGcBvll43OssLKIhSjdaGxgFCUHnK1Nrkh815C22vYo54t62L
-         Run+RuFJsTL+uVAFRc38vMG3VG3bqfi86j93bdPbKUag8/QfNXR+RODjDXtOClgTwVyR
-         JOQSEpTTQ4Hak9/C36gCqwNh+8MB9PzsEjHPw2rstCl+UDfcba070UIux/psD7Kk9HL5
-         NZqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=YKwe6jSULfstrnXD5pmaH7VOhInZQUPQ48ryfkK9oy0=;
-        fh=4K/q7KxT+nCuyhhBemK8xbrZrgsv8S0tLsakCixVUhs=;
-        b=LONeF2WQ3kTzvFRihW0XNIxRNIZQnnJdV8KDyoZiwPj04xTGT8uVVxpE5tfhULLv/z
-         /vCN27cVg+ejGDkmyCc4Bo+nttxBTOAMJSRSOR95F92lg268n5A6X1bMjaI4c/bOXoKY
-         ir1vodo3I8G3s9VvbitD6rUI9EeL0kfb5O76NFk7QW0SpULILQgQrDQ1EsAgwSyTKcXJ
-         p+fIU80tvPT2gZPtQwtEGI5JK+h1ybJ8oQISO5JdP1zoZ9jZL3rGheGtpc1vz/D98w1R
-         4ZLeZH/Xn8gJjT4pviD0JTWeBSqQEQNu29pGg5sRDGKzC/A0vN1WVFRzdsUPtOL++hJs
-         Ws7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778874033; x=1779478833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YKwe6jSULfstrnXD5pmaH7VOhInZQUPQ48ryfkK9oy0=;
-        b=Km2ZCvYINIWbOQag45BZVDgLYzBbCoaYqsiRXuXiu5hlxT5NDX8nJT5aE864FVV7jc
-         kjTwydiTdyoOgf6rJVv97p9GdeutVd13RYE1kqPjteyxDIp7fyaxXD5hgRdwMkhVbAIW
-         gHV1SehEVnaFJP9loafdXjEddo0RS+zo+MdvDvPHAjdkQSLX7uX069JzT1sShFBht6v/
-         q8FjhSJmuN+WPq4Lvrhgk0WhkrBIGwgPWjlB9XNFGHwHQ28pj7Y5fVHPBBtbE/0Y2fh4
-         nkkztc6tjhZIDBOe2zJK7VZw6O1DzeQQyo5WQ9PH9JyDdFHkdg9b5v+PX8zuFoHYLGC4
-         /13Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778874033; x=1779478833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YKwe6jSULfstrnXD5pmaH7VOhInZQUPQ48ryfkK9oy0=;
-        b=cnTC0d1Zoi/UbTw9e0jgG8DQulXrXDMNQsoPGobX8Byng8kQo4YJAY1Wsqlr6RHvsQ
-         +7ndS9blpHZ8ZvVfESIWjJCFOSyKqQWIA7lfTkTn2HrpkvJZP632Pc33MMqWBFQLQmCl
-         jxHWU0SQmtKfuNpfCq9U071zTi6b+zpjTQWteFpsgossID9KhJoL9+4KinVGUzFGJMwj
-         thfOj9eVN1nWUz7jPPKR6240iBHBygylwj4bQmp4C2V9AXOztGGBOqT9zqaKI9DSSFL3
-         To+iRTh06gw0kHYfG72RoA2nxDu/rHkU3TH9tORqFMDt1Nob1+B5BfJiNh95p639r9PO
-         qKfQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/1g4oq/il+wVjb9h5m8ssfkI0tBoHLxyI7TLzXFdnZmeWNjaJb8MH1KyUggV27RUK0q8IZqnl/K5mCx7l8TVj0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLj+ytoqO0she0thcHQ9+z5+rsAQA9Li9Buv73vkJJU6VcdoGg
-	+dLIDinx704dLyG+BR/TlXRJjHcAk/4ccypWXE6lxN3Jly9+2qV9QRIVWMuwyljuCd8YZM6nGiE
-	wPjcD4k7Q56oFBOoOwiRJi2x/czU52+m4H9CFpGUL
-X-Gm-Gg: Acq92OGDmMayHR9tTQwhN3sb6R+64JYJkJZRtC9HdSx7Ml6+fe7PLVaG/FvGkcY3RJ+
-	nMBExCujDuhqepbMLGd4G6qzPB5T4/kxjEy9iPI+Rg831Oq73tVBbufk0Pj3Gf66ao8jERvLFX/
-	z3pyl0Oc1x0EW/1iexH9jfRAASeKCOh/eKAGBnryhQOavhpmcClJmbfP3AushByKLUBuG6PKD0h
-	B314CD8uAiRdXS9fi9PTliahNOyFsOBo5wsMd3JwrYGXu7zEz6638DXe3EKUCvE0BUEs12AoDQu
-	71UQ+MXEsd24NZXRRUpA9BAsg2BZgg==
-X-Received: by 2002:a17:903:28e:b0:2bd:6dad:3df8 with SMTP id
- d9443c01a7336-2bda0ea389amr433985ad.22.1778874032694; Fri, 15 May 2026
- 12:40:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oByE9J/L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54CCC2BCB0;
+	Fri, 15 May 2026 19:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778874106;
+	bh=1yXhHqfMG9ohZvPpaTmXOpNtz2MyNmvkQA5IXlkA9fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oByE9J/L5tCLwamlatLjUIYlyuszL75CP+AGdM0d50Q05TDHdxuVRYqYoVuwC2e24
+	 Gas3bFp051gEhMsymJg/pQYUtqA8SWMgfyU3htTr+ONr4hEvSZTDe8wtIB2Tf83AkV
+	 wX6xK462qPgkQBWKxuRibN4up+A00SfcoPrbZ9JSwwbLXIgAqmwItNjMX6PJ7B5KWs
+	 8or80lh96NI0gS3VnQv3EjSrBknbc4ma5sPxRa20J30F4ea4QAhyyoLzNisLxa+aGy
+	 7m0RCWFHLcZUZfzYnZfJKNtU5oQhMd6mnLBeFi9T4Cgkgd5gdFK/1NggS6Wkukon7y
+	 +NdZZpkvPlcbw==
+Date: Fri, 15 May 2026 12:41:44 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, james.clark@linaro.org, 9erthalion6@gmail.com,
+	adrian.hunter@intel.com, alex@ghiti.fr,
+	alexandre.chartre@oracle.com, andrii@kernel.org,
+	ankur.a.arora@oracle.com, aou@eecs.berkeley.edu,
+	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com,
+	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com,
+	eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org,
+	leo.yan@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, martin.lau@linux.dev,
+	memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com,
+	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org,
+	pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me,
+	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com,
+	tglozar@redhat.com, thomas.falcon@intel.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH v4 11/14] perf pmu-events: Parallelize JSON and metric
+ pre-computation in jevents.py
+Message-ID: <agd2-MgXgs---InR@google.com>
+References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
+ <20260515173852.1378571-1-irogers@google.com>
+ <20260515173852.1378571-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515180806.246914-1-sigmatwojastara@gmail.com> <20260515181547.99D82C2BCB0@smtp.kernel.org>
-In-Reply-To: <20260515181547.99D82C2BCB0@smtp.kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 15 May 2026 12:40:21 -0700
-X-Gm-Features: AVHnY4KI1lrja2wjIoxRnOM6Okw9ETfkCmzYrHCz9L_mjetwnnwff4VNJUH4ucQ
-Message-ID: <CAP-5=fUV6W=TBXbCHARMJwm1Pjb4uJCO82EZ3fjU7jsiR51t0w@mail.gmail.com>
-Subject: Re: [PATCH] treewide: replace /usr/bin/python3 shebangs with env python3
-To: sashiko-reviews@lists.linux.dev
-Cc: Oli R <sigmatwojastara@gmail.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260515173852.1378571-12-irogers@google.com>
 
-On Fri, May 15, 2026 at 11:35=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] Commit message states it replaces `#!/usr/bin/python3` shebang=
-s and causes no functional changes, but actually changes `#!/usr/bin/python=
-` to `#!/usr/bin/env python3` in `tools/perf/tests/shell/lib/perf_json_outp=
-ut_lint.py`.
-> --
->
-> commit 7d3e9689ede53be80434b3ba8cd07c27777d11ad
-> Author: Oli R <sigmatwojastara@gmail.com>
->
-> treewide: replace /usr/bin/python3 shebangs with env python3
->
-> This commit replaces hardcoded /usr/bin/python3 interpreter paths with
-> /usr/bin/env python3 to improve portability.
->
-> > treewide: replace /usr/bin/python3 shebangs with env python3
-> [ ... ]
-> > No functional changes intended.
->
-> Is this description accurate?
->
-> [ ... ]
->
-> > diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tool=
-s/perf/tests/shell/lib/perf_json_output_lint.py
-> > index dafbde56cc76f..dccafd507bb79 100644
-> > --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > @@ -1,4 +1,4 @@
-> > -#!/usr/bin/python
-> > +#!/usr/bin/env python3
->
-> Could this affect functionality on systems where python defaults to Pytho=
-n 2
-> or is managed differently?
+On Fri, May 15, 2026 at 10:38:48AM -0700, Ian Rogers wrote:
+> Currently, jevents.py parses hundreds of JSON event and metric files
+> sequentially across all CPU architectures during Kbuild startup, taking
+> ~3.3 seconds of pure single-core execution time.
 
-The change looks good to me, but I wonder it should be split into
-separate patches for the different subsystems. We do not care about
-Python 2, so I think some review prompt improvements are necessary.
+I'm curious about this.  Does it really need to parse all architectures?
+Oh... is it for perf stat record/report?
 
-Thanks!
-Ian
+Thanks,
+Namhyung
 
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515180806.24=
-6914-1-sigmatwojastara@gmail.com?part=3D1
->
+> 
+> Refactor jevents.py to pre-populate its internal JSON AST cache in parallel
+> across all available CPU cores using ProcessPoolExecutor. Define the worker
+> process initializer _init_worker at the top-level module scope to guarantee
+> flawless pickling and standard event mapping inheritance under spawn
+> multiprocessing semantics (avoiding AttributeError crashes when spawn is
+> used instead of fork). This accelerates jevents.py execution by over 11x
+> (from 3.3s down to ~290ms), fully reclaiming multi-core concurrency during
+> the build generation phase.
+> 
+> Tested-by: James Clark <james.clark@linaro.org>
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/jevents.py | 36 ++++++++++++++++++++++++++++----
+>  1 file changed, 32 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 6adf4b30e1ba..ebacb056524f 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -457,8 +457,8 @@ class JsonEvent:
+>      return f'{{ { _bcs.offsets[s] } }}, /* {fix_comment(s)} */\n'
+>  
+>  
+> -@lru_cache(maxsize=None)
+> -def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+> +_json_cache = {}
+> +def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
+>    """Read json events from the specified file."""
+>    try:
+>      events = json.load(open(path), object_hook=JsonEvent)
+> @@ -474,12 +474,16 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+>    if updates:
+>      for event in events:
+>        if event.metric_name in updates:
+> -        # print(f'Updated {event.metric_name} from\n"{event.metric_expr}"\n'
+> -        #       f'to\n"{updates[event.metric_name]}"')
+>          event.metric_expr = updates[event.metric_name]
+>  
+>    return events
+>  
+> +def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+> +  key = (path, topic)
+> +  if key not in _json_cache:
+> +    _json_cache[key] = _read_json_events_impl(path, topic)
+> +  return _json_cache[key]
+> +
+>  def preprocess_arch_std_files(archpath: str) -> None:
+>    """Read in all architecture standard events."""
+>    global _arch_std_events
+> @@ -1381,6 +1385,14 @@ const char *describe_metricgroup(const char *group)
+>  }
+>  """)
+>  
+> +def _parallel_read_json_events(task: Tuple[str, str]) -> Tuple[str, str, Sequence[JsonEvent]]:
+> +  path, topic = task
+> +  return path, topic, _read_json_events_impl(path, topic)
+> +
+> +def _init_worker(std_events: dict) -> None:
+> +  global _arch_std_events
+> +  _arch_std_events = std_events
+> +
+>  def main() -> None:
+>    global _args
+>  
+> @@ -1459,9 +1471,25 @@ struct pmu_table_entry {
+>      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
+>  
+>    archs.sort()
+> +  import concurrent.futures
+> +  tasks = []
+> +  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
+> +    if len(parents) == 0:
+> +      return
+> +    if item.is_file() and item.name.endswith('.json') and not item.name.endswith('metricgroups.json'):
+> +      tasks.append((item.path, get_topic(item.name)))
+> +
+>    for arch in archs:
+>      arch_path = f'{_args.starting_dir}/{arch}'
+>      preprocess_arch_std_files(arch_path)
+> +    ftw(arch_path, [], collect_json)
+> +
+> +  with concurrent.futures.ProcessPoolExecutor(initializer=_init_worker, initargs=(_arch_std_events,)) as executor:
+> +    for path, topic, events in executor.map(_parallel_read_json_events, tasks):
+> +      _json_cache[(path, topic)] = events
+> +
+> +  for arch in archs:
+> +    arch_path = f'{_args.starting_dir}/{arch}'
+>      ftw(arch_path, [], preprocess_one_file)
+>  
+>    _bcs.compute()
+> -- 
+> 2.54.0.563.g4f69b47b94-goog
+> 
