@@ -1,168 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B676376BEC;
-	Fri, 15 May 2026 19:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF237DAA6
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 19:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874107; cv=none; b=M60CFGkcl2y1g8Xt9JCt+3ZZ5dPm6ovyGg0LWCuStwuLdSg44XxbCg2WFA8gWS+fCi4ZnMRw4fptYu5KNeUyPqufDN70gq/yBbhnWunw1SylmDsO5/9LiI5ellU1ti6M6gMGmxo/0yrJYA7wqd7rW0EIFHqbrLO9ArS0Nnv4+vY=
+	t=1778874124; cv=none; b=caDjOXyx7faRiMzytnD3nbG5ycE2YARqAyOtuHySPPGuhlimhlY3I1ChQO8lpMvqIXDRMCKQn6NFRrswc+KQtKivwSJGm5WjZ/4LRiJH0ORsku2kRgjhT+wVrpfzWK2x80sNlRYwt1NheRNGUlqrolQ+YXPDZGLuxysTdNOdqKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874107; c=relaxed/simple;
-	bh=1yXhHqfMG9ohZvPpaTmXOpNtz2MyNmvkQA5IXlkA9fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=em2WnvVSBwGgzmYVKOvwILfugBNNqM5ra5fiBx17KjQr9RSsVlskk8TxGugUKWdOw4q1eYaWtuH7BFRlaaBiqy84ndHym+VQe0AlelcvdFOoojKuNei8EHSm+l4pyOzTTMF3t7Xbi1OnWLXld8gwfKAESY3zZcE1FYGBpDLq8aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oByE9J/L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778874124; c=relaxed/simple;
+	bh=G4CqAYKsY3Wc2t7gyTbD4Gv39XASTXHXqs798KAVaOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I7ZffZzMG9+aJ6+6A7FDW49JotabMMhb1PD5Z9KYe0/4GBZbvNpyrTbAWDv7TUYRMClNDrWLjSAJjrHHPMWs3Q9zVXBEwdOTViipgNBGz40L2yAIKOX/32E5+1AG5NAaM2XpZZ/+Tdvv6LUSqkGV8tKxPY/FAvbw++kQIBYUug4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KiPnS4dp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oByE9J/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54CCC2BCB0;
-	Fri, 15 May 2026 19:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778874106;
-	bh=1yXhHqfMG9ohZvPpaTmXOpNtz2MyNmvkQA5IXlkA9fk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oByE9J/L5tCLwamlatLjUIYlyuszL75CP+AGdM0d50Q05TDHdxuVRYqYoVuwC2e24
-	 Gas3bFp051gEhMsymJg/pQYUtqA8SWMgfyU3htTr+ONr4hEvSZTDe8wtIB2Tf83AkV
-	 wX6xK462qPgkQBWKxuRibN4up+A00SfcoPrbZ9JSwwbLXIgAqmwItNjMX6PJ7B5KWs
-	 8or80lh96NI0gS3VnQv3EjSrBknbc4ma5sPxRa20J30F4ea4QAhyyoLzNisLxa+aGy
-	 7m0RCWFHLcZUZfzYnZfJKNtU5oQhMd6mnLBeFi9T4Cgkgd5gdFK/1NggS6Wkukon7y
-	 +NdZZpkvPlcbw==
-Date: Fri, 15 May 2026 12:41:44 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, james.clark@linaro.org, 9erthalion6@gmail.com,
-	adrian.hunter@intel.com, alex@ghiti.fr,
-	alexandre.chartre@oracle.com, andrii@kernel.org,
-	ankur.a.arora@oracle.com, aou@eecs.berkeley.edu,
-	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com,
-	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com,
-	eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org,
-	leo.yan@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, martin.lau@linux.dev,
-	memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com,
-	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org,
-	pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me,
-	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com,
-	tglozar@redhat.com, thomas.falcon@intel.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v4 11/14] perf pmu-events: Parallelize JSON and metric
- pre-computation in jevents.py
-Message-ID: <agd2-MgXgs---InR@google.com>
-References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
- <20260515173852.1378571-1-irogers@google.com>
- <20260515173852.1378571-12-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiPnS4dp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778874121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vSQPe0r2nBMN4k24aUYGad00zpFOKV9doRFflow+NpE=;
+	b=KiPnS4dprD3M29+iwux3oA2wMJDAzGm5nitTWAsOjiycHR4QGjBXb4fp0uBHJMPtcfdsNy
+	8nCUSRffVHgoPFDmIJfVa6wGmgCFqevblnPPJVhKEXUZ0qv8ImYwVNNtdW3wn+CNzR2Mi3
+	F7uSuHubfCwSDpiru/2NKEz+vw35SVU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-230-ey5hywcXOVqykllHUuFPrw-1; Fri,
+ 15 May 2026 15:41:56 -0400
+X-MC-Unique: ey5hywcXOVqykllHUuFPrw-1
+X-Mimecast-MFC-AGG-ID: ey5hywcXOVqykllHUuFPrw_1778874114
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F25E51956094;
+	Fri, 15 May 2026 19:41:53 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.80.109])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 63FB11956053;
+	Fri, 15 May 2026 19:41:50 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH v4 0/3] Enable perf tracing for unprivileged users
+Date: Fri, 15 May 2026 15:40:04 -0400
+Message-ID: <20260515194010.93725-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260515173852.1378571-12-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, May 15, 2026 at 10:38:48AM -0700, Ian Rogers wrote:
-> Currently, jevents.py parses hundreds of JSON event and metric files
-> sequentially across all CPU architectures during Kbuild startup, taking
-> ~3.3 seconds of pure single-core execution time.
+Enable users to use perf-trace to trace their own processes, like strace
+but without the overhead of ptrace(). Ensure that users cannot access
+other users' or systemwide tracing data.
 
-I'm curious about this.  Does it really need to parse all architectures?
-Oh... is it for perf stat record/report?
+Changes in v4:
+- Preserve security_perf_event_open(PERF_SECURITY_KERNEL) LSM hook in
+  the tp_bypass path.
+- Lift the PERF_SAMPLE_IP check out of the tp_bypass path above the
+  PERF_SAMPLE_RAW branch so it applies to counting and sampling. This
+  also allows us to ensure PERF_SAMPLE_IP is set for uprobes.
+- Block counting path for TRACE_EVENT_FL_CAP_ANY for unprivileged users
+  with sysctl_perf_event_paranoid > 1.
 
-Thanks,
-Namhyung
+Changes in v3:
+- Don't set PERF_SAMPLE_IP for unprivileged tracepoints. This allows us
+  to exclude PERF_SAMPLE_IP from kaddr_leak without weakening KASLR.
+- Mount tracefs as world-traversable so users can access eventfs
+  directories.
 
-> 
-> Refactor jevents.py to pre-populate its internal JSON AST cache in parallel
-> across all available CPU cores using ProcessPoolExecutor. Define the worker
-> process initializer _init_worker at the top-level module scope to guarantee
-> flawless pickling and standard event mapping inheritance under spawn
-> multiprocessing semantics (avoiding AttributeError crashes when spawn is
-> used instead of fork). This accelerates jevents.py execution by over 11x
-> (from 3.3s down to ~290ms), fully reclaiming multi-core concurrency during
-> the build generation phase.
-> 
-> Tested-by: James Clark <james.clark@linaro.org>
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/jevents.py | 36 ++++++++++++++++++++++++++++----
->  1 file changed, 32 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 6adf4b30e1ba..ebacb056524f 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -457,8 +457,8 @@ class JsonEvent:
->      return f'{{ { _bcs.offsets[s] } }}, /* {fix_comment(s)} */\n'
->  
->  
-> -@lru_cache(maxsize=None)
-> -def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-> +_json_cache = {}
-> +def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
->    """Read json events from the specified file."""
->    try:
->      events = json.load(open(path), object_hook=JsonEvent)
-> @@ -474,12 +474,16 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
->    if updates:
->      for event in events:
->        if event.metric_name in updates:
-> -        # print(f'Updated {event.metric_name} from\n"{event.metric_expr}"\n'
-> -        #       f'to\n"{updates[event.metric_name]}"')
->          event.metric_expr = updates[event.metric_name]
->  
->    return events
->  
-> +def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-> +  key = (path, topic)
-> +  if key not in _json_cache:
-> +    _json_cache[key] = _read_json_events_impl(path, topic)
-> +  return _json_cache[key]
-> +
->  def preprocess_arch_std_files(archpath: str) -> None:
->    """Read in all architecture standard events."""
->    global _arch_std_events
-> @@ -1381,6 +1385,14 @@ const char *describe_metricgroup(const char *group)
->  }
->  """)
->  
-> +def _parallel_read_json_events(task: Tuple[str, str]) -> Tuple[str, str, Sequence[JsonEvent]]:
-> +  path, topic = task
-> +  return path, topic, _read_json_events_impl(path, topic)
-> +
-> +def _init_worker(std_events: dict) -> None:
-> +  global _arch_std_events
-> +  _arch_std_events = std_events
-> +
->  def main() -> None:
->    global _args
->  
-> @@ -1459,9 +1471,25 @@ struct pmu_table_entry {
->      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
->  
->    archs.sort()
-> +  import concurrent.futures
-> +  tasks = []
-> +  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
-> +    if len(parents) == 0:
-> +      return
-> +    if item.is_file() and item.name.endswith('.json') and not item.name.endswith('metricgroups.json'):
-> +      tasks.append((item.path, get_topic(item.name)))
-> +
->    for arch in archs:
->      arch_path = f'{_args.starting_dir}/{arch}'
->      preprocess_arch_std_files(arch_path)
-> +    ftw(arch_path, [], collect_json)
-> +
-> +  with concurrent.futures.ProcessPoolExecutor(initializer=_init_worker, initargs=(_arch_std_events,)) as executor:
-> +    for path, topic, events in executor.map(_parallel_read_json_events, tasks):
-> +      _json_cache[(path, topic)] = events
-> +
-> +  for arch in archs:
-> +    arch_path = f'{_args.starting_dir}/{arch}'
->      ftw(arch_path, [], preprocess_one_file)
->  
->    _bcs.compute()
-> -- 
-> 2.54.0.563.g4f69b47b94-goog
-> 
+Anubhav Shelat (3):
+  perf evsel: don't set PERF_SAMPLE_IP for unprivileged tracepoints
+  perf: enable unprivileged syscall tracing with perf trace
+  tracefs: make root directory world-traversable
+
+ fs/tracefs/inode.c              |  2 +-
+ kernel/events/core.c            | 28 +++++++++++++++++++++++++---
+ kernel/trace/trace_event_perf.c | 21 ++++++++++++++++++++-
+ kernel/trace/trace_events.c     | 16 ++++++++++++++--
+ tools/perf/util/evsel.c         | 14 +++++++++++++-
+ 5 files changed, 73 insertions(+), 8 deletions(-)
+
+-- 
+2.54.0
+
