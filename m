@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866D71DC9B3
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 17:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC5A3DC4B8
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 17:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778866745; cv=none; b=obh1prwwIAxhV8Q6+WTJiQwRLmv6Z1J2nO26YamqKtZwK/mNUanXzUCkRZp7m0XKiSHr3x/608DArkvymzF0zAnhRrDiQSR3q9sBlUVLJcqxXFmbXz9Ha5cUdm9EKLdWyXlriNhWXve06krNLIsDSOgyYa2VroXLdtSPxnFpWbo=
+	t=1778866750; cv=none; b=jqhSGHoMes9nR4es8H0vlZ6jHg9/fHQRdidzuqoUjk2fY9BmdDpD9szStZ6147wnAYZ5fkpdv7k5dcPHAgmAi3S5qNOg0zx1qsCVIM9retValWkdyDPq8XshfbfEi/NdHTjEYJKdg6zmfMIKWvID+JvVHcQiPTAQ5N8bQsrsb9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778866745; c=relaxed/simple;
-	bh=QJWhGnFqUspUPqt/ZDCu0S7y6LbXz1284XXhAWWfSyA=;
+	s=arc-20240116; t=1778866750; c=relaxed/simple;
+	bh=/7TyOYbdEe9k68HYyv7dCCFzh+d6Q52A6z+ebAC5RwQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tC4pYsx8qxUWaIqbSQVp4O7wi9Xrgq3vYwYV83QSQT3yKFfKWkt3XWt+B9M4Q93M9jadookq7Mp69hWh8GYkJGPcnobfc9QmSiqciFX2pcVpPB/X+3miWBh5SLkV4a4q/DvdP4egyusJ+y9ZWgjv2sfspRGkAtveO+pl4fRPPPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cZiv/Wop; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=e+7WH2ZN7oUnpHiejGjIqRwX8Fcng5U/f/Tf8BNbg327pHLp/yxDJMvoanXscoK6oaE28XUaKM4XvSOxRqcGFqYxhUs5WNkxyU5Cn8fN5OXOcqyapQ2kQLFj+/2gcO0PPpGCVHkiiv12VYQ/TfeqjvzBR2UhaSL0uFo3//WAPwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l87vSOwC; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cZiv/Wop"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-132d631edaaso30161c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 10:39:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l87vSOwC"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2f3ec2e8d07so501483eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 10:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778866744; x=1779471544; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778866748; x=1779471548; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=995f1i5Pu7SDgq4PnZXVb1hHnnIiiWib94RWRsl+x6E=;
-        b=cZiv/WopY4F9Q2vTUqZIcX3zYKNQgqy02NoYwBmN5PInE6HCkWnoeaLaUtRxuKCV5z
-         2T1iSNbAFBA6gX5MM6oiag2l466WQdotlabsxjv8faPUtFw+jpvlt05FS8M8B6N4sAZk
-         04hVLpgg7xEkV6E1TCDTw/CWb+FvLE4v38trJ/URLlbqMMJz1lFc3DY3K1fo4F8PQG4w
-         l7MUeJ/5dSviovH7vkVvEIudCVQ6UlEGM1bBOS5beTVF1KBL427E7DAljkkvDrmh6ksp
-         GpzadtlTbh7VZiamkNuo/Vh0TR0MAzXotJbz/BPFulNZBvDV7kQnCBZZlrTx/CICLmLd
-         Hd2g==
+        bh=5GIfuekLiG6d1t2FIig7OwOH7cYz1r1KvcU67M955lU=;
+        b=l87vSOwChOnynPHwAZ0//AVIc+e66cee+/h72nnOxkkaw9YUEE+bDuBuUXGtvyRZQK
+         amguNpHg+AjdS50rVTCl66SoO1Ho7v8Ez/WgVm8Id9ZG+da31mtecBjk96eCV2k0vVlm
+         QuMWLsIED+f5ICot5ZpFjmaK7wUZ2K3zufGWpa7w22HMrY/Jed0k/4ErOBrGbfi83bYV
+         XAUx0zutQ2Mln7SYSlo4GxnSZ70ptiGpXvZO0KKNqKWeKsq0gcTlbMrpQYFVeITBq/Nc
+         sFDHIlOq0URaS2U3Snah/eI/KOQjp4WR4cZvGkwsGP9cps9g+vLDAp764jC1gWakSd4x
+         AY9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778866744; x=1779471544;
+        d=1e100.net; s=20251104; t=1778866748; x=1779471548;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=995f1i5Pu7SDgq4PnZXVb1hHnnIiiWib94RWRsl+x6E=;
-        b=FALK3xfzUZqEFLmXhG5zO2RgJcl7XUC6fYeNPu+UAvoFq7Rb2AiUCE+8557mlc8DOR
-         ccmE8iaTFTrLm/BjlvdcHJpXxAs652WZH28c1WGdiIuTytongmYucCwKs6lo4HwvIJmI
-         CXhoxGX6kB9EtWKHjTGXx5sTtMDrDy4fbnmxF1ONU1pNRb62IbDLEgWns0X23liWLh9D
-         fgjivKhM9G7tQQYg+8IShkpgtn39T6wTCNGyowFwOg3Vpb8vnp/UFWJWBV4XaxQ4HENB
-         rfGk36ypi1J8ueEF6R392Zd4LbEUrJDBGjkSElfYmSYY2LH3k04uIobyqZPJhF7cJuuU
-         gFFw==
-X-Forwarded-Encrypted: i=1; AFNElJ8A/KMwcwyY9sV4qPWOrcqmLuTJUCdbGS/Aaw3l5z3nM4Mo2ahKpzUz6Pw3VywuN3CfPyXNSMNPqhzPRCfYqXKP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys5Isi8NVq/wGNVGbaIrOZD2aCVtQhBi1iJPJMrymKT0sUNoTy
-	FqDa9jZ2pjxhQIfq46FdK85XY3Up3CLAK2GSxPIxGX9acua5D/IDu1wJSt3sX/QW346EqZh9tF9
-	1iMYwKUiLqw==
-X-Received: from dlbur22-n1.prod.google.com ([2002:a05:7022:ea56:10b0:12d:4be7:8b60])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:60b:b0:127:33e0:ea44
- with SMTP id a92af1059eb24-135049480a6mr2228177c88.29.1778866743389; Fri, 15
- May 2026 10:39:03 -0700 (PDT)
-Date: Fri, 15 May 2026 10:38:38 -0700
+        bh=5GIfuekLiG6d1t2FIig7OwOH7cYz1r1KvcU67M955lU=;
+        b=Sew4K7nQnQ+lLqS5X9BFSVICUwrQSh8k5/NLJGHBAxbnpkJk/GfJu8BYUDxFCDsi6/
+         n6m+2tL02zurDIUT3fkS1XRSUTH1/mFNlEI3vmTdWdPY0cWzB43MuotbRbWZYtpegWe4
+         Z2f6q4YtNWCwmWOy0eqyTRgtrlgwx9u/llqS6+iXWAi6Xy1CruegJ3Vn5FDBaIBK6jCx
+         Ouoxx0Be5QkmjgyTu0x8toCUny3QU1AZ9gdY9rRCs4dpA6zmWBc8Z6JNNaR73Fh8+dOe
+         VpFO9GXQDt1rQnxvqsOBctoISua8/ZK+RY/PMzA7fMyj1g/6h0BIkVGOCsSt5p3Tn4bo
+         R3TA==
+X-Forwarded-Encrypted: i=1; AFNElJ//QYjgP5UxklC3eFp3kFRrdcpMjHydLaWbTT/m9YGLYiPfDAWjVmeGRNgbi8g4NIHsW8PBMMpl/QKmVAfF09Lv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwn/StNFemx5dn0/xpxTtlbYF+cU6mq8pY84AEUnBI0de7puFo
+	gnsQG+oDeGne/v/6Fjf6oWrE6GPtmdUa5bRrj1yZn1zaCUxjIThKONqVKYq2nFLh4Oxw983rgjf
+	2dRAWGt3b0A==
+X-Received: from dlbvv13.prod.google.com ([2002:a05:7022:5f0d:b0:128:cfd6:a3c6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:b11:b0:12a:6ab7:3f73
+ with SMTP id a92af1059eb24-1350463608fmr2307586c88.0.1778866747426; Fri, 15
+ May 2026 10:39:07 -0700 (PDT)
+Date: Fri, 15 May 2026 10:38:40 -0700
 In-Reply-To: <20260515173852.1378571-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,9 @@ Mime-Version: 1.0
 References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
  <20260515173852.1378571-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260515173852.1378571-2-irogers@google.com>
-Subject: [PATCH v4 01/14] tools build: Fix feature checks to touch target
- files on success
+Message-ID: <20260515173852.1378571-4-irogers@google.com>
+Subject: [PATCH v4 03/14] perf build: Decouple pmu-events from prepare
+ umbrella target
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
 	namhyung@kernel.org
@@ -78,56 +78,52 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-In tools/build/feature/Makefile, test-clang-bpf-co-re.bin and
-test-bpftool-skeletons.bin redirected grep output but never touched or
-created the $@ target file upon success.
+Currently, the $(LIBPMU_EVENTS_IN) sub-make depends on the massive
+"prepare" umbrella target. Because "prepare" depends on external
+libraries (libapi, libperf, etc.) as well as dozens of generated
+headers, make completely serializes the launch of the pmu-events
+sub-make behind some of those unrelated prerequisites.
 
-Because the target file was never created on disk, Kbuild could never cache
-the result of the check. Consequently, Make treated the prerequisite as
-missing and continuously re-executed the Clang BPF backend and bpftool
-feature checks on every single sub-make evaluation during build startup.
+Since pmu-events is a large compilation unit, unblock its startup by
+binding it directly to only $(LIBPERF) instead of prepare. This allows
+background python generation scripts to overlap simultaneously with
+the rest of the build.
 
-Refactor both feature check recipes to redirect grep output to .make.output
-and touch $@ upon success (> $(@:.bin=.make.output) 2>&1 && touch $@). This
-perfectly matches standard Kbuild feature check conventions and ensures the
-target file is touched on disk purely upon success, allowing Kbuild to
-perfectly cache positive detections and avoid redundant sub-make forks. For
-test-clang-bpf-co-re.bin, add the explicit source file prerequisite
-test-clang-bpf-co-re.c and simplify the Clang recipe using $<.
+Testing a parallel build (make -j28 clean all) shows improvements:
+  Before:
+    real    0m27.642s
+    user    2m32.356s
+    sys     0m26.683s
+
+  After:
+    real    0m22.254s
+    user    2m32.810s
+    sys     0m24.646s
+
+This reclaims over 5 full seconds of build latency (~19.5% overall
+reduction) by elevating average CPU concurrency from ~5.5 active cores
+up to ~8 active cores.
 
 Tested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/feature/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 704c687ed3ad..ea278becee2f 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -383,9 +383,9 @@ $(OUTPUT)test-libaio.bin:
- $(OUTPUT)test-libzstd.bin:
- 	$(BUILD) -lzstd
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index c81797ceec42..c66af4c825fd 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -550,7 +550,7 @@ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+ $(PERF_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=perf
  
--$(OUTPUT)test-clang-bpf-co-re.bin:
--	$(CLANG) -S -g --target=bpf -o - $(patsubst %.bin,%.c,$(@F)) |	\
--		grep BTF_KIND_VAR
-+$(OUTPUT)test-clang-bpf-co-re.bin: test-clang-bpf-co-re.c
-+	$(CLANG) -S -g --target=bpf -o - $< |	\
-+		grep BTF_KIND_VAR > $(@:.bin=.make.output) 2>&1 && touch $@
+-$(LIBPMU_EVENTS_IN): FORCE prepare
++$(LIBPMU_EVENTS_IN): FORCE $(LIBPERF)
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
  
- $(OUTPUT)test-file-handle.bin:
- 	$(BUILD)
-@@ -398,7 +398,7 @@ $(OUTPUT)test-libopenssl.bin:
- 
- $(OUTPUT)test-bpftool-skeletons.bin:
- 	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
--		> $(@:.bin=.make.output) 2>&1
-+		> $(@:.bin=.make.output) 2>&1 && touch $@
- 
- # Testing Rust is special: we don't compile anything, it's enough to check the
- # compiler presence. Compiling a test code for this purposes is problematic,
+ $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
 -- 
 2.54.0.563.g4f69b47b94-goog
 
