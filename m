@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3C43DFC63
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 19:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A773DFC7E
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 19:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778873635; cv=none; b=S3Fo46PB4nad3griYTO2CckU/o+f81nCcilxXujrtquiwcwQDMuMT23XpgzqG9gFQdaCRPEnFoQuXOjpVyUcZyIyXeGOmcqXaVW44UHtHz0w/XFQ9bfDozsevx6mg6axa1U9zbafIJBU4B+Ft6XUvWXy8lvjMLPSs2IHroWBm+Y=
+	t=1778873636; cv=none; b=fUjOgqSuEfqeDgIH1SHCuVLpGwFop5HREqkUHJzfb9iuBsQgGV+JbS+f0YIr71Dpe/FJ7sDHYW9T9oXfq/HB5wdiVY3NL/uuSSJ8KnYvwDQDoH7CXCqCek+oDfsM53GaMJa8Q8dl2UeAZPooKsSUfGCYTzSIzUR0phkBt1s6vBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778873635; c=relaxed/simple;
-	bh=UO8COcfsaqz02sjdD6/7eGxdxivUik5cN2WpzQTquMs=;
+	s=arc-20240116; t=1778873636; c=relaxed/simple;
+	bh=NGfYl6kDEytKUmpKfL2C4Og3ft1hP0ENd8qszCmyGZM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s5F+xdY/iYhdT0gY4HIkJwAWsCjUBb39OuepW5rmdWjPu69dWcfMKzJ68T5eVX0DeOBFGENBnUn4xl2vNirRewGeQbPV+gPMsIDb5sDNElVXFvkp7F7pAeoeR+GrPl0fENd3LmxwUd1R9x2bthr2byiDosXHB7sBVvfLXZDl6es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bHjWSn7W; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=CxGzmb7Y9PUsyHp04yX6Z1arQcrrRG5Pqlqh8LSYt8tVoBlROFCd1xouPCDkwsr5OljzSm3GYDwUEDQ8gWqiJqO5kdE0saIr6XwdsEp1u0LG1WVxUTNQLnhgKiIvY92dpNxcX9KzAA6z1buX9vXjU0jjYqTszjqFQXuIvIXQZAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SDqny1x/; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bHjWSn7W"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12dece274b1so238576c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 12:33:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SDqny1x/"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1353a6f29deso785873c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 12:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778873633; x=1779478433; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778873635; x=1779478435; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=elI3dCv9to9+reTrmH7gWaOOH/Cw1KfhvnnriZ/0VzQ=;
-        b=bHjWSn7WuK6tOHoGEwzIHlTzKWGNE8IyrJaQZpDADdtB+bHqVAFw4SGYK7wFTFVYeX
-         Ie94PN7hE2TXopwUmBSN0AsrN6CCMZ0SOsYrCAREoVnCuxONh1uMt/PrM1YJxToflxix
-         1Ewwh9kjDE/d4w0OAUQSTGj/rkOxlbo5ABZ8rxQa34ZoiRVkP9Pq1LLSqqi06GzQHovG
-         zA+oMSdm4b/kbUTOP8OfZM+BlX70m0kjB1IGU8pmyEtHd7okPi9/OI0AJ9oPHTFv4Cej
-         gm/Qajf9w76cDRX0rQ06vIw4qwatc/z6EbiFG5YWP7PLk7kFshJwtKSrylSHymVOYnq8
-         z7HA==
+        bh=ugOFCk7HwEprnixRixPWaow/W0W91ZlZhg4SUCGAxfk=;
+        b=SDqny1x/8dX7St//cLGfkccVacFkgX9dRZl2SJGG9P0Jq8+TlLHFb8SM3OkmZy0Ygq
+         ChxaAAuQ2IK2CVNr5jU86qm5H2/TCX9RYDgPfgtUpKEHlZzxkf0qu2kOFt+pfKCFbEk8
+         94UZGZtX/bJX0xEnVx1C20F1hABEH1jJjdX9rqEb507IPDDEcnRwIVvyw50qyX7JwuuQ
+         UhfZCR/DlguKPCpfBwqa7zCW5oGPpV63i34SoeEjaJELaPcxLagbFM7D6CWpTUQMU6DS
+         qiHP2lye4vym007UXc0TnOTvtNJXxccmnvabQxV2KzXNCdeVMbIBST/WojFJnNdSQqyt
+         0xuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778873633; x=1779478433;
+        d=1e100.net; s=20251104; t=1778873635; x=1779478435;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=elI3dCv9to9+reTrmH7gWaOOH/Cw1KfhvnnriZ/0VzQ=;
-        b=U5R3h3kgs5Zgfli7tPCskWYxljFsqJCTaB1pRuhtzH7j3IjMnGGThOWYSFezNEcOT+
-         iL+k2todVkLEYIoxfcEf5fpBRloQ80QzeFdmkmmoEwaymtyMIedwjCH/HDu6amghH9Ng
-         ULiGC/H7h0XJST9caMWdf9UO/LT1dOb8AuUQRTUl9HFjdUTDL/5umdECqAFc55oGwCFW
-         tbJP9Mk9z9yKtTtEWarraJfr9AOovVAZXJsWtKnTQ+UeH4yCojBTo/XZ+ZxPqs6pi9xD
-         YLYkLqFu0NSoVoOF0+c4VJZ6zpksyLGPQKO2bQ5x2Qza0huguWnTJ76lDE8yhiaLSrCL
-         wMLg==
-X-Forwarded-Encrypted: i=1; AFNElJ/uwYV5cLDko2qPftAjy8ywjqHO3djlClliLrmJ+D9k1qTug8cFiS92LgtStCMYExt4RwIYcrJSXcEKqd0iIlxu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7aeLaQXhjg0tqTbUeKmcoVriatKS011kYLnm6J+vDEc6IWfMI
-	N3I8KZbHz93U/YtQFNRwmlX3xhzzbSNr0V+HSDSOXQzX5OHjfbi6evdwCNnHNXz9cnCTlFwnmsS
-	E17UWBMYtnw==
-X-Received: from dlbur19.prod.google.com ([2002:a05:7022:ea53:b0:134:c678:5306])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2523:b0:12a:6c4b:9d01
- with SMTP id a92af1059eb24-1350430f349mr2270147c88.7.1778873632533; Fri, 15
- May 2026 12:33:52 -0700 (PDT)
-Date: Fri, 15 May 2026 12:33:12 -0700
+        bh=ugOFCk7HwEprnixRixPWaow/W0W91ZlZhg4SUCGAxfk=;
+        b=pK6OEGBGgflj186/0X4MIS6ZcgBkFIoYeKd/4u6svW+pITETxW0H/GTYBS/J0KERiB
+         p1O/Vwv/6ngGRBJ6QFYTLe1oWMLpvBZhOCdLhO/daTtMPYqMEHiHQggv2D0WZpYFYHWP
+         rX55FGeFDWEH9vgkImDvI5OqFXeU7olSvK8wJhsYyRWShGPfVpQ2pjcnqFQlxy8PQEWn
+         u20550Tdmc88UX2A6jMpoeFOmajLHVIzSDL+6OMieCkUXjPSKtjtswqletuVShB0ugXj
+         YG/X0+FIjvvDdA3RuT20iOD1xL+zPelUzyH2/xOXXtBC7zi3tNfblqBTNF4GLkbDzIwR
+         cWGQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8zhXalKdoEcL496MN9Aw7KWlwx8ztiGwRNzFu+0zTESiNP2LZgo8oIwmwZbhiZdVADuuXxwMTWyyuqXmP5XZSb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP1/WFTaM4ZkMZIBc/MtuZIrZfiR0vIoAIfwnN7QXhbOPMzj29
+	33b64DEEg0lzgehaGJOHLAOsqQ3w+oXywecKh7Jd+j53VWkI9h7M+s8MIPjcX+TVmXikfR3orOp
+	6SyTWgNIwsQ==
+X-Received: from dled20-n1.prod.google.com ([2002:a05:701b:42d4:10b0:12d:d0a4:2ed9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:221c:b0:130:a479:797d
+ with SMTP id a92af1059eb24-1350494e48emr1418656c88.29.1778873634429; Fri, 15
+ May 2026 12:33:54 -0700 (PDT)
+Date: Fri, 15 May 2026 12:33:13 -0700
 In-Reply-To: <20260515193314.1593560-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260515173852.1378571-1-irogers@google.com> <20260515193314.1593560-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260515193314.1593560-13-irogers@google.com>
-Subject: [PATCH v5 12/14] perf build: Prefix SCRIPTS with output directory to
- fix continuous rebuilds
+Message-ID: <20260515193314.1593560-14-irogers@google.com>
+Subject: [PATCH v5 13/14] perf pmu-events: Convert recursive shell assignments
+ and macros to Make built-ins
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
 	namhyung@kernel.org
@@ -77,51 +77,66 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-In Makefile.perf, ALL_PROGRAMS includes SCRIPTS (perf-archive,
-perf-iostat). However, unlike PROGRAMS and DLFILTERS, SCRIPTS was not
-prefixed with $(OUTPUT).
+In pmu-events/Build, ZENS, ARMS, and INTELS were assigned using recursive
+assignment (=), and model_name/vendor_name were evaluated using shell
+macros (echo ... | sed ...).
 
-During out-of-tree builds (or when O= is specified), Make checked for the
-unprefixed target 'tools/perf/perf-archive'. Since the actual script was
-installed into $(OUTPUT)perf-archive, Make concluded the target was
-missing and continuously re-executed the script installation rule on every
-single incremental build.
+Because these variables were expanded inside the COPY_RULE dependency
+evaluation loop across hundreds of PMU JSON files and inside every metric
+generation recipe, Kbuild continuously re-executed 'ls', 'grep', and 'sed'
+shell forks thousands of times during AST parsing and execution.
 
-Prefix SCRIPTS with $(OUTPUT) and update the static pattern rule to ensure
-Kbuild correctly tracks generated script prerequisites during incremental
-builds.
+Convert ZENS, ARMS, and INTELS to simply expanded variables (:=) and
+replace model_name/vendor_name with pure GNU Make string functions. This
+guarantees Make executes directory probing shell forks exactly once when
+the Build file is parsed and evaluates path macros purely in memory,
+completely eliminating over 7,800 redundant sub-processes during build
+startup.
 
-Tested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.perf | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/Build | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index b8a81c9749a8..fc92d6ceac5b 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -405,7 +405,7 @@ python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT
- # Use the detected configuration
- -include $(OUTPUT).config-detected
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 95172a2a851f..372773b998e4 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -56,12 +56,12 @@ $(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
+ # Python to generate architectural metrics
+ GEN_METRIC_DEPS := pmu-events/metric.py pmu-events/common_metrics.py
+ # Functions to extract the model from an extra-metrics.json or extra-metricgroups.json path.
+-model_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/extra-metric.*\.json@\1@')
+-vendor_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/[^/]*/extra-metric.*\.json@\1@')
++model_name = $(notdir $(patsubst %/,%,$(dir $(1))))
++vendor_name = $(notdir $(patsubst %/,%,$(dir $(patsubst %/,%,$(dir $(1))))))
  
--SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
-+SCRIPTS = $(addprefix $(OUTPUT),$(patsubst %.sh,%,$(SCRIPT_SH)))
+ ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
+ # Generate AMD Json
+-ZENS = $(shell ls -d pmu-events/arch/x86/amdzen*)
++ZENS := $(shell ls -d pmu-events/arch/x86/amdzen*)
+ ZEN_METRICS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metrics.json)
+ ZEN_METRICGROUPS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metricgroups.json)
+ GEN_JSON += $(ZEN_METRICS) $(ZEN_METRICGROUPS)
+@@ -78,7 +78,7 @@ endif
  
- PROGRAMS += $(OUTPUT)perf
+ ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),arm64 all))
+ # Generate ARM Json
+-ARMS = $(shell ls -d pmu-events/arch/arm64/arm/*|grep -v cmn)
++ARMS := $(shell ls -d pmu-events/arch/arm64/arm/*|grep -v cmn)
+ ARM_METRICS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metrics.json)
+ ARM_METRICGROUPS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metricgroups.json)
+ GEN_JSON += $(ARM_METRICS) $(ARM_METRICGROUPS)
+@@ -95,7 +95,7 @@ endif
  
-@@ -592,8 +592,8 @@ $(GTK_IN): FORCE prepare
- $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
- 	$(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_LIBS)
- 
--$(SCRIPTS) : % : %.sh
--	$(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
-+$(SCRIPTS) : $(OUTPUT)% : %.sh
-+	$(QUIET_GEN)$(INSTALL) '$<' '$@'
- 
- $(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
- 	$(Q)$(SHELL_PATH) util/PERF-VERSION-GEN $(OUTPUT)
+ ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
+ # Generate Intel Json
+-INTELS = $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
++INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
+ INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
+ INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
+ GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
 -- 
 2.54.0.563.g4f69b47b94-goog
 
