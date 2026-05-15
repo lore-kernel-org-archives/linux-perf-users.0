@@ -1,141 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0437347D954
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 12:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179EC21A95D
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 12:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778846751; cv=none; b=gY2rNfGWqxGd1dqtJrZrsilV6sJluGzjP84E8eNcHaZAwTazhtuNAwq7oQop1Jg11Kv/C3ru6y9oAUqwuqlmMs1H8CYxdek8A6PcNOAhZ+64SBHekkXkwhg1+rSs4clUoiq9Wpv+p6UH3O9M3g4FGaL78TuhoFIBQaOlUtmIRes=
+	t=1778849137; cv=none; b=jxrLVt2YXrFkgL2GrQv1KHk+eEt/h1e5vczmzM3VX6ljjgMeE1lSnkoJapMDHhfj3wutZbXaDl2c028t+XNZnpa7P/5R865++cq6lOhqoPgpDqqjnOs1KMDdvi3XfENI+RhY2rylxO+xzB3fdPkMb7ep1/iLVuwLjKlFNZ8eI6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778846751; c=relaxed/simple;
-	bh=sRGE8mXLDUTfkE3eGAR7T5bSwiYW1LNHaldJT+5g0CM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cFA42obptn7BXxYTtVUyOE4/CuXXhUIiWGwzLeQuojcSntPPWQyRr6W7rfOw4s2gkA9O+90kGpBxnfis2rW9VJhUYYOVXhe/tsgcEweYIzSbVbOGmlRSRVx0LN641YU2VoZV4T4/LYEFwuhS70iE+lC5LQvngbPw8mzITJxcoe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRrsIFGP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778849137; c=relaxed/simple;
+	bh=MpQKr6WJ0E14zMB4IHoxD4bOXR4Vx5vL2Tf1Uqw9fZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JfetuCAB4fIdFNLokIqoc2oOX6JCbQXd34zvH7kpSE9a/nJGLL3v+NQ9WsbORjibvD6T6HfrTCcu2lWhxfJGZeqQJi8tRdfxpg6zCATuu14gnlsEab0esSIPOHoJ5WrLP7AMRtTjkmXSkjaRgJovjwzFsH9EhdwqUKcqNopYTuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NyL66nJi; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRrsIFGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEA0C2BCB0;
-	Fri, 15 May 2026 12:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778846750;
-	bh=sRGE8mXLDUTfkE3eGAR7T5bSwiYW1LNHaldJT+5g0CM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=rRrsIFGP2PeM6nqrgIZHl0BV4RvOsQcQ0dMDSpymUuWelQxEr1q7Fds8QVyz81BCJ
-	 sMaZLuxfubhDjY5UPaJFno8hrt7DfQV1hgAtHf/v+kOMB4/UmuLI7UledjDSOboi5Y
-	 WK3lOhE33uHefY0wNn8RLZuMRfl8OHJtnTc9WqZyVLDO86AtzlIT/Yj0xjiXMoKh1k
-	 wy0IycG0Wgp4Qpiwsci1bB+YqGOUnebpymetbA3+hDqzr8Ys+fEl1TaOXy/GqUrYRz
-	 B8qGwNZedF9JeTMxCDb1laexgNs5VbbDh4aUeTkE8BcjPNKlXmaVylJc79CCN9V+2y
-	 iEoFV3oUQniZw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf bench: add --write-size option to sched pipe
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Breno Leitao" <leitao@debian.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org>
-References: <20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 15 May 2026 12:05:49 +0000
-Message-Id: <20260515120550.8DEA0C2BCB0@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NyL66nJi"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45297094718so7311380f8f.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 05:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1778849134; x=1779453934; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bwFlG7n8P0H64egXIGqnDFtI+u0Yj8dyS9lbJHI4qsI=;
+        b=NyL66nJiQFLDSdyurFMqOFfoAbj9jrjGaRKG8Q1sbBTNvn/lmbQxCjlVZZ1B7UQ/Ep
+         AOXadrEO9mwg0mFcTwbzvNn2NKaTDxNjY2wa65VJpbQXrhhP3NRVCIofw2CN1RLMWjZp
+         C6ok79t+TdaWaQT7gT4iBdj1Pa6+6uu1NjIJKz5hZKVmOgB3mgmFLzInZVvgVQX6KuUJ
+         WIpIs+5fS5YGV/RMI61oR3dm8w1AYBtaMYu+umPYvZLa67NsqmyicOdDWHv70QmYRWvi
+         iEZIXaYFxvGUCTSRQQQLkYuCKSdteHQe2BvDgFBcyJ0t9SDwAJ7YW2CpjaLElx3T2jWN
+         LccA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778849134; x=1779453934;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bwFlG7n8P0H64egXIGqnDFtI+u0Yj8dyS9lbJHI4qsI=;
+        b=EWr3tUxMCii4qd/k+EFFUDgEw1e0LM3qJVGcMWb6ca8BKol/RoonITO90UNEz+6Qrn
+         frhBdhoZMu9/D8ZOd7hIGRvtqqn5EyMw1Ge72DkmGVVZ38tNBuisxWlf9HkIqg/nb9kb
+         gsnb7sHEFFuAGiSU1LrThVWN2RYdA9MlrcZO/rsBenLst5j4GDZbFYbGmEWIOnlo1GJD
+         niiQnKpd9b0Z4wvluuRm3TrPAwcbjDV/3DTpTTXUnNKvp9bitqifbbPmk6jkuhN78mk2
+         n3I8gbjmchPYbuMFPZGV2QtHs2JJL39w01pndgfJTFvxWWUtcOsNZWdH4kV85J0Qf+J8
+         om9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9z2y+CfjqkWFc/leFCsxpBywTRp1yTjuqYYjw1Zk0QTIRVd7eqPm8RdmUNhm8NFeFjWDkWHViPFGjGO3NGxSOI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQncr/sWYhBu7fpy5jml/f6d+hxysnfgAxwhYDRhN5Wi1ENaOG
+	yEn6TPBFu5s9cWt2SBGUkkuQLlgr5I4OjRe59vbJ2GCQHj4mfThH6SJ8Ixy216z51U0=
+X-Gm-Gg: Acq92OF9KcskfjKlWi6tSu2jV17V4yj/nUBbhsWmhGfOKjZ0i7q2fIh7exzRdQEgflH
+	w1uJMiukSastqnSqih9rftmmX98blUxs1/glJK7zLX16VLD/LTkyDakFqsUTpGtYk1KjUVTSS40
+	eLJbWgIcrbfvJ2gAGWrpiPz7w6+xOBFmDnY0zxyBHIZJrQAY6QlniZiK7p9XeFuvTbZHNA4C4Hp
+	1Yl7HnuKIif7h8wr9RaQJa/XqR2RKPXlM0oH2EKjCQ3dLpPSi88vfch/pUoYNtn8f7Fz8GTJiyc
+	bazrS37BK9DOHzgt/oKIWmD4AuhoSXPdFFJUk0faHnHDWTb0dzzWJjPwDci7echIIuPjXVo2/s3
+	JzZ8hiAyjpEPTxluPj58bS4NAxVjQ3nX66LhMcTC0C4PfvGM8Bot56VR6srS+t3rI1CMhyvQdR/
+	8EQPT09ywTo2gZKWcX5Mud1NboHJOVF9euFYvRHXk=
+X-Received: by 2002:a05:6000:22c1:b0:449:a07a:9676 with SMTP id ffacd0b85a97d-45e5c59ec63mr5077427f8f.29.1778849134441;
+        Fri, 15 May 2026 05:45:34 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9adc2209sm12916937f8f.0.2026.05.15.05.45.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 05:45:33 -0700 (PDT)
+Message-ID: <55ae9472-230f-4348-9f12-a25ef33321b4@linaro.org>
+Date: Fri, 15 May 2026 13:45:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf/core: Fix missing read event generation on task
+ exit
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thaumy Cheng <thaumy.love@gmail.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <Suzuki.Poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Mike Leach <mike.leach@linaro.org>
+References: <20251024170543.11201-1-thaumy.love@gmail.com>
+ <1e6337ec-d4a0-420b-bd7b-0fd2b6fee620@linaro.org>
+ <20260206152907.GQ1395266@noisy.programming.kicks-ass.net>
+ <61e544ab-d9b9-454e-9dd7-65625d9be126@linaro.org>
+ <20260303142948.GA3698720@noisy.programming.kicks-ass.net>
+ <f0a5192a-7b6a-4c51-87e9-fc1dbf4d37df@linaro.org>
+ <20260304152316.GO1395266@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260304152316.GO1395266@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Integer overflow in write_size cast bypasses pipe capacity validat=
-ion and causes a deadlock.
-- [High] Missing validation for write_size =3D=3D 0 causes benchmark hangs =
-or bogus results.
-- [Medium] File descriptor leak on the fcntl error path.
---
 
-commit 2c945dc323a6b416d95bca3f92808b828bcc9c74
-Author: Breno Leitao <leitao@debian.org>
 
-perf bench: add --write-size option to sched pipe
+On 04/03/2026 3:23 pm, Peter Zijlstra wrote:
+> On Wed, Mar 04, 2026 at 11:26:10AM +0000, James Clark wrote:
+> 
+>>> @@ -14564,11 +14556,21 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+>>>    	 * won't get any samples after PERF_RECORD_EXIT. We can however still
+>>>    	 * get a few PERF_RECORD_READ events.
+>>>    	 */
+>>> -	if (exit)
+>>> +	if (exit) {
+>>>    		perf_event_task(task, ctx, 0);
+>>> -	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+>>> -		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+>>> +		guard(raw_spinlock_irq)(&ctx->lock);
+>>> +		list_for_each_entry(event, &ctx->event_list, event_entry) {
+>>> +			if (event->attr.inherit_stat) {
+>>> +				if (task && task != TASK_TOMBSTONE &&
+>>> +				    event_filter_match(event))
+>>> +					perf_event_read_event(event, task);
+>>
+>> Doesn't this only work if you happened to have an event opened on every CPU?
+>> Otherwise you could get rescheduled onto a core without an event and the
+>> event_filter_match() will fail and you'd drop the sample read for that exit.
+> 
+> Yes, absolutely. But that is more or less what you get.
+> 
+> So perf has per-task buffers and per-cpu buffers. For a simple per-task
+> profile, the per-task buffer works fine. However, if you want inherited
+> tasks, they can't all emit to the same buffer -- this would be a
+> scalability nightmake. So in that scenario you have to have
+> per-task-per-cpu events and make sure everybody emits to the local
+> buffer.
+> 
+> If you 'forget' to create an event/buffer for a particular CPU the
+> task(s) can run on, you loose events the moment they end up there.
+> 
+> There just isn't much you can do about that.
 
-This commit adds a -s/--write-size option to the sched pipe benchmark to set
-the bytes written and read per ping-pong iteration. It also resizes the pipe
-using F_SETPIPE_SZ to match the requested size.
+Hi Peter,
 
-> diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-> --- a/tools/perf/bench/sched-pipe.c
-> +++ b/tools/perf/bench/sched-pipe.c
-[ ... ]
-> @@ -48,6 +49,7 @@ static	int			loops =3D LOOPS_DEFAULT;
->  static bool			threaded;
-> =20
->  static bool			nonblocking;
-> +static unsigned int		write_size =3D sizeof(int);
+Both of the diffs you posted above work for me. Do we need to do 
+anything for revoke? It seems like a bit of an edge case if it's only 
+for removing the PMU so could probably be left out. Or do we make a 
+similar change to __pmu_detach_event()?
 
-Is there a missing lower-bound check for write_size? If a user passes 0,
-the vfs_write system call will return 0 immediately without invoking
-pipe_write(), meaning no data is transferred and no readers are woken up.
+For remove_on_exec, I put the same loop in perf_event_remove_on_exec() 
+and I think that covers it:
 
-In blocking mode, both threads could instantly spin through their loops
-transferring 0 bytes, generating a falsely fast benchmark result without
-measuring context switch latency. In non-blocking mode, the threads rely
-on epoll_wait(), which would hang forever since the 0-byte write wouldn't
-trigger EPOLLIN.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 87712491f4c7..d152abcafe5a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4683,6 +4683,16 @@ static void perf_event_remove_on_exec(struct 
+perf_event_context *ctx)
+         if (WARN_ON_ONCE(ctx->task != current))
+                 goto unlock;
 
-[ ... ]
-> @@ -204,10 +209,10 @@ static void *worker_thread(void *__tdata)
->  	}
-> =20
->  	for (i =3D 0; i < loops; i++) {
-> -		ret =3D write(td->pipe_write, &m, sizeof(int));
-> -		BUG_ON(ret !=3D sizeof(int));
-> +		ret =3D write(td->pipe_write, td->buf, write_size);
-> +		BUG_ON(ret !=3D (int)write_size);
++       raw_spin_lock_irqsave(&ctx->lock, flags);
++       list_for_each_entry(event, &ctx->event_list, event_entry) {
++               if (event->attr.inherit_stat) {
++                       if (ctx->task != TASK_TOMBSTONE &&
++                           event_filter_match(event))
++                               perf_event_read_event(event, ctx->task);
++               }
++       }
++       raw_spin_unlock_irqrestore(&ctx->lock, flags);
++
+         list_for_each_entry_safe(event, next, &ctx->event_list, 
+event_entry) {
+                 if (!event->attr.remove_on_exec)
+                         continue;
 
-Could this cast to (int) cause an unexpected crash? If write_size is larger
-than INT_MAX, the cast results in a negative number, and positive return
-values from write() would be compared against this negative number,
-triggering the BUG_ON.
 
->  		ret =3D read_pipe(td);
-> -		BUG_ON(ret !=3D sizeof(int));
-> +		BUG_ON(ret !=3D (int)write_size);
->  	}
-> =20
->  	return NULL;
-> @@ -239,6 +244,22 @@ int bench_sched_pipe(int argc, const char **argv)
->  	BUG_ON(pipe2(pipe_1, flags));
->  	BUG_ON(pipe2(pipe_2, flags));
-> =20
-> +	/*
-> +	 * On custom write_size, set the pipe size to acommodate write_size
-> +	 */
-> +	if (write_size > sizeof(int) &&
-> +	    (fcntl(pipe_1[1], F_SETPIPE_SZ, write_size) < (int)write_size ||
-> +	     fcntl(pipe_2[1], F_SETPIPE_SZ, write_size) < (int)write_size)) {
+Do you want me to send your two diffs as patches with you as an author? 
+Or will you take it?
 
-Does this signed cast bypass the pipe capacity validation when write_size
-exceeds INT_MAX?
+Thanks
+James
 
-If fcntl() fails because the size exceeds system limits and returns -1, the
-check evaluates as -1 < (negative number). Since -1 is not less than any
-negative number, this evaluates to false, silently bypassing the error
-handler.
-
-The benchmark would then proceed with default 64KB pipes but attempt to
-write >2GB payloads into them. Because the ping-pong design requires both
-threads to fully execute write() before read(), both threads would fill
-their respective pipes and block indefinitely, resulting in a deadlock.
-
-> +		fprintf(stderr, "--write-size %u exceeds /proc/sys/fs/pipe-max-size\n",
-> +			write_size);
-> +		return -1;
-
-Does this return path leak the pipe file descriptors? The benchmark allocat=
-es
-four file descriptors via pipe2() just above this block. If the early return
-is taken, it appears to exit without passing through a cleanup path to close
-the acquired file descriptors.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515-perf_bench=
-_pipe-v1-1-3c5b805ba178@debian.org?part=3D1
