@@ -1,262 +1,118 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5853FFAB0
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 08:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99B93CE4BA;
+	Fri, 15 May 2026 11:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778833725; cv=none; b=HcXcBexM3qbw/AwQ46WAzYwz9gdlqDBYn2Umsz/VuAbYf+zAN8lomFlcDu5WLF6GqOIe6PYupnqkPetM3xeDSAn6Uw1FVlPU42yGMA6Gd5eIPELtdA+bnxV5EXNW71UBkf7hPDvV3yHWfwesGNizj3tVkuUh7Dxpi0cKPE2RBjs=
+	t=1778844476; cv=none; b=GVn3x1Hg+E+T2M6paCgOA+U0SGQNmHPm26KFwDn/gpNtwXzNK+TIM0VFdxaYyRPaCZ11LEt03j5kZKU+MqeymHSjCUILm7Jbn1Ic8AaeWSemyf5iNacBbhVfIUCk7Sb9gIyReGYns82tk3uPjBdHSoqblPxhqtYhLazoMGsMEx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778833725; c=relaxed/simple;
-	bh=VjM1sDIwoUP6qi68BiA3PqSUNQtFlaJkLbn2w6NF95w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AVM+iA8ypSOS8+wmwGZfQleOAWBNqEVrdCogG1dB4JlSp4/VqBECMEEBNQjooACuYlQNxX2iCKpjJubM2i4e42JdTkQJMABVBXT/Ul6q5mYZJPw0vIt4Ro7aC+aq4UXb3dhYwEnkb0EbIEhSGSuh5C+7cX6m0grNYHlLGhJ8f5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BatIa1gc; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778844476; c=relaxed/simple;
+	bh=1QmB3Gx/1WbwJvtwiPsMqLpKCcMjMe1a+V1Ox4LyywU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Aa87pvrYG6cPyvXIr9S6PgOvGPu8YK4ckE26kxEdIi1mtXtxI8ChhCOwv0nFcQhIP/QMPWjFRcACazOuI21k0+WlfqDlCTfhYnNsPxi5mY4x0xlVznfHPV56HvyndWTuxydqi8E1XN0kBIhSS4Tr/x9oDqLR87oEtsKw0nMaNmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ngf+V18U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BatIa1gc"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-44509921fbcso4554476f8f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 May 2026 01:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778833722; x=1779438522; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x9sH8Q4QjX83trp+YQQ6QbWlIhiR2CnSj4K2FVOvEtA=;
-        b=BatIa1gcYN/3Pq5VcVtdUgifJqGYkH8EXs7wEMcfSL5IljTl4Cq1uQ2lk5wehbA5wQ
-         fOyx3eOCodmJtBRnZUZXu8b+pGptsXS773Mpx7zjWj0pEUpMeppRDVqGRff3f6YetNs9
-         kVzjkgM/aEupCWlq/JPLJ3/ywwVhAz4rsqdW0X5STQaZn2LxO/ZMR/1fQn4rFL77YYyS
-         Rfi/+H4+GfeI28z9Sx7yqZdKnuQN9+DC/9tk6ZotXzT7aQiJPla3Yj6He/gufKrYl+6Y
-         NvpY+Cmwi5jaYfiVPnDRM/pNSeyzQm32GRCLxRRLEVIJcaFtIK/XBOlhooiKqCgWJP6D
-         S0SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778833722; x=1779438522;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x9sH8Q4QjX83trp+YQQ6QbWlIhiR2CnSj4K2FVOvEtA=;
-        b=ExHmjGVwEkliufuMxd/Bynih3YQPsq328fTicpHxQCID1mFEhWT2bpGa2fOIHxX70E
-         AOX265rSdg3Cfxo77BbFZS9Ona6Mh9hYS5g0HuqHZT/T155ITcwRiiFdNEJntQ9eVrXf
-         5sOyWYctNXQD1Q+xU1ND3rIL8/h7WyZFdEXploYqowLQFFKzYaiwP7Wo2L32FR5vEITT
-         yJolPCXmSk2tS1dN85QyTY7DBHyxsMoSER2xWCGJxubAmxra5plaJpkF/Zx1LCCxjw+m
-         iKxl/JYjazx4Dg8BDfipjgl0MngVIOu4GMD9aiO9MjCT2j949NWvWFc6f1jKKI5mhTpM
-         1NEA==
-X-Forwarded-Encrypted: i=1; AFNElJ/TlGRA7GWfmMbMNFU9dpiusQ+/hEo6id48yHHWEHbKRsMSzcUsXX60KqKPaE8a5lkiLbu3jGfsD3Tj1vAYcoZi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdumlonjcg77maTLwjhwWEyBOs7jBJR3NdK/zo4FOAM4OYtnwE
-	VbgOqVwaEx4ba98Q/THzkABvxk8LL33V9vvPn2rSipZW3h48dekfUElVmMq0dTMZE44=
-X-Gm-Gg: Acq92OGUfOPNt/GUC55aX0U+/nY9CkBeOJAPxd+Wa5i+RujSW0T9spywGN1I9Wz73BU
-	GDKER6DQ4N6tzD5okDwF6fM04QzAlmr1tjSr2XFvBWywve9QY3f4uSVK/ng3w11guV32cpziY6m
-	lNSIlk9Cxz8z/z/2m6I3nIFP4sjLnCyEOIrJNZQ5SJ9vENN8c6W8FdIUPYiIMoCeWibXzbeI92P
-	XcuyWsH+IRgrGTpLnYbD8bM0VZE7O1jsg+zWVSkAYqlV3EtWUHyNNSKQrUivjN/A/kgy02pAGhY
-	h93vPfQFQ1qJDGlF/VDO32NVHbC1BAkWEz6dCgTtQXEpq3Qm4rRvjGFxJELStWUgCxTs4LfYDIu
-	oAn2iAufUPQcY08JGNMGmkC8CMLih6zIME5WrPxlNVjJ6iCeXvCBvQBRdMFDVjWTGzXxlFhhe8e
-	yK5tfBRAoSRhC+a2VX3wmJg5G+8R6e
-X-Received: by 2002:a05:6000:1787:b0:455:fbb:28bb with SMTP id ffacd0b85a97d-45e5c5dd6famr3551750f8f.35.1778833722379;
-        Fri, 15 May 2026 01:28:42 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da0a19c2dsm12770884f8f.21.2026.05.15.01.28.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2026 01:28:41 -0700 (PDT)
-Message-ID: <c7a68965-88e5-4808-9a75-d58c4986a3b6@linaro.org>
-Date: Fri, 15 May 2026 09:28:40 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ngf+V18U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B08C2BCB0;
+	Fri, 15 May 2026 11:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778844476;
+	bh=1QmB3Gx/1WbwJvtwiPsMqLpKCcMjMe1a+V1Ox4LyywU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ngf+V18Ur5maro1wDSUVkYvZsmnY0ceVusXYlGsjjujySbK+xDLHBppOtWEmUbTCZ
+	 gVdL43QtPuDf88ZRUVt3xUoGumi4qWMpVHb9HK3MkqHRhWSxqkO+N55zQfxbL2+Mcw
+	 zQ1UgEPdz1RAV+eWQgvfxGubdhFBFWDhv8akq0YrpgVpNWqldNSKSpBTYGUxB1miUN
+	 70PE3WXEdhdvqG+qntvdGLz9Iv/StpStAghQurkSvHTvNpDhU2Y+v2zgM7GFebfnrW
+	 NpiceKUZzALlN1/rh58lVjzfoAwiFS7rcZ+IppjDLReJsTcUokHCmSw+G0K0gsDH+4
+	 yeAyQbusl+pFg==
+Date: Fri, 15 May 2026 08:27:53 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org, namhyung@kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Li Guan <guanli.oerv@isrc.iscas.ac.cn>, 9erthalion6@gmail.com,
+	alex@ghiti.fr, alexander.shishkin@linux.intel.com,
+	andrew.jones@oss.qualcomm.com, aou@eecs.berkeley.edu,
+	atrajeev@linux.ibm.com, howardchu95@gmail.com,
+	john.g.garry@oracle.com, jolsa@kernel.org, leo.yan@linux.dev,
+	libunwind-devel@nongnu.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org, mingo@redhat.com,
+	palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org,
+	shimin.guo@skydio.com, tglozar@redhat.com, tmricht@linux.ibm.com,
+	will@kernel.org
+Subject: Re: [PATCH v5 1/7] perf unwind: Refactor get_entries to allow
+ dynamic libdw/libunwind selection
+Message-ID: <agcDOac0qbP1KZ4Y@x1>
+References: <20260413024805.1316480-1-irogers@google.com>
+ <20260513233151.572332-1-irogers@google.com>
+ <20260513233151.572332-2-irogers@google.com>
+ <agZk-CCrLUMTyWE4@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 13/20] KVM: arm64: Apply dynamic guest counter
- reservations
-To: Colton Lewis <coltonlewis@google.com>
-Cc: alexandru.elisei@arm.com, pbonzini@redhat.com, corbet@lwn.net,
- linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
- maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kvm@vger.kernel.org
-References: <gsntlddlbylw.fsf@coltonlewis-kvm.c.googlers.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <gsntlddlbylw.fsf@coltonlewis-kvm.c.googlers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <agZk-CCrLUMTyWE4@x1>
 
+On Thu, May 14, 2026 at 09:12:40PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, May 13, 2026 at 04:31:45PM -0700, Ian Rogers wrote:
 
+<SNIP>
 
-On 14/05/2026 8:05 pm, Colton Lewis wrote:
-> James Clark <james.clark@linaro.org> writes:
-> 
->> On 13/05/2026 5:45 pm, Colton Lewis wrote:
->>> James Clark <james.clark@linaro.org> writes:
-> 
->>>> On 04/05/2026 10:18 pm, Colton Lewis wrote:
->>>>> Apply dynamic guest counter reservations by checking if the requested
->>>>> guest mask collides with any events the host has scheduled and calling
->>>>> pmu_perf_resched_update() with a hook that updates the mask of
->>>>> available counters in between schedule out and schedule in.
-> 
->>>>> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->>>>> ---
->>>>>    arch/arm64/kvm/pmu-direct.c  | 69 ++++++++++++++++++++++++++++++++
->>>>> ++++
->>>>>    include/linux/perf/arm_pmu.h |  1 +
->>>>>    2 files changed, 70 insertions(+)
-> 
->>>>> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
->>>>> index 2252d3b905db9..14cc419dbafad 100644
->>>>> --- a/arch/arm64/kvm/pmu-direct.c
->>>>> +++ b/arch/arm64/kvm/pmu-direct.c
->>>>> @@ -100,6 +100,73 @@ u8 kvm_pmu_hpmn(struct kvm_vcpu *vcpu)
->>>>>        return *host_data_ptr(nr_event_counters);
->>>>>    }
-> 
->>>>> +/* Callback to update counter mask between perf scheduling */
->>>>> +static void kvm_pmu_update_mask(struct pmu *pmu, void *data)
->>>>> +{
->>>>> +    struct arm_pmu *arm_pmu = to_arm_pmu(pmu);
->>>>> +    unsigned long *new_mask = data;
->>>>> +
->>>>> +    bitmap_copy(arm_pmu->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
->>>>> +}
->>>>> +
->>>>> +/**
->>>>> + * kvm_pmu_set_guest_counters() - Handle dynamic counter reservations
->>>>> + * @cpu_pmu: struct arm_pmu to potentially modify
->>>>> + * @guest_mask: new guest mask for the pmu
->>>>> + *
->>>>> + * Check if guest counters will interfere with current host events 
->>>>> and
->>>>> + * call into perf_pmu_resched_update if a reschedule is required.
->>>>> + */
->>>>> +static void kvm_pmu_set_guest_counters(struct arm_pmu *cpu_pmu, u64
->>>>> guest_mask)
->>>>> +{
->>>>> +    struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
->>>>> +    DECLARE_BITMAP(guest_bitmap, ARMPMU_MAX_HWEVENTS);
->>>>> +    DECLARE_BITMAP(new_mask, ARMPMU_MAX_HWEVENTS);
->>>>> +    bool need_resched = false;
->>>>> +
->>>>> +    bitmap_from_arr64(guest_bitmap, &guest_mask, 
->>>>> ARMPMU_MAX_HWEVENTS);
->>>>> +    bitmap_copy(new_mask, cpu_pmu->hw_cntr_mask, 
->>>>> ARMPMU_MAX_HWEVENTS);
->>>>> +
->>>>> +    if (guest_mask) {
->>>>> +        /* Subtract guest counters from available host mask */
->>>>> +        bitmap_andnot(new_mask, new_mask, guest_bitmap,
->>>>> ARMPMU_MAX_HWEVENTS);
->>>>> +
->>>>> +        /* Did we collide with an active host event? */
->>>>> +        if (bitmap_intersects(cpuc->used_mask, guest_bitmap,
->>>>> ARMPMU_MAX_HWEVENTS)) {
->>>>> +            int idx;
->>>>> +
->>>>> +            need_resched = true;
->>>>> +            cpuc->host_squeezed = true;
->>>>> +
->>>>> +            /* Look for pinned events that are about to be 
->>>>> preempted */
->>>>> +            for_each_set_bit(idx, guest_bitmap, 
->>>>> ARMPMU_MAX_HWEVENTS) {
->>>>> +                if (test_bit(idx, cpuc->used_mask) && cpuc-
->>>>> >events[idx] &&
->>>>> +                    cpuc->events[idx]->attr.pinned) {
->>>>> +                    pr_warn_ratelimited("perf: Pinned host event
->>>>> squeezed out by KVM guest PMU partition\n");
-> 
->>>> Hi Colton,
-> 
->>>> I get "perf: Pinned host event squeezed out by KVM guest PMU partition"
->>>> even with arm_pmuv3.reserved_host_counters=3 for example. I would have
->>>> expected any non zero value to stop the warning.
-> 
->>>> I think armv8pmu_get_single_idx() needs to be changed to allocate from
->>>> the high end host counters first. A more complicated option would be
->>>> checking to see if there are any non-pinned counters in the host
->>>> reserved half when a new pinned counter is opened, then swapping the
->>>> places of the new pinned and existing non-pinned counters so pinned
->>>> always prefer being put into the host half. But it's probably not worth
->>>> doing that.
-> 
->>>> James
-> 
-> 
->>> I agree it makes the most sense to allocate from the top, but I'm happy
->>> the basic idea works.
-> 
-> 
->> Another thing I forgot to mention is that even with the ratelimited
->> warning, this spams the logs any time the host and guest are both using
->> the PMU and I'm not sure how useful that is.
-> 
-> I'm sure it does. I'll delete it.
-> 
+> > +++ b/tools/perf/util/unwind.h
 
-A warn_once might save someone a few hours of debugging, but we probably 
-don't need more than that.
+<SNIP>
 
->>>>> +                    break;
->>>>> +                }
->>>>> +            }
->>>>> +        }
->>>>> +    } else {
->>>>> +        /*
->>>>> +         * Restoring to hw_cntr_mask.
->>>>> +         * Only resched if we previously squeezed an event.
->>>>> +         */
->>>>> +        if (cpuc->host_squeezed) {
->>>>> +            need_resched = true;
->>>>> +            cpuc->host_squeezed = false;
->>>>> +        }
->>>>> +    }
->>>>> +
->>>>> +    if (need_resched) {
->>>>> +        /* Collision: run full perf reschedule */
->>>>> +        perf_pmu_resched_update(&cpu_pmu->pmu, kvm_pmu_update_mask,
->>>>> new_mask);
->>>>> +    } else {
->>>>> +        /* Host was never using guest counters anyway */
->>>>> +        bitmap_copy(cpu_pmu->cntr_mask, new_mask, 
->>>>> ARMPMU_MAX_HWEVENTS);
->>>>> +    }
->>>>> +}
->>>>> +
->>>>>    /**
->>>>>     * kvm_pmu_host_counter_mask() - Compute bitmask of host-reserved
->>>>> counters
->>>>>     * @pmu: Pointer to arm_pmu struct
->>>>> @@ -218,6 +285,7 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
-> 
->>>>>        pmu = vcpu->kvm->arch.arm_pmu;
->>>>>        guest_counters = kvm_pmu_guest_counter_mask(pmu);
->>>>> +    kvm_pmu_set_guest_counters(pmu, guest_counters);
->>>>>        kvm_pmu_apply_event_filter(vcpu);
-> 
->>>>>        for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
->>>>> @@ -319,5 +387,6 @@ void kvm_pmu_put(struct kvm_vcpu *vcpu)
->>>>>        val = read_sysreg(pmintenset_el1);
->>>>>        __vcpu_assign_sys_reg(vcpu, PMINTENSET_EL1, val & mask);
-> 
->>>>> +    kvm_pmu_set_guest_counters(pmu, 0);
->>>>>        preempt_enable();
->>>>>    }
->>>>> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/ 
->>>>> arm_pmu.h
->>>>> index f7b000bb3eca8..63f88fec5e80f 100644
->>>>> --- a/include/linux/perf/arm_pmu.h
->>>>> +++ b/include/linux/perf/arm_pmu.h
->>>>> @@ -75,6 +75,7 @@ struct pmu_hw_events {
-> 
->>>>>        /* Active events requesting branch records */
->>>>>        unsigned int        branch_users;
->>>>> +    bool host_squeezed;
->>>>>    };
-> 
->>>>>    enum armpmu_attr_groups {
+> > +static inline int libdw__get_entries(unwind_entry_cb_t cb __maybe_unused, void *arg __maybe_unused,
+> > +				     struct thread *thread __maybe_unused,
+> > +				     struct perf_sample *data __maybe_unused,
+> > +				     int max_stack __maybe_unused,
+> > +				     bool best_effort __maybe_unused)
+> > +{
+> > +	pr_err("Error: libdw dwarf unwinding not built into perf\n");
+> > +	return 0;
+> > +}
+> > +#endif
 
+I also addressed this local sashiko review comment:
+
+-------------------------------------------------------------------------
+Since unwinding is performed per-sample in the hot path, will using pr_err()
+here cause console flooding if the user explicitly configures an unsupported
+unwind style?
+Should this use pr_warning_once() instead, similar to the UNWIND_STYLE_UNKNOWN
+fallback behavior in unwind.c?
+-------------------------------------------------------------------------
+
+And in one other place, please ack,
+
+- Arnaldo
+
+diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
+index 28db3e3b9b513401..69ba08afda792d17 100644
+--- a/tools/perf/util/unwind.h
++++ b/tools/perf/util/unwind.h
+@@ -53,7 +53,7 @@ static inline int libdw__get_entries(unwind_entry_cb_t cb __maybe_unused, void *
+ 				     int max_stack __maybe_unused,
+ 				     bool best_effort __maybe_unused)
+ {
+-	pr_err("Error: libdw dwarf unwinding not built into perf\n");
++	pr_warning_once("Error: libdw dwarf unwinding not built into perf\n");
+ 	return 0;
+ }
+ #endif
+@@ -81,7 +81,7 @@ static inline int libunwind__get_entries(unwind_entry_cb_t cb __maybe_unused,
+ 					 int max_stack __maybe_unused,
+ 					 bool best_effort __maybe_unused)
+ {
+-	pr_err("Error: libunwind dwarf unwinding not built into perf\n");
++	pr_warning_once("Error: libunwind dwarf unwinding not built into perf\n");
+ 	return 0;
+ }
+ 
