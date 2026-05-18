@@ -1,123 +1,117 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D27386C3B
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 04:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B395380FCE
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 06:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779079706; cv=none; b=cO5wjvr33OS8ur15+Ys2dkCj4jME5v1DgcjWc4W//mJvf8UQPWYwWn59fwZUA7ukkeUbOlaMFXzutFW7IXt3m+qNyaSPeUfSPqY//rtJ0lWyJ6ltph0yxAlcUYoxYpdbtVi0GCW0Ur+Fqh0toH2pMTpZjJ+qlcVRFNjDU3oYolw=
+	t=1779084755; cv=none; b=qjEyDqEdpgFC5FMOc2yjX8SFPecHM8rQKcQYr06qz5gPgebiCE7OEDIgE7667HbDSNgWohXM/posPSRhRkkh25neDOyK+OsL0vDyz21/wJf4YO0UGdIR3WpvX5mZER92GkHZfTyctxLJ8ZT8PpS+R7es7V9BupUhJSRsh87z3+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779079706; c=relaxed/simple;
-	bh=X/Y6Y0RSQ8C+MKLNRZgURcIaY/WnI4mafzsUsFyDboM=;
+	s=arc-20240116; t=1779084755; c=relaxed/simple;
+	bh=zqPX2xXsaBdF1D2OQcUu/6Wi3jnch+KGMZaEohm6g6Y=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JOdQOXmAVWeb36AQBGqb+/KohiTB4XnT1Lra+IMB5mOUu77KEyiv9BQaSAVig7ciurG5RrjQRrqtDOV/VKQq0z/3YOBcymdf6lroMbta14C19JFX7hFggnhmJAU4ygGTF8P4uVWkw+7fubKGKTlnQGm2JLxSlFBnbfolwq4l+kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RrCwG6/f; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=B3rIv1fOe3mWTI7NbW5qiKkoGK/NiI6xbkp3VGBCnSGj7DVbxvPFTL03L0/jQscosTMBXv95YHKLmu6JqMMEBNHdHjpOIZwCTQRFjWMK6yzZ7IG4q6OncjfTbo9hNwMZiXTuVaDjMyh/AKzFKd73Nn4pb2D7h67gt5DIUYqIdwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kvwLKvmh; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RrCwG6/f"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-12dc1c0b7ccso2068331c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 21:48:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kvwLKvmh"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12dc3d81736so1196411c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 23:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779079703; x=1779684503; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779084752; x=1779689552; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TX+St+pVYkIq20j0v2ezoU/ohjaZ4xJX9nTu6/yN9F4=;
-        b=RrCwG6/fcon1Y9E1UwTZvGbuQgn7icbJGIHp8Jz9S41w5Gk2f7DsT+Fv9JF6+dL4x5
-         WCkXTCVpshVMODZVvXNzluOV9q2pS9p5vkWp71z32sRJiLRNPjXqdbbXrIANd1fgxKTT
-         WCgvIFsYPTex2N1nM841XoqNcEH7Katef63MSTj0wiQzFAbhAvDPmgguRo2Z4YopjfjH
-         j/0uFpfeW/WdbroKMDCNUJnZJDKYb2l0OxNUUEfVcu7wuNgsX+WLVYZM3beg8lwIyna+
-         sfby0WEBIShvC6p/dRoAkA14DPYr+OPFXMcBQaZNSqS2SzcXBExZ7hYNZEtYPQN4I0g4
-         evpw==
+        bh=svrBpcf/Ip/LN+2rU1He1WB/MKRBGxKYLI2XlJwS7MM=;
+        b=kvwLKvmh7gdQTC+vyTXsfAxPiHB0q1JA71uzuZgHuG1gswRqaOFdhH7OTyy8XLB963
+         Zu9XO3owq+b3dUPDGraTdKvA5YtKju1F2HdKGglQKtmlp2X6h3ijqKSN9vdF+cXtaR6h
+         tqKsFaAriMqlmeX6UD95i1EtCrtpE8USxx5Y9dGwA3TPxMEDSAFC5a/EW7cz8yRk45pF
+         8s72ItElcXAgyf848LVoDJDR8mNCz5Wix5ASd9zDXOdfrM4kwwteYKDFnQeCx8jJN4jq
+         QMKZlcEQQklYG1/oDs97zM4e87C1gEjM3nmP6iJS8kNVq1S0uqL0FGNrvncU+fwbbmvU
+         3gxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779079703; x=1779684503;
+        d=1e100.net; s=20251104; t=1779084752; x=1779689552;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TX+St+pVYkIq20j0v2ezoU/ohjaZ4xJX9nTu6/yN9F4=;
-        b=aR7cgnHrD7VXcv2J/8clYbIMWeXjURmjOilbPSZh+GtdnvL3Tykg+2DwxGJSXJJH6o
-         qjY4iNZEd3I5QWf+lh+wIJSxhFpne7Nl0QVayEEe0S+DySpHvoQjgXJ60qT9pwnda/nU
-         Z9N/6UACj79KkrDhmAcWqKvjArqjyZ8D5ZNUa2JIS/2v8TLd5DyiDnHMJ+Ks2bFJNno8
-         ZW9hGAkouddZ8dt4J3ydcNAEj7RNg2BwXjrl7dSMigjglpwZ7HqAQ0m9xVDa6wJ7rVCb
-         Go0RU6WXPL3I767k+wW6CC1lb3tO71RZX9+vHtS/XTpGQ4Bd1IXtkBzRPfpx2OengELw
-         UZhg==
-X-Forwarded-Encrypted: i=1; AFNElJ9tn0xZXirumqozcJbGa2pmmYVV8zG4O+7D8pwBT7l4WY/p7hFTmBEFVE6WiUEmolZHQ6W0bVArqIJ2mK86eYsn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6eFaqnlYrJ5UALuN5Hf7jpUR94cugo8L6rD6OdEj4W4X5mdNn
-	MniHpRxbSWJxntsWnShLuc1ICzGNV2Q58+Md7gO8HRV6xArmkHtPBVctGVeAJrkNPThqDgv/eje
-	UZ2toXCXmOQ==
-X-Received: from dly24-n1.prod.google.com ([2002:a05:701b:2058:10b0:135:66d8:351c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:128d:b0:12d:31cb:b806
- with SMTP id a92af1059eb24-134c8d4fb2amr7693120c88.26.1779079702613; Sun, 17
- May 2026 21:48:22 -0700 (PDT)
-Date: Sun, 17 May 2026 21:47:40 -0700
-In-Reply-To: <20260518044740.2526802-1-irogers@google.com>
+        bh=svrBpcf/Ip/LN+2rU1He1WB/MKRBGxKYLI2XlJwS7MM=;
+        b=k/B5F05z34SAHIdbNpTzo4xr8PoGXA3qbVuYFleh7f6YiVjnfPdUmvENh3nU9wAMuC
+         XotxOVk+mkQAx6HYbGgS0c67+i29/82A4k1xYVfQuvYAIdLf8HRrl9QKUSs9qlsW5FZz
+         HT+/Qix7SX/+7UKvU8gtDR7YL57enF+/wx44mF3PD7kj63fvRye8ZW6gsRt2HkviAlqH
+         yljqv6enzuyoGgGhAaadk8KDLX7jgERNwhlmWJZThM71feZyPLhBSnPuUY3agnU8AXPM
+         7P8iRCa9zBqGCJqyZkyWykj0cFPUrm4rsNgCLQFf+dkdJKKLztIo+FSU/XLga00lT2Th
+         k9cw==
+X-Forwarded-Encrypted: i=1; AFNElJ9CT1p389CnEkZR9oTVmBmMFg5+J79bxCVstUIUseHqvIo80wTXz3CD/qNRN/WpWlm2b/xptBHx62uSrpdUtfy6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxVl4fpaMNY4d1y39MQzhw0eJ92PdzxPR8Fyc3WmTYgiXhfdHg
+	1zznZOOazwYT6jpWxPnoWMyJoUWeSzSFF7DUBM9ndAsn8gfItwMtqqXmYzH2GBYSXN89n1iU3Ma
+	r3DbiS+Z0nQ==
+X-Received: from dlbrl26.prod.google.com ([2002:a05:7022:f51a:b0:12c:912f:7ce9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ff42:b0:133:3bb1:8d40
+ with SMTP id a92af1059eb24-1350451ace4mr5109989c88.15.1779084751549; Sun, 17
+ May 2026 23:12:31 -0700 (PDT)
+Date: Sun, 17 May 2026 23:12:26 -0700
+In-Reply-To: <20260429181136.2712655-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260515193314.1593560-1-irogers@google.com> <20260518044740.2526802-1-irogers@google.com>
+References: <20260429181136.2712655-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518044740.2526802-15-irogers@google.com>
-Subject: [PATCH v6 14/14] perf build: Convert llvm-config shell queries to
- simply expanded variables
+Message-ID: <20260518061228.2582860-1-irogers@google.com>
+Subject: [PATCH v3 0/2] perf inject intel-PT LBR/brstack synthesis fixes
 From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
+To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
-	alexandre.chartre@oracle.com, andrii@kernel.org, ankur.a.arora@oracle.com, 
-	aou@eecs.berkeley.edu, bpf@vger.kernel.org, collin.funk1@gmail.com, 
-	costa.shul@redhat.com, daniel@iogearbox.net, dapeng1.mi@linux.intel.com, 
-	dsterba@suse.com, eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org, 
-	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, martin.lau@linux.dev, memxor@gmail.com, 
-	mingo@redhat.com, mmayer@broadcom.com, nathan@kernel.org, palmer@dabbelt.com, 
-	peterz@infradead.org, pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me, 
-	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com, tglozar@redhat.com, 
-	thomas.falcon@intel.com, yonghong.song@linux.dev
+Cc: dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
+	thomas.falcon@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-In Makefile.config, CFLAGS, CXXFLAGS, LIBLLVM, and EXTLIBS were assigned
-using recursive expansion or appended with raw $(shell $(LLVM_CONFIG) ...)
-calls. Because these variables were expanded during dependency evaluation
-across every single object file compilation rule, Kbuild continuously
-re-executed llvm-config forks nearly 200 times during incremental builds.
+An intel-pt trace can be turned into LBR events either in perf script
+or perf inject with the --itrace=L option. With perf inject the
+generated perf.data file failed to be parsed as the sample events were
+out of sync with their perf_event_attr. A range of fixes were
+required.
 
-Convert llvm-config shell queries to simply expanded variables (:=) to
-ensure Make evaluates LLVM compiler flags and library paths exactly once
-when Makefile.config is parsed, eliminating ~185 redundant sub-processes
-during build startup.
+This patch was separated from a large perf script refactor that
+highlighted the breakage:
+https://lore.kernel.org/lkml/20260425224951.174663-1-irogers@google.com/
 
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+v3:
+ - Add missing Fixes: tags on both commits.
+ - Refactor perf_event__repipe_attr to avoid in-place modifications on
+   read-only mmap buffers, preventing SIGSEGV in file mode and premature
+   evsel updates in pipe mode.
+ - Use perf_event__synthesize_attr to correctly construct and repipe
+   attributes in pipe mode.
+ - Replace manual arithmetic in convert_sample_callchain with
+   perf_event__sample_event_size to prevent uninitialized memory leaks.
+ - Retrieve evsel branch_sample_type dynamically in util/arm-spe.c and
+   util/cs-etm.c instead of hardcoding 0, resolving missing hw_idx field
+   on synthesized branch stacks.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 26de7528d6ce..b56fa8419f7d 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -925,11 +925,14 @@ ifndef NO_LIBLLVM
-   $(call feature_check,llvm-perf)
-   ifeq ($(feature-llvm-perf), 1)
-     CFLAGS += -DHAVE_LIBLLVM_SUPPORT
--    CFLAGS += $(shell $(LLVM_CONFIG) --cflags)
--    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
--    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
--    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
--    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
-+    LLVM_CFLAGS := $(shell $(LLVM_CONFIG) --cflags 2>/dev/null)
-+    LLVM_CXXFLAGS := $(shell $(LLVM_CONFIG) --cxxflags 2>/dev/null)
-+    LLVM_LIBLLVM := $(shell $(LLVM_CONFIG) --libs all 2>/dev/null) $(shell $(LLVM_CONFIG) --system-libs 2>/dev/null)
-+    LLVM_LIBDIR := $(shell $(LLVM_CONFIG) --libdir 2>/dev/null)
-+    CFLAGS += $(LLVM_CFLAGS)
-+    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT $(LLVM_CXXFLAGS)
-+    LIBLLVM := $(LLVM_LIBLLVM)
-+    EXTLIBS += -L$(LLVM_LIBDIR) $(LIBLLVM)
-     EXTLIBS += -lstdc++
-     $(call detected,CONFIG_LIBLLVM)
-   else
+v2: Response to sashiko fixes for patch 2, Namhyung's acked-by for patch 1.
+
+v1: https://lore.kernel.org/lkml/20260428070328.1880314-1-irogers@google.com/
+
+Ian Rogers (2):
+  perf event: Fix size of synthesized sample with branch stacks
+  perf inject: Fix itrace branch stack synthesis
+
+ tools/perf/bench/inject-buildid.c  |   9 +-
+ tools/perf/builtin-inject.c        | 141 +++++++++++++++++++++++++----
+ tools/perf/tests/dlfilter-test.c   |   8 +-
+ tools/perf/tests/sample-parsing.c  |   5 +-
+ tools/perf/util/arm-spe.c          |  21 ++++-
+ tools/perf/util/cs-etm.c           |  23 +++--
+ tools/perf/util/intel-bts.c        |   3 +-
+ tools/perf/util/intel-pt.c         |  26 ++++--
+ tools/perf/util/synthetic-events.c |  25 +++--
+ tools/perf/util/synthetic-events.h |   6 +-
+ 10 files changed, 216 insertions(+), 51 deletions(-)
+
 -- 
 2.54.0.563.g4f69b47b94-goog
 
