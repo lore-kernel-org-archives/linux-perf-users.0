@@ -1,109 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446DF389116
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 18:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C25938911E
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 18:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779127949; cv=none; b=WPF58egD9OPZb+noWicVZe9gdJ7FEASKmMPrTikmeyiQ4Wol1u5jYojQB++7zOj4BzEotnXFexT/Bon9g+TKE0PtK82xqidyK/obTBkTwRGE7CggRc1UsTRSBHsJ5EKy4S2eX/gxY+ULz8ZxDidjfACdOe2ZRibpDPSCG0DMou0=
+	t=1779127957; cv=none; b=Hv/+XV3mVgyOt6A5rLpZ168OEm+/sPmlivLPnx3E41wPfEMPGSvI9hOlFVE2knCuQklQ2azu73YPCllaA5nWpuk9lDU7gtb7HTe6mnkMOPzhvaLBuGJg1pD8U7XUWzKqYg6VLvx691cUiXdxb4q84bLBJfSWRsK7hMckVK9+ThA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779127949; c=relaxed/simple;
-	bh=c0dHe3Qs/WPAmWNZhzClNn4ChVpbW0EpjMLpgY0TyFE=;
+	s=arc-20240116; t=1779127957; c=relaxed/simple;
+	bh=4V94P25+wTzz8lm9iRU+uaLEqprlQdE99aPXt7ed914=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Dn6/ZahPUMcgM4uL3uv056c6HXm3+78eKg+eETsVyzBaRQw++OeetEFZNN0Oa3AVj9s7l3CSu7zmm+VHbHFjWBfZqGfaoQVn6N8dDxeL6esQuhQGZYjTvUeG0X69p/xc4k6vzKWek9+TCv8jfpw1u4+CtNZBBuedDc5jsR5BVgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArHSD9wx; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=WU41BP3hxFwob7fFklZ1gRO9JTCGY6/hpcsQLkdutKpTbgfurq7BJ4oBh2/tcdjwOdpAYHUi3+TW0SbrEgHFTYBfF286tesEbGIPySsdQOiOfFNQFmw/RJZsuZFlRrD3MX8JeyxMPTkrQdYm8lBOVcWtl4uP94T2TYu8rhmE71c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQyAESdf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArHSD9wx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB80CC2BCC6;
-	Mon, 18 May 2026 18:12:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQyAESdf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BABC2BCB7;
+	Mon, 18 May 2026 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779127948;
-	bh=c0dHe3Qs/WPAmWNZhzClNn4ChVpbW0EpjMLpgY0TyFE=;
+	s=k20201202; t=1779127957;
+	bh=4V94P25+wTzz8lm9iRU+uaLEqprlQdE99aPXt7ed914=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=ArHSD9wxM7+DMJYYjPQEDuxic11lXLPLoLbGhNSy+U2v08kPkvBClU8awHwYiIyC1
-	 y+U7k6M5uYB+P6L0GLNnopCqgMPA4pHB99Uec8skbaCLLjBg/6/SBvTJR+9JDcVvaq
-	 4Cgn4rSV4Xo6lyamf1p2GoIcbhWgsWPnB6KpvFCfVC+zxwloHBhaGJTdQBlj4j5siB
-	 9ZFj2sZFiYKIB9VQE/WFDZRRPqtpxr2YbM5/pHI8qoPPczKjMgwxpqzd8cILDjrBV0
-	 drEjs0OQ7sr7htnqyjv7K7ZMH2upWWBMFlJq+hT7gJb0r9EYDuurtwRMpzq3IWGIF6
-	 ef8hRBJH+6NaA==
+	b=rQyAESdfS8lzODqcFu+Sst6NdHQwh6GBa+ZdCWGSksUK3PKDDZsAVcXBXgVDuBzUt
+	 +ei+QLXixXFc8K733xvJVqG8Dw/Eo7JSsWLbZf43HVtOKSIPgl7D0MtIKPkcwuYHTn
+	 5RQXxHRf3Dp53yShBc1ZL6CJaKG0n1MatzQe1e4jMW5EovgsceLbcsqRgZoXnXL8F4
+	 QU5Vae+a+iyd/L5SricrxDzpSyzG/apJqv/luARTop3Hl0HlEJHQVjZubO1iIgSfVC
+	 hzjvuzCA35uz4EYjM5xHd6Zjiybc+ddlLncQa1HIPP9rkrULCx03p/UoYieuYKai5G
+	 uofioA3nxnUJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 1/2] perf: Reveal PMU type in fdinfo
+Subject: Re: [PATCH v5 2/2] perf inject: Fix itrace branch stack synthesis
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518174159.1177549-1-ctshao@google.com>
-References: <20260518174159.1177549-1-ctshao@google.com>
+In-Reply-To: <20260518171231.2834947-3-irogers@google.com>
+References: <20260518171231.2834947-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 18:12:28 +0000
-Message-Id: <20260518181228.BB80CC2BCC6@smtp.kernel.org>
+Date: Mon, 18 May 2026 18:12:36 +0000
+Message-Id: <20260518181236.B3BABC2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The `perf_show_fdinfo` function omits the `config4` field from t=
-he `perf_event_attr` struct.
-- [Medium] Lockless read of `event->attr` fields can lead to data tearing a=
-nd inconsistent output.
+- [Medium] The newly added event size validation in `perf_event__repipe_att=
+r` is executed after a memory copy and is vulnerable to integer overflow on=
+ 32-bit architectures.
 --
 
-commit ec3f500bd8b814c602df062a02b83af7397b6b5d
-Author: Chun-Tse Shao <ctshao@google.com>
+commit d1753b02b3fecbf4dd36f4b01ecfc58131e9bfb4
+Author: Ian Rogers <irogers@google.com>
+perf inject: Fix itrace branch stack synthesis
 
-perf: Reveal PMU type in fdinfo
+This commit fixes several issues when synthesizing branch stacks from AUX
+data using perf inject --itrace=3DL. It corrects missing branch stack flags,
+resolves memory leaks, and adds size validation to prevent buffer overflows
+and parse failures.
 
-This commit adds fdinfo output to reveal the PMU configuration for a proces=
-s.
-It exposes perf_event_attr fields such as type, config, config1, config2,
-and config3 through the /proc/*/fdinfo/ interface.
-
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 6d1f8bad7e1c5..d88947e9f7740 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 5f06ee1c14a08..862e178491053 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
 [ ... ]
-> @@ -7506,6 +7507,20 @@ static int perf_fasync(int fd, struct file *filp, =
-int on)
->  	return 0;
->  }
+> @@ -231,7 +242,30 @@ static int perf_event__repipe_attr(const struct perf=
+_tool *tool,
+>  	if (!inject->output.is_pipe)
+>  		return 0;
 > =20
-> +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-> +{
-> +	struct perf_event *event =3D f->private_data;
+> -	return perf_event__repipe_synth(tool, event);
+> +	if (!inject->itrace_synth_opts.set)
+> +		return perf_event__repipe_synth(tool, event);
 > +
-> +	seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
-> +	seq_printf(m, "perf_event_attr.config:\t0x%llx\n", (unsigned long long)=
-event->attr.config);
-> +	seq_printf(m, "perf_event_attr.config1:\t0x%llx\n",
-> +		   (unsigned long long)event->attr.config1);
-> +	seq_printf(m, "perf_event_attr.config2:\t0x%llx\n",
-> +		   (unsigned long long)event->attr.config2);
+> +	memset(&attr, 0, sizeof(attr));
+> +	memcpy(&attr, &event->attr.attr,
+> +	       min_t(size_t, sizeof(attr), (size_t)event->attr.attr.size));
 
-Can these fields be read safely without locking or READ_ONCE()?
+Could this result in an out-of-bounds read from the event buffer if a
+malformed event provides a large attr.size but a very small header.size?
 
-Since event->attr.config1 (which aliases bp_addr) and event->attr.config2
-(which aliases bp_len) can be concurrently modified via the
-PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl, there could be data tearing on
-32-bit architectures if they are updated locklessly with respect to VFS
-readers.
+The size validation check happens just after this memcpy. Would it be safer
+to move the event->header.size check before the memcpy?
 
-> +	seq_printf(m, "perf_event_attr.config3:\t0x%llx\n",
-> +		   (unsigned long long)event->attr.config3);
+> +
+> +	if (event->header.size < sizeof(event->header) + event->attr.attr.size)=
+ {
+> +		pr_err("Attribute event size %u is too small\n", event->header.size);
+> +		return -EINVAL;
+> +	}
 
-Does this code need to print config4 as well?
+On 32-bit architectures, can the addition of sizeof(event->header) and
+event->attr.attr.size overflow if the provided attr.size is exceptionally
+large (like 0xFFFFFFF8)?
 
-The perf_event_attr struct has been extended to include config4.
+If it wraps around to a small value, it seems it would bypass this check
+entirely and cause an underflow in the n_ids calculation below, potentially
+leading to out-of-bounds memory accesses in perf_event__synthesize_attr().
 
-By omitting it from the fdinfo output, we might be missing information for
-users relying on this interface for events and PMUs that utilize this newer
-attribute field.
-
-> +}
+> +	n_ids =3D event->header.size - sizeof(event->header) - event->attr.attr=
+.size;
+> +	n_ids /=3D sizeof(u64);
+> +	ids =3D perf_record_header_attr_id(event);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518174159.1177=
-549-1-ctshao@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518171231.2834=
+947-1-irogers@google.com?part=3D2
