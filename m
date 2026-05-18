@@ -1,206 +1,211 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89516233134
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 22:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCF019E819
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 23:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779144548; cv=none; b=X/HFDw6IpgeWHwYWyUMyIRzrKNSlZEkkx1vZkG9P1i9P92KSEkgBE4SzQIsES9m9G1N4tseY2yCsKP8TmdQNTx8yUIDaBd1SH9jcObYDGSJDnV6iz/XrYLtgXwlT4H03Eq2oxI3SOghXqjVRDguT58Kj63KmJWd+IDwT0wJiyyA=
+	t=1779145362; cv=none; b=P2f946Z2zzHSU18Ri+9QR46MWrsq0FkDDXs5KAV5IRXfPXoUF7nTg39uOWLHld9VxoA7Yyg5wyX7lN1OCEkHbCjHw+667K6opFAM8rxrYxd6m74pJ5S/g3365ki/WkDPVU2HrSps70ShkJ+Arx70DB+JhaVpgm37tmPU1JRBnJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779144548; c=relaxed/simple;
-	bh=ojqdFjfpOzgKZ/9nJ4wDUjptQFaL04I9xwgufbxsvO4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FtUmkG3txFXEg2E4aCIz8m3Tu8Wos2o9LiDISaccOtnDY85M2UchrLw/koWcDdSXIjmCoAqeV3IIFhE9ynAmSnZlsjt4gibCH7ZEMwWCh+X8dDE3gl3NUGXLNmkt93HgRHmL7BxJ+FydfnHFHj8en4/GUNpPun5LVHvhgHEw5YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b4ICnn3a; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1779145362; c=relaxed/simple;
+	bh=KNsa4b1lvGxOT2vbNyOn3U4F4TiOnLFL88DO0D/THxM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EnuYSItkF+N6+k2qZ2quHas3M69C0VS1D+/YGM0z6DfbYWcXEOX7LquBCF4cOHz3xorOpJRPEg2o9g+09U07o6Zi3qa4UPmpT8WrCSvZmY5xDAIaqlz3GB4oTuo39aDhqJC3O1NUr0Wn7NM7tbnGbVWxgGmHwvzrZYYB6G95CR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQsv7HKW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b4ICnn3a"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-303b38ec2f6so3948696eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 15:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779144546; x=1779749346; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4mXObPWxU093Hrs6Zz/xsS5eb+P0/Hk3FQjwiJUB5pM=;
-        b=b4ICnn3axxeN6U/GYQQKQGYj1llovtabr7Q6IK2ucgUa2oJNahzn+baYaJlPt85EFn
-         8egQbISA/WLIN6laMQbJEmrA8DqvkVJh6fIY5LR306WXENts3Cbs8Glea5htdG/I0hFj
-         L/IBUt5hxG4bjfQ78Jy5OmKjfcRF2pgVWpaTVaTnyLuF+iEDFT2yCjV5kQq+mrfwgUIS
-         rwZRz8GdSODvFJrtJomv0mgOssgzF9SPrGhjKsWW6VYXrMq69g/vLEcPAs+4CHcuDj3c
-         Y7UVLoUEFOH1WbfFuqkmMSSaM1XT4HUpfiOyNqjrA+VUUvG/zOXim0ZvGCl9nsYrlvia
-         7v9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779144546; x=1779749346;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4mXObPWxU093Hrs6Zz/xsS5eb+P0/Hk3FQjwiJUB5pM=;
-        b=TI++GSMueWLDjGB9zlMqcvVtOW8KWZQpWLklQC4eoukdYbEICIgjz0d4G9owD7CMz8
-         YP9XuFpbRK4Pmqd+88b9MdOpnbT2EUeZ1awX7ZQttVmzr6TvNd+D2GQGHp54RgR2m9g6
-         hdB4wZuyS3814dYsQ7Za99HY8QO3vF2cwHfFGVaONxFAjM7Qf5l6obdTNFevNkfIwyjN
-         HWE5QtuLUBkte3aKXJoMzFw2nVW1qLZ0rz76Dda8/QqLsxVV/NLhQHGWtIeXfYE04S5D
-         rdMbPasJ2wtsIHRHTtcQxU63Ui8gfWNB7FT91zYkAXWR54ID07Q6Dk7PmTzxAoXLbljz
-         AJsw==
-X-Forwarded-Encrypted: i=1; AFNElJ+IU5lK8fe4jpXwb5R0KU/z6fi97/OS8n7wSCO3Q8epXDDJd9A6lhCSzNJTI4WCPRq0H2iyzbbKHSLnnxj/3uSK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWk3En9wAY3hKKn7HBpTRs5MqGH3QrAC5VkRIvyjvx26jM9Tx0
-	mUAfwaYrkWE/31liBawLlHOUa3a5PLBxjUF32xrmhV44Fbx1TTyXSj0sDSSXsrMzY/psAy59gRG
-	5aqXrmg==
-X-Received: from dycoh22.prod.google.com ([2002:a05:7301:da16:b0:2ed:b77f:b02a])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e7a2:b0:2ea:b85c:153d
- with SMTP id 5a478bee46e88-303986948camr7032909eec.27.1779144545297; Mon, 18
- May 2026 15:49:05 -0700 (PDT)
-Date: Mon, 18 May 2026 15:47:48 -0700
-In-Reply-To: <20260518224819.1247382-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQsv7HKW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1132DC2BCB7;
+	Mon, 18 May 2026 23:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779145362;
+	bh=KNsa4b1lvGxOT2vbNyOn3U4F4TiOnLFL88DO0D/THxM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=AQsv7HKW1WIonMUrxjsCb5t4MaLWeoKA1Lu6JYJU5iXXJjjX+/a5cv6ykh7Lx4+IS
+	 rqMwxmCEuSZq1qXFLviniB9kcQAoPWCrfwyA9XxsUyhq9/xNjNT79JQpS+rd7hX50V
+	 MkDojkjHoYyyO1njNH1hac8y192ukFfiau4g/VjBTt2QRVkpVBZacsAxwuXhJIS5d4
+	 KYgVB9XtPGsLo7bB0o0Z7J92SZEkcR6nh1EQ97Cst9ikPsNplxRViEv5Wxx1EbcKd/
+	 feTulgSXIHJX3Xg6xRdTcfpl0acyWHVpQN07tv7rRWdkjscDbWqpA/ez9ZZcafAhgg
+	 Ysyq274SBhRKA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/2] perf tool_pmu: Make tool PMU events respect
+ enable/disable
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260518223733.3034897-2-irogers@google.com>
+References: <20260518223733.3034897-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 May 2026 23:02:41 +0000
+Message-Id: <20260518230242.1132DC2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260518224819.1247382-1-ctshao@google.com>
-X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260518224819.1247382-2-ctshao@google.com>
-Subject: [PATCH v7 2/2] perf evsel: Find process with busy PMUs for EBUSY
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org, thomas.falcon@intel.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-It parses fdinfo with PMU type, comparing with the event which failed to
-open, and report the processes causing EBUSY error.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [Medium] Inconsistent disabled state on early return in evsel__enable() a=
+nd evsel__disable().
+- [Medium] evsel__tool_pmu_disable_cpu() leaves start_time intact if readin=
+g stats fails, causing disabled CPUs to keep counting.
+- [Medium] Disabling a duration_time group leader prematurely sets its disa=
+bled flag, causing __evlist__disable() to skip member events on CPUs > 0.
+--
 
-Testing cycles and intel_pt//
+commit c37afe120a59773ddf6b54a63fa825fceec20137
+Author: Ian Rogers <irogers@google.com>
 
-  $ ./perf stat -e cycles &
-  [1] 55569
-  $ ./perf stat -e intel_pt// &
-  [2] 55683
-  $ ./perf stat -e intel_pt//
-  Error:
-  The PMU intel_pt counters are busy and in use by another process.
-  Possible processes:
-  55683 ./perf stat -e intel_pt//
+perf tool_pmu: Make tool PMU events respect enable/disable
 
-Only perf with intel_pt was reported.
+Tool PMU events (duration_time, user_time, system_time) currently
+count from when the event is opened to when it is read. This causes
+issues with features like the delay option (-D) or control fd, where
+events are opened but should not start counting immediately. Make these
+events behave more like regular counters by implementing proper enable
+and disable support.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/evsel.c | 80 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 59 insertions(+), 21 deletions(-)
+Link: https://lore.kernel.org/linux-perf-users/20260517093650.2540920-1-nig=
+ro.fra@gmail.com/
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2ee87fd84d3e..1f120c27e5d7 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3928,7 +3928,8 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
- 
--static int dump_perf_event_processes(char *msg, size_t size)
-+static int dump_perf_event_processes(const struct perf_event_attr *failed_attr,
-+				     char *msg, size_t size)
- {
- 	DIR *proc_dir;
- 	struct dirent *proc_entry;
-@@ -3969,29 +3970,64 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 				continue;
- 			/* Take care as readlink doesn't null terminate the string. */
- 			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
--				int cmdline_fd;
--				ssize_t cmdline_size;
--
--				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
--				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
--				if (cmdline_fd == -1)
-+				int fdinfo_fd;
-+				ssize_t fdinfo_size;
-+				char *line;
-+				u32 perf_event_type = UINT32_MAX;
-+
-+				/* Let's check the PMU type reserved by this process */
-+				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-+					  proc_entry->d_name, fd_entry->d_name);
-+				fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+				if (fdinfo_fd == -1)
- 					continue;
--				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
--				close(cmdline_fd);
--				if (cmdline_size < 0)
-+				fdinfo_size = read(fdinfo_fd, buf, sizeof(buf) - 1);
-+				close(fdinfo_fd);
-+				if (fdinfo_size < 0)
- 					continue;
--				buf[cmdline_size] = '\0';
--				for (ssize_t i = 0; i < cmdline_size; i++) {
--					if (buf[i] == '\0')
--						buf[i] = ' ';
-+				buf[fdinfo_size] = '\0';
-+
-+				line = strtok(buf, "\n");
-+				while (line != NULL) {
-+					if (sscanf(line,
-+						   "perf_event_attr.type:\t%u",
-+						   &perf_event_type) == 1)
-+						break;
-+					line = strtok(NULL, "\n");
- 				}
- 
--				if (printed == 0)
--					printed += scnprintf(msg, size, "Possible processes:\n");
--
--				printed += scnprintf(msg + printed, size - printed,
--						"%s %s\n", proc_entry->d_name, buf);
--				break;
-+				/* Report the process which reserves the conflicted PMU. */
-+				/* If fdinfo does not contain PMU type, report it too. */
-+				if (perf_event_type == failed_attr->type ||
-+				    perf_event_type == UINT32_MAX) {
-+					int cmdline_fd;
-+					ssize_t cmdline_size;
-+
-+					scnprintf(buf, sizeof(buf),
-+						  "%s/cmdline",
-+						  proc_entry->d_name);
-+					cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+					if (cmdline_fd == -1)
-+						continue;
-+					cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
-+					close(cmdline_fd);
-+					if (cmdline_size < 0)
-+						continue;
-+					buf[cmdline_size] = '\0';
-+					for (ssize_t i = 0; i < cmdline_size; i++) {
-+						if (buf[i] == '\0')
-+							buf[i] = ' ';
-+					}
-+
-+					if (printed == 0)
-+						printed += scnprintf(
-+							msg, size,
-+							"Possible processes:\n");
-+
-+					printed += scnprintf(msg + printed, size - printed,
-+							"%s %s\n", proc_entry->d_name, buf);
-+					break;
-+				}
- 			}
- 		}
- 		closedir(fd_dir);
-@@ -4109,7 +4145,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			msg, size,
- 			"The PMU %s counters are busy and in use by another process.\n",
- 			evsel->pmu ? evsel->pmu->name : "");
--		return printed + dump_perf_event_processes(msg + printed, size - printed);
-+		return printed + dump_perf_event_processes(&evsel->core.attr,
-+							   msg + printed,
-+							   size - printed);
- 		break;
- 	case EINVAL:
- 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
--- 
-2.54.0.746.g67dd491aae-goog
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+[ ... ]
+> @@ -1810,12 +1867,65 @@ int evsel__enable(struct evsel *evsel)
+>  int evsel__enable(struct evsel *evsel)
+>  {
+> -	int err =3D perf_evsel__enable(&evsel->core);
+> +	int err;
+> +
+> +	if (evsel__is_tool(evsel))
+> +		err =3D evsel__tool_pmu_enable(evsel);
+> +	else
+> +		err =3D perf_evsel__enable(&evsel->core);
+> +
+> +	if (!err && evsel__is_group_leader(evsel)) {
+> +		struct evsel *member;
+> +
+> +		for_each_group_member(member, evsel) {
+> +			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+> +			    evsel__is_non_perf_event_open_pmu(member)) {
+[ ... ]
+> +				int mem_err =3D evsel__enable(member);
+> +
+> +				if (mem_err)
+> +					return mem_err;
 
+Does this early return on mem_err skip setting evsel->disabled =3D false at
+the end of the function? It looks like this could leave the group leader wi=
+th
+its software disabled flag set to true, even though the kernel already
+successfully enabled it via perf_evsel__enable(&evsel->core).
+
+> +			}
+> +			member->disabled =3D false;
+> +		}
+> +	}
+> =20
+>  	if (!err)
+>  		evsel->disabled =3D false;
+>  	return err;
+>  }
+[ ... ]
+>  int evsel__disable(struct evsel *evsel)
+>  {
+> -	int err =3D perf_evsel__disable(&evsel->core);
+> +	int err;
+> +
+> +	if (evsel__is_tool(evsel))
+> +		err =3D evsel__tool_pmu_disable(evsel);
+> +	else
+> +		err =3D perf_evsel__disable(&evsel->core);
+> +
+> +	if (!err && evsel__is_group_leader(evsel)) {
+> +		struct evsel *member;
+> +
+> +		for_each_group_member(member, evsel) {
+> +			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+> +			    evsel__is_non_perf_event_open_pmu(member)) {
+[ ... ]
+> +				int mem_err =3D evsel__disable(member);
+> +
+> +				if (mem_err)
+> +					return mem_err;
+
+A similar early return happens here. If evsel__disable(member) fails, it
+skips marking the group leader evsel->disabled =3D true at the bottom of the
+function. Could this leave the state inconsistent for the leader?
+
+> +			}
+> +			member->disabled =3D true;
+> +		}
+> +	}
+
+> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+> --- a/tools/perf/util/tool_pmu.c
+> +++ b/tools/perf/util/tool_pmu.c
+[ ... ]
+> +int evsel__tool_pmu_disable_cpu(struct evsel *evsel, int cpu_map_idx)
+> +{
+> +	enum tool_pmu_event ev =3D evsel__tool_event(evsel);
+> +	int thread, nthreads;
+> +
+> +	if (evsel->disabled)
+> +		return 0;
+> +
+> +	if (ev =3D=3D TOOL_PMU__EVENT_DURATION_TIME) {
+> +		if (cpu_map_idx =3D=3D 0) {
+> +			__u64 delta =3D rdclock() - evsel->duration_time.start_time;
+> +
+> +			evsel->duration_time.accumulated_time +=3D delta;
+> +			evsel->disabled =3D true;
+
+Since evsel->disabled =3D true is set globally here when processing
+cpu_map_idx 0, will __evlist__disable() see pos->disabled =3D=3D true for t=
+his
+group leader when iterating over the remaining CPUs?
+
+If so, would it skip calling evsel__disable_cpu() for CPUs > 0, failing to
+disable the associated member events on those CPUs?
+
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SY=
+STEM_TIME) {
+> +		nthreads =3D xyarray__max_y(evsel->process_time.start_times);
+> +		for (thread =3D 0; thread < nthreads; thread++) {
+> +			__u64 *start_time =3D xyarray__entry(evsel->process_time.start_times,
+> +							   cpu_map_idx, thread);
+> +			__u64 *accumulated_time =3D xyarray__entry(
+> +				evsel->process_time.accumulated_times, cpu_map_idx, thread);
+> +			__u64 val;
+> +			int err;
+> +
+> +			err =3D tool_pmu__read_stat(evsel, cpu_map_idx, thread, &val);
+> +			if (!err) {
+> +				if (*start_time !=3D INVALID_START_TIME && val >=3D *start_time)
+> +					*accumulated_time +=3D (val - *start_time);
+> +				*start_time =3D INVALID_START_TIME;
+> +			}
+
+If tool_pmu__read_stat() fails here (for instance, due to transient /proc
+errors or a terminating thread), does leaving *start_time intact cause
+subsequent calls to evsel__tool_pmu_read() to continue calculating deltas
+using the lingering *start_time and erroneously add them to accumulated_tim=
+e?
+
+Should *start_time =3D INVALID_START_TIME; be done unconditionally outside
+the if (!err) block?
+
+> +		}
+> +	}
+> +	return 0;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518223733.3034=
+897-1-irogers@google.com?part=3D1
