@@ -1,142 +1,234 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8DF286415
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 15:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779119245; cv=none; b=XT0FnBw1m+Xjok9h2Vfv2Fv7ck9tPFS3gdApy5Hnx5DyyPB2T33nROQmeb6U5R+FC8PGXFzcDDkYxCQM1IgaBmzMbs/qicBmx9c8KmQUDH088uX0qVsL32BVMEuMKyyPp+eIBznbS1VGfzEc5g8cEVuSEDftiXPrD9XgN746z00=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779119245; c=relaxed/simple;
-	bh=NGfYl6kDEytKUmpKfL2C4Og3ft1hP0ENd8qszCmyGZM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N0uiGK/7RYDssMaaYhOgrFp8KyiHT8DooNr1ez9XFZAkNChuSfPbwsR4PAy7HNjfKgwBIeiYiGeI2uE5GtrenPDvJjHisWymeXmyf5tE8LrVmpI0asF+/NzNYLMz3mDnueeC4+CsambvxteLWoY5ECDdsP1RaT3LEgQBrobgeXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrwWJQk7; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CB148B36D
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 16:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779120374; cv=pass; b=fdw2COuxRfJWvE+BNt8in+AuBNof0Tp2JAfnf/d+yxO9don2TN07SvJOjuXPQRq3Y/WIl1dn2bhXK4hhxapvhjHVVeBEBN1uzMvBo+B59lNijya+gILbXzYrVUGPmwR2MR2gx14qLhW6+rvCTf677RENiuve7k+9rd26xxDJ1vk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779120374; c=relaxed/simple;
+	bh=0JN4eWAeyH1DFvPDOFr1bp0SNGRTw2jc5rqIj+ZsVUM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p1ISagJD5VMCF3YSUoN9Q/3s0IP9RCctpLp7qfByB6ij1NBYOwgt03GroaO0lWkR20Lr+K5Ri+WOU/c+P5MSHZKxLIZ3fIb2RImA24S9t5bZPuug/IrExPvTnfjTn9xeTG2aG9e+9WWa7umFRzfhVwAvAftg41JdQ3kyjOWa89U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jGueLnnv; arc=pass smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrwWJQk7"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-13312be8a31so6103525c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 08:47:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jGueLnnv"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso95ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 09:06:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779120368; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QJa5JJNfs3C6AszQrGWRH2u5ipcxsPX0qwAW5NYr3VUXOhOotQJbKOhfj9DDdwIxRJ
+         rzEqDT8k43Gtdas6wRO9Vvm7WefavefcQfUMXMYV1hK7cCvUs0KhHpupbMgHjBTdWxoe
+         x0xjenwy9qjYHvhpZ2x2AeWWQbUcUOHrrg3E/jt2I7kMhkACxcx4XUS7QmRgBjn+c8ly
+         Kk0RtkoLQqHZkopYSXxNVuulJA5abRrIEv/hT8QBaqPlDTQmfl/UWz4p+fyvMpN85zTG
+         pyn7e3xc0sUW0NzUEyNsDGHE4JzzbCWUxFn8S0xv9PHHFIw+pBHyRHLXO0yOmNVngk6G
+         Nmwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/yL2S/NNFD9uZOxHwjkGhATRbJfyjLUg+vdf0l7wFBI=;
+        fh=6mK3Ad8bC0Cv2nGbeYGKhYAJivLQLR3OzWgjBVc9GMQ=;
+        b=aAdBbkSbPGmhaSZGP9zixW6Icmey3e8u8tQUFx0n9U0hiPvl03RToFTG8gfs/OpIS6
+         NwzbbpcxdGiWAxszaTYc5+0xQFj4YXFSkJp+DqLKBG+Qrj6aRJLt0x6Jhg10jOCrMZBh
+         Vaahrd8gnwNzTCB/vy3pIsiKoRuMXlQJ9JTWpILToFbZiTY5MjI+qTnra09Gz5aAqMXD
+         LNgTDr/8ZQu63JqvWR5knNU5JR8CDXduMoM7NtUpfWdYh16NtcXsHQAg7jMBeTeMSDzb
+         drcf2q7DOgpn1+o9H1/PuPG+QyOiQHL1seKMK5cTzq4tj5hdA9SesE9CD0pGfngRshCk
+         tCaA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779119232; x=1779724032; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugOFCk7HwEprnixRixPWaow/W0W91ZlZhg4SUCGAxfk=;
-        b=GrwWJQk7vMPde+vKhBQzl/P429Q/lgUN6J/BG2/d07YliwnQwjS+zSNnm8IoSTQEQI
-         kx+kZBoNEfCNwpBQT3W3r2m9VRuVQSIsPQv8k3DEoxqQhNoV/vTTXKpLBpnh+926Tld9
-         o+yASFtMTzo1QtmiOUqXRiDpKtC2eSgk0SQZ01mbj/2B9D2uDY9HOx8MGJyqMCQr3/iS
-         glVPpPK6GvnMmAKeHqlMsz6gDHekDCloMl030IKnPM49RlWa1Uj7uHvURfWhf8PADf87
-         KEUj7+WEXoRLEuQp9Nwq0w10Ekgg+SM6MNE5w2y6iSptpAFLTu5cPkfEdCp3d2roG2HH
-         IxfA==
+        d=google.com; s=20251104; t=1779120368; x=1779725168; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/yL2S/NNFD9uZOxHwjkGhATRbJfyjLUg+vdf0l7wFBI=;
+        b=jGueLnnvGXPf0SEVFUOojzRtxCqeaOSe0Yzj+zD3sHWcSHCOPwqjC9HnKvg5/v8vvO
+         re1A4G8Fh9asuAzg6hSNQholYgZA16S5Ssrud0W/kdtLOERIt95MnH1l3ORcirQBC9Yu
+         oZ+mlJ1qvOaTU9/Ipx+JI4HCPUFBcbUzE4yU8akOhcl53ykTaj2qY/XzdzJX6F615JKL
+         GuRfH+f1mYy1yL3L6lnz78pE6TCzJNFOAJS++nSyeSoB8m0C/l+f4Pdwnvfb6DP7qrY2
+         N30usLFBRg+HJBllLX+Yxk/3tXlQZy5YufVqvEqHSjKTMhp0jh9zG95dxHQtX0yfIbHs
+         O//A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779119232; x=1779724032;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugOFCk7HwEprnixRixPWaow/W0W91ZlZhg4SUCGAxfk=;
-        b=nEqSkmp6w8AxL4Xay5Vf+JOt+XdbZaF9P+2bYJWoSXg6T6Tb8uEfxscU4WiGrCh78S
-         St60ueLgzuKVMrrCM8JaSNPUu2ff3D4yvggOU/EI/Pta4MgwpAkBLbAOPxvA4HruKMB5
-         +zkTt4Te87u4pZbci1bkplvzgx1of0wN2PRWJulmAI3vialbt4NTySRibchmoKeYyGWJ
-         VDXXsydHmdcLBIdZEGJCh/YE7XPXtA21xjf+VbYdZqFsN6WJsKdX9NbymXATYD23cZ+i
-         t+R/mBNYNSL7EUV1S7o+k8WdKX7VoXIXwMXWkRaj8Hhd4W0Q1v2pjMNFMeJlSm4x+8yr
-         kK9g==
-X-Forwarded-Encrypted: i=1; AFNElJ814WLg1KslC/J5p7nPtZv06HGDspP/kcmVWdcMfxl/Za/SK4cwHKjiThD/AneHBA+HFOE6Lmi8nEsz4o9GNLFh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/rc75S/6/mRki8N8kQW4ytZ9p7bwH3vrm3i7tdJpzSfcNzGF7
-	NlPbNhgQ1dJGbj+fbwmQ98AQ7pcEXOmoNwRbeTUF57sIFeebuisJElReC+N6U1jOpjEcBKOf3da
-	4OxepGL5XSg==
-X-Received: from dlbcj24.prod.google.com ([2002:a05:7022:6998:b0:12d:b2ba:b551])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2512:b0:135:3025:be5c
- with SMTP id a92af1059eb24-1353025bfefmr5841182c88.27.1779119231647; Mon, 18
- May 2026 08:47:11 -0700 (PDT)
-Date: Mon, 18 May 2026 08:46:37 -0700
-In-Reply-To: <20260518154638.2798789-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1779120368; x=1779725168;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/yL2S/NNFD9uZOxHwjkGhATRbJfyjLUg+vdf0l7wFBI=;
+        b=aY1Kd2Mj8XGgdyVn4uPuKPgAqwHG7gv+jNq7L57Ppuc6NURtPJe2nQHFARAwUdir35
+         kIrEaYsZT107U1LYRfJuQYC/GBPIaIqGNjjyBqFtPVEeO6vsSIXaMe0N6qmkhL9rMcLv
+         nIWjjEGWBAzglGf/QK1UHRISJvolMarTeAmHqWZ41IQLDPeBqagQECrhWK6blyLv5nDg
+         jJKNgWSpnRRHQuw4iMuo6rLyll/cXPeotTgS/xozt12+LDfZOn6u7OO1f8/VIRrYKUsR
+         flurUSJgLYpoXAdr9BRI8z5p7vh7jZh2UGqECXL4Qddp9nFvi3nAJeXnOgGjWS6wrhDF
+         nkrQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8gfhzhEoBslNKkhGIK1Sx3JfGEQRkNrxmp3YWxjDs0qxFJxwDNgd0Pt2ylOtnp5Le5k1lp476yi8pp1M9kqxjb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8FklQaKL1XkIAN7av7AfEF3wQyDOxrSkHvNAP6VTiAmR6hWE2
+	txRB6Zv81nXzzD7owUxuIfezp4Otfys38zMvEJwP9ht1Jm16lORBKqWukJm2rsjdeNS3XLm4Gxg
+	K9a1jCAHWSlCHTvsR9jpVtyCvBjZylsorR1ARbbCi
+X-Gm-Gg: Acq92OF7GVQA02YNFxmXaGIm78la14JkhLdIcVQPO4N8l22CsXeU2RlhF59JkIiKecY
+	pwwj+0q0DCiGmLU9eb+zIDabw3WCQdP7bl6X/+Tw86wPm6I3qe/B+sqAfbY6pikNSo7Z0+h0CBw
+	W3/QJDWw0wuQwwMrCpKQtOclXWfZAcPisFgihCISX283So3Gr0MPsL3DZHPno6I9RGhfNtJRamH
+	ZuqgXcOQeuItbBHrzqIQKa/IFrTZzEkzJure+FL/sz3AIu9vWDp8SQnELETnL7tPnzjb72HaH+s
+	oipjfHRQlEhSqxTZOfTLWCN6/Xx9oLxS4uwP+44gQK3rk0JA
+X-Received: by 2002:a17:902:d2cf:b0:2bd:3c1b:3073 with SMTP id
+ d9443c01a7336-2bdb041654emr3259205ad.16.1779120367385; Mon, 18 May 2026
+ 09:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260518044740.2526802-1-irogers@google.com> <20260518154638.2798789-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518154638.2798789-14-irogers@google.com>
-Subject: [PATCH v7 13/14] perf pmu-events: Convert recursive shell assignments
- and macros to Make built-ins
+MIME-Version: 1.0
+References: <20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org> <20260518-james-perf-llvm-version-v2-4-f12cc4f031d8@linaro.org>
+In-Reply-To: <20260518-james-perf-llvm-version-v2-4-f12cc4f031d8@linaro.org>
 From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
-	alexandre.chartre@oracle.com, andrii@kernel.org, ankur.a.arora@oracle.com, 
-	aou@eecs.berkeley.edu, bpf@vger.kernel.org, collin.funk1@gmail.com, 
-	costa.shul@redhat.com, daniel@iogearbox.net, dapeng1.mi@linux.intel.com, 
-	dsterba@suse.com, eddyz87@gmail.com, howardchu95@gmail.com, 
-	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	martin.lau@linux.dev, memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com, 
-	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org, 
-	qmo@kernel.org, ricky.ringler@proton.me, song@kernel.org, 
-	swapnil.sapkal@amd.com, terrelln@fb.com, tglozar@redhat.com, 
-	thomas.falcon@intel.com, yonghong.song@linux.dev
+Date: Mon, 18 May 2026 09:05:55 -0700
+X-Gm-Features: AVHnY4J8ZynnI8bourXp6ojaD0bCqutv1EZpQT8aGfrcInLJ1HrazyPhkbTF28U
+Message-ID: <CAP-5=fWmXQEbLg=xGJwQ4s5q5xUZUTdxx2N1K71N0gztZunQrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] tools/build: Allow versioning LLVM readelf
+To: James Clark <james.clark@linaro.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, ihor.solodrai@linux.dev, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In pmu-events/Build, ZENS, ARMS, and INTELS were assigned using recursive
-assignment (=), and model_name/vendor_name were evaluated using shell
-macros (echo ... | sed ...).
+On Mon, May 18, 2026 at 2:04=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> Documentation/kbuild/llvm.rst mentions that readelf is included in the
+> LLVM toolchain, but it's not currently included in this block.
+>
+> Add it so that LLVM=3D... options also apply to readelf. Users in tools/
+> were Perf which was hardcoding it, and another was the BPF makefile.
+> Both already include Makefile.include so convert them to use the new
+> variable.
+>
+> It also didn't have the cross compile prefix, so either readelf didn't
+> mind opening cross binaries, or it wasn't working for cross builds.
+>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Because these variables were expanded inside the COPY_RULE dependency
-evaluation loop across hundreds of PMU JSON files and inside every metric
-generation recipe, Kbuild continuously re-executed 'ls', 'grep', and 'sed'
-shell forks thousands of times during AST parsing and execution.
+For the tools/perf/Makefile.perf part of this change.
 
-Convert ZENS, ARMS, and INTELS to simply expanded variables (:=) and
-replace model_name/vendor_name with pure GNU Make string functions. This
-guarantees Make executes directory probing shell forks exactly once when
-the Build file is parsed and evaluates path macros purely in memory,
-completely eliminating over 7,800 redundant sub-processes during build
-startup.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/Build | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks for the cleanup!
+Ian
 
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index 95172a2a851f..372773b998e4 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -56,12 +56,12 @@ $(LEGACY_CACHE_JSON): $(LEGACY_CACHE_PY)
- # Python to generate architectural metrics
- GEN_METRIC_DEPS := pmu-events/metric.py pmu-events/common_metrics.py
- # Functions to extract the model from an extra-metrics.json or extra-metricgroups.json path.
--model_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/extra-metric.*\.json@\1@')
--vendor_name = $(shell echo $(1)|sed -e 's@.\+/\(.*\)/[^/]*/extra-metric.*\.json@\1@')
-+model_name = $(notdir $(patsubst %/,%,$(dir $(1))))
-+vendor_name = $(notdir $(patsubst %/,%,$(dir $(patsubst %/,%,$(dir $(1))))))
- 
- ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
- # Generate AMD Json
--ZENS = $(shell ls -d pmu-events/arch/x86/amdzen*)
-+ZENS := $(shell ls -d pmu-events/arch/x86/amdzen*)
- ZEN_METRICS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metrics.json)
- ZEN_METRICGROUPS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metricgroups.json)
- GEN_JSON += $(ZEN_METRICS) $(ZEN_METRICGROUPS)
-@@ -78,7 +78,7 @@ endif
- 
- ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),arm64 all))
- # Generate ARM Json
--ARMS = $(shell ls -d pmu-events/arch/arm64/arm/*|grep -v cmn)
-+ARMS := $(shell ls -d pmu-events/arch/arm64/arm/*|grep -v cmn)
- ARM_METRICS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metrics.json)
- ARM_METRICGROUPS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metricgroups.json)
- GEN_JSON += $(ARM_METRICS) $(ARM_METRICGROUPS)
-@@ -95,7 +95,7 @@ endif
- 
- ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
- # Generate Intel Json
--INTELS = $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
-+INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
- INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
- INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
- GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
--- 
-2.54.0.563.g4f69b47b94-goog
-
+> ---
+>  tools/lib/bpf/Makefile         | 8 ++++----
+>  tools/perf/Makefile.perf       | 1 -
+>  tools/scripts/Makefile.include | 2 ++
+>  3 files changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index 168140f8e646..180dca9c57c8 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -114,12 +114,12 @@ PC_FILE           :=3D $(addprefix $(OUTPUT),$(PC_F=
+ILE))
+>
+>  TAGS_PROG :=3D $(if $(shell which etags 2>/dev/null),etags,ctags)
+>
+> -GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+> +GLOBAL_SYM_COUNT =3D $(shell $(READELF) -s --wide $(BPF_IN_SHARED) | \
+>                            cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*/=
+/' | \
+>                            sed 's/\[.*\]//' | \
+>                            awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {prin=
+t $$NF}' | \
+>                            sort -u | wc -l)
+> -VERSIONED_SYM_COUNT =3D $(shell readelf --dyn-syms --wide $(OUTPUT)libbp=
+f.so | \
+> +VERSIONED_SYM_COUNT =3D $(shell $(READELF) --dyn-syms --wide $(OUTPUT)li=
+bbpf.so | \
+>                               sed 's/\[.*\]//' | \
+>                               awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {p=
+rint $$NF}' | \
+>                               grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | so=
+rt -u | wc -l)
+> @@ -182,12 +182,12 @@ check_abi: $(OUTPUT)libbpf.so $(VERSION_SCRIPT)
+>                      "versioned symbols in $^ ($(VERSIONED_SYM_COUNT))." =
+\
+>                      "Please make sure all LIBBPF_API symbols are"       =
+\
+>                      "versioned in $(VERSION_SCRIPT)." >&2;              =
+\
+> -               readelf -s --wide $(BPF_IN_SHARED) |                     =
+\
+> +               $(READELF) -s --wide $(BPF_IN_SHARED) |                  =
+\
+>                     cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |   =
+\
+>                     sed 's/\[.*\]//' |                                   =
+\
+>                     awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  =
+\
+>                     sort -u > $(OUTPUT)libbpf_global_syms.tmp;           =
+\
+> -               readelf --dyn-syms --wide $(OUTPUT)libbpf.so |           =
+\
+> +               $(READELF) --dyn-syms --wide $(OUTPUT)libbpf.so |        =
+        \
+>                     sed 's/\[.*\]//' |                                   =
+\
+>                     awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}=
+'|  \
+>                     grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |             =
+\
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 0aba14f22a06..63276bf55856 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -215,7 +215,6 @@ FLEX    ?=3D flex
+>  BISON   ?=3D bison
+>  STRIP   =3D strip
+>  AWK     =3D awk
+> -READELF ?=3D readelf
+>
+>  # include Makefile.config by default and rule out
+>  # non-config cases
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
+ude
+> index e81e5b479c56..380ad84ac51e 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -73,6 +73,7 @@ ifneq ($(LLVM),)
+>    $(call allow-override,LLC,$(LLVM_PREFIX)llc$(LLVM_SUFFIX))
+>    $(call allow-override,LLVM_CONFIG,$(LLVM_PREFIX)llvm-config$(LLVM_SUFF=
+IX))
+>    $(call allow-override,LLVM_OBJCOPY,$(LLVM_PREFIX)llvm-objcopy$(LLVM_SU=
+FFIX))
+> +  $(call allow-override,READELF,$(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX)=
+)
+>  else
+>    # Allow setting various cross-compile vars or setting CROSS_COMPILE as=
+ a prefix.
+>    $(call allow-override,CC,$(CROSS_COMPILE)gcc)
+> @@ -80,6 +81,7 @@ else
+>    $(call allow-override,LD,$(CROSS_COMPILE)ld)
+>    $(call allow-override,CXX,$(CROSS_COMPILE)g++)
+>    $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
+> +  $(call allow-override,READELF,$(CROSS_COMPILE)readelf)
+>
+>    # Host versions aren't prefixed
+>    $(call allow-override,HOSTAR,ar)
+>
+> --
+> 2.34.1
+>
