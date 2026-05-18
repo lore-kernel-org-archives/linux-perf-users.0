@@ -1,104 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B890380FD4
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 18:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E87731A81C
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 18:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779128865; cv=none; b=brvDirM7+3A0LiJtxgY4wNkKXbouDoiDB/7BGUG3m9NXUkBZbhvjLFDiM9qH5RhHIRAnkRXRceZajFWc3IYHX3H69lXqX6XKXFv+oSPnIGW+N2WIoLD95yMelwUdRxyOs9sQXcye95s6E3OJo83716BSHzksqg10OH9EadXHodo=
+	t=1779129567; cv=none; b=thivKHXiFLzMBDg/bNEPqvvkSUyHDzjrlLl62ccRNxt27h2pwTSZ2FTSKCEHidQDTlR3OcF30ahE4ZwcE+QghPiS/t+cxzrd2oMn/af+7V+x+Cfi1LR5tsbg0daOGGsOEr1EajMX0OjwFh+xbtHehcnvIQR/eXOzkbuzVZEU7bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779128865; c=relaxed/simple;
-	bh=0RI9P3kHSwt6NnAzh+6xVC9JMxns0704ueu2k7DtPqw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pNqJpveCaMIUYSfBukngPYKJmDhiCH/WOjOZxh6BnUDyjS2fDFkx2JFM4qO72SElYKpViVwqDDJYIa784v/Rpu6RwpD6BGE124Vv+uoz5stG0xVz9G/VbcebruuDWpR7wT6GP2bxeDNfCFF1us33kvqZhUzUeJpg43wJ77OHe48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6SypTzp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779129567; c=relaxed/simple;
+	bh=EZqnjx+QHU2XUgAf2IBXEYH5LSWpOnCzLKQ0dwWi+14=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=gkzxgmJNRMErjdNFIJQUFpkLJJisW+EgJDlJAblwlqjuSCk7hBdaq8FDzo87Bp9QuNKg4Jw5SpaAYHUBP26w5dwJIeGp03Jg0jC8WlUFKmiJGiooWNPVLI2eHei5EUHRr1hEENdzKgE9I5GfWOG08Gn1CyEdjbgIZhzKzaKWR4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ViREnynE; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6SypTzp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56CFC2BCB7;
-	Mon, 18 May 2026 18:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779128865;
-	bh=0RI9P3kHSwt6NnAzh+6xVC9JMxns0704ueu2k7DtPqw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=s6SypTzpjxOV5ab9UAXnaGHqJ7ECznHraC7hBh13/KcsrjQ6vtK6R3OlaUMR+UUs4
-	 PEC8sf73s8YXqjDv23H7B7mVnkYw3Q27TfDlalOi1D8wfvKhbyMGG8Pmn4VEzbn9ip
-	 KL9PZccJ+njwX8dXrJEWYJ0KN/mo8xqKhzp6XiIUESA4O9+qUoLT4fERjsYo/dvgKV
-	 4XexI1kwDC8Yjg3z+aez3FIop8SFntokNhKoZjBoTqPn6rmorsM+0bTlkrqZNwD95y
-	 bjBrgBuR8Azng+IFZk0o0WibtKATpQO5EyUFcPA9ro7wSj6h2zsPnNrfvE+gkGd3/X
-	 BpjQd+CviIa9Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 2/2] perf evsel: Find process with busy PMUs for
- EBUSY
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518174159.1177549-2-ctshao@google.com>
-References: <20260518174159.1177549-2-ctshao@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 18:27:44 +0000
-Message-Id: <20260518182744.E56CFC2BCB7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ViREnynE"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ef62078ee7so3640332eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 11:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779129565; x=1779734365; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bi1SI3b6igqsdTxuANV2VTKVvY/gVbtOWbbYVK3yPMs=;
+        b=ViREnynEL5zeoL7JrQThpGf4GtJ9LpBRiy3l0J7vL5S7+X9iB+oOtYEJVgQCA8BeuT
+         QoHBWXLVDPLsZukz6JhbdF2NAW97i4avuERE44eeX5ydKiplSwpwqEoJMq4xZV+baFvR
+         53oOYP2kR79pgrd40OpHwhN44ES1esZn+8IymkY6n7+MIiHDSf8M2eivsooeuboQ2GWe
+         s7Lgx/gvK4gKBF4igrLvEbiF8TVW59rgazNqySNLnnA8p5bxfiGg7UdeWmIpGS1VSjNZ
+         +7s4ey6gNby0FmWmk+QIOuXIWYm6KaOeKaOdW6f2b50gKiP/iyDO98ku5ASZjhCjpjyG
+         04pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779129565; x=1779734365;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bi1SI3b6igqsdTxuANV2VTKVvY/gVbtOWbbYVK3yPMs=;
+        b=LcUacZCTf/LWDAuf0pKNzVaYWJ6NqoT4ImwwAuRInGdjS316d/AbOhrq8izeBwCb7X
+         q8YPCdHoe0iUlb1VX8Sv4A3nIopQNh3bGmghOOywECLXDYZFPZPrmrA3mf9CkbYmEkW7
+         X5VqQSDo+APHVUmT2iUGk1z7wq+QoCr/7pMJmXXbFc8YrV1nD+e5EOasnGgSaYFKl5zP
+         NNunPX1vrCEaZ5b3q+leteV4pbcgQ3rrYesnqWMMCZpjnpEdYkgP2UeMDIfvsH8I/q3i
+         4So9sfaLs1XUlzppvKvXQgC84J6Spd2q/Hi1FBktAOxwiCcq2ARmcClYG17pf3BvILya
+         TjJQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9nv+pDqIm6Jhfugh+w0FSR+D0EKWE0bvY4RhDH68oZwCG+ydZ4j5hjTpToSdTKral0xqGe5dizsIU9qehLXmia@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr4Ejx63es9F5sTaEWxckuVjHEbMgXoSNf1iOXcMFWykWLo9lm
+	SyBV18yiC62T5x/WRb10qtJgWDZox3K/3eanfZUmZ7fcaKIDs//jwwAkdoYgPuW/nxg/loQnAx4
+	vslxB9Oib0Q==
+X-Received: from dybgr25.prod.google.com ([2002:a05:7301:2019:b0:2df:c53c:24a5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:8187:b0:2d9:5cd9:b8ff
+ with SMTP id 5a478bee46e88-3039818af3amr6823525eec.6.1779129564826; Mon, 18
+ May 2026 11:39:24 -0700 (PDT)
+Date: Mon, 18 May 2026 11:39:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.631.ge1b05301d1-goog
+Message-ID: <20260518183920.2894502-1-irogers@google.com>
+Subject: [PATCH v1 0/2] perf tool_pmu: Support enable/disable for tool PMU events
+From: Ian Rogers <irogers@google.com>
+To: Francesco Nigro <nigro.fra@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] The file descriptor `fdinfo_fd` is permanently leaked on all succe=
-ssful open paths.
---
+A regression in perf stat was reported where tool PMU events (like
+duration_time used in CPUs_utilized metric) incorrectly included the
+delay period when using the delay option (-D).
 
-commit 89c8fa0a46a0a7739ea59073f27c6161911eb75b
-Author: Chun-Tse Shao <ctshao@google.com>
+This series fixes the regression by making tool PMU events
+(duration_time, user_time, system_time) behave more like regular
+counters by implementing proper enable and disable support. They now
+correctly accumulate values only when enabled.
 
-perf evsel: Find process with busy PMUs for EBUSY
+The first patch implements the core enable/disable support for tool PMU
+events, and the second patch adds a shell test to verify that
+duration_time correctly excludes the delay period.
 
-This commit parses the fdinfo of perf events to extract the PMU type.
-It then compares this type with the failed event to accurately report
-the specific processes that are causing an EBUSY error.
+Ian Rogers (2):
+  perf tool_pmu: Make tool PMU events respect enable/disable
+  perf tests: Add test for stat delay option with duration_time
 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 2ee87fd84d3ea..f6282099320ee 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-[ ... ]
-> @@ -3969,29 +3970,61 @@ static int dump_perf_event_processes(char *msg, s=
-ize_t size)
->  				continue;
->  			/* Take care as readlink doesn't null terminate the string. */
->  			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
-> -				int cmdline_fd;
-> -				ssize_t cmdline_size;
-> -
-> -				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
-> -				cmdline_fd =3D openat(dirfd(proc_dir), buf, O_RDONLY);
-> -				if (cmdline_fd =3D=3D -1)
-> -					continue;
-> -				cmdline_size =3D read(cmdline_fd, buf, sizeof(buf) - 1);
-> -				close(cmdline_fd);
-> -				if (cmdline_size < 0)
-> +				int fdinfo_fd;
-> +				ssize_t fdinfo_size;
-> +				char *line;
-> +				u32 perf_event_type =3D UINT32_MAX;
-> +
-> +				/* Let's check the PMU type reserved by this process */
-> +				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-> +					  proc_entry->d_name, fd_entry->d_name);
-> +				fdinfo_fd =3D openat(dirfd(proc_dir), buf, O_RDONLY);
-> +				fdinfo_size =3D read(fdinfo_fd, buf, sizeof(buf) - 1);
-> +				if (fdinfo_size < 0)
->  					continue;
+ tools/perf/tests/shell/stat.sh |  33 +++++
+ tools/perf/util/evsel.c        |  85 +++++++------
+ tools/perf/util/evsel.h        |  10 +-
+ tools/perf/util/tool_pmu.c     | 212 ++++++++++++++++++++++++---------
+ tools/perf/util/tool_pmu.h     |   2 +
+ 5 files changed, 249 insertions(+), 93 deletions(-)
 
-Is fdinfo_fd leaked here and on subsequent execution paths in this loop?
+-- 
+2.54.0.631.ge1b05301d1-goog
 
-Since this loop scans potentially thousands of file descriptors across all
-active processes in /proc, could leaking a file descriptor for every
-discovered perf event rapidly exhaust the process's file descriptor limit
-and lead to EMFILE?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518174159.1177=
-549-1-ctshao@google.com?part=3D2
