@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7865837AA75
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AC537AA66
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:32:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779071554; cv=none; b=VTdDhp8MkdK9n6X0PpBoC9aU2m+xANVJqI91G5TsAVoXe2gGSOcyQ9vLy9e7Vg/ExDJCilysz6P/zVLFRFgGE4CsC9820NQcOyuagJAJ5CiHSPlfOGBCBSN/ODpUfuQ0304DANwhLwtZaAGo66+YepPK5AMsRgCIPEhwbAqislk=
+	t=1779071556; cv=none; b=b1LuCkE3RjIKJfO69Z/Ua21z8y6bcrdkVosHmYAyiy/0oyX4BbZD9s6X4uKYmQisa5B0lToj8OcCruV8r8cUm2ENopw8OcvlK0VFka5+3oXxjbZ6rSV/W/IVNilUd6FFakyeO38R3hOQMfCNUryDUB6CmVRccRyZm3Nhnhsa028=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779071554; c=relaxed/simple;
-	bh=e76xpZcRhXNLGJ7xvMQu/1GBvMtxdgDExLkbv57TDbc=;
+	s=arc-20240116; t=1779071556; c=relaxed/simple;
+	bh=eZ4xQVVU1O5AZm2IG6c7jujiI6Gsuu2YQxBkMask9cE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oPTS6XT4sEBQa2MI+FO2bCLKU2gJcd9O5EnPRb968j64LYT/uQN8ehmu67ns4IozmfPotKWBPfwF9QoWt7eBVLbBdzUtzPIIp84CgfNj39tf6HNiO39xAZ5PmcT4TZ7zJX6Tz1ryw2oiaE5UqYYhO1lKF2o3tefeQVTGh+VaiKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fcQNyXwy; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=tebhYKh5tMx5ZCfdYY6iiYoGW8DDsDNjErxflqhyFdA7z7fu5+ksyOEpA6ufAe229WgGBkRGVRsvQQS4Bw/If9hLRKDjqHq5NrmoPl/4xrBvkZVKLqpYZiK43o26u/1czdOpXc5IWwFuLe3VnM4MW7N0nfmqDGWBPz1lEHd8QDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fz4Xorux; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fcQNyXwy"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bdd327d970so862136eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 19:32:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fz4Xorux"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ee34588671so2006875eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 19:32:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779071552; x=1779676352; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779071553; x=1779676353; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q9IIQ4FasUyd21Mf3EzwD9AtkFSQdGr2tTEgNAZjQYg=;
-        b=fcQNyXwyyvtI/UJHWG4+DzE4Hze1/ItwqIUDjfVF6MA4ZlDrUrgqjD8mUcLUAebIHo
-         YtMy7pxHvfi3qOMpCPzX+1q5iT4K+kio4/JE0qDuEDvDOv05pPMzrCnFbisJV3hz2ej2
-         58XA4W9bUmp1fjpGzNyBeCOviky6mqkrf2OyHczYQT63PjAos1N7/UsxWm1O2utYY3AI
-         Y3AUJdgIXcdpAC050yhGqc3xKJ0solbyi3FbzjSe8rYe0X1cp0uXcjKLlMq1tChSUF82
-         G5uzPFCSabHauiyYOFk5cQYlZuQwtCLHZtxpc9UaHr4WoQeeRY86Lg9cTToPCGes2mNC
-         CPRQ==
+        bh=K2PfCFgFm9W6LUyGogy0Zkx8RpqhHQD/EGHq4TR1zoI=;
+        b=fz4Xorux7kX4Nhz/KfR+uUn2oUgX+CDQmNP3OfIX6b6lVJya8588PY5/a7IzGSc0mr
+         IeJ7w9xCeeEKFG8mbRkZ37wcnJRvCPl8VN+f9bh/+Wblv16+A3jsQebmX7KCFVvRdXra
+         UgweGdLUYbxHrxo0fJR8HnkGTz8MUU/mIgaGGiZzKal/yJdz7tNBGd1idtv59i4Q40RV
+         IpgP3GVyalTGnmwTbW/FuLAQT+LYgYcyGtGpcF7EMdRfK6He3xIu7CiG0LifShdlie/g
+         ei4fnUOLvwb9jOJF/pBn7VYUb+UdYr5CeRvhcthrqezUhHRT8XmM9H8dudfpcGSnX4a5
+         +4Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779071552; x=1779676352;
+        d=1e100.net; s=20251104; t=1779071553; x=1779676353;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q9IIQ4FasUyd21Mf3EzwD9AtkFSQdGr2tTEgNAZjQYg=;
-        b=PDyunxJRlkk1nprOfxmFkpdoclEhO2jMdUj3o5qpD5FaUJvxnKRwsZw0iKkmCtbQ1D
-         J3rkkuE0A+D4vxFsPlW26RD9unpad13uNnWoVjPaI9/2xpIoR0SXAaFqmZoM18LDiOkF
-         v5sMY0/BRjWqvdAJUCK2sRkgUrevabfplm+wTvb/f/SAHh/vXohoLXLU3gYRvelX/+Tw
-         f7ML8xXVO38SoErVdTT7DOh32/uwAOMiLuDTpp26GMtSWY5iTfGJUJEQ1UqwCE/iUe2b
-         JoxS1+2KI+EjA4wWmGDt2QroodIN4902WzWPJkpz/TLLtzGDc1Afx6J4hd6CGta8RFQf
-         syNA==
-X-Forwarded-Encrypted: i=1; AFNElJ/n2CxACA4dI0MfUQ5JPqwlyFP4uJxRDYzeXIPGGveM6qTFxSbJGstkg8fswU82P3IMhKiagXnuOWaVoubEUbTM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUvBCDYOvozMwGTN3TcIMSiKyqRWEm1GLxIV6BLN7egSO3hqkN
-	VJ4u7jwFyarqdn9MNI4aO7DmgOrOdWZbe9ksZ/5NU0RYvEOArMi8828T48SO/acRMhWS+BDy/Yn
-	dQZ2lVJRkdQ==
-X-Received: from dycqw27-n2.prod.google.com ([2002:a05:7300:c01b:20b0:2d9:9fa3:5aa6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a286:b0:2ca:bd22:6102
- with SMTP id 5a478bee46e88-30261d786a6mr6369864eec.14.1779071551302; Sun, 17
- May 2026 19:32:31 -0700 (PDT)
-Date: Sun, 17 May 2026 19:32:24 -0700
+        bh=K2PfCFgFm9W6LUyGogy0Zkx8RpqhHQD/EGHq4TR1zoI=;
+        b=dMmsbQTKLxdhgf6SMQBu+VvgLWVmQm4L13aVed0vrpCiF05BXpsu9miS0U9hyb/SaN
+         1AlAktA+Q3j/l8F8qAD/JqiZpX/R6OrdciMFk5pHm7xKjo2ZU67nmCzHIS7oLkwQZa4C
+         OpepL9g1JF4qxVGVc8UHZ2/mKDMA9TYHQAXvZI2thqogXi6U6slZSF0I15tiUVaB/NEf
+         +qfRqLZPraM8v+v6goviEeMeIOIpXxVnkK3tofphzWbHPYQGn9dDhZX0xDyIuLtYDUdP
+         Fubg/z04VA67Odekhf7gX/vUty9PIu2CmZZGL+j7ZmegRa2grbi42G2hJSMAsjtjrhee
+         Oa1g==
+X-Forwarded-Encrypted: i=1; AFNElJ8yWsZBvoFVG+j/btJxChuBxLJOb8NA96zHjniDao577YdL/tBqPJewj8oElxm3t2/2aATAR/LJWks6LqX3aGlv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwnNi5VVTQooKUxf6rnlyAc+ew5MvqNqEZzVh29oEdcijORQU3
+	fu5zInujPS+gEAQ0GIH73ps5thMwic+3xGLgG7CV0yc7WHMe7JD638th4J3XVp74fn3be5VkhK1
+	ut4UW6HUGXw==
+X-Received: from dycol5.prod.google.com ([2002:a05:7301:db85:b0:2f3:d7f7:5ac6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7c0b:b0:2ef:2878:7ade
+ with SMTP id 5a478bee46e88-303984dd06amr6305545eec.15.1779071553293; Sun, 17
+ May 2026 19:32:33 -0700 (PDT)
+Date: Sun, 17 May 2026 19:32:25 -0700
 In-Reply-To: <20260518023225.2472122-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260518003704.2434308-1-irogers@google.com> <20260518023225.2472122-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518023225.2472122-2-irogers@google.com>
-Subject: [PATCH v6 1/2] perf tests: Add test for uncore event sorting
+Message-ID: <20260518023225.2472122-3-irogers@google.com>
+Subject: [PATCH v6 2/2] perf arch x86 tests: Add test for topdown event sorting
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, 
@@ -69,133 +69,31 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com,
 	mingo@redhat.com, peterz@infradead.org, zide.chen@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add a test for uncore event sorting matching multiple PMUs. Uncore
-PMUs may have a common prefix, like the PMUs uncore_imc_free_running_0
-and uncore_imc_free_running_1 have a prefix of
-uncore_imc_free_running. Parsing an event group like
-"{data_read,data_write}" for those PMUs should result with two groups
-"{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_0/data_write/},
-{uncore_imc_free_running_1/data_read/,uncore_imc_free_running_1/data_write/}"
-which means the evsels need resorting as when initially parsed the
-evsels are ordered with mixed PMUs:
-"{uncore_imc_free_running_0/data_read/,uncore_imc_free_running_1/data_read/,
-uncore_imc_free_running_0/data_write/,uncore_imc_free_running_1/data_write/}".
+Add a test to capture the comment in
+tools/perf/arch/x86/util/evlist.c. Test that slots and
+topdown-retiring get appropriately sorted with respect to instructions
+when they're all specified together. When the PMU requires topdown
+event grouping (indicated by the pressence of the slots event) metric
+events should be after slots, which should be the group leader.
+
+Add a related test that when the slots event isn't given it is
+injected into the appropriate group.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Zide Chen <zide.chen@intel.com>
 ---
- tools/perf/tests/Build                  |   1 +
- tools/perf/tests/builtin-test.c         |   1 +
- tools/perf/tests/tests.h                |   1 +
- tools/perf/tests/uncore-event-sorting.c | 178 ++++++++++++++++++++++++
- 4 files changed, 181 insertions(+)
- create mode 100644 tools/perf/tests/uncore-event-sorting.c
+ tools/perf/arch/x86/tests/topdown.c | 159 +++++++++++++++++++++++++++-
+ 1 file changed, 158 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index c2a67ce45941..66944a4f4968 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -3,6 +3,7 @@
- perf-test-y += builtin-test.o
- perf-test-y += tests-scripts.o
- perf-test-y += parse-events.o
-+perf-test-y += uncore-event-sorting.o
- perf-test-y += dso-data.o
- perf-test-y += vmlinux-kallsyms.o
- perf-test-y += openat-syscall.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 06507066213b..f2c135891477 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -71,6 +71,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__basic_mmap,
- 	&suite__mem,
- 	&suite__parse_events,
-+	&suite__uncore_event_sorting,
- 	&suite__expr,
- 	&suite__PERF_RECORD,
- 	&suite__pmu,
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index f5f1238d1f7f..ee00518bf36f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
- DECLARE_SUITE(event_groups);
- DECLARE_SUITE(symbols);
- DECLARE_SUITE(util);
-+DECLARE_SUITE(uncore_event_sorting);
- DECLARE_SUITE(subcmd_help);
- DECLARE_SUITE(kallsyms_split);
+diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
+index 3ee4e5e71be3..dbee32bf973e 100644
+--- a/tools/perf/arch/x86/tests/topdown.c
++++ b/tools/perf/arch/x86/tests/topdown.c
+@@ -75,4 +75,161 @@ static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest
+ 	return ret;
+ }
  
-diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/uncore-event-sorting.c
-new file mode 100644
-index 000000000000..88bda7a89a05
---- /dev/null
-+++ b/tools/perf/tests/uncore-event-sorting.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+#include <string.h>
-+
-+#include "debug.h"
-+#include "evlist.h"
-+#include "parse-events.h"
-+#include "pmu.h"
-+#include "pmus.h"
-+#include "tests.h"
-+
-+struct match_state {
-+	char *event1;
-+	char *event2;
-+};
-+
-+static char *clean_event_name(struct pmu_event_info *info)
-+{
-+	const char *name = info->name;
-+	const char *pmu_name = info->pmu->name;
-+	size_t pmu_len = strlen(pmu_name);
-+	char *res;
-+	size_t len;
-+
-+	if (!strncmp(name, pmu_name, pmu_len) && name[pmu_len] == '/')
-+		name += pmu_len + 1;
-+
-+	res = strdup(name);
-+	if (!res)
-+		return NULL;
-+
-+	len = strlen(res);
-+	if (len > 0 && res[len - 1] == '/')
-+		res[len - 1] = '\0';
-+
-+	return res;
-+}
-+
-+static int event_cb(void *state, struct pmu_event_info *info)
-+{
-+	struct match_state *m = state;
-+	char *clean_name;
-+
-+	if (m->event1 && m->event2)
-+		return 1;
-+
-+	clean_name = clean_event_name(info);
-+	if (!clean_name)
-+		return 0;
-+
-+	if (!m->event1) {
-+		m->event1 = clean_name;
-+	} else if (!m->event2) {
-+		if (strcmp(m->event1, clean_name)) {
-+			m->event2 = clean_name;
-+			return 1;
-+		}
-+		free(clean_name);
-+	} else {
-+		free(clean_name);
-+	}
-+	return 0;
-+}
-+
+-DEFINE_SUITE("x86 topdown", x86_topdown);
 +#define CHECK_COND(cond, text)					\
 +do {								\
 +	if (!(cond)) {						\
@@ -215,102 +113,145 @@ index 000000000000..88bda7a89a05
 +	}							\
 +} while (0)
 +
-+static int test__uncore_event_sorting(struct test_suite *test __maybe_unused,
-+				      int subtest __maybe_unused)
++static int test_sort(const char *str, int expected_slots_group_size,
++		     int expected_instructions_group_size)
 +{
 +	struct evlist *evlist = NULL;
 +	struct parse_events_error err;
 +	struct evsel *evsel;
-+	struct perf_pmu *pmu = NULL;
-+	char *pmu_prefix = NULL;
-+	struct match_state m = { NULL, NULL };
-+	char buf[1024];
-+	int ret;
++	int ret = TEST_FAIL;
++	bool slots_seen = false;
 +
 +	parse_events_error__init(&err);
 +
-+	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+		size_t len;
-+		struct perf_pmu *sibling;
-+
-+		if (pmu->is_core)
-+			continue;
-+
-+		len = pmu_name_len_no_suffix(pmu->name);
-+		if (len == strlen(pmu->name))
-+			continue;
-+
-+		sibling = pmu;
-+		while ((sibling = perf_pmus__scan(sibling)) != NULL) {
-+			if (sibling->is_core)
-+				continue;
-+			if (pmu_name_len_no_suffix(sibling->name) == len &&
-+			    !strncmp(pmu->name, sibling->name, len))
-+				break;
-+		}
-+
-+		if (!sibling)
-+			continue;
-+
-+		m.event1 = m.event2 = NULL;
-+		perf_pmu__for_each_event(pmu, false, &m, event_cb);
-+
-+		if (m.event1 && m.event2) {
-+			pmu_prefix = strndup(pmu->name, len);
-+			break;
-+		}
-+		free(m.event1);
-+	}
-+
-+	if (!pmu_prefix) {
-+		pr_debug("No suitable uncore PMU found\n");
-+		ret = TEST_SKIP;
-+		goto out_err;
-+	}
-+
 +	evlist = evlist__new();
-+	if (!evlist) {
-+		ret = TEST_FAIL;
++	if (!evlist)
++		goto out_err;
++
++	if (parse_events(evlist, str, &err)) {
++		pr_debug("parse_events failed for %s\n", str);
 +		goto out_err;
 +	}
-+
-+	snprintf(buf, sizeof(buf), "{%s/%s/,%s/%s/}", pmu_prefix, m.event1, pmu_prefix, m.event2);
-+	pr_debug("Parsing: %s\n", buf);
-+
-+	ret = parse_events(evlist, buf, &err);
-+	if (ret) {
-+		pr_debug("parse_events failed\n");
-+		ret = TEST_FAIL;
-+		goto out_err;
-+	}
-+
-+	CHECK_COND(evlist->core.nr_entries >= 4, "Number of events is >= 4");
-+	CHECK_EQUAL(evlist->core.nr_entries % 2, 0, "Number of events is a multiple of 2");
 +
 +	evlist__for_each_entry(evlist, evsel) {
-+		struct evsel *next;
-+
 +		if (!evsel__is_group_leader(evsel))
 +			continue;
 +
-+		next = evsel__next(evsel);
-+		CHECK_EQUAL(evsel->core.nr_members, 2, "Group size is 2");
-+		CHECK_COND(evsel->pmu == next->pmu, "PMU match");
-+		CHECK_COND(strstr(evsel__name(evsel), m.event1) != NULL, "First event name");
-+		CHECK_COND(strstr(evsel__name(next), m.event2) != NULL, "Second event name");
-+	}
-+	ret = TEST_OK;
++		if (strstr(evsel__name(evsel), "slots")) {
++			/*
++			 * Slots as a leader means the PMU is for a perf metric
++			 * group as the slots event isn't present when not.
++			 */
++			slots_seen = true;
++			CHECK_EQUAL(evsel->core.nr_members, expected_slots_group_size,
++				    "slots group size");
++			if (expected_slots_group_size == 3) {
++				struct evsel *next = evsel__next(evsel);
++				struct evsel *next2 = evsel__next(next);
 +
++				CHECK_COND(strstr(evsel__name(next), "instructions") != NULL,
++					   "slots second event is instructions");
++				CHECK_COND(strstr(evsel__name(next2), "topdown-retiring") != NULL,
++					   "slots third event is topdown-retiring");
++			} else if (expected_slots_group_size == 2) {
++				struct evsel *next = evsel__next(evsel);
++
++				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
++					   "slots second event is topdown-retiring");
++			}
++		} else if (strstr(evsel__name(evsel), "instructions")) {
++			CHECK_EQUAL(evsel->core.nr_members, expected_instructions_group_size,
++				    "instructions group size");
++			if (expected_instructions_group_size == 2) {
++				/*
++				 * The instructions event leads a group with a
++				 * topdown-retiring event, neither of which need
++				 * reordering for perf metric event support.
++				 */
++				struct evsel *next = evsel__next(evsel);
++
++				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
++					   "instructions second event is topdown-retiring");
++			}
++		} else if (strstr(evsel__name(evsel), "topdown-retiring")) {
++			/*
++			 * A perf metric event where the PMU doesn't require
++			 * slots as a leader.
++			 */
++			CHECK_EQUAL(evsel->core.nr_members, 1, "topdown-retiring group size");
++		} else if (strstr(evsel__name(evsel), "cycles")) {
++			CHECK_EQUAL(evsel->core.nr_members, 1, "cycles group size");
++		}
++	}
++	CHECK_COND(slots_seen, "slots seen");
++	ret = TEST_OK;
 +out_err:
 +	evlist__delete(evlist);
 +	parse_events_error__exit(&err);
-+	free(pmu_prefix);
-+	free(m.event1);
-+	free(m.event2);
 +	return ret;
 +}
 +
-+DEFINE_SUITE("Uncore event sorting", uncore_event_sorting);
++static int test__x86_topdown_sorting(struct test_suite *test __maybe_unused,
++				     int subtest __maybe_unused)
++{
++	int ret;
++
++	if (!topdown_sys_has_perf_metrics())
++		return TEST_OK;
++
++	ret = test_sort("{instructions,topdown-retiring,slots}", 3, 2);
++	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
++	ret = test_sort("instructions,topdown-retiring,slots", 2, 1);
++	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
++	ret = test_sort("{instructions,slots},topdown-retiring", 2, 1);
++	TEST_ASSERT_EQUAL("slots event in a group but topdown metrics events outside the group",
++			  ret, TEST_OK);
++	ret = test_sort("{instructions,slots},{topdown-retiring}", 2, 1);
++	TEST_ASSERT_EQUAL("slots event and topdown metrics events in two groups",
++			  ret, TEST_OK);
++	ret = test_sort("{instructions,slots},cycles,topdown-retiring", 2, 1);
++	TEST_ASSERT_EQUAL("slots event and metrics event are not in a group and not adjacent",
++			  ret, TEST_OK);
++
++	return TEST_OK;
++}
++
++static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unused,
++					     int subtest __maybe_unused)
++{
++	int ret;
++
++	if (!topdown_sys_has_perf_metrics())
++		return TEST_OK;
++
++	ret = test_sort("{instructions,topdown-retiring}", 3, 2);
++	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
++	ret = test_sort("instructions,topdown-retiring", 2, 1);
++	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
++	ret = test_sort("{instructions},topdown-retiring", 2, 1);
++	TEST_ASSERT_EQUAL("event in a group but topdown metrics events outside the group",
++			  ret, TEST_OK);
++	ret = test_sort("{instructions},{topdown-retiring}", 2, 1);
++	TEST_ASSERT_EQUAL("event and topdown metrics events in two groups",
++			  ret, TEST_OK);
++	ret = test_sort("{instructions},cycles,topdown-retiring", 2, 1);
++	TEST_ASSERT_EQUAL("event and metrics event are not in a group and not adjacent",
++			  ret, TEST_OK);
++
++	return TEST_OK;
++}
++
++static struct test_case x86_topdown_tests[] = {
++	TEST_CASE("topdown events", x86_topdown),
++	TEST_CASE("topdown sorting", x86_topdown_sorting),
++	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
++	{ .name = NULL, }
++};
++
++struct test_suite suite__x86_topdown = {
++	.desc = "x86 topdown",
++	.test_cases = x86_topdown_tests,
++};
 -- 
 2.54.0.563.g4f69b47b94-goog
 
