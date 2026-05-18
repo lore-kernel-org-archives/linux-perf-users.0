@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE012D5A01
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 20:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315A6285CA4
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 21:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779137721; cv=none; b=Gjl8LXtpEe9f5SXo5zjbI9lW7VPNEL4sqRu6KCpcGeF9aZAb0LMgYDAvEtPlIvcAFCuPTO+Pu0W7NAm583CGJAiDU71V1b8CBh7ieXpzSzsqYIT+EYYzHc6Ful8wD1SkZvhcfs3BH5X/jQWJb1YgLOF2nbyBPj6K7WLVY+tBHyA=
+	t=1779140259; cv=none; b=dS3Y0AizPlIP0u2pFzo5sN7MxMg6BYMm28E2IfDGFAPVxAobUjIunAvelwtPUUhy6c16xbYzXzGFv+9T+VI/E3mrnr6R2RiQdXDNm39HylEGxqzvYAu1drD+s4IwKJypvX66td7hcrpDQB513ojFCBqwAkT2gXfRfPnMejmt1M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779137721; c=relaxed/simple;
-	bh=AOSdmyzPG+QRFRF+5DKfJ3NxGRcl58VE/EHNY7Tj+vA=;
+	s=arc-20240116; t=1779140259; c=relaxed/simple;
+	bh=wIqaVtcEJzvyUJjMEMurHaK1NhKEUFFxQZjAs1flii8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=J3hh7o4TrrMigjczQg/VzyUcYLScz9n2/6Y/nfAAH/yViVuV7zB3EUsN0dsdQ/wSEwnuDDR66ApPIyOMmOUjZupuB8zGBTPPwFxrY8ynRmRg8EgY+Q77TX09futqQvv/P7nimDfz8nMA/qJUxCsxPJu4iuyByovmpmmZKZHeqms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/zzY3lY; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id; b=Pnvb7rtaA5mqZ2C9wwhnj8kWKGqrsuLXYFr/JmUaa1pY+4qWWfA24r+vC1E2jMJOweRynnXORhL0eLauyAlkL3fWVpkleM8MwtG9qM3gP5VpuQzINkiWG+zAiUMS8e1zesp9sfj2CC6dR1PXncOrnVLhZxxG6Wnrd1YGOREtfQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LX3uE9bf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/zzY3lY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFACC2BCB7;
-	Mon, 18 May 2026 20:55:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX3uE9bf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02AFC2BCB7;
+	Mon, 18 May 2026 21:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779137721;
-	bh=AOSdmyzPG+QRFRF+5DKfJ3NxGRcl58VE/EHNY7Tj+vA=;
+	s=k20201202; t=1779140258;
+	bh=wIqaVtcEJzvyUJjMEMurHaK1NhKEUFFxQZjAs1flii8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=K/zzY3lYeun4Pdu10Oq6GYdiG939dSutabUhfkGa0loMGK1ppxZrGyJKemtInt6K7
-	 2sHjibrOXfbrAgmEzmUCuIjfGvLRINze9IsAsd6FtewLML1mVT8/EalZqJH2M8nTaa
-	 nWIOZkWbfpKhp03mzw49zHBsmX/AfdkajLtlTp7S/o8GmizFU+AQ3we5YuRbEDGgSP
-	 IdhLbXO6o4Xja8oxNtPEXAtgfC3m8wh+nq7O+T0I+DcWWJGqZAPUbJqvklsIRwnFMv
-	 /vN5wJdJmoEoIzDvpsXuYEAU+BfhjMd7wXDdsPvymGjoURVwOEJg/rRqV4WAph4XKQ
-	 ShT5YK8U/9/wA==
+	b=LX3uE9bfPLKer0EDOtGsMnM27PRHE7lSUTwiQnVlK9q6eAz0dGI1g+EX7ES/GUaEM
+	 zTgdqkYD72rgpzgbG4RhqCxeHt3xJL6NUXhl9z5K09oGNG95knFxbI+w3ZY7u/jgqC
+	 Nkm6d2dPZWJoS8hnbJFy7woRku9tQovQPSxApceOR0LyCQQmlY3wGyLUOzuBaismL+
+	 GUtt7Ul2kvYTDJp+SZKSZQz4kT+tZiC4iq/7GXjt0EWmOCcL1RYMLI0IHUTKa6rgda
+	 FNuBCYdioM1OXtoO0/ZY5Eq7A+UW104q/dB5mFytqbRWFi1ggHhgVcWbh6JIl9m+af
+	 Cp2cIhO8YPPSA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] perf tests: Add test for stat delay option with
- duration_time
+Subject: Re: [PATCH v7 2/2] perf inject: Fix itrace branch stack synthesis
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518201419.2943132-3-irogers@google.com>
-References: <20260518201419.2943132-3-irogers@google.com>
+In-Reply-To: <20260518203805.2955241-3-irogers@google.com>
+References: <20260518203805.2955241-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 20:55:20 +0000
-Message-Id: <20260518205521.0BFACC2BCB7@smtp.kernel.org>
+Date: Mon, 18 May 2026 21:37:38 +0000
+Message-Id: <20260518213738.B02AFC2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,92 +45,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The `test_stat_delay` test lacks an upper bound check, failing t=
-o verify that the delay is excluded from `duration_time`.
+- [Medium] Unconditional dereference of `evsel` in `perf_event__repipe_samp=
+le` can cause a SIGSEGV when processing events with unknown IDs.
 --
 
-commit b57a62c916c7df08ef099bd333919c50a5312b13
+commit f883a5f637221df403997603ff0a3d50c5cf401b
 Author: Ian Rogers <irogers@google.com>
 
-perf tests: Add test for stat delay option with duration_time
+perf inject: Fix itrace branch stack synthesis
 
-This commit adds a test case test_stat_delay to stat.sh to verify that
-duration_time correctly excludes the delay period when using the delay
-option (-D). It runs a perf stat command with a 1000ms delay and a 2 second
-sleep, and checks the resulting duration_time.
+This commit addresses several issues with synthesizing branch stacks from
+AUX data when using "perf inject --itrace=3DL". It fixes sample types, modi=
+fies
+event attributes, and addresses multiple parsing, size calculation, and poi=
+nter
+issues in event repiping paths.
 
-> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat=
-.sh
-> index 4edb04039036e..a9eadd57e1644 100755
-> --- a/tools/perf/tests/shell/stat.sh
-> +++ b/tools/perf/tests/shell/stat.sh
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 5f06ee1c14a08..45eb883f86797 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
 [ ... ]
-> @@ -483,6 +483,53 @@ test_stat_pid() {
->    wait $pid 2>/dev/null || true
->  }
+> @@ -375,7 +415,67 @@ static int perf_event__repipe_sample(const struct pe=
+rf_tool *tool,
 > =20
-> +test_stat_delay() {
-> +  echo "stat -D test"
-> +  if ! env LC_ALL=3DC perf stat -D 1000 -e duration_time sleep 2 > "${st=
-at_output}" 2>&1
-> +  then
-> +    echo "stat -D test [Failed - command failed]"
-> +    cat "${stat_output}"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  duration=3D$(grep "duration_time" "${stat_output}" | awk '{print $1}' =
-| tr -d ',')
-> +  elapsed=3D$(grep "seconds time elapsed" "${stat_output}" | awk '{print=
- $1}')
-> +
-> +  if [ -z "$duration" ] || [ -z "$elapsed" ]
-> +  then
-> +    echo "stat -D test [Failed - failed to find duration_time or time el=
-apsed in output]"
-> +    cat "${stat_output}"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  # Compare duration (ns) and elapsed (s) using awk to handle float and =
-allow tolerance.
-> +  if ! awk -v d=3D"$duration" -v e=3D"$elapsed" '
-> +    BEGIN {
-> +      diff =3D d - (e * 1e9);
-> +      if (diff < 0) diff =3D -diff;
-> +      # Allow 200ms tolerance (200,000,000 ns) for loaded CI machines.
-> +      if (diff > 200000000) {
-> +        printf "Fail: duration (%d ns) and elapsed (%f s) mismatch (diff=
- %d ns)\n", d, e, diff;
-> +        exit 1;
-> +      }
-> +      # Lower bound check: must be at least 0.5s.
-> +      if (d < 500000000) {
-> +        printf "Fail: duration (%d ns) is abnormally small\n", d;
-> +        exit 1;
-> +      }
+>  	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
+> =20
+> -	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
+> +	if (inject->itrace_synth_opts.set &&
+> +	    (inject->itrace_synth_opts.last_branch ||
+> +	     inject->itrace_synth_opts.add_last_branch)) {
+> +		union perf_event *event_copy =3D (void *)inject->event_copy;
+> +		struct branch_stack dummy_bs =3D { .nr =3D 0, .hw_idx =3D 0 };
+> +		int err;
+> +		size_t sz;
+> +		u64 orig_type =3D evsel->core.attr.sample_type;
 
-Is there a missing upper bound check here to verify the delay was actually
-excluded from duration_time?
-
-The commit message states the test verifies duration_time is ~1s and not ~2=
-s.
-However, if a regression caused the -D option to be ignored, both duration
-and elapsed would measure the full 2 seconds of the sleep command.
-
-In that scenario, the difference between them would be near 0 (passing the
-mismatch check), and duration would be ~2s which is > 0.5s (passing the low=
-er
-bound check). The test would silently pass, failing to detect the issue.
-
-Could an upper bound check be added to ensure duration_time is strictly less
-than 2 seconds?
-
-> +      exit 0;
-> +    }'
+If machines__deliver_event() encounters a PERF_RECORD_READ event with an
+unknown or missing sample ID, evsel may be evaluated to NULL and passed
+to this callback. Does this unconditionally dereference evsel, leading to
+a crash when analyzing a malformed perf.data file?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518201419.2943=
-132-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518203805.2955=
+241-1-irogers@google.com?part=3D2
