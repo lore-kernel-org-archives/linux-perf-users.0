@@ -1,213 +1,143 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1779517BCA
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779072652; cv=pass; b=GsyuJ9AqfZFp4E0ZBbdgYxF/vOBK+gihAbgW/fbxOSBqdnVkobpJcd8IhaVmoDSYyMtLovjJ/MaoNcBbJH7oKvZY1lxzxalS1URd6RTy5qdnhvLiS2Of+W0ZqRYDMNJUQbw+/q6Y3l6uZbKtsjK3RlrySyLynhnHtldjlVX9ea0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779072652; c=relaxed/simple;
-	bh=Ooa7cW2D1IYd9NZSoSPSMtct3nfjHy2qVBuFonf3asI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VrJSY7Cpo0IZIyYd4Dxm8VkI0/6NhQ0ICsUMtbQrLXFnFC9yOwyHL8EHpy3NaJZQG+lAvCy6P2JXyyyNIQF/YMxy1AxKQ4JMhVKdWrih0bjYBpCPUtlR1V8NsEk2v/MM6Fg0lXcWWVuWehiGh10mWuvpmSe/ac8mbhBf6aZ6mF8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eqX8YKKP; arc=pass smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC5218DB37
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779072788; cv=none; b=uPfjDNXc6QVCF1qWx0xwj/JNsUCaD3N+tjKBeTe5VefFk/KkDMq27CnpZLR7NCAiMND+cJJMW9eI+CnkoZ3JCH9+FTqM6k6FPt8RShyqDVcBhYWxOpjA1gBvZy3OZrRElMPtwV9UuqZiGHYev6aKuSzpMHvmFWavCgp/yhp6/g0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779072788; c=relaxed/simple;
+	bh=GOmP96ThMyhiZgfWdRo0ZU6j0rv+1uB560Vov5EHSYQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=az3zJEuMTqZdSsWZLA5amkzL45VT+eezgMo3o1Xnj9w/sUd46aXjDufWck+V6tyN7fGbQM9OUEq7VfDWfJkdGk2ara4tcIBx5pVUONuAHh7zS3HN7oLtzcynsogVHhfDoE4xkSbeC03KFF5qpeJIvrem9zrlFF34npZC1TIKZ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAl0ssku; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eqX8YKKP"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2b46da8c48eso455ad.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 19:50:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779072650; cv=none;
-        d=google.com; s=arc-20240605;
-        b=RA9t0MJUHDmEw7773pzAzwEGam/tHB1UWtKyCI3ZokhGNdw7fOoerDPwfzm8rnCNaz
-         Bl6/OTkROk7ELCbqug3Bua3AMaj8+QZ/zrD4wKrFo+CvzozMXENX+2wiqBqWdNiYHPH6
-         Orv7jSFe8abiql/aB6PZ+/ps2P4qbAW6SsNSq6BTPQWw0EKYkA4gTyudJyXhRd5oxj2p
-         MUJpgbVe8dElbms2aGTCSxOpaIStCkdpNWtG2snejQdhoRDUZT7yrT6gNc6jjx6hEYZg
-         Zjgi0/NplHGygAd7lqxunGxbGzyt2f8D6cmtVAEgVIqFocnmoMgxCQIZWo1tTktF2F2U
-         27/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=GlQ9sX2+ndV8BDI+ZX/9maNZGwPG1ORF3D1rWw5qgqs=;
-        fh=7pAOHTLAVeIRICmah8HCU6NV/33tyThZKRTrPipLVKo=;
-        b=OlwUrtAsDcAGGF/3dOMnY0FRc3/Rq8BPDuZDL/CRxCPVN7YFsRer8JxgyfpI3/5khc
-         KBY2YqC8QIakTRLOzUN+gPCxfWtYOuRYeK9L9nmEhvoR4jJpWWKEjekS/7MXuzBNOGAb
-         8DGRML6v5gfu8IR0fggThJhZgY+Vp7fz2TjuIVFnlGsolTnbRln8+CzHWTe+ZvFHR7y9
-         VnmF3Z4d5tu+etCiPeXJU6IhjDTRoAsoVNt8zxMe0VHTqsvAssYZSCLybGrEYQucFq8X
-         Vb5CnlcY1Y83ia4bCZ7YwhRYrOrxBHNjNcfNIWlwmJaaMzI2TESAcQzn5MoTq0+2HFba
-         hHqg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779072650; x=1779677450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GlQ9sX2+ndV8BDI+ZX/9maNZGwPG1ORF3D1rWw5qgqs=;
-        b=eqX8YKKPAZutACG7bJnDmEJeuLy85BIWejOspQAD9ZKhLyxro09bV8lqVqsfQBmJpU
-         loBFNMtDMhl/mxbtfB6DvFlXogCJYq5Ehh9OuFEl3JvPIKz/rwgX0v4wBIu/lxGIfnDi
-         r/5ZTKGCgJPYUGi0ngQrvBpVTDAPwBzNIplGcvEBgh03ccLtt+n0JnbiNd1banNilank
-         KSpdAlENB2EbpM+vHC+HGa+NoUtey469xo/stGmHoe00q+MDu/ME0Iq2QC0CFxvx92nJ
-         e8fOcrnMO4DuCKGkSETAO40t8U6ZCgl/77+sa0qQfUWGmSnuQx0d2VzX+OWpU/f1gg6B
-         xrYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779072650; x=1779677450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GlQ9sX2+ndV8BDI+ZX/9maNZGwPG1ORF3D1rWw5qgqs=;
-        b=WQHXiY+xXsFR6K0YbHuVv3lfSXp3dAjA67clbbZ8jbXjl2IH4VENZKZiD5lp78OQKI
-         Q7fSLhYRRwgJLFo7Mx0BTWZNg4fV3BPqkfRoeuuK687zgnTrlz3DsXRSZdQ/n/IwpJlY
-         mqERD5GA1FdfR6t1ZC8WKaA0bK4lyDZ2Kf0rGBsLjCMblwJLlEUOr85DwvqrY+IRv3Ev
-         gTRRDVVKNSaJfLHgN60jHISTJf/ULm8KNAw3G3UL3SkSfZjzIXkRE1w0oUhcRZjSXx6Q
-         FNbGyS8/36SitouppavSynMKa+x02e38Z9odM49B283+qeAuzbHBpBxj+MsgD7PHYaUz
-         PgPQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8ipIYo8xQll9mX/bUiGzymcMS/e35oyuROG98k+c0vjlp27rUgJ5nRuhNxFnVPOoLArDHX5seAZRGkG+Zs3WgL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy17CE3nPg0mYv/nMBJmrV0mQOOoVodXzUntWvuRSJ2AN+sjJ6u
-	mLMNO40O4gaqywPXPKzkbEH2fXNJczLfYDaT39k8BgTZ3rx2Lw21jD3Q49UE/qdCM06myHoSNrh
-	ePbvUpFndYvE2/Fppkvh32tDBbFzeItM8jZdm4B+Um5+z+r4xAhDe3wOU
-X-Gm-Gg: Acq92OEqVZHgHBa74EDJf6F7BCxwgG2umXYj3JbYALG31OyFSPtS85DBLF51G/fq7/T
-	/0Ltw4GYDC7cXHNS045mlCVM8QBR9G0Q7DB0UluqiN9mJG1gbKi6quSiyUjRN2tMb2asMjXnbKS
-	qhlio56659v7KCBAzUpQRaesQGfIXNqnOzscL974gXAUIAphLIWOVWhkh5NSGg3BkEqhLBgEaGI
-	sOnv+qRB0qDpSXg8LG5Azb97OM5m7lCdgbUsvnQ31JfRxIdMUYZurfXdF1fGi7jfx+A/Rg+3fa7
-	xPavjwR2FaiJgBGoPbw=
-X-Received: by 2002:a17:902:ebc2:b0:2ba:73c3:49b0 with SMTP id
- d9443c01a7336-2bdb03acb3dmr1784335ad.14.1779072649647; Sun, 17 May 2026
- 19:50:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAl0ssku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A0B8C2BCB0;
+	Mon, 18 May 2026 02:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779072787;
+	bh=GOmP96ThMyhiZgfWdRo0ZU6j0rv+1uB560Vov5EHSYQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=mAl0sskuCIr7dYe81vWWGiyiDsNA17jxYqZNFZaZukv7vdjwvEvRH9rpHMVbDmMDd
+	 p2RwNvur1GhIdRD/UBXAC/GuX8MHJ6caHAzLr1fR7flys/odUMvYA1x7CPWnd9bCGI
+	 9pojZT6hxbVl3d9popGb2aBD2RCfcEdubd/sGDgkTe6xf4l3AaUkJBzQ1bFVogyxSz
+	 U1mcBbD3JrELWTfibNFxgA6Rbjuo0Q/yfFIoQ0+zfCh8ji+cqVQmOL0d6Ez9dob91Z
+	 vtt1JVpzOiKNrgoS5BknjUJVWfyOOToAH8C0QTd05QPfKrshK0OXNlTbp8xXe2g4wt
+	 A45nGrhQ7GiYw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 1/2] perf tests: Add test for uncore event sorting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260518023225.2472122-2-irogers@google.com>
+References: <20260518023225.2472122-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 May 2026 02:53:07 +0000
+Message-Id: <20260518025307.8A0B8C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260515193314.1593560-11-irogers@google.com> <20260515195854.1A3C0C2BCB0@smtp.kernel.org>
- <CAP-5=fXM_bGY8uiVa-U9SiFrwY+Dxkrt=s66dfoL9YR7=14Edg@mail.gmail.com> <agpuOvZvo_HNnYsr@z2>
-In-Reply-To: <agpuOvZvo_HNnYsr@z2>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 17 May 2026 19:50:37 -0700
-X-Gm-Features: AVHnY4Jksalie_5MKvIzN7MMZ2hXiEY_ggE5_dwHwA_XCUpwR3bvH9_CRgzrGBs
-Message-ID: <CAP-5=fUfUzKVsrOLUZ7d0FsMcWc=vp5hfmL7Yymnj7Zd9L2tWw@mail.gmail.com>
-Subject: Re: [PATCH v5 10/14] perf pmu-events: Split big_c_string storage into
- standalone compilation unit
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 17, 2026 at 6:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, May 15, 2026 at 04:25:29PM -0700, Ian Rogers wrote:
-> > On Fri, May 15, 2026 at 12:58=E2=80=AFPM <sashiko-bot@kernel.org> wrote=
-:
-> > >
-> > > Thank you for your contribution! Sashiko AI review found 1 potential =
-issue(s) to consider:
-> > > - [Medium] Incremental build breakage and partial clean failure due t=
-o Makefile dependency chaining and Python file closing order.
-> > > --
-> > >
-> > > commit 6c014984ddc9092cbb7ef975a3904baefa427ed5
-> > > Author: Ian Rogers <irogers@google.com>
-> > >
-> > > perf pmu-events: Split big_c_string storage into standalone compilati=
-on unit
-> > >
-> > > This commit splits the large big_c_string literal into a dedicated
-> > > pmu-events-string.c file to allow parallel compilation during Kbuild.
-> > > It updates jevents.py to output both files and adjusts the Makefile
-> > > dependencies to ensure jevents.py is only executed once.
-> > >
-> > > > In jevents.py, defer closing output_string_file until
-> > > > the absolute tail of main() to guarantee identical modification tim=
-estamps
-> > > > with output_file, preventing redundant rebuilds during incremental =
-runs.
-> > >
-> > > Is this guarantee accurate? Since output_file is never explicitly clo=
-sed
-> > > in main(), it gets flushed and closed automatically during Python
-> > > interpreter shutdown, strictly after main() returns.
-> > >
-> > > Will this result in pmu-events.c having a slightly newer modification
-> > > timestamp than pmu-events-string.c on filesystems with nanosecond
-> > > resolution?
-> >
-> > So previously we were worried about the opposite scenario. Using &:
-> > for a group of generated files solves the problem but Linux builds
-> > only require GNU make 4.0 not 4.3, which added this group construct.
-> > We may need to drop this change as I don't see a way to satisfy
-> > Sashiko.
->
-> Isn't the message at the end a proposed solution by Sashiko to satisfy
-> the problem?  See below ...
->
->
-> > > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Bu=
-ild
-> > > > --- a/tools/perf/pmu-events/Build
-> > > > +++ b/tools/perf/pmu-events/Build
-> > >
-> > > [ ... ]
-> > >
-> > > > @@ -224,6 +234,10 @@ endif
-> > > >  # and inputs are dependencies.
-> > > >  $(PMU_EVENTS_C): $(JEVENTS_DEPS)
-> > > >       $(call rule_mkdir)
-> > > > -     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARC=
-H) $(JEVENTS_MODEL) $(OUT_DIR) $@
-> > > > +     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARC=
-H) $(JEVENTS_MODEL) \
-> > > > +            $(OUT_DIR) $(PMU_EVENTS_C) $(PMU_EVENTS_STRING_C)
-> > > > +
-> > > > +$(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
-> > > > +     @:
-> > >
-> > > If pmu-events.c consistently ends up newer than pmu-events-string.c
-> > > due to the Python teardown order, won't Make permanently see
-> > > pmu-events-string.c as out-of-date?
-> > >
-> > > Could this silently trigger redundant recompilations of pmu-events-st=
-ring.o
-> > > and relinking of perf on every incremental build?
-> > >
-> > > Additionally, if pmu-events-string.c is deleted while pmu-events.c
-> > > remains up-to-date, Make will execute this dummy recipe and then atte=
-mpt
-> > > to compile a missing file. Does this pattern handle partial cleanups
-> > > gracefully without creating a build regression?
-> > >
-> > > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-even=
-ts/jevents.py
-> > > > --- a/tools/perf/pmu-events/jevents.py
-> > > > +++ b/tools/perf/pmu-events/jevents.py
-> > >
-> > > [ ... ]
-> > >
-> > > > @@ -1476,6 +1488,8 @@ struct pmu_table_entry {
-> > > >    print_mapping_table(archs)
-> > > >    print_system_mapping_table()
-> > > >    print_metricgroups()
-> > > > +  if _args.output_string_file:
-> > > > +    _args.output_string_file.close()
-> > > >
-> > > >  if __name__ =3D=3D '__main__':
-> > > >    main()
-> > >
-> > > Should _args.output_file.close() be added here alongside
-> > > output_string_file.close() to ensure their final filesystem writes ha=
-ppen
-> > > simultaneously before interpreter shutdown?
->
-> ... here.  Or, maybe you can call os.utime().
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Double free of `m.event1` when scanning uncore PMUs.
+--
 
-Let's give it a try.
+commit 5412f65ccaa1b5aa1cce690a35fcf6de242d9132
+Author: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+perf tests: Add test for uncore event sorting
 
-> Thanks,
-> Namhyung
->
+This commit adds a test for uncore event sorting that matches multiple PMUs.
+It ensures that event groups are correctly resorted when initial parsing
+results in mixed PMUs due to common prefixes.
+
+> diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/u=
+ncore-event-sorting.c
+> new file mode 100644
+> index 0000000000000..88bda7a89a057
+> --- /dev/null
+> +++ b/tools/perf/tests/uncore-event-sorting.c
+[ ... ]
+> +static int test__uncore_event_sorting(struct test_suite *test __maybe_un=
+used,
+> +				      int subtest __maybe_unused)
+> +{
+> +	struct evlist *evlist =3D NULL;
+> +	struct parse_events_error err;
+> +	struct evsel *evsel;
+> +	struct perf_pmu *pmu =3D NULL;
+> +	char *pmu_prefix =3D NULL;
+> +	struct match_state m =3D { NULL, NULL };
+> +	char buf[1024];
+> +	int ret;
+> +
+> +	parse_events_error__init(&err);
+> +
+> +	while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
+> +		size_t len;
+> +		struct perf_pmu *sibling;
+> +
+> +		if (pmu->is_core)
+> +			continue;
+> +
+> +		len =3D pmu_name_len_no_suffix(pmu->name);
+> +		if (len =3D=3D strlen(pmu->name))
+> +			continue;
+> +
+> +		sibling =3D pmu;
+> +		while ((sibling =3D perf_pmus__scan(sibling)) !=3D NULL) {
+> +			if (sibling->is_core)
+> +				continue;
+> +			if (pmu_name_len_no_suffix(sibling->name) =3D=3D len &&
+> +			    !strncmp(pmu->name, sibling->name, len))
+> +				break;
+> +		}
+> +
+> +		if (!sibling)
+> +			continue;
+> +
+> +		m.event1 =3D m.event2 =3D NULL;
+> +		perf_pmu__for_each_event(pmu, false, &m, event_cb);
+> +
+> +		if (m.event1 && m.event2) {
+> +			pmu_prefix =3D strndup(pmu->name, len);
+> +			break;
+> +		}
+> +		free(m.event1);
+> +	}
+
+Could this lead to a double free of m.event1?
+
+If perf_pmu__for_each_event() allocates m.event1 but not m.event2, the code
+falls through the condition and frees m.event1 without setting it back to N=
+ULL.
+
+If the loop subsequently terminates, or if the next iteration triggers an e=
+arly
+continue before m.event1 is reset to NULL, the function will eventually
+proceed to the out_err label.
+
+[ ... ]
+> +out_err:
+> +	evlist__delete(evlist);
+> +	parse_events_error__exit(&err);
+> +	free(pmu_prefix);
+> +	free(m.event1);
+
+When it reaches this point, will it call free(m.event1) again on the dangli=
+ng
+pointer?
+
+> +	free(m.event2);
+> +	return ret;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518023225.2472=
+122-1-irogers@google.com?part=3D1
