@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF9E23505E;
-	Mon, 18 May 2026 06:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C4530AD1A;
+	Mon, 18 May 2026 06:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779087051; cv=none; b=c2Nw5utdLOpdlXEFGLpDxe3LhYTI+zw3NFIiCxasx+eKCZIQQhIwgVsv8AG8qsvNqJz5h6BmgwTZdE/5/fa370Rf+iI7eb9N2xg16ynkFK37XaMOKpf5GZKp9KIkx87VB8bXoWLuaHi5v/dr4HIe5nQO1UROD53eOlZgYtoJyVM=
+	t=1779087166; cv=none; b=dDiBfDyHVl+6YEsJMRiEmhYUyMWsjecL0FvkPX0XiC6hbnKqjrQeFV4Z7YmvdlTsU0Js7SnMmfO2va5eloO00Yy5NKHPA6LvF/FmBnmRLQwk2vnGbQxvOdkNxWEObH5vRoZxKMSwLssZ+Tp6mEPLQPgOMbRG22EY9PzPtSOKyOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779087051; c=relaxed/simple;
-	bh=2X31ZTZlDD4U/Dn+N9t5BUFl3vyfiwuau+dhhE7APV0=;
+	s=arc-20240116; t=1779087166; c=relaxed/simple;
+	bh=vJSeAGlhmmhPXLo+X/Jt1tXtqIGN05TsKjlPQaA2O9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ktu9BTVIZz2WoWZlN2dQwTUtFdY57foBVDNskJFGAq2aLWnl4JVbzs35onWATOoO2ee3qwotqPx4FRZBP/xCFQuNV7fw6EEs6UEKnzGfEiZE2VrpEoolnK4ocN69HMJ6aB/phTnc27kd0kj4sgOPlJxSTmDg3jLT0e8Dzo4HIsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIl2UGDY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nlk3KxgFxIHXpaqN+jklcC5Si92RXdppUoxsTtPY6oz6u41/m5KNpl/C7JEFJfbF6gzBoNwfp+NpvCC6hH715MJYnik3juYzQIMa2+5hoa1f30y1kcoDJMQBafVufeRvX4to1vzJePy7Pw3YM2vwLMWsIQiYQVR12WJNnTLeoVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vbk3plrz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIl2UGDY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B92C2BCB7;
-	Mon, 18 May 2026 06:50:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vbk3plrz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF29C2BCC6;
+	Mon, 18 May 2026 06:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779087050;
-	bh=2X31ZTZlDD4U/Dn+N9t5BUFl3vyfiwuau+dhhE7APV0=;
+	s=k20201202; t=1779087166;
+	bh=vJSeAGlhmmhPXLo+X/Jt1tXtqIGN05TsKjlPQaA2O9o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIl2UGDYfr+oKXZFQjfa7t5ZtXjqF1hZ5xIDVIz51e/UHPiIkwNJn+xXg0ZtPnjdY
-	 A2CO6AXH2AgdPnL+9r9j2VUQ3mtG2JFXRNT07zicBjTDDEUoXYQ8ntNKfu+78liX42
-	 qKAslHm2L6C3N70GC5fbvSB+0Plz46Pv0bJF+D9bqk4tZx82hSzP6ePW4WB3PBArUw
-	 YUz1yNDydjZW8nMr8AeP2y6X2lJQpD3H34oT9Nb9Qe6nOygJrhGfdYfIWS65nyT/wZ
-	 2QNJslFUP30m6/WbCWaw++Yp3JmyM54wS/1qvg6R6RM2HozbmlmIr27HCOQg6goykH
-	 ANGDZKdhAkcEg==
-Date: Sun, 17 May 2026 23:50:48 -0700
+	b=Vbk3plrztF4TrpI+RCLFYof3xWhztONDqfoUu/f4MD+AbkYUIErTq92jgdkl1VMtS
+	 ZR2bkWQV7dvVNXCDkzhTqeIat+/HpblQPrSnfwc7jjUPfkaYkyO+RmHOq4vmO4kxDS
+	 z5oWN6KzaZFFyL8+C4b256LKnMDDTEcBbos4t9qrz/tjHc2uANxo5A8gTEboro1VEZ
+	 42lBZ0AGXpft2cxg5wfB8cHe3Cj+OBA2eQLBiIFaqzJSi75P57UuCby+hDB7ztGgoK
+	 jK05+jSa/yTWjKPNgvr7yV7uoAvEQ5htwKoBSpIWU+gJVe41f7UnSGH0jSHxRA9Gn/
+	 NKdeQLVFEpqAQ==
+Date: Sun, 17 May 2026 23:52:44 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
-	sean@ashe.io, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf trace: Introduce --show-cpu option to display
- cpu id
-Message-ID: <agq2yOddNDgqjh5W@google.com>
-References: <20260424212933.151154-1-atomlin@atomlin.com>
- <fjphwjezyi2rfq54kyx6f7z5nee2iurou4ll6rhlporzbqvonr@5qxhd7q6qvej>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Suchit Karunakaran <suchitkarunakaran@gmail.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf build: compile BPF skeletons with -mcpu=v3
+Message-ID: <agq3PCt_FhxIYgQ8@google.com>
+References: <20260507184238.65280-2-suchitkarunakaran@gmail.com>
+ <20260507234959.EEC5BC2BCB8@smtp.kernel.org>
+ <agAqESWvLdIJBErN@google.com>
+ <agZgPBrlKZ655KdO@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,43 +45,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fjphwjezyi2rfq54kyx6f7z5nee2iurou4ll6rhlporzbqvonr@5qxhd7q6qvej>
+In-Reply-To: <agZgPBrlKZ655KdO@x1>
 
-Hello,
+On Thu, May 14, 2026 at 08:52:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Sat, May 09, 2026 at 11:47:45PM -0700, Namhyung Kim wrote:
+> > Hi Arnaldo,
+> > 
+> > On Thu, May 07, 2026 at 11:49:59PM +0000, sashiko-bot@kernel.org wrote:
+> > > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > > - [High] Adding `-mcpu=v3` to `CLANG_OPTIONS` forces all BPF skeletons to use the BPF v3 ISA, breaking backward compatibility for perf tools designed to run on older kernels.
+> > > --
+> > > 
+> > > commit 2e8791aeccf694e1ae9ed9fda46e3a6f73332838
+> > > Author: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> > > 
+> > > perf build: compile BPF skeletons with -mcpu=v3
+> > > 
+> > > This commit adds -mcpu=v3 to CLANG_OPTIONS to support the atomic
+> > > cmpxchg instruction required by the lock_contention BPF program.
+> > > This forces Clang to emit BPF ISA v3 instructions during skeleton
+> > > compilation.
+> > > 
+> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > > index cee19c923c060..a9a8c84b6b006 100644
+> > > > --- a/tools/perf/Makefile.perf
+> > > > +++ b/tools/perf/Makefile.perf
+> > > 
+> > > [ ... ]
+> > > 
+> > > > @@ -1195,7 +1195,7 @@ ifneq ($(CROSS_COMPILE),)
+> > > >  CLANG_TARGET_ARCH = --target=$(notdir $(CROSS_COMPILE:%-=%))
+> > > >  endif
+> > > >  
+> > > > -CLANG_OPTIONS = -Wall
+> > > > +CLANG_OPTIONS = -Wall -mcpu=v3
+> > > 
+> > > Does this change break backward compatibility for other perf tools running
+> > > on older kernels?
+> > > 
+> > > Since CLANG_OPTIONS is used in the pattern rule for compiling all BPF
+> > > skeletons, this forces every BPF program in perf (such as
+> > > augmented_raw_syscalls.bpf.c and off_cpu.bpf.c) to target the BPF ISA v3.
+> > > 
+> > > Kernels older than 5.1 do not support v3 instructions and will reject
+> > > these programs during the verifier load phase.
+> > 
+> > I think it's old enough and we can move on to ensure v3 instructions.
+> 
+> Can I take this as an Reviewed-by or Acked-by?
 
-On Sat, May 16, 2026 at 10:03:40AM -0400, Aaron Tomlin wrote:
-> On Fri, Apr 24, 2026 at 05:29:33PM -0400, Aaron Tomlin wrote:
-> > When tracing system-wide workloads or specific events, it is highly
-> > valuable to know exactly which CPU executed a specific event. Currently,
-> > perf trace output defaults to omitting CPU information.
-> > 
-> > Introduce a new "--show-cpu" command-line option. When provided, this
-> > flag extracts the CPU from the perf sample and prints it in a "[000]"
-> > format immediately following the timestamp. This mirrors the behaviour of
-> > other tracing tools like ftrace and perf script. For example:
-> > 
-> >   # perf trace -e sched:sched_switch --max-events 5 --show-cpu
-> >        0.000 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "rcu_preempt", next_pid: 16 (rcu_preempt), next_prio: 120)
-> >        0.009 [002] rcu_preempt/16 sched:sched_switch(prev_comm: "rcu_preempt", prev_pid: 16 (rcu_preempt), prev_prio: 120, prev_state: 128, next_comm: "swapper/2", next_prio: 120)
-> >        0.033 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "kworker/u32:48", next_pid: 35840 (kworker/u32:48-), next_prio: 120)
-> >        0.041 [002] kworker/u32:48/35840 sched:sched_switch(prev_comm: "kworker/u32:48", prev_pid: 35840 (kworker/u32:48-), prev_prio: 120, prev_state: 128, next_comm: "swapper/2", next_prio: 120)
-> >        0.045 [002] :0/0 sched:sched_switch(prev_comm: "swapper/2", prev_prio: 120, next_comm: "kworker/u32:48", next_pid: 35840 (kworker/u32:48-), next_prio: 120)
-> > 
-> > The feature is implemented strictly as an opt-in toggle to prevent
-> > cluttering the standard output and to preserve backwards compatibility
-> > for scripts parsing the default output format.
-> 
-> Hi Peter, Ingo, Arnaldo, Namhyung,
-> 
-> Just a gentle ping on this patch. It has been a few weeks since v4 was
-> submitted [1].
-> 
-> Are there any further comments or revisions needed, or is this in a good
-> state to be picked up?
-> 
-> [1]: https://lore.kernel.org/lkml/20260424212933.151154-1-atomlin@atomlin.com/
+Yep,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
