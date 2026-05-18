@@ -1,142 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA822F7EF5
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 22:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9E613A3ED
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 22:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779144207; cv=none; b=X+t/8lLmO38hgI6ng5Y+UCX7GYlPtxYAcLI231/XULcKJ8NbvV1veGL+OfU5nimGt77TPWfv9S1jvQsHYs/n7VfSZTxut9JmkCU/tG7Z40Bxs6Njtsl3v4yAoL7An7Zs8mZw4h2ECTDlonsnABZMUrw9+K9csTqgaTVA+6FZbeA=
+	t=1779144210; cv=none; b=AVpkNZUKhchFiHs3IWalYBx8GSP4UGYuCVJp+8T4LukLH/EyyuR+AgLeFHiwndeLduYWpzOQ9iQRsYgoldPwtqPdDkDsRiDHHzz85JRtGHzgS2mNfFrbDRxqkMbKNa5V8bWGgn7jTBa/M9vh2Q567BAnHDjPkIyfD/mL6j2SFJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779144207; c=relaxed/simple;
-	bh=oVnn67zrCp9szLnBF+LyBv9xFxDjexzMBDDX0iSaLX4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ogwzQFVCHadPh2qNovoHegHYmH08B0xtpYogsKAdwc0K+PawOE12SQHZh32VdI3Waewa5jGlzWRCpxqSHdOeadPznT180HdUihX5J5P08p1yRPRW6XUg959nMGkIxpLjKFRaInkGysCVZjdqQlWoPkVAMiEuQ7RQQABwa3Y4mVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URYwWsl5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779144210; c=relaxed/simple;
+	bh=aHE+LoJpbuOCnIE6BRQ5uSn8/p172vgWMMLdyz2yLiQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eArbFigl+D2IYP8eaUyKQNGg4Fyn03cAh9XQCrjNomw7tD4EKidKMzcC5CI5HZgzqB2VP11PYcGXZOpvKBxbdJq9COTufoUBJ/wzAqaL0b2mbJZrRnWYUK86h/dNu5n+HhaT4/cr0m8ZVwuXz0/GEQGkc9CvFOJUwfJAaeISGBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G8xpdK2W; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URYwWsl5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0470C2BCB7;
-	Mon, 18 May 2026 22:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779144207;
-	bh=oVnn67zrCp9szLnBF+LyBv9xFxDjexzMBDDX0iSaLX4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=URYwWsl5auzOwkPwF9X/TGo++lpY+A7FQBadI7FYykzz4rEYSNbADRG9ghT0Hr1UF
-	 yz75wh4LMX6UM0Qwazbj7rb1r8eRiwl/jLaNfpdQUXXXggNo5jN/sDQgQenh+UuQUG
-	 Bx9eiqABCTmcZBuwpq3uh3dp1xbnqaZfhe/O1d3uRf0PejvtZmBQdIfYHrsHPjqmy8
-	 CUrcOl5H4GAqd46S+TFjALxTWcSWhccRpAGZchYlBa7a2u19QllgG7GvjVwoADcuXA
-	 hESeM0UggCPg/rbc8yE+8fGprLlxgeU/5xT0wLYu0LzhRs2HFOv6W+MAN/epj29CRn
-	 UmF/IhgwlKLLg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/2] perf test: Add stat metrics --for-each-cgroup
- test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518222228.3027004-3-irogers@google.com>
-References: <20260518222228.3027004-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 22:43:26 +0000
-Message-Id: <20260518224326.C0470C2BCB7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G8xpdK2W"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c16233ee11so4012495eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 15:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779144208; x=1779749008; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PuaLmO6AKm2ezA05IShu0PNAE6K6WpCw3h1us7qslE=;
+        b=G8xpdK2WbKJ97YfFN52LCGxW+0PSeOchxkPZ/IE6bNjJKcs0b8hbbd3Dr0ztb9PvGv
+         LWeVzm4mBzDm0Gq4USAcI9j88eIvBvnjK2BDK8xP43BmFyf4NVloq83wzEAembaJv8yn
+         muy9Xq1PRoVMksHmAYrYGtRiM+aU6NYrkWXi/q6tbDBkdzbD3PVFjIuZe6JeZ13q8khb
+         49bqDz2n8TGNNa3IJ1tXXj2DC3wGmRJ7Be340wvvhT6e0xZ/ybS54RuN6k5YyVeCQ+LX
+         B/vOnsgcBQlxTwLU90kH0H/F+8BNB26oNSuWS9IcO9J4dTq+q1U3oqgi1GPDCu9mu+Bm
+         26Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779144208; x=1779749008;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PuaLmO6AKm2ezA05IShu0PNAE6K6WpCw3h1us7qslE=;
+        b=FM7yI+/vP0FyXNEi7UZFMjezS8TWTmkfeW7xMGUHPOaIOtFGCasBwdFLmBCCXUPrWt
+         I48wGbEqxo8kcfRsVer17DdBtqj3xpL45V8H2JLebVPpMJ93z2Ho7WCPcwSqn7K8hZdK
+         zQ3LpPsCQiJ808GMH7Ic97ktRnqH9usSeZEqPhZmRaGWzXQSg6QK/8SUKVrbddlFoHMg
+         alhV+sm/r4olSw1j7nWISgMqJ0eAUm57GjKr8mXFAqYcuqO931hGM154NWUwn6tXcR3Z
+         rUPJIYwZ8Vy675StVmxGxovANnD8awIOt3AqcKAVcqKB/A8ncSs27iyJeIRfKD0am/Th
+         wlkg==
+X-Forwarded-Encrypted: i=1; AFNElJ9lSPyByOMkWcgRQdERxEIY+4RogCcFqsRVAGiPMbY6XcjpVLAXd1ZLpdZ8eLmTBw5/VwIi2Udlzl2Ny/Ihgc0P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr8dXQSu9OJbjepiFAnzo5zgSRO/9qeoGIwbfIkeBPNShINapD
+	pRZgwQ05yQSsReacOP9FKWC1QQ6evsk8wynZ4uBmLujLXVfJO+95pmRtDmWyj8Zu44rc5dAX3Qr
+	WBakMXOuAHg==
+X-Received: from dycaj11.prod.google.com ([2002:a05:7300:fb8b:b0:2e6:f22b:f849])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:cb15:b0:2da:44ac:6d17
+ with SMTP id 5a478bee46e88-30398655327mr8858419eec.17.1779144208290; Mon, 18
+ May 2026 15:43:28 -0700 (PDT)
+Date: Mon, 18 May 2026 15:43:23 -0700
+In-Reply-To: <20260518203805.2955241-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260518203805.2955241-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.631.ge1b05301d1-goog
+Message-ID: <20260518224325.3037838-1-irogers@google.com>
+Subject: [PATCH v8 0/2] perf inject intel-PT LBR/brstack synthesis fixes
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
+	james.clark@linaro.org, leo.yan@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	ravi.bangoria@amd.com, thomas.falcon@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] Missing 'insn_per_cycle' metric support check contradicts the co=
-mmit message and causes false-positive test failures.
-- [Low] Unquoted variables in bash script can cause syntax errors and comma=
-nd execution failures.
-- [Low] Unsafe regex matching with `grep` for cgroup paths.
---
+An intel-pt trace can be turned into LBR events either in perf script
+or perf inject with the --itrace=L option. With perf inject the
+generated perf.data file failed to be parsed as the sample events were
+out of sync with their perf_event_attr. A range of fixes were
+required.
 
-commit eeae523b4cc9fc618f3db63cdc5973fc899f15e2
-Author: Ian Rogers <irogers@google.com>
+This patch was separated from a large perf script refactor that
+highlighted the breakage:
+https://lore.kernel.org/lkml/20260425224951.174663-1-irogers@google.com/
 
-perf test: Add stat metrics --for-each-cgroup test
+v8:
+ - Avoid potential NULL pointer dereference of evsel in Commit 2:
+   * If machines__deliver_event() processes a malformed PERF_RECORD_READ
+     event with an unknown or missing sample ID, the evsel is passed
+     as NULL.
+   * Added an early evsel == NULL check in perf_event__repipe_sample()
+     to safely fallback and repipe the raw event unmodified, preventing
+     any segmentation faults.
 
-This commit adds a new shell test stat_metrics_cgrp.sh to verify metric
-reporting when using --for-each-cgroup. It tests metric outputs for cgroups
-with and without BPF counters.
+v7:
+ - Fixed a critical NULL pointer dereference crash in Commit 2:
+   * In tools/perf/util/intel-pt.c, when branch stack injection is
+     requested (add_last_branch is true) but last_branch is false (such
+     as in perf inject --itrace=L), ptq->last_branch was not allocated.
+   * When PEBS branch stack synthesis is forced via
+     evsel->synth_sample_type, the code dereferenced ptq->last_branch
+     inside do_synth_pebs_sample (either in intel_pt_add_lbrs or by
+     setting nr = 0), causing a SEGSEGV.
+   * Fixed by ensuring ptq->last_branch is successfully allocated in
+     intel_pt_alloc_queue() when add_last_branch is requested.
 
-> The test:
-> - Checks if system-wide monitoring is supported (skips if not).
-> - Checks if insn_per_cycle metric is supported (skips if not).
-> - Finds cgroups to test.
+v6:
+ - Address critical security and correctness feedback in Commit 2:
+   * Fixed potential out-of-bounds read in perf_event__repipe_attr() by
+     moving the header.size validation check before accessing
+     event->attr.attr.size or copying.
+   * Prevented 32-bit integer wrapping overflow on header.size validation
+     by using subtraction instead of addition.
+ - Restored PEBS LBR synthesis fixes in tools/perf/util/intel-pt.c.
 
-The commit message mentions checking if the insn_per_cycle metric is
-supported, but the script only seems to check for system-wide support
-using 'perf stat -a -e instructions'.
+v5:
+ - Restored the missing PEBS branch stack synthesis fixes in intel-pt.c
+   which were accidentally dropped in a previous rebase/conflict
+   resolution.
+ - Addressed the pipe mode size mismatch and ID array out-of-bounds read:
+   * Safely copy the incoming attribute payload using min_t and
+     memset zero, preventing trailing ID corruption.
+   * Explicitly set the synthesized event's attr.size to match the tool's
+     physical sizeof(struct perf_event_attr), guaranteeing perfect offset
+     alignment and removing any risk of hallucinated/garbage IDs or
+     underflow out-of-bounds reads.
+ - Refactored both commit descriptions to strictly focus on code changes,
+   deferring meta-commentary and implementation details exclusively to
+   the cover letter.
 
-If the metric is unavailable on the test architecture, will the script fail
-with exit code 1 ("No metric lines found") instead of gracefully skipping?
+v4:
+ - Avoid temporary regressions in Commit 1:
+   * Used local masked sample_type in convert_sample_callchain instead of
+     unmasked evsel attribute, preventing heap overflows.
+   * Promoted hardware tracer signature changes and dynamic retrieval of
+     branch_sample_type to Commit 1, removing hardcoded 0 bugs.
+   * Checked sample->evsel first before performing evlist__id2evsel lookup
+     to optimize evsel retrieval when already populated.
+ - Address critical security and correctness feedback in Commit 2:
+   * Added check in perf_event__repipe_attr to prevent n_ids underflow.
+   * Fixed early return error path in perf_event__repipe_sample to
+     prevent state corruption and dangling pointers on dummy_bs.
+   * Ensured perf_inject__cut_auxtrace_sample cuts the 8-byte size field
+     even when aux_sample.size is 0 to prevent parser misalignment.
+   * Expanded older attributes to PERF_ATTR_SIZE_VER2 in file mode
+     within __cmd_inject to prevent silent truncation of
+     branch_sample_type.
+   * Added bounds checks against PERF_SAMPLE_MAX_SIZE to all hardware
+     tracing synthetic helpers to prevent heap buffer overflows.
+   * Fixed checkpatch.pl warnings/errors for line-wrapping.
 
-> diff --git a/tools/perf/tests/shell/stat_metrics_cgrp.sh b/tools/perf/tes=
-ts/shell/stat_metrics_cgrp.sh
-> new file mode 100755
-> index 0000000000000..4a29eb9a90674
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/stat_metrics_cgrp.sh
-[ ... ]
-> +	# try root and self cgroups
-> +	find_cgroups_self_cgrp=3D$(grep perf_event /proc/self/cgroup | cut -d: =
--f3)
-> +	if [ -z ${find_cgroups_self_cgrp} ]
+v3:
+ - Add missing Fixes: tags on both commits.
+ - Refactor perf_event__repipe_attr to avoid in-place modifications on
+   read-only mmap buffers, preventing SIGSEGV in file mode and premature
+   evsel updates in pipe mode.
+ - Use perf_event__synthesize_attr to correctly construct and repipe
+   attributes in pipe mode.
+ - Replace manual arithmetic in convert_sample_callchain with
+   perf_event__sample_event_size to prevent uninitialized memory leaks.
+ - Retrieve evsel branch_sample_type dynamically in util/arm-spe.c and
+   util/cs-etm.c instead of hardcoding 0, resolving missing hw_idx field
+   on synthesized branch stacks.
 
-This isn't a bug, but could this cause a bash syntax error ("too many
-arguments") if the cgroup path happens to contain spaces? Enclosing the
-variable in double quotes would prevent word splitting.
+v2: Response to sashiko fixes for patch 2, Namhyung's acked-by for patch 1.
 
-> +	then
-> +		# cgroup v2 doesn't specify perf_event
-> +		find_cgroups_self_cgrp=3D$(grep ^0: /proc/self/cgroup | cut -d: -f3)
-> +	fi
-> +
-> +	if [ -z ${find_cgroups_self_cgrp} ]
+v1: https://lore.kernel.org/lkml/20260428070328.1880314-1-irogers@google.com/
 
-Are double quotes also needed here to prevent word splitting?
+Ian Rogers (2):
+  perf event: Fix size of synthesized sample with branch stacks
+  perf inject: Fix itrace branch stack synthesis
 
-> +	then
-> +		test_cgroups=3D"/"
-> +	else
-> +		test_cgroups=3D"/,${find_cgroups_self_cgrp}"
-> +	fi
-[ ... ]
-> +check_metric_reported()
-> +{
-> +	local opts=3D"$1"
-> +	local output
-> +
-> +	log_verbose "Running check_metric_reported with opts '${opts}'..."
-> +	# Run perf stat
-> +	if ! output=3D$(perf stat -a ${opts} \
-> +			--metrics=3Dinsn_per_cycle \
-> +			--for-each-cgroup ${test_cgroups} \
+ tools/perf/bench/inject-buildid.c  |   9 +-
+ tools/perf/builtin-inject.c        | 165 +++++++++++++++++++++++++----
+ tools/perf/tests/dlfilter-test.c   |   8 +-
+ tools/perf/tests/sample-parsing.c  |   5 +-
+ tools/perf/util/arm-spe.c          |  28 ++++-
+ tools/perf/util/cs-etm.c           |  28 ++++-
+ tools/perf/util/intel-bts.c        |   3 +-
+ tools/perf/util/intel-pt.c         |  35 ++++--
+ tools/perf/util/synthetic-events.c |  25 +++--
+ tools/perf/util/synthetic-events.h |   6 +-
+ 10 files changed, 260 insertions(+), 52 deletions(-)
 
-Similarly, should ${test_cgroups} be quoted to ensure perf stat doesn't
-misinterpret space-separated cgroup paths as commands?
+-- 
+2.54.0.631.ge1b05301d1-goog
 
-> +			-x, sleep 0.1 2>&1)
-> +	then
-> +		echo "FAIL: perf stat failed with exit code $?"
-> +		echo "Output: ${output}"
-> +		exit 1
-> +	fi
-[ ... ]
-> +	for cgrp in "${cgrps[@]}"; do
-> +		# Find lines for this cgroup and metric
-> +		local cgrp_lines
-> +		cgrp_lines=3D$(echo "${output}" | grep "${cgrp}" | grep "insn_per_cycl=
-e" || true)
-
-Since cgroup names can contain dots (like "system.slice"), will grep
-interpret the dot as a regex wildcard?
-
-Using 'grep -F "${cgrp}"' might be safer to ensure a literal string match.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518222228.3027=
-004-1-irogers@google.com?part=3D2
