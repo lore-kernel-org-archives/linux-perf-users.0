@@ -1,128 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225381E25F9
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 01:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E740231A23;
+	Mon, 18 May 2026 01:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779067241; cv=none; b=jH/SO3zVpU4e1bVbrbB+UlgCF9y0ZCifUXTEiRdPTt+UNdvnZ8OwIgoeTISUMDGHDn1BMLr73Q/5eA6Mzt8whMxAkDI+gIhBjd11A/5ZjYDYITleP+U8pgOJRHqVtCZa+NERocYSnHxsiYqwYvL+1+AOswrardEJ0sq0onqAZHs=
+	t=1779068476; cv=none; b=BkkIexUXuhK10jzsMETllEuJtMu7nI3O5JRbIA25D8NPbyyRP9bXvrXADV/qQf5ecwb/0C7LKy81TTkzVfWX6hYq4lFyn//70tD2MXfXPhcv2Wpm/LkV3U6N/9K/B42fvd6qsfRjK2GmDQcEPihcsi4Qne2ogaNaZ5X3fQ+3cdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779067241; c=relaxed/simple;
-	bh=HzMfMF9SKD/oNwVtUDR6NPZ7pgR27HH1M3jOezoOIOA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mH13FAAS4bJo9eA7NJl7RM2TYJ9tnvyByXXiUiB9/+GNR+yH4o3Vge6UhK0s5eqhGhZ2XNqKhCbckP08YurZHyOLT9TcW4Ixw2RkwiA5oKcGvH+Da2frmnWQLxrLlQLeAFO0pZr1qW8Rb4Whik74K7Xdk4+98XwD5vvmL+EgNV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M55eyPXb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779068476; c=relaxed/simple;
+	bh=Ao/4UW0V/N03Ok/KtoGDeo454SJuQ6jSFMg7+Zkej8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9eaJ3QsrNvj3iwUCgAC/V1YfA8a5g2sw2s1U5knUkHdLuzFhlGsLSW4ZRDtd9ZLAo8kvBHm97PZAS/AvE3xV1JLn+y5GCDiTBrZsWy4LojYb+UVBhuHt8GWMXkydiZ4k02y8eclML3lkGzKLUgyJ2+Pp51xyuZ5a3v1vyvmios=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7UZFNat; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M55eyPXb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA4DC2BCB0;
-	Mon, 18 May 2026 01:20:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7UZFNat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23967C2BCB0;
+	Mon, 18 May 2026 01:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779067241;
-	bh=HzMfMF9SKD/oNwVtUDR6NPZ7pgR27HH1M3jOezoOIOA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=M55eyPXb/Rk9SA2UEJoLxOUzWLUJULAtxp1Q+SdfNXYevdGWbOVKLMPO+9+ecBUod
-	 5z81LiVenyKCRethpRxKiliPfnKnBec8mPHnqt8XglSywdlMSFPxBCh/7swUnqt7vB
-	 o8+0vgUFjguK+XMPZp7KCFBSugHBn9lnDKmpzb3KXqyO07hyGyy2RPkIyZcQcW3klc
-	 0RCcgYRPuA3HhkkXHVdk+IM0y8MfMSrEty4Pw9Kx9FrHoGf8pZ3hmpPuETMRE2feVb
-	 moFggqAIOLMoIQOnHXbtRm4oSAiGH8fF7kqsXPc+a3lQQXDPhl9eRLNlsZRO8BMdMp
-	 Kz5fmTq1sAAmw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf arch x86 tests: Add test for topdown event
- sorting
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518003704.2434308-3-irogers@google.com>
-References: <20260518003704.2434308-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 01:20:40 +0000
-Message-Id: <20260518012040.DDA4DC2BCB0@smtp.kernel.org>
+	s=k20201202; t=1779068476;
+	bh=Ao/4UW0V/N03Ok/KtoGDeo454SJuQ6jSFMg7+Zkej8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W7UZFNatdkAO6TyzLDY5hbxKginRpscbt3ke1b4M7WN28jCkcAJUKgU+6Gvqivavx
+	 EhsxeGtsibIsuPqz+WE0DO1Mm+ezcHcb1j3NGvZHVfLWidpQiokrepfwCWwhBVvkB9
+	 SwYsfR924qDRdBe+bopVJLLSkWh0Rv9K4CPiuqqnmxNvOjFPogt4JHPW6f9MjRzcHD
+	 8fwPhtdkY5e1QVq+vJKJpFp+ml+J7+1IR34UJfwC/pZ5LwOfr7g+QrT8zX0s/e6qKX
+	 azlBzB03SRBozR5PMKii+Uny5CP25ny5MWDmt/MOk80tbIGLSkhhtihOhXYPAo3ciF
+	 0Fc91wmfEC0jg==
+Date: Sun, 17 May 2026 18:41:14 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v5 10/14] perf pmu-events: Split big_c_string storage
+ into standalone compilation unit
+Message-ID: <agpuOvZvo_HNnYsr@z2>
+References: <20260515193314.1593560-11-irogers@google.com>
+ <20260515195854.1A3C0C2BCB0@smtp.kernel.org>
+ <CAP-5=fXM_bGY8uiVa-U9SiFrwY+Dxkrt=s66dfoL9YR7=14Edg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXM_bGY8uiVa-U9SiFrwY+Dxkrt=s66dfoL9YR7=14Edg@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] The validation block for `expected_instructions_group_size =3D=
-=3D 2` in `test_sort()` is structurally unreachable dead code.
-- [Low] Passing `test_sort()` directly to `TEST_ASSERT_EQUAL` causes the te=
-st function to execute twice upon failure.
---
+On Fri, May 15, 2026 at 04:25:29PM -0700, Ian Rogers wrote:
+> On Fri, May 15, 2026 at 12:58 PM <sashiko-bot@kernel.org> wrote:
+> >
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Medium] Incremental build breakage and partial clean failure due to Makefile dependency chaining and Python file closing order.
+> > --
+> >
+> > commit 6c014984ddc9092cbb7ef975a3904baefa427ed5
+> > Author: Ian Rogers <irogers@google.com>
+> >
+> > perf pmu-events: Split big_c_string storage into standalone compilation unit
+> >
+> > This commit splits the large big_c_string literal into a dedicated
+> > pmu-events-string.c file to allow parallel compilation during Kbuild.
+> > It updates jevents.py to output both files and adjusts the Makefile
+> > dependencies to ensure jevents.py is only executed once.
+> >
+> > > In jevents.py, defer closing output_string_file until
+> > > the absolute tail of main() to guarantee identical modification timestamps
+> > > with output_file, preventing redundant rebuilds during incremental runs.
+> >
+> > Is this guarantee accurate? Since output_file is never explicitly closed
+> > in main(), it gets flushed and closed automatically during Python
+> > interpreter shutdown, strictly after main() returns.
+> >
+> > Will this result in pmu-events.c having a slightly newer modification
+> > timestamp than pmu-events-string.c on filesystems with nanosecond
+> > resolution?
+> 
+> So previously we were worried about the opposite scenario. Using &:
+> for a group of generated files solves the problem but Linux builds
+> only require GNU make 4.0 not 4.3, which added this group construct.
+> We may need to drop this change as I don't see a way to satisfy
+> Sashiko.
+ 
+Isn't the message at the end a proposed solution by Sashiko to satisfy
+the problem?  See below ...
 
-commit 418562cab64daaf4f2d774b19e333bea0ea7f81a
-Author: Ian Rogers <irogers@google.com>
 
-perf arch x86 tests: Add test for topdown event sorting
+> > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> > > --- a/tools/perf/pmu-events/Build
+> > > +++ b/tools/perf/pmu-events/Build
+> >
+> > [ ... ]
+> >
+> > > @@ -224,6 +234,10 @@ endif
+> > >  # and inputs are dependencies.
+> > >  $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+> > >       $(call rule_mkdir)
+> > > -     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUT_DIR) $@
+> > > +     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) \
+> > > +            $(OUT_DIR) $(PMU_EVENTS_C) $(PMU_EVENTS_STRING_C)
+> > > +
+> > > +$(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
+> > > +     @:
+> >
+> > If pmu-events.c consistently ends up newer than pmu-events-string.c
+> > due to the Python teardown order, won't Make permanently see
+> > pmu-events-string.c as out-of-date?
+> >
+> > Could this silently trigger redundant recompilations of pmu-events-string.o
+> > and relinking of perf on every incremental build?
+> >
+> > Additionally, if pmu-events-string.c is deleted while pmu-events.c
+> > remains up-to-date, Make will execute this dummy recipe and then attempt
+> > to compile a missing file. Does this pattern handle partial cleanups
+> > gracefully without creating a build regression?
+> >
+> > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> > > --- a/tools/perf/pmu-events/jevents.py
+> > > +++ b/tools/perf/pmu-events/jevents.py
+> >
+> > [ ... ]
+> >
+> > > @@ -1476,6 +1488,8 @@ struct pmu_table_entry {
+> > >    print_mapping_table(archs)
+> > >    print_system_mapping_table()
+> > >    print_metricgroups()
+> > > +  if _args.output_string_file:
+> > > +    _args.output_string_file.close()
+> > >
+> > >  if __name__ == '__main__':
+> > >    main()
+> >
+> > Should _args.output_file.close() be added here alongside
+> > output_string_file.close() to ensure their final filesystem writes happen
+> > simultaneously before interpreter shutdown?
 
-This commit adds a test to verify that slots and topdown-retiring get
-appropriately sorted with respect to instructions when specified together. =
-It
-also adds a related test to ensure the slots event is injected into the
-appropriate group when not explicitly provided.
+... here.  Or, maybe you can call os.utime().
 
-> diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/te=
-sts/topdown.c
-> index 3ee4e5e71be3b..9e9dbea7998dc 100644
-> --- a/tools/perf/arch/x86/tests/topdown.c
-> +++ b/tools/perf/arch/x86/tests/topdown.c
-[ ... ]
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (!evsel__is_group_leader(evsel))
-> +			continue;
-[ ... ]
-> +		} else if (strstr(evsel__name(evsel), "instructions")) {
-> +			CHECK_EQUAL(evsel->core.nr_members, expected_instructions_group_size,
-> +				    "instructions group size");
-> +			if (expected_instructions_group_size =3D=3D 2) {
-> +				/*
-> +				 * The instructions event leads a group with a
-> +				 * topdown-retiring event, neither of which need
-> +				 * reordering for perf metric event support.
-> +				 */
-> +				struct evsel *next =3D evsel__next(evsel);
-> +
-> +				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") !=3D NULL,
-> +					   "instructions second event is topdown-retiring");
-> +			}
+Thanks,
+Namhyung
 
-Is this validation block for expected_instructions_group_size =3D=3D 2 reac=
-hable?
-
-The loop explicitly skips events that are not group leaders at the top.
-However, in the test cases passing 2 for expected_instructions_group_size,
-the slots event is injected as the group leader for all three events.
-
-Consequently, instructions becomes a subordinate group member and is skipped
-by the loop entirely, which bypasses these test assertions.
-
-[ ... ]
-> +static int test__x86_topdown_sorting(struct test_suite *test __maybe_unu=
-sed,
-> +				     int subtest __maybe_unused)
-> +{
-> +	if (!topdown_sys_has_perf_metrics())
-> +		return TEST_OK;
-> +
-> +	TEST_ASSERT_EQUAL("all events in a group",
-> +			  test_sort("{instructions,topdown-retiring,slots}", 3, 2), TEST_OK);
-
-Does passing test_sort() directly to TEST_ASSERT_EQUAL cause the test to
-execute twice upon failure?
-
-The TEST_ASSERT_EQUAL macro in tools/perf/tests/tests.h evaluates the
-provided value a second time in its pr_debug statement if the assertion
-fails.
-
-Since test_sort() allocates an evlist, parses events, and prints internal
-debug logs, evaluating it twice creates duplicate work and duplicate debug
-output.
-
-Should the return value of test_sort() be stored in a local variable before
-being passed to the assertion macro?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518003704.2434=
-308-1-irogers@google.com?part=3D2
