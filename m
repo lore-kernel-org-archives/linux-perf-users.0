@@ -1,258 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F713CDBC3
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 07:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDFC3112DA
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 09:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779088062; cv=none; b=Xo7ALo13Evar1QTBKzkiByY7sWFzCco80Hs0Bbk5oKRaq83mzaRMCmFbk/pEOk8BusDECxNg3lTxyUtyguWQ+NqqBu4m59vZhKNrq6J95Ho06c3om43xNpJN33ogzs4+KRWktWqwL5RkKyxCiALd/BJEdByAZrH3ukdHBeyWoHQ=
+	t=1779095052; cv=none; b=qCMoyxEk54pRGz+0pQNp77xPZTSOQwAySQK9xyv4nxsNq/caLnc0N61apPR/5ou9SD9QbQ5zoP2favT5s5LmlX7G3ZmBE0YmuPvHrMTZ6uuIZe3n7+4G17Oga9AI3IHvelH6ATbvWup7Xdz3lR9gdnMgYLinpw4oJv7EM1L8Hoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779088062; c=relaxed/simple;
-	bh=izNXAtLWRHussJllq7BiVeLqLI/b2po5Hu3hpsvAlHg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=O/FO0G4g4TTGdbZKnarMhrpLVj5iMIfu8TX52X2j3bkidcSSd7Q1UQ8h/llioAajqcW4VTbWi7isIiijQW2eboA1TENK4AuaGQ4MQbi/iVzgmUvKyWdjlyKAl42yfyHV+bYTDxNYgDwS1G5qiwotlrTvTlSg+NLtlzpDU1w4yS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuBMVgOb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779095052; c=relaxed/simple;
+	bh=Q8GbrG+ClCg94DgU9vxRlD70lv5DVCRruYHFaOZIxRk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CeV5aztfqhEUwnT6YzKYX+u9ikDUxOISyD7wIKGlclQLyihQTCwMeoJxJDVBqZfCdZRJBgUHVU7vYWhMV+jKOUxkuIkjxkN5Cp8fCrTb8OW41hE2DOu8eUwy06NKkJWSWEPhTxD2IvLjqPCHXwlQ5aumbf9MCCIyMzz69HtiF68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rxBNZk5s; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuBMVgOb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7041EC2BCB7;
-	Mon, 18 May 2026 07:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779088061;
-	bh=izNXAtLWRHussJllq7BiVeLqLI/b2po5Hu3hpsvAlHg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=EuBMVgObM4HkXwDUXPB4o8uENBCDduBzjQ6G5ryldJaSKH+LyKLR1snJ5iRO4APY8
-	 8UGw3Ncv+2IR3J0thzTIS79GruYdwSaZWYdeUCxe3oNdX3rWOKRo1SSjrKUiUPgO06
-	 VNRjLWkAKQZHKHs6xpJkplshOb/X2VFzEyU/dcsKum2VI0333wQSx2g0uPGyBDdNBW
-	 WKAu37iZ7Ht6BmjbRRXNb2WFSJJq4RCVOaRCob71z4HfzmnAgq95HWl1HhrjZEhsZX
-	 F5+3ewcnabQ4rIqHOrbXkCUs/ffcdFEq9rC+cUYgOjlgrh3V5aD9eYMoo2unmVDj1s
-	 5aoGdhMEWQcMw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/2] perf inject: Fix itrace branch stack synthesis
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260518061228.2582860-3-irogers@google.com>
-References: <20260518061228.2582860-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 07:07:40 +0000
-Message-Id: <20260518070741.7041EC2BCB7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxBNZk5s"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-45d96d21e82so1074415f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1779095049; x=1779699849; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xQsc42ku8RRwWOrN3cIN44IoeSXVQzXA3f6OA5chCWI=;
+        b=rxBNZk5syvkO/IJ+yrA1ptcHiceBicKPbbTvXglLWndNUAMDvW5TFkLAfWkXPfQD5i
+         Gm6m76otuwBrINsMN5/nd89drWEogOVRiwROzV5RZIHs4YTYU07W0SE9sFbE12CT9khH
+         hS3ePx4wivzdvbVPFcCD3IRru8p9kL/3ofy32TSejawd1e9euq65oesnkbI5awAc4bJZ
+         JKj4oVWKPNswTS9zwiTLll6efUGhuQbDfwLZljs3caykCWdFZk9Tbkk4Qtrwt1gEsF4G
+         0/jLXXbpcdgi87OxO5zS2k03H39ZzQDtACh449ipI1IC4O/KNsPxwJv69L9+XtbkW6lu
+         Ypqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779095049; x=1779699849;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xQsc42ku8RRwWOrN3cIN44IoeSXVQzXA3f6OA5chCWI=;
+        b=eyP3/ssJtmg1VWRgdFy2aT4iyDqXcB8N8voIG6BsG+DBiBDMc/6nwr/JuTTxyvMbxv
+         RT6hREkwWC1Me5NH9MDF3tHhpOJAWU/gXAlPQ5ZHq6AqzV+3judoqccDTHkFDGjogM0I
+         28nz09rYRFYkqtOmnJ0HwyDhoAHcQEWqb8gLQQK26QnDdkhtwqUbKo1rBEIRjR2C+OMs
+         wp18C2hikWgLhj/sE+Wu8+0jTyY1qV0HLB9kY+VYi29bKUGU1BtupSTu5aGve45O2Dr4
+         5J44hMi6XpgSYyS6/JGIeqkF0o7X7F5MYSG/jvbtSoXvS+aLeWQ3+DGel2hS8JNQVXOQ
+         wpug==
+X-Forwarded-Encrypted: i=1; AFNElJ+INSKNFKU5DZMLFmMQlyKkv8hsBd4jpqTgxhgeGyaYsgvOQCwxNENcEGYXiLVo4Cn6eNltpE4+LgzobLQ5MkWH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4sC5h0inEFUm7rAOMh7Qn4B2Tm1+rwFV0PsoBXaiBOruIn8Aj
+	aortG6fsWt1OLp1r2fcGKuyapFICC78nFnxv8NIzMMVcKRt6394iF+s2AEKxDINtq4k=
+X-Gm-Gg: Acq92OGP8jBBnRB+ozEns2FichTi19h4orp1rQxM4xJLklybgzHNCKjRxFs3jqRVlER
+	HAyLg1f/77SVxkdspbvIzAxAhrWZ+Zx9GI+IzoJTkWLGanlKThvPZqpogI5cJjqFrWNMG5lxUGA
+	7s4uyMjhBfaqvOgxZUbSJMqj8ZHUtFOnZNz4bFYemLR+BsKFKZm4GxV5Hp+dOYeJi02Yh+HwqiR
+	OBoSGg97vwEjvkW5WAWnCenbRiCo/hx71mQphL2Sr6UwrBVbzX5/dz+yYsms9R6DPFD2wVnMUlL
+	e96jAtDR8VOtoMArvvVJ5n5SLpdfJ42tsJXvR237DX2ufL+7H4MazSrEKvXIdfBHRPLsVSuUhXC
+	22ooiV8Z6a5cmjhFL7+a1181PK7kThP/U6L9iEhRS3Eh6YsaRezZWFpGoc8kLI9SD0a0b+Y86Ei
+	MRgaohH22xctoleIflvpZkTaCdqF6D0AxE
+X-Received: by 2002:a05:6000:2902:b0:43e:a81d:c475 with SMTP id ffacd0b85a97d-45e5c58fbf9mr21710267f8f.6.1779095048668;
+        Mon, 18 May 2026 02:04:08 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768072sm35084436f8f.5.2026.05.18.02.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 02:04:08 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v2 0/6] tools/build: Allow versioning of all LLVM tools
+Date: Mon, 18 May 2026 10:03:06 +0100
+Message-Id: <20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMvVCmoC/3WNSw6CQBAFr0J6bRsGAT8r72FYNEMDbYAhPWaiI
+ dzdgcSly3pJ1VvAswp7uCULKAfx4qYI2SEB29PUMUoTGbI0K9PCGHzSyB5n1haHIYwYWDcH8xP
+ VxtZFbc8NRHtWbuW9lx9V5F78y+lnPwpmW3/N/G8zGEyxtGQNXSm3l+Y+yETqjk47qNZ1/QLV3
+ 2IAvwAAAA==
+To: Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, ihor.solodrai@linux.dev
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [Critical] Missing `PERF_SAMPLE_MAX_SIZE` bounds check in auxtrace inject=
-ion helpers causes Heap Overflow.
-- [High] Failure to strip size field on empty AUX samples breaks downstream=
- parsing.
-- [High] Early error return in `perf_event__repipe_sample` leaves a danglin=
-g pointer and corrupted shared state.
-- [High] Integer underflow and out-of-bounds read in `perf_event__repipe_at=
-tr`.
-- [Medium] Missing `attr.size` update in file mode branch stack injection.
---
+I ran into the build issue mentioned in the first commit, because using
+an option like LLVM=-15 is a documented way to build [1], but only
+some of the LLVM tools defined in tools/ support this.
 
-commit 5881c330c2ca4300a88cc8c8e4d578c17a6ebef5
-Author: Ian Rogers <irogers@google.com>
+After fixing that, a lot of other tidyups fell out. I didn't go too far,
+for example some selftests include tools/testing/selftests/lib.mk which
+reimplements some of the LLVM_SUFFIX stuff, but other selftests include
+tools/scripts/Makefile.include and I stopped before touching the former.
+Some other non build scripts hard code toolchains and I didn't touch
+those either, this change is only focused on things that already
+include Makefile.include.
 
-perf inject: Fix itrace branch stack synthesis
+[1]: Documentation/kbuild/llvm.rst
 
-When using "perf inject --itrace=3DL" to synthesize branch stacks from
-AUX data, several issues caused failures with the generated file.
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+Changes in v2:
+- Fix selftests/bpf build. LLD needs to take the full path to be used
+  with -fuse-ld=
+- Link to v1: https://lore.kernel.org/r/20260514-james-perf-llvm-version-v1-0-6cac1a9a4c8d@linaro.org
 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 0c51cb4250d1e..fe03cab7e9907 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -231,7 +242,24 @@ static int perf_event__repipe_attr(const struct perf=
-_tool *tool,
->  	if (!inject->output.is_pipe)
->  		return 0;
-> =20
-> -	return perf_event__repipe_synth(tool, event);
-> +	if (!inject->itrace_synth_opts.set)
-> +		return perf_event__repipe_synth(tool, event);
-> +
-> +	attr =3D event->attr.attr;
-> +	n_ids =3D event->header.size - sizeof(event->header) - event->attr.attr=
-.size;
-> +	n_ids /=3D sizeof(u64);
-> +	ids =3D perf_record_header_attr_id(event);
+---
+James Clark (6):
+      tools/build: Allow versioning of all LLVM tools defined in Makefile.include
+      tools/build: Indent if else blocks
+      selftests: Remove unused LLD variable
+      tools/build: Allow versioning LLVM readelf
+      tools/build: selftests: Allow versioning LLVM lld
+      tools/build: selftests: Remove some duplicate toolchain definitions
 
-Could event->header.size underflow n_ids here if it is smaller than the
-combined size of the header and attribute?
+ tools/bpf/resolve_btfids/Makefile    |  3 --
+ tools/lib/api/Makefile               |  4 --
+ tools/lib/bpf/Makefile               |  8 ++--
+ tools/lib/subcmd/Makefile            |  4 --
+ tools/lib/symbol/Makefile            |  4 --
+ tools/perf/Makefile.perf             |  7 ----
+ tools/scripts/Makefile.include       | 77 ++++++++++++++++++++----------------
+ tools/testing/selftests/bpf/Makefile |  9 ++---
+ tools/testing/selftests/hid/Makefile |  7 ----
+ 9 files changed, 50 insertions(+), 73 deletions(-)
+---
+base-commit: 09d355618f7ccc27ffc7fc668b2e232872962079
+change-id: 20260511-james-perf-llvm-version-43ab1cb5bc7d
 
-If an event is crafted with a maliciously small size, the direct struct
-assignment might trigger an out-of-bounds read, and the underflowed n_ids
-could lead to a large out-of-bounds memcpy() in perf_event__synthesize_attr=
-().
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
-[ ... ]
-> @@ -375,7 +402,63 @@ static int perf_event__repipe_sample(const struct pe=
-rf_tool *tool,
-> =20
->  	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
-> =20
-> -	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
-> +	if (inject->itrace_synth_opts.set &&
-> +	    (inject->itrace_synth_opts.last_branch ||
-> +	     inject->itrace_synth_opts.add_last_branch)) {
-> +		union perf_event *event_copy =3D (void *)inject->event_copy;
-> +		struct branch_stack dummy_bs =3D { .nr =3D 0, .hw_idx =3D 0 };
-> +		int err;
-> +		size_t sz;
-> +		u64 orig_type =3D evsel->core.attr.sample_type;
-> +		u64 orig_branch_type =3D evsel->core.attr.branch_sample_type;
-> +
-> +		struct branch_stack *orig_bs =3D sample->branch_stack;
-> +
-> +		if (event_copy =3D=3D NULL) {
-> +			inject->event_copy =3D malloc(PERF_SAMPLE_MAX_SIZE);
-> +			if (!inject->event_copy)
-> +				return -ENOMEM;
-> +
-> +			event_copy =3D (void *)inject->event_copy;
-> +		}
-> +
-> +		if (!sample->branch_stack)
-> +			sample->branch_stack =3D &dummy_bs;
-> +
-> +		if (inject->itrace_synth_opts.add_last_branch) {
-> +			/* Temporarily add in type bits for synthesis. */
-> +			evsel->core.attr.sample_type |=3D PERF_SAMPLE_BRANCH_STACK;
-> +			evsel->core.attr.branch_sample_type |=3D PERF_SAMPLE_BRANCH_HW_INDEX;
-> +		}
-> +		evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_AUX;
-> +
-> +		sz =3D perf_event__sample_event_size(sample, evsel->core.attr.sample_t=
-ype,
-> +						   evsel->core.attr.read_format,
-> +						   evsel->core.attr.branch_sample_type);
-> +
-> +		if (sz >=3D PERF_SAMPLE_MAX_SIZE) {
-> +			pr_err("Sample size %zu exceeds max size %d\n", sz, PERF_SAMPLE_MAX_S=
-IZE);
-> +			return -EFAULT;
-> +		}
-
-Does this early return leave a dangling pointer in sample->branch_stack and
-corrupt the shared evsel state?
-
-Since the cleanup logic that restores evsel->core.attr.sample_type,
-evsel->core.attr.branch_sample_type, and sample->branch_stack is bypassed,
-sample->branch_stack may be left pointing to the out-of-scope dummy_bs
-variable, which could cause a use-after-free if the sample is processed
-further.
-
-[ ... ]
-> +		evsel->core.attr.sample_type =3D orig_type;
-> +		evsel->core.attr.branch_sample_type =3D orig_branch_type;
-> +		sample->branch_stack =3D orig_bs;
-> +
-> +		if (err) {
-> +			pr_err("Failed to synthesize sample\n");
-> +			return err;
-> +		}
-> +		event =3D event_copy;
-> +	} else if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
->  		event =3D perf_inject__cut_auxtrace_sample(inject, event, sample);
->  		if (IS_ERR(event))
->  			return PTR_ERR(event);
-
-If the original event had PERF_SAMPLE_AUX set but sample->aux_sample.size i=
-s 0,
-will bypassing perf_inject__cut_auxtrace_sample() leave an 8-byte size field
-in the payload?
-
-Because PERF_SAMPLE_AUX is globally stripped from evsel->core.attr.sample_t=
-ype,
-downstream parsers won't expect this 8-byte field, which might misalign
-subsequent fields and cause parsing of the generated file to fail.
-
-[ ... ]
-> @@ -2440,12 +2526,25 @@ static int __cmd_inject(struct perf_inject *injec=
-t)
->  		 * synthesized hardware events, so clear the feature flag.
->  		 */
->  		if (inject->itrace_synth_opts.set) {
-> +			struct evsel *evsel;
-> +
->  			perf_header__clear_feat(&session->header,
->  						HEADER_AUXTRACE);
-> -			if (inject->itrace_synth_opts.last_branch ||
-> -			    inject->itrace_synth_opts.add_last_branch)
-> +
-> +			evlist__for_each_entry(session->evlist, evsel) {
-> +				evsel->core.attr.sample_type &=3D ~PERF_SAMPLE_AUX;
-> +			}
-> +
-> +			if (inject->itrace_synth_opts.add_last_branch) {
->  				perf_header__set_feat(&session->header,
->  						      HEADER_BRANCH_STACK);
-> +
-> +				evlist__for_each_entry(session->evlist, evsel) {
-> +					evsel->core.attr.sample_type |=3D PERF_SAMPLE_BRANCH_STACK;
-> +					evsel->core.attr.branch_sample_type |=3D
-> +						PERF_SAMPLE_BRANCH_HW_INDEX;
-> +				}
-> +			}
->  		}
-
-If the input file was recorded with an older, smaller attribute size, should
-evsel->core.attr.size be expanded to PERF_ATTR_SIZE_VER2 here as well?
-
-Unlike the pipe mode logic in perf_event__repipe_attr(), attr.size isn't
-expanded here. The newly set branch_sample_type field might reside beyond
-attr.size and be silently omitted when headers are written to the output fi=
-le.
-
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index c4ed9f10e731f..7504b2cb5edd8 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -482,13 +482,23 @@ static void arm_spe__prep_branch_stack(struct arm_s=
-pe_queue *speq)
->  	bstack->hw_idx =3D -1ULL;
->  }
-> =20
-> -static int arm_spe__inject_event(union perf_event *event, struct perf_sa=
-mple *sample, u64 type)
-> +static int arm_spe__inject_event(struct arm_spe *spe, union perf_event *=
-event,
-> +				 struct perf_sample *sample, u64 type)
->  {
-> +	struct evsel *evsel =3D NULL;
-> +	u64 branch_sample_type =3D 0;
-> +
-> +	if (spe->session && spe->session->evlist)
-> +		evsel =3D evlist__id2evsel(spe->session->evlist, sample->id);
-> +
-> +	if (evsel)
-> +		branch_sample_type =3D evsel->core.attr.branch_sample_type;
-> +
->  	event->header.type =3D PERF_RECORD_SAMPLE;
->  	event->header.size =3D perf_event__sample_event_size(sample, type, /*re=
-ad_format=3D*/0,
-> -							   /*branch_sample_type=3D*/0);
-> +							   branch_sample_type);
-
-Could the computed event->header.size exceed PERF_SAMPLE_MAX_SIZE here?
-
-The sz >=3D PERF_SAMPLE_MAX_SIZE bounds check was added to
-perf_event__repipe_sample() and perf_event__convert_sample_callchain(), but
-appears to be missing from the hardware tracing helpers (arm_spe__inject_ev=
-ent,
-cs_etm__inject_event, intel_pt_inject_event).
-
-If the computed size exceeds PERF_SAMPLE_MAX_SIZE, it might truncate the va=
-lue
-when assigned to the u16 header.size, while perf_event__synthesize_sample()
-writes the full size and overflows the buffer.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518061228.2582=
-860-1-irogers@google.com?part=3D2
