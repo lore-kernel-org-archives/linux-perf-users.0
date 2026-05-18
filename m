@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021C327A92E
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 15:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CD347CC98
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 15:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779119230; cv=none; b=Aa/hZLHXCJcEQSemRAk/KsnuRppNadgKNlin95EiIwn9HK6vzXajVufuw8lqGQ7ycpqpfGyX1T2kk+qXbQ5TeVXGYl+T4y5f3IHs7TdtyKHH3L6lIVBRwMueWH9iorose1TAxDcmxM8PnMhU/FP2qSpek6VyK0nj38zeyipP530=
+	t=1779119239; cv=none; b=Wg1EWbEs52WuZG3rePzXV/AMcnLAppUzB+DGi8kQG6X/lHPvl8sxGigQOlBJsVy2FBOD/kelupx8mgJJ0/X5gMuKN/86GC9fVJq9k13VHG64+2fKzGWqhh+PX9GWwnmNg2BNklXV8bhGmKmswOb2zIjN2+YCjZ0fRc7iXSIUJ6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779119230; c=relaxed/simple;
-	bh=qGIGcXBZNocRlR3JFELM4l1uEoG1XLzekHqz1ZDyUMo=;
+	s=arc-20240116; t=1779119239; c=relaxed/simple;
+	bh=W1AKf6HBmEZYwn59EoYtmY5+eNzGcl5c+gVy8e78TF0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lF9bIVxS7sYbmx0yFBxwpciJ8aeH3PNo4gEZkIo2AwWoqqhgO7xpmuJp2IpbyLGBjkOT0BGXR4IBVShOpYncD/lQWArk2T1DErsJeV0twJloPMEwTu/n4fWmfpvp1gAXDQ2uBUSJmSP7Ar8SsYHb6a9NlF2uTDh1FsVxMpFvJkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RiWn1Q+p; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=Xlq8WXs597imxTD6l2cwBhcC85u1jC7D6OVEWvl1GFJTEaZ+EKUJ0B2DG12gGq1oWjUpsjulWnKPulQdRDe4ujoWSIcCGmvo4vbQoa7Cn7/OVf04T6/RaLB2jShZgkSnp/CpwIEm1UKcBj5LkTdS50VZRO0F6hjBlvwh52Ilxg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CDSWCAM9; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RiWn1Q+p"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1353ac304f3so4418324c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 08:47:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CDSWCAM9"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2efc342ef15so3385098eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 08:47:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779119218; x=1779724018; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779119226; x=1779724026; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IYhcsGACL8LkG71M/mjaAqqSQSXVQ89TKnDLzXk5kps=;
-        b=RiWn1Q+p16Wn0b/pj03+Xf/rIXSrCqUWqWDMSCGeeOgVWxbKnYnSOegKmxt33pLPiE
-         MyBjihMY+unMXhS1zD8HuZybJ768jOgyBowBCH6Y9YjaD/OaLw4x1/Tl3jTyznxZuBPt
-         AOusN6PHWoDnPjEMGJbJBiSV+Jn5PGSO0jjNN0rCZvikTdg4G3MV/zv+urEXDOvUmy47
-         qp6jveLtV2GZeRFcJSHuqMFN3bGLHC0M5gSeisHDiCtPh5iBQkslcX3avtNdXbKBuwHI
-         OZl8cEdqqto4Hp5Ljo0RmUpr+0VeZQJi3fn6os6KYj8C2LoKvhp9tQF/Tv4ZWPJ8cWcI
-         5lkA==
+        bh=J8Gn9u6Ay2gAeNSJD6VxHlLmg9jVbwsa1tUO88FBQSI=;
+        b=CDSWCAM93WyW/HDu8uqlHfd4chVEi7mRKxeEQl8pVkQ1W7S3ntEOquUgNYHFmemc5u
+         tJkpI90ikUkSz1cdn3Zk8eAYbq6RawEDyGczsE9cQAuQyxZNszYY+kAuzZ12BcZOZeKU
+         oKdtj8a0oRm/Vfq1pdky+rXXQYDACBSVi3uzenUtnI+i3oYC3MzYNpmY2EIU1eOgVzBs
+         50YY7E1Esu83FNukA+WMusUSxs9FpZCgmZBVNrUkIMyLeUJX2bTH6k+2fjRHectuhIqz
+         KHYklyfo3q77ksNVuFAjieaSZt1YSOc301U3JxUJhr+u+vX2A/uiFS47DwRARmGtQXhu
+         pDhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779119218; x=1779724018;
+        d=1e100.net; s=20251104; t=1779119226; x=1779724026;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IYhcsGACL8LkG71M/mjaAqqSQSXVQ89TKnDLzXk5kps=;
-        b=ECdQiWaQF3YXY101rP0C+gNZ5O4ZledQsUeyV6DltC0GUghCmWj4tro0j6D6iRF3IM
-         VGqQ8R2gMOVR5xitdwpxS8Vj+exHMkW4dkkvoc1lBvkHa5+IRAk4vGWbOate2Bw1a2wT
-         bXgRQYNAsq0SWJOk6afKOvRSVnmVIMpOw5QaQWSDTLlAUYnZaVJYw5OIxYFYgtN1lUSZ
-         oXK1o5uN16n2qpdufXn+Bb4/oeSkE7ByPvJD+9M8ufi8tM962Y6G4kVIfjzCvsYsOLeN
-         Ka7aNqo7DHeQ0uY7hZZqFeVC4PPSL7cgad6SGCzJl2lN3ruJDlwhD5Oip9lATLeIDpCY
-         pd5w==
-X-Forwarded-Encrypted: i=1; AFNElJ/HkiVDYSgdMsmTLWQaa0u1pFLJ7SmvEZ1eZ/E6occeq9KYtIBmNpfLQzaMaQ4R7i0X4PMcPIo/0B/YIAYszrTi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNMFTwb9ukMONpLb2H0EgKBOPsq8zI8P1HL5yBW2j9J5508ojo
-	6lzpDLo+j6P7eSM+Y+Z8cra/O84S5QBTqqrn7HATUFbsHCyLHai3WzFY3vwUZXbsUAJaLrgCrvR
-	RYoqrLatiUQ==
-X-Received: from dlbqi10.prod.google.com ([2002:a05:7022:ebca:b0:135:6e62:55b4])
+        bh=J8Gn9u6Ay2gAeNSJD6VxHlLmg9jVbwsa1tUO88FBQSI=;
+        b=A75DQJ/kPyDruh7DS/wX07deGfzBH1JI1uY6Tr/b2aZBvN2JmHKprYeNc3GGuTU1XT
+         Bz5ryALLwZqA79vw9zc90EWoY1inZGwWjzNdn5Zh1uJqzQkrl/ulsURyNIntytL2O3+7
+         8l4s1nvMnwOLd/E6NLn+GhgQCqR4v8tjJT+2Iv4gZ5FcK4483bMB1Z/ibKBHlWllGpCu
+         qv3p+qHHYT7ZLrunzKJgva68nHXXZ42vBdAVMYNWT1dYHzCocctIE3Seag5EWFw0SRhK
+         Wf6bZPYtelQWeePDk8fYaSxO1D3g23QZ7zI5jzPRmucT3I5U2qQepkjvrTw9qTbyyeTi
+         RE2w==
+X-Forwarded-Encrypted: i=1; AFNElJ98a9zP9CxsphfRWvn9d9nYlVSVbCsV+WUPm9rn/jaakatHa3g5P+CRPIQkq8LnnmbN6WjjFTCdtTw5/WPRTF/w@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAILidj1PRDdjGfMlIh+T5Df47Ga3YIc7uPzsdUkjUogY7KikY
+	ayJEOzigGp7ZVDJth1tBX9vKNikMPRm1NP6zWaAg26f31hvaUPC45UZv4Ri1Cpl+vQNbMZrQR2F
+	9eRGcbR1jRw==
+X-Received: from dlbsj9.prod.google.com ([2002:a05:7022:f909:b0:132:8d92:4d68])
  (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:41a7:b0:130:6904:8c17
- with SMTP id a92af1059eb24-1350451e28dmr6652129c88.18.1779119217659; Mon, 18
- May 2026 08:46:57 -0700 (PDT)
-Date: Mon, 18 May 2026 08:46:30 -0700
+ with SMTP id a92af1059eb24-1350451e28dmr6652405c88.18.1779119225401; Mon, 18
+ May 2026 08:47:05 -0700 (PDT)
+Date: Mon, 18 May 2026 08:46:34 -0700
 In-Reply-To: <20260518154638.2798789-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260518044740.2526802-1-irogers@google.com> <20260518154638.2798789-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518154638.2798789-7-irogers@google.com>
-Subject: [PATCH v7 06/14] perf build: Encapsulate vmlinux.h and bpftool in bpf_skel.mak
+Message-ID: <20260518154638.2798789-11-irogers@google.com>
+Subject: [PATCH v7 10/14] perf pmu-events: Split big_c_string storage into
+ standalone compilation unit
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
@@ -76,203 +77,175 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr,
 	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, bpftool and vmlinux.h are prerequisites of the top-level
-prepare target in Makefile.perf. This unnecessarily blocks the massive
-parallel C compilation of libraries (perf-util, perf-ui, pmu-events) during
-the initial startup phase.
+Currently, jevents.py emits both the massive 2.8 MB big_c_string literal
+and tens of thousands of compact_pmu_event struct arrays into a single
+pmu-events.c compilation unit. Compiling this giant file takes ~2.2 seconds
+on a single CPU core during Kbuild startup.
 
-Move all bpftool and vmlinux.h generation rules down into
-tools/perf/bpf_skel.mak to encapsulate BPF tooling completely within the
-skeleton framework. Remove them entirely from prepare to unblock immediate
-parallel build execution.
+Refactor jevents.py to emit big_c_string into a dedicated
+pmu-events-string.c compilation unit. This allows Kbuild to compile
+pmu-events.o and pmu-events-string.o simultaneously in parallel across
+two separate CPU cores, preserving 100% string deduplication and zero
+dynamic ELF relocations while cutting C compilation latency in half.
 
-To prevent parallel sub-makes (perf-util and perf-bench) from racing to
-build shared prerequisites concurrently, while maintaining strict directory
-encapsulation without top-level inclusions, serialize bench after the util
-static archive finishes using an order-only prerequisite:
-  $(LIBPERF_BENCH_IN): FORCE prepare | $(LIBPERF_UTIL)
+Add pmu-events-string.c to tools/perf/.gitignore to ensure in-tree Kbuild
+runs do not leave untracked generated files in the working directory.
+
+To guarantee 100% backward compatibility with GNU Make 4.0+ (avoiding the
+Make 4.3+ grouped target &: syntax which causes older Make versions like
+4.2.1 to spawn multiple concurrent jevents.py processes during parallel
+builds), implement a robust dependency chaining pattern:
+  $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+  $(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
+          @:
+This ensures jevents.py is invoked exactly once. If jevents.py aborts
+early, Make's .DELETE_ON_ERROR: purges pmu-events.c, guaranteeing that
+subsequent Make invocations correctly re-execute the script and overwrite
+pmu-events-string.c. In jevents.py, explicitly close output_file first
+and output_string_file second at the tail of main() to guarantee that
+pmu-events-string.c receives a filesystem timestamp greater than or equal
+to pmu-events.c, completely avoiding redundant incremental rebuilds.
 
 Tested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config |  2 +-
- tools/perf/Makefile.perf   | 61 +++++---------------------------------
- tools/perf/bpf_skel.mak    | 47 +++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+), 55 deletions(-)
+ tools/perf/.gitignore            |  1 +
+ tools/perf/Makefile.perf         |  4 ++--
+ tools/perf/pmu-events/Build      | 16 +++++++++++++++-
+ tools/perf/pmu-events/jevents.py | 23 +++++++++++++++++++----
+ 4 files changed, 37 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7a0e372824c6..8437c3f72125 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -681,7 +681,7 @@ ifeq ($(BUILD_BPF_SKEL),1)
- endif
- 
- ifndef GEN_VMLINUX_H
--  VMLINUX_H=$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
-+  VMLINUX_H_FILE=$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
- endif
- 
- ifndef NO_LIBUNWIND
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index 0f9451a6e39c..3b968c5158b8 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -38,6 +38,7 @@ arch/*/include/generated/
+ trace/beauty/generated/
+ pmu-events/arch/common/common/legacy-cache.json
+ pmu-events/pmu-events.c
++pmu-events/pmu-events-string.c
+ pmu-events/jevents
+ pmu-events/metric_test.log
+ pmu-events/empty-pmu-events.log
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 373eae7fb72a..ec0e91bedce1 100644
+index 96a68723109f..b8a81c9749a8 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -274,7 +274,7 @@ ifeq ($(PYLINT),1)
-   PYLINT := $(shell which pylint 2> /dev/null)
- endif
- 
--export srctree OUTPUT RM CC CXX RUSTC CLANG LD AR CFLAGS CXXFLAGS RUST_FLAGS V BISON FLEX AWK LIBBPF
-+export srctree OUTPUT RM CC CXX RUSTC CLANG LD AR CFLAGS CXXFLAGS RUST_FLAGS V BISON FLEX AWK LIBBPF READELF
- export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT
- 
- include $(srctree)/tools/build/Makefile.include
-@@ -324,7 +324,7 @@ else
- FEATURE_DUMP_EXPORT := $(realpath $(FEATURES_DUMP))
- endif
- 
--export prefix bindir sharedir sysconfdir DESTDIR
-+export prefix bindir sharedir sysconfdir DESTDIR VMLINUX_H_FILE
- 
- # sparse is architecture-neutral, which means that we need to tell it
- # explicitly what architecture to check for. Fix this up for yours..
-@@ -556,7 +556,9 @@ $(LIBPMU_EVENTS_IN): FORCE $(LIBPERF)
- $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
- 
--$(LIBPERF_BENCH_IN): FORCE prepare
-+# The $(LIBPERF_UTIL) dependency is to ensure bpftool and vmlinux.h
-+# aren't racily built for bench/bpf_skel/bench_uprobe.bpf.c
-+$(LIBPERF_BENCH_IN): FORCE prepare | $(LIBPERF_UTIL)
- 	$(Q)$(MAKE) $(build)=perf-bench
- 
- $(LIBPERF_BENCH): $(LIBPERF_BENCH_IN)
-@@ -911,60 +913,11 @@ $(INSTALL_DOC_TARGETS):
- python-clean:
- 	$(python-clean)
- 
--SKEL_OUT := $(abspath $(OUTPUT)util/bpf_skel)
--SKEL_TMP_OUT := $(abspath $(SKEL_OUT)/.tmp)
--
--$(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
-+$(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
- 	$(Q)$(MKDIR) -p $@
- 
--ifeq ($(CONFIG_PERF_BPF_SKEL),y)
--prepare: $(BPFTOOL) $(SKEL_OUT)/vmlinux.h
--BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
--
--$(BPFTOOL): | $(SKEL_TMP_OUT)
--	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
--		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
--
--# Paths to search for a kernel to generate vmlinux.h from.
--VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
--		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)	\
--		     ../../vmlinux					\
--		     /boot/vmlinux-$(shell uname -r)
--
--# Paths to BTF information.
--VMLINUX_BTF_BTF_PATHS ?= /sys/kernel/btf/vmlinux
--
--# Filter out kernels that don't exist or without a BTF section.
--VMLINUX_BTF_ELF_ABSPATHS ?= $(abspath $(wildcard $(VMLINUX_BTF_ELF_PATHS)))
--VMLINUX_BTF_PATHS ?= $(shell for file in $(VMLINUX_BTF_ELF_ABSPATHS); \
--			do \
--				if [ -f $$file ] && ($(READELF) -S "$$file" | grep -q .BTF); \
--				then \
--					echo "$$file"; \
--				fi; \
--			done) \
--			$(wildcard $(VMLINUX_BTF_BTF_PATHS))
--
--# Select the first as the source of vmlinux.h.
--VMLINUX_BTF ?= $(firstword $(VMLINUX_BTF_PATHS))
--
--ifeq ($(VMLINUX_H),)
--  ifeq ($(VMLINUX_BTF),)
--    $(error Missing bpftool input for generating vmlinux.h)
--  endif
--endif
--
--$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) $(VMLINUX_H)
--ifeq ($(VMLINUX_H),)
--	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
--else
--	$(Q)cp "$(VMLINUX_H)" $@
--endif
--
--endif # CONFIG_PERF_BPF_SKEL
--
- bpf-skel-clean:
--	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKEL_OUT)/*.skel.h $(SKEL_OUT)/vmlinux.h $(OUTPUT)bench/bpf_skel/*.skel.h $(OUTPUT)bench/bpf_skel/.tmp
-+	$(Q)$(MAKE) -f bpf_skel.mak clean
- 
+@@ -925,7 +925,7 @@ bpf-skel-clean:
  pmu-events-clean:
  ifeq ($(OUTPUT),)
-diff --git a/tools/perf/bpf_skel.mak b/tools/perf/bpf_skel.mak
-index aa04d8b3ee07..30924ad140c4 100644
---- a/tools/perf/bpf_skel.mak
-+++ b/tools/perf/bpf_skel.mak
-@@ -35,6 +35,47 @@ ifneq ($(WERROR),0)
-   CLANG_OPTIONS += -Werror
- endif
+ 	$(call QUIET_CLEAN, pmu-events) $(RM) \
+-		pmu-events/pmu-events.c \
++		pmu-events/pmu-events*.c \
+ 		pmu-events/metric_test.log \
+ 		pmu-events/test-empty-pmu-events.c \
+ 		pmu-events/empty-pmu-events.log
+@@ -933,7 +933,7 @@ ifeq ($(OUTPUT),)
+ 		-name 'extra-metricgroups.json' -delete
+ else # When an OUTPUT directory is present, clean up the copied pmu-events/arch directory.
+ 	$(call QUIET_CLEAN, pmu-events) $(RM) -r $(OUTPUT)pmu-events/arch \
+-		$(OUTPUT)pmu-events/pmu-events.c \
++		$(OUTPUT)pmu-events/pmu-events*.c \
+ 		$(OUTPUT)pmu-events/metric_test.log \
+ 		$(OUTPUT)pmu-events/test-empty-pmu-events.c \
+ 		$(OUTPUT)pmu-events/empty-pmu-events.log
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index dc1df2d57ddc..95172a2a851f 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,7 +1,12 @@
+ EMPTY_PMU_EVENTS_C = pmu-events/empty-pmu-events.c
+ # pmu-events.c will be generated by jevents.py or copied from EMPTY_PMU_EVENTS_C
+ PMU_EVENTS_C	=  $(OUTPUT)pmu-events/pmu-events.c
++PMU_EVENTS_STRING_C = $(OUTPUT)pmu-events/pmu-events-string.c
++
+ pmu-events-y	+= pmu-events.o
++ifneq ($(NO_JEVENTS),1)
++pmu-events-y	+= pmu-events-string.o
++endif
  
-+$(BPFTOOL):
-+	$(Q)mkdir -p $(SKEL_TOOL_TMP_OUT)
-+	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool OUTPUT=$(SKEL_TOOL_TMP_OUT)/ bootstrap
-+
-+# Paths to search for a kernel to generate vmlinux.h from.
-+VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
-+		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)	\
-+		     ../../vmlinux					\
-+		     /boot/vmlinux-$(shell uname -r)
-+
-+# Paths to BTF information.
-+VMLINUX_BTF_BTF_PATHS ?= /sys/kernel/btf/vmlinux
-+
-+# Filter out kernels that don't exist or without a BTF section.
-+VMLINUX_BTF_ELF_ABSPATHS ?= $(abspath $(wildcard $(VMLINUX_BTF_ELF_PATHS)))
-+VMLINUX_BTF_PATHS ?= $(shell for file in $(VMLINUX_BTF_ELF_ABSPATHS); \
-+			do \
-+				if [ -f $$file ] && ($(READELF) -S "$$file" | grep -q .BTF); \
-+				then \
-+					echo "$$file"; \
-+				fi; \
-+			done) \
-+			$(wildcard $(VMLINUX_BTF_BTF_PATHS))
-+
-+# Select the first as the source of vmlinux.h.
-+VMLINUX_BTF ?= $(firstword $(VMLINUX_BTF_PATHS))
-+
-+ifeq ($(VMLINUX_H_FILE),)
-+  ifeq ($(VMLINUX_BTF),)
-+    $(error Missing bpftool input for generating vmlinux.h)
-+  endif
-+endif
-+
-+$(VMLINUX_H): $(VMLINUX_BTF) $(BPFTOOL) $(VMLINUX_H_FILE)
-+	$(call rule_mkdir)
-+ifeq ($(VMLINUX_H_FILE),)
-+	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
-+else
-+	$(Q)cp "$(VMLINUX_H_FILE)" $@
-+endif
-+
- # Consolidated Pattern rule for $(dir)/bpf_skel/
- $(SKEL_TMP_OUT)/%.bpf.o: $(srctree)/tools/perf/$(dir)/bpf_skel/%.bpf.c $(LIBBPF) $(VMLINUX_H) $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h
+ # pmu-events.c file is generated in the OUTPUT directory so it needs a
+ # separate rule to depend on it properly
+@@ -9,6 +14,10 @@ $(OUTPUT)pmu-events/pmu-events.o: $(PMU_EVENTS_C)
  	$(call rule_mkdir)
-@@ -51,4 +92,10 @@ $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o $(BPFTOOL)
- 	$(Q)$(BPFTOOL) gen skeleton $< > $@
+ 	$(call if_changed_dep,cc_o_c)
  
- .PRECIOUS: $(SKEL_TMP_OUT)/%.bpf.o
++$(OUTPUT)pmu-events/pmu-events-string.o: $(PMU_EVENTS_STRING_C)
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
 +
- endif # CONFIG_PERF_BPF_SKEL
+ # Message for $(call echo-cmd,cp), possibly remove the src file from
+ # the destination to save space in the build log.
+ quiet_cmd_cp   = COPY    $(patsubst %$<,%,$@) <- $<
+@@ -118,6 +127,7 @@ CUR_OUT_JSON	:= $(shell [ -d $(OUT_DIR) ] && find $(OUT_DIR) -type f)
+ 
+ # Things in the OUTPUT directory but shouldn't be there as computed by
+ # OUT_JSON and GEN_JSON.
 +
-+clean:
-+	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TOOL_TMP_OUT) $(OUTPUT)bench/bpf_skel/.tmp $(SKEL_TOOL_OUT)/*.skel.h $(OUTPUT)bench/bpf_skel/*.skel.h $(SKEL_TOOL_OUT)/vmlinux.h
+ ORPHAN_FILES	:= $(filter-out $(OUT_JSON) $(GEN_JSON),$(CUR_OUT_JSON))
+ 
+ # Message for $(call echo-cmd,mkd). There is already a mkdir message
+@@ -224,6 +234,10 @@ endif
+ # and inputs are dependencies.
+ $(PMU_EVENTS_C): $(JEVENTS_DEPS)
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUT_DIR) $@
++	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) \
++            $(OUT_DIR) $(PMU_EVENTS_C) $(PMU_EVENTS_STRING_C)
 +
-+.PHONY: clean
++$(PMU_EVENTS_STRING_C): $(PMU_EVENTS_C)
++	@:
+ 
+ endif # ifeq ($(NO_JEVENTS),1)
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 3a1bcdcdc685..7344940e776a 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -1422,6 +1422,8 @@ such as "arm/cortex-a34".''',
+   )
+   ap.add_argument(
+       'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
++  ap.add_argument(
++      'output_string_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=None)
+   _args = ap.parse_args()
+ 
+   _args.output_file.write(f"""
+@@ -1463,10 +1465,20 @@ struct pmu_table_entry {
+     ftw(arch_path, [], preprocess_one_file)
+ 
+   _bcs.compute()
+-  _args.output_file.write('static const char *const big_c_string =\n')
+-  for s in _bcs.big_string:
+-    _args.output_file.write(s)
+-  _args.output_file.write(';\n\n')
++  if not _args.output_string_file:
++    _args.output_file.write('static const char *const big_c_string =\n')
++    for s in _bcs.big_string:
++      _args.output_file.write(s)
++    _args.output_file.write(';\n\n')
++  else:
++    _args.output_string_file.write('/* SPDX-License-Identifier: GPL-2.0 */\n')
++    _args.output_string_file.write('/* Autogenerated by jevents.py */\n')
++    _args.output_string_file.write('extern const char big_c_string[];\n')
++    _args.output_string_file.write('const char big_c_string[] =\n')
++    for s in _bcs.big_string:
++      _args.output_string_file.write(s)
++    _args.output_string_file.write(';\n')
++    _args.output_file.write('extern const char big_c_string[];\n\n')
+   for arch in archs:
+     arch_path = f'{_args.starting_dir}/{arch}'
+     ftw(arch_path, [], process_one_file)
+@@ -1476,6 +1488,9 @@ struct pmu_table_entry {
+   print_mapping_table(archs)
+   print_system_mapping_table()
+   print_metricgroups()
++  _args.output_file.close()
++  if _args.output_string_file:
++    _args.output_string_file.close()
+ 
+ if __name__ == '__main__':
+   main()
 -- 
 2.54.0.563.g4f69b47b94-goog
 
