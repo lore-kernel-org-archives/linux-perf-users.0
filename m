@@ -1,104 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7C537AA74;
-	Mon, 18 May 2026 19:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A021B338595
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 20:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779133604; cv=none; b=ux3tGxbxs9kRDXW8YxpiUH5TChJKEQAFxkbiCVhQncvu3MVL/0VIkKLNObqf2sfGACgaSbuHmrzERNvZpMUj6KChP0a0A5uwlOXRgpIPK1aNq/MATmtHd2uGDenG17sz1b2gsQfZ97GpcpWJO+96MU0UdXExyTEQW6dbiv6aQ7c=
+	t=1779135271; cv=none; b=Vk4H2gxsoAVJs8yCrG7Rm/Sk6nignvV9wnfSoiQVaE5xWbEoYG+g9qojWl6PJScHaw8QGaKsYgXyEle0owSBz4SSgOkT5zeRH7bjUuvNwsTV2pefRLGjdqXwvKq/bJocnjswHSZMOVBMFCbJ7yvb++CS0E3FNVVj8XvV/svqIXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779133604; c=relaxed/simple;
-	bh=CIwVFWb3hoY6GvPDHAnYYVpICrm/ia8gKv56vEgE7sE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=snQna01/NlMASQZY6/+4Q+tTQjsCVSfB012BWEunfU0pETpdJkTBsGB5Pt39PjBs/hdo0HpRiz7JdOjjE8ANu/S5jN3H9zMuQk8e1TMjfxdKTDd2TYKBcgyp3K0vB+wUPUPiaiZkacZKAr610+F6jTjkbNJKfhS9ikF1dmp6TP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJOdiH6F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779135271; c=relaxed/simple;
+	bh=0Y48nsZ/Ae9X++t9ZXNur/WZfEYDe/xxdJzZmQCuB/s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iZFUj1UlD8jjUlDGNNc0tzyTLt8EH0/zLHvhP8UvW2MRmIWUklmE3t/dFHsX+IPupQjoJogcoMkheEcbbMotb7c/3GI5gTDn0fG3fRVFXaFY9scRceZhzxjNieh7eFpDoCeYy3gsSrjM/U0icv1ONhAheYMwuxBjEW0/7P896A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VOU8rx0p; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJOdiH6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D9CC2BCB7;
-	Mon, 18 May 2026 19:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779133604;
-	bh=CIwVFWb3hoY6GvPDHAnYYVpICrm/ia8gKv56vEgE7sE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uJOdiH6FtE+p9tcxHhHgGsBYcfQA4pdkcKhKTE2Pvsxwnb8w3kR7+Dr7OY7xm9MMv
-	 SblE5Wl37OG8e38u+GsRgSLMxa3pEE1zfZnDeL2sIICEKBPArnsH6CfJtqW3SxgKud
-	 YmhGmtt9GYNewg/9/uFe2Dj041y03uVQFHfc2btqZrYkKRVzXLRFS71A/AMsHx7LYA
-	 O77KfMMtQFKXJopqn6AhKuXemi5KAsFDp1wf6guRHxUoRaDf58TaNqJ4Mgb3Ja147t
-	 eBHowjmRWQ7xlZE37nt/lDRA7Q1Umh0k7pRgLeYYcSC/CMxvY0CtvqcagS4QGgQyug
-	 M/FAWfMV0eBHg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf-tools fixes for v7.1-rc5
-Date: Mon, 18 May 2026 12:46:41 -0700
-Message-ID: <20260518194641.1509400-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VOU8rx0p"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c8279604464so4215417a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 13:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779135270; x=1779740070; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jIvDa6R2A7wsys4eYRpNSxeCX+FUGyPjK07HiyyCJek=;
+        b=VOU8rx0p1W2UchTS9c5/kap4WnxjKbOfNNy2U6vy8d/hpuzSFr2XGnA1TuGqvp/VLE
+         ihDxKZeCsUab2wMesJFUWVAAGLflYqcYi528EfyDoVFcYg3Ncr3vGaB0zErNZXIIZoUM
+         i9tdVD5UMHYCpkiZKAxgs079caOX+A3bh+saDw4/canCaWawIRuqAYYMMWoMDA5PaFJ9
+         1z5nHHCO1Pb5VwIwDKqEOVyIred/fbaWm2qao26yGVq414WD9z47JEfnlYMkUkKdOG5x
+         5zMUwJbbNBtzmhhjtx1cZZAUkpAyjTuJH0Q4R5ov31OdKP5P7YERROulbNJ+lXYrnzWD
+         cMqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779135270; x=1779740070;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jIvDa6R2A7wsys4eYRpNSxeCX+FUGyPjK07HiyyCJek=;
+        b=PdiCbEJ4MuxIsGvgwMWpsY0uaS8rXaLAtvgEDOEvZLyaT3SIpRPhp1l/e0FvN3Uu/k
+         RxQnKguBVKdz699N2loOH42RIvcB35K2OksMacfzEW2+tThl2a3Cnv8g17+DnT3W/+c3
+         2elr8EPUy82bfrG/5pKsGUZgc+y+mkXbZdirU9gp+SSSXK0u73YUh1CvFuAXJyAWZcuD
+         LgB2dJfWXshgngvxMbOVubAQ8t60CvQcEcBke4mL75/0rkeTCjtZnibcZWPUWjdctaCt
+         GqkA4cRl59LiRcjSTCfTYp8O+0sZ2kZTNWjAZFxL6F1TyMYNHz5U+7mjuAtGY4cLcX5w
+         Gy5Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8JNNLcVXlTc3VqQ1uVxH2aeaAksisTzA8vrQ2cyWXuziUy7ISrmXG/nVkZULLkbCXD/6SoRfOPQzjX5oplbbK4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu3NdbP04P6I0pi/Tko4gGLkNG3BpxDNSqfWChpIfxo1Jop2wQ
+	nQHpbSoRrq8BVn5D0JRqTZ5XtPN92J5KFQfhWB7vRAqVnHIXOc03y+xVDjAFg6CpnxsvR3cO6Yk
+	ig8jB5g40Xw==
+X-Received: from pgbdo6.prod.google.com ([2002:a05:6a02:e86:b0:c76:669e:8145])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a120:b0:3a1:d516:36f0
+ with SMTP id adf61e73a8af0-3b22ec3f5afmr17593031637.36.1779135269832; Mon, 18
+ May 2026 13:14:29 -0700 (PDT)
+Date: Mon, 18 May 2026 13:14:12 -0700
+In-Reply-To: <20260518183920.2894502-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260518183920.2894502-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.631.ge1b05301d1-goog
+Message-ID: <20260518201419.2943132-1-irogers@google.com>
+Subject: [PATCH v2 0/2] perf tool_pmu: Support enable/disable for tool PMU events
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, nigro.fra@gmail.com, peterz@infradead.org, 
+	tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+A regression in perf stat was reported where tool PMU events (like
+duration_time used in CPUs_utilized metric) incorrectly included the
+delay period when using the delay option (-D).
 
-Please consider pulling the following changes in perf tools for v7.1.
+This series fixes the regression by making tool PMU events
+(duration_time, user_time, system_time) behave more like regular
+counters by implementing proper enable and disable support. They now
+correctly accumulate values only when enabled.
 
-Thanks,
-Namhyung
+The first patch implements the core enable/disable support for tool PMU
+events, and the second patch adds a shell test to verify that
+duration_time correctly excludes the delay period.
 
+Changes in v2:
+- Implement evsel__tool_pmu_enable() and evsel__tool_pmu_disable() to
+  avoid ioctl failures in batch evsel__enable() and evsel__disable()
+  functions.
+- Correctly iterate and enable/disable tool PMU events configured as
+  non-leader members of event groups.
+- Correct the lseek() arguments order in the read_stat helper:
+  lseek(fd, 0, SEEK_SET) instead of lseek(fd, SEEK_SET, 0).
+- Introduce INVALID_START_TIME (~0ULL) to prevent erroneous large delta
+  accumulation in evsel__tool_pmu_read() if /proc/<pid>/stat fails to
+  read in enable_cpu (e.g., process exited).
+- Improve test parsing to use LC_ALL=C and cut to be robust against
+  different locales, and use awk to dynamically compare duration_time to
+  time elapsed with a 200ms tolerance (avoiding loaded CI false failures).
+  Also added a lower-bound check.
 
-The following changes since commit 5200f5f493f79f14bbdc349e402a40dfb32f23c8:
+Ian Rogers (2):
+  perf tool_pmu: Make tool PMU events respect enable/disable
+  perf tests: Add test for stat delay option with duration_time
 
-  Linux 7.1-rc4 (2026-05-17 13:59:58 -0700)
+ tools/perf/tests/shell/stat.sh |  48 +++++++
+ tools/perf/util/evsel.c        | 190 +++++++++++++++++++------
+ tools/perf/util/evsel.h        |  10 +-
+ tools/perf/util/tool_pmu.c     | 244 ++++++++++++++++++++++++++-------
+ tools/perf/util/tool_pmu.h     |   4 +
+ 5 files changed, 399 insertions(+), 97 deletions(-)
 
-are available in the Git repository at:
+-- 
+2.54.0.631.ge1b05301d1-goog
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v7.1-2026-05-18
-
-for you to fetch changes up to 9a424b62f771a759b040b9be2f3762bad0da283f:
-
-  Merge branch 'perf-upstream' (2026-05-18 12:41:38 -0700)
-
-----------------------------------------------------------------
-perf-tools fixes for v7.1-rc5
-
-An usual sync-up for the header files and related codes.
-
- - copy headers that are used for perf trace syscall beautifier
- - update the beautifier scripts according to the changes
- - not to show differences in the headers by default
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Namhyung Kim (8):
-      perf trace: Sync linux/socket.h with the kernel source
-      perf trace: Sync uapi/linux/fs.h with the kernel source
-      perf trace: Sync uapi/linux/mount.h with the kernel source
-      perf trace: Sync uapi/linux/sched.h with the kernel source
-      perf build: Add make check-headers target
-      perf trace: Add beautifier script for fsmount flags
-      perf trace: Update beautifier script for clone flags
-      Merge branch 'perf-upstream'
-
- tools/perf/Makefile                                |  5 ++++-
- tools/perf/Makefile.perf                           |  9 ++++++++-
- tools/perf/builtin-trace.c                         |  9 +++------
- tools/perf/trace/beauty/beauty.h                   |  3 +++
- tools/perf/trace/beauty/clone.sh                   |  4 ++++
- tools/perf/trace/beauty/fsmount.c                  | 18 +++++++++++++++++-
- tools/perf/trace/beauty/fsmount.sh                 | 11 +++--------
- tools/perf/trace/beauty/fsmount_attr.sh            | 22 ++++++++++++++++++++++
- tools/perf/trace/beauty/include/linux/socket.h     |  2 +-
- tools/perf/trace/beauty/include/uapi/linux/fs.h    | 12 ++++++++++++
- tools/perf/trace/beauty/include/uapi/linux/mount.h |  1 +
- tools/perf/trace/beauty/include/uapi/linux/sched.h | 17 +++++++++++++++--
- 12 files changed, 93 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/trace/beauty/fsmount_attr.sh
