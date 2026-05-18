@@ -1,113 +1,137 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1788C259CBD
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 23:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930841FECBA
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 23:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779145923; cv=none; b=hJgS9NgToEimVLhA/1egwk1GkTxtCuMIEJdwt9ipEkbrLNn1fMesu73AkXm3mX20t8EOS3Y3Saqioq/N7TTJydZ6zkVg12U/znqM4DZx9liFttctfZk1klQxpQv8GAbGbSbioTfG8aBEjI7mw1qy5lRKH3v+1RdmhuRjS8/AfcI=
+	t=1779147267; cv=none; b=tEH8L00Hw31YhC9byo8lV0IWDMQ88q+ljQ/R9w2ixPa2VfD8OeHzpPaWCTQh/LPzT+YUZRxexinOzQk1GEBySaEACLFpBcsOV+ncbRJGJlywnfTOiAwsgVWHgz/SPhk+i9sXC3UZo4R+899p8H5vqgnzJ4nFShntGlpSNfQIqmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779145923; c=relaxed/simple;
-	bh=37pWV75xwxCZRuxck3GG4Qk3pk7xQdd7WWjsZvdBp2o=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KAhvsAuo8d1N9f6sSZ/bvJuIWeYYeTyZYz/FEyBZPAvIRMds81hNK5TGwdFk71KWIUleoDLnY72RUb6w3mxJac73XI9wbmNUXow+eNNZ4dRMibv+Q8Rxu+vaOsNh0rNbjjJeyCHral3kchChyLxwtLRkV7of/SS9+tVVmYBdR3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nCK7n5bU; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1779147267; c=relaxed/simple;
+	bh=MrVZ4M7qSAyCN39c5W/XdsVICgh6PEE++Od1H79mg+M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UYXC8X4A4QrV4EcisCP69vr+Mmpp9HwDyvFR8OIdL5BUN1Wq5T2LeL/1XmGkMNCP6yHZANsKHVsyop94L/+fytlf1BEl30nqmVmPgyrvSh2JRZcQAUldp92fqS61OiIRmT39AZveHtM+8RpGxZmdDbsWoH1KpOJutfxRhUsAjqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lS/G+IsL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nCK7n5bU"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1353ac304f3so5202813c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 16:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779145921; x=1779750721; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=484+LBDmFYyjmS1QZ8UO0N0Y8++tVhi0RvQ5mEJUoYc=;
-        b=nCK7n5bUvY32m2yUpF82IbkPvcD2WEDSR0YqvuQEQ4wB5EXv23t1Hute0/CBibgmLI
-         V09IKVzGxN+aV9Dwgn8uyaGKcb0Uh+Zq9UtSDw5hfSk0yq0vG8tGPApR4vl6ses8QiOp
-         BFbAX3sOky56mLtJhWuWANXvCe6jXgdCWM2RirCwjrebur1VutJ/y7y/0+Xe9zKZXu/e
-         uSjUAx+j1R0Qp8SoojRjmtnDVtrvo8/GeDdUn+Hchac/ufBotf1SebwZJ5WUdGIkXWbR
-         XGOUElWCp2nU5AJm1zn7QCpM1x4XB0sexE9E09tyt7Mkp7y8qqYsdP3d0ZlLkc9gXwkc
-         fDPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779145921; x=1779750721;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=484+LBDmFYyjmS1QZ8UO0N0Y8++tVhi0RvQ5mEJUoYc=;
-        b=Yu3HZnShtiNHlwuMQQze1EXMjF7jOUsLetYCZlA2tD1Dly/cEI+f1m3VinU61gKCyx
-         ZLAAOw5RK1imjtB4CKxpf6op8WvNKnrzXBpXW7mMiP5iqsMwkLmjtE9HeAOymYaJlojx
-         03tbde5v8kgHh4Bll1HyY7lAKwn876VH+WONzv8UjWPZjwFVtJddMHlfO8FpUDaiZ/FI
-         jLO2UucoxkDYdDOZuHJFVgW5C5b1pJ20hnIhDqXuetqfYV2k7GCVQfywEqNlckZz/Pym
-         9ZN/zR60ElroDzg8EG5VySRtVrNgMPtECRJlxz5lBOydlxXrgNSkLvLcet1GDzHUgpEz
-         coPA==
-X-Forwarded-Encrypted: i=1; AFNElJ/QcUgWfr2kOdsT4EaZQreeS0g4YNhw28YVwuYpombLhpC2QyO8LKE8u9+2zx5qpxYERP4jFucaPgH8ZCFdcSEF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy92tB5QpaE0en8L0dc4/TcHMtKMlXlwCmw5SFE36yX9vgLCYvi
-	hcrIH2YkI9M05wBunbdtFbwgS8D7UrOtvUvyHgqDq5mbdZPcJ34Jcxc4w8+GERKgyqPulyVXOXu
-	pleTCwg==
-X-Received: from dlboy14.prod.google.com ([2002:a05:7022:128e:b0:12d:bf5c:266])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:505:b0:128:d7a7:5271
- with SMTP id a92af1059eb24-1350483f3b9mr7134341c88.28.1779145920806; Mon, 18
- May 2026 16:12:00 -0700 (PDT)
-Date: Mon, 18 May 2026 16:11:30 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lS/G+IsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301B2C2BCB7;
+	Mon, 18 May 2026 23:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779147267;
+	bh=MrVZ4M7qSAyCN39c5W/XdsVICgh6PEE++Od1H79mg+M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=lS/G+IsL3YtBAqOB7D7jjwg8dWmKYntgpQnGx97PxAY2jtTMMIyzHM3VGfhOjzIPr
+	 GxexJ45eOZkDkSs11Sz3JdlkgDXReQPKPjP/WkehYGM7rsPTVHWP3rVwy+xwTFC77+
+	 AFiqlxgmVYYv14ofigRzTcYdg9wLH71sir86Rh6iEjxu0xmN64dl4Cvob/3dHsJhK6
+	 RQMMoYrsHEUN7ao8ev9am0MWNh2thL1Y9X1nPVvQf3Q2W/1+eOEvJhREn1xhPLegHr
+	 083/ha54O6d1Gv9nFDMN8X0qMNLZFj/RlctI+gL80KnjLoO31OHs2BVLUcTl0Xid6d
+	 xnebsaMF6ZnSA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 2/2] perf evsel: Find process with busy PMUs for
+ EBUSY
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Chun-Tse Shao" <ctshao@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260518224819.1247382-2-ctshao@google.com>
+References: <20260518224819.1247382-2-ctshao@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 May 2026 23:34:26 +0000
+Message-Id: <20260518233427.301B2C2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260518231150.1252420-1-ctshao@google.com>
-Subject: [PATCH] perf stat: Fix uncore metric scaling bug across sockets and nodes
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, yang.lee@linux.alibaba.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-In multi-socket or Sub-NUMA Clustering (SNC) configurations, uncore
-metrics (such as lpm_miss_lat) calculate incorrect values because they
-divide by a static socket CHA count rather than the aggregation target.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] Use-After-Free and state corruption due to strtok() on a stack-all=
+ocated buffer.
+- [Medium] Terminal injection vulnerability via unsanitized process command=
+ lines.
+- [Low] Improper string comparison bound can lead to false positive process=
+ identification.
+--
 
-Fix this by dynamically utilizing the aggregation count (`aggr->nr`) on
-the metric's leader event. In standard aggregation modes, `aggr->nr` is
-already automatically populated with the correct number of active
-hardware units contributing to that stats bucket.
+commit a4a94ff69c8d665f6d09eaea15fdbbbd89954b18
+Author: Chun-Tse Shao <ctshao@google.com>
 
-Before the fix:
-  perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
-  {"socket" : "S0", "counters" : 28, "ns  lpm_miss_lat_rem" : "163.4", "ns  lpm_miss_lat_loc" : "27.5"}
-  {"socket" : "S1", "counters" : 28, "ns  lpm_miss_lat_rem" : "170.5", "ns  lpm_miss_lat_loc" : "25.5"}
-  perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
-  {"ns  lpm_miss_lat_rem" : "90.4", "ns  lpm_miss_lat_loc" : "12.6"}
-`lpm_miss_lat` on global aggr is 0.5x the actual value.
+perf evsel: Find process with busy PMUs for EBUSY
 
-After the fix:
-  perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
-  {"socket" : "S0", "counters" : 28, "ns  lpm_miss_lat_rem" : "174.8", "ns  lpm_miss_lat_loc" : "34.8"}
-  {"socket" : "S1", "counters" : 28, "ns  lpm_miss_lat_rem" : "170.4", "ns  lpm_miss_lat_loc" : "23.9"}
-  perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
-  {"ns  lpm_miss_lat_rem" : "174.5", "ns  lpm_miss_lat_loc" : "26.2"}
+This commit parses fdinfo to match the PMU type of a perf event that
+failed to open with EBUSY, and reports the conflicting processes.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/stat-shadow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3969,29 +3970,64 @@ static int dump_perf_event_processes(char *msg, s=
+ize_t size)
+>  				continue;
+>  			/* Take care as readlink doesn't null terminate the string. */
+>  			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index bc2d44df7baf..60fdf26c5bb0 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -103,7 +103,7 @@ static int prepare_metric(struct perf_stat_config *config,
- 					val *= 1e-9;
- 				}
- 				if (!source_count)
--					source_count = evsel__source_count(metric_events[i]);
-+					source_count = aggr->nr;
- 			}
- 		}
- 		n = strdup(evsel__metric_id(metric_events[i]));
--- 
-2.54.0.746.g67dd491aae-goog
+Is link_size the correct bound for this comparison?
 
+If the symlink target is shorter than "anon_inode:[perf_event]" but exactly
+matches the prefix (for example, if link_size is 4 and buf is "anon"), this
+strncmp will return 0 and falsely identify the process. Should this also
+check that link_size equals the exact length of the expected string?
+
+[ ... ]
+
+> +				buf[fdinfo_size] =3D '\0';
+> +
+> +				line =3D strtok(buf, "\n");
+> +				while (line !=3D NULL) {
+> +					if (sscanf(line,
+> +						   "perf_event_attr.type:\t%u",
+> +						   &perf_event_type) =3D=3D 1)
+> +						break;
+> +					line =3D strtok(NULL, "\n");
+>  				}
+
+buf is a stack-allocated array. Since strtok stores a pointer to the parsed
+string in its internal static state, does breaking out of this loop early
+leave the internal pointer pointing to popped stack memory?
+
+If another part of the tool later calls strtok(NULL, ...) in the same threa=
+d,
+could this cause a use-after-free or memory corruption as strtok writes null
+bytes? Would it be safer to use strtok_r here to avoid clobbering the shared
+parsing state?
+
+[ ... ]
+
+> +					cmdline_size =3D read(cmdline_fd, buf, sizeof(buf) - 1);
+> +					close(cmdline_fd);
+> +					if (cmdline_size < 0)
+> +						continue;
+> +					buf[cmdline_size] =3D '\0';
+> +					for (ssize_t i =3D 0; i < cmdline_size; i++) {
+> +						if (buf[i] =3D=3D '\0')
+> +							buf[i] =3D ' ';
+> +					}
+> +
+> +					if (printed =3D=3D 0)
+> +						printed +=3D scnprintf(
+> +							msg, size,
+> +							"Possible processes:\n");
+> +
+> +					printed +=3D scnprintf(msg + printed, size - printed,
+> +							"%s %s\n", proc_entry->d_name, buf);
+> +					break;
+
+Does this safely handle unprivileged process command lines?
+
+While null bytes are replaced with spaces, other non-printable characters a=
+nd
+ANSI escape sequences are preserved. If a malicious user intentionally hold=
+s a
+PMU and crafts a command line with escape sequences, could those sequences
+execute in the terminal of the administrator running perf stat, potentially
+allowing terminal output spoofing?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518224819.1247=
+382-1-ctshao@google.com?part=3D2
