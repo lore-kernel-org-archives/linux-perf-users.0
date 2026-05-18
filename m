@@ -1,98 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EA53A1B5;
-	Mon, 18 May 2026 00:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878AD1DB356
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 01:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779065578; cv=none; b=Mi60bc2w/7ty/nJ9wlHri+zb8JR6bbi3Q226zVMCrr7K6/I7msfte4eLnKtTBkKlYRLe+LoM1UhYno4b37g0kYfFz2jbyBOLfFWILRLN7TwM2ClLefx2JX27ytRTPEetHXQYQfLWedvwJPOoqNhd+jhVOiYAnZKhZWae/JGFBhE=
+	t=1779066378; cv=none; b=XhaK2jxYUMlRUNOKH5jwXOJsaSZ3MbjKJ3kzg4+4du+Ov9KeuCj3BPK0WEX/CRygoIGL3QX+Z2ZoP667BKxA5249TOgwVExYKOL4bKIGofum1uJPyYEnXGd8dtnOpq/VgpVoCeMI2quhH9hfZk7cOed3Vl1dmRj7QqJCRtThtmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779065578; c=relaxed/simple;
-	bh=BzzgyqiaawFUyLR6TD77S8sAPXAGNJOFO7uGwNcPFpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sd0rIpuVqbH2ErllYIpumzJ5h4YV/6It2VLQF+iAHvmBgh4JSU0PcZ0CM6Z90jXyIDHgv5C1FSkWB7oxHK9Yo3xPsEAEexhoEhKHCNR5ceG+TSpFqZeGHqi3R4TyQg3jR6vw4Nc6fofAkZd/fHmfKsk0Bu2sv8QdFIL4xv8kK1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hL8SAZdf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779066378; c=relaxed/simple;
+	bh=mc1UccgGcdPIWqIKU7+dZUZ+Iv9ppVrUU4wAKgnFNCo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=s+gY6S6c/wn/ohP4QsV69Q0vDkm9FEUZOsjWxPJIo6BngMylpIn/RHJRw3q8iK2m+NGdye5p5tVRUMLLmOaiDAxmJgEqdMK/Vz0FSPL/LVijrr0MuatGVw+vCqmZ6OM5dcSc9uhuNgP3JimHAwxKSY7P4Hl9SNoMrqkDZbRQCH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr+95KLr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hL8SAZdf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D1AC2BCB3;
-	Mon, 18 May 2026 00:52:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr+95KLr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B61C2BCB0;
+	Mon, 18 May 2026 01:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779065578;
-	bh=BzzgyqiaawFUyLR6TD77S8sAPXAGNJOFO7uGwNcPFpE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hL8SAZdfhUg1An6pQ6Ouv5tqjisDJ3fH1XNezNNbUa5za/geR7S3xnoJg/c1N2Azl
-	 6dda/1Oz+vxVu2pOAGQyvPxG4ixT3nxBDZKu0VA1yNitMXpHQp3qgwOMl6zkC4ap90
-	 CO1p7NAJtOJhlojS0jjLWEatZ/1/67hMIUWOUbPHt2nJnQaY9Oh5OFFGXuYl1LwWFb
-	 lJii/lmNmCdd9jknw9f9h8NWrisJ6Rcu0e5zxJslVF2wTLI6HnaYq2lkrBVC6Fseeh
-	 3QJNxot5kqlfx4ylD5qPI2XHLbrTE+Z2CnTo8lqZLNJOsjI64H6s4jJEdYUpz34Xg9
-	 qRRHtKvogyI2Q==
-Date: Sun, 17 May 2026 17:52:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, james.clark@linaro.org, 9erthalion6@gmail.com,
-	adrian.hunter@intel.com, alex@ghiti.fr,
-	alexandre.chartre@oracle.com, andrii@kernel.org,
-	ankur.a.arora@oracle.com, aou@eecs.berkeley.edu,
-	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com,
-	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com,
-	eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org,
-	leo.yan@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, martin.lau@linux.dev,
-	memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com,
-	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org,
-	pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me,
-	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com,
-	tglozar@redhat.com, thomas.falcon@intel.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v4 11/14] perf pmu-events: Parallelize JSON and metric
- pre-computation in jevents.py
-Message-ID: <agpi522tGtMWwvld@z2>
-References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
- <20260515173852.1378571-1-irogers@google.com>
- <20260515173852.1378571-12-irogers@google.com>
- <agd2-MgXgs---InR@google.com>
- <CAP-5=fXSLgN6hXtQattTp9gqxBkO1gi97EWRF45_0ZKQcK0Z+A@mail.gmail.com>
+	s=k20201202; t=1779066378;
+	bh=mc1UccgGcdPIWqIKU7+dZUZ+Iv9ppVrUU4wAKgnFNCo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=Vr+95KLrLhGBkqG0OFwyKclmGVArLHPSVfTLhcGrIwQcQZcF1RAIaES6hFaEt6omp
+	 +djLFDNVbyEfFAbuhRdID5MvS+W10vHowgPgrZ6H9k8WiNIQbI2KdB6IqDEjttGviZ
+	 pLWpSZiXm+rETTGLYcwaEBeGN2Rp9RASPWK3r+nRPQY4O2vpqR7w7xoofFIY8uxHYi
+	 PiZyJQhrMLeqUXP/FlCqO8aZU8RRRisF6PFO0E6rl5ImRhiJ+RYlFq1b4tK8OsMISU
+	 dAjzXlNP+sRRQ4XY8FZpCoI0fT0QowT5dhLrd/PHuCezimSLCeC+/m2x5XFmHaj4g0
+	 bn4I+jLvdn10A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/2] perf tests: Add test for uncore event sorting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260518003704.2434308-2-irogers@google.com>
+References: <20260518003704.2434308-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 May 2026 01:06:17 +0000
+Message-Id: <20260518010618.18B61C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXSLgN6hXtQattTp9gqxBkO1gi97EWRF45_0ZKQcK0Z+A@mail.gmail.com>
 
-On Fri, May 15, 2026 at 04:05:40PM -0700, Ian Rogers wrote:
-> On Fri, May 15, 2026 at 12:41 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Fri, May 15, 2026 at 10:38:48AM -0700, Ian Rogers wrote:
-> > > Currently, jevents.py parses hundreds of JSON event and metric files
-> > > sequentially across all CPU architectures during Kbuild startup, taking
-> > > ~3.3 seconds of pure single-core execution time.
-> >
-> > I'm curious about this.  Does it really need to parse all architectures?
-> > Oh... is it for perf stat record/report?
-> 
-> So it is controlled by JEVENTS_ARCH and JEVENTS_MODEL:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/Build?h=perf-tools-next#n24
-> The default for JEVENTS_ARCH is SRCARCH (e.g. x86) while JEVENTS_MODEL
-> defaults to "all". We have a build test for JEVENTS_ARCH is "all":
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/make?h=perf-tools-next#n74
-> So saying "all CPU architectures" is a bit over the top, but not
-> wholly inaccurate.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Memory leak of dynamically allocated strings on error and skip p=
+aths.
+--
 
-Ok, so it's all x86 models.  I think it's ok to have "all" for build
-tests.
+commit df52a005ba8bea64e813a32dded17fb34900d4b6
+Author: Ian Rogers <irogers@google.com>
 
-> 
-> Fwiw, I created a script to convert CPUIDs into models:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/models.py?h=perf-tools-next
-> which maybe could be used to reduce the perf binary size by building
-> only the native CPU's JSON. It is a useful script for debugging :-)
+perf tests: Add test for uncore event sorting
 
-Sounds like it should be used by default to pick the current model.
+Add a test for uncore event sorting matching multiple PMUs to ensure evsels
+are resorted properly when parsed with mixed PMUs.
 
-Thanks,
-Namhyung
+> diff --git a/tools/perf/tests/uncore-event-sorting.c b/tools/perf/tests/u=
+ncore-event-sorting.c
+> new file mode 100644
+> --- /dev/null
+> +++ b/tools/perf/tests/uncore-event-sorting.c
 
+[ ... ]
+
+> +	while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
+
+[ ... ]
+
+> +		m.event1 =3D m.event2 =3D NULL;
+> +		perf_pmu__for_each_event(pmu, false, &m, event_cb);
+> +
+> +		if (m.event1 && m.event2) {
+> +			pmu_prefix =3D strndup(pmu->name, len);
+> +			break;
+> +		}
+> +		free(m.event1);
+> +	}
+> +
+> +	if (!pmu_prefix) {
+> +		pr_debug("No suitable uncore PMU found\n");
+> +		return TEST_SKIP;
+> +	}
+
+Does this early return bypass cleanup and leak m.event1 and m.event2?
+
+If strndup() fails to allocate memory during the loop, pmu_prefix remains
+NULL. The loop breaks, and this check returns TEST_SKIP immediately without
+freeing the strings allocated during the perf_pmu__for_each_event() callbac=
+ks.
+
+> +
+> +	evlist =3D evlist__new();
+> +	if (!evlist)
+> +		return TEST_FAIL;
+
+Does returning directly here leak pmu_prefix, m.event1, and m.event2?
+
+If this is updated to use the out_err cleanup path instead, will it
+dereference uninitialized stack memory?
+
+Calling goto out_err; here would jump to parse_events_error__exit(&err)
+before parse_events_error__init(&err) has had a chance to initialize it.
+
+> +
+> +	snprintf(buf, sizeof(buf), "{%s/%s/,%s/%s/}", pmu_prefix, m.event1, pmu=
+_prefix, m.event2);
+> +	pr_debug("Parsing: %s\n", buf);
+> +
+> +	parse_events_error__init(&err);
+
+[ ... ]
+
+> +out_err:
+> +	evlist__delete(evlist);
+> +	parse_events_error__exit(&err);
+> +	free(pmu_prefix);
+> +	free(m.event1);
+> +	free(m.event2);
+> +	return ret;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518003704.2434=
+308-1-irogers@google.com?part=3D1
