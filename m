@@ -1,264 +1,255 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46941382299
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 04:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940EE346ACC
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 04:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779078716; cv=none; b=Ngpbc+EnRcLqriO8ljqz1B8GZnFrYN+4Up/ei7t9WhE0H2CdYTQXQq8OaYk+pPo7x/icGkuWU63DRfwgyFAS59QZoMGIPS64QOi3UbdzBs9n1wgsc6iR1atzpBPm8OAmMs1z6FpLQwx4fDwhXv82yK4eLv7tlIlKZLCXOo+1AOg=
+	t=1779079676; cv=none; b=h4o0KUvitkhraHSr2nq+t82cZ07iIlmeAPhYNNGC+9hTB8nW1cM5te1zuM7wKe5T/FuRwnf8Wh7JWpVqdcUHXDdpFt3aqzLlYltyHy1M9E+Y6sfmqBBjgqciC9ouf66okh//v8M5bPLNFWm1bY7XxMA1kgViUA1lRQu3NEKeP8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779078716; c=relaxed/simple;
-	bh=3g9O2Yw3w3xaXapO32wDQKH9lNWe5WACrGuWp7AIlYk=;
+	s=arc-20240116; t=1779079676; c=relaxed/simple;
+	bh=qoozwfBDiN7ZsI8K4OD5U/OY10bC2BZpXnY6TRkFg24=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=flMfMzKE5l+bRo4OshOfHYKQHbC8uKWHJYPE53CseUwjtVtgIgojd9i/q6aPpYj+57wUH7guxlsyhFUa9cUs8QMWWYbhfJYGevQYDDmF7pQFNPUaQ69wLVBMR+HtOqYiyh9Aw+V3wibZ0fOwqksPnR4skZbB9DEIsGD4+gw6oKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sOcWUnnn; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=rN914EeExcQbQHVINloM6z3+kk+56cxnpYNxidkQDI2eGQV4SV5fwCpi+cx+3vL9u7RT3wBa563gLv230Im/DDJm4Tu6r8hN5RfKEytpICZA2d8OAFOrEiNsCMqgHKgSzkEAqxafk0NhTJzsUAmjpBONbSq15ot5ScVjCIGfeOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=spduw99S; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOcWUnnn"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2bda35eab74so1476983eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 21:31:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="spduw99S"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-130aab78a09so1473136c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 21:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779078711; x=1779683511; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779079673; x=1779684473; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5egDoittCoF2sloPTEbRjge2u/Al3G2t4aOQQynxZU=;
-        b=sOcWUnnnGzceOZpL13M278bU9F+XNGXIe0j/fi7L42zZE04rTupjt6jFjGNz3tBPGH
-         dZmKIE7ZUdulii1OdMv7z4PdaGQoxHfiHF1xSyGtnd5eEMf2P+EROy8yW3qRkiFx/LMz
-         uN5iAh/DMGa89BTCORE04mhTAheKKB30U1l+xDdw9EHJMAEwVOeJsfvyulXdk+z6Xetc
-         YjrZOHYujKkrP4iB75UiBb0FCX7BP75U8CN9X/1tee8vQoxk0IR8XU8B2LxSlBmDjsED
-         I3KY0kGu8x6qEWyx/CMfgKPp/1UfPmXCyxFxChzK0Ye5CR3A7/YWO4PYl8u4Urpg8XUf
-         u22g==
+        bh=Z7BIH49ZbGVpqWGyC/PF2U37BJu1GatOcjrU2HEGUrA=;
+        b=spduw99S6VUh/PLP33RlqEBid+Klzpru683Zv9QaBChBNBhhaUhX/j4hIrOWMJMRoh
+         CMCRXclOjOXz/pG1Qm2RUuarZLZXi+9q41Lb6a1q2sIGuj26m0d9qRYi+hg/uT/HwdiL
+         UGXK5F351uidB45LqFppEUT/BYAqzwygh4mKlMcZ+a5p4PeRUMO7bZtLvVyX9aWCZWMc
+         UZ20ehVdFxN2wfo+tu1jkuMdo+VHDeW4t9MJhY9g131QAMj40uD0PiqnxH7Ug71pLga7
+         bTTJhu9yl94aL/Tde+9prxGNQkMFxyPVlCdMOMKyGPuwjW8drpS8PU8n5gQ2mmEjYuBE
+         HkWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779078711; x=1779683511;
+        d=1e100.net; s=20251104; t=1779079673; x=1779684473;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5egDoittCoF2sloPTEbRjge2u/Al3G2t4aOQQynxZU=;
-        b=WTY7mEQU1RAK9sDlbKP3J8HWXy9907QW2USnVOwvC7jwdSaSR7rVDshcJrP7ApwizV
-         Yt+3KlIerwnIDr5Rp3e3jdTZ7lYAJ+iZfcM1kczDVIoxOnpryRtzalf7JSFL+xB8zDRo
-         4SMIQvSrVNG+nBgxuKCvxxtAlpiPLrIajpqsFhZI+oWmnomHny6LYviHuj7g9eDKbPMB
-         phzmXiwFGs7h2VghaksTF56Rx4d5refHu6GYkeNnKc+b5Yy2zQFxRg/dNJPKxMeWme8X
-         MWqPXrflcE22KhCqdoiaDvva1f4dcObmMT1eDmVVmiq7932mnziU9X1+2r5qbvOE+tOj
-         EkjA==
-X-Forwarded-Encrypted: i=1; AFNElJ8srD7D3gitgmdcrvbGN15axNJiDd+8q99PauzvXbME9mUdI9qKlgaeFztyqCNlB1IjESkoloSUQk6bv7Ytnwfd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmF/3rOlwDgYqLN9fVEV3/AVkwFRXu1VEq8pYSn3iRmyxrCpbx
-	M2ajN5fHxeqs9YCmeYbcZxn1quAg+ddaR59eXKus9pZMC7obM/LkWMhntO9KT66T3UnQDThMa1h
-	ag5uFJWH1AQ==
-X-Received: from dycnr6-n1.prod.google.com ([2002:a05:7300:e9c6:10b0:2da:2af9:bfe2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7885:b0:2c1:82c2:bc31
- with SMTP id 5a478bee46e88-3026197f5b2mr7305963eec.10.1779078710839; Sun, 17
- May 2026 21:31:50 -0700 (PDT)
-Date: Sun, 17 May 2026 21:31:40 -0700
-In-Reply-To: <20260518043140.2522141-1-irogers@google.com>
+        bh=Z7BIH49ZbGVpqWGyC/PF2U37BJu1GatOcjrU2HEGUrA=;
+        b=SCEUOOsjlGE3rlxNCLMAFfqrXxHRdhwzyMZ2Y+t4uvup9WhJLU5grwGswhC6dVuLxp
+         SVDaC/WAdpMppnCx9HPW7TTJlYksqDCsLk7FrMrii40PRrSNrINlAqyUfqYwkc3df7fc
+         h/qjuJCwTQyBhk4d1y3TV+djYK/y3uwcxYySL2Kmd04UhPEi5TjK63Xi4AyTIp/XB7je
+         k6GQNQjds5tcE+AStXpC/HGbVvUqSvsA+nwmZMyMh/6z6eLS2qavdoIfoZQruFx6t0to
+         myIJaa0HRmevZUyW6chrzaLe48qTIpoI+N4N2QA1nD2krs3UAtLW4BoznQbpue08LThm
+         EqWg==
+X-Forwarded-Encrypted: i=1; AFNElJ8lPb+GXg88qTjO257M4rnZQl49T5iE9vAMumoVBV16RUFkW20zcxg85DyIr5We6zsblvgY8FfxnrQOwzSV4q+H@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoXAA9wU+CBZAuxHj7KSTVxtHGrlf5uV9jJLFc7Iaze5wlEfWt
+	sjpPwn9yNcF0W7db4K2tStzo2FyjS1nnz9Zn1v+iawcQDLzSdECzr+iOamn8IWdH3ipbo1jBxK8
+	QrCqPWJ3fNA==
+X-Received: from dlae15.prod.google.com ([2002:a05:701b:230f:b0:135:2b50:3913])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4193:b0:12d:ca31:f1b4
+ with SMTP id a92af1059eb24-135047447camr5873896c88.24.1779079672430; Sun, 17
+ May 2026 21:47:52 -0700 (PDT)
+Date: Sun, 17 May 2026 21:47:26 -0700
+In-Reply-To: <20260515193314.1593560-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260518023225.2472122-1-irogers@google.com> <20260518043140.2522141-1-irogers@google.com>
+References: <20260515193314.1593560-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518043140.2522141-3-irogers@google.com>
-Subject: [PATCH v7 2/2] perf arch x86 tests: Add test for topdown event sorting
+Message-ID: <20260518044740.2526802-1-irogers@google.com>
+Subject: [PATCH v6 00/14] perf build: Reduce build time by nearly half
 From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, collin.funk1@gmail.com, 
-	german.gomez@arm.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, zide.chen@intel.com
+To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
+	namhyung@kernel.org
+Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, alex@ghiti.fr, 
+	alexandre.chartre@oracle.com, andrii@kernel.org, ankur.a.arora@oracle.com, 
+	aou@eecs.berkeley.edu, bpf@vger.kernel.org, collin.funk1@gmail.com, 
+	costa.shul@redhat.com, daniel@iogearbox.net, dapeng1.mi@linux.intel.com, 
+	dsterba@suse.com, eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org, 
+	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, martin.lau@linux.dev, memxor@gmail.com, 
+	mingo@redhat.com, mmayer@broadcom.com, nathan@kernel.org, palmer@dabbelt.com, 
+	peterz@infradead.org, pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me, 
+	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com, tglozar@redhat.com, 
+	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Add a test to capture the comment in
-tools/perf/arch/x86/util/evlist.c. Test that slots and
-topdown-retiring get appropriately sorted with respect to instructions
-when they're all specified together. When the PMU requires topdown
-event grouping (indicated by the pressence of the slots event) metric
-events should be after slots, which should be the group leader.
+This patch series refactors Kbuild internals, BPF skeleton generation,
+Python AST pre-computation, and foundational tooling dependencies across
+the perf tool build system. By eliminating umbrella target synchronization
+barriers, decoupling static library prerequisites, parallelizing single-core
+script generators, and eradicating redundant feature checks, this series
+unlocks absolute theoretical peak multi-core concurrency during Kbuild startup.
 
-Add a related test that when the slots event isn't given it is
-injected into the appropriate group.
+On a 28-core build workstation (make -j28 all from scratch), clean build
+latency improves by over 44%:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Zide Chen <zide.chen@intel.com>
----
- tools/perf/arch/x86/tests/topdown.c | 166 +++++++++++++++++++++++++++-
- 1 file changed, 165 insertions(+), 1 deletion(-)
+  Before:
+    real    0m29.006s
+    user    2m46.019s
+    sys     0m30.610s
 
-diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
-index 3ee4e5e71be3..221f2c4bbb61 100644
---- a/tools/perf/arch/x86/tests/topdown.c
-+++ b/tools/perf/arch/x86/tests/topdown.c
-@@ -75,4 +75,168 @@ static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest
- 	return ret;
- }
- 
--DEFINE_SUITE("x86 topdown", x86_topdown);
-+#define CHECK_COND(cond, text)					\
-+do {								\
-+	if (!(cond)) {						\
-+		pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
-+		ret = TEST_FAIL;				\
-+		goto out_err;					\
-+	}							\
-+} while (0)
-+
-+#define CHECK_EQUAL(val, expected, text)			\
-+do {								\
-+	if ((val) != (expected)) {				\
-+		pr_debug("FAILED %s:%d %s (%d != %d)\n",	\
-+			 __FILE__, __LINE__, text, (val), (expected)); \
-+		ret = TEST_FAIL;				\
-+		goto out_err;					\
-+	}							\
-+} while (0)
-+
-+static int test_sort(const char *str, int expected_slots_group_size,
-+		     int expected_instructions_group_size)
-+{
-+	struct evlist *evlist = NULL;
-+	struct parse_events_error err;
-+	struct evsel *evsel;
-+	int ret = TEST_FAIL;
-+	bool slots_seen = false;
-+
-+	parse_events_error__init(&err);
-+
-+	evlist = evlist__new();
-+	if (!evlist)
-+		goto out_err;
-+
-+	if (parse_events(evlist, str, &err)) {
-+		pr_debug("parse_events failed for %s\n", str);
-+		goto out_err;
-+	}
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel__is_group_leader(evsel))
-+			continue;
-+
-+		if (strstr(evsel__name(evsel), "slots")) {
-+			/*
-+			 * Slots as a leader means the PMU is for a perf metric
-+			 * group as the slots event isn't present when not.
-+			 */
-+			slots_seen = true;
-+			CHECK_EQUAL(evsel->core.nr_members, expected_slots_group_size,
-+				    "slots group size");
-+			if (expected_slots_group_size == 3) {
-+				struct evsel *next = evsel__next(evsel);
-+				struct evsel *next2 = evsel__next(next);
-+
-+				CHECK_COND(strstr(evsel__name(next), "instructions") != NULL,
-+					   "slots second event is instructions");
-+				CHECK_COND(strstr(evsel__name(next2), "topdown-retiring") != NULL,
-+					   "slots third event is topdown-retiring");
-+			} else if (expected_slots_group_size == 2) {
-+				struct evsel *next = evsel__next(evsel);
-+
-+				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
-+					   "slots second event is topdown-retiring");
-+			}
-+		} else if (strstr(evsel__name(evsel), "instructions")) {
-+			CHECK_EQUAL(evsel->core.nr_members, expected_instructions_group_size,
-+				    "instructions group size");
-+			if (expected_instructions_group_size == 2) {
-+				/*
-+				 * On Intel hybrid CPUs (e.g., Alder Lake/
-+				 * Raptor Lake), E-cores (cpu_atom) do not
-+				 * support/enforce the slots event. When
-+				 * parsing event groups containing slots
-+				 * across all PMUs, slots is automatically
-+				 * filtered out from cpu_atom, leaving
-+				 * {cpu_atom/instructions/,
-+				 *  cpu_atom/topdown-retiring/}. On cpu_atom,
-+				 * instructions correctly leads this group of
-+				 * 2 without slots reordering.
-+				 */
-+				struct evsel *next = evsel__next(evsel);
-+
-+				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
-+					   "instructions second event is topdown-retiring");
-+			}
-+		} else if (strstr(evsel__name(evsel), "topdown-retiring")) {
-+			/*
-+			 * A perf metric event where the PMU doesn't require
-+			 * slots as a leader.
-+			 */
-+			CHECK_EQUAL(evsel->core.nr_members, 1, "topdown-retiring group size");
-+		} else if (strstr(evsel__name(evsel), "cycles")) {
-+			CHECK_EQUAL(evsel->core.nr_members, 1, "cycles group size");
-+		}
-+	}
-+	CHECK_COND(slots_seen, "slots seen");
-+	ret = TEST_OK;
-+out_err:
-+	evlist__delete(evlist);
-+	parse_events_error__exit(&err);
-+	return ret;
-+}
-+
-+static int test__x86_topdown_sorting(struct test_suite *test __maybe_unused,
-+				     int subtest __maybe_unused)
-+{
-+	int ret;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return TEST_OK;
-+
-+	ret = test_sort("{instructions,topdown-retiring,slots}", 3, 2);
-+	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
-+	ret = test_sort("instructions,topdown-retiring,slots", 2, 1);
-+	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event in a group but topdown metrics events outside the group",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},{topdown-retiring}", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event and topdown metrics events in two groups",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},cycles,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event and metrics event are not in a group and not adjacent",
-+			  ret, TEST_OK);
-+
-+	return TEST_OK;
-+}
-+
-+static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unused,
-+					     int subtest __maybe_unused)
-+{
-+	int ret;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return TEST_OK;
-+
-+	ret = test_sort("{instructions,topdown-retiring}", 3, 2);
-+	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
-+	ret = test_sort("instructions,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
-+	ret = test_sort("{instructions},topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("event in a group but topdown metrics events outside the group",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions},{topdown-retiring}", 2, 1);
-+	TEST_ASSERT_EQUAL("event and topdown metrics events in two groups",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions},cycles,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("event and metrics event are not in a group and not adjacent",
-+			  ret, TEST_OK);
-+
-+	return TEST_OK;
-+}
-+
-+static struct test_case x86_topdown_tests[] = {
-+	TEST_CASE("topdown events", x86_topdown),
-+	TEST_CASE("topdown sorting", x86_topdown_sorting),
-+	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__x86_topdown = {
-+	.desc = "x86 topdown",
-+	.test_cases = x86_topdown_tests,
-+};
+  After:
+    real    0m16.091s
+    user    2m40.135s
+    sys     0m25.740s
+
+Saving 12.9 full seconds time per clean build. Furthermore, nothing to
+build incremental builds are improved by nearly 7x:
+
+  Before:
+    real    0m11.528s
+    user    0m9.633s
+    sys     0m6.965s
+
+  After:
+    real    0m1.717s
+    user    0m1.682s
+    sys     0m0.960s
+
+Summary of Patches:
+
+1: Fast-Path Feature Detection
+  - Refactors test-clang-bpf-co-re.bin and test-bpftool-skeletons.bin feature
+    checks to group shell pipelines within curly braces and redirect both stdout
+    and stderr to .make.output before touching $@ purely upon success
+    (> $(@:.bin=.make.output) 2>&1 && touch $@). Grouping the pipeline ({ cmd1 | cmd2; })
+    ensures that compiler stderr is successfully captured in .make.output rather
+    than escaping to the parent shell. This perfectly matches standard Kbuild
+    feature check conventions and ensures the target files are touched on disk
+    purely upon success, allowing Kbuild to cache positive detections and avoid
+    continuous sub-make re-evaluations during incremental builds. Adds
+    test-bpftool-skeletons.bin to the clean FILES list and explicit source
+    prerequisite test-clang-bpf-co-re.c.
+
+2-4: Flattening Umbrella Prepare Barriers
+  - builtin-trace embedded inclusions and pmu-events generation are completely
+    decoupled from the sequential "prepare" umbrella target, eliminating Make
+    AST double-parsing overhead and unchoking parallel compilation barriers.
+
+5-7: Decoupling & Pre-generating BPF Skeletons
+  - BPF skeleton rules are extracted out of Makefile.perf into bpf_skel.mak.
+  - Decouples bpftool bootstrap from top-level static libbpf dependencies,
+    attaching bpf-skel-prepare directly to the umbrella prepare target. This
+    allows Make to pre-compile bpftool and dump vmlinux.h in the background at
+    build startup, removing the 7-second serialization bottleneck before BPF
+    object compilation.
+  - Ensures benchmark skeleton intermediate .bpf.o files are cleanly removed
+    during make clean, and adds bpf-skel-prepare to .PHONY.
+
+8-9: Foundational Linkage Optimization
+  - Moves static libsymbol library prerequisites out of the prepare step.
+  - Eliminates redundant libbpf sub-make feature checks during static builds.
+
+10-11: jevents.py Concurrency & Deduplication
+  - Splits the massive 2.8 MB big_c_string literal out of pmu-events.c into a
+    dedicated pmu-events-string.c compilation unit. This slices C compilation
+    latency in half by compiling string and struct tables simultaneously across
+    separate CPU cores while preserving zero dynamic ELF relocations. Adds
+    pmu-events-string.c to .gitignore, declares extern const char big_c_string[];
+    locally inside output_string_file and output_file when split to prevent linkage
+    conflicts with empty-pmu-events.c, defers file closures to ensure identical
+    timestamps, and uses canonical Make 4.0 @: dependency chaining.
+  - Pre-populates jevents.py JSON ASTs and metric formulas in parallel across
+    all available CPU cores using ProcessPoolExecutor (accelerating Python
+    execution by 11x, from 3.3s down to ~290ms). Moves _init_worker to top-level
+    scope to ensure clean pickling under spawn multiprocessing start methods.
+
+12: Out-of-Tree Incremental Rebuild Fix
+  - Prefixes SCRIPTS (perf-archive, perf-iostat) with $(OUTPUT) to prevent
+    Make from continuously re-executing script installation rules on already
+    built out-of-tree builds.
+
+13-14: AST Parsing Optimization & Shell Fork Eradication
+  - Converts ZENS, ARMS, and INTELS in pmu-events/Build from recursive assignment
+    (=) to simply expanded assignment (:=) and replaces model_name/vendor_name
+    with pure GNU Make string functions. This guarantees Make executes directory
+    probing shell forks exactly once during AST parsing and evaluates path macros
+    purely in memory, completely eradicating over 7,800 redundant sub-processes
+    during out-of-tree build evaluation.
+  - Converts llvm-config shell queries in Makefile.config from recursive assignment
+    (=) to simply expanded assignment (:=). This eliminates ~185 redundant sub-processes
+    that were previously executed across object compilation dependency checks.
+
+Changes since v5:
+  - perf pmu-events (Patch 10): Refactored jevents.py to explicitly close output_file
+    first and output_string_file second at the absolute tail of main(), guaranteeing
+    that pmu-events-string.c receives a filesystem modification timestamp strictly
+    greater than or equal to pmu-events.c. This completely eliminates any nanosecond
+    timestamp discrepancy during Python teardown, ensuring Make's canonical @:
+    dependency chaining rule correctly sees pmu-events-string.c as fully up to
+    date and preventing redundant recompilations during incremental builds without
+    requiring manual touch commands in the Makefile.
+
+Ian Rogers (14):
+  tools build: Fix feature checks to touch target files on success
+  perf trace beauty: Make beauty generated C code standalone .o files
+  perf build: Decouple pmu-events from prepare umbrella target
+  perf build: Remove empty archheaders target
+  perf build: Move BPF skeleton generation out of Makefile.perf
+  perf build: Encapsulate vmlinux.h and bpftool in bpf_skel.mak
+  perf build: Pre-generate BPF skeleton tooling during umbrella prepare
+    phase
+  perf build: Move libsymbol dependency out of prepare step
+  perf build: Remove redundant libbpf feature check for static builds
+  perf pmu-events: Split big_c_string storage into standalone
+    compilation unit
+  perf pmu-events: Parallelize JSON and metric pre-computation in
+    jevents.py
+  perf build: Prefix SCRIPTS with output directory to fix continuous
+    rebuilds
+  perf pmu-events: Convert recursive shell assignments and macros to
+    Make built-ins
+  perf build: Convert llvm-config shell queries to simply expanded
+    variables
+
+ tools/build/feature/Makefile                  |  13 +-
+ tools/perf/.gitignore                         |   1 +
+ tools/perf/Build                              |   2 +
+ tools/perf/Makefile.config                    |  19 +-
+ tools/perf/Makefile.perf                      | 423 ++----------------
+ tools/perf/bench/Build                        |   6 +
+ .../bpf_skel/bench_uprobe.bpf.c               |   0
+ tools/perf/bench/uprobe.c                     |   2 +-
+ tools/perf/bpf_skel.mak                       | 109 +++++
+ tools/perf/builtin-trace.c                    |  32 +-
+ tools/perf/pmu-events/Build                   |  26 +-
+ tools/perf/pmu-events/jevents.py              |  59 ++-
+ tools/perf/trace/beauty/Build                 | 276 ++++++++++++
+ tools/perf/trace/beauty/arch_errno_names.c    |   2 +
+ tools/perf/trace/beauty/arch_errno_names.sh   |   2 +-
+ tools/perf/trace/beauty/beauty.h              |  60 +++
+ tools/perf/trace/beauty/eventfd.c             |   6 +-
+ tools/perf/trace/beauty/fsconfig.c            |   5 +
+ tools/perf/trace/beauty/futex_op.c            |   5 +-
+ tools/perf/trace/beauty/futex_val3.c          |   5 +-
+ tools/perf/trace/beauty/mmap.c                |  24 +-
+ tools/perf/trace/beauty/mode_t.c              |   6 +-
+ tools/perf/trace/beauty/msg_flags.c           |   8 +-
+ tools/perf/trace/beauty/open_flags.c          |   2 +
+ tools/perf/trace/beauty/perf_event_open.c     |  21 +-
+ tools/perf/trace/beauty/pid.c                 |   5 +-
+ tools/perf/trace/beauty/sched_policy.c        |   8 +-
+ tools/perf/trace/beauty/seccomp.c             |  12 +-
+ tools/perf/trace/beauty/signum.c              |   6 +-
+ tools/perf/trace/beauty/socket_type.c         |   6 +-
+ .../perf/{util => trace/beauty}/syscalltbl.c  |   0
+ .../perf/{util => trace/beauty}/syscalltbl.h  |   0
+ tools/perf/trace/beauty/tracepoints/Build     |  21 +
+ tools/perf/trace/beauty/waitid_options.c      |   8 +-
+ tools/perf/util/Build                         |  17 +-
+ tools/perf/util/bpf-trace-summary.c           |   2 +-
+ tools/perf/util/env.c                         |   4 -
+ tools/perf/util/env.h                         |   1 +
+ 38 files changed, 688 insertions(+), 516 deletions(-)
+ rename tools/perf/{util => bench}/bpf_skel/bench_uprobe.bpf.c (100%)
+ create mode 100644 tools/perf/bpf_skel.mak
+ create mode 100644 tools/perf/trace/beauty/fsconfig.c
+ rename tools/perf/{util => trace/beauty}/syscalltbl.c (100%)
+ rename tools/perf/{util => trace/beauty}/syscalltbl.h (100%)
+
 -- 
 2.54.0.563.g4f69b47b94-goog
 
