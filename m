@@ -1,257 +1,161 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AC537AA66
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779071556; cv=none; b=b1LuCkE3RjIKJfO69Z/Ua21z8y6bcrdkVosHmYAyiy/0oyX4BbZD9s6X4uKYmQisa5B0lToj8OcCruV8r8cUm2ENopw8OcvlK0VFka5+3oXxjbZ6rSV/W/IVNilUd6FFakyeO38R3hOQMfCNUryDUB6CmVRccRyZm3Nhnhsa028=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779071556; c=relaxed/simple;
-	bh=eZ4xQVVU1O5AZm2IG6c7jujiI6Gsuu2YQxBkMask9cE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tebhYKh5tMx5ZCfdYY6iiYoGW8DDsDNjErxflqhyFdA7z7fu5+ksyOEpA6ufAe229WgGBkRGVRsvQQS4Bw/If9hLRKDjqHq5NrmoPl/4xrBvkZVKLqpYZiK43o26u/1czdOpXc5IWwFuLe3VnM4MW7N0nfmqDGWBPz1lEHd8QDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fz4Xorux; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA2378D87
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 02:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779071628; cv=pass; b=guHYETEccXjOn3NeqpKOLkCVabaHsEaHs06ignKKHaa78x95maFqfowyGLnfj2Mkjsy2rAjkroY51V/9EDVIXnBmTlc2ANAJlr37cBUBETOBj/MNd59E+YuEryGuKOf9jWvxgFksGyr8a4qlOLN8XruTl5GF/t3z/gKc6ddDxLs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779071628; c=relaxed/simple;
+	bh=GRfJM5PQjpTrzvgSOa0uhL71TgDCLDRCggiOFgtBxWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YS6kIcGY4Je30ADxUD2z9/i4DjRUZU/SpxeRaAaR3z7izWUvqPwSYbPrBdo4fsldfbc0Ve/W1zPDVf6LMQJw8vasd0/yPtt81F5sCjn/X3NXxR2Ln6jgBY+h90fQHI805AUMrSYOxLXvjPj/kO3PN0L3xn+IR6smxuDOF5eseX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iuiqvcsO; arc=pass smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fz4Xorux"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ee34588671so2006875eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 19:32:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iuiqvcsO"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2b46da8c48eso775ad.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 May 2026 19:33:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779071625; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Fyu4haybqIF/0if6pQyjGR7bCLYUalOpUXO+sWd2d0fTtQzlQtfAADjEUBO/dgqRK6
+         ew0EqojZeggGBvejkntGyoUq/Jv4QGO4jPr/2q6BvHmQ7Vo+sAVQZQt6mOcVrDJ7DWxz
+         5sFwTGKZ59mmpm7GkyPOZb1cQr0zeWyrGizFbGvlhCdOorvgTCbug7WpagX+bMqDZIOc
+         2stYbjgeAM8ofNHpnfxCVGMVoxIKy8TEJcg1oLmDyqhL1CuuBL9YSypOKTOlyw6IBnum
+         0pb+Ch8rHYKSLSaCZQUS5qGjFYYlTGxZZxi67Io9mTdBLMoFr56+e3W3WqzC0O3u/YJS
+         4nOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=KfwKCx1/f4e0pdku/kXDPetDvANMNpQiE7tYMYwLs8s=;
+        fh=+2o6kzYcHYK2vYBzWDQn7xIvvHE3097OV+zSjeko0nU=;
+        b=Gy5zut3ZRh00QWkdp8bjwO5fN4lC4Bg+BWCCxzcGH8E+ci8GRsvDNOLO6/Mr3i1D8s
+         tI+maBoNKiLkfNIZBU/oPQb2bMe6Px/kX4BcW/qqY7uPcgbHbRNAshslfQzroRaRBrKD
+         LvLaHBHCMesJq+G5BD3wHv5jnsWfekGgbycUgRulZnkCHwr+Y/i095KWCMmt7sc5ZjTy
+         zuC31fnCOZ8/2itQfOrNy+F8vodE85tLC/qEicOKzITWD9GlMrhLLlmMtg0ZQuj1OmDg
+         23Nc//F0wZunIvg3SvtjuWMHrv6jB1UYXK2mSEDUXrI6nGNccUxh2x4xQ2hsrYiv3m0o
+         P59A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779071553; x=1779676353; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2PfCFgFm9W6LUyGogy0Zkx8RpqhHQD/EGHq4TR1zoI=;
-        b=fz4Xorux7kX4Nhz/KfR+uUn2oUgX+CDQmNP3OfIX6b6lVJya8588PY5/a7IzGSc0mr
-         IeJ7w9xCeeEKFG8mbRkZ37wcnJRvCPl8VN+f9bh/+Wblv16+A3jsQebmX7KCFVvRdXra
-         UgweGdLUYbxHrxo0fJR8HnkGTz8MUU/mIgaGGiZzKal/yJdz7tNBGd1idtv59i4Q40RV
-         IpgP3GVyalTGnmwTbW/FuLAQT+LYgYcyGtGpcF7EMdRfK6He3xIu7CiG0LifShdlie/g
-         ei4fnUOLvwb9jOJF/pBn7VYUb+UdYr5CeRvhcthrqezUhHRT8XmM9H8dudfpcGSnX4a5
-         +4Gg==
+        d=google.com; s=20251104; t=1779071625; x=1779676425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KfwKCx1/f4e0pdku/kXDPetDvANMNpQiE7tYMYwLs8s=;
+        b=iuiqvcsOySnoE4a6JG2ZkDlg9tRf0cPkXtPQtUMYjFuwIqVT8PlGB76raidfx1Wryx
+         wgKxxIRANER+GfU7GnydKpH+MKwjnT3hPfdjUKO9igwdcumi8cuTgQUjMdpzBsPFgiAD
+         hiYvMwn+2f435+Ti9aLluOZ0PzBgUonNN6y1/2HF1x1YoQMCHVR4Zb9lqQYh88jrH09T
+         Y92ccir33wmPVQnqzOhMSfMxgn66nf/SHDqz4rMfAq72tUKUZQJQJNA2AhiRHsUO0Pgs
+         mzisjqON//QGRbRafE87ZmPRjB19JK4g65wUFwWbuykGYzWcKtAoQXJaRT86iTsn87k6
+         ExVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779071553; x=1779676353;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2PfCFgFm9W6LUyGogy0Zkx8RpqhHQD/EGHq4TR1zoI=;
-        b=dMmsbQTKLxdhgf6SMQBu+VvgLWVmQm4L13aVed0vrpCiF05BXpsu9miS0U9hyb/SaN
-         1AlAktA+Q3j/l8F8qAD/JqiZpX/R6OrdciMFk5pHm7xKjo2ZU67nmCzHIS7oLkwQZa4C
-         OpepL9g1JF4qxVGVc8UHZ2/mKDMA9TYHQAXvZI2thqogXi6U6slZSF0I15tiUVaB/NEf
-         +qfRqLZPraM8v+v6goviEeMeIOIpXxVnkK3tofphzWbHPYQGn9dDhZX0xDyIuLtYDUdP
-         Fubg/z04VA67Odekhf7gX/vUty9PIu2CmZZGL+j7ZmegRa2grbi42G2hJSMAsjtjrhee
-         Oa1g==
-X-Forwarded-Encrypted: i=1; AFNElJ8yWsZBvoFVG+j/btJxChuBxLJOb8NA96zHjniDao577YdL/tBqPJewj8oElxm3t2/2aATAR/LJWks6LqX3aGlv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwnNi5VVTQooKUxf6rnlyAc+ew5MvqNqEZzVh29oEdcijORQU3
-	fu5zInujPS+gEAQ0GIH73ps5thMwic+3xGLgG7CV0yc7WHMe7JD638th4J3XVp74fn3be5VkhK1
-	ut4UW6HUGXw==
-X-Received: from dycol5.prod.google.com ([2002:a05:7301:db85:b0:2f3:d7f7:5ac6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7c0b:b0:2ef:2878:7ade
- with SMTP id 5a478bee46e88-303984dd06amr6305545eec.15.1779071553293; Sun, 17
- May 2026 19:32:33 -0700 (PDT)
-Date: Sun, 17 May 2026 19:32:25 -0700
-In-Reply-To: <20260518023225.2472122-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1779071625; x=1779676425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KfwKCx1/f4e0pdku/kXDPetDvANMNpQiE7tYMYwLs8s=;
+        b=MtEyX9WOk0jzQgcnATIuezBloO/0F6CQWp70fji3+mfVO7xjqvUMQQNqWNzJEgNPLG
+         zuAisGNpvCbFAmGVyOydhCPy2gGMsXfg+M67oLSYMX1pY8rvPcKEHzVEC/fMNmJAZF5X
+         V0dbVKBmNC+ckluqHFJkJ9/v0Qtf6VKnayOOJOIRb4Cv/m/xH7+VhkFstjoogqXJCJxT
+         VUHQ31HXNndBa0OV8etVMn4ZhPBM1buH5aJmK12jfylHNIZjyY7vpTqCOBvXwWHL18kE
+         Isjv1zmcgRfmzyI9SFxVu7BMw82zkFMOmnvRMXJuM48hja9EDPlH0USaSo9U4yMm4vd7
+         Esfg==
+X-Forwarded-Encrypted: i=1; AFNElJ9KVDlj+q4TvOYD5qjS1YSuRW4vP/A6Vpq0Hyj7u9LYwV5+IM9KyeZmEnVtILtnDY1rcLqgvixwdUGWq9iaU3uo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPX0gQXwT7aKX6/FrhRiO7W+EhRG2HxZ90oPWbnTXlTOAAU3lV
+	UDz9IWTj3zRlt9Tbn5gyeY+OBu3LaNKmPrPfctQ5jLaESv0mJ4OlyQ+lQHEtZp3kHzGfeZczHGB
+	RJB6iCqlurhFwXK1WJ69sZl0t5VQ8aklwXeY/vo7A
+X-Gm-Gg: Acq92OFFL01lJ0ogdK+l7DHRPsc4gkQ9bKry326UXbE51jwsd40VG5u6yRVEkrmpwF8
+	uvWcFlpOkf1ZjwthhUKBut0nvKwux04N0o96z0GXeKj7xecPjLAMH0itI0JC8AB90bChVxkbLKM
+	4u5qj2CmGixVV+nXGga07w1iIRMPkPFbka1pwX+OpvWnByH5Hsxv7lgsfxG679pS3eaIpeys7Xm
+	abfy6WzlXnZ6Q0AaYeF6L6SH91DiWrD1NgiVBPV2XY5bwTTwaaE9Of2Hih23lkPBifapuf8eB4Q
+	iJSffBQSedKVWbDM7HA=
+X-Received: by 2002:a17:902:c950:b0:2b2:70ba:305c with SMTP id
+ d9443c01a7336-2bdb03a2cf7mr1481185ad.8.1779071624450; Sun, 17 May 2026
+ 19:33:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260518003704.2434308-1-irogers@google.com> <20260518023225.2472122-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260518023225.2472122-3-irogers@google.com>
-Subject: [PATCH v6 2/2] perf arch x86 tests: Add test for topdown event sorting
+MIME-Version: 1.0
+References: <CAP-5=fWfrGMV4EafqkwQO-R33c_szXcxVLgH0c4k2zt3zj4HdQ@mail.gmail.com>
+ <20260515173852.1378571-1-irogers@google.com> <20260515173852.1378571-12-irogers@google.com>
+ <agd2-MgXgs---InR@google.com> <CAP-5=fXSLgN6hXtQattTp9gqxBkO1gi97EWRF45_0ZKQcK0Z+A@mail.gmail.com>
+ <agpi522tGtMWwvld@z2>
+In-Reply-To: <agpi522tGtMWwvld@z2>
 From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, collin.funk1@gmail.com, 
-	german.gomez@arm.com, james.clark@linaro.org, jolsa@kernel.org, 
+Date: Sun, 17 May 2026 19:33:32 -0700
+X-Gm-Features: AVHnY4IFZjnockrPWbcy8Dn3abkT6Rc1-0dHFVIPM7KmDbOMaVeLkTDBICdVaI4
+Message-ID: <CAP-5=fXJhx6enPranMaTsDcbf86bJMx7kvHeRGSFkA_+8mRB6g@mail.gmail.com>
+Subject: Re: [PATCH v4 11/14] perf pmu-events: Parallelize JSON and metric
+ pre-computation in jevents.py
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, james.clark@linaro.org, 9erthalion6@gmail.com, 
+	adrian.hunter@intel.com, alex@ghiti.fr, alexandre.chartre@oracle.com, 
+	andrii@kernel.org, ankur.a.arora@oracle.com, aou@eecs.berkeley.edu, 
+	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com, 
+	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com, 
+	eddyz87@gmail.com, howardchu95@gmail.com, jolsa@kernel.org, leo.yan@arm.com, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, zide.chen@intel.com
+	martin.lau@linux.dev, memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com, 
+	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org, 
+	qmo@kernel.org, ricky.ringler@proton.me, song@kernel.org, 
+	swapnil.sapkal@amd.com, terrelln@fb.com, tglozar@redhat.com, 
+	thomas.falcon@intel.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a test to capture the comment in
-tools/perf/arch/x86/util/evlist.c. Test that slots and
-topdown-retiring get appropriately sorted with respect to instructions
-when they're all specified together. When the PMU requires topdown
-event grouping (indicated by the pressence of the slots event) metric
-events should be after slots, which should be the group leader.
+On Sun, May 17, 2026 at 5:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, May 15, 2026 at 04:05:40PM -0700, Ian Rogers wrote:
+> > On Fri, May 15, 2026 at 12:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Fri, May 15, 2026 at 10:38:48AM -0700, Ian Rogers wrote:
+> > > > Currently, jevents.py parses hundreds of JSON event and metric file=
+s
+> > > > sequentially across all CPU architectures during Kbuild startup, ta=
+king
+> > > > ~3.3 seconds of pure single-core execution time.
+> > >
+> > > I'm curious about this.  Does it really need to parse all architectur=
+es?
+> > > Oh... is it for perf stat record/report?
+> >
+> > So it is controlled by JEVENTS_ARCH and JEVENTS_MODEL:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n24
+> > The default for JEVENTS_ARCH is SRCARCH (e.g. x86) while JEVENTS_MODEL
+> > defaults to "all". We have a build test for JEVENTS_ARCH is "all":
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/tests/make?h=3Dperf-tools-next#n74
+> > So saying "all CPU architectures" is a bit over the top, but not
+> > wholly inaccurate.
+>
+> Ok, so it's all x86 models.  I think it's ok to have "all" for build
+> tests.
+>
+> >
+> > Fwiw, I created a script to convert CPUIDs into models:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/pmu-events/models.py?h=3Dperf-tools-next
+> > which maybe could be used to reduce the perf binary size by building
+> > only the native CPU's JSON. It is a useful script for debugging :-)
+>
+> Sounds like it should be used by default to pick the current model.
 
-Add a related test that when the slots event isn't given it is
-injected into the appropriate group.
+Having a build of perf tied to a particular model like Skylake,
+doesn't seem very good for distributions. I think the default should
+try to match what we hope the distributions will do, so an x86 binary
+should run on all x86 models.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Zide Chen <zide.chen@intel.com>
----
- tools/perf/arch/x86/tests/topdown.c | 159 +++++++++++++++++++++++++++-
- 1 file changed, 158 insertions(+), 1 deletion(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
-index 3ee4e5e71be3..dbee32bf973e 100644
---- a/tools/perf/arch/x86/tests/topdown.c
-+++ b/tools/perf/arch/x86/tests/topdown.c
-@@ -75,4 +75,161 @@ static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest
- 	return ret;
- }
- 
--DEFINE_SUITE("x86 topdown", x86_topdown);
-+#define CHECK_COND(cond, text)					\
-+do {								\
-+	if (!(cond)) {						\
-+		pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
-+		ret = TEST_FAIL;				\
-+		goto out_err;					\
-+	}							\
-+} while (0)
-+
-+#define CHECK_EQUAL(val, expected, text)			\
-+do {								\
-+	if ((val) != (expected)) {				\
-+		pr_debug("FAILED %s:%d %s (%d != %d)\n",	\
-+			 __FILE__, __LINE__, text, (val), (expected)); \
-+		ret = TEST_FAIL;				\
-+		goto out_err;					\
-+	}							\
-+} while (0)
-+
-+static int test_sort(const char *str, int expected_slots_group_size,
-+		     int expected_instructions_group_size)
-+{
-+	struct evlist *evlist = NULL;
-+	struct parse_events_error err;
-+	struct evsel *evsel;
-+	int ret = TEST_FAIL;
-+	bool slots_seen = false;
-+
-+	parse_events_error__init(&err);
-+
-+	evlist = evlist__new();
-+	if (!evlist)
-+		goto out_err;
-+
-+	if (parse_events(evlist, str, &err)) {
-+		pr_debug("parse_events failed for %s\n", str);
-+		goto out_err;
-+	}
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel__is_group_leader(evsel))
-+			continue;
-+
-+		if (strstr(evsel__name(evsel), "slots")) {
-+			/*
-+			 * Slots as a leader means the PMU is for a perf metric
-+			 * group as the slots event isn't present when not.
-+			 */
-+			slots_seen = true;
-+			CHECK_EQUAL(evsel->core.nr_members, expected_slots_group_size,
-+				    "slots group size");
-+			if (expected_slots_group_size == 3) {
-+				struct evsel *next = evsel__next(evsel);
-+				struct evsel *next2 = evsel__next(next);
-+
-+				CHECK_COND(strstr(evsel__name(next), "instructions") != NULL,
-+					   "slots second event is instructions");
-+				CHECK_COND(strstr(evsel__name(next2), "topdown-retiring") != NULL,
-+					   "slots third event is topdown-retiring");
-+			} else if (expected_slots_group_size == 2) {
-+				struct evsel *next = evsel__next(evsel);
-+
-+				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
-+					   "slots second event is topdown-retiring");
-+			}
-+		} else if (strstr(evsel__name(evsel), "instructions")) {
-+			CHECK_EQUAL(evsel->core.nr_members, expected_instructions_group_size,
-+				    "instructions group size");
-+			if (expected_instructions_group_size == 2) {
-+				/*
-+				 * The instructions event leads a group with a
-+				 * topdown-retiring event, neither of which need
-+				 * reordering for perf metric event support.
-+				 */
-+				struct evsel *next = evsel__next(evsel);
-+
-+				CHECK_COND(strstr(evsel__name(next), "topdown-retiring") != NULL,
-+					   "instructions second event is topdown-retiring");
-+			}
-+		} else if (strstr(evsel__name(evsel), "topdown-retiring")) {
-+			/*
-+			 * A perf metric event where the PMU doesn't require
-+			 * slots as a leader.
-+			 */
-+			CHECK_EQUAL(evsel->core.nr_members, 1, "topdown-retiring group size");
-+		} else if (strstr(evsel__name(evsel), "cycles")) {
-+			CHECK_EQUAL(evsel->core.nr_members, 1, "cycles group size");
-+		}
-+	}
-+	CHECK_COND(slots_seen, "slots seen");
-+	ret = TEST_OK;
-+out_err:
-+	evlist__delete(evlist);
-+	parse_events_error__exit(&err);
-+	return ret;
-+}
-+
-+static int test__x86_topdown_sorting(struct test_suite *test __maybe_unused,
-+				     int subtest __maybe_unused)
-+{
-+	int ret;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return TEST_OK;
-+
-+	ret = test_sort("{instructions,topdown-retiring,slots}", 3, 2);
-+	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
-+	ret = test_sort("instructions,topdown-retiring,slots", 2, 1);
-+	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event in a group but topdown metrics events outside the group",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},{topdown-retiring}", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event and topdown metrics events in two groups",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions,slots},cycles,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("slots event and metrics event are not in a group and not adjacent",
-+			  ret, TEST_OK);
-+
-+	return TEST_OK;
-+}
-+
-+static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unused,
-+					     int subtest __maybe_unused)
-+{
-+	int ret;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return TEST_OK;
-+
-+	ret = test_sort("{instructions,topdown-retiring}", 3, 2);
-+	TEST_ASSERT_EQUAL("all events in a group", ret, TEST_OK);
-+	ret = test_sort("instructions,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("all events not in a group", ret, TEST_OK);
-+	ret = test_sort("{instructions},topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("event in a group but topdown metrics events outside the group",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions},{topdown-retiring}", 2, 1);
-+	TEST_ASSERT_EQUAL("event and topdown metrics events in two groups",
-+			  ret, TEST_OK);
-+	ret = test_sort("{instructions},cycles,topdown-retiring", 2, 1);
-+	TEST_ASSERT_EQUAL("event and metrics event are not in a group and not adjacent",
-+			  ret, TEST_OK);
-+
-+	return TEST_OK;
-+}
-+
-+static struct test_case x86_topdown_tests[] = {
-+	TEST_CASE("topdown events", x86_topdown),
-+	TEST_CASE("topdown sorting", x86_topdown_sorting),
-+	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__x86_topdown = {
-+	.desc = "x86 topdown",
-+	.test_cases = x86_topdown_tests,
-+};
--- 
-2.54.0.563.g4f69b47b94-goog
-
+> Thanks,
+> Namhyung
+>
