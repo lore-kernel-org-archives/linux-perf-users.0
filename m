@@ -1,38 +1,38 @@
 Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4047D236A73;
-	Tue, 19 May 2026 03:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D7F2673AA;
+	Tue, 19 May 2026 03:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779161589; cv=none; b=L7QJ9CAyH4mVppYHTWBV5jk1TcAzkeA1WaNEm23A6dJXO9dvTyL5LqKrkMEvmRts0jRSQXPctFT7YlwzPs8eT2M9tQtJFzTSK/dORIUo4l73m5aRnLB4OEQcGoes4b3uBMtRzZktXnvgUXWlgU86q+dFwhL6ARrvtyp7NL2fVxM=
+	t=1779161590; cv=none; b=V9w/W73qNUVEzvBZZXV9Sw0NsodL3P9JNgoVzwNRhFtZP53v+flkX5NPE61uewtc1BZqRNTJS3WxhE0teQYSWW+pvEpmgBuRFQwB88Ot81/Vo16A6P3zvINK+X/zhns0F0b8UK1jrO4suUdx8wj1jrYrwRXee4ZJOpqJWwUSCVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779161589; c=relaxed/simple;
-	bh=T3Lz1by1HQVAW4dYR0txXIenZZ4KnjRAfhQPsuWf2Gc=;
+	s=arc-20240116; t=1779161590; c=relaxed/simple;
+	bh=yc5obdwewimg5iwq+DDFeT+P/zi++j0aQ6h1d1Xq01A=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d5XVvpXCrK6RtB8oCuwu9XDL3UGXv5kkuXz+1cwC4ijFYliteVUjcRV1ppyQQ6v9Af2C8nZBxLmWOiVuCUdHTN2TzhmzzcimFpCtCh51eHS/kzdREuF+CpyERgrZPsS95J1NbIzAPuszgKmdr22c+Q/Ev2TwtdJHn7nRbTLTIA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+	 MIME-Version:Content-Type; b=XtEgEyBfibfdbcRQHkwiG/K3gLWhSbuBDpNLs9Vq/MuEVpxURRRB9eP3Lx6GbMorU128Y0FfXvd8sfzz4D4AmowTdouB2bl4V8syZsUUxTwNtmajM7PUkgazOJvzkj00CQ0Jen97/5EMJ8yFeU62FQTyjjBYKTePLA6Zyge7IlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=hygon.cn; spf=fail smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hygon.cn
 Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gKKxR3KRXzT1qv;
-	Tue, 19 May 2026 11:32:43 +0800 (CST)
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gKKxV3KVMzT1qQ;
+	Tue, 19 May 2026 11:32:46 +0800 (CST)
 Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gKKxP3sGtzT1qQ;
-	Tue, 19 May 2026 11:32:41 +0800 (CST)
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gKKxS0xdZzT1qQ;
+	Tue, 19 May 2026 11:32:44 +0800 (CST)
 Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp1.hygon.cn (Postfix) with ESMTPS id A7E0E5955;
-	Tue, 19 May 2026 11:32:36 +0800 (CST)
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id 3BE795955;
+	Tue, 19 May 2026 11:32:39 +0800 (CST)
 Received: from neptune.hygon.cn (172.22.228.106) by cncheex04.Hygon.cn
  (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 19 May
- 2026 11:32:41 +0800
+ 2026 11:32:43 +0800
 From: Qi Liu <liuqi@hygon.cn>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
 	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>, <x86@kernel.org>
 CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<lijing@hygon.cn>, <liuqi@hygon.cn>, Zhenglang Hu <huzhenglang@hygon.cn>
-Subject: [RFC PATCH 1/3] perf/x86/amd/uncore: Add common PMU helper functions
-Date: Tue, 19 May 2026 03:32:23 +0000
-Message-ID: <20260519033225.1479907-2-liuqi@hygon.cn>
+Subject: [RFC PATCH 3/3] perf/x86/amd/uncore: Add Hygon uncore PMU support
+Date: Tue, 19 May 2026 03:32:25 +0000
+Message-ID: <20260519033225.1479907-4-liuqi@hygon.cn>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260519033225.1479907-1-liuqi@hygon.cn>
 References: <20260519033225.1479907-1-liuqi@hygon.cn>
@@ -47,59 +47,138 @@ Content-Type: text/plain
 X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
  (172.23.18.114)
 
-Add common helper functions for AMD-family uncore PMU handling.
+Add uncore PMU support for Hygon processors based on the
+shared AMD-family uncore framework.
 
-The helpers cover event initialization, counter allocation, counter
-read/update, event start/stop and per-CPU context management.  These
-paths are not tied to a specific uncore unit and can be reused by
-drivers with a similar uncore PMU programming model.
+Hygon processors implement uncore PMUs for Data Fabric units
+with a programming model similar to AMD, but with several
+differences:
+
+  - Different MSR base addresses
+  - Vendor-specific event encoding and masks
+  - DF IOD counter allocation semantics
+  - Additional format attributes (e.g. iod, constid)
+
+Reuse the common uncore infrastructure introduced in the
+previous patch, this avoids duplicating the full uncore driver
+while keeping vendor-specific logic isolated.
 
 Signed-off-by: Qi Liu <liuqi@hygon.cn>
 Tested-by: Zhenglang Hu <huzhenglang@hygon.cn>
 ---
- arch/x86/events/amd/uncore_common.c | 390 ++++++++++++++++++++++++++++
- arch/x86/events/amd/uncore_common.h | 113 ++++++++
- 2 files changed, 503 insertions(+)
- create mode 100644 arch/x86/events/amd/uncore_common.c
- create mode 100644 arch/x86/events/amd/uncore_common.h
+ arch/x86/events/Kconfig            |  11 +
+ arch/x86/events/amd/Makefile       |   2 +
+ arch/x86/events/amd/hygon_uncore.c | 567 +++++++++++++++++++++++++++++
+ arch/x86/include/asm/msr-index.h   |   2 +
+ arch/x86/include/asm/perf_event.h  |  20 +
+ include/linux/cpuhotplug.h         |   3 +
+ 6 files changed, 605 insertions(+)
+ create mode 100644 arch/x86/events/amd/hygon_uncore.c
 
-diff --git a/arch/x86/events/amd/uncore_common.c b/arch/x86/events/amd/uncore_common.c
+diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
+index dabdf3d7bf84..cc8387236b95 100644
+--- a/arch/x86/events/Kconfig
++++ b/arch/x86/events/Kconfig
+@@ -45,6 +45,17 @@ config PERF_EVENTS_AMD_UNCORE
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called 'amd-uncore'.
+ 
++config PERF_EVENTS_HYGON_UNCORE
++	tristate "Hygon Uncore performance events"
++	depends on PERF_EVENTS && CPU_SUP_HYGON
++	default y
++	help
++	  Include support for Hygon uncore performance events for use with
++	  e.g., perf stat -e hygon_df/.../.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called 'hygon-uncore'.
++
+ config PERF_EVENTS_AMD_BRS
+ 	depends on PERF_EVENTS && CPU_SUP_AMD
+ 	bool "AMD Zen3 Branch Sampling support"
+diff --git a/arch/x86/events/amd/Makefile b/arch/x86/events/amd/Makefile
+index f951ae64ee36..32bf7aae2368 100644
+--- a/arch/x86/events/amd/Makefile
++++ b/arch/x86/events/amd/Makefile
+@@ -5,6 +5,8 @@ obj-$(CONFIG_PERF_EVENTS_AMD_POWER)	+= power.o
+ obj-$(CONFIG_X86_LOCAL_APIC)		+= ibs.o
+ obj-$(CONFIG_PERF_EVENTS_AMD_UNCORE)	+= amd-uncore.o
+ amd-uncore-objs				:= uncore_common.o uncore.o
++obj-$(CONFIG_PERF_EVENTS_HYGON_UNCORE)	+= hygon-uncore.o
++hygon-uncore-objs			:= uncore_common.o hygon_uncore.o
+ ifdef CONFIG_AMD_IOMMU
+ obj-$(CONFIG_CPU_SUP_AMD)		+= iommu.o
+ endif
+diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
 new file mode 100644
-index 000000000000..a6d50fe803df
+index 000000000000..133b6b1923de
 --- /dev/null
-+++ b/arch/x86/events/amd/uncore_common.c
-@@ -0,0 +1,390 @@
++++ b/arch/x86/events/amd/hygon_uncore.c
+@@ -0,0 +1,567 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Common uncore PMU helpers for AMD-family x86 processors.
++ * Copyright (C) 2026 Chengdu Haiguang IC Design Co., Ltd.
 + */
 +
++#include <linux/cpu.h>
++#include <linux/cpufeature.h>
 +#include <linux/cpumask.h>
-+#include <linux/hrtimer.h>
++#include <linux/init.h>
 +#include <linux/percpu.h>
 +#include <linux/perf_event.h>
 +#include <linux/slab.h>
 +#include <linux/smp.h>
++#include <linux/types.h>
 +
++#include <asm/amd/nb.h>
 +#include <asm/msr.h>
 +#include <asm/perf_event.h>
 +
 +#include "uncore_common.h"
 +
-+#define COUNTER_SHIFT		16
-+#define NUM_COUNTERS_MAX	64
++#define NUM_COUNTERS_DF		4
++
++#undef pr_fmt
++#define pr_fmt(fmt)	"hygon_uncore: " fmt
++
++enum {
++	HYGON_UNCORE_TYPE_DF,
++	HYGON_UNCORE_TYPE_DF_IOD,
++	HYGON_UNCORE_TYPE_MAX,
++};
 +
 +/* Interval for hrtimer, defaults to 60000 milliseconds */
-+static unsigned int uncore_update_interval = 60 * MSEC_PER_SEC;
++static unsigned int update_interval = 60 * MSEC_PER_SEC;
++module_param(update_interval, uint, 0444);
 +
-+void uncore_common_set_update_interval(unsigned int interval)
++static struct uncore_common hygon_uncores[HYGON_UNCORE_TYPE_MAX];
++
++static __always_inline bool hygon_uncore_is_df_iod(struct uncore_common_pmu *pmu)
 +{
-+	uncore_update_interval = interval;
++	struct uncore_common *uncore = pmu->private;
++
++	return uncore == &hygon_uncores[HYGON_UNCORE_TYPE_DF_IOD];
 +}
 +
-+struct uncore_common_pmu *event_to_uncore_common_pmu(struct perf_event *event)
++static __always_inline int hygon_uncore_num_iods(struct uncore_common *uncore, unsigned int cpu)
 +{
-+	return container_of(event->pmu, struct uncore_common_pmu, pmu);
++	union uncore_common_info *info = per_cpu_ptr(uncore->info, cpu);
++
++	return info->split.private;
++}
++
++static u64 hygon_uncore_df_event_mask(void)
++{
++	if (boot_cpu_data.x86_model == 0x4 ||
++	    boot_cpu_data.x86_model == 0x5)
++		return HYGON_F18H_M4H_RAW_EVENT_MASK_DF;
++
++	if (boot_cpu_data.x86_model >= 0x6 &&
++	    boot_cpu_data.x86_model <= 0x18)
++		return HYGON_F18H_M6H_RAW_EVENT_MASK_DF;
++
++	return HYGON_F18H_RAW_EVENT_MASK_DF;
 +}
 +
 +static ssize_t cpumask_show(struct device *dev,
@@ -115,371 +194,14 @@ index 000000000000..a6d50fe803df
 +}
 +static DEVICE_ATTR_RO(cpumask);
 +
-+static struct attribute *uncore_common_attrs[] = {
++static struct attribute *hygon_uncore_attrs[] = {
 +	&dev_attr_cpumask.attr,
 +	NULL,
 +};
 +
-+struct attribute_group uncore_common_attr_group = {
-+	.attrs = uncore_common_attrs,
++static struct attribute_group hygon_uncore_attr_group = {
++	.attrs = hygon_uncore_attrs,
 +};
-+
-+static enum hrtimer_restart uncore_common_hrtimer(struct hrtimer *hrtimer)
-+{
-+	struct uncore_common_ctx *ctx;
-+	struct perf_event *event;
-+	int bit;
-+
-+	ctx = container_of(hrtimer, struct uncore_common_ctx, hrtimer);
-+
-+	if (!ctx->nr_active || ctx->cpu != smp_processor_id())
-+		return HRTIMER_NORESTART;
-+
-+	for_each_set_bit(bit, ctx->active_mask, NUM_COUNTERS_MAX) {
-+		event = ctx->events[bit];
-+		event->pmu->read(event);
-+	}
-+
-+	hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
-+
-+	return HRTIMER_RESTART;
-+}
-+
-+void uncore_common_start_hrtimer(struct uncore_common_ctx *ctx)
-+{
-+	hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
-+		      HRTIMER_MODE_REL_PINNED_HARD);
-+}
-+
-+static void uncore_common_cancel_hrtimer(struct uncore_common_ctx *ctx)
-+{
-+	hrtimer_cancel(&ctx->hrtimer);
-+}
-+
-+static void uncore_common_init_hrtimer(struct uncore_common_ctx *ctx)
-+{
-+	hrtimer_setup(&ctx->hrtimer, uncore_common_hrtimer, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_HARD);
-+}
-+
-+void uncore_common_read(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 prev, new;
-+	s64 delta;
-+
-+	/*
-+	 * since we do not enable counter overflow interrupts,
-+	 * we do not have to worry about prev_count changing on us
-+	 */
-+	prev = local64_read(&hwc->prev_count);
-+
-+	/*
-+	 * Some uncore PMUs do not have RDPMC assignments. In such cases,
-+	 * read counts directly from the corresponding PERF_CTR.
-+	 */
-+	if (hwc->event_base_rdpmc < 0)
-+		rdmsrq(hwc->event_base, new);
-+	else
-+		new = rdpmc(hwc->event_base_rdpmc);
-+
-+	local64_set(&hwc->prev_count, new);
-+
-+	delta = (new << COUNTER_SHIFT) - (prev << COUNTER_SHIFT);
-+	delta >>= COUNTER_SHIFT;
-+
-+	local64_add(delta, &event->count);
-+}
-+
-+void uncore_common_start(struct perf_event *event, int flags)
-+{
-+	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
-+	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!ctx->nr_active++)
-+		uncore_common_start_hrtimer(ctx);
-+
-+	if (flags & PERF_EF_RELOAD)
-+		wrmsrq(hwc->event_base, (u64)local64_read(&hwc->prev_count));
-+
-+	hwc->state = 0;
-+
-+	__set_bit(hwc->idx, ctx->active_mask);
-+	wrmsrq(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE));
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+void uncore_common_stop(struct perf_event *event, int flags)
-+{
-+	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
-+	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	wrmsrq(hwc->config_base, hwc->config);
-+	hwc->state |= PERF_HES_STOPPED;
-+
-+	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-+		event->pmu->read(event);
-+		hwc->state |= PERF_HES_UPTODATE;
-+	}
-+
-+	if (!--ctx->nr_active)
-+		uncore_common_cancel_hrtimer(ctx);
-+
-+	__clear_bit(hwc->idx, ctx->active_mask);
-+}
-+
-+int uncore_common_event_init(struct perf_event *event)
-+{
-+	struct uncore_common_pmu *pmu;
-+	struct uncore_common_ctx *ctx;
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	pmu = event_to_uncore_common_pmu(event);
-+	ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	if (!ctx)
-+		return -ENODEV;
-+
-+	hwc->config = event->attr.config;
-+	hwc->idx = -1;
-+
-+	event->cpu = ctx->cpu;
-+
-+	return 0;
-+}
-+
-+int uncore_common_add(struct perf_event *event, int flags)
-+{
-+	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
-+	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i;
-+
-+	/* are we already assigned? */
-+	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
-+		goto out;
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		if (ctx->events[i] == event) {
-+			hwc->idx = i;
-+			goto out;
-+		}
-+	}
-+
-+	/* if not, take the first available counter */
-+	hwc->idx = -1;
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		struct perf_event *tmp = NULL;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+			hwc->idx = i;
-+			break;
-+		}
-+	}
-+
-+out:
-+	if (hwc->idx == -1)
-+		return -EBUSY;
-+
-+	hwc->config_base = pmu->msr_base + (2 * hwc->idx);
-+	hwc->event_base = pmu->msr_base + 1 + (2 * hwc->idx);
-+	hwc->event_base_rdpmc = pmu->rdpmc_base + hwc->idx;
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+
-+	if (pmu->rdpmc_base < 0)
-+		hwc->event_base_rdpmc = -1;
-+
-+	if (flags & PERF_EF_START)
-+		event->pmu->start(event, PERF_EF_RELOAD);
-+
-+	return 0;
-+}
-+
-+void uncore_common_del(struct perf_event *event, int flags)
-+{
-+	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
-+	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i;
-+
-+	event->pmu->stop(event, PERF_EF_UPDATE);
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		struct perf_event *tmp = event;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
-+			break;
-+	}
-+
-+	hwc->idx = -1;
-+}
-+
-+int uncore_common_ctx_init(struct uncore_common *uncore, unsigned int cpu)
-+{
-+	struct uncore_common_ctx *curr, *prev;
-+	struct uncore_common_pmu *pmu;
-+	int node, cid, gid;
-+	int i, j;
-+
-+	if (!uncore->init_done || !uncore->num_pmus)
-+		return 0;
-+
-+	cid = uncore_common_ctx_cid(uncore, cpu);
-+	gid = uncore_common_ctx_gid(uncore, cpu);
-+
-+	for (i = 0; i < uncore->num_pmus; i++) {
-+		pmu = &uncore->pmus[i];
-+		*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+		curr = NULL;
-+
-+		if (gid != pmu->group)
-+			continue;
-+
-+		for_each_online_cpu(j) {
-+			if (cpu == j)
-+				continue;
-+
-+			prev = *per_cpu_ptr(pmu->ctx, j);
-+			if (!prev)
-+				continue;
-+
-+			if (cid == uncore_common_ctx_cid(uncore, j)) {
-+				curr = prev;
-+				break;
-+			}
-+		}
-+
-+		if (!curr) {
-+			node = cpu_to_node(cpu);
-+
-+			curr = kzalloc_node(sizeof(*curr), GFP_KERNEL, node);
-+			if (!curr)
-+				goto fail;
-+
-+			curr->cpu = cpu;
-+			curr->events = kzalloc_node(sizeof(*curr->events) *
-+						    pmu->num_counters,
-+						    GFP_KERNEL, node);
-+			if (!curr->events) {
-+				kfree(curr);
-+				goto fail;
-+			}
-+
-+			uncore_common_init_hrtimer(curr);
-+			curr->hrtimer_duration = (u64)uncore_update_interval * NSEC_PER_MSEC;
-+
-+			cpumask_set_cpu(cpu, &pmu->active_mask);
-+		}
-+
-+		curr->refcnt++;
-+		*per_cpu_ptr(pmu->ctx, cpu) = curr;
-+	}
-+
-+	return 0;
-+
-+fail:
-+	uncore_common_ctx_free(uncore, cpu);
-+
-+	return -ENOMEM;
-+}
-+
-+void uncore_common_ctx_free(struct uncore_common *uncore, unsigned int cpu)
-+{
-+	struct uncore_common_pmu *pmu;
-+	struct uncore_common_ctx *ctx;
-+	int i;
-+
-+	if (!uncore->init_done)
-+		return;
-+
-+	for (i = 0; i < uncore->num_pmus; i++) {
-+		pmu = &uncore->pmus[i];
-+
-+		if (!pmu->ctx)
-+			continue;
-+
-+		ctx = *per_cpu_ptr(pmu->ctx, cpu);
-+		if (!ctx)
-+			continue;
-+
-+		if (cpu == ctx->cpu)
-+			cpumask_clear_cpu(cpu, &pmu->active_mask);
-+
-+		if (!--ctx->refcnt) {
-+			kfree(ctx->events);
-+			kfree(ctx);
-+		}
-+
-+		*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+	}
-+}
-+
-+void uncore_common_ctx_move(struct uncore_common *uncore, unsigned int cpu)
-+{
-+	struct uncore_common_ctx *curr, *next;
-+	struct uncore_common_pmu *pmu;
-+	int i, j;
-+
-+	if (!uncore->init_done)
-+		return;
-+
-+	for (i = 0; i < uncore->num_pmus; i++) {
-+		pmu = &uncore->pmus[i];
-+		if (!pmu->ctx)
-+			continue;
-+
-+		curr = *per_cpu_ptr(pmu->ctx, cpu);
-+		if (!curr)
-+			continue;
-+
-+		for_each_online_cpu(j) {
-+			if (cpu == j)
-+				continue;
-+
-+			next = *per_cpu_ptr(pmu->ctx, j);
-+			if (!next)
-+				continue;
-+
-+			if (curr == next) {
-+				perf_pmu_migrate_context(&pmu->pmu, cpu, j);
-+				cpumask_clear_cpu(cpu, &pmu->active_mask);
-+				cpumask_set_cpu(j, &pmu->active_mask);
-+				next->cpu = j;
-+				break;
-+			}
-+		}
-+	}
-+}
-diff --git a/arch/x86/events/amd/uncore_common.h b/arch/x86/events/amd/uncore_common.h
-new file mode 100644
-index 000000000000..3657b22268c0
---- /dev/null
-+++ b/arch/x86/events/amd/uncore_common.h
-@@ -0,0 +1,113 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _X86_EVENTS_UNCORE_COMMON_H
-+#define _X86_EVENTS_UNCORE_COMMON_H
-+
-+#include <linux/cpumask.h>
-+#include <linux/device.h>
-+#include <linux/hrtimer.h>
-+#include <linux/perf_event.h>
-+#include <linux/percpu.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+
-+#define UNCORE_NAME_LEN		16
-+#define UNCORE_GROUP_MAX	256
-+#define NUM_COUNTERS_MAX	64
 +
 +#define DEFINE_UNCORE_FORMAT_ATTR(_var, _name, _format)			\
 +static ssize_t __uncore_##_var##_show(struct device *dev,		\
@@ -492,92 +214,547 @@ index 000000000000..3657b22268c0
 +static struct device_attribute format_attr_##_var =			\
 +	__ATTR(_name, 0444, __uncore_##_var##_show, NULL)
 +
-+union uncore_common_info {
-+	struct {
-+		u64 aux_data:32;
-+		u64 num_pmcs:8;
-+		u64 gid:8;
-+		u64 cid:8;
-+		u64 private:8;
-+	} split;
-+	u64 full;
++DEFINE_UNCORE_FORMAT_ATTR(event,	event,		"config:0-5");
++DEFINE_UNCORE_FORMAT_ATTR(umask8,	umask,		"config:8-15");
++DEFINE_UNCORE_FORMAT_ATTR(umask10,	umask,		"config:8-17");
++DEFINE_UNCORE_FORMAT_ATTR(umask12,	umask,		"config:8-19");
++DEFINE_UNCORE_FORMAT_ATTR(constid,	constid,	"config:6-7,32-35,61-62");
++DEFINE_UNCORE_FORMAT_ATTR(iod,		iod,		"config1:0-1");
++
++static struct attribute *hygon_uncore_df_format_attr[] = {
++	&format_attr_event.attr,
++	&format_attr_umask8.attr,
++	&format_attr_constid.attr,
++	NULL,
 +};
 +
-+struct uncore_common_ctx {
-+	int refcnt;
-+	int cpu;
-+	struct perf_event **events;
-+	unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
-+	int nr_active;
-+	struct hrtimer hrtimer;
-+	u64 hrtimer_duration;
++static struct attribute *hygon_uncore_df_iod_format_attr[] = {
++	&format_attr_event.attr,
++	&format_attr_umask10.attr,
++	&format_attr_constid.attr,
++	&format_attr_iod.attr,
++	NULL,
 +};
 +
-+struct uncore_common_pmu {
-+	char name[UNCORE_NAME_LEN];
++static struct attribute_group hygon_uncore_df_format_group = {
++	.name = "format",
++	.attrs = hygon_uncore_df_format_attr,
++};
++
++static struct attribute_group hygon_uncore_df_iod_format_group = {
++	.name = "format",
++	.attrs = hygon_uncore_df_iod_format_attr,
++};
++
++static const struct attribute_group *hygon_uncore_df_attr_groups[] = {
++	&hygon_uncore_attr_group,
++	&hygon_uncore_df_format_group,
++	NULL,
++};
++
++static const struct attribute_group *hygon_uncore_df_iod_attr_groups[] = {
++	&hygon_uncore_attr_group,
++	&hygon_uncore_df_iod_format_group,
++	NULL,
++};
++
++static int hygon_uncore_df_event_init(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++	struct uncore_common_pmu *pmu;
++	struct uncore_common *uncore;
++	u64 event_mask;
++	int ret;
++
++	ret = uncore_common_event_init(event);
++	if (ret)
++		return ret;
++
++	pmu = event_to_uncore_common_pmu(event);
++	uncore = pmu->private;
++
++	if (hygon_uncore_is_df_iod(pmu) &&
++	    event->attr.config1 >= hygon_uncore_num_iods(uncore, event->cpu))
++		return -EINVAL;
++
++	event_mask = hygon_uncore_df_event_mask();
++	hwc->config = event->attr.config & event_mask;
++
++	return 0;
++}
++
++static int hygon_uncore_df_iod_add(struct perf_event *event, int flags)
++{
++	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
++	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
++	struct hw_perf_event *hwc = &event->hw;
++	int iod_idx;
++	int i;
++
++	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
++		goto out;
++
++	for (i = 0; i < pmu->num_counters; i++) {
++		if (ctx->events[i] == event) {
++			hwc->idx = i;
++			goto out;
++		}
++	}
++
++	hwc->idx = -1;
++	iod_idx = event->attr.config1;
++
++	for (i = iod_idx * NUM_COUNTERS_DF; i < (iod_idx + 1) * NUM_COUNTERS_DF; i++) {
++		struct perf_event *tmp = NULL;
++
++		if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
++			hwc->idx = i;
++			break;
++		}
++	}
++
++out:
++	if (hwc->idx == -1)
++		return -EBUSY;
++
++	hwc->config_base = pmu->msr_base + 2 * hwc->idx;
++	hwc->event_base = pmu->msr_base + 1 + 2 * hwc->idx;
++	hwc->event_base_rdpmc = -1;
++	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
++
++	if (flags & PERF_EF_START)
++		event->pmu->start(event, PERF_EF_RELOAD);
++
++	return 0;
++}
++
++static int hygon_uncore_cpu_starting(unsigned int cpu)
++{
++	struct uncore_common *uncore;
++	int i;
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++		uncore->scan(uncore, cpu);
++	}
++
++	return 0;
++}
++
++static int hygon_uncore_cpu_online(unsigned int cpu)
++{
++	struct uncore_common *uncore;
++	int ret;
++	int i;
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++
++		ret = uncore->init(uncore, cpu);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int hygon_uncore_cpu_down_prepare(unsigned int cpu)
++{
++	struct uncore_common *uncore;
++	int i;
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++		uncore->move(uncore, cpu);
++	}
++
++	return 0;
++}
++
++static int hygon_uncore_cpu_dead(unsigned int cpu)
++{
++	struct uncore_common *uncore;
++	int i;
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++		uncore->free(uncore, cpu);
++	}
++
++	return 0;
++}
++
++static int hygon_uncore_df_ctx_init(struct uncore_common *uncore,
++				    unsigned int cpu)
++{
++	struct attribute *df_attr;
++	struct uncore_common_pmu *pmu;
 +	int num_counters;
-+	int rdpmc_base;
-+	u32 msr_base;
-+	int group;
-+	cpumask_t active_mask;
-+	struct pmu pmu;
-+	struct uncore_common_ctx * __percpu *ctx;
-+	void *private;
-+};
 +
-+struct uncore_common {
-+	union uncore_common_info __percpu *info;
-+	struct uncore_common_pmu *pmus;
-+	unsigned int num_pmus;
-+	bool init_done;
-+	void (*scan)(struct uncore_common *uncore, unsigned int cpu);
-+	int (*init)(struct uncore_common *uncore, unsigned int cpu);
-+	void (*move)(struct uncore_common *uncore, unsigned int cpu);
-+	void (*free)(struct uncore_common *uncore, unsigned int cpu);
-+};
++	if (uncore->init_done)
++		return uncore_common_ctx_init(uncore, cpu);
 +
-+extern struct attribute_group uncore_common_attr_group;
++	num_counters = uncore_common_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
 +
-+static inline int uncore_common_ctx_cid(struct uncore_common *uncore,
++	uncore->pmus = kzalloc_obj(*uncore->pmus);
++	if (!uncore->pmus)
++		goto done;
++
++	pmu = &uncore->pmus[0];
++	strscpy(pmu->name, "hygon_df", sizeof(pmu->name));
++	pmu->num_counters = num_counters;
++	pmu->msr_base = MSR_HYGON_F18H_DF_CTL;
++	pmu->rdpmc_base = -1;
++	pmu->group = uncore_common_ctx_gid(uncore, cpu);
++	pmu->private = uncore;
++
++	df_attr = &format_attr_umask8.attr;
++	if (boot_cpu_data.x86_model == 0x4 ||
++	    boot_cpu_data.x86_model == 0x5)
++		df_attr = &format_attr_umask10.attr;
++	else if (boot_cpu_data.x86_model >= 0x6 &&
++		 boot_cpu_data.x86_model <= 0x18)
++		df_attr = &format_attr_umask12.attr;
++	hygon_uncore_df_format_attr[1] = df_attr;
++
++	pmu->ctx = alloc_percpu(struct uncore_common_ctx *);
++	if (!pmu->ctx)
++		goto done;
++
++	pmu->pmu = (struct pmu) {
++		.task_ctx_nr	= perf_invalid_context,
++		.attr_groups	= hygon_uncore_df_attr_groups,
++		.name		= pmu->name,
++		.event_init	= hygon_uncore_df_event_init,
++		.add		= uncore_common_add,
++		.del		= uncore_common_del,
++		.start		= uncore_common_start,
++		.stop		= uncore_common_stop,
++		.read		= uncore_common_read,
++		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
++		.module		= THIS_MODULE,
++	};
++
++	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
++		free_percpu(pmu->ctx);
++		pmu->ctx = NULL;
++		goto done;
++	}
++
++	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
++	uncore->num_pmus = 1;
++
++done:
++	uncore->init_done = true;
++	return uncore_common_ctx_init(uncore, cpu);
++}
++
++static void hygon_uncore_df_ctx_scan(struct uncore_common *uncore,
++				     unsigned int cpu)
++{
++	unsigned int eax, ebx, ecx, edx;
++	union uncore_common_info info;
++
++	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
++		return;
++
++	info.split.gid = 0;
++	info.split.aux_data = 0;
++	info.split.num_pmcs = NUM_COUNTERS_DF;
++
++	cpuid(0x8000001e, &eax, &ebx, &ecx, &edx);
++	info.split.cid = ecx & 0xff;
++
++	*per_cpu_ptr(uncore->info, cpu) = info;
++}
++
++static void hygon_uncore_df_iod_ctx_scan(struct uncore_common *uncore,
++					 unsigned int cpu)
++{
++	int num_packages, iods_per_package;
++	union uncore_common_info info;
++
++	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
++		return;
++
++	if (boot_cpu_data.x86_model < 0x4 || boot_cpu_data.x86_model == 0x6)
++		return;
++
++	num_packages = topology_max_packages();
++	iods_per_package = amd_nb_num() / num_packages - topology_max_dies_per_package();
++	if (iods_per_package <= 0)
++		return;
++
++	info.split.cid = topology_physical_package_id(cpu);
++	info.split.gid = 0;
++	info.split.private = iods_per_package;
++	info.split.num_pmcs = NUM_COUNTERS_DF * iods_per_package;
++
++	*per_cpu_ptr(uncore->info, cpu) = info;
++}
++
++static int hygon_uncore_df_iod_ctx_init(struct uncore_common *uncore,
 +					unsigned int cpu)
 +{
-+	union uncore_common_info *info = per_cpu_ptr(uncore->info, cpu);
++	struct uncore_common_pmu *pmu;
++	int num_counters;
 +
-+	return info->split.cid;
++	if (uncore->init_done)
++		return uncore_common_ctx_init(uncore, cpu);
++
++	num_counters = uncore_common_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
++
++	uncore->pmus = kzalloc_obj(*uncore->pmus);
++	if (!uncore->pmus)
++		goto done;
++
++	pmu = &uncore->pmus[0];
++	strscpy(pmu->name, "hygon_df_iod", sizeof(pmu->name));
++	pmu->num_counters = num_counters;
++	pmu->msr_base = MSR_HYGON_F18H_DF_IOD_CTL;
++	pmu->rdpmc_base = -1;
++	pmu->group = uncore_common_ctx_gid(uncore, cpu);
++	pmu->private = uncore;
++
++	if (boot_cpu_data.x86_model >= 0x6 &&
++	    boot_cpu_data.x86_model <= 0x18)
++		hygon_uncore_df_iod_format_attr[1] = &format_attr_umask12.attr;
++
++	pmu->ctx = alloc_percpu(struct uncore_common_ctx *);
++	if (!pmu->ctx)
++		goto done;
++
++	pmu->pmu = (struct pmu) {
++		.task_ctx_nr	= perf_invalid_context,
++		.attr_groups	= hygon_uncore_df_iod_attr_groups,
++		.name		= pmu->name,
++		.event_init	= hygon_uncore_df_event_init,
++		.add		= hygon_uncore_df_iod_add,
++		.del		= uncore_common_del,
++		.start		= uncore_common_start,
++		.stop		= uncore_common_stop,
++		.read		= uncore_common_read,
++		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
++		.module		= THIS_MODULE,
++	};
++
++	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
++		free_percpu(pmu->ctx);
++		pmu->ctx = NULL;
++		goto done;
++	}
++
++	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
++	uncore->num_pmus = 1;
++
++done:
++	uncore->init_done = true;
++	return uncore_common_ctx_init(uncore, cpu);
 +}
 +
-+static inline int uncore_common_ctx_gid(struct uncore_common *uncore,
-+					unsigned int cpu)
++static struct uncore_common hygon_uncores[HYGON_UNCORE_TYPE_MAX] = {
++	/* HYGON_UNCORE_TYPE_DF */
++	{
++		.scan = hygon_uncore_df_ctx_scan,
++		.init = hygon_uncore_df_ctx_init,
++		.move = uncore_common_ctx_move,
++		.free = uncore_common_ctx_free,
++	},
++	/* HYGON_UNCORE_TYPE_DF IOD */
++	{
++		.scan = hygon_uncore_df_iod_ctx_scan,
++		.init = hygon_uncore_df_iod_ctx_init,
++		.move = uncore_common_ctx_move,
++		.free = uncore_common_ctx_free,
++	},
++};
++
++static int __init hygon_uncore_init(void)
 +{
-+	union uncore_common_info *info = per_cpu_ptr(uncore->info, cpu);
++	struct uncore_common *uncore;
++	int ret = -ENODEV;
++	int i;
 +
-+	return info->split.gid;
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
++		return -ENODEV;
++
++	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
++		return -ENODEV;
++
++	uncore_common_set_update_interval(update_interval);
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++
++		if (WARN_ON_ONCE(!uncore->scan ||
++				 !uncore->init ||
++				 !uncore->move ||
++				 !uncore->free)) {
++			ret = -EINVAL;
++			goto fail;
++		}
++
++		uncore->info = alloc_percpu(union uncore_common_info);
++		if (!uncore->info) {
++			ret = -ENOMEM;
++			goto fail;
++		}
++	}
++
++	ret = cpuhp_setup_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP,
++				"perf/x86/hygon/uncore:prepare",
++				NULL, hygon_uncore_cpu_dead);
++	if (ret)
++		goto fail;
++
++	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
++				"perf/x86/hygon/uncore:starting",
++				hygon_uncore_cpu_starting, NULL);
++	if (ret)
++		goto fail_prep;
++
++	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
++				"perf/x86/hygon/uncore:online",
++				hygon_uncore_cpu_online,
++				hygon_uncore_cpu_down_prepare);
++	if (ret)
++		goto fail_start;
++
++	return 0;
++
++fail_start:
++	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
++fail_prep:
++	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
++fail:
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++
++		if (uncore->info) {
++			free_percpu(uncore->info);
++			uncore->info = NULL;
++		}
++	}
++
++	return ret;
 +}
 +
-+static inline int uncore_common_ctx_num_pmcs(struct uncore_common *uncore,
-+					     unsigned int cpu)
++static void __exit hygon_uncore_exit(void)
 +{
-+	union uncore_common_info *info = per_cpu_ptr(uncore->info, cpu);
++	struct uncore_common *uncore;
++	struct uncore_common_pmu *pmu;
++	int i, j;
 +
-+	return info->split.num_pmcs;
++	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE);
++	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
++	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
++
++	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
++		uncore = &hygon_uncores[i];
++
++		if (!uncore->info)
++			continue;
++
++		free_percpu(uncore->info);
++		uncore->info = NULL;
++
++		for (j = 0; j < uncore->num_pmus; j++) {
++			pmu = &uncore->pmus[j];
++
++			if (!pmu->ctx)
++				continue;
++
++			perf_pmu_unregister(&pmu->pmu);
++			free_percpu(pmu->ctx);
++			pmu->ctx = NULL;
++		}
++
++		kfree(uncore->pmus);
++		uncore->pmus = NULL;
++	}
 +}
 +
-+struct uncore_common_pmu *event_to_uncore_common_pmu(struct perf_event *event);
++module_init(hygon_uncore_init);
++module_exit(hygon_uncore_exit);
 +
-+void uncore_common_set_update_interval(unsigned int interval);
-+int uncore_common_event_init(struct perf_event *event);
-+int uncore_common_add(struct perf_event *event, int flags);
-+void uncore_common_del(struct perf_event *event, int flags);
-+void uncore_common_start(struct perf_event *event, int flags);
-+void uncore_common_stop(struct perf_event *event, int flags);
-+void uncore_common_read(struct perf_event *event);
++MODULE_DESCRIPTION("Hygon Uncore Driver");
++MODULE_LICENSE("GPL");
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 86554de9a3f5..b81d0003e295 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -851,6 +851,8 @@
+ #define MSR_F15H_PTSC			0xc0010280
+ #define MSR_F15H_IC_CFG			0xc0011021
+ #define MSR_F15H_EX_CFG			0xc001102c
++#define MSR_HYGON_F18H_DF_CTL		0xc0010240
++#define MSR_HYGON_F18H_DF_IOD_CTL	0xc0010250
+ 
+ /* Fam 10h MSRs */
+ #define MSR_FAM10H_MMIO_CONF_BASE	0xc0010058
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 752cb319d5ea..9e56b5c94d4b 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -122,6 +122,26 @@
+ 	(AMD64_PERFMON_V2_EVENTSEL_EVENT_NB	|	\
+ 	 AMD64_PERFMON_V2_EVENTSEL_UMASK_NB)
+ 
++#define HYGON_F18H_EVENTSEL_EVENT_DF		0x0000003FULL
++#define HYGON_F18H_EVENTSEL_UMASK_DF		0x0000FF00ULL
++#define HYGON_F18H_M4H_EVENTSEL_UMASK_DF	0x0003FF00ULL
++#define HYGON_F18H_M6H_EVENTSEL_UMASK_DF	0x000FFF00ULL
++#define HYGON_F18H_EVENTSEL_CONSTID_DF			\
++	(0x000000C0ULL | GENMASK_ULL(35, 32) | GENMASK_ULL(62, 61))
 +
-+int uncore_common_ctx_init(struct uncore_common *uncore, unsigned int cpu);
-+void uncore_common_ctx_free(struct uncore_common *uncore, unsigned int cpu);
-+void uncore_common_ctx_move(struct uncore_common *uncore, unsigned int cpu);
-+void uncore_common_start_hrtimer(struct uncore_common_ctx *ctx);
++#define HYGON_F18H_RAW_EVENT_MASK_DF			\
++	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
++	 HYGON_F18H_EVENTSEL_UMASK_DF		|	\
++	 HYGON_F18H_EVENTSEL_CONSTID_DF)
++#define HYGON_F18H_M4H_RAW_EVENT_MASK_DF		\
++	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
++	 HYGON_F18H_M4H_EVENTSEL_UMASK_DF	|	\
++	 HYGON_F18H_EVENTSEL_CONSTID_DF)
++#define HYGON_F18H_M6H_RAW_EVENT_MASK_DF		\
++	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
++	 HYGON_F18H_M6H_EVENTSEL_UMASK_DF	|	\
++	 HYGON_F18H_EVENTSEL_CONSTID_DF)
 +
-+#endif /* _X86_EVENTS_UNCORE_COMMON_H */
+ #define AMD64_PERFMON_V2_ENABLE_UMC			BIT_ULL(31)
+ #define AMD64_PERFMON_V2_EVENTSEL_EVENT_UMC		GENMASK_ULL(7, 0)
+ #define AMD64_PERFMON_V2_EVENTSEL_RDWRMASK_UMC		GENMASK_ULL(9, 8)
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 22ba327ec227..25f64bdfb5dc 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -62,6 +62,7 @@ enum cpuhp_state {
+ 	CPUHP_CREATE_THREADS,
+ 	CPUHP_PERF_X86_PREPARE,
+ 	CPUHP_PERF_X86_AMD_UNCORE_PREP,
++	CPUHP_PERF_X86_HYGON_UNCORE_PREP,
+ 	CPUHP_PERF_POWER,
+ 	CPUHP_PERF_SUPERH,
+ 	CPUHP_X86_HPET_DEAD,
+@@ -148,6 +149,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_RISCV_SBI_IPI_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
++	CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
+ 	CPUHP_AP_PERF_X86_STARTING,
+ 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
+ 	CPUHP_AP_PERF_XTENSA_STARTING,
+@@ -205,6 +207,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_PERF_X86_ONLINE,
+ 	CPUHP_AP_PERF_X86_UNCORE_ONLINE,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE,
++	CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
+ 	CPUHP_AP_PERF_X86_AMD_POWER_ONLINE,
+ 	CPUHP_AP_PERF_S390_CF_ONLINE,
+ 	CPUHP_AP_PERF_S390_SF_ONLINE,
 -- 
 2.34.1
 
