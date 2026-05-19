@@ -1,188 +1,190 @@
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623CA3016FB
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 May 2026 18:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779214014; cv=pass; b=BVPngrcGBrNS5BE9vj2dFHdSJchR1yBBjtZHw3RfLSSkxPeuC7x4Y/pmoIRgyjXLlQTKYq0YrsN+H5mInCfnnw+yRryu2GhIKweRuVZRxjxO243+cVyQxX/PCr4mVTMNcUcuj/v+pv+RaJOPDoksqgRsT3AG15uT6LaUDfUJ+ac=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779214014; c=relaxed/simple;
-	bh=4thNVZ0mHB2sYEYeFvMvXVOlUMWi1njYgCSLRkweRH8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lS7bn5pv83bARU/y8iVU07bIrG3okMVQIPiNgBgqBtMA4WSV82ezyo8IkyQU/ftrRQpyMfDib2BJCZu4pAcF29rCCRLkg2TfVLJO+ssyFR3OGMZWxYwUHmzqJdodj6Z/poCigWHfUUGTbbVtJqbvWa33IEC9Ckotg7vNthc0y08=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gd9Bvh/I; arc=pass smtp.client-ip=74.125.82.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6BF32B13E;
+	Tue, 19 May 2026 18:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779215228; cv=none; b=FZXU/3UrRAJNA4E1JVOR4eOjG6p22kIYrPf0tD6jgkpvIGvwVqN2+pCYerhdvbgKhgM2WemJtZRRPXtJ7cPM9/lWm+csHaCE7q9FVD8PqH8rrzKR8SBurdVLouztWBxWXloW2xOp5ICB5rvUk1IGmXOaybhrv4fO/clfCHK1Qis=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779215228; c=relaxed/simple;
+	bh=D0UlmKjBbuBsCokH2s0rjpons46Hz6b4bz8eXZ/S05M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sKKex67eCNEkqwtgXAMYlzhKm+ZPQk2NxNh0jDiOzxzZS0TOAdcqbU5d9xTmI+St5l79qPMhgXZaCPmdMekwpzaWppK6ZfXdcA9dDx/FvsYEIgklPLj9tdwvIGKDuEYkNJdREIupQCCyP/qJ3aYCYzXCOy6DKj2C6tHwaQbNm28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+D+HnG+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gd9Bvh/I"
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-12c19d23b19so5352661c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 May 2026 11:06:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779214012; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gxsWho8AthSB4SxllUkkUPbbovt2QPyxzq7gw6aEmExMidzw9sQru8D6KTyMx+2ypW
-         fuU5nl3vwPa6GDhEsY1g7uLSh7muagXSq1k6GX8wjjGnnOLDgXuPPITirfmA2QBRWCoP
-         LpQG6cCr4RTm1pPa69xrY7BYLIKAaxa/H453p45T8g0MXn+/TMhSjUtwNh3fEc0fo/iP
-         SyfjmPXNVc88iG2GO9PyiGX9jektORgZjqMyUtwGaWfKxk124HLSHmtbflYFEAQUTJ7U
-         zzGWfzNxiUBTsFcoVfFPQ2OsOWSh55GENN++VeB55rX+HccZWDTYBLLn+MFK2txdbmSK
-         iceg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pXEsiVi0J6CWJzQCcHF6I004hQIxqj2VlxwwG4G9tMQ=;
-        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
-        b=f2Mx+AfXQcuoJzlPCS7LXbfywMflzs3tHIDMyo3OaRyM/rSGM2t9Dq+cCaXR7vnixa
-         0AX1TIR35+g3KynpiKmWj1mpq0o7J8ctnemytYNEN+bPI+MnVR1FsmmRhpGMMIbVCgUf
-         zUBDZ7d/+gD5fhxIBYa8d9qKq9dT6YfDtfAtm2znXG+WuLtASfVf1z/Au87q/krfBXUI
-         b8YxEcEA9lXInb1eXmK+PIY0TbmALppfrBaTDvVa/XFvriajWVD5l5DVPHPgEz01n/mU
-         SPWntWCvG/qNe5dfT42eqDsJWz30CIhXLm68rM1sVvPRZR4KnCZsHIOJk6pxtjbGyKPc
-         6bkg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779214012; x=1779818812; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pXEsiVi0J6CWJzQCcHF6I004hQIxqj2VlxwwG4G9tMQ=;
-        b=Gd9Bvh/IyjLoyD/Av6rgy8Tng73yWYeVV5FIt8eQY6Rmzm07YsnQkm87kLvSppn3vt
-         I0OotpjSjnUlzE55H5/1BNanQA28SjOEkQlu1NW44SqGMkfWOZN+RAh5PrqSEArVA/jE
-         Olw/617i0x/l3g04WIU2+XiXhvmwQjd4AKwQKGawLi4GzWdLcoNypkjJY/gX26+7NMGy
-         Rk/8efbLbDKysP2sp68y4mqK+wDreYHRb/dswOvkN63KKKIMHFoLa9vvN8BR6ZVmRADx
-         7caBSlHkzzfk2KpdOoE/0JimLE1e8IgllWj7fhC0OuRDA7k56bmlxOlAmtHw91r3eVZ0
-         yANw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779214012; x=1779818812;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pXEsiVi0J6CWJzQCcHF6I004hQIxqj2VlxwwG4G9tMQ=;
-        b=FF1i+TJ/YFQhXY9puTEKxHIsErNYBtZR0p2J48ktuwrhYRwDgMUh0F6za9e+TCOtwo
-         17P7See5qzkTPqL8s+0ztqEDruiglzKWZtBeJb7pIxZIT6fCMQ8aILmRP2RbF5RthhGh
-         3y3wIYlIc4xKhy7opeZJeQSNRcRfAMD2UsxgmeU5dUnw5JpVJmT6Y+melyK+iOfvy9px
-         2jeWGKl67a+nVVPHwL1stwbEsL0ne3jQsJq1SWUX3nrZj/w7HVQ75DZ7ZsnmzaE38prQ
-         Q9rTcCV+Kw5+0mdDRXZFYZFa3Y6nGKgFuUKQSIDcE63YOzAkc6IJjd1dZS9AoX1100qL
-         DYkw==
-X-Gm-Message-State: AOJu0YyH9ngUxNN4/FRsIr8ZHma+JX0rZ9zNNpt57iLcS9cQW7UeR/7h
-	0kcS/1EQuBM2QGYi1kqYVqASwBjaDy/Ljr+QQooyCoDXvYJYHP+pRPM71D+ycMcVLAkK2KrX72z
-	+mKTS6R+mBNVlUk8eHudcRhcejIKjA45S0Igk65pTh7AERDpvKlaXcyKx
-X-Gm-Gg: Acq92OE5ctwJlR7YNXv92gzxnPkHKbwy5gWcWmrs3q+0bKX2co03kS4SHmPNIQRC+hy
-	LSfwXSOQgGIR0msrNggroNzEjReZjM6ZFOIzByk0FPDktWWTuEMftNqCzvfPsVJWyAntvXAjCPn
-	SoRnr8/lT1fXuGb565UNQRi61ew8l5JwMkjhSXl8FOsf18LE5+bGsKY3EC/mTVLWbOTNL4QAdkw
-	LajRlWWcFsuO0ne328oNih/xZdCk8bjOU6x+Yy0z+OpJX2VPkanP5+8u8X/5M1QJz5rAaQUDmwS
-	rNfu79u4INnrb2+/LXYL2IZZWBbM1639JsKZF9VwcC+228Uw
-X-Received: by 2002:a05:701b:271b:b0:135:da70:c2d4 with SMTP id
- a92af1059eb24-135da70c454mr932737c88.25.1779214011829; Tue, 19 May 2026
- 11:06:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+D+HnG+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87AFC2BCB3;
+	Tue, 19 May 2026 18:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779215228;
+	bh=D0UlmKjBbuBsCokH2s0rjpons46Hz6b4bz8eXZ/S05M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e+D+HnG+Ty1mxKHOIn51N31dNSmrA7pWhCmcFXeHPgrxixwDhMoqZ4SpQvkkR0ZGC
+	 5Yk31RZJ5v9heamcJKC9opUlrmZznGPDieFD62pGXTvwev32/n1Mbux+j/3e5/0x31
+	 Vb+h/wNQr3manCEhQ/IFin306ZslkYcB5p/fnBkmZaWOvUqxAcQ8a/JXHPmcuTdG5X
+	 jqd1wRARaeD5PFOez1kOQGmZQvh5lFG3n/7LQqR2VsMFuuEdyYUgw48VR4nSHVvsko
+	 7oIP2llgDvNIuyPAOOhaD6Qdlw4GxKcoQInj8Jdfz8vwG2hvRrsMgcY9QgQrIdxniF
+	 olEhGNZ00lGhQ==
+Date: Tue, 19 May 2026 11:27:05 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, 9erthalion6@gmail.com, adrian.hunter@intel.com,
+	alex@ghiti.fr, alexandre.chartre@oracle.com, andrii@kernel.org,
+	ankur.a.arora@oracle.com, aou@eecs.berkeley.edu,
+	bpf@vger.kernel.org, collin.funk1@gmail.com, costa.shul@redhat.com,
+	daniel@iogearbox.net, dapeng1.mi@linux.intel.com, dsterba@suse.com,
+	eddyz87@gmail.com, howardchu95@gmail.com, james.clark@linaro.org,
+	jolsa@kernel.org, leo.yan@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, martin.lau@linux.dev,
+	memxor@gmail.com, mingo@redhat.com, mmayer@broadcom.com,
+	nathan@kernel.org, palmer@dabbelt.com, peterz@infradead.org,
+	pjw@kernel.org, qmo@kernel.org, ricky.ringler@proton.me,
+	song@kernel.org, swapnil.sapkal@amd.com, terrelln@fb.com,
+	tglozar@redhat.com, thomas.falcon@intel.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH v7 00/14] perf build: Reduce build time by nearly half
+Message-ID: <agyrebq2hdayDIyg@google.com>
+References: <20260518044740.2526802-1-irogers@google.com>
+ <20260518154638.2798789-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260518231150.1252420-1-ctshao@google.com> <20260518234452.DEAEFC2BCB7@smtp.kernel.org>
-In-Reply-To: <20260518234452.DEAEFC2BCB7@smtp.kernel.org>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Tue, 19 May 2026 11:06:40 -0700
-X-Gm-Features: AVHnY4IKM7KqTw7rimaea7u0hqsWqLvd1iRJlnijVTEklupSIQWf90acL9kc8ZU
-Message-ID: <CAJpZYjXh2DFpnS3+_cKhJ==6n31qBU8Cnks9VXZB_qH5i7S-eQ@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Fix uncore metric scaling bug across sockets
- and nodes
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260518154638.2798789-1-irogers@google.com>
 
-Based on the AI review, instead of changing `source_count` behavior, I
-will expose `aggr->nr` in perf python metrics and fix per-aggregation
-metrics accordingly.
+On Mon, May 18, 2026 at 08:46:24AM -0700, Ian Rogers wrote:
+> This patch series refactors Kbuild internals, BPF skeleton generation,
+> Python AST pre-computation, and foundational tooling dependencies across
+> the perf tool build system. By eliminating umbrella target synchronization
+> barriers, decoupling static library prerequisites, parallelizing single-core
+> script generators, and eradicating redundant feature checks, this series
+> unlocks absolute theoretical peak multi-core concurrency during Kbuild startup.
+> 
+> On a 28-core build workstation (make -j28 all from scratch), clean build
+> latency improves by over 44%:
+> 
+>   Before:
+>     real    0m29.006s
+>     user    2m46.019s
+>     sys     0m30.610s
+> 
+>   After:
+>     real    0m16.091s
+>     user    2m40.135s
+>     sys     0m25.740s
+> 
+> Saving 12.9 full seconds time per clean build. Furthermore, nothing to
+> build incremental builds are improved by nearly 7x:
+> 
+>   Before:
+>     real    0m11.528s
+>     user    0m9.633s
+>     sys     0m6.965s
+> 
+>   After:
+>     real    0m1.717s
+>     user    0m1.682s
+>     sys     0m0.960s
+> 
+> Summary of Patches:
+> 
+> 1: Fast-Path Feature Detection
+>   - Refactors test-clang-bpf-co-re.bin and test-bpftool-skeletons.bin feature
+>     checks to group shell pipelines within curly braces and redirect both stdout
+>     and stderr to .make.output before touching $@ purely upon success
+>     (> $(@:.bin=.make.output) 2>&1 && touch $@). Grouping the pipeline ({ cmd1 | cmd2; })
+>     ensures that compiler stderr is successfully captured in .make.output rather
+>     than escaping to the parent shell. This perfectly matches standard Kbuild
+>     feature check conventions and ensures the target files are touched on disk
+>     purely upon success, allowing Kbuild to cache positive detections and avoid
+>     continuous sub-make re-evaluations during incremental builds. Adds
+>     test-bpftool-skeletons.bin to the clean FILES list and explicit source
+>     prerequisite test-clang-bpf-co-re.c.
+
+I think patch 1 can be separated and needs Ack/Review from BPF folks.
+
+> 
+> 2-4: Flattening Umbrella Prepare Barriers
+>   - builtin-trace embedded inclusions and pmu-events generation are completely
+>     decoupled from the sequential "prepare" umbrella target, eliminating Make
+>     AST double-parsing overhead and unchoking parallel compilation barriers.
+> 
+> 5-7: Decoupling & Pre-generating BPF Skeletons
+>   - BPF skeleton rules are extracted out of Makefile.perf into bpf_skel.mak.
+>   - Decouples bpftool bootstrap from top-level static libbpf dependencies,
+>     attaching bpf-skel-prepare directly to the umbrella prepare target. This
+>     allows Make to pre-compile bpftool and dump vmlinux.h in the background at
+>     build startup, removing the 7-second serialization bottleneck before BPF
+>     object compilation.
+>   - Ensures benchmark skeleton intermediate .bpf.o files are cleanly removed
+>     during make clean, and adds bpf-skel-prepare to .PHONY.
+> 
+> 8-9: Foundational Linkage Optimization
+>   - Moves static libsymbol library prerequisites out of the prepare step.
+>   - Eliminates redundant libbpf sub-make feature checks during static builds.
+> 
+> 10-11: jevents.py Concurrency & Deduplication
+>   - Splits the massive 2.8 MB big_c_string literal out of pmu-events.c into a
+>     dedicated pmu-events-string.c compilation unit. This slices C compilation
+>     latency in half by compiling string and struct tables simultaneously across
+>     separate CPU cores while preserving zero dynamic ELF relocations. Adds
+>     pmu-events-string.c to .gitignore, declares extern const char big_c_string[];
+>     locally inside output_string_file and output_file when split to prevent linkage
+>     conflicts with empty-pmu-events.c, defers file closures to ensure identical
+>     timestamps, and uses canonical Make 4.0 @: dependency chaining.
+>   - Pre-populates jevents.py JSON ASTs and metric formulas in parallel across
+>     all available CPU cores using ProcessPoolExecutor (accelerating Python
+>     execution by 11x, from 3.3s down to ~290ms). Moves _init_worker to top-level
+>     scope to ensure clean pickling under spawn multiprocessing start methods.
+> 
+> 12: Out-of-Tree Incremental Rebuild Fix
+>   - Prefixes SCRIPTS (perf-archive, perf-iostat) with $(OUTPUT) to prevent
+>     Make from continuously re-executing script installation rules on already
+>     built out-of-tree builds.
+> 
+> 13-14: AST Parsing Optimization & Shell Fork Eradication
+>   - Converts ZENS, ARMS, and INTELS in pmu-events/Build from recursive assignment
+>     (=) to simply expanded assignment (:=) and replaces model_name/vendor_name
+>     with pure GNU Make string functions. This guarantees Make executes directory
+>     probing shell forks exactly once during AST parsing and evaluates path macros
+>     purely in memory, completely eradicating over 7,800 redundant sub-processes
+>     during out-of-tree build evaluation.
+>   - Converts llvm-config shell queries in Makefile.config from recursive assignment
+>     (=) to simply expanded assignment (:=). This eliminates ~185 redundant sub-processes
+>     that were previously executed across object compilation dependency checks.
+> 
+> Changes since v6:
+>   - Rebase/resend as last series failed to apply by Sashiko.
+> 
+> Ian Rogers (14):
+>   tools build: Fix feature checks to touch target files on success
+>   perf trace beauty: Make beauty generated C code standalone .o files
+>   perf build: Decouple pmu-events from prepare umbrella target
+>   perf build: Remove empty archheaders target
+>   perf build: Move BPF skeleton generation out of Makefile.perf
+>   perf build: Encapsulate vmlinux.h and bpftool in bpf_skel.mak
+>   perf build: Pre-generate BPF skeleton tooling during umbrella prepare
+>     phase
+>   perf build: Move libsymbol dependency out of prepare step
+>   perf build: Remove redundant libbpf feature check for static builds
+>   perf pmu-events: Split big_c_string storage into standalone
+>     compilation unit
+>   perf pmu-events: Parallelize JSON and metric pre-computation in
+>     jevents.py
+>   perf build: Prefix SCRIPTS with output directory to fix continuous
+>     rebuilds
+>   perf pmu-events: Convert recursive shell assignments and macros to
+>     Make built-ins
+>   perf build: Convert llvm-config shell queries to simply expanded
+>     variables
+
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
-CT
+Namhyung
 
-On Mon, May 18, 2026 at 4:44=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] The patch codifies a mathematical scaling error across all agg=
-regation modes for uncore metrics by changing `source_count` to `aggr->nr` =
-without removing `#num_packages` from the JSON formulas.
-> --
->
-> commit 1c2296ec7fca6ef588c3a63c6bd68377de82335f
-> Author: Chun-Tse Shao <ctshao@google.com>
->
-> perf stat: Fix uncore metric scaling bug across sockets and nodes
->
-> This commit changes how source_count is determined for uncore metrics.
-> Instead of using the static PMU count via evsel__source_count(), it
-> dynamically assigns aggr->nr from the metric's leader event to handle
-> various aggregation modes.
->
-> > Before the fix:
-> >   perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
-> >   {"socket" : "S0", "counters" : 28, "ns  lpm_miss_lat_rem" : "163.4", =
-"ns  lpm_miss_lat_loc" : "27.5"}
-> >   {"socket" : "S1", "counters" : 28, "ns  lpm_miss_lat_rem" : "170.5", =
-"ns  lpm_miss_lat_loc" : "25.5"}
-> >   perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
-> >   {"ns  lpm_miss_lat_rem" : "90.4", "ns  lpm_miss_lat_loc" : "12.6"}
-> > `lpm_miss_lat` on global aggr is 0.5x the actual value.
->
-> Does this misdiagnose the correct baseline? Existing uncore metrics like
-> lpm_miss_lat are defined in JSON formulas as dividing by
-> (source_count(TICKS) * #num_packages).
->
-> Before this patch, evsel__source_count() returned the static PMU count pe=
-r
-> package (e.g., 28 CHAs). In global aggregation, dividing the global sum o=
-f 56
-> CHAs by (28 * 2) =3D 56 yields the correct average of ~90.4ns.
->
-> The --per-socket mode yielded an incorrectly scaled value because it divi=
-ded
-> the sum of 28 CHAs by (28 * 2) =3D 56 instead of 28.
->
-> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
-w.c
-> > --- a/tools/perf/util/stat-shadow.c
-> > +++ b/tools/perf/util/stat-shadow.c
->
-> [ ... ]
->
-> > @@ -103,7 +103,7 @@ static int prepare_metric(struct perf_stat_config *=
-config,
-> >                                       val *=3D 1e-9;
-> >                               }
-> >                               if (!source_count)
-> > -                                     source_count =3D evsel__source_co=
-unt(metric_events[i]);
-> > +                                     source_count =3D aggr->nr;
-> >                       }
-> >               }
->
-> Does changing source_count to aggr->nr break global mode calculations wit=
-hout
-> updating the JSON metric formulas?
->
-> In global mode, aggr->nr dynamically evaluates to 56 instead of 28. Becau=
-se the
-> JSON formula still multiplies by #num_packages, the metric divides the gl=
-obal
-> sum of 56 CHAs by (56 * 2) =3D 112. This scales the true average incorrec=
-tly,
-> causing the global mode to output the doubled latency value of ~174.5ns.
->
-> Similarly, in --per-socket mode, aggr->nr evaluates to 28, and the formul=
-a
-> still divides the sum of 28 CHAs by (28 * 2) =3D 56, retaining the origin=
-al
-> scaling error in per-socket mode.
->
-> Should the #num_packages multiplier be removed from the JSON formulas whe=
-n
-> making source_count dynamically scale with the aggregation mode?
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260518231150.12=
-52420-1-ctshao@google.com?part=3D1
