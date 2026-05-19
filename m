@@ -1,65 +1,66 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21F230FC2E
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 May 2026 05:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57CB30FC2E
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 May 2026 05:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779166932; cv=none; b=VDg0qBMc5Rxh+aoMZregOG4eoiAcrtF1FSV2LMnR1McJYQ1Ykd+sVlEQ1s+qH9q/0AyXJJAjlGiJ2Plj8ULnGDJR/i+np5G5OcI0KRNhblxEWN3M/lcw8GkLwHQ/cGRXaMBulb08Xaxra+Vyo6tc20jIvf8p5IgHn5yV62lE+2A=
+	t=1779166933; cv=none; b=NiTUYC2fjQzyGJ7H6pzdLUQvEqfML8DTT7wDmMFoL+eIRIEpcts5uc7ffHBda/hcI+NxF9WZHrBjWyhVGawOJcPpihlW4siYnPMmEQWYgvlwsputmcNRAAOj3W55cSNZUVyS8LWsW5lXb1RI7IoEs8FgyX+voL1CZw0UeL0g+n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779166932; c=relaxed/simple;
-	bh=OcP1NgA2NxIksA2y9tdgsVvq26r3piLHRjjkj3eRQAY=;
+	s=arc-20240116; t=1779166933; c=relaxed/simple;
+	bh=Dm1dRXMcj8LHggSUomlhbdBytPSZTwFogeXZK3/CgVE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AgwxuiPBPXW1eOFSHuSv2tny3o5sfticS4XgrYwPslby+N7Nk9o66pmua6l3k6gAN4sD5z5WUKnekvzX+NEwHW/p7xtoBjWutZuEG/pbP/7imoQwsGPX8faoRxN0MIw+WJ3BzTz2WXBaLeH7NhQHnIfEK+yTpiVdtYlhvCRRXEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C9mFHz5G; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=gEGnYtt78XXfkkfS2yO+JHz8+FGHsZKMAIHFZUIXtGBnAt/aVdnFDqKgSBzKj5OfEeDKtvJ9FnFk0o4O935l5UacoekK8kYIN/Kym8eIRr/D2byxq6rZxvu0aqbXX+UM7N3U0bKqhksnn58nsiyBNmmKwwR5KvhmIBsCm2GDqjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BgdugCJh; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C9mFHz5G"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-132d631edaaso19328723c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 22:02:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BgdugCJh"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12dc1c0b7ccso2794777c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 May 2026 22:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779166930; x=1779771730; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779166932; x=1779771732; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GbLm2oZLKqhvgpwkQ11BIiKN7n0arf5bkU5LkbUJH8U=;
-        b=C9mFHz5G1Nyp/Fl61psX/AnTovh2Puv/0ocoU3gl5A7/4y2/pnHd331ng4U1m5E1SZ
-         PYDfuq//ubIA4cq9j6zqR2ep0KOLKcQ9bcsnQOypiFsaO/J2rCy7ql4q/okbnK8IBcZ9
-         3+MIT2JwRk12dHu/iy2nEhQBYGuGtHkIppVo22FFCupUU9+uRUMu/6pOGFH3jRITvpdw
-         fFeJ6ZXVxudmRHRb9OTRdFGsVc/x3fMrg3kYM0/2atr00C75HMpFTegDvJSScC9v0AgO
-         n9QY1IpXLtbZMTU9P1S3pTI+fBUBRMv67dhxsOfiMsuC+HmV2HL3s9FubjkwFfJSiUA7
-         TGiw==
+        bh=rpNAlzgW5SSa1ZsBC1HKHkIDD3KLaNZAgkWCJbzVU4w=;
+        b=BgdugCJhpvIOA867XUU95b14UnKvWvo7prRnNNR4sO2jIxEU366vqp9ds+Sayg7u6T
+         ovIKMNfaB/UU0PaqEjhahm+s8y6chsWmfr1iRJrrYOpjONAK8Xq7W02+Pobraz0z5cN5
+         WXEjLUACldl1PSO9Att16jCyxLeTBoFm3XfcuhuA7spqU1b3bl6fqJkfDIJ1LAK8pccO
+         glMADBToNT5LSIMISVZVpgclUB6Qd4vF8vqmM9mOyjFYU7I6V8tnDljWzyB8cpH9dSaA
+         PbrgRkUeJUVuQpup6bgjzSfEgpmAixIzcBdjzQ42vKr36z4pavzU3r4EDM9RHe784RpY
+         rKQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779166930; x=1779771730;
+        d=1e100.net; s=20251104; t=1779166932; x=1779771732;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GbLm2oZLKqhvgpwkQ11BIiKN7n0arf5bkU5LkbUJH8U=;
-        b=ryQSFdmFPvpxP4xEt5ge8fd/owYDIOPaT1YBg2e7v1ClKAvtZOxaAOwPWCrQLG9yjR
-         cQ3zpAemJngH2vDvreydWWopNXPbJb0RaBr/cSWYWEIC7kwmkuX0d3yoP7nztvWdqlSm
-         +lgA8WgX2MKWxzWJuad0Tiy6ZyTvLR077rcZK+o4HAnPW2UUA4wLJz7GvXprZNr8/iIm
-         tiomDB+OcJ1zc6GUdkH7rYuCJJld+91+sx6/L1YeVlT1Xyb9YsmDlfjxKbun8ZA86aV5
-         U1eTg4nJxYphg+PZw+oFT8Raeo5BN+WebwVCNnpDIMCe/n1SlgVOLWg9rX8yT9C68Oxl
-         H4OQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+GzSG0M9siSUj3TTKKQuMaP32gbPqrSqpWAd/AQDfPUNsC6occzAj9j7eZUGD+U42FDLSJZJFovKC3HU82Wt61@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGpxZrTd0FzxBvEi1latcEBPqBN6iRbdkmdG/+zR17WpOb4Ldg
-	fa+3hQElR/dB5ZoB5OUIKIHMvkLPZczGp42tnwgZeyFlvI0qjgEGM+GAruDYiXaXTiduvrDceCH
-	vQWKSw7wHuA==
-X-Received: from dlbsj9.prod.google.com ([2002:a05:7022:f909:b0:132:8d92:4d65])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:505:b0:12d:c039:6599
- with SMTP id a92af1059eb24-1350483f18dmr7201841c88.22.1779166929643; Mon, 18
- May 2026 22:02:09 -0700 (PDT)
-Date: Mon, 18 May 2026 22:01:48 -0700
-In-Reply-To: <20260519015108.3094513-1-irogers@google.com>
+        bh=rpNAlzgW5SSa1ZsBC1HKHkIDD3KLaNZAgkWCJbzVU4w=;
+        b=NHyM/dIMXyRGpRVsCpGoRBeNBx67GQULkdUqAmZUOiAzp7iSeQKQQjoIgEwXadSZ46
+         XjGt1cHiZX8yl6ST6e/FKqpMAgHfmKfKS+8kwni1p+xfdQlOhHK0e8EO4RJBx4CQpJ7/
+         HgFLruBL2qCrCndiZRlL732dP2WKTSO5h0mrGy2KXKpRd5HmPkq0xlZEfvvJ9B4jzYnu
+         0QFXpGmCSxzNZBeNQEQcNAzfp0/tlMSRBkaGGCqKWUfo/CMuWoSmiBcZpknvyZLCNY9H
+         f9zYk6YOY6OkpMUXHzo7BXEczIuSVcUrpYztfukxFux5lYT0uioZOlYACGL/DeBzRevX
+         +r5g==
+X-Forwarded-Encrypted: i=1; AFNElJ9bQJ7CB6g6poFod9jL13k1a+/MGazYwU83CG/IaeZD/DCTLzn3LcNQf1Uj6l65HYJ5vsdX2Lce0tZwsGQE8IuZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAV7a/W8S9/Mb6B2wb+MTNrffmOkV6s9XWocng1jsp2v2Dt1gk
+	Bc2l0A7TTapARzy4hG90Lua+kVqDI5oyOT27mmfTuklKyp5fJbvzijg1mTltF3GEmw4nHn/1xXL
+	b5G7iKFZUog==
+X-Received: from dlbrh6.prod.google.com ([2002:a05:7022:f306:b0:12c:1f83:7b4c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6b8f:b0:135:3983:2131
+ with SMTP id a92af1059eb24-135398321e5mr4565827c88.21.1779166931554; Mon, 18
+ May 2026 22:02:11 -0700 (PDT)
+Date: Mon, 18 May 2026 22:01:49 -0700
+In-Reply-To: <20260519050150.3144907-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260519015108.3094513-1-irogers@google.com>
+References: <20260519015108.3094513-1-irogers@google.com> <20260519050150.3144907-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.631.ge1b05301d1-goog
-Message-ID: <20260519050150.3144907-1-irogers@google.com>
-Subject: [PATCH v3 0/2] Fix cgroup metric association with BPF counters
+Message-ID: <20260519050150.3144907-2-irogers@google.com>
+Subject: [PATCH v3 1/2] perf stat: Propagate supported flag to follower cgroup
+ BPF events
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -67,55 +68,51 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org, skanev@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-This series fixes an issue where cgroup metrics were not being correctly
-associated and reported (showing `nan %`) when using BPF counters
-(i.e., with `--bpf-counters`).
+When using BPF counters with cgroups, follower events (for cgroups
+other than the first one) are not opened. Because they are not opened,
+their `supported` flag was left as `false`.
 
-The root cause is that cgroup BPF counters only open the "leader" events
-(for the first cgroup) and leave "follower" events unopened. Unopened
-events have their `supported` flag set to `false` by default. During
-metric calculation, `prepare_metric` checks `evsel->supported` and
-discards the value (setting it to `NAN`) if it is `false`, leading to
-`nan %` in the output.
+During metric calculation, `prepare_metric` checks if the event is
+supported. If it is not supported (like the follower events), it
+explicitly sets the value to `NAN`, which eventually causes the metric
+to be reported as `nan %`.
 
-The first patch fixes this by propagating the `supported` flag from the
-leader events to the follower events in `bperf_load_program`.
-
-The second patch adds a new shell test (`stat_metrics_cgrp.sh`) to
-permanently cover this scenario (testing both with and without BPF
-counters) and prevent regressions.
+Fix this by propagating the `supported` flag from the "leader" events
+(the ones opened for the first cgroup) to the "follower" events.
 
 Reported-by: Svilen Kanev <skanev@google.com>
+Assisted-by: Antigravity:gemini-3-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf_counter_cgroup.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Changes since v2:
-- Use `--metrics=insn_per_cycle` for the system-wide capability
-  check in `check_system_wide` to ensure both cycles and instructions
-  are supported.
-- Use exact cgroup field matching with surrounding commas
-  (`,${cgrp},`) in the `grep` check to prevent false positives when
-  matching the root cgroup (`/`).
-- Only enforce metric validation if both `cycles` and `instructions`
-  counts are numeric and non-zero, preventing false failures on
-  idle cgroups.
-- Wrap long lines and fix trailing whitespace in the test script to
-  comply with style guidelines.
-
-Changes since v1:
-- Fix commit message for patch 2 to remove the mention of
-  insn_per_cycle check (which was simplified out).
-- Quote variables in shell script to prevent word splitting.
-- Use grep -F in shell script for literal matching of cgroup
-  names containing dots.
-
-Ian Rogers (2):
-  perf stat: Propagate supported flag to follower cgroup BPF events
-  perf test: Add stat metrics --for-each-cgroup test
-
- tools/perf/tests/shell/stat_metrics_cgrp.sh | 174 ++++++++++++++++++++
- tools/perf/util/bpf_counter_cgroup.c        |  15 ++
- 2 files changed, 189 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat_metrics_cgrp.sh
-
+diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+index 519fee3dc3d0..dd1851634087 100644
+--- a/tools/perf/util/bpf_counter_cgroup.c
++++ b/tools/perf/util/bpf_counter_cgroup.c
+@@ -186,6 +186,21 @@ static int bperf_load_program(struct evlist *evlist)
+ 		i++;
+ 	}
+ 
++	/*
++	 * Propagate supported flag from leaders to followers. Follower events
++	 * are not opened, so their supported flag remains false.
++	 */
++	{
++		struct evsel *leader;
++		int num_events = evlist->core.nr_entries / nr_cgroups;
++
++		evlist__for_each_entry(evlist, evsel) {
++			leader = evlist__find_evsel(evlist, evsel->core.idx % num_events);
++			if (leader)
++				evsel->supported = leader->supported;
++		}
++	}
++
+ 	/*
+ 	 * bperf uses BPF_PROG_TEST_RUN to get accurate reading. Check
+ 	 * whether the kernel support it
 -- 
 2.54.0.631.ge1b05301d1-goog
 
