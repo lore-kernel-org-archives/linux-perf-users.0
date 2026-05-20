@@ -1,167 +1,117 @@
-Received: from mail-yw1-f228.google.com (mail-yw1-f228.google.com [209.85.128.228])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F2C3546D0
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 16:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B773F44D9
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 17:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779294909; cv=none; b=Ipk/mWpJpnu1IU3xjVq9LzNb0gVjIdGnGs+Z9d7LcztOYeiuNjQDPpuPSZ69II8WwzntJ4NG6Hu/xiCNCBAJ9NUaTUGku0C1CT++6810b0qqdghOSRHBoWwv9msBotWyAYnLLatGyvumHw59RA7QbLHccXTs2FIC8MkhmOgYLmE=
+	t=1779299534; cv=none; b=IwhDbREkggYXFdvlKKZB6RZDaIFh0seV4Ui6+5TiTxEbfB5b6UGxvNB3jtVMSpgjTHUoIzedGCdP0qN6BiFlyaPRQ5awG6zp0dvRSVEgY9WDO/E247RWIizF4J6+uuQYv80l/qSbLfGnG9aMgDWqVeTmXQvzzCTmXZaLgWWyxnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779294909; c=relaxed/simple;
-	bh=3lGRAEnQMtX4zERAKSIZdMRkPZ+RvRXWmkS38F/ap7E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KyhDv0ws1aYdL2OSP1t6K5KBZDCkhLlJkQeOesutreRJ/S9SYIKqfHqpCyckUUt9EfHg7Ci1Gc00EF2cPxwborGRl7Se7opkl6xEFhE3bMGzR8JHK/gPpQ61L0kE9HuYPFlfEvAG7K9qGO3XGsUIwPlGJ56s1fOOhetSDDRvnEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GwGMNYlj; arc=none smtp.client-ip=209.85.128.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1779299534; c=relaxed/simple;
+	bh=EEXHGVwWM1C0H1nnRpc8yiySS0LXmvI2LknDeL+xV0g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lNnI5swx0FsjKLLYXifiBMcHlpxQ89Nw+f6GekJjDQogGgPTmYDpSwrsSpk0eLE+pOT2qh9C5ubx8SrAktXo4S08j0ZtoN9EUggmA/OfaZxpRfS+cu3th7wsjAFfx9/di+J7tzz8Z2JkY+gnLjh7/oHVwSsEaPNhRWDydAb4jP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QETtCW5k; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GwGMNYlj"
-Received: by mail-yw1-f228.google.com with SMTP id 00721157ae682-7cfd0d8eb09so20619397b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 09:35:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779294907; x=1779899707;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=k1YJJ1YFmprPS6ntzC8PQrKknM/3MWPFYqmao9X/xvo=;
-        b=D7+RrfS2L4Rr0e3oXbQw2MiOpsLqek1z9ypZXw9+NAEvStFRwU9plg5FcojXMuTb8S
-         x+PplZM0fuL+B/FidJ8+yNW8YNSYdstBjKbKxa4ex4dm8NgL+aTmOqJQo/7OIMJTvI8K
-         LlDXEfsrioY1GcKRNCoCpqs+gmqtfknFEL5RIBvQbqkWqmvM7TK37NQquxyIsI1QiXzS
-         cMY5TS/8GGql99NR5+WQaOI2vgZKQMUPW9nZ1TppE1fJ6dxS+E13lXb9vfoqgJGukMYF
-         gdeoE/gHG1/LtvJE0oOWXAGwnZw/iQER15NIzwwqfVbeaXa4oiVuWnmXexGG2fBil7t+
-         kpjA==
-X-Forwarded-Encrypted: i=1; AFNElJ+b4S/AC7feIyCvc8p5yi7o+blCemHb//iUBrkFLIFkQjJySZa3KHfGLpcjAP2NssoFgxOGIuyt36bdXtlcacNs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFSFq3ZIOmOBAUptyyXC1b/xwxzUZwLDu7IIJxdE3hHAHPsZZf
-	/P/watR89H2vDtr9r8Glcplnd0cBF/bDk5tikxwy+YCpJNbrSnfT0+jWEHZY5mFxISWJGCPf6qG
-	h7OKwAySYYFB8zxbSFppSlt6yKaZjyAgNlKObbB3sFTjQs9qRiZWb06Lm3THZdm3l6WkYb1U9LI
-	uYUwOLhuH9KyWTmEX9DSxQXstZ+H+60aw+VDBRLql08Uu/0L1HeGIpWNat2koho3zDvgcVC16z0
-	6imlYdj56MBurMjmFW2hv6QcFoRhw==
-X-Gm-Gg: Acq92OE6g75DJf6AysGMMJvxng38J8DQKWBd+baYV7q5IKb5yruILhOsa7WGtKiKrGk
-	17tJaUoUuxpXHar5y7ujDD1otNjwaJBuxbweL/Bpd42EOMWVbHJM62KlbcAoFrTZrZ4cGv2AFpc
-	b665QSmEkrFyvd2GLwo8licGWUCdqaWGPL/yehBfz5DvBDhOjCAl3JRuyXSK2Bq/h68GfQCqTo0
-	sxmd8JafzwhSuHYGmzP1QHORkbr5LS7Hf7o5H5erD4dKb47mZy2g5FuotCA9rgOHTIk1MlG2zhP
-	qq1lJmFOYgO+em1EXydEMRyLigrYK250fV3jRV7SVYgRzflxTYxEUAPwlWhT06czMXow6cHuoWW
-	U5bLfx5CDVpYdfrh54S5mQZ6VLUNL3I8Qr1q9nQUcduJxZugXNrFqKYxQqo+H1AUoWj+3mIlZ0L
-	EIvtAolWiBxdpvBxKrzetKy/8pTBr1r/r21dOPZqU5oK1F83Xx0+El/BGjFYI/2A==
-X-Received: by 2002:a05:690c:c18f:b0:7be:5f3e:5309 with SMTP id 00721157ae682-7c95bc1cc7cmr235676737b3.38.1779294906497;
-        Wed, 20 May 2026 09:35:06 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-24.dlp.protect.broadcom.com. [144.49.247.24])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7cc9b6347c4sm8291387b3.22.2026.05.20.09.35.06
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2026 09:35:06 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1353a6f29deso1238111c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 09:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QETtCW5k"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3684cb22502so4887248a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 10:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1779294905; x=1779899705; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=k1YJJ1YFmprPS6ntzC8PQrKknM/3MWPFYqmao9X/xvo=;
-        b=GwGMNYljw6jBdzJepJMLbeQNNXO5dD9AGOQAnHSzthnCgY8wOt3+6Nir+1jpOdLoNN
-         3WLo08ybTjH6mC/GtGPE3EVZpaetLUoqwdTaPuEAJjrJoYvvrV5RmuVX9FIBfXI0+REZ
-         jph+oeSQzt/7hFtxGYwdc/DV/2UaKeKgmZveE=
-X-Forwarded-Encrypted: i=1; AFNElJ9o+IstGBOx+SkaXNI89WeQ3eWFtm6hiUtZ2paSjFsPIVRmo3iDEmh4gU6U64JNaa133ZyZsJDZQ4Bu73fi8jm9@vger.kernel.org
-X-Received: by 2002:a05:7022:607:b0:133:3c47:932e with SMTP id a92af1059eb24-1350494e402mr11987641c88.28.1779294905262;
-        Wed, 20 May 2026 09:35:05 -0700 (PDT)
-X-Received: by 2002:a05:7022:607:b0:133:3c47:932e with SMTP id a92af1059eb24-1350494e402mr11987597c88.28.1779294904668;
-        Wed, 20 May 2026 09:35:04 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cbcb9ed3sm27311954c88.1.2026.05.20.09.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2026 09:35:04 -0700 (PDT)
-Message-ID: <6541a5f4-a150-44b9-af27-8712cdafc1ae@broadcom.com>
-Date: Wed, 20 May 2026 09:35:02 -0700
+        d=google.com; s=20251104; t=1779299532; x=1779904332; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D2U3FhCRfMHQDfxrNN/JYZhtih6t6My6+As1AAp0KQI=;
+        b=QETtCW5kLmvHmS2wXlZKqF4WjFZ4X/+2FKJa5v1Shhv4CzX2ZZuVc9y2W+PeJMCgYS
+         nPGVKtJMF+gjmI2OdSjgEd0k9PLAO9jodW9/vDmgmENUHmXf/0VB915XVZChjHft5w0M
+         4hRrIZCMRj5C6y/3/m6d3bIHCNBOP0gkRXNX/pdu0EUaSQU0NoLmfpomcGw65m+ZpycQ
+         cNvDnGWGktmyWf3Vml0Nx5FvVLJ3cVmFGAMx15p/xXshvYumwZx7wgyqQHnkaW4bbbHc
+         4+ow9Rxx0ozhkNFBqFbjEqOxFMhRdlVj+pZ4S9rcu7xb+GRr5Xg4vOderLzrMFxl0Pjl
+         TQEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779299532; x=1779904332;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D2U3FhCRfMHQDfxrNN/JYZhtih6t6My6+As1AAp0KQI=;
+        b=p58oovX3Q7nY4C/8iP62gTfoUxtXwo8qlV9j5mvzm2XaEpw4+wTm6pE7aMv9sRkE2X
+         GYFXqtYJzMUH0KTPl2m97SnCkNcIUwI71IhM6RMHuaCLQvZFwKaaJCmnTaG5kB6d0oF6
+         XU2ZopV1Prprzp7mfCrwMkTUNcnT1J70VBfmy9zqYnbMBi584SPD9ot6fS8PPKyz5xWI
+         fl+6U5AqzGbdMexweF+iuJwXiczuL54ERrf0sk+EKKCTuN6lZ6DZbzcprAkJ1Dw8Qhep
+         1um1x08ZBbjWXXcKdjhP3d5TFlnx3vVbhFq23XQ9CzlkMuP8Dy2IoztgR/Ago4ijbY3d
+         vH5w==
+X-Forwarded-Encrypted: i=1; AFNElJ/0hLfPMp4Ruxn5IjvSrQree2JWUZ5RM75sIoj1PUwKYO1Du+jzxRQLhWL0CBRoLuFfoP/IzS2V50fbFtfR6/50@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA6KG0bWMJhS3uw20NIO/h1AJvgWaxyntlSMGl3HbTYV47IaVS
+	vrZxrOjGKqbt64EVx57mFA79bP6O7aAbno9Rea/6oKSs9iArdnAWYkGZu+ibVAzbzDdFLJoBVIz
+	XL1GQrg==
+X-Received: from pjbjs11.prod.google.com ([2002:a17:90b:148b:b0:369:2b54:e186])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:568d:b0:368:6ff3:6678
+ with SMTP id 98e67ed59e1d1-36951cb832cmr27002510a91.20.1779299531975; Wed, 20
+ May 2026 10:52:11 -0700 (PDT)
+Date: Wed, 20 May 2026 10:47:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH stable 6.1 v2 5/5] perf build: Remove
- -Wno-unused-but-set-variable from the flex flags when building with clang <
- 13.0.0
-To: stable@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
- "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
- "open list:BPF [MISC]" <bpf@vger.kernel.org>,
- "open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
- bcm-kernel-feedback-list@broadcom.com
-References: <20260520163320.3073037-1-florian.fainelli@broadcom.com>
- <20260520163320.3073037-6-florian.fainelli@broadcom.com>
-Content-Language: en-US, fr-FR
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20260520163320.3073037-6-florian.fainelli@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.669.g59709faab0-goog
+Message-ID: <20260520175038.3039546-1-ctshao@google.com>
+Subject: [PATCH 0/2] perf stat: Fix uncore metric scaling across aggregation modes
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@linaro.org, sandipan.das@amd.com, 
+	leo.yan@arm.com, thomas.falcon@intel.com, yang.lee@linux.alibaba.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/20/26 09:33, Florian Fainelli wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> clang < 13.0.0 doesn't grok -Wno-unused-but-set-variable, so just remove
-> it to avoid:
-> 
->    error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
->    make[4]: *** [/git/perf-6.5.0-rc4/tools/build/Makefile.build:128: /tmp/build/perf/util/pmu-flex.o] Error 1
->    make[4]: *** Waiting for unfinished jobs....
-> 
-> Fixes: ddc8e4c966923ad1 ("perf build: Disable fewer bison warnings")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/lkml/ZNUSWr52jUnVaaa%2F@kernel.org/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> Change-Id: I8db8a372d1e83d26fbe8beda2bcf4d1a871a2b80
+This series fixes a scaling issue for metrics (like lpm_miss_lat) across
+different runtime aggregation modes.
 
-Argh, sorry the Change-Id snuck in there, let me know if you need me to 
-resubmit.
--- 
-Florian
+Uncore metrics currently use `source_count` to scale events. However,
+`source_count` returns the total uncore unit count regardless of the
+selected aggregation mode. When evaluating metrics in different
+aggregation mode other than `--per-socket`, this incorrectly divides
+aggregated uncore events against the total uncore count rather than the
+uncores belonging to the aggregation, leading to wrong metric results.
+
+To fix this, we:
+1. Introduce the aggr_nr() keyword to the metric parser, which
+dynamically resolves to the active units in the current aggregation
+group (`aggr->nr`).
+
+2. Update the python metrics to use `aggr_nr` instead of `source_count`,
+ensuring correct scaling across all runtime aggregation boundaries.
+
+Before the fix (incorrect low latency in global mode):
+  $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+  {"ns  lpm_miss_lat_rem" : "122.8", "ns  lpm_miss_lat_loc" : "114.5"}
+  $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+  {"socket" : "S0", "ns  lpm_miss_lat_rem" : "232.1", "ns  lpm_miss_lat_loc" : "278.2"}
+  {"socket" : "S1", "ns  lpm_miss_lat_rem" : "233.9", "ns  lpm_miss_lat_loc" : "257.5"}
+
+After the fix (correct scaled latency in all aggregation modes):
+  $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+  {"ns  lpm_miss_lat_rem" : "230.0", "ns  lpm_miss_lat_loc" : "220.8"}
+  $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+  {"socket" : "S0", "ns  lpm_miss_lat_rem" : "232.5", "ns  lpm_miss_lat_loc" : "269.9"}
+  {"socket" : "S1", "ns  lpm_miss_lat_rem" : "225.7", "ns  lpm_miss_lat_loc" : "262.3"}
+
+Chun-Tse Shao (2):
+  perf stat: Add aggr_nr metric parser support
+  perf stat: Use aggr_nr scaling for Intel uncore miss latency metrics
+
+ tools/perf/pmu-events/intel_metrics.py |  8 ++++----
+ tools/perf/pmu-events/metric.py        | 11 +++++++++--
+ tools/perf/util/expr.c                 | 27 ++++++++++++++++++++++----
+ tools/perf/util/expr.h                 |  4 ++++
+ tools/perf/util/expr.l                 |  1 +
+ tools/perf/util/expr.y                 | 24 ++++++++++++++++-------
+ tools/perf/util/stat-shadow.c          |  4 +++-
+ 7 files changed, 61 insertions(+), 18 deletions(-)
+
+--
+2.54.0.669.g59709faab0-goog
+
