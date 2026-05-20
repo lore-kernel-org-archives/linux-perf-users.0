@@ -1,62 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C368729B8D3;
-	Wed, 20 May 2026 16:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B4833B97A;
+	Wed, 20 May 2026 16:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779294666; cv=none; b=sPYxOZX4gNSHsIxmS+9dZukujD5WT70QELUyprFpXqEmIEs+aRnmCUlZbXV8LtiRQe5NIekEsCLCUOhqzJcCWZAFTJuJ/AEqLWWPZQA57i2n0GzmMC1KYq9nBRpj2drk7T6W8dvMU8JI0AQLQr427wr7Eq70PQnDwTy18h0HbYw=
+	t=1779294810; cv=none; b=DYdXn3OZ055WlujtJ1ntYhIXHOev70snz9yLmiT/x9HfRxKN84Av9Zet8K5A5Y+DbRh6NqjyvrtjXc3B/IejwAsgS8Yd7NQInG9DOUOakp5LhNN6NiBAj3RePbuS0Hl8doL6kOogqded3UG/w4TTtlLFHs90iaATYfbneJiJPAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779294666; c=relaxed/simple;
-	bh=DFBbrIMssZgDRyOev/Us9CTVOOHNvDY1K6rXMTQKj6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMAo/Ckf8LR8+qNwXR6Wuj85FUzjL0o9+z6p536e1pruqLJAHgx1acE2yX7lr5JmGAmWWOqjIMRvEWVl6g7RGnXlRHhvHOu0654Htec2L1Z3KRmmI+GB8V/SbO3J2+ARMQ8+Ja2rqeKcQ6+hme7sdNznzVNaMyiRuE5rIMrsTsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBM2Otyk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779294810; c=relaxed/simple;
+	bh=m9bIK7//CZw/Q1o2xMpgB+DPsJNKtAtp6MpgiVd2b0U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OU8JRBa0nammRFSjn3cqAK0U8L5JFzs/VTA4O010hiZU/tF0bN8Ceap3svmNZT9q08tclqmxrKDcTer/oR1c8KlVqzTXXmqI72l0kiRxPKVjVfrGwmEvLvueuVZDcBzuucTlfV2jd0NsKZ0NP7HhVTWUQDyJ5+eHykPh//HM29M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DdzHuhUz; arc=none smtp.client-ip=192.19.166.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBM2Otyk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32901F00893;
-	Wed, 20 May 2026 16:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779294665;
-	bh=HImxTGXfOlPJ5yiYjEIBIuu3kZ/Pwu0vhqM2t+VyCbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oBM2Otyk38GG3acwx9YL4+hht3BlC2RO6DLXEPjVV1Vsh7ZLEi643kWif4zwoyVDG
-	 mdCkNcmWBt3Tkz1FZcfFDRCWBtYrxtTJbGZbG+7K0NueUIvxSPogddtwaQ/5trZez7
-	 YZm5M3cbhYFw56xh6pmsMF6LLaVaIyqRk3FHyILZ3k0dEzBcQlP8tqVv+w5arx0teY
-	 7arBcOQRGYCsG8r49dV+eF45qjVFqXi6oRxeU0aEzhS4YqPELRT5vwVMDjDX1aVKn2
-	 j7IJvJkoGX2HrVbGGjXMLsZ9lsTa/mAKWxwHat519DSuHBOui2+sWI3AQ1hHk1ViJN
-	 ODnH+uokvYKtw==
-Date: Wed, 20 May 2026 13:31:02 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Chen Pei <cp0613@linux.alibaba.com>, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, dapeng1.mi@linux.intel.com,
-	pjw@kernel.org, alex@ghiti.fr, guoren@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf riscv: Add SDT argument parsing for RISC-V
-Message-ID: <ag3hxuypbx5swL2Z@x1>
-References: <20260520134004.30573-1-cp0613@linux.alibaba.com>
- <CAP-5=fWApAYb33pSnfW+gRmY7TsPUcfAP1UnBCJW5UpFudpr5A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DdzHuhUz"
+Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id E2E06C001AC3;
+	Wed, 20 May 2026 09:33:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com E2E06C001AC3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1779294807;
+	bh=m9bIK7//CZw/Q1o2xMpgB+DPsJNKtAtp6MpgiVd2b0U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DdzHuhUzX2PXwNjY62kyPQedxFPqVksi0HoDBI8VXBoS4k7nRtz254UeA8pe/tk1e
+	 ghTGQeSQ5oGo3AdoJDIy+GUy1ly1vA6UxFCrevkRAaARiC6lho47fOPffFoRBVE3l0
+	 LT0DKWnZ//qhBA593N7qbvLXR2gVBvTjRtpunzh4=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id 74CFBAEA2;
+	Wed, 20 May 2026 12:33:25 -0400 (EDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: stable@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	bpf@vger.kernel.org (open list:BPF [MISC]),
+	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT),
+	bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH stable 6.1 v2 0/5] perf build fixes
+Date: Wed, 20 May 2026 09:33:15 -0700
+Message-Id: <20260520163320.3073037-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWApAYb33pSnfW+gRmY7TsPUcfAP1UnBCJW5UpFudpr5A@mail.gmail.com>
 
-On Wed, May 20, 2026 at 08:25:50AM -0700, Ian Rogers wrote:
-> On Wed, May 20, 2026 at 6:40 AM Chen Pei <cp0613@linux.alibaba.com> wrote:
-> >  - Add two Reviewed-by tags.
-> >  - No actual update, just to re-trigger sashiko's review.
- 
-> The Sashiko review is green, I think this can be merged.
-> https://sashiko.dev/#/patchset/20260520134004.30573-1-cp0613%40linux.alibaba.com
+This patch series contains "perf" build fixes specific to 6.1. We have
+seen occasional build failures in our CI looking like these:
 
-Thanks, applied to perf-tools-next, for v7.2.
+util/parse-events-bison.c: In function 'yy_symbol_print':
+util/parse-events-bison.c:901: error: unterminated #if
+  901 | #if YYDEBUG
+      |
+util/parse-events-bison.c:1020:62: error: '_p' undeclared (first use in this function)
+ 1020 |   yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp, _parse_state, scanner);
+      |                                                              ^~
+util/parse-events-bison.c:1020:62: note: each undeclared identifier is reported only once for each function it appears in
+util/parse-events-bison.c:1020:64: error: expected ')' at end of input
+ 1020 |   yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp, _parse_state, scanner);
+      |                         ~                                      ^
+      |                                                                )
+ 1021 |   YYFPRINTF (yyo, ")");
+      |
+util/parse-events-bison.c:1020:3: error: too few arguments to function 'yy_symbol_value_print'
+ 1020 |   yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp, _parse_state, scanner);
+      |   ^~~~~~~~~~~~~~~~~~~~~
+util/parse-events-bison.c:991:1: note: declared here
+  991 | yy_symbol_value_print (FILE *yyo,
+      | ^~~~~~~~~~~~~~~~~~~~~
 
-- Arnaldo
+which are resolved by these patches.
+
+Changes in v2:
+
+- backport change adding version-lt3 macro
+- added fix for "perf build: Disable fewer bison warnings" per Sasha's review
+
+Arnaldo Carvalho de Melo (2):
+  tools build: Add 3-component logical version comparators
+  perf build: Remove -Wno-unused-but-set-variable from the flex flags
+    when building with clang < 13.0.0
+
+Ian Rogers (3):
+  perf build: Conditionally define NDEBUG
+  perf parse-events: Make YYDEBUG dependent on doing a debug build
+  perf build: Disable fewer bison warnings
+
+ tools/perf/Makefile.config     |  1 +
+ tools/perf/util/Build          | 32 +++++++++++++++++++++++++-------
+ tools/perf/util/expr.y         |  4 +++-
+ tools/perf/util/parse-events.y |  3 +++
+ tools/perf/util/pmu.y          |  3 +++
+ tools/scripts/utilities.mak    | 20 ++++++++++++++++++++
+ 6 files changed, 55 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
