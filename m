@@ -1,152 +1,172 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD73F54D1
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 18:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779300325; cv=none; b=IxNlAkmoLNnsawPSItQcZsDAeP+YG7yQiAp7j+zBZSlS0RVnAGG7XcYfmoTeUa8Yk0u0El0snQVxy/f+xArGYQ1VfmhVi2xbPs7PYZGT4xpYEDNGgvwAbOfQN8oca1wEX14WLsbbwRq1Gp5MZUj85LP4O6xcnblhnPEp6O8Qip8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779300325; c=relaxed/simple;
-	bh=sIEA+CmW18QpPvy2pvsIC0vFH+Tb50rCXUcoDoQHWNU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P13O31roONFI1kDPij9BULZHjQ6m7/l35HJu5jYWKmH7RbjNr/FKGdyYvQPFjwl4UBAOPgBeEBqSj+Dy6+BBz73hrHq8n57EZ/qMPV+qdtl6hSaQhkS6cBsbvMzBdWjIKcwiu7qzFD4RHn///lWk17crQs4yaVxqVcHcNADK/aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lfc3plLn; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3A03F54D1
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 18:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779300772; cv=pass; b=cayU/HgQMPallhjmKmDfFsL5LEE2hGInBB0D3fxP7lpG+HWMwpExVX6POHe7OjgXRhOcUQ2/J7vRuLO5gt5PLE+qi1saob34GafOvTmfIO6u/eMmvJ152XooN+bwfpEwgQwWYhhc7kUVAF/hhncmCpUOev0ZwFXuOnYcgXB1kWA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779300772; c=relaxed/simple;
+	bh=GTqBzAKfgVAROBwpR4zZIy6e4HLBOZqguTBU7Hhgafw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EXyDcRzRAdlgnD9LZ9n1GygZPGPBzXLN9/AtCySxtu/Rdfa6z+UwdjpS0+K9Jf1gbAaFd94b7MPJ+5/bxMZlXVB0WRZEvJNCtcf0vWA1cqbyJgqapMwC5NfPxExxt4AuyD2Sld2rV18qkF9Mt+yYBxqd8GTmdopH8qxJS14CZNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D9FULw4z; arc=pass smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lfc3plLn"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2babbeff9e4so55989085ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 11:05:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D9FULw4z"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso6475ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 11:12:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779300771; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DzlezUFQS39pg58mhOtoYI6+YOxBKMME9Po9xIsgiNFgQ7K+UKHMnKTlrvUw0ze3dx
+         ZTF6GXi4JnhLfWLDGNmMDiLdEofHKWFlqVjJn0DN/h4Eirzmjeqfqrg4EeIfgXaQ5Tlh
+         nG2amEaoMIwVKi8oeSg1MCr5MkEL0tfzHAOEAa3BOkoBn/iIQlqJdsMs1Jsjgh8Wr6r6
+         /HMGuscOK/Q2hChgymaRpENHQov2Z9HaPHrWoOEvlFfoWkd86UEvSx4UsV3KKHY5Qv41
+         6tUsXato+Qr5jPjHncqcwgncTe4n8HVEkgi//9gb7rNrWsE/8z4zMz7FFmgi6PCtyOBZ
+         TJGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=QcN77jj+lpLzN3ZkjW0mDTaYGrQWWZpdh/lphErstAI=;
+        fh=IZHUywhNPtkXTShIBoh9+zmo8mfB89yBNDw0XBEXmns=;
+        b=jfOS/59aiAUD2B3khL00v9+LLBVMJn/mimQagZONsoqTZgLrMMHTDY9AzQs/mKwIhq
+         /OLI1WkOshgREsf1afcRgqZkdVXY7H/TpU3aSNYE16ov+NXyFbUkZr3eFjFovTxjJhoH
+         CkwXq74H5zfzVVcZWcUNmqBm8gsNDCXbqtTrZ1NdutR3/Pqp4ztTc0LHKuK/4y/jkQC0
+         jh4YzuEx8tLoCjZV1sSS3JjDKXgAc28RDMFqqXgi4F38ixNyLyl1fdttFG7Kdbar42lT
+         0d+2TW+QCxYwnsfkOxP+O/SjpsKPM4Sxvf3XDI0JNi0aGOPT3BjCjOIM9+xfml/sZEry
+         po6Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779300322; x=1779905122; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/4UM21HNphfC3/apIv+GViPAA1EhF64J1eocrwZvEY=;
-        b=lfc3plLntnGsLxA67uvIETlkc11aaU44hAXo1MFTuA/fSKiJC8fJdpCwxVjf4K6BhK
-         RWuhyOBa6WkU8pjobHJJcsDMeM8aCuvXI6Q86U/BVfdkpVtLaBugdBRnEWDrD7+038rK
-         P2/CFsRCeX0YK9anyRuRG8SrNTGIMKnN0AE3GiqO1VAt+0ZbgV9Sme+qrq01kv0d09F7
-         5KR/Gv3oQBue0o/+4sy21RzKfLKRAmGsHDp7zKTopbKJmjpND3gxs8dCVmVUEy25oyMe
-         biwZjIB6S2Fue6ckYKpHojvHrsZkDU0FWv0uqO18MGHzjVrksTkxGKrKNqnsLjlKMwA4
-         gAkA==
+        d=google.com; s=20251104; t=1779300771; x=1779905571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QcN77jj+lpLzN3ZkjW0mDTaYGrQWWZpdh/lphErstAI=;
+        b=D9FULw4zpxQbNAYTYhjLnxW1+EBFBBQQBErMw2FCVzqAJlpCHIqFmXrAcMIHt+TMD4
+         zck8iKIKTXnZFx3fFTrg192PSHfygtjTqwrNKVJoT92Ekn9aiejtguIqYxaqpsTwfGvK
+         cYu4Op0IbKvNW/unYxCZaTkhLXP3z5oAommO5xVAu6aGWaVL9AxTvELUO4gVMoI7/QSL
+         WpxGnA7xj8+jQwj+VBZ1xfjqgkkFtkKoFOShUmLlLcBoAJx+ZPcGJCerH0cAQianEWuF
+         8kgzELSOptd9uP0aMqQEzJVQS1MkmxSgKWKE5ZpOdxffku1+O4SphfXeULqosAa4GNIm
+         5Vdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779300322; x=1779905122;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/4UM21HNphfC3/apIv+GViPAA1EhF64J1eocrwZvEY=;
-        b=C6bnBE9tuGpOhC3ZcJexb+rsmUPJoglncjoCxCLyebE7jH4YDzf+tIEM3WBR3xRrDk
-         oBKEQB69jczmCIGwmAYo5uHGpn0ycIrSLPGikSrnn0U96WKb6no6438axrscHHdl/95G
-         6G83fKOdHiBdcD43AZBXuo0deoCCn+BglnoRL5jxXYEMBn34qhF7aMS73tCJx7tlA3Ro
-         Ow6eqLxk0v9Ej6T5zHKFZZpZ3oAh0EUSCLKNvGBKL8OZrp+yS83/Dlp4GnCrugqE1oJO
-         qcUdhYu6S+IvBW6SZXLus771q4atn6fezARs/Z1fE42IXsu6GyL88Qf2nMWmEp0mE4ds
-         JQJQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/wUESU6nJeoH8waV7505Z2RRFfFtMUaTVobMmw2/3+nK9dU+kQzZst9B+NYJY2K08LRRDUZ+5T9pDlRW3jOhVT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAb9OmNNqzwuGCe6yVUN4exVtra70qiAee/OGA/OeUJlMTuSW2
-	vPc4CH+I1+OqJnNajTH1aFMLBhgDYHp7k6csd4u/VuvATbOv6pVoBzuaDTuKNwGiYojHf9J3mrF
-	CM32kZg==
-X-Received: from plkk11.prod.google.com ([2002:a17:902:c40b:b0:2bc:c1af:322f])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aef:b0:2bc:dc1c:438e
- with SMTP id d9443c01a7336-2be9d40fc9amr4566345ad.11.1779300321595; Wed, 20
- May 2026 11:05:21 -0700 (PDT)
-Date: Wed, 20 May 2026 10:58:22 -0700
-In-Reply-To: <20260520180032.3045144-1-ctshao@google.com>
+        d=1e100.net; s=20251104; t=1779300771; x=1779905571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QcN77jj+lpLzN3ZkjW0mDTaYGrQWWZpdh/lphErstAI=;
+        b=buwjGlxLj5Zk3A+Dv7spAz/CDdDnJhHUoWxZ+XkMCTXPEKtTlddgqglyuVf5j1yhYc
+         o8XodaJBk1TWa4nha8bbJG3OsthuBYWQNi6ZSDPNxFQEHUUOQE6t4GC+MQumW2YEjHVy
+         UUhyUioUpiOY3i6edmnuqETHaf2RWw5Po40S/627e99LksCDs8IFTiwRXXJ9jEttLhX4
+         JW/Lbp8pYv7bB5FlJqMmvwyfl6agXj6Er0HbIzr5zC1cQHPbSK9HWYK2iXn1rK1dLsWg
+         tnw5qUiiVIm96a/z1doiiOBcmLS8xJCvM0DZ2X5uMDxKO/rwHT4REb7hihLqjFKjaY+o
+         onHw==
+X-Forwarded-Encrypted: i=1; AFNElJ+WMsWNP99wdGV6CO+5suX4aZ6d22tLPTLp0TnrpVWitNmIiObZsZhgjEpeMN7e9EdkG9kK/miXFMr2ixi+l1lV@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywaps7z4QfwRpNKwLvXMpB//8ZeemAKfVYnjQJeI7RgbpRlVya3
+	jhPF9gAWELmwf7h4K3qYXVhu+Lgr9IQVmILTZ+C4/duEtBm0hsrsGOo08TGYxl18hHaSQAQlDYP
+	ITCaDE9VJZ6jcNq33+Xkowyp/OkNnnEViNxQNLNIS
+X-Gm-Gg: Acq92OFnNTFlRESF59Ci6Nt4fhZOBJp8moF4s3N0ZE7+BlGgtRdz5I8Eu+n+NEjafQu
+	K1gv9rVO9eDHEyuL8TB64/Vm88bjZrt9uxdG7wG1MbKccUOAg0P6qFBIm6iOssXetRo4u7IQLNV
+	bYPpeZIjD3hsgARJpz2ritWRsgySdQz+F8skmNiNG7EmG4hchTuJqi+QK8wQDLwC8phh3YFI0Ru
+	bEiYTogFE71TU8+NvvLjJKbXh+aum5oHhYZvrBQHV9E39+pGcnCOWd+q/jrbX6vyZbos9/eovkE
+	keAxUSZaLnJZhvsnlX18+pzF+C7HZLdsOCUTL3/a5ril2NPz
+X-Received: by 2002:a17:903:3c63:b0:2b0:7a9b:82f3 with SMTP id
+ d9443c01a7336-2be9f0f065fmr399355ad.8.1779300770571; Wed, 20 May 2026
+ 11:12:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260520180032.3045144-1-ctshao@google.com>
-X-Mailer: git-send-email 2.54.0.669.g59709faab0-goog
-Message-ID: <20260520180032.3045144-3-ctshao@google.com>
-Subject: [PATCH 2/2] perf stat: Use aggr_nr scaling for Intel uncore miss
- latency metrics
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, sandipan.das@amd.com, 
-	linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+References: <20260512194710.162215-1-mjeanson@efficios.com>
+ <CAP-5=fXMtbO=7JMg2YvhQNbqOEFH_ze=8EifYM7bDfR945=KHA@mail.gmail.com>
+ <e6d88ec4-c6fa-473c-ae70-071bb6f040c1@efficios.com> <CAP-5=fVnNyScv=fWy++iucCWWe8G7jcEn=AiDbLEV6PaeBooHQ@mail.gmail.com>
+ <CAP-5=fX5QpRcVhnZCd230FQWsJ8KHbCrv6y_47vcrBK0fhWWxA@mail.gmail.com> <33978160-74a3-42ee-a4a2-1b0ad968a46e@efficios.com>
+In-Reply-To: <33978160-74a3-42ee-a4a2-1b0ad968a46e@efficios.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 20 May 2026 11:12:37 -0700
+X-Gm-Features: AVHnY4KwWx4MoDhxfZ2HdYg8MlT-R0eEapSq3lNmxyTdR2YuhU1rc5M8nqLa8Ys
+Message-ID: <CAP-5=fUxAGG1Cs9yHqy7qjJNa4KP6E_Q0cCdLfmYwcPnHKLdyA@mail.gmail.com>
+Subject: Re: [PATCH] perf data ctf: replace libbabeltrace with babeltrace2-ctf-writer
+To: Michael Jeanson <mjeanson@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Derek Foreman <derek.foreman@collabora.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update `metric.py` to support the new `aggr_nr` keyword in the python
-metric generator. Replace the usage of `source_count` with `aggr_nr` in
-`IntelMissLat` inside `intel_metrics.py` so that uncore latency metrics
-(like `lpm_miss_lat`) scale correctly on multi-socket and SNC systems when
-aggregated globally.
+On Wed, May 20, 2026 at 10:58=E2=80=AFAM Michael Jeanson <mjeanson@efficios=
+.com> wrote:
+>
+> On 2026-05-20 12:13, Ian Rogers wrote:
+> > On Wed, May 13, 2026 at 9:06=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> >> On Wed, May 13, 2026 at 7:14=E2=80=AFAM Michael Jeanson <mjeanson@effi=
+cios.com> wrote:
+> >>> On 2026-05-12 17:54, Ian Rogers wrote:
+> >>>> This is cool, I'm surprised at how non-invasive the change is. I'd
+> >>>> done a similar thing but keeping both babeltrace 1 and 2. I'll post =
+my
+> >>>> WIP in reply just as a heads up, but I have to do much more heavy
+> >>>> engineering.
+> >>>
+> >>> I think I can rework this to try babeltrace2-ctf-writer first and fal=
+l
+> >>> back on libbabeltrace1. The change is non-invasive because
+> >>> bt2-ctf-writer is basically just a compat API for the ctf-writer of b=
+t1
+> >>> but it doesn't expose any of the new features of bt2.
+> >>>
+> >>> Your WIP patch that uses the proper libbabeltrace2 API is definitely =
+the
+> >>> way to go for the long term. In the meantime would you like a v2 of t=
+his
+> >>> patch?
+> >>
+> >> We have a problem with the perf tool in that it carries too much
+> >> baggage due to its library dependencies, so I'd prefer we stick with
+> >> v2 support and your cleaner/simpler patch. I'm also hugely
+> >> appreciative of the work you've put in! I'm too busy to review my own
+> >> work right now, and cleaning this up ASAP offers an advantage.
+> > ...
+> >>
+> >> * We support libbfd although libbfd is GPLv3 and license incompatible
+> >> with perf, which is mainly GPLv2. We carry around libunwind support
+> >> but that project appears unmaintained. We have LLVM support but the
+> >> LLVM dependency is huge in terms of size and dependencies it brings
+> >> in, so people avoid building with it, etc.
+> >
+> > What's the plan here? I'd prefer to carry the v1 patch, ie let's lose
+> > libbabeltrace (version 1) as a dependency.
+>
+> I think I misunderstood you, I thought you wanted to keep the bt1
+> support as a fallback. I'm fine with either version of the patch being
+> merged.
+>
+> I can send an updated version of the v1 patch addressing your review
+> comments.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/pmu-events/intel_metrics.py |  8 ++++----
- tools/perf/pmu-events/metric.py        | 11 +++++++++--
- 2 files changed, 13 insertions(+), 6 deletions(-)
+Arnaldo, Namhyung, do you mind losing libbabeltrace v1 support? As the
+commit message states:
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 52035433b505..50d5a20fa354 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -5,9 +5,9 @@ import json
- import math
- import os
- import re
--from typing import Optional
-+from typing import List, Optional
- from common_metrics import Cycles
--from metric import (d_ratio, has_event, max, source_count, CheckPmu, Event,
-+from metric import (d_ratio, has_event, max, aggr_nr, CheckPmu, Event,
-                     JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-                     Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
-                     MetricRef, Select)
-@@ -674,10 +674,10 @@ def IntelMissLat() -> Optional[MetricGroup]:
-     else:
-         assert data_rd_loc_occ.name == "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_LOCAL", data_rd_loc_occ
- 
--    ticks_per_cha = ticks / source_count(data_rd_loc_ins)
-+    ticks_per_cha = ticks / aggr_nr(data_rd_loc_ins)
-     loc_lat = interval_sec * 1e9 * data_rd_loc_occ / \
-         (ticks_per_cha * data_rd_loc_ins)
--    ticks_per_cha = ticks / source_count(data_rd_rem_ins)
-+    ticks_per_cha = ticks / aggr_nr(data_rd_rem_ins)
-     rem_lat = interval_sec * 1e9 * data_rd_rem_occ / \
-         (ticks_per_cha * data_rd_rem_ins)
-     return MetricGroup("lpm_miss_lat", [
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index ac582db785fc..424659b021ff 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -93,7 +93,7 @@ def CheckEveryEvent(*names: str) -> None:
-       name = name[:name.find(':')]
-     elif '/' in name:
-       name = name[:name.find('/')]
--      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
-+      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power', 'cha', 'uncore']]):
-         continue
-     if name not in all_events_all_models:
-       raise Exception(f"Is {name} a named json event?")
-@@ -576,6 +576,13 @@ def source_count(event: Event) -> Function:
-   return Function('source_count', event)
- 
- 
-+def aggr_nr(event: Event) -> Function:
-+  # pylint: disable=redefined-builtin
-+  # pylint: disable=invalid-name
-+  return Function('aggr_nr', event)
-+
-+
-+
- def has_event(event: Event) -> Function:
-   # pylint: disable=redefined-builtin
-   # pylint: disable=invalid-name
-@@ -762,7 +769,7 @@ def ParsePerfJson(orig: str) -> Expression:
-   # Convert accidentally converted scientific notation constants back
-   py = re.sub(r'([0-9]+)Event\(r"(e[0-9]*)"\)', r'\1\2', py)
-   # Convert all the known keywords back from events to just the keyword
--  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'has_event', 'strcmp_cpuid_str']
-+  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'aggr_nr', 'has_event', 'strcmp_cpuid_str']
-   for kw in keywords:
-     py = re.sub(rf'Event\(r"{kw}"\)', kw, py)
-   try:
--- 
-2.54.0.669.g59709faab0-goog
+  The 1.x branch of Babeltrace has been superseded by 2.x in 2020 and has
+  been unmaintained since 2022, efforts have started to remove it from
+  popular distributions.
 
+My choice would be to go with the v1 patch with the few fixes I'd mentioned=
+.
+
+Thanks,
+Ian
+
+> Cheers,
+>
+> Michael
